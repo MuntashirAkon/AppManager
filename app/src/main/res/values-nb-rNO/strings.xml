@@ -980,4 +980,48 @@
     <string name="pref_thread_count_hint">Verdien må være mellom 0 og %1$d der 0 betyr <i>maksimalt antall operasjoner ved angitt tidspunkt</i>.</string>
     <string name="smali">Smali</string>
     <string name="explore">Utforsk</string>
+    <string name="pref_filter_pattern_title">Filtrer ut etiketter</string>
+    <string name="pref_log_write_period_summary" tools:ignore="PluralsCandidate">Skriv til SD-kort ved opptak for hver %1$d linje.</string>
+    <string name="pref_show_timestamp_summary">Vis prosess-ID og tidsstempel når utvidet.</string>
+    <string name="search_type_contains">Inneholder</string>
+    <string name="toggle_internet">Bruk Internett</string>
+    <string name="vt_checking">VirusTotal: Sjekker …</string>
+    <string name="vt_uploading">VirusTotal: Laster opp …</string>
+    <string name="vt_queued">VirusTotal: I kø</string>
+    <string name="vt_failed">VirusTotal: Mislykket</string>
+    <string name="process_id">Prosess-ID</string>
+    <string name="parent_process_id">Overordnet prosess-ID</string>
+    <string name="virtual_memory">Virtuelt minne</string>
+    <string name="cpu_time">Prosessortid</string>
+    <string name="priority">Prioritet</string>
+    <string name="threads">Trådantall</string>
+    <string name="state">Behandlingstilstand</string>
+    <string name="commandline_args">Kommandolinjeargumenter</string>
+    <string name="swap">Sidevekslingsfil</string>
+    <string name="swap_chart_info">● %1$s brukt ● %2$s ledig</string>
+    <string name="hidden_api_enf_default_policy">Forvalg (basert på programtype)</string>
+    <string name="hidden_api_enf_policy_none">Ingen (full tilgang til det skjulte API-et)</string>
+    <string name="binary_32_bit">32-biter</string>
+    <string name="binary_64_bit">64-biter</string>
+    <string name="so_type_shared_library">Delt bibliotek</string>
+    <string name="so_type_executable">Kjørbar</string>
+    <plurals name="usage_seconds">
+        <item quantity="one">%1$d sek.</item>
+        <item quantity="other">%1$d sek.</item>
+    </plurals>
+    <plurals name="usage_minutes">
+        <item quantity="one">%1$d min.</item>
+        <item quantity="other">%1$d min.</item>
+    </plurals>
+    <string name="pref_filter_pattern_summary">Filtrer ut de valgte etikettene fra logger.</string>
+    <plurals name="toast_log_truncated">
+        <item quantity="one">Loggen er for stor. Viser siste linje.</item>
+        <item quantity="other">Loggen er for stor. Viser de siste %d linjene.</item>
+    </plurals>
+    <string name="vt_scan_date">Skanningsdato: %1$s</string>
+    <string name="vt_permalink">Permanent lenke til VirusTotal</string>
+    <string name="pref_import_backups_hint">Velg en mappe som inneholder sikkerhetskopifilene (Swift Backup/Titanium Backup) eller mapper (OAndBackup)</string>
+    <string name="vt_success">VirusTotal: %1$d/%2$d</string>
+    <string name="pref_vt_apikey">API-nøkkel for VirusTotal</string>
+    <string name="save_and_exit">Lagre og avslutt</string>
 </resources>
