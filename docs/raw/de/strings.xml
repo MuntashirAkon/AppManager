@@ -659,4 +659,167 @@
 \n eine App geöffnet wurde}, können durch Klicken auf die Option \\textbf{App-Nutzung} im Menü aufgerufen werden. Es erfordert jedoch
 \ndie Berechtigung \\textit{Nutzungszugriff}. Dieser Menüpunkt wird nicht aufgeführt, wenn die Nutzungszugriffsfunktion in
 \n\\hyperref[subsec:enable/disable-features]{Einstellungen} ausgeschaltet ist.</string>
+    <string name="pages$app-details-page$uses-permissions">\\textbf{Benutzt Berechtigungen} sind die von der Anwendung verwendeten Berechtigungen. Diese werden so genannt, weil sie im
+\nManifest unter Verwendung von \\texttt{benutzt-Berechtigung}-Tags deklariert werden. Informationen wie \\textit{flags}, \\textit{permission name},
+\n\\textit{Berechtigungsbeschreibung}, \\textit{Paketname}, \\textit{Gruppe} werden aus dem zugehörigen
+\n\\hyperref[subsubsec:permissions]{Berechtigung} entnommen.
+\n
+\n\\textbf{Root- und ADB-Benutzer} können die Berechtigungen \\textit{gefährlich} und \\textit{Entwicklung} gewähren oder entziehen, indem sie
+\ndie Umschalttaste auf der rechten Seite jedes Berechtigungselements. Sie können auch alle gefährlichen Berechtigungen auf einmal entziehen
+\nindem sie die entsprechende Option im Menü verwenden. Nur diese beiden Arten von Berechtigungen können entzogen werden, da Android es 
+\nnicht erlaubt, \\textit{normal}-Berechtigungen zu ändern (was die meisten von ihnen sind). Die einzige Alternative ist, das App-Manifest zu bearbeiten
+\nzu bearbeiten und diese Berechtigungen von dort zu entfernen.
+\n
+\n\\begin{tip}{Info}
+\n Da gefährliche Berechtigungen standardmäßig vom System entzogen werden, ist der Entzug aller gefährlichen Berechtigungen dasselbe
+\n wie das Zurücksetzen aller Berechtigungen.
+\n\\end{tip}
+\n
+\n\\begin{tip}{Hinweis}
+\n Berechtigungen können für Anwendungen, die auf API 23 oder früher abzielen, nicht geändert werden. Daher sind die Berechtigungsumschaltungen für
+\n solche Anwendungen deaktiviert.
+\n\\end{tip}
+\n
+\nBenutzer können die Berechtigungen nach Berechtigungsnamen (in aufsteigender Reihenfolge) sortieren oder wählen, ob verweigerte oder gefährliche
+\nBerechtigungen zuerst anzeigen lassen, indem sie die entsprechenden Optionen im Menü verwenden.</string>
+    <string name="pages$app-details-page$signatures-tab_1">\\textbf{Signaturen} werden eigentlich Signierinformationen genannt. Eine Anwendung wird von den Anwendungsentwicklern mit einem oder mehreren Signierzertifikaten
+\nden Anwendungsentwicklern signiert, bevor sie veröffentlicht wird. Die Integrität einer Anwendung (ob die Anwendung von dem tatsächlichen
+\nEntwickler stammt und nicht von anderen Personen verändert wurde) kann anhand der Signierinformationen überprüft werden; denn wenn eine App von einem
+\nDenn wenn eine App von einem unbefugten Dritten verändert wird, kann die App nicht mehr mit dem/den ursprünglichen Zertifikat(en) signiert werden, da die Signierinformationen
+\nSignierinformationen vom eigentlichen Entwickler geheim gehalten werden. \\Wie überprüfen Sie diese Signaturen\? Mit Prüfsummen. Prüfsummen
+\nwerden aus den Zertifikaten selbst generiert. Wenn der Entwickler die Prüfsummen zur Verfügung stellt, können Sie die Prüfsummen abgleichen
+\nmit den verschiedenen Prüfsummen abgleichen, die auf der Registerkarte \\textbf{Signaturen} generiert wurden. Wenn Sie zum Beispiel App Manager
+\nvon Github, dem Telegram Channel oder dem Repo von IzzyOnDroid heruntergeladen haben, können Sie überprüfen, ob die App tatsächlich von mir freigegeben wurde, indem Sie einfach
+\ndie folgende \\textit{SHA256}-Prüfsumme mit der in dieser Registerkarte angezeigten vergleichen:</string>
+    <string name="pages$app-details-page$other-tabs">Andere Registerkarten listen die Komponenten des Android-Manifests auf, z. B. Funktionen, Konfigurationen, gemeinsam genutzte Bibliotheken und Signaturen. Eine
+\nvollständige Beschreibung dieser Registerkarten wird in Kürze verfügbar sein.</string>
+    <string name="pages$one-click-ops-page$$section-title">1-Klick-Ops Seite</string>
+    <string name="pages$one-click-ops-page$$block-unblock-trackers-title">Blockieren/Entsperren von Trackern</string>
+    <string name="pages$one-click-ops-page$$block-components-dots-title">Block Komponenten\\ Punkte</string>
+    <string name="pages$one-click-ops-page$$set-mode-for-app-ops-dots-title">Modus für App Ops einstellen\\ Punkte</string>
+    <string name="pages$one-click-ops-page$$1-click-back-up-title">Sichern</string>
+    <string name="pages$one-click-ops-page$set-mode-for-app-ops-dots">Diese Option kann verwendet werden, um bestimmte \\hyperref[ch:app-ops]{App-Operationen} aller oder ausgewählter Apps zu konfigurieren.
+\nSie können mehrere App-Op-Konstanten durch Leerzeichen getrennt einfügen.
+\nEs ist nicht immer möglich, im Voraus alle App-Op-Konstanten zu kennen, da sie von Gerät zu Gerät und von Betriebssystem zu Betriebssystem variieren.
+\nUm die gewünschte App-Op-Konstante zu finden, durchsuchen Sie die Registerkarte \\textit{App Ops} auf der Seite \\hyperref[sec:app-details-page]{App-Detailseite}.
+\nBei den Konstanten handelt es sich um ganze Zahlen, die in eckigen Klammern neben den einzelnen App-Op-Namen stehen.
+\nSie können auch die App-Op-Namen verwenden.
+\nSie müssen auch eine der \\hyperref[subsec:mode-constants]{Modi} auswählen, die auf die App-Ops angewandt werden sollen.
+\n
+\n\\begin{danger}{Vorsicht}
+\n Wenn Sie nicht gut über App Ops und die Folgen ihrer Blockierung informiert sind, sollten Sie diese Funktion vermeiden,
+\n da sie zu einer Bootschleife oder einem Softbrick führen kann und Sie möglicherweise einen Werksreset durchführen müssen, um Ihr OS\\@ nutzen zu können.
+\n\\end{danger}</string>
+    <string name="pages$app-details-page$app-ops">\\textbf{App Ops} steht für \\textbf{Application Operations}.
+\nSeit Android 4.3 wird \\textit{App Ops} vom Android-System zur Steuerung der meisten Anwendungsberechtigungen verwendet.
+\nJeder App-Operation ist eine eindeutige Nummer zugeordnet, die auf der Registerkarte App-Operationen in der ersten Klammer steht.
+\nSie haben auch einen privaten und optional einen öffentlichen Namen.
+\nEinige App Ops sind auch mit Textit{Zulassungen} verbunden.
+\nDie Gefährlichkeit einer App-Operation wird auf der Grundlage der zugehörigen Berechtigung und anderer Informationen wie
+\n\\textit{flags}, \\textit{Erlaubnisname}, \\textit{Erlaubnisbeschreibung}, \\textit{Paketname}, \\textit{Gruppe} werden
+\naus der zugehörigen \\hyperref[subsubsec:permissions]{Erlaubnis} übernommen.
+\nAndere Informationen können die folgenden sein:
+\n\\begin{itemize}
+\n \\item} \\textbf{Mode.} Er beschreibt den aktuellen Berechtigungsstatus, der \\textit{allow}, \\textit{deny} (eine
+\n eher falsche Bezeichnung, es bedeutet einfach Fehler), \\textit{ignore} (bedeutet eigentlich verweigern), \\textit{default} (abgeleitet aus
+\n einer Liste von Standardeinstellungen, die intern vom Hersteller festgelegt wurden), \\textit{foreground} (bei neueren Androiden bedeutet es, dass die App op
+\n nur verwendet werden kann, wenn die App im Vordergrund läuft), und einige benutzerdefinierte Modi, die von den Anbietern festgelegt werden (MIUI verwendet
+\n \\textit{ask}, zum Beispiel).
+\n
+\n \\item \\textbf{Duration.} Die Zeitspanne, in der diese App-Op verwendet wurde (es kann negative Dauern geben, deren 
+\n Anwendungsfälle mir derzeit nicht bekannt sind).
+\n
+\n \\item \\textbf{Accept Time.} Das letzte Mal, dass die App Op akzeptiert wurde.
+\n
+\n \\item \\textbf{Reject Time.} Letztes Mal, als die App-Operation abgelehnt wurde.
+\n\\end{itemize}
+\n
+\n\\begin{tip}{Info}
+\n Der Inhalt dieser Registerkarte ist für No-Root-Benutzer sichtbar, wenn \\texttt{android.permission.GET\\_APP\\_OPS\\_STATS} über ADB\\@ gewährt wird.
+\n\\end{tip}
+\n
+\nNeben jeder App-Operation befindet sich eine Schaltfläche, mit der die App-Operation zugelassen oder verweigert (ignoriert) werden kann.
+\nWenn Sie andere für Ihr Gerät verfügbare Modi einstellen möchten, klicken Sie einfach lange auf ein Element.
+\nWenn Sie zusätzliche App-Ops einstellen müssen, die nicht auf der Registerkarte aufgeführt sind, verwenden Sie die Option \\textit{Set custom app op} im Menü.
+\nSie können Ihre Änderungen auch mit der Option \\textit{Zurücksetzen auf Standard} zurücksetzen oder alle gefährlichen App-OPs mit der 
+\nentsprechenden Option im Menü.
+\nSie können sie auch in aufsteigender Reihenfolge nach App-Op-Namen und den zugehörigen eindeutigen Nummern (oder Werten) sortieren.
+\nSie können auch die verweigerten App-Ops zuerst auflisten, indem Sie die entsprechende Sortieroption verwenden.
+\n
+\n\\Beginn{Warnung}{Warnung}
+\n Die Verweigerung einer App-Op kann zu Fehlverhalten der App führen.
+\n Verwenden Sie die Option \\textit{reset to default}, wenn dies der Fall ist.
+\n Aufgrund der Art, wie App-Ops funktionieren, kann es einige Zeit dauern, bis das System sie anwendet.
+\n\\end{warning}
+\n
+\n\\seealsoinline{\\hyperref[ch:app-ops]{Anhang: App Ops}}</string>
+    <string name="pages$app-details-page$permissions">\\textbf{Berechtigungen} sind normalerweise benutzerdefinierte Berechtigungen, die von der Anwendung selbst festgelegt werden. Es kann 
+\nauch reguläre Berechtigungen enthalten, meist in alten Anwendungen. Hier ist eine vollständige Beschreibung der einzelnen Elemente, die dort angezeigt werden:
+\n\\begin{itemize}
+\n \\item \\textbf{Name.} Jede Berechtigung hat einen eindeutigen Namen wie \\texttt{android.permission.INTERNET}, aber mehrere Anwendungen
+\n können die Berechtigung anfordern.
+\n
+\n \\item \\textbf{Icon.} Jede Berechtigung kann ein eigenes Symbol haben. Die anderen Berechtigungsregisterkarten haben kein Symbol, weil
+\n sie kein Symbol im App-Manifest enthalten.
+\n
+\n \\item \\textbf{Description.} Dieses optionale Feld beschreibt die Berechtigung. Wenn der Berechtigung keine Beschreibung zugeordnet ist
+\n gibt, wird das Feld nicht angezeigt.
+\n
+\n \\item \\textbf{Flags.} (Verwendet das Flaggensymbol oder den Namen \\textbf{Schutzstufe}) Hier werden verschiedene Berechtigungsflags beschrieben 
+\n wie \\textit{normal}, \\textit{Entwicklung}, \\textit{gefährlich}, \\textit{instant}, \\textit{gewährt}, \\textit{widerrufen},
+\n \\textit{Signatur}, \\textit{privilegiert}, usw.
+\n
+\n \\item \\textbf{Paketname.} Bezeichnet den mit der Berechtigung verbundenen Paketnamen, d. h. das Paket, das die
+\n die Berechtigung definiert.
+\n
+\n \\Eintrag \\textbf{Gruppe.} Der Gruppenname, der mit der Berechtigung verbunden ist (falls vorhanden). Neuere Androiden verwenden anscheinend keine
+\n Gruppennamen zu verwenden, weshalb Sie normalerweise \\texttt{android.permission-group.UNDEFINED} oder gar keinen Gruppennamen sehen.
+\n\\end{itemize}</string>
+    <string name="pages$app-details-page$signatures-tab_2">Dort werden drei Arten von Prüfsummen angezeigt: \\textit{MD5}, \\textit{SHA1} und \\textit{SHA256}.
+\n
+\n\\begin{danger}{Vorsicht}
+\n Es wird empfohlen, die Signierinformationen nur mit \\textit{SHA256}-Prüfsummen oder mit allen drei Prüfsummen zu überprüfen. VERLASSEN SIE SICH NICHT
+\n nur auf \\textit{MD5} oder \\textit{SHA1} Prüfsummen, da diese bekanntermaßen die gleichen Ergebnisse für mehrere
+\n Zertifikate erzeugen.
+\n\\end{danger}</string>
+    <string name="pages$one-click-ops-page$block-unblock-trackers">Mit dieser Option können Sie die Werbe-/Tracker-Komponenten von den installierten Apps blockieren oder freigeben.
+\nNachdem Sie auf diese Option geklickt haben, werden Sie gefragt, ob AM Tracker von allen Apps oder nur von den Benutzer-Apps auflisten soll.
+\nNeulinge sollten es vermeiden, Tracker aus den System-Apps zu blockieren, um Konsequenzen zu vermeiden.
+\nDanach wird ein Dialogfeld mit mehreren Auswahlmöglichkeiten angezeigt, in dem Sie die Apps, die Sie von diesem Vorgang ausschließen möchten, abwählen können.
+\nWenn Sie auf \\textit{Blocken} oder \\textit{Freigeben} klicken, werden die Änderungen sofort übernommen.
+\n
+\n\\begin{warning}{Hinweis}
+\n Bestimmte Anwendungen funktionieren nach der Anwendung der Sperrung möglicherweise nicht mehr wie erwartet.
+\n Wenn dies der Fall ist, entfernen Sie die Sperrregeln auf einmal oder nacheinander in den Komponenten-Registern der entsprechenden \\hyperref[sec:app-details-page]{App-Detailseite}.
+\n\\end{warning}
+\n
+\n\\begin{amseealso}
+\n \\item \\hyperref[subsec:faq:how-to-unblock-tracker-components]{Wie hebt man die Blockierung von Tracker-Komponenten auf, die mit 1-Click Ops oder Batch Ops blockiert wurden\?}
+\n \\item \\hyperref[par:appdetails:blocking-trackers]{App-Detailseite: Blocking Trackers}
+\n\\end{amseealso}</string>
+    <string name="pages$one-click-ops-page$block-components-dots">Diese Option kann verwendet werden, um bestimmte App-Komponenten zu blockieren, die durch die Signaturen gekennzeichnet sind.
+\nDie App-Signatur ist der vollständige Name oder Teilname der Komponenten.
+\nAus Sicherheitsgründen wird empfohlen, am Ende jedes Teilsignaturnamens ein \\texttt{.} (Punkt) am Ende jedes Teilnamens der Signatur hinzuzufügen, da der hier verwendete Algorithmus alle übereinstimmenden Komponenten auf gierige Weise auswählt.
+\nSie können mehr als eine Signatur einfügen; in diesem Fall müssen alle Signaturen durch Leerzeichen getrennt werden.
+\nÄhnlich wie bei der obigen Option gibt es auch eine Option zur Anwendung der Sperrung auf Systemanwendungen.
+\n
+\n\\begin{danger}{Vorsicht}
+\n Wenn Sie sich der Folgen des Blockierens von Anwendungskomponenten nach Signatur(en) nicht bewusst sind, sollten Sie diese
+\n Einstellung vermeiden, da sie zu einer Bootschleife oder einem Softbrick führen kann und Sie möglicherweise einen Werksreset durchführen müssen, um Ihr OS\\@ nutzen zu können.
+\n\\end{danger}</string>
+    <string name="pages$one-click-ops-page$back-up">1-Klick-Optionen für Backups.
+\nAls Vorsichtsmaßnahme werden die betroffenen Sicherungen aufgelistet, bevor ein Vorgang durchgeführt wird.
+\n
+\n\\paragraph{Alle Anwendungen sichern.} Sichern Sie alle installierten Anwendungen.
+\n
+\n\\paragraph{Vorhandene Sicherungen rückgängig machen.} Sichern Sie alle installierten Anwendungen, für die bereits ein Backup vorhanden ist.
+\n
+\n\\paragraph{Sichern Sie Anwendungen ohne Backups.} Sichern Sie alle installierten Anwendungen ohne vorheriges Backup.
+\n
+\n\\paragraph{Backups überprüfen und wiederherstellen.} Überprüfen Sie die kürzlich erstellten Backups der installierten Anwendungen und wiederholen Sie das Backup, falls erforderlich.
+\n
+\n\\paragraph{Sichern Sie Anwendungen mit Änderungen.} Wenn sich eine Anwendung seit dem letzten Backup geändert hat, führen Sie ein Redo-Backup für diese Anwendung durch.
+\nDabei wird eine Reihe von Indizes überprüft, darunter die App-Version, das Datum der letzten Aktualisierung, das Datum des letzten Starts, die Integrität und die Datei-Hashes.
+\nDie Hashes der Verzeichnisse werden während des Backups erfasst und in einer Datenbank gespeichert.
+\nBei der Ausführung dieses Vorgangs werden neue Hashes erstellt und mit den in der Datenbank gespeicherten verglichen.</string>
 </resources>
