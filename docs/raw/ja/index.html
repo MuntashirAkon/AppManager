@@ -90,7 +90,7 @@ Ops</a></span><li><span><span class=toc-section-number>7.3</span> <a href=#sec:a
 Constants</a></span><li><span><span class=toc-section-number>7.3.3</span> <a href=#subsec:package-ops id=toc:subsec:package-ops>PackageOps</a></span><li><span><span class=toc-section-number>7.3.4</span> <a href=#subsec:opentry id=toc:subsec:opentry>OpEntry</a></span><li><span><span class=toc-section-number>7.3.5</span> <a href=#subsec:usage id=toc:subsec:usage>Usage</a></span></ul><li><span><span class=toc-section-number>7.4</span> <a href=#sec:appopsservice id=toc:sec:appopsservice>AppOpsService</a></span><li><span><span class=toc-section-number>7.5</span> <a href=#sec:appops-xml id=toc:sec:appops-xml>appops.xml</a></span><li><span><span class=toc-section-number>7.6</span> <a href=#sec:appops-cli id=toc:sec:appops-cli>Command Line
 Interface</a></span></ul></ul></nav><div class=titlingpage><div class=center><div class=announcement><p>We’re running a <strong>funding campaign</strong> for App Manager for
 a limited period. <a href=https://opencollective.com/app-manager#category-ABOUT>learn
-more...</a></div><p><img src=../images/icon.png style=width:1in alt=image><p><strong><span class=smallcaps>App Manager</span></strong><p><strong>ユーザーマニュアル</strong><p><em>v3.0.0-alpha01</em><p>3 March 2022<p>Copyright © 2020–2022 Muntashir Al-Islam<blockquote><p>“賢明に、そして、ゆっくりと。速く走る者たちは、つまずきますからな”
+more...</a></div><p><img src=../images/icon.png style=width:1in alt=image><p><strong><span class=smallcaps>App Manager</span></strong><p><strong>ユーザーマニュアル</strong><p><em>v3.0.0-alpha01</em><p>14 March 2022<p>Copyright © 2020–2022 Muntashir Al-Islam<blockquote><p>“賢明に、そして、ゆっくりと。速く走る者たちは、つまずきますからな”
 <span>— 修道士ロレンス, <em>ロメオとジュリエット</em></span></blockquote></div></div><section id=ch:introduction class=level1 data-number=1><h1 data-number=1><span class=header-section-number>1</span> <a href=#toc:ch:introduction>はじめに</a><a href=#ch:introduction class=anchor aria-hidden=true></a></h1><p>App Manager は、Android 用の高度なパッケージマネージャです。
 数え切れないほどの機能を備えているため、ユーザーを支援するためのユーザーマニュアルが必要です。
 このドキュメントは、App Manager
@@ -274,122 +274,42 @@ Managerからデータを消去すると、アプリ内に保存されている�
 このボタンをクリックすると、アプリのマニフェストファイルが別ページで表示されます。マニフェストファイルは、対応するトグルボタン
 (右上)
 を使用してラップまたはアンラップすることができ、保存ボタンを使用して共有ストレージに保存することができます。<li><p><strong>スキャナー</strong>
-このボタンをクリックすると、アプリのトラッカーとライブラリの情報が表示されます。まず、アプリをスキャンして、クラスのリストを抽出し、クラス一覧と複数のシグネチャをマッチングさせます。その後、スキャン結果が表示されます。<br><div class=seealso-inline><p><em>See also: <span><a href=#sec:scanner-page>スキャナーページ</a></span></em></div><li><p><strong>共有設定</strong> Clicking on this button displays a list
-of shared preferences used by the app. Clicking on a preference item in
-the list opens the <a href=#sec:shared-preferences-editor-page>Shared
-Preferences Editor page</a>. This option is only visible to the root
-users.
+このボタンをクリックすると、アプリのトラッカーとライブラリの情報が表示されます。まず、アプリをスキャンして、クラスのリストを抽出し、クラス一覧と複数のシグネチャをマッチングさせます。その後、スキャン結果が表示されます。<br><div class=seealso-inline><p><em>See also: <span><a href=#sec:scanner-page>スキャナーページ</a></span></em></div><li><p><strong>共有設定</strong>
 このボタンをクリックすると、アプリで使用されている共有環境設定の一覧が表示されます。リスト内の設定項目をクリックすると、<a href=#sec:shared-preferences-editor-page>共有設定エディター</a>が表示されます。このオプションは、Rootユーザーのみに表示されます。<li><p><strong>データベース</strong>
 このボタンをクリックすると、アプリが使用しているデータベースの一覧が表示されます。これはもっと改良が必要で、将来的にはデータベース・エディターが追加されるかもしれません。このオプションは、Rootユーザーのみに表示されます。<li><p><strong>F-Droid</strong>
 任意の<em>F-Droid</em>クライアントでアプリのページを開きます。<li><p><strong>ストア</strong> <em>Aurora
 Store</em>でアプリのページを開きます。このオプションは、<em>Aurora
-Store</em>がインストールされている場合のみ表示されます。</ul></section><section id=subsubsec:app-info-options-menu class=level4 data-number=2.2.2.3><h4 data-number=2.2.2.3><span class=header-section-number>2.2.2.3</span> オプションメニュー<a href=#subsubsec:app-info-options-menu class=anchor aria-hidden=true></a></h4><p>ページの右上にあるのが、オプションメニューです。そこにあるオプションの完全な説明は以下の通りです:<ul class=incremental><li><p><strong>共有</strong> Share button can be used to share the APK
-file or <em>APKS</em> file (if the app is has multiple splits) can be
-imported into <a href=https://github.com/Aefyr/SAI>SAI</a>. You can
-share it with your favourite file manager to save the file in your
-shared storage.<li><p><strong>更新</strong> Refreshes the App Info tab.<li><p><strong>設定画面で開く</strong> Opens the app in Android
-Settings.<li><p><strong>バックアップ/復元</strong> Opens the backup/restore
-dialog.<li><p><strong>ブロッキングルールをエクスポート</strong> Export rules
-configured for this app within App Manager.<li><p><strong>Termuxで開く</strong> Opens the app in Termux. This
-actually runs <code>su - user_id</code> where <code>user_id</code>
-denotes the app’s kernel user ID (described in the <a href=#subsubsec:app-info-general-information>General Information
-section</a>). This option is only visible to the root users. See §<a href=#subsubsec:config-termux data-reference-type=ref data-reference=subsubsec:config-termux>2.2.2.4</a> to learn how to
-configure Termux to run commands from third-party applications.<li><p><strong>Termuxで実行</strong> Open the app using
-<code>run-as package_name</code> in Termux. This is only applicable for
-the debuggable apps and works for both root and ADB users. See §<a href=#subsubsec:config-termux data-reference-type=ref data-reference=subsubsec:config-termux>2.2.2.4</a> to learn how to
-configure Termux to run commands from third-party applications.<li><p><strong>アイコンを抽出</strong> Extract and save the app’s icon
-in your desired location.</ul></section><section id=subsubsec:config-termux class=level4 data-number=2.2.2.4><h4 data-number=2.2.2.4><span class=header-section-number>2.2.2.4</span> Termux<a href=#subsubsec:config-termux class=anchor aria-hidden=true></a></h4><p>By default, Termux does not allow running commands from third-party
-applications. To enable this option, you have to add
-<code>allow-external-apps=true</code> in
-<code>~/.termux/termux.properties</code>, and make sure that you are
-running Termux v0.96 or later.<div class="amalert tip"><p><strong><em>Info.</em></strong><p>Enabling this option does not weaken your Termux’ security. The
-third-party apps still need to request the user to allow running
-arbitrary commands in Termux like any other dangerous permissions.</div></section></section><section id=subsec:component-tabs class=level3 data-number=2.2.3><h3 data-number=2.2.3><span class=header-section-number>2.2.3</span>
-<a href=#toc:subsec:component-tabs>コンポーネントタブ</a><a href=#subsec:component-tabs class=anchor aria-hidden=true></a></h3><p><strong>Activities</strong>, <strong>Services</strong>,
-<strong>Receivers</strong> (originally <em>broadcast receivers</em>) and
-<strong>Providers</strong> (originally <em>Content Providers</em>) are
-together called the application components. This is because they share
-similar features in many ways. For example, they all have a
-<em>name</em> and a <em>label</em>. Application components are the
-building blocks of any application, and most of these have to declared
-in the application manifest. Application manifest is a file where
-application specific metadata are stored. The Android operating system
-learns what to do with an application by reading the metadata. Colours
-used in these tabs are explained in §<a href=#subsec:app-details-colour-codes data-reference-type=ref data-reference=subsec:app-details-colour-codes>2.2.1</a>. You also
-have the ability to sort the list of components to display blocked or
-tracker components on top of the list using the <strong>Sort</strong>
-option in the overflow menu.<section id=subsubsec:activities class=level4 data-number=2.2.3.1><h4 data-number=2.2.3.1><span class=header-section-number>2.2.3.1</span> アクティビティ<a href=#subsubsec:activities class=anchor aria-hidden=true></a></h4><p><strong>Activities</strong> are windows or pages that you can browse
-(for instance <em>Main page</em> and <em>App Details page</em> are two
-separate activities). In other words, an activity is a user interface
-(UI) component. Each activity can have multiple UI components known as
-<em>widgets</em> or <em>fragments</em>, and similarly, each of these
-latter components can have multiple of them nested or on top of each
-other. But an activity is the <em>master</em> component: There cannot be
-two nested activities. An application author can also choose to open
-external files within an activity using a method called <em>intent
-filters</em>. When you try to open a file using your file manager,
-either your file manager or system scans for intent filters to decide
-which activities can open that particular file and offers you to open
-the file with these activities (therefore, it is nothing to do with the
-application itself). There are other intent filters as well.<p>Activities which are <em>exportable</em> can be usually opened by any
-third-party apps (some activities require permissions, if that is the
-case, only an application having those permissions can open them). In
-the <em>Activities</em> tab, the name of the activity (on top of each
-list item) is actually a button. It is enabled for the
-<em>exportable</em> activities and disabled for others (root users can
-open any activities). You can click on the button to open the activity
-directly in App Manager. You can also open the Interceptor page by long
-clicking on an activity. Currently, it only works for
-<em>exportable</em> activities.<div class="amalert warning"><p><strong><em>Notice.</em></strong><p>If you are not able to open any activity, chances are it has certain
-dependencies which are not met, e.g. you cannot open <em>App Details
-Activity</em> because it requires that you at least supply a package
-name. These dependencies cannot always be inferred programmatically.
-Therefore, you cannot open them using App Manager.</div><p>You can also create shortcut for these <em>exportable</em> activities
-(using the dedicated button), and if you want, you can edit the shortcut
-as well using the <em>Edit Shortcut</em> button.<div class="amalert danger"><p><strong><em>Caution.</em></strong><p>If you uninstall App Manager, all shortcuts created by App Manager
-will be lost.</div></section><section id=subsubsec:details:servcies class=level4 data-number=2.2.3.2><h4 data-number=2.2.3.2><span class=header-section-number>2.2.3.2</span> サービス<a href=#subsubsec:details:servcies class=anchor aria-hidden=true></a></h4><p>Unlike <a href=#subsubsec:activities>activities</a> which users can
-see, <strong>Services</strong> handle background tasks. If you’re, for
-example, downloading a video from the internet using your phone’s
-Internet browser, the Internet browser is using a foreground service to
-download the content.<p>When you close an activity, it usually gets destroyed immediately
-(depending on many factors such as how much free memory your phone has).
-But services can be run for indefinite periods if desired. If more
-services are running in background, your phone will get slower due to
-shortage of memory and/or processing power, and your phone’s battery can
-be drained more quickly. Newer Android versions have a battery
-optimisation feature enabled by default for all apps. With this feature
-enabled, the system can randomly terminate any service.<p>By the way, both activities and services are run in the same <a href=https://stackoverflow.com/questions/7597742>looper</a> called the
-main looper, which means the services are not really run in the
-background. It’s the application authors job to ensure that. How do
-application communicate with services? They use <a href=#subsubsec:app-details-receivers>broadcast receivers</a>.</section><section id=subsubsec:app-details-receivers class=level4 data-number=2.2.3.3><h4 data-number=2.2.3.3><span class=header-section-number>2.2.3.3</span> レシーバ<a href=#subsubsec:app-details-receivers class=anchor aria-hidden=true></a></h4><p><strong>Receivers</strong> (also called <em>broadcast receivers</em>)
-can be used to trigger execution of certain tasks for certain events.
-These components are called broadcast receivers because they are
-executed as soon as a broadcast message is received. These broadcast
-messages are sent using a method called intent. Intent is a special
-feature for Android which can be used to open applications, activities,
-services and send broadcast messages. Therefore, like <a href=#subsubsec:activities>activities</a>, broadcast receivers use
-intent filters to receive only the desired broadcast message(s).
-Broadcast messages can be sent by either system or the application
-itself. When a broadcast message is sent, the corresponding receivers
-are awakened by the system so that they can execute tasks. For example,
-if you have low memory, your phone may freeze or experience lags for a
-moment after you enable mobile data or connect to the Wifi. Ever
-wondered why? This is because broadcast receivers that can receive
-‘android.net.conn.CONNECTIVITY_CHANGE‘ are awakened by the system as
-soon as you enable data connection. Since many apps use this intent
-filter, all of these apps are awakened almost immediately by the system
-which causes the freeze or lags. That being said, receivers can be used
-for inter-process communication (IPC), i.e., it helps you communicate
-between different apps (provided you have the necessary permissions) or
-even different components of a single application.</section><section id=appdetails:providers class=level4 data-number=2.2.3.4><h4 data-number=2.2.3.4><span class=header-section-number>2.2.3.4</span> プロバイダ<a href=#appdetails:providers class=anchor aria-hidden=true></a></h4><p><strong>Providers</strong> (also called <em>content providers</em>)
-are used for data management. For example, when you save an apk file or
-export rules in App Manager, it uses a content provider called
-‘androidx.core.content.FileProvider‘ to save the APK or export the
-rules. There are other content providers or even custom ones to manage
-various content-related tasks such as database management, tracking,
-searching, etc. Each content provider has a field called
-<em>Authority</em> which is unique to that particular application in the
-entire Android eco-system just like the package name.</section><section id=root化された端末向けの追加機能 class=level4 data-number=2.2.3.5><h4 data-number=2.2.3.5><span class=header-section-number>2.2.3.5</span>
+Store</em>がインストールされている場合のみ表示されます。</ul></section><section id=subsubsec:app-info-options-menu class=level4 data-number=2.2.2.3><h4 data-number=2.2.2.3><span class=header-section-number>2.2.2.3</span> オプションメニュー<a href=#subsubsec:app-info-options-menu class=anchor aria-hidden=true></a></h4><p>ページの右上にあるのが、オプションメニューです。そこにあるオプションとその説明は以下の通りです:<ul class=incremental><li><p><strong>共有</strong>
+共有ボタンでAPKファイルを共有したり、<em>APKSファイル</em>（アプリが複数分割されている場合）を<a href=https://github.com/Aefyr/SAI>SAI</a>にインポートすることができます。任意のファイルマネージャーから共有し、ストレージにファイルを保存することができます。<li><p><strong>更新</strong> アプリ情報タブの内容を更新します。<li><p><strong>設定画面で開く</strong>
+Android設定画面でアプリの詳細画面を開きます。<li><p><strong>バックアップ/復元</strong>
+バックアップ・復元を行うダイアログを開きます。<li><p><strong>ブロッキングルールをエクスポート</strong> App
+Managerでこのアプリに対して設定されたルールをエクスポートします。<li><p><strong>Termuxで開く</strong>
+Termuxでアプリを開きます。これは実際には <code>su - user_id</code>
+を実行します。ここで <code>user_id</code>
+はアプリのカーネルユーザーID（<a href=#subsubsec:app-info-general-information>基本情報セクション</a>で説明されています）を表します。このオプションはRootユーザーにのみ表示されます。サードパーティアプリケーションからコマンドを実行するように
+Termux を設定する方法については §<a href=#subsubsec:config-termux data-reference-type=ref data-reference=subsubsec:config-termux>2.2.2.4</a>
+を参照してください。<li><p><strong>Termuxで実行</strong>
+Termuxで<code>run-as package_name</code>を使用してアプリを開きます。これはデバッグ可能アプリにのみ適用され、Root及びADBの両方で動作します。サードパーティアプリケーションからコマンドを実行するように
+Termux を設定する方法については §<a href=#subsubsec:config-termux data-reference-type=ref data-reference=subsubsec:config-termux>2.2.2.4</a>
+を参照してください。<li><p><strong>アイコンを抽出</strong>
+アプリのアイコンを抽出して任意の場所に保存します。</ul></section><section id=subsubsec:config-termux class=level4 data-number=2.2.2.4><h4 data-number=2.2.2.4><span class=header-section-number>2.2.2.4</span> Termux<a href=#subsubsec:config-termux class=anchor aria-hidden=true></a></h4><p>デフォルトでは、Termuxはサードパーティアプリケーションからのコマンドの実行が許可されていません。
+このオプションを有効にするには、<code>~/.termux/termux.properties</code>
+に <code>allow-external-apps=true</code> を追加し、 Termux v0.96
+以降を実行していることを確認する必要があります。<div class="amalert tip"><p><strong><em>Info.</em></strong><p>このオプションを有効にしても、Termuxのセキュリティは低下しません。
+サードパーティアプリは、他の権限と同様に、Termuxで任意のコマンドを実行できるようにユーザーに要求する必要があります。</div></section></section><section id=subsec:component-tabs class=level3 data-number=2.2.3><h3 data-number=2.2.3><span class=header-section-number>2.2.3</span>
+<a href=#toc:subsec:component-tabs>コンポーネントタブ</a><a href=#subsec:component-tabs class=anchor aria-hidden=true></a></h3><p><strong>アクティビティ</strong>、<strong>サービス</strong>、<strong>レシーバ</strong>（<em>ブロードキャストレシーバ</em>）、<strong>プロバイダ</strong>（<em>コンテンツプロバイダ</em>）を合わせてアプリケーションコンポーネントと呼びます。
+それらは多くの点で同様の機能を共有しているからです。例えば、それらはすべて<em>名前</em>と<em>ラベル</em>を持っています。
+コンポーネントは、あらゆるアプリケーションの構成要素であり、そのほとんどはアプリケーションマニフェストで宣言されなければなりません。
+アプリケーションマニフェストは、アプリケーション固有のメタデータが格納されるファイルです。
+Androidシステムは、メタデータを読み取ることで、アプリケーションで何を行うかを学習します。
+これらのタブで使用される色については、§<a href=#subsec:app-details-colour-codes data-reference-type=ref data-reference=subsec:app-details-colour-codes>2.2.1</a>で説明しています。
+また、オーバーフローメニューのソートオプションを使用して、ブロックされたコンポーネントやトラッカーコンポーネントをリストの上位に表示するよう、
+コンポーネントのリストを<strong>並び替え</strong>る機能があります。<section id=subsubsec:activities class=level4 data-number=2.2.3.1><h4 data-number=2.2.3.1><span class=header-section-number>2.2.3.1</span> アクティビティ<a href=#subsubsec:activities class=anchor aria-hidden=true></a></h4><p><strong>アクティビティ</strong>は、アプリ内の閲覧できるウィンドウやページです（例えば、<em>メインページ</em>と<em>アプリ詳細ページ</em>は別のアクティビティです）。つまり、アクティビティは、ユーザーインターフェース（UI）のコンポーネントです。各アクティビティは、<em>ウィジェット</em>や<em>フラグメント</em>と呼ばれる複数のUIコンポーネントを持つことができ、同様に、後者のコンポーネントも、それぞれ複数のものを入れ子にしたり、オーバーレイすることができます。しかし、アクティビティはマスターコンポーネントです。アクティビティを2つネストさせることはできません。アプリケーションの開発者は、<em>インテントフィルター</em>と呼ばれる方法を使用して、アクティビティ内で外部ファイルを開くことを選択することもできます。ファイルマネージャーを使ってファイルを開こうとすると、ファイルマネージャーかシステムがインテントフィルターをスキャンして、どのアクティビティーがその特定のファイルを開けるかを決め、これらのアクティビティーでファイルを開けるように提案します。（したがって、アプリケーション自体には何の関係もありません）<p><em>エクスポート可能</em>なアクティビティは、通常、サードパーティアプリで開くことができます（一部のアクティビティには権限が必要なため、その場合はその権限を持つアプリケーションのみが開くことができます）。<em>アクティビティ</em>タブでは、アクティビティ名（各リスト項目の上部）がボタンとなっています。これは、<em>エクスポート可能</em>なアクティビティでは有効で、それ以外では無効になっています（Rootユーザーはどのアクティビティでも開くことができます）。ボタンをクリックすると、App
+Managerでアクティビティを直接開くことができます。また、アクティビティを長押しすることで、インタセプターのページを開くことができます。現在は、<em>エクスポート可能</em>なアクティビティに対してのみ機能します。<div class="amalert warning"><p><strong><em>Notice.</em></strong><p>例えば、<em>アプリ詳細アクティビティ</em>は、少なくともパッケージ名を提供する必要があるため、開くことができません。これらの依存関係は、常にプログラムで推論することはできません。したがって、App
+Managerを使用してそれらを開くことはできません。</div><p>また、これらのエクスポート可能なアクティビティのショートカットを作成し（専用ボタンを使用）、必要であれば、ショートカットの編集ボタンでショートカットも編集することができます。<div class="amalert danger"><p><strong><em>Caution.</em></strong><p>App Managerをアンインストールすると、App
+Managerで作成したショートカットはすべて失われます。</div></section><section id=subsubsec:details:servcies class=level4 data-number=2.2.3.2><h4 data-number=2.2.3.2><span class=header-section-number>2.2.3.2</span> サービス<a href=#subsubsec:details:servcies class=anchor aria-hidden=true></a></h4><p>ユーザーが閲覧することができる<a href=#subsubsec:activities>アクティビティ</a>とは異なり、<strong>サービス</strong>はバックグラウンドタスクを処理します。
+例えば、スマートフォンのブラウザを使ってインターネットからファイルをダウンロードする場合、ブラウザはコンテンツをダウンロードするためにバックグラウンドサービスを使用しています。<p>アクティビティを終了すると、通常はすぐにメモリ上から破棄されます（端末の空きメモリの量など、多くの要因に依存します）。しかしサービスは、必要に応じて無期限に実行することができます。より多くのサービスがバックグラウンドで実行されている場合、メモリや処理能力が不足するため、携帯電話の動作が遅くなり、携帯電話のバッテリーがより速く消耗する可能性があります。新しいAndroidのバージョンでは、すべてのアプリでバッテリーの最適化機能がデフォルトで有効になっています。この機能を有効にすると、システムは任意のサービスをランダムに終了させることができます。<p>ところで、アクティビティもサービスもメイン<a href=https://stackoverflow.com/questions/7597742>ルーパー</a>と呼ばれる同じルーパーで実行されるため、サービスが本当にバックグラウンドで実行されているとは限りません。それを保証するのは、アプリケーションの開発者の仕事です。アプリケーションとサービスは<a href=#subsubsec:app-details-receivers>ブロードキャストレシーバー</a>を使って通信しています。</section><section id=subsubsec:app-details-receivers class=level4 data-number=2.2.3.3><h4 data-number=2.2.3.3><span class=header-section-number>2.2.3.3</span> レシーバ<a href=#subsubsec:app-details-receivers class=anchor aria-hidden=true></a></h4><p><strong>レシーバー</strong>（<em>ブロードキャストレシーバー</em>とも呼ばれる）は、特定のイベントに対して特定のタスクの実行を呼び出すために使用することができます。これらのコンポーネントは、ブロードキャストメッセージを受信するとすぐに実行されるため、ブロードキャストレシーバーと呼ばれます。これらのブロードキャストメッセージは、インテントと呼ばれるメソッドを使用して送信されます。インテントはAndroidの特別な機能で、アプリケーションやアクティビティ、サービスを開いたり、ブロードキャストメッセージを送信したりするために使われます。そのため、<a href=#subsubsec:activities>アクティビティ</a>と同様に、ブロードキャストレシーバもインテントフィルターを用いて、必要なブロードキャストメッセージのみを受信することができます。ブロードキャストメッセージは、システムまたはアプリケーション自体のいずれかによって送信することができます。ブロードキャストメッセージが送信されると、対応するレシーバーはシステムによって起動され、タスクを実行できるようになります。例えば、メモリが少ない場合、モバイルデータを有効にしたり、Wifiに接続した後に、端末がフリーズしたり、一瞬ラグが発生することがあります。なぜだか不思議に思ったことはありませんか？これは、「android.net.conn.CONNECTIVITY_CHANGE」を受信できるブロードキャストレシーバーが、データ接続を有効にすると同時に、システムによって起こされるからです。多くのアプリがこのインテントフィルタを使っているため、これらのアプリはすべて、システムによってほとんどすぐに起こされ、フリーズや遅延の原因になっています。要するに、レシーバはプロセス間通信（IPC）、つまり異なるアプリ間（必要な権限がある場合）、あるいは単一アプリケーションの異なるコンポーネント間の通信に使用できます。</section><section id=appdetails:providers class=level4 data-number=2.2.3.4><h4 data-number=2.2.3.4><span class=header-section-number>2.2.3.4</span> プロバイダ<a href=#appdetails:providers class=anchor aria-hidden=true></a></h4><p><strong>プロバイダ</strong>（<em>コンテンツプロバイダ</em>ともいう）は、アプリ内のデータ管理に使用されます。例えば、App
+ManagerでAPKファイルの保存やルールのエクスポートを行う場合、「androidx.core.content.FileProvider」というコンテンツプロバイダを使用します。データベース管理、トラッキング、検索など、様々なコンテンツ関連のタスクを管理するために、他のコンテンツプロバイダや、カスタムプロバイダーもあります。各コンテンツプロバイダは、パッケージ名と同様に、Androidエコシステム全体でその特定のアプリケーションに固有のAuthorityと呼ばれるフィールドを持っています。</section><section id=root化された端末向けの追加機能 class=level4 data-number=2.2.3.5><h4 data-number=2.2.3.5><span class=header-section-number>2.2.3.5</span>
 Root化された端末向けの追加機能<a href=#root化された端末向けの追加機能 class=anchor aria-hidden=true></a></h4><p>Unlike non-root users who are mostly spectators in these tabs, root
 users can perform various operations.<section id=コンポーネントをブロックする class=level5 data-number=2.2.3.5.1><h5 data-number=2.2.3.5.1><span class=header-section-number>2.2.3.5.1</span>
 コンポーネントをブロックする<a href=#コンポーネントをブロックする class=anchor aria-hidden=true></a></h5><p>On the right-most side of each component item, there is a “block”
