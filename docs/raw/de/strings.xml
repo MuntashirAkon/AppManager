@@ -720,7 +720,7 @@
 \naus der zugehörigen \\hyperref[subsubsec:permissions]{Erlaubnis} übernommen.
 \nAndere Informationen können die folgenden sein:
 \n\\begin{itemize}
-\n \\item} \\textbf{Mode.} Er beschreibt den aktuellen Berechtigungsstatus, der \\textit{allow}, \\textit{deny} (eine
+\n \\item \\textbf{Mode.} Er beschreibt den aktuellen Berechtigungsstatus, der \\textit{allow}, \\textit{deny} (eine
 \n eher falsche Bezeichnung, es bedeutet einfach Fehler), \\textit{ignore} (bedeutet eigentlich verweigern), \\textit{default} (abgeleitet aus
 \n einer Liste von Standardeinstellungen, die intern vom Hersteller festgelegt wurden), \\textit{foreground} (bei neueren Androiden bedeutet es, dass die App op
 \n nur verwendet werden kann, wenn die App im Vordergrund läuft), und einige benutzerdefinierte Modi, die von den Anbietern festgelegt werden (MIUI verwendet
@@ -746,7 +746,7 @@
 \nSie können sie auch in aufsteigender Reihenfolge nach App-Op-Namen und den zugehörigen eindeutigen Nummern (oder Werten) sortieren.
 \nSie können auch die verweigerten App-Ops zuerst auflisten, indem Sie die entsprechende Sortieroption verwenden.
 \n
-\n\\Beginn{Warnung}{Warnung}
+\n\\begin{warning}{Warnung}
 \n Die Verweigerung einer App-Op kann zu Fehlverhalten der App führen.
 \n Verwenden Sie die Option \\textit{reset to default}, wenn dies der Fall ist.
 \n Aufgrund der Art, wie App-Ops funktionieren, kann es einige Zeit dauern, bis das System sie anwendet.
