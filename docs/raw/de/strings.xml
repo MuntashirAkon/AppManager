@@ -822,4 +822,98 @@
 \nDabei wird eine Reihe von Indizes überprüft, darunter die App-Version, das Datum der letzten Aktualisierung, das Datum des letzten Starts, die Integrität und die Datei-Hashes.
 \nDie Hashes der Verzeichnisse werden während des Backups erfasst und in einer Datenbank gespeichert.
 \nBei der Ausführung dieses Vorgangs werden neue Hashes erstellt und mit den in der Datenbank gespeicherten verglichen.</string>
+    <string name="pages$one-click-ops-page$$1-click-restore-title">Wiederherstellen</string>
+    <string name="pages$profiles-page$options-menu">Auf dieser Seite gibt es zwei Optionsmenüs. Das Menü mit den drei Punkten oben rechts bietet zwei Optionen, nämlich
+\n\\textit{Voreinstellungen} und \\textit{Importieren}.
+\n\\begin{itemize}
+\n \\item \\textbf{Voreinstellungen} Die Option Voreinstellungen listet eine Reihe von integrierten Profilen auf, die als Ausgangspunkt verwendet werden können.
+\n Die Profile werden aus dem Projekt \\href{https://gitlab.com/W1nst0n/universal-android-debloater}{Universal
+\n Android Debloater} erzeugt.\\\\
+\n \\seealsoinline{\\hyperref[subsec:faq:what-are-bloatware]{FAQ: Was ist Bloatware und wie entfernt man sie\?}}
+\n
+\n \\item \\textbf{Importieren.} Diese Option kann verwendet werden, um ein bestehendes Profil zu importieren.
+\n\\end{itemize}
+\n
+\nEin weiteres Optionsmenü erscheint, wenn Sie lange auf ein beliebiges Profil klicken. Es enthält Optionen wie.
+\n\\begin{itemize}
+\n \\item \\textbf{Jetzt anwenden}. Diese Option kann verwendet werden, um das Profil direkt anzuwenden. Wenn Sie darauf klicken, wird ein Dialog
+\n angezeigt, in dem Sie einen \\hyperref[subsubsec:profile-state]{Profilzustand} auswählen können. Wenn Sie eine der Optionen auswählen,
+\n wird das Profil sofort angewendet.
+\n \\item \\textbf {Löschen.} Wenn Sie auf Löschen klicken, wird das Profil sofort und ohne Warnung entfernt.
+\n \\item \\textbf{Duplizieren.} Diese Option kann verwendet werden, um das Profil zu duplizieren. Wenn Sie darauf klicken, wird ein Eingabefeld
+\n angezeigt, in dem Sie den Namen des Profils eingeben können. Wenn Sie auf ``OK\'\' klicken, wird ein neues Profil erstellt und die
+\n \\hyperref[sec:profile-page]{Profilseite} wird geladen. Das Profil wird nicht gespeichert, bis Sie es manuell speichern.
+\n \\item \\textbf{Exportieren.} Exportiert das Profil auf einen externen Speicher. Auf diese Weise exportierte Profile können unter Verwendung
+\n der Option \\textit{Import} im Drei-Punkte-Menü importiert werden.
+\n \\item \\textbf{Verknüpfung erstellen.} Diese Option kann verwendet werden, um eine Verknüpfung für das Profil zu erstellen. Wenn Sie darauf klicken, werden
+\n zwei Optionen angezeigt: \\textit{Einfach} und \\textit{Erweitert}. Mit der letzteren Option können Sie den Profilstatus festlegen
+\n bevor Sie es anwenden, während die erste Option den Standardstatus verwendet, der beim letzten Speichern des Profils konfiguriert wurde.
+\n\\end{itemize}</string>
+    <string name="pages$profile-page$$section-title">Seite Profil</string>
+    <string name="pages$profile-page$$options-menu-title">Menü Optionen</string>
+    <string name="pages$profile-page$$apps-tab-title">Registerkarte Anwendungen</string>
+    <string name="pages$profile-page$$configurations-tab-title">Registerkarte Konfigurationen</string>
+    <string name="pages$profile-page$$comment-title">Anmerkung</string>
+    <string name="pages$profile-page$$state-title">Zustand</string>
+    <string name="pages$profile-page$$users-title">Nutzer</string>
+    <string name="pages$profile-page$$components-title">Komponenten</string>
+    <string name="pages$profile-page$$app-ops-title">Anwendungsoperationen</string>
+    <string name="pages$profile-page$$permissions-title">Berechtigungen</string>
+    <string name="pages$profile-page$$backup-restore-title">Sichern/Wiederherstellen</string>
+    <string name="pages$profile-page$$export-blocking-rules-title">Regeln für die Exportsperre</string>
+    <string name="pages$profile-page$$disable-title">Deaktivieren</string>
+    <string name="pages$profile-page$$force-stop-title">Zwangsstopp</string>
+    <string name="pages$profile-page$$clear-cache-title">Zwischenspeicher löschen</string>
+    <string name="pages$profile-page$$clear-data-title">Daten löschen</string>
+    <string name="pages$profile-page$$block-trackers-title">Tracker blockieren</string>
+    <string name="pages$profile-page$$save-apk-title">APK speichern</string>
+    <string name="pages$profile-page$configurations-tab">Auf der Registerkarte Konfigurationen können Sie die ausgewählten Pakete konfigurieren. Die Beschreibung der einzelnen Elemente ist unten angegeben:</string>
+    <string name="pages$profile-page$comment">Dies ist der Text, der auf der Seite \\hyperref[sec:profiles-page]{Profile} angezeigt wird. Wenn er nicht gesetzt ist, werden stattdessen die aktuellen
+\nKonfigurationen stattdessen angezeigt.</string>
+    <string name="pages$profiles-page$$options-menu-title">Menü Optionen</string>
+    <string name="pages$one-click-ops-page$intro">Diese Seite wird angezeigt, nachdem Sie auf die Option \\hyperref[subsubsec:main:1-click-ops]{1-Click Ops} im
+\n\\hyperref[subsec:main-page-options-menu]{Hauptmenü}.</string>
+    <string name="pages$profiles-page$$section-title">Seite Profile</string>
+    <string name="pages$one-click-ops-page$restore">1-Klick-Optionen für die Wiederherstellung.
+\nAls Vorsichtsmaßnahme werden die betroffenen Sicherungen aufgelistet, bevor eine Operation durchgeführt wird.
+\n
+\n\\paragraph{Wiederherstellen aller Anwendungen} Wiederherstellen des \\textit{Basis-Backups} aller gesicherten Anwendungen.
+\n
+\n\\paragraph{Wiederherstellen von nicht installierten Anwendungen}. Wiederherstellen des \\textit{Basis-Backup} aller gesicherten Anwendungen, die derzeit nicht installiert sind.
+\n
+\n\\paragraph{Wiederherstellen der letzten Backups}. Wiederherstellen des \\textit{Basis-Backup} von bereits installierten Anwendungen, deren Versionscodes höher sind als die der installierten Versionen.</string>
+    <string name="pages$profiles-page$intro">Die Seite Profile kann über das Optionsmenü auf der Hauptseite aufgerufen werden. Sie zeigt eine Liste der konfigurierten Profile an.
+\nProfile können über die Schaltfläche {Plus} in der rechten unteren Ecke hinzugefügt oder über die Importoption importiert werden,
+\naus einer der Voreinstellungen erstellt oder sogar aus einem bereits vorhandenen Profil dupliziert werden. Wenn Sie auf ein beliebiges Profil klicken, öffnet sich das Fenster
+\n\\hyperref[sec:profile-page]{Profilseite}.</string>
+    <string name="pages$profile-page$state">Gibt an, wie sich bestimmte konfigurierte Optionen verhalten werden. Wenn zum Beispiel die Option \\textit{Deaktivieren} aktiviert ist, werden die Anwendungen
+\ndeaktiviert, wenn der Status \\textit{Ein} ist, und wird aktiviert, wenn der Status \\textit{Aus} ist. Derzeit unterstützt der Status nur
+\n\\textit{Ein} und \\textit{Aus} Werte.</string>
+    <string name="pages$profile-page$intro">Die Seite Profil zeigt die Konfigurationen für ein Profil an. Sie bietet auch die Möglichkeit, sie zu bearbeiten.
+\n
+\n\\begin{tip}{Hinweis}
+\n Wenn Sie ein Profil anwenden und einige Pakete den Kriterien nicht entsprechen, werden sie einfach ignoriert.
+\n\\end{tip}</string>
+    <string name="pages$profile-page$apps-tab">Auf der Registerkarte Apps werden die unter diesem Profil konfigurierten Pakete aufgelistet. Pakete können hinzugefügt oder entfernt werden, indem Sie die Schaltfläche \\textit{Plus}
+\nunten nutzen. Pakete können auch entfernt werden, indem Sie lange auf sie klicken (in diesem Fall wird ein
+\nPopup mit der einzigen Option \\textit{Löschen} angezeigt).</string>
+    <string name="pages$profile-page$options-menu">Das Menü mit den drei Punkten in der oberen rechten Ecke öffnet das Menü Optionen. Es enthält verschiedene Optionen wie.
+\n\\begin{itemize}
+\n \\item \\textbf{Anwenden}. Diese Option kann verwendet werden, um das Profil anzuwenden. Wenn Sie darauf klicken, wird ein Dialogfeld angezeigt, in dem
+\n Sie einen \\hyperref[subsubsec:profile-state]{Profilzustand} auswählen können. Wenn Sie eine der Optionen auswählen, wird das Profil
+\n sofort angewendet.
+\n \\item \\textbf{Speichern.} Ermöglicht es Ihnen, das Profil zu speichern.
+\n \\begin{warning}{Hinweis}
+\n Änderungen werden nie automatisch gespeichert. Sie müssen sie von hier aus manuell speichern.
+\n \\end{warning}
+\n \\item \\textbf{Verwerfen.} Verwirft alle Änderungen, die seit der letzten Speicherung vorgenommen wurden.
+\n \\item \\textbf{Löschen.} Wenn Sie auf Löschen klicken, wird das Profil sofort und ohne Warnung gelöscht.
+\n \\item \\textbf{Duplizieren.} Diese Option kann verwendet werden, um das Profil zu duplizieren. Wenn Sie darauf klicken, wird ein Eingabefeld
+\n angezeigt, in dem Sie den Namen des Profils eingeben können. Wenn Sie auf ``OK\'\' klicken, wird ein neues Profil erstellt, und die Seite wird
+\n neu geladen. Das Profil wird nicht gespeichert, bis Sie es manuell speichern.
+\n \\item \\textbf {Verknüpfung erstellen} Diese Option kann verwendet werden, um eine Verknüpfung für das Profil zu erstellen. Wenn Sie darauf klicken, werden
+\n zwei Optionen angezeigt: \\textit{Einfach} und \\textit{Erweitert}. Mit der letzteren Option können Sie den Profilstatus festlegen
+\n bevor Sie ihn anwenden, während die erste Option den Standardstatus verwendet, der beim letzten Speichern des Profils konfiguriert wurde.
+\n\\end{itemize}</string>
+    <string name="pages$profile-page$users">Wählen Sie die Benutzer aus, auf die das Profil angewendet werden soll. Standardmäßig sind alle Benutzer ausgewählt.</string>
 </resources>
