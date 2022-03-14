@@ -277,8 +277,8 @@
     <string name="in_progress">進行中</string>
     <string name="conversion_failed">轉換失敗。</string>
     <string name="select_apk">選擇 APK</string>
-    <string name="send_crash_report">傳送崩潰報告</string>
-    <string name="tap_to_submit_crash_report">按一下提交崩潰報告。</string>
+    <string name="send_crash_report">傳送當機報告</string>
+    <string name="tap_to_submit_crash_report">按一下以傳送當機報告。</string>
     <string name="am_crashed">App Manager 剛剛當機了</string>
     <string name="filter_running_apps">正在執行的應用程式</string>
     <string name="copy">複製</string>
@@ -404,7 +404,7 @@
     <string name="backup_obb_media">OBB和媒體</string>
     <string name="backup_apk_files">APK 檔案</string>
     <string name="installer_error_session_abandon">無法放棄安裝程式會話</string>
-    <string name="installer_error_session_commit">無法提交 APK 檔案</string>
+    <string name="installer_error_session_commit">無法傳送 APK 檔案</string>
     <string name="installer_error_session_write">無法寫入安裝程式會話</string>
     <string name="installer_error_session_create">無法建立安裝程式會話</string>
     <string name="installer_error_security">無法存取 APK 檔案</string>
@@ -1013,7 +1013,7 @@
         <item quantity="other">最多同時執行 %1$d 操作</item>
     </plurals>
     <string name="pref_thread_count_hint">值必須在 0 到 %1$d 之間，其中 0 表示給定時間 <i> 最大操作次數 </i>。</string>
-    <string name="pref_thread_count">並行執行</string>
+    <string name="pref_thread_count">並列執行</string>
     <string name="type_uri_array">URI 數組</string>
     <string name="pref_always_on_background_msg">始終在後台安裝應用程式並在完成時顯示通知。</string>
     <string name="pref_always_on_background">在後台安裝</string>
