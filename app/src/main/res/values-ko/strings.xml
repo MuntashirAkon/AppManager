@@ -163,4 +163,5 @@
     <string name="usage_weekly">매주</string>
     <string name="usage_access">사용량 접근권한</string>
     <string name="app_info">앱 정보</string>
+    <string name="uninstall_app_message">앱을 삭제하시겠습니까\?</string>
 </resources>
