@@ -5,7 +5,7 @@
         <item>lib39285EFA\\.so|libA3AEECD8\\.so|libsecsdk\\.so|libmsaoaid(auth|sec)\?\\.so</item>
         <item>libBaiduSpeechSDK\\.so|libImgRecognition\\.so|libbdEASRAndroid\\.so|libbdSpilWakeup\\.so|libvad\\.dnn\\.so</item>
         <item>libBeacon\\.so</item>
-        <item>libBugly(-rqd)\?\\.so</item>
+        <item>libBugly(-rqd|-ext)\?\\.so</item>
         <item>libBurstLinker\\.so</item>
         <item>libCtaApiLib\\.so</item>
         <item>libDexHelper(-x86)\?\\.so|libSecShell(-x86)\?\\.so|libdexjni\\.so|libsecexe\\.so</item>
@@ -116,7 +116,6 @@
         <item>libtersafe2\\.so</item>
         <item>libtiff\\.so</item>
         <item>libtorrent4j(-.*)\?\\.so</item>
-        <item>libtpnsSecurity\\.so|libxguardian\\.so</item>
         <item>libtraeimp-rtmp\\.so</item>
         <item>libucrop\\.so</item>
         <item>libumeng-spy\\.so</item>
@@ -125,7 +124,7 @@
         <item>libweexcore\\.so|libweexjsb\\.so|libweexjss\\.so|libweexjssr\\.so|libweexjst\\.so|libWeexEagle\\.so|libWTF\\.so</item>
         <item>libwtecdh\\.so</item>
         <item>libxcrash(_dumper)\?\\.so</item>
-        <item>libxgVipSecurity\\.so</item>
+        <item>libxgVipSecurity\\.so|libtpnsSecurity\\.so|libxguardian\\.so</item>
         <item>libxhook_lib\\.so</item>
         <item>libxlua\\.so</item>
         <item>libyuv(_to_rgb_jni|-decoder)\?\\.so</item>
@@ -209,6 +208,7 @@
         <item>libYandexSpeechKitJni.*\\.so</item>
         <item>libcomScore\\.so</item>
         <item>libstrongswan\\.so</item>
+        <item>libchilkat\\.so</item>
     </array>
     <array name="lib_native_names">
         <item>MSA SDK</item>
@@ -240,13 +240,13 @@
         <item>Tencent Cloud QAPM</item>
         <item>ApngDrawable</item>
         <item>Flutter</item>
-        <item>AMAP SDK</item>
+        <item>Amap</item>
         <item>Virocore</item>
         <item>ARCore</item>
         <item>libaria2</item>
         <item>FFmpeg</item>
         <item>Fresco</item>
-        <item>Bmob</item>
+        <item>Bmob Android SDK</item>
         <item>BoostMultiDex</item>
         <item>Pangle SDK</item>
         <item>163 Crash</item>
@@ -325,7 +325,6 @@
         <item>Tencent MTP</item>
         <item>Android-TiffBitmapFactory</item>
         <item>libtorrent4j</item>
-        <item>Tencent TPNS</item>
         <item>Tencent TRTC</item>
         <item>uCrop</item>
         <item>Umeng</item>
@@ -416,8 +415,9 @@
         <item>Telegram APIs</item>
         <item>Tencent Le Gu</item>
         <item>Yandex SpeechKit</item>
-        <item>ComScore</item>
+        <item>Comscore Analytics</item>
         <item>strongSwan</item>
+        <item>Chilkat</item>
     </array>
     <integer-array name="lib_native_is_tracker">
         <item>1</item>
@@ -534,7 +534,6 @@
         <item>1</item>
         <item>0</item>
         <item>0</item>
-        <item>1</item>
         <item>0</item>
         <item>0</item>
         <item>1</item>
@@ -625,6 +624,7 @@
         <item>0</item>
         <item>1</item>
         <item>0</item>
+        <item>1</item>
         <item>1</item>
         <item>1</item>
     </integer-array>
@@ -743,7 +743,6 @@
         <item>https://cloud.tencent.com/document/product/654/30316</item>
         <item>https://github.com/Beyka/Android-TiffBitmapFactory</item>
         <item>https://github.com/aldenml/libtorrent4j</item>
-        <item>https://xg.qq.com/docs/</item>
         <item>https://cloud.tencent.com/document/product/647/16788</item>
         <item>https://github.com/Yalantis/uCrop/</item>
         <item>https://developer.umeng.com/docs/119267/detail/126061</item>
@@ -836,5 +835,6 @@
         <item>https://cloud.yandex.com/en-ru/docs/speechkit/</item>
         <item>https://www.comscore.com</item>
         <item>https://github.com/strongswan/strongswan</item>
+        <item>https://www.chilkatsoft.com/</item>
     </array>
 </resources>

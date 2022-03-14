@@ -456,6 +456,7 @@
         <item>com.carto</item>
         <item>io.didomi.sdk.</item>
         <item>cn.jpush.android</item>
+        <item>com.heytap.msp.</item>
         <item>com.jumio.MobileSDK</item>
         <item>com.lenddo.mobile</item>
         <item>com.pokkt.sdk.</item>
@@ -581,6 +582,8 @@
         <item>com.vdopia.ads.</item>
         <item>com.geopla.</item>
         <item>com.threebitter.sdk.</item>
+        <item>com.m7.imkfsdk.</item>
+        <item>com.moor.imkf.</item>
         <item>org.acra.</item>
         <item>ch.acra.</item>
         <item>com.adop.sdk.</item>
@@ -1436,6 +1439,7 @@
         <item>Carto (formerly Nutiteq)</item>
         <item>Didomi</item>
         <item>JiGuang Aurora Mobile JPush</item>
+        <item>JiGuang Aurora Mobile JPush</item>
         <item>Jumio</item>
         <item>Lenddo</item>
         <item>POKKT</item>
@@ -1561,6 +1565,8 @@
         <item>Vdopia</item>
         <item>²39Geopla</item>
         <item>²3bitter Beacon</item>
+        <item>²7Moor SDK</item>
+        <item>²7Moor SDK</item>
         <item>²ACRA</item>
         <item>²ACRA</item>
         <item>²ADOP</item>

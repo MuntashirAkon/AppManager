@@ -91,6 +91,7 @@ function addLibSmali($filename = 'libsmali.txt') {
     $file = file_get_contents($filename);
     $libs = explode("\n", $file);
     foreach ($libs as $lib) {
+        if (empty($lib)) continue;
         $lib_arr = json_decode($lib, true);
         $sig = $lib_arr['path'];
         if ($sig[0] == '/') $sig = substr($sig, 1);
