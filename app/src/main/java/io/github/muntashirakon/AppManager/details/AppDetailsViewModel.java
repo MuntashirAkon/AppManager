@@ -517,9 +517,13 @@ public class AppDetailsViewModel extends AndroidViewModel {
         }
     }
 
+    @Nullable
     public ComponentRule getComponentRule(String componentName) {
         synchronized (mBlockerLocker) {
-            return mBlocker.getComponent(componentName);
+            if (mBlocker != null) {
+                return mBlocker.getComponent(componentName);
+            }
+            return null;
         }
     }
 
