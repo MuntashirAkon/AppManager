@@ -13,6 +13,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
@@ -74,10 +76,8 @@ public class LogcatRecordingService extends ForegroundService {
     }
 
 
-    private void initializeReader(Intent intent) {
+    private void initializeReader(@NonNull LogcatReaderLoader loader) {
         try {
-            // use the "time" log so we can see what time the logs were logged at
-            LogcatReaderLoader loader = intent.getParcelableExtra(EXTRA_LOADER);
             mReader = loader.loadReader();
             while (mReader != null && !mReader.readyToRecord() && !mKilled) {
                 mReader.readLine();
@@ -131,11 +131,11 @@ public class LogcatRecordingService extends ForegroundService {
         return super.onStartCommand(intent, flags, startId);
     }
 
-    protected void onHandleIntent(Intent intent) {
-        handleIntent(intent);
-    }
-
-    private void handleIntent(Intent intent) {
+    protected void onHandleIntent(@Nullable Intent intent) {
+        if (intent == null) {
+            // Empty calls
+            return;
+        }
         Log.d(TAG, "Starting with intent: " + intent);
         String filename = intent.getStringExtra(EXTRA_FILENAME);
         String queryText = intent.getStringExtra(EXTRA_QUERY_FILTER);
@@ -144,9 +144,14 @@ public class LogcatRecordingService extends ForegroundService {
         boolean searchCriteriaWillAlwaysMatch = searchCriteria.isEmpty();
         boolean logLevelAcceptsEverything = logLevel == android.util.Log.VERBOSE;
         StringBuilder stringBuilder = new StringBuilder();
+        LogcatReaderLoader loader = intent.getParcelableExtra(EXTRA_LOADER);
+        if (loader == null) {
+            // No loader found
+            return;
+        }
 
         SaveLogHelper.deleteLogIfExists(filename);
-        initializeReader(intent);
+        initializeReader(loader);
         try {
             String line;
             int lineCount = 0;
