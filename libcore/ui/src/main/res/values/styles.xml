@@ -91,7 +91,14 @@
     </style>
 
     <!-- Chip -->
-    <style name="Widget.AppTheme.Chip.Assist" parent="Widget.Material3.Chip.Assist.Elevated">
+    <style name="Widget.AppTheme.Chip.Assist" parent="Widget.Material3.Chip.Assist">
+        <item name="chipMinHeight">24dp</item>
+        <item name="chipMinTouchTargetSize">24dp</item>
+        <item name="chipIconSize">18dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppTheme.BodySmall</item>
+    </style>
+
+    <style name="Widget.AppTheme.Chip.Assist.Elevated" parent="Widget.Material3.Chip.Assist.Elevated">
         <item name="chipMinHeight">24dp</item>
         <item name="chipMinTouchTargetSize">24dp</item>
         <item name="chipIconSize">18dp</item>
@@ -125,6 +132,11 @@
     <style name="Widget.AppTheme.ChipGroup.Assist" parent="Widget.Material3.ChipGroup">
         <!-- chipStyle is set via ChipGroup because the Chip's are generated dynamically -->
         <item name="chipStyle">@style/Widget.AppTheme.Chip.Assist</item>
+    </style>
+
+    <style name="Widget.AppTheme.ChipGroup.Assist.Elevated" parent="Widget.Material3.ChipGroup">
+        <!-- chipStyle is set via ChipGroup because the Chip's are generated dynamically -->
+        <item name="chipStyle">@style/Widget.AppTheme.Chip.Assist.Elevated</item>
     </style>
 
     <style name="Widget.AppTheme.ChipGroup.Filter" parent="Widget.Material3.ChipGroup">
@@ -161,13 +173,13 @@
     </style>
 
     <!-- Menu -->
-    <style name="Widget.AppTheme.PopupMenu" parent="Widget.Material3.PopupMenu"></style>
+    <style name="Widget.AppTheme.PopupMenu" parent="Widget.Material3.PopupMenu" />
 
-    <style name="Widget.AppTheme.PopupMenu.ListPopupWindow" parent="Widget.Material3.PopupMenu.ListPopupWindow"></style>
+    <style name="Widget.AppTheme.PopupMenu.ListPopupWindow" parent="Widget.Material3.PopupMenu.ListPopupWindow" />
 
-    <style name="Widget.AppTheme.PopupMenu.ContextMenu" parent="Widget.Material3.PopupMenu.ContextMenu"></style>
+    <style name="Widget.AppTheme.PopupMenu.ContextMenu" parent="Widget.Material3.PopupMenu.ContextMenu" />
 
-    <style name="Widget.AppTheme.PopupMenu.Overflow" parent="Widget.Material3.PopupMenu.Overflow"></style>
+    <style name="Widget.AppTheme.PopupMenu.Overflow" parent="Widget.Material3.PopupMenu.Overflow" />
     <!-- Overflow menu button -->
     <style name="Widget.AppTheme.PopupMenu.OverflowButton" parent="@style/Widget.AppCompat.ActionButton.Overflow">
         <item name="android:src">@drawable/ic_more_vert_black_24dp</item>

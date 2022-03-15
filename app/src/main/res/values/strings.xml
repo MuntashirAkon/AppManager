@@ -1195,4 +1195,6 @@
     <string name="file_modified_are_you_sure">The file was modified. Discard all your changes and exit?</string>
     <string name="save_and_exit">Save and exit</string>
     <string name="donation_campaign_text">We\'re running a <b>funding campaign</b> for App Manager for a limited period. <a href="https://opencollective.com/app-manager#category-ABOUT">learn more…</a></string>
+    <string name="pref_saved_apk_name_format">Saved APK Name Format</string>
+    <string name="pref_saved_apk_name_format_msg">The format to be used for naming the APK files when you save them.</string>
 </resources>

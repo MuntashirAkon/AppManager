@@ -82,7 +82,7 @@
 
             <io.github.muntashirakon.widget.FlowLayout
                 android:id="@+id/tag_cloud"
-                android:theme="@style/Widget.AppTheme.ChipGroup.Assist"
+                android:theme="@style/Widget.AppTheme.ChipGroup.Assist.Elevated"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/padding_medium"

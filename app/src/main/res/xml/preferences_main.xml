@@ -46,6 +46,12 @@
         app:iconSpaceReserved="false" />
 
     <Preference
+        app:key="saved_apk_format"
+        app:title="@string/pref_saved_apk_name_format"
+        app:summary="@string/pref_saved_apk_name_format_msg"
+        app:iconSpaceReserved="false" />
+
+    <Preference
         app:key="apk_signing_prefs"
         app:title="@string/apk_signing"
         app:summary="@string/pref_apk_signing_msg"

@@ -6,10 +6,12 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
+import androidx.core.content.pm.PackageInfoCompat;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -29,6 +31,8 @@ import io.github.muntashirakon.AppManager.apk.parser.AndroidBinXmlParser;
 import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkExporter;
 import io.github.muntashirakon.AppManager.backup.BackupFiles;
 import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
@@ -82,8 +86,7 @@ public final class ApkUtils {
             PackageManager pm = ctx.getPackageManager();
             PackageInfo packageInfo = PackageManagerCompat.getPackageInfo(packageName, flagMatchUninstalled, userHandle);
             ApplicationInfo info = packageInfo.applicationInfo;
-            String outputName = FileUtils.getSanitizedFileName(info.loadLabel(pm).toString() + "_" +
-                    packageInfo.versionName, false);
+            String outputName = FileUtils.getSanitizedFileName(getFormattedApkFilename(packageInfo, pm), false);
             if (outputName == null) outputName = packageName;
             Path apkFile;
             if (isSplitApk(info)) {
@@ -100,6 +103,22 @@ public final class ApkUtils {
             e.printStackTrace();
             return false;
         }
+    }
+
+    @NonNull
+    private static String getFormattedApkFilename(@NonNull PackageInfo packageInfo, @NonNull PackageManager pm) {
+        // TODO: 15/3/22 Optimize this
+        String apkName = AppPref.getString(AppPref.PrefKey.PREF_SAVED_APK_FORMAT_STR)
+                .replaceAll("%label%", packageInfo.applicationInfo.loadLabel(pm).toString())
+                .replaceAll("%package_name%", packageInfo.packageName)
+                .replaceAll("%version%", packageInfo.versionName)
+                .replaceAll("%version_code%", String.valueOf(PackageInfoCompat.getLongVersionCode(packageInfo)))
+                .replaceAll("%target_sdk%", String.valueOf(packageInfo.applicationInfo.targetSdkVersion))
+                .replaceAll("%datetime%", DateUtils.formatDateTime(System.currentTimeMillis()));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return apkName.replaceAll("%min_sdk%", String.valueOf(packageInfo.applicationInfo.minSdkVersion));
+        }
+        return apkName;
     }
 
     public static boolean isSplitApk(@NonNull ApplicationInfo info) {

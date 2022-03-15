@@ -7,6 +7,7 @@ import android.app.Application;
 import android.content.pm.UserInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.Spanned;
 import android.view.View;
 import android.widget.TextView;
@@ -27,7 +28,10 @@ import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
 import com.android.internal.util.TextUtils;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.textfield.TextInputEditText;
 import com.yariksoffice.lingver.Lingver;
 
 import java.util.ArrayList;
@@ -71,6 +75,15 @@ public class MainPreferences extends PreferenceFragmentCompat {
             Ops.MODE_ADB_OVER_TCP,
             Ops.MODE_ADB_WIFI,
             Ops.MODE_NO_ROOT);
+    public static final String[] APK_NAME_FORMATS = new String[] {
+            "%label%",
+            "%package_name%",
+            "%version%",
+            "%version_code%",
+            "%min_sdk%",
+            "%target_sdk%",
+            "%datetime%"
+    };
 
     SettingsActivity activity;
     private int currentTheme;
@@ -203,6 +216,38 @@ public class MainPreferences extends PreferenceFragmentCompat {
                             .show();
                     return true;
                 });
+        // Saved apk name format
+        Preference savedApkFormatPref = Objects.requireNonNull(findPreference("saved_apk_format"));
+        savedApkFormatPref.setOnPreferenceClickListener(preference -> {
+            View view = getLayoutInflater().inflate(R.layout.dialog_set_apk_format, null);
+            TextInputEditText inputApkNameFormat = view.findViewById(R.id.input_apk_name_format);
+            inputApkNameFormat.setText(AppPref.getString(AppPref.PrefKey.PREF_SAVED_APK_FORMAT_STR));
+            ChipGroup apkNameFormats = view.findViewById(R.id.apk_name_formats);
+            for (String apkNameFormatStr : APK_NAME_FORMATS) {
+                if ("%min_sdk%".equals(apkNameFormatStr) && Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+                    // Old devices does not support min SDK
+                    continue;
+                }
+                addChip(apkNameFormats, apkNameFormatStr).setOnClickListener(v -> {
+                    Editable apkFormat = inputApkNameFormat.getText();
+                    if (apkFormat != null) {
+                        apkFormat.insert(inputApkNameFormat.getSelectionStart(), ((Chip) v).getText());
+                    }
+                });
+            }
+            new MaterialAlertDialogBuilder(activity)
+                    .setTitle(R.string.pref_saved_apk_name_format)
+                    .setView(view)
+                    .setPositiveButton(R.string.save, (dialog, which) -> {
+                        Editable apkFormat = inputApkNameFormat.getText();
+                        if (!TextUtils.isEmpty(apkFormat)) {
+                            AppPref.set(AppPref.PrefKey.PREF_SAVED_APK_FORMAT_STR, apkFormat.toString().trim());
+                        }
+                    })
+                    .setNegativeButton(R.string.cancel, null)
+                    .show();
+            return true;
+        });
         // Thread count
         Preference threadCountPref = Objects.requireNonNull(findPreference("thread_count"));
         threadCount = MultithreadedExecutor.getThreadCount();
@@ -359,6 +404,15 @@ public class MainPreferences extends PreferenceFragmentCompat {
         }
         return getString(R.string.no_root);
     }
+
+    @NonNull
+    private static Chip addChip(@NonNull ChipGroup apkFormats, @NonNull CharSequence text) {
+        Chip chip = new Chip(apkFormats.getContext());
+        chip.setText(text);
+        apkFormats.addView(chip);
+        return chip;
+    }
+
 
     public static class MainPreferencesViewModel extends AndroidViewModel {
         public MainPreferencesViewModel(@NonNull Application application) {

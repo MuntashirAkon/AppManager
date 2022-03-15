@@ -108,6 +108,7 @@ public class AppPref {
         PREF_RUNNING_APPS_FILTER_FLAGS_INT,
         PREF_RUNNING_APPS_SORT_ORDER_INT,
 
+        PREF_SAVED_APK_FORMAT_STR,
         PREF_SELECTED_USERS_STR,
         PREF_SIGNATURE_SCHEMES_INT,
         PREF_SHOW_DISCLAIMER_BOOL,
@@ -483,6 +484,8 @@ public class AppPref {
             case PREF_DEFAULT_BLOCKING_METHOD_STR:
                 // This is default for root
                 return ComponentRule.COMPONENT_TO_BE_BLOCKED_IFW_DISABLE;
+            case PREF_SAVED_APK_FORMAT_STR:
+                return "%label%_%version%";
         }
         throw new IllegalArgumentException("Pref key not found.");
     }
