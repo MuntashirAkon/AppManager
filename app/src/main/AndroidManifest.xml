@@ -569,6 +569,13 @@
             android:launchMode="singleTop"
             android:taskAffinity="" />
         <activity
+            android:name=".crypto.auth.AuthManagerActivity"
+            android:label="@string/auth_manager_title"
+            android:exported="false" />
+        <activity
+            android:name=".crypto.auth.AuthFeatureDemultiplexer"
+            android:exported="true" />
+        <activity
             android:name=".main.SplashActivity"
             android:exported="true"
             android:icon="@mipmap/ic_launcher"

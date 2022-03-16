@@ -50,6 +50,7 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
     public static final String EXTRA_NEW_PROFILE = "new";
     public static final String EXTRA_IS_PRESET = "preset";
     public static final String EXTRA_SHORTCUT_TYPE = "shortcut";
+    public static final String EXTRA_STATE = "state";
 
     @StringDef({ST_NONE, ST_SIMPLE, ST_ADVANCED})
     public @interface ShortcutType {
@@ -84,7 +85,13 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
             return;
         }
         @ShortcutType String shortcutType = getIntent().getStringExtra(EXTRA_SHORTCUT_TYPE);
-        if (shortcutType == null) shortcutType = ST_NONE;
+        String profileState = getIntent().getStringExtra(EXTRA_STATE);
+        if (shortcutType == null) {
+            if (profileState != null) {
+                // If profile state is set, it also means that it is a simple shortcut
+                shortcutType = ST_SIMPLE;
+            } else shortcutType = ST_NONE;
+        }
         boolean newProfile = getIntent().getBooleanExtra(EXTRA_NEW_PROFILE, false);
         boolean isPreset = getIntent().getBooleanExtra(EXTRA_IS_PRESET, false);
         @Nullable String newProfileName;
@@ -99,7 +106,10 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
         switch (shortcutType) {
             case ST_SIMPLE:
                 Intent intent = new Intent(this, ProfileApplierService.class);
-                intent.putExtra(EXTRA_PROFILE_NAME, profileName);
+                intent.putExtra(ProfileApplierService.EXTRA_PROFILE_NAME, profileName);
+                if (profileState != null) {
+                    intent.putExtra(ProfileApplierService.EXTRA_PROFILE_STATE, profileState);
+                }
                 ContextCompat.startForegroundService(this, intent);
                 finish();
                 return;

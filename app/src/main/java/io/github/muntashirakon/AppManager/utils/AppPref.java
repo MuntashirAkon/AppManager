@@ -32,6 +32,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.signing.SigSchemes;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
+import io.github.muntashirakon.AppManager.crypto.auth.AuthManager;
 import io.github.muntashirakon.AppManager.details.AppDetailsFragment;
 import io.github.muntashirakon.AppManager.logcat.helper.LogcatHelper;
 import io.github.muntashirakon.AppManager.main.ListOptions;
@@ -55,6 +56,8 @@ public class AppPref {
         PREF_APP_OP_SHOW_DEFAULT_BOOL,
         PREF_APP_OP_SORT_ORDER_INT,
         PREF_APP_THEME_INT,
+        // We store this in plain text because if the attackers attack us, they can also attack the other apps
+        PREF_AUTHORIZATION_KEY_STR,
 
         PREF_BACKUP_ANDROID_KEYSTORE_BOOL,
         PREF_BACKUP_COMPRESSION_METHOD_STR,
@@ -486,6 +489,8 @@ public class AppPref {
                 return ComponentRule.COMPONENT_TO_BE_BLOCKED_IFW_DISABLE;
             case PREF_SAVED_APK_FORMAT_STR:
                 return "%label%_%version%";
+            case PREF_AUTHORIZATION_KEY_STR:
+                return AuthManager.generateKey();
         }
         throw new IllegalArgumentException("Pref key not found.");
     }

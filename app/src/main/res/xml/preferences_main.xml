@@ -126,6 +126,11 @@
             app:title="@string/changelog"
             app:iconSpaceReserved="false" />
 
+        <Preference
+            app:key="auth_manager"
+            app:title="@string/auth_manager_title"
+            app:iconSpaceReserved="false" />
+
     </PreferenceCategory>
 
 </PreferenceScreen>

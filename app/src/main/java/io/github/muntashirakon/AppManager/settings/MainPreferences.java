@@ -4,6 +4,7 @@ package io.github.muntashirakon.AppManager.settings;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.content.Intent;
 import android.content.pm.UserInfo;
 import android.os.Build;
 import android.os.Bundle;
@@ -44,6 +45,8 @@ import java.util.concurrent.Executors;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.crypto.auth.AuthManagerActivity;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.DeviceInfo2;
 import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.settings.crypto.ImportExportKeyStoreDialogFragment;
@@ -313,6 +316,12 @@ public class MainPreferences extends PreferenceFragmentCompat {
         ((Preference) Objects.requireNonNull(findPreference("changelog")))
                 .setOnPreferenceClickListener(preference -> {
                     executor.submit(() -> model.loadChangeLog());
+                    return true;
+                });
+        // Authorization Management
+        ((Preference) Objects.requireNonNull(findPreference("auth_manager")))
+                .setOnPreferenceClickListener(preference -> {
+                    startActivity(new Intent(activity, AuthManagerActivity.class));
                     return true;
                 });
 
