@@ -1017,8 +1017,6 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                         return true;
                     });
                 }
-            }
-            if (canLaunch && isExported) {
                 holder.createBtn.setOnClickListener(v -> LauncherIconCreator.createLauncherIcon(mActivity, activityInfo,
                         label, activityInfo.loadIcon(mPackageManager)));
                 holder.editBtn.setOnClickListener(v -> {

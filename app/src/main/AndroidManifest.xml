@@ -576,6 +576,9 @@
             android:name=".crypto.auth.AuthFeatureDemultiplexer"
             android:exported="true" />
         <activity
+            android:name=".details.ActivityLauncherShortcutActivity"
+            android:exported="false" />
+        <activity
             android:name=".main.SplashActivity"
             android:exported="true"
             android:icon="@mipmap/ic_launcher"

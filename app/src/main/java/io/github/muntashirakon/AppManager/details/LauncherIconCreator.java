@@ -17,6 +17,7 @@ import androidx.core.graphics.drawable.IconCompat;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 
 // Copyright 2017 Adam M. Szalkowski
@@ -25,13 +26,13 @@ public class LauncherIconCreator {
      * Create launcher icon.
      *
      * @param context         Activity context
-     * @param packageItemInfo App package name
+     * @param activityInfo App package name
      * @param name            Name/Label of the app
      * @param icon            App icon
      */
-    public static void createLauncherIcon(@NonNull Context context, @NonNull ActivityInfo packageItemInfo,
+    public static void createLauncherIcon(@NonNull Context context, @NonNull ActivityInfo activityInfo,
                                           @NonNull String name, @NonNull Drawable icon) {
-        createLauncherIcon(context, name, icon, getIntent(packageItemInfo));
+        createLauncherIcon(context, name, icon, activityInfo.exported ? getIntent(activityInfo) : getProxyIntent(activityInfo));
     }
 
     /**
@@ -79,7 +80,18 @@ public class LauncherIconCreator {
     @NonNull
     private static Intent getIntent(@NonNull ActivityInfo itemInfo) {
         Intent intent = new Intent();
-        intent.setClassName(itemInfo.packageName, itemInfo.name);
+        intent.setClassName(itemInfo.packageName, itemInfo.targetActivity == null ? itemInfo.name : itemInfo.targetActivity);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        return intent;
+    }
+
+    @NonNull
+    private static Intent getProxyIntent(@NonNull ActivityInfo itemInfo) {
+        Intent intent = new Intent();
+        intent.setClass(AppManager.getContext(), ActivityLauncherShortcutActivity.class);
+        intent.putExtra(ActivityLauncherShortcutActivity.EXTRA_PKG, itemInfo.packageName);
+        intent.putExtra(ActivityLauncherShortcutActivity.EXTRA_CLS, itemInfo.targetActivity == null ? itemInfo.name : itemInfo.targetActivity);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         return intent;
