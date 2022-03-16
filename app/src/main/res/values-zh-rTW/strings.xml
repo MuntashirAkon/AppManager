@@ -403,7 +403,7 @@
     <string name="failed_to_extract_obb_files">無法提取OBB檔案</string>
     <string name="backup_obb_media">OBB和媒體</string>
     <string name="backup_apk_files">APK 檔案</string>
-    <string name="installer_error_session_abandon">無法放棄安裝程式會話</string>
+    <string name="installer_error_session_abandon">無法捨棄安裝程式會話</string>
     <string name="installer_error_session_commit">無法傳送 APK 檔案</string>
     <string name="installer_error_session_write">無法寫入安裝程式會話</string>
     <string name="installer_error_session_create">無法建立安裝程式會話</string>
@@ -1043,7 +1043,7 @@
 \nRiseup: https://0xacab.org/muntashir/AppManager
 \nCodeberg: https://codeberg.org/muntashir/AppManager</string>
     <string name="accessibility_service_description">通用無障礙服務，用於執行某些操作，例如在非 root 模式下清除緩存。</string>
-    <string name="exit_confirmation">退出確認</string>
+    <string name="exit_confirmation">確認離開</string>
     <string name="extract">提取</string>
     <string name="replace">取代</string>
     <string name="explore">瀏覽</string>
@@ -1103,13 +1103,13 @@
     <string name="failed_to_disable_magisk_deny_list">無法停用 Magisk DenyList</string>
     <string name="so_type_executable">可執行檔案</string>
     <string name="pref_disable_description">僅停用元件。不建議root使用者使用，因為應用程式可以繞過此操作。在ADB模式下，可以使用此方法停用僅限測試的應用程式。</string>
-    <string name="file_modified_are_you_sure">檔案已修改。放棄所有變更並退出？</string>
+    <string name="file_modified_are_you_sure">檔案已修改。捨棄所有變更並離開？</string>
     <string name="pref_vt_apikey_summary">啟用透過 VirusTotal 掃描 APK 檔案。</string>
     <string name="uses_play_app_signing_description">此應用包含某些標記，指示它 <i> 可能 </i> 正在使用 <a href="https://support.google.com/googleplay/android-developer/answer/9842756">播放應用簽名 </a>。透過此方案，簽名金鑰存儲在Google的伺服器中，Google負責對應用程式進行簽名。請注意，相符的簽名資訊是驗證應用是否未被開發者以外的任何人（在本例中為Google）修改的唯一方法。</string>
     <string name="vt_disclaimer">VirusTotal 及其徽標是 Chronicle LLC 的商標。 App Manager（API 客戶端）及其作者均不對您可能傳送給 VirusTotal 的任何資料負責。</string>
     <string name="vt_scan_date">掃描日期：%1$s</string>
     <string name="primary_abi">主要 ABI</string>
-    <string name="save_and_exit">保存並退出</string>
+    <string name="save_and_exit">儲存並離開</string>
     <string name="donation_campaign_text">我們正在為 App Manager 在有限的時間內運行 <b> 募款活動</b>。 <a href="https://opencollective.com/app-manager#category-ABOUT">了解更多…</a></string>
     <string name="mode_of_op_with_inferred_mode_of_op">%1$s（推斷模式：%2$s）</string>
 </resources>
