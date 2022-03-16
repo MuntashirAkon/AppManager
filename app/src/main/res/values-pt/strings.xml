@@ -445,7 +445,7 @@
     <string name="refresh">Atualizar</string>
     <string name="launch">Iniciar</string>
     <string name="activities">Atividades</string>
-    <string name="require_no_permission">Nenhuma permissão requerida</string>
+    <string name="require_no_permission">Nenhuma permissão necessária</string>
     <string name="permissions">Usa permissões</string>
     <string name="uninstall">Desinstalar</string>
     <string name="battery">Bateria</string>
