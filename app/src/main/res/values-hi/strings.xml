@@ -782,4 +782,7 @@
         <item quantity="other">मिनट</item>
     </plurals>
     <string name="subject_log_report">इस्तेमाल का विवरण</string>
+    <string name="community">कम्युनिटी</string>
+    <string name="community_links">टेलीग्राम: https://t.me/AppManagerChannel
+\nट्विटर: https://twitter.com/AppManagerNews</string>
 </resources>
