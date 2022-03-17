@@ -13,10 +13,10 @@
     <string name="usage_7_days">Posledních 7 dní</string>
     <string name="service">Služby</string>
     <string name="launch_mode">Režim spuštění</string>
-    <string name="no_providers">Žadní poskytovatelé</string>
-    <string name="providers">Poskytovatelé</string>
+    <string name="no_providers">Žadné poskytovače</string>
+    <string name="providers">Poskytovače</string>
     <string name="no_activities">Žádné aktivity</string>
-    <string name="refresh">Aktualizovat</string>
+    <string name="refresh">Obnovit</string>
     <string name="permissions">Využívá oprávnění</string>
     <string name="input_features">Vstupní funkce</string>
     <string name="no_configurations">Žádné konfigurace</string>
@@ -35,12 +35,12 @@
     <string name="patterns_allowed">Vzor povolen</string>
     <string name="write">Zapsat</string>
     <string name="read">Číst</string>
-    <string name="grant_uri_permission">Povolit URI oprávnění</string>
+    <string name="grant_uri_permission">Udělit URI oprávnění</string>
     <string name="flags">Vlajky</string>
-    <string name="orientation">Orientace</string>
+    <string name="orientation">Otočení</string>
     <string name="no_service">Žádné služby</string>
     <string name="authority">Autorita</string>
-    <string name="sort_by_last_update">Poslední update</string>
+    <string name="sort_by_last_update">Nejnovější aktualizace</string>
     <string name="paths_and_directories">Cesty a Adresáře</string>
     <string name="data_dir">Adresář Dat</string>
     <string name="date_updated">Datum Aktualizace</string>
@@ -77,4 +77,8 @@
     <string name="edit_shortcut">Upravit Zástupce</string>
     <string name="error_invalid_icon_format">Neplatný formát ikony</string>
     <string name="third_party">Ikony a Knihovny třetích stran</string>
+    <string name="soft_input">Režim softwarového vstupu</string>
+    <string name="no_receivers">Žádné přijímače</string>
+    <string name="receivers">Přijímače</string>
+    <string name="task_affinity">Příslušnost úlohy</string>
 </resources>
