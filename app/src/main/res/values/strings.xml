@@ -88,7 +88,6 @@
     <string name="shortcut_name">Shortcut Name</string>
     <string name="package_name">Package Name</string>
     <string name="class_name">Class Name</string>
-    <string name="insert_icon">Insert Icon</string>
     <string name="error_invalid_icon_resource">Invalid icon resource</string>
     <string name="error_invalid_icon_format">Invalid icon format</string>
     <string name="icon_picker">Icon Picker</string>
@@ -1201,4 +1200,5 @@
     <string name="auth_manager_title">Authorization Manager</string>
     <string name="regenerate_auth_key">Regenerate authorization key</string>
     <string name="regenerate_auth_key_warning">Are you sure? All the third-party apps have to be reconfigured with the new authorization key.</string>
+    <string name="shortcut_icon">Shortcut Icon</string>
 </resources>

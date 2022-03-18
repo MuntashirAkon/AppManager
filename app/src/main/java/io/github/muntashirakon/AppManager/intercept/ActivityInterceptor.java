@@ -49,12 +49,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.StringTokenizer;
 import java.util.UUID;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.crypto.auth.AuthManager;
+import io.github.muntashirakon.AppManager.details.LauncherIconCreator;
 import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.servermanager.ActivityManagerCompat;
@@ -72,10 +75,14 @@ public class ActivityInterceptor extends BaseActivity {
 
     public static final String EXTRA_PACKAGE_NAME = BuildConfig.APPLICATION_ID + ".intent.extra.PACKAGE_NAME";
     public static final String EXTRA_CLASS_NAME = BuildConfig.APPLICATION_ID + ".intent.extra.CLASS_NAME";
+    public static final String EXTRA_ACTION = BuildConfig.APPLICATION_ID + ".intent.extra.ACTION";
     // TODO(29/8/21): Enable getting activity result for activities launched with root
     public static final String EXTRA_ROOT = BuildConfig.APPLICATION_ID + ".intent.extra.ROOT";
     // Root only
     public static final String EXTRA_USER_HANDLE = BuildConfig.APPLICATION_ID + ".intent.extra.USER_HANDLE";
+    // Whether to trigger the Intent on startup, requires `auth` parameter to be set
+    public static final String EXTRA_TRIGGER_ON_START = BuildConfig.APPLICATION_ID + ".intent.extra.TRIGGER_ON_START";
+    public static final String EXTRA_AUTH = BuildConfig.APPLICATION_ID + ".intent.extra.AUTH";
 
     private static final String INTENT_EDITED = "intent_edited";
 
@@ -333,6 +340,19 @@ public class ActivityInterceptor extends BaseActivity {
                 intent.setComponent(mRequestedComponent);
                 updateSubtitle(mRequestedComponent);
             }
+        }
+        String action = intent.getStringExtra(EXTRA_ACTION);
+        if (action != null) {
+            intent.setAction(action);
+        }
+        // For shortcut/startup trigger: Need authorization to prevent abuse
+        if (intent.getBooleanExtra(EXTRA_TRIGGER_ON_START, false)
+                && AuthManager.getKey().equals(intent.getStringExtra(EXTRA_AUTH))) {
+            intent.removeExtra(EXTRA_TRIGGER_ON_START);
+            intent.removeExtra(EXTRA_AUTH);
+            // Trigger intent
+            launchIntent(intent, mRequestedComponent == null);
+            // Fall-through
         }
         // Whether the Intent was edited
         final boolean isVisible = savedInstanceState != null && savedInstanceState.getBoolean(INTENT_EDITED);
@@ -886,7 +906,8 @@ public class ActivityInterceptor extends BaseActivity {
         boolean isPrivileged = mUseRoot || (mUserHandle != UserHandleHidden.myUserId() && Ops.isPrivileged());
         try {
             if (createChooser) {
-                Intent chooserIntent = Intent.createChooser(intent, mResendIntentButton.getText());
+                Intent chooserIntent = Intent.createChooser(intent, mResendIntentButton != null ?
+                        mResendIntentButton.getText() : getString(R.string.open));
                 if (isPrivileged) {
                     // TODO: 4/2/22 Support sending activity result back to the original app
                     ActivityManagerCompat.startActivity(this, chooserIntent, mUserHandle);
@@ -925,6 +946,42 @@ public class ActivityInterceptor extends BaseActivity {
             return true;
         } else if (id == R.id.action_paste) {
             pasteIntentDetails();
+            return true;
+        } else if (id == R.id.action_shortcut) {
+            ActionBar actionBar = getSupportActionBar();
+            CharSequence shortcutName = null;
+            if (actionBar != null) {
+                shortcutName = actionBar.getSubtitle();
+            }
+            if (shortcutName == null) {
+                shortcutName = Objects.requireNonNull(getTitle());
+            }
+            EditShortcutDialogFragment fragment = EditShortcutDialogFragment.getInstance(shortcutName.toString(), mRequestedComponent);
+            fragment.setOnCreateShortcut((newShortcutName, drawable) -> {
+                try {
+                    Intent intent = new Intent(mMutableIntent);
+                    // Add necessary extras
+                    intent.putExtra(EXTRA_AUTH, AuthManager.getKey());
+                    intent.putExtra(EXTRA_TRIGGER_ON_START, true);
+                    intent.putExtra(EXTRA_ACTION, intent.getAction());
+                    if (mUseRoot) {
+                        intent.putExtra(EXTRA_ROOT, true);
+                    }
+                    if (mUserHandle != UserHandleHidden.myUserId()) {
+                        intent.putExtra(EXTRA_USER_HANDLE, mUserHandle);
+                    }
+                    if (mRequestedComponent != null) {
+                        intent.putExtra(EXTRA_PACKAGE_NAME, mRequestedComponent.getPackageName());
+                        intent.putExtra(EXTRA_CLASS_NAME, mRequestedComponent.getClassName());
+                    }
+                    intent.setClass(getApplicationContext(), ActivityInterceptor.class);
+                    LauncherIconCreator.createLauncherIcon(this, newShortcutName, drawable, intent);
+                } catch (Throwable th) {
+                    Log.e(TAG, th);
+                    UIUtils.displayLongToast(R.string.error_with_details, th.getClass().getName() + ": " + th.getMessage());
+                }
+            });
+            fragment.show(getSupportFragmentManager(), EditShortcutDialogFragment.TAG);
             return true;
         }
         return super.onOptionsItemSelected(item);

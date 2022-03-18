@@ -61,7 +61,7 @@ public class IconPickerDialogFragment extends DialogFragment {
         });
     }
 
-    void attachIconPickerListener(IconPickerListener listener) {
+    public void attachIconPickerListener(IconPickerListener listener) {
         this.listener = listener;
     }
 
@@ -75,7 +75,7 @@ public class IconPickerDialogFragment extends DialogFragment {
         grid.setAdapter(adapter);
         grid.setOnItemClickListener((view, item, index, id) -> {
             if (listener != null) {
-                listener.iconPicked(view.getAdapter().getItem(index).toString());
+                listener.iconPicked((IconItemInfo) view.getAdapter().getItem(index));
                 if (getDialog() != null) getDialog().dismiss();
             }
         });
@@ -95,7 +95,7 @@ public class IconPickerDialogFragment extends DialogFragment {
     }
 
     public interface IconPickerListener {
-        void iconPicked(String icon);
+        void iconPicked(PackageItemInfo icon);
     }
 
     class IconListingAdapter extends BaseAdapter {
@@ -172,7 +172,7 @@ public class IconPickerDialogFragment extends DialogFragment {
 
         public IconItemInfo(String packageName, String iconResourceString) {
             this.packageName = packageName;
-            this.iconResourceString = iconResourceString;
+            this.name = this.iconResourceString = iconResourceString;
         }
 
         @Override

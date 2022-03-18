@@ -1,11 +1,10 @@
 // SPDX-License-Identifier: ISC AND GPL-3.0-or-later
 
-package io.github.muntashirakon.AppManager.details;
+package io.github.muntashirakon.AppManager.intercept;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.ComponentName;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -27,39 +26,57 @@ import androidx.fragment.app.FragmentActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.details.IconPickerDialogFragment;
 
 // Copyright 2017 Adam M. Szalkowski
 public class EditShortcutDialogFragment extends DialogFragment {
-    static final String ARG_ACTIVITY_INFO = "activityInfo";
-    static final String TAG = "EditShortcutDialogFragment";
+    public static final String TAG = EditShortcutDialogFragment.class.getSimpleName();
+    public static final String EXTRA_SHORTCUT_NAME = "shortcut_name";
+    public static final String EXTRA_COMPONENT_NAME = "component_name";
 
-    private ActivityInfo mActivityInfo;
+    @NonNull
+    public static EditShortcutDialogFragment getInstance(@NonNull String shortcutName, @Nullable ComponentName componentName) {
+        EditShortcutDialogFragment fragment = new EditShortcutDialogFragment();
+        Bundle args = new Bundle();
+        args.putString(EXTRA_SHORTCUT_NAME, shortcutName);
+        if (componentName != null) {
+            args.putParcelable(EXTRA_COMPONENT_NAME, componentName);
+        }
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public interface CreateShortcutInterface {
+        void onCreateShortcut(@NonNull String shortcutName, @NonNull Drawable drawable);
+    }
+
+    @Nullable
+    private ComponentName mComponentName;
     private PackageManager mPackageManager;
     private EditText textName;
     private EditText textIcon;
     private ImageView imageIcon;
+    @Nullable
+    private CreateShortcutInterface createShortcutInterface;
+
+    public void setOnCreateShortcut(@Nullable CreateShortcutInterface createShortcutInterface) {
+        this.createShortcutInterface = createShortcutInterface;
+    }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         final FragmentActivity activity = requireActivity();
-        mActivityInfo = requireArguments().getParcelable(ARG_ACTIVITY_INFO);
+        mComponentName = requireArguments().getParcelable(EXTRA_COMPONENT_NAME);
+        String shortcutName = requireArguments().getString(EXTRA_SHORTCUT_NAME);
         mPackageManager = activity.getPackageManager();
         LayoutInflater inflater = LayoutInflater.from(activity);
         if (inflater == null) return super.onCreateDialog(savedInstanceState);
         @SuppressLint("InflateParams")
         View view = inflater.inflate(R.layout.dialog_shortcut, null);
-        final String activityName = (String) mActivityInfo.loadLabel(mPackageManager);
         textName = view.findViewById(R.id.shortcut_name);
-        textName.setText(activityName);
+        textName.setText(shortcutName);
         textIcon = view.findViewById(R.id.insert_icon);
-        ComponentName activityComponent = new ComponentName(mActivityInfo.packageName, mActivityInfo.name);
-        try {
-            String activityIconResourceName = mPackageManager.getResourcesForActivity(activityComponent)
-                    .getResourceName(mActivityInfo.getIconResource());
-            textIcon.setText(activityIconResourceName);
-        } catch (PackageManager.NameNotFoundException | Resources.NotFoundException ignored) {}
-
         textIcon.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
@@ -74,7 +91,6 @@ public class EditShortcutDialogFragment extends DialogFragment {
         });
 
         imageIcon = view.findViewById(R.id.insert_icon_btn);
-        imageIcon.setImageDrawable(mActivityInfo.loadIcon(mPackageManager));
         imageIcon.setOnClickListener(v -> {
             IconPickerDialogFragment dialog = new IconPickerDialogFragment();
             dialog.attachIconPickerListener(icon -> {
@@ -85,12 +101,11 @@ public class EditShortcutDialogFragment extends DialogFragment {
         });
 
         return new MaterialAlertDialogBuilder(activity)
-                .setTitle(mActivityInfo.loadLabel(mPackageManager))
+                .setTitle(shortcutName)
                 .setView(view)
-                .setIcon(mActivityInfo.loadIcon(mPackageManager))
                 .setPositiveButton(R.string.create_shortcut, (dialog, which) -> {
-                    String newActivityName = textName.getText().toString();
-                    if (newActivityName.length() == 0) newActivityName = activityName;
+                    String newShortcutName = textName.getText().toString();
+                    if (newShortcutName.length() == 0) newShortcutName = shortcutName;
 
                     Drawable icon = null;
                     try {
@@ -114,18 +129,18 @@ public class EditShortcutDialogFragment extends DialogFragment {
                     if (icon == null) {
                         icon = mPackageManager.getDefaultActivityIcon();
                     }
-                    LauncherIconCreator.createLauncherIcon(activity, mActivityInfo, newActivityName, icon);
+                    if (createShortcutInterface != null) {
+                        createShortcutInterface.onCreateShortcut(newShortcutName, icon);
+                    }
                 })
-                .setNegativeButton(R.string.cancel, (dialog, which) -> {
-                    if (getDialog() != null) getDialog().cancel();
-                }).create();
+                .setNegativeButton(R.string.cancel, null).create();
     }
 
-    private Drawable getIcon(String icon_resource_string) {
+    private Drawable getIcon(String iconResourceString) {
         try {
-            String pack = icon_resource_string.substring(0, icon_resource_string.indexOf(':'));
-            String type = icon_resource_string.substring(icon_resource_string.indexOf(':') + 1, icon_resource_string.indexOf('/'));
-            String name = icon_resource_string.substring(icon_resource_string.indexOf('/') + 1);
+            String pack = iconResourceString.substring(0, iconResourceString.indexOf(':'));
+            String type = iconResourceString.substring(iconResourceString.indexOf(':') + 1, iconResourceString.indexOf('/'));
+            String name = iconResourceString.substring(iconResourceString.indexOf('/') + 1);
             Resources res = mPackageManager.getResourcesForApplication(pack);
             return ResourcesCompat.getDrawable(res, res.getIdentifier(name, type, pack),
                     getActivity() == null ? null : getActivity().getTheme());
