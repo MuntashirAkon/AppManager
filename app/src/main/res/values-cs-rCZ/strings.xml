@@ -5,7 +5,7 @@
     <string name="activities">Aktivity</string>
     <string name="launch">Spustit</string>
     <string name="error">Chyba</string>
-    <string name="loading">Načítání …</string>
+    <string name="loading">Načítání…</string>
     <!-- &#8230; = ... -->
     <string name="license">Licence</string>
     <string name="usage_weekly">Za týden</string>
@@ -18,7 +18,7 @@
     <string name="no_activities">Žádné aktivity</string>
     <string name="refresh">Obnovit</string>
     <string name="permissions">Využívá oprávnění</string>
-    <string name="input_features">Vstupní funkce</string>
+    <string name="input_features">Funkce pro vstup</string>
     <string name="no_configurations">Žádné konfigurace</string>
     <string name="configurations">Konfigurace</string>
     <string name="app_signing_no_signatures">Žádné platné podpisy</string>
@@ -26,14 +26,14 @@
     <string name="signatures">Podpisy</string>
     <string name="sort_by_sha">Podpis</string>
     <string name="shared_user_id">Sdílené ID uživatele</string>
-    <string name="sort_by_shared_user_id">Sdílené ID uživatele</string>
+    <string name="sort_by_shared_user_id">Sdíleného ID uživatele</string>
     <string name="no_feature">Žádné funkce</string>
-    <string name="uses_feature">Používá funkci</string>
+    <string name="uses_feature">Používá funkce</string>
     <string name="group">Skupina</string>
     <string name="shared_libs">Sdílené knihovny</string>
     <string name="declared_permission">Oprávnění</string>
-    <string name="patterns_allowed">Vzor povolen</string>
-    <string name="write">Zapsat</string>
+    <string name="patterns_allowed">Povolené vzory</string>
+    <string name="write">Zapisovat</string>
     <string name="read">Číst</string>
     <string name="grant_uri_permission">Udělit URI oprávnění</string>
     <string name="flags">Vlajky</string>
@@ -64,7 +64,7 @@
     <string name="about">O aplikaci</string>
     <string name="data_size">Data</string>
     <string name="cache_size">Mezipaměť</string>
-    <string name="sort_by_package_name">Název balíčku</string>
+    <string name="sort_by_package_name">Názvu balíčku</string>
     <string name="user">Uživatel</string>
     <string name="system">Systém</string>
     <string name="sort">Setřídit</string>
@@ -81,4 +81,7 @@
     <string name="no_receivers">Žádné přijímače</string>
     <string name="receivers">Přijímače</string>
     <string name="task_affinity">Příslušnost úlohy</string>
+    <string name="sort_by_app_label">Označení balíčlz</string>
+    <string name="manifest">Manifest</string>
+    <string name="path_permissions">Oprávnění k cestán</string>
 </resources>
