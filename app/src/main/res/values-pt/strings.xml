@@ -932,7 +932,7 @@
     <string name="state_device_io">I/O do aparelho</string>
     <string name="touchscreen_stylus">Caneta</string>
     <string name="navigation_trackball">Trackball</string>
-    <string name="navigation_dial_pad">Discador</string>
+    <string name="navigation_dial_pad">Teclado numérico</string>
     <string name="navigation_no_nav">Sem nav</string>
     <string name="keyboard_12_keys">12 teclas</string>
     <string name="keyboard_qwerty">QWERTY</string>
