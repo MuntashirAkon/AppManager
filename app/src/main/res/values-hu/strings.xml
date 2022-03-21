@@ -92,4 +92,12 @@
     <string name="sort_by_app_label">App címke</string>
     <string name="loading">Betöltés…</string>
     <string name="patterns_allowed">Engedélyezett minták</string>
+    <string name="signatures">Aláírások</string>
+    <string name="sort_by_sha">Aláírás</string>
+    <string name="third_party">Harmadik-féltől származó könyvtárak és ikonok</string>
+    <string name="all_classes">Összes osztály</string>
+    <string name="no_shared_libs">Nincsenek megosztott könyvtárak</string>
+    <string name="shared_libs">Megosztott könyvtárak</string>
+    <string name="grant_uri_permission">URI engedélyek megadása</string>
+    <string name="found_trackers">Talált nyomkövetők:</string>
 </resources>
