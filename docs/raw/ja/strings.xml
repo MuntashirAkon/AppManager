@@ -427,4 +427,5 @@
 \n\\begin{danger}{Caution}
 \nApp Managerをアンインストールすると、App Managerで作成したショートカットはすべて失われます。
 \n\\end{danger}</string>
+    <string name="pages$app-details-page$additional-features-for-rooted-phones">これらのタブでは非Rootユーザーよりも、Rootユーザーは様々な操作を行うことができます。</string>
 </resources>
