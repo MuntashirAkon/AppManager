@@ -293,7 +293,7 @@
 \nアプリが持ちうるほぼすべての情報が記述されています。</string>
     <string name="pages$app-details-page$app-info-tab">\\textbf{アプリ情報}タブには、アプリケーションに関する一般的な情報が含まれています。
 \nまた、このタブ内で実行可能な多くのアクションが表示されます。</string>
-    <string name="pages$app-details-page$other-tabs">その他のタブは、機能、設定、共有ライブラリ、署名などのアンドロイドマニフェストのコンポーネントを一覧表示します。
+    <string name="pages$app-details-page$other-tabs">その他のタブは、機能、設定、共有ライブラリ、署名などのAndroidマニフェストのコンポーネントを一覧表示します。
 \nこれらのタブに関する完全な説明は、近日中に公開される予定です。</string>
     <string name="pages$app-details-page$app-info-general-information">以下のリストは、アプリ情報タブに記載されている順番と同じです。
 \n\\begin{itemize}
@@ -428,4 +428,32 @@
 \nApp Managerをアンインストールすると、App Managerで作成したショートカットはすべて失われます。
 \n\\end{danger}</string>
     <string name="pages$app-details-page$additional-features-for-rooted-phones">これらのタブでは非Rootユーザーよりも、Rootユーザーは様々な操作を行うことができます。</string>
+    <string name="pages$app-details-page$blocking-trackers">トラッカーコンポーネントを無効にするには、三点メニューの「トラッカーをブロック」を使用します。
+\n現在表示されているタブに関係なく、すべてのトラッカーコンポーネントがブロックされます。
+\n
+\n\\begin{tip}{Info}
+\nトラッカーコンポーネントは、アプリのコンポーネントの部分集合です。
+\nしたがって、他のコンポーネントのブロックに使用されるのと同じ方法によりブロックされます。
+\n\\end{tip}
+\n
+\n\\begin{amseealso}
+\n \\item \\hyperref[subsec:tracker-classes-versus-tracker-components]{FAQ: トラッカーのクラスとトラッカーコンポーネント}
+\n \\item \\hyperref[sec:scanner-page]{スキャナーページ}
+\n \\item \\hyperref[subsec:block-unblock-trackers]{ワンタップ一括処理: トラッカーをブロック/ブロック解除}
+\n\\end{amseealso}</string>
+    <string name="pages$app-details-page$signatures-tab_2">ここに表示されるチェックサムは、\\textit{MD5}、\\textit{SHA1}、\\textit{SHA256}の3種類です。
+\n
+\n\\begin{danger}{Caution}
+\n署名情報の検証には、\\textit{SHA256}チェックサムのみ、もしくはこれら3つすべてを使用することを推奨します。
+\n\\textit{MD5}や\\textit{SHA1}のチェックサムだけでは、複数の証明書に対して同じハッシュを生成する可能性あるので、
+\nそれらのみに依存しないようにしてください。
+\n\\end{danger}</string>
+    <string name="pages$app-details-page$blocking-components">各コンポーネント項目の右端には、「ブロック」ボタンがあります。（ブロックされているときは「ブロック解除」ボタンとなります）
+\nこのボタンを使って、そのコンポーネントのブロックの状態を切り替えることができます。
+\n\\hyperref[subsubsec:instant-component-blocking]{インスタントブロッキング}を有効にしていない場合、
+\nまたは以前にアプリケーションにブロックを適用していない場合は、
+\n3点メニューの\\textbf{ルールを反映}オプションで変更を適用する必要があります。
+\nまた、\\textbf{ルールを除去}オプションから、すでに適用されたルールを削除することもできます。
+\n
+\n\\seealsoinline{\\hyperref[sec:faq:app-components]{FAQ: アプリのコンポーネント}}</string>
 </resources>
