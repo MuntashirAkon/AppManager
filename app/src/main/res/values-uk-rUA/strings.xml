@@ -1204,10 +1204,10 @@
     <string name="mode_of_op_with_inferred_mode_of_op">%1$s (імовірний режим: %2$s)</string>
     <string name="scan_in_vt">Сканування в VirusTotal</string>
     <plurals name="usage_minutes">
-        <item quantity="one">%1$d хв.</item>
-        <item quantity="few">%1$d хв.</item>
-        <item quantity="many">%1$d хв.</item>
-        <item quantity="other">%1$d хв.</item>
+        <item quantity="one">%1$d хв</item>
+        <item quantity="few">%1$d хв</item>
+        <item quantity="many">%1$d хв</item>
+        <item quantity="other">%1$d хв</item>
     </plurals>
     <string name="vt_uploading">VirusTotal: завантаження…</string>
     <string name="vt_permalink">Постійне посилання на VirusTotal</string>
