@@ -28,10 +28,13 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.io.ProxyInputStream;
 import io.github.muntashirakon.util.LocalizedString;
 
 public class NativeLibraries {
+    public static final String TAG = NativeLibraries.class.getSimpleName();
+
     private static final int ELF_MAGIC = 0x7f454c46; // 0x7f ELF
 
     public static class NativeLib implements LocalizedString {
@@ -162,7 +165,9 @@ public class NativeLibraries {
         @Override
         public CharSequence toLocalizedString(@NonNull Context context) {
             StringBuilder sb = new StringBuilder();
-            sb.append(Formatter.formatFileSize(context, mSize)).append(", ");
+            if (mSize != -1) {
+                sb.append(Formatter.formatFileSize(context, mSize)).append(", ");
+            }
             switch (mArch) {
                 case ARCH_32BIT:
                     sb.append(context.getString(R.string.binary_32_bit)).append(", ");
@@ -205,8 +210,9 @@ public class NativeLibraries {
             byte[] header = new byte[20]; // First 20 bytes is enough
             is.read(header);
             ByteBuffer buffer = ByteBuffer.wrap(header);
-            if (buffer.getInt() != ELF_MAGIC) {
-                throw new IOException("Invalid header");
+            int magic = buffer.getInt();
+            if (magic != ELF_MAGIC) {
+                throw new IOException(String.format("Invalid header magic 0x%x", magic));
             }
             NativeLib nativeLib = new NativeLib(path, size);
             nativeLib.mArch = buffer.get(); // EI_CLASS
@@ -242,6 +248,8 @@ public class NativeLibraries {
                         NativeLib nativeLib = NativeLib.parse(zipEntry.getName(), zipEntry.getSize(), is);
                         libs.add(nativeLib);
                         uniqueLibs.add(nativeLib.getName());
+                    } catch (IOException e) {
+                        Log.w(TAG, "Could not load native library " + zipEntry.getName(), e);
                     }
                 }
             }
@@ -254,9 +262,13 @@ public class NativeLibraries {
             ZipEntry zipEntry;
             while ((zipEntry = zipInputStream.getNextEntry()) != null) {
                 if (zipEntry.getName().endsWith(".so")) {
-                    NativeLib nativeLib = NativeLib.parse(zipEntry.getName(), zipEntry.getSize(), zipInputStream);
-                    libs.add(nativeLib);
-                    uniqueLibs.add(nativeLib.getName());
+                    try {
+                        NativeLib nativeLib = NativeLib.parse(zipEntry.getName(), zipEntry.getSize(), zipInputStream);
+                        libs.add(nativeLib);
+                        uniqueLibs.add(nativeLib.getName());
+                    } catch (IOException e) {
+                        Log.w(TAG, "Could not load native library " + zipEntry.getName(), e);
+                    }
                 }
             }
         }
@@ -272,6 +284,8 @@ public class NativeLibraries {
                     NativeLib nativeLib = NativeLib.parse(zipEntry.getName(), zipEntry.getSize(), is);
                     libs.add(nativeLib);
                     uniqueLibs.add(nativeLib.getName());
+                } catch (IOException e) {
+                    Log.w(TAG, "Could not load native library " + zipEntry.getName(), e);
                 }
             }
         }
