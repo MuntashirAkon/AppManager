@@ -1111,4 +1111,20 @@
     <string name="save_and_exit">儲存並離開</string>
     <string name="donation_campaign_text">我們正在為 App Manager 在有限的時間內運行 <b> 募款活動</b>。 <a href="https://opencollective.com/app-manager#category-ABOUT">了解更多…</a></string>
     <string name="mode_of_op_with_inferred_mode_of_op">%1$s（推斷模式：%2$s）</string>
+    <string name="intent_firewall">IFW</string>
+    <string name="magisk_denylist">Magisk黑名單</string>
+    <string name="java">Java</string>
+    <string name="smali">Smali</string>
+    <string name="vt_success">病毒總共: %1$d/%2$d</string>
+    <string name="cpu_percent">%% CPU</string>
+    <string name="swap">SWAP</string>
+    <string name="cpu_time">CPU時間</string>
+    <string name="pref_saved_apk_name_format">儲存APK名稱格式</string>
+    <string name="pref_saved_apk_name_format_msg">保存時用於命名 APK 文件的格式。</string>
+    <string name="auth_manager_description">要從外部應用程序啟動 Intent，需要提供一個名為 <tt>auth</tt> 的額外字段，且必須包含以下鍵：</string>
+    <string name="auth_manager_title">授權管理</string>
+    <string name="regenerate_auth_key">重新產生授權密鑰</string>
+    <string name="regenerate_auth_key_warning">您確定嗎？所有第三方應用必須使用新的授權密鑰。</string>
+    <string name="shortcut_icon">快捷圖示</string>
+    <string name="system_partition">Android root</string>
 </resources>
