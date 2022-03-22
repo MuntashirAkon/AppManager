@@ -230,6 +230,27 @@ public class RunningAppsViewModel extends AndroidViewModel {
 
     private final MutableLiveData<Pair<ApplicationInfo, Boolean>> mPreventBackgroundRunResult = new MutableLiveData<>();
 
+    public boolean canRunInBackground(@NonNull ApplicationInfo info) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+            return true;
+        }
+        try {
+            AppOpsService appOpsService = new AppOpsService();
+            boolean canRun;
+            {
+                int mode = appOpsService.checkOperation(AppOpsManager.OP_RUN_IN_BACKGROUND, info.uid, info.packageName);
+                canRun = (mode != AppOpsManager.MODE_IGNORED && mode != AppOpsManager.MODE_ERRORED);
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                int mode = appOpsService.checkOperation(AppOpsManager.OP_RUN_ANY_IN_BACKGROUND, info.uid, info.packageName);
+                canRun |= (mode != AppOpsManager.MODE_IGNORED && mode != AppOpsManager.MODE_ERRORED);
+            }
+            return canRun;
+        } catch (RemoteException e) {
+            return true;
+        }
+    }
+
     public void preventBackgroundRun(@NonNull ApplicationInfo info) {
         mExecutor.submit(() -> {
             try {

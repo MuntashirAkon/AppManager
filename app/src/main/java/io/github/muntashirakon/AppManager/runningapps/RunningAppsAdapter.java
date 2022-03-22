@@ -25,8 +25,6 @@ import java.util.List;
 import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.appops.AppOpsManager;
-import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
 import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
@@ -150,12 +148,7 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAd
                     mModel.forceStop(applicationInfo);
                     return true;
                 });
-                int mode = AppOpsManager.MODE_DEFAULT;
-                try {
-                    mode = new AppOpsService().checkOperation(AppOpsManager.OP_RUN_IN_BACKGROUND, applicationInfo.uid, applicationInfo.packageName);
-                } catch (Exception ignore) {
-                }
-                if (mode != AppOpsManager.MODE_IGNORED && mode != AppOpsManager.MODE_ERRORED) {
+                if (mModel.canRunInBackground(applicationInfo)) {
                     bgItem.setVisible(true).setOnMenuItemClickListener(item -> {
                         mModel.preventBackgroundRun(applicationInfo);
                         return true;
