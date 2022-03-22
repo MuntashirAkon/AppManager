@@ -1159,4 +1159,11 @@
     <string name="primary_abi">Birincil ABI</string>
     <string name="hidden_api_enf_default_policy">Öntanımlı (uygulama türüne göre)</string>
     <string name="binary_64_bit">64 Bit</string>
+    <string name="pref_saved_apk_name_format">Kaydedilen APK Adı Biçimi</string>
+    <string name="auth_manager_title">Yetkilendirme Yöneticisi</string>
+    <string name="regenerate_auth_key">Yetkilendirme anahtarını yeniden oluştur</string>
+    <string name="shortcut_icon">Kısayol Simgesi</string>
+    <string name="pref_saved_apk_name_format_msg">APK dosyalarını kaydettiğinizde adlandırmak için kullanılacak biçim.</string>
+    <string name="auth_manager_description">Bir Intent\'i harici bir uygulamadan başlatmak için, <tt>auth</tt> adlı ek bir alan sağlamak gereklidir ve şu anahtarı içermelidir:</string>
+    <string name="regenerate_auth_key_warning">Emin misiniz\? Tüm üçüncü taraf uygulamaların yeni yetkilendirme anahtarıyla yeniden yapılandırılması gerekir.</string>
 </resources>
