@@ -47,7 +47,6 @@
     <string name="icon_picker">Ikon választó</string>
     <string name="error_invalid_icon_format">Érvénytelen ikon formátum</string>
     <string name="error_invalid_icon_resource">Érvénytelen ikon forrás</string>
-    <string name="insert_icon">Ikon beszúrás</string>
     <string name="class_name">Osztály név</string>
     <string name="package_name">Csomagnév</string>
     <string name="shortcut_name">Parancsikon neve</string>

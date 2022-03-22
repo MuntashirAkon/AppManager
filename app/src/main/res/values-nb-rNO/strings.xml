@@ -585,7 +585,6 @@
     </plurals>
     <string name="toggle_class_listing">Endre klasseliste</string>
     <string name="class_viewer">Klasse-betrakter</string>
-    <string name="insert_icon">Sett inn ikon</string>
     <string name="obb_size">Obb</string>
     <string name="sort_by_domain">Bruker-programmer først</string>
     <string name="uses_feature">Brukerfunksjoner</string>

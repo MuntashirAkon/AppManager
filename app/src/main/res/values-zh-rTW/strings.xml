@@ -749,7 +749,6 @@
     <string name="icon_picker">圖示選擇器</string>
     <string name="error_invalid_icon_format">無效的圖示格式</string>
     <string name="error_invalid_icon_resource">無效的圖示資源</string>
-    <string name="insert_icon">插入圖示</string>
     <string name="class_name">類別名稱</string>
     <string name="package_name">套件名稱</string>
     <string name="shortcut_name">捷徑名稱</string>

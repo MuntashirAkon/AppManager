@@ -72,7 +72,6 @@
     <string name="shortcut_name">Nome do Atalho</string>
     <string name="package_name">Nome do Pacote</string>
     <string name="class_name">Nome da Classe</string>
-    <string name="insert_icon">Inserir Ícone</string>
     <string name="error_invalid_icon_resource">Recurso de ícone inválido</string>
     <string name="error_invalid_icon_format">Formato de ícone inválido</string>
     <string name="icon_picker">Seletor de Ícone</string>

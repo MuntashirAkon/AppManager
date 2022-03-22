@@ -194,7 +194,6 @@
     <string name="icon_picker">Selector de iconos</string>
     <string name="error_invalid_icon_format">Formato de icono no válido</string>
     <string name="error_invalid_icon_resource">Recurso de icono no válido</string>
-    <string name="insert_icon">Insertar icono</string>
     <string name="class_name">Nombre de la Clase</string>
     <string name="package_name">Nombre del paquete</string>
     <string name="shortcut_name">Nombre del atajo (shortcut)</string>

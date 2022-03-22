@@ -85,7 +85,6 @@
     <string name="shortcut_name">快捷方式名称</string>
     <string name="package_name">应用包名</string>
     <string name="class_name">类名</string>
-    <string name="insert_icon">图标</string>
     <string name="error_invalid_icon_resource">无效的图标</string>
     <string name="error_invalid_icon_format">无效图标格式</string>
     <string name="icon_picker">选择图标</string>

@@ -84,7 +84,6 @@
     <string name="shortcut_name">ショートカート名</string>
     <string name="package_name">パッケージ名</string>
     <string name="class_name">クラス名</string>
-    <string name="insert_icon">アイコンを挿入</string>
     <string name="error_invalid_icon_resource">アイコンの保存先が無効です</string>
     <string name="error_invalid_icon_format">アイコンのフォーマットが無効です</string>
     <string name="icon_picker">アイコンを選択</string>

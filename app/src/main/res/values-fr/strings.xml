@@ -573,7 +573,6 @@
     <string name="icon_picker">Sélecteur d\'icône</string>
     <string name="error_invalid_icon_format">Format d\'icône invalide</string>
     <string name="error_invalid_icon_resource">Ressource d\'icône invalide</string>
-    <string name="insert_icon">Insérer une icône</string>
     <string name="class_name">Nom de classe</string>
     <string name="package_name">Nom du paquet</string>
     <string name="shortcut_name">Nom du raccourci</string>

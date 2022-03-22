@@ -92,7 +92,6 @@
     <string name="error_creating_shortcut">바로가기 생성 중 오류</string>
     <string name="package_name">패키지 이름</string>
     <string name="class_name">클래스 이름</string>
-    <string name="insert_icon">아이콘 삽입</string>
     <string name="error_invalid_icon_resource">잘못된 아이콘 리소스</string>
     <string name="error_invalid_icon_format">잘못된 아이콘 형식</string>
     <string name="icon_picker">아이콘 선택기</string>

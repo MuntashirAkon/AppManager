@@ -222,7 +222,6 @@
     <string name="icon_picker">Pengambil Ikon</string>
     <string name="error_invalid_icon_format">Format ikon tidak valid</string>
     <string name="error_invalid_icon_resource">Sumber ikon tidak valid</string>
-    <string name="insert_icon">Masukkan Ikon</string>
     <string name="class_name">Nama Class</string>
     <string name="package_name">Nama Package</string>
     <string name="shortcut_name">Nama Pintasan</string>

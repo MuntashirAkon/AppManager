@@ -85,7 +85,6 @@
     <string name="shortcut_name">Название ярлыка</string>
     <string name="package_name">Имя пакета</string>
     <string name="class_name">Название класса</string>
-    <string name="insert_icon">Вставить значек</string>
     <string name="error_invalid_icon_resource">Недействительный ресурс значка</string>
     <string name="error_invalid_icon_format">Неверный формат значка</string>
     <string name="icon_picker">Выбор иконок</string>

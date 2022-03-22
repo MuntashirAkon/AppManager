@@ -85,7 +85,6 @@
     <string name="shortcut_name">Name der Verknüpfung</string>
     <string name="package_name">Paketname</string>
     <string name="class_name">Klassenname</string>
-    <string name="insert_icon">Icon hinzufügen</string>
     <string name="error_invalid_icon_resource">Ungültige Icon-Ressource</string>
     <string name="error_invalid_icon_format">Ungültiges Icon-Format</string>
     <string name="icon_picker">Icon-Auswahl</string>

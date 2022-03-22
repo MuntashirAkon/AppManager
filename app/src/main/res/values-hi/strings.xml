@@ -252,7 +252,6 @@
     <string name="icon_picker">आइकन पिकर</string>
     <string name="error_invalid_icon_format">अमान्य आइकन प्रारूप</string>
     <string name="error_invalid_icon_resource">अमान्य आइकन संसाधन</string>
-    <string name="insert_icon">आइकन डालें</string>
     <string name="class_name">क्लास का नाम</string>
     <string name="package_name">पैकेज का नाम</string>
     <string name="shortcut_name">शॉर्टकट का नाम</string>

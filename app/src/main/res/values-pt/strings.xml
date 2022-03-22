@@ -302,7 +302,6 @@
     <string name="icon_picker">Seletor de ícone</string>
     <string name="error_invalid_icon_format">Formato de ícone inválido</string>
     <string name="error_invalid_icon_resource">Recurso de ícone inválido</string>
-    <string name="insert_icon">Inserir ícone</string>
     <string name="class_name">Nome da classe</string>
     <string name="package_name">Nome do pacote</string>
     <string name="shortcut_name">Nome do atalho</string>

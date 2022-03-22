@@ -578,7 +578,6 @@
 \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
 \nРозробка лого: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="icon_picker">Вибір іконки</string>
-    <string name="insert_icon">Вставити іконку</string>
     <string name="package_name">Назва пакету</string>
     <string name="shortcut_name">Назва ярлика</string>
     <string name="starting_activity">Стартове activity: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>

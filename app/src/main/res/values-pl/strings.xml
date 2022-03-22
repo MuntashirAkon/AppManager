@@ -111,7 +111,6 @@
     <string name="install_in_progress">Instalowanie…</string>
     <string name="license">Licencja</string>
     <string name="error_invalid_icon_format">Nieprawidłowy format ikony</string>
-    <string name="insert_icon">Wstaw ikonę</string>
     <string name="class_name">Nazwa klasy</string>
     <string name="shortcut_name">Nazwa skrótu</string>
     <string name="edit_shortcut">Edytuj skrót</string>

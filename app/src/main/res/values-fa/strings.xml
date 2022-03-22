@@ -147,7 +147,6 @@
     <string name="icon_picker">انتخاب‌گر آیکون</string>
     <string name="error_invalid_icon_format">فرمت آیکون نامعتبر</string>
     <string name="error_invalid_icon_resource">منبع آیکون نامعتبر</string>
-    <string name="insert_icon">درج نماد</string>
     <string name="class_name">نام کلاس</string>
     <string name="package_name">نام بسته</string>
     <string name="shortcut_name">نام میانبر</string>

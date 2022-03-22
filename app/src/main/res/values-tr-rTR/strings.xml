@@ -115,7 +115,6 @@
     <string name="icon_picker">Simge Seçici</string>
     <string name="error_invalid_icon_format">Geçersiz Simge Biçimi</string>
     <string name="error_invalid_icon_resource">Geçersiz Simge Kaynağı</string>
-    <string name="insert_icon">Simge Ekle</string>
     <string name="class_name">Sınıf Adı</string>
     <string name="package_name">Paket Adı</string>
     <string name="shortcut_name">Kısayol Adı</string>
