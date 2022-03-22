@@ -1160,4 +1160,11 @@
     <string name="endianness_little_endian">Little endian</string>
     <string name="hidden_api_enf_policy_warn">Warn (acesso total à API oculta, mas emite avisos)</string>
     <string name="donation_campaign_text">Estamos realizando uma <b>campanha de financiamento</b> para o App Manager por um período limitado. <a href="https://opencollective.com/app-manager#category-ABOUT">saiba mais…</a></string>
+    <string name="pref_saved_apk_name_format">Formato de Nome de APK Salvo</string>
+    <string name="pref_saved_apk_name_format_msg">O formato a ser usado para nomear os arquivos APK ao salvá-los.</string>
+    <string name="auth_manager_description">Para iniciar um Intent a partir de um aplicativo externo, é necessário fornecer um campo extra chamado <tt>auth</tt>, e deve conter a seguinte chave:</string>
+    <string name="auth_manager_title">Gerenciador de Autorização</string>
+    <string name="regenerate_auth_key">Regenerar chave de autorização</string>
+    <string name="regenerate_auth_key_warning">Tem certeza\? Todos os aplicativos de terceiros precisam ser reconfigurados com a nova chave de autorização.</string>
+    <string name="shortcut_icon">Ícone de Atalho</string>
 </resources>
