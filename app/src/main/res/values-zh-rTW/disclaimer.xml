@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<resources>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources>
     <string name="disclaimer_header">免責聲明</string>
     <string name="disclaimer_footer">© 2020–2021 Muntashir Al-Islam</string>
     <string name="disclaimer_agree_forever">不再顯示此訊息</string>
     <string name="disclaimer_agree">我同意</string>
     <string name="disclaimer_exit">退出</string>
-    <string name="disclaimer_body">App Manager 提供 root 功能，如果使用不當，可能會損害您的裝置。應用程式管理器對使用此應用程式造成的任何損害不承擔責任。如果您不完全瞭解 root 的工作原理，則應避免使用 root 選項，直到您完全了解風險。
+    <string name="disclaimer_body">App Manager 提供 root 功能，如果使用不當，可能會損害您的裝置。對使用此應用程式造成的任何損害不承擔責任。如果您不完全瞭解 root 的工作原理，則應避免使用 root 選項，直到您完全了解風險。
 \n
-\n我向其他應用程式和網站提供的任何連結都適合使用者。我不負責任何內容，你可能會發現通過去外部連結。
+\n向其他應用程式和網站提供的任何連結都適合使用者。但不負責任何內容，你可能會發現連結至外部的連結。
 \n
-\n使用 App Manager 時，您承擔自己的使用的全部責任，並且不會因濫用而承擔任何損害、索賠或貨幣價值。
+\n使用 App Manager 時，您需承擔自己的使用的全部責任，並且不會因濫用而承擔任何損害、索賠或貨幣價值。
 \n
 \n使用此應用程式，即表示您接受使用該應用程式的所有責任，並同意對於您做出的任何對您的裝置有不利影響的行為不負責。</string>
 </resources>
