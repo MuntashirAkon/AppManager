@@ -1235,4 +1235,11 @@
     <string name="save_and_exit">Зберегти й вийти</string>
     <string name="donation_campaign_text">Проводимо короткострокову <b>кампанію збору коштів</b> для App Manager. <a href="https://opencollective.com/app-manager#category-ABOUT">докладніше…</a></string>
     <string name="hidden_api_enf_policy_dark_grey_and_black">Строго (списки обмеження й блокування)</string>
+    <string name="auth_manager_title">Менеджер авторизації</string>
+    <string name="regenerate_auth_key">Перестворити ключ авторизації</string>
+    <string name="regenerate_auth_key_warning">Точно\? Всі сторонні застосунки доведеться переналаштувати на використання нового ключа авторизації.</string>
+    <string name="shortcut_icon">Значок запуску</string>
+    <string name="auth_manager_description">Щоб запустити Intent зі стороннього застосунку, обов\'язково зазначте додатковим полем <tt>auth</tt> такий ключ:</string>
+    <string name="pref_saved_apk_name_format">Формат назви збережених APK</string>
+    <string name="pref_saved_apk_name_format_msg">Формат, який буде використано для іменування при збереженні APK-файлів.</string>
 </resources>
