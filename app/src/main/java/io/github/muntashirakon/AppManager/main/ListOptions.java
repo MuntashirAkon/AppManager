@@ -46,6 +46,7 @@ public class ListOptions extends BottomSheetDialogFragment {
             SORT_BY_BACKUP,
             SORT_BY_TRACKERS,
             SORT_BY_LAST_ACTION,
+            SORT_BY_INSTALLATION_DATE,
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface SortOrder {
@@ -63,6 +64,7 @@ public class ListOptions extends BottomSheetDialogFragment {
     public static final int SORT_BY_BACKUP = 9;
     public static final int SORT_BY_TRACKERS = 10;
     public static final int SORT_BY_LAST_ACTION = 11;
+    public static final int SORT_BY_INSTALLATION_DATE = 12;
 
     @IntDef(flag = true, value = {
             FILTER_NO_FILTER,
@@ -98,7 +100,7 @@ public class ListOptions extends BottomSheetDialogFragment {
     private static final int[] SORT_ITEMS_MAP = {R.string.sort_by_domain, R.string.sort_by_app_label,
             R.string.sort_by_package_name, R.string.sort_by_last_update, R.string.sort_by_shared_user_id,
             R.string.sort_by_target_sdk, R.string.sort_by_sha, R.string.sort_by_disabled_app,
-            R.string.sort_by_blocked_components, R.string.sort_by_backup, R.string.trackers, R.string.last_actions};
+            R.string.sort_by_blocked_components, R.string.sort_by_backup, R.string.trackers, R.string.last_actions, R.string.sort_by_installation_date};
     private static final SparseIntArray FILTER_MAP = new SparseIntArray() {{
         put(FILTER_USER_APPS, R.string.filter_user_apps);
         put(FILTER_SYSTEM_APPS, R.string.filter_system_apps);

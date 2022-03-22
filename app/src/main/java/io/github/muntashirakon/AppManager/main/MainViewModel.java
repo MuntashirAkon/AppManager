@@ -410,6 +410,9 @@ public class MainViewModel extends AndroidViewModel {
                     case ListOptions.SORT_BY_LAST_UPDATE:
                         // Sort in decreasing order
                         return -mode * o1.lastUpdateTime.compareTo(o2.lastUpdateTime);
+                    case ListOptions.SORT_BY_INSTALLATION_DATE:
+                        // Sort in decreasing order
+                        return -mode * Long.compare(o1.firstInstallTime, o2.firstInstallTime);
                     case ListOptions.SORT_BY_TARGET_SDK:
                         // null on top
                         if (o1.sdk == null) return -mode;

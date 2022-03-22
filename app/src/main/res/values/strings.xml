@@ -1201,4 +1201,5 @@
     <string name="regenerate_auth_key">Regenerate authorization key</string>
     <string name="regenerate_auth_key_warning">Are you sure? All the third-party apps have to be reconfigured with the new authorization key.</string>
     <string name="shortcut_icon">Shortcut Icon</string>
+    <string name="sort_by_installation_date">Installation date</string>
 </resources>
