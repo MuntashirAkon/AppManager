@@ -12,7 +12,7 @@
         android:id="@+id/action_list_options"
         android:icon="@drawable/ic_list_status"
         android:title="@string/list_options"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_refresh"
