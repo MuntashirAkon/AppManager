@@ -19,6 +19,7 @@ import static io.github.muntashirakon.AppManager.utils.ExUtils.rethrowAsIOExcept
 
 public class ProxyOutputStream extends OutputStream {
     private final IFileDescriptor mFd;
+    private boolean closed = false;
 
     public ProxyOutputStream(String file) throws IOException {
         this(new ProxyFile(file), false);
@@ -94,6 +95,7 @@ public class ProxyOutputStream extends OutputStream {
     public void close() throws IOException {
         try {
             mFd.close();
+            closed = true;
         } catch (RemoteException e) {
             rethrowAsIOException(e);
         }
@@ -101,7 +103,7 @@ public class ProxyOutputStream extends OutputStream {
 
     @Override
     protected void finalize() throws Throwable {
-        if (mFd != null) {
+        if (mFd != null && !closed) {
             mFd.close();
         }
     }
