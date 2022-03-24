@@ -29,8 +29,7 @@ import java.io.OutputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.AppManager;
@@ -87,10 +86,9 @@ public final class TarUtils {
             try (TarArchiveOutputStream tos = new TarArchiveOutputStream(os)) {
                 tos.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
                 tos.setBigNumberMode(TarArchiveOutputStream.BIGNUMBER_POSIX);
-                List<Path> files = new ArrayList<>();
                 Path basePath = source.isDirectory() ? source : source.getParentFile();
                 if (basePath == null) basePath = new Path(AppManager.getContext(), new File("/"));
-                gatherFiles(files, basePath, source, filters, exclude, followLinks);
+                List<Path> files = listAllFiles(basePath, source, filters, exclude, followLinks);
                 for (Path file : files) {
                     String relativePath = getRelativePath(file, basePath);
                     if (relativePath.equals("") || relativePath.equals("/")) continue;
@@ -196,67 +194,147 @@ public final class TarUtils {
     }
 
     @VisibleForTesting
-    static void gatherFiles(@NonNull List<Path> files, @NonNull Path basePath, @NonNull Path source,
-                            @Nullable String[] filters, @Nullable String[] exclude, boolean followLinks)
-            throws IOException {
-        if (source.isDirectory()) {  // OsConstants#S_ISDIR
-            // Is a directory, add only the directory if it's a symbolic link and followLinks is disabled
+    @NonNull
+    static List<Path> listAllFiles(@NonNull Path basePath, @NonNull Path source, @Nullable String[] filters,
+                                          @Nullable String[] exclude, boolean followLinks) throws IOException {
+        LinkedList<Path> allFiles = new LinkedList<>();
+        if (source.isFile()) { // OsConstants#S_ISREG
+            // Add it and return
+            allFiles.add(source);
+            return allFiles;
+        } else if (source.isDirectory()) { // OsConstants#S_ISDIR
             if (!followLinks && source.isSymbolicLink()) {
-                files.add(source);
-                return;
+                // Add the directory only if it's a symbolic link and followLinks is disabled
+                allFiles.add(source);
+                return allFiles;
             }
-            // Check if the contents of the directory matches the filters
-            Path[] children = source.listFiles(pathname -> pathname.isDirectory()
-                    || (isUnderFilter(pathname, basePath, filters) && !willExclude(pathname, basePath, exclude)));
-            if (children.length == 0) {
-                // Add this directory nonetheless if it matches one of the filters
-                if (isUnderFilter(source, basePath, filters) && !willExclude(source, basePath, exclude)) {
-                    files.add(source);
+        } else {
+            // No support for any other files
+            return allFiles;
+        }
+        // Top-level directory
+        Path[] fileList = source.listFiles(pathname -> pathname.isDirectory()
+                || (isUnderFilter(pathname, basePath, filters) && !willExclude(pathname, basePath, exclude)));
+        if (fileList.length == 0) {
+            // Add this directory nonetheless if it matches one of the filters, no symlink checks needed
+            if (isUnderFilter(source, basePath, filters) && !willExclude(source, basePath, exclude)) {
+                allFiles.add(source);
+            }
+            return allFiles;
+        } else {
+            // Has children, don't check for filters, just add the directory
+            allFiles.add(source);
+        }
+        // Declare a collection of stored directories
+        LinkedList<Path> dirCheckList = new LinkedList<>();
+        for (Path curFile: fileList) {
+            if (curFile.isFile()) { // OsConstants#S_ISREG
+                allFiles.add(curFile);
+            } else if(curFile.isDirectory()) { // OsConstants#S_ISDIR
+                if (!followLinks && curFile.isSymbolicLink()) {
+                    // Add the directory only if it's a symbolic link and followLinks is disabled
+                    allFiles.add(curFile);
+                } else {
+                    // Not a symlink
+                    dirCheckList.add(curFile);
                 }
-                return;
+            } // else No support for any other files
+        }
+        while (!dirCheckList.isEmpty()) {
+            Path removedDir = dirCheckList.removeFirst();
+            // Remove the first catalog
+            Path[] removedDirFileList = removedDir.listFiles(pathname -> pathname.isDirectory()
+                    || (isUnderFilter(pathname, basePath, filters) && !willExclude(pathname, basePath, exclude)));
+            if (removedDirFileList.length == 0) {
+                // Add this directory nonetheless if it matches one of the filters, no symlink checks needed
+                if (isUnderFilter(removedDir, basePath, filters) && !willExclude(removedDir, basePath, exclude)) {
+                    allFiles.add(removedDir);
+                }
+                continue;
             } else {
-                // Has children, don't check for filters, just add the directory
-                files.add(source);
+                // Has children
+                allFiles.add(removedDir);
             }
-            for (Path child : children) {
-                gatherFiles(files, basePath, child, filters, exclude, followLinks);
+            for(Path curFile : removedDirFileList) {
+                if (curFile.isFile()) { // OsConstants#S_ISREG
+                    allFiles.add(curFile);
+                } else if(curFile.isDirectory()) { // OsConstants#S_ISDIR
+                    if (!followLinks && curFile.isSymbolicLink()) {
+                        // Add the directory only if it's a symbolic link and followLinks is disabled
+                        allFiles.add(curFile);
+                    } else {
+                        // Not a symlink
+                        dirCheckList.add(curFile);
+                    }
+                } // else No support for any other files
             }
-        } else if (source.isFile()) {  // OsConstants#S_ISREG
-            // Not directory, add it
-            files.add(source);
-        } // else we don't support other type of files
+        }
+        return allFiles;
     }
 
     private static void validateFiles(@NonNull Path basePath,
                                       @NonNull Path source,
                                       @Nullable String[] filters,
                                       @Nullable String[] exclude) {
-        if (source.isDirectory()) {
-            // Check if the contents of the directory matches the filters
-            HashSet<Path> children = new HashSet<>(Arrays.asList(source.listFiles(pathname -> pathname.isDirectory()
-                    || (isUnderFilter(pathname, basePath, filters) && !willExclude(pathname, basePath, exclude)))));
-            if (children.isEmpty()) {
+        if (!source.isDirectory()) {
+            // Not a directory, skip
+            return;
+        }
+        // List matched and unmatched children for top-level directory
+        LinkedList<Path> matchedChildren = new LinkedList<>();
+        List<Path> unmatchedChildren = new ArrayList<>();
+        for (Path childPath : source.listFiles()) {
+            if (childPath.isDirectory() || (isUnderFilter(childPath, basePath, filters)
+                    && !willExclude(childPath, basePath, exclude))) {
+                // Matches the filter or it is a directory
+                matchedChildren.add(childPath);
+            } else unmatchedChildren.add(childPath);
+        }
+        if (matchedChildren.isEmpty()) {
+            // No children have matched, delete this directory
+            if (!basePath.equals(source)) {
+                // Only delete if the source is not the base path
+                source.delete();
+            }
+            // Create this directory again if it matches one of the filters
+            if (isUnderFilter(source, basePath, filters) && !willExclude(source, basePath, exclude)) {
+                source.mkdirs();
+            }
+            return;
+        }
+        // Validate matched children
+        while (!matchedChildren.isEmpty()) {
+            Path removedChild = matchedChildren.removeFirst();
+            if (!removedChild.isDirectory()) {
+                // Not a directory, skip
+                continue;
+            }
+            // List matched and unmatched children
+            int matchedCount = 0;
+            for (Path childPath : removedChild.listFiles()) {
+                if (childPath.isDirectory() || (isUnderFilter(childPath, basePath, filters)
+                        && !willExclude(childPath, basePath, exclude))) {
+                    // Matches the filter or it is a directory
+                    matchedChildren.add(childPath);
+                    ++matchedCount;
+                } else unmatchedChildren.add(childPath);
+            }
+            if (matchedCount == 0) {
                 // No children have matched, delete this directory
-                if (!basePath.equals(source)) {
+                if (!basePath.equals(removedChild)) {
                     // Only delete if the source is not the base path
-                    source.delete();
+                    removedChild.delete();
                 }
                 // Create this directory again if it matches one of the filters
-                if (isUnderFilter(source, basePath, filters) && !willExclude(source, basePath, exclude)) {
-                    source.mkdirs();
+                if (isUnderFilter(removedChild, basePath, filters) && !willExclude(removedChild, basePath, exclude)) {
+                    removedChild.mkdirs();
                 }
-                return;
             }
-            // Check for unmatched children
-            Path[] unmatchedChildren = source.listFiles(pathname -> !children.contains(pathname));
-            // Delete unmatched children
-            for (Path child : unmatchedChildren) {
-                child.delete();
-            }
-            // Validate matched children
-            for (Path child : children) {
-                validateFiles(basePath, child, filters, exclude);
-            }
+        }
+        // Delete unmatched children
+        for (Path child : unmatchedChildren) {
+            // No need to check return value as some paths may not exist
+            child.delete();
         }
     }
 
