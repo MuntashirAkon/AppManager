@@ -1202,4 +1202,6 @@
     <string name="regenerate_auth_key_warning">Are you sure? All the third-party apps have to be reconfigured with the new authorization key.</string>
     <string name="shortcut_icon">Shortcut Icon</string>
     <string name="sort_by_installation_date">Installation date</string>
+    <string name="backup_volume_unavailable_warning">The selected backup volume is not currently available. If it is located in an external storage, please insert it, or change the backup volume.</string>
+    <string name="change_backup_volume">Change volume</string>
 </resources>

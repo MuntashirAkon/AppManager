@@ -531,6 +531,20 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
                 }
             }
         }
+        // Check for backup volume
+        if (!AppPref.getAppManagerDirectory().exists()) {
+            new MaterialAlertDialogBuilder(this)
+                    .setTitle(R.string.backup_volume)
+                    .setMessage(R.string.backup_volume_unavailable_warning)
+                    .setPositiveButton(R.string.close, null)
+                    .setNeutralButton(R.string.change_backup_volume, (dialog, which) -> {
+                        Intent intent = new Intent(this, SettingsActivity.class);
+                        intent.putExtra(SettingsActivity.EXTRA_KEY, "backup_restore_prefs");
+                        intent.putExtra(SettingsActivity.EXTRA_SUB_KEY, "backup_volume");
+                        startActivity(intent);
+                    })
+                    .show();
+        }
     }
 
     @Override

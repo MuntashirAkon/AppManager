@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.preference.Preference;
@@ -14,15 +15,21 @@ import androidx.preference.PreferenceFragmentCompat;
 
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
+import java.util.Objects;
+
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 
 public class SettingsActivity extends BaseActivity implements PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
     public static final String EXTRA_KEY = "key";
-    public static final String EXTRA_SUB_KEY = "key";
+    public static final String EXTRA_SUB_KEY = "sub_key";
 
     public LinearProgressIndicator progressIndicator;
     private FragmentManager fragmentManager;
+    @Nullable
+    private String key;
+    @Nullable
+    private String subKey;
 
     @Override
     protected void onAuthenticated(Bundle savedInstanceState) {
@@ -32,7 +39,8 @@ public class SettingsActivity extends BaseActivity implements PreferenceFragment
         progressIndicator.setVisibilityAfterHide(View.GONE);
         progressIndicator.hide();
 
-        String key = getIntent().getStringExtra(EXTRA_KEY);
+        key = getIntent().getStringExtra(EXTRA_KEY);
+        subKey = getIntent().getStringExtra(EXTRA_SUB_KEY);
 
         fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.main_layout, MainPreferences.getInstance(key))
@@ -64,8 +72,9 @@ public class SettingsActivity extends BaseActivity implements PreferenceFragment
             Bundle args = pref.getExtras();
             Fragment fragment = fragmentManager.getFragmentFactory()
                     .instantiate(this.getClassLoader(), pref.getFragment());
-            if (fragment instanceof PreferenceFragment) {
-                args.putString(PreferenceFragment.PREF_KEY, getIntent().getStringExtra(EXTRA_SUB_KEY));
+            if (subKey != null && fragment instanceof PreferenceFragment && Objects.equals(pref.getKey(), key)) {
+                args.putString(PreferenceFragment.PREF_KEY, subKey);
+                subKey = null;
             }
             fragment.setArguments(args);
             // The line below is kept because this is how it is handled in AndroidX library
