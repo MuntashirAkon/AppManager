@@ -52,7 +52,7 @@
     <string name="pref_import_blocker_msg">ब्लॉकर से ब्लॉकिंग रूल्स आयात करें, प्रत्येक फाइल जो एक पैकेज के रूल्स समाविष्ट करती है</string>
     <string name="pref_import_watt_msg">वाट से ब्लॉकिंग रूल्स आयात करें, प्रत्येक फाइल जो एक पैकेज नाम जैसे कि packagename.xml के रूल्स समाविष्ट करती है।</string>
     <string name="pref_import_msg">ऐप मैनेजर से पहले निर्यात किए गए ब्लॉकिंग नियमों को आयात करें</string>
-    <string name="pref_export_msg">ब्लॉकिंग नियमों को एक्सटर्नल स्टोरज में आयात करें जिनको ऐप मैनेजर के भीतर कॉन्फ़िगर किया गया है</string>
+    <string name="pref_export_msg">ऐप मैनेजर में कॉन्फ़िगर किए गए ब्लॉकिंग नियमों को एक्सटर्नल स्टोरेज में निर्यात करें।</string>
     <string name="touchscreen">टचस्क्रीन</string>
     <string name="navigation">नेविगेशन</string>
     <string name="keyboard_type">कीबोर्ड प्रकार</string>
@@ -98,7 +98,7 @@
     <string name="user_and_uid">यूज़र: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
     <string name="memory_virtual_memory">मेमोरी: %1$s, वर्चुअल मेमोरी: %2$s</string>
     <string name="pid_and_ppid">प्रोसेस आईडी: %1$d, पैरेंट प्रोसेस आईडी: %2$d</string>
-    <string name="disable_background_run">बैकग्राउंड में चलना ना दे</string>
+    <string name="disable_background_run">बैकग्राउंड कार्रवाई रोकें</string>
     <string name="kill_process">जबरदस्ती रोकें</string>
     <string name="running_apps">चल रहे ऐप</string>
     <string name="store">स्टोर</string>
@@ -112,7 +112,7 @@
     <string name="pref_import_blocker">ब्लॉकर से आयात करें</string>
     <string name="pref_import_watt">वाट से आयात करें</string>
     <string name="pref_import_export_blocking_rules_msg">रूल्स का आयात/निर्यात करें, बाहरी रूल्स का वाट और ब्लॉकर से आयात करें।</string>
-    <string name="pref_import_export_blocking_rules">ब्लॉकिंग रूल्स का आयात/निर्यात</string>
+    <string name="pref_import_export_blocking_rules">ब्लॉकिंग नियमों का आयात/निर्यात</string>
     <string name="sort_by_mobile_data">मोबाइल डेटा</string>
     <string name="sort_by_times_opened">कितनी बार खोला</string>
     <string name="sort_by_screen_time">स्क्रीन समय</string>
@@ -130,7 +130,7 @@
     <string name="app_settings">सेटिंग्स</string>
     <string name="usage_access">इस्तेमाल का एक्सेस</string>
     <string name="pref_global_blocking_enabled_msg">आप एप्लिकेशन को ब्लॉक किए बिना किसी भी एप्लिकेशन के किसी भी कंपोनेंट को ब्लॉक कर सकते हैं।</string>
-    <string name="pref_global_blocking_enabled">ग्लोबल कंपोनेंट ब्लॉकिंग</string>
+    <string name="pref_global_blocking_enabled">तत्काल कंपोनेंट ब्लॉकिंग</string>
     <string name="str_logo">लोगो</string>
     <string name="rules_not_applied">रूल्स लागू नहीं हैं</string>
     <string name="failed_to_disable_op">अनुरोध किए गए ऐप ऑप को बंद नहीं किया जा सका</string>
@@ -193,7 +193,7 @@
     <string name="menu_remove_rules">रूल्स हटाएँ</string>
     <string name="failed_to_extract_apk_file">एपीके फाइल एक्सट्रैक्ट नहीं कर सका</string>
     <string name="share_apk">एपीके शेयर करें</string>
-    <string name="grant_usage_acess_message">ऐप उपयोग जानकारी प्रदर्शित करने के लिए इस्तेमाल एक्सेस की अनुमति अनिवार्य है।</string>
+    <string name="grant_usage_acess_message">इसका उपयोग एप्लिकेशन उपयोग जानकारी प्रदर्शित करने के लिए किया जाता है।</string>
     <string name="grant_usage_access">इस्तेमाल एक्सेस की अनुमति दें</string>
     <string name="go">जाएँ</string>
     <string name="go_back">पीछे जाएँ</string>
@@ -784,4 +784,5 @@
     <string name="community">कम्युनिटी</string>
     <string name="community_links">टेलीग्राम: https://t.me/AppManagerChannel
 \nट्विटर: https://twitter.com/AppManagerNews</string>
+    <string name="failed_to_uninstall_app">अनइंस्टॉल विफल</string>
 </resources>
