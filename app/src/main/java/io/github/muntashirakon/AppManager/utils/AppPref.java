@@ -19,7 +19,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
@@ -243,7 +242,7 @@ public class AppPref {
     }
 
     @NonNull
-    public static Path getAppManagerDirectory() throws FileNotFoundException {
+    public static Path getAppManagerDirectory() {
         Context ctx = getInstance().context;
         Uri uri = getSelectedDirectory();
         Path path;

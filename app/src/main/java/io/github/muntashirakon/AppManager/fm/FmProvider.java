@@ -86,18 +86,13 @@ public class FmProvider extends ContentProvider {
         }
     }
 
-    @Nullable
+    @NonNull
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection,
                         @Nullable String[] selectionArgs, @Nullable String sortOrder) {
         // ContentProvider has already checked granted permissions
         String[] projectionColumns = projection == null ? COLUMNS : projection;
-        Path path;
-        try {
-            path = getFileProviderPath(uri);
-        } catch (FileNotFoundException e) {
-            return null;
-        }
+        Path path = getFileProviderPath(uri);
         List<String> columns = new ArrayList<>();
         List<Object> values = new ArrayList<>();
         for (String column : projectionColumns) {
@@ -139,11 +134,7 @@ public class FmProvider extends ContentProvider {
     @Nullable
     @Override
     public String getType(@NonNull Uri uri) {
-        try {
-            return getFileProviderPath(uri).getType();
-        } catch (FileNotFoundException e) {
-            return null;
-        }
+        return getFileProviderPath(uri).getType();
     }
 
     @Nullable
@@ -170,7 +161,7 @@ public class FmProvider extends ContentProvider {
     }
 
     @NonNull
-    private static Path getFileProviderPath(@NonNull Uri uri) throws FileNotFoundException {
+    private static Path getFileProviderPath(@NonNull Uri uri) {
         return new Path(AppManager.getContext(), getFileProviderPathInternal(uri));
     }
 

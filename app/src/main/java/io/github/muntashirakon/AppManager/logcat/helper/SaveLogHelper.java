@@ -13,7 +13,6 @@ import androidx.annotation.Nullable;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -166,7 +165,7 @@ public class SaveLogHelper {
     }
 
     @NonNull
-    private static Path getAMDirectory() throws FileNotFoundException {
+    private static Path getAMDirectory() {
         Path amDir = AppPref.getAppManagerDirectory();
         if (!amDir.exists()) {
             amDir.mkdir();

@@ -11,7 +11,6 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -44,7 +43,7 @@ public class FmViewModel extends AndroidViewModel {
     }
 
     @AnyThread
-    public void loadFiles(Uri uri) throws FileNotFoundException {
+    public void loadFiles(Uri uri) {
         Path path = new Path(getApplication(), uri);
         loadFiles(path);
     }

@@ -31,7 +31,7 @@ public class BackupFiles {
     static final String NO_MEDIA = ".nomedia";
 
     @NonNull
-    public static Path getBackupDirectory() throws FileNotFoundException {
+    public static Path getBackupDirectory() {
         return AppPref.getAppManagerDirectory();
     }
 

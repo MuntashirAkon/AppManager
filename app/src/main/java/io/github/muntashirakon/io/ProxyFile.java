@@ -83,11 +83,6 @@ public class ProxyFile extends File {
         return super.delete();
     }
 
-    public boolean forceDelete() {
-        if (isFile()) return super.delete();
-        else return deleteDir(this);
-    }
-
     @NonNull
     @Override
     public ProxyFile getAbsoluteFile() {
@@ -331,19 +326,5 @@ public class ProxyFile extends File {
 
     public boolean isRemote() {
         return mFile != null && mFile.asBinder().pingBinder();
-    }
-
-    private static boolean deleteDir(ProxyFile dir) {
-        if (dir != null && dir.isDirectory()) {
-            String[] children = dir.list();
-            if (children == null) return false;
-            for (String child : children) {
-                boolean success = deleteDir(new ProxyFile(dir, child));
-                if (!success) return false;
-            }
-            return dir.delete();
-        } else if (dir != null && dir.isFile()) {
-            return dir.delete();
-        } else return false;
     }
 }

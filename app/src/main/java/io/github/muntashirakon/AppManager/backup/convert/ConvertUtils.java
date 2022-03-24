@@ -11,7 +11,6 @@ import com.android.apksig.ApkVerifier;
 import com.android.apksig.apk.ApkFormatException;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
@@ -37,7 +36,7 @@ import static io.github.muntashirakon.AppManager.backup.MetadataManager.TAR_TYPE
 
 public final class ConvertUtils {
     @NonNull
-    public static Path[] getRelevantImportFiles(@NonNull Uri uri, @ImportType int backupType) throws FileNotFoundException {
+    public static Path[] getRelevantImportFiles(@NonNull Uri uri, @ImportType int backupType) {
         return getRelevantImportFiles(backupType, new Path(AppManager.getContext(), uri));
     }
 

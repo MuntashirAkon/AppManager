@@ -105,23 +105,18 @@ public class AppExplorerViewModel extends AndroidViewModel {
                 }
             }
             List<AdapterItem> adapterItems = new ArrayList<>();
-            try {
-                Path path;
-                if (uri == null) {
-                    // Null URI always means root of the zip file
-                    path = zipFileRoot;
-                } else {
-                    path = new Path(AppManager.getContext(), uri);
-                }
-                for (Path child : path.listFiles()) {
-                    adapterItems.add(new AdapterItem(child));
-                }
-                Collections.sort(adapterItems);
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                this.fmItems.postValue(adapterItems);
+            Path path;
+            if (uri == null) {
+                // Null URI always means root of the zip file
+                path = zipFileRoot;
+            } else {
+                path = new Path(AppManager.getContext(), uri);
             }
+            for (Path child : path.listFiles()) {
+                adapterItems.add(new AdapterItem(child));
+            }
+            Collections.sort(adapterItems);
+            this.fmItems.postValue(adapterItems);
         });
     }
 

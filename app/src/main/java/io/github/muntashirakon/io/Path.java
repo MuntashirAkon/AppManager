@@ -46,6 +46,22 @@ import io.github.muntashirakon.AppManager.utils.FileUtils;
 public class Path {
     public static final String TAG = Path.class.getSimpleName();
 
+    @NonNull
+    public static Path getPrimaryPath(@NonNull Context context, @Nullable String path) {
+        return new Path(context, new Uri.Builder()
+                .scheme(ContentResolver.SCHEME_CONTENT)
+                .authority("com.android.externalstorage.documents")
+                .path("/tree/primary:" + (path == null ? "" : path))
+                .build());
+    }
+
+    private static Uri uriWithAppendedPath(@NonNull Uri basePath, @NonNull String[] children) {
+        for (String child : children) {
+            basePath = Uri.withAppendedPath(basePath, child);
+        }
+        return basePath;
+    }
+
     // An invalid MIME so that it doesn't match any extension
     private static final String DEFAULT_MIME = "application/x-invalid-mime-type";
 
@@ -73,53 +89,61 @@ public class Path {
         mDocumentFile = documentFile;
     }
 
-    public Path(@NonNull Context context, @NonNull Uri uri) throws FileNotFoundException {
+    public Path(@NonNull Context context, @NonNull Uri uri) {
         mContext = context;
         Path fsRoot = VirtualFileSystem.getFsRoot(uri);
         if (fsRoot != null) {
             mDocumentFile = fsRoot.mDocumentFile;
             return;
         }
-        DocumentFile documentFile = null;
+        DocumentFile documentFile;
         switch (uri.getScheme()) {
             case ContentResolver.SCHEME_CONTENT:
                 boolean isTreeUri = uri.getPath().startsWith("/tree/");
-                documentFile = isTreeUri ? DocumentFile.fromTreeUri(context, uri) : DocumentFile.fromSingleUri(context, uri);
+                documentFile = Objects.requireNonNull(isTreeUri ? DocumentFile.fromTreeUri(context, uri) : DocumentFile.fromSingleUri(context, uri));
                 break;
             case ContentResolver.SCHEME_FILE:
                 documentFile = new ProxyDocumentFile(new ProxyFile(uri.getPath()));
                 break;
             case VirtualDocumentFile.SCHEME: {
                 Pair<Integer, String> parsedUri = VirtualDocumentFile.parseUri(uri);
-                if (parsedUri == null) break;
-                Path rootPath = VirtualFileSystem.getFsRoot(parsedUri.first);
-                if (rootPath == null) break;
-                if (parsedUri.second.equals(File.separator)) {
-                    documentFile = rootPath.mDocumentFile;
-                } else {
-                    // Find file is acceptable here since the file always exists
-                    documentFile = rootPath.mDocumentFile.findFile(parsedUri.second);
+                if (parsedUri != null) {
+                    Path rootPath = VirtualFileSystem.getFsRoot(parsedUri.first);
+                    if (rootPath != null) {
+                        if (parsedUri.second == null || parsedUri.second.equals(File.separator)) {
+                            documentFile = rootPath.mDocumentFile;
+                        } else {
+                            // Find file is acceptable here since the file always exists
+                            documentFile = Objects.requireNonNull(rootPath.mDocumentFile.findFile(parsedUri.second));
+                        }
+                        break;
+                    }
                 }
-                break;
             }
             default:
                 throw new IllegalArgumentException("Unsupported uri " + uri);
         }
-        if (documentFile == null) throw new FileNotFoundException("Uri " + uri + " does not belong to any document.");
+        // Setting mDocumentFile at the end ensures that it is never null
         mDocumentFile = documentFile;
     }
 
     public Path(@NonNull Context context, @NonNull UriPermission uriPermission) throws FileNotFoundException {
         mContext = context;
-        DocumentFile documentFile = DocumentFile.fromTreeUri(context, uriPermission.getUri());
-        if (documentFile == null)
-            throw new FileNotFoundException("Uri " + uriPermission + " does not belong to any document.");
-        mDocumentFile = documentFile;
+        mDocumentFile = Objects.requireNonNull(DocumentFile.fromTreeUri(context, uriPermission.getUri()));
+    }
+
+    public Path(@NonNull Path path, @NonNull String child) {
+        this(path.mContext, Uri.withAppendedPath(path.getUri(), Uri.encode(child)));
+    }
+
+    public Path(@NonNull Path path, @NonNull String... children) {
+        this(path.mContext, uriWithAppendedPath(path.getUri(), children));
     }
 
     /**
      * Return the last segment of this path.
      */
+    @Nullable
     public String getName() {
         return mDocumentFile.getName();
     }
@@ -131,6 +155,7 @@ public class Path {
      * be used to test if the returned Uri is backed by an
      * {@link android.provider.DocumentsProvider}.
      */
+    @NonNull
     public Uri getUri() {
         return mDocumentFile.getUri();
     }
@@ -223,9 +248,9 @@ public class Path {
      *                    choose to add extension based on the mime type. If
      *                    displayName contains an extension, set it to null.
      * @return The newly created file.
-     * @throws IOException                   If the target is a mount point, a directory, or the current file is not a
-     *                                       directory, or failed for any other reason.
-     * @throws IllegalArgumentException      If the display name contains file separator.
+     * @throws IOException              If the target is a mount point, a directory, or the current file is not a
+     *                                  directory, or failed for any other reason.
+     * @throws IllegalArgumentException If the display name contains file separator.
      */
     @NonNull
     public Path createNewFile(@NonNull String displayName, @Nullable String mimeType) throws IOException {
@@ -271,8 +296,8 @@ public class Path {
      *                    choose to add extension based on the mime type. If
      *                    displayName contains an extension, set it to null.
      * @return The newly created file.
-     * @throws IOException                   If the target is a mount point, a directory or failed for any other reason.
-     * @throws IllegalArgumentException      If the display name is malformed.
+     * @throws IOException              If the target is a mount point, a directory or failed for any other reason.
+     * @throws IllegalArgumentException If the display name is malformed.
      */
     @NonNull
     public Path createNewArbitraryFile(@NonNull String displayName, @Nullable String mimeType) throws IOException {
@@ -405,10 +430,10 @@ public class Path {
      * @param displayName Display name for the directory. The name must not
      *                    contain any file separator.
      * @return The existing or newly created directory or mount point.
-     * @throws IOException                   If the target directory could not be created, or the existing or the
-     *                                       current file is not a directory.
-     * @throws IllegalArgumentException      If the display name contains file
-     *                                       separator.
+     * @throws IOException              If the target directory could not be created, or the existing or the
+     *                                  current file is not a directory.
+     * @throws IllegalArgumentException If the display name contains file
+     *                                  separator.
      */
     @NonNull
     public Path findOrCreateDirectory(@NonNull String displayName) throws IOException {
@@ -893,11 +918,7 @@ public class Path {
         DocumentFile parentFile = null;
         if (mountPoint != null) {
             Uri parentUri = FileUtils.removeLastPathSegment(mountPoint);
-            try {
-                parentFile = new Path(context, parentUri).mDocumentFile;
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
+            parentFile = new Path(context, parentUri).mDocumentFile;
         }
         return parentFile;
     }

@@ -24,8 +24,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import java.io.FileNotFoundException;
-
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.StorageUtils;
 import io.github.muntashirakon.widget.MultiSelectionView;
@@ -98,11 +96,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
             if (swipeRefresh != null) swipeRefresh.setRefreshing(false);
             adapter.setFmList(fmItems);
         });
-        try {
-            model.loadFiles(uri);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        model.loadFiles(uri);
     }
 
     @Override

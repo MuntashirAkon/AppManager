@@ -22,7 +22,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
-import java.io.FileNotFoundException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
@@ -316,11 +315,7 @@ public class BatchOpsManager {
         int userHandle = UserHandleHidden.myUserId();
         Path[] files;
         final List<UserPackagePair> failedPkgList = new ArrayList<>();
-        try {
-            files = ConvertUtils.getRelevantImportFiles(uri, backupType);
-        } catch (FileNotFoundException e) {
-            return new Result(failedPkgList);
-        }
+        files = ConvertUtils.getRelevantImportFiles(uri, backupType);
         MultithreadedExecutor executor = MultithreadedExecutor.getNewInstance();
         try {
             for (Path file : files) {

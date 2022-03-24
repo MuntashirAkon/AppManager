@@ -45,6 +45,7 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.StorageUtils;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
+import io.github.muntashirakon.io.Path;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
@@ -65,10 +66,6 @@ public class BackupRestorePreferences extends PreferenceFragment {
     @ImportType
     private int importType;
 
-    private final Intent safIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
-            .putExtra("android.content.extra.SHOW_ADVANCED", true)
-            .putExtra("android.content.extra.FANCY", true)
-            .putExtra("android.content.extra.SHOW_FILESIZE", true);
     private final ActivityResultLauncher<Intent> safSelectBackupVolume = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -209,7 +206,21 @@ public class BackupRestorePreferences extends PreferenceFragment {
                                     .build())
                             .setItems(R.array.import_backup_options, (dialog, which) -> {
                                 importType = which;
-                                safSelectImportDirectory.launch(safIntent);
+                                String path;
+                                switch (importType) {
+                                    case ImportType.OAndBackup:
+                                        path = "oandbackups";
+                                        break;
+                                    case ImportType.TitaniumBackup:
+                                        path = "TitaniumBackup";
+                                        break;
+                                    case ImportType.SwiftBackup:
+                                        path = "SwiftBackup";
+                                        break;
+                                    default:
+                                        path = "";
+                                }
+                                safSelectImportDirectory.launch(getSafIntent(path));
                             })
                             .setNegativeButton(R.string.close, null)
                             .show();
@@ -249,7 +260,7 @@ public class BackupRestorePreferences extends PreferenceFragment {
                         .setMessage(R.string.notice_saf)
                         .setPositiveButton(R.string.go, (dialog1, which1) -> {
                             if (alertDialog.get() != null) alertDialog.get().dismiss();
-                            safSelectBackupVolume.launch(safIntent);
+                            safSelectBackupVolume.launch(getSafIntent("AppManager"));
                         })
                         .setNeutralButton(R.string.cancel, null)
                         .show());
@@ -293,6 +304,12 @@ public class BackupRestorePreferences extends PreferenceFragment {
                 });
             }
         }).start();
+    }
+
+    private Intent getSafIntent(String path) {
+        return new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
+                .putExtra("android.provider.extra.SHOW_ADVANCED", true)
+                .putExtra("android.provider.extra.INITIAL_URI", Path.getPrimaryPath(activity, path).getUri());
     }
 
     @CryptoUtils.Mode

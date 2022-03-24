@@ -25,7 +25,6 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -139,13 +138,7 @@ public class ClassViewerActivity extends BaseActivity {
             if (appName != null) actionBar.setTitle(appName);
             else actionBar.setTitle(R.string.class_viewer);
         }
-        try {
-            smaliPath = new Path(this, uri);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            finish();
-            return;
-        }
+        smaliPath = new Path(this, uri);
         updateUi();
     }
 
