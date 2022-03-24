@@ -19,7 +19,6 @@ import androidx.collection.ArrayMap;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.preference.Preference;
-import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -50,7 +49,7 @@ import io.github.muntashirakon.dialog.DialogTitleBuilder;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
-public class BackupRestorePreferences extends PreferenceFragmentCompat {
+public class BackupRestorePreferences extends PreferenceFragment {
     @StringRes
     private static final int[] encryptionNames = new int[]{
             R.string.none,

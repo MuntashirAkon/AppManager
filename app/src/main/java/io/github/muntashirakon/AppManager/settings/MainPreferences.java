@@ -14,18 +14,19 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.collection.ArrayMap;
 import androidx.core.app.ActivityCompat;
 import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.Preference;
-import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
 import com.android.internal.util.TextUtils;
@@ -46,7 +47,6 @@ import java.util.concurrent.Executors;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.crypto.auth.AuthManagerActivity;
-import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.DeviceInfo2;
 import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.settings.crypto.ImportExportKeyStoreDialogFragment;
@@ -62,7 +62,16 @@ import io.github.muntashirakon.dialog.AlertDialogBuilder;
 import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 
-public class MainPreferences extends PreferenceFragmentCompat {
+public class MainPreferences extends PreferenceFragment {
+    @NonNull
+    public static MainPreferences getInstance(@Nullable String key) {
+        MainPreferences preferences = new MainPreferences();
+        Bundle args = new Bundle();
+        args.putString(PREF_KEY, key);
+        preferences.setArguments(args);
+        return preferences;
+    }
+
     private static final List<Integer> THEME_CONST = Arrays.asList(
             AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM,
             AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY,
@@ -88,7 +97,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
             "%datetime%"
     };
 
-    SettingsActivity activity;
+    private FragmentActivity activity;
     private int currentTheme;
     private int currentLayoutOrientation;
     private String currentLang;
@@ -103,7 +112,7 @@ public class MainPreferences extends PreferenceFragmentCompat {
         setPreferencesFromResource(R.xml.preferences_main, rootKey);
         getPreferenceManager().setPreferenceDataStore(new SettingsDataStore());
         model = new ViewModelProvider(this).get(MainPreferencesViewModel.class);
-        activity = (SettingsActivity) requireActivity();
+        activity = requireActivity();
         // Custom locale
         currentLang = AppPref.getString(AppPref.PrefKey.PREF_CUSTOM_LOCALE_STR);
         ArrayMap<String, Locale> locales = LangUtils.getAppLanguages(activity);

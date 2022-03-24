@@ -526,6 +526,7 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
         } else if (itemId == R.id.menu_settings) {
             // TODO: 16/4/21 Navigate to the relevant preferences, set result if changes are made
             Intent intent = new Intent(this, SettingsActivity.class);
+            intent.putExtra(SettingsActivity.EXTRA_KEY, "log_viewer_prefs");
             activityLauncher.launch(intent, result -> {
                 // Preferences may have changed
                 mCollapsedMode = !AppPref.getBoolean(AppPref.PrefKey.PREF_LOG_VIEWER_EXPAND_BY_DEFAULT_BOOL);
@@ -616,15 +617,11 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
             String tagQuery = (logLine.getTag().contains(" ")) ? ('"' + logLine.getTag() + '"') : logLine.getTag();
             setSearchText(SearchCriteria.TAG_KEYWORD + tagQuery);
             dialog.dismiss();
-            //TODO: put the cursor at the end
-            /*searchEditText.setSelection(searchEditText.length());*/
         });
 
         pid.setEndIconOnClickListener(v -> {
             setSearchText(SearchCriteria.PID_KEYWORD + logLine.getProcessId());
             dialog.dismiss();
-            //TODO: put the cursor at the end
-            /*searchEditText.setSelection(searchEditText.length());*/
         });
     }
 
