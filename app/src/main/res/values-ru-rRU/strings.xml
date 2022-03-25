@@ -1236,4 +1236,8 @@
     <string name="endianness_big_endian">От старшего к младшему</string>
     <string name="donation_campaign_text">Мы проводим <b>кампанию по финансированию</b> App Manager в течение ограниченного периода времени. <a href="https://opencollective.com/app-manager#category-ABOUT"> узнать больше...</a></string>
     <string name="endianness_little_endian">От младшего к старшему</string>
+    <string name="regenerate_auth_key_warning">Вы уверены\? Все сторонние приложения должны быть перенастроены с использованием нового ключа авторизации.</string>
+    <string name="pref_saved_apk_name_format">Формат имени сохраненного APK</string>
+    <string name="pref_saved_apk_name_format_msg">Формат, который будет использоваться для названия файлов APK при их сохранении.</string>
+    <string name="auth_manager_description">Чтобы запустить Intent из внешнего приложения, необходимо указать дополнительное поле с именем <tt>auth</tt>, и оно должно содержать следующий ключ:</string>
 </resources>
