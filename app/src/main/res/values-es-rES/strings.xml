@@ -1115,13 +1115,13 @@
     <string name="uses_play_app_signing">Firma de Aplicaciones Play</string>
     <string name="scan_in_vt">Escanear en VirusTotal</string>
     <string name="process_id">ID de proceso</string>
-    <string name="virtual_memory">Memoria virtual</string>
+    <string name="virtual_memory">Memoria Virtual</string>
     <string name="cpu_percent">%% CPU</string>
     <string name="cpu_time">Tiempo de CPU</string>
     <string name="priority">Prioridad</string>
-    <string name="state">Estado de proceso</string>
-    <string name="commandline_args">Argumentos de línea de comandos</string>
-    <string name="swap">Swap</string>
+    <string name="state">Estado del proceso</string>
+    <string name="commandline_args">Argumentos de línea de comando</string>
+    <string name="swap">Intercambiar</string>
     <string name="memory_chart_info">● %1$s Aplicaciones ● %2$s En caché ● %3$s Buffers ● %4$s Libre</string>
     <string name="swap_chart_info">● %1$s Usado ● %2$s Libre</string>
     <string name="failed_to_use_the_current_mode_of_operation">No es posible usar el modo de operación actual. Volviendo a modo no-root para esta sesión.</string>
@@ -1140,5 +1140,31 @@
         <item quantity="one">Hola</item>
         <item quantity="other">Holas</item>
     </plurals>
-    <string name="uses_play_app_signing_description">Está aplicación contiene algunos marcadores que indican que <i>posiblemente</i> sean usados <a href="https://support.google.com/googleplay/android-developer/answer/9842756">Play App Signing</a>. Con esta programación, las claves de inicio son guardadas en los servidores de Google, y Google es responsable por el inicio de sesión en la app. Tenga en cuenta que emparejar la información de inicio es la única forma de verificar que \u0020la aplicación no fue modificada por una persona diferente al desarrollador (y en este caso, también Google).</string>
+    <string name="uses_play_app_signing_description">Está aplicación contiene algunos marcadores que indican que <i>posiblemente</i> usen <a href="https://support.google.com/googleplay/android-developer/answer/9842756">Play App Signing</a>. Con este mecanismo, las claves de inicio son guardadas en los servidores de Google, y Google es el responsable por el inicio de sesión en la app. Tenga en cuenta que emparejar la información de inicio es la única forma de verificar que la app no fue modificada por una persona diferente al desarrollador (y en este caso, también Google).</string>
+    <string name="parent_process_id">ID del proceso padre</string>
+    <string name="threads">Número de subprocesos</string>
+    <string name="hidden_api_enf_policy_dark_grey_and_black">Cumplimiento (listas negras y gris oscuro)</string>
+    <string name="hidden_api_enf_policy_warn">Advertencia (acceso completo a la API oculta, pero emite advertencias)</string>
+    <string name="binary_64_bit">64 Bit</string>
+    <string name="endianness_little_endian">Byte menos significativo</string>
+    <string name="endianness_big_endian">Byte más significativo</string>
+    <string name="so_type_executable">Ejecutable</string>
+    <string name="primary_abi">Interfaz binaria de aplicación (ABI) primaria</string>
+    <string name="zygote_preload_name">Nombre de precarga de Zygote</string>
+    <string name="hidden_api_enf_default_policy">Valor predeterminado (según el tipo de aplicación)</string>
+    <string name="hidden_api_enf_policy_none">Ninguno (acceso completo a la API oculta)</string>
+    <string name="hidden_api_enforcement_policy">Política de aplicación de la API oculta</string>
+    <string name="hidden_api_enf_policy_black">Cumplimiento (sólo listas negras)</string>
+    <string name="binary_32_bit">32 Bit</string>
+    <string name="so_type_shared_library">Biblioteca dinámica</string>
+    <string name="file_modified_are_you_sure">El archivo fue modificado. ¿Quiere descartar todos los cambios y salir\?</string>
+    <string name="save_and_exit">Guardar y salir</string>
+    <string name="pref_saved_apk_name_format">Formato del nombre del APK guardado</string>
+    <string name="auth_manager_description">Para lanzar un Intent desde una app externa, es necesario suministrar un campo extra llamado <tt>auth</tt>, y debe contener la siguiente clave:</string>
+    <string name="auth_manager_title">Gestor de autorizaciones</string>
+    <string name="regenerate_auth_key">Regenerar la clave de autorización</string>
+    <string name="shortcut_icon">Icono de acceso directo</string>
+    <string name="donation_campaign_text">Estamos ejecutando una <b>campaña de financiación</b> para la App Manager durante un periodo limitado. <a href="https://opencollective.com/app-manager#category-ABOUT">Más información aquí...</a></string>
+    <string name="pref_saved_apk_name_format_msg">El formato que se utilizará para nombrar los archivos APK cuando los guarde.</string>
+    <string name="regenerate_auth_key_warning">¿Está seguro\? Todas las aplicaciones de terceros tienen que ser reconfiguradas con la nueva clave de autorización.</string>
 </resources>
