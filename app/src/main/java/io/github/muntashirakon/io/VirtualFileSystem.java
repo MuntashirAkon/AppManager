@@ -3,9 +3,11 @@
 package io.github.muntashirakon.io;
 
 import android.net.Uri;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.annotation.WorkerThread;
 import androidx.collection.SparseArrayCompat;
 
@@ -211,6 +213,7 @@ public final class VirtualFileSystem {
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     public static class DexFileSystem extends FileSystem {
         @Nullable
         private final File filePath;

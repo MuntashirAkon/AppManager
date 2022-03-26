@@ -5,9 +5,11 @@ package io.github.muntashirakon.AppManager.scanner;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,108 +18,94 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
-import androidx.appcompat.app.ActionBar;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.android.internal.util.TextUtils;
-import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
-import io.github.muntashirakon.AppManager.misc.AdvancedSearchView.ChoiceGenerator;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
-import io.github.muntashirakon.io.Path;
-import io.github.muntashirakon.io.VirtualFileSystem;
 
 import static io.github.muntashirakon.AppManager.misc.AdvancedSearchView.SEARCH_TYPE_REGEX;
 
-// Copyright 2015 Google, Inc.
-public class ClassListingActivity extends BaseActivity implements AdvancedSearchView.OnQueryTextListener {
-    public static final String EXTRA_APP_NAME = "EXTRA_APP_NAME";
-    public static final String EXTRA_DEX_VFS_ID = "vfs_id";
-
+public class ClassListingFragment extends Fragment implements AdvancedSearchView.OnQueryTextListener {
     private TextView mEmptyView;
-    private boolean trackerClassesOnly;
+    private boolean mTrackerClassesOnly;
     private ClassListingAdapter mClassListingAdapter;
-    private CharSequence mAppName;
-    private Path dexRootPath;
-    private ActionBar mActionBar;
-    private LinearProgressIndicator mProgressIndicator;
 
-    private List<String> classListAll;
-    private List<String> trackerClassList = new ArrayList<>();
+    private List<String> mAllClasses;
+    private List<String> mTrackerClasses;
+    private ScannerViewModel mViewModel;
+    private ScannerActivity mActivity;
+
+    public ClassListingFragment() {
+        setHasOptionsMenu(true);
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return inflater.inflate(R.layout.fragment_class_lister, container, false);
+    }
 
     @Override
-    protected void onAuthenticated(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_class_listing);
-        setSupportActionBar(findViewById(R.id.toolbar));
-        mActionBar = getSupportActionBar();
-        classListAll = ScannerActivity.classListAll;
-        trackerClassList = ScannerActivity.trackerClassList;
-        if (classListAll == null) {
-            finish();
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        mViewModel = new ViewModelProvider(requireActivity()).get(ScannerViewModel.class);
+        mActivity = (ScannerActivity) requireActivity();
+        mAllClasses = mViewModel.getAllClasses();
+        mTrackerClasses = mViewModel.getTrackerClasses();
+        if (mAllClasses == null) {
+            mActivity.onBackPressed();
             return;
         }
-        if (trackerClassList == null) trackerClassList = Collections.emptyList();
-        mAppName = getIntent().getStringExtra(EXTRA_APP_NAME);
-        int dexVfsId = getIntent().getIntExtra(EXTRA_DEX_VFS_ID, 0);
-        if (dexVfsId == 0) {
-            finish();
-            return;
-        }
-        dexRootPath = VirtualFileSystem.getFsRoot(dexVfsId);
-        if (dexRootPath == null) {
-            finish();
-            return;
-        }
-        if (mActionBar != null) {
-            mActionBar.setTitle(mAppName);
-            mActionBar.setDisplayShowCustomEnabled(true);
-            UIUtils.setupAdvancedSearchView(mActionBar, this);
+        if (mTrackerClasses == null) {
+            mTrackerClasses = Collections.emptyList();
         }
 
-        trackerClassesOnly = false;
+        mTrackerClassesOnly = false;
 
-        ListView listView = findViewById(android.R.id.list);
+        ListView listView = view.findViewById(android.R.id.list);
         listView.setTextFilterEnabled(true);
         listView.setDividerHeight(0);
-        mEmptyView = findViewById(android.R.id.empty);
+        mEmptyView = view.findViewById(android.R.id.empty);
         listView.setEmptyView(mEmptyView);
-        mClassListingAdapter = new ClassListingAdapter(this);
+        mClassListingAdapter = new ClassListingAdapter(mActivity);
         listView.setAdapter(mClassListingAdapter);
-        listView.setOnItemClickListener((parent, view, position, id) -> {
-            String className = (!trackerClassesOnly ? trackerClassList : classListAll)
+        listView.setOnItemClickListener((parent, view1, position, id) -> {
+            String className = (!mTrackerClassesOnly ? mTrackerClasses : mAllClasses)
                     .get((int) (parent.getAdapter()).getItemId(position));
             try {
-                Intent intent = new Intent(this, ClassViewerActivity.class);
-                intent.putExtra(ClassViewerActivity.EXTRA_URI, dexRootPath.findFile(className
-                        .replace('.', '/') + ".smali").getUri());
-                intent.putExtra(ClassViewerActivity.EXTRA_APP_NAME, mAppName);
+                Intent intent = new Intent(mActivity, ClassViewerActivity.class);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    intent.putExtra(ClassViewerActivity.EXTRA_URI, mViewModel.getUriFromClassName(className));
+                } else {
+                    intent.putExtra(ClassViewerActivity.EXTRA_CLASS_CONTENT, mViewModel.getClassContent(className));
+                }
+                intent.putExtra(ClassViewerActivity.EXTRA_APP_NAME, mActivity.getTitle());
+                intent.putExtra(ClassViewerActivity.EXTRA_CLASS_NAME, className);
                 startActivity(intent);
             } catch (Exception e) {
                 e.printStackTrace();
-                Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
+                UIUtils.displayLongToast(e.toString());
             }
         });
-
-        mProgressIndicator = findViewById(R.id.progress_linear);
-        mProgressIndicator.setVisibilityAfterHide(View.GONE);
         showProgress(true);
         setAdapterList();
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         if (mClassListingAdapter != null && !TextUtils.isEmpty(mClassListingAdapter.mConstraint)) {
             mClassListingAdapter.filter();
@@ -126,12 +114,12 @@ public class ClassListingActivity extends BaseActivity implements AdvancedSearch
 
     @UiThread
     private void setAdapterList() {
-        if (!trackerClassesOnly) {
-            mClassListingAdapter.setDefaultList(trackerClassList);
-            mActionBar.setSubtitle(getString(R.string.tracker_classes));
+        if (!mTrackerClassesOnly) {
+            mClassListingAdapter.setDefaultList(mTrackerClasses);
+            mActivity.setSubtitle(getString(R.string.tracker_classes));
         } else {
-            mClassListingAdapter.setDefaultList(classListAll);
-            mActionBar.setSubtitle(getString(R.string.all_classes));
+            mClassListingAdapter.setDefaultList(mAllClasses);
+            mActivity.setSubtitle(getString(R.string.all_classes));
         }
         showProgress(false);
     }
@@ -150,31 +138,26 @@ public class ClassListingActivity extends BaseActivity implements AdvancedSearch
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_class_listing_actions, menu);
-        return super.onCreateOptionsMenu(menu);
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.fragment_class_lister_actions, menu);
+        AdvancedSearchView searchView = (AdvancedSearchView) menu.findItem(R.id.action_search).getActionView();
+        searchView.setOnQueryTextListener(this);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        if (id == android.R.id.home) {
-            finish();
-        } else if (id == R.id.action_toggle_class_listing) {
-            trackerClassesOnly = !trackerClassesOnly;
+        if (id == R.id.action_toggle_class_listing) {
+            mTrackerClassesOnly = !mTrackerClassesOnly;
             setAdapterList();
         } else return super.onOptionsItemSelected(item);
         return true;
     }
 
     private void showProgress(boolean willShow) {
-        if (willShow) {
-            mProgressIndicator.show();
-            mEmptyView.setText(R.string.loading);
-        } else {
-            mProgressIndicator.hide();
-            mEmptyView.setText(R.string.no_tracker_class);
-        }
+        mActivity.showProgress(willShow);
+        mEmptyView.setText(willShow ? R.string.loading : R.string.no_tracker_class);
     }
 
     static class ClassListingAdapter extends BaseAdapter implements Filterable {
@@ -281,7 +264,7 @@ public class ClassListingActivity extends BaseActivity implements AdvancedSearch
                         List<String> list = AdvancedSearchView.matches(
                                 constraint,
                                 mDefaultList,
-                                (ChoiceGenerator<String>) object -> mFilterType == SEARCH_TYPE_REGEX ? object
+                                (AdvancedSearchView.ChoiceGenerator<String>) object -> mFilterType == SEARCH_TYPE_REGEX ? object
                                         : object.toLowerCase(Locale.ROOT),
                                 mFilterType);
 

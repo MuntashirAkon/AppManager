@@ -93,9 +93,6 @@
             android:name=".scanner.ClassViewerActivity"
             android:exported="false" />
         <activity
-            android:name=".scanner.ClassListingActivity"
-            android:exported="false" />
-        <activity
             android:name=".scanner.ScannerActivity"
             android:exported="true"
             android:label="@string/scanner">

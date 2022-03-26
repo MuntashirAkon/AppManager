@@ -6,6 +6,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.UriPermission;
 import android.net.Uri;
+import android.os.Build;
 import android.os.HandlerThread;
 import android.os.ParcelFileDescriptor;
 import android.os.RemoteException;
@@ -16,6 +17,7 @@ import android.webkit.MimeTypeMap;
 import androidx.annotation.CheckResult;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.util.Pair;
 import androidx.documentfile.provider.DexDocumentFile;
 import androidx.documentfile.provider.DocumentFile;
@@ -79,6 +81,7 @@ public class Path {
         mDocumentFile = new ZipDocumentFile(getParentFile(context, vfsId), vfsId, zipFile, path);
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     public Path(@NonNull Context context, int vfsId, @NonNull DexClasses dexClasses, @Nullable String path) {
         mContext = context;
         mDocumentFile = new DexDocumentFile(getParentFile(context, vfsId), vfsId, dexClasses, path);

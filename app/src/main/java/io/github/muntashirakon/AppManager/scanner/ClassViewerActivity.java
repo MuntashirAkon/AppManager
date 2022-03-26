@@ -6,6 +6,7 @@ package io.github.muntashirakon.AppManager.scanner;
 
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.AppCompatEditText;
 import androidx.core.content.ContextCompat;
@@ -42,6 +44,8 @@ import io.github.muntashirakon.io.Path;
 public class ClassViewerActivity extends BaseActivity {
     public static final String EXTRA_APP_NAME = "app_name";
     public static final String EXTRA_URI = "uri";
+    public static final String EXTRA_CLASS_NAME = "class_name";
+    public static final String EXTRA_CLASS_CONTENT = "class_content";
 
     private static final Pattern SMALI_KEYWORDS = Pattern.compile(
             "\\b(invoke-(virtual(/range|)|direct|static|interface|super|polymorphic|custom)|" +
@@ -90,6 +94,7 @@ public class ClassViewerActivity extends BaseActivity {
     private static final Pattern JAVA_VALUE = Pattern.compile("(\"(?:\\\\\\\\[^\"]|\\\\\\\\\"|.)*?\")" +
             "|\\b((?!\\d)-?(0x[\\da-f]+|\\d+)\\.?0?[fl]?|true|false|null)\\b", Pattern.MULTILINE);
 
+    @RequiresApi(Build.VERSION_CODES.O)
     @Nullable
     private SpannableString formattedSmaliContent;
     @Nullable
@@ -97,10 +102,15 @@ public class ClassViewerActivity extends BaseActivity {
     private boolean isWrapped = true;  // Wrap by default
     private AppCompatEditText container;
     private LinearProgressIndicator mProgressIndicator;
+    @RequiresApi(Build.VERSION_CODES.O)
     private Uri uri;
+    @RequiresApi(Build.VERSION_CODES.O)
     private Path smaliPath;
+    @Deprecated
+    private String content;
+    private String className;
     private boolean isDisplayingSmali = true;
-    private final ActivityResultLauncher<String> exportManifest = registerForActivityResult(
+    private final ActivityResultLauncher<String> saveJavaOrSmali = registerForActivityResult(
             new ActivityResultContracts.CreateDocument(),
             uri -> {
                 if (uri == null) {
@@ -108,8 +118,8 @@ public class ClassViewerActivity extends BaseActivity {
                     return;
                 }
                 try (OutputStream outputStream = getContentResolver().openOutputStream(uri)) {
-                    Objects.requireNonNull(outputStream).write(isDisplayingSmali ?
-                            formattedSmaliContent.toString().getBytes(StandardCharsets.UTF_8) :
+                    Objects.requireNonNull(outputStream).write(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
+                            isDisplayingSmali ? formattedSmaliContent.toString().getBytes(StandardCharsets.UTF_8) :
                             formattedJavaContent.toString().getBytes(StandardCharsets.UTF_8));
                     outputStream.flush();
                     Toast.makeText(this, R.string.saved_successfully, Toast.LENGTH_SHORT).show();
@@ -125,20 +135,30 @@ public class ClassViewerActivity extends BaseActivity {
         setSupportActionBar(findViewById(R.id.toolbar));
         mProgressIndicator = findViewById(R.id.progress_linear);
         mProgressIndicator.setVisibilityAfterHide(View.GONE);
-        uri = getIntent().getParcelableExtra(EXTRA_URI);
-        if (uri == null) {
-            finish();
-            return;
+        className = getIntent().getStringExtra(EXTRA_CLASS_NAME);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            uri = getIntent().getParcelableExtra(EXTRA_URI);
+            if (uri == null) {
+                finish();
+                return;
+            }
+        } else {
+            content = getIntent().getStringExtra(EXTRA_CLASS_CONTENT);
         }
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             CharSequence appName = getIntent().getCharSequenceExtra(EXTRA_APP_NAME);
-            String barName = FileUtils.trimExtension(uri.getLastPathSegment());
+            String barName;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                barName = FileUtils.trimExtension(uri.getLastPathSegment());
+            } else barName = className;
             actionBar.setSubtitle(barName);
             if (appName != null) actionBar.setTitle(appName);
             else actionBar.setTitle(R.string.class_viewer);
         }
-        smaliPath = new Path(this, uri);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            smaliPath = new Path(this, uri);
+        }
         updateUi();
     }
 
@@ -149,7 +169,7 @@ public class ClassViewerActivity extends BaseActivity {
         container.setVisibility(View.VISIBLE);
         container.setKeyListener(null);
         container.setTextColor(ContextCompat.getColor(this, R.color.dark_orange));
-        if (isDisplayingSmali) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && isDisplayingSmali) {
             displaySmaliContent();
         } else {
             displayJavaContent();
@@ -167,7 +187,9 @@ public class ClassViewerActivity extends BaseActivity {
             if (formattedJavaContent == null) {
                 String javaContent;
                 try {
-                    javaContent = ScannerUtils.toJavaCode(Objects.requireNonNull(formattedSmaliContent).toString(), -1);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        javaContent = ScannerUtils.toJavaCode(Objects.requireNonNull(formattedSmaliContent).toString(), -1);
+                    } else javaContent = content;
                 } catch (Throwable e) {
                     runOnUiThread(() -> {
                         Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
@@ -213,6 +235,7 @@ public class ClassViewerActivity extends BaseActivity {
         }).start();
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private void displaySmaliContent() {
         mProgressIndicator.show();
         final int typeClassColor = ContextCompat.getColor(this, R.color.ocean_blue);
@@ -275,6 +298,9 @@ public class ClassViewerActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_any_viewer_actions, menu);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+            menu.findItem(R.id.action_java_smali_toggle).setVisible(false);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -286,9 +312,12 @@ public class ClassViewerActivity extends BaseActivity {
         } else if (id == R.id.action_wrap) {
             updateUi();
         } else if (id == R.id.action_save) {
-            String fileName = FileUtils.trimExtension(uri.getLastPathSegment())
-                    + (isDisplayingSmali ? ".smali" : ".java");
-            exportManifest.launch(fileName);
+            String fileName;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                fileName = FileUtils.trimExtension(uri.getLastPathSegment())
+                        + (isDisplayingSmali ? ".smali" : ".java");
+            } else fileName = className + ".java";
+            saveJavaOrSmali.launch(fileName);
         } else if (id == R.id.action_java_smali_toggle) {
             isDisplayingSmali = !isDisplayingSmali;
             item.setTitle(isDisplayingSmali ? R.string.java : R.string.smali);

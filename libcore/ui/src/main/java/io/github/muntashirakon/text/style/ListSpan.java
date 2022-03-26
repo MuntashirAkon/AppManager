@@ -7,6 +7,8 @@ import android.graphics.Paint;
 import android.text.Layout;
 import android.text.style.LeadingMarginSpan;
 
+import java.util.Locale;
+
 /**
  * Create numeric or bulleted list by aligning all the lines in a paragraph.
  */
@@ -20,10 +22,21 @@ public class ListSpan implements LeadingMarginSpan {
      * @param trailingGap Gaps to add after the numeric digits.
      * @param index       Index number for a numeric list.
      */
+    public ListSpan(int leadingGap, int trailingGap, int index, Locale locale) {
+        this.mLeadingGapWidth = leadingGap;
+        this.mTrailingGapWidth = trailingGap;
+        this.mText = String.format(locale, "%d.", index);
+    }
+
+    /**
+     * @param leadingGap  Leading gaps including the numeric digit(s).
+     * @param trailingGap Gaps to add after the numeric digits.
+     * @param index       Index number for a numeric list.
+     */
     public ListSpan(int leadingGap, int trailingGap, int index) {
         this.mLeadingGapWidth = leadingGap;
         this.mTrailingGapWidth = trailingGap;
-        this.mText = index + ".";
+        this.mText = String.format(Locale.getDefault(), "%d.", index);
     }
 
     /**
@@ -48,7 +61,8 @@ public class ListSpan implements LeadingMarginSpan {
             Paint.Style lastStyle = p.getStyle();
             p.setStyle(Paint.Style.FILL);
             float width = p.measureText(this.mText);
-            c.drawText(this.mText, (mLeadingGapWidth + x - width / 2) * dir, bottom - p.descent(), p);
+            c.drawText(this.mText, x * dir, bottom - p.descent(), p);
+            c.drawText("", (mLeadingGapWidth + x - width / 2) * dir, bottom - p.descent(), p);
             p.setStyle(lastStyle);
         }
     }
