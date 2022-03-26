@@ -535,7 +535,7 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
                 holder.wifiDataUsage.setText(UIUtils.setImageSpan(dataUsage, wifiIcon, holder.wifiDataUsage));
             } else holder.wifiDataUsage.setText("");
             // Set usage percentage
-            holder.percentUsage.setText(String.format(Locale.ROOT, "%d%%", percentUsage));
+            holder.percentUsage.setText(String.format(Locale.getDefault(), "%d%%", percentUsage));
             holder.usageIndicator.show();
             holder.usageIndicator.setProgress(percentUsage);
             // On Click Listener
