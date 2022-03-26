@@ -456,4 +456,10 @@
 \nまた、\\textbf{ルールを除去}オプションから、すでに適用されたルールを削除することもできます。
 \n
 \n\\seealsoinline{\\hyperref[sec:faq:app-components]{FAQ: アプリのコンポーネント}}</string>
+    <string name="pages$app-details-page$permission-tabs">\\textbf{App Ops}、\\textbf{Uses Permissions}、\\textbf{Permissions}タブは、権限に関連しています。
+\nAndroidでは、同じID(\\textit{共有ID}として知られます)を持たないアプリやプロセス間の通信は、しばしばパーミッション（複数可）を必要とします。
+\nこれらの権限は、権限コントローラーによって管理されます。
+\nアプリケーションのマニフェストに記載されていれば自動的に付与される\\textit{通常}の権限もありますが、
+\n\\textit{dangerous}、\\textit{development}パーミッションはユーザーの確認が必要です。
+\nこれらのタブで使用される色については、\\cref{subsec:app-details-colour-codes}節で説明しています。</string>
 </resources>
