@@ -1122,4 +1122,11 @@
     <string name="donation_campaign_text">App Managerの<b>ファンディングキャンペーン</b>を期間限定で実施しています。<a href="https://opencollective.com/app-manager#category-ABOUT">詳細を見る…</a></string>
     <string name="hidden_api_enf_policy_dark_grey_and_black">Enforce (ダークグレー/ブラックリスト)</string>
     <string name="endianness_big_endian">ビッグエンディアン</string>
+    <string name="pref_saved_apk_name_format">保存するAPKのファイル名</string>
+    <string name="pref_saved_apk_name_format_msg">APKファイルを保存する際のファイル名形式を指定します。</string>
+    <string name="auth_manager_title">認証マネージャ</string>
+    <string name="regenerate_auth_key">認証キーを再生成</string>
+    <string name="regenerate_auth_key_warning">すべての外部アプリは、新しい認証キーで再設定する必要があります。本当に宜しいですか？</string>
+    <string name="shortcut_icon">ショートカットアイコン</string>
+    <string name="auth_manager_description">外部アプリからインテントによって起動するには、<tt>auth</tt>というフィールドを追加する必要があり、それには次のキーが含まれていなければなりません:</string>
 </resources>
