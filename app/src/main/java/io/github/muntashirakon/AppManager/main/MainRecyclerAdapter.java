@@ -33,6 +33,7 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.divider.MaterialDivider;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -65,6 +66,7 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
     final ImageLoader imageLoader;
 
     private final int mColorSurface;
+    private final int mColorSurfaceVariant;
     private final int mColorSurfaceDisabled;
     private final int mColorStopped;
     private final int mColorOrange;
@@ -79,6 +81,7 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
         imageLoader = new ImageLoader(mActivity.mModel.executor);
 
         mColorSurface = MaterialColors.getColor(mActivity, R.attr.colorSurface, MainRecyclerAdapter.class.getCanonicalName());
+        mColorSurfaceVariant = MaterialColors.getColor(mActivity, R.attr.colorSurfaceVariant, MainRecyclerAdapter.class.getCanonicalName());
         mColorSurfaceDisabled = ContextCompat.getColor(mActivity, R.color.disabled_user);
 
         mColorStopped = ContextCompat.getColor(mActivity, R.color.stopped);
@@ -259,11 +262,16 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
             return true;
         });
         holder.icon.setOnClickListener(v -> toggleSelection(position));
-        // Background colors: selected > disabled > regular
-        if (item.isDisabled) {
-            holder.itemView.setCardBackgroundColor(mColorSurfaceDisabled);
+        holder.itemView.setCardBackgroundColor(mColorSurface);
+        // Divider colors: disabled > regular
+        if (!item.isInstalled) {
+            holder.divider.setDividerColor(mColorRed);
+        } else if (item.isDisabled) {
+            holder.divider.setDividerColor(mColorSurfaceDisabled);
+        } else if ((item.flags & ApplicationInfo.FLAG_STOPPED) != 0) { // Force-stopped: Dark cyan
+            holder.divider.setDividerColor(mColorStopped);
         } else {
-            holder.itemView.setCardBackgroundColor(mColorSurface);
+            holder.divider.setDividerColor(mColorSurfaceVariant);
         }
         // Add yellow star if the app is in debug mode
         holder.debugIcon.setVisibility(item.debuggable ? View.VISIBLE : View.INVISIBLE);
@@ -326,9 +334,9 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
             // Highlight searched query
             holder.packageName.setText(UIUtils.getHighlightedText(item.packageName, mSearchQuery, mColorRed));
         } else holder.packageName.setText(item.packageName);
-        // Set package name color to dark cyan if the app is in stopped/force closed state
-        if ((item.flags & ApplicationInfo.FLAG_STOPPED) != 0)
-            holder.packageName.setTextColor(mColorStopped);
+        // Set package name color to orange if the app has known tracker components
+        if (item.trackerCount > 0)
+            holder.packageName.setTextColor(mColorOrange);
         else holder.packageName.setTextColor(mColorSecondary);
         // Set version (along with HW accelerated, debug and test only flags)
         CharSequence version = holder.version.getText();
@@ -481,6 +489,7 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
         TextView backupIndicator;
         TextView backupInfo;
         TextView backupInfoExt;
+        MaterialDivider divider;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -499,6 +508,7 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
             backupIndicator = itemView.findViewById(R.id.backup_indicator);
             backupInfo = itemView.findViewById(R.id.backup_info);
             backupInfoExt = itemView.findViewById(R.id.backup_info_ext);
+            divider = itemView.findViewById(R.id.divider);
         }
     }
 }
