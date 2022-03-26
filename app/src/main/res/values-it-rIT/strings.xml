@@ -131,7 +131,7 @@
     <string name="all_classes">Tutte le classi</string>
     <string name="tracker_classes">Classi Tracker</string>
     <string name="tracker_details">Dettagli Tracker</string>
-    <string name="found_trackers">Trova Trackers:</string>
+    <string name="found_trackers">Trova Tracker:</string>
     <string name="no_shared_libs">Nessuna libreria condivisa</string>
     <string name="third_party">Librerie Terze Parti ed Icone</string>
     <string name="error_invalid_icon_format">Formato non valido per l\'icona</string>
@@ -462,4 +462,5 @@
     <string name="follow_system">Seguire il sistema</string>
     <string name="ago">fa</string>
     <string name="user_with_id">Utente: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
+    <string name="keep_data_and_app_signing_signatures">Mantieni i dati e le firme</string>
 </resources>
