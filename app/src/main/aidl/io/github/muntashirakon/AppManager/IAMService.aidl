@@ -21,4 +21,5 @@ interface IAMService {
     FileStatus lstat(in String path) = 10;
     IFileDescriptor getFD(in String path, in String mode) = 11;
     int getUid() = 12;
+    void symlink(in String file, in String link) = 13;
 }

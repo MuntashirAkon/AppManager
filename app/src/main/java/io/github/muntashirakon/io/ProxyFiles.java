@@ -46,6 +46,12 @@ public final class ProxyFiles {
         } else Os.chown(path.getAbsolutePath(), uid, gid);
     }
 
+    public static void symlink(@NonNull File file, @NonNull String link) throws ErrnoException, RemoteException {
+        if (file instanceof ProxyFile && Ops.isPrivileged()) {
+            IPCUtils.getAmService().symlink(file.getAbsolutePath(), link);
+        } else Os.symlink(file.getAbsolutePath(), link);
+    }
+
     /**
      * Set owner and mode of of given path.
      *

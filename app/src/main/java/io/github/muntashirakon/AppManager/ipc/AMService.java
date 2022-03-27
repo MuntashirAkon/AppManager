@@ -117,6 +117,15 @@ public class AMService extends RootService {
         }
 
         @Override
+        public void symlink(String file, String link) throws RemoteException {
+            try {
+                Os.symlink(file, link);
+            } catch (ErrnoException e) {
+                throw new RemoteException(e.getMessage());
+            }
+        }
+
+        @Override
         public boolean onTransact(int code, @NonNull Parcel data, Parcel reply, int flags) throws RemoteException {
             if (code == ProxyBinder.PROXY_BINDER_TRANSACT_CODE) {
                 data.enforceInterface(IRootIPC.class.getName());

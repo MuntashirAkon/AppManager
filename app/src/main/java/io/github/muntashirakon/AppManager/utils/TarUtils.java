@@ -33,8 +33,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.io.ProxyFiles;
 import io.github.muntashirakon.io.SplitInputStream;
 import io.github.muntashirakon.io.SplitOutputStream;
@@ -162,8 +162,13 @@ public final class TarUtils {
                         String linkName = entry.getLinkName();
                         // There's no need to check if the linkName exists as it may be extracted
                         // after the link has been created
-                        if (!Runner.runCommand(new String[]{"ln", "-s", linkName, file.getFilePath()}).isSuccessful()) {
-                            throw new IOException("Couldn't create symbolic link " + file + " pointing to " + linkName);
+                        // TODO: 27/3/22 It might be necessary to check the link if it points to an old APK folder content
+                        try {
+                            // Delete link if already exists
+                            file.delete();
+                            ProxyFiles.symlink(new ProxyFile(linkName), file.getFilePath());
+                        } catch (ErrnoException | RemoteException e) {
+                            throw new IOException("Couldn't create symbolic link " + file + " pointing to " + linkName, e);
                         }
                         continue;  // links do not need permission fixes
                     } else {
