@@ -3,6 +3,7 @@
 package io.github.muntashirakon.AppManager.apk.signing;
 
 import android.content.Context;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -113,7 +114,8 @@ public class Signer {
     }
 
     public static boolean verify(@NonNull SigSchemes sigSchemes, @NonNull File apk, @Nullable File idsig) {
-        ApkVerifier.Builder builder = new ApkVerifier.Builder(apk);
+        ApkVerifier.Builder builder = new ApkVerifier.Builder(apk)
+                .setMaxCheckedPlatformVersion(Build.VERSION.SDK_INT);
         if (sigSchemes.v4SchemeEnabled()) {
             if (idsig == null) {
                 throw new RuntimeException("idsig file is mandatory for v4 signature scheme.");

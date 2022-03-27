@@ -4,6 +4,7 @@ package io.github.muntashirakon.AppManager.backup.convert;
 
 import android.annotation.SuppressLint;
 import android.net.Uri;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
 
@@ -120,7 +121,9 @@ public final class ConvertUtils {
             cachedFile = FileUtils.getCachedFile(is);
         }
         List<String> checksums = new ArrayList<>(1);
-        ApkVerifier verifier = new ApkVerifier.Builder(cachedFile).build();
+        ApkVerifier verifier = new ApkVerifier.Builder(cachedFile)
+                .setMaxCheckedPlatformVersion(Build.VERSION.SDK_INT)
+                .build();
         ApkVerifier.Result apkVerifierResult = verifier.verify();
         // Get signer certificates
         List<X509Certificate> certificates = apkVerifierResult.getSignerCertificates();

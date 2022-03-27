@@ -636,8 +636,9 @@ public final class PackageUtils {
 
     @Nullable
     private static SignerInfo getSignerInfo(@NonNull File apkFile) {
-        ApkVerifier.Builder builder = new ApkVerifier.Builder(apkFile);
-        ApkVerifier apkVerifier = builder.build();
+        ApkVerifier apkVerifier = new ApkVerifier.Builder(apkFile)
+                .setMaxCheckedPlatformVersion(Build.VERSION.SDK_INT)
+                .build();
         try {
             return new SignerInfo(apkVerifier.verify());
         } catch (CertificateEncodingException | IOException | ApkFormatException | NoSuchAlgorithmException e) {

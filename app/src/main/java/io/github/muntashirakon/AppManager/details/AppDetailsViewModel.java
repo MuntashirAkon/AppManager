@@ -1664,7 +1664,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
         }
         try {
             File idsigFile = mApkFile.getIdsigFile();
-            ApkVerifier.Builder builder = new ApkVerifier.Builder(mApkFile.getBaseEntry().getRealCachedFile());
+            ApkVerifier.Builder builder = new ApkVerifier.Builder(mApkFile.getBaseEntry().getRealCachedFile())
+                    .setMaxCheckedPlatformVersion(Build.VERSION.SDK_INT);
             if (idsigFile != null) {
                 builder.setV4SignatureFile(idsigFile);
             }
