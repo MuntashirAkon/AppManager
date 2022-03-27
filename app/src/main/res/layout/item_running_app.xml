@@ -1,96 +1,111 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.AppTheme.CardView.Elevated"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:focusable="true"
-    android:paddingHorizontal="@dimen/padding_medium"
-    android:paddingVertical="@dimen/padding_very_small">
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/icon"
-        android:layout_width="@dimen/icon_size"
-        android:layout_height="match_parent"
-        android:layout_marginEnd="@dimen/padding_small"
-        android:layout_weight="0"
-        android:contentDescription="@string/str_logo"
-        tools:srcCompat="@tools:sample/avatars" />
+    android:layout_marginHorizontal="@dimen/padding_small"
+    android:layout_marginVertical="2dp">
 
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        android:focusable="true"
+        android:paddingVertical="@dimen/padding_small"
+        android:paddingHorizontal="@dimen/padding_small">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/process_name"
-            android:layout_width="wrap_content"
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/icon"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="@dimen/padding_small"
+            android:layout_weight="0"
+            android:contentDescription="@string/str_logo"
+            tools:srcCompat="@mipmap/ic_launcher" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/process_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:singleLine="true"
+                android:textAppearance="?android:attr/textAppearanceListItem"
+                tools:text="@string/app_name" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/package_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="italic"
+                android:textAppearance="?attr/textAppearanceBodySmall"
+                tools:text="io.github.muntashirakon.AppManager" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/process_ids"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:textAppearance="?attr/textAppearanceBodySmall"
+                android:textSize="10sp"
+                tools:text="Process ID: 10000, Parent Process ID: 1000"
+                tools:ignore="SmallSp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/memory_usage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceBodySmall"
+                android:textSize="10sp"
+                tools:text="Memory: 162 MB, Virtual Memory: 14.72 GB"
+                tools:ignore="SmallSp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/user_state_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceBodySmall"
+                android:textSize="10sp"
+                tools:text="User: u0_a167 (10167), State: Sleeping (Unknown)"
+                tools:ignore="SmallSp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/selinux_context"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?attr/textAppearanceBodySmall"
+                android:textSize="10sp"
+                tools:text="SELinux: u:r:untrusted_app:s0:c110,c257"
+                tools:ignore="SmallSp" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/more"
+            style="@style/Widget.AppTheme.Button.IconButton"
+            android:layout_width="@dimen/icon_size"
+            android:layout_height="@dimen/icon_size"
+            android:layout_marginStart="@dimen/padding_small"
+            android:padding="@dimen/padding_small"
+            android:layout_weight="0"
             android:layout_gravity="center_vertical"
-            android:gravity="center"
-            android:singleLine="true"
-            android:textAppearance="?android:attr/textAppearanceListItem"
-            tools:text="@tools:sample/lorem" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/package_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="italic"
-            android:textAppearance="?attr/textAppearanceBodySmall"
-            tools:text="@tools:sample/lorem" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/process_ids"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:textAppearance="?attr/textAppearanceBodySmall"
-            android:textSize="10sp"
-            tools:text="@tools:sample/lorem"
-            tools:ignore="SmallSp" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/memory_usage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?attr/textAppearanceBodySmall"
-            android:textSize="10sp"
-            tools:text="@tools:sample/lorem"
-            tools:ignore="SmallSp" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/user_state_info"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?attr/textAppearanceBodySmall"
-            android:textSize="10sp"
-            tools:text="@tools:sample/lorem"
-            tools:ignore="SmallSp" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/selinux_context"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="?attr/textAppearanceBodySmall"
-            android:textSize="10sp"
-            tools:text="@tools:sample/lorem"
-            tools:ignore="SmallSp" />
+            app:icon="@drawable/ic_more_vert_black_24dp"
+            app:iconSize="20dp" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/more"
-        style="@style/Widget.AppTheme.Button.IconButton"
-        android:layout_width="@dimen/icon_size"
-        android:layout_height="@dimen/icon_size"
-        android:layout_marginStart="@dimen/padding_small"
-        android:padding="@dimen/padding_small"
-        android:layout_weight="0"
-        android:layout_gravity="center_vertical"
-        app:icon="@drawable/ic_more_vert_black_24dp"
-        app:iconSize="20dp" />
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_gravity="bottom" />
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+</com.google.android.material.card.MaterialCardView>

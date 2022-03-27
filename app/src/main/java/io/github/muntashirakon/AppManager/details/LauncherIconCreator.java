@@ -17,6 +17,8 @@ import androidx.core.graphics.drawable.IconCompat;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import java.util.UUID;
+
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 
@@ -25,31 +27,47 @@ public class LauncherIconCreator {
     /**
      * Create launcher icon.
      *
-     * @param context         Activity context
+     * @param context      Activity context
      * @param activityInfo App package name
-     * @param name            Name/Label of the app
-     * @param icon            App icon
+     * @param name         Name/Label of the app
+     * @param icon         App icon
      */
     public static void createLauncherIcon(@NonNull Context context, @NonNull ActivityInfo activityInfo,
-                                          @NonNull String name, @NonNull Drawable icon) {
+                                          @NonNull CharSequence name, @NonNull Drawable icon) {
         createLauncherIcon(context, name, icon, activityInfo.exported ? getIntent(activityInfo) : getProxyIntent(activityInfo));
     }
 
     /**
      * Create launcher icon.
      *
-     * @param context Activity context
+     * @param context Context
      * @param name    Name/Label of the app
      * @param icon    App icon
+     * @param intent  Shortcut intent
      */
-    public static void createLauncherIcon(@NonNull Context context, @NonNull String name, @NonNull Drawable icon,
+    public static void createLauncherIcon(@NonNull Context context, @NonNull CharSequence name, @NonNull Drawable icon,
+                                          @NonNull Intent intent) {
+        createLauncherIcon(context, UUID.randomUUID().toString(), name, icon, intent);
+    }
+
+    /**
+     * Create launcher icon.
+     *
+     * @param context    Context
+     * @param shortcutId Shortcut ID
+     * @param name       Name/Label of the app
+     * @param icon       App icon
+     * @param intent     Shortcut intent
+     */
+    public static void createLauncherIcon(@NonNull Context context, @NonNull String shortcutId,
+                                          @NonNull CharSequence name, @NonNull Drawable icon,
                                           @NonNull Intent intent) {
         Bitmap bitmap = getBitmapFromDrawable(icon);
 
         // Set action for shortcut
         intent.setAction(Intent.ACTION_CREATE_SHORTCUT);
 
-        ShortcutInfoCompat shortcutInfo = new ShortcutInfoCompat.Builder(context, name)
+        ShortcutInfoCompat shortcutInfo = new ShortcutInfoCompat.Builder(context, shortcutId)
                 .setShortLabel(name)
                 .setLongLabel(name)
                 .setIcon(IconCompat.createWithBitmap(bitmap))

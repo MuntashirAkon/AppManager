@@ -19,6 +19,9 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.color.MaterialColors;
+import com.google.android.material.divider.MaterialDivider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +30,7 @@ import java.util.Locale;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
 import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
+import io.github.muntashirakon.AppManager.main.MainRecyclerAdapter;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
@@ -39,11 +43,13 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAd
     private final RunningAppsViewModel mModel;
     private final int mColorRed;
     private final ArrayList<ProcessItem> mProcessItems = new ArrayList<>();
+    private final int mColorSurface;
 
     RunningAppsAdapter(@NonNull RunningAppsActivity activity) {
         super();
         mActivity = activity;
         mModel = activity.mModel;
+        mColorSurface = MaterialColors.getColor(mActivity, R.attr.colorSurface, MainRecyclerAdapter.class.getCanonicalName());
         mColorRed = ContextCompat.getColor(activity, R.color.red);
     }
 
@@ -161,8 +167,8 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAd
             // Display popup menu
             popupMenu.show();
         });
-        // Set background colors
-        holder.itemView.setBackgroundResource(position % 2 == 0 ? R.drawable.item_semi_transparent : R.drawable.item_transparent);
+        // Set background color
+        holder.itemView.setCardBackgroundColor(mColorSurface);
         // Set selections
         holder.icon.setOnClickListener(v -> toggleSelection(position));
         holder.itemView.setOnLongClickListener(v -> {
@@ -237,6 +243,7 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAd
     }
 
     static class ViewHolder extends MultiSelectionView.ViewHolder {
+        MaterialCardView itemView;
         ImageView icon;
         MaterialButton more;
         TextView processName;
@@ -245,9 +252,11 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAd
         TextView memoryUsage;
         TextView userAndStateInfo;
         TextView selinuxContext;
+        MaterialDivider divider;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            this.itemView = (MaterialCardView) itemView;
             icon = itemView.findViewById(R.id.icon);
             more = itemView.findViewById(R.id.more);
             processName = itemView.findViewById(R.id.process_name);
@@ -256,6 +265,7 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAd
             memoryUsage = itemView.findViewById(R.id.memory_usage);
             userAndStateInfo = itemView.findViewById(R.id.user_state_info);
             selinuxContext = itemView.findViewById(R.id.selinux_context);
+            divider = itemView.findViewById(R.id.divider);
         }
     }
 }
