@@ -165,6 +165,9 @@
     <style name="Widget.AppTheme.CardView.Filled" parent="Widget.Material3.CardView.Filled" />
 
     <style name="Widget.AppTheme.CardView.Outlined" parent="Widget.Material3.CardView.Outlined" />
+    <style name="Widget.AppTheme.CardView.Outlined.DiagonallyRounded" parent="Widget.Material3.CardView.Outlined">
+        <item name="shapeAppearance">@style/ShapeAppearance.AppTheme.DiagonallyRounded</item>
+    </style>
 
     <!-- MaterialCalendar -->
     <style name="Widget.AppTheme.MaterialCalendar" parent="ThemeOverlay.Material3.MaterialCalendar">
@@ -280,6 +283,13 @@
 
     <style name="ShapeAppearance.AppTheme.CircleComponent" parent="">
         <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="ShapeAppearance.AppTheme.DiagonallyRounded" parent="">
+        <item name="cornerSize">24dp</item>
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+        <item name="cornerSizeTopLeft">0dp</item>
     </style>
 
     <!-- TextAppearance attributes: We do not use Material* or AppCompat because they change over time -->

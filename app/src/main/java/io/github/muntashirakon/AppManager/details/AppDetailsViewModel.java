@@ -65,6 +65,7 @@ import io.github.muntashirakon.AppManager.appops.AppOpsUtils;
 import io.github.muntashirakon.AppManager.appops.OpEntry;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsAppOpItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsComponentItem;
+import io.github.muntashirakon.AppManager.details.struct.AppDetailsDefinedPermissionItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsPermissionItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsServiceItem;
@@ -1407,55 +1408,11 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 mUsesPermissions.postValue(Collections.emptyList());
                 return;
             }
-            boolean isRootOrAdbEnabled = Ops.isPrivileged();
             for (int i = 0; i < mPackageInfo.requestedPermissions.length; ++i) {
-                try {
-                    String permissionName = mPackageInfo.requestedPermissions[i];
-                    PermissionInfo permissionInfo = PermissionCompat.getPermissionInfo(mPackageInfo.requestedPermissions[i],
-                            mPackageInfo.packageName, PackageManager.GET_META_DATA);
-                    if (permissionInfo == null) {
-                        Log.d(TAG, "Couldn't fetch info for permission " + permissionName);
-                        permissionInfo = new PermissionInfo();
-                        permissionInfo.name = permissionName;
-                    }
-                    boolean isGranted = (mPackageInfo.requestedPermissionsFlags[i] & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0;
-                    int appOp = AppOpsManager.permissionToOpCode(permissionName);
-                    int permissionFlags = 0;
-                    if (isRootOrAdbEnabled) {
-                        try {
-                            permissionFlags = PermissionCompat.getPermissionFlags(permissionName, mPackageName,
-                                    mUserHandle);
-                        } catch (RemoteException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    boolean appOpAllowed = false;
-                    try {
-                        if (!mIsExternalApk && appOp != OP_NONE) {
-                            int mode = mAppOpsService.checkOperation(appOp, mPackageInfo.applicationInfo.uid, mPackageName);
-                            appOpAllowed = mode == AppOpsManager.MODE_ALLOWED;
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                                appOpAllowed |= mode == AppOpsManager.MODE_FOREGROUND;
-                            }
-                        }
-                    } catch (RemoteException ignore) {
-                    }
-                    int flags = mPackageInfo.requestedPermissionsFlags[i];
-                    int protection = PermissionInfoCompat.getProtection(permissionInfo);
-                    int protectionFlags = PermissionInfoCompat.getProtectionFlags(permissionInfo);
-                    Permission permission;
-                    if (protection == PermissionInfo.PROTECTION_DANGEROUS && PermUtils.systemSupportsRuntimePermissions()) {
-                        permission = new RuntimePermission(permissionName, isGranted, appOp, appOpAllowed, permissionFlags);
-                    } else if ((protectionFlags & PermissionInfo.PROTECTION_FLAG_DEVELOPMENT) != 0) {
-                        permission = new DevelopmentPermission(permissionName, isGranted, appOp, appOpAllowed, permissionFlags);
-                    } else {
-                        permission = new ReadOnlyPermission(permissionName, isGranted, appOp, appOpAllowed, permissionFlags);
-                    }
-                    AppDetailsPermissionItem appDetailsItem = new AppDetailsPermissionItem(permissionInfo, permission, flags);
-                    appDetailsItem.name = permissionName;
-                    mUsesPermissionItems.add(appDetailsItem);
-                } catch (Throwable th) {
-                    th.printStackTrace();
+                AppDetailsPermissionItem permissionItem = getPermissionItem(mPackageInfo.requestedPermissions[i],
+                        (mPackageInfo.requestedPermissionsFlags[i] & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0);
+                if (permissionItem != null) {
+                    mUsesPermissionItems.add(permissionItem);
                 }
             }
         }
@@ -1471,6 +1428,56 @@ public class AppDetailsViewModel extends AndroidViewModel {
         return rawPermissions;
     }
 
+    public AppDetailsPermissionItem getPermissionItem(String permissionName, boolean isGranted) {
+        try {
+            PermissionInfo permissionInfo = PermissionCompat.getPermissionInfo(permissionName,
+                    mPackageInfo.packageName, PackageManager.GET_META_DATA);
+            if (permissionInfo == null) {
+                Log.d(TAG, "Couldn't fetch info for permission " + permissionName);
+                permissionInfo = new PermissionInfo();
+                permissionInfo.name = permissionName;
+            }
+            int flags = permissionInfo.flags;
+            int appOp = AppOpsManager.permissionToOpCode(permissionName);
+            int permissionFlags = 0;
+            if (Ops.isPrivileged()) {
+                try {
+                    permissionFlags = PermissionCompat.getPermissionFlags(permissionName, mPackageName,
+                            mUserHandle);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                }
+            }
+            boolean appOpAllowed = false;
+            try {
+                if (!mIsExternalApk && appOp != OP_NONE) {
+                    int mode = mAppOpsService.checkOperation(appOp, mPackageInfo.applicationInfo.uid, mPackageName);
+                    appOpAllowed = mode == AppOpsManager.MODE_ALLOWED;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                        appOpAllowed |= mode == AppOpsManager.MODE_FOREGROUND;
+                    }
+                }
+            } catch (RemoteException ignore) {
+            }
+            int protection = PermissionInfoCompat.getProtection(permissionInfo);
+            int protectionFlags = PermissionInfoCompat.getProtectionFlags(permissionInfo);
+            Permission permission;
+            if (protection == PermissionInfo.PROTECTION_DANGEROUS && PermUtils.systemSupportsRuntimePermissions()) {
+                permission = new RuntimePermission(permissionName, isGranted, appOp, appOpAllowed, permissionFlags);
+            } else if ((protectionFlags & PermissionInfo.PROTECTION_FLAG_DEVELOPMENT) != 0) {
+                permission = new DevelopmentPermission(permissionName, isGranted, appOp, appOpAllowed, permissionFlags);
+            } else {
+                permission = new ReadOnlyPermission(permissionName, isGranted, appOp, appOpAllowed, permissionFlags);
+            }
+            AppDetailsPermissionItem appDetailsItem = new AppDetailsPermissionItem(permissionInfo, permission, flags);
+            appDetailsItem.name = permissionName;
+            return appDetailsItem;
+        } catch (Throwable th) {
+            th.printStackTrace();
+            return null;
+        }
+    }
+
     @NonNull
     private final MutableLiveData<List<AppDetailsItem<PermissionInfo>>> mPermissions = new MutableLiveData<>();
     private final List<AppDetailsItem<PermissionInfo>> mPermissionItems = new ArrayList<>();
@@ -1479,15 +1486,120 @@ public class AppDetailsViewModel extends AndroidViewModel {
     private void loadPermissions() {
         synchronized (mPermissionItems) {
             mPermissionItems.clear();
-            if (getPackageInfoInternal() == null || mPackageInfo.permissions == null) {
+            if (getPackageInfoInternal() == null) {
                 // No custom permissions
                 mPermissions.postValue(mPermissionItems);
                 return;
             }
-            for (PermissionInfo permissionInfo : mPackageInfo.permissions) {
-                AppDetailsItem<PermissionInfo> appDetailsItem = new AppDetailsItem<>(permissionInfo);
-                appDetailsItem.name = permissionInfo.name;
-                mPermissionItems.add(appDetailsItem);
+            Set<String> visitedPerms = new HashSet<>();
+            if (mPackageInfo.permissions != null) {
+                for (PermissionInfo permissionInfo : mPackageInfo.permissions) {
+                    AppDetailsDefinedPermissionItem appDetailsItem = new AppDetailsDefinedPermissionItem(permissionInfo, false);
+                    appDetailsItem.name = permissionInfo.name;
+                    mPermissionItems.add(appDetailsItem);
+                    visitedPerms.add(permissionInfo.name);
+                }
+            }
+            if (mPackageInfo.activities != null) {
+                for (ActivityInfo activityInfo : mPackageInfo.activities) {
+                    if (activityInfo.permission != null && !visitedPerms.contains(activityInfo.permission)) {
+                        try {
+                            PermissionInfo permissionInfo = PermissionCompat.getPermissionInfo(activityInfo.permission,
+                                    mPackageInfo.packageName, PackageManager.GET_META_DATA);
+                            if (permissionInfo == null) {
+                                Log.d(TAG, "Couldn't fetch info for permission " + activityInfo.permission);
+                                permissionInfo = new PermissionInfo();
+                                permissionInfo.name = activityInfo.permission;
+                            }
+                            AppDetailsDefinedPermissionItem appDetailsItem = new AppDetailsDefinedPermissionItem(permissionInfo, true);
+                            appDetailsItem.name = permissionInfo.name;
+                            mPermissionItems.add(appDetailsItem);
+                            visitedPerms.add(permissionInfo.name);
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+            if (mPackageInfo.services != null) {
+                for (ServiceInfo serviceInfo : mPackageInfo.services) {
+                    if (serviceInfo.permission != null && !visitedPerms.contains(serviceInfo.permission)) {
+                        try {
+                            PermissionInfo permissionInfo = PermissionCompat.getPermissionInfo(serviceInfo.permission,
+                                    mPackageInfo.packageName, PackageManager.GET_META_DATA);
+                            if (permissionInfo == null) {
+                                Log.d(TAG, "Couldn't fetch info for permission " + serviceInfo.permission);
+                                permissionInfo = new PermissionInfo();
+                                permissionInfo.name = serviceInfo.permission;
+                            }
+                            AppDetailsDefinedPermissionItem appDetailsItem = new AppDetailsDefinedPermissionItem(permissionInfo, true);
+                            appDetailsItem.name = permissionInfo.name;
+                            mPermissionItems.add(appDetailsItem);
+                            visitedPerms.add(permissionInfo.name);
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+            if (mPackageInfo.providers != null) {
+                for (ProviderInfo providerInfo : mPackageInfo.providers) {
+                    if (providerInfo.readPermission != null && !visitedPerms.contains(providerInfo.readPermission)) {
+                        try {
+                            PermissionInfo permissionInfo = PermissionCompat.getPermissionInfo(providerInfo.readPermission,
+                                    mPackageInfo.packageName, PackageManager.GET_META_DATA);
+                            if (permissionInfo == null) {
+                                Log.d(TAG, "Couldn't fetch info for permission " + providerInfo.readPermission);
+                                permissionInfo = new PermissionInfo();
+                                permissionInfo.name = providerInfo.readPermission;
+                            }
+                            AppDetailsDefinedPermissionItem appDetailsItem = new AppDetailsDefinedPermissionItem(permissionInfo, true);
+                            appDetailsItem.name = permissionInfo.name;
+                            mPermissionItems.add(appDetailsItem);
+                            visitedPerms.add(permissionInfo.name);
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if (providerInfo.writePermission != null && !visitedPerms.contains(providerInfo.writePermission)) {
+                        try {
+                            PermissionInfo permissionInfo = PermissionCompat.getPermissionInfo(providerInfo.writePermission,
+                                    mPackageInfo.packageName, PackageManager.GET_META_DATA);
+                            if (permissionInfo == null) {
+                                Log.d(TAG, "Couldn't fetch info for permission " + providerInfo.writePermission);
+                                permissionInfo = new PermissionInfo();
+                                permissionInfo.name = providerInfo.writePermission;
+                            }
+                            AppDetailsDefinedPermissionItem appDetailsItem = new AppDetailsDefinedPermissionItem(permissionInfo, true);
+                            appDetailsItem.name = permissionInfo.name;
+                            mPermissionItems.add(appDetailsItem);
+                            visitedPerms.add(permissionInfo.name);
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+            if (mPackageInfo.receivers != null) {
+                for (ActivityInfo activityInfo : mPackageInfo.receivers) {
+                    if (activityInfo.permission != null && !visitedPerms.contains(activityInfo.permission)) {
+                        try {
+                            PermissionInfo permissionInfo = PermissionCompat.getPermissionInfo(activityInfo.permission,
+                                    mPackageInfo.packageName, PackageManager.GET_META_DATA);
+                            if (permissionInfo == null) {
+                                Log.d(TAG, "Couldn't fetch info for permission " + activityInfo.permission);
+                                permissionInfo = new PermissionInfo();
+                                permissionInfo.name = activityInfo.permission;
+                            }
+                            AppDetailsDefinedPermissionItem appDetailsItem = new AppDetailsDefinedPermissionItem(permissionInfo, true);
+                            appDetailsItem.name = permissionInfo.name;
+                            mPermissionItems.add(appDetailsItem);
+                            visitedPerms.add(permissionInfo.name);
+                        } catch (RemoteException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
             }
             mPermissions.postValue(filterAndSortPermissions(mPermissionItems));
         }

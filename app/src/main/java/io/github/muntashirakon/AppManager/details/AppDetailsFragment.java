@@ -47,6 +47,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.chip.Chip;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.divider.MaterialDivider;
@@ -72,6 +73,7 @@ import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.OpEntry;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsAppOpItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsComponentItem;
+import io.github.muntashirakon.AppManager.details.struct.AppDetailsDefinedPermissionItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsPermissionItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsServiceItem;
@@ -676,6 +678,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             Button launchBtn;
             SwitchMaterial toggleSwitch;
             MaterialDivider divider;
+            Chip chipType;
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
@@ -693,6 +696,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                         blockBtn = itemView.findViewById(R.id.block_component);
                         shortcutBtn = itemView.findViewById(R.id.edit_shortcut_btn);
                         divider = itemView.findViewById(R.id.divider);
+                        chipType = itemView.findViewById(R.id.type);
                         break;
                     case SERVICES:
                         imageView = itemView.findViewById(R.id.icon);
@@ -703,6 +707,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                         launchBtn = itemView.findViewById(R.id.launch);
                         blockBtn = itemView.findViewById(R.id.block_component);
                         divider = itemView.findViewById(R.id.divider);
+                        chipType = itemView.findViewById(R.id.type);
                         itemView.findViewById(R.id.taskAffinity).setVisibility(View.GONE);
                         itemView.findViewById(R.id.launchMode).setVisibility(View.GONE);
                         itemView.findViewById(R.id.softInput).setVisibility(View.GONE);
@@ -719,6 +724,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                         textView7 = itemView.findViewById(R.id.process_name);
                         blockBtn = itemView.findViewById(R.id.block_component);
                         divider = itemView.findViewById(R.id.divider);
+                        chipType = itemView.findViewById(R.id.type);
                         itemView.findViewById(R.id.launch).setVisibility(View.GONE);
                         itemView.findViewById(R.id.edit_shortcut_btn).setVisibility(View.GONE);
                         break;
@@ -733,6 +739,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                         textView7 = itemView.findViewById(R.id.process_name);
                         blockBtn = itemView.findViewById(R.id.block_component);
                         divider = itemView.findViewById(R.id.divider);
+                        chipType = itemView.findViewById(R.id.type);
                         itemView.findViewById(R.id.launch).setVisibility(View.GONE);
                         itemView.findViewById(R.id.edit_shortcut_btn).setVisibility(View.GONE);
                         break;
@@ -744,6 +751,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                         textView4 = itemView.findViewById(R.id.orientation);
                         textView5 = itemView.findViewById(R.id.launchMode);
                         divider = itemView.findViewById(R.id.divider);
+                        chipType = itemView.findViewById(R.id.type);
                         itemView.findViewById(R.id.softInput).setVisibility(View.GONE);
                         itemView.findViewById(R.id.launch).setVisibility(View.GONE);
                         itemView.findViewById(R.id.edit_shortcut_btn).setVisibility(View.GONE);
@@ -785,7 +793,8 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                         textView1 = itemView.findViewById(R.id.item_title);
                         textView2 = itemView.findViewById(R.id.item_subtitle);
                         launchBtn = itemView.findViewById(R.id.item_open);
-                        itemView.findViewById(R.id.item_icon).setVisibility(View.GONE);
+                        divider = itemView.findViewById(R.id.divider);
+                        chipType = itemView.findViewById(R.id.lib_type);
                         textView1.setTextIsSelectable(true);
                         textView2.setTextIsSelectable(true);
                         break;
@@ -829,7 +838,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                     view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_text_view, parent, false);
                     break;
                 case SHARED_LIBRARIES:
-                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_icon_title_subtitle, parent, false);
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_shared_lib, parent, false);
                     break;
             }
             return new ViewHolder(view);
@@ -949,6 +958,10 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             } else {
                 holder.divider.setDividerColor(mColorSurfaceVariant);
             }
+            if (componentItem.isTracker()) {
+                holder.chipType.setText(R.string.tracker);
+                holder.chipType.setVisibility(View.VISIBLE);
+            } else holder.chipType.setVisibility(View.GONE);
             // Name
             if (mConstraint != null && activityName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
@@ -1060,6 +1073,10 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             } else {
                 holder.divider.setDividerColor(mColorSurfaceVariant);
             }
+            if (serviceItem.isTracker()) {
+                holder.chipType.setText(R.string.tracker);
+                holder.chipType.setVisibility(View.VISIBLE);
+            } else holder.chipType.setVisibility(View.GONE);
             // Label
             holder.textView1.setText(Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(serviceInfo.name)));
             // Name
@@ -1129,6 +1146,10 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             } else {
                 holder.divider.setDividerColor(mColorSurfaceVariant);
             }
+            if (componentItem.isTracker()) {
+                holder.chipType.setText(R.string.tracker);
+                holder.chipType.setVisibility(View.VISIBLE);
+            } else holder.chipType.setVisibility(View.GONE);
             // Label
             holder.textView1.setText(Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(activityInfo.name)));
             // Name
@@ -1184,6 +1205,10 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             } else {
                 holder.divider.setDividerColor(mColorSurfaceVariant);
             }
+            if (componentItem.isTracker()) {
+                holder.chipType.setText(R.string.tracker);
+                holder.chipType.setVisibility(View.VISIBLE);
+            } else holder.chipType.setVisibility(View.GONE);
             // Label
             holder.textView1.setText(Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(providerName)));
             // Icon
@@ -1480,6 +1505,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                 StringBuilder sb = new StringBuilder(Formatter.formatFileSize(mActivity, libFile.length()))
                         .append("\n").append(libFile.getAbsolutePath());
                 holder.textView2.setText(sb);
+                holder.chipType.setText(libFile.getName().endsWith(".so") ? "SO" : "JAR");
                 holder.launchBtn.setVisibility(View.VISIBLE);
                 holder.launchBtn.setOnClickListener(openAsFolderInFM(mActivity, libFile.getParent()));
             } else {
@@ -1487,16 +1513,30 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             }
             if (item.vanillaItem instanceof NativeLibraries.NativeLib) {
                 holder.textView2.setText(((LocalizedString) item.vanillaItem).toLocalizedString(mActivity));
+                String type;
+                switch (((NativeLibraries.NativeLib) item.vanillaItem).getType()) {
+                    case NativeLibraries.NativeLib.TYPE_DYN:
+                        type = "SHARED";
+                        break;
+                    case NativeLibraries.NativeLib.TYPE_EXEC:
+                        type = "EXEC";
+                        break;
+                    default:
+                        type = "SO";
+                }
+                holder.chipType.setText(type);
             }
-            holder.itemView.setBackgroundResource(index % 2 == 0 ? R.drawable.item_semi_transparent : R.drawable.item_transparent);
+            holder.divider.setDividerColor(mColorSurfaceVariant);
         }
 
         private void getPermissionsView(@NonNull ViewHolder holder, int index) {
-            View view = holder.itemView;
-            final PermissionInfo permissionInfo;
+            AppDetailsDefinedPermissionItem permissionItem;
             synchronized (mAdapterList) {
-                permissionInfo = (PermissionInfo) mAdapterList.get(index).vanillaItem;
+                permissionItem = (AppDetailsDefinedPermissionItem) mAdapterList.get(index);
             }
+            PermissionInfo permissionInfo = permissionItem.vanillaItem;
+            // Internal or external
+            holder.chipType.setText(permissionItem.isExternal ? R.string.external : R.string.internal);
             // Label
             holder.textView1.setText(permissionInfo.loadLabel(mPackageManager));
             // Name
@@ -1517,7 +1557,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             // Protection level
             String protectionLevel = Utils.getProtectionLevelString(permissionInfo);
             holder.textView5.setText(String.format(Locale.ROOT, "\u2691 %s", protectionLevel));
-            // Set background color
+            // Set border color
             if (protectionLevel.contains("dangerous")) {
                 holder.divider.setDividerColor(mColorRed);
             }

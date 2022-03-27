@@ -1,0 +1,75 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.AppTheme.CardView.Elevated"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/padding_small"
+    android:layout_marginVertical="2dp">
+
+    <com.google.android.material.chip.Chip
+        android:id="@+id/lib_type"
+        style="@style/Widget.AppTheme.CardView.Outlined.DiagonallyRounded"
+        android:layout_width="wrap_content"
+        android:layout_height="12dp"
+        android:layout_gravity="end"
+        android:textSize="@dimen/font_size_smaller"
+        tools:text=".so" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/item_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:focusable="true"
+        android:background="@drawable/item_transparent"
+        android:paddingHorizontal="@dimen/padding_medium"
+        android:paddingVertical="@dimen/padding_medium">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/item_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceListItem"
+                tools:text="@tools:sample/lorem" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/item_subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="?android:attr/textColorSecondary"
+                android:nextFocusRight="@id/item_open"
+                tools:text="@tools:sample/lorem" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/item_open"
+            style="@style/Widget.AppTheme.Button.IconButton"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="@dimen/padding_medium"
+            android:layout_weight="0"
+            android:background="@drawable/item_transparent"
+            android:focusable="true"
+            android:nextFocusLeft="@id/item_subtitle"
+            app:icon="@drawable/ic_open_in_new_black_24dp"
+            app:iconSize="24dp" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/divider"
+        android:layout_width="6dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start" />
+
+</com.google.android.material.card.MaterialCardView>

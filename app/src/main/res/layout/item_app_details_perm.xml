@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:textIsSelectable="true"
                 android:textAppearance="?android:attr/textAppearanceListItem"
-                tools:text="android.permission.PERMISSION_NAME" />
+                tools:text="android.permission.A_VERY_LONG_PERMISSION_NAME" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/perm_description"
@@ -76,8 +76,8 @@
 
     <com.google.android.material.divider.MaterialDivider
         android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="4dp"
-        android:layout_gravity="bottom" />
+        android:layout_width="6dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start" />
 
 </com.google.android.material.card.MaterialCardView>
