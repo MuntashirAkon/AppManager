@@ -1030,8 +1030,8 @@
     <string name="checkbox_never_show_partial_select_help">Больше не показывать</string>
     <string name="add_filter_ellipsis">Добавить фильтр…</string>
     <string name="add_filter">Добавить фильтр</string>
-    <string name="log_level_fatal">Fatal</string>
-    <string name="log_level_warn">Warn</string>
+    <string name="log_level_fatal">Фатальный</string>
+    <string name="log_level_warn">Предупреждение</string>
     <string name="log_level_verbose">Verbose</string>
     <string name="log_level_info">Info</string>
     <string name="log_level_error">Error</string>
@@ -1074,7 +1074,7 @@
     <string name="netpolicy_reject_cellular_data">Отклонить передачу мобильных данных</string>
     <string name="netpolicy_allow_background_data">Разрешить фоновую передачу данных, когда включена экономия трафика</string>
     <string name="netpolicy_reject_background_data">Отклонить фоновую передачу данных</string>
-    <string name="pkcs12_keystore">PKCS #12 KeyStore (P12)</string>
+    <string name="pkcs12_keystore">PKCS #12 хранилище ключа (P12)</string>
     <string name="saf">SAF</string>
     <string name="port_number_invalid">Недействительный номер порта.</string>
     <string name="port_number_empty">Номер порта пуст.</string>
@@ -1151,7 +1151,7 @@
     <string name="failed_to_uninstall_app">Не получилось удалить</string>
     <string name="import_from_sb">Импорт из Swift Backup 3.0 – 3.2</string>
     <string name="java">Java</string>
-    <string name="smali">Smali</string>
+    <string name="smali">маленький</string>
     <string name="explore">Анализировать</string>
     <string name="system_partition">Корень системного раздела</string>
     <string name="exit_confirmation">Подтверждение выхода</string>
@@ -1174,7 +1174,7 @@
     <string name="intent_firewall">IFW</string>
     <string name="failed_to_change_app_op_mode">Не удалось изменить режим работы приложения.</string>
     <string name="toggle_internet">Использовать интернет</string>
-    <string name="vt_success">VirusTotal: %1$d/%2$d</string>
+    <string name="vt_success">Проверка VirusTota(-ом): %1$d/%2$d</string>
     <string name="vt_scan_date">Дата сканирования: %1$s</string>
     <string name="vt_permalink">Постоянная ссылка на VirusTotal</string>
     <string name="vt_queued">VirusTotal: в очереди</string>
@@ -1195,7 +1195,7 @@
     <string name="swap_chart_info">● %1$s Используется ● %2$s Свободно</string>
     <string name="failed_to_use_the_current_mode_of_operation">Невозможно использовать текущий режим работы. Возврат к режиму без-root для этого сеанса.</string>
     <string name="warning_working_on_root_mode">Предупреждение: работа в режиме root вместо режима ADB.</string>
-    <string name="magisk_denylist">Magisk DenyList</string>
+    <string name="magisk_denylist">Список запрещенных журналов</string>
     <string name="failed_to_enable_magisk_deny_list">Не удалось включить Magisk DenyList</string>
     <plurals name="usage_seconds">
         <item quantity="one">%1$d с.</item>
@@ -1240,4 +1240,7 @@
     <string name="pref_saved_apk_name_format">Формат имени сохраненного APK</string>
     <string name="pref_saved_apk_name_format_msg">Формат, который будет использоваться для названия файлов APK при их сохранении.</string>
     <string name="auth_manager_description">Чтобы запустить Intent из внешнего приложения, необходимо указать дополнительное поле с именем <tt>auth</tt>, и оно должно содержать следующий ключ:</string>
+    <string name="auth_manager_title">Менеджер авторизации</string>
+    <string name="regenerate_auth_key">Пересоздать ключ авторизации</string>
+    <string name="shortcut_icon">Значок ярлыка</string>
 </resources>
