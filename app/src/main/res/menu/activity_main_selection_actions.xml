@@ -16,7 +16,7 @@
         android:icon="@drawable/ic_baseline_power_settings_new_24" />
     <item
         android:id="@+id/action_clear_data_cache"
-        android:icon="@drawable/ic_trash_can_outline"
+        android:icon="@drawable/ic_clear"
         android:title="@string/clear" />
     <item
         android:id="@+id/action_save_apk"

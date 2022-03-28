@@ -1062,7 +1062,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             });
                 }
                 // Clear data
-                addToHorizontalLayout(R.string.clear_data, R.drawable.ic_trash_can_outline)
+                addToHorizontalLayout(R.string.clear_data, R.drawable.ic_clear_data)
                         .setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
                                 .setTitle(mPackageLabel)
                                 .setMessage(R.string.clear_data_message)
@@ -1088,7 +1088,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                 .setNegativeButton(R.string.cancel, null)
                                 .show());
                 // Clear cache
-                addToHorizontalLayout(R.string.clear_cache, R.drawable.ic_trash_can_outline)
+                addToHorizontalLayout(R.string.clear_cache, R.drawable.ic_clear_cache)
                         .setOnClickListener(v -> {
                             if (isAdbEnabled || isRootEnabled) {
                                 executor.submit(() -> {
