@@ -3,7 +3,7 @@
     <string name="_lang_tag" translatable="false">es-ES</string>
     <string name="uninstall">Desinstalar</string>
     <string name="permissions">Usos de los permisos</string>
-    <string name="require_no_permission">No se requiere ningún permiso</string>
+    <string name="require_no_permission">"No se requiere  permiso"</string>
     <string name="activities">Actividades</string>
     <string name="launch">Iniciar</string>
     <string name="refresh">Actualizar</string>
@@ -20,7 +20,7 @@
     <string name="no_service">Sin servicios</string>
     <string name="orientation">Orientación</string>
     <string name="soft_input">Modo de entrada suave</string>
-    <string name="flags">Flags</string>
+    <string name="flags">Banderas</string>
     <string name="grant_uri_permission">Conceder permisos URI</string>
     <string name="path_permissions">Permisos de ruta</string>
     <string name="read">Leer</string>
@@ -755,7 +755,7 @@
     <string name="density">Densidad</string>
     <string name="screen">Pantalla</string>
     <string name="hardware">Hardware</string>
-    <string name="permissive">Permissive</string>
+    <string name="permissive">Permisivo</string>
     <string name="enforcing">Enforcing</string>
     <string name="selinux">SELinux</string>
     <string name="patch_level">Nivel del parche</string>
@@ -1126,7 +1126,7 @@
     <string name="swap_chart_info">● %1$s Usado ● %2$s Libre</string>
     <string name="failed_to_use_the_current_mode_of_operation">No es posible usar el modo de operación actual. Volviendo a modo no-root para esta sesión.</string>
     <string name="warning_working_on_root_mode">Advertencia: Se está trabajando en root en lugar de modo ADB.</string>
-    <string name="magisk_denylist">Magisk DenyList</string>
+    <string name="magisk_denylist">Lista de bloqueo Magisk</string>
     <string name="failed_to_enable_magisk_deny_list">No se pudo habilitar Magisk DenyList</string>
     <string name="mode_of_op_with_inferred_mode_of_op">%1$s (Modo inferido: %2$s)</string>
     <string name="vt_permalink">Enlace permanente a VirusTotal</string>
@@ -1137,8 +1137,8 @@
     <string name="failed_to_change_app_op_mode">No se pudo cambiar el modo de operación de la aplicación.</string>
     <string name="failed_to_disable_magisk_deny_list">No se pudo deshabilitar Magisk DenyList</string>
     <plurals name="usage_minutes">
-        <item quantity="one">Hola</item>
-        <item quantity="other">Holas</item>
+        <item quantity="one">minuto</item>
+        <item quantity="other">minutos</item>
     </plurals>
     <string name="uses_play_app_signing_description">Está aplicación contiene algunos marcadores que indican que <i>posiblemente</i> usen <a href="https://support.google.com/googleplay/android-developer/answer/9842756">Play App Signing</a>. Con este mecanismo, las claves de inicio son guardadas en los servidores de Google, y Google es el responsable por el inicio de sesión en la app. Tenga en cuenta que emparejar la información de inicio es la única forma de verificar que la app no fue modificada por una persona diferente al desarrollador (y en este caso, también Google).</string>
     <string name="parent_process_id">ID del proceso padre</string>
