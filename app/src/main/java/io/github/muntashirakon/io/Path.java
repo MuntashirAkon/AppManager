@@ -703,6 +703,12 @@ public class Path {
         return mDocumentFile.lastModified();
     }
 
+    public void setLastModified(long time) {
+        if (mDocumentFile instanceof ProxyDocumentFile) {
+            Objects.requireNonNull(getFile()).setLastModified(time);
+        }
+    }
+
     @NonNull
     public Path[] listFiles() {
         VirtualFileSystem.FileSystem[] fileSystems = VirtualFileSystem.getFileSystemsAtUri(getUri());

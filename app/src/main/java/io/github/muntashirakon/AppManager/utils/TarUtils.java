@@ -187,6 +187,8 @@ public final class TarUtils {
                     }
                     // Fix permissions
                     ProxyFiles.setPermissions(file, entry.getMode(), entry.getUserId(), entry.getGroupId());
+                    // Restore timestamp
+                    file.setLastModified(entry.getModTime().getTime());
                 }
                 // Delete unwanted files
                 validateFiles(dest, dest, filters, exclude);
