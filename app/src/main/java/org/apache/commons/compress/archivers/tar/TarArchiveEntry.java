@@ -435,8 +435,8 @@ public class TarArchiveEntry implements ArchiveEntry, TarConstants, EntryStreamO
             if (!file.isDirectory()) {
                 this.size = file.length();
             }
+            this.modTime = file.lastModified() / MILLIS_PER_SECOND;
         }
-        this.modTime = file.lastModified() / MILLIS_PER_SECOND;
         this.userName = "";
         preserveAbsolutePath = false;
     }
@@ -464,8 +464,8 @@ public class TarArchiveEntry implements ArchiveEntry, TarConstants, EntryStreamO
             if (!file.isDirectory()) {
                 this.size = file.length();
             }
+            this.modTime = file.lastModified() / MILLIS_PER_SECOND;
         }
-        this.modTime = file.lastModified() / MILLIS_PER_SECOND;
         this.userName = "";
         preserveAbsolutePath = false;
     }
@@ -490,7 +490,7 @@ public class TarArchiveEntry implements ArchiveEntry, TarConstants, EntryStreamO
         this.mode = fstat.st_mode;
         this.userId = fstat.st_uid;
         this.groupId = fstat.st_gid;
-        setModTime(fstat.st_mtime);
+        this.modTime = fstat.st_mtime;
     }
 
     private void readFileMode(@NonNull final Path file, final String normalizedName)
@@ -517,7 +517,7 @@ public class TarArchiveEntry implements ArchiveEntry, TarConstants, EntryStreamO
         this.mode = fstat.st_mode;
         this.userId = fstat.st_uid;
         this.groupId = fstat.st_gid;
-        setModTime(fstat.st_mtime);
+        this.modTime = fstat.st_mtime;
     }
 
     /**
