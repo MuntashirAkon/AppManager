@@ -188,7 +188,10 @@ public final class TarUtils {
                     // Fix permissions
                     ProxyFiles.setPermissions(file, entry.getMode(), entry.getUserId(), entry.getGroupId());
                     // Restore timestamp
-                    file.setLastModified(entry.getModTime().getTime());
+                    long modificationTime = entry.getModTime().getTime();
+                    if (modificationTime > 0) { // Backward-compatibility
+                        file.setLastModified(entry.getModTime().getTime());
+                    }
                 }
                 // Delete unwanted files
                 validateFiles(dest, dest, filters, exclude);

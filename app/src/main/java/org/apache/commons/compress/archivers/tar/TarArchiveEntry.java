@@ -435,8 +435,8 @@ public class TarArchiveEntry implements ArchiveEntry, TarConstants, EntryStreamO
             if (!file.isDirectory()) {
                 this.size = file.length();
             }
-            this.modTime = file.lastModified() / MILLIS_PER_SECOND;
         }
+        this.modTime = file.lastModified() / MILLIS_PER_SECOND;
         this.userName = "";
         preserveAbsolutePath = false;
     }
@@ -464,8 +464,8 @@ public class TarArchiveEntry implements ArchiveEntry, TarConstants, EntryStreamO
             if (!file.isDirectory()) {
                 this.size = file.length();
             }
-            this.modTime = file.lastModified() / MILLIS_PER_SECOND;
         }
+        this.modTime = file.lastModified() / MILLIS_PER_SECOND;
         this.userName = "";
         preserveAbsolutePath = false;
     }
