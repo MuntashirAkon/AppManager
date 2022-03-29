@@ -276,86 +276,86 @@
 \n\\begin{itemize}
 \n \\item \\textbf{Anwendungssymbol} Das Anwendungssymbol. Wenn eine App kein Symbol hat, wird das Standardsymbol des Systems angezeigt.
 \n
-\n \\item \\textbf{App Label.} Das Anwendungslabel oder der Anwendungsname.
+\n \\item \\textbf{Anwendungslabel.} Das Anwendungslabel oder der Anwendungsname.
 \n
-\n \\item \\textbf{Version.} Die Anwendungsversion ist in zwei Teile unterteilt. Der erste Teil heißt \\textit{Version name}. Das Format dieses Teils variiert, besteht aber häufig aus mehreren durch Punkte getrennten Ganzzahlen. Der zweite Teil
+\n \\item \\textbf{Version.} Die Anwendungsversion ist in zwei Teile unterteilt. Der erste Teil heißt \\textit{Versionsname}. Das Format dieses Teils variiert, besteht aber häufig aus mehreren durch Punkte getrennten Ganzzahlen. Der zweite Teil
 \n wird \\textit{Versionscode} genannt und ist unter der ersten Klammer geschlossen. Der Versionscode ist eine ganze Zahl, die normalerweise
 \n verwendet wird, um zwischen den Versionen einer Anwendung zu unterscheiden (da der Versionsname oft von einer Maschine nicht gelesen werden kann). Im Allgemeinen hat eine neue
-\n Version einer Anwendung einen höheren Versionscode als die alte. Wenn zum Beispiel \\texttt{123} und \\texttt{125} zwei
+\n Version einer Anwendung einen höheren Versionscode als die alte. Wenn zum Beispiel \\texttt{123} und \\texttt{125} zwei Versionen
 \n einer App sind, kann man sagen, dass die letztere aktueller ist als die erste, weil der Versionscode der
-\n letztere höher ist. Bei Anwendungen, die von Plattformen abhängen (Mobilgeräte, Tabs, Desktops usw.), können diese Versions-
+\n letztere höher ist. Bei Anwendungen, die von plattformabhängigen (Mobilgeräte, Tablets, Desktops usw.), können diese Versions-
 \nnummern
-\n irreführend sein, da sie Präfixe für jede Plattform verwenden.
+\n irreführend sein, da sie Präfixe für jeweilige Plattform verwenden.
 \n
 \n \\item \\textbf{Tags.} (Auch bekannt als Tag-Clouds) Tags enthalten die grundlegenden, prägnanten und nützlichsten Informationen zu einer App.
-\n Tags enthalten \\textit{tracker info} (d. h. die Anzahl der Tracker-Komponenten), \\textit{app type} (Benutzer-App oder System-App
+\n \\textit{Tracker Info} (d. h. die Anzahl der Tracker-Komponenten), \\textit{App Typ} (Benutzer-App oder System-App
 \n und ob es sich bei der App um eine aktualisierte Version der System-App handelt oder ob die App systemlos unter Verwendung von Magisk installiert wurde),
-\n \\textit{running} (d. h. ein oder mehrere Dienste der App laufen im Hintergrund), \\textit{split APK info} (d. h.
-\n \\Anzahl der Splits), \\textit{debuggable} (die App ist eine Debug-Version), \\textit{test only} (die App ist eine reine Test
-\n App), \\textit{large heap} (die App hat eine große Heapgröße angefordert), \\textit{stopped} (die App wurde zwangsweise gestoppt),
-\n \\textit{disabled} (die App ist deaktiviert), \\textit{KeyStore} (die App hat Elemente im Android KeyStore),
+\n \\textit{Laufende} (d. h. ein oder mehrere Dienste der App laufen im Hintergrund), \\textit{split APK info} (d. h.
+\n \\Anzahl der Splits), \\textit{fehlersuchfähig} (die App ist eine Debug-Version), \\textit{nur für Tests} (die App ist eine reine Test
+\n App), \\textit{großer Speicherplatz} (die App hat einen großen Speicherplatz angefordert), \\textit{gestoppt} (die App wurde zwangsweise gestoppt),
+\n \\textit{deaktiviert} (die App ist deaktiviert), \\textit{Schlüsselspeicher} (die App hat Elemente im Android KeyStore),
 \n \\textit{no code} (die App hat keinen mit ihr verbundenen Code), \\hyperref[sec:terminologies]{\\textit{SSAID}},
-\n \\textit{netpolicy} (Netzpolitik, z. B. Nutzung von Hintergrunddaten) und \\textit{Batterieoptimierung}.
-\n Die Bedeutung von \\textit{test only} und \\textit{debuggable} liegt darin, dass Apps mit diesen Eigenschaften zusätzliche Aufgaben übernehmen können
-\n zusätzliche Aufgaben ausführen können oder diese Apps ohne Root \\texttt{run-as} sein können, was potenzielle Sicherheitsprobleme verursachen kann
+\n \\textit{Netzrichtlinie} (Netzrichtlinie, z. B. Nutzung von Hintergrunddaten) und \\textit{Batterieoptimierung}.
+\n Die Bedeutung von \\textit{nur für Tests} und \\textit{fehlersuchfähig} liegt darin, dass Apps mit diesen Eigenschaften zusätzliche Aufgaben übernehmen können
+\n oder diese Apps ohne Root \\texttt{ausführbar} sein können, was potenzielle Sicherheitsprobleme verursachen kann
 \n wenn diese Anwendungen private Informationen speichern.
-\n \\textit{Large heap} bedeutet, dass der App bei Bedarf eine größere Menge an Speicher (RAM) zugewiesen wird.
-\n Auch wenn dies in den meisten Fällen nicht schädlich ist, sollten verdächtige Anwendungen, die einen großen Heap anfordern, ernst genommen werden.
+\n \\textit{großer Speicherplatz} bedeutet, dass der App bei Bedarf eine größere Menge an Speicher (RAM) zugewiesen wird.
+\n Auch wenn dies in den meisten Fällen nicht schädlich ist, sollten verdächtige Anwendungen, die einen großen Speicherplatz anfordern, ernst genommen werden.
 \n
-\n \\item \\textbf {Horizontales Aktionsfeld} Dies ist ein Aktionsfeld, das verschiedene Aktionen für die App enthält. Siehe .
+\n \\item \\textbf {Horizontales Aktionsfeld} Dies ist ein Aktionsfeld, das verschiedene Aktionen für die App enthält. Siehe
 \n §\\cref{subsubsec:horizontal-action-panel} für eine vollständige Liste der hier verfügbaren Aktionen.
 \n
-\n \\item \\textbf{Pfade \\&amp; Verzeichnisse.} Enthält verschiedene Informationen zu Anwendungspfaden, einschließlich \\textit{app
-\n Verzeichnis} (wo die APK-Dateien gespeichert sind), \\textit{Datenverzeichnisse} (intern, gerätegeschützt und extern),
-\n \\textit{gesplittete APK-Verzeichnisse} (zusammen mit den Split-Namen), und \\textit{native JNI-Bibliothek} (falls vorhanden). JNI
-\n Bibliotheken werden verwendet, um native Codes aufzurufen, die normalerweise in C/C++ geschrieben sind. Die Verwendung einer nativen Bibliothek kann die Anwendung
-\n oder die Verwendung von Bibliotheken von Drittanbietern, die in anderen Sprachen als Java geschrieben wurden, wie bei den meisten Spielen. Sie können
-\n Sie können diese Verzeichnisse auch mit Ihrem bevorzugten Dateimanager öffnen (vorausgesetzt, er unterstützt dies und hat die notwendigen
-\n Sie können diese Verzeichnisse auch mit Ihren bevorzugten Dateimanagern öffnen (vorausgesetzt, diese unterstützen sie und verfügen über die erforderlichen Berechtigungen), indem Sie auf das Startsymbol auf der rechten Seite jedes Elements klicken.
+\n \\item \\textbf{Pfade \\&amp; Verzeichnisse.} Enthält verschiedene Informationen zu Anwendungspfaden, einschließlich \\textit{App-
+\n Verzeichnissen} (wo die APK-Dateien gespeichert sind), \\textit{Datenverzeichnisse} (intern, gerätegeschützt und extern),
+\n \\textit{gesplittete APK-Verzeichnisse} (zusammen mit den Split-Namen), und \\textit{native JNI-Bibliothek} (falls vorhanden). JNI-
+\n Bibliotheken werden verwendet, um native Codes aufzurufen, die normalerweise in C/C++ geschrieben sind. Die Verwendung einer nativen Bibliothek kann die Anwendung flüssiger laufen lassen
+\n oder einer Anwendung helfen, Bibliotheken von Drittanbietern zu verwenden, die in anderen Sprachen als Java geschrieben wurden, wie bei den meisten Spiele. Sie können
+\n diese Verzeichnisse auch mit Ihrem bevorzugten Dateimanager öffnen (vorausgesetzt, er unterstützt dies und hat
+\n die erforderlichen Berechtigungen), indem Sie auf das Startsymbol auf der rechten Seite jedes Elements klicken.
 \n
 \n \\item \\textbf{Datenverwendung seit dem letzten Start} Eine ziemlich selbsterklärende Option. Beachten Sie aber, dass aufgrund einiger Probleme die
-\n Ergebnisse oft irreführend und schlichtweg falsch sein können. Dieser Teil bleibt ausgeblendet, wenn die Berechtigung \\textit{Usage Access}
+\n Ergebnisse oft irreführend und schlichtweg falsch sein können. Dieser Teil bleibt ausgeblendet, wenn die Berechtigung \\textit{Nutzungszugriff}
 \n bei neueren Geräten nicht gewährt wird.
 \n
-\n \\item \\textbf{Storage \\&amp; Cache.} Zeigt Informationen über die Größe der App (APK-Dateien), der Daten und des Cache an. Auf
-\n älteren Geräten wird auch die Größe von externen Daten, Cache, Medien und OBB-Ordnern angezeigt. Dieser Teil bleibt ausgeblendet, wenn
+\n \\item \\textbf{Speicher \\&amp; Cache.} Zeigt Informationen über die Größe der App (APK-Dateien), der Daten und des Cache an. Auf
+\n älteren Geräten wird auch die Größe von externen Daten, Cache, Medien und OBB-Ordnern angezeigt. Dieser Teil bleibt ausgeblendet, wenn der
 \n \\textit{Nutzungszugriff} auf neueren Geräten nicht gewährt wird.
 \n
 \n \\item \\textbf{Weitere Informationen} Zeigt weitere Informationen an, wie z. B..
 \n \\begin{itemize}
 \n \\item \\textbf{SDK.} Zeigt Informationen im Zusammenhang mit dem Android SDK an. Es gibt zwei (bei alten Geräten einen) Werte:
-\n \\textit{Max} bezeichnet das Ziel-SDK und \\textit{Min} bezeichnet das Mindest-SDK (letzteres ist in alten Geräten nicht verfügbar
-\n Geräten nicht verfügbar). Es ist empfehlenswert, Anwendungen mit dem maximalen SDK zu verwenden, das die Plattform derzeit unterstützt. SDK ist auch
-\n auch als textbf{API Level} bekannt.
+\n \\textit{Max} bezeichnet das Ziel-SDK und \\textit{Min} bezeichnet das Mindest-SDK (letzteres ist in alten Geräten nicht verfügbar).
+\n Es ist empfehlenswert, Anwendungen mit dem maximalen SDK zu verwenden, das die Plattform derzeit unterstützt. SDK ist auch
+\n als textbf{API Level} bekannt.
 \n \\seealsoinline{\\href{https://en.wikipedia.org/wiki/Android_version_history\\#Overview}{Android Versionsgeschichte}}
 \n
-\n \\item \\textbf{Flags.} Die Anwendungsflags, die zum Zeitpunkt der Erstellung der Anwendung verwendet werden. Für eine vollständige Liste der Flags
-\n und deren Funktion finden Sie auf der Seite
+\n \\item \\textbf{Anwendungsflags.} Die Anwendungsflags, die zum Zeitpunkt der Erstellung der Anwendung verwendet werden. Für eine vollständige Liste der Flags
+\n und deren Funktion finden Sie auf der Seite die
 \n \\href{https://developer.android.com/reference/android/content/pm/ApplicationInfo\\#flags}{offizielle Dokumentation}.
 \n
-\n \\item \\textbf{Date Installed.} Das Datum, an dem die Anwendung zum ersten Mal installiert wurde.
+\n \\item \\textbf{Installationsdatum.} Das Datum, an dem die Anwendung zum ersten Mal installiert wurde.
 \n
-\n \\item \\textbf{Date Updated.} Das Datum, an dem die App zuletzt aktualisiert wurde. Dies ist dasselbe wie \\textit{Date Installed}
+\n \\item \\textbf{Aktualisierungsdatum.} Das Datum, an dem die App zuletzt aktualisiert wurde. Dies ist dasselbe wie \\textit{Installationsdatum}
 \n wenn die App noch nicht aktualisiert wurde.
 \n
-\n \\item \\textbf{Installer App.} Die App, die diese App installiert hat. Nicht alle Apps liefern die Informationen, die der
-\n Paketmanager verwendet werden, um die Installer-App zu registrieren. Daher sollte dieser Wert nicht als selbstverständlich angesehen werden.
+\n \\item \\textbf{Installer-App.} Die App, die diese App installiert hat. Nicht alle Apps liefern die Informationen, die der
+\n Paketmanager verwendet, um die Installer-App zu registrieren. Daher sollte dieser Wert nicht als selbstverständlich angesehen werden.
 \n
 \n \\item \\textbf{Benutzer-ID.} Die eindeutige Benutzer-ID, die der App vom Android-System zugewiesen wurde. Bei gemeinsam genutzten Anwendungen wird dieselbe
-\n Benutzer-ID mehreren Anwendungen zugewiesen, die die gleiche \\textit{Shared User ID} haben.
+\n Benutzer-ID mehreren Anwendungen zugewiesen, die die gleiche \\textit{Gemeinsame Benutzer-ID} haben.
 \n
 \n \\item \\textbf{Gemeinsame Benutzer-ID.} Gilt für Anwendungen, die gemeinsam genutzt werden. Obwohl hier ID steht, ist dies
-\n ist dies eigentlich ein String-Wert. Die gemeinsam genutzte Anwendung muss die gleiche
-\n \\hyperref[subsec:signatures-tab]{signatures}.
+\n eigentlich ein String-Wert. Die gemeinsam genutzte Anwendung muss die gleiche
+\n \\hyperref[subsec:signatures-tab]{Signatur} haben.
 \n
 \n \\item \\textbf{Hauptaktivität} Der Haupteinstiegspunkt in die Anwendung. Dies ist nur sichtbar, wenn die App über
-\n \\hyperref[subsubsec:activities]{activities} hat und eine dieser Aktivitäten vom Launcher aus geöffnet werden kann. Außerdem gibt es eine
+\n \\hyperref[subsubsec:activities]{Aktivitäten} verfügt und eine dieser Aktivitäten vom Launcher aus geöffnet werden kann. Außerdem gibt es eine
 \n Start-Schaltfläche auf der rechten Seite, die verwendet werden kann, um diese Aktivität zu starten.
 \n \\end{itemize}
 \n\\end{itemize}</string>
     <string name="pages$app-details-page$horizontal-action-panel">Das horizontale Aktionsfeld, wie im vorherigen Abschnitt beschrieben, besteht aus verschiedenen app-bezogenen Aktionen, wie z. B..
 \n\\begin{itemize}
-\n \\item \\textbf{Launch.} Anwendungen, die einen Launcher \\hyperref[subsubsec:activities]{activities} haben, können
+\n \\item \\textbf{Launch.} Anwendungen, die einen Launcher \\hyperref[subsubsec:activities]{Aktivitäten} haben, können
 \n diese Schaltfläche verwenden.
 \n
 \n \\item \\textbf{Deaktivieren.} Deaktivieren Sie eine Anwendung. Diese Schaltfläche wird nicht für bereits deaktivierte Anwendungen oder für Benutzer angezeigt, die
@@ -366,7 +366,7 @@
 \n
 \n \\item \\textbf{Deinstallieren} Deinstallieren Sie eine App.
 \n
-\n \\item \\textbf{Enable.} Aktivieren Sie eine App. Diese Schaltfläche wird nicht für bereits aktivierte Anwendungen oder für Benutzer angezeigt, die nicht
+\n \\item \\textbf{Aktivieren.} Aktivieren Sie eine App. Diese Schaltfläche wird nicht für bereits aktivierte Anwendungen oder für Benutzer angezeigt, die nicht
 \n root oder ADB\\@ haben.
 \n
 \n \\item \\textbf{Force Stop.} Erzwingt das Anhalten einer Anwendung. Wenn Sie das Anhalten einer App erzwingen, kann die App nicht mehr im
@@ -377,16 +377,16 @@
 \n werden z. B. alle in der App gespeicherten Regeln entfernt (die Sperrung wird jedoch nicht entfernt). Aus diesem Grund sollten Sie
 \n immer eine Sicherungskopie Ihrer Regeln erstellen. Diese Schaltfläche wird Benutzern, die nicht über Root oder ADB\\@ verfügen, nicht angezeigt.
 \n
-\n \\item \\textbf{Cache leeren.} Nur den App-Cache löschen. Es gibt keine Android-Möglichkeit, den App-Cache zu löschen. Daher braucht es
-\n Root-Berechtigung erforderlich, um den Cache aus dem internen Speicher der App zu löschen.
+\n \\item \\textbf{Cache leeren.} Löscht nur den App-Cache. Es gibt keine Android-Möglichkeit, den App-Cache zu löschen. Daher braucht es
+\n Root-Berechtigung, um den Cache aus dem internen Speicher der App zu löschen.
 \n
-\n \\item \\textbf{Install.} Installieren Sie eine APK, die mit einer beliebigen Drittanbieter-App geöffnet wurde. Diese Schaltfläche wird nur angezeigt für eine
+\n \\item \\textbf{Installieren.} Installieren Sie eine APK, die mit einer beliebigen Drittanbieter-App geöffnet wurde. Diese Schaltfläche wird nur angezeigt für eine
 \n externen APK angezeigt, die noch nicht installiert wurde.
 \n
 \n \\item \\textbf{Was gibt\'s Neues.} Diese Schaltfläche wird für eine APK angezeigt, die einen höheren Versionscode hat als die installierte.
 \n Wenn Sie auf diese Schaltfläche klicken, wird ein Dialog angezeigt, der die Unterschiede in einer Art Versionskontrolle darstellt. Die angezeigten Informationen
-\n Die angezeigten Informationen umfassen \\textit{Version}, \\textit{Tracker}, \\textit{Zulassungen}, \\textit{Komponenten}, \\textit{Signaturen}
-\n (Prüfsummenänderungen), \\textit{features}, \\textit{shared libraries} und \\textit{SDK}.
+\n umfassen \\textit{Version}, \\textit{Tracker}, \\textit{Zulassungen}, \\textit{Komponenten}, \\textit{Signaturen}
+\n (Prüfsummenänderungen), \\textit{Ausstattung}, \\textit{gemeinsame Bibliotheken} und \\textit{SDK}.
 \n
 \n \\item \\textbf{Update.} Wird für eine Anwendung angezeigt, die einen höheren Versionscode hat als die installierte Anwendung.
 \n
@@ -394,25 +394,25 @@
 \n
 \n \\item \\textbf{Downgrade.} Wird für eine Anwendung angezeigt, die einen niedrigeren Versionscode als die installierte Anwendung hat.
 \n
-\n \\item \\textbf{Manifest.} Wenn Sie auf diese Schaltfläche klicken, wird die Manifestdatei der App auf einer separaten Seite angezeigt. Die Manifest-
-\n Datei kann mit der entsprechenden Schaltfläche (oben rechts) ein- oder ausgepackt werden oder mit der Schaltfläche save im
+\n \\item \\textbf{Manifest.} Wenn Sie auf diese Schaltfläche klicken, wird die Manifest-Datei der App auf einer separaten Seite angezeigt. Die Manifest-
+\n Datei kann mit der entsprechenden Schaltfläche (oben rechts) ein- oder ausgepackt werden oder mit der Schaltfläche \"Speichern\" im
 \n gemeinsamen Speicherplatz gespeichert werden, indem Sie die Schaltfläche \"Speichern\" verwenden.
 \n
-\n \\item \\textbf{Scanner.} Wenn Sie auf diese Schaltfläche klicken, werden die Tracker- und Bibliotheksinformationen der App angezeigt. Zunächst wird die
-\n App gescannt, um eine Liste von Klassen zu extrahieren. Dann wird die Klassenliste mit einer Reihe von Signaturen abgeglichen. Danach wird
-\n eine Scan-Zusammenfassung angezeigt.\\\\
+\n \\item \\textbf{Scanner.} Wenn Sie auf diese Schaltfläche klicken, werden die Tracker- und Bibliotheksinformationen der App angezeigt. Zunächst
+\n die App gescannt, um eine Liste von Klassen zu extrahieren. Dann wird die Klassenliste mit einer Reihe von Signaturen abgeglichen. Danach
+\n wird eine Scan-Zusammenfassung angezeigt.\\\\
 \n \\seealsoinline{\\hyperref[sec:scanner-page]{Scannerseite}}
 \n
-\n \\item \\textbf{Gemeinsame Voreinstellungen} Wenn Sie auf diese Schaltfläche klicken, wird eine Liste der von der Anwendung verwendeten gemeinsamen Einstellungen angezeigt. Ein Klick auf
-\n auf ein Einstellungselement in der Liste öffnet die \\hyperref[sec:shared-preferences-editor-page]{Shared Preferences Editor
-\n Seite}. Diese Option ist nur für die Root-Benutzer sichtbar.
+\n \\item \\textbf{Gemeinsame Voreinstellungen} Wenn Sie auf diese Schaltfläche klicken, wird eine Liste der von der Anwendung verwendeten gemeinsamen Einstellungen angezeigt. Ein Klick
+\n auf ein Einstellungselement in der Liste öffnet die \\hyperref[sec:shared-preferences-editor-page]{Seite Editor für gemeinsamen Einstellungen}.
+\n Diese Option ist nur für die Root-Benutzer sichtbar.
 \n
 \n \\item \\textbf {Datenbanken.} Wenn Sie auf diese Schaltfläche klicken, wird eine Liste der von der Anwendung verwendeten Datenbanken angezeigt. Hier sind weitere
-\n Verbesserungen und einen Datenbank-Editor, der in Zukunft hinzugefügt werden könnte. Diese Option ist nur für die Root-Benutzer sichtbar.
+\n Verbesserungen notwendig, u.a ein Datenbank-Editor, der in Zukunft hinzugefügt werden könnte. Diese Option ist nur für die Root-Benutzer sichtbar.
 \n
 \n \\item \\textbf {F-Droid.} Öffnet die App in Ihrem bevorzugten \\textit{F-Droid}-Client.
 \n
-\n \\item \\textbf{Store.} Öffnet die App in \\textit{Aurora Store}. Die Option ist nur sichtbar, wenn \\textit{Aurora Store}
+\n \\item \\textbf{Store.} Öffnet die App im \\textit{Aurora Store}. Die Option ist nur sichtbar, wenn \\textit{Aurora Store}
 \n installiert ist.
 \n\\end{itemize}</string>
     <string name="pages$app-details-page$additional-features-for-rooted-phones">Anders als Benutzer ohne Root-Rechte, die hier zumeist nur Zuschauer sind, können Benutzer mit Root-Rechten hier verschiedene Dinge tun.</string>
@@ -512,8 +512,8 @@
 \nfür die Interprozesskommunikation (IPC) verwendet werden, d. h. sie helfen Ihnen bei der Kommunikation zwischen verschiedenen Anwendungen (vorausgesetzt, Sie haben die
 \nerforderlichen Berechtigungen) oder sogar zwischen verschiedenen Komponenten einer einzigen Anwendung.</string>
     <string name="pages$app-details-page$providers">\\textbf{Provider} (auch \\textit{Content Provider} genannt) werden für die Datenverwaltung verwendet. Wenn Sie zum Beispiel eine
-\napk-Datei speichern oder Regeln in App Manager exportieren, wird ein Inhaltsanbieter namens `androidx.core.content.FileProvider` verwendet, um die
-\ndie APK zu speichern oder die Regeln zu exportieren. Es gibt weitere oder sogar eigene Content Provider, um verschiedene inhaltsbezogene Aufgaben zu verwalten,
+\napk-Datei speichern oder Regeln in App Manager exportieren, wird ein Inhaltsanbieter namens `androidx.core.content.FileProvider` verwendet.
+\nEs gibt weitere oder sogar eigene Content Provider, um verschiedene inhaltsbezogene Aufgaben zu verwalten,
 \nwie z.B. Datenbankmanagement, Tracking, Suche, etc. Jeder Content-Provider hat ein Feld namens \\textit{Authority}
 \ndas für diese bestimmte App im gesamten Android-Ökosystem ebenso eindeutig ist wie der Paketname.</string>
     <string name="pages$app-details-page$blocking-components">Auf der rechten Seite jeder Komponente befindet sich ein Symbol für ``Blockieren\'\' (das zu einem Symbol für ``Entblocken/Wiederherstellen\'\' wird, wenn
@@ -683,12 +683,12 @@
 \nBenutzer können die Berechtigungen nach Berechtigungsnamen (in aufsteigender Reihenfolge) sortieren oder wählen, ob verweigerte oder gefährliche
 \nBerechtigungen zuerst anzeigen lassen, indem sie die entsprechenden Optionen im Menü verwenden.</string>
     <string name="pages$app-details-page$signatures-tab_1">\\textbf{Signaturen} werden eigentlich Signierinformationen genannt. Eine Anwendung wird von den Anwendungsentwicklern mit einem oder mehreren Signierzertifikaten
-\nden Anwendungsentwicklern signiert, bevor sie veröffentlicht wird. Die Integrität einer Anwendung (ob die Anwendung von dem tatsächlichen
+\nsigniert, bevor sie veröffentlicht wird. Die Integrität einer Anwendung (d.h. ob die Anwendung von dem tatsächlichen
 \nEntwickler stammt und nicht von anderen Personen verändert wurde) kann anhand der Signierinformationen überprüft werden; denn wenn eine App von einem
-\nDenn wenn eine App von einem unbefugten Dritten verändert wird, kann die App nicht mehr mit dem/den ursprünglichen Zertifikat(en) signiert werden, da die Signierinformationen
-\nSignierinformationen vom eigentlichen Entwickler geheim gehalten werden. \\Wie überprüfen Sie diese Signaturen\? Mit Prüfsummen. Prüfsummen
-\nwerden aus den Zertifikaten selbst generiert. Wenn der Entwickler die Prüfsummen zur Verfügung stellt, können Sie die Prüfsummen abgleichen
-\nmit den verschiedenen Prüfsummen abgleichen, die auf der Registerkarte \\textbf{Signaturen} generiert wurden. Wenn Sie zum Beispiel App Manager
+\nunbefugten Dritten verändert wird, kann die App nicht mehr mit dem/den ursprünglichen Zertifikat(en) signiert werden, da die Signierinformationen
+\nvom eigentlichen Entwickler geheim gehalten werden. \\Wie überprüfen Sie diese Signaturen\? Mit Prüfsummen. Die Prüfsummen werden
+\naus den Zertifikaten selbst generiert. Wenn der Entwickler die Prüfsummen zur Verfügung stellt, können Sie die Prüfsummen abgleichen,
+\ndie auf der Registerkarte \\textbf{Signaturen} generiert wurden. Wenn Sie zum Beispiel App Manager
 \nvon Github, dem Telegram Channel oder dem Repo von IzzyOnDroid heruntergeladen haben, können Sie überprüfen, ob die App tatsächlich von mir freigegeben wurde, indem Sie einfach
 \ndie folgende \\textit{SHA256}-Prüfsumme mit der in dieser Registerkarte angezeigten vergleichen:</string>
     <string name="pages$app-details-page$other-tabs">Andere Registerkarten listen die Komponenten des Android-Manifests auf, z. B. Funktionen, Konfigurationen, gemeinsam genutzte Bibliotheken und Signaturen. Eine
@@ -762,18 +762,18 @@
 \n \\item \\textbf{Icon.} Jede Berechtigung kann ein eigenes Symbol haben. Die anderen Berechtigungsregisterkarten haben kein Symbol, weil
 \n sie kein Symbol im App-Manifest enthalten.
 \n
-\n \\item \\textbf{Description.} Dieses optionale Feld beschreibt die Berechtigung. Wenn der Berechtigung keine Beschreibung zugeordnet ist
-\n gibt, wird das Feld nicht angezeigt.
+\n \\item \\textbf{Description.} Dieses optionale Feld beschreibt die Berechtigung. Wenn der Berechtigung keine Beschreibung zugeordnet ist,
+\n wird das Feld nicht angezeigt.
 \n
 \n \\item \\textbf{Flags.} (Verwendet das Flaggensymbol oder den Namen \\textbf{Schutzstufe}) Hier werden verschiedene Berechtigungsflags beschrieben 
 \n wie \\textit{normal}, \\textit{Entwicklung}, \\textit{gefährlich}, \\textit{instant}, \\textit{gewährt}, \\textit{widerrufen},
 \n \\textit{Signatur}, \\textit{privilegiert}, usw.
 \n
-\n \\item \\textbf{Paketname.} Bezeichnet den mit der Berechtigung verbundenen Paketnamen, d. h. das Paket, das die
+\n \\item \\textbf{Paketname.} Bezeichnet den mit der Berechtigung verbundenen Paketnamen, d. h. das Paket, das
 \n die Berechtigung definiert.
 \n
 \n \\Eintrag \\textbf{Gruppe.} Der Gruppenname, der mit der Berechtigung verbunden ist (falls vorhanden). Neuere Androiden verwenden anscheinend keine
-\n Gruppennamen zu verwenden, weshalb Sie normalerweise \\texttt{android.permission-group.UNDEFINED} oder gar keinen Gruppennamen sehen.
+\n Gruppennamen, weshalb Sie normalerweise \\texttt{android.permission-group.UNDEFINED} oder gar keinen Gruppennamen sehen.
 \n\\end{itemize}</string>
     <string name="pages$app-details-page$signatures-tab_2">Dort werden drei Arten von Prüfsummen angezeigt: \\textit{MD5}, \\textit{SHA1} und \\textit{SHA256}.
 \n
@@ -916,4 +916,137 @@
 \n bevor Sie ihn anwenden, während die erste Option den Standardstatus verwendet, der beim letzten Speichern des Profils konfiguriert wurde.
 \n\\end{itemize}</string>
     <string name="pages$profile-page$users">Wählen Sie die Benutzer aus, auf die das Profil angewendet werden soll. Standardmäßig sind alle Benutzer ausgewählt.</string>
+    <string name="pages$settings-page$$app-theme-title">App-Design</string>
+    <string name="pages$settings-page$$screen-lock-title">Bildschirm sperren</string>
+    <string name="pages$settings-page$$mode-of-operation-title">Betriebsmodus</string>
+    <string name="pages$settings-page$$enable-disable-features-title">Aktivieren/Deaktivieren von Funktionen</string>
+    <string name="pages$settings-page$$apk-signing-title">APK-Signierung</string>
+    <string name="pages$settings-page$$signature-schemes-title">Signaturregelungen</string>
+    <string name="pages$settings-page$$signing-key-title">Signierschlüssel</string>
+    <string name="faq$misc$$section-title">Sonstiges</string>
+    <string name="faq$misc$$i-dont-use-root-adb-title">Ich verwende kein root/ADB. Bin ich völlig vor irgendwelchen Schäden sicher\?</string>
+    <string name="faq$misc$$why-internet-permission-title">Warum hat AM die Berechtigung INTERNET, obwohl es keine Verbindung zum Internet herstellt\?</string>
+    <string name="faq$misc$$how-tracker-updated-title">Wie werden die Tracker und Bibliotheken aktualisiert\?</string>
+    <string name="faq$misc$$bloatware-title">Was ist Bloatware und wie kann man sie entfernen\?</string>
+    <string name="appendices$specifications$$background-title">Hintergrund</string>
+    <string name="faq$misc$bloatware">Bei Bloatware handelt es sich um überflüssige Anwendungen, die vom Hersteller oder OEM geliefert werden und in der Regel Systemanwendungen sind. Diese Anwendungen werden oft verwendet,
+\num Benutzer zu verfolgen und Benutzerdaten zu sammeln, die sie möglicherweise gewinnbringend verkaufen. System-Apps müssen keine Erlaubnis einholen,
+\num auf Geräteinformationen, Kontakte und Nachrichtendaten sowie auf andere Nutzungsdaten wie Ihre
+\nGewohnheiten und alles, was Sie auf Ihrem gemeinsamen Speicher speichern, zugreifen zu können.
+\n
+\nDie Bloatware umfassen auch Google-Apps (wie Google Play Services, Google Play Store, Gmail, Google, Messages,
+\nDialer, Kontakte), Facebook-Apps (die Facebook-App besteht aus vier oder fünf Apps), Facebook Messenger, Instagram,
+\nTwitter und viele andere Apps, die ebenfalls Nutzer verfolgen und/oder Nutzerdaten ohne Zustimmung sammeln können, da sie alle
+\nSystem-Apps sind. Sie können einige Berechtigungen in den Android-Einstellungen deaktivieren, aber seien Sie sich bewusst, dass die Android-Einstellungen fast
+\njede Berechtigung versteckt, die ein Sicherheitsexperte als potenziell gefährlich bezeichnen würde.
+\n
+\nWenn es sich bei der Bloatware um Benutzeranwendungen handelt, können Sie sie entweder über die Android-Einstellungen oder über AM deinstallieren. Die Deinstallation von System-
+\nApps ist ohne Root-Berechtigung nicht möglich. Sie können System-Apps auch mit ADB deinstallieren, aber das funktioniert möglicherweise nicht bei allen
+\nApps. AM kann System-Apps mit Root oder ADB deinstallieren (letzteres natürlich mit gewissen Einschränkungen), aber diese Methoden
+\nkönnen die Systemanwendungen nicht vollständig entfernen, da sie sich in der Partition \\emph{system} befinden, die eine schreibgeschützte
+\nPartition ist. Wenn Sie über Root verfügen, können Sie diese Partition wieder einhängen, um diese Anwendungen manuell zu entfernen, aber dies wird Over
+\nthe Air (OTA)-Updates unterbrechen, da die Daten in der Systempartition geändert wurden. Es gibt zwei Arten von Updates, Delta-
+\n(eine kleine Version, die nur die Änderungen zwischen zwei Versionen enthält) und vollständige Updates. Sie können weiterhin vollständige Updates anwenden,
+\naber die Bloatware wird erneut installiert, und Sie müssen sie daher erneut löschen. Außerdem bieten nicht alle
+\nHersteller vollständige Aktualisierungen an.
+\n
+\nEine andere Lösung besteht darin, diese Apps entweder über die Android-Einstellungen (No-Root) oder AM zu deaktivieren, aber bestimmte Dienste können weiterhin
+\nim Hintergrund laufen, da sie von anderen Systemanwendungen unter Verwendung von Interprozesskommunikation (IPC) gestartet werden können. Eine mögliche
+\nLösung ist es, alle Bloatware zu deaktivieren, bis der Dienst endgültig beendet ist (nach einem Neustart). Aufgrund der starken
+\nÄnderungen an den Android-Frameworks durch die Hersteller kann das Entfernen oder Deaktivieren bestimmter Bloatware jedoch zum Absturz der System-UI
+\noder sogar einen Bootloop verursachen, was zu einem (Soft-)Bricking Ihres Geräts führt. Sie können im Internet suchen oder andere Benutzer befragen
+\num mehr darüber herauszufinden, wie Sie Ihr Gerät debloaten können.
+\n
+\nAb v2.5.19 verfügt AM über eine neue Funktion namens \\hyperref[sec:profile-page]{Profile}. Die
+\n\\hyperref[sec:profiles-page]{Seite Profile} bietet die Möglichkeit, neue Profile aus einer der Voreinstellungen zu erstellen. Die Voreinstellungen
+\nbestehen aus Debloating-Profilen, die als Ausgangspunkt für die Überwachung, Deaktivierung und Entfernung von Bloatware von
+\neinem proprietären Android-Betriebssystem.
+\n
+\n\\begin{warning}{Hinweis}
+\n In den meisten Fällen können Sie Ihr Gerät nicht vollständig debloaten. Daher empfiehlt es sich, ein benutzerdefiniertes ROM zu verwenden,
+\n wie Graphene OS, Lineage OS oder deren Derivate, die frei von Bloatware sind.
+\n\\end{warning}</string>
+    <string name="appendices$specifications$$chapter-title">Spezifikationen</string>
+    <string name="appendices$specifications$$rules-specification-title">Regeln Spezifikationen</string>
+    <string name="appendices$specifications$$external-title">Extern</string>
+    <string name="pages$profile-page$components">Dies verhält sich genauso wie die Option \\hyperref[subsec:block-components-dots]{Block-Komponenten-Punkte} auf der
+\n1-Klick-Ops-Seite. Allerdings gilt dies nur für die ausgewählten Pakete. Wenn die Option \\hyperref[subsubsec:profile-state]{Status}
+\n\\textit{ein} ist, werden die Komponenten blockiert, und wenn der Status \\textit{aus} ist, werden die Komponenten entsperrt.
+\nDie Option kann (unabhängig von den eingegebenen Werten) deaktiviert werden, indem Sie auf die Schaltfläche \\textit{Deaktivieren} im Eingabedialog
+\nklicken.
+\n
+\n\\seealsoinline{\\hyperref[subsec:faq:what-are-app-components]{Was sind die App-Komponenten\?}}</string>
+    <string name="appendices$specifications$external">Externes Format wird zum Importieren oder Exportieren von Regeln in App Manager verwendet.
+\n\\begin{Verbatim}
+\n &lt;Paketname&gt; &lt;Komponentenname&gt; &lt;Typ&gt; &lt;Modus&gt;|&lt;Komponentenstatus&gt;|&lt;ist_gewährt&gt;
+\n\\end{Verbatim}
+\nDas Format ist im Wesentlichen dasselbe wie oben, mit Ausnahme des ersten Elements, das der Name des Pakets ist.
+\n
+\n\\begin{danger}{Vorsicht}
+\n Die exportierten Regeln haben ein anderes Format als die internen Regeln und sollten nicht direkt in die Datei
+\n \\textbf{conf}-Ordner kopiert werden.
+\n\\{end{danger}}</string>
+    <string name="appendices$specifications$internal">Das folgende Format wird intern in App Manager verwendet und ist nicht mit dem externen Format kompatibel.
+\n\\begin{Verbatim}
+\n &lt;Name&gt; &lt;Typ&gt; &lt;Modus&gt;|&lt;Komponente_Status&gt;|&lt;ist_gewährt&gt;
+\n\\end{Verbatim}
+\nHier:
+\n\\begin{itemize}
+\n \\item \\texttt{&lt;Name&gt;} -- Name der Komponente/Zulassung/App-Op (im Falle einer App-Op kann es sich um einen String oder eine ganze Zahl handeln)
+\n \\item \\texttt{&lt;Typ&gt;} -- Eines der Elemente \\texttt{ACTIVITY}, \\texttt{RECEIVER}, \\texttt{PROVIDER}, \\texttt{SERVICE},
+\n \\texttt{App\\_OP}, \\texttt{PERMISSION}
+\n \\item \\texttt{&lt;Modus&gt;} -- (Für app ops) Die zugehörige \\hyperref[subsec:mode-constants]{mode constant}
+\n \\item \\texttt{&lt;Komponente\\_Status&gt;} -- (Für Komponenten) Komponentenstatus
+\n \\begin{itemize}
+\n \\item \\texttt{wahr} -- Die Komponente wurde angewendet (der Wert \\texttt{wahr} wird aus Kompatibilitätsgründen beibehalten)
+\n \\item \\texttt{falsch} -- Die Komponente wurde noch nicht angewendet, wird aber in Zukunft angewendet (der Wert \\texttt{falsch}
+\n wird aus Kompatibilitätsgründen beibehalten)
+\n \\item \\texttt{freigeschaltet} -- Die Komponente soll freigegeben werden
+\n \\end{itemize}
+\n \\item \\texttt{&lt;ist\\_gewährt&gt;} -- (Für Berechtigungen) Ob die Berechtigung erteilt oder entzogen ist
+\n\\end{itemize}</string>
+    <string name="appendices$specifications$background">AM unterstützt derzeit das Sperren von Aktivitäten, Broadcast-Empfängern, Inhaltsanbietern, Diensten, App-Ops und Berechtigungen,
+\nund in Zukunft werde ich möglicherweise weitere Blockierungsoptionen hinzufügen. Um die Portabilität zu erhöhen, ist es notwendig, alle diese Daten zu importieren/exportieren.
+\n
+\nDie Verwendung einer Datenbank sollte die beste Wahl sein, wenn es um die Speicherung von Daten geht. Im Moment werden mehrere \\texttt{tsv}-Dateien
+\nwobei jede Datei den Namen des Pakets und eine \\texttt{.tsv}-Erweiterung hat. Die Datei/Datenbank wird abgefragt/verarbeitet
+\ndurch die Klasse \\texttt{RulesStorageManager}. Aufgrund dieser Abstraktion sollte es in Zukunft einfacher sein, auf Datenbank- oder
+\nverschlüsselte Datenbanksysteme zu wechseln, ohne das Design des gesamten Projekts zu ändern. Derzeit werden alle Konfigurations-
+\ndateien unter \\texttt{/data/data/io.github.muntashirakon.AppManager/Files/conf} gespeichert.</string>
+    <string name="appendices$specifications$$internal-title">Intern</string>
+    <string name="appendices$specifications$$rules-file-format-title">Regeln Dateiformat</string>
+    <string name="faq$aot$feature-adb">Die meisten der vom ADB-Modus unterstützten Funktionen sind standardmäßig aktiviert, sobald die ADB-Unterstützung von AM erkannt wird. Dazu gehören
+\nDeaktivieren, Zwangsstoppen, Daten löschen, App-Ops und Berechtigungen gewähren/entziehen. Sie können auch Anwendungen ohne eine
+\nAufforderung installieren und \\hyperref[subsubsec:main:running-apps]{Laufende Apps/Prozesse} anzeigen.</string>
+    <string name="faq$misc$$shizuku-title">Gibt es Pläne für Shizuku\?</string>
+    <string name="faq$misc$i-dont-use-root-adb">Ja. AM kann keine Systemeinstellungen ohne Root oder ADB over TCP\\@ ändern.</string>
+    <string name="faq$misc$how-tracker-updated">Tracker und Bibliotheken werden manuell aktualisiert, bevor eine neue Version veröffentlicht wird.</string>
+    <string name="faq$misc$shizuku">Die Verwendung von versteckten APIs und die Ausführung von privilegiertem Code durch App Manager ist jetzt viel komplexer und kann nicht mit
+\nanderen Anwendungen von Drittanbietern wie z. B. \\href{https://shizuku.rikka.app}{Shizuku}. Hier sind einige Gründe für die Nichtberücksichtigung von
+\nShizuku (das jetzt die Apache 2.0 Lizenz hat) durch den App Manager:
+\n\\begin{enumerate}
+\n \\item Shizuku war ursprünglich unfrei, was mich dazu veranlasste, einen ähnlichen Ansatz für App Manager zu verwenden, um sowohl root
+\n und ADB zu nutzen
+\n \\item App Manager unterstützt bereits sowohl ADB als auch Root, was in einigen Fällen leistungsfähiger ist als Shizuku
+\n \\item Sich für die wichtigsten Funktionen auf eine Drittanbieter-App zu verlassen, ist keine gute Designentscheidung
+\n \\item Die Integration von Shizuku wird die Komplexität des App Managers erhöhen.
+\n\\end{enumerate}</string>
+    <string name="faq$misc$why-internet-permission">AM verwendet die Berechtigung INTERNET aus den folgenden Gründen:
+\n\\begin{enumerate}
+\n \\item \\textbf{Um ADB-over-TCP-Unterstützung für Nicht-Root-Benutzer bereitzustellen}. ADB over TCP ist ein benutzerdefiniertes Netzwerkprotokoll
+\n das normalerweise auf Port \\texttt{5555} läuft. Um sich mit diesem Port über localhost zu verbinden, benötigt AM daher diese Berechtigung.
+\n \\item \\textbf{Um privilegierten Code sowohl im Root- als auch im ADB-Modus auszuführen.} AM ist eine Benutzeranwendung und kann weder privilegierten
+\n Code ausführen und kann auch nicht auf versteckte APIs zugreifen. Folglich führt AM einen Server in der privilegierten Umgebung aus, indem es die
+\n \\texttt{App\\_Prozess} an Port \\texttt{60001} nutzt, und auf der Benutzerseite verbindet sich AM mit diesem Server und führt privilegierten
+\n Code aus der Ferne von der Anwendung aus. Nun gibt es alternative Möglichkeiten, mit einem entfernten Dienst zu kommunizieren. Diese werden derzeit
+\n in Betracht gezogen.
+\n\\end{enumerate}</string>
+    <string name="pages$settings-page$$section-title">Seite Einstellungen</string>
+    <string name="pages$settings-page$$language-title">Sprache</string>
+    <string name="pages$settings-page$$installer-app-title">InstallationsApps</string>
+    <string name="pages$settings-page$$installer-title">Installationsprogramm</string>
+    <string name="pages$settings-page$$show-users-in-installer-title">Benutzer im Installationsprogramm anzeigen</string>
+    <string name="pages$settings-page$$sign-apk-title">APK signieren</string>
+    <string name="pages$settings-page$$install-location-title">Speicherort</string>
+    <string name="pages$settings-page$$backup-restore-title">Sichern/Wiederherstellen</string>
 </resources>
