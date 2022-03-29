@@ -217,7 +217,7 @@
     <string name="external_data_dir">Externes Daten-Verzeichnis</string>
     <string name="external_multiple_data_dir">Externes Daten-Verzeichnis <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
     <plurals name="no_of_times_opened">
-        <item quantity="one">%1$d mal</item>
+        <item quantity="one">einmal</item>
         <item quantity="other">%1$d mal</item>
     </plurals>
     <string name="sort_by_last_used">Zuletzt verwendet</string>
@@ -1166,5 +1166,5 @@
     <string name="auth_manager_title">Autorisierungsverwalter</string>
     <string name="regenerate_auth_key">Autorisierungsschlüssel neu erzeugen</string>
     <string name="regenerate_auth_key_warning">Sind Sie sicher\? Alle Anwendungen von Drittanbietern müssen mit dem neuen Autorisierungsschlüssel neu konfiguriert werden.</string>
-    <string name="shortcut_icon">Schnellzugriffsymbol</string>
+    <string name="shortcut_icon">Tastaturkürzel</string>
 </resources>
