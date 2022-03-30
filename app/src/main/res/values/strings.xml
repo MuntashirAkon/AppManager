@@ -1207,4 +1207,5 @@
     <string name="external">External</string>
     <string name="internal">Internal</string>
     <string name="tracker">Tracker</string>
+    <string name="input_ssaid_instruction">SSAID is a %1$d byte hexadecimal number i.e. a string of length %2$d containing 0 to 9 and a to f.</string>
 </resources>

@@ -14,7 +14,6 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.pm.Signature;
 import android.graphics.Bitmap;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.NetworkPolicyManager;
 import android.net.Uri;
@@ -33,7 +32,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -49,7 +47,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
-import androidx.appcompat.app.AlertDialog;
 import androidx.collection.ArrayMap;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -64,8 +61,6 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.File;
 import java.io.IOException;
@@ -79,7 +74,6 @@ import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
@@ -118,7 +112,7 @@ import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.sharedpref.SharedPrefsActivity;
-import io.github.muntashirakon.AppManager.ssaid.SsaidSettings;
+import io.github.muntashirakon.AppManager.ssaid.ChangeSsaidDialog;
 import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
@@ -777,66 +771,13 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         }
         if (tagCloud.ssaid != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             addChip(R.string.ssaid, R.color.red_orange).setOnClickListener(v -> {
-                View view = getLayoutInflater().inflate(R.layout.dialog_ssaid_info, null);
-                AlertDialog alertDialog = new MaterialAlertDialogBuilder(mActivity)
-                        .setTitle(R.string.ssaid)
-                        .setView(view)
-                        .setPositiveButton(R.string.apply, null)
-                        .setNegativeButton(R.string.close, null)
-                        .setNeutralButton(R.string.reset_to_default, null)
-                        .create();
-                TextInputEditText ssaidHolder = view.findViewById(R.id.ssaid);
-                TextInputLayout ssaidInputLayout = view.findViewById(android.R.id.text1);
-                AtomicReference<Button> applyButton = new AtomicReference<>();
-                AtomicReference<Button> resetButton = new AtomicReference<>();
-                AtomicReference<String> ssaid = new AtomicReference<>(tagCloud.ssaid);
-
-                alertDialog.setOnShowListener(dialog -> {
-                    applyButton.set(alertDialog.getButton(AlertDialog.BUTTON_POSITIVE));
-                    resetButton.set(alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL));
-                    applyButton.get().setVisibility(View.GONE);
-                    applyButton.get().setOnClickListener(v2 -> executor.submit(() -> {
-                        try {
-                            SsaidSettings ssaidSettings = new SsaidSettings(mPackageName, mApplicationInfo.uid);
-                            if (ssaidSettings.setSsaid(ssaid.get())) {
-                                model.loadTagCloud();
-                                runOnUiThread(() -> displayLongToast(R.string.restart_to_reflect_changes));
-                            } else {
-                                runOnUiThread(() -> displayLongToast(R.string.failed_to_change_ssaid));
-                            }
-                            alertDialog.dismiss();
-                        } catch (IOException ignore) {
-                        }
-                    }));
-                    resetButton.get().setVisibility(View.GONE);
-                    resetButton.get().setOnClickListener(v2 -> {
-                        ssaid.set(tagCloud.ssaid);
-                        ssaidHolder.setText(ssaid.get());
-                        resetButton.get().setVisibility(View.GONE);
-                        applyButton.get().setVisibility(View.GONE);
-                    });
+                ChangeSsaidDialog changeSsaidDialog = ChangeSsaidDialog.getInstance(mPackageName, mApplicationInfo.uid,
+                        tagCloud.ssaid);
+                changeSsaidDialog.setSsaidChangedInterface((newSsaid, isSuccessful) -> {
+                    displayLongToast(isSuccessful ? R.string.restart_to_reflect_changes : R.string.failed_to_change_ssaid);
+                    if (isSuccessful) tagCloud.ssaid = newSsaid;
                 });
-                ssaidHolder.setText(tagCloud.ssaid);
-                ssaidHolder.setTypeface(Typeface.MONOSPACE);
-                ssaidHolder.setOnClickListener(v2 -> {
-                    ClipboardManager clipboard = (ClipboardManager) mActivity.getSystemService(Context.CLIPBOARD_SERVICE);
-                    ClipData clip = ClipData.newPlainText("SSAID", ssaid.get());
-                    clipboard.setPrimaryClip(clip);
-                    displayShortToast(R.string.copied_to_clipboard);
-                });
-                ssaidInputLayout.setEndIconOnClickListener(v2 -> {
-                    ssaid.set(SsaidSettings.generateSsaid(mPackageName));
-                    ssaidHolder.setText(ssaid.get());
-                    if (!tagCloud.ssaid.equals(ssaid.get())) {
-                        if (resetButton.get() != null) {
-                            resetButton.get().setVisibility(View.VISIBLE);
-                        }
-                        if (applyButton.get() != null) {
-                            applyButton.get().setVisibility(View.VISIBLE);
-                        }
-                    }
-                });
-                alertDialog.show();
+                changeSsaidDialog.show(getChildFragmentManager(), ChangeSsaidDialog.TAG);
             });
         }
         if (tagCloud.uriGrants != null) {
