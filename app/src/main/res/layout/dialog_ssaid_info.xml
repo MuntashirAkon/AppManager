@@ -16,21 +16,19 @@
         android:text="@string/ssaid_info" />
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@android:id/text1"
+        android:id="@+id/ssaid_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:counterEnabled="true"
         app:endIconMode="custom"
         app:endIconDrawable="@drawable/ic_baseline_autorenew_24">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/ssaid"
+            android:id="@android:id/text1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="25sp"
-            android:inputType="none"
-            android:focusable="false"
-            android:cursorVisible="false"
-            android:textAllCaps="true"
+            android:inputType="text"
             tools:text="@tools:sample/full_names" />
 
     </com.google.android.material.textfield.TextInputLayout>
