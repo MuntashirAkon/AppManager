@@ -1,0 +1,16 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/screen_time"
+    android:initialKeyguardLayout="@layout/app_widget_screen_time"
+    android:initialLayout="@layout/app_widget_screen_time"
+    android:minWidth="110dp"
+    android:minHeight="40dp"
+    android:resizeMode="horizontal|vertical"
+    android:minResizeHeight="40dp"
+    android:minResizeWidth="110dp"
+    android:previewImage="@drawable/app_widget_preview_screen_time"
+    android:previewLayout="@layout/app_widget_screen_time"
+    android:targetCellWidth="2"
+    android:targetCellHeight="1"
+    android:updatePeriodMillis="60000"
+    android:widgetCategory="home_screen" />

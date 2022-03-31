@@ -320,8 +320,8 @@
             android:theme="@style/AppTheme.TransparentBackground" />
         <activity
             android:name=".profiles.ProfilesActivity"
-            android:label="@string/profiles"
-            android:exported="true" />
+            android:exported="true"
+            android:label="@string/profiles" />
         <activity
             android:name=".profiles.AppsProfileActivity"
             android:exported="false" />
@@ -338,11 +338,12 @@
             android:theme="@style/AppTheme.TransparentBackground" />
         <activity
             android:name=".intercept.ActivityInterceptor"
-            android:label="@string/interceptor"
             android:enabled="true"
             android:exported="true"
+            android:label="@string/interceptor"
             android:taskAffinity=""
             android:windowSoftInputMode="stateUnchanged">
+
             <!-- matching any given mime type -->
             <intent-filter tools:ignore="AppLinkUrlError">
                 <action android:name="android.intent.action.VIEW" />
@@ -567,8 +568,8 @@
             android:taskAffinity="" />
         <activity
             android:name=".crypto.auth.AuthManagerActivity"
-            android:label="@string/auth_manager_title"
-            android:exported="false" />
+            android:exported="false"
+            android:label="@string/auth_manager_title" />
         <activity
             android:name=".crypto.auth.AuthFeatureDemultiplexer"
             android:exported="true" />
@@ -599,6 +600,7 @@
             android:taskAffinity=".logcat.LogcatActivity">
             <intent-filter>
                 <action android:name="${applicationId}.action.LAUNCH" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
@@ -631,11 +633,12 @@
             android:exported="false" />
         <service
             android:name=".accessibility.NoRootAccessibilityService"
-            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE"
-            android:exported="false">
+            android:exported="false"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
             <intent-filter>
                 <action android:name="android.accessibilityservice.AccessibilityService" />
             </intent-filter>
+
             <meta-data
                 android:name="android.accessibilityservice"
                 android:resource="@xml/accessibility_service_config" />
@@ -646,19 +649,31 @@
             android:exported="true"
             tools:ignore="ExportedReceiver" />
         <receiver
+            android:name=".usage.ScreenTimeAppWidget"
+            android:exported="true"
+            android:label="@string/screen_time">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/app_widget_info_screen_time" />
+        </receiver>
+        <receiver
             android:name=".logcat.RecordingWidgetProvider"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+
                 <data android:scheme="log_viewer_widget" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
-
             <intent-filter>
                 <action android:name="${applicationId}.action.RECORD_OR_STOP" />
+
                 <data android:scheme="log_viewer_widget" />
             </intent-filter>
 
@@ -673,4 +688,5 @@
             android:exported="false"
             android:grantUriPermissions="true" />
     </application>
+
 </manifest>

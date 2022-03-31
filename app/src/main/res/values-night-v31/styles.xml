@@ -1,0 +1,10 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<resources>
+
+    <style name="AppTheme.AppWidgetContainerParent" parent="@android:style/Theme.DeviceDefault.DayNight">
+        <item name="appWidgetRadius">@android:dimen/system_app_widget_background_radius</item>
+        <item name="appWidgetPadding">16dp</item>
+        <item name="appWidgetInnerRadius">@android:dimen/system_app_widget_inner_radius</item>
+    </style>
+
+</resources>

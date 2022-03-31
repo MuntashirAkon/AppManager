@@ -1,0 +1,161 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.AppTheme.AppWidget.Container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@style/AppTheme.AppWidgetContainer">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_medium">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@string/screen_time" />
+
+        <TextView
+            android:id="@+id/screen_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingVertical="@dimen/padding_small"
+            android:gravity="center_vertical"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textSize="36sp"
+            android:textStyle="bold"
+            tools:text="2h 30m" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_margin="4dp"
+                    android:background="@drawable/circle_background"
+                    android:backgroundTint="#e9c2c3" />
+
+                <TextView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_margin="4dp"
+                    android:background="@drawable/circle_background"
+                    android:backgroundTint="#674A6A" />
+
+                <TextView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:layout_margin="4dp"
+                    android:background="@drawable/circle_background"
+                    android:backgroundTint="#342932" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/app3_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textSize="@dimen/font_size_medium"
+                    tools:text="K-9 Mail" />
+
+                <TextView
+                    android:id="@+id/app2_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textSize="@dimen/font_size_medium"
+                    tools:text="App Manager" />
+
+                <TextView
+                    android:id="@+id/app1_label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="4dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
+                    android:textSize="@dimen/font_size_medium"
+                    tools:text="Signal" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Badges -->
+
+    <TextView
+        android:id="@+id/app1_time"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/circle_background"
+        android:backgroundTint="#342932"
+        android:gravity="center"
+        android:maxLines="1"
+        android:textColor="?android:attr/textColorSecondary"
+        android:textSize="@dimen/font_size_medium"
+        tools:text="~1h" />
+
+    <TextView
+        android:id="@+id/app2_time"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="25dp"
+        android:layout_marginBottom="85dp"
+        android:background="@drawable/circle_background"
+        android:backgroundTint="#674A6A"
+        android:gravity="center"
+        android:maxLines="1"
+        android:textColor="?android:attr/textColorSecondary"
+        android:textSize="@dimen/font_size_medium"
+        tools:text="45m" />
+
+    <TextView
+        android:id="@+id/app3_time"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="55dp"
+        android:layout_marginBottom="145dp"
+        android:background="@drawable/circle_background"
+        android:backgroundTint="#e9c2c3"
+        android:gravity="center"
+        android:maxLines="1"
+        android:textColor="?android:attr/textColorPrimaryInverse"
+        android:textSize="@dimen/font_size_medium"
+        tools:text="20m" />
+
+</RelativeLayout>
