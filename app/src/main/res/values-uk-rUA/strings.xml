@@ -1242,4 +1242,12 @@
     <string name="auth_manager_description">Щоб запустити Intent зі стороннього додатка, обов\'язково зазначте додатковим полем <tt>auth</tt> такий ключ:</string>
     <string name="pref_saved_apk_name_format">Формат назви збережених APK</string>
     <string name="pref_saved_apk_name_format_msg">Формат, який буде використано для іменування при збереженні APK-файлів.</string>
+    <string name="change_backup_volume">Змінити том</string>
+    <string name="external">Зовнішній</string>
+    <string name="internal">Внутрішній</string>
+    <string name="tracker">Трекер</string>
+    <string name="input_ssaid_instruction">SSAID — це %1$d-байтне шістнадцяткове число, тобто %2$d-символьний рядок із цифр від 0 до 9 та/або літер від a до f.</string>
+    <string name="sort_by_installation_date">Дата встановлення</string>
+    <string name="backup_volume_unavailable_warning">Обраний том резервного копіювання наразі недоступний. Якщо його розміщено в зовнішньому сховищі, будь ласка, під\'єднайте це сховище чи оберіть інший том резервного копіювання.</string>
+    <string name="screen_time">Екранний час</string>
 </resources>
