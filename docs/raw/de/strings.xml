@@ -985,7 +985,7 @@
 \n\\begin{danger}{Vorsicht}
 \n Die exportierten Regeln haben ein anderes Format als die internen Regeln und sollten nicht direkt in die Datei
 \n \\textbf{conf}-Ordner kopiert werden.
-\n\\{end{danger}}</string>
+\n\\end{danger}</string>
     <string name="appendices$specifications$internal">Das folgende Format wird intern in App Manager verwendet und ist nicht mit dem externen Format kompatibel.
 \n\\begin{Verbatim}
 \n &lt;Name&gt; &lt;Typ&gt; &lt;Modus&gt;|&lt;Komponente_Status&gt;|&lt;ist_gewährt&gt;
