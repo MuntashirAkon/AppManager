@@ -1318,4 +1318,12 @@
     <string name="regenerate_auth_key_warning">هل أنت واثق؟ يجب إعادة تكوين جميع تطبيقات الطرف الثالث باستخدام مفتاح التفويض الجديد.</string>
     <string name="auth_manager_title">مدير التفويض</string>
     <string name="regenerate_auth_key">إعادة إنشاء مفتاح المصادقة</string>
+    <string name="sort_by_installation_date">تاريخ التثبيت</string>
+    <string name="change_backup_volume">تغيير السعة</string>
+    <string name="external">خارجي</string>
+    <string name="internal">داخلي</string>
+    <string name="tracker">المتعقب</string>
+    <string name="input_ssaid_instruction">SSAID هو رقم سداسي عشري %1$d بايت أي سلسلة طولها %2$d تحتوي على 0 إلى 9 و a إلى f.</string>
+    <string name="screen_time">وقت الشاشة</string>
+    <string name="backup_volume_unavailable_warning">وحدة تخزين النسخ الاحتياطي المحددة غير متوفرة حاليا. إذا كانت موجودة في وحدة تخزين خارجية ، فيرجى إدخالها أو تغيير وحدة تخزين النسخ الاحتياطي.</string>
 </resources>
