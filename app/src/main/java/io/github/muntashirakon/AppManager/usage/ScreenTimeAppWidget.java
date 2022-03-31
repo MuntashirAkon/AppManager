@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.RemoteException;
-import android.util.Log;
 import android.util.Size;
 import android.widget.RemoteViews;
 
@@ -58,7 +57,6 @@ public class ScreenTimeAppWidget extends AppWidgetProvider {
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntentCompat.FLAG_IMMUTABLE);
         // Construct the RemoteViews object
         Size appWidgetSize = getAppWidgetSize(context, appWidgetManager, appWidgetId);
-        Log.w("WIDGET", "Size: " + appWidgetSize);
         RemoteViews views;
         if (appWidgetSize.getHeight() <= 200) {
             views = new RemoteViews(context.getPackageName(), R.layout.app_widget_screen_time_small);
