@@ -102,4 +102,9 @@
         <!-- The colors used in the progress animation. The first color will also be the color of the bar that grows in response to a user swipe gesture. -->
         <attr name="indicatorColor" />
     </declare-styleable>
+    <declare-styleable name="AppWidgetAttrs">
+        <attr name="appWidgetPadding" format="dimension" />
+        <attr name="appWidgetInnerRadius" format="dimension" />
+        <attr name="appWidgetRadius" format="dimension" />
+    </declare-styleable>
 </resources>
