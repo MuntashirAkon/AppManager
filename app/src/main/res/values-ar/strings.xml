@@ -1314,7 +1314,7 @@
     <string name="pref_saved_apk_name_format">تنسيق اسم APK المحفوظ</string>
     <string name="pref_saved_apk_name_format_msg">التنسيق الذي سيتم استخدامه لتسمية ملفات APK عند حفظها.</string>
     <string name="shortcut_icon">رمز الاختصار</string>
-    <string name="auth_manager_description">لبدء Intent من تطبيق خارجي ، من الضروري توفير حقل إضافي يسمى <tt> المصادقة </tt> ، ويجب أن يحتوي على المفتاح التالي:</string>
+    <string name="auth_manager_description">لبدء Intent من تطبيق خارجي ، من الضروري توفير حقل إضافي يسمى <tt>auth</tt> ، ويجب أن يحتوي على المفتاح التالي:</string>
     <string name="regenerate_auth_key_warning">هل أنت واثق؟ يجب إعادة تكوين جميع تطبيقات الطرف الثالث باستخدام مفتاح التفويض الجديد.</string>
     <string name="auth_manager_title">مدير التفويض</string>
     <string name="regenerate_auth_key">إعادة إنشاء مفتاح المصادقة</string>
