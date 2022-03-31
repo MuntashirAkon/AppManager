@@ -1166,4 +1166,12 @@
     <string name="pref_saved_apk_name_format_msg">APK dosyalarını kaydettiğinizde adlandırmak için kullanılacak biçim.</string>
     <string name="auth_manager_description">Bir Intent\'i harici bir uygulamadan başlatmak için, <tt>auth</tt> adlı ek bir alan sağlamak gereklidir ve şu anahtarı içermelidir:</string>
     <string name="regenerate_auth_key_warning">Emin misiniz\? Tüm üçüncü taraf uygulamaların yeni yetkilendirme anahtarıyla yeniden yapılandırılması gerekir.</string>
+    <string name="sort_by_installation_date">Kurulum tarihi</string>
+    <string name="backup_volume_unavailable_warning">Seçilen yedekleme birimi şu anda kullanılabilir değil. Harici bir depolama biriminde bulunuyorsa, lütfen onu takın veya yedekleme birimini değiştirin.</string>
+    <string name="change_backup_volume">Birimi değiştir</string>
+    <string name="external">Harici</string>
+    <string name="tracker">İzleyici</string>
+    <string name="input_ssaid_instruction">SSAID, %1$d bayt bir onaltılık sayıdır, yani 0\'dan 9\'a rakamlar ve a, b, c, d, e ve f harflerini içeren %2$d uzunluğunda bir dizgedir.</string>
+    <string name="screen_time">Ekran Süresi</string>
+    <string name="internal">Dahili</string>
 </resources>
