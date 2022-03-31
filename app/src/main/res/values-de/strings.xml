@@ -1167,4 +1167,12 @@
     <string name="regenerate_auth_key">Autorisierungsschlüssel neu erzeugen</string>
     <string name="regenerate_auth_key_warning">Sind Sie sicher\? Alle Anwendungen von Drittanbietern müssen mit dem neuen Autorisierungsschlüssel neu konfiguriert werden.</string>
     <string name="shortcut_icon">Tastaturkürzel</string>
+    <string name="change_backup_volume">Medium wechseln</string>
+    <string name="external">Extern</string>
+    <string name="internal">Intern</string>
+    <string name="tracker">Tracker</string>
+    <string name="input_ssaid_instruction">SSAID ist eine %1$d-Byte-Hexadezimalzahl, d.h. eine Zeichenkette der Länge %2$d mit 0 bis 9 und a bis f.</string>
+    <string name="screen_time">Zeit am Bildschirm</string>
+    <string name="backup_volume_unavailable_warning">Das ausgewählte Sicherungsmedium ist derzeit nicht verfügbar. Wenn es sich auf einem externen Speicher befindet, legen Sie es bitte ein oder ändern Sie das Sicherungsmedium.</string>
+    <string name="sort_by_installation_date">Installationsdatum</string>
 </resources>
