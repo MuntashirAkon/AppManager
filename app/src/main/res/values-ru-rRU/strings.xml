@@ -1243,4 +1243,12 @@
     <string name="auth_manager_title">Менеджер авторизации</string>
     <string name="regenerate_auth_key">Пересоздать ключ авторизации</string>
     <string name="shortcut_icon">Значок быстрого доступа</string>
+    <string name="sort_by_installation_date">Дата установки</string>
+    <string name="change_backup_volume">Изменить том</string>
+    <string name="external">Внешний</string>
+    <string name="internal">Внутренний</string>
+    <string name="tracker">Трекер</string>
+    <string name="screen_time">Время работа экрана</string>
+    <string name="input_ssaid_instruction">SSAID - это шестнадцатеричное число длиной %1$d байт, то есть строка длиной %2$d, содержащая от 0 до 9 и от a до f.</string>
+    <string name="backup_volume_unavailable_warning">Выбранный том резервных копий в настоящее время недоступен. Если он находится на внешнем накопителе, подключите его или измените том для резервных копий.</string>
 </resources>
