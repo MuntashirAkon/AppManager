@@ -111,8 +111,6 @@
         <item>com.ubercab.client.core.analytics.</item>
         <item>com.lisnr.</item>
         <item>com.silverpush.</item>
-        <item>com.silverpush.location</item>
-        <item>com.silverpush.sdk.android.SPService</item>
         <item>com.shopkick.sdk.api.</item>
         <item>com.shopkick.fetchers.</item>
         <item>tv.alphonso.service</item>
@@ -254,7 +252,6 @@
         <item>com.swrve.sdk</item>
         <item>com.onesignal.</item>
         <item>com.appdynamics.</item>
-        <item>com.startapp.android.publish</item>
         <item>com.startapp.</item>
         <item>com.aerserv.sdk.</item>
         <item>de.infonline.</item>
@@ -456,7 +453,6 @@
         <item>com.carto</item>
         <item>io.didomi.sdk.</item>
         <item>cn.jpush.android</item>
-        <item>com.heytap.msp.</item>
         <item>com.jumio.MobileSDK</item>
         <item>com.lenddo.mobile</item>
         <item>com.pokkt.sdk.</item>
@@ -580,6 +576,13 @@
         <item>com.userexperior</item>
         <item>com.vdopia.client.android.</item>
         <item>com.vdopia.ads.</item>
+        <item>com.adgem.android.</item>
+        <item>com.adtrial.sdk.</item>
+        <item>com.pincrux.</item>
+        <item>org.lasque.tusdk.core</item>
+        <item>org.lasque.tusdkpulse.core</item>
+        <item>net.veloxity.</item>
+        <item>com.yoadx.yoadx.</item>
         <item>com.geopla.</item>
         <item>com.threebitter.sdk.</item>
         <item>com.m7.imkfsdk.</item>
@@ -597,10 +600,8 @@
         <item>com.ad2iction.</item>
         <item>com.a4gpublisher.</item>
         <item>mobi.mclick.ad.</item>
-        <item>com.adgem.android.</item>
         <item>com.adtech.adtechmobile</item>
         <item>com.adtheorent.</item>
-        <item>com.adtrial.sdk.</item>
         <item>com.kuaiyou.loader.</item>
         <item>com.adwhirl.</item>
         <item>com.adchina.android</item>
@@ -822,7 +823,6 @@
         <item>com.parse.PushServiceApi</item>
         <item>it.partytrack.sdk.</item>
         <item>com.phunware.advertising.</item>
-        <item>com.pincrux.</item>
         <item>com.pinterest.android.pdk.</item>
         <item>com.playfab.PlayFab</item>
         <item>com.plleti.offerwall.</item>
@@ -893,7 +893,6 @@
         <item>com.trillbit.</item>
         <item>com.triplelift.sdk.</item>
         <item>com.triplelift.tl_sdk.</item>
-        <item>org.lasque.tusdk</item>
         <item>.ads.AdsInfoWebViewActivity</item>
         <item>.ads.AdsCompanionWebViewActivity</item>
         <item>.analytics.TweetAnalyticsWebViewActivity</item>
@@ -929,7 +928,6 @@
         <item>com.growstarry.</item>
         <item>com.usabilla.sdk.</item>
         <item>mobi.vserv.android.adengine.</item>
-        <item>net.veloxity.</item>
         <item>com.vivo.push.sdk.</item>
         <item>com.vodafone.netperform.runtime.</item>
         <item>com.walkme.wmads</item>
@@ -955,7 +953,6 @@
         <item>jp.co.yahoo.android.yssens.YSSensAnalytics</item>
         <item>com.yext.locationsdk.</item>
         <item>com.yieldlab.</item>
-        <item>com.yoadx.yoadx.</item>
         <item>com.yougood.basebusiness.</item>
         <item>com.yougoodtech.</item>
         <item>net.youmi</item>
@@ -1093,8 +1090,6 @@
         <item>Uber Analytics</item>
         <item>Uber Analytics</item>
         <item>Lisnr</item>
-        <item>SilverPush</item>
-        <item>SilverPush</item>
         <item>SilverPush</item>
         <item>Shopkick</item>
         <item>Shopkick</item>
@@ -1237,7 +1232,6 @@
         <item>Swrve</item>
         <item>OneSignal</item>
         <item>Appdynamics</item>
-        <item>Startapp</item>
         <item>Startapp</item>
         <item>AerServ</item>
         <item>INFOnline</item>
@@ -1439,7 +1433,6 @@
         <item>Carto (formerly Nutiteq)</item>
         <item>Didomi</item>
         <item>JiGuang Aurora Mobile JPush</item>
-        <item>JiGuang Aurora Mobile JPush</item>
         <item>Jumio</item>
         <item>Lenddo</item>
         <item>POKKT</item>
@@ -1563,6 +1556,13 @@
         <item>UserExperior</item>
         <item>Vdopia</item>
         <item>Vdopia</item>
+        <item>AdGem</item>
+        <item>AdTrial</item>
+        <item>Pincrux</item>
+        <item>Tutucloud</item>
+        <item>Tutucloud</item>
+        <item>Veloxity</item>
+        <item>Yoadx</item>
         <item>²39Geopla</item>
         <item>²3bitter Beacon</item>
         <item>²7Moor SDK</item>
@@ -1580,10 +1580,8 @@
         <item>²Ad2</item>
         <item>²Ad4Game</item>
         <item>²AdFlex</item>
-        <item>²AdGem</item>
         <item>²AdTech</item>
         <item>²AdTheorent</item>
-        <item>²AdTrial</item>
         <item>²AdView</item>
         <item>²AdWhirl (AdMob)</item>
         <item>²Adchina</item>
@@ -1805,7 +1803,6 @@
         <item>²Parse</item>
         <item>²PartyTrack</item>
         <item>²Phunware Advertising</item>
-        <item>²Pincrux</item>
         <item>²Pinterest</item>
         <item>²PlayFab java</item>
         <item>²Plleti</item>
@@ -1876,7 +1873,6 @@
         <item>²Trillbit</item>
         <item>²TripleLift</item>
         <item>²TripleLift</item>
-        <item>²Tutucloud</item>
         <item>²Twitter ads</item>
         <item>²Twitter ads</item>
         <item>²Twitter ads</item>
@@ -1912,7 +1908,6 @@
         <item>²Unknown Trackers</item>
         <item>²Usabilla by Salesforce</item>
         <item>²VServ</item>
-        <item>²Veloxity</item>
         <item>²Vivo Push SDK</item>
         <item>²Vodafone NetPerform</item>
         <item>²WalkMe/Abbi.io</item>
@@ -1938,7 +1933,6 @@
         <item>²Yahoo!Japan DataShare</item>
         <item>²Yext</item>
         <item>²Yieldlab</item>
-        <item>²Yoadx</item>
         <item>²Yougoodtech</item>
         <item>²Yougoodtech</item>
         <item>²Youmi</item>

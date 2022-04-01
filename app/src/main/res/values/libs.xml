@@ -55,6 +55,7 @@
         <item>androidx.versionedparcelable</item>
         <item>androidx.viewpager2</item>
         <item>androidx.webkit</item>
+        <item>androidx.window</item>
         <item>androidx.work</item>
         <item>angtrim.com.fivestarslibrary</item>
         <item>antlr</item>
@@ -101,6 +102,7 @@
         <item>btools.routingapp</item>
         <item>br.com.bloder.magic</item>
         <item>br.com.classapp.RNSensitiveInfo</item>
+        <item>br.com.erickhaendel.flutter_screen_wake</item>
         <item>br.com.simplepass.loadingbutton</item>
         <item>br.tiagohm.markdownview</item>
         <item>butterknife</item>
@@ -198,6 +200,7 @@
         <item>com.allenliu.versionchecklib</item>
         <item>com.almeros.android.multitouch</item>
         <item>com.aloisdeniel.geocoder</item>
+        <item>com.yourcompany.geocoder</item>
         <item>com.amap.api</item>
         <item>com.amazon.device.ads</item>
         <item>com.amazon.device.associates</item>
@@ -847,6 +850,7 @@
         <item>com.google.android.gms.location</item>
         <item>com.google.android.libraries.cast.companionlibrary</item>
         <item>com.google.android.material</item>
+        <item>com.google.android.mediahome.video</item>
         <item>com.google.android.net</item>
         <item>com.google.android.play.core</item>
         <item>com.google.android.vending</item>
@@ -1885,6 +1889,8 @@
         <item>dev.chrisbanes.insetter</item>
         <item>dev.chrisbanes.snapper</item>
         <item>dev.doubledot.doki</item>
+        <item>dev.fluttercommunity.plus.device_info</item>
+        <item>dev.fluttercommunity.plus.packageinfo</item>
         <item>dev.fluttercommunity.plus.share</item>
         <item>dev.jahir.blueprint</item>
         <item>dev.jahir.frames</item>
@@ -2456,8 +2462,12 @@
         <item>afu.org.checkerframework</item>
         <item>org.checkerframework</item>
         <item>org.chickenhook.restrictionbypass</item>
+        <item>org.chromium.base</item>
+        <item>org.chromium.build</item>
         <item>org.chromium.customtabsclient</item>
+        <item>org.chromium.net</item>
         <item>org.chromium.support_lib_boundary</item>
+        <item>org.chromium.url</item>
         <item>org.cocos2dx</item>
         <item>org.codeandmagic.android.gauge</item>
         <item>org.codehaus.jackson</item>
@@ -2924,6 +2934,7 @@
         <item>Android Jetpack VersionedParcelable</item>
         <item>AndroidX Widget ViewPager2</item>
         <item>Webkit</item>
+        <item>Jetpack WindowManager Library</item>
         <item>WorkManager</item>
         <item>Android Five Stars Library</item>
         <item>ANTLR</item>
@@ -2970,6 +2981,7 @@
         <item>brouter</item>
         <item>Magic Button</item>
         <item>React Native Sensitive Info</item>
+        <item>Flutter Screen Wake</item>
         <item>Progress Button Android</item>
         <item>MarkdownView</item>
         <item>Butter Knife</item>
@@ -3066,6 +3078,7 @@
         <item>FloatView</item>
         <item>CheckVersionLib</item>
         <item>Android Gesture Detectors Framework</item>
+        <item>geocoder</item>
         <item>geocoder</item>
         <item>AMap</item>
         <item>Amazon Advertisement</item>
@@ -3716,6 +3729,7 @@
         <item>Google Mobile Services</item>
         <item>CastCompanionLibrary</item>
         <item>Google Material Design</item>
+        <item>Media Home Video</item>
         <item>Google Android Net</item>
         <item>Google Play Core</item>
         <item>Google Play Store</item>
@@ -4754,6 +4768,8 @@
         <item>Insetter</item>
         <item>Snapper</item>
         <item>Doki</item>
+        <item>device_info_plus</item>
+        <item>package_info_plus</item>
         <item>share_plus</item>
         <item>Blueprints</item>
         <item>Frames</item>
@@ -5325,8 +5341,12 @@
         <item>Checker Framework</item>
         <item>Checker Framework</item>
         <item>RestrictionBypass</item>
+        <item>Chromium Base</item>
+        <item>Chromium Build</item>
         <item>Chrome Custom Tabs</item>
+        <item>Chrome Networking Stack</item>
         <item>Webkit Boundary Interfaces</item>
+        <item>Chrome\'s URL library</item>
         <item>Cocos2d-x</item>
         <item>GaugeView</item>
         <item>Jackson Json-processor</item>
@@ -5795,49 +5815,51 @@
         <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
-        <item>Development Framework</item>
-        <item>Development Framework</item>
-        <item>UI Component</item>
-        <item>Development Framework</item>
-        <item>Utility</item>
-        <item>Utility</item>
-        <item>Utility</item>
-        <item>Utility</item>
-        <item>Utility</item>
-        <item>Development Aid</item>
-        <item>Development Aid</item>
-        <item>UI Component</item>
-        <item>UI Component</item>
-        <item>UI Component</item>
-        <item>Development Aid</item>
-        <item>Utility</item>
-        <item>Development Aid</item>
-        <item>Development Aid</item>
-        <item>UI Component</item>
-        <item>UI Component</item>
-        <item>Utility</item>
-        <item>Utility</item>
-        <item>UI Component</item>
-        <item>Utility</item>
-        <item>Utility</item>
-        <item>Utility</item>
-        <item>Utility</item>
-        <item>Development Aid</item>
-        <item>Utility</item>
-        <item>UI Component</item>
-        <item>Utility</item>
-        <item>Utility</item>
-        <item>Utility</item>
-        <item>Utility</item>
-        <item>Utility</item>
-        <item>Utility</item>
-        <item>Utility</item>
-        <item>UI Component</item>
-        <item>Utility</item>
         <item>Utility</item>
         <item>Development Framework</item>
+        <item>Development Framework</item>
+        <item>UI Component</item>
+        <item>Development Framework</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Development Aid</item>
+        <item>Development Aid</item>
+        <item>UI Component</item>
+        <item>UI Component</item>
+        <item>UI Component</item>
+        <item>Development Aid</item>
+        <item>Utility</item>
+        <item>Development Aid</item>
+        <item>Development Aid</item>
+        <item>UI Component</item>
+        <item>UI Component</item>
+        <item>Utility</item>
         <item>Utility</item>
         <item>UI Component</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Development Aid</item>
+        <item>Utility</item>
+        <item>UI Component</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>UI Component</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Development Framework</item>
+        <item>Utility</item>
+        <item>UI Component</item>
+        <item>Utility</item>
         <item>Utility</item>
         <item>UI Component</item>
         <item>Utility</item>
@@ -5933,6 +5955,7 @@
         <item>UI Component</item>
         <item>UI Component</item>
         <item>UI Component</item>
+        <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
@@ -6587,6 +6610,7 @@
         <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
+        <item>Utility</item>
         <item>App Market</item>
         <item>Utility</item>
         <item>Utility</item>
@@ -7622,6 +7646,8 @@
         <item>Utility</item>
         <item>Utility</item>
         <item>UI Component</item>
+        <item>Utility</item>
+        <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
@@ -8194,7 +8220,11 @@
         <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
         <item>UI Component</item>
+        <item>Utility</item>
+        <item>Utility</item>
         <item>Utility</item>
         <item>Game Engine</item>
         <item>UI Component</item>
@@ -8662,6 +8692,7 @@
         <item>https://developer.android.com/jetpack/androidx/releases/versionedparcelable</item>
         <item>https://developer.android.com/reference/androidx/viewpager2/widget/ViewPager2</item>
         <item>https://developer.android.com/jetpack/androidx/releases/webkit</item>
+        <item>https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/window/</item>
         <item>https://developer.android.com/jetpack/androidx/releases/work</item>
         <item>https://github.com/Angtrim/Android-Five-Stars-Library</item>
         <item>http://www.antlr2.org/</item>
@@ -8708,6 +8739,7 @@
         <item>https://github.com/abrensch/brouter</item>
         <item>https://github.com/bloderxd/MagicButton</item>
         <item>https://github.com/mCodex/react-native-sensitive-info</item>
+        <item>https://github.com/erickhaendel/flutter_screen_wake</item>
         <item>https://github.com/leandroBorgesFerreira/LoadingButtonAndroid</item>
         <item>https://github.com/tiagohm/MarkdownView</item>
         <item>https://github.com/JakeWharton/butterknife</item>
@@ -8804,6 +8836,7 @@
         <item>https://github.com/AlexLiuSheng/FloatView</item>
         <item>https://github.com/AlexLiuSheng/CheckVersionLib</item>
         <item>https://github.com/Almeros/android-gesture-detectors</item>
+        <item>https://github.com/aloisdeniel/flutter_geocoder</item>
         <item>https://github.com/aloisdeniel/flutter_geocoder</item>
         <item>https://lbs.amap.com/api/android-location-sdk/locationsummary</item>
         <item>https://developer.amazon.com/public/apis/earn/mobile-ads/docs/quick-start</item>
@@ -9454,6 +9487,7 @@
         <item>https://developers.google.com/android/reference/com/google/android/gms/package-summary</item>
         <item>https://github.com/iheartradio/android-cast-companion-library</item>
         <item>https://github.com/material-components/material-components-android</item>
+        <item>https://developer.android.com/training/home-channels/video</item>
         <item>http://developer.android.com/reference/android/net/package-summary.html</item>
         <item>https://developer.android.com/guide/playcore</item>
         <item>https://play.google.com/</item>
@@ -10492,6 +10526,8 @@
         <item>https://github.com/chrisbanes/insetter</item>
         <item>https://github.com/chrisbanes/snapper</item>
         <item>https://github.com/doubledotlabs/doki</item>
+        <item>https://github.com/fluttercommunity/plus_plugins/tree/main/packages/device_info_plus</item>
+        <item>https://github.com/fluttercommunity/plus_plugins/tree/main/packages/package_info_plus</item>
         <item>https://github.com/fluttercommunity/plus_plugins/tree/main/packages/share_plus/share_plus</item>
         <item>https://github.com/jahirfiquitiva/Blueprint</item>
         <item>https://github.com/jahirfiquitiva/Frames</item>
@@ -11063,8 +11099,12 @@
         <item>https://checkerframework.org/</item>
         <item>https://checkerframework.org/</item>
         <item>https://github.com/ChickenHook/RestrictionBypass</item>
+        <item>https://chromium.googlesource.com/chromium/src/base/</item>
+        <item>https://chromium.googlesource.com/chromium/src/build/</item>
         <item>https://github.com/GoogleChrome/custom-tabs-client</item>
+        <item>https://chromium.googlesource.com/chromium/src/net/</item>
         <item>https://chromium.googlesource.com/chromium/src/+/HEAD/android_webview/support_library/boundary_interfaces</item>
+        <item>https://chromium.googlesource.com/chromium/src/url/</item>
         <item>https://www.cocos2d-x.org/</item>
         <item>https://github.com/CodeAndMagic/GaugeView</item>
         <item>https://github.com/codehaus/jackson</item>
