@@ -1129,4 +1129,12 @@
     <string name="regenerate_auth_key">重新生成授权密钥</string>
     <string name="regenerate_auth_key_warning">你确定吗？必须用新的授权密钥来重新配置所有第三方应用。</string>
     <string name="shortcut_icon">快捷方式图标</string>
+    <string name="sort_by_installation_date">安装日期</string>
+    <string name="backup_volume_unavailable_warning">所选的备份卷当前不可用。如它位于外部存储，请插入它，或更改备份卷。</string>
+    <string name="change_backup_volume">更改卷</string>
+    <string name="external">外部</string>
+    <string name="internal">内部</string>
+    <string name="tracker">跟踪器</string>
+    <string name="input_ssaid_instruction">SSAID 是一个 %1$d 字节的十六进制数，即一个包含 0 到 9 和 a 到 f 的长为 %2$d 的字符串。</string>
+    <string name="screen_time">屏幕时间</string>
 </resources>
