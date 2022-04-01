@@ -2,7 +2,7 @@
 name: Help wanted
 about: Ask for help regarding a feature or an improvement in the docs
 title: ''
-labels: help wanted
+labels: Help Wanted
 assignees: ''
 
 ---

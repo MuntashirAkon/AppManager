@@ -2,7 +2,7 @@
 name: Bug report
 about: Create a report to help us improve App Manager
 title: ''
-labels: P3, S3, bug
+labels: P3, S3, Bug
 assignees: ''
 
 ---

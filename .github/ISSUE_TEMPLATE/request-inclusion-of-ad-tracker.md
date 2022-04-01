@@ -2,7 +2,7 @@
 name: Request inclusion of ad/tracker
 about: Request inclusion of ad/tracker
 title: ''
-labels: ad/tracker
+labels: Ad/Tracker
 assignees: ''
 
 ---
