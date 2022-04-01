@@ -7,21 +7,21 @@ import android.content.DialogInterface;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.util.SparseBooleanArray;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
+import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class SplitApkChooser extends DialogFragment {
@@ -58,6 +58,7 @@ public class SplitApkChooser extends DialogFragment {
     private OnTriggerInstallInterface installInterface;
     private ApkFile apkFile;
     private PackageManager pm;
+    private final HashMap<String /* feature */, HashSet<Integer> /* seen types */> seenSplits = new HashMap<>();
 
     @NonNull
     @Override
@@ -71,26 +72,41 @@ public class SplitApkChooser extends DialogFragment {
             throw new IllegalArgumentException("ApkFile cannot be empty.");
         }
         apkFile = ApkFile.getInstance(apkFileKey);
-        if (!apkFile.isSplit()) throw new RuntimeException("Apk file does not contain any split.");
+        if (!apkFile.isSplit()) {
+            throw new RuntimeException("Apk file does not contain any split.");
+        }
         List<ApkFile.Entry> apkEntries = apkFile.getEntries();
         CharSequence[] entryNames = new CharSequence[apkEntries.size()];
-        final boolean[] choices = getChoices(apkEntries);
         for (int i = 0; i < apkEntries.size(); ++i) {
             entryNames[i] = apkEntries.get(i).toLocalizedString(requireActivity());
         }
-        if (installInterface == null) throw new RuntimeException("No install action has been set.");
-        return new MaterialAlertDialogBuilder(requireActivity())
-                .setCancelable(false)
-                .setCustomTitle(UIUtils.getDialogTitle(requireActivity(), pm.getApplicationLabel(appInfo),
+        if (installInterface == null) {
+            throw new RuntimeException("No install action has been set.");
+        }
+        SearchableMultiChoiceDialogBuilder<ApkFile.Entry> builder = new SearchableMultiChoiceDialogBuilder<>(
+                requireActivity(), apkEntries, entryNames)
+                .setTitle(UIUtils.getDialogTitle(requireActivity(), pm.getApplicationLabel(appInfo),
                         pm.getApplicationIcon(appInfo), versionInfo))
-                .setMultiChoiceItems(entryNames, choices, (dialog, which, isChecked) -> {
-                    if (isChecked) apkFile.select(which);
-                    else apkFile.deselect(which);
-                })
-                .setPositiveButton(actionName == null ? getString(R.string.install) : actionName,
-                        (dialog, which) -> installInterface.triggerInstall())
-                .setNegativeButton(R.string.cancel, (dialog, which) -> dialog.cancel())
-                .create();
+                .showSelectAll(false)
+                .addSelections(getInitialSelections(apkEntries))
+                .setPositiveButton(actionName == null ? getString(R.string.install) : actionName, (dialog, which, selectedItems) ->
+                        installInterface.triggerInstall())
+                .setNegativeButton(R.string.cancel, (dialog, which, selectedItems) -> onCancel(dialog))
+                .setCancelable(false);
+        return builder.setOnMultiChoiceClickListener((dialog, which, item, isChecked) -> {
+            if (isChecked) {
+                builder.addSelections(select(which));
+            } else {
+                int[] itemsToDeselect = deselect(which);
+                if (itemsToDeselect == null) {
+                    // Reselect the item
+                    builder.addSelections(new int[]{which});
+                } else {
+                    builder.removeSelections(itemsToDeselect);
+                }
+            }
+            builder.reloadListUi();
+        }).create();
     }
 
     @Override
@@ -109,34 +125,59 @@ public class SplitApkChooser extends DialogFragment {
     }
 
     @NonNull
-    public boolean[] getChoices(@NonNull final List<ApkFile.Entry> apkEntries) {
-        boolean[] choices = new boolean[apkEntries.size()];
-        Arrays.fill(choices, false);
-        ApkFile.Entry apkEntry;
+    public int[] getInitialSelections(@NonNull final List<ApkFile.Entry> apkEntries) {
+        List<Integer> selections = new ArrayList<>();
         try {
+            // See if the app has been installed
             ApplicationInfo info = pm.getApplicationInfo(apkFile.getPackageName(), 0);
+            HashSet<String> splitNames = new HashSet<>();
             try (ApkFile installedApkFile = ApkFile.getInstance(ApkFile.createInstance(info))) {
-                List<String> splitNames = new ArrayList<>();
-                for (ApkFile.Entry apkEntry1 : installedApkFile.getEntries()) {
-                    splitNames.add(apkEntry1.name);
+                for (ApkFile.Entry apkEntry : installedApkFile.getEntries()) {
+                    splitNames.add(apkEntry.name);
                 }
-                if (splitNames.size() > 0) {
-                    for (int i = 0; i < apkEntries.size(); ++i) {
-                        apkEntry = apkEntries.get(i);
-                        if (splitNames.contains(apkEntry.name) || apkEntry.type == ApkFile.APK_BASE) {
-                            choices[i] = true;
-                            apkFile.select(i);
-                        } else apkFile.deselect(i);
+            }
+            if (splitNames.size() > 0) {
+                for (int i = 0; i < apkEntries.size(); ++i) {
+                    ApkFile.Entry apkEntry = apkEntries.get(i);
+                    if (splitNames.contains(apkEntry.name) || apkEntry.type == ApkFile.APK_BASE) {
+                        HashSet<Integer> types = seenSplits.get(apkEntry.getFeature());
+                        if (types == null) {
+                            types = new HashSet<>();
+                            seenSplits.put(apkEntry.getFeature(), types);
+                        }
+                        types.add(apkEntry.type);
+                        apkFile.select(i);
                     }
-                    return choices;
                 }
+                // Fall-through deliberately to see if there are any new requirements
             }
         } catch (PackageManager.NameNotFoundException | ApkFile.ApkFileException ignored) {
         }
-        SparseBooleanArray seenSplit = new SparseBooleanArray(3);
+        // Set up features
         for (int i = 0; i < apkEntries.size(); ++i) {
-            apkEntry = apkEntries.get(i);
-            choices[i] = apkEntry.isSelected() || apkEntry.isRequired();
+            ApkFile.Entry apkEntry = apkEntries.get(i);
+            if (apkEntry.isSelected() || apkEntry.isRequired()) {
+                selections.add(i);
+                if (apkEntry.type == ApkFile.APK_BASE || apkEntry.type == ApkFile.APK_SPLIT_FEATURE) {
+                    // Set feature
+                    if (seenSplits.get(apkEntry.getFeature()) == null) {
+                        seenSplits.put(apkEntry.getFeature(), new HashSet<>());
+                    }
+                }
+            }
+        }
+        // Only selecting the first item works because the splits are already ranked.
+        for (int i = 0; i < apkEntries.size(); ++i) {
+            ApkFile.Entry apkEntry = apkEntries.get(i);
+            if (apkEntry.isSelected() || apkEntry.isRequired()) {
+                // Already selected
+                continue;
+            }
+            HashSet<Integer> types = seenSplits.get(apkEntry.getFeature());
+            if (types == null) {
+                // This feature was not selected earlier
+                continue;
+            }
             switch (apkEntry.type) {
                 case ApkFile.APK_BASE:
                 case ApkFile.APK_SPLIT_FEATURE:
@@ -144,20 +185,23 @@ public class SplitApkChooser extends DialogFragment {
                 case ApkFile.APK_SPLIT:
                     break;
                 case ApkFile.APK_SPLIT_DENSITY:
-                    if (!seenSplit.get(ApkFile.APK_SPLIT_DENSITY)) {
-                        seenSplit.put(ApkFile.APK_SPLIT_DENSITY, choices[i] = true);
+                    if (!types.contains(ApkFile.APK_SPLIT_DENSITY)) {
+                        types.add(ApkFile.APK_SPLIT_DENSITY);
+                        selections.add(i);
                         apkFile.select(i);
                     }
                     break;
                 case ApkFile.APK_SPLIT_ABI:
-                    if (!seenSplit.get(ApkFile.APK_SPLIT_ABI)) {
-                        seenSplit.put(ApkFile.APK_SPLIT_ABI, choices[i] = true);
+                    if (!types.contains(ApkFile.APK_SPLIT_ABI)) {
+                        types.add(ApkFile.APK_SPLIT_ABI);
+                        selections.add(i);
                         apkFile.select(i);
                     }
                     break;
                 case ApkFile.APK_SPLIT_LOCALE:
-                    if (!seenSplit.get(ApkFile.APK_SPLIT_LOCALE)) {
-                        seenSplit.put(ApkFile.APK_SPLIT_LOCALE, choices[i] = true);
+                    if (!types.contains(ApkFile.APK_SPLIT_LOCALE)) {
+                        types.add(ApkFile.APK_SPLIT_LOCALE);
+                        selections.add(i);
                         apkFile.select(i);
                     }
                     break;
@@ -165,6 +209,82 @@ public class SplitApkChooser extends DialogFragment {
                     throw new RuntimeException("Invalid split type.");
             }
         }
-        return choices;
+        return ArrayUtils.convertToIntArray(selections);
+    }
+
+    @NonNull
+    private int[] select(int index) {
+        List<Integer> selections = new ArrayList<>();
+        List<ApkFile.Entry> apkEntries = apkFile.getEntries();
+        ApkFile.Entry entry = apkEntries.get(index);
+        String feature = entry.getFeature();
+        HashSet<Integer> types = new HashSet<>();
+        seenSplits.put(feature, types);
+        for (int i = 0; i < apkEntries.size(); ++i) {
+            ApkFile.Entry apkEntry = apkEntries.get(i);
+            if (Objects.equals(apkEntry.getFeature(), feature)) {
+                if (apkEntry.isSelected()) {
+                    // Deselect unwanted items
+                    apkFile.deselect(i);
+                }
+                // Select wanted items only
+                switch (apkEntry.type) {
+                    case ApkFile.APK_BASE:
+                    case ApkFile.APK_SPLIT_FEATURE:
+                        apkFile.select(i);
+                        break;
+                    case ApkFile.APK_SPLIT_UNKNOWN:
+                    case ApkFile.APK_SPLIT:
+                        break;
+                    case ApkFile.APK_SPLIT_DENSITY:
+                        if (!types.contains(ApkFile.APK_SPLIT_DENSITY)) {
+                            types.add(ApkFile.APK_SPLIT_DENSITY);
+                            selections.add(i);
+                            apkFile.select(i);
+                        }
+                        break;
+                    case ApkFile.APK_SPLIT_ABI:
+                        if (!types.contains(ApkFile.APK_SPLIT_ABI)) {
+                            types.add(ApkFile.APK_SPLIT_ABI);
+                            selections.add(i);
+                            apkFile.select(i);
+                        }
+                        break;
+                    case ApkFile.APK_SPLIT_LOCALE:
+                        if (!types.contains(ApkFile.APK_SPLIT_LOCALE)) {
+                            types.add(ApkFile.APK_SPLIT_LOCALE);
+                            selections.add(i);
+                            apkFile.select(i);
+                        }
+                        break;
+                    default:
+                        throw new RuntimeException("Invalid split type.");
+                }
+            }
+        }
+        return ArrayUtils.convertToIntArray(selections);
+    }
+
+    @Nullable
+    private int[] deselect(int index) {
+        List<ApkFile.Entry> apkEntries = apkFile.getEntries();
+        ApkFile.Entry entry = apkEntries.get(index);
+        if (entry.isRequired()) {
+            // Can't be unselected
+            return null;
+        }
+        List<Integer> selections = new ArrayList<>();
+        String feature = entry.getFeature();
+        seenSplits.remove(feature);
+        for (int i = 0; i < apkEntries.size(); ++i) {
+            ApkFile.Entry apkEntry = apkEntries.get(i);
+            if (Objects.equals(apkEntry.getFeature(), feature)) {
+                if (apkEntry.isSelected()) {
+                    selections.add(i);
+                    apkFile.deselect(i);
+                }
+            }
+        }
+        return ArrayUtils.convertToIntArray(selections);
     }
 }

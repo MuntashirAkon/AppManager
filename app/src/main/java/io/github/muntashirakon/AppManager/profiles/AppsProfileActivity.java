@@ -166,7 +166,7 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
             }
             progressIndicator.hide();
             new SearchableMultiChoiceDialogBuilder<>(this, items, itemNames)
-                    .setSelections(model.getCurrentPackages())
+                    .addSelections(model.getCurrentPackages())
                     .setTitle(R.string.apps)
                     .setPositiveButton(R.string.ok, (d, i, selectedItems) -> model.setPackages(selectedItems))
                     .setNegativeButton(R.string.cancel, null)

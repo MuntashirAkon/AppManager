@@ -113,7 +113,7 @@ public class RestoreTasksDialogFragment extends DialogFragment {
         if (isDetached()) return;
         activity.mProgressIndicator.hide();
         new SearchableMultiChoiceDialogBuilder<>(activity, applicationItems, applicationLabels)
-                .setSelections(applicationItems)
+                .addSelections(applicationItems)
                 .setTitle(R.string.filtered_packages)
                 .setPositiveButton(R.string.restore, (dialog, which, selectedItems) -> {
                     if (isDetached()) return;

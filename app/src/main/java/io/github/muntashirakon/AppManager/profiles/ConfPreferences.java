@@ -216,7 +216,7 @@ public class ConfPreferences extends PreferenceFragmentCompat {
             new SearchableMultiChoiceDialogBuilder<>(activity, checkedItems, R.array.rule_types)
                     .setTitle(R.string.options)
                     .hideSearchBar(true)
-                    .setSelections(selectedRules)
+                    .addSelections(selectedRules)
                     .setPositiveButton(R.string.ok, (dialog, which, selectedItems) -> {
                         int value = 0;
                         for (int item : selectedItems) value |= item;
@@ -319,7 +319,7 @@ public class ConfPreferences extends PreferenceFragmentCompat {
                 pref.setOnPreferenceClickListener(v -> {
                     new SearchableMultiChoiceDialogBuilder<>(activity, userHandles, userNames)
                             .setTitle(R.string.select_user)
-                            .setSelections(selectedUsers)
+                            .addSelections(selectedUsers)
                             .showSelectAll(false)
                             .setPositiveButton(R.string.ok, (dialog, which, selectedUserHandles) -> {
                                 if (selectedUserHandles.size() == 0) {

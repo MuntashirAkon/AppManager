@@ -213,7 +213,7 @@ public class BackupDialogFragment extends DialogFragment {
                     if (isDetached()) return;
                     new SearchableMultiChoiceDialogBuilder<>(activity, userHandles, userNames)
                             .setTitle(R.string.select_user)
-                            .setSelections(Collections.singletonList(UserHandleHidden.myUserId()))
+                            .addSelections(Collections.singletonList(UserHandleHidden.myUserId()))
                             .showSelectAll(false)
                             .setPositiveButton(R.string.ok, (dialog, which, selectedUsers) -> {
                                 List<UserPackagePair> newTargetPackages = new ArrayList<>();

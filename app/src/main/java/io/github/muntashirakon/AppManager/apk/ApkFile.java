@@ -458,15 +458,11 @@ public final class ApkFile implements AutoCloseable {
     }
 
     public void select(int entry) {
-        Entry tmpEntry = entries.get(entry);
-        tmpEntry.selected = true;
-        entries.set(entry, tmpEntry);
+        entries.get(entry).selected = true;
     }
 
     public void deselect(int entry) {
-        Entry tmpEntry = entries.get(entry);
-        tmpEntry.selected = false;
-        entries.set(entry, tmpEntry);
+        entries.get(entry).selected = false;
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
@@ -845,6 +841,18 @@ public final class ApkFile implements AutoCloseable {
                 return new Locale.Builder().setLanguageTag(Objects.requireNonNull(splitSuffix)).build();
             }
             throw new RuntimeException("Attempt to fetch Locale for invalid apk");
+        }
+
+        @Nullable
+        public String getFeature() {
+            if (type == APK_SPLIT_FEATURE) {
+                return name;
+            }
+            return forFeature;
+        }
+
+        public boolean isForFeature() {
+            return forFeature != null;
         }
 
         @Override

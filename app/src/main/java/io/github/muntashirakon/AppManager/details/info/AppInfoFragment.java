@@ -587,7 +587,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 if (!isExternalApk && isRootEnabled) {
                     new SearchableMultiChoiceDialogBuilder<>(mActivity, tagCloud.trackerComponents, trackerComponentNames)
                             .setTitle(R.string.trackers)
-                            .setSelections(tagCloud.trackerComponents)
+                            .addSelections(tagCloud.trackerComponents)
                             .setNegativeButton(R.string.cancel, null)
                             .setPositiveButton(R.string.block, (dialog, which, selectedItems) -> {
                                 showProgressIndicator(true);

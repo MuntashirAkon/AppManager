@@ -161,7 +161,7 @@ public class LogViewerPreferences extends PreferenceFragmentCompat {
         logBuffers.setOnPreferenceClickListener(preference -> {
             new SearchableMultiChoiceDialogBuilder<>(activity, LOG_BUFFERS, LOG_BUFFER_NAMES)
                     .setTitle(R.string.pref_buffer_title)
-                    .setSelections(PreferenceHelper.getBuffers())
+                    .addSelections(PreferenceHelper.getBuffers())
                     .setPositiveButton(R.string.save, (dialog, which, selectedItems) -> {
                         if (selectedItems.size() == 0) return;
                         int bufferFlags = 0;

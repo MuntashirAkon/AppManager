@@ -47,9 +47,17 @@ public class SearchableMultiChoiceDialogBuilder<T> {
     private final CheckBox selectAll;
     @NonNull
     private final SearchableRecyclerViewAdapter adapter;
+    @Nullable
+    private AlertDialog dialog;
+    @Nullable
+    private OnMultiChoiceClickListener<T> onMultiChoiceClickListener;
 
     public interface OnClickListener<T> {
         void onClick(DialogInterface dialog, int which, @NonNull ArrayList<T> selectedItems);
+    }
+
+    public interface OnMultiChoiceClickListener<T> {
+        void onClick(DialogInterface dialog, int which, T item, boolean isChecked);
     }
 
     public SearchableMultiChoiceDialogBuilder(@NonNull FragmentActivity activity, @NonNull List<T> items, @ArrayRes int itemNames) {
@@ -107,9 +115,37 @@ public class SearchableMultiChoiceDialogBuilder<T> {
         checkSelections();
     }
 
-    public SearchableMultiChoiceDialogBuilder<T> setSelections(@Nullable List<T> selectedItems) {
-        adapter.setSelectedItems(selectedItems);
+    public SearchableMultiChoiceDialogBuilder<T> setOnMultiChoiceClickListener(@Nullable OnMultiChoiceClickListener<T>
+                                                                                       onMultiChoiceClickListener) {
+        this.onMultiChoiceClickListener = onMultiChoiceClickListener;
+        return this;
+    }
+
+    public SearchableMultiChoiceDialogBuilder<T> addSelections(@Nullable List<T> selectedItems) {
+        adapter.addSelectedItems(selectedItems);
         checkSelections();
+        return this;
+    }
+
+    public SearchableMultiChoiceDialogBuilder<T> addSelections(@Nullable int[] selectedIndexes) {
+        adapter.addSelectedIndexes(selectedIndexes);
+        checkSelections();
+        return this;
+    }
+
+    public SearchableMultiChoiceDialogBuilder<T> removeSelections(@Nullable int[] selectedIndexes) {
+        adapter.removeSelectedIndexes(selectedIndexes);
+        checkSelections();
+        return this;
+    }
+
+    public SearchableMultiChoiceDialogBuilder<T> reloadListUi() {
+        adapter.notifyDataSetChanged();
+        return this;
+    }
+
+    public SearchableMultiChoiceDialogBuilder<T> setCancelable(boolean cancelable) {
+        builder.setCancelable(cancelable);
         return this;
     }
 
@@ -130,6 +166,11 @@ public class SearchableMultiChoiceDialogBuilder<T> {
 
     public SearchableMultiChoiceDialogBuilder<T> setTitle(@StringRes int title) {
         builder.setTitle(title);
+        return this;
+    }
+
+    public SearchableMultiChoiceDialogBuilder<T> setTitle(View title) {
+        builder.setCustomTitle(title);
         return this;
     }
 
@@ -176,7 +217,7 @@ public class SearchableMultiChoiceDialogBuilder<T> {
     }
 
     public AlertDialog create() {
-        return builder.create();
+        return dialog = builder.create();
     }
 
     public void show() {
@@ -185,6 +226,12 @@ public class SearchableMultiChoiceDialogBuilder<T> {
 
     private void checkSelections() {
         selectAll.setChecked(adapter.areAllSelected(), false);
+    }
+
+    private void triggerMultiChoiceClickListener(int index, boolean isChecked) {
+        if (dialog != null && onMultiChoiceClickListener != null) {
+            onMultiChoiceClickListener.onClick(dialog, index, adapter.items.get(index), isChecked);
+        }
     }
 
     class SearchableRecyclerViewAdapter extends RecyclerView.Adapter<SearchableRecyclerViewAdapter.ViewHolder> {
@@ -239,7 +286,7 @@ public class SearchableMultiChoiceDialogBuilder<T> {
             return selections;
         }
 
-        void setSelectedItems(@Nullable List<T> selectedItems) {
+        void addSelectedItems(@Nullable List<T> selectedItems) {
             if (selectedItems != null) {
                 for (T item : selectedItems) {
                     int index = items.indexOf(item);
@@ -248,6 +295,26 @@ public class SearchableMultiChoiceDialogBuilder<T> {
                             this.selectedItems.add(index);
                         }
                     } else notFoundItems.add(item);
+                }
+            }
+        }
+
+        void addSelectedIndexes(@Nullable int[] selectedIndexes) {
+            if (selectedIndexes != null) {
+                for (int index : selectedIndexes) {
+                    synchronized (this.selectedItems) {
+                        this.selectedItems.add(index);
+                    }
+                }
+            }
+        }
+
+        void removeSelectedIndexes(@Nullable int[] selectedIndexes) {
+            if (selectedIndexes != null) {
+                for (int index : selectedIndexes) {
+                    synchronized (this.selectedItems) {
+                        this.selectedItems.remove(index);
+                    }
                 }
             }
         }
@@ -310,6 +377,7 @@ public class SearchableMultiChoiceDialogBuilder<T> {
                 selected.set(!selected.get());
                 holder.item.setChecked(selected.get());
                 checkSelections();
+                triggerMultiChoiceClickListener(index, selected.get());
             });
         }
 

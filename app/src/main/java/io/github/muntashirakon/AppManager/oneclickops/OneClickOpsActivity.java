@@ -203,7 +203,7 @@ public class OneClickOpsActivity extends BaseActivity {
                             tracker.count, tracker.count))));
         }
         new SearchableMultiChoiceDialogBuilder<>(this, trackerPackages, trackerPackagesWithTrackerCount)
-                .setSelections(trackerPackages)
+                .addSelections(trackerPackages)
                 .setTitle(R.string.found_trackers)
                 .setPositiveButton(R.string.block, (dialog, which, selectedPackages) -> {
                     mProgressIndicator.show();
@@ -246,7 +246,7 @@ public class OneClickOpsActivity extends BaseActivity {
             packageNamesWithComponentCount.add(builder);
         }
         new SearchableMultiChoiceDialogBuilder<>(this, selectedPackages, packageNamesWithComponentCount)
-                .setSelections(selectedPackages)
+                .addSelections(selectedPackages)
                 .setTitle(R.string.filtered_packages)
                 .setPositiveButton(R.string.apply, (dialog1, which1, selectedItems) -> {
                     mProgressIndicator.show();
@@ -324,7 +324,7 @@ public class OneClickOpsActivity extends BaseActivity {
             packagesWithAppOpCount.add(builder1);
         }
         new SearchableMultiChoiceDialogBuilder<>(this, selectedPackages, packagesWithAppOpCount)
-                .setSelections(selectedPackages)
+                .addSelections(selectedPackages)
                 .setTitle(R.string.filtered_packages)
                 .setPositiveButton(R.string.apply, (dialog1, which1, selectedItems) -> {
                     mProgressIndicator.show();

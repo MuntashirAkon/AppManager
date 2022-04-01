@@ -2,15 +2,16 @@
 
 package io.github.muntashirakon.AppManager;
 
-import android.content.Context;
+import android.content.res.Resources;
 import android.util.DisplayMetrics;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import androidx.collection.ArrayMap;
 import androidx.core.os.ConfigurationCompat;
 import androidx.core.os.LocaleListCompat;
+
+import java.util.HashMap;
+import java.util.Map;
+
 import io.github.muntashirakon.AppManager.misc.VMRuntime;
 
 public class StaticDataset {
@@ -54,14 +55,13 @@ public class StaticDataset {
     public static final int DEVICE_DENSITY;
 
     static {
-        DEVICE_DENSITY = AppManager.getContext().getResources().getDisplayMetrics().densityDpi;
+        DEVICE_DENSITY = Resources.getSystem().getDisplayMetrics().densityDpi;
     }
 
     public static final Map<String, Integer> LOCALE_RANKING = new HashMap<>();
 
     static {
-        Context context = AppManager.getContext();
-        LocaleListCompat localeList = ConfigurationCompat.getLocales(context.getResources().getConfiguration());
+        LocaleListCompat localeList = ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration());
         for (int i = 0; i < localeList.size(); i++) {
             LOCALE_RANKING.put(localeList.get(i).getLanguage(), i);
         }
