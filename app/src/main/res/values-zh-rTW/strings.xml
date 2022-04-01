@@ -1127,4 +1127,12 @@
     <string name="regenerate_auth_key_warning">您確定嗎？所有第三方應用必須使用新的授權密鑰。</string>
     <string name="shortcut_icon">快捷圖示</string>
     <string name="system_partition">Android root</string>
+    <string name="sort_by_installation_date">安裝日期</string>
+    <string name="backup_volume_unavailable_warning">選擇的備份卷目前無法使用。如果它位於外部儲存中，請插入它，或變更備份卷。</string>
+    <string name="change_backup_volume">變更卷</string>
+    <string name="external">外部</string>
+    <string name="internal">内部</string>
+    <string name="tracker">追蹤器</string>
+    <string name="input_ssaid_instruction">SSAID 是一個 %1$d 位元組十六進位數值，即長度為 %2$d 的字串，其中包含 0 到 9 和 a 到 f。</string>
+    <string name="screen_time">螢幕使用時間</string>
 </resources>
