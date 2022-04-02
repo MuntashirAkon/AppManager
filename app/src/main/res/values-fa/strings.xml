@@ -1090,4 +1090,12 @@
     <string name="restore_latest_msg">برنامه‌های نصب‌شده‌ای را که کد نسخه‌شان بالاتر از کد نسخه نصب‌شده است، بازیابی کنید.</string>
     <string name="input_permissions_description">مجوزهای ورودی با فاصله، به عنوان مثال. <tt>com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION</tt> و غیره. از <tt>*</tt> برای درخواست همه مجوز ها استفاده کنید.</string>
     <string name="failed_to_save_key">نمی‌توان کلید را ذخیره کرد.</string>
+    <plurals name="usage_minutes">
+        <item quantity="one">%1$d دقیقه</item>
+        <item quantity="other">%1$d دقیقه</item>
+    </plurals>
+    <plurals name="usage_seconds">
+        <item quantity="one">%1$d ثانیه</item>
+        <item quantity="other">%1$d ثانیه</item>
+    </plurals>
 </resources>
