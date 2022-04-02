@@ -82,6 +82,7 @@ public class AdbUtils {
         return new Pair<>(host, port);
     }
 
+    @RequiresApi(Build.VERSION_CODES.R)
     @WorkerThread
     @NonNull
     public static Pair<String, Integer> getLatestAdbPairingDaemon(@NonNull Context context, long timeout, @NonNull TimeUnit unit)
@@ -117,7 +118,7 @@ public class AdbUtils {
 
     @RequiresApi(Build.VERSION_CODES.R)
     @UiThread
-    public static void configureWirelessDebugging(FragmentActivity activity, AdbConnectionCallback callback) {
+    public static void configureWirelessDebugging(@NonNull FragmentActivity activity, @NonNull AdbConnectionCallback callback) {
         new MaterialAlertDialogBuilder(activity)
                 .setTitle(R.string.wireless_debugging)
                 .setMessage(R.string.choose_what_to_do)
@@ -160,7 +161,7 @@ public class AdbUtils {
     }
 
     @UiThread
-    public static void displayAdbConnect(FragmentActivity activity, AdbConnectionCallback callback) {
+    public static void displayAdbConnect(@NonNull FragmentActivity activity, @NonNull AdbConnectionCallback callback) {
         AlertDialog alertDialog = new TextInputDialogBuilder(activity, R.string.port_number)
                 .setTitle(R.string.wireless_debugging)
                 .setInputText(String.valueOf(ServerConfig.getAdbPort()))

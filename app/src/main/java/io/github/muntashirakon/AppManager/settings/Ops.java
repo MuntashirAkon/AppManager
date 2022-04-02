@@ -494,6 +494,7 @@ public class Ops {
     }
 
     @WorkerThread
+    @RequiresApi(Build.VERSION_CODES.R)
     @NoOps
     private static int findAdbPort(@NonNull Context context, long timeoutInSeconds)
             throws IOException, InterruptedException {
@@ -503,10 +504,13 @@ public class Ops {
     @WorkerThread
     @NoOps
     private static int findAdbPortNoThrow(@NonNull Context context, long timeoutInSeconds, int defaultPort) {
-        try {
-            return findAdbPort(context, timeoutInSeconds);
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            // Find ADB port only in Android 11 (R) or later
+            try {
+                return findAdbPort(context, timeoutInSeconds);
+            } catch (IOException | InterruptedException e) {
+                e.printStackTrace();
+            }
         }
         return defaultPort;
     }
