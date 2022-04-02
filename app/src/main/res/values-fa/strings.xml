@@ -969,7 +969,7 @@
     <string name="running_services_logcat_hint">روی یک مورد کلیک کنید تا نمایشگر گزارش با شناسه فرآیند مربوطه به عنوان فیلتر پیش فرض باز شود.</string>
     <string name="pref_import_backups_hint">فهرست حاوی فایل های پشتیبان (برنامه سویفت بک آپ / برنامه تیتانیوم بک‌آپ) یا فهرست های (برنامه و بک آپ) را انتخاب کنید</string>
     <string name="java">جاوا</string>
-    <string name="smali">کوچکی</string>
+    <string name="smali">اسمالی</string>
     <string name="accessibility_service_description">سرویس دسترسی عمومی برای انجام عملیات خاصی مانند پاک کردن حافظه پنهان در حالت بدون ریشه.</string>
     <string name="explore">جستجو</string>
     <string name="system_partition">روت اندروید</string>
@@ -1098,4 +1098,19 @@
         <item quantity="one">%1$d ثانیه</item>
         <item quantity="other">%1$d ثانیه</item>
     </plurals>
+    <string name="authenticating">در حال تایید…</string>
+    <string name="search_type_prefix">پیشوند</string>
+    <string name="pref_vt_apikey">کلید VirusTotal API</string>
+    <string name="pref_default_blocking_method">روش پیش فرض مسدودسازی</string>
+    <string name="search_type_contains">شامل</string>
+    <string name="vt_uploading">VirusTotal: در حال بارگذاری…</string>
+    <string name="vt_success">VirusTotal: %1$d/%2$d</string>
+    <string name="vt_scan_date">تاریخ اسکن: %1$s</string>
+    <string name="vt_permalink">لینک دائمی به VirusTotal</string>
+    <string name="vt_slowness_warning">با توجه به سرعت اینترنت و ترافیک سرور ممکن است کمی طول بکشد.</string>
+    <string name="search_type_suffix">پسوند</string>
+    <string name="pref_default_blocking_method_description">روشی که به صورت پیش فرض زمانی که امکان انتخاب روش مسدودسازی وجود ندارد استفاده می شود.</string>
+    <string name="toggle_internet">استفاده از اینترنت</string>
+    <string name="vt_failed">VirusTotal: ناموفق بود</string>
+    <string name="vt_checking">VirusTotal: در حال بررسی…</string>
 </resources>
