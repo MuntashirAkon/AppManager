@@ -163,4 +163,6 @@
     <string name="usage_access">사용량 접근권한</string>
     <string name="app_info">앱 정보</string>
     <string name="uninstall_app_message">앱을 삭제하시겠습니까\?</string>
+    <string name="failed_to_extract_apk_file">APK 파일을 추출할 수 없습니다</string>
+    <string name="share_apk">APK 공유</string>
 </resources>
