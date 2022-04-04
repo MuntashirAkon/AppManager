@@ -1129,4 +1129,5 @@
     <string name="regenerate_auth_key_warning">すべての外部アプリは、新しい認証キーで再設定する必要があります。本当に宜しいですか？</string>
     <string name="shortcut_icon">ショートカットアイコン</string>
     <string name="auth_manager_description">外部アプリからインテントによって起動するには、<tt>auth</tt>というフィールドを追加する必要があり、それには次のキーが含まれていなければなりません:</string>
+    <string name="sort_by_installation_date">インストール日時</string>
 </resources>
