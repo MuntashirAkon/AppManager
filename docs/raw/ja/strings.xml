@@ -462,4 +462,101 @@
 \nアプリケーションのマニフェストに記載されていれば自動的に付与される\\textit{通常}の権限もありますが、
 \n\\textit{dangerous}、\\textit{development}パーミッションはユーザーの確認が必要です。
 \nこれらのタブで使用される色については、\\cref{subsec:app-details-colour-codes}節で説明しています。</string>
+    <string name="pages$app-details-page$app-ops">\\textbf{App Ops} は、\\textbf{Application Operations}(アプリケーションの操作)の略です。
+\nAndroid 4.3以降、textit{App Ops}はAndroidシステムによってアプリ権限の大部分を制御するために使用されています。
+\n各AppOpsは、それらに関連付けられた一意の番号を持っており、それはApp Opsタブの最初の括弧内に閉じられています。
+\nまた、プライベート名を持ち、任意でパブリック名を持つことができます。
+\nいくつかのAppOpsは、\\textit{権限}とも関連付けられています。
+\nAppOpsの保護レベルは、関連付けられた権限に基づいて決定されます。
+\n\\textit{フラグ}、\\textit{権限名}、\\textit{権限の説明}、\\textit{パッケージ名}、\\textit{グループ}のような情報は、
+\n関連付けられた\\hyperref[subsubsec:permissions]{権限}から取得されます。
+\nその他の情報としては、以下のようなものがあります:
+\n\\begin{itemize}
+\n \\item \\textbf{モード} 現在の認可状態を表し、
+\nallow、deny（やや語弊がありますが、単にエラーを意味します）、
+\nignore（実際には拒否を意味します）、default（ベンダーが内部で設定したデフォルトのリストから推測されます）、
+\nforeground（新しいAndroidシステムでは、アプリケーションがフォアグラウンドで実行中のときのみAppOpsが使用できることを意味します）があります。
+\nまた、ベンダーが設定したいくつかのカスタムモード（例えば、MIUIの場合はask）があります。
+\n
+\n \\item \\textbf{使用した時間} このAppOpsが使用された時間を表します。
+\n
+\n \\item \\textbf{許可した時間} このAppOpsが最後に許可された時間を表します。
+\n
+\n \\item \\textbf{拒否した時間} このAppOpsが最後に拒否された時間を表します。
+\n\\end{itemize}
+\n
+\n\\begin{tip}{Info}
+\n このタブの内容は、ADBにてtexttt{android.permission.GET\\_APP\\_OPS\\_STATS}権限が付与されている場合、非Rootユーザーでも見ることができます。
+\n\\end{tip}
+\n
+\n各AppOpsの項目の横にトグルボタンがあり、AppOpsを許可または拒否（無視）するために使用することができます。
+\nデバイスで利用可能な他のモードを設定する必要がある場合は、項目を長押ししてください。
+\nタブに表示されていないAppOpsを追加で設定する必要がある場合は、
+\nメニューの\\textit{カスタムAppOpsを適用}オプションを使用します。
+\nまた、\\textit{デフォルトに戻す}オプションを使用して変更内容をリセットしたり、
+\nメニューの対応するオプションを使用して危険なAppOpsをすべて拒否したりすることができます。
+\nまた、AppOpsの名前と関連する一意の番号（または値）で昇順に並べ替えることもできます。
+\nまた、対応するソートオプションを使用して、拒否されたAppOpsを最初に表示することができます。
+\n
+\n\\begin{warning}{Warning}
+\nAppOpsを拒否すると、アプリケーションが誤動作することがあります。
+\nそのような場合は、\\textit{デフォルトに戻す}オプションを使用してください。
+\nAppOpsの動作の性質上、システムがそれを適用するのに時間がかかることがあります。
+\n\\end{warning}
+\n
+\n\\seealsoinline{\\hyperref[ch:app-ops]{付録: App Ops}}</string>
+    <string name="pages$app-details-page$uses-permissions">\\textbf{Uses Permissions}は、アプリケーションで使用される権限です。マニフェストで\\texttt{uses-permission}タグを使用して宣言されます。
+\n\\textit{フラグ}、\\textit{パーミッション名}、\\textit{パーミッションの説明}、\\textit{パッケージ名}、\\textit{グループ}などの情報は、
+\n関連する\\hyperref[subsubsec:permissions]{権限}から取得されます。
+\n
+\n\\textbf{RootおよびADBユーザー}は、各権限項目の右側にあるトグルボタンを使用して、
+\n\\textit{dangerous}権限と\\textit{development}権限を許可したり、取り消したりすることができます。
+\nまた、メニューの対応するオプションを使用して、危険なパーミッションを一度に取り消すこともできます。
+\nAndroidは\\textit{通常の} パーミッション（そのほとんどがそうですが）を変更することができないので、
+\nこの2種類のパーミッションのみ取り消すことができます。
+\n唯一の選択肢は、アプリケーションマニフェストを編集し、そこからこれらの権限を削除することです。
+\n
+\n\\begin{tip}{Info}
+\ndangerous権限はシステムによってデフォルトで拒否されているため、
+\nすべてのdangerous権限を取り消すことは、すべての権限をリセットすることと同じです。
+\n\\end{tip}
+\n
+\n\\begin{tip}{Notice}
+\nAPI23以前を対象としたアプリは、権限を変更することができません。
+\nそのため、そのようなアプリではパーミッションの切り替えは無効です。
+\n\\end{tip}
+\n
+\nユーザーは、権限名でソートしたり（昇順）、メニューの対応するオプションを使用して、拒否された権限や
+\ndangerous権限を最初に表示するように選択することができます。</string>
+    <string name="pages$app-details-page$signatures-tab_1">\\textbf{署名}は、実際には署名情報と呼ばれ、アプリケーションは公開する前に、
+\nアプリケーション開発者によって1つ以上の署名証明書によって署名されます。
+\nアプリケーションの完全性（そのアプリケーションが実際の開発者のものかどうか、
+\n他の人によって変更されていないかどうか）は、署名情報を使って確認できます。
+\nなぜなら、アプリケーションを第三者が変更した場合、署名情報は実際の開発者によって秘密にされているため、
+\n元の証明書を使って再び署名することができないからです。
+\nこれらの署名はチェックサムで検証することができます。チェックサムは、証明書自体から生成されます。
+\n開発者がチェックサムを提供する場合、\\textbf{署名}タブで表示されたチェックサムを照合することができます。
+\n例えば、Github、Telegramチャンネル、IzzyOnDroidのリポジトリからApp Managerをダウンロードした場合、次の\\textit{SHA256}チェックサムをこのタブに表示されるものと照合するだけで、そのアプリケーションが実際に私がリリースしたものかどうか確認することができます:</string>
+    <string name="pages$app-details-page$permissions">\\textbf{パーミッション}は通常、アプリケーション自身によって定義されるカスタム権限です。
+\n主に古いアプリケーションでは、通常の権限も含まれることがあります。そこに表示される各項目の完全な説明は次の通りです:
+\n\\begin{itemize}
+\n \\item \\textbf{権限名} 各権限は\\texttt{android.permission.INTERNET}のような一意の名前を持っており、
+\n複数のアプリケーションがその権限を要求することができます。
+\n
+\n \\item \\textbf{アイコン} 各権限は任意のアイコンを持つことができます。
+\n他の権限タブでは、アプリケーションマニフェストにアイコンが含まれていないため、アイコンを持ちません。
+\n
+\n \\item \\textbf{詳細} This optional field describes the permission. If there isn\'t any description associated
+\n with the permission, the field is not displayed.
+\n
+\n \\item \\textbf{フラグ} (Uses the flag symbol or \\textbf{Protection Level} name) This describes various permission flags such
+\n as \\textit{normal}, \\textit{development}, \\textit{dangerous}, \\textit{instant}, \\textit{granted}, \\textit{revoked},
+\n \\textit{signature}, \\textit{privileged}, etc.
+\n
+\n \\item \\textbf{パッケージ名} Denotes the package name associated with the permission, i.e.\\ the package that defined
+\n the permission.
+\n
+\n \\item \\textbf{グループ} The group name associated with the permission (if any). Newer Androids do not seem to use
+\n group names which is why you\'ll usually see \\texttt{android.permission-group.UNDEFINED} or no group name at all.
+\n\\end{itemize}</string>
 </resources>
