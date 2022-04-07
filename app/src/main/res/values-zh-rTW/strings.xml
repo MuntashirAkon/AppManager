@@ -1119,9 +1119,9 @@
     <string name="cpu_percent">%% CPU</string>
     <string name="swap">SWAP</string>
     <string name="cpu_time">CPU時間</string>
-    <string name="pref_saved_apk_name_format">儲存APK名稱格式</string>
-    <string name="pref_saved_apk_name_format_msg">保存時用於命名 APK 文件的格式。</string>
-    <string name="auth_manager_description">要從外部應用程序啟動 Intent，需要提供一個名為 <tt>auth</tt> 的額外字段，且必須包含以下鍵：</string>
+    <string name="pref_saved_apk_name_format">儲存的 APK 名稱格式</string>
+    <string name="pref_saved_apk_name_format_msg">儲存 APK 檔案時用於命名這些檔案的格式。</string>
+    <string name="auth_manager_description">要從外部應用程式啟動 Intent，需要提供一個名為 <tt>auth</tt> 的額外字段，且必須包含以下鍵：</string>
     <string name="auth_manager_title">授權管理</string>
     <string name="regenerate_auth_key">重新產生授權密鑰</string>
     <string name="regenerate_auth_key_warning">您確定嗎？所有第三方應用必須使用新的授權密鑰。</string>
