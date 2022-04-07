@@ -141,7 +141,7 @@ public class AppInfoViewModel extends AndroidViewModel {
             }
             int privateFlags = ApplicationInfoCompat.getPrivateFlags(applicationInfo);
             tagCloud.isAppHidden = (privateFlags & ApplicationInfoCompat.PRIVATE_FLAG_HIDDEN) != 0;
-            tagCloud.magiskHiddenProcesses = new ArrayList<>(MagiskHide.getProcesses(packageInfo));
+            tagCloud.magiskHiddenProcesses = MagiskHide.getProcesses(packageInfo);
             boolean magiskHideEnabled = false;
             for (MagiskProcess magiskProcess : tagCloud.magiskHiddenProcesses) {
                 magiskHideEnabled |= magiskProcess.isEnabled();
@@ -152,7 +152,7 @@ public class AppInfoViewModel extends AndroidViewModel {
                 }
             }
             tagCloud.isMagiskHideEnabled = !mainModel.getIsExternalApk() && magiskHideEnabled;
-            tagCloud.magiskDeniedProcesses = new ArrayList<>(MagiskDenyList.getProcesses(packageInfo));
+            tagCloud.magiskDeniedProcesses = MagiskDenyList.getProcesses(packageInfo);
             boolean magiskDenyListEnabled = false;
             for (MagiskProcess magiskProcess : tagCloud.magiskDeniedProcesses) {
                 magiskDenyListEnabled |= magiskProcess.isEnabled();

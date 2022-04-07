@@ -20,6 +20,7 @@ import java.util.List;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
+import io.github.muntashirakon.AppManager.magisk.MagiskProcess;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.struct.AppOpRule;
 import io.github.muntashirakon.AppManager.rules.struct.BatteryOptimizationRule;
@@ -146,12 +147,12 @@ public class RulesStorageManager implements Closeable {
         addUniqueEntry(new NotificationListenerRule(packageName, name, isGranted));
     }
 
-    public void setMagiskHide(String processName, boolean hidden) {
-        addUniqueEntry(new MagiskHideRule(packageName, processName, hidden));
+    public void setMagiskHide(@NonNull MagiskProcess magiskProcess) {
+        addUniqueEntry(new MagiskHideRule(magiskProcess));
     }
 
-    public void setMagiskDenyList(String processName, boolean denied) {
-        addUniqueEntry(new MagiskDenyListRule(packageName, processName, denied));
+    public void setMagiskDenyList(MagiskProcess magiskProcess) {
+        addUniqueEntry(new MagiskDenyListRule(magiskProcess));
     }
 
     public void setBatteryOptimization(boolean willOptimize) {

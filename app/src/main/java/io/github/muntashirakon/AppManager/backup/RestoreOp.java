@@ -540,28 +540,15 @@ class RestoreOp implements Closeable {
                     case MAGISK_HIDE: {
                         MagiskHideRule magiskHideRule = (MagiskHideRule) entry;
                         if (magiskHideAvailable) {
-                            if (magiskHideRule.isHidden()) {
-                                MagiskHide.add(packageName, magiskHideRule.getProcessName());
-                            } else {
-                                MagiskHide.remove(packageName, magiskHideRule.getProcessName());
-                            }
+                            MagiskHide.apply(magiskHideRule.getMagiskProcess());
                         } else {
                             // Fall-back to Magisk DenyList
-                            if (magiskHideRule.isHidden()) {
-                                MagiskDenyList.add(packageName, magiskHideRule.getProcessName());
-                            } else {
-                                MagiskDenyList.remove(packageName, magiskHideRule.getProcessName());
-                            }
+                            MagiskDenyList.apply(magiskHideRule.getMagiskProcess());
                         }
                         break;
                     }
                     case MAGISK_DENY_LIST: {
-                        MagiskDenyListRule magiskDenyListRule = (MagiskDenyListRule) entry;
-                        if (magiskDenyListRule.isDenied()) {
-                            MagiskDenyList.add(packageName, magiskDenyListRule.getProcessName());
-                        } else {
-                            MagiskDenyList.remove(packageName, magiskDenyListRule.getProcessName());
-                        }
+                        MagiskDenyList.apply(((MagiskDenyListRule) entry).getMagiskProcess());
                         break;
                     }
                     case NOTIFICATION:

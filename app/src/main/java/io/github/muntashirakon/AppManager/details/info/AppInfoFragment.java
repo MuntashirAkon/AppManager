@@ -805,56 +805,57 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @UiThread
     private void displayMagiskHideDialog() {
-        if (magiskHiddenProcesses == null || magiskHiddenProcesses.isEmpty()) {
-            return;
-        }
-        boolean[] choices = new boolean[magiskHiddenProcesses.size()];
-        CharSequence[] processes = new CharSequence[magiskHiddenProcesses.size()];
-        int i = 0;
-        for (MagiskProcess mp : magiskHiddenProcesses) {
-            SpannableStringBuilder sb = new SpannableStringBuilder(UIUtils.getPrimaryText(mActivity, mp.name));
-            if (mp.isIsolatedProcess()) {
-                sb.append("\n").append(UIUtils.getSecondaryText(mActivity, getString(R.string.isolated)));
-                if (mp.isRunning()) {
-                    sb.append(", ").append(UIUtils.getSecondaryText(mActivity, getString(R.string.running)));
+        SearchableMultiChoiceDialogBuilder<MagiskProcess> builder;
+        builder = getMagiskProcessDialog(magiskHiddenProcesses, (dialog, which, mp, isChecked) -> executor.submit(() -> {
+            mp.setEnabled(isChecked);
+            if (MagiskHide.apply(mp)) {
+                try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mPackageName, mainModel.getUserHandle())) {
+                    cb.setMagiskHide(mp);
+                    runOnUiThread(this::refreshDetails);
                 }
-            } else if (mp.isRunning()) {
-                sb.append("\n").append(UIUtils.getSecondaryText(mActivity, getString(R.string.running)));
+            } else {
+                mp.setEnabled(!isChecked);
+                runOnUiThread(() -> displayLongToast(isChecked ? R.string.failed_to_enable_magisk_hide
+                        : R.string.failed_to_disable_magisk_hide));
             }
-            processes[i] = UIUtils.getSmallerText(sb);
-            choices[i] = mp.isEnabled();
-            i++;
+        }));
+        if (builder != null) {
+            builder.setTitle(R.string.magisk_hide_enabled).show();
         }
-        new MaterialAlertDialogBuilder(mActivity)
-                .setTitle(R.string.magisk_hide_enabled)
-                .setMultiChoiceItems(processes, choices, (dialog, which, isChecked) -> executor.submit(() -> {
-                    MagiskProcess mp = magiskHiddenProcesses.get(which);
-                    mp.setEnabled(isChecked);
-                    if (MagiskHide.apply(mp)) {
-                        choices[which] = isChecked;
-                        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mPackageName, mainModel.getUserHandle())) {
-                            cb.setMagiskHide(mp.name, isChecked);
-                            runOnUiThread(this::refreshDetails);
-                        }
-                    } else {
-                        mp.setEnabled(!isChecked);
-                        runOnUiThread(() -> displayLongToast(isChecked ? R.string.failed_to_enable_magisk_hide
-                                : R.string.failed_to_disable_magisk_hide));
-                    }
-                }))
-                .setNegativeButton(R.string.close, null)
-                .show();
     }
 
     @UiThread
     private void displayMagiskDenyListDialog() {
-        if (magiskDeniedProcesses == null || magiskDeniedProcesses.isEmpty()) {
-            return;
+        SearchableMultiChoiceDialogBuilder<MagiskProcess> builder;
+        builder = getMagiskProcessDialog(magiskDeniedProcesses, (dialog, which, mp, isChecked) -> executor.submit(() -> {
+            mp.setEnabled(isChecked);
+            if (MagiskDenyList.apply(mp)) {
+                try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mPackageName, mainModel.getUserHandle())) {
+                    cb.setMagiskDenyList(mp);
+                    runOnUiThread(this::refreshDetails);
+                }
+            } else {
+                mp.setEnabled(!isChecked);
+                runOnUiThread(() -> displayLongToast(isChecked ? R.string.failed_to_enable_magisk_deny_list
+                        : R.string.failed_to_disable_magisk_deny_list));
+            }
+        }));
+        if (builder != null) {
+            builder.setTitle(R.string.magisk_denylist).show();
         }
-        boolean[] choices = new boolean[magiskDeniedProcesses.size()];
-        CharSequence[] processes = new CharSequence[magiskDeniedProcesses.size()];
+    }
+
+    @Nullable
+    public SearchableMultiChoiceDialogBuilder<MagiskProcess> getMagiskProcessDialog(
+            @Nullable List<MagiskProcess> magiskProcesses,
+            SearchableMultiChoiceDialogBuilder.OnMultiChoiceClickListener<MagiskProcess> multiChoiceClickListener) {
+        if (magiskProcesses == null || magiskProcesses.isEmpty()) {
+            return null;
+        }
+        List<Integer> selectedIndexes = new ArrayList<>();
+        CharSequence[] processes = new CharSequence[magiskProcesses.size()];
         int i = 0;
-        for (MagiskProcess mp : magiskDeniedProcesses) {
+        for (MagiskProcess mp : magiskProcesses) {
             SpannableStringBuilder sb = new SpannableStringBuilder(UIUtils.getPrimaryText(mActivity, mp.name));
             if (mp.isIsolatedProcess()) {
                 sb.append("\n").append(UIUtils.getSecondaryText(mActivity, getString(R.string.isolated)));
@@ -865,28 +866,16 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 sb.append("\n").append(UIUtils.getSecondaryText(mActivity, getString(R.string.running)));
             }
             processes[i] = UIUtils.getSmallerText(sb);
-            choices[i] = mp.isEnabled();
+            if (mp.isEnabled()) {
+                selectedIndexes.add(i);
+            }
             i++;
         }
-        new MaterialAlertDialogBuilder(mActivity)
-                .setTitle(R.string.magisk_denylist)
-                .setMultiChoiceItems(processes, choices, (dialog, which, isChecked) -> executor.submit(() -> {
-                    MagiskProcess mp = magiskDeniedProcesses.get(which);
-                    mp.setEnabled(isChecked);
-                    if (MagiskDenyList.apply(mp)) {
-                        choices[which] = isChecked;
-                        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mPackageName, mainModel.getUserHandle())) {
-                            cb.setMagiskDenyList(mp.name, isChecked);
-                            runOnUiThread(this::refreshDetails);
-                        }
-                    } else {
-                        mp.setEnabled(!isChecked);
-                        runOnUiThread(() -> displayLongToast(isChecked ? R.string.failed_to_enable_magisk_deny_list
-                                : R.string.failed_to_disable_magisk_deny_list));
-                    }
-                }))
-                .setNegativeButton(R.string.close, null)
-                .show();
+        return new SearchableMultiChoiceDialogBuilder<>(mActivity, magiskProcesses, processes)
+                .addSelections(ArrayUtils.convertToIntArray(selectedIndexes))
+                .setTextSelectable(true)
+                .setOnMultiChoiceClickListener(multiChoiceClickListener)
+                .setNegativeButton(R.string.close, null);
     }
 
     private void setHorizontalActions() {

@@ -41,6 +41,7 @@ import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.magisk.MagiskDenyList;
 import io.github.muntashirakon.AppManager.magisk.MagiskHide;
+import io.github.muntashirakon.AppManager.magisk.MagiskProcess;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.rules.PseudoRules;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
@@ -391,14 +392,18 @@ class BackupOp implements Closeable {
             rules.setAppOp(entry.getOp(), entry.getMode());
         }
         // Backup MagiskHide data
-        Collection<String> magiskHiddenProcesses = MagiskHide.getProcesses(mPackageName);
-        for (String processName : magiskHiddenProcesses) {
-            rules.setMagiskHide(processName, true);
+        Collection<MagiskProcess> magiskHiddenProcesses = MagiskHide.getProcesses(mPackageInfo);
+        for (MagiskProcess magiskProcess : magiskHiddenProcesses) {
+            if (magiskProcess.isEnabled()) {
+                rules.setMagiskHide(magiskProcess);
+            }
         }
         // Backup Magisk DenyList data
-        Collection<String> magiskDeniedProcesses = MagiskDenyList.getProcesses(mPackageName);
-        for (String processName : magiskDeniedProcesses) {
-            rules.setMagiskDenyList(processName, true);
+        Collection<MagiskProcess> magiskDeniedProcesses = MagiskDenyList.getProcesses(mPackageInfo);
+        for (MagiskProcess magiskProcess : magiskDeniedProcesses) {
+            if (magiskProcess.isEnabled()) {
+                rules.setMagiskDenyList(magiskProcess);
+            }
         }
         // Backup allowed notification listeners aka BIND_NOTIFICATION_LISTENER_SERVICE
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {

@@ -8,9 +8,12 @@ import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
 
 import java.util.Collection;
+import java.util.List;
 
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.settings.Ops;
+
+import static io.github.muntashirakon.AppManager.magisk.MagiskUtils.ISOLATED_MAGIC;
 
 @AnyThread
 public class MagiskDenyList {
@@ -37,10 +40,12 @@ public class MagiskDenyList {
     }
 
     public static boolean apply(@NonNull MagiskProcess magiskProcess) {
+        String packageName = magiskProcess.isIsolatedProcess() && !magiskProcess.isAppZygote() ? ISOLATED_MAGIC
+                : magiskProcess.packageName;
         if (magiskProcess.isEnabled()) {
-            return add(magiskProcess.packageName, magiskProcess.name);
+            return add(packageName, magiskProcess.name);
         }
-        return remove(magiskProcess.packageName, magiskProcess.name);
+        return remove(packageName, magiskProcess.name);
     }
 
     public static boolean add(String packageName, String processName) {
@@ -56,13 +61,13 @@ public class MagiskDenyList {
     }
 
     @NonNull
-    public static Collection<MagiskProcess> getProcesses(@NonNull PackageInfo packageInfo) {
+    public static List<MagiskProcess> getProcesses(@NonNull PackageInfo packageInfo) {
         return MagiskUtils.getProcesses(packageInfo, getProcesses(packageInfo.packageName));
     }
 
     @NonNull
     public static Collection<String> getProcesses(@NonNull String packageName) {
-        Runner.Result result = Runner.runCommand("magisk --denylist ls | grep " + packageName);
+        Runner.Result result = Runner.runCommand("magisk --denylist ls");
         return MagiskUtils.parseProcesses(packageName, result);
     }
 

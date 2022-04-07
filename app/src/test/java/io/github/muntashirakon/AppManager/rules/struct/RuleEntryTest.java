@@ -5,9 +5,11 @@ package io.github.muntashirakon.AppManager.rules.struct;
 import org.junit.Test;
 
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
+import io.github.muntashirakon.AppManager.magisk.MagiskProcess;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class RuleEntryTest {
     private static final String PACKAGE_NAME = "sample.package";
@@ -60,16 +62,40 @@ public class RuleEntryTest {
 
     @Test
     public void flattenMagiskHideToString() {
-        RuleEntry rule = new MagiskHideRule(PACKAGE_NAME, "pkg:process", true);
-        assertEquals(PACKAGE_NAME + "\tpkg:process\tMAGISK_HIDE\ttrue", rule.flattenToString(true));
-        assertEquals("pkg:process\tMAGISK_HIDE\ttrue", rule.flattenToString(false));
+        MagiskProcess mp = new MagiskProcess(PACKAGE_NAME, "pkg:process");
+        mp.setEnabled(true);
+        RuleEntry rule = new MagiskHideRule(mp);
+        assertEquals(PACKAGE_NAME + "\tpkg:process\tMAGISK_HIDE\ttrue\tfalse", rule.flattenToString(true));
+        assertEquals("pkg:process\tMAGISK_HIDE\ttrue\tfalse", rule.flattenToString(false));
+    }
+
+    @Test
+    public void flattenMagiskHideIsolatedToString() {
+        MagiskProcess mp = new MagiskProcess(PACKAGE_NAME, "pkg:process");
+        mp.setEnabled(true);
+        mp.setIsolatedProcess(true);
+        RuleEntry rule = new MagiskHideRule(mp);
+        assertEquals(PACKAGE_NAME + "\tpkg:process\tMAGISK_HIDE\ttrue\ttrue", rule.flattenToString(true));
+        assertEquals("pkg:process\tMAGISK_HIDE\ttrue\ttrue", rule.flattenToString(false));
     }
 
     @Test
     public void flattenMagiskDenyListToString() {
-        RuleEntry rule = new MagiskDenyListRule(PACKAGE_NAME, "pkg:process", true);
-        assertEquals(PACKAGE_NAME + "\tpkg:process\tMAGISK_DENY_LIST\ttrue", rule.flattenToString(true));
-        assertEquals("pkg:process\tMAGISK_DENY_LIST\ttrue", rule.flattenToString(false));
+        MagiskProcess mp = new MagiskProcess(PACKAGE_NAME, "pkg:process");
+        mp.setEnabled(true);
+        RuleEntry rule = new MagiskDenyListRule(mp);
+        assertEquals(PACKAGE_NAME + "\tpkg:process\tMAGISK_DENY_LIST\ttrue\tfalse", rule.flattenToString(true));
+        assertEquals("pkg:process\tMAGISK_DENY_LIST\ttrue\tfalse", rule.flattenToString(false));
+    }
+
+    @Test
+    public void flattenMagiskDenyListIsolatedToString() {
+        MagiskProcess mp = new MagiskProcess(PACKAGE_NAME, "pkg:process");
+        mp.setEnabled(true);
+        mp.setIsolatedProcess(true);
+        RuleEntry rule = new MagiskDenyListRule(mp);
+        assertEquals(PACKAGE_NAME + "\tpkg:process\tMAGISK_DENY_LIST\ttrue\ttrue", rule.flattenToString(true));
+        assertEquals("pkg:process\tMAGISK_DENY_LIST\ttrue\ttrue", rule.flattenToString(false));
     }
 
     @Test
@@ -170,8 +196,9 @@ public class RuleEntryTest {
 
     @Test
     public void unflattenMagiskHideFromStringOld() {
-        RuleEntry rule = new MagiskHideRule(PACKAGE_NAME, PACKAGE_NAME, true);
-        // Old
+        MagiskProcess mp = new MagiskProcess(PACKAGE_NAME, PACKAGE_NAME);
+        mp.setEnabled(true);
+        RuleEntry rule = new MagiskHideRule(mp);
         assertEquals(RuleEntry.unflattenFromString(null, PACKAGE_NAME + "\tSTUB\tMAGISK_HIDE\ttrue", true), rule);
         assertEquals(RuleEntry.unflattenFromString(PACKAGE_NAME, PACKAGE_NAME + "\tSTUB\tMAGISK_HIDE\ttrue", true), rule);
         assertEquals(RuleEntry.unflattenFromString(PACKAGE_NAME, "STUB\tMAGISK_HIDE\ttrue", false), rule);
@@ -179,18 +206,60 @@ public class RuleEntryTest {
 
     @Test
     public void unflattenMagiskHideFromStringNew() {
-        RuleEntry rule = new MagiskHideRule(PACKAGE_NAME, "pkg:process", true);
+        MagiskProcess mp = new MagiskProcess(PACKAGE_NAME, "pkg:process");
+        mp.setEnabled(true);
+        RuleEntry rule = new MagiskHideRule(mp);
         assertEquals(RuleEntry.unflattenFromString(null, PACKAGE_NAME + "\tpkg:process\tMAGISK_HIDE\ttrue", true), rule);
         assertEquals(RuleEntry.unflattenFromString(PACKAGE_NAME, PACKAGE_NAME + "\tpkg:process\tMAGISK_HIDE\ttrue", true), rule);
         assertEquals(RuleEntry.unflattenFromString(PACKAGE_NAME, "pkg:process\tMAGISK_HIDE\ttrue", false), rule);
     }
 
     @Test
+    public void unflattenMagiskHideIsolatedFromString() {
+        MagiskProcess mp = new MagiskProcess(PACKAGE_NAME, "pkg:process");
+        mp.setEnabled(true);
+        mp.setIsolatedProcess(true);
+        RuleEntry rule = new MagiskHideRule(mp);
+        assertEquals(RuleEntry.unflattenFromString(null, PACKAGE_NAME + "\tpkg:process\tMAGISK_HIDE\ttrue\ttrue", true), rule);
+        assertEquals(RuleEntry.unflattenFromString(PACKAGE_NAME, PACKAGE_NAME + "\tpkg:process\tMAGISK_HIDE\ttrue\ttrue", true), rule);
+        assertEquals(RuleEntry.unflattenFromString(PACKAGE_NAME, "pkg:process\tMAGISK_HIDE\ttrue\ttrue", false), rule);
+    }
+
+    @Test
     public void unflattenMagiskDenyListFromString() {
-        RuleEntry rule = new MagiskDenyListRule(PACKAGE_NAME, "pkg:process", true);
+        MagiskProcess mp = new MagiskProcess(PACKAGE_NAME, "pkg:process");
+        mp.setEnabled(true);
+        RuleEntry rule = new MagiskDenyListRule(mp);
         assertEquals(RuleEntry.unflattenFromString(null, PACKAGE_NAME + "\tpkg:process\tMAGISK_DENY_LIST\ttrue", true), rule);
         assertEquals(RuleEntry.unflattenFromString(PACKAGE_NAME, PACKAGE_NAME + "\tpkg:process\tMAGISK_DENY_LIST\ttrue", true), rule);
         assertEquals(RuleEntry.unflattenFromString(PACKAGE_NAME, "pkg:process\tMAGISK_DENY_LIST\ttrue", false), rule);
+    }
+
+    @Test
+    public void unflattenMagiskDenyListIsolatedFromString() {
+        MagiskProcess mp = new MagiskProcess(PACKAGE_NAME, "pkg:process");
+        mp.setEnabled(true);
+        mp.setIsolatedProcess(true);
+        RuleEntry rule = new MagiskDenyListRule(mp);
+        assertEquals(RuleEntry.unflattenFromString(null, PACKAGE_NAME + "\tpkg:process\tMAGISK_DENY_LIST\ttrue\ttrue", true), rule);
+        assertEquals(RuleEntry.unflattenFromString(PACKAGE_NAME, PACKAGE_NAME + "\tpkg:process\tMAGISK_DENY_LIST\ttrue\ttrue", true), rule);
+        assertEquals(RuleEntry.unflattenFromString(PACKAGE_NAME, "pkg:process\tMAGISK_DENY_LIST\ttrue\ttrue", false), rule);
+    }
+
+    @Test
+    public void unflattenMagiskDenyListZygoteFromString() {
+        String processName = PACKAGE_NAME + "_zygote";
+        MagiskProcess mp = new MagiskProcess(PACKAGE_NAME, processName);
+        mp.setEnabled(true);
+        mp.setIsolatedProcess(true);
+        mp.setAppZygote(true);
+        RuleEntry rule = new MagiskDenyListRule(mp);
+        MagiskDenyListRule parsedRule = (MagiskDenyListRule) RuleEntry.unflattenFromString(null, PACKAGE_NAME + "\t" + processName + "\tMAGISK_DENY_LIST\ttrue\ttrue", true);
+        // Check if it automatically detects zygote process
+        assertTrue(parsedRule.getMagiskProcess().isAppZygote());
+        assertEquals(parsedRule, rule);
+        assertEquals(RuleEntry.unflattenFromString(PACKAGE_NAME, PACKAGE_NAME + "\t" + processName + "\tMAGISK_DENY_LIST\ttrue\ttrue", true), rule);
+        assertEquals(RuleEntry.unflattenFromString(PACKAGE_NAME, processName + "\tMAGISK_DENY_LIST\ttrue\ttrue", false), rule);
     }
 
     @Test

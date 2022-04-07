@@ -2,9 +2,11 @@
 
 package io.github.muntashirakon.AppManager.magisk;
 
+import android.content.pm.ApplicationInfo;
 import android.content.pm.ComponentInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.ServiceInfo;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,6 +29,8 @@ public class MagiskUtils {
     // FIXME(20/9/20): This isn't always true, see check_data in util_functions.sh
     public static final String NVBASE = "/data/adb";
     private static boolean bootMode = false;
+
+    public static final String ISOLATED_MAGIC = "isolated";
 
     private static final String[] SCAN_PATHS = new String[]{
             "/system/app", "/system/priv-app", "/system/product/app", "/system/product/priv-app"
@@ -109,9 +113,10 @@ public class MagiskUtils {
     }
 
     @NonNull
-    static Collection<MagiskProcess> getProcesses(@NonNull PackageInfo packageInfo,
+    static List<MagiskProcess> getProcesses(@NonNull PackageInfo packageInfo,
                                                   @NonNull Collection<String> enabledProcesses) {
         String packageName = packageInfo.packageName;
+        ApplicationInfo applicationInfo = packageInfo.applicationInfo;
         Map<String, MagiskProcess> processNameProcessMap = new HashMap<>();
         {
             // Add default process
@@ -122,42 +127,71 @@ public class MagiskUtils {
         // Add other processes: order must be preserved
         if (packageInfo.services != null) {
             for (ServiceInfo info : packageInfo.services) {
-                if (!packageName.equals(info.processName) && processNameProcessMap.get(info.processName) == null) {
-                    MagiskProcess mp = new MagiskProcess(packageName, info.processName);
-                    mp.setEnabled(enabledProcesses.contains(info.processName));
-                    mp.setIsolatedProcess((info.flags & ServiceInfo.FLAG_ISOLATED_PROCESS) != 0);
-                    processNameProcessMap.put(info.processName, mp);
+                if ((info.flags & ServiceInfo.FLAG_ISOLATED_PROCESS) != 0) {
+                    // Isolated process
+                    if ((info.flags & ServiceInfo.FLAG_USE_APP_ZYGOTE) != 0) {
+                        // Uses app zygote
+                        String processName = (applicationInfo.processName == null ? applicationInfo.packageName : applicationInfo.processName) + "_zygote";
+                        if (processNameProcessMap.get(processName) == null) {
+                            MagiskProcess mp = new MagiskProcess(packageName, processName);
+                            mp.setEnabled(enabledProcesses.contains(processName));
+                            mp.setIsolatedProcess(true);
+                            mp.setAppZygote(true);
+                            processNameProcessMap.put(processName, mp);
+                        }
+                    } else {
+                        String processName = getProcessName(applicationInfo, info)
+                                + (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q ? (":" + packageName) : "");
+                        if (processNameProcessMap.get(processName) == null) {
+                            MagiskProcess mp = new MagiskProcess(packageName, processName);
+                            mp.setEnabled(enabledProcesses.contains(processName));
+                            mp.setIsolatedProcess(true);
+                            processNameProcessMap.put(processName, mp);
+                        }
+                    }
+                } else {
+                    String processName = getProcessName(applicationInfo, info);
+                    if (processNameProcessMap.get(processName) == null) {
+                        MagiskProcess mp = new MagiskProcess(packageName, processName);
+                        mp.setEnabled(enabledProcesses.contains(processName));
+                        processNameProcessMap.put(processName, mp);
+                    }
                 }
             }
         }
         if (packageInfo.activities != null) {
             for (ComponentInfo info : packageInfo.activities) {
-                if (!packageName.equals(info.processName) && processNameProcessMap.get(info.processName) == null) {
-                    MagiskProcess mp = new MagiskProcess(packageName, info.processName);
-                    mp.setEnabled(enabledProcesses.contains(info.processName));
-                    processNameProcessMap.put(info.processName, mp);
+                String processName = getProcessName(applicationInfo, info);
+                if (processNameProcessMap.get(processName) == null) {
+                    MagiskProcess mp = new MagiskProcess(packageName, processName);
+                    mp.setEnabled(enabledProcesses.contains(processName));
+                    processNameProcessMap.put(processName, mp);
                 }
             }
         }
         if (packageInfo.providers != null) {
             for (ComponentInfo info : packageInfo.providers) {
-                if (!packageName.equals(info.processName) && processNameProcessMap.get(info.processName) == null) {
-                    MagiskProcess mp = new MagiskProcess(packageName, info.processName);
-                    mp.setEnabled(enabledProcesses.contains(info.processName));
-                    processNameProcessMap.put(info.processName, mp);
+                String processName = getProcessName(applicationInfo, info);
+                if (processNameProcessMap.get(processName) == null) {
+                    MagiskProcess mp = new MagiskProcess(packageName, processName);
+                    mp.setEnabled(enabledProcesses.contains(processName));
+                    processNameProcessMap.put(processName, mp);
                 }
             }
         }
         if (packageInfo.receivers != null) {
             for (ComponentInfo info : packageInfo.receivers) {
-                if (!packageName.equals(info.processName) && processNameProcessMap.get(info.processName) == null) {
-                    MagiskProcess mp = new MagiskProcess(packageName, info.processName);
-                    mp.setEnabled(enabledProcesses.contains(info.processName));
-                    processNameProcessMap.put(info.processName, mp);
+                String processName = getProcessName(applicationInfo, info);
+                if (processNameProcessMap.get(processName) == null) {
+                    MagiskProcess mp = new MagiskProcess(packageName, processName);
+                    mp.setEnabled(enabledProcesses.contains(processName));
+                    processNameProcessMap.put(processName, mp);
                 }
             }
         }
-        return processNameProcessMap.values();
+        List<MagiskProcess> magiskProcesses = new ArrayList<>(processNameProcessMap.values());
+        Collections.sort(magiskProcesses, (o1, o2) -> o1.name.compareToIgnoreCase(o2.name));
+        return magiskProcesses;
     }
 
     @NonNull
@@ -175,12 +209,19 @@ public class MagiskUtils {
                     processes.add(packageName);
                 } // else mismatch due to greedy algorithm
             } else if (splits.length == 2) {
-                // New-style output
-                if (splits[0].equals(packageName)) {
+                // New style output
+                if (splits[0].equals(packageName) || splits[0].equals(ISOLATED_MAGIC)) {
                     processes.add(splits[1]);
                 } // else mismatch due to greedy algorithm
             } // else unknown match
         }
         return processes;
+    }
+
+    @NonNull
+    private static String getProcessName(@NonNull ApplicationInfo applicationInfo, @NonNull ComponentInfo info) {
+        // Priority: component process name > application process name > package name
+        return info.processName != null ? info.processName : (applicationInfo.processName != null
+                ? applicationInfo.processName : applicationInfo.packageName);
     }
 }

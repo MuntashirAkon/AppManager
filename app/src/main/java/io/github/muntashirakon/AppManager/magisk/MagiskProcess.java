@@ -15,6 +15,7 @@ public class MagiskProcess {
     private boolean mIsolatedProcess;
     private boolean mIsRunning;
     private boolean mIsEnabled;
+    private boolean mIsAppZygote;
 
     public MagiskProcess(@NonNull String packageName, @NonNull String name) {
         this.packageName = packageName;
@@ -24,6 +25,15 @@ public class MagiskProcess {
     public MagiskProcess(@NonNull String packageName) {
         this.packageName = packageName;
         this.name = packageName;
+    }
+
+    public MagiskProcess(@NonNull MagiskProcess magiskProcess) {
+        packageName = magiskProcess.packageName;
+        name = magiskProcess.name;
+        mIsolatedProcess = magiskProcess.mIsolatedProcess;
+        mIsRunning = magiskProcess.mIsRunning;
+        mIsEnabled = magiskProcess.mIsEnabled;
+        mIsAppZygote = magiskProcess.mIsAppZygote;
     }
 
     public void setEnabled(boolean enabled) {
@@ -48,6 +58,14 @@ public class MagiskProcess {
 
     public boolean isRunning() {
         return mIsRunning;
+    }
+
+    public void setAppZygote(boolean appZygote) {
+        mIsAppZygote = appZygote;
+    }
+
+    public boolean isAppZygote() {
+        return mIsAppZygote;
     }
 
     @Override

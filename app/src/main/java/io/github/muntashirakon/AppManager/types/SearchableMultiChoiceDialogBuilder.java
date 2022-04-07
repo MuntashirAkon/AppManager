@@ -51,6 +51,7 @@ public class SearchableMultiChoiceDialogBuilder<T> {
     private AlertDialog dialog;
     @Nullable
     private OnMultiChoiceClickListener<T> onMultiChoiceClickListener;
+    private boolean isTextSelectable;
 
     public interface OnClickListener<T> {
         void onClick(DialogInterface dialog, int which, @NonNull ArrayList<T> selectedItems);
@@ -141,6 +142,11 @@ public class SearchableMultiChoiceDialogBuilder<T> {
 
     public SearchableMultiChoiceDialogBuilder<T> reloadListUi() {
         adapter.notifyDataSetChanged();
+        return this;
+    }
+
+    public SearchableMultiChoiceDialogBuilder<T> setTextSelectable(boolean textSelectable) {
+        this.isTextSelectable = textSelectable;
         return this;
     }
 
@@ -322,8 +328,17 @@ public class SearchableMultiChoiceDialogBuilder<T> {
         void selectAll() {
             synchronized (selectedItems) {
                 synchronized (filteredItems) {
-                    selectedItems.addAll(filteredItems);
+                    List<Integer> newSelections = new ArrayList<>();
+                    for (int index : filteredItems) {
+                        if (!selectedItems.contains(index)) {
+                            newSelections.add(index);
+                        }
+                    }
+                    selectedItems.addAll(newSelections);
                     checkSelections();
+                    for (int index : newSelections) {
+                        triggerMultiChoiceClickListener(index, true);
+                    }
                     notifyDataSetChanged();
                 }
             }
@@ -332,9 +347,18 @@ public class SearchableMultiChoiceDialogBuilder<T> {
         void deselectAll() {
             synchronized (selectedItems) {
                 synchronized (filteredItems) {
+                    List<Integer> oldSelections = new ArrayList<>();
+                    for (int index : filteredItems) {
+                        if (selectedItems.contains(index)) {
+                            oldSelections.add(index);
+                        }
+                    }
                     //noinspection SlowAbstractSetRemoveAll
-                    selectedItems.removeAll(filteredItems);
+                    selectedItems.removeAll(oldSelections);
                     checkSelections();
+                    for (int index : oldSelections) {
+                        triggerMultiChoiceClickListener(index, false);
+                    }
                     notifyDataSetChanged();
                 }
             }
@@ -367,6 +391,7 @@ public class SearchableMultiChoiceDialogBuilder<T> {
                 selected = new AtomicBoolean(selectedItems.contains(index));
             }
             holder.item.setText(itemNames.get(index));
+            holder.item.setTextIsSelectable(isTextSelectable);
             holder.item.setChecked(selected.get());
             holder.item.setOnClickListener(v -> {
                 synchronized (selectedItems) {
