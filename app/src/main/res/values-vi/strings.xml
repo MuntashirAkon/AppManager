@@ -18,7 +18,7 @@
     <string name="receivers">Người nhận</string>
     <string name="no_activities">Không có hoạt động</string>
     <string name="refresh">Làm mới</string>
-    <string name="launch">Phóng</string>
+    <string name="launch">Khởi chạy</string>
     <string name="activities">Hoạt động</string>
     <string name="require_no_permission">Không cần sự cho phép</string>
     <string name="permissions">Sử dụng quyền</string>
@@ -1128,4 +1128,12 @@
     <string name="shortcut_icon">Biểu tượng lối tắt</string>
     <string name="pref_saved_apk_name_format_msg">Định dạng được sử dụng để đặt tên tệp APK khi bạn lưu chúng.</string>
     <string name="regenerate_auth_key_warning">Bạn có chắc không\? Tất cả ứng dụng bên thứ ba phải được thiết lập lại bằng mã ủy quyền mới.</string>
+    <string name="sort_by_installation_date">Thời gian cài đặt</string>
+    <string name="backup_volume_unavailable_warning">Ổ đĩa sao lưu đã chọn hiện không khả dụng. Nếu nó nằm trong bộ nhớ ngoài, vui lòng lắp nó vào hoặc thay đổi ổ đĩa sao lưu.</string>
+    <string name="change_backup_volume">Thay đổi ổ đĩa</string>
+    <string name="external">Ngoài</string>
+    <string name="internal">Trong</string>
+    <string name="input_ssaid_instruction">SSAID là số thập lục phân %1$d byte, tức là một chuỗi có độ dài %2$d chứa 0 đến 9 và a đến f.</string>
+    <string name="screen_time">Thời gian sử dụng Màn hình</string>
+    <string name="tracker">Trình theo dõi</string>
 </resources>
