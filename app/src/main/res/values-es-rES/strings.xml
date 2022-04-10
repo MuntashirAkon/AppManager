@@ -1168,4 +1168,11 @@
     <string name="pref_saved_apk_name_format_msg">El formato que se utilizará para nombrar los archivos APK cuando los guarde.</string>
     <string name="regenerate_auth_key_warning">¿Está seguro\? Todas las aplicaciones de terceros tienen que ser reconfiguradas con la nueva clave de autorización.</string>
     <string name="sort_by_installation_date">Fecha de instalación</string>
+    <string name="backup_volume_unavailable_warning">El volumen de copia de seguridad seleccionado no está disponible. Si está ubicado en un almacenamiento externo, por favor conéctelo, o cambie el nombre del volumen.</string>
+    <string name="input_ssaid_instruction">SSAID es un número hexadecimal, cuyo tamaño en bytes es de %1$d, por ejemplo, una cadena de texto de tamaño %2$d, que contiene números del 0 al 9 y de las letras a hasta la f.</string>
+    <string name="change_backup_volume">Cambiar volumen</string>
+    <string name="external">Externo</string>
+    <string name="internal">Interno</string>
+    <string name="tracker">Rastreador</string>
+    <string name="screen_time">Tiempo en Pantalla</string>
 </resources>
