@@ -1167,4 +1167,12 @@
     <string name="regenerate_auth_key">Regenerar chave de autorização</string>
     <string name="regenerate_auth_key_warning">Tem certeza\? Todos os aplicativos de terceiros precisam ser reconfigurados com a nova chave de autorização.</string>
     <string name="shortcut_icon">Ícone de Atalho</string>
+    <string name="external">Externo</string>
+    <string name="backup_volume_unavailable_warning">O volume de backup selecionado não está disponível no momento. Se estiver localizado em um armazenamento externo, insira-o ou altere o volume de backup.</string>
+    <string name="sort_by_installation_date">Data de instalação</string>
+    <string name="change_backup_volume">Alterar volume</string>
+    <string name="internal">Interno</string>
+    <string name="tracker">Rastreador</string>
+    <string name="input_ssaid_instruction">SSAID é um número hexadecimal de byte %1$d, ou seja, uma string de comprimento %2$d contendo 0 a 9 e a a f.</string>
+    <string name="screen_time">Tempo de Tela</string>
 </resources>
