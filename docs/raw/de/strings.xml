@@ -1049,4 +1049,93 @@
     <string name="pages$settings-page$$sign-apk-title">APK signieren</string>
     <string name="pages$settings-page$$install-location-title">Speicherort</string>
     <string name="pages$settings-page$$backup-restore-title">Sichern/Wiederherstellen</string>
+    <string name="pages$profile-page$save-apk">Ermöglicht das Speichern von APK-Dateien unter \\texttt{AppManager/apks} für die ausgewählten Pakete.</string>
+    <string name="pages$settings-page$$compression-method-title">Komprimierungsverfahren</string>
+    <string name="pages$settings-page$$backup-options-title">Sicherungsoptionen</string>
+    <string name="pages$settings-page$$instant-component-blocking-title">Sofortige Komponentensperre</string>
+    <string name="pages$profile-page$app-ops">Dies verhält sich genauso wie die Option \\hyperref[subsec:set-mode-for-app-ops-dots]{Modus für App Ops einstellen\\dots} auf der
+\nSeite 1-Click Ops. Allerdings gilt dies nur für die ausgewählten Pakete. Wenn die Option
+\n\\hyperref[subsubsec:profile-state]{Status} \\textit{Ein} ist, werden die App Ops verweigert (d.h. ignoriert), und wenn der Status
+\n\\textit{Aus} ist, werden die App-OPs zugelassen. Die Option kann (unabhängig von den eingegebenen Werten) deaktiviert werden, indem Sie auf
+\ndie Schaltfläche \\textit{deaktiviert} im Eingabedialog klicken.</string>
+    <string name="pages$profile-page$permissions">Diese Option kann verwendet werden, um bestimmte Berechtigungen für die ausgewählten Pakete zu gewähren oder zu entziehen. Wie andere oben,
+\nmüssen die Berechtigungen durch Leerzeichen getrennt werden. Wenn der \\hyperref[subsubsec:profile-state]{Status} \\textit{Ein} ist, werden die
+\nBerechtigungen entzogen, und wenn der Status \\textit{Aus} ist, werden die Berechtigungen erlaubt. Die Option kann
+\ndeaktiviert werden (unabhängig von den eingegebenen Werten), indem Sie im Eingabedialog auf die Schaltfläche \\textit{deaktiviert} klicken.</string>
+    <string name="pages$profile-page$block-trackers">Ermöglicht die Sperrung/Entsperrung der Tracker-Komponenten der ausgewählten Pakete in Abhängigkeit vom
+\n\\hyperref[subsubsec:profile-state]{Status}. Wenn der Zustand \\textit{Ein} ist, werden die Tracker blockiert, und wenn der Zustand
+\n\\textit{Aus} ist, werden die Tracker entsperrt.</string>
+    <string name="pages$profile-page$disable">Aktiviert/deaktiviert die ausgewählten Pakete je nach dem Zustand von \\hyperref[subsubsec:profile-state]{Status}. Wenn der Status
+\n\\textit{Ein} ist, werden die Pakete deaktiviert, und wenn der Zustand \\textit{Aus} ist, werden die Pakete aktiviert.</string>
+    <string name="pages$settings-page$$backup-apps-with-keystore-title">Anwendungen mit Android KeyStore sichern</string>
+    <string name="pages$profile-page$export-blocking-rules">Mit dieser Option können Sie Blockierungsregeln exportieren.
+\n
+\n\\begin{danger}{Gefahr}
+\n Diese Option ist noch nicht implementiert.
+\n\\end{danger}</string>
+    <string name="pages$profile-page$force-stop">Ermöglicht das erzwungene Anhalten der ausgewählten Pakete.</string>
+    <string name="pages$profile-page$clear-data">Ermöglicht das Löschen von Daten für die ausgewählten Pakete.</string>
+    <string name="pages$profile-page$clear-cache">Ermöglicht das Löschen des Cache für die ausgewählten Pakete.</string>
+    <string name="pages$settings-page$$encryption-title">Verschlüsselung</string>
+    <string name="pages$settings-page$$rules-title">Regeln</string>
+    <string name="pages$settings-page$$backup-volume-title">Sicherungsvolumen</string>
+    <string name="pages$settings-page$$remove-all-rules-title">Alle Regeln löschen</string>
+    <string name="pages$settings-page$$import-export-keystore-title">Schlüsselspeicher importieren/exportieren</string>
+    <string name="pages$settings-page$$import-export-blocking-rules-title">Import/Export-Sperrregeln</string>
+    <string name="pages$settings-page$$device-info-title">Über das Gerät selbst</string>
+    <string name="pages$settings-page$intro">Die Einstellungen können verwendet werden, um das Verhalten der App anzupassen.</string>
+    <string name="pages$settings-page$language">Konfigurieren Sie die In-App-Sprache.
+\nApp Manager unterstützt derzeit 19 (neunzehn) Sprachen.</string>
+    <string name="pages$settings-page$app-theme">In-App-Thema konfigurieren.</string>
+    <string name="pages$settings-page$screen-lock">Sperren Sie den App Manager mit der Android-Bildschirmsperre, sofern eine Bildschirmsperre konfiguriert ist.</string>
+    <string name="pages$settings-page$mode-of-operation">Sie können eine der vier Optionen auswählen:
+\n\\begin{itemize}
+\n \\item \\textbf{Auto.} Lassen Sie AM entscheiden, welche Option für Sie geeignet ist.
+\n Obwohl dies die Standardoption ist, kann sie bei einigen Geräten Probleme verursachen.
+\n
+\n \\item \\textbf{Root.} Wählen Sie den Root-Modus.
+\n Standardmäßig fordert AM die Root-Berechtigung an, wenn Root erkannt, aber noch nicht gewährt wurde.
+\n Wenn diese Option ausgewählt ist, wird AM im Root-Modus ausgeführt, auch wenn Root nicht verfügbar ist oder verweigert wird.
+\n Dies kann zu Abstürzen oder Einfrierproblemen führen und sollte daher nicht aktiviert werden, wenn Root nicht verfügbar ist.
+\n
+\n \\item \\textbf{ADB über TCP.} Aktivieren Sie \\hyperref[sec:adb-over-tcp]{ADB über TCP} Modus.
+\n AM kann auf unbestimmte Zeit hängen bleiben, wenn ADB über TCP nicht aktiviert ist.
+\n
+\n \\item \\textbf{No-root.} AM läuft im no-root Modus.
+\n AM ist leistungsfähiger, wenn dies aktiviert ist, aber alle Root/ADB-Funktionen werden deaktiviert.
+\n\\end{itemize}</string>
+    <string name="pages$settings-page$enable-disable-features">Aktivieren oder deaktivieren Sie bestimmte Funktionen im App Manager, z. B.
+\n\\begin{itemize}
+\n \\item Interceptor
+\n \\item Manifest-Betrachter
+\n \\item Scanner
+\n \\item Paket-Installer
+\n \\item Verwendungszugang: Wenn diese Option deaktiviert ist, fragt App Manager nie nach der Berechtigung \\textit{Benutzungszugriff}.
+\n \\item Protokoll-Viewer
+\n\\end{itemize}</string>
+    <string name="pages$settings-page$signature-schemes">Wählen Sie die zu verwendenden \\href{https://source.android.com/security/apksigning}{Signaturschemata} aus.
+\nEs wird empfohlen, mindestens die Signaturschemata v1 und v2 zu verwenden.
+\nVerwenden Sie die Schaltfläche \\textit{Zurücksetzen auf Standard}, falls Sie verwirrt sind.</string>
+    <string name="pages$settings-page$signing-key">Konfigurieren Sie einen benutzerdefinierten Signierschlüssel zum Signieren von APK-Dateien.
+\nSchlüssel aus einem bestehenden KeyStore können in den App Manager importiert werden, oder es kann ein neuer Schlüssel generiert werden.
+\n
+\n\\begin{warning}{Hinweis}
+\n App Manager verwaltet einen KeyStore, in dem die in der App verwendeten Schlüssel gespeichert werden.
+\n Das Passwort für den Keystore wird bei Bedarf abgefragt.
+\n Achten Sie darauf, das Passwort an einem sicheren Ort zu speichern, da der KeyStore sonst bei Bedarf nicht wiederhergestellt werden kann.
+\n\\end{warning}</string>
+    <string name="pages$profile-page$backup-restore">Diese Option kann verwendet werden, um ein Backup der ausgewählten Anwendungen und ihrer Daten zu erstellen oder sie wiederherzustellen. Es sind zwei Optionen
+\nverfügbar: \\textit{Backup-Optionen} und \\textit{Backup-Name}.
+\n\\begin{itemize}
+\n \\item \\textbf{Backup-Optionen} Dasselbe wie die \\hyperref[subsec:backup-restore-backup-options]{Sicherungsoptionen} der
+\n Sicherungs-/Wiederherstellungsfunktion. Wenn nicht festgelegt, werden die Standardoptionen verwendet.
+\n \\item \\textbf{Sicherungsname} Legen Sie einen benutzerdefinierten Namen für die Sicherung fest. Wenn der Name der Sicherung festgelegt ist, erhält sie bei jeder Erstellung einer Sicherung
+\n einen eindeutigen Namen mit dem Suffix backup-name erhalten. Dieses Verhalten wird in einer zukünftigen Version korrigiert werden.
+\n Lassen Sie dieses Feld für reguläre oder ``Basis\'\' Backups leer (stellen Sie auch sicher, dass Sie nicht \\textit{backup multiple} in den
+\n Sicherungsoptionen aktivieren).
+\n\\end{itemize}
+\n
+\nWenn der Status von \\hyperref[subsubsec:profile-state]{Status} \\textit{Ein} ist, werden die Pakete gesichert, und wenn der Status
+\n\\textit{Aus}, werden die Pakete wiederhergestellt. Die Option kann deaktiviert werden, indem Sie auf die Schaltfläche \\textit{deaktiviert} im
+\ndem Eingabedialog.</string>
 </resources>
