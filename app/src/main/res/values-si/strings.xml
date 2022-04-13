@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<resources>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources>
     <string name="service">සේවාවන්</string>
+    <string name="authority">අධිකාරිය</string>
+    <string name="no_service">සේවාවන් නොමැත</string>
+    <string name="orientation">දිශානතිය</string>
+    <string name="soft_input">මෘදු ආදාන ක්‍රමය</string>
+    <string name="flags">කොඩි</string>
 </resources>
