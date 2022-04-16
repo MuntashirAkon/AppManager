@@ -14,7 +14,7 @@
     <string name="sort_by_last_update">Utolsó frissítés</string>
     <string name="no_activities">Nincs aktivitás</string>
     <string name="refresh">Frissítés</string>
-    <string name="activities">Aktivitás</string>
+    <string name="activities">Tevékenségek</string>
     <string name="require_no_permission">Nem szükséges engedély</string>
     <string name="no_service">Nincs szolgáltatás</string>
     <string name="authority">Hatóság</string>
