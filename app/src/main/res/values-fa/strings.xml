@@ -1113,5 +1113,5 @@
     <string name="toggle_internet">استفاده از اینترنت</string>
     <string name="vt_failed">VirusTotal: ناموفق بود</string>
     <string name="vt_checking">VirusTotal: در حال بررسی…</string>
-    <string name="intent_firewall">AmirAli1885</string>
+    <string name="intent_firewall"></string>
 </resources>
