@@ -149,7 +149,7 @@
     <string name="native_library_dir">原生的java本地接口目录</string>
     <string name="process_name">进程名称</string>
     <string name="no_code">没有代码</string>
-    <string name="requested_large_heap">大内存</string>
+    <string name="requested_large_heap">Large heap</string>
     <string name="updated_app">更新</string>
     <string name="debuggable">可调试</string>
     <string name="test_only">仅测试</string>
@@ -346,8 +346,8 @@
     <string name="termux">Termux 终端模拟器</string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> 已安装</string>
     <string name="filter">筛选器</string>
-    <string name="filter_user_apps">用户</string>
-    <string name="filter_system_apps">系统</string>
+    <string name="filter_user_apps">用户应用</string>
+    <string name="filter_system_apps">系统应用</string>
     <string name="filter_apps_with_rules">被阻止</string>
     <string name="select_all">全选</string>
     <string name="filter_disabled_apps">已停用</string>
@@ -505,7 +505,7 @@
     <string name="sort_by_apps_first">应用程序优先</string>
     <string name="sort_by_process_name">进程名</string>
     <string name="sort_by_process_id">进程 ID</string>
-    <string name="filter_apps">应用</string>
+    <string name="filter_apps">Android 应用</string>
     <string name="no_apps">没有应用</string>
     <string name="apps">应用程序</string>
     <string name="pref_backup_flags_msg">为备份选项添加一个预设消除了每次备份/恢复时选择 flags 的负担。</string>
@@ -687,7 +687,7 @@
     <string name="users">用户</string>
     <string name="languages">语言</string>
     <string name="battery_capacity">容量</string>
-    <string name="memory">运行内存</string>
+    <string name="memory">内存</string>
     <string name="vendor">厂商</string>
     <string name="gles_version">OpenGL ES 版本</string>
     <string name="no_of_cores">核心数量</string>
@@ -716,7 +716,7 @@
     <string name="backup_external_data_description">备份外部数据文件夹。</string>
     <string name="backup_internal_data_description">备份数据文件夹。如果选中，将默认备份内部数据文件夹。</string>
     <string name="backup_apk_files_description">仅备份来自源目录的 APK 文件。要让该选项工作，必须选中 <b>源目录</b>。</string>
-    <string name="selinux">SELinux 状态</string>
+    <string name="selinux">SELinux 上下文</string>
     <string name="window_size">窗口尺寸</string>
     <string name="refresh_rate">刷新率</string>
     <string name="scaling_factor">缩放系数</string>
@@ -1083,7 +1083,7 @@
     <string name="process_id">进程 ID</string>
     <string name="parent_process_id">父进程 ID</string>
     <string name="virtual_memory">虚拟内存</string>
-    <string name="cpu_percent">%% CPU</string>
+    <string name="cpu_percent">CPU 占用</string>
     <string name="cpu_time">CPU 时间</string>
     <string name="priority">优先级</string>
     <string name="threads">线程数</string>
