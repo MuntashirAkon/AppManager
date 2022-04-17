@@ -108,7 +108,7 @@
     <string name="menu_remove_rules">Rimuovi regole</string>
     <string name="failed_to_extract_apk_file">Impossibile estrarre il file APK</string>
     <string name="share_apk">Condividi APK</string>
-    <string name="grant_usage_acess_message">L\'accesso di utilizzo è fondamentale per mostare le informazioni sull\'utilizzo dell\'applicazione.</string>
+    <string name="grant_usage_acess_message">Utilizzato per mostare le informazioni sull\'utilizzo dell\'applicazione.</string>
     <string name="grant_usage_access">Fornisci accesso</string>
     <string name="go">Vai</string>
     <string name="go_back">Indietro</string>
@@ -282,8 +282,8 @@
         <item quantity="one"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> giorno</item>
         <item quantity="other"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> giorni</item>
     </plurals>
-    <string name="tested_signatures_on_classes_and_time_taken">Testato<xliff:g id="signature_no" example="342">%1$d</xliff:g> firme con le classi <xliff:g id="class_no" example="6000">%2$d</xliff:g>
-\nTempo richiesto<xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> iterazioni).</string>
+    <string name="tested_signatures_on_classes_and_time_taken">Testato <xliff:g id="signature_no" example="342">%1$d</xliff:g> firme con le classi <xliff:g id="class_no" example="6000">%2$d</xliff:g>
+\nTempo impiegato <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> iterazioni).</string>
     <plurals name="other_trackers_and_classes">
         <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g>tracker con la classe <xliff:g id="class_no" example="50">%2$d</xliff:g></item>
         <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> tracker con le classi<xliff:g id="class_no" example="50">%2$d</xliff:g></item>
@@ -463,4 +463,14 @@
     <string name="ago">fa</string>
     <string name="user_with_id">Utente: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
     <string name="keep_data_and_app_signing_signatures">Mantieni i dati e le firme</string>
+    <string name="key_name">Nome chiave</string>
+    <plurals name="usage_seconds">
+        <item quantity="one">%1$d secondo</item>
+        <item quantity="other">%1$d secondi</item>
+    </plurals>
+    <string name="failed_to_uninstall_app">Disinstallazione non riuscita</string>
+    <plurals name="usage_minutes">
+        <item quantity="one">%1$d minuto</item>
+        <item quantity="other">%1$d minuti</item>
+    </plurals>
 </resources>
