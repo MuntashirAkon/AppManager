@@ -111,7 +111,7 @@ Ops</a></span><li><span><span class=toc-section-number>7.3</span> <a href=#sec:a
 Constants</a></span><li><span><span class=toc-section-number>7.3.3</span> <a href=#subsec:package-ops id=toc:subsec:package-ops>PackageOps</a></span><li><span><span class=toc-section-number>7.3.4</span> <a href=#subsec:opentry id=toc:subsec:opentry>OpEntry</a></span><li><span><span class=toc-section-number>7.3.5</span> <a href=#subsec:usage id=toc:subsec:usage>Usage</a></span></ul><li><span><span class=toc-section-number>7.4</span> <a href=#sec:appopsservice id=toc:sec:appopsservice>AppOpsService</a></span><li><span><span class=toc-section-number>7.5</span> <a href=#sec:appops-xml id=toc:sec:appops-xml>appops.xml</a></span><li><span><span class=toc-section-number>7.6</span> <a href=#sec:appops-cli id=toc:sec:appops-cli>Command Line
 Interface</a></span></ul></ul></nav><div class=titlingpage><div class=center><div class=announcement><p>We’re running a <strong>funding campaign</strong> for App Manager for
 a limited period. <a href=https://opencollective.com/app-manager#category-ABOUT>learn
-more...</a></div><p><img src=../images/icon.png style=width:1in alt=image><p><strong><span class=smallcaps>App Manager</span></strong><p><strong>User Manual</strong><p><em>v3.0.0-alpha01</em><p>3 March 2022<p>Copyright © 2020–2022 Muntashir Al-Islam<blockquote><p>“Wisely and slow. They stumble that run fast.” <span>— Friar
+more...</a></div><p><img src=../images/icon.png style=width:1in alt=image><p><strong><span class=smallcaps>App Manager</span></strong><p><strong>User Manual</strong><p><em>v3.0.0-alpha02</em><p>18 April 2022<p>Copyright © 2020–2022 Muntashir Al-Islam<blockquote><p>“Wisely and slow. They stumble that run fast.” <span>— Friar
 Laurence, <em>Romeo and Juliet</em></span></blockquote></div></div><section id=ch:introduction class=level1 data-number=1><h1 data-number=1><span class=header-section-number>1</span> <a href=#toc:ch:introduction>Introducción</a><a href=#ch:introduction class=anchor aria-hidden=true></a></h1><p>App Manager es un administrador de paquetes avanzado para Android.
 Ofrece innumerables funciones y, en consecuencia, requiere un manual de
 usuario para ayudar a sus usuarios. Este documento actúa como un manual
@@ -315,9 +315,9 @@ directamente a través de este elemento de menú. La opción permanece
 oculta si la aplicación no está presente en la sistema.</section><section id=configuraciones class=level4 data-number=2.1.5.11><h4 data-number=2.1.5.11><span class=header-section-number>2.1.5.11</span> Configuraciones<a href=#configuraciones class=anchor aria-hidden=true></a></h4><p>Este elemento del menú abre la <a href=#sec:settings-page>Settings
 page</a> de la aplicación.</section></section></section><section id=sec:app-details-page class=level2 data-number=2.2><h2 data-number=2.2><span class=header-section-number>2.2</span> <a href=#toc:sec:app-details-page>Página de detalles de la
 aplicación</a><a href=#sec:app-details-page class=anchor aria-hidden=true></a></h2><p><strong>App Details</strong> page consists of 11 (eleven) tabs. It
-describes almost every bit of information an application can have,
-including all attributes from its manifest, <a href=#ch:app-ops>application operations</a>, signing information,
-libraries, and so on.<section id=subsec:app-details-colour-codes class=level3 data-number=2.2.1><h3 data-number=2.2.1><span class=header-section-number>2.2.1</span>
+describes almost every bit of information an app can have, including all
+attributes from its manifest, <a href=#ch:app-ops>application
+operations</a>, signing information, libraries, and so on.<section id=subsec:app-details-colour-codes class=level3 data-number=2.2.1><h3 data-number=2.2.1><span class=header-section-number>2.2.1</span>
 <a href=#toc:subsec:app-details-colour-codes>Código de color</a><a href=#subsec:app-details-colour-codes class=anchor aria-hidden=true></a></h3><p>List of background colours used in this page, and their meaning:<ul class=incremental><li><p><span class=colorbox style=background-color:red><span style=color:#000>Red (day)</span></span> / <span class=colorbox style=background-color:#790d0d><span style=color:#fff>dark red
 (night)</span></span> – Denotes any app ops or permissions having the
 dangerous flag, or any components blocked within App Manager<li><p><span class=colorbox style=background-color:#ff8a80><span style=color:#000>Light red (day)</span></span> / <span class=colorbox style=background-color:#4f1c14><span style=color:#fff>very
@@ -332,73 +332,63 @@ the running services.</ul></section><section id=subsec:app-info-tab class=level3
 aplicación</a><a href=#subsec:app-info-tab class=anchor aria-hidden=true></a></h3><p><strong>App Info</strong> tab contains general information about an
 application. It also lists many actions that can be performed within
 this tab.<section id=subsubsec:app-info-general-information class=level4 data-number=2.2.2.1><h4 data-number=2.2.2.1><span class=header-section-number>2.2.2.1</span> Información general<a href=#subsubsec:app-info-general-information class=anchor aria-hidden=true></a></h4><p>The list below is in the same order as listed in the App Info
-tab.<ul class=incremental><li><p><strong>Application Icon.</strong> The application icon. If the
-application does not have an icon, the system default icon will be
-displayed. It is also possible to verify the APK signature via SHA or
-MD5 sums stored in the clipboard by simply clicking on it.<li><p><strong>Application Label.</strong> The application label or the
-name of the application.<li><p><strong>Package Name.</strong> The name of the application
-package. Clicking on the name stores it in the clipboard.<li><p><strong>Version.</strong> The application version is divided into
-two parts. The first part is called <em>version name</em>. The format of
-this part varies but often consists of multiple integers separated by
-dots. The second part is called <em>version code</em>. It is enclosed by
-the first brackets. The version code is an integer used to differentiate
-between application versions (since a version name can be unreadable to
-a machine). In general, a new version of an application has higher
-version code than the old ones. For example, if <code>123</code> and
-<code>125</code> are two version codes of an application, we can say
-that the latter is more updated than the former because the version code
-of the latter is higher. Applications that serve different APK files for
-the same version on different platforms (mobile, tabs, desktops, etc.)
-or architectures (32/64 bits, ARM or Intel), the version numbers can be
-misleading as they often add prefixes for each platform.<li><p><strong>Tags.</strong> (Also known as tag clouds) Tags include
-the most basic, concise and useful information of an application, such
-as—<ul class=incremental><li><p><strong>Tracker info.</strong> Number of tracker components in
-the application (e.g., <em>5 trackers</em>).<li><p><em>application type</em> User application or system application
-and whether the application is an updated version of the system
-application or if the application is installed systemless-ly using
-Magisk</ul><p>Tags contain <em>tracker info</em> (i.e. number of tracker
-components), <em>application type</em> (user application or system
-application and whether the application is an updated version of the
-system application or if the application is installed systemless-ly
-using Magisk), <em>running</em> (i.e. one or more services of the
-application is running in the background), <em>split APK info</em> (i.e.
- number of splits), <em>debuggable</em> (the application is a debug
-version), <em>test only</em> (the application is a test only
-application), <em>large heap</em> (the application has requested a large
-heap size), <em>stopped</em> (the application is force stopped),
-<em>disabled</em> (the application is disabled), <em>KeyStore</em> (the
-application has items in the Android KeyStore), <em>no code</em> (the
-application doesn’t have any code associated with it), <a href=#sec:terminologies><em>SSAID</em></a>, <em>netpolicy</em>
+tab.<ul class=incremental><li><p><strong>App Icon.</strong> The application icon. If an app
+doesn’t have an icon, the system default icon is displayed.<li><p><strong>App Label.</strong> The application label or application
+name.<li><p><strong>Version.</strong> Application version is divided into two
+parts. The first part is called <em>version name</em>, the format of
+this part varies but it often consists of multiple integers separated by
+dots. The second part is called <em>version code</em> and it is closed
+under first brackets. Version code is an integer which is usually used
+to differentiate between app versions (as version name can often be
+unreadable by a machine). In general, new version of an app has higher
+version code than the old ones. For instance, if <code>123</code> and
+<code>125</code> are two version codes of an app, we can say that the
+latter is more updated than the former because the version code of the
+latter is higher. For applications that depend on platforms (mobile,
+tabs, desktops, etc.), these version numbers can be misleading as they
+use prefixes for each platform.<li><p><strong>Tags.</strong> (Also known as tag clouds) Tags include
+the basic, concise and most useful info of an app. Tags contain
+<em>tracker info</em> (i.e. number of tracker components), <em>app
+type</em> (user app or system app and whether the app is an updated
+version of the system app or if the app is installed systemless-ly using
+Magisk), <em>running</em> (i.e. one or more services of the app is
+running in the background), <em>split APK info</em> (i.e.  number of
+splits), <em>debuggable</em> (the app is a debug version), <em>test
+only</em> (the app is a test only app), <em>large heap</em> (the app has
+requested a large heap size), <em>stopped</em> (the app is force
+stopped), <em>disabled</em> (the app is disabled), <em>KeyStore</em>
+(the app has items in the Android KeyStore), <em>no code</em> (the app
+doesn’t have any code associated with it), <a href=#sec:terminologies><em>SSAID</em></a>, <em>netpolicy</em>
 (network policy such as background data usage), and <em>battery
 optimization</em>. The importance of including <em>test only</em> and
-<em>debuggable</em> is that application with these properties can do
-additional tasks or these apps can be <code>run-as</code> without root
-which can cause potential security problems if these apps store any
-private information. <em>Large heap</em> denotes that the application
-will be allocated a higher amount of memory (RAM) if needed. While this
-may not be harmful for most cases, any suspicious apps requesting large
-heap should be taken seriously.<li><p><strong>Horizontal Action Panel.</strong> This is an action panel
-containing various actions regarding the application. See §<a href=#subsubsec:horizontal-action-panel data-reference-type=ref data-reference=subsubsec:horizontal-action-panel>2.2.2.2</a> for a
+<em>debuggable</em> is that app with these properties can do additional
+tasks or these apps can be <code>run-as</code> without root which can
+cause potential security problems if these apps store any private
+information. <em>Large heap</em> denotes that the app will be allocated
+a higher amount of memory (RAM) if needed. While this may not be harmful
+for most cases, any suspicious apps requesting large heap should be
+taken seriously.<li><p><strong>Horizontal Action Panel.</strong> This is an action panel
+containing various actions regarding the app. See §<a href=#subsubsec:horizontal-action-panel data-reference-type=ref data-reference=subsubsec:horizontal-action-panel>2.2.2.2</a> for a
 complete list of actions available here.<li><p><strong>Paths & Directories.</strong> Contains various
 information regarding application paths including <em>app directory</em>
 (where the APK files are stored), <em>data directories</em> (internal,
 device protected and externals), <em>split APK directories</em> (along
 with the split names), and <em>native JNI library</em> (if present). JNI
 libraries are used to invoke native codes usually written in C/C++. Use
-of native library can make the application run faster or help an
-application use third-party libraries written using languages other than
-Java like in most games. You can also open these directories using your
-favourite file managers (provided they support it and have necessary
-permissions) by clicking on the launch icon on the right-hand side of
-each item.<li><p><strong>Data Usage Since Last Boot.</strong> A rather self
+of native library can make the app run faster or help an app use
+third-party libraries written using languages other than Java like in
+most games. You can also open these directories using your favourite
+file managers (provided they support it and have necessary permissions)
+by clicking on the launch icon on the right-hand side of each
+item.<li><p><strong>Data Usage Since Last Boot.</strong> A rather self
 explanatory option. But beware that due to some issues, the results
 might often be misleading and simply wrong. This part remains hidden if
 <em>Usage Access</em> permission is not granted in newer
 devices.<li><p><strong>Storage & Cache.</strong> Displays information
-regarding the size of the application (APK files), data and cache. In
-older devices, size of external data, cache, media and OBB folders are
-also displayed. This part remains hidden if <em>Usage Access</em>
-permission is not granted in newer devices.<li><p><strong>More Info.</strong> Displays other information such
+regarding the size of the app (APK files), data and cache. In older
+devices, size of external data, cache, media and OBB folders are also
+displayed. This part remains hidden if <em>Usage Access</em> permission
+is not granted in newer devices.<li><p><strong>More Info.</strong> Displays other information such
 as–<ul class=incremental><li><p><strong>SDK.</strong> Displays information related to the Android
 SDK. There are two (one in old devices) values: <em>Max</em> denotes the
 target SDK and <em>Min</em> denotes the minimum SDK (the latter is not
@@ -406,92 +396,88 @@ available in old devices). It is best practice to use apps with maximum
 SDK that the platform currently supports. SDK is also known as
 <strong>API Level</strong>.<div class=seealso-inline><p><em>See also: <span><a href=https://en.wikipedia.org/wiki/Android_version_history#Overview>Android
 Version History</a></span></em></div><li><p><strong>Flags.</strong> The application flags used at the time of
-building the application. For a complete list of flags and what they do,
-visit the <a href=https://developer.android.com/reference/android/content/pm/ApplicationInfo#flags>official
-documentation</a>.<li><p><strong>Date Installed.</strong> The date when the application
-was first installed.<li><p><strong>Date Updated.</strong> The date when the application was
-last updated. This is the same as <em>Date Installed</em> if the
-application hasn’t been updated.<li><p><strong>Installer App.</strong> The application that installed
-this application. Not all application supply the information used by the
-package manager to register the installer application. Therefore, this
-value should not be taken for granted.<li><p><strong>User ID.</strong> The unique user ID set by the Android
-system to the application. For shared applications, same user ID is
-assigned to multiple applications that have the same <em>Shared User
+building the app. For a complete list of flags and what they do, visit
+the <a href=https://developer.android.com/reference/android/content/pm/ApplicationInfo#flags>official
+documentation</a>.<li><p><strong>Date Installed.</strong> The date when the app was first
+installed.<li><p><strong>Date Updated.</strong> The date when the app was last
+updated. This is the same as <em>Date Installed</em> if the app hasn’t
+been updated.<li><p><strong>Installer App.</strong> The app that installed this app.
+Not all app supply the information used by the package manager to
+register the installer app. Therefore, this value should not be taken
+for granted.<li><p><strong>User ID.</strong> The unique user ID set by the Android
+system to the app. For shared applications, same user ID is assigned to
+multiple applications that have the same <em>Shared User
 ID</em>.<li><p><strong>Shared User ID.</strong> Applicable for applications that
 are shared together. Although it says ID, this is actually a string
-value. The shared application must have the same <a href=#subsec:signatures-tab>signatures</a>.<li><p><strong>Main Activity.</strong> The main entry point to the
-application. This is only visible if the application has <a href=#subsubsec:activities>activities</a> and any of those are
+value. The shared application must have the same <a href=#subsec:signatures-tab>signatures</a>.<li><p><strong>Main Activity.</strong> The main entry point to the app.
+This is only visible if the app has <a href=#subsubsec:activities>activities</a> and any of those are
 openable from the Launcher. There’s also a launch button on the
 right-hand side which can be used to launch this activity.</ul></ul></section><section id=subsubsec:horizontal-action-panel class=level4 data-number=2.2.2.2><h4 data-number=2.2.2.2><span class=header-section-number>2.2.2.2</span> Panel de acción
 horizontal<a href=#subsubsec:horizontal-action-panel class=anchor aria-hidden=true></a></h4><p>Horizontal Action Panel, as described in the previous section,
-consists of various application-related actions, such as–<ul class=incremental><li><p><strong>Launch.</strong> Application that has a launcher <a href=#subsubsec:activities>activities</a> can be launched using this
-button.<li><p><strong>Disable.</strong> Disable an application. This button is
-not displayed for already disabled apps or to users who do not have root
-or <a href=#sec:adb-over-tcp>ADB</a>. If you disable an application,
-the application will not be displayed in your Launcher application.
-Shortcuts for the application will also be removed. If you disable a
-user application, you can only enable them via App Manager or any other
-tool that supports it. There isn’t any option in Android Settings to
-enable a disabled user application.<li><p><strong>Uninstall.</strong> Uninstall an application.<li><p><strong>Enable.</strong> Enable an application. This button is
-not displayed for already enabled apps or to users who do not have root
-or ADB.<li><p><strong>Force Stop.</strong> Force-stop an application. When you
-force stop an application, the application will not be able to run in
-background unless you explicitly open it first. However, this is not
-always true.<li><p><strong>Clear Data.</strong> Clear data from an application. This
+consists of various app-related actions, such as–<ul class=incremental><li><p><strong>Launch.</strong> Application that has a launcher <a href=#subsubsec:activities>activities</a> can be launched using this
+button.<li><p><strong>Disable.</strong> Disable an app. This button is not
+displayed for already disabled apps or to users who do not have root or
+<a href=#sec:adb-over-tcp>ADB</a>. If you disable an app, the app will
+not be displayed in your Launcher app. Shortcuts for the app will also
+be removed. If you disable a user app, you can only enable them via App
+Manager or any other tool that supports it. There isn’t any option in
+Android Settings to enable a disabled user app.<li><p><strong>Uninstall.</strong> Uninstall an app.<li><p><strong>Enable.</strong> Enable an app. This button is not
+displayed for already enabled apps or to users who do not have root or
+ADB.<li><p><strong>Force Stop.</strong> Force-stop an app. When you force
+stop an app, the app will not be able to run in background unless you
+explicitly open it first. However, this is not always true.<li><p><strong>Clear Data.</strong> Clear data from an app. This
 includes any information stored in the internal and often the external
-directories, including accounts (if set by the application), cache, etc.
+directories, including accounts (if set by the app), cache, etc.
 Clearing data from App Manager, for example, removes all the rules (the
-blocking is not removed though) saved within the application. Which is
-why you should always take backups of your rules. This button is not
-displayed to users who do not have root or ADB.<li><p><strong>Clear Cache.</strong> Clear application cache only. There
-is not any Android-way to clear application cache. Therefore, it needs
-root permission to clear cache from the application’s internal
-storage.<li><p><strong>Install.</strong> Install an APK opened using any
-third-party application. This button is only displayed for an external
-APK that hasn’t been installed.<li><p><strong>What’s New.</strong> This button is displayed for an APK
+blocking is not removed though) saved within the app. Which is why you
+should always take backups of your rules. This button is not displayed
+to users who do not have root or ADB.<li><p><strong>Clear Cache.</strong> Clear app cache only. There is not
+any Android-way to clear app cache. Therefore, it needs root permission
+to clear cache from the app’s internal storage.<li><p><strong>Install.</strong> Install an APK opened using any
+third-party app. This button is only displayed for an external APK that
+hasn’t been installed.<li><p><strong>What’s New.</strong> This button is displayed for an APK
 that has higher version code than the installed one. Clicking on this
 button displays a dialog consisting of differences in a version control
 manner. The information it displays include <em>version</em>,
 <em>trackers</em>, <em>permissions</em>, <em>components</em>,
 <em>signatures</em> (checksum changes), <em>features</em>, <em>shared
-libraries</em> and <em>SDK</em>.<li><p><strong>Update.</strong> Displayed for an application that has a
-higher version code than the installed application.<li><p><strong>Reinstall.</strong> Displayed for an application that has
-the same version code as the installed application.<li><p><strong>Downgrade.</strong> Displayed for an application that has
-a lower version code than the installed application.<li><p><strong>Manifest.</strong> Clicking on this button displays the
-application’s manifest file in a separate page. The manifest file can be
-wrapped or unwrapped using the corresponding toggle button (on the
-top-right side) or can be saved to you shared storage using the save
+libraries</em> and <em>SDK</em>.<li><p><strong>Update.</strong> Displayed for an app that has a higher
+version code than the installed app.<li><p><strong>Reinstall.</strong> Displayed for an app that has the
+same version code as the installed app.<li><p><strong>Downgrade.</strong> Displayed for an app that has a lower
+version code than the installed app.<li><p><strong>Manifest.</strong> Clicking on this button displays the
+app’s manifest file in a separate page. The manifest file can be wrapped
+or unwrapped using the corresponding toggle button (on the top-right
+side) or can be saved to you shared storage using the save
 button.<li><p><strong>Scanner.</strong> Clicking on this button displays the
-application’s tracker and library information. At first, it scans the
-application to extract a list of classes. Then the class list is matched
-with a number of signatures. After that, a scan summary is
-displayed.<br><div class=seealso-inline><p><em>See also: <span><a href=#sec:scanner-page>Scanner
+app’s tracker and library information. At first, it scans the app to
+extract a list of classes. Then the class list is matched with a number
+of signatures. After that, a scan summary is displayed.<br><div class=seealso-inline><p><em>See also: <span><a href=#sec:scanner-page>Scanner
 page</a></span></em></div><li><p><strong>Shared Prefs.</strong> Clicking on this button displays a
-list of shared preferences used by the application. Clicking on a
-preference item in the list opens the <a href=#sec:shared-preferences-editor-page>Shared Preferences Editor
+list of shared preferences used by the app. Clicking on a preference
+item in the list opens the <a href=#sec:shared-preferences-editor-page>Shared Preferences Editor
 page</a>. This option is only visible to the root users.<li><p><strong>Databases.</strong> Clicking on this button displays a
-list of databases used by the application. This needs more improvements,
-and a database editor which might be added in the future. This option is
-only visible to the root users.<li><p><strong>F-Droid.</strong> Opens the application in your favourite
-<em>F-Droid</em> client.<li><p><strong>Store.</strong> Opens the application in <em>Aurora
-Store</em>. The option is only visible if <em>Aurora Store</em> is
+list of databases used by the app. This needs more improvements, and a
+database editor which might be added in the future. This option is only
+visible to the root users.<li><p><strong>F-Droid.</strong> Opens the app in your favourite
+<em>F-Droid</em> client.<li><p><strong>Store.</strong> Opens the app in <em>Aurora Store</em>.
+The option is only visible if <em>Aurora Store</em> is
 installed.</ul></section><section id=subsubsec:app-info-options-menu class=level4 data-number=2.2.2.3><h4 data-number=2.2.2.3><span class=header-section-number>2.2.2.3</span> Opciones de menú<a href=#subsubsec:app-info-options-menu class=anchor aria-hidden=true></a></h4><p>Options-menu is located in the top-right corner of the page. A
 complete description of the options present there are given below:<ul class=incremental><li><p><strong>Share.</strong> Share button can be used to share the APK
-file or <em>APKS</em> file (if the application is has multiple splits)
-can be imported into <a href=https://github.com/Aefyr/SAI>SAI</a>. You
-can share it with your favourite file manager to save the file in your
-shared storage.<li><p><strong>Refresh.</strong> Refreshes the App Info tab.<li><p><strong>View in Settings.</strong> Opens the application in
-Android Settings.<li><p><strong>Backup/Restore.</strong> Opens the backup/restore
+file or <em>APKS</em> file (if the app is has multiple splits) can be
+imported into <a href=https://github.com/Aefyr/SAI>SAI</a>. You can
+share it with your favourite file manager to save the file in your
+shared storage.<li><p><strong>Refresh.</strong> Refreshes the App Info tab.<li><p><strong>View in Settings.</strong> Opens the app in Android
+Settings.<li><p><strong>Backup/Restore.</strong> Opens the backup/restore
 dialog.<li><p><strong>Export Blocking Rules.</strong> Export rules configured
-for this application within App Manager.<li><p><strong>Open in Termux.</strong> Opens the application in Termux.
-This actually runs <code>su - user_id</code> where <code>user_id</code>
-denotes the application’s kernel user ID (described in the <a href=#subsubsec:app-info-general-information>General Information
+for this app within App Manager.<li><p><strong>Open in Termux.</strong> Opens the app in Termux. This
+actually runs <code>su - user_id</code> where <code>user_id</code>
+denotes the app’s kernel user ID (described in the <a href=#subsubsec:app-info-general-information>General Information
 section</a>). This option is only visible to the root users. See §<a href=#subsubsec:config-termux data-reference-type=ref data-reference=subsubsec:config-termux>2.2.2.4</a> to learn how to
-configure Termux to run commands from third-party applications.<li><p><strong>Run in Termux.</strong> Open the application using
+configure Termux to run commands from third-party applications.<li><p><strong>Run in Termux.</strong> Open the app using
 <code>run-as package_name</code> in Termux. This is only applicable for
 the debuggable apps and works for both root and ADB users. See §<a href=#subsubsec:config-termux data-reference-type=ref data-reference=subsubsec:config-termux>2.2.2.4</a> to learn how to
-configure Termux to run commands from third-party applications.<li><p><strong>Extract Icon.</strong> Extract and save the application’s
-icon in your desired location.</ul></section><section id=subsubsec:config-termux class=level4 data-number=2.2.2.4><h4 data-number=2.2.2.4><span class=header-section-number>2.2.2.4</span> Termux<a href=#subsubsec:config-termux class=anchor aria-hidden=true></a></h4><p>By default, Termux does not allow running commands from third-party
+configure Termux to run commands from third-party applications.<li><p><strong>Extract Icon.</strong> Extract and save the app’s icon in
+your desired location.</ul></section><section id=subsubsec:config-termux class=level4 data-number=2.2.2.4><h4 data-number=2.2.2.4><span class=header-section-number>2.2.2.4</span> Termux<a href=#subsubsec:config-termux class=anchor aria-hidden=true></a></h4><p>By default, Termux does not allow running commands from third-party
 applications. To enable this option, you have to add
 <code>allow-external-apps=true</code> in
 <code>~/.termux/termux.properties</code>, and make sure that you are
@@ -507,8 +493,8 @@ similar features in many ways. For example, they all have a
 building blocks of any application, and most of these have to declared
 in the application manifest. Application manifest is a file where
 application specific metadata are stored. The Android operating system
-learns what to do with an application by reading the metadata. Colours
-used in these tabs are explained in §<a href=#subsec:app-details-colour-codes data-reference-type=ref data-reference=subsec:app-details-colour-codes>2.2.1</a>. You also
+learns what to do with an app by reading the metadata. Colours used in
+these tabs are explained in §<a href=#subsec:app-details-colour-codes data-reference-type=ref data-reference=subsec:app-details-colour-codes>2.2.1</a>. You also
 have the ability to sort the list of components to display blocked or
 tracker components on top of the list using the <strong>Sort</strong>
 option in the overflow menu.<section id=subsubsec:activities class=level4 data-number=2.2.3.1><h4 data-number=2.2.3.1><span class=header-section-number>2.2.3.1</span> Actividades<a href=#subsubsec:activities class=anchor aria-hidden=true></a></h4><p><strong>Activities</strong> are windows or pages that you can browse
@@ -526,14 +512,14 @@ which activities can open that particular file and offers you to open
 the file with these activities (therefore, it is nothing to do with the
 application itself). There are other intent filters as well.<p>Activities which are <em>exportable</em> can be usually opened by any
 third-party apps (some activities require permissions, if that is the
-case, only an application having those permissions can open them). In
-the <em>Activities</em> tab, the name of the activity (on top of each
-list item) is actually a button. It is enabled for the
-<em>exportable</em> activities and disabled for others (root users can
-open any activities). You can click on the button to open the activity
-directly in App Manager. You can also open the Interceptor page by long
-clicking on an activity. Currently, it only works for
-<em>exportable</em> activities.<div class="amalert warning"><p><strong><em>Notice.</em></strong><p>If you are not able to open any activity, chances are it has certain
+case, only an app having those permissions can open them). In the
+<em>Activities</em> tab, the name of the activity (on top of each list
+item) is actually a button. It is enabled for the <em>exportable</em>
+activities and disabled for others (root users can open any activities).
+You can click on the button to open the activity directly in App
+Manager. You can also open the Interceptor page by long clicking on an
+activity. Currently, it only works for <em>exportable</em>
+activities.<div class="amalert warning"><p><strong><em>Notice.</em></strong><p>If you are not able to open any activity, chances are it has certain
 dependencies which are not met, e.g. you cannot open <em>App Details
 Activity</em> because it requires that you at least supply a package
 name. These dependencies cannot always be inferred programmatically.
@@ -562,42 +548,42 @@ messages are sent using a method called intent. Intent is a special
 feature for Android which can be used to open applications, activities,
 services and send broadcast messages. Therefore, like <a href=#subsubsec:activities>activities</a>, broadcast receivers use
 intent filters to receive only the desired broadcast message(s).
-Broadcast messages can be sent by either system or the application
-itself. When a broadcast message is sent, the corresponding receivers
-are awakened by the system so that they can execute tasks. For example,
-if you have low memory, your phone may freeze or experience lags for a
-moment after you enable mobile data or connect to the Wifi. Ever
-wondered why? This is because broadcast receivers that can receive
+Broadcast messages can be sent by either system or the app itself. When
+a broadcast message is sent, the corresponding receivers are awakened by
+the system so that they can execute tasks. For example, if you have low
+memory, your phone may freeze or experience lags for a moment after you
+enable mobile data or connect to the Wifi. Ever wondered why? This is
+because broadcast receivers that can receive
 ‘android.net.conn.CONNECTIVITY_CHANGE‘ are awakened by the system as
 soon as you enable data connection. Since many apps use this intent
 filter, all of these apps are awakened almost immediately by the system
 which causes the freeze or lags. That being said, receivers can be used
 for inter-process communication (IPC), i.e., it helps you communicate
 between different apps (provided you have the necessary permissions) or
-even different components of a single application.</section><section id=appdetails:providers class=level4 data-number=2.2.3.4><h4 data-number=2.2.3.4><span class=header-section-number>2.2.3.4</span> Proveedores<a href=#appdetails:providers class=anchor aria-hidden=true></a></h4><p><strong>Providers</strong> (also called <em>content providers</em>)
+even different components of a single app.</section><section id=appdetails:providers class=level4 data-number=2.2.3.4><h4 data-number=2.2.3.4><span class=header-section-number>2.2.3.4</span> Proveedores<a href=#appdetails:providers class=anchor aria-hidden=true></a></h4><p><strong>Providers</strong> (also called <em>content providers</em>)
 are used for data management. For example, when you save an apk file or
 export rules in App Manager, it uses a content provider called
 ‘androidx.core.content.FileProvider‘ to save the APK or export the
 rules. There are other content providers or even custom ones to manage
 various content-related tasks such as database management, tracking,
 searching, etc. Each content provider has a field called
-<em>Authority</em> which is unique to that particular application in the
-entire Android eco-system just like the package name.</section><section id=características-adicionales-para-dispositivos-con-acceso-raíz class=level4 data-number=2.2.3.5><h4 data-number=2.2.3.5><span class=header-section-number>2.2.3.5</span> Características adicionales
+<em>Authority</em> which is unique to that particular app in the entire
+Android eco-system just like the package name.</section><section id=características-adicionales-para-dispositivos-con-acceso-raíz class=level4 data-number=2.2.3.5><h4 data-number=2.2.3.5><span class=header-section-number>2.2.3.5</span> Características adicionales
 para dispositivos con acceso raíz<a href=#características-adicionales-para-dispositivos-con-acceso-raíz class=anchor aria-hidden=true></a></h4><p>A diferencia de los usuarios no root que en su mayoría son
 espectadores en estas pestañas, los usuarios root pueden realizar varias
 operaciones.<section id=bloqueo-de-componentes class=level5 data-number=2.2.3.5.1><h5 data-number=2.2.3.5.1><span class=header-section-number>2.2.3.5.1</span> Bloqueo de componentes<a href=#bloqueo-de-componentes class=anchor aria-hidden=true></a></h5><p>On the right-most side of each component item, there is a “block”
 icon (which becomes a “unblock/restore” icon when the component is being
 blocked). This icon (actually, a button) can be used to toggle the
 blocking status of that particular component. If you do not have <a href=#subsubsec:instant-component-blocking>Instant Component
-Blocking</a> enabled or haven’t applied blocking for the application
-before, you have to apply the changes using the <strong>Apply
-rules</strong> option in three-dots menu. You can also remove already
-applied rules using the same option (which would be read as
-<strong>Remove rules</strong> this time).<div class=seealso-inline><p><em>See also: <span><a href=#sec:faq:app-components>FAQ: App
+Blocking</a> enabled or haven’t applied blocking for the app before, you
+have to apply the changes using the <strong>Apply rules</strong> option
+in three-dots menu. You can also remove already applied rules using the
+same option (which would be read as <strong>Remove rules</strong> this
+time).<div class=seealso-inline><p><em>See also: <span><a href=#sec:faq:app-components>FAQ: App
 Components</a></span></em></div></section><section id=par:appdetails:blocking-trackers class=level5 data-number=2.2.3.5.2><h5 data-number=2.2.3.5.2><span class=header-section-number>2.2.3.5.2</span> Bloqueo de rastreadores<a href=#par:appdetails:blocking-trackers class=anchor aria-hidden=true></a></h5><p>You can disable tracker components using the <strong>Block
 tracker</strong> option in the three-dots menu. All tracker components
-will be blocked regardless of the tab you’re currently in.<div class="amalert tip"><p><strong><em>Info.</em></strong><p>Tracker components are a subset of application components. Therefore,
-they are blocked using the same method used for blocking any other
+will be blocked regardless of the tab you’re currently in.<div class="amalert tip"><p><strong><em>Info.</em></strong><p>Tracker components are a subset of app components. Therefore, they
+are blocked using the same method used for blocking any other
 components.</div><div class=seealso><p><em>See also:</em><ul class=incremental><li><p><a href=#subsec:tracker-classes-versus-tracker-components>FAQ:
 Tracker classes versus tracker components</a><li><p><a href=#sec:scanner-page>Scanner Page</a><li><p><a href=#subsec:block-unblock-trackers>1-Click Ops Page:
 Block/Unblock Trackers</a></ul></div></section></section></section><section id=subsec:permission-tabs class=level3 data-number=2.2.4><h3 data-number=2.2.4><span class=header-section-number>2.2.4</span>
@@ -613,42 +599,39 @@ confirmation from the user. Colours used in these tabs are explained in
 §<a href=#subsec:app-details-colour-codes data-reference-type=ref data-reference=subsec:app-details-colour-codes>2.2.1</a>.<section id=subsubsec:app-ops class=level4 data-number=2.2.4.1><h4 data-number=2.2.4.1><span class=header-section-number>2.2.4.1</span> Operaciones de
 aplicaciones<a href=#subsubsec:app-ops class=anchor aria-hidden=true></a></h4><p><strong>App Ops</strong> stands for <strong>Application
 Operations</strong>. Since Android 4.3, <em>App Ops</em> are used by
-Android system to control most of the application permissions. Each
-application op has a unique number associated with them which are closed
-inside first brackets in the App Ops tab. They also have a private and
-optionally, a public name. Some application ops are also associated with
-<em>permissions</em>. The dangerousness of an application op is decided
-based on the associated permission, and other information such as
-<em>flags</em>, <em>permission name</em>, <em>permission
-description</em>, <em>package name</em>, <em>group</em> are taken from
-the associated <a href=#subsubsec:permissions>permission</a>. Other
-information may include the following:<ul class=incremental><li><p><strong>Mode.</strong> It describes the current authorisation
+Android system to control most of the application permissions. Each app
+op has a unique number associated with them which are closed inside
+first brackets in the App Ops tab. They also have a private and
+optionally, a public name. Some app ops are also associated with
+<em>permissions</em>. The dangerousness of an app op is decided based on
+the associated permission, and other information such as <em>flags</em>,
+<em>permission name</em>, <em>permission description</em>, <em>package
+name</em>, <em>group</em> are taken from the associated <a href=#subsubsec:permissions>permission</a>. Other information may
+include the following:<ul class=incremental><li><p><strong>Mode.</strong> It describes the current authorisation
 status which can be <em>allow</em>, <em>deny</em> (a rather misnomer, it
 simply means error), <em>ignore</em> (it actually means deny),
 <em>default</em> (inferred from a list of defaults set internally by the
-vendor), <em>foreground</em> (in newer Androids, it means the
-application op can only be used when the application is running in
-foreground), and some custom modes set by the vendors (MIUI uses
-<em>ask</em>, for instance).<li><p><strong>Duration.</strong> The amount of time this application op
-has been used (there can be negative durations whose use cases are
-currently unknown to me).<li><p><strong>Accept Time.</strong> Last time the application op was
-accepted.<li><p><strong>Reject Time.</strong> Last time the application op was
+vendor), <em>foreground</em> (in newer Androids, it means the app op can
+only be used when the app is running in foreground), and some custom
+modes set by the vendors (MIUI uses <em>ask</em>, for
+instance).<li><p><strong>Duration.</strong> The amount of time this app op has
+been used (there can be negative durations whose use cases are currently
+unknown to me).<li><p><strong>Accept Time.</strong> Last time the app op was
+accepted.<li><p><strong>Reject Time.</strong> Last time the app op was
 rejected.</ul><div class="amalert tip"><p><strong><em>Info.</em></strong><p>Contents of this tab are visible to no-root users if
 <code>android.permission.GET_APP_OPS_STATS</code> is granted via
-ADB.</div><p>There is a toggle button next to each application op item which can
-be used to allow or deny (ignore) the application op. If you need to set
-other modes available to your device, simply long click on an item. If
-you need to set additional application ops that are not listed in the
-tab, use the <em>Set custom application op</em> option in the menu. You
-can also reset your changes using the <em>Reset to default</em> option
-or deny all dangerous application ops using the corresponding option in
-the menu. You can also sort them in ascending order by application op
-names and the associated unique numbers (or values). You can also list
-the denied application ops first using the corresponding sorting
-option.<div class="amalert warning"><p><strong><em>Warning.</em></strong><p>Denying an application op may cause the application to misbehave. Use
-the <em>reset to default</em> option if that is the case. Due to the
-nature how application ops work, the system may take some time to apply
-them.</div><div class=seealso-inline><p><em>See also: <span><a href=#ch:app-ops>Appendix: App
+ADB.</div><p>There is a toggle button next to each app op item which can be used
+to allow or deny (ignore) the app op. If you need to set other modes
+available to your device, simply long click on an item. If you need to
+set additional app ops that are not listed in the tab, use the <em>Set
+custom app op</em> option in the menu. You can also reset your changes
+using the <em>Reset to default</em> option or deny all dangerous app ops
+using the corresponding option in the menu. You can also sort them in
+ascending order by app op names and the associated unique numbers (or
+values). You can also list the denied app ops first using the
+corresponding sorting option.<div class="amalert warning"><p><strong><em>Warning.</em></strong><p>Denying an app op may cause the app to misbehave. Use the <em>reset
+to default</em> option if that is the case. Due to the nature how app
+ops work, the system may take some time to apply them.</div><div class=seealso-inline><p><em>See also: <span><a href=#ch:app-ops>Appendix: App
 Ops</a></span></em></div></section><section id=permisos-de-uso class=level4 data-number=2.2.4.2><h4 data-number=2.2.4.2><span class=header-section-number>2.2.4.2</span> Permisos de uso<a href=#permisos-de-uso class=anchor aria-hidden=true></a></h4><p><strong>Uses Permissions</strong> are the permissions used by the
 application. This is named so because they are declared in the manifest
 using <code>uses-permission</code> tags. Information such as
@@ -660,20 +643,20 @@ button on the right side of each permission item. They can also revoke
 dangerous permissions all at once using the corresponding option in the
 menu. Only these two types of permissions can be revoked because Android
 doesn’t allow modifying <em>normal</em> permissions (which most of them
-are). The only alternative is to edit the application manifest and
-remove these permissions from there.<div class="amalert tip"><p><strong><em>Info.</em></strong><p>Since dangerous permissions are revoked by default by the system,
+are). The only alternative is to edit the app manifest and remove these
+permissions from there.<div class="amalert tip"><p><strong><em>Info.</em></strong><p>Since dangerous permissions are revoked by default by the system,
 revoking all dangerous permissions is the same as resetting all
 permissions.</div><div class="amalert tip"><p><strong><em>Notice.</em></strong><p>Permissions cannot be changed for apps targeting API 23 or earlier.
 Therefore, permission toggles are disabled for such apps.</div><p>Users can sort the permissions by permission name (in ascending
 order) or choose to display denied or dangerous permissions at first
 using the corresponding options in the menu.</section><section id=subsubsec:permissions class=level4 data-number=2.2.4.3><h4 data-number=2.2.4.3><span class=header-section-number>2.2.4.3</span> Permisos<a href=#subsubsec:permissions class=anchor aria-hidden=true></a></h4><p><strong>Permissions</strong> are usually custom permissions defined
-by the application itself. It could contain regular permissions as well,
-mostly in old applications. Here’s a complete description of each item
-that is displayed there:<ul class=incremental><li><p><strong>Name.</strong> Each permission has a unique name like
-<code>android.permission.INTERNET</code> but multiple application can
-request the permission.<li><p><strong>Icon.</strong> Each permission can have a custom icon.
+by the app itself. It could contain regular permissions as well, mostly
+in old applications. Here’s a complete description of each item that is
+displayed there:<ul class=incremental><li><p><strong>Name.</strong> Each permission has a unique name like
+<code>android.permission.INTERNET</code> but multiple app can request
+the permission.<li><p><strong>Icon.</strong> Each permission can have a custom icon.
 The other permission tabs do not have any icon because they do not
-contain any icon in the application manifest.<li><p><strong>Description.</strong> This optional field describes the
+contain any icon in the app manifest.<li><p><strong>Description.</strong> This optional field describes the
 permission. If there isn’t any description associated with the
 permission, the field is not displayed.<li><p><strong>Flags.</strong> (Uses the flag symbol or
 <strong>Protection Level</strong> name) This describes various
@@ -687,21 +670,21 @@ is why you’ll usually see
 <code>android.permission-group.UNDEFINED</code> or no group name at
 all.</ul></section></section><section id=subsec:signatures-tab class=level3 data-number=2.2.5><h3 data-number=2.2.5><span class=header-section-number>2.2.5</span>
 <a href=#toc:subsec:signatures-tab>Pestañas de firmas</a><a href=#subsec:signatures-tab class=anchor aria-hidden=true></a></h3><p><strong>Signatures</strong> are actually called signing info. An
-application is signed by one or more singing certificates by the
+application is signed by one or more signing certificates by the
 application developers before publishing it. The integrity of an
-application (whether the application is from the actual developer and
-isn’t modified by other people) can be checked using the signing info;
-because when an application is modified by a third-party unauthorised
-person, the application cannot be signed using the original
-certificate(s) again because the signing info are kept private by the
-actual developer. <em>How do you verify these signatures?</em> Using
-checksums. Checksums are generated from the certificates themselves. If
-the developer supplies the checksums, you can match the checksums using
-the different checksums generated in the <strong>Signatures</strong>
-tab. For example, if you have downloaded App Manager from Github,
-Telegram Channel or IzzyOnDroid’s repo, you can verify whether the
-application is actually released by me by simply matching the following
-<em>SHA256</em> checksum with the one displayed in this tab:<pre><code>320c0c0fe8cef873f2b554cb88c837f1512589dcced50c5b25c43c04596760ab</code></pre><p>There are three types of checksums displayed there: <em>MD5</em>,
+application (whether the app is from the actual developer and isn’t
+modified by other people) can be checked using the signing info; because
+when an app is modified by a third-party unauthorised person, the app
+cannot be signed using the original certificate(s) again because the
+signing info are kept private by the actual developer. <em>How do you
+verify these signatures?</em> Using checksums. Checksums are generated
+from the certificates themselves. If the developer supplies the
+checksums, you can match the checksums using the different checksums
+generated in the <strong>Signatures</strong> tab. For example, if you
+have downloaded App Manager from Github, Telegram Channel or
+IzzyOnDroid’s repo, you can verify whether the app is actually released
+by me by simply matching the following <em>SHA256</em> checksum with the
+one displayed in this tab:<pre><code>320c0c0fe8cef873f2b554cb88c837f1512589dcced50c5b25c43c04596760ab</code></pre><p>There are three types of checksums displayed there: <em>MD5</em>,
 <em>SHA1</em> and <em>SHA256</em>.<div class="amalert danger"><p><strong><em>Caution.</em></strong><p>It is recommended that you verify signing info using only
 <em>SHA256</em> checksums or all three of them. DO NOT rely on
 <em>MD5</em> or <em>SHA1</em> checksums only as they are known to

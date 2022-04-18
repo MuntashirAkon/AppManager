@@ -1,11 +1,11 @@
 <?php
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 
-function list_files($dir) {
-    return array_diff(scandir($res_dir), array('..', '.'));
+function list_files(string $dir) {
+    return array_diff(scandir($dir), array('..', '.'));
 }
 
-function list_files_recursive($dir) {
+function list_files_recursive(string $dir) : array {
     if ($dir[strlen($dir) - 1] != '/') $dir = $dir . '/';
     $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($dir));
     $paths = array();
@@ -17,24 +17,24 @@ function list_files_recursive($dir) {
         $relative_path = str_replace($dir, '', $pathname);
         if ($relative_path == '.') continue; // Ignore this directory
         if ($last_segment == '.') $relative_path = substr($relative_path, 0, strlen($relative_path) - 1);
-        array_push($paths, $relative_path);
+        $paths[] = $relative_path;
     }
     return $paths;
 }
 
 // https://developer.android.com/guide/topics/resources/string-resource.html#FormattingAndStyling
-function android_escape($string) {
+function android_escape(string $string): string {
     return strtr($string, array('@' => '\@', '?' => '\?', '<' => '&lt;', '>' => '&gt;', '"' => '\"', "'" => "\'", '&' => '&amp;'));
 }
 
-function android_escape_slash($string) {
+function android_escape_slash(string $string) : string {
     return strtr($string, array('@' => '\@', '?' => '\?', '<' => '&lt;', '>' => '&gt;', '"' => '\"', "'" => "\'", '&' => '&amp;', '\\' => '\\\\'));
 }
 
-function android_escape_slash_newline($string) {
+function android_escape_slash_newline(string $string) : string {
     return strtr($string, array('@' => '\@', '?' => '\?', '<' => '&lt;', '>' => '&gt;', '"' => '\"', "'" => "\'", '&' => '&amp;', '\\' => '\\\\', "\n" => '\n'));
 }
 
-function android_escape_slash_newline_reverse($string) {
+function android_escape_slash_newline_reverse(string $string) : string {
     return strtr($string, array('\@' => '@', '\?' => '?', '&lt;' => '<', '&gt;' => '>', '\"' => '"', "\'" => "'", '&amp;' => '&', '\\\\' => '\\', '\n' => "\n"));
 }

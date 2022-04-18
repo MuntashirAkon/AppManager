@@ -95,7 +95,7 @@
             document.location.assign(url + lang + '/');
         }
 
-        const supportedLanguages = ['en', 'es', 'ja', 'ru', 'zh-rCN'];
+        const supportedLanguages = ['PLACEHOLDER_LANGUAGES_AS_ARRAY'];
 
         function onLoadDocument() {
             const lang = getLanguage();
@@ -107,7 +107,6 @@
                 // Try without region
                 if (lang.includes('-')) {
                     loadLanguage(lang.split('-')[0]);
-                    return;
                 }
             }
         }
@@ -123,13 +122,7 @@
           <div id="app">App</div>
           <div id="manager">Manager</div>
           <div id="combobox">
-            <span>
-              <a href="en/" onclick="setLanguage('en')">English</a> &#x2022;
-              <a href="es/" onclick="setLanguage('es')">español</a> &#x2022;
-              <a href="ja/" onclick="setLanguage('ja')">日本語</a> &#x2022;
-              <a href="ru/" onclick="setLanguage('ru')">русский</a> &#x2022;
-              <a href="zh-rCN/" onclick="setLanguage('zh-rCN')">中文 (中国)</a>
-            </span>
+<span><!-- PLACEHOLDER_LANGUAGES_AS_HTML --></span>
             <hr />
             <small style="font-style: oblique;">This site uses a cookie to remember your language preference in this browser. Disable JavaScript if you do not wish to use this feature.</small>
           </div>

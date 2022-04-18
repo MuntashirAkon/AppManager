@@ -9,6 +9,7 @@ date_default_timezone_set('UTC');
 // build <lang>     Build HTML from TeX using Pandoc for the given language.
 // rebase           Extract strings from the TeX files and re-create the base translation file.
 // update <lang>    Rebuild HTML from strings.xml for the given language.
+// deploy           Rebuild HTML and deploy it to the GitHub pages.
 // debug            Do experiments.
 
 // External requirements: Pandoc, pandoc-crossref, minify
@@ -22,12 +23,17 @@ const STRINGS_XML = 'strings.xml';
 const RAW_DIR = './docs/raw';
 const BASE_DIR = RAW_DIR . '/en';
 
+// Deployment
+const DIST_DIR = './docs/dist';
+const DIST_REPO = 'git@github.com:MuntashirAkon/AppManager.git';
+const DIST_BRANCH = 'pages';
+
 /**
  * Build and minify the outputs from TeX.
  *
- * @param $lang Target language e.g. en, ru, ja, etc.
+ * @param string $lang Target language e.g. en, ru, ja, etc.
  */
-function build_html($lang) {
+function build_html(string $lang) {
     $pwd = RAW_DIR . '/' . $lang;
     $main_tex = $pwd . '/' . MAIN_TEX;
     $output_file = $pwd . '/' . OUTPUT_FILENAME;
@@ -63,10 +69,10 @@ function build_html($lang) {
     $to_search = array();
     $to_replace = array();
     foreach ($matches['name'] as $color_name) {
-        array_push($to_search, "/style=\"background-color: ${color_name}\"/", "/style=\"color: ${color_name}\"/");
+        array_push($to_search, "/style=\"background-color: $color_name\"/", "/style=\"color: $color_name\"/");
     }
     foreach ($matches['color'] as $color_value) {
-        array_push($to_replace, "class=\"colorbox\" style=\"background-color: #${color_value}\"", "style=\"color: #${color_value}\"");
+        array_push($to_replace, "class=\"colorbox\" style=\"background-color: #$color_value\"", "style=\"color: #$color_value\"");
     }
 
     // Replace version name and date
@@ -84,14 +90,14 @@ function build_html($lang) {
     file_put_contents($output_file, $output_contents);
 
     // Minify CSS
-    $cmd = "minify \"${custom_css}\" -o \"${base_dir}/../css/custom.css\"";
+    $cmd = "minify \"$custom_css\" -o \"$base_dir/../css/custom.css\"";
     system($cmd, $ret_val);
     if ($ret_val != 0) {
         echo "Could not minify custom.css";
         exit(1);
     }
     // Minify HTML
-    $cmd = "minify \"${output_file}\" -o \"${pwd}/index.min.html\" && mv \"${pwd}/index.min.html\" \"${output_file}\"";
+    $cmd = "minify \"$output_file\" -o \"$pwd/index.min.html\" && mv \"$pwd/index.min.html\" \"$output_file\"";
     system($cmd, $ret_val);
     if ($ret_val != 0) {
         echo "Could not minify index.html";
@@ -103,18 +109,18 @@ function build_html($lang) {
 /**
  * Recursively parse all the \input command and gather all the included tex files from main.tex.
  *
- * @param $tex_files Relative links to the TeX files
+ * @param string[] $tex_files Relative links to the TeX files
  */
-function collect_tex_files(&$tex_files, $base_dir = null, $tex_file = null) {
+function collect_tex_files(array &$tex_files, string $base_dir = null, string $tex_file = null) {
     if ($tex_file == null) {
         $base_dir = getcwd() . '/' . BASE_DIR;
         $tex_file = MAIN_TEX;
     }
     if (!file_exists($base_dir . '/' . $tex_file)) {
-        echo "File ${tex_file} does not exist!";
+        echo "File $tex_file does not exist!";
         return;
     }
-    array_push($tex_files, $tex_file);
+    $tex_files[] = $tex_file;
     $contents = file_get_contents($base_dir . '/' . $tex_file);
     preg_match_all('/\\\input\{(?<tex_file>[^\}]+)\}/', $contents, $matches);
     foreach ($matches['tex_file'] as $t) {
@@ -125,11 +131,11 @@ function collect_tex_files(&$tex_files, $base_dir = null, $tex_file = null) {
 /**
  * Parse the given TeX file and return the parsed contents as a key-value pair.
  */
-function get_tex_contents_assoc($tex_file) {
+function get_tex_contents_assoc(string $tex_file): array {
     $tex_file_contents = file_get_contents($tex_file);
 
     // Get all the titles
-    preg_match_all('/((?<=section{)|(?<=subsection{)|(?<=subsubsection{)|(?<=chapter{)|(?<=caption{)|(?<=paragraph{))(?<raw_title>.*)(?<=\%\%##)(?<key>.*)(?=>>)/', $tex_file_contents, $matches);
+    preg_match_all('/((?<=section{)|(?<=subsection{)|(?<=subsubsection{)|(?<=chapter{)|(?<=caption{)|(?<=paragraph{))(?<raw_title>.*)(?<=%%##)(?<key>.*)(?=>>)/', $tex_file_contents, $matches);
     // Get titles from the raw titles
     $title_values = array();
     foreach ($matches['raw_title'] as $raw_title) {
@@ -147,7 +153,7 @@ function get_tex_contents_assoc($tex_file) {
                     --$c; // Decrease { counter since one match was found
                     if ($c < 0) {
                         // End of the title reached
-                        array_push($title_values, substr($raw_title, 0, $i));
+                        $title_values[] = substr($raw_title, 0, $i);
                         break;
                     }
                 }
@@ -157,21 +163,21 @@ function get_tex_contents_assoc($tex_file) {
     // Check keys for verification testing
     foreach ($matches['key'] as $key) {
         if (strlen($key) == 0) {
-            echo "Warning: Empty raw title for key ${key}\n";
+            echo "Warning: Empty raw title for key $key\n";
             continue;
         }
         if ($key[0] != '$') {
-            echo "Warning: First letter of the title is not `$` (key: ${key})\n";
+            echo "Warning: First letter of the title is not `$` (key: $key)\n";
         }
-        if (!preg_match('/^\$[a-zA-Z0-9-_\.]+$/', $key)) {
-            echo "Warning: Key (${key}) didn't match the required Regex\n";
+        if (!preg_match('/^\$[a-zA-Z0-9-_.]+$/', $key)) {
+            echo "Warning: Key ($key) didn't match the required Regex\n";
         }
     }
     // Convert to key => value pair
     $titles = array_combine($matches['key'], $title_values);
 
     // Extract all the contents
-    preg_match_all('/(?<=\%\%!!)(?<key>.*)(?=<<)/', $tex_file_contents, $matches);
+    preg_match_all('/(?<=%%!!)(?<key>.*)(?=<<)/', $tex_file_contents, $matches);
     $content_values = array();
     $offset = 0;
     foreach ($matches['key'] as $key) {
@@ -179,15 +185,15 @@ function get_tex_contents_assoc($tex_file) {
         $start_pos = strpos($tex_file_contents, $start_magic, $offset) + strlen($start_magic);
         $end_pos = strpos($tex_file_contents, "\n%%!!>>", $offset);
         $offset = $end_pos + 7;
-        array_push($content_values, substr($tex_file_contents, $start_pos, $end_pos - $start_pos));
+        $content_values[] = substr($tex_file_contents, $start_pos, $end_pos - $start_pos);
     }
     foreach ($matches['key'] as $key) {
         if (strlen($key) == 0) {
-            echo "Warning: Empty raw title for key ${key}\n";
+            echo "Warning: Empty raw title for key $key\n";
             continue;
         }
-        if (!preg_match('/^[a-zA-Z0-9-_\.]+$/', $key)) {
-            echo "Warning: Key (${key}) didn't match the required Regex\n";
+        if (!preg_match('/^[a-zA-Z0-9-_.]+$/', $key)) {
+            echo "Warning: Key ($key) didn't match the required Regex\n";
         }
     }
     $contents = array_combine($matches['key'], $content_values);
@@ -230,9 +236,9 @@ function rebase_strings() {
  * Update translation from strings.xml for the given language. It replaces the strings available in the strings.xml and
  * then rebuilds the HTML file.
  *
- * @param $lang Target language e.g. en, ru, ja, etc.
+ * @param string $lang Target language e.g. en, ru, ja, etc.
  */
-function update_translations($lang) {
+function update_translations(string $lang) {
     $pwd = RAW_DIR . '/' . $lang;
     $strings_file = $pwd . '/' . STRINGS_XML;
     $base_dir = getcwd() . '/' . BASE_DIR;
@@ -248,7 +254,7 @@ function update_translations($lang) {
         $tex_file = str_replace('$', '/', substr($raw_key, 0, $pos) . '.tex');
         $key = substr($raw_key, $pos + 1);
         if (strlen($tex_file) == 0 || strlen($key) == 0) {
-            echo "Invalid TeX filename or key (raw: ${raw_key})\n";
+            echo "Invalid TeX filename or key (raw: $raw_key)\n";
             exit(1);
         }
         if (!isset($strings[$tex_file])) $strings[$tex_file] = array();
@@ -264,7 +270,7 @@ function update_translations($lang) {
         if (!is_dir($dir)) {
             if (file_exists($dir)) unlink($dir);
             if (!mkdir($dir, 0777, true)) {
-                echo "Error: Could not create ${dir}\n";
+                echo "Error: Could not create $dir\n";
                 exit(1);
             }
         }
@@ -273,7 +279,7 @@ function update_translations($lang) {
             $tex_file_contents = file_get_contents($base_dir . '/' . $tex_file);
             foreach ($contents as $key => $val) {
                 if (strlen($key) == 0) {
-                    echo "Warning: Empty key (file: ${tex_file})";
+                    echo "Warning: Empty key (file: $tex_file)";
                     continue;
                 }
                 if ($key[0] == '$') {
@@ -281,7 +287,7 @@ function update_translations($lang) {
                     $magic = preg_quote('%%##' . $key . '>>', '/');
                     preg_match('/((?<=section{)|(?<=subsection{)|(?<=subsubsection{)|(?<=chapter{)|(?<=caption{)|(?<=paragraph{))(?<raw_title>.*)'. $magic .'/', $tex_file_contents, $matches, PREG_OFFSET_CAPTURE);
                     if (!isset($matches['raw_title'])) {
-                        echo "Warning: Could not find magic ${magic} in ${tex_file}\n";
+                        echo "Warning: Could not find magic $magic in $tex_file\n";
                         continue;
                     }
                     // Sanitize raw title to real title
@@ -314,9 +320,9 @@ function update_translations($lang) {
                 }
                 // Replace TeX contents
                 $start_magic = '%%!!' . $key . "<<\n";
-                $start_pos = strpos($tex_file_contents, $start_magic, 0);
+                $start_pos = strpos($tex_file_contents, $start_magic);
                 if ($start_pos === false) {
-                    echo "Warning: Key not found (file: ${tex_file}, key: ${key})\n";
+                    echo "Warning: Key not found (file: $tex_file, key: $key)\n";
                     continue;
                 }
                 $start_pos += strlen($start_magic);
@@ -345,6 +351,91 @@ function update_translations($lang) {
     }
 }
 
+function deploy() {
+    $languages = collect_languages();
+    // Rebuild HTML
+    foreach ($languages as $language) {
+        $output_file = RAW_DIR . '/' . $language . '/' . OUTPUT_FILENAME;
+        $strings_file = RAW_DIR . '/' . $language . '/' . STRINGS_XML;
+        if (!need_update($output_file, $strings_file)) {
+            fprintf(STDERR, "Skipped updating HTML for language $language\n");
+            continue;
+        }
+        if ($language == 'en') {
+            // For en, only build HTML
+            build_html($language);
+        } else {
+            update_translations($language);
+        }
+    }
+    if (!is_dir(DIST_DIR)) {
+        mkdir(DIST_DIR);
+    }
+    // Copy HTML files to dist dir
+    foreach ($languages as $language) {
+        $src_html = RAW_DIR . '/' . $language . '/index.html';
+        $dst_dir = DIST_DIR . '/' . $language;
+        if (!is_dir($dst_dir)) {
+            mkdir($dst_dir);
+        }
+        copy($src_html, $dst_dir . '/index.html');
+    }
+    // Copy other files
+    // - images
+    $dir = RAW_DIR . '/images';
+    $files = list_files_recursive($dir);
+    mkdir(DIST_DIR . '/images');
+    foreach ($files as $file) {
+        copy($dir . '/' . $file, DIST_DIR . '/images/' . $file);
+    }
+    // - css
+    $dir = RAW_DIR . '/css';
+    $files = list_files_recursive($dir);
+    mkdir(DIST_DIR . '/css');
+    foreach ($files as $file) {
+        copy($dir . '/' . $file, DIST_DIR . '/css/' . $file);
+    }
+    // Generate index.html
+    $js_lang_html = array();
+    foreach ($languages as $language) {
+        $lang_code = get_IETF_language_tag($language);
+        $js_lang_html[] = "  <a href=\"$language/\" onclick=\"setLanguage('$language')\">" . Locale::getDisplayName($lang_code, $lang_code) . "</a>";
+    }
+    $html_contents = file_get_contents(RAW_DIR . '/index.html');
+    $html_contents = str_replace('PLACEHOLDER_LANGUAGES_AS_ARRAY', implode('\', \'', $languages), $html_contents);
+    $html_contents = str_replace('<!-- PLACEHOLDER_LANGUAGES_AS_HTML -->', "\n" . implode(" &#x2022;\n", $js_lang_html) . "\n", $html_contents);
+    file_put_contents(DIST_DIR . '/index.html', $html_contents);
+    // Ignore .DS_Store files
+    file_put_contents(DIST_DIR . '/' . '.gitignore', '*.DS_Store');
+    // Commit changes
+    passthru('cd ' . DIST_DIR . ' && git init && git add -A && git commit && git push -f ' . DIST_REPO . ' master:' . DIST_BRANCH);
+    // Delete dist dir
+    passthru('rm -rf ' . DIST_DIR);
+}
+
+function collect_languages() : array {
+    $files = array_diff(list_files(RAW_DIR), array('css', 'images'));
+    $languages = array();
+    foreach ($files as $file) {
+        if (is_dir(RAW_DIR . '/' . $file)) {
+            $languages[] = $file;
+        }
+    }
+    return $languages;
+}
+
+function need_update(string $html_file, string $strings_file) : bool {
+    if (!is_file($html_file) || !is_file($strings_file)) {
+        return true;
+    }
+    $html_time = filemtime($html_file);
+    $strings_time = filemtime($strings_file);
+    if ($html_time === false || $strings_time === false) {
+        return true;
+    }
+    return $strings_time > $html_time;
+}
+
 function get_trimmed_content(string $content) : string {
     $len = strlen($content);
     if ($len > 0 && $content[0] == '"' && $content[$len - 1] == '"') {
@@ -355,7 +446,7 @@ function get_trimmed_content(string $content) : string {
     return android_escape_slash_newline_reverse(str_replace("\n", '', $content));
 }
 
-function get_IETF_language_tag($lang) {
+function get_IETF_language_tag(string $lang): string {
     if (strpos($lang, '-') === false) return $lang;
     $lang_parts = explode('-', $lang);
     if ($lang_parts[1][0] == 'r') {
@@ -398,6 +489,9 @@ switch($verb) {
         } else {
             update_translations($argv[2]);
         }
+        break;
+    case 'deploy':
+        deploy();
         break;
     case 'debug':
         echo "Nothing to do.";
