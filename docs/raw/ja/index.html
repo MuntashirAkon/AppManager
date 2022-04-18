@@ -90,7 +90,7 @@ Ops</a></span><li><span><span class=toc-section-number>7.3</span> <a href=#sec:a
 Constants</a></span><li><span><span class=toc-section-number>7.3.3</span> <a href=#subsec:package-ops id=toc:subsec:package-ops>PackageOps</a></span><li><span><span class=toc-section-number>7.3.4</span> <a href=#subsec:opentry id=toc:subsec:opentry>OpEntry</a></span><li><span><span class=toc-section-number>7.3.5</span> <a href=#subsec:usage id=toc:subsec:usage>Usage</a></span></ul><li><span><span class=toc-section-number>7.4</span> <a href=#sec:appopsservice id=toc:sec:appopsservice>AppOpsService</a></span><li><span><span class=toc-section-number>7.5</span> <a href=#sec:appops-xml id=toc:sec:appops-xml>appops.xml</a></span><li><span><span class=toc-section-number>7.6</span> <a href=#sec:appops-cli id=toc:sec:appops-cli>Command Line
 Interface</a></span></ul></ul></nav><div class=titlingpage><div class=center><div class=announcement><p>We’re running a <strong>funding campaign</strong> for App Manager for
 a limited period. <a href=https://opencollective.com/app-manager#category-ABOUT>learn
-more...</a></div><p><img src=../images/icon.png style=width:1in alt=image><p><strong><span class=smallcaps>App Manager</span></strong><p><strong>ユーザーマニュアル</strong><p><em>v3.0.0-alpha01</em><p>14 March 2022<p>Copyright © 2020–2022 Muntashir Al-Islam<blockquote><p>“賢明に、そして、ゆっくりと。速く走る者たちは、つまずきますからな”
+more...</a></div><p><img src=../images/icon.png style=width:1in alt=image><p><strong><span class=smallcaps>App Manager</span></strong><p><strong>ユーザーマニュアル</strong><p><em>v3.0.0-alpha02</em><p>18 April 2022<p>Copyright © 2020–2022 Muntashir Al-Islam<blockquote><p>“賢明に、そして、ゆっくりと。速く走る者たちは、つまずきますからな”
 <span>— 修道士ロレンス, <em>ロメオとジュリエット</em></span></blockquote></div></div><section id=ch:introduction class=level1 data-number=1><h1 data-number=1><span class=header-section-number>1</span> <a href=#toc:ch:introduction>はじめに</a><a href=#ch:introduction class=anchor aria-hidden=true></a></h1><p>App Manager は、Android 用の高度なパッケージマネージャです。
 数え切れないほどの機能を備えているため、ユーザーを支援するためのユーザーマニュアルが必要です。
 このドキュメントは、App Manager
@@ -310,130 +310,96 @@ Managerを使用してそれらを開くことはできません。</div><p>ま�
 Managerで作成したショートカットはすべて失われます。</div></section><section id=subsubsec:details:servcies class=level4 data-number=2.2.3.2><h4 data-number=2.2.3.2><span class=header-section-number>2.2.3.2</span> サービス<a href=#subsubsec:details:servcies class=anchor aria-hidden=true></a></h4><p>ユーザーが閲覧することができる<a href=#subsubsec:activities>アクティビティ</a>とは異なり、<strong>サービス</strong>はバックグラウンドタスクを処理します。
 例えば、スマートフォンのブラウザを使ってインターネットからファイルをダウンロードする場合、ブラウザはコンテンツをダウンロードするためにバックグラウンドサービスを使用しています。<p>アクティビティを終了すると、通常はすぐにメモリ上から破棄されます（端末の空きメモリの量など、多くの要因に依存します）。しかしサービスは、必要に応じて無期限に実行することができます。より多くのサービスがバックグラウンドで実行されている場合、メモリや処理能力が不足するため、携帯電話の動作が遅くなり、携帯電話のバッテリーがより速く消耗する可能性があります。新しいAndroidのバージョンでは、すべてのアプリでバッテリーの最適化機能がデフォルトで有効になっています。この機能を有効にすると、システムは任意のサービスをランダムに終了させることができます。<p>ところで、アクティビティもサービスもメイン<a href=https://stackoverflow.com/questions/7597742>ルーパー</a>と呼ばれる同じルーパーで実行されるため、サービスが本当にバックグラウンドで実行されているとは限りません。それを保証するのは、アプリケーションの開発者の仕事です。アプリケーションとサービスは<a href=#subsubsec:app-details-receivers>ブロードキャストレシーバー</a>を使って通信しています。</section><section id=subsubsec:app-details-receivers class=level4 data-number=2.2.3.3><h4 data-number=2.2.3.3><span class=header-section-number>2.2.3.3</span> レシーバ<a href=#subsubsec:app-details-receivers class=anchor aria-hidden=true></a></h4><p><strong>レシーバー</strong>（<em>ブロードキャストレシーバー</em>とも呼ばれる）は、特定のイベントに対して特定のタスクの実行を呼び出すために使用することができます。これらのコンポーネントは、ブロードキャストメッセージを受信するとすぐに実行されるため、ブロードキャストレシーバーと呼ばれます。これらのブロードキャストメッセージは、インテントと呼ばれるメソッドを使用して送信されます。インテントはAndroidの特別な機能で、アプリケーションやアクティビティ、サービスを開いたり、ブロードキャストメッセージを送信したりするために使われます。そのため、<a href=#subsubsec:activities>アクティビティ</a>と同様に、ブロードキャストレシーバもインテントフィルターを用いて、必要なブロードキャストメッセージのみを受信することができます。ブロードキャストメッセージは、システムまたはアプリケーション自体のいずれかによって送信することができます。ブロードキャストメッセージが送信されると、対応するレシーバーはシステムによって起動され、タスクを実行できるようになります。例えば、メモリが少ない場合、モバイルデータを有効にしたり、Wifiに接続した後に、端末がフリーズしたり、一瞬ラグが発生することがあります。なぜだか不思議に思ったことはありませんか？これは、「android.net.conn.CONNECTIVITY_CHANGE」を受信できるブロードキャストレシーバーが、データ接続を有効にすると同時に、システムによって起こされるからです。多くのアプリがこのインテントフィルタを使っているため、これらのアプリはすべて、システムによってほとんどすぐに起こされ、フリーズや遅延の原因になっています。要するに、レシーバはプロセス間通信（IPC）、つまり異なるアプリ間（必要な権限がある場合）、あるいは単一アプリケーションの異なるコンポーネント間の通信に使用できます。</section><section id=appdetails:providers class=level4 data-number=2.2.3.4><h4 data-number=2.2.3.4><span class=header-section-number>2.2.3.4</span> プロバイダ<a href=#appdetails:providers class=anchor aria-hidden=true></a></h4><p><strong>プロバイダ</strong>（<em>コンテンツプロバイダ</em>ともいう）は、アプリ内のデータ管理に使用されます。例えば、App
 ManagerでAPKファイルの保存やルールのエクスポートを行う場合、「androidx.core.content.FileProvider」というコンテンツプロバイダを使用します。データベース管理、トラッキング、検索など、様々なコンテンツ関連のタスクを管理するために、他のコンテンツプロバイダや、カスタムプロバイダーもあります。各コンテンツプロバイダは、パッケージ名と同様に、Androidエコシステム全体でその特定のアプリケーションに固有のAuthorityと呼ばれるフィールドを持っています。</section><section id=root化された端末向けの追加機能 class=level4 data-number=2.2.3.5><h4 data-number=2.2.3.5><span class=header-section-number>2.2.3.5</span>
-Root化された端末向けの追加機能<a href=#root化された端末向けの追加機能 class=anchor aria-hidden=true></a></h4><p>Unlike non-root users who are mostly spectators in these tabs, root
-users can perform various operations.<section id=コンポーネントをブロックする class=level5 data-number=2.2.3.5.1><h5 data-number=2.2.3.5.1><span class=header-section-number>2.2.3.5.1</span>
-コンポーネントをブロックする<a href=#コンポーネントをブロックする class=anchor aria-hidden=true></a></h5><p>On the right-most side of each component item, there is a “block”
-icon (which becomes a “unblock/restore” icon when the component is being
-blocked). This icon (actually, a button) can be used to toggle the
-blocking status of that particular component. If you do not have <a href=#subsubsec:instant-component-blocking>Instant Component
-Blocking</a> enabled or haven’t applied blocking for the application
-before, you have to apply the changes using the <strong>Apply
-rules</strong> option in three-dots menu. You can also remove already
-applied rules using the same option (which would be read as
-<strong>Remove rules</strong> this time).<div class=seealso-inline><p><em>See also: <span><a href=#sec:faq:app-components>FAQ: App
-Components</a></span></em></div></section><section id=par:appdetails:blocking-trackers class=level5 data-number=2.2.3.5.2><h5 data-number=2.2.3.5.2><span class=header-section-number>2.2.3.5.2</span>
-トラッカーをブロックする<a href=#par:appdetails:blocking-trackers class=anchor aria-hidden=true></a></h5><p>You can disable tracker components using the <strong>Block
-tracker</strong> option in the three-dots menu. All tracker components
-will be blocked regardless of the tab you’re currently in.<div class="amalert tip"><p><strong><em>Info.</em></strong><p>Tracker components are a subset of application components. Therefore,
-they are blocked using the same method used for blocking any other
-components.</div><div class=seealso><p><em>See also:</em><ul class=incremental><li><p><a href=#subsec:tracker-classes-versus-tracker-components>FAQ:
-Tracker classes versus tracker components</a><li><p><a href=#sec:scanner-page>Scanner Page</a><li><p><a href=#subsec:block-unblock-trackers>1-Click Ops Page:
-Block/Unblock Trackers</a></ul></div></section></section></section><section id=subsec:permission-tabs class=level3 data-number=2.2.4><h3 data-number=2.2.4><span class=header-section-number>2.2.4</span>
-<a href=#toc:subsec:permission-tabs>権限タブ</a><a href=#subsec:permission-tabs class=anchor aria-hidden=true></a></h3><p><strong>App Ops</strong>, <strong>Uses Permissions</strong> and
-<strong>Permissions</strong> tabs are related to permissions. In Android
-communication between apps or processes which do not have the same
-identity (known as <em>shared id</em>) often require permission(s).
-These permissions are managed by the permission controller. Some
-permissions are considered <em>normal</em> permissions which are granted
-automatically if they appear in the application manifest, but
-<em>dangerous</em> and <em>development</em> permissions require
-confirmation from the user. Colours used in these tabs are explained in
-§<a href=#subsec:app-details-colour-codes data-reference-type=ref data-reference=subsec:app-details-colour-codes>2.2.1</a>.<section id=subsubsec:app-ops class=level4 data-number=2.2.4.1><h4 data-number=2.2.4.1><span class=header-section-number>2.2.4.1</span> App Ops<a href=#subsubsec:app-ops class=anchor aria-hidden=true></a></h4><p><strong>App Ops</strong> stands for <strong>Application
-Operations</strong>. Since Android 4.3, <em>App Ops</em> are used by
-Android system to control most of the application permissions. Each
-application op has a unique number associated with them which are closed
-inside first brackets in the App Ops tab. They also have a private and
-optionally, a public name. Some application ops are also associated with
-<em>permissions</em>. The dangerousness of an application op is decided
-based on the associated permission, and other information such as
-<em>flags</em>, <em>permission name</em>, <em>permission
-description</em>, <em>package name</em>, <em>group</em> are taken from
-the associated <a href=#subsubsec:permissions>permission</a>. Other
-information may include the following:<ul class=incremental><li><p><strong>Mode.</strong> It describes the current authorisation
-status which can be <em>allow</em>, <em>deny</em> (a rather misnomer, it
-simply means error), <em>ignore</em> (it actually means deny),
-<em>default</em> (inferred from a list of defaults set internally by the
-vendor), <em>foreground</em> (in newer Androids, it means the
-application op can only be used when the application is running in
-foreground), and some custom modes set by the vendors (MIUI uses
-<em>ask</em>, for instance).<li><p><strong>Duration.</strong> The amount of time this application op
-has been used (there can be negative durations whose use cases are
-currently unknown to me).<li><p><strong>Accept Time.</strong> Last time the application op was
-accepted.<li><p><strong>Reject Time.</strong> Last time the application op was
-rejected.</ul><div class="amalert tip"><p><strong><em>Info.</em></strong><p>Contents of this tab are visible to no-root users if
-<code>android.permission.GET_APP_OPS_STATS</code> is granted via
-ADB.</div><p>There is a toggle button next to each application op item which can
-be used to allow or deny (ignore) the application op. If you need to set
-other modes available to your device, simply long click on an item. If
-you need to set additional application ops that are not listed in the
-tab, use the <em>Set custom application op</em> option in the menu. You
-can also reset your changes using the <em>Reset to default</em> option
-or deny all dangerous application ops using the corresponding option in
-the menu. You can also sort them in ascending order by application op
-names and the associated unique numbers (or values). You can also list
-the denied application ops first using the corresponding sorting
-option.<div class="amalert warning"><p><strong><em>Warning.</em></strong><p>Denying an application op may cause the application to misbehave. Use
-the <em>reset to default</em> option if that is the case. Due to the
-nature how application ops work, the system may take some time to apply
-them.</div><div class=seealso-inline><p><em>See also: <span><a href=#ch:app-ops>Appendix: App
-Ops</a></span></em></div></section><section id=使用する権限 class=level4 data-number=2.2.4.2><h4 data-number=2.2.4.2><span class=header-section-number>2.2.4.2</span> 使用する権限<a href=#使用する権限 class=anchor aria-hidden=true></a></h4><p><strong>Uses Permissions</strong> are the permissions used by the
-application. This is named so because they are declared in the manifest
-using <code>uses-permission</code> tags. Information such as
-<em>flags</em>, <em>permission name</em>, <em>permission
-description</em>, <em>package name</em>, <em>group</em> are taken from
-the associated <a href=#subsubsec:permissions>permission</a>.<p><strong>Root and ADB users</strong> can grant or revoke the
-<em>dangerous</em> and <em>development</em> permissions using the toggle
-button on the right side of each permission item. They can also revoke
-dangerous permissions all at once using the corresponding option in the
-menu. Only these two types of permissions can be revoked because Android
-doesn’t allow modifying <em>normal</em> permissions (which most of them
-are). The only alternative is to edit the application manifest and
-remove these permissions from there.<div class="amalert tip"><p><strong><em>Info.</em></strong><p>Since dangerous permissions are revoked by default by the system,
-revoking all dangerous permissions is the same as resetting all
-permissions.</div><div class="amalert tip"><p><strong><em>Notice.</em></strong><p>Permissions cannot be changed for apps targeting API 23 or earlier.
-Therefore, permission toggles are disabled for such apps.</div><p>Users can sort the permissions by permission name (in ascending
-order) or choose to display denied or dangerous permissions at first
-using the corresponding options in the menu.</section><section id=subsubsec:permissions class=level4 data-number=2.2.4.3><h4 data-number=2.2.4.3><span class=header-section-number>2.2.4.3</span> 権限<a href=#subsubsec:permissions class=anchor aria-hidden=true></a></h4><p><strong>Permissions</strong> are usually custom permissions defined
-by the application itself. It could contain regular permissions as well,
-mostly in old applications. Here’s a complete description of each item
-that is displayed there:<ul class=incremental><li><p><strong>Name.</strong> Each permission has a unique name like
-<code>android.permission.INTERNET</code> but multiple application can
-request the permission.<li><p><strong>Icon.</strong> Each permission can have a custom icon.
-The other permission tabs do not have any icon because they do not
-contain any icon in the application manifest.<li><p><strong>Description.</strong> This optional field describes the
+Root化された端末向けの追加機能<a href=#root化された端末向けの追加機能 class=anchor aria-hidden=true></a></h4><p>これらのタブでは非Rootユーザーよりも、Rootユーザーは様々な操作を行うことができます。<section id=コンポーネントをブロックする class=level5 data-number=2.2.3.5.1><h5 data-number=2.2.3.5.1><span class=header-section-number>2.2.3.5.1</span>
+コンポーネントをブロックする<a href=#コンポーネントをブロックする class=anchor aria-hidden=true></a></h5><p>各コンポーネント項目の右端には、「ブロック」ボタンがあります。（ブロックされているときは「ブロック解除」ボタンとなります）
+このボタンを使って、そのコンポーネントのブロックの状態を切り替えることができます。
+<a href=#subsubsec:instant-component-blocking>インスタントブロッキング</a>を有効にしていない場合、
+または以前にアプリケーションにブロックを適用していない場合は、
+3点メニューの<strong>ルールを反映</strong>オプションで変更を適用する必要があります。
+また、<strong>ルールを除去</strong>オプションから、すでに適用されたルールを削除することもできます。<div class=seealso-inline><p><em>See also: <span><a href=#sec:faq:app-components>FAQ:
+アプリのコンポーネント</a></span></em></div></section><section id=par:appdetails:blocking-trackers class=level5 data-number=2.2.3.5.2><h5 data-number=2.2.3.5.2><span class=header-section-number>2.2.3.5.2</span>
+トラッカーをブロックする<a href=#par:appdetails:blocking-trackers class=anchor aria-hidden=true></a></h5><p>トラッカーコンポーネントを無効にするには、三点メニューの「トラッカーをブロック」を使用します。
+現在表示されているタブに関係なく、すべてのトラッカーコンポーネントがブロックされます。<div class="amalert tip"><p><strong><em>Info.</em></strong><p>トラッカーコンポーネントは、アプリのコンポーネントの部分集合です。
+したがって、他のコンポーネントのブロックに使用されるのと同じ方法によりブロックされます。</div><div class=seealso><p><em>See also:</em><ul class=incremental><li><p><a href=#subsec:tracker-classes-versus-tracker-components>FAQ:
+トラッカーのクラスとトラッカーコンポーネント</a><li><p><a href=#sec:scanner-page>スキャナーページ</a><li><p><a href=#subsec:block-unblock-trackers>ワンタップ一括処理:
+トラッカーをブロック/ブロック解除</a></ul></div></section></section></section><section id=subsec:permission-tabs class=level3 data-number=2.2.4><h3 data-number=2.2.4><span class=header-section-number>2.2.4</span>
+<a href=#toc:subsec:permission-tabs>権限タブ</a><a href=#subsec:permission-tabs class=anchor aria-hidden=true></a></h3><p><strong>App Ops</strong>、<strong>Uses
+Permissions</strong>、<strong>Permissions</strong>タブは、権限に関連しています。
+Androidでは、同じID(<em>共有ID</em>として知られます)を持たないアプリやプロセス間の通信は、しばしばパーミッション（複数可）を必要とします。
+これらの権限は、権限コントローラーによって管理されます。
+アプリケーションのマニフェストに記載されていれば自動的に付与される<em>通常</em>の権限もありますが、
+<em>dangerous</em>、<em>development</em>パーミッションはユーザーの確認が必要です。
+これらのタブで使用される色については、<a href=#subsec:app-details-colour-codes data-reference-type=ref data-reference=subsec:app-details-colour-codes>2.2.1</a>節で説明しています。<section id=subsubsec:app-ops class=level4 data-number=2.2.4.1><h4 data-number=2.2.4.1><span class=header-section-number>2.2.4.1</span> App Ops<a href=#subsubsec:app-ops class=anchor aria-hidden=true></a></h4><p><strong>App Ops</strong> は、<strong>Application
+Operations</strong>(アプリケーションの操作)の略です。 Android
+4.3以降、textit<span>App
+Ops</span>はAndroidシステムによってアプリ権限の大部分を制御するために使用されています。
+各AppOpsは、それらに関連付けられた一意の番号を持っており、それはApp
+Opsタブの最初の括弧内に閉じられています。
+また、プライベート名を持ち、任意でパブリック名を持つことができます。
+いくつかのAppOpsは、<em>権限</em>とも関連付けられています。
+AppOpsの保護レベルは、関連付けられた権限に基づいて決定されます。
+<em>フラグ</em>、<em>権限名</em>、<em>権限の説明</em>、<em>パッケージ名</em>、<em>グループ</em>のような情報は、
+関連付けられた<a href=#subsubsec:permissions>権限</a>から取得されます。
+その他の情報としては、以下のようなものがあります:<ul class=incremental><li><p><strong>モード</strong> 現在の認可状態を表し、
+allow、deny（やや語弊がありますが、単にエラーを意味します）、
+ignore（実際には拒否を意味します）、default（ベンダーが内部で設定したデフォルトのリストから推測されます）、
+foreground（新しいAndroidシステムでは、アプリケーションがフォアグラウンドで実行中のときのみAppOpsが使用できることを意味します）があります。
+また、ベンダーが設定したいくつかのカスタムモード（例えば、MIUIの場合はask）があります。<li><p><strong>使用した時間</strong>
+このAppOpsが使用された時間を表します。<li><p><strong>許可した時間</strong>
+このAppOpsが最後に許可された時間を表します。<li><p><strong>拒否した時間</strong>
+このAppOpsが最後に拒否された時間を表します。</ul><div class="amalert tip"><p><strong><em>Info.</em></strong><p>このタブの内容は、ADBにてtexttt<span>android.permission.GET_APP_OPS_STATS</span>権限が付与されている場合、非Rootユーザーでも見ることができます。</div><p>各AppOpsの項目の横にトグルボタンがあり、AppOpsを許可または拒否（無視）するために使用することができます。
+デバイスで利用可能な他のモードを設定する必要がある場合は、項目を長押ししてください。
+タブに表示されていないAppOpsを追加で設定する必要がある場合は、
+メニューの<em>カスタムAppOpsを適用</em>オプションを使用します。
+また、<em>デフォルトに戻す</em>オプションを使用して変更内容をリセットしたり、
+メニューの対応するオプションを使用して危険なAppOpsをすべて拒否したりすることができます。
+また、AppOpsの名前と関連する一意の番号（または値）で昇順に並べ替えることもできます。
+また、対応するソートオプションを使用して、拒否されたAppOpsを最初に表示することができます。<div class="amalert warning"><p><strong><em>Warning.</em></strong><p>AppOpsを拒否すると、アプリケーションが誤動作することがあります。
+そのような場合は、<em>デフォルトに戻す</em>オプションを使用してください。
+AppOpsの動作の性質上、システムがそれを適用するのに時間がかかることがあります。</div><div class=seealso-inline><p><em>See also: <span><a href=#ch:app-ops>付録: App
+Ops</a></span></em></div></section><section id=使用する権限 class=level4 data-number=2.2.4.2><h4 data-number=2.2.4.2><span class=header-section-number>2.2.4.2</span> 使用する権限<a href=#使用する権限 class=anchor aria-hidden=true></a></h4><p><strong>Uses
+Permissions</strong>は、アプリケーションで使用される権限です。マニフェストで<code>uses-permission</code>タグを使用して宣言されます。
+<em>フラグ</em>、<em>パーミッション名</em>、<em>パーミッションの説明</em>、<em>パッケージ名</em>、<em>グループ</em>などの情報は、
+関連する<a href=#subsubsec:permissions>権限</a>から取得されます。<p><strong>RootおよびADBユーザー</strong>は、各権限項目の右側にあるトグルボタンを使用して、
+<em>dangerous</em>権限と<em>development</em>権限を許可したり、取り消したりすることができます。
+また、メニューの対応するオプションを使用して、危険なパーミッションを一度に取り消すこともできます。
+Androidは<em>通常の</em>
+パーミッション（そのほとんどがそうですが）を変更することができないので、
+この2種類のパーミッションのみ取り消すことができます。
+唯一の選択肢は、アプリケーションマニフェストを編集し、そこからこれらの権限を削除することです。<div class="amalert tip"><p><strong><em>Info.</em></strong><p>dangerous権限はシステムによってデフォルトで拒否されているため、
+すべてのdangerous権限を取り消すことは、すべての権限をリセットすることと同じです。</div><div class="amalert tip"><p><strong><em>Notice.</em></strong><p>API23以前を対象としたアプリは、権限を変更することができません。
+そのため、そのようなアプリではパーミッションの切り替えは無効です。</div><p>ユーザーは、権限名でソートしたり（昇順）、メニューの対応するオプションを使用して、拒否された権限や
+dangerous権限を最初に表示するように選択することができます。</section><section id=subsubsec:permissions class=level4 data-number=2.2.4.3><h4 data-number=2.2.4.3><span class=header-section-number>2.2.4.3</span> 権限<a href=#subsubsec:permissions class=anchor aria-hidden=true></a></h4><p><strong>パーミッション</strong>は通常、アプリケーション自身によって定義されるカスタム権限です。
+主に古いアプリケーションでは、通常の権限も含まれることがあります。そこに表示される各項目の完全な説明は次の通りです:<ul class=incremental><li><p><strong>権限名</strong>
+各権限は<code>android.permission.INTERNET</code>のような一意の名前を持っており、
+複数のアプリケーションがその権限を要求することができます。<li><p><strong>アイコン</strong>
+各権限は任意のアイコンを持つことができます。
+他の権限タブでは、アプリケーションマニフェストにアイコンが含まれていないため、アイコンを持ちません。<li><p><strong>詳細</strong> This optional field describes the
 permission. If there isn’t any description associated with the
-permission, the field is not displayed.<li><p><strong>Flags.</strong> (Uses the flag symbol or
+permission, the field is not displayed.<li><p><strong>フラグ</strong> (Uses the flag symbol or
 <strong>Protection Level</strong> name) This describes various
 permission flags such as <em>normal</em>, <em>development</em>,
 <em>dangerous</em>, <em>instant</em>, <em>granted</em>,
-<em>revoked</em>, <em>signature</em>, <em>privileged</em>, etc.<li><p><strong>Package Name.</strong> Denotes the package name
-associated with the permission, i.e. the package that defined the
-permission.<li><p><strong>Group.</strong> The group name associated with the
+<em>revoked</em>, <em>signature</em>, <em>privileged</em>, etc.<li><p><strong>パッケージ名</strong> Denotes the package name associated
+with the permission, i.e. the package that defined the
+permission.<li><p><strong>グループ</strong> The group name associated with the
 permission (if any). Newer Androids do not seem to use group names which
 is why you’ll usually see
 <code>android.permission-group.UNDEFINED</code> or no group name at
 all.</ul></section></section><section id=subsec:signatures-tab class=level3 data-number=2.2.5><h3 data-number=2.2.5><span class=header-section-number>2.2.5</span>
-<a href=#toc:subsec:signatures-tab>署名情報タブ</a><a href=#subsec:signatures-tab class=anchor aria-hidden=true></a></h3><p><strong>Signatures</strong> are actually called signing info. An
-application is signed by one or more singing certificates by the
-application developers before publishing it. The integrity of an
-application (whether the application is from the actual developer and
-isn’t modified by other people) can be checked using the signing info;
-because when an application is modified by a third-party unauthorised
-person, the application cannot be signed using the original
-certificate(s) again because the signing info are kept private by the
-actual developer. <em>How do you verify these signatures?</em> Using
-checksums. Checksums are generated from the certificates themselves. If
-the developer supplies the checksums, you can match the checksums using
-the different checksums generated in the <strong>Signatures</strong>
-tab. For example, if you have downloaded App Manager from Github,
-Telegram Channel or IzzyOnDroid’s repo, you can verify whether the
-application is actually released by me by simply matching the following
-<em>SHA256</em> checksum with the one displayed in this tab:<pre><code>320c0c0fe8cef873f2b554cb88c837f1512589dcced50c5b25c43c04596760ab</code></pre><p>There are three types of checksums displayed there: <em>MD5</em>,
-<em>SHA1</em> and <em>SHA256</em>.<div class="amalert danger"><p><strong><em>Caution.</em></strong><p>It is recommended that you verify signing info using only
-<em>SHA256</em> checksums or all three of them. DO NOT rely on
-<em>MD5</em> or <em>SHA1</em> checksums only as they are known to
-generate the same results for multiple certificates.</div></section><section id=subsec:other-tabs class=level3 data-number=2.2.6><h3 data-number=2.2.6><span class=header-section-number>2.2.6</span>
-<a href=#toc:subsec:other-tabs>その他のタブ</a><a href=#subsec:other-tabs class=anchor aria-hidden=true></a></h3><p>その他のタブは、機能、設定、共有ライブラリ、署名などのアンドロイドマニフェストのコンポーネントを一覧表示します。
+<a href=#toc:subsec:signatures-tab>署名情報タブ</a><a href=#subsec:signatures-tab class=anchor aria-hidden=true></a></h3><p><strong>署名</strong>は、実際には署名情報と呼ばれ、アプリケーションは公開する前に、
+アプリケーション開発者によって1つ以上の署名証明書によって署名されます。
+アプリケーションの完全性（そのアプリケーションが実際の開発者のものかどうか、
+他の人によって変更されていないかどうか）は、署名情報を使って確認できます。
+なぜなら、アプリケーションを第三者が変更した場合、署名情報は実際の開発者によって秘密にされているため、
+元の証明書を使って再び署名することができないからです。
+これらの署名はチェックサムで検証することができます。チェックサムは、証明書自体から生成されます。
+開発者がチェックサムを提供する場合、<strong>署名</strong>タブで表示されたチェックサムを照合することができます。
+例えば、Github、Telegramチャンネル、IzzyOnDroidのリポジトリからApp
+Managerをダウンロードした場合、次の<em>SHA256</em>チェックサムをこのタブに表示されるものと照合するだけで、そのアプリケーションが実際に私がリリースしたものかどうか確認することができます:<pre><code>320c0c0fe8cef873f2b554cb88c837f1512589dcced50c5b25c43c04596760ab</code></pre><p>ここに表示されるチェックサムは、<em>MD5</em>、<em>SHA1</em>、<em>SHA256</em>の3種類です。<div class="amalert danger"><p><strong><em>Caution.</em></strong><p>署名情報の検証には、<em>SHA256</em>チェックサムのみ、もしくはこれら3つすべてを使用することを推奨します。
+<em>MD5</em>や<em>SHA1</em>のチェックサムだけでは、複数の証明書に対して同じハッシュを生成する可能性あるので、
+それらのみに依存しないようにしてください。</div></section><section id=subsec:other-tabs class=level3 data-number=2.2.6><h3 data-number=2.2.6><span class=header-section-number>2.2.6</span>
+<a href=#toc:subsec:other-tabs>その他のタブ</a><a href=#subsec:other-tabs class=anchor aria-hidden=true></a></h3><p>その他のタブは、機能、設定、共有ライブラリ、署名などのAndroidマニフェストのコンポーネントを一覧表示します。
 これらのタブに関する完全な説明は、近日中に公開される予定です。</section></section><section id=sec:1-click-ops-page class=level2 data-number=2.3><h2 data-number=2.3><span class=header-section-number>2.3</span> <a href=#toc:sec:1-click-ops-page>1-Click Ops Page</a><a href=#sec:1-click-ops-page class=anchor aria-hidden=true></a></h2><p>This page appears after clicking on the <a href=#subsubsec:main:1-click-ops>1-Click Ops option</a> in the <a href=#subsec:main-page-options-menu>main menu</a>.<section id=subsec:block-unblock-trackers class=level3 data-number=2.3.1><h3 data-number=2.3.1><span class=header-section-number>2.3.1</span>
 <a href=#toc:subsec:block-unblock-trackers>Block/Unblock
 Trackers</a><a href=#subsec:block-unblock-trackers class=anchor aria-hidden=true></a></h3><p>This option can be used to block or unblock the ad/tracker components
