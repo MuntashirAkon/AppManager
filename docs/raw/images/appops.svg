@@ -1,208 +1,37 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
-    "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="100%"
-    height="100%" viewBox="-0.5 -0.5 651 361" style="background-color: rgb(255, 255, 255);">
-    <defs />
-    <g>
-        <rect x="0" y="170" width="130" height="60" fill="none" stroke="#000000" pointer-events="all" />
-        <g transform="translate(-0.5 -0.5)">
-            <switch>
-                <foreignObject pointer-events="none" width="100%" height="100%"
-                    requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"
-                    style="overflow: visible; text-align: left;">
-                    <div xmlns="http://www.w3.org/1999/xhtml"
-                        style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 128px; height: 1px; padding-top: 200px; margin-left: 1px;">
-                        <div style="box-sizing: border-box; font-size: 0px; text-align: center;">
-                            <div
-                                style="display: inline-block; font-size: 15px; font-family: Palatino; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
-                                Android<br style="font-size: 15px" />Settings
-                            </div>
-                        </div>
-                    </div>
-                </foreignObject>
-                <text x="65" y="205" fill="#000000" font-family="Palatino" font-size="15px" text-anchor="middle">
-                    Android...
-                </text>
-            </switch>
-        </g>
-        <rect x="220" y="0" width="140" height="60" fill="none" stroke="#000000" pointer-events="all" />
-        <g transform="translate(-0.5 -0.5)">
-            <switch>
-                <foreignObject pointer-events="none" width="100%" height="100%"
-                    requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"
-                    style="overflow: visible; text-align: left;">
-                    <div xmlns="http://www.w3.org/1999/xhtml"
-                        style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 138px; height: 1px; padding-top: 30px; margin-left: 221px;">
-                        <div style="box-sizing: border-box; font-size: 0px; text-align: center;">
-                            <div
-                                style="display: inline-block; font-size: 15px; font-family: Palatino; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
-                                <font style="font-size: 15px">AppOpsManager</font>
-                            </div>
-                        </div>
-                    </div>
-                </foreignObject>
-                <text x="290" y="35" fill="#000000" font-family="Palatino" font-size="15px" text-anchor="middle">
-                    AppOpsManager
-                </text>
-            </switch>
-        </g>
-        <rect x="210" y="170" width="160" height="60" fill="none" stroke="#000000" pointer-events="all" />
-        <path d="M 226 170 L 226 230 M 354 170 L 354 230" fill="none" stroke="#000000" stroke-miterlimit="10"
-            pointer-events="all" />
-        <g transform="translate(-0.5 -0.5)">
-            <switch>
-                <foreignObject pointer-events="none" width="100%" height="100%"
-                    requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"
-                    style="overflow: visible; text-align: left;">
-                    <div xmlns="http://www.w3.org/1999/xhtml"
-                        style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 126px; height: 1px; padding-top: 200px; margin-left: 227px;">
-                        <div style="box-sizing: border-box; font-size: 0px; text-align: center;">
-                            <div
-                                style="display: inline-block; font-size: 15px; font-family: Palatino; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
-                                <font style="font-size: 15px">AppOpsService</font>
-                            </div>
-                        </div>
-                    </div>
-                </foreignObject>
-                <text x="290" y="205" fill="#000000" font-family="Palatino" font-size="15px" text-anchor="middle">
-                    AppOpsService
-                </text>
-            </switch>
-        </g>
-        <rect x="490" y="150" width="160" height="100" fill="none" stroke="#000000" pointer-events="all" />
-        <g transform="translate(-0.5 -0.5)">
-            <switch>
-                <foreignObject pointer-events="none" width="100%" height="100%"
-                    requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"
-                    style="overflow: visible; text-align: left;">
-                    <div xmlns="http://www.w3.org/1999/xhtml"
-                        style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 158px; height: 1px; padding-top: 200px; margin-left: 491px;">
-                        <div style="box-sizing: border-box; font-size: 0px; text-align: center;">
-                            <div
-                                style="display: inline-block; font-size: 12px; font-family: Palatino; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: normal; overflow-wrap: normal;">
-                                <font style="font-size: 15px">Java Service &amp; Native Service
-                                    <br />
-                                </font>
-                                <br />
-                                <i>Location, SMS, camera, audio, etc.</i>
-                            </div>
-                        </div>
-                    </div>
-                </foreignObject>
-                <text x="570" y="204" fill="#000000" font-family="Palatino" font-size="12px" text-anchor="middle">Java
-                    Service &amp; Native Serv...
-                </text>
-            </switch>
-        </g>
-        <path
-            d="M 260 285 C 260 276.72 273.43 270 290 270 C 297.96 270 305.59 271.58 311.21 274.39 C 316.84 277.21 320 281.02 320 285 L 320 375 C 320 383.28 306.57 390 290 390 C 273.43 390 260 383.28 260 375 Z"
-            fill="none" stroke="#000000" stroke-miterlimit="10" transform="rotate(90,290,330)" pointer-events="all" />
-        <path d="M 320 285 C 320 293.28 306.57 300 290 300 C 273.43 300 260 293.28 260 285" fill="none" stroke="#000000"
-            stroke-miterlimit="10" transform="rotate(90,290,330)" pointer-events="all" />
-        <g transform="translate(-0.5 -0.5)">
-            <switch>
-                <foreignObject pointer-events="none" width="100%" height="100%"
-                    requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"
-                    style="overflow: visible; text-align: left;">
-                    <div xmlns="http://www.w3.org/1999/xhtml"
-                        style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 83px; height: 1px; padding-top: 330px; margin-left: 236px;">
-                        <div style="box-sizing: border-box; font-size: 0px; text-align: center;">
-                            <div
-                                style="display: inline-block; font-size: 15px; font-family: Palatino; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; font-style: italic; white-space: normal; overflow-wrap: normal;">
-                                appops.xml
-                            </div>
-                        </div>
-                    </div>
-                </foreignObject>
-                <text x="278" y="335" fill="#000000" font-family="Palatino" font-size="15px" text-anchor="middle"
-                    font-style="italic">appops.xml
-                </text>
-            </switch>
-        </g>
-        <path d="M 290 60 L 290 113.88" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="stroke" />
-        <path d="M 290 128.88 L 282.5 113.88 L 297.5 113.88 Z" fill="none" stroke="#000000" stroke-miterlimit="10"
-            pointer-events="all" />
-        <path d="M 65 170 Q 90 60 213.8 31.43" fill="none" stroke="#000000" stroke-miterlimit="10"
-            pointer-events="stroke" />
-        <path d="M 218.91 30.25 L 212.88 35.24 L 213.8 31.43 L 211.3 28.42 Z" fill="#000000" stroke="#000000"
-            stroke-miterlimit="10" pointer-events="all" />
-        <g transform="translate(-0.5 -0.5)">
-            <switch>
-                <foreignObject pointer-events="none" width="100%" height="100%"
-                    requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"
-                    style="overflow: visible; text-align: left;">
-                    <div xmlns="http://www.w3.org/1999/xhtml"
-                        style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 1px; height: 1px; padding-top: 100px; margin-left: 160px;">
-                        <div style="box-sizing: border-box; font-size: 0px; text-align: center;">
-                            <div
-                                style="display: inline-block; font-size: 11px; font-family: Palatino; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: nowrap;">
-                                <span>Change permission<br /> associated with app ops 
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                </foreignObject>
-                <text x="160" y="104" fill="#000000" font-family="Palatino" font-size="11px" text-anchor="middle">Change
-                    permission...
-                </text>
-            </switch>
-        </g>
-        <path d="M 290 293.63 L 290 236.37" fill="none" stroke="#000000" stroke-miterlimit="10"
-            pointer-events="stroke" />
-        <path d="M 290 298.88 L 286.5 291.88 L 290 293.63 L 293.5 291.88 Z" fill="#000000" stroke="#000000"
-            stroke-miterlimit="10" pointer-events="all" />
-        <path d="M 290 231.12 L 293.5 238.12 L 290 236.37 L 286.5 238.12 Z" fill="#000000" stroke="#000000"
-            stroke-miterlimit="10" pointer-events="all" />
-        <g transform="translate(-0.5 -0.5)">
-            <switch>
-                <foreignObject pointer-events="none" width="100%" height="100%"
-                    requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"
-                    style="overflow: visible; text-align: left;">
-                    <div xmlns="http://www.w3.org/1999/xhtml"
-                        style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 1px; height: 1px; padding-top: 266px; margin-left: 365px;">
-                        <div style="box-sizing: border-box; font-size: 0px; text-align: center;">
-                            <div
-                                style="display: inline-block; font-size: 11px; font-family: Palatino; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: nowrap;">
-                                 Load/store permission info 
-                            </div>
-                        </div>
-                    </div>
-                </foreignObject>
-                <text x="365" y="269" fill="#000000" font-family="Palatino" font-size="11px" text-anchor="middle">
-                     Load/store permission info 
-                </text>
-            </switch>
-        </g>
-        <path d="M 376.37 200 L 490 200" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="stroke" />
-        <path d="M 371.12 200 L 378.12 196.5 L 376.37 200 L 378.12 203.5 Z" fill="#000000" stroke="#000000"
-            stroke-miterlimit="10" pointer-events="all" />
-        <g transform="translate(-0.5 -0.5)">
-            <switch>
-                <foreignObject pointer-events="none" width="100%" height="100%"
-                    requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility"
-                    style="overflow: visible; text-align: left;">
-                    <div xmlns="http://www.w3.org/1999/xhtml"
-                        style="display: flex; align-items: unsafe center; justify-content: unsafe center; width: 1px; height: 1px; padding-top: 191px; margin-left: 431px;">
-                        <div style="box-sizing: border-box; font-size: 0px; text-align: center;">
-                            <div
-                                style="display: inline-block; font-size: 11px; font-family: Palatino; color: rgb(0, 0, 0); line-height: 1.2; pointer-events: all; white-space: nowrap;">
-                                 Check permission 
-                            </div>
-                        </div>
-                    </div>
-                </foreignObject>
-                <text x="431" y="194" fill="#000000" font-family="Palatino" font-size="11px" text-anchor="middle"> Check
-                    permission 
-                </text>
-            </switch>
-        </g>
-        <path d="M 290 130 L 290 170" fill="none" stroke="#000000" stroke-miterlimit="10" pointer-events="stroke" />
-    </g>
-    <switch>
-        <g requiredFeatures="http://www.w3.org/TR/SVG11/feature#Extensibility" />
-        <a transform="translate(0,-5)" xlink:href="https://www.diagrams.net/doc/faq/svg-export-text-problems"
-            target="_blank">
-            <text text-anchor="middle" font-size="10px" x="50%" y="100%">Viewer does not support full SVG 1.1</text>
-        </a>
-    </switch>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg style="background-color:rgb(255, 255, 255)" version="1.1" viewBox="-.5 -.5 651 361" xmlns="http://www.w3.org/2000/svg">
+ <rect y="170" width="130" height="60" fill="none" pointer-events="all" stroke="#000000"/>
+ <text x="64.36998" y="195.54974" fill="#000000" font-family="Palatino" font-size="15px" text-anchor="middle"><tspan x="64.36998" y="195.54974">Android</tspan><tspan x="64.36998" y="214.29974">Settings</tspan></text>
+ <rect x="220" width="140" height="60" fill="none" pointer-events="all" stroke="#000000"/>
+ <text x="290" y="35" fill="#000000" font-family="Palatino" font-size="15px" text-anchor="middle">AppOpsManager</text>
+ <rect x="210" y="170" width="160" height="60" fill="none" pointer-events="all" stroke="#000000"/>
+ <path d="m226 170v60m128-60v60" fill="none" pointer-events="all" stroke="#000000" stroke-miterlimit="10"/>
+ <text x="290" y="205" fill="#000000" font-family="Palatino" font-size="15px" text-anchor="middle">AppOpsService</text>
+ <rect x="490" y="150" width="160" height="100" fill="none" pointer-events="all" stroke="#000000"/>
+ <g transform="translate(-.5 -32.5)">
+  <text x="570" y="204" fill="#000000" font-family="Palatino" font-size="15px" text-anchor="middle"><tspan x="570" y="204">Java Service &amp; Native</tspan><tspan x="570" y="222.75">Service</tspan></text>
+ </g>
+ <path transform="rotate(90,290,330)" d="m260 285c0-8.28 13.43-15 30-15 7.96 0 15.59 1.58 21.21 4.39 5.63 2.82 8.79 6.63 8.79 10.61v90c0 8.28-13.43 15-30 15s-30-6.72-30-15z" fill="none" pointer-events="all" stroke="#000000" stroke-miterlimit="10"/>
+ <path transform="rotate(90,290,330)" d="m320 285c0 8.28-13.43 15-30 15s-30-6.72-30-15" fill="none" pointer-events="all" stroke="#000000" stroke-miterlimit="10"/>
+ <text x="278" y="335" fill="#000000" font-family="Palatino" font-size="15px" font-style="italic" text-anchor="middle">appops.xml</text>
+ <g fill="none" stroke="#000000" stroke-miterlimit="10">
+  <path d="m290 60v53.88" pointer-events="stroke"/>
+  <path d="m290 128.88-7.5-15h15z" pointer-events="all"/>
+  <path d="m65 170q25-110 148.8-138.57" pointer-events="stroke"/>
+ </g>
+ <path d="m218.91 30.25-6.03 4.99 0.92-3.81-2.5-3.01z" fill="#000000" pointer-events="all" stroke="#000000" stroke-miterlimit="10"/>
+ <text x="160" y="104" fill="#000000" font-family="Palatino" font-size="11px" text-anchor="middle"><tspan x="160" y="104">Change permission</tspan><tspan x="161.375" y="117.75">associated with app ops</tspan></text>
+ <g stroke="#000000" stroke-miterlimit="10">
+  <path d="m290 293.63v-57.26" fill="none" pointer-events="stroke"/>
+  <path d="m290 298.88-3.5-7 3.5 1.75 3.5-1.75z" fill="#000000" pointer-events="all"/>
+  <path d="m290 231.12 3.5 7-3.5-1.75-3.5 1.75z" fill="#000000" pointer-events="all"/>
+ </g>
+ <text x="365" y="269" fill="#000000" font-family="Palatino" font-size="11px" text-anchor="middle">Load/store permission info</text>
+ <path d="m376.37 200h113.63" fill="none" pointer-events="stroke" stroke="#000000" stroke-miterlimit="10"/>
+ <path d="m371.12 200 7-3.5-1.75 3.5 1.75 3.5z" fill="#000000" pointer-events="all" stroke="#000000" stroke-miterlimit="10"/>
+ <text x="431" y="194" fill="#000000" font-family="Palatino" font-size="11px" text-anchor="middle">Check permission</text>
+ <path d="m290 130v40" fill="none" pointer-events="stroke" stroke="#000000" stroke-miterlimit="10"/>
+ <g transform="translate(-.5 11.5)">
+  <text x="570" y="210" fill="#000000" font-family="Palatino" font-size="11px" font-style="italic" text-anchor="middle"><tspan x="570" y="210">Location, SMS, camera, audio,</tspan><tspan x="570" y="223.75">etc.</tspan></text>
+ </g>
 </svg>
