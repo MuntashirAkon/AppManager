@@ -558,4 +558,10 @@
 \n\\end{itemize}</string>
     <string name="keywords$see_also">\\newcommand{\\KeywordSeeAlso}{こちらもご覧ください:}</string>
     <string name="keywords$end_of_keyword_in_alert">\\newcommand{\\KeywordEndOfKeyWordInAlert}{.}</string>
+    <string name="pages$one-click-ops-page$$block-unblock-trackers-title">トラッカーのブロック/ブロック解除</string>
+    <string name="pages$one-click-ops-page$$set-mode-for-app-ops-dots-title">AppOpsモードの設定\\dots</string>
+    <string name="pages$one-click-ops-page$$1-click-restore-title">復元</string>
+    <string name="pages$one-click-ops-page$$section-title">ワンタップ一括処理</string>
+    <string name="pages$one-click-ops-page$$block-components-dots-title">コンポーネントのブロック\\dots</string>
+    <string name="pages$one-click-ops-page$$1-click-back-up-title">バックアップ</string>
 </resources>
