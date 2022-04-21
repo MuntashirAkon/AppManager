@@ -1,0 +1,16 @@
+% SPDX-License-Identifier: GPL-3.0-or-later OR CC-BY-SA-4.0
+\documentclass{memoir}
+
+\newcommand{\Vanilla}{\LaTeX}
+
+% -----------------------------------
+% Define Latex-specific environments
+% -----------------------------------
+
+% po4a: command announcement [_]
+\newenvironment{announcement}{}{}
+% Override seealso to remove 'see also' prefix
+\renewenvironment{seealso}{}{}
+
+% Include main
+\input{main.tex}

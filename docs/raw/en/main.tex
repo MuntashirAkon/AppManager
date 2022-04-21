@@ -1,5 +1,7 @@
 % SPDX-License-Identifier: GPL-3.0-or-later OR CC-BY-SA-4.0
+\ifdefined\Vanilla\else
 \documentclass{memoir}
+\fi
 
 % ------------------------------
 % Unknown commands/env for po4a
@@ -26,6 +28,7 @@
 \usepackage[outputdir=.]{minted}
 \usepackage{hyperref}
 \usepackage[all]{hypcap}
+\usepackage[inkscapearea=page]{svg}
 
 % po4a: command hypersetup {}
 \hypersetup{
@@ -41,12 +44,21 @@
 % Alert environments
 % -------------------
 
-% po4a: environment amalert []{}
+% po4a: environment amalert--tip []{}
+% po4a: environment amalert--warning []{}
+% po4a: environment amalert--danger []{}
 % po4a: environment mdframed []{_}
+\newenvironment{amalert--tip}
+{\mdframed[linecolor={black},backgroundcolor=white,linewidth=3pt,topline=false,rightline=false,bottomline=false]}
+{\endmdframed}
 
-%\newenvironment{amalert}[1]
-%{\mdframed[linecolor={#1},backgroundcolor=white,linewidth=3pt,topline=false,rightline=false,bottomline=false]}
-%{\endmdframed}
+\newenvironment{amalert--warning}
+{\mdframed[linecolor={Dandelion},backgroundcolor=white,linewidth=3pt,topline=false,rightline=false,bottomline=false]}
+{\endmdframed}
+
+\newenvironment{amalert--danger}
+{\mdframed[linecolor={BrickRed},backgroundcolor=white,linewidth=3pt,topline=false,rightline=false,bottomline=false]}
+{\endmdframed}
 
 % po4a: environment tip [_]
 \newenvironment{tip}[1]
@@ -91,7 +103,8 @@
 % ----------------------
 % See also environments
 % ----------------------
-% po4a: command amseealsoinline {_}
+% po4a: command seealso-inline {_}
+\newenvironment{seealso-inline}{}{}
 \newcommand{\seealsoinline}[1]{
 \begin{seealso-inline}
 \noindent\textit{See also: {#1}}
@@ -108,6 +121,11 @@
     \end{seealso}
 }
 
+% Special case for \includesvg for Pandoc
+\ifdefined\Vanilla\else
+    \renewcommand{\includesvg}{\includegraphics}
+\fi
+
 % -------------------
 % Colours used in AM
 % -------------------
@@ -117,7 +135,13 @@
 \definecolor{AMLightRed}{HTML}{FF8A80}
 \definecolor{AMVeryDarkRed}{HTML}{4F1C14}
 \definecolor{AMVividOrange}{HTML}{FF8017}
-\definecolor{AMVeryDarkOrange}{HTML}{FF801780}
+\ifdefined\Vanilla\else
+    \definecolor{AMVeryDarkOrange}{HTML}{FF801780}
+\fi
+\ifdefined\Vanilla
+    % We have to define Vanilla colour letter because Pandoc only looks at the first colour
+    \definecolor{AMVeryDarkOrange}{HTML}{FF8017}
+\fi
 \definecolor{AMSoftMagenta}{HTML}{EA80FC}
 \definecolor{AMVeryDarkViolet}{HTML}{431C5D}
 \definecolor{AMLightGreyishOrange}{HTML}{FCEED1}
@@ -137,6 +161,9 @@
 % META
 \title{App Manager}
 \author{Muntashir Al-Islam}
+
+% Load variables
+\input{transient.tex}
 
 \begin{document}
     \input{titlepage.tex}

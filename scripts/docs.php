@@ -10,6 +10,7 @@ date_default_timezone_set('UTC');
 // rebase           Extract strings from the TeX files and re-create the base translation file.
 // update <lang>    Rebuild HTML from strings.xml for the given language.
 // deploy           Rebuild HTML and deploy it to the GitHub pages.
+// pdf              Build PDF from TeX using pdflatex (English-only).
 // debug            Do experiments.
 
 // External requirements: Pandoc, pandoc-crossref, minify
@@ -54,6 +55,8 @@ function build_html(string $lang) {
     foreach ($lua_files as $lua_script) {
         $cmd .= ' --lua-filter="' . $lua_dir . '/' . $lua_script . '"';
     }
+    // Create variables first
+    create_transient_tex($pwd, get_IETF_language_tag($lang));
     // Run command
     passthru($cmd, $ret_val);
     if ($ret_val != 0) {
@@ -75,15 +78,8 @@ function build_html(string $lang) {
         array_push($to_replace, "class=\"colorbox\" style=\"background-color: #$color_value\"", "style=\"color: #$color_value\"");
     }
 
-    // Replace version name and date
-    $am_version = system("grep -m1 versionName ./app/build.gradle | awk -F \\\" '{print $2}'", $ret_val);
-    if ($ret_val != 0) {
-        echo 'Could not get the versionName from ./app/build.gradle';
-        exit(1);
-    }
-    $today = date('j F Y');
-    array_push($to_replace, $am_version, $today, 'href="../css/custom.css"');
-    array_push($to_search, '/\$ABC\$APP-MANAGER-VERSION\$XYZ\$/', '/\$ABC\$USER-MANUAL-DATE\$XYZ\$/', '/href=\"custom\.css\"/');
+    $to_search[] = '/href=\"custom\.css\"/';
+    $to_replace[] = 'href="../css/custom.css"';
     $output_contents = file_get_contents($output_file);
     $output_contents = preg_replace($to_search, $to_replace, $output_contents);
 
@@ -458,6 +454,31 @@ function get_IETF_language_tag(string $lang): string {
     return implode('-', $lang_parts);
 }
 
+function create_transient_tex(string $target_dir, string $ietf_lang = 'en') {
+    $am_version = system("grep -m1 versionName ./app/build.gradle | awk -F \\\" '{print $2}'", $ret_val);
+    if ($ret_val != 0) {
+        echo 'Could not get the versionName from ./app/build.gradle';
+        exit(1);
+    }
+    $fmt = new IntlDateFormatter(
+        $ietf_lang,
+        IntlDateFormatter::FULL,
+        IntlDateFormatter::FULL,
+        'UTC',
+        IntlDateFormatter::GREGORIAN,
+        'd MMMM yyyy'
+    );
+    $today = $fmt->format(new DateTime());
+    $content = <<<EOF
+\\newcommand{\\version}{{$am_version}}
+\\ifdefined\\Vanilla\\else
+    \\renewcommand{\\today}{{$today}}
+\\fi
+EOF;
+
+    file_put_contents($target_dir . '/transient.tex', $content);
+}
+
 // MAIN //
 if ($argc < 2) {
     echo 'Invalid number of arguments.';
@@ -492,6 +513,16 @@ switch($verb) {
         break;
     case 'deploy':
         deploy();
+        break;
+    case 'pdf':
+        create_transient_tex(BASE_DIR);
+        passthru('cd ' . BASE_DIR . ' && pdflatex -shell-escape main_vanilla.tex', $return_code);
+        if ($return_code == 0) {
+            echo 'Built pdf: ' . BASE_DIR . '/main_vanilla.pdf' . "\n";
+        } else {
+            // Error
+            exit($return_code);
+        }
         break;
     case 'debug':
         echo "Nothing to do.";
