@@ -19,6 +19,7 @@
         <item>androidx.annotation</item>
         <item>androidx.arch</item>
         <item>androidx.appcompat</item>
+        <item>androidx.autofill</item>
         <item>androidx.biometric</item>
         <item>androidx.browser</item>
         <item>androidx.camera</item>
@@ -29,8 +30,10 @@
         <item>androidx.core</item>
         <item>androidx.cursoradapter</item>
         <item>androidx.customview</item>
+        <item>androidx.databinding</item>
         <item>androidx.datastore</item>
         <item>androidx.documentfile</item>
+        <item>androidx.dynamicanimation</item>
         <item>androidx.emoji2</item>
         <item>androidx.exifinterface</item>
         <item>androidx.fragment.app</item>
@@ -42,15 +45,20 @@
         <item>androidx.localbroadcastmanager</item>
         <item>androidx.media</item>
         <item>androidx.media2</item>
+        <item>androidx.multidex</item>
         <item>androidx.navigation</item>
         <item>androidx.palette</item>
         <item>androidx.preference</item>
         <item>androidx.print</item>
         <item>androidx.room</item>
+        <item>androidx.recyclerview</item>
+        <item>com.crazylegend.recyclerview</item>
         <item>androidx.savedstate</item>
         <item>androidx.sqlite</item>
+        <item>androidx.swiperefreshlayout</item>
         <item>androidx.test</item>
         <item>androidx.transition</item>
+        <item>androidx.tvprovider</item>
         <item>androidx.vectordrawable</item>
         <item>androidx.versionedparcelable</item>
         <item>androidx.viewpager2</item>
@@ -106,6 +114,7 @@
         <item>br.com.simplepass.loadingbutton</item>
         <item>br.tiagohm.markdownview</item>
         <item>butterknife</item>
+        <item>by.chemerisuk.cordova.support</item>
         <item>by.kirich1409.viewbindingdelegate</item>
         <item>bz.tsung.android.objectify</item>
         <item>ca.rmen.sunrisesunset</item>
@@ -144,6 +153,7 @@
         <item>codes.side.andcolorpicker</item>
         <item>coil</item>
         <item>com.abdeveloper.library</item>
+        <item>com.absinthe.rulesbundle</item>
         <item>com.actionbarsherlock</item>
         <item>com.activeandroid</item>
         <item>com.ad4screen.sdk</item>
@@ -238,6 +248,7 @@
         <item>org.conscrypt</item>
         <item>com.android.setupwizardlib</item>
         <item>com.android.tools.ir</item>
+        <item>com.android.tools.r8</item>
         <item>com.android.vending</item>
         <item>com.android.volley</item>
         <item>com.androidnetworking</item>
@@ -435,7 +446,6 @@
         <item>com.crazylegend.crashyreporter</item>
         <item>com.crazylegend.customviews</item>
         <item>com.crazylegend.kotlinextensions</item>
-        <item>com.crazylegend.recyclerview</item>
         <item>com.crazylegend.viewbinding</item>
         <item>com.crittercism.app.Crittercism</item>
         <item>com.criware</item>
@@ -473,6 +483,7 @@
         <item>com.dd.processbutton</item>
         <item>com.deezer.sdk</item>
         <item>com.deishelon.roundedbottomsheet</item>
+        <item>com.delagen.cordova.browser</item>
         <item>com.dev.sacot41.scviewpager</item>
         <item>com.devbrackets.android.exomedia</item>
         <item>com.developer.filepicker</item>
@@ -702,7 +713,11 @@
         <item>fm.jiecao.audio.waveform</item>
         <item>com.github.dhaval2404.imagepicker</item>
         <item>com.github.donmor.filedialog</item>
+        <item>com.github.doyaaaaaken.kotlincsv</item>
         <item>com.github.Drabu.SSNInputView</item>
+        <item>com.github.druk.dnssd</item>
+        <item>com.github.druk.rx2dnssd</item>
+        <item>com.github.druk.rxdnssd</item>
         <item>com.github.fabtransitionactivity</item>
         <item>com.github.faucamp.simplertmp</item>
         <item>com.github.fge.jackson</item>
@@ -858,8 +873,18 @@
         <item>com.google.androidbrowserhelper.trusted</item>
         <item>com.google.api.client</item>
         <item>com.google.api.common</item>
+        <item>com.google.api.services.admob</item>
+        <item>com.google.api.services.adsense</item>
+        <item>com.google.api.services.adsensehost</item>
+        <item>com.google.api.services.analytics</item>
+        <item>com.google.api.services.analyticsadmin</item>
+        <item>com.google.api.services.analyticsdata</item>
+        <item>com.google.api.services.analyticsreporting</item>
         <item>com.google.api.services.drive</item>
         <item>com.google.api.services.youtube</item>
+        <item>com.google.api.services.youtubeAnalytics</item>
+        <item>com.google.api.services.youtubereporting</item>
+        <item>com.google.api.services</item>
         <item>com.google.appinventor</item>
         <item>com.google.ar.core</item>
         <item>com.google.auth</item>
@@ -1050,6 +1075,7 @@
         <item>com.kakao.adfit.ads</item>
         <item>com.karumi.dexter</item>
         <item>com.kasem.flutter_absolute_path</item>
+        <item>com.keenencharles.unsplash</item>
         <item>com.kenai.jffi</item>
         <item>com.kenai.jnr.x86asm</item>
         <item>jnr.x86asm</item>
@@ -1248,6 +1274,7 @@
         <item>com.netki.dns</item>
         <item>com.netki.dnssec</item>
         <item>com.netki.tlsa</item>
+        <item>com.networknt.schema</item>
         <item>com.newrelic.agent</item>
         <item>com.nex3z.flowlayout</item>
         <item>com.wefika.flowlayout</item>
@@ -1508,6 +1535,7 @@
         <item>com.skydoves.balloon</item>
         <item>com.skydoves.expandablelayout</item>
         <item>net.cachapa.expandablelayout</item>
+        <item>com.skydoves.landscapist</item>
         <item>com.skydoves.powermenu</item>
         <item>com.skydoves.powerspinner</item>
         <item>com.skydoves.progressview</item>
@@ -1598,12 +1626,15 @@
         <item>com.takwolf.morsecoder</item>
         <item>com.tananaev.adblib</item>
         <item>com.tanguyantoine.react</item>
+        <item>com.tans.rxutils</item>
+        <item>com.tans.tadapter</item>
         <item>com.taobao.android.dexposed</item>
         <item>com.tapadoo.alerter</item>
         <item>com.tapstream.sdk</item>
         <item>com.tbruyelle.rxpermissions</item>
         <item>com.tbruyelle.rxpermissions2</item>
         <item>com.tbuonomo.viewpagerdotsindicator</item>
+        <item>com.tchvu3.capacitorvoicerecorder</item>
         <item>com.tech.freak.wizardpager</item>
         <item>com.tectiv3.aes</item>
         <item>com.tekartik.sqflite</item>
@@ -1815,6 +1846,7 @@
         <item>com.zebra.android</item>
         <item>com.zebra.sdk</item>
         <item>com.zenjoy.ads</item>
+        <item>com.zeoflow.jx</item>
         <item>com.zerotier.sdk</item>
         <item>com.zhihu.matisse</item>
         <item>com.zhkrb.cloudflare_scrape_android</item>
@@ -2068,6 +2100,7 @@
         <item>io.github.novacrypto.toruntime</item>
         <item>io.github.ponnamkarthik.toast.fluttertoast</item>
         <item>io.github.pwlin.cordova.plugins.fileopener2</item>
+        <item>io.github.rosemoe.sora</item>
         <item>io.github.silvaren.easyrs</item>
         <item>io.github.xfally.cordova.plugin.ftp</item>
         <item>io.gresse.hugo.vumeterlibrary</item>
@@ -2170,6 +2203,7 @@
         <item>javax.servlet</item>
         <item>javax.validation</item>
         <item>javax.ws.rs</item>
+        <item>javax.xml.bind</item>
         <item>jcifs</item>
         <item>jcifsng</item>
         <item>jcifsng211</item>
@@ -2241,6 +2275,7 @@
         <item>me.drozdzynski.library.steppers</item>
         <item>me.dkzwm.widget.srl</item>
         <item>me.everything.android.ui.overscroll</item>
+        <item>me.grishka.appkit</item>
         <item>me.gujun.android.span</item>
         <item>me.himanshusoni.gpxparser</item>
         <item>me.imid.swipebacklayout</item>
@@ -2254,6 +2289,7 @@
         <item>me.jfenn.timedatepickers</item>
         <item>me.leolin.shortcutbadger</item>
         <item>me.nereo.multi_image_selector</item>
+        <item>me.onebone.toolbar</item>
         <item>me.piruin.quickaction</item>
         <item>me.priyesh.chroma</item>
         <item>me.proton.core</item>
@@ -2410,6 +2446,7 @@
         <item>org.aopalliance</item>
         <item>org.apache.commons</item>
         <item>org.apache.cordova</item>
+        <item>org.apache.felix</item>
         <item>org.apache.ftpserver</item>
         <item>org.apache.harmony</item>
         <item>org.apache.hc</item>
@@ -2491,10 +2528,17 @@
         <item>org.devio.rn.splashscreen</item>
         <item>org.dmfs.rfc5545</item>
         <item>org.dom4j</item>
+        <item>org.eclipse.core</item>
         <item>org.eclipse.egit</item>
+        <item>org.eclipse.equinox</item>
+        <item>org.eclipse.jdt</item>
         <item>org.eclipse.jetty</item>
+        <item>org.eclipse.jface</item>
+        <item>org.eclipse.osgi</item>
         <item>org.eclipse.paho.android.service</item>
         <item>org.eclipse.paho.client.mqttv3</item>
+        <item>org.eclipse.jface.text</item>
+        <item>org.eclipse.text</item>
         <item>org.fabiomsr.moneytextview</item>
         <item>org.firezenk.audiowaves</item>
         <item>org.fmod</item>
@@ -2635,6 +2679,7 @@
         <item>org.ndeftools</item>
         <item>org.netlib</item>
         <item>org.nibor.autolink</item>
+        <item>org.nield.kotlinstatistics</item>
         <item>org.nuclearfog.zoomview</item>
         <item>org.objectweb.asm</item>
         <item>org.ow2.asmdex</item>
@@ -2649,7 +2694,7 @@
         <item>org.opensextant.geodesy</item>
         <item>org.opentripplanner</item>
         <item>org.openudid</item>
-        <item>org.osgi.framework</item>
+        <item>org.osgi</item>
         <item>org.oshkimaadziig.george.androidutils</item>
         <item>org.osmdroid</item>
         <item>org.parceler</item>
@@ -2763,7 +2808,9 @@
         <item>rikka.material</item>
         <item>rikka.multiprocesspreference</item>
         <item>rikka.recyclerview-utils</item>
+        <item>rikka.preference</item>
         <item>rikka.sui</item>
+        <item>rikka.widget</item>
         <item>rm.com.audiowave</item>
         <item>org.roboguice</item>
         <item>roboguice</item>
@@ -2898,6 +2945,7 @@
         <item>Android Jetpack Annotations</item>
         <item>Arch</item>
         <item>AppCompat</item>
+        <item>Autofill</item>
         <item>Biometric</item>
         <item>Browser</item>
         <item>CameraX</item>
@@ -2908,8 +2956,10 @@
         <item>Androidx Core</item>
         <item>AndroidX Cursor Adapter</item>
         <item>Android Support Library Custom View</item>
+        <item>Databinding</item>
         <item>DataStore</item>
         <item>Documentfile</item>
+        <item>Dynamicanimation</item>
         <item>Android Emoji2 Compat</item>
         <item>Exifinterface</item>
         <item>Androidx Fragment</item>
@@ -2921,15 +2971,20 @@
         <item>AndroidX Local Broadcast Manager</item>
         <item>Media</item>
         <item>Media2</item>
+        <item>Android Multi Dex Library</item>
         <item>Navigation</item>
         <item>Palette</item>
         <item>Preference</item>
         <item>Print</item>
         <item>Room</item>
+        <item>Recyclerview</item>
+        <item>Recyclerview</item>
         <item>Android Activity Saved State</item>
         <item>Sqlite</item>
+        <item>Swiperefreshlayout</item>
         <item>AndroidX Test</item>
         <item>Transition</item>
+        <item>Android Support TV Provider</item>
         <item>Vectordrawable</item>
         <item>Android Jetpack VersionedParcelable</item>
         <item>AndroidX Widget ViewPager2</item>
@@ -2985,6 +3040,7 @@
         <item>Progress Button Android</item>
         <item>MarkdownView</item>
         <item>Butter Knife</item>
+        <item>cordova-support-android-plugin</item>
         <item>ViewBindingPropertyDelegate</item>
         <item>Android Object Preference Loader</item>
         <item>SunriseSunset</item>
@@ -3023,6 +3079,7 @@
         <item>andColorPicker</item>
         <item>Coil</item>
         <item>MultiSelectDialog</item>
+        <item>LibChecker-Rules-Bundle</item>
         <item>ActionBarSherlock</item>
         <item>ActiveAndroid</item>
         <item>Ad4Screen</item>
@@ -3117,6 +3174,7 @@
         <item>Conscrypt</item>
         <item>SetupWizardLib</item>
         <item>Android Instant Run</item>
+        <item>D8 dexer and R8 shrinker</item>
         <item>Google Play</item>
         <item>Volley HTTP library</item>
         <item>Fast Android Networking Library</item>
@@ -3314,7 +3372,6 @@
         <item>Crashy</item>
         <item>Custom Views</item>
         <item>General extensions</item>
-        <item>Recyclerview</item>
         <item>View Binding</item>
         <item>Apteligent by VMWare (formerly Crittercism)</item>
         <item>Criware</item>
@@ -3352,6 +3409,7 @@
         <item>android-process-button</item>
         <item>Deezer Android SDK</item>
         <item>Rounded Bottom Sheet</item>
+        <item>cordova-plugin-browser</item>
         <item>SCViewPager</item>
         <item>ExoMedia</item>
         <item>FilePicker</item>
@@ -3581,7 +3639,11 @@
         <item>audio-waveform</item>
         <item>Image Picker Library</item>
         <item>FileDialog</item>
+        <item>kotlin-csv</item>
         <item>SSNInputView</item>
+        <item>Android mDNSResponder</item>
+        <item>Android mDNSResponder</item>
+        <item>Android mDNSResponder</item>
         <item>FabTransitionActivity</item>
         <item>SimpleRtmp</item>
         <item>jackson-coreutils</item>
@@ -3737,8 +3799,18 @@
         <item>Android Browser Helper</item>
         <item>Google API Client Libraries</item>
         <item>API Common for Java</item>
+        <item>Google Java API Client Services for AdMob</item>
+        <item>Google Java API Client Services for AdSense</item>
+        <item>Google Java API Client Services for AdSense</item>
+        <item>Java API for Google Analytics</item>
+        <item>Java API for Google Analytics</item>
+        <item>Java API for Google Analytics</item>
+        <item>Java API for Google Analytics</item>
         <item>Google Drive API</item>
         <item>YouTube Data API</item>
+        <item>YouTube Analytics Data API</item>
+        <item>YouTube Analytics Data API</item>
+        <item>Google Java API Client Services</item>
         <item>Google App Inventor</item>
         <item>Google ARCode</item>
         <item>Google Auth Library For Java OAuth2 HTTP</item>
@@ -3929,6 +4001,7 @@
         <item>AdFit (Daum)</item>
         <item>Dexter</item>
         <item>flutter_absolute_path</item>
+        <item>Android Unsplash (Unofficial)</item>
         <item>jffi</item>
         <item>jnr-x86asm</item>
         <item>jnr-x86asm</item>
@@ -4127,6 +4200,7 @@
         <item>Netki Wallet Name Resolver</item>
         <item>Netki Wallet Name Resolver</item>
         <item>Netki Wallet Name Resolver</item>
+        <item>json-schema-validator</item>
         <item>New Relic</item>
         <item>FlowLayout</item>
         <item>FlowLayout</item>
@@ -4387,6 +4461,7 @@
         <item>Balloon</item>
         <item>ExpandableLayout</item>
         <item>ExpandableLayout</item>
+        <item>Landscapist</item>
         <item>PowerMenu</item>
         <item>PowerSpinner</item>
         <item>ProgressView</item>
@@ -4477,12 +4552,15 @@
         <item>Java - MorseCoder</item>
         <item>Java ADB library</item>
         <item>react-native-music-control</item>
+        <item>RxUtils</item>
+        <item>tAdapter</item>
         <item>dexposed</item>
         <item>Alerter</item>
         <item>Tapstream</item>
         <item>RxPermissions</item>
         <item>RxPermissions</item>
         <item>Material View Pager Dots Indicator</item>
+        <item>Capacitor Voice Recorder</item>
         <item>Wizard Pager</item>
         <item>React Native AES</item>
         <item>sqflite</item>
@@ -4694,6 +4772,7 @@
         <item>Zebra</item>
         <item>Zebra API</item>
         <item>Zenjoy</item>
+        <item>jx</item>
         <item>ZeroTier SDK</item>
         <item>Matisse</item>
         <item>cloudflare-scrape-Android</item>
@@ -4947,6 +5026,7 @@
         <item>ToRuntime</item>
         <item>fluttertoast</item>
         <item>cordova-plugin-file-opener2</item>
+        <item>sora-editor</item>
         <item>easyRS</item>
         <item>cordova-plugin-ftp</item>
         <item>Android VuMeter library</item>
@@ -5049,6 +5129,7 @@
         <item>JavaX Servlet API</item>
         <item>Bean Validation API</item>
         <item>JavaX WebServices RESTful Resources</item>
+        <item>JAXB API</item>
         <item>JCIFS</item>
         <item>jcifs-ng-for-jcifsfile</item>
         <item>jcifs-ng 2.1.1</item>
@@ -5120,6 +5201,7 @@
         <item>Steppers</item>
         <item>SmoothRefreshLayout</item>
         <item>overscroll-decor</item>
+        <item>AppKit</item>
         <item>Kpan</item>
         <item>gpx-parser</item>
         <item>SwipeBackLayout</item>
@@ -5133,6 +5215,7 @@
         <item>TimeDatePicker</item>
         <item>ShortcutBadger</item>
         <item>MultiImageSelector</item>
+        <item>compose-collapsing-toolbar</item>
         <item>Quick Action</item>
         <item>chroma</item>
         <item>Proton Core Libraries</item>
@@ -5289,6 +5372,7 @@
         <item>AOP Alliance</item>
         <item>Apache Commons</item>
         <item>Apache Cordova</item>
+        <item>Apache Felix</item>
         <item>Apache FtpServer</item>
         <item>Apache Harmony</item>
         <item>Apache HttpComponents</item>
@@ -5370,10 +5454,17 @@
         <item>react-native-splash-screen</item>
         <item>rfc5545-datetime</item>
         <item>dom4j</item>
+        <item>Eclipse Core</item>
         <item>EGit</item>
+        <item>Eclipse Equinox</item>
+        <item>Eclipse JDT</item>
         <item>Eclipse Jetty</item>
+        <item>JFace</item>
+        <item>OSGi System Bundle</item>
         <item>Eclipse Paho Android Service</item>
         <item>Paho Java Client</item>
+        <item>Eclipse Platform Text</item>
+        <item>Eclipse Platform Text</item>
         <item>MoneyTextView</item>
         <item>Audio Waves</item>
         <item>FMOD</item>
@@ -5514,6 +5605,7 @@
         <item>NDEF Tools for Android</item>
         <item>netlib-java</item>
         <item>autolink-java</item>
+        <item>Kotlin Statistics</item>
         <item>ZoomView</item>
         <item>ASM</item>
         <item>ASM</item>
@@ -5528,7 +5620,7 @@
         <item>Geodesy</item>
         <item>OpenTripPlanner (OTP)</item>
         <item>OpenUDID Salama Generator</item>
-        <item>OSGi Framework</item>
+        <item>OSGi</item>
         <item>George’s Android Utilities</item>
         <item>OpenStreetMap-Tools for Android</item>
         <item>Parceler</item>
@@ -5642,7 +5734,9 @@
         <item>Rikka Libs</item>
         <item>Rikka Libs</item>
         <item>Rikka Libs</item>
+        <item>Rikka Apps Preferences</item>
         <item>Sui</item>
+        <item>Rikka Apps Widget</item>
         <item>Audiogram</item>
         <item>Roboguice</item>
         <item>Roboguice</item>
@@ -5781,71 +5875,21 @@
         <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
-        <item>Development Framework</item>
-        <item>Development Framework</item>
-        <item>Utility</item>
-        <item>Utility</item>
-        <item>Utility</item>
-        <item>UI Component</item>
-        <item>Development Aid</item>
-        <item>UI Component</item>
-        <item>UI Component</item>
-        <item>Utility</item>
-        <item>Development Aid</item>
-        <item>Development Aid</item>
-        <item>Utility</item>
-        <item>Utility</item>
-        <item>Utility</item>
-        <item>Utility</item>
-        <item>Utility</item>
-        <item>Utility</item>
-        <item>Utility</item>
-        <item>Utility</item>
-        <item>Utility</item>
-        <item>Utility</item>
-        <item>Utility</item>
-        <item>Utility</item>
-        <item>Utility</item>
-        <item>Utility</item>
-        <item>Development Framework</item>
-        <item>UI Component</item>
-        <item>UI Component</item>
-        <item>Utility</item>
-        <item>UI Component</item>
-        <item>Utility</item>
-        <item>Utility</item>
-        <item>Utility</item>
         <item>Utility</item>
         <item>Development Framework</item>
         <item>Development Framework</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
         <item>UI Component</item>
-        <item>Development Framework</item>
         <item>Utility</item>
-        <item>Utility</item>
-        <item>Utility</item>
-        <item>Utility</item>
-        <item>Utility</item>
-        <item>Development Aid</item>
         <item>Development Aid</item>
         <item>UI Component</item>
         <item>UI Component</item>
         <item>UI Component</item>
-        <item>Development Aid</item>
         <item>Utility</item>
         <item>Development Aid</item>
         <item>Development Aid</item>
-        <item>UI Component</item>
-        <item>UI Component</item>
-        <item>Utility</item>
-        <item>Utility</item>
-        <item>UI Component</item>
-        <item>Utility</item>
-        <item>Utility</item>
-        <item>Utility</item>
-        <item>Utility</item>
-        <item>Development Aid</item>
-        <item>Utility</item>
-        <item>UI Component</item>
         <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
@@ -5853,15 +5897,8 @@
         <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
-        <item>UI Component</item>
         <item>Utility</item>
         <item>Utility</item>
-        <item>Development Framework</item>
-        <item>Utility</item>
-        <item>UI Component</item>
-        <item>Utility</item>
-        <item>Utility</item>
-        <item>UI Component</item>
         <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
@@ -5872,6 +5909,72 @@
         <item>Utility</item>
         <item>UI Component</item>
         <item>Development Framework</item>
+        <item>UI Component</item>
+        <item>Utility</item>
+        <item>UI Component</item>
+        <item>Utility</item>
+        <item>UI Component</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Development Framework</item>
+        <item>Development Framework</item>
+        <item>UI Component</item>
+        <item>Development Framework</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Development Aid</item>
+        <item>Development Aid</item>
+        <item>UI Component</item>
+        <item>UI Component</item>
+        <item>UI Component</item>
+        <item>Development Aid</item>
+        <item>Utility</item>
+        <item>Development Aid</item>
+        <item>Development Aid</item>
+        <item>UI Component</item>
+        <item>UI Component</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>UI Component</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Development Aid</item>
+        <item>Utility</item>
+        <item>UI Component</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>UI Component</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Development Framework</item>
+        <item>Utility</item>
+        <item>UI Component</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>UI Component</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>UI Component</item>
+        <item>Development Framework</item>
         <item>Development Framework</item>
         <item>Utility</item>
         <item>Utility</item>
@@ -5902,6 +6005,7 @@
         <item>UI Component</item>
         <item>Utility</item>
         <item>UI Component</item>
+        <item>Development Aid</item>
         <item>UI Component</item>
         <item>Utility</item>
         <item>Advertisement</item>
@@ -5988,6 +6092,7 @@
         <item>Utility</item>
         <item>Payment</item>
         <item>UI Component</item>
+        <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
@@ -6193,7 +6298,6 @@
         <item>Utility</item>
         <item>UI Component</item>
         <item>Utility</item>
-        <item>UI Component</item>
         <item>Development Aid</item>
         <item>Mobile Analytics</item>
         <item>Game Engine</item>
@@ -6231,6 +6335,7 @@
         <item>UI Component</item>
         <item>Utility</item>
         <item>UI Component</item>
+        <item>Utility</item>
         <item>UI Component</item>
         <item>Utility</item>
         <item>UI Component</item>
@@ -6461,6 +6566,10 @@
         <item>UI Component</item>
         <item>Utility</item>
         <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
         <item>UI Component</item>
         <item>Utility</item>
         <item>Utility</item>
@@ -6619,6 +6728,16 @@
         <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
         <item>Development Framework</item>
         <item>Utility</item>
         <item>Utility</item>
@@ -6811,6 +6930,7 @@
         <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
+        <item>Utility</item>
         <item>UI Component</item>
         <item>UI Component</item>
         <item>UI Component</item>
@@ -7006,6 +7126,7 @@
         <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
+        <item>Development Aid</item>
         <item>Mobile Analytics</item>
         <item>UI Component</item>
         <item>UI Component</item>
@@ -7266,6 +7387,7 @@
         <item>UI Component</item>
         <item>UI Component</item>
         <item>UI Component</item>
+        <item>Utility</item>
         <item>UI Component</item>
         <item>UI Component</item>
         <item>UI Component</item>
@@ -7358,10 +7480,13 @@
         <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
         <item>Mobile Analytics</item>
         <item>Utility</item>
         <item>Utility</item>
         <item>UI Component</item>
+        <item>Utility</item>
         <item>UI Component</item>
         <item>Utility</item>
         <item>Utility</item>
@@ -7574,6 +7699,7 @@
         <item>Development Framework</item>
         <item>Advertisement</item>
         <item>Utility</item>
+        <item>Utility</item>
         <item>UI Component</item>
         <item>Utility</item>
         <item>UI Component</item>
@@ -7825,6 +7951,7 @@
         <item>Utility</item>
         <item>Utility</item>
         <item>UI Component</item>
+        <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
@@ -7912,6 +8039,7 @@
         <item>Utility</item>
         <item>UI Component</item>
         <item>UI Component</item>
+        <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
@@ -7999,6 +8127,7 @@
         <item>UI Component</item>
         <item>UI Component</item>
         <item>UI Component</item>
+        <item>Utility</item>
         <item>UI Component</item>
         <item>Utility</item>
         <item>UI Component</item>
@@ -8010,6 +8139,7 @@
         <item>UI Component</item>
         <item>UI Component</item>
         <item>Utility</item>
+        <item>UI Component</item>
         <item>UI Component</item>
         <item>UI Component</item>
         <item>UI Component</item>
@@ -8186,6 +8316,7 @@
         <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
+        <item>Utility</item>
         <item>Development Aid</item>
         <item>Development Aid</item>
         <item>Development Aid</item>
@@ -8253,6 +8384,13 @@
         <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
         <item>UI Component</item>
         <item>UI Component</item>
         <item>Utility</item>
@@ -8393,6 +8531,7 @@
         <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
+        <item>Utility</item>
         <item>UI Component</item>
         <item>Utility</item>
         <item>Utility</item>
@@ -8407,7 +8546,7 @@
         <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
-        <item>Development Framework</item>
+        <item>Utility</item>
         <item>Utility</item>
         <item>Map</item>
         <item>Utility</item>
@@ -8522,6 +8661,8 @@
         <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
+        <item>Utility</item>
+        <item>UI Component</item>
         <item>UI Component</item>
         <item>Development Framework</item>
         <item>Development Framework</item>
@@ -8656,6 +8797,7 @@
         <item>https://developer.android.com/jetpack/androidx/releases/annotation</item>
         <item>https://developer.android.com/jetpack/androidx/releases/arch</item>
         <item>https://developer.android.com/jetpack/androidx/releases/appcompat</item>
+        <item>https://developer.android.com/jetpack/androidx/releases/autofill</item>
         <item>https://developer.android.com/jetpack/androidx/releases/biometric</item>
         <item>https://developer.android.com/jetpack/androidx/releases/browser</item>
         <item>https://developer.android.com/jetpack/androidx/releases/camera</item>
@@ -8666,8 +8808,10 @@
         <item>https://developer.android.com/jetpack/androidx/releases/core</item>
         <item>https://developer.android.com/tools/extras/support-library.html</item>
         <item>https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/customview/</item>
+        <item>https://developer.android.com/jetpack/androidx/releases/databinding/</item>
         <item>https://developer.android.com/jetpack/androidx/releases/datastore</item>
         <item>https://developer.android.com/jetpack/androidx/releases/documentfile</item>
+        <item>https://developer.android.com/jetpack/androidx/releases/dynamicanimation</item>
         <item>https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/emoji2/</item>
         <item>https://developer.android.com/jetpack/androidx/releases/exifinterface</item>
         <item>https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/fragment/</item>
@@ -8679,15 +8823,20 @@
         <item>https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-localbroadcastmanager-release/localbroadcastmanager/</item>
         <item>https://developer.android.com/jetpack/androidx/releases/media</item>
         <item>https://developer.android.com/jetpack/androidx/releases/media2</item>
+        <item>https://developer.android.com/jetpack/androidx/releases/multidex</item>
         <item>https://developer.android.com/jetpack/androidx/releases/navigation</item>
         <item>https://developer.android.com/jetpack/androidx/releases/palette</item>
         <item>https://developer.android.com/jetpack/androidx/releases/preference</item>
         <item>https://developer.android.com/jetpack/androidx/releases/print</item>
         <item>https://developer.android.com/jetpack/androidx/releases/room</item>
+        <item>https://developer.android.com/jetpack/androidx/releases/recyclerview</item>
+        <item>https://developer.android.com/jetpack/androidx/releases/recyclerview</item>
         <item>https://developer.android.com/jetpack/androidx</item>
         <item>https://developer.android.com/jetpack/androidx/releases/sqlite</item>
+        <item>https://developer.android.com/jetpack/androidx/releases/swiperefreshlayout</item>
         <item>https://github.com/android/android-test</item>
         <item>https://developer.android.com/jetpack/androidx/releases/transition</item>
+        <item>https://developer.android.com/jetpack/androidx/releases/tvprovider</item>
         <item>https://developer.android.com/jetpack/androidx/releases/vectordrawable</item>
         <item>https://developer.android.com/jetpack/androidx/releases/versionedparcelable</item>
         <item>https://developer.android.com/reference/androidx/viewpager2/widget/ViewPager2</item>
@@ -8743,6 +8892,7 @@
         <item>https://github.com/leandroBorgesFerreira/LoadingButtonAndroid</item>
         <item>https://github.com/tiagohm/MarkdownView</item>
         <item>https://github.com/JakeWharton/butterknife</item>
+        <item>https://github.com/chemerisuk/cordova-support-android-plugin</item>
         <item>https://github.com/kirich1409/ViewBindingPropertyDelegate</item>
         <item>https://github.com/ionull/objectify</item>
         <item>https://github.com/caarmen/SunriseSunset</item>
@@ -8781,6 +8931,7 @@
         <item>https://github.com/side-codes/andColorPicker</item>
         <item>https://github.com/coil-kt/coil</item>
         <item>https://github.com/abumoallim/Android-Multi-Select-Dialog</item>
+        <item>https://github.com/zhaobozhen/LibChecker-Rules-Bundle</item>
         <item>https://github.com/JakeWharton/ActionBarSherlock</item>
         <item>https://github.com/pardom/ActiveAndroid</item>
         <item>http://www.ad4screen.com/</item>
@@ -8875,6 +9026,7 @@
         <item>https://github.com/google/conscrypt</item>
         <item>https://android.googlesource.com/platform/frameworks/opt/setupwizard/</item>
         <item>https://developer.android.com/studio/run/index.html#instant-run</item>
+        <item>https://r8.googlesource.com/r8</item>
         <item>https://play.google.com/</item>
         <item>https://developer.android.com/training/volley</item>
         <item>https://github.com/amitshekhariitbhu/Fast-Android-Networking</item>
@@ -9072,7 +9224,6 @@
         <item>https://github.com/CraZyLegenD/Crashy</item>
         <item>https://github.com/CraZyLegenD/Set-Of-Useful-Kotlin-Extensions-and-Helpers/tree/master/customviews</item>
         <item>https://github.com/CraZyLegenD/Set-Of-Useful-Kotlin-Extensions-and-Helpers/tree/master/kotlinextensions</item>
-        <item>https://github.com/CraZyLegenD/Set-Of-Useful-Kotlin-Extensions-and-Helpers/tree/master/recyclerview</item>
         <item>https://github.com/CraZyLegenD/Set-Of-Useful-Kotlin-Extensions-and-Helpers/tree/master/viewbinding</item>
         <item>http://www.apteligent.com/</item>
         <item>https://www.criware.com/en/</item>
@@ -9110,6 +9261,7 @@
         <item>https://github.com/dmytrodanylyk/android-process-button</item>
         <item>https://github.com/deezer/</item>
         <item>https://github.com/Deishelon/RoundedBottomSheet</item>
+        <item>https://github.com/Delagen/cordova-plugin-browser</item>
         <item>https://github.com/sacot41/SCViewPager</item>
         <item>https://github.com/brianwernick/ExoMedia</item>
         <item>https://github.com/TutorialsAndroid/FilePicker</item>
@@ -9339,7 +9491,11 @@
         <item>https://github.com/derlio/audio-waveform</item>
         <item>https://github.com/Dhaval2404/ImagePicker</item>
         <item>https://github.com/donmor/FileDialog</item>
+        <item>https://github.com/doyaaaaaken/kotlin-csv</item>
         <item>https://github.com/Drabu/SSNInputView</item>
+        <item>https://github.com/andriydruk/RxDNSSD</item>
+        <item>https://github.com/andriydruk/RxDNSSD</item>
+        <item>https://github.com/andriydruk/RxDNSSD</item>
         <item>https://github.com/coyarzun89/FabTransitionActivity</item>
         <item>https://github.com/faucamp/SimpleRtmp</item>
         <item>https://github.com/fge/jackson-coreutils</item>
@@ -9495,8 +9651,18 @@
         <item>https://github.com/GoogleChrome/android-browser-helper</item>
         <item>https://github.com/googleapis/google-api-java-client</item>
         <item>https://github.com/googleapis/api-common-java</item>
+        <item>https://github.com/googleapis/google-api-java-client-services</item>
+        <item>https://github.com/googleapis/google-api-java-client-services</item>
+        <item>https://github.com/googleapis/google-api-java-client-services</item>
+        <item>https://github.com/googleapis/google-api-java-client-services</item>
+        <item>https://github.com/googleapis/google-api-java-client-services</item>
+        <item>https://github.com/googleapis/google-api-java-client-services</item>
+        <item>https://github.com/googleapis/google-api-java-client-services</item>
         <item>https://github.com/googleapis/google-api-java-client-services/tree/main/clients/google-api-services-drive</item>
         <item>https://github.com/googleapis/google-api-java-client-services/tree/main/clients/google-api-services-youtube</item>
+        <item>https://github.com/googleapis/google-api-java-client-services</item>
+        <item>https://github.com/googleapis/google-api-java-client-services</item>
+        <item>https://github.com/googleapis/google-api-java-client-services</item>
         <item>https://code.google.com/p/app-inventor-for-android/</item>
         <item>https://developers.google.com/ar/develop/</item>
         <item>https://github.com/googleapis/google-auth-library-java</item>
@@ -9687,6 +9853,7 @@
         <item>https://www.daum.net/</item>
         <item>https://github.com/Karumi/Dexter</item>
         <item>https://github.com/KasemJaffer/flutter_absolute_path</item>
+        <item>https://github.com/KeenenCharles/AndroidUnplash</item>
         <item>https://github.com/jnr/jffi</item>
         <item>https://github.com/jnr/jnr-x86asm</item>
         <item>https://github.com/jnr/jnr-x86asm</item>
@@ -9885,6 +10052,7 @@
         <item>https://github.com/schildbach/java-wns-resolver</item>
         <item>https://github.com/schildbach/java-wns-resolver</item>
         <item>https://github.com/schildbach/java-wns-resolver</item>
+        <item>https://github.com/networknt/json-schema-validator</item>
         <item>http://www.newrelic.com/</item>
         <item>https://github.com/nex3z/FlowLayout</item>
         <item>https://github.com/nex3z/FlowLayout</item>
@@ -10145,6 +10313,7 @@
         <item>https://github.com/skydoves/Balloon</item>
         <item>https://github.com/skydoves/ExpandableLayout</item>
         <item>https://github.com/skydoves/ExpandableLayout</item>
+        <item>https://github.com/skydoves/landscapist</item>
         <item>https://github.com/skydoves/PowerMenu</item>
         <item>https://github.com/skydoves/PowerSpinner</item>
         <item>https://github.com/skydoves/ProgressView</item>
@@ -10235,12 +10404,15 @@
         <item>https://github.com/TakWolf/Java-MorseCoder</item>
         <item>https://github.com/tananaev/adblib</item>
         <item>https://github.com/tanguyantoine/react-native-music-control</item>
+        <item>https://github.com/Tans5/RxUtils</item>
+        <item>https://github.com/Tans5/tAdapter</item>
         <item>https://github.com/alibaba/dexposed</item>
         <item>https://github.com/Tapadoo/Alerter</item>
         <item>https://github.com/tapstream/tapstream-sdk-android</item>
         <item>https://github.com/tbruyelle/RxPermissions</item>
         <item>https://github.com/tbruyelle/RxPermissions</item>
         <item>https://github.com/tommybuonomo/dotsindicator</item>
+        <item>https://github.com/tchvu3/capacitor-voice-recorder</item>
         <item>https://github.com/TechFreak/WizardPager</item>
         <item>https://github.com/tectiv3/react-native-aes</item>
         <item>https://github.com/tekartik/sqflite</item>
@@ -10452,6 +10624,7 @@
         <item>https://github.com/bcraig/Zebra</item>
         <item>http://techdocs.zebra.com/link-os/latest/webservices/content/overview-summary.html</item>
         <item>http://www.zenjoy.net/</item>
+        <item>https://github.com/zeoflow/jx</item>
         <item>https://github.com/zerotier/ZeroTierOne</item>
         <item>https://github.com/zhihu/Matisse</item>
         <item>https://github.com/zhkrb/cloudflare-scrape-Android</item>
@@ -10705,6 +10878,7 @@
         <item>https://github.com/NovaCrypto/ToRuntime</item>
         <item>https://github.com/PonnamKarthik/FlutterToast</item>
         <item>https://github.com/pwlin/cordova-plugin-file-opener2</item>
+        <item>https://github.com/Rosemoe/sora-editor</item>
         <item>https://github.com/silvaren/easyrs</item>
         <item>https://libraries.io/github/xfally/cordova-plugin-ftp</item>
         <item>https://github.com/HugoGresse/AndroidVuMeter</item>
@@ -10807,6 +10981,7 @@
         <item>https://www.jcp.org/en/jsr/detail\?id=369</item>
         <item>https://mvnrepository.com/artifact/javax.validation/validation-api</item>
         <item>https://docs.oracle.com/javaee/7/api/javax/ws/rs/package-summary.html</item>
+        <item>https://mvnrepository.com/artifact/javax.xml.bind/jaxb-api/2.4.0-b180830.0359</item>
         <item>https://jcifs.samba.org/</item>
         <item>https://github.com/Sentaroh/jcifs-ng-for-jcifsfile</item>
         <item>https://github.com/Sentaroh/jcifsng-211-20190202</item>
@@ -10878,6 +11053,7 @@
         <item>https://github.com/drozdzynski/Steppers</item>
         <item>https://github.com/dkzwm/SmoothRefreshLayout</item>
         <item>https://github.com/EverythingMe/overscroll-decor</item>
+        <item>https://github.com/grishka/appkit</item>
         <item>https://github.com/2dxgujun/Kpan</item>
         <item>https://github.com/himanshu-soni/gpx-parser</item>
         <item>https://github.com/ikew0ng/SwipeBackLayout</item>
@@ -10891,6 +11067,7 @@
         <item>https://github.com/fennifith/TimeDatePicker</item>
         <item>https://github.com/leolin310148/ShortcutBadger</item>
         <item>https://github.com/lovetuzitong/MultiImageSelector</item>
+        <item>https://github.com/onebone/compose-collapsing-toolbar</item>
         <item>https://github.com/piruin/quickaction</item>
         <item>https://github.com/ItsPriyesh/chroma</item>
         <item>https://github.com/ProtonMail/protoncore_android</item>
@@ -11047,6 +11224,7 @@
         <item>https://sourceforge.net/projects/aopalliance/</item>
         <item>https://commons.apache.org/</item>
         <item>https://cordova.apache.org/</item>
+        <item>https://felix.apache.org/documentation/index.html</item>
         <item>https://mina.apache.org/ftpserver-project/index.html</item>
         <item>https://harmony.apache.org/</item>
         <item>https://hc.apache.org/</item>
@@ -11128,10 +11306,17 @@
         <item>https://github.com/crazycodeboy/react-native-splash-screen</item>
         <item>https://github.com/dmfs/rfc5545-datetime</item>
         <item>https://github.com/dom4j/dom4j</item>
+        <item>https://www.eclipse.org/eclipse/platform-core/</item>
         <item>https://eclipse.org/egit/</item>
+        <item>https://projects.eclipse.org/projects/eclipse.equinox</item>
+        <item>https://projects.eclipse.org/projects/eclipse.jdt</item>
         <item>https://www.eclipse.org/jetty/</item>
+        <item>https://wiki.eclipse.org/JFace</item>
+        <item>https://mvnrepository.com/artifact/org.eclipse.platform/org.eclipse.osgi</item>
         <item>https://github.com/eclipse/paho.mqtt.android</item>
         <item>https://eclipse.org/paho/clients/java/</item>
+        <item>https://git.eclipse.org/c/platform/eclipse.platform.text.git/tree/org.eclipse.text</item>
+        <item>https://git.eclipse.org/c/platform/eclipse.platform.text.git/tree/org.eclipse.text</item>
         <item>https://github.com/fabiomsr/MoneyTextView</item>
         <item>https://github.com/FireZenk/AudioWaves</item>
         <item>https://fmod.com/</item>
@@ -11211,7 +11396,7 @@
         <item>http://www.kxml.org/</item>
         <item>https://github.com/getlantern/lantern</item>
         <item>https://github.com/dogecoin/libdohj</item>
-        <item>https://wiki.libsdl.org/Android</item>
+        <item>https://github.com/libsdl-org/SDL</item>
         <item>https://github.com/joshjdevl/libsodium-jni</item>
         <item>https://github.com/lyubo/react-native-sodium</item>
         <item>https://github.com/ligi/SnackEngage</item>
@@ -11272,6 +11457,7 @@
         <item>https://github.com/skjolber/ndef-tools-for-android</item>
         <item>https://github.com/fommil/netlib-java</item>
         <item>https://github.com/robinst/autolink-java</item>
+        <item>https://github.com/thomasnield/kotlin-statistics</item>
         <item>https://github.com/nuclearfog/ZoomView</item>
         <item>http://asm.ow2.org/</item>
         <item>http://asm.ow2.org/</item>
@@ -11286,7 +11472,7 @@
         <item>https://github.com/OpenSextant/geodesy</item>
         <item>https://github.com/opentripplanner/OpenTripPlanner</item>
         <item>https://github.com/vieux/OpenUDID</item>
-        <item>https://osgi.org/javadoc/r6/core/index.html</item>
+        <item>https://mvnrepository.com/artifact/org.osgi</item>
         <item>https://github.com/george-steel/android-utils</item>
         <item>https://github.com/osmdroid/osmdroid</item>
         <item>https://github.com/johncarl81/parceler</item>
@@ -11400,7 +11586,9 @@
         <item>https://github.com/RikkaApps/libraries</item>
         <item>https://github.com/RikkaApps/libraries</item>
         <item>https://github.com/RikkaApps/libraries</item>
+        <item>https://github.com/RikkaApps/RikkaX/tree/master/preference</item>
         <item>https://github.com/RikkaApps/Sui</item>
+        <item>https://github.com/RikkaApps/RikkaX</item>
         <item>https://github.com/alxrm/audiowave-progressbar</item>
         <item>https://github.com/roboguice/roboguice</item>
         <item>https://github.com/roboguice/roboguice</item>
