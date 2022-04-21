@@ -134,7 +134,7 @@
 \n请求新功能不需要任何捐赠，且它们的优先级是按作者倾向排序.
 \n
 \n\\emph{App Manager 接受任何资助的提议}
-\n有兴趣的组织的代表可以通过以下方式直接联系联系所有者: §\\cref{sec:contact}.</string>
+\n有兴趣的组织的代表可以通过以下方式直接联系联系所有者: §\\ref{sec:contact}.</string>
     <string name="intro$main$contact">Muntashir Al-Islam\\footnote{可称``Muntashir Akon\'\'}\\\\
 \n邮箱: \\href{mailto:muntashirakon@riseup.net}{muntashirakon [at] riseup [dot] net}\\\\
 \nKey Fingerprint: \\texttt{7bad37c2981e41f8f6abea7f58f0b4f26c346fce}\\\\
@@ -170,11 +170,11 @@
 \n\\end{tip}</string>
     <string name="pages$main-page$application-types">一个应用程序可以是 \\textbf{用户} 或 \\textbf{系统} 应用，同时存在以下后缀:
 \n\\begin{itemize}
-\n \\item \\texttt{X} -- 支持多种架构(AArch32位/AArch64位)
-\n \\item \\texttt{0} -- 不含dex文件(包含ART/Davilk虚拟机字节码, 即可直接运行的代码)
-\n \\item \\texttt{\\textdegree°} -- 处于休眠状态
-\n \\item \\texttt{\\#} -- 已请求大量堆(Heap Memory)内存
-\n \\item \\texttt{\?} -- 已请求处于安全模式下的虚拟机
+\n \\item \\texttt{X} -- 支持多种架构
+\n \\item \\texttt{0} -- 不含dex文件
+\n \\item \\texttt{°} -- 已暂停应用
+\n \\item \\texttt{\\#} -- 应用程序请求系统分配一个大堆，即\\ 大运行时内存
+\n \\item \\texttt{\?} -- 应用程序请求虚拟机处于安全模式。
 \n\\end{itemize}</string>
     <string name="pages$main-page$version-info">版本名称有以下前缀:
 \n\\begin{itemize}
