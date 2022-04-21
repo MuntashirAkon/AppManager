@@ -1,2 +1,248 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="intro$main$$bin-sources-title">二進制(可執行)分發來源</string>
+    <string name="intro$main$$translations-title">翻譯</string>
+    <string name="intro$main$$contributing-title">貢獻</string>
+    <string name="intro$main$$buiding-title">構建說明</string>
+    <string name="intro$main$$submit-patches-title">提交補丁</string>
+    <string name="intro$main$$source-code-links-title">原始碼連結</string>
+    <string name="pages$main-page$$apk-updater-title">APK 更新程式</string>
+    <string name="pages$main-page$$settings-title">設定</string>
+    <string name="pages$main-page$$log-viewer-title">日誌查看器</string>
+    <string name="pages$app-details-page$$other-tabs-title">其他分頁</string>
+    <string name="intro$main$$official-sources-title">官方來源</string>
+    <string name="intro$main$$contact-title">聯繫我們</string>
+    <string name="intro$main$$donation-title">捐款\\&amp;資金</string>
+    <string name="intro$main$source-code-links">除了GitHub之外，所有都是鏡像連結。標記應始終是最新的，但不能保證主分支是最新的
+\n最新的。如果目標是克隆主分支，請使用 GitHub 連結而不是其他連結。</string>
+    <string name="intro$main$bin-sources">App Manager 透過以下渠道發布。
+\n非官方來源可能分發 App Manager 的修改版本，後果自負。
+\n\\begin{enumerate}
+\n\\item F-Droid \\footnote{For distributing normal releases only}\\\\
+\n\\textit{Link:} \\url{https://f-droid.org/packages/io.github.muntashirakon.AppManager}
+\n\\item GitHub repository.\\\\
+\n\\textit{Normal releases:} \\url{https://github.com/MuntashirAkon/AppManager/releases}\\\\
+\n\\textit{Debug releases:} \\url{https://github.com/MuntashirAkon/AppManager/actions}
+\n\\item Telegram.\\\\
+\n\\textit{Normal releases:} \\url{https://t.me/AppManagerChannel}\\\\
+\n\\textit{Debug releases:} \\url{https://t.me/AppManagerDebug}
+\n\\end{enumerate}</string>
+    <string name="pages$main-page$$version-info-title">版本資訊</string>
+    <string name="pages$main-page$$options-menu-title">選項功能表</string>
+    <string name="pages$main-page$$1-click-ops-title">一鍵式操作</string>
+    <string name="pages$main$$pages-chapter-title">頁面</string>
+    <string name="pages$main-page$$batch-operations-title">批處理</string>
+    <string name="pages$main-page$$instructions-title">說明</string>
+    <string name="pages$main-page$$filter-title">篩選</string>
+    <string name="pages$main-page$$system-config-title">系統配置</string>
+    <string name="pages$main-page$$colour-codes-title">顏色代碼</string>
+    <string name="pages$main-page$$profile_name-title">配置檔案名稱</string>
+    <string name="pages$main-page$$profiles-title">配置檔案</string>
+    <string name="pages$main-page$$application-types-title">應用程式類型</string>
+    <string name="pages$main-page$$app-usage-title">應用程式使用情況</string>
+    <string name="pages$main-page$$running-apps-title">正在執行的應用程式</string>
+    <string name="pages$main-page$$section-title">主畫面</string>
+    <string name="pages$main-page$$how-app-ops-work-title">主畫面中的應用程式清單項</string>
+    <string name="pages$app-details-page$$servcies-title">服務 (Services)</string>
+    <string name="pages$app-details-page$$receivers-title">接收器</string>
+    <string name="pages$app-details-page$$blocking-components-title">封鎖元件</string>
+    <string name="pages$app-details-page$$uses-permissions-title">使用權限</string>
+    <string name="pages$app-details-page$$permissions-title">權限</string>
+    <string name="pages$app-details-page$$app-ops-title"></string>
+    <string name="pages$app-details-page$$permission-tabs-title">權限分頁</string>
+    <string name="pages$app-details-page$$signatures-tab-title">簽名分頁</string>
+    <string name="pages$app-details-page$$blocking-trackers-title">封鎖跟踪器</string>
+    <string name="pages$app-details-page$intro">\\textbf{應用程式詳細資訊頁}由11個標籤頁組成.幾乎描述了一個應用程式的所有資訊,
+\n包括清單中的所有屬性, \\hyperref[ch:app-ops]{AppOps},簽名,原生庫等</string>
+    <string name="pages$app-details-page$app-info-tab">\\textbf{應用程式資訊} 分頁包含關於一個應用程式的基本資訊,
+\n許多操作可以在此標籤中執行.</string>
+    <string name="intro$main$supported-versions">目前，支援的版本有 v2.6.0（穩定版）、v3.0.0（alpha 版和調試版）。以前版本的 App Manager 可能包含安全漏洞，不應使用。</string>
+    <string name="pages$app-details-page$$providers-title">提供者</string>
+    <string name="pages$app-details-page$$additional-features-for-rooted-phones-title">針對已 Root 的手機的額外功能</string>
+    <string name="intro$main$terminologies">\\begin{itemize}
+\n\\item \\textbf{AM} --- App Manager
+\n\\item \\textbf{Block/Unblock} --- Used for component blocking or unblocking. How components are blocked depends on
+\nthe user preferences.
+\n\\item \\textbf{IFW} --- Intent Firewall (意圖防火牆)
+\n\\item \\textbf{Ops} --- operations (操作), e.g.\\app ops, batch ops, 1-click ops
+\n\\item \\textbf{SSAID} --- \\texttt{Settings.Secure.ANDROID\\_ID} - 分配給每個應用程式的設備標識符 (Android Oreo及以上版本)，由應用程式簽名與包\\texttt{android}的SSAID組合生成的。因此，除非使用者選擇格式化設備，否則它保證對每個應用程式來說都是獨一無二的。它被廣泛用於跟踪使用者。
+\n\\item \\textbf{Tracker} --- Denotes tracker components throughout the document and in App Manager except in the
+\n\\hyperref[sec:scanner-page]{scanner page}. Trackers include libraries such as crash reporters, analytics,
+\nprofiling, identification, ad, location, etc. Thus, they are not equal in functions. There is no distinction or bias
+\nbetween open source and closed source libraries that promote tracking.
+\n\\end{itemize}</string>
+    <string name="pages$main-page$instructions">點擊 \\textbf{指南} 開啟離線版的App Manager使用者手冊.
+\n它也可能開啟在線版本如果如果相應的功能拆分\\texttt{feat\\_docs}未安裝,
+\n或系統 WebView不存在.</string>
+    <string name="pages$main-page$colour-codes">\\begin{itemize}
+\n\\item \\colorbox{AMLightGreyishOrange}{\\textcolor{black}{淺灰橙(日間模式下)}} /\\colorbox{AMDarkBlue}{
+\n\\textcolor{white}{深藍(夜間模式下)}} -- 多選模式下被選中的應用程式
+\n\\item \\colorbox{AMLightRed}{\\textcolor{black}{淺紅(日間模式下)}} /\\colorbox{AMVeryDarkRed}{\\textcolor{white}
+\n{深紅 (夜間模式下)}} -- 停用的應用程式
+\n\\item \\colorbox{AMYellow}{\\textcolor{black}{黃色星標}} -- 可調試的應用程式
+\n\\item \\textcolor{AMOrange}{橙色 \\textit{日期}} -- 應用程式可讀取日誌
+\n\\item \\textcolor{AMOrange}{橙色 \\textit{UID}} -- 使用者 ID 在應用程式間被共享
+\n\\item \\textcolor{AMOrange}{橙色 \\textit{SDK}} -- 使用明文網絡通信(如 HTTP)
+\n\\item \\textcolor{red}{紅色 \\textit{包名}} -- 應用程式禁止清除數據
+\n\\item \\textcolor{red}{紅色\\textit{備份標識}} -- 已解除安裝的應用程式存在一個或多個備份
+\n\\item \\textcolor{AMOrange}{橙色\\textit{備份標識}} -- 備份過期,
+\n如基本備份中包含已安裝的應用程式的舊版本
+\n\\item \\textcolor{AMDarkCyan}{深藍綠色 \\textit{備份標識}} -- 備份在期,
+\n如基本備份中包含已安裝應用程式的相同或更高版本
+\n\\item \\textcolor{AMDarkCyan}{深藍綠色 \\textit{包名}} -- 已強行停止執行的應用程式
+\n\\item \\textcolor{AMDarkCyan}{深藍綠色 \\textit{版本}} -- 不活躍的應用程式
+\n\\item \\textcolor{magenta}{紫紅} -- 常駐應用程式(一直執行的應用程式)
+\n\\end{itemize}</string>
+    <string name="pages$app-details-page$colour-codes">本頁中使用的背景顏色列表:
+\n\\begin{itemize}
+\n\\item \\colorbox{AMRed}{\\textcolor{black}{正紅 (日間)}} /\\colorbox{AMDarkRed}{\\textcolor{white}{深紅 (夜間)}}
+\n-- 危險權限或, 被封鎖的元件(使用App Manager操作)
+\n
+\n\\item \\colorbox{AMLightRed}{\\textcolor{black}{亮紅 (日間)}} /\\colorbox{AMVeryDarkRed}{\\textcolor{white}{緋紅 (夜間)}} -- 被封鎖的元件(其他應用程式操作)
+\n
+\n\\begin{tip}{注意}
+\n表示在 App Manager 之外停用(封鎖)的元件, 標記為停用(封鎖)的元件並不意味著它被使用者停用,它也可能是被系統停用的, 或者在其清單(Android-Manifest.xml)中被標記為停用(封鎖)。被停用的應用程式也會被系統（和App Manager）視為停用(封鎖)。
+\n\\end{tip}
+\n
+\n\\item \\colorbox{AMVividOrange}{\\textcolor{black}{鮮橙 (日間)}} /\\colorbox{AMVeryDarkOrange}{
+\n\\textcolor{white}{深橙 (夜間)}} -- 追蹤器元件
+\n
+\n\\item \\colorbox{AMSoftMagenta}{\\textcolor{black}{亮紫 (日間)}} /\\colorbox{AMVeryDarkViolet}{
+\n\\textcolor{white}{深紫 (夜間)}} -- 正在執行的元件
+\n\\end{itemize}</string>
+    <string name="intro$main$donation">\\emph{捐贈或購買並不是使用App Manager的必要條件.} 雖然 App Manager 不支持任何任何內購,
+\n但可以透過 Open Source Collective 向 App Manager 的所有者發送捐贈.
+\n
+\nOpen Source Collective 是 Open Collective 平台上的一個財政託管機構，以幫助開源項目管理他們的財務狀況。
+\n目前，它支持透過銀行賬戶、PayPal、信用卡或借記卡和加密貨幣發起捐贈.
+\n
+\n\\textit{Link:} \\url{https://opencollective.com/muntashir}.
+\n
+\n透過發送捐款，發送者同意他們不應使用捐款作為籌碼來使作者優先考慮其所請求的功能.
+\n請求新功能不需要任何捐贈，且它們的優先級是按作者傾向排序.
+\n
+\n\\emph{App Manager 接受任何資助的提議}
+\n有興趣的組織的代表可以透過以下方式直接聯繫聯繫所有者: §\\cref{sec:contact}.</string>
+    <string name="pages$main-page$filter">主畫面中列出的應用程式可以透過以下方式進行過濾:
+\n\\begin{itemize}
+\n\\item \\textbf{使用者} 僅使用者應用程式
+\n\\item \\textbf{系統} 僅系統應用程式
+\n\\item \\textbf{停用} 僅停用應用程式
+\n\\item \\textbf{被封鎖} 僅被封鎖元件的應用程式
+\n\\item \\textbf{可開啟} 僅至少有一個Aactivity的應用程式
+\n\\item \\textbf{有備份} 僅有備份的應用程式
+\n\\item \\textbf{無備份} 僅沒有備份的應用程式
+\n\\item \\textbf{執行中} 僅正在執行的應用程式
+\n\\item \\textbf{有分包} 僅有分包(多Apk)應用程式
+\n\\item \\textbf{已安裝} 僅已安裝應用程式
+\n\\item \\textbf{已解除安裝} 僅已解除安裝應用程式
+\n\\end{itemize}
+\n
+\n與排序不同，它可以同時應用程式多個過濾選項，
+\n如，停用的使用者應用程式可以透過選擇 \\textit{使用者}和 \\textit{停用}列出，這對\\hyperref[subsec:batch-operations]{批處理}特別有用，在這種情況下過濾使用者應用程式可能是必要的，以便安全地進行某些操作。
+\nUnlike sorting, it is possible to apply more than one filtering options at the same time. For example, the disabled user
+\napplications can be listed by selecting both \\textit{User apps} and \\textit{Disabled apps}. This can be particularly
+\nuseful for \\hyperref[subsec:batch-operations]{batch operations} where filtering the user applications may be necessary
+\nto carry out certain operations safely.</string>
+    <string name="intro$main$translations">App Manager 不接受直接透過PR/MR進行的翻譯。翻譯僅透過 Weblate 進行自動化管理。
+\n要加入翻譯團隊，請造訪 \\url{https://hosted.weblate.org/engage/app-manager/}。</string>
+    <string name="intro$main$intro">App Manager 是一個提供大量功能的高級的 Android 軟件包管理器，因此，需要使用者手冊來幫助使用者正確使用。本文作為 App Manager 的使用者手冊，旨在描述 App Manager 所提供的每一個功能。
+\n本文也可以被認為是 App Manager 的 ``官方\\\'\\\' 指南，並指明 App Manager 的預期行為。翻譯可能有誤 (原文為英文)。因此，每個有能力的使用者應該閱讀該檔案的英文版本，以獲得最佳的體驗。
+\n此外還可能有其他非官方的或第三方的資源，如博客文章、視頻、聊天群組等。雖然這些資源可能對許多人有用，但它們可能不是針對最新版本。
+\n如果在App Manager中發現任何偏離本文件的情況，應在
+\n\\href{https://github.com/MuntashirAkon/AppManager/issues}{App Manager 問題追蹤}內反映。</string>
+    <string name="intro$main$submit-patches">除GitHub之外的倉庫目前被視為鏡像，在這些網站提交的 PR/MR 將不被接受.
+\n\\footnote{GitHub 的 PR 將使用 git patch 進行手動合併, 因此, GitHub 可能會錯誤地將它們標記為closed而不是merged.}
+\n相反，patches (\\texttt{.patch} 檔案) 可以透過電子郵件附件提交。 \\textit{請務必對Commits簽名(Signing-off)}
+\n更多資訊請參見位於原始碼根目錄下的CONTRIBUTING檔案.
+\n
+\n\\begin{warning}{注意}
+\n在透過電子郵件提交補丁是，整個郵件對話在將來可能會被公開造訪.
+\n所以，請不要除了您的姓名和電子郵件地址之外，不要包含任何個人身份資訊（PII）.
+\n\\end{warning}</string>
+    <string name="intro$main$contributing">使用者可以透過多種方式做出貢獻，例如創建有用的問題、參加討論、改進
+\n檔案和翻譯，新增無法識別的庫或追蹤器，查看原始程式碼以及
+\n報告安全漏洞。</string>
+    <string name="pages$main-page$batch-operations">批處理也可以在這個頁面內進行。
+\n多選模式可以由點擊任何應用程式圖標或長按列表中的任何一項進入。
+\n進入後，僅需單擊列表中的任何一項便可選中，而不是開啟應用程式詳細資訊頁。
+\n該模式下，批處理操作位於位於頁面底部的多選功能表，包括包括：
+\n\\begin{itemize}
+\n\\item 將選中應用程式新增到 \\hyperref[sec:profiles-page]{配置}
+\n\\item \\hyperref[sec:backup-restore]{備份、恢復或刪除}應用程式
+\n\\item 封鎖應用程式中的追蹤器
+\n\\item 清除應用程式數據或緩存
+\n\\item 啟用/停用/強制停止/解除安裝應用程式
+\n\\item 導出屏蔽規則
+\n\\item 封鎖應用程式的後台操作 (Android 7 及更高版本)
+\n\\item 導出APK檔案到 \\texttt{AppManager/apks}
+\n\\item 設置\\hyperref[sec:net-policy]{聯網規則}
+\n\\end{itemize}
+\n
+\n\\begin{tip}{無障礙}
+\n進入多選模式後，鍵盤或遙控器的左右鍵呼出多選功能表。
+\n\\end{tip}</string>
+    <string name="pages$main-page$options-menu">“選項”功能表提供了多個選項，可用於對列出的應用程式進行排序和篩選以及導航
+\n新增到 App Manager 內外的不同頁面。</string>
+    <string name="pages$main-page$sort">主畫面中列出的應用程式可以按照以下方式進行排序:
+\n\\begin{itemize}
+\n\\item \\textbf{使用者應用程式優先} 使用者應用程式將優先展示
+\n\\item \\textbf{應用程式標籤} 根據應用程式標籤（也稱為 \\textit{應用程式名稱}）升序排序。 (默認選項)
+\n\\item \\textbf{包名} 根據包名升序排序
+\n\\item \\textbf{最後更新} 根據更新時間降序排序
+\n\\item \\textbf{共享 user ID} 根據共享 user ID升序排序
+\n\\item \\textbf{目標 SDK} 根據目標SDK升序排序
+\n\\item \\textbf{簽名} 根據簽名資訊升序排序
+\n\\item \\textbf{已停用優先} 已停用將優先展示
+\n\\item \\textbf{已封鎖優先} 根據已封鎖的應用程式元件數目降序排序
+\n\\item \\textbf{已備份優先} 已備份將優先展示
+\n\\item \\textbf{追蹤器} 根據追蹤器數目降序排序S
+\n\\item \\textbf{最後操作} 根據被App Manager操作的應用程式時間降序排序
+\n\\end{itemize}
+\n
+\n此外，還有 \\textit{反轉} 選項，可以用來對列表進行反向排序。
+\n無論怎樣排序偏好，應用程式都是先按字母順序排序，以防止產生任何隨機排序結果.</string>
+    <string name="pages$main-page$intro">主畫面列出所有已安裝、已解除安裝和已備份的應用程式。
+\n單獨點擊任何已安裝的應用程式項目可開啟相應的 \\hyperref[sec:app-details-page]{應用程式詳細資訊頁}。
+\n對於未安裝的系統應用程式，它會顯示一個 對話框提示，可以用來重新安裝該應用程式。
+\n使用列表選項中的 \\hyperlink{par:main-page-sort}{排序} ，可以選擇應用程式列表的排序方式，離開應用程式後仍會保留排序方式。
+\n使用列表選項中的 \\hyperlink{par:main-page-filter}{過濾}，可以過濾列表選項。
+\n篩選也可以透過搜尋欄進行過濾，並支持正則表達式。</string>
+    <string name="titlepage$user_manual">{\\huge\\bfseries 使用者手冊\\par}</string>
+    <string name="intro$main$$introduction-chapter-title">簡介</string>
+    <string name="intro$main$$terminologies-title">術語</string>
+    <string name="intro$main$$supported-versions-title">受支持的版本</string>
+    <string name="intro$main$buiding">在位於原始碼根目錄下的BUILDING檔案中可以獲得編譯指導。</string>
+    <string name="intro$main$contact">Muntashir Al-Islam\\footnote{你也可以稱呼我為\'\'Muntashir Akon\'\'}\\\\
+\nEmail： \\href{mailto:muntashirakon@riseup.net}{muntashirakon [at] riseup [dot] net}\\\\
+\nKey Fingerprint： \\texttt{7bad37c2981e41f8f6abea7f58f0b4f26c346fce}\\\\
+\nGitHub： \\url{https://github.com/MuntashirAkon}\\\\
+\nTwitter： \\url{https://twitter.com/Muntashir}</string>
+    <string name="pages$main-page$$sort-title">排序</string>
+    <string name="pages$main-page$$list-options-title">清單選項</string>
+    <string name="pages$main-page$application-types">一個應用程式可以是 \\textbf{使用者} 或 \\textbf{系統} 應用程式，同時存在以下後綴:
+\n\\begin{itemize}
+\n\\item \\texttt{X} -- 支持多種架構(AArch32位/AArch64位)
+\n\\item \\texttt{0} -- 不含dex檔案(包含ART/Davilk虛擬機字節碼, 即可直接執行的代碼)
+\n\\item \\texttt{\\textdegree°} -- 處於休眠狀態
+\n\\item \\texttt{\\</string>
+    <string name="pages$main-page$version-info">版本名稱有以下前綴:
+\n\\begin{itemize}
+\n\\item \\texttt{\\_} -- 沒有硬件加速（減慢應用程式中的過渡動畫）
+\n\\item \\texttt{\\textasciitilde} -- 僅測試模式
+\n\\item \\texttt{debug} -- 可調試應用程式
+\n\\end{itemize}</string>
+    <string name="pages$main-page$list-options">\\textbf{列表選項} 包含了對主畫面中的列表進行排序和過濾的選項。</string>
+    <string name="pages$main-page$settings">此功能表項將開啟應用程式內 \\hyperref[sec:settings-page]{Settings page}。</string>
+    <string name="pages$app-details-page$$horizontal-action-panel-title">水平操作面板</string>
+    <string name="pages$app-details-page$$activities-title">活動 (Activity)</string>
+    <string name="pages$app-details-page$$colour-codes-title">顏色代碼</string>
+    <string name="pages$app-details-page$$app-info-options-menu-title">選項功能表</string>
+    <string name="pages$app-details-page$$app-info-general-information-title">基本資訊</string>
+    <string name="pages$app-details-page$$component-tabs-title">元件分頁</string>
+    <string name="pages$app-details-page$$app-info-tab-title">應用程式資訊</string>
+    <string name="pages$app-details-page$$section-title">應用程式詳細資訊頁</string>
+    <string name="pages$one-click-ops-page$$section-title">一鍵式操作頁面</string>
+    <string name="pages$main-page$$termux-title">Termux</string>
+    <string name="pages$app-details-page$$config-termux-title">Termux</string>
+</resources>
