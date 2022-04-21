@@ -48,7 +48,7 @@
     <string name="pages$app-details-page$$blocking-components-title">封鎖元件</string>
     <string name="pages$app-details-page$$uses-permissions-title">使用權限</string>
     <string name="pages$app-details-page$$permissions-title">權限</string>
-    <string name="pages$app-details-page$$app-ops-title"></string>
+    <string name="pages$app-details-page$$app-ops-title"/>
     <string name="pages$app-details-page$$permission-tabs-title">權限分頁</string>
     <string name="pages$app-details-page$$signatures-tab-title">簽名分頁</string>
     <string name="pages$app-details-page$$blocking-trackers-title">封鎖跟踪器</string>
@@ -225,7 +225,9 @@
 \n\\item \\texttt{X} -- 支持多種架構(AArch32位/AArch64位)
 \n\\item \\texttt{0} -- 不含dex檔案(包含ART/Davilk虛擬機字節碼, 即可直接執行的代碼)
 \n\\item \\texttt{\\textdegree°} -- 處於休眠狀態
-\n\\item \\texttt{\\</string>
+\n\\item \\texttt{\\#} -- The application requested the system to allocate a large heap i.e.\\ large runtime memory
+\n\\item \\texttt{\?} -- The application requested the virtual machine to be in the safe mode.
+\n\\end{itemize}</string>
     <string name="pages$main-page$version-info">版本名稱有以下前綴:
 \n\\begin{itemize}
 \n\\item \\texttt{\\_} -- 沒有硬件加速（減慢應用程式中的過渡動畫）
