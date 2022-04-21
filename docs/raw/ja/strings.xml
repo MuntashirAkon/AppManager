@@ -11,7 +11,7 @@
 \nを起動してください。そうすると、\\textit{ADBモードで動作中}とトースト通知が画面下部に表示されます。その後はTCPサーバーを停止させて構いません。
 \nLineageやその派生システムではTCP経由のADBをPCなしでも切り替えできます。
 \n\\textbf{ネットワーク経由のADB} オプションが\\textbf{USBデバッグ}オプションの下部に存在します。但し後者の場合ではTCPサーバーを停止できません。</string>
-    <string name="faq$aot$usb-debugging">チャプター \\cref{ch:guides}の§\\cref{subsec:enable-usb-debugging}をご確認ください。</string>
+    <string name="faq$aot$usb-debugging">チャプター \\ref{ch:guides}の§\\ref{subsec:enable-usb-debugging}をご確認ください。</string>
     <string name="faq$aot$block-tracker">残念ながらできません。ADBでは限られた \\href{https://github.com/aosp-mirror/platform_frameworks_base/blob/master/packages/Shell/AndroidManifest.xml}{権限}
 \nしか利用できず、アプリのコンポーネント制御はこの中に含まれません。</string>
     <string name="faq$aot$feature-adb">ADBモードではAppManagerの殆どの機能が利用でき、ADBモードが検出された際、自動的に有効になります。
@@ -131,7 +131,7 @@
 \n\\begin{itemize}
 \n \\item \\texttt{X} -- マルチアーキテクチャをサポートしています
 \n \\item \\texttt{0} -- アプリにDEXファイルが存在しません
-\n \\item \\texttt{\\textdegree°} -- 休止したアプリ
+\n \\item \\texttt{°} -- 休止したアプリ
 \n \\item \\texttt{\\#} -- アプリはシステムに大きなヒープ、すなわち大きな実行時メモリを割り当てるよう要求しています
 \n \\item \\texttt{\?} -- アプリは仮想マシンをセーフモードにするよう要求しています
 \n\\end{itemize}</string>
@@ -168,7 +168,7 @@
 \n寄付を送ることにより、あなたは寄付を利用して要求された機能を優先させないことに同意するものとします。
 \n機能リクエストは、賞金や寄付を必要とせず、開発者の好みに応じて優先順位がつけられます。
 \n
-\n\\emph{App Managerは、資金提供や助成金の申し出を受け付けています。}利害関係のある組織の代表者は、§\\cref{sec:contact}に記載されている連絡先を使用して開発者に直接連絡することができます。</string>
+\n\\emph{App Managerは、資金提供や助成金の申し出を受け付けています。}利害関係のある組織の代表者は、§\\ref{sec:contact}に記載されている連絡先を使用して開発者に直接連絡することができます。</string>
     <string name="intro$main$source-code-links">GitHub以外はそのミラーです。タグは常に最新であるべきですが、masterブランチが最新であることは保証されていません。
 \nmasterブランチのクローンを作成することが目的であれば、他のリンクではなくGitHubのリンクを使用してください。</string>
     <string name="pages$main-page$$options-menu-title">オプションメニュー</string>
@@ -305,7 +305,7 @@
 \n
 \n \\item \\textbf{タグ} タグには、アプリの基本的で簡潔な、有用な情報が含まれています。例えば、\\textit{トラッカー情報}（トラッカーコンポーネントの数など）、\\textit{アプリの種類}（ユーザーアプリかシステムアプリか、アプリがシステムアプリの更新版かMagiskを使ってシステムレスでインストールされたか）、\\textit{実行中}（アプリのサービスがバックグラウンドで実行されているか）、\\textit{分割APK情報}（例. split APK info（分割数）、\\textit{debuggable}（アプリはデバッグバージョン）、\\textit{test only}（アプリはテスト専用アプリ）、\\textit{ラージヒープ}（アプリは大きなヒープサイズを要求）、\\textit{停止}（アプリは強制停止）、\\textit{無効}（アプリは無効）、\\textit{キーストア}（アプリはAndroid KeyStoreにアイテムがある）、\\textit{no code}（アプリにはコードが関連付けられていない）、\\hyperref[sec:terminologies]{\\textit{SSAID}}、\\textit{netpolicy}（バックグラウンドデータ使用などネットワークポリシー）、\\textit{バッテリー最適化}が表示されます。\\textit{test only}と\\textit{debuggable}を含めることの重要性は、これらのプロパティを持つアプリが追加のタスクを実行できること、またはこれらのアプリが個人情報を保存する場合、セキュリティ上の問題を引き起こす可能性のあるルートなしで実行できることにあります。\\textit{ラージヒープ}は、アプリが必要に応じてより多くのメモリ（RAM）を割り当てられることを意味します。ほとんどの場合、これは有害ではないかもしれませんが、大きなヒープを要求する不審なアプリは慎重に考慮する必要があります。
 \n
-\n \\item \\textbf{アクションパネル} アプリに関する様々なアクションを含むアクションパネルです。ここで利用できるアクションの一覧は、\\cref{subsubsec:horizontal-action-panel}節を参照してください。
+\n \\item \\textbf{アクションパネル} アプリに関する様々なアクションを含むアクションパネルです。ここで利用できるアクションの一覧は、\\ref{subsubsec:horizontal-action-panel}節を参照してください。
 \n
 \n \\item \\textbf{パスとディレクトリ} \\textit{アプリディレクトリ}（APK ファイルが格納される場所）、\\textit{データディレクトリ}（内部、デバイス保護、外部）、\\textit{分割 APK ディレクトリ}（分割名と共に）、\\textit{ネイティブ JNI ライブラリ}（存在する場合）を含むアプリケーションパスに関するさまざまな情報が含まれています。JNI ライブラリは、通常 C/C++ で記述されたネイティブコードを呼び出すために使用されます。ネイティブライブラリを使用すると、アプリの実行速度が向上したり、ほとんどのゲームのようにJava以外の言語で書かれたサードパーティライブラリをアプリが使用できるようになります。これらのディレクトリは、各項目の右側にある起動アイコンをクリックして、お気に入りのファイルマネージャ（サポートしており、必要なパーミッションがある場合）を使用して開くこともできます。
 \n
@@ -384,9 +384,9 @@
 \n \\item \\textbf{バックアップ/復元} バックアップ・復元を行うダイアログを開きます。
 \n \\item \\textbf{ブロッキングルールをエクスポート} App Managerでこのアプリに対して設定されたルールをエクスポートします。
 \n
-\n \\item \\textbf{Termuxで開く} Termuxでアプリを開きます。これは実際には \\texttt{su - user\\_id} を実行します。ここで \\texttt{user\\_id} はアプリのカーネルユーザーID（\\hyperref[subsubsec:app-info-general-information]{基本情報セクション}で説明されています）を表します。このオプションはRootユーザーにのみ表示されます。サードパーティアプリケーションからコマンドを実行するように Termux を設定する方法については §\\cref{subsubsec:config-termux} を参照してください。
+\n \\item \\textbf{Termuxで開く} Termuxでアプリを開きます。これは実際には \\texttt{su - user\\_id} を実行します。ここで \\texttt{user\\_id} はアプリのカーネルユーザーID（\\hyperref[subsubsec:app-info-general-information]{基本情報セクション}で説明されています）を表します。このオプションはRootユーザーにのみ表示されます。サードパーティアプリケーションからコマンドを実行するように Termux を設定する方法については §\\ref{subsubsec:config-termux} を参照してください。
 \n
-\n \\item \\textbf{Termuxで実行} Termuxで\\texttt{run-as package\\_name}を使用してアプリを開きます。これはデバッグ可能アプリにのみ適用され、Root及びADBの両方で動作します。サードパーティアプリケーションからコマンドを実行するように Termux を設定する方法については §\\cref{subsubsec:config-termux} を参照してください。
+\n \\item \\textbf{Termuxで実行} Termuxで\\texttt{run-as package\\_name}を使用してアプリを開きます。これはデバッグ可能アプリにのみ適用され、Root及びADBの両方で動作します。サードパーティアプリケーションからコマンドを実行するように Termux を設定する方法については §\\ref{subsubsec:config-termux} を参照してください。
 \n
 \n \\item \\textbf{アイコンを抽出} アプリのアイコンを抽出して任意の場所に保存します。
 \n\\end{itemize}</string>
@@ -411,7 +411,7 @@
 \nコンポーネントは、あらゆるアプリケーションの構成要素であり、そのほとんどはアプリケーションマニフェストで宣言されなければなりません。
 \nアプリケーションマニフェストは、アプリケーション固有のメタデータが格納されるファイルです。
 \nAndroidシステムは、メタデータを読み取ることで、アプリケーションで何を行うかを学習します。
-\nこれらのタブで使用される色については、§\\cref{subsec:app-details-colour-codes}で説明しています。
+\nこれらのタブで使用される色については、§\\ref{subsec:app-details-colour-codes}で説明しています。
 \nまた、オーバーフローメニューのソートオプションを使用して、ブロックされたコンポーネントやトラッカーコンポーネントをリストの上位に表示するよう、
 \nコンポーネントのリストを\\textbf{並び替え}る機能があります。</string>
     <string name="pages$app-details-page$activities">\\textbf{アクティビティ}は、アプリ内の閲覧できるウィンドウやページです（例えば、\\textit{メインページ}と\\textit{アプリ詳細ページ}は別のアクティビティです）。つまり、アクティビティは、ユーザーインターフェース（UI）のコンポーネントです。各アクティビティは、\\textit{ウィジェット}や\\textit{フラグメント}と呼ばれる複数のUIコンポーネントを持つことができ、同様に、後者のコンポーネントも、それぞれ複数のものを入れ子にしたり、オーバーレイすることができます。しかし、アクティビティはマスターコンポーネントです。アクティビティを2つネストさせることはできません。アプリケーションの開発者は、\\textit{インテントフィルター}と呼ばれる方法を使用して、アクティビティ内で外部ファイルを開くことを選択することもできます。ファイルマネージャーを使ってファイルを開こうとすると、ファイルマネージャーかシステムがインテントフィルターをスキャンして、どのアクティビティーがその特定のファイルを開けるかを決め、これらのアクティビティーでファイルを開けるように提案します。（したがって、アプリケーション自体には何の関係もありません）
@@ -461,9 +461,9 @@
 \nこれらの権限は、権限コントローラーによって管理されます。
 \nアプリケーションのマニフェストに記載されていれば自動的に付与される\\textit{通常}の権限もありますが、
 \n\\textit{dangerous}、\\textit{development}パーミッションはユーザーの確認が必要です。
-\nこれらのタブで使用される色については、\\cref{subsec:app-details-colour-codes}節で説明しています。</string>
+\nこれらのタブで使用される色については、\\ref{subsec:app-details-colour-codes}節で説明しています。</string>
     <string name="pages$app-details-page$app-ops">\\textbf{App Ops} は、\\textbf{Application Operations}(アプリケーションの操作)の略です。
-\nAndroid 4.3以降、textit{App Ops}はAndroidシステムによってアプリ権限の大部分を制御するために使用されています。
+\nAndroid 4.3以降、\\textit{App Ops}はAndroidシステムによってアプリ権限の大部分を制御するために使用されています。
 \n各AppOpsは、それらに関連付けられた一意の番号を持っており、それはApp Opsタブの最初の括弧内に閉じられています。
 \nまた、プライベート名を持ち、任意でパブリック名を持つことができます。
 \nいくつかのAppOpsは、\\textit{権限}とも関連付けられています。
@@ -546,17 +546,16 @@
 \n \\item \\textbf{アイコン} 各権限は任意のアイコンを持つことができます。
 \n他の権限タブでは、アプリケーションマニフェストにアイコンが含まれていないため、アイコンを持ちません。
 \n
-\n \\item \\textbf{詳細} This optional field describes the permission. If there isn\'t any description associated
-\n with the permission, the field is not displayed.
+\n \\item \\textbf{詳細} このフィールドは、権限についての詳細な説明です。権限に関連する説明がない場合、このフィールドは表示されません。
 \n
-\n \\item \\textbf{フラグ} (Uses the flag symbol or \\textbf{Protection Level} name) This describes various permission flags such
-\n as \\textit{normal}, \\textit{development}, \\textit{dangerous}, \\textit{instant}, \\textit{granted}, \\textit{revoked},
-\n \\textit{signature}, \\textit{privileged}, etc.
+\n \\item \\textbf{フラグ} (フラグシンボルまたは\\textbf{保護レベル}名を使用） 
+\ntextit{normal}, \\textit{development}, \\textit{dangerous}, \\textit{instant}, \\textit{granted}, \\textit{revoked},\\textit{signature}, \\textit{privileged}などの権限フラグを表します。
 \n
-\n \\item \\textbf{パッケージ名} Denotes the package name associated with the permission, i.e.\\ the package that defined
-\n the permission.
+\n \\item \\textbf{パッケージ名} 権限に関連するパッケージ名、すなわちその権限を定義したパッケージを表します。
 \n
-\n \\item \\textbf{グループ} The group name associated with the permission (if any). Newer Androids do not seem to use
-\n group names which is why you\'ll usually see \\texttt{android.permission-group.UNDEFINED} or no group name at all.
+\n \\item \\textbf{グループ} 権限に関連するグループ名を表します。新しいAndroidシステムではグループ名を使用しないため、
+\n通常\\texttt{android.permission-group.UNDEFINED}やグループ名が全く表示されないことになるでしょう。
 \n\\end{itemize}</string>
+    <string name="keywords$see_also">\\newcommand{\\KeywordSeeAlso}{こちらもご覧ください:}</string>
+    <string name="keywords$end_of_keyword_in_alert">\\newcommand{\\KeywordEndOfKeyWordInAlert}{.}</string>
 </resources>
