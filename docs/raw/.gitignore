@@ -11,4 +11,6 @@
 !*.lua
 !*.md
 !*.sh
+en/svg-inkscape
+en/main_vanilla.pdf
 en/transient.tex

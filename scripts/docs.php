@@ -470,7 +470,7 @@ function create_transient_tex(string $target_dir, string $ietf_lang = 'en') {
     );
     $today = $fmt->format(new DateTime());
     $content = <<<EOF
-\\newcommand{\\version}{{$am_version}}
+\\newcommand{\\version}{v{$am_version}}
 \\ifdefined\\Vanilla\\else
     \\renewcommand{\\today}{{$today}}
 \\fi
