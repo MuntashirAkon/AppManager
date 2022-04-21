@@ -90,7 +90,7 @@ Ops</a></span><li><span><span class=toc-section-number>7.3</span> <a href=#sec:a
 Constants</a></span><li><span><span class=toc-section-number>7.3.3</span> <a href=#subsec:package-ops id=toc:subsec:package-ops>PackageOps</a></span><li><span><span class=toc-section-number>7.3.4</span> <a href=#subsec:opentry id=toc:subsec:opentry>OpEntry</a></span><li><span><span class=toc-section-number>7.3.5</span> <a href=#subsec:usage id=toc:subsec:usage>Usage</a></span></ul><li><span><span class=toc-section-number>7.4</span> <a href=#sec:appopsservice id=toc:sec:appopsservice>AppOpsService</a></span><li><span><span class=toc-section-number>7.5</span> <a href=#sec:appops-xml id=toc:sec:appops-xml>appops.xml</a></span><li><span><span class=toc-section-number>7.6</span> <a href=#sec:appops-cli id=toc:sec:appops-cli>Command Line
 Interface</a></span></ul></ul></nav><div class=titlingpage><div class=center><div class=announcement><p>We’re running a <strong>funding campaign</strong> for App Manager for
 a limited period. <a href=https://opencollective.com/app-manager#category-ABOUT>learn
-more...</a></div><p><img src=../images/icon.png style=width:1in alt=image><p><strong><span class=smallcaps>App Manager</span></strong><p><strong>ユーザーマニュアル</strong><p><em>v3.0.0-alpha02</em><p>21 04 2022<p>Copyright © 2020–2022 Muntashir Al-Islam<blockquote><p>“賢明に、そして、ゆっくりと。速く走る者たちは、つまずきますからな”
+more...</a></div><p><img src=../images/icon.png style=width:1in alt=image><p><strong><span class=smallcaps>App Manager</span></strong><p><strong>ユーザーマニュアル</strong><p><em>v3.0.0-alpha02</em><p>21 4月 2022<p>Copyright © 2020–2022 Muntashir Al-Islam<blockquote><p>“賢明に、そして、ゆっくりと。速く走る者たちは、つまずきますからな”
 <span>— 修道士ロレンス, <em>ロメオとジュリエット</em></span></blockquote></div></div><section id=ch:introduction class=level1 data-number=1><h1 data-number=1><span class=header-section-number>1</span> <a href=#toc:ch:introduction>はじめに</a><a href=#ch:introduction class=anchor aria-hidden=true></a></h1><p>App Manager は、Android 用の高度なパッケージマネージャです。
 数え切れないほどの機能を備えているため、ユーザーを支援するためのユーザーマニュアルが必要です。
 このドキュメントは、App Manager
@@ -274,7 +274,7 @@ Managerからデータを消去すると、アプリ内に保存されている�
 このボタンをクリックすると、アプリのマニフェストファイルが別ページで表示されます。マニフェストファイルは、対応するトグルボタン
 (右上)
 を使用してラップまたはアンラップすることができ、保存ボタンを使用して共有ストレージに保存することができます。<li><p><strong>スキャナー</strong>
-このボタンをクリックすると、アプリのトラッカーとライブラリの情報が表示されます。まず、アプリをスキャンして、クラスのリストを抽出し、クラス一覧と複数のシグネチャをマッチングさせます。その後、スキャン結果が表示されます。<br><div class=seealso-inline><p><em>See also: <span><a href=#sec:scanner-page>スキャナーページ</a></span></em></div><li><p><strong>共有設定</strong>
+このボタンをクリックすると、アプリのトラッカーとライブラリの情報が表示されます。まず、アプリをスキャンして、クラスのリストを抽出し、クラス一覧と複数のシグネチャをマッチングさせます。その後、スキャン結果が表示されます。<br><div class=seealso-inline><p><em>こちらもご覧ください: <span><a href=#sec:scanner-page>スキャナーページ</a></span></em></div><li><p><strong>共有設定</strong>
 このボタンをクリックすると、アプリで使用されている共有環境設定の一覧が表示されます。リスト内の設定項目をクリックすると、<a href=#sec:shared-preferences-editor-page>共有設定エディター</a>が表示されます。このオプションは、Rootユーザーのみに表示されます。<li><p><strong>データベース</strong>
 このボタンをクリックすると、アプリが使用しているデータベースの一覧が表示されます。これはもっと改良が必要で、将来的にはデータベース・エディターが追加されるかもしれません。このオプションは、Rootユーザーのみに表示されます。<li><p><strong>F-Droid</strong>
 任意の<em>F-Droid</em>クライアントでアプリのページを開きます。<li><p><strong>ストア</strong> <em>Aurora
@@ -316,11 +316,11 @@ Root化された端末向けの追加機能<a href=#root化された端末向け
 <a href=#subsubsec:instant-component-blocking>インスタントブロッキング</a>を有効にしていない場合、
 または以前にアプリケーションにブロックを適用していない場合は、
 3点メニューの<strong>ルールを反映</strong>オプションで変更を適用する必要があります。
-また、<strong>ルールを除去</strong>オプションから、すでに適用されたルールを削除することもできます。<div class=seealso-inline><p><em>See also: <span><a href=#sec:faq:app-components>FAQ:
+また、<strong>ルールを除去</strong>オプションから、すでに適用されたルールを削除することもできます。<div class=seealso-inline><p><em>こちらもご覧ください: <span><a href=#sec:faq:app-components>FAQ:
 アプリのコンポーネント</a></span></em></div></section><section id=par:appdetails:blocking-trackers class=level5 data-number=2.2.3.5.2><h5 data-number=2.2.3.5.2><span class=header-section-number>2.2.3.5.2</span>
 トラッカーをブロックする<a href=#par:appdetails:blocking-trackers class=anchor aria-hidden=true></a></h5><p>トラッカーコンポーネントを無効にするには、三点メニューの「トラッカーをブロック」を使用します。
 現在表示されているタブに関係なく、すべてのトラッカーコンポーネントがブロックされます。<div class="amalert tip"><p><strong><em>Info.</em></strong><p>トラッカーコンポーネントは、アプリのコンポーネントの部分集合です。
-したがって、他のコンポーネントのブロックに使用されるのと同じ方法によりブロックされます。</div><div class=seealso><p><em>See also:</em><ul class=incremental><li><p><a href=#subsec:tracker-classes-versus-tracker-components>FAQ:
+したがって、他のコンポーネントのブロックに使用されるのと同じ方法によりブロックされます。</div><div class=seealso><p><em>こちらもご覧ください:</em><ul class=incremental><li><p><a href=#subsec:tracker-classes-versus-tracker-components>FAQ:
 トラッカーのクラスとトラッカーコンポーネント</a><li><p><a href=#sec:scanner-page>スキャナーページ</a><li><p><a href=#subsec:block-unblock-trackers>ワンタップ一括処理:
 トラッカーをブロック/ブロック解除</a></ul></div></section></section></section><section id=subsec:permission-tabs class=level3 data-number=2.2.4><h3 data-number=2.2.4><span class=header-section-number>2.2.4</span>
 <a href=#toc:subsec:permission-tabs>権限タブ</a><a href=#subsec:permission-tabs class=anchor aria-hidden=true></a></h3><p><strong>App Ops</strong>、<strong>Uses
@@ -331,8 +331,8 @@ Androidでは、同じID(<em>共有ID</em>として知られます)を持たな�
 <em>dangerous</em>、<em>development</em>パーミッションはユーザーの確認が必要です。
 これらのタブで使用される色については、<a href=#subsec:app-details-colour-codes data-reference-type=ref data-reference=subsec:app-details-colour-codes>2.2.1</a>節で説明しています。<section id=subsubsec:app-ops class=level4 data-number=2.2.4.1><h4 data-number=2.2.4.1><span class=header-section-number>2.2.4.1</span> App Ops<a href=#subsubsec:app-ops class=anchor aria-hidden=true></a></h4><p><strong>App Ops</strong> は、<strong>Application
 Operations</strong>(アプリケーションの操作)の略です。 Android
-4.3以降、textit<span>App
-Ops</span>はAndroidシステムによってアプリ権限の大部分を制御するために使用されています。
+4.3以降、<em>App
+Ops</em>はAndroidシステムによってアプリ権限の大部分を制御するために使用されています。
 各AppOpsは、それらに関連付けられた一意の番号を持っており、それはApp
 Opsタブの最初の括弧内に閉じられています。
 また、プライベート名を持ち、任意でパブリック名を持つことができます。
@@ -356,7 +356,7 @@ foreground（新しいAndroidシステムでは、アプリケーションがフ
 また、AppOpsの名前と関連する一意の番号（または値）で昇順に並べ替えることもできます。
 また、対応するソートオプションを使用して、拒否されたAppOpsを最初に表示することができます。<div class="amalert warning"><p><strong><em>Warning.</em></strong><p>AppOpsを拒否すると、アプリケーションが誤動作することがあります。
 そのような場合は、<em>デフォルトに戻す</em>オプションを使用してください。
-AppOpsの動作の性質上、システムがそれを適用するのに時間がかかることがあります。</div><div class=seealso-inline><p><em>See also: <span><a href=#ch:app-ops>付録: App
+AppOpsの動作の性質上、システムがそれを適用するのに時間がかかることがあります。</div><div class=seealso-inline><p><em>こちらもご覧ください: <span><a href=#ch:app-ops>付録: App
 Ops</a></span></em></div></section><section id=使用する権限 class=level4 data-number=2.2.4.2><h4 data-number=2.2.4.2><span class=header-section-number>2.2.4.2</span> 使用する権限<a href=#使用する権限 class=anchor aria-hidden=true></a></h4><p><strong>Uses
 Permissions</strong>は、アプリケーションで使用される権限です。マニフェストで<code>uses-permission</code>タグを使用して宣言されます。
 <em>フラグ</em>、<em>パーミッション名</em>、<em>パーミッションの説明</em>、<em>パッケージ名</em>、<em>グループ</em>などの情報は、
@@ -374,19 +374,15 @@ dangerous権限を最初に表示するように選択することができま�
 各権限は<code>android.permission.INTERNET</code>のような一意の名前を持っており、
 複数のアプリケーションがその権限を要求することができます。<li><p><strong>アイコン</strong>
 各権限は任意のアイコンを持つことができます。
-他の権限タブでは、アプリケーションマニフェストにアイコンが含まれていないため、アイコンを持ちません。<li><p><strong>詳細</strong> This optional field describes the
-permission. If there isn’t any description associated with the
-permission, the field is not displayed.<li><p><strong>フラグ</strong> (Uses the flag symbol or
-<strong>Protection Level</strong> name) This describes various
-permission flags such as <em>normal</em>, <em>development</em>,
-<em>dangerous</em>, <em>instant</em>, <em>granted</em>,
-<em>revoked</em>, <em>signature</em>, <em>privileged</em>, etc.<li><p><strong>パッケージ名</strong> Denotes the package name associated
-with the permission, i.e. the package that defined the
-permission.<li><p><strong>グループ</strong> The group name associated with the
-permission (if any). Newer Androids do not seem to use group names which
-is why you’ll usually see
-<code>android.permission-group.UNDEFINED</code> or no group name at
-all.</ul></section></section><section id=subsec:signatures-tab class=level3 data-number=2.2.5><h3 data-number=2.2.5><span class=header-section-number>2.2.5</span>
+他の権限タブでは、アプリケーションマニフェストにアイコンが含まれていないため、アイコンを持ちません。<li><p><strong>詳細</strong>
+このフィールドは、権限についての詳細な説明です。権限に関連する説明がない場合、このフィールドは表示されません。<li><p><strong>フラグ</strong>
+(フラグシンボルまたは<strong>保護レベル</strong>名を使用）
+textit<span>normal</span>, <em>development</em>, <em>dangerous</em>,
+<em>instant</em>, <em>granted</em>, <em>revoked</em>,<em>signature</em>,
+<em>privileged</em>などの権限フラグを表します。<li><p><strong>パッケージ名</strong>
+権限に関連するパッケージ名、すなわちその権限を定義したパッケージを表します。<li><p><strong>グループ</strong>
+権限に関連するグループ名を表します。新しいAndroidシステムではグループ名を使用しないため、
+通常<code>android.permission-group.UNDEFINED</code>やグループ名が全く表示されないことになるでしょう。</ul></section></section><section id=subsec:signatures-tab class=level3 data-number=2.2.5><h3 data-number=2.2.5><span class=header-section-number>2.2.5</span>
 <a href=#toc:subsec:signatures-tab>署名情報タブ</a><a href=#subsec:signatures-tab class=anchor aria-hidden=true></a></h3><p><strong>署名</strong>は、実際には署名情報と呼ばれ、アプリケーションは公開する前に、
 アプリケーション開発者によって1つ以上の署名証明書によって署名されます。
 アプリケーションの完全性（そのアプリケーションが実際の開発者のものかどうか、
@@ -411,7 +407,7 @@ box will appear where you can deselect the apps you want to exclude from
 this operation. Clicking <em>block</em> or <em>unblock</em> applies the
 changes immediately.<div class="amalert warning"><p><strong><em>Notice.</em></strong><p>Certain apps may not function as expected after applying the
 blocking. If that is the case, remove blocking rules all at once or one
-by one in the component tabs of the corresponding <a href=#sec:app-details-page>App Details page</a>.</div><div class=seealso><p><em>See also:</em><ul class=incremental><li><p><a href=#subsec:faq:how-to-unblock-tracker-components>How to
+by one in the component tabs of the corresponding <a href=#sec:app-details-page>App Details page</a>.</div><div class=seealso><p><em>こちらもご覧ください:</em><ul class=incremental><li><p><a href=#subsec:faq:how-to-unblock-tracker-components>How to
 unblock the tracker components blocked using 1-Click Ops or Batch
 Ops?</a><li><p><a href=#par:appdetails:blocking-trackers>App Details Page:
 Blocking Trackers</a></ul></div></section><section id=subsec:block-components-dots class=level3 data-number=2.3.2><h3 data-number=2.3.2><span class=header-section-number>2.3.2</span>
@@ -463,8 +459,8 @@ top-right offers two options such as <em>presets</em> and
 <em>import</em>.<ul class=incremental><li><p><strong>Presets.</strong> Presets option lists a number of
 built-in profiles that can be used as a starting point. The profiles are
 generated from the project <a href=https://gitlab.com/W1nst0n/universal-android-debloater>Universal
-Android Debloater</a>.<br><div class=seealso-inline><p><em>See also: <span><a href=#subsec:faq:what-are-bloatware>FAQ:
-What are bloatware and how to remove them?</a></span></em></div><li><p><strong>Import.</strong> This option can be used to import an
+Android Debloater</a>.<br><div class=seealso-inline><p><em>こちらもご覧ください: <span><a href=#subsec:faq:what-are-bloatware>FAQ: What are bloatware and how to
+remove them?</a></span></em></div><li><p><strong>Import.</strong> This option can be used to import an
 existing profile.</ul><p>Another options menu appears when you long click on any profile. They
 have options such as–<ul class=incremental><li><p><strong>Apply now….</strong> This option can be used to apply the
 profile directly. When clicked, a dialog will be displayed where you can
@@ -520,7 +516,7 @@ packages. If the <a href=#subsubsec:profile-state>state</a> is
 <em>on</em>, the components will be blocked, and if the state is
 <em>off</em>, the components will be unblocked. The option can be
 disabled (regardless of the inserted values) by clicking on the
-<em>disabled</em> button on the input dialog.<div class=seealso-inline><p><em>See also: <span><a href=#subsec:faq:what-are-app-components>What are the app
+<em>disabled</em> button on the input dialog.<div class=seealso-inline><p><em>こちらもご覧ください: <span><a href=#subsec:faq:what-are-app-components>What are the app
 components?</a></span></em></div></section><section id=app-ops class=level4 data-number=2.5.3.5><h4 data-number=2.5.3.5><span class=header-section-number>2.5.3.5</span> App Ops<a href=#app-ops class=anchor aria-hidden=true></a></h4><p>This behaves the same way as the <a href=#subsec:set-mode-for-app-ops-dots>Set Mode for App Ops…</a>
 option does in the 1-Click Ops page. However, this only applies for the
 selected packages. If the <a href=#subsubsec:profile-state>state</a>
@@ -609,7 +605,7 @@ applied immediately for all apps without explicitly enabling blocking
 for an app.<div class="amalert warning"><p><strong><em>Notice.</em></strong><p>Enabling this setting may have some unintended consequences. For
 instance, the rules that are not completely removed will be applied
 again. So, proceed with caution. This option should be kept disabled if
-not required for some reasons.</div><div class=seealso-inline><p><em>See also: <span><a href=#subsec:faq:what-is-instant-component-blocking>FAQ: What is
+not required for some reasons.</div><div class=seealso-inline><p><em>こちらもご覧ください: <span><a href=#subsec:faq:what-is-instant-component-blocking>FAQ: What is
 instant component blocking?</a></span></em></div></section><section id=importexport-blocking-rules class=level4 data-number=2.6.9.2><h4 data-number=2.6.9.2><span class=header-section-number>2.6.9.2</span> Import/Export Blocking
 Rules<a href=#importexport-blocking-rules class=anchor aria-hidden=true></a></h4><p>It is possible to import or export blocking rules within App Manager
 for all apps. There is a choice to export or import only certain rules
@@ -617,8 +613,7 @@ for all apps. There is a choice to export or import only certain rules
 possible to import blocking rules from <a href=https://github.com/lihenggui/blocker>Blocker</a> and <a href=https://github.com/tuyafeng/Watt>Watt</a>. If it is necessary to
 export blocking rules for a single app, use the corresponding <a href=#sec:app-details-page>App Details page</a> to export rules, or
 for multiple apps, use <a href=#subsec:batch-operations>batch
-operations</a>.<div class=seealso-inline><p><em>See also: <span><a href=#sec:rules-specification>Rules
-Specification</a></span></em></div><section id=export class=level5 data-number=2.6.9.2.1><h5 data-number=2.6.9.2.1><span class=header-section-number>2.6.9.2.1</span> Export<a href=#export class=anchor aria-hidden=true></a></h5><p>Export blocking rules for all apps configured within App Manager.
+operations</a>.<div class=seealso-inline><p><em>こちらもご覧ください: <span><a href=#sec:rules-specification>Rules Specification</a></span></em></div><section id=export class=level5 data-number=2.6.9.2.1><h5 data-number=2.6.9.2.1><span class=header-section-number>2.6.9.2.1</span> Export<a href=#export class=anchor aria-hidden=true></a></h5><p>Export blocking rules for all apps configured within App Manager.
 This may include <a href=#subsec:faq:what-are-app-components>app
 components</a>, app ops and permissions based on the options selected in
 the multi-choice options.</section><section id=import class=level5 data-number=2.6.9.2.2><h5 data-number=2.6.9.2.2><span class=header-section-number>2.6.9.2.2</span> Import<a href=#import class=anchor aria-hidden=true></a></h5><p>Import previously exported blocking rules from App Manager. Similar
@@ -669,7 +664,7 @@ matched signatures, and the number of classes against each signature.
 Some tracker names may have <span class="math inline"><sup>2</sup></span> prefix which indicates that the
 trackers are in the <a href=https://etip.exodus-privacy.eu.org>ETIP</a> stand-by list
 i.e. whether they are actual trackers is still being investigated.<p>The third item lists the number of libraries along with their names.
-The information are mostly taken from <a href=https://gitlab.com/IzzyOnDroid/repo>IzzyOnDroid repo</a>.<div class=seealso-inline><p><em>See also: <span><a href=#subsec:tracker-classes-versus-tracker-components>FAQ: Tracker
+The information are mostly taken from <a href=https://gitlab.com/IzzyOnDroid/repo>IzzyOnDroid repo</a>.<div class=seealso-inline><p><em>こちらもご覧ください: <span><a href=#subsec:tracker-classes-versus-tracker-components>FAQ: Tracker
 classes vs tracker components</a></span></em></div><section id=subsec:missing-signatures class=level3 data-number=2.7.1><h3 data-number=2.7.1><span class=header-section-number>2.7.1</span>
 <a href=#toc:subsec:missing-signatures>Missing Signatures</a><a href=#subsec:missing-signatures class=anchor aria-hidden=true></a></h3><p>At the bottom of the page, there is a special item denoting the
 number of missing signatures (i.e. missing classes). The missing
@@ -684,7 +679,7 @@ should just ignore it.</strong></section></section><section id=sec:interceptor-p
 and the destination apps. It offers a feature-complete user interface
 for editing <code>Intent</code>s.<div class="amalert tip"><p><strong><em>Info.</em></strong><p>Development of interceptor is still in progress. It can only
 intercept activities for now.</div><div class="amalert warning"><p><strong><em>Warning.</em></strong><p>Interceptor only works for <em>implicit</em> intents where the <a href=#subsec:faq:what-are-app-components>app component</a> isn’t
-specified.</div><div class=seealso><p><em>See also:</em><ul class=incremental><li><p><a href=https://developer.android.com/guide/components/intents-common>Common
+specified.</div><div class=seealso><p><em>こちらもご覧ください:</em><ul class=incremental><li><p><a href=https://developer.android.com/guide/components/intents-common>Common
 Intents</a><li><p><a href=https://developer.android.com/guide/components/intents-filters>Intents
 and Intent Filters</a></ul></div><section id=subsec:intent-filters class=level3 data-number=2.8.1><h3 data-number=2.8.1><span class=header-section-number>2.8.1</span>
 <a href=#toc:subsec:intent-filters>Intent Filters</a><a href=#subsec:intent-filters class=anchor aria-hidden=true></a></h3><p>Intent filters are used by the apps to specify which tasks they are
@@ -756,8 +751,8 @@ Manager and restart your device. You may see <em>working on ADB
 mode</em> message without restarting but this isn’t entirely true. The
 server (used as an interface between system and App Manager) is still
 running in root mode. This is a known issue and will be fixed in a
-future version of App Manager.</div><div class=seealso-inline><p><em>See also: <span><a href=#sec:faq:adb-over-tcp>FAQ: ADB over
-TCP</a></span></em></div><section id=subsec:enable-developer-options class=level3 data-number=3.1.1><h3 data-number=3.1.1><span class=header-section-number>3.1.1</span>
+future version of App Manager.</div><div class=seealso-inline><p><em>こちらもご覧ください: <span><a href=#sec:faq:adb-over-tcp>FAQ:
+ADB over TCP</a></span></em></div><section id=subsec:enable-developer-options class=level3 data-number=3.1.1><h3 data-number=3.1.1><span class=header-section-number>3.1.1</span>
 <a href=#toc:subsec:enable-developer-options>Enable developer
 options</a><a href=#subsec:enable-developer-options class=anchor aria-hidden=true></a></h3><section id=subsubsec:location-of-developer-options class=level4 data-number=3.1.1.1><h4 data-number=3.1.1.1><span class=header-section-number>3.1.1.1</span> Location of developer
 options<a href=#subsubsec:location-of-developer-options class=anchor aria-hidden=true></a></h4><p><strong>Developer options</strong> is located in Android
@@ -869,7 +864,7 @@ system implemented from the scratch. This is probably the only app that
 has the ability to restore not only the app or its data but also
 permissions and rules that you’ve configured within App Manager. You can
 also choose to back up an app multiple times (with custom names) or for
-all users.<div class=seealso><p><em>See also:</em><ul class=incremental><li><p><a href=#subsec:1-click-back-up>1-Click Ops: Back
+all users.<div class=seealso><p><em>こちらもご覧ください:</em><ul class=incremental><li><p><a href=#subsec:1-click-back-up>1-Click Ops: Back
 up</a><li><p><a href=#subsec:1-click-restore>1-Click Ops:
 Restore</a></ul></div><section id=subsec:backup-location class=level3 data-number=3.2.1><h3 data-number=3.2.1><span class=header-section-number>3.2.1</span>
 <a href=#toc:subsec:backup-location>Location</a><a href=#subsec:backup-location class=anchor aria-hidden=true></a></h3><p>Back up/restore is a part of <a href=#subsec:batch-operations>batch
@@ -939,7 +934,7 @@ option will disable the signature checks. This option is applied only
 when you restore a backup. During backup, the checksums are generated
 regardless of this option.<div class="amalert warning"><p><strong><em>Caution.</em></strong><p>You should always disable this option to ensure that your backups are
 not modified by any third-party applications. However, this would only
-work if you enabled encryption.</div></ul><div class=seealso-inline><p><em>See also: <span><a href=#subsubsec:settings-encryption>Settings:
+work if you enabled encryption.</div></ul><div class=seealso-inline><p><em>こちらもご覧ください: <span><a href=#subsubsec:settings-encryption>Settings:
 Encryption</a></span></em></div></section><section id=subsec:backup-restore-backup class=level3 data-number=3.2.3><h3 data-number=3.2.3><span class=header-section-number>3.2.3</span>
 <a href=#toc:subsec:backup-restore-backup>Backup</a><a href=#subsec:backup-restore-backup class=anchor aria-hidden=true></a></h3><p>Backup respects all the backup options except <strong>Skip signature
 checks</strong>. If base backups (i.e., backups that don’t have the
@@ -1463,7 +1458,7 @@ application is allowed and what is not allowed to perform, and
 <em>appops.xml</em>, it returns the default mode available in
 <strong>AppOpsManager</strong>.</section><section id=sec:appopsmanager class=level2 data-number=7.3><h2 data-number=7.3><span class=header-section-number>7.3</span> <a href=#toc:sec:appopsmanager>AppOpsManager</a><a href=#sec:appopsmanager class=anchor aria-hidden=true></a></h2><p><a href=https://android.googlesource.com/platform/frameworks/base/+/master/core/java/android/app/AppOpsManager.java>AppOpsManager</a>
 stands for application operations manager. It consists of various
-constants and classes to modify app operations.<div class=seealso-inline><p><em>See also: <span><a href=https://developer.android.com/reference/android/app/AppOpsManager>AppOpsManager
+constants and classes to modify app operations.<div class=seealso-inline><p><em>こちらもご覧ください: <span><a href=https://developer.android.com/reference/android/app/AppOpsManager>AppOpsManager
 documentation</a></span></em></div><section id=subsec:op-constants class=level3 data-number=7.3.1><h3 data-number=7.3.1><span class=header-section-number>7.3.1</span>
 <a href=#toc:subsec:op-constants><code>OP_*</code> Constants</a><a href=#subsec:op-constants class=anchor aria-hidden=true></a></h3><p><code>OP_*</code> are the integer constants starting from
 <code>0</code>. <code>OP_NONE</code> implies that no operations are
