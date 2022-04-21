@@ -190,7 +190,7 @@
     <string name="shared_prefs">공유 설정</string>
     <string name="deleted_successfully">삭제</string>
     <string name="deletion_failed">삭제 실패</string>
-    <string name="long_integer_value">Long integer value</string>
+    <string name="long_integer_value">긴 정수 값</string>
     <string name="decimal_value">10진수 값</string>
     <string name="select_type">타입 선택</string>
     <string name="add_item">아이템 추가</string>
