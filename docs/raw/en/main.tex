@@ -40,6 +40,9 @@
 \setcounter{tocdepth}{3}
 \setcounter{secnumdepth}{3}
 
+% Import localised keywords
+\input{keywords.tex}
+
 % -------------------
 % Alert environments
 % -------------------
@@ -65,7 +68,7 @@
 {%
     \begin{amalert--tip}
     \noindent
-    \textbf{\textit{#1.}}
+    \textbf{\textit{#1\KeywordEndOfKeyWordInAlert}}
     }%
     {
     \end{amalert--tip}
@@ -76,7 +79,7 @@
 {
     \begin{amalert--warning}
     \noindent
-    \textbf{\textit{#1.}}
+    \textbf{\textit{#1\KeywordEndOfKeyWordInAlert}}
     }%
     {
     \end{amalert--warning}
@@ -87,7 +90,7 @@
 {
     \begin{amalert--danger}
     \noindent
-    \textbf{\textit{#1.}}
+    \textbf{\textit{#1\KeywordEndOfKeyWordInAlert}}
     }%
     {
     \end{amalert--danger}
@@ -107,13 +110,13 @@
 \newenvironment{seealso-inline}{}{}
 \newcommand{\seealsoinline}[1]{
 \begin{seealso-inline}
-\noindent\textit{See also: {#1}}
+\noindent\textit{\KeywordSeeAlso~{#1}}
 \end{seealso-inline}
 }
 % po4a: environment amseealso
 \newenvironment{amseealso}{
     \begin{seealso}
-        \itshape See also:
+        \itshape\KeywordSeeAlso
         \begin{itemize}
         }
         {
