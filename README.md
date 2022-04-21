@@ -1,10 +1,5 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later OR CC-BY-SA-4.0 -->
 
-**We're running a funding campaign for App Manager for a limited period.** Visit https://opencollective.com/app-manager
-for more information.
-
----
-
 <p align="center">
   <img src="docs/raw/images/icon.png" alt="App Manager Logo" height="150">
 </p>

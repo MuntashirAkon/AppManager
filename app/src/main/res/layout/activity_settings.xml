@@ -9,28 +9,10 @@
 
     <include layout="@layout/appbar" />
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/main_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
-
-        <io.github.muntashirakon.widget.HyperlinkTextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/padding_medium"
-            android:paddingVertical="@dimen/padding_small"
-            android:text="@string/donation_campaign_text"
-            android:textAppearance="?attr/textAppearanceBodySmall"
-            android:textStyle="italic"
-            android:textColor="?attr/colorOnSecondaryContainer"
-            android:background="?attr/colorSecondaryContainer"/>
-
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/main_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

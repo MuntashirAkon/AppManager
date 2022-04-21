@@ -1,10 +1,4 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later OR CC-BY-SA-4.0 */
-.announcement {
-    font-style: italic;
-    border: 1px solid #1C1B1F;
-    background: lightyellow;
-}
-
 #title-block-header {
     display: none;
 }
@@ -73,7 +67,7 @@
     display: inline;
 }
 
-.titlingpage p:nth-child(3) {
+.titlingpage p:nth-child(2) {
     font-size: 3em;
 }
 
@@ -391,11 +385,6 @@ td {
 }
 
 @media (prefers-color-scheme: dark) {
-    .announcement {
-        border: 1px solid #E6E1E5;
-        background: black;
-    }
-
     #TOC {
         color: #EADDFF; /* ?attr/colorOnPrimaryContainer */
         background: #4F378B !important; /* ?attr/colorPrimaryContainer */

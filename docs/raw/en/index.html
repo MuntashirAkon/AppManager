@@ -106,9 +106,7 @@ Backup/Sharing</a></span><li><span><span class=toc-section-number>6.4.8</span> <
 Backup</a></span></ul></ul><li><span><span class=toc-section-number>7</span> <a href=#ch:app-ops id=toc:ch:app-ops>App Ops</a></span><ul class=incremental><li><span><span class=toc-section-number>7.1</span> <a href=#sec:app-ops-background id=toc:sec:app-ops-background>Background</a></span><li><span><span class=toc-section-number>7.2</span> <a href=#sec:introduction-to-app-ops id=toc:sec:introduction-to-app-ops>Introduction to App
 Ops</a></span><li><span><span class=toc-section-number>7.3</span> <a href=#sec:appopsmanager id=toc:sec:appopsmanager>AppOpsManager</a></span><ul class=incremental><li><span><span class=toc-section-number>7.3.1</span> <a href=#subsec:op-constants id=toc:subsec:op-constants><code>OP_*</code> Constants</a></span><li><span><span class=toc-section-number>7.3.2</span> <a href=#subsec:mode-constants id=toc:subsec:mode-constants><code>MODE_*</code>
 Constants</a></span><li><span><span class=toc-section-number>7.3.3</span> <a href=#subsec:package-ops id=toc:subsec:package-ops>PackageOps</a></span><li><span><span class=toc-section-number>7.3.4</span> <a href=#subsec:opentry id=toc:subsec:opentry>OpEntry</a></span><li><span><span class=toc-section-number>7.3.5</span> <a href=#subsec:usage id=toc:subsec:usage>Usage</a></span></ul><li><span><span class=toc-section-number>7.4</span> <a href=#sec:appopsservice id=toc:sec:appopsservice>AppOpsService</a></span><li><span><span class=toc-section-number>7.5</span> <a href=#sec:appops-xml id=toc:sec:appops-xml>appops.xml</a></span><li><span><span class=toc-section-number>7.6</span> <a href=#sec:appops-cli id=toc:sec:appops-cli>Command Line
-Interface</a></span></ul></ul></nav><div class=titlingpage><div class=center><div class=announcement><p>We’re running a <strong>funding campaign</strong> for App Manager for
-a limited period. <a href=https://opencollective.com/app-manager#category-ABOUT>learn
-more...</a></div><p><img src=../images/icon.png style=width:1in alt=image><p><strong><span class=smallcaps>App Manager</span></strong><p><strong>User Manual</strong><p><em>v3.0.0-alpha02</em><p>21 April 2022<p>Copyright © 2020–2022 Muntashir Al-Islam<blockquote><p>“Wisely and slow. They stumble that run fast.” <span>— Friar
+Interface</a></span></ul></ul></nav><div class=titlingpage><div class=center><p><img src=../images/icon.png style=width:1in alt=image><p><strong><span class=smallcaps>App Manager</span></strong><p><strong>User Manual</strong><p><em>v3.0.0-alpha02</em><p>21 April 2022<p>Copyright © 2020–2022 Muntashir Al-Islam<blockquote><p>“Wisely and slow. They stumble that run fast.” <span>— Friar
 Laurence, <em>Romeo and Juliet</em></span></blockquote></div></div><section id=ch:introduction class=level1 data-number=1><h1 data-number=1><span class=header-section-number>1</span> <a href=#toc:ch:introduction>Introduction</a><a href=#ch:introduction class=anchor aria-hidden=true></a></h1><p>App Manager is an advanced package manager for Android. It offers
 countless features, and consequently, requires a user manual to assist
 its users. This document acts as a user manual for App Manager in the
@@ -384,7 +382,7 @@ SDK. There are two (one in old devices) values: <em>Max</em> denotes the
 target SDK and <em>Min</em> denotes the minimum SDK (the latter is not
 available in old devices). It is best practice to use apps with maximum
 SDK that the platform currently supports. SDK is also known as
-<strong>API Level</strong>.<div class=seealso-inline><p><em>See also: <span><a href=https://en.wikipedia.org/wiki/Android_version_history#Overview>Android
+<strong>API Level</strong>.<div class=seealso-inline><p><em>See also: <span><a href=https://en.wikipedia.org/wiki/Android_version_history#Overview>Android
 Version History</a></span></em></div><li><p><strong>Flags.</strong> The application flags used at the time of
 building the app. For a complete list of flags and what they do, visit
 the <a href=https://developer.android.com/reference/android/content/pm/ApplicationInfo#flags>official
@@ -440,7 +438,7 @@ side) or can be saved to you shared storage using the save
 button.<li><p><strong>Scanner.</strong> Clicking on this button displays the
 app’s tracker and library information. At first, it scans the app to
 extract a list of classes. Then the class list is matched with a number
-of signatures. After that, a scan summary is displayed.<br><div class=seealso-inline><p><em>See also: <span><a href=#sec:scanner-page>Scanner
+of signatures. After that, a scan summary is displayed.<br><div class=seealso-inline><p><em>See also: <span><a href=#sec:scanner-page>Scanner
 page</a></span></em></div><li><p><strong>Shared Prefs.</strong> Clicking on this button displays a
 list of shared preferences used by the app. Clicking on a preference
 item in the list opens the <a href=#sec:shared-preferences-editor-page>Shared Preferences Editor
@@ -567,7 +565,7 @@ Blocking</a> enabled or haven’t applied blocking for the app before, you
 have to apply the changes using the <strong>Apply rules</strong> option
 in three-dots menu. You can also remove already applied rules using the
 same option (which would be read as <strong>Remove rules</strong> this
-time).<div class=seealso-inline><p><em>See also: <span><a href=#sec:faq:app-components>FAQ: App
+time).<div class=seealso-inline><p><em>See also: <span><a href=#sec:faq:app-components>FAQ: App
 Components</a></span></em></div></section><section id=par:appdetails:blocking-trackers class=level5 data-number=2.2.3.5.2><h5 data-number=2.2.3.5.2><span class=header-section-number>2.2.3.5.2</span> Blocking Trackers<a href=#par:appdetails:blocking-trackers class=anchor aria-hidden=true></a></h5><p>You can disable tracker components using the <strong>Block
 tracker</strong> option in the three-dots menu. All tracker components
 will be blocked regardless of the tab you’re currently in.<div class="amalert tip"><p><strong><em>Info.</em></strong><p>Tracker components are a subset of app components. Therefore, they
@@ -618,7 +616,7 @@ ascending order by app op names and the associated unique numbers (or
 values). You can also list the denied app ops first using the
 corresponding sorting option.<div class="amalert warning"><p><strong><em>Warning.</em></strong><p>Denying an app op may cause the app to misbehave. Use the <em>reset
 to default</em> option if that is the case. Due to the nature how app
-ops work, the system may take some time to apply them.</div><div class=seealso-inline><p><em>See also: <span><a href=#ch:app-ops>Appendix: App
+ops work, the system may take some time to apply them.</div><div class=seealso-inline><p><em>See also: <span><a href=#ch:app-ops>Appendix: App
 Ops</a></span></em></div></section><section id=uses-permissions class=level4 data-number=2.2.4.2><h4 data-number=2.2.4.2><span class=header-section-number>2.2.4.2</span> Uses Permissions<a href=#uses-permissions class=anchor aria-hidden=true></a></h4><p><strong>Uses Permissions</strong> are the permissions used by the
 application. This is named so because they are declared in the manifest
 using <code>uses-permission</code> tags. Information such as
@@ -741,7 +739,7 @@ top-right offers two options such as <em>presets</em> and
 <em>import</em>.<ul class=incremental><li><p><strong>Presets.</strong> Presets option lists a number of
 built-in profiles that can be used as a starting point. The profiles are
 generated from the project <a href=https://gitlab.com/W1nst0n/universal-android-debloater>Universal
-Android Debloater</a>.<br><div class=seealso-inline><p><em>See also: <span><a href=#subsec:faq:what-are-bloatware>FAQ:
+Android Debloater</a>.<br><div class=seealso-inline><p><em>See also: <span><a href=#subsec:faq:what-are-bloatware>FAQ:
 What are bloatware and how to remove them?</a></span></em></div><li><p><strong>Import.</strong> This option can be used to import an
 existing profile.</ul><p>Another options menu appears when you long click on any profile. They
 have options such as–<ul class=incremental><li><p><strong>Apply now….</strong> This option can be used to apply the
@@ -798,7 +796,7 @@ packages. If the <a href=#subsubsec:profile-state>state</a> is
 <em>on</em>, the components will be blocked, and if the state is
 <em>off</em>, the components will be unblocked. The option can be
 disabled (regardless of the inserted values) by clicking on the
-<em>disabled</em> button on the input dialog.<div class=seealso-inline><p><em>See also: <span><a href=#subsec:faq:what-are-app-components>What are the app
+<em>disabled</em> button on the input dialog.<div class=seealso-inline><p><em>See also: <span><a href=#subsec:faq:what-are-app-components>What are the app
 components?</a></span></em></div></section><section id=app-ops class=level4 data-number=2.5.3.5><h4 data-number=2.5.3.5><span class=header-section-number>2.5.3.5</span> App Ops<a href=#app-ops class=anchor aria-hidden=true></a></h4><p>This behaves the same way as the <a href=#subsec:set-mode-for-app-ops-dots>Set Mode for App Ops…</a>
 option does in the 1-Click Ops page. However, this only applies for the
 selected packages. If the <a href=#subsubsec:profile-state>state</a>
@@ -887,7 +885,7 @@ applied immediately for all apps without explicitly enabling blocking
 for an app.<div class="amalert warning"><p><strong><em>Notice.</em></strong><p>Enabling this setting may have some unintended consequences. For
 instance, the rules that are not completely removed will be applied
 again. So, proceed with caution. This option should be kept disabled if
-not required for some reasons.</div><div class=seealso-inline><p><em>See also: <span><a href=#subsec:faq:what-is-instant-component-blocking>FAQ: What is
+not required for some reasons.</div><div class=seealso-inline><p><em>See also: <span><a href=#subsec:faq:what-is-instant-component-blocking>FAQ: What is
 instant component blocking?</a></span></em></div></section><section id=importexport-blocking-rules class=level4 data-number=2.6.9.2><h4 data-number=2.6.9.2><span class=header-section-number>2.6.9.2</span> Import/Export Blocking
 Rules<a href=#importexport-blocking-rules class=anchor aria-hidden=true></a></h4><p>It is possible to import or export blocking rules within App Manager
 for all apps. There is a choice to export or import only certain rules
@@ -895,7 +893,7 @@ for all apps. There is a choice to export or import only certain rules
 possible to import blocking rules from <a href=https://github.com/lihenggui/blocker>Blocker</a> and <a href=https://github.com/tuyafeng/Watt>Watt</a>. If it is necessary to
 export blocking rules for a single app, use the corresponding <a href=#sec:app-details-page>App Details page</a> to export rules, or
 for multiple apps, use <a href=#subsec:batch-operations>batch
-operations</a>.<div class=seealso-inline><p><em>See also: <span><a href=#sec:rules-specification>Rules
+operations</a>.<div class=seealso-inline><p><em>See also: <span><a href=#sec:rules-specification>Rules
 Specification</a></span></em></div><section id=export class=level5 data-number=2.6.9.2.1><h5 data-number=2.6.9.2.1><span class=header-section-number>2.6.9.2.1</span> Export<a href=#export class=anchor aria-hidden=true></a></h5><p>Export blocking rules for all apps configured within App Manager.
 This may include <a href=#subsec:faq:what-are-app-components>app
 components</a>, app ops and permissions based on the options selected in
@@ -947,7 +945,7 @@ matched signatures, and the number of classes against each signature.
 Some tracker names may have <span class="math inline"><sup>2</sup></span> prefix which indicates that the
 trackers are in the <a href=https://etip.exodus-privacy.eu.org>ETIP</a> stand-by list
 i.e. whether they are actual trackers is still being investigated.<p>The third item lists the number of libraries along with their names.
-The information are mostly taken from <a href=https://gitlab.com/IzzyOnDroid/repo>IzzyOnDroid repo</a>.<div class=seealso-inline><p><em>See also: <span><a href=#subsec:tracker-classes-versus-tracker-components>FAQ: Tracker
+The information are mostly taken from <a href=https://gitlab.com/IzzyOnDroid/repo>IzzyOnDroid repo</a>.<div class=seealso-inline><p><em>See also: <span><a href=#subsec:tracker-classes-versus-tracker-components>FAQ: Tracker
 classes vs tracker components</a></span></em></div><section id=subsec:missing-signatures class=level3 data-number=2.7.1><h3 data-number=2.7.1><span class=header-section-number>2.7.1</span>
 <a href=#toc:subsec:missing-signatures>Missing Signatures</a><a href=#subsec:missing-signatures class=anchor aria-hidden=true></a></h3><p>At the bottom of the page, there is a special item denoting the
 number of missing signatures (i.e. missing classes). The missing
@@ -1034,7 +1032,7 @@ Manager and restart your device. You may see <em>working on ADB
 mode</em> message without restarting but this isn’t entirely true. The
 server (used as an interface between system and App Manager) is still
 running in root mode. This is a known issue and will be fixed in a
-future version of App Manager.</div><div class=seealso-inline><p><em>See also: <span><a href=#sec:faq:adb-over-tcp>FAQ: ADB over
+future version of App Manager.</div><div class=seealso-inline><p><em>See also: <span><a href=#sec:faq:adb-over-tcp>FAQ: ADB over
 TCP</a></span></em></div><section id=subsec:enable-developer-options class=level3 data-number=3.1.1><h3 data-number=3.1.1><span class=header-section-number>3.1.1</span>
 <a href=#toc:subsec:enable-developer-options>Enable developer
 options</a><a href=#subsec:enable-developer-options class=anchor aria-hidden=true></a></h3><section id=subsubsec:location-of-developer-options class=level4 data-number=3.1.1.1><h4 data-number=3.1.1.1><span class=header-section-number>3.1.1.1</span> Location of developer
@@ -1217,7 +1215,7 @@ option will disable the signature checks. This option is applied only
 when you restore a backup. During backup, the checksums are generated
 regardless of this option.<div class="amalert warning"><p><strong><em>Caution.</em></strong><p>You should always disable this option to ensure that your backups are
 not modified by any third-party applications. However, this would only
-work if you enabled encryption.</div></ul><div class=seealso-inline><p><em>See also: <span><a href=#subsubsec:settings-encryption>Settings:
+work if you enabled encryption.</div></ul><div class=seealso-inline><p><em>See also: <span><a href=#subsubsec:settings-encryption>Settings:
 Encryption</a></span></em></div></section><section id=subsec:backup-restore-backup class=level3 data-number=3.2.3><h3 data-number=3.2.3><span class=header-section-number>3.2.3</span>
 <a href=#toc:subsec:backup-restore-backup>Backup</a><a href=#subsec:backup-restore-backup class=anchor aria-hidden=true></a></h3><p>Backup respects all the backup options except <strong>Skip signature
 checks</strong>. If base backups (i.e., backups that don’t have the
@@ -1751,7 +1749,7 @@ application is allowed and what is not allowed to perform, and
 <em>appops.xml</em>, it returns the default mode available in
 <strong>AppOpsManager</strong>.</section><section id=sec:appopsmanager class=level2 data-number=7.3><h2 data-number=7.3><span class=header-section-number>7.3</span> <a href=#toc:sec:appopsmanager>AppOpsManager</a><a href=#sec:appopsmanager class=anchor aria-hidden=true></a></h2><p><a href=https://android.googlesource.com/platform/frameworks/base/+/master/core/java/android/app/AppOpsManager.java>AppOpsManager</a>
 stands for application operations manager. It consists of various
-constants and classes to modify app operations.<div class=seealso-inline><p><em>See also: <span><a href=https://developer.android.com/reference/android/app/AppOpsManager>AppOpsManager
+constants and classes to modify app operations.<div class=seealso-inline><p><em>See also: <span><a href=https://developer.android.com/reference/android/app/AppOpsManager>AppOpsManager
 documentation</a></span></em></div><section id=subsec:op-constants class=level3 data-number=7.3.1><h3 data-number=7.3.1><span class=header-section-number>7.3.1</span>
 <a href=#toc:subsec:op-constants><code>OP_*</code> Constants</a><a href=#subsec:op-constants class=anchor aria-hidden=true></a></h3><p><code>OP_*</code> are the integer constants starting from
 <code>0</code>. <code>OP_NONE</code> implies that no operations are
