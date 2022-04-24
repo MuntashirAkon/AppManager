@@ -84,38 +84,48 @@ public final class ComponentUtils {
         return trackers;
     }
 
+    public static void blockTrackingComponents(@NonNull UserPackagePair pair) {
+        HashMap<String, RuleType> components = ComponentUtils.getTrackerComponentsForPackage(pair.getPackageName(), pair.getUserHandle());
+        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
+            for (String componentName : components.keySet()) {
+                cb.addComponent(componentName, components.get(componentName));
+            }
+            cb.applyRules(true);
+        }
+    }
+
     @WorkerThread
     @NonNull
     public static List<UserPackagePair> blockTrackingComponents(@NonNull Collection<UserPackagePair> userPackagePairs) {
         List<UserPackagePair> failedPkgList = new ArrayList<>();
-        HashMap<String, RuleType> components;
         for (UserPackagePair pair : userPackagePairs) {
-            components = ComponentUtils.getTrackerComponentsForPackage(pair.getPackageName(), pair.getUserHandle());
-            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
-                for (String componentName : components.keySet()) {
-                    cb.addComponent(componentName, components.get(componentName));
-                }
-                cb.applyRules(true);
+            try {
+                blockTrackingComponents(pair);
             } catch (Exception e) {
                 e.printStackTrace();
                 failedPkgList.add(pair);
             }
         }
         return failedPkgList;
+    }
+
+    public static void unblockTrackingComponents(@NonNull UserPackagePair pair) {
+        HashMap<String, RuleType> components = getTrackerComponentsForPackage(pair.getPackageName(), pair.getUserHandle());
+        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
+            for (String componentName : components.keySet()) {
+                cb.removeComponent(componentName);
+            }
+            cb.applyRules(true);
+        }
     }
 
     @WorkerThread
     @NonNull
     public static List<UserPackagePair> unblockTrackingComponents(@NonNull Collection<UserPackagePair> userPackagePairs) {
         List<UserPackagePair> failedPkgList = new ArrayList<>();
-        HashMap<String, RuleType> components;
         for (UserPackagePair pair : userPackagePairs) {
-            components = getTrackerComponentsForPackage(pair.getPackageName(), pair.getUserHandle());
-            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
-                for (String componentName : components.keySet()) {
-                    cb.removeComponent(componentName);
-                }
-                cb.applyRules(true);
+            try {
+                unblockTrackingComponents(pair);
             } catch (Exception e) {
                 e.printStackTrace();
                 failedPkgList.add(pair);
@@ -124,44 +134,24 @@ public final class ComponentUtils {
         return failedPkgList;
     }
 
-    @WorkerThread
-    @NonNull
-    public static List<UserPackagePair> blockFilteredComponents(@NonNull Collection<UserPackagePair> userPackagePairs, String[] signatures) {
-        List<UserPackagePair> failedPkgList = new ArrayList<>();
-        HashMap<String, RuleType> components;
-        for (UserPackagePair pair : userPackagePairs) {
-            components = PackageUtils.getFilteredComponents(pair.getPackageName(), pair.getUserHandle(), signatures);
-            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
-                for (String componentName : components.keySet()) {
-                    cb.addComponent(componentName, components.get(componentName));
-                }
-                cb.applyRules(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-                failedPkgList.add(pair);
+    public static void blockFilteredComponents(@NonNull UserPackagePair pair, String[] signatures) {
+        HashMap<String, RuleType> components = PackageUtils.getFilteredComponents(pair.getPackageName(), pair.getUserHandle(), signatures);
+        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
+            for (String componentName : components.keySet()) {
+                cb.addComponent(componentName, components.get(componentName));
             }
+            cb.applyRules(true);
         }
-        return failedPkgList;
     }
 
-    @WorkerThread
-    @NonNull
-    public static List<UserPackagePair> unblockFilteredComponents(@NonNull Collection<UserPackagePair> userPackagePairs, String[] signatures) {
-        List<UserPackagePair> failedPkgList = new ArrayList<>();
-        HashMap<String, RuleType> components;
-        for (UserPackagePair pair : userPackagePairs) {
-            components = PackageUtils.getFilteredComponents(pair.getPackageName(), pair.getUserHandle(), signatures);
-            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
-                for (String componentName : components.keySet()) {
-                    cb.removeComponent(componentName);
-                }
-                cb.applyRules(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-                failedPkgList.add(pair);
+    public static void unblockFilteredComponents(@NonNull UserPackagePair pair, String[] signatures) {
+        HashMap<String, RuleType> components = PackageUtils.getFilteredComponents(pair.getPackageName(), pair.getUserHandle(), signatures);
+        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
+            for (String componentName : components.keySet()) {
+                cb.removeComponent(componentName);
             }
+            cb.applyRules(true);
         }
-        return failedPkgList;
     }
 
     public static void storeRules(@NonNull OutputStream os, @NonNull List<RuleEntry> rules, boolean isExternal)

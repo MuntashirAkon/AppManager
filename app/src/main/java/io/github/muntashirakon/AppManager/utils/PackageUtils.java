@@ -449,9 +449,9 @@ public final class PackageUtils {
     }
 
     @Nullable
-    public static ArrayList<String> packagesToAppLabels(@NonNull PackageManager pm, @Nullable List<String> packages, List<Integer> userHandles) {
+    public static ArrayList<CharSequence> packagesToAppLabels(@NonNull PackageManager pm, @Nullable List<String> packages, List<Integer> userHandles) {
         if (packages == null) return null;
-        ArrayList<String> appLabels = new ArrayList<>();
+        ArrayList<CharSequence> appLabels = new ArrayList<>();
         int i = 0;
         for (String packageName : packages) {
             appLabels.add(PackageUtils.getPackageLabel(pm, packageName, userHandles.get(i)).toString());

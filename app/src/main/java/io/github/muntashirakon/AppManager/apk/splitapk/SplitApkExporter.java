@@ -12,6 +12,7 @@ import androidx.annotation.WorkerThread;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,7 +38,7 @@ import io.github.muntashirakon.io.Path;
  */
 public final class SplitApkExporter {
     @WorkerThread
-    public static void saveApks(PackageInfo packageInfo, Path apksFile) throws Exception {
+    public static void saveApks(PackageInfo packageInfo, Path apksFile) throws IOException {
         try (OutputStream outputStream = apksFile.openOutputStream();
              ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream)) {
             zipOutputStream.setMethod(ZipOutputStream.DEFLATED);

@@ -7,6 +7,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.RemoteException;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -69,39 +70,27 @@ public final class ApkUtils {
     /**
      * Backup the given apk (both root and non root). This is similar to apk sharing feature except
      * that these are saved at /sdcard/AppManager/apks
-     *
-     * @return true on success, false on failure
      */
     @WorkerThread
-    public static boolean backupApk(String packageName, int userHandle) {
-        Path backupPath;
-        try {
-            backupPath = BackupFiles.getApkBackupDirectory();
-        } catch (IOException e) {
-            return false;
-        }
+    public static void backupApk(String packageName, int userHandle)
+            throws IOException, PackageManager.NameNotFoundException, RemoteException {
+        Path backupPath = BackupFiles.getApkBackupDirectory();
         // Fetch package info
         Context ctx = AppManager.getContext();
-        try {
-            PackageManager pm = ctx.getPackageManager();
-            PackageInfo packageInfo = PackageManagerCompat.getPackageInfo(packageName, flagMatchUninstalled, userHandle);
-            ApplicationInfo info = packageInfo.applicationInfo;
-            String outputName = FileUtils.getSanitizedFileName(getFormattedApkFilename(packageInfo, pm), false);
-            if (outputName == null) outputName = packageName;
-            Path apkFile;
-            if (isSplitApk(info)) {
-                // Split apk
-                apkFile = backupPath.createNewFile(outputName + EXT_APKS, null);
-                SplitApkExporter.saveApks(packageInfo, apkFile);
-            } else {
-                // Regular apk
-                apkFile = backupPath.createNewFile(outputName + EXT_APK, null);
-                FileUtils.copy(new Path(ctx, new File(info.publicSourceDir)), apkFile);
-            }
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
+        PackageManager pm = ctx.getPackageManager();
+        PackageInfo packageInfo = PackageManagerCompat.getPackageInfo(packageName, flagMatchUninstalled, userHandle);
+        ApplicationInfo info = packageInfo.applicationInfo;
+        String outputName = FileUtils.getSanitizedFileName(getFormattedApkFilename(packageInfo, pm), false);
+        if (outputName == null) outputName = packageName;
+        Path apkFile;
+        if (isSplitApk(info)) {
+            // Split apk
+            apkFile = backupPath.createNewFile(outputName + EXT_APKS, null);
+            SplitApkExporter.saveApks(packageInfo, apkFile);
+        } else {
+            // Regular apk
+            apkFile = backupPath.createNewFile(outputName + EXT_APK, null);
+            FileUtils.copy(new Path(ctx, new File(info.publicSourceDir)), apkFile);
         }
     }
 

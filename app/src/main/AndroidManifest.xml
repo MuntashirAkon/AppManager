@@ -330,12 +330,11 @@
             android:exported="false"
             android:label="@string/sys_config" />
         <activity
-            android:name=".misc.AlertDialogActivity"
+            android:name=".batchops.BatchOpsResultsActivity"
             android:excludeFromRecents="true"
             android:exported="false"
             android:launchMode="singleInstance"
-            android:taskAffinity=""
-            android:theme="@style/AppTheme.TransparentBackground" />
+            android:taskAffinity="" />
         <activity
             android:name=".intercept.ActivityInterceptor"
             android:enabled="true"

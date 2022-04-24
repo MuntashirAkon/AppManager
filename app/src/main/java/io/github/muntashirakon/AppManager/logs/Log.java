@@ -6,21 +6,15 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 
 import static android.util.Log.ASSERT;
@@ -30,34 +24,29 @@ import static android.util.Log.INFO;
 import static android.util.Log.VERBOSE;
 import static android.util.Log.WARN;
 
-public class Log {
+public class Log extends Logger {
     @IntDef(value = {VERBOSE, DEBUG, INFO, WARN, ERROR, ASSERT})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Level {
     }
 
-    private static final Log INSTANCE;
+    @Nullable
+    private static Log INSTANCE;
     private static final File LOG_FILE;
     private static final DateFormat DATE_FORMAT;
 
     static {
         DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.ROOT);
-        File cacheDir = AppManager.getContext().getExternalCacheDir();
-        if (cacheDir != null && cacheDir.canWrite()) {
-            LOG_FILE = new File(cacheDir, "am.log");
-        } else LOG_FILE = new File(AppManager.getContext().getCacheDir(), "am.log");
-        INSTANCE = new Log();
+        LOG_FILE = new File(getLoggingDirectory(), "am.log");
+        try {
+            INSTANCE = new Log();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    @Nullable
-    private PrintWriter writer;
-    private final ExecutorService executor = Executors.newFixedThreadPool(1);
-
-    private Log() {
-        try {
-            writer = new PrintWriter(new BufferedWriter(new FileWriter(LOG_FILE)));
-        } catch (IOException ignore) {
-        }
+    private Log() throws IOException {
+        super(LOG_FILE, false);
     }
 
     public static void v(@Nullable String tag, @NonNull String msg) {
@@ -133,8 +122,7 @@ public class Log {
     }
 
     private static void println(@Level int level, @Nullable String tag, @Nullable String msg, @Nullable Throwable tr) {
-        if (INSTANCE.writer == null) return;
-
+        if (INSTANCE == null) return;
         StringBuilder sb = new StringBuilder();
         sb.append(DATE_FORMAT.format(new Date(System.currentTimeMillis()))).append(" ");
         switch (level) {
@@ -159,15 +147,6 @@ public class Log {
         }
         sb.append(tag == null ? "App Manager" : tag);
         if (msg != null) sb.append(": ").append(msg);
-
-        INSTANCE.executor.submit(() -> {
-            synchronized (INSTANCE) {
-                INSTANCE.writer.println(sb);
-                if (tr != null) {
-                    tr.printStackTrace(INSTANCE.writer);
-                }
-                INSTANCE.writer.flush();
-            }
-        });
+        INSTANCE.println(sb, tr);
     }
 }

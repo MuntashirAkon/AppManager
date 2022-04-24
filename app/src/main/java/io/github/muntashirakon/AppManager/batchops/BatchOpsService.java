@@ -25,7 +25,6 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.main.MainActivity;
-import io.github.muntashirakon.AppManager.misc.AlertDialogActivity;
 import io.github.muntashirakon.AppManager.types.ForegroundService;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 
@@ -129,9 +128,10 @@ public class BatchOpsService extends ForegroundService {
             if (ACTION_BATCH_OPS_PROGRESS.equals(intent.getAction())) {
                 if (notificationManager == null) return;
                 int progressMax = intent.getIntExtra(EXTRA_PROGRESS_MAX, 0);
-                String progressMessage = intent.getStringExtra(EXTRA_PROGRESS_MESSAGE);
-                if (progressMessage == null)
+                CharSequence progressMessage = intent.getCharSequenceExtra(EXTRA_PROGRESS_MESSAGE);
+                if (progressMessage == null) {
                     progressMessage = getString(R.string.operation_running);
+                }
                 builder.setContentText(progressMessage);
                 builder.setProgress(progressMax, intent.getIntExtra(EXTRA_PROGRESS_CURRENT, 0), progressMax == 0);
                 notificationManager.notify(NOTIFICATION_ID, builder.build());
@@ -276,7 +276,7 @@ public class BatchOpsService extends ForegroundService {
             case Activity.RESULT_FIRST_USER:  // Failed
                 String detailsMessage = getString(R.string.full_stop_tap_to_see_details);
                 String message = getDesiredErrorString(opResult.getFailedPackages().size());
-                Intent intent = new Intent(this, AlertDialogActivity.class);
+                Intent intent = new Intent(this, BatchOpsResultsActivity.class);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                     intent.setIdentifier(String.valueOf(System.currentTimeMillis()));
                 }

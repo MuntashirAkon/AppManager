@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
 import android.net.Uri;
+import android.os.RemoteException;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -41,32 +42,19 @@ import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabled
  * Import components from external apps like Blocker, Watt
  */
 public class ExternalComponentsImporter {
-    @WorkerThread
-    @NonNull
-    public static List<UserPackagePair> setModeToFilteredAppOps(@NonNull Collection<UserPackagePair> userPackagePairs,
-                                                                int[] appOps,
-                                                                @AppOpsManager.Mode int mode) {
-        List<UserPackagePair> failedPkgList = new ArrayList<>();
+    public static void setModeToFilteredAppOps(@NonNull AppOpsService appOpsService,
+                                               @NonNull UserPackagePair pair,
+                                               int[] appOps,
+                                               @AppOpsManager.Mode int mode) throws RemoteException {
         Collection<Integer> appOpList;
-        AppOpsService appOpsService = new AppOpsService();
-        for (UserPackagePair pair : userPackagePairs) {
-            appOpList = PackageUtils.getFilteredAppOps(pair.getPackageName(), pair.getUserHandle(), appOps, mode);
-            try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(),
-                    pair.getUserHandle())) {
-                for (int appOp : appOpList) {
-                    try {
-                        appOpsService.setMode(appOp, PackageUtils.getAppUid(pair), pair.getPackageName(), mode);
-                        cb.setAppOp(appOp, mode);
-                    } catch (Exception ignore) {
-                    }
-                }
-                cb.applyRules(true);
-            } catch (Exception e) {
-                e.printStackTrace();
-                failedPkgList.add(pair);
+        appOpList = PackageUtils.getFilteredAppOps(pair.getPackageName(), pair.getUserHandle(), appOps, mode);
+        try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
+            for (int appOp : appOpList) {
+                appOpsService.setMode(appOp, PackageUtils.getAppUid(pair), pair.getPackageName(), mode);
+                cb.setAppOp(appOp, mode);
             }
+            cb.applyRules(true);
         }
-        return failedPkgList;
     }
 
     @WorkerThread

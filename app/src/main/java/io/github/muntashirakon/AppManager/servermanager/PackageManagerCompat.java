@@ -23,6 +23,7 @@ import android.os.Build;
 import android.os.DeadObjectException;
 import android.os.RemoteException;
 import android.os.SystemClock;
+import android.util.AndroidException;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -41,6 +42,7 @@ import dev.rikka.tools.refine.Refine;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.compat.StorageManagerCompat;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
+import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DEFAULT;
@@ -217,7 +219,24 @@ public final class PackageManagerCompat {
         return AppManager.getIPackageManager().getInstallerPackageName(packageName);
     }
 
-    public static boolean clearApplicationUserData(String packageName, @UserIdInt int userId) {
+    public static void clearApplicationUserData(@NonNull UserPackagePair pair) throws AndroidException, InterruptedException {
+        IPackageManager pm = AppManager.getIPackageManager();
+        CountDownLatch dataClearWatcher = new CountDownLatch(1);
+        AtomicBoolean isSuccess = new AtomicBoolean(false);
+        pm.clearApplicationUserData(pair.getPackageName(), new IPackageDataObserver.Stub() {
+            @Override
+            public void onRemoveCompleted(String packageName, boolean succeeded) {
+                isSuccess.set(succeeded);
+                dataClearWatcher.countDown();
+            }
+        }, pair.getUserHandle());
+        dataClearWatcher.await();
+        if (!isSuccess.get()) {
+            throw new AndroidException("Could not clear data of package " + pair);
+        }
+    }
+
+    public static boolean clearApplicationUserData(@NonNull String packageName, @UserIdInt int userId) {
         IPackageManager pm = AppManager.getIPackageManager();
         CountDownLatch dataClearWatcher = new CountDownLatch(1);
         AtomicBoolean isSuccess = new AtomicBoolean(false);
@@ -235,6 +254,26 @@ public final class PackageManagerCompat {
             return false;
         }
         return isSuccess.get();
+    }
+
+    public static void deleteApplicationCacheFilesAsUser(UserPackagePair pair) throws AndroidException, InterruptedException {
+        IPackageManager pm = AppManager.getIPackageManager();
+        CountDownLatch dataClearWatcher = new CountDownLatch(1);
+        AtomicBoolean isSuccess = new AtomicBoolean(false);
+        IPackageDataObserver observer = new IPackageDataObserver.Stub() {
+            @Override
+            public void onRemoveCompleted(String packageName, boolean succeeded) {
+                dataClearWatcher.countDown();
+                isSuccess.set(succeeded);
+            }
+        };
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            pm.deleteApplicationCacheFilesAsUser(pair.getPackageName(), pair.getUserHandle(), observer);
+        } else pm.deleteApplicationCacheFiles(pair.getPackageName(), observer);
+        dataClearWatcher.await();
+        if (!isSuccess.get()) {
+            throw new AndroidException("Could not clear cache of package " + pair);
+        }
     }
 
     public static boolean deleteApplicationCacheFilesAsUser(String packageName, int userId) {
