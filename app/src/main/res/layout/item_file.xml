@@ -18,7 +18,6 @@
         android:layout_gravity="center_vertical"
         android:layout_marginEnd="@dimen/padding_medium"
         android:layout_weight="0"
-        android:focusable="false"
         tools:ignore="ContentDescription"
         tools:srcCompat="@tools:sample/avatars" />
 
@@ -33,7 +32,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceListItem"
-            android:focusable="false"
             tools:text="@tools:sample/lorem" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -41,7 +39,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textColor="?android:attr/textColorSecondary"
-            android:focusable="false"
             android:nextFocusRight="@id/item_open"
             tools:text="@tools:sample/lorem" />
 
@@ -56,7 +53,6 @@
         android:layout_marginStart="@dimen/padding_medium"
         android:layout_weight="0"
         android:background="@drawable/item_transparent"
-        android:focusable="true"
         android:nextFocusLeft="@id/item_subtitle"
         app:icon="@drawable/ic_open_in_new_black_24dp"
         app:iconSize="24dp" />

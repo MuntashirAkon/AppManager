@@ -9,6 +9,8 @@ import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.style.LeadingMarginSpan;
 import android.util.TypedValue;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.Dimension;
 import androidx.annotation.NonNull;
@@ -41,6 +43,11 @@ public final class UiUtils {
     @Dimension
     public static int pxToDp(@NonNull Context context, @Px int pixel) {
         return (int) ((float) pixel / context.getResources().getDisplayMetrics().density);
+    }
+
+    public static void hideKeyboard(@NonNull View v) {
+        InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
     }
 
     /**

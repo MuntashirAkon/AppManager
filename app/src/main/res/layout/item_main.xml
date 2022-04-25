@@ -4,13 +4,13 @@
     style="@style/Widget.AppTheme.CardView.Elevated"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:focusable="true"
     android:layout_marginHorizontal="@dimen/padding_small"
     android:layout_marginVertical="2dp">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:focusable="true"
         android:orientation="horizontal"
         android:padding="@dimen/padding_small">
 

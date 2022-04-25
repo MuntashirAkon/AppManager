@@ -18,7 +18,8 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/classes"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:focusable="true">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
@@ -48,6 +49,7 @@
                 android:id="@+id/tracker"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusable="true"
                 android:layout_marginTop="@dimen/padding_small">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
@@ -78,6 +80,7 @@
                 android:id="@+id/vt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusable="true"
                 android:layout_marginTop="@dimen/padding_small">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
@@ -110,6 +113,7 @@
                 android:id="@+id/libs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusable="true"
                 android:layout_marginTop="@dimen/padding_small">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
@@ -140,6 +144,7 @@
                 android:id="@+id/apk"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusable="true"
                 android:layout_marginTop="@dimen/padding_small">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
@@ -171,6 +176,7 @@
                 android:id="@+id/signatures"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusable="true"
                 android:layout_marginTop="@dimen/padding_small">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
@@ -202,6 +208,7 @@
                 android:id="@+id/missing_libs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:focusable="true"
                 android:layout_marginTop="@dimen/padding_small"
                 android:visibility="gone">
 

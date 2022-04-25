@@ -180,10 +180,12 @@ public class ListOptions extends BottomSheetDialogFragment {
         for (int i = 0; i < FILTER_MAP.size(); ++i) {
             filterView.addView(getFilterChip(FILTER_MAP.keyAt(i), FILTER_MAP.valueAt(i)));
         }
+        sortGroup.getChildAt(0).requestFocus();
     }
 
     public Chip getFilterChip(@Filter int flag, @StringRes int strRes) {
         Chip chip = new Chip(filterView.getContext());
+        chip.setFocusable(true);
         chip.setCloseIconVisible(false);
         chip.setText(strRes);
         chip.setChecked(model.hasFilterFlag(flag));
@@ -196,6 +198,7 @@ public class ListOptions extends BottomSheetDialogFragment {
 
     public Chip getRadioChip(@SortOrder int sortOrder, @StringRes int strRes) {
         Chip chip = new Chip(sortGroup.getContext());
+        chip.setFocusable(true);
         chip.setCloseIconVisible(false);
         chip.setId(sortOrder);
         chip.setText(strRes);

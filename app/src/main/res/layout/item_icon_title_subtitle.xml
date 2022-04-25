@@ -17,7 +17,6 @@
         android:layout_height="match_parent"
         android:layout_marginEnd="@dimen/padding_medium"
         android:layout_weight="0"
-        android:focusable="false"
         tools:ignore="ContentDescription"
         tools:srcCompat="@tools:sample/avatars" />
 

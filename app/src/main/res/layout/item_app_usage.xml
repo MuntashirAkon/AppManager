@@ -5,6 +5,7 @@
     style="@style/Widget.AppTheme.CardView.Elevated"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:focusable="true"
     app:cardElevation="0dp"
     android:layout_marginHorizontal="@dimen/padding_small"
     android:layout_marginVertical="2dp">
@@ -14,7 +15,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="@drawable/item_transparent"
-        android:focusable="true"
         android:padding="@dimen/padding_small">
 
         <androidx.appcompat.widget.LinearLayoutCompat

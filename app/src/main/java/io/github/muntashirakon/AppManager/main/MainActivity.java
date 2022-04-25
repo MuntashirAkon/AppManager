@@ -25,7 +25,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.SearchView;
 import androidx.collection.ArrayMap;
 import androidx.core.content.ContextCompat;
 import androidx.core.text.HtmlCompat;
@@ -75,6 +74,7 @@ import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
 import io.github.muntashirakon.reflow.ReflowMenuViewWrapper;
+import io.github.muntashirakon.util.UiUtils;
 import io.github.muntashirakon.widget.MultiSelectionView;
 import io.github.muntashirakon.widget.SwipeRefreshLayout;
 import me.zhanghai.android.fastscroll.FastScrollerBuilder;
@@ -93,7 +93,7 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
     MainViewModel mModel;
 
     private MainRecyclerAdapter mAdapter;
-    private SearchView mSearchView;
+    private AdvancedSearchView mSearchView;
     private LinearProgressIndicator mProgressIndicator;
     private SwipeRefreshLayout mSwipeRefresh;
     private MultiSelectionView multiSelectionView;
@@ -148,11 +148,17 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
             actionBar.setCustomView(searchView, layoutParams);
             mSearchView = searchView;
             mSearchView.setIconifiedByDefault(false);
+            mSearchView.setOnFocusChangeListener((v, hasFocus) -> {
+                if (!hasFocus) {
+                    UiUtils.hideKeyboard(v);
+                }
+            });
         }
 
         mProgressIndicator = findViewById(R.id.progress_linear);
         mProgressIndicator.setVisibilityAfterHide(View.GONE);
         RecyclerView recyclerView = findViewById(R.id.item_list);
+        recyclerView.requestFocus(); // Initially (the view isn't actually focusable)
         mSwipeRefresh = findViewById(R.id.swipe_refresh);
         mSwipeRefresh.setOnRefreshListener(this);
 
@@ -194,6 +200,10 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
         mModel.getApplicationItems().observe(this, applicationItems -> {
             if (mAdapter != null) mAdapter.setDefaultList(applicationItems);
             showProgressIndicator(false);
+            if (recyclerView.getFocusedChild() == null) {
+                View v = recyclerView.getChildAt(0);
+                if (v != null) v.requestFocus();
+            }
         });
     }
 

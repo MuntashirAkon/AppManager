@@ -29,7 +29,6 @@
         android:layout_weight="0"
         android:paddingVertical="@dimen/padding_small"
         android:layout_marginEnd="@dimen/padding_small"
-        android:focusable="true"
         app:icon="@drawable/ic_baseline_clear_24"
         app:iconSize="20dp" />
 
