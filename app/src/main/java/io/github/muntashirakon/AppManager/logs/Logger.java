@@ -11,8 +11,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import io.github.muntashirakon.AppManager.AppManager;
 
@@ -26,7 +24,6 @@ public class Logger implements Closeable {
     }
 
     private final PrintWriter mWriter;
-    private final ExecutorService mExecutor = Executors.newFixedThreadPool(1);
 
     private boolean mIsClosed;
 
@@ -45,20 +42,18 @@ public class Logger implements Closeable {
 
     @CallSuper
     public void println(@Nullable Object message, @Nullable Throwable tr) {
-        mExecutor.submit(() -> {
-            synchronized (mWriter) {
-                mWriter.println(message);
-                if (tr != null) {
-                    tr.printStackTrace(mWriter);
-                }
-                mWriter.flush();
+        synchronized (mWriter) {
+            mWriter.println(message);
+            if (tr != null) {
+                tr.printStackTrace(mWriter);
             }
-        });
+        }
     }
 
     @CallSuper
     @Override
     public void close() {
+        mWriter.flush();
         mWriter.close();
         mIsClosed = true;
     }
@@ -67,6 +62,7 @@ public class Logger implements Closeable {
     protected void finalize() throws Throwable {
         // Closing is mandatory in order to make sure the logs are written correctly
         if (!mIsClosed) {
+            mWriter.flush();
             mWriter.close();
         }
     }

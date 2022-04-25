@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -77,17 +78,27 @@ public class ProfileManager {
 
     @NonNull
     private final ProfileMetaManager.Profile profile;
+    @Nullable
+    private ProfileLogger mLogger;
 
     public ProfileManager(@NonNull ProfileMetaManager metaManager) throws FileNotFoundException {
-        if (metaManager.profile == null)
+        if (metaManager.profile == null) {
             throw new FileNotFoundException("Profile cannot be empty.");
-        this.profile = metaManager.profile;
+        }
+        profile = metaManager.profile;
+        try {
+            mLogger = new ProfileLogger(profile.name);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @SuppressLint("SwitchIntDef")
     public void applyProfile(@Nullable String state) {
         // Set state
         if (state == null) state = profile.state;
+
+        log("====> Started execution with state " + state);
 
         if (profile.packages.length == 0) return;
         int[] users = profile.users == null ? Users.getUsersIds() : profile.users;
@@ -97,12 +108,12 @@ public class ProfileManager {
                 userPackagePairs.add(new UserPackagePair(packageName, user));
             }
         }
-        BatchOpsManager batchOpsManager = new BatchOpsManager();
+        BatchOpsManager batchOpsManager = new BatchOpsManager(mLogger);
         BatchOpsManager.Result result;
         // Apply component blocking
         String[] components = profile.components;
         if (components != null) {
-            Log.d(TAG, "Started block/unblock components. State: " + state);
+            log("====> Started block/unblock components. State: " + state);
             Bundle args = new Bundle();
             args.putStringArray(BatchOpsManager.ARG_SIGNATURES, components);
             batchOpsManager.setArgs(args);
@@ -121,7 +132,7 @@ public class ProfileManager {
         // Apply app ops blocking
         int[] appOps = profile.appOps;
         if (appOps != null) {
-            Log.d(TAG, "Started ignore/default components. State: " + state);
+            log("====> Started ignore/default components. State: " + state);
             Bundle args = new Bundle();
             args.putIntArray(BatchOpsManager.ARG_APP_OPS, appOps);
             switch (state) {
@@ -141,7 +152,7 @@ public class ProfileManager {
         // Apply permissions
         String[] permissions = profile.permissions;
         if (permissions != null) {
-            Log.d(TAG, "Started grant/revoke permissions.");
+            log("====> Started grant/revoke permissions.");
             Bundle args = new Bundle();
             args.putStringArray(BatchOpsManager.ARG_PERMISSIONS, permissions);
             batchOpsManager.setArgs(args);
@@ -157,10 +168,78 @@ public class ProfileManager {
                 Log.d(TAG, "Failed packages: " + result);
             }
         } else Log.d(TAG, "Skipped permissions.");
+        // Backup rules
+        Integer rulesFlag = profile.exportRules;
+        if (rulesFlag != null) {
+            log("====> Not implemented export rules.");
+            // TODO(18/11/20): Export rules
+        } else Log.d(TAG, "Skipped export rules.");
+        // Disable/enable
+        if (profile.disable) {
+            log("====> Started disable/enable. State: " + state);
+            switch (state) {
+                case ProfileMetaManager.STATE_ON:
+                    result = batchOpsManager.performOp(BatchOpsManager.OP_DISABLE, userPackagePairs);
+                    break;
+                case ProfileMetaManager.STATE_OFF:
+                default:
+                    result = batchOpsManager.performOp(BatchOpsManager.OP_ENABLE, userPackagePairs);
+            }
+            if (!result.isSuccessful()) {
+                Log.d(TAG, "Failed packages: " + result);
+            }
+        } else Log.d(TAG, "Skipped disable/enable.");
+        // Force-stop
+        if (profile.forceStop) {
+            log("====> Started force-stop.");
+            result = batchOpsManager.performOp(BatchOpsManager.OP_FORCE_STOP, userPackagePairs);
+            if (!result.isSuccessful()) {
+                Log.d(TAG, "Failed packages: " + result);
+            }
+        } else Log.d(TAG, "Skipped force stop.");
+        // Clear cache
+        if (profile.clearCache) {
+            log("====> Started clear cache.");
+            result = batchOpsManager.performOp(BatchOpsManager.OP_CLEAR_CACHE, userPackagePairs);
+            if (!result.isSuccessful()) {
+                Log.d(TAG, "Failed packages: " + result);
+            }
+        } else Log.d(TAG, "Skipped clear cache.");
+        // Clear data
+        if (profile.clearData) {
+            log("====> Started clear data.");
+            result = batchOpsManager.performOp(BatchOpsManager.OP_CLEAR_DATA, userPackagePairs);
+            if (!result.isSuccessful()) {
+                Log.d(TAG, "Failed packages: " + result);
+            }
+        } else Log.d(TAG, "Skipped clear data.");
+        // Block trackers
+        if (profile.blockTrackers) {
+            log("====> Started block trackers. State: " + state);
+            switch (state) {
+                case ProfileMetaManager.STATE_ON:
+                    result = batchOpsManager.performOp(BatchOpsManager.OP_BLOCK_TRACKERS, userPackagePairs);
+                    break;
+                case ProfileMetaManager.STATE_OFF:
+                default:
+                    result = batchOpsManager.performOp(BatchOpsManager.OP_UNBLOCK_TRACKERS, userPackagePairs);
+            }
+            if (!result.isSuccessful()) {
+                Log.d(TAG, "Failed packages: " + result);
+            }
+        } else Log.d(TAG, "Skipped block trackers.");
+        // Backup apk
+        if (profile.saveApk) {
+            log("====> Started backup apk.");
+            result = batchOpsManager.performOp(BatchOpsManager.OP_BACKUP_APK, userPackagePairs);
+            if (!result.isSuccessful()) {
+                Log.d(TAG, "Failed packages: " + result);
+            }
+        } else Log.d(TAG, "Skipped backup apk.");
         // Backup/restore data
         ProfileMetaManager.Profile.BackupInfo backupInfo = profile.backupData;
         if (backupInfo != null) {
-            Log.d(TAG, "Started backup/restore.");
+            log("====> Started backup/restore.");
             BackupFlags backupFlags = new BackupFlags(backupInfo.flags);
             Bundle args = new Bundle();
             if (backupFlags.backupMultiple() && backupInfo.name != null) {
@@ -187,73 +266,19 @@ public class ProfileManager {
                 Log.d(TAG, "Failed packages: " + result);
             }
         } else Log.d(TAG, "Skipped backup/restore.");
-        // Backup rules
-        Integer rulesFlag = profile.exportRules;
-        if (rulesFlag != null) {
-            Log.d(TAG, "Not implemented export rules.");
-            // TODO(18/11/20): Export rules
-        } else Log.d(TAG, "Skipped export rules.");
-        // Disable/enable
-        if (profile.disable) {
-            Log.d(TAG, "Started disable/enable. State: " + state);
-            switch (state) {
-                case ProfileMetaManager.STATE_ON:
-                    result = batchOpsManager.performOp(BatchOpsManager.OP_DISABLE, userPackagePairs);
-                    break;
-                case ProfileMetaManager.STATE_OFF:
-                default:
-                    result = batchOpsManager.performOp(BatchOpsManager.OP_ENABLE, userPackagePairs);
-            }
-            if (!result.isSuccessful()) {
-                Log.d(TAG, "Failed packages: " + result);
-            }
-        } else Log.d(TAG, "Skipped disable/enable.");
-        // Force-stop
-        if (profile.forceStop) {
-            Log.d(TAG, "Started force-stop.");
-            result = batchOpsManager.performOp(BatchOpsManager.OP_FORCE_STOP, userPackagePairs);
-            if (!result.isSuccessful()) {
-                Log.d(TAG, "Failed packages: " + result);
-            }
-        } else Log.d(TAG, "Skipped force stop.");
-        // Clear cache
-        if (profile.clearCache) {
-            Log.d(TAG, "Started clear cache.");
-            result = batchOpsManager.performOp(BatchOpsManager.OP_CLEAR_CACHE, userPackagePairs);
-            if (!result.isSuccessful()) {
-                Log.d(TAG, "Failed packages: " + result);
-            }
-        } else Log.d(TAG, "Skipped clear cache.");
-        // Clear data
-        if (profile.clearData) {
-            Log.d(TAG, "Started clear data.");
-            result = batchOpsManager.performOp(BatchOpsManager.OP_CLEAR_DATA, userPackagePairs);
-            if (!result.isSuccessful()) {
-                Log.d(TAG, "Failed packages: " + result);
-            }
-        } else Log.d(TAG, "Skipped clear data.");
-        // Block trackers
-        if (profile.blockTrackers) {
-            Log.d(TAG, "Started block trackers. State: " + state);
-            switch (state) {
-                case ProfileMetaManager.STATE_ON:
-                    result = batchOpsManager.performOp(BatchOpsManager.OP_BLOCK_TRACKERS, userPackagePairs);
-                    break;
-                case ProfileMetaManager.STATE_OFF:
-                default:
-                    result = batchOpsManager.performOp(BatchOpsManager.OP_UNBLOCK_TRACKERS, userPackagePairs);
-            }
-            if (!result.isSuccessful()) {
-                Log.d(TAG, "Failed packages: " + result);
-            }
-        } else Log.d(TAG, "Skipped block trackers.");
-        // Backup apk
-        if (profile.saveApk) {
-            Log.d(TAG, "Started backup apk.");
-            result = batchOpsManager.performOp(BatchOpsManager.OP_BACKUP_APK, userPackagePairs);
-            if (!result.isSuccessful()) {
-                Log.d(TAG, "Failed packages: " + result);
-            }
-        } else Log.d(TAG, "Skipped backup apk.");
+        log("====> Execution completed.");
+        batchOpsManager.conclude();
+    }
+
+    public void conclude() {
+        if (mLogger != null) {
+            mLogger.close();
+        }
+    }
+
+    private void log(@Nullable String message) {
+        if (mLogger != null) {
+            mLogger.println(message);
+        }
     }
 }

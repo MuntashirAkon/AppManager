@@ -36,10 +36,10 @@
         android:clickable="true"
         android:focusable="true"
         android:src="@drawable/ic_baseline_add_24"
-        android:layout_marginEnd="@dimen/padding_medium"
-        android:layout_marginBottom="@dimen/padding_medium"
+        android:layout_marginHorizontal="@dimen/padding_medium"
+        android:layout_marginBottom="72dp"
         app:layout_anchor="@id/bottom_navigation"
-        app:layout_anchorGravity="center"
+        app:layout_anchorGravity="right|top"
         android:contentDescription="@string/add_item" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -43,6 +43,9 @@ public class ProfileMetaManager {
     public static final String STATE_OFF = "off";
 
     public static class Profile {
+        @NonNull
+        public final String name;  // name (name of the profile)
+
         public int type = 0;  // type
         public int version = 1;  // version
         public boolean allowRoutine = true;  // allow_routine
@@ -50,8 +53,6 @@ public class ProfileMetaManager {
         public String state;  // state
         @Nullable
         public int[] users;  // users
-        @NonNull
-        private final String name;  // name (name of the profile)
         @NonNull
         public String[] packages;  // packages (a list of packages)
         @Nullable
@@ -277,7 +278,7 @@ public class ProfileMetaManager {
     }
 
     @NonNull
-    private static String getCleanedProfileName(@NonNull String dirtyProfileName) {
+    static String getCleanedProfileName(@NonNull String dirtyProfileName) {
         return dirtyProfileName.trim().replaceAll("[\\\\/?\"<>|\\s]+", "_");  // [\\/:?"<>|\s]
     }
 

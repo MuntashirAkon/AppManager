@@ -191,6 +191,7 @@ public class BatchOpsService extends ForegroundService {
         BatchOpsManager batchOpsManager = new BatchOpsManager();
         batchOpsManager.setArgs(args);
         BatchOpsManager.Result result = batchOpsManager.performOp(op, packages, userHandles);
+        batchOpsManager.conclude();
         if (result.isSuccessful()) {
             sendResults(Activity.RESULT_OK, null);
         } else {

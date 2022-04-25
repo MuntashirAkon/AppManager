@@ -60,10 +60,10 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
     public static final String ST_SIMPLE = "simple";
     public static final String ST_ADVANCED = "advanced";
 
-    private ViewPager viewPager;
-    private NavigationBarView bottomNavigationView;
-    private MenuItem prevMenuItem;
-    private final Fragment[] fragments = new Fragment[2];
+    private ViewPager mViewPager;
+    private NavigationBarView mBottomNavigationView;
+    private MenuItem mPrevMenuItem;
+    private final Fragment[] mFragments = new Fragment[3];
     ProfileViewModel model;
     FloatingActionButton fab;
     LinearProgressIndicator progressIndicator;
@@ -141,11 +141,11 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
             // Requested a new profile, clone profile
             model.loadAndCloneProfile(newProfileName, isPreset, profileName);
         } else model.loadProfile();
-        viewPager = findViewById(R.id.pager);
-        viewPager.addOnPageChangeListener(this);
-        viewPager.setAdapter(new ProfileFragmentPagerAdapter(getSupportFragmentManager()));
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
-        bottomNavigationView.setOnItemSelectedListener(this);
+        mViewPager = findViewById(R.id.pager);
+        mViewPager.addOnPageChangeListener(this);
+        mViewPager.setAdapter(new ProfileFragmentPagerAdapter(getSupportFragmentManager()));
+        mBottomNavigationView = findViewById(R.id.bottom_navigation);
+        mBottomNavigationView.setOnItemSelectedListener(this);
         fab.setOnClickListener(v -> {
             progressIndicator.show();
             model.loadInstalledApps();
@@ -252,8 +252,8 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
 
     @Override
     protected void onDestroy() {
-        if (viewPager != null) {
-            viewPager.removeOnPageChangeListener(this);
+        if (mViewPager != null) {
+            mViewPager.removeOnPageChangeListener(this);
         }
         super.onDestroy();
     }
@@ -262,9 +262,11 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.action_apps) {
-            viewPager.setCurrentItem(0);
+            mViewPager.setCurrentItem(0);
         } else if (itemId == R.id.action_conf) {
-            viewPager.setCurrentItem(1);
+            mViewPager.setCurrentItem(1);
+        } else if (itemId == R.id.action_logs) {
+            mViewPager.setCurrentItem(2);
         } else return false;
         return true;
     }
@@ -275,14 +277,14 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
 
     @Override
     public void onPageSelected(int position) {
-        if (prevMenuItem != null) {
-            prevMenuItem.setChecked(false);
+        if (mPrevMenuItem != null) {
+            mPrevMenuItem.setChecked(false);
         } else {
-            bottomNavigationView.getMenu().getItem(0).setChecked(false);
+            mBottomNavigationView.getMenu().getItem(0).setChecked(false);
         }
 
-        bottomNavigationView.getMenu().getItem(position).setChecked(true);
-        prevMenuItem = bottomNavigationView.getMenu().getItem(position);
+        mBottomNavigationView.getMenu().getItem(position).setChecked(true);
+        mPrevMenuItem = mBottomNavigationView.getMenu().getItem(position);
     }
 
     @Override
@@ -298,13 +300,15 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
         @NonNull
         @Override
         public Fragment getItem(int position) {
-            Fragment fragment = fragments[position];
+            Fragment fragment = mFragments[position];
             if (fragment == null) {
                 switch (position) {
                     case 0:
-                        return fragments[position] = new AppsFragment();
+                        return mFragments[position] = new AppsFragment();
                     case 1:
-                        return fragments[position] = new ConfFragment();
+                        return mFragments[position] = new ConfFragment();
+                    case 2:
+                        return mFragments[position] = new LogViewerFragment();
                 }
             }
             return Objects.requireNonNull(fragment);
@@ -312,7 +316,7 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
 
         @Override
         public int getCount() {
-            return fragments.length;
+            return mFragments.length;
         }
     }
 }

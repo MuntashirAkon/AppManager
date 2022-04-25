@@ -43,6 +43,7 @@ import io.github.muntashirakon.AppManager.backup.BackupManager;
 import io.github.muntashirakon.AppManager.backup.convert.ConvertUtils;
 import io.github.muntashirakon.AppManager.backup.convert.Converter;
 import io.github.muntashirakon.AppManager.backup.convert.ImportType;
+import io.github.muntashirakon.AppManager.logs.Logger;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.rules.compontents.ExternalComponentsImporter;
@@ -156,13 +157,21 @@ public class BatchOpsManager {
     public static final int OP_NET_POLICY = 20;
 
     @Nullable
-    public BatchOpsLogger mLogger;
+    public Logger mLogger;
+    public final boolean mCustomLogger;
+
     public BatchOpsManager() {
+        mCustomLogger = false;
         try {
             mLogger = new BatchOpsLogger();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public BatchOpsManager(@Nullable Logger logger) {
+        mLogger = logger;
+        mCustomLogger = true;
     }
 
     private static Result lastResult;
@@ -244,6 +253,12 @@ public class BatchOpsManager {
                 break;
         }
         return lastResult = new Result(Arrays.asList(userPackagePairs));
+    }
+
+    public void conclude() {
+        if (!mCustomLogger && mLogger != null) {
+            mLogger.close();
+        }
     }
 
     /**

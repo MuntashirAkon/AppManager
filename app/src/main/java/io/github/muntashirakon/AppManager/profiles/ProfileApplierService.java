@@ -66,6 +66,7 @@ public class ProfileApplierService extends ForegroundService {
         try {
             ProfileManager profileManager = new ProfileManager(new ProfileMetaManager(profileName));
             profileManager.applyProfile(state);
+            profileManager.conclude();
             sendNotification(Activity.RESULT_OK);
         } catch (FileNotFoundException e) {
             Log.e("ProfileApplier", "Could not apply the profile");

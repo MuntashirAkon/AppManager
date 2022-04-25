@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
@@ -10,5 +9,10 @@
         android:id="@+id/action_conf"
         android:icon="@drawable/ic_tune_black_24dp"
         android:title="@string/configurations" />
+
+    <item
+        android:id="@+id/action_logs"
+        android:icon="@drawable/ic_history"
+        android:title="@string/log_viewer" />
 
 </menu>
