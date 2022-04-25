@@ -67,7 +67,7 @@ import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 public class ScannerFragment extends Fragment {
     private static final String SIG_TO_IGNORE = "^(android(|x)|com\\.android|com\\.google\\.android|java(|x)|j\\$\\.(util|time)|\\w\\d?(\\.\\w\\d?)+)\\..*$";
 
-    private List<String> mClassListAll;
+    private int totalClasses;
     private final List<String> mTrackerClassList = new ArrayList<>();
     private final List<String> mLibClassList = new ArrayList<>();
 
@@ -131,11 +131,12 @@ public class ScannerFragment extends Fragment {
         });
         // List all classes
         mViewModel.allClassesLiveData().observe(getViewLifecycleOwner(), allClasses -> {
-            mClassListAll = allClasses;
+            totalClasses = allClasses.size();
             ((TextView) view.findViewById(R.id.classes_title)).setText(getResources().getQuantityString(R.plurals.classes,
-                    mClassListAll.size(), mClassListAll.size()));
+                    allClasses.size(), allClasses.size()));
             view.findViewById(R.id.classes).setOnClickListener(v ->
                     mActivity.loadNewFragment(new ClassListingFragment()));
+
             // Fetch tracker info
             new Thread(() -> {
                 Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
@@ -304,6 +305,7 @@ public class ScannerFragment extends Fragment {
         long t_start, t_end;
         t_start = System.currentTimeMillis();
         // Iterate over all classes
+        mTrackerClassList.clear();
         for (String className : mViewModel.getAllClasses()) {
             if (className.length() > 8 && className.contains(".")) {
                 // Iterate over all signatures to match the class name
@@ -351,8 +353,8 @@ public class ScannerFragment extends Fragment {
                     TextUtils.joinSpannable(", ", foundTrackerNames));
         }
         SpannableStringBuilder builder = new SpannableStringBuilder(
-                getString(R.string.tested_signatures_on_classes_and_time_taken,
-                        trackerSignatures.length, mClassListAll.size(), totalTimeTaken, totalIteration));
+                getString(R.string.tested_signatures_on_classes_and_time_taken, trackerSignatures.length, totalClasses,
+                        totalTimeTaken, totalIteration));
         if (foundTrackerList.length() > 0) {
             builder.append("\n").append(foundTrackerList);
         }
@@ -422,6 +424,7 @@ public class ScannerFragment extends Fragment {
         // The following array is directly mapped to the arrays above
         int[] signatureCount = new int[libSignatures.length];
         // Iterate over all classes
+        mLibClassList.clear();
         for (String className : mViewModel.getAllClasses()) {
             if (className.length() > 8 && className.contains(".")) {
                 boolean matched = false;
