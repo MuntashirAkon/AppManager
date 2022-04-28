@@ -1078,7 +1078,6 @@
     <string name="so_type_executable">Dapat dieksekusi</string>
     <string name="file_modified_are_you_sure">File tersebut telah dimodifikasi. Buang semua perubahan Anda dan keluar\?</string>
     <string name="save_and_exit">Simpan dan keluar</string>
-    <string name="donation_campaign_text">Kami menjalankan kampanye pendanaan <b/> untuk App Manager untuk jangka waktu terbatas. <a href="https://opencollective.com/app-manager#category-ABOUT">pelajari lebih lanjut ... </a></string>
     <string name="paired_successfully">dipasangkan.</string>
     <string name="failed_to_uninstall_app">Pencabutan instalasi gagal</string>
     <string name="second_degree_tracker_note">²awalan mengindikasikan bahwa pelacak ada di dalam <a href="https://etip.exodus-privacy.eu.org/">ETIP stand-by list</a> i.e apakah mereka adalah benar pelacak sedang diinvestigasi.</string>

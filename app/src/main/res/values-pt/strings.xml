@@ -1144,7 +1144,6 @@
     <string name="mode_of_op_with_inferred_mode_of_op">%1$s (modo inferido: %2$s)</string>
     <string name="save_and_exit">Guardar e sair</string>
     <string name="file_modified_are_you_sure">O ficheiro foi modificado. Descartar todas as suas alterações e sair\?</string>
-    <string name="donation_campaign_text">Estamos a realizar uma <b>campanha de financiamento</b> para o App Manager durante um período limitado. <a href="https://opencollective.com/app-manager#category-ABOUT">saiba mais…</a></string>
     <string name="so_type_shared_library">Biblioteca partilhada</string>
     <string name="hidden_api_enf_default_policy">Padrão (com base no tipo de aplicação)</string>
     <string name="primary_abi">Índice Primário de Variação Absoluta</string>

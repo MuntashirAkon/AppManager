@@ -1151,7 +1151,6 @@
     <string name="so_type_shared_library">Paylaşılan kütüphane</string>
     <string name="save_and_exit">Kaydet ve çık</string>
     <string name="hidden_api_enf_policy_warn">Uyar (gizli API\'ye tam erişim ancak uyarı verir)</string>
-    <string name="donation_campaign_text">Sınırlı bir süre boyunca App Manager için bir <b>fonlama kampanyası</b> yapıyoruz. <a href="https://opencollective.com/app-manager#category-ABOUT">Daha fazla bilgi edinin…</a></string>
     <string name="zygote_preload_name">Zygote ön yükleme adı</string>
     <string name="so_type_executable">Çalıştırılabilir dosya</string>
     <string name="file_modified_are_you_sure">Dosya değiştirildi. Tüm değişikliklerinizi iptal edip çıkılsın mı\?</string>

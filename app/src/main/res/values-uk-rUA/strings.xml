@@ -1233,7 +1233,6 @@
     <string name="so_type_executable">Виконуваний файл</string>
     <string name="file_modified_are_you_sure">Файл було змінено. Відкинути всі ваші зміни й вийти\?</string>
     <string name="save_and_exit">Зберегти й вийти</string>
-    <string name="donation_campaign_text">Проводимо короткострокову <b>кампанію збору коштів</b> для App Manager. <a href="https://opencollective.com/app-manager#category-ABOUT">докладніше…</a></string>
     <string name="hidden_api_enf_policy_dark_grey_and_black">Строго (списки обмеження й блокування)</string>
     <string name="auth_manager_title">Менеджер авторизації</string>
     <string name="regenerate_auth_key">Перестворити ключ авторизації</string>

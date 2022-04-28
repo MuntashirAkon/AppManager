@@ -649,7 +649,6 @@
     <string name="second_degree_tracker_note">Il prefisso ² indica che i tracker sono nella <a href="https://etip.exodus-privacy.eu.org/">Lista stand-by ETIP</a> cioè non è ancora certo se siano tracker effettivi.</string>
     <string name="interceptor">Intercettatore</string>
     <string name="file_modified_are_you_sure">Il file è stato modificato. Scartare tutte le modifiche e uscire\?</string>
-    <string name="donation_campaign_text">Stiamo conducendo una <b>campagna di finanziamento</b> per App Manager per un periodo limitato. <a href="https://opencollective.com/app-manager#category-ABOUT">per saperne di più...</a></string>
     <string name="auth_manager_description">Per lanciare un Intent da un\'app esterna, è necessario fornire un campo extra chiamato <tt>auth</tt>, e deve contenere la seguente chiave:</string>
     <string name="backup_volume_unavailable_warning">Il volume di backup selezionato non è attualmente disponibile. Se si trova in una memoria esterna, inseriscila o cambia il volume di backup.</string>
     <string name="community">Comunità</string>

@@ -1120,7 +1120,6 @@
     <string name="hidden_api_enf_policy_black">Thực thi (chỉ danh sách cấm)</string>
     <string name="binary_64_bit">64 Bit</string>
     <string name="endianness_big_endian">Big endian</string>
-    <string name="donation_campaign_text">Chúng tôi đang chạy một <b>chiến dịch góp tiền</b> cho App Manager trong một khoảng thời gian giới hạn. <a href="https://opencollective.com/app-manager#category-ABOUT">tìm hiểu thêm…</a></string>
     <string name="pref_saved_apk_name_format">ĐỊnh dạng tên tệp APK được lưu</string>
     <string name="auth_manager_description">Để chạy Intent từ một ứng dụng ngoài, bạn cần nhập thêm một trường gọi là <tt>auth</tt>, và nó phải chứa mã sau:</string>
     <string name="auth_manager_title">Quản lý ủy quyền</string>

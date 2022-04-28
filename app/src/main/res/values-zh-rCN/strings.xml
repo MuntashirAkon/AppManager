@@ -1121,7 +1121,6 @@
     <string name="endianness_big_endian">Big endian 编码</string>
     <string name="endianness_little_endian">Little endian 编码</string>
     <string name="so_type_executable">可执行</string>
-    <string name="donation_campaign_text">我们正为 App Manager 举办一个限时的<b>筹款活动</b>。<a href="https://opencollective.com/app-manager#category-ABOUT">了解更多……</a></string>
     <string name="auth_manager_description">要从外部应用启动一个 intent，需要提供一个名为 <tt>auth</tt>的额外字段，其必须包含下列键：</string>
     <string name="pref_saved_apk_name_format">保存的 APK 名称格式</string>
     <string name="pref_saved_apk_name_format_msg">保存 APK 文件时用来命名它们的格式。</string>

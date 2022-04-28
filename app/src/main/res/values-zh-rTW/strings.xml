@@ -1109,7 +1109,6 @@
     <string name="vt_scan_date">掃描日期：%1$s</string>
     <string name="primary_abi">主要 ABI</string>
     <string name="save_and_exit">儲存並離開</string>
-    <string name="donation_campaign_text">我們正在為 App Manager 在有限的時間內運行 <b> 募款活動</b>。 <a href="https://opencollective.com/app-manager#category-ABOUT">了解更多…</a></string>
     <string name="mode_of_op_with_inferred_mode_of_op">%1$s（推斷模式：%2$s）</string>
     <string name="intent_firewall">IFW</string>
     <string name="magisk_denylist">Magisk黑名單</string>

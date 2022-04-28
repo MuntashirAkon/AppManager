@@ -1159,7 +1159,6 @@
     <string name="endianness_little_endian">Little endian</string>
     <string name="file_modified_are_you_sure">Die Datei wurde geändert. Verwerfen Sie alle Ihre Änderungen und beenden Sie\?</string>
     <string name="hidden_api_enf_policy_warn">Warnen (voller Zugriff auf die versteckte API, gibt aber Warnungen aus)</string>
-    <string name="donation_campaign_text">Wir führen für einen begrenzten Zeitraum eine <b>Finanzierungskampagne</b> für App Manager durch. <a href="https://opencollective.com/app-manager#category-ABOUT">Erfahren mehr ...</a></string>
     <string name="pref_saved_apk_name_format">Namensformat des gespeicherten APK</string>
     <string name="pref_saved_apk_name_format_msg">Das Format, das für die Benennung der APK-Dateien beim Speichern verwendet werden soll.</string>
     <string name="auth_manager_description">Um ein Intent von einer externen Anwendung aus zu starten, muss ein zusätzliches Feld mit der Bezeichnung <tt>auth</tt> bereitgestellt werden, das den folgenden Schlüssel enthalten muss:</string>

@@ -1164,7 +1164,6 @@
     <string name="auth_manager_title">Gestor de autorizaciones</string>
     <string name="regenerate_auth_key">Regenerar la clave de autorización</string>
     <string name="shortcut_icon">Icono de acceso directo</string>
-    <string name="donation_campaign_text">Estamos ejecutando una <b>campaña de financiación</b> para la App Manager durante un periodo limitado. <a href="https://opencollective.com/app-manager#category-ABOUT">Más información aquí...</a></string>
     <string name="pref_saved_apk_name_format_msg">El formato que se utilizará para nombrar los archivos APK cuando los guarde.</string>
     <string name="regenerate_auth_key_warning">¿Está seguro\? Todas las aplicaciones de terceros tienen que ser reconfiguradas con la nueva clave de autorización.</string>
     <string name="sort_by_installation_date">Fecha de instalación</string>
