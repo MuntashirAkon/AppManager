@@ -1,2 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="titlepage$user_manual">영어 
+\n{\\huge\\bfseries 사용자 매뉴얼\\par}</string>
+    <string name="intro$main$intro">App Manager는 안드로이드용 고급 패키지 매니저입니다. 수많은 기능을 갖추고 있어 사용자를
+\n지원하기 위한 사용자 매뉴얼이 필요합니다. 이 문서는 App Manager가 제공하는 모든 기능을 설명하는 것을 목적으로
+\n하며 App Manager 의 사용자 매뉴얼로 기능합니다. 또한 이 문서는 App Manager의 공식 가이드라인으로 볼 수도 있고
+\nApp Manager가 원하는 동작을 나타내기도 합니다. 번역에 의해 이 문서(영어로 쓰여저 있다)가 오해 받을
+\n가능성이 있습니다. 따라서, 모든 유능한 사용자는 App Manager를 최대한 활용하기 위해 영문 문서를
+\n읽어야 합니다. 블로그 기사, 비디오, 채팅 그룹 등 다른 비공식 또는 서드파티의 자원 역시 존재할 수
+\n있습니다. 이러한 리소스는 많은 사람들에게 유용할 수 있지만 App Manager의 최신 버전을 지원하지
+\n않을 수 있습니다. App Manager에서 해당 문서에서 일탈이 검출되면 App Manager의
+\n\\href{https://github.com/MuntashirAkon/AppManager/issues}{App Manager 이슈 트래커}에서 보고해야 합니다.</string>
+    <string name="keywords$see_also">\\newcommand{\\KeywordSeeAlso}{See also:}</string>
+    <string name="keywords$end_of_keyword_in_alert">\\newcommand{\\KeywordEndOfKeyWordInAlert}{.}</string>
+    <string name="titlepage$quotation">\\begin{quotation}
+\n ``현명하고 신중해라. 빨리 달리면 넘어지게 마련이다.\'\'
+\n %\\sourceatright
+\n {--- 수도사 로렌스, \\textit{로미오와 줄리엣}}
+\n \\end{quotation}</string>
+    <string name="intro$main$$introduction-chapter-title">소개</string>
+    <string name="intro$main$$terminologies-title">용어</string>
+    <string name="intro$main$$supported-versions-title">지원되는 버전</string>
+    <string name="intro$main$$official-sources-title">공식 출처</string>
+    <string name="intro$main$$bin-sources-title">이진 배포 소스</string>
+    <string name="intro$main$$source-code-links-title">소스 코드 링크</string>
+    <string name="intro$main$$translations-title">번역</string>
+    <string name="intro$main$$contributing-title">기여</string>
+    <string name="intro$main$$buiding-title">빌드 설명</string>
+    <string name="intro$main$$submit-patches-title">패치 제출</string>
+    <string name="intro$main$$donation-title">기부 \\&amp; 자금</string>
+    <string name="intro$main$$contact-title">연락처</string>
+</resources>
