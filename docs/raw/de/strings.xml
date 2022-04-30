@@ -274,146 +274,215 @@
 \n\\end{itemize}</string>
     <string name="pages$app-details-page$app-info-general-information">Die folgende Liste ist in der gleichen Reihenfolge wie auf der Registerkarte \"App-Info\" aufgeführt.
 \n\\begin{itemize}
-\n \\item \\textbf{Anwendungssymbol} Das Anwendungssymbol. Wenn eine App kein Symbol hat, wird das Standardsymbol des Systems angezeigt.
+\n \\item \\textbf{Anwendungssymbol} Das Anwendungssymbol. Wenn die Anwendung kein Symbol hat, wird das Standardsymbol des Systems
+\n angezeigt. Es ist auch möglich, die APK-Signatur über SHA- oder MD5-Summen zu überprüfen, die in der Zwischenablage
+\n gespeichert sind, indem Sie einfach darauf klicken.
 \n
-\n \\item \\textbf{Anwendungslabel.} Das Anwendungslabel oder der Anwendungsname.
+\n \\item \\textbf {Anwendungskennzeichnung.} Das Anwendungslabel oder der Name der Anwendung.
 \n
-\n \\item \\textbf{Version.} Die Anwendungsversion ist in zwei Teile unterteilt. Der erste Teil heißt \\textit{Versionsname}. Das Format dieses Teils variiert, besteht aber häufig aus mehreren durch Punkte getrennten Ganzzahlen. Der zweite Teil
-\n wird \\textit{Versionscode} genannt und ist unter der ersten Klammer geschlossen. Der Versionscode ist eine ganze Zahl, die normalerweise
-\n verwendet wird, um zwischen den Versionen einer Anwendung zu unterscheiden (da der Versionsname oft von einer Maschine nicht gelesen werden kann). Im Allgemeinen hat eine neue
-\n Version einer Anwendung einen höheren Versionscode als die alte. Wenn zum Beispiel \\texttt{123} und \\texttt{125} zwei Versionen
-\n einer App sind, kann man sagen, dass die letztere aktueller ist als die erste, weil der Versionscode der
-\n letztere höher ist. Bei Anwendungen, die von plattformabhängigen (Mobilgeräte, Tablets, Desktops usw.), können diese Versions-
-\nnummern
-\n irreführend sein, da sie Präfixe für jeweilige Plattform verwenden.
+\n \\item \\textbf{Paketname.} Der Name des Anwendungspakets. Wenn Sie auf den Namen klicken, wird er in der Zwischenablage gespeichert.
 \n
-\n \\item \\textbf{Tags.} (Auch bekannt als Tag-Clouds) Tags enthalten die grundlegenden, prägnanten und nützlichsten Informationen zu einer App.
-\n \\textit{Tracker Info} (d. h. die Anzahl der Tracker-Komponenten), \\textit{App Typ} (Benutzer-App oder System-App
-\n und ob es sich bei der App um eine aktualisierte Version der System-App handelt oder ob die App systemlos unter Verwendung von Magisk installiert wurde),
-\n \\textit{Laufende} (d. h. ein oder mehrere Dienste der App laufen im Hintergrund), \\textit{split APK info} (d. h.
-\n \\Anzahl der Splits), \\textit{fehlersuchfähig} (die App ist eine Debug-Version), \\textit{nur für Tests} (die App ist eine reine Test
-\n App), \\textit{großer Speicherplatz} (die App hat einen großen Speicherplatz angefordert), \\textit{gestoppt} (die App wurde zwangsweise gestoppt),
-\n \\textit{deaktiviert} (die App ist deaktiviert), \\textit{Schlüsselspeicher} (die App hat Elemente im Android KeyStore),
-\n \\textit{no code} (die App hat keinen mit ihr verbundenen Code), \\hyperref[sec:terminologies]{\\textit{SSAID}},
-\n \\textit{Netzrichtlinie} (Netzrichtlinie, z. B. Nutzung von Hintergrunddaten) und \\textit{Batterieoptimierung}.
-\n Die Bedeutung von \\textit{nur für Tests} und \\textit{fehlersuchfähig} liegt darin, dass Apps mit diesen Eigenschaften zusätzliche Aufgaben übernehmen können
-\n oder diese Apps ohne Root \\texttt{ausführbar} sein können, was potenzielle Sicherheitsprobleme verursachen kann
-\n wenn diese Anwendungen private Informationen speichern.
-\n \\textit{großer Speicherplatz} bedeutet, dass der App bei Bedarf eine größere Menge an Speicher (RAM) zugewiesen wird.
-\n Auch wenn dies in den meisten Fällen nicht schädlich ist, sollten verdächtige Anwendungen, die einen großen Speicherplatz anfordern, ernst genommen werden.
+\n \\item \\textbf{Version.} Die Anwendungsversion ist in zwei Teile unterteilt. Der erste Teil heißt \\textit{Versions-
+\n name}. Das Format dieses Teils variiert, besteht aber häufig aus mehreren durch Punkte getrennten Ganzzahlen. Der zweite Teil
+\n wird \\textit{Versionscode} genannt. Er wird von den ersten Klammern umschlossen. Der Versionscode ist eine ganze Zahl, die genutzt wird
+\n um zwischen Anwendungsversionen zu unterscheiden (da ein Versionsname für eine Maschine unlesbar sein kann). Generell gilt,
+\n hat eine neue Version einer Anwendung einen höheren Versionscode als die alten Versionen. Zum Beispiel, wenn \\texttt{123} und
+\n \\texttt{125} zwei Versionscodes einer Anwendung sind, kann man sagen, dass die letztere aktueller ist als die erstere
+\n weil der Versionscode der letzteren höher ist. Anwendungen, die verschiedene APK-Dateien für dieselbe Version
+\n auf verschiedenen Plattformen (Mobilgeräte, Tabs, Desktops usw.) oder Architekturen (32/64 Bit, ARM oder Intel) anbieten, können die Versionsnummern
+\n Nummern irreführend sein, da sie oft Präfixe für jede Plattform hinzufügen.
 \n
-\n \\item \\textbf {Horizontales Aktionsfeld} Dies ist ein Aktionsfeld, das verschiedene Aktionen für die App enthält. Siehe
-\n §\\cref{subsubsec:horizontal-action-panel} für eine vollständige Liste der hier verfügbaren Aktionen.
+\n \\item \\textbf{Tags.} (Auch bekannt als Tag-Clouds) Tags enthalten die grundlegendsten, prägnantesten und nützlichsten Informationen über eine
+\n Anwendung, wie z. B..
+\n \\begin{itemize}
+\n \\item \\textit{Tracker info.} Anzahl der Tracker-Komponenten in der Anwendung (z. B. \\textit{5 Tracker}) Die
+\n Farbe des Tags erscheint orange, wenn die Tracker nicht blockiert sind, und dunkelcyan, wenn sie im App Manager blockiert sind.
+\n Ein Klick auf das Tag öffnet ein Dialogfeld mit der Liste der Tracker-Komponenten, die gesperrt oder freigegeben werden können
+\n wenn der App Manager über ausreichende Berechtigungen verfügt.
+\n \\Textit{Anwendungstyp.} Benutzeranwendung oder Systemanwendung. Wenn es sich um eine Systemanwendung handelt, ob
+\n die Anwendung eine aktualisierte Version der Systemanwendung ist oder ob die Anwendung systemlos installiert wurde
+\n über Magisk installiert wurde.
+\n \\item \\textit{Split APK info.} Anzahl der Splits in der APK mit Ausnahme der Basis-APK (z. B. \\textit{5 splits}).
+\n Wenn Sie auf das Tag klicken, wird ein Dialogfeld mit den Informationen über die aufgeteilte APK, wie Typ und Größe, geöffnet.
+\n \\item \\textit{Debuggable.} Die Anwendung kann über ADB\\@ debuggt werden. Debuggingfähige Anwendungen können bestimmte
+\n Funktionen nutzen, die einer normalen Anwendung nicht zur Verfügung stehen. Auf die Daten der Anwendung kann über ADB zugegriffen werden (z.B.\\ unter Verwendung von
+\n \\texttt{run-as} command) ohne zusätzliche Berechtigungen.
+\n \\item \\textit{Test only.} Die Anwendung ist eine reine Testanwendung. Reine Testanwendungen können bestimmte Funktionen nutzen
+\n Funktionen nutzen, die einer normalen Anwendung nicht zur Verfügung stehen. Auf die Daten der Anwendung kann über ADB zugegriffen werden (z. B. unter Verwendung von
+\n \\texttt{run-as} command) ohne zusätzliche Berechtigungen.
+\n \\item \\textit{Large heap.} Die Anwendung hat eine große Heap-Größe angefordert, d.h. es wird mehr Platz im Speicher (RAM)
+\n für die dynamische Zuweisung angefordert. Es obliegt dem Betriebssystem zu entscheiden, ob es der Anwendung einen großen
+\n Speicherplatz für die Anwendung zugewiesen wird. Der App Manager zum Beispiel fordert eine große Heap-Größe an, weil er eine ganze APK in den Speicher laden muss.
+\n APK in den Speicher laden muss, während er eine APK vor Android 8 scannt.
+\n \\Kein Code. Der Anwendung ist kein Code zugeordnet, d. h. es sind keine DEX-Dateien vorhanden.
+\n Bei einigen Systemanwendungen kann sich der eigentliche Code an einem anderen Ort befinden.
+\n \\item \\textit{Running.} Ein oder mehrere Dienste der Anwendung werden derzeit im Hintergrund ausgeführt. Ein Klick auf
+\n auf das Tag öffnet einen Dialog mit der Liste der laufenden Dienste. Durch Anklicken eines beliebigen Dienstes wird dieser in der Protokollanzeige geöffnet
+\n Viewer, sofern die Funktion des Log Viewers aktiviert ist.
+\n \\Textit{Stopped} Die Anwendung wird zwangsweise gestoppt. Dies kann jedoch nicht verhindern, dass sie später automatisch
+\n später.
+\n \\item \\textit{Disabled.} Zeigt an, dass die Anwendung deaktiviert (vor dem Startprogramm verborgen) ist.
+\n \\item \\textit{Suspended.} Zeigt an, dass die Anwendung ausgesetzt ist (im Launcher ausgegraut).
+\n \\item \\textit{Hidden.} Zeigt an, dass die Anwendung versteckt ist (im Launcher ausgeblendet).
+\n \\item \\textit{MagiskHide.} MagiskHide ist aktiviert. Ein Klick auf das Tag öffnet einen Dialog mit der Liste der
+\n Prozessen innerhalb der Anwendung, die der MagiskHide-Liste hinzugefügt oder aus ihr entfernt werden können.
+\n \\item \\textit{MagiskDenyList.} Die Anwendung ist in MagiskDenyList vorhanden. Ein Klick auf das Tag öffnet einen Dialog
+\n mit der Liste der Prozesse innerhalb der Anwendung, die zu MagiskDenyList hinzugefügt oder daraus entfernt werden können.
+\n \\Element \"KeyStore\". Die Anwendung hat Elemente im Android KeyStore. Ein Klick auf das Tag öffnet einen Dialog
+\n mit allen KeyStore-Dateien, die zur Anwendung gehören.
 \n
-\n \\item \\textbf{Pfade \\&amp; Verzeichnisse.} Enthält verschiedene Informationen zu Anwendungspfaden, einschließlich \\textit{App-
-\n Verzeichnissen} (wo die APK-Dateien gespeichert sind), \\textit{Datenverzeichnisse} (intern, gerätegeschützt und extern),
-\n \\textit{gesplittete APK-Verzeichnisse} (zusammen mit den Split-Namen), und \\textit{native JNI-Bibliothek} (falls vorhanden). JNI-
-\n Bibliotheken werden verwendet, um native Codes aufzurufen, die normalerweise in C/C++ geschrieben sind. Die Verwendung einer nativen Bibliothek kann die Anwendung flüssiger laufen lassen
-\n oder einer Anwendung helfen, Bibliotheken von Drittanbietern zu verwenden, die in anderen Sprachen als Java geschrieben wurden, wie bei den meisten Spiele. Sie können
-\n diese Verzeichnisse auch mit Ihrem bevorzugten Dateimanager öffnen (vorausgesetzt, er unterstützt dies und hat
-\n die erforderlichen Berechtigungen), indem Sie auf das Startsymbol auf der rechten Seite jedes Elements klicken.
+\n \\Textit{Backup.} Die Anwendung wurde mindestens einmal unter Verwendung von App Manager gesichert. Ein Klick auf das Tag
+\n wird ein Dialog geöffnet, der alle verfügbaren Sicherungen zusammen mit den Metadaten enthält.
+\n \\item \\textit{Keine Batterieoptimierung.} Die Batterieoptimierung ist für die Anwendung deaktiviert. Es ist möglich
+\n ist es möglich, die Akku-Optimierung wieder zu aktivieren, indem Sie auf das Tag klicken.
+\n \\item \\hyperref[sec:net-policy]{\\textit{Netzpolitik.}} Die Netzpolitik (z. B. die Datennutzung im Hintergrund) ist
+\n für die Anwendung. Wenn Sie auf das Tag klicken, wird ein Dialogfeld mit den unterstützten Richtlinien für die Plattform
+\n zusammen mit den Optionen zu deren Konfiguration.
+\n \\item \\hyperref[sec:terminologies]{\\textit{SSAID.}} Ein Klick auf das Tag öffnet ein Dialogfeld mit der aktuellen
+\n SSAID, die der Anwendung zugewiesen ist. Es ist auch möglich, die SSAID bei Bedarf zurückzusetzen/neu zu generieren.
+\n \\item \\textit{SAF.} Gibt an, dass der Anwendung der Zugriff auf einen oder mehrere Speicherorte oder Dateien gewährt wurde.
+\n Dateien, d. h. URIs, über das Storage Access Framework (SAF). Ein Klick auf das Tag öffnet einen Dialog mit der Liste der
+\n gewährten URIs.
+\n \\Textit{Play App Signing}. Zeigt an, dass die Anwendung möglicherweise von Google signiert ist.
+\n \\end{itemize}
 \n
-\n \\item \\textbf{Datenverwendung seit dem letzten Start} Eine ziemlich selbsterklärende Option. Beachten Sie aber, dass aufgrund einiger Probleme die
-\n Ergebnisse oft irreführend und schlichtweg falsch sein können. Dieser Teil bleibt ausgeblendet, wenn die Berechtigung \\textit{Nutzungszugriff}
-\n bei neueren Geräten nicht gewährt wird.
+\n \\item \\textbf{Horizontales Aktionsfeld.} Ein Aktionspanel mit verschiedenen Aktionen, die für die Anwendung durchgeführt werden können.
+\n die Anwendung. Siehe §\\ref{subsubsec:horizontal-action-panel} für eine vollständige Liste der hier verfügbaren Aktionen.
+\n Zusätzliche Aktionen sind im Menü \\hyperref[subsubsec:app-info-options-menu]{options menu} verfügbar.
 \n
-\n \\item \\textbf{Speicher \\&amp; Cache.} Zeigt Informationen über die Größe der App (APK-Dateien), der Daten und des Cache an. Auf
-\n älteren Geräten wird auch die Größe von externen Daten, Cache, Medien und OBB-Ordnern angezeigt. Dieser Teil bleibt ausgeblendet, wenn der
-\n \\textit{Nutzungszugriff} auf neueren Geräten nicht gewährt wird.
+\n \\item \\textbf{Pfade \\&amp; Verzeichnisse.} Enthält verschiedene Informationen zu Anwendungspfaden, einschließlich \\textit{app
+\n Verzeichnis} (wo sich die APK-Dateien befinden), \\textit{Datenverzeichnisse} (intern, gerätegeschützt und extern),
+\n \\textit{geteilte APK-Verzeichnisse} (zusammen mit den Split-Namen), und \\textit{native JNI-Bibliothek} (falls vorhanden). JNI
+\n Bibliotheken werden verwendet, um native Codes aufzurufen, die normalerweise in C/C++ geschrieben sind. Die Verwendung einer nativen Bibliothek kann die Anwendung
+\n schneller laufen lassen oder einer Anwendung helfen, Bibliotheken von Drittanbietern zu verwenden, die in anderen Sprachen als Java geschrieben wurden, wie in den meisten
+\n Spiele. Die Verzeichnisse können über Dateimanager von Drittanbietern geöffnet werden, sofern sie dies unterstützen und über die erforderlichen
+\n Die Verzeichnisse können über Dateimanager von Drittanbietern geöffnet werden, sofern sie diese unterstützen und über die erforderlichen Berechtigungen verfügen, indem Sie auf das Startsymbol auf der rechten Seite jedes Verzeichnisses klicken.
+\n
+\n \\item \\textbf {Datennutzung.} Die von der Anwendung verwendete Datenmenge, wie vom Betriebssystem gemeldet. Je nach
+\n Android-Version kann dies eine breite Palette von Berechtigungen erfordern, einschließlich \\textit{Nutzungszugriff} und \\textit{Telefonie}
+\n Berechtigungen.
+\n
+\n \\item \\textbf{Storage \\&amp; Cache.} Zeigt Informationen über die Größe der Anwendung (APK-Dateien, optimierte
+\n Dateien), Daten und Cache. Bei älteren Geräten wird auch die Größe von externen Daten, Cache, Medien und OBB-Ordnern angezeigt.
+\n Dieser Teil bleibt ausgeblendet, wenn auf neueren Geräten die Berechtigung \\textit{Nutzungszugriff} nicht erteilt wird.
 \n
 \n \\item \\textbf{Weitere Informationen} Zeigt weitere Informationen an, wie z. B..
 \n \\begin{itemize}
 \n \\item \\textbf{SDK.} Zeigt Informationen im Zusammenhang mit dem Android SDK an. Es gibt zwei (bei alten Geräten einen) Werte:
-\n \\textit{Max} bezeichnet das Ziel-SDK und \\textit{Min} bezeichnet das Mindest-SDK (letzteres ist in alten Geräten nicht verfügbar).
-\n Es ist empfehlenswert, Anwendungen mit dem maximalen SDK zu verwenden, das die Plattform derzeit unterstützt. SDK ist auch
-\n als textbf{API Level} bekannt.
+\n \\textit{Max} bezeichnet das Ziel-SDK und \\textit{Min} bezeichnet das Mindest-SDK (letzteres ist in alten Geräten nicht verfügbar
+\n Geräten nicht verfügbar). Es ist empfehlenswert, Anwendungen mit dem maximalen SDK zu verwenden, das die Plattform derzeit unterstützt, um
+\n um sicherzustellen, dass die Anwendung nicht im Kompatibilitätsmodus ausgeführt wird, um datenschutzwidrige Funktionen zu verwenden.
+\n SDK wird auch als textbf{API Level} bezeichnet.
 \n \\seealsoinline{\\href{https://en.wikipedia.org/wiki/Android_version_history\\#Overview}{Android Versionsgeschichte}}
 \n
-\n \\item \\textbf{Anwendungsflags.} Die Anwendungsflags, die zum Zeitpunkt der Erstellung der Anwendung verwendet werden. Für eine vollständige Liste der Flags
-\n und deren Funktion finden Sie auf der Seite die
+\n \\item \\textbf{Flags.} Die Anwendungsflags, die zum Zeitpunkt der Erstellung der Anwendung verwendet wurden. Für eine vollständige Liste der
+\n Flags und deren Funktion finden Sie auf der Seite
 \n \\href{https://developer.android.com/reference/android/content/pm/ApplicationInfo\\#flags}{offizielle Dokumentation}.
 \n
-\n \\item \\textbf{Installationsdatum.} Das Datum, an dem die Anwendung zum ersten Mal installiert wurde.
+\n \\item \\textbf{Date Installed.} Das Datum, an dem die Anwendung zum ersten Mal installiert wurde.
 \n
-\n \\item \\textbf{Aktualisierungsdatum.} Das Datum, an dem die App zuletzt aktualisiert wurde. Dies ist dasselbe wie \\textit{Installationsdatum}
-\n wenn die App noch nicht aktualisiert wurde.
+\n \\item \\textbf{Date Updated.} Das Datum, an dem die Anwendung zuletzt aktualisiert wurde. Dies ist dasselbe wie \\textit{Date Installed}
+\n wenn die Anwendung nicht aktualisiert wurde.
 \n
-\n \\item \\textbf{Installer-App.} Die App, die diese App installiert hat. Nicht alle Apps liefern die Informationen, die der
-\n Paketmanager verwendet, um die Installer-App zu registrieren. Daher sollte dieser Wert nicht als selbstverständlich angesehen werden.
+\n \\item \\textbf{Installer App.} Die Anwendung, die diese Anwendung installiert hat. Nicht alle Anwendungen liefern die Informationen, die der
+\n Paketmanager verwendet werden, um die Installer-Anwendung zu registrieren. Daher sollte dieser Wert nicht als selbstverständlich angesehen werden.
 \n
-\n \\item \\textbf{Benutzer-ID.} Die eindeutige Benutzer-ID, die der App vom Android-System zugewiesen wurde. Bei gemeinsam genutzten Anwendungen wird dieselbe
-\n Benutzer-ID mehreren Anwendungen zugewiesen, die die gleiche \\textit{Gemeinsame Benutzer-ID} haben.
+\n \\item \\textbf{Benutzer-ID.} Die eindeutige Benutzer-ID, die der Anwendung vom Android-System zugewiesen wurde. Bei gemeinsam genutzten Anwendungen wird dieselbe
+\n Benutzer-ID mehreren Anwendungen zugewiesen, die die gleiche \\textit{Gemeinsame User ID} haben.
 \n
-\n \\item \\textbf{Gemeinsame Benutzer-ID.} Gilt für Anwendungen, die gemeinsam genutzt werden. Obwohl hier ID steht, ist dies
-\n eigentlich ein String-Wert. Die gemeinsam genutzte Anwendung muss die gleiche
-\n \\hyperref[subsec:signatures-tab]{Signatur} haben.
+\n \\item \\textbf{Gemeinsame Benutzer-ID.} Gilt für Anwendungen, die gemeinsam genutzt werden. Die gemeinsam genutzte Anwendung muss
+\n die gleichen \\hyperref[subsec:signatures-tab]{Signaturen} haben.
 \n
-\n \\item \\textbf{Hauptaktivität} Der Haupteinstiegspunkt in die Anwendung. Dies ist nur sichtbar, wenn die App über
-\n \\hyperref[subsubsec:activities]{Aktivitäten} verfügt und eine dieser Aktivitäten vom Launcher aus geöffnet werden kann. Außerdem gibt es eine
+\n \\item \\textbf{Primäres ABI.} Von dieser Plattform unterstützte Architektur für diese Anwendung.
+\n
+\n \\item \\textbf{Zygote Preload Name.} Verantwortlich für das Vorladen von Anwendungscode und Daten, die von allen
+\n isolierte Dienste, die die Anwendung Zygote verwenden.
+\n
+\n \\item \\textbf{Versteckte API-Durchsetzungsrichtlinie}. Seit Android 9 sind viele Methoden und Klassen im Android-Framework
+\n durch eine versteckte API-Durchsetzungsrichtlinie für Drittanbieteranwendungen unzugänglich gemacht. Sie hat die
+\n folgenden Optionen:
+\n \\begin{itemize}
+\n \\item \\textit{Default.} Basierend auf der Art der Anwendung. Für Systemanwendungen sollte es deaktiviert sein,
+\n und für andere sollte es erzwungen werden.
+\n \\item \\textit{None/disabled.} Die Anwendung hat vollen Zugriff auf die versteckte API, wie sie vorher verwendet wurde
+\n Android 9.
+\n \\item \\textit{Warn.} Wie oben, mit dem Unterschied, dass Warnungen jedes Mal protokolliert werden, wenn die Anwendung auf
+\n die versteckte API zugreift. Diese Funktion wird meist nicht verwendet.
+\n \\item \\textit{Enforce.} Die Anwendung kann nicht auf die versteckte API zugreifen, entweder auf die dunkelgraue Liste oder die schwarze Liste, oder
+\n beides. Dies ist die Standardoption für Anwendungen von Drittanbietern in Android 9 und höher, es sei denn, die
+\n Anwendung vom OEM oder dem Hersteller auf die Whitelist gesetzt wurde.
+\n \\{Warnung}
+\n Die Richtlinie zur Durchsetzung versteckter APIs ist in Android nicht richtig implementiert und kann von der
+\n Anwendung umgangen werden. Aus diesem Grund sollte diesem Wert nicht vertraut werden.
+\n \\end{warning}
+\n \\end{itemize}
+\n
+\n \\item \\textbf{SELinux.} Obligatorische Zugriffskontrollrichtlinie (MAC), die vom Betriebssystem über SELinux festgelegt wurde.
+\n
+\n \\item \\textbf{Main Activity.} Der Haupteinstiegspunkt in die Anwendung. Dies ist nur sichtbar, wenn die Anwendung über
+\n \\hyperref[subsubsec:activities]{activities} und jede dieser Aktivitäten kann vom Launcher aus geöffnet werden. Außerdem gibt es eine
 \n Start-Schaltfläche auf der rechten Seite, die verwendet werden kann, um diese Aktivität zu starten.
 \n \\end{itemize}
 \n\\end{itemize}</string>
-    <string name="pages$app-details-page$horizontal-action-panel">Das horizontale Aktionsfeld, wie im vorherigen Abschnitt beschrieben, besteht aus verschiedenen app-bezogenen Aktionen, wie z. B..
+    <string name="pages$app-details-page$horizontal-action-panel">Die horizontale Aktionsleiste, wie im vorherigen Abschnitt beschrieben, besteht aus verschiedenen anwendungsbezogenen Aktionen, wie z. B..
 \n\\begin{itemize}
-\n \\item \\textbf{Launch.} Anwendungen, die einen Launcher \\hyperref[subsubsec:activities]{Aktivitäten} haben, können
-\n diese Schaltfläche verwenden.
+\n \\item \\textbf{Starten.} Starten Sie die Anwendung, sofern sie einen Starter \\hyperref[subsubsec:activities]{Aktivität} hat.
 \n
-\n \\item \\textbf{Deaktivieren.} Deaktivieren Sie eine Anwendung. Diese Schaltfläche wird nicht für bereits deaktivierte Anwendungen oder für Benutzer angezeigt, die
-\n nicht über root oder \\hyperref[sec:adb-over-tcp]{ADB} verfügen. Wenn Sie eine App deaktivieren, wird die App nicht in Ihrer
-\n Launcher-App angezeigt. Verknüpfungen für die App werden ebenfalls entfernt. Wenn Sie eine Benutzer-App deaktivieren, können Sie sie nur über den
-\n App Manager oder ein anderes Tool, das dies unterstützt, aktivieren. In den Android-Einstellungen gibt es keine Option zum Aktivieren einer deaktivierten Benutzer
-\n app.
+\n \\item \\textbf{Deaktivieren.} Deaktivieren Sie die Anwendung. Diese Schaltfläche wird nicht angezeigt, wenn sie bereits deaktiviert ist oder der Benutzer
+\n nicht über ausreichende Berechtigungen verfügt. Nachdem die Anwendung deaktiviert wurde, wird sie aus der Anwendungsschublade ausgeblendet. Verknüpfungen
+\n für die Anwendung können ebenfalls entfernt werden. Die Anwendung kann nur über den App-Manager oder ein anderes Tool, das dies unterstützt, wieder aktiviert werden.
+\n das sie unterstützt. In den Android-Einstellungen gibt es keine Option, um eine deaktivierte Benutzeranwendung zu aktivieren.
 \n
-\n \\item \\textbf{Deinstallieren} Deinstallieren Sie eine App.
+\n \\item \\textbf {Deinstallieren.} Deinstallieren Sie die Anwendung.
 \n
-\n \\item \\textbf{Aktivieren.} Aktivieren Sie eine App. Diese Schaltfläche wird nicht für bereits aktivierte Anwendungen oder für Benutzer angezeigt, die nicht
-\n root oder ADB\\@ haben.
+\n \\item \\textbf{Aktivieren.} Aktivieren Sie die Anwendung. Diese Schaltfläche wird nicht angezeigt, wenn sie bereits aktiviert ist oder der Benutzer
+\n nicht über ausreichende Berechtigungen verfügt.
 \n
-\n \\item \\textbf{Force Stop.} Erzwingt das Anhalten einer Anwendung. Wenn Sie das Anhalten einer App erzwingen, kann die App nicht mehr im
-\n Hintergrund ausgeführt werden, es sei denn, Sie öffnen sie vorher explizit. Dies ist jedoch nicht immer der Fall.
+\n \\item \\textbf{Stopp erzwingen.} Erzwingt das Anhalten der Anwendung.
 \n
-\n \\item \\textbf{Daten löschen.} Löscht Daten aus einer App. Dazu gehören alle Informationen, die in den internen und oft auch
-\n externen Verzeichnissen gespeichert sind, einschließlich Konten (falls von der App festgelegt), Cache usw. Das Löschen von Daten aus dem App Manager, zum Beispiel
-\n werden z. B. alle in der App gespeicherten Regeln entfernt (die Sperrung wird jedoch nicht entfernt). Aus diesem Grund sollten Sie
-\n immer eine Sicherungskopie Ihrer Regeln erstellen. Diese Schaltfläche wird Benutzern, die nicht über Root oder ADB\\@ verfügen, nicht angezeigt.
+\n \\item \\textbf{Daten löschen.} Löscht Daten aus der Anwendung. Dies schließt alle Informationen ein, die in den internen
+\n und neuerdings auch in den externen Verzeichnissen gespeicherten Informationen, einschließlich Konten (falls von der Anwendung festgelegt), Cache usw. Das Löschen von Daten
+\n aus dem App-Manager werden beispielsweise alle in der Anwendung gespeicherten Regeln entfernt (die Sperrung wird jedoch nicht aufgehoben).
+\n Anwendung gespeichert sind. Aus diesem Grund sollten Sie immer Sicherungskopien Ihrer Regeln erstellen. Diese Schaltfläche wird nicht angezeigt, wenn der Benutzer
+\n über ausreichende Rechte verfügt.
 \n
-\n \\item \\textbf{Cache leeren.} Löscht nur den App-Cache. Es gibt keine Android-Möglichkeit, den App-Cache zu löschen. Daher braucht es
-\n Root-Berechtigung, um den Cache aus dem internen Speicher der App zu löschen.
+\n \\item \\textbf{Cache löschen.} Anwendungscache löschen. Es gibt keine Android-Möglichkeit, den Cache einer bestimmten
+\n Anwendung zu löschen. Daher sind Root-Rechte erforderlich, um den Cache des internen Speichers der Anwendung zu löschen.
 \n
-\n \\item \\textbf{Installieren.} Installieren Sie eine APK, die mit einer beliebigen Drittanbieter-App geöffnet wurde. Diese Schaltfläche wird nur angezeigt für eine
-\n externen APK angezeigt, die noch nicht installiert wurde.
+\n \\item \\textbf{Installieren.} Aktion zur Installation einer Anwendung, die über eine Drittanbieteranwendung geöffnet wurde. Diese Schaltfläche wird nur angezeigt
+\n angezeigt, wenn die Anwendung noch nicht installiert wurde.
 \n
-\n \\item \\textbf{Was gibt\'s Neues.} Diese Schaltfläche wird für eine APK angezeigt, die einen höheren Versionscode hat als die installierte.
-\n Wenn Sie auf diese Schaltfläche klicken, wird ein Dialog angezeigt, der die Unterschiede in einer Art Versionskontrolle darstellt. Die angezeigten Informationen
-\n umfassen \\textit{Version}, \\textit{Tracker}, \\textit{Zulassungen}, \\textit{Komponenten}, \\textit{Signaturen}
-\n (Prüfsummenänderungen), \\textit{Ausstattung}, \\textit{gemeinsame Bibliotheken} und \\textit{SDK}.
+\n \\item \\textbf{Was gibt\'s Neues.} Diese Schaltfläche wird für eine externe Anwendung angezeigt, wenn sie bereits installiert ist. Wenn Sie auf
+\n auf diese Schaltfläche wird ein Dialogfeld angezeigt, in dem die Unterschiede zwischen der geöffneten und der installierten Version im Sinne einer
+\n Versionskontrolle an. Die angezeigten Informationen umfassen \\textit{Version}, \\textit{Tracker},
+\n \\textit{Zulassungen}, \\textit{Komponenten}, \\textit{Signaturen} (Prüfsummenänderungen), \\textit{Merkmale},
+\n \\textit{Gemeinsame Bibliotheken} und \\textit{SDK}.
 \n
-\n \\item \\textbf{Update.} Wird für eine Anwendung angezeigt, die einen höheren Versionscode hat als die installierte Anwendung.
+\n \\item \\textbf{Update.} Wird angezeigt, wenn die Anwendung einen höheren Versionscode hat als die installierte Anwendung.
 \n
-\n \\item \\textbf{Neuinstallation.} Wird für eine Anwendung angezeigt, die denselben Versionscode hat wie die installierte Anwendung.
+\n \\item \\textbf{Neuinstallation.} Wird angezeigt, wenn die Anwendung denselben Versionscode hat wie die installierte Anwendung.
 \n
-\n \\item \\textbf{Downgrade.} Wird für eine Anwendung angezeigt, die einen niedrigeren Versionscode als die installierte Anwendung hat.
+\n \\item \\textbf{Downgrade.} Wird angezeigt, wenn die Anwendung einen niedrigeren Versionscode hat als die installierte Anwendung.
 \n
-\n \\item \\textbf{Manifest.} Wenn Sie auf diese Schaltfläche klicken, wird die Manifest-Datei der App auf einer separaten Seite angezeigt. Die Manifest-
-\n Datei kann mit der entsprechenden Schaltfläche (oben rechts) ein- oder ausgepackt werden oder mit der Schaltfläche \"Speichern\" im
-\n gemeinsamen Speicherplatz gespeichert werden, indem Sie die Schaltfläche \"Speichern\" verwenden.
+\n \\item \\textbf{Manifest.} Wenn Sie auf diese Schaltfläche klicken, wird die Manifest-Datei der Anwendung auf einer separaten Seite angezeigt. Die
+\n Manifest-Datei kann über die entsprechende Schaltfläche (oben rechts) ein- oder ausgepackt oder über die Schaltfläche
+\n oder über die Schaltfläche \"Speichern\" im Speicher abgelegt werden.
 \n
-\n \\item \\textbf{Scanner.} Wenn Sie auf diese Schaltfläche klicken, werden die Tracker- und Bibliotheksinformationen der App angezeigt. Zunächst
-\n die App gescannt, um eine Liste von Klassen zu extrahieren. Dann wird die Klassenliste mit einer Reihe von Signaturen abgeglichen. Danach
-\n wird eine Scan-Zusammenfassung angezeigt.\\\\
-\n \\seealsoinline{\\hyperref[sec:scanner-page]{Scannerseite}}
+\n \\item \\textbf{Scanner.} Scannt die Anwendung, um potenzielle Tracker und Bibliotheken aufzulisten. Es scannt auch die
+\n Datei unter Verwendung von VirusTotal, falls konfiguriert.\\\\
+\n \\seealsoinline{\\hyperref[sec:scanner-page]{Scanner-Seite}}
 \n
-\n \\item \\textbf{Gemeinsame Voreinstellungen} Wenn Sie auf diese Schaltfläche klicken, wird eine Liste der von der Anwendung verwendeten gemeinsamen Einstellungen angezeigt. Ein Klick
-\n auf ein Einstellungselement in der Liste öffnet die \\hyperref[sec:shared-preferences-editor-page]{Seite Editor für gemeinsamen Einstellungen}.
-\n Diese Option ist nur für die Root-Benutzer sichtbar.
+\n \\item \\textbf{Gemeinsame Voreinstellungen} Wenn Sie auf diese Schaltfläche klicken, wird eine Liste der von der Anwendung verwendeten gemeinsamen Einstellungen angezeigt.
+\n Wenn Sie auf ein Einstellungselement in der Liste klicken, wird die Seite \\hyperref[sec:shared-preferences-editor-page]{Gemeinsame Voreinstellungen
+\n Editor-Seite}. Diese Option ist nur sichtbar, wenn der Benutzer über die erforderlichen Berechtigungen verfügt.
 \n
-\n \\item \\textbf {Datenbanken.} Wenn Sie auf diese Schaltfläche klicken, wird eine Liste der von der Anwendung verwendeten Datenbanken angezeigt. Hier sind weitere
-\n Verbesserungen notwendig, u.a ein Datenbank-Editor, der in Zukunft hinzugefügt werden könnte. Diese Option ist nur für die Root-Benutzer sichtbar.
+\n \\item \\textbf {Datenbanken.} Wenn Sie auf diese Schaltfläche klicken, wird eine Liste der Datenbanken angezeigt, die von der Anwendung verwendet werden. Diese Option
+\n ist nur sichtbar, wenn der Benutzer über die erforderlichen Berechtigungen verfügt.
 \n
-\n \\item \\textbf {F-Droid.} Öffnet die App in Ihrem bevorzugten \\textit{F-Droid}-Client.
+\n \\item \\textbf{F-Droid.} Öffnet die Anwendung in Ihrem bevorzugten \\textit{F-Droid}-Client.
 \n
-\n \\item \\textbf{Store.} Öffnet die App im \\textit{Aurora Store}. Die Option ist nur sichtbar, wenn \\textit{Aurora Store}
-\n installiert ist.
+\n \\item \\textbf{Store.} Öffnet die Anwendung in \\textit{Aurora Store}. Die Option ist nur sichtbar, wenn \\textit{Aurora
+\n Store} installiert ist.
 \n\\end{itemize}</string>
     <string name="pages$app-details-page$additional-features-for-rooted-phones">Anders als Benutzer ohne Root-Rechte, die hier zumeist nur Zuschauer sind, können Benutzer mit Root-Rechten hier verschiedene Dinge tun.</string>
     <string name="pages$app-details-page$app-info-options-menu">Das Menü \"Optionen\" befindet sich in der oberen rechten Ecke der Seite. Eine vollständige Beschreibung der dort vorhandenen Optionen finden Sie
@@ -439,22 +508,23 @@
 \n
 \n \\item \\textbf{Symbol extrahieren.} Extrahieren und speichern Sie das Symbol der Anwendung an dem von Ihnen gewünschten Ort.
 \n\\end{itemize}</string>
-    <string name="pages$app-details-page$config-termux">Standardmäßig lässt Termux die Ausführung von Befehlen aus Drittanbieter-Anwendungen nicht zu. Um diese Option zu aktivieren, müssen Sie Folgendes hinzufügen
-\n\\texttt{allow-external-apps=true} in \\texttt{\\textasciitilde/.termux/termux.properties} hinzufügen, und sicherstellen, dass Sie
-\nTermux v0.96 oder höher verwenden.
+    <string name="pages$app-details-page$config-termux">Standardmäßig lässt Termux die Ausführung von Befehlen aus Drittanbieteranwendungen nicht zu. Um diese Option zu verwenden, muss Termux v0.96
+\noder höher erforderlich und \\texttt{allow-external-apps=true} muss in \\texttt{\\textasciitilde/.termux/termux.properties} hinzugefügt werden.
 \n
 \n\\begin{tip}{Info}
-\n Die Aktivierung dieser Option schwächt nicht die Sicherheit Ihres Termux. Die Anwendungen von Drittanbietern müssen den Benutzer immer noch dazu auffordern
-\n die Ausführung beliebiger Befehle in Termux erlauben, wie jede andere gefährliche Berechtigung.
+\n Das Aktivieren dieser Option schwächt die Sicherheit von Termux nicht. Die Anwendungen von Drittanbietern müssen den Benutzer immer noch fragen, ob
+\n die Ausführung beliebiger Befehle in Termux zu erlauben.
 \n\\end{tip}</string>
-    <string name="pages$app-details-page$component-tabs">\\textbf{Aktivitäten}, \\textbf{Dienste}, \\textbf{Empfänger} (ursprünglich \\textit{Broadcast-Empfänger}) und
-\n\\textbf{Provider} (ursprünglich \\textit{Content Providers}) werden zusammen als Anwendungskomponenten bezeichnet. Dies deshalb,
-\nweil sie in vielerlei Hinsicht ähnliche Merkmale aufweisen. Zum Beispiel haben sie alle einen \\textit{Namen} und ein \\textit{Label}.
-\nAnwendungskomponenten sind die Bausteine einer jeden Anwendung, und die meisten von ihnen müssen im Anwendungs
-\nmanifestiert werden. Das Anwendungsmanifest ist eine Datei, in der anwendungsspezifische Metadaten gespeichert werden. Das Android-Betriebssystem
-\nlernt durch das Lesen der Metadaten, was es mit einer Anwendung tun soll. Die in diesen Registerkarten verwendeten Farben werden in
-\n§cref{subsec:app-details-colour-codes}. Sie haben auch die Möglichkeit, die Liste der Komponenten so zu sortieren, dass blockierte oder
-\nTracker-Komponenten am Anfang der Liste anzuzeigen, indem Sie die Option \\textbf{Sortieren} im Überlaufmenü verwenden.</string>
+    <string name="pages$app-details-page$component-tabs">\\textbf{Aktivitäten}, \\textbf{Dienste}, \\textbf{Empfänger} (d. h. Rundfunkempfänger) und \\textbf{Provider}
+\n(d. h. Inhaltsanbieter) werden gemeinsam als Anwendungskomponenten bezeichnet. Der Grund dafür ist, dass sie sich
+\nin vielerlei Hinsicht ähnliche Merkmale aufweisen. Zum Beispiel haben sie alle einen \\textit{Name}, ein \\textit{Label}, ein \\textit{Icon} und werden
+\nüber \\textit{Absicht} ausgeführt. Anwendungskomponenten sind die Bausteine einer Anwendung und müssen im
+\ndem Anwendungsmanifest deklariert werden. Das Anwendungsmanifest ist eine Datei, in der anwendungsspezifische Metadaten gespeichert werden. Das Android
+\nBetriebssystem lernt durch das Lesen der Metadaten, was es mit der Anwendung tun soll.
+\n
+\nDie in diesen Registerkarten verwendeten Farben werden in §\\ref{subsec:app-details-colour-codes} erklärt. Es ist auch möglich, die Liste der Komponenten so zu sortieren,
+\ndass blockierte oder Tracker-Komponenten ganz oben in der Liste angezeigt werden, und zwar über die Option \\textbf{Sortieren} im Menü
+\nÜberlauf-Menü.</string>
     <string name="pages$app-details-page$activities">\\textbf{Aktivitäten} sind Fenster oder Seiten, die Sie durchsuchen können (z. B. \\textit{Hauptseite} und \\textit{App-Detail-
 \nSeite} sind zwei separate Aktivitäten). Mit anderen Worten, eine Aktivität ist eine Komponente der Benutzeroberfläche (UI). Jede Aktivität kann
 \nmehrere UI-Komponenten haben, die als \\textit{Widgets} oder \\textit{Fragmente} bekannt sind, und ebenso kann jede der letztgenannten
