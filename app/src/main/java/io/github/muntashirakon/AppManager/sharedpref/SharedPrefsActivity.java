@@ -2,8 +2,6 @@
 
 package io.github.muntashirakon.AppManager.sharedpref;
 
-import android.app.Activity;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -11,10 +9,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,6 +19,8 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -38,6 +36,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.ProxyFile;
+import io.github.muntashirakon.widget.RecyclerViewWithEmptyView;
 
 public class SharedPrefsActivity extends BaseActivity implements
         SearchView.OnQueryTextListener, EditPrefItemFragment.InterfaceCommunicator {
@@ -73,23 +72,11 @@ public class SharedPrefsActivity extends BaseActivity implements
         mProgressIndicator = findViewById(R.id.progress_linear);
         mProgressIndicator.setVisibilityAfterHide(View.GONE);
         mProgressIndicator.show();
-        ListView listView = findViewById(android.R.id.list);
-        listView.setTextFilterEnabled(true);
-        listView.setDividerHeight(0);
-        listView.setEmptyView(findViewById(android.R.id.empty));
+        RecyclerViewWithEmptyView recyclerView = findViewById(android.R.id.list);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setEmptyView(findViewById(android.R.id.empty));
         mAdapter = new SharedPrefsListingAdapter(this);
-        listView.setAdapter(mAdapter);
-        listView.setOnItemClickListener((parent, view, position, id) -> {
-            EditPrefItemFragment.PrefItem prefItem = new EditPrefItemFragment.PrefItem();
-            prefItem.keyName = mAdapter.getItem(position);
-            prefItem.keyValue = mViewModel.getValue(prefItem.keyName);
-            EditPrefItemFragment dialogFragment = new EditPrefItemFragment();
-            Bundle args = new Bundle();
-            args.putParcelable(EditPrefItemFragment.ARG_PREF_ITEM, prefItem);
-            args.putInt(EditPrefItemFragment.ARG_MODE, EditPrefItemFragment.MODE_EDIT);
-            dialogFragment.setArguments(args);
-            dialogFragment.show(getSupportFragmentManager(), EditPrefItemFragment.TAG);
-        });
+        recyclerView.setAdapter(mAdapter);
         FloatingActionButton fab = findViewById(R.id.floatingActionButton);
         fab.setOnClickListener(v -> {
             DialogFragment dialogFragment = new EditPrefItemFragment();
@@ -216,28 +203,41 @@ public class SharedPrefsActivity extends BaseActivity implements
                 .show();
     }
 
-    static class SharedPrefsListingAdapter extends BaseAdapter implements Filterable {
-        private final LayoutInflater mLayoutInflater;
+    private void displayEditor(@NonNull String prefName) {
+        EditPrefItemFragment.PrefItem prefItem = new EditPrefItemFragment.PrefItem();
+        prefItem.keyName = prefName;
+        prefItem.keyValue = mViewModel.getValue(prefName);
+        EditPrefItemFragment dialogFragment = new EditPrefItemFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(EditPrefItemFragment.ARG_PREF_ITEM, prefItem);
+        args.putInt(EditPrefItemFragment.ARG_MODE, EditPrefItemFragment.MODE_EDIT);
+        dialogFragment.setArguments(args);
+        dialogFragment.show(getSupportFragmentManager(), EditPrefItemFragment.TAG);
+    }
+
+    static class SharedPrefsListingAdapter extends RecyclerView.Adapter<SharedPrefsListingAdapter.ViewHolder> implements Filterable {
+        private final SharedPrefsActivity mActivity;
         private Filter mFilter;
         private String mConstraint;
         private String[] mDefaultList;
         private String[] mAdapterList;
         private Map<String, Object> mAdapterMap;
 
-        private final int mColorTransparent;
-        private final int mColorSemiTransparent;
         private final int mColorRed;
 
-        static class ViewHolder {
+        static class ViewHolder extends RecyclerView.ViewHolder {
             TextView itemName;
             TextView itemValue;
+
+            public ViewHolder(@NonNull View itemView) {
+                super(itemView);
+                itemName = itemView.findViewById(R.id.item_title);
+                itemValue = itemView.findViewById(R.id.item_subtitle);
+            }
         }
 
-        SharedPrefsListingAdapter(@NonNull Activity activity) {
-            mLayoutInflater = activity.getLayoutInflater();
-
-            mColorTransparent = Color.TRANSPARENT;
-            mColorSemiTransparent = ContextCompat.getColor(activity, R.color.semi_transparent);
+        SharedPrefsListingAdapter(@NonNull SharedPrefsActivity activity) {
+            mActivity = activity;
             mColorRed = ContextCompat.getColor(activity, R.color.red);
         }
 
@@ -252,45 +252,37 @@ public class SharedPrefsActivity extends BaseActivity implements
         }
 
         @Override
-        public int getCount() {
+        public int getItemCount() {
             return mAdapterList == null ? 0 : mAdapterList.length;
         }
 
+        @NonNull
         @Override
-        public String getItem(int position) {
-            return mAdapterList[position];
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_shared_pref, parent, false);
+            return new ViewHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+            String prefName = mAdapterList[position];
+            if (mConstraint != null && prefName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
+                // Highlight searched query
+                holder.itemName.setText(UIUtils.getHighlightedText(prefName, mConstraint, mColorRed));
+            } else {
+                holder.itemName.setText(prefName);
+            }
+            Object value = mAdapterMap.get(prefName);
+            String strValue = (value != null) ? value.toString() : "";
+            holder.itemValue.setText(strValue.length() > REASONABLE_STR_SIZE ?
+                    strValue.substring(0, REASONABLE_STR_SIZE) : strValue);
+            holder.itemView.setOnClickListener(v -> mActivity.displayEditor(prefName));
+            holder.itemView.setBackgroundResource(position % 2 == 0 ? R.drawable.item_semi_transparent : R.drawable.item_transparent);
         }
 
         @Override
         public long getItemId(int position) {
             return position;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder viewHolder;
-            if (convertView == null) {
-                convertView = mLayoutInflater.inflate(R.layout.item_shared_pref, parent, false);
-                viewHolder = new ViewHolder();
-                viewHolder.itemName = convertView.findViewById(R.id.item_title);
-                viewHolder.itemValue = convertView.findViewById(R.id.item_subtitle);
-                convertView.setTag(viewHolder);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
-            String prefName = mAdapterList[position];
-            if (mConstraint != null && prefName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
-                // Highlight searched query
-                viewHolder.itemName.setText(UIUtils.getHighlightedText(prefName, mConstraint, mColorRed));
-            } else {
-                viewHolder.itemName.setText(prefName);
-            }
-            Object value = mAdapterMap.get(prefName);
-            String strValue = (value != null) ? value.toString() : "";
-            viewHolder.itemValue.setText(strValue.length() > REASONABLE_STR_SIZE ?
-                    strValue.substring(0, REASONABLE_STR_SIZE) : strValue);
-            convertView.setBackgroundColor(position % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
-            return convertView;
         }
 
         @Override

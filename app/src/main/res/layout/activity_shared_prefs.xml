@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-        <ListView
+        <io.github.muntashirakon.widget.RecyclerViewWithEmptyView
             android:id="@android:id/list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
