@@ -77,7 +77,7 @@
     <string name="pages$app-details-page$$app-info-general-information-title">基本信息</string>
     <string name="pages$app-details-page$$horizontal-action-panel-title">水平操作面板</string>
     <string name="pages$app-details-page$$app-info-options-menu-title">选项菜单</string>
-    <string name="pages$app-details-page$$config-termux-title">Termux</string>
+    <string name="pages$app-details-page$$config-termux-title">配置 Termux</string>
     <string name="pages$app-details-page$$component-tabs-title">组件选项卡</string>
     <string name="pages$app-details-page$$receivers-title">(广播)接收器 ((Broadcast)Receiver)</string>
     <string name="pages$app-details-page$$providers-title">(内容)提供者 ((Content)Providers)</string>
@@ -231,7 +231,7 @@
     <string name="pages$app-details-page$$signatures-tab-title">签名选项卡</string>
     <string name="pages$app-details-page$$blocking-trackers-title">阻止跟踪器</string>
     <string name="pages$app-details-page$$app-ops-title">App Ops</string>
-    <string name="pages$app-details-page$colour-codes">本页中使用的背景颜色列表:
+    <string name="pages$app-details-page$colour-codes">本页中使用的颜色列表及它们的含义：
 \n\\begin{itemize}
 \n \\item \\colorbox{AMRed}{\\textcolor{black}{正红 (日间)}} / \\colorbox{AMDarkRed}{\\textcolor{white}{深红 (夜间)}}
 \n -- 危险权限或, 被阻止的组件(使用App Manager操作)
