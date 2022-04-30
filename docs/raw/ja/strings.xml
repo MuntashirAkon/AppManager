@@ -262,7 +262,7 @@
 \nこのメニュー項目から実行中のセッション(または新しいセッション)を直接開くことができます。
 \nアプリがシステムにインストールされていない場合、このオプションは表示されません。</string>
     <string name="pages$app-details-page$$app-info-options-menu-title">オプションメニュー</string>
-    <string name="pages$app-details-page$$config-termux-title">Termux</string>
+    <string name="pages$app-details-page$$config-termux-title">Termuxを構成</string>
     <string name="pages$app-details-page$$component-tabs-title">コンポーネントタブ</string>
     <string name="pages$app-details-page$$receivers-title">レシーバ</string>
     <string name="pages$app-details-page$$blocking-components-title">コンポーネントをブロックする</string>
@@ -273,7 +273,7 @@
 \n \\item \\colorbox{AMRed}{\\textcolor{black}{赤 (ライト)}} / \\colorbox{AMDarkRed}{\\textcolor{white}{紅赤 (ナイト)}}
 \n -- Dangerousフラグを持つAppOpsや権限、またはApp Manager内でブロックされたコンポーネントを表します。
 \n
-\n \\item \\colorbox{AMLightRed}{\\textcolor{black}{うすだいだい (ライト)}} / \\colorbox{AMVeryDarkRed}{\\textcolor{white}{茶色 
+\n \\item \\colorbox{AMLightRed}{\\textcolor{black}{うすだいだい (ライト)}} / \\colorbox{AMVeryDarkRed}{\\textcolor{white}{茶色
 \n(ナイト)}} -- App Managerの外部で無効化されているコンポーネントを表します。
 \n
 \n \\begin{tip}{Note}
