@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
     <string name="uninstall">Odinstalovat</string>
     <string name="require_no_permission">Nejsou vyžadována žádná oprávnění</string>
     <string name="activities">Aktivity</string>
@@ -47,10 +47,10 @@
     <string name="user_app">Uživatelská aplikace</string>
     <string name="sdk_max">Cíl</string>
     <string name="starting_activity">Spouštění aktivity: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
-    <string name="error_invalid_icon_resource">Neplatný zdroj ikony</string>
+    <string name="error_invalid_icon_resource">Invalidní zdroj ikony</string>
     <string name="data_usage_msg">Využití dat</string>
     <string name="app_not_installed">Aplikace není nainstalována</string>
-    <string name="word_wrap">Přepnutí zabalení textu</string>
+    <string name="word_wrap">Přepnout obtékání slov</string>
     <string name="create_shortcut">Vytvořit Zástupce</string>
     <string name="class_name">Název Třídy</string>
     <string name="date_installed">Datum Instalace</string>
@@ -70,7 +70,7 @@
     <string name="version_name_with_code">Verze <xliff:g id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g id="version_code" example="365">%2$d</xliff:g>)</string>
     <string name="more_info">Více Info</string>
     <string name="empty_package_name">Název prázdného balíčku</string>
-    <string name="error_verbose_pin_shortcut">Aktuální spouštěč nepodporuje PinShortcut. Nelze vytvořit zástupce.</string>
+    <string name="error_verbose_pin_shortcut">Současný spouštěč nepodporuje funkci PinShortcut. Nelze vytvořit zástupce.</string>
     <string name="package_name">Název Balíčku</string>
     <string name="shortcut_name">Nazev Zástupce</string>
     <string name="edit_shortcut">Upravit Zástupce</string>
@@ -83,4 +83,48 @@
     <string name="sort_by_app_label">Označení balíčlz</string>
     <string name="manifest">Manifest</string>
     <string name="path_permissions">Oprávnění k cestán</string>
+    <string name="sdk_min">Min</string>
+    <string name="sort_by_domain">Uživatelské aplikace jako první</string>
+    <string name="main_activity">Hlavní činnosti</string>
+    <string name="tracker_details">Detaily o sledovači</string>
+    <string name="tracker_classes">Třídy o sledovači</string>
+    <string name="credits_message">Autorům
+\n- Otevřený projekt Android
+\n- <a href="https://github.com/butzist/ActivityLauncher">Spouštěč činností</a>
+\n- \u0020<a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
+\n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
+\n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
+\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+\n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
+\n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
+\n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a>
+\n- <a href="https://github.com/Aefyr/SAI">SAI</a>
+\n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+\nOriginální logo kreditu: <a href="https://github.com/Atrate">Atrate</a> </string>
+    <string name="toggle_class_listing">Přepínač listování třídy</string>
+    <plurals name="tracker_and_classes">
+        <item quantity="one">1 sledovač s &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt; třídou</item>
+        <item quantity="few">1 sledovač s &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"class_no\" example=\"50\"&gt; třídami</item>
+        <item quantity="other"></item>
+    </plurals>
+    <string name="tested_signatures_on_classes_and_time_taken" tools:ignore="PluralsCandidate">Testováno &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" xmlns:tools=\"http://schemas.android.com/tools\" id=\"signature_no\" example=\"342\"&gt; podpisy na
+\n&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" xmlns:tools=\"http://schemas.android.com/tools\" id=\"class_no\" example=\"6000\"&gt; třídách
+\nPřevzatý čas &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" xmlns:tools=\"http://schemas.android.com/tools\" id=\"time\" example=\"10000\"&gt; ms (
+\n&lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" xmlns:tools=\"http://schemas.android.com/tools\" id=\"iteration_no\" example=\"100000\"&gt; iteracemi).</string>
+    <string name="obb_size">Obb</string>
+    <string name="found_trackers">Najít sledovače:</string>
+    <string name="all_classes">Všechny třídy</string>
+    <string name="credits">Kredity</string>
+    <string name="icon_picker">Sběrač ikon</string>
+    <string name="sdk_flags">Příznaky</string>
+    <string name="installer_app">Instalátor aplikace</string>
+    <string name="sort_by_target_sdk">Cílové SDK</string>
+    <string name="data_transmitted">Přenesená data</string>
+    <string name="data_received">Obdržená data</string>
+    <string name="media_size">Média</string>
+    <string name="class_viewer">Zobrazovač třídy</string>
 </resources>
