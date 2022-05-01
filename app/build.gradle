@@ -112,7 +112,7 @@ dependencies {
 
     implementation "com.github.topjohnwu.libsu:core:${libsu_version}"
 
-    implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:4.2'
+    implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:4.3'
     implementation "dev.rikka.tools.refine:runtime:${refine_version}"
 
     implementation 'me.zhanghai.android.fastscroll:library:1.1.7'
@@ -124,7 +124,7 @@ dependencies {
 //    androidTestImplementation "com.android.support.test.espresso:espresso-intents:3.0.2"
 
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.robolectric:robolectric:4.7.2'
+    testImplementation 'org.robolectric:robolectric:4.7.3'
 }
 
 preBuild.dependsOn ":server:build"
