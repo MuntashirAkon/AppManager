@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.sharedpref;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -154,6 +155,15 @@ public class SharedPrefsActivity extends BaseActivity implements
     }
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem newWindow = menu.findItem(R.id.action_separate_window);
+        if (newWindow != null) {
+            newWindow.setEnabled(!mViewModel.isModified());
+        }
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
@@ -166,6 +176,14 @@ public class SharedPrefsActivity extends BaseActivity implements
             mViewModel.deleteSharedPrefFile();
         } else if (id == R.id.action_save) {
             mViewModel.writeSharedPrefs();
+        } else if (id == R.id.action_separate_window) {
+            if (!mViewModel.isModified()) {
+                Intent intent = new Intent(getIntent());
+                intent.setClass(this, SharedPrefsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                startActivity(intent);
+                finish();
+            }
         } else return super.onOptionsItemSelected(item);
         return true;
     }

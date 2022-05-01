@@ -85,6 +85,7 @@
         </activity>
         <activity
             android:name=".sharedpref.SharedPrefsActivity"
+            android:taskAffinity=""
             android:exported="false" />
         <activity
             android:name=".usage.AppUsageActivity"

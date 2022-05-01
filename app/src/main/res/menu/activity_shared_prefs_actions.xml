@@ -15,4 +15,8 @@
         android:id="@+id/action_delete"
         android:icon="@drawable/ic_trash_can_outline"
         android:title="@string/delete" />
+    <item
+        android:id="@+id/action_separate_window"
+        android:icon="@drawable/ic_open_in_new_black_24dp"
+        android:title="@string/open_in_new_window" />
 </menu>
