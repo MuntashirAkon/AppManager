@@ -42,6 +42,7 @@
         <item>@string/type_int</item>
         <item>@string/type_long</item>
         <item>@string/type_string</item>
+        <item>@string/type_string_set</item>
     </string-array>
     <string-array name="extras_types">
         <item>@string/type_boolean</item>

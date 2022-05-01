@@ -28,6 +28,7 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.Set;
 
 import io.github.muntashirakon.AppManager.R;
 
@@ -42,7 +43,9 @@ public class EditPrefItemFragment extends DialogFragment {
             MODE_DELETE
     })
     @Retention(RetentionPolicy.SOURCE)
-    public @interface Mode {}
+    public @interface Mode {
+    }
+
     public static final int MODE_EDIT = 1;  // Key name is disabled
     public static final int MODE_CREATE = 2;  // Key name is not disabled
     public static final int MODE_DELETE = 3;
@@ -52,15 +55,19 @@ public class EditPrefItemFragment extends DialogFragment {
             TYPE_FLOAT,
             TYPE_INTEGER,
             TYPE_LONG,
-            TYPE_STRING
+            TYPE_STRING,
+            TYPE_SET
     })
     @Retention(RetentionPolicy.SOURCE)
-    public @interface Type {}
+    public @interface Type {
+    }
+
     private static final int TYPE_BOOLEAN = 0;
-    private static final int TYPE_FLOAT   = 1;
+    private static final int TYPE_FLOAT = 1;
     private static final int TYPE_INTEGER = 2;
-    private static final int TYPE_LONG    = 3;
-    private static final int TYPE_STRING  = 4;
+    private static final int TYPE_LONG = 3;
+    private static final int TYPE_STRING = 4;
+    private static final int TYPE_SET = 5;
 
     private InterfaceCommunicator mInterfaceCommunicator;
 
@@ -72,7 +79,8 @@ public class EditPrefItemFragment extends DialogFragment {
         public String keyName;
         public Object keyValue;
 
-        public PrefItem(){}
+        public PrefItem() {
+        }
 
         protected PrefItem(@NonNull Parcel in) {
             keyName = in.readString();
@@ -101,9 +109,11 @@ public class EditPrefItemFragment extends DialogFragment {
         };
     }
 
-    private final ViewGroup[] mLayoutTypes = new ViewGroup[5];
-    private final TextView[] mValues = new TextView[5];
-    private @Type int currentType;
+    private final ViewGroup[] mLayoutTypes = new ViewGroup[6];
+    private final TextView[] mValues = new TextView[6];
+    @Type
+    private int currentType;
+
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
@@ -117,19 +127,20 @@ public class EditPrefItemFragment extends DialogFragment {
         @SuppressLint("InflateParams")
         View view = inflater.inflate(R.layout.dialog_edit_pref_item, null);
         Spinner spinner = view.findViewById(R.id.type_selector_spinner);
-        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(activity,
-                R.array.shared_pref_types, R.layout.item_checked_text_view);
+        ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(activity, R.array.shared_pref_types,
+                R.layout.item_checked_text_view);
         spinner.setAdapter(spinnerAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                for (ViewGroup layout: mLayoutTypes) layout.setVisibility(View.GONE);
+                for (ViewGroup layout : mLayoutTypes) layout.setVisibility(View.GONE);
                 mLayoutTypes[position].setVisibility(View.VISIBLE);
                 currentType = position;
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
         // Set layouts
         mLayoutTypes[TYPE_BOOLEAN] = view.findViewById(R.id.layout_bool);
@@ -137,12 +148,14 @@ public class EditPrefItemFragment extends DialogFragment {
         mLayoutTypes[TYPE_INTEGER] = view.findViewById(R.id.layout_int);
         mLayoutTypes[TYPE_LONG] = view.findViewById(R.id.layout_long);
         mLayoutTypes[TYPE_STRING] = view.findViewById(R.id.layout_string);
+        mLayoutTypes[TYPE_SET] = view.findViewById(R.id.layout_string);
         // Set views
         mValues[TYPE_BOOLEAN] = view.findViewById(R.id.input_bool);
         mValues[TYPE_FLOAT] = view.findViewById(R.id.input_float);
         mValues[TYPE_INTEGER] = view.findViewById(R.id.input_int);
         mValues[TYPE_LONG] = view.findViewById(R.id.input_long);
         mValues[TYPE_STRING] = view.findViewById(R.id.input_string);
+        mValues[TYPE_SET] = view.findViewById(R.id.input_string);
         // Key name
         TextInputEditText editKeyName = view.findViewById(R.id.key_name);
         if (prefItem != null) {
@@ -175,9 +188,15 @@ public class EditPrefItemFragment extends DialogFragment {
                 spinner.setSelection(TYPE_LONG);
             } else if (keyValue instanceof String) {
                 currentType = TYPE_STRING;
-                mLayoutTypes[TYPE_LONG].setVisibility(View.VISIBLE);
+                mLayoutTypes[TYPE_STRING].setVisibility(View.VISIBLE);
                 mValues[TYPE_STRING].setText((String) keyValue);
                 spinner.setSelection(TYPE_STRING);
+            } else if (keyValue instanceof Set) {
+                currentType = TYPE_SET;
+                mLayoutTypes[TYPE_SET].setVisibility(View.VISIBLE);
+                //noinspection unchecked
+                mValues[TYPE_SET].setText(SharedPrefsUtil.flattenToString((Set<String>) keyValue));
+                spinner.setSelection(TYPE_SET);
             }
         }
         mInterfaceCommunicator = (InterfaceCommunicator) activity;
@@ -212,6 +231,9 @@ public class EditPrefItemFragment extends DialogFragment {
                             case TYPE_STRING:
                                 newPrefItem.keyValue = mValues[currentType].getText().toString();
                                 break;
+                            case TYPE_SET:
+                                newPrefItem.keyValue = SharedPrefsUtil.unflattenToSet(mValues[currentType].getText().toString());
+                                break;
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -220,7 +242,7 @@ public class EditPrefItemFragment extends DialogFragment {
                     }
                     mInterfaceCommunicator.sendInfo(mode, newPrefItem);
                 })
-                .setNegativeButton(R.string.cancel,  (dialog, which) -> {
+                .setNegativeButton(R.string.cancel, (dialog, which) -> {
                     if (getDialog() != null) getDialog().cancel();
                 });
         if (mode == MODE_EDIT) builder.setNeutralButton(R.string.delete,
