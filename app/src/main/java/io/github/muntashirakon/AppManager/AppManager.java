@@ -11,6 +11,7 @@ import android.sun.security.provider.JavaKeyStoreProvider;
 import androidx.annotation.NonNull;
 import androidx.room.Room;
 
+import com.google.android.material.color.DynamicColors;
 import com.topjohnwu.superuser.Shell;
 import com.yariksoffice.lingver.Lingver;
 
@@ -63,6 +64,7 @@ public class AppManager extends Application {
     public void onCreate() {
         instance = this;
         super.onCreate();
+        DynamicColors.applyToActivitiesIfAvailable(this);
         Lingver.init(instance, LangUtils.getLocaleByLanguage(instance));
         Security.addProvider(new JavaKeyStoreProvider());
     }
