@@ -26,25 +26,82 @@ public interface IPackageManagerN {
     @Deprecated
     ParceledListSlice<PermissionGroupInfo> getAllPermissionGroups(int flags) throws RemoteException;
 
+    /**
+     * @deprecated Removed in API 33 (Android T)
+     */
+    @Deprecated
     ParceledListSlice<ResolveInfo> queryIntentActivities(Intent intent, String resolvedType, int flags, int userId)
             throws RemoteException;
 
+    @RequiresApi(Build.VERSION_CODES.T)
+    ParceledListSlice<ResolveInfo> queryIntentActivities(Intent intent, String resolvedType, long flags, int userId)
+            throws RemoteException;
+
+    /**
+     * @deprecated Removed in API 33 (Android T)
+     */
+    @Deprecated
     ParceledListSlice<ResolveInfo> queryIntentActivityOptions(ComponentName caller, Intent[] specifics,
                                                               String[] specificTypes, Intent intent,
                                                               String resolvedType, int flags, int userId) throws RemoteException;
 
+    @RequiresApi(Build.VERSION_CODES.T)
+    ParceledListSlice<ResolveInfo> queryIntentActivityOptions(ComponentName caller, Intent[] specifics,
+                                                              String[] specificTypes, Intent intent,
+                                                              String resolvedType, long flags, int userId) throws RemoteException;
+
+    /**
+     * @deprecated Removed in API 33 (Android T)
+     */
+    @Deprecated
     ParceledListSlice<ResolveInfo> queryIntentReceivers(Intent intent, String resolvedType, int flags, int userId)
             throws RemoteException;
 
+    @RequiresApi(Build.VERSION_CODES.T)
+    ParceledListSlice<ResolveInfo> queryIntentReceivers(Intent intent, String resolvedType, long flags, int userId)
+            throws RemoteException;
+
+    /**
+     * @deprecated Removed in API 33 (Android T)
+     */
+    @Deprecated
     ParceledListSlice<ResolveInfo> queryIntentServices(Intent intent, String resolvedType, int flags, int userId)
             throws RemoteException;
 
+    @RequiresApi(Build.VERSION_CODES.T)
+    ParceledListSlice<ResolveInfo> queryIntentServices(Intent intent, String resolvedType, long flags, int userId)
+            throws RemoteException;
+
+    /**
+     * @deprecated Removed in API 33 (Android T)
+     */
+    @Deprecated
     ParceledListSlice<ResolveInfo> queryIntentContentProviders(Intent intent, String resolvedType, int flags,
+                                                               int userId) throws RemoteException;
+
+    @RequiresApi(Build.VERSION_CODES.T)
+    ParceledListSlice<ResolveInfo> queryIntentContentProviders(Intent intent, String resolvedType, long flags,
                                                                int userId) throws RemoteException;
 
     ParceledListSlice<ApplicationInfo> getPersistentApplications(int flags) throws RemoteException;
 
+    /**
+     * @deprecated Removed in API 26 (Android O)
+     */
+    @Deprecated
     ParceledListSlice<ProviderInfo> queryContentProviders(String processName, int uid, int flags) throws RemoteException;
+
+    /**
+     * @deprecated Removed in API 33 (Android T)
+     */
+    @Deprecated
+    @RequiresApi(Build.VERSION_CODES.O)
+    ParceledListSlice<ProviderInfo> queryContentProviders(String processName, int uid, int flags, String metaDataKey)
+            throws RemoteException;
+
+    @RequiresApi(Build.VERSION_CODES.T)
+    ParceledListSlice<ProviderInfo> queryContentProviders(String processName, int uid, long flags, String metaDataKey)
+            throws RemoteException;
 
     ParceledListSlice<InstrumentationInfo> queryInstrumentation(String targetPackage, int flags) throws RemoteException;
 

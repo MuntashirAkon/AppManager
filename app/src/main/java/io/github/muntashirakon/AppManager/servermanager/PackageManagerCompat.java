@@ -75,6 +75,7 @@ public final class PackageManagerCompat {
 
     private static final int WORKING_FLAGS = PackageManager.GET_META_DATA | PackageUtils.flagMatchUninstalled;
 
+    @SuppressWarnings("deprecation")
     @WorkerThread
     public static List<PackageInfo> getInstalledPackages(int flags, @UserIdInt int userHandle)
             throws RemoteException {
@@ -95,13 +96,22 @@ public final class PackageManagerCompat {
             }
             return packageInfoList;
         }
-        return AppManager.getIPackageManager().getInstalledPackages(flags, userHandle).getList();
+        IPackageManager pm = AppManager.getIPackageManager();
+        if (Build.VERSION.SDK_INT >= 33) {
+            return pm.getInstalledPackages((long) flags, userHandle).getList();
+        }
+        return pm.getInstalledPackages(flags, userHandle).getList();
     }
 
+    @SuppressWarnings("deprecation")
     @WorkerThread
     public static List<ApplicationInfo> getInstalledApplications(int flags, @UserIdInt int userHandle)
             throws RemoteException {
-        return AppManager.getIPackageManager().getInstalledApplications(flags, userHandle).getList();
+        IPackageManager pm = AppManager.getIPackageManager();
+        if (Build.VERSION.SDK_INT >= 33) {
+            return pm.getInstalledApplications((long) flags, userHandle).getList();
+        }
+        return pm.getInstalledApplications(flags, userHandle).getList();
     }
 
     @NonNull
@@ -110,7 +120,7 @@ public final class PackageManagerCompat {
         IPackageManager pm = AppManager.getIPackageManager();
         PackageInfo info = null;
         try {
-            info = pm.getPackageInfo(packageName, flags, userHandle);
+            info = getPackageInfoInternal(pm, packageName, flags, userHandle);
         } catch (DeadObjectException ignore) {
         }
         if (info == null) {
@@ -118,7 +128,7 @@ public final class PackageManagerCompat {
             // first check the existence of the package
             int strippedFlags = flags & ~(PackageManager.GET_ACTIVITIES | PackageManager.GET_SERVICES
                     | PackageManager.GET_PROVIDERS | PackageManager.GET_RECEIVERS | PackageManager.GET_PERMISSIONS);
-            info = pm.getPackageInfo(packageName, strippedFlags, userHandle);
+            info = getPackageInfoInternal(pm, packageName, strippedFlags, userHandle);
             if (info == null) {
                 // At this point, it should either return package info or throw RemoteException.
                 // Returning null denotes that it failed again even after the major flags have been stripped.
@@ -130,35 +140,35 @@ public final class PackageManagerCompat {
             if ((flags & PackageManager.GET_ACTIVITIES) != 0) {
                 int newFlags = flags & ~(PackageManager.GET_SERVICES | PackageManager.GET_PROVIDERS
                         | PackageManager.GET_RECEIVERS | PackageManager.GET_PERMISSIONS);
-                PackageInfo info1 = pm.getPackageInfo(packageName, newFlags, userHandle);
+                PackageInfo info1 = getPackageInfoInternal(pm, packageName, newFlags, userHandle);
                 if (info1 != null) activities = info1.activities;
             }
             ServiceInfo[] services = null;
             if ((flags & PackageManager.GET_SERVICES) != 0) {
                 int newFlags = flags & ~(PackageManager.GET_ACTIVITIES | PackageManager.GET_PROVIDERS
                         | PackageManager.GET_RECEIVERS | PackageManager.GET_PERMISSIONS);
-                PackageInfo info1 = pm.getPackageInfo(packageName, newFlags, userHandle);
+                PackageInfo info1 = getPackageInfoInternal(pm, packageName, newFlags, userHandle);
                 if (info1 != null) services = info1.services;
             }
             ProviderInfo[] providers = null;
             if ((flags & PackageManager.GET_PROVIDERS) != 0) {
                 int newFlags = flags & ~(PackageManager.GET_ACTIVITIES | PackageManager.GET_SERVICES
                         | PackageManager.GET_RECEIVERS | PackageManager.GET_PERMISSIONS);
-                PackageInfo info1 = pm.getPackageInfo(packageName, newFlags, userHandle);
+                PackageInfo info1 = getPackageInfoInternal(pm, packageName, newFlags, userHandle);
                 if (info1 != null) providers = info1.providers;
             }
             ActivityInfo[] receivers = null;
             if ((flags & PackageManager.GET_RECEIVERS) != 0) {
                 int newFlags = flags & ~(PackageManager.GET_ACTIVITIES | PackageManager.GET_SERVICES
                         | PackageManager.GET_PROVIDERS | PackageManager.GET_PERMISSIONS);
-                PackageInfo info1 = pm.getPackageInfo(packageName, newFlags, userHandle);
+                PackageInfo info1 = getPackageInfoInternal(pm, packageName, newFlags, userHandle);
                 if (info1 != null) receivers = info1.receivers;
             }
             PermissionInfo[] permissions = null;
             if ((flags & PackageManager.GET_PERMISSIONS) != 0) {
                 int newFlags = flags & ~(PackageManager.GET_ACTIVITIES | PackageManager.GET_SERVICES
                         | PackageManager.GET_PROVIDERS | PackageManager.GET_RECEIVERS);
-                PackageInfo info1 = pm.getPackageInfo(packageName, newFlags, userHandle);
+                PackageInfo info1 = getPackageInfoInternal(pm, packageName, newFlags, userHandle);
                 if (info1 != null) permissions = info1.permissions;
             }
             info.activities = activities;
@@ -171,10 +181,15 @@ public final class PackageManagerCompat {
         return Objects.requireNonNull(info);
     }
 
+    @SuppressWarnings("deprecation")
     @NonNull
     public static ApplicationInfo getApplicationInfo(String packageName, int flags, @UserIdInt int userHandle)
             throws RemoteException {
-        return AppManager.getIPackageManager().getApplicationInfo(packageName, flags, userHandle);
+        IPackageManager pm = AppManager.getIPackageManager();
+        if (Build.VERSION.SDK_INT >= 33) {
+            return pm.getApplicationInfo(packageName, (long) flags, userHandle);
+        }
+        return pm.getApplicationInfo(packageName, flags, userHandle);
     }
 
     @SuppressWarnings("deprecation")
@@ -185,8 +200,14 @@ public final class PackageManagerCompat {
         IPackageManager pm = AppManager.getIPackageManager();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             IPackageManagerN pmN = Refine.unsafeCast(pm);
-            ParceledListSlice<ResolveInfo> resolveInfoList = pmN.queryIntentActivities(intent,
-                    intent.resolveTypeIfNeeded(context.getContentResolver()), flags, userId);
+            ParceledListSlice<ResolveInfo> resolveInfoList;
+            if (Build.VERSION.SDK_INT >= 33) {
+                resolveInfoList = pmN.queryIntentActivities(intent,
+                        intent.resolveTypeIfNeeded(context.getContentResolver()), (long) flags, userId);
+            } else {
+                resolveInfoList = pmN.queryIntentActivities(intent,
+                        intent.resolveTypeIfNeeded(context.getContentResolver()), flags, userId);
+            }
             return resolveInfoList.getList();
         } else {
             return pm.queryIntentActivities(intent, intent.resolveTypeIfNeeded(context.getContentResolver()), flags,
@@ -322,5 +343,14 @@ public final class PackageManagerCompat {
         } else {
             pm.freeStorageAndNotify(freeStorageSize, observer);
         }
+    }
+
+    @SuppressWarnings("deprecation")
+    private static PackageInfo getPackageInfoInternal(IPackageManager pm, String packageName, int flags, @UserIdInt int userId)
+            throws RemoteException {
+        if (Build.VERSION.SDK_INT >= 33) {
+            return pm.getPackageInfo(packageName, (long) flags, userId);
+        }
+        return pm.getPackageInfo(packageName, flags, userId);
     }
 }
