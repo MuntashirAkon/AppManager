@@ -6,7 +6,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.UserHandleHidden;
-import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,7 +18,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
@@ -45,33 +43,29 @@ public class ProfileManager {
     }
 
     @NonNull
-    public static HashMap<String, String> getProfiles() {
+    public static HashMap<String, CharSequence> getProfileSummaries() {
         File profilesPath = ProfileMetaManager.getProfilesDir();
         String[] profilesFiles = ArrayUtils.defeatNullable(profilesPath.list((dir, name) -> name.endsWith(ProfileMetaManager.PROFILE_EXT)));
-        HashMap<String, String> profiles = new HashMap<>(profilesFiles.length);
+        HashMap<String, CharSequence> profiles = new HashMap<>(profilesFiles.length);
         Context context = AppManager.getContext();
-        String summary;
         for (String profile : profilesFiles) {
             int index = profile.indexOf(ProfileMetaManager.PROFILE_EXT);
             profile = profile.substring(0, index);
-            summary = TextUtils.join(", ", new ProfileMetaManager(profile).getLocalisedSummaryOrComment(context));
-            if (summary.length() == 0) {
-                summary = context.getString(R.string.no_configurations);
-            }
-            profiles.put(profile, summary);
+            ProfileMetaManager metaManager = new ProfileMetaManager(profile);
+            profiles.put(metaManager.getProfileName(), metaManager.toLocalizedString(context));
         }
         return profiles;
     }
 
     @NonNull
-    public static HashMap<String, ProfileMetaManager> getProfileMetadata() {
+    public static List<ProfileMetaManager> getProfileMetadata() {
         File profilesPath = ProfileMetaManager.getProfilesDir();
         String[] profilesFiles = ArrayUtils.defeatNullable(profilesPath.list((dir, name) -> name.endsWith(ProfileMetaManager.PROFILE_EXT)));
-        HashMap<String, ProfileMetaManager> profiles = new HashMap<>(profilesFiles.length);
+        List<ProfileMetaManager> profiles = new ArrayList<>(profilesFiles.length);
         for (String profile : profilesFiles) {
             int index = profile.indexOf(ProfileMetaManager.PROFILE_EXT);
             profile = profile.substring(0, index);
-            profiles.put(profile, new ProfileMetaManager(profile));
+            profiles.add(new ProfileMetaManager(profile));
         }
         return profiles;
     }

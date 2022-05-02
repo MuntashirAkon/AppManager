@@ -4,13 +4,13 @@ package io.github.muntashirakon.AppManager.profiles;
 
 import android.app.Application;
 
-import java.util.HashMap;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+
+import java.util.HashMap;
 
 public class ProfilesViewModel extends AndroidViewModel {
 
@@ -18,9 +18,9 @@ public class ProfilesViewModel extends AndroidViewModel {
         super(application);
     }
 
-    private MutableLiveData<HashMap<String, String>> profileLiveData;
+    private MutableLiveData<HashMap<String, CharSequence>> profileLiveData;
 
-    public LiveData<HashMap<String, String>> getProfiles() {
+    public LiveData<HashMap<String, CharSequence>> getProfiles() {
         if (profileLiveData == null) {
             profileLiveData = new MutableLiveData<>();
             new Thread(this::loadProfiles).start();
@@ -30,7 +30,7 @@ public class ProfilesViewModel extends AndroidViewModel {
 
     @WorkerThread
     public void loadProfiles() {
-        HashMap<String, String> profiles = ProfileManager.getProfiles();
+        HashMap<String, CharSequence> profiles = ProfileManager.getProfileSummaries();
         profileLiveData.postValue(profiles);
     }
 }

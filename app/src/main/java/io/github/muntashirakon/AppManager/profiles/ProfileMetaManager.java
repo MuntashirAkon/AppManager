@@ -30,8 +30,9 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
 import io.github.muntashirakon.io.ProxyOutputStream;
+import io.github.muntashirakon.util.LocalizedString;
 
-public class ProfileMetaManager {
+public class ProfileMetaManager implements LocalizedString {
     public static final String PROFILE_EXT = ".am.json";
 
     @StringDef({STATE_ON, STATE_OFF})
@@ -101,66 +102,91 @@ public class ProfileMetaManager {
     public static ProfileMetaManager fromPreset(@NonNull String profileName,
                                                 @NonNull String presetName)
             throws JSONException {
-        ProfileMetaManager profileMetaManager = new ProfileMetaManager(profileName);
         String fileContents = FileUtils.getContentFromAssets(AppManager.getContext(), "profiles/" + presetName + ".am.json");
-        profileMetaManager.readProfile(fileContents);
-        return profileMetaManager;
+        return fromJSONString(profileName, fileContents);
     }
 
     @NonNull
     public static ProfileMetaManager fromJSONString(@NonNull String profileName,
                                                     @NonNull String profileContents)
             throws JSONException {
-        ProfileMetaManager manager = new ProfileMetaManager(profileName);
-        manager.readProfile(profileContents);
-        return manager;
+        return new ProfileMetaManager(profileName, profileContents);
     }
 
     @NonNull
-    private final String profileName;
+    private final String mProfileName;
     @NonNull
-    private final File profilePath;
+    private final File mProfilePath;
     @Nullable
     public Profile profile;
 
     public ProfileMetaManager(@NonNull String profileName) {
-        this(profileName, null);
+        this(profileName, null, null);
+    }
+
+    public ProfileMetaManager(@NonNull String profileName, boolean require) throws ProfileNotFoundException {
+        this(profileName, null, null);
+        if (require && this.profile == null) {
+            throw new ProfileNotFoundException("Profile " + profileName + " not found.");
+        }
+    }
+
+    public ProfileMetaManager(@NonNull String profileName, @Nullable String jsonContent) {
+        this(profileName, null, jsonContent);
     }
 
     public ProfileMetaManager(@NonNull String profileName, @Nullable String[] packages) {
-        this.profileName = getCleanedProfileName(profileName);
-        this.profilePath = getProfilesDir();
-        if (!profilePath.exists()) {
+        this(profileName, packages, null);
+    }
+
+    public ProfileMetaManager(@NonNull String profileName, @Nullable String[] packages, @Nullable String jsonContent) {
+        File profilesDir = getProfilesDir();
+        if (!profilesDir.exists()) {
             //noinspection ResultOfMethodCallIgnored
-            profilePath.mkdirs();
+            profilesDir.mkdirs();
         }
-        if (packages != null) this.profile = new Profile(profileName, packages);
-        if (getProfilePath().exists()) {
+        mProfilePath = new File(profilesDir, getCleanedProfileName(profileName) + PROFILE_EXT);
+        if (jsonContent != null) {
             try {
-                readProfile(FileUtils.getFileContent(getProfilePath()));
+                profile = readProfile(jsonContent);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else if (mProfilePath.exists()) {
+            try {
+                profile = readProfile(FileUtils.getFileContent(mProfilePath));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
+        if (packages != null) {
+            if (profile != null) {
+                profile.packages = packages;
+            } else {
+                profile = new Profile(profileName, packages);
+            }
+        }
+        mProfileName = profile != null ? profile.name : profileName;
     }
 
     @NonNull
     public Profile newProfile(@NonNull String[] packages) {
-        return profile = new Profile(profileName, packages);
+        return profile = new Profile(mProfileName, packages);
     }
 
     @NonNull
     public String getProfileName() {
-        return profileName;
+        return mProfileName;
     }
 
-    public void readProfile(@Nullable String profileStr) throws JSONException {
+    @NonNull
+    public static Profile readProfile(@Nullable String profileStr) throws JSONException {
         if (TextUtils.isEmpty(profileStr)) throw new JSONException("Empty JSON string");
         @SuppressWarnings("ConstantConditions")  // Never null here
                 JSONObject profileObj = new JSONObject(profileStr);
         String profileName = profileObj.getString("name");
         String[] packageNames = JSONUtils.getArray(String.class, profileObj.getJSONArray("packages"));
-        profile = new Profile(profileName, packageNames);
+        Profile profile = new Profile(profileName, packageNames);
         profile.comment = JSONUtils.getString(profileObj, "comment", null);
         profile.type = profileObj.getInt("type");
         profile.version = profileObj.getInt("version");
@@ -202,11 +228,12 @@ public class ProfileMetaManager {
             profile.saveApk = miscConfig.contains("save_apk");
         } catch (Exception ignore) {
         }
+        return profile;
     }
 
     @WorkerThread
     public void writeProfile() throws IOException, JSONException, RemoteException {
-        try (OutputStream outputStream = new ProxyOutputStream(getProfilePath())) {
+        try (OutputStream outputStream = new ProxyOutputStream(mProfilePath)) {
             writeProfile(outputStream);
         }
     }
@@ -249,8 +276,8 @@ public class ProfileMetaManager {
     }
 
     public boolean deleteProfile() {
-        if (getProfilePath().exists()) {
-            return getProfilePath().delete();
+        if (mProfilePath.exists()) {
+            return mProfilePath.delete();
         }
         // Profile doesn't exist
         return true;
@@ -278,12 +305,17 @@ public class ProfileMetaManager {
     }
 
     @NonNull
-    static String getCleanedProfileName(@NonNull String dirtyProfileName) {
-        return dirtyProfileName.trim().replaceAll("[\\\\/?\"<>|\\s]+", "_");  // [\\/:?"<>|\s]
+    @Override
+    public CharSequence toLocalizedString(@NonNull Context context) {
+        List<String> summaries = getLocalisedSummaryOrComment(context);
+        if (summaries.isEmpty()) {
+            return context.getString(R.string.no_configurations);
+        }
+        return TextUtils.join(", ", summaries);
     }
 
     @NonNull
-    private File getProfilePath() {
-        return new File(profilePath, profileName + PROFILE_EXT);
+    static String getCleanedProfileName(@NonNull String dirtyProfileName) {
+        return dirtyProfileName.trim().replaceAll("[\\\\/:?\"<>|\\s]+", "_");  // [\\/:?"<>|\s]
     }
 }

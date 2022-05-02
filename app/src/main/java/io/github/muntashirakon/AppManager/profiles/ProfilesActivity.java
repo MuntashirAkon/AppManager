@@ -196,7 +196,7 @@ public class ProfilesActivity extends BaseActivity {
         private String mConstraint;
         private String[] mDefaultList;
         private String[] mAdapterList;
-        private HashMap<String, String> mAdapterMap;
+        private HashMap<String, CharSequence> mAdapterMap;
         private final ProfilesActivity activity;
 
         private final int mColorTransparent;
@@ -217,7 +217,7 @@ public class ProfilesActivity extends BaseActivity {
             mColorRed = ContextCompat.getColor(activity, R.color.red);
         }
 
-        void setDefaultList(@NonNull HashMap<String, String> list) {
+        void setDefaultList(@NonNull HashMap<String, CharSequence> list) {
             mDefaultList = list.keySet().toArray(new String[0]);
             mAdapterList = mDefaultList;
             mAdapterMap = list;
@@ -258,9 +258,8 @@ public class ProfilesActivity extends BaseActivity {
             } else {
                 viewHolder.item_name.setText(profName);
             }
-            Object value = mAdapterMap.get(profName);
-            String strValue = (value != null) ? value.toString() : "";
-            viewHolder.item_value.setText(strValue);
+            CharSequence value = mAdapterMap.get(profName);
+            viewHolder.item_value.setText(value != null ? value : "");
             convertView.setBackgroundColor(position % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
             convertView.setOnClickListener(v -> {
                 Intent intent = new Intent(activity, AppsProfileActivity.class);

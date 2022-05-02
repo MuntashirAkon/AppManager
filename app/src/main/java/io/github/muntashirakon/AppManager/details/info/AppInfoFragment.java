@@ -21,7 +21,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.provider.Settings;
-import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.format.Formatter;
 import android.util.Pair;
@@ -56,7 +55,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.internal.util.TextUtils;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -68,7 +66,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
@@ -469,17 +466,11 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 }
             });
         } else if (itemId == R.id.action_add_to_profile) {
-            HashMap<String, ProfileMetaManager> profilesMap = ProfileManager.getProfileMetadata();
-            List<CharSequence> profileNames = new ArrayList<>(profilesMap.size());
-            List<ProfileMetaManager> profiles = new ArrayList<>(profilesMap.size());
-            ProfileMetaManager profileMetaManager;
-            Spannable summary;
-            for (String profileName : profilesMap.keySet()) {
-                profileMetaManager = profilesMap.get(profileName);
-                //noinspection ConstantConditions
-                summary = TextUtils.joinSpannable(", ", profileMetaManager.getLocalisedSummaryOrComment(mActivity));
-                profiles.add(profileMetaManager);
-                profileNames.add(new SpannableStringBuilder(profileName).append("\n").append(getSecondaryText(mActivity, getSmallerText(summary))));
+            List<ProfileMetaManager> profiles = ProfileManager.getProfileMetadata();
+            List<CharSequence> profileNames = new ArrayList<>(profiles.size());
+            for (ProfileMetaManager profileMetaManager : profiles) {
+                profileNames.add(new SpannableStringBuilder(profileMetaManager.getProfileName()).append("\n")
+                        .append(getSecondaryText(mActivity, getSmallerText(profileMetaManager.toLocalizedString(mActivity)))));
             }
             new SearchableMultiChoiceDialogBuilder<>(mActivity, profiles, profileNames)
                     .setTitle(R.string.add_to_profile)

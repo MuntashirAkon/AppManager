@@ -10,7 +10,6 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.NetworkPolicyManager;
 import android.os.Bundle;
-import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -37,7 +36,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -406,17 +404,11 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
         } else if (id == R.id.action_uninstall) {
             handleBatchOpWithWarning(BatchOpsManager.OP_UNINSTALL);
         } else if (id == R.id.action_add_to_profile) {
-            HashMap<String, ProfileMetaManager> profilesMap = ProfileManager.getProfileMetadata();
-            List<CharSequence> profileNames = new ArrayList<>(profilesMap.size());
-            List<ProfileMetaManager> profiles = new ArrayList<>(profilesMap.size());
-            ProfileMetaManager profileMetaManager;
-            Spannable summary;
-            for (String profileName : profilesMap.keySet()) {
-                profileMetaManager = profilesMap.get(profileName);
-                //noinspection ConstantConditions
-                summary = com.android.internal.util.TextUtils.joinSpannable(", ", profileMetaManager.getLocalisedSummaryOrComment(this));
-                profiles.add(profileMetaManager);
-                profileNames.add(new SpannableStringBuilder(profileName).append("\n").append(getSecondaryText(this, getSmallerText(summary))));
+            List<ProfileMetaManager> profiles = ProfileManager.getProfileMetadata();
+            List<CharSequence> profileNames = new ArrayList<>(profiles.size());
+            for (ProfileMetaManager profileMetaManager : profiles) {
+                profileNames.add(new SpannableStringBuilder(profileMetaManager.getProfileName()).append("\n")
+                        .append(getSecondaryText(this, getSmallerText(profileMetaManager.toLocalizedString(this)))));
             }
             new SearchableMultiChoiceDialogBuilder<>(this, profiles, profileNames)
                     .setTitle(R.string.add_to_profile)
