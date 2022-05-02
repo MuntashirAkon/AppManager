@@ -20,7 +20,7 @@
     <string name="no_service">无服务</string>
     <string name="orientation">屏幕旋转</string>
     <string name="soft_input">软键盘输入模式</string>
-    <string name="flags">标记</string>
+    <string name="flags">标志位(Flags)</string>
     <string name="grant_uri_permission">授权 URI 权限</string>
     <string name="path_permissions">路径授权</string>
     <string name="read">读取</string>
@@ -68,7 +68,7 @@
     <string name="data_dir">数据目录</string>
     <string name="sdk_min">最低</string>
     <string name="sdk_max">目标</string>
-    <string name="sdk_flags">标识模版</string>
+    <string name="sdk_flags">标志位(Flags)</string>
     <string name="more_info">更多信息</string>
     <string name="date_installed">安装时间</string>
     <string name="date_updated">更新时间</string>
@@ -146,7 +146,7 @@
     <string name="menu_apply_rules">应用规则</string>
     <string name="search">搜索</string>
     <string name="dev_protected_data_dir">受设备保护的数据目录</string>
-    <string name="native_library_dir">原生的java本地接口目录</string>
+    <string name="native_library_dir">原生 JNI 库目录</string>
     <string name="process_name">进程名称</string>
     <string name="no_code">没有代码</string>
     <string name="requested_large_heap">Large heap</string>
@@ -295,8 +295,8 @@
     <string name="sort_by_denied_app_ops">优先拒绝</string>
     <string name="sort_by_app_ops_values">AppOps 值</string>
     <string name="sort_by_permission_names">权限名称</string>
-    <string name="sort_by_dangerous_permissions">优先的危险</string>
-    <string name="sort_by_denied_permissions">首次拒绝</string>
+    <string name="sort_by_dangerous_permissions">危险优先</string>
+    <string name="sort_by_denied_permissions">拒绝优先</string>
     <string name="deny_dangerous_permissions">拒绝有危险的权限</string>
     <string name="sort_by_tracker_components">跟踪器优先</string>
     <string name="unknown_op">未知的操作</string>
@@ -401,7 +401,7 @@
     <string name="pref_remove_all_rules_msg">权限已被授予，app ops 和组件将回到它们的默认值。</string>
     <string name="are_you_sure">您确定吗？</string>
     <string name="filter_apps_with_activities">可打开</string>
-    <string name="toggle_default_app_ops">切换默认应用</string>
+    <string name="toggle_default_app_ops">切换默认 AppOps</string>
     <string name="installer_error_aborted">安装失败，要么因为它被取消，要么因为会话被意外关闭</string>
     <string name="installer_error_blocked_device">设备</string>
     <string name="installer_error_blocked">安装被阻止, 由 <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
@@ -508,7 +508,7 @@
     <string name="filter_apps">Android 应用</string>
     <string name="no_apps">没有应用</string>
     <string name="apps">应用程序</string>
-    <string name="pref_backup_flags_msg">为备份选项添加一个预设消除了每次备份/恢复时选择 flags 的负担。</string>
+    <string name="pref_backup_flags_msg">为备份选项添加一个预设, 以消除了每次备份/恢复时选择标志位(Flags)的负担。</string>
     <string name="pref_compression_method">压缩方法</string>
     <string name="rules">规则</string>
     <string name="other">其他</string>
@@ -596,7 +596,7 @@
     <string name="encryption">加密</string>
     <string name="select_user">选择用户</string>
     <string name="pref_show_users_in_installer_msg">安装外部应用程序之前，显示要选择的用户列表。需要 root 或 ADB。</string>
-    <string name="pref_show_users_in_installer">在安装包中显示用户</string>
+    <string name="pref_show_users_in_installer">在安装器中显示用户</string>
     <string name="failed_to_duplicate_profile">无法复制配置文件</string>
     <string name="keyboard_no_keys">无按键</string>
     <string name="send_selected">发送选中的应用</string>
@@ -628,7 +628,7 @@
     <string name="install_location_prefer_external">外部存储优先</string>
     <string name="install_location_internal_only">仅内部存储</string>
     <string name="install_location">安装位置</string>
-    <string name="comment">注解</string>
+    <string name="comment">备注</string>
     <string name="pref_sign_apk_msg">安装 APK 前先对它们进行签名。</string>
     <string name="pref_sign_apk">对 APK 进行签名</string>
     <string name="pref_signature_schemes_msg">为了更好的兼容性，至少应选中 v1 和 v2 方案。v4 方案需要选中 v2 或 v3。</string>
@@ -1000,7 +1000,7 @@
     <string name="help_permissions_tab">这些权限由该应用程序定义且无法撤销。</string>
     <string name="help_app_ops_tab">点击项目以<b>允许</b>或<b>忽略</b>它。长按某个项目可查看其他支持的模式。</string>
     <string name="saved_filters">已保存的过滤器</string>
-    <string name="permission_flags">权限标记</string>
+    <string name="permission_flags">权限标志位</string>
     <string name="pref_selected_users_msg">限制 App Manager 仅与选定的用户一起工作。</string>
     <string name="pref_selected_users">选中的用户</string>
     <string name="enable_disable">启用/禁用</string>
