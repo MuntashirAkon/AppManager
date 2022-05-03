@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:description="@string/clear_app_cache_description"
+    android:initialLayout="@layout/app_widget_clear_cache"
+    android:minWidth="40dp"
+    android:minHeight="40dp"
+    android:previewImage="@drawable/app_widget_preview_clear_cache"
+    android:previewLayout="@layout/app_widget_clear_cache"
+    android:targetCellWidth="1"
+    android:targetCellHeight="1"
+    android:updatePeriodMillis="0"
+    android:widgetCategory="home_screen" />

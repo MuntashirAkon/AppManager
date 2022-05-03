@@ -176,14 +176,19 @@ public class BatchOpsService extends ForegroundService {
         }
         op = intent.getIntExtra(EXTRA_OP, BatchOpsManager.OP_NONE);
         packages = intent.getStringArrayListExtra(EXTRA_OP_PKG);
-        if (packages == null) return;
+        if (packages == null) {
+            packages = new ArrayList<>(0);
+        }
+        if (op == BatchOpsManager.OP_NONE) return;
         args = intent.getBundleExtra(EXTRA_OP_EXTRA_ARGS);
         ArrayList<Integer> userHandles = intent.getIntegerArrayListExtra(EXTRA_OP_USERS);
         if (userHandles == null) {
             userHandles = new ArrayList<>(packages.size());
-            for (String ignore : packages) userHandles.add(UserHandleHidden.myUserId());
+            for (String ignore : packages) {
+                userHandles.add(UserHandleHidden.myUserId());
+            }
         }
-        if (op == BatchOpsManager.OP_NONE || packages == null) {
+        if (op == BatchOpsManager.OP_NONE) {
             sendResults(Activity.RESULT_CANCELED, null);
             return;
         }
@@ -316,6 +321,8 @@ public class BatchOpsService extends ForegroundService {
                 return getString(R.string.block_trackers);
             case BatchOpsManager.OP_CLEAR_DATA:
                 return getString(R.string.clear_data);
+            case BatchOpsManager.OP_CLEAR_CACHE:
+                return getString(R.string.clear_cache);
             case BatchOpsManager.OP_DISABLE:
                 return getString(R.string.disable);
             case BatchOpsManager.OP_DISABLE_BACKGROUND:

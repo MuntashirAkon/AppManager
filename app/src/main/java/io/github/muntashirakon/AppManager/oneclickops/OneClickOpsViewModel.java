@@ -152,24 +152,14 @@ public class OneClickOpsViewModel extends AndroidViewModel {
     public void trimCaches() {
         executor.submit(() -> {
             long size = 1024L * 1024L * 1024L * 1024L;  // 1 TB
-            final OneClickOpsActivity.ClearDataObserver obs = new OneClickOpsActivity.ClearDataObserver();
             try {
                 // TODO: 30/8/21 Iterate all volumes?
                 PackageManagerCompat.freeStorageAndNotify(null /* internal */, size,
-                        StorageManagerCompat.FLAG_ALLOCATE_DEFY_ALL_RESERVED, obs);
+                        StorageManagerCompat.FLAG_ALLOCATE_DEFY_ALL_RESERVED);
+                this.trimCachesResult.postValue(true);
             } catch (RemoteException e) {
                 this.trimCachesResult.postValue(false);
             }
-            //noinspection SynchronizationOnLocalVariableOrMethodParameter
-            synchronized (obs) {
-                while (!obs.finished) {
-                    try {
-                        obs.wait();
-                    } catch (InterruptedException ignore) {
-                    }
-                }
-            }
-            this.trimCachesResult.postValue(true);
         });
     }
 

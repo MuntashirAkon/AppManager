@@ -15,6 +15,11 @@
 
     <style name="AppTheme.AppWidgetContainer" parent="AppTheme.AppWidgetContainerParent" />
 
+    <style name="AppTheme.AppWidgetContainer.IconOnly" parent="AppTheme.AppWidgetContainerParent">
+        <item name="appWidgetPadding">8dp</item>
+        <item name="appWidgetRadius">8dp</item>
+    </style>
+
     <style name="Widget.AppTheme.AppWidget" parent="android:Widget">
         <item name="android:id">@android:id/background</item>
         <item name="android:background">?android:attr/colorBackground</item>

@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.IPackageDataObserver;
 import android.content.pm.IPackageInstaller;
 import android.content.pm.IPackageManager;
 import android.content.pm.IPackageManagerN;
@@ -35,11 +34,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import dev.rikka.tools.refine.Refine;
 import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.compat.ClearDataObserver;
 import io.github.muntashirakon.AppManager.compat.StorageManagerCompat;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
@@ -240,84 +238,62 @@ public final class PackageManagerCompat {
         return AppManager.getIPackageManager().getInstallerPackageName(packageName);
     }
 
-    public static void clearApplicationUserData(@NonNull UserPackagePair pair) throws AndroidException, InterruptedException {
+    public static void clearApplicationUserData(@NonNull UserPackagePair pair) throws AndroidException {
         IPackageManager pm = AppManager.getIPackageManager();
-        CountDownLatch dataClearWatcher = new CountDownLatch(1);
-        AtomicBoolean isSuccess = new AtomicBoolean(false);
-        pm.clearApplicationUserData(pair.getPackageName(), new IPackageDataObserver.Stub() {
-            @Override
-            public void onRemoveCompleted(String packageName, boolean succeeded) {
-                isSuccess.set(succeeded);
-                dataClearWatcher.countDown();
+        ClearDataObserver obs = new ClearDataObserver();
+        pm.clearApplicationUserData(pair.getPackageName(), obs, pair.getUserHandle());
+        //noinspection SynchronizationOnLocalVariableOrMethodParameter
+        synchronized (obs) {
+            while (!obs.isCompleted()) {
+                try {
+                    obs.wait(60_000);
+                } catch (InterruptedException ignore) {
+                }
             }
-        }, pair.getUserHandle());
-        dataClearWatcher.await();
-        if (!isSuccess.get()) {
+        }
+        if (!obs.isSuccessful()) {
             throw new AndroidException("Could not clear data of package " + pair);
         }
     }
 
     public static boolean clearApplicationUserData(@NonNull String packageName, @UserIdInt int userId) {
-        IPackageManager pm = AppManager.getIPackageManager();
-        CountDownLatch dataClearWatcher = new CountDownLatch(1);
-        AtomicBoolean isSuccess = new AtomicBoolean(false);
         try {
-            pm.clearApplicationUserData(packageName, new IPackageDataObserver.Stub() {
-                @Override
-                public void onRemoveCompleted(String packageName, boolean succeeded) {
-                    isSuccess.set(succeeded);
-                    dataClearWatcher.countDown();
-                }
-            }, userId);
-            dataClearWatcher.await();
-        } catch (RemoteException | SecurityException | InterruptedException e) {
+            clearApplicationUserData(new UserPackagePair(packageName, userId));
+            return true;
+        } catch (AndroidException | SecurityException e) {
             e.printStackTrace();
             return false;
         }
-        return isSuccess.get();
     }
 
-    public static void deleteApplicationCacheFilesAsUser(UserPackagePair pair) throws AndroidException, InterruptedException {
+    public static void deleteApplicationCacheFilesAsUser(UserPackagePair pair) throws AndroidException {
         IPackageManager pm = AppManager.getIPackageManager();
-        CountDownLatch dataClearWatcher = new CountDownLatch(1);
-        AtomicBoolean isSuccess = new AtomicBoolean(false);
-        IPackageDataObserver observer = new IPackageDataObserver.Stub() {
-            @Override
-            public void onRemoveCompleted(String packageName, boolean succeeded) {
-                dataClearWatcher.countDown();
-                isSuccess.set(succeeded);
-            }
-        };
+        ClearDataObserver obs = new ClearDataObserver();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            pm.deleteApplicationCacheFilesAsUser(pair.getPackageName(), pair.getUserHandle(), observer);
-        } else pm.deleteApplicationCacheFiles(pair.getPackageName(), observer);
-        dataClearWatcher.await();
-        if (!isSuccess.get()) {
+            pm.deleteApplicationCacheFilesAsUser(pair.getPackageName(), pair.getUserHandle(), obs);
+        } else pm.deleteApplicationCacheFiles(pair.getPackageName(), obs);
+        //noinspection SynchronizationOnLocalVariableOrMethodParameter
+        synchronized (obs) {
+            while (!obs.isCompleted()) {
+                try {
+                    obs.wait(60_000);
+                } catch (InterruptedException ignore) {
+                }
+            }
+        }
+        if (!obs.isSuccessful()) {
             throw new AndroidException("Could not clear cache of package " + pair);
         }
     }
 
     public static boolean deleteApplicationCacheFilesAsUser(String packageName, int userId) {
-        IPackageManager pm = AppManager.getIPackageManager();
-        CountDownLatch dataClearWatcher = new CountDownLatch(1);
-        AtomicBoolean isSuccess = new AtomicBoolean(false);
         try {
-            IPackageDataObserver observer = new IPackageDataObserver.Stub() {
-                @Override
-                public void onRemoveCompleted(String packageName, boolean succeeded) {
-                    dataClearWatcher.countDown();
-                    isSuccess.set(succeeded);
-                }
-            };
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                pm.deleteApplicationCacheFilesAsUser(packageName, userId, observer);
-            } else pm.deleteApplicationCacheFiles(packageName, observer);
-            dataClearWatcher.await();
-        } catch (RemoteException | SecurityException | InterruptedException e) {
+            deleteApplicationCacheFilesAsUser(new UserPackagePair(packageName, userId));
+            return true;
+        } catch (AndroidException | SecurityException e) {
             e.printStackTrace();
             return false;
         }
-        return isSuccess.get();
     }
 
     public static void forceStopPackage(String packageName, int userId) throws RemoteException {
@@ -332,16 +308,25 @@ public final class PackageManagerCompat {
     @SuppressWarnings("deprecation")
     public static void freeStorageAndNotify(@Nullable String volumeUuid,
                                             long freeStorageSize,
-                                            @StorageManagerCompat.AllocateFlags int storageFlags,
-                                            IPackageDataObserver observer)
+                                            @StorageManagerCompat.AllocateFlags int storageFlags)
             throws RemoteException {
+        ClearDataObserver obs = new ClearDataObserver();
         IPackageManager pm = AppManager.getIPackageManager();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            pm.freeStorageAndNotify(volumeUuid, freeStorageSize, storageFlags, observer);
+            pm.freeStorageAndNotify(volumeUuid, freeStorageSize, storageFlags, obs);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            pm.freeStorageAndNotify(volumeUuid, freeStorageSize, observer);
+            pm.freeStorageAndNotify(volumeUuid, freeStorageSize, obs);
         } else {
-            pm.freeStorageAndNotify(freeStorageSize, observer);
+            pm.freeStorageAndNotify(freeStorageSize, obs);
+        }
+        //noinspection SynchronizationOnLocalVariableOrMethodParameter
+        synchronized (obs) {
+            while (!obs.isCompleted()) {
+                try {
+                    obs.wait(60_000);
+                } catch (InterruptedException ignore) {
+                }
+            }
         }
     }
 

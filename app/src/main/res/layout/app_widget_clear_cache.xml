@@ -1,0 +1,18 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/Widget.AppTheme.AppWidget"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:background="@drawable/app_widget_background"
+    android:theme="@style/AppTheme.AppWidgetContainer.IconOnly">
+
+    <ImageView
+        android:id="@+id/appwidget_icon"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:contentDescription="@string/clear_app_cache"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_clear_cache" />
+</RelativeLayout>

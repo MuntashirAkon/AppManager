@@ -6,7 +6,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.IPackageDataObserver;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.view.MenuItem;
@@ -52,6 +51,8 @@ import static io.github.muntashirakon.AppManager.utils.UIUtils.getPrimaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
 public class OneClickOpsActivity extends BaseActivity {
+    public static final String EXTRA_OP = "op";
+
     LinearProgressIndicator mProgressIndicator;
 
     private OneClickOpsViewModel mViewModel;
@@ -65,6 +66,15 @@ public class OneClickOpsActivity extends BaseActivity {
 
     @Override
     protected void onAuthenticated(Bundle savedInstanceState) {
+        int op = getIntent().getIntExtra(EXTRA_OP, BatchOpsManager.OP_NONE);
+        if (op == BatchOpsManager.OP_CLEAR_CACHE) {
+            Intent intent = new Intent(this, BatchOpsService.class);
+            intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_CLEAR_CACHE);
+            intent.putExtra(BatchOpsService.EXTRA_HEADER, getString(R.string.one_click_ops));
+            ContextCompat.startForegroundService(this, intent);
+            finishAndRemoveTask();
+            return;
+        }
         setContentView(R.layout.activity_one_click_ops);
         setSupportActionBar(findViewById(R.id.toolbar));
         mViewModel = new ViewModelProvider(this).get(OneClickOpsViewModel.class);
@@ -368,19 +378,5 @@ public class OneClickOpsActivity extends BaseActivity {
             appOpNames.add(AppOpsManager.opToName(appOp));
         }
         return appOpNames;
-    }
-
-    static class ClearDataObserver extends IPackageDataObserver.Stub {
-        boolean finished;
-        boolean result;
-
-        @Override
-        public void onRemoveCompleted(String packageName, boolean succeeded) {
-            synchronized (this) {
-                finished = true;
-                result = succeeded;
-                notifyAll();
-            }
-        }
     }
 }

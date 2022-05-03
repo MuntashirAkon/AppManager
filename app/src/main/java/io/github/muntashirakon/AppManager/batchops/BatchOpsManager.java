@@ -27,6 +27,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -43,6 +44,7 @@ import io.github.muntashirakon.AppManager.backup.BackupManager;
 import io.github.muntashirakon.AppManager.backup.convert.ConvertUtils;
 import io.github.muntashirakon.AppManager.backup.convert.Converter;
 import io.github.muntashirakon.AppManager.backup.convert.ImportType;
+import io.github.muntashirakon.AppManager.compat.StorageManagerCompat;
 import io.github.muntashirakon.AppManager.logs.Logger;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
@@ -388,6 +390,10 @@ public class BatchOpsManager {
 
     @NonNull
     private Result opClearCache() {
+        if (userPackagePairs.length == 0) {
+            // No packages supplied means trim all caches
+            return opTrimCaches();
+        }
         List<UserPackagePair> failedPackages = new ArrayList<>();
         for (UserPackagePair pair : userPackagePairs) {
             try {
@@ -398,6 +404,22 @@ public class BatchOpsManager {
             }
         }
         return lastResult = new Result(failedPackages);
+    }
+
+    @NonNull
+    private Result opTrimCaches() {
+        long size = 1024L * 1024L * 1024L * 1024L;  // 1 TB
+        boolean isSuccessful;
+        try {
+            // TODO: 30/8/21 Iterate all volumes?
+            PackageManagerCompat.freeStorageAndNotify(null /* internal */, size,
+                    StorageManagerCompat.FLAG_ALLOCATE_DEFY_ALL_RESERVED);
+            isSuccessful = true;
+        } catch (Throwable e) {
+            log("====> op=TRIM_CACHES", e);
+            isSuccessful = false;
+        }
+        return lastResult = new Result(Collections.emptyList(), isSuccessful);
     }
 
     @NonNull
@@ -624,40 +646,46 @@ public class BatchOpsManager {
 
     public static class Result {
         @NonNull
-        private final ArrayList<String> failedPackages;
+        private final ArrayList<String> mFailedPackages;
         @NonNull
-        private final ArrayList<Integer> associatedUserHandles;
+        private final ArrayList<Integer> mAssociatedUserHandles;
         @NonNull
-        private final List<UserPackagePair> userPackagePairs;
+        private final List<UserPackagePair> mUserPackagePairs;
+        private final boolean mIsSuccessful;
 
         public Result(@NonNull List<UserPackagePair> failedUserPackagePairs) {
-            this.userPackagePairs = failedUserPackagePairs;
-            failedPackages = new ArrayList<>();
-            associatedUserHandles = new ArrayList<>();
+            this(failedUserPackagePairs, failedUserPackagePairs.isEmpty());
+        }
+
+        public Result(@NonNull List<UserPackagePair> failedUserPackagePairs, boolean isSuccessful) {
+            mUserPackagePairs = failedUserPackagePairs;
+            mFailedPackages = new ArrayList<>();
+            mAssociatedUserHandles = new ArrayList<>();
             for (UserPackagePair userPackagePair : failedUserPackagePairs) {
-                failedPackages.add(userPackagePair.getPackageName());
-                associatedUserHandles.add(userPackagePair.getUserHandle());
+                mFailedPackages.add(userPackagePair.getPackageName());
+                mAssociatedUserHandles.add(userPackagePair.getUserHandle());
             }
+            mIsSuccessful = isSuccessful;
         }
 
         public boolean isSuccessful() {
-            return failedPackages.size() == 0;
+            return mIsSuccessful;
         }
 
         @NonNull
         public List<UserPackagePair> getUserPackagePairs() {
-            return userPackagePairs;
+            return mUserPackagePairs;
         }
 
         @NonNull
         public ArrayList<String> getFailedPackages() {
-            return failedPackages;
+            return mFailedPackages;
         }
 
         @NonNull
         @UserIdInt
         public ArrayList<Integer> getAssociatedUserHandles() {
-            return associatedUserHandles;
+            return mAssociatedUserHandles;
         }
     }
 }

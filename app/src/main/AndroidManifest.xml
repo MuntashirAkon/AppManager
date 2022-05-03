@@ -667,6 +667,18 @@
                 android:resource="@xml/app_widget_info_screen_time" />
         </receiver>
         <receiver
+            android:name=".oneclickops.ClearCacheAppWidget"
+            android:exported="true"
+            android:label="@string/clear_cache">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/app_widget_info_clear_cache" />
+        </receiver>
+        <receiver
             android:name=".logcat.RecordingWidgetProvider"
             android:exported="true">
             <intent-filter>
