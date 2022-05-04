@@ -568,7 +568,7 @@
     <string name="restart_to_reflect_changes">Zrestartuj urządzenie, aby zastosować zmiany.</string>
     <string name="failed_to_change_ssaid">Nie udało się zmienić SSAID</string>
     <string name="copied_to_clipboard">Skopiowano do schowka.</string>
-    <string name="ssaid_info">SSAID (<tt>Settings.Secure.ANDROID_ID</tt>) jest identyfikatorem urządzenia przypisanym do każdej aplikacji (od Android Oreo wzwyż). Jest on szeroko wykorzystywany przez aplikacje do śledzenia użytkowników.</string>
+    <string name="ssaid_info">SSAID (<tt>Settings.Secure.ANDROID_ID</tt>) jest identyfikatorem urządzenia przypisanym do każdej aplikacji (od Android 8 \"Oreo\" wzwyż). Jest on szeroko wykorzystywany przez aplikacje do śledzenia użytkowników.</string>
     <string name="ssaid">SSAID</string>
     <string name="os_version">Wersja systemu operacyjnego</string>
     <string name="add">Dodaj</string>
@@ -1148,4 +1148,16 @@
     <string name="failed_to_disable_magisk_hide">Nie można wyłączyć MagiskHide</string>
     <string name="disable_background_run_description">Ustawia tryb <i>Ignoruj</i> dla następujących operacji aplikacji: <tt>RUN_IN_BACKGROUND</tt> (z Androida 7.0) i <tt>RUN_ANY_IN_BACKGROUND</tt> (z Androida 9).</string>
     <string name="density">Gęstość</string>
+    <plurals name="usage_minutes">
+        <item quantity="one">%1$d min.</item>
+        <item quantity="few">%1$d min.</item>
+        <item quantity="many">%1$d min.</item>
+        <item quantity="other">%1$d min.</item>
+    </plurals>
+    <plurals name="usage_seconds">
+        <item quantity="one">%1$d sek.</item>
+        <item quantity="few">%1$d sek.</item>
+        <item quantity="many">%1$d sek.</item>
+        <item quantity="other">%1$d sek.</item>
+    </plurals>
 </resources>
