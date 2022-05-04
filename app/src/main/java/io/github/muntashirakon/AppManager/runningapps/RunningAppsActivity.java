@@ -220,6 +220,15 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
             if (vtFileScanMeta == null) {
                 // Started uploading
                 UIUtils.displayShortToast(R.string.vt_uploading);
+                if (AppPref.getBoolean(AppPref.PrefKey.PREF_VIRUS_TOTAL_PROMPT_BEFORE_UPLOADING_BOOL)) {
+                    new MaterialAlertDialogBuilder(this)
+                            .setTitle(R.string.scan_in_vt)
+                            .setMessage(R.string.vt_confirm_uploading_file)
+                            .setCancelable(false)
+                            .setPositiveButton(R.string.vt_confirm_upload_and_scan, (dialog, which) -> mModel.enableUploading())
+                            .setNegativeButton(R.string.no, (dialog, which) -> mModel.disableUploading())
+                            .show();
+                } else mModel.enableUploading();
             } else {
                 UIUtils.displayShortToast(R.string.vt_queued);
             }

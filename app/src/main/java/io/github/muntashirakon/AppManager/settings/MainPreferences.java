@@ -281,17 +281,20 @@ public class MainPreferences extends PreferenceFragment {
                     .show();
             return true;
         });
-        // VT APK key
+        // VT API key
         ((Preference) Objects.requireNonNull(findPreference("vt_apikey"))).setOnPreferenceClickListener(preference -> {
             new TextInputDialogBuilder(activity, null)
                     .setTitle(R.string.pref_vt_apikey)
                     .setHelperText(getString(R.string.pref_vt_apikey_description) + "\n\n" + getString(R.string.vt_disclaimer))
                     .setInputText(AppPref.getVtApiKey())
+                    .setCheckboxLabel(R.string.pref_vt_prompt_before_uploading)
+                    .setChecked(AppPref.getBoolean(AppPref.PrefKey.PREF_VIRUS_TOTAL_PROMPT_BEFORE_UPLOADING_BOOL))
                     .setNegativeButton(R.string.cancel, null)
                     .setPositiveButton(R.string.save, (dialog, which, inputText, isChecked) -> {
                         if (inputText != null) {
                             AppPref.set(AppPref.PrefKey.PREF_VIRUS_TOTAL_API_KEY_STR, inputText.toString());
                         }
+                        AppPref.set(AppPref.PrefKey.PREF_VIRUS_TOTAL_PROMPT_BEFORE_UPLOADING_BOOL, isChecked);
                     })
                     .show();
             return true;

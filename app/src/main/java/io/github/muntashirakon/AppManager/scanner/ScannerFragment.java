@@ -178,6 +178,15 @@ public class ScannerFragment extends Fragment {
             if (vtFileScanMeta == null) {
                 // Uploading
                 vtTitleView.setText(R.string.vt_uploading);
+                if (AppPref.getBoolean(AppPref.PrefKey.PREF_VIRUS_TOTAL_PROMPT_BEFORE_UPLOADING_BOOL)) {
+                    new MaterialAlertDialogBuilder(mActivity)
+                            .setTitle(R.string.scan_in_vt)
+                            .setMessage(R.string.vt_confirm_uploading_file)
+                            .setCancelable(false)
+                            .setPositiveButton(R.string.vt_confirm_upload_and_scan, (dialog, which) -> mViewModel.enableUploading())
+                            .setNegativeButton(R.string.no, (dialog, which) -> mViewModel.disableUploading())
+                            .show();
+                } else mViewModel.enableUploading();
             } else {
                 // Upload completed and queued
                 vtTitleView.setText(R.string.vt_queued);

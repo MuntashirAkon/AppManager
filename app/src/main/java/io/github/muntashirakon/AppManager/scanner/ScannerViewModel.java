@@ -7,7 +7,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.SystemClock;
 import android.util.Pair;
 
 import androidx.annotation.AnyThread;
@@ -23,6 +22,7 @@ import com.android.apksig.ApkVerifier;
 import com.android.apksig.apk.ApkFormatException;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,6 +31,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import io.github.muntashirakon.AppManager.scanner.reflector.Reflector;
 import io.github.muntashirakon.AppManager.scanner.vt.VirusTotal;
@@ -42,7 +43,7 @@ import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.VirtualFileSystem;
 
-public class ScannerViewModel extends AndroidViewModel {
+public class ScannerViewModel extends AndroidViewModel implements VirusTotal.FullScanResponseInterface {
     private File apkFile;
     private boolean cached;
     private boolean loaded = false;
@@ -227,42 +228,8 @@ public class ScannerViewModel extends AndroidViewModel {
         apkChecksumsLiveData.postValue(digests);
         if (vt == null) return;
         String md5 = digests[0].second;
-        try {
-            List<VtFileReport> reports = vt.fetchReports(new String[]{md5});
-            if (reports.size() == 0) throw new IOException("No report returned.");
-            VtFileReport report = reports.get(0);
-            int responseCode = report.getResponseCode();
-            if (responseCode == VirusTotal.RESPONSE_FOUND) {
-                vtFileReportLiveData.postValue(report);
-                return;
-            }
-            // Report not found: request scan or wait
-            if (responseCode == VirusTotal.RESPONSE_NOT_FOUND) {
-                if (apkFile.length() > 32 * 1024 * 1024) {
-                    throw new IOException("APK is larger than 32 MB.");
-                }
-                vtFileScanMetaLiveData.postValue(null);
-                VtFileScanMeta scanMeta = vt.scan(apkFile.getName(), apkFile);
-                vtFileScanMetaLiveData.postValue(scanMeta);
-                responseCode = VirusTotal.RESPONSE_QUEUED;
-            } else {
-                // Item is queued
-                vtFileReportLiveData.postValue(report);
-            }
-            int waitDuration = 60_000;
-            while (responseCode == VirusTotal.RESPONSE_QUEUED) {
-                reports = vt.fetchReports(new String[]{md5});
-                if (reports.size() == 0) throw new IOException("No report returned.");
-                report = reports.get(0);
-                responseCode = report.getResponseCode();
-                // Wait for result: First wait for 1 minute, then for 30 seconds
-                // We won't do it less than 30 seconds since the API has a limit of 4 request/minute
-                SystemClock.sleep(waitDuration);
-                waitDuration = 30_000;
-            }
-            if (responseCode == VirusTotal.RESPONSE_FOUND) {
-                vtFileReportLiveData.postValue(report);
-            } else throw new IOException("Could not generate scan report");
+        try (InputStream is = new FileInputStream(apkFile)) {
+            vt.fetchReportsOrScan(apkFile.getName(), apkFile.length(), is, md5, this);
         } catch (IOException e) {
             e.printStackTrace();
             vtFileReportLiveData.postValue(null);
@@ -321,5 +288,48 @@ public class ScannerViewModel extends AndroidViewModel {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    private boolean mUploadingEnabled;
+    private CountDownLatch mUploadingEnabledWatcher;
+
+    public void enableUploading() {
+        mUploadingEnabled = true;
+        if (mUploadingEnabledWatcher != null) {
+            mUploadingEnabledWatcher.countDown();
+        }
+    }
+
+    public void disableUploading() {
+        mUploadingEnabled = false;
+        if (mUploadingEnabledWatcher != null) {
+            mUploadingEnabledWatcher.countDown();
+        }
+    }
+
+    @Override
+    public boolean scanFile() {
+        mUploadingEnabled = false;
+        mUploadingEnabledWatcher = new CountDownLatch(1);
+        vtFileScanMetaLiveData.postValue(null);
+        try {
+            mUploadingEnabledWatcher.await(2, TimeUnit.MINUTES);
+        } catch (InterruptedException ignore) {
+        }
+        return mUploadingEnabled;
+    }
+
+    @Override
+    public void onScanningInitiated() {
+    }
+
+    @Override
+    public void onScanCompleted(@NonNull VtFileScanMeta meta) {
+        vtFileScanMetaLiveData.postValue(meta);
+    }
+
+    @Override
+    public void onReportReceived(@NonNull VtFileReport report) {
+        vtFileReportLiveData.postValue(report);
     }
 }

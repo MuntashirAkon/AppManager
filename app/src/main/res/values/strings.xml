@@ -1210,4 +1210,7 @@
     <string name="screen_time">Screen Time</string>
     <string name="open_in_new_window">New window</string>
     <string name="type_string_set">Set of strings</string>
+    <string name="pref_vt_prompt_before_uploading">Display prompt before uploading a file.</string>
+    <string name="vt_confirm_uploading_file">The file was not found in the VirusTotal database. Do you want to upload it?</string>
+    <string name="vt_confirm_upload_and_scan">Yes, upload and scan</string>
 </resources>

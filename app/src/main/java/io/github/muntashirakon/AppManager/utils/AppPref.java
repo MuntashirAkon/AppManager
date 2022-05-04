@@ -116,6 +116,7 @@ public class AppPref {
         PREF_SHOW_DISCLAIMER_BOOL,
 
         PREF_VIRUS_TOTAL_API_KEY_STR,
+        PREF_VIRUS_TOTAL_PROMPT_BEFORE_UPLOADING_BOOL,
         ;
 
         public static final String[] keys = new String[values().length];
@@ -430,6 +431,7 @@ public class AppPref {
             case PREF_SHOW_DISCLAIMER_BOOL:
             case PREF_LOG_VIEWER_SHOW_PID_TID_TIMESTAMP_BOOL:
             case PREF_INSTALLER_DISPLAY_CHANGES_BOOL:
+            case PREF_VIRUS_TOTAL_PROMPT_BEFORE_UPLOADING_BOOL:
                 return true;
             case PREF_CONCURRENCY_THREAD_COUNT_INT:
                 return 0;

@@ -6,7 +6,6 @@ import android.app.Application;
 import android.content.pm.ApplicationInfo;
 import android.os.Build;
 import android.os.RemoteException;
-import android.os.SystemClock;
 import android.os.UserHandleHidden;
 import android.text.TextUtils;
 
@@ -28,6 +27,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
@@ -99,45 +100,35 @@ public class RunningAppsViewModel extends AndroidViewModel {
                 return;
             }
             String sha256 = DigestUtils.getHexDigest(DigestUtils.SHA_256, proxyFile);
-            try {
-                List<VtFileReport> reports = mVt.fetchReports(new String[]{sha256});
-                if (reports.size() == 0) throw new IOException("No report returned.");
-                VtFileReport report = reports.get(0);
-                int responseCode = report.getResponseCode();
-                if (responseCode == VirusTotal.RESPONSE_FOUND) {
-                    mVtFileReport.postValue(new Pair<>(processItem, report));
-                    return;
-                }
-                // Report not found: request scan or wait
-                if (responseCode == VirusTotal.RESPONSE_NOT_FOUND) {
-                    if (proxyFile.length() > 32 * 1024 * 1024) {
-                        throw new IOException("APK is larger than 32 MB.");
-                    }
-                    mVtFileScanMeta.postValue(new Pair<>(processItem, null));
-                    VtFileScanMeta scanMeta;
-                    try (InputStream is = new ProxyInputStream(proxyFile)) {
-                        scanMeta = mVt.scan(proxyFile.getName(), is);
-                    }
-                    mVtFileScanMeta.postValue(new Pair<>(processItem, scanMeta));
-                    responseCode = VirusTotal.RESPONSE_QUEUED;
-                } else {
-                    // Item is queued
-                    mVtFileReport.postValue(new Pair<>(processItem, report));
-                }
-                int waitDuration = 60_000;
-                while (responseCode == VirusTotal.RESPONSE_QUEUED) {
-                    reports = mVt.fetchReports(new String[]{sha256});
-                    if (reports.size() == 0) throw new IOException("No report returned.");
-                    report = reports.get(0);
-                    responseCode = report.getResponseCode();
-                    // Wait for result: First wait for 1 minute, then for 30 seconds
-                    // We won't do it less than 30 seconds since the API has a limit of 4 request/minute
-                    SystemClock.sleep(waitDuration);
-                    waitDuration = 30_000;
-                }
-                if (responseCode == VirusTotal.RESPONSE_FOUND) {
-                    mVtFileReport.postValue(new Pair<>(processItem, report));
-                } else throw new IOException("Could not generate scan report");
+            try (InputStream is = new ProxyInputStream(proxyFile)) {
+                mVt.fetchReportsOrScan(proxyFile.getName(), proxyFile.length(), is, sha256,
+                        new VirusTotal.FullScanResponseInterface() {
+                            @Override
+                            public boolean scanFile() {
+                                mUploadingEnabled = false;
+                                mUploadingEnabledWatcher = new CountDownLatch(1);
+                                mVtFileScanMeta.postValue(new Pair<>(processItem, null));
+                                try {
+                                    mUploadingEnabledWatcher.await(2, TimeUnit.MINUTES);
+                                } catch (InterruptedException ignore) {
+                                }
+                                return mUploadingEnabled;
+                            }
+
+                            @Override
+                            public void onScanningInitiated() {
+                            }
+
+                            @Override
+                            public void onScanCompleted(@NonNull VtFileScanMeta meta) {
+                                mVtFileScanMeta.postValue(new Pair<>(processItem, meta));
+                            }
+
+                            @Override
+                            public void onReportReceived(@NonNull VtFileReport report) {
+                                mVtFileReport.postValue(new Pair<>(processItem, report));
+                            }
+                        });
             } catch (IOException e) {
                 e.printStackTrace();
                 mVtFileReport.postValue(new Pair<>(processItem, null));
@@ -410,5 +401,22 @@ public class RunningAppsViewModel extends AndroidViewModel {
 
     public void clearSelections() {
         mSelectedItems.clear();
+    }
+
+    private boolean mUploadingEnabled;
+    private CountDownLatch mUploadingEnabledWatcher;
+
+    public void enableUploading() {
+        mUploadingEnabled = true;
+        if (mUploadingEnabledWatcher != null) {
+            mUploadingEnabledWatcher.countDown();
+        }
+    }
+
+    public void disableUploading() {
+        mUploadingEnabled = false;
+        if (mUploadingEnabledWatcher != null) {
+            mUploadingEnabledWatcher.countDown();
+        }
     }
 }

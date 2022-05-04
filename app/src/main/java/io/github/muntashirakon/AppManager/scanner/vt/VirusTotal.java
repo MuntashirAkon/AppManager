@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 package io.github.muntashirakon.AppManager.scanner.vt;
 
+import android.os.SystemClock;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
@@ -11,6 +13,7 @@ import com.google.gson.Gson;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -28,6 +31,16 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.io.IoUtils;
 
 public class VirusTotal {
+    public interface FullScanResponseInterface {
+        boolean scanFile();
+
+        void onScanningInitiated();
+
+        void onScanCompleted(@NonNull VtFileScanMeta meta);
+
+        void onReportReceived(@NonNull VtFileReport report);
+    }
+
     public static final int RESPONSE_FOUND = 1;
     public static final int RESPONSE_NOT_FOUND = 0;
     public static final int RESPONSE_QUEUED = -2;
@@ -55,6 +68,56 @@ public class VirusTotal {
         mGson = new Gson();
     }
 
+    public void fetchReportsOrScan(@NonNull String filename, long fileSize,
+                                   @NonNull InputStream is,
+                                   @NonNull String checksum,
+                                   @NonNull FullScanResponseInterface response)
+            throws IOException {
+        List<VtFileReport> reports = fetchReports(new String[]{checksum});
+        if (reports.isEmpty()) {
+            throw new IOException("No report returned.");
+        }
+        VtFileReport report = reports.get(0);
+        int responseCode = report.getResponseCode();
+        if (responseCode == VirusTotal.RESPONSE_FOUND) {
+            response.onReportReceived(report);
+            return;
+        }
+        // Report not found: request scan or wait if queued
+        if (responseCode == VirusTotal.RESPONSE_NOT_FOUND) {
+            // Initiate scan
+            if (!response.scanFile()) {
+                // Scanning disabled
+                throw new FileNotFoundException("File not found in VirusTotal.");
+            }
+            if (fileSize > 32 * 1024 * 1024) {
+                throw new IOException("APK is larger than 32 MB.");
+            }
+            response.onScanningInitiated();
+            VtFileScanMeta scanMeta = scan(filename, is);
+            response.onScanCompleted(scanMeta);
+            responseCode = VirusTotal.RESPONSE_QUEUED;
+        } else {
+            // Item is queued
+            response.onReportReceived(report);
+        }
+        int waitDuration = 60_000;
+        while (responseCode == VirusTotal.RESPONSE_QUEUED) {
+            reports = fetchReports(new String[]{checksum});
+            if (reports.isEmpty()) throw new IOException("No report returned.");
+            report = reports.get(0);
+            responseCode = report.getResponseCode();
+            // Wait for result: First wait for 1 minute, then for 30 seconds
+            // We won't do it less than 30 seconds since the API has a limit of 4 request/minute
+            SystemClock.sleep(waitDuration);
+            waitDuration = 30_000;
+        }
+        if (responseCode == VirusTotal.RESPONSE_FOUND) {
+            response.onReportReceived(report);
+        } else throw new IOException("Could not generate scan report");
+    }
+
+    @NonNull
     public VtFileScanMeta scan(String filename, File file) throws IOException {
         try (FileInputStream fis = new FileInputStream(file)) {
             return scan(filename, fis);

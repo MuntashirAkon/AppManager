@@ -84,6 +84,11 @@ public class TextInputDialogBuilder {
         return this;
     }
 
+    public TextInputDialogBuilder setChecked(boolean checked) {
+        checkBox.setChecked(checked);
+        return this;
+    }
+
     public TextInputDialogBuilder setCheckboxLabel(@Nullable CharSequence checkboxLabel) {
         if (checkboxLabel != null) {
             checkBox.setVisibility(View.VISIBLE);
