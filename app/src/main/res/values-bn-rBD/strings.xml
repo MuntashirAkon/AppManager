@@ -410,7 +410,7 @@
     <string name="import_options">অপসন গুলো ইম্পোর্ট করুন</string>
     <string name="pref_export">এক্সপোর্ট</string>
     <string name="pref_import">ইম্পোর্ট</string>
-    <string name="pref_import_export_blocking_rules_msg">ইম্পোর্ট/এক্সপোর্ট বিধি, ওয়াট বা ব্লকার থেকে বহিঃস্থ বিধি ইম্পোর্ট করুন</string>
+    <string name="pref_import_export_blocking_rules_msg">ইম্পোর্ট/এক্সপোর্ট বিধি, ওয়াট বা ব্লকার থেকে বহিঃস্থ বিধি ইম্পোর্ট করুন।</string>
     <string name="str_logo">লোগো</string>
     <string name="class_viewer">ক্লাস ভিউয়ার</string>
     <string name="failed_to_enable_op">অনুরোধকৃত অ্যাপ অপটিকে সক্রিয় করা যায়নি</string>
