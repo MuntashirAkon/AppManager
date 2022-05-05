@@ -1136,4 +1136,9 @@
     <string name="tracker">跟踪器</string>
     <string name="input_ssaid_instruction">SSAID 是一个 %1$d 字节的十六进制数，即一个包含 0 到 9 和 a 到 f 的长为 %2$d 的字符串。</string>
     <string name="screen_time">屏幕时间</string>
+    <string name="type_string_set">字符集</string>
+    <string name="pref_vt_prompt_before_uploading">上传文件前显示提示。</string>
+    <string name="vt_confirm_upload_and_scan">是，上传并扫描</string>
+    <string name="open_in_new_window">新窗口</string>
+    <string name="vt_confirm_uploading_file">在 VirusTotal 数据库中找不到该文件。 你要上传吗？</string>
 </resources>
