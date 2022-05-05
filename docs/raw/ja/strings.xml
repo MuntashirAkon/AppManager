@@ -316,7 +316,7 @@
 \n \\item \\textbf{詳細情報} 次のような情報を表示します。
 \n \\begin{itemize}
 \n \\item \\textbf{SDK} Android SDKに関連する情報を表示します。値は2つ（古い端末では1つ）あります。\\textit{最大}はターゲットSDK、\\textit{最小}は最小SDKを表します（後者はそれ以上古い端末では利用できません）。現在プラットフォームがサポートしている最大のSDKを持つアプリを使用するのが好ましいです。SDKは、\\textbf{APIレベル}とも呼ばれます。
-\n \\seealsoinline{\\href{https://ja.wikipedia.org/wiki/Android%E3%81%AE%E3%83%90%E3%83%BC%E3%82%B8%E3%83%A7%E3%83%B3%E5%B1%A5%E6%AD%B4}{Androidのバージョン履歴}}
+\n \\seealsoinline{\\href{https://ja.wikipedia.org/wiki/Android\\%E3\\%81\\%AE\\%E3\\%83\\%90\\%E3\\%83\\%BC\\%E3\\%82\\%B8\\%E3\\%83\\%A7\\%E3\\%83\\%B3\\%E5\\%B1\\%A5\\%E6\\%AD\\%B4}{Androidのバージョン履歴}}
 \n
 \n \\item \\textbf{フラグ} The application flags used at the time of building the app. For a complete list of flags
 \n and what they do, visit the
