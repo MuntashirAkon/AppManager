@@ -400,7 +400,7 @@
     <string name="pages$app-details-page$providers">\\textbf{プロバイダ}（\\textit{コンテンツプロバイダ}ともいう）は、アプリ内のデータ管理に使用されます。例えば、App ManagerでAPKファイルの保存やルールのエクスポートを行う場合、「androidx.core.content.FileProvider」というコンテンツプロバイダを使用します。データベース管理、トラッキング、検索など、様々なコンテンツ関連のタスクを管理するために、他のコンテンツプロバイダや、カスタムプロバイダーもあります。各コンテンツプロバイダは、パッケージ名と同様に、Androidエコシステム全体でその特定のアプリケーションに固有のAuthorityと呼ばれるフィールドを持っています。</string>
     <string name="pages$app-details-page$config-termux">デフォルトでは、Termuxはサードパーティアプリケーションからのコマンドの実行が許可されていません。
 \nこのオプションを有効にするには、\\texttt{\\textasciitilde/.termux/termux.properties} に \\texttt{allow-external-apps=true} を追加し、
-\nTermux v0.96 以降を実行していることを確認する必要があります。
+\nTermux v0.96 以降を実行している必要があります。
 \n
 \n\\begin{tip}{Info}
 \nこのオプションを有効にしても、Termuxのセキュリティは低下しません。
@@ -564,4 +564,5 @@
     <string name="pages$one-click-ops-page$$section-title">ワンタップ一括処理</string>
     <string name="pages$one-click-ops-page$$block-components-dots-title">コンポーネントのブロック\\dots</string>
     <string name="pages$one-click-ops-page$$1-click-back-up-title">バックアップ</string>
+    <string name="pages$app-details-page$$shared-libs-tab-title">共有ライブラリタブ</string>
 </resources>
