@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.servermanager;
 
+import android.annotation.SuppressLint;
 import android.annotation.UserIdInt;
 import android.content.ComponentName;
 import android.content.Context;
@@ -38,6 +39,7 @@ import java.util.Objects;
 import dev.rikka.tools.refine.Refine;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.compat.ClearDataObserver;
+import io.github.muntashirakon.AppManager.compat.CompatUtils;
 import io.github.muntashirakon.AppManager.compat.StorageManagerCompat;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
@@ -73,6 +75,7 @@ public final class PackageManagerCompat {
 
     private static final int WORKING_FLAGS = PackageManager.GET_META_DATA | PackageUtils.flagMatchUninstalled;
 
+    @SuppressLint("NewApi")
     @SuppressWarnings("deprecation")
     @WorkerThread
     public static List<PackageInfo> getInstalledPackages(int flags, @UserIdInt int userHandle)
@@ -95,18 +98,19 @@ public final class PackageManagerCompat {
             return packageInfoList;
         }
         IPackageManager pm = AppManager.getIPackageManager();
-        if (Build.VERSION.SDK_INT >= 33) {
+        if (CompatUtils.isAndroid13Beta()) {
             return pm.getInstalledPackages((long) flags, userHandle).getList();
         }
         return pm.getInstalledPackages(flags, userHandle).getList();
     }
 
+    @SuppressLint("NewApi")
     @SuppressWarnings("deprecation")
     @WorkerThread
     public static List<ApplicationInfo> getInstalledApplications(int flags, @UserIdInt int userHandle)
             throws RemoteException {
         IPackageManager pm = AppManager.getIPackageManager();
-        if (Build.VERSION.SDK_INT >= 33) {
+        if (CompatUtils.isAndroid13Beta()) {
             return pm.getInstalledApplications((long) flags, userHandle).getList();
         }
         return pm.getInstalledApplications(flags, userHandle).getList();
@@ -179,17 +183,19 @@ public final class PackageManagerCompat {
         return Objects.requireNonNull(info);
     }
 
+    @SuppressLint("NewApi")
     @SuppressWarnings("deprecation")
     @NonNull
     public static ApplicationInfo getApplicationInfo(String packageName, int flags, @UserIdInt int userHandle)
             throws RemoteException {
         IPackageManager pm = AppManager.getIPackageManager();
-        if (Build.VERSION.SDK_INT >= 33) {
+        if (CompatUtils.isAndroid13Beta()) {
             return pm.getApplicationInfo(packageName, (long) flags, userHandle);
         }
         return pm.getApplicationInfo(packageName, flags, userHandle);
     }
 
+    @SuppressLint("NewApi")
     @SuppressWarnings("deprecation")
     @NonNull
     public static List<ResolveInfo> queryIntentActivities(@NonNull Context context, @NonNull Intent intent, int flags,
@@ -199,7 +205,7 @@ public final class PackageManagerCompat {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             IPackageManagerN pmN = Refine.unsafeCast(pm);
             ParceledListSlice<ResolveInfo> resolveInfoList;
-            if (Build.VERSION.SDK_INT >= 33) {
+            if (CompatUtils.isAndroid13Beta()) {
                 resolveInfoList = pmN.queryIntentActivities(intent,
                         intent.resolveTypeIfNeeded(context.getContentResolver()), (long) flags, userId);
             } else {
@@ -330,10 +336,11 @@ public final class PackageManagerCompat {
         }
     }
 
+    @SuppressLint("NewApi")
     @SuppressWarnings("deprecation")
     private static PackageInfo getPackageInfoInternal(IPackageManager pm, String packageName, int flags, @UserIdInt int userId)
             throws RemoteException {
-        if (Build.VERSION.SDK_INT >= 33) {
+        if (CompatUtils.isAndroid13Beta()) {
             return pm.getPackageInfo(packageName, (long) flags, userId);
         }
         return pm.getPackageInfo(packageName, flags, userId);
