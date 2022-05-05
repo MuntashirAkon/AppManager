@@ -418,15 +418,20 @@
     <string name="debuggable">Avlusbar</string>
     <string name="credits_message">Til utviklerne av
 \n- Android Open Source-prosjektet
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
-\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
-\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
+\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+\n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
+\n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
+\n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
 \nLogohenvisning: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="close">Lukk</string>
     <string name="user_profile_with_id">Profil: %1$s (%2$d)</string>
@@ -652,7 +657,7 @@
     <string name="pref_remove_all_rules_msg">Tilganger vil bli innvilget, app-operasjoner og komponenter vil tilbakestilles til sine forvalgte verdier.</string>
     <plurals name="alert_failed_to_set_app_ops">
         <item quantity="one">Kunne ikke sette app-operasjoner for ett program</item>
-        <item quantity="other">Kunne ikke sette app-operasjoner for %1$s programmer</item>
+        <item quantity="other">Kunne ikke sette app-operasjoner for %1$d programmer</item>
     </plurals>
     <string name="input_app_ops">Skriv inn app-operasjoner</string>
     <string name="uninstall_updates">Avinstaller oppgraderinger</string>
