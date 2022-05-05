@@ -1164,4 +1164,25 @@
     <string name="smali">Smali</string>
     <string name="import_from_sb">Importuj z Swift Backup 3.0 – 3.2</string>
     <string name="pref_import_backups_hint">Wybierz katalog zawierający pliki kopii zapasowych (Swift Backup/Titanium Backup) lub katalogi (OAndBackup)</string>
+    <string name="extract">Wyodrębnij</string>
+    <string name="replace">Zastąp</string>
+    <string name="rename">Zmień nazwę</string>
+    <string name="intent_firewall_and_disable">IFW + wyłącz</string>
+    <string name="intent_firewall">IFW</string>
+    <string name="pref_default_blocking_method">Domyślna metoda blokowania</string>
+    <string name="authenticating">Uwierzytelnianie…</string>
+    <string name="toggle_internet">Użyj internetu</string>
+    <string name="search_type_suffix">Przyrostek</string>
+    <string name="search_type_regular_expressions">Regex</string>
+    <string name="vt_success">VirusTotal: %1$d/%2$d</string>
+    <string name="pref_default_blocking_method_description">Metoda domyślnie stosowana w miejscach, w których nie ma możliwości wybrania metody blokowania.</string>
+    <string name="search_type_contains">Zawiera</string>
+    <string name="pref_intent_firewall_and_disable_description">Blokowanie składników za pomocą zapory sieciowej oraz ich wyłączanie. Metoda zalecana dla użytkowników z uprawnieniami roota.</string>
+    <string name="pref_intent_firewall_description">Blokuj komponenty tylko za pomocą umyślnej zapory sieciowej. Nie jest to zalecane, ponieważ niektóre aplikacje systemowe mogą omijać zapory.</string>
+    <string name="pref_disable_description">Wyłącz tylko komponenty. Metoda niezalecana dla użytkowników z rootem, ponieważ aplikacje mogą ją obejść. W trybach ADB za pomocą tej metody można wyłączyć tylko aplikacje testowe.</string>
+    <string name="search_type_prefix">Przedrostek</string>
+    <string name="vt_checking">VirusTotal: Sprawdzanie…</string>
+    <string name="vt_uploading">VirusTotal: Przesyłanie…</string>
+    <string name="vt_queued">VirusTotal: W kolejce</string>
+    <string name="vt_failed">VirusTotal: Niepowodzenie</string>
 </resources>
