@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <string name="_lang_tag" translatable="false">hi</string>
-    <string name="deny_app_ops_description">कांस्टेंट वैल्यू द्वारा पहचाने गए ऐप ऑपरेशंस को अस्वीकार करें, यानी 63 का मतलब है RUN_IN_BACKGROUND</string>
+    <string name="deny_app_ops_description">कांस्टेंट वैल्यू द्वारा पहचाने गए ऐप ऑपरेशंस को अस्वीकार करें, यानी <tt>63</tt> का मतलब है <tt>RUN_IN_BACKGROUND</tt></string>
     <string name="block_components_description">दिए गए हस्ताक्षर द्वारा पहचाने गए सभी कंपोनेंट को ब्लॉक करें</string>
     <string name="block_components_dots">कंपोनेंट ब्लॉक करें…</string>
     <string name="block_unblock_trackers_description">सभी इंस्टॉल किए गए ऐप्स से विज्ञापन और ट्रैकिंग कंपोनेंट को ब्लॉक या अनब्लॉक करें</string>
@@ -50,7 +50,7 @@
     <string name="follow_system">सिस्टम के अनुसार</string>
     <string name="pref_app_theme">ऐप थीम</string>
     <string name="pref_import_blocker_msg">ब्लॉकर से ब्लॉकिंग रूल्स आयात करें, प्रत्येक फाइल जो एक पैकेज के रूल्स समाविष्ट करती है</string>
-    <string name="pref_import_watt_msg">वाट से ब्लॉकिंग रूल्स आयात करें, प्रत्येक फाइल जो एक पैकेज नाम जैसे कि packagename.xml के रूल्स समाविष्ट करती है।</string>
+    <string name="pref_import_watt_msg">वाट से ब्लॉकिंग रूल्स आयात करें, प्रत्येक फाइल जो एक पैकेज नाम जैसे कि <tt>packagename.xml</tt> के रूल्स समाविष्ट करती है।</string>
     <string name="pref_import_msg">ऐप मैनेजर से पहले निर्यात किए गए ब्लॉकिंग नियमों को आयात करें</string>
     <string name="pref_export_msg">ऐप मैनेजर में कॉन्फ़िगर किए गए ब्लॉकिंग नियमों को एक्सटर्नल स्टोरेज में निर्यात करें।</string>
     <string name="touchscreen">टचस्क्रीन</string>
@@ -341,16 +341,16 @@
     </plurals>
     <string name="failed_to_parse_some_numbers">कुछ नंबर पार्स नहीं कर सके</string>
     <string name="only_works_in_root_or_adb_mode">केवल रूट या एडीबी मोड में काम करता है</string>
-    <string name="input_app_ops_description">ऐप ऑप कांस्टेंट को रिक्त स्थान के साथ के साथ लिखें, उदाहरण के लिए (63 72 12) आदि। आप कोष्ठक के तहत ऐप ऑप्स टैब में ऐप ऑप कांस्टेंट पा सकते हैं।</string>
+    <string name="input_app_ops_description">ऐप ऑप कांस्टेंट को रिक्त स्थान के साथ के साथ लिखें, उदाहरण के लिए (<tt>WAKE_LOCK 63 72 CAMERA</tt>) आदि। आप कोष्ठक के तहत ऐप ऑप्स टैब में ऐप ऑप कांस्टेंट पा सकते हैं।</string>
     <string name="input_app_ops">इनपुट ऐप ऑप्स</string>
     <string name="filtered_packages">फ़िल्टर किए गए पैकेज</string>
-    <string name="input_signatures_description">रिक्त स्थान के साथ इनपुट हस्ताक्षर, उदाहरण के लिए (com.facebook org.app2 com.app3) आदि।</string>
+    <string name="input_signatures_description">रिक्त स्थान के साथ इनपुट हस्ताक्षर, उदाहरण के लिए (<tt>com.facebook org.app2 com.app3</tt>) आदि।</string>
     <string name="input_signatures">इनपुट हस्ताक्षर</string>
     <string name="failed_packages">असफल पैकेज</string>
     <string name="no_tracker_found">कोई ट्रैकर नहीं मिला</string>
     <string name="clear_app_cache_description">सभी ऐप्स के कैश को साफ करता है</string>
     <string name="clear_app_cache">ऐप कैश साफ करें</string>
-    <string name="clear_data_from_uninstalled_apps_description">DONT_DELETE_DATA फ्लैग के साथ अनइंस्टॉल किए गए एप्लिकेशन से डेटा साफ़ करें</string>
+    <string name="clear_data_from_uninstalled_apps_description"><tt>DONT_DELETE_DATA</tt> फ्लैग के साथ अनइंस्टॉल किए गए एप्लिकेशन से डेटा साफ़ करें</string>
     <string name="clear_data_from_uninstalled_apps">अनइंस्टॉल किए गए ऐप्स से डेटा साफ़ करें</string>
     <string name="patterns_allowed">पैटर्न अनुमति</string>
     <string name="write">लिखें</string>
@@ -691,7 +691,7 @@
     <string name="simple">सरल</string>
     <string name="enabled">सक्षम</string>
     <string name="choose">चुनें</string>
-    <string name="input_permissions_description">रिक्त स्थान के साथ अनुमतियां इनपुट , उदाहरण के लिए (com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION) आदि।</string>
+    <string name="input_permissions_description">रिक्त स्थान के साथ अनुमतियां इनपुट , उदाहरण के लिए (<tt>com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION</tt>) आदि।</string>
     <string name="input_permissions">अनुमतियाँ इनपुट</string>
     <string name="options">विकल्प</string>
     <string name="off">बंद</string>
@@ -753,11 +753,11 @@
     <string name="selinux">SELinux</string>
     <string name="patch_level">पैच स्तर</string>
     <string name="backup_skip_signature_checks_description">बैकअप रिस्टोर करने के लिए उपयोगी है जो चेकसम सत्यापन विफलता के कारण विफल हो रहे हैं या पहले से बने बैकअप की तुलना में एक अलग एपीके हस्ताक्षर है।</string>
-    <string name="backup_multiple_description">बेस बैकअप के बजाय बैक अप नाम से अलग नाम का इस्तेमाल करें।</string>
+    <string name="backup_multiple_description">बेस बैकअप के बजाय बैक अप <i>नाम</i> से अलग नाम का इस्तेमाल करें।</string>
     <string name="backup_rules_description">ऐप मैनेजर के भीतर कॉन्फ़िगर किए गए नियमों का बैकअप करें।</string>
     <string name="backup_extras_description">ऐप अनुमतियां, बैटरी की बचत, डेटा उपयोग विकल्प, मैजिस्कहाइड स्थिति आदि बैकअप करें।</string>
     <string name="backup_extras">एक्स्ट्रास</string>
-    <string name="backup_cache_description">, no_cache और no_backup फ़ोल्डर का बैकअप न करें।</string>
+    <string name="backup_cache_description"><b>cache</b>, <b>no_cache</b> और <b>no_backup</b> फ़ोल्डर का बैकअप न करें।</string>
     <string name="backup_obb_media_description">ओबीबी और मीडिया फ़ोल्डर्स बैकअप करें।</string>
     <string name="backup_external_data_description">बाहरी डेटा फ़ोल्डर्स का बैकअप करें। इसको काम करने के लिए <b> डेटा </b> चयनित होना अनिवार्य है।</string>
     <string name="backup_internal_data_description">डेटा फ़ोल्डर्स बैकअप करें। अगर चयनित किया तो इंटरनल डेटा फ़ोल्डर्स को भी बैकअप किया जाएगा।</string>
@@ -767,8 +767,8 @@
     <string name="pref_cat_configuration">व्यवस्था का प्रारूप</string>
     <string name="pref_cat_appearance">दिखावट</string>
     <plurals name="usage_seconds">
-        <item quantity="one">सेकंड</item>
-        <item quantity="other">सेकंड</item>
+        <item quantity="one">%1$d सेकंड</item>
+        <item quantity="other">%1$d सेकंड</item>
     </plurals>
     <string name="text_filter_text">फिल्टर मूलपाठ</string>
     <string name="send_log_title">इस्तेमाल की जानकारी भेजो</string>
@@ -777,8 +777,8 @@
     <string name="swap">विनिमय</string>
     <string name="settings">समायोजन</string>
     <plurals name="usage_minutes">
-        <item quantity="one">मिनट</item>
-        <item quantity="other">मिनट</item>
+        <item quantity="one">%1$d मिनट</item>
+        <item quantity="other">%1$d मिनट</item>
     </plurals>
     <string name="subject_log_report">इस्तेमाल का विवरण</string>
     <string name="community">कम्युनिटी</string>
