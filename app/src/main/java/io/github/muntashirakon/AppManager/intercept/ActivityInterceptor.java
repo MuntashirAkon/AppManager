@@ -1257,7 +1257,7 @@ public class ActivityInterceptor extends BaseActivity {
             ResolveInfo resolveInfo = matchingActivities.get(position);
             ActivityInfo info = resolveInfo.activityInfo;
             holder.title.setText(info.loadLabel(pm));
-            String activityName = info.targetActivity != null ? info.targetActivity : info.name;
+            String activityName = info.name;
             String name = info.packageName + "\n" + activityName;
             holder.subtitle.setText(name);
             holder.subtitle.setTextIsSelectable(true);

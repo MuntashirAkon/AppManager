@@ -1133,7 +1133,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             }
             for (ActivityInfo activityInfo : mPackageInfo.activities) {
                 AppDetailsComponentItem componentItem = new AppDetailsComponentItem(activityInfo);
-                componentItem.name = activityInfo.targetActivity == null ? activityInfo.name : activityInfo.targetActivity;
+                componentItem.name = activityInfo.name;
                 synchronized (mBlockerLocker) {
                     if (!mIsExternalApk) {
                         componentItem.setRule(mBlocker.getComponent(activityInfo.name));
@@ -1270,11 +1270,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     }
 
     public boolean isComponentDisabled(@NonNull ComponentInfo componentInfo) {
-        String className = componentInfo.name;
-        if (componentInfo instanceof ActivityInfo && ((ActivityInfo) componentInfo).targetActivity != null) {
-            className = ((ActivityInfo) componentInfo).targetActivity;
-        }
-        ComponentName componentName = new ComponentName(componentInfo.packageName, className);
+        ComponentName componentName = new ComponentName(componentInfo.packageName, componentInfo.name);
         try {
             int componentEnabledSetting = PackageManagerCompat.getComponentEnabledSetting(componentName, mUserHandle);
             switch (componentEnabledSetting) {

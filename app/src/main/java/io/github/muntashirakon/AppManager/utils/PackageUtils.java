@@ -331,9 +331,11 @@ public final class PackageUtils {
         // Add activities
         if (packageInfo.activities != null) {
             for (ActivityInfo activityInfo : packageInfo.activities) {
-                if (activityInfo.targetActivity != null)
+                if (activityInfo.targetActivity != null) {
+                    // We need real class name exclusively
                     componentClasses.put(activityInfo.targetActivity, RuleType.ACTIVITY);
-                else componentClasses.put(activityInfo.name, RuleType.ACTIVITY);
+                }
+                componentClasses.put(activityInfo.name, RuleType.ACTIVITY);
             }
         }
         // Add others

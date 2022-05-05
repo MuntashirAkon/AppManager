@@ -98,7 +98,7 @@ public class LauncherIconCreator {
     @NonNull
     private static Intent getIntent(@NonNull ActivityInfo itemInfo) {
         Intent intent = new Intent();
-        intent.setClassName(itemInfo.packageName, itemInfo.targetActivity == null ? itemInfo.name : itemInfo.targetActivity);
+        intent.setClassName(itemInfo.packageName, itemInfo.name);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         return intent;
@@ -109,7 +109,7 @@ public class LauncherIconCreator {
         Intent intent = new Intent();
         intent.setClass(AppManager.getContext(), ActivityLauncherShortcutActivity.class);
         intent.putExtra(ActivityLauncherShortcutActivity.EXTRA_PKG, itemInfo.packageName);
-        intent.putExtra(ActivityLauncherShortcutActivity.EXTRA_CLS, itemInfo.targetActivity == null ? itemInfo.name : itemInfo.targetActivity);
+        intent.putExtra(ActivityLauncherShortcutActivity.EXTRA_CLS, itemInfo.name);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         return intent;
