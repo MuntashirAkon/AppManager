@@ -1160,4 +1160,8 @@
         <item quantity="many">%1$d sek.</item>
         <item quantity="other">%1$d sek.</item>
     </plurals>
+    <string name="java">Java</string>
+    <string name="smali">Smali</string>
+    <string name="import_from_sb">Importuj z Swift Backup 3.0 – 3.2</string>
+    <string name="pref_import_backups_hint">Wybierz katalog zawierający pliki kopii zapasowych (Swift Backup/Titanium Backup) lub katalogi (OAndBackup)</string>
 </resources>
