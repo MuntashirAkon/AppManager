@@ -4,16 +4,15 @@
     <string-array name="languages_key">
         <item>ar</item>
         <item>auto</item>
-        <item>bn-BD</item>
         <item>de</item>
         <item>en</item>
         <item>es-ES</item>
         <item>fa</item>
         <item>fr</item>
         <item>hi</item>
-        <item>in</item>
+        <item>id</item>
         <item>it</item>
-        <item>ja-JP</item>
+        <item>ja</item>
         <item>nb-NO</item>
         <item>pl</item>
         <item>pt</item>

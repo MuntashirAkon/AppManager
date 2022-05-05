@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
-    <string name="_lang_tag" translatable="false">bn-BD</string>
     <string name="uninstall">আনইনস্টল</string>
     <string name="require_no_permission">কোন অনুমতির প্রয়োজন নেই</string>
     <string name="activities">কার্যকলাপ</string>
