@@ -361,7 +361,7 @@
     <string name="skip_signature_checks">স্বাক্ষর চেকগুলি এড়িয়ে যান</string>
     <string name="backup_options">Backup Options</string>
     <string name="components">উপাদানগুলো</string>
-    <string name="clear_data_from_uninstalled_apps_description">DONT_DELETE_DATA ফ্ল্যাগ দ্বারা আনইনস্টলড অ্যাপগুলো থেকে ডাটা মুছুন</string>
+    <string name="clear_data_from_uninstalled_apps_description"><tt>DONT_DELETE_DATA</tt> ফ্ল্যাগ দ্বারা আনইনস্টলড অ্যাপগুলো থেকে ডাটা মুছুন</string>
     <string name="manifest_viewer">ম্যানিফেস্ট ভিউয়ার</string>
     <string name="sort_by_target_sdk">টার্গেট SDK</string>
     <string name="sort_by_sha">স্বাক্ষর</string>
