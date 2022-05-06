@@ -491,14 +491,14 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
         exportRulesMenu.setEnabled(nonZeroSelection);
         addToProfileMenu.setEnabled(nonZeroSelection);
         /* === Visible/Invisible === */
-        boolean isRootEnabled = Ops.isRoot();
-        boolean isRootOrAdbEnabled = Ops.isPrivileged();
-        enableDisableMenu.setVisible(isRootOrAdbEnabled);
-        forceStopMenu.setVisible(isRootOrAdbEnabled);
-        clearDataCacheMenu.setVisible(isRootOrAdbEnabled);
-        preventBackgroundMenu.setVisible(isRootOrAdbEnabled);
-        netPolicyMenu.setVisible(isRootOrAdbEnabled);
-        blockUnblockTrackersMenu.setVisible(isRootEnabled);
+        boolean privileged = Ops.isPrivileged();
+        uninstallMenu.setVisible(privileged);
+        enableDisableMenu.setVisible(privileged);
+        forceStopMenu.setVisible(privileged);
+        clearDataCacheMenu.setVisible(privileged);
+        preventBackgroundMenu.setVisible(privileged);
+        netPolicyMenu.setVisible(privileged);
+        blockUnblockTrackersMenu.setVisible(privileged);
     }
 
     @Override
