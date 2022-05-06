@@ -29,7 +29,6 @@ TMP_PATH="tmp"
 AAB_PATH="${RELEASE_PATH}/${DEFAULT_NAME}.aab"
 APKS_PATH="${RELEASE_PATH}/${DEFAULT_NAME}.apks"
 APK_PATH="${RELEASE_PATH}/${DEFAULT_NAME}-universal.apks"
-APK_FILE_PATH="${RELEASE_PATH}/${DEFAULT_NAME}.apk"
 
 SUPPORTED_LANGUAGES=(ar de en es fa fr hi id it ja nb pl pt ru tr uk vi zh)
 SUPPORTED_DPIS=(ldpi mdpi tvdpi hdpi xhdpi xxhdpi xxxhdpi)
@@ -57,7 +56,7 @@ if [[ "$BUILD_AAB" == true ]]; then
   if [[ -f "${AAB_PATH}" ]]; then
     rm "${AAB_PATH}"
   fi
-  ./gradlew "app:bundle$(tr '[:lower:]' '[:upper:]' <<<"${RELEASE_TYPE:0:1}")${RELEASE_TYPE:1}"
+  ./gradlew "bundle$(tr '[:lower:]' '[:upper:]' <<<"${RELEASE_TYPE:0:1}")${RELEASE_TYPE:1}"
 fi
 
 if [[ -f ${AAB_PATH} ]]; then
@@ -98,7 +97,7 @@ done
 rm ./base-*
 # Make zip
 cd "${lastPWD}"
-zip -j "${RELEASE_PATH}/${DEFAULT_NAME}.apks" "${RELEASE_PATH}/${TMP_PATH}/splits"/*
+zip -j "${RELEASE_PATH}/${APP_NAME}.apks" "${RELEASE_PATH}/${TMP_PATH}/splits"/*
 rm -rf "${RELEASE_PATH:?}/${TMP_PATH}"
 
 # Unzip universal APKS file
@@ -106,14 +105,11 @@ if [[ -f ${APK_PATH} ]]; then
   unzip "${APK_PATH}" -d "${RELEASE_PATH}"/${TMP_PATH}
   rm "${APK_PATH}"
 else
-  echo "$APKS_PATH doesn't exist"
+  echo "$APK_PATH doesn't exist"
   exit 1
 fi
-mv "${RELEASE_PATH}/${TMP_PATH}/universal.apk" "${APK_FILE_PATH}"
+mv "${RELEASE_PATH}/${TMP_PATH}/universal.apk" "${RELEASE_PATH}/${APP_NAME}.apk"
+touch "${RELEASE_PATH}/${APP_NAME}.apk"
 rm -rf "${RELEASE_PATH:?}/${TMP_PATH}"
-
-# Rename files
-mv "${APKS_PATH}" "${RELEASE_PATH}/${APP_NAME}.apks"
-mv "${APK_FILE_PATH}" "${RELEASE_PATH}/${APP_NAME}.apk"
 
 echo "Output generated at $(pwd)/${RELEASE_PATH}"
