@@ -36,8 +36,8 @@ import java.util.Objects;
 
 import dev.rikka.tools.refine.Refine;
 import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.compat.UsageStatsManagerCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.servermanager.UsageStatsManagerCompat;
 import io.github.muntashirakon.AppManager.utils.NonNullUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;

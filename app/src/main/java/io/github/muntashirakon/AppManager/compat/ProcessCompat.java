@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-package io.github.muntashirakon.AppManager.servermanager;
+package io.github.muntashirakon.AppManager.compat;
 
 import android.os.RemoteException;
 
@@ -11,8 +11,9 @@ import java.io.IOException;
 
 import io.github.muntashirakon.AppManager.ipc.IPCUtils;
 import io.github.muntashirakon.AppManager.ipc.RemoteProcess;
+import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 
-public class ProcessCompat {
+public final class ProcessCompat {
     public static Process exec(@Nullable String[] cmd, @Nullable String[] env, @Nullable File dir) throws IOException {
         if (LocalServer.isAMServiceAlive()) {
             try {

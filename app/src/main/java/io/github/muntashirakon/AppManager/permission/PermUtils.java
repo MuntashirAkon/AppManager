@@ -15,18 +15,18 @@ import androidx.annotation.WorkerThread;
 
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
+import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
+import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.servermanager.ActivityManagerCompat;
-import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
 import io.github.muntashirakon.AppManager.settings.Ops;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
-import static io.github.muntashirakon.AppManager.servermanager.PermissionCompat.FLAG_PERMISSION_AUTO_REVOKED;
-import static io.github.muntashirakon.AppManager.servermanager.PermissionCompat.FLAG_PERMISSION_ONE_TIME;
-import static io.github.muntashirakon.AppManager.servermanager.PermissionCompat.FLAG_PERMISSION_REVIEW_REQUIRED;
-import static io.github.muntashirakon.AppManager.servermanager.PermissionCompat.FLAG_PERMISSION_REVOKED_COMPAT;
-import static io.github.muntashirakon.AppManager.servermanager.PermissionCompat.FLAG_PERMISSION_USER_FIXED;
-import static io.github.muntashirakon.AppManager.servermanager.PermissionCompat.FLAG_PERMISSION_USER_SET;
+import static io.github.muntashirakon.AppManager.compat.PermissionCompat.FLAG_PERMISSION_AUTO_REVOKED;
+import static io.github.muntashirakon.AppManager.compat.PermissionCompat.FLAG_PERMISSION_ONE_TIME;
+import static io.github.muntashirakon.AppManager.compat.PermissionCompat.FLAG_PERMISSION_REVIEW_REQUIRED;
+import static io.github.muntashirakon.AppManager.compat.PermissionCompat.FLAG_PERMISSION_REVOKED_COMPAT;
+import static io.github.muntashirakon.AppManager.compat.PermissionCompat.FLAG_PERMISSION_USER_FIXED;
+import static io.github.muntashirakon.AppManager.compat.PermissionCompat.FLAG_PERMISSION_USER_SET;
 
 public class PermUtils {
     private static final String KILL_REASON_APP_OP_CHANGE = "Permission related app op changed";

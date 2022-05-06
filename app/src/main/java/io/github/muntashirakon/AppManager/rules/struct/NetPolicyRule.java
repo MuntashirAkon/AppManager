@@ -7,8 +7,8 @@ import androidx.annotation.NonNull;
 import java.util.Objects;
 import java.util.StringTokenizer;
 
+import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.rules.RuleType;
-import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerCompat;
 
 public class NetPolicyRule extends RuleEntry {
     @NetworkPolicyManagerCompat.NetPolicy

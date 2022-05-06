@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-package io.github.muntashirakon.AppManager.servermanager;
+package io.github.muntashirakon.AppManager.compat;
 
 import android.content.pm.ApplicationInfo;
 import android.content.pm.ApplicationInfoHidden;
@@ -15,7 +15,7 @@ import java.lang.annotation.RetentionPolicy;
 
 import dev.rikka.tools.refine.Refine;
 
-public class ApplicationInfoCompat {
+public final class ApplicationInfoCompat {
     /**
      * Value for {@code #privateFlags}: true if the application is hidden via restrictions and for
      * most purposes is considered as not installed.

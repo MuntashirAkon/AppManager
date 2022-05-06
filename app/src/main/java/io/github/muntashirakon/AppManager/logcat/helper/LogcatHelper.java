@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import io.github.muntashirakon.AppManager.compat.ProcessCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.servermanager.ProcessCompat;
 
 // Copyright 2012 Nolan Lawson
 public class LogcatHelper {

@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-package io.github.muntashirakon.AppManager.servermanager;
+package io.github.muntashirakon.AppManager.compat;
 
 import android.annotation.UserIdInt;
 import android.app.usage.IUsageStatsManager;
@@ -12,7 +12,7 @@ import android.os.RemoteException;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 
-public class UsageStatsManagerCompat {
+public final class UsageStatsManagerCompat {
     private static final String SYS_USAGE_STATS_SERVICE = "usagestats";
 
     private static final String USAGE_STATS_SERVICE_NAME;

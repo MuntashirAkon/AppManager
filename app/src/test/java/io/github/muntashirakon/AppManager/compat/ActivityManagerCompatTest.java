@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-package io.github.muntashirakon.AppManager.servermanager;
+package io.github.muntashirakon.AppManager.compat;
 
 import android.app.ActivityManager;
 import android.content.ComponentName;

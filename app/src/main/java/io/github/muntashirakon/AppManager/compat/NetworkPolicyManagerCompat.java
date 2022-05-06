@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-package io.github.muntashirakon.AppManager.servermanager;
+package io.github.muntashirakon.AppManager.compat;
 
 import android.content.Context;
 import android.net.INetworkPolicyManager;
@@ -20,7 +20,7 @@ import java.util.List;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 
-public class NetworkPolicyManagerCompat {
+public final class NetworkPolicyManagerCompat {
     /*
      * The policies below are taken from LineageOS
      * Source: https://github.com/LineageOS/android_frameworks_base/blob/lineage-18.1/core/java/android/net/NetworkPolicyManager.java

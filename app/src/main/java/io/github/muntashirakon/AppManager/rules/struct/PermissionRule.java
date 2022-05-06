@@ -12,13 +12,13 @@ import java.util.Objects;
 import java.util.StringTokenizer;
 
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
+import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 import io.github.muntashirakon.AppManager.permission.DevelopmentPermission;
 import io.github.muntashirakon.AppManager.permission.PermUtils;
 import io.github.muntashirakon.AppManager.permission.Permission;
 import io.github.muntashirakon.AppManager.permission.ReadOnlyPermission;
 import io.github.muntashirakon.AppManager.permission.RuntimePermission;
 import io.github.muntashirakon.AppManager.rules.RuleType;
-import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
 
 public class PermissionRule extends RuleEntry {
     private final int mAppOp;

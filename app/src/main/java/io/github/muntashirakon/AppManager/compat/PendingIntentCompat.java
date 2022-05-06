@@ -5,7 +5,7 @@ package io.github.muntashirakon.AppManager.compat;
 import android.app.PendingIntent;
 import android.os.Build;
 
-public class PendingIntentCompat {
+public final class PendingIntentCompat {
     public static final int FLAG_IMMUTABLE;
     public static final int FLAG_MUTABLE;
 

@@ -20,6 +20,8 @@ import java.util.List;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
+import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
+import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 import io.github.muntashirakon.AppManager.magisk.MagiskProcess;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.struct.AppOpRule;
@@ -33,8 +35,6 @@ import io.github.muntashirakon.AppManager.rules.struct.PermissionRule;
 import io.github.muntashirakon.AppManager.rules.struct.RuleEntry;
 import io.github.muntashirakon.AppManager.rules.struct.SsaidRule;
 import io.github.muntashirakon.AppManager.rules.struct.UriGrantRule;
-import io.github.muntashirakon.AppManager.servermanager.NetworkPolicyManagerCompat;
-import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
 import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.ProxyFileReader;

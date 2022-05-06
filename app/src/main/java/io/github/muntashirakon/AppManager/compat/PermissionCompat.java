@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-package io.github.muntashirakon.AppManager.servermanager;
+package io.github.muntashirakon.AppManager.compat;
 
 import android.annotation.SuppressLint;
 import android.annotation.UserIdInt;
@@ -29,7 +29,7 @@ import dev.rikka.tools.refine.Refine;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 
-public class PermissionCompat {
+public final class PermissionCompat {
     public static final int FLAG_PERMISSION_NONE = 0;
 
     /**

@@ -16,8 +16,8 @@ import java.util.Objects;
 
 import aosp.libcore.util.EmptyArray;
 import io.github.muntashirakon.AppManager.backup.BackupManager;
+import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
-import io.github.muntashirakon.AppManager.servermanager.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.io.Path;
 

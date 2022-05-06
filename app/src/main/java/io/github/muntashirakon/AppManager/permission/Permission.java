@@ -5,16 +5,16 @@ package io.github.muntashirakon.AppManager.permission;
 import android.os.Build;
 
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
-import io.github.muntashirakon.AppManager.servermanager.PermissionCompat;
+import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 
-import static io.github.muntashirakon.AppManager.servermanager.PermissionCompat.FLAG_PERMISSION_GRANTED_BY_DEFAULT;
-import static io.github.muntashirakon.AppManager.servermanager.PermissionCompat.FLAG_PERMISSION_POLICY_FIXED;
-import static io.github.muntashirakon.AppManager.servermanager.PermissionCompat.FLAG_PERMISSION_REVIEW_REQUIRED;
-import static io.github.muntashirakon.AppManager.servermanager.PermissionCompat.FLAG_PERMISSION_REVOKED_COMPAT;
-import static io.github.muntashirakon.AppManager.servermanager.PermissionCompat.FLAG_PERMISSION_REVOKE_ON_UPGRADE;
-import static io.github.muntashirakon.AppManager.servermanager.PermissionCompat.FLAG_PERMISSION_SYSTEM_FIXED;
-import static io.github.muntashirakon.AppManager.servermanager.PermissionCompat.FLAG_PERMISSION_USER_FIXED;
-import static io.github.muntashirakon.AppManager.servermanager.PermissionCompat.FLAG_PERMISSION_USER_SET;
+import static io.github.muntashirakon.AppManager.compat.PermissionCompat.FLAG_PERMISSION_GRANTED_BY_DEFAULT;
+import static io.github.muntashirakon.AppManager.compat.PermissionCompat.FLAG_PERMISSION_POLICY_FIXED;
+import static io.github.muntashirakon.AppManager.compat.PermissionCompat.FLAG_PERMISSION_REVIEW_REQUIRED;
+import static io.github.muntashirakon.AppManager.compat.PermissionCompat.FLAG_PERMISSION_REVOKED_COMPAT;
+import static io.github.muntashirakon.AppManager.compat.PermissionCompat.FLAG_PERMISSION_REVOKE_ON_UPGRADE;
+import static io.github.muntashirakon.AppManager.compat.PermissionCompat.FLAG_PERMISSION_SYSTEM_FIXED;
+import static io.github.muntashirakon.AppManager.compat.PermissionCompat.FLAG_PERMISSION_USER_FIXED;
+import static io.github.muntashirakon.AppManager.compat.PermissionCompat.FLAG_PERMISSION_USER_SET;
 
 // Copyright (C) 2015 The Android Open Source Project
 public class Permission {
