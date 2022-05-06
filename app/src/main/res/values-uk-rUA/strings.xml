@@ -1249,4 +1249,9 @@
     <string name="sort_by_installation_date">Дата встановлення</string>
     <string name="backup_volume_unavailable_warning">Обраний том резервного копіювання наразі недоступний. Якщо його розміщено в зовнішньому сховищі, будь ласка, під\'єднайте це сховище чи оберіть інший том резервного копіювання.</string>
     <string name="screen_time">Екранний час</string>
+    <string name="open_in_new_window">Нове вікно</string>
+    <string name="type_string_set">Набір рядків</string>
+    <string name="vt_confirm_uploading_file">Файл не знайдено в базі даних VirusTotal. Ви хочете його завантажити\?</string>
+    <string name="vt_confirm_upload_and_scan">Так, завантажити та сканувати</string>
+    <string name="pref_vt_prompt_before_uploading">Відобразити запит перед завантаженням файлу.</string>
 </resources>
