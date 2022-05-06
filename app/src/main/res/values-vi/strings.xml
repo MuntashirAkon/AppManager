@@ -1135,4 +1135,9 @@
     <string name="input_ssaid_instruction">SSAID là số thập lục phân %1$d byte, tức là một chuỗi có độ dài %2$d chứa 0 đến 9 và a đến f.</string>
     <string name="screen_time">Thời gian sử dụng Màn hình</string>
     <string name="tracker">Trình theo dõi</string>
+    <string name="open_in_new_window">Cửa sổ mới</string>
+    <string name="type_string_set">Tập hợp xâu</string>
+    <string name="pref_vt_prompt_before_uploading">Hỏi trước khi tải tệp lên.</string>
+    <string name="vt_confirm_uploading_file">Tệp không có trong cơ sở dữ liệu của VirusTotal. Bạn có muốn tải tệp lên không\?</string>
+    <string name="vt_confirm_upload_and_scan">Có, tải lên và quét</string>
 </resources>
