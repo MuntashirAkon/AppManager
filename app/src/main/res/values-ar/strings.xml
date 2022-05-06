@@ -1325,4 +1325,9 @@
     <string name="input_ssaid_instruction">SSAID هو رقم سداسي عشري %1$d بايت أي سلسلة طولها %2$d تحتوي على 0 إلى 9 و a إلى f.</string>
     <string name="screen_time">وقت الشاشة</string>
     <string name="backup_volume_unavailable_warning">وحدة تخزين النسخ الاحتياطي المحددة غير متوفرة حاليا. إذا كانت موجودة في وحدة تخزين خارجية ، فيرجى إدخالها أو تغيير وحدة تخزين النسخ الاحتياطي.</string>
+    <string name="pref_vt_prompt_before_uploading">عرض التاكيد قبل تحميل ملف.</string>
+    <string name="vt_confirm_upload_and_scan">نعم ، قم بالتحميل والفحص</string>
+    <string name="open_in_new_window">نافذة جديدة</string>
+    <string name="vt_confirm_uploading_file">لم يتم العثور على الملف في قاعدة بيانات VirusTotal. هل تريد تحميله؟</string>
+    <string name="type_string_set">مجموعة من السلاسل</string>
 </resources>
