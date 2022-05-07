@@ -83,8 +83,9 @@
     <string name="pages$app-details-page$$providers-title">(内容)提供者 ((Content)Providers)</string>
     <string name="pages$app-details-page$$blocking-components-title">阻止组件</string>
     <string name="pages$app-details-page$$other-tabs-title">其他选项卡</string>
-    <string name="pages$app-details-page$intro">\\textbf{应用详情页}由11个标签页组成.几乎描述了一个应用程序的所有信息,
-\n包括清单中的所有属性, \\hyperref[ch:app-ops]{AppOps},签名,原生库等</string>
+    <string name="pages$app-details-page$intro">\\textbf{应用详情} 页面由 11 个标签页组成。它描述了一个应用程序所能有的几乎所有信息, 
+\n包括其清单中的所有属性、\\hyperref[ch:app-ops]{应用操作}、签名
+\n信息、库等等。</string>
     <string name="pages$app-details-page$app-info-tab">\\textbf{应用信息} 选项卡包含关于一个应用程序的基本信息,
 \n许多操作可以在此标签中执行.</string>
     <string name="pages$one-click-ops-page$$section-title">一键操作页</string>
@@ -478,7 +479,7 @@
     <string name="pages$interceptor-page$$reset-to-default-title">重置为默认</string>
     <string name="pages$interceptor-page$$send-edited-intent-title">发送编辑过的意图(Intent)</string>
     <string name="pages$shared-prefs-editor-page$$section_title">共享首选项(Shared Preferences)编辑页</string>
-    <string name="guide$aot$$section-title">经由TCP的ADB</string>
+    <string name="guide$aot$$section-title">经由 TCP 的 ADB</string>
     <string name="guide$aot$$enable-dev-options-title">启用开发者选项</string>
     <string name="guide$aot$$location-dev-options-title">开发人员选项的位置</string>
     <string name="guide$aot$$how-to-enable-dev-options-title">如何启用开发者选项</string>
