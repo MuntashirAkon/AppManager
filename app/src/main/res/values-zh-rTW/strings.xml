@@ -1134,4 +1134,9 @@
     <string name="tracker">追蹤器</string>
     <string name="input_ssaid_instruction">SSAID 是一個 %1$d 位元組十六進位數值，即長度為 %2$d 的字串，其中包含 0 到 9 和 a 到 f。</string>
     <string name="screen_time">螢幕使用時間</string>
+    <string name="open_in_new_window">新視窗</string>
+    <string name="type_string_set">字串集</string>
+    <string name="pref_vt_prompt_before_uploading">上傳檔案前顯示提示。</string>
+    <string name="vt_confirm_uploading_file">在 VirusTotal 資料庫中找不到該檔案。是否要上傳？</string>
+    <string name="vt_confirm_upload_and_scan">是，上傳並掃描</string>
 </resources>
