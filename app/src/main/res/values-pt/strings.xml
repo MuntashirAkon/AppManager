@@ -1147,4 +1147,12 @@
     <string name="so_type_shared_library">Biblioteca partilhada</string>
     <string name="hidden_api_enf_default_policy">Padrão (com base no tipo de aplicação)</string>
     <string name="primary_abi">Índice Primário de Variação Absoluta</string>
+    <string name="hidden_api_enf_policy_none">Nenhuma (acesso total à API oculta)</string>
+    <string name="zygote_preload_name">Nome de pré-carregamento do Zygote</string>
+    <string name="hidden_api_enforcement_policy">Política de aplicação de API oculta</string>
+    <string name="hidden_api_enf_policy_warn">Avisar (acesso total à API oculta, mas emite avisos)</string>
+    <string name="hidden_api_enf_policy_dark_grey_and_black">Forçar (listas cinza-escuro e negras)</string>
+    <string name="hidden_api_enf_policy_black">Forçar (apenas listas negras)</string>
+    <string name="binary_32_bit">32 Bit</string>
+    <string name="binary_64_bit">64 Bit</string>
 </resources>
