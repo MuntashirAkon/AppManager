@@ -1139,4 +1139,6 @@
     <string name="pref_vt_prompt_before_uploading">上傳檔案前顯示提示。</string>
     <string name="vt_confirm_uploading_file">在 VirusTotal 資料庫中找不到該檔案。是否要上傳？</string>
     <string name="vt_confirm_upload_and_scan">是，上傳並掃描</string>
+    <string name="endianness_little_endian">位元組由小到大</string>
+    <string name="endianness_big_endian">位元組由大到小</string>
 </resources>
