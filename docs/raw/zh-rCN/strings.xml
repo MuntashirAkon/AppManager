@@ -601,4 +601,68 @@
     <string name="faq$app-components$$tracker-classes-versus-tracker-components-title">跟踪器类与跟踪器组件</string>
     <string name="faq$app-components$$how-to-unblock-title">如何使用 \"一键操作 \"或 \"批量操作 \"解禁的追踪器组件？</string>
     <string name="appendices$changelogs$$chapter-title">更新日志</string>
+    <string name="pages$app-details-page$uses-permissions">\\textbf{系统预定义权限}(\\textit{Uses Permissions}) 是应用(申请)所使用的权限，其在应用程序清单中使用 \\texttt{uses-permission} 标签声明。
+\n其 \"标志位 (\\textit{flags})\"、\"权限名 (\\textit{permission name})\"、\"权限描述 (\\textit{permission description})\"、\"包名 ( \\textit{package name})\"、\"群组 (\\textit{group})\" 取自相关\\hyperref[subsubsec:permissions]{权限}。
+\n
+\n
+\n特权用户可通过切换按钮授予或撤销 危险 (\\textit{dangerous}) 和 开发 (\\textit{development}) 权限，也可以使用菜单中的相应选项。
+\n只能撤销以上两种权限，因为Android不允许修改 普通 (\\textit{normal}) 权限（其中大多数是）。但仍有可能撤销它们通过编辑 \\texttt{runtime-permissions.xml} 本身，但是否可能仍不明确。
+\n
+\n\\begin{tip}{提示}
+\n 由于系统默认会撤销危险权限，因此撤销所有危险权限与重置所有权限是一样的。
+\n\\end{tip}
+\n
+\n可以以升序方式按权限名称对列表排序，也可以优先显示拒绝的权限。</string>
+    <string name="pages$app-details-page$permissions">(自定义)\\textbf{权限} 通常是应用自身定义的自定义权限，包括该应用声明的、标记为\"内部( \\textit{Internal})\" 权限，其他应用声明、标记为\"外部( \\textit{External})\"的权限。外部权限在应用程序组件中指定为依赖项，即应用只有在拥有指定的权限时才能调用该组件：
+\n\\begin{itemize}
+\n \\item \\textbf{名称} 每个权限都有的唯一的名称，如 \\texttt{android.permission.INTERNET} ，但多个应用可以请求同一个权限。
+\n
+\n \\item \\textbf{图标} 每个权限都可以有一个自定义图标，其他权限选项卡没有任何图标，因为它们在应用程序清单中不包含任何图标。
+\n
+\n \\item \\textbf{描述} 描述权限的可选字段，若没有与权限关联的任何描述，则不会显示该字段。
+\n
+\n \\item \\textbf{标志位(Flags)} 使用标志符号或 \\textbf{保护名称(Protection Level)} 名称描述权限， 诸如 普通 \\textit{normal}、开发 \\textit{development}、危险 \\textit{dangerous},、即时 \\textit{instant}, 已授权 \\textit{granted}、已撤销 \\textit{revoked}、签名 \\textit{signature}、特权 \\textit{privileged} 等。
+\n
+\n \\item \\textbf{包名} 表示与权限关联的包名，即定义权限的包名。
+\n
+\n \\item \\textbf{群组(Group)} 与权限关联的群组（如果有），几个相关的权限通常可以组合在一起。
+\n\\end{itemize}</string>
+    <string name="pages$settings-page$language">配置应用内语言，
+\nApp Manager 目前支持19种语言。</string>
+    <string name="pages$app-details-page$permission-tabs">\\textbf{App Ops}, \\textbf{使用权限} and \\textbf{权限} 选项卡与权限相关。
+\n安卓中，在不具有相同身份（称为 \\textit{shared ID}）的应用或进程之间进行通信常常需要权限，其由权限控制器管理。
+\n一些被视为\\textit{普通} 的权限，若它们出现在应用程序清单中，则会自动授予，但\\textit{危险}权限 和 \\textit{开发} 权限需要用户确认。
+\n选项卡中使用的颜色在 §\\ref{subsec:app-details-color-codes} 中有解释。</string>
+    <string name="pages$app-details-page$app-ops">\\textbf{App Ops} 代表\"应用操作 \\textbf{ (Application Operations)} \". 
+\n自 Android 4.3 开始，Android 使用 \\textit{App Ops} 控制大多系统权限，每个 App Op 都有一个与之关联的唯一编号，该编号与其私有名称将一同显示在“App Ops”选项卡中，一些 App Ops 也有一个公共名称。
+\n大量的应用操作是也与权限相关，在此选项卡中，若 App Ops 相关的权限被视为危险则被标记为危险。其他信息如 标志位(\\textit{flags}), 权限名称 (\\textit{permission name}), 权限描述(\\textit{permission description}),包名 (\\textit{package name}),群组 ( \\textit{group}) 也取自相关的 \\hyperref[subsubsec:permissions]{权限}。
+\n
+\n其他可能包括以下内容:
+\n\\begin{itemize}
+\n \\item \\textbf{模式(Mode)}: 描述了当前授权状态，可以是\"允许 (\\textit{allow})\"、\"拒绝(\\textit{deny})\"（实际为错误）、\"忽略(\\textit{ignore})\"（实际为拒绝）、\"默认(\\textit{default})\"（从手机供应商或 AOSP 内部设置的默认列表推断）、\"前台(\\textit{foreground})\" （在新的Android版本中，应用只能在前台运行时获取该权限），以及一些供应商自定义的模式，如MIUI使用询问(\\textit{ask})。
+\n
+\n \\item \\textbf{时长(Duration)}: 此 App Ops 现已使用的时间（可能为负原因未知）。
+\n
+\n \\item \\textbf{允许时刻(Accept Time)}: 上一次 App Op 被许可。
+\n
+\n \\item \\textbf{拒绝时刻(Reject Time)}: 上一次 App Op 被拒绝。
+\n\\end{itemize}
+\n
+\n
+\n\\begin{tip}{提示}
+\n若 \\texttt{android.permission.GET\\_APP\\_OPS\\_STATS} 由 ADB 授予，则此选项卡的内容对非 root 用户可见\\@.
+\n\\end{tip}
+\n
+\n每个 App Op 项都有切换按钮，可用于允许或拒绝（忽略）它，其他受支持的模式也可以通过长按来设置。
+\n如果选项卡中未列出所需的 App Op，可使用菜单中的\\textbf{设置自定义 App Op }。
+\n菜单中的\\textbf{重置为默认} 可重置App Ops， 或使用拒绝危险权限的相关操作。
+\n受 App Ops 本身工作方式所限，系统可能需要不少时间来更改它们。
+\n
+\n\\begin{tip}{Tip}
+\n拒绝某些 App Ops 可能会导致应用行为异常，若所有修复手段都失败，可尝试使用 \\textit{重置为默认} 选项。
+\n\\end{tip}
+\n
+\n可以以升序方式按 App Ops 名称和其编号对列表排序，也可以优先显示拒绝的 App Ops。
+\n
+\n\\seealsoinline{\\hyperref[ch:app-ops]{附录: App Ops}}</string>
 </resources>
