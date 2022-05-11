@@ -163,7 +163,7 @@ public class ImportExportRulesDialogFragment extends BottomSheetDialogFragment {
         new Thread(() -> {
             final List<ItemCount> itemCounts = new ArrayList<>();
             ItemCount trackerCount;
-            for (App app : AppManager.getDb().appDao().getAllInstalled()) {
+            for (App app : AppManager.getAppsDb().appDao().getAllInstalled()) {
                 if (isDetached()) return;
                 if (!systemApps && (app.flags & ApplicationInfo.FLAG_SYSTEM) != 0)
                     continue;

@@ -42,7 +42,7 @@ public class AppDb {
     private final AppDao appDao;
 
     public AppDb() {
-        appDao = AppManager.getDb().appDao();
+        appDao = AppManager.getAppsDb().appDao();
     }
 
     public List<App> getAllApplications() {

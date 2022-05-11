@@ -19,13 +19,14 @@ import org.lsposed.hiddenapibypass.HiddenApiBypass;
 
 import java.security.Security;
 
-import io.github.muntashirakon.AppManager.db.AMDatabase;
+import io.github.muntashirakon.AppManager.db.AppsDb;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 
 public class AppManager extends Application {
     private static AppManager instance;
-    private static AMDatabase db;
+    private static AppsDb appsDb;
 
     static {
         Shell.enableVerboseLogging = BuildConfig.DEBUG;
@@ -49,15 +50,13 @@ public class AppManager extends Application {
     }
 
     @NonNull
-    public static synchronized AMDatabase getDb() {
-        if (db == null) {
-            db = Room.databaseBuilder(getContext(), AMDatabase.class, "am")
-                    .addMigrations(AMDatabase.MIGRATION_1_2, AMDatabase.MIGRATION_2_3, AMDatabase.MIGRATION_3_4,
-                            AMDatabase.MIGRATION_4_5)
+    public static synchronized AppsDb getAppsDb() {
+        if (appsDb == null) {
+            appsDb = Room.databaseBuilder(getContext(), AppsDb.class, FileUtils.getCachePath() + "/apps.db")
                     .fallbackToDestructiveMigration()
                     .build();
         }
-        return db;
+        return appsDb;
     }
 
     @Override

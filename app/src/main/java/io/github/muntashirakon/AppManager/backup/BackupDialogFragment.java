@@ -170,7 +170,7 @@ public class BackupDialogFragment extends DialogFragment {
                 });
                 new Thread(() -> {
                     for (UserPackagePair pair : targetPackages) {
-                        List<App> apps = AppManager.getDb().appDao().getAll(pair.getPackageName(), pair.getUserHandle());
+                        List<App> apps = AppManager.getAppsDb().appDao().getAll(pair.getPackageName(), pair.getUserHandle());
                         if (apps == null || apps.size() <= 0 || !apps.get(0).isInstalled) {
                             activity.runOnUiThread(() -> {
                                 if (isDetached()) return;

@@ -61,7 +61,7 @@ public class LogFilterAdapter extends ArrayAdapter<LogFilter> {
             }
         });
         holder.actionButton.setOnClickListener(v -> {
-            new Thread(() -> AppManager.getDb().logFilterDao().delete(logFilter)).start();
+            new Thread(() -> AppManager.getAppsDb().logFilterDao().delete(logFilter)).start();
             remove(logFilter);
             notifyDataSetChanged();
         });

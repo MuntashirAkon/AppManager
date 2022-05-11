@@ -288,8 +288,8 @@ public class SBConverter extends Converter {
 
     @SuppressLint("WrongConstant")
     private void generateMetadata() throws BackupException {
+        mCachedApk = FileUtils.getTempPath(mContext, mPackageName, "base.apk");
         try (InputStream pis = getApkFile().openInputStream()) {
-            mCachedApk = FileUtils.getTempPath(mContext, mPackageName, "base.apk");
             try (OutputStream fos = mCachedApk.openOutputStream()) {
                 FileUtils.copy(pis, fos);
             }

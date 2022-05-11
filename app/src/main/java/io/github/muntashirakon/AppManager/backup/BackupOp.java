@@ -274,7 +274,7 @@ class BackupOp implements Closeable {
                 FileHash fileHash = new FileHash();
                 fileHash.path = dir;
                 fileHash.hash = DigestUtils.getHexDigest(DigestUtils.SHA_256, new Path(mContext, dir));
-                AppManager.getDb().fileHashDao().insert(fileHash);
+                AppManager.getAppsDb().fileHashDao().insert(fileHash);
             }
         }).start();
         for (int i = 0; i < mMetadata.dataDirs.length; ++i) {
@@ -308,12 +308,7 @@ class BackupOp implements Closeable {
         } catch (FileNotFoundException ignore) {
         }
         // Store the KeyStore files
-        Path cachePath;
-        try {
-            cachePath = new Path(mContext, FileUtils.getCachePath());
-        } catch (IOException e) {
-            throw new BackupException("Could not get cache path", e);
-        }
+        Path cachePath = new Path(mContext, FileUtils.getCachePath());
         List<String> cachedKeyStoreFileNames = new ArrayList<>();
         List<String> keyStoreFilters = new ArrayList<>();
         for (String keyStoreFileName : KeyStoreUtils.getKeyStoreFiles(mContext, mApplicationInfo.uid, mUserId)) {

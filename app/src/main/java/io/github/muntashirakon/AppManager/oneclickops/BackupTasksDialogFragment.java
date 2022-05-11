@@ -159,7 +159,7 @@ public class BackupTasksDialogFragment extends DialogFragment {
                         try {
                             List<String> changedDirs = new ArrayList<>();
                             for (String dir : backup.getMetadata().dataDirs) {
-                                String hash = AppManager.getDb().fileHashDao().getHash(dir);
+                                String hash = AppManager.getAppsDb().fileHashDao().getHash(dir);
                                 // For now, if hash is null, don't proceed to backup
                                 if (hash == null) {
                                     break;

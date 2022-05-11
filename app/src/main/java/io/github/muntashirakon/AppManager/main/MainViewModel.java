@@ -489,7 +489,7 @@ public class MainViewModel extends AndroidViewModel {
             case PackageChangeReceiver.ACTION_PACKAGE_ALTERED:
             case PackageChangeReceiver.ACTION_PACKAGE_ADDED:
                 for (String packageName : packages) {
-                    ApplicationItem item = getNewApplicationItem(packageName, AppManager.getDb().appDao()
+                    ApplicationItem item = getNewApplicationItem(packageName, AppManager.getAppsDb().appDao()
                             .getAll(packageName));
                     if (item != null) insertOrAddApplicationItem(item);
                 }
@@ -533,7 +533,7 @@ public class MainViewModel extends AndroidViewModel {
                 if (item.backup == null) {
                     applicationItems.remove(item);
                     for (int userHandle : item.userHandles) {
-                        AppManager.getDb().appDao().delete(item.packageName, userHandle);
+                        AppManager.getAppsDb().appDao().delete(item.packageName, userHandle);
                     }
                 } else {
                     ApplicationItem changedItem = getNewApplicationItem(packageName);
@@ -623,7 +623,7 @@ public class MainViewModel extends AndroidViewModel {
                 item.trackerCount = app.trackerCount;
                 item.lastActionTime = app.lastActionTime;
                 oldItem = item;
-                AppManager.getDb().appDao().insert(app);
+                AppManager.getAppsDb().appDao().insert(app);
             } catch (Exception e) {
                 e.printStackTrace();
             }

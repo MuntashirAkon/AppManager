@@ -271,7 +271,7 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
 
     @WorkerThread
     private void addFiltersToSuggestions() {
-        for (LogFilter logFilter : AppManager.getDb().logFilterDao().getAll()) {
+        for (LogFilter logFilter : AppManager.getAppsDb().logFilterDao().getAll()) {
             addToAutocompleteSuggestions(logFilter.name);
         }
     }
@@ -637,7 +637,7 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
 
     private void showFiltersDialog() {
         executor.submit(() -> {
-            final List<LogFilter> filters = AppManager.getDb().logFilterDao().getAll();
+            final List<LogFilter> filters = AppManager.getAppsDb().logFilterDao().getAll();
             Collections.sort(filters);
             mHandler.post(() -> {
                 final LogFilterAdapter logFilterAdapter = new LogFilterAdapter(LogViewerActivity.this, filters);
@@ -674,7 +674,7 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
         final String trimmed = text.trim();
         if (!TextUtils.isEmpty(trimmed)) {
             executor.submit(() -> {
-                LogFilterDao dao = AppManager.getDb().logFilterDao();
+                LogFilterDao dao = AppManager.getAppsDb().logFilterDao();
                 long id = dao.insert(trimmed);
                 LogFilter logFilter = dao.get(id);
                 mHandler.post(() -> {

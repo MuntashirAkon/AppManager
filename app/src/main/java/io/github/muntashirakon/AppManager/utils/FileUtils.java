@@ -419,7 +419,7 @@ public final class FileUtils {
 
     @AnyThread
     @NonNull
-    public static Path getTempPath(Context context, String relativeDir, String filename) throws IOException {
+    public static Path getTempPath(Context context, String relativeDir, String filename) {
         File newDir = new File(getCachePath() + File.separator + relativeDir);
         int i = 1;
         while (newDir.exists()) {
@@ -431,8 +431,19 @@ public final class FileUtils {
 
     @AnyThread
     @NonNull
-    public static File getCachePath() throws IOException {
-        File extDir = AppManager.getContext().getExternalCacheDir();
+    public static File getCachePath() {
+        Context context = AppManager.getContext();
+        try {
+            return getExternalCachePath(context);
+        } catch (IOException e) {
+            return context.getCacheDir();
+        }
+    }
+
+    @AnyThread
+    @NonNull
+    public static File getExternalCachePath(@NonNull Context context) throws IOException {
+        File extDir = context.getExternalCacheDir();
         if (extDir == null) {
             throw new FileNotFoundException("External storage unavailable.");
         }

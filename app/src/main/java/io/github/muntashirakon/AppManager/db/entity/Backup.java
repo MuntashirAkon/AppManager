@@ -70,6 +70,9 @@ public class Backup {
     @ColumnInfo(name = "installer_app")
     public String installer;
 
+    @ColumnInfo(name = "info_hash")
+    public String hash;
+
     public BackupFlags getFlags() {
         return new BackupFlags(flags);
     }

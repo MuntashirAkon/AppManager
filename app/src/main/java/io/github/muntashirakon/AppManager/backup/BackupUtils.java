@@ -61,7 +61,7 @@ public final class BackupUtils {
             }
             backupMetadata.put(latestBackup.packageName, latestBackup);
         }
-        BackupDao backupDao = AppManager.getDb().backupDao();
+        BackupDao backupDao = AppManager.getAppsDb().backupDao();
         backupDao.deleteAll();
         backupDao.insert(backups);
         return backupMetadata;
@@ -81,7 +81,7 @@ public final class BackupUtils {
                 latestBackup = backup;
             }
         }
-        AppManager.getDb().backupDao().insert(backups);
+        AppManager.getAppsDb().backupDao().insert(backups);
         return latestBackup;
     }
 
@@ -89,7 +89,7 @@ public final class BackupUtils {
     @NonNull
     public static HashMap<String, Backup> getAllLatestBackupMetadataFromDb() {
         HashMap<String, Backup> backupMetadata = new HashMap<>();
-        List<Backup> backups = AppManager.getDb().backupDao().getAll();
+        List<Backup> backups = AppManager.getAppsDb().backupDao().getAll();
         for (Backup backup : backups) {
             Backup latestBackup = backupMetadata.get(backup.packageName);
             if (latestBackup == null || backup.backupTime > latestBackup.backupTime) {

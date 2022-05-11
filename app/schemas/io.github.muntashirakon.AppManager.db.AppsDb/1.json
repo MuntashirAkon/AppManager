@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 5,
-    "identityHash": "2d67750e288d10d848e222bdbe1942a1",
+    "version": 1,
+    "identityHash": "d363fa70deeafe04c0457034f211df42",
     "entities": [
       {
         "tableName": "app",
@@ -185,6 +185,7 @@
             "columnNames": [
               "name"
             ],
+            "orders": [],
             "createSql": "CREATE UNIQUE INDEX IF NOT EXISTS `index_name` ON `${TABLE_NAME}` (`name`)"
           }
         ],
@@ -218,7 +219,7 @@
       },
       {
         "tableName": "backup",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`package_name` TEXT NOT NULL, `backup_name` TEXT NOT NULL, `label` TEXT, `version_name` TEXT, `version_code` INTEGER NOT NULL, `is_system` INTEGER NOT NULL, `has_splits` INTEGER NOT NULL, `has_rules` INTEGER NOT NULL, `backup_time` INTEGER NOT NULL, `crypto` TEXT, `meta_version` INTEGER NOT NULL, `flags` INTEGER NOT NULL, `user_id` INTEGER NOT NULL, `tar_type` TEXT, `has_key_store` INTEGER NOT NULL, `installer_app` TEXT, PRIMARY KEY(`backup_name`, `package_name`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`package_name` TEXT NOT NULL, `backup_name` TEXT NOT NULL, `label` TEXT, `version_name` TEXT, `version_code` INTEGER NOT NULL, `is_system` INTEGER NOT NULL, `has_splits` INTEGER NOT NULL, `has_rules` INTEGER NOT NULL, `backup_time` INTEGER NOT NULL, `crypto` TEXT, `meta_version` INTEGER NOT NULL, `flags` INTEGER NOT NULL, `user_id` INTEGER NOT NULL, `tar_type` TEXT, `has_key_store` INTEGER NOT NULL, `installer_app` TEXT, `info_hash` TEXT, PRIMARY KEY(`backup_name`, `package_name`))",
         "fields": [
           {
             "fieldPath": "packageName",
@@ -315,6 +316,12 @@
             "columnName": "installer_app",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "hash",
+            "columnName": "info_hash",
+            "affinity": "TEXT",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -331,7 +338,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '2d67750e288d10d848e222bdbe1942a1')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'd363fa70deeafe04c0457034f211df42')"
     ]
   }
 }
