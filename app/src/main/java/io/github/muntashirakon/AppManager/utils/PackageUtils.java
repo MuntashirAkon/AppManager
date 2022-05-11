@@ -52,6 +52,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
@@ -80,9 +81,10 @@ import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.Users;
-import io.github.muntashirakon.io.FileStatus;
-import io.github.muntashirakon.io.ProxyFile;
-import io.github.muntashirakon.io.ProxyFiles;
+import io.github.muntashirakon.io.ExtendedFile;
+import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
+import io.github.muntashirakon.io.UidGidPair;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getBoldString;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getColoredText;
@@ -420,15 +422,6 @@ public final class PackageUtils {
         return info.requestedPermissions;
     }
 
-    @Nullable
-    public static ApplicationInfo getApplicationInfo(@NonNull String packageName, @UserIdInt int userId) {
-        try {
-            return AppManager.getIPackageManager().getApplicationInfo(packageName, flagMatchUninstalled, userId);
-        } catch (Throwable ignore) {
-        }
-        return null;
-    }
-
     @NonNull
     public static String getPackageLabel(@NonNull PackageManager pm, String packageName) {
         try {
@@ -504,19 +497,19 @@ public final class PackageUtils {
         int userHandle = UserHandleHidden.getUserId(applicationInfo.uid);
         OsEnvironment.UserEnvironment ue = OsEnvironment.getUserEnvironment(userHandle);
         if (loadExternal) {
-            ProxyFile[] externalFiles = ue.buildExternalStorageAppDataDirs(applicationInfo.packageName);
-            for (ProxyFile externalFile : externalFiles) {
+            Path[] externalFiles = ue.buildExternalStorageAppDataDirs(applicationInfo.packageName);
+            for (Path externalFile : externalFiles) {
                 if (externalFile != null && externalFile.exists())
-                    dataDirs.add(externalFile.getAbsolutePath());
+                    dataDirs.add(externalFile.getFilePath());
             }
         }
         if (loadMediaObb) {
-            List<ProxyFile> externalFiles = new ArrayList<>();
+            List<Path> externalFiles = new ArrayList<>();
             externalFiles.addAll(Arrays.asList(ue.buildExternalStorageAppMediaDirs(applicationInfo.packageName)));
             externalFiles.addAll(Arrays.asList(ue.buildExternalStorageAppObbDirs(applicationInfo.packageName)));
-            for (ProxyFile externalFile : externalFiles) {
+            for (Path externalFile : externalFiles) {
                 if (externalFile != null && externalFile.exists())
-                    dataDirs.add(externalFile.getAbsolutePath());
+                    dataDirs.add(externalFile.getFilePath());
             }
         }
         return dataDirs.toArray(new String[0]);
@@ -875,22 +868,25 @@ public final class PackageUtils {
     }
 
     public static void ensurePackageStagingDirectoryPrivileged() throws ErrnoException, RemoteException {
-        File psd = new ProxyFile(PACKAGE_STAGING_DIRECTORY);
+        Path psd = Paths.get(PACKAGE_STAGING_DIRECTORY);
         if (!psd.isDirectory()) {
             // Recreate directory
-            File parent = psd.getParentFile();
-            if (parent == null) throw new IllegalStateException("Parent should be /data/local");
+            Path parent = psd.getParentFile();
+            if (parent == null) {
+                throw new IllegalStateException("Parent should be /data/local");
+            }
             if (psd.exists()) psd.delete();
             psd.mkdir();
         }
         // Change permission
-        FileStatus stat = ProxyFiles.stat(psd);
-        if ((stat.st_mode & 0x1FF) != 0711) {
-            ProxyFiles.chmod(psd, 0711);
+        ExtendedFile f = Objects.requireNonNull(psd.getFile());
+        if ((f.getMode() & 0x1FF) != 0711) {
+            f.setMode(0711);
         }
         // Change UID, GID
-        if (stat.st_uid != 2000 || stat.st_gid != 2000) {
-            ProxyFiles.chown(psd, 2000, 2000);
+        UidGidPair uidGidPair = f.getUidGid();
+        if (uidGidPair.uid != 2000 || uidGidPair.gid != 2000) {
+            f.setUidGid(2000, 2000);
         }
     }
 

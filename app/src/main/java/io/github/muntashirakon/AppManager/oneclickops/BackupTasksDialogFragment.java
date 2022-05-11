@@ -36,7 +36,7 @@ import io.github.muntashirakon.AppManager.usage.UsageUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
-import io.github.muntashirakon.io.ProxyFile;
+import io.github.muntashirakon.io.Paths;
 
 public class BackupTasksDialogFragment extends DialogFragment {
     public static final String TAG = "BackupTasksDialogFragment";
@@ -164,7 +164,7 @@ public class BackupTasksDialogFragment extends DialogFragment {
                                 if (hash == null) {
                                     break;
                                 }
-                                String newHash = DigestUtils.getHexDigest(DigestUtils.SHA_256, new ProxyFile(dir));
+                                String newHash = DigestUtils.getHexDigest(DigestUtils.SHA_256, Paths.get(dir));
                                 if (!hash.equals(newHash)) changedDirs.add(dir);
                             }
                             // TODO: 23/4/21 Support delta backup

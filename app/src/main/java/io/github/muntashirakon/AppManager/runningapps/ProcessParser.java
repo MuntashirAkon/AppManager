@@ -23,7 +23,7 @@ import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
-import io.github.muntashirakon.AppManager.ipc.IPCUtils;
+import io.github.muntashirakon.AppManager.ipc.LocalServices;
 import io.github.muntashirakon.AppManager.ipc.ps.ProcessEntry;
 import io.github.muntashirakon.AppManager.ipc.ps.Ps;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -59,7 +59,7 @@ public final class ProcessParser {
         try {
             List<ProcessEntry> processEntries;
             if (LocalServer.isAMServiceAlive()) {
-                processEntries = (List<ProcessEntry>) IPCUtils.getServiceSafe().getRunningProcesses().getList();
+                processEntries = (List<ProcessEntry>) LocalServices.getAmService().getRunningProcesses().getList();
             } else {
                 Ps ps = new Ps();
                 ps.loadProcesses();

@@ -14,6 +14,7 @@ import android.util.Xml;
 
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
 import com.android.internal.util.TextUtils;
@@ -36,7 +37,8 @@ import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.misc.SystemProperties;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
-import io.github.muntashirakon.io.ProxyFile;
+import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 
 /**
  * Loads global system configuration info.
@@ -525,12 +527,10 @@ public class SystemConfig {
 
     private void readAllPermissions() {
         // Read configuration from system
-        readPermissions(OsEnvironment.buildPath(
-                Environment.getRootDirectory(), "etc", "sysconfig"), ALLOW_ALL);
+        readPermissions(Paths.build(Environment.getRootDirectory(), "etc", "sysconfig"), ALLOW_ALL);
 
         // Read configuration from the old permissions dir
-        readPermissions(OsEnvironment.buildPath(
-                Environment.getRootDirectory(), "etc", "permissions"), ALLOW_ALL);
+        readPermissions(Paths.build(Environment.getRootDirectory(), "etc", "permissions"), ALLOW_ALL);
 
         // Vendors are only allowed to customize these
         int vendorPermissionFlag = ALLOW_LIBS | ALLOW_FEATURES | ALLOW_PRIVAPP_PERMISSIONS
@@ -539,64 +539,51 @@ public class SystemConfig {
             // For backward compatibility
             vendorPermissionFlag |= (ALLOW_PERMISSIONS | ALLOW_APP_CONFIGS);
         }
-        readPermissions(OsEnvironment.buildPath(
-                OsEnvironment.getVendorDirectory(), "etc", "sysconfig"), vendorPermissionFlag);
-        readPermissions(OsEnvironment.buildPath(
-                OsEnvironment.getVendorDirectory(), "etc", "permissions"), vendorPermissionFlag);
+        readPermissions(Paths.build(OsEnvironment.getVendorDirectory(), "etc", "sysconfig"), vendorPermissionFlag);
+        readPermissions(Paths.build(OsEnvironment.getVendorDirectory(), "etc", "permissions"), vendorPermissionFlag);
 
         String vendorSkuProperty = SystemProperties.get(VENDOR_SKU_PROPERTY, "");
         if (!vendorSkuProperty.isEmpty()) {
             String vendorSkuDir = "sku_" + vendorSkuProperty;
-            readPermissions(OsEnvironment.buildPath(
-                    OsEnvironment.getVendorDirectory(), "etc", "sysconfig", vendorSkuDir),
+            readPermissions(Paths.build(OsEnvironment.getVendorDirectory(), "etc", "sysconfig", vendorSkuDir),
                     vendorPermissionFlag);
-            readPermissions(OsEnvironment.buildPath(
-                    OsEnvironment.getVendorDirectory(), "etc", "permissions", vendorSkuDir),
+            readPermissions(Paths.build(OsEnvironment.getVendorDirectory(), "etc", "permissions", vendorSkuDir),
                     vendorPermissionFlag);
         }
 
         // Allow ODM to customize system configs as much as Vendor, because /odm is another
         // vendor partition other than /vendor.
         int odmPermissionFlag = vendorPermissionFlag;
-        readPermissions(OsEnvironment.buildPath(
-                OsEnvironment.getOdmDirectory(), "etc", "sysconfig"), odmPermissionFlag);
-        readPermissions(OsEnvironment.buildPath(
-                OsEnvironment.getOdmDirectory(), "etc", "permissions"), odmPermissionFlag);
+        readPermissions(Paths.build(OsEnvironment.getOdmDirectory(), "etc", "sysconfig"), odmPermissionFlag);
+        readPermissions(Paths.build(OsEnvironment.getOdmDirectory(), "etc", "permissions"), odmPermissionFlag);
 
         String skuProperty = SystemProperties.get(SKU_PROPERTY, "");
         if (!skuProperty.isEmpty()) {
             String skuDir = "sku_" + skuProperty;
 
-            readPermissions(OsEnvironment.buildPath(
-                    OsEnvironment.getOdmDirectory(), "etc", "sysconfig", skuDir), odmPermissionFlag);
-            readPermissions(OsEnvironment.buildPath(
-                    OsEnvironment.getOdmDirectory(), "etc", "permissions", skuDir),
+            readPermissions(Paths.build(OsEnvironment.getOdmDirectory(), "etc", "sysconfig", skuDir),
+                    odmPermissionFlag);
+            readPermissions(Paths.build(OsEnvironment.getOdmDirectory(), "etc", "permissions", skuDir),
                     odmPermissionFlag);
         }
 
         // Allow OEM to customize these
         int oemPermissionFlag = ALLOW_FEATURES | ALLOW_OEM_PERMISSIONS | ALLOW_ASSOCIATIONS;
-        readPermissions(OsEnvironment.buildPath(
-                OsEnvironment.getOemDirectory(), "etc", "sysconfig"), oemPermissionFlag);
-        readPermissions(OsEnvironment.buildPath(
-                OsEnvironment.getOemDirectory(), "etc", "permissions"), oemPermissionFlag);
+        readPermissions(Paths.build(OsEnvironment.getOemDirectory(), "etc", "sysconfig"), oemPermissionFlag);
+        readPermissions(Paths.build(OsEnvironment.getOemDirectory(), "etc", "permissions"), oemPermissionFlag);
 
         // Allow Product to customize all system configs
-        readPermissions(OsEnvironment.buildPath(
-                OsEnvironment.getProductDirectory(), "etc", "sysconfig"), ALLOW_ALL);
-        readPermissions(OsEnvironment.buildPath(
-                OsEnvironment.getProductDirectory(), "etc", "permissions"), ALLOW_ALL);
+        readPermissions(Paths.build(OsEnvironment.getProductDirectory(), "etc", "sysconfig"), ALLOW_ALL);
+        readPermissions(Paths.build(OsEnvironment.getProductDirectory(), "etc", "permissions"), ALLOW_ALL);
 
         // Allow /system_ext to customize all system configs
-        readPermissions(OsEnvironment.buildPath(
-                OsEnvironment.getSystemExtDirectory(), "etc", "sysconfig"), ALLOW_ALL);
-        readPermissions(OsEnvironment.buildPath(
-                OsEnvironment.getSystemExtDirectory(), "etc", "permissions"), ALLOW_ALL);
+        readPermissions(Paths.build(OsEnvironment.getSystemExtDirectory(), "etc", "sysconfig"), ALLOW_ALL);
+        readPermissions(Paths.build(OsEnvironment.getSystemExtDirectory(), "etc", "permissions"), ALLOW_ALL);
     }
 
-    public void readPermissions(@NonNull ProxyFile libraryDir, int permissionFlag) {
+    public void readPermissions(@Nullable Path libraryDir, int permissionFlag) {
         // Read permissions from given directory.
-        if (!libraryDir.exists() || !libraryDir.isDirectory()) {
+        if (libraryDir == null || !libraryDir.exists() || !libraryDir.isDirectory()) {
             if (permissionFlag == ALLOW_ALL) {
                 Log.w(TAG, "No directory " + libraryDir + ", skipping");
             }
@@ -604,19 +591,19 @@ public class SystemConfig {
         }
 
         // Iterate over the files in the directory and scan .xml files
-        ProxyFile platformFile = null;
-        for (ProxyFile f : libraryDir.listFiles()) {
+        Path platformFile = null;
+        for (Path f : libraryDir.listFiles()) {
             if (!f.isFile()) {
                 continue;
             }
 
             // We'll read platform.xml last
-            if (f.getPath().endsWith("etc/permissions/platform.xml")) {
+            if (f.getUri().getPath().endsWith("etc/permissions/platform.xml")) {
                 platformFile = f;
                 continue;
             }
 
-            if (!f.getPath().endsWith(".xml")) {
+            if (!f.getUri().getPath().endsWith(".xml")) {
                 Log.i(TAG, "Non-xml file " + f + " in " + libraryDir + " directory, ignoring");
                 continue;
             }
@@ -634,12 +621,12 @@ public class SystemConfig {
         }
     }
 
-    private void logNotAllowedInPartition(String name, ProxyFile permFile, @NonNull XmlPullParser parser) {
+    private void logNotAllowedInPartition(String name, Path permFile, @NonNull XmlPullParser parser) {
         Log.w(TAG, "<" + name + "> not allowed in partition of "
                 + permFile + " at " + parser.getPositionDescription());
     }
 
-    private void readPermissionsFromXml(ProxyFile permFile, int permissionFlag) {
+    private void readPermissionsFromXml(Path permFile, int permissionFlag) {
         StringReader permReader = new StringReader(FileUtils.getFileContent(permFile));
         Log.i(TAG, "Reading permissions from " + permFile);
 
@@ -1072,14 +1059,14 @@ public class SystemConfig {
                             // partitions are stored separately. This is to prevent xml files in
                             // the vendor partition from granting permissions to priv apps in the
                             // system partition and vice versa.
-                            boolean vendor = permFile.getAbsolutePath().startsWith(
-                                    OsEnvironment.getVendorDirectory().getAbsolutePath() + "/")
-                                    || permFile.getAbsolutePath().startsWith(
-                                    OsEnvironment.getOdmDirectory().getAbsolutePath() + "/");
-                            boolean product = permFile.getAbsolutePath().startsWith(
-                                    OsEnvironment.getProductDirectory().getAbsolutePath() + "/");
-                            boolean systemExt = permFile.getAbsolutePath().startsWith(
-                                    OsEnvironment.getSystemExtDirectory().getAbsolutePath() + "/");
+                            boolean vendor = permFile.getFilePath().startsWith(
+                                    OsEnvironment.getVendorDirectory().getFilePath() + "/")
+                                    || permFile.getFilePath().startsWith(
+                                    OsEnvironment.getOdmDirectory().getFilePath() + "/");
+                            boolean product = permFile.getFilePath().startsWith(
+                                    OsEnvironment.getProductDirectory().getFilePath() + "/");
+                            boolean systemExt = permFile.getFilePath().startsWith(
+                                    OsEnvironment.getSystemExtDirectory().getFilePath() + "/");
                             if (vendor) {
                                 readPrivAppPermissions(parser, mVendorPrivAppPermissions,
                                         mVendorPrivAppDenyPermissions);
@@ -1479,7 +1466,7 @@ public class SystemConfig {
         mOemPermissions.put(packageName, permissions);
     }
 
-    private void readSplitPermission(@NonNull XmlPullParser parser, ProxyFile permFile)
+    private void readSplitPermission(@NonNull XmlPullParser parser, Path permFile)
             throws IOException, XmlPullParserException {
         String splitPerm = parser.getAttributeValue(null, "name");
         if (splitPerm == null) {
@@ -1521,7 +1508,7 @@ public class SystemConfig {
         }
     }
 
-    private void readComponentOverrides(@NonNull XmlPullParser parser, ProxyFile permFile)
+    private void readComponentOverrides(@NonNull XmlPullParser parser, Path permFile)
             throws IOException, XmlPullParserException {
         String pkgname = parser.getAttributeValue(null, "package");
         if (pkgname == null) {

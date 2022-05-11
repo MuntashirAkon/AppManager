@@ -4,6 +4,8 @@
 
 package io.github.muntashirakon.AppManager.rules.compontents;
 
+import android.content.Context;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -14,19 +16,21 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.rules.RuleType;
-import io.github.muntashirakon.io.ProxyFile;
+import io.github.muntashirakon.io.Path;
 
 import static org.junit.Assert.assertEquals;
 
 @RunWith(RobolectricTestRunner.class)
 public class ComponentUtilsTest {
     private final ClassLoader classLoader = getClass().getClassLoader();
+    private final Context context = AppManager.getContext();
 
     @Test
     public void getIFWRulesForPackage() {
         assert classLoader != null;
-        ProxyFile ifwDir = new ProxyFile(classLoader.getResource("ifw").getFile());
+        Path ifwDir = new Path(context, classLoader.getResource("ifw").getFile());
         HashMap<String, RuleType> expectedHashMap = getExpectedHashMap();
         HashMap<String, RuleType> actualHashMap = ComponentUtils.getIFWRulesForPackage("sample.package", ifwDir);
         assertEquals(expectedHashMap.size(), actualHashMap.size());

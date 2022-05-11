@@ -19,7 +19,6 @@ import androidx.annotation.WorkerThread;
 import androidx.core.content.pm.PermissionInfoCompat;
 
 import java.io.Closeable;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -28,6 +27,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
 import io.github.muntashirakon.AppManager.AppManager;
@@ -62,7 +62,7 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.io.Path;
-import io.github.muntashirakon.io.ProxyFile;
+import io.github.muntashirakon.io.Paths;
 
 import static io.github.muntashirakon.AppManager.backup.BackupManager.CERT_PREFIX;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.DATA_PREFIX;
@@ -236,18 +236,22 @@ class BackupOp implements Closeable {
     }
 
     private void backupApkFiles() throws BackupException {
-        final File dataAppPath = OsEnvironment.getDataAppDirectory();
+        Path dataAppPath = OsEnvironment.getDataAppDirectory();
         final String sourceBackupFilePrefix = SOURCE_PREFIX + getExt(mMetadata.tarType);
-        String sourceDir = PackageUtils.getSourceDir(mApplicationInfo);
-        if (dataAppPath.getAbsolutePath().equals(sourceDir)) {
+        Path sourceDir = Paths.get(PackageUtils.getSourceDir(mApplicationInfo));
+        if (dataAppPath.equals(sourceDir)) {
+            // APK located inside /data/app directory
             // Backup only the apk file (no split apk support for this type of apk)
-            sourceDir = new File(sourceDir, mMetadata.apkName).getAbsolutePath();
+            try {
+                sourceDir = sourceDir.findFile(mMetadata.apkName);
+            } catch (FileNotFoundException e) {
+                throw new BackupException(mMetadata.apkName + " not found at " + sourceDir);
+            }
         }
         Path[] sourceFiles;
         try {
-            sourceFiles = TarUtils.create(mMetadata.tarType, new Path(mContext, new File(sourceDir)), mTempBackupPath,
-                    sourceBackupFilePrefix, /* language=regexp */ new String[]{".*\\.apk"}, null, null,
-                    false).toArray(new Path[0]);
+            sourceFiles = TarUtils.create(mMetadata.tarType, sourceDir, mTempBackupPath, sourceBackupFilePrefix,
+                    /* language=regexp */ new String[]{".*\\.apk"}, null, null, false).toArray(new Path[0]);
         } catch (Throwable th) {
             throw new BackupException("APK files backup is requested but no source directory has been backed up.", th);
         }
@@ -257,7 +261,7 @@ class BackupOp implements Closeable {
             throw new BackupException("Failed to encrypt " + Arrays.toString(sourceFiles), e);
         }
         for (Path file : sourceFiles) {
-            mChecksum.add(file.getName(), DigestUtils.getHexDigest(mMetadata.checksumAlgo, file));
+            mChecksum.add(Objects.requireNonNull(file.getName()), DigestUtils.getHexDigest(mMetadata.checksumAlgo, file));
         }
     }
 
@@ -269,14 +273,14 @@ class BackupOp implements Closeable {
             for (String dir : mMetadata.dataDirs) {
                 FileHash fileHash = new FileHash();
                 fileHash.path = dir;
-                fileHash.hash = DigestUtils.getHexDigest(DigestUtils.SHA_256, new ProxyFile(dir));
+                fileHash.hash = DigestUtils.getHexDigest(DigestUtils.SHA_256, new Path(mContext, dir));
                 AppManager.getDb().fileHashDao().insert(fileHash);
             }
         }).start();
         for (int i = 0; i < mMetadata.dataDirs.length; ++i) {
             sourceBackupFilePrefix = DATA_PREFIX + i + getExt(mMetadata.tarType);
             try {
-                dataFiles = TarUtils.create(mMetadata.tarType, new Path(mContext, new ProxyFile(mMetadata.dataDirs[i])),
+                dataFiles = TarUtils.create(mMetadata.tarType, new Path(mContext, mMetadata.dataDirs[i]),
                                 mTempBackupPath, sourceBackupFilePrefix, null, null,
                                 BackupUtils.getExcludeDirs(!mBackupFlags.backupCache(), null), false)
                         .toArray(new Path[0]);
@@ -289,18 +293,19 @@ class BackupOp implements Closeable {
                 throw new BackupException("Failed to encrypt " + Arrays.toString(dataFiles));
             }
             for (Path file : dataFiles) {
-                mChecksum.add(file.getName(), DigestUtils.getHexDigest(mMetadata.checksumAlgo, file));
+                mChecksum.add(Objects.requireNonNull(file.getName()), DigestUtils.getHexDigest(mMetadata.checksumAlgo, file));
             }
         }
     }
 
     private void backupKeyStore() throws BackupException {  // Called only when the app has an keystore item
-        Path keyStorePath = new Path(mContext, KeyStoreUtils.getKeyStorePath(mUserId));
-        ProxyFile masterKeyFile = KeyStoreUtils.getMasterKey(mUserId);
-        if (masterKeyFile.exists()) {
-            // Master key exists, so take it's checksum to verify it during the restore
+        Path keyStorePath = KeyStoreUtils.getKeyStorePath(mContext, mUserId);
+        try {
+            Path masterKeyFile = KeyStoreUtils.getMasterKey(mContext, mUserId);
+            // Master key exists, so take its checksum to verify it during the restore
             mChecksum.add(MASTER_KEY, DigestUtils.getHexDigest(mMetadata.checksumAlgo,
                     FileUtils.getFileContent(masterKeyFile).getBytes()));
+        } catch (FileNotFoundException ignore) {
         }
         // Store the KeyStore files
         Path cachePath;
@@ -311,7 +316,7 @@ class BackupOp implements Closeable {
         }
         List<String> cachedKeyStoreFileNames = new ArrayList<>();
         List<String> keyStoreFilters = new ArrayList<>();
-        for (String keyStoreFileName : KeyStoreUtils.getKeyStoreFiles(mApplicationInfo.uid, mUserId)) {
+        for (String keyStoreFileName : KeyStoreUtils.getKeyStoreFiles(mContext, mApplicationInfo.uid, mUserId)) {
             try {
                 String newFileName = Utils.replaceOnce(keyStoreFileName, String.valueOf(mApplicationInfo.uid),
                         String.valueOf(KEYSTORE_PLACEHOLDER));
@@ -347,7 +352,7 @@ class BackupOp implements Closeable {
             throw new BackupException("Failed to encrypt " + Arrays.toString(backedUpKeyStoreFiles), e);
         }
         for (Path file : backedUpKeyStoreFiles) {
-            mChecksum.add(file.getName(), DigestUtils.getHexDigest(mMetadata.checksumAlgo, file));
+            mChecksum.add(Objects.requireNonNull(file.getName()), DigestUtils.getHexDigest(mMetadata.checksumAlgo, file));
         }
     }
 
@@ -463,7 +468,7 @@ class BackupOp implements Closeable {
             // Overwrite with the new file
             miscFile = mBackupFile.getMiscFile(mMetadata.crypto);
             // Store checksum
-            mChecksum.add(miscFile.getName(), DigestUtils.getHexDigest(mMetadata.checksumAlgo, miscFile));
+            mChecksum.add(Objects.requireNonNull(miscFile.getName()), DigestUtils.getHexDigest(mMetadata.checksumAlgo, miscFile));
         } catch (IOException e) {
             throw new BackupException("Couldn't get misc.am.tsv for generating checksum", e);
         }
@@ -481,7 +486,7 @@ class BackupOp implements Closeable {
             // Overwrite with the new file
             rulesFile = mBackupFile.getRulesFile(mMetadata.crypto);
             // Store checksum
-            mChecksum.add(rulesFile.getName(), DigestUtils.getHexDigest(mMetadata.checksumAlgo, rulesFile));
+            mChecksum.add(Objects.requireNonNull(rulesFile.getName()), DigestUtils.getHexDigest(mMetadata.checksumAlgo, rulesFile));
         } catch (IOException e) {
             throw new BackupException("Rules backup is requested but encountered an error during fetching rules.", e);
         }

@@ -14,8 +14,8 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
 
-import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -27,8 +27,8 @@ import java.util.StringTokenizer;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.io.AtomicProxyFile;
-import io.github.muntashirakon.io.ProxyOutputStream;
+import io.github.muntashirakon.io.AtomicExtendedFile;
+import io.github.muntashirakon.io.Paths;
 
 import static com.android.internal.util.XmlUtils.readBooleanAttribute;
 import static com.android.internal.util.XmlUtils.readIntAttribute;
@@ -42,7 +42,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
 public class UriManager {
     public static final String TAG = "UriManager";
 
-    private final AtomicProxyFile mGrantFile;
+    private final AtomicExtendedFile mGrantFile;
 
     private final HashMap<String, ArrayList<UriGrant>> uriGrantsHashMap = new HashMap<>();
 
@@ -62,7 +62,8 @@ public class UriManager {
     private static final String ATTR_PREFIX = "prefix";
 
     public UriManager() {
-        mGrantFile = new AtomicProxyFile(new File(OsEnvironment.getDataSystemDirectory(), "urigrants.xml"));
+        mGrantFile = new AtomicExtendedFile(Objects.requireNonNull(Objects.requireNonNull(Paths.build(
+                OsEnvironment.getDataSystemDirectory(), "urigrants.xml")).getFile()));
         readGrantedUriPermissions();
     }
 
@@ -93,7 +94,7 @@ public class UriManager {
             }
         }
 
-        ProxyOutputStream fos = null;
+        FileOutputStream fos = null;
         try {
             fos = mGrantFile.startWrite();
             XmlSerializer out = Xml.newSerializer();

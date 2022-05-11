@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Map;
@@ -28,8 +29,8 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.StorageManagerCompat;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.users.Users;
-import io.github.muntashirakon.io.ProxyFile;
-import io.github.muntashirakon.io.ProxyFileReader;
+import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.PathReader;
 
 public class StorageUtils {
     public static final String TAG = "StorageUtils";
@@ -41,17 +42,16 @@ public class StorageUtils {
     public static ArrayMap<String, Uri> getAllStorageLocations(@NonNull Context context, boolean includeInternal) {
         ArrayMap<String, Uri> storageLocations = new ArrayMap<>(10);
         if (includeInternal) {
-            ProxyFile internal = new ProxyFile(Environment.getDataDirectory());
+            Path internal = new Path(context, Environment.getDataDirectory());
             addStorage(context.getString(R.string.internal_storage), internal, storageLocations);
-            addStorage(context.getString(R.string.system_partition), new ProxyFile(OsEnvironment.getRootDirectory()),
-                    storageLocations);
+            addStorage(context.getString(R.string.system_partition), OsEnvironment.getRootDirectory(), storageLocations);
         }
         @SuppressWarnings("deprecation")
-        ProxyFile sdCard = new ProxyFile(Environment.getExternalStorageDirectory());
+        Path sdCard = new Path(context, Environment.getExternalStorageDirectory());
         addStorage(context.getString(R.string.external_storage), sdCard, storageLocations);
         getStorageEnv(context, storageLocations);
         retrieveStorageManager(context, storageLocations);
-        retrieveStorageFilesystem(storageLocations);
+        retrieveStorageFilesystem(context, storageLocations);
         getStorageExternalFilesDir(context, storageLocations);
         // Get SAF persisted directories
         ArrayMap<Uri, Long> grantedUrisAndDate = SAFUtils.getUrisWithDate(context);
@@ -66,12 +66,11 @@ public class StorageUtils {
     /**
      * unified test function to add storage if fitting
      */
-    private static void addStorage(String label, ProxyFile entry, Map<String, Uri> storageLocations) {
-        Uri uri = Uri.fromFile(entry);
-        if (entry != null && entry.listFiles() != null && !storageLocations.containsValue(uri)) {
-            storageLocations.put(label, uri);
+    private static void addStorage(String label, Path entry, Map<String, Uri> storageLocations) {
+        if (entry != null && !storageLocations.containsValue(entry.getUri())) {
+            storageLocations.put(label, entry.getUri());
         } else if (entry != null) {
-            Log.d(TAG, entry.getAbsolutePath());
+            Log.d(TAG, entry.getUri().toString());
         }
     }
 
@@ -95,15 +94,15 @@ public class StorageUtils {
      * Get storage indirect, best solution so far
      */
     private static void getStorageExternalFilesDir(Context context, Map<String, Uri> storageLocations) {
-        //Get primary & secondary external device storage (internal storage & micro SDCARD slot...)
+        // Get primary & secondary external device storage (internal storage & micro SDCARD slot...)
         File[] listExternalDirs = ContextCompat.getExternalFilesDirs(context, null);
         for (File listExternalDir : listExternalDirs) {
             if (listExternalDir != null) {
                 String path = listExternalDir.getAbsolutePath();
                 int indexMountRoot = path.indexOf("/Android/data/");
                 if (indexMountRoot >= 0 && indexMountRoot <= path.length()) {
-                    //Get the root path for the external directory
-                    ProxyFile file = new ProxyFile(path.substring(0, indexMountRoot));
+                    // Get the root path for the external directory
+                    Path file = new Path(context, path.substring(0, indexMountRoot));
                     addStorage(file.getName(), file, storageLocations);
                 }
             }
@@ -129,7 +128,7 @@ public class StorageUtils {
                 File dir = vol.getPathFile();
                 if (dir == null) continue;
                 String label = vol.getUserLabel();
-                addStorage(label, new ProxyFile(dir), storageLocations);
+                addStorage(label, new Path(context, dir), storageLocations);
             }
             Log.d(TAG, "used storagemanager");
         } catch (Exception e) {
@@ -140,23 +139,22 @@ public class StorageUtils {
     /**
      * Get storage via /proc/mounts, probably never works
      */
-    private static void retrieveStorageFilesystem(Map<String, Uri> storageLocations) {
-        try {
-            ProxyFile mountFile = new ProxyFile("/proc/mounts");
-            if (mountFile.exists()) {
-                BufferedReader reader = new BufferedReader(new ProxyFileReader(mountFile));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    if (line.startsWith("/dev/block/vold/")) {
-                        String[] lineElements = line.split(" ");
-                        ProxyFile element = new ProxyFile(lineElements[1]);
-                        // Don't add the default mount path since it's already in the list.
-                        addStorage(element.getName(), element, storageLocations);
-                    }
+    private static void retrieveStorageFilesystem(Context context, Map<String, Uri> storageLocations) {
+        Path mountFile = new Path(context, "/proc/mounts");
+        if (!mountFile.isDirectory()) {
+            return;
+        }
+        try (BufferedReader reader = new BufferedReader(new PathReader(mountFile))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.startsWith("/dev/block/vold/")) {
+                    String[] lineElements = line.split(" ");
+                    Path element = new Path(context, lineElements[1]);
+                    // Don't add the default mount path since it's already in the list.
+                    addStorage(element.getName(), element, storageLocations);
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (IOException ignore) {
         }
     }
 }

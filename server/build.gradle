@@ -50,7 +50,7 @@ def makeJars(String buildType) {
     println("Created ${amJar}")
     println("Creating main.jar...")
     buildArgs = ['--release', '--output', mainJar]
-    buildArgs.add("${debugClassDir}/io/github/muntashirakon/AppManager/server/IPCMain.class")
+    buildArgs.add("${debugClassDir}/io/github/muntashirakon/AppManager/server/RootServiceMain.class")
     buildArgs.add("${libserverClassDir}/io/github/muntashirakon/AppManager/server/common/ServerUtils.class")
     buildArgs.addAll(['--lib', "${android.sdkDirectory.path}/platforms/android-${rootProject.ext.targetSdk}/android.jar"])
     exec {

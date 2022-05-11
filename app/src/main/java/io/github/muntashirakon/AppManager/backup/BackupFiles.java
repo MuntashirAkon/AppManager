@@ -17,8 +17,8 @@ import java.util.List;
 
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.io.Path;
-import io.github.muntashirakon.io.ProxyFileReader;
-import io.github.muntashirakon.io.ProxyFileWriter;
+import io.github.muntashirakon.io.PathReader;
+import io.github.muntashirakon.io.PathWriter;
 
 public class BackupFiles {
     static final String APK_SAVING_DIRECTORY = "apks";
@@ -254,10 +254,10 @@ public class BackupFiles {
         public Checksum(@NonNull Path checksumFile, String mode) throws IOException {
             this.mMode = mode;
             if ("w".equals(mode)) {
-                mWriter = new PrintWriter(new BufferedWriter(new ProxyFileWriter(checksumFile)));
+                mWriter = new PrintWriter(new BufferedWriter(new PathWriter(checksumFile)));
             } else if ("r".equals(mode)) {
                 synchronized (mChecksums) {
-                    BufferedReader reader = new BufferedReader(new ProxyFileReader(checksumFile));
+                    BufferedReader reader = new BufferedReader(new PathReader(checksumFile));
                     // Get checksums
                     String line;
                     String[] lineSplits;

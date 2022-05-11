@@ -10,9 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,6 +25,7 @@ import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 
 /**
  * Used to generate app bundle with .apks extension. This file has all the apks as well as 3 other
@@ -44,12 +44,14 @@ public final class SplitApkExporter {
             zipOutputStream.setMethod(ZipOutputStream.DEFLATED);
             zipOutputStream.setLevel(Deflater.BEST_COMPRESSION);
 
-            List<File> apkFiles = getAllApkFiles(packageInfo);
+            List<Path> apkFiles = getAllApkFiles(packageInfo);
             Collections.sort(apkFiles);
 
             // Count total file size
             long totalApkBytesCount = 0;
-            for (File apkFile : apkFiles) totalApkBytesCount += apkFile.length();
+            for (Path apkFile : apkFiles) {
+                totalApkBytesCount += apkFile.length();
+            }
 
             // Metadata
             ApksMetadata apksMetadata = new ApksMetadata(packageInfo);
@@ -93,14 +95,14 @@ public final class SplitApkExporter {
             zipOutputStream.closeEntry();
 
             // Add files
-            for (File apkFile : apkFiles) {
+            for (Path apkFile : apkFiles) {
                 ZipEntry zipEntry = new ZipEntry(apkFile.getName());
                 zipEntry.setMethod(ZipEntry.DEFLATED);
                 zipEntry.setSize(apkFile.length());
                 zipEntry.setCrc(DigestUtils.calculateCrc32(apkFile));
                 zipEntry.setTime(apksMetadata.exportTimestamp);
                 zipOutputStream.putNextEntry(zipEntry);
-                try (FileInputStream apkInputStream = new FileInputStream(apkFile)) {
+                try (InputStream apkInputStream = apkFile.openInputStream()) {
                     IoUtils.copy(apkInputStream, zipOutputStream);
                 }
                 zipOutputStream.closeEntry();
@@ -109,13 +111,14 @@ public final class SplitApkExporter {
     }
 
     @NonNull
-    private static List<File> getAllApkFiles(@NonNull PackageInfo packageInfo) {
+    private static List<Path> getAllApkFiles(@NonNull PackageInfo packageInfo) {
         ApplicationInfo applicationInfo = packageInfo.applicationInfo;
-        List<File> apkFiles = new ArrayList<>();
-        apkFiles.add(new File(applicationInfo.publicSourceDir));
+        List<Path> apkFiles = new ArrayList<>();
+        apkFiles.add(Paths.get(applicationInfo.publicSourceDir));
         if (applicationInfo.splitPublicSourceDirs != null) {
+            // FIXME: 8/5/22 This does not work for disabled apps
             for (String splitPath : applicationInfo.splitPublicSourceDirs)
-                apkFiles.add(new File(splitPath));
+                apkFiles.add(Paths.get(splitPath));
         }
         return apkFiles;
     }

@@ -26,6 +26,7 @@ import com.android.internal.util.TextUtils;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -40,9 +41,6 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
-import io.github.muntashirakon.io.ProxyFile;
-import io.github.muntashirakon.io.ProxyInputStream;
-import io.github.muntashirakon.io.ProxyOutputStream;
 
 public final class FileUtils {
     public static final String TAG = FileUtils.class.getSimpleName();
@@ -90,20 +88,17 @@ public final class FileUtils {
 
     @WorkerThread
     @NonNull
-    public static File saveZipFile(@NonNull InputStream zipInputStream,
-                                   @NonNull File destinationDirectory,
+    public static Path saveZipFile(@NonNull InputStream zipInputStream,
+                                   @NonNull Path destinationDirectory,
                                    @NonNull String fileName)
             throws IOException {
-        return saveZipFile(zipInputStream, new ProxyFile(destinationDirectory, fileName));
+        return saveZipFile(zipInputStream, destinationDirectory.findOrCreateFile(fileName, null));
     }
 
     @WorkerThread
     @NonNull
-    public static File saveZipFile(@NonNull InputStream zipInputStream, @NonNull File filePath)
-            throws IOException {
-        if (filePath.exists()) //noinspection ResultOfMethodCallIgnored
-            filePath.delete();
-        try (OutputStream outputStream = new ProxyOutputStream(filePath)) {
+    public static Path saveZipFile(@NonNull InputStream zipInputStream, @NonNull Path filePath) throws IOException {
+        try (OutputStream outputStream = filePath.openOutputStream()) {
             IoUtils.copy(zipInputStream, outputStream);
         }
         return filePath;
@@ -238,6 +233,14 @@ public final class FileUtils {
     }
 
     @AnyThread
+    public static void deleteSilently(@Nullable Path path) {
+        if (path == null || !path.exists()) return;
+        if (!path.delete()) {
+            Log.w(TAG, String.format("Unable to delete %s", path));
+        }
+    }
+
+    @AnyThread
     public static void deleteSilently(@Nullable File file) {
         if (file == null || !file.exists()) return;
         if (!file.delete()) {
@@ -252,74 +255,6 @@ public final class FileUtils {
         int lastIndexOfDot = str.lastIndexOf('.');
         if (lastIndexOfDot == -1) return "";
         return str.substring(str.lastIndexOf('.') + 1);
-    }
-
-    @AnyThread
-    public static long fileSize(@Nullable File root) {
-        if (root == null) {
-            return 0;
-        }
-        if (root.isFile()) {
-            return root.length();
-        }
-        try {
-            if (isSymlink(root)) {
-                return 0;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            return 0;
-        }
-
-        long length = 0;
-        File[] files = root.listFiles();
-        if (files == null) {
-            return 0;
-        }
-        for (File file : files) {
-            length += fileSize(file);
-        }
-
-        return length;
-    }
-
-    @AnyThread
-    public static long fileSize(@Nullable Path root) {
-        if (root == null) {
-            return 0;
-        }
-        if (root.isFile()) {
-            return root.length();
-        }
-        try {
-            if (root.isSymbolicLink()) {
-                return 0;
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-            return 0;
-        }
-
-        long length = 0;
-        Path[] files = root.listFiles();
-        for (Path file : files) {
-            length += fileSize(file);
-        }
-
-        return length;
-    }
-
-    @AnyThread
-    private static boolean isSymlink(@NonNull File file) throws IOException {
-        File canon;
-        File parentFile = file.getParentFile();
-        if (parentFile == null) {
-            canon = file;
-        } else {
-            File canonDir = parentFile.getCanonicalFile();
-            canon = new File(canonDir, file.getName());
-        }
-        return !canon.getCanonicalFile().equals(canon.getAbsoluteFile());
     }
 
     @WorkerThread
@@ -345,7 +280,7 @@ public final class FileUtils {
     @NonNull
     public static String getFileContent(@NonNull File file, @NonNull String emptyValue) {
         if (!file.exists() || file.isDirectory()) return emptyValue;
-        try (InputStream inputStream = new ProxyInputStream(file)) {
+        try (InputStream inputStream = new FileInputStream(file)) {
             return getInputStreamContent(inputStream);
         } catch (IOException e) {
             if (!(e.getCause() instanceof ErrnoException)) {
@@ -476,30 +411,10 @@ public final class FileUtils {
         return tempFile;
     }
 
-    @WorkerThread
-    @NonNull
-    public static File getCachedFile(byte[] bytes) throws IOException {
-        File tempFile = getTempFile();
-        bytesToFile(bytes, tempFile);
-        return tempFile;
-    }
-
     @AnyThread
     @NonNull
     public static File getTempFile() throws IOException {
         return File.createTempFile("file_" + System.currentTimeMillis(), ".cached", getCachePath());
-    }
-
-    @AnyThread
-    @NonNull
-    public static File getTempFolder(String folderNamePrefix) throws IOException {
-        File newDir = new File(getCachePath() + File.separator + folderNamePrefix);
-        int i = 1;
-        while (newDir.exists()) {
-            newDir = new File(getCachePath() + File.separator + (folderNamePrefix + "_" + i));
-        }
-        newDir.mkdirs();
-        return newDir;
     }
 
     @AnyThread

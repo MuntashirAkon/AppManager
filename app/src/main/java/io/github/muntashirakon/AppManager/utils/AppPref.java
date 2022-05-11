@@ -39,6 +39,7 @@ import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.runningapps.RunningAppsActivity;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 
 public class AppPref {
     private static final String PREF_NAME = "preferences";
@@ -244,14 +245,13 @@ public class AppPref {
 
     @NonNull
     public static Path getAppManagerDirectory() {
-        Context ctx = getInstance().context;
         Uri uri = getSelectedDirectory();
         Path path;
         if (uri.getScheme().equals(ContentResolver.SCHEME_FILE)) {
             // Append AppManager
             String newPath = uri.getPath() + File.separator + "AppManager";
-            path = new Path(ctx, new Uri.Builder().scheme(ContentResolver.SCHEME_FILE).path(newPath).build());
-        } else path = new Path(ctx, uri);
+            path = Paths.get(newPath);
+        } else path = Paths.get(uri);
         if (!path.exists()) path.mkdirs();
         return path;
     }

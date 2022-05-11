@@ -114,7 +114,7 @@ public final class RunnerUtils {
             String pathEnv = System.getenv("PATH");
             if (pathEnv == null) return false;
             for (String pathDir : pathEnv.split(":")) {
-                if (pathDir != null && new File(pathDir, "su").exists()) {
+                if (pathDir != null && new File(pathDir, "su").canExecute()) {
                     return true;
                 }
             }

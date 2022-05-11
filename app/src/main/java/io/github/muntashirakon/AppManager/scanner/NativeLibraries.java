@@ -29,7 +29,6 @@ import java.util.zip.ZipInputStream;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.io.ProxyInputStream;
 import io.github.muntashirakon.util.LocalizedString;
 
 public class NativeLibraries {
@@ -224,13 +223,6 @@ public class NativeLibraries {
             nativeLib.mType = buffer.getChar(); // e_type
             nativeLib.mIsa = buffer.getChar(); // e_machine
             return nativeLib;
-        }
-
-        @NonNull
-        public static NativeLib parse(@NonNull String path, @NonNull File file) throws IOException {
-            try (InputStream is = new ProxyInputStream(file)) {
-                return parse(path, path.length(), is);
-            }
         }
     }
 

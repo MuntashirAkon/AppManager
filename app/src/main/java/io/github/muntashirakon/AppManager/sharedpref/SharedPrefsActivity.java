@@ -3,6 +3,7 @@
 package io.github.muntashirakon.AppManager.sharedpref;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -36,7 +37,6 @@ import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.io.Path;
-import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.widget.RecyclerViewWithEmptyView;
 
 public class SharedPrefsActivity extends BaseActivity implements
@@ -55,14 +55,14 @@ public class SharedPrefsActivity extends BaseActivity implements
     protected void onAuthenticated(Bundle savedInstanceState) {
         setContentView(R.layout.activity_shared_prefs);
         setSupportActionBar(findViewById(R.id.toolbar));
-        String sharedPrefFile = getIntent().getStringExtra(EXTRA_PREF_LOCATION);
+        Uri sharedPrefUri = getIntent().getParcelableExtra(EXTRA_PREF_LOCATION);
         String appLabel = getIntent().getStringExtra(EXTRA_PREF_LABEL);
-        if (sharedPrefFile == null) {
+        if (sharedPrefUri == null) {
             finish();
             return;
         }
         mViewModel = new ViewModelProvider(this).get(SharedPrefsViewModel.class);
-        mViewModel.setSharedPrefsFile(new Path(getApplicationContext(), new ProxyFile(sharedPrefFile)));
+        mViewModel.setSharedPrefsFile(new Path(getApplicationContext(), sharedPrefUri));
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle(appLabel);

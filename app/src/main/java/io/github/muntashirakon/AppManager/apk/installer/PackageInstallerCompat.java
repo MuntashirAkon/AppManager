@@ -32,13 +32,13 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.WorkerThread;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -56,12 +56,10 @@ import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
-import io.github.muntashirakon.io.ProxyFile;
 
 @SuppressLint("ShiftFlags")
 public final class PackageInstallerCompat {
@@ -702,27 +700,22 @@ public final class PackageInstallerCompat {
         try {
             // Get the first writable external storage directory
             OsEnvironment.UserEnvironment ue = OsEnvironment.getUserEnvironment(userHandle);
-            ProxyFile[] extDirs = ue.getExternalDirs();
-            ProxyFile writableExtDir = null;
-            for (ProxyFile extDir : extDirs) {
-                if (extDir.canWrite() || extDir.getAbsolutePath().startsWith("/storage/emulated")) {
+            Path[] extDirs = ue.getExternalDirs();
+            Path writableExtDir = null;
+            for (Path extDir : extDirs) {
+                if (extDir.canWrite() || Objects.requireNonNull(extDir.getFilePath()).startsWith("/storage/emulated")) {
                     writableExtDir = extDir;
                     break;
                 }
             }
-            if (writableExtDir == null) throw new IOException("Couldn't find any writable Obb dir");
+            if (writableExtDir == null) {
+                throw new IOException("Couldn't find any writable Obb dir");
+            }
             // Get writable OBB directory
-            final ProxyFile writableObbDir = new ProxyFile(writableExtDir.getAbsolutePath() + "/" +
-                    ApkFile.OBB_DIR + "/" + packageName);
-            if (writableObbDir.exists()) {
-                File[] oldObbFiles = ArrayUtils.defeatNullable(writableObbDir.listFiles());
-                // Delete old files
-                for (File oldFile : oldObbFiles) {
-                    //noinspection ResultOfMethodCallIgnored
-                    oldFile.delete();
-                }
-            } else {
-                if (!writableObbDir.mkdirs()) throw new IOException("Couldn't create Obb dir");
+            Path writableObbDir = writableExtDir.findOrCreateDirectory(ApkFile.OBB_DIR).findOrCreateDirectory(packageName);
+            // Delete old files
+            for (Path oldFile : writableObbDir.listFiles()) {
+                oldFile.delete();
             }
             apkFile.extractObb(writableObbDir);
             UiThreadHandler.run(() -> UIUtils.displayLongToast(R.string.obb_files_extracted_successfully));

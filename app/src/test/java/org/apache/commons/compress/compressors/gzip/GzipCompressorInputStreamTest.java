@@ -14,6 +14,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,8 +23,7 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.Path;
-import io.github.muntashirakon.io.ProxyInputStream;
-import io.github.muntashirakon.io.ProxyOutputStream;
+import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.io.SplitInputStream;
 
 import static org.junit.Assert.assertEquals;
@@ -36,8 +36,8 @@ public class GzipCompressorInputStreamTest {
     @Test
     public void testUnTarGzip() throws IOException {
         assert classLoader != null;
-        try (ProxyInputStream pis = new ProxyInputStream(new File(classLoader.getResource("AppManager_v2.5.22.apks.tar.gz").getFile()));
-             BufferedInputStream bis = new BufferedInputStream(pis);
+        try (InputStream is = Paths.get(classLoader.getResource("AppManager_v2.5.22.apks.tar.gz").getFile()).openInputStream();
+             BufferedInputStream bis = new BufferedInputStream(is);
              GzipCompressorInputStream gis = new GzipCompressorInputStream(bis, true);
              TarArchiveInputStream tis = new TarArchiveInputStream(gis)) {
             ArchiveEntry entry;
@@ -45,7 +45,7 @@ public class GzipCompressorInputStreamTest {
                 // create a new path, remember check zip slip attack
                 File file = new File("/tmp", entry.getName());
                 // copy TarArchiveInputStream to newPath
-                try (OutputStream os = new ProxyOutputStream(file)) {
+                try (OutputStream os = Paths.get(file).openOutputStream()) {
                     FileUtils.copy(tis, os);
                 }
             }
@@ -88,7 +88,7 @@ public class GzipCompressorInputStreamTest {
                 // create a new path, remember check zip slip attack
                 File file = new File("/tmp", entry.getName());
                 // copy TarArchiveInputStream to newPath
-                try (OutputStream os = new ProxyOutputStream(file)) {
+                try (OutputStream os = Paths.get(file).openOutputStream()) {
                     FileUtils.copy(tis, os);
                 }
             }

@@ -9,9 +9,11 @@ import android.util.Pair;
 import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringDef;
+import androidx.annotation.VisibleForTesting;
 import androidx.annotation.WorkerThread;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Retention;
@@ -27,7 +29,6 @@ import java.util.zip.CheckedInputStream;
 import aosp.libcore.util.HexEncoding;
 import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
-import io.github.muntashirakon.io.ProxyInputStream;
 
 public class DigestUtils {
     @StringDef({CRC32, MD2, MD5, SHA_1, SHA_224, SHA_256, SHA_384, SHA_512})
@@ -51,6 +52,7 @@ public class DigestUtils {
         return HexEncoding.encodeToString(getDigest(algo, bytes), false /* lowercase */);
     }
 
+    @VisibleForTesting
     @WorkerThread
     @NonNull
     public static String getHexDigest(@Algorithm String algo, @NonNull File path) {
@@ -58,7 +60,7 @@ public class DigestUtils {
         gatherFiles(allFiles, path);
         List<String> hashes = new ArrayList<>(allFiles.size());
         for (File file : allFiles) {
-            try (InputStream fileInputStream = new ProxyInputStream(file)) {
+            try (InputStream fileInputStream = new FileInputStream(file)) {
                 hashes.add(DigestUtils.getHexDigest(algo, fileInputStream));
             } catch (IOException e) {
                 e.printStackTrace();
@@ -137,8 +139,10 @@ public class DigestUtils {
     }
 
     @WorkerThread
-    public static long calculateCrc32(File file) throws IOException {
-        return calculateCrc32(new ProxyInputStream(file));
+    public static long calculateCrc32(Path file) throws IOException {
+        try (InputStream is = file.openInputStream()) {
+            return calculateCrc32(is);
+        }
     }
 
     @AnyThread
@@ -162,7 +166,7 @@ public class DigestUtils {
 
     @WorkerThread
     @NonNull
-    public static Pair<String, String>[] getDigests(File path) {
+    public static Pair<String, String>[] getDigests(Path path) {
         @Algorithm String[] algorithms = new String[]{DigestUtils.MD5, DigestUtils.SHA_1, DigestUtils.SHA_256,
                 DigestUtils.SHA_384, DigestUtils.SHA_512};
         @SuppressWarnings("unchecked")
@@ -196,6 +200,7 @@ public class DigestUtils {
         return result;
     }
 
+    // FIXME: 8/5/22 Replace recursion with iteration
     static void gatherFiles(@NonNull List<File> files, @NonNull File source) {
         if (source.isDirectory()) {
             File[] children = source.listFiles();

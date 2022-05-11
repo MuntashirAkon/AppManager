@@ -2,8 +2,6 @@
 
 package org.apache.commons.compress.archivers.tar;
 
-import android.content.Context;
-
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,7 +9,6 @@ import org.robolectric.RobolectricTestRunner;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -21,10 +18,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.Path;
-import io.github.muntashirakon.io.ProxyInputStream;
+import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.io.SplitInputStream;
 import io.github.muntashirakon.io.SplitOutputStream;
 
@@ -33,26 +29,25 @@ import static org.junit.Assert.assertEquals;
 @RunWith(RobolectricTestRunner.class)
 public class TarArchiveOutputStreamTest {
     private final ClassLoader classLoader = getClass().getClassLoader();
-    private final Context context = AppManager.getContext();
 
     @Test
     public void testTarSplit() throws IOException {
         List<String> fileNames = Arrays.asList("AppManager_v2.5.22.apks.0", "AppManager_v2.5.22.apks.1");
-        List<File> fileList = new ArrayList<>();
+        List<Path> fileList = new ArrayList<>();
         assert classLoader != null;
         for (String fileName : fileNames) {
-            fileList.add(new File(classLoader.getResource(fileName).getFile()));
+            fileList.add(Paths.get(classLoader.getResource(fileName).getFile()));
         }
 
-        Path tmpPath = new Path(context, new File("/tmp"));
+        Path tmpPath = Paths.get("/tmp");
         // Always run tests using SplitOutputStream
         try (SplitOutputStream sot = new SplitOutputStream(tmpPath, "AppManager_v2.5.22.apks.tar", 1024 * 1024);
              BufferedOutputStream bot = new BufferedOutputStream(sot);
              TarArchiveOutputStream tot = new TarArchiveOutputStream(bot)) {
-            for (File file : fileList) {
+            for (Path file : fileList) {
                 TarArchiveEntry tarEntry = new TarArchiveEntry(file, file.getName());
                 tot.putArchiveEntry(tarEntry);
-                try (InputStream is = new ProxyInputStream(file)) {
+                try (InputStream is = file.openInputStream()) {
                     FileUtils.copy(is, tot);
                 }
                 tot.closeArchiveEntry();
@@ -82,20 +77,20 @@ public class TarArchiveOutputStreamTest {
     @Test
     public void testTar() throws IOException {
         List<String> fileNames = Arrays.asList("AppManager_v2.5.22.apks.0", "AppManager_v2.5.22.apks.1");
-        List<File> fileList = new ArrayList<>();
+        List<Path> fileList = new ArrayList<>();
         assert classLoader != null;
         for (String fileName : fileNames) {
-            fileList.add(new File(classLoader.getResource(fileName).getFile()));
+            fileList.add(Paths.get(classLoader.getResource(fileName).getFile()));
         }
 
         // Always run tests using SplitOutputStream
         try (FileOutputStream sot = new FileOutputStream("/tmp/AppManager_v2.5.22.apks.tar");
              BufferedOutputStream bot = new BufferedOutputStream(sot);
              TarArchiveOutputStream tot = new TarArchiveOutputStream(bot)) {
-            for (File file : fileList) {
+            for (Path file : fileList) {
                 TarArchiveEntry tarEntry = new TarArchiveEntry(file, file.getName());
                 tot.putArchiveEntry(tarEntry);
-                try (InputStream is = new ProxyInputStream(file)) {
+                try (InputStream is = file.openInputStream()) {
                     FileUtils.copy(is, tot);
                 }
                 tot.closeArchiveEntry();

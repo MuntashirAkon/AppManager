@@ -2,8 +2,6 @@
 
 package org.apache.commons.compress.compressors.bzip2;
 
-import android.content.Context;
-
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
@@ -14,7 +12,6 @@ import org.robolectric.RobolectricTestRunner;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -24,10 +21,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.Path;
-import io.github.muntashirakon.io.ProxyInputStream;
+import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.io.SplitInputStream;
 import io.github.muntashirakon.io.SplitOutputStream;
 
@@ -36,25 +32,24 @@ import static org.junit.Assert.assertEquals;
 @RunWith(RobolectricTestRunner.class)
 public class BZip2CompressorOutputStreamTest {
     private final ClassLoader classLoader = getClass().getClassLoader();
-    private final Context context = AppManager.getContext();
 
     @Test
     public void testTarGzip() throws IOException {
         List<String> fileNames = Arrays.asList("AppManager_v2.5.22.apks.0", "AppManager_v2.5.22.apks.1");
-        List<File> fileList = new ArrayList<>();
+        List<Path> fileList = new ArrayList<>();
         assert classLoader != null;
         for (String fileName : fileNames) {
-            fileList.add(new File(classLoader.getResource(fileName).getFile()));
+            fileList.add(Paths.get(classLoader.getResource(fileName).getFile()));
         }
 
         try (FileOutputStream fos = new FileOutputStream("/tmp/AppManager_v2.5.22.apks.tar.bz2");
              BufferedOutputStream bos = new BufferedOutputStream(fos);
              BZip2CompressorOutputStream bZos = new BZip2CompressorOutputStream(bos);
              TarArchiveOutputStream tos = new TarArchiveOutputStream(bZos)) {
-            for (File file : fileList) {
+            for (Path file : fileList) {
                 TarArchiveEntry tarEntry = new TarArchiveEntry(file, file.getName());
                 tos.putArchiveEntry(tarEntry);
-                try (InputStream is = new ProxyInputStream(file)) {
+                try (InputStream is = file.openInputStream()) {
                     FileUtils.copy(is, tos);
                 }
                 tos.closeArchiveEntry();
@@ -83,21 +78,21 @@ public class BZip2CompressorOutputStreamTest {
     @Test
     public void testSplitTarBZip2() throws IOException {
         List<String> fileNames = Arrays.asList("AppManager_v2.5.22.apks.0", "AppManager_v2.5.22.apks.1");
-        List<File> fileList = new ArrayList<>();
+        List<Path> fileList = new ArrayList<>();
         assert classLoader != null;
         for (String fileName : fileNames) {
-            fileList.add(new File(classLoader.getResource(fileName).getFile()));
+            fileList.add(Paths.get(classLoader.getResource(fileName).getFile()));
         }
 
-        Path tmpPath = new Path(context, new File("/tmp"));
+        Path tmpPath = Paths.get("/tmp");
         try (SplitOutputStream sos = new SplitOutputStream(tmpPath, "AppManager_v2.5.22.apks.tar.bz2", 1024 * 1024);
              BufferedOutputStream bos = new BufferedOutputStream(sos);
              BZip2CompressorOutputStream bZos = new BZip2CompressorOutputStream(bos);
              TarArchiveOutputStream tos = new TarArchiveOutputStream(bZos)) {
-            for (File file : fileList) {
+            for (Path file : fileList) {
                 TarArchiveEntry tarEntry = new TarArchiveEntry(file, file.getName());
                 tos.putArchiveEntry(tarEntry);
-                try (InputStream is = new ProxyInputStream(file)) {
+                try (InputStream is = file.openInputStream()) {
                     FileUtils.copy(is, tos);
                 }
                 tos.closeArchiveEntry();

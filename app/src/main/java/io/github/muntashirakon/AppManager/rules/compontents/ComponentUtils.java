@@ -38,8 +38,7 @@ import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.io.Path;
-import io.github.muntashirakon.io.ProxyFile;
-import io.github.muntashirakon.io.ProxyInputStream;
+import io.github.muntashirakon.io.Paths;
 
 public final class ComponentUtils {
     public static boolean isTracker(String componentName) {
@@ -210,27 +209,25 @@ public final class ComponentUtils {
 
     @NonNull
     public static HashMap<String, RuleType> getIFWRulesForPackage(@NonNull String packageName) {
-        return getIFWRulesForPackage(packageName, ComponentsBlocker.SYSTEM_RULES_PATH);
+        return getIFWRulesForPackage(packageName, Paths.get(ComponentsBlocker.SYSTEM_RULES_PATH));
     }
 
     @VisibleForTesting
     @NonNull
-    public static HashMap<String, RuleType> getIFWRulesForPackage(@NonNull String packageName, @NonNull ProxyFile path) {
+    public static HashMap<String, RuleType> getIFWRulesForPackage(@NonNull String packageName, @NonNull Path path) {
         HashMap<String, RuleType> rules = new HashMap<>();
-        ProxyFile[] files = path.listFiles((dir, name) -> {
+        Path[] files = path.listFiles((dir, name) -> {
             // For our case, name must start with package name to support apps like Watt, Blocker and MyAndroidTools,
             // and to prevent unwanted situation, such as when the contains unsupported tags such as intent-filter.
             return name.startsWith(packageName) && name.endsWith(".xml");
         });
-        if (files != null) {
-            for (ProxyFile ifwRulesFile : files) {
-                // Get file contents
-                try (InputStream inputStream = new ProxyInputStream(ifwRulesFile)) {
-                    // Read rules
-                    rules.putAll(readIFWRules(inputStream, packageName));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        for (Path ifwRulesFile : files) {
+            // Get file contents
+            try (InputStream inputStream = ifwRulesFile.openInputStream()) {
+                // Read rules
+                rules.putAll(readIFWRules(inputStream, packageName));
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
         return rules;

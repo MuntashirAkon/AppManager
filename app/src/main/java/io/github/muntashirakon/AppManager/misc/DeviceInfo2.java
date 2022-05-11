@@ -47,7 +47,9 @@ import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.Utils;
-import io.github.muntashirakon.io.ProxyFileReader;
+import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.PathReader;
+import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.util.LocalizedString;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getStyledKeyValue;
@@ -368,7 +370,8 @@ public class DeviceInfo2 implements LocalizedString {
 
     @Nullable
     private String getCpuHardware() {
-        try (BufferedReader reader = new BufferedReader(new ProxyFileReader("/proc/cpuinfo"))) {
+        Path cpuInfoPath = Paths.getUnprivileged("/proc/cpuinfo");
+        try (BufferedReader reader = new BufferedReader(new PathReader(cpuInfoPath))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 if (line.trim().startsWith("Hardware")) {

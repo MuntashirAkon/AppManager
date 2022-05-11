@@ -62,6 +62,9 @@ public final class PermissionUtils {
 
     public static boolean hasStoragePermission(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (Utils.isRoboUnitTest()) {
+                return false;
+            }
             return Environment.isExternalStorageManager();
         }
         return hasPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);

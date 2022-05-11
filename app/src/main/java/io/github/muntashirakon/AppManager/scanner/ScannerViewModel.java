@@ -41,6 +41,7 @@ import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.io.VirtualFileSystem;
 
 public class ScannerViewModel extends AndroidViewModel implements VirusTotal.FullScanResponseInterface {
@@ -224,7 +225,7 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
     @WorkerThread
     private void generateApkChecksumsAndScanInVirusTotal() {
         waitForFile();
-        Pair<String, String>[] digests = DigestUtils.getDigests(apkFile);
+        Pair<String, String>[] digests = DigestUtils.getDigests(Paths.get(apkFile));
         apkChecksumsLiveData.postValue(digests);
         if (vt == null) return;
         String md5 = digests[0].second;

@@ -61,6 +61,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -130,7 +131,6 @@ import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
 import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
 import io.github.muntashirakon.io.Path;
-import io.github.muntashirakon.io.ProxyFile;
 import io.github.muntashirakon.widget.SwipeRefreshLayout;
 import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
@@ -724,7 +724,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             } else chip = addChip(R.string.keystore);
             chip.setOnClickListener(view -> new MaterialAlertDialogBuilder(mActivity)
                     .setTitle(R.string.keystore)
-                    .setItems(KeyStoreUtils.getKeyStoreFiles(mApplicationInfo.uid,
+                    .setItems(KeyStoreUtils.getKeyStoreFiles(mActivity, mApplicationInfo.uid,
                             mainModel.getUserHandle()).toArray(new String[0]), null)
                     .setNegativeButton(R.string.close, null)
                     .show());
@@ -1087,8 +1087,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         // Root only features
         if (!mainModel.getIsExternalApk()) {
             // Shared prefs (root only)
-            final List<ProxyFile> sharedPrefs = new ArrayList<>();
-            ProxyFile[] tmpPaths = getSharedPrefs(mApplicationInfo.dataDir);
+            final List<Path> sharedPrefs = new ArrayList<>();
+            Path[] tmpPaths = getSharedPrefs(mApplicationInfo.dataDir);
             if (tmpPaths != null) sharedPrefs.addAll(Arrays.asList(tmpPaths));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 tmpPaths = getSharedPrefs(mApplicationInfo.deviceProtectedDataDir);
@@ -1104,7 +1104,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                 .setTitle(R.string.shared_prefs)
                                 .setItems(sharedPrefNames, (dialog, which) -> {
                                     Intent intent = new Intent(mActivity, SharedPrefsActivity.class);
-                                    intent.putExtra(SharedPrefsActivity.EXTRA_PREF_LOCATION, sharedPrefs.get(which).getAbsolutePath());
+                                    intent.putExtra(SharedPrefsActivity.EXTRA_PREF_LOCATION, sharedPrefs.get(which).getUri());
                                     intent.putExtra(SharedPrefsActivity.EXTRA_PREF_LABEL, mPackageLabel);
                                     startActivity(intent);
                                 })
@@ -1112,7 +1112,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                 .show());
             }
             // Databases (root only)
-            final List<ProxyFile> databases = new ArrayList<>();
+            final List<Path> databases = new ArrayList<>();
             tmpPaths = getDatabases(mApplicationInfo.dataDir);
             if (tmpPaths != null) databases.addAll(Arrays.asList(tmpPaths));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -1130,9 +1130,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                 .setItems(databases2, (dialog, i) -> {
                                     // TODO: 7/7/21 VACUUM the database before opening it
                                     Context ctx = AppManager.getContext();
-                                    Path dbPath = new Path(ctx, databases.get(i));
                                     Intent openFile = new Intent(Intent.ACTION_VIEW);
-                                    openFile.setDataAndType(FmProvider.getContentUri(dbPath), "application/vnd.sqlite3");
+                                    openFile.setDataAndType(FmProvider.getContentUri(databases.get(i)), "application/vnd.sqlite3");
                                     openFile.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_GRANT_READ_URI_PERMISSION);
                                     if (openFile.resolveActivityInfo(ctx.getPackageManager(), 0) != null) {
                                         ctx.startActivity(openFile);
@@ -1394,15 +1393,25 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     @Nullable
-    private ProxyFile[] getSharedPrefs(@NonNull String sourceDir) {
-        ProxyFile sharedPath = new ProxyFile(sourceDir, "shared_prefs");
-        return sharedPath.listFiles();
+    private Path[] getSharedPrefs(@NonNull String sourceDir) {
+        try {
+            Path sharedPath = new Path(mActivity, sourceDir).findFile("shared_prefs");
+            return sharedPath.listFiles();
+        } catch (FileNotFoundException e) {
+            return null;
+        }
+
     }
 
-    private ProxyFile[] getDatabases(@NonNull String sourceDir) {
-        ProxyFile sharedPath = new ProxyFile(sourceDir, "databases");
-        return sharedPath.listFiles((dir, name) -> !(name.endsWith("-journal")
-                || name.endsWith("-wal") || name.endsWith("-shm")));
+    @Nullable
+    private Path[] getDatabases(@NonNull String sourceDir) {
+        try {
+            Path sharedPath = new Path(mActivity, sourceDir).findFile("databases");
+            return sharedPath.listFiles((dir, name) -> !(name.endsWith("-journal")
+                    || name.endsWith("-wal") || name.endsWith("-shm")));
+        } catch (FileNotFoundException e) {
+            return null;
+        }
     }
 
     @NonNull

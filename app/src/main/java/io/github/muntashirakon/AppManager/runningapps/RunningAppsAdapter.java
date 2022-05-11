@@ -35,7 +35,7 @@ import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
-import io.github.muntashirakon.io.ProxyFile;
+import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
 public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAdapter.ViewHolder> {
@@ -139,7 +139,7 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAd
             // Scan using VT
             MenuItem scanVtIem = menu.findItem(R.id.action_scan_vt);
             String firstCliArg = processItem.getCommandlineArgs()[0];
-            if (mModel.isVirusTotalAvailable() && (applicationInfo != null || new ProxyFile(firstCliArg).canRead())) {
+            if (mModel.isVirusTotalAvailable() && (applicationInfo != null || Paths.get(firstCliArg).canRead())) {
                 // TODO: 7/1/22 Check other arguments for files, too?
                 scanVtIem.setVisible(true).setOnMenuItemClickListener(item -> {
                     mModel.scanWithVt(processItem);

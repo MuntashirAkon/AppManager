@@ -6,7 +6,6 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.os.RemoteException;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.ArrayMap;
@@ -24,12 +23,10 @@ import androidx.annotation.RequiresApi;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -39,10 +36,10 @@ import java.util.Objects;
 import java.util.Set;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
-import io.github.muntashirakon.io.AtomicProxyFile;
+import io.github.muntashirakon.io.AtomicExtendedFile;
 import io.github.muntashirakon.io.IoUtils;
-import io.github.muntashirakon.io.ProxyFile;
-import io.github.muntashirakon.io.ProxyOutputStream;
+import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 
 /**
  * This class contains the state for one type of settings. It is responsible
@@ -134,7 +131,7 @@ public final class SettingsStateV31 implements SettingsState {
     private final int mMaxBytesPerAppPackage;
 
     @GuardedBy("mLock")
-    private final ProxyFile mStatePersistFile;
+    private final Path mStatePersistFile;
 
     private final Setting mNullSetting = new Setting(null, null, false, null, null) {
         @Override
@@ -210,13 +207,13 @@ public final class SettingsStateV31 implements SettingsState {
                 + settingTypeToString(getTypeFromKey(key)) + "]";
     }
 
-    public SettingsStateV31(Object lock, File file, int key, int maxBytesPerAppPackage, Looper looper)
+    public SettingsStateV31(Object lock, Path file, int key, int maxBytesPerAppPackage, Looper looper)
             throws IllegalStateException {
         // It is important that we use the same lock as the settings provider
         // to ensure multiple mutations on this state are atomically persisted
         // as the async persistence should be blocked while we make changes.
         mLock = lock;
-        mStatePersistFile = new ProxyFile(file);
+        mStatePersistFile = file;
         mKey = key;
         mHandler = new MyHandler(looper);
         if (maxBytesPerAppPackage == MAX_BYTES_PER_APP_PACKAGE_LIMITED) {
@@ -662,8 +659,8 @@ public final class SettingsStateV31 implements SettingsState {
                 Log.i(LOG_TAG, "[PERSIST START]");
             }
 
-            AtomicProxyFile destination = new AtomicProxyFile(mStatePersistFile);
-            ProxyOutputStream out = null;
+            AtomicExtendedFile destination = new AtomicExtendedFile(mStatePersistFile.getFile());
+            FileOutputStream out = null;
             try {
                 out = destination.startWrite();
 
@@ -713,17 +710,15 @@ public final class SettingsStateV31 implements SettingsState {
                 if (t instanceof IOException) {
                     // we failed to create a directory, so log the permissions and existence
                     // state for the settings file and directory
-                    logSettingsDirectoryInformation(destination.getBaseFile());
+                    logSettingsDirectoryInformation(Paths.get(destination.getBaseFile()));
                     if (t.getMessage().contains("Couldn't create directory")) {
                         // attempt to create the directory with Files.createDirectories, which
                         // throws more informative errors than File.mkdirs.
-                        Path parentPath = destination.getBaseFile().getParentFile().toPath();
-                        try {
-                            Files.createDirectories(parentPath);
+                        Path parentPath = Paths.get(destination.getBaseFile().getParentFile());
+                        if (parentPath.mkdirs()) {
                             Log.i(LOG_TAG, "Successfully created " + parentPath);
-                        } catch (Throwable t2) {
-                            Log.e(LOG_TAG, "Failed to write " + parentPath
-                                    + " with Files.writeDirectories", t2);
+                        } else {
+                            Log.e(LOG_TAG, "Failed to write " + parentPath + " with Files.writeDirectories");
                         }
                     }
                 }
@@ -740,11 +735,11 @@ public final class SettingsStateV31 implements SettingsState {
         }
     }
 
-    private static void logSettingsDirectoryInformation(File settingsFile) {
-        File parent = settingsFile.getParentFile();
+    private static void logSettingsDirectoryInformation(Path settingsFile) {
+        Path parent = settingsFile.getParentFile();
         Log.i(LOG_TAG, "directory info for directory/file " + settingsFile
                 + " with stacktrace ", new Exception());
-        File ancestorDir = parent;
+        Path ancestorDir = parent;
         while (ancestorDir != null) {
             if (!ancestorDir.exists()) {
                 Log.i(LOG_TAG, "ancestor directory " + ancestorDir
@@ -756,7 +751,7 @@ public final class SettingsStateV31 implements SettingsState {
                 Log.i(LOG_TAG, "ancestor directory " + ancestorDir
                         + " permissions: r: " + ancestorDir.canRead() + " w: "
                         + ancestorDir.canWrite() + " x: " + ancestorDir.canExecute());
-                File ancestorParent = ancestorDir.getParentFile();
+                Path ancestorParent = ancestorDir.getParentFile();
                 if (ancestorParent != null) {
                     Log.i(LOG_TAG, "ancestor's parent directory " + ancestorParent
                             + " permissions: r: " + ancestorParent.canRead() + " w: "
@@ -868,7 +863,7 @@ public final class SettingsStateV31 implements SettingsState {
     @GuardedBy("mLock")
     private void readStateSyncLocked() throws IllegalStateException {
         FileInputStream in;
-        AtomicFile file = new AtomicFile(mStatePersistFile);
+        AtomicFile file = new AtomicFile(mStatePersistFile.getFile());
         try {
             in = file.openRead();
         } catch (FileNotFoundException fnfe) {
@@ -882,12 +877,11 @@ public final class SettingsStateV31 implements SettingsState {
         }
 
         // Settings file exists but is corrupted. Retry with the fallback file
-        final File statePersistFallbackFile = new File(
-                mStatePersistFile.getAbsolutePath() + FALLBACK_FILE_SUFFIX);
+        final Path statePersistFallbackFile = Paths.get(mStatePersistFile.getFilePath() + FALLBACK_FILE_SUFFIX);
         Log.i(LOG_TAG, "Failed parsing settings file: " + mStatePersistFile
                 + ", retrying with fallback file: " + statePersistFallbackFile);
         try {
-            in = new AtomicFile(statePersistFallbackFile).openRead();
+            in = new AtomicFile(statePersistFallbackFile.getFile()).openRead();
         } catch (FileNotFoundException fnfe) {
             final String message = "No fallback file found for: " + mStatePersistFile;
             Log.wtf(LOG_TAG, message);
@@ -897,7 +891,7 @@ public final class SettingsStateV31 implements SettingsState {
             // Parsed state from fallback file. Restore original file with fallback file
             try {
                 IoUtils.copy(statePersistFallbackFile, mStatePersistFile);
-            } catch (IOException | RemoteException ignored) {
+            } catch (IOException ignored) {
                 // Failed to copy, but it's okay because we already parsed states from fallback file
             }
         } else {
@@ -921,13 +915,13 @@ public final class SettingsStateV31 implements SettingsState {
     }
 
     /**
-     * Uses AtomicProxyFile to check if the file or its backup exists.
+     * Uses AtomicExtendedFile to check if the file or its backup exists.
      *
      * @param file The file to check for existence
      * @return whether the original or backup exist
      */
-    public static boolean stateFileExists(ProxyFile file) {
-        AtomicProxyFile stateFile = new AtomicProxyFile(file);
+    public static boolean stateFileExists(Path file) {
+        AtomicExtendedFile stateFile = new AtomicExtendedFile(file.getFile());
         return stateFile.exists();
     }
 

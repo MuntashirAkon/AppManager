@@ -14,7 +14,7 @@ class LocalShell extends Runner {
     @WorkerThread
     @Override
     protected synchronized Result runCommand() {
-        Shell.Job shell = Shell.sh(commands.toArray(new String[0]));
+        Shell.Job shell = Shell.cmd(commands.toArray(new String[0]));
         for (InputStream is : inputStreams) {
             shell.add(is);
         }

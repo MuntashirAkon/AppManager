@@ -58,7 +58,7 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
-import io.github.muntashirakon.io.ProxyFile;
+import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.unapkm.api.UnApkm;
 import io.github.muntashirakon.util.LocalizedString;
 
@@ -174,7 +174,7 @@ public final class ApkFile implements AutoCloseable {
     private final List<Entry> entries = new ArrayList<>();
     private Entry baseEntry;
     @Nullable
-    private File idsigFile;
+    private Path idsigFile;
     @NonNull
     private final String packageName;
     @NonNull
@@ -417,7 +417,10 @@ public final class ApkFile implements AutoCloseable {
 
     @Nullable
     public File getIdsigFile() {
-        return idsigFile;
+        if (idsigFile != null) {
+            return idsigFile.getFile();
+        }
+        return null;
     }
 
     @NonNull
@@ -446,7 +449,7 @@ public final class ApkFile implements AutoCloseable {
     }
 
     @WorkerThread
-    public void extractObb(ProxyFile writableObbDir) throws IOException {
+    public void extractObb(Path writableObbDir) throws IOException {
         if (!hasObb() || zipFile == null) return;
         for (ZipEntry obbEntry : obbFiles) {
             String fileName = FileUtils.getFileNameFromZipEntry(obbEntry);
@@ -498,13 +501,14 @@ public final class ApkFile implements AutoCloseable {
     }
 
     @NonNull
-    private File getCachePath() {
-        File destDir = AppManager.getContext().getExternalCacheDir();
+    private Path getCachePath() {
+        Context context = AppManager.getContext();
+        File destDir = context.getExternalCacheDir();
         if (destDir == null || !Environment.getExternalStorageState(destDir).equals(Environment.MEDIA_MOUNTED))
             throw new RuntimeException("External media not present");
         if (!destDir.exists()) //noinspection ResultOfMethodCallIgnored
             destDir.mkdirs();
-        return destDir;
+        return new Path(context, destDir);
     }
 
     public class Entry implements AutoCloseable, LocalizedString {
@@ -767,13 +771,17 @@ public final class ApkFile implements AutoCloseable {
          */
         @WorkerThread
         public File getRealCachedFile() throws IOException {
-            if (source != null && source.canRead() && !source.getAbsolutePath().startsWith("/proc/self")) return source;
+            if (source != null && source.canRead() && !source.getAbsolutePath().startsWith("/proc/self")) {
+                return source;
+            }
             if (cachedFile != null) {
-                if (cachedFile.canRead()) return cachedFile;
-                else FileUtils.deleteSilently(cachedFile);
+                if (cachedFile.canRead()) {
+                    return cachedFile;
+                } else FileUtils.deleteSilently(cachedFile);
             }
             try (InputStream is = getRealInputStream()) {
-                return cachedFile = FileUtils.saveZipFile(is, getCachePath(), name);
+                cachedFile = FileUtils.saveZipFile(is, getCachePath(), name).getFile();
+                return Objects.requireNonNull(cachedFile);
             }
         }
 

@@ -21,7 +21,8 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
 
-import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -34,11 +35,10 @@ import java.util.Set;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.io.AtomicProxyFile;
+import io.github.muntashirakon.io.AtomicExtendedFile;
 import io.github.muntashirakon.io.IoUtils;
-import io.github.muntashirakon.io.ProxyFile;
-import io.github.muntashirakon.io.ProxyInputStream;
-import io.github.muntashirakon.io.ProxyOutputStream;
+import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 
 /**
  * This class contains the state for one type of settings. It is responsible
@@ -131,7 +131,7 @@ public final class SettingsStateV26 implements SettingsState {
     private final int mMaxBytesPerAppPackage;
 
     @GuardedBy("mLock")
-    private final ProxyFile mStatePersistFile;
+    private final Path mStatePersistFile;
 
     private final Setting mNullSetting = new Setting(null, null, false, null, null) {
         @Override
@@ -209,13 +209,13 @@ public final class SettingsStateV26 implements SettingsState {
                 + settingTypeToString(getTypeFromKey(key)) + "]";
     }
 
-    public SettingsStateV26(Object lock, File file, int key, int maxBytesPerAppPackage, Looper looper)
+    public SettingsStateV26(Object lock, Path file, int key, int maxBytesPerAppPackage, Looper looper)
             throws IllegalStateException {
         // It is important that we use the same lock as the settings provider
         // to ensure multiple mutations on this state are atomically persisted
         // as the async persistence should be blocked while we make changes.
         mLock = lock;
-        mStatePersistFile = new ProxyFile(file);
+        mStatePersistFile = file;
         mKey = key;
         mHandler = new MyHandler(looper);
         if (maxBytesPerAppPackage == MAX_BYTES_PER_APP_PACKAGE_LIMITED) {
@@ -659,8 +659,8 @@ public final class SettingsStateV26 implements SettingsState {
                 Log.i(LOG_TAG, "[PERSIST START]");
             }
 
-            AtomicProxyFile destination = new AtomicProxyFile(mStatePersistFile);
-            ProxyOutputStream out = null;
+            AtomicExtendedFile destination = new AtomicExtendedFile(mStatePersistFile.getFile());
+            FileOutputStream out = null;
             try {
                 out = destination.startWrite();
 
@@ -719,11 +719,11 @@ public final class SettingsStateV26 implements SettingsState {
                 if (t instanceof IOException) {
                     // we failed to create a directory, so log the permissions and existence
                     // state for the settings file and directory
-                    logSettingsDirectoryInformation(destination.getBaseFile());
+                    logSettingsDirectoryInformation(Paths.get(destination.getBaseFile()));
                     if (t.getMessage().contains("Couldn't create directory")) {
                         // attempt to create the directory with Files.createDirectories, which
                         // throws more informative errors than File.mkdirs.
-                        ProxyFile parentPath = destination.getBaseFile().getParentFile();
+                        Path parentPath = Paths.get(destination.getBaseFile().getParentFile());
                         if (parentPath.mkdirs()) {
                             Log.i(LOG_TAG, "Successfully created " + parentPath);
                         } else {
@@ -744,11 +744,11 @@ public final class SettingsStateV26 implements SettingsState {
         }
     }
 
-    private static void logSettingsDirectoryInformation(ProxyFile settingsFile) {
-        ProxyFile parent = settingsFile.getParentFile();
+    private static void logSettingsDirectoryInformation(Path settingsFile) {
+        Path parent = settingsFile.getParentFile();
         Log.i(LOG_TAG, "directory info for directory/file " + settingsFile
                 + " with stacktrace ", new Exception());
-        ProxyFile ancestorDir = parent;
+        Path ancestorDir = parent;
         while (ancestorDir != null) {
             if (!ancestorDir.exists()) {
                 Log.i(LOG_TAG, "ancestor directory " + ancestorDir
@@ -760,7 +760,7 @@ public final class SettingsStateV26 implements SettingsState {
                 Log.i(LOG_TAG, "ancestor directory " + ancestorDir
                         + " permissions: r: " + ancestorDir.canRead() + " w: "
                         + ancestorDir.canWrite() + " x: " + ancestorDir.canExecute());
-                ProxyFile ancestorParent = ancestorDir.getParentFile();
+                Path ancestorParent = ancestorDir.getParentFile();
                 if (ancestorParent != null) {
                     Log.i(LOG_TAG, "ancestor's parent directory " + ancestorParent
                             + " permissions: r: " + ancestorParent.canRead() + " w: "
@@ -859,8 +859,8 @@ public final class SettingsStateV26 implements SettingsState {
 
     @GuardedBy("mLock")
     private void readStateSyncLocked() throws IllegalStateException {
-        ProxyInputStream in;
-        AtomicProxyFile file = new AtomicProxyFile(mStatePersistFile);
+        FileInputStream in;
+        AtomicExtendedFile file = new AtomicExtendedFile(mStatePersistFile.getFile());
         try {
             in = file.openRead();
         } catch (IOException | RemoteException fnfe) {
@@ -874,11 +874,11 @@ public final class SettingsStateV26 implements SettingsState {
         }
 
         // Settings file exists but is corrupted. Retry with the fallback file
-        final ProxyFile statePersistFallbackFile = new ProxyFile(mStatePersistFile.getAbsolutePath() + FALLBACK_FILE_SUFFIX);
+        Path statePersistFallbackFile = Paths.get(mStatePersistFile.getFilePath() + FALLBACK_FILE_SUFFIX);
         Log.i(LOG_TAG, "Failed parsing settings file: " + mStatePersistFile
                 + ", retrying with fallback file: " + statePersistFallbackFile);
         try {
-            in = new AtomicProxyFile(statePersistFallbackFile).openRead();
+            in = new AtomicExtendedFile(statePersistFallbackFile.getFile()).openRead();
         } catch (IOException | RemoteException fnfe) {
             final String message = "No fallback file found for: " + mStatePersistFile;
             Log.e(LOG_TAG, message);
@@ -888,7 +888,7 @@ public final class SettingsStateV26 implements SettingsState {
             // Parsed state from fallback file. Restore original file with fallback file
             try {
                 IoUtils.copy(statePersistFallbackFile, mStatePersistFile);
-            } catch (IOException | RemoteException ignored) {
+            } catch (IOException ignored) {
                 // Failed to copy, but it's okay because we already parsed states from fallback file
             }
         } else {
@@ -913,13 +913,13 @@ public final class SettingsStateV26 implements SettingsState {
     }
 
     /**
-     * Uses AtomicProxyFile to check if the file or its backup exists.
+     * Uses AtomicExtendedFile to check if the file or its backup exists.
      *
      * @param file The file to check for existence
      * @return whether the original or backup exist
      */
-    public static boolean stateFileExists(ProxyFile file) {
-        AtomicProxyFile stateFile = new AtomicProxyFile(file);
+    public static boolean stateFileExists(Path file) {
+        AtomicExtendedFile stateFile = new AtomicExtendedFile(Objects.requireNonNull(file.getFile()));
         return stateFile.exists();
     }
 

@@ -1,0 +1,7 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+
+apply from: "$gradle.ext.appManagerRoot/common.gradle"
+
+dependencies {
+    api "androidx.documentfile:documentfile:1.0.1"
+}

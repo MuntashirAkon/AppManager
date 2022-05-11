@@ -82,6 +82,7 @@ dependencies {
     compileOnly project(path: ':hiddenapi')
 
     implementation project(path: ':libapkparser')
+    implementation project(path: ':libcore:io')
     implementation project(path: ':libcore:ui')
     implementation project(path: ':libopenpgp')
     implementation project(path: ':libserver')
@@ -124,7 +125,7 @@ dependencies {
 //    androidTestImplementation "com.android.support.test.espresso:espresso-intents:3.0.2"
 
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.robolectric:robolectric:4.7.3'
+    testImplementation 'org.robolectric:robolectric:4.8.1'
 }
 
 preBuild.dependsOn ":server:build"

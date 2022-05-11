@@ -29,7 +29,7 @@ public class SharedPrefsViewModel extends AndroidViewModel {
     private final MutableLiveData<Boolean> mSharedPrefsDeletedLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> mSharedPrefsModifiedLiveData = new MutableLiveData<>();
 
-    // TODO: 8/2/22 Use AtomicProxyFile to better handle errors
+    // TODO: 8/2/22 Use AtomicExtendedFile to better handle errors
     private Path mSharedPrefsFile;
     private Map<String, Object> mSharedPrefsMap;
     private boolean modified;

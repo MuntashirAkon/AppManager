@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
 import io.github.muntashirakon.AppManager.adb.AdbUtils;
-import io.github.muntashirakon.AppManager.ipc.IPCUtils;
+import io.github.muntashirakon.AppManager.ipc.LocalServices;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.NoOps;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
@@ -462,7 +462,7 @@ public class Ops {
         if (LocalServer.isAMServiceAlive()) {
             // AM service is running
             try {
-                if (IPCUtils.getServiceSafe().getUid() == 0) {
+                if (LocalServices.getAmService().getUid() == 0) {
                     // AM service is being run as root
                     if (sIsAdb) {
                         UiThreadHandler.run(() -> UIUtils.displayLongToast(R.string.warning_working_on_root_mode));
@@ -472,7 +472,7 @@ public class Ops {
                 } else {
                     if (sIsRoot) {
                         // AM is supposed to be run as root, not ADB. Abort service.
-                        IPCUtils.stopDaemon(context);
+                        LocalServices.stopServices();
                         // Throw error to revert changes
                         throw new RemoteException("App Manager was running as ADB, root was requested.");
                     } else {

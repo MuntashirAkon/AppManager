@@ -7,9 +7,11 @@ import android.content.Context;
 import android.content.UriPermission;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Environment;
 import android.os.HandlerThread;
 import android.os.ParcelFileDescriptor;
 import android.os.RemoteException;
+import android.os.UserHandleHidden;
 import android.system.ErrnoException;
 import android.system.OsConstants;
 import android.webkit.MimeTypeMap;
@@ -21,7 +23,7 @@ import androidx.annotation.RequiresApi;
 import androidx.core.util.Pair;
 import androidx.documentfile.provider.DexDocumentFile;
 import androidx.documentfile.provider.DocumentFile;
-import androidx.documentfile.provider.ProxyDocumentFile;
+import androidx.documentfile.provider.ExtendedRawDocumentFile;
 import androidx.documentfile.provider.VirtualDocumentFile;
 import androidx.documentfile.provider.ZipDocumentFile;
 
@@ -30,23 +32,57 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.zip.ZipFile;
 
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.compat.StorageManagerCompat;
-import io.github.muntashirakon.AppManager.ipc.IPCUtils;
+import io.github.muntashirakon.AppManager.ipc.LocalServices;
+import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.scanner.DexClasses;
-import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
+import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 
 /**
  * Provide an interface to {@link File} and {@link DocumentFile} with basic functionalities.
  */
-public class Path {
+// TODO: 8/5/22 Move all URI handling logic to Paths and keep only business logic here
+public class Path implements Comparable<Path> {
     public static final String TAG = Path.class.getSimpleName();
+
+    private static final Set<String> EXCLUSIVE_ACCESS_PATHS = new HashSet<String>() {{
+        // We cannot use Path API here
+        // Read-only
+        add(Environment.getRootDirectory().getAbsolutePath());
+        add(OsEnvironment.getDataDirectoryRaw() + "/app");
+        add(OsEnvironment.getProductDirectoryRaw());
+        add(OsEnvironment.getVendorDirectoryRaw());
+        // Read-write
+        Context context = AppManager.getContext();
+        add(Objects.requireNonNull(context.getFilesDir().getParentFile()).getAbsolutePath());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            add(context.createDeviceProtectedStorageContext().getDataDir().getAbsolutePath());
+        }
+        File[] extDirs = context.getExternalCacheDirs();
+        if (extDirs != null) {
+            for (File dir : extDirs) {
+                add(Objects.requireNonNull(dir.getParentFile()).getAbsolutePath());
+            }
+        }
+        if (PermissionUtils.hasStoragePermission(context)) {
+            // FIXME: 7/5/22 From A11, no access to the /sdcard/Android directory
+            add("/sdcard");
+            add("/storage/emulated/" + UserHandleHidden.myUserId());
+        }
+    }};
 
     @NonNull
     public static Path getPrimaryPath(@NonNull Context context, @Nullable String path) {
@@ -64,16 +100,57 @@ public class Path {
         return basePath;
     }
 
+    private static boolean needPrivilegedAccess(@NonNull String path) {
+        for (String p : EXCLUSIVE_ACCESS_PATHS) {
+            // FIXME: 7/5/22 Check exclusively for directory
+            if (path.startsWith(p)) {
+                // Need no privileged access
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @NonNull
+    private static DocumentFile getRequiredRawDocument(@NonNull String path) {
+        if (needPrivilegedAccess(path)) {
+            try {
+                FileSystemManager fs = LocalServices.getFileSystemManager();
+                return new ExtendedRawDocumentFile(fs.getFile(path));
+            } catch (RemoteException e) {
+                Log.w(TAG, "Could not get privileged access to path " + path, e);
+                // Fall-back to unprivileged access
+            }
+        }
+        return new ExtendedRawDocumentFile(FileSystemManager.getLocal().getFile(path));
+    }
+
     // An invalid MIME so that it doesn't match any extension
     private static final String DEFAULT_MIME = "application/x-invalid-mime-type";
 
+    @NonNull
     private final Context mContext;
     @NonNull
     private DocumentFile mDocumentFile;
 
+    public Path(@NonNull Context context, @NonNull String fileLocation) {
+        mContext = context;
+        mDocumentFile = getRequiredRawDocument(fileLocation);
+    }
+
     public Path(@NonNull Context context, @NonNull File fileLocation) {
         mContext = context;
-        mDocumentFile = new ProxyDocumentFile(fileLocation);
+        mDocumentFile = getRequiredRawDocument(fileLocation.getAbsolutePath());
+    }
+
+    public Path(@NonNull Context context, @NonNull String fileLocation, boolean privileged) throws RemoteException {
+        mContext = context;
+        if (privileged) {
+            FileSystemManager fs = LocalServices.getFileSystemManager();
+            mDocumentFile = new ExtendedRawDocumentFile(fs.getFile(fileLocation));
+        } else {
+            mDocumentFile = new ExtendedRawDocumentFile(FileSystemManager.getLocal().getFile(fileLocation));
+        }
     }
 
     public Path(@NonNull Context context, int vfsId, @NonNull ZipFile zipFile, @Nullable String path) {
@@ -106,7 +183,7 @@ public class Path {
                 documentFile = Objects.requireNonNull(isTreeUri ? DocumentFile.fromTreeUri(context, uri) : DocumentFile.fromSingleUri(context, uri));
                 break;
             case ContentResolver.SCHEME_FILE:
-                documentFile = new ProxyDocumentFile(new ProxyFile(uri.getPath()));
+                documentFile = getRequiredRawDocument(uri.getPath());
                 break;
             case VirtualDocumentFile.SCHEME: {
                 Pair<Integer, String> parsedUri = VirtualDocumentFile.parseUri(uri);
@@ -164,13 +241,13 @@ public class Path {
     }
 
     /**
-     * Return the underlying {@link File} if the path is backed by a real file,
+     * Return the underlying {@link ExtendedFile} if the path is backed by a real file,
      * {@code null} otherwise.
      */
     @Nullable
-    public File getFile() {
-        if (mDocumentFile instanceof ProxyDocumentFile) {
-            return new ProxyFile(mDocumentFile.getUri().getPath());
+    public ExtendedFile getFile() {
+        if (mDocumentFile instanceof ExtendedRawDocumentFile) {
+            return ((ExtendedRawDocumentFile) mDocumentFile).getFile();
         }
         return null;
     }
@@ -180,7 +257,7 @@ public class Path {
      */
     @Nullable
     public String getFilePath() {
-        if (mDocumentFile instanceof ProxyDocumentFile) {
+        if (mDocumentFile instanceof ExtendedRawDocumentFile) {
             return mDocumentFile.getUri().getPath();
         }
         return null;
@@ -192,7 +269,7 @@ public class Path {
      */
     @Nullable
     public String getRealFilePath() throws IOException {
-        if (mDocumentFile instanceof ProxyDocumentFile) {
+        if (mDocumentFile instanceof ExtendedRawDocumentFile) {
             return Objects.requireNonNull(getFile()).getCanonicalPath();
         }
         return null;
@@ -224,7 +301,7 @@ public class Path {
     @CheckResult
     public boolean recreate() {
         if (isDirectory() || isMountPoint()) return false;
-        if (mDocumentFile instanceof ProxyDocumentFile) {
+        if (mDocumentFile instanceof ExtendedRawDocumentFile) {
             try {
                 File f = Objects.requireNonNull(getFile());
                 if (f.exists()) f.delete();
@@ -519,14 +596,8 @@ public class Path {
      * @throws IOException If an I/O error occurs while accessing file attributes.
      */
     public boolean isSymbolicLink() throws IOException {
-        if (mDocumentFile instanceof ProxyDocumentFile) {
-            try {
-                FileStatus lstat = ProxyFiles.lstat(Objects.requireNonNull(getFile()));
-                // https://github.com/win32ports/unistd_h/blob/master/unistd.h
-                return OsConstants.S_ISLNK(lstat.st_mode);
-            } catch (ErrnoException | RemoteException e) {
-                return ExUtils.rethrowAsIOException(e);
-            }
+        if (mDocumentFile instanceof ExtendedRawDocumentFile) {
+            return Objects.requireNonNull(getFile()).isSymlink();
         }
         return false;
     }
@@ -550,6 +621,18 @@ public class Path {
     }
 
     /**
+     * Whether the file can be executed.
+     *
+     * @return {@code true} if it can be executed.
+     */
+    public boolean canExecute() {
+        if (mDocumentFile instanceof ExtendedRawDocumentFile) {
+            return Objects.requireNonNull(getFile()).canExecute();
+        }
+        return false;
+    }
+
+    /**
      * Whether the file is a mount point, thereby, is being overridden by another file system.
      *
      * @return {@code true} if this is a mount point.
@@ -560,7 +643,7 @@ public class Path {
 
     public boolean mkdir() {
         if (exists() || isMountPoint()) return true;
-        if (mDocumentFile instanceof ProxyDocumentFile) {
+        if (mDocumentFile instanceof ExtendedRawDocumentFile) {
             return Objects.requireNonNull(getFile()).mkdir();
         } else {
             DocumentFile parent = mDocumentFile.getParentFile();
@@ -577,7 +660,7 @@ public class Path {
 
     public boolean mkdirs() {
         if (exists() || isMountPoint()) return true;
-        if (mDocumentFile instanceof ProxyDocumentFile) {
+        if (mDocumentFile instanceof ExtendedRawDocumentFile) {
             return Objects.requireNonNull(getFile()).mkdirs();
         }
         // For others, directory can't be created recursively as parent must exist
@@ -617,7 +700,7 @@ public class Path {
             // There's no point is attempting to move if the destination is read-only
             return false;
         }
-        if (mDocumentFile instanceof ProxyDocumentFile && path.mDocumentFile instanceof ProxyDocumentFile) {
+        if (mDocumentFile instanceof ExtendedRawDocumentFile && path.mDocumentFile instanceof ExtendedRawDocumentFile) {
             // Try using the default option
             File src = Objects.requireNonNull(getFile());
             File dst = Objects.requireNonNull(path.getFile());
@@ -704,7 +787,7 @@ public class Path {
     }
 
     public void setLastModified(long time) {
-        if (mDocumentFile instanceof ProxyDocumentFile) {
+        if (mDocumentFile instanceof ExtendedRawDocumentFile) {
             Objects.requireNonNull(getFile()).setLastModified(time);
         }
     }
@@ -750,33 +833,63 @@ public class Path {
         Path[] ss = listFiles();
         ArrayList<Path> files = new ArrayList<>();
         for (Path s : ss) {
-            if ((filter == null) || filter.accept(this, s.getName()))
+            if (s.getName() != null && (filter == null || filter.accept(this, s.getName()))) {
                 files.add(s);
+            }
         }
         return files.toArray(new Path[0]);
+    }
+
+    @NonNull
+    public String[] listFileNames() {
+        Path[] ss = listFiles();
+        ArrayList<String> files = new ArrayList<>();
+        for (Path s : ss) {
+            if (s.getName() != null) {
+                files.add(s.getName());
+            }
+        }
+        return files.toArray(new String[0]);
+    }
+
+    @NonNull
+    public String[] listFileNames(@Nullable FileFilter filter) {
+        Path[] ss = listFiles();
+        ArrayList<String> files = new ArrayList<>();
+        for (Path s : ss) {
+            if (s.getName() != null && (filter == null || filter.accept(s))) {
+                files.add(s.getName());
+            }
+        }
+        return files.toArray(new String[0]);
+    }
+
+    @NonNull
+    public String[] listFileNames(@Nullable FilenameFilter filter) {
+        Path[] ss = listFiles();
+        ArrayList<String> files = new ArrayList<>();
+        for (Path s : ss) {
+            if (s.getName() != null && (filter == null || filter.accept(s, s.getName()))) {
+                files.add(s.getName());
+            }
+        }
+        return files.toArray(new String[0]);
     }
 
     @Nullable
     public ParcelFileDescriptor openFileDescriptor(@NonNull String mode, @NonNull HandlerThread callbackThread)
             throws FileNotFoundException {
-        if (mDocumentFile instanceof ProxyDocumentFile) {
-            File file = Objects.requireNonNull(getFile());
-            int modeBits = ParcelFileDescriptor.parseMode(mode);
-            if (file instanceof ProxyFile && ((ProxyFile) file).isRemote()) {
+        if (mDocumentFile instanceof ExtendedRawDocumentFile) {
+            ExtendedFile file = Objects.requireNonNull(getFile());
+            if (file instanceof RemoteFile) {
+                int modeBits = ParcelFileDescriptor.parseMode(mode);
                 try {
                     return StorageManagerCompat.openProxyFileDescriptor(modeBits, new ProxyStorageCallback(
-                            file.getAbsolutePath(), mode, callbackThread));
-                } catch (RemoteException | IOException e) {
+                            file.getAbsolutePath(), modeBits, callbackThread));
+                } catch (IOException e) {
                     throw (FileNotFoundException) new FileNotFoundException(e.getMessage()).initCause(e);
                 }
-            } else {
-                try {
-                    return StorageManagerCompat.openProxyFileDescriptor(modeBits, new ProxyStorageCallback(
-                            FileDescriptorImpl.getInstance(file.getAbsolutePath(), mode), callbackThread));
-                } catch (IOException | ErrnoException e) {
-                    throw (FileNotFoundException) new FileNotFoundException(e.getMessage()).initCause(e);
-                }
-            }
+            } // else use the default content provider
         } else if (mDocumentFile instanceof VirtualDocumentFile) {
             if (!mDocumentFile.isFile()) return null;
             int modeBits = ParcelFileDescriptor.parseMode(mode);
@@ -799,8 +912,8 @@ public class Path {
 
     @NonNull
     public OutputStream openOutputStream(boolean append) throws IOException {
-        if (mDocumentFile instanceof ProxyDocumentFile) {
-            return new ProxyOutputStream(Objects.requireNonNull(getFile()), append);
+        if (mDocumentFile instanceof ExtendedRawDocumentFile) {
+            return Objects.requireNonNull(getFile()).newOutputStream(append);
         } else if (mDocumentFile instanceof VirtualDocumentFile) {
             // For now, none of the virtual document files support writing
             throw new IOException("VFS does not yet support writing.");
@@ -815,8 +928,8 @@ public class Path {
 
     @NonNull
     public InputStream openInputStream() throws IOException {
-        if (mDocumentFile instanceof ProxyDocumentFile) {
-            return new ProxyInputStream(Objects.requireNonNull(getFile()));
+        if (mDocumentFile instanceof ExtendedRawDocumentFile) {
+            return Objects.requireNonNull(getFile()).newInputStream();
         } else if (mDocumentFile instanceof VirtualDocumentFile) {
             return ((VirtualDocumentFile<?>) mDocumentFile).openInputStream();
         }
@@ -844,6 +957,11 @@ public class Path {
     @Override
     public int hashCode() {
         return mDocumentFile.getUri().hashCode();
+    }
+
+    @Override
+    public int compareTo(@NonNull Path o) {
+        return mDocumentFile.getUri().compareTo(o.mDocumentFile.getUri());
     }
 
     @FunctionalInterface
@@ -961,25 +1079,24 @@ public class Path {
 
     private static class VirtualStorageCallback extends StorageManagerCompat.ProxyFileDescriptorCallbackCompat {
         private final InputStream mIs;
+        private boolean mClosed;
 
         public VirtualStorageCallback(VirtualDocumentFile<?> document, HandlerThread callbackThread) throws IOException {
             super(callbackThread);
             mIs = document.openInputStream();
+            // FIXME: 9/5/22 We really cannot use an InputStream because we need to support seeking. For now, we will
+            //  skip the offset since the streams are fetched sequentially.
         }
 
         @Override
         public long onGetSize() throws ErrnoException {
-            try {
-                return mIs.available();
-            } catch (IOException e) {
-                throw new ErrnoException(e.getMessage(), OsConstants.EBADF);
-            }
+            return -1; // Not a real file
         }
 
         @Override
         public int onRead(long offset, int size, byte[] data) throws ErrnoException {
             try {
-                return mIs.read(data, (int) offset, size);
+                return mIs.read(data, 0, size);
             } catch (IOException e) {
                 throw new ErrnoException(e.getMessage(), OsConstants.EBADF);
             }
@@ -989,6 +1106,7 @@ public class Path {
         protected void onRelease() {
             try {
                 mIs.close();
+                mClosed = true;
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -996,51 +1114,56 @@ public class Path {
 
         @Override
         protected void finalize() throws Throwable {
-            mIs.close();
+            if (!mClosed) {
+                mIs.close();
+            }
         }
     }
 
     private static class ProxyStorageCallback extends StorageManagerCompat.ProxyFileDescriptorCallbackCompat {
-        private final IFileDescriptor mFd;
+        private final FileChannel mChannel;
 
-        private ProxyStorageCallback(String path, String mode, HandlerThread thread) throws RemoteException {
+        private ProxyStorageCallback(String path, int modeBits, HandlerThread thread) throws IOException {
             super(thread);
             try {
-                mFd = IPCUtils.getAmService().getFD(path, mode);
+                FileSystemManager fs = LocalServices.getFileSystemManager();
+                mChannel = fs.openChannel(path, modeBits);
             } catch (RemoteException e) {
+                thread.quitSafely();
+                throw new IOException(e);
+            } catch (IOException e) {
                 thread.quitSafely();
                 throw e;
             }
         }
 
-        private ProxyStorageCallback(IFileDescriptor fd, HandlerThread thread) {
-            super(thread);
-            mFd = fd;
-        }
-
         @Override
         public long onGetSize() throws ErrnoException {
             try {
-                return mFd.available();
-            } catch (RemoteException e) {
+                return mChannel.size();
+            } catch (IOException e) {
                 throw new ErrnoException(e.getMessage(), OsConstants.EBADF);
             }
         }
 
         @Override
         public int onRead(long offset, int size, byte[] data) throws ErrnoException {
+            ByteBuffer bf = ByteBuffer.wrap(data);
+            bf.limit(size);
             try {
-                return mFd.read(data, (int) offset, size);
-            } catch (RemoteException e) {
+                return mChannel.read(bf, offset);
+            } catch (IOException e) {
                 throw new ErrnoException(e.getMessage(), OsConstants.EBADF);
             }
         }
 
         @Override
         public int onWrite(long offset, int size, byte[] data) throws ErrnoException {
+            ByteBuffer bf = ByteBuffer.wrap(data);
+            bf.limit(size);
             try {
-                return mFd.write(data, (int) offset, size);
-            } catch (RemoteException e) {
+                return mChannel.write(bf, offset);
+            } catch (IOException e) {
                 throw new ErrnoException(e.getMessage(), OsConstants.EBADF);
             }
         }
@@ -1048,8 +1171,8 @@ public class Path {
         @Override
         public void onFsync() throws ErrnoException {
             try {
-                mFd.sync();
-            } catch (RemoteException e) {
+                mChannel.force(true);
+            } catch (IOException e) {
                 throw new ErrnoException(e.getMessage(), OsConstants.EBADF);
             }
         }
@@ -1057,15 +1180,15 @@ public class Path {
         @Override
         protected void onRelease() {
             try {
-                mFd.close();
-            } catch (RemoteException e) {
+                mChannel.close();
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
         @Override
         protected void finalize() throws Throwable {
-            mFd.close();
+            mChannel.close();
         }
     }
 }

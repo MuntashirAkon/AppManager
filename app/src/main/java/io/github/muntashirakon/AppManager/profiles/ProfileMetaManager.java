@@ -15,7 +15,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.annotation.Retention;
@@ -23,13 +22,15 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
-import io.github.muntashirakon.io.ProxyOutputStream;
+import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.util.LocalizedString;
 
 public class ProfileMetaManager implements LocalizedString {
@@ -94,8 +95,9 @@ public class ProfileMetaManager implements LocalizedString {
     }
 
     @NonNull
-    public static File getProfilesDir() {
-        return new File(AppManager.getContext().getFilesDir(), "profiles");
+    public static Path getProfilesDir() {
+        Context context = AppManager.getContext();
+        return Objects.requireNonNull(Paths.build(context.getFilesDir(), "profiles"));
     }
 
     @NonNull
@@ -116,7 +118,7 @@ public class ProfileMetaManager implements LocalizedString {
     @NonNull
     private final String mProfileName;
     @NonNull
-    private final File mProfilePath;
+    private final Path mProfilePath;
     @Nullable
     public Profile profile;
 
@@ -140,12 +142,12 @@ public class ProfileMetaManager implements LocalizedString {
     }
 
     public ProfileMetaManager(@NonNull String profileName, @Nullable String[] packages, @Nullable String jsonContent) {
-        File profilesDir = getProfilesDir();
+        Path profilesDir = getProfilesDir();
         if (!profilesDir.exists()) {
             //noinspection ResultOfMethodCallIgnored
             profilesDir.mkdirs();
         }
-        mProfilePath = new File(profilesDir, getCleanedProfileName(profileName) + PROFILE_EXT);
+        mProfilePath = Objects.requireNonNull(Paths.build(profilesDir, getCleanedProfileName(profileName) + PROFILE_EXT));
         if (jsonContent != null) {
             try {
                 profile = readProfile(jsonContent);
@@ -233,7 +235,7 @@ public class ProfileMetaManager implements LocalizedString {
 
     @WorkerThread
     public void writeProfile() throws IOException, JSONException, RemoteException {
-        try (OutputStream outputStream = new ProxyOutputStream(mProfilePath)) {
+        try (OutputStream outputStream = mProfilePath.openOutputStream()) {
             writeProfile(outputStream);
         }
     }

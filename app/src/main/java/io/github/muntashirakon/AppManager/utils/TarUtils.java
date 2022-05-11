@@ -2,7 +2,6 @@
 
 package io.github.muntashirakon.AppManager.utils;
 
-import android.os.RemoteException;
 import android.system.ErrnoException;
 
 import androidx.annotation.NonNull;
@@ -31,11 +30,11 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.io.Path;
-import io.github.muntashirakon.io.ProxyFile;
-import io.github.muntashirakon.io.ProxyFiles;
+import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.io.SplitInputStream;
 import io.github.muntashirakon.io.SplitOutputStream;
 
@@ -72,7 +71,7 @@ public final class TarUtils {
     public static List<Path> create(@NonNull @TarType String type, @NonNull Path source, @NonNull Path dest,
                                     @NonNull String destFilePrefix, @Nullable String[] filters,
                                     @Nullable Long splitSize, @Nullable String[] exclude, boolean followLinks)
-            throws IOException, RemoteException, ErrnoException {
+            throws IOException {
         try (SplitOutputStream sos = new SplitOutputStream(dest, destFilePrefix, splitSize == null ? DEFAULT_SPLIT_SIZE : splitSize);
              BufferedOutputStream bos = new BufferedOutputStream(sos)) {
             OutputStream os;
@@ -131,7 +130,7 @@ public final class TarUtils {
     @WorkerThread
     public static void extract(@NonNull @TarType String type, @NonNull Path[] sources, @NonNull Path dest,
                                @Nullable String[] filters, @Nullable String[] exclude)
-            throws IOException, RemoteException {
+            throws IOException {
         try (SplitInputStream sis = new SplitInputStream(sources);
              BufferedInputStream bis = new BufferedInputStream(sis)) {
             InputStream is;
@@ -163,12 +162,9 @@ public final class TarUtils {
                         // There's no need to check if the linkName exists as it may be extracted
                         // after the link has been created
                         // TODO: 27/3/22 It might be necessary to check the link if it points to an old APK folder content
-                        try {
-                            // Delete link if already exists
-                            file.delete();
-                            ProxyFiles.symlink(new ProxyFile(linkName), file.getFilePath());
-                        } catch (ErrnoException | RemoteException e) {
-                            throw new IOException("Couldn't create symbolic link " + file + " pointing to " + linkName, e);
+                        file.delete();
+                        if (Objects.requireNonNull(file.getFile()).createNewSymlink(linkName)) {
+                            throw new IOException("Couldn't create symbolic link " + file + " pointing to " + linkName);
                         }
                         continue;  // links do not need permission fixes
                     } else {
@@ -186,7 +182,7 @@ public final class TarUtils {
                         }
                     }
                     // Fix permissions
-                    ProxyFiles.setPermissions(file, entry.getMode(), entry.getUserId(), entry.getGroupId());
+                    Paths.setPermissions(file, entry.getMode(), entry.getUserId(), entry.getGroupId());
                     // Restore timestamp
                     long modificationTime = entry.getModTime().getTime();
                     if (modificationTime > 0) { // Backward-compatibility
@@ -195,7 +191,7 @@ public final class TarUtils {
                 }
                 // Delete unwanted files
                 validateFiles(dest, dest, filters, exclude);
-            } catch (ErrnoException | RemoteException e) {
+            } catch (ErrnoException e) {
                 throw new IOException(e);
             } finally {
                 is.close();

@@ -37,7 +37,7 @@ import io.github.muntashirakon.AppManager.rules.struct.SsaidRule;
 import io.github.muntashirakon.AppManager.rules.struct.UriGrantRule;
 import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.io.Path;
-import io.github.muntashirakon.io.ProxyFileReader;
+import io.github.muntashirakon.io.PathReader;
 
 public class RulesStorageManager implements Closeable {
     @NonNull
@@ -210,7 +210,7 @@ public class RulesStorageManager implements Closeable {
     @GuardedBy("entries")
     protected void loadEntries(Path file, boolean isExternal) throws IOException, RemoteException {
         String dataRow;
-        try (BufferedReader TSVFile = new BufferedReader(new ProxyFileReader(file))) {
+        try (BufferedReader TSVFile = new BufferedReader(new PathReader(file))) {
             while ((dataRow = TSVFile.readLine()) != null) {
                 RuleEntry entry = RuleEntry.unflattenFromString(packageName, dataRow, isExternal);
                 synchronized (mEntries) {

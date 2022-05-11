@@ -22,7 +22,7 @@ class RemoteShellImpl extends IRemoteShell.Stub {
     private final Shell.Job job;
 
     public RemoteShellImpl(String[] cmd) {
-        job = Shell.sh(cmd);
+        job = Shell.cmd(cmd);
     }
 
     @Override

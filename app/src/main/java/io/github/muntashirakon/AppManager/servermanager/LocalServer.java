@@ -20,7 +20,7 @@ import java.net.SocketTimeoutException;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.IAMService;
-import io.github.muntashirakon.AppManager.ipc.IPCUtils;
+import io.github.muntashirakon.AppManager.ipc.LocalServices;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.NoOps;
 import io.github.muntashirakon.AppManager.server.common.Caller;
@@ -63,7 +63,8 @@ public class LocalServer {
     @NoOps(used = true)
     public static void launchAmService() throws RemoteException {
         if (amService == null || !amService.asBinder().pingBinder()) {
-            amService = IPCUtils.getAmService();
+            amService = LocalServices.bindAmService();
+            LocalServices.bindFileSystemManager();
         }
     }
 

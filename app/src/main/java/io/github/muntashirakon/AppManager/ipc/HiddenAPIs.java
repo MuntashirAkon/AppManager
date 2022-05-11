@@ -3,9 +3,12 @@
 package io.github.muntashirakon.AppManager.ipc;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
+import android.content.Context;
+import android.content.ContextWrapper;
+import android.os.Build;
+import android.os.IBinder;
+import android.util.Log;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 /**
@@ -15,27 +18,68 @@ import java.lang.reflect.Method;
  * accessing these internal APIs through reflection will be blocked.
  */
 // Copyright 2020 John "topjohnwu" Wu
+@SuppressLint({"PrivateApi,DiscouragedPrivateApi,SoonBlockedPrivateApi", "RestrictedApi"})
 class HiddenAPIs {
-    // Set this flag to silence AMS's complaints
-    @SuppressWarnings("JavaReflectionMemberAccess")
-    static int FLAG_RECEIVER_FROM_SHELL() {
+    public static final String TAG = HiddenAPIs.class.getSimpleName();
+
+    private static Method addService;
+    private static Method attachBaseContext;
+    private static Method setAppName;
+
+    // Set this flag to silence AMS's complaints. Only exist on Android 8.0+
+    public static final int FLAG_RECEIVER_FROM_SHELL = Build.VERSION.SDK_INT >= 26 ? 0x00400000 : 0;
+
+    static {
         try {
-            Field f = Intent.class.getDeclaredField("FLAG_RECEIVER_FROM_SHELL");
-            return (int) f.get(null);
-        } catch (Exception e) {
-            // Only exist on Android 8.0+
-            return 0;
+            Class<?> sm = Class.forName("android.os.ServiceManager");
+            if (Build.VERSION.SDK_INT >= 28) {
+                try {
+                    addService = sm.getDeclaredMethod("addService",
+                            String.class, IBinder.class, boolean.class, int.class);
+                } catch (NoSuchMethodException ignored) {
+                    // Fallback to the 2 argument version
+                }
+            }
+            if (addService == null) {
+                addService = sm.getDeclaredMethod("addService", String.class, IBinder.class);
+            }
+
+            attachBaseContext = ContextWrapper.class.getDeclaredMethod("attachBaseContext", Context.class);
+            attachBaseContext.setAccessible(true);
+
+            Class<?> ddm = Class.forName("android.ddm.DdmHandleAppName");
+            setAppName = ddm.getDeclaredMethod("setAppName", String.class, int.class);
+        } catch (ReflectiveOperationException e) {
+            Log.e(TAG, e.getMessage(), e);
         }
     }
 
-    @SuppressLint("PrivateApi,DiscouragedPrivateApi")
     static void setAppName(String name) {
         try {
-            Class<?> ddm = Class.forName("android.ddm.DdmHandleAppName");
-            Method m = ddm.getDeclaredMethod("setAppName", String.class, int.class);
-            m.invoke(null, name, 0);
-        } catch (Exception e) {
+            setAppName.invoke(null, name, 0);
+        } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    static void addService(String name, IBinder service) {
+        try {
+            if (addService.getParameterTypes().length == 4) {
+                // Set dumpPriority to 0 so the service cannot be listed
+                addService.invoke(null, name, service, false, 0);
+            } else {
+                addService.invoke(null, name, service);
+            }
+        } catch (ReflectiveOperationException e) {
+            Log.e(TAG, e.getMessage(), e);
+        }
+    }
+
+    static void attachBaseContext(Object wrapper, Context context) {
+        if (wrapper instanceof ContextWrapper) {
+            try {
+                attachBaseContext.invoke(wrapper, context);
+            } catch (ReflectiveOperationException ignored) { /* Impossible */ }
         }
     }
 }

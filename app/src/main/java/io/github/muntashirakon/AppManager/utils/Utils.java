@@ -68,7 +68,7 @@ import static android.app.ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREG
 import static android.app.ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIBLE;
 
 public class Utils {
-    public static final String TERMUX_LOGIN_PATH = OsEnvironment.getDataDataDirectory() + "/com.termux/files/usr/bin/login";
+    public static final String TERMUX_LOGIN_PATH = OsEnvironment.getDataDirectoryRaw() + "/data/com.termux/files/usr/bin/login";
 
     @NonNull
     public static String camelCaseToSpaceSeparatedString(@NonNull String str) {

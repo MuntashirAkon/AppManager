@@ -21,7 +21,7 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.Path;
-import io.github.muntashirakon.io.ProxyOutputStream;
+import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.io.SplitInputStream;
 
 import static org.junit.Assert.assertEquals;
@@ -47,7 +47,7 @@ public class TarArchiveInputStreamTest {
                 // create a new path, remember check zip slip attack
                 File file = new File("/tmp", entry.getName());
                 // copy TarArchiveInputStream to newPath
-                try (OutputStream os = new ProxyOutputStream(file)) {
+                try (OutputStream os = Paths.get(file).openOutputStream()) {
                     FileUtils.copy(tis, os);
                 }
             }

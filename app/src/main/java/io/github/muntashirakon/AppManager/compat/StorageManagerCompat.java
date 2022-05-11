@@ -25,12 +25,13 @@ import java.lang.annotation.RetentionPolicy;
 import dev.rikka.tools.refine.Refine;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 
-// Copyright 2018 Fung Gwo (fythonx@gmail.com)
+import static io.github.muntashirakon.io.IoUtils.DEFAULT_BUFFER_SIZE;
+
+// Copyright 2018 Fung Gwo <fythonx@gmail.com>
+// Copyright 2021 Muntashir Al-Islam
 // Modified from https://gist.github.com/fython/924f8d9019bca75d22de116bb69a54a1
 public final class StorageManagerCompat {
     private static final String TAG = StorageManagerCompat.class.getSimpleName();
-
-    public static final int DEFAULT_BUFFER_SIZE = 1024 * 50;
 
     /**
      * Flag indicating that a disk space allocation request should be allowed to
@@ -83,14 +84,20 @@ public final class StorageManagerCompat {
         // We cannot use StorageManager#openProxyFileDescriptor directly due to its limitation on how callbacks are handled
         ParcelFileDescriptor[] pipe = ParcelFileDescriptor.createReliablePipe();
         if ((mode & ParcelFileDescriptor.MODE_READ_ONLY) != 0) {
+            // Reading requested i.e. we have to read from our side and write it to the target
             callback.handler.post(() -> {
                 try (ParcelFileDescriptor.AutoCloseOutputStream os = new ParcelFileDescriptor.AutoCloseOutputStream(pipe[1])) {
+                    long totalSize = callback.onGetSize();
+                    long currOffset = 0;
                     byte[] buf = new byte[DEFAULT_BUFFER_SIZE];
                     int size;
-                    while ((size = callback.onRead(0, DEFAULT_BUFFER_SIZE, buf)) > 0) {
+                    while ((size = callback.onRead(currOffset, DEFAULT_BUFFER_SIZE, buf)) > 0) {
                         os.write(buf, 0, size);
+                        currOffset += size;
                     }
-                    callback.onRelease();
+                    if (totalSize > 0 && currOffset + 1 != totalSize) {
+                        throw new IOException("Could not read the whole resource");
+                    }
                 } catch (IOException | ErrnoException e) {
                     Log.e(TAG, "Failed to read file.", e);
                     try {
@@ -98,26 +105,35 @@ public final class StorageManagerCompat {
                     } catch (IOException exc) {
                         Log.e(TAG, "Can't even close PFD with error.", exc);
                     }
+                } finally {
+                    callback.onRelease();
                 }
             });
             return pipe[0];
         } else if ((mode & ParcelFileDescriptor.MODE_WRITE_ONLY) != 0) {
+            // Writing requested i.e. we have to read from the target and write it to our side
             callback.handler.post(() -> {
                 try (ParcelFileDescriptor.AutoCloseInputStream is = new ParcelFileDescriptor.AutoCloseInputStream(pipe[0])) {
+                    long currOffset = 0;
                     byte[] buf = new byte[DEFAULT_BUFFER_SIZE];
                     int size;
                     while ((size = is.read(buf)) != -1) {
-                        callback.onWrite(0, size, buf);
+                        callback.onWrite(currOffset, size, buf);
+                        currOffset += size;
                     }
-                    callback.onRelease();
+                    long totalSize = callback.onGetSize();
+                    if (totalSize > 0 && currOffset + 1 != totalSize) {
+                        throw new IOException("Could not write the whole resource");
+                    }
                 } catch (IOException | ErrnoException e) {
                     Log.e(TAG, "Failed to write file.", e);
-
                     try {
                         pipe[0].closeWithError(e.getMessage());
                     } catch (IOException exc) {
                         Log.e(TAG, "Can't even close PFD with error.", exc);
                     }
+                } finally {
+                    callback.onRelease();
                 }
             });
             return pipe[1];

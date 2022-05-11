@@ -16,7 +16,7 @@ import java.io.FileDescriptor;
 import java.util.Map;
 import java.util.Objects;
 
-import io.github.muntashirakon.AppManager.server.common.IRootIPC;
+import io.github.muntashirakon.AppManager.server.common.IRootServiceManager;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.settings.Ops;
 
@@ -50,12 +50,12 @@ public class ProxyBinder implements IBinder {
             }
             Parcel newData = Parcel.obtain();
             try {
-                newData.writeInterfaceToken(IRootIPC.class.getName());
+                newData.writeInterfaceToken(IRootServiceManager.class.getName());
                 newData.writeStrongBinder(original);
                 newData.writeInt(code);
                 newData.appendFrom(data, 0, data.dataSize());
-                // Transact via AMService instead of AM
-                IPCUtils.getServiceSafe().asBinder().transact(PROXY_BINDER_TRANSACT_CODE, newData, reply, flags);
+                // Transact via AMService
+                LocalServices.getAmService().asBinder().transact(PROXY_BINDER_TRANSACT_CODE, newData, reply, flags);
             } finally {
                 newData.recycle();
             }

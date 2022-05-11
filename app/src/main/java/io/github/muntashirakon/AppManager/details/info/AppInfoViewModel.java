@@ -20,6 +20,7 @@ import androidx.lifecycle.MutableLiveData;
 import com.android.internal.util.TextUtils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +35,7 @@ import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.details.AppDetailsViewModel;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.magisk.MagiskDenyList;
 import io.github.muntashirakon.AppManager.magisk.MagiskHide;
 import io.github.muntashirakon.AppManager.magisk.MagiskProcess;
@@ -56,7 +58,8 @@ import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
-import io.github.muntashirakon.io.ProxyFile;
+import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 
 public class AppInfoViewModel extends AndroidViewModel {
     private final MutableLiveData<CharSequence> packageLabel = new MutableLiveData<>();
@@ -163,8 +166,8 @@ public class AppInfoViewModel extends AndroidViewModel {
                 }
             }
             tagCloud.isMagiskDenyListEnabled = !mainModel.getIsExternalApk() && magiskDenyListEnabled;
-            tagCloud.hasKeyStoreItems = KeyStoreUtils.hasKeyStore(applicationInfo.uid);
-            tagCloud.hasMasterKeyInKeyStore = KeyStoreUtils.hasMasterKey(applicationInfo.uid);
+            tagCloud.hasKeyStoreItems = KeyStoreUtils.hasKeyStore(getApplication(), applicationInfo.uid);
+            tagCloud.hasMasterKeyInKeyStore = KeyStoreUtils.hasMasterKey(getApplication(), applicationInfo.uid);
             tagCloud.usesPlayAppSigning = PackageUtils.usesPlayAppSigning(applicationInfo);
             try {
                 tagCloud.backups = MetadataManager.getMetadata(packageName);
@@ -206,6 +209,7 @@ public class AppInfoViewModel extends AndroidViewModel {
             }
         } catch (Throwable th) {
             // Unknown behaviour
+            Log.e("AIVM", th);
             throw new RuntimeException(th);
         } finally {
             this.tagCloud.postValue(tagCloud);
@@ -330,15 +334,14 @@ public class AppInfoViewModel extends AndroidViewModel {
     private AppUsageStatsManager.DataUsage getNetStats(int uid) {
         long tx = 0L;
         long rx = 0L;
-        File uidStatsDir = new ProxyFile(UID_STATS_PATH + uid);
+        Path uidStatsDir = Paths.get(UID_STATS_PATH + uid);
         if (uidStatsDir.isDirectory()) {
-            File txFile = new ProxyFile(uidStatsDir, UID_STATS_TX);
-            File rxFile = new ProxyFile(uidStatsDir, UID_STATS_RX);
-            if (txFile.exists()) {
+            try {
+                Path txFile = uidStatsDir.findFile(UID_STATS_TX);
+                Path rxFile = uidStatsDir.findFile(UID_STATS_RX);
                 tx = Long.parseLong(FileUtils.getFileContent(txFile, "0").trim());
-            }
-            if (rxFile.exists()) {
                 rx = Long.parseLong(FileUtils.getFileContent(rxFile, "0").trim());
+            } catch (FileNotFoundException ignore) {
             }
         }
         return new AppUsageStatsManager.DataUsage(tx, rx);

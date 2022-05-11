@@ -9,10 +9,8 @@ import android.content.pm.ServiceInfo;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.collection.ArraySet;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -23,7 +21,8 @@ import java.util.Map;
 import java.util.Set;
 
 import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.io.ProxyFile;
+import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 
 public class MagiskUtils {
     // FIXME(20/9/20): This isn't always true, see check_data in util_functions.sh
@@ -37,8 +36,8 @@ public class MagiskUtils {
     };
 
     @NonNull
-    public static String getModDir() {
-        return NVBASE + "/modules" + (bootMode ? "_update" : "");
+    public static Path getModDir() {
+        return Paths.get(NVBASE + "/modules" + (bootMode ? "_update" : ""));
     }
 
     public static void setBootMode(boolean bootMode) {
@@ -52,20 +51,15 @@ public class MagiskUtils {
         if (systemlessPaths == null) {
             systemlessPaths = new ArrayList<>();
             // Get module paths
-            ProxyFile[] modulePaths = getDirectories(new ProxyFile(getModDir()));
-            if (modulePaths != null) {
-                // Scan module paths
-                ProxyFile[] paths;
-                for (ProxyFile file : modulePaths) {
-                    // Get system apk files
-                    for (String sysPath : SCAN_PATHS) {
-                        paths = getDirectories(new ProxyFile(file, sysPath));
-                        if (paths != null) {
-                            for (ProxyFile path : paths) {
-                                if (hasApkFile(path)) {
-                                    systemlessPaths.add(sysPath + "/" + path.getName());
-                                }
-                            }
+            Path[] modulePaths = getModDir().listFiles(Path::isDirectory);
+            // Scan module paths
+            for (Path file : modulePaths) {
+                // Get system apk files
+                for (String sysPath : SCAN_PATHS) {
+                    Path[] paths = Paths.get(file + sysPath).listFiles(Path::isDirectory);
+                    for (Path path : paths) {
+                        if (hasApkFile(path)) {
+                            systemlessPaths.add(sysPath + "/" + path.getName());
                         }
                     }
                 }
@@ -96,18 +90,10 @@ public class MagiskUtils {
         return packages;
     }
 
-    @Nullable
-    private static ProxyFile[] getDirectories(@NonNull ProxyFile file) {
+    private static boolean hasApkFile(@NonNull Path file) {
         if (file.isDirectory()) {
-            return file.listFiles(pathname -> new ProxyFile(pathname).isDirectory());
-        }
-        return null;
-    }
-
-    private static boolean hasApkFile(@NonNull ProxyFile file) {
-        if (file.isDirectory()) {
-            File[] files = file.listFiles((dir, name) -> name.endsWith(".apk"));
-            return files != null && files.length > 0;
+            Path[] files = file.listFiles((dir, name) -> name.endsWith(".apk"));
+            return files.length > 0;
         }
         return false;
     }

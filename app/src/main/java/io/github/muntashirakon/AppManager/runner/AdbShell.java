@@ -13,7 +13,7 @@ import java.io.InputStream;
 import io.github.muntashirakon.AppManager.IAMService;
 import io.github.muntashirakon.AppManager.IRemoteShell;
 import io.github.muntashirakon.AppManager.IShellResult;
-import io.github.muntashirakon.AppManager.ipc.IPCUtils;
+import io.github.muntashirakon.AppManager.ipc.LocalServices;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.ParcelFileDescriptorUtil;
 
@@ -23,7 +23,7 @@ class AdbShell extends Runner {
     @Override
     protected synchronized Result runCommand() {
         try {
-            IAMService amService = IPCUtils.getServiceSafe();
+            IAMService amService = LocalServices.getAmService();
             IRemoteShell shell = amService.getShell(commands.toArray(new String[0]));
             for (InputStream is : inputStreams) {
                 shell.addInputStream(ParcelFileDescriptorUtil.pipeFrom(is));

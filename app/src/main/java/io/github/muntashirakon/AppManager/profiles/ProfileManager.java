@@ -10,7 +10,6 @@ import android.os.UserHandleHidden;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -24,15 +23,15 @@ import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.Users;
-import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.io.Path;
 
 public class ProfileManager {
     public static final String TAG = "ProfileManager";
 
     @NonNull
     public static ArrayList<String> getProfileNames() {
-        File profilesPath = ProfileMetaManager.getProfilesDir();
-        String[] profilesFiles = ArrayUtils.defeatNullable(profilesPath.list((dir, name) -> name.endsWith(ProfileMetaManager.PROFILE_EXT)));
+        Path profilesPath = ProfileMetaManager.getProfilesDir();
+        String[] profilesFiles = profilesPath.listFileNames((dir, name) -> name.endsWith(ProfileMetaManager.PROFILE_EXT));
         ArrayList<String> profileNames = new ArrayList<>(profilesFiles.length);
         for (String profile : profilesFiles) {
             int index = profile.indexOf(ProfileMetaManager.PROFILE_EXT);
@@ -44,8 +43,8 @@ public class ProfileManager {
 
     @NonNull
     public static HashMap<String, CharSequence> getProfileSummaries() {
-        File profilesPath = ProfileMetaManager.getProfilesDir();
-        String[] profilesFiles = ArrayUtils.defeatNullable(profilesPath.list((dir, name) -> name.endsWith(ProfileMetaManager.PROFILE_EXT)));
+        Path profilesPath = ProfileMetaManager.getProfilesDir();
+        String[] profilesFiles = profilesPath.listFileNames((dir, name) -> name.endsWith(ProfileMetaManager.PROFILE_EXT));
         HashMap<String, CharSequence> profiles = new HashMap<>(profilesFiles.length);
         Context context = AppManager.getContext();
         for (String profile : profilesFiles) {
@@ -59,8 +58,8 @@ public class ProfileManager {
 
     @NonNull
     public static List<ProfileMetaManager> getProfileMetadata() {
-        File profilesPath = ProfileMetaManager.getProfilesDir();
-        String[] profilesFiles = ArrayUtils.defeatNullable(profilesPath.list((dir, name) -> name.endsWith(ProfileMetaManager.PROFILE_EXT)));
+        Path profilesPath = ProfileMetaManager.getProfilesDir();
+        String[] profilesFiles = profilesPath.listFileNames((dir, name) -> name.endsWith(ProfileMetaManager.PROFILE_EXT));
         List<ProfileMetaManager> profiles = new ArrayList<>(profilesFiles.length);
         for (String profile : profilesFiles) {
             int index = profile.indexOf(ProfileMetaManager.PROFILE_EXT);

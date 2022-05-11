@@ -11,11 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.WorkerThread;
 
-import java.io.File;
-
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
-import io.github.muntashirakon.io.ProxyFile;
+import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 
 public class PackageSizeInfo {
     public final String packageName;
@@ -53,20 +51,22 @@ public class PackageSizeInfo {
 
     @RequiresApi(Build.VERSION_CODES.O)
     private long getMediaSizeInternal(@NonNull OsEnvironment.UserEnvironment ue) {
-        ProxyFile[] files = ue.buildExternalStorageAppMediaDirs(packageName);
+        Path[] files = ue.buildExternalStorageAppMediaDirs(packageName);
         long size = 0L;
-        for (File file : files) {
-            if (file.exists()) size += FileUtils.fileSize(file);
+        for (Path file : files) {
+            if (file.exists()) size += Paths.size(file);
         }
         return size;
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
     private long getObbSizeInternal(@NonNull OsEnvironment.UserEnvironment ue) {
-        ProxyFile[] files = ue.buildExternalStorageAppObbDirs(packageName);
+        Path[] files = ue.buildExternalStorageAppObbDirs(packageName);
         long size = 0L;
-        for (File file : files) {
-            if (file.exists()) size += FileUtils.fileSize(file);
+        for (Path file : files) {
+            if (file.exists()) {
+                size += Paths.size(file);
+            }
         }
         return size;
     }

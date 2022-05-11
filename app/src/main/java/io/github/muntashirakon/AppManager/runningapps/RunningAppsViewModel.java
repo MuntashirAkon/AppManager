@@ -41,8 +41,7 @@ import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
-import io.github.muntashirakon.io.ProxyFile;
-import io.github.muntashirakon.io.ProxyInputStream;
+import io.github.muntashirakon.io.Path;
 
 public class RunningAppsViewModel extends AndroidViewModel {
     @RunningAppsActivity.SortOrder
@@ -94,14 +93,14 @@ public class RunningAppsViewModel extends AndroidViewModel {
             return;
         }
         mExecutor.submit(() -> {
-            ProxyFile proxyFile = new ProxyFile(file);
+            Path proxyFile = new Path(getApplication(), file);
             if (!proxyFile.canRead()) {
                 mVtFileReport.postValue(new Pair<>(processItem, null));
                 return;
             }
             String sha256 = DigestUtils.getHexDigest(DigestUtils.SHA_256, proxyFile);
-            try (InputStream is = new ProxyInputStream(proxyFile)) {
-                mVt.fetchReportsOrScan(proxyFile.getName(), proxyFile.length(), is, sha256,
+            try (InputStream is = proxyFile.openInputStream()) {
+                mVt.fetchReportsOrScan(Objects.requireNonNull(proxyFile.getName()), proxyFile.length(), is, sha256,
                         new VirusTotal.FullScanResponseInterface() {
                             @Override
                             public boolean scanFile() {

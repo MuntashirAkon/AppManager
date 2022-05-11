@@ -22,9 +22,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.github.muntashirakon.io.FileStatus;
+import io.github.muntashirakon.io.ExtendedFile;
 import io.github.muntashirakon.io.Path;
-import io.github.muntashirakon.io.ProxyFiles;
+import io.github.muntashirakon.io.Paths;
+import io.github.muntashirakon.io.UidGidPair;
 
 /**
  * This class represents an entry in a Tar archive. It consists
@@ -426,19 +427,7 @@ public class TarArchiveEntry implements ArchiveEntry, TarConstants, EntryStreamO
      * @param fileName the name to be used for the entry.
      */
     public TarArchiveEntry(final File file, final String fileName) {
-        final String normalizedName = normalizeFileName(fileName, false);
-        this.file = file;
-        this.path = null;
-        try {
-            readFileMode(this.file, normalizedName);
-        } catch (final IOException | ErrnoException | RemoteException e) {
-            if (!file.isDirectory()) {
-                this.size = file.length();
-            }
-            this.modTime = file.lastModified() / MILLIS_PER_SECOND;
-        }
-        this.userName = "";
-        preserveAbsolutePath = false;
+        this(Paths.get(file), fileName);
     }
 
     /**
@@ -470,29 +459,6 @@ public class TarArchiveEntry implements ArchiveEntry, TarConstants, EntryStreamO
         preserveAbsolutePath = false;
     }
 
-    private void readFileMode(@NonNull final File file, final String normalizedName)
-            throws IOException, ErrnoException, RemoteException {
-        if (file.isDirectory()) {
-            this.linkFlag = LF_DIR;
-            final int nameLength = normalizedName.length();
-            if (nameLength == 0 || normalizedName.charAt(nameLength - 1) != '/') {
-                this.name = normalizedName + "/";
-            } else {
-                this.name = normalizedName;
-            }
-        } else {
-            this.linkFlag = LF_NORMAL;
-            this.name = normalizedName;
-            this.size = file.length();
-        }
-        // Setup file attributes
-        FileStatus fstat = ProxyFiles.stat(file);
-        this.mode = fstat.st_mode;
-        this.userId = fstat.st_uid;
-        this.groupId = fstat.st_gid;
-        this.modTime = fstat.st_mtime;
-    }
-
     private void readFileMode(@NonNull final Path file, final String normalizedName)
             throws IOException, ErrnoException, RemoteException {
         if (file.isDirectory()) {
@@ -508,16 +474,15 @@ public class TarArchiveEntry implements ArchiveEntry, TarConstants, EntryStreamO
             this.name = normalizedName;
             this.size = file.length();
         }
-        File realFile = file.getFile();
-        if (realFile == null) {
-            throw new IOException("The path doesn't belong to a file.");
-        }
         // Setup file attributes
-        FileStatus fstat = ProxyFiles.stat(realFile);
-        this.mode = fstat.st_mode;
-        this.userId = fstat.st_uid;
-        this.groupId = fstat.st_gid;
-        this.modTime = fstat.st_mtime;
+        ExtendedFile f = file.getFile();
+        if (f != null) {
+            this.mode = f.getMode();
+            UidGidPair p = f.getUidGid();
+            this.userId = p.uid;
+            this.groupId = p.gid;
+        }
+        this.modTime = file.lastModified() / MILLIS_PER_SECOND;
     }
 
     /**

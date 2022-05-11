@@ -8,7 +8,6 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.os.Build;
-import android.os.RemoteException;
 import android.system.ErrnoException;
 import android.util.Pair;
 
@@ -17,13 +16,14 @@ import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
 import java.io.Closeable;
-import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
@@ -60,10 +60,9 @@ import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
-import io.github.muntashirakon.io.FileStatus;
 import io.github.muntashirakon.io.Path;
-import io.github.muntashirakon.io.ProxyFile;
-import io.github.muntashirakon.io.ProxyFiles;
+import io.github.muntashirakon.io.Paths;
+import io.github.muntashirakon.io.UidGidPair;
 
 import static io.github.muntashirakon.AppManager.appops.AppOpsManager.OP_NONE;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.DATA_PREFIX;
@@ -219,8 +218,10 @@ class RestoreOp implements Closeable {
             return;
         }
         String oldChecksum = checksum.get(MASTER_KEY);
-        Path masterKey = new Path(context, KeyStoreUtils.getMasterKey(userHandle));
-        if (!masterKey.exists()) {
+        Path masterKey;
+        try {
+            masterKey = KeyStoreUtils.getMasterKey(context, userHandle);
+        } catch (FileNotFoundException e) {
             if (oldChecksum == null) return;
             else throw new BackupException("Master key existed when the checksum was made but now it doesn't.");
         }
@@ -288,7 +289,7 @@ class RestoreOp implements Closeable {
                 synchronized (sLock) {
                     PackageUtils.ensurePackageStagingDirectoryPrivileged();
                 }
-                packageStagingDirectory = new Path(context, new ProxyFile(PackageUtils.PACKAGE_STAGING_DIRECTORY));
+                packageStagingDirectory = new Path(context, PackageUtils.PACKAGE_STAGING_DIRECTORY);
             } catch (Exception e) {
                 throw new BackupException("Could not ensure the existence of /data/local/tmp", e);
             }
@@ -368,38 +369,39 @@ class RestoreOp implements Closeable {
         } catch (IOException e) {
             throw new BackupException("Failed to decrypt " + Arrays.toString(keyStoreFiles), e);
         }
-        // Restore KeyStore files
-        File keyStoreFolder = KeyStoreUtils.getKeyStorePath(userHandle);
-        // Note-down UID/GID
-        FileStatus ksFileStatus;
+        // Restore KeyStore files to the /data/misc/keystore folder
+        Path keyStorePath = KeyStoreUtils.getKeyStorePath(context, userHandle);
+        // Note down UID/GID
+        UidGidPair uidGidPair;
+        int mode;
         try {
-            ksFileStatus = ProxyFiles.stat(keyStoreFolder);
-        } catch (ErrnoException | RemoteException e) {
+            uidGidPair = Objects.requireNonNull(keyStorePath.getFile()).getUidGid();
+            mode = keyStorePath.getFile().getMode();
+        } catch (ErrnoException e) {
             throw new BackupException("Failed to access properties of the KeyStore folder.", e);
         }
-        Path keyStorePath = new Path(context, keyStoreFolder);
         try {
             TarUtils.extract(metadata.tarType, keyStoreFiles, keyStorePath, null, null);
             // Restore folder permission
-            ProxyFiles.chown(keyStoreFolder, ksFileStatus.st_uid, ksFileStatus.st_gid);
+            Paths.chown(keyStorePath, uidGidPair.uid, uidGidPair.gid);
             //noinspection OctalInteger
-            ProxyFiles.chmod(keyStoreFolder, ksFileStatus.st_mode & 0777);
+            Paths.chmod(keyStorePath, mode & 0777);
         } catch (Throwable th) {
             throw new BackupException("Failed to restore the KeyStore files.", th);
         }
         // Rename files
         int uid = packageInfo.applicationInfo.uid;
-        List<String> keyStoreFileNames = KeyStoreUtils.getKeyStoreFiles(KEYSTORE_PLACEHOLDER, userHandle);
+        List<String> keyStoreFileNames = KeyStoreUtils.getKeyStoreFiles(context, KEYSTORE_PLACEHOLDER, userHandle);
         for (String keyStoreFileName : keyStoreFileNames) {
             try {
-                File targetFile = new ProxyFile(keyStoreFolder, Utils.replaceOnce(keyStoreFileName,
-                        String.valueOf(KEYSTORE_PLACEHOLDER), String.valueOf(uid)));
-                keyStorePath.findFile(keyStoreFileName).moveTo(keyStorePath.findOrCreateFile(targetFile.getName(), null));
+                String newFilename = Utils.replaceOnce(keyStoreFileName, String.valueOf(KEYSTORE_PLACEHOLDER), String.valueOf(uid));
+                keyStorePath.findFile(keyStoreFileName).renameTo(newFilename);
+                Path targetFile = keyStorePath.findFile(newFilename);
                 // Restore file permission
-                ProxyFiles.chown(targetFile, ksFileStatus.st_uid, ksFileStatus.st_gid);
+                Paths.chown(targetFile, uidGidPair.uid, uidGidPair.gid);
                 //noinspection OctalInteger
-                ProxyFiles.chmod(targetFile, 0600);
-            } catch (IOException | ErrnoException | RemoteException e) {
+                Paths.chmod(targetFile, 0600);
+            } catch (IOException | ErrnoException e) {
                 throw new BackupException("Failed to rename KeyStore files", e);
             }
         }
@@ -441,10 +443,6 @@ class RestoreOp implements Closeable {
         for (int i = 0; i < metadata.dataDirs.length; ++i) {
             dataSource = Utils.replaceOnce(metadata.dataDirs[i], "/" + metadata.userHandle + "/", "/" + userHandle + "/");
             dataFiles = getDataFiles(backupPath, i);
-            Pair<Integer, Integer> uidAndGid = null;
-            if (new ProxyFile(dataSource).exists()) {
-                uidAndGid = BackupUtils.getUidAndGid(dataSource, packageInfo.applicationInfo.uid);
-            }
             if (dataFiles.length == 0) {
                 throw new BackupException("Data restore is requested but there are no data files for index " + i + ".");
             }
@@ -469,8 +467,11 @@ class RestoreOp implements Closeable {
                 }
             }
             // Create data folder if not exists
-            Path dataSourceFile = new Path(context, new ProxyFile(dataSource));
-            if (!dataSourceFile.exists()) {
+            Path dataSourceFile = new Path(context, dataSource);
+            Pair<Integer, Integer> uidAndGid = null;
+            if (dataSourceFile.exists()) {
+                uidAndGid = BackupUtils.getUidAndGid(dataSourceFile, packageInfo.applicationInfo.uid);
+            } else {
                 // FIXME(10/9/20): Check if the media is mounted and writable before running
                 //  mkdir, otherwise it may create a folder to a path that will be gone
                 //  after a restart

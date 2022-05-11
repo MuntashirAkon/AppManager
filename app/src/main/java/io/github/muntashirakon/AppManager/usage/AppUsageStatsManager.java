@@ -36,6 +36,7 @@ import java.util.Objects;
 
 import dev.rikka.tools.refine.Refine;
 import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.compat.UsageStatsManagerCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.NonNullUtils;
@@ -44,6 +45,7 @@ import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 
 import static android.net.NetworkCapabilities.TRANSPORT_CELLULAR;
 import static android.net.NetworkCapabilities.TRANSPORT_WIFI;
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagMatchUninstalled;
 
 public class AppUsageStatsManager {
     @Retention(RetentionPolicy.SOURCE)
@@ -136,7 +138,7 @@ public class AppUsageStatsManager {
             throws RemoteException {
         UsageUtils.TimeInterval range = UsageUtils.getTimeInterval(usageInterval);
         PackageUsageInfo packageUsageInfo = new PackageUsageInfo(context, packageName, userId,
-                PackageUtils.getApplicationInfo(packageName, userId));
+                PackageManagerCompat.getApplicationInfo(packageName, flagMatchUninstalled, userId));
         UsageEvents events = UsageStatsManagerCompat.queryEvents(range.getStartTime(), range.getEndTime(), userId);
         if (events == null) return packageUsageInfo;
         UsageEvents.Event event = new UsageEvents.Event();
@@ -238,7 +240,7 @@ public class AppUsageStatsManager {
         for (String packageName : screenTimes.keySet()) {
             // Skip uninstalled packages?
             PackageUsageInfo packageUsageInfo = new PackageUsageInfo(context, packageName, userId,
-                    PackageUtils.getApplicationInfo(packageName, userId));
+                    PackageManagerCompat.getApplicationInfo(packageName, flagMatchUninstalled, userId));
             packageUsageInfo.timesOpened = NonNullUtils.defeatNullable(accessCount.get(packageName));
             packageUsageInfo.lastUsageTime = NonNullUtils.defeatNullable(lastUse.get(packageName));
             packageUsageInfo.screenTime = NonNullUtils.defeatNullable(screenTimes.get(packageName));

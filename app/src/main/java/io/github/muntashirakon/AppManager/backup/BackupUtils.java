@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.backup;
 
+import android.system.ErrnoException;
 import android.text.TextUtils;
 import android.util.Pair;
 
@@ -9,25 +10,23 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.db.dao.BackupDao;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.logcat.helper.SaveLogHelper;
-import io.github.muntashirakon.io.FileStatus;
 import io.github.muntashirakon.io.Path;
-import io.github.muntashirakon.io.ProxyFile;
-import io.github.muntashirakon.io.ProxyFiles;
+import io.github.muntashirakon.io.UidGidPair;
 
 public final class BackupUtils {
     @NonNull
-    private static List<String> getBackupPackages() throws FileNotFoundException {
+    private static List<String> getBackupPackages() {
         Path backupPath = BackupFiles.getBackupDirectory();
         List<String> packages;
         Path[] files = backupPath.listFiles(Path::isDirectory);
@@ -122,11 +121,11 @@ public final class BackupUtils {
     }
 
     @NonNull
-    static Pair<Integer, Integer> getUidAndGid(String filepath, int uid) {
+    static Pair<Integer, Integer> getUidAndGid(Path filepath, int uid) {
         try {
-            FileStatus status = ProxyFiles.stat(new ProxyFile(filepath));
-            return new Pair<>(status.st_uid, status.st_gid);
-        } catch (Exception e) {
+            UidGidPair uidGidPair = Objects.requireNonNull(filepath.getFile()).getUidGid();
+            return new Pair<>(uidGidPair.uid, uidGidPair.gid);
+        } catch (ErrnoException e) {
             // Fallback to kernel user ID
             return new Pair<>(uid, uid);
         }

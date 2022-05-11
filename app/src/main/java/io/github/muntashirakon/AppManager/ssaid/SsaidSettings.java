@@ -14,7 +14,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.WorkerThread;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.security.InvalidKeyException;
@@ -28,7 +27,7 @@ import aosp.libcore.util.HexEncoding;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
-import io.github.muntashirakon.io.ProxyFile;
+import io.github.muntashirakon.io.Path;
 
 import static io.github.muntashirakon.AppManager.ssaid.SettingsState.SYSTEM_PACKAGE_NAME;
 
@@ -49,14 +48,10 @@ public class SsaidSettings {
         HandlerThread thread = new HandlerThread("SSAID", Process.THREAD_PRIORITY_BACKGROUND);
         thread.start();
         int ssaidKey = SettingsStateV26.makeKey(SettingsState.SETTINGS_TYPE_SSAID, 0);
-        File ssaidLocation = new ProxyFile(OsEnvironment.getUserSystemDirectory(UserHandleHidden.getUserId(uid)),
-                "settings_ssaid.xml");
-        try {
-            if (!ssaidLocation.canRead()) {
-                throw new IOException("settings_ssaid.xml is inaccessible.");
-            }
-        } catch (SecurityException e) {
-            throw new IOException(e);
+        Path ssaidLocation = OsEnvironment.getUserSystemDirectory(UserHandleHidden.getUserId(uid))
+                .findFile("settings_ssaid.xml");
+        if (!ssaidLocation.canRead()) {
+            throw new IOException("settings_ssaid.xml is inaccessible.");
         }
         try {
             if (Build.VERSION.SDK_INT > Build.VERSION_CODES.S) {

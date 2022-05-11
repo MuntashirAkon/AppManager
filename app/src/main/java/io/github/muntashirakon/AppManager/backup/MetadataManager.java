@@ -45,6 +45,7 @@ import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.util.LocalizedString;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
@@ -141,7 +142,7 @@ public final class MetadataManager {
 
         public long getBackupSize() {
             if (backupPath == null) return 0L;
-            return FileUtils.fileSize(backupPath);
+            return Paths.size(backupPath);
         }
 
         @Override
@@ -223,10 +224,10 @@ public final class MetadataManager {
     }
 
     private Metadata metadata;
-    private final AppManager appManager;
+    private final Context context;
 
     private MetadataManager() {
-        this.appManager = AppManager.getInstance();
+        this.context = AppManager.getInstance();
     }
 
     public Metadata getMetadata() {
@@ -330,7 +331,7 @@ public final class MetadataManager {
     public Metadata setupMetadata(@NonNull PackageInfo packageInfo,
                                   int userHandle,
                                   @NonNull BackupFlags requestedFlags) {
-        PackageManager pm = appManager.getPackageManager();
+        PackageManager pm = context.getPackageManager();
         ApplicationInfo applicationInfo = packageInfo.applicationInfo;
         metadata = new Metadata();
         // We don't need to backup custom users or multiple backup flags
@@ -344,7 +345,7 @@ public final class MetadataManager {
             // Unknown tar type, set default
             metadata.tarType = TarUtils.TAR_GZIP;
         }
-        metadata.keyStore = KeyStoreUtils.hasKeyStore(applicationInfo.uid);
+        metadata.keyStore = KeyStoreUtils.hasKeyStore(context, applicationInfo.uid);
         metadata.label = applicationInfo.loadLabel(pm).toString();
         metadata.packageName = packageInfo.packageName;
         metadata.versionName = packageInfo.versionName;

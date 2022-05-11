@@ -16,10 +16,12 @@ import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
@@ -39,9 +41,8 @@ import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
-import io.github.muntashirakon.io.AtomicProxyFile;
-import io.github.muntashirakon.io.ProxyFile;
-import io.github.muntashirakon.io.ProxyOutputStream;
+import io.github.muntashirakon.io.AtomicExtendedFile;
+import io.github.muntashirakon.io.Paths;
 
 import static io.github.muntashirakon.AppManager.appops.AppOpsManager.OP_NONE;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
@@ -64,14 +65,11 @@ import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagMatchUni
 public final class ComponentsBlocker extends RulesStorageManager {
     public static final String TAG = "ComponentBlocker";
 
-    static final ProxyFile SYSTEM_RULES_PATH;
+    static final String SYSTEM_RULES_PATH;
 
     static {
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
-            SYSTEM_RULES_PATH = new ProxyFile("/data/secure/system/ifw");
-        } else {
-            SYSTEM_RULES_PATH = new ProxyFile("/data/system/ifw");
-        }
+        SYSTEM_RULES_PATH = Build.VERSION.SDK_INT <= Build.VERSION_CODES.M ? "/data/secure/system/ifw"
+                : "/data/system/ifw";
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -148,7 +146,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
     }
 
     @NonNull
-    private final AtomicProxyFile mRulesFile;
+    private final AtomicExtendedFile mRulesFile;
     @NonNull
     private Set<String> mComponents;
     @Nullable
@@ -156,7 +154,8 @@ public final class ComponentsBlocker extends RulesStorageManager {
 
     private ComponentsBlocker(String packageName, int userHandle) {
         super(packageName, userHandle);
-        mRulesFile = new AtomicProxyFile(new ProxyFile(SYSTEM_RULES_PATH, packageName + ".xml"));
+        mRulesFile = new AtomicExtendedFile(Objects.requireNonNull(Paths.get(SYSTEM_RULES_PATH).getFile())
+                .getChildFile(packageName + ".xml"));
         try {
             mPackageInfo = PackageManagerCompat.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES
                     | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS | flagDisabledComponents
@@ -346,7 +345,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
                 ((receivers.length() == 0) ? "" : "<broadcast block=\"true\" log=\"false\">\n" + receivers + "</broadcast>\n") +
                 "</rules>";
         // Save rules
-        ProxyOutputStream rulesStream = null;
+        FileOutputStream rulesStream = null;
         try {
             rulesStream = mRulesFile.startWrite();
             Log.d(TAG, "Rules: " + rules);

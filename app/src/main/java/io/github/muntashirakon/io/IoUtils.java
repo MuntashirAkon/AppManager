@@ -3,7 +3,7 @@
 package io.github.muntashirakon.io;
 
 import android.os.Build;
-import android.os.RemoteException;
+import android.util.Log;
 
 import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
@@ -11,13 +11,10 @@ import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
 import java.io.EOFException;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Arrays;
-
-import io.github.muntashirakon.AppManager.logs.Log;
 
 import static android.system.OsConstants.O_APPEND;
 import static android.system.OsConstants.O_CREAT;
@@ -71,14 +68,6 @@ public final class IoUtils {
             pos += cc;
         }
         return output;
-    }
-
-    @WorkerThread
-    public static long copy(File from, File to) throws IOException, RemoteException {
-        try (InputStream in = new ProxyInputStream(from);
-             OutputStream out = new ProxyOutputStream(to)) {
-            return copy(in, out);
-        }
     }
 
     @WorkerThread
