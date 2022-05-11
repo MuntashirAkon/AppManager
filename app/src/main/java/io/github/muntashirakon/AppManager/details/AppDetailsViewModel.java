@@ -139,6 +139,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             mReceiver = new PackageIntentReceiver(this);
             mWaitForBlocker = true;
         } catch (Throwable th) {
+            Log.e(TAG, th);
             throw new RuntimeException("Could not instantiate AppDetailsViewModel", th);
         }
     }
@@ -146,7 +147,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @GuardedBy("blockerLocker")
     @Override
     public void onCleared() {
-        Log.d("ADVM", "On Clear called for " + mPackageName);
+        Log.d(TAG, "On Clear called for " + mPackageName);
         super.onCleared();
         mExecutor.submit(() -> {
             synchronized (mBlockerLocker) {
@@ -172,7 +173,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         MutableLiveData<PackageInfo> packageInfoLiveData = new MutableLiveData<>();
         mExecutor.submit(() -> {
             try {
-                Log.d("ADVM", "Package Uri is being set");
+                Log.d(TAG, "Package Uri is being set");
                 mIsExternalApk = true;
                 mApkFileKey = ApkFile.createInstance(packageUri, type);
                 mApkFile = ApkFile.getInstance(mApkFileKey);
@@ -183,7 +184,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 setPackageInfo(false);
                 packageInfoLiveData.postValue(getPackageInfo());
             } catch (Throwable th) {
-                Log.e("ADVM", "Could not fetch package info.", th);
+                Log.e(TAG, "Could not fetch package info.", th);
                 packageInfoLiveData.postValue(null);
             } finally {
                 mPackageInfoWatcher.countDown();
@@ -198,7 +199,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         MutableLiveData<PackageInfo> packageInfoLiveData = new MutableLiveData<>();
         mExecutor.submit(() -> {
             try {
-                Log.d("ADVM", "Package name is being set");
+                Log.d(TAG, "Package name is being set");
                 mIsExternalApk = false;
                 setPackageName(packageName);
                 // TODO: 23/5/21 The app could be “data only”
@@ -209,7 +210,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 mApkFile = ApkFile.getInstance(mApkFileKey);
                 packageInfoLiveData.postValue(pi);
             } catch (Throwable th) {
-                Log.e("ADVM", "Could not fetch package info.", th);
+                Log.e(TAG, "Could not fetch package info.", th);
                 packageInfoLiveData.postValue(null);
             } finally {
                 mPackageInfoWatcher.countDown();
@@ -232,7 +233,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @GuardedBy("blockerLocker")
     private void setPackageName(String packageName) {
         if (this.mPackageName != null) return;
-        Log.d("ADVM", "Package name is being set for " + packageName);
+        Log.d(TAG, "Package name is being set for " + packageName);
         this.mPackageName = packageName;
         if (mIsExternalApk) return;
         mExecutor.submit(() -> {
@@ -1037,7 +1038,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     throw new PackageManager.NameNotFoundException("Package cannot be parsed");
                 }
                 if (mInstalledPackageInfo == null) {
-                    Log.d("ADVM", mPackageName + " not installed for user " + mUserHandle);
+                    Log.d(TAG, mPackageName + " not installed for user " + mUserHandle);
                 }
                 mPackageInfo.applicationInfo.sourceDir = mApkPath;
                 mPackageInfo.applicationInfo.publicSourceDir = mApkPath;
@@ -1780,17 +1781,17 @@ public class AppDetailsViewModel extends AndroidViewModel {
         @WorkerThread
         protected void onPackageChanged(Intent intent, @Nullable Integer uid, @Nullable String[] packages) {
             if (uid != null && (mModel.mPackageInfo == null || mModel.mPackageInfo.applicationInfo.uid == uid)) {
-                Log.d("ADVM", "Package is changed.");
+                Log.d(TAG, "Package is changed.");
                 mModel.setIsPackageChanged();
             } else if (packages != null) {
                 for (String packageName : packages) {
                     if (packageName.equals(mModel.mPackageName)) {
-                        Log.d("ADVM", "Package availability changed.");
+                        Log.d(TAG, "Package availability changed.");
                         mModel.setIsPackageChanged();
                     }
                 }
             } else {
-                Log.d("ADVM", "Locale changed.");
+                Log.d(TAG, "Locale changed.");
                 mModel.setIsPackageChanged();
             }
         }
