@@ -30,7 +30,10 @@ public class AppDetailsComponentItem extends AppDetailsItem<ComponentInfo> {
     }
 
     public boolean isBlocked() {
-        return mRule != null && mRule.isBlocked();
+        if (mRule == null) {
+            return false;
+        }
+        return mRule.isBlocked() && (mRule.isIfw() || isDisabled());
     }
 
     public ComponentRule getRule() {

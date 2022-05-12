@@ -92,7 +92,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
      */
     @NonNull
     public static ComponentsBlocker getInstance(@NonNull String packageName, int userHandle) {
-        return getInstance(packageName, userHandle, false);
+        return getInstance(packageName, userHandle, true);
     }
 
     /**
@@ -111,7 +111,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
      */
     @NonNull
     public static ComponentsBlocker getMutableInstance(@NonNull String packageName, int userHandle) {
-        ComponentsBlocker componentsBlocker = getInstance(packageName, userHandle, true);
+        ComponentsBlocker componentsBlocker = getInstance(packageName, userHandle, false);
         componentsBlocker.readOnly = false;
         return componentsBlocker;
     }
@@ -123,23 +123,24 @@ public final class ComponentsBlocker extends RulesStorageManager {
      * mutable, closing this instance will commit the changes automatically. To prevent this,
      * {@link #setReadOnly()} should be called before closing the instance.
      *
-     * @param packageName      The package whose instance is to be returned
-     * @param userHandle       The user to whom the rules belong
-     * @param noReloadFromDisk Whether not to load rules from the {@link #SYSTEM_RULES_PATH}
+     * @param packageName    The package whose instance is to be returned
+     * @param userHandle     The user to whom the rules belong
+     * @param reloadFromDisk Whether to load rules from the {@link #SYSTEM_RULES_PATH}
      * @return New or existing immutable instance for the package
      * @see #getInstance(String, int)
      * @see #getMutableInstance(String, int)
      */
     @NonNull
-    public static ComponentsBlocker getInstance(@NonNull String packageName, int userHandle, boolean noReloadFromDisk) {
+    public static ComponentsBlocker getInstance(@NonNull String packageName, int userHandle, boolean reloadFromDisk) {
         if (sInstance == null) {
             sInstance = new ComponentsBlocker(packageName, userHandle);
-        } else if (!noReloadFromDisk || !sInstance.packageName.equals(packageName)) {
+        } else if (reloadFromDisk || !sInstance.packageName.equals(packageName)) {
             sInstance.close();
             sInstance = new ComponentsBlocker(packageName, userHandle);
         }
-        if (!noReloadFromDisk && Ops.isRoot()) {
+        if (reloadFromDisk && Ops.isRoot()) {
             sInstance.retrieveDisabledComponents();
+            sInstance.invalidateComponents();
         }
         sInstance.readOnly = true;
         return sInstance;
@@ -322,7 +323,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
         StringBuilder services = new StringBuilder();
         StringBuilder receivers = new StringBuilder();
         for (ComponentRule component : getAllComponents()) {
-            // Ignore components that needs unblocking
+            // Ignore components requiring unblocking
             if (!component.isIfw()) continue;
             String componentFilter = "  <component-filter name=\"" + packageName + "/" + component.name + "\"/>\n";
             switch (component.type) {
@@ -522,6 +523,46 @@ public final class ComponentsBlocker extends RulesStorageManager {
                 removeEntry(entry);
             }
         }
+    }
+
+    /**
+     * Check all components that needs to be disabled/enabled and assign to be disabled/enabled if
+     * necessary.
+     */
+    public int invalidateComponents() {
+        int invalidated = 0;
+        List<ComponentRule> allEntries = getAllComponents();
+        for (ComponentRule entry : allEntries) {
+            // First check if it actually exists
+            if (!mComponents.contains(entry.name)) {
+                removeEntry(entry);
+                ++invalidated;
+                continue;
+            }
+            try {
+                int s = PackageManagerCompat.getComponentEnabledSetting(new ComponentName(entry.packageName, entry.name), userHandle);
+                switch (entry.getComponentStatus()) {
+                    case ComponentRule.COMPONENT_BLOCKED_IFW_DISABLE:
+                    case ComponentRule.COMPONENT_DISABLED:
+                        // If component is enabled/defaulted, make it to be disabled
+                        if (s == PackageManager.COMPONENT_ENABLED_STATE_ENABLED
+                                || s == PackageManager.COMPONENT_ENABLED_STATE_DEFAULT) {
+                            addComponent(entry.name, entry.type, entry.getToBe());
+                            ++invalidated;
+                        }
+                        break;
+                    case ComponentRule.COMPONENT_ENABLED:
+                        // If component is not enabled, make it to be enabled
+                        if (s != PackageManager.COMPONENT_ENABLED_STATE_ENABLED) {
+                            addComponent(entry.name, entry.type, entry.getToBe());
+                            ++invalidated;
+                        }
+                        break;
+                }
+            } catch (RemoteException ignore) {
+            }
+        }
+        return invalidated;
     }
 
     /**

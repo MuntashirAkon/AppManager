@@ -585,7 +585,7 @@ public class MainViewModel extends AndroidViewModel {
                                 | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
                                 | PackageManager.GET_SERVICES | flagDisabledComponents, userId);
                 App app = App.fromPackageInfo(getApplication(), packageInfo);
-                try (ComponentsBlocker cb = ComponentsBlocker.getInstance(app.packageName, app.userId, true)) {
+                try (ComponentsBlocker cb = ComponentsBlocker.getInstance(app.packageName, app.userId, false)) {
                     app.rulesCount = cb.entryCount();
                 }
                 ApplicationItem item = new ApplicationItem(packageInfo.applicationInfo);

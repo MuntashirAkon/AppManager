@@ -77,7 +77,7 @@ public class AppDb {
                     // Already has this entry, skip
                     continue;
                 }
-                try (ComponentsBlocker cb = ComponentsBlocker.getInstance(app.packageName, app.userId, true)) {
+                try (ComponentsBlocker cb = ComponentsBlocker.getInstance(app.packageName, app.userId, false)) {
                     app.rulesCount = cb.entryCount();
                 }
                 newApps.add(app);
@@ -121,7 +121,7 @@ public class AppDb {
 
                     App app = App.fromPackageInfo(context, packageInfo);
                     backups.remove(packageInfo.packageName);
-                    try (ComponentsBlocker cb = ComponentsBlocker.getInstance(app.packageName, app.userId, true)) {
+                    try (ComponentsBlocker cb = ComponentsBlocker.getInstance(app.packageName, app.userId, false)) {
                         app.rulesCount = cb.entryCount();
                     }
                     newApps.add(app);
@@ -134,7 +134,7 @@ public class AppDb {
 
                 if (backup == null) continue;
                 App app = App.fromBackup(backup);
-                try (ComponentsBlocker cb = ComponentsBlocker.getInstance(app.packageName, app.userId, true)) {
+                try (ComponentsBlocker cb = ComponentsBlocker.getInstance(app.packageName, app.userId, false)) {
                     app.rulesCount = cb.entryCount();
                 }
                 newApps.add(app);
