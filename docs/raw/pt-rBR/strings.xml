@@ -1,4 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="keywords$see_also">\\newcommand{\\KeywordSeeAlso}{Ver também:}</string>
+    <string name="intro$main$$introduction-chapter-title">Introdução</string>
+    <string name="intro$main$$terminologies-title">Terminologias</string>
+    <string name="intro$main$$supported-versions-title">Versões suportadas</string>
+    <string name="intro$main$$official-sources-title">Fontes Oficiais</string>
+    <string name="intro$main$$bin-sources-title">Fontes de Distribuição Binária</string>
+    <string name="intro$main$$donation-title">Doação \\&amp; Financiamento</string>
+    <string name="intro$main$$contact-title">Contato</string>
+    <string name="intro$main$$submit-patches-title">Submissão de correções</string>
+    <string name="intro$main$$source-code-links-title">Links para o Código Fonte</string>
+    <string name="intro$main$$translations-title">Traduções</string>
+    <string name="intro$main$$contributing-title">Contribuição</string>
+    <string name="intro$main$$buiding-title">Instruções de Contrução</string>
+    <string name="titlepage$quotation">\\begin{quotation}
+\n ``Devagar e sabiamente. Os que correm rápido, tropeçam.\'\'
+\n %\\sourceatright
+\n {--- Friar Laurence, \\textit{Romeu e Julieta}}
+\n \\end{quotation}</string>
 </resources>
