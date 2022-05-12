@@ -27,12 +27,16 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 
+import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.scanner.reflector.Reflector;
 import io.github.muntashirakon.AppManager.scanner.vt.VirusTotal;
 import io.github.muntashirakon.AppManager.scanner.vt.VtFileReport;
@@ -45,6 +49,8 @@ import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.io.VirtualFileSystem;
 
 public class ScannerViewModel extends AndroidViewModel implements VirusTotal.FullScanResponseInterface {
+    private static final Pattern SIG_TO_IGNORE = Pattern.compile("^(android(|x)|com\\.android|com\\.google\\.android|java(|x)|j\\$\\.(util|time)|\\w\\d?(\\.\\w\\d?)+)\\..*$");
+
     private File apkFile;
     private boolean cached;
     private boolean loaded = false;
@@ -54,6 +60,8 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
     private DexClassesPreOreo dexClassesPreOreo;
     @Nullable
     private final VirusTotal vt;
+    @Nullable
+    private String mPackageName;
 
     private List<String> allClasses;
     private List<String> trackerClasses;
@@ -66,8 +74,9 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
     private final MutableLiveData<ApkVerifier.Result> apkVerifierResultLiveData = new MutableLiveData<>();
     private final MutableLiveData<PackageInfo> packageInfoLiveData = new MutableLiveData<>();
     private final MutableLiveData<List<String>> allClassesLiveData = new MutableLiveData<>();
-    private final MutableLiveData<List<String>> trackerClassesLiveData = new MutableLiveData<>();
-    private final MutableLiveData<List<String>> libraryClassesLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<SignatureInfo>> trackerClassesLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<SignatureInfo>> libraryClassesLiveData = new MutableLiveData<>();
+    private final MutableLiveData<ArrayList<String>> missingClassesLiveData = new MutableLiveData<>();
     // Null = Uploading, NonNull = Queued
     private final MutableLiveData<VtFileScanMeta> vtFileScanMetaLiveData = new MutableLiveData<>();
     // Null = Failed, NonNull = Result generated
@@ -143,12 +152,16 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
         return allClassesLiveData;
     }
 
-    public LiveData<List<String>> trackerClassesLiveData() {
+    public LiveData<List<SignatureInfo>> trackerClassesLiveData() {
         return trackerClassesLiveData;
     }
 
-    public LiveData<List<String>> libraryClassesLiveData() {
+    public LiveData<List<SignatureInfo>> libraryClassesLiveData() {
         return libraryClassesLiveData;
+    }
+
+    public LiveData<ArrayList<String>> missingClassesLiveData() {
+        return missingClassesLiveData;
     }
 
     public LiveData<VtFileReport> vtFileReportLiveData() {
@@ -254,8 +267,12 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
     @WorkerThread
     private void loadPackageInfo() {
         waitForFile();
-        final PackageManager pm = getApplication().getPackageManager();
-        packageInfoLiveData.postValue(pm.getPackageArchiveInfo(apkFile.getAbsolutePath(), 0));
+        PackageManager pm = getApplication().getPackageManager();
+        PackageInfo packageInfo = pm.getPackageArchiveInfo(apkFile.getAbsolutePath(), 0);
+        if (packageInfo != null) {
+            mPackageName = packageInfo.packageName;
+        }
+        packageInfoLiveData.postValue(packageInfo);
     }
 
     @WorkerThread
@@ -280,6 +297,86 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
             allClasses = dexClassesPreOreo.getClassNames();
         }
         allClassesLiveData.postValue(allClasses);
+        // Load tracker and library info
+        executor.submit(this::loadTrackers);
+        executor.submit(this::loadLibraries);
+    }
+
+    @WorkerThread
+    private void loadTrackers() {
+        if (allClasses == null) return;
+        List<SignatureInfo> trackerInfoList = new ArrayList<>();
+        String[] trackerNames = StaticDataset.getTrackerNames();
+        String[] trackerSignatures = StaticDataset.getTrackerCodeSignatures();
+        int[] signatureCount = new int[trackerSignatures.length];
+        // Iterate over all classes
+        trackerClasses = new ArrayList<>();
+        for (String className : allClasses) {
+            if (className.length() > 8 && className.contains(".")) {
+                // Iterate over all signatures to match the class name
+                // This is a greedy algorithm, only matches the first item
+                for (int i = 0; i < trackerSignatures.length; i++) {
+                    if (className.contains(trackerSignatures[i])) {
+                        trackerClasses.add(className);
+                        signatureCount[i]++;
+                        break;
+                    }
+                }
+            }
+        }
+        // Iterate over signatures again but this time list only the found ones.
+        for (int i = 0; i < trackerSignatures.length; i++) {
+            if (signatureCount[i] == 0) continue;
+            SignatureInfo signatureInfo = new SignatureInfo(trackerSignatures[i], trackerNames[i]);
+            signatureInfo.setCount(signatureCount[i]);
+            trackerInfoList.add(signatureInfo);
+        }
+        trackerClassesLiveData.postValue(trackerInfoList);
+    }
+
+    public void loadLibraries() {
+        if (allClasses == null) return;
+        List<SignatureInfo> libraryInfoList = new ArrayList<>();
+        ArrayList<String> missingLibs = new ArrayList<>();
+        String[] libNames = getApplication().getResources().getStringArray(R.array.lib_names);
+        String[] libSignatures = getApplication().getResources().getStringArray(R.array.lib_signatures);
+        String[] libTypes = getApplication().getResources().getStringArray(R.array.lib_types);
+        // The following array is directly mapped to the arrays above
+        int[] signatureCount = new int[libSignatures.length];
+        // Iterate over all classes
+        libraryClasses = new ArrayList<>();
+        for (String className : allClasses) {
+            if (className.length() > 8 && className.contains(".")) {
+                boolean matched = false;
+                // Iterate over all signatures to match the class name
+                // This is a greedy algorithm, only matches the first item
+                for (int i = 0; i < libSignatures.length; i++) {
+                    if (className.contains(libSignatures[i])) {
+                        matched = true;
+                        // Add to found classes
+                        libraryClasses.add(className);
+                        // Increment this signature match count
+                        signatureCount[i]++;
+                        break;
+                    }
+                }
+                // Add the class to the missing libs list if it doesn't match the filters
+                if (!matched
+                        && (mPackageName != null && !className.startsWith(mPackageName))
+                        && !SIG_TO_IGNORE.matcher(className).matches()) {
+                    missingLibs.add(className);
+                }
+            }
+        }
+        // Iterate over signatures again but this time list only the found ones.
+        for (int i = 0; i < libSignatures.length; i++) {
+            if (signatureCount[i] == 0) continue;
+            SignatureInfo signatureInfo = new SignatureInfo(libSignatures[i], libNames[i], libTypes[i]);
+            signatureInfo.setCount(signatureCount[i]);
+            libraryInfoList.add(signatureInfo);
+        }
+        libraryClassesLiveData.postValue(libraryInfoList);
+        missingClassesLiveData.postValue(missingLibs);
     }
 
     @WorkerThread

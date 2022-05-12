@@ -46,7 +46,6 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.scanner.vt.VtFileReport;
 import io.github.muntashirakon.AppManager.scanner.vt.VtFileReportScanItem;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
@@ -65,12 +64,6 @@ import static io.github.muntashirakon.AppManager.utils.UIUtils.getPrimaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
 public class ScannerFragment extends Fragment {
-    private static final String SIG_TO_IGNORE = "^(android(|x)|com\\.android|com\\.google\\.android|java(|x)|j\\$\\.(util|time)|\\w\\d?(\\.\\w\\d?)+)\\..*$";
-
-    private int totalClasses;
-    private final List<String> mTrackerClassList = new ArrayList<>();
-    private final List<String> mLibClassList = new ArrayList<>();
-
     private CharSequence mAppName;
     @Nullable
     private String mPackageName;
@@ -131,40 +124,41 @@ public class ScannerFragment extends Fragment {
         });
         // List all classes
         mViewModel.allClassesLiveData().observe(getViewLifecycleOwner(), allClasses -> {
-            totalClasses = allClasses.size();
             ((TextView) view.findViewById(R.id.classes_title)).setText(getResources().getQuantityString(R.plurals.classes,
                     allClasses.size(), allClasses.size()));
             view.findViewById(R.id.classes).setOnClickListener(v ->
                     mActivity.loadNewFragment(new ClassListingFragment()));
-
-            // Fetch tracker info
-            new Thread(() -> {
-                Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-                try {
-                    setTrackerInfo(view);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }).start();
-            // Fetch library info
-            new Thread(() -> {
-                Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
-                try {
-                    setLibraryInfo(view);
-                    // Progress is dismissed here because this will take the largest time
-                    mActivity.runOnUiThread(() -> mActivity.showProgress(false));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }).start();
         });
         // List tracker classes
-        mViewModel.trackerClassesLiveData().observe(getViewLifecycleOwner(), trackerClasses -> {
-            // TODO: 26/3/22
-        });
+        mViewModel.trackerClassesLiveData().observe(getViewLifecycleOwner(), trackerClasses ->
+                setTrackerInfo(trackerClasses, view));
         // List library classes
         mViewModel.libraryClassesLiveData().observe(getViewLifecycleOwner(), libraryClasses -> {
-            // TODO: 26/3/22
+            setLibraryInfo(libraryClasses, view);
+            // Progress is dismissed here because this will take the largest time
+            mActivity.showProgress(false);
+        });
+        // List missing classes
+        mViewModel.missingClassesLiveData().observe(getViewLifecycleOwner(), missingClasses -> {
+            if (missingClasses.size() > 0) {
+                ((TextView) view.findViewById(R.id.missing_libs_title)).setText(getResources().getQuantityString(R.plurals.missing_signatures, missingClasses.size(), missingClasses.size()));
+                View v = view.findViewById(R.id.missing_libs);
+                v.setVisibility(View.VISIBLE);
+                v.setOnClickListener(v2 -> new SearchableMultiChoiceDialogBuilder<>(mActivity, missingClasses,
+                        ArrayUtils.toCharSequence(missingClasses))
+                        .setTitle(R.string.signatures)
+                        .showSelectAll(false)
+                        .setNegativeButton(R.string.ok, null)
+                        .setNeutralButton(R.string.send_selected, (dialog, which, selectedItems) -> {
+                            Intent i = new Intent(Intent.ACTION_SEND);
+                            i.setType("message/rfc822");
+                            i.putExtra(Intent.EXTRA_EMAIL, new String[]{"muntashirakon@riseup.net"});
+                            i.putExtra(Intent.EXTRA_SUBJECT, "App Manager: Missing signatures");
+                            i.putExtra(Intent.EXTRA_TEXT, selectedItems.toString());
+                            startActivity(Intent.createChooser(i, getText(R.string.signatures)));
+                        })
+                        .show());
+            }
         });
         // VirusTotal
         vtContainerView = view.findViewById(R.id.vt);
@@ -306,49 +300,23 @@ public class ScannerFragment extends Fragment {
         return foundNativeLibInfoMap;
     }
 
-    private void setTrackerInfo(View view) {
-        String[] trackerNames = StaticDataset.getTrackerNames();
-        String[] trackerSignatures = StaticDataset.getTrackerCodeSignatures();
-        int[] signatureCount = new int[trackerSignatures.length];
-        int totalIteration = 0;
-        long t_start, t_end;
-        t_start = System.currentTimeMillis();
-        // Iterate over all classes
-        mTrackerClassList.clear();
-        for (String className : mViewModel.getAllClasses()) {
-            if (className.length() > 8 && className.contains(".")) {
-                // Iterate over all signatures to match the class name
-                // This is a greedy algorithm, only matches the first item
-                for (int i = 0; i < trackerSignatures.length; i++) {
-                    totalIteration++;
-                    if (className.contains(trackerSignatures[i])) {
-                        mTrackerClassList.add(className);
-                        signatureCount[i]++;
-                        break;
-                    }
-                }
-            }
-        }
-        t_end = System.currentTimeMillis();
-        long totalTimeTaken = t_end - t_start;
-        mViewModel.setTrackerClasses(mTrackerClassList);
+    private void setTrackerInfo(@NonNull List<SignatureInfo> trackerInfoList, @NonNull View view) {
         Map<String, SpannableStringBuilder> foundTrackerInfoMap = new ArrayMap<>();
         foundTrackerInfoMap.putAll(getNativeLibraryInfo(true));
         final boolean[] hasSecondDegree = new boolean[]{false};
         // Iterate over signatures again but this time list only the found ones.
-        for (int i = 0; i < trackerSignatures.length; i++) {
-            if (signatureCount[i] == 0) continue;
-            if (foundTrackerInfoMap.get(trackerNames[i]) == null) {
-                foundTrackerInfoMap.put(trackerNames[i], new SpannableStringBuilder()
-                        .append(getPrimaryText(mActivity, trackerNames[i])));
+        for (SignatureInfo trackerInfo : trackerInfoList) {
+            if (foundTrackerInfoMap.get(trackerInfo.label) == null) {
+                foundTrackerInfoMap.put(trackerInfo.label, new SpannableStringBuilder()
+                        .append(getPrimaryText(mActivity, trackerInfo.label)));
             }
             //noinspection ConstantConditions Never null here
-            foundTrackerInfoMap.get(trackerNames[i])
+            foundTrackerInfoMap.get(trackerInfo.label)
                     .append("\n")
-                    .append(getMonospacedText(trackerSignatures[i]))
-                    .append(getSmallerText(" (" + signatureCount[i] + ")"));
+                    .append(getMonospacedText(trackerInfo.signature))
+                    .append(getSmallerText(" (" + trackerInfo.getCount() + ")"));
             if (!hasSecondDegree[0]) {
-                hasSecondDegree[0] = trackerNames[i].startsWith("²");
+                hasSecondDegree[0] = trackerInfo.label.startsWith("²");
             }
         }
         Set<String> foundTrackerNames = foundTrackerInfoMap.keySet();
@@ -361,22 +329,17 @@ public class ScannerFragment extends Fragment {
             foundTrackerList.append(getString(R.string.found_trackers)).append(" ").append(
                     TextUtils.joinSpannable(", ", foundTrackerNames));
         }
-        SpannableStringBuilder builder = new SpannableStringBuilder(
-                getString(R.string.tested_signatures_on_classes_and_time_taken, trackerSignatures.length, totalClasses,
-                        totalTimeTaken, totalIteration));
-        if (foundTrackerList.length() > 0) {
-            builder.append("\n").append(foundTrackerList);
-        }
+        int totalTrackerClasses = mViewModel.getTrackerClasses().size();
         // Get summary
         CharSequence summary;
         if (totalTrackersFound == 0) {
             summary = getString(R.string.no_tracker_found);
         } else if (totalTrackersFound == 1) {
-            summary = getResources().getQuantityString(R.plurals.tracker_and_classes, mTrackerClassList.size(), mTrackerClassList.size());
+            summary = getResources().getQuantityString(R.plurals.tracker_and_classes, totalTrackerClasses, totalTrackerClasses);
         } else if (totalTrackersFound == 2) {
-            summary = getResources().getQuantityString(R.plurals.two_trackers_and_classes, mTrackerClassList.size(), mTrackerClassList.size());
+            summary = getResources().getQuantityString(R.plurals.two_trackers_and_classes, totalTrackerClasses, totalTrackerClasses);
         } else {
-            summary = getResources().getQuantityString(R.plurals.other_trackers_and_classes, totalTrackersFound, totalTrackersFound, mTrackerClassList.size());
+            summary = getResources().getQuantityString(R.plurals.other_trackers_and_classes, totalTrackersFound, totalTrackersFound, totalTrackerClasses);
         }
         // Add colours
         CharSequence coloredSummary;
@@ -386,93 +349,59 @@ public class ScannerFragment extends Fragment {
             coloredSummary = getColoredText(summary, ContextCompat.getColor(mActivity, R.color.electric_red));
         }
 
-        mActivity.runOnUiThread(() -> {
-            ((TextView) view.findViewById(R.id.tracker_title)).setText(coloredSummary);
-            ((TextView) view.findViewById(R.id.tracker_description)).setText(builder);
-            if (totalTrackersFound == 0) return;
-            MaterialCardView trackersView = view.findViewById(R.id.tracker);
-            trackersView.setOnClickListener(v -> {
-                DialogTitleBuilder titleBuilder = new DialogTitleBuilder(mActivity)
-                        .setTitle(R.string.tracker_details)
-                        .setSubtitle(summary);
-                if (mPackageName != null) {
-                    titleBuilder.setEndIcon(R.drawable.ic_exodusprivacy, v1 -> {
-                                Uri exodus_link = Uri.parse(String.format(
-                                        "https://reports.exodus-privacy.eu.org/en/reports/%s/latest/", mPackageName));
-                                Intent intent = new Intent(Intent.ACTION_VIEW, exodus_link);
-                                if (intent.resolveActivity(mActivity.getPackageManager()) != null) {
-                                    startActivity(intent);
-                                }
-                            })
-                            .setEndIconContentDescription(R.string.exodus_link);
-                }
-                new ScrollableDialogBuilder(mActivity, hasSecondDegree[0] ?
-                        new SpannableStringBuilder(trackerList)
-                                .append("\n\n")
-                                .append(getSmallerText(getText(R.string.second_degree_tracker_note)))
-                        : trackerList)
-                        .setTitle(titleBuilder.build())
-                        .enableAnchors()
-                        .setPositiveButton(R.string.ok, null)
-                        .setNeutralButton(R.string.copy, (dialog, which, isChecked) -> {
-                            ClipboardManager clipboard = (ClipboardManager) mActivity.getSystemService(Context.CLIPBOARD_SERVICE);
-                            ClipData clip = ClipData.newPlainText(getString(R.string.signatures), trackerList);
-                            clipboard.setPrimaryClip(clip);
-                            Snackbar.make(trackersView, R.string.copied_to_clipboard, Snackbar.LENGTH_SHORT).show();
+        ((TextView) view.findViewById(R.id.tracker_title)).setText(coloredSummary);
+        ((TextView) view.findViewById(R.id.tracker_description)).setText(foundTrackerList);
+        if (totalTrackersFound == 0) return;
+        MaterialCardView trackersView = view.findViewById(R.id.tracker);
+        trackersView.setOnClickListener(v -> {
+            DialogTitleBuilder titleBuilder = new DialogTitleBuilder(mActivity)
+                    .setTitle(R.string.tracker_details)
+                    .setSubtitle(summary);
+            if (mPackageName != null) {
+                titleBuilder.setEndIcon(R.drawable.ic_exodusprivacy, v1 -> {
+                            Uri exodus_link = Uri.parse(String.format(
+                                    "https://reports.exodus-privacy.eu.org/en/reports/%s/latest/", mPackageName));
+                            Intent intent = new Intent(Intent.ACTION_VIEW, exodus_link);
+                            if (intent.resolveActivity(mActivity.getPackageManager()) != null) {
+                                startActivity(intent);
+                            }
                         })
-                        .show();
-            });
+                        .setEndIconContentDescription(R.string.exodus_link);
+            }
+            new ScrollableDialogBuilder(mActivity, hasSecondDegree[0] ?
+                    new SpannableStringBuilder(trackerList)
+                            .append("\n\n")
+                            .append(getSmallerText(getText(R.string.second_degree_tracker_note)))
+                    : trackerList)
+                    .setTitle(titleBuilder.build())
+                    .enableAnchors()
+                    .setPositiveButton(R.string.ok, null)
+                    .setNeutralButton(R.string.copy, (dialog, which, isChecked) -> {
+                        ClipboardManager clipboard = (ClipboardManager) mActivity.getSystemService(Context.CLIPBOARD_SERVICE);
+                        ClipData clip = ClipData.newPlainText(getString(R.string.signatures), trackerList);
+                        clipboard.setPrimaryClip(clip);
+                        Snackbar.make(trackersView, R.string.copied_to_clipboard, Snackbar.LENGTH_SHORT).show();
+                    })
+                    .show();
         });
     }
 
-    private void setLibraryInfo(View view) {
-        ArrayList<String> missingLibs = new ArrayList<>();
-        String[] libNames = getResources().getStringArray(R.array.lib_names);
-        String[] libSignatures = getResources().getStringArray(R.array.lib_signatures);
-        String[] libTypes = getResources().getStringArray(R.array.lib_types);
-        // The following array is directly mapped to the arrays above
-        int[] signatureCount = new int[libSignatures.length];
-        // Iterate over all classes
-        mLibClassList.clear();
-        for (String className : mViewModel.getAllClasses()) {
-            if (className.length() > 8 && className.contains(".")) {
-                boolean matched = false;
-                // Iterate over all signatures to match the class name
-                // This is a greedy algorithm, only matches the first item
-                for (int i = 0; i < libSignatures.length; i++) {
-                    if (className.contains(libSignatures[i])) {
-                        matched = true;
-                        // Add to found classes
-                        mLibClassList.add(className);
-                        // Increment this signature match count
-                        signatureCount[i]++;
-                        break;
-                    }
-                }
-                // Add the class to the missing libs list if it doesn't match the filters
-                if (!matched
-                        && (mPackageName != null && !className.startsWith(mPackageName))
-                        && !className.matches(SIG_TO_IGNORE)) {
-                    missingLibs.add(className);
-                }
-            }
-        }
+    private void setLibraryInfo(@NonNull List<SignatureInfo> libraryInfoList, @NonNull View view) {
         Map<String, SpannableStringBuilder> foundLibInfoMap = new ArrayMap<>();
         foundLibInfoMap.putAll(getNativeLibraryInfo(false));
         // Iterate over signatures again but this time list only the found ones.
-        for (int i = 0; i < libSignatures.length; i++) {
-            if (signatureCount[i] == 0) continue;
-            if (foundLibInfoMap.get(libNames[i]) == null) {
+        for (SignatureInfo libraryInfo : libraryInfoList) {
+            if (foundLibInfoMap.get(libraryInfo.label) == null) {
                 // Add the lib info since it isn't added already
-                foundLibInfoMap.put(libNames[i], new SpannableStringBuilder()
-                        .append(getPrimaryText(mActivity, libNames[i]))
-                        .append(getSmallerText(" (" + libTypes[i] + ")")));
+                foundLibInfoMap.put(libraryInfo.label, new SpannableStringBuilder()
+                        .append(getPrimaryText(mActivity, libraryInfo.label))
+                        .append(getSmallerText(" (" + libraryInfo.type + ")")));
             }
             //noinspection ConstantConditions Never null here
-            foundLibInfoMap.get(libNames[i])
+            foundLibInfoMap.get(libraryInfo.label)
                     .append("\n")
-                    .append(getMonospacedText(libSignatures[i]))
-                    .append(getSmallerText(" (" + signatureCount[i] + ")"));
+                    .append(getMonospacedText(libraryInfo.signature))
+                    .append(getSmallerText(" (" + libraryInfo.getCount() + ")"));
         }
         Set<String> foundLibNames = foundLibInfoMap.keySet();
         List<Spannable> foundLibInfoList = new ArrayList<>(foundLibInfoMap.values());
@@ -486,46 +415,25 @@ public class ScannerFragment extends Fragment {
             summary = getResources().getQuantityString(R.plurals.libraries, totalLibsFound, totalLibsFound);
         }
 
-        mActivity.runOnUiThread(() -> {
-            ((TextView) view.findViewById(R.id.libs_title)).setText(summary);
-            ((TextView) view.findViewById(R.id.libs_description)).setText(TextUtils.join(", ", foundLibNames));
-            if (totalLibsFound == 0) return;
-            MaterialCardView libsView = view.findViewById(R.id.libs);
-            libsView.setOnClickListener(v ->
-                    new ScrollableDialogBuilder(mActivity, foundLibsInfo)
-                            .setTitle(new DialogTitleBuilder(mActivity)
-                                    .setTitle(R.string.lib_details)
-                                    .setSubtitle(summary)
-                                    .build())
-                            .setNegativeButton(R.string.ok, null)
-                            .setNeutralButton(R.string.copy, (dialog, which, isChecked) -> {
-                                ClipboardManager clipboard = (ClipboardManager) mActivity.getSystemService(Context.CLIPBOARD_SERVICE);
-                                ClipData clip = ClipData.newPlainText(getString(R.string.signatures), foundLibsInfo);
-                                clipboard.setPrimaryClip(clip);
-                                Snackbar.make(libsView, R.string.copied_to_clipboard, Snackbar.LENGTH_SHORT).show();
-                            })
-                            .show());
-            // Missing libs
-            if (missingLibs.size() > 0) {
-                ((TextView) view.findViewById(R.id.missing_libs_title)).setText(getResources().getQuantityString(R.plurals.missing_signatures, missingLibs.size(), missingLibs.size()));
-                View v = view.findViewById(R.id.missing_libs);
-                v.setVisibility(View.VISIBLE);
-                v.setOnClickListener(v2 -> new SearchableMultiChoiceDialogBuilder<>(mActivity, missingLibs,
-                        ArrayUtils.toCharSequence(missingLibs))
-                        .setTitle(R.string.signatures)
-                        .showSelectAll(false)
+        ((TextView) view.findViewById(R.id.libs_title)).setText(summary);
+        ((TextView) view.findViewById(R.id.libs_description)).setText(TextUtils.join(", ", foundLibNames));
+        if (totalLibsFound == 0) return;
+        MaterialCardView libsView = view.findViewById(R.id.libs);
+        libsView.setOnClickListener(v ->
+                new ScrollableDialogBuilder(mActivity, foundLibsInfo)
+                        .setTitle(new DialogTitleBuilder(mActivity)
+                                .setTitle(R.string.lib_details)
+                                .setSubtitle(summary)
+                                .build())
                         .setNegativeButton(R.string.ok, null)
-                        .setNeutralButton(R.string.send_selected, (dialog, which, selectedItems) -> {
-                            Intent i = new Intent(Intent.ACTION_SEND);
-                            i.setType("message/rfc822");
-                            i.putExtra(Intent.EXTRA_EMAIL, new String[]{"muntashirakon@riseup.net"});
-                            i.putExtra(Intent.EXTRA_SUBJECT, "App Manager: Missing signatures");
-                            i.putExtra(Intent.EXTRA_TEXT, selectedItems.toString());
-                            startActivity(Intent.createChooser(i, getText(R.string.signatures)));
+                        .setNeutralButton(R.string.copy, (dialog, which, isChecked) -> {
+                            ClipboardManager clipboard = (ClipboardManager) mActivity.getSystemService(Context.CLIPBOARD_SERVICE);
+                            ClipData clip = ClipData.newPlainText(getString(R.string.signatures), foundLibsInfo);
+                            clipboard.setPrimaryClip(clip);
+                            Snackbar.make(libsView, R.string.copied_to_clipboard, Snackbar.LENGTH_SHORT).show();
                         })
                         .show());
-            }
-        });
+
     }
 
     @NonNull

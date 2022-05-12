@@ -152,7 +152,6 @@
         <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> trackers with <xliff:g id="class_no" example="50">%2$d</xliff:g> classes</item>
         <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> trackers with <xliff:g id="class_no" example="50">%2$d</xliff:g> classes</item>
     </plurals>
-    <string name="tested_signatures_on_classes_and_time_taken" tools:ignore="PluralsCandidate">Tested <xliff:g id="signature_no" example="342">%1$d</xliff:g> signatures on <xliff:g id="class_no" example="6000">%2$d</xliff:g> classes.\nTime taken <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> iterations).</string>
     <string name="found_trackers">Found Trackers:</string>
     <string name="tracker_details">Tracker details</string>
     <string name="tracker_classes">Tracker classes</string>
