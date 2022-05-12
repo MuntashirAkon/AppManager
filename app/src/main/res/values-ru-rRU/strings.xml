@@ -1252,7 +1252,7 @@
     <string name="backup_volume_unavailable_warning">Выбранный том резервных копий в настоящее время недоступен. Если он находится на внешнем накопителе, подключите его или измените том для резервных копий.</string>
     <string name="open_in_new_window">Новое окно</string>
     <string name="vt_confirm_uploading_file">Файл не найден в базе данных VirusTotal. Вы хотите загрузить его\?</string>
-    <string name="vt_confirm_upload_and_scan">Да, загрузить и отсканировать</string>
+    <string name="vt_confirm_upload_and_scan">Да, загрузить и просканировать</string>
     <string name="type_string_set">Набор строк</string>
     <string name="pref_vt_prompt_before_uploading">Показывать подсказку перед загрузкой файла.</string>
 </resources>
