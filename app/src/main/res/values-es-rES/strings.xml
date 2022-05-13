@@ -1174,4 +1174,5 @@
     <string name="internal">Interno</string>
     <string name="tracker">Rastreador</string>
     <string name="screen_time">Tiempo en Pantalla</string>
+    <string name="open_in_new_window">Nueva ventana</string>
 </resources>
