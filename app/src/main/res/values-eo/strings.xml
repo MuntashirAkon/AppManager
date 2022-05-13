@@ -68,4 +68,14 @@
     <string name="activities">Aktivecoj</string>
     <string name="require_no_permission">Neniu permeso necesas</string>
     <string name="permissions">Uzas permesojn</string>
+    <string name="no_feature">Neniuj funkcioj</string>
+    <string name="uses_feature">Uzas funkciojn</string>
+    <string name="no_providers">Neniuj provizantoj</string>
+    <string name="receivers">Riceviloj</string>
+    <string name="no_receivers">Neniuj riceviloj</string>
+    <string name="providers">Provizantoj</string>
+    <string name="sort_by_last_update">Laste ĝisdatigita</string>
+    <string name="signatures">Subskriboj</string>
+    <string name="sort_by_sha">Subskribo</string>
+    <string name="refresh">Aktualigi</string>
 </resources>
