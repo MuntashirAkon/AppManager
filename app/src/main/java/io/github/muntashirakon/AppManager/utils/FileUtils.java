@@ -34,7 +34,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigInteger;
 import java.nio.charset.Charset;
-import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 
 import io.github.muntashirakon.AppManager.AppManager;
@@ -475,30 +474,5 @@ public final class FileUtils {
             Log.e(TAG, "Failed to apply mode 644 to " + file);
             throw new IOException(e);
         }
-    }
-
-    @NonNull
-    public static String getRelativePath(@NonNull String targetPath, @NonNull String baseDir, @NonNull String separator) {
-        String[] base = baseDir.split(Pattern.quote(separator));
-        String[] target = targetPath.split(Pattern.quote(separator));
-
-        // Count common elements and their length
-        int commonCount = 0, commonLength = 0, maxCount = Math.min(target.length, base.length);
-        while (commonCount < maxCount) {
-            String targetElement = target[commonCount];
-            if (!targetElement.equals(base[commonCount])) break;
-            commonCount++;
-            commonLength += targetElement.length() + 1; // Directory name length plus slash
-        }
-        if (commonCount == 0) return targetPath; // No common path element
-
-        int targetLength = targetPath.length();
-        int dirsUp = base.length - commonCount;
-        StringBuilder relative = new StringBuilder(dirsUp * 3 + targetLength - commonLength + 1);
-        for (int i = 0; i < dirsUp; i++) {
-            relative.append("..").append(separator);
-        }
-        if (commonLength < targetLength) relative.append(targetPath.substring(commonLength));
-        return relative.toString();
     }
 }

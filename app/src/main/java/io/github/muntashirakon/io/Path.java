@@ -593,9 +593,8 @@ public class Path implements Comparable<Path> {
      *
      * @return {@code true} iff the file is accessed using Java File API and
      * is a symbolic link.
-     * @throws IOException If an I/O error occurs while accessing file attributes.
      */
-    public boolean isSymbolicLink() throws IOException {
+    public boolean isSymbolicLink() {
         if (mDocumentFile instanceof ExtendedRawDocumentFile) {
             return Objects.requireNonNull(getFile()).isSymlink();
         }

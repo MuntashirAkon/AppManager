@@ -13,7 +13,6 @@ import androidx.annotation.VisibleForTesting;
 import androidx.annotation.WorkerThread;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.annotation.Retention;
@@ -29,6 +28,7 @@ import java.util.zip.CheckedInputStream;
 import aosp.libcore.util.HexEncoding;
 import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 
 public class DigestUtils {
     @StringDef({CRC32, MD2, MD5, SHA_1, SHA_224, SHA_256, SHA_384, SHA_512})
@@ -56,27 +56,13 @@ public class DigestUtils {
     @WorkerThread
     @NonNull
     public static String getHexDigest(@Algorithm String algo, @NonNull File path) {
-        List<File> allFiles = new ArrayList<>();
-        gatherFiles(allFiles, path);
-        List<String> hashes = new ArrayList<>(allFiles.size());
-        for (File file : allFiles) {
-            try (InputStream fileInputStream = new FileInputStream(file)) {
-                hashes.add(DigestUtils.getHexDigest(algo, fileInputStream));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        if (hashes.size() == 0) return HexEncoding.encodeToString(new byte[0], false /* lowercase */);
-        if (hashes.size() == 1) return hashes.get(0);
-        String fullString = TextUtils.join("", hashes);
-        return getHexDigest(algo, fullString.getBytes());
+        return getHexDigest(algo, Paths.get(path));
     }
 
     @WorkerThread
     @NonNull
     public static String getHexDigest(@Algorithm String algo, @NonNull Path path) {
-        List<Path> allFiles = new ArrayList<>();
-        gatherFiles(allFiles, path);
+        List<Path> allFiles = Paths.getAll(path);
         List<String> hashes = new ArrayList<>(allFiles.size());
         for (Path file : allFiles) {
             try (InputStream fileInputStream = file.openInputStream()) {
@@ -198,36 +184,5 @@ public class DigestUtils {
             l >>= 8;
         }
         return result;
-    }
-
-    // FIXME: 8/5/22 Replace recursion with iteration
-    static void gatherFiles(@NonNull List<File> files, @NonNull File source) {
-        if (source.isDirectory()) {
-            File[] children = source.listFiles();
-            if (children == null || children.length == 0) {
-                return;
-            }
-            for (File child : children) {
-                gatherFiles(files, child);
-            }
-        } else if (source.isFile()) {
-            // Not directory, add it
-            files.add(source);
-        } // else we don't support other type of files
-    }
-
-    static void gatherFiles(@NonNull List<Path> files, @NonNull Path source) {
-        if (source.isDirectory()) {
-            Path[] children = source.listFiles();
-            if (children.length == 0) {
-                return;
-            }
-            for (Path child : children) {
-                gatherFiles(files, child);
-            }
-        } else if (source.isFile()) {
-            // Not directory, add it
-            files.add(source);
-        } // else we don't support other type of files
     }
 }

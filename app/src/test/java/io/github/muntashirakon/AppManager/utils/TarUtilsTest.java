@@ -6,6 +6,7 @@ import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
@@ -26,6 +27,7 @@ import java.util.List;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.io.SplitInputStream;
 
 import static org.junit.Assert.assertArrayEquals;
@@ -261,18 +263,18 @@ public class TarUtilsTest {
         };
         String[] actualPaths = new String[expectedPaths.length];
         for (int i = 0; i < actualPaths.length; ++i) {
-            actualPaths[i] = TarUtils.getRelativePath(absolutes[i], basePath, "/");
+            actualPaths[i] = getRelativePath(absolutes[i], basePath, "/");
         }
         assertArrayEquals(expectedPaths, actualPaths);
     }
 
     @Test
     public void testGetRelativePathsUnix() {
-        assertEquals("stuff/xyz.dat", TarUtils.getRelativePath(new File("/var/data/stuff/xyz.dat"),
+        assertEquals("stuff/xyz.dat", getRelativePath(new File("/var/data/stuff/xyz.dat"),
                 new File("/var/data/"), "/"));
-        assertEquals("../../b/c", TarUtils.getRelativePath(new File("/a/b/c"),
+        assertEquals("../../b/c", getRelativePath(new File("/a/b/c"),
                 new File("/a/x/y/"), "/"));
-        assertEquals("../../b/c", TarUtils.getRelativePath(new File("/m/n/o/a/b/c"),
+        assertEquals("../../b/c", getRelativePath(new File("/m/n/o/a/b/c"),
                 new File("/m/n/o/a/x/y/"), "/"));
     }
 
@@ -282,8 +284,8 @@ public class TarUtilsTest {
         File base = new File("C:\\Windows\\Speech\\Common\\sapisvr.exe");
         File workingBase = new File("C:\\Windows\\Speech\\Common\\");
 
-        assertNotEquals("..\\..\\Boot\\Fonts\\chs_boot.ttf", TarUtils.getRelativePath(target, base, "\\"));
-        assertEquals("..\\..\\Boot\\Fonts\\chs_boot.ttf", TarUtils.getRelativePath(target, workingBase, "\\"));
+        assertNotEquals("..\\..\\Boot\\Fonts\\chs_boot.ttf", getRelativePath(target, base, "\\"));
+        assertEquals("..\\..\\Boot\\Fonts\\chs_boot.ttf", getRelativePath(target, workingBase, "\\"));
     }
 
     @Test
@@ -291,7 +293,7 @@ public class TarUtilsTest {
         File target = new File("C:\\Windows\\Boot\\Fonts\\chs_boot.ttf");
         File base = new File("C:\\Windows\\Speech\\Common\\");
 
-        assertEquals("..\\..\\Boot\\Fonts\\chs_boot.ttf", TarUtils.getRelativePath(target, base, "\\"));
+        assertEquals("..\\..\\Boot\\Fonts\\chs_boot.ttf", getRelativePath(target, base, "\\"));
     }
 
     @Test
@@ -300,8 +302,8 @@ public class TarUtilsTest {
         File base = new File("C:\\Windows\\Speech\\Common\\foo.txt");
         File workingBase = new File("C:\\Windows\\Speech\\Common\\");
 
-        assertNotEquals("..\\..\\Boot\\Fonts", TarUtils.getRelativePath(target, base, "\\"));
-        assertEquals("..\\..\\Boot\\Fonts", TarUtils.getRelativePath(target, workingBase, "\\"));
+        assertNotEquals("..\\..\\Boot\\Fonts", getRelativePath(target, base, "\\"));
+        assertEquals("..\\..\\Boot\\Fonts", getRelativePath(target, workingBase, "\\"));
     }
 
     @Test
@@ -310,8 +312,8 @@ public class TarUtilsTest {
         File base = new File("C:\\foo.txt");
         File workingBase = new File("C:\\");
 
-        assertNotEquals("Windows\\Boot\\Fonts", TarUtils.getRelativePath(target, base, "\\"));
-        assertEquals("Windows\\Boot\\Fonts", TarUtils.getRelativePath(target, workingBase, "\\"));
+        assertNotEquals("Windows\\Boot\\Fonts", getRelativePath(target, base, "\\"));
+        assertEquals("Windows\\Boot\\Fonts", getRelativePath(target, workingBase, "\\"));
     }
 
     @Test
@@ -320,7 +322,7 @@ public class TarUtilsTest {
         File base = new File("C:\\Windows\\Speech\\Common\\");
         String expected = "..\\..\\Boot\\";
 
-        String relPath = TarUtils.getRelativePath(target, base, "\\");
+        String relPath = getRelativePath(target, base, "\\");
         assertEquals(expected, relPath);
     }
 
@@ -328,7 +330,7 @@ public class TarUtilsTest {
     public void testGetRelativePathDifferentDriveLetters() {
         File target = new File("D:\\sources\\recovery\\RecEnv.exe");
         File base = new File("C:\\Java\\workspace\\AcceptanceTests\\Standard test data\\geo\\");
-        assertEquals(target.getAbsolutePath(), TarUtils.getRelativePath(target, base, "\\"));
+        assertEquals(target.getAbsolutePath(), getRelativePath(target, base, "\\"));
     }
 
     @NonNull
@@ -373,7 +375,7 @@ public class TarUtilsTest {
     }
 
     private static void gatherFiles(@NonNull List<String> files, @NonNull Path basePath, @NonNull Path source) {
-        files.add(TarUtils.getRelativePath(source, basePath, File.separator));
+        files.add(Paths.getRelativePath(source, basePath, File.separator));
         if (source.isDirectory()) {
             Path[] children = source.listFiles();
             if (children.length == 0) return;
@@ -381,5 +383,13 @@ public class TarUtilsTest {
                 gatherFiles(files, basePath, child);
             }
         }
+    }
+
+    @VisibleForTesting
+    @NonNull
+    static String getRelativePath(@NonNull File file, @NonNull File basePath, @NonNull String separator) {
+        String baseDir = basePath.toURI().getPath();
+        String targetPath = file.toURI().getPath();
+        return Paths.getRelativePath(targetPath, baseDir, separator);
     }
 }

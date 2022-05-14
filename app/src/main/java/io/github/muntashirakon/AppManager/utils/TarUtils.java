@@ -7,7 +7,6 @@ import android.system.ErrnoException;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringDef;
-import androidx.annotation.VisibleForTesting;
 import androidx.annotation.WorkerThread;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
@@ -31,8 +30,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.io.SplitInputStream;
@@ -86,10 +85,12 @@ public final class TarUtils {
                 tos.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
                 tos.setBigNumberMode(TarArchiveOutputStream.BIGNUMBER_POSIX);
                 Path basePath = source.isDirectory() ? source : source.getParentFile();
-                if (basePath == null) basePath = new Path(AppManager.getContext(), new File("/"));
-                List<Path> files = listAllFiles(basePath, source, filters, exclude, followLinks);
+                if (basePath == null) {
+                    basePath = Paths.get("/");
+                }
+                List<Path> files = Paths.getAll(basePath, source, filters, exclude, followLinks);
                 for (Path file : files) {
-                    String relativePath = getRelativePath(file, basePath);
+                    String relativePath = Paths.getRelativePath(file, basePath);
                     if (relativePath.equals("") || relativePath.equals("/")) continue;
                     // For links, check if followLinks is enabled
                     if (!followLinks && file.isSymbolicLink()) {
@@ -121,16 +122,32 @@ public final class TarUtils {
      * Create a tar file using the given compression method and split it into multiple files based
      * on the supplied split size.
      *
-     * @param type    Compression type
-     * @param sources Source files, sorted properly if there are multiple files.
-     * @param dest    Destination directory
-     * @param filters A list of mutually exclusive regex filters
-     * @param exclude A list of mutually exclusive regex patterns to be excluded
+     * @param type       Compression type
+     * @param sources    Source files, sorted properly if there are multiple files.
+     * @param dest       Destination directory
+     * @param filters    A list of mutually exclusive regex filters
+     * @param exclusions A list of mutually exclusive regex patterns to be excluded
      */
     @WorkerThread
     public static void extract(@NonNull @TarType String type, @NonNull Path[] sources, @NonNull Path dest,
-                               @Nullable String[] filters, @Nullable String[] exclude)
+                               @Nullable String[] filters, @Nullable String[] exclusions)
             throws IOException {
+        // Convert filters into patterns to reduce overheads
+        Pattern[] filterPatterns;
+        if (filters != null) {
+            filterPatterns = new Pattern[filters.length];
+            for (int i = 0; i < filters.length; ++i) {
+                filterPatterns[i] = Pattern.compile(filters[i]);
+            }
+        } else filterPatterns = null;
+        Pattern[] exclusionPatterns;
+        if (exclusions != null) {
+            exclusionPatterns = new Pattern[exclusions.length];
+            for (int i = 0; i < exclusions.length; ++i) {
+                exclusionPatterns[i] = Pattern.compile(exclusions[i]);
+            }
+        } else exclusionPatterns = null;
+        // Run extraction
         try (SplitInputStream sis = new SplitInputStream(sources);
              BufferedInputStream bis = new BufferedInputStream(sis)) {
             InputStream is;
@@ -149,8 +166,8 @@ public final class TarUtils {
                     if (entry.isDirectory()) {
                         file = dest.createDirectories(entry.getName());
                     } else file = dest.createNewArbitraryFile(entry.getName(), null);
-                    if (!entry.isDirectory() && (!isUnderFilter(file, dest, filters)
-                            || willExclude(file, dest, exclude))) {
+                    if (!entry.isDirectory() && (!Paths.isUnderFilter(file, dest, filterPatterns)
+                            || Paths.willExclude(file, dest, exclusionPatterns))) {
                         // Unlike create, there's no efficient way to detect if a directory contains any filters.
                         // Therefore, directory can't be filtered during extraction
                         file.delete();
@@ -190,7 +207,7 @@ public final class TarUtils {
                     }
                 }
                 // Delete unwanted files
-                validateFiles(dest, dest, filters, exclude);
+                validateFiles(dest, dest, filterPatterns, exclusionPatterns);
             } catch (ErrnoException e) {
                 throw new IOException(e);
             } finally {
@@ -199,89 +216,10 @@ public final class TarUtils {
         }
     }
 
-    @VisibleForTesting
-    @NonNull
-    static List<Path> listAllFiles(@NonNull Path basePath, @NonNull Path source, @Nullable String[] filters,
-                                          @Nullable String[] exclude, boolean followLinks) throws IOException {
-        LinkedList<Path> allFiles = new LinkedList<>();
-        if (source.isFile()) { // OsConstants#S_ISREG
-            // Add it and return
-            allFiles.add(source);
-            return allFiles;
-        } else if (source.isDirectory()) { // OsConstants#S_ISDIR
-            if (!followLinks && source.isSymbolicLink()) {
-                // Add the directory only if it's a symbolic link and followLinks is disabled
-                allFiles.add(source);
-                return allFiles;
-            }
-        } else {
-            // No support for any other files
-            return allFiles;
-        }
-        // Top-level directory
-        Path[] fileList = source.listFiles(pathname -> pathname.isDirectory()
-                || (isUnderFilter(pathname, basePath, filters) && !willExclude(pathname, basePath, exclude)));
-        if (fileList.length == 0) {
-            // Add this directory nonetheless if it matches one of the filters, no symlink checks needed
-            if (isUnderFilter(source, basePath, filters) && !willExclude(source, basePath, exclude)) {
-                allFiles.add(source);
-            }
-            return allFiles;
-        } else {
-            // Has children, don't check for filters, just add the directory
-            allFiles.add(source);
-        }
-        // Declare a collection of stored directories
-        LinkedList<Path> dirCheckList = new LinkedList<>();
-        for (Path curFile: fileList) {
-            if (curFile.isFile()) { // OsConstants#S_ISREG
-                allFiles.add(curFile);
-            } else if(curFile.isDirectory()) { // OsConstants#S_ISDIR
-                if (!followLinks && curFile.isSymbolicLink()) {
-                    // Add the directory only if it's a symbolic link and followLinks is disabled
-                    allFiles.add(curFile);
-                } else {
-                    // Not a symlink
-                    dirCheckList.add(curFile);
-                }
-            } // else No support for any other files
-        }
-        while (!dirCheckList.isEmpty()) {
-            Path removedDir = dirCheckList.removeFirst();
-            // Remove the first catalog
-            Path[] removedDirFileList = removedDir.listFiles(pathname -> pathname.isDirectory()
-                    || (isUnderFilter(pathname, basePath, filters) && !willExclude(pathname, basePath, exclude)));
-            if (removedDirFileList.length == 0) {
-                // Add this directory nonetheless if it matches one of the filters, no symlink checks needed
-                if (isUnderFilter(removedDir, basePath, filters) && !willExclude(removedDir, basePath, exclude)) {
-                    allFiles.add(removedDir);
-                }
-                continue;
-            } else {
-                // Has children
-                allFiles.add(removedDir);
-            }
-            for(Path curFile : removedDirFileList) {
-                if (curFile.isFile()) { // OsConstants#S_ISREG
-                    allFiles.add(curFile);
-                } else if(curFile.isDirectory()) { // OsConstants#S_ISDIR
-                    if (!followLinks && curFile.isSymbolicLink()) {
-                        // Add the directory only if it's a symbolic link and followLinks is disabled
-                        allFiles.add(curFile);
-                    } else {
-                        // Not a symlink
-                        dirCheckList.add(curFile);
-                    }
-                } // else No support for any other files
-            }
-        }
-        return allFiles;
-    }
-
     private static void validateFiles(@NonNull Path basePath,
                                       @NonNull Path source,
-                                      @Nullable String[] filters,
-                                      @Nullable String[] exclude) {
+                                      @Nullable Pattern[] filters,
+                                      @Nullable Pattern[] exclusions) {
         if (!source.isDirectory()) {
             // Not a directory, skip
             return;
@@ -290,8 +228,8 @@ public final class TarUtils {
         LinkedList<Path> matchedChildren = new LinkedList<>();
         List<Path> unmatchedChildren = new ArrayList<>();
         for (Path childPath : source.listFiles()) {
-            if (childPath.isDirectory() || (isUnderFilter(childPath, basePath, filters)
-                    && !willExclude(childPath, basePath, exclude))) {
+            if (childPath.isDirectory() || (Paths.isUnderFilter(childPath, basePath, filters)
+                    && !Paths.willExclude(childPath, basePath, exclusions))) {
                 // Matches the filter or it is a directory
                 matchedChildren.add(childPath);
             } else unmatchedChildren.add(childPath);
@@ -303,7 +241,7 @@ public final class TarUtils {
                 source.delete();
             }
             // Create this directory again if it matches one of the filters
-            if (isUnderFilter(source, basePath, filters) && !willExclude(source, basePath, exclude)) {
+            if (Paths.isUnderFilter(source, basePath, filters) && !Paths.willExclude(source, basePath, exclusions)) {
                 source.mkdirs();
             }
             return;
@@ -318,8 +256,8 @@ public final class TarUtils {
             // List matched and unmatched children
             int matchedCount = 0;
             for (Path childPath : removedChild.listFiles()) {
-                if (childPath.isDirectory() || (isUnderFilter(childPath, basePath, filters)
-                        && !willExclude(childPath, basePath, exclude))) {
+                if (childPath.isDirectory() || (Paths.isUnderFilter(childPath, basePath, filters)
+                        && !Paths.willExclude(childPath, basePath, exclusions))) {
                     // Matches the filter or it is a directory
                     matchedChildren.add(childPath);
                     ++matchedCount;
@@ -332,7 +270,7 @@ public final class TarUtils {
                     removedChild.delete();
                 }
                 // Create this directory again if it matches one of the filters
-                if (isUnderFilter(removedChild, basePath, filters) && !willExclude(removedChild, basePath, exclude)) {
+                if (Paths.isUnderFilter(removedChild, basePath, filters) && !Paths.willExclude(removedChild, basePath, exclusions)) {
                     removedChild.mkdirs();
                 }
             }
@@ -342,44 +280,5 @@ public final class TarUtils {
             // No need to check return value as some paths may not exist
             child.delete();
         }
-    }
-
-    private static boolean isUnderFilter(@NonNull Path file, @NonNull Path basePath, @Nullable String[] filters) {
-        if (filters == null) return true;
-        String fileStr = getRelativePath(file, basePath);
-        for (String filter : filters) {
-            if (fileStr.matches(filter)) return true;
-        }
-        return false;
-    }
-
-    private static boolean willExclude(@NonNull Path file, @NonNull Path basePath, @Nullable String[] exclude) {
-        if (exclude == null) return false;
-        String fileStr = getRelativePath(file, basePath);
-        for (String excludeRegex : exclude) {
-            if (fileStr.matches(excludeRegex)) return true;
-        }
-        return false;
-    }
-
-    @NonNull
-    private static String getRelativePath(@NonNull Path file, @NonNull Path basePath) {
-        return getRelativePath(file, basePath, File.separator);
-    }
-
-    @VisibleForTesting
-    @NonNull
-    static String getRelativePath(@NonNull Path file, @NonNull Path basePath, @NonNull String separator) {
-        String baseDir = basePath.getUri().getPath() + (basePath.isDirectory() ? separator : "");
-        String targetPath = file.getUri().getPath() + (file.isDirectory() ? separator : "");
-        return FileUtils.getRelativePath(targetPath, baseDir, separator);
-    }
-
-    @VisibleForTesting
-    @NonNull
-    static String getRelativePath(@NonNull File file, @NonNull File basePath, @NonNull String separator) {
-        String baseDir = basePath.toURI().getPath();
-        String targetPath = file.toURI().getPath();
-        return FileUtils.getRelativePath(targetPath, baseDir, separator);
     }
 }
