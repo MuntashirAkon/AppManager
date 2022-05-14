@@ -468,8 +468,6 @@
     <string name="disabled_app">Désactivé</string>
     <string name="key_name_cannot_be_null">Le nom de clé ne peut pas être vide</string>
     <string name="error_evaluating_input">Impossible d\'évaluer la saisie</string>
-    <string name="tested_signatures_on_classes_and_time_taken"><xliff:g id="signature_no" example="342">%1$d</xliff:g> signatures testées sur <xliff:g id="class_no" example="6000">%2$d</xliff:g> classes.
-\nDurée : <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> itérations).</string>
     <string name="error_verbose_pin_shortcut">Le lanceur actuel ne prend pas en charge l\'épinglage des raccourcis. Impossible de créer un raccourci.</string>
     <string name="type_string">Caractères</string>
     <string name="type_long">Nombre entier long</string>

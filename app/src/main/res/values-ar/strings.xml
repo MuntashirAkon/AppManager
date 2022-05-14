@@ -41,8 +41,6 @@
     <string name="tracker_classes">فئات التتبع</string>
     <string name="tracker_details">تفاصيل برمجيات التتبع</string>
     <string name="found_trackers">برمجيات التتبع التي تم العثور عليها:</string>
-    <string name="tested_signatures_on_classes_and_time_taken">تم اختبار <xliff:g id="signature_no" example="342">%1$d</xliff:g> التوقيعات على <xliff:g id="class_no" example="6000">%2$d</xliff:g> الفئات.
-\nالوقت الذي استغرق <xliff:g id="time" example="10000">%3$d</xliff:g> مللي ثانية (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> التكرارات).</string>
     <string name="toggle_class_listing">تبديل قائمة الفصل</string>
     <string name="class_viewer">عارض الفصل</string>
     <string name="word_wrap">تفعيل التفاف النص</string>

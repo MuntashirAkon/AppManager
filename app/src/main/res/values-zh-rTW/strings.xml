@@ -26,8 +26,6 @@
     <plurals name="main_list_date_days">
         <item quantity="other"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> 天</item>
     </plurals>
-    <string name="tested_signatures_on_classes_and_time_taken">在 <xliff:g id="class_no" example="6000"> %2$d </xliff:g> 類上測試 <xliff:g id="signature_no" example="342"> %1$d </xliff:g> 簽名。
-\n所佔用時間 <xliff:g id="time" example="10000"> %3$d </xliff:g> 毫秒 （<xliff:g id="iteration_no" example="100000"> %4$d </xliff:g> 反覆運算）。</string>
     <plurals name="other_trackers_and_classes">
         <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> 帶有 <xliff:g id="class_no" example="50"> %2$d </xliff:g> 類的追蹤器</item>
     </plurals>

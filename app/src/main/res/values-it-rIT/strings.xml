@@ -282,8 +282,6 @@
         <item quantity="one"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> giorno</item>
         <item quantity="other"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> giorni</item>
     </plurals>
-    <string name="tested_signatures_on_classes_and_time_taken">Testato <xliff:g id="signature_no" example="342">%1$d</xliff:g> firme con le classi <xliff:g id="class_no" example="6000">%2$d</xliff:g>
-\nTempo impiegato <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> iterazioni).</string>
     <plurals name="other_trackers_and_classes">
         <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g>tracker con la classe <xliff:g id="class_no" example="50">%2$d</xliff:g></item>
         <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> tracker con le classi<xliff:g id="class_no" example="50">%2$d</xliff:g></item>

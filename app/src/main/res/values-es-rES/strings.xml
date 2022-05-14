@@ -710,8 +710,6 @@
     <string name="off">Apagado</string>
     <string name="on">Encendido</string>
     <string name="profile_state_msg">Estado personalizado de encendido/apagado para este perfil</string>
-    <string name="tested_signatures_on_classes_and_time_taken">Se pusieron a prueba <xliff:g id="signature_no" example="342">%1$d</xliff:g> firmas en <xliff:g id="class_no" example="6000">%2$d</xliff:g> clases.
-\nEl proceso demoró <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> iteraciones).</string>
     <string name="interceptor">Interceptor</string>
     <string name="backup_internal_data_description">Hacer copia de respaldo de las carpetas de datos internos.</string>
     <string name="backup_apk_files_description">Respaldo solo de los archivos APK del directorio de origen, «splits» incluidos.</string>

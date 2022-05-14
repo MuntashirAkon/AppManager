@@ -952,8 +952,6 @@
 \nTwitter: https://twitter.com/AppManagerNews</string>
     <string name="community">Cộng đồng</string>
     <string name="native_library_dir">Thư mục thư viện JNI gốc</string>
-    <string name="tested_signatures_on_classes_and_time_taken" tools:ignore="PluralsCandidate">Đã thử nghiệm <xliff:g id="signature_no" example="342">%1$d</xliff:g> chữ ký trên <xliff:g id="class_no" example="6000">%2$d</xliff:g> class.
-\nĐã mất khoảng thời gian <xliff:g id="time" example="10000">%3$d</xliff:g> mili giây (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> lần lặp lại).</string>
     <string name="input_key">Nhập mã (ở hệ thập lục phân)</string>
     <string name="installer_app_message">Chọn <b>Chọn</b> để chọn từ các ứng dụng đã cài đặt hoặc chọn <b>Tuỳ chỉnh</b> để chỉ định một tên gói tuỳ chỉnh.</string>
     <string name="verified_using_unreliable_hash">Đã xác minh bằng hash không đáng tin cậy</string>

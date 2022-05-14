@@ -111,8 +111,6 @@
     <string name="word_wrap">Zeilenumbruch ein-/ausschalten</string>
     <string name="class_viewer">Klassen-Betrachter</string>
     <string name="toggle_class_listing">Auflisten von Klassen ein-/ausschalten</string>
-    <string name="tested_signatures_on_classes_and_time_taken">Geprüfte <xliff:g id="signature_no" example="342">%1$d</xliff:g> Signaturen auf <xliff:g id="class_no" example="6000">%2$d</xliff:g> Klassen.
-\nBenötigte Zeit der <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> Durchläufe).</string>
     <string name="found_trackers">Gefundene Verfolger:</string>
     <string name="tracker_details">Verfolger-Details</string>
     <string name="tracker_classes">Verfolger-Klassen</string>

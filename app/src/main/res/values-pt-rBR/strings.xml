@@ -98,8 +98,6 @@
     <string name="word_wrap">Alternar quebra de palavra</string>
     <string name="class_viewer">Visualizador de Classe</string>
     <string name="toggle_class_listing">Alternar Lista de Classes</string>
-    <string name="tested_signatures_on_classes_and_time_taken">Testado <xliff:g id="signature_no" example="342">%1$d</xliff:g> assinaturas em <xliff:g id="class_no" example="6000">%2$d</xliff:g> classes.
-\nTempo levado <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> iterações).</string>
     <string name="found_trackers">Rastreadores Encontrados:</string>
     <string name="tracker_details">Detalhes do reastreador</string>
     <string name="tracker_classes">Classes rastreadoras</string>

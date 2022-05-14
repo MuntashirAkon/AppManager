@@ -471,8 +471,6 @@
     <string name="export_blocking_rules">Eksporter blokkeringsregler</string>
     <string name="disable_background">Forhindre bakgrunnskjøring</string>
     <string name="found_trackers">Fant disse sporerne:</string>
-    <string name="tested_signatures_on_classes_and_time_taken">Testet <xliff:g id="signature_no" example="342">%1$d</xliff:g> signaturer på <xliff:g id="class_no" example="6000">%2$d</xliff:g> klasser.
-\nTidsforløp <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> gjentagelser).</string>
     <plurals name="other_trackers_and_classes">
         <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> sporere med <xliff:g id="class_no" example="50">%2$d</xliff:g> klasser</item>
         <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> sporere med <xliff:g id="class_no" example="50">%2$d</xliff:g> klasser</item>

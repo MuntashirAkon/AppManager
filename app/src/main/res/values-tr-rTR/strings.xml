@@ -433,8 +433,6 @@
     <string name="test_only">Yalnızca test</string>
     <string name="debuggable">Hata ayıklanabilir</string>
     <string name="go">Git</string>
-    <string name="tested_signatures_on_classes_and_time_taken"><xliff:g id="class_no" example="6000">%2$d</xliff:g> sınıfta <xliff:g id="signature_no" example="342">%1$d</xliff:g> imza test edildi.
-\n<xliff:g id="time" example="10000">%3$d</xliff:g> ms zaman aldı (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> yineleme).</string>
     <string name="split_feature_name">Özellik: <xliff:g id="feature_name" example="Visualizer">%1$s</xliff:g></string>
     <string name="export_blocking_rules">Engelleme Kurallarını Dışa Aktar</string>
     <string name="disable_background">Arka planda çalışmayı engelle</string>

@@ -109,12 +109,8 @@
     <plurals name="tracker_and_classes">
         <item quantity="one">1 sledovač s <xliff:g id="class_no" example="50">%1$d</xliff:g> třídou</item>
         <item quantity="few">1 sledovač s <xliff:g id="class_no" example="50">%1$d</xliff:g> třídami</item>
-        <item quantity="other"></item>
+        <item quantity="other"/>
     </plurals>
-    <string name="tested_signatures_on_classes_and_time_taken" tools:ignore="PluralsCandidate">Testováno <xliff:g id="signature_no" example="342">%1$d</xliff:g> podpisy na
-\n<xliff:g id="class_no" example="6000">%2$d</xliff:g> třídách
-\nPřevzatý čas <xliff:g id="time" example="10000">%3$d</xliff:g> ms (
-\n<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> iteracemi).</string>
     <string name="obb_size">Obb</string>
     <string name="found_trackers">Najít sledovače:</string>
     <string name="all_classes">Všechny třídy</string>

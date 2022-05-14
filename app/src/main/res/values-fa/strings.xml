@@ -105,10 +105,6 @@
     <string name="tracker_details">جزئیات ردیاب</string>
     <string name="ecc">رمزنگاری منحنی بیضوی</string>
     <string name="found_trackers">ردیاب‌های یافت شده:</string>
-    <string name="tested_signatures_on_classes_and_time_taken">تست شده <xliff:g id="signature_no" example="342">%1$d</xliff:g>
-\nامضا در <xliff:g id="class_no" example="6000">%2$d</xliff:g> کلاس ها.
-\nزمان استفاده شده <xliff:g id="time" example="10000">%3$d</xliff:g>
-\nام اس (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> تکرارها).</string>
     <plurals name="other_trackers_and_classes">
         <item quantity="one"><xliff:g id="tracker_no" example="8"> %1$d </xliff:g> ردیاب با کلاس‌های <xliff:g id="class_no" example="50"> %2$d </xliff:g></item>
         <item quantity="other"><xliff:g id="tracker_no" example="8"> %1$d </xliff:g> ردیاب با کلاس‌های <xliff:g id="class_no" example="50"> %2$d </xliff:g></item>
@@ -1113,5 +1109,5 @@
     <string name="toggle_internet">استفاده از اینترنت</string>
     <string name="vt_failed">VirusTotal: ناموفق بود</string>
     <string name="vt_checking">VirusTotal: در حال بررسی…</string>
-    <string name="intent_firewall"></string>
+    <string name="intent_firewall"/>
 </resources>

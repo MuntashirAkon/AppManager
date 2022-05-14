@@ -224,8 +224,6 @@
     <string name="tracker_classes">ट्रैकर क्लासेज</string>
     <string name="tracker_details">ट्रैकर विवरण</string>
     <string name="found_trackers">ट्रैकर्स मिले:</string>
-    <string name="tested_signatures_on_classes_and_time_taken">टेस्ट किया <xliff:g id="signature_no" example="342">%1$d</xliff:g> हस्ताक्षरों को <xliff:g id="class_no" example="6000">%2$d</xliff:g> क्लासेज पर ।
-\nसमय लिया <xliff:g id="time" example="10000">%3$d</xliff:g> मिलिसेकंड (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> पुनरावृत्तियां).</string>
     <string name="toggle_class_listing">टॉगल वर्ग सूचीकरण</string>
     <string name="class_viewer">क्लास दर्शक</string>
     <string name="word_wrap">वर्ड व्रैप चालू/बंद करें</string>

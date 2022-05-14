@@ -156,8 +156,6 @@
     <plurals name="other_trackers_and_classes">
         <item quantity="other"><xliff:g id="class_no" example="50">%2$d</xliff:g> 클래스가 있는 <xliff:g id="tracker_no" example="8">%1$d</xliff:g>개 추적기</item>
     </plurals>
-    <string name="tested_signatures_on_classes_and_time_taken" tools:ignore="PluralsCandidate"><xliff:g id="class_no" example="6000">%2$d</xliff:g> 클래스에서 <xliff:g id="signature_no" example="342">%1$d</xliff:g>개 서명을 테스트했습니다.
-\n<xliff:g id="time" example="10000">%3$d</xliff:g> ms가 소요되었습니다(<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> 반복).</string>
     <string name="grant_usage_acess_message">앱 사용량 정보를 표시하는 데 사용됩니다.</string>
     <string name="usage_weekly">매주</string>
     <string name="usage_access">사용량 접근권한</string>

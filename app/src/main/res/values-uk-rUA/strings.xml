@@ -213,8 +213,6 @@
     <string name="rules_not_applied">Правила не застосовані</string>
     <string name="error_evaluating_input">Не вдалося оцінити вхідні дані</string>
     <string name="shared_prefs">Спільні налаштування</string>
-    <string name="tested_signatures_on_classes_and_time_taken">Протестовано <xliff:g id="signature_no" example="342">%1$d</xliff:g> підписи в <xliff:g id="class_no" example="6000">%2$d</xliff:g> класах.
-\nВитрачений час <xliff:g id="time" example="10000">%3$d</xliff:g> мс (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> ітерацій).</string>
     <plurals name="main_list_date_days">
         <item quantity="one"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> день</item>
         <item quantity="few"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> дні</item>

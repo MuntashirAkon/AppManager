@@ -111,8 +111,6 @@
     <string name="word_wrap">自动换行</string>
     <string name="class_viewer">类查看器</string>
     <string name="toggle_class_listing">切换类列表</string>
-    <string name="tested_signatures_on_classes_and_time_taken">测试了 <xliff:g id="signature_no" example="342">%1$d</xliff:g> 特征码于<xliff:g id="class_no" example="6000">%2$d</xliff:g> 个 classes。
-\n耗费时间 <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> 迭代)。</string>
     <string name="found_trackers">已找到追踪器:</string>
     <string name="tracker_details">追踪器详细信息</string>
     <string name="tracker_classes">追踪器类</string>

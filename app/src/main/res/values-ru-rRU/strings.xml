@@ -111,8 +111,6 @@
     <string name="word_wrap">Перенос слов</string>
     <string name="class_viewer">Просмотр классов</string>
     <string name="toggle_class_listing">Переключить список классов</string>
-    <string name="tested_signatures_on_classes_and_time_taken">Протестировано <xliff:g id="signature_no" example="342">%1$d</xliff:g> подписей в <xliff:g id="class_no" example="6000">%2$d</xliff:g> классах.
-\nЗатраченное время <xliff:g id="time" example="10000">%3$d</xliff:g> мс (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> итераций).</string>
     <string name="found_trackers">Найденные трекеры:</string>
     <string name="tracker_details">О трекере</string>
     <string name="tracker_classes">Классы трекера</string>

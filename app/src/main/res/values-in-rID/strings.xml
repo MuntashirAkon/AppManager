@@ -186,8 +186,6 @@
     <string name="tracker_classes">Class tracker</string>
     <string name="tracker_details">Rincian tracker</string>
     <string name="found_trackers">Tracker ditemukan:</string>
-    <string name="tested_signatures_on_classes_and_time_taken">Telah diuji tanda tangan <xliff:g id="signature_no" example="342">%1$d</xliff:g> pada kelas <xliff:g id="class_no" example="6000">%2$d</xliff:g>.
-\nWaktu terpakai <xliff:g id="time" example="10000">%3$d</xliff:g> milidetik (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> pengualngan).</string>
     <plurals name="other_trackers_and_classes">
         <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> tracker dengan <xliff:g id="class_no" example="50">%2$d</xliff:g> class</item>
     </plurals>

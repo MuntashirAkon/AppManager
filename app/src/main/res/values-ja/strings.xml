@@ -119,8 +119,6 @@
     <plurals name="other_trackers_and_classes">
         <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g>個のトラッカーに<xliff:g id="class_no" example="50">%2$d</xliff:g>個のクラス</item>
     </plurals>
-    <string name="tested_signatures_on_classes_and_time_taken"><xliff:g id="signature_no" example="342">%1$d</xliff:g>件の定義リストで<xliff:g id="class_no" example="6000">%2$d</xliff:g>個のクラスを検証しました.
-\n計測時間: <xliff:g id="time" example="10000">%3$d</xliff:g> ms (<xliff:g id="iteration_no" example="100000">%4$d</xliff:g> 反復).</string>
     <string name="found_trackers">見つかったトラッカー:</string>
     <string name="tracker_details">トラッカーの詳細</string>
     <string name="tracker_classes">トラッカーのクラス</string>
