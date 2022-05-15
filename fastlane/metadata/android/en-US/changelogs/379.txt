@@ -1,7 +1,0 @@
-F-Droid doesn't support extended changelog. View in-app changelog for a more helpful changelog.
-- 1-Click Ops: Add backup/restore
-- AppInfo: MagiskHide
-- Backup/restore app installer, netpolicy, deviceidle, magiskhide, notification access and URI grants
-- Profile: Grant/revoke permissions
-- Option to launch services
-and various bug fixes and performance improvements.
