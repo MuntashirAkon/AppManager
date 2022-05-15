@@ -261,9 +261,10 @@ public class Path implements Comparable<Path> {
     /**
      * Return the last segment of this path.
      */
-    @Nullable
+    @NonNull
     public String getName() {
-        return mDocumentFile.getName();
+        // Last path segment is required.
+        return Objects.requireNonNull(mDocumentFile.getName());
     }
 
     /**
@@ -870,7 +871,8 @@ public class Path implements Comparable<Path> {
         Path[] ss = listFiles();
         ArrayList<Path> files = new ArrayList<>();
         for (Path s : ss) {
-            if (s.getName() != null && (filter == null || filter.accept(this, s.getName()))) {
+            s.getName();
+            if (filter == null || filter.accept(this, s.getName())) {
                 files.add(s);
             }
         }
@@ -882,9 +884,8 @@ public class Path implements Comparable<Path> {
         Path[] ss = listFiles();
         ArrayList<String> files = new ArrayList<>();
         for (Path s : ss) {
-            if (s.getName() != null) {
-                files.add(s.getName());
-            }
+            s.getName();
+            files.add(s.getName());
         }
         return files.toArray(new String[0]);
     }
@@ -894,7 +895,8 @@ public class Path implements Comparable<Path> {
         Path[] ss = listFiles();
         ArrayList<String> files = new ArrayList<>();
         for (Path s : ss) {
-            if (s.getName() != null && (filter == null || filter.accept(s))) {
+            s.getName();
+            if (filter == null || filter.accept(s)) {
                 files.add(s.getName());
             }
         }
@@ -906,7 +908,8 @@ public class Path implements Comparable<Path> {
         Path[] ss = listFiles();
         ArrayList<String> files = new ArrayList<>();
         for (Path s : ss) {
-            if (s.getName() != null && (filter == null || filter.accept(s, s.getName()))) {
+            s.getName();
+            if (filter == null || filter.accept(s, s.getName())) {
                 files.add(s.getName());
             }
         }

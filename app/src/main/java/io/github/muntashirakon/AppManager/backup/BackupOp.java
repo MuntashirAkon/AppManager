@@ -27,7 +27,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.regex.Pattern;
 
 import io.github.muntashirakon.AppManager.AppManager;
@@ -261,7 +260,7 @@ class BackupOp implements Closeable {
             throw new BackupException("Failed to encrypt " + Arrays.toString(sourceFiles), e);
         }
         for (Path file : sourceFiles) {
-            mChecksum.add(Objects.requireNonNull(file.getName()), DigestUtils.getHexDigest(mMetadata.checksumAlgo, file));
+            mChecksum.add(file.getName(), DigestUtils.getHexDigest(mMetadata.checksumAlgo, file));
         }
     }
 
@@ -293,7 +292,7 @@ class BackupOp implements Closeable {
                 throw new BackupException("Failed to encrypt " + Arrays.toString(dataFiles));
             }
             for (Path file : dataFiles) {
-                mChecksum.add(Objects.requireNonNull(file.getName()), DigestUtils.getHexDigest(mMetadata.checksumAlgo, file));
+                mChecksum.add(file.getName(), DigestUtils.getHexDigest(mMetadata.checksumAlgo, file));
             }
         }
     }
@@ -347,7 +346,7 @@ class BackupOp implements Closeable {
             throw new BackupException("Failed to encrypt " + Arrays.toString(backedUpKeyStoreFiles), e);
         }
         for (Path file : backedUpKeyStoreFiles) {
-            mChecksum.add(Objects.requireNonNull(file.getName()), DigestUtils.getHexDigest(mMetadata.checksumAlgo, file));
+            mChecksum.add(file.getName(), DigestUtils.getHexDigest(mMetadata.checksumAlgo, file));
         }
     }
 
@@ -463,7 +462,7 @@ class BackupOp implements Closeable {
             // Overwrite with the new file
             miscFile = mBackupFile.getMiscFile(mMetadata.crypto);
             // Store checksum
-            mChecksum.add(Objects.requireNonNull(miscFile.getName()), DigestUtils.getHexDigest(mMetadata.checksumAlgo, miscFile));
+            mChecksum.add(miscFile.getName(), DigestUtils.getHexDigest(mMetadata.checksumAlgo, miscFile));
         } catch (IOException e) {
             throw new BackupException("Couldn't get misc.am.tsv for generating checksum", e);
         }
@@ -481,7 +480,7 @@ class BackupOp implements Closeable {
             // Overwrite with the new file
             rulesFile = mBackupFile.getRulesFile(mMetadata.crypto);
             // Store checksum
-            mChecksum.add(Objects.requireNonNull(rulesFile.getName()), DigestUtils.getHexDigest(mMetadata.checksumAlgo, rulesFile));
+            mChecksum.add(rulesFile.getName(), DigestUtils.getHexDigest(mMetadata.checksumAlgo, rulesFile));
         } catch (IOException e) {
             throw new BackupException("Rules backup is requested but encountered an error during fetching rules.", e);
         }

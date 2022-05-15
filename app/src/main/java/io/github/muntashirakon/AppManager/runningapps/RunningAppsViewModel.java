@@ -100,7 +100,7 @@ public class RunningAppsViewModel extends AndroidViewModel {
             }
             String sha256 = DigestUtils.getHexDigest(DigestUtils.SHA_256, proxyFile);
             try (InputStream is = proxyFile.openInputStream()) {
-                mVt.fetchReportsOrScan(Objects.requireNonNull(proxyFile.getName()), proxyFile.length(), is, sha256,
+                mVt.fetchReportsOrScan(proxyFile.getName(), proxyFile.length(), is, sha256,
                         new VirusTotal.FullScanResponseInterface() {
                             @Override
                             public boolean scanFile() {
