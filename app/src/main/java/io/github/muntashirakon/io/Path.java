@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.io;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.UriPermission;
@@ -36,10 +37,8 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.zip.ZipFile;
 
 import io.github.muntashirakon.AppManager.AppManager;
@@ -58,29 +57,63 @@ import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 public class Path implements Comparable<Path> {
     public static final String TAG = Path.class.getSimpleName();
 
-    private static final Set<String> EXCLUSIVE_ACCESS_PATHS = new HashSet<String>() {{
+    private static final List<Boolean> EXCLUSIVE_ACCESS_GRANTED = new ArrayList<>();
+    private static final List<String> EXCLUSIVE_ACCESS_PATHS = new ArrayList<String>() {{
         // We cannot use Path API here
         // Read-only
         add(Environment.getRootDirectory().getAbsolutePath());
+        EXCLUSIVE_ACCESS_GRANTED.add(true);
         add(OsEnvironment.getDataDirectoryRaw() + "/app");
+        EXCLUSIVE_ACCESS_GRANTED.add(true);
         add(OsEnvironment.getProductDirectoryRaw());
+        EXCLUSIVE_ACCESS_GRANTED.add(true);
         add(OsEnvironment.getVendorDirectoryRaw());
+        EXCLUSIVE_ACCESS_GRANTED.add(true);
         // Read-write
         Context context = AppManager.getContext();
         add(Objects.requireNonNull(context.getFilesDir().getParentFile()).getAbsolutePath());
+        EXCLUSIVE_ACCESS_GRANTED.add(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             add(context.createDeviceProtectedStorageContext().getDataDir().getAbsolutePath());
+            EXCLUSIVE_ACCESS_GRANTED.add(true);
         }
         File[] extDirs = context.getExternalCacheDirs();
         if (extDirs != null) {
             for (File dir : extDirs) {
                 add(Objects.requireNonNull(dir.getParentFile()).getAbsolutePath());
+                EXCLUSIVE_ACCESS_GRANTED.add(true);
             }
         }
         if (PermissionUtils.hasStoragePermission(context)) {
-            // FIXME: 7/5/22 From A11, no access to the /sdcard/Android directory
-            add("/sdcard");
-            add("/storage/emulated/" + UserHandleHidden.myUserId());
+            int userId = UserHandleHidden.myUserId();
+            String[] cards;
+            if (userId == 0) {
+                cards = new String[]{
+                        "/sdcard",
+                        "/storage/emulated/" + userId
+                };
+            } else cards = new String[]{"/storage/emulated/" + userId};
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                // Add Android/data and Android/obb to the exemption list
+                boolean canInstallApps = PermissionUtils.hasPermission(context, Manifest.permission.REQUEST_INSTALL_PACKAGES);
+                for (String card : cards) {
+                    add(card + "/Android/data");
+                    EXCLUSIVE_ACCESS_GRANTED.add(false);
+                    if (!canInstallApps) {
+                        add(card + "/Android/obb");
+                        EXCLUSIVE_ACCESS_GRANTED.add(false);
+                    }
+                }
+            }
+            // Lowest priority
+            for (String card : cards) {
+                add(card);
+                EXCLUSIVE_ACCESS_GRANTED.add(true);
+            }
+        }
+        // Assert sizes
+        if (size() != EXCLUSIVE_ACCESS_GRANTED.size()) {
+            throw new RuntimeException();
         }
     }};
 
@@ -101,8 +134,13 @@ public class Path implements Comparable<Path> {
     }
 
     private static boolean needPrivilegedAccess(@NonNull String path) {
+        for (int i = 0; i < EXCLUSIVE_ACCESS_PATHS.size(); ++i) {
+            if (path.startsWith(EXCLUSIVE_ACCESS_PATHS.get(i))) {
+                // May need no privileged access
+                return EXCLUSIVE_ACCESS_GRANTED.get(i);
+            }
+        }
         for (String p : EXCLUSIVE_ACCESS_PATHS) {
-            // FIXME: 7/5/22 Check exclusively for directory
             if (path.startsWith(p)) {
                 // Need no privileged access
                 return false;
