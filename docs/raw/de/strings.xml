@@ -1208,4 +1208,5 @@
 \nWenn der Status von \\hyperref[subsubsec:profile-state]{Status} \\textit{Ein} ist, werden die Pakete gesichert, und wenn der Status
 \n\\textit{Aus}, werden die Pakete wiederhergestellt. Die Option kann deaktiviert werden, indem Sie auf die Schaltfläche \\textit{deaktiviert} im
 \ndem Eingabedialog.</string>
+    <string name="pages$app-details-page$$shared-libs-tab-title">Registerkarte Gemeinsame Bibliotheken</string>
 </resources>
