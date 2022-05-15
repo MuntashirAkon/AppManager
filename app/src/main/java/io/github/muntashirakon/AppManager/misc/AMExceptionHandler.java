@@ -34,8 +34,8 @@ public class AMExceptionHandler implements Thread.UncaughtExceptionHandler {
         for (StackTraceElement traceElement : arr) {
             report.append("    at ").append(traceElement.toString()).append("\n");
         }
-        Throwable cause = e.getCause();
-        if (cause != null) {
+        Throwable cause = e;
+        while((cause = cause.getCause()) != null) {
             report.append(" Caused by: ").append(cause).append("\n");
             arr = cause.getStackTrace();
             for (StackTraceElement stackTraceElement : arr) {
