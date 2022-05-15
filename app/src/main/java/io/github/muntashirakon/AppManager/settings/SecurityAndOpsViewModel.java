@@ -16,7 +16,7 @@ import androidx.lifecycle.MutableLiveData;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 
-public class SecurityAndOpsViewModel extends AndroidViewModel {
+public class SecurityAndOpsViewModel extends AndroidViewModel implements Ops.AdbConnectionInterface {
     public static final String TAG = SecurityAndOpsViewModel.class.getSimpleName();
 
     private boolean mIsAuthenticating = false;
@@ -66,6 +66,7 @@ public class SecurityAndOpsViewModel extends AndroidViewModel {
         });
     }
 
+    @Override
     @AnyThread
     public void connectAdb(int port) {
         executor.submit(() -> {
@@ -76,6 +77,7 @@ public class SecurityAndOpsViewModel extends AndroidViewModel {
         });
     }
 
+    @Override
     @AnyThread
     @RequiresApi(Build.VERSION_CODES.R)
     public void pairAdb(@Nullable String pairingCode, int port) {

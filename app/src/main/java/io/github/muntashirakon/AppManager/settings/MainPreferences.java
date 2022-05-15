@@ -15,7 +15,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.WorkerThread;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.collection.ArrayMap;
 import androidx.core.app.ActivityCompat;
@@ -105,7 +106,6 @@ public class MainPreferences extends PreferenceFragment {
     private String currentMode;
     private MainPreferencesViewModel model;
     private int threadCount;
-    private final ExecutorService executor = Executors.newFixedThreadPool(1);
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -175,6 +175,7 @@ public class MainPreferences extends PreferenceFragment {
         screenLock.setChecked(AppPref.getBoolean(AppPref.PrefKey.PREF_ENABLE_SCREEN_LOCK_BOOL));
         // Mode of operation
         Preference mode = Objects.requireNonNull(findPreference("mode_of_operations"));
+        AlertDialog modeOfOpsAlertDialog = UIUtils.getProgressDialog(activity, getString(R.string.loading));
         final String[] modes = getResources().getStringArray(R.array.modes);
         currentMode = AppPref.getString(AppPref.PrefKey.PREF_MODE_OF_OPS_STR);
         // Backward compatibility for v2.6.0
@@ -199,13 +200,8 @@ public class MainPreferences extends PreferenceFragment {
                     .setPositiveButton(R.string.apply, (dialog, which) -> {
                         AppPref.set(AppPref.PrefKey.PREF_MODE_OF_OPS_STR, currentMode);
                         mode.setSummary(modes[MODE_NAMES.indexOf(currentMode)]);
-                        executor.submit(() -> {
-                            Ops.init(activity, true);
-                            if (isVisible()) {
-                                mode.setSummary(getString(R.string.mode_of_op_with_inferred_mode_of_op,
-                                        modes[MODE_NAMES.indexOf(currentMode)], getInferredMode()));
-                            }
-                        });
+                        modeOfOpsAlertDialog.show();
+                        model.setModeOfOps();
                     })
                     .setNegativeButton(R.string.cancel, null)
                     .show();
@@ -213,7 +209,7 @@ public class MainPreferences extends PreferenceFragment {
         });
         Preference usersPref = Objects.requireNonNull(findPreference("selected_users"));
         usersPref.setOnPreferenceClickListener(preference -> {
-            executor.submit(() -> model.loadAllUsers());
+            model.loadAllUsers();
             return true;
         });
         // Enable/disable features
@@ -309,7 +305,7 @@ public class MainPreferences extends PreferenceFragment {
         // About device
         ((Preference) Objects.requireNonNull(findPreference("about_device")))
                 .setOnPreferenceClickListener(preference -> {
-                    executor.submit(() -> model.loadDeviceInfo(new DeviceInfo2(activity)));
+                    model.loadDeviceInfo(new DeviceInfo2(activity));
                     return true;
                 });
         // About
@@ -327,7 +323,7 @@ public class MainPreferences extends PreferenceFragment {
         // Changelog
         ((Preference) Objects.requireNonNull(findPreference("changelog")))
                 .setOnPreferenceClickListener(preference -> {
-                    executor.submit(() -> model.loadChangeLog());
+                    model.loadChangeLog();
                     return true;
                 });
         // Authorization Management
@@ -373,6 +369,31 @@ public class MainPreferences extends PreferenceFragment {
                         Utils.relaunchApp(activity);
                     })
                     .show();
+        });
+        // Mode of ops
+        model.getModeOfOpsStatus().observe(this, status -> {
+            switch (status) {
+                case Ops.STATUS_SUCCESS:
+                case Ops.STATUS_FAILED:
+                    modeOfOpsAlertDialog.dismiss();
+                    mode.setSummary(getString(R.string.mode_of_op_with_inferred_mode_of_op,
+                            modes[MODE_NAMES.indexOf(currentMode)], getInferredMode()));
+                    return;
+                case Ops.STATUS_DISPLAY_WIRELESS_DEBUGGING:
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        model.autoConnectAdb(Ops.STATUS_DISPLAY_PAIRING);
+                        return;
+                    } // fall-through
+                case Ops.STATUS_DISPLAY_PAIRING:
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        modeOfOpsAlertDialog.dismiss();
+                        Ops.connectWirelessDebugging(activity, model);
+                        return;
+                    } // fall-through
+                case Ops.STATUS_DISPLAY_CONNECT:
+                    modeOfOpsAlertDialog.dismiss();
+                    Ops.connectAdbInput(activity, model);
+            }
         });
         // Changelog
         model.getChangeLog().observe(this, changeLog -> new ScrollableDialogBuilder(activity, changeLog, true)
@@ -435,45 +456,86 @@ public class MainPreferences extends PreferenceFragment {
     }
 
 
-    public static class MainPreferencesViewModel extends AndroidViewModel {
+    public static class MainPreferencesViewModel extends AndroidViewModel implements Ops.AdbConnectionInterface {
+        private final ExecutorService mExecutor = Executors.newFixedThreadPool(1);
+
         public MainPreferencesViewModel(@NonNull Application application) {
             super(application);
         }
 
-        private final MutableLiveData<List<UserInfo>> selectUsers = new MutableLiveData<>();
+        private final MutableLiveData<List<UserInfo>> mSelectUsers = new MutableLiveData<>();
 
         public LiveData<List<UserInfo>> selectUsers() {
-            return selectUsers;
+            return mSelectUsers;
         }
 
-        @WorkerThread
         public void loadAllUsers() {
-            selectUsers.postValue(Users.getAllUsers());
+            mExecutor.submit(() -> mSelectUsers.postValue(Users.getAllUsers()));
         }
 
-        private final MutableLiveData<CharSequence> changeLog = new MutableLiveData<>();
+        private final MutableLiveData<CharSequence> mChangeLog = new MutableLiveData<>();
 
         public LiveData<CharSequence> getChangeLog() {
-            return changeLog;
+            return mChangeLog;
         }
 
-        @WorkerThread
         public void loadChangeLog() {
-            Spanned spannedChangelog = HtmlCompat.fromHtml(FileUtils.getContentFromAssets(getApplication(),
-                    "changelog.html"), HtmlCompat.FROM_HTML_MODE_COMPACT);
-            changeLog.postValue(spannedChangelog);
+            mExecutor.submit(() -> {
+                Spanned spannedChangelog = HtmlCompat.fromHtml(FileUtils.getContentFromAssets(getApplication(),
+                        "changelog.html"), HtmlCompat.FROM_HTML_MODE_COMPACT);
+                mChangeLog.postValue(spannedChangelog);
+            });
         }
 
-        private final MutableLiveData<DeviceInfo2> deviceInfo = new MutableLiveData<>();
+        private final MutableLiveData<DeviceInfo2> mDeviceInfo = new MutableLiveData<>();
 
         public LiveData<DeviceInfo2> getDeviceInfo() {
-            return deviceInfo;
+            return mDeviceInfo;
         }
 
-        @WorkerThread
         private void loadDeviceInfo(@NonNull DeviceInfo2 di) {
-            di.loadInfo();
-            deviceInfo.postValue(di);
+            mExecutor.submit(() -> {
+                di.loadInfo();
+                mDeviceInfo.postValue(di);
+            });
+        }
+
+        private final MutableLiveData<Integer> mModeOfOpsStatus = new MutableLiveData<>();
+
+        public LiveData<Integer> getModeOfOpsStatus() {
+            return mModeOfOpsStatus;
+        }
+
+        public void setModeOfOps() {
+            mExecutor.submit(() -> {
+                int status = Ops.init(getApplication(), true);
+                mModeOfOpsStatus.postValue(status);
+            });
+        }
+
+        @RequiresApi(Build.VERSION_CODES.R)
+        public void autoConnectAdb(int returnCodeOnFailure) {
+            mExecutor.submit(() -> {
+                int status = Ops.autoConnectAdb(getApplication(), returnCodeOnFailure);
+                mModeOfOpsStatus.postValue(status);
+            });
+        }
+
+        @Override
+        public void connectAdb(int port) {
+            mExecutor.submit(() -> {
+                int status = Ops.connectAdb(port, Ops.STATUS_FAILED);
+                mModeOfOpsStatus.postValue(status);
+            });
+        }
+
+        @Override
+        @RequiresApi(Build.VERSION_CODES.R)
+        public void pairAdb(@Nullable String pairingCode, int port) {
+            mExecutor.submit(() -> {
+                int status = Ops.pairAdb(getApplication(), pairingCode, port);
+                mModeOfOpsStatus.postValue(status);
+            });
         }
     }
 }

@@ -20,9 +20,7 @@ import androidx.fragment.app.FragmentActivity;
 import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
@@ -124,59 +122,6 @@ public class Ops {
         }
     }
 
-    @Deprecated
-    @WorkerThread
-    @NoOps // Although we've used Ops checks, its overall usage does not affect anything
-    public static synchronized void init(@NonNull FragmentActivity activity, boolean force) {
-        Context context = activity.getApplicationContext();
-        String mode = AppPref.getString(AppPref.PrefKey.PREF_MODE_OF_OPS_STR);
-        if (MODE_AUTO.equals(mode)) {
-            autoDetectRootOrAdb(context);
-            return;
-        }
-        if (MODE_NO_ROOT.equals(mode)) {
-            sIsAdb = sIsRoot = false;
-            return;
-        }
-        if (!force && isAMServiceUpAndRunning(context, mode)) {
-            // An instance of AMService is already running
-            return;
-        }
-        try {
-            switch (mode) {
-                case MODE_ROOT:
-                    if (!hasRoot()) {
-                        throw new Exception("Root is unavailable.");
-                    }
-                    sIsAdb = false;
-                    sIsRoot = true;
-                    LocalServer.launchAmService();
-                    return;
-                case MODE_ADB_WIFI:
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                        connectWirelessDebugging(activity);
-                        return;
-                    } // else fallback to ADB over TCP
-                case "adb":
-                    if (mode.equals("adb")) {
-                        // Backward compatibility for v2.6.0 or earlier
-                        AppPref.set(AppPref.PrefKey.PREF_MODE_OF_OPS_STR, MODE_ADB_OVER_TCP);
-                    }
-                    // fallback to ADB over TCP
-                case MODE_ADB_OVER_TCP:
-                    sIsAdb = true;
-                    sIsRoot = false;
-                    ServerConfig.setAdbPort(findAdbPortNoThrow(context, 10, ServerConfig.getAdbPort()));
-                    LocalServer.restart();
-            }
-        } catch (Throwable e) {
-            Log.e("ModeOfOps", e);
-            // Fallback to no-root mode for this session, this does not modify the user preference
-            sIsAdb = sIsRoot = false;
-            UiThreadHandler.run(() -> UIUtils.displayLongToast(R.string.failed_to_use_the_current_mode_of_operation));
-        }
-    }
-
     @WorkerThread
     @NoOps // Although we've used Ops checks, its overall usage does not affect anything
     @Status
@@ -270,91 +215,22 @@ public class Ops {
         }
     }
 
-    @Deprecated
-    @WorkerThread
-    @RequiresApi(Build.VERSION_CODES.R)
-    @NoOps // Although we've used Ops checks, its overall usage does not affect anything
-    private static void connectWirelessDebugging(@NonNull FragmentActivity activity)
-            throws InterruptedException, IOException, RemoteException {
-        sIsAdb = true;
-        sIsRoot = false;
-        try {
-            ServerConfig.setAdbPort(findAdbPortNoThrow(activity, 5, ServerConfig.getAdbPort()));
-            LocalServer.restart();
-            return; // Success
-        } catch (RemoteException | IOException e) {
-            Log.e("ADB", e);
-            // Failed, fall-through
-        }
-        CountDownLatch waitForPort = new CountDownLatch(1);
-        AtomicInteger adbPort = new AtomicInteger(-1);
-        AdbUtils.AdbConnectionCallback callback = new AdbUtils.AdbConnectionCallback() {
-            @UiThread
-            @Override
-            public void connect(int port) {
-                adbPort.set(port);
-                waitForPort.countDown();
-            }
-
-            @UiThread
-            @Override
-            public void pair(@Nullable String pairingCode, int port) {
-                if (pairingCode == null || port == -1) {
-                    waitForPort.countDown();
-                    return;
-                }
-                new Thread(() -> {
-                    try {
-                        AdbConnectionManager.getInstance().pair(ServerConfig.getAdbHost(activity), port, pairingCode.trim());
-                        try {
-                            adbPort.set(findAdbPort(activity, 7));
-                            waitForPort.countDown();
-                        } catch (Throwable ignore) {
-                        }
-                        UiThreadHandler.run(() -> {
-                            UIUtils.displayShortToast(R.string.paired_successfully);
-                            if (adbPort.get() == -1 && !activity.isDestroyed()) {
-                                AdbUtils.displayAdbConnect(activity, this);
-                            } else waitForPort.countDown();
-                        });
-                    } catch (Exception e) {
-                        UiThreadHandler.run(() -> UIUtils.displayShortToast(R.string.failed));
-                        waitForPort.countDown();
-                        Log.e("ADB", e);
-                    }
-                }).start();
-            }
-        };
-        UiThreadHandler.run(() -> AdbUtils.configureWirelessDebugging(activity, callback));
-        Log.e("ADB", "Before");
-        waitForPort.await(2, TimeUnit.MINUTES);
-        Log.e("ADB", "After");
-        if (adbPort.get() == -1) {
-            // One last try
-            adbPort.set(findAdbPort(activity, 5));
-        }
-        if (adbPort.get() != -1) {
-            ServerConfig.setAdbPort(adbPort.get());
-        }
-        LocalServer.restart();
-    }
-
     @UiThread
     @RequiresApi(Build.VERSION_CODES.R)
     @NoOps // Although we've used Ops checks, its overall usage does not affect anything
     public static void connectWirelessDebugging(@NonNull FragmentActivity activity,
-                                                @NonNull SecurityAndOpsViewModel viewModel) {
+                                                @NonNull AdbConnectionInterface adbConnectionInterface) {
         AdbUtils.AdbConnectionCallback callback = new AdbUtils.AdbConnectionCallback() {
             @UiThread
             @Override
             public void connect(int port) {
-                viewModel.connectAdb(port);
+                adbConnectionInterface.connectAdb(port);
             }
 
             @UiThread
             @Override
             public void pair(@Nullable String pairingCode, int port) {
-                viewModel.pairAdb(pairingCode, port);
+                adbConnectionInterface.pairAdb(pairingCode, port);
             }
         };
         AdbUtils.configureWirelessDebugging(activity, callback);
@@ -405,12 +281,13 @@ public class Ops {
 
     @UiThread
     @NoOps
-    public static void connectAdbInput(@NonNull FragmentActivity activity, @NonNull SecurityAndOpsViewModel viewModel) {
+    public static void connectAdbInput(@NonNull FragmentActivity activity,
+                                       @NonNull AdbConnectionInterface adbConnectionInterface) {
         AdbUtils.AdbConnectionCallback callback = new AdbUtils.AdbConnectionCallback() {
             @UiThread
             @Override
             public void connect(int port) {
-                viewModel.connectAdb(port);
+                adbConnectionInterface.connectAdb(port);
             }
 
             @UiThread
@@ -513,5 +390,13 @@ public class Ops {
             }
         }
         return defaultPort;
+    }
+
+    @AnyThread
+    public interface AdbConnectionInterface {
+        void connectAdb(int port);
+
+        @RequiresApi(Build.VERSION_CODES.R)
+        void pairAdb(@Nullable String pairingCode, int port);
     }
 }
