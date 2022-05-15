@@ -1172,4 +1172,9 @@
     <string name="screen_time">Zeit am Bildschirm</string>
     <string name="backup_volume_unavailable_warning">Das ausgewählte Sicherungsmedium ist derzeit nicht verfügbar. Wenn es sich auf einem externen Speicher befindet, legen Sie es bitte ein oder ändern Sie das Sicherungsmedium.</string>
     <string name="sort_by_installation_date">Installationsdatum</string>
+    <string name="pref_vt_prompt_before_uploading">Eingabeaufforderung vor dem Hochladen einer Datei anzeigen.</string>
+    <string name="vt_confirm_uploading_file">Die Datei wurde nicht in der VirusTotal-Datenbank gefunden. Möchten Sie sie hochladen\?</string>
+    <string name="vt_confirm_upload_and_scan">Ja, hochladen und scannen</string>
+    <string name="open_in_new_window">Neues Fenster</string>
+    <string name="type_string_set">Satz von Zeichenfolgen</string>
 </resources>
