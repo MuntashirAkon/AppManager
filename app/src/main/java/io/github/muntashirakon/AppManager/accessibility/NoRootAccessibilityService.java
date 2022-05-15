@@ -4,6 +4,7 @@ package io.github.muntashirakon.AppManager.accessibility;
 
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.os.Build;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.Log;
@@ -16,8 +17,8 @@ import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.ResourceUtil;
 
 public class NoRootAccessibilityService extends BaseAccessibilityService {
-    private static final String SETTING_PACKAGE = "com.android.settings";
-    private static final String INSTALLER_PACKAGE = "com.android.packageinstaller";
+    private static final CharSequence SETTING_PACKAGE = "com.android.settings";
+    private static final CharSequence INSTALLER_PACKAGE = "com.android.packageinstaller";
 
     private final AccessibilityMultiplexer multiplexer = AccessibilityMultiplexer.getInstance();
     private PackageManager pm;
@@ -32,68 +33,63 @@ public class NoRootAccessibilityService extends BaseAccessibilityService {
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
         Log.d("ACCESSIBILITY", event.toString());
-        if (event.getEventType() == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
-            if (event.getPackageName().equals(INSTALLER_PACKAGE)) {
-                // Install/uninstall
-                if (event.getClassName().equals("android.app.Dialog")) {
-                    if (multiplexer.isInstallEnabled()) {
-                        performViewClick(findViewByText(getString(event, "install"), true)); // install_text
-                    }
-                } else if (event.getClassName().equals("com.android.packageinstaller.UninstallerActivity")) {
-                    if (multiplexer.isUninstallEnabled()) {
-                        performViewClick(findViewByText(getString(event, "ok"), true)); // dlg_ok
+        if (event.getEventType() != AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
+            return;
+        }
+        CharSequence packageName = event.getPackageName();
+        if (INSTALLER_PACKAGE.equals(packageName)) {
+            automateInstallationUninstallation(event);
+            return;
+        }
+        if (SETTING_PACKAGE.equals(packageName)) {
+            // Clear data/cache, force-stop
+            if (event.getClassName().equals("com.android.settings.applications.InstalledAppDetailsTop")) {
+                AccessibilityNodeInfo node = findViewByText(getString(event, "force_stop"), true);
+                if (multiplexer.isForceStopEnabled()) {
+                    if (node != null) {
+                        if (node.isEnabled()) {
+                            tries = 0;
+                            performViewClick(node);
+                        } else if (tries > 0 && navigateToStorageAndCache(event)) {
+                            // Hack to enable force-stop when it is disabled due to Android bug
+                            performBackClick();
+                            --tries;
+                        } else performBackClick();
+                        node.recycle();
+                    } else performBackClick();
+                } else if (multiplexer.isNavigateToStorageAndCache()) {
+                    SystemClock.sleep(1000);
+                    navigateToStorageAndCache(event);
+                }
+            } else if (event.getClassName().equals("com.android.settings.SubSettings")
+                    || getString(event, "storage_settings").equals(event.getText().toString())) {
+                if (multiplexer.isClearDataEnabled()) {
+                    performViewClick(findViewByText(getString(event, "clear_user_data_text"), true));
+                }
+                if (multiplexer.isClearCacheEnabled()) {
+                    multiplexer.enableClearCache(false);
+                    AccessibilityNodeInfo node = findViewByText(getString(event, "clear_cache_btn_text"), true);
+                    if (node != null) {
+                        if (node.isEnabled()) {
+                            performViewClick(node);
+                        }
+                        performBackClick();
+                        performBackClick();
+                        node.recycle();
                     }
                 }
-            } else if (event.getPackageName().equals(SETTING_PACKAGE)) {
-                // Clear data/cache, force-stop
-                if (event.getClassName().equals("com.android.settings.applications.InstalledAppDetailsTop")) {
-                    AccessibilityNodeInfo node = findViewByText(getString(event, "force_stop"), true);
-                    if (multiplexer.isForceStopEnabled()) {
-                        if (node != null) {
-                            if (node.isEnabled()) {
-                                tries = 0;
-                                performViewClick(node);
-                            } else if (tries > 0 && navigateToStorageAndCache(event)) {
-                                // Hack to enable force-stop when it is disabled due to Android bug
-                                performBackClick();
-                                --tries;
-                            } else performBackClick();
-                            node.recycle();
-                        } else performBackClick();
-                    } else if (multiplexer.isNavigateToStorageAndCache()) {
-                        SystemClock.sleep(1000);
-                        navigateToStorageAndCache(event);
-                    }
-                } else if (event.getClassName().equals("com.android.settings.SubSettings")
-                        || getString(event, "storage_settings").equals(event.getText().toString())) {
-                    if (multiplexer.isClearDataEnabled()) {
-                        performViewClick(findViewByText(getString(event, "clear_user_data_text"), true));
-                    }
-                    if (multiplexer.isClearCacheEnabled()) {
-                        multiplexer.enableClearCache(false);
-                        AccessibilityNodeInfo node = findViewByText(getString(event, "clear_cache_btn_text"), true);
-                        if (node != null) {
-                            if (node.isEnabled()) {
-                                performViewClick(node);
-                            }
-                            performBackClick();
-                            performBackClick();
-                            node.recycle();
-                        }
-                    }
-                } else if (event.getClassName().equals("androidx.appcompat.app.AlertDialog")) {
-                    if (multiplexer.isForceStopEnabled() && findViewByText(getString(event, "force_stop_dlg_title")) != null) {
-                        multiplexer.enableForceStop(false);
-                        tries = 1; // Restore tries
-                        performViewClick(findViewByText(getString(event, "dlg_ok"), true));
-                        performBackClick();
-                    }
-                    if (multiplexer.isClearDataEnabled() && findViewByText(getString(event, "clear_data_dlg_title")) != null) {
-                        multiplexer.enableClearData(false);
-                        performViewClick(findViewByText(getString(event, "dlg_ok"), true));
-                        performBackClick();
-                        performBackClick();
-                    }
+            } else if (event.getClassName().equals("androidx.appcompat.app.AlertDialog")) {
+                if (multiplexer.isForceStopEnabled() && findViewByText(getString(event, "force_stop_dlg_title")) != null) {
+                    multiplexer.enableForceStop(false);
+                    tries = 1; // Restore tries
+                    performViewClick(findViewByText(getString(event, "dlg_ok"), true));
+                    performBackClick();
+                }
+                if (multiplexer.isClearDataEnabled() && findViewByText(getString(event, "clear_data_dlg_title")) != null) {
+                    multiplexer.enableClearData(false);
+                    performViewClick(findViewByText(getString(event, "dlg_ok"), true));
+                    performBackClick();
+                    performBackClick();
                 }
             }
         }
@@ -103,8 +99,25 @@ public class NoRootAccessibilityService extends BaseAccessibilityService {
     public void onInterrupt() {
     }
 
+    private void automateInstallationUninstallation(@NonNull AccessibilityEvent event) {
+        if (event.getClassName().equals("android.app.Dialog")) {
+            if (multiplexer.isInstallEnabled()) {
+                // Install
+                performViewClick(findViewByText(getString(event, "install"), true)); // install_text
+            }
+        } else if (event.getClassName().equals("com.android.packageinstaller.UninstallerActivity")) {
+            if (multiplexer.isUninstallEnabled()) {
+                // uninstall
+                performViewClick(findViewByText(getString(event, "ok"), true)); // dlg_ok
+            }
+        }
+    }
+
     private boolean navigateToStorageAndCache(AccessibilityEvent event) {
-        String storageSettings = getString(event, "storage_settings_for_app");
+        String storageSettings;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            storageSettings = getString(event, "storage_settings_for_app");
+        } else storageSettings = getString(event, "storage_label");
         SystemClock.sleep(500); // It may take a few moments to initialise the Recycler/List views
         AccessibilityNodeInfo storageNode = findViewByTextRecursive(getRootInActiveWindow(), storageSettings);
         if (storageNode != null) {
