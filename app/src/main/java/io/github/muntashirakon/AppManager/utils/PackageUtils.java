@@ -489,7 +489,7 @@ public final class PackageUtils {
         }
         if (loadInternal) {
             dataDirs.add(applicationInfo.dataDir);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N &&
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && applicationInfo.deviceProtectedDataDir != null &&
                     !applicationInfo.dataDir.equals(applicationInfo.deviceProtectedDataDir)) {
                 dataDirs.add(applicationInfo.deviceProtectedDataDir);
             }

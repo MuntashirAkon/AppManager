@@ -131,6 +131,7 @@ import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
 import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.widget.SwipeRefreshLayout;
 import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
@@ -1393,9 +1394,10 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     @Nullable
-    private Path[] getSharedPrefs(@NonNull String sourceDir) {
+    private Path[] getSharedPrefs(@Nullable String sourceDir) {
+        if (sourceDir == null) return null;
         try {
-            Path sharedPath = new Path(mActivity, sourceDir).findFile("shared_prefs");
+            Path sharedPath = Paths.get(sourceDir).findFile("shared_prefs");
             return sharedPath.listFiles();
         } catch (FileNotFoundException e) {
             return null;
@@ -1404,9 +1406,10 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     @Nullable
-    private Path[] getDatabases(@NonNull String sourceDir) {
+    private Path[] getDatabases(@Nullable String sourceDir) {
+        if (sourceDir == null) return null;
         try {
-            Path sharedPath = new Path(mActivity, sourceDir).findFile("databases");
+            Path sharedPath = Paths.get(sourceDir).findFile("databases");
             return sharedPath.listFiles((dir, name) -> !(name.endsWith("-journal")
                     || name.endsWith("-wal") || name.endsWith("-shm")));
         } catch (FileNotFoundException e) {
