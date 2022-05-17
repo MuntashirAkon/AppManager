@@ -1,23 +1,24 @@
 % SPDX-License-Identifier: GPL-3.0-or-later OR CC-BY-SA-4.0
 \section{Scanner Page}\label{sec:scanner-page} %%##$section-title>>
 %%!!intro<<
-\textbf{Scanner page} appears after clicking on the \emph{scanner} button in the \hyperref[subsec:app-info-tab]{App Info
-tab}. External APK files can also be opened for scanning from file managers, web browsers, etc.
+\textbf{Scanner page} appears after clicking on the \emph{scanner} button in the \hyperref[subsec:app-info-tab]{App Info tab}.
+External APK files can also be opened for scanning from file managers, web browsers, etc.
 
 It scans for trackers and libraries, and displays the number of trackers and libraries as a summary. It also displays
-checksums of the APK file as well as the signing certificate(s).
+checksums of the APK file as well as the signing certificates. If VirusTotal is configured in the settings,
+it also attempts to retrieve reports from VirusTotal, or uploads the APK file if it is not in the database.
 
 \begin{danger}{Disclaimer}
-    AM only scans an app statically without prejudice. The app may provide the options for opting out, or in some cases,
-    certain features of the tracker may not be used at all by the app (e.g.\ F-Droid), or some apps may simply use them
-    as placeholders to prevent the breaking of certain features (e.g.\ Fennec F-Droid). \textbf{The intention of the
-    scanner is to give you an idea about what the APK might contain. It should be taken as an initial step for further
-    investigations.}
+    App Manager only scans an application statically without prejudice. The application may provide the options for opting out,
+    or in some cases, certain features of the tracker may not be used at all by the application (e.g.\ F-Droid),
+    or some applications may simply use them as placeholders to prevent the breaking of certain features (e.g.\ Fennec F-Droid).
+    \textbf{The intention of the scanner is to give you an idea about what the APK might contain. It should be taken as an initial step for further investigations.}
 \end{danger}
 
-Clicking on the first item (i.e.\ number of classes) opens a new page containing a list of tracker classes for the app.
-All classes can also be viewed by clicking on the \textit{Toggle Class Listing} menu. A sneak-peek of each class can be
-viewed by simply clicking on any class item.
+Clicking on the first item (i.e.\ number of classes) opens a new page containing a list of tracker classes for the application.
+All classes can also be viewed by clicking on the \textit{Toggle Class Listing} menu.
+A sneak-peek of each class can be viewed by simply clicking on any class item. In Android 8 (Oreo) and later,
+this includes the whole SMALI version of the class, and can be converted into Java using the corresponding option.
 
 \begin{tip}{Notice}
     Due to various limitations, it is not possible to scan all the components of an APK file. This is especially true if
@@ -41,5 +42,5 @@ At the bottom of the page, there is a special item denoting the number of missin
 The missing signatures are the ones that AM has failed to match against any known libraries. The number itself has no
 particular meaning as many libraries contain hundreds of classes, but clicking on the item will bring up a dialog
 containing the signatures which is helpful in inspecting the missing signatures. \textbf{This feature is only intended
-for people who know what a missing signature is and what to do with it, average users should just ignore it.}
+for people who know what a missing signature is and what to do with it, other users should ignore it.}
 %%!!>>

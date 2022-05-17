@@ -1,13 +1,12 @@
 % SPDX-License-Identifier: GPL-3.0-or-later OR CC-BY-SA-4.0
 \section{Settings Page}\label{sec:settings-page} %%##$section-title>>
 %%!!intro<<
-Settings can be used to customise the behaviour of the app.
+Settings page can be used to customise the behaviour of App Manager.
 %%!!>>
 
 \subsection{Language}\label{subsec:language} %%##$language-title>>
 %%!!language<<
-Configure in-app language.
-App Manager currently supports 19 (nineteen) languages.
+Configure in-app language. App Manager currently supports 21 (twenty one) languages.
 %%!!>>
 
 \subsection{App Theme}\label{subsec:app-theme} %%##$app-theme-title>>
@@ -18,38 +17,72 @@ Configure in-app theme.
 \subsection{Screen Lock}\label{subsec:screen-lock} %%##$screen-lock-title>>
 %%!!screen-lock<<
 Lock App Manager using Android screen lock provided a screen lock is configured.
+
+\begin{warning}{Warning}
+    If screen lock is disabled in Android after enabling this setting, App Manager will not open until it is enabled again.
+\end{warning}
 %%!!>>
 
 \subsection{Mode of Operation}\label{subsec:mode-of-operation} %%##$mode-of-operation-title>>
 %%!!mode-of-operation<<
-You can select one of the four options:
+Mode of operation defines how App Manager works as a whole. It has the following options:
 \begin{itemize}
-    \item \textbf{Auto.} Let AM decide the suitable option for you.
-    Although this is the default option, it may cause problems in some devices.
+    \item \textbf{Auto.} Let App Manager decide the suitable option.
+    Although this is the default option, non-rooted users should use the \textit{no-root} mode.
 
-    \item \textbf{Root.} Select root mode.
-    By default, AM requests root permission if root is detected but hasn't been granted.
-    If this option is selected, AM will run in root mode even if root is unavailable or denied.
-    This may cause crashes or freezing issues, therefore, shouldn't be enabled if root is unavailable.
+    \item \textbf{Root.} Operate App Manager in root mode. App Manager will fall back to \textit{no-root} mode if root
+    is not detected, or in rare cases when Binder communication through root is disabled (e.g.\ in \href{https://github.com/MuntashirAkon/AppManager/issues/606}{Phh SuperUser}).
 
-    \item \textbf{ADB over TCP.} Enable \hyperref[sec:adb-over-tcp]{ADB over TCP} mode.
-    AM may hang indefinitely if ADB over TCP is not enabled.
+    \item \textbf{ADB over TCP.} Operate App Manager in ADB mode via \hyperref[sec:adb-over-tcp]{ADB over TCP}.
+    App Manager will fall back to \textit{no-root} mode if ADB over TCP is not enabled.
 
-    \item \textbf{No-root.} AM runs in no-root mode.
-    AM performs better if this is enabled but all the root/ADB features will be disabled.
+    \item \textbf{Wireless debugging.} Enable ADB via Wireless Debugging. It will try to connect to the configured port
+    automatically at first. On failure, it will ask the user to either pair or connect to the ADB daemon manually.
+    App Manager will fall back to \textit{no-root} mode if it fails to connect to the ADB daemon this way.
+    \begin{tip}{Info}
+        This option is only displayed in devices running Android 11 or later as Wireless Debugging was introduced in Android 11.
+    \end{tip}
+
+    \item \textbf{No-root.} Operate App Manager in no-root mode. While App Manager performs better in this mode,
+    all the root- or ADB-specific features will be disabled.
 \end{itemize}
+
+It also displays the currently inferred mode of operation. The actual mode of operations are \textit{root}, \textit{ABD} and \textit{no-root}.
+%%!!>>
+
+\subsection{Selected Users}\label{subsec:selected-users} %%##$selected-users-title>>
+%%!!selected-users<<
+This option lets you control the users App Manager should operate on. App Manager operates on all users in root or ADB mode by default.
 %%!!>>
 
 \subsection{Enable/Disable Features}\label{subsec:enable/disable-features} %%##$enable-disable-features-title>>
 %%!!enable-disable-features<<
 Enable or disable certain features in App Manager, such as
 \begin{itemize}
-    \item Interceptor
-    \item Manifest viewer
-    \item Scanner
-    \item Package installer
-    \item Usage access: With this option turned off, App Manager will never ask for the \textit{Usage Access} permission.
-    \item Log viewer
+    \item \textbf{Interceptor}
+    \item \textbf{Manifest viewer}
+    \item \textbf{Scanner}
+    \item \textbf{Package installer}
+    \item \textbf{Usage access.} With this feature turned off, App Manager will never ask for the \textit{Usage Access} permission.
+    \item \textbf{Log viewer}
+    \item \textbf{Use the internet.} All the Internet features are disabled if this feature is turned off.
+    Currently, the only Internet feature is fetching scanning reports via VirusTotal.
+\end{itemize}
+%%!!>>
+
+\subsection{Saved APK Name Format}\label{subsec:saved-apk-name-format} %%##$saved-apk-name-format-title>>
+%%!!saved-apk-name-format<<
+Defines the format of the APK name to be used while saving it via batch operations or through profiles.
+App Manager offers some special keywords enclosed inside \texttt{\%} (percentage) signs and available below the input box.
+These keywords are:
+\begin{itemize}
+    \item \textbf{\texttt{label}.} Denotes the name or label of the application. This can be localised to the configured language depending on the app.
+    \item \textbf{\texttt{package\_name}.} Denotes the name of the package or application ID, the unique identifier that each application has.
+    \item \textbf{\texttt{version}.} Denotes the current version of the application extracted from its manifest.
+    \item \textbf{\texttt{version\_code}.} Denotes the current version code of the application that can be used to separate two versions of the same application.
+    \item \textbf{\texttt{min\_sdk}.} Denotes the minimum SDK (i.e.\ Android framework version) that the application can operate on. This data is only available since Android 7 (Nougat).
+    \item \textbf{\texttt{target\_sdk}.} Denotes the SDK that this application targets. The application can operate on higher SDK but only in the compatibility mode.
+    \item \textbf{\texttt{datetime}.} Denotes the time and date when the APK is exported.
 \end{itemize}
 %%!!>>
 
@@ -57,48 +90,70 @@ Enable or disable certain features in App Manager, such as
 
 \subsubsection{Signature Schemes} %%##$signature-schemes-title>>
 %%!!signature-schemes<<
-Select the \href{https://source.android.com/security/apksigning}{signature schemes} to use.
-It is recommended that you use at least v1 and v2 signature schemes.
-Use the \textit{Reset to Default} button in case you're confused.
+Configure the \href{https://source.android.com/security/apksigning}{signature schemes} to be used when APK signing is enabled.
+v1 and v2 signature schemes are enabled by default, but v3 should also be enabled to ensure proper security in Android 9 or later.
 %%!!>>
 
 \subsubsection{Signing Key} %%##$signing-key-title>>
 %%!!signing-key<<
-Configure custom signing key for signing APK files.
-Keys from an existing KeyStore can be imported to App Manager, or a new key can be generated.
+Configure custom signing key for signing APK files. Keys from an existing KeyStore can be imported to App Manager,
+or a new key can be generated.
 
-\begin{warning}{Notice}
-    App Manager maintains a KeyStore where the keys used within the app are stored.
-    The password for the keystore will be asked when necessary.
-    Be sure to store the password in a safe place, otherwise the KeyStore cannot be recovered when necessary.
-\end{warning}
+\begin{danger}{Danger}
+    Do not use the key that is supplied with App Manager as it is publicly accessible by anybody. In the future,
+    the default key will be removed.
+\end{danger}
+
+\begin{tip}{Tip}
+    If you need to use the key in the future, it is recommended that you create a KeyStore yourself and import the key
+    here. Keys generated within App Manager is at the risk of being deleted without a proper backup.
+\end{tip}
 %%!!>>
 
 \subsection{Installer}\label{subsec:installer} %%##$installer-title>>
 
 \subsubsection{Show users in installer} %%##$show-users-in-installer-title>>
 %%!!show-users-in-installer<<
-For root/ADB users, a list of users will be displayed before installing the app.
-The app will be installed only for the specified user (or all users if selected).
+When enabled, a list of users will be displayed before installing the application. The application will be installed
+only for the specified users.
 %%!!>>
 
 \subsubsection{Sign APK} %%##$sign-apk-title>>
 %%!!sign-apk<<
-Whether to sign the APK files before installing the app.
-Visit \hyperref[subsec:apk-signing]{APK signing} section to configure signing.
+Whether to sign the APK files before installing the application. The \hyperref[subsec:apk-signing]{APK signing} page can
+be used to configure signing.
 %%!!>>
 
-\subsubsection{Install location} %%##$install-location-title>>
+\subsubsection{Install Location} %%##$install-location-title>>
 %%!!install-location<<
-Choose APK install location.
-This can be one of \textit{auto}, \textit{internal only} and \textit{prefer external}.
-In newer Android versions, the last option may not always install the app in the external storage.
+Define APK installation location. This can be one of \textit{auto}, \textit{internal only} and \textit{prefer external}.
+In newer Android versions, selecting the last option does not guarantee that the application will be installed in the external storage.
 %%!!>>
 
 \subsubsection{Installer App} %%##$installer-app-title>>
 %%!!installer-app<<
-Select the installer app, useful for some apps which explicitly checks for their installer.
-This only works for root/ADB users.
+Select the installer application, useful for applications that explicitly checks the installer as a way to verify if the application is installed legitimately.
+This only works for root or ADB users.
+
+\begin{tip}{Notice}
+    While checking for the installer might seem a legitimate concern for an application, the Android framework already deals with this during the installation.
+    Checking for the installer is simply the wrong way to prove the legitimacy of the source of an application.
+\end{tip}
+%%!!>>
+
+\subsubsection{Block Trackers} %%##$block-trackers-title>>
+%%!!block-trackers<<
+Whether to block the tracking components immediately after installing the application.
+%%!!>>
+
+\subsubsection{Display Changes} %%##$display-changes-title>>
+%%!!display-changes<<
+Whether to display changes in version, trackers, components, permissions, signatures, SDK, etc. in a version controlled style if the application has already been installed.
+%%!!>>
+
+\subsubsection{Install in the Background} %%##$install-in-the-background-title>>
+%%!!install-in-the-background<<
+Whether to always install applications in the background. A notification will be issued once the installation is finished.
 %%!!>>
 
 \subsection{Back up/Restore}\label{subsec:backup/restore} %%##$backup-restore-title>>
@@ -108,94 +163,84 @@ Settings related to \hyperref[sec:backup-restore]{back up/restore}.
 
 \subsubsection{Compression method} %%##$compression-method-title>>
 %%!!compression-method<<
-Set which compression method to be used during backups.
-App Manager supports GZip and BZip2 compression methods, GZip being the default compression method.
-It doesn't affect the restore of an existing backup.
+Set the compression method to be used during backups. App Manager supports GZip and BZip2 compression methods,
+GZip being the default compression method. It doesn't affect the restoring of an existing backup.
 %%!!>>
 
 \subsubsection{Backup Options}\label{subsubsec:settings-backup-options} %%##$backup-options-title>>
 %%!!backup-options<<
-Customise the back up/restore dialog.
+Customise the \textit{back up/restore dialog} displayed while taking a backup.
+
+\seealsoinline{\hyperref[subsec:backup-restore-backup-options]{Backup options}}
 %%!!>>
 
 \subsubsection{Backup apps with Android KeyStore} %%##$backup-apps-with-keystore-title>>
 %%!!backup-apps-with-keystore<<
-Allow backup of apps that has entries in the Android KeyStore (disabled by default).
-Some apps (such as Signal) may crash if restored.
-KeyStore backup also doesn't work from Android 9 but still kept as many apps having KeyStore can be restored without problem.
+Allow backup of applications that has entries in the Android KeyStore. This option is disabled by default because a few apps (such as Signal) may crash if restored.
 %%!!>>
 
 \subsubsection{Encryption}\label{subsubsec:settings-encryption} %%##$encryption-title>>
 %%!!encryption<<
-Set an encryption method for the backups.
-App Manager currently supports OpenPGP (via
-\href{https://f-droid.org/packages/org.sufficientlysecure.keychain/}{OpenKeyChain}), AES and RSA (hybrid encryption with
-AES).
-Like \hyperref[subsec:apk-signing]{APK signing}, The AES and RSA keys are stored in the KeyStore and can be imported
-from other KeyStores.
+Set an encryption method for the backups. App Manager currently supports OpenPGP (via
+\href{https://f-droid.org/packages/org.sufficientlysecure.keychain/}{OpenKeyChain}), AES and RSA (hybrid encryption with AES).
+Like \hyperref[subsec:apk-signing]{APK signing}, The AES and RSA keys are stored in the KeyStore and can be imported from other KeyStores.
+
+\begin{danger}{Danger}
+    For your own safety, it is not recommended generating RSA keys inside App Manager. Instead, they should be imported from a KeyStore stored in a secure place.\\
+    In case of AES, the generated key should be stored in a secure place, such as using a password manager.
+\end{danger}
 %%!!>>
 
 \subsubsection{Backup Volume}\label{subsubsec:backup-volume} %%##$backup-volume-title>>
 %%!!backup-volume<<
-Lets you select the storage where the backups will be stored.
+Select the storage where the backups will be stored. This is also where logs and exported APK files are saved.
 
 \begin{tip}{Notice}
-    The backup volume only specifies the storage, not the path.
-    Backups are stored in \texttt{AppManager} folder inside the storage path.
-    This is also where logs and exported APK files are saved.
+    The backup volume only specifies the storage, not the path. Backups are traditionally stored in the \texttt{AppManager} folder inside the storage path.
+    But when the path is selected using Storage Access Framework (SAF), the selected path or directory is used directly.
 \end{tip}
+%%!!>>
+
+\subsubsection{Import Backups} %%##$import-backups-title>>
+%%!!import-backups<<
+Import backups from old and discontinued projects such as Titanium Backup, OAndBackup, and Swift Backup (version 3.0 to 3.2).
+The backups are not deleted after importing to prevent data loss in case the imported backups cannot be restored properly.
 %%!!>>
 
 \subsection{Rules}\label{subsec:rules} %%##$rules-title>>
 
 \subsubsection{Instant Component Blocking}\label{subsubsec:instant-component-blocking} %%##$instant-component-blocking-title>>
 %%!!instant-component-blocking<<
-By default, blocking rules are not applied unless they are applied explicitly in \hyperref[sec:app-details-page]{the App
-Details page} for any package.
-Upon enabling this option, all (old and new) rules are applied immediately for all apps without explicitly enabling
-blocking for an app.
-
-\begin{warning}{Notice}
-    Enabling this setting may have some unintended consequences.
-    For instance, the rules that are not completely removed will be applied again.
-    So, proceed with caution.
-    This option should be kept disabled if not required for some reasons.
-\end{warning}
+By default, blocking rules are not applied unless they are applied explicitly in \hyperref[sec:app-details-page]{the App Details page} for any application.
+After enabling this option, all (old and new) rules are applied immediately for all applications without explicitly enabling blocking for an application.
 
 \seealsoinline{\hyperref[subsec:faq:what-is-instant-component-blocking]{FAQ: What is instant component blocking?}}
 %%!!>>
 
 \subsubsection{Import/Export Blocking Rules} %%##$import-export-blocking-rules-title>>
 %%!!import-export-blocking-rules<<
-It is possible to import or export blocking rules within App Manager for all apps.
-There is a choice to export or import only certain rules (components, app ops or permissions) instead of all of them.
-It is also possible to import blocking rules from \href{https://github.com/lihenggui/blocker}{Blocker} and
-\href{https://github.com/tuyafeng/Watt}{Watt}.
-If it is necessary to export blocking rules for a single app, use the corresponding \hyperref[sec:app-details-page]{App
-Details page} to export rules, or for multiple apps, use \hyperref[subsec:batch-operations]{batch operations}.
+It is possible to import or export blocking rules within App Manager for all applications. The types of rules (components, app ops or permissions) that should be imported or exported can also be selected.
+It is also possible to import blocking rules from \href{https://github.com/lihenggui/blocker}{Blocker} and \href{https://github.com/tuyafeng/Watt}{Watt}.
+If it is necessary to export blocking rules for a single application, the corresponding \hyperref[sec:app-details-page]{App Details page} can be used to export rules, or for multiple apps, \hyperref[subsec:batch-operations]{batch operations} can be used.
 
 \seealsoinline{\hyperref[sec:rules-specification]{Rules Specification}}
 
-\paragraph{Export} Export blocking rules for all apps configured within App Manager.
-This may include \hyperref[subsec:faq:what-are-app-components]{app components}, app ops and permissions based on the
-options selected in the multi-choice options.
+\paragraph{Export} Export blocking rules for all applications configured within App Manager.
+This may include \hyperref[subsec:faq:what-are-app-components]{app components}, app ops and permissions based on the options selected in the multi-choice options.
 
 \paragraph{Import} Import previously exported blocking rules from App Manager.
-Similar to export, this may include \hyperref[subsec:faq:what-are-app-components]{app components}, app ops and
-permissions based on the options selected in the multi-choice options.
+Similar to export, this may include \hyperref[subsec:faq:what-are-app-components]{app components}, app ops and permissions based on the options selected in the multi-choice options.
 
 \paragraph{Import Existing Rules}\label{par:import-existing-rules}
 \phantomsection
-Add components disabled by other apps to App Manager.
-App Manager only keeps track of component disabled within App Manager.
-If you use other tools to block app components, you can use this tools to import these disabled components.
-Clicking on this option triggers a search for disabled components and will list apps with components disabled by user.
-For safety, all the apps are unselected by default.
-You can manually select the apps in the list and re-apply the blocking through App Manager.
+Add components disabled by other applications to App Manager. App Manager only keeps track of the components disabled within App Manager.
+If application components are blocked or disabled by other tools or applications, this option can be utilised to import them.
+On clicking this option, App Manager will find the components potentially disabled by other applications or tools and list only the name of the applications along with the number of matched components.
+For safety, all the applications are unselected by default. They have to be selected manually, and the blocking has to be re-applied via App Manager.
 
 \begin{danger}{Caution}
     Be careful when using this tool as there can be many false positives.
-    Choose only the apps that you are certain about.
+    Choose only the applications that you are certain about.
 \end{danger}
 
 \paragraph{Import from Watt} Import configuration files from \href{https://github.com/tuyafeng/Watt}{Watt}, each file
@@ -205,8 +250,7 @@ containing rules for a single package and file name being the name of the packag
     Location of configuration files in Watt: \texttt{/sdcard/Android/data/com.tuyafeng.watt/files/ifw}
 \end{tip}
 
-\paragraph{Import from Blocker} Import blocking rules from \href{https://github.com/lihenggui/blocker}{Blocker}, each
-file containing rules for a single package.
+\paragraph{Import from Blocker} Import blocking rules from \href{https://github.com/lihenggui/blocker}{Blocker}, each file containing rules for a single package.
 These files have a \texttt{.json} extension.
 %%!!>>
 
@@ -218,10 +262,9 @@ This will enable all blocked components, app ops will be set to their default va
 
 \subsection{Import/Export Keystore}\label{subsec:import/export-keystore} %%##$import-export-keystore-title>>
 %%!!import-export-keystore<<
-Import or export the KeyStore used by App Manager.
-This is a Bouncy Castle KeyStore with \texttt{bks} extension.
+Import or export the KeyStore used by App Manager. This is a Bouncy Castle KeyStore with \texttt{bks} extension.
 Therefore, other KeyStore such as Java KeyStore (JKS) or PKCS \#12 are not supported.
-If you need to import a key from these KeyStores, use the relevant options outlined above.
+If a key is needed to be imported from such a KeyStore, the relevant options should be should as specified above.
 %%!!>>
 
 \subsection{About the device}\label{subsec:device-info} %%##$device-info-title>>

@@ -40,14 +40,14 @@ page, inside \textbf{About Phone}. But the best way to find it is to use the sea
 %%!!enable-usb-debug<<
 After \hyperref[subsubsec:location-of-developer-options]{locating the developer options}, enable \textbf{Developer
 option} (if not already). After that, scroll down a bit until you will find the option \textbf{USB debugging}. Use the
-toggle button on the right hand side to enable it. At this point, you may get an alert prompt where you may have to
+toggle button on the right-hand side to enable it. At this point, you may get an alert prompt where you may have to
 click \textit{OK} to actually enable it. You may also have to enable some other options depending on device vendor and
 ROM. Here are some examples:
 %%!!>>
 
 \subsubsection{Xiaomi (MIUI)} %%##$miui-usb-debug-title>>
 %%!!miui-usb-debug<<
-Enable \textbf{USB debugging (security settings)} as well.
+Enable \textbf{USB debugging (Security settings)} as well.
 %%!!>>
 
 \subsubsection{Huawei (EMUI)} %%##$emui-usb-debug-title>>
@@ -59,6 +59,12 @@ saying \textbf{Allow access to device data?} in which case click \textbf{YES, AL
     Often the \textbf{USB debugging} mode could be disabled automatically by the system. If that's the case, repeat the
     above procedure.
 \end{tip}
+%%!!>>
+
+\subsubsection{Realme} %%##$realme-usb-debug-title>>
+%%!!realme-usb-debug<<
+Depending on the device and the version of operating system, you have to enable \textbf{Disable Permission Monitoring},
+or \textbf{USB debugging (Security settings)} along with \textbf{Install via USB}.
 %%!!>>
 
 \subsubsection{LG} %%##$lg-usb-debug-title>>
@@ -80,7 +86,7 @@ In case \textbf{USB Debugging} is greyed out, you can do the following:
 \subsection{Setup ADB on PC or Mac}\label{subsec:setup-adb-on-pc-or-mac} %%##$setup-adb-on-pc-title>>
 %%!!setup-adb-on-pc<<
 In order to enable ADB over TCP, you have to set up ADB in your PC or Mac. \textbf{\textit{Lineage OS users can skip to
-§\ref{subsubsec:lineage-os}.}}
+\Sref{subsubsec:lineage-os}.}}
 %%!!>>
 
 \subsubsection{Windows} %%##$setup-adb-win-title>>
@@ -140,11 +146,11 @@ unzip platform-tools.zip && rm platform-tools.zip && cd platform-tools
 
 \subsection{Configure ADB over TCP}\label{subsec:configure-adb-over-tcp} %%##$configure-aot-title>>
 
-\subsubsection{Lineage OS}\label{subsubsec:lineage-os} %%##$aot-lineage-os-title>>
+\subsubsection{Lineage OS 17.1 and Earlier}\label{subsubsec:lineage-os} %%##$aot-lineage-os-title>>
 %%!!aot-lineage-os<<
 Lineage OS (or its derivatives) users can directly enable ADB over TCP using the developer options. To enable that,
 go to the \textbf{Developer options}, scroll down until you find \textbf{ADB over Network}. Now, use the toggle button
-on the right-hand side to enable it and skip to §\ref{subsubsec:adb-mode-on-app-manager}.
+on the right-hand side to enable it and skip to \Sref{subsubsec:adb-mode-in-app-manager}.
 %%!!>>
 
 \subsubsection{Enable ADB over TCP via PC or Mac}\label{subsubsec:enable-adb-over-tcp-via-pc-or-mac} %%##$enable-aot-via-pc-title>>
@@ -176,18 +182,18 @@ adb tcpip 5555
 \end{danger}
 %%!!>>
 
-\subsubsection{Enable ADB mode on App Manager}\label{subsubsec:adb-mode-on-app-manager} %%##$adb-mode-am-title>>
+\subsubsection{Enable ADB mode in App Manager}\label{subsubsec:adb-mode-in-app-manager} %%##$adb-mode-am-title>>
 %%!!adb-mode-am<<
-After enabling ADB over TCP (in the previous subsections), open App Manager (AM). You should see \textbf{working on ADB
-mode} toast message at the bottom. If not, remove AM from the recents and open AM again from the launcher.
+After enabling ADB over TCP, relaunch App Manager. App Manager should detect ADB mode automatically. If it cannot,
+you can change the mode of operation to ADB over TCP in the \hyperref[subsec:mode-of-operation]{settings page}.
+There, you can also verify whether App Manager has correctly detected ADB as indicated by the \textit{inferred mode}.
 
 \begin{tip}{Notice}
-    In some Android phones, the USB cable is needed to be disconnected from the PC in order for it to work.
+    In some Android devices, the USB cable is needed to be disconnected from the PC before connecting to App Manager.
 \end{tip}
 
 \begin{warning}{Warning}
-    ADB over TCP will be disabled after a restart. In that case, you have to follow
-    §\ref{subsubsec:enable-adb-over-tcp-via-pc-or-mac} again.
+    ADB over TCP will be disabled after a reboot. In that case, you have to follow \Sref{subsubsec:enable-adb-over-tcp-via-pc-or-mac} again.
 \end{warning}
 %%!!>>
 

@@ -1,0 +1,47 @@
+% SPDX-License-Identifier: GPL-3.0-or-later OR CC-BY-SA-4.0
+\section{Automating Tasks}\label{sec:automating-tasks} %%##$section-title>>
+%%!!intro<<
+It is possible to trigger profiles configured inside App Manager via third-party applications such as \textbf{Automation} or \textbf{Tasker}.
+Traditionally, \texttt{Intent}s are used to trigger such operations.
+%%!!>>
+
+\subsection{Generating authorization key}\label{subsec:generating-authorization-key} %%##$generating-authorization-key-title>>
+%%!!generating-authorization-key<<
+In order to ensure proper security, an authorization key is required. To generate a authorization key, go to \textbf{Settings} page and then click \textbf{Authorization Manager} at the bottom.
+If an authorization key has not been generated, it will be generated automatically. The key can be regenerated as required.
+
+\begin{danger}{Caution}
+    Regenerating the authorization key can have some side effects such as invalidation of all the previously configured Intents.
+\end{danger}
+%%!!>>
+
+\subsection{Configuring tasks}\label{subsec:at:general-configuration} %%##$general-configuration-title>>
+%%!!general-configuration<<
+The activity \texttt{io.github.muntashirakon.AppManager.crypto.auth.AuthFeatureDemultiplexer} is responsible for handling all the automations.
+Sending an intent to the activity lets App Manager perform the designated operation by redirecting the \texttt{Intent} to the designated activity or service.
+%%!!>>
+
+\subsubsection{Required extras} %%##$required-extras-title>>
+%%!!required-extras<<
+It has two primary extras required in all conditions. The key names, data types are all follows:
+\begin{enumerate}
+    \item \textbf{\texttt{auth}.} (String value) The authorization key as described in the earlier section.
+    \item \textbf{\texttt{feature}.} (String value) Name of the feature. Supported features are described in the next section.
+\end{enumerate}
+%%!!>>
+
+\subsection{Features}\label{subsec:at:features} %%##$features-title>>
+%%!!features<<
+App Manager current support a single feature, namely \texttt{profile}.
+%%!!>>
+
+\subsection{Triggering a profile}\label{subsec:triggering-a-profile} %%##$triggering-a-profile-title>>
+%%!!triggering-a-profile<<
+In order to trigger a profile, \texttt{feature} must have the value \texttt{profile}. In addition, the following extras can be included:
+\begin{enumerate}
+    \item \textbf{\texttt{prof}.} (String value -- required) The name of the profile as displayed in the \hyperref[sec:profiles-page]{Profiles page}.
+    \item \textbf{\texttt{state}.} (String value -- optional) State of the profile -- currently \texttt{on} or \texttt{off} -- as specified in the documentation.
+    If this extra is not set, App Manager will display a prompt where a state must be selected. Therefore, for complete automation,
+    this option should be set.
+\end{enumerate}
+%%!!>>

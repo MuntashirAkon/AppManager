@@ -129,6 +129,14 @@
     \renewcommand{\includesvg}{\includegraphics}
 \fi
 
+% \Cref, \Sref fix for Pandoc
+\ifdefined\Vanilla\else
+\renewcommand{\Cref}{\KeywordChapter~\ref}
+\fi
+\ifdefined\Vanilla\else
+\renewcommand{\Sref}{§\ref}
+\fi
+
 % -------------------
 % Colours used in AM
 % -------------------

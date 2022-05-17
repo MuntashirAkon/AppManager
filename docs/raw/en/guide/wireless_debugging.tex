@@ -1,0 +1,67 @@
+% SPDX-License-Identifier: GPL-3.0-or-later OR CC-BY-SA-4.0
+\section{Wireless Debugging}\label{sec:wireless-debugging} %%##$section-title>>
+%%!!intro<<
+If you are running Android 11 or later and capable of connecting to a Wi-Fi network for, at least, a few moments,
+Wireless Debugging is the recommended approach as it offers more protection than \hyperref[sec:adb-over-tcp]{ADB over TCP}.
+It requires two steps:
+\begin{enumerate}
+    \item \textbf{ADB pairing.} The initial and a bit complex step for a novice user. Fortunately, this step is not required all the time.
+    \item \textbf{Connecting to ADB.} The final step which needs to be carried out every time you reboot your phone.
+\end{enumerate}
+%%!!>>
+
+\subsection{Enable developer options and USB Debugging}\label{subsec:enable-developer-options-and-usb-debugging} %%##$enable-developer-options-and-usb-debugging-title>>
+%%!!enable-developer-options-and-usb-debugging<<
+See \Sref{subsec:enable-developer-options} and \Sref{subsec:enable-usb-debugging}.
+%%!!>>
+
+\subsection{Enable Wireless Debugging}\label{subsec:enable-wireless-debugging} %%##$enable-wireless-debugging-title>>
+%%!!enable-wireless-debugging<<
+In the \textbf{Developer options} page, find \textbf{Wireless debugging} and click to open it. In the new page,
+turn on \textit{Use wireless debugging}. Depending on your configuration, you might see a dialog prompt asking you to verify your decision.
+If that is the case, click \textit{Allow}.
+
+\begin{tip}{Tip}
+    For an easy access, you might want to add \textbf{Wireless debugging} in the notification tiles section. To do this,
+    find \textbf{Quick settings developer tiles} in the \textbf{Developer options} page and click to open it.
+    In the new window, enable \textit{Wireless debugging}. However, this option is unavailable in most operating systems.
+\end{tip}
+%%!!>>
+
+\subsection{Pair ADB with App Manager}\label{subsec:pair-adb-with-app-manager} %%##$pair-adb-with-appmanager-title>>
+%%!!pair-adb-with-app-manager<<
+Keeping the \textbf{Wireless debugging} page open, go to the \textit{Recents} page either by swiping up or by using the dedicated navigation button,
+and click on the Settings logo to enable \textit{Split screen}. It will wait for you to select or launch another application:
+Launch or select App Manager.
+
+Now, in App Manager and navigate to \textbf{Settings} and then enable \textit{Wireless debugging} in \hyperref[subsec:mode-of-operation]{Mode of operation}.
+After a few moments, App Manager will ask you to either connect or pair ADB\@. Select \textit{pair}.
+
+In the \textbf{Wireless debugging} page (now should be on top among the splits), select \textbf{Pair device with pairing code}.
+At this, a dialog prompt will be displayed. Note down the port number and pairing code but \textbf{DO NOT} close the dialog prompt or the window.
+
+Finally, in App Manager, insert the port number and the pairing code and click \textit{pair}. If the pairing is successful, it will display a \textit{successful} message at the bottom,
+and the dialog prompt in the \textbf{Wireless debugging} page will be dismissed automatically, and you will be able to see App Manager listed as an ADB client.
+
+\begin{tip}{Notice}
+    If you do not use App Manager in ADB mode for a while (depending on devices), App Manager might be removed from the list.
+    In that case, you have to repeat the above procedure.
+\end{tip}
+%%!!>>
+
+\subsection{Connect App Manager to ADB}\label{subsec:connect-app-manager-to-adb} %%##$connect-am-to-adb-title>>
+%%!!connect-am-to-adb<<
+App Manager should be able to connect to ADB automatically if the mode of operation is set to \textit{auto}, \textit{ADB over TCP} or \textit{Wireless debugging}.
+If that is not the case, select \textit{Wireless debugging} in the \hyperref[subsec:mode-of-operation]{settings page}.
+If App Manager fails to detect or connect to ADB, it will display a dialog prompt to connect or pair ADB. Select \textit{connect}.
+
+Now, navigate to the \textbf{Wireless debugging} page in Android settings, and note down the port number displayed in the page.
+In App Manager's dialog prompt, replace the port number with the one that you have noted earlier, and click \textit{connect}.
+
+Once a connection has been established, you can safely disable \textbf{Wireless debugging} in Android settings.
+
+\begin{danger}{Caution}
+    Never disable \textbf{USB Debugging} or any other additional options described in \Sref{subsec:enable-developer-options-and-usb-debugging}.
+    If you do this, the remote server used by App Manager will be stopped, and you may have to start all over again.
+\end{danger}
+%%!!>
