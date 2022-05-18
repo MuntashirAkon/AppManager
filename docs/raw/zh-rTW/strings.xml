@@ -289,15 +289,15 @@
     <string name="guide$backup-restore$$restore-title">恢覆</string>
     <string name="faq$app-components$$limitations-title">追蹤器或其他組件在App Manager中是如何被禁用的？其局限性是什麽？</string>
     <string name="appendices$specifications$external">外部格式用於在 App Manager 中導入或導出規則。
-\n\\開始{逐字}
+\n\\begin{Verbatim}
 \n &lt;package_name&gt; &lt;component_name&gt; &lt;type&gt; &lt;mode&gt;|&lt;component_status&gt;|&lt;is_granted&gt;
-\n\\end{逐字}
+\n\\end{Verbatim}
 \n除了第一項是包的名稱外，該格式與上述格式基本相同。
 \n
-\n\\begin{危險}{注意}
+\n\\begin{danger}{注意}
 \n 導出的規則與內部規則的格式不同，不應直接複製到
 \n \\textbf{conf} 文件夾。
-\n\\結束{危險}</string>
+\n\\end{danger}</string>
     <string name="pages$app-details-page$$shared-libs-tab-title">共享庫選項卡</string>
     <string name="pages$app-details-page$permission-tabs">\\textbf{App Ops}, \\textbf{使用權限} and \\textbf{權限} 選項卡與權限相關。
 \n安卓中，在不具有相同身份（稱為 \\textit{shared ID}）的應用或進程之間進行通信常常需要權限，其由權限控制器管理。
