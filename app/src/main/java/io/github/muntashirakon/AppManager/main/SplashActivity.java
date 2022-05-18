@@ -78,29 +78,35 @@ public class SplashActivity extends AppCompatActivity {
         Log.d(TAG, "Waiting to be authenticated.");
         mViewModel.authenticationStatus().observe(this, status -> {
             switch (status) {
+                case Ops.STATUS_AUTO_CONNECT_WIRELESS_DEBUGGING:
+                    Log.d(TAG, "Try auto-connecting to wireless debugging.");
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        mViewModel.autoConnectAdb(Ops.STATUS_WIRELESS_DEBUGGING_CHOOSER_REQUIRED);
+                        return;
+                    } // fall-through
+                case Ops.STATUS_WIRELESS_DEBUGGING_CHOOSER_REQUIRED:
+                    Log.d(TAG, "Display wireless debugging chooser (pair or connect)");
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        Ops.connectWirelessDebugging(this, mViewModel);
+                        return;
+                    } // fall-through
+                case Ops.STATUS_ADB_CONNECT_REQUIRED:
+                    Log.d(TAG, "Display connect dialog.");
+                    Ops.connectAdbInput(this, mViewModel);
+                    return;
+                case Ops.STATUS_ADB_PAIRING_REQUIRED:
+                    Log.d(TAG, "Display pairing dialog.");
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        Ops.pairAdbInput(this, mViewModel);
+                        return;
+                    } // fall-through
                 case Ops.STATUS_SUCCESS:
-                case Ops.STATUS_FAILED:
+                case Ops.STATUS_FAILURE:
                     Log.d(TAG, "Authentication completed.");
                     mViewModel.setAuthenticating(false);
                     Ops.setAuthenticated(true);
                     startActivity(new Intent(this, MainActivity.class));
                     finish();
-                    return;
-                case Ops.STATUS_DISPLAY_WIRELESS_DEBUGGING:
-                    Log.d(TAG, "Request wireless debugging.");
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                        mViewModel.autoConnectAdb(Ops.STATUS_DISPLAY_PAIRING);
-                        return;
-                    } // fall-through
-                case Ops.STATUS_DISPLAY_PAIRING:
-                    Log.d(TAG, "Display pairing dialog.");
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                        Ops.connectWirelessDebugging(this, mViewModel);
-                        return;
-                    } // fall-through
-                case Ops.STATUS_DISPLAY_CONNECT:
-                    Log.d(TAG, "Display connect dialog.");
-                    Ops.connectAdbInput(this, mViewModel);
             }
         });
         if (!mViewModel.isAuthenticating()) {

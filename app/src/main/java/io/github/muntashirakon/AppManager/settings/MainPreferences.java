@@ -59,6 +59,7 @@ import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.adb.android.AdbMdns;
 import io.github.muntashirakon.dialog.AlertDialogBuilder;
 import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
@@ -373,26 +374,32 @@ public class MainPreferences extends PreferenceFragment {
         // Mode of ops
         model.getModeOfOpsStatus().observe(this, status -> {
             switch (status) {
-                case Ops.STATUS_SUCCESS:
-                case Ops.STATUS_FAILED:
-                    modeOfOpsAlertDialog.dismiss();
-                    mode.setSummary(getString(R.string.mode_of_op_with_inferred_mode_of_op,
-                            modes[MODE_NAMES.indexOf(currentMode)], getInferredMode()));
-                    return;
-                case Ops.STATUS_DISPLAY_WIRELESS_DEBUGGING:
+                case Ops.STATUS_AUTO_CONNECT_WIRELESS_DEBUGGING:
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                        model.autoConnectAdb(Ops.STATUS_DISPLAY_PAIRING);
+                        model.autoConnectAdb(Ops.STATUS_WIRELESS_DEBUGGING_CHOOSER_REQUIRED);
                         return;
                     } // fall-through
-                case Ops.STATUS_DISPLAY_PAIRING:
+                case Ops.STATUS_WIRELESS_DEBUGGING_CHOOSER_REQUIRED:
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                         modeOfOpsAlertDialog.dismiss();
                         Ops.connectWirelessDebugging(activity, model);
                         return;
                     } // fall-through
-                case Ops.STATUS_DISPLAY_CONNECT:
+                case Ops.STATUS_ADB_CONNECT_REQUIRED:
                     modeOfOpsAlertDialog.dismiss();
                     Ops.connectAdbInput(activity, model);
+                    return;
+                case Ops.STATUS_ADB_PAIRING_REQUIRED:
+                    modeOfOpsAlertDialog.dismiss();
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        Ops.pairAdbInput(activity, model);
+                        return;
+                    } // fall-through
+                case Ops.STATUS_SUCCESS:
+                case Ops.STATUS_FAILURE:
+                    modeOfOpsAlertDialog.dismiss();
+                    mode.setSummary(getString(R.string.mode_of_op_with_inferred_mode_of_op,
+                            modes[MODE_NAMES.indexOf(currentMode)], getInferredMode()));
             }
         });
         // Changelog
@@ -524,7 +531,7 @@ public class MainPreferences extends PreferenceFragment {
         @Override
         public void connectAdb(int port) {
             mExecutor.submit(() -> {
-                int status = Ops.connectAdb(port, Ops.STATUS_FAILED);
+                int status = Ops.connectAdb(port, Ops.STATUS_FAILURE);
                 mModeOfOpsStatus.postValue(status);
             });
         }
@@ -536,6 +543,37 @@ public class MainPreferences extends PreferenceFragment {
                 int status = Ops.pairAdb(getApplication(), pairingCode, port);
                 mModeOfOpsStatus.postValue(status);
             });
+        }
+
+        @Override
+        public void onStatusReceived(int status) {
+            mModeOfOpsStatus.postValue(status);
+        }
+
+        private final MutableLiveData<Integer> mAdbPairingPort = new MutableLiveData<>();
+        private AdbMdns mAdbMdnsPairing;
+
+        @NonNull
+        @Override
+        public LiveData<Integer> startObservingAdbPairingPort() {
+            mExecutor.submit(() -> {
+                if (mAdbMdnsPairing == null) {
+                    mAdbMdnsPairing = new AdbMdns(getApplication(), AdbMdns.SERVICE_TYPE_TLS_PAIRING, (hostAddress, port) -> {
+                        if (port != -1) {
+                            mAdbPairingPort.postValue(port);
+                        }
+                    });
+                }
+                mAdbMdnsPairing.start();
+            });
+            return mAdbPairingPort;
+        }
+
+        @Override
+        public void stopObservingAdbPairingPort() {
+            if (mAdbMdnsPairing != null) {
+                mAdbMdnsPairing.stop();
+            }
         }
     }
 }

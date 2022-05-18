@@ -71,32 +71,39 @@ public abstract class BaseActivity extends AppCompatActivity {
         Log.d(TAG, "Waiting to be authenticated.");
         mViewModel.authenticationStatus().observe(this, status -> {
             switch (status) {
-                case Ops.STATUS_SUCCESS:
-                case Ops.STATUS_FAILED:
-                    Log.d(TAG, "Authentication completed.");
-                    mViewModel.setAuthenticating(false);
-                    if (mAlertDialog != null) mAlertDialog.dismiss();
-                    Ops.setAuthenticated(true);
-                    onAuthenticated(savedInstanceState);
-                    return;
-                case Ops.STATUS_DISPLAY_WIRELESS_DEBUGGING:
-                    Log.d(TAG, "Request wireless debugging.");
+                case Ops.STATUS_AUTO_CONNECT_WIRELESS_DEBUGGING:
+                    Log.d(TAG, "Try auto-connecting to wireless debugging.");
                     mAlertDialog = null;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                        mViewModel.autoConnectAdb(Ops.STATUS_DISPLAY_PAIRING);
+                        mViewModel.autoConnectAdb(Ops.STATUS_WIRELESS_DEBUGGING_CHOOSER_REQUIRED);
                         return;
                     } // fall-through
-                case Ops.STATUS_DISPLAY_PAIRING:
-                    Log.d(TAG, "Display pairing dialog.");
+                case Ops.STATUS_WIRELESS_DEBUGGING_CHOOSER_REQUIRED:
+                    Log.d(TAG, "Display wireless debugging chooser (pair or connect)");
                     mAlertDialog = null;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                         Ops.connectWirelessDebugging(this, mViewModel);
                         return;
                     } // fall-through
-                case Ops.STATUS_DISPLAY_CONNECT:
+                case Ops.STATUS_ADB_CONNECT_REQUIRED:
                     Log.d(TAG, "Display connect dialog.");
                     mAlertDialog = null;
                     Ops.connectAdbInput(this, mViewModel);
+                    return;
+                case Ops.STATUS_ADB_PAIRING_REQUIRED:
+                    Log.d(TAG, "Display pairing dialog.");
+                    mAlertDialog = null;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        Ops.pairAdbInput(this, mViewModel);
+                        return;
+                    } // fall-through
+                case Ops.STATUS_SUCCESS:
+                case Ops.STATUS_FAILURE:
+                    Log.d(TAG, "Authentication completed.");
+                    mViewModel.setAuthenticating(false);
+                    if (mAlertDialog != null) mAlertDialog.dismiss();
+                    Ops.setAuthenticated(true);
+                    onAuthenticated(savedInstanceState);
             }
         });
         if (!mViewModel.isAuthenticating()) {

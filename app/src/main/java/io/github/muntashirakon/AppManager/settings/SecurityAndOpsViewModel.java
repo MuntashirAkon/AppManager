@@ -15,13 +15,15 @@ import androidx.lifecycle.MutableLiveData;
 
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
+import io.github.muntashirakon.adb.android.AdbMdns;
 
 public class SecurityAndOpsViewModel extends AndroidViewModel implements Ops.AdbConnectionInterface {
     public static final String TAG = SecurityAndOpsViewModel.class.getSimpleName();
 
     private boolean mIsAuthenticating = false;
     private final MutableLiveData<Integer> mAuthenticationStatus = new MutableLiveData<>();
-    private final MultithreadedExecutor executor = MultithreadedExecutor.getNewInstance();
+    private final MutableLiveData<Integer> mAdbPairingPort = new MutableLiveData<>();
+    private final MultithreadedExecutor mExecutor = MultithreadedExecutor.getNewInstance();
 
     public SecurityAndOpsViewModel(@NonNull Application application) {
         super(application);
@@ -29,7 +31,7 @@ public class SecurityAndOpsViewModel extends AndroidViewModel implements Ops.Adb
 
     @Override
     protected void onCleared() {
-        executor.shutdown();
+        mExecutor.shutdown();
         super.onCleared();
     }
 
@@ -47,7 +49,7 @@ public class SecurityAndOpsViewModel extends AndroidViewModel implements Ops.Adb
 
     @AnyThread
     public void setModeOfOps() {
-        executor.submit(() -> {
+        mExecutor.submit(() -> {
             Log.d(TAG, "Before Ops::init");
             int status = Ops.init(getApplication(), false);
             Log.d(TAG, "After Ops::init");
@@ -58,7 +60,7 @@ public class SecurityAndOpsViewModel extends AndroidViewModel implements Ops.Adb
     @AnyThread
     @RequiresApi(Build.VERSION_CODES.R)
     public void autoConnectAdb(int returnCodeOnFailure) {
-        executor.submit(() -> {
+        mExecutor.submit(() -> {
             Log.d(TAG, "Before Ops::autoConnectAdb");
             int status = Ops.autoConnectAdb(getApplication(), returnCodeOnFailure);
             Log.d(TAG, "After Ops::autoConnectAdb");
@@ -69,9 +71,9 @@ public class SecurityAndOpsViewModel extends AndroidViewModel implements Ops.Adb
     @Override
     @AnyThread
     public void connectAdb(int port) {
-        executor.submit(() -> {
+        mExecutor.submit(() -> {
             Log.d(TAG, "Before Ops::connectAdb");
-            int status = Ops.connectAdb(port, Ops.STATUS_FAILED);
+            int status = Ops.connectAdb(port, Ops.STATUS_FAILURE);
             Log.d(TAG, "After Ops::connectAdb");
             mAuthenticationStatus.postValue(status);
         });
@@ -81,11 +83,41 @@ public class SecurityAndOpsViewModel extends AndroidViewModel implements Ops.Adb
     @AnyThread
     @RequiresApi(Build.VERSION_CODES.R)
     public void pairAdb(@Nullable String pairingCode, int port) {
-        executor.submit(() -> {
+        mExecutor.submit(() -> {
             Log.d(TAG, "Before Ops::pairAdb");
             int status = Ops.pairAdb(getApplication(), pairingCode, port);
             Log.d(TAG, "After Ops::pairAdb");
             mAuthenticationStatus.postValue(status);
         });
+    }
+
+    @Override
+    public void onStatusReceived(int status) {
+        mAuthenticationStatus.postValue(status);
+    }
+
+    private AdbMdns mAdbMdnsPairing;
+
+    @NonNull
+    @Override
+    public LiveData<Integer> startObservingAdbPairingPort() {
+        mExecutor.submit(() -> {
+            if (mAdbMdnsPairing == null) {
+                mAdbMdnsPairing = new AdbMdns(getApplication(), AdbMdns.SERVICE_TYPE_TLS_PAIRING, (hostAddress, port) -> {
+                    if (port != -1) {
+                        mAdbPairingPort.postValue(port);
+                    }
+                });
+            }
+            mAdbMdnsPairing.start();
+        });
+        return mAdbPairingPort;
+    }
+
+    @Override
+    public void stopObservingAdbPairingPort() {
+        if (mAdbMdnsPairing != null) {
+            mAdbMdnsPairing.stop();
+        }
     }
 }
