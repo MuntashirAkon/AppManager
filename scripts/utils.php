@@ -38,3 +38,18 @@ function android_escape_slash_newline(string $string) : string {
 function android_escape_slash_newline_reverse(string $string) : string {
     return strtr($string, array('\@' => '@', '\?' => '?', '&lt;' => '<', '&gt;' => '>', '\"' => '"', "\'" => "'", '&amp;' => '&', '\\\\' => '\\', '\n' => "\n"));
 }
+
+function syntax_error_with_position(string $path, string $texts, int $position, string $error_message = "Syntax error") {
+    $lines = explode("\n", $texts);
+    $line_no = 0;
+    foreach ($lines as $line) {
+        ++$line_no;
+        $len = strlen($line);
+        if ($len > $position) {
+            break;
+        }
+        $position -= ($len + 1);
+    }
+    fprintf(STDERR, "\e[41;1mError:\e[0m %s near $path:$line_no:%d \n", $error_message, abs($position));
+    exit(1);
+}

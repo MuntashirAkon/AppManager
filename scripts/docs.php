@@ -60,7 +60,7 @@ function build_html(string $lang) {
     // Run command
     passthru($cmd, $ret_val);
     if ($ret_val != 0) {
-        echo 'Pandoc could not generate an HTML file.';
+        fprintf(STDERR, "Pandoc could not generate an HTML file.\n");
         exit(1);
     }
 
@@ -89,14 +89,14 @@ function build_html(string $lang) {
     $cmd = "minify \"$custom_css\" -o \"$base_dir/../css/custom.css\"";
     system($cmd, $ret_val);
     if ($ret_val != 0) {
-        echo "Could not minify custom.css";
+        fprintf(STDERR, "Could not minify custom.css\n");
         exit(1);
     }
     // Minify HTML
     $cmd = "minify \"$output_file\" -o \"$pwd/index.min.html\" && mv \"$pwd/index.min.html\" \"$output_file\"";
     system($cmd, $ret_val);
     if ($ret_val != 0) {
-        echo "Could not minify index.html";
+        fprintf(STDERR, "Could not minify index.html\n");
         exit(1);
     }
     // Replace custom.css with ../css/custom.css
@@ -178,10 +178,39 @@ function get_tex_contents_assoc(string $tex_file): array {
     $offset = 0;
     foreach ($matches['key'] as $key) {
         $start_magic = '%%!!' . $key . "<<\n";
-        $start_pos = strpos($tex_file_contents, $start_magic, $offset) + strlen($start_magic);
+        $start_pos = strpos($tex_file_contents, $start_magic, $offset);
+        if ($start_pos === false) {
+            fprintf(STDERR, "Error: Could not find key $key in $tex_file\n");
+            exit(1);
+        }
+        $start_pos += strlen($start_magic);
         $end_pos = strpos($tex_file_contents, "\n%%!!>>", $offset);
+        if ($end_pos === false) {
+            $supposed_block_start_pos = strpos($tex_file_contents, "\n%%!!", $start_pos);
+            if ($supposed_block_start_pos !== false) {
+                syntax_error_with_position($tex_file, $tex_file_contents, $supposed_block_start_pos, "Could not locate %%!!>> for key: $key");
+            } else {
+                syntax_error_with_position($tex_file, $tex_file_contents, strlen($tex_file_contents), "EOF reached before matching %%!!>> for key: $key");
+            }
+        }
+        // Ensure there is no %%!!<string><< or %%##$<string>>> between start and end since nesting isn't allowed
+        $mal_pos1 = strpos($tex_file_contents, "\n%%!!", $start_pos);
+        $mal_pos2 = strpos($tex_file_contents, "\n%%##", $start_pos);
+        if ($mal_pos1 !== $end_pos) {
+            syntax_error_with_position($tex_file, $tex_file_contents, $mal_pos1);
+        }
+        if ($mal_pos2 !== false && $mal_pos2 < $end_pos) {
+            syntax_error_with_position($tex_file, $tex_file_contents, $mal_pos2);
+        }
         $offset = $end_pos + 7;
         $content_values[] = substr($tex_file_contents, $start_pos, $end_pos - $start_pos);
+        // Ensure that the next key is available before running into %%!!>> again
+        $mal_pos1 = strpos($tex_file_contents, "\n%%!!", $offset);
+        $mal_pos2 = strpos($tex_file_contents, "\n%%!!>>", $offset);
+        if ($mal_pos1 !== false && $mal_pos1 === $mal_pos2) {
+            // Invalid %%!!>> i.e. the end position considered earlier is wrong
+            syntax_error_with_position($tex_file, $tex_file_contents, $end_pos);
+        }
     }
     foreach ($matches['key'] as $key) {
         if (strlen($key) == 0) {
@@ -235,9 +264,9 @@ function rebase_strings() {
  * @param string $lang Target language e.g. en, ru, ja, etc.
  */
 function update_translations(string $lang) {
-    $pwd = RAW_DIR . '/' . $lang;
-    $strings_file = $pwd . '/' . STRINGS_XML;
     $base_dir = getcwd() . '/' . BASE_DIR;
+    $pwd = $base_dir . '/../' . $lang;
+    $strings_file = $pwd . '/' . STRINGS_XML;
     // Read strings.xml: Get tex file and key
     $dom = new DOMDocument();
     $dom->loadXML(file_get_contents($strings_file));
@@ -250,7 +279,7 @@ function update_translations(string $lang) {
         $tex_file = str_replace('$', '/', substr($raw_key, 0, $pos) . '.tex');
         $key = substr($raw_key, $pos + 1);
         if (strlen($tex_file) == 0 || strlen($key) == 0) {
-            echo "Invalid TeX filename or key (raw: $raw_key)\n";
+            fprintf(STDERR, "Invalid TeX filename or key (raw: $raw_key)\n");
             exit(1);
         }
         if (!isset($strings[$tex_file])) $strings[$tex_file] = array();
@@ -266,7 +295,7 @@ function update_translations(string $lang) {
         if (!is_dir($dir)) {
             if (file_exists($dir)) unlink($dir);
             if (!mkdir($dir, 0777, true)) {
-                echo "Error: Could not create $dir\n";
+                fprintf(STDERR, "Error: Could not create $dir\n");
                 exit(1);
             }
         }
@@ -327,6 +356,53 @@ function update_translations(string $lang) {
             }
             // Store the files in pwd
             file_put_contents($pwd . '/' . $tex_file, $tex_file_contents);
+            // Check if curly braces are closed correctly
+            $brace_count = 0;
+            $len = strlen($tex_file_contents);
+            for ($i = 0; $i < $len; ++$i) {
+                if ($tex_file_contents[$i] == '{' && ($i == 0 || $tex_file_contents[$i - 1] != '\\')) {
+                    // Unescaped {
+                    ++$brace_count;
+                } else if ($tex_file_contents[$i] == '}' && ($i == 0 || $tex_file_contents[$i - 1] != '\\')) {
+                    // Unescaped }
+                    --$brace_count;
+                    if ($brace_count < 0) {
+                        syntax_error_with_position($pwd . '/' . $tex_file, $tex_file_contents, $i, "Syntax error '$tex_file_contents[$i]'");
+                    }
+                }
+            }
+            if ($brace_count > 0) {
+                $brace_count = 0;
+                for ($i = $len - 1; $i >= 0; --$i) {
+                    if ($tex_file_contents[$i] == '{' && ($i == 0 || $tex_file_contents[$i - 1] != '\\')) {
+                        // Unescaped {
+                        --$brace_count;
+                        if ($brace_count < 0) {
+                            syntax_error_with_position($pwd . '/' . $tex_file, $tex_file_contents, $i, "Syntax error '$tex_file_contents[$i]'");
+                        }
+                    } else if ($tex_file_contents[$i] == '}' && ($i == 0 || $tex_file_contents[$i - 1] != '\\')) {
+                        // Unescaped }
+                        ++$brace_count;
+                    }
+                }
+            }
+            // Begin/end checks FIXME: This check is only covers a few things. It completely ignores checks like nesting
+            preg_match_all('/(?<=\\begin\{)(?<env>.*)(?=})/', $tex_file_contents, $matches);
+            $env_begin = $matches['env'];
+            sort($env_begin);
+            preg_match_all('/(?<=\\end\{)(?<env>.*)(?=})/', $tex_file_contents, $matches);
+            $env_end = $matches['env'];
+            sort($env_end);
+            if (count($env_begin) != count($env_end)) {
+                fprintf(STDERR, "Error: Invalid number of begin and ending of environments.\n");
+                exit(1);
+            }
+            for ($i = 0; $i < count($env_begin); ++$i) {
+                if ($env_begin[$i] != $env_end[$i]) {
+                    fprintf(STDERR, "Error: Could not find the end of the environment: $env_begin[$i].\n");
+                    exit(1);
+                }
+            }
         } else { // Didn't match any translation
             // Simply copy the file
             copy($base_dir . '/' . $tex_file, $pwd . '/' . $tex_file);
@@ -457,7 +533,7 @@ function get_IETF_language_tag(string $lang): string {
 function create_transient_tex(string $target_dir, string $ietf_lang = 'en') {
     $am_version = system("grep -m1 versionName ./app/build.gradle | awk -F \\\" '{print $2}'", $ret_val);
     if ($ret_val != 0) {
-        echo 'Could not get the versionName from ./app/build.gradle';
+        fprintf(STDERR, "Could not get the versionName from ./app/build.gradle\n");
         exit(1);
     }
     $fmt = new IntlDateFormatter(
@@ -481,7 +557,7 @@ EOF;
 
 // MAIN //
 if ($argc < 2) {
-    echo 'Invalid number of arguments.';
+    fprintf(STDERR, "Invalid number of arguments.\n");
     exit(1);
 }
 
@@ -490,7 +566,7 @@ $verb = $argv[1];
 switch($verb) {
     case 'build':
         if (!isset($argv[2])) {
-            echo 'build <lang>';
+            fprintf(STDERR, "build <lang>\n");
             exit(1);
         }
         build_html($argv[2]);
@@ -500,7 +576,7 @@ switch($verb) {
         break;
     case 'update':
         if (!isset($argv[2])) {
-            echo 'update <lang>';
+            fprintf(STDERR, 'update <lang>\n');
             exit(1);
         }
         if ($argv[2] == 'en') {
@@ -525,6 +601,6 @@ switch($verb) {
         }
         break;
     case 'debug':
-        echo "Nothing to do.";
+        echo "Nothing to do.\n";
         break;
 }
