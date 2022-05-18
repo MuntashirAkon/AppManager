@@ -5,246 +5,716 @@
     <string name="intro$main$$contributing-title">貢獻</string>
     <string name="intro$main$$buiding-title">構建說明</string>
     <string name="intro$main$$submit-patches-title">提交補丁</string>
-    <string name="intro$main$$source-code-links-title">原始碼連結</string>
-    <string name="pages$main-page$$apk-updater-title">APK 更新程式</string>
-    <string name="pages$main-page$$settings-title">設定</string>
-    <string name="pages$main-page$$log-viewer-title">日誌查看器</string>
-    <string name="pages$app-details-page$$other-tabs-title">其他分頁</string>
+    <string name="intro$main$$source-code-links-title">源碼鏈接</string>
+    <string name="pages$main-page$$apk-updater-title">APK更新器</string>
+    <string name="pages$main-page$$settings-title">設置</string>
+    <string name="pages$main-page$$log-viewer-title">日志查看器</string>
+    <string name="pages$app-details-page$$other-tabs-title">其他選項卡</string>
     <string name="intro$main$$official-sources-title">官方來源</string>
-    <string name="intro$main$$contact-title">聯繫我們</string>
-    <string name="intro$main$$donation-title">捐款\\&amp;資金</string>
-    <string name="intro$main$source-code-links">除了GitHub之外，所有都是鏡像連結。標記應始終是最新的，但不能保證主分支是最新的
-\n最新的。如果目標是克隆主分支，請使用 GitHub 連結而不是其他連結。</string>
-    <string name="intro$main$bin-sources">App Manager 透過以下渠道發布。
+    <string name="intro$main$$contact-title">聯系我們</string>
+    <string name="intro$main$$donation-title">捐贈 \\&amp; 資助</string>
+    <string name="intro$main$source-code-links">除了GitHub外其他都是鏡像鏈接。tags 應當始終是最新的，但 master 分支不保證是
+\n最新的。如果計劃 clone master 分支，請使用 GitHub 鏈接而不是其他鏈接。</string>
+    <string name="intro$main$bin-sources">App Manager 通過以下渠道發布。
 \n非官方來源可能分發 App Manager 的修改版本，後果自負。
 \n\\begin{enumerate}
-\n\\item F-Droid \\footnote{For distributing normal releases only}\\\\
-\n\\textit{Link:} \\url{https://f-droid.org/packages/io.github.muntashirakon.AppManager}
-\n\\item GitHub repository.\\\\
-\n\\textit{Normal releases:} \\url{https://github.com/MuntashirAkon/AppManager/releases}\\\\
-\n\\textit{Debug releases:} \\url{https://github.com/MuntashirAkon/AppManager/actions}
-\n\\item Telegram.\\\\
-\n\\textit{Normal releases:} \\url{https://t.me/AppManagerChannel}\\\\
-\n\\textit{Debug releases:} \\url{https://t.me/AppManagerDebug}
+\n \\item F-Droid \\footnote{For distributing normal releases only}\\\\
+\n \\textit{Link:} \\url{https://f-droid.org/packages/io.github.muntashirakon.AppManager}
+\n \\item GitHub repository.\\\\
+\n \\textit{Normal releases:} \\url{https://github.com/MuntashirAkon/AppManager/releases}\\\\
+\n \\textit{Debug releases:} \\url{https://github.com/MuntashirAkon/AppManager/actions}
+\n \\item Telegram.\\\\
+\n \\textit{Normal releases:} \\url{https://t.me/AppManagerChannel}\\\\
+\n \\textit{Debug releases:} \\url{https://t.me/AppManagerDebug}
 \n\\end{enumerate}</string>
-    <string name="pages$main-page$$version-info-title">版本資訊</string>
-    <string name="pages$main-page$$options-menu-title">選項功能表</string>
-    <string name="pages$main-page$$1-click-ops-title">一鍵式操作</string>
+    <string name="pages$main-page$$version-info-title">版本信息</string>
+    <string name="pages$main-page$$options-menu-title">選項菜單</string>
+    <string name="pages$main-page$$1-click-ops-title">一鍵操作</string>
     <string name="pages$main$$pages-chapter-title">頁面</string>
     <string name="pages$main-page$$batch-operations-title">批處理</string>
     <string name="pages$main-page$$instructions-title">說明</string>
     <string name="pages$main-page$$filter-title">篩選</string>
     <string name="pages$main-page$$system-config-title">系統配置</string>
-    <string name="pages$main-page$$colour-codes-title">顏色代碼</string>
-    <string name="pages$main-page$$profile_name-title">配置檔案名稱</string>
-    <string name="pages$main-page$$profiles-title">配置檔案</string>
-    <string name="pages$main-page$$application-types-title">應用程式類型</string>
-    <string name="pages$main-page$$app-usage-title">應用程式使用情況</string>
-    <string name="pages$main-page$$running-apps-title">正在執行的應用程式</string>
-    <string name="pages$main-page$$section-title">主畫面</string>
-    <string name="pages$main-page$$how-app-ops-work-title">主畫面中的應用程式清單項</string>
+    <string name="pages$main-page$$colour-codes-title">顏色代碼含義</string>
+    <string name="pages$main-page$$profile_name-title">配置文件名稱</string>
+    <string name="pages$main-page$$profiles-title">配置文件</string>
+    <string name="pages$main-page$$application-types-title">應用類型</string>
+    <string name="pages$main-page$$app-usage-title">應用使用情況</string>
+    <string name="pages$main-page$$running-apps-title">正在運行的應用</string>
+    <string name="pages$main-page$$section-title">主頁</string>
+    <string name="pages$main-page$$how-app-ops-work-title">主頁面中的一個應用程序列表項</string>
     <string name="pages$app-details-page$$servcies-title">服務 (Services)</string>
-    <string name="pages$app-details-page$$receivers-title">接收器</string>
-    <string name="pages$app-details-page$$blocking-components-title">封鎖元件</string>
+    <string name="pages$app-details-page$$receivers-title">(廣播)接收器 ((Broadcast)Receiver)</string>
+    <string name="pages$app-details-page$$blocking-components-title">阻止組件</string>
     <string name="pages$app-details-page$$uses-permissions-title">使用權限</string>
     <string name="pages$app-details-page$$permissions-title">權限</string>
-    <string name="pages$app-details-page$$app-ops-title"/>
-    <string name="pages$app-details-page$$permission-tabs-title">權限分頁</string>
-    <string name="pages$app-details-page$$signatures-tab-title">簽名分頁</string>
-    <string name="pages$app-details-page$$blocking-trackers-title">封鎖跟踪器</string>
-    <string name="pages$app-details-page$intro">\\textbf{應用程式詳細資訊頁}由11個標籤頁組成.幾乎描述了一個應用程式的所有資訊,
-\n包括清單中的所有屬性, \\hyperref[ch:app-ops]{AppOps},簽名,原生庫等</string>
-    <string name="pages$app-details-page$app-info-tab">\\textbf{應用程式資訊} 分頁包含關於一個應用程式的基本資訊,
-\n許多操作可以在此標籤中執行.</string>
-    <string name="intro$main$supported-versions">目前，支援的版本有 v2.6.0（穩定版）、v3.0.0（alpha 版和調試版）。以前版本的 App Manager 可能包含安全漏洞，不應使用。</string>
-    <string name="pages$app-details-page$$providers-title">提供者</string>
-    <string name="pages$app-details-page$$additional-features-for-rooted-phones-title">針對已 Root 的手機的額外功能</string>
+    <string name="pages$app-details-page$$app-ops-title">App Ops</string>
+    <string name="pages$app-details-page$$permission-tabs-title">權限選項卡</string>
+    <string name="pages$app-details-page$$signatures-tab-title">簽名選項卡</string>
+    <string name="pages$app-details-page$$blocking-trackers-title">阻止跟蹤器</string>
+    <string name="pages$app-details-page$intro">\\textbf{應用詳情} 頁面由 11 個標簽頁組成。它描述了一個應用程序所能有的幾乎所有信息,
+\n包括其清單中的所有屬性、\\hyperref[ch:app-ops]{應用操作}、簽名
+\n信息、庫等等。</string>
+    <string name="pages$app-details-page$app-info-tab">\\textbf{應用信息} 選項卡包含關於一個應用程序的基本信息,
+\n許多操作可以在此標簽中執行.</string>
+    <string name="intro$main$supported-versions">當前，支持的版本是v2.6.0（穩定版），v3.0.0（alpha和debug版）。先前版本的 App
+\nManager 可能包含安全漏洞，不應繼續使用。</string>
+    <string name="pages$app-details-page$$providers-title">(內容)提供者 ((Content)Providers)</string>
+    <string name="pages$app-details-page$$additional-features-for-rooted-phones-title">針對已root的手機的額外功能</string>
     <string name="intro$main$terminologies">\\begin{itemize}
-\n\\item \\textbf{AM} --- App Manager
-\n\\item \\textbf{Block/Unblock} --- Used for component blocking or unblocking. How components are blocked depends on
-\nthe user preferences.
-\n\\item \\textbf{IFW} --- Intent Firewall (意圖防火牆)
-\n\\item \\textbf{Ops} --- operations (操作), e.g.\\app ops, batch ops, 1-click ops
-\n\\item \\textbf{SSAID} --- \\texttt{Settings.Secure.ANDROID\\_ID} - 分配給每個應用程式的設備標識符 (Android Oreo及以上版本)，由應用程式簽名與包\\texttt{android}的SSAID組合生成的。因此，除非使用者選擇格式化設備，否則它保證對每個應用程式來說都是獨一無二的。它被廣泛用於跟踪使用者。
-\n\\item \\textbf{Tracker} --- Denotes tracker components throughout the document and in App Manager except in the
-\n\\hyperref[sec:scanner-page]{scanner page}. Trackers include libraries such as crash reporters, analytics,
-\nprofiling, identification, ad, location, etc. Thus, they are not equal in functions. There is no distinction or bias
-\nbetween open source and closed source libraries that promote tracking.
+\n \\item \\textbf{AM} --- App Manager
+\n \\item \\textbf{Block/Unblock} --- Used for component blocking or unblocking. How components are blocked depends on
+\n the user preferences.
+\n \\item \\textbf{IFW} --- Intent Firewall (意圖防火墻)
+\n \\item \\textbf{Ops} --- operations (操作), e.g.\\ app ops, batch ops, 1-click ops
+\n \\item \\textbf{SSAID} --- \\texttt{Settings.Secure.ANDROID\\_ID} - 分配給每個應用的設備標識符 (Android Oreo及以上版本)，由應用簽名與包\\texttt{android}的SSAID組合生成的。因此，除非用戶選擇格式化設備，否則它保證對每個應用來說都是獨一無二的。它被廣泛用於跟蹤用戶。
+\n \\item \\textbf{Tracker} --- Denotes tracker components throughout the document and in App Manager except in the
+\n \\hyperref[sec:scanner-page]{scanner page}. Trackers include libraries such as crash reporters, analytics,
+\n profiling, identification, ad, location, etc. Thus, they are not equal in functions. There is no distinction or bias
+\n between open source and closed source libraries that promote tracking.
 \n\\end{itemize}</string>
-    <string name="pages$main-page$instructions">點擊 \\textbf{指南} 開啟離線版的App Manager使用者手冊.
-\n它也可能開啟在線版本如果如果相應的功能拆分\\texttt{feat\\_docs}未安裝,
+    <string name="pages$main-page$instructions">點擊 \\textbf{指南} 打開離線版的App Manager用戶手冊.
+\n它也可能打開在線版本如果如果相應的功能拆分\\texttt{feat\\_docs}未安裝,
 \n或系統 WebView不存在.</string>
     <string name="pages$main-page$colour-codes">\\begin{itemize}
-\n\\item \\colorbox{AMLightGreyishOrange}{\\textcolor{black}{淺灰橙(日間模式下)}} /\\colorbox{AMDarkBlue}{
-\n\\textcolor{white}{深藍(夜間模式下)}} -- 多選模式下被選中的應用程式
-\n\\item \\colorbox{AMLightRed}{\\textcolor{black}{淺紅(日間模式下)}} /\\colorbox{AMVeryDarkRed}{\\textcolor{white}
-\n{深紅 (夜間模式下)}} -- 停用的應用程式
-\n\\item \\colorbox{AMYellow}{\\textcolor{black}{黃色星標}} -- 可調試的應用程式
-\n\\item \\textcolor{AMOrange}{橙色 \\textit{日期}} -- 應用程式可讀取日誌
-\n\\item \\textcolor{AMOrange}{橙色 \\textit{UID}} -- 使用者 ID 在應用程式間被共享
-\n\\item \\textcolor{AMOrange}{橙色 \\textit{SDK}} -- 使用明文網絡通信(如 HTTP)
-\n\\item \\textcolor{red}{紅色 \\textit{包名}} -- 應用程式禁止清除數據
-\n\\item \\textcolor{red}{紅色\\textit{備份標識}} -- 已解除安裝的應用程式存在一個或多個備份
-\n\\item \\textcolor{AMOrange}{橙色\\textit{備份標識}} -- 備份過期,
-\n如基本備份中包含已安裝的應用程式的舊版本
-\n\\item \\textcolor{AMDarkCyan}{深藍綠色 \\textit{備份標識}} -- 備份在期,
-\n如基本備份中包含已安裝應用程式的相同或更高版本
-\n\\item \\textcolor{AMDarkCyan}{深藍綠色 \\textit{包名}} -- 已強行停止執行的應用程式
-\n\\item \\textcolor{AMDarkCyan}{深藍綠色 \\textit{版本}} -- 不活躍的應用程式
-\n\\item \\textcolor{magenta}{紫紅} -- 常駐應用程式(一直執行的應用程式)
+\n \\item \\colorbox{AMLightGreyishOrange}{\\textcolor{black}{淺灰橙(日間模式下)}} / \\colorbox{AMDarkBlue}{
+\n \\textcolor{white}{深藍(夜間模式下)}} -- 多選模式下被選中的應用
+\n \\item \\colorbox{AMLightRed}{\\textcolor{black}{淺紅(日間模式下)}} / \\colorbox{AMVeryDarkRed}{\\textcolor{white}
+\n {深紅 (夜間模式下)}} -- 停用的應用
+\n \\item \\colorbox{AMYellow}{\\textcolor{black}{黃色星標}} -- 可調試的應用
+\n \\item \\textcolor{AMOrange}{橙色 \\textit{日期}} -- 應用可讀取日志
+\n \\item \\textcolor{AMOrange}{橙色 \\textit{UID}} -- 用戶 ID 在應用間被共享
+\n \\item \\textcolor{AMOrange}{橙色 \\textit{SDK}} -- 使用明文網絡通信(如 HTTP)
+\n \\item \\textcolor{red}{紅色 \\textit{包名}} -- 應用禁止清除數據
+\n \\item \\textcolor{red}{紅色\\textit{備份標識}} -- 已卸載的應用存在一個或多個備份
+\n \\item \\textcolor{AMOrange}{橙色\\textit{備份標識}} -- 備份過期,
+\n 如基本備份中包含已安裝的應用的舊版本
+\n \\item \\textcolor{AMDarkCyan}{深藍綠色 \\textit{備份標識}} -- 備份在期,
+\n 如基本備份中包含已安裝應用的相同或更高版本
+\n \\item \\textcolor{AMDarkCyan}{深藍綠色 \\textit{包名}} -- 已強行停止運行的應用
+\n \\item \\textcolor{AMDarkCyan}{深藍綠色 \\textit{版本}} -- 不活躍的應用
+\n \\item \\textcolor{magenta}{紫紅} -- 常駐應用(一直運行的應用)
 \n\\end{itemize}</string>
-    <string name="pages$app-details-page$colour-codes">本頁中使用的背景顏色列表:
+    <string name="pages$app-details-page$colour-codes">本頁中使用的顏色列表及它們的含義：
 \n\\begin{itemize}
-\n\\item \\colorbox{AMRed}{\\textcolor{black}{正紅 (日間)}} /\\colorbox{AMDarkRed}{\\textcolor{white}{深紅 (夜間)}}
-\n-- 危險權限或, 被封鎖的元件(使用App Manager操作)
+\n \\item \\colorbox{AMRed}{\\textcolor{black}{正紅 (日間)}} / \\colorbox{AMDarkRed}{\\textcolor{white}{深紅 (夜間)}}
+\n -- 危險權限或, 被阻止的組件(使用App Manager操作)
 \n
-\n\\item \\colorbox{AMLightRed}{\\textcolor{black}{亮紅 (日間)}} /\\colorbox{AMVeryDarkRed}{\\textcolor{white}{緋紅 (夜間)}} -- 被封鎖的元件(其他應用程式操作)
+\n \\item \\colorbox{AMLightRed}{\\textcolor{black}{亮紅 (日間)}} / \\colorbox{AMVeryDarkRed}{\\textcolor{white}{緋紅 (夜間)}} -- 被阻止的組件(其他應用操作)
 \n
-\n\\begin{tip}{注意}
-\n表示在 App Manager 之外停用(封鎖)的元件, 標記為停用(封鎖)的元件並不意味著它被使用者停用,它也可能是被系統停用的, 或者在其清單(Android-Manifest.xml)中被標記為停用(封鎖)。被停用的應用程式也會被系統（和App Manager）視為停用(封鎖)。
-\n\\end{tip}
+\n \\begin{tip}{注意}
+\n表示在 App Manager 之外禁用(阻止)的組件, 標記為禁用(阻止)的組件並不意味著它被用戶禁用,它也可能是被系統禁用的, 或者在其清單(Android-Manifest.xml)中被標記為禁用(阻止)。被停用的應用程序也會被系統（和App Manager）視為禁用(阻止)。
+\n \\end{tip}
 \n
-\n\\item \\colorbox{AMVividOrange}{\\textcolor{black}{鮮橙 (日間)}} /\\colorbox{AMVeryDarkOrange}{
-\n\\textcolor{white}{深橙 (夜間)}} -- 追蹤器元件
+\n \\item \\colorbox{AMVividOrange}{\\textcolor{black}{鮮橙 (日間)}} / \\colorbox{AMVeryDarkOrange}{
+\n \\textcolor{white}{深橙 (夜間)}} -- 追蹤器組件
 \n
-\n\\item \\colorbox{AMSoftMagenta}{\\textcolor{black}{亮紫 (日間)}} /\\colorbox{AMVeryDarkViolet}{
-\n\\textcolor{white}{深紫 (夜間)}} -- 正在執行的元件
+\n \\item \\colorbox{AMSoftMagenta}{\\textcolor{black}{亮紫 (日間)}} / \\colorbox{AMVeryDarkViolet}{
+\n \\textcolor{white}{深紫 (夜間)}} -- 正在運行的組件
 \n\\end{itemize}</string>
     <string name="intro$main$donation">\\emph{捐贈或購買並不是使用App Manager的必要條件.} 雖然 App Manager 不支持任何任何內購,
-\n但可以透過 Open Source Collective 向 App Manager 的所有者發送捐贈.
+\n但可以通過 Open Source Collective 向 App Manager 的所有者發送捐贈.
 \n
-\nOpen Source Collective 是 Open Collective 平台上的一個財政託管機構，以幫助開源項目管理他們的財務狀況。
-\n目前，它支持透過銀行賬戶、PayPal、信用卡或借記卡和加密貨幣發起捐贈.
+\nOpen Source Collective 是 Open Collective 平台上的一個財政托管機構，以幫助開源項目管理他們的財務狀況。
+\n目前，它支持通過銀行賬戶、PayPal、信用卡或借記卡和加密貨幣發起捐贈.
 \n
 \n\\textit{Link:} \\url{https://opencollective.com/muntashir}.
 \n
-\n透過發送捐款，發送者同意他們不應使用捐款作為籌碼來使作者優先考慮其所請求的功能.
+\n通過發送捐款，發送者同意他們不應使用捐款作為籌碼來使作者優先考慮其所請求的功能.
 \n請求新功能不需要任何捐贈，且它們的優先級是按作者傾向排序.
 \n
 \n\\emph{App Manager 接受任何資助的提議}
-\n有興趣的組織的代表可以透過以下方式直接聯繫聯繫所有者: §\\cref{sec:contact}.</string>
-    <string name="pages$main-page$filter">主畫面中列出的應用程式可以透過以下方式進行過濾:
+\n有興趣的組織的代表可以通過以下方式直接聯系聯系所有者: §\\ref{sec:contact}.</string>
+    <string name="pages$main-page$filter">主頁面中列出的應用可以通過以下方式進行過濾:
 \n\\begin{itemize}
-\n\\item \\textbf{使用者} 僅使用者應用程式
-\n\\item \\textbf{系統} 僅系統應用程式
-\n\\item \\textbf{停用} 僅停用應用程式
-\n\\item \\textbf{被封鎖} 僅被封鎖元件的應用程式
-\n\\item \\textbf{可開啟} 僅至少有一個Aactivity的應用程式
-\n\\item \\textbf{有備份} 僅有備份的應用程式
-\n\\item \\textbf{無備份} 僅沒有備份的應用程式
-\n\\item \\textbf{執行中} 僅正在執行的應用程式
-\n\\item \\textbf{有分包} 僅有分包(多Apk)應用程式
-\n\\item \\textbf{已安裝} 僅已安裝應用程式
-\n\\item \\textbf{已解除安裝} 僅已解除安裝應用程式
+\n \\item \\textbf{用戶} 僅用戶應用
+\n \\item \\textbf{系統} 僅系統應用
+\n \\item \\textbf{停用} 僅停用應用
+\n \\item \\textbf{被阻止} 僅被阻止組件的應用
+\n \\item \\textbf{可打開} 僅至少有一個Aactivity的應用
+\n \\item \\textbf{有備份} 僅有備份的應用
+\n \\item \\textbf{無備份} 僅沒有備份的應用
+\n \\item \\textbf{運行中} 僅正在運行的應用
+\n \\item \\textbf{有分包} 僅有分包(多Apk)應用
+\n \\item \\textbf{已安裝} 僅已安裝應用
+\n \\item \\textbf{已卸載} 僅已卸載應用
 \n\\end{itemize}
 \n
-\n與排序不同，它可以同時應用程式多個過濾選項，
-\n如，停用的使用者應用程式可以透過選擇 \\textit{使用者}和 \\textit{停用}列出，這對\\hyperref[subsec:batch-operations]{批處理}特別有用，在這種情況下過濾使用者應用程式可能是必要的，以便安全地進行某些操作。
+\n與排序不同，它可以同時應用多個過濾選項，
+\n如，停用的用戶應用可以通過選擇 \\textit{用戶}和 \\textit{停用}列出，這對\\hyperref[subsec:batch-operations]{批處理}特別有用，在這種情況下過濾用戶應用可能是必要的，以便安全地進行某些操作。
 \nUnlike sorting, it is possible to apply more than one filtering options at the same time. For example, the disabled user
 \napplications can be listed by selecting both \\textit{User apps} and \\textit{Disabled apps}. This can be particularly
 \nuseful for \\hyperref[subsec:batch-operations]{batch operations} where filtering the user applications may be necessary
 \nto carry out certain operations safely.</string>
-    <string name="intro$main$translations">App Manager 不接受直接透過PR/MR進行的翻譯。翻譯僅透過 Weblate 進行自動化管理。
-\n要加入翻譯團隊，請造訪 \\url{https://hosted.weblate.org/engage/app-manager/}。</string>
-    <string name="intro$main$intro">App Manager 是一個提供大量功能的高級的 Android 軟件包管理器，因此，需要使用者手冊來幫助使用者正確使用。本文作為 App Manager 的使用者手冊，旨在描述 App Manager 所提供的每一個功能。
-\n本文也可以被認為是 App Manager 的 ``官方\\\'\\\' 指南，並指明 App Manager 的預期行為。翻譯可能有誤 (原文為英文)。因此，每個有能力的使用者應該閱讀該檔案的英文版本，以獲得最佳的體驗。
+    <string name="intro$main$translations">App Manager 不接受直接通過PR/MR進行的翻譯。翻譯僅通過 Weblate 進行自動化管理。
+\n要加入翻譯團隊，請訪問 \\url{https://hosted.weblate.org/engage/app-manager/}。</string>
+    <string name="intro$main$intro">App Manager 是一個提供大量功能的高級的 Android 軟件包管理器，因此，需要用戶手冊來幫助用戶正確使用。本文作為 App Manager 的用戶手冊，旨在描述 App Manager 所提供的每一個功能。
+\n本文也可以被認為是 App Manager 的 ``官方\'\' 指南，並指明 App Manager 的預期行為。翻譯可能有誤 (原文為英文)。因此，每個有能力的用戶應該閱讀該文件的英文版本，以獲得最佳的體驗。
 \n此外還可能有其他非官方的或第三方的資源，如博客文章、視頻、聊天群組等。雖然這些資源可能對許多人有用，但它們可能不是針對最新版本。
-\n如果在App Manager中發現任何偏離本文件的情況，應在
+\n如果在App Manager中發現任何偏離本文檔的情況，應在
 \n\\href{https://github.com/MuntashirAkon/AppManager/issues}{App Manager 問題追蹤}內反映。</string>
     <string name="intro$main$submit-patches">除GitHub之外的倉庫目前被視為鏡像，在這些網站提交的 PR/MR 將不被接受.
-\n\\footnote{GitHub 的 PR 將使用 git patch 進行手動合併, 因此, GitHub 可能會錯誤地將它們標記為closed而不是merged.}
-\n相反，patches (\\texttt{.patch} 檔案) 可以透過電子郵件附件提交。 \\textit{請務必對Commits簽名(Signing-off)}
-\n更多資訊請參見位於原始碼根目錄下的CONTRIBUTING檔案.
+\n\\footnote{GitHub 的 PR 將使用 git patch 進行手動合並, 因此, GitHub 可能會錯誤地將它們標記為closed而不是merged.}
+\n相反，patches (\\texttt{.patch} 文件) 可以通過電子郵件附件提交。\\textit{請務必對Commits簽名(Signing-off)}
+\n更多信息請參見位於源碼根目錄下的CONTRIBUTING文件.
 \n
 \n\\begin{warning}{注意}
-\n在透過電子郵件提交補丁是，整個郵件對話在將來可能會被公開造訪.
-\n所以，請不要除了您的姓名和電子郵件地址之外，不要包含任何個人身份資訊（PII）.
+\n在通過電子郵件提交補丁是，整個郵件對話在將來可能會被公開訪問.
+\n所以，請不要除了您的姓名和電子郵件地址之外，不要包含任何個人身份信息（PII）.
 \n\\end{warning}</string>
-    <string name="intro$main$contributing">使用者可以透過多種方式做出貢獻，例如創建有用的問題、參加討論、改進
-\n檔案和翻譯，新增無法識別的庫或追蹤器，查看原始程式碼以及
-\n報告安全漏洞。</string>
+    <string name="intro$main$contributing">用戶可有通過多種方式做出貢獻，如創建有用 issues 、參加討論、
+\n改進文檔和翻譯，添加未被認可的庫或跟蹤器，
+\n審查源代碼以及報告安全漏洞。</string>
     <string name="pages$main-page$batch-operations">批處理也可以在這個頁面內進行。
-\n多選模式可以由點擊任何應用程式圖標或長按列表中的任何一項進入。
-\n進入後，僅需單擊列表中的任何一項便可選中，而不是開啟應用程式詳細資訊頁。
-\n該模式下，批處理操作位於位於頁面底部的多選功能表，包括包括：
+\n多選模式可以由點擊任何應用圖標或長按列表中的任何一項進入。
+\n進入後，僅需單擊列表中的任何一項便可選中，而不是打開應用程序詳情頁。
+\n該模式下，批處理操作位於位於頁面底部的多選菜單，包括包括：
 \n\\begin{itemize}
-\n\\item 將選中應用程式新增到 \\hyperref[sec:profiles-page]{配置}
-\n\\item \\hyperref[sec:backup-restore]{備份、恢復或刪除}應用程式
-\n\\item 封鎖應用程式中的追蹤器
-\n\\item 清除應用程式數據或緩存
-\n\\item 啟用/停用/強制停止/解除安裝應用程式
-\n\\item 導出屏蔽規則
-\n\\item 封鎖應用程式的後台操作 (Android 7 及更高版本)
-\n\\item 導出APK檔案到 \\texttt{AppManager/apks}
-\n\\item 設置\\hyperref[sec:net-policy]{聯網規則}
+\n \\item 將選中應用添加到 \\hyperref[sec:profiles-page]{配置}
+\n \\item \\hyperref[sec:backup-restore]{備份、恢覆或刪除}應用程序
+\n \\item 阻止應用中的追蹤器
+\n \\item 清除應用數據或緩存
+\n \\item 啟用/停用/強制停止/卸載應用程序
+\n \\item 導出屏蔽規則
+\n \\item 阻止應用的後台操作 (Android 7 及更高版本)
+\n \\item 導出APK文件到 \\texttt{AppManager/apks}
+\n \\item 設置\\hyperref[sec:net-policy]{聯網規則}
 \n\\end{itemize}
 \n
 \n\\begin{tip}{無障礙}
-\n進入多選模式後，鍵盤或遙控器的左右鍵呼出多選功能表。
+\n 進入多選模式後，鍵盤或遙控器的左右鍵呼出多選菜單。
 \n\\end{tip}</string>
-    <string name="pages$main-page$options-menu">“選項”功能表提供了多個選項，可用於對列出的應用程式進行排序和篩選以及導航
-\n新增到 App Manager 內外的不同頁面。</string>
-    <string name="pages$main-page$sort">主畫面中列出的應用程式可以按照以下方式進行排序:
+    <string name="pages$main-page$options-menu">選項菜單提供了幾個選項，可用以對列出的應用程序進行排序和過濾，
+\n以及轉到 App Manager 內或外的不同頁面。</string>
+    <string name="pages$main-page$sort">主頁面中列出的應用程序可以按照以下方式進行排序:
 \n\\begin{itemize}
-\n\\item \\textbf{使用者應用程式優先} 使用者應用程式將優先展示
-\n\\item \\textbf{應用程式標籤} 根據應用程式標籤（也稱為 \\textit{應用程式名稱}）升序排序。 (默認選項)
-\n\\item \\textbf{包名} 根據包名升序排序
-\n\\item \\textbf{最後更新} 根據更新時間降序排序
-\n\\item \\textbf{共享 user ID} 根據共享 user ID升序排序
-\n\\item \\textbf{目標 SDK} 根據目標SDK升序排序
-\n\\item \\textbf{簽名} 根據簽名資訊升序排序
-\n\\item \\textbf{已停用優先} 已停用將優先展示
-\n\\item \\textbf{已封鎖優先} 根據已封鎖的應用程式元件數目降序排序
-\n\\item \\textbf{已備份優先} 已備份將優先展示
-\n\\item \\textbf{追蹤器} 根據追蹤器數目降序排序S
-\n\\item \\textbf{最後操作} 根據被App Manager操作的應用程式時間降序排序
+\n \\item \\textbf{用戶應用優先} 用戶應用將優先展示
+\n \\item \\textbf{應用標簽} 根據應用標簽（也稱為 \\textit{應用程序名稱}）升序排序。(默認選項)
+\n \\item \\textbf{包名} 根據包名升序排序
+\n \\item \\textbf{最後更新} 根據更新時間降序排序
+\n \\item \\textbf{共享 user ID} 根據共享 user ID升序排序
+\n \\item \\textbf{目標 SDK} 根據目標SDK升序排序
+\n \\item \\textbf{簽名} 根據簽名信息升序排序
+\n \\item \\textbf{已停用優先} 已停用將優先展示
+\n \\item \\textbf{已阻止優先} 根據已阻止的應用組件數目降序排序
+\n \\item \\textbf{已備份優先} 已備份將優先展示
+\n \\item \\textbf{追蹤器} 根據追蹤器數目降序排序S
+\n \\item \\textbf{最後操作} 根據被App Manager操作的應用時間降序排序
 \n\\end{itemize}
 \n
 \n此外，還有 \\textit{反轉} 選項，可以用來對列表進行反向排序。
-\n無論怎樣排序偏好，應用程式都是先按字母順序排序，以防止產生任何隨機排序結果.</string>
-    <string name="pages$main-page$intro">主畫面列出所有已安裝、已解除安裝和已備份的應用程式。
-\n單獨點擊任何已安裝的應用程式項目可開啟相應的 \\hyperref[sec:app-details-page]{應用程式詳細資訊頁}。
-\n對於未安裝的系統應用程式，它會顯示一個 對話框提示，可以用來重新安裝該應用程式。
-\n使用列表選項中的 \\hyperlink{par:main-page-sort}{排序} ，可以選擇應用程式列表的排序方式，離開應用程式後仍會保留排序方式。
+\n無論怎樣排序偏好，應用程序都是先按字母順序排序，以防止產生任何隨機排序結果.</string>
+    <string name="pages$main-page$intro">主頁面列出所有已安裝、已卸載和已備份的應用。
+\n單獨點擊任何已安裝的應用項目可打開相應的 \\hyperref[sec:app-details-page]{應用詳情頁}。
+\n對於未安裝的系統應用，它會顯示一個 對話框提示，可以用來重新安裝該應用。
+\n使用列表選項中的 \\hyperlink{par:main-page-sort}{排序} ，可以選擇應用列表的排序方式，退出應用後仍會保留排序方式。
 \n使用列表選項中的 \\hyperlink{par:main-page-filter}{過濾}，可以過濾列表選項。
-\n篩選也可以透過搜尋欄進行過濾，並支持正則表達式。</string>
-    <string name="titlepage$user_manual">{\\huge\\bfseries 使用者手冊\\par}</string>
+\n篩選也可以通過搜索欄進行過濾，並支持正則表達式。</string>
+    <string name="titlepage$user_manual">{\\huge\\bfseries 用戶手冊\\par}</string>
     <string name="intro$main$$introduction-chapter-title">簡介</string>
     <string name="intro$main$$terminologies-title">術語</string>
     <string name="intro$main$$supported-versions-title">受支持的版本</string>
-    <string name="intro$main$buiding">在位於原始碼根目錄下的BUILDING檔案中可以獲得編譯指導。</string>
-    <string name="intro$main$contact">Muntashir Al-Islam\\footnote{你也可以稱呼我為\'\'Muntashir Akon\'\'}\\\\
-\nEmail： \\href{mailto:muntashirakon@riseup.net}{muntashirakon [at] riseup [dot] net}\\\\
-\nKey Fingerprint： \\texttt{7bad37c2981e41f8f6abea7f58f0b4f26c346fce}\\\\
-\nGitHub： \\url{https://github.com/MuntashirAkon}\\\\
-\nTwitter： \\url{https://twitter.com/Muntashir}</string>
+    <string name="intro$main$buiding">在位於源碼根目錄下的BUILDING文件中可以獲得編譯指導。</string>
+    <string name="intro$main$contact">Muntashir Al-Islam\\footnote{可稱``Muntashir Akon\'\'}\\\\
+\n郵箱: \\href{mailto:muntashirakon@riseup.net}{muntashirakon [at] riseup [dot] net}\\\\
+\nKey Fingerprint: \\texttt{7bad37c2981e41f8f6abea7f58f0b4f26c346fce}\\\\
+\nGitHub: \\url{https://github.com/MuntashirAkon}\\\\
+\nTwitter: \\url{https://twitter.com/Muntashir}</string>
     <string name="pages$main-page$$sort-title">排序</string>
-    <string name="pages$main-page$$list-options-title">清單選項</string>
-    <string name="pages$main-page$application-types">一個應用程式可以是 \\textbf{使用者} 或 \\textbf{系統} 應用程式，同時存在以下後綴:
+    <string name="pages$main-page$$list-options-title">列表選項</string>
+    <string name="pages$main-page$application-types">一個應用程序可以是 \\textbf{用戶} 或 \\textbf{系統} 應用，同時存在以下後綴:
 \n\\begin{itemize}
-\n\\item \\texttt{X} -- 支持多種架構(AArch32位/AArch64位)
-\n\\item \\texttt{0} -- 不含dex檔案(包含ART/Davilk虛擬機字節碼, 即可直接執行的代碼)
-\n\\item \\texttt{\\textdegree°} -- 處於休眠狀態
-\n\\item \\texttt{\\#} -- The application requested the system to allocate a large heap i.e.\\ large runtime memory
-\n\\item \\texttt{\?} -- The application requested the virtual machine to be in the safe mode.
+\n \\item \\texttt{X} -- 支持多種架構
+\n \\item \\texttt{0} -- 不含dex文件
+\n \\item \\texttt{°} -- 已暫停應用
+\n \\item \\texttt{\\#} -- 應用程序請求系統分配一個大堆，即\\ 大運行時內存
+\n \\item \\texttt{\?} -- 應用程序請求虛擬機處於安全模式。
 \n\\end{itemize}</string>
     <string name="pages$main-page$version-info">版本名稱有以下前綴:
 \n\\begin{itemize}
-\n\\item \\texttt{\\_} -- 沒有硬件加速（減慢應用程式中的過渡動畫）
-\n\\item \\texttt{\\textasciitilde} -- 僅測試模式
-\n\\item \\texttt{debug} -- 可調試應用程式
+\n \\item \\texttt{\\_} -- 沒有硬件加速（減慢應用中的過渡動畫）
+\n \\item \\texttt{\\textasciitilde} -- 僅測試模式
+\n \\item \\texttt{debug} -- 可調試應用
 \n\\end{itemize}</string>
-    <string name="pages$main-page$list-options">\\textbf{列表選項} 包含了對主畫面中的列表進行排序和過濾的選項。</string>
-    <string name="pages$main-page$settings">此功能表項將開啟應用程式內 \\hyperref[sec:settings-page]{Settings page}。</string>
+    <string name="pages$main-page$list-options">\\textbf{列表選項} 包含了對主頁面中的列表進行排序和過濾的選項。</string>
+    <string name="pages$main-page$settings">此菜單項將打開本應用的 \\hyperref[sec:settings-page]{設置}.</string>
     <string name="pages$app-details-page$$horizontal-action-panel-title">水平操作面板</string>
     <string name="pages$app-details-page$$activities-title">活動 (Activity)</string>
-    <string name="pages$app-details-page$$colour-codes-title">顏色代碼</string>
-    <string name="pages$app-details-page$$app-info-options-menu-title">選項功能表</string>
-    <string name="pages$app-details-page$$app-info-general-information-title">基本資訊</string>
-    <string name="pages$app-details-page$$component-tabs-title">元件分頁</string>
-    <string name="pages$app-details-page$$app-info-tab-title">應用程式資訊</string>
-    <string name="pages$app-details-page$$section-title">應用程式詳細資訊頁</string>
-    <string name="pages$one-click-ops-page$$section-title">一鍵式操作頁面</string>
-    <string name="pages$main-page$$termux-title">Termux</string>
-    <string name="pages$app-details-page$$config-termux-title">Termux</string>
+    <string name="pages$app-details-page$$colour-codes-title">顏色代碼含義</string>
+    <string name="pages$app-details-page$$app-info-options-menu-title">選項菜單</string>
+    <string name="pages$app-details-page$$app-info-general-information-title">基本信息</string>
+    <string name="pages$app-details-page$$component-tabs-title">組件選項卡</string>
+    <string name="pages$app-details-page$$app-info-tab-title">應用信息</string>
+    <string name="pages$app-details-page$$section-title">應用程序詳情頁</string>
+    <string name="pages$one-click-ops-page$$section-title">一鍵操作頁</string>
+    <string name="pages$main-page$$termux-title">Termux 終端模擬器</string>
+    <string name="pages$app-details-page$$config-termux-title">配置 Termux</string>
+    <string name="pages$settings-page$$compression-method-title">壓縮方法</string>
+    <string name="pages$settings-page$$backup-options-title">備份選項</string>
+    <string name="pages$settings-page$$backup-apps-with-keystore-title">備份帶 Android 密鑰庫的應用程序</string>
+    <string name="pages$settings-page$$backup-volume-title">備份位置</string>
+    <string name="pages$interceptor-page$$mime-type-title">MIME 類型</string>
+    <string name="pages$settings-page$language">配置應用內語言，
+\nApp Manager 目前支持19種語言。</string>
+    <string name="pages$interceptor-page$$categories-title">類別(Categories)</string>
+    <string name="faq$misc$$i-dont-use-root-adb-title">我不使用root/ADB，是否完全安全？</string>
+    <string name="guide$aot$$adb-mode-am-title">在App Manager上啟用ADB模式</string>
+    <string name="guide$aot$$references-title">參考</string>
+    <string name="faq$app-components$$also-blocked-by-other-tools-title">被 App Manager 禁用但同時也被其他工具禁用的組件會發生什麽？</string>
+    <string name="faq$app-components$$what-is-component-blocking-title">什麽是即時組件禁用？</string>
+    <string name="faq$app-components$$tracker-classes-versus-tracker-components-title">跟蹤器類與跟蹤器組件</string>
+    <string name="pages$app-details-page$uses-permissions">\\textbf{系統預定義權限}(\\textit{Uses Permissions}) 是應用(申請)所使用的權限，其在應用程序清單中使用 \\texttt{uses-permission} 標簽聲明。
+\n其 \"標志位 (\\textit{flags})\"、\"權限名 (\\textit{permission name})\"、\"權限描述 (\\textit{permission description})\"、\"包名 ( \\textit{package name})\"、\"群組 (\\textit{group})\" 取自相關\\hyperref[subsubsec:permissions]{權限}。
+\n
+\n
+\n特權用戶可通過切換按鈕授予或撤銷 危險 (\\textit{dangerous}) 和 開發 (\\textit{development}) 權限，也可以使用菜單中的相應選項。
+\n只能撤銷以上兩種權限，因為Android不允許修改 普通 (\\textit{normal}) 權限（其中大多數是）。但仍有可能撤銷它們通過編輯 \\texttt{runtime-permissions.xml} 本身，但是否可能仍不明確。
+\n
+\n\\begin{tip}{提示}
+\n 由於系統默認會撤銷危險權限，因此撤銷所有危險權限與重置所有權限是一樣的。
+\n\\end{tip}
+\n
+\n可以以升序方式按權限名稱對列表排序，也可以優先顯示拒絕的權限。</string>
+    <string name="pages$interceptor-page$$flags-title">標志位(Flags)</string>
+    <string name="guide$aot$$aot-lineage-os-title">Lineage OS</string>
+    <string name="faq$app-components$$how-to-unblock-title">如何使用 \"一鍵操作 \"或 \"批量操作 \"解禁的追蹤器組件？</string>
+    <string name="faq$misc$$why-internet-permission-title">為什麽 App Manager 有聯網的權限，而它卻沒有連接到互聯網？</string>
+    <string name="pages$profiles-page$$options-menu-title">選項菜單</string>
+    <string name="pages$profile-page$$state-title">狀態</string>
+    <string name="pages$settings-page$$section-title">設置頁面</string>
+    <string name="pages$settings-page$$language-title">界面語言</string>
+    <string name="pages$scanner-page$$section-title">掃描器頁面</string>
+    <string name="guide$aot$$setup-adb-linux-title">Linux</string>
+    <string name="guide$backup-restore$$delete-title">刪除備份</string>
+    <string name="guide$backup-restore$$restore-title">恢覆</string>
+    <string name="faq$app-components$$limitations-title">追蹤器或其他組件在App Manager中是如何被禁用的？其局限性是什麽？</string>
+    <string name="appendices$specifications$external">外部格式用於在 App Manager 中導入或導出規則。
+\n\\開始{逐字}
+\n &lt;package_name&gt; &lt;component_name&gt; &lt;type&gt; &lt;mode&gt;|&lt;component_status&gt;|&lt;is_granted&gt;
+\n\\end{逐字}
+\n除了第一項是包的名稱外，該格式與上述格式基本相同。
+\n
+\n\\begin{危險}{注意}
+\n 導出的規則與內部規則的格式不同，不應直接複製到
+\n \\textbf{conf} 文件夾。
+\n\\結束{危險}</string>
+    <string name="pages$app-details-page$$shared-libs-tab-title">共享庫選項卡</string>
+    <string name="pages$app-details-page$permission-tabs">\\textbf{App Ops}, \\textbf{使用權限} and \\textbf{權限} 選項卡與權限相關。
+\n安卓中，在不具有相同身份（稱為 \\textit{shared ID}）的應用或進程之間進行通信常常需要權限，其由權限控制器管理。
+\n一些被視為\\textit{普通} 的權限，若它們出現在應用程序清單中，則會自動授予，但\\textit{危險}權限 和 \\textit{開發} 權限需要用戶確認。
+\n選項卡中使用的顏色在 §\\ref{subsec:app-details-color-codes} 中有解釋。</string>
+    <string name="pages$profile-page$$users-title">用戶</string>
+    <string name="pages$interceptor-page$$data-title">數據(Data)</string>
+    <string name="faq$app-components$$other-tools-retained-in-am-title">被其他工具禁用的應用程序組件是否保留在App Manager中？</string>
+    <string name="pages$app-details-page$horizontal-action-panel">如上節所述,水平滾動操作面板由各種與應用相關的操作組成, 如 -
+\n\\begin{itemize}
+\n \\item \\textbf{啟動}: 啟動應用. 前提是要有一個可啟動\\hyperref[subsubsec:activities]{活動}.
+\n
+\n \\item \\textbf{禁用}: 停用應用. 若應用已被禁用或用戶沒有足夠的權限，則不會顯示該按鈕.
+\n禁用應用後，將從應用程序列表中隱藏，應用的快捷方式也可能被刪除.
+\n只能通過App Manager或任何其他支工具重新啟用該應用.
+\nAndroid設置中沒有任何選項可以啟用禁用的用戶應用.
+\n
+\n \\item \\textbf{卸載}: 卸載應用
+\n
+\n \\item \\textbf{啟用}: 啟用應用. 若應用已啟用或用戶沒有足夠的權限，則不會顯示該按鈕.
+\n
+\n \\item \\textbf{強制停止}: 強制停止應用.
+\n
+\n \\item \\textbf{清除數據}: 清除應用數據. 清除包括存儲在應用內部和（僅Android 10 以上）外部目錄中的任何應用數據，包括帳戶（如果由應用設置）、緩存等.
+\n例如，清除 App Manager 數據將會刪除所有保存的規則（但不會清除已阻止組件），因此你應該檢查備份你的規則文件。若用戶沒有足夠的權限，則不會顯示此按鈕.
+\n
+\n \\item \\textbf{清除緩存}: 清除應用緩存. 沒有任何原生方法可以清除特定應用程序的緩存，因此，需要root權限才能清除應用程序內部存儲中的緩存.
+\n
+\n \\item \\textbf{安裝}: 通過第三方應用安裝應用. 此按鈕僅在應用尚未安裝時顯示.
+\n
+\n \\item \\textbf{What\'s New}: 若外部應用已安裝，則會顯示此按鈕. 單擊此按鈕將顯示一個對話框，將以版本控制方式，顯示打開的版本和安裝的版本之間的差異.
+\n包括: \\textit{版本}, \\textit{追蹤器}, \\textit{權限}, \\textit{組件}, \\textit{簽名} (校驗值改變
+\n), \\textit{特性}, \\textit{共享庫} 與 \\textit{SDK}.
+\n
+\n \\item \\textbf{更新}: 若應用的版本號高於已安裝的應用，則會顯示.
+\n
+\n \\item \\textbf{重裝}: 若應用與已安裝的應用具有相同的版本號，則會顯示.
+\n
+\n \\item \\textbf{降級}: 若應用的版本號低於已安裝的應用，則會顯示.
+\n
+\n \\item \\textbf{應用清單(Manifest)}: 單擊將在單獨的頁面中顯示應用清單文件.
+\n可以使用對應切換按鈕（位於右上方）開啟自動換行，也可以使用保存按鈕保存到存儲器.
+\n
+\n \\item \\textbf{掃描器}: 掃描應用以列出潛在的跟蹤器和庫.
+\n若可用，它還會使用VirusTotal掃描文件.\\\\
+\n \\seealsoinline{\\hyperref[sec:scanner-page]{掃描器頁面}}
+\n
+\n \\item \\textbf{共享首選項}: 顯示應用程序使用的共享首選項(Shared-Preferences)列表.
+\n 單擊列表中的首選項將打開\\hyperref[sec:shared-preferences-editor-page]{共享首選項編輯器}. 若用戶沒有足夠的權限，則不會顯示此按鈕.
+\n
+\n \\item \\textbf{數據庫}: 將顯示應用程序使用的數據庫列表. 若用戶沒有足夠的權限，則不會顯示此按鈕.
+\n
+\n \\item \\textbf{F-Droid}: 在你常用的\\textit{F-Droid} 客戶端中打開該應用.
+\n
+\n \\item \\textbf{Store}: 在 \\textit{Aurora Store}打開該應用. 僅在\\textit{Aurora Store}後顯示.
+\n\\end{itemize}</string>
+    <string name="pages$app-details-page$app-info-options-menu">選項菜單位於頁面的右上角, 下面給出了對現有選項的完整描述:
+\n\\begin{itemize}
+\n \\item \\textbf{分享}: 共享按鈕可用於共享 APK 或(如果應用程序有多個拆分) \\textit{APKS}.
+\n
+\n \\item \\textbf{刷新}: 刷新應用信息選項卡.
+\n
+\n \\item \\textbf{在設置中查看}: 在 Android 設置中打開應用.
+\n
+\n \\item \\textbf{備份/恢覆}: 打開備份/恢覆對話框.
+\n
+\n \\item \\textbf{導出屏蔽規則}: 導出應用配置規則.
+\n
+\n \\item \\textbf{在 Termux 中打開}: 在 Termux 中打開應用. 實際以 \\texttt{su - user\\_id} 命令運行且該 \\texttt{用戶ID} 為應用的(內核)用戶 ID (參見§\\ref{subsubsec:app-info-general-information}).
+\n 此選項僅適用於 Root 用戶.
+\n 請參閱 §\\ref{subsubsec:config-termux} 以了解如何配置 Termux 以運行來自第三方應用的命令.
+\n
+\n \\item \\textbf{在 Termux 中運行}: 在Termux中通過 \\texttt{run-as package\\_name} 打開應用.
+\n 此選項僅對可調式應用有效並適用於 Root 與 Adb 用戶.
+\n 請參閱 §\\ref{subsubsec:config-termux} 以了解如何配置 Termux 以運行來自第三方應用的命令.
+\n
+\n \\item \\textbf{MagiskHide}: 打開一個對話框，其中包含應用程序中可以從 MagiskHide 列表中添加或刪除的進程列表.
+\n
+\n \\item \\textbf{MagiskDenyList}: 打開一個對話框，其中包含應用程序中可以從 MagiskDenyList 添加或刪除的進程列表.
+\n
+\n \\item \\textbf{電池優化}: 啟用/禁用電池優化.
+\n
+\n \\item \\hyperref[sec:net-policy]{\\textbf{聯網策略}}: 配置應用的聯網策略（如後台數據使用） .
+\n
+\n \\item \\textbf{導出圖標}: 提取應用圖標並將其保存至共享存儲.
+\n
+\n \\item \\textbf{添加配置}: 應用程序添加到已配置的 \\hyperref[sec:profile-page]{配置文件}.
+\n\\end{itemize}</string>
+    <string name="pages$app-details-page$config-termux">默認情況下，Termux 不允許運行來自第三方應用的命令。要使用此選項，請使用 Termux v0.96 以上版本，並且必須在 \\texttt{\\textasciitilde/.termux/termux.properties} 中添加 \\texttt{allow-external-apps=true}。
+\n
+\n\\begin{tip}{Info}
+\n 啟用此選項不會削弱Termux的安全性。第三方應用仍然需要取得用戶允許才能在Termux中運行任意命令。
+\n\\end{tip}</string>
+    <string name="pages$app-details-page$component-tabs">\\textbf{活動(Activities)}、\\textbf{服務(Services)}、\\textbf{廣播接收器(Receivers)}和 \\textbf{內容提供者(Providers)} 統稱為應用程序組件. 它們共享在許多相似特征，如，它們都有一個 \\textit{名稱}、一個 \\textit{標簽}、一個 \\textit{圖標} 並且通過 \\textit{意圖(Intent)} 執行.
+\n應用程序組件是應用的本構造，必須在應用程序清單中聲明.
+\n應用程序清單是存儲應用程序特定元數據的文件，Android 通過讀取元數據來處理應用。
+\n
+\n這些選項卡中使用的顏色在 §\\ref{subsec:app-details-colour-codes} 中進行了解釋。也可以在彈出菜單對列表進行排序.</string>
+    <string name="pages$app-details-page$activities">\\textbf{Activity} 是可以由 Android 唯一標識的窗口或頁面(如\\textit{主頁} 和 \\textit{應用詳情頁} 是兩個活動).
+\n每個活動可以有多個 UI 組件，稱為 \\textit{部件(widgets)} 或 \\textit{碎片(fragments)}，每個組件都可以嵌套或放置在彼此之上.
+\n開發人員還可以選擇使用名為\\textit{意圖過濾器(intent filters)}選擇打開外部文件、鏈接等.
+\n如當使用文件管理器打開文件時，文件管理器或操作系統通過 PackageManager 掃描意圖過濾器以查找能夠打開文件的活動，並用其打開文件.
+\n
+\n標記\\textit{exportable} 的活動通常可以由任何第三方應用程序打開.
+\n有些活動需要權限，如果是這種情況，只有具有這些權限的應用程序才能打開.
+\n在 \\textit{活動} 選項卡中，可以通過 \\textbf{啟動} 按鈕啟動， 若有必要可提供額外信息，如意圖(Intent)的 extras、data或Action.
+\n長按 \\textbf{啟動} 按鈕會打開提供此類功能的 \\hyperref[sec:interceptor-page]{Activity Interceptor} 頁面.
+\n
+\n\\begin{tip}{Notice}
+\n 如果您無法打開任何活動，則很可能它具有某些未滿足的依賴項目，例如\\您無法打開 \\textit{應用詳情頁} ，由於其至少需要提供一包名.
+\n 由於無法機械式推斷這些依賴關系，因此默認情況下可能無法通過 App Manager 打開這些活動.
+\n\\end{tip}
+\n
+\n也可以通過 \\textbf{創建快捷方式} 按鈕來創建活動的快捷方式
+\n
+\n\\begin{danger}{Caution}
+\n 如果您卸載App Manager，應用管理器創建的所有快捷方式都將丟失.
+\n\\end{danger}</string>
+    <string name="pages$app-details-page$app-ops">\\textbf{App Ops} 代表\"應用操作 \\textbf{ (Application Operations)} \".
+\n自 Android 4.3 開始，Android 使用 \\textit{App Ops} 控制大多系統權限，每個 App Op 都有一個與之關聯的唯一編號，該編號與其私有名稱將一同顯示在“App Ops”選項卡中，一些 App Ops 也有一個公共名稱。
+\n大量的應用操作是也與權限相關，在此選項卡中，若 App Ops 相關的權限被視為危險則被標記為危險。其他信息如 標志位(\\textit{flags}), 權限名稱 (\\textit{permission name}), 權限描述(\\textit{permission description}),包名 (\\textit{package name}),群組 ( \\textit{group}) 也取自相關的 \\hyperref[subsubsec:permissions]{權限}。
+\n
+\n其他可能包括以下內容:
+\n\\begin{itemize}
+\n \\item \\textbf{模式(Mode)}: 描述了當前授權狀態，可以是\"允許 (\\textit{allow})\"、\"拒絕(\\textit{deny})\"（實際為錯誤）、\"忽略(\\textit{ignore})\"（實際為拒絕）、\"默認(\\textit{default})\"（從手機供應商或 AOSP 內部設置的默認列表推斷）、\"前台(\\textit{foreground})\" （在新的Android版本中，應用只能在前台運行時獲取該權限），以及一些供應商自定義的模式，如MIUI使用詢問(\\textit{ask})。
+\n
+\n \\item \\textbf{時長(Duration)}: 此 App Ops 現已使用的時間（可能為負原因未知）。
+\n
+\n \\item \\textbf{允許時刻(Accept Time)}: 上一次 App Op 被許可。
+\n
+\n \\item \\textbf{拒絕時刻(Reject Time)}: 上一次 App Op 被拒絕。
+\n\\end{itemize}
+\n
+\n
+\n\\begin{tip}{提示}
+\n若 \\texttt{android.permission.GET\\_APP\\_OPS\\_STATS} 由 ADB 授予，則此選項卡的內容對非 root 用戶可見\\@.
+\n\\end{tip}
+\n
+\n每個 App Op 項都有切換按鈕，可用於允許或拒絕（忽略）它，其他受支持的模式也可以通過長按來設置。
+\n如果選項卡中未列出所需的 App Op，可使用菜單中的\\textbf{設置自定義 App Op }。
+\n菜單中的\\textbf{重置為默認} 可重置App Ops， 或使用拒絕危險權限的相關操作。
+\n受 App Ops 本身工作方式所限，系統可能需要不少時間來更改它們。
+\n
+\n\\begin{tip}{Tip}
+\n拒絕某些 App Ops 可能會導致應用行為異常，若所有修覆手段都失敗，可嘗試使用 \\textit{重置為默認} 選項。
+\n\\end{tip}
+\n
+\n可以以升序方式按 App Ops 名稱和其編號對列表排序，也可以優先顯示拒絕的 App Ops。
+\n
+\n\\seealsoinline{\\hyperref[ch:app-ops]{附錄: App Ops}}</string>
+    <string name="pages$app-details-page$permissions">(自定義)\\textbf{權限} 通常是應用自身定義的自定義權限，包括該應用聲明的、標記為\"內部( \\textit{Internal})\" 權限，其他應用聲明、標記為\"外部( \\textit{External})\"的權限。外部權限在應用程序組件中指定為依賴項，即應用只有在擁有指定的權限時才能調用該組件：
+\n\\begin{itemize}
+\n \\item \\textbf{名稱} 每個權限都有的唯一的名稱，如 \\texttt{android.permission.INTERNET} ，但多個應用可以請求同一個權限。
+\n
+\n \\item \\textbf{圖標} 每個權限都可以有一個自定義圖標，其他權限選項卡沒有任何圖標，因為它們在應用程序清單中不包含任何圖標。
+\n
+\n \\item \\textbf{描述} 描述權限的可選字段，若沒有與權限關聯的任何描述，則不會顯示該字段。
+\n
+\n \\item \\textbf{標志位(Flags)} 使用標志符號或 \\textbf{保護名稱(Protection Level)} 名稱描述權限， 諸如 普通 \\textit{normal}、開發 \\textit{development}、危險 \\textit{dangerous},、即時 \\textit{instant}, 已授權 \\textit{granted}、已撤銷 \\textit{revoked}、簽名 \\textit{signature}、特權 \\textit{privileged} 等。
+\n
+\n \\item \\textbf{包名} 表示與權限關聯的包名，即定義權限的包名。
+\n
+\n \\item \\textbf{群組(Group)} 與權限關聯的群組（如果有），幾個相關的權限通常可以組合在一起。
+\n\\end{itemize}</string>
+    <string name="pages$profile-page$$export-blocking-rules-title">導出屏蔽規則</string>
+    <string name="pages$profile-page$$disable-title">禁用</string>
+    <string name="pages$settings-page$$app-theme-title">應用主題</string>
+    <string name="pages$settings-page$$screen-lock-title">屏幕鎖定</string>
+    <string name="pages$settings-page$$encryption-title">加密</string>
+    <string name="pages$settings-page$$rules-title">規則</string>
+    <string name="pages$settings-page$$instant-component-blocking-title">即時組件攔截</string>
+    <string name="pages$settings-page$$import-export-blocking-rules-title">導入/導出阻止規則</string>
+    <string name="pages$settings-page$$device-info-title">關於設備</string>
+    <string name="pages$settings-page$app-theme">配置應用內主題</string>
+    <string name="pages$settings-page$enable-disable-features">啟用或禁用應用 App Manager 中的某些功能，如
+\n\\begin{itemize}
+\n \\item 攔截器(Interceptor)
+\n \\item 應用清單文件瀏覽器(Manifest viewer)
+\n \\item 掃描器(Scanner)
+\n \\item 包安裝器(Package installer)
+\n \\item 使用情況(Usage access): 關閉此選項後，App Manager 將永遠不會請求 \\textit{Usage Access} 權限.
+\n \\item 日志瀏覽器(Log viewer)
+\n\\end{itemize}</string>
+    <string name="pages$settings-page$show-users-in-installer">對於 root/AD B用戶，在安裝應用之前將顯示一個用戶列表.
+\n該應用將只對指定的用戶（或者如果選擇了所有用戶）安裝.</string>
+    <string name="pages$settings-page$backup-restore">與 \\hyperref[sec:backup-restore]{備份恢覆} 相關的設置.</string>
+    <string name="pages$scanner-page$$missing-signatures-title">缺少簽名</string>
+    <string name="pages$interceptor-page$$send-edited-intent-title">發送編輯過的意圖(Intent)</string>
+    <string name="pages$shared-prefs-editor-page$$section_title">共享首選項(Shared Preferences)編輯頁</string>
+    <string name="guide$aot$$section-title">經由 TCP 的 ADB</string>
+    <string name="guide$aot$$enable-dev-options-title">啟用開發者選項</string>
+    <string name="guide$aot$$location-dev-options-title">開發人員選項的位置</string>
+    <string name="guide$aot$$how-to-enable-dev-options-title">如何啟用開發者選項</string>
+    <string name="guide$aot$$configure-aot-title">配置經由TCP的ADB</string>
+    <string name="guide$aot$$enable-aot-via-pc-title">在 PC 或 Mac 上啟用 經由TCP的ADB</string>
+    <string name="pages$settings-page$sign-apk">安裝應用前是否對 APK 文件進行簽名.
+\n轉至 \\hyperref[subsec:apk-signing]{APK 簽名} 部分來配置簽名.</string>
+    <string name="faq$app-components$$detect-by-related-apps-title">為什麽被App Manager禁用的組件沒有被其他相關應用程序檢測到？</string>
+    <string name="faq$misc$$section-title">雜項</string>
+    <string name="faq$misc$$how-tracker-updated-title">跟蹤器和庫是如何更新的？</string>
+    <string name="faq$misc$$shizuku-title">對於 Shizuku 有何計劃？</string>
+    <string name="faq$misc$$bloatware-title">什麽是預裝(bloatware)軟件以及如何刪除？</string>
+    <string name="appendices$specifications$$chapter-title">語法</string>
+    <string name="appendices$specifications$$rules-specification-title">規則語法</string>
+    <string name="pages$main-page$running-apps">此菜單項打開一個新頁面，其中顯示正在運行的應用程序或進程的列表。它還顯示
+\n當前內存和緩存（如果可用）使用情況。如果 App Manager 無法使用 root 或 ADB，它只會顯示自己
+\n在最新版本的 Android 中。正在運行的應用程序或進程也可以在
+\n結果頁面。每個進程 ID (PID) 的日誌也可以在 \\hyperref[subsubsec:log-viewer]{log viewer} 中查看。
+\n此外，還可以通過單擊圖標或長按
+\n物品。正常單擊任何項目會打開一個對話框，其中顯示更詳細的信息。</string>
+    <string name="pages$app-details-page$servcies">與用戶可以看到的 \\hyperref[subsubsec:activities]{activities} 不同，\\textbf{Services} 處理後台任務。例如，
+\n如果您使用手機的 Internet 瀏覽器從 Internet 下載視頻，則 Internet 瀏覽器正在使用
+\n\\textit{前台服務} 下載內容。
+\n
+\n當一個活動被關閉或從 \\textit{Recents} 部分中刪除時，它可能會立即被銷毀，具體取決於
+\n許多因素，例如手機有多少可用內存。但如果需要，服務可以無限期地運行。如果更多
+\n服務在後台運行，由於內存和/或處理能力不足，手機可能會變慢，以及
+\n手機的電池會更快耗盡。較新的 Android 版本啟用了電池優化功能
+\n默認情況下適用於所有應用程序。啟用此功能後，系統可以隨機終止任何服務。然而，
+\n前台服務（即使用固定通知運行的服務，例如音樂播放器）通常不是
+\n除非系統資源不足（內存、電池等），否則終止。供應商特定的庫存 ROM 可以提供更多
+\n積極的優化。例如，MIUI 有一個非常激進的優化功能，稱為 \\textit{MIUI 優化}。
+\n
+\n活動和服務都在同一個 \\href{https://stackoverflow.com/questions/7597742}{looper} 中運行
+\n主循環器，這意味著服務並沒有真正在後台運行。開發人員的任務是
+\n確保這一點。應用程序如何與服務通信？它用
+\n\\hyperref[subsubsec:app-details-receivers]{broadcast receiver} 或 Binder。</string>
+    <string name="pages$main-page$app-usage">應用程序使用統計，例如 \\textit{屏幕時間}、\\textit{數據使用量}（移動和 Wi-Fi）、\\textit{
+\n單擊菜單中的 \\textbf{App Usage} 選項可以訪問打開應用程序的次數}。但是，它需要
+\n\\textit{使用權限} 權限。如果使用訪問功能被禁用，則不會列出此菜單項
+\n\\hyperref[subsec:enable/disable-features]{設置}。</string>
+    <string name="pages$main-page$profiles">此菜單項打開 \\hyperref[sec:profiles-page]{profiles page}。配置文件是一種配置經常使用的方法
+\n任務。它們也可以通過快捷方式調用。</string>
+    <string name="pages$main-page$log-viewer">此菜單項可打開日志查看器頁面，其使用 \\texttt{logcat} 命令顯示並管理日志.
+\n此頁面默認只能顯示 App Manager 自身進程的日志記錄，但是，
+\n若授予\\texttt{android.permission.READ\\_LOGS} 權限後，則可顯示來自所有進程的日志.
+\n若當前\\hyperref[subsec:mode-of-operation]{運行模式} 為 root 或 ADB\\@，此權限將自動授予.</string>
+    <string name="pages$main-page$termux">如果系統中已安裝\\href{https://github.com/termux/termux-app}{Termux} ，則可直接從此菜單項運行會話（或
+\n新會話）.
+\n如果應用不存在，則此選項將被隱藏.</string>
+    <string name="pages$main-page$apk-updater">若系統中已安裝\\href{https://github.com/rumboalla/apkupdater}{APK Updater} ，則可通過此菜單項直接打開.
+\n若系統中不存在該應用，則該選項將被隱藏.</string>
+    <string name="pages$app-details-page$app-info-general-information">以下的列表與“應用信息”選項卡中列出的順序相同.
+\n\\begin{itemize}
+\n \\item \\textbf{應用圖標}: 應用圖標，若應用沒有圖標，則顯示系統默認圖標.
+\n可以點擊圖標，進行與剪貼板中的 SHA 或 MD5 進行 APK 簽名驗證.
+\n \\item \\textbf{應用標簽}: 應用程序名.
+\n \\item \\textbf{包名}: 應用程序包名，點擊覆制.
+\n \\item \\textbf{版本}: 版本分為兩部分:
+\n第一部分稱 \\textit{版本名(Version Name)}. 格式各不相同，但常由多個以點分隔的整數組成.
+\n第二部分稱 \\textit{版本號}. 其被第一個括號括起來. 版本代碼是一個整數，用於 區分應用程序版本 (因為機器無法讀取版本名). 簡言之, 新版本的應用程序具有比舊版本更高的版本代碼. 如，如果 \\texttt{123} 和 \\texttt{125} 是一個應用程序的兩個版本代碼，我們可以說後者比前者更新(後者的版本代碼更高).
+\n在不同平台（移動、平板、桌面等）或架構（32/64 位、ARM 或 Intel）上為同一版本提供不同 APK 文件的應用程序，版本號可能會產生誤導，因為它們通常會為每個平台添加前綴 .
+\n
+\n \\item \\textbf{標簽}: (也稱標簽雲) 標簽包括應用程序最基本、最簡潔、有用的信息，如--- \\begin{itemize}
+\n \\item \\textit{追蹤器信息} 應用程序中跟蹤器組件的數量 (如, \\textit{5 個追蹤器}).
+\n如果跟蹤器未被阻止，則標記顏色顯示為橙色，如果跟蹤器在App Manager中被阻止，則標記顏色顯示為深青色.
+\n單擊標簽會打開一個對話框，其包含跟蹤器組件列表，如果 App Manager 具有足夠的權限，可以阻止或取消阻止這些組件.
+\n \\item \\textit{應用類型} 用戶應用或系統應用。系統應用程序的更新版本和通過 Magisk 無系統安裝的應用也被認為是系統應用.
+\n \\item \\textit{Split APK 信息} APK 中的拆分包數量，不包括基本 APK (e.g., \\textit{5 分包}). 單擊標簽會打開一個對話框，其中包含分包 APK 信息，例如類型和大小.
+\n \\item \\textit{可調試} 應用可以通過 ADB調試.可調試應用可以享受常規應用無法使用的某些功能. 應用的數據可以通過 ADB 訪問 (如使用\\texttt{run-as} 命令無需任何額外權限).
+\n \\item \\textit{僅測試} 應用是僅測試應用程序. 僅測試應用可以享受常規應用無法使用的某些功能. 應用的數據可以通過 ADB 訪問 (如使用\\texttt{run-as} 命令無需任何額外權限).
+\n \\item \\textit{大(堆/Heap)內存} 應用將請求較大的堆內存, 即需要更多內存 (RAM) 空間用於動態分配.
+\n 是否為應用程序分配大空間仍由操作系統決定. 如，App Manager 請求較大的堆大小，因為它在 Android 8 之前需要在掃描的 APK 時將整個 APK 加載到內存中App.
+\n \\item \\textit{無代碼} 該應用無任何相關代碼,如不含Dex文件.
+\n在某些系統應用中，實際代碼可能位於其他位置.
+\n \\item \\textit{運行中} 應用的一項或多項服務正在後台運行.
+\n單擊標簽將打開一個對話框，其中包含正在運行的服務列表.
+\n如果啟用了日志查看器功能，單擊任何服務會將在日志查看器中它.
+\n \\item \\textit{已停止} 應用被強制停止. 這可能不會阻止它以後自動啟動.
+\n \\item \\textit{已禁用} 應用被禁用 (在啟動器無圖標).
+\n \\item \\textit{已掛起} 表示應用程序已掛起 (在啟動器中顯示為灰色).
+\n \\item \\textit{被隱藏} 示應用程序是隱藏的 (在啟動器無圖標).
+\n \\item \\textit{MagiskHide} MagiskHide 已啟用. 單擊該標簽會打開一個對話框，其中包含應用程序中可以從 MagiskHide 添加或刪除的進程列表.
+\n \\item \\textit{MagiskDenyList} 該應用程序存在於 MagiskDenyList 中. 單擊標簽會打開一個對話框，其中包含應用程序中可以從 MagiskDenyList 列表中添加或刪除的進程列表.
+\n \\item \\textit{密匙庫} 應用在 Android KeyStore 中存有項目. 單擊將打開一個對話框，其中包含屬於該應用程序的所有 KeyStore 文件.
+\n \\item \\textit{備份} 應用至少使用 App Manager 備份過一次. 單擊標簽會打開一個對話框，其包含所有可用的備份以及元數據.
+\n \\item \\textit{不進行電池優化} 電池優化對應用不生效. 可以通過單擊標簽重新啟用電池優化.
+\n \\item \\hyperref[sec:net-policy]{\\textit{聯網策略}} 為應用配置聯網策略（如，後台數據使用）. 單擊標簽會顯示一個對話框，其中包含系統支持的策略.
+\n \\item \\hyperref[sec:terminologies]{\\textit{SSAID}} 點擊打開一個對話框，其中包含分配給應用程序的當前 SSAID。若需要可以重置/重新生成 SSAID.
+\n \\item \\textit{SAF} 表示應用已被授權訪問一個或多個存儲位置或文件，即獲得由存儲訪問框架 (SAF) 的 URI.
+\n單擊打開一個對話框，其中包含授予的 URI.
+\n \\item \\textit{被 Google Play 簽名} 表示應用程序可能由 Google 簽名.
+\n \\end{itemize}
+\n
+\n \\item \\textbf{水平滾動操作面板} 一個操作面板，由可以對應用執行的各種操作組成, 有關可用操作的完整列表，請參閱§\\ref{subsubsec:horizontal-action-panel}.
+\n
+\n \\item \\textbf{路徑與目錄}: 應用有關路徑的各種信息，包括 \\textit{應用目錄} (where the APK files reside), \\textit{數據目錄} (internal, device protected and externals), \\textit{應用分包目錄} (along with the split names), and \\textit{本機原生 JNI 庫} (如果有). JNI 庫用於調用通常用 C/C++ 編寫的本機原生代碼, 使用本機原生庫可以使應用程序運行得更快或幫助應用程序使用使用非 Java 語言編寫的第三方庫，同大多數遊戲中一樣.
+\n通過單擊每個目錄項右側的啟動圖標, 可以通過第三方文件管理器打開目錄，前提是它們支持並獲得必要的權限.
+\n
+\n \\item \\textbf{數據使用}: 操作系統報告的應用程序使用的數據量.
+\n 根據 Android 版本，這可能需要廣泛的權限，包括 \\textit{訪問應用使用情況} 和 \\textit{電話} 權限.
+\n
+\n \\item \\textbf{存儲與緩存}: 顯示有關應用程序大小（APK 文件、優化文件）、數據和緩存的信息。 在舊設備中，還會顯示外部數據、緩存、媒體和 OBB 文件夾的大小. 如果在較新的設備中未授予 \\textit{訪問應用使用情況s} 權限，此部分將隱藏.
+\n
+\n \\item \\textbf{更多信息} 例如--
+\n \\begin{itemize}
+\n \\item \\textbf{SDK} 顯示與 Android SDK 相關的信息. 存在兩個（舊設備只有一個）值:
+\n \\textit{最高} 目標 SDK 與\\textit{最低} 最低SDK (後者不適用於舊設備).
+\n最佳實踐是使用平台當前支持的最大 SDK 的應用程序，以確保應用程序未在兼容模式下運行(以便使用隱私規避功能).
+\n SDK 已稱為 \\textbf{等級(API Level)}.
+\n \\seealsoinline{\\href{https://en.wikipedia.org/wiki/Android_version_history\\#Overview}{Android Version History}}
+\n
+\n \\item \\textbf{標志位(Flags)}: 構建應用程序時使用的應用標志, 有關標志的完整列表及其作用, 請見\\href{https://developer.android.com/reference/android/content/pm/ApplicationInfo\\#flags}{official documentation}.
+\n
+\n \\item \\textbf{安裝日期}: 首次安裝應用的日期.
+\n
+\n \\item \\textbf{更新日期}: 上次更新應用程序的日期. 如果應用程序尚未更新，這與 \\textit{安裝日期} 相同.
+\n
+\n \\item \\textbf{安裝器}: 安裝此應用的應用.
+\n並非所有應用程序都提供包管理器用來注冊安裝程序應用程序的信息. 因此，這個值不應被視為理所當然。
+\n
+\n \\item \\textbf{User ID}: Android系統給應用設置的唯一用戶ID.
+\n 對於共享應用，相同的用戶 ID 被分配給具有相同 \\textit{Shared User ID} 的多個應用程序.
+\n
+\n \\item \\textbf{Shared User ID}: 適用於一起共享ID的應用. 共享應用必須具有相同的 \\hyperref[subsec:signatures-tab]{簽名}.
+\n
+\n \\item \\textbf{首選ABI}: 此平台為此應用程序支持的架構。
+\n
+\n \\item \\textbf{Zygote preload name}: 負責預加載應用程序代碼和在所有使用應用程序 zygote 的隔離服務之間共享的數據.
+\n
+\n \\item \\textbf{隱藏 API 使用策略}: 從 Android 9 開始，Android Framework 中的許多方法和類第三方應用程序無法通過隱藏 API 強制訪問.
+\n存在以下選項:
+\n \\begin{itemize}
+\n \\item \\textit{默認(Default}: 基於應用的類型。 對於系統應用程序，它應該被禁用，而對於其他應用，它應該被強制執行.
+\n \\item \\textit{無或關閉(None/disabled)}: 該應用可以完全訪問隱藏的 API，就像在 Android 9 之前一樣.
+\n \\item \\textit{警告(Warn)}: 與上面相同，除了每次應用程序訪問隱藏 API 時都會記錄警告. 這一般未使用的.
+\n \\item \\textit{強制(Enforce)}: 應用無法訪問隱藏的 API，無論是深灰名單還是黑名單，或者兩者都無法訪問.
+\n這是 Android 9 及更高版本中第三方應用程序的默認選項，除非該應用程序被 OEM 或供應商列入白名單.
+\n \\begin{warning}{Warning}
+\n 隱藏 API 訪問限制策略在 Android 中沒有正確實現，應用程序可以繞過它.
+\n 因此，不應信任此值.
+\n \\end{warning}
+\n \\end{itemize}
+\n
+\n \\item \\textbf{SELinux}: 操作系統通過 SELinux 設置的強制訪問控制 (MAC) 策略.
+\n
+\n \\item \\textbf{主活動}: 應用的主要入口點.
+\n這僅在應用程序具有 \\hyperref[subsubsec:activities]{活動} 並且其中任何一個都可以從啟動器中打開時顯示. 右側還有一個啟動按鈕，可用於啟動此活動.
+\n \\end{itemize}
+\n\\end{itemize}</string>
+    <string name="pages$profile-page$$section-title">配置頁</string>
+    <string name="pages$profile-page$$options-menu-title">選項菜單</string>
+    <string name="pages$profile-page$$apps-tab-title">應用程序選項卡</string>
+    <string name="pages$profile-page$$configurations-tab-title">配置選項卡</string>
+    <string name="pages$profile-page$$comment-title">備注</string>
+    <string name="pages$profile-page$$components-title">組件</string>
+    <string name="pages$profile-page$$app-ops-title">AppOps 權限</string>
+    <string name="pages$profile-page$$permissions-title">權限</string>
+    <string name="pages$profile-page$$backup-restore-title">備份/恢覆</string>
+    <string name="pages$profile-page$$force-stop-title">強制停止</string>
+    <string name="pages$profile-page$$clear-cache-title">清除緩存</string>
+    <string name="pages$profile-page$$clear-data-title">清除數據</string>
+    <string name="pages$profile-page$$save-apk-title">保存APK</string>
+    <string name="pages$settings-page$$mode-of-operation-title">操作模式</string>
+    <string name="pages$settings-page$$enable-disable-features-title">啟用/禁用功能</string>
+    <string name="pages$settings-page$$apk-signing-title">APK 簽名</string>
+    <string name="pages$settings-page$$signature-schemes-title">簽名方案</string>
+    <string name="pages$settings-page$$signing-key-title">簽名密鑰</string>
+    <string name="pages$settings-page$$installer-title">安裝器</string>
+    <string name="pages$settings-page$$show-users-in-installer-title">在安裝器中顯示用戶</string>
+    <string name="pages$settings-page$$sign-apk-title">簽名 APK</string>
+    <string name="pages$settings-page$$install-location-title">安裝位置</string>
+    <string name="pages$settings-page$$remove-all-rules-title">刪除所有規則</string>
+    <string name="pages$settings-page$$import-export-keystore-title">導入/導出密鑰庫</string>
+    <string name="pages$interceptor-page$$extras-title">附加數據(Extras)</string>
+    <string name="pages$interceptor-page$$uri-title">URI</string>
+    <string name="pages$interceptor-page$$matching-activities-title">匹配的活動(Activity)</string>
+    <string name="pages$interceptor-page$$reset-to-default-title">重置為默認</string>
+    <string name="guide$aot$$enable-usb-debugging-title">啟用USB調試</string>
+    <string name="guide$aot$$setup-adb-win-title">Windows</string>
+    <string name="guide$aot$$miui-usb-debug-title">小米 (MIUI)</string>
+    <string name="guide$aot$$emui-usb-debug-title">華為 (EMUI)</string>
+    <string name="guide$aot$$lg-usb-debug-title">LG</string>
+    <string name="guide$aot$$troubleshooting-usb-debug-title">故障排除</string>
+    <string name="guide$aot$$setup-adb-on-pc-title">在PC或Mac上配置ADB</string>
+    <string name="guide$backup-restore$$location-title">位置</string>
+    <string name="guide$backup-restore$$options-title">備份選項</string>
+    <string name="guide$backup-restore$$backup-title">備份</string>
+    <string name="guide$backup-restore$$section-title">備份/恢覆</string>
+    <string name="faq$aot$$usb-debugging-title">無法啟用 USB 調試，怎麽辦？</string>
+    <string name="faq$aot$$feature-adb-title">哪些功能可以在ADB模式下使用？</string>
+    <string name="faq$aot$$block-tracker-title">我可以使用 ADB over TCP 來禁用跟蹤器或任何其他應用程序組件嗎？</string>
+    <string name="appendices$specifications$$background-title">背景介紹</string>
+    <string name="appendices$specifications$$rules-file-format-title">規則文件格式</string>
+    <string name="appendices$specifications$$internal-title">內部</string>
+    <string name="appendices$specifications$$external-title">外部</string>
+    <string name="appendices$changelogs$$chapter-title">更新日志</string>
+    <string name="titlepage$quotation">\\begin{quote}
+\n 明智而緩慢。他們跌跌撞撞地跑得很快。
+\n %\\sourceatright
+\n {---勞倫斯修士，\\textit{羅密歐與朱麗葉}}
+\n \\end{quote}</string>
+    <string name="pages$main-page$profile_name">也可以列出僅存在於 \\hyperref[sec:profiles-page]{profile} 中的應用程序。這個可以
+\n對於在配置文件上執行某些操作（例如，卸載配置文件中的所有應用程序）很有用
+\n不能通過 \\hyperref[sec:profiles-page]{Profiles page} 完成。</string>
+    <string name="pages$main-page$1-click-ops">\\textbf{1-Click Ops} 代表單擊操作。它打開 \\hyperref[sec:1-click-ops-page]{corresponding
+\npage} 在新活動中。</string>
+    <string name="pages$main-page$system-config">此菜單項打開一個新頁面，其中包含 Android 中包含的各種系統配置、黑名單/白名單
+\n顯示 OEM、供應商、AOSP 或 Magisk 模塊。它需要根。因此，該菜單項不會
+\n如果 App Manager 無法使用 root 權限，則會列出。</string>
+    <string name="pages$one-click-ops-page$$1-click-back-up-title">備份</string>
+    <string name="pages$one-click-ops-page$$1-click-restore-title">恢覆</string>
+    <string name="pages$profiles-page$$section-title">配置文件頁面</string>
+    <string name="pages$settings-page$$installer-app-title">安裝來源</string>
+    <string name="pages$settings-page$$backup-restore-title">備份/恢覆</string>
+    <string name="pages$settings-page$install-location">選擇APK安裝位置，可以為 \\textit{自動}、\\textit{僅內部} 和\\textit{傾向外部}.
+\n在較新的Android版本中，最後一個選項可能並不總是能如期在外部存儲中安裝應用.</string>
+    <string name="pages$settings-page$installer-app">選擇安裝程序，對一些明確檢查其安裝程序的應用很有用 (只適用於 root/ADB 用戶).</string>
+    <string name="pages$interceptor-page$$section-title">攔截器頁面</string>
+    <string name="pages$interceptor-page$$intent-filters-title">意圖(Intent)過濾器</string>
+    <string name="pages$interceptor-page$$action-title">動作(Action)</string>
+    <string name="guide$main$$guides-chapter-title">指南</string>
+    <string name="guide$aot$$setup-adb-mac-title">macOS</string>
+    <string name="guide$net-policy$$section-title">連網策略</string>
+    <string name="faq$main$$faq-chapter-title">常見問題</string>
+    <string name="faq$app-components$$section-title">應用組件</string>
+    <string name="faq$app-components$$what-are-app-components-title">什麽是應用組件？</string>
+    <string name="faq$aot$$section-title">ADB over TCP (經由TCP的ADB)</string>
+    <string name="faq$aot$$restart-title">我必須在每次重啟後啟用ADB over TCP嗎？</string>
 </resources>
