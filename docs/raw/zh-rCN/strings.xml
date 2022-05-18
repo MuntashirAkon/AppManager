@@ -127,15 +127,17 @@
 \n但可以通过 Open Source Collective 向 App Manager 的所有者发送捐赠.
 \n
 \nOpen Source Collective 是 Open Collective 平台上的一个财政托管机构，以帮助开源项目管理他们的财务状况。
-\n目前，它支持通过银行账户、PayPal、信用卡或借记卡和加密货币发起捐赠.
+\n目前，它支持通过银行账户、PayPal、信用卡或借记卡
+\n和加密货币发起捐赠.
 \n
 \n\\textit{Link:} \\url{https://opencollective.com/muntashir}.
 \n
 \n通过发送捐款，发送者同意他们不应使用捐款作为筹码来使作者优先考虑其所请求的功能.
-\n请求新功能不需要任何捐赠，且它们的优先级是按作者倾向排序.
+\n请求新功能不需要任何捐赠，
+\n且它们的优先级是按作者倾向排序.
 \n
 \n\\emph{App Manager 接受任何资助的提议}
-\n有兴趣的组织的代表可以通过以下方式直接联系联系所有者: §\\ref{sec:contact}.</string>
+\n有兴趣的组织的代表可以通过以下方式直接联系联系所有者: \\Sref{sec:contact}.</string>
     <string name="intro$main$contact">Muntashir Al-Islam\\footnote{可称``Muntashir Akon\'\'}\\\\
 \n邮箱: \\href{mailto:muntashirakon@riseup.net}{muntashirakon [at] riseup [dot] net}\\\\
 \nKey Fingerprint: \\texttt{7bad37c2981e41f8f6abea7f58f0b4f26c346fce}\\\\
@@ -457,16 +459,18 @@
     <string name="pages$settings-page$app-theme">配置应用内主题</string>
     <string name="pages$settings-page$$import-export-keystore-title">导入/导出密钥库</string>
     <string name="pages$settings-page$$device-info-title">关于设备</string>
-    <string name="pages$settings-page$install-location">选择APK安装位置，可以为 \\textit{自动}、\\textit{仅内部} 和\\textit{倾向外部}.
-\n在较新的Android版本中，最后一个选项可能并不总是能如期在外部存储中安装应用.</string>
+    <string name="pages$settings-page$install-location">定义 APK 安装位置，可以是 \\textit{自动}、\\textit{仅内部存储} 和\\textit{偏好外部存储}。
+\n在较新的 Android 版本中，选择最后一个选项并不保证应用将被安装在外部存储中。</string>
     <string name="pages$settings-page$enable-disable-features">启用或禁用应用 App Manager 中的某些功能，如
 \n\\begin{itemize}
-\n \\item 拦截器(Interceptor)
-\n \\item 应用清单文件浏览器(Manifest viewer)
-\n \\item 扫描器(Scanner)
-\n \\item 包安装器(Package installer)
-\n \\item 使用情况(Usage access): 关闭此选项后，App Manager 将永远不会请求 \\textit{Usage Access} 权限.
-\n \\item 日志浏览器(Log viewer)
+\n \\item \\textbf{拦截器}
+\n \\item \\textbf{Manifest 查看器}
+\n \\item \\textbf{扫描器}
+\n \\item \\textbf{包安装器}
+\n \\item \\textbf{使用情况.} 如关闭此功能，App Manager 永远不会请求 \\textit{使用情况} 权限.
+\n \\item \\textbf{日志查看器}
+\n \\item \\textbf{使用互联网.}如果关闭此功能，则所有互联网功能都将被禁用。
+\n 目前，唯一的互联网功能是通过 VirusTotal 获取扫描报告。
 \n\\end{itemize}</string>
     <string name="pages$settings-page$backup-restore">与 \\hyperref[sec:backup-restore]{备份恢复} 相关的设置.</string>
     <string name="pages$interceptor-page$$data-title">数据(Data)</string>
@@ -492,9 +496,9 @@
     <string name="guide$aot$$setup-adb-win-title">Windows</string>
     <string name="guide$aot$$setup-adb-linux-title">Linux</string>
     <string name="guide$aot$$configure-aot-title">配置经由TCP的ADB</string>
-    <string name="guide$aot$$aot-lineage-os-title">Lineage OS</string>
+    <string name="guide$aot$$aot-lineage-os-title">Lineage OS 17.1 及更早版本</string>
     <string name="guide$aot$$enable-aot-via-pc-title">在 PC 或 Mac 上启用 经由TCP的ADB</string>
-    <string name="guide$aot$$adb-mode-am-title">在App Manager上启用ADB模式</string>
+    <string name="guide$aot$$adb-mode-am-title">在 App Manager 中启用 ADB 模式</string>
     <string name="guide$aot$$setup-adb-mac-title">macOS</string>
     <string name="guide$aot$$references-title">参考</string>
     <string name="guide$backup-restore$$section-title">备份/恢复</string>
@@ -578,13 +582,19 @@
 \n应用程序清单是存储应用程序特定元数据的文件，Android 通过读取元数据来处理应用。
 \n
 \n这些选项卡中使用的颜色在 §\\ref{subsec:app-details-colour-codes} 中进行了解释。也可以在弹出菜单对列表进行排序.</string>
-    <string name="pages$settings-page$installer-app">选择安装程序，对一些明确检查其安装程序的应用很有用 (只适用于 root/ADB 用户).</string>
+    <string name="pages$settings-page$installer-app">选择安装程序，这对于明确检查安装程序以验证应用程序是否合法安装的应用程序很有用。
+\n这只适用于 root 或 ADB 用户。
+\n
+\n\\begin{tip}{Notice}
+\n 对于应用来说，检查安装包似乎并无不妥，但 Android 框架已经在安装过程中处理了这个问题。
+\n 通过检查安装包是证明应用来源合法性是错误的。
+\n\\end{tip}</string>
     <string name="pages$settings-page$$enable-disable-features-title">启用/禁用功能</string>
     <string name="pages$settings-page$$apk-signing-title">APK 签名</string>
-    <string name="pages$settings-page$show-users-in-installer">对于 root/AD B用户，在安装应用之前将显示一个用户列表.
-\n该应用将只对指定的用户（或者如果选择了所有用户）安装.</string>
-    <string name="pages$settings-page$sign-apk">安装应用前是否对 APK 文件进行签名.
-\n转至 \\hyperref[subsec:apk-signing]{APK 签名} 部分来配置签名.</string>
+    <string name="pages$settings-page$show-users-in-installer">启用后，将在安装应用前显示用户列表。将只为特定用户
+\n安装应用。</string>
+    <string name="pages$settings-page$sign-apk">安装应用前是否对 APK 文件进行签名。可用 \\hyperref[subsec:apk-signing]{APK 签名} 页面
+\n来配置签名。</string>
     <string name="pages$scanner-page$$section-title">扫描器页面</string>
     <string name="pages$interceptor-page$$action-title">动作(Action)</string>
     <string name="pages$interceptor-page$$section-title">拦截器页面</string>
@@ -627,8 +637,7 @@
 \n
 \n \\item \\textbf{群组(Group)} 与权限关联的群组（如果有），几个相关的权限通常可以组合在一起。
 \n\\end{itemize}</string>
-    <string name="pages$settings-page$language">配置应用内语言，
-\nApp Manager 目前支持19种语言。</string>
+    <string name="pages$settings-page$language">配置应用内语言。App Manager 目前支持 21 种语言。</string>
     <string name="pages$app-details-page$permission-tabs">\\textbf{App Ops}, \\textbf{使用权限} and \\textbf{权限} 选项卡与权限相关。
 \n安卓中，在不具有相同身份（称为 \\textit{shared ID}）的应用或进程之间进行通信常常需要权限，其由权限控制器管理。
 \n一些被视为\\textit{普通} 的权限，若它们出现在应用程序清单中，则会自动授予，但\\textit{危险}权限 和 \\textit{开发} 权限需要用户确认。
