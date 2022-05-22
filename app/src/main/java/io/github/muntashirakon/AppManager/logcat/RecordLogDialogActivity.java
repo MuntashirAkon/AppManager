@@ -7,6 +7,7 @@ import android.os.Bundle;
 import io.github.muntashirakon.AppManager.BaseActivity;
 
 // Copyright 2012 Nolan Lawson
+// Copyright 2021 Muntashir Al-Islam
 public class RecordLogDialogActivity extends BaseActivity {
     public static final String EXTRA_QUERY_SUGGESTIONS = "suggestions";
 
@@ -17,14 +18,10 @@ public class RecordLogDialogActivity extends BaseActivity {
 
     @Override
     protected void onAuthenticated(Bundle savedInstanceState) {
-        final String[] suggestions = (getIntent() != null && getIntent().hasExtra(EXTRA_QUERY_SUGGESTIONS))
-                ? getIntent().getStringArrayExtra(EXTRA_QUERY_SUGGESTIONS) : new String[]{};
-
-        RecordLogDialogFragment dialogFragment = new RecordLogDialogFragment();
-        Bundle args = new Bundle();
-        args.putStringArray(RecordLogDialogFragment.QUERY_SUGGESTIONS, suggestions);
-        dialogFragment.setArguments(args);
-        dialogFragment.show(getSupportFragmentManager(), RecordLogDialogFragment.TAG);
+        RecordLogDialogFragment dialog;
+        dialog = RecordLogDialogFragment.getInstance(getIntent().getStringArrayExtra(EXTRA_QUERY_SUGGESTIONS), null);
+        dialog.show(getSupportFragmentManager(), RecordLogDialogFragment.TAG);
+        dialog.setOnDismissListener(v -> finish());
     }
 
 }

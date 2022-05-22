@@ -32,6 +32,7 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 // Copyright 2012 Nolan Lawson
+// Copyright 2021 Muntashir Al-Islam
 public class LogViewerRecyclerAdapter extends RecyclerView.Adapter<LogViewerRecyclerAdapter.ViewHolder>
         implements Filterable {
     public static final String TAG = LogViewerRecyclerAdapter.class.getSimpleName();
@@ -112,7 +113,6 @@ public class LogViewerRecyclerAdapter extends RecyclerView.Adapter<LogViewerRecy
         setHasStableIds(true);
     }
 
-
     /**
      * Adds the specified object at the end of the array.
      *
@@ -130,7 +130,6 @@ public class LogViewerRecyclerAdapter extends RecyclerView.Adapter<LogViewerRecy
             }
         }
     }
-
 
     public void addWithFilter(LogLine object, CharSequence text, boolean notify) {
         if (mOriginalValues != null) {
@@ -200,13 +199,14 @@ public class LogViewerRecyclerAdapter extends RecyclerView.Adapter<LogViewerRecy
                     mObjects.remove(mOriginalValues.get(i));
                 }
                 mOriginalValues = new ArrayList<>(subList);
+                notifyDataSetChanged();
             }
         } else {
             synchronized (mLock) {
                 mObjects = new ArrayList<>(mObjects.subList(n, mObjects.size()));
+                notifyDataSetChanged();
             }
         }
-        notifyDataSetChanged();
         stopWatch.log();
     }
 
@@ -231,8 +231,21 @@ public class LogViewerRecyclerAdapter extends RecyclerView.Adapter<LogViewerRecy
         }
     }
 
-    public List<LogLine> getTrueValues() {
-        return mOriginalValues != null ? mOriginalValues : mObjects;
+    @GuardedBy("mLock")
+    public int getRealSize() {
+        synchronized (mLock) {
+            return (mOriginalValues != null ? mOriginalValues : mObjects).size();
+        }
+    }
+
+    @GuardedBy("mLock")
+    public void setCollapseMode(boolean isCollapsed) {
+        synchronized (mLock) {
+            List<LogLine> list = mOriginalValues != null ? mOriginalValues : mObjects;
+            for (LogLine logLine : list) {
+                logLine.setExpanded(!isCollapsed);
+            }
+        }
     }
 
     @NonNull
@@ -245,18 +258,7 @@ public class LogViewerRecyclerAdapter extends RecyclerView.Adapter<LogViewerRecy
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Context context = holder.itemView.getContext();
-        LogLine logLine;
-        try {
-            logLine = getItem(position);
-        } catch (IndexOutOfBoundsException ignore) {
-            // XXX hack - I sometimes get array index out of bounds exceptions here
-            // no idea how to solve it, so this is the best I can do
-            // FIXME
-            logLine = LogLine.newLogLine("",
-                    AppPref.getBoolean(AppPref.PrefKey.PREF_LOG_VIEWER_EXPAND_BY_DEFAULT_BOOL),
-                    AppPref.getString(AppPref.PrefKey.PREF_LOG_VIEWER_FILTER_PATTERN_STR));
-        }
-
+        LogLine logLine = getItem(position);
         holder.logLine = logLine;
 
         int levelColor = getBackgroundColorForLogLevel(context, logLine.getLogLevel());
@@ -334,10 +336,6 @@ public class LogViewerRecyclerAdapter extends RecyclerView.Adapter<LogViewerRecy
         return mFilter;
     }
 
-    public List<LogLine> getObjects() {
-        return mObjects;
-    }
-
     public void setClickListener(ViewHolder.OnClickListener clickListener) {
         mClickListener = clickListener;
     }
@@ -405,8 +403,8 @@ public class LogViewerRecyclerAdapter extends RecyclerView.Adapter<LogViewerRecy
         protected void publishResults(CharSequence constraint, FilterResults results) {
             synchronized (mLock) {
                 mObjects = (List<LogLine>) results.values;
+                notifyDataSetChanged();
             }
-            notifyDataSetChanged();
         }
     }
 

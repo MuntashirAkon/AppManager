@@ -1,4 +1,6 @@
 <!-- SPDX-License-Identifier: WTFPL AND GPL-3.0-or-later -->
+<!-- Copyright 2012 Nolan Lawson -->
+<!-- Copyright 2021 Muntashir Al-Islam -->
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -17,18 +19,19 @@
         tools:listitem="@layout/item_logcat"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/padding_medium"
         android:visibility="gone"
-        app:borderWidth="0dp"
-        app:elevation="6dp"
-        app:pressedTranslationZ="12dp"
-        app:srcCompat="@drawable/ic_stop_white_24dp"
+        android:text="@string/log_stop_recording"
+        android:textColor="?attr/colorOnError"
+        app:icon="@drawable/ic_stop_white_24dp"
+        app:iconTint="?attr/colorOnError"
+        app:backgroundTint="?attr/colorError"
         tools:visibility="visible"
-        android:contentDescription="@string/record_log" />
+        android:contentDescription="@string/log_stop_recording" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

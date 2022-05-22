@@ -20,6 +20,7 @@ import androidx.core.app.NotificationManagerCompat;
 
 import java.io.IOException;
 import java.util.Random;
+import java.util.regex.Pattern;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
@@ -40,20 +41,23 @@ import io.github.muntashirakon.AppManager.utils.NotificationUtils;
  * Reads logs.
  */
 // Copyright 2012 Nolan Lawson
+// Copyright 2021 Muntashir Al-Islam
 public class LogcatRecordingService extends ForegroundService {
     public static final String TAG = LogcatRecordingService.class.getSimpleName();
 
-    public static final String URI_SCHEME = "catlog_recording_service";
+    public static final String URI_SCHEME = "am_logcat_recording_service";
     public static final String EXTRA_FILENAME = "filename";
     public static final String EXTRA_LOADER = "loader";
     public static final String EXTRA_QUERY_FILTER = "filter";
     public static final String EXTRA_LEVEL = "level";
+
     private static final String ACTION_STOP_RECORDING = BuildConfig.APPLICATION_ID + ".action.STOP_RECORDING";
-    private final Object lock = new Object();
+
+    private final Object mLock = new Object();
     private LogcatReader mReader;
     private boolean mKilled;
-    private Handler handler;
-    private final BroadcastReceiver receiver = new BroadcastReceiver() {
+    private Handler mHandler;
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             // Received broadcast to kill service
@@ -71,8 +75,8 @@ public class LogcatRecordingService extends ForegroundService {
         super.onCreate();
         IntentFilter intentFilter = new IntentFilter(ACTION_STOP_RECORDING);
         intentFilter.addDataScheme(URI_SCHEME);
-        registerReceiver(receiver, intentFilter);
-        handler = new Handler(Looper.getMainLooper());
+        registerReceiver(mReceiver, intentFilter);
+        mHandler = new Handler(Looper.getMainLooper());
     }
 
 
@@ -96,7 +100,7 @@ public class LogcatRecordingService extends ForegroundService {
     public void onDestroy() {
         super.onDestroy();
         killProcess();
-        unregisterReceiver(receiver);
+        unregisterReceiver(mReceiver);
         stopForeground(true);
         WidgetHelper.updateWidgets(getApplicationContext(), false);
     }
@@ -105,7 +109,6 @@ public class LogcatRecordingService extends ForegroundService {
     public int onStartCommand(Intent intent, int flags, int startId) {
         // Update widget
         WidgetHelper.updateWidgets(getApplicationContext());
-        CharSequence tickerText = getText(R.string.notification_ticker);
         Intent stopRecordingIntent = new Intent();
         stopRecordingIntent.setAction(ACTION_STOP_RECORDING);
         // Have to make this unique for God knows what reason
@@ -119,7 +122,7 @@ public class LogcatRecordingService extends ForegroundService {
         // Set the icon, scrolling text and timestamp
         NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID);
         notification.setSmallIcon(R.drawable.ic_launcher_foreground);
-        notification.setTicker(tickerText);
+        notification.setTicker(getText(R.string.notification_ticker));
         notification.setWhen(System.currentTimeMillis());
         notification.setContentTitle(getString(R.string.notification_title));
         notification.setContentText(getString(R.string.notification_subtext));
@@ -156,7 +159,7 @@ public class LogcatRecordingService extends ForegroundService {
             String line;
             int lineCount = 0;
             int logLinePeriod = AppPref.getInt(AppPref.PrefKey.PREF_LOG_VIEWER_WRITE_PERIOD_INT);
-            String filterPattern = AppPref.getString(AppPref.PrefKey.PREF_LOG_VIEWER_FILTER_PATTERN_STR);
+            Pattern filterPattern = Pattern.compile(AppPref.getString(AppPref.PrefKey.PREF_LOG_VIEWER_FILTER_PATTERN_STR));
             while (mReader != null && (line = mReader.readLine()) != null && !mKilled) {
                 // filter
                 if (!searchCriteriaWillAlwaysMatch || !logLevelAcceptsEverything) {
@@ -186,7 +189,7 @@ public class LogcatRecordingService extends ForegroundService {
         }
     }
 
-    private boolean checkLogLine(String line, SearchCriteria searchCriteria, int logLevel, String filterPattern) {
+    private boolean checkLogLine(String line, SearchCriteria searchCriteria, int logLevel, Pattern filterPattern) {
         LogLine logLine = LogLine.newLogLine(line, false, filterPattern);
         return logLine != null && logLine.getLogLevel() >= logLevel && searchCriteria.matches(logLine);
     }
@@ -203,12 +206,12 @@ public class LogcatRecordingService extends ForegroundService {
 
 
     private void makeToast(final int stringResId, final int toastLength) {
-        handler.post(() -> Toast.makeText(LogcatRecordingService.this, stringResId, toastLength).show());
+        mHandler.post(() -> Toast.makeText(LogcatRecordingService.this, stringResId, toastLength).show());
     }
 
     private void killProcess() {
         if (!mKilled) {
-            synchronized (lock) {
+            synchronized (mLock) {
                 if (!mKilled && mReader != null) {
                     // kill the logcat process
                     mReader.killQuietly();

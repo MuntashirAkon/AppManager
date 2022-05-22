@@ -7,6 +7,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
@@ -51,8 +54,26 @@ public class ServiceHelper {
             // Add query text and log level
             intent.putExtra(LogcatRecordingService.EXTRA_QUERY_FILTER, queryFilter);
             intent.putExtra(LogcatRecordingService.EXTRA_LEVEL, logLevel);
-            context.startService(intent);
+            ContextCompat.startForegroundService(context, intent);
         }
+    }
+
+    @Nullable
+    public static synchronized Intent getLogcatRecorderServiceIfNotAlreadyRunning(Context context, String filename,
+                                                                              String queryFilter, int logLevel) {
+        boolean alreadyRunning = ServiceHelper.checkIfServiceIsRunning(context, LogcatRecordingService.class);
+        if (alreadyRunning) {
+            return null;
+        }
+        Intent intent = new Intent(context, LogcatRecordingService.class);
+        intent.putExtra(LogcatRecordingService.EXTRA_FILENAME, filename);
+        // Load "lastLine" in the background
+        LogcatReaderLoader loader = LogcatReaderLoader.create(true);
+        intent.putExtra(LogcatRecordingService.EXTRA_LOADER, loader);
+        // Add query text and log level
+        intent.putExtra(LogcatRecordingService.EXTRA_QUERY_FILTER, queryFilter);
+        intent.putExtra(LogcatRecordingService.EXTRA_LEVEL, logLevel);
+        return intent;
     }
 
     public static boolean checkIfServiceIsRunning(Context context, Class<?> service) {

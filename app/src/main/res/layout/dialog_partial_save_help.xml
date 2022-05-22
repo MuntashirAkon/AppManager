@@ -1,21 +1,27 @@
 <!-- SPDX-License-Identifier: WTFPL AND GPL-3.0-or-later -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingStart="@dimen/padding_medium"
-    android:paddingEnd="@dimen/padding_medium">
+    android:layout_height="wrap_content">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/dialog_partial_select_explanation"
-        android:textAppearance="@style/TextAppearance.AppTheme.BodyLarge" />
+        android:orientation="vertical"
+        android:paddingStart="@dimen/padding_medium"
+        android:paddingEnd="@dimen/padding_medium">
 
-    <androidx.appcompat.widget.AppCompatCheckBox
-        android:id="@android:id/checkbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/checkbox_never_show_partial_select_help" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dialog_partial_select_explanation"
+            android:textAppearance="@style/TextAppearance.AppTheme.BodyLarge" />
 
-</LinearLayout>
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@android:id/checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/checkbox_never_show_partial_select_help" />
+
+    </LinearLayout>
+
+</ScrollView>

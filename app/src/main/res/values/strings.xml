@@ -1212,4 +1212,5 @@
     <string name="pref_vt_prompt_before_uploading">Display prompt before uploading a file.</string>
     <string name="vt_confirm_uploading_file">The file was not found in the VirusTotal database. Do you want to upload it?</string>
     <string name="vt_confirm_upload_and_scan">Yes, upload and scan</string>
+    <string name="log_stop_recording">Stop recording</string>
 </resources>

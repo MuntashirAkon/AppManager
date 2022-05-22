@@ -9,6 +9,8 @@ import androidx.annotation.Nullable;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,6 +23,7 @@ public class LogcatHelper {
     public static final String TAG = LogcatHelper.class.getSimpleName();
 
     @IntDef(value = {LOG_ID_MAIN, LOG_ID_RADIO, LOG_ID_EVENTS, LOG_ID_SYSTEM, LOG_ID_CRASH}, flag = true)
+    @Retention(RetentionPolicy.SOURCE)
     public @interface LogBufferId {
     }
 
@@ -29,12 +32,16 @@ public class LogcatHelper {
     public static final int LOG_ID_EVENTS = 1 << 2;
     public static final int LOG_ID_SYSTEM = 1 << 3;
     public static final int LOG_ID_CRASH = 1 << 4;
+    public static final int LOG_ID_ALL = LOG_ID_MAIN|LOG_ID_RADIO|LOG_ID_EVENTS|LOG_ID_SYSTEM|LOG_ID_CRASH;
+    public static final int LOG_ID_DEFAULT = LOG_ID_MAIN|LOG_ID_SYSTEM|LOG_ID_CRASH;
 
     public static final String BUFFER_MAIN = "main";
     public static final String BUFFER_RADIO = "radio";
     public static final String BUFFER_EVENTS = "events";
     public static final String BUFFER_SYSTEM = "system";
     public static final String BUFFER_CRASH = "crash";
+    public static final String BUFFER_ALL = "all";
+    public static final String BUFFER_DEFAULT = "default";
 
     public static Process getLogcatProcess(@LogBufferId int buffers) throws IOException {
         return ProcessCompat.exec(getLogcatArgs(buffers, false));
@@ -68,27 +75,34 @@ public class LogcatHelper {
     @NonNull
     private static String[] getLogcatArgs(@LogBufferId int buffers, boolean dumpAndExit) {
         List<String> args = new ArrayList<>(Arrays.asList("logcat", "-v", "time"));
-        // For some reason, adding -b main excludes log output from AndroidRuntime runtime exceptions,
-        // whereas just leaving it blank keeps them in.  So do not specify the buffer if it is "main"
-        if ((buffers & LOG_ID_MAIN) != 0) {
+
+        if (buffers == LOG_ID_ALL) {
             args.add("-b");
-            args.add(BUFFER_MAIN);
-        }
-        if ((buffers & LOG_ID_RADIO) != 0) {
+            args.add(BUFFER_ALL);
+        } else if (buffers == LOG_ID_DEFAULT) {
             args.add("-b");
-            args.add(BUFFER_RADIO);
-        }
-        if ((buffers & LOG_ID_EVENTS) != 0) {
-            args.add("-b");
-            args.add(BUFFER_EVENTS);
-        }
-        if ((buffers & LOG_ID_SYSTEM) != 0) {
-            args.add("-b");
-            args.add(BUFFER_SYSTEM);
-        }
-        if ((buffers & LOG_ID_CRASH) != 0) {
-            args.add("-b");
-            args.add(BUFFER_CRASH);
+            args.add(BUFFER_DEFAULT);
+        } else {
+            if ((buffers & LOG_ID_MAIN) != 0) {
+                args.add("-b");
+                args.add(BUFFER_MAIN);
+            }
+            if ((buffers & LOG_ID_RADIO) != 0) {
+                args.add("-b");
+                args.add(BUFFER_RADIO);
+            }
+            if ((buffers & LOG_ID_EVENTS) != 0) {
+                args.add("-b");
+                args.add(BUFFER_EVENTS);
+            }
+            if ((buffers & LOG_ID_SYSTEM) != 0) {
+                args.add("-b");
+                args.add(BUFFER_SYSTEM);
+            }
+            if ((buffers & LOG_ID_CRASH) != 0) {
+                args.add("-b");
+                args.add(BUFFER_CRASH);
+            }
         }
         if (dumpAndExit) args.add("-d");
         return args.toArray(new String[0]);

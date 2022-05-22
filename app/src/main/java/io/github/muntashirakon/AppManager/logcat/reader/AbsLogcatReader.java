@@ -4,7 +4,7 @@ package io.github.muntashirakon.AppManager.logcat.reader;
 
 
 // Copyright 2012 Nolan Lawson
-public abstract class AbsLogcatReader implements LogcatReader {
+abstract class AbsLogcatReader implements LogcatReader {
     protected boolean recordingMode;
 
     public AbsLogcatReader(boolean recordingMode) {

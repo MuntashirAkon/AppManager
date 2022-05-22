@@ -2,23 +2,17 @@
 
 package io.github.muntashirakon.AppManager.logcat;
 
-import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.database.MatrixCursor;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.RemoteException;
-import android.os.UserHandleHidden;
 import android.provider.BaseColumns;
 import android.text.TextUtils;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,11 +33,13 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.cursoradapter.widget.CursorAdapter;
 import androidx.cursoradapter.widget.SimpleCursorAdapter;
+import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
@@ -52,7 +48,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -62,7 +57,6 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 import io.github.muntashirakon.AppManager.db.dao.LogFilterDao;
 import io.github.muntashirakon.AppManager.db.entity.LogFilter;
 import io.github.muntashirakon.AppManager.fm.FmProvider;
@@ -70,22 +64,17 @@ import io.github.muntashirakon.AppManager.logcat.helper.BuildHelper;
 import io.github.muntashirakon.AppManager.logcat.helper.PreferenceHelper;
 import io.github.muntashirakon.AppManager.logcat.helper.SaveLogHelper;
 import io.github.muntashirakon.AppManager.logcat.helper.ServiceHelper;
-import io.github.muntashirakon.AppManager.logcat.reader.LogcatReader;
-import io.github.muntashirakon.AppManager.logcat.reader.LogcatReaderLoader;
 import io.github.muntashirakon.AppManager.logcat.struct.LogLine;
-import io.github.muntashirakon.AppManager.logcat.struct.SavedLog;
 import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
 import io.github.muntashirakon.AppManager.logcat.struct.SendLogDetails;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.settings.LogViewerPreferences;
 import io.github.muntashirakon.AppManager.settings.SettingsActivity;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
-import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.StoragePermission;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
@@ -98,8 +87,10 @@ import static io.github.muntashirakon.AppManager.logcat.LogViewerRecyclerAdapter
 import static io.github.muntashirakon.AppManager.logcat.LogViewerRecyclerAdapter.ViewHolder.CONTEXT_MENU_FILTER_ID;
 
 // Copyright 2012 Nolan Lawson
-public class LogViewerActivity extends BaseActivity implements FilterListener,
-        LogViewerRecyclerAdapter.ViewHolder.OnClickListener {
+// Copyright 2021 Muntashir Al-Islam
+public class LogViewerActivity extends BaseActivity implements FilterListener, SearchView.OnQueryTextListener,
+        LogViewerRecyclerAdapter.ViewHolder.OnClickListener, LogViewerViewModel.LogLinesAvailableInterface,
+        SearchView.OnSuggestionListener {
     public static final String TAG = LogViewerActivity.class.getSimpleName();
 
     public static final String ACTION_LAUNCH = BuildConfig.APPLICATION_ID + ".action.LAUNCH";
@@ -114,22 +105,18 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
 
     private static final String INTENT_FILENAME = "filename";
 
-    private RecyclerView recyclerView;
-    private LinearProgressIndicator progressIndicator;
-    private FloatingActionButton fab;
+    private RecyclerView mRecyclerView;
+    private LinearProgressIndicator mProgressIndicator;
+    private ExtendedFloatingActionButton mStopRecordingFab;
     private LogViewerRecyclerAdapter mLogListAdapter;
-    private LogReaderAsyncTask mTask;
 
     private String mSearchingString;
 
     private boolean mAutoscrollToBottom = true;
-    private boolean mCollapsedMode;
-
-    private String mFilterPattern = null;
 
     private boolean mDynamicallyEnteringSearchText;
-    private boolean partialSelectMode;
-    private final List<LogLine> partiallySelectedLogLines = new ArrayList<>(2);
+    private boolean mPartialSelectMode;
+    private final List<LogLine> mPartiallySelectedLogLines = new ArrayList<>(2);
 
     private final Set<String> mSearchSuggestionsSet = new HashSet<>();
     private CursorAdapter mSearchSuggestionsAdapter;
@@ -137,7 +124,10 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
     private String mCurrentlyOpenLog = null;
 
     private Handler mHandler;
-    private SearchView searchView;
+    private SearchView mSearchView;
+    private LogViewerViewModel mViewModel;
+
+    private int mCounter = 0;
 
     private final MultithreadedExecutor executor = MultithreadedExecutor.getNewInstance();
     private final BetterActivityResult<Intent, ActivityResult> activityLauncher =
@@ -171,88 +161,68 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
     public void onAuthenticated(Bundle savedInstanceState) {
         setContentView(R.layout.activity_logcat);
         setSupportActionBar(findViewById(R.id.toolbar));
-        progressIndicator = findViewById(R.id.progress_linear);
-        progressIndicator.setVisibilityAfterHide(View.GONE);
-        fab = findViewById(R.id.fab);
+        mViewModel = new ViewModelProvider(this).get(LogViewerViewModel.class);
+        mProgressIndicator = findViewById(R.id.progress_linear);
+        mProgressIndicator.setVisibilityAfterHide(View.GONE);
+        mStopRecordingFab = findViewById(R.id.fab);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayShowCustomEnabled(true);
-            searchView = UIUtils.setupSearchView(actionBar, new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String query) {
-                    return false;
-                }
-
-                @Override
-                public boolean onQueryTextChange(String newText) {
-                    if (!mDynamicallyEnteringSearchText) {
-                        search(newText);
-                        populateSuggestionsAdapter(newText);
-                    }
-                    mDynamicallyEnteringSearchText = false;
-                    return false;
-                }
-            });
-            searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-                @Override
-                public boolean onSuggestionSelect(int position) {
-                    return false;
-                }
-
-                @Override
-                public boolean onSuggestionClick(int position) {
-                    List<String> suggestions = getSuggestionsForQuery(mSearchingString);
-                    if (!suggestions.isEmpty()) {
-                        searchView.setQuery(suggestions.get(position), true);
-                    }
-                    return false;
-                }
-            });
+            mSearchView = UIUtils.setupSearchView(actionBar, this);
+            mSearchView.setOnSuggestionListener(this);
         }
 
         mSearchSuggestionsAdapter = new SimpleCursorAdapter(this, R.layout.item_checked_text_view, null,
                 new String[]{"suggestion"}, new int[]{android.R.id.text1},
                 CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
-        searchView.setSuggestionsAdapter(mSearchSuggestionsAdapter);
+        mSearchView.setSuggestionsAdapter(mSearchSuggestionsAdapter);
 
         // Set removal of sensitive info
         LogLine.omitSensitiveInfo = AppPref.getBoolean(AppPref.PrefKey.PREF_LOG_VIEWER_OMIT_SENSITIVE_INFO_BOOL);
 
         storagePermission.request(granted -> {
-            if (granted) handleShortcuts(getIntent().getStringExtra("shortcut_action"));
+            if (granted) {
+                handleShortcuts(getIntent().getStringExtra("shortcut_action"));
+            }
         });
 
         mHandler = new Handler(Looper.getMainLooper());
 
-        fab.setOnClickListener(v -> {
+        mStopRecordingFab.setOnClickListener(v -> {
             // Stop recording
             ServiceHelper.stopBackgroundServiceIfRunning(LogViewerActivity.this);
         });
 
-        recyclerView = findViewById(R.id.list);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setItemAnimator(null);
-        new FastScrollerBuilder(recyclerView).useMd2Style().build();
+        mRecyclerView = findViewById(R.id.list);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView.setItemAnimator(null);
+        new FastScrollerBuilder(mRecyclerView).useMd2Style().build();
 
-        mCollapsedMode = !AppPref.getBoolean(AppPref.PrefKey.PREF_LOG_VIEWER_EXPAND_BY_DEFAULT_BOOL);
-        mFilterPattern = AppPref.getString(AppPref.PrefKey.PREF_LOG_VIEWER_FILTER_PATTERN_STR);
-
-        Log.d(TAG, "Initial collapsed mode is " + mCollapsedMode);
+        // Set collapsed mode
+        mViewModel.setCollapsedMode(!AppPref.getBoolean(AppPref.PrefKey.PREF_LOG_VIEWER_EXPAND_BY_DEFAULT_BOOL));
 
         setUpLogViewerAdapter();
         // Grant read logs permission if not already
-        if (!PermissionUtils.hasPermission(this, Manifest.permission.READ_LOGS) && LocalServer.isAMServiceAlive()) {
-            executor.submit(() -> {
-                try {
-                    PermissionCompat.grantPermission(getPackageName(), Manifest.permission.READ_LOGS,
-                            UserHandleHidden.myUserId());
-                } catch (RemoteException e) {
-                    Log.d(TAG, e.toString());
+        mViewModel.grantReadLogsPermission();
+        // It doesn't matter whether the permission has been granted or not, we can start logging
+        mViewModel.setLogLinesAvailableInterface(this);
+        mViewModel.observeLoggingFinished().observe(this, finished -> {
+            if (finished) {
+                mProgressIndicator.hide();
+                if (mViewModel.isLogcatPaused()) {
+                    mViewModel.resumeLogcat();
                 }
-            });
-        }
-        // It doesn't matter whether the permission has been granted or not
+                if (mOnFinishedRunnable != null) {
+                    mOnFinishedRunnable.run();
+                }
+            }
+        });
+        mViewModel.observeLoadingProgress().observe(this, percentage ->
+                mProgressIndicator.setProgressCompat(percentage, true));
+        mViewModel.observeTruncatedLines().observe(this, maxDisplayedLines -> UIUtils.displayLongToast(
+                getResources().getQuantityString(R.plurals.toast_log_truncated, maxDisplayedLines, maxDisplayedLines)));
+
         startLog();
     }
 
@@ -277,11 +247,10 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
     }
 
     private void startLog() {
-        Intent intent = getIntent();
-        if (intent == null || !intent.hasExtra(INTENT_FILENAME)) {
+        String filename = getIntent().getStringExtra(INTENT_FILENAME);
+        if (filename == null) {
             startMainLog();
         } else {
-            String filename = intent.getStringExtra(INTENT_FILENAME);
             openLogFile(filename);
         }
         doAfterInitialMessage(getIntent());
@@ -315,9 +284,9 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
             // Scroll to bottom, since for some reason it always scrolls to the top, which is annoying
             scrollToBottom();
         }
-        boolean recordingInProgress = ServiceHelper.checkIfServiceIsRunning(getApplicationContext(), LogcatRecordingService.class);
-        if (fab != null) {
-            fab.setVisibility(recordingInProgress ? View.VISIBLE : View.GONE);
+        if (mStopRecordingFab != null) {
+            boolean recordingInProgress = ServiceHelper.checkIfServiceIsRunning(getApplicationContext(), LogcatRecordingService.class);
+            mStopRecordingFab.setVisibility(recordingInProgress ? View.VISIBLE : View.GONE);
         }
     }
 
@@ -339,20 +308,25 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
 
     private void startMainLog() {
         Runnable mainLogRunnable = () -> {
+            // PreExecute begin
+            resetDisplayedLog(null);
+
+            mProgressIndicator.hide();
+            mProgressIndicator.setIndeterminate(true);
+            mProgressIndicator.show();
+            // PreExecute end
             if (mLogListAdapter != null) {
                 mLogListAdapter.clear();
             }
-            mTask = new LogReaderAsyncTask();
-            mTask.execute((Void) null);
+            mViewModel.startLogcat();
         };
 
-        if (mTask != null) {
+        if (!mViewModel.isLogcatKilled()) {
+            // Restart
             // Do only after current log is depleted, to avoid splicing the streams together
-            // (Don't cross the streams!)
-            mTask.unpause();
-            mTask.setOnFinished(mainLogRunnable);
-            mTask.killReader();
-            mTask = null;
+            mViewModel.resumeLogcat();
+            setOnFinished(mainLogRunnable);
+            mViewModel.killLogcatReader();
         } else {
             // No main log currently running; just start up the main log now
             mainLogRunnable.run();
@@ -368,11 +342,6 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mTask != null) {
-            mTask.killReader();
-            mTask.cancel(true);
-            mTask = null;
-        }
         executor.shutdownNow();
     }
 
@@ -402,8 +371,8 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
 
     @Override
     public void onBackPressed() {
-        if (!searchView.isIconified()) {
-            searchView.setIconified(true);
+        if (!mSearchView.isIconified()) {
+            mSearchView.setIconified(true);
         } else if (mCurrentlyOpenLog != null) {
             startMainLog();
         } else {
@@ -413,9 +382,9 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
-        boolean showingMainLog = (mTask != null);
+        boolean showingMainLog = !mViewModel.isLogcatKilled();
         MenuItem item = menu.findItem(R.id.menu_expand_all);
-        if (mCollapsedMode) {
+        if (mViewModel.isCollapsedMode()) {
             item.setIcon(R.drawable.ic_expand_more_white_24dp);
             item.setTitle(R.string.expand_all);
         } else {
@@ -449,8 +418,8 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
         crazyLoggerMenuItem.setVisible(BuildConfig.DEBUG);
 
         MenuItem partialSelectMenuItem = menu.findItem(R.id.menu_partial_select);
-        partialSelectMenuItem.setEnabled(!partialSelectMode);
-        partialSelectMenuItem.setVisible(!partialSelectMode);
+        partialSelectMenuItem.setEnabled(!mPartialSelectMode);
+        partialSelectMenuItem.setVisible(!mPartialSelectMode);
 
         return super.onPrepareOptionsMenu(menu);
     }
@@ -465,16 +434,16 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         if (itemId == R.id.menu_play_pause) {
-            pauseOrUnpause(item);
+            pauseOrResume(item);
             return true;
         } else if (itemId == R.id.menu_expand_all) {
-            expandOrCollapseAll(true);
+            expandOrCollapse();
             return true;
         } else if (itemId == R.id.menu_clear) {
             if (mLogListAdapter != null) {
                 mLogListAdapter.clear();
             }
-            Snackbar.make(recyclerView, R.string.log_cleared, Snackbar.LENGTH_LONG)
+            Snackbar.make(mRecyclerView, R.string.log_cleared, Snackbar.LENGTH_LONG)
                     .setAction(R.string.undo, v -> startMainLog())
                     .show();
             return true;
@@ -492,7 +461,9 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
             return true;
         } else if (itemId == R.id.menu_open_log) {
             storagePermission.request(granted -> {
-                if (granted) displayOpenLogFileDialog();
+                if (granted) {
+                    displayOpenLogFileDialog();
+                }
             });
             return true;
         } else if (itemId == R.id.menu_save_log || itemId == R.id.menu_save_as_log) {
@@ -502,7 +473,9 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
             return true;
         } else if (itemId == R.id.menu_record_log) {
             storagePermission.request(granted -> {
-                if (granted) showRecordLogDialog();
+                if (granted) {
+                    showRecordLogDialog();
+                }
             });
             return true;
         } else if (itemId == R.id.menu_send_log_zip) {
@@ -524,13 +497,12 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
             });
             return true;
         } else if (itemId == R.id.menu_settings) {
-            // TODO: 16/4/21 Navigate to the relevant preferences, set result if changes are made
             Intent intent = new Intent(this, SettingsActivity.class);
             intent.putExtra(SettingsActivity.EXTRA_KEY, "log_viewer_prefs");
             activityLauncher.launch(intent, result -> {
                 // Preferences may have changed
-                mCollapsedMode = !AppPref.getBoolean(AppPref.PrefKey.PREF_LOG_VIEWER_EXPAND_BY_DEFAULT_BOOL);
-                if (result.getResultCode() == RESULT_OK) {
+                mViewModel.setCollapsedMode(!AppPref.getBoolean(AppPref.PrefKey.PREF_LOG_VIEWER_EXPAND_BY_DEFAULT_BOOL));
+                if (result.getResultCode() == RESULT_FIRST_USER) {
                     Intent data = result.getData();
                     if (data != null && data.getBooleanExtra("bufferChanged", false)
                             && mCurrentlyOpenLog == null) {
@@ -578,21 +550,89 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
 
     @Override
     public void onClick(final View itemView, final LogLine logLine) {
-        if (partialSelectMode) {
+        if (mPartialSelectMode) {
             logLine.setHighlighted(true);
-            partiallySelectedLogLines.add(logLine);
+            mPartiallySelectedLogLines.add(logLine);
 
-            mHandler.post(() -> mLogListAdapter.notifyItemChanged(recyclerView.getChildAdapterPosition(itemView)));
+            mLogListAdapter.notifyItemChanged(mRecyclerView.getChildAdapterPosition(itemView));
 
-            if (partiallySelectedLogLines.size() == 2) {
+            if (mPartiallySelectedLogLines.size() == 2) {
                 storagePermission.request(granted -> {
                     if (granted) completePartialSelect();
                 });
             }
         } else {
             logLine.setExpanded(!logLine.isExpanded());
-            mLogListAdapter.notifyItemChanged(recyclerView.getChildAdapterPosition(itemView));
+            mLogListAdapter.notifyItemChanged(mRecyclerView.getChildAdapterPosition(itemView));
         }
+    }
+
+    @Override
+    public void onNewLogsAvailable(@NonNull List<LogLine> newLogLines) {
+        if (!mViewModel.isLogcatKilled()) {
+            mProgressIndicator.hide();
+            for (LogLine logLine : newLogLines) {
+                mLogListAdapter.addWithFilter(logLine, mSearchingString, false);
+                addToAutocompleteSuggestions(logLine);
+            }
+            mLogListAdapter.notifyDataSetChanged();
+
+            // How many logs to keep in memory, to avoid OutOfMemoryError
+            int maxNumLogLines = AppPref.getInt(AppPref.PrefKey.PREF_LOG_VIEWER_DISPLAY_LIMIT_INT);
+
+            // Check to see if the list needs to be truncated to avoid OutOfMemoryError
+            ++mCounter;
+            if (mCounter % UPDATE_CHECK_INTERVAL == 0 && mLogListAdapter.getRealSize() > maxNumLogLines) {
+                int numItemsToRemove = mLogListAdapter.getRealSize() - maxNumLogLines;
+                mLogListAdapter.removeFirst(numItemsToRemove);
+                Log.d(TAG, "Truncating " + numItemsToRemove + " lines from log list to avoid out of memory errors");
+            }
+
+            if (mAutoscrollToBottom) {
+                scrollToBottom();
+            }
+        } else {
+            // File mode
+            mProgressIndicator.hide();
+
+            for (LogLine logLine : newLogLines) {
+                mLogListAdapter.addWithFilter(logLine, "", false);
+                addToAutocompleteSuggestions(logLine);
+            }
+            mLogListAdapter.notifyDataSetChanged();
+
+            // Scroll to bottom
+            scrollToBottom();
+        }
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        if (!mDynamicallyEnteringSearchText) {
+            search(newText);
+            populateSuggestionsAdapter(newText);
+        }
+        mDynamicallyEnteringSearchText = false;
+        return false;
+    }
+
+    @Override
+    public boolean onSuggestionSelect(int position) {
+        return false;
+    }
+
+    @Override
+    public boolean onSuggestionClick(int position) {
+        List<String> suggestions = getSuggestionsForQuery(mSearchingString);
+        if (!suggestions.isEmpty()) {
+            mSearchView.setQuery(suggestions.get(position), true);
+        }
+        return false;
     }
 
     private void showSearchByDialog(final LogLine logLine) {
@@ -626,13 +666,13 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
     }
 
     private void showRecordLogDialog() {
-        // start up the dialog-like activity
         String[] suggestions = mSearchSuggestionsSet.toArray(new String[0]);
-
-        Intent intent = new Intent(LogViewerActivity.this, RecordLogDialogActivity.class);
-        intent.putExtra(RecordLogDialogActivity.EXTRA_QUERY_SUGGESTIONS, suggestions);
-
-        startActivity(intent);
+        DialogFragment dialog = RecordLogDialogFragment.getInstance(suggestions, () -> {
+            if (mStopRecordingFab != null) {
+                mStopRecordingFab.setVisibility(View.VISIBLE);
+            }
+        });
+        dialog.show(getSupportFragmentManager(), RecordLogDialogFragment.TAG);
     }
 
     private void showFiltersDialog() {
@@ -694,23 +734,19 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
         boolean hideHelp = PreferenceHelper.getHidePartialSelectHelpPreference(this);
 
         if (hideHelp) {
-            partialSelectMode = true;
-            partiallySelectedLogLines.clear();
+            mPartialSelectMode = true;
+            mPartiallySelectedLogLines.clear();
             Toast.makeText(this, R.string.toast_started_select_partial, Toast.LENGTH_SHORT).show();
         } else {
-            LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            @SuppressLint("InflateParams") View helpView = inflater.inflate(R.layout.dialog_partial_save_help, null);
-            // don't show the scroll bar
-            helpView.setVerticalScrollBarEnabled(false);
-            helpView.setHorizontalScrollBarEnabled(false);
-            final CheckBox checkBox = helpView.findViewById(android.R.id.checkbox);
+            View helpView = View.inflate(this, R.layout.dialog_partial_save_help, null);
+            CheckBox checkBox = helpView.findViewById(android.R.id.checkbox);
 
             new MaterialAlertDialogBuilder(this)
                     .setTitle(R.string.menu_title_partial_select)
                     .setView(helpView)
                     .setPositiveButton(R.string.ok, (dialog, which) -> {
-                        partialSelectMode = true;
-                        partiallySelectedLogLines.clear();
+                        mPartialSelectMode = true;
+                        mPartiallySelectedLogLines.clear();
                         Toast.makeText(LogViewerActivity.this, R.string.toast_started_select_partial, Toast.LENGTH_SHORT).show();
                         if (checkBox.isChecked()) {
                             // hide this help dialog in the future
@@ -722,14 +758,10 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
         }
     }
 
-    private void expandOrCollapseAll(boolean change) {
-        mCollapsedMode = change != mCollapsedMode;
-        int oldFirstVisibleItem = ((LinearLayoutManager) recyclerView.getLayoutManager()).findFirstVisibleItemPosition();
-        for (LogLine logLine : mLogListAdapter.getTrueValues()) {
-            if (logLine != null) {
-                logLine.setExpanded(!mCollapsedMode);
-            }
-        }
+    private void expandOrCollapse() {
+        int oldFirstVisibleItem = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+        mViewModel.setCollapsedMode(!mViewModel.isCollapsedMode());
+        mLogListAdapter.setCollapseMode(mViewModel.isCollapsedMode());
         mLogListAdapter.notifyDataSetChanged();
         // Ensure that we either stay autoscrolling at the bottom of the list...
         if (mAutoscrollToBottom) {
@@ -737,7 +769,7 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
             // ... or that whatever was the previous first visible item is still the current first
             // visible item after expanding/collapsing
         } else if (oldFirstVisibleItem != -1) {
-            recyclerView.scrollToPosition(oldFirstVisibleItem);
+            mRecyclerView.scrollToPosition(oldFirstVisibleItem);
         }
         supportInvalidateOptionsMenu();
     }
@@ -1011,87 +1043,31 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
     }
 
     private void openLogFile(final String filename) {
-        @SuppressLint("StaticFieldLeak") final AsyncTask<Void, Void, List<LogLine>> openFileTask = new AsyncTask<Void, Void, List<LogLine>>() {
+        Runnable openLogfileRunnable = () -> {
+            resetDisplayedLog(filename);
 
-            @Override
-            protected void onPreExecute() {
-                super.onPreExecute();
-                resetDisplayedLog(filename);
+            mProgressIndicator.hide();
+            mProgressIndicator.setIndeterminate(false);
+            mProgressIndicator.show();
 
-                progressIndicator.hide();
-                progressIndicator.setIndeterminate(false);
-                progressIndicator.show();
-            }
-
-            @Override
-            protected List<LogLine> doInBackground(Void... params) {
-
-                // remove any lines at the beginning if necessary
-                final int maxLines = AppPref.getInt(AppPref.PrefKey.PREF_LOG_VIEWER_DISPLAY_LIMIT_INT);
-                SavedLog savedLog;
-                try {
-                    savedLog = SaveLogHelper.openLog(filename, maxLines);
-                } catch (IOException e) {
-                    Log.e(TAG, e);
-                    return Collections.emptyList();
-                }
-                List<String> lines = savedLog.getLogLines();
-                List<LogLine> logLines = new ArrayList<>();
-                for (int lineNumber = 0, linesSize = lines.size(); lineNumber < linesSize; lineNumber++) {
-                    String line = lines.get(lineNumber);
-                    LogLine logLine = LogLine.newLogLine(line, !mCollapsedMode, mFilterPattern);
-                    if (logLine != null) {
-                        logLines.add(logLine);
-                    }
-                    final int finalLineNumber = lineNumber;
-                    runOnUiThread(() -> progressIndicator.setProgressCompat(finalLineNumber * 100 / linesSize, true));
-                }
-
-                // notify the user if the saved file was truncated
-                if (savedLog.isTruncated()) {
-                    mHandler.post(() -> {
-                        String toastText = getResources().getQuantityString(R.plurals.toast_log_truncated, maxLines, maxLines);
-                        Toast.makeText(LogViewerActivity.this, toastText, Toast.LENGTH_LONG).show();
-                    });
-                }
-
-                return logLines;
-            }
-
-            @Override
-            protected void onPostExecute(List<LogLine> logLines) {
-                super.onPostExecute(logLines);
-                progressIndicator.hide();
-
-                for (LogLine logLine : logLines) {
-                    mLogListAdapter.addWithFilter(logLine, "", false);
-                    addToAutocompleteSuggestions(logLine);
-
-                }
-                mLogListAdapter.notifyDataSetChanged();
-
-                // scroll to bottom
-                scrollToBottom();
-            }
+            mViewModel.openLogsFromFile(filename);
         };
 
         // if the main log task is running, we can only run AFTER it's been canceled
-
-        if (mTask != null) {
-            mTask.setOnFinished(() -> openFileTask.execute((Void) null));
-            mTask.unpause();
-            mTask.killReader();
-            mTask = null;
+        if (!mViewModel.isLogcatKilled()) {
+            setOnFinished(openLogfileRunnable);
+            mViewModel.resumeLogcat();
+            mViewModel.killLogcatReader();
         } else {
             // main log not running; just open in this thread
-            openFileTask.execute((Void) null);
+            openLogfileRunnable.run();
         }
     }
 
     public void resetDisplayedLog(String filename) {
         mLogListAdapter.clear();
         mCurrentlyOpenLog = filename;
-        mCollapsedMode = !AppPref.getBoolean(AppPref.PrefKey.PREF_LOG_VIEWER_EXPAND_BY_DEFAULT_BOOL);
+        mViewModel.setCollapsedMode(!AppPref.getBoolean(AppPref.PrefKey.PREF_LOG_VIEWER_EXPAND_BY_DEFAULT_BOOL));
         // Populate suggestions with existing filters (if any)
         executor.submit(this::addFiltersToSuggestions);
         updateUiForFilename();
@@ -1115,8 +1091,8 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
     private void setUpLogViewerAdapter() {
         mLogListAdapter = new LogViewerRecyclerAdapter();
         mLogListAdapter.setClickListener(this);
-        recyclerView.setAdapter(mLogListAdapter);
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        mRecyclerView.setAdapter(mLogListAdapter);
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -1134,7 +1110,7 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
                 }
             }
         });
-        recyclerView.setHasFixedSize(true);
+        mRecyclerView.setHasFixedSize(true);
     }
 
     private void completePartialSelect() {
@@ -1148,8 +1124,8 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
                     } else {
                         @SuppressWarnings("ConstantConditions")
                         String filename = inputText.toString();
-                        if (partiallySelectedLogLines.size() == 2)
-                            savePartialLog(filename, partiallySelectedLogLines.get(0), partiallySelectedLogLines.get(1));
+                        if (mPartiallySelectedLogLines.size() == 2)
+                            savePartialLog(filename, mPartiallySelectedLogLines.get(0), mPartiallySelectedLogLines.get(1));
                     }
                 })
                 .setNegativeButton(R.string.cancel, (dialog, which, inputText, isChecked) -> cancelPartialSelect())
@@ -1157,15 +1133,15 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
     }
 
     private void cancelPartialSelect() {
-        partialSelectMode = false;
+        mPartialSelectMode = false;
         boolean changed = false;
-        for (LogLine logLine : partiallySelectedLogLines) {
+        for (LogLine logLine : mPartiallySelectedLogLines) {
             if (logLine.isHighlighted()) {
                 logLine.setHighlighted(false);
                 changed = true;
             }
         }
-        partiallySelectedLogLines.clear();
+        mPartiallySelectedLogLines.clear();
         if (changed) {
             mHandler.post(mLogListAdapter::notifyDataSetChanged);
         }
@@ -1175,9 +1151,9 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
         // Sets the search text without invoking autosuggestions, which are really only useful when typing
         mDynamicallyEnteringSearchText = true;
         search(text);
-        searchView.setIconified(false);
-        searchView.setQuery(mSearchingString, true);
-        searchView.clearFocus();
+        mSearchView.setIconified(false);
+        mSearchView.setQuery(mSearchingString, true);
+        mSearchView.clearFocus();
     }
 
     private void search(String filterText) {
@@ -1189,23 +1165,20 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
         }
     }
 
-    private void pauseOrUnpause(MenuItem item) {
-        LogReaderAsyncTask currentTask = mTask;
-        if (currentTask != null) {
-            if (currentTask.isPaused()) {
-                currentTask.unpause();
-                item.setIcon(R.drawable.ic_pause_white_24dp);
-            } else {
-                currentTask.pause();
-                item.setIcon(R.drawable.ic_play_arrow_white_24dp);
-            }
+    private void pauseOrResume(MenuItem item) {
+        if (mViewModel.isLogcatPaused()) {
+            mViewModel.resumeLogcat();
+            item.setIcon(R.drawable.ic_pause_white_24dp);
+        } else {
+            mViewModel.pauseLogcat();
+            item.setIcon(R.drawable.ic_play_arrow_white_24dp);
         }
     }
 
     @Override
     public void onFilterComplete(int count) {
         // always scroll to the bottom when searching
-        recyclerView.scrollToPosition(count - 1);
+        mRecyclerView.scrollToPosition(count - 1);
     }
 
     private void logLevelChanged() {
@@ -1230,157 +1203,12 @@ public class LogViewerActivity extends BaseActivity implements FilterListener,
     }
 
     private void scrollToBottom() {
-        recyclerView.scrollToPosition(mLogListAdapter.getItemCount() - 1);
+        mRecyclerView.scrollToPosition(mLogListAdapter.getItemCount() - 1);
     }
 
-    @SuppressLint("StaticFieldLeak")
-    private class LogReaderAsyncTask extends AsyncTask<Void, LogLine, Void> {
+    private Runnable mOnFinishedRunnable;
 
-        private final Object mLock = new Object();
-        private int counter = 0;
-        private volatile boolean mPaused;
-        private boolean mFirstLineReceived;
-        private boolean mKilled;
-        private LogcatReader mReader;
-        private Runnable mOnFinishedRunnable;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            resetDisplayedLog(null);
-
-            progressIndicator.hide();
-            progressIndicator.setIndeterminate(true);
-            progressIndicator.show();
-        }
-
-        @Override
-        protected Void doInBackground(Void... params) {
-            try {
-                // use "recordingMode" because we want to load all the existing lines at once
-                // for a performance boost
-                LogcatReaderLoader loader = LogcatReaderLoader.create(true);
-                mReader = loader.loadReader();
-
-                int maxLines = AppPref.getInt(AppPref.PrefKey.PREF_LOG_VIEWER_DISPLAY_LIMIT_INT);
-
-                String line;
-                LinkedList<LogLine> initialLines = new LinkedList<>();
-                while ((line = mReader.readLine()) != null && !isCancelled()) {
-                    if (mPaused) {
-                        synchronized (mLock) {
-                            if (mPaused) {
-                                mLock.wait();
-                            }
-                        }
-                    }
-                    LogLine logLine = LogLine.newLogLine(line, !mCollapsedMode, mFilterPattern);
-                    if (logLine == null) {
-                        if (mReader.readyToRecord()) {
-                            publishProgress();
-                        }
-                    } else if (!mReader.readyToRecord()) {
-                        // "ready to record" in this case means all the initial lines have been flushed from the reader
-                        initialLines.add(logLine);
-                        if (initialLines.size() > maxLines) {
-                            initialLines.removeFirst();
-                        }
-                    } else if (!initialLines.isEmpty()) {
-                        // flush all the initial lines we've loaded
-                        initialLines.add(logLine);
-                        publishProgress(initialLines.toArray(new LogLine[0]));
-                        initialLines.clear();
-                    } else {
-                        // just proceed as normal
-                        publishProgress(logLine);
-                    }
-                }
-            } catch (Exception e) {
-                Log.e(TAG, e);
-            } finally {
-                killReader();
-            }
-            return null;
-        }
-
-        void killReader() {
-            if (!mKilled) {
-                synchronized (mLock) {
-                    if (!mKilled && mReader != null) {
-                        mReader.killQuietly();
-                        mKilled = true;
-                    }
-                }
-            }
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            super.onPostExecute(result);
-            doWhenFinished();
-        }
-
-        @Override
-        protected void onProgressUpdate(LogLine... values) {
-            super.onProgressUpdate(values);
-
-            if (values == null) return;
-
-            if (!mFirstLineReceived) {
-                mFirstLineReceived = true;
-                progressIndicator.hide();
-            }
-            for (LogLine logLine : values) {
-                mLogListAdapter.addWithFilter(logLine, mSearchingString, false);
-
-                addToAutocompleteSuggestions(logLine);
-            }
-            mLogListAdapter.notifyDataSetChanged();
-
-            // How many logs to keep in memory, to avoid OutOfMemoryError
-            int maxNumLogLines = AppPref.getInt(AppPref.PrefKey.PREF_LOG_VIEWER_DISPLAY_LIMIT_INT);
-
-            // check to see if the list needs to be truncated to avoid out of memory errors
-            if (++counter % UPDATE_CHECK_INTERVAL == 0
-                    && mLogListAdapter.getTrueValues().size() > maxNumLogLines) {
-                int numItemsToRemove = mLogListAdapter.getTrueValues().size() - maxNumLogLines;
-                mLogListAdapter.removeFirst(numItemsToRemove);
-                Log.d(TAG, "Truncating " + numItemsToRemove + " lines from log list to avoid out of memory errors");
-            }
-
-            if (mAutoscrollToBottom) {
-                scrollToBottom();
-            }
-        }
-
-        private void doWhenFinished() {
-            if (mPaused) {
-                unpause();
-            }
-            if (mOnFinishedRunnable != null) {
-                mOnFinishedRunnable.run();
-            }
-        }
-
-        private void pause() {
-            synchronized (mLock) {
-                mPaused = true;
-            }
-        }
-
-        private void unpause() {
-            synchronized (mLock) {
-                mPaused = false;
-                mLock.notify();
-            }
-        }
-
-        private boolean isPaused() {
-            return mPaused;
-        }
-
-        private void setOnFinished(Runnable onFinished) {
-            this.mOnFinishedRunnable = onFinished;
-        }
+    private void setOnFinished(Runnable onFinished) {
+        this.mOnFinishedRunnable = onFinished;
     }
 }

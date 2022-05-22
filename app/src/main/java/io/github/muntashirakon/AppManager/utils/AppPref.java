@@ -366,19 +366,18 @@ public class AppPref {
     public Object get(String key) {
         int index = PrefKey.indexOf(key);
         if (index == -1) throw new IllegalArgumentException("Invalid key: " + key);
-        AppPref appPref = getInstance();
-        Object defaultValue = appPref.getDefaultValue(PrefKey.prefKeyList.get(index));
+        Object defaultValue = getDefaultValue(PrefKey.prefKeyList.get(index));
         switch (PrefKey.types[index]) {
             case TYPE_BOOLEAN:
-                return appPref.preferences.getBoolean(key, (boolean) defaultValue);
+                return preferences.getBoolean(key, (boolean) defaultValue);
             case TYPE_FLOAT:
-                return appPref.preferences.getFloat(key, (float) defaultValue);
+                return preferences.getFloat(key, (float) defaultValue);
             case TYPE_INTEGER:
-                return appPref.preferences.getInt(key, (int) defaultValue);
+                return preferences.getInt(key, (int) defaultValue);
             case TYPE_LONG:
-                return appPref.preferences.getLong(key, (long) defaultValue);
+                return preferences.getLong(key, (long) defaultValue);
             case TYPE_STRING:
-                return Objects.requireNonNull(appPref.preferences.getString(key, (String) defaultValue));
+                return Objects.requireNonNull(preferences.getString(key, (String) defaultValue));
         }
         throw new IllegalArgumentException("Unknown key or type.");
     }
@@ -482,7 +481,7 @@ public class AppPref {
             case PREF_LOG_VIEWER_DEFAULT_LOG_LEVEL_INT:
                 return Log.VERBOSE;
             case PREF_LOG_VIEWER_BUFFER_INT:
-                return LogcatHelper.LOG_ID_MAIN | LogcatHelper.LOG_ID_SYSTEM | LogcatHelper.LOG_ID_CRASH;
+                return LogcatHelper.LOG_ID_DEFAULT;
             case PREF_LAYOUT_ORIENTATION_INT:
                 return View.LAYOUT_DIRECTION_LTR;
             case PREF_DEFAULT_BLOCKING_METHOD_STR:

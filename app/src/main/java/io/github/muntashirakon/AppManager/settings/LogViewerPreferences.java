@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.settings;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -168,14 +170,28 @@ public class LogViewerPreferences extends PreferenceFragmentCompat {
                         for (int flag : selectedItems) {
                             bufferFlags |= flag;
                         }
+                        int previousFlags = AppPref.getInt(AppPref.PrefKey.PREF_LOG_VIEWER_BUFFER_INT);
                         AppPref.set(AppPref.PrefKey.PREF_LOG_VIEWER_BUFFER_INT, bufferFlags);
+                        if (previousFlags != bufferFlags) {
+                            sendBufferChanged(activity);
+                        }
                     })
                     .setNegativeButton(R.string.cancel, null)
-                    .setNeutralButton(R.string.reset_to_default, (dialog, which, selectedItems) ->
-                            AppPref.setDefault(AppPref.PrefKey.PREF_LOG_VIEWER_BUFFER_INT))
+                    .setNeutralButton(R.string.reset_to_default, (dialog, which, selectedItems) -> {
+                        int previousFlags = AppPref.getInt(AppPref.PrefKey.PREF_LOG_VIEWER_BUFFER_INT);
+                        AppPref.setDefault(AppPref.PrefKey.PREF_LOG_VIEWER_BUFFER_INT);
+                        if (previousFlags != LogcatHelper.LOG_ID_DEFAULT) {
+                            sendBufferChanged(activity);
+                        }
+                    })
                     .show();
             return true;
         });
+    }
+
+    public static void sendBufferChanged(FragmentActivity activity) {
+        Intent intent = new Intent().putExtra("bufferChanged", true);
+        activity.setResult(Activity.RESULT_FIRST_USER, intent);
     }
 
     @Override

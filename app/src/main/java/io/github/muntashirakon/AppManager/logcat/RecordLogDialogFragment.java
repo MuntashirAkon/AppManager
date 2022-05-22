@@ -3,16 +3,22 @@
 package io.github.muntashirakon.AppManager.logcat;
 
 import android.app.Dialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
@@ -21,53 +27,78 @@ import io.github.muntashirakon.AppManager.logcat.helper.ServiceHelper;
 import io.github.muntashirakon.AppManager.logcat.helper.WidgetHelper;
 import io.github.muntashirakon.AppManager.settings.LogViewerPreferences;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDropdownDialogBuilder;
 
 // Copyright 2012 Nolan Lawson
+// Copyright 2021 Muntashir Al-Islam
 public class RecordLogDialogFragment extends DialogFragment {
-    public static final String TAG = "RecordLogDialogFragment";
+    public static final String TAG = RecordLogDialogFragment.class.getSimpleName();
 
-    public static final String QUERY_SUGGESTIONS = "suggestions";
+    private static final String QUERY_SUGGESTIONS = "suggestions";
 
-    private FragmentActivity activity;
-    private String filterQuery;
-    private int logLevel;
+    public interface OnRecordingServiceStartedListenerInterface {
+        void onServiceStarted();
+    }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        requireDialog().setCancelable(false);
-        requireDialog().setCanceledOnTouchOutside(false);
+    @NonNull
+    public static RecordLogDialogFragment getInstance(@Nullable String[] suggestions,
+                                                      @Nullable OnRecordingServiceStartedListenerInterface listener) {
+        RecordLogDialogFragment dialogFragment = new RecordLogDialogFragment();
+        Bundle args = new Bundle();
+        args.putStringArray(QUERY_SUGGESTIONS, suggestions);
+        dialogFragment.setArguments(args);
+        dialogFragment.mListener = listener;
+        return dialogFragment;
+    }
+
+    private FragmentActivity mActivity;
+    private String mFilterQuery;
+    private int mLogLevel;
+    @Nullable
+    private OnRecordingServiceStartedListenerInterface mListener;
+    @Nullable
+    private DialogInterface.OnDismissListener mDismissListener;
+
+    public void setOnDismissListener(DialogInterface.OnDismissListener dismissListener) {
+        mDismissListener = dismissListener;
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        activity = requireActivity();
-        final List<String> suggestions = Arrays.asList(requireArguments().getStringArray(QUERY_SUGGESTIONS));
+        mActivity = requireActivity();
+        String[] suggestions = requireArguments().getStringArray(QUERY_SUGGESTIONS);
         String logFilename = SaveLogHelper.createLogFilename();
-        logLevel = AppPref.getInt(AppPref.PrefKey.PREF_LOG_VIEWER_DEFAULT_LOG_LEVEL_INT);
-        filterQuery = "";
-        AlertDialog alertDialog = new TextInputDialogBuilder(activity, R.string.enter_filename)
+        mLogLevel = AppPref.getInt(AppPref.PrefKey.PREF_LOG_VIEWER_DEFAULT_LOG_LEVEL_INT);
+        mFilterQuery = "";
+        AlertDialog alertDialog = new TextInputDialogBuilder(mActivity, R.string.enter_filename)
                 .setTitle(R.string.record_log)
                 .setInputText(logFilename)
                 .setPositiveButton(R.string.ok, (dialog, which, inputText, isChecked) -> {
                     if (SaveLogHelper.isInvalidFilename(inputText)) {
-                        Toast.makeText(activity, R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity, R.string.enter_good_filename, Toast.LENGTH_SHORT).show();
                     } else {
                         //noinspection ConstantConditions
                         String filename = inputText.toString();
-                        new Thread(() -> ServiceHelper.startBackgroundServiceIfNotAlreadyRunning(activity, filename,
-                                filterQuery, logLevel)).start();
-                        dialog.dismiss();
-                        activity.finish();
+                        Context context = mActivity.getApplicationContext();
+                        new Thread(() -> {
+                            Intent intent = ServiceHelper.getLogcatRecorderServiceIfNotAlreadyRunning(context, filename,
+                                    mFilterQuery, mLogLevel);
+                            UiThreadHandler.run(() -> {
+                                if (intent != null) {
+                                    ContextCompat.startForegroundService(context, intent);
+                                }
+                                if (mListener != null && !(mActivity.isFinishing() || mActivity.isDestroyed())) {
+                                    mListener.onServiceStarted();
+                                }
+                            });
+                        }).start();
                     }
                 })
                 .setNegativeButton(R.string.cancel, (dialog, which, inputText, isChecked) -> {
-                    WidgetHelper.updateWidgets(activity);
-                    dialog.dismiss();
-                    activity.finish();
+                    WidgetHelper.updateWidgets(mActivity);
                 })
                 .setNeutralButton(R.string.text_filter_ellipsis, null)
                 .create();
@@ -75,19 +106,27 @@ public class RecordLogDialogFragment extends DialogFragment {
             AlertDialog dialog1 = (AlertDialog) dialog;
             Button filterButton = dialog1.getButton(AlertDialog.BUTTON_NEUTRAL);
             filterButton.setOnClickListener(v -> {
-                WidgetHelper.updateWidgets(activity);
-                showFilterDialogForRecording(suggestions);
+                WidgetHelper.updateWidgets(mActivity);
+                showFilterDialogForRecording(suggestions != null ? Arrays.asList(suggestions) : Collections.emptyList());
             });
         });
         return alertDialog;
     }
 
+    @Override
+    public void onDismiss(@NonNull DialogInterface dialog) {
+        super.onDismiss(dialog);
+        if (mDismissListener != null) {
+            mDismissListener.onDismiss(dialog);
+        }
+    }
+
     public void showFilterDialogForRecording(List<String> filterQuerySuggestions) {
         List<CharSequence> logLevelsLocalised = Arrays.asList(getResources().getStringArray(R.array.log_levels));
-        int idx = LogViewerPreferences.LOG_LEVEL_VALUES.indexOf(logLevel);
-        TextInputDropdownDialogBuilder builder = new TextInputDropdownDialogBuilder(activity, R.string.text_filter_text)
+        int idx = LogViewerPreferences.LOG_LEVEL_VALUES.indexOf(mLogLevel);
+        TextInputDropdownDialogBuilder builder = new TextInputDropdownDialogBuilder(mActivity, R.string.text_filter_text)
                 .setTitle(R.string.filter)
-                .setInputText(filterQuery)
+                .setInputText(mFilterQuery)
                 .setDropdownItems(filterQuerySuggestions, -1, true)
                 .setAuxiliaryInput(getText(R.string.log_level), null, logLevelsLocalised.get(idx),
                         logLevelsLocalised, true)
@@ -96,8 +135,8 @@ public class RecordLogDialogFragment extends DialogFragment {
             if (inputText == null || builder.getAuxiliaryInput() == null) return;
             int logLevelIdx = logLevelsLocalised.indexOf(builder.getAuxiliaryInput().toString().trim());
             if (logLevelIdx == -1) return;
-            logLevel = LogViewerPreferences.LOG_LEVEL_VALUES.get(logLevelIdx);
-            filterQuery = inputText.toString();
+            mLogLevel = LogViewerPreferences.LOG_LEVEL_VALUES.get(logLevelIdx);
+            mFilterQuery = inputText.toString();
         }).show();
     }
 }

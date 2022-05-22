@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.logcat.struct;
 import android.text.TextUtils;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.util.regex.Matcher;
@@ -14,12 +15,13 @@ import io.github.muntashirakon.AppManager.logcat.reader.ScrubberUtils;
 
 
 // Copyright 2012 Nolan Lawson
+// Copyright 2021 Muntashir Al-Islam
 public class LogLine {
     public static final int LOG_FATAL = 15;
 
     private static final int TIMESTAMP_LENGTH = 19;
 
-    private static final Pattern logPattern = Pattern.compile(
+    private static final Pattern LOG_PATTERN = Pattern.compile(
             // log level
             "(\\w)" + "/" +
                     // tag
@@ -30,6 +32,7 @@ public class LogLine {
                     // optional weird number that only occurs on ZTE blade
                     "(?:\\*\\s*\\d+)?" +
                     "\\): ");
+    private static final String BEGIN = "--------- beginning of ";
 
     private int logLevel;
     private String tag;
@@ -42,7 +45,7 @@ public class LogLine {
     public static boolean omitSensitiveInfo = false;
 
     @Nullable
-    public static LogLine newLogLine(String originalLine, boolean expanded, String filterPattern) {
+    public static LogLine newLogLine(@NonNull String originalLine, boolean expanded, @Nullable Pattern filterPattern) {
         LogLine logLine = new LogLine();
         logLine.setExpanded(expanded);
 
@@ -58,7 +61,7 @@ public class LogLine {
             startIdx = TIMESTAMP_LENGTH; // cut off timestamp
         }
 
-        Matcher matcher = logPattern.matcher(originalLine);
+        Matcher matcher = LOG_PATTERN.matcher(originalLine);
 
         if (matcher.find(startIdx)) {
             char logLevelChar = matcher.group(1).charAt(0);
@@ -71,7 +74,7 @@ public class LogLine {
             }
 
             String tagText = matcher.group(2);
-            if (tagText.matches(filterPattern)) {
+            if (filterPattern != null && filterPattern.matcher(tagText).matches()) {
                 return null;
             }
 
@@ -79,15 +82,14 @@ public class LogLine {
             logLine.setProcessId(Integer.parseInt(matcher.group(3)));
 
             logLine.setLogOutput(logText);
-
+        } else if (originalLine.startsWith(BEGIN)) {
+            Log.d("LogLine", "Started buffer: " + originalLine.substring(BEGIN.length()));
         } else {
             Log.d("LogLine", "Line doesn't match pattern: " + originalLine);
             logLine.setLogOutput(originalLine);
             logLine.setLogLevel(-1);
         }
-
         return logLine;
-
     }
 
     public static int convertCharToLogLevel(char logLevelChar) {

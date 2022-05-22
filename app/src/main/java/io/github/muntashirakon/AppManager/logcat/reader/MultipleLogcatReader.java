@@ -25,8 +25,7 @@ public class MultipleLogcatReader extends AbsLogcatReader {
     private final List<ReaderThread> readerThreads = new LinkedList<>();
     private final BlockingQueue<String> queue = new ArrayBlockingQueue<>(1);
 
-    public MultipleLogcatReader(boolean recordingMode,
-                                Map<Integer, String> lastLines) throws IOException {
+    public MultipleLogcatReader(boolean recordingMode, Map<Integer, String> lastLines) throws IOException {
         super(recordingMode);
         // Read from all three buffers all at once
         for (Entry<Integer, String> entry : lastLines.entrySet()) {

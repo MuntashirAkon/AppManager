@@ -2,34 +2,35 @@
 
 package io.github.muntashirakon.AppManager.logcat.reader;
 
-import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
-
-import io.github.muntashirakon.AppManager.logcat.helper.LogcatHelper;
-import io.github.muntashirakon.AppManager.logcat.helper.PreferenceHelper;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.github.muntashirakon.AppManager.logcat.helper.LogcatHelper;
+import io.github.muntashirakon.AppManager.logcat.helper.PreferenceHelper;
+import io.github.muntashirakon.util.ParcelUtils;
+
 // Copyright 2012 Nolan Lawson
+// Copyright 2021 Muntashir Al-Islam
 public class LogcatReaderLoader implements Parcelable {
-    private final Map<Integer, String> lastLines;
-    private final boolean recordingMode;
-    private final boolean multiple;
+    private final Map<Integer, String> mLastLines;
+    private final boolean mRecordingMode;
+    private final boolean mMultipleBuffers;
 
     private LogcatReaderLoader(@LogcatHelper.LogBufferId @NonNull List<Integer> buffers, boolean recordingMode) {
-        this.recordingMode = recordingMode;
-        this.multiple = buffers.size() > 1;
-        this.lastLines = new HashMap<>();
+        this.mRecordingMode = recordingMode;
+        this.mMultipleBuffers = buffers.size() > 1;
+        this.mLastLines = new HashMap<>();
         for (Integer buffer : buffers) {
             // No need to grab the last line if this isn't recording mode
             String lastLine = recordingMode ? LogcatHelper.getLastLogLine(buffer) : null;
-            lastLines.put(buffer, lastLine);
+            mLastLines.put(buffer, lastLine);
         }
     }
 
@@ -41,14 +42,14 @@ public class LogcatReaderLoader implements Parcelable {
 
     public LogcatReader loadReader() throws IOException {
         LogcatReader reader;
-        if (!multiple) {
+        if (!mMultipleBuffers) {
             // single reader
-            Integer buffers = lastLines.keySet().iterator().next();
-            String lastLine = lastLines.values().iterator().next();
-            reader = new SingleLogcatReader(recordingMode, buffers, lastLine);
+            Integer buffers = mLastLines.keySet().iterator().next();
+            String lastLine = mLastLines.values().iterator().next();
+            reader = new SingleLogcatReader(mRecordingMode, buffers, lastLine);
         } else {
             // multiple reader
-            reader = new MultipleLogcatReader(recordingMode, lastLines);
+            reader = new MultipleLogcatReader(mRecordingMode, mLastLines);
         }
 
         return reader;
@@ -71,32 +72,14 @@ public class LogcatReaderLoader implements Parcelable {
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeInt(recordingMode ? 1 : 0);
-        dest.writeInt(multiple ? 1 : 0);
-        writeParcelableMap(dest, lastLines);
+        dest.writeInt(mRecordingMode ? 1 : 0);
+        dest.writeInt(mMultipleBuffers ? 1 : 0);
+        ParcelUtils.writeMap(mLastLines, dest);
     }
 
     private LogcatReaderLoader(@NonNull Parcel in) {
-        this.recordingMode = in.readInt() == 1;
-        this.multiple = in.readInt() == 1;
-        this.lastLines = readParcelableMap(in);
-    }
-
-    public static void writeParcelableMap(@NonNull Parcel parcel, @NonNull Map<Integer, String> map) {
-        parcel.writeInt(map.size());
-        for (Map.Entry<Integer, String> e : map.entrySet()) {
-            parcel.writeInt(e.getKey());
-            parcel.writeString(e.getValue());
-        }
-    }
-
-    @NonNull
-    public static Map<Integer, String> readParcelableMap(@NonNull Parcel parcel) {
-        int size = parcel.readInt();
-        Map<Integer, String> map = new HashMap<>(size);
-        for (int i = 0; i < size; i++) {
-            map.put(parcel.readInt(), parcel.readString());
-        }
-        return map;
+        this.mRecordingMode = in.readInt() == 1;
+        this.mMultipleBuffers = in.readInt() == 1;
+        this.mLastLines = ParcelUtils.readMap(in, Integer.class.getClassLoader(), String.class.getClassLoader());
     }
 }
