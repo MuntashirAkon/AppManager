@@ -3,7 +3,7 @@
     <string name="_lang_tag" translatable="false">es-ES</string>
     <string name="uninstall">Desinstalar</string>
     <string name="permissions">Usos de los permisos</string>
-    <string name="require_no_permission">No se requiere permiso</string>
+    <string name="require_no_permission">No se requiere autorización</string>
     <string name="activities">Actividades</string>
     <string name="launch">Iniciar</string>
     <string name="refresh">Actualizar</string>
