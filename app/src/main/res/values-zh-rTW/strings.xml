@@ -1103,7 +1103,7 @@
     <string name="file_modified_are_you_sure">檔案已修改。捨棄所有變更並離開？</string>
     <string name="pref_vt_apikey_summary">啟用透過 VirusTotal 掃描 APK 檔案。</string>
     <string name="uses_play_app_signing_description">此應用包含某些標記，指示它 <i> 可能 </i> 正在使用 <a href="https://support.google.com/googleplay/android-developer/answer/9842756">播放應用簽名 </a>。透過此方案，簽名金鑰存儲在Google的伺服器中，Google負責對應用程式進行簽名。請注意，相符的簽名資訊是驗證應用是否未被開發者以外的任何人（在本例中為Google）修改的唯一方法。</string>
-    <string name="vt_disclaimer">VirusTotal 及其徽標是 Chronicle LLC 的商標。 App Manager（API 客戶端）及其作者均不對您可能傳送給 VirusTotal 的任何資料負責。</string>
+    <string name="vt_disclaimer">VirusTotal 及其標誌是 Chronicle LLC 的商標。 App Manager（API 客戶端）及其作者均不對您可能傳送給 VirusTotal 的任何資料負責。</string>
     <string name="vt_scan_date">掃描日期：%1$s</string>
     <string name="primary_abi">主要 ABI</string>
     <string name="save_and_exit">儲存並離開</string>
