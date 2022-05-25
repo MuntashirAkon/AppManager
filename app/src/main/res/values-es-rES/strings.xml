@@ -2,7 +2,7 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
     <string name="_lang_tag" translatable="false">es-ES</string>
     <string name="uninstall">Desinstalar</string>
-    <string name="permissions">Usos de los permisos</string>
+    <string name="permissions">Requiere autorizaciones</string>
     <string name="require_no_permission">No se requiere autorización</string>
     <string name="activities">Actividades</string>
     <string name="launch">Iniciar</string>
