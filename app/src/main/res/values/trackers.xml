@@ -583,6 +583,7 @@
         <item>org.lasque.tusdkpulse.core</item>
         <item>net.veloxity.</item>
         <item>com.yoadx.yoadx.</item>
+        <item>coelib.c.couluslibrary</item>
         <item>com.geopla.</item>
         <item>com.threebitter.sdk.</item>
         <item>com.m7.imkfsdk.</item>
@@ -1564,6 +1565,7 @@
         <item>Tutucloud</item>
         <item>Veloxity</item>
         <item>Yoadx</item>
+        <item>Coulus Coelib</item>
         <item>²39Geopla</item>
         <item>²3bitter Beacon</item>
         <item>²7Moor SDK</item>
