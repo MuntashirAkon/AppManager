@@ -1,9 +1,0 @@
-F-Droid doesn't support extended changelog. View in-app changelog for a more helpful changelog.
-- New language: Japanese
-- Official support for Android TV
-- Backup/restore SSAID
-- Sort & filter for main page
-- Screen lock
-- App Info: Configure battery optimization, net policy, SSAID
-- Interceptor: Add/remove extras
-...and various other fixes and performance improvements.
