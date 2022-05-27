@@ -30,10 +30,10 @@ allprojects {
 }
 
 project.ext {
-    compileSdk = 31
+    compileSdk = 32
     buildTools = "30.0.3"
     minSdk = 21
-    targetSdk = 31
+    targetSdk = 32
 
     libsu_version = "5.0.1"
     room_version = "2.4.2"
