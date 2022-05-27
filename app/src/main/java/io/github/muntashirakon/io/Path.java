@@ -137,13 +137,7 @@ public class Path implements Comparable<Path> {
         for (int i = 0; i < EXCLUSIVE_ACCESS_PATHS.size(); ++i) {
             if (path.startsWith(EXCLUSIVE_ACCESS_PATHS.get(i))) {
                 // May need no privileged access
-                return EXCLUSIVE_ACCESS_GRANTED.get(i);
-            }
-        }
-        for (String p : EXCLUSIVE_ACCESS_PATHS) {
-            if (path.startsWith(p)) {
-                // Need no privileged access
-                return false;
+                return !EXCLUSIVE_ACCESS_GRANTED.get(i);
             }
         }
         return true;
