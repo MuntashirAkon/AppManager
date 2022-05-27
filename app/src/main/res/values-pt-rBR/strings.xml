@@ -1177,4 +1177,7 @@
     <string name="pref_vt_prompt_before_uploading">Exibe o prompt antes de carregar um arquivo.</string>
     <string name="vt_confirm_uploading_file">O arquivo não foi encontrado no banco de dados do VirusTotal. Deseja carregá-lo\?</string>
     <string name="vt_confirm_upload_and_scan">Sim, faça upload e escaneie</string>
+    <string name="apk_checksums">Somas de verificação de APK</string>
+    <string name="item_select">Selecionar</string>
+    <string name="log_stop_recording">Parar gravação</string>
 </resources>
