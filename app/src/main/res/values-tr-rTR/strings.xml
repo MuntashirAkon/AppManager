@@ -1176,4 +1176,7 @@
     <string name="pref_vt_prompt_before_uploading">Dosyayı karşıya yüklemeden önce sor.</string>
     <string name="vt_confirm_upload_and_scan">Evet, yükle ve tara</string>
     <string name="vt_confirm_uploading_file">Dosya, VirusTotal veri tabanında bulunamadı. Karşıya yüklemek istiyor musunuz\?</string>
+    <string name="log_stop_recording">Kaydı durdur</string>
+    <string name="apk_checksums">APK Sağlama Toplamları</string>
+    <string name="item_select">Seç</string>
 </resources>
