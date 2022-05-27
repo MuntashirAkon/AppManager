@@ -31,7 +31,7 @@ import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 
-// FIXME: 8/2/22 Add support for lower SDKs by fixing Smali/Baksmali and Jadx
+// FIXME: 8/2/22 Add support for lower SDKs by fixing Smali/Baksmali
 @RequiresApi(Build.VERSION_CODES.O)
 public class DexClasses implements Closeable {
     private final HashMap<String, ClassDef> classDefArraySet = new HashMap<>();

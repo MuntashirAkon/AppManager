@@ -162,6 +162,14 @@
     <!-- MaterialCardView -->
     <style name="Widget.AppTheme.CardView.Elevated" parent="Widget.Material3.CardView.Elevated" />
 
+    <style name="Widget.AppTheme.CardView.Elevated.Padded" parent="Widget.AppTheme.CardView.Elevated">
+        <!-- Fix margin issue -->
+        <item name="android:layout_marginTop">@dimen/padding_very_small</item>
+        <item name="android:layout_marginBottom">@dimen/padding_very_small</item>
+        <item name="android:layout_marginStart">@dimen/padding_small</item>
+        <item name="android:layout_marginEnd">@dimen/padding_small</item>
+    </style>
+
     <style name="Widget.AppTheme.CardView.Filled" parent="Widget.Material3.CardView.Filled" />
 
     <style name="Widget.AppTheme.CardView.Outlined" parent="Widget.Material3.CardView.Outlined" />

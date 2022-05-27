@@ -12,10 +12,10 @@
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="@dimen/padding_small">
+            android:orientation="vertical">
 
             <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.AppTheme.CardView.Elevated.Padded"
                 android:id="@+id/classes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -46,11 +46,11 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.AppTheme.CardView.Elevated.Padded"
                 android:id="@+id/tracker"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:focusable="true"
-                android:layout_marginTop="@dimen/padding_small">
+                android:focusable="true">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
@@ -77,11 +77,11 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.AppTheme.CardView.Elevated.Padded"
                 android:id="@+id/vt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:focusable="true"
-                android:layout_marginTop="@dimen/padding_small">
+                android:focusable="true">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
@@ -110,11 +110,11 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.AppTheme.CardView.Elevated.Padded"
                 android:id="@+id/libs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:focusable="true"
-                android:layout_marginTop="@dimen/padding_small">
+                android:focusable="true">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
@@ -141,11 +141,11 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.AppTheme.CardView.Elevated.Padded"
                 android:id="@+id/apk"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:focusable="true"
-                android:layout_marginTop="@dimen/padding_small">
+                android:focusable="true">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
@@ -173,11 +173,11 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.AppTheme.CardView.Elevated.Padded"
                 android:id="@+id/signatures"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:focusable="true"
-                android:layout_marginTop="@dimen/padding_small">
+                android:focusable="true">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
@@ -205,12 +205,14 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.AppTheme.CardView.Elevated.Padded"
                 android:id="@+id/missing_libs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:focusable="true"
                 android:layout_marginTop="@dimen/padding_small"
-                android:visibility="gone">
+                android:visibility="gone"
+                tools:visibility="visible">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"

@@ -110,6 +110,7 @@ public class VirusTotal {
             // Wait for result: First wait for 1 minute, then for 30 seconds
             // We won't do it less than 30 seconds since the API has a limit of 4 request/minute
             SystemClock.sleep(waitDuration);
+            // TODO: 23/5/22 Wait duration should be according to the fileSize
             waitDuration = 30_000;
         }
         if (responseCode == VirusTotal.RESPONSE_FOUND) {

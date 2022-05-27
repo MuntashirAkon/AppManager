@@ -86,13 +86,12 @@ public class ScannerFragment extends Fragment {
         mActivity = (ScannerActivity) requireActivity();
         // Checksum
         mViewModel.apkChecksumsLiveData().observe(getViewLifecycleOwner(), checksums -> {
-            SpannableStringBuilder sb = new SpannableStringBuilder(mViewModel.getApkUri().toString()).append("\n");
-            sb.append(getPrimaryText(mActivity, getString(R.string.checksums)));
+            SpannableStringBuilder sb = new SpannableStringBuilder();
             for (Pair<String, String> digest : checksums) {
                 sb.append("\n").append(getPrimaryText(mActivity, digest.first + ": "))
                         .append(getMonospacedText(digest.second));
             }
-            ((TextView) view.findViewById(R.id.apk_title)).setText(R.string.source_dir);
+            ((TextView) view.findViewById(R.id.apk_title)).setText(R.string.apk_checksums);
             ((TextView) view.findViewById(R.id.apk_description)).setText(sb);
         });
         // Package info: Title & subtitle
