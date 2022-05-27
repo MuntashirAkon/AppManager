@@ -1139,4 +1139,7 @@
     <string name="vt_confirm_upload_and_scan">是，上传并扫描</string>
     <string name="open_in_new_window">新窗口</string>
     <string name="vt_confirm_uploading_file">在 VirusTotal 数据库中找不到该文件。 你要上传吗？</string>
+    <string name="apk_checksums">APK 校验和</string>
+    <string name="log_stop_recording">停止录制</string>
+    <string name="item_select">选择</string>
 </resources>
