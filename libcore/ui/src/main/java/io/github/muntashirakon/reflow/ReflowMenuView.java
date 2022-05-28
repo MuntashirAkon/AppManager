@@ -675,7 +675,7 @@ public abstract class ReflowMenuView extends FlowLayout implements MenuView {
         ColorStateList baseColor = AppCompatResources.getColorStateList(getContext(), value.resourceId);
         if (!getContext()
                 .getTheme()
-                .resolveAttribute(androidx.appcompat.R.attr.colorPrimary, value, true)) {
+                .resolveAttribute(R.attr.colorPrimary, value, true)) {
             return null;
         }
         int colorPrimary = value.data;

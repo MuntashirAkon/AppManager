@@ -15,20 +15,22 @@
         android:layout_height="match_parent"
         android:layout_marginStart="56dp" />
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/item_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="start"
+        android:textAlignment="viewStart"
         android:layout_weight="1"
         android:textAppearance="?android:attr/textAppearanceListItem"
         tools:text="@tools:sample/lorem[5]" />
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/item_subtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="end"
+        android:textAlignment="viewEnd"
         android:layout_weight="1"
         android:textColor="?android:attr/textColorSecondary"
         android:textIsSelectable="true"

@@ -21,8 +21,6 @@
         <attr name="rowSpacing" format="enum|dimension">
             <enum name="auto" value="-65536" />
         </attr>
-        <!-- Display items from right to left. Default is auto. -->
-        <attr name="rtl" format="boolean" />
         <!-- The maximum height of FlowLayout in terms of number of rows. -->
         <attr name="maxRows" format="integer" />
         <!-- Vertical gravity of each line -->
@@ -33,6 +31,10 @@
             <enum name="bottom" value="0x50" />
         </attr>
         <attr name="android:gravity" />
+        <!-- Preview only: set items to be displayed inside the layout -->
+        <attr name="listItem" format="reference" />
+        <!-- Preview only: Number of times the list item has to be displayed inside the layout. Default is 10. -->
+        <attr name="itemCount" format="integer" />
     </declare-styleable>
     <declare-styleable name="MaxHeightScrollView">
         <attr name="maxHeight" format="dimension" />

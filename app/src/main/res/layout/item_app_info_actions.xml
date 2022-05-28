@@ -10,5 +10,5 @@
     android:padding="16dp"
     app:shapeAppearanceOverlay="@style/ShapeAppearance.AppTheme.SmallComponent"
     android:textAppearance="?android:attr/textAppearanceListItem"
-    tools:text="@string/uninstall"
-    tools:drawableTopCompat="@drawable/ic_trash_can_outline" />
+    tools:text="@tools:sample/cities"
+    tools:drawableTopCompat="@tools:sample/avatars" />

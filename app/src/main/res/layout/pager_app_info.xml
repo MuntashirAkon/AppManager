@@ -48,11 +48,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:textIsSelectable="true"
-                    android:textAppearance="?attr/textAppearanceTitleMedium"
                     android:background="@drawable/item_transparent"
                     android:nextFocusUp="@id/icon"
                     android:nextFocusDown="@id/packageName"
+                    android:textAppearance="?attr/textAppearanceTitleMedium"
+                    android:textIsSelectable="true"
+                    tools:ignore="TouchTargetSizeCheck"
                     tools:text="@string/app_name" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -60,11 +61,12 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:textIsSelectable="true"
-                    android:textStyle="italic"
                     android:background="@drawable/item_transparent"
                     android:nextFocusUp="@id/label"
                     android:nextFocusDown="@id/version"
+                    android:textIsSelectable="true"
+                    android:textStyle="italic"
+                    tools:ignore="TouchTargetSizeCheck"
                     tools:text="io.github.muntashirakon.AppManager.debug" />
 
                 <androidx.appcompat.widget.AppCompatTextView
@@ -72,10 +74,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:textIsSelectable="true"
                     android:background="@drawable/item_transparent"
                     android:nextFocusUp="@id/packageName"
                     android:nextFocusDown="@id/tag_cloud"
+                    android:textIsSelectable="true"
+                    tools:ignore="TouchTargetSizeCheck"
                     tools:text="v10.2.0 (1001)" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
@@ -91,7 +94,8 @@
                 app:childSpacing="@dimen/padding_very_small"
                 app:rowSpacing="@dimen/padding_very_small"
                 android:nextFocusUp="@id/version"
-                android:nextFocusDown="@id/horizontal_layout" />
+                android:nextFocusDown="@id/horizontal_layout"
+                tools:listItem="@layout/item_chip" />
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_marginTop="@dimen/padding_small"
@@ -103,7 +107,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
-                <HorizontalScrollView
+                <io.github.muntashirakon.widget.HorizontalScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
 
@@ -116,9 +120,10 @@
                         android:paddingStart="8dp"
                         android:paddingTop="4dp"
                         android:paddingEnd="8dp"
-                        android:paddingBottom="4dp" />
+                        android:paddingBottom="4dp"
+                        tools:listItem="@layout/item_app_info_actions" />
 
-                </HorizontalScrollView>
+                </io.github.muntashirakon.widget.HorizontalScrollView>
 
                 <com.google.android.material.divider.MaterialDivider
                     android:layout_width="match_parent"

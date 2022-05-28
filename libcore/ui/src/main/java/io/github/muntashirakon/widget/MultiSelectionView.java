@@ -41,8 +41,6 @@ import io.github.muntashirakon.ui.R;
 import io.github.muntashirakon.util.ParcelUtils;
 import io.github.muntashirakon.util.UiUtils;
 
-import static com.google.android.material.R.style.Widget_MaterialComponents_CardView;
-
 @SuppressLint("RestrictedApi")
 public class MultiSelectionView extends MaterialCardView {
     public interface OnSelectionChangeListener {
@@ -122,7 +120,7 @@ public class MultiSelectionView extends MaterialCardView {
 
         // Custom attributes
         TintTypedArray attributes = ThemeEnforcement.obtainTintedStyledAttributes(context, attrs,
-                R.styleable.MultiSelectionView, defStyleAttr, Widget_MaterialComponents_CardView);
+                R.styleable.MultiSelectionView, defStyleAttr, R.style.Widget_MaterialComponents_CardView);
 
         // Set styles
         @Px

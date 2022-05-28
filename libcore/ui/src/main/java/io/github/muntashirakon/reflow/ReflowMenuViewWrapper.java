@@ -126,7 +126,7 @@ public abstract class ReflowMenuViewWrapper extends LinearLayoutCompat {
     }
 
     public ReflowMenuViewWrapper(Context context, AttributeSet attrs, @AttrRes int defStyleAttr) {
-        this(context, attrs, defStyleAttr, com.google.android.material.R.style.Widget_Design_BottomNavigationView);
+        this(context, attrs, defStyleAttr, R.style.Widget_Design_BottomNavigationView);
     }
 
     public ReflowMenuViewWrapper(
