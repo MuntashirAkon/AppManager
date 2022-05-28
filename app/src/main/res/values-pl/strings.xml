@@ -1252,4 +1252,7 @@
     <string name="file_modified_are_you_sure">Plik został zmodyfikowany. Odrzucić wszystkie zmiany i wyjść\?</string>
     <string name="save_and_exit">Zapisz i wyjdź</string>
     <string name="pref_saved_apk_name_format">Format zapisanej nazwy APK</string>
+    <string name="item_select">Wybierz</string>
+    <string name="apk_checksums">Sumy kontrolne APK</string>
+    <string name="log_stop_recording">Zatrzymaj nagrywanie</string>
 </resources>
