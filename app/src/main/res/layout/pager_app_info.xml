@@ -107,9 +107,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 
-                <io.github.muntashirakon.widget.HorizontalScrollView
+                <HorizontalScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layoutDirection="ltr">
 
                     <io.github.muntashirakon.widget.FlowLayout
                         android:id="@+id/horizontal_layout"
@@ -123,7 +124,7 @@
                         android:paddingBottom="4dp"
                         tools:listItem="@layout/item_app_info_actions" />
 
-                </io.github.muntashirakon.widget.HorizontalScrollView>
+                </HorizontalScrollView>
 
                 <com.google.android.material.divider.MaterialDivider
                     android:layout_width="match_parent"
