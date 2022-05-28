@@ -52,7 +52,7 @@
     <string name="deny_dangerous_app_ops">Заборонити небезпечні app ops</string>
     <string name="failed_to_enable_op">Сталася помилка під час спроби надати дозвіл</string>
     <string name="no_app_ops">Немає операцій з дозволами</string>
-    <string name="app_ops">App Ops</string>
+    <string name="app_ops">Керування дозволами</string>
     <string name="sys_config">Конфігурація системи</string>
     <string name="only_install">Лише встановити</string>
     <string name="app_signing_install_without_data_loss">Якщо ви вимкнули перевірку підпису, ви можете використовувати опцію <b>Лише встановити</b>, для встановлення додатку без втрати даних.</string>
