@@ -117,7 +117,7 @@
     <string name="state_locked_memory">Заблокована пам\'ять</string>
     <string name="state_low_priority">Низький пріоритет</string>
     <string name="state_high_priority">Високий пріоритет</string>
-    <string name="state_unknown">Unknown</string>
+    <string name="state_unknown">Невідомий</string>
     <string name="state_idle">Очікування</string>
     <string name="state_zombie">Зомбі</string>
     <string name="state_dead">Мертвий</string>
@@ -485,7 +485,7 @@
     <string name="require_no_permission">Не вимагає дозволів</string>
     <string name="required">Вимагається</string>
     <string name="subject">Тема</string>
-    <string name="state_waking">Waking</string>
+    <string name="state_waking">Пробудження</string>
     <string name="state_trace_stop">Трасування зупинки</string>
     <string name="sdk_flags">Прапорці</string>
     <string name="flags">Прапорці</string>
@@ -1060,9 +1060,9 @@
     <string name="suspended">Призупинено</string>
     <string name="saf">SAF</string>
     <string name="filter_choice_pid">PID</string>
-    <string name="log_level_fatal">Fatal</string>
-    <string name="log_level_warn">Warn</string>
-    <string name="log_level_verbose">Verbose</string>
+    <string name="log_level_fatal">Фатальне</string>
+    <string name="log_level_warn">Попередження</string>
+    <string name="log_level_verbose">Докладне</string>
     <string name="log_level_info">Info</string>
     <string name="log_level_error">Error</string>
     <string name="log_level_debug">Debug</string>
