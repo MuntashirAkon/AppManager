@@ -97,40 +97,22 @@
                 android:nextFocusDown="@id/horizontal_layout"
                 tools:listItem="@layout/item_chip" />
 
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_marginTop="@dimen/padding_small"
+            <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layoutDirection="ltr">
 
-                <com.google.android.material.divider.MaterialDivider
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-                <HorizontalScrollView
-                    android:layout_width="match_parent"
+                <io.github.muntashirakon.widget.RoundedFirstAndLastChildViewGroup
+                    android:id="@+id/horizontal_layout"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layoutDirection="ltr">
+                    android:nextFocusUp="@id/tag_cloud"
+                    android:nextFocusDown="@android:id/list"
+                    android:paddingHorizontal="@dimen/padding_medium"
+                    android:paddingVertical="@dimen/padding_small"
+                    tools:listItem="@layout/item_app_info_action" />
 
-                    <io.github.muntashirakon.widget.FlowLayout
-                        android:id="@+id/horizontal_layout"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:nextFocusUp="@id/tag_cloud"
-                        android:nextFocusDown="@android:id/list"
-                        android:paddingStart="8dp"
-                        android:paddingTop="4dp"
-                        android:paddingEnd="8dp"
-                        android:paddingBottom="4dp"
-                        tools:listItem="@layout/item_app_info_actions" />
-
-                </HorizontalScrollView>
-
-                <com.google.android.material.divider.MaterialDivider
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
+            </HorizontalScrollView>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@android:id/list"

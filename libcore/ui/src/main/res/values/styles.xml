@@ -277,6 +277,10 @@
     <style name="Widget.AppTheme.Button.EFAB" parent="Widget.Material3.ExtendedFloatingActionButton.Primary" />
 
     <!-- ShapeAppearance attributes -->
+    <style name="ShapeAppearance.AppTheme.None" parent="ShapeAppearance.Material3.SmallComponent">
+        <item name="cornerSize">0dp</item>
+    </style>
+
     <style name="ShapeAppearance.AppTheme.SmallComponent" parent="ShapeAppearance.Material3.SmallComponent">
         <item name="cornerSize">12dp</item>
     </style>
@@ -298,6 +302,20 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSizeBottomRight">0dp</item>
         <item name="cornerSizeTopLeft">0dp</item>
+    </style>
+
+    <style name="ShapeAppearance.AppTheme.LeftRounded" parent="">
+        <item name="cornerSize">24dp</item>
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopRight">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+    </style>
+
+    <style name="ShapeAppearance.AppTheme.RightRounded" parent="">
+        <item name="cornerSize">24dp</item>
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">0dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
     </style>
 
     <!-- TextAppearance attributes: We do not use Material* or AppCompat because they change over time -->
