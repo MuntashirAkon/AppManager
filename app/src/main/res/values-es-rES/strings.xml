@@ -1173,4 +1173,11 @@
     <string name="tracker">Rastreador</string>
     <string name="screen_time">Tiempo en Pantalla</string>
     <string name="open_in_new_window">Nueva ventana</string>
+    <string name="type_string_set">Conjunto de cadenas</string>
+    <string name="vt_confirm_uploading_file">El archivo no fue encontrado en la base de datos de VirusTotal. Desea subir el archivo\?</string>
+    <string name="vt_confirm_upload_and_scan">Si, subir y escanear</string>
+    <string name="log_stop_recording">Detener grabación</string>
+    <string name="apk_checksums">Suma de verificación APK</string>
+    <string name="item_select">Elegir</string>
+    <string name="pref_vt_prompt_before_uploading">Mostrar aviso antes de iniciar la subida del archivo.</string>
 </resources>
