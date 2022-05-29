@@ -1177,4 +1177,7 @@
     <string name="vt_confirm_upload_and_scan">Ja, hochladen und scannen</string>
     <string name="open_in_new_window">Neues Fenster</string>
     <string name="type_string_set">Satz von Zeichenfolgen</string>
+    <string name="item_select">Asuwählen</string>
+    <string name="log_stop_recording">Aufnahme stoppen</string>
+    <string name="apk_checksums">APK Prüfsumme</string>
 </resources>
