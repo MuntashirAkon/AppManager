@@ -867,7 +867,7 @@ public final class PackageUtils {
         return builder;
     }
 
-    public static void ensurePackageStagingDirectoryPrivileged() throws ErrnoException, RemoteException {
+    public static void ensurePackageStagingDirectoryPrivileged() throws ErrnoException {
         Path psd = Paths.get(PACKAGE_STAGING_DIRECTORY);
         if (!psd.isDirectory()) {
             // Recreate directory

@@ -29,7 +29,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 import java.util.regex.Pattern;
 
 import io.github.muntashirakon.io.Path;
@@ -180,7 +179,7 @@ public final class TarUtils {
                         // after the link has been created
                         // TODO: 27/3/22 It might be necessary to check the link if it points to an old APK folder content
                         file.delete();
-                        if (!Objects.requireNonNull(file.getFile()).createNewSymlink(linkName)) {
+                        if (!file.createNewSymbolicLink(linkName)) {
                             throw new IOException("Couldn't create symbolic link " + file + " pointing to " + linkName);
                         }
                         continue;  // links do not need permission fixes
