@@ -80,6 +80,7 @@ public class Path implements Comparable<Path> {
         File[] extDirs = context.getExternalCacheDirs();
         if (extDirs != null) {
             for (File dir : extDirs) {
+                if (dir == null) continue;
                 add(Objects.requireNonNull(dir.getParentFile()).getAbsolutePath());
                 EXCLUSIVE_ACCESS_GRANTED.add(true);
             }
