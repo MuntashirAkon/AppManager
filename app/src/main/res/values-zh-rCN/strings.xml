@@ -27,7 +27,7 @@
     <string name="write">写入</string>
     <string name="patterns_allowed">允许的模式</string>
     <string name="declared_permission">自定义权限</string>
-    <string name="shared_libs">共享程序库</string>
+    <string name="shared_libs">共享库</string>
     <string name="group">群组</string>
     <string name="uses_feature">属性</string>
     <string name="no_feature">无</string>
@@ -147,7 +147,7 @@
     <string name="native_library_dir">原生 JNI 库目录</string>
     <string name="process_name">进程名称</string>
     <string name="no_code">没有代码</string>
-    <string name="requested_large_heap">Large heap</string>
+    <string name="requested_large_heap">大堆内存(Large heap)</string>
     <string name="updated_app">更新</string>
     <string name="debuggable">可调试</string>
     <string name="test_only">仅测试</string>
@@ -194,7 +194,7 @@
     <string name="storage_and_cache">存储和缓存</string>
     <string name="total_size">总计</string>
     <string name="app_size">应用程序</string>
-    <string name="app_ops">AppOps</string>
+    <string name="app_ops">App Ops</string>
     <string name="no_app_ops">无 AppOps 权限</string>
     <string name="failed_to_enable_op">无法启用请求的 AppOps 权限</string>
     <string name="failed_to_disable_op">无法禁用请求的 AppOps</string>
@@ -207,7 +207,7 @@
     <string name="usage_yesterday">昨天</string>
     <string name="exodus_link">\u03b5xodus 链接</string>
     <string name="sort_by_disabled_app">已禁用</string>
-    <string name="sort_by_blocked_components">已拦截组件</string>
+    <string name="sort_by_blocked_components">已拦截组件优先</string>
     <string name="external_data_dir">外部资料目录</string>
     <string name="external_multiple_data_dir">外部数据目录 <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
     <plurals name="no_of_times_opened">
@@ -302,10 +302,10 @@
         <item quantity="other">无法禁用来自%1$d个应用的跟踪器</item>
     </plurals>
     <string name="failed_to_grant_permission">无法授予权限</string>
-    <string name="failed_to_revoke_permission">无法撤销权限</string>
+    <string name="failed_to_revoke_permission">无法拒绝权限</string>
     <string name="failed_to_reset_app_ops">无法重置应用操作</string>
-    <string name="failed_to_deny_dangerous_perms">无法撤销所有的危险权限</string>
-    <string name="failed_to_deny_dangerous_app_ops">无法撤消所有危险的应用程序操作</string>
+    <string name="failed_to_deny_dangerous_perms">无法拒绝所有危险权限</string>
+    <string name="failed_to_deny_dangerous_app_ops">无法拒绝所有危险 App Ops</string>
     <string name="launch_app">启动</string>
     <string name="never_ask">从不询问</string>
     <string name="one_click_ops">一键操作</string>
@@ -853,7 +853,7 @@
     <string name="pref_installer_msg">配置应用安装程序的行为。</string>
     <string name="filter_choice_tag">标签</string>
     <string name="filter_choice_pid">PID</string>
-    <string name="filter_choice">搜索依据</string>
+    <string name="filter_choice">作为搜索依据</string>
     <string name="enter_good_filename">请输入一个有效的文件名。</string>
     <string name="enter_filename">输入文件名</string>
     <string name="dialog_partial_select_explanation">1. 选择<b>第一</b>行。
@@ -994,7 +994,7 @@
     <string name="pref_import_backups">导入备份</string>
     <string name="added_to_queue">已添至队列</string>
     <string name="minimum_version">最小版本: %d</string>
-    <string name="help_uses_permissions_tab">点击一个项目来<b>授予</b>或<b>撤销</b>它。只有<b>危险</b>和<b>开发</b>权限可被授予或撤销。</string>
+    <string name="help_uses_permissions_tab">点击一个项目来<b>授予</b>或<b>拒绝</b>它。只有<b>危险</b>和<b>开发</b>权限可被授予或撤销。</string>
     <string name="help_permissions_tab">这些权限由该应用程序定义且无法撤销。</string>
     <string name="help_app_ops_tab">点击项目以<b>允许</b>或<b>忽略</b>它。长按某个项目可查看其他支持的模式。</string>
     <string name="saved_filters">已保存的过滤器</string>
