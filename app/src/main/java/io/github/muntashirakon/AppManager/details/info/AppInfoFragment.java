@@ -1419,7 +1419,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @NonNull
     private Chip addChip(@StringRes int resId, @ColorRes int color) {
-        Chip chip = new Chip(mTagCloud.getContext());
+        Chip chip = (Chip) LayoutInflater.from(mActivity).inflate(R.layout.item_chip, mTagCloud, false);
         chip.setText(resId);
         chip.setChipBackgroundColorResource(color);
         mTagCloud.addView(chip);
@@ -1428,7 +1428,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @NonNull
     private Chip addChip(CharSequence text, @ColorRes int color) {
-        Chip chip = new Chip(mTagCloud.getContext());
+        Chip chip = (Chip) LayoutInflater.from(mActivity).inflate(R.layout.item_chip, mTagCloud, false);
         chip.setText(text);
         chip.setChipBackgroundColorResource(color);
         mTagCloud.addView(chip);
@@ -1437,7 +1437,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @NonNull
     private Chip addChip(@StringRes int resId) {
-        Chip chip = new Chip(mTagCloud.getContext());
+        Chip chip = (Chip) LayoutInflater.from(mActivity).inflate(R.layout.item_chip, mTagCloud, false);
         chip.setText(resId);
         mTagCloud.addView(chip);
         return chip;
@@ -1445,7 +1445,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @NonNull
     private Chip addChip(CharSequence text) {
-        Chip chip = new Chip(mTagCloud.getContext());
+        Chip chip = (Chip) LayoutInflater.from(mActivity).inflate(R.layout.item_chip, mTagCloud, false);
         chip.setText(text);
         mTagCloud.addView(chip);
         return chip;

@@ -105,6 +105,14 @@
         <item name="android:textAppearance">@style/TextAppearance.AppTheme.BodySmall</item>
     </style>
 
+    <style name="Widget.AppTheme.Chip.Assist.Elevated.Padded" parent="Widget.AppTheme.Chip.Assist.Elevated">
+        <!-- Fix margin issue -->
+        <item name="android:layout_marginTop">@dimen/padding_very_small</item>
+        <item name="android:layout_marginBottom">@dimen/padding_very_small</item>
+        <item name="android:layout_marginStart">@dimen/padding_very_small</item>
+        <item name="android:layout_marginEnd">@dimen/padding_very_small</item>
+    </style>
+
     <style name="Widget.AppTheme.Chip.Filter" parent="Widget.Material3.Chip.Filter">
         <item name="chipMinHeight">24dp</item>
         <item name="chipMinTouchTargetSize">24dp</item>

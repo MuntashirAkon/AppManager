@@ -85,14 +85,10 @@
 
             <io.github.muntashirakon.widget.FlowLayout
                 android:id="@+id/tag_cloud"
-                android:theme="@style/Widget.AppTheme.ChipGroup.Assist.Elevated"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/padding_medium"
-                android:layout_marginVertical="@dimen/padding_very_small"
+                android:paddingHorizontal="@dimen/padding_medium"
                 android:gravity="center_horizontal"
-                app:childSpacing="@dimen/padding_very_small"
-                app:rowSpacing="@dimen/padding_very_small"
                 android:nextFocusUp="@id/version"
                 android:nextFocusDown="@id/horizontal_layout"
                 tools:listItem="@layout/item_chip" />
