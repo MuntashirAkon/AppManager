@@ -107,7 +107,8 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
     @GuardedBy("mAdapterList")
     @Override
     public void cancelSelection() {
-        deselectAll();
+        super.cancelSelection();
+        mActivity.mModel.cancelSelection();
     }
 
     @Override

@@ -106,6 +106,7 @@ public class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> 
 
     @Override
     protected void cancelSelection() {
+        super.cancelSelection();
         // TODO: 4/7/21
     }
 

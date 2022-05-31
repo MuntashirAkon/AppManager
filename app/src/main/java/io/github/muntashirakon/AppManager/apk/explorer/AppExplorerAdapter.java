@@ -103,6 +103,7 @@ public class AppExplorerAdapter extends MultiSelectionView.Adapter<AppExplorerAd
 
     @Override
     protected void cancelSelection() {
+        super.cancelSelection();
         // TODO: 4/7/21
     }
 

@@ -35,6 +35,7 @@ import com.google.android.material.internal.ThemeEnforcement;
 import com.google.android.material.transition.MaterialSharedAxis;
 
 import java.lang.reflect.Field;
+import java.util.Locale;
 
 import io.github.muntashirakon.reflow.ReflowMenuViewWrapper;
 import io.github.muntashirakon.ui.R;
@@ -353,12 +354,15 @@ public class MultiSelectionView extends MaterialCardView {
         int selectionCount = adapter.getSelectedItemCount();
         if (selectionCount <= 0 && hideOnEmpty) {
             if (getVisibility() != GONE) hide();
+            if (selectionChangeListener != null) {
+                selectionChangeListener.onSelectionChange(0);
+            }
             return;
         }
         if (selectionCount > 0) {
             if (getVisibility() != VISIBLE) show();
         }
-        selectionCounter.setText(selectionCount + "/" + adapter.getTotalItemCount());
+        selectionCounter.setText(String.format(Locale.getDefault(), "%d/%d", selectionCount, adapter.getTotalItemCount()));
         selectAllView.setChecked(adapter.areAllSelected(), false);
         if (selectionChangeListener != null) {
             selectionChangeListener.onSelectionChange(selectionCount);
@@ -428,8 +432,15 @@ public class MultiSelectionView extends MaterialCardView {
         @AnyThread
         protected abstract boolean isSelected(int position);
 
+        /**
+         * Cancel the selection process. This should clear all the selected items that may not be displayed in the
+         * {@link RecyclerView} due to filtering, etc.
+         */
         @UiThread
-        protected abstract void cancelSelection();
+        @CallSuper
+        protected void cancelSelection() {
+            deselectAll();
+        }
 
         @AnyThread
         protected abstract int getSelectedItemCount();

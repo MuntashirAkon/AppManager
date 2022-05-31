@@ -216,8 +216,8 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAd
 
     @Override
     protected void cancelSelection() {
+        super.cancelSelection();
         mModel.clearSelections();
-        notifyDataSetChanged();
     }
 
     @NonNull

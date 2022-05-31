@@ -139,6 +139,19 @@ public class MainViewModel extends AndroidViewModel {
         }
     }
 
+    public void cancelSelection() {
+        synchronized (applicationItems) {
+            for (ApplicationItem item : selectedApplicationItems) {
+                int i = applicationItems.indexOf(item);
+                if (i != -1) {
+                    applicationItems.get(i).isSelected = false;
+                }
+            }
+            selectedApplicationItems.clear();
+            selectedPackages.clear();
+        }
+    }
+
     @Nullable
     public ApplicationItem getLastSelectedPackage() {
         if (selectedApplicationItems.size() > 0) {
