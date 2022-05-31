@@ -1253,4 +1253,7 @@
     <string name="vt_confirm_upload_and_scan">Да, загрузить и просканировать</string>
     <string name="type_string_set">Набор строк</string>
     <string name="pref_vt_prompt_before_uploading">Показывать подсказку перед загрузкой файла.</string>
+    <string name="log_stop_recording">Остановить запись</string>
+    <string name="apk_checksums">Контрольные суммы APK</string>
+    <string name="item_select">Выбрать</string>
 </resources>
