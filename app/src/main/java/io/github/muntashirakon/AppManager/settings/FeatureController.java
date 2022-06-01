@@ -20,6 +20,7 @@ import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.apk.explorer.AppExplorerActivity;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
 import io.github.muntashirakon.AppManager.details.ManifestViewerActivity;
 import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
@@ -36,6 +37,7 @@ public class FeatureController {
             FEAT_USAGE_ACCESS,
             FEAT_LOG_VIEWER,
             FEAT_INTERNET,
+            FEAT_APP_EXPLORER,
     })
     public @interface FeatureFlags {
     }
@@ -47,6 +49,7 @@ public class FeatureController {
     public static final int FEAT_USAGE_ACCESS = 1 << 4;
     public static final int FEAT_LOG_VIEWER = 1 << 5;
     public static final int FEAT_INTERNET = 1 << 6;
+    public static final int FEAT_APP_EXPLORER = 1 << 7;
 
     @NonNull
     public static FeatureController getInstance() {
@@ -70,6 +73,8 @@ public class FeatureController {
             put(FEAT_USAGE_ACCESS, R.string.usage_access);
             featureFlags.add(FEAT_LOG_VIEWER);
             put(FEAT_LOG_VIEWER, R.string.log_viewer);
+            featureFlags.add(FEAT_APP_EXPLORER);
+            put(FEAT_APP_EXPLORER, R.string.app_explorer);
             featureFlags.add(FEAT_INTERNET);
             put(FEAT_INTERNET, R.string.toggle_internet);
         }
@@ -123,6 +128,10 @@ public class FeatureController {
         return getInstance().isEnabled(FEAT_INTERNET);
     }
 
+    public static boolean isAppExplorerEnabled() {
+        return getInstance().isEnabled(FEAT_APP_EXPLORER);
+    }
+
     public boolean isEnabled(@FeatureFlags int key) {
         ComponentName cn;
         switch (key) {
@@ -144,6 +153,9 @@ public class FeatureController {
                 return (flags & key) != 0;
             case FEAT_LOG_VIEWER:
                 cn = getComponentName(key, LogViewerActivity.class);
+                break;
+            case FEAT_APP_EXPLORER:
+                cn = getComponentName(key, AppExplorerActivity.class);
                 break;
             default:
                 throw new IllegalArgumentException();
@@ -181,6 +193,9 @@ public class FeatureController {
                 break;
             case FEAT_LOG_VIEWER:
                 modifyState(key, LogViewerActivity.class, enabled);
+                break;
+            case FEAT_APP_EXPLORER:
+                modifyState(key, AppExplorerActivity.class, enabled);
                 break;
         }
         // Modify flags

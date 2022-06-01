@@ -120,6 +120,7 @@
         </activity>
         <activity
             android:name=".apk.explorer.AppExplorerActivity"
+            android:enabled="true"
             android:exported="true"
             android:label="@string/explore">
             <intent-filter>
