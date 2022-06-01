@@ -129,7 +129,6 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAd
             if (FeatureController.isLogViewerEnabled()) {
                 viewLogsItem.setVisible(true).setOnMenuItemClickListener(item -> {
                     Intent logViewerIntent = new Intent(mActivity.getApplicationContext(), LogViewerActivity.class)
-                            .setAction(LogViewerActivity.ACTION_LAUNCH)
                             .putExtra(LogViewerActivity.EXTRA_FILTER, SearchCriteria.PID_KEYWORD + processItem.pid)
                             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mActivity.startActivity(logViewerIntent);

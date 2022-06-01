@@ -8,7 +8,6 @@ import android.content.Context;
 import android.content.Intent;
 
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 
 import java.util.List;
 
@@ -38,23 +37,6 @@ public class ServiceHelper {
         if (alreadyRunning) {
             Intent intent = new Intent(context, LogcatRecordingService.class);
             context.stopService(intent);
-        }
-    }
-
-    public static synchronized void startBackgroundServiceIfNotAlreadyRunning(Context context, String filename,
-                                                                              String queryFilter, int logLevel) {
-        boolean alreadyRunning = ServiceHelper.checkIfServiceIsRunning(context, LogcatRecordingService.class);
-        Log.d(TAG, "Is LogcatRecordingService running: " + alreadyRunning);
-        if (!alreadyRunning) {
-            Intent intent = new Intent(context, LogcatRecordingService.class);
-            intent.putExtra(LogcatRecordingService.EXTRA_FILENAME, filename);
-            // Load "lastLine" in the background
-            LogcatReaderLoader loader = LogcatReaderLoader.create(true);
-            intent.putExtra(LogcatRecordingService.EXTRA_LOADER, loader);
-            // Add query text and log level
-            intent.putExtra(LogcatRecordingService.EXTRA_QUERY_FILTER, queryFilter);
-            intent.putExtra(LogcatRecordingService.EXTRA_LEVEL, logLevel);
-            ContextCompat.startForegroundService(context, intent);
         }
     }
 

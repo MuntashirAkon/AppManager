@@ -952,11 +952,9 @@
         <item quantity="one">%d file will be deleted</item>
         <item quantity="other">%d files will be deleted</item>
     </plurals>
-    <string name="checkbox_never_show_partial_select_help">Don\'t show again</string>
     <string name="copy_to_clipboard">Copy to clipboard</string>
     <string name="delete_saved_log">Delete Saved Logs</string>
     <string name="dialog_compiling_log">Compiling log…</string>
-    <string name="dialog_partial_select_explanation">1. Select the <b>first</b> line.\n2. Then select the <b>last</b> line.</string>
     <string name="enter_filename">Enter filename</string>
     <string name="enter_good_filename">Please enter a valid filename.</string>
     <string name="filter_choice">Search by</string>
@@ -967,8 +965,7 @@
     <string name="log_recording_started">Log recording started.</string>
     <string name="log_saved">Log saved.</string>
     <string name="manage_saved_logs">Manage Saved Logs</string>
-    <string name="menu_title_partial_select">Save Partial</string>
-    <string name="no_saved_logs">No saved logs found.</string>
+    <string name="no_saved_logs">No saved logs.</string>
     <string name="notification_subtext">Touch to stop recording</string>
     <string name="notification_ticker">Log recording started</string>
     <string name="notification_title">Log recording in progress</string>
@@ -1007,7 +1004,6 @@
         <item quantity="one">Log too large, showing last %d line.</item>
         <item quantity="other">Log too large, showing last %d lines.</item>
     </plurals>
-    <string name="toast_started_select_partial">Select Partial mode enabled</string>
     <string name="unable_to_save_log">Unable to save log. Did you enter a valid filename?</string>
     <string name="widget_recording_in_progress">Recording…</string>
     <string name="widget_start_recording">Record\nLog</string>
@@ -1020,7 +1016,6 @@
     <string name="omit_sensitive_info_summary">Omit sensitive info like web urls, phone numbers or emails.</string>
     <string name="text_include_dmesg">Include kernel log</string>
     <string name="pref_include_dmesg" translatable="false">dmesg</string>
-    <string name="save_log_zip">Save zip</string>
     <string name="share_log">Share</string>
     <string name="view_logs">View logs</string>
     <string name="running_services">Running Services</string>

@@ -15,13 +15,15 @@ import android.widget.TextView;
 import androidx.annotation.ColorInt;
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.collection.SparseArrayCompat;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
@@ -30,12 +32,17 @@ import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.widget.MultiSelectionView;
 
 // Copyright 2012 Nolan Lawson
 // Copyright 2021 Muntashir Al-Islam
-public class LogViewerRecyclerAdapter extends RecyclerView.Adapter<LogViewerRecyclerAdapter.ViewHolder>
+public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogViewerRecyclerAdapter.ViewHolder>
         implements Filterable {
     public static final String TAG = LogViewerRecyclerAdapter.class.getSimpleName();
+
+    public static final int CONTEXT_MENU_FILTER_ID = 0;
+    public static final int CONTEXT_MENU_COPY_ID = 1;
+    public static final int CONTEXT_MENU_SELECT_ID = 2;
 
     private static final SparseArrayCompat<Integer> BACKGROUND_COLORS = new SparseArrayCompat<Integer>(7) {
         {
@@ -107,6 +114,7 @@ public class LogViewerRecyclerAdapter extends RecyclerView.Adapter<LogViewerRecy
     private ArrayFilter mFilter;
 
     private int logLevelLimit = AppPref.getInt(AppPref.PrefKey.PREF_LOG_VIEWER_DEFAULT_LOG_LEVEL_INT);
+    private final Set<LogLine> mSelectedLogLines = new LinkedHashSet<>();
 
     public LogViewerRecyclerAdapter() {
         mObjects = new ArrayList<>();
@@ -131,7 +139,20 @@ public class LogViewerRecyclerAdapter extends RecyclerView.Adapter<LogViewerRecy
         }
     }
 
-    public void addWithFilter(LogLine object, CharSequence text, boolean notify) {
+    @GuardedBy("mLock")
+    public void readdAll(LogLine object, boolean notify) {
+        synchronized (mLock) {
+            if (mOriginalValues != null) {
+                mOriginalValues.add(object);
+            }
+            mObjects.add(object);
+            if (notify) {
+                notifyItemInserted(mObjects.size());
+            }
+        }
+    }
+
+    public void addWithFilter(@NonNull LogLine object, @Nullable CharSequence text, boolean notify) {
         if (mOriginalValues != null) {
             List<LogLine> inputList = Collections.singletonList(object);
             if (mFilter == null) {
@@ -238,6 +259,10 @@ public class LogViewerRecyclerAdapter extends RecyclerView.Adapter<LogViewerRecy
         }
     }
 
+    public Set<LogLine> getSelectedLogLines() {
+        return mSelectedLogLines;
+    }
+
     @GuardedBy("mLock")
     public void setCollapseMode(boolean isCollapsed) {
         synchronized (mLock) {
@@ -248,11 +273,52 @@ public class LogViewerRecyclerAdapter extends RecyclerView.Adapter<LogViewerRecy
         }
     }
 
+    @Override
+    protected void select(int position) {
+        synchronized (mSelectedLogLines) {
+            mSelectedLogLines.add(getItem(position));
+        }
+    }
+
+    @Override
+    protected void deselect(int position) {
+        synchronized (mSelectedLogLines) {
+            mSelectedLogLines.remove(getItem(position));
+        }
+    }
+
+    @Override
+    protected boolean isSelected(int position) {
+        synchronized (mSelectedLogLines) {
+            return mSelectedLogLines.contains(getItem(position));
+        }
+    }
+
+    @Override
+    protected void cancelSelection() {
+        super.cancelSelection();
+        synchronized (mSelectedLogLines) {
+            mSelectedLogLines.clear();
+        }
+    }
+
+    @Override
+    protected int getSelectedItemCount() {
+        synchronized (mSelectedLogLines) {
+            return mSelectedLogLines.size();
+        }
+    }
+
+    @Override
+    protected int getTotalItemCount() {
+        return getItemCount();
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_logcat, parent, false);
-        return new ViewHolder(v, mClickListener);
+        return new ViewHolder(v);
     }
 
     @Override
@@ -268,9 +334,9 @@ public class LogViewerRecyclerAdapter extends RecyclerView.Adapter<LogViewerRecy
         t.setTextColor(getForegroundColorForLogLevel(context, logLine.getLogLevel()));
         t.setVisibility(logLine.getLogLevel() == -1 ? View.GONE : View.VISIBLE);
 
+        holder.itemView.setBackgroundResource(0);
         View contentView = holder.itemView.findViewById(R.id.log_content);
-        contentView.setBackgroundResource(logLine.isHighlighted() ? R.drawable.item_highlight : (position % 2 == 0 ?
-                R.drawable.item_semi_transparent : R.drawable.item_transparent));
+        contentView.setBackgroundResource(position % 2 == 0 ? R.drawable.item_semi_transparent : R.drawable.item_transparent);
 
         //OUTPUT TEXT VIEW
         TextView output = holder.output;
@@ -280,7 +346,7 @@ public class LogViewerRecyclerAdapter extends RecyclerView.Adapter<LogViewerRecy
         //TAG TEXT VIEW
         TextView tag = holder.tag;
         tag.setSingleLine(!logLine.isExpanded());
-        tag.setText(logLine.getTag());
+        tag.setText(logLine.getTagName());
         tag.setVisibility(logLine.getLogLevel() == -1 ? View.GONE : View.VISIBLE);
 
         //EXPANDED INFO
@@ -297,7 +363,35 @@ public class LogViewerRecyclerAdapter extends RecyclerView.Adapter<LogViewerRecy
             timestampText.setText(logLine.getTimestamp());
         }
 
-        tag.setTextColor(getOrCreateTagColor(context, logLine.getTag()));
+        tag.setTextColor(getOrCreateTagColor(context, logLine.getTagName()));
+        // Allow selection
+        holder.itemView.setOnClickListener(v -> {
+            if (isInSelectionMode()) {
+                toggleSelection(position);
+            } else {
+                logLine.setExpanded(!logLine.isExpanded());
+                notifyItemChanged(position);
+            }
+        });
+        holder.itemView.setOnLongClickListener(v -> {
+            PopupMenu menu = new PopupMenu(v.getContext(), v);
+            menu.getMenu().add(0, CONTEXT_MENU_FILTER_ID, 0, R.string.filter_choice);
+            menu.getMenu().add(0, CONTEXT_MENU_COPY_ID, 0, R.string.copy_to_clipboard);
+            menu.getMenu().add(0, CONTEXT_MENU_SELECT_ID, 0, R.string.item_select);
+            menu.setOnMenuItemClickListener(item -> {
+                if (item.getItemId() == CONTEXT_MENU_SELECT_ID) {
+                    toggleSelection(position);
+                    return true;
+                }
+                if (mClickListener != null) {
+                    return mClickListener.onMenuItemClick(item, logLine);
+                }
+                return false;
+            });
+            menu.show();
+            return true;
+        });
+        super.onBindViewHolder(holder, position);
     }
 
     @GuardedBy("mLock")
@@ -319,7 +413,6 @@ public class LogViewerRecyclerAdapter extends RecyclerView.Adapter<LogViewerRecy
     public int getLogLevelLimit() {
         return logLevelLimit;
     }
-
 
     public void setLogLevelLimit(int logLevelLimit) {
         this.logLevelLimit = logLevelLimit;
@@ -424,11 +517,11 @@ public class LogViewerRecyclerAdapter extends RecyclerView.Adapter<LogViewerRecy
         }
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder implements PopupMenu.OnMenuItemClickListener,
-            View.OnClickListener, View.OnLongClickListener {
+    public static class ViewHolder extends MultiSelectionView.ViewHolder {
         // id for context menu entry
         public static final int CONTEXT_MENU_FILTER_ID = 0;
         public static final int CONTEXT_MENU_COPY_ID = 1;
+        public static final int CONTEXT_MENU_SELECT_ID = 2;
 
         LogLine logLine;
         TextView logLevel;
@@ -436,44 +529,15 @@ public class LogViewerRecyclerAdapter extends RecyclerView.Adapter<LogViewerRecy
         TextView output;
         TextView pid;
 
-        private final ViewHolder.OnClickListener clickListener;
-
-        public ViewHolder(View itemView, final ViewHolder.OnClickListener clickListener) {
+        public ViewHolder(View itemView) {
             super(itemView);
             logLevel = itemView.findViewById(R.id.log_level_text);
             tag = itemView.findViewById(R.id.tag_text);
             output = itemView.findViewById(R.id.log_output_text);
             pid = itemView.findViewById(R.id.pid_text);
-
-            this.clickListener = clickListener;
-
-            itemView.setOnClickListener(this);
-            itemView.setOnLongClickListener(this);
-        }
-
-        @Override
-        public void onClick(View v) {
-            clickListener.onClick(v, logLine);
-        }
-
-        @Override
-        public boolean onLongClick(View v) {
-            PopupMenu menu = new PopupMenu(v.getContext(), v);
-            menu.getMenu().add(0, CONTEXT_MENU_FILTER_ID, 0, R.string.filter_choice);
-            menu.getMenu().add(0, CONTEXT_MENU_COPY_ID, 0, R.string.copy_to_clipboard);
-            menu.setOnMenuItemClickListener(this);
-            menu.show();
-            return true;
-        }
-
-        @Override
-        public boolean onMenuItemClick(MenuItem item) {
-            return clickListener.onMenuItemClick(item, logLine);
         }
 
         public interface OnClickListener {
-            void onClick(View itemView, LogLine logLine);
-
             boolean onMenuItemClick(MenuItem item, LogLine logLine);
         }
     }

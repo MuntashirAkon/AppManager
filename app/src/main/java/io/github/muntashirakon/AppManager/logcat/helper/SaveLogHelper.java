@@ -10,47 +10,44 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 import io.github.muntashirakon.AppManager.backup.BackupFiles;
 import io.github.muntashirakon.AppManager.logcat.struct.SavedLog;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 
 // Copyright 2012 Nolan Lawson
 public class SaveLogHelper {
     public static final String TAG = SaveLogHelper.class.getSimpleName();
 
     public static final String TEMP_DEVICE_INFO_FILENAME = "device_info.txt";
-    public static final String TEMP_LOG_FILENAME = "logcat.log";
+    public static final String TEMP_LOG_FILENAME = "logcat.am.log";
     public static final String TEMP_DMESG_FILENAME = "dmesg.txt";
     public static final String SAVED_LOGS_DIR = "saved_logs";
     private static final String TEMP_ZIP_FILENAME = "logs";
     private static final int BUFFER = 0x1000; // 4K
 
     @Nullable
-    public static Path saveTemporaryFile(String filename, CharSequence text, List<String> lines) {
+    public static Path saveTemporaryFile(String filename, CharSequence text, Collection<String> lines) {
         try {
             Path tempFile = getTempDirectory().createNewFile(filename, null);
             try (PrintStream out = new PrintStream(new BufferedOutputStream(tempFile.openOutputStream(), BUFFER))) {
@@ -78,7 +75,7 @@ public class SaveLogHelper {
     public static void deleteLogIfExists(@Nullable String filename) {
         if (filename == null) return;
         try {
-            getSavedLogsDirectory().findFile(filename).delete();
+            getFile(filename).delete();
         } catch (IOException ignore) {
         }
     }
@@ -108,8 +105,8 @@ public class SaveLogHelper {
     }
 
     @NonNull
-    public static SavedLog openLog(@NonNull String filename, int maxLines) throws IOException {
-        Path logFile = getSavedLogsDirectory().findFile(filename);
+    public static SavedLog openLog(@NonNull Uri fileUri, int maxLines) {
+        Path logFile = Paths.get(fileUri);
         LinkedList<String> logLines = new LinkedList<>();
         boolean truncated = false;
         try (BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(logFile.openInputStream()), BUFFER)) {
@@ -127,31 +124,39 @@ public class SaveLogHelper {
     }
 
     public static synchronized boolean saveLog(CharSequence logString, String filename) {
-        return saveLog(null, logString, filename);
-    }
-
-    public static synchronized boolean saveLog(List<String> logLines, String filename) {
-        return saveLog(logLines, null, filename);
-    }
-
-    private static boolean saveLog(List<String> logLines, CharSequence logString, String filename) {
         try {
-            Path newFile = getSavedLogsDirectory().createNewFile(filename, null);
-            try (PrintStream out = new PrintStream(new BufferedOutputStream(newFile.openOutputStream(), BUFFER))) {
-                // Save a log as either a list of strings
-                if (logLines != null) {
-                    for (CharSequence line : logLines) {
-                        out.println(line);
-                    }
-                } else if (logString != null) {
-                    out.print(logString);
-                }
-            }
+            saveLog(null, logString, filename);
+            return true;
         } catch (IOException e) {
-            Log.e(TAG, e);
+            e.printStackTrace();
             return false;
         }
-        return true;
+    }
+
+    @Nullable
+    public static synchronized Path saveLog(List<String> logLines, String filename) {
+        try {
+            return saveLog(logLines, null, filename);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    @NonNull
+    private static Path saveLog(List<String> logLines, CharSequence logString, String filename) throws IOException {
+        Path newFile = getSavedLogsDirectory().createNewFile(filename, null);
+        try (PrintStream out = new PrintStream(new BufferedOutputStream(newFile.openOutputStream(), BUFFER))) {
+            // Save a log as either a list of strings
+            if (logLines != null) {
+                for (CharSequence line : logLines) {
+                    out.println(line);
+                }
+            } else if (logString != null) {
+                out.print(logString);
+            }
+        }
+        return newFile;
     }
 
     @NonNull
@@ -174,43 +179,13 @@ public class SaveLogHelper {
     }
 
     @NonNull
-    public static Path saveTemporaryZipFile(String filename, @NonNull List<Path> files) throws IOException {
-        Path zipFile = getTempDirectory().createNewFile(filename, null);
-        try (ZipOutputStream output = new ZipOutputStream(new BufferedOutputStream(zipFile.openOutputStream(), BUFFER))) {
-            for (Path file : files) {
-                try (BufferedInputStream input = new BufferedInputStream(file.openInputStream(), BUFFER)) {
-                    ZipEntry entry = new ZipEntry(file.getName());
-                    output.putNextEntry(entry);
-                    FileUtils.copy(input, output);
-                }
-            }
-        }
-        return zipFile;
-    }
-
-    public static void saveZipFileAndThrow(@NonNull Context context, @NonNull Uri uri, @NonNull List<Path> files)
-            throws IOException {
-        OutputStream os = context.getContentResolver().openOutputStream(uri);
-        if (os == null) throw new IOException("Could not open uri.");
-        try (ZipOutputStream output = new ZipOutputStream(new BufferedOutputStream(os, BUFFER))) {
-            for (Path file : files) {
-                try (BufferedInputStream input = new BufferedInputStream(file.openInputStream(), BUFFER)) {
-                    ZipEntry entry = new ZipEntry(file.getName());
-                    output.putNextEntry(entry);
-                    FileUtils.copy(input, output);
-                }
-            }
-        }
-    }
-
-    @NonNull
     public static String createZipFilename(boolean withDate) {
         return createLogFilename(TEMP_ZIP_FILENAME, ".zip", withDate);
     }
 
     @NonNull
     public static String createLogFilename() {
-        return createLogFilename(null, ".log", true);
+        return createLogFilename(null, ".am.log", true);
     }
 
     @NonNull
@@ -244,13 +219,4 @@ public class SaveLogHelper {
                 || !filenameAsString.endsWith(".log");
     }
 
-    public static void cleanTemp() {
-        try {
-            Path[] files = getTempDirectory().listFiles();
-            for (Path file : files) {
-                file.delete();
-            }
-        } catch (Throwable ignore) {
-        }
-    }
 }

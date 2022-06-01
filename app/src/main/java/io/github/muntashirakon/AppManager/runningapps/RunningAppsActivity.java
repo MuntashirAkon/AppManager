@@ -388,7 +388,6 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
             if (selectedItems.size() == 1) {
                 ProcessItem processItem = selectedItems.get(0);
                 Intent logViewerIntent = new Intent(getApplicationContext(), LogViewerActivity.class)
-                        .setAction(LogViewerActivity.ACTION_LAUNCH)
                         .putExtra(LogViewerActivity.EXTRA_FILTER, SearchCriteria.PID_KEYWORD + processItem.pid)
                         .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(logViewerIntent);

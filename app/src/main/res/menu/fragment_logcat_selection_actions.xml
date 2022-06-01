@@ -1,0 +1,18 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_save"
+        android:icon="@drawable/ic_content_save_outline"
+        android:title="@string/save" />
+
+    <item
+        android:id="@+id/action_share"
+        android:icon="@drawable/ic_share_black_24dp"
+        android:title="@string/share_log" />
+
+    <item
+        android:id="@+id/action_export"
+        android:icon="@drawable/ic_file_export_outline"
+        android:title="@string/pref_export" />
+
+</menu>

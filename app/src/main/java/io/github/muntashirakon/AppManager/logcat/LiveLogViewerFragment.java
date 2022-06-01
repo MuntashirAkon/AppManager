@@ -1,0 +1,157 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+
+package io.github.muntashirakon.AppManager.logcat;
+
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Filter;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import java.lang.ref.WeakReference;
+import java.util.List;
+
+import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.logcat.helper.ServiceHelper;
+import io.github.muntashirakon.AppManager.logcat.struct.LogLine;
+import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.reflow.ReflowMenuViewWrapper;
+
+import static io.github.muntashirakon.AppManager.logcat.LogViewerActivity.UPDATE_CHECK_INTERVAL;
+
+// Copyright 2022 Muntashir Al-Islam
+public class LiveLogViewerFragment extends AbsLogViewerFragment implements LogViewerViewModel.LogLinesAvailableInterface,
+        ReflowMenuViewWrapper.OnItemSelectedListener, LogViewerActivity.SearchingInterface, Filter.FilterListener {
+    public static final String TAG = LiveLogViewerFragment.class.getSimpleName();
+
+    private int mLogCounter = 0;
+    private String mQueryString;
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        mMultiSelectionView.setOnSelectionChangeListener(selectionCount -> {
+            if (selectionCount == 1) {
+                mViewModel.pauseLogcat();
+            } else if (selectionCount == 0) {
+                mViewModel.resumeLogcat();
+            }
+        });
+        mViewModel.startLogcat(new WeakReference<>(this));
+    }
+
+    @Override
+    public void onResume() {
+        if (mLogListAdapter != null && mLogListAdapter.getItemCount() > 0) {
+            // Scroll to bottom
+            // TODO: 31/5/22 Is this really required?
+            mRecyclerView.scrollToPosition(mLogListAdapter.getItemCount() - 1);
+        }
+        if (mActivity.getSupportActionBar() != null) {
+            mActivity.getSupportActionBar().setSubtitle("");
+        }
+        super.onResume();
+
+    }
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.fragment_live_log_viewer_actions, menu);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+
+        boolean recordingInProgress = ServiceHelper.checkIfServiceIsRunning(requireContext().getApplicationContext(),
+                LogcatRecordingService.class);
+        MenuItem recordMenuItem = menu.findItem(R.id.action_record);
+        recordMenuItem.setEnabled(!recordingInProgress);
+        recordMenuItem.setVisible(!recordingInProgress);
+
+        MenuItem crazyLoggerMenuItem = menu.findItem(R.id.action_crazy_logger_service);
+        crazyLoggerMenuItem.setEnabled(BuildConfig.DEBUG);
+        crazyLoggerMenuItem.setVisible(BuildConfig.DEBUG);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_play_pause) {
+            if (mViewModel.isLogcatPaused()) {
+                mViewModel.resumeLogcat();
+                item.setIcon(R.drawable.ic_pause_white_24dp);
+            } else {
+                mViewModel.pauseLogcat();
+                item.setIcon(R.drawable.ic_play_arrow_white_24dp);
+            }
+        } else if (id == R.id.action_clear) {
+            if (mLogListAdapter != null) {
+                mLogListAdapter.clear();
+                UIUtils.displayLongToast(R.string.log_cleared);
+            }
+        } else if (id == R.id.action_record) {
+            mStoragePermission.request(granted -> {
+                if (granted) {
+                    mActivity.showRecordLogDialog();
+                }
+            });
+        } else if (id == R.id.action_crazy_logger_service) {
+            ServiceHelper.startOrStopCrazyLogger(mActivity);
+        } else return super.onOptionsItemSelected(item);
+        return true;
+    }
+
+    @Override
+    public void onNewLogsAvailable(@NonNull List<LogLine> logLines) {
+        mActivity.getProgressBar().hide();
+        for (LogLine logLine : logLines) {
+            mLogListAdapter.addWithFilter(logLine, mQueryString, false);
+            mActivity.addToAutocompleteSuggestions(logLine);
+        }
+        mLogListAdapter.notifyDataSetChanged();
+
+        // How many logs to keep in memory, to avoid OutOfMemoryError
+        int maxNumLogLines = AppPref.getInt(AppPref.PrefKey.PREF_LOG_VIEWER_DISPLAY_LIMIT_INT);
+
+        // Check to see if the list needs to be truncated to avoid OutOfMemoryError
+        ++mLogCounter;
+        if (mLogCounter % UPDATE_CHECK_INTERVAL == 0 && mLogListAdapter.getRealSize() > maxNumLogLines) {
+            int numItemsToRemove = mLogListAdapter.getRealSize() - maxNumLogLines;
+            mLogListAdapter.removeFirst(numItemsToRemove);
+            Log.d(TAG, "Truncating " + numItemsToRemove + " lines from log list to avoid out of memory errors");
+        }
+
+        if (mAutoscrollToBottom) {
+            mRecyclerView.scrollToPosition(mLogListAdapter.getItemCount() - 1);
+        }
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_save) {
+            displaySaveLogDialog(true);
+        } else if (id == R.id.action_export) {
+            displaySaveDebugLogsDialog(false, true);
+        } else if (id == R.id.action_share) {
+            displaySaveDebugLogsDialog(true, true);
+        } else return false;
+        // Handled successfully
+        mMultiSelectionView.hide();
+        return true;
+    }
+
+    @Override
+    public void onQuery(@Nullable String searchTerm) {
+        mQueryString = searchTerm;
+        super.onQuery(searchTerm);
+    }
+}

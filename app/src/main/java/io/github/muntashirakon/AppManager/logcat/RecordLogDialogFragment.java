@@ -97,9 +97,8 @@ public class RecordLogDialogFragment extends DialogFragment {
                         }).start();
                     }
                 })
-                .setNegativeButton(R.string.cancel, (dialog, which, inputText, isChecked) -> {
-                    WidgetHelper.updateWidgets(mActivity);
-                })
+                .setNegativeButton(R.string.cancel, (dialog, which, inputText, isChecked) ->
+                        WidgetHelper.updateWidgets(mActivity))
                 .setNeutralButton(R.string.text_filter_ellipsis, null)
                 .create();
         alertDialog.setOnShowListener(dialog -> {

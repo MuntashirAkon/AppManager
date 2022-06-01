@@ -598,16 +598,44 @@
         </activity>
         <activity
             android:name=".logcat.LogViewerActivity"
-            android:configChanges="screenSize|orientation"
             android:enabled="true"
             android:exported="true"
             android:label="@string/log_viewer"
             android:launchMode="singleTop"
-            android:taskAffinity=".logcat.LogcatActivity">
+            android:taskAffinity="">
             <intent-filter>
-                <action android:name="${applicationId}.action.LAUNCH" />
+                <action android:name="android.intent.action.SEND" />
 
                 <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:mimeType="text/plain" />
+                <data android:mimeType="application/octet-stream" />
+                <data android:pathPattern=".*\\.am.log" />
+                <data android:pathPattern=".*\\..*\\.am.log" />
+                <data android:pathPattern=".*\\..*\\..*\\.am.log" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.am.log" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.am.log" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.am.log" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.am.log" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="file" />
+                <data android:scheme="content" />
+                <data android:host="*" />
+                <data android:mimeType="text/plain" />
+                <data android:mimeType="application/octet-stream" />
+                <data android:pathPattern=".*\\.am.log" />
+                <data android:pathPattern=".*\\..*\\.am.log" />
+                <data android:pathPattern=".*\\..*\\..*\\.am.log" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\.am.log" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\.am.log" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.am.log" />
+                <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.am.log" />
             </intent-filter>
 
             <meta-data

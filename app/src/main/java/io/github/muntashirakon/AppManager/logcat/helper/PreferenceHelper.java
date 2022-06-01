@@ -35,18 +35,6 @@ public class PreferenceHelper {
         editor.apply();
     }
 
-    public static boolean getHidePartialSelectHelpPreference(Context context) {
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPrefs.getBoolean(context.getText(R.string.pref_hide_partial_select_help).toString(), false);
-    }
-
-    public static void setHidePartialSelectHelpPreference(Context context, boolean bool) {
-        SharedPreferences sharedPrefs = PreferenceManager.getDefaultSharedPreferences(context);
-        Editor editor = sharedPrefs.edit();
-        editor.putBoolean(context.getString(R.string.pref_hide_partial_select_help), bool);
-        editor.apply();
-    }
-
     @NonNull
     public static List<Integer> getBuffers() {
         @LogcatHelper.LogBufferId int buffers = AppPref.getInt(AppPref.PrefKey.PREF_LOG_VIEWER_BUFFER_INT);

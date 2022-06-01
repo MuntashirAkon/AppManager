@@ -1,0 +1,58 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_expand_collapse"
+        android:icon="@drawable/ic_expand_more_white_24dp"
+        android:title="@string/expand_all"
+        app:showAsAction="always" />
+
+    <item
+        android:icon="@drawable/ic_file_document_outline"
+        android:title="@string/file">
+
+        <menu>
+            <item
+                android:id="@+id/action_open"
+                android:icon="@drawable/ic_folder_outline"
+                android:title="@string/open" />
+
+            <item
+                android:id="@+id/action_save"
+                android:icon="@drawable/ic_content_save_outline"
+                android:title="@string/save_as" />
+
+            <item
+                android:id="@+id/action_delete"
+                android:icon="@drawable/ic_trash_can_outline"
+                android:title="@string/manage_saved_logs" />
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/action_change_log_level"
+        android:icon="@drawable/ic_sort_black_24dp"
+        android:title="@string/log_level" />
+
+    <item
+        android:id="@+id/action_show_saved_filters"
+        android:icon="@drawable/ic_filter_list_white_24dp"
+        android:title="@string/saved_filters" />
+
+    <item
+        android:id="@+id/action_share"
+        android:icon="@drawable/ic_share_black_24dp"
+        android:title="@string/share_log" />
+
+    <item
+        android:id="@+id/action_export"
+        android:icon="@drawable/ic_file_export_outline"
+        android:title="@string/pref_export" />
+
+    <item
+        android:id="@+id/action_settings"
+        android:icon="@drawable/ic_baseline_settings_24"
+        android:title="@string/settings" />
+
+</menu>

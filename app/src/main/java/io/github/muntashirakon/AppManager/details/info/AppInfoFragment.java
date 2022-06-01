@@ -678,7 +678,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                 .setItems(runningServices, (dialog, which) -> {
                                     if (!FeatureController.isLogViewerEnabled()) return;
                                     Intent logViewerIntent = new Intent(mActivity.getApplicationContext(), LogViewerActivity.class)
-                                            .setAction(LogViewerActivity.ACTION_LAUNCH)
                                             .putExtra(LogViewerActivity.EXTRA_FILTER, SearchCriteria.PID_KEYWORD + tagCloud.runningServices.get(which).pid)
                                             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     mActivity.startActivity(logViewerIntent);

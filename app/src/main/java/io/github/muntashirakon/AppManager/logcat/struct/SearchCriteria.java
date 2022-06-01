@@ -76,13 +76,13 @@ public class SearchCriteria {
     private boolean checkFoundText(LogLine logLine) {
         return TextUtils.isEmpty(searchText)
                 || (searchTextAsInt != -1 && searchTextAsInt == logLine.getProcessId())
-                || (logLine.getTag() != null && logLine.getTag().toLowerCase(Locale.ROOT).contains(searchText.toLowerCase(Locale.ROOT)))
+                || (logLine.getTagName() != null && logLine.getTagName().toLowerCase(Locale.ROOT).contains(searchText.toLowerCase(Locale.ROOT)))
                 || (logLine.getLogOutput() != null && logLine.getLogOutput().toLowerCase(Locale.ROOT).contains(searchText.toLowerCase(Locale.ROOT)));
     }
 
     private boolean checkFoundTag(LogLine logLine) {
         return TextUtils.isEmpty(tag)
-                || (logLine.getTag() != null && logLine.getTag().toLowerCase(Locale.ROOT).contains(tag.toLowerCase(Locale.ROOT)));
+                || (logLine.getTagName() != null && logLine.getTagName().toLowerCase(Locale.ROOT).contains(tag.toLowerCase(Locale.ROOT)));
     }
 
     private boolean checkFoundPid(LogLine logLine) {
