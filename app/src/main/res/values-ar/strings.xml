@@ -1328,4 +1328,7 @@
     <string name="open_in_new_window">نافذة جديدة</string>
     <string name="vt_confirm_uploading_file">لم يتم العثور على الملف في قاعدة بيانات VirusTotal. هل تريد تحميله؟</string>
     <string name="type_string_set">مجموعة من السلاسل</string>
+    <string name="item_select">تحديد</string>
+    <string name="log_stop_recording">إيقاف التسجيل</string>
+    <string name="apk_checksums">مجاميع APK الاختبارية</string>
 </resources>
