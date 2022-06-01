@@ -637,10 +637,6 @@
                 <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\.am.log" />
                 <data android:pathPattern=".*\\..*\\..*\\..*\\..*\\..*\\..*\\.am.log" />
             </intent-filter>
-
-            <meta-data
-                android:name="android.app.shortcuts"
-                android:resource="@xml/shortcuts" />
         </activity>
         <activity
             android:name=".logcat.RecordLogDialogActivity"
@@ -708,6 +704,7 @@
         </receiver>
         <receiver
             android:name=".logcat.RecordingWidgetProvider"
+            android:label="@string/record_log"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
