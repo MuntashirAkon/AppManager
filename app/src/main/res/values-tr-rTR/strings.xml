@@ -941,7 +941,7 @@
     <string name="notification_title">Günlük kaydı devam ediyor</string>
     <string name="notification_ticker">Günlük kaydı başladı</string>
     <string name="notification_subtext">Kaydı durdurmak için dokunun</string>
-    <string name="no_saved_logs">Kaydedilmiş günlük bulunamadı.</string>
+    <string name="no_saved_logs">Kaydedilen günlük yok.</string>
     <string name="manage_saved_logs">Kaydedilen Günlükleri Yönet</string>
     <string name="log_saved">Günlük kaydedildi.</string>
     <string name="log_recording_started">Günlük kaydı başladı.</string>
