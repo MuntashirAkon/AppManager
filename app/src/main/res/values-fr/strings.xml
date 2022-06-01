@@ -703,7 +703,6 @@
 \nTwitter : https://twitter.com/AppManagerNews</string>
     <string name="community">Communauté</string>
     <string name="pref_selected_users_msg">Restreindre l\'utilisation d\'App Manager aux seuls utilisateurs sélectionnés.</string>
-    <string name="toast_started_select_partial">Sélection Partielle activés</string>
     <string name="backup_extras_description">Sauvegarder les autorisations des applications, les options d\'économie de batterie et d\'utilisation des données, l\'état de MagiskHide, SSAID, etc.</string>
     <string name="backup_extras">Extras</string>
     <string name="backup_cache_description">Sauvegarder les dossiers <b>cache</b>, <b>no_cache</b> et <b>no_backup</b>.</string>
@@ -903,7 +902,6 @@
     <string name="notification_title">Enregistrement du journal en cours</string>
     <string name="notification_ticker">L\'enregistrement du journal a démarré</string>
     <string name="notification_subtext">Touchez pour arrêter l\'enregistrement</string>
-    <string name="menu_title_partial_select">Sauvegarde partielle</string>
     <string name="manage_saved_logs">Gérer les journaux sauvegardés</string>
     <string name="log_saved">Journal sauvegardé.</string>
     <string name="log_recording_started">L’enregistrement du journal a commencé.</string>
@@ -911,10 +909,7 @@
     <string name="log_cleared">Journaux supprimés</string>
     <string name="filter_choice_pid">PID</string>
     <string name="filter_choice">Rechercher par</string>
-    <string name="dialog_partial_select_explanation">1. Sélectionnez la <b>première</b> ligne.
-\n2. Puis, sélectionnez la <b>dernière</b> ligne.</string>
     <string name="copy_to_clipboard">Copier dans le presse-papier</string>
-    <string name="checkbox_never_show_partial_select_help">Ne plus afficher</string>
     <plurals name="file_deletion_confirmation">
         <item quantity="one">Le fichier %d sera supprimé</item>
         <item quantity="other">Les fichiers %d seront supprimés</item>
@@ -1038,7 +1033,6 @@
     <string name="pref_expanded_by_default_title">Développer par défaut</string>
     <string name="pref_log_line_period_error">Saisissez un nombre entier entre 1 et 1000.</string>
     <string name="pref_log_write_period_title">Fréquence d\'écriture</string>
-    <string name="save_log_zip">Enregistrer au format Zip</string>
     <string name="collapse_all">Tout réduire</string>
     <string name="text_include_dmesg">Inclure le journal du noyau</string>
     <string name="pref_show_timestamp_title">Afficher l\'identifiant du process et l\'horodatage</string>

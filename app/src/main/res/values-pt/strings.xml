@@ -600,7 +600,6 @@
     <string name="running_services">Serviços em Execução</string>
     <string name="view_logs">Ver registos</string>
     <string name="share_log">Partilhar</string>
-    <string name="save_log_zip">Salvar zip</string>
     <string name="text_include_dmesg">Incluir o registo do kernel</string>
     <string name="omit_sensitive_info_summary">Omitir informações sensíveis como urls da Web, números de telefone ou e-mails.</string>
     <string name="omit_sensitive_info">Omitir informações sensíveis</string>
@@ -613,7 +612,6 @@
 \nRegisto</string>
     <string name="widget_recording_in_progress">Gravando…</string>
     <string name="unable_to_save_log">Não é possível gravar o registo. Inseriu um nome de ficheiro válido\?</string>
-    <string name="toast_started_select_partial">Selecione o modo parcial ativado</string>
     <string name="toast_invalid_selection">Seleção inválida. Por favor, tente de novo.</string>
     <string name="toast_invalid_level">Nome de nível inválido: %s</string>
     <string name="pref_display_limit_hint">Digite um número válido entre %1$d e %2$d.</string>
@@ -649,7 +647,6 @@
     <string name="notification_ticker">Gravação de registo iniciada</string>
     <string name="notification_subtext">Toque para parar de gravar</string>
     <string name="no_saved_logs">Não foram encontrados registos gravados.</string>
-    <string name="menu_title_partial_select">Salvar Parcial</string>
     <string name="manage_saved_logs">Gerir registos gravados</string>
     <string name="log_saved">Registo gravado.</string>
     <string name="log_recording_started">A gravação do registo começou.</string>
@@ -660,12 +657,9 @@
     <string name="filter_choice">Pesquisar por</string>
     <string name="enter_good_filename">Por favor, digite um nome de ficheiro válido.</string>
     <string name="enter_filename">Digite nome de ficheiro</string>
-    <string name="dialog_partial_select_explanation">1. Selecione a <b>primeira</b> linha.
-\n2. Em seguida, selecione a <b>última</b> linha.</string>
     <string name="dialog_compiling_log">A compilar o registo…</string>
     <string name="delete_saved_log">Eliminar registos gravados</string>
     <string name="copy_to_clipboard">Copiar para área de transferência</string>
-    <string name="checkbox_never_show_partial_select_help">Não mostrar novamente</string>
     <plurals name="file_deletion_confirmation">
         <item quantity="one">%d ficheiro será eliminado</item>
         <item quantity="other">%d ficheiros serão eliminados</item>

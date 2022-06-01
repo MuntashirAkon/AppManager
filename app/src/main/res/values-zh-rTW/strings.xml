@@ -872,7 +872,6 @@
     <string name="save_apk">儲存 APK</string>
     <string name="running_services">執行中的服務</string>
     <string name="share_log">分享</string>
-    <string name="save_log_zip">儲存壓縮檔案</string>
     <string name="text_include_dmesg">包括核心日誌</string>
     <string name="omit_sensitive_info_summary">省略敏感資訊，如網址、電話號碼或電子郵件。</string>
     <string name="omit_sensitive_info">省略敏感資訊</string>
@@ -884,7 +883,6 @@
     <string name="widget_start_recording">記錄
 \n日誌</string>
     <string name="widget_recording_in_progress">記錄…</string>
-    <string name="toast_started_select_partial">選擇啟用的部分模式</string>
     <plurals name="toast_log_truncated">
         <item quantity="other">日誌太大，顯示最後 %d 行。</item>
     </plurals>
@@ -921,7 +919,6 @@
     <string name="notification_ticker">日誌錄製開始</string>
     <string name="notification_subtext">按一下即可停止錄製</string>
     <string name="no_saved_logs">找不到已儲存的日誌。</string>
-    <string name="menu_title_partial_select">儲存部分</string>
     <string name="manage_saved_logs">管理已儲存的日誌</string>
     <string name="log_saved">已儲存日誌。</string>
     <string name="log_recording_started">日誌錄製已開始。</string>
@@ -929,12 +926,9 @@
     <string name="filter_choice_tag">標籤</string>
     <string name="filter_choice">搜尋依據</string>
     <string name="enter_filename">輸入檔案名稱</string>
-    <string name="dialog_partial_select_explanation">1. 選擇 <b>第 </b> 行。
-\n2. 然後選擇 <b> 最後 </b> 行。</string>
     <string name="dialog_compiling_log">正在編譯日誌…</string>
     <string name="delete_saved_log">刪除已儲存的日誌</string>
     <string name="copy_to_clipboard">複製到剪貼簿</string>
-    <string name="checkbox_never_show_partial_select_help">不再顯示</string>
     <string name="add_filter_ellipsis">新增過濾器…</string>
     <string name="add_filter">新增過濾器</string>
     <string name="log_level_fatal">重大</string>

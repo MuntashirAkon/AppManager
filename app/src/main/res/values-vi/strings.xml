@@ -656,7 +656,6 @@
     <string name="running_services">Dịch vụ đang chạy</string>
     <string name="view_logs">Xem nhật ký</string>
     <string name="share_log">Chia sẻ</string>
-    <string name="save_log_zip">Lưu zip</string>
     <string name="text_include_dmesg">Bao gồm nhật ký của kernel</string>
     <string name="omit_sensitive_info_summary">Bỏ đi thông tin nhạy cảm như URL web, số điện thoại hoặc email.</string>
     <string name="omit_sensitive_info">Bỏ đi thông tin nhạy cảm</string>
@@ -669,7 +668,6 @@
 \nNhật ký</string>
     <string name="widget_recording_in_progress">Đang ghi lại…</string>
     <string name="unable_to_save_log">Không thể lưu nhật ký. Bạn đã nhập tên tệp hợp lệ chưa\?</string>
-    <string name="toast_started_select_partial">Chế độ chọn một phần đang bật</string>
     <plurals name="toast_log_truncated">
         <item quantity="other">Nhật ký quá lớn, đang hiện %d dòng cuối.</item>
     </plurals>
@@ -708,7 +706,6 @@
     <string name="notification_ticker">Đã bắt đầu ghi lại nhật ký</string>
     <string name="notification_subtext">Chạm để dừng ghi lại</string>
     <string name="no_saved_logs">Không tìm thấy nhật ký đã lưu nào.</string>
-    <string name="menu_title_partial_select">Lưu một phần</string>
     <string name="manage_saved_logs">Quản lý nhật ký đã lưu</string>
     <string name="log_saved">Đã lưu nhật ký.</string>
     <string name="log_recording_started">Đã bắt đầu ghi lại nhật ký.</string>
@@ -719,12 +716,9 @@
     <string name="filter_choice">Tìm kiếm theo</string>
     <string name="enter_good_filename">Vui lòng nhập tên tệp hợp lệ.</string>
     <string name="enter_filename">Nhập tên tệp</string>
-    <string name="dialog_partial_select_explanation">1. Chọn dòng <b>đầu tiên</b>.
-\n2. Sau đó chọn dòng <b>cuối cùng</b>.</string>
     <string name="dialog_compiling_log">Đang biên dịch nhật ký…</string>
     <string name="delete_saved_log">Xoá nhật ký đã lưu</string>
     <string name="copy_to_clipboard">Sao chép vào bộ nhớ tạm</string>
-    <string name="checkbox_never_show_partial_select_help">Không hiện lại</string>
     <plurals name="file_deletion_confirmation">
         <item quantity="other">%d tệp sẽ bị xoá</item>
     </plurals>

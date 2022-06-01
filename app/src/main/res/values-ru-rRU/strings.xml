@@ -954,7 +954,6 @@
     <string name="running_services">Работающие службы</string>
     <string name="view_logs">Просмотр логов</string>
     <string name="share_log">Поделиться</string>
-    <string name="save_log_zip">Сохранить zip</string>
     <string name="text_include_dmesg">Включить журнал ядра</string>
     <string name="omit_sensitive_info_summary">Пропустить конфиденциальную информацию, такую как веб-адрес, телефонные номера или электронную почту.</string>
     <string name="omit_sensitive_info">Пропустить конфиденциальную информацию</string>
@@ -967,7 +966,6 @@
 \nЛог</string>
     <string name="widget_recording_in_progress">Запись…</string>
     <string name="unable_to_save_log">Невозможно сохранить лог. Вы ввели действительное имя файла\?</string>
-    <string name="toast_started_select_partial">Выбрать частичный режим включен</string>
     <plurals name="toast_log_truncated">
         <item quantity="one">Лог слишком большой, показано последнюю %d строку.</item>
         <item quantity="few">Лог слишком большой, показано последние %d строки.</item>
@@ -1009,7 +1007,6 @@
     <string name="notification_ticker">Начата запись лога</string>
     <string name="notification_subtext">Нажмите, чтобы остановить запись</string>
     <string name="no_saved_logs">Сохраненных логов не найдено.</string>
-    <string name="menu_title_partial_select">Сохранить частично</string>
     <string name="manage_saved_logs">Управление сохраненными логами</string>
     <string name="log_saved">Лог сохранен.</string>
     <string name="log_recording_started">Началась запись лога.</string>
@@ -1020,12 +1017,9 @@
     <string name="filter_choice">Искать по</string>
     <string name="enter_good_filename">Пожалуйста, введите действительное имя файла.</string>
     <string name="enter_filename">Введите имя файла</string>
-    <string name="dialog_partial_select_explanation">1. Выберите <b>первую</b> строку.
-\n2. Затем выберите <b>последнюю</b> строку.</string>
     <string name="dialog_compiling_log">Составление лога…</string>
     <string name="delete_saved_log">Удалить сохраненные логи</string>
     <string name="copy_to_clipboard">Скопировать в буфер обмена</string>
-    <string name="checkbox_never_show_partial_select_help">Больше не показывать</string>
     <string name="add_filter_ellipsis">Добавить фильтр…</string>
     <string name="add_filter">Добавить фильтр</string>
     <string name="log_level_fatal">Fatal</string>

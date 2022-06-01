@@ -856,12 +856,9 @@
     <string name="filter_choice">作为搜索依据</string>
     <string name="enter_good_filename">请输入一个有效的文件名。</string>
     <string name="enter_filename">输入文件名</string>
-    <string name="dialog_partial_select_explanation">1. 选择<b>第一</b>行。
-\n2. 接着选择<b>最后</b>一行。</string>
     <string name="dialog_compiling_log">正在编译日志…</string>
     <string name="delete_saved_log">删除已保存的日志</string>
     <string name="copy_to_clipboard">复制到剪贴板</string>
-    <string name="checkbox_never_show_partial_select_help">不再显示</string>
     <string name="add_filter_ellipsis">添加过滤器…</string>
     <string name="add_filter">添加过滤器</string>
     <string name="log_level_fatal">致命</string>
@@ -878,7 +875,6 @@
     <string name="log_cleared">日志已清除</string>
     <string name="log_recording_started">日志记录已启动。</string>
     <string name="log_saved">日志已保存。</string>
-    <string name="menu_title_partial_select">保存部分</string>
     <string name="manage_saved_logs">管理已保存的日志</string>
     <string name="no_saved_logs">未找到已保存的日志。</string>
     <string name="notification_ticker">日志记录已启动</string>
@@ -904,7 +900,6 @@
     <string name="running_services">运行中的服务</string>
     <string name="view_logs">查看日志</string>
     <string name="share_log">分享</string>
-    <string name="save_log_zip">保存 zip</string>
     <string name="text_include_dmesg">包含内核日志</string>
     <string name="omit_sensitive_info_summary">忽略敏感信息，如网址、电话号码或电子邮件。</string>
     <string name="omit_sensitive_info">省略敏感信息</string>
@@ -917,7 +912,6 @@
 \n日志</string>
     <string name="widget_recording_in_progress">记录中…</string>
     <string name="unable_to_save_log">无法保存日志。你是否输入了有效的文件名\?</string>
-    <string name="toast_started_select_partial">已启用“选择部分”模式</string>
     <plurals name="toast_log_truncated">
         <item quantity="other">日志太大，仅显示最后 %d 行。</item>
     </plurals>

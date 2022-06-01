@@ -1010,7 +1010,6 @@
     <string name="running_services">Usługi uruchomione</string>
     <string name="view_logs">Wyświetl dzienniki</string>
     <string name="share_log">Udostępnij</string>
-    <string name="save_log_zip">Zapisz zip</string>
     <string name="text_include_dmesg">Dołącz dziennik jądra</string>
     <string name="omit_sensitive_info_summary">Pomiń poufne informacje, takie jak adresy URL, numery telefonów lub e-maile.</string>
     <string name="omit_sensitive_info">Pomiń poufne informacje</string>
@@ -1023,7 +1022,6 @@
 \nDziennik</string>
     <string name="widget_recording_in_progress">Rejestrowanie…</string>
     <string name="unable_to_save_log">Nie można zapisać dziennika. Czy podano poprawną nazwę pliku\?</string>
-    <string name="toast_started_select_partial">Wybierz włączony tryb częściowy</string>
     <plurals name="toast_log_truncated">
         <item quantity="one">Dziennik jest zbyt duży, pokazuje ostatnią %d linię.</item>
         <item quantity="few">Dziennik jest zbyt duży, pokazuje ostatnie %d linie.</item>
@@ -1065,7 +1063,6 @@
     <string name="notification_ticker">Rozpoczęto rejestrowanie dziennika</string>
     <string name="notification_subtext">Dotknij, aby zatrzymać rejestrowanie</string>
     <string name="no_saved_logs">Nie znaleziono zapisanych dzienników.</string>
-    <string name="menu_title_partial_select">Zapisz częściowo</string>
     <string name="manage_saved_logs">Zarządzaj zapisanymi dziennikami</string>
     <string name="log_saved">Zapisano dziennik.</string>
     <string name="log_recording_started">Rozpoczęto rejestrowanie dziennika.</string>
@@ -1076,12 +1073,9 @@
     <string name="filter_choice">Szukaj według</string>
     <string name="enter_good_filename">Podaj poprawną nazwę pliku.</string>
     <string name="enter_filename">Wpisz nazwę pliku</string>
-    <string name="dialog_partial_select_explanation">1. Wybierz linię <b>-pierwszą</b>.
-\n2. Następnie wybierz linię <b>ostatnią</b>.</string>
     <string name="dialog_compiling_log">Kompilacja dziennika…</string>
     <string name="delete_saved_log">Usuń zapisane dzienniki</string>
     <string name="copy_to_clipboard">Skopuj do schowka</string>
-    <string name="checkbox_never_show_partial_select_help">Nie pokazuj ponownie</string>
     <plurals name="file_deletion_confirmation">
         <item quantity="one">%d plik zostanie usunięty</item>
         <item quantity="few">%d plik zostaną usunięte</item>

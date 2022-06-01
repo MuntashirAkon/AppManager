@@ -858,7 +858,6 @@
     <string name="running_services">Menjalankan Layanan</string>
     <string name="view_logs">Lihat catatan log</string>
     <string name="share_log">Bagikan</string>
-    <string name="save_log_zip">Simpan zip</string>
     <string name="text_include_dmesg">termasuk log kernel</string>
     <string name="omit_sensitive_info_summary">Hilangkan informasi sensitif seperti alamat url web, nomor telepon atau email.</string>
     <string name="omit_sensitive_info">Hilangkan informasi sensitif</string>
@@ -871,7 +870,6 @@
 \nLog</string>
     <string name="widget_recording_in_progress">Merekam…</string>
     <string name="unable_to_save_log">Tidak dapat menyimpan catatan log. Apakah Anda memasukkan sebuah nama berkas yang valid\?</string>
-    <string name="toast_started_select_partial">Mode Pilih Sebagian diaktifkan</string>
     <plurals name="toast_log_truncated">
         <item quantity="other">Catatan log terlalu besar, menampilkan baris %d terakhir.</item>
     </plurals>
@@ -910,7 +908,6 @@
     <string name="notification_ticker">Perekaman catatan log dimulai</string>
     <string name="notification_subtext">Sentuh untuk menghentikan rekaman</string>
     <string name="no_saved_logs">Tidak ada catatan log ditemukan.</string>
-    <string name="menu_title_partial_select">Simpan Sebagian</string>
     <string name="manage_saved_logs">Kelola Log Tersimpan</string>
     <string name="log_saved">Log disimpan.</string>
     <string name="log_recording_started">Perekaman catatan log dimulai.</string>
@@ -921,12 +918,9 @@
     <string name="filter_choice">Cari berdasarkan</string>
     <string name="enter_good_filename">Silahkan masukkan nama berkas yang valid.</string>
     <string name="enter_filename">Masukkan nama berkas</string>
-    <string name="dialog_partial_select_explanation">1. Pilih baris <b>pertama</b>.
-\n2. Lalu pilih baris <b>terakhir</b>.</string>
     <string name="dialog_compiling_log">Mengumpulkan catatan log…</string>
     <string name="delete_saved_log">Hapus Log Tersimpan</string>
     <string name="copy_to_clipboard">Salin ke papanklip</string>
-    <string name="checkbox_never_show_partial_select_help">Jangan tampilkan lagi</string>
     <string name="add_filter_ellipsis">Tambah Filter…</string>
     <string name="add_filter">Tambah Filter</string>
     <string name="log_level_fatal">Fatal</string>

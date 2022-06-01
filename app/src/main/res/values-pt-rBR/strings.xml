@@ -885,7 +885,6 @@
     <string name="pref_installer_msg">Configurar comportamentos do instalador de aplicativos.</string>
     <string name="filter_choice_tag">Tag</string>
     <string name="filter_choice_pid">PID</string>
-    <string name="checkbox_never_show_partial_select_help">Não mostrar novamente</string>
     <string name="add_filter_ellipsis">Adicionar Filtro…</string>
     <string name="log_viewer">Visualizador de Registro</string>
     <string name="trackers_unblocked_successfully">Os rastreadores estão agora desbloqueados</string>
@@ -897,7 +896,6 @@
     <string name="running_services">Serviços em Execução</string>
     <string name="view_logs">Ver registros</string>
     <string name="share_log">Compartilhar</string>
-    <string name="save_log_zip">Salvar zip</string>
     <string name="text_include_dmesg">Incluir o registro do kernel</string>
     <string name="omit_sensitive_info_summary">Omitir informações sensíveis como urls da Web, números de telefone ou e-mails.</string>
     <string name="omit_sensitive_info">Omitir informações sensíveis</string>
@@ -910,7 +908,6 @@
 \nRegistro</string>
     <string name="widget_recording_in_progress">Gravando…</string>
     <string name="unable_to_save_log">Não é possível salvar o registro. Você inseriu um nome de arquivo válido\?</string>
-    <string name="toast_started_select_partial">Selecione o modo parcial ativado</string>
     <plurals name="toast_log_truncated">
         <item quantity="one">Registro muito grande, mostrando última %d linha.</item>
         <item quantity="other">Registro muito grande, mostrando últimas %d linhas.</item>
@@ -950,7 +947,6 @@
     <string name="notification_ticker">Gravação de registro iniciada</string>
     <string name="notification_subtext">Toque para parar de gravar</string>
     <string name="no_saved_logs">Não foram encontrados registros salvos.</string>
-    <string name="menu_title_partial_select">Salvar Parcial</string>
     <string name="manage_saved_logs">Gerenciar Registros Salvos</string>
     <string name="log_saved">Registro salvo.</string>
     <string name="log_recording_started">A gravação do registro começou.</string>
@@ -959,8 +955,6 @@
     <string name="filter_choice">Pesquisar por</string>
     <string name="enter_filename">Digite nome de arquivo</string>
     <string name="enter_good_filename">Por favor, digite um nome de arquivo válido.</string>
-    <string name="dialog_partial_select_explanation">1. Selecione a <b>primeira</b> linha.
-\n2. Em seguida, selecione a <b>última</b> linha.</string>
     <string name="dialog_compiling_log">Compilando registro…</string>
     <string name="delete_saved_log">Excluir Registros Salvos</string>
     <string name="copy_to_clipboard">Copiar para área de transferência</string>

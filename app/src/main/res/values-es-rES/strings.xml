@@ -847,7 +847,6 @@
     <string name="collapse_all">Contraer todo</string>
     <string name="expand_all">Expandir todo</string>
     <string name="unable_to_save_log">No se puede guardar el registro. Compruebe que haya introducido un nombre de archivo válido.</string>
-    <string name="toast_started_select_partial">Modo de selección parcial activado</string>
     <string name="pref_display_limit_hint">Introduzca un número válido entre %1$d y %2$d.</string>
     <string name="toast_invalid_level">El nombre del nivel no es válido: %s</string>
     <string name="omit_sensitive_info">Omitir información confidencial</string>
@@ -901,7 +900,6 @@
     <string name="running_services">Servicios en ejecución</string>
     <string name="view_logs">Ver registros</string>
     <string name="share_log">Compartir</string>
-    <string name="save_log_zip">Guardar ZIP</string>
     <string name="pk8_file">Archivo PKCS n.º 8 (PK8)</string>
     <string name="pem_and_pk8">PEM y PKCS n.º 8 (PK8)</string>
     <string name="pkcs12_keystore">Almacén de claves PKCS n.º 12 (P12)</string>
@@ -951,7 +949,6 @@
     <string name="signing_key">Clave de firma</string>
     <string name="delete_saved_log">Eliminar registros guardados</string>
     <string name="copy_to_clipboard">Copiar en el portapapeles</string>
-    <string name="checkbox_never_show_partial_select_help">No mostrar de nuevo</string>
     <plurals name="file_deletion_confirmation">
         <item quantity="one">Se eliminará %d archivo</item>
         <item quantity="other">Se eliminarán %d archivos</item>
@@ -978,7 +975,6 @@
     <string name="notification_title">Grabación de registros en curso</string>
     <string name="notification_ticker">Comenzó la grabación de los registros</string>
     <string name="no_saved_logs">No se encontró ningún registro guardado.</string>
-    <string name="menu_title_partial_select">Guardar parcialmente</string>
     <string name="manage_saved_logs">Gestionar registros guardados</string>
     <string name="log_saved">Se guardó el registro.</string>
     <string name="log_recording_started">Comenzó la grabación de los registros.</string>
@@ -1006,8 +1002,6 @@
     <string name="port_number_invalid">Número de puerto no válido.</string>
     <string name="unknown_net_policy">Directiva de red desconocida (%1$s - %2$X)</string>
     <string name="pref_buffer_title">Buffer de registros</string>
-    <string name="dialog_partial_select_explanation">1. Seleccione la <b>primera</b> línea.
-\n2. Luego seleccione la <b>última</b> línea.</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">No se pudo instalar la aplicación a causa de una discrepancia en las firmas. Se desinstaló sin vaciarle los datos.</string>
     <string name="failed">Fallido</string>
     <string name="pref_filter_pattern_title">Filtrar etiquetas</string>

@@ -851,7 +851,6 @@
     <string name="input_key_password">キーのパスワード</string>
     <string name="failed_to_initialize_key_store">App Managerのキーストアを構成できませんでした。</string>
     <string name="generate_key">生成</string>
-    <string name="menu_title_partial_select">一部分を保存</string>
     <string name="pref_default_log_level_title">既定のログレベル</string>
     <string name="pref_cat_configuration">構成</string>
     <string name="pref_cat_appearance">外観</string>
@@ -873,12 +872,9 @@
     <string name="filter_choice">次で検索</string>
     <string name="enter_good_filename">有効なファイル名を指定してください。</string>
     <string name="enter_filename">ファイル名を入力</string>
-    <string name="dialog_partial_select_explanation">1.まず、<b>最初の行</b>を選択します。
-\n2.次に、<b>最後の行</b>を選択します。</string>
     <string name="dialog_compiling_log">ログを生成中…</string>
     <string name="delete_saved_log">保存したログを消去</string>
     <string name="copy_to_clipboard">クリップボードにコピー</string>
-    <string name="checkbox_never_show_partial_select_help">再度表示しない</string>
     <string name="add_filter_ellipsis">フィルタを追加…</string>
     <string name="add_filter">フィルタを追加</string>
     <string name="log_level_fatal">Fatal</string>
@@ -940,7 +936,6 @@
     <string name="settings">設定</string>
     <string name="text_include_dmesg">カーネルログを含める</string>
     <string name="text_include_device_info">デバイス情報を含める</string>
-    <string name="save_log_zip">ZIPで保存</string>
     <string name="share_log">共有</string>
     <string name="widget_recording_in_progress">記録中…</string>
     <string name="start_recording_log">記録を開始</string>
@@ -951,7 +946,6 @@
     <string name="import_keystore">キーストアをインポート</string>
     <string name="pref_import_export_keystore_msg">App Manager内で使用される Bouncy Castle キーストアをインポート/エクスポートします。</string>
     <string name="pref_import_export_keystore">キーストアをインポート/エクスポート</string>
-    <string name="toast_started_select_partial">部分選択モードが有効になりました</string>
     <string name="pref_rules_msg">インスタントブロッキング、ルールのインポート/エクスポート/削除 等の操作を行います</string>
     <string name="saf">SAF</string>
     <plurals name="file_deletion_confirmation">

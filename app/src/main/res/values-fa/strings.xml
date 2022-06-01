@@ -505,7 +505,6 @@
     <string name="no_app_ops_permission">هیچ مجوزی برای نمایش عملیات برنامه وجود ندارد</string>
     <string name="orientation_user_landscape">چشم انداز کاربر</string>
     <string name="toast_invalid_level">نام سطح نامعتبر: %s</string>
-    <string name="toast_started_select_partial">حالت قسمتی فعال است را انتخاب کنید</string>
     <string name="collapse_all">جمع کردن همه</string>
     <string name="widget_recording_in_progress">در حال ضبط…</string>
     <string name="undo">برگشت</string>
@@ -678,7 +677,6 @@
     <string name="new_alias_password">رمز نام مستعار جدید</string>
     <string name="found_no_alias_in_keystore">هیچ نام مستعاری در فروشگاه کلید یافت نشد!</string>
     <string name="log_viewer">نمایشگر ورود به سیستم</string>
-    <string name="checkbox_never_show_partial_select_help">دیگر نشان نده</string>
     <string name="subject_log_report">ارسال گزارشات</string>
     <string name="widget_start_recording">گرفتن
 \nگزارش</string>
@@ -778,7 +776,6 @@
     <string name="failed_to_read_keystore">نمی‌توان کلید فروشگاه را خواند.</string>
     <string name="failed_to_block_trackers">ردیاب‌ها مسدود نشدند</string>
     <string name="latest_backup">آخرین پشتیبان گیری</string>
-    <string name="save_log_zip">ذخیره فایل زیپ</string>
     <string name="filter_apps_with_backups">با پشتیبان گیری ها</string>
     <string name="pref_encryption_msg">رمزگذاری فایل‌های پشتیبان.</string>
     <string name="installer_error_session_write">نمی توان در قسمت نصب کننده چیزی نوشت</string>
@@ -903,7 +900,6 @@
     <string name="filter_choice_pid">PID</string>
     <string name="filter_choice_tag">برچسب زدن</string>
     <string name="log_cleared">گزارشات پاک شدند</string>
-    <string name="menu_title_partial_select">ذخیره قسمتی</string>
     <string name="notification_subtext">برای متوقف شدن لمس کنید</string>
     <string name="no_saved_logs">گزارشی پیدا نشد.</string>
     <plurals name="toast_log_truncated">
@@ -1052,8 +1048,6 @@
     <string name="delete_saved_log">گزارشات ذخیره شده را حذف کنید</string>
     <string name="log_level">مرحله گزارش</string>
     <string name="signing_key">کلید امضا</string>
-    <string name="dialog_partial_select_explanation">1. خط <b>اولین</b> را انتخاب کنید.
-\n2. سپس خط <b>آخرین</b> را انتخاب کنید.</string>
     <string name="keystore_file">فایل کلید فروشگاه</string>
     <string name="keystore_pass">رمز کلید فروشگاه</string>
     <string name="pkcs12_keystore">PKCS #12 فروشگاه کلید (P12)</string>

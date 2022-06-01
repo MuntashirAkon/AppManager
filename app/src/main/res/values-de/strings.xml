@@ -859,7 +859,6 @@
     <string name="notification_ticker">Protokollierung gestartet</string>
     <string name="notification_subtext">Berühren, um die Aufnahme zu stoppen</string>
     <string name="no_saved_logs">Keine gespeicherten Protokolle gefunden.</string>
-    <string name="menu_title_partial_select">Teilweise speichern</string>
     <string name="manage_saved_logs">Gespeicherte Protokolle verwalten</string>
     <string name="filter_choice_tag">Kennzeichnung</string>
     <string name="log_cleared">Protokolle gelöscht</string>
@@ -870,12 +869,9 @@
     <string name="filter_choice">Suche nach</string>
     <string name="enter_good_filename">Bitte geben Sie einen gültigen Dateinamen ein.</string>
     <string name="enter_filename">Dateinamen eingeben</string>
-    <string name="dialog_partial_select_explanation">1. Wählen Sie die <b>erste</b> Zeile.
-\n2. Wählen Sie dann die <b>letzte</b> Zeile.</string>
     <string name="dialog_compiling_log">Log kompilieren…</string>
     <string name="delete_saved_log">Gespeicherte Protokolle löschen</string>
     <string name="copy_to_clipboard">In die Zwischenablage kopieren</string>
-    <string name="checkbox_never_show_partial_select_help">Nicht wieder anzeigen</string>
     <plurals name="file_deletion_confirmation">
         <item quantity="one">Die Datei %d wird gelöscht</item>
         <item quantity="other">Die Dateien %d werden gelöscht</item>
@@ -933,7 +929,6 @@
 \nRiseup: https://0xacab.org/muntashir/AppManager
 \nCodeberg: https://codeberg.org/muntashir/AppManager</string>
     <string name="app_signing_signatures">Signaturen</string>
-    <string name="toast_started_select_partial">Auswahl Teilmodus aktiviert</string>
     <string name="orientation_right_to_left">Von Rechts nach Links</string>
     <string name="orientation_left_to_right">Von Links nach Rechts</string>
     <string name="orientation_follow_locale">Lokale folgen</string>
@@ -959,7 +954,6 @@
     <string name="running_services">Aktive Dienste</string>
     <string name="view_logs">Protokolle anzeigen</string>
     <string name="share_log">Teilen</string>
-    <string name="save_log_zip">Zip-Datei speichern</string>
     <string name="text_include_dmesg">Kernel-Log mit einschließen</string>
     <string name="omit_sensitive_info_summary">Sensible Informationen wie Web-URLs, Telefonnummern oder E-Mails auslassen.</string>
     <string name="omit_sensitive_info">Sensible Informationen auslassen</string>

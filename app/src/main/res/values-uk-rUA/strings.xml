@@ -944,7 +944,6 @@
     <string name="notification_ticker">Запис логу розпочато</string>
     <string name="notification_subtext">Торкніться, щоб зупинити запис</string>
     <string name="no_saved_logs">Збережених логів не знайдено.</string>
-    <string name="menu_title_partial_select">Зберегти частково</string>
     <string name="manage_saved_logs">Керування збереженими логами</string>
     <string name="log_saved">Лог збережено.</string>
     <string name="log_recording_started">Розпочато запис логу.</string>
@@ -954,12 +953,9 @@
     <string name="filter_choice">Шукати за</string>
     <string name="enter_good_filename">Введіть дійсну назву файлу.</string>
     <string name="enter_filename">Введіть назву файлу</string>
-    <string name="dialog_partial_select_explanation">1. Виберіть <b>перший рядок</b>.
-\n2. Потім виберіть <b>останній</b> рядок.</string>
     <string name="dialog_compiling_log">Компіляція логу…</string>
     <string name="delete_saved_log">Видалити збережені логи</string>
     <string name="copy_to_clipboard">Скопіювати в буфер обміну</string>
-    <string name="checkbox_never_show_partial_select_help">Більше не показувати</string>
     <string name="add_filter_ellipsis">Додати фільтр…</string>
     <string name="add_filter">Додати фільтр</string>
     <string name="filename">Назва файлу</string>
@@ -986,7 +982,6 @@
     <string name="running_services">Запущені служби</string>
     <string name="view_logs">Перегляд логів</string>
     <string name="share_log">Поділитись</string>
-    <string name="save_log_zip">Зберегти zip</string>
     <string name="text_include_dmesg">Включити журнал ядра</string>
     <string name="omit_sensitive_info_summary">Пропускати конфіденційну інформацію, наприклад веб-адреси, номери телефонів або електронну пошту.</string>
     <string name="omit_sensitive_info">Пропустити конфіденційну інформацію</string>
@@ -999,7 +994,6 @@
 \nЛог</string>
     <string name="widget_recording_in_progress">Запис…</string>
     <string name="unable_to_save_log">Не вдалося зберегти лог. Ви ввели дійсне ім\'я файлу\?</string>
-    <string name="toast_started_select_partial">Виберіть \"Частковий режим увімкнено\"</string>
     <plurals name="toast_log_truncated">
         <item quantity="one">Лог занадто великий, відображається останній %d рядок.</item>
         <item quantity="few">Лог занадто великий, відображаються останні %d рядки.</item>

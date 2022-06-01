@@ -891,7 +891,6 @@
     <string name="running_services">Çalışan Hizmetler</string>
     <string name="view_logs">Günlükleri görüntüle</string>
     <string name="share_log">Paylaş</string>
-    <string name="save_log_zip">Zip dosyasını kaydet</string>
     <string name="text_include_dmesg">Çekirdek günlüğünü dahil et</string>
     <string name="omit_sensitive_info_summary">Web URL\'leri, telefon numaraları veya e-posta adresleri gibi hassas bilgileri atla.</string>
     <string name="omit_sensitive_info">Hassas bilgileri atla</string>
@@ -904,7 +903,6 @@
 \nKaydı</string>
     <string name="widget_recording_in_progress">Kaydediliyor…</string>
     <string name="unable_to_save_log">Günlük kaydedilemiyor. Geçerli bir dosya adı girdiniz mi\?</string>
-    <string name="toast_started_select_partial">Kısmi seçim modu etkinleştirildi</string>
     <plurals name="toast_log_truncated">
         <item quantity="one">Günlük çok büyük, son %d satır gösteriliyor.</item>
         <item quantity="other">Günlük çok büyük, son %d satır gösteriliyor.</item>
@@ -944,7 +942,6 @@
     <string name="notification_ticker">Günlük kaydı başladı</string>
     <string name="notification_subtext">Kaydı durdurmak için dokunun</string>
     <string name="no_saved_logs">Kaydedilmiş günlük bulunamadı.</string>
-    <string name="menu_title_partial_select">Kısmi Kaydet</string>
     <string name="manage_saved_logs">Kaydedilen Günlükleri Yönet</string>
     <string name="log_saved">Günlük kaydedildi.</string>
     <string name="log_recording_started">Günlük kaydı başladı.</string>
@@ -955,12 +952,9 @@
     <string name="filter_choice">Arama ölçütü</string>
     <string name="enter_good_filename">Lütfen geçerli bir dosya adı girin.</string>
     <string name="enter_filename">Dosya adını girin</string>
-    <string name="dialog_partial_select_explanation">1. <b>İlk</b> satırı seçin.
-\n2. Ardından <b>son</b> satırı seçin.</string>
     <string name="dialog_compiling_log">Günlük derleniyor…</string>
     <string name="delete_saved_log">Kaydedilen Günlükleri Sil</string>
     <string name="copy_to_clipboard">Panoya kopyala</string>
-    <string name="checkbox_never_show_partial_select_help">Bir daha gösterme</string>
     <string name="add_filter_ellipsis">Filtre Ekle…</string>
     <string name="add_filter">Filtre Ekle</string>
     <string name="log_level_fatal">Ölümcül</string>

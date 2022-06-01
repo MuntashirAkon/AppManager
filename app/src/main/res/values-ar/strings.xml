@@ -567,7 +567,6 @@
     <string name="log_level">مستوى السجل</string>
     <string name="log_saved">تم حفظ السجل.</string>
     <string name="manage_saved_logs">إدارة السجلات المحفوظة</string>
-    <string name="menu_title_partial_select">حفظ جزئي</string>
     <string name="no_saved_logs">لم يتم العثور على سجلات محفوظة.</string>
     <string name="notification_subtext">المس لإيقاف التسجيل</string>
     <string name="notification_title">تسجيل السجلات قيد التقدم</string>
@@ -600,7 +599,6 @@
     <string name="pref_display_limit_hint">يرجى إدخال رقم صالح بين %1$d و %2$d.</string>
     <string name="toast_invalid_level">اسم مستوى غير صالح: %s</string>
     <string name="toast_invalid_selection">اختيار غير صحيح. حاول مرة اخرى.</string>
-    <string name="toast_started_select_partial">تحديد تمكين الوضع الجزئي</string>
     <string name="unable_to_save_log">تعذر حفظ السجل. هل أدخلت اسم ملف صالح؟</string>
     <string name="widget_recording_in_progress">يسجل…</string>
     <string name="widget_start_recording">تسجيل
@@ -613,7 +611,6 @@
     <string name="omit_sensitive_info">حذف المعلومات الحساسة</string>
     <string name="omit_sensitive_info_summary">حذف المعلومات الحساسة مثل عناوين الويب أو أرقام الهواتف أو رسائل البريد الإلكتروني.</string>
     <string name="text_include_dmesg">تضمين سجل kernel</string>
-    <string name="save_log_zip">حفظ الملف المضغوط</string>
     <string name="share_log">مشاركة</string>
     <string name="view_logs">عرض السجلات</string>
     <string name="running_services">الخدمات المشغلة</string>
@@ -1066,12 +1063,9 @@
     <string name="log_level_fatal">خطأ قاتل</string>
     <string name="add_filter">إضافة عامل تصفية</string>
     <string name="add_filter_ellipsis">إضافة عامل تصفية…</string>
-    <string name="checkbox_never_show_partial_select_help">لا تظهر مرة أخرى</string>
     <string name="copy_to_clipboard">نسخ إلى الحافظة</string>
     <string name="delete_saved_log">حذف السجلات المحفوظة</string>
     <string name="dialog_compiling_log">يتم الآن تجميع السجل…</string>
-    <string name="dialog_partial_select_explanation">1. حدد السطر <b> الأول </b>.
-\n2. ثم حدد <b> آخر سطر </b>.</string>
     <string name="enter_filename">أدخل اسم ملف</string>
     <string name="enter_good_filename">الرجاء إدخال اسم ملف صالح.</string>
     <string name="filter_choice">البحث عبر</string>

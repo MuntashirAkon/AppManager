@@ -769,7 +769,6 @@
     <string name="pref_cat_configuration">Oppsett</string>
     <string name="pref_cat_appearance">Utseende</string>
     <string name="pref_cat_advanced">Avansert</string>
-    <string name="menu_title_partial_select">Lagre delvis</string>
     <string name="manage_saved_logs">Håndter lagrede logger</string>
     <string name="log_saved">Logg lagret.</string>
     <string name="filter_choice_tag">Etikett</string>
@@ -779,7 +778,6 @@
     <string name="enter_filename">Skriv inn filnavn …</string>
     <string name="delete_saved_log">Slett lagrede logger</string>
     <string name="copy_to_clipboard">Kopier til utklippstavle</string>
-    <string name="checkbox_never_show_partial_select_help">Ikke vis igjen</string>
     <string name="keystore_pass">KeyStore-passord</string>
     <string name="keystore_file">KeyStore-fil</string>
     <string name="failed_to_initialize_key_store">Kunne ikke starte App Manager KeyStore.</string>
@@ -800,8 +798,6 @@
     <string name="text_filter_text">Filtertekst</string>
     <string name="text_filter_ellipsis">Filtrer …</string>
     <string name="subject_log_report">Loggrapport</string>
-    <string name="dialog_partial_select_explanation">1. Velg den <b>første</b> linjen.
-\n2. Velg så den <b>siste</b> linjen.</string>
     <string name="dialog_compiling_log">Kompilerer logg …</string>
     <plurals name="file_deletion_confirmation">
         <item quantity="one">Én fil vil bli slettet</item>
@@ -849,7 +845,6 @@
     <string name="orientation_right_to_left">Høyre til venstre</string>
     <string name="orientation_left_to_right">Venstre til høyre</string>
     <string name="base_backup">Grunn-sikkerhetskopi</string>
-    <string name="save_log_zip">Lagre ZIP</string>
     <string name="widget_start_recording">Før opp
 \nlogg</string>
     <string name="widget_recording_in_progress">Fører opp …</string>
