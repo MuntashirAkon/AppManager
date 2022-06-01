@@ -518,11 +518,6 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
     }
 
     public static class ViewHolder extends MultiSelectionView.ViewHolder {
-        // id for context menu entry
-        public static final int CONTEXT_MENU_FILTER_ID = 0;
-        public static final int CONTEXT_MENU_COPY_ID = 1;
-        public static final int CONTEXT_MENU_SELECT_ID = 2;
-
         LogLine logLine;
         TextView logLevel;
         TextView tag;

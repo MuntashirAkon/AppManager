@@ -32,8 +32,6 @@ public class LiveLogViewerFragment extends AbsLogViewerFragment implements LogVi
     public static final String TAG = LiveLogViewerFragment.class.getSimpleName();
 
     private int mLogCounter = 0;
-    private String mQueryString;
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -147,11 +145,5 @@ public class LiveLogViewerFragment extends AbsLogViewerFragment implements LogVi
         // Handled successfully
         mMultiSelectionView.hide();
         return true;
-    }
-
-    @Override
-    public void onQuery(@Nullable String searchTerm) {
-        mQueryString = searchTerm;
-        super.onQuery(searchTerm);
     }
 }

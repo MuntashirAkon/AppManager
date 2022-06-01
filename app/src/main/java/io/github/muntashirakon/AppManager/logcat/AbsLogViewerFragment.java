@@ -51,7 +51,7 @@ public abstract class AbsLogViewerFragment extends Fragment implements LogViewer
     protected LogViewerRecyclerAdapter mLogListAdapter;
 
     protected boolean mAutoscrollToBottom = true;
-    protected String mQueryString;
+    protected volatile String mQueryString;
 
     protected final StoragePermission mStoragePermission = StoragePermission.init(this);
     protected final RecyclerView.OnScrollListener mRecyclerViewScrollListener = new RecyclerView.OnScrollListener() {
@@ -89,6 +89,11 @@ public abstract class AbsLogViewerFragment extends Fragment implements LogViewer
         mRecyclerView = view.findViewById(R.id.list);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
         mRecyclerView.setItemAnimator(null);
+        // Check for query string
+        mQueryString = mActivity.getSearchQuery();
+        if (mQueryString != null) {
+            mRecyclerView.postDelayed(() -> mActivity.search(mQueryString), 1000);
+        }
         new FastScrollerBuilder(mRecyclerView).useMd2Style().build();
         mLogListAdapter = new LogViewerRecyclerAdapter();
         mLogListAdapter.setClickListener(mActivity);

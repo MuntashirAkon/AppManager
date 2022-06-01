@@ -70,8 +70,8 @@ import io.github.muntashirakon.dialog.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 
-import static io.github.muntashirakon.AppManager.logcat.LogViewerRecyclerAdapter.ViewHolder.CONTEXT_MENU_COPY_ID;
-import static io.github.muntashirakon.AppManager.logcat.LogViewerRecyclerAdapter.ViewHolder.CONTEXT_MENU_FILTER_ID;
+import static io.github.muntashirakon.AppManager.logcat.LogViewerRecyclerAdapter.CONTEXT_MENU_COPY_ID;
+import static io.github.muntashirakon.AppManager.logcat.LogViewerRecyclerAdapter.CONTEXT_MENU_FILTER_ID;
 
 // Copyright 2012 Nolan Lawson
 // Copyright 2021 Muntashir Al-Islam
@@ -270,6 +270,7 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
     }
 
     private void startLogging() {
+        applyFiltersFromIntent(getIntent());
         Uri dataUri = IntentCompat.getDataUri(getIntent());
         String filename = getIntent().getStringExtra(INTENT_FILENAME);
         if (dataUri != null) {
@@ -279,7 +280,6 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
         } else {
             startLiveLogViewer(false);
         }
-        applyFiltersFromIntent(getIntent());
     }
 
     private void applyFiltersFromIntent(@Nullable Intent intent) {
@@ -287,7 +287,7 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
         String filter = intent.getStringExtra(EXTRA_FILTER);
         String level = intent.getStringExtra(EXTRA_LEVEL);
         if (!TextUtils.isEmpty(filter)) {
-            setSearchText(filter);
+            setSearchQuery(filter);
         }
         if (!TextUtils.isEmpty(level)) {
             int logLevelLimit = LogLine.convertCharToLogLevel(level.charAt(0));
@@ -313,6 +313,7 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        applyFiltersFromIntent(intent);
         Uri dataUri = IntentCompat.getDataUri(intent);
         String filename = intent.getStringExtra(INTENT_FILENAME);
         if (dataUri != null) {
@@ -320,7 +321,6 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
         } else if (filename != null) {
             openLogFile(filename);
         }
-        applyFiltersFromIntent(intent);
     }
 
     @Override
@@ -494,12 +494,12 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
 
         tag.setEndIconOnClickListener(v -> {
             String tagQuery = (logLine.getTagName().contains(" ")) ? ('"' + logLine.getTagName() + '"') : logLine.getTagName();
-            setSearchText(SearchCriteria.TAG_KEYWORD + tagQuery);
+            setSearchQuery(SearchCriteria.TAG_KEYWORD + tagQuery);
             dialog.dismiss();
         });
 
         pid.setEndIconOnClickListener(v -> {
-            setSearchText(SearchCriteria.PID_KEYWORD + logLine.getProcessId());
+            setSearchQuery(SearchCriteria.PID_KEYWORD + logLine.getProcessId());
             dialog.dismiss();
         });
     }
@@ -538,7 +538,7 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
                 .show();
 
         logFilterAdapter.setOnItemClickListener((parent, view1, position, logFilter) -> {
-            setSearchText(logFilter.name);
+            setSearchQuery(logFilter.name);
             alertDialog.dismiss();
         });
     }
@@ -608,13 +608,17 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
         search(mSearchQuery);
     }
 
-    private void setSearchText(String text) {
+    private void setSearchQuery(String text) {
         // Sets the search text without invoking autosuggestions, which are really only useful when typing
         mDynamicallyEnteringSearchQuery = true;
         search(text);
         mSearchView.setIconified(false);
         mSearchView.setQuery(mSearchQuery, true);
         mSearchView.clearFocus();
+    }
+
+    String getSearchQuery() {
+        return mSearchQuery;
     }
 
     void search(String filterText) {
