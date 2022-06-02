@@ -567,7 +567,7 @@
     <string name="log_level">مستوى السجل</string>
     <string name="log_saved">تم حفظ السجل.</string>
     <string name="manage_saved_logs">إدارة السجلات المحفوظة</string>
-    <string name="no_saved_logs">لم يتم العثور على سجلات محفوظة.</string>
+    <string name="no_saved_logs">لا توجد سجلات محفوظة.</string>
     <string name="notification_subtext">المس لإيقاف التسجيل</string>
     <string name="notification_title">تسجيل السجلات قيد التقدم</string>
     <string name="open">افتح</string>
