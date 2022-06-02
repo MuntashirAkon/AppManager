@@ -3,7 +3,6 @@
 package io.github.muntashirakon.AppManager.utils;
 
 import android.system.ErrnoException;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -188,7 +187,6 @@ public final class TarUtils {
                         if (linkName.startsWith("/data/app/")) {
                             linkName = getAbsolutePathToDataApp(linkName, realDataAppPath);
                         }
-                        Log.e("TarUtils", linkName);
                         file.delete();
                         if (!file.createNewSymbolicLink(linkName)) {
                             throw new IOException("Couldn't create symbolic link " + file + " pointing to " + linkName);
@@ -293,7 +291,7 @@ public final class TarUtils {
     }
 
     @VisibleForTesting
-    @Nullable
+    @NonNull
     static String getAbsolutePathToDataApp(@NonNull String brokenPath, @Nullable String realPath) {
         brokenPath = brokenPath.endsWith(File.separator) ? brokenPath.substring(0, brokenPath.length() - 1) : brokenPath;
         if (realPath == null) return brokenPath;
