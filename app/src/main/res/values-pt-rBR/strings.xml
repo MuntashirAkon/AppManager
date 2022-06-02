@@ -946,7 +946,7 @@
     <string name="notification_title">Gravação de registro em andamento</string>
     <string name="notification_ticker">Gravação de registro iniciada</string>
     <string name="notification_subtext">Toque para parar de gravar</string>
-    <string name="no_saved_logs">Não foram encontrados registros salvos.</string>
+    <string name="no_saved_logs">Nenhum registro salvo.</string>
     <string name="manage_saved_logs">Gerenciar Registros Salvos</string>
     <string name="log_saved">Registro salvo.</string>
     <string name="log_recording_started">A gravação do registro começou.</string>
