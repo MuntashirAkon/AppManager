@@ -493,12 +493,12 @@
     <string name="task_affinity">Спорідненість завдань</string>
     <string name="store">Aurora Store</string>
     <string name="orientation_user_landscape">Користувацька, горизонтальна</string>
-    <string name="orientation_sensor">Датчик</string>
-    <string name="orientation_sensor_portrait">Вертикальна по датчику</string>
-    <string name="orientation_sensor_landscape">Горизонтальна по датчику</string>
-    <string name="orientation_no_sensor">Без датчика</string>
+    <string name="orientation_sensor">Датник</string>
+    <string name="orientation_sensor_portrait">Вертикальна по датнику</string>
+    <string name="orientation_sensor_landscape">Горизонтальна по датнику</string>
+    <string name="orientation_no_sensor">Без датника</string>
     <string name="orientation_full_user">Повністю користувацька</string>
-    <string name="orientation_full_sensor">Повністю згідно датчика</string>
+    <string name="orientation_full_sensor">Повністю згідно датника</string>
     <string name="integer_value">Ціле значення</string>
     <string name="long_integer_value">Довге ціле значення</string>
     <string name="string_value">Значення рядка</string>
@@ -943,7 +943,7 @@
     <string name="notification_title">Триває запис логу</string>
     <string name="notification_ticker">Запис логу розпочато</string>
     <string name="notification_subtext">Торкніться, щоб зупинити запис</string>
-    <string name="no_saved_logs">Збережених логів не знайдено.</string>
+    <string name="no_saved_logs">Немає збережених журналів.</string>
     <string name="manage_saved_logs">Керування збереженими логами</string>
     <string name="log_saved">Лог збережено.</string>
     <string name="log_recording_started">Розпочато запис логу.</string>
