@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.compat;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.UserIdInt;
 import android.content.ComponentName;
@@ -39,8 +40,11 @@ import java.util.Objects;
 import dev.rikka.tools.refine.Refine;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
+import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 
 import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DEFAULT;
 import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
@@ -94,7 +98,7 @@ public final class PackageManagerCompat {
             }
             return packageInfoList;
         }
-        IPackageManager pm = AppManager.getIPackageManager();
+        IPackageManager pm = getPackageManager();
         if (CompatUtils.isAndroid13Beta()) {
             return pm.getInstalledPackages((long) flags, userHandle).getList();
         }
@@ -106,7 +110,7 @@ public final class PackageManagerCompat {
     @WorkerThread
     public static List<ApplicationInfo> getInstalledApplications(int flags, @UserIdInt int userHandle)
             throws RemoteException {
-        IPackageManager pm = AppManager.getIPackageManager();
+        IPackageManager pm = getPackageManager();
         if (CompatUtils.isAndroid13Beta()) {
             return pm.getInstalledApplications((long) flags, userHandle).getList();
         }
@@ -116,7 +120,7 @@ public final class PackageManagerCompat {
     @NonNull
     public static PackageInfo getPackageInfo(String packageName, int flags, @UserIdInt int userHandle)
             throws RemoteException, PackageManager.NameNotFoundException {
-        IPackageManager pm = AppManager.getIPackageManager();
+        IPackageManager pm = getPackageManager();
         PackageInfo info = null;
         try {
             info = getPackageInfoInternal(pm, packageName, flags, userHandle);
@@ -185,7 +189,7 @@ public final class PackageManagerCompat {
     @NonNull
     public static ApplicationInfo getApplicationInfo(String packageName, int flags, @UserIdInt int userHandle)
             throws RemoteException {
-        IPackageManager pm = AppManager.getIPackageManager();
+        IPackageManager pm = getPackageManager();
         if (CompatUtils.isAndroid13Beta()) {
             return pm.getApplicationInfo(packageName, (long) flags, userHandle);
         }
@@ -198,7 +202,7 @@ public final class PackageManagerCompat {
     public static List<ResolveInfo> queryIntentActivities(@NonNull Context context, @NonNull Intent intent, int flags,
                                                           @UserIdInt int userId)
             throws RemoteException {
-        IPackageManager pm = AppManager.getIPackageManager();
+        IPackageManager pm = getPackageManager();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             IPackageManagerN pmN = Refine.unsafeCast(pm);
             ParceledListSlice<ResolveInfo> resolveInfoList;
@@ -220,7 +224,7 @@ public final class PackageManagerCompat {
     public static int getComponentEnabledSetting(ComponentName componentName,
                                                  @UserIdInt int userId)
             throws RemoteException {
-        return AppManager.getIPackageManager().getComponentEnabledSetting(componentName, userId);
+        return getPackageManager().getComponentEnabledSetting(componentName, userId);
     }
 
     public static void setComponentEnabledSetting(ComponentName componentName,
@@ -228,21 +232,21 @@ public final class PackageManagerCompat {
                                                   @EnabledFlags int flags,
                                                   @UserIdInt int userId)
             throws RemoteException {
-        AppManager.getIPackageManager().setComponentEnabledSetting(componentName, newState, flags, userId);
+        getPackageManager().setComponentEnabledSetting(componentName, newState, flags, userId);
     }
 
     public static void setApplicationEnabledSetting(String packageName, @EnabledState int newState,
                                                     @EnabledFlags int flags, @UserIdInt int userId)
             throws RemoteException {
-        AppManager.getIPackageManager().setApplicationEnabledSetting(packageName, newState, flags, userId, null);
+        getPackageManager().setApplicationEnabledSetting(packageName, newState, flags, userId, null);
     }
 
     public static String getInstallerPackage(String packageName) throws RemoteException {
-        return AppManager.getIPackageManager().getInstallerPackageName(packageName);
+        return getPackageManager().getInstallerPackageName(packageName);
     }
 
     public static void clearApplicationUserData(@NonNull UserPackagePair pair) throws AndroidException {
-        IPackageManager pm = AppManager.getIPackageManager();
+        IPackageManager pm = getPackageManager();
         ClearDataObserver obs = new ClearDataObserver();
         pm.clearApplicationUserData(pair.getPackageName(), obs, pair.getUserHandle());
         //noinspection SynchronizationOnLocalVariableOrMethodParameter
@@ -270,7 +274,7 @@ public final class PackageManagerCompat {
     }
 
     public static void deleteApplicationCacheFilesAsUser(UserPackagePair pair) throws AndroidException {
-        IPackageManager pm = AppManager.getIPackageManager();
+        IPackageManager pm = getPackageManager();
         ClearDataObserver obs = new ClearDataObserver();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             pm.deleteApplicationCacheFilesAsUser(pair.getPackageName(), pair.getUserHandle(), obs);
@@ -304,8 +308,8 @@ public final class PackageManagerCompat {
     }
 
     @NonNull
-    public static IPackageInstaller getPackageInstaller(@NonNull IPackageManager pm) throws RemoteException {
-        return IPackageInstaller.Stub.asInterface(new ProxyBinder(pm.getPackageInstaller().asBinder()));
+    public static IPackageInstaller getPackageInstaller() throws RemoteException {
+        return IPackageInstaller.Stub.asInterface(new ProxyBinder(getPackageManager().getPackageInstaller().asBinder()));
     }
 
     @SuppressWarnings("deprecation")
@@ -313,8 +317,24 @@ public final class PackageManagerCompat {
                                             long freeStorageSize,
                                             @StorageManagerCompat.AllocateFlags int storageFlags)
             throws RemoteException {
+        IPackageManager pm;
         ClearDataObserver obs = new ClearDataObserver();
-        IPackageManager pm = AppManager.getIPackageManager();
+        if (PermissionUtils.hasPermission(AppManager.getContext(), Manifest.permission.CLEAR_APP_CACHE)) {
+            // Clear cache using unprivileged method: Mostly applicable for Android Lollipop
+            pm = getUnprivilegedPackageManager();
+        } else { // Use privileged mode
+            if (Ops.isAdb() && Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+                // IPackageManager#freeStorageAndNotify cannot be used before Android Oreo because Shell does not have
+                // the permission android.permission.CLEAR_APP_CACHE
+                for (int userId : Users.getUsersIds()) {
+                    for (ApplicationInfo info : getInstalledApplications(0, userId)) {
+                        deleteApplicationCacheFilesAsUser(info.packageName, userId);
+                    }
+                }
+                return;
+            }
+            pm = getPackageManager();
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             pm.freeStorageAndNotify(volumeUuid, freeStorageSize, storageFlags, obs);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -341,5 +361,13 @@ public final class PackageManagerCompat {
             return pm.getPackageInfo(packageName, (long) flags, userId);
         }
         return pm.getPackageInfo(packageName, flags, userId);
+    }
+
+    public static IPackageManager getPackageManager() {
+        return IPackageManager.Stub.asInterface(ProxyBinder.getService("package"));
+    }
+
+    private static IPackageManager getUnprivilegedPackageManager() {
+        return IPackageManager.Stub.asInterface(ProxyBinder.getUnprivilegedService("package"));
     }
 }

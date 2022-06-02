@@ -7,7 +7,6 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.FeatureInfo;
-import android.content.pm.IPackageManager;
 import android.content.pm.PackageManager;
 import android.content.pm.UserInfo;
 import android.os.Build;
@@ -40,9 +39,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.StaticDataset;
+import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.users.Users;
@@ -406,11 +405,10 @@ public class DeviceInfo2 implements LocalizedString {
     // User + System apps
     @NonNull
     private Pair<Integer, Integer> getPackageStats(int userHandle) {
-        IPackageManager pm = AppManager.getIPackageManager();
         int systemApps = 0;
         int userApps = 0;
         try {
-            List<ApplicationInfo> applicationInfoList = pm.getInstalledApplications(0, userHandle).getList();
+            List<ApplicationInfo> applicationInfoList = PackageManagerCompat.getInstalledApplications(0, userHandle);
             for (ApplicationInfo info : applicationInfoList) {
                 if ((info.flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
                     ++systemApps;

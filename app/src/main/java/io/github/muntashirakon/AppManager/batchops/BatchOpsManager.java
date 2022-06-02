@@ -439,7 +439,7 @@ public class BatchOpsManager {
     @NonNull
     private Result opAppEnabledSetting(@PackageManagerCompat.EnabledState int newState) {
         List<UserPackagePair> failedPackages = new ArrayList<>();
-        IPackageManager pm = AppManager.getIPackageManager();
+        IPackageManager pm = PackageManagerCompat.getPackageManager();
         for (UserPackagePair pair : userPackagePairs) {
             try {
                 pm.setApplicationEnabledSetting(pair.getPackageName(), newState, 0, pair.getUserHandle(), null);

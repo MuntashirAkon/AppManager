@@ -4,7 +4,6 @@ package io.github.muntashirakon.AppManager;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.pm.IPackageManager;
 import android.os.Build;
 import android.sun.security.provider.JavaKeyStoreProvider;
 
@@ -20,7 +19,6 @@ import org.lsposed.hiddenapibypass.HiddenApiBypass;
 import java.security.Security;
 
 import io.github.muntashirakon.AppManager.db.AppsDb;
-import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 
@@ -43,10 +41,6 @@ public class AppManager extends Application {
     @NonNull
     public static Context getContext() {
         return instance.getBaseContext();
-    }
-
-    public static IPackageManager getIPackageManager() {
-        return IPackageManager.Stub.asInterface(ProxyBinder.getService("package"));
     }
 
     @NonNull

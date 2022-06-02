@@ -638,7 +638,7 @@ public final class PackageInstallerCompat {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private boolean openSession() {
         try {
-            packageInstaller = PackageManagerCompat.getPackageInstaller(AppManager.getIPackageManager());
+            packageInstaller = PackageManagerCompat.getPackageInstaller();
         } catch (RemoteException e) {
             callFinish(STATUS_FAILURE_SESSION_CREATE);
             Log.e(TAG, "OpenSession: Could not get PackageInstaller.", e);
@@ -786,7 +786,7 @@ public final class PackageInstallerCompat {
 
     @SuppressWarnings("deprecation")
     public static void uninstall(String packageName, @UserIdInt int userHandle, boolean keepData) throws Exception {
-        IPackageInstaller pi = PackageManagerCompat.getPackageInstaller(AppManager.getIPackageManager());
+        IPackageInstaller pi = PackageManagerCompat.getPackageInstaller();
         LocalIntentReceiver receiver = new LocalIntentReceiver();
         IntentSender sender = receiver.getIntentSender();
         boolean isPrivileged = LocalServer.isAMServiceAlive();

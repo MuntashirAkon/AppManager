@@ -36,6 +36,16 @@ public class ProxyBinder implements IBinder {
         return new ProxyBinder(binder);
     }
 
+    @NonNull
+    public static IBinder getUnprivilegedService(String serviceName) {
+        IBinder binder = sServiceCache.get(serviceName);
+        if (binder == null) {
+            binder = ServiceManager.getService(serviceName);
+            sServiceCache.put(serviceName, binder);
+        }
+        return binder;
+    }
+
     private final IBinder original;
 
     public ProxyBinder(@NonNull IBinder original) {

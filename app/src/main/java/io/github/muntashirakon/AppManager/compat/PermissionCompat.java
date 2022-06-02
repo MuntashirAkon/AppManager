@@ -26,7 +26,6 @@ import java.util.Collections;
 import java.util.List;
 
 import dev.rikka.tools.refine.Refine;
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 
 public final class PermissionCompat {
@@ -273,7 +272,7 @@ public final class PermissionCompat {
             IPermissionManager permissionManager = getPermissionManager();
             return permissionManager.getPermissionFlags(permissionName, packageName, userId);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            return AppManager.getIPackageManager().getPermissionFlags(permissionName, packageName, userId);
+            return PackageManagerCompat.getPackageManager().getPermissionFlags(permissionName, packageName, userId);
         } else return FLAG_PERMISSION_NONE;
     }
 
@@ -291,7 +290,7 @@ public final class PermissionCompat {
                                              @PermissionFlags int flagValues,
                                              boolean checkAdjustPolicyFlagPermission,
                                              @UserIdInt int userId) throws RemoteException {
-        IPackageManager pm = AppManager.getIPackageManager();
+        IPackageManager pm = PackageManagerCompat.getPackageManager();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             IPermissionManager permissionManager = getPermissionManager();
             permissionManager.updatePermissionFlags(permissionName, packageName, flagMask, flagValues,
@@ -309,7 +308,7 @@ public final class PermissionCompat {
                                        @NonNull String permissionName,
                                        @UserIdInt int userId)
             throws RemoteException {
-        IPackageManager pm = AppManager.getIPackageManager();
+        IPackageManager pm = PackageManagerCompat.getPackageManager();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             IPermissionManager permissionManager = getPermissionManager();
             permissionManager.grantRuntimePermission(packageName, permissionName, userId);
@@ -331,7 +330,7 @@ public final class PermissionCompat {
                                         @NonNull String permissionName,
                                         @UserIdInt int userId,
                                         @Nullable String reason) throws RemoteException {
-        IPackageManager pm = AppManager.getIPackageManager();
+        IPackageManager pm = PackageManagerCompat.getPackageManager();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             IPermissionManager permissionManager = getPermissionManager();
             permissionManager.revokeRuntimePermission(packageName, permissionName, userId, reason);
@@ -346,7 +345,7 @@ public final class PermissionCompat {
     public static int checkPermission(@NonNull String permissionName,
                                       @NonNull String packageName,
                                       @UserIdInt int userId) throws RemoteException {
-        IPackageManager pm = AppManager.getIPackageManager();
+        IPackageManager pm = PackageManagerCompat.getPackageManager();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             return pm.checkPermission(permissionName, packageName, userId);
         } else {
@@ -358,7 +357,7 @@ public final class PermissionCompat {
     @Nullable
     public static PermissionInfo getPermissionInfo(String permissionName, String packageName, int flags)
             throws RemoteException {
-        IPackageManager pm = AppManager.getIPackageManager();
+        IPackageManager pm = PackageManagerCompat.getPackageManager();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             return getPermissionManager().getPermissionInfo(permissionName, packageName, flags);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -371,7 +370,7 @@ public final class PermissionCompat {
     public static PermissionGroupInfo getPermissionGroupInfo(String groupName, int flags) throws RemoteException {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             return getPermissionManager().getPermissionGroupInfo(groupName, flags);
-        } else return AppManager.getIPackageManager().getPermissionGroupInfo(groupName, flags);
+        } else return PackageManagerCompat.getPackageManager().getPermissionGroupInfo(groupName, flags);
     }
 
     @SuppressWarnings("deprecation")
@@ -379,7 +378,7 @@ public final class PermissionCompat {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             return getPermissionManager().queryPermissionsByGroup(groupName, flags).getList();
         } else {
-            IPackageManager pm = AppManager.getIPackageManager();
+            IPackageManager pm = PackageManagerCompat.getPackageManager();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 IPackageManagerN pmN = Refine.unsafeCast(pm);
                 return pmN.queryPermissionsByGroup(groupName, flags).getList();
@@ -391,7 +390,7 @@ public final class PermissionCompat {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             return getPermissionManager().getSplitPermissions();
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            return AppManager.getIPackageManager().getSplitPermissions();
+            return PackageManagerCompat.getPackageManager().getSplitPermissions();
         }
         return Collections.emptyList();
     }

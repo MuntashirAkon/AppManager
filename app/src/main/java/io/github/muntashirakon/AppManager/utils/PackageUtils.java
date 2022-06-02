@@ -282,17 +282,18 @@ public final class PackageUtils {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             CountDownLatch waitForStats = new CountDownLatch(1);
             try {
-                AppManager.getIPackageManager().getPackageSizeInfo(packageName, userHandle, new IPackageStatsObserver.Stub() {
-                    @SuppressWarnings("deprecation")
-                    @Override
-                    public void onGetStatsCompleted(final PackageStats pStats, boolean succeeded) {
-                        try {
-                            if (succeeded) packageSizeInfo.set(new PackageSizeInfo(pStats));
-                        } finally {
-                            waitForStats.countDown();
-                        }
-                    }
-                });
+                PackageManagerCompat.getPackageManager().getPackageSizeInfo(packageName, userHandle,
+                        new IPackageStatsObserver.Stub() {
+                            @SuppressWarnings("deprecation")
+                            @Override
+                            public void onGetStatsCompleted(final PackageStats pStats, boolean succeeded) {
+                                try {
+                                    if (succeeded) packageSizeInfo.set(new PackageSizeInfo(pStats));
+                                } finally {
+                                    waitForStats.countDown();
+                                }
+                            }
+                        });
                 waitForStats.await(5, TimeUnit.SECONDS);
             } catch (RemoteException | InterruptedException e) {
                 Log.e(TAG, e);
