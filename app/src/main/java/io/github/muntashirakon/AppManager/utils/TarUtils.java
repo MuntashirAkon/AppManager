@@ -3,10 +3,12 @@
 package io.github.muntashirakon.AppManager.utils;
 
 import android.system.ErrnoException;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringDef;
+import androidx.annotation.VisibleForTesting;
 import androidx.annotation.WorkerThread;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
@@ -129,7 +131,8 @@ public final class TarUtils {
      */
     @WorkerThread
     public static void extract(@NonNull @TarType String type, @NonNull Path[] sources, @NonNull Path dest,
-                               @Nullable String[] filters, @Nullable String[] exclusions)
+                               @Nullable String[] filters, @Nullable String[] exclusions,
+                               @Nullable String realDataAppPath)
             throws IOException {
         // Convert filters into patterns to reduce overheads
         Pattern[] filterPatterns;
@@ -174,10 +177,18 @@ public final class TarUtils {
                     }
                     // Check if the given entry is a link.
                     if (entry.isSymbolicLink() && file.getFilePath() != null) {
+                        if ((!Paths.isUnderFilter(file, dest, filterPatterns) || Paths.willExclude(file, dest, exclusionPatterns))) {
+                            // Do not create this link even if it is a directory
+                            continue;
+                        }
                         String linkName = entry.getLinkName();
                         // There's no need to check if the linkName exists as it may be extracted
                         // after the link has been created
-                        // TODO: 27/3/22 It might be necessary to check the link if it points to an old APK folder content
+                        // Special check for /data/app
+                        if (linkName.startsWith("/data/app/")) {
+                            linkName = getAbsolutePathToDataApp(linkName, realDataAppPath);
+                        }
+                        Log.e("TarUtils", linkName);
                         file.delete();
                         if (!file.createNewSymbolicLink(linkName)) {
                             throw new IOException("Couldn't create symbolic link " + file + " pointing to " + linkName);
@@ -279,5 +290,39 @@ public final class TarUtils {
             // No need to check return value as some paths may not exist
             child.delete();
         }
+    }
+
+    @VisibleForTesting
+    @Nullable
+    static String getAbsolutePathToDataApp(@NonNull String brokenPath, @Nullable String realPath) {
+        brokenPath = brokenPath.endsWith(File.separator) ? brokenPath.substring(0, brokenPath.length() - 1) : brokenPath;
+        if (realPath == null) return brokenPath;
+        if ("/data/app".equals(brokenPath)) {
+            return brokenPath;
+        }
+        String[] brokenPathParts = brokenPath.split(File.separator);
+        // The initial number of File.separator is 4, and the rests could be either part of the app path or
+        // point to lib, oat or apk files
+        // Index 4-1 = 3 is always a link to app
+        if (brokenPathParts.length <= 4) {
+            return realPath;
+        }
+        if ("lib".equals(brokenPathParts[4]) || "oat".equals(brokenPathParts[4]) || brokenPathParts[4].endsWith(".apk")) {
+            StringBuilder sb = new StringBuilder(realPath);
+            for (int i = 4; i < brokenPathParts.length; ++i) {
+                sb.append(File.separator).append(brokenPathParts[i]);
+            }
+            return sb.toString();
+        }
+        // Index 5-1 = 4 is also a part of the app
+        if (brokenPathParts.length == 5) {
+            return realPath;
+        }
+        // Index 6-1 = 5 and later are currently not a part of the app
+        StringBuilder sb = new StringBuilder(realPath);
+        for (int i = 5; i < brokenPathParts.length; ++i) {
+            sb.append(File.separator).append(brokenPathParts[i]);
+        }
+        return sb.toString();
     }
 }

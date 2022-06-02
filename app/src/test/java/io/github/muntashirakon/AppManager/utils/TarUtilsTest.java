@@ -333,6 +333,44 @@ public class TarUtilsTest {
         assertEquals(target.getAbsolutePath(), getRelativePath(target, base, "\\"));
     }
 
+    @Test
+    public void testGetAbsolutePathToDataApp() {
+        String[] brokenPaths = new String[]{
+                "/data/app",
+                "/data/app/",
+                "/data/app/example.app",
+                "/data/app/example.app/",
+                "/data/app/example.app/lib",
+                "/data/app/example.app/lib/",
+                "/data/app/example.app/oat",
+                "/data/app/example.app/base.apk",
+                "/data/app/~~random-things==/example.app-more_random_things==",
+                "/data/app/~~random-things==/example.app-more_random_things==/",
+                "/data/app/~~random-things==/example.app-more_random_things==/lib",
+                "/data/app/~~random-things==/example.app-more_random_things==/lib/",
+                "/data/app/~~random-things==/example.app-more_random_things==/base.apk",
+        };
+        String realPath = "/data/app/~~new-random-things==/example.app-more_new_random_things==";
+        String[] expectedPaths = new String[]{
+                "/data/app",
+                "/data/app",
+                realPath,
+                realPath,
+                realPath + "/lib",
+                realPath + "/lib",
+                realPath + "/oat",
+                realPath + "/base.apk",
+                realPath,
+                realPath,
+                realPath + "/lib",
+                realPath + "/lib",
+                realPath + "/base.apk",
+        };
+        for (int i = 0; i < brokenPaths.length; ++i) {
+            assertEquals("Failed in index " + i, expectedPaths[i], TarUtils.getAbsolutePathToDataApp(brokenPaths[i], realPath));
+        }
+    }
+
     @NonNull
     public static List<String> getFileNamesGZip(@NonNull List<Path> tarFiles) throws IOException {
         List<String> fileNames = new ArrayList<>();
@@ -362,7 +400,7 @@ public class TarUtilsTest {
                                     @Nullable String[] exclude, @NonNull List<String> expectedPaths) throws Throwable {
         List<String> actualPaths = new ArrayList<>();
         recreateDir(testRoot);
-        TarUtils.extract(TarUtils.TAR_GZIP, sourceFiles, testRoot, include, exclude);
+        TarUtils.extract(TarUtils.TAR_GZIP, sourceFiles, testRoot, include, exclude, null);
         gatherFiles(actualPaths, testRoot, testRoot);
         Collections.sort(expectedPaths);
         Collections.sort(actualPaths);

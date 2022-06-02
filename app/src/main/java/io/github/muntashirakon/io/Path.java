@@ -637,7 +637,7 @@ public class Path implements Comparable<Path> {
 
     /**
      * Creates a new symbolic link named by this abstract pathname to a target file if and only if the pathname is a
-     * physical file and the target does not yet exist.
+     * physical file and is not yet exist.
      *
      * @param target the target of the symbolic link.
      * @return {@code true} if target did not exist and the link was successfully created, and {@code false} otherwise.

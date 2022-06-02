@@ -169,7 +169,8 @@ public final class BackupUtils {
 
     @NonNull
     static String[] getExcludeDirs(boolean includeCache, @Nullable String[] others) {
-        List<String> excludeDirs = new ArrayList<>();
+        // Lib dirs has to be ignored by default
+        List<String> excludeDirs = new ArrayList<>(Arrays.asList(BackupManager.LIB_DIR));
         if (includeCache) {
             excludeDirs.addAll(Arrays.asList(BackupManager.CACHE_DIRS));
         }

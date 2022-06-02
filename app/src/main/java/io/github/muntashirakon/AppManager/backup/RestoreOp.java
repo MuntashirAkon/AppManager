@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
 import java.io.Closeable;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -320,7 +321,7 @@ class RestoreOp implements Closeable {
             }
             // Extract apk files to the package staging directory
             try {
-                TarUtils.extract(metadata.tarType, backupSourceFiles, packageStagingDirectory, allApkNames, null);
+                TarUtils.extract(metadata.tarType, backupSourceFiles, packageStagingDirectory, allApkNames, null, null);
             } catch (Throwable th) {
                 throw new BackupException("Failed to extract the apk file(s).", th);
             }
@@ -381,7 +382,7 @@ class RestoreOp implements Closeable {
             throw new BackupException("Failed to access properties of the KeyStore folder.", e);
         }
         try {
-            TarUtils.extract(metadata.tarType, keyStoreFiles, keyStorePath, null, null);
+            TarUtils.extract(metadata.tarType, keyStoreFiles, keyStorePath, null, null, null);
             // Restore folder permission
             Paths.chown(keyStorePath, uidGidPair.uid, uidGidPair.gid);
             //noinspection OctalInteger
@@ -485,8 +486,9 @@ class RestoreOp implements Closeable {
             }
             // Extract data to the data directory
             try {
+                String publicSourceDir = new File(packageInfo.applicationInfo.publicSourceDir).getParent();
                 TarUtils.extract(metadata.tarType, dataFiles, dataSourceFile, null, BackupUtils
-                        .getExcludeDirs(!requestedFlags.backupCache(), null));
+                        .getExcludeDirs(!requestedFlags.backupCache(), null), publicSourceDir);
             } catch (Throwable th) {
                 throw new BackupException("Failed to restore data files for index " + i + ".", th);
             }

@@ -9,7 +9,6 @@ import android.webkit.MimeTypeMap;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -187,11 +186,15 @@ public class ExtendedRawDocumentFile extends DocumentFile {
         return "application/octet-stream";
     }
 
-    private static boolean deleteContents(File dir) {
-        File[] files = dir.listFiles();
+    private static boolean deleteContents(ExtendedFile dir) {
+        if (dir.isSymlink()) {
+            // Do not follow symbolic links
+            return true;
+        }
+        ExtendedFile[] files = dir.listFiles();
         boolean success = true;
         if (files != null) {
-            for (File file : files) {
+            for (ExtendedFile file : files) {
                 if (file.isDirectory()) {
                     success &= deleteContents(file);
                 }
