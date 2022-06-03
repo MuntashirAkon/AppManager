@@ -34,7 +34,6 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.widget.CheckBox;
 import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
@@ -268,7 +267,7 @@ public class SearchableMultiChoiceDialogBuilder<T> {
         }
 
         void setFilteredItems(CharSequence constraint) {
-            Locale locale = LangUtils.getLocaleByLanguage(activity);
+            Locale locale = Locale.getDefault();
             synchronized (filteredItems) {
                 filteredItems.clear();
                 for (int i = 0; i < items.size(); ++i) {

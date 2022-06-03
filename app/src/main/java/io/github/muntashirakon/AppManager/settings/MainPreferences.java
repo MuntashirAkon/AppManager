@@ -35,7 +35,6 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
-import com.yariksoffice.lingver.Lingver;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -119,7 +118,11 @@ public class MainPreferences extends PreferenceFragment {
         ArrayMap<String, Locale> locales = LangUtils.getAppLanguages(activity);
         final CharSequence[] languages = getLanguagesL(locales);
         Preference locale = Objects.requireNonNull(findPreference("custom_locale"));
-        locale.setSummary(languages[locales.indexOfKey(currentLang)]);
+        int localeIndex = locales.indexOfKey(currentLang);
+        if (localeIndex < 0) {
+            localeIndex = locales.indexOfKey(LangUtils.LANG_AUTO);
+        }
+        locale.setSummary(languages[localeIndex]);
         locale.setOnPreferenceClickListener(preference -> {
             new MaterialAlertDialogBuilder(activity)
                     .setTitle(R.string.choose_language)
@@ -127,8 +130,8 @@ public class MainPreferences extends PreferenceFragment {
                             (dialog, which) -> currentLang = locales.keyAt(which))
                     .setPositiveButton(R.string.apply, (dialog, which) -> {
                         AppPref.set(AppPref.PrefKey.PREF_CUSTOM_LOCALE_STR, currentLang);
-                        Lingver.getInstance().setLocale(activity, LangUtils.getLocaleByLanguage(activity));
                         ActivityCompat.recreate(activity);
+                        activity.getSupportFragmentManager().popBackStackImmediate();
                     })
                     .setNegativeButton(R.string.cancel, null)
                     .show();
@@ -166,6 +169,7 @@ public class MainPreferences extends PreferenceFragment {
                     .setPositiveButton(R.string.apply, (dialog, which) -> {
                         AppPref.set(AppPref.PrefKey.PREF_LAYOUT_ORIENTATION_INT, currentLayoutOrientation);
                         ActivityCompat.recreate(activity);
+                        activity.getSupportFragmentManager().popBackStackImmediate();
                     })
                     .setNegativeButton(R.string.cancel, null)
                     .show();

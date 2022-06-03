@@ -2,31 +2,90 @@
 
 package io.github.muntashirakon.AppManager.utils;
 
+import android.app.Activity;
+import android.app.Application;
+import android.content.ComponentCallbacks;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.LocaleList;
-import android.util.DisplayMetrics;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.collection.ArrayMap;
+import androidx.core.app.ActivityCompat;
 import androidx.core.os.ConfigurationCompat;
-import androidx.core.os.LocaleListCompat;
 
-import com.yariksoffice.lingver.Lingver;
-
+import java.util.HashMap;
 import java.util.IllformedLocaleException;
+import java.util.LinkedHashSet;
 import java.util.Locale;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.logs.Log;
 
 public final class LangUtils {
     public static final String LANG_AUTO = "auto";
     public static final String LANG_DEFAULT = "en";
 
     private static ArrayMap<String, Locale> sLocaleMap;
+
+    public static void init(@NonNull Application application) {
+        application.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
+            private final HashMap<ComponentName, Locale> mLastLocales = new HashMap<>();
+            @Override
+            public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
+                mLastLocales.put(activity.getComponentName(), applyLocaleToActivity(activity));
+            }
+
+            @Override
+            public void onActivityStarted(@NonNull Activity activity) {
+                if (!Objects.equals(mLastLocales.get(activity.getComponentName()), getFromPreference(activity))) {
+                    Log.d("LangUtils", "Locale changed in activity " + activity.getComponentName());
+                    ActivityCompat.recreate(activity);
+                }
+            }
+
+            @Override
+            public void onActivityResumed(@NonNull Activity activity) {
+            }
+
+            @Override
+            public void onActivityPaused(@NonNull Activity activity) {
+            }
+
+            @Override
+            public void onActivityStopped(@NonNull Activity activity) {
+            }
+
+            @Override
+            public void onActivitySaveInstanceState(@NonNull Activity activity, @NonNull Bundle outState) {
+            }
+
+            @Override
+            public void onActivityDestroyed(@NonNull Activity activity) {
+                mLastLocales.remove(activity.getComponentName());
+            }
+        });
+        application.registerComponentCallbacks(new ComponentCallbacks() {
+            @Override
+            public void onConfigurationChanged(@NonNull Configuration newConfig) {
+                applyLocale(application);
+            }
+
+            @Override
+            public void onLowMemory() {
+            }
+        });
+        applyLocale(application);
+    }
 
     public static void setAppLanguages(@NonNull Context context) {
         if (sLocaleMap == null) sLocaleMap = new ArrayMap<>();
@@ -41,7 +100,7 @@ public final class LangUtils {
             String langTag = ctx.getString(R.string._lang_tag);
 
             if (LANG_AUTO.equals(locale)) {
-                sLocaleMap.put(LANG_AUTO, LocaleListCompat.getDefault().get(0));
+                sLocaleMap.put(LANG_AUTO, null);
             } else if (LANG_DEFAULT.equals(langTag)) {
                 sLocaleMap.put(LANG_DEFAULT, appDefaultLocale);
             } else sLocaleMap.put(locale, ConfigurationCompat.getLocales(conf).get(0));
@@ -55,11 +114,17 @@ public final class LangUtils {
     }
 
     @NonNull
-    public static Locale getLocaleByLanguage(@NonNull Context context) {
+    public static Locale getFromPreference(@NonNull Context context) {
         String language = AppPref.getLanguage(context);
         getAppLanguages(context);
         Locale locale = sLocaleMap.get(language);
-        return locale != null ? locale : LocaleListCompat.getDefault().get(0);
+        if (locale != null) {
+            return locale;
+        }
+        // Load from system configuration
+        Configuration conf = Resources.getSystem().getConfiguration();
+        //noinspection deprecation
+        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ? conf.getLocales().get(0) : conf.locale;
     }
 
     public static boolean isValidLocale(@NonNull String languageTag) {
@@ -77,21 +142,80 @@ public final class LangUtils {
 
     @NonNull
     public static String getSeparatorString() {
-        if (Lingver.getInstance().getLanguage().equals("fr")) return " : ";
+        if (Locale.getDefault().getLanguage().equals(new Locale("fr").getLanguage())) {
+            return " : ";
+        }
         return ": ";
     }
 
     @NonNull
-    public static ContextWrapper wrap(@NonNull Context context) {
-        Resources res = context.getResources();
+    public static ContextWrapper wrapSystem(@NonNull Context context) {
+        Resources res = Resources.getSystem();
         Configuration configuration = res.getConfiguration();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            configuration.setLocales(LocaleList.getDefault());
-        } else {
-            configuration.setLocale(LocaleListCompat.getDefault().get(0));
-            DisplayMetrics dm = res.getDisplayMetrics();
-            res.updateConfiguration(configuration, dm);
-        }
         return new ContextWrapper(context.createConfigurationContext(configuration));
+    }
+
+    public static Locale applyLocaleToActivity(Activity activity) {
+        Locale locale = applyLocale(activity);
+        // Update title
+        try {
+            ActivityInfo info = activity.getPackageManager().getActivityInfo(activity.getComponentName(), 0);
+            if (info.labelRes != 0) {
+                activity.setTitle(info.labelRes);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        // Update menu
+        activity.invalidateOptionsMenu();
+        return locale;
+    }
+
+    private static Locale applyLocale(Context context) {
+        return applyLocale(context, LangUtils.getFromPreference(context));
+    }
+
+    private static Locale applyLocale(@NonNull Context context, @NonNull Locale locale) {
+        updateResources(context, locale);
+        Context appContext = context.getApplicationContext();
+        if (appContext != context) {
+            updateResources(appContext, locale);
+        }
+        return locale;
+    }
+
+    private static void updateResources(@NonNull Context context, @NonNull Locale locale) {
+        Locale.setDefault(locale);
+
+        Resources res = context.getResources();
+        Configuration conf = res.getConfiguration();
+        //noinspection deprecation
+        Locale current = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ? conf.getLocales().get(0) : conf.locale;
+
+        if (current == locale) {
+            return;
+        }
+
+        conf = new Configuration(conf);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            setLocaleApi24(conf, locale);
+        } else {
+            conf.setLocale(locale);
+        }
+        //noinspection deprecation
+        res.updateConfiguration(conf, res.getDisplayMetrics());
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private static void setLocaleApi24(@NonNull Configuration config, @NonNull Locale locale) {
+        LocaleList defaultLocales = LocaleList.getDefault();
+        LinkedHashSet<Locale> locales = new LinkedHashSet<>(defaultLocales.size() + 1);
+        // Bring the target locale to the front of the list
+        // There's a hidden API, but it's not currently used here.
+        locales.add(locale);
+        for (int i = 0; i < defaultLocales.size(); ++i) {
+            locales.add(defaultLocales.get(i));
+        }
+        config.setLocales(new LocaleList(locales.toArray(new Locale[0])));
     }
 }

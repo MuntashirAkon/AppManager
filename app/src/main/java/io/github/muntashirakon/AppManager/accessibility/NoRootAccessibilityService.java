@@ -27,7 +27,7 @@ public class NoRootAccessibilityService extends BaseAccessibilityService {
     @Override
     public void onCreate() {
         super.onCreate();
-        pm = LangUtils.wrap(this).getPackageManager();
+        pm = LangUtils.wrapSystem(this).getPackageManager();
     }
 
     @Override

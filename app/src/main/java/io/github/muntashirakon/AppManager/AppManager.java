@@ -12,7 +12,6 @@ import androidx.room.Room;
 
 import com.google.android.material.color.DynamicColors;
 import com.topjohnwu.superuser.Shell;
-import com.yariksoffice.lingver.Lingver;
 
 import org.lsposed.hiddenapibypass.HiddenApiBypass;
 
@@ -21,6 +20,7 @@ import java.security.Security;
 import io.github.muntashirakon.AppManager.db.AppsDb;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class AppManager extends Application {
     private static AppManager instance;
@@ -58,14 +58,14 @@ public class AppManager extends Application {
         instance = this;
         super.onCreate();
         DynamicColors.applyToActivitiesIfAvailable(this);
-        Lingver.init(instance, LangUtils.getLocaleByLanguage(instance));
+        LangUtils.init(this);
         Security.addProvider(new JavaKeyStoreProvider());
     }
 
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && !Utils.isRoboUnitTest()) {
             HiddenApiBypass.addHiddenApiExemptions("L");
         }
     }

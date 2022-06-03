@@ -36,13 +36,13 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
+import io.github.muntashirakon.AppManager.utils.LangUtils;
 
 public class HelpActivity extends BaseActivity {
     private LinearLayoutCompat container;
     private WebView webView;
     private LinearLayoutCompat searchContainer;
     private SearchView searchView;
-    private static boolean firstTime = true;
 
     @Override
     protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
@@ -66,12 +66,9 @@ public class HelpActivity extends BaseActivity {
             openDocsSite();
             return;
         }
-        if (firstTime) {
-            // Recreate if loaded for the first time to prevent localization issue.
-            recreate();
-            firstTime = false;
-            return;
-        }
+        // Fix locale issue due to WebView (https://issuetracker.google.com/issues/37113860)
+        LangUtils.applyLocaleToActivity(this);
+
         LinearLayoutCompat webviewWrapper = findViewById(R.id.webview_wrapper);
         webView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
