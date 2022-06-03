@@ -88,6 +88,8 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
     private static final String PACKAGE_NAME_TERMUX = "com.termux";
     private static final String ACTIVITY_NAME_TERMUX = "com.termux.app.TermuxActivity";
 
+    private static boolean SHOW_DISCLAIMER = true;
+
     MainViewModel mModel;
 
     private MainRecyclerAdapter mAdapter;
@@ -174,9 +176,10 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
         multiSelectionView.setOnSelectionChangeListener(this);
         selectionMenu = multiSelectionView.getMenu();
 
-        if ((boolean) AppPref.get(AppPref.PrefKey.PREF_SHOW_DISCLAIMER_BOOL)) {
-            @SuppressLint("InflateParams")
-            View view = getLayoutInflater().inflate(R.layout.dialog_disclaimer, null);
+        if (SHOW_DISCLAIMER && AppPref.getBoolean(AppPref.PrefKey.PREF_SHOW_DISCLAIMER_BOOL)) {
+            // Disclaimer will only be shown the first time it is loaded.
+            SHOW_DISCLAIMER = false;
+            View view = View.inflate(this, R.layout.dialog_disclaimer, null);
             new MaterialAlertDialogBuilder(this)
                     .setView(view)
                     .setCancelable(false)
