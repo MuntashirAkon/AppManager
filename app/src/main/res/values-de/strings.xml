@@ -858,7 +858,7 @@
     <string name="notification_title">Protokollierung lauft</string>
     <string name="notification_ticker">Protokollierung gestartet</string>
     <string name="notification_subtext">Berühren, um die Aufnahme zu stoppen</string>
-    <string name="no_saved_logs">Keine gespeicherten Protokolle gefunden.</string>
+    <string name="no_saved_logs">Keine gespeicherten Protokolle.</string>
     <string name="manage_saved_logs">Gespeicherte Protokolle verwalten</string>
     <string name="filter_choice_tag">Kennzeichnung</string>
     <string name="log_cleared">Protokolle gelöscht</string>
