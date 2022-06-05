@@ -1062,7 +1062,7 @@
     <string name="notification_title">Rejestrowanie dziennika w toku</string>
     <string name="notification_ticker">Rozpoczęto rejestrowanie dziennika</string>
     <string name="notification_subtext">Dotknij, aby zatrzymać rejestrowanie</string>
-    <string name="no_saved_logs">Nie znaleziono zapisanych dzienników.</string>
+    <string name="no_saved_logs">Brak zapisanych dzienników.</string>
     <string name="manage_saved_logs">Zarządzaj zapisanymi dziennikami</string>
     <string name="log_saved">Zapisano dziennik.</string>
     <string name="log_recording_started">Rozpoczęto rejestrowanie dziennika.</string>
@@ -1249,4 +1249,5 @@
     <string name="item_select">Wybierz</string>
     <string name="apk_checksums">Sumy kontrolne APK</string>
     <string name="log_stop_recording">Zatrzymaj nagrywanie</string>
+    <string name="app_explorer">App Explorer</string>
 </resources>
