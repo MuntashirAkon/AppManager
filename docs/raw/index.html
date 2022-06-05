@@ -62,12 +62,14 @@
         }
     </style>
     <script>
+        // noinspection JSUnusedGlobalSymbols
         function setLanguage(language) {
             const date = new Date();
             date.setTime(date.getTime() + (365 * 24 * 60 * 60 * 1000));
             let expires = "expires=" + date.toUTCString();
             document.cookie = "lang=" + language + ";" + expires + ";path=/";
-            return true
+            loadLanguage(language)
+            return false
         }
 
         function getLanguage() {
@@ -85,18 +87,23 @@
         }
 
         function loadLanguage(lang) {
-            let url = document.location.href;
-            if (url.endsWith("index.html")) {
-                url = url.replace("index.html", "")
+            const protocol = document.location.protocol + '//';
+            const host = document.location.host;
+            let path = document.location.pathname;
+            const queries = document.location.search;
+            const hash = document.location.hash;
+            if (path.endsWith("index.html")) {
+                path = path.replace("index.html", "")
             }
-            if (!url.endsWith("/")) {
-                url += '/';
+            if (!path.endsWith("/")) {
+                path += '/';
             }
-            document.location.assign(url + lang + '/');
+            document.location.assign(protocol + host + path + lang + '/' + (queries ? queries : '') + (hash ? hash : ''));
         }
 
         const supportedLanguages = ['PLACEHOLDER_LANGUAGES_AS_ARRAY'];
 
+        // noinspection JSUnusedGlobalSymbols
         function onLoadDocument() {
             const lang = getLanguage();
             if (lang != null) {

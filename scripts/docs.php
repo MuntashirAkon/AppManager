@@ -34,7 +34,7 @@ const DIST_BRANCH = 'pages';
  *
  * @param string $lang Target language e.g. en, ru, ja, etc.
  */
-function build_html(string $lang) {
+function build_html(string $lang): void {
     $pwd = RAW_DIR . '/' . $lang;
     $main_tex = $pwd . '/' . MAIN_TEX;
     $output_file = $pwd . '/' . OUTPUT_FILENAME;
@@ -107,7 +107,7 @@ function build_html(string $lang) {
  *
  * @param string[] $tex_files Relative links to the TeX files
  */
-function collect_tex_files(array &$tex_files, string $base_dir = null, string $tex_file = null) {
+function collect_tex_files(array &$tex_files, string $base_dir = null, string $tex_file = null): void {
     if ($tex_file == null) {
         $base_dir = getcwd() . '/' . BASE_DIR;
         $tex_file = MAIN_TEX;
@@ -229,7 +229,7 @@ function get_tex_contents_assoc(string $tex_file): array {
 /**
  * Update base strings.xml
  */
-function rebase_strings() {
+function rebase_strings(): void {
     $base_dir = getcwd() . '/' . BASE_DIR;
     $strings_file = $base_dir . '/' . STRINGS_XML;
     $tex_files = array();
@@ -263,7 +263,7 @@ function rebase_strings() {
  *
  * @param string $lang Target language e.g. en, ru, ja, etc.
  */
-function update_translations(string $lang) {
+function update_translations(string $lang): void {
     $base_dir = getcwd() . '/' . BASE_DIR;
     $pwd = $base_dir . '/../' . $lang;
     $strings_file = $pwd . '/' . STRINGS_XML;
@@ -423,7 +423,7 @@ function update_translations(string $lang) {
     }
 }
 
-function deploy() {
+function deploy(): void {
     $languages = collect_languages();
     // Rebuild HTML
     foreach ($languages as $language) {
@@ -471,7 +471,7 @@ function deploy() {
     $js_lang_html = array();
     foreach ($languages as $language) {
         $lang_code = get_IETF_language_tag($language);
-        $js_lang_html[] = "  <a href=\"$language/\" onclick=\"setLanguage('$language')\">" . Locale::getDisplayName($lang_code, $lang_code) . "</a>";
+        $js_lang_html[] = "  <a href=\"$language/\" onclick=\"return setLanguage('$language')\">" . Locale::getDisplayName($lang_code, $lang_code) . "</a>";
     }
     $html_contents = file_get_contents(RAW_DIR . '/index.html');
     $html_contents = str_replace('PLACEHOLDER_LANGUAGES_AS_ARRAY', implode('\', \'', $languages), $html_contents);
@@ -519,7 +519,9 @@ function get_trimmed_content(string $content) : string {
 }
 
 function get_IETF_language_tag(string $lang): string {
-    if (strpos($lang, '-') === false) return $lang;
+    if (!str_contains($lang, '-')) {
+        return $lang;
+    }
     $lang_parts = explode('-', $lang);
     if ($lang_parts[1][0] == 'r') {
         // Skip r
@@ -530,7 +532,7 @@ function get_IETF_language_tag(string $lang): string {
     return implode('-', $lang_parts);
 }
 
-function create_transient_tex(string $target_dir, string $ietf_lang = 'en') {
+function create_transient_tex(string $target_dir, string $ietf_lang = 'en'): void {
     $am_version = system("grep -m1 versionName ./app/build.gradle | awk -F \\\" '{print $2}'", $ret_val);
     if ($ret_val != 0) {
         fprintf(STDERR, "Could not get the versionName from ./app/build.gradle\n");
