@@ -1251,7 +1251,7 @@
     <string name="pages$settings-page$install-in-the-background">Ob Anwendungen immer im Hintergrund installiert werden sollen. Sobald die Installation abgeschlossen ist, wird eine Benachrichtigung ausgegeben.</string>
     <string name="pages$settings-page$compression-method">Legen Sie die Kompressionsmethode fest, die bei Backups verwendet werden soll. App Manager unterstützt die Komprimierungsmethoden GZip und BZip2,
 \nGZip ist die Standardkomprimierungsmethode. Es hat keinen Einfluss auf die Wiederherstellung einer bestehenden Sicherung.</string>
-    <string name="pages$settings-page$backup-options">Passen Sie das Dialogfeld {Sicherung/Wiederherstellung} an, das bei der Erstellung einer Sicherung angezeigt wird.
+    <string name="pages$settings-page$backup-options">Passen Sie das Dialogfeld \\textit{Sicherung/Wiederherstellung} an, das bei der Erstellung einer Sicherung angezeigt wird.
 \n
 \n\\seealsoinline{\\hyperref[subsec:backup-restore-backup-options]{Sicherungsoptionen}}</string>
     <string name="pages$settings-page$import-backups">Importieren Sie Sicherungen aus alten und eingestellten Projekten wie Titanium Backup, OAndBackup und Swift Backup (Version 3.0 bis 3.2).
