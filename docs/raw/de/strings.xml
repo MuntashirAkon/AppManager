@@ -39,12 +39,12 @@
 \n
 \n\\textit{Link:} \\url{https://opencollective.com/muntashir}.
 \n
-\nMit der Überweisung von Spenden stimmen die Absender zu, dass sie die Spenden nicht als Druckmittel verwenden, um die von ihnen gewünschten 
+\nMit der Überweisung von Spenden stimmen die Absender zu, dass sie die Spenden nicht als Druckmittel verwenden, um die von ihnen gewünschten
 \nFunktionen zu priorisieren. Für Feature-Anfragen sind keine Belohnungen oder Spenden erforderlich, und sie werden nach den
 \nPräferenzen des Entwicklers priorisiert.
 \n
-\n\\emph{App-Manager nimmt alle Angebote für Finanzierungen oder Zuschüsse an.} Vertreter der interessierten Organisation können 
-\ndirekt den Entwickler über die in §\\cref{sec:Ansprechpartner} angegebenen Optionen kontaktieren.</string>
+\n\\emph{App-Manager nimmt alle Angebote für Finanzierungen oder Zuschüsse an.} Vertreter der interessierten Organisation können
+\ndirekt den Entwickler über die in \\Sref{sec:Ansprechpartner} angegebenen Optionen kontaktieren.</string>
     <string name="intro$main$intro">App Manager ist ein fortschrittlicher Paketmanager für Android. Er bietet zahllose Funktionen und benötigt daher ein Benutzer-
 \nhandbuch, um seine Benutzer zu unterstützen. Dieses Dokument fungiert als Benutzerhandbuch für App Manager in dem Sinne,
 \ndass es darauf abzielt, jede Funktion zu beschreiben, die App Manager zu bieten hat. Dieses Dokument kann auch als ``offizieller\'\' Leitfaden für App Manager betrachtet
@@ -222,7 +222,7 @@
     <string name="pages$main-page$log-viewer">Dieser Menüpunkt öffnet die Log-Betrachter Seite, die Protokolle mit dem Befehl \\texttt{logcat} anzeigen und verwalten kann. Unter
 \nStandardmäßig kann diese Seite nur die Aktivitäten des App Managers anzeigen. Sie kann jedoch Protokolle von allen Prozessen anzeigen
 \nProzesse anzeigen, wenn \\texttt{android.permission.READ\\_LOGS} gewährt wird. Diese Berechtigung wird automatisch erteilt, wenn die aktuelle
-\n\\hyperref[subsec:mode-of-operation]{Betriebsmodus} entweder root oder ADB ist.</string>
+\n\\hyperref[subsec:mode-of-operation]{Betriebsmodus} entweder root oder ADB\\@ ist.</string>
     <string name="pages$app-details-page$$section-title">App-Detailseite</string>
     <string name="pages$main-page$apk-updater">Wenn die App \\href{https://github.com/rumboalla/apkupdater}{APK Updater} im System installiert ist, kann sie
 \ndirekt über diesen Menüpunkt geöffnet werden. Die Option bleibt ausgeblendet, wenn die App nicht im System vorhanden ist.</string>
@@ -246,13 +246,13 @@
     <string name="pages$app-details-page$$permissions-title">Berechtigungen</string>
     <string name="pages$app-details-page$$other-tabs-title">Sonstige Registerkarten</string>
     <string name="pages$app-details-page$$signatures-tab-title">Registerkarte Signaturen</string>
-    <string name="pages$app-details-page$intro">Die Seite \\textbf{App-Details} besteht aus 11 (elf) Registerkarten. Sie beschreibt fast alle Informationen, die eine App
-\nhaben kann, einschließlich aller Attribute aus dem Manifest, \\hyperref[ch:app-ops]{Anwendungsoperationen}, Signier-
+    <string name="pages$app-details-page$intro">\\textbf{Anwendungsdetails} Seite besteht aus 11 (elf) Registerkarten. Sie beschreibt fast alle Informationen, die
+\neine Anwendung haben kann, einschließlich aller Attribute aus ihrem Manifest, \\hyperref[ch:app-ops]{Anwendungsoperationen}, Signier
 \nInformationen, Bibliotheken, und so weiter.</string>
     <string name="pages$app-details-page$$app-ops-title">Anwendungsoperationen</string>
     <string name="pages$app-details-page$app-info-tab">\\textbf{App Info} enthält allgemeine Informationen über eine Anwendung. Außerdem werden hier viele Aktionen aufgelistet, die
 \nauf dieser Registerkarte durchgeführt werden können.</string>
-    <string name="pages$app-details-page$colour-codes">Liste der Hintergrundfarben, die auf dieser Seite verwendet werden, und ihre Bedeutung:
+    <string name="pages$app-details-page$colour-codes">Liste der Farben, die auf dieser Seite verwendet werden, und ihre Bedeutung:
 \n\\begin{itemize}
 \n \\item \\colorbox{AMRed}{\\textcolor{black}{Rot (Tag)}} / \\colorbox{AMDarkRed}{\\textcolor{white}{Dunkelrot (Nacht)}}
 \n -- Kennzeichnet alle App-OPs oder Berechtigungen mit dem Flag \"Gefährlich\" oder alle im App Manager blockierten Komponenten
@@ -347,7 +347,7 @@
 \n \\end{itemize}
 \n
 \n \\item \\textbf{Horizontales Aktionsfeld.} Ein Aktionspanel mit verschiedenen Aktionen, die für die Anwendung durchgeführt werden können.
-\n die Anwendung. Siehe §\\ref{subsubsec:horizontal-action-panel} für eine vollständige Liste der hier verfügbaren Aktionen.
+\n die Anwendung. Siehe \\Sref{subsubsec:horizontal-action-panel} für eine vollständige Liste der hier verfügbaren Aktionen.
 \n Zusätzliche Aktionen sind im Menü \\hyperref[subsubsec:app-info-options-menu]{options menu} verfügbar.
 \n
 \n \\item \\textbf{Pfade \\&amp; Verzeichnisse.} Enthält verschiedene Informationen zu Anwendungspfaden, einschließlich \\textit{app
@@ -449,7 +449,7 @@
 \n \\item \\textbf{Cache löschen.} Anwendungscache löschen. Es gibt keine Android-Möglichkeit, den Cache einer bestimmten
 \n Anwendung zu löschen. Daher sind Root-Rechte erforderlich, um den Cache des internen Speichers der Anwendung zu löschen.
 \n
-\n \\item \\textbf{Installieren.} Aktion zur Installation einer Anwendung, die über eine Drittanbieteranwendung geöffnet wurde. Diese Schaltfläche wird nur angezeigt
+\n \\item \\textbf{Installieren.} Aktion zur Installation einer Anwendung, die über eine Drittanbieteranwendung geöffnet wurde. Diese Schaltfläche wird nur
 \n angezeigt, wenn die Anwendung noch nicht installiert wurde.
 \n
 \n \\item \\textbf{Was gibt\'s Neues.} Diese Schaltfläche wird für eine externe Anwendung angezeigt, wenn sie bereits installiert ist. Wenn Sie auf
@@ -484,29 +484,44 @@
 \n \\item \\textbf{Store.} Öffnet die Anwendung in \\textit{Aurora Store}. Die Option ist nur sichtbar, wenn \\textit{Aurora
 \n Store} installiert ist.
 \n\\end{itemize}</string>
-    <string name="pages$app-details-page$additional-features-for-rooted-phones">Anders als Benutzer ohne Root-Rechte, die hier zumeist nur Zuschauer sind, können Benutzer mit Root-Rechten hier verschiedene Dinge tun.</string>
+    <string name="pages$app-details-page$additional-features-for-rooted-phones">Im Gegensatz zu Nicht-Root-Benutzern, die in diesen Registerkarten meist nur Zuschauer sind, können Root-Benutzer verschiedene Operationen durchführen.</string>
     <string name="pages$app-details-page$app-info-options-menu">Das Menü \"Optionen\" befindet sich in der oberen rechten Ecke der Seite. Eine vollständige Beschreibung der dort vorhandenen Optionen finden Sie
 \nunten angegeben:
 \n\\begin{itemize}
-\n \\item \\textbf{Teilen.} Die Schaltfläche Teilen kann verwendet werden, um die APK-Datei zu teilen, oder die \\textit{APKS}-Datei (wenn die App
-\n mehrere Splits hat) kann in \\href{https://github.com/Aefyr/SAI}{SAI} importiert werden. Sie können sie mit Ihrem bevorzugten
-\n Dateimanager freigeben, um die Datei in Ihrem gemeinsamen Speicher zu speichern.
+\n \\item \\textbf{Teilen.} Die Schaltfläche Teilen kann verwendet werden, um die APK zu teilen oder (wenn die Anwendung mehrere Teile hat)
+\n \\textit{APKS} Datei, die aus der Anwendung extrahiert wurde.
 \n
 \n \\item \\textbf{Auffrischen.} Aktualisiert die Registerkarte App-Info.
-\n \\item \\textbf{In Einstellungen anzeigen.} Öffnet die App in den Android-Einstellungen.
-\n \\item \\textbf{Sichern/Wiederherstellen.} Öffnet den Sicherungs-/Wiederherstellungsdialog.
-\n \\item \\textbf{Blockierungsregeln exportieren.} Exportiert Regeln, die für diese App im App Manager konfiguriert wurden.
 \n
-\n \\item \\textbf{Öffnen in Termux.} Öffnet die App in Termux. Dabei wird \\texttt{su - user\\_id} ausgeführt, wobei
-\n \\texttt{user\\_id} die Kernel-Benutzer-ID der Anwendung bezeichnet (beschrieben in der
-\n \\hyperref[subsubsec:app-info-general-information]{Abschnitt Allgemeine Informationen}). Diese Option ist nur sichtbar für den
-\n root-Benutzer. Unter §\\cref{subsubsec:config-termux} erfahren Sie, wie Sie Termux so konfigurieren, dass Befehle von Drittanbieteranwendungen ausgeführt werden.
+\n \\item \\textbf{Ansicht in Einstellungen.} Öffnen Sie die Anwendung in den Android-Einstellungen.
 \n
-\n \\item \\textbf{Ausführen in Termux.} Öffnen Sie die Anwendung unter Verwendung von \\texttt{run-as package\\_name} in Termux. Dies ist nur anwendbar
-\n für die debuggbaren Anwendungen und funktioniert sowohl für Root- als auch für ADB-Benutzer. Siehe §\\cref{subsubsec:config-termux} um zu erfahren, wie man
-\n Termux so zu konfigurieren, dass Befehle von Drittanbieter-Anwendungen ausgeführt werden.
+\n \\Eintrag \\textbf{Sichern/Wiederherstellen.} Öffnen Sie den Dialog zum Sichern/Wiederherstellen.
 \n
-\n \\item \\textbf{Symbol extrahieren.} Extrahieren und speichern Sie das Symbol der Anwendung an dem von Ihnen gewünschten Ort.
+\n \\item \\textbf{Blockierungsregeln exportieren.} Exportieren von Regeln, die für die Anwendung im App Manager konfiguriert wurden.
+\n
+\n \\item \\textbf{Öffnen in Termux.} Öffnen Sie die Anwendung in Termux. Dabei wird \\texttt{su - user\\_id} ausgeführt, wobei
+\n \\texttt{user\\_id} die Kernel-Benutzerkennung der Anwendung bezeichnet (beschrieben in \\Sref{subsubsec:app-info-general-information}).
+\n Diese Option ist nur für den Root-Benutzer sichtbar. Siehe \\Sref{subsubsec:config-termux}, um zu erfahren, wie man Termux
+\n für die Ausführung von Befehlen aus Anwendungen von Drittanbietern konfiguriert.
+\n
+\n \\item \\textbf{Ausführen in Termux.} Öffnen Sie die Anwendung über \\texttt{run-as package\\_name} in Termux. Dies ist nur
+\n Dies gilt nur für die debuggbaren Anwendungen und funktioniert sowohl für Root- als auch für ADB-Benutzer. Siehe \\Sref{subsubsec:config-termux}
+\n erfahren Sie, wie Sie Termux so konfigurieren, dass Befehle von Drittanbieteranwendungen ausgeführt werden.
+\n
+\n \\item \\textbf{MagiskHide.} Öffnet ein Dialogfeld mit der Liste der Prozesse innerhalb der Anwendung, die zum MagiskHide hinzugefügt
+\n oder aus der MagiskHide-Liste entfernt werden können.
+\n
+\n \\item \\textbf{MagiskDenyList.} Öffnet ein Dialogfeld mit einer Liste von Prozessen innerhalb der Anwendung, die
+\n aus der MagiskDenyList hinzugefügt oder entfernt werden können.
+\n
+\n \\item \\textbf{Batterieoptimierung.} Aktivieren/Deaktivieren der Batterieoptimierung.
+\n
+\n \\item \\hyperref[sec:net-policy]{\\textbf{Netzpolitik.}} Konfigurieren Sie die Netzpolitik (z. B. die Datennutzung im Hintergrund) für die
+\n Anwendung.
+\n
+\n \\item \\textbf{Symbol extrahieren.} Extrahieren und Speichern des Symbols der Anwendung im gemeinsamen Speicher.
+\n
+\n \\item \\textbf{Hinzufügenzum Profile.} Fügen Sie die Anwendung zu einem der konfigurierten \\hyperref[sec:profile-page]{Profile} hinzu.
 \n\\end{itemize}</string>
     <string name="pages$app-details-page$config-termux">Standardmäßig lässt Termux die Ausführung von Befehlen aus Drittanbieteranwendungen nicht zu. Um diese Option zu verwenden, muss Termux v0.96
 \noder höher erforderlich und \\texttt{allow-external-apps=true} muss in \\texttt{\\textasciitilde/.termux/termux.properties} hinzugefügt werden.
@@ -522,52 +537,51 @@
 \ndem Anwendungsmanifest deklariert werden. Das Anwendungsmanifest ist eine Datei, in der anwendungsspezifische Metadaten gespeichert werden. Das Android
 \nBetriebssystem lernt durch das Lesen der Metadaten, was es mit der Anwendung tun soll.
 \n
-\nDie in diesen Registerkarten verwendeten Farben werden in §\\ref{subsec:app-details-colour-codes} erklärt. Es ist auch möglich, die Liste der Komponenten so zu sortieren,
+\nDie in diesen Registerkarten verwendeten Farben werden in \\Sref{subsec:app-details-colour-codes} erklärt. Es ist auch möglich, die Liste der Komponenten so zu sortieren,
 \ndass blockierte oder Tracker-Komponenten ganz oben in der Liste angezeigt werden, und zwar über die Option \\textbf{Sortieren} im Menü
 \nÜberlauf-Menü.</string>
-    <string name="pages$app-details-page$activities">\\textbf{Aktivitäten} sind Fenster oder Seiten, die Sie durchsuchen können (z. B. \\textit{Hauptseite} und \\textit{App-Detail-
-\nSeite} sind zwei separate Aktivitäten). Mit anderen Worten, eine Aktivität ist eine Komponente der Benutzeroberfläche (UI). Jede Aktivität kann
-\nmehrere UI-Komponenten haben, die als \\textit{Widgets} oder \\textit{Fragmente} bekannt sind, und ebenso kann jede der letztgenannten
-\nKomponenten können mehrere von ihnen verschachtelt oder übereinander angeordnet sein. Eine Aktivität ist jedoch die Komponente \\textit{Master}:
-\nEs kann nicht zwei verschachtelte Aktivitäten geben. Ein Anwendungsautor kann sich auch dafür entscheiden, externe Dateien innerhalb einer Aktivität zu öffnen
-\nund dabei eine Methode namens \\textit{Intent Filter} verwenden. Wenn Sie versuchen, eine Datei mit Ihrem Dateimanager zu öffnen, sucht entweder Ihr Dateimanager
-\n oder das System nach Absichtsfiltern, um zu entscheiden, welche Aktivitäten diese bestimmte Datei öffnen können, und bietet Ihnen an
-\ndie Datei mit diesen Aktivitäten zu öffnen (es hat also nichts mit der Anwendung selbst zu tun). Es gibt auch andere Intent-
-\nFilter.
+    <string name="pages$app-details-page$activities">\\textbf{Aktivitäten} sind die Fenster oder Seiten, die vom Android-Betriebssystem eindeutig identifiziert werden können (z. B.,
+\n\\textit{Hauptseite} und \\textit{App-Detailseite} sind zwei Aktivitäten). Jede Aktivität kann mehrere UI-Komponenten haben
+\nbekannt als \\textit{Steuerelemente}oder \\textit{Fragmente}, und jede Komponente kann verschachtelt oder übereinander platziert werden. Der
+\nEntwickler kann sich auch dafür entscheiden, externe Dateien, Links usw. innerhalb einer Aktivität zu öffnen, indem er eine Methode namens
+\n\\textit{intent filters}. Wenn Sie zum Beispiel eine Datei mit Ihrem Dateimanager öffnen, durchsucht entweder Ihr Dateimanager oder
+\nBetriebssystem die Absichtsfilter über PackageManager, um die Aktivitäten zu finden, die die Datei öffnen können, und
+\nbietet Ihnen an, die Datei mit diesen Aktivitäten zu öffnen.
 \n
-\nAktivitäten, die \\textit{exportable} sind, können in der Regel von jeder Drittanbieter-Anwendung geöffnet werden (einige Aktivitäten erfordern
-\nWenn dies der Fall ist, kann nur eine Anwendung, die über diese Berechtigungen verfügt, sie öffnen). Auf der Registerkarte \\textit{Aktivitäten},
-\nist der Name der Aktivität (oben in jedem Listenelement) eigentlich eine Schaltfläche. Sie ist aktiviert für die \\textit{exportable}
-\nAktivitäten aktiviert und für andere deaktiviert (Root-Benutzer können alle Aktivitäten öffnen). Sie können auf die Schaltfläche klicken, um die
-\nAktivität direkt im App Manager zu öffnen. Sie können die Interceptor-Seite auch öffnen, indem Sie lange auf eine Aktivität klicken. Derzeit
-\nfunktioniert dies nur für \\textit{exportierbare} Aktivitäten.
+\nAktivitäten, die exportierbar sind, können in der Regel von beliebigen Drittanbieteranwendungen geöffnet werden. Einige Aktivitäten erfordern
+\nBerechtigungen, und wenn das der Fall ist, kann nur eine Anwendung mit diesen Berechtigungen sie öffnen. In der
+\n\\textit{Aktivitäten} können Aktivitäten über die Schaltfläche \\textbf{Launch} gestartet werden. Wenn es erforderlich ist, zusätzliche
+\nzusätzliche Informationen wie Intent-Extras, Daten oder Aktionen anzugeben, öffnet ein langer Klick auf die Schaltfläche \\textbf{Launch} das Fenster
+\n\\hyperref[sec:interceptor-page]{Activity Interceptor} Seite, die solche Funktionen bietet.
 \n
-\n\\begin{warning}{Hinweis}
-\n Wenn Sie eine Aktivität nicht öffnen können, besteht die Möglichkeit, dass sie bestimmte Abhängigkeiten nicht erfüllt, z. B. können Sie
-\n \\textit{App-Details-Aktivität} nicht öffnen, weil dafür mindestens ein Paketname angegeben werden muss. Diese
-\n Abhängigkeiten können nicht immer programmatisch abgeleitet werden. Daher können Sie sie nicht mit dem App Manager öffnen.
-\n\\end{warning}
+\n\\begin{tip}{Hinweis}
+\n Wenn Sie eine Aktivität nicht öffnen können, ist es wahrscheinlich, dass bestimmte Abhängigkeiten nicht erfüllt sind, z.B. \\ Sie
+\n Sie können z. B. die Seite \\textit{App-Details} nicht öffnen, weil Sie dafür zumindest einen Paketnamen angeben müssen. Da diese
+\n Abhängigkeiten nicht programmatisch hergeleitet werden können, können diese Aktivitäten standardmäßig nicht über den App Manager geöffnet werden.
+\n\\end{tip}
 \n
-\nSie können auch eine Verknüpfung für diese \\textit{ausführbare} Aktivitäten erstellen (über die entsprechende Schaltfläche), und wenn Sie möchten, können Sie
-\ndie Verknüpfung auch bearbeiten, indem Sie die Schaltfläche \\textit{Verknüpfung bearbeiten} verwenden.
+\nEs ist auch möglich, über die Schaltfläche \\textbf{Verknüpfung erstellen} Verknüpfungen zu den Aktivitäten zu erstellen.
 \n
 \n\\begin{danger}{Vorsicht}
 \n Wenn Sie App Manager deinstallieren, gehen alle von App Manager erstellten Verknüpfungen verloren.
 \n\\end{danger}</string>
-    <string name="pages$app-details-page$servcies">Im Gegensatz zu \\hyperref[subsubsec:activities]{Aktivitäten}, die für die Benutzer sichtbar sind, werden mit \\textbf{Diensten} Hintergrundaufgaben erledigt. Wenn
-\nSie z. B. ein Video aus dem Internet herunterladen und dabei den Internetbrowser Ihres Telefons verwenden, verwendet der Internetbrowser
-\neinen Dienst im Vordergrund verwendet, um den Inhalt herunterzuladen.
+    <string name="pages$app-details-page$servcies">Im Gegensatz zu \\hyperref[subsubsec:activities]{Aktivitäten}, die Benutzer sehen können, erledigen \\textbf{Services} Hintergrundaufgaben. Zum Beispiel,
+\nwenn Sie mit dem Internetbrowser Ihres Telefons ein Video aus dem Internet herunterladen, verwendet der Internetbrowser einen
+\n\\textit{foreground service}, um den Inhalt herunterzuladen.
 \n
-\nWenn Sie eine Aktivität beenden, wird sie in der Regel sofort gelöscht (dies hängt von vielen Faktoren ab, z. B. davon, wie viel freier
-\nSpeicher Ihres Telefons hat). Dienste können jedoch auf Wunsch für unbestimmte Zeit laufen. Wenn mehr Dienste im Hintergrund ausgeführt werden
-\nHintergrund laufen, wird Ihr Handy langsamer, weil der Speicher und/oder die Verarbeitungsleistung knapp wird, und der Akku des Handys kann
-\nschneller entladen werden. Bei neueren Android-Versionen ist die Funktion zur Akkuoptimierung standardmäßig für alle Apps aktiviert.
-\nWenn diese Funktion aktiviert ist, kann das System willkürlich jeden Dienst beenden.
+\nWenn eine Aktivität geschlossen oder aus dem Abschnitt \\textit{Ereignisse} entfernt wird, kann sie sofort zerstört werden, abhängig von
+\nabhängig von vielen Faktoren, z. B. davon, wie viel freier Speicherplatz auf dem Telefon vorhanden ist. Dienste können jedoch auf Wunsch unbegrenzt ausgeführt werden. Wenn mehr
+\nDienste im Hintergrund ausgeführt werden, kann das Telefon aufgrund des Mangels an Speicher und/oder Verarbeitungsleistung langsamer werden, und
+\nder Akku des Telefons wird schneller entladen. Bei neueren Android-Versionen ist die Funktion zur Akkuoptimierung
+\nstandardmäßig für alle Anwendungen aktiviert. Wenn diese Funktion aktiviert ist, kann das System jeden Dienst willkürlich beenden. Allerdings,
+\nVordergrunddienste (d. h. Dienste, die mit einer festen Benachrichtigung laufen, wie z. B. der Musikplayer) werden in der Regel nicht
+\nbeendet, es sei denn, die Ressourcen des Systems sind knapp (Speicher, Batterie usw.). Herstellerspezifische Standard-ROMs können eine
+\naggressivere Optimierung bieten. MIUI verfügt beispielsweise über eine sehr aggressive Optimierungsfunktion, die als \\textit{MIUI Optimierung} bekannt ist.
 \n
-\nÜbrigens werden sowohl Aktivitäten als auch Dienste im gleichen \\href{https://stackoverflow.com/questions/7597742}{looper}
-\nHauptlooper genannt, was bedeutet, dass die Dienste nicht wirklich im Hintergrund ausgeführt werden. Es ist die Aufgabe der Anwendungsautoren
-\ndies sicherzustellen. Wie kommunizieren die Anwendungen mit den Diensten\? Sie verwenden den
-\n\\hyperref[subsubsec:app-details-receivers]{Broadcast-Empfänger}.</string>
+\nBeide Aktivitäten und Dienste werden im selben \\href{https://stackoverflow.com/questions/7597742}{looper} ausgeführt, dem
+\ndem Hauptlooper, was bedeutet, dass die Dienste nicht wirklich im Hintergrund ausgeführt werden. Es ist die Aufgabe des Entwicklers, dies
+\nsicherzustellen. Wie kommuniziert die Anwendung mit dem Dienst\? Sie verwendet
+\n\\hyperref[subsubsec:app-details-receivers]{Broadcast Empfänger} oder Binder.</string>
     <string name="pages$app-details-page$receivers">\\textbf{Empfänger} (auch \\textit{Broadcast Empfänger} genannt) können für die Ausführung bestimmter Aufgaben für
 \nbestimmten Ereignissen verwendet werden. Diese Komponenten werden als Broadcast-Empfänger bezeichnet, da sie ausgeführt werden, sobald eine Broadcast-Nachricht
 \nempfangen wird. Diese Broadcast-Nachrichten werden mit einer Methode namens Intent gesendet. Intent ist eine spezielle Funktion für Android
@@ -578,14 +592,15 @@
 \nwenig Speicherplatz haben, kann es sein, dass Ihr Telefon nach dem Aktivieren der mobilen Daten oder dem Herstellen einer Wifi-Verbindung für einen Moment einfriert oder verzögert wird.
 \nHaben Sie sich schon einmal gefragt, warum\? Das liegt daran, dass Broadcast-Empfänger, die `android.net.conn.CONNECTIVITY\\_CHANGE` empfangen können
 \nvom System geweckt werden, sobald Sie die Datenverbindung aktivieren. Da viele Apps diesen Absichtsfilter verwenden, werden alle diese Apps
-\nfast sofort vom System geweckt, was das Einfrieren oder die Verzögerungen verursacht. Abgesehen davon können Empfänger verwendet werden
-\nfür die Interprozesskommunikation (IPC) verwendet werden, d. h. sie helfen Ihnen bei der Kommunikation zwischen verschiedenen Anwendungen (vorausgesetzt, Sie haben die
+\nfast sofort vom System geweckt, was das Einfrieren oder die Verzögerungen verursacht. 
+\n
+\nAbgesehen davon können Empfänger für die Interprozesskommunikation (IPC) verwendet werden, d. h. sie helfen Ihnen bei der Kommunikation zwischen verschiedenen Anwendungen (vorausgesetzt, Sie haben die
 \nerforderlichen Berechtigungen) oder sogar zwischen verschiedenen Komponenten einer einzigen Anwendung.</string>
     <string name="pages$app-details-page$providers">\\textbf{Provider} (auch \\textit{Content Provider} genannt) werden für die Datenverwaltung verwendet. Wenn Sie zum Beispiel eine
-\napk-Datei speichern oder Regeln in App Manager exportieren, wird ein Inhaltsanbieter namens `androidx.core.content.FileProvider` verwendet.
-\nEs gibt weitere oder sogar eigene Content Provider, um verschiedene inhaltsbezogene Aufgaben zu verwalten,
-\nwie z.B. Datenbankmanagement, Tracking, Suche, etc. Jeder Content-Provider hat ein Feld namens \\textit{Authority}
-\ndas für diese bestimmte App im gesamten Android-Ökosystem ebenso eindeutig ist wie der Paketname.</string>
+\nAPK-Datei speichern oder Regeln in App Manager exportieren, wird ein Inhaltsanbieter namens \\texttt{.fm.FmProvider} verwendet, um die APK zu speichern oder
+\ndie Regeln zu exportieren. Es gibt viele Inhaltsanbieter, darunter auch die vom System bereitgestellten, um verschiedene
+\ninhaltsbezogenen Aufgaben wie Datenbankverwaltung, Nachverfolgung, Suche usw. Jeder Inhaltsanbieter hat ein Feld namens
+\n\\textit{Authority}, das für die Anwendung im gesamten Android-Ökosystem ebenso eindeutig ist wie der Paketname.</string>
     <string name="pages$app-details-page$blocking-components">Auf der rechten Seite jeder Komponente befindet sich ein Symbol für ``Blockieren\'\' (das zu einem Symbol für ``Entblocken/Wiederherstellen\'\' wird, wenn
 \ndie Komponente blockiert ist). Dieses Symbol (eigentlich eine Schaltfläche) kann verwendet werden, um den Blockierstatus der
 \nbestimmten Komponente zu ändern. Wenn Sie \\hyperref[subsubsec:instant-component-blocking]{Instant Komponenten blockieren}
@@ -613,7 +628,7 @@
 \n\\textit{normale} Berechtigungen, die automatisch gewährt werden, wenn sie im Anwendungsmanifest erscheinen, aber
 \n\\textit{gefährlich} und \\textit{Entwicklung} Berechtigungen erfordern eine Bestätigung durch den Benutzer. Die in diesen Registerkarten verwendeten Farben
 \nwerden in §\\cref{subsec:app-details-colour-codes} erläutert.</string>
-    <string name="pages$app-details-page$$config-termux-title">Termux</string>
+    <string name="pages$app-details-page$$config-termux-title">Termux konfigurieren</string>
     <string name="pages$app-details-page$$blocking-components-title">Komponenten blockieren</string>
     <string name="pages$main-page$batch-operations">Auf dieser Seite sind auch Stapeloperationen oder Operationen mit mehreren Anwendungen möglich. Der Mehrfachauswahlmodus kann
 \naktiviert werden, indem man auf ein beliebiges Anwendungssymbol klickt oder indem man auf ein beliebiges Element in der Liste lange klickt. Einmal aktiviert, wählt ein einfacher Klick auf
@@ -659,7 +674,7 @@
 \n\\begin{itemize}
 \n \\item \\texttt{X} -- Unterstützt mehrere Architekturen
 \n \\item \\texttt{0} -- Keine Dex-Dateien in der Anwendung vorhanden
-\n \\item \\texttt{\\textdegree°} -- Unterbrochene Anwendung
+\n \\item \\texttt{\\°} -- Unterbrochene Anwendung
 \n \\item \\texttt{\\#} -- Die Anwendung hat das System aufgefordert, einen großen Heap, d. h. großen Laufzeitspeicher, zuzuweisen
 \n \\item \\texttt{\?} -- Die Anwendung forderte die virtuelle Maschine auf, in den sicheren Modus zu wechseln.
 \n\\end{itemize}</string>
@@ -937,7 +952,7 @@
     <string name="pages$profile-page$$clear-data-title">Daten löschen</string>
     <string name="pages$profile-page$$block-trackers-title">Tracker blockieren</string>
     <string name="pages$profile-page$$save-apk-title">APK speichern</string>
-    <string name="pages$profile-page$configurations-tab">Auf der Registerkarte Konfigurationen können Sie die ausgewählten Pakete konfigurieren. Die Beschreibung der einzelnen Elemente ist unten angegeben:</string>
+    <string name="pages$profile-page$configurations-tab">Auf der Registerkarte Konfigurationen können Sie die ausgewählten Pakete konfigurieren.</string>
     <string name="pages$profile-page$comment">Dies ist der Text, der auf der Seite \\hyperref[sec:profiles-page]{Profile} angezeigt wird. Wenn er nicht gesetzt ist, werden stattdessen die aktuellen
 \nKonfigurationen stattdessen angezeigt.</string>
     <string name="pages$profiles-page$$options-menu-title">Menü Optionen</string>
@@ -959,11 +974,7 @@
     <string name="pages$profile-page$state">Gibt an, wie sich bestimmte konfigurierte Optionen verhalten werden. Wenn zum Beispiel die Option \\textit{Deaktivieren} aktiviert ist, werden die Anwendungen
 \ndeaktiviert, wenn der Status \\textit{Ein} ist, und wird aktiviert, wenn der Status \\textit{Aus} ist. Derzeit unterstützt der Status nur
 \n\\textit{Ein} und \\textit{Aus} Werte.</string>
-    <string name="pages$profile-page$intro">Die Seite Profil zeigt die Konfigurationen für ein Profil an. Sie bietet auch die Möglichkeit, sie zu bearbeiten.
-\n
-\n\\begin{tip}{Hinweis}
-\n Wenn Sie ein Profil anwenden und einige Pakete den Kriterien nicht entsprechen, werden sie einfach ignoriert.
-\n\\end{tip}</string>
+    <string name="pages$profile-page$intro">Die Seite Profil zeigt die Konfigurationen für ein Profil an. Sie bietet auch die Möglichkeit, sie zu bearbeiten.</string>
     <string name="pages$profile-page$apps-tab">Auf der Registerkarte Apps werden die unter diesem Profil konfigurierten Pakete aufgelistet. Pakete können hinzugefügt oder entfernt werden, indem Sie die Schaltfläche \\textit{Plus}
 \nunten nutzen. Pakete können auch entfernt werden, indem Sie lange auf sie klicken (in diesem Fall wird ein
 \nPopup mit der einzigen Option \\textit{Löschen} angezeigt).</string>
@@ -1040,10 +1051,10 @@
     <string name="appendices$specifications$$rules-specification-title">Regeln Spezifikationen</string>
     <string name="appendices$specifications$$external-title">Extern</string>
     <string name="pages$profile-page$components">Dies verhält sich genauso wie die Option \\hyperref[subsec:block-components-dots]{Block-Komponenten-Punkte} auf der
-\n1-Klick-Ops-Seite. Allerdings gilt dies nur für die ausgewählten Pakete. Wenn die Option \\hyperref[subsubsec:profile-state]{Status}
-\n\\textit{ein} ist, werden die Komponenten blockiert, und wenn der Status \\textit{aus} ist, werden die Komponenten entsperrt.
-\nDie Option kann (unabhängig von den eingegebenen Werten) deaktiviert werden, indem Sie auf die Schaltfläche \\textit{Deaktivieren} im Eingabedialog
-\nklicken.
+\n1-Klick-Ops-Seite. Allerdings wird die Blockierung hier nur auf die ausgewählten Pakete angewendet.
+\nWenn der Status von \\hyperref[subsubsec:profile-state]{Status} \\textit{ein} ist, werden die Komponenten blockiert,
+\nund wenn der Status \\textit{aus} ist, werden die Komponenten entsperrt.
+\nDie Option kann (unabhängig von den eingegebenen Werten) durch Klicken auf die Schaltfläche \\textit{deaktiviert} im Eingabedialog deaktiviert werden.
 \n
 \n\\seealsoinline{\\hyperref[subsec:faq:what-are-app-components]{Was sind die App-Komponenten\?}}</string>
     <string name="appendices$specifications$external">Externes Format wird zum Importieren oder Exportieren von Regeln in App Manager verwendet.
@@ -1077,12 +1088,13 @@
 \n\\end{itemize}</string>
     <string name="appendices$specifications$background">AM unterstützt derzeit das Sperren von Aktivitäten, Broadcast-Empfängern, Inhaltsanbietern, Diensten, App-Ops und Berechtigungen,
 \nund in Zukunft werde ich möglicherweise weitere Blockierungsoptionen hinzufügen. Um die Portabilität zu erhöhen, ist es notwendig, alle diese Daten zu importieren/exportieren.
+\ndieser Daten.
 \n
-\nDie Verwendung einer Datenbank sollte die beste Wahl sein, wenn es um die Speicherung von Daten geht. Im Moment werden mehrere \\texttt{tsv}-Dateien
+\nDie Pflege einer Datenbank sollte die beste Wahl sein, wenn es um die Speicherung von Daten geht. Im Moment werden mehrere \\texttt{tsv}-Dateien
 \nwobei jede Datei den Namen des Pakets und eine \\texttt{.tsv}-Erweiterung hat. Die Datei/Datenbank wird abgefragt/verarbeitet
-\ndurch die Klasse \\texttt{RulesStorageManager}. Aufgrund dieser Abstraktion sollte es in Zukunft einfacher sein, auf Datenbank- oder
-\nverschlüsselte Datenbanksysteme zu wechseln, ohne das Design des gesamten Projekts zu ändern. Derzeit werden alle Konfigurations-
-\ndateien unter \\texttt{/data/data/io.github.muntashirakon.AppManager/Files/conf} gespeichert.</string>
+\ndurch die Klasse \\texttt{RegelSpeicherManager}. Aufgrund dieser Abstraktion sollte es in Zukunft einfacher sein, auf Datenbank- oder
+\nverschlüsselte Datenbanksysteme zu wechseln, ohne das Design des gesamten Projekts zu ändern. Derzeit werden alle Konfigurations
+\nDateien unter \\texttt{/data/data/io.github.muntashirakon.AppManager/Files/conf} gespeichert.</string>
     <string name="appendices$specifications$$internal-title">Intern</string>
     <string name="appendices$specifications$$rules-file-format-title">Regeln Dateiformat</string>
     <string name="faq$aot$feature-adb">Die meisten der vom ADB-Modus unterstützten Funktionen sind standardmäßig aktiviert, sobald die ADB-Unterstützung von AM erkannt wird. Dazu gehören
@@ -1157,23 +1169,34 @@
     <string name="pages$settings-page$language">Konfigurieren Sie die In-App-Sprache.
 \nApp Manager unterstützt derzeit 19 (neunzehn) Sprachen.</string>
     <string name="pages$settings-page$app-theme">In-App-Thema konfigurieren.</string>
-    <string name="pages$settings-page$screen-lock">Sperren Sie den App Manager mit der Android-Bildschirmsperre, sofern eine Bildschirmsperre konfiguriert ist.</string>
-    <string name="pages$settings-page$mode-of-operation">Sie können eine der vier Optionen auswählen:
+    <string name="pages$settings-page$screen-lock">Sperren Sie den App Manager mit der Android-Bildschirmsperre, sofern eine Bildschirmsperre konfiguriert ist.
+\n
+\n\\begin{warning}{Warnung}
+\n Wenn die Bildschirmsperre in Android nach dem Aktivieren dieser Einstellung deaktiviert ist, wird App Manager nicht geöffnet, bis sie wieder aktiviert wird.
+\n\\end{warning}</string>
+    <string name="pages$settings-page$mode-of-operation">Der Betriebsmodus legt fest, wie der App Manager insgesamt funktioniert. Er hat die folgenden Optionen:
 \n\\begin{itemize}
-\n \\item \\textbf{Auto.} Lassen Sie AM entscheiden, welche Option für Sie geeignet ist.
-\n Obwohl dies die Standardoption ist, kann sie bei einigen Geräten Probleme verursachen.
+\n \\item \\textbf{Auto.} Überlassen Sie App Manager die Wahl der geeigneten Option.
+\n Obwohl dies die Standardoption ist, sollten nicht gerootete Benutzer den Modus \\textit{no-root} verwenden.
 \n
-\n \\item \\textbf{Root.} Wählen Sie den Root-Modus.
-\n Standardmäßig fordert AM die Root-Berechtigung an, wenn Root erkannt, aber noch nicht gewährt wurde.
-\n Wenn diese Option ausgewählt ist, wird AM im Root-Modus ausgeführt, auch wenn Root nicht verfügbar ist oder verweigert wird.
-\n Dies kann zu Abstürzen oder Einfrierproblemen führen und sollte daher nicht aktiviert werden, wenn Root nicht verfügbar ist.
+\n \\textbf{Root.} Betreibt App Manager im Root-Modus. App Manager fällt in den Modus \\textit{no-root} zurück, wenn root
+\n nicht erkannt wird, oder in seltenen Fällen, wenn die Binder-Kommunikation über root deaktiviert ist (z.B. in \\href{https://github.com/MuntashirAkon/AppManager/issues/606}{Phh SuperUser}).
 \n
-\n \\item \\textbf{ADB über TCP.} Aktivieren Sie \\hyperref[sec:adb-over-tcp]{ADB über TCP} Modus.
-\n AM kann auf unbestimmte Zeit hängen bleiben, wenn ADB über TCP nicht aktiviert ist.
+\n \\item \\textbf{ADB über TCP.} Betreiben Sie App Manager im ADB-Modus über \\hyperref[sec:adb-over-tcp]{ADB über TCP}.
+\n App Manager fällt in den \\textit{no-root}-Modus zurück, wenn ADB over TCP nicht aktiviert ist.
 \n
-\n \\item \\textbf{No-root.} AM läuft im no-root Modus.
-\n AM ist leistungsfähiger, wenn dies aktiviert ist, aber alle Root/ADB-Funktionen werden deaktiviert.
-\n\\end{itemize}</string>
+\n \\textbf{Wireless debugging}. Aktivieren Sie ADB über Wireless Debugging. Es wird versucht, zunächst automatisch eine Verbindung mit dem konfigurierten Port
+\n automatisch zu verbinden. Wenn dies fehlschlägt, wird der Benutzer aufgefordert, entweder ein Pairing durchzuführen oder sich manuell mit dem ADB-Daemon zu verbinden.
+\n App Manager fällt in den Modus \\textit{no-root} zurück, wenn die Verbindung mit dem ADB-Daemon auf diese Weise nicht zustande kommt.
+\n \\begin{tip}{Info}
+\n Diese Option wird nur bei Geräten mit Android 11 oder höher angezeigt, da Wireless Debugging mit Android 11 eingeführt wurde.
+\n \\end{tip}
+\n
+\n \\item \\textbf{No-root.} Betreiben Sie App Manager im no-root Modus. Während App Manager in diesem Modus besser funktioniert,
+\n werden alle Root- oder ADB-spezifischen Funktionen deaktiviert.
+\n\\end{itemize}
+\n
+\nHier wird auch der aktuell abgeleitete Betriebsmodus angezeigt. Die tatsächlichen Betriebsmodi sind \\textit{root}, \\textit{ABD} und \\textit{no-root}.</string>
     <string name="pages$settings-page$enable-disable-features">Aktivieren oder deaktivieren Sie bestimmte Funktionen im App Manager, z. B.
 \n\\begin{itemize}
 \n \\item Interceptor
@@ -1209,4 +1232,110 @@
 \n\\textit{Aus}, werden die Pakete wiederhergestellt. Die Option kann deaktiviert werden, indem Sie auf die Schaltfläche \\textit{deaktiviert} im
 \ndem Eingabedialog.</string>
     <string name="pages$app-details-page$$shared-libs-tab-title">Registerkarte Gemeinsame Bibliotheken</string>
+    <string name="keywords$see_also">\\newcommand{\\KeywordSeeAlso}{Siehe auch:}</string>
+    <string name="pages$settings-page$sign-apk">Ob die APK-Dateien vor der Installation der Anwendung signiert werden sollen. Die Seite \\hyperref[subsec:apk-signing]{APK Signierung} kann
+\nverwendet werden, um die Signierung zu konfigurieren.</string>
+    <string name="pages$settings-page$backup-restore">Einstellungen in Bezug auf \\hyperref[sec:backup-restore]{Sicherung/Wiederherstellung}.</string>
+    <string name="pages$settings-page$install-location">Definieren Sie den APK-Installationsort. Dies kann eine der Optionen \\textit{auto}, \\textit{nur intern} und \\textit{vorzugsweise extern} sein.
+\nBei neueren Android-Versionen garantiert die Auswahl der letzten Option nicht, dass die Anwendung auf dem externen Speicher installiert wird.</string>
+    <string name="keywords$end_of_keyword_in_alert">\\newcommand{\\KeywordEndOfKeyWordInAlert}{:}</string>
+    <string name="pages$settings-page$$install-in-the-background-title">Im Hintergrund installieren</string>
+    <string name="pages$settings-page$$import-backups-title">Backups importieren</string>
+    <string name="pages$settings-page$$selected-users-title">Ausgewählte Benutzer</string>
+    <string name="pages$settings-page$$saved-apk-name-format-title">Gespeichertes APK-Namensformat</string>
+    <string name="pages$settings-page$$block-trackers-title">Tracker blockieren</string>
+    <string name="pages$settings-page$$display-changes-title">Änderungen anzeigen</string>
+    <string name="pages$settings-page$selected-users">Mit dieser Option können Sie festlegen, für welche Benutzer App Manager arbeiten soll. App Manager arbeitet standardmäßig für alle Benutzer im Root- oder ADB-Modus.</string>
+    <string name="pages$settings-page$block-trackers">Ob die Tracking-Komponenten sofort nach der Installation der Anwendung blockiert werden sollen.</string>
+    <string name="pages$settings-page$display-changes">Ob Änderungen an Version, Tracker, Komponenten, Berechtigungen, Signaturen, SDK usw. versionskontrolliert angezeigt werden sollen, wenn die Anwendung bereits installiert wurde.</string>
+    <string name="pages$settings-page$install-in-the-background">Ob Anwendungen immer im Hintergrund installiert werden sollen. Sobald die Installation abgeschlossen ist, wird eine Benachrichtigung ausgegeben.</string>
+    <string name="pages$settings-page$compression-method">Legen Sie die Kompressionsmethode fest, die bei Backups verwendet werden soll. App Manager unterstützt die Komprimierungsmethoden GZip und BZip2,
+\nGZip ist die Standardkomprimierungsmethode. Es hat keinen Einfluss auf die Wiederherstellung einer bestehenden Sicherung.</string>
+    <string name="pages$settings-page$backup-options">Passen Sie das Dialogfeld {Sicherung/Wiederherstellung} an, das bei der Erstellung einer Sicherung angezeigt wird.
+\n
+\n\\seealsoinline{\\hyperref[subsec:backup-restore-backup-options]{Sicherungsoptionen}}</string>
+    <string name="pages$settings-page$import-backups">Importieren Sie Sicherungen aus alten und eingestellten Projekten wie Titanium Backup, OAndBackup und Swift Backup (Version 3.0 bis 3.2).
+\nDie Sicherungen werden nach dem Importieren nicht gelöscht, um Datenverluste zu vermeiden, falls die importierten Sicherungen nicht ordnungsgemäß wiederhergestellt werden können.</string>
+    <string name="pages$settings-page$import-export-keystore">Importieren oder exportieren Sie den von App Manager verwendeten KeyStore. Dies ist ein Bouncy Castle KeyStore mit der Erweiterung \\texttt{bks}.
+\nDaher werden andere KeyStore wie Java KeyStore (JKS) oder PKCS \\#12 nicht unterstützt.
+\nWenn ein Schlüssel aus einem solchen KeyStore importiert werden muss, sollten die entsprechenden Optionen wie oben angegeben gewählt werden.</string>
+    <string name="pages$settings-page$show-users-in-installer">Wenn diese Option aktiviert ist, wird vor der Installation der Anwendung eine Liste der Benutzer angezeigt. Die Anwendung wird 
+\nnur für die angegebenen Benutzer installiert.</string>
+    <string name="pages$settings-page$installer-app">Wählen Sie die Installationsanwendung aus. Dies ist nützlich für Anwendungen, die explizit das Installationsprogramm prüfen, um festzustellen, ob die Anwendung rechtmäßig installiert wurde.
+\nDies funktioniert nur für Root- oder ADB-Benutzer.
+\n
+\n\\begin{tip}{Hinweis}
+\n Während die Suche nach dem Installationsprogramm ein legitimes Anliegen für eine Anwendung zu sein scheint, kümmert sich das Android-Framework bereits während der Installation um dieses Problem.
+\n Die Suche nach dem Installationsprogramm ist einfach der falsche Weg, um die Legitimität der Quelle einer Anwendung zu beweisen.
+\n\\end{tip}</string>
+    <string name="pages$settings-page$encryption">Legen Sie eine Verschlüsselungsmethode für die Backups fest. App Manager unterstützt derzeit OpenPGP (über
+\n\\href{https://f-droid.org/packages/org.sufficientlysecure.keychain/}{OpenKeyChain}), AES und RSA (Hybridverschlüsselung mit AES).
+\nWie bei der \\hyperref[subsec:apk-signing]{APK Signierung} werden die AES- und RSA-Schlüssel im KeyStore gespeichert und können aus anderen KeyStores importiert werden.
+\n
+\n\\begin{danger}{Gefahr}
+\n Zu Ihrer eigenen Sicherheit ist es nicht empfehlenswert, RSA-Schlüssel innerhalb des App Managers zu erzeugen. Stattdessen sollten sie aus einem KeyStore importiert werden, der an einem sicheren Ort aufbewahrt wird.\\\\
+\n Im Falle von AES sollte der generierte Schlüssel an einem sicheren Ort gespeichert werden, z. B. in einem Passwortmanager.
+\n\\end{danger}</string>
+    <string name="pages$settings-page$backup-apps-with-keystore">Sicherung von Anwendungen mit Einträgen im Android KeyStore zulassen. Diese Option ist standardmäßig deaktiviert, da einige Anwendungen (z. B. Signal) bei der Wiederherstellung abstürzen können.</string>
+    <string name="pages$settings-page$backup-volume">Wählen Sie den Speicher, in dem die Backups gespeichert werden. Hier werden auch Protokolle und exportierte APK-Dateien gespeichert.
+\n
+\n\\begin{tip}{Hinweis}
+\n Das Backup-Volume gibt nur den Speicherort, nicht den Pfad an. Backups werden traditionell im Ordner \\texttt{AppManager} innerhalb des Speicherpfads gespeichert.
+\n Wenn der Pfad jedoch mit Storage Access Framework (SAF) ausgewählt wurde, wird der ausgewählte Pfad oder das Verzeichnis direkt verwendet.
+\n\\end{tip}</string>
+    <string name="pages$settings-page$instant-component-blocking">Standardmäßig werden Sperrregeln nicht angewendet, es sei denn, sie werden explizit in \\hyperref[sec:app-details-page]{der Seite mit den Anwendungsdetails} für eine beliebige Anwendung angewendet.
+\nNach Aktivierung dieser Option werden alle (alten und neuen) Regeln sofort für alle Anwendungen angewendet, ohne dass die Sperrung für eine Anwendung explizit aktiviert wird.
+\n
+\n\\seealsoinline{\\hyperref[subsec:faq:what-is-instant-component-blocking]{FAQ: Was ist Instant-Component-Blocking\?}}</string>
+    <string name="pages$settings-page$import-export-blocking-rules">Es ist möglich, Sperrregeln im App Manager für alle Anwendungen zu importieren oder zu exportieren. Die Arten von Regeln (Komponenten, App Ops oder Berechtigungen), die importiert oder exportiert werden sollen, können ebenfalls ausgewählt werden.
+\nEs ist auch möglich, Sperrregeln aus \\href{https://github.com/lihenggui/blocker}{Blocker} und \\href{https://github.com/tuyafeng/Watt}{Watt} zu importieren.
+\nWenn es notwendig ist, Sperrregeln für eine einzelne Anwendung zu exportieren, kann die entsprechende \\hyperref[sec:app-details-page]{App-Detailseite} verwendet werden, um Regeln zu exportieren, oder für mehrere Anwendungen können \\hyperref[subsec:batch-operations]{Batchoperationen} verwendet werden.
+\n
+\n\\seealsoinline{\\hyperref[sec:rules-specification]{Regelspezifikation}}
+\n
+\n\\paragraph{Export} Exportiert Sperrregeln für alle im App Manager konfigurierten Anwendungen.
+\nDies kann \\hyperref[subsec:faq:what-are-app-components]{Anwendungskomponenten}, App-OPs und Berechtigungen umfassen, basierend auf den in den Multi-Choice-Optionen ausgewählten Optionen.
+\n
+\n\\paragraph{Importieren} Importieren Sie zuvor exportierte Blockierungsregeln aus dem App Manager.
+\nÄhnlich wie beim Export kann dies \\hyperref[subsec:faq:what-are-app-components]{App Komponenten}, App Operationen und Berechtigungen basierend auf den in den Multi-Choice-Optionen ausgewählten Optionen enthalten.
+\n
+\n\\paragraph{Importieren bestehender Regeln}\\label{par:import-existing-rules}
+\n\\antomsection
+\nHinzufügen von Komponenten zum App Manager, die von anderen Anwendungen deaktiviert wurden. App Manager verfolgt nur die Komponenten, die innerhalb von App Manager deaktiviert wurden.
+\nWenn Anwendungskomponenten von anderen Tools oder Anwendungen blockiert oder deaktiviert werden, können Sie diese mit dieser Option importieren.
+\nWenn Sie auf diese Option klicken, findet App Manager die Komponenten, die möglicherweise von anderen Anwendungen oder Tools deaktiviert wurden, und listet nur den Namen der Anwendungen zusammen mit der Anzahl der übereinstimmenden Komponenten auf.
+\nZur Sicherheit sind alle Anwendungen standardmäßig nicht ausgewählt. Sie müssen manuell ausgewählt werden, und die Blockierung muss über den App Manager erneut angewendet werden.
+\n
+\n\\begin{danger}{Achtung}
+\n Seien Sie bei der Verwendung dieses Tools vorsichtig, da es viele falsch positive Ergebnisse geben kann.
+\n Wählen Sie nur die Anwendungen aus, bei denen Sie sich sicher sind.
+\n\\end{danger}
+\n
+\n\\paragraph{Importieren von Watt} Importieren Sie Konfigurationsdateien aus \\href{https://github.com/tuyafeng/Watt}{Watt}, wobei jede Datei
+\nRegeln für ein einzelnes Paket enthält und der Dateiname der Name des Pakets mit der Erweiterung \\texttt{.xml} ist.
+\n
+\n\\begin{tip}{Tip}
+\n Speicherort der Konfigurationsdateien in Watt: \\texttt{/sdcard/Android/data/com.tuyafeng.watt/files/ifw}
+\n\\end{tip}
+\n
+\n\\paragraph{Importieren von Blocker} Importieren Sie Blockierungsregeln aus \\href{https://github.com/lihenggui/blocker}{Blocker}, wobei jede Datei Regeln für ein einzelnes Paket enthält.
+\nDiese Dateien haben die Erweiterung \\texttt{.json}.</string>
+    <string name="pages$settings-page$remove-all-rules">Ein-Klick-Option zum Entfernen aller im App Manager konfigurierten Regeln.
+\nDadurch werden alle blockierten Komponenten aktiviert, die App-OPs werden auf ihre Standardwerte gesetzt und die Berechtigungen werden gewährt.</string>
+    <string name="pages$settings-page$saved-apk-name-format">Legt das Format des APK-Namens fest, das beim Speichern über Batch-Operationen oder über Profile verwendet werden soll.
+\nApp Manager bietet einige spezielle Schlüsselwörter, die in \\texttt{\\%} (Prozentzeichen) eingeschlossen und unterhalb des Eingabefeldes zu finden sind.
+\nDiese Schlüsselwörter sind:
+\n\\begin{itemize}
+\n \\item \\textbf{\\texttt{Bezeichnung}.} Bezeichnet den Namen oder die Bezeichnung der Anwendung. Dieser kann je nach Anwendung in der konfigurierten Sprache lokalisiert werden.
+\n \\item \\textbf{\\texttt{Paketname}.} Bezeichnet den Namen des Pakets oder die Anwendungs-ID, den eindeutigen Bezeichner, den jede Anwendung hat.
+\n \\item \\textbf{\\texttt{Version}.} Gibt die aktuelle Version der Anwendung an, die dem Manifest entnommen wurde.
+\n \\item \\textbf{\\texttt{Versionscode}.} Bezeichnet den aktuellen Versionscode der Anwendung, der verwendet werden kann, um zwei Versionen derselben Anwendung zu unterscheiden.
+\n \\item \\textbf{\\texttt{mindest notwendiges SDK }.} Bezeichnet das minimale SDK (d. h. die Version des Android-Frameworks), mit dem die Anwendung arbeiten kann. Diese Daten sind erst seit Android 7 (Nougat) verfügbar.
+\n \\item \\textbf{\\texttt{empfohlenes SDK}.} Bezeichnet das SDK, auf das diese Anwendung abzielt. Die Anwendung kann auf höheren SDKs arbeiten, aber nur im Kompatibilitätsmodus.
+\n \\item \\textbf{\\texttt{Datumsangabe}.} Bezeichnet die Uhrzeit und das Datum, an dem die APK exportiert wird.
+\n\\end{itemize}</string>
+    <string name="keywords$chapter">\\newcommand{\\KeywordChapter}{Kapitel}</string>
+    <string name="pages$app-details-page$shared-libs-tab">\\textbf{Gemeinsame Bibliotheken} listet alle JAR-Legacy-Abhängigkeiten sowie die JNI-Bibliotheken (Java Native Interface) auf.
+\nFür JNI-Bibliotheken wird die Plattform (x86/x86\\_64/ARM/AArch64), die Architektur (32/64 Bit), der Objekttyp (Shared Object
+\noder ausführbar), usw.</string>
 </resources>
