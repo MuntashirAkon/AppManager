@@ -51,7 +51,7 @@
     <string name="launch">Lancer</string>
     <string name="activities">Activités</string>
     <string name="require_no_permission">Aucune autorisation requise</string>
-    <string name="permissions">Nécessite des autorisations</string>
+    <string name="permissions">Utilise les autorisations</string>
     <string name="installer_app">Installeur App</string>
     <string name="scanner">Analyseur</string>
     <string name="sort">Trier</string>
@@ -1127,4 +1127,8 @@
     <string name="failed_to_disable_magisk_deny_list">Impossible de désactiver Magisk DenyList</string>
     <string name="intent_firewall">IFW</string>
     <string name="intent_firewall_and_disable">IFW + désactiver</string>
+    <string name="pref_intent_firewall_and_disable_description">Bloquez les composants à l\'aide du pare-feu intentionnel et désactivez-les. Méthode recommandée pour les utilisateurs root.</string>
+    <string name="failed_to_change_app_op_mode">Impossible de changer le mode de fonctionnement de l\'application.</string>
+    <string name="pref_intent_firewall_description">Bloquer les composants en utilisant uniquement le pare-feu Intent. Non recommandé car certaines applications système peuvent contourner les pare-feu.</string>
+    <string name="pref_disable_description">Désactivez uniquement les composants. Non recommandé pour les utilisateurs root car les applications peuvent contourner cette méthode. Dans les modes ADB, les applications de test uniquement peuvent être désactivées avec cette méthode.</string>
 </resources>
