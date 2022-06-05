@@ -161,7 +161,17 @@
         </activity>
         <activity
             android:name=".main.MainActivity"
-            android:exported="false" />
+            android:label="@string/app_name"
+            android:exported="true">
+            <intent-filter android:label="@string/search">
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="market" android:host="search" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".details.AppDetailsActivity"
             android:exported="true"

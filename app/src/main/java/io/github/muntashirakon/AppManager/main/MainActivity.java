@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.net.NetworkPolicyManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -153,6 +154,14 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
                     UiUtils.hideKeyboard(v);
                 }
             });
+            // Check for market://search/?q=<query>
+            Uri marketUri = getIntent().getData();
+            if (marketUri != null && "market".equals(marketUri.getScheme()) && "search".equals(marketUri.getHost())) {
+                String query = marketUri.getQueryParameter("q");
+                if (query != null) {
+                    mSearchView.setQuery(query, true);
+                }
+            }
         }
 
         mProgressIndicator = findViewById(R.id.progress_linear);
