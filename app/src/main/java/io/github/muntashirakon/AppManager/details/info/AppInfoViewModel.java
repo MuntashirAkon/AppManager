@@ -58,6 +58,7 @@ import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 
@@ -248,18 +249,19 @@ public class AppInfoViewModel extends AndroidViewModel {
         }
         appInfo.extDataDirs = new ArrayList<>();
         if (!isExternalApk) {
-            File[] dataDirs = getApplication().getExternalCacheDirs();
-            if (dataDirs != null) {
+            File[] externalCacheDirs = getApplication().getExternalCacheDirs();
+            if (externalCacheDirs != null) {
                 String tmpDataDir;
-                for (File dataDir : dataDirs) {
+                for (File dataDir : externalCacheDirs) {
                     if (dataDir == null) continue;
                     tmpDataDir = dataDir.getParent();
                     if (tmpDataDir != null) {
                         tmpDataDir = new File(tmpDataDir).getParent();
                     }
                     if (tmpDataDir != null) {
-                        tmpDataDir = tmpDataDir + File.separatorChar + packageName;
-                        if (new File(tmpDataDir).exists()) {
+                        tmpDataDir = Utils.replaceOnce(tmpDataDir + File.separatorChar + packageName,
+                                "" + UserHandleHidden.myUserId(), "" + userHandle);
+                        if (Paths.get(tmpDataDir).exists()) {
                             appInfo.extDataDirs.add(tmpDataDir);
                         }
                     }
