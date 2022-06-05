@@ -411,7 +411,7 @@
 \n \\item \\textit{Enforce.} Die Anwendung kann nicht auf die versteckte API zugreifen, entweder auf die dunkelgraue Liste oder die schwarze Liste, oder
 \n beides. Dies ist die Standardoption für Anwendungen von Drittanbietern in Android 9 und höher, es sei denn, die
 \n Anwendung vom OEM oder dem Hersteller auf die Whitelist gesetzt wurde.
-\n \\{Warnung}
+\n \\begin{warning}{Warnung}
 \n Die Richtlinie zur Durchsetzung versteckter APIs ist in Android nicht richtig implementiert und kann von der
 \n Anwendung umgangen werden. Aus diesem Grund sollte diesem Wert nicht vertraut werden.
 \n \\end{warning}
