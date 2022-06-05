@@ -1173,4 +1173,5 @@
     <string name="log_stop_recording">Kaydı durdur</string>
     <string name="apk_checksums">APK Sağlama Toplamları</string>
     <string name="item_select">Seç</string>
+    <string name="app_explorer">Uygulama Gezgini</string>
 </resources>
