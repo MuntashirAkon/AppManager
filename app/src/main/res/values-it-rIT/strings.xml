@@ -240,7 +240,7 @@
     <string name="clear_data">Cancella Dati</string>
     <string name="user_and_uid">Utente: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
     <string name="memory_virtual_memory">Memoria: %1$s, Memoria Virtuale: %2$s</string>
-    <string name="pid_and_ppid">ID Processo: %1$d, Processo ID Parente: %2$d</string>
+    <string name="pid_and_ppid">ID Processo: %1$d, ID Processo Padre: %2$d</string>
     <string name="disable_background_run">Impedisci il caricamento in Background</string>
     <string name="kill_process">Forza arresto</string>
     <string name="running_apps">App attive</string>
@@ -344,7 +344,7 @@
     <string name="installed_apps">App installate</string>
     <string name="restart_to_reflect_changes">Devi riavviare immediatamente il dispositivo per usufruire delle nuove modifiche.</string>
     <string name="failed_to_change_ssaid">Impossibile cambiare SSAID</string>
-    <string name="copied_to_clipboard">Copiato negli appunti</string>
+    <string name="copied_to_clipboard">Copiato negli appunti.</string>
     <string name="ssaid_info">SSAID (<tt>Settings.Secure.ANDROID_ID</tt>) è un identificatore del dispositivo assegnato ad ogni app (da Android 8 \"Oreo\"). È spesso utilizzato dalle app per tracciare gli utenti.</string>
     <string name="ssaid">SSAID</string>
     <string name="os_version">Versione SO</string>
@@ -390,7 +390,7 @@
     <string name="obb_files_extracted_successfully">file OBB estratti</string>
     <string name="backup_apk_files">file APK</string>
     <string name="installer_error_security">Impossibile accedere ai file APK</string>
-    <string name="install_in_progress">Installazione in corso</string>
+    <string name="install_in_progress">Installazione…</string>
     <string name="unblock_trackers">Sblocca tracker</string>
     <string name="reinstall">Reinstalla</string>
     <string name="install_app_message">Vuoi installare questa app\?</string>
@@ -710,4 +710,6 @@
         <item quantity="one">Eseguire al massimo %1$d operazione in parallelo</item>
         <item quantity="other">Eseguire al massimo %1$d operazioni in parallelo</item>
     </plurals>
+    <string name="community_links">Telegram: https://t.me/AppManagerChannel
+\nTwitter: https://twitter.com/AppManagerNews</string>
 </resources>
