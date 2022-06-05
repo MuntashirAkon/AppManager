@@ -42,6 +42,7 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 
 public class RunningAppsViewModel extends AndroidViewModel {
     @RunningAppsActivity.SortOrder
@@ -93,7 +94,7 @@ public class RunningAppsViewModel extends AndroidViewModel {
             return;
         }
         mExecutor.submit(() -> {
-            Path proxyFile = new Path(getApplication(), file);
+            Path proxyFile = Paths.get(file);
             if (!proxyFile.canRead()) {
                 mVtFileReport.postValue(new Pair<>(processItem, null));
                 return;

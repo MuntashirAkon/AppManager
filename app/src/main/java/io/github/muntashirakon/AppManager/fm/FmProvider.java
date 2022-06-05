@@ -27,9 +27,9 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 
 // Copyright 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
 // Modified from FileProvider.kt
@@ -162,7 +162,7 @@ public class FmProvider extends ContentProvider {
 
     @NonNull
     private static Path getFileProviderPath(@NonNull Uri uri) {
-        return new Path(AppManager.getContext(), getFileProviderPathInternal(uri));
+        return Paths.get(getFileProviderPathInternal(uri));
     }
 
     @VisibleForTesting

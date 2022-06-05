@@ -39,6 +39,7 @@ import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 
 // Copyright 2015 Google, Inc.
 public class ClassViewerActivity extends BaseActivity {
@@ -157,7 +158,7 @@ public class ClassViewerActivity extends BaseActivity {
             else actionBar.setTitle(R.string.class_viewer);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            smaliPath = new Path(this, uri);
+            smaliPath = Paths.get(uri);
         }
         updateUi();
     }

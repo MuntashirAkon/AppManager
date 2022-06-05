@@ -198,7 +198,7 @@ public class TBConverter extends Converter {
 
     private void backupApkFile() throws BackupException {
         // Decompress APK file
-        Path baseApkFile = FileUtils.getTempPath(mContext, mPackageName, mDestMetadata.apkName);
+        Path baseApkFile = FileUtils.getTempPath(mPackageName, mDestMetadata.apkName);
         try (InputStream pis = getApkFile(mSourceMetadata.apkName, mSourceMetadata.tarType).openInputStream();
              BufferedInputStream bis = new BufferedInputStream(pis)) {
             CompressorInputStream is;

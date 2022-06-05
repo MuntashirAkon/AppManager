@@ -176,7 +176,7 @@ public class Path implements Comparable<Path> {
         mDocumentFile = getRequiredRawDocument(fileLocation.getAbsolutePath());
     }
 
-    public Path(@NonNull Context context, @NonNull String fileLocation, boolean privileged) throws RemoteException {
+    /* package */ Path(@NonNull Context context, @NonNull String fileLocation, boolean privileged) throws RemoteException {
         mContext = context;
         if (privileged) {
             FileSystemManager fs = LocalServices.getFileSystemManager();
@@ -186,23 +186,24 @@ public class Path implements Comparable<Path> {
         }
     }
 
-    public Path(@NonNull Context context, int vfsId, @NonNull ZipFile zipFile, @Nullable String path) {
+    /* package */ Path(@NonNull Context context, int vfsId, @NonNull ZipFile zipFile, @Nullable String path) {
         mContext = context;
         mDocumentFile = new ZipDocumentFile(getParentFile(context, vfsId), vfsId, zipFile, path);
     }
 
+    /* package */
     @RequiresApi(Build.VERSION_CODES.O)
-    public Path(@NonNull Context context, int vfsId, @NonNull DexClasses dexClasses, @Nullable String path) {
+    Path(@NonNull Context context, int vfsId, @NonNull DexClasses dexClasses, @Nullable String path) {
         mContext = context;
         mDocumentFile = new DexDocumentFile(getParentFile(context, vfsId), vfsId, dexClasses, path);
     }
 
-    public Path(@NonNull Context context, @NonNull DocumentFile documentFile) {
+    private Path(@NonNull Context context, @NonNull DocumentFile documentFile) {
         mContext = context;
         mDocumentFile = documentFile;
     }
 
-    public Path(@NonNull Context context, @NonNull Uri uri) {
+    /* package */ Path(@NonNull Context context, @NonNull Uri uri) {
         mContext = context;
         Path fsRoot = VirtualFileSystem.getFsRoot(uri);
         if (fsRoot != null) {
@@ -240,16 +241,16 @@ public class Path implements Comparable<Path> {
         mDocumentFile = documentFile;
     }
 
-    public Path(@NonNull Context context, @NonNull UriPermission uriPermission) throws FileNotFoundException {
+    /* package */ Path(@NonNull Context context, @NonNull UriPermission uriPermission) throws FileNotFoundException {
         mContext = context;
         mDocumentFile = Objects.requireNonNull(DocumentFile.fromTreeUri(context, uriPermission.getUri()));
     }
 
-    public Path(@NonNull Path path, @NonNull String child) {
+    /* package */ Path(@NonNull Path path, @NonNull String child) {
         this(path.mContext, Uri.withAppendedPath(path.getUri(), Uri.encode(child)));
     }
 
-    public Path(@NonNull Path path, @NonNull String... children) {
+    /* package */ Path(@NonNull Path path, @NonNull String... children) {
         this(path.mContext, uriWithAppendedPath(path.getUri(), children));
     }
 

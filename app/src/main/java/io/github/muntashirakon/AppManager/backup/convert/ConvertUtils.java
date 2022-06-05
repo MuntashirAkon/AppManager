@@ -20,7 +20,6 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.backup.BackupException;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
@@ -32,13 +31,14 @@ import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 
 import static io.github.muntashirakon.AppManager.backup.MetadataManager.TAR_TYPES;
 
 public final class ConvertUtils {
     @NonNull
     public static Path[] getRelevantImportFiles(@NonNull Uri uri, @ImportType int backupType) {
-        return getRelevantImportFiles(backupType, new Path(AppManager.getContext(), uri));
+        return getRelevantImportFiles(backupType, Paths.get(uri));
     }
 
     @NonNull

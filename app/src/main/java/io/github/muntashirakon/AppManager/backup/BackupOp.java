@@ -272,15 +272,15 @@ class BackupOp implements Closeable {
             for (String dir : mMetadata.dataDirs) {
                 FileHash fileHash = new FileHash();
                 fileHash.path = dir;
-                fileHash.hash = DigestUtils.getHexDigest(DigestUtils.SHA_256, new Path(mContext, dir));
+                fileHash.hash = DigestUtils.getHexDigest(DigestUtils.SHA_256, Paths.get(dir));
                 AppManager.getAppsDb().fileHashDao().insert(fileHash);
             }
         }).start();
         for (int i = 0; i < mMetadata.dataDirs.length; ++i) {
             sourceBackupFilePrefix = DATA_PREFIX + i + getExt(mMetadata.tarType);
             try {
-                dataFiles = TarUtils.create(mMetadata.tarType, new Path(mContext, mMetadata.dataDirs[i]),
-                                mTempBackupPath, sourceBackupFilePrefix, null, null,
+                dataFiles = TarUtils.create(mMetadata.tarType, Paths.get(mMetadata.dataDirs[i]), mTempBackupPath,
+                                sourceBackupFilePrefix, null, null,
                                 BackupUtils.getExcludeDirs(!mBackupFlags.backupCache(), null), false)
                         .toArray(new Path[0]);
             } catch (Throwable th) {
@@ -307,7 +307,7 @@ class BackupOp implements Closeable {
         } catch (FileNotFoundException ignore) {
         }
         // Store the KeyStore files
-        Path cachePath = new Path(mContext, FileUtils.getCachePath());
+        Path cachePath = Paths.get(FileUtils.getCachePath());
         List<String> cachedKeyStoreFileNames = new ArrayList<>();
         List<String> keyStoreFilters = new ArrayList<>();
         for (String keyStoreFileName : KeyStoreUtils.getKeyStoreFiles(mContext, mApplicationInfo.uid, mUserId)) {

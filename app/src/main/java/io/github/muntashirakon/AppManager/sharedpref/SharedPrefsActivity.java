@@ -36,7 +36,7 @@ import java.util.Map;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
-import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.widget.RecyclerViewWithEmptyView;
 
 public class SharedPrefsActivity extends BaseActivity implements
@@ -62,7 +62,7 @@ public class SharedPrefsActivity extends BaseActivity implements
             return;
         }
         mViewModel = new ViewModelProvider(this).get(SharedPrefsViewModel.class);
-        mViewModel.setSharedPrefsFile(new Path(getApplicationContext(), sharedPrefUri));
+        mViewModel.setSharedPrefsFile(Paths.get(sharedPrefUri));
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle(appLabel);

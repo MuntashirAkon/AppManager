@@ -468,7 +468,7 @@ class RestoreOp implements Closeable {
                 }
             }
             // Create data folder if not exists
-            Path dataSourceFile = new Path(context, dataSource);
+            Path dataSourceFile = Paths.get(dataSource);
             Pair<Integer, Integer> uidAndGid = null;
             if (dataSourceFile.exists()) {
                 uidAndGid = BackupUtils.getUidAndGid(dataSourceFile, packageInfo.applicationInfo.uid);

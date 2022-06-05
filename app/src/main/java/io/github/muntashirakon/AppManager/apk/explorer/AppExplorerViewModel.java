@@ -23,12 +23,12 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.parser.AndroidBinXmlDecoder;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.io.VirtualFileSystem;
 
 public class AppExplorerViewModel extends AndroidViewModel {
@@ -110,7 +110,7 @@ public class AppExplorerViewModel extends AndroidViewModel {
                 // Null URI always means root of the zip file
                 path = zipFileRoot;
             } else {
-                path = new Path(AppManager.getContext(), uri);
+                path = Paths.get(uri);
             }
             for (Path child : path.listFiles()) {
                 adapterItems.add(new AdapterItem(child));
@@ -200,7 +200,7 @@ public class AppExplorerViewModel extends AndroidViewModel {
     }
 
     private void addCachedFile(@NonNull AdapterItem item, File file) {
-        item.setCachedFile(new Path(AppManager.getContext(), file));
+        item.setCachedFile(Paths.get(file));
         cachedFiles.add(file);
     }
 }

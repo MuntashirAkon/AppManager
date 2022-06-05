@@ -18,6 +18,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 
 public class FmViewModel extends AndroidViewModel {
     private final ExecutorService executor = Executors.newFixedThreadPool(3);
@@ -44,7 +45,7 @@ public class FmViewModel extends AndroidViewModel {
 
     @AnyThread
     public void loadFiles(Uri uri) {
-        Path path = new Path(getApplication(), uri);
+        Path path = Paths.get(uri);
         loadFiles(path);
     }
 

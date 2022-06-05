@@ -37,6 +37,7 @@ import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagMatchUninstalled;
 
@@ -58,11 +59,11 @@ public final class ApkUtils {
         Path tmpPublicSource;
         if (isSplitApk(info)) {
             // Split apk
-            tmpPublicSource = new Path(ctx, new File(AppManager.getContext().getExternalCacheDir(), outputName + EXT_APKS));
+            tmpPublicSource = Paths.get(new File(AppManager.getContext().getExternalCacheDir(), outputName + EXT_APKS));
             SplitApkExporter.saveApks(packageInfo, tmpPublicSource);
         } else {
             // Regular apk
-            tmpPublicSource = new Path(ctx, new File(packageInfo.applicationInfo.publicSourceDir));
+            tmpPublicSource = Paths.get(packageInfo.applicationInfo.publicSourceDir);
         }
         return tmpPublicSource;
     }
@@ -90,7 +91,7 @@ public final class ApkUtils {
         } else {
             // Regular apk
             apkFile = backupPath.createNewFile(outputName + EXT_APK, null);
-            FileUtils.copy(new Path(ctx, new File(info.publicSourceDir)), apkFile);
+            FileUtils.copy(Paths.get(info.publicSourceDir), apkFile);
         }
     }
 

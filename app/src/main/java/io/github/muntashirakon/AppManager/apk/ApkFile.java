@@ -59,6 +59,7 @@ import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.unapkm.api.UnApkm;
 import io.github.muntashirakon.util.LocalizedString;
 
@@ -502,13 +503,12 @@ public final class ApkFile implements AutoCloseable {
 
     @NonNull
     private Path getCachePath() {
-        Context context = AppManager.getContext();
-        File destDir = context.getExternalCacheDir();
+        File destDir = AppManager.getContext().getExternalCacheDir();
         if (destDir == null || !Environment.getExternalStorageState(destDir).equals(Environment.MEDIA_MOUNTED))
             throw new RuntimeException("External media not present");
         if (!destDir.exists()) //noinspection ResultOfMethodCallIgnored
             destDir.mkdirs();
-        return new Path(context, destDir);
+        return Paths.get(destDir);
     }
 
     public class Entry implements AutoCloseable, LocalizedString {

@@ -40,6 +40,7 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 
 public final class FileUtils {
     public static final String TAG = FileUtils.class.getSimpleName();
@@ -418,14 +419,14 @@ public final class FileUtils {
 
     @AnyThread
     @NonNull
-    public static Path getTempPath(Context context, String relativeDir, String filename) {
+    public static Path getTempPath(String relativeDir, String filename) {
         File newDir = new File(getCachePath() + File.separator + relativeDir);
         int i = 1;
         while (newDir.exists()) {
             newDir = new File(getCachePath() + File.separator + (relativeDir + "_" + i));
         }
         newDir.mkdirs();
-        return new Path(context, new File(newDir, filename));
+        return Paths.get(new File(newDir, filename));
     }
 
     @AnyThread
