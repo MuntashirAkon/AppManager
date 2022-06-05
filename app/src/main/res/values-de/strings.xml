@@ -1174,4 +1174,5 @@
     <string name="item_select">Asuwählen</string>
     <string name="log_stop_recording">Aufnahme stoppen</string>
     <string name="apk_checksums">APK Prüfsumme</string>
+    <string name="app_explorer">AppExplorer</string>
 </resources>
