@@ -1136,4 +1136,5 @@
     <string name="apk_checksums">APK 校验和</string>
     <string name="log_stop_recording">停止录制</string>
     <string name="item_select">选择</string>
+    <string name="app_explorer">应用浏览器</string>
 </resources>
