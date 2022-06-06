@@ -1174,4 +1174,5 @@
     <string name="apk_checksums">Somas de verificação de APK</string>
     <string name="item_select">Selecionar</string>
     <string name="log_stop_recording">Parar gravação</string>
+    <string name="app_explorer">Explorador de Aplicativos</string>
 </resources>
