@@ -1,31 +1,22 @@
 % SPDX-License-Identifier: GPL-3.0-or-later OR CC-BY-SA-4.0
 \section{Miscellanea}\label{sec:faq:miscellanea} %%##$section-title>>
 
-\subsection{I don't use root/ADB. Am I completely safe from any harms?} %%##$i-dont-use-root-adb-title>>
+\subsection{I don't use root/ADB. Am I completely safe from any harms?}\label{subsec:faq:no-root-no-harms} %%##$i-dont-use-root-adb-title>>
 %%!!i-dont-use-root-adb<<
 Yes. AM cannot modify any system settings without root or ADB over TCP\@.
 %%!!>>
 
-\subsection{Why does AM have the INTERNET permission when it doesn't connect to the Internet?} %%##$why-internet-permission-title>>
-%%!!why-internet-permission<<
-AM uses the INTERNET permission for the following reasons:
-\begin{enumerate}
-    \item \textbf{To provide ADB over TCP support for the non-root users.} ADB over TCP is a custom network protocol
-    that usually runs on port \texttt{5555}. Therefore, to connect to this port via localhost, AM needs this permission.
-    \item \textbf{To execute privileged code both on root and ADB mode.} AM, being a user app, cannot execute privileged
-    code nor can it access any hidden APIs. Consequently, AM runs a server in the privileged environment using
-    \texttt{app\_process} at port \texttt{60001} and on the user side, AM connects to this server and execute privileged
-    code remotely from the app. Now, there are alternative ways to communicate with a remote service. Currently, they
-    are under consideration.
-\end{enumerate}
-%%!!>>
-
-\subsection{How are the trackers and libraries are updated?} %%##$how-tracker-updated-title>>
+\subsection{How are the trackers and libraries are updated?}\label{subsec:faq:how-trackers-libs-updated} %%##$how-tracker-updated-title>>
 %%!!how-tracker-updated<<
 Trackers and libraries are updated manually before making a new release.
 %%!!>>
 
-\subsection{Any plans for Shizuku?} %%##$shizuku-title>>
+\subsection{Are APKs deleted after installed?}\label{subsec:faq:apks-deleted-after-installed} %%##$apks-deleted-after-installed>>
+%%!!apks-deleted-after-installed<<
+No, APKs aren't deleted by App Manager after they are installed.
+%%!!>>
+
+\subsection{Any plans for Shizuku?}\label{subsec:faq:shizuku-support} %%##$shizuku-title>>
 %%!!shizuku<<
 App Manager's use of hidden API and privileged code execution is now much more complex and cannot be integrated with
 other third party apps such as \href{https://shizuku.rikka.app}{Shizuku}. Here are some reasons for not considering

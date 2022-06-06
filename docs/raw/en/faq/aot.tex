@@ -1,30 +1,27 @@
 % SPDX-License-Identifier: GPL-3.0-or-later OR CC-BY-SA-4.0
 \section{ADB over TCP}\label{sec:faq:adb-over-tcp} %%##$section-title>>
 
-\subsection{Do I have to enable ADB over TCP everytime I restart?} %%##$restart-title>>
+\subsection{Do I have to enable ADB over TCP everytime I restart?}\label{subsec:faq:enable-adb-on-every-restart} %%##$restart-title>>
 %%!!restart<<
-Unfortunately, yes. However, as of v2.5.13, you don't need to keep AoT enabled all the time as it now uses a
-server-client mechanism to interact with the system, but you do have to keep the \textbf{Developer options} as well as
-\textbf{USB debugging} enabled. To do that, enable \hyperref[sec:adb-over-tcp]{ADB over TCP} and open App Manager. You
-should see \textit{working on ADB mode} toast message in the bottom. If you see it, you can safely stop the server. For
-Lineage OS or its derivative OS, you can toggle AoT without any PC or Mac by simply toggling the \textbf{ADB over
-network} option located just below the \textbf{USB debugging}, but the server can't be stopped for the latter case.
+Unfortunately, yes. This is because the ADB daemon, the process responsible for ADB connection, is also restarted after
+a reboot, and it does not re-enable ADB over TCP\@.
 %%!!>>
 
-\subsection{Cannot enable USB debugging. What to do?} %%##$usb-debugging-title>>
+\subsection{Cannot enable USB debugging. What to do?}\label{subsec:faq:usb-debugging} %%##$usb-debugging-title>>
 %%!!usb-debugging<<
 See \Sref{subsec:enable-usb-debugging} in \Cref{ch:guides}.
 %%!!>>
 
-\subsection{Can I block tracker or any other application components using ADB over TCP?} %%##$block-tracker-title>>
+\subsection{Can I block tracker or any other application components using ADB over TCP?}\label{subsec:faq:block-components-using-adb} %%##$block-tracker-title>>
 %%!!block-tracker<<
-Sadly, no. ADB has limited \href{https://github.com/aosp-mirror/platform_frameworks_base/blob/master/packages/Shell/AndroidManifest.xml}{permissions}
-and controlling application components is not one of them.
+ADB has limited number of \href{https://github.com/aosp-mirror/platform_frameworks_base/blob/master/packages/Shell/AndroidManifest.xml}{permissions}
+and controlling application components is not one of them. However, the components of a \textit{test-only} app can be
+controlled via ADB\@. If App Manager detects such an application, it enables the blocking options automatically.
 %%!!>>
 
-\subsection{Which features can be used in ADB mode?} %%##$feature-adb-title>>
+\subsection{Which features can be used in ADB mode?}\label{subsec:faq:adb-features} %%##$feature-adb-title>>
 %%!!feature-adb<<
-Most of the features supported by ADB mode are enabled by default once ADB support is detected by AM. These include
-disable, force-stop, clear data, grant/revoke app ops and permissions. You can also install applications without any
-prompt and view \hyperref[subsubsec:main:running-apps]{running apps/processes}.
+Supported features are enabled automatically in the ADB mode. Supported features include disabling, force-stopping,
+clearing application data, granting or revoking app ops and permissions, and so on. It is also possible to install or
+uninstall applications without any prompt from the system.
 %%!!>>
