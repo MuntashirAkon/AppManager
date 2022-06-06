@@ -1325,4 +1325,5 @@
     <string name="item_select">تحديد</string>
     <string name="log_stop_recording">إيقاف التسجيل</string>
     <string name="apk_checksums">مجاميع APK الاختبارية</string>
+    <string name="app_explorer">متصفح التطبيق</string>
 </resources>
