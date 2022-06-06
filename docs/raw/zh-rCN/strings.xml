@@ -469,6 +469,7 @@
 \n \\item \\textbf{包安装器}
 \n \\item \\textbf{使用情况.} 如关闭此功能，App Manager 永远不会请求 \\textit{使用情况} 权限.
 \n \\item \\textbf{日志查看器}
+\n``探索\'\' 选择在尝试打开 APK 文件时不可用。
 \n \\item \\textbf{使用互联网.}如果关闭此功能，则所有互联网功能都将被禁用。
 \n 目前，唯一的互联网功能是通过 VirusTotal 获取扫描报告。
 \n\\end{itemize}</string>
