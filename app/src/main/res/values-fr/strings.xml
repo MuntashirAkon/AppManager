@@ -1131,4 +1131,21 @@
     <string name="failed_to_change_app_op_mode">Impossible de changer le mode de fonctionnement de l\'application.</string>
     <string name="pref_intent_firewall_description">Bloquer les composants en utilisant uniquement le pare-feu Intent. Non recommandé car certaines applications système peuvent contourner les pare-feu.</string>
     <string name="pref_disable_description">Désactivez uniquement les composants. Non recommandé pour les utilisateurs root car les applications peuvent contourner cette méthode. Dans les modes ADB, les applications de test uniquement peuvent être désactivées avec cette méthode.</string>
+    <string name="tracker">Suiveur</string>
+    <string name="shortcut_icon">Icône du raccourci</string>
+    <string name="sort_by_installation_date">Date d\'installation</string>
+    <string name="vt_confirm_upload_and_scan">Oui, envoyer et scanner</string>
+    <string name="binary_32_bit">32 bits</string>
+    <string name="binary_64_bit">64 bits</string>
+    <string name="so_type_shared_library">Bibliothèque partagée</string>
+    <string name="external">Externe</string>
+    <string name="item_select">Sélectionner</string>
+    <string name="change_backup_volume">Changer le volume</string>
+    <string name="screen_time">Temps à l\'écran</string>
+    <string name="open_in_new_window">Nouvelle fenêtre</string>
+    <string name="log_stop_recording">Arrêter l\'enregistrement</string>
+    <string name="so_type_executable">Exécutable</string>
+    <string name="save_and_exit">Enregistrer et quitter</string>
+    <string name="internal">Interne</string>
+    <string name="app_explorer">Explorateur d\'applications</string>
 </resources>
