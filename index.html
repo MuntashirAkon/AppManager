@@ -1,0 +1,151 @@
+<!DOCTYPE html><!-- SPDX-License-Identifier: GPL-3.0-or-later OR CC-BY-SA-4.0 -->
+<html lang="en">
+  <head>
+    <title>App Manager Docs</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta charset="utf-8" />
+    <meta name="Description" content="User manual for App Manager" />
+    <link rel="stylesheet" href="css/custom.css">
+    <style>
+        body {
+            max-width: 1080px;
+            margin: 0 auto;
+        }
+
+        #middle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        #flex {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        #logo-holder {
+            flex: 1 0 0;
+            padding: 10px;
+            max-width: 200px;
+        }
+
+        #logo {
+            max-width: 100%;
+            min-width: 180px;
+            box-shadow: inset 0 0 1px 1px #212121, 0 0 5px 0 #212121;
+            border-radius: 50%;
+        }
+
+        #content {
+            flex: 2 0 0;
+            padding: 10px;
+            text-align: start;
+            line-height: normal;
+            word-break: keep-all;
+        }
+
+        #app {
+            font-size: 500%;
+            text-shadow: 0 0 2px #212121;
+            font-family: Helvetica Nueue, Helvetica, sans-serif;
+        }
+
+        #manager {
+            font-size: 500%;
+            font-weight: bold;
+            text-shadow: 0 0 2px #212121;
+            font-family: Helvetica Nueue, Helvetica, sans-serif;
+        }
+    </style>
+    <script>
+        // noinspection JSUnusedGlobalSymbols
+        function setLanguage(language) {
+            const date = new Date();
+            date.setTime(date.getTime() + (365 * 24 * 60 * 60 * 1000));
+            let expires = "expires=" + date.toUTCString();
+            document.cookie = "lang=" + language + ";" + expires + ";path=/";
+            loadLanguage(language)
+            return false
+        }
+
+        function getLanguage() {
+            const name = "lang=";
+            let cookies = decodeURIComponent(document.cookie).split(';');
+            for(let cookie of cookies) {
+                while (cookie.charAt(0) === ' ') {
+                    cookie = cookie.substring(1);
+                }
+                if (cookie.indexOf(name) === 0) {
+                    return cookie.substring(name.length, cookie.length);
+                }
+            }
+            return null;
+        }
+
+        function loadLanguage(lang) {
+            const protocol = document.location.protocol + '//';
+            const host = document.location.host;
+            let path = document.location.pathname;
+            const queries = document.location.search;
+            const hash = document.location.hash;
+            if (path.endsWith("index.html")) {
+                path = path.replace("index.html", "")
+            }
+            if (!path.endsWith("/")) {
+                path += '/';
+            }
+            document.location.assign(protocol + host + path + lang + '/' + (queries ? queries : '') + (hash ? hash : ''));
+        }
+
+        const supportedLanguages = ['de', 'en', 'es', 'ja', 'ko', 'pt-rBR', 'ru', 'vi', 'zh-rCN', 'zh-rTW'];
+
+        // noinspection JSUnusedGlobalSymbols
+        function onLoadDocument() {
+            const lang = getLanguage();
+            if (lang != null) {
+                if (supportedLanguages.includes(lang)) {
+                    loadLanguage(lang);
+                    return;
+                }
+                // Try without region
+                if (lang.includes('-')) {
+                    loadLanguage(lang.split('-')[0]);
+                }
+            }
+        }
+    </script>
+  </head>
+  <body onLoad="onLoadDocument()">
+    <div id="middle">
+      <div id="flex">
+        <div id="logo-holder">
+          <img src="./images/icon.png" id="logo" alt="App Manager logo" />
+        </div>
+        <div id="content">
+          <div id="app">App</div>
+          <div id="manager">Manager</div>
+          <div id="combobox">
+<span>
+  <a href="de/" onclick="return setLanguage('de')">Deutsch</a> &#x2022;
+  <a href="en/" onclick="return setLanguage('en')">English</a> &#x2022;
+  <a href="es/" onclick="return setLanguage('es')">español</a> &#x2022;
+  <a href="ja/" onclick="return setLanguage('ja')">日本語</a> &#x2022;
+  <a href="ko/" onclick="return setLanguage('ko')">한국어</a> &#x2022;
+  <a href="pt-rBR/" onclick="return setLanguage('pt-rBR')">português (Brasil)</a> &#x2022;
+  <a href="ru/" onclick="return setLanguage('ru')">русский</a> &#x2022;
+  <a href="vi/" onclick="return setLanguage('vi')">Tiếng Việt</a> &#x2022;
+  <a href="zh-rCN/" onclick="return setLanguage('zh-rCN')">中文（简体）</a> &#x2022;
+  <a href="zh-rTW/" onclick="return setLanguage('zh-rTW')">中文（繁體）</a>
+</span>
+            <hr />
+            <small style="font-style: oblique;">This site uses a cookie to remember your language preference in this browser. Disable JavaScript if you do not wish to use this feature.</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
