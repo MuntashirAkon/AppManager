@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<resources>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources>
     <string name="disclaimer_header">AVERTISSEMENT</string>
     <string name="disclaimer_exit">Quitter</string>
     <string name="disclaimer_agree">J\'accepte</string>
     <string name="disclaimer_agree_forever">Ne plus afficher</string>
-    <string name="disclaimer_footer">© 2020–2021 Muntashir Al-Islam</string>
+    <string name="disclaimer_footer">© 2020–2022 Muntashir Al-Islam</string>
     <string name="disclaimer_body">App Manager offre des fonctions root qui pourraient éventuellement nuire à votre appareil si elle est mal utilisée. App Manager n’est pas responsable des dommages causés par l’utilisation de cette application. Si vous n’êtes pas pleinement conscient du fonctionnement des racines, vous devriez éviter d’utiliser les options root jusqu’à ce que vous êtes pleinement conscient des risques.
 \n
 \nTout lien que je fournit à d’autres applications et sites Web est pour les utilisateurs bénéficient. Je ne suis pas responsable de tout contenu que vous pouvez trouver en allant sur des liens externes.
