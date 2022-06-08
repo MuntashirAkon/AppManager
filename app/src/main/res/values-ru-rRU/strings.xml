@@ -1006,7 +1006,7 @@
     <string name="notification_title">Запись лога в процессе</string>
     <string name="notification_ticker">Начата запись лога</string>
     <string name="notification_subtext">Нажмите, чтобы остановить запись</string>
-    <string name="no_saved_logs">Нет сохраненных логов</string>
+    <string name="no_saved_logs">Нет сохраненных логов.</string>
     <string name="manage_saved_logs">Управление сохраненными логами</string>
     <string name="log_saved">Лог сохранен.</string>
     <string name="log_recording_started">Началась запись лога.</string>
