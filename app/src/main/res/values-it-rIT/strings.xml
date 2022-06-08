@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
     <string name="_lang_tag" translatable="false">it</string>
     <string name="uninstall">Disinstalla</string>
     <string name="require_no_permission">Nessun permesso richiesto</string>
@@ -304,6 +304,7 @@
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
 \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
 \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
 \n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
 \n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
 \n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
@@ -407,7 +408,7 @@
     <string name="open_in_termux">Apri su Termux</string>
     <string name="export_icon">Estrai icona</string>
     <string name="no_matching_package_found">Non è stato possibile trovare tale app</string>
-    <string name="block_unblock_trackers">Blocca/sblocca tracker</string>
+    <string name="block_unblock_trackers">Blocca/sblocca trackers</string>
     <string name="clear_data_message">Vuoi davvero cancellare i dati di questa applicazione\?</string>
     <string name="skip_signature_checks">Salta controlli firme</string>
     <string name="yes">Sì</string>
@@ -431,7 +432,7 @@
     </plurals>
     <plurals name="alert_failed_to_delete_backup">
         <item quantity="one">Impossibile eliminare %1$d backup</item>
-        <item quantity="other">Impossibile eliminare %1$d backup</item>
+        <item quantity="other">Impossibile eliminare %1$d backups</item>
     </plurals>
     <string name="delete_backup">Elimina backup</string>
     <string name="restore">Ripristina</string>
@@ -471,7 +472,7 @@
         <item quantity="one">%1$d minuto</item>
         <item quantity="other">%1$d minuti</item>
     </plurals>
-    <string name="sort_by_blocked_components">Prima bloccate</string>
+    <string name="sort_by_blocked_components">Prima i Bloccati</string>
     <string name="no_changes">Nessun cambiamento</string>
     <string name="netpolicy_disable_network_access">Disattiva accesso alla rete</string>
     <string name="wireless_debugging_not_supported">Il debug wireless non è supportato in questa piattaforma.</string>
@@ -489,7 +490,7 @@
     <string name="exit_confirmation">Conferma di uscita</string>
     <string name="vt_slowness_warning">A seconda della velocità di Internet e del carico sul server, questo può richiedere un po\' di tempo.</string>
     <string name="vt_disclaimer">VirusTotal e i suoi loghi sono un marchio di Chronicle LLC. Né App Manager - il client API - né i suoi autori sono responsabili per i dati che puoi inviare a VirusTotal.</string>
-    <string name="sort_by_disabled_app">Prima disabilitate</string>
+    <string name="sort_by_disabled_app">Prima i Disabilitati</string>
     <string name="confirm_installation">Conferma installazione</string>
     <string name="sort_by_backup">Prima con backup</string>
     <string name="checksums">Checksum</string>
@@ -499,7 +500,7 @@
     <string name="port_number_invalid">Il numero di porta non è valido.</string>
     <string name="select_apk">Seleziona APK</string>
     <string name="duplicate">Duplica</string>
-    <string name="sort_by_dangerous_permissions">Prima pericolose</string>
+    <string name="sort_by_dangerous_permissions">Prima i Pericolosi</string>
     <string name="sort_by_denied_permissions">Prima negate</string>
     <string name="changes_not_saved">Modifiche non salvate</string>
     <string name="new_profile">Nuovo profilo</string>
@@ -526,7 +527,7 @@
     <string name="app_signing_install_without_data_loss">Se hai disattivato la verifica della firma, puoi usare l\'opzione <b>Installa soltanto</b> per installare l\'app senza perdere dati.</string>
     <string name="only_install">Installa soltanto</string>
     <string name="view_missing_signatures">Tocca per visualizzare o inviare firme non ancora presenti nel database delle librerie di App Manager.</string>
-    <string name="am_crashed">App Manager è appena crashato</string>
+    <string name="am_crashed">App Manager è appena andato in crash</string>
     <string name="in_progress">In corso</string>
     <string name="input_profile_name">Nome profilo</string>
     <string name="profile_disable_msg">Disabilita o abilita le app in base allo stato</string>
@@ -542,11 +543,11 @@
     <string name="type_uri_array">Lista di URIs</string>
     <string name="java">Java</string>
     <string name="clear_data_from_uninstalled_apps_description">Cancella i dati delle app disinstallate con il flag <tt>DONT_DELETE_DATA</tt></string>
-    <string name="sort_by_process_id">ID processo</string>
+    <string name="sort_by_process_id">ID Processo</string>
     <string name="tap_to_see_details">Tocca per vedere i dettagli</string>
     <string name="accept_time">Tempo per accettare</string>
     <string name="reject_time">Tempo per rifiutare</string>
-    <string name="sort_by_denied_app_ops">Prima negate</string>
+    <string name="sort_by_denied_app_ops">Prima i Negati</string>
     <string name="one_click_ops">Operazioni 1-Click</string>
     <string name="failed_packages">Pacchetti falliti</string>
     <string name="no_profiles">Nessun profilo</string>
@@ -564,21 +565,21 @@
     <string name="app_signing_signature">Firma</string>
     <string name="copy">Copia</string>
     <string name="filter_running_apps">App in esecuzione</string>
-    <string name="tap_to_submit_crash_report">Tocca per inviare il rapporto di crash.</string>
-    <string name="send_crash_report">Invia rapporto di crash</string>
+    <string name="tap_to_submit_crash_report">Tocca per inviare il rapporto sull\'arresto anomalo.</string>
+    <string name="send_crash_report">Invia rapporto di arresto anomalo</string>
     <string name="input_profile_name_description">Il nome del profilo non può contenere spazi.</string>
     <string name="failed_to_duplicate_profile">Impossibile duplicare il profilo</string>
     <string name="pref_show_users_in_installer">Mostra utenti nell\'installatore</string>
     <string name="pref_show_users_in_installer_msg">Visualizza un elenco di utenti da selezionare prima di installare un\'app esterna. Richiede root o ADB.</string>
-    <string name="pref_encryption_msg">Codifica i backup.</string>
+    <string name="pref_encryption_msg">Crittografia per i salvataggi.</string>
     <string name="none">Nessuno</string>
     <string name="allow_routine_ops">Permetti operazioni di routine</string>
     <string name="profile_state">Stato del profilo</string>
     <string name="allow_routine_ops_msg">Permetti l\'uso del profilo nelle operazioni di routine</string>
     <string name="profile_force_stop_msg">Arresto forzata delle app</string>
-    <string name="profile_clear_cache_msg">Cancella la cache delle app</string>
-    <string name="profile_clear_data_msg">Cancella i dati delle app</string>
-    <string name="profile_block_trackers_msg">Blocca i tracker nelle app</string>
+    <string name="profile_clear_cache_msg">Pulisci la cache delle app</string>
+    <string name="profile_clear_data_msg">Pulisci i dati delle app</string>
+    <string name="profile_block_trackers_msg">Blocca i trackers nelle app</string>
     <string name="profile_state_msg">Stato on/off personalizzato per questo profilo</string>
     <string name="off">Spento</string>
     <string name="options">Opzioni</string>
@@ -653,7 +654,7 @@
     <string name="rules">Regole</string>
     <string name="pref_mode_of_operations">Modalità di funzionamento</string>
     <string name="public_key">Chiave pubblica</string>
-    <string name="clear_app_cache">Cancella la cache delle app</string>
+    <string name="clear_app_cache">Pulisci la cache dell\'app</string>
     <string name="sys_config">Configurazione di sistema</string>
     <string name="keystore">KeyStore</string>
     <string name="pref_backup_flags_msg">L\'aggiunta di un predefinito per le opzioni di backup rimuove l\'onere di selezionare le flag ogni volta che si fa il backup/ripristino.</string>
@@ -662,7 +663,7 @@
     <string name="scanner">Scanner</string>
     <string name="no_libs">Nessuna libreria</string>
     <string name="lib_details">Dettagli libreria</string>
-    <string name="encryption">Codifica</string>
+    <string name="encryption">Crittografia</string>
     <string name="ecc">Crittografia a curva ellittica</string>
     <string name="extras">Extra</string>
     <string name="running_services">Servizi in Esecuzione</string>
@@ -673,7 +674,7 @@
     <string name="confirm_import_keystore">Sei sicuro di voler sostituire il KeyStore esistente\? Questa azione non può essere annullata.</string>
     <plurals name="alert_failed_to_import_backups">
         <item quantity="one">Impossibile importare %1$d backup</item>
-        <item quantity="other">Impossibile importare %1$d backup</item>
+        <item quantity="other">Impossibile importare %1$d backups</item>
     </plurals>
     <string name="help_permissions_tab">Questi permessi sono definiti da questa applicazione e non possono essere revocati.</string>
     <string name="pref_display_changes_msg">Mostra cambiamenti di versione, tracker, componenti, permessi, firme, SDK, ecc. in base alla versione.</string>
@@ -722,13 +723,13 @@
     <string name="external_storage">Memoria Esterna</string>
     <string name="internal_storage">Memoria Interna</string>
     <string name="sd_card">Scheda SD</string>
-    <string name="type_long_array">Vettore di long integers</string>
+    <string name="type_long_array">Vettore di interi lunghi</string>
     <string name="type_float_array">Vettore di numeri decimali</string>
     <string name="failed_to_initialize_key_store">Impossibile inizializzare il keystore App Manager.</string>
     <string name="use_default">Usa predefinita</string>
     <string name="default_key_used">La chiave predefinita è in uso.</string>
     <string name="components">Componenti</string>
-    <string name="installer_error_conflict">Impossibile installare l\'applicazione perchè il nome del pacchetto è in uso</string>
+    <string name="installer_error_conflict">Impossibile installare l\'app perché il pacchetto è in uso</string>
     <string name="state_dead">Morto</string>
     <string name="close">Chiudi</string>
     <string name="state_trace_stop">Arresto analisi</string>
@@ -783,7 +784,7 @@
     <string name="installer_error_aborted">Installazione fallita perchè è stata annullata o la sessione è stata chiusa inaspettatamente</string>
     <string name="failed_to_fetch_package_info">Impossibile recuperare informazioni pacchetto</string>
     <string name="operation_running">Operazione in corso…</string>
-    <string name="full_stop_tap_to_see_details">. Premi per vedere i dettagli.</string>
+    <string name="full_stop_tap_to_see_details">. Tocca per vedere i dettagli.</string>
     <string name="package_installer">Installer Pacchetto</string>
     <string name="installer_error_session_create">Impossibile creare un session installer</string>
     <string name="installer_error_session_write">Impossibile scrivere sul session installer</string>
@@ -888,7 +889,7 @@
     <string name="backup_msg">Salva applicazioni con i dati</string>
     <string name="restore_msg">Rirpristina applicazioni con i dati</string>
     <string name="screen_lock">Schermata di Blocco</string>
-    <string name="type_long_array_list">Lista di long integers</string>
+    <string name="type_long_array_list">Lista di interi lunghi</string>
     <string name="type_string_array">Vettore di stringhe</string>
     <string name="type_string_array_list">Lista di stringhe</string>
     <string name="no_battery_optimization">Nessuna ottimizzazione della batteria</string>
@@ -951,8 +952,8 @@
     <string name="screen_lock_msg">Blocca App Manager usando il blocco dello schermo di Android</string>
     <string name="type_component_name">Nome Component</string>
     <string name="type_null">Nessun valore</string>
-    <string name="type_int_array">Vettore di integers</string>
-    <string name="type_int_array_list">Lista di integers</string>
+    <string name="type_int_array">Vettore di interi</string>
+    <string name="type_int_array_list">Lista di interi</string>
     <string name="has_net_policy">Politica di rete</string>
     <string name="net_policy">Politica di rete</string>
     <string name="organization_unit">Unità organizzazione (OU)</string>
@@ -1017,4 +1018,161 @@
     <string name="working_on_adb_mode">Lavorando sulla modalità ADB</string>
     <string name="key_not_set">Non impostata.</string>
     <string name="unknown_split_for_feature"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> per funzionalità <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="tracker">Tracker</string>
+    <string name="vt_confirm_uploading_file">Il file non è stato trovato nel database di VirusTotal. Vuoi caricarlo\?</string>
+    <string name="alias_pass">Password dell\'alias</string>
+    <string name="pref_log_viewer_msg">Configura come i registri sono mostrati.</string>
+    <string name="log_level_verbose">Dettagliato</string>
+    <string name="log_level_warn">Avvisi</string>
+    <string name="delete_saved_log">Cancella Registri Salvati</string>
+    <string name="log_cleared">Registri cancellati</string>
+    <string name="log_recording_started">Registrazione registro avviata.</string>
+    <string name="log_saved">Registro salvato.</string>
+    <string name="no_saved_logs">Nessun registro salvato.</string>
+    <string name="notification_subtext">Tocca per fermare la registrazione</string>
+    <string name="notification_ticker">Registrazione registro avviata</string>
+    <string name="pref_filter_pattern_title">Filtra i Tags</string>
+    <string name="pref_expanded_by_default_summary">Mostra il testo del registro completo come impostazione predefinita.</string>
+    <string name="pref_log_write_period_summary" tools:ignore="PluralsCandidate">Mentri registra, scrivi sulla scheda SD ogni %1$d righe.</string>
+    <string name="expand_all">Espandi Tutti</string>
+    <string name="background">Sfondo</string>
+    <string name="smali">Smali</string>
+    <string name="uses_play_app_signing">Firma Play App</string>
+    <string name="process_id">ID Processo</string>
+    <string name="pem_file">File PEM</string>
+    <string name="import_key">Importa chiave</string>
+    <string name="new_alias_password">Nuova password dell\'alias</string>
+    <string name="save_as">Salva Come…</string>
+    <string name="send_log_title">Invia Registro</string>
+    <string name="add_filter">Aggiungi Filtro</string>
+    <string name="start_recording_log">Registra</string>
+    <string name="state_name">Nome Stato (ST)</string>
+    <string name="locality_name">Città (city) nome (L)</string>
+    <string name="country_name" tools:ignore="TypographyOther">Nome paese (C)</string>
+    <string name="keystore_file">File KeyStore</string>
+    <string name="keystore_pass">Password KeyStore</string>
+    <string name="java_keystore">KeyStore Java (JKS)</string>
+    <string name="bouncy_castle_keystore">KeyStore Bouncy Castle (BKS)</string>
+    <string name="found_no_alias_in_keystore">Nessun alias trovato nel KeyStore!</string>
+    <string name="choose_an_alias">Scegli un alias</string>
+    <string name="pref_import_backups_msg">Importa salvataggi da OAndBackup, Swift Backup (3.0–3.2) o Titanium Backup.</string>
+    <string name="import_from_oab">Imporat da OAndBackup</string>
+    <string name="restart_log_viewer_to_see_changes">Riavvia la finestra del visualizzatore del registro per vedere le modifche.</string>
+    <string name="log_level_debug">Debug</string>
+    <string name="log_level_error">Errore</string>
+    <string name="log_level_info">Informazioni</string>
+    <string name="log_level_fatal">Fatale</string>
+    <string name="add_filter_ellipsis">Aggiungi Filtro…</string>
+    <string name="enter_filename">Inserisci il nome del file</string>
+    <string name="copy_to_clipboard">Copia negli appunti</string>
+    <string name="dialog_compiling_log">Compilando registro…</string>
+    <string name="open">Apri</string>
+    <string name="log_level">Livello Registro</string>
+    <string name="pref_buffer_title">Buffer(s) Registro</string>
+    <string name="pref_default_log_level_title">Livello del Registro Predefinito</string>
+    <string name="pref_display_limit_summary" tools:ignore="PluralsCandidate">Mostra solo gli ultimi %1$d registri in modo da evitare errori di memoria esaurita.</string>
+    <string name="pref_log_line_period_error">Inserisci un intero tra 1 e 1000 per favore.</string>
+    <string name="pref_log_write_period_title">Scrivi un Punto</string>
+    <string name="pref_show_timestamp_summary">Mostra l\'id del processo e il timestamp quando espanso.</string>
+    <string name="pref_show_timestamp_title">Mostra Pid &amp; Timestamp</string>
+    <string name="record_log">Registra Registro</string>
+    <string name="widget_start_recording">Registra
+\nRegistro</string>
+    <string name="pause_unpause">Riproduci/Pausa</string>
+    <string name="undo">Annulla</string>
+    <string name="file">File</string>
+    <string name="collapse_all">Collassa Tutti</string>
+    <string name="intent_firewall">IFW</string>
+    <string name="pref_vt_apikey">Chiave API VirusTotal</string>
+    <string name="parent_process_id">ID Processo Padre</string>
+    <string name="virtual_memory">Memoria Virtuale</string>
+    <string name="cpu_percent">%% CPU</string>
+    <string name="cpu_time">Tempo CPU</string>
+    <string name="state">Stato Processo</string>
+    <string name="priority">Priorità</string>
+    <string name="failed_to_change_app_op_mode">Impossibile cambiare la modalità operazione applicazione.</string>
+    <string name="commandline_args">Argomenti da linea di comando</string>
+    <string name="memory_chart_info">● %1$s Applicazioni ● %2$s Cached ● %3$s Buffers ● %4$s Libere</string>
+    <string name="swap_chart_info">● %1$s Usate ● %2$s Libere</string>
+    <string name="swap">Scambia</string>
+    <string name="failed_to_use_the_current_mode_of_operation">Impossibile usare la modalità di operazione corrente. Ritorno alla modalità non-root per questa sessione.</string>
+    <string name="warning_working_on_root_mode">Attenzione: Lavorando in modalità root invece che ADB.</string>
+    <string name="failed_to_disable_magisk_deny_list">Impossibile disattivare Denylist di Magisk</string>
+    <string name="mode_of_op_with_inferred_mode_of_op">%1$s (Modalità dedotta: %2$s)</string>
+    <string name="hidden_api_enf_policy_black">Enforce (solo liste nere)</string>
+    <string name="open_in_new_window">Nuova finestra</string>
+    <string name="type_string_set">Set di stringhe</string>
+    <string name="pref_vt_prompt_before_uploading">Mostra prompt prima di caricare un file.</string>
+    <string name="vt_confirm_upload_and_scan">Sì, carica e scansiona</string>
+    <string name="log_stop_recording">Ferma registrazione</string>
+    <string name="apk_checksums">Checksums APK</string>
+    <string name="item_select">Seleziona</string>
+    <plurals name="toast_log_truncated">
+        <item quantity="one">Registro troppo grande, visualizzazione dell\'ultima %d riga.</item>
+        <item quantity="other">Registro troppo grande, visualizzazione delle ultime %d righe.</item>
+    </plurals>
+    <plurals name="file_deletion_confirmation">
+        <item quantity="one">Il file %d sarà eliminato</item>
+        <item quantity="other">I files %d saranno eliminati</item>
+    </plurals>
+    <string name="expiry_date_cannot_be_empty">La data di scadenza non può essere vuota.</string>
+    <string name="pref_installer_msg">Configura i comportamenti dell\'installer delle app.</string>
+    <string name="failed_to_read_keystore">Impossibile leggere il KeyStore.</string>
+    <string name="signing_key">Chiave per firmare</string>
+    <string name="pref_import_backups">Importa salvataggi</string>
+    <string name="log_viewer">Visualizzatore del Registro</string>
+    <string name="filter_choice">Cerca per</string>
+    <string name="filter_choice_pid">PID</string>
+    <string name="pref_cat_advanced">Avanzate</string>
+    <string name="pref_cat_appearance">Aspetto</string>
+    <string name="pref_cat_configuration">Configurazione</string>
+    <string name="text_filter_text">Filtra testo</string>
+    <string name="save_log">Salva Registro</string>
+    <string name="settings">Impostazioni</string>
+    <string name="subject_log_report">Rapporto registro</string>
+    <string name="text_filter_ellipsis">Filtra…</string>
+    <string name="filter_choice_tag">Tag</string>
+    <string name="primary_abi">ABI Principale</string>
+    <string name="hidden_api_enf_default_policy">Predefinito (basato sul tipo di applicazione)</string>
+    <string name="enter_good_filename">Inserisci un nome valido per favore.</string>
+    <string name="manage_saved_logs">Gestisci Registri Salvati</string>
+    <string name="notification_title">Registrazione registro in corso</string>
+    <string name="pref_default_log_level_summary">Livello del registro all\'avvio, quando apri i files, e quando registri.</string>
+    <string name="pref_display_limit_title">Limite Visualizzazione del Registro</string>
+    <string name="pref_filter_pattern_summary">Filtra i tags selezionati dai registri.</string>
+    <string name="pref_expanded_by_default_title">Espandi come Impostazione Predefinita</string>
+    <string name="text_include_device_info">Include informazioni del dispositivo</string>
+    <string name="pref_display_limit_hint" tools:ignore="PluralsCandidate">Inserisci un numero valido tra %1$d e %2$d per favore.</string>
+    <string name="toast_invalid_level">Nome livello non valido: %s</string>
+    <string name="toast_invalid_selection">Selezione non valida. Si prega di riprovare.</string>
+    <string name="unable_to_save_log">Impossibile salvare il registro. Hai inserito un nome del file valido\?</string>
+    <string name="widget_recording_in_progress">Registrando…</string>
+    <string name="omit_sensitive_info">Ometti le informazioni sensibili</string>
+    <string name="omit_sensitive_info_summary">Ometti le informazioni sensibili come urls web, numeri di telefono o emails.</string>
+    <string name="text_include_dmesg">Includi registro del kernel</string>
+    <string name="saf">SAF</string>
+    <string name="failed_to_enable_magisk_deny_list">Impossibile attivare Denylist di Magisk</string>
+    <string name="magisk_denylist">DenyList di Magisk</string>
+    <string name="zygote_preload_name">Nome precaricamento Zygote</string>
+    <string name="hidden_api_enforcement_policy">Politica di tutela API nascosto</string>
+    <string name="hidden_api_enf_policy_none">Nessuno (accesso completo all\'API nascosto)</string>
+    <string name="hidden_api_enf_policy_warn">Avviso (accesso completo all\'API nascosto ma emette avvisi)</string>
+    <string name="hidden_api_enf_policy_dark_grey_and_black">Enforce (liste grigio-scure e nere)</string>
+    <string name="binary_32_bit">32 Bit</string>
+    <string name="binary_64_bit">64 Bit</string>
+    <string name="endianness_little_endian">Little endian</string>
+    <string name="endianness_big_endian">Big endian</string>
+    <string name="pref_vt_apikey_description">Una chiave API abilita App Manager a caricare i files APK su VirusTotal e a recuperare i rapporti. Registrati su https://virustotal.com per ottenere una chiave API gratis.</string>
+    <string name="search_type_regular_expressions">Espressione regolare</string>
+    <string name="pref_vt_apikey_summary">Abilita scansione files APK tramite VirusTotal.</string>
+    <string name="threads">Conteggio Thread</string>
+    <string name="so_type_shared_library">Libreria condivisa</string>
+    <string name="scan_in_vt">Scansiona su VirusTotal</string>
+    <string name="app_explorer">Esploratore App</string>
+    <string name="pem_and_pk8">PEM e PKCS #8 (PK8)</string>
+    <string name="pk8_file">File PKCS #8 (PK8)</string>
+    <string name="import_from_tb">Importa da Titanium Backup</string>
+    <string name="pkcs12_keystore">KeyStore PKCS #12 (P12)</string>
+    <string name="intent_firewall_and_disable">IFW + disabilita</string>
+    <string name="uses_play_app_signing_description">Questa app contiene alcuni markers che indicano che <i>potrebbe</i> usare <a href="https://support.google.com/googleplay/android-developer/answer/9842756">Firma Play App</a>. Con questo schema, le chiavi per firmare sono memorizzate su servers di Google, e Google è responsabile per la firma dell\'app. Nota che le informazioni sulla firma che corrispondono è l\'unico modo per verificare che l\'app non è stata modificata da qualcuno oltre allo sviluppatore (e in questo caso, anche Google).</string>
 </resources>
