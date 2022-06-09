@@ -646,7 +646,7 @@
     <string name="notification_title">Gravação de registo em andamento</string>
     <string name="notification_ticker">Gravação de registo iniciada</string>
     <string name="notification_subtext">Toque para parar de gravar</string>
-    <string name="no_saved_logs">Não foram encontrados registos gravados.</string>
+    <string name="no_saved_logs">Nenhum registro salvo.</string>
     <string name="manage_saved_logs">Gerir registos gravados</string>
     <string name="log_saved">Registo gravado.</string>
     <string name="log_recording_started">A gravação do registo começou.</string>
@@ -1147,4 +1147,13 @@
     <string name="hidden_api_enf_policy_black">Forçar (apenas listas negras)</string>
     <string name="binary_32_bit">32 Bit</string>
     <string name="binary_64_bit">64 Bit</string>
+    <string name="change_backup_volume">Alterar volume</string>
+    <string name="pref_saved_apk_name_format">Nome do formato APK salvo</string>
+    <string name="pref_saved_apk_name_format_msg">O formato usado para nomear os arquivos APK estão salvá-los.</string>
+    <string name="sort_by_installation_date">Data de instalação</string>
+    <string name="external">Externo</string>
+    <string name="so_type_executable">Executável</string>
+    <string name="auth_manager_title">Gerente de autorização</string>
+    <string name="backup_volume_unavailable_warning">O volume de backup selecionado não está disponível no momento. Se estiver localizado em um armazenamento externo, insira-o ou altere o volume de backup.</string>
+    <string name="internal">Interno</string>
 </resources>
