@@ -52,7 +52,7 @@
     <string name="deny_dangerous_app_ops">Заборонити небезпечні app ops</string>
     <string name="failed_to_enable_op">Сталася помилка під час спроби надати дозвіл</string>
     <string name="no_app_ops">Немає операцій з дозволами</string>
-    <string name="app_ops">Операції з додатком</string>
+    <string name="app_ops">App Ops</string>
     <string name="sys_config">Конфігурація системи</string>
     <string name="only_install">Лише встановити</string>
     <string name="app_signing_install_without_data_loss">Якщо ви вимкнули перевірку підпису, ви можете використовувати опцію <b>Лише встановити</b>, для встановлення додатку без втрати даних.</string>
@@ -1031,7 +1031,7 @@
 \nRiseup: https://0xacab.org/muntashir/AppManager
 \nCodeberg: https://codeberg.org/muntashir/AppManager</string>
     <string name="apk_updater">APK Updater</string>
-    <string name="enforcing">Примусово виконати</string>
+    <string name="enforcing">Enforcing</string>
     <string name="uri">URI</string>
     <string name="rsa">RSA</string>
     <string name="aes">AES</string>
@@ -1054,9 +1054,9 @@
     <string name="suspended">Призупинено</string>
     <string name="saf">SAF</string>
     <string name="filter_choice_pid">PID</string>
-    <string name="log_level_fatal">Фатальний</string>
-    <string name="log_level_warn">Попередження</string>
-    <string name="log_level_verbose">Детально</string>
+    <string name="log_level_fatal">Fatal</string>
+    <string name="log_level_warn">Warn</string>
+    <string name="log_level_verbose">Verbose</string>
     <string name="log_level_info">Info</string>
     <string name="log_level_error">Error</string>
     <string name="log_level_debug">Debug</string>
@@ -1064,7 +1064,7 @@
     <string name="bouncy_castle_keystore">Bouncy Castle KeyStore (BKS)</string>
     <string name="java_keystore">Java KeyStore (JKS)</string>
     <string name="bootloader">Bootloader</string>
-    <string name="permissive">Рекомендуючий</string>
+    <string name="permissive">Permissive</string>
     <string name="ssaid">SSAID</string>
     <string name="type_uri">URI</string>
     <string name="port_number_invalid">Недійсний номер порту.</string>
@@ -1249,5 +1249,5 @@
     <string name="log_stop_recording">Зупинити записування</string>
     <string name="apk_checksums">Контрольні суми APK</string>
     <string name="item_select">Обрати</string>
-    <string name="app_explorer">Перегляд програм</string>
+    <string name="app_explorer">Дослідження додатків</string>
 </resources>
