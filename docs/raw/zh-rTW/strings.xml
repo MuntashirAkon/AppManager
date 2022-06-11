@@ -277,7 +277,6 @@
 \n可以以升序方式按權限名稱對列表排序，也可以優先顯示拒絕的權限。</string>
     <string name="pages$interceptor-page$$flags-title">標志位(Flags)</string>
     <string name="guide$aot$$aot-lineage-os-title">Lineage OS</string>
-    <string name="faq$app-components$$how-to-unblock-title">如何使用 \"一鍵操作 \"或 \"批量操作 \"解禁的追蹤器組件？</string>
     <string name="faq$misc$$why-internet-permission-title">為什麽 App Manager 有聯網的權限，而它卻沒有連接到互聯網？</string>
     <string name="pages$profiles-page$$options-menu-title">選項菜單</string>
     <string name="pages$profile-page$$state-title">狀態</string>
@@ -495,7 +494,6 @@
     <string name="guide$aot$$enable-aot-via-pc-title">在 PC 或 Mac 上啟用 經由TCP的ADB</string>
     <string name="pages$settings-page$sign-apk">安裝應用前是否對 APK 文件進行簽名.
 \n轉至 \\hyperref[subsec:apk-signing]{APK 簽名} 部分來配置簽名.</string>
-    <string name="faq$app-components$$detect-by-related-apps-title">為什麽被App Manager禁用的組件沒有被其他相關應用程序檢測到？</string>
     <string name="faq$misc$$section-title">雜項</string>
     <string name="faq$misc$$how-tracker-updated-title">跟蹤器和庫是如何更新的？</string>
     <string name="faq$misc$$shizuku-title">對於 Shizuku 有何計劃？</string>

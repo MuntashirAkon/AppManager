@@ -1006,7 +1006,6 @@
     <string name="pages$settings-page$$signing-key-title">Signierschlüssel</string>
     <string name="faq$misc$$section-title">Sonstiges</string>
     <string name="faq$misc$$i-dont-use-root-adb-title">Ich verwende kein root/ADB. Bin ich völlig vor irgendwelchen Schäden sicher\?</string>
-    <string name="faq$misc$$why-internet-permission-title">Warum hat AM die Berechtigung INTERNET, obwohl es keine Verbindung zum Internet herstellt\?</string>
     <string name="faq$misc$$how-tracker-updated-title">Wie werden die Tracker und Bibliotheken aktualisiert\?</string>
     <string name="faq$misc$$bloatware-title">Was ist Bloatware und wie kann man sie entfernen\?</string>
     <string name="appendices$specifications$$background-title">Hintergrund</string>
@@ -1112,16 +1111,6 @@
 \n \\item App Manager unterstützt bereits sowohl ADB als auch Root, was in einigen Fällen leistungsfähiger ist als Shizuku
 \n \\item Sich für die wichtigsten Funktionen auf eine Drittanbieter-App zu verlassen, ist keine gute Designentscheidung
 \n \\item Die Integration von Shizuku wird die Komplexität des App Managers erhöhen.
-\n\\end{enumerate}</string>
-    <string name="faq$misc$why-internet-permission">AM verwendet die Berechtigung INTERNET aus den folgenden Gründen:
-\n\\begin{enumerate}
-\n \\item \\textbf{Um ADB-over-TCP-Unterstützung für Nicht-Root-Benutzer bereitzustellen}. ADB over TCP ist ein benutzerdefiniertes Netzwerkprotokoll
-\n das normalerweise auf Port \\texttt{5555} läuft. Um sich mit diesem Port über localhost zu verbinden, benötigt AM daher diese Berechtigung.
-\n \\item \\textbf{Um privilegierten Code sowohl im Root- als auch im ADB-Modus auszuführen.} AM ist eine Benutzeranwendung und kann weder privilegierten
-\n Code ausführen und kann auch nicht auf versteckte APIs zugreifen. Folglich führt AM einen Server in der privilegierten Umgebung aus, indem es die
-\n \\texttt{App\\_Prozess} an Port \\texttt{60001} nutzt, und auf der Benutzerseite verbindet sich AM mit diesem Server und führt privilegierten
-\n Code aus der Ferne von der Anwendung aus. Nun gibt es alternative Möglichkeiten, mit einem entfernten Dienst zu kommunizieren. Diese werden derzeit
-\n in Betracht gezogen.
 \n\\end{enumerate}</string>
     <string name="pages$settings-page$$section-title">Seite Einstellungen</string>
     <string name="pages$settings-page$$language-title">Sprache</string>

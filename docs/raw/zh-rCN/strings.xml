@@ -269,7 +269,6 @@
     <string name="guide$backup-restore$$restore-title">恢复</string>
     <string name="guide$backup-restore$$delete-title">删除备份</string>
     <string name="faq$misc$$i-dont-use-root-adb-title">我不使用root/ADB，是否完全安全？</string>
-    <string name="faq$misc$$why-internet-permission-title">为什么 App Manager 有联网的权限，而它却没有连接到互联网？</string>
     <string name="faq$misc$$how-tracker-updated-title">跟踪器和库是如何更新的？</string>
     <string name="faq$misc$$shizuku-title">对于 Shizuku 有何计划？</string>
     <string name="faq$misc$$bloatware-title">什么是预装(bloatware)软件以及如何删除？</string>
@@ -606,11 +605,9 @@
     <string name="faq$app-components$$section-title">应用组件</string>
     <string name="faq$app-components$$what-are-app-components-title">什么是应用组件？</string>
     <string name="faq$app-components$$limitations-title">追踪器或其他组件在App Manager中是如何被禁用的？其局限性是什么？</string>
-    <string name="faq$app-components$$detect-by-related-apps-title">为什么被App Manager禁用的组件没有被其他相关应用程序检测到？</string>
     <string name="faq$app-components$$other-tools-retained-in-am-title">被其他工具禁用的应用程序组件是否保留在App Manager中？</string>
     <string name="faq$app-components$$what-is-component-blocking-title">什么是即时组件禁用？</string>
     <string name="faq$app-components$$tracker-classes-versus-tracker-components-title">跟踪器类与跟踪器组件</string>
-    <string name="faq$app-components$$how-to-unblock-title">如何使用 \"一键操作 \"或 \"批量操作 \"解禁的追踪器组件？</string>
     <string name="appendices$changelogs$$chapter-title">更新日志</string>
     <string name="pages$app-details-page$uses-permissions">\\textbf{系统预定义权限}(\\textit{Uses Permissions}) 是应用(申请)所使用的权限，其在应用程序清单中使用 \\texttt{uses-permission} 标签声明。
 \n其 \"标志位 (\\textit{flags})\"、\"权限名 (\\textit{permission name})\"、\"权限描述 (\\textit{permission description})\"、\"包名 ( \\textit{package name})\"、\"群组 (\\textit{group})\" 取自相关\\hyperref[subsubsec:permissions]{权限}。
