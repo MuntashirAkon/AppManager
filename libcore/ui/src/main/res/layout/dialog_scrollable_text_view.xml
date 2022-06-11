@@ -1,10 +1,13 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/padding_medium"
     android:scrollIndicators="top|bottom"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="false"
     tools:ignore="UnusedAttribute">
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -29,4 +32,4 @@
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-</ScrollView>
+</androidx.core.widget.NestedScrollView>

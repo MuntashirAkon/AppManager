@@ -7,18 +7,21 @@
     tools:context=".logcat.LogViewerActivity"
     android:orientation="vertical">
 
-    <androidx.recyclerview.widget.RecyclerView
+    <io.github.muntashirakon.widget.RecyclerView
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="none"
         android:clipToPadding="false"
+        android:fitsSystemWindows="true"
+        app:fastScrollerEnabled="true"
         tools:listitem="@layout/item_logcat" />
 
     <io.github.muntashirakon.widget.MultiSelectionView
         android:id="@+id/selection_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
         android:focusable="false"
         app:menu="@menu/fragment_logcat_selection_actions" />
 

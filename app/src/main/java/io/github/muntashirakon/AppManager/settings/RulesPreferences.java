@@ -7,7 +7,6 @@ import android.os.UserHandleHidden;
 import android.widget.Toast;
 
 import androidx.preference.Preference;
-import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -26,7 +25,7 @@ import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
 
-public class RulesPreferences extends PreferenceFragmentCompat {
+public class RulesPreferences extends PreferenceFragment {
     private final String[] blockingMethods = new String[]{
             ComponentRule.COMPONENT_TO_BE_BLOCKED_IFW_DISABLE,
             ComponentRule.COMPONENT_TO_BE_BLOCKED_IFW,

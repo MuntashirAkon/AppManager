@@ -5,9 +5,11 @@
     android:layout_height="match_parent">
 
     <ListView
-        android:id="@android:id/list"
+        android:id="@+id/list_item"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:fitsSystemWindows="true"
         android:fastScrollEnabled="true"
         tools:listitem="@android:layout/simple_list_item_1" />
 
@@ -16,6 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
-        tools:text="@string/no_tracker_class" />
+        tools:text="@string/no_tracker_class"
+        tools:visibility="gone" />
 
 </FrameLayout>

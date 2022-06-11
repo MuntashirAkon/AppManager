@@ -133,7 +133,6 @@ import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.widget.SwipeRefreshLayout;
-import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
 import static io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat.HIDDEN_API_ENFORCEMENT_BLACK;
 import static io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat.HIDDEN_API_ENFORCEMENT_DEFAULT;
@@ -238,7 +237,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         versionView = view.findViewById(R.id.version);
         adapter = new AppInfoRecyclerAdapter(mActivity);
         recyclerView.setAdapter(adapter);
-        new FastScrollerBuilder(view.findViewById(R.id.scrollView)).useMd2Style().build();
         // Set observer
         mainModel.get(AppDetailsFragment.APP_INFO).observe(getViewLifecycleOwner(), appDetailsItems -> {
             if (appDetailsItems != null && !appDetailsItems.isEmpty() && mainModel.isPackageExist()) {

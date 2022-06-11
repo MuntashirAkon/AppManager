@@ -12,13 +12,15 @@
         android:layout_height="match_parent"
         android:focusable="false">
 
-        <androidx.recyclerview.widget.RecyclerView
+        <io.github.muntashirakon.widget.RecyclerView
             android:id="@+id/list_item"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scrollbars="none"
             android:focusable="false"
             android:clipToPadding="false"
+            android:fitsSystemWindows="true"
+            app:fastScrollerEnabled="true"
             tools:listitem="@layout/item_icon_title_subtitle" />
 
     </io.github.muntashirakon.widget.SwipeRefreshLayout>
@@ -27,6 +29,7 @@
         android:id="@+id/selection_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
         android:focusable="false"
         app:menu="@menu/activity_app_explorer_selection_actions" />
 

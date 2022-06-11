@@ -25,6 +25,10 @@ import androidx.annotation.Px;
 import androidx.annotation.UiThread;
 import androidx.appcompat.widget.TintTypedArray;
 import androidx.core.content.ContextCompat;
+import androidx.core.util.ObjectsCompat;
+import androidx.core.view.OnApplyWindowInsetsListener;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.customview.view.AbsSavedState;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.transition.Transition;
@@ -43,7 +47,7 @@ import io.github.muntashirakon.util.ParcelUtils;
 import io.github.muntashirakon.util.UiUtils;
 
 @SuppressLint("RestrictedApi")
-public class MultiSelectionView extends MaterialCardView {
+public class MultiSelectionView extends MaterialCardView implements OnApplyWindowInsetsListener {
     public interface OnSelectionChangeListener {
         void onSelectionChange(int selectionCount);
     }
@@ -67,13 +71,13 @@ public class MultiSelectionView extends MaterialCardView {
     private int currentHeight;
     @Px
     private int selectionBottomPadding;
-    @Px
-    private int selectionBottomPaddingMinimum;
     private boolean inSelectionMode = false;
     @Nullable
     private Adapter<?> adapter;
     @Nullable
     private OnSelectionChangeListener selectionChangeListener;
+    @Nullable
+    private WindowInsetsCompat lastInsets;
 
     public MultiSelectionView(Context context) {
         this(context, null);
@@ -139,6 +143,8 @@ public class MultiSelectionView extends MaterialCardView {
         selectionActionsView.setItemActiveIndicatorEnabled(false);
 
         attributes.recycle();
+
+        ViewCompat.setOnApplyWindowInsetsListener(this, this);
     }
 
     static class SavedState extends AbsSavedState {
@@ -204,7 +210,6 @@ public class MultiSelectionView extends MaterialCardView {
         SavedState ss = new SavedState(superState);
         ss.currentHeight = currentHeight;
         ss.selectionBottomPadding = selectionBottomPadding;
-        ss.selectionBottomPaddingMinimum = selectionBottomPaddingMinimum;
         ss.inSelectionMode = inSelectionMode;
         return ss;
     }
@@ -216,7 +221,6 @@ public class MultiSelectionView extends MaterialCardView {
             super.onRestoreInstanceState(ss.getSuperState());
             currentHeight = ss.currentHeight;
             selectionBottomPadding = ss.selectionBottomPadding;
-            selectionBottomPaddingMinimum = ss.selectionBottomPaddingMinimum;
             inSelectionMode = ss.inSelectionMode;
         } else super.onRestoreInstanceState(state);
         if (inSelectionMode) {
@@ -231,18 +235,7 @@ public class MultiSelectionView extends MaterialCardView {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         // Set layout params
-        ViewGroup.LayoutParams params = getLayoutParams();
-        if (params instanceof MarginLayoutParams) {
-            ((MarginLayoutParams) params).leftMargin = horizontalMargin;
-            ((MarginLayoutParams) params).rightMargin = horizontalMargin;
-            ((MarginLayoutParams) params).bottomMargin = bottomMargin;
-        }
-        try {
-            Field gravity = params.getClass().getField("gravity");
-            gravity.set(params, Gravity.BOTTOM);
-        } catch (NoSuchFieldException | IllegalAccessException ignore) {
-        }
-        setLayoutParams(params);
+        updateMarginAndPosition();
     }
 
     @Override
@@ -258,6 +251,20 @@ public class MultiSelectionView extends MaterialCardView {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, MeasureSpec.makeMeasureSpec(currentHeight, MeasureSpec.AT_MOST));
+    }
+
+    @Override
+    public WindowInsetsCompat onApplyWindowInsets(View v, WindowInsetsCompat insets) {
+        WindowInsetsCompat newInsets = null;
+        if (ViewCompat.getFitsSystemWindows(this)) {
+            newInsets = insets;
+        }
+        if (!ObjectsCompat.equals(lastInsets, newInsets)) {
+            lastInsets = newInsets;
+            updateMarginAndPosition();
+            requestLayout();
+        }
+        return insets;
     }
 
     @NonNull
@@ -278,16 +285,6 @@ public class MultiSelectionView extends MaterialCardView {
     @Px
     public int getSelectionBottomPadding() {
         return selectionBottomPadding;
-    }
-
-    public void setSelectionBottomPaddingMinimum(@Px int padding) {
-        selectionBottomPaddingMinimum = padding;
-        if (selectionBottomPadding == 0) {
-            selectionBottomPadding = selectionBottomPaddingMinimum;
-            if (adapter != null) {
-                adapter.setSelectionBottomPadding(selectionBottomPadding);
-            }
-        }
     }
 
     public void setAdapter(@NonNull Adapter<?> adapter) {
@@ -328,9 +325,15 @@ public class MultiSelectionView extends MaterialCardView {
         Transition sharedAxis = new MaterialSharedAxis(MaterialSharedAxis.Y, false);
         TransitionManager.beginDelayedTransition(this, sharedAxis);
         setVisibility(GONE);
-        selectionBottomPadding = selectionBottomPaddingMinimum;
+        selectionBottomPadding = 0;
         inSelectionMode = false;
         if (adapter != null) {
+            //noinspection PointlessNullCheck
+            if (adapter.recyclerView != null
+                    && ViewCompat.getFitsSystemWindows(adapter.recyclerView)
+                    && lastInsets != null) {
+                selectionBottomPadding += lastInsets.getSystemWindowInsetBottom();
+            }
             adapter.setInSelectionMode(false);
             adapter.setSelectionBottomPadding(selectionBottomPadding);
         }
@@ -395,6 +398,29 @@ public class MultiSelectionView extends MaterialCardView {
         requestLayout();
     }
 
+    private void updateMarginAndPosition() {
+        ViewGroup.LayoutParams params = getLayoutParams();
+        if (params instanceof MarginLayoutParams) {
+            int totalLeftMargin = horizontalMargin;
+            int totalRightMargin = horizontalMargin;
+            int totalBottomMargin = bottomMargin;
+            if (ViewCompat.getFitsSystemWindows(this) && lastInsets != null) {
+                totalLeftMargin += lastInsets.getSystemWindowInsetLeft();
+                totalRightMargin += lastInsets.getSystemWindowInsetRight();
+                totalBottomMargin += lastInsets.getSystemWindowInsetBottom();
+            }
+            ((MarginLayoutParams) params).leftMargin = totalLeftMargin;
+            ((MarginLayoutParams) params).rightMargin = totalRightMargin;
+            ((MarginLayoutParams) params).bottomMargin = totalBottomMargin;
+        }
+        try {
+            Field gravity = params.getClass().getField("gravity");
+            gravity.set(params, Gravity.BOTTOM);
+        } catch (NoSuchFieldException | IllegalAccessException ignore) {
+        }
+        setLayoutParams(params);
+    }
+
     public abstract static class Adapter<VH extends ViewHolder> extends RecyclerView.Adapter<VH> implements View.OnLayoutChangeListener {
         private interface OnSelectionChangeListener {
             @UiThread
@@ -413,6 +439,7 @@ public class MultiSelectionView extends MaterialCardView {
         private boolean isInSelectionMode;
         @Nullable
         private RecyclerView recyclerView;
+        private int defaultBottomPadding;
         @ColorInt
         private int highlightColor;
 
@@ -553,7 +580,8 @@ public class MultiSelectionView extends MaterialCardView {
                 recyclerView.setClipToPadding(false);
             }
             recyclerView.setPadding(recyclerView.getPaddingLeft(), recyclerView.getPaddingTop(),
-                    recyclerView.getPaddingRight(), selectionBottomPadding);
+                    recyclerView.getPaddingRight(), selectionBottomPadding == 0 ? defaultBottomPadding
+                            : selectionBottomPadding);
         }
 
         @CallSuper
@@ -561,6 +589,7 @@ public class MultiSelectionView extends MaterialCardView {
         public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
             super.onAttachedToRecyclerView(recyclerView);
             this.recyclerView = recyclerView;
+            this.defaultBottomPadding = recyclerView.getPaddingBottom();
             this.highlightColor = ContextCompat.getColor(recyclerView.getContext(), R.color.highlight);
             recyclerView.addOnLayoutChangeListener(this);
         }

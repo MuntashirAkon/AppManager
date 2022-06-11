@@ -34,12 +34,12 @@
         android:layout_marginEnd="@dimen/padding_medium"
         android:text="@string/select_all" />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <io.github.muntashirakon.widget.RecyclerView
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scrollbars="none"
         android:scrollIndicators="top|bottom"
+        app:fastScrollerEnabled="true"
         tools:ignore="UnusedAttribute"
         tools:listitem="@layout/mtrl_alert_select_dialog_multichoice" />
 

@@ -90,7 +90,7 @@ public class FlowLayout extends ViewGroup {
             mRowVerticalGravity = array.getInt(R.styleable.FlowLayout_rowVerticalGravity, ROW_VERTICAL_GRAVITY_AUTO);
             if (isInEditMode()) {
                 int listItemId = array.getResourceId(R.styleable.FlowLayout_listItem, 0);
-                int itemCount = array.getInt(R.styleable.FlowLayout_listItem, 10);
+                int itemCount = array.getInt(R.styleable.FlowLayout_itemCount, 10);
                 initPreview(listItemId, itemCount);
             }
         } finally {

@@ -5,9 +5,12 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ScrollView
+    <io.github.muntashirakon.widget.NestedScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        android:clipToPadding="false">
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/log_content"
@@ -22,12 +25,13 @@
             android:background="@null"
             tools:text="@tools:sample/lorem/random" />
 
-    </ScrollView>
+    </io.github.muntashirakon.widget.NestedScrollView>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/padding_medium"
         android:text="@string/clear"

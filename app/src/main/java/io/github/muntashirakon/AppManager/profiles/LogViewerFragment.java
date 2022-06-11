@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.util.UiUtils;
 
 public class LogViewerFragment extends Fragment {
     @Nullable
@@ -34,6 +35,7 @@ public class LogViewerFragment extends Fragment {
         AppCompatEditText tv = view.findViewById(R.id.log_content);
         tv.setKeyListener(null);
         ExtendedFloatingActionButton efab = view.findViewById(R.id.floatingActionButton);
+        UiUtils.applyWindowInsetsAsMargin(efab, false, true);
         efab.setOnClickListener(v -> {
             ProfileLogger.clearLogs(model.getProfileName());
             tv.setText("");

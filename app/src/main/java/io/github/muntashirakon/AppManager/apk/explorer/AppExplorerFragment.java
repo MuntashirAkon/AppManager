@@ -22,7 +22,6 @@ import java.io.File;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.widget.MultiSelectionView;
 import io.github.muntashirakon.widget.SwipeRefreshLayout;
-import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
 public class AppExplorerFragment extends Fragment implements SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener {
     public static final String ARG_NAME = "name";
@@ -75,7 +74,6 @@ public class AppExplorerFragment extends Fragment implements SearchView.OnQueryT
         RecyclerView recyclerView = view.findViewById(R.id.list_item);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));
-        new FastScrollerBuilder(recyclerView).useMd2Style().build();
         adapter = new AppExplorerAdapter(activity);
         recyclerView.setAdapter(adapter);
         multiSelectionView = view.findViewById(R.id.selection_view);

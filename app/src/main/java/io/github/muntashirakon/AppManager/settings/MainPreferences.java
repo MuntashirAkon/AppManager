@@ -2,7 +2,6 @@
 
 package io.github.muntashirakon.AppManager.settings;
 
-import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Intent;
 import android.content.pm.UserInfo;
@@ -315,8 +314,7 @@ public class MainPreferences extends PreferenceFragment {
                 });
         // About
         ((Preference) Objects.requireNonNull(findPreference("about"))).setOnPreferenceClickListener(preference -> {
-            @SuppressLint("InflateParams")
-            View view = getLayoutInflater().inflate(R.layout.dialog_about, null);
+            View view = View.inflate(activity, R.layout.dialog_about, null);
             ((TextView) view.findViewById(R.id.version)).setText(String.format(Locale.getDefault(),
                     "%s (%d)", BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
             new AlertDialogBuilder(activity, true)
@@ -413,8 +411,7 @@ public class MainPreferences extends PreferenceFragment {
                 .show());
         // Device info
         model.getDeviceInfo().observe(this, deviceInfo -> {
-            @SuppressLint("InflateParams")
-            View view = getLayoutInflater().inflate(R.layout.dialog_scrollable_text_view, null);
+            View view = View.inflate(activity, R.layout.dialog_scrollable_text_view, null);
             ((TextView) view.findViewById(android.R.id.content)).setText(deviceInfo.toLocalizedString(activity));
             view.findViewById(android.R.id.checkbox).setVisibility(View.GONE);
             new AlertDialogBuilder(activity, true).setTitle(R.string.about_device).setView(view).show();

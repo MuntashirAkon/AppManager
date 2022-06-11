@@ -52,7 +52,7 @@ public class KeyPairGeneratorDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         FragmentActivity activity = requireActivity();
-        View view = getLayoutInflater().inflate(R.layout.dialog_certificate_generator, null);
+        View view = View.inflate(activity, R.layout.dialog_certificate_generator, null);
         Spinner keySizeSpinner = view.findViewById(R.id.key_size_selector_spinner);
         keySizeSpinner.setAdapter(new ArrayAdapter<>(activity, R.layout.support_simple_spinner_dropdown_item,
                 SUPPORTED_RSA_KEY_SIZES));

@@ -38,7 +38,6 @@ import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.reflow.ReflowMenuViewWrapper;
 import io.github.muntashirakon.widget.MultiSelectionView;
-import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
 public abstract class AbsLogViewerFragment extends Fragment implements LogViewerViewModel.LogLinesAvailableInterface,
         ReflowMenuViewWrapper.OnItemSelectedListener, LogViewerActivity.SearchingInterface, Filter.FilterListener {
@@ -94,7 +93,6 @@ public abstract class AbsLogViewerFragment extends Fragment implements LogViewer
         if (mQueryString != null) {
             mRecyclerView.postDelayed(() -> mActivity.search(mQueryString), 1000);
         }
-        new FastScrollerBuilder(mRecyclerView).useMd2Style().build();
         mLogListAdapter = new LogViewerRecyclerAdapter();
         mLogListAdapter.setClickListener(mActivity);
         mMultiSelectionView = view.findViewById(R.id.selection_view);

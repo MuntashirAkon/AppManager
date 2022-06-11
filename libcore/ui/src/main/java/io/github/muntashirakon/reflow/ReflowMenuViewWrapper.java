@@ -37,7 +37,6 @@ import androidx.customview.view.AbsSavedState;
 
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.internal.ThemeEnforcement;
-import com.google.android.material.internal.ViewUtils;
 import com.google.android.material.resources.MaterialResources;
 import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.shape.MaterialShapeUtils;
@@ -274,23 +273,6 @@ public abstract class ReflowMenuViewWrapper extends LinearLayoutCompat {
                     public void onMenuModeChange(@NonNull MenuBuilder menu) {
                     }
                 });
-
-        applyWindowInsets();
-    }
-
-    private void applyWindowInsets() {
-        ViewUtils.doOnApplyWindowInsets(this, (view, insets, initialPadding) -> {
-            // Window insets may add additional padding, e.g., to dodge the system navigation bar
-            initialPadding.bottom += insets.getSystemWindowInsetBottom();
-
-            boolean isRtl = ViewCompat.getLayoutDirection(view) == ViewCompat.LAYOUT_DIRECTION_RTL;
-            int systemWindowInsetLeft = insets.getSystemWindowInsetLeft();
-            int systemWindowInsetRight = insets.getSystemWindowInsetRight();
-            initialPadding.start += isRtl ? systemWindowInsetRight : systemWindowInsetLeft;
-            initialPadding.end += isRtl ? systemWindowInsetLeft : systemWindowInsetRight;
-            initialPadding.applyToView(view);
-            return insets;
-        });
     }
 
     @NonNull

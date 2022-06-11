@@ -36,20 +36,23 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <io.github.muntashirakon.widget.RecyclerViewWithEmptyView
-                android:id="@+id/recycler_view"
+            <!-- We need to use scrollView id in order to preserve compatibility -->
+            <io.github.muntashirakon.widget.RecyclerView
+                android:id="@+id/scrollView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scrollbars="none"
-                android:focusable="false"
+                android:fitsSystemWindows="true"
+                android:clipToPadding="false"
+                app:fastScrollerEnabled="true"
                 tools:listitem="@layout/item_app_details_primary" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@android:id/empty"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                tools:text="@tools:sample/lorem[2]" />
+                tools:text="@tools:sample/lorem[2]"
+                tools:visibility="gone" />
 
         </FrameLayout>
 

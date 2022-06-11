@@ -15,11 +15,13 @@
         android:focusable="false"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-        <me.zhanghai.android.fastscroll.FastScrollNestedScrollView
+        <io.github.muntashirakon.widget.NestedScrollView
             android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:clipToPadding="false">
+            android:fitsSystemWindows="true"
+            android:clipToPadding="false"
+            app:fastScrollerEnabled="true">
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
@@ -122,7 +124,7 @@
                     android:textSize="@dimen/font_size_small"
                     tools:text="@string/swap_chart_info" />
 
-                <androidx.recyclerview.widget.RecyclerView
+                <io.github.muntashirakon.widget.RecyclerView
                     android:id="@+id/list_item"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -135,7 +137,7 @@
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
-        </me.zhanghai.android.fastscroll.FastScrollNestedScrollView>
+        </io.github.muntashirakon.widget.NestedScrollView>
 
     </io.github.muntashirakon.widget.SwipeRefreshLayout>
 
@@ -143,6 +145,7 @@
         android:id="@+id/selection_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
         android:focusable="false"
         app:menu="@menu/activity_running_apps_popup_actions" />
 

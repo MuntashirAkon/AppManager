@@ -6,11 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <me.zhanghai.android.fastscroll.FastScrollNestedScrollView
+    <io.github.muntashirakon.widget.NestedScrollView
         android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:scrollbars="none">
+        android:fitsSystemWindows="true"
+        android:clipToPadding="false"
+        app:fastScrollerEnabled="true">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
@@ -120,6 +122,6 @@
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-    </me.zhanghai.android.fastscroll.FastScrollNestedScrollView>
+    </io.github.muntashirakon.widget.NestedScrollView>
 
 </io.github.muntashirakon.widget.SwipeRefreshLayout>

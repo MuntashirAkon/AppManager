@@ -22,7 +22,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -37,7 +36,8 @@ import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.io.Paths;
-import io.github.muntashirakon.widget.RecyclerViewWithEmptyView;
+import io.github.muntashirakon.util.UiUtils;
+import io.github.muntashirakon.widget.RecyclerView;
 
 public class SharedPrefsActivity extends BaseActivity implements
         SearchView.OnQueryTextListener, EditPrefItemFragment.InterfaceCommunicator {
@@ -73,12 +73,13 @@ public class SharedPrefsActivity extends BaseActivity implements
         mProgressIndicator = findViewById(R.id.progress_linear);
         mProgressIndicator.setVisibilityAfterHide(View.GONE);
         mProgressIndicator.show();
-        RecyclerViewWithEmptyView recyclerView = findViewById(android.R.id.list);
+        RecyclerView recyclerView = findViewById(android.R.id.list);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setEmptyView(findViewById(android.R.id.empty));
         mAdapter = new SharedPrefsListingAdapter(this);
         recyclerView.setAdapter(mAdapter);
         FloatingActionButton fab = findViewById(R.id.floatingActionButton);
+        UiUtils.applyWindowInsetsAsMargin(fab);
         fab.setOnClickListener(v -> {
             DialogFragment dialogFragment = new EditPrefItemFragment();
             Bundle args = new Bundle();

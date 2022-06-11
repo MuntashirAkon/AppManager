@@ -44,6 +44,14 @@
              navigation package. -->
         <attr name="menu" />
     </declare-styleable>
+    <declare-styleable name="NestedScrollView">
+        <!-- Whether fast scroller is enabled. Default is false. -->
+        <attr name="fastScrollerEnabled" />
+    </declare-styleable>
+    <declare-styleable name="RecyclerView">
+        <!-- Whether fast scroller is enabled. Default is false. -->
+        <attr name="fastScrollerEnabled" format="boolean" />
+    </declare-styleable>
     <declare-styleable name="ReflowMenuViewWrapper">
         <!-- Background tint for the navigation bar. -->
         <attr name="backgroundTint" />

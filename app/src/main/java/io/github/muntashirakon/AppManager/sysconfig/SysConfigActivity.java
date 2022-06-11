@@ -20,7 +20,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
@@ -32,8 +31,7 @@ import java.util.List;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
-import io.github.muntashirakon.widget.RecyclerViewWithEmptyView;
-import me.zhanghai.android.fastscroll.FastScrollerBuilder;
+import io.github.muntashirakon.widget.RecyclerView;
 
 public class SysConfigActivity extends BaseActivity {
     private SysConfigRecyclerAdapter adapter;
@@ -51,7 +49,7 @@ public class SysConfigActivity extends BaseActivity {
         AppCompatSpinner spinner = findViewById(R.id.spinner);
         // Make spinner the first item to focus on
         spinner.requestFocus();
-        RecyclerViewWithEmptyView recyclerView = findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setEmptyView(findViewById(android.R.id.empty));
         progressIndicator = findViewById(R.id.progress_linear);
         progressIndicator.setVisibilityAfterHide(View.GONE);
@@ -82,7 +80,6 @@ public class SysConfigActivity extends BaseActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
-        new FastScrollerBuilder(recyclerView).useMd2Style().build();
     }
 
     @Override

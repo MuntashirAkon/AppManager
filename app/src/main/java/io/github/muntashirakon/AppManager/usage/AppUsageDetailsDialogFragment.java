@@ -20,7 +20,6 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -31,8 +30,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
-import io.github.muntashirakon.widget.RecyclerViewWithEmptyView;
-import me.zhanghai.android.fastscroll.FastScrollerBuilder;
+import io.github.muntashirakon.widget.RecyclerView;
 
 public class AppUsageDetailsDialogFragment extends DialogFragment {
     public static final String TAG = AppUsageDetailsDialogFragment.class.getSimpleName();
@@ -57,10 +55,9 @@ public class AppUsageDetailsDialogFragment extends DialogFragment {
             return super.onCreateDialog(savedInstanceState);
         }
         View view = inflater.inflate(R.layout.dialog_app_usage_details, null);
-        RecyclerViewWithEmptyView recyclerView = view.findViewById(android.R.id.list);
+        RecyclerView recyclerView = view.findViewById(android.R.id.list);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));
-        new FastScrollerBuilder(recyclerView).useMd2Style().build();
         recyclerView.setEmptyView(view.findViewById(android.R.id.empty));
         AppUsageDetailsAdapter adapter = new AppUsageDetailsAdapter(activity);
         recyclerView.setAdapter(adapter);

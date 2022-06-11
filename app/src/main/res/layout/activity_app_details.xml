@@ -6,10 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".details.AppDetailsActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
+    <io.github.muntashirakon.widget.AppBarLayout
         android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
+        app:liftOnScroll="true"
+        app:liftOnScrollTargetViewId="@id/scrollView">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
@@ -22,7 +25,7 @@
             android:layout_height="wrap_content"
             app:tabMode="scrollable" />
 
-    </com.google.android.material.appbar.AppBarLayout>
+    </io.github.muntashirakon.widget.AppBarLayout>
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/pager"

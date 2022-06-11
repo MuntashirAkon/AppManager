@@ -2,7 +2,6 @@
 
 package io.github.muntashirakon.dialog;
 
-import android.annotation.SuppressLint;
 import android.content.DialogInterface;
 import android.text.method.LinkMovementMethod;
 import android.text.util.Linkify;
@@ -33,9 +32,8 @@ public class ScrollableDialogBuilder {
         void onClick(DialogInterface dialog, int which, boolean isChecked);
     }
 
-    @SuppressLint("InflateParams")
     public ScrollableDialogBuilder(@NonNull FragmentActivity activity, @Nullable CharSequence message, boolean fullScreen) {
-        View view = activity.getLayoutInflater().inflate(R.layout.dialog_scrollable_text_view, null);
+        View view = View.inflate(activity, R.layout.dialog_scrollable_text_view, null);
         this.message = view.findViewById(android.R.id.content);
         this.message.setText(message);
         this.checkBox = view.findViewById(android.R.id.checkbox);

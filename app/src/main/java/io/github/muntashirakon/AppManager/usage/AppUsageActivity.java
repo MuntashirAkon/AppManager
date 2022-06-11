@@ -37,7 +37,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
@@ -64,9 +63,8 @@ import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
-import io.github.muntashirakon.widget.RecyclerViewWithEmptyView;
+import io.github.muntashirakon.widget.RecyclerView;
 import io.github.muntashirakon.widget.SwipeRefreshLayout;
-import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
 import static io.github.muntashirakon.AppManager.usage.UsageUtils.USAGE_LAST_BOOT;
 import static io.github.muntashirakon.AppManager.usage.UsageUtils.USAGE_TODAY;
@@ -124,7 +122,7 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
 
         // Get usage stats
         mAppUsageAdapter = new AppUsageAdapter(this);
-        RecyclerViewWithEmptyView recyclerView = findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setEmptyView(findViewById(android.R.id.empty));
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -151,7 +149,6 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-        new FastScrollerBuilder(findViewById(R.id.scrollView)).useMd2Style().build();
         mViewModel.getPackageUsageInfoList().observe(this, packageUsageInfoList -> {
             mAppUsageAdapter.setDefaultList(packageUsageInfoList);
             setUsageSummary();

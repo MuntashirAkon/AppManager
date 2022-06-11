@@ -67,20 +67,20 @@ public class AlertDialogBuilder extends AlertDialog.Builder {
     private static final int MATERIAL_ALERT_DIALOG_THEME_OVERLAY = R.attr.materialAlertDialogTheme;
 
     @Nullable
-    private final FullScreenDialogTitleBuilder titleBuilder;
+    private final FullScreenDialogTitleBuilder mTitleBuilder;
     @NonNull
-    private final Rect backgroundInsets;
-    private final boolean fullScreenMode;
+    private final Rect mBackgroundInsets;
+    private final boolean mFullScreenMode;
 
     @Nullable
-    private Drawable background;
-    private boolean exitOnButtonPress = true;
+    private Drawable mBackground;
+    private boolean mExitOnButtonPress = true;
     @Nullable
-    private DialogInterface.OnClickListener positiveButtonListener;
+    private DialogInterface.OnClickListener mPositiveButtonListener;
     @Nullable
-    private DialogInterface.OnClickListener negativeButtonListener;
+    private DialogInterface.OnClickListener mNegativeButtonListener;
     @Nullable
-    private DialogInterface.OnClickListener neutralButtonListener;
+    private DialogInterface.OnClickListener mNeutralButtonListener;
 
     @SuppressLint("RestrictedApi")
     private static int getMaterialAlertDialogThemeOverlay(@NonNull Context context) {
@@ -130,15 +130,15 @@ public class AlertDialogBuilder extends AlertDialog.Builder {
         // MATERIAL_ALERT_DIALOG_THEME_OVERLAY are 0 otherwise alertDialogTheme will override both.
         super(createMaterialAlertDialogThemedContext(context),
                 getOverridingThemeResId(context, overrideThemeResId));
-        this.fullScreenMode = supportsFullScreen(context, fullScreenMode);
+        mFullScreenMode = supportsFullScreen(context, fullScreenMode);
         // Ensure we are using the correctly themed context rather than the context that was passed in.
         context = getContext();
         Theme theme = context.getTheme();
         if (fullScreenMode) {
-            titleBuilder = new FullScreenDialogTitleBuilder(context);
-        } else titleBuilder = null;
+            mTitleBuilder = new FullScreenDialogTitleBuilder(context);
+        } else mTitleBuilder = null;
 
-        backgroundInsets = MaterialDialogs.getDialogBackgroundInsets(context, DEF_STYLE_ATTR, DEF_STYLE_RES);
+        mBackgroundInsets = MaterialDialogs.getDialogBackgroundInsets(context, DEF_STYLE_ATTR, DEF_STYLE_RES);
 
         int surfaceColor = MaterialColors.getColor(context, R.attr.colorSurface, getClass().getCanonicalName());
         MaterialShapeDrawable materialShapeDrawable =
@@ -156,7 +156,7 @@ public class AlertDialogBuilder extends AlertDialog.Builder {
                 materialShapeDrawable.setCornerSize(dialogCornerRadius);
             }
         }
-        background = materialShapeDrawable;
+        mBackground = materialShapeDrawable;
     }
 
     @SuppressLint("RestrictedApi")
@@ -166,99 +166,99 @@ public class AlertDialogBuilder extends AlertDialog.Builder {
         AlertDialog alertDialog = super.create();
         Window window = alertDialog.getWindow();
         // TODO: 28/1/22 Use Handler instead of lamda functions
-        if (fullScreenMode && titleBuilder != null) {
+        if (mFullScreenMode && mTitleBuilder != null) {
             alertDialog.setOnShowListener(dialog -> {
                 Button neutralButton = alertDialog.getButton(DialogInterface.BUTTON_NEUTRAL);
-                if (neutralButtonListener != null) {
+                if (mNeutralButtonListener != null) {
                     neutralButton.setOnClickListener(v -> {
-                        neutralButtonListener.onClick(alertDialog, DialogInterface.BUTTON_NEUTRAL);
-                        if (exitOnButtonPress) alertDialog.dismiss();
+                        mNeutralButtonListener.onClick(alertDialog, DialogInterface.BUTTON_NEUTRAL);
+                        if (mExitOnButtonPress) alertDialog.dismiss();
                     });
                 }
             });
-            titleBuilder.setOnPositiveButtonClickListener(positiveButtonListener);
-            titleBuilder.setOnCloseButtonClickListener(negativeButtonListener);
-            alertDialog.setCustomTitle(titleBuilder.build(alertDialog));
+            mTitleBuilder.setOnPositiveButtonClickListener(mPositiveButtonListener);
+            mTitleBuilder.setOnCloseButtonClickListener(mNegativeButtonListener);
+            alertDialog.setCustomTitle(mTitleBuilder.build(alertDialog));
             window.setWindowAnimations(R.style.AppTheme_FullScreenDialog_Animation);
             // No need to set any insets
             return alertDialog;
         }
         alertDialog.setOnShowListener(dialog -> {
             Button neutralButton = alertDialog.getButton(DialogInterface.BUTTON_NEUTRAL);
-            if (neutralButtonListener != null) {
+            if (mNeutralButtonListener != null) {
                 neutralButton.setOnClickListener(v -> {
-                    neutralButtonListener.onClick(alertDialog, DialogInterface.BUTTON_NEUTRAL);
-                    if (exitOnButtonPress) alertDialog.dismiss();
+                    mNeutralButtonListener.onClick(alertDialog, DialogInterface.BUTTON_NEUTRAL);
+                    if (mExitOnButtonPress) alertDialog.dismiss();
                 });
             }
             Button positiveButton = alertDialog.getButton(DialogInterface.BUTTON_POSITIVE);
-            if (positiveButtonListener != null) {
+            if (mPositiveButtonListener != null) {
                 positiveButton.setOnClickListener(v -> {
-                    positiveButtonListener.onClick(alertDialog, DialogInterface.BUTTON_POSITIVE);
-                    if (exitOnButtonPress) alertDialog.dismiss();
+                    mPositiveButtonListener.onClick(alertDialog, DialogInterface.BUTTON_POSITIVE);
+                    if (mExitOnButtonPress) alertDialog.dismiss();
                 });
             }
             Button negativeButton = alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE);
-            if (negativeButtonListener != null) {
+            if (mNegativeButtonListener != null) {
                 negativeButton.setOnClickListener(v -> {
-                    negativeButtonListener.onClick(alertDialog, DialogInterface.BUTTON_NEGATIVE);
-                    if (exitOnButtonPress) alertDialog.dismiss();
+                    mNegativeButtonListener.onClick(alertDialog, DialogInterface.BUTTON_NEGATIVE);
+                    if (mExitOnButtonPress) alertDialog.dismiss();
                 });
             }
         });
         /* {@link Window#getDecorView()} should be called before any changes are made to the Window
          * as it locks in attributes and affects layout. */
         View decorView = window.getDecorView();
-        if (background instanceof MaterialShapeDrawable) {
-            ((MaterialShapeDrawable) background).setElevation(ViewCompat.getElevation(decorView));
+        if (mBackground instanceof MaterialShapeDrawable) {
+            ((MaterialShapeDrawable) mBackground).setElevation(ViewCompat.getElevation(decorView));
         }
 
-        Drawable insetDrawable = MaterialDialogs.insetDrawable(background, backgroundInsets);
+        Drawable insetDrawable = MaterialDialogs.insetDrawable(mBackground, mBackgroundInsets);
         window.setBackgroundDrawable(insetDrawable);
-        decorView.setOnTouchListener(new InsetDialogOnTouchListener(alertDialog, backgroundInsets));
+        decorView.setOnTouchListener(new InsetDialogOnTouchListener(alertDialog, mBackgroundInsets));
         return alertDialog;
     }
 
     @Nullable
     public Drawable getBackground() {
-        return background;
+        return mBackground;
     }
 
     @NonNull
     public AlertDialogBuilder setBackground(@Nullable Drawable background) {
-        this.background = background;
+        mBackground = background;
         return this;
     }
 
     @NonNull
     public AlertDialogBuilder setBackgroundInsetStart(@Px int backgroundInsetStart) {
         if (getContext().getResources().getConfiguration().getLayoutDirection() == ViewCompat.LAYOUT_DIRECTION_RTL) {
-            backgroundInsets.right = backgroundInsetStart;
+            mBackgroundInsets.right = backgroundInsetStart;
         } else {
-            backgroundInsets.left = backgroundInsetStart;
+            mBackgroundInsets.left = backgroundInsetStart;
         }
         return this;
     }
 
     @NonNull
     public AlertDialogBuilder setBackgroundInsetTop(@Px int backgroundInsetTop) {
-        backgroundInsets.top = backgroundInsetTop;
+        mBackgroundInsets.top = backgroundInsetTop;
         return this;
     }
 
     @NonNull
     public AlertDialogBuilder setBackgroundInsetEnd(@Px int backgroundInsetEnd) {
         if (getContext().getResources().getConfiguration().getLayoutDirection() == ViewCompat.LAYOUT_DIRECTION_RTL) {
-            backgroundInsets.left = backgroundInsetEnd;
+            mBackgroundInsets.left = backgroundInsetEnd;
         } else {
-            backgroundInsets.right = backgroundInsetEnd;
+            mBackgroundInsets.right = backgroundInsetEnd;
         }
         return this;
     }
 
     @NonNull
     public AlertDialogBuilder setBackgroundInsetBottom(@Px int backgroundInsetBottom) {
-        backgroundInsets.bottom = backgroundInsetBottom;
+        mBackgroundInsets.bottom = backgroundInsetBottom;
         return this;
     }
 
@@ -266,10 +266,10 @@ public class AlertDialogBuilder extends AlertDialog.Builder {
      * Whether to exit after a button (negative, positive or neutral) has been pressed.
      */
     public AlertDialogBuilder setExitOnButtonPress(boolean exitOnButtonPress) {
-        if (titleBuilder != null) {
-            titleBuilder.setExitOnButtonPress(exitOnButtonPress);
+        if (mTitleBuilder != null) {
+            mTitleBuilder.setExitOnButtonPress(exitOnButtonPress);
         }
-        this.exitOnButtonPress = exitOnButtonPress;
+        mExitOnButtonPress = exitOnButtonPress;
         return this;
     }
 
@@ -279,8 +279,8 @@ public class AlertDialogBuilder extends AlertDialog.Builder {
     @NonNull
     @Override
     public AlertDialogBuilder setTitle(@StringRes int titleId) {
-        if (fullScreenMode && titleBuilder != null) {
-            titleBuilder.setTitle(titleId);
+        if (mFullScreenMode && mTitleBuilder != null) {
+            mTitleBuilder.setTitle(titleId);
             return this;
         }
         return (AlertDialogBuilder) super.setTitle(titleId);
@@ -289,8 +289,8 @@ public class AlertDialogBuilder extends AlertDialog.Builder {
     @NonNull
     @Override
     public AlertDialogBuilder setTitle(@Nullable CharSequence title) {
-        if (fullScreenMode && titleBuilder != null) {
-            titleBuilder.setTitle(title);
+        if (mFullScreenMode && mTitleBuilder != null) {
+            mTitleBuilder.setTitle(title);
             return this;
         }
         return (AlertDialogBuilder) super.setTitle(title);
@@ -336,9 +336,9 @@ public class AlertDialogBuilder extends AlertDialog.Builder {
     @Override
     public AlertDialogBuilder setPositiveButton(
             @StringRes int textId, @Nullable final OnClickListener listener) {
-        positiveButtonListener = listener;
-        if (fullScreenMode && titleBuilder != null) {
-            titleBuilder.setPositiveButtonText(textId);
+        mPositiveButtonListener = listener;
+        if (mFullScreenMode && mTitleBuilder != null) {
+            mTitleBuilder.setPositiveButtonText(textId);
             return this;
         }
         return (AlertDialogBuilder) super.setPositiveButton(textId, null);
@@ -348,9 +348,9 @@ public class AlertDialogBuilder extends AlertDialog.Builder {
     @Override
     public AlertDialogBuilder setPositiveButton(
             @Nullable CharSequence text, @Nullable final OnClickListener listener) {
-        positiveButtonListener = listener;
-        if (fullScreenMode && titleBuilder != null) {
-            titleBuilder.setPositiveButtonText(text);
+        mPositiveButtonListener = listener;
+        if (mFullScreenMode && mTitleBuilder != null) {
+            mTitleBuilder.setPositiveButtonText(text);
             return this;
         }
         return (AlertDialogBuilder) super.setPositiveButton(text, null);
@@ -359,8 +359,8 @@ public class AlertDialogBuilder extends AlertDialog.Builder {
     @NonNull
     @Override
     public AlertDialogBuilder setPositiveButtonIcon(@Nullable Drawable icon) {
-        if (fullScreenMode && titleBuilder != null) {
-            titleBuilder.setPositiveButtonIcon(icon);
+        if (mFullScreenMode && mTitleBuilder != null) {
+            mTitleBuilder.setPositiveButtonIcon(icon);
             return this;
         }
         return (AlertDialogBuilder) super.setPositiveButtonIcon(icon);
@@ -370,9 +370,9 @@ public class AlertDialogBuilder extends AlertDialog.Builder {
     @Override
     public AlertDialogBuilder setNegativeButton(
             @StringRes int textId, @Nullable final OnClickListener listener) {
-        negativeButtonListener = listener;
-        if (fullScreenMode && titleBuilder != null) {
-            titleBuilder.setCloseIconContentDescription(textId);
+        mNegativeButtonListener = listener;
+        if (mFullScreenMode && mTitleBuilder != null) {
+            mTitleBuilder.setCloseIconContentDescription(textId);
             return this;
         }
         return (AlertDialogBuilder) super.setNegativeButton(textId, null);
@@ -382,9 +382,9 @@ public class AlertDialogBuilder extends AlertDialog.Builder {
     @Override
     public AlertDialogBuilder setNegativeButton(
             @Nullable CharSequence text, @Nullable final OnClickListener listener) {
-        negativeButtonListener = listener;
-        if (fullScreenMode && titleBuilder != null) {
-            titleBuilder.setCloseIconContentDescription(text);
+        mNegativeButtonListener = listener;
+        if (mFullScreenMode && mTitleBuilder != null) {
+            mTitleBuilder.setCloseIconContentDescription(text);
             return this;
         }
         return (AlertDialogBuilder) super.setNegativeButton(text, null);
@@ -393,8 +393,8 @@ public class AlertDialogBuilder extends AlertDialog.Builder {
     @NonNull
     @Override
     public AlertDialogBuilder setNegativeButtonIcon(@Nullable Drawable icon) {
-        if (fullScreenMode && titleBuilder != null) {
-            titleBuilder.setCloseButtonIcon(icon);
+        if (mFullScreenMode && mTitleBuilder != null) {
+            mTitleBuilder.setCloseButtonIcon(icon);
             return this;
         }
         return (AlertDialogBuilder) super.setNegativeButtonIcon(icon);
@@ -404,7 +404,7 @@ public class AlertDialogBuilder extends AlertDialog.Builder {
     @Override
     public AlertDialogBuilder setNeutralButton(
             @StringRes int textId, @Nullable final OnClickListener listener) {
-        neutralButtonListener = listener;
+        mNeutralButtonListener = listener;
         return (AlertDialogBuilder) super.setNeutralButton(textId, null);
     }
 
@@ -412,7 +412,7 @@ public class AlertDialogBuilder extends AlertDialog.Builder {
     @Override
     public AlertDialogBuilder setNeutralButton(
             @Nullable CharSequence text, @Nullable final OnClickListener listener) {
-        neutralButtonListener = listener;
+        mNeutralButtonListener = listener;
         return (AlertDialogBuilder) super.setNeutralButton(text, null);
     }
 

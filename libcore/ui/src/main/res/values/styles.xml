@@ -2,24 +2,12 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
     <style name="AppThemeOverlay" parent="Theme.Material3.Light.NoActionBar">
-        <item name="android:statusBarColor">?attr/colorPrimary</item>
-        <item name="android:navigationBarColor">?attr/colorPrimary</item>
+        <item name="android:statusBarColor">#99000000</item>
+        <item name="android:navigationBarColor">#99000000</item>
     </style>
 
     <style name="AppTheme" parent="AppThemeOverlay">
-        <!--        <item name="android:textColorPrimary">@color/textColorPrimary</item>-->
-        <!--        <item name="android:textColorSecondary">@color/textColorSecondary</item>-->
-        <!--        <item name="android:colorBackground">@color/colorSurface</item>-->
-        <!--        <item name="colorOnBackground">@color/textColorSecondary</item>-->
-        <!--        <item name="colorSurface">@color/colorSurface</item>-->
-        <!--        <item name="colorOnSurface">@color/textColorSecondary</item>-->
-        <!--        <item name="colorAccent">@color/colorAccent</item>-->
-        <!--        <item name="colorPrimary">@color/colorPrimary</item>-->
-        <!--        <item name="colorSecondary">@color/colorSecondary</item>-->
-        <!--        <item name="colorTertiary">@color/colorTertiary</item>-->
-
         <item name="navigationIcon">@drawable/ic_keyboard_backspace_black_24dp</item>
-        <!--        <item name="popupMenuBackground">@drawable/popup_background</item>-->
 
         <item name="bottomSheetDialogTheme">@style/AppTheme.BottomSheetDialog</item>
         <item name="checkboxStyle">@style/Widget.AppTheme.CompoundButton.CheckBox</item>

@@ -11,7 +11,6 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -32,11 +31,11 @@ import com.google.android.material.transition.MaterialSharedAxis;
 
 import java.lang.reflect.Method;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
+import io.github.muntashirakon.util.UiUtils;
 
 public class HelpActivity extends BaseActivity {
     private LinearLayoutCompat container;
@@ -46,7 +45,12 @@ public class HelpActivity extends BaseActivity {
 
     @Override
     protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
-        setContentView(R.layout.activity_help);
+        try {
+            setContentView(R.layout.activity_help);
+        } catch (Throwable th) {
+            openDocsSite();
+            return;
+        }
         setSupportActionBar(findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) actionBar.setTitle(R.string.instructions);
@@ -59,20 +63,12 @@ public class HelpActivity extends BaseActivity {
             return;
         }
         container = findViewById(R.id.container);
-        // WebView has to be loaded dynamically to prevent in-app localization issue.
-        try {
-            webView = new WebView(AppManager.getContext());
-        } catch (Throwable th) {
-            openDocsSite();
-            return;
-        }
+        webView = findViewById(R.id.webview);
+        UiUtils.applyWindowInsetsAsPaddingNoTop(container);
+
         // Fix locale issue due to WebView (https://issuetracker.google.com/issues/37113860)
         LangUtils.applyLocaleToActivity(this);
 
-        LinearLayoutCompat webviewWrapper = findViewById(R.id.webview_wrapper);
-        webView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT));
-        webviewWrapper.addView(webView);
         webView.setWebViewClient(new WebViewClientImpl());
         webView.setNetworkAvailable(false);
         WebSettings webSettings = webView.getSettings();

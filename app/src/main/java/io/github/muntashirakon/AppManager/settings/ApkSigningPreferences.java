@@ -5,7 +5,6 @@ package io.github.muntashirakon.AppManager.settings;
 import android.os.Bundle;
 
 import androidx.preference.Preference;
-import androidx.preference.PreferenceFragmentCompat;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -22,7 +21,7 @@ import io.github.muntashirakon.AppManager.settings.crypto.RSACryptoSelectionDial
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 
-public class ApkSigningPreferences extends PreferenceFragmentCompat {
+public class ApkSigningPreferences extends PreferenceFragment {
     public static final String TAG = "ApkSigningPreferences";
     private SettingsActivity activity;
     private Preference customSig;

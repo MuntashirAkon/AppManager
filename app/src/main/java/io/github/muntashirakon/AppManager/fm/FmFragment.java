@@ -28,7 +28,6 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.StorageUtils;
 import io.github.muntashirakon.widget.MultiSelectionView;
 import io.github.muntashirakon.widget.SwipeRefreshLayout;
-import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
@@ -86,7 +85,6 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         RecyclerView recyclerView = view.findViewById(R.id.list_item);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));
-        new FastScrollerBuilder(recyclerView).useMd2Style().build();
         adapter = new FmAdapter(activity);
         recyclerView.setAdapter(adapter);
         multiSelectionView = view.findViewById(R.id.selection_view);

@@ -39,6 +39,7 @@ import io.github.muntashirakon.AppManager.details.LauncherIconCreator;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
+import io.github.muntashirakon.util.UiUtils;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getPrimaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
@@ -80,6 +81,7 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
         progressIndicator = findViewById(R.id.progress_linear);
         progressIndicator.setVisibilityAfterHide(View.GONE);
         fab = findViewById(R.id.floatingActionButton);
+        UiUtils.applyWindowInsetsAsMargin(fab);
         if (getIntent() == null) {
             finish();
             return;

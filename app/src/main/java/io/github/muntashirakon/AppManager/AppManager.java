@@ -18,6 +18,7 @@ import org.lsposed.hiddenapibypass.HiddenApiBypass;
 import java.security.Security;
 
 import io.github.muntashirakon.AppManager.db.AppsDb;
+import io.github.muntashirakon.AppManager.misc.AMExceptionHandler;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -57,6 +58,7 @@ public class AppManager extends Application {
     public void onCreate() {
         instance = this;
         super.onCreate();
+        Thread.setDefaultUncaughtExceptionHandler(new AMExceptionHandler(this));
         DynamicColors.applyToActivitiesIfAvailable(this);
         LangUtils.init(this);
         Security.addProvider(new JavaKeyStoreProvider());

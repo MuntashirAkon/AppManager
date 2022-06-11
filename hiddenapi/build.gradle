@@ -10,7 +10,7 @@ java {
 dependencies {
     annotationProcessor "dev.rikka.tools.refine:annotation-processor:${refine_version}"
     compileOnly "dev.rikka.tools.refine:annotation:${refine_version}"
+    compileOnly 'org.jetbrains:annotations:23.0.0'
 
     implementation "androidx.annotation:annotation:${annotation_version}"
-    implementation 'org.jetbrains:annotations:22.0.0'
 }

@@ -33,6 +33,7 @@
         android:id="@+id/floatingActionButton"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
+        android:fitsSystemWindows="true"
         android:clickable="true"
         android:focusable="true"
         android:src="@drawable/ic_baseline_add_24"

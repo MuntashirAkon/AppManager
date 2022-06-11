@@ -44,7 +44,6 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.chip.Chip;
@@ -99,9 +98,8 @@ import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.dialog.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.util.LocalizedString;
-import io.github.muntashirakon.widget.RecyclerViewWithEmptyView;
+import io.github.muntashirakon.widget.RecyclerView;
 import io.github.muntashirakon.widget.SwipeRefreshLayout;
-import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
 import static io.github.muntashirakon.AppManager.details.AppDetailsViewModel.OPEN_GL_ES;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpModeNames;
@@ -222,10 +220,9 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
         // Swipe refresh
         mSwipeRefresh = view.findViewById(R.id.swipe_refresh);
         mSwipeRefresh.setOnRefreshListener(this);
-        RecyclerViewWithEmptyView recyclerView = view.findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = view.findViewById(R.id.scrollView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
-        new FastScrollerBuilder(recyclerView).useMd2Style().build();
         final TextView emptyView = view.findViewById(android.R.id.empty);
         emptyView.setText(getNotFoundString(mNeededProperty));
         recyclerView.setEmptyView(emptyView);

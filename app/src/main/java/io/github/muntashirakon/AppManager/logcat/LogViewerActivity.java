@@ -69,6 +69,7 @@ import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 import io.github.muntashirakon.dialog.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
+import io.github.muntashirakon.util.UiUtils;
 
 import static io.github.muntashirakon.AppManager.logcat.LogViewerRecyclerAdapter.CONTEXT_MENU_COPY_ID;
 import static io.github.muntashirakon.AppManager.logcat.LogViewerRecyclerAdapter.CONTEXT_MENU_FILTER_ID;
@@ -144,6 +145,7 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
         mProgressIndicator = findViewById(R.id.progress_linear);
         mProgressIndicator.setVisibilityAfterHide(View.GONE);
         mStopRecordingFab = findViewById(R.id.fab);
+        UiUtils.applyWindowInsetsAsMargin(mStopRecordingFab);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {

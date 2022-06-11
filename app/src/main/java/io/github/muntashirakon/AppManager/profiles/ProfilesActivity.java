@@ -48,6 +48,7 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
+import io.github.muntashirakon.util.UiUtils;
 
 public class ProfilesActivity extends BaseActivity {
     private static final String TAG = "ProfilesActivity";
@@ -115,9 +116,11 @@ public class ProfilesActivity extends BaseActivity {
         progressIndicator.setVisibilityAfterHide(View.GONE);
         ListView listView = findViewById(android.R.id.list);
         listView.setEmptyView(findViewById(android.R.id.empty));
+        UiUtils.applyWindowInsetsAsPaddingNoTop(listView);
         adapter = new ProfilesAdapter(this);
         listView.setAdapter(adapter);
         FloatingActionButton fab = findViewById(R.id.floatingActionButton);
+        UiUtils.applyWindowInsetsAsMargin(fab);
         fab.setOnClickListener(v -> new TextInputDialogBuilder(this, R.string.input_profile_name)
                 .setTitle(R.string.new_profile)
                 .setHelperText(R.string.input_profile_name_description)

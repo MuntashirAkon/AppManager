@@ -1,13 +1,14 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <io.github.muntashirakon.widget.RecyclerViewWithEmptyView
+    <io.github.muntashirakon.widget.RecyclerView
         android:id="@android:id/list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        app:fastScrollerEnabled="true" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@android:id/empty"

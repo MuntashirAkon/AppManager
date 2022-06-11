@@ -35,7 +35,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.widget.CheckBox;
-import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
 public class SearchableMultiChoiceDialogBuilder<T> {
     @NonNull
@@ -75,7 +74,6 @@ public class SearchableMultiChoiceDialogBuilder<T> {
         RecyclerView recyclerView = view.findViewById(android.R.id.list);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false));
-        new FastScrollerBuilder(recyclerView).useMd2Style().build();
         searchBar = view.findViewById(R.id.search_bar);
         selectAll = view.findViewById(android.R.id.checkbox);
         TextInputEditText searchInput = view.findViewById(R.id.search_input);

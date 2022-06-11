@@ -9,7 +9,6 @@ import android.util.Log;
 
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.Preference;
-import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreference;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -28,7 +27,7 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 
-public class LogViewerPreferences extends PreferenceFragmentCompat {
+public class LogViewerPreferences extends PreferenceFragment {
     public static final List<Integer> LOG_LEVEL_VALUES = Arrays.asList(Log.VERBOSE, Log.DEBUG, Log.INFO, Log.WARN,
             Log.ERROR, LogLine.LOG_FATAL);
     public static final List<CharSequence> LOG_BUFFER_NAMES = Arrays.asList(LogcatHelper.BUFFER_MAIN, LogcatHelper.BUFFER_RADIO,

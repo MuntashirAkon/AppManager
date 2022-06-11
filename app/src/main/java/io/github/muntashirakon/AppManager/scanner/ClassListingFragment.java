@@ -36,6 +36,7 @@ import java.util.Locale;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.util.UiUtils;
 
 import static io.github.muntashirakon.AppManager.misc.AdvancedSearchView.SEARCH_TYPE_REGEX;
 
@@ -75,7 +76,8 @@ public class ClassListingFragment extends Fragment implements AdvancedSearchView
 
         mTrackerClassesOnly = false;
 
-        ListView listView = view.findViewById(android.R.id.list);
+        ListView listView = view.findViewById(R.id.list_item);
+        UiUtils.applyWindowInsetsAsPaddingNoTop(listView);
         listView.setTextFilterEnabled(true);
         listView.setDividerHeight(0);
         mEmptyView = view.findViewById(android.R.id.empty);

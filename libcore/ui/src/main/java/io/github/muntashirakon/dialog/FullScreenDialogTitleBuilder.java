@@ -2,12 +2,10 @@
 
 package io.github.muntashirakon.dialog;
 
-import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
-import android.view.LayoutInflater;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -103,9 +101,7 @@ public class FullScreenDialogTitleBuilder {
     }
 
     public View build(DialogInterface dialog) {
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        @SuppressLint("InflateParams")
-        View v = inflater.inflate(R.layout.dialog_title_toolbar, null);
+        View v = View.inflate(context, R.layout.dialog_title_toolbar, null);
         MaterialToolbar toolbar = v.findViewById(R.id.toolbar);
         if (title != null) toolbar.setTitle(title);
         else if (titleRes != 0) toolbar.setTitle(titleRes);

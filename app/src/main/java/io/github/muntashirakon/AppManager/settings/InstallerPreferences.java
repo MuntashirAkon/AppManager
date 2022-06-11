@@ -10,7 +10,6 @@ import android.text.SpannableStringBuilder;
 
 import androidx.core.util.Pair;
 import androidx.preference.Preference;
-import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -31,7 +30,7 @@ import static io.github.muntashirakon.AppManager.utils.UIUtils.getPrimaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
-public class InstallerPreferences extends PreferenceFragmentCompat {
+public class InstallerPreferences extends PreferenceFragment {
     private static final int[] installLocationNames = new int[]{
             R.string.auto,  // PackageInfo.INSTALL_LOCATION_AUTO
             R.string.install_location_internal_only,  // PackageInfo.INSTALL_LOCATION_INTERNAL_ONLY

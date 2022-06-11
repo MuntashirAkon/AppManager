@@ -1,9 +1,12 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<io.github.muntashirakon.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scrollIndicators="top|bottom"
+    android:fitsSystemWindows="true"
+    android:clipToPadding="false"
     tools:ignore="UnusedAttribute">
 
     <androidx.appcompat.widget.LinearLayoutCompat
@@ -125,4 +128,4 @@
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-</ScrollView>
+</io.github.muntashirakon.widget.NestedScrollView>

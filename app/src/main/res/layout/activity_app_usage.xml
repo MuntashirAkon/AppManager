@@ -15,11 +15,13 @@
         android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-        <me.zhanghai.android.fastscroll.FastScrollNestedScrollView
+        <io.github.muntashirakon.widget.NestedScrollView
             android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scrollbars="none">
+            android:fitsSystemWindows="true"
+            android:clipToPadding="false"
+            app:fastScrollerEnabled="true">
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
@@ -59,7 +61,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
 
-                    <io.github.muntashirakon.widget.RecyclerViewWithEmptyView
+                    <io.github.muntashirakon.widget.RecyclerView
                         android:id="@+id/recycler_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -80,7 +82,7 @@
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
-        </me.zhanghai.android.fastscroll.FastScrollNestedScrollView>
+        </io.github.muntashirakon.widget.NestedScrollView>
 
     </io.github.muntashirakon.widget.SwipeRefreshLayout>
 

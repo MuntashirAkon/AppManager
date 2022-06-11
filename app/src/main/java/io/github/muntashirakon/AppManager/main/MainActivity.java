@@ -75,7 +75,6 @@ import io.github.muntashirakon.reflow.ReflowMenuViewWrapper;
 import io.github.muntashirakon.util.UiUtils;
 import io.github.muntashirakon.widget.MultiSelectionView;
 import io.github.muntashirakon.widget.SwipeRefreshLayout;
-import me.zhanghai.android.fastscroll.FastScrollerBuilder;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
@@ -165,10 +164,8 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
         mAdapter = new MainRecyclerAdapter(MainActivity.this);
         mAdapter.setHasStableIds(true);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setOverScrollMode(RecyclerView.OVER_SCROLL_NEVER);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(mAdapter);
-        new FastScrollerBuilder(recyclerView).useMd2Style().build();
         multiSelectionView = findViewById(R.id.selection_view);
         multiSelectionView.setOnItemSelectedListener(this);
         multiSelectionView.setAdapter(mAdapter);
