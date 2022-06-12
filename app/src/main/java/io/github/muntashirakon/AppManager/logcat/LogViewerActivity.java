@@ -58,7 +58,6 @@ import io.github.muntashirakon.AppManager.logcat.helper.SaveLogHelper;
 import io.github.muntashirakon.AppManager.logcat.helper.ServiceHelper;
 import io.github.muntashirakon.AppManager.logcat.struct.LogLine;
 import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
-import io.github.muntashirakon.AppManager.logcat.struct.SendLogDetails;
 import io.github.muntashirakon.AppManager.settings.SettingsActivity;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
@@ -116,19 +115,13 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
     private final BetterActivityResult<String, Uri> saveLauncher = BetterActivityResult
             .registerForActivityResult(this, new ActivityResultContracts.CreateDocument());
 
-    public static void startChooser(Context context, String subject, String body,
-                                    SendLogDetails.AttachmentType attachmentType, Path attachment) {
-        Intent actionSendIntent = new Intent(Intent.ACTION_SEND);
-
-        actionSendIntent.setType(attachmentType.getMimeType());
-        actionSendIntent.putExtra(Intent.EXTRA_SUBJECT, subject);
-        if (!body.isEmpty()) {
-            actionSendIntent.putExtra(Intent.EXTRA_TEXT, body);
-        }
-        if (attachment != null) {
-            actionSendIntent.putExtra(Intent.EXTRA_STREAM, FmProvider.getContentUri(attachment))
-                    .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        }
+    public static void startChooser(@NonNull Context context, @Nullable String subject,
+                                    @NonNull String attachmentType, @NonNull Path attachment) {
+        Intent actionSendIntent = new Intent(Intent.ACTION_SEND)
+                .setType(attachmentType)
+                .putExtra(Intent.EXTRA_SUBJECT, subject)
+                .putExtra(Intent.EXTRA_STREAM, FmProvider.getContentUri(attachment))
+                .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         try {
             context.startActivity(Intent.createChooser(actionSendIntent, context.getResources().getText(R.string.send_log_title))
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
@@ -211,14 +204,16 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
             if (mLoadingDialog != null) {
                 mLoadingDialog.dismiss();
             }
-            if (sendLogDetails == null) {
+            if (sendLogDetails == null
+                    || sendLogDetails.getAttachmentType() == null
+                    || sendLogDetails.getAttachment() == null) {
                 UIUtils.displayLongToast(R.string.failed);
                 return;
             }
             if (mLogsToBeShared) {
                 // Open chooser dialog
-                startChooser(this, sendLogDetails.getSubject(), sendLogDetails.getBody(),
-                        sendLogDetails.getAttachmentType(), sendLogDetails.getAttachment());
+                startChooser(this, sendLogDetails.getSubject(), sendLogDetails.getAttachmentType(),
+                        sendLogDetails.getAttachment());
             } else {
                 // Open SAF activity
                 saveLauncher.launch(sendLogDetails.getAttachment().getName(), uri -> {

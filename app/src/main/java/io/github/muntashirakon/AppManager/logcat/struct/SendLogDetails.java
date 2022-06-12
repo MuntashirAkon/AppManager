@@ -2,60 +2,44 @@
 
 package io.github.muntashirakon.AppManager.logcat.struct;
 
+import androidx.annotation.Nullable;
+
 import io.github.muntashirakon.io.Path;
 
 // Copyright 2012 Nolan Lawson
+// Copyright 2021 Muntashir Al-Islam
 public class SendLogDetails {
+    @Nullable
     private String subject;
-    private String body;
+    @Nullable
     private Path attachment;
-    private SendLogDetails.AttachmentType attachmentType;
+    @Nullable
+    private String attachmentType;
 
+    @Nullable
     public String getSubject() {
         return subject;
     }
 
-    public void setSubject(String subject) {
+    public void setSubject(@Nullable String subject) {
         this.subject = subject;
     }
 
-    public String getBody() {
-        return body;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
-    }
-
+    @Nullable
     public Path getAttachment() {
         return attachment;
     }
 
-    public void setAttachment(Path attachment) {
+    public void setAttachment(@Nullable Path attachment) {
         this.attachment = attachment;
     }
 
-    public SendLogDetails.AttachmentType getAttachmentType() {
+    @Nullable
+    public String getAttachmentType() {
         return attachmentType;
     }
 
-    public void setAttachmentType(SendLogDetails.AttachmentType attachmentType) {
+    public void setAttachmentType(@Nullable String attachmentType) {
         this.attachmentType = attachmentType;
-    }
-
-    public enum AttachmentType {
-        None("text/plain"),
-        Zip("application/zip"),
-        Text("application/*");
-
-        private final String mimeType;
-
-        AttachmentType(String mimeType) {
-            this.mimeType = mimeType;
-        }
-
-        public String getMimeType() {
-            return this.mimeType;
-        }
     }
 }

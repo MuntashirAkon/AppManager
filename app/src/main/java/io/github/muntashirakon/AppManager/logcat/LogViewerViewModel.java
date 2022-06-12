@@ -331,7 +331,7 @@ public class LogViewerViewModel extends AndroidViewModel {
     @AnyThread
     public void saveLogs(@NonNull Path path, @NonNull SendLogDetails sendLogDetails) {
         mExecutor.submit(() -> {
-            if (sendLogDetails.getAttachmentType() == SendLogDetails.AttachmentType.None) {
+            if (sendLogDetails.getAttachmentType() == null || sendLogDetails.getAttachment() == null) {
                 mLogSavedLiveData.postValue(null);
                 return;
             }
@@ -351,7 +351,6 @@ public class LogViewerViewModel extends AndroidViewModel {
     public void prepareLogsToBeSent(boolean includeDeviceInfo, boolean includeDmesg, @NonNull Collection<String> logLines) {
         mExecutor.submit(() -> {
             SendLogDetails sendLogDetails = new SendLogDetails();
-            sendLogDetails.setBody("");
             sendLogDetails.setSubject(getApplication().getString(R.string.subject_log_report));
             // either zip up multiple files or just attach the one file
             String deviceInfo = null;
@@ -380,7 +379,7 @@ public class LogViewerViewModel extends AndroidViewModel {
             }
 
             if (exportCount == 0) {
-                sendLogDetails.setAttachmentType(SendLogDetails.AttachmentType.None);
+                sendLogDetails.setAttachmentType(null);
             } else if (exportCount == 1) {
                 Path tempFile;
                 if (!logLines.isEmpty()) {
@@ -390,7 +389,7 @@ public class LogViewerViewModel extends AndroidViewModel {
                 } else {
                     tempFile = SaveLogHelper.saveTemporaryFile(SaveLogHelper.TEMP_DEVICE_INFO_FILENAME, deviceInfo, null);
                 }
-                sendLogDetails.setAttachmentType(SendLogDetails.AttachmentType.Text);
+                sendLogDetails.setAttachmentType("text/plain");
                 sendLogDetails.setAttachment(tempFile);
                 mTemporaryFiles.add(tempFile);
             } else { // Multiple attachments, make zip first
@@ -414,11 +413,12 @@ public class LogViewerViewModel extends AndroidViewModel {
                             output.write(dmesg.getBytes(StandardCharsets.UTF_8));
                         }
                     }
-                    sendLogDetails.setAttachmentType(SendLogDetails.AttachmentType.Zip);
+                    sendLogDetails.setAttachmentType("application/zip");
                     sendLogDetails.setAttachment(zipFile);
+                    mTemporaryFiles.add(zipFile);
                 } catch (Throwable th) {
                     th.printStackTrace();
-                    sendLogDetails.setAttachmentType(SendLogDetails.AttachmentType.None);
+                    sendLogDetails.setAttachmentType(null);
                 }
             }
             mLogToBeSentLiveData.postValue(sendLogDetails);
