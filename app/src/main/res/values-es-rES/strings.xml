@@ -12,7 +12,7 @@
     <string name="no_receivers">Sin receptores</string>
     <string name="providers">Proveedores</string>
     <string name="no_providers">Sin proveedores</string>
-    <string name="launch_mode">Modo de lanzamiento</string>
+    <string name="launch_mode">Modo de inicio</string>
     <string name="task_affinity">Afinidad de tareas</string>
     <string name="sort_by_last_update">Última actualización</string>
     <string name="authority">Autoridad</string>
@@ -456,8 +456,8 @@
     </plurals>
     <string name="uses_feature">Objetivos de las funciones</string>
     <plurals name="no_of_splits">
-        <item quantity="one">%1$d split</item>
-        <item quantity="other">%1$d splits</item>
+        <item quantity="one">%1$d parte</item>
+        <item quantity="other">%1$d partes</item>
     </plurals>
     <string name="launch_mode_single_top">Parte superior</string>
     <string name="installer_error_lidl_rom">Su ROM no es compatible con Rootless Installer.</string>
@@ -681,7 +681,7 @@
     <string name="input_keystore_pass_msg">Toque aquí para introducir la contraseña del almacén de claves</string>
     <string name="input_keystore_pass_description">Proporcione la contraseña del almacén de claves del Gestor de aplicaciones. Si esta es la primera vez que ve esto, sírvase de un generador de contraseñas para crear una y guárdela en un lugar seguro antes de introducirla aquí.</string>
     <string name="input_keystore_pass">Introduzca la contraseña del almacén de claves</string>
-    <string name="splits">Splits</string>
+    <string name="splits">Partes</string>
     <string name="source_stamp_verified">SourceStamp (Sello de la fuente) verificado.</string>
     <string name="not_verified">No verificado</string>
     <string name="verified">Verificado</string>
@@ -754,7 +754,7 @@
     <string name="screen">Pantalla</string>
     <string name="hardware">Hardware</string>
     <string name="permissive">Permisivo</string>
-    <string name="enforcing">Enforcing</string>
+    <string name="enforcing">Enforzando</string>
     <string name="selinux">SELinux</string>
     <string name="patch_level">Nivel del parche</string>
     <string name="backup_skip_signature_checks_description">Para restaurar respaldos que o fallan en la verificación del checksum o tiene firmas diferentes APK diferente a los respaldos anteriores.</string>
@@ -846,7 +846,7 @@
     <string name="app_signing_signatures">Firmas</string>
     <string name="collapse_all">Contraer todo</string>
     <string name="expand_all">Expandir todo</string>
-    <string name="unable_to_save_log">No se puede guardar el registro. Compruebe que haya introducido un nombre de archivo válido.</string>
+    <string name="unable_to_save_log">No se puede guardar el registro. ¿Escribió un nombre de archivo válido\?</string>
     <string name="pref_display_limit_hint">Introduzca un número válido entre %1$d y %2$d.</string>
     <string name="toast_invalid_level">El nombre del nivel no es válido: %s</string>
     <string name="omit_sensitive_info">Omitir información confidencial</string>
@@ -940,7 +940,7 @@
     <string name="keystore_file">Archivo de almacén de claves</string>
     <string name="import_key">Importar clave</string>
     <string name="pem_file">Archivo PEM</string>
-    <string name="found_no_alias_in_keystore">No se encontró ningún alias en el almacén de claves.</string>
+    <string name="found_no_alias_in_keystore">¡No se encontró ningún alias en el almacén de claves!</string>
     <string name="alias_pass">Contraseña del alias</string>
     <string name="choose_an_alias">Elija un alias</string>
     <string name="failed_to_read_keystore">No se pudo consultar el almacén de claves.</string>
@@ -974,7 +974,7 @@
     <string name="no_changes">Ningún cambio</string>
     <string name="notification_title">Grabación de registros en curso</string>
     <string name="notification_ticker">Comenzó la grabación de los registros</string>
-    <string name="no_saved_logs">No se encontró ningún registro guardado.</string>
+    <string name="no_saved_logs">Ningún registro guardado.</string>
     <string name="manage_saved_logs">Gestionar registros guardados</string>
     <string name="log_saved">Se guardó el registro.</string>
     <string name="log_recording_started">Comenzó la grabación de los registros.</string>
@@ -1086,7 +1086,7 @@
     <string name="search_type_contains">Incluye</string>
     <string name="search_type_prefix">Prefijo</string>
     <string name="search_type_suffix">Sufijo</string>
-    <string name="search_type_regular_expressions">Regex</string>
+    <string name="search_type_regular_expressions">Expresión regular</string>
     <string name="pref_default_blocking_method_description">Método a usar por defecto en lugares donde no hay opción para escoger un método de bloqueo.</string>
     <string name="pref_intent_firewall_and_disable_description">Bloquea componentes usando Intent Firewall así como también los deshabilita. Método recomendado para usuarios root.</string>
     <string name="pref_intent_firewall_description">Bloquea componentes usando sólo Intent Firewall. No se recomienda ya que algunas apps del sistema pueden eludir firewalls.</string>
@@ -1097,11 +1097,11 @@
         <item quantity="other">%1$d segs</item>
     </plurals>
     <string name="toggle_internet">Usar el Internet</string>
-    <string name="vt_checking">VirusTotal: Verificando…</string>
-    <string name="vt_uploading">VirusTotal: Enviando…</string>
+    <string name="vt_checking">VirusTotal: Comprobando…</string>
+    <string name="vt_uploading">VirusTotal: Subiendo…</string>
     <string name="vt_success">VirusTotal: %1$d/%2$d</string>
     <string name="vt_scan_date">Fecha de escaneo: %1$s</string>
-    <string name="vt_slowness_warning">Dependiendo de la velocidad de Internet y de la carga en el servidor, esto podría tardar un poco.</string>
+    <string name="vt_slowness_warning">Dependiendo de la velocidad de Internet y la carga del servidor, esto podría tardar un rato.</string>
     <string name="pref_vt_apikey">Clave API de VirusTotal</string>
     <string name="pref_vt_apikey_description">Una clave API permite a App Manager subir archivos APK a VirusTotal, así como también obtener informes de este. Regístrese en https://virustotal.com para obtener una clave API de forma gratuita.</string>
     <string name="uses_play_app_signing">Firma de Aplicaciones Play</string>
@@ -1115,7 +1115,7 @@
     <string name="commandline_args">Argumentos de línea de comando</string>
     <string name="swap">Intercambiar</string>
     <string name="memory_chart_info">● %1$s Aplicaciones ● %2$s En caché ● %3$s Buffers ● %4$s Libre</string>
-    <string name="swap_chart_info">● %1$s Usado ● %2$s Libre</string>
+    <string name="swap_chart_info">● %1$s usado ● %2$s sin usar</string>
     <string name="failed_to_use_the_current_mode_of_operation">No es posible usar el modo de operación actual. Volviendo a modo no-root para esta sesión.</string>
     <string name="warning_working_on_root_mode">Advertencia: Se está trabajando en root en lugar de modo ADB.</string>
     <string name="magisk_denylist">Lista de bloqueo Magisk</string>
@@ -1134,7 +1134,7 @@
     </plurals>
     <string name="uses_play_app_signing_description">Está aplicación contiene algunos marcadores que indican que <i>posiblemente</i> usen <a href="https://support.google.com/googleplay/android-developer/answer/9842756">Play App Signing</a>. Con este mecanismo, las claves de inicio son guardadas en los servidores de Google, y Google es el responsable por el inicio de sesión en la app. Tenga en cuenta que emparejar la información de inicio es la única forma de verificar que la app no fue modificada por una persona diferente al desarrollador (y en este caso, también Google).</string>
     <string name="parent_process_id">ID del proceso padre</string>
-    <string name="threads">Número de subprocesos</string>
+    <string name="threads">Número de hilos</string>
     <string name="hidden_api_enf_policy_dark_grey_and_black">Cumplimiento (listas negras y gris oscuro)</string>
     <string name="hidden_api_enf_policy_warn">Advertencia (acceso completo a la API oculta, pero emite advertencias)</string>
     <string name="binary_64_bit">64 Bit</string>
