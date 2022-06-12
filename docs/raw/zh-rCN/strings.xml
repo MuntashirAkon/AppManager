@@ -581,7 +581,7 @@
 \n应用程序组件是应用的本构造，必须在应用程序清单中声明.
 \n应用程序清单是存储应用程序特定元数据的文件，Android 通过读取元数据来处理应用。
 \n
-\n这些选项卡中使用的颜色在 §\\ref{subsec:app-details-colour-codes} 中进行了解释。也可以在弹出菜单对列表进行排序.</string>
+\n这些选项卡中使用的颜色在 \\Sref{subsec:app-details-colour-codes} 中进行了解释。也可以在弹出菜单对列表进行排序.</string>
     <string name="pages$settings-page$installer-app">选择安装程序，这对于明确检查安装程序以验证应用程序是否合法安装的应用程序很有用。
 \n这只适用于 root 或 ADB 用户。
 \n
@@ -600,11 +600,11 @@
     <string name="pages$interceptor-page$$section-title">拦截器页面</string>
     <string name="pages$interceptor-page$$intent-filters-title">意图(Intent)过滤器</string>
     <string name="guide$main$$guides-chapter-title">指南</string>
-    <string name="faq$app-components$$also-blocked-by-other-tools-title">被 App Manager 禁用但同时也被其他工具禁用的组件会发生什么？</string>
+    <string name="faq$app-components$$also-blocked-by-other-tools-title">现在被 App Manager 拦截但先前被其他工具禁用的组件会发生什么？</string>
     <string name="faq$main$$faq-chapter-title">常见问题</string>
     <string name="faq$app-components$$section-title">应用组件</string>
     <string name="faq$app-components$$what-are-app-components-title">什么是应用组件？</string>
-    <string name="faq$app-components$$limitations-title">追踪器或其他组件在App Manager中是如何被禁用的？其局限性是什么？</string>
+    <string name="faq$app-components$$limitations-title">追踪器和其他组件在App Manager中是如何被禁用的？其局限性是什么？</string>
     <string name="faq$app-components$$other-tools-retained-in-am-title">被其他工具禁用的应用程序组件是否保留在App Manager中？</string>
     <string name="faq$app-components$$what-is-component-blocking-title">什么是即时组件禁用？</string>
     <string name="faq$app-components$$tracker-classes-versus-tracker-components-title">跟踪器类与跟踪器组件</string>
@@ -639,7 +639,7 @@
     <string name="pages$app-details-page$permission-tabs">\\textbf{App Ops}, \\textbf{使用权限} and \\textbf{权限} 选项卡与权限相关。
 \n安卓中，在不具有相同身份（称为 \\textit{shared ID}）的应用或进程之间进行通信常常需要权限，其由权限控制器管理。
 \n一些被视为\\textit{普通} 的权限，若它们出现在应用程序清单中，则会自动授予，但\\textit{危险}权限 和 \\textit{开发} 权限需要用户确认。
-\n选项卡中使用的颜色在 §\\ref{subsec:app-details-color-codes} 中有解释。</string>
+\n选项卡中使用的颜色在 \\Sref{subsec:app-details-color-codes} 中有解释。</string>
     <string name="pages$app-details-page$app-ops">\\textbf{App Ops} 代表\"应用操作 \\textbf{ (Application Operations)} \". 
 \n自 Android 4.3 开始，Android 使用 \\textit{App Ops} 控制大多系统权限，每个 App Op 都有一个与之关联的唯一编号，该编号与其私有名称将一同显示在“App Ops”选项卡中，一些 App Ops 也有一个公共名称。
 \n大量的应用操作是也与权限相关，在此选项卡中，若 App Ops 相关的权限被视为危险则被标记为危险。其他信息如 标志位(\\textit{flags}), 权限名称 (\\textit{permission name}), 权限描述(\\textit{permission description}),包名 (\\textit{package name}),群组 ( \\textit{group}) 也取自相关的 \\hyperref[subsubsec:permissions]{权限}。
