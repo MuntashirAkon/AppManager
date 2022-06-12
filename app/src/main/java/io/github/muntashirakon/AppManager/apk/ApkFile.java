@@ -362,7 +362,21 @@ public final class ApkFile implements AutoCloseable {
             }
         } else {
             File[] apks = sourceDir.listFiles((dir, name) -> name.endsWith(".apk"));
-            if (apks == null) throw new ApkFileException("No apk files found");
+            if (apks == null) {
+                // Directory might be inaccessible
+                Log.w(TAG, "No apk files found in " + sourceDir.getAbsolutePath() + ". Using default.");
+                List<File> allApks = new ArrayList<>();
+                allApks.add(cacheFilePath);
+                String[] splits = info.splitPublicSourceDirs;
+                if (splits != null) {
+                    for (String split : splits) {
+                        if (split != null) {
+                            allApks.add(new File(split));
+                        }
+                    }
+                }
+                apks = allApks.toArray(new File[0]);
+            }
             String fileName;
             for (File apk : apks) {
                 fileName = FileUtils.getLastPathComponent(apk.getAbsolutePath());

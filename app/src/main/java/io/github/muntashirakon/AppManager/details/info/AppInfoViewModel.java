@@ -35,7 +35,6 @@ import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.details.AppDetailsViewModel;
-import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.magisk.MagiskDenyList;
 import io.github.muntashirakon.AppManager.magisk.MagiskHide;
 import io.github.muntashirakon.AppManager.magisk.MagiskProcess;
@@ -58,6 +57,7 @@ import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
+import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
@@ -208,12 +208,13 @@ public class AppInfoViewModel extends AndroidViewModel {
                     tagCloud.uriGrants = uriGrants;
                 }
             }
+            this.tagCloud.postValue(tagCloud);
         } catch (Throwable th) {
             // Unknown behaviour
-            Log.e("AIVM", th);
-            throw new RuntimeException(th);
-        } finally {
-            this.tagCloud.postValue(tagCloud);
+            UiThreadHandler.run(() -> {
+                // Throw Runtime exception in main thread to crash the app
+                throw new RuntimeException(th);
+            });
         }
     }
 
