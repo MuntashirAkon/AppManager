@@ -1153,8 +1153,10 @@
     <string name="hidden_api_enf_policy_none">Aucun (accès total à l\'API cachée)</string>
     <string name="hidden_api_enf_policy_warn">Attention (accès total à l\'API cachée mais avec des avertissements)</string>
     <string name="failed_to_use_the_current_mode_of_operation">Impossible de rester dans le mode d\'opération actuel. Retour au mode non root pour cette session.</string>
-    <string name="mode_of_op_with_inferred_mode_of_op">%1$s (Mode déduit: %2$s)</string>
-    <string name="zygote_preload_name">Nom de préchargement de Zygote</string>
+    <string name="mode_of_op_with_inferred_mode_of_op">%1$s (Mode déduit : %2$s)</string>
+    <string name="zygote_preload_name">Nom du préchargement de Zygote</string>
     <string name="hidden_api_enf_default_policy">Par défaut (basé sur le type d\'application)</string>
     <string name="file_modified_are_you_sure">Le fichier a été modifié. Voulez-vous annuler toutes vos modifications et quitter\?</string>
+    <string name="primary_abi">ABI principale</string>
+    <string name="pref_saved_apk_name_format_msg">Le format à utiliser pour nommer les fichiers APK lorsque vous les enregistrez.</string>
 </resources>
