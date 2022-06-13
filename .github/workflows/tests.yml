@@ -8,7 +8,7 @@ on:
     paths-ignore:
       - 'fastlane/**'
       - 'scripts/**'
-      - 'README.md'
+      - '*.md'
   pull_request:
     branches:
       - 'master'
@@ -16,7 +16,7 @@ on:
     paths-ignore:
       - 'fastlane/**'
       - 'scripts/**'
-      - 'README.md'
+      - '*.md'
 
 jobs:
   build:
