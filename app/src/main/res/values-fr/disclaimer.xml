@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources>
-    <string name="disclaimer_header">AVERTISSEMENT</string>
+    <string name="disclaimer_header">Limitation de responsabilité</string>
     <string name="disclaimer_exit">Quitter</string>
     <string name="disclaimer_agree">J\'accepte</string>
     <string name="disclaimer_agree_forever">Ne plus afficher</string>
     <string name="disclaimer_footer">© 2020–2022 Muntashir Al-Islam</string>
-    <string name="disclaimer_body">App Manager offre des fonctions root qui pourraient éventuellement nuire à votre appareil si elle est mal utilisée. App Manager n’est pas responsable des dommages causés par l’utilisation de cette application. Si vous n’êtes pas pleinement conscient du fonctionnement des racines, vous devriez éviter d’utiliser les options root jusqu’à ce que vous êtes pleinement conscient des risques.
+    <string name="disclaimer_body">App Manager propose des fonctions racines qui pourraient éventuellement endommager votre appareil en cas d\'utilisation inappropriée. App Manager n’est pas responsable des dommages liés à l’utilisation de cette application. Si vous ne maîtrisez pas le fonctionnement des racines, vous devriez éviter d’utiliser les options racines tant que vous n\'êtes pas pleinement conscient des risques.
 \n
-\nTout lien que je fournit à d’autres applications et sites Web est pour les utilisateurs bénéficient. Je ne suis pas responsable de tout contenu que vous pouvez trouver en allant sur des liens externes.
+\nTout lien fourni vers d’autres applications et sites web est destiné à aider les utilisateurs. Je ne suis pas responsable du contenu que vous pourrez trouver en suivant ces liens.
 \n
-\nEn utilisant App Manager, vous acceptez l’entière responsabilité de votre propre utilisation et n’acceptez aucun dommage, réclamation ou valeur monétaire sera donné en raison d’une mauvaise utilisation.
+\nEn utilisant App Manager, vous acceptez l’entière responsabilité de son utilisation et n’engagerez aucune action en réparation de dommage lié à une mauvaise utilisation.
 \n
-\nEn utilisant cette application, vous acceptez toute responsabilité en l’utilisant et convenez que je ne suis pas responsable des actions que vous faites qui a un effet négatif sur votre appareil.</string>
+\nEn utilisant cette application, vous acceptez toute responsabilité liée à son usage et conviendrez que je ne suis pas responsable des effets indésirables engendrés sur votre appareil.</string>
 </resources>
