@@ -1,9 +1,0 @@
-F-Droid doesn't support extended changelog. View in-app changelog for a more helpful changelog.
-- New language: Traditional Chinese
-- Installer: display version, size and tracker info
-- Removed toybox
-- Main page: filter by uninstalled apps, apps without backups, display uninstalled apps
-- Profile: Wildcard support for permissions/app ops
-- App info: Verify copied checksum on clicking on app icon
-- Security: Fix screen lock issue
-and various bug fixes, minor features and performance improvements.
