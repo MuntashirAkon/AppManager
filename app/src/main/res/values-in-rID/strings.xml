@@ -1115,4 +1115,14 @@
     <string name="regenerate_auth_key_warning">and yakin\? semua aplikasi pihak ketiga harus terkonfigurasi dengan authorization key.</string>
     <string name="regenerate_auth_key">menyusun ulang authorization key</string>
     <string name="auth_manager_description">Untuk menjalankan Intent melalui aplikasi eksternal, harus membentuk extra field bernama <tt>auth</tt> terlebih dahulu, dan harus mencantumkan key berikut ini:</string>
+    <string name="sort_by_installation_date">tanggal pemasangan</string>
+    <string name="item_select">Pilih</string>
+    <string name="log_stop_recording">berhentilah merekam</string>
+    <string name="shortcut_icon">ikon pintasan</string>
+    <string name="external">eksternal</string>
+    <string name="internal">Internal</string>
+    <string name="tracker">pelacak</string>
+    <string name="screen_time">waktu tayang</string>
+    <string name="open_in_new_window">jendela baru</string>
+    <string name="vt_confirm_upload_and_scan">Benar, unggah dan pindai</string>
 </resources>
