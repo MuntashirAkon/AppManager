@@ -277,7 +277,6 @@
 \n可以以升序方式按權限名稱對列表排序，也可以優先顯示拒絕的權限。</string>
     <string name="pages$interceptor-page$$flags-title">標志位(Flags)</string>
     <string name="guide$aot$$aot-lineage-os-title">Lineage OS</string>
-    <string name="faq$misc$$why-internet-permission-title">為什麽 App Manager 有聯網的權限，而它卻沒有連接到互聯網？</string>
     <string name="pages$profiles-page$$options-menu-title">選項菜單</string>
     <string name="pages$profile-page$$state-title">狀態</string>
     <string name="pages$settings-page$$section-title">設置頁面</string>
