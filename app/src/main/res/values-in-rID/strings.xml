@@ -907,7 +907,7 @@
     <string name="notification_title">Perekaman catatan log sedang berlangsung</string>
     <string name="notification_ticker">Perekaman catatan log dimulai</string>
     <string name="notification_subtext">Sentuh untuk menghentikan rekaman</string>
-    <string name="no_saved_logs">Tidak ada catatan log ditemukan.</string>
+    <string name="no_saved_logs">Riwayat log tidak ditemukan.</string>
     <string name="manage_saved_logs">Kelola Log Tersimpan</string>
     <string name="log_saved">Log disimpan.</string>
     <string name="log_recording_started">Perekaman catatan log dimulai.</string>
@@ -1111,4 +1111,8 @@
     <string name="binary_32_bit">32 Bit</string>
     <string name="binary_64_bit">64 Bit</string>
     <string name="endianness_big_endian">big endian</string>
+    <string name="auth_manager_title">Manajer otorisasi</string>
+    <string name="regenerate_auth_key_warning">and yakin\? semua aplikasi pihak ketiga harus terkonfigurasi dengan authorization key.</string>
+    <string name="regenerate_auth_key">menyusun ulang authorization key</string>
+    <string name="auth_manager_description">Untuk menjalankan Intent melalui aplikasi eksternal, harus membentuk extra field bernama <tt>auth</tt> terlebih dahulu, dan harus mencantumkan key berikut ini:</string>
 </resources>
