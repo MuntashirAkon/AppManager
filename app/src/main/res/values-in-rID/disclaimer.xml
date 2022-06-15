@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<resources>
-    <string name="disclaimer_header">SYARAT PEMAKAIAN / DISCLAIMER</string>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources>
+    <string name="disclaimer_header">Penafian</string>
     <string name="disclaimer_body">App Manajer menawarkan fungsi root yang mungkin dapat membahayakan perangkat Anda jika digunakan secara tidak benar. App Manajer tidak bertanggung jawab atas segala kerusakan yang dibuat oleh pengguna aplikasi ini. Jika Anda tidak sepenuhnya mengetahui cara kerja root maka Anda harus menghindarinya menggunakan opsi root hingga Anda sepenuhnya menyadari risikonya.
 
 \n\nTautan apa pun yang saya berikan ke aplikasi dan situs web lain adalah untuk keuntungan pengguna. Saya tidak bertanggung jawab atas konten apa pun yang mungkin Anda temukan dengan membuka tautan eksternal.
