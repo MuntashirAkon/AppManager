@@ -39,6 +39,7 @@ import java.io.File;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.BuildConfig;
@@ -559,6 +560,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
             ssb.append("\n\n").append(UIUtils.getItalicString(statusMessage));
         }
         tv.setText(ssb);
+        AtomicReference<AlertDialog> dialogAtomicReference = new AtomicReference<>();
         DialogTitleBuilder title = new DialogTitleBuilder(this)
                 .setTitle(model.getAppLabel())
                 .setSubtitle(getVersionInfoWithTrackers(model.getNewPackageInfo()))
@@ -571,6 +573,10 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
                 appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_BACK_TO_MAIN, true);
                 appDetailsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(appDetailsIntent);
+                if (!hasNext() && dialogAtomicReference.get() != null) {
+                    dialogAtomicReference.get().dismiss();
+                    goToNext();
+                }
             });
         }
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(this)
@@ -591,7 +597,8 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
                 });
             }
         }
-        return builder.create();
+        dialogAtomicReference.set(builder.create());
+        return dialogAtomicReference.get();
     }
 
     @NonNull
