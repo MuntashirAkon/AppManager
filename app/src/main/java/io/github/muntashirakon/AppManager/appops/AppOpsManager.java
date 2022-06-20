@@ -362,6 +362,9 @@ public class AppOpsManager {
     public static final int OP_NEARBY_WIFI_DEVICES = 116;
     public static final int OP_ESTABLISH_VPN_SERVICE = 117;
     public static final int OP_ESTABLISH_VPN_MANAGER = 118;
+    public static final int OP_ACCESS_RESTRICTED_SETTINGS = 119;
+    public static final int OP_RECEIVE_AMBIENT_TRIGGER_AUDIO = 120;
+
     public static final int _NUM_OP = AppOpsManagerHidden._NUM_OP;
 
     // MIUI app ops taken from framework.jar
@@ -524,6 +527,8 @@ public class AppOpsManager {
     public static final String OPSTR_NEARBY_WIFI_DEVICES = "android:nearby_wifi_devices";
     public static final String OPSTR_ESTABLISH_VPN_SERVICE = "android:establish_vpn_service";
     public static final String OPSTR_ESTABLISH_VPN_MANAGER = "android:establish_vpn_manager";
+    public static final String OPSTR_ACCESS_RESTRICTED_SETTINGS = "android:access_restricted_settings";
+    public static final String OPSTR_RECEIVE_AMBIENT_TRIGGER_AUDIO = "android:receive_ambient_trigger_audio";
 
     private static final int[] RUNTIME_AND_APPOP_PERMISSIONS_OPS = {
             // RUNTIME PERMISSIONS
@@ -720,13 +725,15 @@ public class AppOpsManager {
             OP_COARSE_LOCATION,                 // COARSE_LOCATION_SOURCE
             OP_MANAGE_MEDIA,                    // MANAGE_MEDIA
             OP_BLUETOOTH_CONNECT,               // BLUETOOTH_CONNECT
-            OP_UWB_RANGING,                     // OP_UWB_RANGING
-            OP_ACTIVITY_RECOGNITION,            // OP_ACTIVITY_RECOGNITION_SOURCE
-            OP_BLUETOOTH_ADVERTISE,             // OP_BLUETOOTH_ADVERTISE
-            OP_RECORD_INCOMING_PHONE_AUDIO,     // OP_RECORD_INCOMING_PHONE_AUDIO
-            OP_NEARBY_WIFI_DEVICES,             // OP_NEARBY_WIFI_DEVICES
-            OP_ESTABLISH_VPN_SERVICE,           // OP_ESTABLISH_VPN_SERVICE
-            OP_ESTABLISH_VPN_MANAGER,           // OP_ESTABLISH_VPN_MANAGER
+            OP_UWB_RANGING,                     // UWB_RANGING
+            OP_ACTIVITY_RECOGNITION,            // ACTIVITY_RECOGNITION_SOURCE
+            OP_BLUETOOTH_ADVERTISE,             // BLUETOOTH_ADVERTISE
+            OP_RECORD_INCOMING_PHONE_AUDIO,     // RECORD_INCOMING_PHONE_AUDIO
+            OP_NEARBY_WIFI_DEVICES,             // NEARBY_WIFI_DEVICES
+            OP_ESTABLISH_VPN_SERVICE,           // ESTABLISH_VPN_SERVICE
+            OP_ESTABLISH_VPN_MANAGER,           // ESTABLISH_VPN_MANAGER
+            OP_ACCESS_RESTRICTED_SETTINGS,      // ACCESS_RESTRICTED_SETTINGS
+            OP_RECEIVE_AMBIENT_TRIGGER_AUDIO,   // RECEIVE_AMBIENT_TRIGGER_AUDIO
     };
 
     /**
@@ -894,6 +901,8 @@ public class AppOpsManager {
             OPSTR_NEARBY_WIFI_DEVICES,
             OPSTR_ESTABLISH_VPN_SERVICE,
             OPSTR_ESTABLISH_VPN_MANAGER,
+            OPSTR_ACCESS_RESTRICTED_SETTINGS,
+            OPSTR_RECEIVE_AMBIENT_TRIGGER_AUDIO,
     };
 
     /**
@@ -1020,6 +1029,8 @@ public class AppOpsManager {
             "NEARBY_WIFI_DEVICES",
             "ESTABLISH_VPN_SERVICE",
             "ESTABLISH_VPN_MANAGER",
+            "ACCESS_RESTRICTED_SETTINGS",
+            "RECEIVE_AMBIENT_TRIGGER_AUDIO",
     };
 
     /**
@@ -1189,6 +1200,8 @@ public class AppOpsManager {
             "android.permission.NEARBY_WIFI_DEVICES",
             null, // no permission for OP_ESTABLISH_VPN_SERVICE
             null, // no permission for OP_ESTABLISH_VPN_MANAGER
+            null, // no permission for OP_ACCESS_RESTRICTED_SETTINGS
+            null, // no permission for OP_RECEIVE_AMBIENT_TRIGGER_AUDIO
     };
 
     /**
@@ -1316,6 +1329,8 @@ public class AppOpsManager {
             null, // NEARBY_WIFI_DEVICES
             null, // ESTABLISH_VPN_SERVICE
             null, // ESTABLISH_VPN_MANAGER
+            null, // ACCESS_RESTRICTED_SETTINGS
+            null, // RECEIVE_AMBIENT_TRIGGER_AUDIO
     };
 
     /**
@@ -1441,6 +1456,8 @@ public class AppOpsManager {
             null, // NEARBY_WIFI_DEVICES
             null, // ESTABLISH_VPN_SERVICE
             null, // ESTABLISH_VPN_MANAGER
+            null, // ACCESS_RESTRICTED_SETTINGS
+            null, // RECEIVE_AMBIENT_TRIGGER_AUDIO
     };
 
     /**
@@ -1566,6 +1583,8 @@ public class AppOpsManager {
             MODE_ALLOWED, // NEARBY_WIFI_DEVICES
             MODE_ALLOWED, // ESTABLISH_VPN_SERVICE
             MODE_ALLOWED, // ESTABLISH_VPN_MANAGER
+            MODE_ALLOWED, // ACCESS_RESTRICTED_SETTINGS
+            MODE_ALLOWED, // RECEIVE_AMBIENT_TRIGGER_AUDIO
     };
 
 
@@ -1701,6 +1720,8 @@ public class AppOpsManager {
             false, // NEARBY_WIFI_DEVICES
             false, // ESTABLISH_VPN_SERVICE
             false, // ESTABLISH_VPN_MANAGER
+            false, // ACCESS_RESTRICTED_SETTINGS
+            false, // RECEIVE_AMBIENT_TRIGGER_AUDIO
     };
 
     /**
