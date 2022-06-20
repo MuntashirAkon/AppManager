@@ -291,7 +291,7 @@ public class ActivityInterceptor extends BaseActivity {
     @Nullable
     private Intent mLastResultIntent = null;
 
-    private boolean mAreTextWatchersActive;
+    private volatile boolean mAreTextWatchersActive;
 
     private final ImageLoader mImageLoader = new ImageLoader();
     private final ActivityResultLauncher<Intent> mIntentLauncher = registerForActivityResult(
@@ -316,7 +316,7 @@ public class ActivityInterceptor extends BaseActivity {
         setSupportActionBar(findViewById(R.id.toolbar));
         findViewById(R.id.progress_linear).setVisibility(View.GONE);
         // Get Intent
-        Intent intent = getIntent();
+        Intent intent = new Intent(getIntent());
         mUseRoot = intent.getBooleanExtra(EXTRA_ROOT, false);
         mUserHandle = intent.getIntExtra(EXTRA_USER_HANDLE, UserHandleHidden.myUserId());
         intent.removeExtra(EXTRA_ROOT);
@@ -720,7 +720,7 @@ public class ActivityInterceptor extends BaseActivity {
             protected void onUpdateIntent(String modifiedContent) {
                 if (mMutableIntent == null) return;
                 String packageName = mMutableIntent.getPackage();
-                if (packageName == null) {
+                if (packageName == null && !TextUtils.isEmpty(modifiedContent)) {
                     UIUtils.displayShortToast(R.string.set_package_name_first);
                     mAreTextWatchersActive = false;
                     mClassNameView.setText(null);
@@ -730,11 +730,11 @@ public class ActivityInterceptor extends BaseActivity {
                 if (TextUtils.isEmpty(modifiedContent)) {
                     mRequestedComponent = null;
                     mMutableIntent.setComponent(null);
-                } else {
-                    mRequestedComponent = new ComponentName(packageName, (modifiedContent.startsWith(".") ?
-                            packageName : "") + modifiedContent);
-                    mMutableIntent.setComponent(mRequestedComponent);
+                    return;
                 }
+                mRequestedComponent = new ComponentName(packageName, (modifiedContent.startsWith(".") ?
+                        packageName : "") + modifiedContent);
+                mMutableIntent.setComponent(mRequestedComponent);
             }
         });
         mUriView.addTextChangedListener(new IntentUpdateTextWatcher(mUriView) {
