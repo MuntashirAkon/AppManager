@@ -14,7 +14,7 @@ public class BatchOpsLogger extends Logger {
     private static final File LOG_FILE = new File(getLoggingDirectory(), "batch_ops.log");
 
     protected BatchOpsLogger() throws IOException {
-        super(LOG_FILE, true);
+        super(LOG_FILE, false);
     }
 
     @NonNull
