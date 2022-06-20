@@ -20,15 +20,21 @@ import androidx.annotation.WorkerThread;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 
 public abstract class ForegroundService extends Service {
-    public class Binder extends android.os.Binder {
+    public static class Binder extends android.os.Binder {
+        private final ForegroundService mService;
+
+        private Binder(ForegroundService service) {
+            mService = service;
+        }
+
         @SuppressWarnings("unchecked")
         public <T extends ForegroundService> T getService() {
-            return (T) ForegroundService.this;
+            return (T) mService;
         }
     }
 
     private final String name;
-    private final IBinder binder = new Binder();
+    private final IBinder binder = new Binder(this);
     @SuppressWarnings("FieldCanBeLocal")
     private Looper serviceLooper;
     private ServiceHandler serviceHandler;
