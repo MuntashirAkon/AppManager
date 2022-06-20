@@ -29,7 +29,6 @@ import java.util.List;
 import java.util.Set;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
-import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
@@ -151,14 +150,14 @@ public class OneClickOpsActivity extends BaseActivity {
                 getText(R.string.restore_msg)).setOnClickListener(v ->
                 new RestoreTasksDialogFragment().show(getSupportFragmentManager(),
                         RestoreTasksDialogFragment.TAG));
-        if (BuildConfig.DEBUG) {
-            mItemCreator.addItemWithTitleSubtitle(getString(R.string.clear_data_from_uninstalled_apps),
-                            getString(R.string.clear_data_from_uninstalled_apps_description))
-                    .setOnClickListener(v -> clearData());
-            mItemCreator.addItemWithTitleSubtitle(getString(R.string.clear_app_cache),
-                            getString(R.string.clear_app_cache_description))
-                    .setOnClickListener(v -> clearAppCache());
-        }
+//        if (BuildConfig.DEBUG) {
+//            mItemCreator.addItemWithTitleSubtitle(getString(R.string.clear_data_from_uninstalled_apps),
+//                            getString(R.string.clear_data_from_uninstalled_apps_description))
+//                    .setOnClickListener(v -> clearData());
+//            mItemCreator.addItemWithTitleSubtitle(getString(R.string.clear_app_cache),
+//                            getString(R.string.clear_app_cache_description))
+//                    .setOnClickListener(v -> clearAppCache());
+//        }
         mItemCreator.addItemWithTitleSubtitle(getString(R.string.trim_caches_in_all_apps),
                         getString(R.string.trim_caches_in_all_apps_description))
                 .setOnClickListener(v -> {
