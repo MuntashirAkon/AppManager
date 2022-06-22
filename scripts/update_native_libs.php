@@ -13,8 +13,7 @@ $libs_info = json_decode(file_get_contents(LIB_NATIVE), true);
 printf_AM();
 
 // === Functions === //
-function printf_AM()
-{
+function printf_AM(): void {
     global $libs_info;
     echo <<<EOF
 <?xml version="1.0" encoding="utf-8"?>

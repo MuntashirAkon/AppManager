@@ -847,6 +847,7 @@
         <item>com.rakuten.gap.ads</item>
         <item>com.revenuecat.</item>
         <item>com.rumble.sdk</item>
+        <item>com.gigya.</item>
         <item>com.sas.mkt.mobile.sdk.</item>
         <item>com.sdkbox.</item>
         <item>com.ss.android.</item>
@@ -1829,6 +1830,7 @@
         <item>²Rakuten Unified Ads</item>
         <item>²RevenueCat</item>
         <item>²Rumble</item>
+        <item>²SAP CDC (Gigya)</item>
         <item>²SAS</item>
         <item>²SDKBOX</item>
         <item>²SNS SDK(bytedance)</item>

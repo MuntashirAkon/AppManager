@@ -4,16 +4,20 @@
 
 date_default_timezone_set('UTC');
 
-// USAGE: php ./scripts/docs.php VERB [ARGS]
-// VERBS:
-// build <lang>     Build HTML from TeX using Pandoc for the given language.
-// rebase           Extract strings from the TeX files and re-create the base translation file.
-// update <lang>    Rebuild HTML from strings.xml for the given language.
-// deploy           Rebuild HTML and deploy it to the GitHub pages.
-// pdf              Build PDF from TeX using pdflatex (English-only).
-// debug            Do experiments.
+const HELP = <<<EOF
+USAGE: php ./scripts/docs.php VERB [ARGS]
+VERBS:
+ build <lang>   Build HTML from TeX using Pandoc for the given language.
+ rebase         Extract strings from the TeX files and re-create the base
+                translation file.
+ update <lang>  Rebuild HTML from strings.xml for the given language.
+ deploy         Rebuild HTML and deploy it to the GitHub pages.
+ pdf            Build PDF from TeX using pdflatex (English-only).
+ debug          Do experiments.
 
-// External requirements: Pandoc, pandoc-crossref, minify
+DEPENDENCIES: Pandoc, pandoc-crossref, minify
+
+EOF;
 
 require_once __DIR__ . "/utils.php";
 
@@ -559,7 +563,8 @@ EOF;
 
 // MAIN //
 if ($argc < 2) {
-    fprintf(STDERR, "Invalid number of arguments.\n");
+    fprintf(STDERR, "Invalid number of arguments.\n\n");
+    fprintf(STDERR, HELP);
     exit(1);
 }
 
@@ -605,4 +610,11 @@ switch($verb) {
     case 'debug':
         echo "Nothing to do.\n";
         break;
+    case 'help':
+        echo HELP;
+        exit(0);
+    default:
+        fprintf(STDERR, "Invalid verb $verb\n\n");
+        fprintf(STDERR, HELP);
+        exit(1);
 }

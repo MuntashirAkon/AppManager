@@ -30,7 +30,7 @@ $packages = array();
 
 # Parse
 foreach ($files as $file) {
-    parse_packages($directory . '/' . $file);
+    parse_packages($packages, $directory . '/' . $file);
 }
 
 # Save
@@ -49,21 +49,20 @@ foreach ($packages as $profile_name => $package_list) {
 }
 echo "    </string-array>\n";
 
-function parse_packages($filename) {
-    global $packages;
+function parse_packages(&$packages, $filename): void {
     $contents = explode("\n", file_get_contents($filename));
     $last_key = "";
     foreach ($contents as $dirty_line) {
         $line = trim($dirty_line);
-        if (empty($line) || substr($line, 0, 1) == '#') {
+        if (empty($line) || str_starts_with($line, '#')) {
             continue;
         }
-        if (substr($line, 0, 10) == 'declare -a') {
+        if (str_starts_with($line, 'declare -a')) {
             $last_key = substr($line, 11, strpos($line, '=(') - 11);
             $packages[$last_key] = array();
         }
-        if (substr($line, 0, 1) == '"') {
-            array_push($packages[$last_key], substr($line, 1, strpos($line, '"', 1) - 1));
+        if (str_starts_with($line, '"')) {
+            $packages[$last_key][] = substr($line, 1, strpos($line, '"', 1) - 1);
         }
     }
 }

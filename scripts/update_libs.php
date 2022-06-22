@@ -6,8 +6,8 @@
 
 require_once __DIR__ . "/utils.php";
 
-const LIB_SMALI = 'https://gitlab.com/IzzyOnDroid/repo/-/raw/master/lib/libsmali.txt';
-const AM_LIB_SMALI = './libs/libsmali.txt';
+const LIB_SMALI = 'https://gitlab.com/IzzyOnDroid/repo/-/raw/master/lib/libsmali.jsonl';
+const AM_LIB_SMALI = './libs/libsmali.jsonl';
 
 $libs_info = array();
 
@@ -18,17 +18,7 @@ printf_AM();
 
 // === Functions === //
 
-function printf_libs() {
-    global $libs_info;
-    $s = "____";
-    foreach ($libs_info as $name => $info) {
-        foreach ($info["code_sigs"] as $sig) {
-            echo $name . $s . $sig . $s . $info['type'] . $s . $info['website'] . "\n";
-        }
-    }
-}
-
-function printf_AM() {
+function printf_AM(): void {
     global $libs_info;
     echo <<<EOF
 <?xml version="1.0" encoding="utf-8"?>
@@ -38,9 +28,9 @@ function printf_AM() {
 
 EOF;
 
-    foreach ($libs_info as $name => $info) {
+    foreach ($libs_info as $info) {
         foreach ($info["code_sigs"] as $sig) {
-            echo "        <item>${sig}</item>\n";
+            echo "        <item>$sig</item>\n";
         }
     }
 
@@ -51,7 +41,7 @@ EOF;
 EOF;
 
     foreach ($libs_info as $name => $info) {
-        foreach ($info["code_sigs"] as $sig) {
+        foreach ($info["code_sigs"] as $ignored) {
             echo "        <item>" . android_escape($name) . "</item>\n";
         }
     }
@@ -62,8 +52,8 @@ EOF;
 
 EOF;
 
-    foreach ($libs_info as $name => $info) {
-        foreach ($info["code_sigs"] as $sig) {
+    foreach ($libs_info as $info) {
+        foreach ($info["code_sigs"] as $ignored) {
             echo "        <item>" . android_escape($info['type']) . "</item>\n";
         }
     }
@@ -74,8 +64,8 @@ EOF;
 
 EOF;
 
-    foreach ($libs_info as $name => $info) {
-        foreach ($info["code_sigs"] as $sig) {
+    foreach ($libs_info as $info) {
+        foreach ($info["code_sigs"] as $ignored) {
             echo "        <item>" . android_escape($info['website']) . "</item>\n";
         }
     }
@@ -86,7 +76,7 @@ EOF;
 EOF;
 }
 
-function addLibSmali($filename = 'libsmali.txt') {
+function addLibSmali($filename = 'libsmali.jsonl'): void {
     global $libs_info;
     $file = file_get_contents($filename);
     $libs = explode("\n", $file);
@@ -105,39 +95,7 @@ function addLibSmali($filename = 'libsmali.txt') {
         if (isset($libs_info[$name])) {
             // Update signatures
             if (!in_array($sig, $libs_info[$name]["code_sigs"])) {
-                array_push($libs_info[$name]["code_sigs"], $sig);
-            }
-        } else {
-            // Add new
-            $libs_info[$name] = [
-                "code_sigs" => array($sig),
-                "type" => $type,
-                "website" => $url
-            ];
-        }
-    }
-}
-
-function addLibRadar($filename = 'libradar.txt') {
-    global $libs_info;
-    $file = file_get_contents($filename);
-    $libs = explode("\n", $file);
-    foreach ($libs as $lib) {
-        $lib_arr = json_decode($lib, true);
-        $sig = $lib_arr['pn'];
-        if ($sig[0] == '/') $sig = substr($sig, 1);
-        $sig = str_replace('/', '.', $sig);
-        $name = $lib_arr['lib'];
-        if ($name == "") {
-            print_r($lib_arr);
-            continue;
-        }
-        $type = $lib_arr['tp'];
-        $url = $lib_arr['ch'];
-        if (isset($libs_info[$name])) {
-            // Update signatures
-            if (!in_array($sig, $libs_info[$name]["code_sigs"])) {
-                array_push($libs_info[$name]["code_sigs"], $sig);
+                $libs_info[$name]["code_sigs"][] = $sig;
             }
         } else {
             // Add new

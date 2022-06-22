@@ -1,7 +1,9 @@
 <?php
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 
-function list_files(string $dir) {
+use JetBrains\PhpStorm\NoReturn;
+
+function list_files(string $dir): array {
     return array_diff(scandir($dir), array('..', '.'));
 }
 
@@ -39,7 +41,8 @@ function android_escape_slash_newline_reverse(string $string) : string {
     return strtr($string, array('\@' => '@', '\?' => '?', '&lt;' => '<', '&gt;' => '>', '\"' => '"', "\'" => "'", '&amp;' => '&', '\\\\' => '\\', '\n' => "\n"));
 }
 
-function syntax_error_with_position(string $path, string $texts, int $position, string $error_message = "Syntax error") {
+#[NoReturn]
+function syntax_error_with_position(string $path, string $texts, int $position, string $error_message = "Syntax error"): void {
     $lines = explode("\n", $texts);
     $line_no = 0;
     foreach ($lines as $line) {

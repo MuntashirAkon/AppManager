@@ -22,22 +22,11 @@ $file = file_get_contents('./scripts/tmp_trackers.json');
 $trackers_json = json_decode($file, true);
 addToTrackerInfo($trackers_json['trackers']);
 
-// printf_oF2pks();
 printf_AM();
 
 // === Functions === //
 
-function printf_oF2pks() {
-  global $tracker_info;
-  $s = "____";
-  foreach($tracker_info as $tracker => $info) {
-    foreach($info["code_sigs"] as $sig) {
-      echo $tracker.$s.$sig.$s.$info['website'].$s.$info['net_sigs'].$s.$info['id']."\n";
-    }
-  }
-}
-
-function printf_AM() {
+function printf_AM(): void {
   global $tracker_info;
   echo <<<EOF
 <?xml version="1.0" encoding="utf-8"?>
@@ -47,9 +36,9 @@ function printf_AM() {
 
 EOF;
 
-  foreach($tracker_info as $tracker => $info) {
+  foreach($tracker_info as $info) {
     foreach($info["code_sigs"] as $sig) {
-      echo "        <item>${sig}</item>\n";
+      echo "        <item>$sig</item>\n";
     }
   }
 
@@ -60,8 +49,8 @@ EOF;
 EOF;
 
   foreach($tracker_info as $tracker => $info) {
-    foreach($info["code_sigs"] as $sig) {
-      echo "        <item>${tracker}</item>\n";
+    foreach($info["code_sigs"] as $ignored) {
+      echo "        <item>$tracker</item>\n";
     }
   }
 
@@ -71,9 +60,9 @@ EOF;
 EOF;
 }
 
-function addToTrackerInfo($trackers, $prefix='') {
+function addToTrackerInfo($trackers, $prefix=''): void {
   global $tracker_info, $j;
-  foreach($trackers as $id => $tracker) {
+  foreach($trackers as $tracker) {
     $tmp = $tracker['code_signature'];
     $nc = $tracker['network_signature'];
     $name = $tracker['name'];
@@ -84,7 +73,7 @@ function addToTrackerInfo($trackers, $prefix='') {
         $arr = explode("|", $tmp);
         foreach ($arr as $sig) {
           if (!in_array($sig, $tracker_info[$name]["code_sigs"])) {
-            array_push($tracker_info[$name]["code_sigs"], $sig);
+            $tracker_info[$name]["code_sigs"][] = $sig;
           }
         }
       } else {
@@ -95,7 +84,7 @@ function addToTrackerInfo($trackers, $prefix='') {
           $arr = explode("|", $tmp);
           foreach ($arr as $sig) {
             if (!in_array($sig, $tracker_info[$name]["code_sigs"])) {
-              array_push($tracker_info[$name]["code_sigs"], $sig);
+              $tracker_info[$name]["code_sigs"][] = $sig;
             }
           }
         } else {

@@ -4,7 +4,7 @@
 
 // Example usage: php ./libs/add_lib.php
 
-$filename = "./libs/libsmali.txt";
+$filename = __DIR__ . '/libs/libsmali.jsonl';
 
 $library_type = [
     "ui" => "UI Component",           // GUI support.

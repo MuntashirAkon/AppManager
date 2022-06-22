@@ -19,10 +19,10 @@ if (file_exists($res_dir)) {
     } else {
         $_files = array_diff(scandir($res_dir), array('..', '.'));
         foreach ($_files as $file) {
-            if (strpos($file, 'values-') !== false) {
+            if (str_contains($file, 'values-')) {
                 $file = $res_dir . '/' . $file . '/strings.xml';
                 if (file_exists($file)) {
-                    array_push($string_files, $file);
+                    $string_files[] = $file;
                 }
             }
         }
