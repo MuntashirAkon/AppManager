@@ -3,6 +3,7 @@
 package io.github.muntashirakon.AppManager.settings;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.RemoteException;
 import android.text.Editable;
@@ -43,6 +44,7 @@ import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
+import io.github.muntashirakon.dialog.DialogTitleBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 
 /**
@@ -238,8 +240,17 @@ public class Ops {
     @NoOps // Although we've used Ops checks, its overall usage does not affect anything
     public static void connectWirelessDebugging(@NonNull FragmentActivity activity,
                                                 @NonNull AdbConnectionInterface callback) {
-        new MaterialAlertDialogBuilder(activity)
+        DialogTitleBuilder builder = new DialogTitleBuilder(activity)
                 .setTitle(R.string.wireless_debugging)
+                .setEndIcon(R.drawable.ic_open_in_new_black_24dp, v -> {
+                    Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS)
+                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    activity.startActivity(intent);
+                })
+                .setEndIconContentDescription(R.string.open_developer_options_page);
+
+        new MaterialAlertDialogBuilder(activity)
+                .setCustomTitle(builder.build())
                 .setMessage(R.string.choose_what_to_do)
                 .setCancelable(false)
                 .setPositiveButton(R.string.adb_connect, (dialog1, which1) -> callback.onStatusReceived(Ops.STATUS_ADB_CONNECT_REQUIRED))

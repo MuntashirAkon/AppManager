@@ -1212,4 +1212,5 @@
     <string name="item_select">Select</string>
     <string name="app_explorer">App Explorer</string>
     <string name="netpolicy_cannot_be_modified_for_core_apps">Net policy cannot be modified for Android core apps.</string>
+    <string name="open_developer_options_page">Open developer options page in Android settings</string>
 </resources>
