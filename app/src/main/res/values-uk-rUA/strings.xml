@@ -760,10 +760,10 @@
     <string name="backup_rules_description">Резервне копіювання правил, налаштованих в App Manager.</string>
     <string name="backup_extras_description">Резервне копіювання дозволів, економії заряду, опцій використання даних, стану MagiskHide, SSAID, тощо.</string>
     <string name="backup_extras">Додатково</string>
-    <string name="backup_cache_description">Резервне копіювання папок <b>cache</b>, <b>no_cache</b> та <b>no_backup</b>.</string>
-    <string name="backup_obb_media_description">Резервне копіювання файлів OBB та папок медіа.</string>
-    <string name="backup_external_data_description">Резервне копіювання зовнішніх папок даних.</string>
-    <string name="backup_internal_data_description">Резервне копіювання папок даних. Якщо вибрати цей параметр, за замовчуванням буде створено резервні копії внутрішніх папок даних.</string>
+    <string name="backup_cache_description">Резервне копіювання тек <b>cache</b>, <b>no_cache</b> та <b>no_backup</b>.</string>
+    <string name="backup_obb_media_description">Резервне копіювання файлів OBB та тек медіа.</string>
+    <string name="backup_external_data_description">Резервне копіювання зовнішніх тек даних.</string>
+    <string name="backup_internal_data_description">Резервне копіювання тек даних. Якщо вибрати цей параметр, за замовчуванням буде створено резервні копії внутрішніх тек даних.</string>
     <string name="backup_apk_files_description">Резервне копіювання лише файлів apk з вихідного каталогу. Для цього слід вибрати <b>Джерело</b>.</string>
     <string name="security">Безпека</string>
     <string name="graphics">Графіка</string>
@@ -1137,7 +1137,7 @@
     <string name="paste">Вставити</string>
     <string name="set_package_name_first">Спочатку встановіть назву пакета!</string>
     <string name="identifier">Ідентифікатор</string>
-    <string name="backup_volume_dialog_description">Томи з префіксом <tt>/tree</tt> є папками, вибраними за допомогою Storage Access Framework (SAF). За винятком цих папок, каталог за замовчуванням для App Manager є підпапкою з назвою <tt>AppManager</tt>.</string>
+    <string name="backup_volume_dialog_description">Томи з префіксом <tt>/tree</tt> є теками, вибраними за допомогою Storage Access Framework (SAF). За винятком цих тек, каталог за замовчуванням для App Manager є підтекою з назвою <tt>AppManager</tt>.</string>
     <string name="second_degree_tracker_note">Префікс ² вказує на те, що трекери знаходяться в списку очікування <a href="https://etip.exodus-privacy.eu.org/">ETIP</a>, тобто чи є вони фактичними трекерами, все ще досліджується.</string>
     <string name="failed_to_uninstall_app">Не вдалося видалити</string>
     <string name="exit_confirmation">Підтвердження виходу</string>
