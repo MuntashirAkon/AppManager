@@ -18,13 +18,11 @@ import android.widget.TextView;
 import androidx.annotation.AnyThread;
 import androidx.annotation.AttrRes;
 import androidx.annotation.CallSuper;
-import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.Px;
 import androidx.annotation.UiThread;
 import androidx.appcompat.widget.TintTypedArray;
-import androidx.core.content.ContextCompat;
 import androidx.core.util.ObjectsCompat;
 import androidx.core.view.OnApplyWindowInsetsListener;
 import androidx.core.view.ViewCompat;
@@ -440,12 +438,12 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
         @Nullable
         private RecyclerView recyclerView;
         private int defaultBottomPadding;
-        @ColorInt
-        private int highlightColor;
 
         public Adapter() {
             setHasStableIds(true);
         }
+
+        public abstract int getHighlightColor();
 
         @AnyThread
         public abstract long getItemId(int position);
@@ -590,7 +588,6 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
             super.onAttachedToRecyclerView(recyclerView);
             this.recyclerView = recyclerView;
             this.defaultBottomPadding = recyclerView.getPaddingBottom();
-            this.highlightColor = ContextCompat.getColor(recyclerView.getContext(), R.color.highlight);
             recyclerView.addOnLayoutChangeListener(this);
         }
 
@@ -610,7 +607,7 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
             // Set selection background
             if (isSelected(position)) {
                 if (holder.itemView instanceof MaterialCardView) {
-                    ((MaterialCardView) holder.itemView).setCardBackgroundColor(highlightColor);
+                    ((MaterialCardView) holder.itemView).setCardBackgroundColor(getHighlightColor());
                 } else {
                     holder.itemView.setBackgroundResource(R.drawable.item_highlight);
                 }

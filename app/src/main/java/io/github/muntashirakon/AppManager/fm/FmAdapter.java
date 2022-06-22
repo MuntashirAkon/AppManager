@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -18,14 +19,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
 public class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
     private final List<FmItem> adapterList = new ArrayList<>();
     private final FmActivity fmActivity;
+    @ColorInt
+    private final int highlightColor;
 
     public FmAdapter(FmActivity activity) {
         this.fmActivity = activity;
+        highlightColor = ColorCodes.getListItemSelectionColor(activity);
     }
 
     public void setFmList(List<FmItem> list) {
@@ -33,6 +38,11 @@ public class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> 
         adapterList.addAll(list);
         notifySelectionChange();
         notifyDataSetChanged();
+    }
+
+    @Override
+    public int getHighlightColor() {
+        return highlightColor;
     }
 
     @NonNull

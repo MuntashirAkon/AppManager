@@ -96,6 +96,7 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.dialog.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.util.LocalizedString;
 import io.github.muntashirakon.widget.RecyclerView;
@@ -187,7 +188,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
     private final ExecutorService mExecutor = Executors.newFixedThreadPool(3);
     private final ImageLoader mImageLoader = new ImageLoader(mExecutor);
 
-    private int mColorRed;
+    private int mColorQueryStringHighlight;
 
     public AppDetailsFragment() {
     }
@@ -206,7 +207,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
         }
         mMainModel = new ViewModelProvider(mActivity).get(AppDetailsViewModel.class);
         mPackageManager = mActivity.getPackageManager();
-        mColorRed = ContextCompat.getColor(mActivity, R.color.red);
+        mColorQueryStringHighlight = ColorCodes.getQueryStringHighlightColor(mActivity);
     }
 
     @Nullable
@@ -843,42 +844,43 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+            Context context = holder.itemView.getContext();
             switch (mRequestedProperty) {
                 case SERVICES:
-                    getServicesView(holder, position);
+                    getServicesView(context, holder, position);
                     break;
                 case RECEIVERS:
-                    getReceiverView(holder, position);
+                    getReceiverView(context, holder, position);
                     break;
                 case PROVIDERS:
-                    getProviderView(holder, position);
+                    getProviderView(context, holder, position);
                     break;
                 case APP_OPS:
-                    getAppOpsView(holder, position);
+                    getAppOpsView(context, holder, position);
                     break;
                 case USES_PERMISSIONS:
-                    getUsesPermissionsView(holder, position);
+                    getUsesPermissionsView(context, holder, position);
                     break;
                 case PERMISSIONS:
-                    getPermissionsView(holder, position);
+                    getPermissionsView(context, holder, position);
                     break;
                 case FEATURES:
-                    getFeaturesView(holder, position);
+                    getFeaturesView(context, holder, position);
                     break;
                 case CONFIGURATIONS:
-                    getConfigurationView(holder, position);
+                    getConfigurationView(context, holder, position);
                     break;
                 case SIGNATURES:
-                    getSignatureView(holder, position);
+                    getSignatureView(context, holder, position);
                     break;
                 case SHARED_LIBRARIES:
-                    getSharedLibsView(holder, position);
+                    getSharedLibsView(context, holder, position);
                     break;
                 case ACTIVITIES:
                 case NONE:
                 case APP_INFO:
                 default:
-                    getActivityView(holder, position);
+                    getActivityView(context, holder, position);
                     break;
             }
         }
@@ -937,7 +939,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             });
         }
 
-        private void getActivityView(@NonNull ViewHolder holder, int index) {
+        private void getActivityView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
             final AppDetailsComponentItem componentItem;
             synchronized (mAdapterList) {
                 componentItem = (AppDetailsComponentItem) mAdapterList.get(index);
@@ -947,11 +949,11 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             final boolean isDisabled = !mIsExternalApk && componentItem.isDisabled();
             // Background color: regular < tracker < disabled < blocked
             if (!mIsExternalApk && componentItem.isBlocked()) {
-                holder.divider.setDividerColor(mColorRed);
+                holder.divider.setDividerColor(ColorCodes.getComponentBlockedIndicatorColor(context));
             } else if (isDisabled) {
-                holder.divider.setDividerColorResource(R.color.disabled_user);
+                holder.divider.setDividerColor(ColorCodes.getComponentExternallyBlockedIndicatorColor(context));
             } else if (componentItem.isTracker()) {
-                holder.divider.setDividerColorResource(R.color.tracker);
+                holder.divider.setDividerColor(ColorCodes.getComponentTrackerIndicatorColor(context));
             } else {
                 holder.divider.setDividerColor(mColorSurfaceVariant);
             }
@@ -962,7 +964,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             // Name
             if (mConstraint != null && activityName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
-                holder.textView2.setText(UIUtils.getHighlightedText(activityName, mConstraint, mColorRed));
+                holder.textView2.setText(UIUtils.getHighlightedText(activityName, mConstraint, mColorQueryStringHighlight));
             } else {
                 holder.textView2.setText(activityName.startsWith(mPackageName) ?
                         activityName.replaceFirst(mPackageName, "") : activityName);
@@ -1051,7 +1053,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             } else holder.blockBtn.setVisibility(View.GONE);
         }
 
-        private void getServicesView(@NonNull ViewHolder holder, int index) {
+        private void getServicesView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
             final AppDetailsServiceItem serviceItem;
             synchronized (mAdapterList) {
                 serviceItem = (AppDetailsServiceItem) mAdapterList.get(index);
@@ -1060,13 +1062,13 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             final boolean isDisabled = !mIsExternalApk && serviceItem.isDisabled();
             // Background color: regular < tracker < disabled < blocked < running
             if (serviceItem.isRunning()) {
-                holder.divider.setDividerColorResource(R.color.running);
+                holder.divider.setDividerColor(ColorCodes.getComponentRunningIndicatorColor(context));
             } else if (!mIsExternalApk && serviceItem.isBlocked()) {
-                holder.divider.setDividerColor(mColorRed);
+                holder.divider.setDividerColor(ColorCodes.getComponentBlockedIndicatorColor(context));
             } else if (isDisabled) {
-                holder.divider.setDividerColorResource(R.color.disabled_user);
+                holder.divider.setDividerColor(ColorCodes.getComponentExternallyBlockedIndicatorColor(context));
             } else if (serviceItem.isTracker()) {
-                holder.divider.setDividerColorResource(R.color.tracker);
+                holder.divider.setDividerColor(ColorCodes.getComponentTrackerIndicatorColor(context));
             } else {
                 holder.divider.setDividerColor(mColorSurfaceVariant);
             }
@@ -1079,7 +1081,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             // Name
             if (mConstraint != null && serviceInfo.name.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
-                holder.textView2.setText(UIUtils.getHighlightedText(serviceInfo.name, mConstraint, mColorRed));
+                holder.textView2.setText(UIUtils.getHighlightedText(serviceInfo.name, mConstraint, mColorQueryStringHighlight));
             } else {
                 holder.textView2.setText(serviceInfo.name.startsWith(mPackageName) ?
                         serviceInfo.name.replaceFirst(mPackageName, "") : serviceInfo.name);
@@ -1127,7 +1129,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             } else holder.blockBtn.setVisibility(View.GONE);
         }
 
-        private void getReceiverView(@NonNull ViewHolder holder, int index) {
+        private void getReceiverView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
             final AppDetailsComponentItem componentItem;
             synchronized (mAdapterList) {
                 componentItem = (AppDetailsComponentItem) mAdapterList.get(index);
@@ -1135,11 +1137,11 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             final ActivityInfo activityInfo = (ActivityInfo) componentItem.vanillaItem;
             // Background color: regular < tracker < disabled < blocked
             if (!mIsExternalApk && componentItem.isBlocked()) {
-                holder.divider.setDividerColor(mColorRed);
+                holder.divider.setDividerColor(ColorCodes.getComponentBlockedIndicatorColor(context));
             } else if (!mIsExternalApk && componentItem.isDisabled()) {
-                holder.divider.setDividerColorResource(R.color.disabled_user);
+                holder.divider.setDividerColor(ColorCodes.getComponentExternallyBlockedIndicatorColor(context));
             } else if (componentItem.isTracker()) {
-                holder.divider.setDividerColorResource(R.color.tracker);
+                holder.divider.setDividerColor(ColorCodes.getComponentTrackerIndicatorColor(context));
             } else {
                 holder.divider.setDividerColor(mColorSurfaceVariant);
             }
@@ -1152,7 +1154,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             // Name
             if (mConstraint != null && activityInfo.name.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
-                holder.textView2.setText(UIUtils.getHighlightedText(activityInfo.name, mConstraint, mColorRed));
+                holder.textView2.setText(UIUtils.getHighlightedText(activityInfo.name, mConstraint, mColorQueryStringHighlight));
             } else {
                 holder.textView2.setText(activityInfo.name.startsWith(mPackageName) ?
                         activityInfo.name.replaceFirst(mPackageName, "")
@@ -1185,7 +1187,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             } else holder.blockBtn.setVisibility(View.GONE);
         }
 
-        private void getProviderView(@NonNull ViewHolder holder, int index) {
+        private void getProviderView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
             final AppDetailsComponentItem componentItem;
             synchronized (mAdapterList) {
                 componentItem = (AppDetailsComponentItem) mAdapterList.get(index);
@@ -1194,11 +1196,11 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             final String providerName = providerInfo.name;
             // Background color: regular < tracker < disabled < blocked
             if (!mIsExternalApk && componentItem.isBlocked()) {
-                holder.divider.setDividerColor(mColorRed);
+                holder.divider.setDividerColor(ColorCodes.getComponentBlockedIndicatorColor(context));
             } else if (!mIsExternalApk && componentItem.isDisabled()) {
-                holder.divider.setDividerColorResource(R.color.disabled_user);
+                holder.divider.setDividerColor(ColorCodes.getComponentExternallyBlockedIndicatorColor(context));
             } else if (componentItem.isTracker()) {
-                holder.divider.setDividerColorResource(R.color.tracker);
+                holder.divider.setDividerColor(ColorCodes.getComponentTrackerIndicatorColor(context));
             } else {
                 holder.divider.setDividerColor(mColorSurfaceVariant);
             }
@@ -1248,7 +1250,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             // Name
             if (mConstraint != null && providerName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
-                holder.textView2.setText(UIUtils.getHighlightedText(providerName, mConstraint, mColorRed));
+                holder.textView2.setText(UIUtils.getHighlightedText(providerName, mConstraint, mColorQueryStringHighlight));
             } else {
                 holder.textView2.setText(providerName.startsWith(mPackageName) ?
                         providerName.replaceFirst(mPackageName, "") : providerName);
@@ -1266,7 +1268,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             } else holder.blockBtn.setVisibility(View.GONE);
         }
 
-        private void getAppOpsView(@NonNull ViewHolder holder, int index) {
+        private void getAppOpsView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
             AppDetailsAppOpItem item;
             synchronized (mAdapterList) {
                 item = (AppDetailsAppOpItem) mAdapterList.get(index);
@@ -1280,7 +1282,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                 opName.append(getString(R.string.unknown_op));
             } else if (mConstraint != null && opStr.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
-                opName.append(UIUtils.getHighlightedText(opStr, mConstraint, mColorRed));
+                opName.append(UIUtils.getHighlightedText(opStr, mConstraint, mColorQueryStringHighlight));
             } else opName.append(opStr);
             holder.textView1.setText(opName);
             // Set op mode, running and duration
@@ -1362,7 +1364,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             }
             // Set background
             if (item.isDangerous) {
-                holder.divider.setDividerColor(mColorRed);
+                holder.divider.setDividerColor(ColorCodes.getPermissionDangerousIndicatorColor(context));
             } else {
                 holder.divider.setDividerColor(mColorSurfaceVariant);
             }
@@ -1410,7 +1412,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             });
         }
 
-        private void getUsesPermissionsView(@NonNull ViewHolder holder, int index) {
+        private void getUsesPermissionsView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
             AppDetailsPermissionItem permissionItem;
             synchronized (mAdapterList) {
                 permissionItem = (AppDetailsPermissionItem) mAdapterList.get(index);
@@ -1420,7 +1422,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             // Set permission name
             if (mConstraint != null && permName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
-                holder.textView1.setText(UIUtils.getHighlightedText(permName, mConstraint, mColorRed));
+                holder.textView1.setText(UIUtils.getHighlightedText(permName, mConstraint, mColorQueryStringHighlight));
             } else holder.textView1.setText(permName);
             // Set others
             // Description
@@ -1435,7 +1437,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             holder.textView3.setText(String.format(Locale.ROOT, "\u2691 %s", protectionLevel));
             // Set background color
             if (permissionItem.isDangerous) {
-                holder.divider.setDividerColor(mColorRed);
+                holder.divider.setDividerColor(ColorCodes.getPermissionDangerousIndicatorColor(context));
             } else {
                 holder.divider.setDividerColor(mColorSurfaceVariant);
             }
@@ -1491,7 +1493,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             holder.itemView.setLongClickable(flags != 0);
         }
 
-        private void getSharedLibsView(@NonNull ViewHolder holder, int index) {
+        private void getSharedLibsView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
             AppDetailsItem<?> item;
             synchronized (mAdapterList) {
                 item = mAdapterList.get(index);
@@ -1526,7 +1528,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             holder.divider.setDividerColor(mColorSurfaceVariant);
         }
 
-        private void getPermissionsView(@NonNull ViewHolder holder, int index) {
+        private void getPermissionsView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
             AppDetailsDefinedPermissionItem permissionItem;
             synchronized (mAdapterList) {
                 permissionItem = (AppDetailsDefinedPermissionItem) mAdapterList.get(index);
@@ -1539,7 +1541,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             // Name
             if (mConstraint != null && permissionInfo.name.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
-                holder.textView2.setText(UIUtils.getHighlightedText(permissionInfo.name, mConstraint, mColorRed));
+                holder.textView2.setText(UIUtils.getHighlightedText(permissionInfo.name, mConstraint, mColorQueryStringHighlight));
             } else {
                 holder.textView2.setText(permissionInfo.name.startsWith(mPackageName) ?
                         permissionInfo.name.replaceFirst(mPackageName, "") : permissionInfo.name);
@@ -1556,12 +1558,14 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             holder.textView5.setText(String.format(Locale.ROOT, "\u2691 %s", protectionLevel));
             // Set border color
             if (protectionLevel.contains("dangerous")) {
-                holder.divider.setDividerColor(mColorRed);
+                holder.divider.setDividerColor(ColorCodes.getPermissionDangerousIndicatorColor(context));
+            } else {
+                holder.divider.setDividerColor(mColorSurfaceVariant);
             }
         }
 
         @SuppressLint("SetTextI18n")
-        private void getFeaturesView(@NonNull ViewHolder holder, int index) {
+        private void getFeaturesView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
             View view = holder.itemView;
             final FeatureInfo featureInfo;
             synchronized (mAdapterList) {
@@ -1608,7 +1612,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             } else holder.textView3.setVisibility(View.GONE);
         }
 
-        private void getConfigurationView(@NonNull ViewHolder holder, int index) {
+        private void getConfigurationView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
             View view = holder.itemView;
             final ConfigurationInfo configurationInfo;
             synchronized (mAdapterList) {
@@ -1629,7 +1633,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                     getString(Utils.getTouchScreen(configurationInfo.reqTouchScreen))));
         }
 
-        private void getSignatureView(@NonNull ViewHolder holder, int index) {
+        private void getSignatureView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
             TextView textView = (TextView) holder.itemView;
             AppDetailsItem<?> item;
             synchronized (mAdapterList) {

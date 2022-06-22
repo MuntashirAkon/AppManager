@@ -29,7 +29,6 @@ import android.util.Pair;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.pm.PackageInfoCompat;
 
 import com.android.apksig.ApkVerifier;
@@ -81,6 +80,7 @@ import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.io.ExtendedFile;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
@@ -825,28 +825,28 @@ public final class PackageUtils {
     public static Spannable getApkVerifierInfo(@Nullable ApkVerifier.Result result, Context ctx) {
         SpannableStringBuilder builder = new SpannableStringBuilder();
         if (result == null) return builder;
-        int colorRed = ContextCompat.getColor(ctx, R.color.red);
-        int colorGreen = ContextCompat.getColor(ctx, R.color.stopped);
+        int colorFailure = ColorCodes.getFailureColor(ctx);
+        int colorSuccess = ColorCodes.getSuccessColor(ctx);
         int warnCount = 0;
         List<CharSequence> errors = new ArrayList<>();
         for (ApkVerifier.IssueWithParams err : result.getErrors()) {
-            errors.add(getColoredText(err.toString(), colorRed));
+            errors.add(getColoredText(err.toString(), colorFailure));
         }
         warnCount += result.getWarnings().size();
         for (ApkVerifier.Result.V1SchemeSignerInfo signer : result.getV1SchemeIgnoredSigners()) {
             String name = signer.getName();
             for (ApkVerifier.IssueWithParams err : signer.getErrors()) {
-                errors.add(getColoredText(new SpannableStringBuilder(getBoldString(name + ": ")).append(err.toString()), colorRed));
+                errors.add(getColoredText(new SpannableStringBuilder(getBoldString(name + ": ")).append(err.toString()), colorFailure));
             }
             warnCount += signer.getWarnings().size();
         }
         if (result.isVerified()) {
             if (warnCount == 0) {
                 builder.append(getColoredText(getTitleText(ctx, "\u2714 " +
-                        ctx.getString(R.string.verified)), colorGreen));
+                        ctx.getString(R.string.verified)), colorSuccess));
             } else {
                 builder.append(getColoredText(getTitleText(ctx, "\u2714 " + ctx.getResources()
-                        .getQuantityString(R.plurals.verified_with_warning, warnCount, warnCount)), colorGreen));
+                        .getQuantityString(R.plurals.verified_with_warning, warnCount, warnCount)), colorSuccess));
             }
             if (result.isSourceStampVerified()) {
                 builder.append("\n\u2714 ").append(ctx.getString(R.string.source_stamp_verified));
@@ -860,7 +860,7 @@ public final class PackageUtils {
                     .getQuantityString(R.plurals.app_signing_signature_schemes_pl, sigSchemes.size()) + ": "));
             builder.append(TextUtils.joinSpannable(", ", sigSchemes));
         } else {
-            builder.append(getColoredText(getTitleText(ctx, "\u2718 " + ctx.getString(R.string.not_verified)), colorRed));
+            builder.append(getColoredText(getTitleText(ctx, "\u2718 " + ctx.getString(R.string.not_verified)), colorFailure));
         }
         builder.append("\n");
         // If there are errors, no certificate info will be loaded

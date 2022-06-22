@@ -13,6 +13,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.pm.Signature;
+import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.NetworkPolicyManager;
@@ -37,7 +38,7 @@ import android.widget.TextView;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.AnyThread;
-import androidx.annotation.ColorRes;
+import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.GuardedBy;
 import androidx.annotation.MainThread;
@@ -48,7 +49,6 @@ import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
 import androidx.collection.ArrayMap;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.core.content.pm.PackageInfoCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -128,6 +128,7 @@ import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
 import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
 import io.github.muntashirakon.io.Path;
@@ -566,14 +567,15 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         // Add tracker chip
         if (!tagCloud.trackerComponents.isEmpty()) {
             CharSequence[] trackerComponentNames = new CharSequence[tagCloud.trackerComponents.size()];
+            int blockedColor = ColorCodes.getComponentTrackerBlockedIndicatorColor(mActivity);
             for (int i = 0; i < trackerComponentNames.length; ++i) {
                 ComponentRule rule = tagCloud.trackerComponents.get(i);
-                trackerComponentNames[i] = rule.isBlocked() ? getColoredText(rule.name,
-                        ContextCompat.getColor(mActivity, R.color.stopped)) : rule.name;
+                trackerComponentNames[i] = rule.isBlocked() ? getColoredText(rule.name, blockedColor) : rule.name;
             }
             addChip(getResources().getQuantityString(R.plurals.no_of_trackers, tagCloud.trackerComponents.size(),
-                    tagCloud.trackerComponents.size()), tagCloud.areAllTrackersBlocked ? R.color.stopped
-                    : R.color.tracker).setOnClickListener(v -> {
+                    tagCloud.trackerComponents.size()), tagCloud.areAllTrackersBlocked
+                    ? ColorCodes.getComponentTrackerBlockedIndicatorColor(mActivity)
+                    : ColorCodes.getComponentTrackerIndicatorColor(mActivity)).setOnClickListener(v -> {
                 if (!isExternalApk && isRootEnabled) {
                     new SearchableMultiChoiceDialogBuilder<>(mActivity, tagCloud.trackerComponents, trackerComponentNames)
                             .setTitle(R.string.trackers)
@@ -647,10 +649,10 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             addChip(R.string.no_code);
         }
         if (tagCloud.hasRequestedLargeHeap) {
-            addChip(R.string.requested_large_heap, R.color.tracker);
+            addChip(R.string.requested_large_heap);
         }
         if (tagCloud.runningServices.size() > 0) {
-            addChip(R.string.running, R.color.running).setOnClickListener(v -> {
+            addChip(R.string.running, ColorCodes.getComponentRunningIndicatorColor(mActivity)).setOnClickListener(v -> {
                 mProgressIndicator.show();
                 executor.submit(() -> {
                     CharSequence[] runningServices = new CharSequence[tagCloud.runningServices.size()];
@@ -696,16 +698,16 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             });
         }
         if (tagCloud.isForceStopped) {
-            addChip(R.string.stopped, R.color.stopped);
+            addChip(R.string.stopped, ColorCodes.getAppForceStoppedIndicatorColor(mActivity));
         }
         if (!tagCloud.isAppEnabled) {
-            addChip(R.string.disabled_app, R.color.disabled_user);
+            addChip(R.string.disabled_app, ColorCodes.getAppDisabledIndicatorColor(mActivity));
         }
         if (tagCloud.isAppSuspended) {
-            addChip(R.string.suspended, R.color.stopped);
+            addChip(R.string.suspended, ColorCodes.getAppSuspendedIndicatorColor(mActivity));
         }
         if (tagCloud.isAppHidden) {
-            addChip(R.string.hidden, R.color.disabled_user);
+            addChip(R.string.hidden, ColorCodes.getAppHiddenIndicatorColor(mActivity));
         }
         magiskHiddenProcesses = tagCloud.magiskHiddenProcesses;
         if (tagCloud.isMagiskHideEnabled) {
@@ -718,7 +720,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         if (tagCloud.hasKeyStoreItems) {
             Chip chip;
             if (tagCloud.hasMasterKeyInKeyStore) {
-                chip = addChip(R.string.keystore, R.color.tracker);
+                chip = addChip(R.string.keystore, ColorCodes.getAppKeystoreIndicatorColor(mActivity));
             } else chip = addChip(R.string.keystore);
             chip.setOnClickListener(view -> new MaterialAlertDialogBuilder(mActivity)
                     .setTitle(R.string.keystore)
@@ -739,15 +741,16 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     .show());
         }
         if (!tagCloud.isBatteryOptimized) {
-            addChip(R.string.no_battery_optimization, R.color.red_orange).setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
-                    .setTitle(R.string.battery_optimization)
-                    .setMessage(R.string.enable_battery_optimization)
-                    .setNegativeButton(R.string.no, null)
-                    .setPositiveButton(R.string.yes, (dialog, which) -> {
-                        Runner.runCommand(new String[]{"dumpsys", "deviceidle", "whitelist", "-" + mPackageName});
-                        refreshDetails();
-                    })
-                    .show());
+            addChip(R.string.no_battery_optimization, ColorCodes.getAppNoBatteryOptimizationIndicatorColor(mActivity))
+                    .setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
+                            .setTitle(R.string.battery_optimization)
+                            .setMessage(R.string.enable_battery_optimization)
+                            .setNegativeButton(R.string.no, null)
+                            .setPositiveButton(R.string.yes, (dialog, which) -> {
+                                Runner.runCommand(new String[]{"dumpsys", "deviceidle", "whitelist", "-" + mPackageName});
+                                refreshDetails();
+                            })
+                            .show());
         }
         if (tagCloud.netPolicies > 0) {
             String[] readablePolicies = NetworkPolicyManagerCompat.getReadablePolicies(mActivity, tagCloud.netPolicies)
@@ -759,7 +762,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     .show());
         }
         if (tagCloud.ssaid != null && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            addChip(R.string.ssaid, R.color.red_orange).setOnClickListener(v -> {
+            addChip(R.string.ssaid, ColorCodes.getAppSsaidIndicatorColor(mActivity)).setOnClickListener(v -> {
                 ChangeSsaidDialog changeSsaidDialog = ChangeSsaidDialog.getInstance(mPackageName, mApplicationInfo.uid,
                         tagCloud.ssaid);
                 changeSsaidDialog.setSsaidChangedInterface((newSsaid, isSuccessful) -> {
@@ -783,12 +786,13 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             });
         }
         if (tagCloud.usesPlayAppSigning) {
-            addChip(R.string.uses_play_app_signing, R.color.disabled_user).setOnClickListener(v ->
-                    new MaterialAlertDialogBuilder(mActivity)
-                            .setTitle(R.string.uses_play_app_signing)
-                            .setMessage(R.string.uses_play_app_signing_description)
-                            .setNegativeButton(R.string.close, null)
-                            .show());
+            addChip(R.string.uses_play_app_signing, ColorCodes.getAppPlayAppSigningIndicatorColor(mActivity))
+                    .setOnClickListener(v ->
+                            new MaterialAlertDialogBuilder(mActivity)
+                                    .setTitle(R.string.uses_play_app_signing)
+                                    .setMessage(R.string.uses_play_app_signing_description)
+                                    .setNegativeButton(R.string.close, null)
+                                    .show());
         }
     }
 
@@ -1415,19 +1419,19 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     @NonNull
-    private Chip addChip(@StringRes int resId, @ColorRes int color) {
+    private Chip addChip(@StringRes int resId, @ColorInt int color) {
         Chip chip = (Chip) LayoutInflater.from(mActivity).inflate(R.layout.item_chip, mTagCloud, false);
         chip.setText(resId);
-        chip.setChipBackgroundColorResource(color);
+        chip.setChipBackgroundColor(ColorStateList.valueOf(color));
         mTagCloud.addView(chip);
         return chip;
     }
 
     @NonNull
-    private Chip addChip(CharSequence text, @ColorRes int color) {
+    private Chip addChip(CharSequence text, @ColorInt int color) {
         Chip chip = (Chip) LayoutInflater.from(mActivity).inflate(R.layout.item_chip, mTagCloud, false);
         chip.setText(text);
-        chip.setChipBackgroundColorResource(color);
+        chip.setChipBackgroundColor(ColorStateList.valueOf(color));
         mTagCloud.addView(chip);
         return chip;
     }

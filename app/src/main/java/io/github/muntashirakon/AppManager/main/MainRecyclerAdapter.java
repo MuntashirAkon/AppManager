@@ -24,6 +24,7 @@ import android.widget.SectionIndexer;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
 import androidx.annotation.UiThread;
@@ -52,6 +53,7 @@ import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
 public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecyclerAdapter.ViewHolder>
@@ -67,12 +69,13 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
 
     private final int mColorSurface;
     private final int mColorSurfaceVariant;
-    private final int mColorSurfaceDisabled;
-    private final int mColorStopped;
+    private final int mColorGreen;
     private final int mColorOrange;
     private final int mColorPrimary;
     private final int mColorSecondary;
-    private final int mColorRed;
+    private final int mQueryStringHighlight;
+    @ColorInt
+    private final int mHighlightColor;
 
     MainRecyclerAdapter(@NonNull MainActivity activity) {
         super();
@@ -82,13 +85,13 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
 
         mColorSurface = MaterialColors.getColor(mActivity, R.attr.colorSurface, MainRecyclerAdapter.class.getCanonicalName());
         mColorSurfaceVariant = MaterialColors.getColor(mActivity, R.attr.colorSurfaceVariant, MainRecyclerAdapter.class.getCanonicalName());
-        mColorSurfaceDisabled = ContextCompat.getColor(mActivity, R.color.disabled_user);
 
-        mColorStopped = ContextCompat.getColor(mActivity, R.color.stopped);
+        mColorGreen = ContextCompat.getColor(mActivity, R.color.stopped);
         mColorOrange = ContextCompat.getColor(mActivity, R.color.orange);
         mColorPrimary = ContextCompat.getColor(mActivity, R.color.textColorPrimary);
         mColorSecondary = ContextCompat.getColor(mActivity, R.color.textColorSecondary);
-        mColorRed = ContextCompat.getColor(mActivity, R.color.red);
+        mQueryStringHighlight = ColorCodes.getQueryStringHighlightColor(mActivity);
+        mHighlightColor = ColorCodes.getListItemSelectionColor(activity);
     }
 
     @GuardedBy("mAdapterList")
@@ -102,6 +105,11 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
             notifyDataSetChanged();
             notifySelectionChange();
         }
+    }
+
+    @Override
+    public int getHighlightColor() {
+        return mHighlightColor;
     }
 
     @GuardedBy("mAdapterList")
@@ -266,11 +274,11 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
         holder.itemView.setCardBackgroundColor(mColorSurface);
         // Divider colors: disabled > regular
         if (!item.isInstalled) {
-            holder.divider.setDividerColor(mColorRed);
+            holder.divider.setDividerColor(ColorCodes.getAppUninstalledIndicatorColor(mActivity));
         } else if (item.isDisabled) {
-            holder.divider.setDividerColor(mColorSurfaceDisabled);
+            holder.divider.setDividerColor(ColorCodes.getAppDisabledIndicatorColor(mActivity));
         } else if ((item.flags & ApplicationInfo.FLAG_STOPPED) != 0) { // Force-stopped: Dark cyan
-            holder.divider.setDividerColor(mColorStopped);
+            holder.divider.setDividerColor(ColorCodes.getAppForceStoppedIndicatorColor(mActivity));
         } else {
             holder.divider.setDividerColor(mColorSurfaceVariant);
         }
@@ -324,7 +332,7 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
         // Set app label
         if (!TextUtils.isEmpty(mSearchQuery) && item.label.toLowerCase(Locale.ROOT).contains(mSearchQuery)) {
             // Highlight searched query
-            holder.label.setText(UIUtils.getHighlightedText(item.label, mSearchQuery, mColorRed));
+            holder.label.setText(UIUtils.getHighlightedText(item.label, mSearchQuery, mQueryStringHighlight));
         } else holder.label.setText(item.label);
         // Set app label color to red if clearing user data not allowed
         if (item.isInstalled && (item.flags & ApplicationInfo.FLAG_ALLOW_CLEAR_USER_DATA) == 0) {
@@ -333,11 +341,11 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
         // Set package name
         if (!TextUtils.isEmpty(mSearchQuery) && item.packageName.toLowerCase(Locale.ROOT).contains(mSearchQuery)) {
             // Highlight searched query
-            holder.packageName.setText(UIUtils.getHighlightedText(item.packageName, mSearchQuery, mColorRed));
+            holder.packageName.setText(UIUtils.getHighlightedText(item.packageName, mSearchQuery, mQueryStringHighlight));
         } else holder.packageName.setText(item.packageName);
         // Set package name color to orange if the app has known tracker components
         if (item.trackerCount > 0)
-            holder.packageName.setTextColor(mColorOrange);
+            holder.packageName.setTextColor(ColorCodes.getComponentTrackerIndicatorColor(mActivity));
         else holder.packageName.setTextColor(mColorSecondary);
         // Set version (along with HW accelerated, debug and test only flags)
         CharSequence version = holder.version.getText();
@@ -351,7 +359,7 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
             UsageStatsManager mUsageStats;
             mUsageStats = mActivity.getSystemService(UsageStatsManager.class);
             if (mUsageStats != null && mUsageStats.isAppInactive(item.packageName))
-                holder.version.setTextColor(mColorStopped);
+                holder.version.setTextColor(mColorGreen);
             else holder.version.setTextColor(mColorSecondary);
         }
         // Set app type: system or user app (along with large heap, suspended, multi-arch,
@@ -393,14 +401,14 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
             if (item.isInstalled) {
                 if (item.backup.versionCode >= item.versionCode) {
                     // Up-to-date backup
-                    indicatorColor = mColorStopped;
+                    indicatorColor = ColorCodes.getBackupLatestIndicatorColor(mActivity);
                 } else {
                     // Outdated backup
-                    indicatorColor = mColorOrange;
+                    indicatorColor = ColorCodes.getBackupOutdatedIndicatorColor(mActivity);
                 }
             } else {
                 // App not installed
-                indicatorColor = mColorRed;
+                indicatorColor = ColorCodes.getBackupUninstalledIndicatorColor(mActivity);
             }
             holder.backupIndicator.setTextColor(indicatorColor);
             Backup backup = item.backup;

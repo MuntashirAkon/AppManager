@@ -18,7 +18,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SearchView;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -35,6 +34,7 @@ import java.util.Map;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.util.UiUtils;
 import io.github.muntashirakon.widget.RecyclerView;
@@ -242,7 +242,7 @@ public class SharedPrefsActivity extends BaseActivity implements
         private String[] mAdapterList;
         private Map<String, Object> mAdapterMap;
 
-        private final int mColorRed;
+        private final int mQueryStringHighlightColor;
 
         static class ViewHolder extends RecyclerView.ViewHolder {
             TextView itemName;
@@ -257,7 +257,7 @@ public class SharedPrefsActivity extends BaseActivity implements
 
         SharedPrefsListingAdapter(@NonNull SharedPrefsActivity activity) {
             mActivity = activity;
-            mColorRed = ContextCompat.getColor(activity, R.color.red);
+            mQueryStringHighlightColor = ColorCodes.getQueryStringHighlightColor(activity);
         }
 
         void setDefaultList(@NonNull Map<String, Object> list) {
@@ -287,7 +287,7 @@ public class SharedPrefsActivity extends BaseActivity implements
             String prefName = mAdapterList[position];
             if (mConstraint != null && prefName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
-                holder.itemName.setText(UIUtils.getHighlightedText(prefName, mConstraint, mColorRed));
+                holder.itemName.setText(UIUtils.getHighlightedText(prefName, mConstraint, mQueryStringHighlightColor));
             } else {
                 holder.itemName.setText(prefName);
             }

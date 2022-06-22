@@ -36,6 +36,7 @@ import java.util.Locale;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.util.UiUtils;
 
 import static io.github.muntashirakon.AppManager.misc.AdvancedSearchView.SEARCH_TYPE_REGEX;
@@ -174,14 +175,14 @@ public class ClassListingFragment extends Fragment implements AdvancedSearchView
 
         private final int mColorTransparent;
         private final int mColorSemiTransparent;
-        private final int mColorRed;
+        private final int mQueryStringHighlightColor;
 
         ClassListingAdapter(@NonNull Activity activity) {
             mLayoutInflater = activity.getLayoutInflater();
 
             mColorTransparent = Color.TRANSPARENT;
             mColorSemiTransparent = ContextCompat.getColor(activity, R.color.semi_transparent);
-            mColorRed = ContextCompat.getColor(activity, R.color.red);
+            mQueryStringHighlightColor = ColorCodes.getQueryStringHighlightColor(activity);
         }
 
         @UiThread
@@ -240,7 +241,7 @@ public class ClassListingFragment extends Fragment implements AdvancedSearchView
             TextView textView = (TextView) convertView;
             if (mConstraint != null && className.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
-                textView.setText(UIUtils.getHighlightedText(className, mConstraint, mColorRed));
+                textView.setText(UIUtils.getHighlightedText(className, mConstraint, mQueryStringHighlightColor));
             } else {
                 textView.setText(className);
             }

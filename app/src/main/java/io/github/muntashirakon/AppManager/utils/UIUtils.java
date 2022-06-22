@@ -27,6 +27,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.PluralsRes;
@@ -52,7 +53,7 @@ public class UIUtils {
 
     @NonNull
     public static Spannable getHighlightedText(@NonNull String text, @NonNull String constraint,
-                                               int color) {
+                                               @ColorInt int color) {
         Spannable spannable = sSpannableFactory.newSpannable(text);
         int start = text.toLowerCase(Locale.ROOT).indexOf(constraint);
         if (start == -1) return spannable;

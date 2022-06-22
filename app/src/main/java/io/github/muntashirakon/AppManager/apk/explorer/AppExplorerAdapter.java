@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -19,6 +20,7 @@ import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.fm.FileType;
+import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
 public class AppExplorerAdapter extends MultiSelectionView.Adapter<AppExplorerAdapter.ViewHolder> {
@@ -26,9 +28,12 @@ public class AppExplorerAdapter extends MultiSelectionView.Adapter<AppExplorerAd
 
     private final List<AdapterItem> adapterList = new ArrayList<>();
     private final AppExplorerActivity activity;
+    @ColorInt
+    private final int highlightColor;
 
     public AppExplorerAdapter(AppExplorerActivity activity) {
         this.activity = activity;
+        highlightColor = ColorCodes.getListItemSelectionColor(activity);
     }
 
     public void setFmList(List<AdapterItem> list) {
@@ -36,6 +41,11 @@ public class AppExplorerAdapter extends MultiSelectionView.Adapter<AppExplorerAd
         adapterList.addAll(list);
         notifySelectionChange();
         notifyDataSetChanged();
+    }
+
+    @Override
+    public int getHighlightColor() {
+        return highlightColor;
     }
 
     @NonNull

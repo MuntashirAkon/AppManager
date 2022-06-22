@@ -1,15 +1,7 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <resources>
-    <color name="colorAccent">@color/sand_tan_shadow</color>
-    <color name="colorSurface">#FF121212</color>
-    <color name="colorPrimary">@color/colorAccent</color>
-    <color name="colorSecondary">#FFE4BD97</color>
-    <color name="colorTertiary">#FFF0CDAB</color>
-
     <color name="textColorPrimary">@android:color/white</color>
     <color name="textColorSecondary">#FFBEBEBE</color>
-
-    <color name="color_primary_96">#F4121212</color>
 
     <color name="disabled_user">#BF4F1C14</color>
     <color name="highlight">@color/purple_shadow</color>

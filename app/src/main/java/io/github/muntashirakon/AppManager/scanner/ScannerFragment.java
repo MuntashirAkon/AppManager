@@ -19,11 +19,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.ColorInt;
-import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.collection.ArrayMap;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -54,6 +52,7 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
 import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
 import io.github.muntashirakon.util.UiUtils;
@@ -208,13 +207,13 @@ public class ScannerFragment extends Fragment {
     private void publishVirusTotalReport(@NonNull VtFileReport vtFileReport) {
         int positives = Objects.requireNonNull(vtFileReport.getPositives());
         CharSequence resultSummary = getString(R.string.vt_success, positives, vtFileReport.getTotal());
-        @ColorRes
+        @ColorInt
         int color;
         if (positives <= 3) {
-            color = R.color.stopped;
+            color = ColorCodes.getVirusTotalSafeIndicatorColor(mActivity);
         } else if (positives <= 12) {
-            color = R.color.tracker;
-        } else color = R.color.electric_red;
+            color = ColorCodes.getVirusTotalUnsafeIndicatorColor(mActivity);
+        } else color = ColorCodes.getVirusTotalExtremelyUnsafeIndicatorColor(mActivity);
         DialogTitleBuilder titleBuilder = new DialogTitleBuilder(mActivity)
                 .setTitle(getString(R.string.vt_success, positives, vtFileReport.getTotal()))
                 .setSubtitle(getString(R.string.vt_scan_date, vtFileReport.getScanDate()))
@@ -229,25 +228,25 @@ public class ScannerFragment extends Fragment {
         Spanned result;
         Map<String, VtFileReportScanItem> vtFileReportScanItems = vtFileReport.getScans();
         if (vtFileReportScanItems != null) {
-            @ColorInt int colorRed = ContextCompat.getColor(mActivity, R.color.electric_red);
-            @ColorInt int colorGreen = ContextCompat.getColor(mActivity, R.color.stopped);
+            int colorUnsafe = ColorCodes.getVirusTotalExtremelyUnsafeIndicatorColor(mActivity);
+            int colorSafe = ColorCodes.getVirusTotalSafeIndicatorColor(mActivity);
             ArrayList<Spannable> detectedList = new ArrayList<>();
             ArrayList<Spannable> undetectedList = new ArrayList<>();
             for (String avName : vtFileReportScanItems.keySet()) {
                 VtFileReportScanItem item = Objects.requireNonNull(vtFileReportScanItems.get(avName));
                 if (item.isDetected()) {
                     detectedList.add(new SpannableStringBuilder(getColoredText(getPrimaryText(mActivity, avName),
-                            colorRed)).append(getSmallerText(" (" + item.getVersion() + ")"))
+                            colorUnsafe)).append(getSmallerText(" (" + item.getVersion() + ")"))
                             .append("\n").append(item.getMalware()));
                 } else {
                     undetectedList.add(new SpannableStringBuilder(getColoredText(getPrimaryText(mActivity, avName),
-                            colorGreen)).append(getSmallerText(" (" + item.getVersion() + ")")));
+                            colorSafe)).append(getSmallerText(" (" + item.getVersion() + ")")));
                 }
             }
             detectedList.addAll(undetectedList);
             result = UiUtils.getOrderedList(detectedList);
         } else result = null;
-        vtTitleView.setText(getColoredText(resultSummary, ContextCompat.getColor(mActivity, color)));
+        vtTitleView.setText(getColoredText(resultSummary, color));
         if (result != null) {
             vtDescriptionView.setText(R.string.tap_to_see_details);
             vtContainerView.setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
@@ -343,9 +342,9 @@ public class ScannerFragment extends Fragment {
         // Add colours
         CharSequence coloredSummary;
         if (totalTrackersFound == 0) {
-            coloredSummary = getColoredText(summary, ContextCompat.getColor(mActivity, R.color.stopped));
+            coloredSummary = getColoredText(summary, ColorCodes.getScannerNoTrackerIndicatorColor(mActivity));
         } else {
-            coloredSummary = getColoredText(summary, ContextCompat.getColor(mActivity, R.color.electric_red));
+            coloredSummary = getColoredText(summary, ColorCodes.getScannerTrackerIndicatorColor(mActivity));
         }
 
         ((TextView) view.findViewById(R.id.tracker_title)).setText(coloredSummary);

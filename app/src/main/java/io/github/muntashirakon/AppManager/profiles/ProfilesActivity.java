@@ -47,6 +47,7 @@ import io.github.muntashirakon.AppManager.details.LauncherIconCreator;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 import io.github.muntashirakon.util.UiUtils;
 
@@ -204,7 +205,7 @@ public class ProfilesActivity extends BaseActivity {
 
         private final int mColorTransparent;
         private final int mColorSemiTransparent;
-        private final int mColorRed;
+        private final int mQueryStringHighlightColor;
 
         static class ViewHolder {
             TextView item_name;
@@ -217,7 +218,7 @@ public class ProfilesActivity extends BaseActivity {
 
             mColorTransparent = Color.TRANSPARENT;
             mColorSemiTransparent = ContextCompat.getColor(activity, R.color.semi_transparent);
-            mColorRed = ContextCompat.getColor(activity, R.color.red);
+            mQueryStringHighlightColor = ColorCodes.getQueryStringHighlightColor(activity);
         }
 
         void setDefaultList(@NonNull HashMap<String, CharSequence> list) {
@@ -257,7 +258,7 @@ public class ProfilesActivity extends BaseActivity {
             String profName = mAdapterList[position];
             if (mConstraint != null && profName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
-                viewHolder.item_name.setText(UIUtils.getHighlightedText(profName, mConstraint, mColorRed));
+                viewHolder.item_name.setText(UIUtils.getHighlightedText(profName, mConstraint, mQueryStringHighlightColor));
             } else {
                 viewHolder.item_name.setText(profName);
             }

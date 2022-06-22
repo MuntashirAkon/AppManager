@@ -15,7 +15,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -32,6 +31,7 @@ import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 
 public class WhatsNewDialogFragment extends DialogFragment {
     public static final String TAG = WhatsNewDialogFragment.class.getSimpleName();
@@ -106,8 +106,8 @@ public class WhatsNewDialogFragment extends DialogFragment {
         private final Typeface typefaceMedium;
 
         WhatsNewRecyclerAdapter() {
-            colorAdd = ContextCompat.getColor(mActivity, R.color.stopped);
-            colorRemove = ContextCompat.getColor(mActivity, R.color.electric_red);
+            colorAdd = ColorCodes.getWhatsNewPlusIndicatorColor(mActivity);
+            colorRemove = ColorCodes.getWhatsNewMinusIndicatorColor(mActivity);
             colorNeutral = UIUtils.getTextColorPrimary(mActivity);
             typefaceNormal = Typeface.create("sans-serif", Typeface.NORMAL);
             typefaceMedium = Typeface.create("sans-serif-medium", Typeface.NORMAL);

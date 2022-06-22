@@ -14,9 +14,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
-import androidx.core.content.ContextCompat;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
@@ -35,22 +35,26 @@ import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
 public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAdapter.ViewHolder> {
     private final RunningAppsActivity mActivity;
     private final RunningAppsViewModel mModel;
-    private final int mColorRed;
+    private final int mQueryStringHighlightColor;
     private final ArrayList<ProcessItem> mProcessItems = new ArrayList<>();
     private final int mColorSurface;
+    @ColorInt
+    private final int mHighlightColor;
 
     RunningAppsAdapter(@NonNull RunningAppsActivity activity) {
         super();
         mActivity = activity;
         mModel = activity.mModel;
         mColorSurface = MaterialColors.getColor(mActivity, R.attr.colorSurface, MainRecyclerAdapter.class.getCanonicalName());
-        mColorRed = ContextCompat.getColor(activity, R.color.red);
+        mQueryStringHighlightColor = ColorCodes.getQueryStringHighlightColor(activity);
+        mHighlightColor = ColorCodes.getListItemSelectionColor(activity);
     }
 
     void setDefaultList(List<ProcessItem> processItems) {
@@ -60,6 +64,11 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAd
         }
         notifyDataSetChanged();
         notifySelectionChange();
+    }
+
+    @Override
+    public int getHighlightColor() {
+        return mHighlightColor;
     }
 
     @NonNull
@@ -85,7 +94,7 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAd
         // Set process name
         if (mModel.getQuery() != null && processName.toLowerCase(Locale.ROOT).contains(mModel.getQuery())) {
             // Highlight searched query
-            holder.processName.setText(UIUtils.getHighlightedText(processName, mModel.getQuery(), mColorRed));
+            holder.processName.setText(UIUtils.getHighlightedText(processName, mModel.getQuery(), mQueryStringHighlightColor));
         } else {
             holder.processName.setText(processName);
         }
