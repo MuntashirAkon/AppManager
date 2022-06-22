@@ -1137,4 +1137,5 @@
     <string name="log_stop_recording">停止录制</string>
     <string name="item_select">选择</string>
     <string name="app_explorer">应用浏览器</string>
+    <string name="netpolicy_cannot_be_modified_for_core_apps">不允许修改 Android 核心应用的网络策略。</string>
 </resources>
