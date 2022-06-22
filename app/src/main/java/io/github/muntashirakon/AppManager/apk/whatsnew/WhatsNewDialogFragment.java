@@ -20,6 +20,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,14 +28,13 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textview.MaterialTextView;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class WhatsNewDialogFragment extends DialogFragment {
-    public static final String TAG = "WhatsNewDialogFragment";
+    public static final String TAG = WhatsNewDialogFragment.class.getSimpleName();
     public static final String ARG_NEW_PKG_INFO = "ARG_NEW_PKG_INFO";
     public static final String ARG_OLD_PKG_INFO = "ARG_OLD_PKG_INFO";
     public static final String ARG_INSTALL_NAME = "ARG_INSTALL_NAME";
@@ -47,55 +47,46 @@ public class WhatsNewDialogFragment extends DialogFragment {
     }
 
     public void setOnTriggerInstall(InstallInterface installInterface) {
-        this.installInterface = installInterface;
+        this.mInstallInterface = installInterface;
     }
 
-    InstallInterface installInterface;
-    FragmentActivity activity;
-    WhatsNewRecyclerAdapter adapter;
-    PackageInfo newPkgInfo;
-    PackageInfo oldPkgInfo;
+    private InstallInterface mInstallInterface;
+    private FragmentActivity mActivity;
+    private WhatsNewRecyclerAdapter mAdapter;
+    private PackageInfo mNewPkgInfo;
+    private PackageInfo mOldPkgInfo;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        activity = requireActivity();
-        newPkgInfo = requireArguments().getParcelable(ARG_NEW_PKG_INFO);
-        oldPkgInfo = requireArguments().getParcelable(ARG_OLD_PKG_INFO);
+        WhatsNewDialogViewModel viewModel = new ViewModelProvider(this).get(WhatsNewDialogViewModel.class);
+        mActivity = requireActivity();
+        mNewPkgInfo = requireArguments().getParcelable(ARG_NEW_PKG_INFO);
+        mOldPkgInfo = requireArguments().getParcelable(ARG_OLD_PKG_INFO);
         final String installName = requireArguments().getString(ARG_INSTALL_NAME);
         String versionInfo = requireArguments().getString(ARG_VERSION_INFO);
-        LayoutInflater inflater = LayoutInflater.from(activity);
-        if (inflater == null) return super.onCreateDialog(savedInstanceState);
-        View view = inflater.inflate(R.layout.dialog_whats_new, null);
+        View view = View.inflate(mActivity, R.layout.dialog_whats_new, null);
         RecyclerView recyclerView = (RecyclerView) view;
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
-        adapter = new WhatsNewRecyclerAdapter();
-        recyclerView.setAdapter(adapter);
-        new Thread(() -> {
-            ApkWhatsNewFinder.Change[][] changes = ApkWhatsNewFinder.getInstance().getWhatsNew(newPkgInfo, oldPkgInfo);
-            List<ApkWhatsNewFinder.Change> changeList = new ArrayList<>();
-            for (ApkWhatsNewFinder.Change[] changes1 : changes) {
-                if (changes1.length > 0) Collections.addAll(changeList, changes1);
-            }
-            if (isDetached()) return;
-            if (changeList.size() == 0) {
-                changeList.add(new ApkWhatsNewFinder.Change(ApkWhatsNewFinder.CHANGE_INFO, getString(R.string.no_changes)));
-            }
-            activity.runOnUiThread(() -> adapter.setAdapterList(changeList));
-        }).start();
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity)
+        recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+        mAdapter = new WhatsNewRecyclerAdapter();
+        recyclerView.setAdapter(mAdapter);
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(mActivity)
                 .setTitle(R.string.whats_new)
                 .setView(view);
-        if (installInterface != null) {
-            PackageManager pm = activity.getPackageManager();
+        if (mInstallInterface != null) {
+            PackageManager pm = mActivity.getPackageManager();
             builder.setCustomTitle(UIUtils.getDialogTitle(requireActivity(),
-                            pm.getApplicationLabel(newPkgInfo.applicationInfo),
-                            pm.getApplicationIcon(newPkgInfo.applicationInfo),
+                            pm.getApplicationLabel(mNewPkgInfo.applicationInfo),
+                            pm.getApplicationIcon(mNewPkgInfo.applicationInfo),
                             versionInfo))
-                    .setNegativeButton(R.string.cancel, (dialog, which) -> installInterface.triggerCancel())
-                    .setPositiveButton(installName, (dialog, which) -> installInterface.triggerInstall());
-        } else builder.setNegativeButton(R.string.ok, null);
+                    .setNegativeButton(R.string.cancel, (dialog, which) -> mInstallInterface.triggerCancel())
+                    .setPositiveButton(installName, (dialog, which) -> mInstallInterface.triggerInstall());
+        } else {
+            builder.setNegativeButton(R.string.ok, null);
+        }
+        viewModel.getChangesLiveData().observe(this, changes -> mAdapter.setAdapterList(changes));
+        viewModel.loadChanges(mNewPkgInfo, mOldPkgInfo);
         return builder.create();
     }
 
@@ -115,9 +106,9 @@ public class WhatsNewDialogFragment extends DialogFragment {
         private final Typeface typefaceMedium;
 
         WhatsNewRecyclerAdapter() {
-            colorAdd = ContextCompat.getColor(activity, R.color.stopped);
-            colorRemove = ContextCompat.getColor(activity, R.color.electric_red);
-            colorNeutral = UIUtils.getTextColorPrimary(activity);
+            colorAdd = ContextCompat.getColor(mActivity, R.color.stopped);
+            colorRemove = ContextCompat.getColor(mActivity, R.color.electric_red);
+            colorNeutral = UIUtils.getTextColorPrimary(mActivity);
             typefaceNormal = Typeface.create("sans-serif", Typeface.NORMAL);
             typefaceMedium = Typeface.create("sans-serif-medium", Typeface.NORMAL);
         }
@@ -139,8 +130,8 @@ public class WhatsNewDialogFragment extends DialogFragment {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             ApkWhatsNewFinder.Change change = mAdapterList.get(position);
-            if (change.value.startsWith(newPkgInfo.packageName)) {
-                change.value = change.value.replaceFirst(newPkgInfo.packageName, "");
+            if (change.value.startsWith(mNewPkgInfo.packageName)) {
+                change.value = change.value.replaceFirst(mNewPkgInfo.packageName, "");
             }
             switch (change.changeType) {
                 case ApkWhatsNewFinder.CHANGE_ADD:
