@@ -967,7 +967,11 @@ public class Path implements Comparable<Path> {
     @NonNull
     public OutputStream openOutputStream(boolean append) throws IOException {
         if (mDocumentFile instanceof ExtendedRawDocumentFile) {
-            return Objects.requireNonNull(getFile()).newOutputStream(append);
+            try {
+                return Objects.requireNonNull(getFile()).newOutputStream(append);
+            } catch (IOException e) {
+                throw new IOException("Could not open file for writing: " + mDocumentFile.getUri());
+            }
         } else if (mDocumentFile instanceof VirtualDocumentFile) {
             // For now, none of the virtual document files support writing
             throw new IOException("VFS does not yet support writing.");
@@ -982,10 +986,14 @@ public class Path implements Comparable<Path> {
 
     @NonNull
     public InputStream openInputStream() throws IOException {
-        if (mDocumentFile instanceof ExtendedRawDocumentFile) {
-            return Objects.requireNonNull(getFile()).newInputStream();
-        } else if (mDocumentFile instanceof VirtualDocumentFile) {
-            return ((VirtualDocumentFile<?>) mDocumentFile).openInputStream();
+        try {
+            if (mDocumentFile instanceof ExtendedRawDocumentFile) {
+                return Objects.requireNonNull(getFile()).newInputStream();
+            } else if (mDocumentFile instanceof VirtualDocumentFile) {
+                return ((VirtualDocumentFile<?>) mDocumentFile).openInputStream();
+            }
+        } catch (IOException e) {
+            throw new IOException("Could not open file for reading: " + mDocumentFile.getUri(), e);
         }
         InputStream is = mContext.getContentResolver().openInputStream(mDocumentFile.getUri());
         if (is == null) {
