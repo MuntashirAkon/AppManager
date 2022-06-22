@@ -21,6 +21,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.RemoteException;
+import android.os.UserHandleHidden;
 import android.provider.Settings;
 import android.text.SpannableStringBuilder;
 import android.text.format.Formatter;
@@ -412,6 +413,10 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 Log.e(TAG, "No DUMP permission.");
             }
         } else if (itemId == R.id.action_net_policy) {
+            if (!UserHandleHidden.isApp(mApplicationInfo.uid)) {
+                UIUtils.displayLongToast(R.string.netpolicy_cannot_be_modified_for_core_apps);
+                return true;
+            }
             ArrayMap<Integer, String> netPolicyMap = NetworkPolicyManagerCompat.getAllReadablePolicies(mActivity);
             int[] polices = new int[netPolicyMap.size()];
             String[] policyStrings = new String[netPolicyMap.size()];

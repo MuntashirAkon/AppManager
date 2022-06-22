@@ -1211,4 +1211,5 @@
     <string name="apk_checksums">APK Checksums</string>
     <string name="item_select">Select</string>
     <string name="app_explorer">App Explorer</string>
+    <string name="netpolicy_cannot_be_modified_for_core_apps">Net policy cannot be modified for Android core apps.</string>
 </resources>

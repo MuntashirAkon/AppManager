@@ -6,6 +6,7 @@ import android.content.Context;
 import android.net.INetworkPolicyManager;
 import android.net.NetworkPolicyManager;
 import android.os.RemoteException;
+import android.os.UserHandleHidden;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -16,11 +17,15 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
+import io.github.muntashirakon.AppManager.logs.Log;
 
 public final class NetworkPolicyManagerCompat {
+    public static final String TAG = NetworkPolicyManagerCompat.class.getSimpleName();
+
     /*
      * The policies below are taken from LineageOS
      * Source: https://github.com/LineageOS/android_frameworks_base/blob/lineage-18.1/core/java/android/net/NetworkPolicyManager.java
@@ -85,7 +90,11 @@ public final class NetworkPolicyManagerCompat {
     }
 
     public static void setUidPolicy(int uid, int policies) throws RemoteException {
-        getNetPolicyManager().setUidPolicy(uid, policies);
+        if (UserHandleHidden.isApp(uid)) {
+            getNetPolicyManager().setUidPolicy(uid, policies);
+        } else {
+            Log.w(TAG, String.format(Locale.ROOT, "Cannot set policy %d to uid %d", policies, uid));
+        }
     }
 
     @NonNull
