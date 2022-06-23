@@ -42,11 +42,6 @@ public class BatchOpsResultsActivity extends BaseActivity {
     private Bundle mArgs;
 
     @Override
-    protected boolean displaySplashScreen() {
-        return false;
-    }
-
-    @Override
     protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
         if (getIntent() == null) {
             finish();

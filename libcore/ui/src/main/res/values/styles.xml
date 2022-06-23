@@ -9,6 +9,7 @@
     <style name="AppTheme" parent="AppThemeOverlay">
         <item name="navigationIcon">@drawable/ic_keyboard_backspace_black_24dp</item>
 
+        <item name="materialFullScreenAlertDialogTheme">@style/AppTheme</item>
         <item name="bottomSheetDialogTheme">@style/AppTheme.BottomSheetDialog</item>
         <item name="checkboxStyle">@style/Widget.AppTheme.CompoundButton.CheckBox</item>
         <item name="chipStyle">@style/Widget.AppTheme.Chip.Assist</item>
@@ -32,6 +33,10 @@
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
     </style>
 
+    <style name="AppTheme.Black" parent="AppTheme">
+        <item name="materialFullScreenAlertDialogTheme">@style/AppTheme.Black</item>
+    </style>
+
     <style name="AppTheme.TransparentBackground" parent="AppTheme">
         <item name="android:background">@null</item>
         <item name="background">@null</item>
@@ -41,6 +46,10 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowAnimationStyle">@null</item>
         <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.TransparentBackground.Black" parent="AppTheme.TransparentBackground">
+        <item name="materialFullScreenAlertDialogTheme">@style/AppTheme.Black</item>
     </style>
 
     <!-- Animation for full-screen alert dialog -->

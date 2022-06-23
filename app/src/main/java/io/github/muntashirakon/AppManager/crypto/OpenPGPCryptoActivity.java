@@ -26,8 +26,8 @@ public class OpenPGPCryptoActivity extends BaseActivity {
             });
 
     @Override
-    protected boolean displaySplashScreen() {
-        return false;
+    protected boolean getTransparentBackground() {
+        return true;
     }
 
     @Override

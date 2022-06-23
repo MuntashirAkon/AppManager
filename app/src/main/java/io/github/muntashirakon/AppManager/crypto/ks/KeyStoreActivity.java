@@ -26,7 +26,7 @@ public class KeyStoreActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AppearanceUtils.applyToActivity(this);
+        AppearanceUtils.applyToActivity(this, true);
         if (getIntent() != null) {
             onNewIntent(getIntent());
         } else finish();

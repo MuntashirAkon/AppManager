@@ -70,11 +70,6 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
     LinearProgressIndicator progressIndicator;
 
     @Override
-    protected boolean displaySplashScreen() {
-        return false;
-    }
-
-    @Override
     protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
         setContentView(R.layout.activity_apps_profile);
         setSupportActionBar(findViewById(R.id.toolbar));

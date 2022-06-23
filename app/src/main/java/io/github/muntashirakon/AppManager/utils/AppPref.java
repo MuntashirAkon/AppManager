@@ -16,6 +16,7 @@ import android.view.View;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StyleRes;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import java.io.File;
@@ -56,6 +57,9 @@ public class AppPref {
         PREF_APP_OP_SHOW_DEFAULT_BOOL,
         PREF_APP_OP_SORT_ORDER_INT,
         PREF_APP_THEME_INT,
+        PREF_APP_THEME_CUSTOM_INT,
+        // This is just a placeholder to prevent crash
+        PREF_APP_THEME_PURE_BLACK_BOOL,
         // We store this in plain text because if the attackers attack us, they can also attack the other apps
         PREF_AUTHORIZATION_KEY_STR,
 
@@ -317,6 +321,34 @@ public class AppPref {
         return getInt(PrefKey.PREF_LAYOUT_ORIENTATION_INT);
     }
 
+    @StyleRes
+    public static int getAppTheme() {
+        switch (getInt(PrefKey.PREF_APP_THEME_CUSTOM_INT)) {
+            case 1: // Full black theme
+                return R.style.AppTheme_Black;
+            default: // Normal theme
+                return R.style.AppTheme;
+        }
+    }
+
+    @StyleRes
+    public static int getTransparentAppTheme() {
+        switch (getInt(PrefKey.PREF_APP_THEME_CUSTOM_INT)) {
+            case 1: // Full black theme
+                return R.style.AppTheme_TransparentBackground_Black;
+            default: // Normal theme
+                return R.style.AppTheme_TransparentBackground;
+        }
+    }
+
+    public static boolean isPureBlackTheme() {
+        return getInt(PrefKey.PREF_APP_THEME_CUSTOM_INT) == 1;
+    }
+
+    public static void setPureBlackTheme(boolean enabled) {
+        set(PrefKey.PREF_APP_THEME_CUSTOM_INT, enabled ? 1 : 0);
+    }
+
     public static void set(PrefKey key, Object value) {
         getInstance().setPref(key, value);
     }
@@ -429,6 +461,7 @@ public class AppPref {
             case PREF_MAIN_WINDOW_SORT_REVERSE_BOOL:
             case PREF_LOG_VIEWER_EXPAND_BY_DEFAULT_BOOL:
             case PREF_LOG_VIEWER_OMIT_SENSITIVE_INFO_BOOL:
+            case PREF_APP_THEME_PURE_BLACK_BOOL:
                 return false;
             case PREF_APP_OP_SHOW_DEFAULT_BOOL:
             case PREF_SHOW_DISCLAIMER_BOOL:
@@ -437,6 +470,7 @@ public class AppPref {
             case PREF_VIRUS_TOTAL_PROMPT_BEFORE_UPLOADING_BOOL:
                 return true;
             case PREF_CONCURRENCY_THREAD_COUNT_INT:
+            case PREF_APP_THEME_CUSTOM_INT:
                 return 0;
             case PREF_LAST_VERSION_CODE_LONG:
                 return 0L;

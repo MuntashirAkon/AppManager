@@ -16,10 +16,12 @@ import android.view.ViewGroup;
 import android.view.WindowInsets;
 import android.view.inputmethod.InputMethodManager;
 
+import androidx.annotation.AttrRes;
 import androidx.annotation.Dimension;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.Px;
+import androidx.annotation.StyleRes;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
@@ -52,6 +54,13 @@ public final class UiUtils {
     @Dimension
     public static int pxToDp(@NonNull Context context, @Px int pixel) {
         return (int) ((float) pixel / context.getResources().getDisplayMetrics().density);
+    }
+
+    @StyleRes
+    public static int getStyle(@NonNull Context context, @AttrRes int resId) {
+        TypedValue typedValue = new TypedValue();
+        context.getTheme().resolveAttribute(resId, typedValue, true);
+        return typedValue.data;
     }
 
     public static void hideKeyboard(@NonNull View v) {

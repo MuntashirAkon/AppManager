@@ -1,5 +1,6 @@
 <!-- SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later -->
 <resources>
+    <attr name="materialFullScreenAlertDialogTheme" format="reference" />
     <declare-styleable name="FlowLayout">
         <!-- Constrains items to a single horizontal line. By default, this is false and items will reflow to multiple
              lines. If this is set to true, the view should be wrapped inside a HorizontalScrollView. -->

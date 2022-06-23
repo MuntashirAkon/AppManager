@@ -30,7 +30,6 @@ import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.SecurityAndOpsViewModel;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
-import io.github.muntashirakon.AppManager.utils.appearance.AppearanceUtils;
 
 public class SplashActivity extends AppCompatActivity {
     public static final String TAG = SplashActivity.class.getSimpleName();
@@ -57,9 +56,10 @@ public class SplashActivity extends AppCompatActivity {
 
     @Override
     protected final void onCreate(@Nullable Bundle savedInstanceState) {
+        // Set theme
+        setTheme(AppPref.isPureBlackTheme() ? R.style.AppTheme_Splash_Black : R.style.AppTheme_Splash);
         super.onCreate(savedInstanceState);
         SplashScreen.installSplashScreen(this);
-        AppearanceUtils.applyToActivity(this);
         setContentView(R.layout.activity_authentication);
         ((TextView) findViewById(R.id.version)).setText(String.format(Locale.ROOT, "%s (%d)",
                 BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));

@@ -7,6 +7,10 @@
         <item name="postSplashScreenTheme">@style/AppTheme</item>
     </style>
 
+    <style name="AppTheme.Splash.Black" parent="AppTheme.Splash">
+        <item name="postSplashScreenTheme">@style/AppTheme.Black</item>
+    </style>
+
     <style name="AppTheme.AppWidgetContainerParent" parent="@android:style/Theme.DeviceDefault">
         <item name="appWidgetRadius">24dp</item>
         <item name="appWidgetPadding">16dp</item>

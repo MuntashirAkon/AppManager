@@ -56,7 +56,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected final void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AppearanceUtils.applyToActivity(this);
+        AppearanceUtils.applyToActivity(this, getTransparentBackground());
         if (Ops.isAuthenticated()) {
             Log.d(TAG, "Already authenticated.");
             onAuthenticated(savedInstanceState);
@@ -111,8 +111,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected abstract void onAuthenticated(@Nullable Bundle savedInstanceState);
 
-    protected boolean displaySplashScreen() {
-        return true;
+    protected boolean getTransparentBackground() {
+        return false;
     }
 
     @CallSuper

@@ -43,6 +43,7 @@ import com.google.android.material.resources.MaterialAttributes;
 import com.google.android.material.shape.MaterialShapeDrawable;
 
 import io.github.muntashirakon.ui.R;
+import io.github.muntashirakon.util.UiUtils;
 
 import static com.google.android.material.theme.overlay.MaterialThemeOverlay.wrap;
 
@@ -117,7 +118,8 @@ public class AlertDialogBuilder extends AlertDialog.Builder {
     }
 
     public AlertDialogBuilder(@NonNull Context context, boolean fullScreenMode) {
-        this(context, supportsFullScreen(context, fullScreenMode) ? R.style.AppTheme : 0, fullScreenMode);
+        this(context, supportsFullScreen(context, fullScreenMode) ?
+                UiUtils.getStyle(context, R.attr.materialFullScreenAlertDialogTheme) : 0, fullScreenMode);
     }
 
     public AlertDialogBuilder(@NonNull Context context, @StyleRes int overrideThemeResId) {

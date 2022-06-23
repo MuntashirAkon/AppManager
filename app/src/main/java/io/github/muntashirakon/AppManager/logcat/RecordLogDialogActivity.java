@@ -12,8 +12,8 @@ public class RecordLogDialogActivity extends BaseActivity {
     public static final String EXTRA_QUERY_SUGGESTIONS = "suggestions";
 
     @Override
-    protected boolean displaySplashScreen() {
-        return false;
+    protected boolean getTransparentBackground() {
+        return true;
     }
 
     @Override

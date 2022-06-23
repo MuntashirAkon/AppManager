@@ -8,6 +8,7 @@ import android.content.ComponentCallbacks;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.SparseArray;
+import android.util.SparseBooleanArray;
 import android.util.SparseIntArray;
 import android.view.Window;
 
@@ -28,8 +29,8 @@ import io.github.muntashirakon.AppManager.utils.LangUtils;
 public final class AppearanceUtils {
     public static final String TAG = AppearanceUtils.class.getSimpleName();
 
-    public static void applyToActivity(@NonNull FragmentActivity activity) {
-        // TODO: 23/6/22 Do something during activity creation
+    public static void applyToActivity(@NonNull FragmentActivity activity, boolean transparentBackground) {
+        activity.setTheme(transparentBackground ? AppPref.getTransparentAppTheme() : AppPref.getAppTheme());
     }
 
     public static void init(@NonNull Application application) {
@@ -41,11 +42,13 @@ public final class AppearanceUtils {
     public static class ActivityAppearanceCallback implements Application.ActivityLifecycleCallbacks {
         private final SparseArray<Locale> mLastLocales = new SparseArray<>();
         private final SparseIntArray mLastLayoutDirection = new SparseIntArray();
+        private final SparseBooleanArray mLastAppTheme = new SparseBooleanArray();
 
         @Override
         public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
             mLastLocales.put(activity.hashCode(), LangUtils.applyLocaleToActivity(activity));
             mLastLayoutDirection.put(activity.hashCode(), AppPref.getLayoutOrientation());
+            mLastAppTheme.put(activity.hashCode(), AppPref.isPureBlackTheme());
             AppCompatDelegate.setDefaultNightMode(AppPref.getInt(AppPref.PrefKey.PREF_APP_THEME_INT));
             Window window = activity.getWindow();
             WindowCompat.setDecorFitsSystemWindows(window, false);
@@ -60,6 +63,10 @@ public final class AppearanceUtils {
             }
             if (!Objects.equals(mLastLayoutDirection.get(activity.hashCode()), AppPref.getLayoutOrientation())) {
                 Log.d(TAG, "Layout orientation changed in activity " + activity.getComponentName());
+                ActivityCompat.recreate(activity);
+            }
+            if (!Objects.equals(mLastAppTheme.get(activity.hashCode()), AppPref.isPureBlackTheme())) {
+                Log.d(TAG, "App theme changed in activity " + activity.getComponentName());
                 ActivityCompat.recreate(activity);
             }
         }
@@ -84,6 +91,7 @@ public final class AppearanceUtils {
         public void onActivityDestroyed(@NonNull Activity activity) {
             mLastLocales.delete(activity.hashCode());
             mLastLayoutDirection.delete(activity.hashCode());
+            mLastAppTheme.delete(activity.hashCode());
         }
     }
 

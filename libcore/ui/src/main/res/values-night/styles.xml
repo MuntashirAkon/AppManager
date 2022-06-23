@@ -5,4 +5,15 @@
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
+
+    <style name="AppTheme.Black" parent="AppTheme">
+        <item name="android:colorBackground">#000</item>
+        <item name="colorSurface">#000</item>
+        <item name="materialFullScreenAlertDialogTheme">@style/AppTheme.Black</item>
+    </style>
+
+    <style name="AppTheme.TransparentBackground.Black" parent="AppTheme.TransparentBackground">
+        <item name="colorSurface">#000</item>
+        <item name="materialFullScreenAlertDialogTheme">@style/AppTheme.Black</item>
+    </style>
 </resources>
