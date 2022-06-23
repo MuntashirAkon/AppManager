@@ -1175,4 +1175,5 @@
     <string name="pkcs12_keystore">KeyStore PKCS #12 (P12)</string>
     <string name="intent_firewall_and_disable">IFW + disabilita</string>
     <string name="uses_play_app_signing_description">Questa app contiene alcuni markers che indicano che <i>potrebbe</i> usare <a href="https://support.google.com/googleplay/android-developer/answer/9842756">Firma Play App</a>. Con questo schema, le chiavi per firmare sono memorizzate su servers di Google, e Google è responsabile per la firma dell\'app. Nota che le informazioni sulla firma che corrispondono è l\'unico modo per verificare che l\'app non è stata modificata da qualcuno oltre allo sviluppatore (e in questo caso, anche Google).</string>
+    <string name="netpolicy_cannot_be_modified_for_core_apps">La politica di rete non può essere modificata per le applicazioni principali di Android.</string>
 </resources>
