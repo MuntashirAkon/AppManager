@@ -313,6 +313,10 @@ public class AppPref {
         return selectedStatus;
     }
 
+    public static int getLayoutOrientation() {
+        return getInt(PrefKey.PREF_LAYOUT_ORIENTATION_INT);
+    }
+
     public static void set(PrefKey key, Object value) {
         getInstance().setPref(key, value);
     }

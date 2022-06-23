@@ -149,6 +149,7 @@ public class MainPreferences extends PreferenceFragment {
                     .setPositiveButton(R.string.apply, (dialog, which) -> {
                         AppPref.set(AppPref.PrefKey.PREF_APP_THEME_INT, currentTheme);
                         AppCompatDelegate.setDefaultNightMode(currentTheme);
+                        activity.getSupportFragmentManager().popBackStackImmediate();
                         appTheme.setSummary(themes[THEME_CONST.indexOf(currentTheme)]);
                     })
                     .setNegativeButton(R.string.cancel, null)
@@ -157,7 +158,7 @@ public class MainPreferences extends PreferenceFragment {
         });
         // Layout orientation
         final String[] layoutOrientations = getResources().getStringArray(R.array.layout_orientations);
-        currentLayoutOrientation = AppPref.getInt(AppPref.PrefKey.PREF_LAYOUT_ORIENTATION_INT);
+        currentLayoutOrientation = AppPref.getLayoutOrientation();
         Preference layoutOrientation = Objects.requireNonNull(findPreference("layout_orientation"));
         layoutOrientation.setSummary(layoutOrientations[LAYOUT_ORIENTATION_CONST.indexOf(currentLayoutOrientation)]);
         layoutOrientation.setOnPreferenceClickListener(preference -> {

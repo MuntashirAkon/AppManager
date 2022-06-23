@@ -3,89 +3,31 @@
 package io.github.muntashirakon.AppManager.utils;
 
 import android.app.Activity;
-import android.app.Application;
-import android.content.ComponentCallbacks;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.LocaleList;
+import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.collection.ArrayMap;
-import androidx.core.app.ActivityCompat;
 import androidx.core.os.ConfigurationCompat;
 
-import java.util.HashMap;
 import java.util.IllformedLocaleException;
 import java.util.LinkedHashSet;
 import java.util.Locale;
-import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.logs.Log;
 
 public final class LangUtils {
     public static final String LANG_AUTO = "auto";
     public static final String LANG_DEFAULT = "en";
 
     private static ArrayMap<String, Locale> sLocaleMap;
-
-    public static void init(@NonNull Application application) {
-        application.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
-            private final HashMap<ComponentName, Locale> mLastLocales = new HashMap<>();
-            @Override
-            public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
-                mLastLocales.put(activity.getComponentName(), applyLocaleToActivity(activity));
-            }
-
-            @Override
-            public void onActivityStarted(@NonNull Activity activity) {
-                if (!Objects.equals(mLastLocales.get(activity.getComponentName()), getFromPreference(activity))) {
-                    Log.d("LangUtils", "Locale changed in activity " + activity.getComponentName());
-                    ActivityCompat.recreate(activity);
-                }
-            }
-
-            @Override
-            public void onActivityResumed(@NonNull Activity activity) {
-            }
-
-            @Override
-            public void onActivityPaused(@NonNull Activity activity) {
-            }
-
-            @Override
-            public void onActivityStopped(@NonNull Activity activity) {
-            }
-
-            @Override
-            public void onActivitySaveInstanceState(@NonNull Activity activity, @NonNull Bundle outState) {
-            }
-
-            @Override
-            public void onActivityDestroyed(@NonNull Activity activity) {
-                mLastLocales.remove(activity.getComponentName());
-            }
-        });
-        application.registerComponentCallbacks(new ComponentCallbacks() {
-            @Override
-            public void onConfigurationChanged(@NonNull Configuration newConfig) {
-                applyLocale(application);
-            }
-
-            @Override
-            public void onLowMemory() {
-            }
-        });
-        applyLocale(application);
-    }
 
     public static void setAppLanguages(@NonNull Context context) {
         if (sLocaleMap == null) sLocaleMap = new ArrayMap<>();
@@ -171,7 +113,7 @@ public final class LangUtils {
         return locale;
     }
 
-    private static Locale applyLocale(Context context) {
+    public static Locale applyLocale(Context context) {
         return applyLocale(context, LangUtils.getFromPreference(context));
     }
 
@@ -197,10 +139,19 @@ public final class LangUtils {
         }
 
         conf = new Configuration(conf);
+        // Set locale
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             setLocaleApi24(conf, locale);
         } else {
             conf.setLocale(locale);
+        }
+        // Reset layout direction from the preferences
+        switch (AppPref.getLayoutOrientation()) {
+            case View.LAYOUT_DIRECTION_RTL:
+                conf.setLayoutDirection(Locale.forLanguageTag("ar"));
+                break;
+            case View.LAYOUT_DIRECTION_LTR:
+                conf.setLayoutDirection(Locale.ENGLISH);
         }
         //noinspection deprecation
         res.updateConfiguration(conf, res.getDisplayMetrics());

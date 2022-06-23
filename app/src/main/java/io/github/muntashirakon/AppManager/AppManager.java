@@ -20,8 +20,8 @@ import java.security.Security;
 import io.github.muntashirakon.AppManager.db.AppsDb;
 import io.github.muntashirakon.AppManager.misc.AMExceptionHandler;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
-import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.AppManager.utils.appearance.AppearanceUtils;
 
 public class AppManager extends Application {
     private static AppManager instance;
@@ -60,7 +60,7 @@ public class AppManager extends Application {
         super.onCreate();
         Thread.setDefaultUncaughtExceptionHandler(new AMExceptionHandler(this));
         DynamicColors.applyToActivitiesIfAvailable(this);
-        LangUtils.init(this);
+        AppearanceUtils.init(this);
         Security.addProvider(new JavaKeyStoreProvider());
     }
 
