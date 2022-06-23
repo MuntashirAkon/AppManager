@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
 
 import io.github.muntashirakon.AppManager.logcat.helper.LogcatHelper;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -74,6 +75,19 @@ public class MultipleLogcatReader extends AbsLogcatReader {
         }).start();
     }
 
+    @Override
+    public void killQuietly(ExecutorService executor) {
+        for (ReaderThread thread : readerThreads) {
+            thread.killed = true;
+        }
+        // Kill all threads in the background
+        executor.submit(() -> {
+            for (ReaderThread thread : readerThreads) {
+                thread.reader.killQuietly();
+            }
+            queue.offer(DUMMY_NULL);
+        });
+    }
 
     @Override
     public List<Process> getProcesses() {
