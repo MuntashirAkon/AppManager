@@ -261,7 +261,7 @@ public class SearchableMultiChoiceDialogBuilder<T> {
                         filteredItems.add(i);
                     }
                 }
-            }).start();
+            }, "searchable_multi_choice_dialog").start();
         }
 
         void setFilteredItems(CharSequence constraint) {

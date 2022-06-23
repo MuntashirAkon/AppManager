@@ -55,6 +55,7 @@
                 android:nextFocusUp="@id/spinner"
                 android:fitsSystemWindows="true"
                 android:clipToPadding="false"
+                app:fastScrollerEnabled="true"
                 tools:listitem="@layout/item_icon_title_subtitle" />
 
             <androidx.appcompat.widget.AppCompatTextView
