@@ -278,6 +278,13 @@
         <item name="iconGravity">textTop</item>
     </style>
 
+    <style name="Widget.AppTheme.Button.IconButton.InverseColor" parent="Widget.Material3.Button.IconButton">
+        <item name="backgroundTint">@color/sixty_percent_black</item>
+        <item name="iconTint">?attr/colorSurface</item>
+        <item name="iconPadding">0dp</item>
+        <item name="iconGravity">textTop</item>
+    </style>
+
     <style name="Widget.AppTheme.Button.FAB" parent="Widget.Material3.FloatingActionButton.Primary" />
 
     <style name="Widget.AppTheme.Button.EFAB" parent="Widget.Material3.ExtendedFloatingActionButton.Primary" />

@@ -37,19 +37,20 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:layout_gravity="start"
                 style="?attr/materialAlertDialogTitleTextStyle"
                 android:textAppearance="?attr/textAppearanceHeadlineSmall"
                 android:textColor="?attr/colorOnSurface"
-                tools:text="@tools:sample/lorem[10]" />
+                tools:text="@tools:sample/lorem[1]" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/action"
-                style="@style/Widget.AppTheme.Button.IconButton"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                style="@style/Widget.AppTheme.Button.IconButton.InverseColor"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_weight="0"
-                android:layout_gravity="center_vertical"
-                android:layout_marginStart="8dip"
+                android:layout_marginStart="8dp"
+                android:layout_gravity="end"
                 app:icon="@drawable/ic_more_vert_black_24dp"
                 app:iconSize="24dp" />
 

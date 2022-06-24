@@ -34,6 +34,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:layout_gravity="center"
+            android:paddingHorizontal="@dimen/padding_small"
             android:focusable="false"
             android:gravity="center"
             android:textAppearance="?attr/textAppearanceBodySmall"
@@ -41,20 +42,18 @@
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/action_cancel"
-            style="@style/Widget.AppTheme.Button.TextButton.Icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/Widget.AppTheme.Button.IconButton.InverseColor"
+            android:layout_width="34dp"
+            android:layout_height="34dp"
             android:layout_weight="0"
             android:layout_gravity="end|center_vertical"
+            android:layout_marginHorizontal="@dimen/padding_small"
             android:focusable="true"
             android:clickable="true"
             android:nextFocusLeft="@id/action_select_all"
             android:nextFocusDown="@id/selection_actions"
-            android:text="@android:string/cancel"
-            android:textAppearance="?attr/textAppearanceBodySmall"
             app:icon="@drawable/ic_baseline_clear_24"
-            app:iconSize="@dimen/padding_medium"
-            app:iconPadding="0dp" />
+            app:iconSize="20dp" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
