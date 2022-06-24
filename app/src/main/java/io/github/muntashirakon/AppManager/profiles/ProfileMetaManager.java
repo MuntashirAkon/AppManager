@@ -20,6 +20,7 @@ import java.io.OutputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -27,6 +28,7 @@ import java.util.Objects;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
 import io.github.muntashirakon.io.Path;
@@ -179,6 +181,20 @@ public class ProfileMetaManager implements LocalizedString {
     @NonNull
     public String getProfileName() {
         return mProfileName;
+    }
+
+    public void appendPackages(@NonNull Collection<String> packageList) {
+        if (profile == null) {
+            newProfile(packageList.toArray(new String[0]));
+            return;
+        }
+        List<String> uniquePackages = new ArrayList<>();
+        for (String newPackage : packageList) {
+            if (!ArrayUtils.contains(profile.packages, newPackage)) {
+                uniquePackages.add(newPackage);
+            }
+        }
+        profile.packages = ArrayUtils.concatElements(String.class, profile.packages, uniquePackages.toArray(new String[0]));
     }
 
     @NonNull

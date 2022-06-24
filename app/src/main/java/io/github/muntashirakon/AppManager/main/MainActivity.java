@@ -64,7 +64,6 @@ import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuild
 import io.github.muntashirakon.AppManager.usage.AppUsageActivity;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.StoragePermission;
@@ -414,13 +413,11 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
                     .setTitle(R.string.add_to_profile)
                     .setNegativeButton(R.string.cancel, null)
                     .setPositiveButton(R.string.add, (dialog, which, selectedItems) -> {
-                        multiSelectionView.cancel();
                         for (ProfileMetaManager metaManager : selectedItems) {
                             if (metaManager.profile != null) {
                                 try {
-                                    metaManager.profile.packages = ArrayUtils.concatElements(String.class, metaManager
-                                            .profile.packages, mModel.getSelectedPackages().keySet()
-                                            .toArray(new String[0]));
+                                    metaManager.appendPackages(mModel.getSelectedPackages().keySet());
+                                    multiSelectionView.cancel();
                                     metaManager.writeProfile();
                                 } catch (Throwable e) {
                                     e.printStackTrace();

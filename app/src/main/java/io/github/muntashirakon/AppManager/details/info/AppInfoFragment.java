@@ -484,8 +484,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         for (ProfileMetaManager metaManager : selectedItems) {
                             if (metaManager.profile != null) {
                                 try {
-                                    metaManager.profile.packages = ArrayUtils.appendElement(String.class,
-                                            metaManager.profile.packages, mPackageName);
+                                    metaManager.appendPackages(Collections.singletonList(mPackageName));
                                     metaManager.writeProfile();
                                 } catch (Throwable e) {
                                     e.printStackTrace();
