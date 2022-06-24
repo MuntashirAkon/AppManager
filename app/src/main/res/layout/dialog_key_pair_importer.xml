@@ -40,6 +40,7 @@
             android:layout_height="wrap_content"
             android:hint="@string/keystore_pass"
             android:layout_marginTop="@dimen/padding_small"
+            app:endIconMode="password_toggle"
             app:hintAnimationEnabled="true"
             app:hintEnabled="true">
 
@@ -48,8 +49,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:importantForAutofill="no"
-                android:inputType="text"
-                tools:text="@tools:sample/date/ddmmyy" />
+                android:inputType="textPassword"
+                tools:text="@tools:sample/lorem[4]" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.sun.misc.BASE64Decoder;
 import android.sun.misc.BASE64Encoder;
 import android.sun.security.pkcs.PKCS8Key;
+import android.sun.security.provider.JavaKeyStoreProvider;
 import android.sun.security.provider.X509Factory;
 import android.sun.security.x509.AlgorithmId;
 import android.sun.security.x509.CertificateAlgorithmId;
@@ -31,6 +32,8 @@ import androidx.annotation.Nullable;
 
 import com.android.internal.util.TextUtils;
 
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -49,6 +52,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
+import java.security.Provider;
 import java.security.PublicKey;
 import java.security.SecureRandom;
 import java.security.SignatureException;
@@ -69,9 +73,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.io.IoUtils;
 
 public class KeyStoreUtils {
+    public static final String TAG = KeyStoreUtils.class.getSimpleName();
+
     @NonNull
     public static KeyPair loadDefaultKey(@NonNull Context context)
             throws IOException, InvalidKeyException, CertificateException {
@@ -89,7 +96,11 @@ public class KeyStoreUtils {
         return new KeyPair(privateKey, certificate);
     }
 
-    private static final String[] types = {"JKS", "PKCS12", "BKS"};
+    public static final String KEY_STORE_TYPE_JKS = "JKS";
+    public static final String KEY_STORE_TYPE_PKCS12 = "PKCS12";
+    public static final String KEY_STORE_TYPE_BKS = "BKS";
+
+    private static final String[] TYPES = {KEY_STORE_TYPE_JKS, KEY_STORE_TYPE_PKCS12, KEY_STORE_TYPE_BKS};
 
     @NonNull
     public static ArrayList<String> listAliases(@NonNull Context context,
@@ -97,8 +108,9 @@ public class KeyStoreUtils {
                                                 int ksType,
                                                 @Nullable char[] ksPass)
             throws IOException, KeyStoreException, CertificateException, NoSuchAlgorithmException {
-        String keyType = types[ksType];
-        final KeyStore ks = KeyStore.getInstance(keyType);
+        String keyType = TYPES[ksType];
+        Log.d(TAG, "Loading keystore " + keyType);
+        final KeyStore ks = KeyStore.getInstance(keyType, getKeyStoreProvider(keyType));
         try (InputStream is = context.getContentResolver().openInputStream(ksUri)) {
             if (is == null) throw new FileNotFoundException(ksUri + " does not exist.");
             ks.load(is, ksPass);
@@ -112,8 +124,9 @@ public class KeyStoreUtils {
                                      @Nullable char[] aliasPass)
             throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException,
             UnrecoverableKeyException {
-        String keyType = types[ksType];
-        final KeyStore ks = KeyStore.getInstance(keyType);
+        String keyType = TYPES[ksType];
+        Log.d(TAG, "Loading keystore " + keyType);
+        final KeyStore ks = KeyStore.getInstance(keyType, getKeyStoreProvider(keyType));
         try (InputStream is = context.getContentResolver().openInputStream(ksUri)) {
             if (is == null) throw new FileNotFoundException(ksUri + " does not exist.");
             ks.load(is, ksPass);
@@ -158,6 +171,18 @@ public class KeyStoreUtils {
             return new KeyPair(privateKey, generateCert(privateKey, publicKey, formattedSubject, expiryDate));
         } catch (IOException e) {
             throw new CertificateEncodingException(e);
+        }
+    }
+
+    @NonNull
+    private static Provider getKeyStoreProvider(String keyStoreType) {
+        switch (keyStoreType) {
+            default:
+            case KEY_STORE_TYPE_JKS:
+                return new JavaKeyStoreProvider();
+            case KEY_STORE_TYPE_PKCS12:
+            case KEY_STORE_TYPE_BKS:
+                return new BouncyCastleProvider();
         }
     }
 
