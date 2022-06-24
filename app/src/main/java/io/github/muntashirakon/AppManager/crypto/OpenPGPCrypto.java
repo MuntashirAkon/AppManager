@@ -27,7 +27,6 @@ import org.openintents.openpgp.util.OpenPgpServiceConnection;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.security.GeneralSecurityException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -118,7 +117,7 @@ public class OpenPGPCrypto implements Crypto {
 
     @Override
     public void decrypt(@NonNull InputStream encryptedStream, @NonNull OutputStream unencryptedStream)
-            throws IOException, GeneralSecurityException {
+            throws IOException {
         Intent intent = new Intent(OpenPgpApi.ACTION_DECRYPT_VERIFY);
         handleStreams(intent, Cipher.DECRYPT_MODE, encryptedStream, unencryptedStream);
     }
@@ -133,7 +132,7 @@ public class OpenPGPCrypto implements Crypto {
 
     @Override
     public void encrypt(@NonNull InputStream unencryptedStream, @NonNull OutputStream encryptedStream)
-            throws IOException, GeneralSecurityException {
+            throws IOException {
         Intent intent = new Intent(OpenPgpApi.ACTION_ENCRYPT);
         intent.putExtra(OpenPgpApi.EXTRA_KEY_IDS, keyIds);
         handleStreams(intent, Cipher.ENCRYPT_MODE, unencryptedStream, encryptedStream);

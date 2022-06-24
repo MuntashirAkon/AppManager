@@ -2,7 +2,10 @@
 
 package io.github.muntashirakon.AppManager.crypto.ks;
 
+import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
+
+import java.util.Objects;
 
 import javax.crypto.SecretKey;
 
@@ -15,8 +18,8 @@ public class SecretKeyAndVersion extends Pair<SecretKey, Integer> {
      * @param secretKey                                The key
      * @param androidVersionWhenTheKeyHasBeenGenerated The android version when the key has been generated
      */
-    public SecretKeyAndVersion(SecretKey secretKey, int androidVersionWhenTheKeyHasBeenGenerated) {
-        super(secretKey, androidVersionWhenTheKeyHasBeenGenerated);
+    public SecretKeyAndVersion(@NonNull SecretKey secretKey, int androidVersionWhenTheKeyHasBeenGenerated) {
+        super(Objects.requireNonNull(secretKey), androidVersionWhenTheKeyHasBeenGenerated);
     }
 
     /**
@@ -24,6 +27,7 @@ public class SecretKeyAndVersion extends Pair<SecretKey, Integer> {
      *
      * @return The key
      */
+    @NonNull
     public SecretKey getSecretKey() {
         return first;
     }

@@ -87,17 +87,19 @@ public class RSACryptoSelectionDialogFragment extends DialogFragment {
                 .setTitle(R.string.rsa)
                 .setNegativeButton(R.string.pref_import, null)
                 .setNeutralButton(R.string.generate_key, null)
-                .setPositiveButton(allowDefault ? R.string.use_default : R.string.ok, (dialog, which, isChecked) -> {
-                    if (allowDefault && model != null) {
-                        model.addDefaultKeyPair(targetAlias);
-                    }
-                });
+                .setPositiveButton(allowDefault ? R.string.use_default : R.string.ok, null);
         Objects.requireNonNull(model).loadSigningInfo(targetAlias);
         AlertDialog dialog = Objects.requireNonNull(builder).create();
         dialog.setOnShowListener(dialog3 -> {
             AlertDialog dialog1 = (AlertDialog) dialog3;
+            Button defaultButton = dialog1.getButton(AlertDialog.BUTTON_POSITIVE);
             Button importButton = dialog1.getButton(AlertDialog.BUTTON_NEGATIVE);
             Button generateButton = dialog1.getButton(AlertDialog.BUTTON_NEUTRAL);
+            defaultButton.setOnClickListener(v -> {
+                if (allowDefault && model != null) {
+                    model.addDefaultKeyPair(targetAlias);
+                }
+            });
             importButton.setOnClickListener(v -> {
                 KeyPairImporterDialogFragment fragment = new KeyPairImporterDialogFragment();
                 Bundle args = new Bundle();
@@ -170,6 +172,7 @@ public class RSACryptoSelectionDialogFragment extends DialogFragment {
                     }
                     status.postValue(new Pair<>(R.string.done, false));
                     keyPairUpdated(targetAlias);
+                    signingInfo.postValue(null);
                 } catch (Exception e) {
                     Log.e(TAG, e);
                     status.postValue(new Pair<>(R.string.failed_to_save_key, false));

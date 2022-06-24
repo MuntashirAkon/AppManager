@@ -28,7 +28,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -49,7 +48,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import javax.crypto.CipherInputStream;
 import javax.crypto.SecretKey;
 
 import io.github.muntashirakon.AppManager.AppManager;
@@ -64,7 +62,6 @@ import io.github.muntashirakon.AppManager.crypto.RandomChar;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
-import io.github.muntashirakon.io.IoUtils;
 
 public class KeyStoreManager {
     public static final String TAG = "KSManager";
@@ -410,10 +407,9 @@ public class KeyStoreManager {
     @CheckResult
     @Nullable
     private static char[] getDecryptedPassword(@NonNull String encryptedPass) {
-        byte[] encryptedBytes = Base64.decode(encryptedPass, Base64.NO_WRAP);
-        try (ByteArrayInputStream bis = new ByteArrayInputStream(encryptedBytes);
-             CipherInputStream cipherInputStream = CompatUtil.createCipherInputStream(bis, AppManager.getContext())) {
-            return Utils.bytesToChars(IoUtils.readFully(cipherInputStream, -1, true));
+        try {
+            byte[] encryptedBytes = Base64.decode(encryptedPass, Base64.NO_WRAP);
+            return Utils.bytesToChars(CompatUtil.decryptData(AppManager.getContext(), encryptedBytes));
         } catch (Exception e) {
             Log.e("KS", "Could not get decrypted password for " + encryptedPass, e);
         }

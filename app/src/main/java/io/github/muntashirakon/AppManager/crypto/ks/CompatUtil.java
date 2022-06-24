@@ -14,8 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
@@ -34,11 +34,11 @@ import java.util.Calendar;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
-import javax.crypto.CipherInputStream;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
+import javax.crypto.ShortBufferException;
 import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -47,6 +47,7 @@ import javax.security.auth.x500.X500Principal;
 
 import io.github.muntashirakon.AppManager.logs.Log;
 
+// Copyright 2021 Muntashir Al-Islam
 // Copyright 2018 New Vector Ltd
 public class CompatUtil {
     private static final String TAG = CompatUtil.class.getSimpleName();
@@ -63,7 +64,6 @@ public class CompatUtil {
     private static final String SHARED_KEY_ANDROID_VERSION_WHEN_KEY_HAS_BEEN_GENERATED =
             "android_version_when_key_has_been_generated";
 
-    private static SecretKeyAndVersion sSecretKeyAndVersion;
     private static SecureRandom sPrng;
 
     /**
@@ -76,94 +76,90 @@ public class CompatUtil {
      * @param context the context holding the application shared preferences
      */
     @SuppressWarnings({"deprecation", "InlinedApi"})
+    @NonNull
     private static synchronized SecretKeyAndVersion getAesGcmLocalProtectionKey(@NonNull Context context)
             throws KeyStoreException, CertificateException, NoSuchAlgorithmException, IOException,
             NoSuchProviderException, InvalidAlgorithmParameterException, NoSuchPaddingException,
             InvalidKeyException, IllegalBlockSizeException, UnrecoverableKeyException {
-        if (sSecretKeyAndVersion == null) {
-            final KeyStore keyStore = KeyStore.getInstance(ANDROID_KEY_STORE_PROVIDER);
-            keyStore.load(null);
+        KeyStore keyStore = KeyStore.getInstance(ANDROID_KEY_STORE_PROVIDER);
+        keyStore.load(null);
 
-            Log.i(TAG, "Loading local protection key");
+        Log.i(TAG, "Loading local protection key");
+        SharedPreferences sharedPreferences = context.getSharedPreferences("keystore", Context.MODE_PRIVATE);
+        // Get the version of Android when the key has been generated, default to the current version of the system.
+        // In the latter case, the key will be generated.
+        int androidVersionWhenTheKeyHasBeenGenerated = sharedPreferences.getInt(
+                SHARED_KEY_ANDROID_VERSION_WHEN_KEY_HAS_BEEN_GENERATED, Build.VERSION.SDK_INT);
 
-            SecretKey key;
-
-            final SharedPreferences sharedPreferences = context.getSharedPreferences("keystore",
-                    Context.MODE_PRIVATE);
-            // Get the version of Android when the key has been generated, default to the current version of the system.
-            // In this case, the key will be generated
-            final int androidVersionWhenTheKeyHasBeenGenerated = sharedPreferences.getInt(
-                    SHARED_KEY_ANDROID_VERSION_WHEN_KEY_HAS_BEEN_GENERATED, Build.VERSION.SDK_INT);
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                if (keyStore.containsAlias(AES_LOCAL_PROTECTION_KEY_ALIAS)) {
-                    Log.i(TAG, "AES local protection key found in keystore");
-                    key = (SecretKey) keyStore.getKey(AES_LOCAL_PROTECTION_KEY_ALIAS, null);
-                } else {
-                    // Check if a key has been created on version < M (in case of OS upgrade)
-                    key = readKeyApiL(sharedPreferences, keyStore);
-
-                    if (key == null) {
-                        Log.i(TAG, "Generating AES key with keystore");
-                        final KeyGenerator generator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES,
-                                ANDROID_KEY_STORE_PROVIDER);
-                        generator.init(new KeyGenParameterSpec.Builder(AES_LOCAL_PROTECTION_KEY_ALIAS,
-                                KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
-                                .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
-                                .setKeySize(AES_GCM_KEY_SIZE_IN_BITS)
-                                .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
-                                .build());
-                        key = generator.generateKey();
-
-                        sharedPreferences.edit()
-                                .putInt(SHARED_KEY_ANDROID_VERSION_WHEN_KEY_HAS_BEEN_GENERATED, Build.VERSION.SDK_INT)
-                                .apply();
-                    }
-                }
-            } else {
-                key = readKeyApiL(sharedPreferences, keyStore);
-
-                if (key == null) {
-                    Log.i(TAG, "Generating RSA key pair with keystore");
-                    final KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA",
-                            ANDROID_KEY_STORE_PROVIDER);
-                    final Calendar start = Calendar.getInstance();
-                    final Calendar end = Calendar.getInstance();
-                    end.add(Calendar.YEAR, 10);
-
-                    generator.initialize(new KeyPairGeneratorSpec.Builder(context)
-                            .setAlgorithmParameterSpec(new RSAKeyGenParameterSpec(2048,
-                                    RSAKeyGenParameterSpec.F4))
-                            .setAlias(RSA_WRAP_LOCAL_PROTECTION_KEY_ALIAS)
-                            .setSubject(new X500Principal("CN=App Manager"))
-                            .setStartDate(start.getTime())
-                            .setEndDate(end.getTime())
-                            .setSerialNumber(BigInteger.ONE)
-                            .build());
-                    final KeyPair keyPair = generator.generateKeyPair();
-
-                    Log.i(TAG, "Generating wrapped AES key");
-
-                    final byte[] aesKeyRaw = new byte[AES_GCM_KEY_SIZE_IN_BITS / Byte.SIZE];
-                    getPrng().nextBytes(aesKeyRaw);
-                    key = new SecretKeySpec(aesKeyRaw, "AES");
-
-                    final Cipher cipher = Cipher.getInstance(RSA_WRAP_CIPHER_TYPE);
-                    cipher.init(Cipher.WRAP_MODE, keyPair.getPublic());
-                    byte[] wrappedAesKey = cipher.wrap(key);
-
-                    sharedPreferences.edit()
-                            .putString(AES_WRAPPED_PROTECTION_KEY_SHARED_PREFERENCE,
-                                    Base64.encodeToString(wrappedAesKey, 0))
-                            .putInt(SHARED_KEY_ANDROID_VERSION_WHEN_KEY_HAS_BEEN_GENERATED, Build.VERSION.SDK_INT)
-                            .apply();
-                }
+        // Check if there's a key in the Android keystore (M and later)
+        if (keyStore.containsAlias(AES_LOCAL_PROTECTION_KEY_ALIAS)) {
+            Log.i(TAG, "AES local protection key found in keystore");
+            SecretKey secretKey = (SecretKey) keyStore.getKey(AES_LOCAL_PROTECTION_KEY_ALIAS, null);
+            if (secretKey == null) {
+                throw new KeyStoreException("Could not load AES local protection key from keystore");
             }
-
-            sSecretKeyAndVersion = new SecretKeyAndVersion(key, androidVersionWhenTheKeyHasBeenGenerated);
+            return new SecretKeyAndVersion(secretKey, androidVersionWhenTheKeyHasBeenGenerated);
         }
 
-        return sSecretKeyAndVersion;
+        // Check if a key has been created on version < M (such as, in case of an OS upgrade)
+        SecretKey secretKey = readKeyApiL(sharedPreferences, keyStore);
+        if (secretKey != null) {
+            return new SecretKeyAndVersion(secretKey, androidVersionWhenTheKeyHasBeenGenerated);
+        }
+
+        // Otherwise generate key
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            Log.i(TAG, "Generating AES key with keystore");
+            KeyGenerator generator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES,
+                    ANDROID_KEY_STORE_PROVIDER);
+            generator.init(new KeyGenParameterSpec.Builder(AES_LOCAL_PROTECTION_KEY_ALIAS,
+                    KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
+                    .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
+                    .setKeySize(AES_GCM_KEY_SIZE_IN_BITS)
+                    .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
+                    .build());
+            secretKey = generator.generateKey();
+
+            sharedPreferences.edit()
+                    .putInt(SHARED_KEY_ANDROID_VERSION_WHEN_KEY_HAS_BEEN_GENERATED, Build.VERSION.SDK_INT)
+                    .apply();
+            return new SecretKeyAndVersion(secretKey, androidVersionWhenTheKeyHasBeenGenerated);
+        }
+
+        Log.i(TAG, "Generating RSA key pair with keystore");
+        KeyPairGenerator generator = KeyPairGenerator.getInstance("RSA", ANDROID_KEY_STORE_PROVIDER);
+        Calendar start = Calendar.getInstance();
+        Calendar end = Calendar.getInstance();
+        end.add(Calendar.YEAR, 10);
+
+        generator.initialize(new KeyPairGeneratorSpec.Builder(context)
+                .setAlgorithmParameterSpec(new RSAKeyGenParameterSpec(2048,
+                        RSAKeyGenParameterSpec.F4))
+                .setAlias(RSA_WRAP_LOCAL_PROTECTION_KEY_ALIAS)
+                .setSubject(new X500Principal("CN=App Manager"))
+                .setStartDate(start.getTime())
+                .setEndDate(end.getTime())
+                .setSerialNumber(BigInteger.ONE)
+                .build());
+        KeyPair keyPair = generator.generateKeyPair();
+
+        Log.i(TAG, "Generating wrapped AES key");
+
+        byte[] aesKeyRaw = new byte[AES_GCM_KEY_SIZE_IN_BITS / Byte.SIZE];
+        getPrng().nextBytes(aesKeyRaw);
+        secretKey = new SecretKeySpec(aesKeyRaw, "AES");
+
+        Cipher cipher = Cipher.getInstance(RSA_WRAP_CIPHER_TYPE);
+        cipher.init(Cipher.WRAP_MODE, keyPair.getPublic());
+        byte[] wrappedAesKey = cipher.wrap(secretKey);
+
+        sharedPreferences.edit()
+                .putString(AES_WRAPPED_PROTECTION_KEY_SHARED_PREFERENCE,
+                        Base64.encodeToString(wrappedAesKey, 0))
+                .putInt(SHARED_KEY_ANDROID_VERSION_WHEN_KEY_HAS_BEEN_GENERATED, Build.VERSION.SDK_INT)
+                .apply();
+
+        return new SecretKeyAndVersion(secretKey, androidVersionWhenTheKeyHasBeenGenerated);
     }
 
     /**
@@ -177,12 +173,12 @@ public class CompatUtil {
     private static SecretKey readKeyApiL(@NonNull SharedPreferences sharedPreferences, @NonNull KeyStore keyStore)
             throws KeyStoreException, NoSuchPaddingException, NoSuchAlgorithmException, InvalidKeyException,
             UnrecoverableKeyException {
-        final String wrappedAesKeyString = sharedPreferences.getString(AES_WRAPPED_PROTECTION_KEY_SHARED_PREFERENCE, null);
+        String wrappedAesKeyString = sharedPreferences.getString(AES_WRAPPED_PROTECTION_KEY_SHARED_PREFERENCE, null);
         if (wrappedAesKeyString != null && keyStore.containsAlias(RSA_WRAP_LOCAL_PROTECTION_KEY_ALIAS)) {
             Log.i(TAG, "RSA + wrapped AES local protection keys found in keystore");
-            final PrivateKey privateKey = (PrivateKey) keyStore.getKey(RSA_WRAP_LOCAL_PROTECTION_KEY_ALIAS, null);
-            final byte[] wrappedAesKey = Base64.decode(wrappedAesKeyString, 0);
-            final Cipher cipher = Cipher.getInstance(RSA_WRAP_CIPHER_TYPE);
+            PrivateKey privateKey = (PrivateKey) keyStore.getKey(RSA_WRAP_LOCAL_PROTECTION_KEY_ALIAS, null);
+            byte[] wrappedAesKey = Base64.decode(wrappedAesKeyString, 0);
+            Cipher cipher = Cipher.getInstance(RSA_WRAP_CIPHER_TYPE);
             cipher.init(Cipher.UNWRAP_MODE, privateKey);
             return (SecretKey) cipher.unwrap(wrappedAesKey, "AES", Cipher.SECRET_KEY);
         }
@@ -212,12 +208,9 @@ public class CompatUtil {
             throws InvalidAlgorithmParameterException, UnrecoverableKeyException, NoSuchPaddingException,
             IllegalBlockSizeException, CertificateException, KeyStoreException, NoSuchAlgorithmException,
             IOException, NoSuchProviderException, InvalidKeyException, BadPaddingException, DestroyFailedException {
-        final SecretKeyAndVersion keyAndVersion = getAesGcmLocalProtectionKey(context);
-        if (keyAndVersion == null || keyAndVersion.getSecretKey() == null) {
-            throw new KeyStoreException();
-        }
+        SecretKeyAndVersion keyAndVersion = getAesGcmLocalProtectionKey(context);
 
-        final Cipher cipher = Cipher.getInstance(AES_GCM_CIPHER_TYPE);
+        Cipher cipher = Cipher.getInstance(AES_GCM_CIPHER_TYPE);
         byte[] iv;
 
         if (keyAndVersion.getAndroidVersionWhenTheKeyHasBeenGenerated() >= Build.VERSION_CODES.M) {
@@ -239,32 +232,29 @@ public class CompatUtil {
     }
 
     /**
-     * Create a CipherInputStream instance.
-     * Warning, if `in` is not an encrypted stream, it's up to the caller to close and reopen `in`, because the stream has been read.
+     * Decrypt given data.
      *
-     * @param in      The input stream
-     * @param context The context holding the application shared preferences
-     * @return The created InputStream, or null if the InputStream `in`  does not contain encrypted data
+     * @param context       The context holding the application shared preferences
+     * @param encryptedData Data to be decrypted
+     * @return Decrypted data.
      */
     @NonNull
-    public static CipherInputStream createCipherInputStream(@NonNull InputStream in, @NonNull Context context)
+    public static byte[] decryptData(@NonNull Context context, @NonNull byte[] encryptedData)
             throws NoSuchPaddingException, NoSuchAlgorithmException, CertificateException,
             InvalidKeyException, KeyStoreException, UnrecoverableKeyException, IllegalBlockSizeException,
-            NoSuchProviderException, InvalidAlgorithmParameterException, IOException {
-        final int iv_len = in.read();
+            NoSuchProviderException, InvalidAlgorithmParameterException, IOException, ShortBufferException, BadPaddingException {
+        ByteBuffer encryptedBuffer = ByteBuffer.wrap(encryptedData);
+        int iv_len = encryptedBuffer.get();
         if (iv_len != AES_GCM_IV_LENGTH) {
             throw new InvalidAlgorithmParameterException("Invalid IV length " + iv_len);
         }
 
-        final byte[] iv = new byte[AES_GCM_IV_LENGTH];
-        in.read(iv);
+        byte[] iv = new byte[AES_GCM_IV_LENGTH];
+        encryptedBuffer.get(iv);
 
-        final Cipher cipher = Cipher.getInstance(AES_GCM_CIPHER_TYPE);
+        Cipher cipher = Cipher.getInstance(AES_GCM_CIPHER_TYPE);
 
-        final SecretKeyAndVersion keyAndVersion = getAesGcmLocalProtectionKey(context);
-        if (keyAndVersion == null || keyAndVersion.getSecretKey() == null) {
-            throw new KeyStoreException();
-        }
+        SecretKeyAndVersion keyAndVersion = getAesGcmLocalProtectionKey(context);
 
         AlgorithmParameterSpec spec;
 
@@ -276,6 +266,8 @@ public class CompatUtil {
 
         cipher.init(Cipher.DECRYPT_MODE, keyAndVersion.getSecretKey(), spec);
 
-        return new CipherInputStream(in, cipher);
+        ByteBuffer decryptedBuffer = ByteBuffer.allocate(cipher.getOutputSize(encryptedBuffer.remaining()));
+        cipher.doFinal(encryptedBuffer, decryptedBuffer);
+        return decryptedBuffer.array();
     }
 }

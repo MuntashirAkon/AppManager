@@ -17,8 +17,6 @@ import org.bouncycastle.crypto.params.KeyParameter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.InvalidKeyException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -99,7 +97,7 @@ public class AESCrypto implements Crypto {
 
     @Override
     public void encrypt(@NonNull InputStream unencryptedStream, @NonNull OutputStream encryptedStream)
-            throws IOException, InvalidAlgorithmParameterException, InvalidKeyException {
+            throws IOException {
         // Init cipher
         GCMBlockCipher cipher = new GCMBlockCipher(new AESEngine());
         cipher.init(true, spec);
@@ -117,7 +115,7 @@ public class AESCrypto implements Crypto {
 
     @Override
     public void decrypt(@NonNull InputStream encryptedStream, @NonNull OutputStream unencryptedStream)
-            throws IOException, InvalidAlgorithmParameterException, InvalidKeyException {
+            throws IOException {
         // Init cipher
         GCMBlockCipher cipher = new GCMBlockCipher(new AESEngine());
         cipher.init(false, spec);
