@@ -1175,4 +1175,5 @@
     <string name="item_select">Elegir</string>
     <string name="pref_vt_prompt_before_uploading">Mostrar aviso antes de iniciar la subida del archivo.</string>
     <string name="app_explorer">Explorador de apps</string>
+    <string name="netpolicy_cannot_be_modified_for_core_apps">La politica de Net no puede ser modificada para las aplicaciones core de Android.</string>
 </resources>
