@@ -18,7 +18,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.LinearLayoutCompat;
 
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.Locale;
@@ -27,9 +26,10 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
+import io.github.muntashirakon.dialog.CapsuleBottomSheetDialogFragment;
 
 
-public class RunningAppDetails extends BottomSheetDialogFragment {
+public class RunningAppDetails extends CapsuleBottomSheetDialogFragment {
     public static final String TAG = RunningAppDetails.class.getSimpleName();
 
     public static final String ARG_PS_ITEM = "ps_item";
@@ -45,9 +45,9 @@ public class RunningAppDetails extends BottomSheetDialogFragment {
 
     private final ImageLoader mImageLoader = new ImageLoader();
 
-    @Nullable
+    @NonNull
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View initRootView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.dialog_running_app_details, container, false);
     }
 

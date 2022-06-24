@@ -4,7 +4,11 @@ package io.github.muntashirakon.util;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.Rect;
+import android.os.Build;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
@@ -13,7 +17,9 @@ import android.text.style.LeadingMarginSpan;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowInsets;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 
 import androidx.annotation.AttrRes;
@@ -22,6 +28,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.Px;
 import androidx.annotation.StyleRes;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
@@ -122,6 +129,7 @@ public final class UiUtils {
                                                @Nullable Rect initialMargin);
     }
 
+    @SuppressWarnings("deprecation")
     public static void applyWindowInsetsAsPaddingNoTop(View v) {
         doOnApplyWindowInsets(v, (view, insets, initialPadding, initialMargin) -> {
             if (!ViewCompat.getFitsSystemWindows(view)) {
@@ -152,6 +160,7 @@ public final class UiUtils {
         applyWindowInsetsAsMargin(v, true, true);
     }
 
+    @SuppressWarnings("deprecation")
     public static void applyWindowInsetsAsMargin(View v, boolean bottomMargin, boolean topMargin) {
         doOnApplyWindowInsets(v, (view, insets, initialPadding, initialMargin) -> {
             if (initialMargin == null || !ViewCompat.getFitsSystemWindows(view)) {
@@ -200,5 +209,59 @@ public final class UiUtils {
                 listener.onApplyWindowInsets(view1, insets, initialPadding, initialMargins));
         // Request some insets
         ViewUtils.requestApplyInsetsWhenAttached(view);
+    }
+
+    public static boolean isDarkMode() {
+        switch (AppCompatDelegate.getDefaultNightMode()) {
+            case AppCompatDelegate.MODE_NIGHT_YES:
+                return true;
+            default:
+            case AppCompatDelegate.MODE_NIGHT_NO:
+                return false;
+            case AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM:
+            case AppCompatDelegate.MODE_NIGHT_AUTO_BATTERY:
+            case AppCompatDelegate.MODE_NIGHT_UNSPECIFIED:
+            case AppCompatDelegate.MODE_NIGHT_AUTO_TIME:
+                return isDarkModeOnSystem();
+        }
+    }
+
+    public static boolean isDarkModeOnSystem() {
+        return (Resources.getSystem().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK)
+                == Configuration.UI_MODE_NIGHT_YES;
+    }
+
+    @SuppressWarnings("deprecation")
+    public static void setSystemBarStyle(@NonNull Window window, boolean needLightStatusBar) {
+        window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+
+        if (!isDarkMode()) {
+            window.getDecorView().setSystemUiVisibility(window.getDecorView().getSystemUiVisibility()
+                    | WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && needLightStatusBar) {
+                window.getDecorView().setSystemUiVisibility(window.getDecorView().getSystemUiVisibility()
+                        | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            }
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+                int windowInsetBottom = window.getDecorView().getRootWindowInsets().getSystemWindowInsetBottom();
+                if (windowInsetBottom >= Resources.getSystem().getDisplayMetrics().density * 40) {
+                    window.getDecorView().setSystemUiVisibility(window.getDecorView().getSystemUiVisibility()
+                            | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR);
+                }
+            }
+        }
+        setSystemBarTransparent(window);
+    }
+
+    @SuppressWarnings("deprecation")
+    private static void setSystemBarTransparent(@NonNull Window window) {
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        window.setStatusBarColor(Color.TRANSPARENT);
+        window.setNavigationBarColor(Color.TRANSPARENT);
     }
 }

@@ -1,0 +1,8 @@
+<!-- SPDX-License-Identifier: MIT -->
+<set xmlns:android="http://schemas.android.com/apk/res/android">
+    <translate
+        android:duration="@android:integer/config_mediumAnimTime"
+        android:fromYDelta="100%p"
+        android:interpolator="@android:anim/accelerate_interpolator"
+        android:toXDelta="0%p" />
+</set>

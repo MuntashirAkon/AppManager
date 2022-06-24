@@ -1,8 +1,0 @@
-<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="rectangle">
-    <solid android:color="?attr/colorSurfaceVariant" />
-    <corners
-        android:topLeftRadius="@dimen/padding_medium"
-        android:topRightRadius="@dimen/padding_medium" />
-</shape>

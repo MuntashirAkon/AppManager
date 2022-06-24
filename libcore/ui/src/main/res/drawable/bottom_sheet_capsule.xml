@@ -5,5 +5,5 @@
     <solid android:color="@color/ten_percent_black" />
     <size
         android:width="64dp"
-        android:height="4dp" />
+        android:height="5dp" />
 </shape>

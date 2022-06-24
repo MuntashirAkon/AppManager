@@ -10,6 +10,7 @@
     <color name="semi_transparent">#10000000</color>
     <color name="stopped">@color/blue_mountain</color>
     <color name="ten_percent_black">#28000000</color>
+    <color name="sixty_percent_black">#9A000000</color>
     <color name="tracker">#FFFF8017</color> <!-- dark orange -->
 
     <color name="grey">#ffe0e0e0</color>

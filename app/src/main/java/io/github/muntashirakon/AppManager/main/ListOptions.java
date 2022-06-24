@@ -15,7 +15,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -28,9 +27,10 @@ import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.profiles.ProfileManager;
+import io.github.muntashirakon.dialog.CapsuleBottomSheetDialogFragment;
 import io.github.muntashirakon.widget.AnyFilterArrayAdapter;
 
-public class ListOptions extends BottomSheetDialogFragment {
+public class ListOptions extends CapsuleBottomSheetDialogFragment {
     public static final String TAG = ListOptions.class.getSimpleName();
 
     @IntDef(value = {
@@ -120,9 +120,9 @@ public class ListOptions extends BottomSheetDialogFragment {
     private ChipGroup sortGroup;
     private ViewGroup filterView;
 
-    @Nullable
+    @NonNull
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View initRootView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.dialog_list_options, container, false);
     }
 

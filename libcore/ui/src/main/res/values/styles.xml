@@ -73,11 +73,12 @@
     </style>
 
     <style name="AppTheme.BottomSheetModal" parent="Widget.Material3.BottomSheet.Modal">
-        <!-- FIXME: Must use shapeAppearance -->
-        <item name="android:paddingTop">@dimen/padding_large</item>
-        <item name="android:background">@drawable/rounded_top_with_capsule</item>
-        <item name="shapeAppearance">@null</item>
-        <item name="shapeAppearanceOverlay">@null</item>
+        <item name="shapeAppearance">@style/ShapeAppearance.AppTheme.MediumComponent.RoundedTop</item>
+    </style>
+
+    <style name="AppTheme.BottomSheetAnimation" parent="">
+        <item name="android:windowEnterAnimation">@anim/bottom_sheet_slide_up</item>
+        <item name="android:windowExitAnimation">@anim/bottom_sheet_slide_down</item>
     </style>
 
     <!-- CheckBox -->
@@ -321,6 +322,13 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSizeTopLeft">0dp</item>
         <item name="cornerSizeBottomLeft">0dp</item>
+    </style>
+
+    <style name="ShapeAppearance.AppTheme.MediumComponent.RoundedTop" parent="">
+        <item name="cornerSize">16dp</item>
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
     </style>
 
     <!-- TextAppearance attributes: We do not use Material* or AppCompat because they change over time -->

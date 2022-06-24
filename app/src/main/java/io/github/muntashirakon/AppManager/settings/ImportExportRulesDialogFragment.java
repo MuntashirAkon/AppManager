@@ -16,7 +16,6 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
@@ -34,9 +33,10 @@ import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
+import io.github.muntashirakon.dialog.CapsuleBottomSheetDialogFragment;
 
-public class ImportExportRulesDialogFragment extends BottomSheetDialogFragment {
-    public static final String TAG = "ImportExportRulesDialogFragment";
+public class ImportExportRulesDialogFragment extends CapsuleBottomSheetDialogFragment {
+    public static final String TAG = ImportExportRulesDialogFragment.class.getSimpleName();
 
     private static final String MIME_JSON = "application/json";
     private static final String MIME_TSV = "text/tab-separated-values";
@@ -129,9 +129,9 @@ public class ImportExportRulesDialogFragment extends BottomSheetDialogFragment {
                 requireDialog().dismiss();
             });
 
-    @Nullable
+    @NonNull
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View initRootView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.dialog_settings_import_export, container, false);
     }
 
