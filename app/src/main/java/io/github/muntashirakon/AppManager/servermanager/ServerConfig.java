@@ -21,7 +21,6 @@ import java.net.Inet4Address;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.misc.NoOps;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
 
 // Copyright 2016 Zheng Li
 public final class ServerConfig {
@@ -46,16 +45,13 @@ public final class ServerConfig {
             return;
         }
 
-        File internalStorage = context.getFilesDir().getParentFile();
-        if (internalStorage == null || !internalStorage.exists()) {
+        File externalStorage = context.getExternalCacheDir();
+        if (externalStorage == null || !externalStorage.exists()) {
             throw new FileNotFoundException("Internal storage unavailable");
         }
 
-        // Set folder permission
-        FileUtils.chmod711(internalStorage);
-
-        destJarFile = new File(internalStorage, JAR_NAME);
-        destExecFile = new File(internalStorage, EXECUTABLE_FILE_NAME);
+        destJarFile = new File(externalStorage, JAR_NAME);
+        destExecFile = new File(externalStorage, EXECUTABLE_FILE_NAME);
 
         if (userHandle != 0) {
             SOCKET_PATH += userHandle;

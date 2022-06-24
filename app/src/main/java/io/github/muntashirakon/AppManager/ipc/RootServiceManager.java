@@ -160,7 +160,7 @@ public class RootServiceManager implements Handler.Callback {
         }
 
         Context de = ContextUtils.getDeContext(context);
-        File mainJar = new File(de.getCacheDir(), "main.jar");
+        File mainJar = new File(de.getExternalCacheDir(), "main.jar");
         File stagingMainJar = new File(PACKAGE_STAGING_DIRECTORY, "main.jar");
 
         StringBuilder env = new StringBuilder();
