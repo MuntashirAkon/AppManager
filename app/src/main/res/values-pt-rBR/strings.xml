@@ -1175,4 +1175,5 @@
     <string name="item_select">Selecionar</string>
     <string name="log_stop_recording">Parar gravação</string>
     <string name="app_explorer">Explorador de Aplicativos</string>
+    <string name="netpolicy_cannot_be_modified_for_core_apps">A política de rede não pode ser modificada para aplicativos principais do Android.</string>
 </resources>
