@@ -884,7 +884,7 @@
     <string name="tap_to_see_details">Toque para ver detalhes</string>
     <string name="lib_details">Detalhes da biblioteca</string>
     <string name="no_libs">Nenhuma biblioteca</string>
-    <string name="scanner">Scanner</string>
+    <string name="scanner">Analisador</string>
     <string name="sys_config">Configurações do Sistema</string>
     <string name="app_signing_install_without_data_loss">Se desligou a verificação de assinatura, pode usar a opção <b>Apenas instalar</b> para instalar a app sem perder dados.</string>
     <string name="dsa_affine_y">Atribuir coordenada y</string>
@@ -1156,4 +1156,23 @@
     <string name="auth_manager_title">Gerente de autorização</string>
     <string name="backup_volume_unavailable_warning">O volume de backup selecionado não está disponível no momento. Se estiver localizado em um armazenamento externo, insira-o ou altere o volume de backup.</string>
     <string name="internal">Interno</string>
+    <string name="netpolicy_cannot_be_modified_for_core_apps">A política de rede não pode ser alterada para as aplicações centrais do Android.</string>
+    <string name="auth_manager_description">Para iniciar um Intent a partir de uma aplicação externa, é necessário fornecer um campo extra chamado <tt>auth</tt> e deve conter a seguinte chave:</string>
+    <string name="regenerate_auth_key">Regenerar chave de autorização</string>
+    <string name="shortcut_icon">Ícone do atalho</string>
+    <string name="regenerate_auth_key_warning">Tem certeza\? Todas as aplicações de terceiros têm de ser reconfiguradas com a nova chave de autorização.</string>
+    <string name="input_ssaid_instruction">SSAID é um número hexadecimal de byte %1$d, ou seja, uma string de comprimento %2$d contendo 0 a 9 e \"a\" a \"f\".</string>
+    <string name="vt_confirm_upload_and_scan">Sim, enviar e analisar</string>
+    <string name="screen_time">Tempo de ecrã</string>
+    <string name="vt_confirm_uploading_file">O ficheiro não foi encontrado na base de dados do VirusTotal. Quer enviá-lo\?</string>
+    <string name="endianness_little_endian">Little endian</string>
+    <string name="endianness_big_endian">Big endian</string>
+    <string name="log_stop_recording">Parar registo de eventos</string>
+    <string name="tracker">Rastreador</string>
+    <string name="pref_vt_prompt_before_uploading">Mostrar o aviso antes de enviar um ficheiro.</string>
+    <string name="apk_checksums">Checksums de APK</string>
+    <string name="item_select">Selecionar</string>
+    <string name="open_in_new_window">Nova janela</string>
+    <string name="type_string_set">Conjunto de strings</string>
+    <string name="app_explorer">Explorador de aplicações</string>
 </resources>
