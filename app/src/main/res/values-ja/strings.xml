@@ -1121,4 +1121,5 @@
     <string name="shortcut_icon">ショートカットアイコン</string>
     <string name="auth_manager_description">外部アプリからインテントによって起動するには、<tt>auth</tt>というフィールドを追加する必要があり、それには次のキーが含まれていなければなりません:</string>
     <string name="sort_by_installation_date">インストール日時</string>
+    <string name="netpolicy_cannot_be_modified_for_core_apps">ネットポリシーは、Androidコアアプリでは変更できません。</string>
 </resources>
