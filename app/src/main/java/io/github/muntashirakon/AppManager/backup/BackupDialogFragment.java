@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
@@ -186,7 +187,12 @@ public class BackupDialogFragment extends DialogFragment {
             if ((customModes & MODE_RESTORE) != 0 && baseBackupCount == targetPackages.size()) {
                 negativeButton.setOnClickListener(v -> {
                     mode = MODE_RESTORE;
-                    new Thread(this::handleCustomUsers).start();
+                    if (BuildConfig.DEBUG) {
+                        new Thread(this::handleCustomUsers).start();
+                    } else {
+                        // Remove support for custom users in production builds
+                        flags.removeFlag(BackupFlags.BACKUP_CUSTOM_USERS);
+                    }
                 });
             } else {
                 negativeButton.setVisibility(View.GONE);
