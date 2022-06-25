@@ -1326,4 +1326,5 @@
     <string name="log_stop_recording">إيقاف التسجيل</string>
     <string name="apk_checksums">مجاميع APK الاختبارية</string>
     <string name="app_explorer">متصفح التطبيق</string>
+    <string name="netpolicy_cannot_be_modified_for_core_apps">لا يمكن تعديل سياسة الشبكة لتطبيقات Android الأساسية.</string>
 </resources>
