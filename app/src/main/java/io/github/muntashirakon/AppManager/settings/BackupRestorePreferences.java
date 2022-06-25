@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -40,6 +39,7 @@ import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.crypto.RSACrypto;
 import io.github.muntashirakon.AppManager.db.utils.AppDb;
 import io.github.muntashirakon.AppManager.settings.crypto.AESCryptoSelectionDialogFragment;
+import io.github.muntashirakon.AppManager.settings.crypto.ECCCryptoSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.settings.crypto.OpenPgpKeySelectionDialogFragment;
 import io.github.muntashirakon.AppManager.settings.crypto.RSACryptoSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -58,7 +58,7 @@ public class BackupRestorePreferences extends PreferenceFragment {
             R.string.open_pgp_provider,
             R.string.aes,
             R.string.rsa,
-            /* R.string.ecc, // TODO(01/04/21): Implement ECC */
+             R.string.ecc,
     };
 
     private SettingsActivity activity;
@@ -180,8 +180,13 @@ public class BackupRestorePreferences extends PreferenceFragment {
                                 break;
                             }
                             case CryptoUtils.MODE_ECC: {
-                                // TODO(01/04/21): Implement ECC
-                                Toast.makeText(activity, "Not implemented yet.", Toast.LENGTH_SHORT).show();
+                                ECCCryptoSelectionDialogFragment fragment = new ECCCryptoSelectionDialogFragment();
+                                fragment.setOnKeyPairUpdatedListener((keyPair, certificateBytes) -> {
+                                    if (keyPair != null) {
+                                        AppPref.set(AppPref.PrefKey.PREF_ENCRYPTION_STR, CryptoUtils.MODE_ECC);
+                                    }
+                                });
+                                fragment.show(getParentFragmentManager(), RSACryptoSelectionDialogFragment.TAG);
                                 break;
                             }
                             case CryptoUtils.MODE_OPEN_PGP: {

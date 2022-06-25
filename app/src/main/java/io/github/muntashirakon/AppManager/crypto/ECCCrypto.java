@@ -5,6 +5,8 @@ package io.github.muntashirakon.AppManager.crypto;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -20,22 +22,21 @@ import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyPair;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
 
-public class RSACrypto extends AESCrypto {
-    public static final String TAG = "RSACrypto";
+public class ECCCrypto extends AESCrypto {
+    public static final String TAG = "ECCCrypto";
 
-    public static final String RSA_EXT = ".rsa";
-    public static final String RSA_KEY_ALIAS = "backup_rsa";
+    public static final String ECC_EXT = ".ecc";
+    public static final String ECC_KEY_ALIAS = "backup_ecc";
 
-    private static final String RSA_CIPHER_TYPE = "RSA/NONE/OAEPPadding";  // 42 bytes padding
+    private static final String ECC_CIPHER_TYPE = "ECIES";
     private static final int AES_KEY_SIZE_BITS = 256;
 
-    public RSACrypto(@NonNull byte[] iv, @Nullable byte[] encryptedAesKey) throws CryptoException {
-        // This class extends AES crypto as RSA uses hybrid encryption
-        super(iv, CryptoUtils.MODE_RSA, encryptedAesKey);
+    public ECCCrypto(@NonNull byte[] iv, @Nullable byte[] encryptedAesKey) throws CryptoException {
+        super(iv, CryptoUtils.MODE_ECC, encryptedAesKey);
     }
 
-    @Override
     @Nullable
+    @Override
     public byte[] getEncryptedAesKey() {
         return super.getEncryptedAesKey();
     }
@@ -50,20 +51,18 @@ public class RSACrypto extends AESCrypto {
 
     @NonNull
     static SecretKey decryptAesKey(@NonNull byte[] encryptedAesKey) throws CryptoException {
-        // We only have 32/64 bytes AES key with either 256 or 512 bytes minus 42 bytes of data,
-        // so it should work without issues
         KeyPair keyPair;
         try {
             KeyStoreManager keyStoreManager = KeyStoreManager.getInstance();
-            keyPair = keyStoreManager.getKeyPair(RSA_KEY_ALIAS);
+            keyPair = keyStoreManager.getKeyPair(ECC_KEY_ALIAS);
             if (keyPair == null) {
-                throw new CryptoException("No KeyPair with alias " + RSA_KEY_ALIAS);
+                throw new CryptoException("No KeyPair with alias " + ECC_KEY_ALIAS);
             }
         } catch (Exception e) {
             throw new CryptoException(e);
         }
         try {
-            Cipher cipher = Cipher.getInstance(RSA_CIPHER_TYPE);
+            Cipher cipher = Cipher.getInstance(ECC_CIPHER_TYPE, new BouncyCastleProvider());
             cipher.init(Cipher.DECRYPT_MODE, keyPair.getPrivateKey());
             return new SecretKeySpec(cipher.doFinal(encryptedAesKey), "AES");
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException
@@ -74,20 +73,18 @@ public class RSACrypto extends AESCrypto {
 
     @NonNull
     static byte[] encryptAesKey(@NonNull SecretKey key) throws CryptoException {
-        // We only have 32/64 bytes AES key with either 256 or 512 bytes minus 42 bytes of data,
-        // so it should work without issues
         KeyPair keyPair;
         try {
             KeyStoreManager keyStoreManager = KeyStoreManager.getInstance();
-            keyPair = keyStoreManager.getKeyPair(RSA_KEY_ALIAS);
+            keyPair = keyStoreManager.getKeyPair(ECC_KEY_ALIAS);
             if (keyPair == null) {
-                throw new CryptoException("No KeyPair with alias " + RSA_KEY_ALIAS);
+                throw new CryptoException("No KeyPair with alias " + ECC_KEY_ALIAS);
             }
         } catch (Exception e) {
             throw new CryptoException(e);
         }
         try {
-            Cipher cipher = Cipher.getInstance(RSA_CIPHER_TYPE);
+            Cipher cipher = Cipher.getInstance(ECC_CIPHER_TYPE, new BouncyCastleProvider());
             cipher.init(Cipher.ENCRYPT_MODE, keyPair.getPublicKey());
             return cipher.doFinal(key.getEncoded());
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException

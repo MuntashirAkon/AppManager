@@ -307,6 +307,7 @@ public final class MetadataManager {
                 mMetadata.keyIds = rootObj.getString("key_ids");
                 break;
             case CryptoUtils.MODE_RSA:
+            case CryptoUtils.MODE_ECC:
                 mMetadata.aes = HexEncoding.decode(rootObj.getString("aes"));
                 // Deliberate fallthrough
             case CryptoUtils.MODE_AES:

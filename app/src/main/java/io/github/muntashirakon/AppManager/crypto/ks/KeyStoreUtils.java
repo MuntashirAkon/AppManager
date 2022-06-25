@@ -28,10 +28,19 @@ import android.sun.security.x509.X509CertImpl;
 import android.sun.security.x509.X509CertInfo;
 import android.text.TextUtils;
 
+import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.bouncycastle.asn1.x509.SubjectPublicKeyInfo;
+import org.bouncycastle.asn1.x9.X9ECParameters;
+import org.bouncycastle.cert.X509v3CertificateBuilder;
+import org.bouncycastle.cert.jcajce.JcaX509CertificateConverter;
+import org.bouncycastle.crypto.ec.CustomNamedCurves;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.jce.spec.ECParameterSpec;
+import org.bouncycastle.operator.OperatorCreationException;
+import org.bouncycastle.operator.jcajce.JcaContentSignerBuilder;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
@@ -41,6 +50,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.security.GeneralSecurityException;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.KeyException;
@@ -49,20 +59,16 @@ import java.security.KeyPairGenerator;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.PublicKey;
 import java.security.SecureRandom;
-import java.security.SignatureException;
-import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.security.spec.DSAPrivateKeySpec;
-import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.RSAPrivateCrtKeySpec;
@@ -70,7 +76,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.io.IoUtils;
@@ -95,6 +100,17 @@ public class KeyStoreUtils {
         return new KeyPair(privateKey, certificate);
     }
 
+    /**
+     * Must be kept in sync with {@link #TYPES}.
+     */
+    @IntDef({KeyType.JKS, KeyType.PKCS12, KeyType.BKS, KeyType.PK8})
+    public @interface KeyType {
+        int JKS = 0;
+        int PKCS12 = 1;
+        int BKS = 2;
+        int PK8 = 3;
+    }
+
     public static final String KEY_STORE_TYPE_JKS = "JKS";
     public static final String KEY_STORE_TYPE_PKCS12 = "PKCS12";
     public static final String KEY_STORE_TYPE_BKS = "BKS";
@@ -104,9 +120,9 @@ public class KeyStoreUtils {
     @NonNull
     public static ArrayList<String> listAliases(@NonNull Context context,
                                                 @NonNull Uri ksUri,
-                                                int ksType,
+                                                @KeyType int ksType,
                                                 @Nullable char[] ksPass)
-            throws IOException, KeyStoreException, CertificateException, NoSuchAlgorithmException {
+            throws IOException, GeneralSecurityException {
         String keyType = TYPES[ksType];
         Log.d(TAG, "Loading keystore " + keyType);
         final KeyStore ks = KeyStore.getInstance(keyType, getKeyStoreProvider(keyType));
@@ -118,11 +134,10 @@ public class KeyStoreUtils {
     }
 
     @NonNull
-    public static KeyPair getKeyPair(@NonNull Context context, @NonNull Uri ksUri, int ksType,
+    public static KeyPair getKeyPair(@NonNull Context context, @NonNull Uri ksUri, @KeyType int ksType,
                                      @Nullable String ksAlias, @Nullable char[] ksPass,
                                      @Nullable char[] aliasPass)
-            throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException,
-            UnrecoverableKeyException {
+            throws GeneralSecurityException, IOException {
         String keyType = TYPES[ksType];
         Log.d(TAG, "Loading keystore " + keyType);
         final KeyStore ks = KeyStore.getInstance(keyType, getKeyStoreProvider(keyType));
@@ -143,7 +158,7 @@ public class KeyStoreUtils {
 
     @NonNull
     public static KeyPair getKeyPair(@NonNull Context context, @NonNull Uri keyPath, @NonNull Uri certPath)
-            throws Exception {
+            throws GeneralSecurityException, IOException {
         ContentResolver cr = context.getContentResolver();
         PKCS8EncodedKeySpec spec;
         PrivateKey privateKey;
@@ -154,6 +169,7 @@ public class KeyStoreUtils {
         }
         try (InputStream cer = cr.openInputStream(certPath)) {
             cert = (X509Certificate) CertificateFactory.getInstance("X.509").generateCertificate(cer);
+            // TODO: 22/5/21 Check algorithm type: We only support RSA and EC
             privateKey = KeyFactory.getInstance(cert.getPublicKey().getAlgorithm()).generatePrivate(spec);
         }
         return new KeyPair(privateKey, cert);
@@ -161,18 +177,13 @@ public class KeyStoreUtils {
 
     @NonNull
     public static KeyPair generateRSAKeyPair(@NonNull String formattedSubject, int keySize, long expiryDate)
-            throws NoSuchAlgorithmException, CertificateException, NoSuchProviderException,
-            InvalidKeyException, SignatureException {
+            throws GeneralSecurityException, IOException {
         KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
         keyPairGenerator.initialize(keySize, SecureRandom.getInstance("SHA1PRNG"));
         java.security.KeyPair generateKeyPair = keyPairGenerator.generateKeyPair();
         PublicKey publicKey = generateKeyPair.getPublic();
         PrivateKey privateKey = generateKeyPair.getPrivate();
-        try {
-            return new KeyPair(privateKey, generateCert(privateKey, publicKey, formattedSubject, expiryDate));
-        } catch (IOException e) {
-            throw new CertificateEncodingException(e);
-        }
+        return new KeyPair(privateKey, generateRSACert(privateKey, publicKey, formattedSubject, expiryDate));
     }
 
     @NonNull
@@ -187,12 +198,24 @@ public class KeyStoreUtils {
         }
     }
 
+    @NonNull
+    public static KeyPair generateECCKeyPair(@NonNull String formattedSubject, long expiryDate)
+            throws GeneralSecurityException, OperatorCreationException {
+        X9ECParameters curve25519 = CustomNamedCurves.getByName("curve25519");
+        ECParameterSpec parameterSpec = new ECParameterSpec(curve25519.getCurve(), curve25519.getG(), curve25519.getN(), curve25519.getH());
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("ECDH", new BouncyCastleProvider());
+        keyPairGenerator.initialize(parameterSpec, SecureRandom.getInstance("SHA1PRNG"));
+        java.security.KeyPair generateKeyPair = keyPairGenerator.generateKeyPair();
+        PublicKey publicKey = generateKeyPair.getPublic();
+        PrivateKey privateKey = generateKeyPair.getPrivate();
+        return new KeyPair(privateKey, generateECDSACert(privateKey, publicKey, formattedSubject, expiryDate));
+    }
+
     /**
      * Read a PKCS #8, Base64-encrypted file as a Key instance. This is similar to
      * {@link CertificateFactory#generateCertificate(InputStream)} except that it generates a private key.
      */
-    public static PrivateKey generatePrivateKey(InputStream inputStream)
-            throws IOException, NoSuchAlgorithmException, InvalidKeySpecException, KeyException {
+    public static PrivateKey generatePrivateKey(InputStream inputStream) throws IOException, GeneralSecurityException {
         try (BufferedReader in = new BufferedReader(new InputStreamReader(inputStream))) {
             String line;
             boolean readingKey = false;
@@ -339,29 +362,42 @@ public class KeyStoreUtils {
         }
     }
 
+    private static X509Certificate generateECDSACert(@NonNull PrivateKey privateKey, @NonNull PublicKey publicKey,
+                                                     @NonNull String formattedSubject, long expiryDate)
+            throws OperatorCreationException, CertificateException {
+        Date notBefore = new Date();
+        Date notAfter = new Date(expiryDate);
+        org.bouncycastle.asn1.x500.X500Name x500Name = new org.bouncycastle.asn1.x500.X500Name(formattedSubject);
+        JcaContentSignerBuilder signerBuilder = new JcaContentSignerBuilder("SHA512withECDSA");
+        signerBuilder.setProvider(new BouncyCastleProvider());
+        SubjectPublicKeyInfo spki = SubjectPublicKeyInfo.getInstance(publicKey.getEncoded());
+        X509v3CertificateBuilder v3CertGen = new X509v3CertificateBuilder(x500Name,
+                BigInteger.valueOf(new SecureRandom().nextInt() & Integer.MAX_VALUE), notBefore, notAfter, x500Name, spki);
+        return new JcaX509CertificateConverter().getCertificate(v3CertGen.build(signerBuilder.build(privateKey)));
+    }
+
     @NonNull
-    private static X509Certificate generateCert(PrivateKey privateKey, PublicKey publicKey,
-                                                @NonNull String formattedSubject, long expiryDate)
-            throws CertificateException, NoSuchAlgorithmException, NoSuchProviderException, SignatureException,
-            InvalidKeyException, IOException {
+    private static X509Certificate generateRSACert(@NonNull PrivateKey privateKey, @NonNull PublicKey publicKey,
+                                                   @NonNull String formattedSubject, long expiryDate)
+            throws GeneralSecurityException, IOException {
         String algorithmName = "SHA512withRSA";
         CertificateExtensions certificateExtensions = new CertificateExtensions();
-        certificateExtensions.set("SubjectKeyIdentifier", new SubjectKeyIdentifierExtension(
+        certificateExtensions.set(SubjectKeyIdentifierExtension.NAME, new SubjectKeyIdentifierExtension(
                 new KeyIdentifier(publicKey).getIdentifier()));
         X500Name x500Name = new X500Name(formattedSubject);
         Date notBefore = new Date();
         Date notAfter = new Date(expiryDate);
-        certificateExtensions.set("PrivateKeyUsage", new PrivateKeyUsageExtension(notBefore, notAfter));
+        certificateExtensions.set(PrivateKeyUsageExtension.NAME, new PrivateKeyUsageExtension(notBefore, notAfter));
         CertificateValidity certificateValidity = new CertificateValidity(notBefore, notAfter);
         X509CertInfo x509CertInfo = new X509CertInfo();
-        x509CertInfo.set("version", new CertificateVersion(2));
-        x509CertInfo.set("serialNumber", new CertificateSerialNumber(new Random().nextInt() & Integer.MAX_VALUE));
-        x509CertInfo.set("algorithmID", new CertificateAlgorithmId(AlgorithmId.get(algorithmName)));
-        x509CertInfo.set("subject", new CertificateSubjectName(x500Name));
-        x509CertInfo.set("key", new CertificateX509Key(publicKey));
-        x509CertInfo.set("validity", certificateValidity);
-        x509CertInfo.set("issuer", new CertificateIssuerName(x500Name));
-        x509CertInfo.set("extensions", certificateExtensions);
+        x509CertInfo.set(X509CertInfo.VERSION, new CertificateVersion(CertificateVersion.V3));
+        x509CertInfo.set(X509CertInfo.SERIAL_NUMBER, new CertificateSerialNumber(new SecureRandom().nextInt() & Integer.MAX_VALUE));
+        x509CertInfo.set(X509CertInfo.ALGORITHM_ID, new CertificateAlgorithmId(AlgorithmId.get(algorithmName)));
+        x509CertInfo.set(X509CertInfo.SUBJECT, new CertificateSubjectName(x500Name));
+        x509CertInfo.set(X509CertInfo.KEY, new CertificateX509Key(publicKey));
+        x509CertInfo.set(X509CertInfo.VALIDITY, certificateValidity);
+        x509CertInfo.set(X509CertInfo.ISSUER, new CertificateIssuerName(x500Name));
+        x509CertInfo.set(X509CertInfo.EXTENSIONS, certificateExtensions);
         X509CertImpl x509CertImpl = new X509CertImpl(x509CertInfo);
         x509CertImpl.sign(privateKey, algorithmName);
         return x509CertImpl;

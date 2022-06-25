@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyPair;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -34,6 +35,9 @@ import io.github.muntashirakon.dialog.AlertDialogBuilder;
 
 public class KeyPairGeneratorDialogFragment extends DialogFragment {
     public static final String TAG = "KeyPairGeneratorDialogFragment";
+
+    public static final String EXTRA_KEY_TYPE = "type";
+
     public static final List<Integer> SUPPORTED_RSA_KEY_SIZES = Arrays.asList(2048, 4096);
 
     public interface OnGenerateListener {
@@ -43,6 +47,8 @@ public class KeyPairGeneratorDialogFragment extends DialogFragment {
     private OnGenerateListener listener;
     private int keySize;
     private long expiryDate;
+    @CryptoUtils.Mode
+    private String keyType;
 
     public void setOnGenerateListener(OnGenerateListener listener) {
         this.listener = listener;
@@ -52,21 +58,27 @@ public class KeyPairGeneratorDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         FragmentActivity activity = requireActivity();
+        keyType = requireArguments().getString(EXTRA_KEY_TYPE, CryptoUtils.MODE_RSA);
         View view = View.inflate(activity, R.layout.dialog_certificate_generator, null);
         Spinner keySizeSpinner = view.findViewById(R.id.key_size_selector_spinner);
-        keySizeSpinner.setAdapter(new ArrayAdapter<>(activity, R.layout.support_simple_spinner_dropdown_item,
-                SUPPORTED_RSA_KEY_SIZES));
-        keySizeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                keySize = SUPPORTED_RSA_KEY_SIZES.get(position);
-            }
+        if (keyType.equals(CryptoUtils.MODE_RSA)) {
+            keySizeSpinner.setAdapter(new ArrayAdapter<>(activity, R.layout.support_simple_spinner_dropdown_item,
+                    SUPPORTED_RSA_KEY_SIZES));
+            keySizeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    keySize = SUPPORTED_RSA_KEY_SIZES.get(position);
+                }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                keySize = 2048;
-            }
-        });
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                    keySize = 2048;
+                }
+            });
+        } else {
+            // There's no keysize for ECC
+            ((View) keySizeSpinner.getParent()).setVisibility(View.GONE);
+        }
         EditText expiryDate = view.findViewById(R.id.expiry_date);
         expiryDate.setKeyListener(null);
         expiryDate.setOnFocusChangeListener((v, hasFocus) -> {
@@ -100,7 +112,11 @@ public class KeyPairGeneratorDialogFragment extends DialogFragment {
                         formattedSubject = "CN=App Manager";
                     }
                     try {
-                        keyPair.set(KeyStoreUtils.generateRSAKeyPair(formattedSubject, keySize, this.expiryDate));
+                        if (keyType.equals(CryptoUtils.MODE_RSA)) {
+                            keyPair.set(KeyStoreUtils.generateRSAKeyPair(formattedSubject, keySize, this.expiryDate));
+                        } else if (keyType.equals(CryptoUtils.MODE_ECC)) {
+                            keyPair.set(KeyStoreUtils.generateECCKeyPair(formattedSubject, this.expiryDate));
+                        }
                     } catch (Exception e) {
                         Log.e(TAG, e);
                     } finally {

@@ -94,6 +94,7 @@ dependencies {
     implementation 'com.github.MuntashirAkon:sun-security-android:1.1'
     implementation 'com.github.MuntashirAkon:libadb-android:2.2.0'
     implementation 'org.bouncycastle:bcprov-jdk15on:1.70'
+    implementation 'org.bouncycastle:bcpkix-jdk15on:1.70'
     implementation 'com.github.MuntashirAkon.jadx:jadx-core:5a62a8e625'
     implementation 'com.github.MuntashirAkon.jadx:jadx-dex-input:5a62a8e625'
 

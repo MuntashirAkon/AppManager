@@ -27,6 +27,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyPair;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -110,6 +111,9 @@ public class RSACryptoSelectionDialogFragment extends DialogFragment {
             });
             generateButton.setOnClickListener(v -> {
                 KeyPairGeneratorDialogFragment fragment = new KeyPairGeneratorDialogFragment();
+                Bundle args = new Bundle();
+                args.putString(KeyPairGeneratorDialogFragment.EXTRA_KEY_TYPE, CryptoUtils.MODE_RSA);
+                fragment.setArguments(args);
                 fragment.setOnGenerateListener(keyPair -> model.addKeyPair(targetAlias, keyPair));
                 fragment.show(getParentFragmentManager(), KeyPairGeneratorDialogFragment.TAG);
             });

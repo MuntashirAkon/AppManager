@@ -46,6 +46,7 @@ public class KeyPairImporterDialogFragment extends DialogFragment {
     @Nullable
     private OnKeySelectedListener listener;
     private FragmentActivity activity;
+    @KeyStoreUtils.KeyType
     private int keyType;
     @Nullable
     private Uri ksOrPemFile;
@@ -89,11 +90,11 @@ public class KeyPairImporterDialogFragment extends DialogFragment {
                 R.layout.support_simple_spinner_dropdown_item));
         keyTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(AdapterView<?> parent, View view, @KeyStoreUtils.KeyType int position, long id) {
                 ksPassOrPk8.setText(null);
                 ksLocationOrPem.setText(null);
 
-                if (position == 3) {
+                if (position == KeyStoreUtils.KeyType.PK8) {
                     // PKCS #8 and PEM
                     ksPassOrPk8Layout.setHint(R.string.pk8_file);
                     ksPassOrPk8.setKeyListener(null);
@@ -118,7 +119,7 @@ public class KeyPairImporterDialogFragment extends DialogFragment {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                keyType = 0;
+                keyType = KeyStoreUtils.KeyType.JKS;
                 // KeyStore
                 ksPassOrPk8Layout.setHint(R.string.keystore_pass);
                 ksPassOrPk8.setKeyListener(keyListener);
@@ -138,7 +139,7 @@ public class KeyPairImporterDialogFragment extends DialogFragment {
             Button okButton = dialog1.getButton(AlertDialog.BUTTON_POSITIVE);
             okButton.setOnClickListener(v -> {
                 if (listener == null) return;
-                if (keyType == 3) {
+                if (keyType == KeyStoreUtils.KeyType.PK8) {
                     // PKCS #8 and PEM
                     try {
                         if (pk8File == null || ksOrPemFile == null) {
