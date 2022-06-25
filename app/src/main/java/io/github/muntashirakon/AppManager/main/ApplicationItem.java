@@ -84,6 +84,7 @@ public class ApplicationItem extends PackageItemInfo {
     public Integer blockedCount = 0;
     public Integer trackerCount = 0;
     public Long lastActionTime = 0L;
+    public Long totalSize = 0L;
     /**
      * Whether the item is a user app (or system app)
      */

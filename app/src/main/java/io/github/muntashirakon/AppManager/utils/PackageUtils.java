@@ -230,6 +230,12 @@ public final class PackageUtils {
             item.blockedCount = app.rulesCount;
             item.trackerCount = app.trackerCount;
             item.lastActionTime = app.lastActionTime;
+            for (int userId : item.userHandles) {
+                PackageSizeInfo sizeInfo = getPackageSizeInfo(context, item.packageName, userId, null);
+                if (sizeInfo != null) {
+                    item.totalSize += sizeInfo.getTotalSize();
+                }
+            }
         }
         // Add rest of the backups
         for (String packageName : backups.keySet()) {
@@ -278,7 +284,7 @@ public final class PackageUtils {
 
     @WorkerThread
     @Nullable
-    public static PackageSizeInfo getPackageSizeInfo(Context context, String packageName, int userHandle, UUID storageUuid) {
+    public static PackageSizeInfo getPackageSizeInfo(@NonNull Context context, @NonNull String packageName, int userHandle, @Nullable UUID storageUuid) {
         AtomicReference<PackageSizeInfo> packageSizeInfo = new AtomicReference<>();
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             CountDownLatch waitForStats = new CountDownLatch(1);
@@ -303,7 +309,7 @@ public final class PackageUtils {
             try {
                 IStorageStatsManager storageStatsManager = IStorageStatsManager.Stub.asInterface(ProxyBinder
                         .getService(Context.STORAGE_STATS_SERVICE));
-                String uuidString = StorageManagerHidden.convert(storageUuid);
+                String uuidString = storageUuid != null ? StorageManagerHidden.convert(storageUuid) : null;
                 StorageStats storageStats = storageStatsManager.queryStatsForPackage(uuidString, packageName,
                         userHandle, context.getPackageName());
                 packageSizeInfo.set(new PackageSizeInfo(packageName, storageStats, userHandle));
