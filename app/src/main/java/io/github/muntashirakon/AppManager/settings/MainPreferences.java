@@ -160,6 +160,7 @@ public class MainPreferences extends PreferenceFragment {
         });
         // Black theme/custom theme
         SwitchPreferenceCompat fullBlackTheme = Objects.requireNonNull(findPreference("app_theme_pure_black"));
+        fullBlackTheme.setVisible(BuildConfig.DEBUG);
         fullBlackTheme.setChecked(AppPref.isPureBlackTheme());
         fullBlackTheme.setOnPreferenceChangeListener((preference, newValue) -> {
             boolean enabled = (boolean) newValue;
