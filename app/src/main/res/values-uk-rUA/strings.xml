@@ -1250,4 +1250,5 @@
     <string name="apk_checksums">Контрольні суми APK</string>
     <string name="item_select">Обрати</string>
     <string name="app_explorer">Дослідження додатків</string>
+    <string name="netpolicy_cannot_be_modified_for_core_apps">Неможливо змінити мережеву політику системних застосунків Android.</string>
 </resources>
