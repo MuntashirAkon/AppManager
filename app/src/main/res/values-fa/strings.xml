@@ -901,7 +901,7 @@
     <string name="filter_choice_tag">برچسب زدن</string>
     <string name="log_cleared">گزارشات پاک شدند</string>
     <string name="notification_subtext">برای متوقف شدن لمس کنید</string>
-    <string name="no_saved_logs">گزارشی پیدا نشد.</string>
+    <string name="no_saved_logs">هیچ گزارش ذخیره شده‌ای یافت نشد.</string>
     <plurals name="toast_log_truncated">
         <item quantity="one">گزارش خیلی بزرگ است، آخرین %d خط را نشان می دهد.</item>
         <item quantity="other">گزارش خیلی بزرگ است, آخرین%dخط را نشان می دهد.</item>
@@ -1103,5 +1103,9 @@
     <string name="toggle_internet">استفاده از اینترنت</string>
     <string name="vt_failed">VirusTotal: ناموفق بود</string>
     <string name="vt_checking">VirusTotal: در حال بررسی…</string>
-    <string name="intent_firewall"/>
+    <string name="intent_firewall">IFW</string>
+    <string name="pref_disable_description">فقط اجزا را غیرفعال کنید برای کاربران روت توصیه نمی شود زیرا برنامه ها می توانند این را دور بزنند. در حالت‌های ADB، فقط برنامه های test-only را میتوان با این روش غیرفعال کرد.</string>
+    <string name="pref_intent_firewall_description">اجزاء را فقط با استفاده از فایروال Intent مسدود کنید. توصیه نمی شود زیرا برخی از برنامه های سیستم می توانند فایروال ها را دور بزنند.</string>
+    <string name="intent_firewall_and_disable">IFW + غیرفعال کردن</string>
+    <string name="pref_intent_firewall_and_disable_description">کامپوننت ها را با استفاده از فایروال Intent مسدود کنید و همچنین آنها را غیرفعال کنید. روش پیشنهادی برای کاربران با دسترسی روت.</string>
 </resources>
