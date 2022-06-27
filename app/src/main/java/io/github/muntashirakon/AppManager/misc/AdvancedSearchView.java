@@ -21,7 +21,6 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
-import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.TintTypedArray;
 import androidx.customview.view.AbsSavedState;
 
@@ -35,6 +34,8 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.util.UiUtils;
+import io.github.muntashirakon.widget.SearchView;
 
 public class AdvancedSearchView extends SearchView {
     @IntDef(flag = true, value = {
@@ -147,10 +148,11 @@ public class AdvancedSearchView extends SearchView {
     @SuppressLint("RestrictedApi")
     public AdvancedSearchView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        context = getContext();
         mSearchSrcTextView = findViewById(R.id.search_src_text);
         mSearchTypeSelectionButton = findViewById(R.id.search_mag_icon);
         mSearchTypeSelectionButton.setImageResource(R.drawable.ic_filter_menu_outline);
-        mSearchTypeSelectionButton.setBackgroundResource(R.drawable.item_transparent);
+        mSearchTypeSelectionButton.setBackground(UiUtils.getDrawable(context, android.R.attr.selectableItemBackgroundBorderless));
         mSearchTypeSelectionButton.setOnClickListener(onClickSearchIcon);
         final TintTypedArray a = TintTypedArray.obtainStyledAttributes(context,
                 attrs, R.styleable.SearchView, defStyleAttr, 0);

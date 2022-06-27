@@ -7,21 +7,20 @@
     android:orientation="vertical">
 
     <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.AppTheme.TextInputLayout.Small"
+        style="@style/Widget.AppTheme.SearchViewInputLayout"
         android:id="@+id/search_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/search"
         android:paddingStart="@dimen/padding_medium"
         android:paddingEnd="@dimen/padding_medium"
-        app:hintAnimationEnabled="true"
-        app:hintEnabled="true">
+        app:hintEnabled="false">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/search_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:singleLine="true"
+            android:hint="@string/search"
             tools:text="@tools:sample/full_names" />
 
     </com.google.android.material.textfield.TextInputLayout>

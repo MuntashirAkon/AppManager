@@ -8,6 +8,7 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -29,6 +30,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.Px;
 import androidx.annotation.StyleRes;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
@@ -68,6 +70,13 @@ public final class UiUtils {
         TypedValue typedValue = new TypedValue();
         context.getTheme().resolveAttribute(resId, typedValue, true);
         return typedValue.data;
+    }
+
+    @Nullable
+    public static Drawable getDrawable(@NonNull Context context, @AttrRes int resId) {
+        TypedValue typedValue = new TypedValue();
+        context.getTheme().resolveAttribute(resId, typedValue, true);
+        return ContextCompat.getDrawable(context, typedValue.resourceId);
     }
 
     public static void hideKeyboard(@NonNull View v) {
