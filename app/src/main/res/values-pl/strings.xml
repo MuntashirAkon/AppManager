@@ -1250,4 +1250,5 @@
     <string name="apk_checksums">Sumy kontrolne APK</string>
     <string name="log_stop_recording">Zatrzymaj nagrywanie</string>
     <string name="app_explorer">App Explorer</string>
+    <string name="netpolicy_cannot_be_modified_for_core_apps">Zasad sieciowych nie można modyfikować dla systemowych aplikacji Android.</string>
 </resources>
