@@ -1142,4 +1142,7 @@
     <string name="item_select">选择</string>
     <string name="app_explorer">应用浏览器</string>
     <string name="netpolicy_cannot_be_modified_for_core_apps">不允许修改 Android 核心应用的网络策略。</string>
+    <string name="open_developer_options_page">在Android设置中打开开发者选项页面</string>
+    <string name="pref_pure_black_theme">纯黑主题</string>
+    <string name="pref_pure_black_theme_msg">启用夜间模式时，使用完全黑色的背景。</string>
 </resources>
