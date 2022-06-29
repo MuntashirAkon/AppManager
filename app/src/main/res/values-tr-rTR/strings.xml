@@ -552,14 +552,17 @@
     <string name="class_viewer">Sınıf Görüntüleyici</string>
     <string name="word_wrap">Sözcük kaydırmayı aç/kapat</string>
     <string name="credits_message">Aşağıdaki projelerin yazarlarına
-\n- Android Open Source Project
+\n- The Android Open Source Project
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a>
 \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a>
 \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
-\n<a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
+\n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a>
+\n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
 \n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
 \n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
 \n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
@@ -567,6 +570,7 @@
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
 \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+\n- <a href="https://github.com/zhaobozhen/librariest">Absinthe\'s libraries</a>
 \nOrijinal logo: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="credits">Teşekkürler</string>
     <string name="paths_and_directories">Yollar ve Dizinler</string>
@@ -1175,4 +1179,7 @@
     <string name="item_select">Seç</string>
     <string name="app_explorer">Uygulama Gezgini</string>
     <string name="netpolicy_cannot_be_modified_for_core_apps">Ağ politikası, çekirdek Android uygulamaları için değiştirilemez.</string>
+    <string name="pref_pure_black_theme_msg">Gece modu etkinleştirildiğinde tamamen siyah bir arka plan kullanın.</string>
+    <string name="pref_pure_black_theme">Saf siyah tema</string>
+    <string name="open_developer_options_page">Android ayarlarında geliştirici seçenekleri sayfasını açın</string>
 </resources>
