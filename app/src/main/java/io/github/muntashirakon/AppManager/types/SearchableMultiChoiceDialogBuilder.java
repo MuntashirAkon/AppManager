@@ -4,8 +4,6 @@ package io.github.muntashirakon.AppManager.types;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +22,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.resources.MaterialAttributes;
-import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,13 +32,14 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.widget.CheckBox;
+import io.github.muntashirakon.widget.SearchView;
 
 public class SearchableMultiChoiceDialogBuilder<T> {
     @NonNull
     private final FragmentActivity activity;
     @NonNull
     private final MaterialAlertDialogBuilder builder;
-    private final View searchBar;
+    private final SearchView searchView;
     private final CheckBox selectAll;
     @NonNull
     private final SearchableRecyclerViewAdapter adapter;
@@ -74,25 +72,24 @@ public class SearchableMultiChoiceDialogBuilder<T> {
         RecyclerView recyclerView = view.findViewById(android.R.id.list);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false));
-        searchBar = view.findViewById(R.id.search_bar);
+        searchView = view.findViewById(R.id.action_search);
         selectAll = view.findViewById(android.R.id.checkbox);
-        TextInputEditText searchInput = view.findViewById(R.id.search_input);
-        searchInput.addTextChangedListener(new TextWatcher() {
+        searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            public boolean onQueryTextSubmit(String query) {
+                return false;
             }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                adapter.setFilteredItems(s);
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
+            public boolean onQueryTextChange(String newText) {
+                adapter.setFilteredItems(newText);
+                return true;
             }
         });
         // Don't display search bar if items are less than 6
-        if (items.size() < 6) searchBar.setVisibility(View.GONE);
+        if (items.size() < 6) {
+            searchView.setVisibility(View.GONE);
+        }
         builder = new MaterialAlertDialogBuilder(activity).setView(view);
         @SuppressLint("RestrictedApi")
         int layoutId = MaterialAttributes.resolveInteger(activity, R.attr.multiChoiceItemLayout,
@@ -153,7 +150,7 @@ public class SearchableMultiChoiceDialogBuilder<T> {
     }
 
     public SearchableMultiChoiceDialogBuilder<T> hideSearchBar(boolean hide) {
-        this.searchBar.setVisibility(hide ? View.GONE : View.VISIBLE);
+        this.searchView.setVisibility(hide ? View.GONE : View.VISIBLE);
         return this;
     }
 

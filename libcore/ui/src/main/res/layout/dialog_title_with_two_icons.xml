@@ -46,8 +46,8 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/action"
                 style="@style/Widget.AppTheme.Button.IconButton.InverseColor"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:layout_width="34dp"
+                android:layout_height="34dp"
                 android:layout_weight="0"
                 android:layout_marginStart="8dp"
                 android:layout_gravity="end"

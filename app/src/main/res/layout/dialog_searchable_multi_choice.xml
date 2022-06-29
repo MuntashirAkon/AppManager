@@ -6,29 +6,19 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <com.google.android.material.textfield.TextInputLayout
-        style="@style/Widget.AppTheme.SearchViewInputLayout"
-        android:id="@+id/search_bar"
+    <io.github.muntashirakon.widget.SearchView
+        style="@style/Widget.AppTheme.SearchView.Small"
+        android:id="@+id/action_search"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingStart="@dimen/padding_medium"
-        android:paddingEnd="@dimen/padding_medium"
-        app:hintEnabled="false">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/search_input"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:singleLine="true"
-            android:hint="@string/search"
-            tools:text="@tools:sample/full_names" />
-
-    </com.google.android.material.textfield.TextInputLayout>
+        android:layout_height="40dp"
+        android:layout_marginHorizontal="@dimen/padding_medium"
+        app:iconifiedByDefault="false" />
 
     <io.github.muntashirakon.widget.CheckBox
         android:id="@android:id/checkbox"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
+        android:layout_gravity="center_vertical"
         android:layout_marginStart="@dimen/padding_medium"
         android:layout_marginEnd="@dimen/padding_medium"
         android:text="@string/select_all" />

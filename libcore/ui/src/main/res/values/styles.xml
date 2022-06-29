@@ -214,38 +214,25 @@
     <!-- SearchView -->
     <style name="Widget.AppTheme.SearchView" parent="Widget.AppCompat.SearchView">
         <item name="queryBackground">@null</item>
-        <item name="closeIcon">@drawable/ic_baseline_clear_24</item>
+        <item name="closeIcon">@drawable/mtrl_ic_cancel</item>
+        <item name="closeIconTint">@color/m3_textfield_indicator_text_color</item>
         <item name="searchIcon">@drawable/ic_search</item>
         <item name="queryHint">@android:string/search_go</item>
-        <item name="boxBackgroundColor">@color/ten_percent_black</item>
+        <item name="frameMarginHorizontal">8dp</item>
+        <item name="android:backgroundTint">@color/ten_percent_black</item>
+        <item name="android:textAppearance">?attr/textAppearanceBodyLarge</item>
         <item name="shapeAppearanceOverlay">@style/ShapeAppearance.AppTheme.LargeComponent</item>
     </style>
 
-    <style name="Widget.AppTheme.SearchViewInputLayout" parent="Widget.AppTheme.TextInputLayout">
-        <item name="boxBackgroundColor">@color/ten_percent_black</item>
-        <item name="boxStrokeWidth">0dp</item>
-        <item name="boxStrokeWidthFocused">0dp</item>
-        <item name="hintTextAppearance">@style/TextAppearance.AppTheme.LabelSmaller</item>
-        <item name="materialThemeOverlay">@style/ThemeOverlay.AppTheme.SearchViewInputLayout</item>
-        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.AppTheme.MediumComponent</item>
-    </style>
-
-    <style name="ThemeOverlay.AppTheme.SearchViewInputLayout" parent="">
-        <item name="autoCompleteTextViewStyle">@style/Widget.AppTheme.SearchViewEditText</item>
-        <item name="editTextStyle">@style/Widget.AppTheme.SearchViewEditText</item>
-    </style>
-
-    <style name="Widget.AppTheme.SearchViewEditText" parent="Widget.Material3.TextInputEditText.OutlinedBox.Dense">
-        <item name="android:textAppearance">@style/TextAppearance.AppTheme.BodySmall</item>
-        <item name="android:paddingStart">12dp</item>
-        <item name="android:paddingEnd">12dp</item>
-        <item name="android:paddingTop">8dp</item>
-        <item name="android:paddingBottom">8dp</item>
-        <item name="android:minHeight">34dp</item>
+    <style name="Widget.AppTheme.SearchView.Small" parent="Widget.AppTheme.SearchView">
+        <item name="frameMarginHorizontal">2dp</item>
+        <item name="android:textAppearance">?attr/textAppearanceBodyMedium</item>
     </style>
 
     <!-- TextInputLayout -->
-    <style name="Widget.AppTheme.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox.Dense" />
+    <style name="Widget.AppTheme.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox.Dense">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.AppTheme.LargeComponent</item>
+    </style>
 
     <style name="Widget.AppTheme.TextInputLayout.Small" parent="Widget.AppTheme.TextInputLayout">
         <item name="hintTextAppearance">@style/TextAppearance.AppTheme.LabelSmaller</item>

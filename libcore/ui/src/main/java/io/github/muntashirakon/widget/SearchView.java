@@ -4,17 +4,22 @@ package io.github.muntashirakon.widget;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.res.ColorStateList;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
+import android.util.TypedValue;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StyleRes;
 import androidx.appcompat.widget.TintTypedArray;
 
-import com.google.android.material.color.MaterialColors;
 import com.google.android.material.internal.ThemeEnforcement;
 import com.google.android.material.resources.MaterialResources;
+import com.google.android.material.resources.TextAppearance;
+import com.google.android.material.resources.TextAppearanceFontCallback;
 import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.shape.ShapeAppearanceModel;
 import com.google.android.material.shape.Shapeable;
@@ -26,8 +31,10 @@ import static com.google.android.material.theme.overlay.MaterialThemeOverlay.wra
 public class SearchView extends androidx.appcompat.widget.SearchView implements Shapeable {
     private static final int DEF_STYLE_RES = R.style.Widget_AppTheme_SearchView;
 
+    private final SearchAutoComplete mSearchSrcTextView;
+    private final LinearLayout mSearchEditFrame;
+    private final ImageView mCloseButton;
     private final MaterialShapeDrawable mExpandedSearchViewShapeDrawable;
-    private ColorStateList mBoxBackgroundColor;
     private float mElevation;
 
     public SearchView(@NonNull Context context) {
@@ -47,20 +54,51 @@ public class SearchView extends androidx.appcompat.widget.SearchView implements 
         super(wrap(context, attrs, defStyleAttr, defStyleRes), attrs, defStyleAttr);
 
         context = getContext();
+        mCloseButton = findViewById(R.id.search_close_btn);
+        mSearchSrcTextView = findViewById(R.id.search_src_text);
+        mSearchEditFrame = findViewById(R.id.search_edit_frame);
         mElevation = getElevation();
 
         final TintTypedArray a = ThemeEnforcement.obtainTintedStyledAttributes(
-                context, attrs, R.styleable.TextInputLayout, defStyleAttr, DEF_STYLE_RES);
+                context, attrs, R.styleable.SearchView, defStyleAttr, DEF_STYLE_RES);
 
-        mBoxBackgroundColor = MaterialResources.getColorStateList(
-                context, a, R.styleable.TextInputLayout_boxBackgroundColor);
-        if (mBoxBackgroundColor == null) {
-            mBoxBackgroundColor = ColorStateList.valueOf(MaterialColors.getColor(
-                    context, R.attr.colorSurface, SearchView.class.getSimpleName()));
+        TextAppearance textAppearance = MaterialResources.getTextAppearance(context, a.getWrappedTypeArray(),
+                R.styleable.SearchView_android_textAppearance);
+
+        if (textAppearance != null) {
+            mSearchSrcTextView.setHintTextColor(textAppearance.textColorHint);
+            mSearchSrcTextView.setLinkTextColor(textAppearance.textColorLink);
+            mSearchSrcTextView.setAllCaps(textAppearance.textAllCaps);
+            mSearchSrcTextView.setTextColor(textAppearance.getTextColor());
+            if (textAppearance.shadowColor != null) {
+                mSearchSrcTextView.setShadowLayer(textAppearance.shadowRadius, textAppearance.shadowDx,
+                        textAppearance.shadowDy, textAppearance.shadowColor.getDefaultColor());
+            }
+            mSearchSrcTextView.setLetterSpacing(textAppearance.letterSpacing);
+            mSearchSrcTextView.setTextColor(textAppearance.getTextColor());
+            mSearchSrcTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textAppearance.getTextSize());
+            textAppearance.getFontAsync(context, new TextAppearanceFontCallback() {
+                @Override
+                public void onFontRetrieved(Typeface typeface, boolean fontResolvedSynchronously) {
+                    mSearchSrcTextView.setTypeface(typeface);
+                }
+
+                @Override
+                public void onFontRetrievalFailed(int reason) {
+                }
+            });
         }
+
+        mCloseButton.setImageTintList(MaterialResources.getColorStateList(
+                context, a, R.styleable.SearchView_closeIconTint));
+
+        int frameMarginHorizontal = a.getDimensionPixelSize(R.styleable.SearchView_frameMarginHorizontal, 0);
 
         a.recycle();
         mExpandedSearchViewShapeDrawable = new MaterialShapeDrawable(context, attrs, defStyleAttr, DEF_STYLE_RES);
+        ViewGroup.MarginLayoutParams layoutParams = (MarginLayoutParams) mSearchEditFrame.getLayoutParams();
+        layoutParams.setMarginStart(frameMarginHorizontal);
+        layoutParams.setMarginEnd(frameMarginHorizontal);
         updateBackgroundExpanded();
     }
 
@@ -86,7 +124,6 @@ public class SearchView extends androidx.appcompat.widget.SearchView implements 
 
     private void updateBackgroundExpanded() {
         mExpandedSearchViewShapeDrawable.initializeElevationOverlay(getContext());
-        mExpandedSearchViewShapeDrawable.setFillColor(mBoxBackgroundColor);
         mExpandedSearchViewShapeDrawable.setElevation(mElevation);
         setBackground(mExpandedSearchViewShapeDrawable);
     }

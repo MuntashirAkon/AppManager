@@ -1,6 +1,13 @@
 <!-- SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later -->
 <resources>
     <attr name="materialFullScreenAlertDialogTheme" format="reference" />
+    <declare-styleable name="SearchView">
+        <!-- Tint to apply to the SearchView's close icon. -->
+        <attr name="closeIconTint" />
+        <attr name="android:textAppearance" />
+        <!-- Horizontal margin of the edit frame -->
+        <attr name="frameMarginHorizontal" format="dimension" />
+    </declare-styleable>
     <declare-styleable name="FlowLayout">
         <!-- Constrains items to a single horizontal line. By default, this is false and items will reflow to multiple
              lines. If this is set to true, the view should be wrapped inside a HorizontalScrollView. -->
