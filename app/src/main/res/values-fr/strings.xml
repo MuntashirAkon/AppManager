@@ -1159,4 +1159,19 @@
     <string name="file_modified_are_you_sure">Le fichier a été modifié. Voulez-vous annuler toutes vos modifications et quitter \?</string>
     <string name="primary_abi">ABI principale</string>
     <string name="pref_saved_apk_name_format_msg">Le format à utiliser pour nommer les fichiers APK lorsque vous les enregistrez.</string>
+    <string name="open_developer_options_page">Ouvrir la page des options de développeur dans les préférences Android</string>
+    <string name="vt_confirm_uploading_file">Ce fichier n\'a pas été trouvé dans la base VirusTotal. Voulez-vous l\'envoyer \?</string>
+    <string name="pref_vt_prompt_before_uploading">Afficher une confirmation avec l\'envoyer un fichier.</string>
+    <string name="pref_pure_black_theme_msg">Utilise un arrière-plan complètement noir quand le mode nuit est actif.</string>
+    <string name="pref_pure_black_theme">Thème noir pur</string>
+    <string name="apk_checksums">Checksums de l\'APK</string>
+    <string name="regenerate_auth_key">Regénérer la clé d\'autorisation</string>
+    <string name="hidden_api_enf_policy_dark_grey_and_black">Impose (listes gris foncé et noire)</string>
+    <string name="backup_volume_unavailable_warning">Le volume de sauvegarde sélectionné n\'est pas disponible actuellement. S\'il est dans un stockage externe, veuillez insérer celui-ci, ou changer de volume de sauvegarde.</string>
+    <string name="type_string_set">Ensemble de chaines de caractères</string>
+    <string name="regenerate_auth_key_warning">Êtes-vous sûr \? Toutes les applications tiers doivent être reconfigurées avec la nouvelle clé d\'authentification.</string>
+    <string name="auth_manager_title">Gestionnaire d\'autorisation</string>
+    <string name="hidden_api_enf_policy_black">Impose (liste noire seulement)</string>
+    <string name="input_ssaid_instruction">Le SSAID est un nombre hexadécimal de %1$d octets, c\'est-à-dire une chaine de %2$d caractères uniquement de 0 à 9 et de a à f.</string>
+    <string name="auth_manager_description">Pour lancer un Intent depuis une application externe, il est nécessaire de fournir un champ supplémentaire nommé <tt>auth</tt>, qui doit contenir les clés suivantes :</string>
 </resources>
