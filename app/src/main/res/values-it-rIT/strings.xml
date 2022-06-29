@@ -302,8 +302,11 @@
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a>
 \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a>
 \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a>
 \n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
 \n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
 \n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
@@ -312,6 +315,7 @@
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
 \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+\n- <a href="https://github.com/zhaobozhen/librariest">Absinthe\'s libraries</a>
 \nCrediti logo originale: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="credits">Crediti</string>
     <string name="sdk_flags">Flags</string>
@@ -1176,4 +1180,7 @@
     <string name="intent_firewall_and_disable">IFW + disabilita</string>
     <string name="uses_play_app_signing_description">Questa app contiene alcuni markers che indicano che <i>potrebbe</i> usare <a href="https://support.google.com/googleplay/android-developer/answer/9842756">Firma Play App</a>. Con questo schema, le chiavi per firmare sono memorizzate su servers di Google, e Google è responsabile per la firma dell\'app. Nota che le informazioni sulla firma che corrispondono è l\'unico modo per verificare che l\'app non è stata modificata da qualcuno oltre allo sviluppatore (e in questo caso, anche Google).</string>
     <string name="netpolicy_cannot_be_modified_for_core_apps">La politica di rete non può essere modificata per le applicazioni principali di Android.</string>
+    <string name="pref_pure_black_theme_msg">Usa uno sfondo completamente nero quando la modalità notte è abilitata.</string>
+    <string name="open_developer_options_page">Apri la pagina delle opzioni sviluppatore nelle impostazioni di Android</string>
+    <string name="pref_pure_black_theme">Tema nero puro</string>
 </resources>
