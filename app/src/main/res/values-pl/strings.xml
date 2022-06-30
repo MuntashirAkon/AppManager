@@ -267,8 +267,11 @@
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a>
 \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a>
 \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a>
 \n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
 \n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
 \n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
@@ -277,6 +280,7 @@
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
 \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+\n- <a href="https://github.com/zhaobozhen/librariest">Absinthe\'s libraries</a>
 \nAutorskie logo: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="icon_picker">Selektor ikon</string>
     <string name="create_shortcut">Utwórz skrót</string>
@@ -1251,4 +1255,7 @@
     <string name="log_stop_recording">Zatrzymaj nagrywanie</string>
     <string name="app_explorer">App Explorer</string>
     <string name="netpolicy_cannot_be_modified_for_core_apps">Zasad sieciowych nie można modyfikować dla systemowych aplikacji Android.</string>
+    <string name="pref_pure_black_theme">Motyw czysta czerń</string>
+    <string name="pref_pure_black_theme_msg">Użycie całkowicie czarnego tła, gdy tryb nocny jest włączony.</string>
+    <string name="open_developer_options_page">Otwórz stronę opcji programisty w ustawieniach Androida</string>
 </resources>
