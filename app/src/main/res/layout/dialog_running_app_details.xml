@@ -57,7 +57,7 @@
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/info"
-                style="@style/Widget.AppTheme.Button.IconButton"
+                style="@style/Widget.AppTheme.Button.IconButton.InverseColor"
                 android:layout_width="@dimen/icon_size"
                 android:layout_height="@dimen/icon_size"
                 android:layout_weight="0"
