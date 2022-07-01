@@ -239,7 +239,9 @@
         <item name="materialThemeOverlay">@style/ThemeOverlay.AppTheme.TextInputLayout.Small</item>
     </style>
 
-    <style name="Widget.AppTheme.TextInputLayout.ExposedDropdownMenu" parent="Widget.Material3.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu" />
+    <style name="Widget.AppTheme.TextInputLayout.ExposedDropdownMenu" parent="Widget.Material3.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu">
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.AppTheme.LargeComponent</item>
+    </style>
 
     <style name="Widget.AppTheme.TextInputLayout.ExposedDropdownMenu.Small" parent="Widget.AppTheme.TextInputLayout.ExposedDropdownMenu">
         <item name="hintTextAppearance">@style/TextAppearance.AppTheme.LabelSmaller</item>
