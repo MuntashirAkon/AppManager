@@ -53,12 +53,40 @@ public class AppUsageDetailsDialog extends CapsuleBottomSheetDialogFragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public boolean displayLoaderByDefault() {
+        return true;
+    }
+
+    @Override
+    public void onBodyInitialized(@NonNull View view, @Nullable Bundle savedInstanceState) {
         FragmentActivity activity = requireActivity();
         PackageUsageInfo usageInfo = requireArguments().getParcelable(ARG_PACKAGE_USAGE_INFO);
         if (usageInfo == null) {
+            finishLoading();
             return;
         }
+        // Set header first
+        DialogTitleBuilder titleBuilder = new DialogTitleBuilder(activity)
+                .setTitle(usageInfo.appLabel)
+                .setTitleSelectable(true)
+                .setSubtitle(usageInfo.packageName)
+                .setSubtitleSelectable(true)
+                .setEndIcon(R.drawable.ic_information_variant, v -> {
+                    Intent appDetailsIntent = new Intent(requireContext(), AppDetailsActivity.class);
+                    appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, usageInfo.packageName);
+                    appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_USER_HANDLE, usageInfo.userId);
+                    appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_BACK_TO_MAIN, false);
+                    startActivity(appDetailsIntent);
+                })
+                .setEndIconContentDescription(R.string.app_info);
+        ApplicationInfo applicationInfo = usageInfo.applicationInfo;
+        if (applicationInfo != null) {
+            PackageManager pm = activity.getPackageManager();
+            titleBuilder.setStartIcon(applicationInfo.loadIcon(pm));
+        }
+        setHeader(titleBuilder.build());
+
+        // Set body
         AppUsageStatsManager.DataUsage mobileData = usageInfo.mobileData;
         AppUsageStatsManager.DataUsage wifiData = usageInfo.wifiData;
 
@@ -85,42 +113,30 @@ public class AppUsageDetailsDialog extends CapsuleBottomSheetDialogFragment {
             lastUsed.setText(R.string._undefined);
         }
         userId.setText(String.format(Locale.getDefault(), "%d", usageInfo.userId));
-        if (mobileData != null && (mobileData.first != 0 || mobileData.second != 0)) {
-            String dataUsage = String.format("  \u2191 %1$s \u2193 %2$s",
-                    Formatter.formatFileSize(requireContext(), mobileData.first),
-                    Formatter.formatFileSize(requireContext(), mobileData.second));
-            mobileDataUsage.setText(dataUsage);
-        } else mobileDataUsage.setText(R.string._undefined);
-        if (wifiData != null && (wifiData.first != 0 || wifiData.second != 0)) {
-            String dataUsage = String.format("  \u2191 %1$s \u2193 %2$s",
-                    Formatter.formatFileSize(requireContext(), wifiData.first),
-                    Formatter.formatFileSize(requireContext(), wifiData.second));
-            wifiDataUsage.setText(dataUsage);
-        } else wifiDataUsage.setText(R.string._undefined);
+        if ((mobileData == null && wifiData == null) || (mobileData != null && wifiData != null
+                && (mobileData.getTotal() + wifiData.getTotal() == 0))) {
+            view.findViewById(R.id.data_usage_layout).setVisibility(View.GONE);
+        } else {
+            if (mobileData != null && mobileData.getTotal() != 0) {
+                String dataUsage = String.format("  \u2191 %1$s \u2193 %2$s",
+                        Formatter.formatFileSize(requireContext(), mobileData.first),
+                        Formatter.formatFileSize(requireContext(), mobileData.second));
+                mobileDataUsage.setText(dataUsage);
+            } else mobileDataUsage.setVisibility(View.GONE);
+            if (wifiData != null && wifiData.getTotal() != 0) {
+                String dataUsage = String.format("  \u2191 %1$s \u2193 %2$s",
+                        Formatter.formatFileSize(requireContext(), wifiData.first),
+                        Formatter.formatFileSize(requireContext(), wifiData.second));
+                wifiDataUsage.setText(dataUsage);
+            } else wifiDataUsage.setVisibility(View.GONE);
+        }
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));
         recyclerView.setAdapter(adapter);
         adapter.setDefaultList(usageInfo.entries);
 
-        DialogTitleBuilder titleBuilder = new DialogTitleBuilder(activity)
-                .setTitle(usageInfo.appLabel)
-                .setTitleSelectable(true)
-                .setSubtitle(usageInfo.packageName)
-                .setSubtitleSelectable(true)
-                .setEndIcon(R.drawable.ic_information_variant, v -> {
-                    Intent appDetailsIntent = new Intent(requireContext(), AppDetailsActivity.class);
-                    appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, usageInfo.packageName);
-                    appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_USER_HANDLE, usageInfo.userId);
-                    appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_BACK_TO_MAIN, false);
-                    startActivity(appDetailsIntent);
-                })
-                .setEndIconContentDescription(R.string.app_info);
-        ApplicationInfo applicationInfo = usageInfo.applicationInfo;
-        if (applicationInfo != null) {
-            PackageManager pm = activity.getPackageManager();
-            titleBuilder.setStartIcon(applicationInfo.loadIcon(pm));
-        }
-        setHeader(titleBuilder.build());
+        // Load the body
+        getView().postDelayed(this::finishLoading, 300);
     }
 
     static class AppUsageDetailsAdapter extends RecyclerView.Adapter<AppUsageDetailsAdapter.ViewHolder> {

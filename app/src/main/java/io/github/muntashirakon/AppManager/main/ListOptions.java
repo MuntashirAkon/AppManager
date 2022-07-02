@@ -128,6 +128,7 @@ public class ListOptions extends CapsuleBottomSheetDialogFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         MainActivity activity = (MainActivity) requireActivity();
         model = activity.mModel;
         sortGroup = view.findViewById(R.id.sort_options);

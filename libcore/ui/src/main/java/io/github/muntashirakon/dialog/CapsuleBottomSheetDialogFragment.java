@@ -55,12 +55,17 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
     private static final long ANIMATION_DURATION = 350L;
     private static final int MAX_PEEK_SIZE = 0;
 
+    private LinearLayoutCompat mBottomSheetContainer;
     private View mRootView;
     private View mCapsule;
     private LinearLayoutCompat mHeaderContainer;
+    private FrameLayout mMainContainer;
+    private LinearLayoutCompat mBodyContainer;
+    private LinearLayoutCompat mLoadingLayout;
     @Nullable
     private View mHeader;
     private boolean mIsCapsuleActivated;
+    private boolean mIsLoadingFinished;
     @NonNull
     private ValueAnimator mAnimator = new ObjectAnimator();
     private BottomSheetBehavior<FrameLayout> mBehavior;
@@ -107,7 +112,44 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
     public abstract View initRootView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState);
 
     @MainThread
-    public void init(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    public void onBodyInitialized(@NonNull View bodyView, @Nullable Bundle savedInstanceState) {
+    }
+
+    @MainThread
+    public boolean displayLoaderByDefault() {
+        return false;
+    }
+
+    @MainThread
+    public void startLoading() {
+        if (!mIsLoadingFinished) {
+            return;
+        }
+        mIsLoadingFinished = false;
+        try {
+            mMainContainer.removeOnLayoutChangeListener(this);
+            mLoadingLayout.setVisibility(View.VISIBLE);
+            mBodyContainer.removeAllViews();
+        } finally {
+            mMainContainer.addOnLayoutChangeListener(this);
+        }
+    }
+
+    @MainThread
+    public void finishLoading() {
+        if (mIsLoadingFinished) {
+            return;
+        }
+        mIsLoadingFinished = true;
+        try {
+            mMainContainer.removeOnLayoutChangeListener(this);
+            mBodyContainer.removeAllViews();
+            mBodyContainer.addView(mRootView, new LinearLayoutCompat.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            mLoadingLayout.setVisibility(View.GONE);
+        } finally {
+            mMainContainer.addOnLayoutChangeListener(this);
+        }
     }
 
     @Nullable
@@ -134,18 +176,28 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
     @NonNull
     @Override
     public final View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        LinearLayoutCompat bottomSheetContainer = (LinearLayoutCompat) inflater.inflate(R.layout.dialog_bottom_sheet_capsule, container, false);
-        mCapsule = bottomSheetContainer.findViewById(R.id.capsule);
+        mBottomSheetContainer = (LinearLayoutCompat) inflater.inflate(R.layout.dialog_bottom_sheet_capsule, container, false);
+        mCapsule = mBottomSheetContainer.findViewById(R.id.capsule);
         mCapsule.setBackground(new TransitionDrawable(new Drawable[]{
                 ContextCompat.getDrawable(requireContext(), R.drawable.bottom_sheet_capsule),
                 ContextCompat.getDrawable(requireContext(), R.drawable.bottom_sheet_capsule_activated)
         }));
-        mHeaderContainer = bottomSheetContainer.findViewById(R.id.header);
-        mRootView = initRootView(inflater, bottomSheetContainer, savedInstanceState);
+        mHeaderContainer = mBottomSheetContainer.findViewById(R.id.header);
+        mBodyContainer = mBottomSheetContainer.findViewById(R.id.body);
+        mLoadingLayout = mBottomSheetContainer.findViewById(R.id.loader);
+        mMainContainer = (FrameLayout) mBodyContainer.getParent();
+        mRootView = initRootView(inflater, mBottomSheetContainer, savedInstanceState);
 
-        bottomSheetContainer.addView(getRootView(), new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        init(bottomSheetContainer, savedInstanceState);
-        return bottomSheetContainer;
+        if (!displayLoaderByDefault()) {
+            finishLoading();
+        }
+        return mBottomSheetContainer;
+    }
+
+    @CallSuper
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        onBodyInitialized(mRootView, savedInstanceState);
     }
 
     @CallSuper
@@ -153,10 +205,10 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
     public void onStart() {
         super.onStart();
         mBehavior.addBottomSheetCallback(mBottomSheetCallback);
-        mRootView.addOnLayoutChangeListener(this);
+        mMainContainer.addOnLayoutChangeListener(this);
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            mRootView.post(() -> {
+            mMainContainer.post(() -> {
                 try {
                     Method setStateInternal = BottomSheetBehavior.class.getDeclaredMethod("setStateInternal", int.class);
                     setStateInternal.setAccessible(true);
@@ -172,6 +224,7 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
     public void onStop() {
         super.onStop();
         mBehavior.removeBottomSheetCallback(mBottomSheetCallback);
+        mMainContainer.removeOnLayoutChangeListener(this);
     }
 
     @CallSuper
@@ -185,7 +238,7 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
     @Override
     public void onDestroyView() {
         mAnimator.cancel();
-        mRootView.removeOnLayoutChangeListener(this);
+        mMainContainer.removeOnLayoutChangeListener(this);
         mRootView = null;
         super.onDestroyView();
     }

@@ -53,6 +53,7 @@ public class RunningAppDetails extends CapsuleBottomSheetDialogFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         ProcessItem processItem = requireArguments().getParcelable(ARG_PS_ITEM);
         if (processItem == null) {
             dismiss();

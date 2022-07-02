@@ -137,6 +137,7 @@ public class ImportExportRulesDialogFragment extends CapsuleBottomSheetDialogFra
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         activity = (SettingsActivity) requireActivity();
         view.findViewById(R.id.export_internal).setOnClickListener(v -> {
             final String fileName = "app_manager_rules_export-" + DateUtils.formatDateTime(System.currentTimeMillis()) + ".am.tsv";
