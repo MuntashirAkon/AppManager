@@ -1182,4 +1182,8 @@
     <string name="pref_pure_black_theme_msg">Gece modu etkinleştirildiğinde tamamen siyah bir arka plan kullanın.</string>
     <string name="pref_pure_black_theme">Saf siyah tema</string>
     <string name="open_developer_options_page">Android ayarlarında geliştirici seçenekleri sayfasını açın</string>
+    <string name="usage_times_opened">Açılma sayısı</string>
+    <string name="usage_last_used">Son kullanma</string>
+    <string name="usage_mobile_data">Mobil veri</string>
+    <string name="usage_wifi_data">Wi-Fi verisi</string>
 </resources>
