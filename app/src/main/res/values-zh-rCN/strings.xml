@@ -1145,4 +1145,8 @@
     <string name="open_developer_options_page">在Android设置中打开开发者选项页面</string>
     <string name="pref_pure_black_theme">纯黑主题</string>
     <string name="pref_pure_black_theme_msg">启用夜间模式时，使用完全黑色的背景。</string>
+    <string name="usage_mobile_data">移动流量</string>
+    <string name="usage_wifi_data">Wi-Fi 流量</string>
+    <string name="usage_times_opened">打开次数</string>
+    <string name="usage_last_used">上次使用</string>
 </resources>
