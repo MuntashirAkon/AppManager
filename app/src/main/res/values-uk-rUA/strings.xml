@@ -1258,4 +1258,8 @@
     <string name="pref_pure_black_theme">Цілковито чорна тема</string>
     <string name="pref_pure_black_theme_msg">Використовувати повністю чорне тло, коли ввімкнено нічний режим.</string>
     <string name="open_developer_options_page">Відкрийте сторінку параметрів розробника в налаштуваннях Android</string>
+    <string name="usage_times_opened">Кількість відкривань</string>
+    <string name="usage_last_used">Останнє використання</string>
+    <string name="usage_mobile_data">Мобільні дані</string>
+    <string name="usage_wifi_data">Дані Wi-Fi</string>
 </resources>
