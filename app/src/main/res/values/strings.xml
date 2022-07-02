@@ -1216,4 +1216,8 @@
     <string name="open_developer_options_page">Open developer options page in Android settings</string>
     <string name="pref_pure_black_theme">Pure black theme</string>
     <string name="pref_pure_black_theme_msg">Use a completely black background when night mode is enabled.</string>
+    <string name="usage_times_opened">Times opened</string>
+    <string name="usage_last_used">Last used</string>
+    <string name="usage_mobile_data">Mobile data</string>
+    <string name="usage_wifi_data">Wi-Fi data</string>
 </resources>

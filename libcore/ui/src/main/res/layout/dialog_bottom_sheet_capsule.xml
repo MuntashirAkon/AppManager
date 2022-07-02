@@ -13,4 +13,14 @@
         android:layout_marginTop="@dimen/padding_small"
         tools:background="@drawable/bottom_sheet_capsule" />
 
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+<!--        <include layout="@layout/dialog_title_with_two_icons" />-->
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
 </androidx.appcompat.widget.LinearLayoutCompat>

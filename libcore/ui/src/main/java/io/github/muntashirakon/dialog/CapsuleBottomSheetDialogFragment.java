@@ -20,6 +20,7 @@ import android.view.WindowManager;
 import android.widget.FrameLayout;
 
 import androidx.annotation.CallSuper;
+import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.LinearLayoutCompat;
@@ -56,6 +57,9 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
 
     private View mRootView;
     private View mCapsule;
+    private LinearLayoutCompat mHeaderContainer;
+    @Nullable
+    private View mHeader;
     private boolean mIsCapsuleActivated;
     @NonNull
     private ValueAnimator mAnimator = new ObjectAnimator();
@@ -98,10 +102,24 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
         return mRootView;
     }
 
+    @MainThread
     @NonNull
     public abstract View initRootView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState);
 
-    public void init(@Nullable Bundle savedInstanceState) {
+    @MainThread
+    public void init(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    }
+
+    @Nullable
+    public View getHeader() {
+        return mHeader;
+    }
+
+    public void setHeader(@Nullable View header) {
+        mHeader = header;
+        mHeaderContainer.removeAllViews();
+        mHeaderContainer.addView(header, new LinearLayoutCompat.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
     }
 
     @CallSuper
@@ -122,9 +140,11 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
                 ContextCompat.getDrawable(requireContext(), R.drawable.bottom_sheet_capsule),
                 ContextCompat.getDrawable(requireContext(), R.drawable.bottom_sheet_capsule_activated)
         }));
+        mHeaderContainer = bottomSheetContainer.findViewById(R.id.header);
         mRootView = initRootView(inflater, bottomSheetContainer, savedInstanceState);
+
         bottomSheetContainer.addView(getRootView(), new LinearLayoutCompat.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-        init(savedInstanceState);
+        init(bottomSheetContainer, savedInstanceState);
         return bottomSheetContainer;
     }
 

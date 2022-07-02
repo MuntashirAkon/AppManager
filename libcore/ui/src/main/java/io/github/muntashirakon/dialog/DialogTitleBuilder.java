@@ -2,10 +2,8 @@
 
 package io.github.muntashirakon.dialog;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -21,116 +19,128 @@ import io.github.muntashirakon.ui.R;
 
 public class DialogTitleBuilder {
     @NonNull
-    private final Context context;
+    private final Context mContext;
     @StringRes
-    private int titleRes;
+    private int mTitleRes;
     @Nullable
-    private CharSequence title;
+    private CharSequence mTitle;
+    private boolean mTitleSelectable;
     @StringRes
-    private int subtitleRes;
+    private int mSubtitleRes;
     @Nullable
-    private CharSequence subtitle;
+    private CharSequence mSubtitle;
+    private boolean mSubtitleSelectable;
     @DrawableRes
-    private int startIconRes;
+    private int mStartIconRes;
     @Nullable
-    private Drawable startIcon;
+    private Drawable mStartIcon;
     @DrawableRes
-    private int endIconRes;
+    private int mEndIconRes;
     @Nullable
-    private Drawable endIcon;
+    private Drawable mEndIcon;
     @Nullable
-    private View.OnClickListener endIconClickListener;
+    private View.OnClickListener mEndIconClickListener;
     @StringRes
-    private int endIconContentDescriptionRes;
+    private int mEndIconContentDescriptionRes;
     @Nullable
-    private CharSequence endIconContentDescription;
+    private CharSequence mEndIconContentDescription;
 
     public DialogTitleBuilder(@NonNull Context context) {
-        this.context = context;
+        mContext = context;
     }
 
     public DialogTitleBuilder setTitle(@Nullable CharSequence title) {
-        this.title = title;
+        mTitle = title;
         return this;
     }
 
     public DialogTitleBuilder setTitle(@StringRes int titleRes) {
-        this.titleRes = titleRes;
+        mTitleRes = titleRes;
+        return this;
+    }
+
+    public DialogTitleBuilder setTitleSelectable(boolean titleSelectable) {
+        mTitleSelectable = titleSelectable;
         return this;
     }
 
     public DialogTitleBuilder setSubtitle(@Nullable CharSequence subtitle) {
-        this.subtitle = subtitle;
+        mSubtitle = subtitle;
         return this;
     }
 
     public DialogTitleBuilder setSubtitle(@StringRes int subtitleRes) {
-        this.subtitleRes = subtitleRes;
+        mSubtitleRes = subtitleRes;
+        return this;
+    }
+
+    public DialogTitleBuilder setSubtitleSelectable(boolean subtitleSelectable) {
+        mSubtitleSelectable = subtitleSelectable;
         return this;
     }
 
     public DialogTitleBuilder setStartIcon(@Nullable Drawable startIcon) {
-        this.startIcon = startIcon;
+        mStartIcon = startIcon;
         return this;
     }
 
     public DialogTitleBuilder setStartIcon(@DrawableRes int startIconRes) {
-        this.startIconRes = startIconRes;
+        mStartIconRes = startIconRes;
         return this;
     }
 
     public DialogTitleBuilder setEndIcon(@Nullable Drawable endIcon, @Nullable View.OnClickListener listener) {
-        this.endIcon = endIcon;
-        this.endIconClickListener = listener;
+        mEndIcon = endIcon;
+        mEndIconClickListener = listener;
         return this;
     }
 
     public DialogTitleBuilder setEndIcon(@DrawableRes int endIconRes, @Nullable View.OnClickListener listener) {
-        this.endIconRes = endIconRes;
-        this.endIconClickListener = listener;
+        mEndIconRes = endIconRes;
+        mEndIconClickListener = listener;
         return this;
     }
 
     public DialogTitleBuilder setEndIconContentDescription(@Nullable CharSequence endIconContentDescription) {
-        this.endIconContentDescription = endIconContentDescription;
+        mEndIconContentDescription = endIconContentDescription;
         return this;
     }
 
     public DialogTitleBuilder setEndIconContentDescription(@StringRes int endIconContentDescriptionRes) {
-        this.endIconContentDescriptionRes = endIconContentDescriptionRes;
+        mEndIconContentDescriptionRes = endIconContentDescriptionRes;
         return this;
     }
 
     public View build() {
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        @SuppressLint("InflateParams")
-        View v = inflater.inflate(R.layout.dialog_title_with_two_icons, null);
+        View v = View.inflate(mContext, R.layout.dialog_title_with_two_icons, null);
         TextView title = v.findViewById(R.id.title);
         TextView subtitle = v.findViewById(R.id.subtitle);
         ImageView startIcon = v.findViewById(R.id.icon);
         MaterialButton endIcon = v.findViewById(R.id.action);
         // Set title
-        if (this.title != null) title.setText(this.title);
-        else if (this.titleRes != 0) title.setText(this.titleRes);
+        if (mTitle != null) title.setText(mTitle);
+        else if (mTitleRes != 0) title.setText(mTitleRes);
+        title.setTextIsSelectable(mTitleSelectable);
         // Set subtitle or hide
-        if (this.subtitle == null && this.subtitleRes == 0) subtitle.setVisibility(View.GONE);
-        else if (this.subtitle != null) subtitle.setText(this.subtitle);
-        else subtitle.setText(this.subtitleRes);
+        if (mSubtitle == null && mSubtitleRes == 0) subtitle.setVisibility(View.GONE);
+        else if (mSubtitle != null) subtitle.setText(mSubtitle);
+        else subtitle.setText(mSubtitleRes);
+        subtitle.setTextIsSelectable(mSubtitleSelectable);
         // Set start icon or hide
-        if (this.startIcon == null && this.startIconRes == 0) startIcon.setVisibility(View.GONE);
-        else if (this.startIcon != null) startIcon.setImageDrawable(this.startIcon);
-        else startIcon.setImageResource(this.startIconRes);
+        if (mStartIcon == null && mStartIconRes == 0) startIcon.setVisibility(View.GONE);
+        else if (mStartIcon != null) startIcon.setImageDrawable(mStartIcon);
+        else startIcon.setImageResource(mStartIconRes);
         // Set end icon or hide
-        if (this.endIcon == null && this.endIconRes == 0) endIcon.setVisibility(View.GONE);
-        else if (this.endIcon != null) endIcon.setIcon(this.endIcon);
-        else endIcon.setIconResource(this.endIconRes);
-        if (this.endIconClickListener != null) {
-            endIcon.setOnClickListener(this.endIconClickListener);
+        if (mEndIcon == null && mEndIconRes == 0) endIcon.setVisibility(View.GONE);
+        else if (mEndIcon != null) endIcon.setIcon(mEndIcon);
+        else endIcon.setIconResource(mEndIconRes);
+        if (mEndIconClickListener != null) {
+            endIcon.setOnClickListener(mEndIconClickListener);
         }
-        if (this.endIconContentDescription != null) {
-            endIcon.setContentDescription(this.endIconContentDescription);
-        } else if (this.endIconContentDescriptionRes != 0) {
-            endIcon.setContentDescription(context.getText(this.endIconContentDescriptionRes));
+        if (mEndIconContentDescription != null) {
+            endIcon.setContentDescription(mEndIconContentDescription);
+        } else if (mEndIconContentDescriptionRes != 0) {
+            endIcon.setContentDescription(mContext.getText(mEndIconContentDescriptionRes));
         }
         return v;
     }

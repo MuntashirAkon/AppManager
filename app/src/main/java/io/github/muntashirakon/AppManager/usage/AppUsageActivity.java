@@ -52,6 +52,7 @@ import java.util.Objects;
 import java.util.Set;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
+import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -155,8 +156,8 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
             mProgressIndicator.hide();
         });
         mViewModel.getPackageUsageInfo().observe(this, packageUsageInfo -> {
-            AppUsageDetailsDialogFragment fragment = AppUsageDetailsDialogFragment.getInstance(packageUsageInfo);
-            fragment.show(getSupportFragmentManager(), AppUsageDetailsDialogFragment.TAG);
+            AppUsageDetailsDialog fragment = AppUsageDetailsDialog.getInstance(packageUsageInfo);
+            fragment.show(getSupportFragmentManager(), AppUsageDetailsDialog.TAG);
         });
         checkPermissions();
     }
@@ -480,7 +481,6 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
             return new ViewHolder(view);
         }
 
-        @SuppressLint("SetTextI18n")
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             final PackageUsageInfo usageInfo;
@@ -504,9 +504,16 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
             // Set package name
             holder.packageName.setText(usageInfo.packageName);
             // Set usage
-            long lastTimeUsed = usageInfo.lastUsageTime;
-            if (lastTimeUsed > 1) {
-                holder.lastUsageDate.setText(DateUtils.formatDateTime(lastTimeUsed));
+            long lastTimeUsed = usageInfo.lastUsageTime > 1 ? (System.currentTimeMillis() - usageInfo.lastUsageTime) : 0;
+            if (mActivity.mViewModel.getCurrentInterval() != USAGE_YESTERDAY
+                    && usageInfo.packageName.equals(BuildConfig.APPLICATION_ID)) {
+                // Special case for App Manager since the user is using the app right now
+                holder.lastUsageDate.setText(R.string.running);
+            } else if (lastTimeUsed > 1) {
+                holder.lastUsageDate.setText(String.format(Locale.getDefault(), "%s %s",
+                        DateUtils.getFormattedDuration(mActivity, lastTimeUsed), mActivity.getString(R.string.ago)));
+            } else {
+                holder.lastUsageDate.setText(R.string._undefined);
             }
             String screenTimesWithTimesOpened;
             // Set times opened

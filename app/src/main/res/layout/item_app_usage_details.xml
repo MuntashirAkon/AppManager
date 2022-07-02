@@ -3,25 +3,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:focusable="true"
     android:paddingHorizontal="@dimen/padding_medium"
     android:paddingVertical="@dimen/padding_small">
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/item_title"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="@dimen/padding_very_small"
         android:textIsSelectable="true"
         android:textAppearance="?android:attr/textAppearanceListItem"
         tools:text="@tools:sample/lorem" />
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/item_subtitle"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/padding_very_small"
         android:textIsSelectable="true"
         android:textColor="?android:attr/textColorSecondary"
-        tools:text="@tools:sample/lorem[9]" />
+        tools:text="@tools:sample/lorem[20]" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>
