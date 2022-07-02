@@ -1334,4 +1334,8 @@
     <string name="pref_pure_black_theme">نسق أسود نقي</string>
     <string name="pref_pure_black_theme_msg">استخدم خلفية سوداء تماما عند تمكين الوضع الليلي.</string>
     <string name="open_developer_options_page">فتح صفحة خيارات مطوري البرامج في إعدادات Android</string>
+    <string name="usage_times_opened">اوقات الفتح</string>
+    <string name="usage_last_used">آخر استخدام</string>
+    <string name="usage_mobile_data">بيانات الهاتف</string>
+    <string name="usage_wifi_data">بيانات واي فاي</string>
 </resources>
