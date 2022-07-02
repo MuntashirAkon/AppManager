@@ -783,4 +783,10 @@
     <string name="community_links">टेलीग्राम: https://t.me/AppManagerChannel
 \nट्विटर: https://twitter.com/AppManagerNews</string>
     <string name="failed_to_uninstall_app">अनइंस्टॉल विफल</string>
+    <string name="input_keystore_alias_pass_msg">%1$s के लिए पासवर्ड प्रदान करने के लिए यहाँ टैप करें</string>
+    <string name="internal_data">आंतरिक डेटा</string>
+    <string name="pref_backup_volume_msg">उस वॉल्यूम या डिस्क का चयन करें जहां बैकअप संग्रहीत किया जाएगा।</string>
+    <string name="size">आकार</string>
+    <string name="screen">स्क्रीन</string>
+    <string name="action">कार्रवाई</string>
 </resources>
