@@ -1183,4 +1183,8 @@
     <string name="pref_pure_black_theme_msg">Usa uno sfondo completamente nero quando la modalità notte è abilitata.</string>
     <string name="open_developer_options_page">Apri la pagina delle opzioni sviluppatore nelle impostazioni di Android</string>
     <string name="pref_pure_black_theme">Tema nero puro</string>
+    <string name="usage_mobile_data">Dati mobili</string>
+    <string name="usage_wifi_data">Dati Wi-Fi</string>
+    <string name="usage_times_opened">Numero di volte che è stata aperta</string>
+    <string name="usage_last_used">Usata ultima volta</string>
 </resources>
