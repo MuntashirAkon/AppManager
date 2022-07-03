@@ -97,8 +97,11 @@
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a>
 \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a>
 \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a>
 \n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
 \n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
 \n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
@@ -107,6 +110,7 @@
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
 \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+\n- <a href="https://github.com/zhaobozhen/librariest">Absinthe\'s libraries</a>
 \nCopyright für das Original-Logo: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="word_wrap">Zeilenumbruch ein-/ausschalten</string>
     <string name="class_viewer">Klassen-Betrachter</string>
@@ -1177,4 +1181,10 @@
     <string name="app_explorer">AppExplorer</string>
     <string name="netpolicy_cannot_be_modified_for_core_apps">Die Netz-Richtlinie kann für Android-Kernanwendungen nicht geändert werden.</string>
     <string name="pref_pure_black_theme">Rein schwarzes Thema</string>
+    <string name="open_developer_options_page">Öffnen Sie die Seite mit den Entwickleroptionen in den Android-Einstellungen</string>
+    <string name="pref_pure_black_theme_msg">Verwenden Sie einen komplett schwarzen Hintergrund, wenn der Nachtmodus aktiviert ist.</string>
+    <string name="usage_wifi_data">Wi-Fi-Daten</string>
+    <string name="usage_mobile_data">Mobile Daten</string>
+    <string name="usage_times_opened">Geöffnete Zeiten</string>
+    <string name="usage_last_used">Zuletzt benutzt</string>
 </resources>
