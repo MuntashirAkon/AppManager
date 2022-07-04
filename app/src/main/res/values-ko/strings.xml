@@ -134,13 +134,13 @@
     </plurals>
     <string name="credits_message">다음의 작성자들에게
 \n- 안드로이드 오픈 소스 프로젝트
-\n- <a href="https://github.com/butzist/ActivityLauncher">활동 실행도구</a>
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">앱_패키지 정보</a>
-\n- <a href="https://github.com/zhaobao/AppsMonitor">앱모니터</a>
+\n- <a href="https://github.com/butzist/ActivityLauncher">ActivityLauncher</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
+\n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
-\n- <a href="https://github.com/billthefarmer/editor">편집기</a>
+\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
 \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
-\n- <a href="https://github.com/zhanghai/MaterialFiles">재료 파일</a>
+\n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
 \n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
 \n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
 \n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
