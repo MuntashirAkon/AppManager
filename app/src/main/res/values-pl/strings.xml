@@ -1258,4 +1258,8 @@
     <string name="pref_pure_black_theme">Motyw czysta czerń</string>
     <string name="pref_pure_black_theme_msg">Użycie całkowicie czarnego tła, gdy tryb nocny jest włączony.</string>
     <string name="open_developer_options_page">Otwórz stronę opcji programisty w ustawieniach Androida</string>
+    <string name="usage_last_used">Ostatnio użyto</string>
+    <string name="usage_mobile_data">Dane komórkowe</string>
+    <string name="usage_wifi_data">Dane Wi-Fi</string>
+    <string name="usage_times_opened">Czasy otwarć</string>
 </resources>
