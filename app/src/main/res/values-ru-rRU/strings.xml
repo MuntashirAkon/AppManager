@@ -1250,4 +1250,7 @@
     <string name="log_stop_recording">Остановить запись</string>
     <string name="apk_checksums">Контрольные суммы APK</string>
     <string name="item_select">Выбрать</string>
+    <string name="netpolicy_cannot_be_modified_for_core_apps">Сетевую политику нельзя изменить для основных приложений Android.</string>
+    <string name="open_developer_options_page">Откройте страницу параметров разработчика в настройках Android</string>
+    <string name="usage_last_used">Последний раз был использован</string>
 </resources>
