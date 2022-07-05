@@ -84,7 +84,7 @@ import io.github.muntashirakon.AppManager.apk.ApkUtils;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
-import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
+import io.github.muntashirakon.AppManager.backup.dialog.BackupRestoreDialogFragment;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
@@ -349,14 +349,11 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             });
         } else if (itemId == R.id.action_backup) {
             if (mainModel == null) return true;
-            BackupDialogFragment backupDialogFragment = new BackupDialogFragment();
-            Bundle args = new Bundle();
-            args.putParcelableArrayList(BackupDialogFragment.ARG_PACKAGE_PAIRS, new ArrayList<>(
-                    Collections.singleton(new UserPackagePair(mPackageName, mainModel.getUserHandle()))));
-            backupDialogFragment.setArguments(args);
-            backupDialogFragment.setOnActionBeginListener(mode -> showProgressIndicator(true));
-            backupDialogFragment.setOnActionCompleteListener((mode, failedPackages) -> showProgressIndicator(false));
-            backupDialogFragment.show(mActivity.getSupportFragmentManager(), BackupDialogFragment.TAG);
+            BackupRestoreDialogFragment fragment = BackupRestoreDialogFragment.getInstance(
+                    Collections.singletonList(new UserPackagePair(mPackageName, mainModel.getUserHandle())));
+            fragment.setOnActionBeginListener(mode -> showProgressIndicator(true));
+            fragment.setOnActionCompleteListener((mode, failedPackages) -> showProgressIndicator(false));
+            fragment.show(mActivity.getSupportFragmentManager(), BackupRestoreDialogFragment.TAG);
         } else if (itemId == R.id.action_view_settings) {
             startActivity(IntentUtils.getAppDetailsSettings(mPackageName));
         } else if (itemId == R.id.action_export_blocking_rules) {

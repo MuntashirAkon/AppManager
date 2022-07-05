@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.CallSuper;
 import androidx.annotation.MainThread;
@@ -56,14 +57,14 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
     private static final int MAX_PEEK_SIZE = 0;
 
     private LinearLayoutCompat mBottomSheetContainer;
-    private View mRootView;
     private View mCapsule;
     private LinearLayoutCompat mHeaderContainer;
     private FrameLayout mMainContainer;
     private LinearLayoutCompat mBodyContainer;
-    private LinearLayoutCompat mLoadingLayout;
+    private RelativeLayout mLoadingLayout;
     @Nullable
     private View mHeader;
+    private View mBody;
     private boolean mIsCapsuleActivated;
     private boolean mIsLoadingFinished;
     @NonNull
@@ -103,8 +104,8 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
         }
     };
 
-    public View getRootView() {
-        return mRootView;
+    public View getBody() {
+        return mBody;
     }
 
     @MainThread
@@ -144,7 +145,7 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
         try {
             mMainContainer.removeOnLayoutChangeListener(this);
             mBodyContainer.removeAllViews();
-            mBodyContainer.addView(mRootView, new LinearLayoutCompat.LayoutParams(
+            mBodyContainer.addView(mBody, new LinearLayoutCompat.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
             mLoadingLayout.setVisibility(View.GONE);
         } finally {
@@ -186,7 +187,7 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
         mBodyContainer = mBottomSheetContainer.findViewById(R.id.body);
         mLoadingLayout = mBottomSheetContainer.findViewById(R.id.loader);
         mMainContainer = (FrameLayout) mBodyContainer.getParent();
-        mRootView = initRootView(inflater, mBottomSheetContainer, savedInstanceState);
+        mBody = initRootView(inflater, mBottomSheetContainer, savedInstanceState);
 
         if (!displayLoaderByDefault()) {
             finishLoading();
@@ -197,7 +198,7 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
     @CallSuper
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        onBodyInitialized(mRootView, savedInstanceState);
+        onBodyInitialized(mBody, savedInstanceState);
     }
 
     @CallSuper
@@ -239,7 +240,7 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
     public void onDestroyView() {
         mAnimator.cancel();
         mMainContainer.removeOnLayoutChangeListener(this);
-        mRootView = null;
+        mBody = null;
         super.onDestroyView();
     }
 

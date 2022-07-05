@@ -169,7 +169,7 @@ public class BackupManager {
         }
     }
 
-    public boolean deleteBackup(@Nullable String[] backupNames) throws BackupException {
+    public void deleteBackup(@Nullable String[] backupNames) throws BackupException {
         if (backupNames == null) {
             // No backup names supplied, use user handle
             BackupFiles backupFiles;
@@ -202,7 +202,6 @@ public class BackupManager {
                 }
             }
         }
-        return true;
     }
 
     public void verify(@Nullable String backupName) throws BackupException {

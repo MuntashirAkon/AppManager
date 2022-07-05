@@ -42,7 +42,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
+import io.github.muntashirakon.AppManager.backup.dialog.BackupRestoreDialogFragment;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
@@ -321,13 +321,10 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
         int id = item.getItemId();
         if (id == R.id.action_backup) {
             if (mModel != null) {
-                BackupDialogFragment backupDialogFragment = new BackupDialogFragment();
-                Bundle args = new Bundle();
-                args.putParcelableArrayList(BackupDialogFragment.ARG_PACKAGE_PAIRS, mModel.getSelectedPackagesWithUsers());
-                backupDialogFragment.setArguments(args);
-                backupDialogFragment.setOnActionBeginListener(mode -> showProgressIndicator(true));
-                backupDialogFragment.setOnActionCompleteListener((mode, failedPackages) -> showProgressIndicator(false));
-                backupDialogFragment.show(getSupportFragmentManager(), BackupDialogFragment.TAG);
+                BackupRestoreDialogFragment fragment = BackupRestoreDialogFragment.getInstance(mModel.getSelectedPackagesWithUsers());
+                fragment.setOnActionBeginListener(mode -> showProgressIndicator(true));
+                fragment.setOnActionCompleteListener((mode, failedPackages) -> showProgressIndicator(false));
+                fragment.show(getSupportFragmentManager(), BackupRestoreDialogFragment.TAG);
                 multiSelectionView.cancel();
             }
         } else if (id == R.id.action_save_apk) {

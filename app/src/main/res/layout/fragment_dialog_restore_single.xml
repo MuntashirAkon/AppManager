@@ -1,0 +1,91 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <io.github.muntashirakon.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="?attr/actionBarSize"
+        android:scrollbars="vertical"
+        android:scrollIndicators="top|bottom"
+        tools:ignore="UnusedAttribute">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.AppTheme.ErrorMessageLayout"
+                android:id="@+id/message_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/padding_medium"
+                android:layout_marginVertical="@dimen/padding_small"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <io.github.muntashirakon.widget.TextInputTextView
+                    android:id="@+id/message"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="Some apps cannot be backed up." />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <io.github.muntashirakon.widget.RecyclerView
+                android:id="@android:id/list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:overScrollMode="never" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </io.github.muntashirakon.widget.NestedScrollView>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_gravity="bottom"
+        android:paddingHorizontal="@dimen/padding_medium">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/action_restore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="@dimen/padding_small"
+            android:text="@string/restore" />
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.AppTheme.Button.FilledTonalButton"
+            android:id="@+id/action_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@id/action_restore"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="@dimen/padding_small"
+            android:text="@string/delete" />
+
+        <com.google.android.material.button.MaterialButton
+            style="@style/Widget.AppTheme.Button.IconButton"
+            android:id="@+id/more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@id/action_delete"
+            android:layout_centerInParent="true"
+            android:minWidth="48dp"
+            android:maxWidth="0dp"
+            android:maxHeight="0dp"
+            app:icon="@drawable/ic_more_vert_black_24dp"
+            app:iconPadding="0dp"
+            app:iconGravity="textTop"
+            app:iconSize="24dp" />
+
+    </RelativeLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

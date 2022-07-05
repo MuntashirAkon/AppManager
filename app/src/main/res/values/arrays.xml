@@ -229,4 +229,12 @@
         <item>@string/import_from_tb</item>
         <item>@string/import_from_sb</item>
     </string-array>
+    <string-array name="backup_restore_tabs_single">
+        <item>@string/backup</item>
+        <item>@string/restore_dots</item>
+    </string-array>
+    <string-array name="backup_restore_tabs_multiple">
+        <item>@string/backup</item>
+        <item>@string/restore</item>
+    </string-array>
 </resources>

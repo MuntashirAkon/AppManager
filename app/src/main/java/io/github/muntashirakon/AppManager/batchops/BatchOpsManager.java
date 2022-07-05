@@ -38,12 +38,12 @@ import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.appops.AppOpsUtils;
 import io.github.muntashirakon.AppManager.appops.OpEntry;
-import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
 import io.github.muntashirakon.AppManager.backup.BackupException;
 import io.github.muntashirakon.AppManager.backup.BackupManager;
 import io.github.muntashirakon.AppManager.backup.convert.ConvertUtils;
 import io.github.muntashirakon.AppManager.backup.convert.Converter;
 import io.github.muntashirakon.AppManager.backup.convert.ImportType;
+import io.github.muntashirakon.AppManager.backup.dialog.BackupRestoreDialogFragment;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat.NetPolicy;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
@@ -212,13 +212,13 @@ public class BatchOpsManager {
             case OP_BACKUP_APK:
                 return opBackupApk();
             case OP_BACKUP:
-                return opBackupRestore(BackupDialogFragment.MODE_BACKUP);
+                return opBackupRestore(BackupRestoreDialogFragment.MODE_BACKUP);
             case OP_BLOCK_TRACKERS:
                 return opBlockTrackers();
             case OP_CLEAR_DATA:
                 return opClearData();
             case OP_DELETE_BACKUP:
-                return opBackupRestore(BackupDialogFragment.MODE_DELETE);
+                return opBackupRestore(BackupRestoreDialogFragment.MODE_DELETE);
             case OP_DISABLE:
                 return opAppEnabledSetting(PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER);
             case OP_DISABLE_BACKGROUND:
@@ -230,7 +230,7 @@ public class BatchOpsManager {
             case OP_FORCE_STOP:
                 return opForceStop();
             case OP_RESTORE_BACKUP:
-                return opBackupRestore(BackupDialogFragment.MODE_RESTORE);
+                return opBackupRestore(BackupRestoreDialogFragment.MODE_RESTORE);
             case OP_UNINSTALL:
                 return opUninstall();
             case OP_UNBLOCK_TRACKERS:
@@ -296,7 +296,7 @@ public class BatchOpsManager {
         return lastResult = new Result(failedPackages);
     }
 
-    private Result opBackupRestore(@BackupDialogFragment.ActionMode int mode) {
+    private Result opBackupRestore(@BackupRestoreDialogFragment.ActionMode int mode) {
         List<UserPackagePair> failedPackages = new ArrayList<>();
         MultithreadedExecutor executor = MultithreadedExecutor.getNewInstance();
         try {
@@ -306,13 +306,13 @@ public class BatchOpsManager {
                     BackupManager backupManager = BackupManager.getNewInstance(pair, args.getInt(ARG_FLAGS));
                     try {
                         switch (mode) {
-                            case BackupDialogFragment.MODE_BACKUP:
+                            case BackupRestoreDialogFragment.MODE_BACKUP:
                                 backupManager.backup(backupNames);
                                 break;
-                            case BackupDialogFragment.MODE_DELETE:
+                            case BackupRestoreDialogFragment.MODE_DELETE:
                                 backupManager.deleteBackup(backupNames);
                                 break;
-                            case BackupDialogFragment.MODE_RESTORE:
+                            case BackupRestoreDialogFragment.MODE_RESTORE:
                                 backupManager.restore(backupNames);
                                 break;
                         }

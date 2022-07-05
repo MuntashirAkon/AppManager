@@ -3,6 +3,7 @@
 package io.github.muntashirakon.dialog;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.text.Editable;
 import android.view.View;
@@ -11,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -23,136 +23,136 @@ import io.github.muntashirakon.ui.R;
 @SuppressWarnings("unused")
 public class TextInputDialogBuilder {
     @NonNull
-    private final FragmentActivity activity;
+    private final Context mContext;
     @NonNull
-    private final TextInputLayout textInputLayout;
+    private final TextInputLayout mTextInputLayout;
     @NonNull
-    private final TextInputEditText editText;
+    private final TextInputEditText mEditText;
     @NonNull
-    private final MaterialCheckBox checkBox;
+    private final MaterialCheckBox mCheckBox;
     @NonNull
-    private final MaterialAlertDialogBuilder builder;
+    private final MaterialAlertDialogBuilder mBuilder;
 
     public interface OnClickListener {
         void onClick(DialogInterface dialog, int which, @Nullable Editable inputText, boolean isChecked);
     }
 
     @SuppressLint("InflateParams")
-    public TextInputDialogBuilder(@NonNull FragmentActivity activity, @Nullable CharSequence inputTextLabel) {
-        this.activity = activity;
-        View view = activity.getLayoutInflater().inflate(R.layout.dialog_text_input, null);
-        this.textInputLayout = view.findViewById(android.R.id.text1);
-        this.textInputLayout.setHint(inputTextLabel);
-        this.editText = view.findViewById(android.R.id.input);
-        this.checkBox = view.findViewById(android.R.id.checkbox);
-        this.checkBox.setVisibility(View.GONE);
-        this.builder = new MaterialAlertDialogBuilder(activity).setView(view);
+    public TextInputDialogBuilder(@NonNull Context context, @Nullable CharSequence inputTextLabel) {
+        this.mContext = context;
+        View view = View.inflate(context, R.layout.dialog_text_input, null);
+        this.mTextInputLayout = view.findViewById(android.R.id.text1);
+        this.mTextInputLayout.setHint(inputTextLabel);
+        this.mEditText = view.findViewById(android.R.id.input);
+        this.mCheckBox = view.findViewById(android.R.id.checkbox);
+        this.mCheckBox.setVisibility(View.GONE);
+        this.mBuilder = new MaterialAlertDialogBuilder(context).setView(view);
     }
 
     @SuppressLint("InflateParams")
-    public TextInputDialogBuilder(@NonNull FragmentActivity activity, @StringRes int inputTextLabel) {
-        this(activity, activity.getText(inputTextLabel));
+    public TextInputDialogBuilder(@NonNull Context context, @StringRes int inputTextLabel) {
+        this(context, context.getText(inputTextLabel));
     }
 
     public TextInputDialogBuilder setTitle(@Nullable CharSequence title) {
-        builder.setTitle(title);
+        mBuilder.setTitle(title);
         return this;
     }
 
     public TextInputDialogBuilder setTitle(@StringRes int title) {
-        builder.setTitle(title);
+        mBuilder.setTitle(title);
         return this;
     }
 
     public TextInputDialogBuilder setInputText(@Nullable CharSequence inputText) {
-        editText.setText(inputText);
+        mEditText.setText(inputText);
         return this;
     }
 
     public TextInputDialogBuilder setInputText(@StringRes int inputText) {
-        editText.setText(inputText);
+        mEditText.setText(inputText);
         return this;
     }
 
     public TextInputDialogBuilder setHelperText(@Nullable CharSequence helperText) {
-        textInputLayout.setHelperText(helperText);
+        mTextInputLayout.setHelperText(helperText);
         return this;
     }
 
     public TextInputDialogBuilder setHelperText(@StringRes int helperText) {
-        textInputLayout.setHelperText(activity.getText(helperText));
+        mTextInputLayout.setHelperText(mContext.getText(helperText));
         return this;
     }
 
     public TextInputDialogBuilder setChecked(boolean checked) {
-        checkBox.setChecked(checked);
+        mCheckBox.setChecked(checked);
         return this;
     }
 
     public TextInputDialogBuilder setCheckboxLabel(@Nullable CharSequence checkboxLabel) {
         if (checkboxLabel != null) {
-            checkBox.setVisibility(View.VISIBLE);
-            checkBox.setText(checkboxLabel);
-        } else checkBox.setVisibility(View.GONE);
+            mCheckBox.setVisibility(View.VISIBLE);
+            mCheckBox.setText(checkboxLabel);
+        } else mCheckBox.setVisibility(View.GONE);
         return this;
     }
 
     public TextInputDialogBuilder setCheckboxLabel(@StringRes int checkboxLabel) {
         if (checkboxLabel != 0) {
-            checkBox.setVisibility(View.VISIBLE);
-            checkBox.setText(checkboxLabel);
-        } else checkBox.setVisibility(View.GONE);
+            mCheckBox.setVisibility(View.VISIBLE);
+            mCheckBox.setText(checkboxLabel);
+        } else mCheckBox.setVisibility(View.GONE);
         return this;
     }
 
     public TextInputDialogBuilder setPositiveButton(@StringRes int textId, OnClickListener listener) {
-        builder.setPositiveButton(textId, (dialog, which) -> {
-            if (listener != null) listener.onClick(dialog, which, editText.getText(), checkBox.isChecked());
+        mBuilder.setPositiveButton(textId, (dialog, which) -> {
+            if (listener != null) listener.onClick(dialog, which, mEditText.getText(), mCheckBox.isChecked());
         });
         return this;
     }
 
     public TextInputDialogBuilder setPositiveButton(@NonNull CharSequence text, OnClickListener listener) {
-        builder.setPositiveButton(text, (dialog, which) -> {
-            if (listener != null) listener.onClick(dialog, which, editText.getText(), checkBox.isChecked());
+        mBuilder.setPositiveButton(text, (dialog, which) -> {
+            if (listener != null) listener.onClick(dialog, which, mEditText.getText(), mCheckBox.isChecked());
         });
         return this;
     }
 
     public TextInputDialogBuilder setNegativeButton(@StringRes int textId, OnClickListener listener) {
-        builder.setNegativeButton(textId, (dialog, which) -> {
-            if (listener != null) listener.onClick(dialog, which, editText.getText(), checkBox.isChecked());
+        mBuilder.setNegativeButton(textId, (dialog, which) -> {
+            if (listener != null) listener.onClick(dialog, which, mEditText.getText(), mCheckBox.isChecked());
         });
         return this;
     }
 
     public TextInputDialogBuilder setNegativeButton(@NonNull CharSequence text, OnClickListener listener) {
-        builder.setNegativeButton(text, (dialog, which) -> {
-            if (listener != null) listener.onClick(dialog, which, editText.getText(), checkBox.isChecked());
+        mBuilder.setNegativeButton(text, (dialog, which) -> {
+            if (listener != null) listener.onClick(dialog, which, mEditText.getText(), mCheckBox.isChecked());
         });
         return this;
     }
 
     public TextInputDialogBuilder setNeutralButton(@StringRes int textId, OnClickListener listener) {
-        builder.setNeutralButton(textId, (dialog, which) -> {
-            if (listener != null) listener.onClick(dialog, which, editText.getText(), checkBox.isChecked());
+        mBuilder.setNeutralButton(textId, (dialog, which) -> {
+            if (listener != null) listener.onClick(dialog, which, mEditText.getText(), mCheckBox.isChecked());
         });
         return this;
     }
 
     public TextInputDialogBuilder setNeutralButton(@NonNull CharSequence text, OnClickListener listener) {
-        builder.setNeutralButton(text, (dialog, which) -> {
-            if (listener != null) listener.onClick(dialog, which, editText.getText(), checkBox.isChecked());
+        mBuilder.setNeutralButton(text, (dialog, which) -> {
+            if (listener != null) listener.onClick(dialog, which, mEditText.getText(), mCheckBox.isChecked());
         });
         return this;
     }
 
     public Editable getInputText() {
-        return editText.getText();
+        return mEditText.getText();
     }
 
     public AlertDialog create() {
-        return builder.create();
+        return mBuilder.create();
     }
 
     public void show() {

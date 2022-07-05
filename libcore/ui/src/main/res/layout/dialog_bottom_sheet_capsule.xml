@@ -33,27 +33,18 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" />
 
-        <androidx.appcompat.widget.LinearLayoutCompat
+        <RelativeLayout
             android:id="@+id/loader"
             android:layout_width="match_parent"
-            android:layout_height="240dp"
-            android:orientation="horizontal">
+            android:layout_height="240dp">
 
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="vertical">
+                android:layout_centerInParent="true"
+                android:indeterminate="true" />
 
-                <com.google.android.material.progressindicator.CircularProgressIndicator
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:indeterminate="true" />
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
+        </RelativeLayout>
 
     </FrameLayout>
 

@@ -1,0 +1,57 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:overScrollMode="never"
+        tools:visibility="visible">
+
+        <com.google.android.material.tabs.TabLayout
+            style="@style/Widget.Material3.TabLayout.OnSurface"
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="@dimen/padding_medium"
+            app:tabMode="fixed"
+            app:tabBackground="@drawable/tab_item_background_rounded"
+            app:tabTextColor="?attr/colorOnSecondaryContainer"
+            app:tabSelectedTextColor="?attr/colorOnPrimary"
+            app:tabIndicator="@null">
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="TAB 1" />
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="TAB 2" />
+
+        </com.google.android.material.tabs.TabLayout>
+
+    </androidx.viewpager.widget.ViewPager>
+
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_container_view_tag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/message"
+        android:layout_width="match_parent"
+        android:layout_height="320dp"
+        android:visibility="gone"
+        android:gravity="center"
+        android:text="@string/backup_no_backups_present"
+        tools:visibility="visible" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

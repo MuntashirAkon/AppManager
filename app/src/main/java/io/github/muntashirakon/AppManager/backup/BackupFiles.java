@@ -21,6 +21,8 @@ import io.github.muntashirakon.io.PathReader;
 import io.github.muntashirakon.io.PathWriter;
 
 public class BackupFiles {
+    public static final String BASE_BACKUP_NAME = "base";
+
     static final String APK_SAVING_DIRECTORY = "apks";
     static final String TEMPORARY_DIRECTORY = ".tmp";
 
@@ -40,6 +42,7 @@ public class BackupFiles {
         return getBackupDirectory().findOrCreateDirectory(TEMPORARY_DIRECTORY);
     }
 
+    @Deprecated
     @NonNull
     public static Path getPackagePath(@NonNull String packageName, boolean create) throws IOException {
         if (create) {
@@ -67,7 +70,7 @@ public class BackupFiles {
 
     public static void createNoMediaIfNotExists() throws IOException {
         Path backupDirectory = getBackupDirectory();
-        if (backupDirectory.hasFile(NO_MEDIA)) {
+        if (!backupDirectory.hasFile(NO_MEDIA)) {
             backupDirectory.createNewFile(NO_MEDIA, null);
         }
     }

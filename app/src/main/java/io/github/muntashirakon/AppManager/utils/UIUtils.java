@@ -201,11 +201,11 @@ public class UIUtils {
     }
 
     public static int getTextColorPrimary(@NonNull Context context) {
-        return MaterialColors.getColor(context, R.attr.colorOnBackground, -1);
+        return MaterialColors.getColor(context, R.attr.colorOnSurface, -1);
     }
 
     public static int getTextColorSecondary(@NonNull Context context) {
-        return MaterialColors.getColor(context, R.attr.colorOnSurface, -1);
+        return MaterialColors.getColor(context, R.attr.colorOnSurfaceVariant, -1);
     }
 
     public static int getTitleSize(@NonNull Context context) {

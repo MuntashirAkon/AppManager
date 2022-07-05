@@ -18,6 +18,9 @@ public interface BackupDao {
     @Query("SELECT * FROM backup")
     List<Backup> getAll();
 
+    @Query("SELECT * FROM backup WHERE package_name = :packageName")
+    List<Backup> get(String packageName);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insert(List<Backup> backups);
 

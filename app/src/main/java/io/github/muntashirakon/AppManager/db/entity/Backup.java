@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.db.entity;
 
+import android.os.UserHandleHidden;
+
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -75,6 +77,10 @@ public class Backup {
 
     public BackupFlags getFlags() {
         return new BackupFlags(flags);
+    }
+
+    public boolean isBaseBackup() {
+        return String.valueOf(UserHandleHidden.myUserId()).equals(backupName);
     }
 
     @NonNull

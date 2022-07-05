@@ -1220,4 +1220,11 @@
     <string name="usage_last_used">Last used</string>
     <string name="usage_mobile_data">Mobile data</string>
     <string name="usage_wifi_data">Wi-Fi data</string>
+    <string name="frozen">Frozen</string>
+    <string name="freeze">Freeze</string>
+    <string name="unfreeze">Unfreeze</string>
+    <string name="backup_no_backups_present">No backups.</string>
+    <string name="restore_dots">Restore…</string>
+    <string name="backup_apps_cannot_be_restored">The following apps cannot be restored because they do not have a base backup:</string>
+    <string name="backup_apps_cannot_be_backed_up">The following apps are not installed and cannot be backed up:</string>
 </resources>

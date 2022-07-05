@@ -26,25 +26,32 @@ import io.github.muntashirakon.io.UidGidPair;
 
 public final class BackupUtils {
     @NonNull
-    private static List<String> getBackupPackages() {
+    private static List<Path> getBackupPaths() {
         Path backupPath = BackupFiles.getBackupDirectory();
-        List<String> packages;
+        List<Path> backupPaths;
         Path[] files = backupPath.listFiles(Path::isDirectory);
-        packages = new ArrayList<>();
+        backupPaths = new ArrayList<>(files.length);
         for (Path path : files) {
-            packages.add(path.getName());
+            if (SaveLogHelper.SAVED_LOGS_DIR.equals(path.getName())) {
+                continue;
+            }
+            if (BackupFiles.APK_SAVING_DIRECTORY.equals(path.getName())) {
+                continue;
+            }
+            if (BackupFiles.TEMPORARY_DIRECTORY.equals(path.getName())) {
+                continue;
+            }
+            backupPaths.add(path);
         }
-        packages.remove(SaveLogHelper.SAVED_LOGS_DIR);
-        packages.remove(BackupFiles.APK_SAVING_DIRECTORY);
-        packages.remove(BackupFiles.TEMPORARY_DIRECTORY);
-        // We don't need to check the contents of the packages at this stage.
-        // It's the caller's job to check contents if needed.
-        return packages;
+        // We don't need to check further at this stage.
+        // It's the caller's job to check the contents if needed.
+        return backupPaths;
     }
 
     @WorkerThread
     @NonNull
-    public static HashMap<String, Backup> storeAllAndGetLatestBackupMetadata() throws IOException {
+    public static HashMap<String, Backup> storeAllAndGetLatestBackupMetadata() {
+        BackupDao backupDao = AppManager.getAppsDb().backupDao();
         HashMap<String, Backup> backupMetadata = new HashMap<>();
         HashMap<String, List<MetadataManager.Metadata>> allBackupMetadata = getAllMetadata();
         List<Backup> backups = new ArrayList<>();
@@ -61,7 +68,6 @@ public final class BackupUtils {
             }
             backupMetadata.put(latestBackup.packageName, latestBackup);
         }
-        BackupDao backupDao = AppManager.getAppsDb().backupDao();
         backupDao.deleteAll();
         backupDao.insert(backups);
         return backupMetadata;
@@ -69,6 +75,7 @@ public final class BackupUtils {
 
     @WorkerThread
     @Nullable
+    @Deprecated
     public static Backup storeAllAndGetLatestBackupMetadata(String packageName) throws IOException {
         MetadataManager.Metadata[] allBackupMetadata = MetadataManager.getMetadata(packageName);
         List<Backup> backups = new ArrayList<>();
@@ -104,11 +111,11 @@ public final class BackupUtils {
      */
     @WorkerThread
     @NonNull
-    public static HashMap<String, List<MetadataManager.Metadata>> getAllMetadata() throws IOException {
+    public static HashMap<String, List<MetadataManager.Metadata>> getAllMetadata() {
         HashMap<String, List<MetadataManager.Metadata>> backupMetadata = new HashMap<>();
-        List<String> backupPackages = getBackupPackages();
-        for (String dirtyPackageName : backupPackages) {
-            MetadataManager.Metadata[] metadataList = MetadataManager.getMetadata(dirtyPackageName);
+        List<Path> backupFolderNames = getBackupPaths();
+        for (Path backupFolderName : backupFolderNames) {
+            MetadataManager.Metadata[] metadataList = MetadataManager.getMetadata(backupFolderName);
             for (MetadataManager.Metadata metadata : metadataList) {
                 if (!backupMetadata.containsKey(metadata.packageName)) {
                     backupMetadata.put(metadata.packageName, new ArrayList<>());

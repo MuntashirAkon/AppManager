@@ -10,9 +10,7 @@ import android.content.pm.PackageManager;
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
@@ -191,16 +189,11 @@ public class AppDb {
     @NonNull
     private Map<String, Backup> getBackups(boolean loadBackups) {
         if (loadBackups) {
-            try {
-                // Very long operation
-                return BackupUtils.storeAllAndGetLatestBackupMetadata();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            // Very long operation
+            return BackupUtils.storeAllAndGetLatestBackupMetadata();
         } else {
             return BackupUtils.getAllLatestBackupMetadataFromDb();
         }
-        return Collections.emptyMap();
     }
 
     @NonNull

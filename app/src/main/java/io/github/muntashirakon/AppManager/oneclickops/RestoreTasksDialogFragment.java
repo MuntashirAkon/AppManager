@@ -21,7 +21,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.backup.BackupDialogFragment;
+import io.github.muntashirakon.AppManager.backup.dialog.BackupRestoreDialogFragment;
 import io.github.muntashirakon.AppManager.main.ApplicationItem;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -117,16 +117,12 @@ public class RestoreTasksDialogFragment extends DialogFragment {
                 .setTitle(R.string.filtered_packages)
                 .setPositiveButton(R.string.restore, (dialog, which, selectedItems) -> {
                     if (isDetached()) return;
-                    BackupDialogFragment backupDialogFragment = new BackupDialogFragment();
-                    Bundle args = new Bundle();
-                    args.putParcelableArrayList(BackupDialogFragment.ARG_PACKAGE_PAIRS,
-                            PackageUtils.getUserPackagePairs(selectedItems));
-                    args.putInt(BackupDialogFragment.ARG_CUSTOM_MODE, BackupDialogFragment.MODE_RESTORE);
-                    backupDialogFragment.setArguments(args);
-                    backupDialogFragment.setOnActionBeginListener(mode -> activity.mProgressIndicator.show());
-                    backupDialogFragment.setOnActionCompleteListener((mode, failedPackages) -> activity.mProgressIndicator.hide());
+                    BackupRestoreDialogFragment fragment = BackupRestoreDialogFragment.getInstance(
+                            PackageUtils.getUserPackagePairs(selectedItems), BackupRestoreDialogFragment.MODE_RESTORE);
+                    fragment.setOnActionBeginListener(mode -> activity.mProgressIndicator.show());
+                    fragment.setOnActionCompleteListener((mode, failedPackages) -> activity.mProgressIndicator.hide());
                     if (isDetached()) return;
-                    backupDialogFragment.show(getParentFragmentManager(), BackupDialogFragment.TAG);
+                    fragment.show(getParentFragmentManager(), BackupRestoreDialogFragment.TAG);
                 })
                 .setNegativeButton(R.string.cancel, null)
                 .show();

@@ -163,14 +163,15 @@ public class ConfPreferences extends PreferenceFragmentCompat {
             if (backupInfo != null) flags = new BackupFlags(backupInfo.flags);
             else flags = BackupFlags.fromPref();
             final AtomicInteger backupFlags = new AtomicInteger(flags.getFlags());
+            List<Integer> supportedBackupFlags = BackupFlags.getSupportedBackupFlagsAsArray();
             view.findViewById(R.id.dialog_button).setOnClickListener(v -> new MaterialAlertDialogBuilder(activity)
                     .setTitle(R.string.backup_options)
-                    .setMultiChoiceItems(BackupFlags.getFormattedFlagNames(activity),
-                            flags.flagsToCheckedItems(),
+                    .setMultiChoiceItems(BackupFlags.getFormattedFlagNames(activity, supportedBackupFlags),
+                            flags.flagsToCheckedItems(supportedBackupFlags),
                             (dialog, index, isChecked) -> {
                                 if (isChecked) {
-                                    flags.addFlag(BackupFlags.backupFlags.get(index));
-                                } else flags.removeFlag(BackupFlags.backupFlags.get(index));
+                                    flags.addFlag(supportedBackupFlags.get(index));
+                                } else flags.removeFlag(supportedBackupFlags.get(index));
                             })
                     .setPositiveButton(R.string.save, (dialog, which) -> backupFlags.set(flags.getFlags()))
                     .setNegativeButton(R.string.cancel, null)

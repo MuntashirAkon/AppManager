@@ -24,6 +24,7 @@ import androidx.preference.SwitchPreferenceCompat;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -121,14 +122,15 @@ public class BackupRestorePreferences extends PreferenceFragment {
         // Backup flags
         BackupFlags flags = BackupFlags.fromPref();
         ((Preference) Objects.requireNonNull(findPreference("backup_flags"))).setOnPreferenceClickListener(preference -> {
+            List<Integer> supportedBackupFlags = BackupFlags.getSupportedBackupFlagsAsArray();
             new MaterialAlertDialogBuilder(activity)
                     .setTitle(R.string.backup_options)
-                    .setMultiChoiceItems(BackupFlags.getFormattedFlagNames(activity),
-                            flags.flagsToCheckedItems(),
+                    .setMultiChoiceItems(BackupFlags.getFormattedFlagNames(activity, supportedBackupFlags),
+                            flags.flagsToCheckedItems(supportedBackupFlags),
                             (dialog, index, isChecked) -> {
                                 if (isChecked) {
-                                    flags.addFlag(BackupFlags.backupFlags.get(index));
-                                } else flags.removeFlag(BackupFlags.backupFlags.get(index));
+                                    flags.addFlag(supportedBackupFlags.get(index));
+                                } else flags.removeFlag(supportedBackupFlags.get(index));
                             })
                     .setPositiveButton(R.string.save, (dialog, which) ->
                             AppPref.set(AppPref.PrefKey.PREF_BACKUP_FLAGS_INT, flags.getFlags()))

@@ -1,0 +1,13 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:top="@dimen/padding_small"
+        android:bottom="@dimen/padding_small"
+        android:left="@dimen/padding_very_small"
+        android:right="@dimen/padding_very_small">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/tab_item_background_color" />
+            <corners android:radius="16dp" />
+        </shape>
+    </item>
+</layer-list>
