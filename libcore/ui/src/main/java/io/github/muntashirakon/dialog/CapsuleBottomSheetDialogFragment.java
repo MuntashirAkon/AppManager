@@ -2,8 +2,6 @@
 
 package io.github.muntashirakon.dialog;
 
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -23,11 +21,11 @@ import androidx.annotation.CallSuper;
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.Px;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
-import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -37,9 +35,9 @@ import com.google.android.material.shape.ShapeAppearanceModel;
 
 import java.lang.reflect.Method;
 import java.util.Locale;
+import java.util.Objects;
 
 import io.github.muntashirakon.ui.R;
-import io.github.muntashirakon.util.AnimationUtils;
 import io.github.muntashirakon.util.UiUtils;
 
 /**
@@ -52,9 +50,6 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
         implements View.OnLayoutChangeListener {
     public static final String TAG = CapsuleBottomSheetDialogFragment.class.getSimpleName();
 
-    private static final long ANIMATION_DURATION = 350L;
-    private static final int MAX_PEEK_SIZE = 0;
-
     private LinearLayoutCompat mBottomSheetContainer;
     private View mCapsule;
     private LinearLayoutCompat mHeaderContainer;
@@ -66,9 +61,12 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
     private View mBody;
     private boolean mIsCapsuleActivated;
     private boolean mIsLoadingFinished;
-    @NonNull
-    private ValueAnimator mAnimator = new ObjectAnimator();
     private BottomSheetBehavior<FrameLayout> mBehavior;
+    @Px
+    private int mMaxHeight;
+    @Px
+    private int mMaxPeekHeight;
+
     private final BottomSheetBehavior.BottomSheetCallback mBottomSheetCallback = new BottomSheetBehavior.BottomSheetCallback() {
         @Override
         public void onStateChanged(@NonNull View bottomSheet, int newState) {
@@ -127,13 +125,8 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
             return;
         }
         mIsLoadingFinished = false;
-        try {
-            mMainContainer.removeOnLayoutChangeListener(this);
-            mLoadingLayout.setVisibility(View.VISIBLE);
-            mBodyContainer.removeAllViews();
-        } finally {
-            mMainContainer.addOnLayoutChangeListener(this);
-        }
+        mLoadingLayout.setVisibility(View.VISIBLE);
+        mBodyContainer.setVisibility(View.GONE);
     }
 
     @MainThread
@@ -142,15 +135,12 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
             return;
         }
         mIsLoadingFinished = true;
-        try {
-            mMainContainer.removeOnLayoutChangeListener(this);
-            mBodyContainer.removeAllViews();
-            mBodyContainer.addView(mBody, new LinearLayoutCompat.LayoutParams(
+        mBodyContainer.setVisibility(View.VISIBLE);
+        if (mBodyContainer.getChildCount() != 1) {
+            mBodyContainer.addView(getBody(), new ViewGroup.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-            mLoadingLayout.setVisibility(View.GONE);
-        } finally {
-            mMainContainer.addOnLayoutChangeListener(this);
-        }
+        } // else Body has already been set, no need to set it again
+        mLoadingLayout.setVisibility(View.GONE);
     }
 
     @Nullable
@@ -165,6 +155,27 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
     }
 
+    @Px
+    public int getMaxHeight() {
+        return mMaxHeight;
+    }
+
+    public void setMaxHeight(@Px int maxHeight) {
+        mMaxHeight = maxHeight;
+        if (mBehavior != null) {
+            mBehavior.setMaxHeight(maxHeight);
+        }
+    }
+
+    @Px
+    public int getMaxPeekHeight() {
+        return mMaxPeekHeight;
+    }
+
+    public void setMaxPeekHeight(@Px int maxPeekHeight) {
+        mMaxPeekHeight = maxPeekHeight;
+    }
+
     @CallSuper
     @NonNull
     @Override
@@ -172,6 +183,11 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
         BottomSheetDialog dialog = new BottomSheetDialogInternal(requireContext(), getTheme());
         mBehavior = dialog.getBehavior();
         mBehavior.setSkipCollapsed(true);
+        if (mMaxHeight != 0) {
+            mBehavior.setMaxHeight(mMaxHeight);
+        } else {
+            mMaxHeight = mBehavior.getMaxHeight();
+        }
         return dialog;
     }
 
@@ -207,7 +223,7 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
     public void onStart() {
         super.onStart();
         mBehavior.addBottomSheetCallback(mBottomSheetCallback);
-        mMainContainer.addOnLayoutChangeListener(this);
+        mBottomSheetContainer.addOnLayoutChangeListener(this);
 
         mBottomSheetContainer.post(() -> {
             try {
@@ -224,21 +240,13 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
     public void onStop() {
         super.onStop();
         mBehavior.removeBottomSheetCallback(mBottomSheetCallback);
-        mMainContainer.removeOnLayoutChangeListener(this);
-    }
-
-    @CallSuper
-    @Override
-    public void onDetach() {
-        mAnimator.cancel();
-        super.onDetach();
+        mBottomSheetContainer.removeOnLayoutChangeListener(this);
     }
 
     @CallSuper
     @Override
     public void onDestroyView() {
-        mAnimator.cancel();
-        mMainContainer.removeOnLayoutChangeListener(this);
+        mHeader = null;
         mBody = null;
         super.onDestroyView();
     }
@@ -246,9 +254,11 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
     @CallSuper
     @Override
     public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-        if ((bottom - top) != (oldBottom - oldTop)) {
-            enqueueAnimation(() -> animateHeight(oldBottom - oldTop, bottom - top, () -> {
-            }));
+        int oldHeight = oldBottom - oldTop;
+        int newHeight = bottom - top;
+        if (newHeight != oldHeight) {
+            Log.d(TAG, String.format(Locale.ROOT, "onLayoutChange: %d -> %d", oldHeight, newHeight));
+            updateDialogHeight(newHeight);
         }
     }
 
@@ -272,33 +282,11 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
         return newMaterialShapeDrawable;
     }
 
-    private void animateHeight(int from, int to, @NonNull Runnable onEnd) {
-        mAnimator.cancel();
-        mAnimator = ObjectAnimator.ofFloat(0f, 1f);
-        mAnimator.setDuration(ANIMATION_DURATION);
-        mAnimator.setInterpolator(new FastOutSlowInInterpolator());
-        Log.d(TAG, String.format(Locale.ROOT, "animateHeight: %d -> %d", from, to));
-        mAnimator.addUpdateListener(animation -> {
-            Float scale = (Float) animation.getAnimatedValue();
-            int newHeight = (int) ((to - from) * scale + from);
-            setClippedHeight(newHeight);
-        });
-        AnimationUtils.doOnAnimationEnd(mAnimator, onEnd);
-        mAnimator.start();
-    }
-
-    private void enqueueAnimation(@NonNull Runnable action) {
-        if (!mAnimator.isRunning()) {
-            action.run();
-        } else {
-            AnimationUtils.doOnAnimationEnd(mAnimator, action);
+    private void updateDialogHeight(int newHeight) {
+        if (mMaxPeekHeight != 0 && newHeight > mMaxPeekHeight) {
+            newHeight = mMaxPeekHeight;
         }
-    }
-
-    private void setClippedHeight(int newHeight) {
-        if (newHeight <= MAX_PEEK_SIZE || MAX_PEEK_SIZE == 0) {
-            mBehavior.setPeekHeight(newHeight);
-        }
+        mBehavior.setPeekHeight(newHeight, true);
     }
 
     public void onCapsuleActivated(boolean activated) {
@@ -331,8 +319,8 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
                 }
             }
 
-            findViewById(R.id.container).setFitsSystemWindows(false);
-            findViewById(R.id.coordinator).setFitsSystemWindows(false);
+            Objects.requireNonNull((View) findViewById(R.id.container)).setFitsSystemWindows(false);
+            Objects.requireNonNull((View) findViewById(R.id.coordinator)).setFitsSystemWindows(false);
         }
     }
 }

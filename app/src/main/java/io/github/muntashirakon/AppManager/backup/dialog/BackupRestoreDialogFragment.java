@@ -10,6 +10,7 @@ import android.content.pm.UserInfo;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.UserHandleHidden;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -139,8 +140,7 @@ public class BackupRestoreDialogFragment extends CapsuleBottomSheetDialogFragmen
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         mActivity = requireActivity();
-        mStoragePermission.request(granted -> {
-        });
+        mStoragePermission.request();
     }
 
     @Override
@@ -164,7 +164,7 @@ public class BackupRestoreDialogFragment extends CapsuleBottomSheetDialogFragmen
 
     private void loadBody(@BackupInfoState int state) {
         state = getRealState(state);
-        finishLoading();
+        Log.d(TAG, "Backup dialog state: " + state);
         switch (state) {
             default:
             case BackupInfoState.NONE:
@@ -230,23 +230,25 @@ public class BackupRestoreDialogFragment extends CapsuleBottomSheetDialogFragmen
     }
 
     private void showBackupOptionsUnavailable() {
-        // TODO: 5/7/22 Show message that no backups available
         getBody().findViewById(R.id.message).setVisibility(View.VISIBLE);
+        getBody().findViewById(R.id.fragment_container_view_tag).setVisibility(View.GONE);
+        finishLoading();
     }
 
     private void loadMultipleBackupFragment() {
         mDialogTitleBuilder.setTitle(R.string.backup);
         setHeader(mDialogTitleBuilder.build());
+        finishLoading();
         getChildFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container_view_tag, BackupFragment.getInstance())
                 .commit();
-
     }
 
     private void loadMultipleRestoreFragment() {
         mDialogTitleBuilder.setTitle(R.string.restore);
         updateMultipleRestoreHeader();
+        finishLoading();
         getChildFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container_view_tag, RestoreMultipleFragment.getInstance())
@@ -263,6 +265,7 @@ public class BackupRestoreDialogFragment extends CapsuleBottomSheetDialogFragmen
         ViewPager viewPager = getBody().findViewById(R.id.pager);
         TabLayout tabLayout = getBody().findViewById(R.id.tab_layout);
         viewPager.setVisibility(View.VISIBLE);
+        finishLoading();
         viewPager.setAdapter(new BackupDialogFragmentPagerAdapter(this));
         tabLayout.setupWithViewPager(viewPager);
     }
@@ -277,6 +280,7 @@ public class BackupRestoreDialogFragment extends CapsuleBottomSheetDialogFragmen
     private void loadSingleBackupFragment() {
         mDialogTitleBuilder.setTitle(R.string.backup);
         updateSingleBackupHeader();
+        finishLoading();
         getChildFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container_view_tag, BackupFragment.getInstance())
@@ -286,6 +290,7 @@ public class BackupRestoreDialogFragment extends CapsuleBottomSheetDialogFragmen
     private void loadSingleRestoreFragment() {
         mDialogTitleBuilder.setTitle(R.string.restore_dots);
         updateSingleBackupHeader();
+        finishLoading();
         getChildFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_container_view_tag, RestoreSingleFragment.getInstance())
@@ -302,6 +307,7 @@ public class BackupRestoreDialogFragment extends CapsuleBottomSheetDialogFragmen
         ViewPager viewPager = getBody().findViewById(R.id.pager);
         TabLayout tabLayout = getBody().findViewById(R.id.tab_layout);
         viewPager.setVisibility(View.VISIBLE);
+        finishLoading();
         viewPager.setAdapter(new BackupDialogFragmentPagerAdapter(this));
         tabLayout.setupWithViewPager(viewPager);
     }
