@@ -25,6 +25,8 @@ class FlagsAdapter extends RecyclerView.Adapter<FlagsAdapter.ViewHolder> {
     private final int mLayoutId;
     private final List<Integer> mSupportedBackupFlags;
     private final CharSequence[] mSupportedBackupFlagNames;
+    @BackupFlags.BackupFlag
+    private final int mDisabledFlags;
 
     @BackupFlags.BackupFlag
     private int mSelectedFlags;
@@ -32,12 +34,19 @@ class FlagsAdapter extends RecyclerView.Adapter<FlagsAdapter.ViewHolder> {
     @SuppressLint("RestrictedApi")
     public FlagsAdapter(@NonNull Context context, @BackupFlags.BackupFlag int flags,
                         @BackupFlags.BackupFlag int supportedFlags) {
+        this(context, flags, supportedFlags, 0);
+    }
+
+    @SuppressLint("RestrictedApi")
+    public FlagsAdapter(@NonNull Context context, @BackupFlags.BackupFlag int flags,
+                        @BackupFlags.BackupFlag int supportedFlags, @BackupFlags.BackupFlag int disabledFlags) {
         mLayoutId = MaterialAttributes.resolveInteger(context, R.attr.multiChoiceItemLayout,
                 R.layout.mtrl_alert_select_dialog_multichoice);
         // We list |supportedFlags| and select |flags| by default
         mSupportedBackupFlags = BackupFlags.getBackupFlagsAsArray(supportedFlags);
         mSupportedBackupFlagNames = BackupFlags.getFormattedFlagNames(context, mSupportedBackupFlags);
         mSelectedFlags = flags;
+        mDisabledFlags = disabledFlags;
         notifyDataSetChanged();
     }
 
@@ -56,7 +65,9 @@ class FlagsAdapter extends RecyclerView.Adapter<FlagsAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         int flag = mSupportedBackupFlags.get(position);
         boolean isSelected = (mSelectedFlags & flag) != 0;
+        boolean isDisabled = (mDisabledFlags & flag) != 0;
         holder.item.setChecked(isSelected);
+        holder.item.setEnabled(!isDisabled);
         holder.item.setText(mSupportedBackupFlagNames[position]);
         holder.item.setOnClickListener(v -> {
             if (isSelected) {

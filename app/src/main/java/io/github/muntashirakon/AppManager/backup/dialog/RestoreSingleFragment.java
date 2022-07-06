@@ -34,6 +34,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
+import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class RestoreSingleFragment extends Fragment {
@@ -123,18 +124,22 @@ public class RestoreSingleFragment extends Fragment {
         if (BuildConfig.DEBUG) {
             supportedBackupFlags.add(BackupFlags.BACKUP_CUSTOM_USERS);
         }
-        new MaterialAlertDialogBuilder(mContext)
+        List<Integer> disabledFlags = new ArrayList<>();
+        if (!mViewModel.getBackupInfo().isInstalled()) {
+            enabledFlags.addFlag(BackupFlags.BACKUP_APK_FILES);
+            disabledFlags.add(BackupFlags.BACKUP_APK_FILES);
+        }
+        new SearchableMultiChoiceDialogBuilder<>(mContext, supportedBackupFlags, BackupFlags.getFormattedFlagNames(mContext, supportedBackupFlags))
                 .setTitle(R.string.backup_options)
-                .setMultiChoiceItems(BackupFlags.getFormattedFlagNames(mContext, supportedBackupFlags),
-                        enabledFlags.flagsToCheckedItems(supportedBackupFlags),
-                        (dialog, index, isChecked) -> {
-                            if (isChecked) {
-                                enabledFlags.addFlag(supportedBackupFlags.get(index));
-                            } else {
-                                enabledFlags.removeFlag(supportedBackupFlags.get(index));
-                            }
-                        })
-                .setPositiveButton(R.string.restore, (dialog, which) -> {
+                .addSelections(BackupFlags.getBackupFlagsAsArray(enabledFlags.getFlags()))
+                .addDisabledItems(disabledFlags)
+                .setPositiveButton(R.string.restore, (dialog, which, selections) -> {
+                    int newFlags = 0;
+                    for (int flag : selections) {
+                        newFlags |= flag;
+                    }
+                    enabledFlags.setFlags(newFlags);
+
                     BackupRestoreDialogViewModel.OperationInfo operationInfo = new BackupRestoreDialogViewModel.OperationInfo();
                     operationInfo.mode = BackupRestoreDialogFragment.MODE_RESTORE;
                     operationInfo.op = BatchOpsManager.OP_RESTORE_BACKUP;

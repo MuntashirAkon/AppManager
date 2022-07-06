@@ -3,7 +3,9 @@
 package io.github.muntashirakon.AppManager.types;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +18,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.collection.ArraySet;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,12 +32,13 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.widget.CheckBox;
 import io.github.muntashirakon.widget.SearchView;
 
 public class SearchableMultiChoiceDialogBuilder<T> {
     @NonNull
-    private final FragmentActivity activity;
+    private final Context context;
     @NonNull
     private final MaterialAlertDialogBuilder builder;
     private final SearchView searchView;
@@ -57,21 +59,21 @@ public class SearchableMultiChoiceDialogBuilder<T> {
         void onClick(DialogInterface dialog, int which, T item, boolean isChecked);
     }
 
-    public SearchableMultiChoiceDialogBuilder(@NonNull FragmentActivity activity, @NonNull List<T> items, @ArrayRes int itemNames) {
-        this(activity, items, activity.getResources().getTextArray(itemNames));
+    public SearchableMultiChoiceDialogBuilder(@NonNull Context context, @NonNull List<T> items, @ArrayRes int itemNames) {
+        this(context, items, context.getResources().getTextArray(itemNames));
     }
 
-    public SearchableMultiChoiceDialogBuilder(@NonNull FragmentActivity activity, @NonNull List<T> items, CharSequence[] itemNames) {
-        this(activity, items, Arrays.asList(itemNames));
+    public SearchableMultiChoiceDialogBuilder(@NonNull Context context, @NonNull List<T> items, CharSequence[] itemNames) {
+        this(context, items, Arrays.asList(itemNames));
     }
 
     @SuppressLint("InflateParams")
-    public SearchableMultiChoiceDialogBuilder(@NonNull FragmentActivity activity, @NonNull List<T> items, @NonNull List<CharSequence> itemNames) {
-        this.activity = activity;
-        View view = activity.getLayoutInflater().inflate(R.layout.dialog_searchable_multi_choice, null);
+    public SearchableMultiChoiceDialogBuilder(@NonNull Context context, @NonNull List<T> items, @NonNull List<CharSequence> itemNames) {
+        this.context = context;
+        View view = View.inflate(context, R.layout.dialog_searchable_multi_choice, null);
         RecyclerView recyclerView = view.findViewById(android.R.id.list);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false));
+        recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
         searchView = view.findViewById(R.id.action_search);
         selectAll = view.findViewById(android.R.id.checkbox);
         searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
@@ -90,9 +92,9 @@ public class SearchableMultiChoiceDialogBuilder<T> {
         if (items.size() < 6) {
             searchView.setVisibility(View.GONE);
         }
-        builder = new MaterialAlertDialogBuilder(activity).setView(view);
+        builder = new MaterialAlertDialogBuilder(context).setView(view);
         @SuppressLint("RestrictedApi")
-        int layoutId = MaterialAttributes.resolveInteger(activity, R.attr.multiChoiceItemLayout,
+        int layoutId = MaterialAttributes.resolveInteger(context, R.attr.multiChoiceItemLayout,
                 R.layout.mtrl_alert_select_dialog_multichoice);
         adapter = new SearchableRecyclerViewAdapter(itemNames, items, layoutId);
         recyclerView.setAdapter(adapter);
@@ -113,6 +115,12 @@ public class SearchableMultiChoiceDialogBuilder<T> {
     public SearchableMultiChoiceDialogBuilder<T> setOnMultiChoiceClickListener(@Nullable OnMultiChoiceClickListener<T>
                                                                                        onMultiChoiceClickListener) {
         this.onMultiChoiceClickListener = onMultiChoiceClickListener;
+        return this;
+    }
+
+    public SearchableMultiChoiceDialogBuilder<T> addDisabledItems(@Nullable List<T> disabledItems) {
+        adapter.addDisabledItems(disabledItems);
+        checkSelections();
         return this;
     }
 
@@ -245,6 +253,7 @@ public class SearchableMultiChoiceDialogBuilder<T> {
         private final ArrayList<Integer> filteredItems = new ArrayList<>();
         @NonNull
         private final Set<Integer> selectedItems = new ArraySet<>();
+        private final Set<Integer> disabledItems = new ArraySet<>();
         @LayoutRes
         private final int layoutId;
 
@@ -319,6 +328,19 @@ public class SearchableMultiChoiceDialogBuilder<T> {
             }
         }
 
+        void addDisabledItems(@Nullable List<T> disabledItems) {
+            if (disabledItems != null) {
+                for (T item : disabledItems) {
+                    int index = items.indexOf(item);
+                    if (index != -1) {
+                        synchronized (this.disabledItems) {
+                            this.disabledItems.add(index);
+                        }
+                    }
+                }
+            }
+        }
+
         void selectAll() {
             synchronized (selectedItems) {
                 synchronized (filteredItems) {
@@ -386,6 +408,9 @@ public class SearchableMultiChoiceDialogBuilder<T> {
             }
             holder.item.setText(itemNames.get(index));
             holder.item.setTextIsSelectable(isTextSelectable);
+            synchronized (disabledItems) {
+                holder.item.setEnabled(!disabledItems.contains(index));
+            }
             holder.item.setChecked(selected.get());
             holder.item.setOnClickListener(v -> {
                 synchronized (selectedItems) {
@@ -413,6 +438,9 @@ public class SearchableMultiChoiceDialogBuilder<T> {
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
                 item = itemView.findViewById(android.R.id.text1);
+                // textAppearanceBodyLarge
+                item.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
+                item.setTextColor(UIUtils.getTextColorSecondary(item.getContext()));
             }
         }
     }

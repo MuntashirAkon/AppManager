@@ -58,7 +58,13 @@ public class RestoreMultipleFragment extends Fragment {
         if (BuildConfig.DEBUG) {
             supportedFlags |= BackupFlags.BACKUP_CUSTOM_USERS;
         }
-        FlagsAdapter adapter = new FlagsAdapter(mContext, BackupFlags.fromPref().getFlags(), supportedFlags);
+        int checkedFlags = BackupFlags.fromPref().getFlags();
+        int disabledFlags = 0;
+        if (mViewModel.getUninstalledApps().size() > 0) {
+            checkedFlags |= BackupFlags.BACKUP_APK_FILES;
+            disabledFlags |= BackupFlags.BACKUP_APK_FILES;
+        }
+        FlagsAdapter adapter = new FlagsAdapter(mContext, checkedFlags, supportedFlags, disabledFlags);
         recyclerView.setAdapter(adapter);
 
         Set<CharSequence> appsWithoutBackups = mViewModel.getAppsWithoutBackups();
