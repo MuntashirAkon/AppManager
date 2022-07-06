@@ -228,7 +228,7 @@
         <item quantity="many">%1$d раз</item>
         <item quantity="other">%1$d раз</item>
     </plurals>
-    <string name="sort_by_last_used">Последний запуск</string>
+    <string name="sort_by_last_used">Последнее использование</string>
     <string name="sort_by_screen_time">Время использования</string>
     <string name="sort_by_times_opened">Количество запусков</string>
     <string name="sort_by_mobile_data">Мобильные данные</string>
@@ -793,7 +793,7 @@
     <string name="security">Безопасность</string>
     <string name="patch_level">Обновление системы безопасности Андроид</string>
     <string name="backup_skip_signature_checks_description">Восстановление резервных копий, которые либо не прошли проверку контрольных сумм, либо имеют подписи, отличные от предыдущих резервных копий APK.</string>
-    <string name="backup_multiple_description">Создать отдельную резервную копию <i>с именем</i> вместо базовой.</string>
+    <string name="backup_multiple_description">Создание отдельной резервной копии, с <i>именем</i> , которое отличается от базового наименования бекапа.</string>
     <string name="backup_rules_description">Резервное копирование правил, настроенных в App Manager.</string>
     <string name="backup_extras_description">Резервное копирование разрешений приложения, экономия батареи, параметры использования данных, статус MagiskHide, SSAID и т.д.</string>
     <string name="backup_extras">Дополнительно</string>
@@ -1250,7 +1250,13 @@
     <string name="log_stop_recording">Остановить запись</string>
     <string name="apk_checksums">Контрольные суммы APK</string>
     <string name="item_select">Выбрать</string>
-    <string name="netpolicy_cannot_be_modified_for_core_apps">Сетевую политику нельзя изменить для основных приложений Android.</string>
-    <string name="open_developer_options_page">Откройте страницу параметров разработчика в настройках Android</string>
-    <string name="usage_last_used">Последний раз был использован</string>
+    <string name="netpolicy_cannot_be_modified_for_core_apps">Сетевую политику нельзя изменить для приложений ОС Android.</string>
+    <string name="open_developer_options_page">Откройте страницу \"Для разработчиков\" в настройках вашего устройства</string>
+    <string name="usage_last_used">Последнее использование</string>
+    <string name="pref_pure_black_theme">Полностью черная тема</string>
+    <string name="pref_pure_black_theme_msg">Использовать полностью черный фон, когда включен ночной режим.</string>
+    <string name="usage_mobile_data">Мобильные данные</string>
+    <string name="usage_times_opened">Количество запусков</string>
+    <string name="usage_wifi_data">Wi-Fi данные</string>
+    <string name="app_explorer">Обозреватель приложений</string>
 </resources>
