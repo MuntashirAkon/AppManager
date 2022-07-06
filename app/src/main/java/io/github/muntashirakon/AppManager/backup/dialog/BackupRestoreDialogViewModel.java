@@ -153,8 +153,8 @@ public class BackupRestoreDialogViewModel extends AndroidViewModel {
                 } else {
                     for (App app : apps) {
                         backupInfo.setAppLabel(app.packageLabel);
-                        backupInfo.setInstalled(app.isInstalled);
-                        break;
+                        // Installation gets higher priority
+                        backupInfo.setInstalled(backupInfo.isInstalled() | app.isInstalled);
                     }
                 }
             }
