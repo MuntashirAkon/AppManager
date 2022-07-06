@@ -5,7 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <androidx.viewpager.widget.ViewPager
+    <!-- The sequence must be maintained. -->
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_container_view_tag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <io.github.muntashirakon.widget.ViewPagerNoTouchIntercept
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -13,12 +19,17 @@
         android:overScrollMode="never"
         tools:visibility="visible">
 
+        <!-- Dummy nested scroll view to prevent unwanted behaviour, see material-components-android#373 -->
+        <io.github.muntashirakon.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
         <com.google.android.material.tabs.TabLayout
             style="@style/Widget.Material3.TabLayout.OnSurface"
             android:id="@+id/tab_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/padding_medium"
+            app:tabPadding="@dimen/padding_medium"
             app:tabMode="fixed"
             app:tabBackground="@drawable/tab_item_background_rounded"
             app:tabTextColor="?attr/colorOnSecondaryContainer"
@@ -37,12 +48,7 @@
 
         </com.google.android.material.tabs.TabLayout>
 
-    </androidx.viewpager.widget.ViewPager>
-
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/fragment_container_view_tag"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+    </io.github.muntashirakon.widget.ViewPagerNoTouchIntercept>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/message"
