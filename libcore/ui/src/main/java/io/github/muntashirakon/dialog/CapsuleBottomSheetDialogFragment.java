@@ -6,7 +6,6 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.app.Dialog;
 import android.content.Context;
-import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
@@ -91,6 +90,7 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
                         mIsCapsuleActivated = false;
                         onCapsuleActivated(false);
                     }
+                    // Workaround for rounded corners in the bottom sheet
                     bottomSheet.setBackground(createMaterialShapeDrawable(bottomSheet));
                 case BottomSheetBehavior.STATE_HALF_EXPANDED:
                 case BottomSheetBehavior.STATE_HIDDEN:
@@ -171,6 +171,7 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         BottomSheetDialog dialog = new BottomSheetDialogInternal(requireContext(), getTheme());
         mBehavior = dialog.getBehavior();
+        mBehavior.setSkipCollapsed(true);
         return dialog;
     }
 
@@ -208,16 +209,14 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
         mBehavior.addBottomSheetCallback(mBottomSheetCallback);
         mMainContainer.addOnLayoutChangeListener(this);
 
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            mMainContainer.post(() -> {
-                try {
-                    Method setStateInternal = BottomSheetBehavior.class.getDeclaredMethod("setStateInternal", int.class);
-                    setStateInternal.setAccessible(true);
-                    setStateInternal.invoke(mBehavior, BottomSheetBehavior.STATE_EXPANDED);
-                } catch (Throwable ignore) {
-                }
-            });
-        }
+        mBottomSheetContainer.post(() -> {
+            try {
+                Method setStateInternal = BottomSheetBehavior.class.getDeclaredMethod("setStateInternal", int.class);
+                setStateInternal.setAccessible(true);
+                setStateInternal.invoke(mBehavior, BottomSheetBehavior.STATE_EXPANDED);
+            } catch (Throwable ignore) {
+            }
+        });
     }
 
     @CallSuper
