@@ -1259,4 +1259,13 @@
     <string name="usage_times_opened">Количество запусков</string>
     <string name="usage_wifi_data">Wi-Fi данные</string>
     <string name="app_explorer">Обозреватель приложений</string>
+    <string name="frozen">Заморожено</string>
+    <string name="freeze">Заморозить</string>
+    <string name="unfreeze">Разморозить</string>
+    <string name="backup_no_backups_present">Нет резервных копий</string>
+    <string name="restore_dots">Восстановление…</string>
+    <string name="backup_apps_cannot_be_restored">Следующие приложения не могут быть восстановлены, потому что у них нет базовой резервной копии:</string>
+    <string name="backup_apps_cannot_be_backed_up">Следующие приложения не установлены и их резервное копирование невозможно:</string>
+    <string name="restart_device">Перезагрузить устройство</string>
+    <string name="import_backups_warning_delete_backups_after_import">Удалить резервные копии после их импорта в App Manager\? Каждая резервная копия удаляется отдельно после успешного импорта. Выберите <b>Нет</b>, если не уверены.</string>
 </resources>
