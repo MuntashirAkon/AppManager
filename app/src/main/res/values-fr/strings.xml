@@ -963,11 +963,11 @@
     <string name="failed_to_enable_magisk_hide">Impossible d\'activer MagiskHide</string>
     <string name="pref_backup_restore_msg">Personnaliser la sauvegarder/restauration.</string>
     <string name="backup_volume">Volume de sauvegarde</string>
-    <string name="pref_backup_volume_msg">Sélectionnez le volume ou le disque où placer les sauvegardes.</string>
+    <string name="pref_backup_volume_msg">Sélectionnez le volume ou le disque où sauvegarder.</string>
     <string name="unencrypted">Non chiffré</string>
     <string name="encrypted">Chiffré</string>
     <string name="backup_custom_users">Utilisateurs personnalisés</string>
-    <string name="backup_custom_users_description">N\'exécuter les sauvegardes que pour les utilisateurs mentionnés</string>
+    <string name="backup_custom_users_description">N\'effectuer que les sauvegardes des utilisateurs spécifiés</string>
     <string name="no_volumes_found">Impossible de trouver un volume avec des droits d\'écriture.</string>
     <string name="bootloader">Chargeur de démarrage</string>
     <string name="verify_and_redo_backups_msg">Vérifiez l\'intégrité des sauvegardes précédentes et refaites les sauvegardes pour lesquelles le contrôle d\'intégrité a échoué.</string>
