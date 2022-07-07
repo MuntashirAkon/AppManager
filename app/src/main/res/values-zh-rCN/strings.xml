@@ -1157,4 +1157,5 @@
     <string name="restore_dots">还原…</string>
     <string name="backup_apps_cannot_be_backed_up">未安装下列应用，因而无法进行备份：</string>
     <string name="restart_device">重启设备</string>
+    <string name="import_backups_warning_delete_backups_after_import">将备份导入 App Manager 后删除备份？ 每个备份在成功导入后会被单独删除。 如不确定，选择<b>否</b>。</string>
 </resources>
