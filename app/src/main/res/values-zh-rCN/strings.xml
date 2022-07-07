@@ -1149,4 +1149,11 @@
     <string name="usage_wifi_data">Wi-Fi 流量</string>
     <string name="usage_times_opened">打开次数</string>
     <string name="usage_last_used">上次使用</string>
+    <string name="backup_apps_cannot_be_restored">无法还原下列应用，因它们没有基备份：</string>
+    <string name="frozen">已冻结</string>
+    <string name="unfreeze">解冻</string>
+    <string name="freeze">冻结</string>
+    <string name="backup_no_backups_present">无备份。</string>
+    <string name="restore_dots">还原…</string>
+    <string name="backup_apps_cannot_be_backed_up">未安装下列应用，因而无法进行备份：</string>
 </resources>
