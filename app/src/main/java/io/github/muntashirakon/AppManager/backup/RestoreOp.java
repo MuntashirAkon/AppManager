@@ -104,6 +104,8 @@ class RestoreOp implements Closeable {
     private boolean isInstalled;
     private final List<Path> decryptedFiles = new ArrayList<>();
 
+    private boolean requiresRestart;
+
     RestoreOp(@NonNull String packageName, @NonNull MetadataManager metadataManager,
               @NonNull BackupFlags requestedFlags, @NonNull BackupFiles.BackupFile backupFile,
               int userHandle) throws BackupException {
@@ -211,6 +213,10 @@ class RestoreOp implements Closeable {
         } catch (Throwable th) {
             throw new BackupException("Unknown error occurred", th);
         }
+    }
+
+    public boolean requiresRestart() {
+        return requiresRestart;
     }
 
     private void checkMasterKey() throws BackupException {
@@ -569,11 +575,13 @@ class RestoreOp implements Closeable {
                         UriManager uriManager = new UriManager();
                         uriManager.grantUri(newUriGrant);
                         uriManager.writeGrantedUriPermissions();
+                        requiresRestart = true;
                         break;
                     case SSAID:
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                             new SsaidSettings(packageName, packageInfo.applicationInfo.uid)
                                     .setSsaid(((SsaidRule) entry).getSsaid());
+                            requiresRestart = true;
                         }
                         break;
                 }

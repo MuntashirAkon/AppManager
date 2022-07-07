@@ -73,6 +73,7 @@ public class ProfileManager {
     private final ProfileMetaManager.Profile profile;
     @Nullable
     private ProfileLogger mLogger;
+    private boolean mRequiresRestart;
 
     public ProfileManager(@NonNull ProfileMetaManager metaManager) throws FileNotFoundException {
         if (metaManager.profile == null) {
@@ -84,6 +85,10 @@ public class ProfileManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public boolean requiresRestart() {
+        return mRequiresRestart;
     }
 
     @SuppressLint("SwitchIntDef")
@@ -252,8 +257,11 @@ public class ProfileManager {
                     result = batchOpsManager.performOp(BatchOpsManager.OP_BACKUP, userPackagePairs);
                     break;
                 case ProfileMetaManager.STATE_OFF:  // Restore backup
-                default:
                     result = batchOpsManager.performOp(BatchOpsManager.OP_RESTORE_BACKUP, userPackagePairs);
+                    mRequiresRestart |= result.requiresRestart();
+                    break;
+                default:
+                    result = new BatchOpsManager.Result(userPackagePairs);
             }
             if (!result.isSuccessful()) {
                 Log.d(TAG, "Failed packages: " + result);

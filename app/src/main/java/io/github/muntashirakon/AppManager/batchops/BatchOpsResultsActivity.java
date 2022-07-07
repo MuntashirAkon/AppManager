@@ -31,6 +31,7 @@ import java.util.List;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.RestartUtils;
 
 public class BatchOpsResultsActivity extends BaseActivity {
     private RecyclerView mRecyclerView;
@@ -45,6 +46,9 @@ public class BatchOpsResultsActivity extends BaseActivity {
     protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
         if (getIntent() == null) {
             finish();
+            return;
+        }
+        if (restartIfNeeded(getIntent())) {
             return;
         }
         setContentView(R.layout.activity_batch_ops_results);
@@ -69,6 +73,9 @@ public class BatchOpsResultsActivity extends BaseActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        if (restartIfNeeded(getIntent())) {
+            return;
+        }
         handleIntent(intent);
     }
 
@@ -86,6 +93,14 @@ public class BatchOpsResultsActivity extends BaseActivity {
         intent.removeExtra(BatchOpsService.EXTRA_FAILED_PKG);
         intent.removeExtra(BatchOpsService.EXTRA_OP_USERS);
         intent.removeExtra(BatchOpsService.EXTRA_FAILURE_MESSAGE);
+    }
+
+    private boolean restartIfNeeded(@NonNull Intent intent) {
+        if (getIntent().getBooleanExtra(BatchOpsService.EXTRA_REQUIRES_RESTART, false)) {
+            RestartUtils.restart(RestartUtils.RESTART_NORMAL);
+            return true;
+        }
+        return false;
     }
 
     @Override

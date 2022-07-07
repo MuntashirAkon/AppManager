@@ -59,6 +59,8 @@ public class BackupManager {
     @NonNull
     private final BackupFlags requestedFlags;
 
+    private boolean requiresRestart;
+
     protected BackupManager(@NonNull UserPackagePair targetPackage, int flags) {
         this.targetPackage = targetPackage;
         metadataManager = MetadataManager.getNewInstance();
@@ -69,6 +71,10 @@ public class BackupManager {
             e.printStackTrace();
         }
         Log.d(TAG, String.format(Locale.ROOT, "Package: %s, user: %d", targetPackage.getPackageName(), targetPackage.getUserHandle()));
+    }
+
+    public boolean requiresRestart() {
+        return requiresRestart;
     }
 
     /**
@@ -163,6 +169,7 @@ public class BackupManager {
                     metadataManager, requestedFlags, backupFileList[0],
                     targetPackage.getUserHandle())) {
                 restoreOp.runRestore();
+                requiresRestart |= restoreOp.requiresRestart();
             }
         } else {
             Log.w(RestoreOp.TAG, "No backups found.");

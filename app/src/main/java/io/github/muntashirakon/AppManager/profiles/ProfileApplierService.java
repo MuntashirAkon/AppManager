@@ -16,6 +16,8 @@ import java.io.FileNotFoundException;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.batchops.BatchOpsResultsActivity;
+import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.types.ForegroundService;
@@ -67,10 +69,10 @@ public class ProfileApplierService extends ForegroundService {
             ProfileManager profileManager = new ProfileManager(new ProfileMetaManager(profileName));
             profileManager.applyProfile(state);
             profileManager.conclude();
-            sendNotification(Activity.RESULT_OK);
+            sendNotification(Activity.RESULT_OK, profileManager.requiresRestart());
         } catch (FileNotFoundException e) {
             Log.e("ProfileApplier", "Could not apply the profile");
-            sendNotification(Activity.RESULT_CANCELED);
+            sendNotification(Activity.RESULT_CANCELED, false);
         }
     }
 
@@ -120,7 +122,7 @@ public class ProfileApplierService extends ForegroundService {
         super.onDestroy();
     }
 
-    private void sendNotification(int result) {
+    private void sendNotification(int result, boolean requiresRestart) {
         NotificationCompat.Builder builder = NotificationUtils.getHighPriorityNotificationBuilder(this);
         builder.setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
@@ -135,6 +137,14 @@ public class ProfileApplierService extends ForegroundService {
                 break;
             case Activity.RESULT_OK:  // Successful
                 builder.setContentText(getString(R.string.the_operation_was_successful));
+        }
+        if (requiresRestart) {
+            Intent intent = new Intent(this, BatchOpsResultsActivity.class);
+            intent.putExtra(BatchOpsService.EXTRA_REQUIRES_RESTART, true);
+            @SuppressLint("WrongConstant")
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
+                    PendingIntent.FLAG_ONE_SHOT | PendingIntentCompat.FLAG_IMMUTABLE);
+            builder.addAction(0, getString(R.string.restart_device), pendingIntent);
         }
         NotificationUtils.displayHighPriorityNotification(this, builder.build());
     }

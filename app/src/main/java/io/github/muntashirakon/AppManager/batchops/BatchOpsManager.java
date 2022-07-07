@@ -30,6 +30,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
@@ -299,6 +300,7 @@ public class BatchOpsManager {
     private Result opBackupRestore(@BackupRestoreDialogFragment.ActionMode int mode) {
         List<UserPackagePair> failedPackages = new ArrayList<>();
         MultithreadedExecutor executor = MultithreadedExecutor.getNewInstance();
+        AtomicBoolean requiresRestart = new AtomicBoolean();
         try {
             String[] backupNames = args.getStringArray(ARG_BACKUP_NAMES);
             for (UserPackagePair pair : userPackagePairs) {
@@ -314,6 +316,7 @@ public class BatchOpsManager {
                                 break;
                             case BackupRestoreDialogFragment.MODE_RESTORE:
                                 backupManager.restore(backupNames);
+                                requiresRestart.set(requiresRestart.get() | backupManager.requiresRestart());
                                 break;
                         }
                     } catch (BackupException e) {
@@ -328,7 +331,9 @@ public class BatchOpsManager {
             log("====> op=BACKUP_RESTORE, mode=" + mode, th);
         }
         executor.awaitCompletion();
-        return lastResult = new Result(failedPackages);
+        lastResult = new Result(failedPackages);
+        lastResult.setRequiresRestart(requiresRestart.get());
+        return lastResult;
     }
 
     @NonNull
@@ -653,6 +658,8 @@ public class BatchOpsManager {
         private final List<UserPackagePair> mUserPackagePairs;
         private final boolean mIsSuccessful;
 
+        private boolean mRequiresRestart;
+
         public Result(@NonNull List<UserPackagePair> failedUserPackagePairs) {
             this(failedUserPackagePairs, failedUserPackagePairs.isEmpty());
         }
@@ -666,6 +673,14 @@ public class BatchOpsManager {
                 mAssociatedUserHandles.add(userPackagePair.getUserHandle());
             }
             mIsSuccessful = isSuccessful;
+        }
+
+        public boolean requiresRestart() {
+            return mRequiresRestart;
+        }
+
+        public void setRequiresRestart(boolean requiresRestart) {
+            mRequiresRestart = requiresRestart;
         }
 
         public boolean isSuccessful() {

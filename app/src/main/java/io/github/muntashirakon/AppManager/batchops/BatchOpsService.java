@@ -20,6 +20,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
@@ -56,9 +57,13 @@ public class BatchOpsService extends ForegroundService {
      */
     public static final String EXTRA_FAILED_PKG = "EXTRA_FAILED_PKG_ARR";
     /**
-     * The failure message
+     * The failure message.
      */
     public static final String EXTRA_FAILURE_MESSAGE = "EXTRA_FAILURE_MESSAGE";
+    /**
+     * Boolean value to describe whether a reboot is required.
+     */
+    public static final String EXTRA_REQUIRES_RESTART = "requires_restart";
     /**
      * The progress message to be used with {@link #ACTION_BATCH_OPS_PROGRESS}
      */
@@ -198,7 +203,7 @@ public class BatchOpsService extends ForegroundService {
         BatchOpsManager.Result result = batchOpsManager.performOp(op, packages, userHandles);
         batchOpsManager.conclude();
         if (result.isSuccessful()) {
-            sendResults(Activity.RESULT_OK, null);
+            sendResults(Activity.RESULT_OK, result);
         } else {
             sendResults(Activity.RESULT_FIRST_USER, result);
         }
@@ -263,7 +268,7 @@ public class BatchOpsService extends ForegroundService {
         sendNotification(result, opResult);
     }
 
-    private void sendNotification(int result, BatchOpsManager.Result opResult) {
+    private void sendNotification(int result, @Nullable BatchOpsManager.Result opResult) {
         String contentTitle = getDesiredOpTitle(op);
         NotificationCompat.Builder builder = NotificationUtils.getHighPriorityNotificationBuilder(this)
                 .setAutoCancel(true)
@@ -280,6 +285,7 @@ public class BatchOpsService extends ForegroundService {
                 builder.setContentText(getString(R.string.the_operation_was_successful));
                 break;
             case Activity.RESULT_FIRST_USER:  // Failed
+                Objects.requireNonNull(opResult);
                 String detailsMessage = getString(R.string.full_stop_tap_to_see_details);
                 String message = getDesiredErrorString(opResult.getFailedPackages().size());
                 Intent intent = new Intent(this, BatchOpsResultsActivity.class);
@@ -296,6 +302,14 @@ public class BatchOpsService extends ForegroundService {
                         PendingIntent.FLAG_ONE_SHOT | PendingIntentCompat.FLAG_IMMUTABLE);
                 builder.setContentIntent(pendingIntent);
                 builder.setContentText(message + detailsMessage);
+        }
+        if (opResult != null && opResult.requiresRestart()) {
+            Intent intent = new Intent(this, BatchOpsResultsActivity.class);
+            intent.putExtra(EXTRA_REQUIRES_RESTART, true);
+            @SuppressLint("WrongConstant")
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
+                    PendingIntent.FLAG_ONE_SHOT | PendingIntentCompat.FLAG_IMMUTABLE);
+            builder.addAction(0, getString(R.string.restart_device), pendingIntent);
         }
         NotificationUtils.displayHighPriorityNotification(this, builder.build());
     }

@@ -1227,4 +1227,5 @@
     <string name="restore_dots">Restore…</string>
     <string name="backup_apps_cannot_be_restored">The following apps cannot be restored because they do not have a base backup:</string>
     <string name="backup_apps_cannot_be_backed_up">The following apps are not installed and cannot be backed up:</string>
+    <string name="restart_device">Restart device</string>
 </resources>
