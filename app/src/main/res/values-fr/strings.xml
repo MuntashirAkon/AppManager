@@ -723,7 +723,7 @@
     <string name="input_keystore_alias_pass_description">Insérer le mot de passe pour l\'alias <b>%1$s</b>. Vous pouvez laisser ce champ vide si le mot de passe est le même que celui du KeyStore.</string>
     <string name="input_keystore_alias_pass">Mot de passe pour l\'alias <b>%1$s</b></string>
     <string name="input_keystore_pass_msg">Tapez ici pour entrer le mot de passe KeyStore</string>
-    <string name="input_keystore_pass_description">Entrez le mot de passe du magasin de clés d\'App Manager. Si vous voyez ceci pour la première fois, veuillez s.v.p. utiliser un générateur de mots de passe pour en générer un et le sauvegarder dans un endroit sécurisé avant de l\'insérer ici.</string>
+    <string name="input_keystore_pass_description">Entrez le mot de passe du magasin de clés d\'App Manager. Si vous voyez ceci pour la première fois, veuillez s\'il vous plaît utiliser un générateur de mots de passe pour en générer un et le sauvegarder dans un endroit sécurisé avant de l\'insérer ici.</string>
     <string name="input_keystore_pass">Saisissez le mot de passe du magasin de clés</string>
     <string name="not_verified">Non vérifié</string>
     <string name="verified">Vérifié</string>
