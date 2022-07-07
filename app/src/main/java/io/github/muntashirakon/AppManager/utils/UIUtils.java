@@ -95,6 +95,12 @@ public class UIUtils {
     }
 
     @NonNull
+    public static Spannable getStyledKeyValue(@NonNull Context context, @StringRes int keyRes, CharSequence value,
+                                              CharSequence separator) {
+        return getStyledKeyValue(context, context.getText(keyRes), value, separator);
+    }
+
+    @NonNull
     public static Spannable getStyledKeyValue(@NonNull Context context, @StringRes int keyRes, CharSequence value) {
         return getStyledKeyValue(context, context.getText(keyRes), value);
     }

@@ -41,7 +41,6 @@ import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 import io.github.muntashirakon.util.UiUtils;
 
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getPrimaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
 public class AppsProfileActivity extends BaseActivity implements NavigationBarView.OnItemSelectedListener,
@@ -158,7 +157,8 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
             for (Pair<CharSequence, ApplicationInfo> itemPair : itemPairs) {
                 items.add(itemPair.second.packageName);
                 boolean isSystem = (itemPair.second.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
-                itemNames.add(new SpannableStringBuilder(getPrimaryText(this, itemPair.first)).append("\n")
+                itemNames.add(new SpannableStringBuilder(itemPair.first)
+                        .append("\n")
                         .append(getSmallerText(getString(isSystem ? R.string.system : R.string.user))));
             }
             progressIndicator.hide();

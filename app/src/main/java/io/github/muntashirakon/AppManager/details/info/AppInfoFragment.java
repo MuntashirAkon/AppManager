@@ -850,7 +850,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         CharSequence[] processes = new CharSequence[magiskProcesses.size()];
         int i = 0;
         for (MagiskProcess mp : magiskProcesses) {
-            SpannableStringBuilder sb = new SpannableStringBuilder(UIUtils.getPrimaryText(mActivity, mp.name));
+            SpannableStringBuilder sb = new SpannableStringBuilder();
             if (mp.isIsolatedProcess()) {
                 sb.append("\n").append(UIUtils.getSecondaryText(mActivity, getString(R.string.isolated)));
                 if (mp.isRunning()) {
@@ -859,7 +859,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             } else if (mp.isRunning()) {
                 sb.append("\n").append(UIUtils.getSecondaryText(mActivity, getString(R.string.running)));
             }
-            processes[i] = UIUtils.getSmallerText(sb);
+            processes[i] = new SpannableStringBuilder(mp.name).append(UIUtils.getSmallerText(sb));
             if (mp.isEnabled()) {
                 selectedIndexes.add(i);
             }

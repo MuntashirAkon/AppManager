@@ -26,7 +26,6 @@ import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagMatchUninstalled;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getPrimaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
@@ -99,7 +98,7 @@ public class InstallerPreferences extends PreferenceFragment {
                             for (Pair<CharSequence, String> pair : appInfo) {
                                 if (isDetached()) return;
                                 items.add(pair.second);
-                                itemNames.add(new SpannableStringBuilder(getPrimaryText(activity, pair.first))
+                                itemNames.add(new SpannableStringBuilder(pair.first)
                                         .append("\n").append(getSecondaryText(activity, getSmallerText(pair.second))));
                             }
                             int selectedApp = itemNames.indexOf(installerApp);

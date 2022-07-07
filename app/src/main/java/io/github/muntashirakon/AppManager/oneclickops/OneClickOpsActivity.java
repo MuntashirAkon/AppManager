@@ -46,7 +46,6 @@ import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpMode
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpModes;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpNames;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOps;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getPrimaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
 public class OneClickOpsActivity extends BaseActivity {
@@ -207,13 +206,13 @@ public class OneClickOpsActivity extends BaseActivity {
         final List<CharSequence> trackerPackagesWithTrackerCount = new ArrayList<>(trackerCounts.size());
         for (ItemCount tracker : trackerCounts) {
             trackerPackages.add(tracker.packageName);
-            trackerPackagesWithTrackerCount.add(new SpannableStringBuilder(getPrimaryText(this, tracker.packageLabel))
+            trackerPackagesWithTrackerCount.add(new SpannableStringBuilder(tracker.packageLabel)
                     .append("\n").append(getSmallerText(getResources().getQuantityString(R.plurals.no_of_trackers,
                             tracker.count, tracker.count))));
         }
         new SearchableMultiChoiceDialogBuilder<>(this, trackerPackages, trackerPackagesWithTrackerCount)
                 .addSelections(trackerPackages)
-                .setTitle(R.string.found_trackers)
+                .setTitle(R.string.filtered_packages)
                 .setPositiveButton(R.string.block, (dialog, which, selectedPackages) -> {
                     mProgressIndicator.show();
                     Intent intent = new Intent(this, BatchOpsService.class);
@@ -248,7 +247,7 @@ public class OneClickOpsActivity extends BaseActivity {
         final ArrayList<String> selectedPackages = new ArrayList<>();
         List<CharSequence> packageNamesWithComponentCount = new ArrayList<>();
         for (ItemCount component : componentCounts) {
-            builder = new SpannableStringBuilder(getPrimaryText(this, component.packageLabel))
+            builder = new SpannableStringBuilder(component.packageLabel)
                     .append("\n").append(getSmallerText(getResources().getQuantityString(R.plurals.no_of_components,
                             component.count, component.count)));
             selectedPackages.add(component.packageName);
@@ -326,7 +325,7 @@ public class OneClickOpsActivity extends BaseActivity {
         final ArrayList<String> selectedPackages = new ArrayList<>();
         List<CharSequence> packagesWithAppOpCount = new ArrayList<>();
         for (AppOpCount appOp : appOpCounts) {
-            builder1 = new SpannableStringBuilder(getPrimaryText(this, appOp.packageLabel))
+            builder1 = new SpannableStringBuilder(appOp.packageLabel)
                     .append("\n").append(getSmallerText("(" + appOp.count + ") " + TextUtils.joinSpannable(", ",
                             appOpToNames(appOp.appOps))));
             selectedPackages.add(appOp.packageName);

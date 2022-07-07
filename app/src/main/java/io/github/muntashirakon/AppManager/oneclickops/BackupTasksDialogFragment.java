@@ -34,6 +34,7 @@ import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.UsageUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
+import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.io.Paths;
@@ -122,10 +123,14 @@ public class BackupTasksDialogFragment extends DialogFragment {
                                 0).verify(backup.backupName);
                     } catch (Throwable e) {
                         applicationItems.add(item);
-                        applicationLabels.add(new SpannableStringBuilder(UIUtils.getPrimaryText(activity,
-                                backup.label + ": " + backup.backupName)).append('\n').append(UIUtils
-                                .getSmallerText(UIUtils.getSecondaryText(activity, new SpannableStringBuilder(
-                                        backup.packageName).append('\n').append(e.getMessage())))));
+                        applicationLabels.add(new SpannableStringBuilder(backup.label)
+                                .append(LangUtils.getSeparatorString())
+                                .append(backup.backupName)
+                                .append('\n')
+                                .append(UIUtils.getSmallerText(UIUtils.getSecondaryText(activity,
+                                        new SpannableStringBuilder(backup.packageName)
+                                                .append('\n')
+                                                .append(e.getMessage())))));
                     }
                 }
                 if (isDetached() || Thread.currentThread().isInterrupted()) return;
@@ -171,9 +176,11 @@ public class BackupTasksDialogFragment extends DialogFragment {
                         } catch (IOException ignore) {
                         }
                         applicationItems.add(item);
-                        applicationLabels.add(new SpannableStringBuilder(UIUtils.getPrimaryText(activity,
-                                backup.label + ": " + backup.backupName)).append('\n').append(UIUtils
-                                .getSmallerText(UIUtils.getSecondaryText(activity, backup.packageName))));
+                        applicationLabels.add(new SpannableStringBuilder().append(backup.label)
+                                .append(LangUtils.getSeparatorString())
+                                .append(backup.backupName)
+                                .append('\n')
+                                .append(UIUtils.getSmallerText(UIUtils.getSecondaryText(activity, backup.packageName))));
                     }
                 }
                 if (isDetached() || Thread.currentThread().isInterrupted()) return;

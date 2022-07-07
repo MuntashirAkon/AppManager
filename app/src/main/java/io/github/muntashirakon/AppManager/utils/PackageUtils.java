@@ -90,6 +90,7 @@ import static io.github.muntashirakon.AppManager.utils.UIUtils.getBoldString;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getColoredText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getMonospacedText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getPrimaryText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getStyledKeyValue;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getTitleText;
 
 public final class PackageUtils {
@@ -730,48 +731,50 @@ public final class PackageUtils {
             throws CertificateEncodingException {
         SpannableStringBuilder builder = new SpannableStringBuilder();
         if (certificate == null) return builder;
+        final String separator = LangUtils.getSeparatorString();
         byte[] certBytes = certificate.getEncoded();
-        builder.append(getPrimaryText(ctx, ctx.getString(R.string.subject) + ": "))
-                .append(certificate.getSubjectX500Principal().getName()).append("\n")
-                .append(getPrimaryText(ctx, ctx.getString(R.string.issuer) + ": "))
-                .append(certificate.getIssuerX500Principal().getName()).append("\n")
-                .append(getPrimaryText(ctx, ctx.getString(R.string.issued_date) + ": "))
-                .append(certificate.getNotBefore().toString()).append("\n")
-                .append(getPrimaryText(ctx, ctx.getString(R.string.expiry_date) + ": "))
-                .append(certificate.getNotAfter().toString()).append("\n")
-                .append(getPrimaryText(ctx, ctx.getString(R.string.type) + ": "))
-                .append(certificate.getType()).append(", ")
-                .append(getPrimaryText(ctx, ctx.getString(R.string.version) + ": "))
-                .append(String.valueOf(certificate.getVersion())).append(", ")
-                .append(getPrimaryText(ctx, ctx.getString(R.string.validity) + ": "));
+        builder.append(getStyledKeyValue(ctx, R.string.subject, certificate.getSubjectX500Principal().getName(), separator))
+                .append("\n")
+                .append(getStyledKeyValue(ctx, R.string.issuer, certificate.getIssuerX500Principal().getName(), separator))
+                .append("\n")
+                .append(getStyledKeyValue(ctx, R.string.issued_date, certificate.getNotBefore().toString(), separator))
+                .append("\n")
+                .append(getStyledKeyValue(ctx, R.string.expiry_date, certificate.getNotAfter().toString(), separator))
+                .append("\n")
+                .append(getStyledKeyValue(ctx, R.string.type, certificate.getType(), separator))
+                .append(", ")
+                .append(getStyledKeyValue(ctx, R.string.version, String.valueOf(certificate.getVersion()), separator))
+                .append(", ");
+        int validity;
         try {
             certificate.checkValidity();
-            builder.append(ctx.getString(R.string.valid));
+            validity = R.string.valid;
         } catch (CertificateExpiredException e) {
-            builder.append(ctx.getString(R.string.expired));
+            validity = R.string.expired;
         } catch (CertificateNotYetValidException e) {
-            builder.append(ctx.getString(R.string.not_yet_valid));
+            validity = R.string.not_yet_valid;
         }
-        builder.append("\n")
-                .append(getPrimaryText(ctx, ctx.getString(R.string.serial_no) + ": "))
+        builder.append(getStyledKeyValue(ctx, R.string.validity, ctx.getText(validity), separator))
+                .append("\n")
+                .append(getPrimaryText(ctx, ctx.getString(R.string.serial_no) + separator))
                 .append(getMonospacedText(Utils.bytesToHex(certificate.getSerialNumber().toByteArray())))
                 .append("\n");
         // Checksums
         builder.append(getTitleText(ctx, ctx.getString(R.string.checksums))).append("\n");
         Pair<String, String>[] digests = DigestUtils.getDigests(certBytes);
         for (Pair<String, String> digest : digests) {
-            builder.append(getPrimaryText(ctx, digest.first + ": "))
+            builder.append(getPrimaryText(ctx, digest.first + separator))
                     .append(getMonospacedText(digest.second))
                     .append("\n");
         }
         // Signature
         builder.append(getTitleText(ctx, ctx.getString(R.string.app_signing_signature)))
                 .append("\n")
-                .append(getPrimaryText(ctx, ctx.getString(R.string.algorithm) + ": "))
-                .append(certificate.getSigAlgName()).append("\n")
-                .append(getPrimaryText(ctx, "OID: "))
-                .append(certificate.getSigAlgOID()).append("\n")
-                .append(getPrimaryText(ctx, ctx.getString(R.string.app_signing_signature) + ": "))
+                .append(getStyledKeyValue(ctx, R.string.algorithm, certificate.getSigAlgName(), separator))
+                .append("\n")
+                .append(getStyledKeyValue(ctx, "OID", certificate.getSigAlgOID(), separator))
+                .append("\n")
+                .append(getPrimaryText(ctx, ctx.getString(R.string.app_signing_signature) + separator))
                 .append(getMonospacedText(Utils.bytesToHex(certificate.getSignature()))).append("\n");
         // Public key used by Google: https://github.com/google/conscrypt
         // 1. X509PublicKey (PublicKey)
@@ -780,24 +783,22 @@ public final class PackageUtils {
         PublicKey publicKey = certificate.getPublicKey();
         builder.append(getTitleText(ctx, ctx.getString(R.string.public_key)))
                 .append("\n")
-                .append(getPrimaryText(ctx, ctx.getString(R.string.algorithm) + ": "))
-                .append(publicKey.getAlgorithm()).append("\n")
-                .append(getPrimaryText(ctx, ctx.getString(R.string.format) + ": "))
-                .append(publicKey.getFormat());
+                .append(getStyledKeyValue(ctx, R.string.algorithm, publicKey.getAlgorithm(), separator))
+                .append("\n")
+                .append(getStyledKeyValue(ctx, R.string.format, publicKey.getFormat(), separator));
         if (publicKey instanceof RSAPublicKey) {
             RSAPublicKey rsaPublicKey = (RSAPublicKey) publicKey;
             builder.append("\n")
-                    .append(getPrimaryText(ctx, ctx.getString(R.string.rsa_exponent) + ": "))
-                    .append(rsaPublicKey.getPublicExponent().toString()).append("\n")
-                    .append(getPrimaryText(ctx, ctx.getString(R.string.rsa_modulus) + ": "))
+                    .append(getStyledKeyValue(ctx, R.string.rsa_exponent, rsaPublicKey.getPublicExponent().toString(), separator))
+                    .append("\n")
+                    .append(getPrimaryText(ctx, ctx.getString(R.string.rsa_modulus) + separator))
                     .append(getMonospacedText(Utils.bytesToHex(rsaPublicKey.getModulus().toByteArray())));
         } else if (publicKey instanceof ECPublicKey) {
             ECPublicKey ecPublicKey = (ECPublicKey) publicKey;
             builder.append("\n")
-                    .append(getPrimaryText(ctx, ctx.getString(R.string.dsa_affine_x) + ": "))
-                    .append(ecPublicKey.getW().getAffineX().toString()).append("\n")
-                    .append(getPrimaryText(ctx, ctx.getString(R.string.dsa_affine_y) + ": "))
-                    .append(ecPublicKey.getW().getAffineY().toString());
+                    .append(getStyledKeyValue(ctx, R.string.dsa_affine_x, ecPublicKey.getW().getAffineX().toString(), separator))
+                    .append("\n")
+                    .append(getStyledKeyValue(ctx, R.string.dsa_affine_y, ecPublicKey.getW().getAffineY().toString(), separator));
         }
         // TODO(5/10/20): Add description for each extensions
         Set<String> critSet = certificate.getCriticalExtensionOIDs();
@@ -805,7 +806,7 @@ public final class PackageUtils {
             builder.append("\n").append(getTitleText(ctx, ctx.getString(R.string.critical_exts)));
             for (String oid : critSet) {
                 builder.append("\n- ")
-                        .append(getPrimaryText(ctx, oid + ": "))
+                        .append(getPrimaryText(ctx, oid + separator))
                         .append(getMonospacedText(Utils.bytesToHex(certificate.getExtensionValue(oid))));
             }
         }
@@ -814,7 +815,7 @@ public final class PackageUtils {
             builder.append("\n").append(getTitleText(ctx, ctx.getString(R.string.non_critical_exts)));
             for (String oid : nonCritSet) {
                 builder.append("\n- ")
-                        .append(getPrimaryText(ctx, oid + ": "))
+                        .append(getPrimaryText(ctx, oid + separator))
                         .append(getMonospacedText(Utils.bytesToHex(certificate.getExtensionValue(oid))));
             }
         }
@@ -836,7 +837,7 @@ public final class PackageUtils {
         for (ApkVerifier.Result.V1SchemeSignerInfo signer : result.getV1SchemeIgnoredSigners()) {
             String name = signer.getName();
             for (ApkVerifier.IssueWithParams err : signer.getErrors()) {
-                errors.add(getColoredText(new SpannableStringBuilder(getBoldString(name + ": ")).append(err.toString()), colorFailure));
+                errors.add(getColoredText(new SpannableStringBuilder(getBoldString(name + LangUtils.getSeparatorString())).append(err.toString()), colorFailure));
             }
             warnCount += signer.getWarnings().size();
         }
@@ -857,7 +858,7 @@ public final class PackageUtils {
             if (result.isVerifiedUsingV3Scheme()) sigSchemes.add("v3");
             if (result.isVerifiedUsingV4Scheme()) sigSchemes.add("v4");
             builder.append("\n").append(getPrimaryText(ctx, ctx.getResources()
-                    .getQuantityString(R.plurals.app_signing_signature_schemes_pl, sigSchemes.size()) + ": "));
+                    .getQuantityString(R.plurals.app_signing_signature_schemes_pl, sigSchemes.size()) + LangUtils.getSeparatorString()));
             builder.append(TextUtils.joinSpannable(", ", sigSchemes));
         } else {
             builder.append(getColoredText(getTitleText(ctx, "\u2718 " + ctx.getString(R.string.not_verified)), colorFailure));

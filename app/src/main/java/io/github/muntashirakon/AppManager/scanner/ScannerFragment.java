@@ -51,6 +51,7 @@ import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuild
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
+import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
@@ -87,7 +88,7 @@ public class ScannerFragment extends Fragment {
         mViewModel.apkChecksumsLiveData().observe(getViewLifecycleOwner(), checksums -> {
             SpannableStringBuilder sb = new SpannableStringBuilder();
             for (Pair<String, String> digest : checksums) {
-                sb.append("\n").append(getPrimaryText(mActivity, digest.first + ": "))
+                sb.append("\n").append(getPrimaryText(mActivity, digest.first + LangUtils.getSeparatorString()))
                         .append(getMonospacedText(digest.second));
             }
             ((TextView) view.findViewById(R.id.apk_title)).setText(R.string.apk_checksums);
@@ -440,16 +441,16 @@ public class ScannerFragment extends Fragment {
         for (X509Certificate cert : certificates) {
             try {
                 if (builder.length() > 0) builder.append("\n\n");
-                builder.append(getPrimaryText(context, context.getString(R.string.issuer) + ": "))
+                builder.append(getPrimaryText(context, context.getString(R.string.issuer) + LangUtils.getSeparatorString()))
                         .append(cert.getIssuerX500Principal().getName()).append("\n")
-                        .append(getPrimaryText(context, context.getString(R.string.algorithm) + ": "))
+                        .append(getPrimaryText(context, context.getString(R.string.algorithm) + LangUtils.getSeparatorString()))
                         .append(cert.getSigAlgName()).append("\n");
                 // Checksums
                 builder.append(getPrimaryText(context, context.getString(R.string.checksums)));
                 Pair<String, String>[] digests = DigestUtils.getDigests(cert.getEncoded());
                 for (Pair<String, String> digest : digests) {
                     builder.append("\n")
-                            .append(getPrimaryText(context, digest.first + ": "))
+                            .append(getPrimaryText(context, digest.first + LangUtils.getSeparatorString()))
                             .append(getMonospacedText(digest.second));
                 }
             } catch (CertificateEncodingException e) {

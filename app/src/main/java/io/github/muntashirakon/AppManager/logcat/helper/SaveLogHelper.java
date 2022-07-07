@@ -85,7 +85,7 @@ public class SaveLogHelper {
         CharSequence[] fileNames = new CharSequence[files.size()];
         DateFormat dateFormat = DateFormat.getDateTimeInstance();
         for (int i = 0; i < files.size(); ++i) {
-            fileNames[i] = new SpannableStringBuilder(UIUtils.getPrimaryText(context, files.get(i).getName()))
+            fileNames[i] = new SpannableStringBuilder(files.get(i).getName())
                     .append("\n").append(UIUtils.getSmallerText(UIUtils.getSecondaryText(context,
                             dateFormat.format(new Date(files.get(i).lastModified())))));
         }
