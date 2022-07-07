@@ -8,7 +8,7 @@
     <string name="data_usage_msg">Données d\'utilisation</string>
     <string name="data_transmitted">Données envoyées</string>
     <string name="data_received">Données reçues</string>
-    <string name="sort_by_target_sdk">SDK cible</string>
+    <string name="sort_by_target_sdk">Cible SDK</string>
     <string name="sort_by_domain">Applications utilisateur en premier</string>
     <string name="sort_by_package_name">Nom du paquet</string>
     <string name="sort_by_app_label">Nom de l\'application</string>
@@ -31,7 +31,7 @@
     <string name="patterns_allowed">Motifs autorisés</string>
     <string name="write">Écrire</string>
     <string name="read">Lire</string>
-    <string name="path_permissions">Autorisations de chemin</string>
+    <string name="path_permissions">Autorisations de chemin d\'accès</string>
     <string name="grant_uri_permission">Autoriser l\'accès aux URI</string>
     <string name="flags">Drapeaux</string>
     <string name="soft_input">Mode saisie douce</string>
@@ -86,7 +86,7 @@
     <string name="encryption">Chiffrement</string>
     <string name="select_user">Sélectionner l\'utilisateur</string>
     <string name="pref_show_users_in_installer_msg">Afficher une liste des utilisateurs à sélectionner avant d\'installer une application externe. Nécessite le mode root ou ADB.</string>
-    <string name="pref_show_users_in_installer">Afficher les utilisateurs dans l\'installateur</string>
+    <string name="pref_show_users_in_installer">Afficher les utilisateurs dans l\'installeur</string>
     <string name="failed_to_duplicate_profile">Impossible de dupliquer le profil</string>
     <string name="duplicate">Dupliquer</string>
     <string name="new_profile">Nouveau profil</string>
@@ -221,7 +221,7 @@
     <string name="installer_error_session_create">Impossible de créer un session d\'installation</string>
     <string name="installer_error_security">Impossible d\'accéder aux fichiers APK</string>
     <string name="install_in_progress">Installation…</string>
-    <string name="package_installer">Installateur de paquets</string>
+    <string name="package_installer">Installeur de paquets</string>
     <string name="unblock_trackers">Débloquer les traqueurs</string>
     <string name="reinstall">Réinstaller</string>
     <string name="install_app_message">Voulez-vous installer cette application \?</string>
@@ -464,7 +464,7 @@
     <string name="uninstall_app_message">Voulez-vous désinstaller cette application \?</string>
     <string name="view_in_settings">Voir dans les paramètres</string>
     <string name="no_content">Pas de contenu</string>
-    <string name="no_usage_in_this_time_range">Aucune uilisation pendant cette periode</string>
+    <string name="no_usage_in_this_time_range">Aucune utilisation pendant cette periode</string>
     <string name="disabled_app">Désactivé</string>
     <string name="key_name_cannot_be_null">Le nom de clé ne peut pas être vide</string>
     <string name="error_evaluating_input">Impossible d\'évaluer la saisie</string>
@@ -554,8 +554,11 @@
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Infos Apps_packages</a>
 \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a>
 \n- <a href="https://github.com/billthefarmer/editor">Editeur</a>
+\n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a>
 \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a>
 \n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
 \n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
 \n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
@@ -564,6 +567,7 @@
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
 \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+\n- <a href="https://github.com/zhaobozhen/librariest">Absinthe\'s libraries</a>
 \nCrédits logo original : <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="credits">Crédits</string>
     <string name="third_party">Bibliothèques tierces et icônes</string>
@@ -589,7 +593,7 @@
     <string name="sdk_max">Cible</string>
     <string name="sdk_min">Min</string>
     <string name="source_dir">Répertoire source</string>
-    <string name="paths_and_directories">Chemins et répertoires</string>
+    <string name="paths_and_directories">Chemins d\'accès et répertoires</string>
     <string name="data_dir">Répertoire de données</string>
     <string name="user_app">Application utilisateur</string>
     <string name="system_app">Application système</string>
@@ -606,7 +610,7 @@
     <string name="failed_to_disable_op">Impossible de désactiver l\'autorisation demandée</string>
     <string name="failed_to_enable_op">Impossible d\'activer l\'autorisation demandée</string>
     <string name="ago">il y a</string>
-    <string name="reject_time">Temps de re</string>
+    <string name="reject_time">Temps de rejet</string>
     <string name="accept_time">Temps d\'acceptation</string>
     <string name="pref_import_blocker">Importer depuis Blocker</string>
     <string name="pref_import_watt">Importer depuis Watt</string>
@@ -687,14 +691,14 @@
         <item quantity="other">Impossible de définir les opérations d\'application pour %1$d applications</item>
     </plurals>
     <string name="input_app_ops_description_profile">Saisissez les noms ou les constantes d\'opérations d\'application avec des espaces, par exemple <tt>WAKE_LOCK 63 72 CAMERA</tt>. Utilisez <tt>*</tt> pour appliquer toutes les opérations d\'application configurées.</string>
-    <string name="input_app_ops_description">Saisissez les noms ou les constantes d\'opérations d\'application avec des espaces, par exemple <tt>WAKE_LOCK 63 72 CAMERA</tt></string>
+    <string name="input_app_ops_description">Saisissez les noms ou les constantes d\'opérations d\'application avec des espaces, par exemple <tt>WAKE_LOCK 63 72 CAMERA</tt> etc.</string>
     <string name="deny_app_ops_description">Définir un mode pour les opérations de l\'application identifiées par les valeurs constante, par exemple <tt>63</tt> ou <tt>RUN_IN_BACKGROUND</tt></string>
     <string name="pref_remove_all_rules_msg">Les autorisations seront accordées, les opérations et les composants de l\'application retrouveront leurs valeurs par défaut.</string>
     <plurals name="app_signing_signature_schemes_pl">
         <item quantity="one">Schéma de signature</item>
         <item quantity="other">Schémas de signature</item>
     </plurals>
-    <string name="orientation_sensor_landscape">Le paysage des capteurs</string>
+    <string name="orientation_sensor_landscape">Capteur mode paysage</string>
     <string name="text_include_device_info">Include les informations de l\'appareil</string>
     <string name="record_log">Journaux d\'enregistrement</string>
     <string name="default_key_used">Valeur par défaut utilisée.</string>
@@ -925,19 +929,19 @@
     <string name="import_from_oab">Importer depuis OAndBackup</string>
     <string name="pref_import_backups_msg">Importer les sauvegardes depuis OAndBackup, Swift Backup (3.0–3.2) ou Titanium Backup.</string>
     <string name="pref_import_backups">Importer les sauvegardes</string>
-    <string name="orientation_user_portrait">Portrait utilisateur</string>
+    <string name="orientation_user_portrait">Mode portrait</string>
     <string name="failed_to_uninstall_app">La désinstallation a échoué</string>
-    <string name="toggle_default_app_ops">Basculer les opérations d\'application par défaut</string>
-    <string name="state_session_leader">Chef de séance</string>
+    <string name="toggle_default_app_ops">Basculer vers les opérations d\'application par défaut</string>
+    <string name="state_session_leader">Chef de session</string>
     <string name="second_degree_tracker_note">Le préfixe ² indique que les trackers sont dans la <a href="https://etip.exodus-privacy.eu.org/">liste d\'attente ETIP</a>, c\'est-à-dire qu\'il s\'agit toujours de trackers réels.</string>
     <plurals name="no_of_splits">
         <item quantity="one">%1$d division</item>
         <item quantity="other">%1$d divisions</item>
     </plurals>
     <string name="launch_mode_single_top">Partie supérieure</string>
-    <string name="orientation_user_landscape">Paysage de l\'utilisateur</string>
+    <string name="orientation_user_landscape">Mode paysage</string>
     <string name="orientation_sensor_portrait">Capteur mode portrait</string>
-    <string name="state_wake_kill">Suppression réveil</string>
+    <string name="state_wake_kill">Désactiver le réveil</string>
     <string name="systemless_app">Appli sans système</string>
     <string name="source_stamp_verified">Timbre source vérifié.</string>
     <string name="no_app_ops_permission">Aucune autorisation pour l\'affichage des opérations d\'application</string>
@@ -997,7 +1001,7 @@
     <string name="trim_caches_in_all_apps">Réduire le cache de toutes les applications</string>
     <string name="pref_rules_msg">Blocage instantané, importer/exporter/supprimer des règles, etc.</string>
     <string name="pref_expanded_by_default_summary">Afficher le texte complet du journal par défaut.</string>
-    <string name="pref_installer_msg">Configurer le comportement de l\'installateur d\'applications.</string>
+    <string name="pref_installer_msg">Configurer le comportement de l\'installeur d\'application.</string>
     <string name="port_number_pairing_code_empty">Numéro de port ou code d\'appariement vide.</string>
     <string name="common_name">Nom Commun (CN)</string>
     <string name="organization_unit">Unité d\'organisation (OU)</string>
@@ -1111,11 +1115,11 @@
     <string name="swap">Échange</string>
     <plurals name="usage_minutes">
         <item quantity="one">%1$d min</item>
-        <item quantity="other">%1$d min</item>
+        <item quantity="other">%1$d mins</item>
     </plurals>
     <plurals name="usage_seconds">
         <item quantity="one">%1$d sec</item>
-        <item quantity="other">%1$d sec</item>
+        <item quantity="other">%1$d secs</item>
     </plurals>
     <string name="vt_slowness_warning">En fonction de la vitesse de connexion Internet et de la charge du serveur, ceci peut prendre un moment.</string>
     <string name="uses_play_app_signing_description">Cette application contient certains marqueurs qui indiquent qu\'elle <i>pourrait</i> utiliser le système de <a href="https://support.google.com/googleplay/android-developer/answer/9842756">connexion à Google Play</a>. Avec ce système, les clés de signature sont stockées sur les serveurs de Google, qui est responsable de la signature de l\'application. Notez que la correspondance des informations de signature est le seul moyen de vérifier que l\'application n\'a pas été modifiée par une tierce personne à l\'exception du développeur (et dans ce cas, de Google également).</string>
@@ -1174,4 +1178,21 @@
     <string name="hidden_api_enf_policy_black">Impose (liste noire seulement)</string>
     <string name="input_ssaid_instruction">Le SSAID est un nombre hexadécimal de %1$d octets, c\'est-à-dire une chaine de %2$d caractères uniquement de 0 à 9 et de a à f.</string>
     <string name="auth_manager_description">Pour lancer un Intent depuis une application externe, il est nécessaire de fournir un champ supplémentaire nommé <tt>auth</tt>, qui doit contenir les clés suivantes :</string>
+    <string name="frozen">Gelé</string>
+    <string name="freeze">Geler</string>
+    <string name="unfreeze">Dégeler</string>
+    <string name="backup_no_backups_present">Pas de sauvegarde.</string>
+    <string name="restore_dots">Restaurer…</string>
+    <string name="backup_apps_cannot_be_restored">Les applications suivantes ne peuvent pas être restaurées car elles n\'ont pas de sauvegarde de base :</string>
+    <string name="backup_apps_cannot_be_backed_up">Les applications suivantes ne sont pas installées et ne peuvent pas être sauvegardées :</string>
+    <string name="restart_device">Redémarrez votre appareil</string>
+    <string name="import_backups_warning_delete_backups_after_import">Supprimer les sauvegardes après les avoir importées dans App Manager \? Chaque sauvegarde est supprimée individuellement après avoir été importée avec succès. Sélectionnez <b>Non</b> en cas de doute.</string>
+    <string name="endianness_big_endian">Big endian</string>
+    <string name="hidden_api_enforcement_policy">Politique d\'application de l\'API masquée</string>
+    <string name="endianness_little_endian">Little endian</string>
+    <string name="netpolicy_cannot_be_modified_for_core_apps">La stratégie réseau ne peut pas être modifiée pour les applications principales d\'Android.</string>
+    <string name="usage_last_used">Dernière utilisation</string>
+    <string name="usage_mobile_data">Données mobiles</string>
+    <string name="usage_wifi_data">Données Wi-Fi</string>
+    <string name="usage_times_opened">Nombre d\'ouvertures</string>
 </resources>
