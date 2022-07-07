@@ -720,7 +720,7 @@
     <string name="keep_data_and_app_signing_signatures">Conserver les données et les signatures</string>
     <string name="this_action_cannot_be_undone">Cette action ne peut être annulée.</string>
     <string name="input_keystore_alias_pass_msg">Tapez ici pour fournir le mot de passe pour %1$s</string>
-    <string name="input_keystore_alias_pass_description">Entrez le mot de passe pour l\'alias <b>%1$s</b>. Vous pouvez laisser à vide si le mot de passe est le même que celui du magasin de clés.</string>
+    <string name="input_keystore_alias_pass_description">Entrez le mot de passe pour l\'alias <b>%1$s</b>. Vous pouvez laisser le champ vide si le mot de passe est le même que celui du magasin de clés.</string>
     <string name="input_keystore_alias_pass">Mot de passe pour l\'alias <b>%1$s</b></string>
     <string name="input_keystore_pass_msg">Appuyez ici pour entrer le mot de passe du magasin de clés</string>
     <string name="input_keystore_pass_description">Entrez le mot de passe du magasin de clés d\'App Manager. Si vous voyez ceci pour la première fois, veuillez s\'il vous plaît utiliser un générateur de mots de passe pour en générer un et le sauvegarder dans un endroit sécurisé avant de l\'insérer ici.</string>
