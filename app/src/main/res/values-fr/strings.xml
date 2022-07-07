@@ -953,8 +953,8 @@
     <string name="screen">Écran</string>
     <string name="failed_to_disable_magisk_hide">Désactivation de MagiskHide impossible</string>
     <string name="enforcing">Imposer</string>
-    <string name="backup_multiple_description">Créez une sauvegarde <i>named</i> distincte de la sauvegarde de base.</string>
-    <string name="backup_skip_signature_checks_description">Restaurez les sauvegardes qui échouent à la vérification de la somme de contrôle ou de signatures APK différentes a leurs sauvegardes précédentes.</string>
+    <string name="backup_multiple_description">Créer une sauvegarde séparée <i>nommée</i> à la place de la sauvegarde de base.</string>
+    <string name="backup_skip_signature_checks_description">Restaurer des sauvegardes qui ont échoué au test de somme de contrôle ou bien ont des signatures d\'APK différentes par rapport à leur précédente sauvegarde.</string>
     <string name="patch_level">Niveau de correctif</string>
     <string name="scaling_factor">Facteur d\'échelle</string>
     <string name="set_custom_app_op">Définir une opération d\'application personnalisée</string>
