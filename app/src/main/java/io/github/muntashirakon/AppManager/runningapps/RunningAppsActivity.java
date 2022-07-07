@@ -17,7 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.ColorRes;
+import androidx.annotation.AttrRes;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,6 +29,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.color.MaterialColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
@@ -483,8 +484,8 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
         Spannable memInfo = UIUtils.charSequenceToSpannable(getString(R.string.memory_chart_info, Formatter
                         .formatShortFileSize(this, appMemory), Formatter.formatShortFileSize(this, cachedMemory),
                 Formatter.formatShortFileSize(this, buffers), Formatter.formatShortFileSize(this, freeMemory)));
-        setColors(memInfo, new int[]{R.color.purple_shadow, R.color.android_theme_tag_color_02, R.color.green_mountain,
-                R.color.ragin_beige});
+        setColors(memInfo, new int[]{R.attr.colorOnSurface, R.attr.colorPrimary, R.attr.colorTertiary,
+                R.attr.colorSurfaceVariant});
         mMemoryInfoView.setText(memInfo);
 
         // Swap
@@ -506,16 +507,16 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
         // Set color and size info
         Spannable swapInfo = UIUtils.charSequenceToSpannable(getString(R.string.swap_chart_info, Formatter
                 .formatShortFileSize(this, usedSwap), Formatter.formatShortFileSize(this, totalSwap - usedSwap)));
-        setColors(swapInfo, new int[]{R.color.purple_shadow, R.color.ragin_beige});
+        setColors(swapInfo, new int[]{R.attr.colorOnSurface, R.attr.colorSurfaceVariant});
         mSwapInfoView.setText(swapInfo);
     }
 
-    private void setColors(@NonNull Spannable text, @ColorRes int[] colors) {
+    private void setColors(@NonNull Spannable text, @AttrRes int[] colors) {
         int idx = 0;
         for (int color : colors) {
             idx = text.toString().indexOf('●', idx);
             if (idx == -1) break;
-            text.setSpan(new ForegroundColorSpan(ContextCompat.getColor(this, color)), idx, idx + 1,
+            text.setSpan(new ForegroundColorSpan(MaterialColors.getColor(this, color, TAG)), idx, idx + 1,
                     Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
             ++idx;
         }

@@ -38,41 +38,47 @@
                     android:textSize="@dimen/font_size_larger"
                     tools:text="Memory: 2.8 GB/2.1 GB" />
 
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:id="@+id/memory_usage_chart"
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/padding_medium"
-                    android:layout_marginHorizontal="@dimen/padding_medium"
-                    android:orientation="horizontal">
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/padding_medium">
 
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0"
-                        android:background="@color/purple_shadow"
-                        tools:layout_width="200dp" />
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:id="@+id/memory_usage_chart"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/padding_medium"
+                        android:orientation="horizontal">
 
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0"
-                        android:background="@color/android_theme_tag_color_02"
-                        tools:layout_width="100dp" />
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0"
+                            android:background="?attr/colorOnSurface"
+                            tools:layout_width="200dp" />
 
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0"
-                        android:background="@color/green_mountain"
-                        tools:layout_width="30dp" />
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0"
+                            android:background="?attr/colorPrimary"
+                            tools:layout_width="100dp" />
 
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@color/ragin_beige" />
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0"
+                            android:background="?attr/colorTertiary"
+                            tools:layout_width="30dp" />
 
-                </androidx.appcompat.widget.LinearLayoutCompat>
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="?attr/colorSurfaceVariant" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/memory_usage_info"
@@ -93,27 +99,33 @@
                     android:textSize="@dimen/font_size_larger"
                     tools:text="Swap: 2.8 GB/2.1 GB" />
 
-                <androidx.appcompat.widget.LinearLayoutCompat
-                    android:id="@+id/swap_usage_chart"
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/padding_medium"
-                    android:layout_marginHorizontal="@dimen/padding_medium"
-                    android:orientation="horizontal">
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/padding_medium">
 
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0"
-                        android:background="@color/purple_shadow"
-                        tools:layout_width="170dp" />
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:id="@+id/swap_usage_chart"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/padding_medium"
+                        android:orientation="horizontal">
 
-                    <View
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:background="@color/ragin_beige" />
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0"
+                            android:background="?attr/colorOnSurface"
+                            tools:layout_width="170dp" />
 
-                </androidx.appcompat.widget.LinearLayoutCompat>
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:background="?attr/colorSurfaceVariant" />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/swap_usage_info"
