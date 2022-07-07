@@ -1262,4 +1262,9 @@
     <string name="usage_last_used">Останнє використання</string>
     <string name="usage_mobile_data">Мобільні дані</string>
     <string name="usage_wifi_data">Дані Wi-Fi</string>
+    <string name="backup_no_backups_present">Немає запасних копій.</string>
+    <string name="restore_dots">Відновити…</string>
+    <string name="backup_apps_cannot_be_restored">Наступні застосунки неможливо відновити, оскільки щодо них немає опорної запасної копії:</string>
+    <string name="backup_apps_cannot_be_backed_up">Наступні застосунки не встановлені, тому неможливо створити їх запасну копію:</string>
+    <string name="restart_device">Перезапустити пристрій</string>
 </resources>
