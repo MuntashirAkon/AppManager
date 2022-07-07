@@ -727,11 +727,11 @@
     <string name="input_keystore_pass">Entrer le mot de passe du KeyStore</string>
     <string name="not_verified">Non vérifié</string>
     <string name="verified">Vérifié</string>
-    <string name="pref_signature_schemes_msg">Il faut choisir au moins les schémas v1 et v2 pour une plus grande compatibilité. Le schéma v4 nécessite v2 ou v3.</string>
-    <string name="v4_scheme">schéma v4 (depuis Android 11)</string>
-    <string name="v3_scheme">schéma v3 (depuis Android 9)</string>
-    <string name="v2_scheme">schéma v2 (depuis Android 7.0)</string>
-    <string name="v1_scheme">schéma v1 (depuis Android 1.0)</string>
+    <string name="pref_signature_schemes_msg">Les schémas v1 et v2 devraient être à minima choisis pour une meilleure compatibilité. Le schéma v4 requiert v2 ou v3.</string>
+    <string name="v4_scheme">Schéma v4 (depuis Android 11)</string>
+    <string name="v3_scheme">Schéma v3 (depuis Android 9)</string>
+    <string name="v2_scheme">Schéma v2 (depuis Android 7.0)</string>
+    <string name="v1_scheme">Schéma v1 (depuis Android 1.0)</string>
     <string name="pref_apk_signing_msg">Définir les schémas de signature, la clé de signature personnalisée, etc.</string>
     <string name="apk_signing">Signature de l\'APK</string>
     <string name="pref_sign_apk_msg">Signer les fichiers APK avant de les installer.</string>
@@ -814,7 +814,7 @@
     <string name="type_float_array_list">Liste de nombres décimaux</string>
     <string name="type_float_array">Tableau de nombres décimaux</string>
     <string name="type_long_array_list">Liste d\'entiers longs</string>
-    <string name="keystore">Gestionnaire de clé</string>
+    <string name="keystore">Magasin de clés</string>
     <string name="input_key_password">Mot de passe Clé</string>
     <string name="invalid_aes_key_size">Format de clé invalide pour un chiffrement AES. La taille de la clé doit être de 128 ou 256 bits.</string>
     <string name="orientation_full_user">Utilisateur complet</string>
