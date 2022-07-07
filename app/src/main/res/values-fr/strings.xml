@@ -707,7 +707,7 @@
 \nTwitter : https://twitter.com/AppManagerNews</string>
     <string name="community">Communauté</string>
     <string name="pref_selected_users_msg">Restreindre l\'utilisation d\'App Manager aux seuls utilisateurs sélectionnés.</string>
-    <string name="backup_extras_description">Sauvegarder les permissions d\'application, options de l\'économiseur de batterie et données d\'utilisation, statut MagiskHide, SSAID, etc.</string>
+    <string name="backup_extras_description">Sauvegarder les permissions d\'application, les options de l\'économiseur de batterie et de l\'utilisation des données, le statut MagiskHide, SSAID, etc.</string>
     <string name="backup_extras">Extras</string>
     <string name="backup_cache_description">Sauvegarder les dossiers <b>cache</b>, <b>no_cache</b> et <b>no_backup</b>.</string>
     <string name="backup_obb_media_description">Sauvegarder les répertoires OBB et média.</string>
