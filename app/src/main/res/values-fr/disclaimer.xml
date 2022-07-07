@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources>
-    <string name="disclaimer_header">Limitation de responsabilité</string>
+    <string name="disclaimer_header">Clause de non-responsabilité</string>
     <string name="disclaimer_exit">Quitter</string>
     <string name="disclaimer_agree">J\'accepte</string>
     <string name="disclaimer_agree_forever">Ne plus afficher</string>
