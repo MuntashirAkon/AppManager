@@ -790,7 +790,7 @@
     <string name="key_not_set">Non défini.</string>
     <string name="use_default">Utiliser la valeur par défaut</string>
     <string name="invalid_rsa_key_size">Taille de clé invalide pour le chiffrement RSA. La longueur de clé doit être 1024, 2048 ou 4096 bits.</string>
-    <string name="generate_key">Générer</string>
+    <string name="generate_key">Générer une clé</string>
     <string name="filter_apps_without_backups">Sans sauvegardes</string>
     <string name="uninstalled_apps">Application désinstallées</string>
     <string name="verified_using_unreliable_hash">Vérifié à l\'aide d\'un hachage non fiable</string>
@@ -815,7 +815,7 @@
     <string name="type_float_array">Tableau de nombres décimaux</string>
     <string name="type_long_array_list">Liste d\'entiers longs</string>
     <string name="keystore">Magasin de clés</string>
-    <string name="input_key_password">Mot de passe Clé</string>
+    <string name="input_key_password">Mot de passe maître</string>
     <string name="invalid_aes_key_size">Format de clé invalide pour un chiffrement AES. La taille de la clé doit être de 128 ou 256 bits.</string>
     <string name="orientation_full_user">Utilisateur complet</string>
     <string name="next">Suivant</string>
@@ -983,7 +983,7 @@
     <string name="has_net_policy">Politique réseau</string>
     <string name="net_policy">politique réseau</string>
     <string name="ssaid_info">SSAID (<tt>Settings.Secure.ANDROID_ID</tt>) est un identifiant d\'appareil attribué à chaque application (à partir d\'Android 8 \"Oreo\"). C\'est largement utilisé par les applications pour suivre les utilisateurs.</string>
-    <string name="copied_to_clipboard">Copié dans le presse-papier.</string>
+    <string name="copied_to_clipboard">Copier vers le presse-papier.</string>
     <string name="restart_to_reflect_changes">Vous devez redémarrer l\'appareil immédiatement pour profiter des modifications récentes.</string>
     <string name="isolated">Confiné</string>
     <string name="screen_lock_not_enabled">Veuillez choisir un écran de verrouillage dans les paramètres Android, ou effacer les données de cette application.</string>
@@ -1022,7 +1022,7 @@
     <string name="keystore_file">Fichier KeyStore</string>
     <string name="signing_key">Clé de signature</string>
     <string name="log_level_verbose">Détaillé</string>
-    <string name="country_name" tools:ignore="TypographyOther">Pays (C)</string>
+    <string name="country_name" tools:ignore="TypographyOther">Nom du Pays (C)</string>
     <string name="restart_log_viewer_to_see_changes">Redémarrer la fenêtre du visualiseur de journaux pour voir les changements.</string>
     <string name="delete_saved_log">Supprimer les journaux sauvegardés</string>
     <string name="log_level_warn">Avertissement</string>
