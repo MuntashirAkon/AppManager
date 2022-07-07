@@ -171,11 +171,17 @@ public class BackupRestoreDialogViewModel extends AndroidViewModel {
                 for (MetadataManager.Metadata backup : backupInfo.getBackups()) {
                     mWorstBackupFlag &= backup.flags.getFlags();
                 }
-                if (backupInfo.isInstalled() && backupInfo.getBackups().size() > 0) {
+                if (backupInfo.getBackups().isEmpty()) {
+                    mAppsWithoutBackups.add(backupInfo.getAppLabel());
+                }
+                if (!backupInfo.isInstalled()) {
+                    mUninstalledApps.add(backupInfo.getAppLabel());
+                }
+                if (backupInfo.isInstalled() && !backupInfo.getBackups().isEmpty()) {
                     status = BackupInfoState.BOTH_SINGLE;
                 } else if (backupInfo.isInstalled()) {
                     status = BackupInfoState.BACKUP_SINGLE;
-                } else if (backupInfo.getBackups().size() > 0) {
+                } else if (!backupInfo.getBackups().isEmpty()) {
                     status = BackupInfoState.RESTORE_SINGLE;
                 } else status = BackupInfoState.NONE;
             } else {
