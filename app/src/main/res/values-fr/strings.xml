@@ -952,11 +952,11 @@
     <string name="matching_activities">Activités correspondantes</string>
     <string name="screen">Écran</string>
     <string name="failed_to_disable_magisk_hide">Désactivation de MagiskHide impossible</string>
-    <string name="enforcing">Imposer</string>
+    <string name="enforcing">Forcer</string>
     <string name="backup_multiple_description">Créer une sauvegarde séparée <i>nommée</i> à la place de la sauvegarde de base.</string>
-    <string name="backup_skip_signature_checks_description">Restaurer des sauvegardes qui ont échoué au test de somme de contrôle ou bien ont des signatures d\'APK différentes par rapport à leur précédente sauvegarde.</string>
+    <string name="backup_skip_signature_checks_description">Restaurer les sauvegardes qui ont échoué au test de somme de contrôle ou qui ont des signatures d\'APK différentes par rapport à leur précédente sauvegarde.</string>
     <string name="patch_level">Niveau de correctif</string>
-    <string name="scaling_factor">Facteur d\'échelle</string>
+    <string name="scaling_factor">Facteur d\'échelonnage</string>
     <string name="set_custom_app_op">Définir une opération d\'application personnalisée</string>
     <string name="set_mode_for_app_ops_dots">Définir le mode pour les opérations d\'application…</string>
     <string name="permissive">Permissif</string>
