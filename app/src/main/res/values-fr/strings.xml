@@ -727,7 +727,7 @@
     <string name="input_keystore_pass">Entrer le mot de passe du KeyStore</string>
     <string name="not_verified">Non vérifié</string>
     <string name="verified">Vérifié</string>
-    <string name="pref_signature_schemes_msg">Les schémas v1 et v2 devraient être à minima choisis pour une meilleure compatibilité. Le schéma v4 requiert v2 ou v3.</string>
+    <string name="pref_signature_schemes_msg">Les schémas v1 et v2 doivent être choisis pour une meilleure compatibilité. Le schéma v4 requiert un schéma v2 ou v3.</string>
     <string name="v4_scheme">Schéma v4 (depuis Android 11)</string>
     <string name="v3_scheme">Schéma v3 (depuis Android 9)</string>
     <string name="v2_scheme">Schéma v2 (depuis Android 7.0)</string>
