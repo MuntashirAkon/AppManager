@@ -1187,4 +1187,12 @@
     <string name="usage_wifi_data">Dati Wi-Fi</string>
     <string name="usage_times_opened">Numero di volte che è stata aperta</string>
     <string name="usage_last_used">Usata ultima volta</string>
+    <string name="frozen">Congelata</string>
+    <string name="freeze">Congela</string>
+    <string name="unfreeze">Scongela</string>
+    <string name="backup_no_backups_present">Nessun backup.</string>
+    <string name="restore_dots">Ripristina…</string>
+    <string name="backup_apps_cannot_be_restored">Le seguenti applicazioni non possono essere ripristinate perché non dispongono di un backup di base:</string>
+    <string name="backup_apps_cannot_be_backed_up">Le seguenti applicazioni non sono installate e non possono essere sottoposte a backup:</string>
+    <string name="restart_device">Riavvia dispositivo</string>
 </resources>
