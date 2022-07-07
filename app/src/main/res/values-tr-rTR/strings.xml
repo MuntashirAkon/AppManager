@@ -1186,4 +1186,13 @@
     <string name="usage_last_used">Son kullanma</string>
     <string name="usage_mobile_data">Mobil veri</string>
     <string name="usage_wifi_data">Wi-Fi verisi</string>
+    <string name="restore_dots">Geri yükle…</string>
+    <string name="backup_apps_cannot_be_restored">Aşağıdaki uygulamalar, temel yedekleri olmadığı için geri yüklenemiyor:</string>
+    <string name="restart_device">Aygıtı yeniden başlat</string>
+    <string name="frozen">Donduruldu</string>
+    <string name="freeze">Dondur</string>
+    <string name="unfreeze">Çöz</string>
+    <string name="import_backups_warning_delete_backups_after_import">Yedekler App Manager\'a aktarıldıktan sonra silinsin mi\? Her yedek başarılı bir şekilde içe aktarıldıktan sonra ayrı ayrı silinir. Emin değilseniz <b>Hayır</b> seçeneğini seçin.</string>
+    <string name="backup_no_backups_present">Yedekleme yok.</string>
+    <string name="backup_apps_cannot_be_backed_up">Aşağıdaki uygulamalar kurulu değil ve yedeklenemiyor:</string>
 </resources>
