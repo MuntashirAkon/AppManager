@@ -66,6 +66,7 @@ public class BackupRestorePreferences extends PreferenceFragment {
     private Uri backupVolume;
     @ImportType
     private int importType;
+    private boolean deleteBackupsAfterImport;
 
     private final ActivityResultLauncher<Intent> safSelectBackupVolume = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -92,7 +93,10 @@ public class BackupRestorePreferences extends PreferenceFragment {
                 if (data == null) return;
                 Uri treeUri = data.getData();
                 if (treeUri == null) return;
-                startImportOperation(importType, treeUri);
+                int takeFlags = data.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+                        | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                requireContext().getContentResolver().takePersistableUriPermission(treeUri, takeFlags);
+                startImportOperation(importType, treeUri, deleteBackupsAfterImport);
             });
 
     @Override
@@ -222,7 +226,19 @@ public class BackupRestorePreferences extends PreferenceFragment {
                                     default:
                                         path = "";
                                 }
-                                safSelectImportDirectory.launch(getSafIntent(path));
+                                new MaterialAlertDialogBuilder(activity)
+                                        .setTitle(R.string.pref_import_backups)
+                                        .setMessage(R.string.import_backups_warning_delete_backups_after_import)
+                                        .setPositiveButton(R.string.no, (dialog1, which1) -> {
+                                            deleteBackupsAfterImport = false;
+                                            safSelectImportDirectory.launch(getSafIntent(path));
+                                        })
+                                        .setNegativeButton(R.string.yes, (dialog1, which1) -> {
+                                            deleteBackupsAfterImport = true;
+                                            safSelectImportDirectory.launch(getSafIntent(path));
+                                        })
+                                        .setNeutralButton(R.string.cancel, null)
+                                        .show();
                             })
                             .setNegativeButton(R.string.close, null)
                             .show();
@@ -237,7 +253,7 @@ public class BackupRestorePreferences extends PreferenceFragment {
     }
 
     @UiThread
-    private void startImportOperation(@ImportType int backupType, Uri uri) {
+    private void startImportOperation(@ImportType int backupType, Uri uri, boolean removeImported) {
         // Start batch ops service
         Intent intent = new Intent(activity, BatchOpsService.class);
         BatchOpsManager.Result input = new BatchOpsManager.Result(Collections.emptyList());
@@ -247,6 +263,7 @@ public class BackupRestorePreferences extends PreferenceFragment {
         Bundle args = new Bundle();
         args.putInt(BatchOpsManager.ARG_BACKUP_TYPE, backupType);
         args.putParcelable(BatchOpsManager.ARG_URI, uri);
+        args.putBoolean(BatchOpsManager.ARG_REMOVE_IMPORTED, removeImported);
         intent.putExtra(BatchOpsService.EXTRA_OP_EXTRA_ARGS, args);
         ContextCompat.startForegroundService(activity, intent);
     }

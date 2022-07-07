@@ -102,7 +102,11 @@ public class BatchOpsManager {
      * {@link String} value, {@link String} representation of {@link Uri}. To be used with {@link #OP_IMPORT_BACKUPS}.
      */
     public static final String ARG_URI = "uri";
-
+    /**
+     * {@link Boolean} value denoting if the imported backups should be removed after a successful operation.
+     * To be used with {@link #OP_IMPORT_BACKUPS}.
+     */
+    public static final String ARG_REMOVE_IMPORTED = "remove_imported";
     /**
      * {@link Integer} value. One of the {@link NetPolicy network policies}. To be used with {@link #OP_NET_POLICY}.
      */
@@ -341,6 +345,7 @@ public class BatchOpsManager {
         @ImportType
         int backupType = args.getInt(ARG_BACKUP_TYPE, ImportType.OAndBackup);
         Uri uri = Objects.requireNonNull(args.getParcelable(ARG_URI));
+        boolean removeImported = args.getBoolean(ARG_REMOVE_IMPORTED, false);
         int userHandle = UserHandleHidden.myUserId();
         Path[] files;
         final List<UserPackagePair> failedPkgList = new ArrayList<>();
@@ -352,6 +357,10 @@ public class BatchOpsManager {
                     Converter converter = ConvertUtils.getConversionUtil(backupType, file);
                     try {
                         converter.convert();
+                        if (removeImported) {
+                            // Since the conversion was successful, remove the files for it.
+                            converter.cleanup();
+                        }
                     } catch (BackupException e) {
                         log("====> op=IMPORT_BACKUP, pkg=" + converter.getPackageName(), e);
                         synchronized (failedPkgList) {

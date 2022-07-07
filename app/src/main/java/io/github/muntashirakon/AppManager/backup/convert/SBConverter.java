@@ -4,7 +4,6 @@ package io.github.muntashirakon.AppManager.backup.convert;
 
 import android.annotation.SuppressLint;
 import android.annotation.UserIdInt;
-import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -64,14 +63,13 @@ import static io.github.muntashirakon.AppManager.utils.TarUtils.TAR_GZIP;
 public class SBConverter extends Converter {
     public static final String TAG = SBConverter.class.getSimpleName();
 
-    @NonNull
-    private final Context mContext = AppManager.getContext();
     private final Path mBackupLocation;
     @UserIdInt
     private final int mUserId;
     private final String mPackageName;
     private final long mBackupTime;
     private final PackageManager mPm;
+    private final List<Path> mFilesToBeDeleted = new ArrayList<>();
 
     private Crypto mCrypto;
     private BackupFiles.Checksum mChecksum;
@@ -87,6 +85,7 @@ public class SBConverter extends Converter {
         mBackupTime = xmlFile.lastModified();
         mUserId = UserHandleHidden.myUserId();
         mPm = AppManager.getContext().getPackageManager();
+        mFilesToBeDeleted.add(xmlFile);
     }
 
     @Override
@@ -175,6 +174,13 @@ public class SBConverter extends Converter {
                 Objects.requireNonNull(mCachedApk.getParentFile()).delete();
             }
             return;
+        }
+    }
+
+    @Override
+    public void cleanup() {
+        for (Path file : mFilesToBeDeleted) {
+            file.delete();
         }
     }
 
@@ -293,6 +299,7 @@ public class SBConverter extends Converter {
             try (OutputStream fos = mCachedApk.openOutputStream()) {
                 FileUtils.copy(pis, fos);
             }
+            mFilesToBeDeleted.add(getApkFile());
         } catch (IOException e) {
             throw new BackupException("Could not cache APK file", e);
         }
@@ -321,27 +328,27 @@ public class SBConverter extends Converter {
         // Backup flags
         BackupFlags flags = new BackupFlags(BackupFlags.BACKUP_APK_FILES);
         try {
-            getObbFile();
+            mFilesToBeDeleted.add(getObbFile());
             flags.addFlag(BackupFlags.BACKUP_EXT_OBB_MEDIA);
         } catch (FileNotFoundException ignore) {
         }
         try {
-            getIntDataFile();
+            mFilesToBeDeleted.add(getIntDataFile());
             flags.addFlag(BackupFlags.BACKUP_INT_DATA);
             flags.addFlag(BackupFlags.BACKUP_CACHE);
         } catch (FileNotFoundException ignore) {
         }
         try {
-            getExtDataFile();
+            mFilesToBeDeleted.add(getExtDataFile());
             flags.addFlag(BackupFlags.BACKUP_EXT_DATA);
             flags.addFlag(BackupFlags.BACKUP_CACHE);
         } catch (FileNotFoundException ignore) {
         }
         mSourceMetadata.flags = flags;
-        mSourceMetadata.dataDirs = ConvertUtils.getDataDirs(this.mPackageName, this.mUserId,
-                flags.backupInternalData(), flags.backupExternalData(), flags.backupMediaObb());
+        mSourceMetadata.dataDirs = ConvertUtils.getDataDirs(mPackageName, mUserId, flags.backupInternalData(),
+                flags.backupExternalData(), flags.backupMediaObb());
         try {
-            getSplitFile();
+            mFilesToBeDeleted.add(getSplitFile());
             mSourceMetadata.isSplitApk = true;
         } catch (FileNotFoundException e) {
             mSourceMetadata.isSplitApk = false;

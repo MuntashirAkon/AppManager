@@ -3,7 +3,6 @@
 package io.github.muntashirakon.AppManager.backup.convert;
 
 import android.annotation.UserIdInt;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.UserHandleHidden;
@@ -28,11 +27,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.Properties;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.backup.BackupException;
 import io.github.muntashirakon.AppManager.backup.BackupFiles;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
@@ -65,14 +65,13 @@ public class TBConverter extends Converter {
     private static final String INTERNAL_PREFIX = "data/data/";
     private static final String EXTERNAL_PREFIX = "data/data/.external.";
 
-    @NonNull
-    private final Context mContext = AppManager.getContext();
     private final Path mBackupLocation;
     @UserIdInt
     private final int mUserId;
     private final Path mPropFile;
     private final String mPackageName;
     private final long mBackupTime;
+    private final List<Path> mFilesToBeDeleted = new ArrayList<>();
 
     private Crypto mCrypto;
     private BackupFiles.Checksum mChecksum;
@@ -89,19 +88,20 @@ public class TBConverter extends Converter {
      * @param propFile Location to the properties file e.g. {@code /sdcard/TitaniumBackup/package.name-YYYYMMDD-HHMMSS.properties}
      */
     public TBConverter(@NonNull Path propFile) {
-        this.mPropFile = propFile;
-        this.mBackupLocation = propFile.getParentFile();
-        this.mUserId = UserHandleHidden.myUserId();
+        mPropFile = propFile;
+        mBackupLocation = propFile.getParentFile();
+        mUserId = UserHandleHidden.myUserId();
         String dirtyName = propFile.getName();
         int idx = dirtyName.indexOf('-');
-        if (idx == -1) this.mPackageName = null;
-        else this.mPackageName = dirtyName.substring(0, idx);
-        this.mBackupTime = propFile.lastModified();  // TODO: Grab from the file name
+        if (idx == -1) mPackageName = null;
+        else mPackageName = dirtyName.substring(0, idx);
+        mBackupTime = propFile.lastModified();  // TODO: Grab from the file name
+        mFilesToBeDeleted.add(propFile);
     }
 
     @Override
     public void convert() throws BackupException {
-        if (this.mPackageName == null) {
+        if (mPackageName == null) {
             throw new BackupException("Could not read package name.");
         }
         // Source metadata
@@ -196,6 +196,13 @@ public class TBConverter extends Converter {
         return mPackageName;
     }
 
+    @Override
+    public void cleanup() {
+        for (Path file : mFilesToBeDeleted) {
+            file.delete();
+        }
+    }
+
     private void backupApkFile() throws BackupException {
         // Decompress APK file
         Path baseApkFile = FileUtils.getTempPath(mPackageName, mDestMetadata.apkName);
@@ -254,7 +261,7 @@ public class TBConverter extends Converter {
     private void backupData() throws BackupException {
         Path dataFile;
         try {
-            dataFile = getDataFile(FileUtils.trimExtension(this.mPropFile.getName()), mSourceMetadata.tarType);
+            dataFile = getDataFile(FileUtils.trimExtension(mPropFile.getName()), mSourceMetadata.tarType);
         } catch (FileNotFoundException e) {
             throw new BackupException("Could not get data file", e);
         }
@@ -395,20 +402,20 @@ public class TBConverter extends Converter {
     }
 
     private void readPropFile() throws BackupException {
-        try (InputStream is = this.mPropFile.openInputStream()) {
+        try (InputStream is = mPropFile.openInputStream()) {
             Properties prop = new Properties();
             prop.load(is);
             mSourceMetadata.label = prop.getProperty("app_label");
-            mSourceMetadata.packageName = this.mPackageName;
+            mSourceMetadata.packageName = mPackageName;
             mSourceMetadata.versionName = prop.getProperty("app_version_name");
             mSourceMetadata.versionCode = Integer.parseInt(prop.getProperty("app_version_code"));
             mSourceMetadata.isSystem = "1".equals(prop.getProperty("app_is_system"));
             mSourceMetadata.isSplitApk = false;
             mSourceMetadata.splitConfigs = ArrayUtils.emptyArray(String.class);
             mSourceMetadata.hasRules = false;
-            mSourceMetadata.backupTime = this.mBackupTime;
+            mSourceMetadata.backupTime = mBackupTime;
             mSourceMetadata.crypto = CryptoUtils.MODE_NO_ENCRYPTION;  // We only support no encryption mode for TB backups
-            mSourceMetadata.apkName = this.mPackageName + "-" + prop.getProperty("app_apk_md5") + ".apk";
+            mSourceMetadata.apkName = mPackageName + "-" + prop.getProperty("app_apk_md5") + ".apk";
             mSourceMetadata.userHandle = UserHandleHidden.myUserId();
             // Compression type
             String compressionType = prop.getProperty("app_apk_codec");
@@ -420,7 +427,7 @@ public class TBConverter extends Converter {
             // Flags
             mSourceMetadata.flags = new BackupFlags(BackupFlags.BACKUP_MULTIPLE);
             try {
-                getDataFile(FileUtils.trimExtension(this.mPropFile.getName()), mSourceMetadata.tarType);
+                mFilesToBeDeleted.add(getDataFile(FileUtils.trimExtension(mPropFile.getName()), mSourceMetadata.tarType));
                 // No error = data file exists
                 mSourceMetadata.flags.addFlag(BackupFlags.BACKUP_INT_DATA);
                 if ("1".equals(prop.getProperty("has_external_data"))) {
@@ -430,12 +437,12 @@ public class TBConverter extends Converter {
             } catch (FileNotFoundException ignore) {
             }
             try {
-                getApkFile(mSourceMetadata.apkName, mSourceMetadata.tarType);
+                mFilesToBeDeleted.add(getApkFile(mSourceMetadata.apkName, mSourceMetadata.tarType));
                 // No error = APK file exists
                 mSourceMetadata.flags.addFlag(BackupFlags.BACKUP_APK_FILES);
             } catch (FileNotFoundException ignore) {
             }
-            mSourceMetadata.dataDirs = ConvertUtils.getDataDirs(this.mPackageName, this.mUserId, mSourceMetadata.flags
+            mSourceMetadata.dataDirs = ConvertUtils.getDataDirs(mPackageName, mUserId, mSourceMetadata.flags
                     .backupInternalData(), mSourceMetadata.flags.backupExternalData(), false);
             mSourceMetadata.keyStore = false;
             mSourceMetadata.installer = AppPref.getString(AppPref.PrefKey.PREF_INSTALLER_INSTALLER_APP_STR);
@@ -454,21 +461,20 @@ public class TBConverter extends Converter {
         String filename = filePrefix + ".tar";
         if (TAR_BZIP2.equals(tarType)) filename += ".bz2";
         else filename += ".gz";
-        return this.mBackupLocation.findFile(filename);
+        return mBackupLocation.findFile(filename);
     }
 
     @NonNull
     private Path getApkFile(String apkName, @TarUtils.TarType String tarType) throws FileNotFoundException {
         if (TAR_BZIP2.equals(tarType)) apkName += ".bz2";
         else apkName += ".gz";
-        return this.mBackupLocation.findFile(apkName);
+        return mBackupLocation.findFile(apkName);
     }
 
     private void backupIcon() {
         if (mIcon == null) return;
-        if (!mTempBackupPath.hasFile(ICON_FILE)) return;
         try {
-            Path iconFile = mTempBackupPath.findFile(ICON_FILE);
+            Path iconFile = mTempBackupPath.findOrCreateFile(ICON_FILE, null);
             try (OutputStream outputStream = iconFile.openOutputStream()) {
                 mIcon.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
                 outputStream.flush();

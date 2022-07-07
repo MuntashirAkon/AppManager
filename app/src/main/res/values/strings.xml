@@ -1228,4 +1228,5 @@
     <string name="backup_apps_cannot_be_restored">The following apps cannot be restored because they do not have a base backup:</string>
     <string name="backup_apps_cannot_be_backed_up">The following apps are not installed and cannot be backed up:</string>
     <string name="restart_device">Restart device</string>
+    <string name="import_backups_warning_delete_backups_after_import">Delete the backups after importing them to App Manager? Each backup is individually deleted after it is imported with success. Select <b>No</b> if unsure.</string>
 </resources>

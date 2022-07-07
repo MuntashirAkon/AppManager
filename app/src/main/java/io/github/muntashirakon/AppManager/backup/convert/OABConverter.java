@@ -96,10 +96,10 @@ public class OABConverter extends Converter {
      * @param backupLocation E.g. {@code /sdcard/oandbackups/package.name}
      */
     public OABConverter(@NonNull Path backupLocation) {
-        this.mBackupLocation = backupLocation;
+        mBackupLocation = backupLocation;
         // Last path component is the package name
-        this.mPackageName = backupLocation.getName();
-        this.mUserId = UserHandleHidden.myUserId();
+        mPackageName = backupLocation.getName();
+        mUserId = UserHandleHidden.myUserId();
     }
 
     @Override
@@ -192,6 +192,11 @@ public class OABConverter extends Converter {
     }
 
     @Override
+    public void cleanup() {
+        mBackupLocation.delete();
+    }
+
+    @Override
     public String getPackageName() {
         return mPackageName;
     }
@@ -245,7 +250,7 @@ public class OABConverter extends Converter {
                 mSourceMetadata.flags.addFlag(BackupFlags.BACKUP_CACHE);
             }
             mSourceMetadata.userHandle = UserHandleHidden.myUserId();
-            mSourceMetadata.dataDirs = ConvertUtils.getDataDirs(this.mPackageName, this.mUserId, mSourceMetadata.flags
+            mSourceMetadata.dataDirs = ConvertUtils.getDataDirs(mPackageName, mUserId, mSourceMetadata.flags
                     .backupInternalData(), mSourceMetadata.flags.backupExternalData(), false);
             mSourceMetadata.tarType = ConvertUtils.getTarTypeFromPref();
             mSourceMetadata.keyStore = false;
