@@ -699,7 +699,7 @@
         <item quantity="other">Schémas de signature</item>
     </plurals>
     <string name="orientation_sensor_landscape">Capteur mode paysage</string>
-    <string name="text_include_device_info">Include les informations de l\'appareil</string>
+    <string name="text_include_device_info">Inclure les informations de l\'appareil</string>
     <string name="record_log">Journaux d\'enregistrement</string>
     <string name="default_key_used">Clé par défaut utilisée.</string>
     <string name="disable_background_run_description">Défini le mode <i>Ignore</i> pour les opérations d\'application suivantes : <tt>RUN_IN_BACKGROUND</tt> (depuis Android 7.0) et <tt>RUN_ANY_IN_BACKGROUND</tt> (depuis Android 9).</string>
@@ -992,8 +992,8 @@
     <string name="input_key">Touche de saisie (en hexadécimal)</string>
     <string name="failed_to_initialize_key_store">Impossible d\'initialiser le magasin de clés de App Manager.</string>
     <string name="failed_to_save_key">La clé n\'a pu être enregistrée.</string>
-    <string name="expiry_date_cannot_be_empty">La date d\'expiration ne peut pas être vide.</string>
-    <string name="failed_to_read_keystore">Lecture du KeyStore impossible.</string>
+    <string name="expiry_date_cannot_be_empty">La date d\'expiration ne peut être vide.</string>
+    <string name="failed_to_read_keystore">Impossible de lire le magasin de clés.</string>
     <string name="enter_good_filename">Veuillez saisir un nom de fichier valide.</string>
     <string name="pref_always_on_background">Installation en arrière-plan</string>
     <string name="found_no_alias_in_keystore">Pas d\'alias trouvé dans le magasin de clés !</string>
@@ -1017,7 +1017,7 @@
     <string name="rename">Renommer</string>
     <string name="locality_name">Nom de la localité (ville) (L)</string>
     <string name="state_name">Nom de la région (ST)</string>
-    <string name="filename">Nom de fichier</string>
+    <string name="filename">Nom du fichier</string>
     <string name="keystore_pass">Mot de passe du magasin de clés</string>
     <string name="keystore_file">Fichier de magasin de clés</string>
     <string name="signing_key">Clé de signature</string>
@@ -1030,12 +1030,12 @@
     <string name="enter_filename">Entrez le nom du fichier</string>
     <string name="filter_choice_tag">Étiquette</string>
     <string name="no_saved_logs">Aucun journal sauvegardé.</string>
-    <string name="pref_cat_configuration">Réglages</string>
+    <string name="pref_cat_configuration">Configuration</string>
     <string name="pref_display_limit_summary" tools:ignore="PluralsCandidate">N\'afficher que les %1$d derniers journaux pour éviter la saturation de la mémoire.</string>
     <string name="pref_cat_appearance">Apparence</string>
     <string name="pref_cat_advanced">Avancé</string>
     <string name="pref_expanded_by_default_title">Développer par défaut</string>
-    <string name="pref_log_line_period_error">Saisissez un nombre entier entre 1 et 1000.</string>
+    <string name="pref_log_line_period_error">Veuillez entrer un entier compris entre 1 et 1000.</string>
     <string name="pref_log_write_period_title">Fréquence d\'écriture</string>
     <string name="collapse_all">Tout réduire</string>
     <string name="text_include_dmesg">Inclure le journal du noyau</string>
@@ -1048,7 +1048,7 @@
     <string name="pref_display_changes">Afficher les modifications</string>
     <string name="saf">SAF</string>
     <string name="pref_display_changes_msg">Afficher les changements de version, pisteurs, composants, permissions, signatures, SDK, etc. par version.</string>
-    <string name="no_changes">Aucune modification</string>
+    <string name="no_changes">Pas de changements</string>
     <string name="wireless_debugging">Débogage sans fil</string>
     <string name="wireless_debugging_not_supported">Le débogage sans fil n\'est pas supporté par cette plate-forme.</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">Impossible d\'installer l\'application car la signature ne correspond pas. Elle a été désinstallée mais ses données n\'ont pas été supprimées.</string>
