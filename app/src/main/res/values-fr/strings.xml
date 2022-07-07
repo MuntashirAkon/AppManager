@@ -948,7 +948,7 @@
     <string name="app_signing_signature_schemes">Schémas de signature</string>
     <string name="pref_backup_android_keystore">Sauvegarder les applications avec le magasin de clés Android</string>
     <string name="set_app_op_mode">Définir le mode d\'opération d\'application</string>
-    <string name="filter_apps_with_splits">Avec séparations</string>
+    <string name="filter_apps_with_splits">Avec séparateurs</string>
     <string name="matching_activities">Activités correspondantes</string>
     <string name="screen">Écran</string>
     <string name="failed_to_disable_magisk_hide">Désactivation de MagiskHide impossible</string>
