@@ -833,7 +833,7 @@
     <string name="saved_filters">Filtres enregistrés</string>
     <string name="pref_selected_users">Utilisateurs sélectionnés</string>
     <string name="minimum_version">Version minimale : %d</string>
-    <string name="help_permissions_tab">Ces permissions sont définies par l\'application et ne peuvent être révoquées.</string>
+    <string name="help_permissions_tab">Ces permissions sont définies par cette application et ne peuvent être révoquées.</string>
     <string name="unknown_net_policy">Politique réseau inconnue (%1$s - %2$X)</string>
     <string name="port_number_invalid">Le numéro de port est incorrect.</string>
     <string name="port_number_empty">Le numéro de port est vide.</string>
@@ -853,7 +853,7 @@
     </plurals>
     <string name="orientation_right_to_left">De droite à gauche</string>
     <string name="orientation_left_to_right">De gauche à droite</string>
-    <string name="failed">Échoué</string>
+    <string name="failed">Échec</string>
     <string name="confirm_import_keystore">Voulez-vous vraiment remplacer le magasin de clés existant \? Cette action ne pourra pas être annulée.</string>
     <string name="import_keystore">Importer le magasin de clés</string>
     <string name="pref_import_export_keystore_msg">Importer/Exporter le Bouncy Castle KeyStore (BKS) utilisé en interne par App Manager.</string>
@@ -894,13 +894,13 @@
     <string name="send_log_title">Envoyer le journal</string>
     <string name="save_log">Enregistrer le journal</string>
     <string name="save_as">Enregistrer sous…</string>
-    <string name="pref_show_timestamp_summary">Afficher l\'identifiant du process et l\'horodatage lorsque développé.</string>
+    <string name="pref_show_timestamp_summary">Afficher l\'identifiant du processus et l\'horodatage lorsque développé.</string>
     <string name="pref_log_write_period_summary" tools:ignore="PluralsCandidate">Lors de l\'enregistrement, écrire sur la carte SD toutes les %1$d lignes.</string>
     <string name="pref_filter_pattern_title">Filtrer les étiquettes</string>
     <string name="pref_filter_pattern_summary">Filtrer les étiquettes sélectionnées depuis les journaux.</string>
     <string name="pref_display_limit_title">Limite d\'affichage des journaux</string>
     <string name="pref_default_log_level_title">Niveau de journalisation par défaut</string>
-    <string name="pref_default_log_level_summary">Niveau de journalisation au démarrage, lors de l\'ouverture de fichiers, et pendant l\'enregistrement.</string>
+    <string name="pref_default_log_level_summary">Niveau de journalisation au démarrage, lors de l\'ouverture , et de l\'enregistrement de fichiers.</string>
     <string name="pref_buffer_title">Tampon(s) de journalisation</string>
     <string name="open">Ouvrir</string>
     <string name="notification_title">Enregistrement du journal en cours</string>
@@ -1039,10 +1039,10 @@
     <string name="pref_log_write_period_title">Fréquence d\'écriture</string>
     <string name="collapse_all">Tout réduire</string>
     <string name="text_include_dmesg">Inclure le journal du noyau</string>
-    <string name="pref_show_timestamp_title">Afficher l\'identifiant du process et l\'horodatage</string>
+    <string name="pref_show_timestamp_title">Afficher le Pid &amp; l\'horodatage</string>
     <string name="text_filter_ellipsis">Filtre…</string>
     <string name="text_filter_text">Filtrer le texte</string>
-    <string name="suspended">En pause</string>
+    <string name="suspended">Interrompu</string>
     <string name="pref_layout_orientation">Orientation de la mise en page</string>
     <string name="orientation_follow_locale">Suivre les paramètres régionaux</string>
     <string name="pref_display_changes">Afficher les modifications</string>
@@ -1051,7 +1051,7 @@
     <string name="no_changes">Pas de changements</string>
     <string name="wireless_debugging">Débogage sans fil</string>
     <string name="wireless_debugging_not_supported">Le débogage sans fil n\'est pas supporté par cette plateforme.</string>
-    <string name="app_signing_signature_mismatch_for_data_only_app">Impossible d\'installer l\'application car la signature ne correspond pas. Elle a été désinstallée mais ses données n\'ont pas été supprimées.</string>
+    <string name="app_signing_signature_mismatch_for_data_only_app">Impossible d\'installer l\'application en raison d\'une incompatibilité de signature. L\'application a été désinstallée sans effacer ses données.</string>
     <string name="help_app_ops_tab">Cliquez sur un élément pour <b>l\'autoriser</b> ou <b>l\'ignorer</b>. Cliquez longuement sur un élément pour voir les autres modes supportés.</string>
     <string name="failed_to_prevent_background_run">Impossible d\'empêcher %1$s de s\'exécuter en arrière-plan</string>
     <string name="permission_flags">Indicateurs d\'autorisation</string>
