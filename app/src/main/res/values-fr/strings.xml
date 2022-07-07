@@ -809,7 +809,7 @@
     <string name="choose_what_to_do">Choisissez quoi faire.</string>
     <string name="enable_battery_optimization">Activer l\'optimisation de batterie \?</string>
     <string name="type_uri">URI</string>
-    <string name="type_string_array_list">Liste de chaînes de caractères</string>
+    <string name="type_string_array_list">Liste des chaînes de caractères</string>
     <string name="type_string_array">Tableau de chaînes de caractères</string>
     <string name="type_float_array_list">Liste de nombres décimaux</string>
     <string name="type_float_array">Tableau de nombres décimaux</string>
@@ -959,7 +959,7 @@
     <string name="scaling_factor">Facteur d\'échelonnage</string>
     <string name="set_custom_app_op">Définir une opération d\'application personnalisée</string>
     <string name="set_mode_for_app_ops_dots">Définir le mode pour les opérations d\'application…</string>
-    <string name="permissive">Permissive (permissif)</string>
+    <string name="permissive">Facultatif</string>
     <string name="failed_to_enable_magisk_hide">Impossible d\'activer MagiskHide</string>
     <string name="pref_backup_restore_msg">Personnaliser la sauvegarder/restauration.</string>
     <string name="backup_volume">Volume de sauvegarde</string>
@@ -975,9 +975,9 @@
     <string name="backup_apps_with_changes_msg">Refaire les sauvegardes pour les applications avec des modifications depuis la dernière sauvegarde. Ceci inclus les changements de taille et de version, et la date de la dernière exécution.</string>
     <string name="restore_all_msg">Restaurer les sauvegardes de base pour toutes les applications sauvegardées.</string>
     <string name="screen_lock_msg">Verrouiller App Manager en utilisant le verrouillage d\'écran Android</string>
-    <string name="no_battery_optimization">Pas d\'optimisation de la batterie</string>
+    <string name="no_battery_optimization">Batterie non optimisée</string>
     <string name="unlock_app_manager">Déverrouiller App Manager</string>
-    <string name="type_null">Aucune valeur</string>
+    <string name="type_null">Pas de données</string>
     <string name="restore_not_installed_msg">Restaurer la sauvegarde de base pour les applications qui ne sont pas actuellement installées.</string>
     <string name="battery_optimization">Optimisation de batterie</string>
     <string name="has_net_policy">Politique réseau</string>
