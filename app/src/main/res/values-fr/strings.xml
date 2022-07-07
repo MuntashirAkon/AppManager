@@ -971,7 +971,7 @@
     <string name="no_volumes_found">Impossible de trouver un volume avec des droits d\'écriture.</string>
     <string name="bootloader">Chargeur de démarrage</string>
     <string name="verify_and_redo_backups_msg">Vérifiez l\'intégrité des sauvegardes précédentes et refaites les sauvegardes pour lesquelles le contrôle d\'intégrité a échoué.</string>
-    <string name="backup_apps_with_changes">Sauvegarder les applications avec des modifications</string>
+    <string name="backup_apps_with_changes">Sauvegarder les applications avec changements</string>
     <string name="backup_apps_with_changes_msg">Refaire les sauvegardes pour les applications avec des modifications depuis la dernière sauvegarde. Ceci inclus les changements de taille et de version, et la date de la dernière exécution.</string>
     <string name="restore_all_msg">Restaurer les sauvegardes de base pour toutes les applications sauvegardées.</string>
     <string name="screen_lock_msg">Verrouiller App Manager en utilisant le verrouillage d\'écran Android</string>
