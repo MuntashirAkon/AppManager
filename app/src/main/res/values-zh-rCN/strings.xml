@@ -1156,4 +1156,5 @@
     <string name="backup_no_backups_present">无备份。</string>
     <string name="restore_dots">还原…</string>
     <string name="backup_apps_cannot_be_backed_up">未安装下列应用，因而无法进行备份：</string>
+    <string name="restart_device">重启设备</string>
 </resources>
