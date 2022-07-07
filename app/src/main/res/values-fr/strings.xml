@@ -702,7 +702,7 @@
     <string name="text_include_device_info">Include les informations de l\'appareil</string>
     <string name="record_log">Journaux d\'enregistrement</string>
     <string name="default_key_used">Valeur par défaut utilisée.</string>
-    <string name="disable_background_run_description">Paramètre le mode <i>Ignore</i> pour les opérations d\'application suivantes : <tt>RUN_IN_BACKGROUND</tt> (depuis Android 7.0) et <tt>RUN_ANY_IN_BACKGROUND</tt> (depuis Android 9).</string>
+    <string name="disable_background_run_description">Défini le mode <i>Ignore</i> pour les opérations d\'application suivantes : <tt>RUN_IN_BACKGROUND</tt> (depuis Android 7.0) et <tt>RUN_ANY_IN_BACKGROUND</tt> (depuis Android 9).</string>
     <string name="community_links">Telegram : https://t.me/AppManagerChannel
 \nTwitter : https://twitter.com/AppManagerNews</string>
     <string name="community">Communauté</string>
@@ -951,7 +951,7 @@
     <string name="filter_apps_with_splits">Avec séparateurs</string>
     <string name="matching_activities">Activités correspondantes</string>
     <string name="screen">Écran</string>
-    <string name="failed_to_disable_magisk_hide">Désactivation de MagiskHide impossible</string>
+    <string name="failed_to_disable_magisk_hide">Impossible de désactiver MagiskHide</string>
     <string name="enforcing">Forcer</string>
     <string name="backup_multiple_description">Créer une sauvegarde séparée <i>nommée</i> à la place de la sauvegarde de base.</string>
     <string name="backup_skip_signature_checks_description">Restaurer les sauvegardes qui ont échoué au test de somme de contrôle ou qui ont des signatures d\'APK différentes par rapport à leur précédente sauvegarde.</string>
@@ -959,8 +959,8 @@
     <string name="scaling_factor">Facteur d\'échelonnage</string>
     <string name="set_custom_app_op">Définir une opération d\'application personnalisée</string>
     <string name="set_mode_for_app_ops_dots">Définir le mode pour les opérations d\'application…</string>
-    <string name="permissive">Permissif</string>
-    <string name="failed_to_enable_magisk_hide">Activation de MagiskHide impossible</string>
+    <string name="permissive">Permissive (permissif)</string>
+    <string name="failed_to_enable_magisk_hide">Impossible d\'activer MagiskHide</string>
     <string name="pref_backup_restore_msg">Personnaliser la sauvegarder/restauration.</string>
     <string name="backup_volume">Volume de sauvegarde</string>
     <string name="pref_backup_volume_msg">Sélectionnez le volume ou le disque où placer les sauvegardes.</string>
