@@ -1338,4 +1338,13 @@
     <string name="usage_last_used">آخر استخدام</string>
     <string name="usage_mobile_data">بيانات الهاتف</string>
     <string name="usage_wifi_data">بيانات واي فاي</string>
+    <string name="frozen">مجمد</string>
+    <string name="backup_apps_cannot_be_backed_up">التطبيقات التالية غير مثبتة ولا يمكن نسخها احتياطيا:</string>
+    <string name="restart_device">إعادة تشغيل الجهاز</string>
+    <string name="backup_apps_cannot_be_restored">لا يمكن استعادة التطبيقات التالية لأنها لا تحتوي على نسخة احتياطية أساسية:</string>
+    <string name="freeze">تجميد</string>
+    <string name="unfreeze">إلغاء التجميد</string>
+    <string name="backup_no_backups_present">لا توجد نسخ احتياطية.</string>
+    <string name="restore_dots">يستعيد…</string>
+    <string name="import_backups_warning_delete_backups_after_import">حذف النسخ الاحتياطية بعد استيرادها إلى مدير التطبيقات؟ يتم حذف كل نسخة احتياطية بشكل فردي بعد استيرادها بنجاح. حدد <b> No</b> إذا لم تكن متأكدا.</string>
 </resources>
