@@ -26,11 +26,10 @@ import android.sun.security.x509.SubjectKeyIdentifierExtension;
 import android.sun.security.x509.X500Name;
 import android.sun.security.x509.X509CertImpl;
 import android.sun.security.x509.X509CertInfo;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import com.android.internal.util.TextUtils;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
@@ -131,7 +130,9 @@ public class KeyStoreUtils {
             if (is == null) throw new FileNotFoundException(ksUri + " does not exist.");
             ks.load(is, ksPass);
         }
-        if (TextUtils.isEmpty(ksAlias)) ksAlias = ks.aliases().nextElement();
+        if (TextUtils.isEmpty(ksAlias)) {
+            ksAlias = ks.aliases().nextElement();
+        }
         Key key = ks.getKey(ksAlias, aliasPass);
         if (key instanceof PrivateKey) {
             X509Certificate cert = (X509Certificate) ks.getCertificate(ksAlias);

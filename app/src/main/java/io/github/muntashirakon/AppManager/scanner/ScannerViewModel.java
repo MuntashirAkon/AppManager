@@ -185,6 +185,11 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
         return mApkFile;
     }
 
+    @Nullable
+    public String getPackageName() {
+        return mPackageName;
+    }
+
     public void setApkFile(@Nullable File apkFile) {
         this.mApkFile = apkFile;
     }

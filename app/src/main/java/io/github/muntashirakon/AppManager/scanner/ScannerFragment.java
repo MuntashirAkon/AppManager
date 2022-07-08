@@ -2,12 +2,9 @@
 
 package io.github.muntashirakon.AppManager.scanner;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -28,7 +25,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.android.internal.util.TextUtils;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
 import java.security.cert.CertificateEncodingException;
@@ -54,8 +50,6 @@ import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
-import io.github.muntashirakon.dialog.DialogTitleBuilder;
-import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
 import io.github.muntashirakon.util.UiUtils;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getColoredText;
@@ -65,8 +59,6 @@ import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
 public class ScannerFragment extends Fragment {
     private CharSequence mAppName;
-    @Nullable
-    private String mPackageName;
     private ScannerViewModel mViewModel;
     private ScannerActivity mActivity;
 
@@ -86,19 +78,19 @@ public class ScannerFragment extends Fragment {
         mActivity = (ScannerActivity) requireActivity();
         // Checksum
         mViewModel.apkChecksumsLiveData().observe(getViewLifecycleOwner(), checksums -> {
-            SpannableStringBuilder sb = new SpannableStringBuilder();
+            List<CharSequence> lines = new ArrayList<>();
             for (Pair<String, String> digest : checksums) {
-                sb.append("\n").append(getPrimaryText(mActivity, digest.first + LangUtils.getSeparatorString()))
-                        .append(getMonospacedText(digest.second));
+                lines.add(new SpannableStringBuilder()
+                        .append(getPrimaryText(mActivity, digest.first + LangUtils.getSeparatorString()))
+                        .append(getMonospacedText(digest.second)));
             }
             ((TextView) view.findViewById(R.id.apk_title)).setText(R.string.apk_checksums);
-            ((TextView) view.findViewById(R.id.apk_description)).setText(sb);
+            ((TextView) view.findViewById(R.id.apk_description)).setText(TextUtils.joinSpannable("\n", lines));
         });
         // Package info: Title & subtitle
         mViewModel.packageInfoLiveData().observe(getViewLifecycleOwner(), packageInfo -> {
             if (packageInfo != null) {
                 String archiveFilePath = mViewModel.getApkFile().getAbsolutePath();
-                mPackageName = packageInfo.packageName;
                 final ApplicationInfo applicationInfo = packageInfo.applicationInfo;
                 applicationInfo.publicSourceDir = archiveFilePath;
                 applicationInfo.sourceDir = archiveFilePath;
@@ -215,17 +207,8 @@ public class ScannerFragment extends Fragment {
         } else if (positives <= 12) {
             color = ColorCodes.getVirusTotalUnsafeIndicatorColor(mActivity);
         } else color = ColorCodes.getVirusTotalExtremelyUnsafeIndicatorColor(mActivity);
-        DialogTitleBuilder titleBuilder = new DialogTitleBuilder(mActivity)
-                .setTitle(getString(R.string.vt_success, positives, vtFileReport.getTotal()))
-                .setSubtitle(getString(R.string.vt_scan_date, vtFileReport.getScanDate()))
-                .setEndIcon(R.drawable.ic_vt, v -> {
-                    Uri vtPermalink = Uri.parse(vtFileReport.getPermalink());
-                    Intent linkIntent = new Intent(Intent.ACTION_VIEW, vtPermalink);
-                    if (linkIntent.resolveActivity(mActivity.getPackageManager()) != null) {
-                        startActivity(linkIntent);
-                    }
-                })
-                .setEndIconContentDescription(R.string.vt_permalink);
+        CharSequence scanDate = getString(R.string.vt_scan_date, vtFileReport.getScanDate());
+        String permalink = vtFileReport.getPermalink();
         Spanned result;
         Map<String, VtFileReportScanItem> vtFileReportScanItems = vtFileReport.getScans();
         if (vtFileReportScanItems != null) {
@@ -250,17 +233,10 @@ public class ScannerFragment extends Fragment {
         vtTitleView.setText(getColoredText(resultSummary, color));
         if (result != null) {
             vtDescriptionView.setText(R.string.tap_to_see_details);
-            vtContainerView.setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
-                    .setCustomTitle(titleBuilder.build())
-                    .setMessage(result)
-                    .setPositiveButton(R.string.ok, null)
-                    .setNeutralButton(R.string.copy, (dialog, which) -> {
-                        ClipboardManager clipboard = (ClipboardManager) mActivity.getSystemService(Context.CLIPBOARD_SERVICE);
-                        ClipData clip = ClipData.newPlainText(getString(R.string.scan_in_vt), result);
-                        clipboard.setPrimaryClip(clip);
-                        Snackbar.make(vtContainerView, R.string.copied_to_clipboard, Snackbar.LENGTH_SHORT).show();
-                    })
-                    .show());
+            vtContainerView.setOnClickListener(v -> {
+                VirusTotalDialog fragment = VirusTotalDialog.getInstance(resultSummary, scanDate, result, permalink);
+                fragment.show(getParentFragmentManager(), VirusTotalDialog.TAG);
+            });
         }
     }
 
@@ -302,7 +278,7 @@ public class ScannerFragment extends Fragment {
     private void setTrackerInfo(@NonNull List<SignatureInfo> trackerInfoList, @NonNull View view) {
         Map<String, SpannableStringBuilder> foundTrackerInfoMap = new ArrayMap<>();
         foundTrackerInfoMap.putAll(getNativeLibraryInfo(true));
-        final boolean[] hasSecondDegree = new boolean[]{false};
+        boolean hasSecondDegree = false;
         // Iterate over signatures again but this time list only the found ones.
         for (SignatureInfo trackerInfo : trackerInfoList) {
             if (foundTrackerInfoMap.get(trackerInfo.label) == null) {
@@ -314,14 +290,14 @@ public class ScannerFragment extends Fragment {
                     .append("\n")
                     .append(getMonospacedText(trackerInfo.signature))
                     .append(getSmallerText(" (" + trackerInfo.getCount() + ")"));
-            if (!hasSecondDegree[0]) {
-                hasSecondDegree[0] = trackerInfo.label.startsWith("²");
+            if (!hasSecondDegree) {
+                hasSecondDegree = trackerInfo.label.startsWith("²");
             }
         }
         Set<String> foundTrackerNames = foundTrackerInfoMap.keySet();
         List<Spannable> foundTrackerInfo = new ArrayList<>(foundTrackerInfoMap.values());
         Collections.sort(foundTrackerInfo, (o1, o2) -> o1.toString().compareToIgnoreCase(o2.toString()));
-        Spanned trackerList = UiUtils.getOrderedList(foundTrackerInfo);
+        SpannableStringBuilder trackerList = new SpannableStringBuilder(UiUtils.getOrderedList(foundTrackerInfo));
         SpannableStringBuilder foundTrackerList = new SpannableStringBuilder();
         int totalTrackersFound = foundTrackerInfoMap.size();
         if (totalTrackersFound > 0) {
@@ -352,36 +328,10 @@ public class ScannerFragment extends Fragment {
         ((TextView) view.findViewById(R.id.tracker_description)).setText(foundTrackerList);
         if (totalTrackersFound == 0) return;
         MaterialCardView trackersView = view.findViewById(R.id.tracker);
+        boolean finalHasSecondDegree = hasSecondDegree;
         trackersView.setOnClickListener(v -> {
-            DialogTitleBuilder titleBuilder = new DialogTitleBuilder(mActivity)
-                    .setTitle(R.string.tracker_details)
-                    .setSubtitle(summary);
-            if (mPackageName != null) {
-                titleBuilder.setEndIcon(R.drawable.ic_exodusprivacy, v1 -> {
-                            Uri exodus_link = Uri.parse(String.format(
-                                    "https://reports.exodus-privacy.eu.org/en/reports/%s/latest/", mPackageName));
-                            Intent intent = new Intent(Intent.ACTION_VIEW, exodus_link);
-                            if (intent.resolveActivity(mActivity.getPackageManager()) != null) {
-                                startActivity(intent);
-                            }
-                        })
-                        .setEndIconContentDescription(R.string.exodus_link);
-            }
-            new ScrollableDialogBuilder(mActivity, hasSecondDegree[0] ?
-                    new SpannableStringBuilder(trackerList)
-                            .append("\n\n")
-                            .append(getSmallerText(getText(R.string.second_degree_tracker_note)))
-                    : trackerList)
-                    .setTitle(titleBuilder.build())
-                    .enableAnchors()
-                    .setPositiveButton(R.string.ok, null)
-                    .setNeutralButton(R.string.copy, (dialog, which, isChecked) -> {
-                        ClipboardManager clipboard = (ClipboardManager) mActivity.getSystemService(Context.CLIPBOARD_SERVICE);
-                        ClipData clip = ClipData.newPlainText(getString(R.string.signatures), trackerList);
-                        clipboard.setPrimaryClip(clip);
-                        Snackbar.make(trackersView, R.string.copied_to_clipboard, Snackbar.LENGTH_SHORT).show();
-                    })
-                    .show();
+            TrackerInfoDialog fragment = TrackerInfoDialog.getInstance(coloredSummary, trackerList, finalHasSecondDegree);
+            fragment.show(getParentFragmentManager(), TrackerInfoDialog.TAG);
         });
     }
 
@@ -418,20 +368,10 @@ public class ScannerFragment extends Fragment {
         ((TextView) view.findViewById(R.id.libs_description)).setText(TextUtils.join(", ", foundLibNames));
         if (totalLibsFound == 0) return;
         MaterialCardView libsView = view.findViewById(R.id.libs);
-        libsView.setOnClickListener(v ->
-                new ScrollableDialogBuilder(mActivity, foundLibsInfo)
-                        .setTitle(new DialogTitleBuilder(mActivity)
-                                .setTitle(R.string.lib_details)
-                                .setSubtitle(summary)
-                                .build())
-                        .setNegativeButton(R.string.ok, null)
-                        .setNeutralButton(R.string.copy, (dialog, which, isChecked) -> {
-                            ClipboardManager clipboard = (ClipboardManager) mActivity.getSystemService(Context.CLIPBOARD_SERVICE);
-                            ClipData clip = ClipData.newPlainText(getString(R.string.signatures), foundLibsInfo);
-                            clipboard.setPrimaryClip(clip);
-                            Snackbar.make(libsView, R.string.copied_to_clipboard, Snackbar.LENGTH_SHORT).show();
-                        })
-                        .show());
+        libsView.setOnClickListener(v -> {
+            LibraryInfoDialog fragment = LibraryInfoDialog.getInstance(summary, foundLibsInfo);
+            fragment.show(getParentFragmentManager(), LibraryInfoDialog.TAG);
+        });
 
     }
 

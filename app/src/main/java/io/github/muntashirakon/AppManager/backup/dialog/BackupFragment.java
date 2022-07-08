@@ -18,7 +18,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Set;
 
@@ -26,7 +25,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
-import io.github.muntashirakon.widget.TextInputTextView;
+import io.github.muntashirakon.widget.MaterialAlertView;
 
 public class BackupFragment extends Fragment {
     public static BackupFragment getInstance() {
@@ -47,8 +46,7 @@ public class BackupFragment extends Fragment {
         mViewModel = new ViewModelProvider(requireParentFragment()).get(BackupRestoreDialogViewModel.class);
         mContext = requireContext();
 
-        TextInputTextView messageView = view.findViewById(R.id.message);
-        TextInputLayout messageViewContainer = view.findViewById(R.id.message_container);
+        MaterialAlertView messageView = view.findViewById(R.id.message);
         RecyclerView recyclerView = view.findViewById(android.R.id.list);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
@@ -65,7 +63,7 @@ public class BackupFragment extends Fragment {
                 sb.append("\n● ").append(appLabel);
             }
             messageView.setText(sb);
-            messageViewContainer.setVisibility(View.VISIBLE);
+            messageView.setVisibility(View.VISIBLE);
         }
         view.findViewById(R.id.action_backup).setOnClickListener(v -> {
             BackupFlags newFlags = new BackupFlags(adapter.getSelectedFlags());

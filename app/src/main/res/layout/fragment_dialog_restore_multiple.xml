@@ -1,5 +1,6 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -17,24 +18,16 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.AppTheme.ErrorMessageLayout"
-                android:id="@+id/message_container"
+            <io.github.muntashirakon.widget.MaterialAlertView
+                android:id="@+id/message"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/padding_medium"
                 android:layout_marginVertical="@dimen/padding_small"
                 android:visibility="gone"
-                tools:visibility="visible">
-
-                <io.github.muntashirakon.widget.TextInputTextView
-                    android:id="@+id/message"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:overScrollMode="never"
-                    tools:text="Some apps cannot be backed up." />
-
-            </com.google.android.material.textfield.TextInputLayout>
+                app:alertType="warn"
+                tools:visibility="visible"
+                tools:text="Some apps cannot be backed up." />
 
             <io.github.muntashirakon.widget.RecyclerView
                 android:id="@android:id/list"

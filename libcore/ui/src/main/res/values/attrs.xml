@@ -1,5 +1,6 @@
 <!-- SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later -->
 <resources>
+    <attr name="materialAlertViewStyle" format="reference" />
     <attr name="materialFullScreenAlertDialogTheme" format="reference" />
     <declare-styleable name="SearchView">
         <!-- Tint to apply to the SearchView's close icon. -->
@@ -43,6 +44,16 @@
         <attr name="listItem" format="reference" />
         <!-- Preview only: Number of times the list item has to be displayed inside the layout. Default is 10. -->
         <attr name="itemCount" format="integer" />
+    </declare-styleable>
+    <declare-styleable name="MaterialAlertView">
+        <attr name="alertType" format="enum">
+            <enum name="info" value="0" />
+            <enum name="warn" value="1" />
+            <enum name="custom" value="-1" />
+        </attr>
+        <attr name="android:text" />
+        <attr name="android:textAppearance" />
+        <attr name="android:textColor" />
     </declare-styleable>
     <declare-styleable name="MaxHeightScrollView">
         <attr name="maxHeight" format="dimension" />

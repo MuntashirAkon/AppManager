@@ -16,12 +16,11 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.RemoteException;
 import android.os.UserHandleHidden;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
-
-import com.android.internal.util.TextUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;

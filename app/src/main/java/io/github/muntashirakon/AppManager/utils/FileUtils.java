@@ -16,13 +16,12 @@ import android.os.ParcelFileDescriptor;
 import android.provider.OpenableColumns;
 import android.system.ErrnoException;
 import android.system.Os;
+import android.text.TextUtils;
 
 import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
-
-import com.android.internal.util.TextUtils;
 
 import java.io.BufferedOutputStream;
 import java.io.File;

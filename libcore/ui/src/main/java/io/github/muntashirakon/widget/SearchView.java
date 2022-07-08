@@ -4,9 +4,7 @@ package io.github.muntashirakon.widget;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -15,11 +13,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StyleRes;
 import androidx.appcompat.widget.TintTypedArray;
+import androidx.core.widget.TextViewCompat;
 
 import com.google.android.material.internal.ThemeEnforcement;
 import com.google.android.material.resources.MaterialResources;
-import com.google.android.material.resources.TextAppearance;
-import com.google.android.material.resources.TextAppearanceFontCallback;
 import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.shape.ShapeAppearanceModel;
 import com.google.android.material.shape.Shapeable;
@@ -62,32 +59,8 @@ public class SearchView extends androidx.appcompat.widget.SearchView implements 
         final TintTypedArray a = ThemeEnforcement.obtainTintedStyledAttributes(
                 context, attrs, R.styleable.SearchView, defStyleAttr, DEF_STYLE_RES);
 
-        TextAppearance textAppearance = MaterialResources.getTextAppearance(context, a.getWrappedTypeArray(),
-                R.styleable.SearchView_android_textAppearance);
-
-        if (textAppearance != null) {
-            mSearchSrcTextView.setHintTextColor(textAppearance.textColorHint);
-            mSearchSrcTextView.setLinkTextColor(textAppearance.textColorLink);
-            mSearchSrcTextView.setAllCaps(textAppearance.textAllCaps);
-            mSearchSrcTextView.setTextColor(textAppearance.getTextColor());
-            if (textAppearance.shadowColor != null) {
-                mSearchSrcTextView.setShadowLayer(textAppearance.shadowRadius, textAppearance.shadowDx,
-                        textAppearance.shadowDy, textAppearance.shadowColor.getDefaultColor());
-            }
-            mSearchSrcTextView.setLetterSpacing(textAppearance.letterSpacing);
-            mSearchSrcTextView.setTextColor(textAppearance.getTextColor());
-            mSearchSrcTextView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textAppearance.getTextSize());
-            textAppearance.getFontAsync(context, new TextAppearanceFontCallback() {
-                @Override
-                public void onFontRetrieved(Typeface typeface, boolean fontResolvedSynchronously) {
-                    mSearchSrcTextView.setTypeface(typeface);
-                }
-
-                @Override
-                public void onFontRetrievalFailed(int reason) {
-                }
-            });
-        }
+        int textAppearance = a.getResourceId(R.styleable.SearchView_android_textAppearance, 0);
+        TextViewCompat.setTextAppearance(mSearchSrcTextView, textAppearance);
 
         mCloseButton.setImageTintList(MaterialResources.getColorStateList(
                 context, a, R.styleable.SearchView_closeIconTint));

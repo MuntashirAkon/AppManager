@@ -16,6 +16,7 @@
         <item name="chipGroupStyle">@style/Widget.AppTheme.ChipGroup</item>
         <item name="chipStandaloneStyle">@style/Widget.AppTheme.Chip.Input</item>
         <item name="floatingActionButtonStyle">@style/Widget.AppTheme.Button.FAB</item>
+        <item name="materialAlertViewStyle">@style/Widget.AppTheme.MaterialAlertView</item>
         <item name="materialCalendarTheme">@style/Widget.AppTheme.MaterialCalendar</item>
         <item name="materialCardViewStyle">@style/Widget.AppTheme.CardView.Elevated</item>
         <item name="materialDividerStyle">@style/Widget.AppTheme.Divider</item>
@@ -230,17 +231,26 @@
         <item name="android:textAppearance">?attr/textAppearanceBodyMedium</item>
     </style>
 
-    <!-- TextInputLayout -->
-    <style name="Widget.AppTheme.ErrorMessageLayout" parent="Widget.AppTheme.TextInputLayout">
-        <item name="boxBackgroundColor">?attr/colorErrorContainer</item>
+    <!-- MaterialAlertView -->
+    <style name="Widget.AppTheme.MaterialAlertView" parent="Widget.AppTheme.TextInputLayout">
+        <item name="boxBackgroundColor">?attr/colorPrimaryContainer</item>
         <item name="boxStrokeWidth">0dp</item>
         <item name="boxStrokeWidthFocused">0dp</item>
-        <item name="startIconDrawable">@drawable/ic_caution</item>
-        <item name="startIconTint">?attr/colorOnErrorContainer</item>
+        <item name="startIconDrawable">@drawable/ic_information_variant</item>
+        <item name="startIconTint">?attr/colorOnPrimaryContainer</item>
+        <item name="android:textColor">?attr/colorOnPrimaryContainer</item>
+        <item name="android:textAppearance">?attr/textAppearanceBodyMedium</item>
         <item name="shapeAppearanceOverlay">@style/ShapeAppearance.AppTheme.MediumComponent</item>
-        <item name="materialThemeOverlay">@style/ThemeOverlay.AppTheme.TextInputLayout.Medium.Error</item>
     </style>
 
+    <style name="Widget.AppTheme.MaterialAlertView.Warn" parent="Widget.AppTheme.MaterialAlertView">
+        <item name="boxBackgroundColor">?attr/colorErrorContainer</item>
+        <item name="startIconDrawable">@drawable/ic_caution</item>
+        <item name="startIconTint">?attr/colorOnErrorContainer</item>
+        <item name="android:textColor">?attr/colorOnErrorContainer</item>
+    </style>
+
+    <!-- TextInputLayout -->
     <style name="Widget.AppTheme.TextInputLayout" parent="Widget.Material3.TextInputLayout.OutlinedBox.Dense">
         <item name="shapeAppearanceOverlay">@style/ShapeAppearance.AppTheme.LargeComponent</item>
     </style>
@@ -259,16 +269,6 @@
         <item name="materialThemeOverlay">@style/ThemeOverlay.AppTheme.TextInputLayout.Small</item>
     </style>
 
-    <style name="ThemeOverlay.AppTheme.TextInputLayout.Medium" parent="">
-        <item name="autoCompleteTextViewStyle">@style/Widget.AppTheme.TextInputEditText.Medium</item>
-        <item name="editTextStyle">@style/Widget.AppTheme.TextInputEditText.Medium</item>
-    </style>
-
-    <style name="ThemeOverlay.AppTheme.TextInputLayout.Medium.Error" parent="">
-        <item name="autoCompleteTextViewStyle">@style/Widget.AppTheme.TextInputEditText.Medium.Error</item>
-        <item name="editTextStyle">@style/Widget.AppTheme.TextInputEditText.Medium.Error</item>
-    </style>
-
     <style name="ThemeOverlay.AppTheme.TextInputLayout.Small" parent="">
         <item name="autoCompleteTextViewStyle">@style/Widget.AppTheme.TextInputEditText.Small</item>
         <item name="editTextStyle">@style/Widget.AppTheme.TextInputEditText.Small</item>
@@ -282,15 +282,6 @@
         <item name="android:paddingTop">8dp</item>
         <item name="android:paddingBottom">8dp</item>
         <item name="android:minHeight">34dp</item>
-    </style>
-
-    <style name="Widget.AppTheme.TextInputEditText.Medium" parent="Widget.Material3.TextInputEditText.OutlinedBox">
-        <item name="android:textAppearance">?attr/textAppearanceBodyMedium</item>
-    </style>
-
-    <style name="Widget.AppTheme.TextInputEditText.Medium.Error" parent="Widget.AppTheme.TextInputEditText.Medium">
-        <item name="android:textAppearance">?attr/textAppearanceBodyMedium</item>
-        <item name="android:textColor">?attr/colorOnErrorContainer</item>
     </style>
 
     <!-- Button attributes -->
