@@ -353,7 +353,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     Collections.singletonList(new UserPackagePair(mPackageName, mainModel.getUserHandle())));
             fragment.setOnActionBeginListener(mode -> showProgressIndicator(true));
             fragment.setOnActionCompleteListener((mode, failedPackages) -> showProgressIndicator(false));
-            fragment.show(mActivity.getSupportFragmentManager(), BackupRestoreDialogFragment.TAG);
+            fragment.show(getParentFragmentManager(), BackupRestoreDialogFragment.TAG);
         } else if (itemId == R.id.action_view_settings) {
             startActivity(IntentUtils.getAppDetailsSettings(mPackageName));
         } else if (itemId == R.id.action_export_blocking_rules) {
@@ -731,15 +731,14 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     .show());
         }
         if (tagCloud.backups.length > 0) {
-            CharSequence[] backupNames = new CharSequence[tagCloud.backups.length];
-            for (int i = 0; i < tagCloud.backups.length; ++i) {
-                backupNames[i] = tagCloud.backups[i].toLocalizedString(mActivity);
-            }
-            addChip(R.string.backup).setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
-                    .setTitle(R.string.backup)
-                    .setItems(backupNames, null)
-                    .setNegativeButton(R.string.close, null)
-                    .show());
+            addChip(R.string.backup).setOnClickListener(v -> {
+                BackupRestoreDialogFragment fragment = BackupRestoreDialogFragment.getInstance(
+                        Collections.singletonList(new UserPackagePair(mPackageName, mainModel.getUserHandle())),
+                        BackupRestoreDialogFragment.MODE_RESTORE | BackupRestoreDialogFragment.MODE_DELETE);
+                fragment.setOnActionBeginListener(mode -> showProgressIndicator(true));
+                fragment.setOnActionCompleteListener((mode, failedPackages) -> showProgressIndicator(false));
+                fragment.show(getParentFragmentManager(), BackupRestoreDialogFragment.TAG);
+            });
         }
         if (!tagCloud.isBatteryOptimized) {
             addChip(R.string.no_battery_optimization, ColorCodes.getAppNoBatteryOptimizationIndicatorColor(mActivity))
