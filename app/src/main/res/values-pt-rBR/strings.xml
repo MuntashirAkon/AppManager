@@ -84,8 +84,11 @@
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a>
 \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a>
 \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a>
 \n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
 \n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
 \n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
@@ -94,7 +97,8 @@
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
 \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
-\nOriginal logo credit: <a href="https://github.com/Atrate">Atrate</a>. </string>
+\n- <a href="https://github.com/zhaobozhen/librariest">Absinthe\'s libraries</a>
+\nCrédito do logo original: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="word_wrap">Alternar quebra de palavra</string>
     <string name="class_viewer">Visualizador de Classe</string>
     <string name="toggle_class_listing">Alternar Lista de Classes</string>
@@ -1176,4 +1180,20 @@
     <string name="log_stop_recording">Parar gravação</string>
     <string name="app_explorer">Explorador de Aplicativos</string>
     <string name="netpolicy_cannot_be_modified_for_core_apps">A política de rede não pode ser modificada para aplicativos principais do Android.</string>
+    <string name="freeze">Congelar</string>
+    <string name="frozen">Congelado</string>
+    <string name="unfreeze">Descongelar</string>
+    <string name="backup_no_backups_present">Sem backups.</string>
+    <string name="restore_dots">Restaurar…</string>
+    <string name="backup_apps_cannot_be_restored">Os seguintes aplicativos não podem ser restaurados porque não possuem um backup básico:</string>
+    <string name="backup_apps_cannot_be_backed_up">Os seguintes aplicativos não estão instalados e não podem ser armazenados em backup:</string>
+    <string name="restart_device">Reiniciar dispositivo</string>
+    <string name="import_backups_warning_delete_backups_after_import">Excluir os backups depois de importá-los para o App Manager\? Cada backup é excluído individualmente após ser importado com sucesso. Selecione <b>Não</b> se não tiver certeza.</string>
+    <string name="open_developer_options_page">Abrir a página de opções do desenvolvedor nas configurações do Android</string>
+    <string name="pref_pure_black_theme">tema preto puro</string>
+    <string name="pref_pure_black_theme_msg">Use um fundo completamente preto quando o modo noturno estiver ativado.</string>
+    <string name="usage_times_opened">Vezes aberto</string>
+    <string name="usage_last_used">Usado por último</string>
+    <string name="usage_mobile_data">Dados móveis</string>
+    <string name="usage_wifi_data">Dados Wi-Fi</string>
 </resources>
