@@ -1187,4 +1187,9 @@
     <string name="usage_mobile_data">Mobile Daten</string>
     <string name="usage_times_opened">Geöffnete Zeiten</string>
     <string name="usage_last_used">Zuletzt benutzt</string>
+    <string name="frozen">Eingefroren</string>
+    <string name="freeze">einfrieren</string>
+    <string name="unfreeze">auftauen</string>
+    <string name="backup_no_backups_present">Keine backups.</string>
+    <string name="restore_dots">wiederherstellen…</string>
 </resources>
