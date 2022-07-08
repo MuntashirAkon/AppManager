@@ -7,7 +7,9 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.text.method.MovementMethod;
 import android.util.AttributeSet;
+import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -17,10 +19,13 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.widget.TintTypedArray;
 import androidx.core.widget.TextViewCompat;
+import androidx.transition.TransitionManager;
+import androidx.transition.Visibility;
 
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.internal.ThemeEnforcement;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.android.material.transition.MaterialFadeThrough;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -72,7 +77,9 @@ public class MaterialAlertView extends TextInputLayout {
         a.recycle();
 
         TextViewCompat.setTextAppearance(mTextInputTextView, texAppearance);
-        mTextInputTextView.setTextColor(textColor);
+        if (textColor != null) {
+            mTextInputTextView.setTextColor(textColor);
+        }
         mTextInputTextView.setText(text);
         mTextInputTextView.setOverScrollMode(OVER_SCROLL_NEVER);
 
@@ -116,6 +123,35 @@ public class MaterialAlertView extends TextInputLayout {
 
     public void setMovementMethod(MovementMethod movementMethod) {
         mTextInputTextView.setMovementMethod(movementMethod);
+    }
+
+    public void show() {
+        MaterialFadeThrough fadeThrough = new MaterialFadeThrough();
+        fadeThrough.addTarget(this);
+        fadeThrough.setDuration(500);
+        fadeThrough.setMode(Visibility.MODE_IN);
+        ViewParent parent = getParent();
+        if (parent instanceof ViewGroup) {
+            TransitionManager.beginDelayedTransition((ViewGroup) parent, fadeThrough);
+        } else {
+            TransitionManager.beginDelayedTransition(this, fadeThrough);
+        }
+        setVisibility(View.VISIBLE);
+    }
+
+    public void hide() {
+        MaterialFadeThrough fadeThrough = new MaterialFadeThrough();
+        fadeThrough.addTarget(this);
+        fadeThrough.setSecondaryAnimatorProvider(null);
+        fadeThrough.setDuration(1000);
+        fadeThrough.setMode(Visibility.MODE_OUT);
+        ViewParent parent = getParent();
+        if (parent instanceof ViewGroup) {
+            TransitionManager.beginDelayedTransition((ViewGroup) parent, fadeThrough);
+        } else {
+            TransitionManager.beginDelayedTransition(this, fadeThrough);
+        }
+        setVisibility(View.GONE);
     }
 
     private void applyAlertType() {

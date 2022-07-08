@@ -18,7 +18,6 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.progressindicator.LinearProgressIndicator;
-import com.google.android.material.textview.MaterialTextView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,9 +63,7 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         progressIndicator = view.findViewById(R.id.progress_linear);
         progressIndicator.setVisibilityAfterHide(View.GONE);
         progressIndicator.show();
-        MaterialTextView alertText = view.findViewById(R.id.alert_text);
-        alertText.setVisibility(View.GONE);
-        alertText.setText(R.string.changes_not_saved);
+        view.findViewById(R.id.alert_text).setVisibility(View.GONE);
         swipeRefresh.setOnChildScrollUpCallback((parent, child) -> recyclerView.canScrollVertically(-1));
         model = activity.model;
         AppsRecyclerAdapter adapter = new AppsRecyclerAdapter();

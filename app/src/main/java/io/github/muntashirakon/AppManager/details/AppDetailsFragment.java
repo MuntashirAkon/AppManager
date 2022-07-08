@@ -99,6 +99,8 @@ import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.dialog.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.util.LocalizedString;
+import io.github.muntashirakon.util.ProgressIndicatorCompat;
+import io.github.muntashirakon.widget.MaterialAlertView;
 import io.github.muntashirakon.widget.RecyclerView;
 import io.github.muntashirakon.widget.SwipeRefreshLayout;
 
@@ -178,7 +180,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
     private SwipeRefreshLayout mSwipeRefresh;
     private MenuItem mBlockingToggler;
     private LinearProgressIndicator mProgressIndicator;
-    private TextView mAlertText;
+    private MaterialAlertView mAlertView;
     private boolean mIsExternalApk;
     @Property
     private int mNeededProperty;
@@ -232,13 +234,17 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
         mProgressIndicator = view.findViewById(R.id.progress_linear);
         mProgressIndicator.setVisibilityAfterHide(View.GONE);
         showProgressIndicator(true);
-        mAlertText = view.findViewById(R.id.alert_text);
+        mAlertView = view.findViewById(R.id.alert_text);
+        mAlertView.setEndIconMode(MaterialAlertView.END_ICON_CUSTOM);
+        mAlertView.setEndIconDrawable(R.drawable.mtrl_ic_cancel);
+        mAlertView.setEndIconContentDescription(R.string.close);
+        mAlertView.setEndIconOnClickListener(v -> mAlertView.hide());
         int helpStringRes = getHelpString(mNeededProperty);
-        if (helpStringRes != 0) mAlertText.setText(helpStringRes);
+        if (helpStringRes != 0) mAlertView.setText(helpStringRes);
         if (helpStringRes == 0 || mNeededProperty >= ACTIVITIES && mNeededProperty <= PROVIDERS) {
-            mAlertText.setVisibility(View.GONE);
+            mAlertView.setVisibility(View.GONE);
         } else {
-            mAlertText.postDelayed(() -> mAlertText.setVisibility(View.GONE), 30_000);
+            mAlertView.postDelayed(() -> mAlertView.hide(), 15_000);
         }
         mSwipeRefresh.setOnChildScrollUpCallback((parent, child) -> recyclerView.canScrollVertically(-1));
         if (mMainModel == null) return;
@@ -252,8 +258,10 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
         });
         mMainModel.getRuleApplicationStatus().observe(getViewLifecycleOwner(), status -> {
             if (mNeededProperty >= ACTIVITIES && mNeededProperty <= PROVIDERS) {
-                mAlertText.setVisibility(status != AppDetailsViewModel.RULE_NOT_APPLIED ?
-                        View.GONE : View.VISIBLE);
+                mAlertView.setAlertType(MaterialAlertView.ALERT_TYPE_WARN);
+                if (status == AppDetailsViewModel.RULE_NOT_APPLIED) {
+                    mAlertView.show();
+                } else mAlertView.hide();
             }
         });
     }
@@ -613,9 +621,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
     }
 
     private void showProgressIndicator(boolean show) {
-        if (mProgressIndicator == null) return;
-        if (show) mProgressIndicator.show();
-        else mProgressIndicator.hide();
+        ProgressIndicatorCompat.setVisibility(mProgressIndicator, show);
     }
 
     @NonNull
