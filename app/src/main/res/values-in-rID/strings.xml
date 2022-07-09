@@ -1018,7 +1018,7 @@
     <plurals name="usage_seconds">
         <item quantity="other">%1$d detik</item>
     </plurals>
-    <string name="backup_volume_dialog_description">Volume dengan awalan <tt>/tree</tt> adalah folder yang dipilih menggunakan Storage Access Framework (SAF). Kecuali folder ini, direktori default untuk App Manager adalah subfolder bernama <tt>AppManager</tt>.</string>
+    <string name="backup_volume_dialog_description">Volume dengan <tt>/tree</tt> adalah folder yang dipilih menggunakan Storage Access Framework (SAF). Kecuali folder ini, direktori default untuk App Manager adalah subfolder bernama <tt>AppManager</tt>.</string>
     <string name="user_root">Gunakan root</string>
     <string name="pid">ID Proses</string>
     <string name="keystore_password_info">Berikut ini adalah kata sandi App Manager KeyStore. Harap simpan di tempat yang aman jika Anda akan mencadangkan/memulihkan App Manager KeyStore. <b> Pesan ini tidak akan ditampilkan lagi. </b></string>
@@ -1125,4 +1125,31 @@
     <string name="screen_time">waktu tayang</string>
     <string name="open_in_new_window">jendela baru</string>
     <string name="vt_confirm_upload_and_scan">Benar, unggah dan pindai</string>
+    <string name="unfreeze">Cairkan</string>
+    <string name="backup_no_backups_present">tidak ada cadangan.</string>
+    <string name="restore_dots">Memulihkan…</string>
+    <string name="frozen">Dibekukan</string>
+    <string name="freeze">Diam</string>
+    <string name="backup_apps_cannot_be_restored">Aplikasi berikut tidak dapat dipulihkan karena tidak memiliki cadangan dasar:</string>
+    <string name="backup_apps_cannot_be_backed_up">Aplikasi berikut tidak diinstal dan tidak dapat dicadangkan:</string>
+    <string name="restart_device">Memulai ulang perangkat</string>
+    <string name="netpolicy_cannot_be_modified_for_core_apps">Kebijakan Net tidak dapat diubah untuk aplikasi inti Android.</string>
+    <string name="import_backups_warning_delete_backups_after_import">Hapus cadangan setelah mengimpornya ke Manajer Aplikasi\? Setiap cadangan dihapus satu per satu setelah berhasil diimpor. Pilih <b>Tidak</b> jika tidak yakin.</string>
+    <string name="change_backup_volume">ubah volume</string>
+    <string name="pref_saved_apk_name_format">Format Nama APK disimpan</string>
+    <string name="open_developer_options_page">Buka halaman opsi pengembang di pengaturan Android</string>
+    <string name="pref_pure_black_theme">tema Pure black</string>
+    <string name="pref_pure_black_theme_msg">Gunakan latar belakang yang benar-benar hitam saat mode malam diaktifkan.</string>
+    <string name="pref_saved_apk_name_format_msg">Format akan digunakan untuk menamai file APK saat Anda menyimpannya.</string>
+    <string name="input_ssaid_instruction">SSAID adalah %1$d byte angka heksadesimal yaitu string dengan panjang %2$d yang berisi 0 hingga 9 dan a hingga f.</string>
+    <string name="apk_checksums">APK Checksum</string>
+    <string name="backup_volume_unavailable_warning">Volume cadangan yang dipilih saat ini tidak tersedia. Jika terletak di penyimpanan eksternal, silakan masukkan, atau ubah volume cadangan.</string>
+    <string name="pref_vt_prompt_before_uploading">Tampilkan pengingat sebelum mengunggah file.</string>
+    <string name="vt_confirm_uploading_file">File tidak ditemukan di database VirusTotal. Apakah Anda ingin mengunggahnya\?</string>
+    <string name="type_string_set">atur string</string>
+    <string name="usage_times_opened">Waktu dibuka</string>
+    <string name="usage_last_used">terakhir digunakan</string>
+    <string name="usage_mobile_data">data seluler</string>
+    <string name="usage_wifi_data">data Wi-Fi</string>
+    <string name="app_explorer">Penjelajah Aplikasi</string>
 </resources>
