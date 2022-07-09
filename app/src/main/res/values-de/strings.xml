@@ -1192,4 +1192,8 @@
     <string name="unfreeze">auftauen</string>
     <string name="backup_no_backups_present">Keine backups.</string>
     <string name="restore_dots">wiederherstellen…</string>
+    <string name="backup_apps_cannot_be_restored">Die folgenden Apps können nicht wiederhergestellt werden, da sie über kein Basis-Backup verfügen:</string>
+    <string name="backup_apps_cannot_be_backed_up">Die folgenden Apps sind nicht installiert und können nicht gesichert werden:</string>
+    <string name="restart_device">Gerät neustarten</string>
+    <string name="import_backups_warning_delete_backups_after_import">Backups löschen, nachdem sie in App Manager importiert wurden\? Jedes Backup wird nach erfolgreichem Import einzeln gelöscht. Wählen Sie <b>Nein</b>, wenn Sie sich nicht sicher sind.</string>
 </resources>
