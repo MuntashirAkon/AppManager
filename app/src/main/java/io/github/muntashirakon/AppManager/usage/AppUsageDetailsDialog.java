@@ -72,10 +72,8 @@ public class AppUsageDetailsDialog extends CapsuleBottomSheetDialogFragment {
                 .setSubtitle(usageInfo.packageName)
                 .setSubtitleSelectable(true)
                 .setEndIcon(R.drawable.ic_information_variant, v -> {
-                    Intent appDetailsIntent = new Intent(requireContext(), AppDetailsActivity.class);
-                    appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, usageInfo.packageName);
-                    appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_USER_HANDLE, usageInfo.userId);
-                    appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_BACK_TO_MAIN, false);
+                    Intent appDetailsIntent = AppDetailsActivity.getIntent(activity, usageInfo.packageName,
+                            usageInfo.userId);
                     startActivity(appDetailsIntent);
                 })
                 .setEndIconContentDescription(R.string.app_info);

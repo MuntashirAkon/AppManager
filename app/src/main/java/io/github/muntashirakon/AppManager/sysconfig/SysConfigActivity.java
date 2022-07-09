@@ -153,9 +153,7 @@ public class SysConfigActivity extends BaseActivity {
                     activity.imageLoader.displayImage(info.name, null, holder.icon);
                 }
                 holder.icon.setOnClickListener(v -> {
-                    Intent appDetailsIntent = new Intent(activity, AppDetailsActivity.class);
-                    appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, info.name);
-                    appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_USER_HANDLE, 0);
+                    Intent appDetailsIntent = AppDetailsActivity.getIntent(activity, info.name,0);
                     activity.startActivity(appDetailsIntent);
                 });
             } else {

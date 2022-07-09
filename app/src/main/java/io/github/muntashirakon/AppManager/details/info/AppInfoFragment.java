@@ -1271,8 +1271,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 ListItem listItem = ListItem.newSelectableRegularItem(getString(R.string.installed_version),
                         getString(R.string.version_name_with_code, mInstalledPackageInfo.versionName,
                                 PackageInfoCompat.getLongVersionCode(mInstalledPackageInfo)), v -> {
-                            Intent appDetailsIntent = new Intent(mActivity, AppDetailsActivity.class);
-                            appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, mPackageName);
+                            Intent appDetailsIntent = AppDetailsActivity.getIntent(mActivity, mPackageName,
+                                    UserHandleHidden.myUserId());
                             mActivity.startActivity(appDetailsIntent);
                         });
                 listItem.setActionIcon(R.drawable.ic_information_variant);

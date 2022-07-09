@@ -800,7 +800,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
                             }
                         }
                     }
-                } catch (PackageManager.NameNotFoundException | IllegalArgumentException | IndexOutOfBoundsException ignore) {
+                } catch (PackageManager.NameNotFoundException | IllegalArgumentException |
+                         IndexOutOfBoundsException ignore) {
                 }
             }
         }
@@ -1731,8 +1732,19 @@ public class AppDetailsViewModel extends AndroidViewModel {
         if (info.sharedLibraryFiles != null) {
             for (String sharedLibrary : info.sharedLibraryFiles) {
                 File sharedLib = new File(sharedLibrary);
-                AppDetailsItem<?> appDetailsItem = new AppDetailsItem<>(sharedLib);
-                appDetailsItem.name = sharedLib.getName();
+                AppDetailsItem<?> appDetailsItem = null;
+                if (sharedLib.exists() && sharedLib.getName().endsWith(".apk")) {
+                    // APK file
+                    PackageInfo packageInfo = mPackageManager.getPackageArchiveInfo(sharedLibrary, 0);
+                    if (packageInfo != null) {
+                        appDetailsItem = new AppDetailsItem<>(packageInfo);
+                        appDetailsItem.name = packageInfo.applicationInfo.loadLabel(mPackageManager).toString();
+                    }
+                }
+                if (appDetailsItem == null) {
+                    appDetailsItem = new AppDetailsItem<>(sharedLib);
+                    appDetailsItem.name = sharedLib.getName();
+                }
                 appDetailsItems.add(appDetailsItem);
             }
         }

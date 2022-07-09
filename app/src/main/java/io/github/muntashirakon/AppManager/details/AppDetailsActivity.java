@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.details;
 
+import android.annotation.UserIdInt;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.res.TypedArray;
@@ -34,12 +36,39 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.main.MainActivity;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.util.ParcelUtils;
 
 public class AppDetailsActivity extends BaseActivity {
-    public static final String EXTRA_PACKAGE_NAME = "pkg";
-    public static final String EXTRA_USER_HANDLE = "user";
-    public static final String EXTRA_BACK_TO_MAIN = "main";
+    private static final String EXTRA_PACKAGE_NAME = "pkg";
+    private static final String EXTRA_USER_HANDLE = "user";
+    private static final String EXTRA_BACK_TO_MAIN = "main";
+
+    @NonNull
+    public static Intent getIntent(@NonNull Context context, @NonNull String packageName, @UserIdInt int userId) {
+        Intent intent = new Intent(context, AppDetailsActivity.class);
+        intent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, packageName);
+        intent.putExtra(AppDetailsActivity.EXTRA_USER_HANDLE, userId);
+        return intent;
+    }
+
+    @NonNull
+    public static Intent getIntent(@NonNull Context context, @NonNull String packageName, @UserIdInt int userId,
+                                   boolean backToMainPage) {
+        Intent intent = new Intent(context, AppDetailsActivity.class);
+        intent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, packageName);
+        intent.putExtra(AppDetailsActivity.EXTRA_USER_HANDLE, userId);
+        intent.putExtra(AppDetailsActivity.EXTRA_BACK_TO_MAIN, backToMainPage);
+        return intent;
+    }
+
+    @NonNull
+    public static Intent getIntent(@NonNull Context context, @NonNull Path apkPath, boolean backToMainPage) {
+        Intent intent = new Intent(context, AppDetailsActivity.class);
+        intent.setDataAndType(apkPath.getUri(), "application/vnd.android.package-archive");
+        intent.putExtra(AppDetailsActivity.EXTRA_BACK_TO_MAIN, backToMainPage);
+        return intent;
+    }
 
     public AppDetailsViewModel model;
     public AdvancedSearchView searchView;

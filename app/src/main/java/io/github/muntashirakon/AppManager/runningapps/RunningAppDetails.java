@@ -104,10 +104,8 @@ public class RunningAppDetails extends CapsuleBottomSheetDialogFragment {
             appLabel.setText(packageInfo.applicationInfo.loadLabel(requireContext().getPackageManager()));
             packageName.setText(packageInfo.packageName);
             openAppInfoButton.setOnClickListener(v -> {
-                Intent appDetailsIntent = new Intent(requireContext(), AppDetailsActivity.class);
-                appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, packageInfo.packageName);
-                appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_USER_HANDLE, UserHandleHidden
-                        .getUserId(processItem.uid));
+                Intent appDetailsIntent = AppDetailsActivity.getIntent(requireContext(), packageInfo.packageName,
+                        UserHandleHidden.getUserId(processItem.uid));
                 startActivity(appDetailsIntent);
                 dismiss();
             });

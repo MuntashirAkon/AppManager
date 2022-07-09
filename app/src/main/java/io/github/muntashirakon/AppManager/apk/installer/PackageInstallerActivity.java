@@ -567,10 +567,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
                 .setStartIcon(model.getAppIcon());
         if (displayOpenAndAppInfo) {
             title.setEndIcon(R.drawable.ic_information_variant, v -> {
-                Intent appDetailsIntent = new Intent(this, AppDetailsActivity.class);
-                appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, packageName);
-                appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_USER_HANDLE, lastUserId);
-                appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_BACK_TO_MAIN, true);
+                Intent appDetailsIntent = AppDetailsActivity.getIntent(this, packageName, lastUserId, true);
                 appDetailsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(appDetailsIntent);
                 if (!hasNext() && dialogAtomicReference.get() != null) {

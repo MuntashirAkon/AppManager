@@ -33,18 +33,19 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/item_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:attr/textAppearanceListItem"
                 tools:text="@tools:sample/lorem" />
 
-            <androidx.appcompat.widget.AppCompatTextView
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/item_subtitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="?android:attr/textColorSecondary"
+                android:textIsSelectable="true"
                 android:nextFocusRight="@id/item_open"
                 tools:text="@tools:sample/lorem" />
 
@@ -58,7 +59,6 @@
             android:layout_gravity="center"
             android:layout_marginStart="@dimen/padding_medium"
             android:layout_weight="0"
-            android:background="@drawable/item_transparent"
             android:nextFocusLeft="@id/item_subtitle"
             app:icon="@drawable/ic_open_in_new_black_24dp"
             app:iconSize="24dp" />

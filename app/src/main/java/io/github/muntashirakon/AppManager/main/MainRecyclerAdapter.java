@@ -220,41 +220,43 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
                 Toast.makeText(mActivity, R.string.app_not_installed, Toast.LENGTH_SHORT).show();
                 return;
             }
-            Intent appDetailsIntent = new Intent(mActivity, AppDetailsActivity.class);
-            appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_PACKAGE_NAME, item.packageName);
-            if (item.userHandles.length > 0) {
-                if (item.userHandles.length > 1) {
-                    String[] userNames = new String[item.userHandles.length];
-                    List<UserInfo> users = Users.getUsers();
-                    if (users != null) {
-                        for (UserInfo info : users) {
-                            for (int i = 0; i < item.userHandles.length; ++i) {
-                                if (info.id == item.userHandles[i]) {
-                                    userNames[i] = info.name == null ? String.valueOf(info.id) : info.name;
-                                }
-                            }
-                        }
-                    } else if (ArrayUtils.contains(item.userHandles, UserHandleHidden.myUserId())) {
-                        appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_USER_HANDLE, UserHandleHidden.myUserId());
-                        mActivity.startActivity(appDetailsIntent);
-                        return;
-                    } else return;
-                    new MaterialAlertDialogBuilder(mActivity)
-                            .setTitle(R.string.select_user)
-                            .setItems(userNames, (dialog, which) -> {
-                                appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_USER_HANDLE, item.userHandles[which]);
-                                mActivity.startActivity(appDetailsIntent);
-                                dialog.dismiss();
-                            })
-                            .setNegativeButton(R.string.cancel, null)
-                            .show();
-                } else {
-                    int[] userHandles = Users.getUsersIds();
-                    if (!ArrayUtils.contains(userHandles, item.userHandles[0])) return;
-                    appDetailsIntent.putExtra(AppDetailsActivity.EXTRA_USER_HANDLE, item.userHandles[0]);
-                    mActivity.startActivity(appDetailsIntent);
+            if (item.userHandles.length == 0) {
+                Intent intent = AppDetailsActivity.getIntent(mActivity, item.packageName, UserHandleHidden.myUserId());
+                mActivity.startActivity(intent);
+                return;
+            }
+            if (item.userHandles.length == 1) {
+                int[] userHandles = Users.getUsersIds();
+                if (!ArrayUtils.contains(userHandles, item.userHandles[0])) return;
+                Intent intent = AppDetailsActivity.getIntent(mActivity, item.packageName, item.userHandles[0]);
+                mActivity.startActivity(intent);
+                return;
+            }
+            String[] userNames = new String[item.userHandles.length];
+            List<UserInfo> users = Users.getUsers();
+            if (users == null) {
+                if (ArrayUtils.contains(item.userHandles, UserHandleHidden.myUserId())) {
+                    Intent intent = AppDetailsActivity.getIntent(mActivity, item.packageName, UserHandleHidden.myUserId());
+                    mActivity.startActivity(intent);
                 }
-            } else mActivity.startActivity(appDetailsIntent);
+                return;
+            }
+            for (UserInfo info : users) {
+                for (int i = 0; i < item.userHandles.length; ++i) {
+                    if (info.id == item.userHandles[i]) {
+                        userNames[i] = info.name == null ? String.valueOf(info.id) : info.name;
+                    }
+                }
+            }
+            new MaterialAlertDialogBuilder(mActivity)
+                    .setTitle(R.string.select_user)
+                    .setItems(userNames, (dialog, which) -> {
+                        Intent intent = AppDetailsActivity.getIntent(mActivity, item.packageName, item.userHandles[which]);
+                        mActivity.startActivity(intent);
+                        dialog.dismiss();
+                    })
+                    .setNegativeButton(R.string.cancel, null)
+                    .show();
         });
         holder.itemView.setOnLongClickListener(v -> {
             // Long click listener: Select/deselect an app.

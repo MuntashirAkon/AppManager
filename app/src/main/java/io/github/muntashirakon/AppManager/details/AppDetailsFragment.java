@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ConfigurationInfo;
 import android.content.pm.FeatureInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PathPermission;
 import android.content.pm.PermissionInfo;
@@ -40,6 +41,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.pm.PackageInfoCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -98,6 +100,7 @@ import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.dialog.TextInputDropdownDialogBuilder;
+import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.util.LocalizedString;
 import io.github.muntashirakon.util.ProgressIndicatorCompat;
 import io.github.muntashirakon.widget.MaterialAlertView;
@@ -679,7 +682,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             ImageView imageView;
             MaterialButton blockBtn;
             Button shortcutBtn;
-            Button launchBtn;
+            MaterialButton launchBtn;
             SwitchMaterial toggleSwitch;
             MaterialDivider divider;
             Chip chipType;
@@ -1512,11 +1515,29 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                 holder.textView2.setText(sb);
                 holder.chipType.setText(libFile.getName().endsWith(".so") ? "SO" : "JAR");
                 holder.launchBtn.setVisibility(View.VISIBLE);
+                holder.launchBtn.setIconResource(R.drawable.ic_open_in_new_black_24dp);
                 holder.launchBtn.setOnClickListener(openAsFolderInFM(mActivity, libFile.getParent()));
-            } else {
-                holder.launchBtn.setVisibility(View.GONE);
-            }
-            if (item.vanillaItem instanceof NativeLibraries.NativeLib) {
+            } else if (item.vanillaItem instanceof PackageInfo) {
+                PackageInfo packageInfo = (PackageInfo) item.vanillaItem;
+                File apkFile = new File(packageInfo.applicationInfo.publicSourceDir);
+                StringBuilder sb = new StringBuilder()
+                        .append(packageInfo.packageName)
+                        .append("\n")
+                        .append(Formatter.formatFileSize(mActivity, apkFile.length()))
+                        .append(", ")
+                        .append(getString(R.string.version_name_with_code, packageInfo.versionName,
+                                PackageInfoCompat.getLongVersionCode(packageInfo)))
+                        .append("\n")
+                        .append(apkFile.getAbsolutePath());
+                holder.textView2.setText(sb);
+                holder.chipType.setText("APK");
+                holder.launchBtn.setVisibility(View.VISIBLE);
+                holder.launchBtn.setIconResource(R.drawable.ic_information_variant);
+                holder.launchBtn.setOnClickListener(v -> {
+                    Intent intent = AppDetailsActivity.getIntent(mActivity, Paths.get(apkFile), false);
+                    startActivity(intent);
+                });
+            } else if (item.vanillaItem instanceof NativeLibraries.NativeLib) {
                 holder.textView2.setText(((LocalizedString) item.vanillaItem).toLocalizedString(mActivity));
                 String type;
                 switch (((NativeLibraries.NativeLib) item.vanillaItem).getType()) {
@@ -1530,6 +1551,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                         type = "SO";
                 }
                 holder.chipType.setText(type);
+                holder.launchBtn.setVisibility(View.GONE);
             }
             holder.divider.setDividerColor(mColorSurfaceVariant);
         }
