@@ -48,13 +48,14 @@ public class ManifestViewerActivity extends BaseActivity {
     private static final Pattern QUOTATIONS = Pattern.compile("\"([^\"]*)\"", Pattern.MULTILINE);
     private static final Pattern MANIFEST_TAGS = Pattern.compile
             ("(</?(manifest|application|compatible-screens|instrumentation|permission" +
-                            "(-group|-tree)?|supports-(gl-texture|screens)|uses-(configuration|" +
-                            "feature|permission(-sdk-23)?|sdk)|activity(-alias)?|meta-data|service|" +
-                            "receiver|provider|uses-library|intent-filter|layout|eat-comment|" +
+                            "(-group|-tree)?|supports-(gl-texture|screens)|" +
+                            "uses-(configuration|feature|permission(-sdk-(23|m))?|sdk|split|static-library)|" +
+                            "activity(-alias)?|meta-data|service|receiver|provider|uses-library|static-library|" +
+                            "intent-filter|layout|eat-comment|" +
                             "grant-uri-permissions|path-permission|action|category|data|protected-" +
                             "broadcast|overlay|library|original-package|restrict-update|" +
                             "adopt-permissions|feature-group|key-sets|package|package-verifier|" +
-                            "attribution|queries|supports-input|uses-permission-sdk-m|uses-split|" +
+                            "attribution|queries|supports-input|" +
                             "profileable)\\b|/?>)",
                     Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
 
