@@ -85,7 +85,6 @@ public final class ApkFile implements AutoCloseable {
     private static final String ATTR_SPLIT = "split";
     private static final String ATTR_PACKAGE = "package";
     private static final String CONFIG_PREFIX = "config.";
-    public static final String OBB_DIR = "Android/obb";
 
     private static final String UN_APKM_PKG = "io.github.muntashirakon.unapkm";
 

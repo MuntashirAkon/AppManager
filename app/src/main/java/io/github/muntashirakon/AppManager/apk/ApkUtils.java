@@ -2,12 +2,14 @@
 
 package io.github.muntashirakon.AppManager.apk;
 
+import android.annotation.UserIdInt;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.RemoteException;
+import android.os.UserHandleHidden;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,11 +19,13 @@ import androidx.core.content.pm.PackageInfoCompat;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
@@ -32,6 +36,7 @@ import io.github.muntashirakon.AppManager.apk.parser.AndroidBinXmlParser;
 import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkExporter;
 import io.github.muntashirakon.AppManager.backup.BackupFiles;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
@@ -57,7 +62,7 @@ public final class ApkUtils {
                 packageInfo.versionName, false);
         if (outputName == null) outputName = info.packageName;
         Path tmpPublicSource;
-        if (isSplitApk(info)) {
+        if (isSplitApk(info) || hasObbFiles(info.packageName, UserHandleHidden.getUserId(info.uid))) {
             // Split apk
             tmpPublicSource = Paths.get(new File(AppManager.getContext().getExternalCacheDir(), outputName + EXT_APKS));
             SplitApkExporter.saveApks(packageInfo, tmpPublicSource);
@@ -73,7 +78,7 @@ public final class ApkUtils {
      * that these are saved at /sdcard/AppManager/apks
      */
     @WorkerThread
-    public static void backupApk(String packageName, int userHandle)
+    public static void backupApk(@NonNull String packageName, @UserIdInt int userHandle)
             throws IOException, PackageManager.NameNotFoundException, RemoteException {
         Path backupPath = BackupFiles.getApkBackupDirectory();
         // Fetch package info
@@ -85,7 +90,7 @@ public final class ApkUtils {
         String outputName = FileUtils.getSanitizedFileName(getFormattedApkFilename(packageInfo, pm), false);
         if (outputName == null) outputName = packageName;
         Path apkFile;
-        if (isSplitApk(info)) {
+        if (isSplitApk(info) || hasObbFiles(packageName, userHandle)) {
             // Split apk
             apkFile = backupPath.createNewFile(outputName + EXT_APKS, null);
             SplitApkExporter.saveApks(packageInfo, apkFile);
@@ -194,6 +199,53 @@ public final class ApkUtils {
         }
         if (!seenManifestElement) throw new ApkFile.ApkFileException("No manifest found.");
         return manifestAttrs;
+    }
+
+    public static boolean hasObbFiles(@NonNull String packageName, @UserIdInt int userId) {
+        try {
+            return getObbDir(packageName, userId).listFiles().length > 0;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @NonNull
+    public static Path getObbDir(@NonNull String packageName, @UserIdInt int userId) throws FileNotFoundException {
+        // Get writable OBB directory
+        Path obbDir = getWritableExternalDirectory(userId)
+                .findFile("Android")
+                .findFile("obb")
+                .findFile(packageName);
+        return Paths.get(obbDir.getUri());
+    }
+
+    @NonNull
+    public static Path getOrCreateObbDir(@NonNull String packageName, @UserIdInt int userId) throws IOException {
+        // Get writable OBB directory
+        Path obbDir = getWritableExternalDirectory(userId)
+                .findOrCreateDirectory("Android")
+                .findOrCreateDirectory("obb")
+                .findOrCreateDirectory(packageName);
+        return Paths.get(obbDir.getUri());
+    }
+
+    @NonNull
+    public static Path getWritableExternalDirectory(@UserIdInt int userId) throws FileNotFoundException {
+        // Get the first writable external storage directory
+        OsEnvironment.UserEnvironment userEnvironment = OsEnvironment.getUserEnvironment(userId);
+        Path[] extDirs = userEnvironment.getExternalDirs();
+        Path writableExtDir = null;
+        for (Path extDir : extDirs) {
+            if (extDir.canWrite() || Objects.requireNonNull(extDir.getFilePath()).startsWith("/storage/emulated")) {
+                writableExtDir = extDir;
+                break;
+            }
+        }
+        if (writableExtDir == null) {
+            throw new FileNotFoundException("Couldn't find any writable Obb dir");
+        }
+        return writableExtDir;
     }
 
     public static int getDensityFromName(@Nullable String densityName) {

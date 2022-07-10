@@ -38,7 +38,6 @@ import java.io.OutputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.List;
-import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -48,11 +47,11 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
+import io.github.muntashirakon.AppManager.apk.ApkUtils;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -698,21 +697,8 @@ public final class PackageInstallerCompat {
         // Disable closing apk file in case the installation is finished already.
         closeApkFile = false;
         try {
-            // Get the first writable external storage directory
-            OsEnvironment.UserEnvironment ue = OsEnvironment.getUserEnvironment(userHandle);
-            Path[] extDirs = ue.getExternalDirs();
-            Path writableExtDir = null;
-            for (Path extDir : extDirs) {
-                if (extDir.canWrite() || Objects.requireNonNull(extDir.getFilePath()).startsWith("/storage/emulated")) {
-                    writableExtDir = extDir;
-                    break;
-                }
-            }
-            if (writableExtDir == null) {
-                throw new IOException("Couldn't find any writable Obb dir");
-            }
             // Get writable OBB directory
-            Path writableObbDir = writableExtDir.findOrCreateDirectory(ApkFile.OBB_DIR).findOrCreateDirectory(packageName);
+            Path writableObbDir = ApkUtils.getOrCreateObbDir(packageName, userHandle);
             // Delete old files
             for (Path oldFile : writableObbDir.listFiles()) {
                 oldFile.delete();

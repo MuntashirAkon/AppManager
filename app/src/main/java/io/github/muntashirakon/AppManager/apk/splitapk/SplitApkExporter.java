@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.apk.splitapk;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.graphics.Bitmap;
+import android.os.UserHandleHidden;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
@@ -21,6 +22,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.apk.ApkUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.IoUtils;
@@ -49,7 +51,8 @@ public final class SplitApkExporter {
     }
 
     static void saveApkInternal(@NonNull ZipOutputStream zipOutputStream, @NonNull PackageInfo packageInfo) throws IOException {
-        List<Path> apkFiles = getAllApkFiles(packageInfo);
+        ApplicationInfo applicationInfo = packageInfo.applicationInfo;
+        List<Path> apkFiles = getAllApkFiles(applicationInfo);
         Collections.sort(apkFiles);
 
         // Metadata
@@ -57,7 +60,7 @@ public final class SplitApkExporter {
         apksMetadata.writeMetadata(zipOutputStream);
         
         // Add icon
-        Bitmap bitmap = FileUtils.getBitmapFromDrawable(packageInfo.applicationInfo.loadIcon(AppManager.getContext().getPackageManager()));
+        Bitmap bitmap = FileUtils.getBitmapFromDrawable(applicationInfo.loadIcon(AppManager.getContext().getPackageManager()));
         ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, pngOutputStream);
         addBytes(zipOutputStream, pngOutputStream.toByteArray(), ApksMetadata.ICON_FILE, apksMetadata.exportTimestamp);
@@ -67,7 +70,18 @@ public final class SplitApkExporter {
             addFile(zipOutputStream, apkFile, apkFile.getName(), apksMetadata.exportTimestamp);
         }
 
-        // TODO: 10/7/22 Add OBB
+        // Add OBB files if possible
+        Path obbDir = null;
+        try {
+            obbDir = ApkUtils.getObbDir(packageInfo.packageName, UserHandleHidden.getUserId(applicationInfo.uid));
+        } catch (IOException ignore) {
+        }
+        if (obbDir != null) {
+            Path[] obbFiles = obbDir.listFiles();
+            for (Path obbFile : obbFiles) {
+                addFile(zipOutputStream, obbFile, obbFile.getName(), apksMetadata.exportTimestamp);
+            }
+        }
     }
 
     static void addFile(@NonNull ZipOutputStream zipOutputStream, @NonNull Path filePath, @NonNull String name,
@@ -97,8 +111,7 @@ public final class SplitApkExporter {
     }
 
     @NonNull
-    private static List<Path> getAllApkFiles(@NonNull PackageInfo packageInfo) {
-        ApplicationInfo applicationInfo = packageInfo.applicationInfo;
+    private static List<Path> getAllApkFiles(@NonNull ApplicationInfo applicationInfo) {
         List<Path> apkFiles = new ArrayList<>();
         apkFiles.add(Paths.get(applicationInfo.publicSourceDir));
         if (applicationInfo.splitPublicSourceDirs != null) {
