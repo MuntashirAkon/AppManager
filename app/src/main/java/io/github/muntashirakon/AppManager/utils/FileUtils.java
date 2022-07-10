@@ -413,7 +413,13 @@ public final class FileUtils {
     @AnyThread
     @NonNull
     public static File getTempFile() throws IOException {
-        return File.createTempFile("file_" + System.currentTimeMillis(), ".cached", getCachePath());
+        return getTempFile(".cached");
+    }
+
+    @AnyThread
+    @NonNull
+    public static File getTempFile(String extension) throws IOException {
+        return File.createTempFile("file_" + System.currentTimeMillis(), extension, getCachePath());
     }
 
     @AnyThread

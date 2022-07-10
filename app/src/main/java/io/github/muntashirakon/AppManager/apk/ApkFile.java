@@ -55,6 +55,7 @@ import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.apk.parser.AndroidBinXmlParser;
 import io.github.muntashirakon.AppManager.apk.signing.SigSchemes;
 import io.github.muntashirakon.AppManager.apk.signing.Signer;
+import io.github.muntashirakon.AppManager.apk.splitapk.ApksMetadata;
 import io.github.muntashirakon.AppManager.fm.FmProvider;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.VMRuntime;
@@ -236,7 +237,7 @@ public final class ApkFile implements AutoCloseable {
         if (extension.equals("apkm")) {
             // Convert to APKS
             try {
-                this.cacheFilePath = FileUtils.getTempFile();
+                this.cacheFilePath = FileUtils.getTempFile(".apks");
                 try (ParcelFileDescriptor inputFD = cr.openFileDescriptor(apkUri, "r");
                      OutputStream outputStream = new FileOutputStream(this.cacheFilePath)) {
                     if (inputFD == null) {
@@ -303,7 +304,7 @@ public final class ApkFile implements AutoCloseable {
                 ZipEntry zipEntry = zipEntries.nextElement();
                 if (zipEntry.isDirectory()) continue;
                 String fileName = FileUtils.getFileNameFromZipEntry(zipEntry);
-                if (fileName.endsWith(".apk")) {
+                if (fileName.endsWith(".apk")) { // APK is more likely to match
                     try (InputStream zipInputStream = zipFile.getInputStream(zipEntry)) {
                         // Get manifest attributes
                         ByteBuffer manifest;
@@ -331,6 +332,9 @@ public final class ApkFile implements AutoCloseable {
                     } catch (IOException e) {
                         throw new ApkFileException(e);
                     }
+                } else if (fileName.equals(ApksMetadata.META_FILE)) {
+                    // TODO: 10/7/22
+                    //  Parse metadata to get dependencies
                 } else if (fileName.endsWith(".obb")) {
                     obbFiles.add(zipEntry);
                 } else if (fileName.endsWith(".idsig")) {

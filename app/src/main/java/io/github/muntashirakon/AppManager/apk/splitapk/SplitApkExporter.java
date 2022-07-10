@@ -38,76 +38,62 @@ import io.github.muntashirakon.io.Paths;
  */
 public final class SplitApkExporter {
     @WorkerThread
-    public static void saveApks(PackageInfo packageInfo, Path apksFile) throws IOException {
+    public static void saveApks(@NonNull PackageInfo packageInfo, @NonNull Path apksFile) throws IOException {
         try (OutputStream outputStream = apksFile.openOutputStream();
              ZipOutputStream zipOutputStream = new ZipOutputStream(outputStream)) {
             zipOutputStream.setMethod(ZipOutputStream.DEFLATED);
             zipOutputStream.setLevel(Deflater.BEST_COMPRESSION);
 
-            List<Path> apkFiles = getAllApkFiles(packageInfo);
-            Collections.sort(apkFiles);
-
-            // Count total file size
-            long totalApkBytesCount = 0;
-            for (Path apkFile : apkFiles) {
-                totalApkBytesCount += apkFile.length();
-            }
-
-            // Metadata
-            ApksMetadata apksMetadata = new ApksMetadata(packageInfo);
-            apksMetadata.setupMetadata();
-            apksMetadata.backupComponents = Collections.singletonList(new ApksMetadata.BackupComponent("apk_files", totalApkBytesCount));
-
-            // Add metadata v2
-            byte[] metaV2 = apksMetadata.getMetadataV2().getBytes();
-            ZipEntry metaV2ZipEntry = new ZipEntry(ApksMetadata.META_V2_FILE);
-            metaV2ZipEntry.setMethod(ZipEntry.DEFLATED);
-            metaV2ZipEntry.setSize(metaV2.length);
-            metaV2ZipEntry.setCrc(DigestUtils.calculateCrc32(metaV2));
-            metaV2ZipEntry.setTime(apksMetadata.exportTimestamp);
-            zipOutputStream.putNextEntry(metaV2ZipEntry);
-            zipOutputStream.write(metaV2);
-            zipOutputStream.closeEntry();
-
-            // Add metadata V1
-            byte[] metaV1 = apksMetadata.getMetadataV1().getBytes();
-            ZipEntry metaV1ZipEntry = new ZipEntry(ApksMetadata.META_V1_FILE);
-            metaV1ZipEntry.setMethod(ZipEntry.DEFLATED);
-            metaV1ZipEntry.setSize(metaV1.length);
-            metaV1ZipEntry.setCrc(DigestUtils.calculateCrc32(metaV1));
-            metaV1ZipEntry.setTime(apksMetadata.exportTimestamp);
-            zipOutputStream.putNextEntry(metaV1ZipEntry);
-            zipOutputStream.write(metaV1);
-            zipOutputStream.closeEntry();
-
-            // Add icon
-            Bitmap bitmap = FileUtils.getBitmapFromDrawable(packageInfo.applicationInfo.loadIcon(AppManager.getContext().getPackageManager()));
-            ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, pngOutputStream);
-            byte[] pngIcon = pngOutputStream.toByteArray();
-            ZipEntry pngZipEntry = new ZipEntry(ApksMetadata.ICON_FILE);
-            pngZipEntry.setMethod(ZipEntry.DEFLATED);
-            pngZipEntry.setSize(pngIcon.length);
-            pngZipEntry.setCrc(DigestUtils.calculateCrc32(pngIcon));
-            pngZipEntry.setTime(apksMetadata.exportTimestamp);
-            zipOutputStream.putNextEntry(pngZipEntry);
-            zipOutputStream.write(pngIcon);
-            zipOutputStream.closeEntry();
-
-            // Add files
-            for (Path apkFile : apkFiles) {
-                ZipEntry zipEntry = new ZipEntry(apkFile.getName());
-                zipEntry.setMethod(ZipEntry.DEFLATED);
-                zipEntry.setSize(apkFile.length());
-                zipEntry.setCrc(DigestUtils.calculateCrc32(apkFile));
-                zipEntry.setTime(apksMetadata.exportTimestamp);
-                zipOutputStream.putNextEntry(zipEntry);
-                try (InputStream apkInputStream = apkFile.openInputStream()) {
-                    IoUtils.copy(apkInputStream, zipOutputStream);
-                }
-                zipOutputStream.closeEntry();
-            }
+            saveApkInternal(zipOutputStream, packageInfo);
         }
+    }
+
+    static void saveApkInternal(@NonNull ZipOutputStream zipOutputStream, @NonNull PackageInfo packageInfo) throws IOException {
+        List<Path> apkFiles = getAllApkFiles(packageInfo);
+        Collections.sort(apkFiles);
+
+        // Metadata
+        ApksMetadata apksMetadata = new ApksMetadata(packageInfo);
+        apksMetadata.writeMetadata(zipOutputStream);
+        
+        // Add icon
+        Bitmap bitmap = FileUtils.getBitmapFromDrawable(packageInfo.applicationInfo.loadIcon(AppManager.getContext().getPackageManager()));
+        ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, pngOutputStream);
+        addBytes(zipOutputStream, pngOutputStream.toByteArray(), ApksMetadata.ICON_FILE, apksMetadata.exportTimestamp);
+
+        // Add apk files
+        for (Path apkFile : apkFiles) {
+            addFile(zipOutputStream, apkFile, apkFile.getName(), apksMetadata.exportTimestamp);
+        }
+
+        // TODO: 10/7/22 Add OBB
+    }
+
+    static void addFile(@NonNull ZipOutputStream zipOutputStream, @NonNull Path filePath, @NonNull String name,
+                               long timestamp) throws IOException {
+        ZipEntry zipEntry = new ZipEntry(name);
+        zipEntry.setMethod(ZipEntry.DEFLATED);
+        zipEntry.setSize(filePath.length());
+        zipEntry.setCrc(DigestUtils.calculateCrc32(filePath));
+        zipEntry.setTime(timestamp);
+        zipOutputStream.putNextEntry(zipEntry);
+        try (InputStream apkInputStream = filePath.openInputStream()) {
+            IoUtils.copy(apkInputStream, zipOutputStream);
+        }
+        zipOutputStream.closeEntry();
+    }
+
+    static void addBytes(@NonNull ZipOutputStream zipOutputStream, @NonNull byte[] bytes, @NonNull String name,
+                               long timestamp) throws IOException {
+        ZipEntry zipEntry = new ZipEntry(name);
+        zipEntry.setMethod(ZipEntry.DEFLATED);
+        zipEntry.setSize(bytes.length);
+        zipEntry.setCrc(DigestUtils.calculateCrc32(bytes));
+        zipEntry.setTime(timestamp);
+        zipOutputStream.putNextEntry(zipEntry);
+        zipOutputStream.write(bytes);
+        zipOutputStream.closeEntry();
     }
 
     @NonNull
