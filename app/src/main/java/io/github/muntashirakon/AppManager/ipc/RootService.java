@@ -201,12 +201,13 @@ public abstract class RootService extends ContextWrapper {
                 task.run(os, null, null);
                 // The whole command has now been fetched.
                 String cmd = os.toString();
-                if (Ops.isRoot()) {
-                    if (!Runner.runCommand(Runner.getRootInstance(), cmd).isSuccessful()) {
+                if (Ops.isAdb()) {
+                    // ADB must be checked at first
+                    if (LocalServer.getInstance().runCommand(cmd).getStatusCode() != 0) {
                         Log.e(TAG, "Couldn't start service.");
                     }
-                } else if (Ops.isAdb()) {
-                    if (LocalServer.getInstance().runCommand(cmd).getStatusCode() != 0) {
+                } else if (Ops.isRoot()) {
+                    if (!Runner.runCommand(cmd).isSuccessful()) {
                         Log.e(TAG, "Couldn't start service.");
                     }
                 }

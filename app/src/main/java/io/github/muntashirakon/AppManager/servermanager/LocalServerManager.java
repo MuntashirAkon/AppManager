@@ -230,7 +230,7 @@ class LocalServerManager {
         }
         String command = getExecCommand(); // + "\n" + "supolicy --live 'allow qti_init_shell zygote_exec file execute'";
         Log.d(TAG, "useRootStartServer: " + command);
-        Runner.Result result = Runner.runCommand(Runner.getRootInstance(), command);
+        Runner.Result result = Runner.runCommand(command);
 
         Log.d(TAG, "useRootStartServer: " + result.getOutput());
         if (!result.isSuccessful()) {

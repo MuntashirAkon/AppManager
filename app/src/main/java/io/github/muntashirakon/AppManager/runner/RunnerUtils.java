@@ -6,6 +6,9 @@ import android.os.Build;
 import android.os.UserHandleHidden;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import com.topjohnwu.superuser.Shell;
 
 import java.io.File;
 import java.io.IOException;
@@ -98,24 +101,34 @@ public final class RunnerUtils {
         else return String.valueOf(userHandle);
     }
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     @NoOps
     public static boolean isRootGiven() {
-        if (isRootAvailable()) {
-            String output = Runner.runCommand(Runner.getRootInstance(), "echo AMRootTest").getOutput();
-            return output.contains("AMRootTest");
-        }
-        return false;
+        return Boolean.TRUE.equals(isAppGrantedRoot());
     }
 
     @NoOps
     public static boolean isRootAvailable() {
+        return !Boolean.FALSE.equals(isAppGrantedRoot());
+    }
+
+    /**
+     * @see Shell#isAppGrantedRoot()
+     */
+    @Nullable
+    @NoOps
+    public static Boolean isAppGrantedRoot() {
+        if (Runner.getRootInstance().isRoot()) {
+            // Root granted
+            return true;
+        }
+        // Check if root is available
         try {
             String pathEnv = System.getenv("PATH");
             if (pathEnv == null) return false;
             for (String pathDir : pathEnv.split(":")) {
-                if (pathDir != null && new File(pathDir, "su").canExecute()) {
-                    return true;
+                if (new File(pathDir, "su").canExecute()) {
+                    // Root available but App Manager is not granted root
+                    return null;
                 }
             }
         } catch (Throwable ignore) {

@@ -18,6 +18,12 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.ParcelFileDescriptorUtil;
 
 class AdbShell extends Runner {
+    @Override
+    public boolean isRoot() {
+        // TODO: 13/7/22 Add support for root over ADB
+        return false;
+    }
+
     @WorkerThread
     @NonNull
     @Override
@@ -31,7 +37,7 @@ class AdbShell extends Runner {
             IShellResult result = shell.exec();
             return new Result(result.getStdout().getList(), result.getStderr().getList(), result.getExitCode());
         } catch (RemoteException | IOException e) {
-            Log.e("AdbShellRunner", e);
+            Log.e(AdbShell.class.getSimpleName(), e);
             return new Result();
         }
     }
