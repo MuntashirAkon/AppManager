@@ -1195,4 +1195,5 @@
     <string name="backup_apps_cannot_be_restored">Le seguenti applicazioni non possono essere ripristinate perché non dispongono di un backup di base:</string>
     <string name="backup_apps_cannot_be_backed_up">Le seguenti applicazioni non sono installate e non possono essere sottoposte a backup:</string>
     <string name="restart_device">Riavvia dispositivo</string>
+    <string name="import_backups_warning_delete_backups_after_import">Eliminare i backup dopo averli importati in App Manager\? Ogni backup viene eliminato singolarmente dopo essere stato importato con successo. Seleziona <b>No</b> se non sei sicuro.</string>
 </resources>
