@@ -1,2 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="intro$main$$translations-title">Traductions</string>
+    <string name="intro$main$$contributing-title">Contribuer</string>
+    <string name="intro$main$$donation-title">Dons et Financement</string>
+    <string name="intro$main$$contact-title">Contact</string>
+    <string name="intro$main$$official-sources-title">Sources Officielles</string>
+    <string name="intro$main$$supported-versions-title">Versions Supportées</string>
+    <string name="intro$main$$terminologies-title">Terminologies</string>
+</resources>
