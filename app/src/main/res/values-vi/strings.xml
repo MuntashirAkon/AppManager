@@ -393,8 +393,11 @@
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a>
 \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a>
 \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a>
 \n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
 \n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
 \n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
@@ -403,6 +406,7 @@
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
 \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+\n- <a href="https://github.com/zhaobozhen/librariest">Thư viện của Absinthe</a>
 \nGhi nhận logo ban đầu: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="starting_activity">Hoạt động bắt đầu: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="clear_data_message">Bạn có chắc muốn xoá dữ liệu của ứng dụng này không\?</string>
@@ -705,7 +709,7 @@
     <string name="notification_title">Đang ghi lại nhật ký</string>
     <string name="notification_ticker">Đã bắt đầu ghi lại nhật ký</string>
     <string name="notification_subtext">Chạm để dừng ghi lại</string>
-    <string name="no_saved_logs">Không tìm thấy nhật ký đã lưu nào.</string>
+    <string name="no_saved_logs">Không có nhật ký đã lưu.</string>
     <string name="manage_saved_logs">Quản lý nhật ký đã lưu</string>
     <string name="log_saved">Đã lưu nhật ký.</string>
     <string name="log_recording_started">Đã bắt đầu ghi lại nhật ký.</string>
@@ -1132,4 +1136,25 @@
     <string name="pref_vt_prompt_before_uploading">Hỏi trước khi tải tệp lên.</string>
     <string name="vt_confirm_uploading_file">Tệp không có trong cơ sở dữ liệu của VirusTotal. Bạn có muốn tải tệp lên không\?</string>
     <string name="vt_confirm_upload_and_scan">Có, tải lên và quét</string>
+    <string name="frozen">Đã đóng băng</string>
+    <string name="restore_dots">Khôi phục…</string>
+    <string name="backup_apps_cannot_be_restored">Các ứng dụng sau không thể được khôi phục vì chúng không có bản sao lưu cơ sở:</string>
+    <string name="backup_apps_cannot_be_backed_up">Các ứng dụng sau không được cài đặt và không thể được sao lưu:</string>
+    <string name="restart_device">Khởi động lại thiết bị</string>
+    <string name="import_backups_warning_delete_backups_after_import">Xóa các bản sao lưu sau khi nhập vào App Manager\? Mỗi bản sao lưu được xóa lần lượt sau khi nhập thành công. Hãy chọn <b>Không</b> nếu không chắc.</string>
+    <string name="log_stop_recording">Dừng ghi</string>
+    <string name="apk_checksums">Mã kiểm tra APK</string>
+    <string name="item_select">Chọn</string>
+    <string name="pref_pure_black_theme">Chế độ đen tuyền</string>
+    <string name="pref_pure_black_theme_msg">Sử dụng nền đen khi bật chế độ ban đêm.</string>
+    <string name="netpolicy_cannot_be_modified_for_core_apps">Không thể thay đổi chính sách mạng cho các ứng dụng cốt lõi của Android.</string>
+    <string name="open_developer_options_page">Mở trang tùy chọn nhà phát triển trong cài đặt Android</string>
+    <string name="app_explorer">Khám phá ứng dụng</string>
+    <string name="backup_no_backups_present">Không có bản sao lưu.</string>
+    <string name="unfreeze">Rã đông</string>
+    <string name="freeze">Đóng băng</string>
+    <string name="usage_times_opened">Số lần mở</string>
+    <string name="usage_last_used">Sử dụng lần cuối</string>
+    <string name="usage_mobile_data">Dữ liệu di động</string>
+    <string name="usage_wifi_data">Dữ liệu Wi-Fi</string>
 </resources>
