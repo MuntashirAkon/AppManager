@@ -1021,4 +1021,17 @@
     <string name="vt_success">VirusTotal: %1$d/%2$d</string>
     <string name="pref_vt_apikey">API-nøkkel for VirusTotal</string>
     <string name="save_and_exit">Lagre og avslutt</string>
+    <string name="input_backup_name_description">Sikkerhetskopiens skal ikke begynne med et siffer og skal heller ikke inneholde mellomrom. La den stå tom hvis du vil bruke gjeldende dato-klokkeslett.</string>
+    <string name="dsa_affine_x">Affint x koordinat</string>
+    <string name="state_waking">Våkne, vekke</string>
+    <string name="rsa_modulus">Modulus</string>
+    <string name="dsa_affine_y">Affint y koordinat</string>
+    <string name="source_stamp_verified">Kildestempel godkjent.</string>
+    <string name="state_trace_stop">Sporingstopp</string>
+    <string name="batch_ops">Partielle handlinger, partielle operasjoner</string>
+    <string name="view_missing_signatures">Trykk for å se eller sende inn signaturer som ennå ikke finnes i App Managers database med biblioteker.</string>
+    <string name="state_zombie">Zombie</string>
+    <string name="pref_show_users_in_installer_msg">Vis liste over brukere du kan velge før installasjon av ekstern app. Krever root eller ADB.</string>
+    <string name="input_permissions">Inndata tillatelser</string>
+    <string name="installer">Installer</string>
 </resources>
