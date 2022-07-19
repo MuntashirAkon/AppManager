@@ -1,2 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="refresh">Rifresko</string>
+    <string name="receivers">Marrësit</string>
+    <string name="no_activities">Asnjë Aktivitet</string>
+    <string name="no_receivers">Asnjë Marrës</string>
+    <string name="activities">Aktivitete</string>
+    <string name="uninstall">Fshi</string>
+</resources>
