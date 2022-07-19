@@ -66,9 +66,7 @@ public class IntentCompat {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             intent.removeFlags(flags);
         } else {
-            int _flags = intent.getFlags();
-            _flags &= ~flags;
-            intent.setFlags(_flags);
+            intent.setFlags(intent.getFlags() & ~flags);
         }
     }
 
@@ -200,7 +198,7 @@ public class IntentCompat {
     }
 
     @Nullable
-    public static Pair<Integer, String> valueToParsableStringAndType(Object object) {
+    private static Pair<Integer, String> valueToParsableStringAndType(Object object) {
         if (object == null) {
             return new Pair<>(TYPE_NULL, null);
         } else if (object instanceof String) {
@@ -356,6 +354,123 @@ public class IntentCompat {
                 intent.putExtra(extraItem.keyName, (Parcelable[]) extraItem.keyValue);
                 break;
         }
+    }
+
+    @NonNull
+    public static List<String> flattenToCommand(@NonNull Intent intent) {
+        List<String> args = new ArrayList<>();
+        String action = intent.getAction();
+        String data = intent.getDataString();
+        String type = intent.getType();
+        Set<String> categories = intent.getCategories();
+        ComponentName cn = intent.getComponent();
+        String packageName = intent.getPackage();
+        int flags = intent.getFlags();
+        Bundle extras = intent.getExtras();
+
+        if (action != null) {
+            args.add("-a");
+            args.add(action);
+        }
+        if (data != null) {
+            args.add("-d");
+            args.add(data);
+        }
+        if (type != null) {
+            args.add("-t");
+            args.add(type);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            String id = intent.getIdentifier();
+            if (id != null) {
+                args.add("-i");
+                args.add(id);
+            }
+        }
+        if (categories != null) {
+            for (String category : categories) {
+                args.add("-c");
+                args.add(category);
+            }
+        }
+        if (cn != null) {
+            args.add("-n");
+            args.add(cn.flattenToString());
+        }
+        if (extras != null) {
+            for (String key : extras.keySet()) {
+                Pair<Integer, String> typeAndString = valueToParsableStringAndType(extras.get(key));
+                if (typeAndString == null) {
+                    // else unsupported bundle item, ignore
+                    continue;
+                }
+                switch (typeAndString.first) {
+                    case TYPE_STRING:
+                        args.add("--es");
+                        break;
+                    case TYPE_NULL:
+                        args.add("--esn");
+                        break;
+                    case TYPE_BOOLEAN:
+                        args.add("--ez");
+                        break;
+                    case TYPE_INTEGER:
+                        args.add("--ei");
+                        break;
+                    case TYPE_LONG:
+                        args.add("--el");
+                        break;
+                    case TYPE_FLOAT:
+                        args.add("--ef");
+                        break;
+                    case TYPE_URI:
+                        args.add("--eu");
+                        break;
+                    case TYPE_COMPONENT_NAME:
+                        args.add("--ecn");
+                        break;
+                    case TYPE_INT_ARR:
+                        args.add("--eia");
+                        break;
+                    case TYPE_INT_AL:
+                        args.add("--eial");
+                        break;
+                    case TYPE_LONG_ARR:
+                        args.add("--ela");
+                        break;
+                    case TYPE_LONG_AL:
+                        args.add("--elal");
+                        break;
+                    case TYPE_FLOAT_ARR:
+                        args.add("--efa");
+                        break;
+                    case TYPE_FLOAT_AL:
+                        args.add("--efal");
+                        break;
+                    case TYPE_STRING_ARR:
+                        args.add("--esa");
+                        break;
+                    case TYPE_STRING_AL:
+                        args.add("--esal");
+                        break;
+                    default:
+                        // Unsupported
+                        continue;
+                }
+                // Add key
+                args.add(key);
+                if (typeAndString.first != TYPE_NULL) {
+                    // All except NULL has a value
+                    args.add(typeAndString.second);
+                }
+            }
+        }
+        args.add("-f");
+        args.add(String.valueOf(flags));
+        if (packageName != null) {
+            args.add(packageName);
+        }
+        return args;
     }
 
     @NonNull

@@ -49,6 +49,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.StringTokenizer;
 import java.util.UUID;
@@ -62,6 +63,7 @@ import io.github.muntashirakon.AppManager.crypto.auth.AuthManager;
 import io.github.muntashirakon.AppManager.details.LauncherIconCreator;
 import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -786,6 +788,18 @@ public class ActivityInterceptor extends BaseActivity {
         UIUtils.displayShortToast(R.string.copied_to_clipboard);
     }
 
+    private void copyIntentAsCommand() {
+        if (mMutableIntent == null) {
+            return;
+        }
+        List<String> args = IntentCompat.flattenToCommand(mMutableIntent);
+        String command = String.format(Locale.ROOT, "%s start --user %d %s", RunnerUtils.CMD_AM, mUserHandle,
+                TextUtils.join(" ", args));
+        ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+        clipboard.setPrimaryClip(ClipData.newPlainText("am command", command));
+        UIUtils.displayShortToast(R.string.copied_to_clipboard);
+    }
+
     private void pasteIntentDetails() {
         ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
         ClipData clipData = clipboard.getPrimaryClip();
@@ -941,8 +955,11 @@ public class ActivityInterceptor extends BaseActivity {
         if (id == android.R.id.home) {
             finish();
             return true;
-        } else if (id == R.id.action_copy) {
+        } else if (id == R.id.action_copy_as_default) {
             copyIntentDetails();
+            return true;
+        } else if (id == R.id.action_copy_as_command) {
+            copyIntentAsCommand();
             return true;
         } else if (id == R.id.action_paste) {
             pasteIntentDetails();
