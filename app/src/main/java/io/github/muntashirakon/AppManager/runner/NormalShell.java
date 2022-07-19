@@ -13,6 +13,10 @@ class NormalShell extends Runner {
     private final Shell shell;
 
     public NormalShell(boolean isRoot) {
+        if (isRoot == Shell.getShell().isRoot()) {
+            shell = Shell.getShell();
+            return;
+        }
         int flags = isRoot ? Shell.FLAG_MOUNT_MASTER : Shell.FLAG_NON_ROOT_SHELL;
         shell = Shell.Builder.create().setFlags(flags).setTimeout(10).build();
     }
