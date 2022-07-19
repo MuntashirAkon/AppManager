@@ -130,7 +130,6 @@ public class MainPreferences extends PreferenceFragment {
                     .setPositiveButton(R.string.apply, (dialog, which) -> {
                         AppPref.set(AppPref.PrefKey.PREF_CUSTOM_LOCALE_STR, currentLang);
                         ActivityCompat.recreate(activity);
-                        activity.getSupportFragmentManager().popBackStackImmediate();
                     })
                     .setNegativeButton(R.string.cancel, null)
                     .show();
@@ -150,7 +149,6 @@ public class MainPreferences extends PreferenceFragment {
                         if (AppPref.getInt(AppPref.PrefKey.PREF_APP_THEME_INT) != currentTheme) {
                             AppPref.set(AppPref.PrefKey.PREF_APP_THEME_INT, currentTheme);
                             AppCompatDelegate.setDefaultNightMode(currentTheme);
-                            activity.getSupportFragmentManager().popBackStackImmediate();
                             appTheme.setSummary(themes[THEME_CONST.indexOf(currentTheme)]);
                         }
                     })
@@ -166,7 +164,6 @@ public class MainPreferences extends PreferenceFragment {
             boolean enabled = (boolean) newValue;
             AppPref.setPureBlackTheme(enabled);
             activity.recreate();
-            activity.getSupportFragmentManager().popBackStackImmediate();
             return true;
         });
         // Layout orientation
@@ -182,7 +179,6 @@ public class MainPreferences extends PreferenceFragment {
                     .setPositiveButton(R.string.apply, (dialog, which) -> {
                         AppPref.set(AppPref.PrefKey.PREF_LAYOUT_ORIENTATION_INT, currentLayoutOrientation);
                         ActivityCompat.recreate(activity);
-                        activity.getSupportFragmentManager().popBackStackImmediate();
                     })
                     .setNegativeButton(R.string.cancel, null)
                     .show();

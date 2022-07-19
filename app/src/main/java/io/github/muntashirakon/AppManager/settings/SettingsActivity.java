@@ -43,15 +43,9 @@ public class SettingsActivity extends BaseActivity implements PreferenceFragment
         subKey = getIntent().getStringExtra(EXTRA_SUB_KEY);
 
         fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.main_layout, MainPreferences.getInstance(key))
-                .addToBackStack(null).commit();
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (fragmentManager.getBackStackEntryCount() <= 1) {
-            finish();
-        } else super.onBackPressed();
+        fragmentManager.beginTransaction()
+                .replace(R.id.main_layout, MainPreferences.getInstance(key))
+                .commit();
     }
 
     @Override
