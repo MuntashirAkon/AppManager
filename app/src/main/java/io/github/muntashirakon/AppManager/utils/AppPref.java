@@ -74,6 +74,7 @@ public class AppPref {
          */
         PREF_CONCURRENCY_THREAD_COUNT_INT,
         PREF_CUSTOM_LOCALE_STR,
+        PREF_DISPLAY_CHANGELOG_BOOL,
         PREF_ENABLE_KILL_FOR_SYSTEM_BOOL,
         PREF_ENABLE_SCREEN_LOCK_BOOL,
         PREF_ENABLED_FEATURES_INT,
@@ -462,6 +463,7 @@ public class AppPref {
             case PREF_LOG_VIEWER_EXPAND_BY_DEFAULT_BOOL:
             case PREF_LOG_VIEWER_OMIT_SENSITIVE_INFO_BOOL:
             case PREF_APP_THEME_PURE_BLACK_BOOL:
+            case PREF_DISPLAY_CHANGELOG_BOOL:
                 return false;
             case PREF_APP_OP_SHOW_DEFAULT_BOOL:
             case PREF_SHOW_DISCLAIMER_BOOL:

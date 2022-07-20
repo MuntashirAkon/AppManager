@@ -59,7 +59,6 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
 import aosp.libcore.util.HexEncoding;
-import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
@@ -576,16 +575,6 @@ public class Utils {
             Log.e("Utils", "Could not get proper XML.", e);
             return dirtyXml;
         }
-    }
-
-    public static boolean isAppUpdated() {
-        long newVersionCode = BuildConfig.VERSION_CODE;
-        long oldVersionCode = (long) AppPref.get(AppPref.PrefKey.PREF_LAST_VERSION_CODE_LONG);
-        return oldVersionCode != 0 && oldVersionCode < newVersionCode;
-    }
-
-    public static boolean isAppInstalled() { // or data cleared
-        return (long) AppPref.get(AppPref.PrefKey.PREF_LAST_VERSION_CODE_LONG) == 0;
     }
 
     /**

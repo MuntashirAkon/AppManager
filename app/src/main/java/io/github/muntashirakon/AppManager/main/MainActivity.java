@@ -40,7 +40,6 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
-import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.dialog.BackupRestoreDialogFragment;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
@@ -55,7 +54,6 @@ import io.github.muntashirakon.AppManager.profiles.ProfileMetaManager;
 import io.github.muntashirakon.AppManager.profiles.ProfilesActivity;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.runningapps.RunningAppsActivity;
-import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.SettingsActivity;
@@ -68,7 +66,6 @@ import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.StoragePermission;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
-import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
 import io.github.muntashirakon.reflow.ReflowMenuViewWrapper;
 import io.github.muntashirakon.util.UiUtils;
@@ -183,14 +180,12 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
                         if (((MaterialCheckBox) view.findViewById(R.id.agree_forever)).isChecked()) {
                             AppPref.set(AppPref.PrefKey.PREF_SHOW_DISCLAIMER_BOOL, false);
                         }
-                        checkFirstRun();
-                        checkAppUpdate();
+                        displayChangelogIfRequired();
                     })
                     .setNegativeButton(R.string.disclaimer_exit, (dialog, which) -> finishAndRemoveTask())
                     .show();
         } else {
-            checkFirstRun();
-            checkAppUpdate();
+            displayChangelogIfRequired();
         }
 
         // Set observer
@@ -556,17 +551,9 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
         unregisterReceiver(mBatchOpsBroadCastReceiver);
     }
 
-    private void checkFirstRun() {
-        if (Utils.isAppInstalled()) {
-            // TODO(4/1/21): Do something relevant and useful
-            AppPref.set(AppPref.PrefKey.PREF_LAST_VERSION_CODE_LONG, (long) BuildConfig.VERSION_CODE);
-        }
-    }
-
-    private void checkAppUpdate() {
-        if (Utils.isAppUpdated()) {
-            // Clean old am.jar
-            FileUtils.deleteSilently(ServerConfig.getDestJarFile());
+    private void displayChangelogIfRequired() {
+        if (AppPref.getBoolean(AppPref.PrefKey.PREF_DISPLAY_CHANGELOG_BOOL)) {
+            AppPref.set(AppPref.PrefKey.PREF_DISPLAY_CHANGELOG_BOOL, false);
             mModel.executor.submit(() -> {
                 final Spanned spannedChangelog = HtmlCompat.fromHtml(FileUtils.getContentFromAssets(this, "changelog.html"), HtmlCompat.FROM_HTML_MODE_COMPACT);
                 runOnUiThread(() -> new ScrollableDialogBuilder(this, spannedChangelog)
@@ -578,7 +565,6 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
                             startActivity(helpIntent);
                         }).show());
             });
-            AppPref.set(AppPref.PrefKey.PREF_LAST_VERSION_CODE_LONG, (long) BuildConfig.VERSION_CODE);
         }
     }
 

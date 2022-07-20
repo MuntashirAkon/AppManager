@@ -46,7 +46,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 if (result.getResultCode() == RESULT_OK) {
                     // Success
-                    handleSecurityAndModeOfOp();
+                    handleMigrationAndModeOfOp();
                 } else {
                     // Authentication failed
                     finishAndRemoveTask();
@@ -159,7 +159,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     private void ensureSecurityAndModeOfOp() {
         if (!AppPref.getBoolean(AppPref.PrefKey.PREF_ENABLE_SCREEN_LOCK_BOOL)) {
             // No security enabled
-            handleSecurityAndModeOfOp();
+            handleMigrationAndModeOfOp();
             return;
         }
         Log.d(TAG, "Security enabled.");
@@ -175,7 +175,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    private void handleSecurityAndModeOfOp() {
+    private void handleMigrationAndModeOfOp() {
         // Authentication was successful
         Log.d(TAG, "Authenticated");
         // Set mode of operation

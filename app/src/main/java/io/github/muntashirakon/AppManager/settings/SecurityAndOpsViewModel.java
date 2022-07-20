@@ -13,7 +13,10 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.self.Migrations;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.adb.android.AdbMdns;
 
@@ -50,6 +53,23 @@ public class SecurityAndOpsViewModel extends AndroidViewModel implements Ops.Adb
     @AnyThread
     public void setModeOfOps() {
         mExecutor.submit(() -> {
+            // Migration
+            long thisVersion = BuildConfig.VERSION_CODE;
+            long lastVersion = (long) AppPref.get(AppPref.PrefKey.PREF_LAST_VERSION_CODE_LONG);
+            if (lastVersion != 0) {
+                // First version: set this as the last version
+                AppPref.set(AppPref.PrefKey.PREF_LAST_VERSION_CODE_LONG, (long) BuildConfig.VERSION_CODE);
+            }
+            if (lastVersion < thisVersion) {
+                Log.d(TAG, "Start migration");
+                // App is updated
+                AppPref.set(AppPref.PrefKey.PREF_DISPLAY_CHANGELOG_BOOL, true);
+                Migrations.startMigration(lastVersion, thisVersion);
+                // Migration is done: set this as the last version
+                AppPref.set(AppPref.PrefKey.PREF_LAST_VERSION_CODE_LONG, (long) BuildConfig.VERSION_CODE);
+                Log.d(TAG, "End migration");
+            }
+            // Ops
             Log.d(TAG, "Before Ops::init");
             int status = Ops.init(getApplication(), false);
             Log.d(TAG, "After Ops::init");
