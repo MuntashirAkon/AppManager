@@ -2,10 +2,16 @@
 
 package io.github.muntashirakon.AppManager.db.dao;
 
-import androidx.room.*;
-import io.github.muntashirakon.AppManager.db.entity.App;
+import androidx.room.Dao;
+import androidx.room.Delete;
+import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
+import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.List;
+
+import io.github.muntashirakon.AppManager.db.entity.App;
 
 @Dao
 public interface AppDao {
@@ -29,6 +35,9 @@ public interface AppDao {
 
     @Update
     void update(App app);
+
+    @Query("DELETE FROM app WHERE 1")
+    void deleteAll();
 
     @Delete
     void delete(App app);

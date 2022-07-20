@@ -32,10 +32,10 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupFiles;
 import io.github.muntashirakon.AppManager.compat.PermissionCompat;
+import io.github.muntashirakon.AppManager.db.AppsDb;
 import io.github.muntashirakon.AppManager.db.entity.LogFilter;
 import io.github.muntashirakon.AppManager.logcat.helper.BuildHelper;
 import io.github.muntashirakon.AppManager.logcat.helper.SaveLogHelper;
@@ -314,7 +314,7 @@ public class LogViewerViewModel extends AndroidViewModel {
     @AnyThread
     public void loadFilters() {
         mExecutor.submit(() -> {
-            final List<LogFilter> filters = AppManager.getAppsDb().logFilterDao().getAll();
+            final List<LogFilter> filters = AppsDb.getInstance().logFilterDao().getAll();
             Collections.sort(filters);
             mLogFiltersLiveData.postValue(filters);
         });

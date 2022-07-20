@@ -23,13 +23,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
+import io.github.muntashirakon.AppManager.db.AppsDb;
 import io.github.muntashirakon.AppManager.db.entity.App;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
+import io.github.muntashirakon.AppManager.db.utils.AppDb;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
@@ -132,8 +133,8 @@ public class BackupRestoreDialogViewModel extends AndroidViewModel {
                 }
                 backupInfo = new BackupInfo(userPackagePair.getPackageName(), userPackagePair.getUserHandle());
                 backupInfoMap.put(userPackagePair.getPackageName(), backupInfo);
-                List<App> apps = AppManager.getAppsDb().appDao().getAll(userPackagePair.getPackageName());
-                List<Backup> backups = AppManager.getAppsDb().backupDao().get(userPackagePair.getPackageName());
+                List<App> apps = new AppDb().getAllApplications(userPackagePair.getPackageName());
+                List<Backup> backups = AppsDb.getInstance().backupDao().get(userPackagePair.getPackageName());
                 // Fetch backup info
                 List<MetadataManager.Metadata> metadata = new ArrayList<>();
                 for (Backup backup : backups) {

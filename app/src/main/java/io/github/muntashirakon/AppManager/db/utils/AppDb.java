@@ -17,10 +17,11 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.backup.BackupUtils;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.db.AppsDb;
 import io.github.muntashirakon.AppManager.db.dao.AppDao;
+import io.github.muntashirakon.AppManager.db.dao.BackupDao;
 import io.github.muntashirakon.AppManager.db.entity.App;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -38,14 +39,52 @@ public class AppDb {
     private static final Object sLock = new Object();
 
     private final AppDao appDao;
+    private final BackupDao backupDao;
 
     public AppDb() {
-        appDao = AppManager.getAppsDb().appDao();
+        appDao = AppsDb.getInstance().appDao();
+        backupDao = AppsDb.getInstance().backupDao();
     }
 
     public List<App> getAllApplications() {
         synchronized (sLock) {
             return appDao.getAll();
+        }
+    }
+
+    public List<App> getAllInstalledApplications() {
+        synchronized (sLock) {
+            return appDao.getAllInstalled();
+        }
+    }
+
+    public List<App> getAllApplications(String packageName) {
+        synchronized (sLock) {
+            return appDao.getAll(packageName);
+        }
+    }
+
+    public void insert(App app) {
+        synchronized (sLock) {
+            appDao.insert(app);
+        }
+    }
+
+    public void deleteApplication(String packageName, int userId) {
+        synchronized (sLock) {
+            appDao.delete(packageName, userId);
+        }
+    }
+
+    public void deleteAllApplications() {
+        synchronized (sLock) {
+            appDao.deleteAll();
+        }
+    }
+
+    public void deleteAllBackups() {
+        synchronized (sLock) {
+            backupDao.deleteAll();
         }
     }
 

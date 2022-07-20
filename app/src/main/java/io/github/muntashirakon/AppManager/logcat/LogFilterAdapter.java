@@ -15,8 +15,8 @@ import com.google.android.material.button.MaterialButton;
 
 import java.util.List;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.db.AppsDb;
 import io.github.muntashirakon.AppManager.db.entity.LogFilter;
 
 // Copyright 2012 Nolan Lawson
@@ -61,7 +61,7 @@ public class LogFilterAdapter extends ArrayAdapter<LogFilter> {
             }
         });
         holder.actionButton.setOnClickListener(v -> {
-            new Thread(() -> AppManager.getAppsDb().logFilterDao().delete(logFilter)).start();
+            new Thread(() -> AppsDb.getInstance().logFilterDao().delete(logFilter)).start();
             remove(logFilter);
             notifyDataSetChanged();
         });

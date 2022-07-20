@@ -36,12 +36,12 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.backup.BackupUtils;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.db.entity.App;
+import io.github.muntashirakon.AppManager.db.utils.AppDb;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.profiles.ProfileMetaManager;
@@ -502,8 +502,7 @@ public class MainViewModel extends AndroidViewModel {
             case PackageChangeReceiver.ACTION_PACKAGE_ALTERED:
             case PackageChangeReceiver.ACTION_PACKAGE_ADDED:
                 for (String packageName : packages) {
-                    ApplicationItem item = getNewApplicationItem(packageName, AppManager.getAppsDb().appDao()
-                            .getAll(packageName));
+                    ApplicationItem item = getNewApplicationItem(packageName, new AppDb().getAllApplications(packageName));
                     if (item != null) insertOrAddApplicationItem(item);
                 }
                 sortApplicationList(mSortBy, mSortReverse);
@@ -545,8 +544,9 @@ public class MainViewModel extends AndroidViewModel {
             if (item != null) {
                 if (item.backup == null) {
                     applicationItems.remove(item);
+                    AppDb appDb = new AppDb();
                     for (int userHandle : item.userHandles) {
-                        AppManager.getAppsDb().appDao().delete(item.packageName, userHandle);
+                        appDb.deleteApplication(item.packageName, userHandle);
                     }
                 } else {
                     ApplicationItem changedItem = getNewApplicationItem(packageName);
@@ -590,6 +590,7 @@ public class MainViewModel extends AndroidViewModel {
     private ApplicationItem getNewApplicationItem(String packageName) {
         ApplicationItem oldItem = null;
         int thisUser = UserHandleHidden.myUserId();
+        AppDb appDb = new AppDb();
         for (int userId : Users.getUsersIds()) {
             try {
                 @SuppressLint("WrongConstant")
@@ -636,7 +637,7 @@ public class MainViewModel extends AndroidViewModel {
                 item.trackerCount = app.trackerCount;
                 item.lastActionTime = app.lastActionTime;
                 oldItem = item;
-                AppManager.getAppsDb().appDao().insert(app);
+                appDb.insert(app);
             } catch (Exception e) {
                 e.printStackTrace();
             }

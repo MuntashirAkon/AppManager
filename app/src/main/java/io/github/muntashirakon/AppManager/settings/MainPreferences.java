@@ -46,6 +46,7 @@ import java.util.concurrent.Executors;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.crypto.auth.AuthManagerActivity;
+import io.github.muntashirakon.AppManager.db.utils.AppDb;
 import io.github.muntashirakon.AppManager.misc.DeviceInfo2;
 import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.settings.crypto.ImportExportKeyStoreDialogFragment;
@@ -316,6 +317,12 @@ public class MainPreferences extends PreferenceFragment {
                     fragment.show(getParentFragmentManager(), ImportExportKeyStoreDialogFragment.TAG);
                     return true;
                 });
+        // Reload apps
+        ((Preference) Objects.requireNonNull(findPreference("reload_apps")))
+                .setOnPreferenceClickListener(preference -> {
+                    model.reloadApps();
+                    return true;
+                });
         // About device
         ((Preference) Objects.requireNonNull(findPreference("about_device")))
                 .setOnPreferenceClickListener(preference -> {
@@ -511,10 +518,19 @@ public class MainPreferences extends PreferenceFragment {
             return mDeviceInfo;
         }
 
-        private void loadDeviceInfo(@NonNull DeviceInfo2 di) {
+        public void loadDeviceInfo(@NonNull DeviceInfo2 di) {
             mExecutor.submit(() -> {
                 di.loadInfo();
                 mDeviceInfo.postValue(di);
+            });
+        }
+
+        public void reloadApps() {
+            mExecutor.submit(() -> {
+                AppDb appDb = new AppDb();
+                appDb.deleteAllApplications();
+                appDb.deleteAllBackups();
+                appDb.loadInstalledOrBackedUpApplications(getApplication());
             });
         }
 

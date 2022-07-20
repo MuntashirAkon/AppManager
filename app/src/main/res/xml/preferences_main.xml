@@ -105,8 +105,8 @@
         app:iconSpaceReserved="false" />
 
     <PreferenceCategory
-        app:key="other_category"
-        app:title="@string/other"
+        app:key="troubleshooting"
+        app:title="@string/troubleshooting"
         app:iconSpaceReserved="false">
 
         <Preference
@@ -114,6 +114,19 @@
             app:title="@string/pref_import_export_keystore"
             app:summary="@string/pref_import_export_keystore_msg"
             app:iconSpaceReserved="false" />
+
+        <Preference
+            app:key="reload_apps"
+            app:title="@string/pref_reload_apps"
+            app:summary="@string/pref_reload_apps_msg"
+            app:iconSpaceReserved="false" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:key="other_category"
+        app:title="@string/other"
+        app:iconSpaceReserved="false">
 
         <Preference
             app:key="about_device"

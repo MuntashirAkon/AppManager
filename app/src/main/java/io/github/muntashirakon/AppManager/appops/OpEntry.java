@@ -38,6 +38,7 @@ public class OpEntry implements Parcelable {
         return mOp;
     }
 
+    @AppOpsManager.Mode
     public int getMode() {
         return mMode;
     }

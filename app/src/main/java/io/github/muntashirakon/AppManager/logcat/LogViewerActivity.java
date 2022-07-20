@@ -47,9 +47,9 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.Set;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.db.AppsDb;
 import io.github.muntashirakon.AppManager.db.dao.LogFilterDao;
 import io.github.muntashirakon.AppManager.db.entity.LogFilter;
 import io.github.muntashirakon.AppManager.fm.FmProvider;
@@ -261,7 +261,7 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
 
     @WorkerThread
     private void addFiltersToSuggestions() {
-        for (LogFilter logFilter : AppManager.getAppsDb().logFilterDao().getAll()) {
+        for (LogFilter logFilter : AppsDb.getInstance().logFilterDao().getAll()) {
             addToAutocompleteSuggestions(logFilter.name);
         }
     }
@@ -544,7 +544,7 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
         final String trimmed = text.trim();
         if (!TextUtils.isEmpty(trimmed)) {
             executor.submit(() -> {
-                LogFilterDao dao = AppManager.getAppsDb().logFilterDao();
+                LogFilterDao dao = AppsDb.getInstance().logFilterDao();
                 long id = dao.insert(trimmed);
                 LogFilter logFilter = dao.get(id);
                 UiThreadHandler.run(() -> {

@@ -38,6 +38,7 @@ import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 import io.github.muntashirakon.AppManager.crypto.Crypto;
 import io.github.muntashirakon.AppManager.crypto.CryptoException;
+import io.github.muntashirakon.AppManager.db.AppsDb;
 import io.github.muntashirakon.AppManager.db.entity.FileHash;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -273,7 +274,7 @@ class BackupOp implements Closeable {
                 FileHash fileHash = new FileHash();
                 fileHash.path = dir;
                 fileHash.hash = DigestUtils.getHexDigest(DigestUtils.SHA_256, Paths.get(dir));
-                AppManager.getAppsDb().fileHashDao().insert(fileHash);
+                AppsDb.getInstance().fileHashDao().insert(fileHash);
             }
         }).start();
         for (int i = 0; i < mMetadata.dataDirs.length; ++i) {

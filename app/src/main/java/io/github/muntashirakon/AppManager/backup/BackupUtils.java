@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
-import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.db.AppsDb;
 import io.github.muntashirakon.AppManager.db.dao.BackupDao;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.logcat.helper.SaveLogHelper;
@@ -51,7 +51,7 @@ public final class BackupUtils {
     @WorkerThread
     @NonNull
     public static HashMap<String, Backup> storeAllAndGetLatestBackupMetadata() {
-        BackupDao backupDao = AppManager.getAppsDb().backupDao();
+        BackupDao backupDao = AppsDb.getInstance().backupDao();
         HashMap<String, Backup> backupMetadata = new HashMap<>();
         HashMap<String, List<MetadataManager.Metadata>> allBackupMetadata = getAllMetadata();
         List<Backup> backups = new ArrayList<>();
@@ -88,7 +88,7 @@ public final class BackupUtils {
                 latestBackup = backup;
             }
         }
-        AppManager.getAppsDb().backupDao().insert(backups);
+        AppsDb.getInstance().backupDao().insert(backups);
         return latestBackup;
     }
 
@@ -96,7 +96,7 @@ public final class BackupUtils {
     @NonNull
     public static HashMap<String, Backup> getAllLatestBackupMetadataFromDb() {
         HashMap<String, Backup> backupMetadata = new HashMap<>();
-        List<Backup> backups = AppManager.getAppsDb().backupDao().getAll();
+        List<Backup> backups = AppsDb.getInstance().backupDao().getAll();
         for (Backup backup : backups) {
             Backup latestBackup = backupMetadata.get(backup.packageName);
             if (latestBackup == null || backup.backupTime > latestBackup.backupTime) {

@@ -22,11 +22,11 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupManager;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.backup.dialog.BackupRestoreDialogFragment;
+import io.github.muntashirakon.AppManager.db.AppsDb;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.main.ApplicationItem;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
@@ -164,7 +164,7 @@ public class BackupTasksDialogFragment extends DialogFragment {
                         try {
                             List<String> changedDirs = new ArrayList<>();
                             for (String dir : backup.getMetadata().dataDirs) {
-                                String hash = AppManager.getAppsDb().fileHashDao().getHash(dir);
+                                String hash = AppsDb.getInstance().fileHashDao().getHash(dir);
                                 // For now, if hash is null, don't proceed to backup
                                 if (hash == null) {
                                     break;

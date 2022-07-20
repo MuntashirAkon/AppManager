@@ -21,9 +21,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.db.entity.App;
+import io.github.muntashirakon.AppManager.db.utils.AppDb;
 import io.github.muntashirakon.AppManager.oneclickops.ItemCount;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.rules.compontents.ExternalComponentsImporter;
@@ -164,7 +164,7 @@ public class ImportExportRulesDialogFragment extends CapsuleBottomSheetDialogFra
         new Thread(() -> {
             final List<ItemCount> itemCounts = new ArrayList<>();
             ItemCount trackerCount;
-            for (App app : AppManager.getAppsDb().appDao().getAllInstalled()) {
+            for (App app : new AppDb().getAllInstalledApplications()) {
                 if (isDetached()) return;
                 if (!systemApps && (app.flags & ApplicationInfo.FLAG_SYSTEM) != 0)
                     continue;

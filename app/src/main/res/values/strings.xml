@@ -1230,4 +1230,7 @@
     <string name="backup_apps_cannot_be_backed_up">The following apps are not installed and cannot be backed up:</string>
     <string name="restart_device">Restart device</string>
     <string name="import_backups_warning_delete_backups_after_import">Delete the backups after importing them to App Manager? Each backup is individually deleted after it is imported with success. Select <b>No</b> if unsure.</string>
+    <string name="troubleshooting">Troubleshooting</string>
+    <string name="pref_reload_apps">Reload apps</string>
+    <string name="pref_reload_apps_msg">Reload the list of apps stored in App Manager database in case of unexpected behaviour.</string>
 </resources>
