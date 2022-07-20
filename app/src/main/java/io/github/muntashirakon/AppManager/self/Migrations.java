@@ -12,6 +12,7 @@ import java.util.Locale;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
+import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 
@@ -54,6 +55,8 @@ public class Migrations {
                     oldAppsDb.renameTo(newAppsDb);
                 }
             }
+            // Disable Internet feature by default
+            FeatureController.getInstance().modifyState(FeatureController.FEAT_INTERNET, false);
         }
     };
 
