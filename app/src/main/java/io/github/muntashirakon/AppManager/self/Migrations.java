@@ -40,6 +40,8 @@ public class Migrations {
             // Delete old cache dir (removed in v2.6.4 (394))
             File oldCacheDir = context.getExternalFilesDir("cache");
             FileUtils.deleteDir(oldCacheDir);
+            // Disable Internet feature by default
+            FeatureController.getInstance().modifyState(FeatureController.FEAT_INTERNET, false);
         }
     };
 
@@ -55,8 +57,6 @@ public class Migrations {
                     oldAppsDb.renameTo(newAppsDb);
                 }
             }
-            // Disable Internet feature by default
-            FeatureController.getInstance().modifyState(FeatureController.FEAT_INTERNET, false);
         }
     };
 
