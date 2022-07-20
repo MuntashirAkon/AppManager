@@ -24,6 +24,7 @@
         <item>androidx.biometric</item>
         <item>androidx.browser</item>
         <item>androidx.camera</item>
+        <item>androidx.car.app</item>
         <item>androidx.cardview</item>
         <item>androidx.collection</item>
         <item>androidx.compose</item>
@@ -106,6 +107,10 @@
         <item>ar.com.hjg.pngj</item>
         <item>arrow.core</item>
         <item>arrow.typeclasses</item>
+        <item>at.bitfire.cert4android</item>
+        <item>at.bitfire.dav4jvm</item>
+        <item>at.bitfire.ical4android</item>
+        <item>at.bitfire.vcard4android</item>
         <item>at.connyduck.sparkbutton</item>
         <item>com.varunest.sparkbutton</item>
         <item>at.favre.lib.crypto.bcrypt</item>
@@ -173,6 +178,9 @@
         <item>co.dift.ui</item>
         <item>co.infinum.goldfinger</item>
         <item>co.metalab.asyncawait</item>
+        <item>co.nstant.in.cbor</item>
+        <item>co.rh.id.lib.concurrent_utils</item>
+        <item>co.rh.id.lib.rx3_utils</item>
         <item>co.sensara.sensy</item>
         <item>codes.side.andcolorpicker</item>
         <item>coil</item>
@@ -236,6 +244,7 @@
         <item>com.almeros.android.multitouch</item>
         <item>com.aloisdeniel.geocoder</item>
         <item>com.yourcompany.geocoder</item>
+        <item>com.aloisdeniel.image_native_resizer</item>
         <item>com.amap.api</item>
         <item>com.amazon.device.ads</item>
         <item>com.amazon.device.associates</item>
@@ -431,11 +440,13 @@
         <item>com.chirag.RNMail</item>
         <item>com.chiralcode.colorpicker</item>
         <item>com.chrynan.chords</item>
+        <item>com.chuckerteam.chucker</item>
         <item>com.chyrta.onboarder</item>
         <item>com.cleveroad.audiowidget</item>
         <item>com.cleveroad.play_widget</item>
         <item>com.clipsub.RNShake</item>
         <item>com.cloudrail.si</item>
+        <item>com.cloudwebrtc.webrtc</item>
         <item>com.cmcewen.blurview</item>
         <item>com.cocoahero.android.geojson</item>
         <item>com.cocosw.bottomsheet</item>
@@ -458,6 +469,7 @@
         <item>com.commonsware.cwac.sacklist</item>
         <item>com.commonsware.cwac.wakeful</item>
         <item>com.comscore</item>
+        <item>com.contrarywind.view</item>
         <item>com.cooltechworks.views.shimmer</item>
         <item>com.corbt.keepawake</item>
         <item>com.cordova.plugin.android.fingerprintauth</item>
@@ -476,6 +488,7 @@
         <item>com.crazylegend.viewbinding</item>
         <item>com.crittercism.app.Crittercism</item>
         <item>com.criware</item>
+        <item>com.crossbowffs.remotepreferences</item>
         <item>com.crowdin.platform</item>
         <item>com.cryptape.cita</item>
         <item>com.csvreader</item>
@@ -581,6 +594,7 @@
         <item>com.evollu.react.fcm</item>
         <item>com.evrencoskun.tableview</item>
         <item>com.exacttarget</item>
+        <item>com.example.android.commitcontent.ime</item>
         <item>com.example.android.wizardpager</item>
         <item>com.example.connectivity</item>
         <item>com.exxbrain.android.biometric</item>
@@ -772,6 +786,7 @@
         <item>com.github.godness84.RNRecyclerViewList</item>
         <item>com.github.gzuliyujiang.chardet</item>
         <item>com.github.hbldh.bleak</item>
+        <item>com.github.ihsg.patternlocker</item>
         <item>com.github.IrineSistiana.shadowsocks.plugin.simple_tls</item>
         <item>com.github.ivbaranov.mfb</item>
         <item>com.github.jaiimageio</item>
@@ -795,6 +810,7 @@
         <item>com.github.kiprobinson.bigfraction</item>
         <item>com.github.kittinunf.fuel</item>
         <item>com.github.kittinunf.result</item>
+        <item>com.github.kiulian.downloader</item>
         <item>com.github.kotvertolet.youtubejextractor</item>
         <item>com.github.kr328.kaidl</item>
         <item>com.github.ksoichiro.android.observablescrollview</item>
@@ -900,6 +916,7 @@
         <item>com.google.android.gms.auth</item>
         <item>com.google.android.gms.common</item>
         <item>com.google.android.gms.location</item>
+        <item>com.google.android.gms.stats</item>
         <item>com.google.android.libraries.cast.companionlibrary</item>
         <item>com.google.android.material</item>
         <item>com.google.android.mediahome.video</item>
@@ -1614,6 +1631,8 @@
         <item>com.spotify.webapi</item>
         <item>com.sprylab.android.widget</item>
         <item>com.sptproximitykit</item>
+        <item>com.squareup.curtains</item>
+        <item>curtains.internal</item>
         <item>com.squareup.duktape</item>
         <item>com.squareup.haha</item>
         <item>com.squareup.javapoet</item>
@@ -1844,6 +1863,7 @@
         <item>com.webtrends.mobile.analytics</item>
         <item>com.webtrends.mobile.android</item>
         <item>com.wei.android.lib.fingerprintidentify</item>
+        <item>com.weigan.loopview</item>
         <item>com.weiwangcn.betterspinner.library</item>
         <item>com.werdpressed.partisan.rundo</item>
         <item>com.whebcraft.android.plugin</item>
@@ -1937,6 +1957,7 @@
         <item>de.appplant.cordova.plugin.notification</item>
         <item>de.blinkt.openvpn</item>
         <item>de.c1710.filemojicompat_ui</item>
+        <item>de.charlex.compose</item>
         <item>de.cketti.library.changelog</item>
         <item>de.duenndns.ssl</item>
         <item>de.epgpaid</item>
@@ -2318,6 +2339,8 @@
         <item>khttp</item>
         <item>klb.android.GameEngine</item>
         <item>kotlin</item>
+        <item>kotlinx.android.extensions</item>
+        <item>kotlinx.android.parcel</item>
         <item>kotlinx.atomicfu</item>
         <item>kotlinx.collections.immutable</item>
         <item>kotlinx.coroutines</item>
@@ -2616,6 +2639,7 @@
         <item>org.eclipse.paho.client.mqttv3</item>
         <item>org.eclipse.jface.text</item>
         <item>org.eclipse.text</item>
+        <item>org.eclipse.tm4e</item>
         <item>org.fabiomsr.moneytextview</item>
         <item>org.firezenk.audiowaves</item>
         <item>org.fmod</item>
@@ -3040,6 +3064,7 @@
         <item>Biometric</item>
         <item>Browser</item>
         <item>CameraX</item>
+        <item>AndroidX Car App</item>
         <item>Cardview</item>
         <item>Android Support Library collections</item>
         <item>Jetpack Compose</item>
@@ -3122,6 +3147,10 @@
         <item>PNGJ</item>
         <item>Λrrow</item>
         <item>Λrrow</item>
+        <item>cert4android</item>
+        <item>dav4jvm</item>
+        <item>ical4android</item>
+        <item>vcard4android</item>
         <item>SparkButton</item>
         <item>SparkButton</item>
         <item>Bcrypt</item>
@@ -3189,6 +3218,9 @@
         <item>SwipeToAction</item>
         <item>Goldfinger</item>
         <item>AsyncAwait</item>
+        <item>CBOR For Java</item>
+        <item>Java concurrent utilities</item>
+        <item>rx-utils</item>
         <item>Sensara</item>
         <item>andColorPicker</item>
         <item>Coil</item>
@@ -3252,6 +3284,7 @@
         <item>Android Gesture Detectors Framework</item>
         <item>geocoder</item>
         <item>geocoder</item>
+        <item>image_native_resizer</item>
         <item>AMap</item>
         <item>Amazon Advertisement</item>
         <item>Amazon Mobile Associates</item>
@@ -3447,11 +3480,13 @@
         <item>react-native-mail</item>
         <item>Color Picker for Android</item>
         <item>chords</item>
+        <item>Chucker</item>
         <item>Android Onboarder</item>
         <item>Audio Widget Overlay View</item>
         <item>PlayWidget</item>
         <item>React Native Shake Event Detector</item>
         <item>CloudRail SI for Java</item>
+        <item>Flutter-WebRTC</item>
         <item>React Native Blur</item>
         <item>Android GeoJSON</item>
         <item>BottomSheet</item>
@@ -3474,6 +3509,7 @@
         <item>CommonsWare SackOfViewsAdapter</item>
         <item>CWAC Wakeful</item>
         <item>Comscore Analytics</item>
+        <item>Android-PickerView</item>
         <item>ShimmerRecyclerView</item>
         <item>react-native-keep-awake</item>
         <item>cordova-plugin-android-fingerprint-auth</item>
@@ -3492,6 +3528,7 @@
         <item>View Binding</item>
         <item>Apteligent by VMWare (formerly Crittercism)</item>
         <item>Criware</item>
+        <item>RemotePreferences</item>
         <item>Crowdin Android SDK</item>
         <item>CITA</item>
         <item>CsvReader</item>
@@ -3597,6 +3634,7 @@
         <item>react-native-fcm</item>
         <item>TableView</item>
         <item>ExactTarget</item>
+        <item>Android CommitContentSampleIME Sample</item>
         <item>Android WizardPager</item>
         <item>connectivity</item>
         <item>Android biometric</item>
@@ -3788,6 +3826,7 @@
         <item>react-native-recyclerview-list</item>
         <item>CJKCharsetDetector</item>
         <item>bleak</item>
+        <item>Pattern Locker</item>
         <item>simple-tls</item>
         <item>Material Favorite Button</item>
         <item>jai-imageio-core</item>
@@ -3811,6 +3850,7 @@
         <item>BigFraction</item>
         <item>Fuel</item>
         <item>Result</item>
+        <item>java-youtube-downloader</item>
         <item>YoutubeJExtractor for Android</item>
         <item>kaidl</item>
         <item>Android-ObservableScrollView</item>
@@ -3913,6 +3953,7 @@
         <item>Google Tag Manager</item>
         <item>Android Vision</item>
         <item>Android Wear APIs</item>
+        <item>Google Mobile Services</item>
         <item>Google Mobile Services</item>
         <item>Google Mobile Services</item>
         <item>Google Mobile Services</item>
@@ -4630,6 +4671,8 @@
         <item>Spotify Web API</item>
         <item>TextureVideoView for Android</item>
         <item>Singlespot</item>
+        <item>Curtains</item>
+        <item>Curtains</item>
         <item>Duktape</item>
         <item>Headless Android Heap Analyzer</item>
         <item>JavaPoet</item>
@@ -4860,6 +4903,7 @@
         <item>Webtrends</item>
         <item>Webtrends</item>
         <item>FingerprintIdentify</item>
+        <item>androidWheelView</item>
         <item>BetterSpinner</item>
         <item>RunDo</item>
         <item>Cordova Download Plugin</item>
@@ -4953,6 +4997,7 @@
         <item>cordova-plugin-local-notifications</item>
         <item>OpenVPN for Android</item>
         <item>FilemojiCompat</item>
+        <item>HtmlText</item>
         <item>ckChangeLog</item>
         <item>MemorizingTrustManager</item>
         <item>EPGpaid</item>
@@ -5334,6 +5379,8 @@
         <item>khttp</item>
         <item>Playground OSS</item>
         <item>Kotlin</item>
+        <item>Kotlin Android Extensions Runtime</item>
+        <item>Kotlin Android Extensions Runtime</item>
         <item>AtomicFU</item>
         <item>Immutable Collections Library for Kotlin</item>
         <item>kotlinx.coroutines</item>
@@ -5632,6 +5679,7 @@
         <item>Paho Java Client</item>
         <item>Eclipse Platform Text</item>
         <item>Eclipse Platform Text</item>
+        <item>Eclipse tm4e</item>
         <item>MoneyTextView</item>
         <item>Audio Waves</item>
         <item>FMOD</item>
@@ -6056,6 +6104,7 @@
         <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
+        <item>Utility</item>
         <item>UI Component</item>
         <item>Utility</item>
         <item>Development Framework</item>
@@ -6138,6 +6187,10 @@
         <item>Utility</item>
         <item>Development Aid</item>
         <item>Development Aid</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
         <item>UI Component</item>
         <item>UI Component</item>
         <item>Utility</item>
@@ -6205,6 +6258,9 @@
         <item>UI Component</item>
         <item>Utility</item>
         <item>Utility</item>
+        <item>Utility</item>
+        <item>Development Aid</item>
+        <item>Development Aid</item>
         <item>Utility</item>
         <item>UI Component</item>
         <item>Utility</item>
@@ -6264,6 +6320,7 @@
         <item>UI Component</item>
         <item>UI Component</item>
         <item>UI Component</item>
+        <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
@@ -6463,9 +6520,11 @@
         <item>Utility</item>
         <item>UI Component</item>
         <item>Utility</item>
+        <item>Utility</item>
         <item>UI Component</item>
         <item>UI Component</item>
         <item>UI Component</item>
+        <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
         <item>UI Component</item>
@@ -6490,6 +6549,7 @@
         <item>Utility</item>
         <item>Utility</item>
         <item>Mobile Analytics</item>
+        <item>UI Component</item>
         <item>UI Component</item>
         <item>Utility</item>
         <item>Utility</item>
@@ -6512,6 +6572,7 @@
         <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
+        <item>Utility</item>
         <item>Mobile Analytics</item>
         <item>Mobile Analytics</item>
         <item>UI Component</item>
@@ -6613,6 +6674,7 @@
         <item>Utility</item>
         <item>UI Component</item>
         <item>Mobile Analytics</item>
+        <item>Development Aid</item>
         <item>UI Component</item>
         <item>Utility</item>
         <item>Utility</item>
@@ -6804,6 +6866,7 @@
         <item>UI Component</item>
         <item>Utility</item>
         <item>Utility</item>
+        <item>UI Component</item>
         <item>Utility</item>
         <item>UI Component</item>
         <item>Utility</item>
@@ -6821,6 +6884,7 @@
         <item>UI Component</item>
         <item>UI Component</item>
         <item>UI Component</item>
+        <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
@@ -6932,6 +6996,7 @@
         <item>Development Framework</item>
         <item>Development Framework</item>
         <item>Development Framework</item>
+        <item>Development Framework</item>
         <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
@@ -7647,6 +7712,8 @@
         <item>UI Component</item>
         <item>Advertisement</item>
         <item>Development Aid</item>
+        <item>Development Aid</item>
+        <item>Development Aid</item>
         <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
@@ -7877,6 +7944,7 @@
         <item>Mobile Analytics</item>
         <item>Utility</item>
         <item>UI Component</item>
+        <item>UI Component</item>
         <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
@@ -7969,6 +8037,7 @@
         <item>Utility</item>
         <item>Utility</item>
         <item>UI Component</item>
+        <item>Utility</item>
         <item>UI Component</item>
         <item>Utility</item>
         <item>Utility</item>
@@ -8357,6 +8426,8 @@
         <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
+        <item>Utility</item>
+        <item>Utility</item>
         <item>UI Component</item>
         <item>Utility</item>
         <item>Utility</item>
@@ -8635,6 +8706,7 @@
         <item>Utility</item>
         <item>UI Component</item>
         <item>UI Component</item>
+        <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
         <item>Utility</item>
@@ -9072,6 +9144,7 @@
         <item>https://developer.android.com/jetpack/androidx/releases/biometric</item>
         <item>https://developer.android.com/jetpack/androidx/releases/browser</item>
         <item>https://developer.android.com/jetpack/androidx/releases/camera</item>
+        <item>https://developer.android.com/jetpack/androidx/releases/car-app</item>
         <item>https://android.googlesource.com/platform/frameworks/support/+/refs/heads/androidx-main/cardview/</item>
         <item>https://developer.android.com/tools/extras/support-library.html</item>
         <item>https://developer.android.com/jetpack/androidx/releases/compose</item>
@@ -9154,6 +9227,10 @@
         <item>https://github.com/leonbloy/pngj</item>
         <item>https://arrow-kt.io/</item>
         <item>https://arrow-kt.io/</item>
+        <item>https://github.com/bitfireAT/cert4android</item>
+        <item>https://github.com/bitfireAT/dav4jvm</item>
+        <item>https://github.com/bitfireAT/ical4android</item>
+        <item>https://github.com/bitfireAT/vcard4android</item>
         <item>https://jitpack.io/p/connyduck/sparkbutton</item>
         <item>https://jitpack.io/p/connyduck/sparkbutton</item>
         <item>https://github.com/patrickfav/bcrypt</item>
@@ -9221,6 +9298,9 @@
         <item>https://github.com/vcalvello/SwipeToAction</item>
         <item>https://github.com/infinum/Android-Goldfinger</item>
         <item>https://github.com/metalabdesign/AsyncAwait</item>
+        <item>https://github.com/c-rack/cbor-java</item>
+        <item>https://github.com/rh-id/concurrent-utils</item>
+        <item>https://github.com/rh-id/rx-utils</item>
         <item>https://www.sensara.tv/</item>
         <item>https://github.com/side-codes/andColorPicker</item>
         <item>https://github.com/coil-kt/coil</item>
@@ -9284,6 +9364,7 @@
         <item>https://github.com/Almeros/android-gesture-detectors</item>
         <item>https://github.com/aloisdeniel/flutter_geocoder</item>
         <item>https://github.com/aloisdeniel/flutter_geocoder</item>
+        <item>https://github.com/aloisdeniel/image_native_resizer</item>
         <item>https://lbs.amap.com/api/android-location-sdk/locationsummary</item>
         <item>https://developer.amazon.com/public/apis/earn/mobile-ads/docs/quick-start</item>
         <item>https://developer.amazon.com/mobile-associates</item>
@@ -9479,11 +9560,13 @@
         <item>https://github.com/chirag04/react-native-mail</item>
         <item>https://github.com/chiralcode/Android-Color-Picker</item>
         <item>https://github.com/chRyNaN/chords</item>
+        <item>https://github.com/ChuckerTeam/chucker</item>
         <item>https://github.com/chyrta/AndroidOnboarder</item>
         <item>https://github.com/Cleveroad/MusicBobber</item>
         <item>https://github.com/Cleveroad/PlayWidget</item>
         <item>https://github.com/Doko-Demo-Doa/react-native-shake</item>
         <item>https://github.com/CloudRail/cloudrail-si-java-sdk</item>
+        <item>https://github.com/flutter-webrtc/flutter-webrtc</item>
         <item>https://github.com/Kureev/react-native-blur</item>
         <item>https://github.com/cocoahero/android-geojson</item>
         <item>https://github.com/soarcn/BottomSheet</item>
@@ -9506,6 +9589,7 @@
         <item>https://github.com/commonsguy/cwac-sacklist</item>
         <item>https://github.com/commonsguy/cwac-wakeful</item>
         <item>http://www.comscore.com/</item>
+        <item>https://github.com/Bigkoo/Android-PickerView</item>
         <item>https://github.com/sharish/ShimmerRecyclerView</item>
         <item>https://github.com/corbt/react-native-keep-awake</item>
         <item>https://github.com/mjwheatley/cordova-plugin-android-fingerprint-auth</item>
@@ -9524,6 +9608,7 @@
         <item>https://github.com/CraZyLegenD/Set-Of-Useful-Kotlin-Extensions-and-Helpers/tree/master/viewbinding</item>
         <item>http://www.apteligent.com/</item>
         <item>https://www.criware.com/en/</item>
+        <item>https://github.com/apsun/RemotePreferences</item>
         <item>https://github.com/crowdin/mobile-sdk-android</item>
         <item>https://github.com/cryptape/cita</item>
         <item>http://javacsv.sourceforge.net/</item>
@@ -9629,6 +9714,7 @@
         <item>https://github.com/evollu/react-native-fcm</item>
         <item>https://github.com/evrencoskun/TableView</item>
         <item>http://help.exacttarget.com/en/technical_library/API_Overview/</item>
+        <item>https://github.com/googlearchive/android-CommitContentSampleIME</item>
         <item>https://github.com/romannurik/Android-WizardPager</item>
         <item>https://pub.dev/packages/connectivity</item>
         <item>https://github.com/exxbrain/android-biometric</item>
@@ -9820,6 +9906,7 @@
         <item>https://github.com/godness84/react-native-recyclerview-list</item>
         <item>https://github.com/gzu-liyujiang/CJKCharsetDetector</item>
         <item>https://github.com/hbldh/bleak</item>
+        <item>https://github.com/ihsg/PatternLocker</item>
         <item>https://github.com/IrineSistiana/simple-tls</item>
         <item>https://github.com/IvBaranov/MaterialFavoriteButton</item>
         <item>https://github.com/jai-imageio/jai-imageio-core</item>
@@ -9843,6 +9930,7 @@
         <item>https://github.com/kiprobinson/BigFraction</item>
         <item>https://github.com/kittinunf/fuel</item>
         <item>https://github.com/kittinunf/Result</item>
+        <item>https://github.com/sealedtx/java-youtube-downloader</item>
         <item>https://github.com/kotvertolet/youtube-jextractor</item>
         <item>https://github.com/Kr328/kaidl</item>
         <item>https://github.com/ksoichiro/Android-ObservableScrollView</item>
@@ -9945,6 +10033,7 @@
         <item>https://www.google.com/intl/en/tagmanager/</item>
         <item>https://developers.google.com/vision/</item>
         <item>https://developers.google.com/android/reference/com/google/android/gms/wearable/package-summary</item>
+        <item>https://developers.google.com/android/reference/com/google/android/gms/package-summary</item>
         <item>https://developers.google.com/android/reference/com/google/android/gms/package-summary</item>
         <item>https://developers.google.com/android/reference/com/google/android/gms/package-summary</item>
         <item>https://developers.google.com/android/reference/com/google/android/gms/package-summary</item>
@@ -10662,6 +10751,8 @@
         <item>https://kaaes.github.io/spotify-web-api-android/</item>
         <item>https://github.com/sprylab/texturevideoview</item>
         <item>https://www.singlespot.com/</item>
+        <item>https://github.com/square/curtains</item>
+        <item>https://github.com/square/curtains</item>
         <item>https://search.maven.org/artifact/com.squareup.duktape/duktape-android</item>
         <item>https://github.com/square/haha</item>
         <item>https://github.com/square/javapoet</item>
@@ -10892,6 +10983,7 @@
         <item>https://www.webtrends.com/</item>
         <item>https://www.webtrends.com/</item>
         <item>https://github.com/uccmawei/FingerprintIdentify</item>
+        <item>https://github.com/weidongjian/androidWheelView</item>
         <item>https://github.com/Lesilva/BetterSpinner</item>
         <item>https://github.com/PPartisan/RunDo</item>
         <item>https://github.com/Whebcraft/cordova-plugin-downloader</item>
@@ -10985,6 +11077,7 @@
         <item>https://github.com/katzer/cordova-plugin-local-notifications</item>
         <item>https://github.com/schwabe/ics-openvpn</item>
         <item>https://github.com/c1710/filemojicompat</item>
+        <item>https://github.com/ch4rl3x/HtmlText</item>
         <item>https://github.com/cketti/ckChangeLog</item>
         <item>https://github.com/ge0rg/MemorizingTrustManager</item>
         <item>https://www.epgpaid.de/</item>
@@ -11366,6 +11459,8 @@
         <item>https://github.com/ascclemens/khttp</item>
         <item>https://github.com/KLab/PlaygroundOSS</item>
         <item>https://github.com/JetBrains/kotlin</item>
+        <item>https://github.com/JetBrains/kotlin/tree/master/plugins/android-extensions/android-extensions-runtime</item>
+        <item>https://github.com/JetBrains/kotlin/tree/master/plugins/android-extensions/android-extensions-runtime</item>
         <item>https://github.com/Kotlin/kotlinx.atomicfu</item>
         <item>https://github.com/Kotlin/kotlinx.collections.immutable</item>
         <item>https://github.com/Kotlin/kotlinx.coroutines</item>
@@ -11664,6 +11759,7 @@
         <item>https://eclipse.org/paho/clients/java/</item>
         <item>https://git.eclipse.org/c/platform/eclipse.platform.text.git/tree/org.eclipse.text</item>
         <item>https://git.eclipse.org/c/platform/eclipse.platform.text.git/tree/org.eclipse.text</item>
+        <item>https://github.com/eclipse/tm4e</item>
         <item>https://github.com/fabiomsr/MoneyTextView</item>
         <item>https://github.com/FireZenk/AudioWaves</item>
         <item>https://fmod.com/</item>

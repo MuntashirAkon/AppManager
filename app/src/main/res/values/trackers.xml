@@ -240,6 +240,7 @@
         <item>com.otherlevels.</item>
         <item>net.pubnative</item>
         <item>com.appnext.</item>
+        <item>com.appnext.sdk</item>
         <item>com.mobfox.</item>
         <item>com.adsdk.sdk.</item>
         <item>com.jm.co.shallwead.sdk.</item>
@@ -504,6 +505,7 @@
         <item>com.tapr.internal.</item>
         <item>com.tapr.helpers.</item>
         <item>com.tappx.sdk.</item>
+        <item>com.tappx.sdk.android</item>
         <item>cn.thinkingdata.</item>
         <item>com.vk.sdk.</item>
         <item>com.vk.api.sdk.</item>
@@ -640,6 +642,7 @@
         <item>com.sfbx.appconsent.</item>
         <item>io.applink.applinkio.AppLinkIO</item>
         <item>com.applink.security.</item>
+        <item>com.gryphonet</item>
         <item>com.appzilo.sdk.</item>
         <item>com.appenda.</item>
         <item>com.apperhand.device.</item>
@@ -648,6 +651,7 @@
         <item>com.askingpoint.</item>
         <item>az.nativead.</item>
         <item>com.avazu.tracking.</item>
+        <item>com.babator.babatorui.</item>
         <item>com.backendless.</item>
         <item>com.github.backtrace-labs.</item>
         <item>backtraceio.library.</item>
@@ -656,15 +660,18 @@
         <item>jp.beaconbank.</item>
         <item>com.beemray.</item>
         <item>ai.bitlabs.sdk.</item>
+        <item>com.braintreepayments.api.</item>
         <item>com.brandio.ads</item>
         <item>com.bugclipper.android.</item>
         <item>com.buglife.sdk.</item>
         <item>com.adfonic.</item>
         <item>com.caramelads.</item>
         <item>io.cleaninsights.sdk.piwik.</item>
+        <item>com.clearblade.platform.api.</item>
         <item>com.contentsquare.android.</item>
-        <item>com.crashsdk.</item>
-        <item>io.inventiv.critic.</item>
+        <item>com.summer.crashsdk.</item>
+        <item>io.inventiv.critic.android</item>
+        <item>com.evidon.</item>
         <item>cat.ereza.customactivityoncrash</item>
         <item>com.thinkyeah.common.</item>
         <item>com.databox.</item>
@@ -679,7 +686,6 @@
         <item>io.embrace.android.embracesdk.</item>
         <item>.services.analytics.AnalyticsProviderService</item>
         <item>.services.analytics.HeartbeatJobService</item>
-        <item>com.evidon.</item>
         <item>com.ew.sdk.adboost.</item>
         <item>.adboost.</item>
         <item>jp.appAdForce.android.</item>
@@ -704,13 +710,16 @@
         <item>com.reach.OverlayActivity</item>
         <item>com.reach.PeerActivity</item>
         <item>com.reach.widget</item>
+        <item>com.gad.sdk.</item>
         <item>com.gamania.beanfunsdk.</item>
         <item>com.gamesparks.sdk.</item>
         <item>com.geouniq.android.</item>
         <item>com.google.cloud.audit</item>
         <item>com.google.mlkit</item>
         <item>com.android.billingclient</item>
+        <item>com.grab.grabidpartnersdk</item>
         <item>com.timerazor.gravysdk.</item>
+        <item>com.greedygame.legacy</item>
         <item>com.greenrobot.</item>
         <item>com.groundtruth.sdk</item>
         <item>com.growingio.</item>
@@ -741,7 +750,7 @@
         <item>io.karte.android.tracker.</item>
         <item>com.kakao.ad.</item>
         <item>com.kakao.kakaolink</item>
-        <item>com.adzerk.android.sdk</item>
+        <item>com.adzerk</item>
         <item>com.zestadz.android.</item>
         <item>com.linecorp.line.admolin</item>
         <item>com.five_corp.ad.</item>
@@ -809,8 +818,7 @@
         <item>com.ogury.consent.</item>
         <item>com.ogury.sdk.</item>
         <item>com.onetrust.</item>
-        <item>com.openmediation.sdk.</item>
-        <item>com.crosspromotion.sdk</item>
+        <item>com.openmediation.</item>
         <item>org.openudid.</item>
         <item>org.OpenUDID.</item>
         <item>com.huawei.openalliance.ad.</item>
@@ -1223,6 +1231,7 @@
         <item>OtherLevels</item>
         <item>PubNative</item>
         <item>Appnext</item>
+        <item>Appnext</item>
         <item>MobFox</item>
         <item>MobFox</item>
         <item>ShallWeAD</item>
@@ -1487,6 +1496,7 @@
         <item>TapResearch</item>
         <item>TapResearch</item>
         <item>Tappx</item>
+        <item>Tappx</item>
         <item>ThinkingData Analytics</item>
         <item>VKontakte SDK</item>
         <item>VKontakte SDK</item>
@@ -1623,6 +1633,7 @@
         <item>²AppConsent CMP</item>
         <item>²AppLink.io</item>
         <item>²AppLink.io</item>
+        <item>²AppRight (by Gryphonet)</item>
         <item>²AppZilo</item>
         <item>²Appenda</item>
         <item>²Apperhand</item>
@@ -1631,6 +1642,7 @@
         <item>²Askingpoint</item>
         <item>²Avazu aNative</item>
         <item>²Avazu aNative</item>
+        <item>²Babator</item>
         <item>²Backendless</item>
         <item>²Backtrace</item>
         <item>²Backtrace</item>
@@ -1639,15 +1651,18 @@
         <item>²BeaconBank</item>
         <item>²Beemray</item>
         <item>²BitLabs</item>
+        <item>²Braintree</item>
         <item>²Brandio</item>
         <item>²BugClipper</item>
         <item>²Buglife</item>
         <item>²Byyd (Adfonic)</item>
         <item>²CaramelAds</item>
         <item>²CleanInsights</item>
+        <item>²ClearBlade</item>
         <item>²Contentsquare</item>
         <item>²CrashSDK</item>
         <item>²Critic</item>
+        <item>²Crownpeak</item>
         <item>²Custom Activity On Crash</item>
         <item>²DaoCheng(Thinkyeah)</item>
         <item>²Databox</item>
@@ -1662,7 +1677,6 @@
         <item>²Embrace</item>
         <item>²Epic games analytics</item>
         <item>²Epic games analytics</item>
-        <item>²Evidon (now Crownpeak)</item>
         <item>²Eyewind</item>
         <item>²Eyewind</item>
         <item>²F.O.X(appadforce)</item>
@@ -1687,13 +1701,16 @@
         <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
         <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
         <item>²GMobi - Go2Reach (General Mobile Corporation)</item>
+        <item>²GPA KOREA</item>
         <item>²Gamania Beanfun</item>
         <item>²Game Sparks</item>
         <item>²GeoUniq (Cloud4Win)</item>
         <item>²Google Cloud Audit</item>
         <item>²Google ML Kit</item>
         <item>²Google Play Billing Library / Service</item>
+        <item>²Grab Analytics</item>
         <item>²Gravy Analytics</item>
+        <item>²GreedyGame</item>
         <item>²GreenRobot</item>
         <item>²GroundTruth</item>
         <item>²GrowingIO</item>
@@ -1792,7 +1809,6 @@
         <item>²Ogury</item>
         <item>²Ogury</item>
         <item>²Onetrust</item>
-        <item>²OpenMeditation</item>
         <item>²OpenMeditation</item>
         <item>²OpenUDID</item>
         <item>²OpenUDID</item>

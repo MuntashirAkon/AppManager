@@ -63,7 +63,7 @@ EOF;
 function addToTrackerInfo($trackers, $prefix=''): void {
   global $tracker_info, $j;
   foreach($trackers as $tracker) {
-    $tmp = $tracker['code_signature'];
+    $tmp = str_replace('\\', '', $tracker['code_signature']);
     $nc = $tracker['network_signature'];
     $name = $tracker['name'];
     if (empty($nc)) $nc = "NC";
