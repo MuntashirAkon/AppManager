@@ -38,7 +38,6 @@ import dev.rikka.tools.refine.Refine;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.compat.UsageStatsManagerCompat;
-import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.NonNullUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
@@ -299,27 +298,24 @@ public class AppUsageStatsManager {
         UsageUtils.TimeInterval range = UsageUtils.getTimeInterval(intervalType);
         List<String> subscriberIds = getSubscriberIds(context, networkType);
         NetworkStats.Bucket bucket = new NetworkStats.Bucket();
-        NetworkStats networkStats;
-        try {
-            for (String subscriberId : subscriberIds) {
-                networkStats = nsm.querySummary(networkType, subscriberId, range.getStartTime(), range.getEndTime());
-                if (networkStats != null) {
-                    while (networkStats.hasNextBucket()) {
-                        networkStats.getNextBucket(bucket);
-                        DataUsage dataUsage = dataUsageSparseArray.get(bucket.getUid());
-                        if (dataUsage != null) {
-                            dataUsage = new DataUsage(bucket.getTxBytes() + dataUsage.getTx(),
-                                    bucket.getRxBytes() + dataUsage.getRx());
-                        } else {
-                            dataUsage = new DataUsage(bucket.getTxBytes(), bucket.getRxBytes());
-                        }
-                        dataUsageSparseArray.put(bucket.getUid(), dataUsage);
+        for (String subscriberId : subscriberIds) {
+            try (NetworkStats networkStats = nsm.querySummary(networkType, subscriberId, range.getStartTime(), range.getEndTime())) {
+                if (networkStats == null) continue;
+                while (networkStats.hasNextBucket()) {
+                    networkStats.getNextBucket(bucket);
+                    DataUsage dataUsage = dataUsageSparseArray.get(bucket.getUid());
+                    if (dataUsage != null) {
+                        dataUsage = new DataUsage(bucket.getTxBytes() + dataUsage.getTx(),
+                                bucket.getRxBytes() + dataUsage.getRx());
+                    } else {
+                        dataUsage = new DataUsage(bucket.getTxBytes(), bucket.getRxBytes());
                     }
+                    dataUsageSparseArray.put(bucket.getUid(), dataUsage);
                 }
+            } catch (RemoteException ignore) {
             }
-        } catch (RemoteException e) {
-            Log.e("AppUsage", e);
         }
+
         return dataUsageSparseArray;
     }
 
@@ -337,9 +333,8 @@ public class AppUsageStatsManager {
         for (int networkId = 0; networkId < 2; ++networkId) {
             subscriberIds = getSubscriberIds(context, networkId);
             for (String subscriberId : subscriberIds) {
-                try {
-                    NetworkStats networkStats = nsm.querySummary(networkId, subscriberId,
-                            range.getStartTime(), range.getEndTime());
+                try (NetworkStats networkStats = nsm.querySummary(networkId, subscriberId, range.getStartTime(),
+                        range.getEndTime())) {
                     if (networkStats == null) continue;
                     while (networkStats.hasNextBucket()) {
                         networkStats.getNextBucket(bucket);
