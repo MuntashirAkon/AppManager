@@ -20,9 +20,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.NoOps;
 
 public final class RunnerUtils {
+    public static final String TAG = RunnerUtils.class.getSimpleName();
+
     public static final String CMD_PM = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ? "cmd package" : "pm";
 
     public static final String CMD_INSTALL_EXISTING_PACKAGE = CMD_PM + " install-existing --user %s %s";
@@ -124,8 +127,11 @@ public final class RunnerUtils {
         // Check if root is available
         try {
             String pathEnv = System.getenv("PATH");
+            Log.d(TAG, "PATH=" + pathEnv);
             if (pathEnv == null) return false;
             for (String pathDir : pathEnv.split(":")) {
+                File suFile = new File(pathDir, "su");
+                Log.d(TAG, "SU(file=" + suFile + ", exists=" + suFile.exists() + ", executable=" + suFile.canExecute() + ")");
                 if (new File(pathDir, "su").canExecute()) {
                     // Root available but App Manager is not granted root
                     return null;
