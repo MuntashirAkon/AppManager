@@ -11,7 +11,6 @@ import android.content.pm.PackageManager;
 import android.net.NetworkPolicyManager;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.Menu;
@@ -26,7 +25,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.collection.ArrayMap;
 import androidx.core.content.ContextCompat;
-import androidx.core.text.HtmlCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -35,6 +33,9 @@ import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -44,6 +45,9 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.dialog.BackupRestoreDialogFragment;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
+import io.github.muntashirakon.AppManager.changelog.Changelog;
+import io.github.muntashirakon.AppManager.changelog.ChangelogParser;
+import io.github.muntashirakon.AppManager.changelog.ChangelogRecyclerAdapter;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
@@ -63,10 +67,9 @@ import io.github.muntashirakon.AppManager.usage.AppUsageActivity;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.StoragePermission;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
-import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
+import io.github.muntashirakon.dialog.AlertDialogBuilder;
 import io.github.muntashirakon.reflow.ReflowMenuViewWrapper;
 import io.github.muntashirakon.util.UiUtils;
 import io.github.muntashirakon.widget.MultiSelectionView;
@@ -555,15 +558,24 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
         if (AppPref.getBoolean(AppPref.PrefKey.PREF_DISPLAY_CHANGELOG_BOOL)) {
             AppPref.set(AppPref.PrefKey.PREF_DISPLAY_CHANGELOG_BOOL, false);
             mModel.executor.submit(() -> {
-                final Spanned spannedChangelog = HtmlCompat.fromHtml(FileUtils.getContentFromAssets(this, "changelog.html"), HtmlCompat.FROM_HTML_MODE_COMPACT);
-                runOnUiThread(() -> new ScrollableDialogBuilder(this, spannedChangelog)
-                        .linkifyAll()
-                        .setTitle(R.string.changelog)
-                        .setNegativeButton(R.string.ok, null)
-                        .setNeutralButton(R.string.instructions, (dialog, which, isChecked) -> {
-                            Intent helpIntent = new Intent(this, HelpActivity.class);
-                            startActivity(helpIntent);
-                        }).show());
+                Changelog changelog;
+                try {
+                    changelog = new ChangelogParser(getApplication(), R.raw.changelog).parse();
+                } catch (IOException | XmlPullParserException e) {
+                    return;
+                }
+                runOnUiThread(() -> {
+                    RecyclerView recyclerView = (RecyclerView) View.inflate(this, R.layout.dialog_whats_new, null);
+                    recyclerView.setHasFixedSize(true);
+                    recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
+                    ChangelogRecyclerAdapter adapter = new ChangelogRecyclerAdapter();
+                    recyclerView.setAdapter(adapter);
+                    adapter.setAdapterList(changelog.getChangelogItems());
+                    new AlertDialogBuilder(this, true)
+                            .setTitle(R.string.changelog)
+                            .setView(recyclerView)
+                            .show();
+                });
             });
         }
     }

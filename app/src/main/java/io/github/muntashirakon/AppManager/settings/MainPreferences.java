@@ -8,7 +8,6 @@ import android.content.pm.UserInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.Spanned;
 import android.view.View;
 import android.widget.TextView;
 
@@ -19,7 +18,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.collection.ArrayMap;
 import androidx.core.app.ActivityCompat;
-import androidx.core.text.HtmlCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.AndroidViewModel;
@@ -28,6 +26,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.Preference;
 import androidx.preference.SwitchPreferenceCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.internal.util.TextUtils;
 import com.google.android.material.chip.Chip;
@@ -35,6 +35,9 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -45,6 +48,9 @@ import java.util.concurrent.Executors;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.changelog.Changelog;
+import io.github.muntashirakon.AppManager.changelog.ChangelogParser;
+import io.github.muntashirakon.AppManager.changelog.ChangelogRecyclerAdapter;
 import io.github.muntashirakon.AppManager.crypto.auth.AuthManagerActivity;
 import io.github.muntashirakon.AppManager.db.utils.AppDb;
 import io.github.muntashirakon.AppManager.misc.DeviceInfo2;
@@ -53,14 +59,12 @@ import io.github.muntashirakon.AppManager.settings.crypto.ImportExportKeyStoreDi
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.adb.android.AdbMdns;
 import io.github.muntashirakon.dialog.AlertDialogBuilder;
-import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 
 public class MainPreferences extends PreferenceFragment {
@@ -422,10 +426,18 @@ public class MainPreferences extends PreferenceFragment {
             }
         });
         // Changelog
-        model.getChangeLog().observe(this, changeLog -> new ScrollableDialogBuilder(activity, changeLog, true)
-                .linkifyAll()
-                .setTitle(R.string.changelog)
-                .show());
+        model.getChangeLog().observe(this, changelog -> {
+            RecyclerView recyclerView = (RecyclerView) View.inflate(activity, R.layout.dialog_whats_new, null);
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
+            ChangelogRecyclerAdapter adapter = new ChangelogRecyclerAdapter();
+            recyclerView.setAdapter(adapter);
+            adapter.setAdapterList(changelog.getChangelogItems());
+            new AlertDialogBuilder(activity, true)
+                    .setTitle(R.string.changelog)
+                    .setView(recyclerView)
+                    .show();
+        });
         // Device info
         model.getDeviceInfo().observe(this, deviceInfo -> {
             View view = View.inflate(activity, R.layout.dialog_scrollable_text_view, null);
@@ -498,17 +510,20 @@ public class MainPreferences extends PreferenceFragment {
             mExecutor.submit(() -> mSelectUsers.postValue(Users.getAllUsers()));
         }
 
-        private final MutableLiveData<CharSequence> mChangeLog = new MutableLiveData<>();
+        private final MutableLiveData<Changelog> mChangeLog = new MutableLiveData<>();
 
-        public LiveData<CharSequence> getChangeLog() {
+        public LiveData<Changelog> getChangeLog() {
             return mChangeLog;
         }
 
         public void loadChangeLog() {
             mExecutor.submit(() -> {
-                Spanned spannedChangelog = HtmlCompat.fromHtml(FileUtils.getContentFromAssets(getApplication(),
-                        "changelog.html"), HtmlCompat.FROM_HTML_MODE_COMPACT);
-                mChangeLog.postValue(spannedChangelog);
+                try {
+                    Changelog changelog = new ChangelogParser(getApplication(), R.raw.changelog).parse();
+                    mChangeLog.postValue(changelog);
+                } catch (IOException | XmlPullParserException e) {
+                    e.printStackTrace();
+                }
             });
         }
 
