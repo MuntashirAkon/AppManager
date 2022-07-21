@@ -1268,4 +1268,10 @@
     <string name="backup_apps_cannot_be_backed_up">Следующие приложения не установлены и их резервное копирование невозможно:</string>
     <string name="restart_device">Перезагрузить устройство</string>
     <string name="import_backups_warning_delete_backups_after_import">Удалить резервные копии после их импорта в App Manager\? Каждая резервная копия удаляется отдельно после успешного импорта. Выберите <b>Нет</b>, если не уверены.</string>
+    <string name="troubleshooting">Устранение неполадок</string>
+    <string name="pref_reload_apps">Перезагрузить приложения</string>
+    <string name="pref_reload_apps_msg">Перезагрузка списка приложений, хранящихся в базе данных App Manager, в случае неожиданного поведения.</string>
+    <string name="changelog_type_new">Новое</string>
+    <string name="changelog_type_fix">Исправления</string>
+    <string name="changelog_type_improve">Улучшения</string>
 </resources>
