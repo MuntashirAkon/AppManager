@@ -91,17 +91,20 @@
     <string name="license">Lizenz</string>
     <string name="third_party">Drittanbieter-Lizenzen und -Icons</string>
     <string name="credits">Danksagungen</string>
-    <string name="credits_message">Dieses Projekt baut auf folgenden Projekten auf:
+    <string name="credits_message">An die Autoren von:
 \n- The Android Open Source Project
+\n- <a href="https://github.com/zhaobozhen/libraries">Absinthe\'s libraries</a>
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/gabrielemariotti/changeloglib">ChangeLog Library</a>
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a>
 \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
 \n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a>
 \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
 \n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a>
+\n- <a href="https://github.com/topjohnwu/Magisk">Magisk</a>
 \n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
 \n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
 \n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
@@ -110,8 +113,7 @@
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
 \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
-\n- <a href="https://github.com/zhaobozhen/librariest">Absinthe\'s libraries</a>
-\nCopyright für das Original-Logo: <a href="https://github.com/Atrate">Atrate</a>. </string>
+\nAnerkennung für das ursprüngliche Logo: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="word_wrap">Zeilenumbruch ein-/ausschalten</string>
     <string name="class_viewer">Klassen-Betrachter</string>
     <string name="toggle_class_listing">Auflisten von Klassen ein-/ausschalten</string>
@@ -1196,4 +1198,10 @@
     <string name="backup_apps_cannot_be_backed_up">Die folgenden Apps sind nicht installiert und können nicht gesichert werden:</string>
     <string name="restart_device">Gerät neustarten</string>
     <string name="import_backups_warning_delete_backups_after_import">Backups löschen, nachdem sie in App Manager importiert wurden\? Jedes Backup wird nach erfolgreichem Import einzeln gelöscht. Wählen Sie <b>Nein</b>, wenn Sie sich nicht sicher sind.</string>
+    <string name="pref_reload_apps_msg">Laden Sie die Liste der in der App-Manager-Datenbank gespeicherten Anwendungen neu, wenn unerwartetes Verhalten auftritt.</string>
+    <string name="changelog_type_fix">Lösung</string>
+    <string name="troubleshooting">Fehlerbehebung</string>
+    <string name="pref_reload_apps">Apps neu laden</string>
+    <string name="changelog_type_new">Neu</string>
+    <string name="changelog_type_improve">Verbessern</string>
 </resources>
