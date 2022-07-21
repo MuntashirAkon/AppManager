@@ -93,15 +93,18 @@
     <string name="credits">鸣谢</string>
     <string name="credits_message">感谢下列开源项目作者：
 \n- The Android Open Source Project
+\n- <a href="https://github.com/zhaobozhen/libraries">Absinthe\'s libraries</a>
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/gabrielemariotti/changeloglib">ChangeLog Library</a>
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a>
 \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
 \n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a>
 \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
 \n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a>
+\n- <a href="https://github.com/topjohnwu/Magisk">Magisk</a>
 \n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
 \n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
 \n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
@@ -110,7 +113,6 @@
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
 \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
-\n- <a href="https://github.com/zhaobozhen/librariest">Absinthe\'s libraries</a>
 \n原始图标作者：<a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="word_wrap">自动换行</string>
     <string name="class_viewer">类查看器</string>
@@ -1158,4 +1160,10 @@
     <string name="backup_apps_cannot_be_backed_up">未安装下列应用，因而无法进行备份：</string>
     <string name="restart_device">重启设备</string>
     <string name="import_backups_warning_delete_backups_after_import">将备份导入 App Manager 后删除备份？ 每个备份在成功导入后会被单独删除。 如不确定，选择<b>否</b>。</string>
+    <string name="troubleshooting">疑难解答</string>
+    <string name="pref_reload_apps">重新加载应用</string>
+    <string name="pref_reload_apps_msg">重新加载存储在 App Manager 数据库中的应用列表，以防意外行为。</string>
+    <string name="changelog_type_new">新增</string>
+    <string name="changelog_type_fix">修复</string>
+    <string name="changelog_type_improve">改进</string>
 </resources>
