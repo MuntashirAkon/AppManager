@@ -12,9 +12,11 @@
         android:required="false" />
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.CLEAR_APP_CACHE"
+    <uses-permission
+        android:name="android.permission.CLEAR_APP_CACHE"
         tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.DELETE_CACHE_FILES"
+    <uses-permission
+        android:name="android.permission.DELETE_CACHE_FILES"
         tools:ignore="ProtectedPermissions" />
     <uses-permission
         android:name="android.permission.DUMP"
@@ -85,6 +87,14 @@
                 <action android:name="android.intent.action.APPLICATION_PREFERENCES" />
 
                 <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="app" />
+                <data android:host="io.github.muntashirakon.appmanager.settings" />
             </intent-filter>
         </activity>
         <activity

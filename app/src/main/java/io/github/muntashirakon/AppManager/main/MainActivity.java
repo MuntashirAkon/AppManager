@@ -269,7 +269,7 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
                 mModel.loadApplicationItems();
             }
         } else if (id == R.id.action_settings) {
-            Intent settingsIntent = new Intent(this, SettingsActivity.class);
+            Intent settingsIntent = SettingsActivity.getIntent(this);
             startActivity(settingsIntent);
         } else if (id == R.id.action_app_usage) {
             Intent usageIntent = new Intent(this, AppUsageActivity.class);
@@ -532,9 +532,7 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
                     .setMessage(R.string.backup_volume_unavailable_warning)
                     .setPositiveButton(R.string.close, null)
                     .setNeutralButton(R.string.change_backup_volume, (dialog, which) -> {
-                        Intent intent = new Intent(this, SettingsActivity.class);
-                        intent.putExtra(SettingsActivity.EXTRA_KEY, "backup_restore_prefs");
-                        intent.putExtra(SettingsActivity.EXTRA_SUB_KEY, "backup_volume");
+                        Intent intent = SettingsActivity.getIntent(this, "backup_restore_prefs", "backup_volume");
                         startActivity(intent);
                     })
                     .show();

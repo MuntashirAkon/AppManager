@@ -18,9 +18,16 @@ import io.github.muntashirakon.util.UiUtils;
 public abstract class PreferenceFragment extends PreferenceFragmentCompat {
     public static final String PREF_KEY = "key";
 
+    @Nullable
+    private String prefKey;
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        if (getArguments() != null) {
+            prefKey = requireArguments().getString(PREF_KEY);
+            requireArguments().remove(PREF_KEY);
+        }
         // https://github.com/androidx/androidx/blob/androidx-main/preference/preference/res/layout/preference_recyclerview.xml
         RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
         recyclerView.setFitsSystemWindows(true);
@@ -28,17 +35,24 @@ public abstract class PreferenceFragment extends PreferenceFragmentCompat {
         UiUtils.applyWindowInsetsAsPaddingNoTop(recyclerView);
     }
 
-    @SuppressLint("RestrictedApi")
     @Override
     public void onStart() {
         super.onStart();
-        String prefKey = getArguments() != null ? requireArguments().getString(PREF_KEY) : null;
+        updateUi();
+    }
+
+    public void setPrefKey(@Nullable String prefKey) {
+        this.prefKey = prefKey;
+        updateUi();
+    }
+
+    @SuppressLint("RestrictedApi")
+    private void updateUi() {
         if (prefKey != null) {
             Preference prefToNavigate = findPreference(prefKey);
             if (prefToNavigate != null) {
                 prefToNavigate.performClick();
             }
-            requireArguments().remove(PREF_KEY);
         }
     }
 }
