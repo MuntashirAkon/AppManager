@@ -263,15 +263,18 @@
     <string name="word_wrap">Przełącz zawijanie słów</string>
     <string name="credits_message">Do autorów
 \n- Projektu Android Open Source (AOSP)
+\n- <a href="https://github.com/zhaobozhen/libraries">Absinthe\'s libraries</a>
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/gabrielemariotti/changeloglib">ChangeLog Library</a>
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a>
 \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
 \n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a>
 \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
 \n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a>
+\n- <a href="https://github.com/topjohnwu/Magisk">Magisk</a>
 \n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
 \n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
 \n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
@@ -280,7 +283,6 @@
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
 \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
-\n- <a href="https://github.com/zhaobozhen/librariest">Absinthe\'s libraries</a>
 \nAutorskie logo: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="icon_picker">Selektor ikon</string>
     <string name="create_shortcut">Utwórz skrót</string>
@@ -313,7 +315,7 @@
     <string name="failed_to_uninstall_updates">Nie można odinstalować aktualizacji dla <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="update_uninstalled_successfully">Aktualizacje dla <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> zostały odinstalowane.</string>
     <string name="uninstall_updates">Odinstaluj aktualizacje</string>
-    <string name="allow_open_pgp_operation">Kliknij, aby zezwolić Menadżerowi Aplikacji na używanie OpenPGP</string>
+    <string name="allow_open_pgp_operation">Dotknij, aby zezwolić App Manager na używanie OpenPGP</string>
     <string name="confirm_installation">Potwierdź instalację</string>
     <string name="error_evaluating_input">Nie można ewaluować danych wejściowych</string>
     <string name="type_string">Znaki</string>
@@ -417,7 +419,7 @@
     <string name="block_components_dots">Zablokuj komponenty…</string>
     <string name="block_unblock_trackers_description">Zablokuj lub odblokuj komponenty śledzące i reklamy we wszystkich zainstalowanych aplikacjach</string>
     <string name="clear_cache">Wyczyść pamięć podręczną</string>
-    <string name="pref_import_existing_msg">Dodawanie składników wyłączonych przez inne aplikacje do App Manager. Zachowaj ostrożność podczas korzystania z tego narzędzia, ponieważ może wystąpić wiele fałszywych alarmów. Wybierz tylko te aplikacje, których jesteś pewien.</string>
+    <string name="pref_import_existing_msg">Dodawanie składników wyłączonych przez inne aplikacje do App Manager. Zachowaj ostrożność podczas korzystania z tego narzędzia, ponieważ może wystąpić wiele fałszywych alarmów. Wybierz aplikacje godne zaufania.</string>
     <string name="pref_import_existing">Importuj istniejące reguły</string>
     <string name="source_code">Kod źródłowy</string>
     <string name="update">Zaktualizuj</string>
@@ -777,8 +779,8 @@
     <string name="failed_to_reset_app_ops">Nie udało się zresetować ustawień aplikacji</string>
     <string name="pref_import_blocker_msg">Importuj reguły filtrowania z Blockera, z których każdy zawiera reguły dla pojedynczego modułu.</string>
     <string name="pref_import_watt_msg">Importuj reguły blokowania z Watt, każdy plik zawierający reguły dla pojedyńczego pakietu o nazwie <tt>packagename.xml</tt> itp.</string>
-    <string name="pref_import_msg">Importuj wcześniej wyeksportowane reguły blokowania z menedżera aplikacji.</string>
-    <string name="pref_export_msg">Eksportuj reguły blokowania skonfigurowane w Menedżerze aplikacji do pamięci zewnętrznej.</string>
+    <string name="pref_import_msg">Importuj wcześniej wyeksportowane reguły blokowania z App Manager.</string>
+    <string name="pref_export_msg">Eksportuj reguły blokowania skonfigurowane w App Manager do pamięci zewnętrznej.</string>
     <string name="touchscreen">Ekran dotykowy</string>
     <string name="reject_time">Czas odrzucenia</string>
     <string name="accept_time">Czas zatwierdzenia</string>
@@ -876,7 +878,7 @@
     <string name="type_uri_array">Tablica URIs</string>
     <string name="pref_always_on_background_msg">Zawsze instaluj aplikacje w tle i wyświetl powiadomienia po skończeniu.</string>
     <string name="pref_always_on_background">Instaluj w tle</string>
-    <string name="pref_block_trackers_msg">Zablokuj komponenty śledzenia po zainstalowaniu aplikacji za pomocą Menedżera aplikacji.</string>
+    <string name="pref_block_trackers_msg">Zablokuj komponenty śledzenia po zainstalowaniu aplikacji przy użyciu App Manager.</string>
     <string name="next">Następny</string>
     <string name="installer_app_installed">Aplikacja zainstalowana</string>
     <string name="staging_apk_files">Inscenizacja…</string>
@@ -889,7 +891,7 @@
     <string name="board_name">Płyta główna</string>
     <string name="extras">Dodatki</string>
     <string name="filter_apps_with_splits">Z podziałami</string>
-    <string name="input_keystore_pass_description">Wprowadź hasło KeyStore. Jeżeli widzisz to po raz pierwszy, proszę użyj generator hasła i zapisz je w bezpiecznym miejscu przed wpisaniem go tutaj.</string>
+    <string name="input_keystore_pass_description">Wprowadź hasło KeyStore. Jeżeli widzisz to po raz pierwszy, użyj generatora hasła i zapisz je w bezpiecznym miejscu zanim wprowadzisz je tutaj.</string>
     <string name="copy">Kopiuj</string>
     <string name="launch_mode_single_instance">Pojedyncza instancja</string>
     <string name="batch_ops">Operacje wsadowe</string>
@@ -902,7 +904,7 @@
     <string name="backup_skip_signature_checks_description">Przywróć kopie zapasowe, które albo nie przejdą weryfikacji sumy kontrolnej, albo mają inne podpisy APK niż ich poprzednie kopie zapasowe.</string>
     <string name="no_app_ops_permission">Brak uprawnień do wyświetlania operacji aplikacji</string>
     <string name="input_keystore_alias_pass_msg">Kliknij tutaj aby wprowadzić hasło dla %1$s</string>
-    <string name="view_missing_signatures">Dotknij, aby wyświetlić lub wysłać podpisy, które nie znajdują się jeszcze w bazie danych bibliotek programu App Manager.</string>
+    <string name="view_missing_signatures">Dotknij, aby wyświetlić lub wysłać podpisy, które nie znajdują się jeszcze w bazie danych bibliotek App Managera.</string>
     <string name="scanner">Skaner</string>
     <string name="sys_config">Konfiguracja systemu</string>
     <string name="app_signing_install_without_data_loss">Jeśli wyłączono weryfikację podpisu, można użyć opcji <b>Tylko zainstaluj</b>, aby zainstalować aplikację bez utraty danych.</string>
@@ -949,7 +951,7 @@
     <string name="files">Pliki</string>
     <string name="storage">Pamięć</string>
     <string name="backup_volume_dialog_description">Woluminy z prefiksem <tt>/tree</tt> to foldery wybrane za pomocą Storage Access Framework (SAF). Oprócz tych folderów domyślnym katalogiem App Managera jest podfolder o nazwie <tt>AppManager</tt>.</string>
-    <string name="notice_saf">W przeciwieństwie do woluminów, wybrany katalog będzie używany do przechowywania wszystkich plików związanych z App Managerem, w tym zapisanych pakietów APK i kopii zapasowych. Storage Access Framework (SAF) jest bardzo powolny, dlatego należy używać tej opcji tylko wtedy, gdy nie można użyć innych.</string>
+    <string name="notice_saf">W przeciwieństwie do woluminów, wybrany katalog będzie używany do przechowywania wszystkich plików związanych z App Manager, w tym zapisanych pakietów APK i kopii zapasowych. Storage Access Framework (SAF) jest bardzo powolny, dlatego należy używać tej opcji tylko wtedy, gdy nie można użyć innych.</string>
     <string name="notice">Notyfikacja</string>
     <string name="enable_disable">Włącz/wyłącz</string>
     <string name="error_with_details">Błąd: %s</string>
@@ -1223,7 +1225,7 @@
     <string name="type_string_set">Zestaw ciągów</string>
     <string name="accessibility_service_description">Ogólna usługa dostępności umożliwiająca wykonywanie pewnych operacji, takich jak czyszczenie pamięci podręcznej w trybie bez-roota.</string>
     <string name="vt_slowness_warning">W zależności od szybkości Internetu i obciążenia serwera może to trochę potrwać.</string>
-    <string name="pref_vt_apikey_description">Klucz API umożliwia App Managerowi przesyłanie plików APK do VirusTotal, a także pobieranie raportów. Zarejestruj się na stronie https://virustotal.com, aby otrzymać klucz API za darmo.</string>
+    <string name="pref_vt_apikey_description">Klucz API umożliwia App Manager przesyłanie plików APK do VirusTotal, a także pobieranie raportów. Zarejestruj się na stronie https://virustotal.com, aby otrzymać klucz API za darmo.</string>
     <string name="pref_vt_apikey_summary">Włącz skanowanie plików APK za pomocą VirusTotal.</string>
     <string name="uses_play_app_signing">Podpisywanie aplikacji Play</string>
     <string name="virtual_memory">Pamięć wirtualna</string>
@@ -1271,4 +1273,10 @@
     <string name="backup_apps_cannot_be_backed_up">Następujące aplikacje nie są zainstalowane i nie można wykonać ich kopii zapasowej:</string>
     <string name="import_backups_warning_delete_backups_after_import">Czy usuwać kopie zapasowe po zaimportowaniu ich do App Managera\? Każda kopia zapasowa jest osobno usuwana po pomyślnym zaimportowaniu. Wybierz <b>Nie</b> jeśli nie masz pewności.</string>
     <string name="backup_apps_cannot_be_restored">Następujące aplikacje nie mogą być przywrócone, ponieważ nie mają podstawowej kopii zapasowej:</string>
+    <string name="troubleshooting">Rozwiązywanie problemów</string>
+    <string name="pref_reload_apps">Odśwież aplikacje</string>
+    <string name="pref_reload_apps_msg">Odśwież listę aplikacji przechowywanych w bazie danych App Manager, w przypadku nieoczekiwanego zachowania.</string>
+    <string name="changelog_type_new">Nowy</string>
+    <string name="changelog_type_fix">Napraw</string>
+    <string name="changelog_type_improve">Polepsz</string>
 </resources>
