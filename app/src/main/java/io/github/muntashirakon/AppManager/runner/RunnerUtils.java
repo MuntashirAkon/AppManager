@@ -125,19 +125,16 @@ public final class RunnerUtils {
             return true;
         }
         // Check if root is available
-        try {
-            String pathEnv = System.getenv("PATH");
-            Log.d(TAG, "PATH=" + pathEnv);
-            if (pathEnv == null) return false;
-            for (String pathDir : pathEnv.split(":")) {
-                File suFile = new File(pathDir, "su");
-                Log.d(TAG, "SU(file=" + suFile + ", exists=" + suFile.exists() + ", executable=" + suFile.canExecute() + ")");
-                if (new File(pathDir, "su").canExecute()) {
-                    // Root available but App Manager is not granted root
-                    return null;
-                }
+        String pathEnv = System.getenv("PATH");
+        Log.d(TAG, "PATH=" + pathEnv);
+        if (pathEnv == null) return false;
+        for (String pathDir : pathEnv.split(":")) {
+            File suFile = new File(pathDir, "su");
+            Log.d(TAG, "SU(file=" + suFile + ", exists=" + suFile.exists() + ", executable=" + suFile.canExecute() + ")");
+            if (new File(pathDir, "su").canExecute()) {
+                // Root available but App Manager is not granted root
+                return null;
             }
-        } catch (Throwable ignore) {
         }
         return false;
     }
