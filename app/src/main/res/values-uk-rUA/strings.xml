@@ -1268,4 +1268,13 @@
     <string name="backup_apps_cannot_be_backed_up">Наступні застосунки не встановлені, тому неможливо створити їх запасну копію:</string>
     <string name="restart_device">Перезапустити пристрій</string>
     <string name="import_backups_warning_delete_backups_after_import">Видалити запасні копії після їх імпорту у App Manager\? Кожна запасна копія видаляється окремо після її успішного імпорту. Виберіть <b>Ні</b>, якщо не впевнені.</string>
+    <string name="frozen">Заморожено</string>
+    <string name="freeze">Заморозити</string>
+    <string name="unfreeze">Розморозити</string>
+    <string name="troubleshooting">Вирішення проблем</string>
+    <string name="changelog_type_new">Нове</string>
+    <string name="changelog_type_fix">Виправлення</string>
+    <string name="changelog_type_improve">Поліпшення</string>
+    <string name="pref_reload_apps">Перезавантажити застосунки</string>
+    <string name="pref_reload_apps_msg">Перезавантажувати список застосунків, що зберігаються в базі даних App Manager, у разі неочікуваної поведінки.</string>
 </resources>
