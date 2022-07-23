@@ -144,16 +144,16 @@
     <string name="launch_mode_single_task">Єдине завдання</string>
     <string name="launch_mode_single_instance">Один екземпляр</string>
     <string name="launch_mode_multiple">Кілька</string>
-    <string name="locale_split_for_base_apk"><xliff:g id="split_name" example="English">%1$s</xliff:g> локаль базового АРК</string>
+    <string name="locale_split_for_base_apk"><xliff:g id="split_name" example="English">%1$s</xliff:g> локаль основного АРК</string>
     <string name="locale_split_for_feature"><xliff:g id="split_name" example="English">%1$s</xliff:g> локаль <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
-    <string name="abi_split_for_base_apk"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> код для базового АРК</string>
+    <string name="abi_split_for_base_apk"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> код для основного АРК</string>
     <string name="abi_split_for_feature"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> код <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
-    <string name="density_split_for_base_apk"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) ресурсів для базового АРК</string>
+    <string name="density_split_for_base_apk"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) ресурсів для основного АРК</string>
     <string name="density_split_for_feature"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) ресурси для функції <xliff:g id="feature_name" example="Visualizer">%3$s</xliff:g></string>
-    <string name="unknown_split_for_base_apk"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> базового АРК</string>
+    <string name="unknown_split_for_base_apk"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> основного АРК</string>
     <string name="unknown_split_for_feature"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> для функції <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
     <string name="split_feature_name">Функції: <xliff:g id="feature_name" example="Visualizer">%1$s</xliff:g></string>
-    <string name="base_apk">Базовий файл .apk</string>
+    <string name="base_apk">Основний файл .apk</string>
     <string name="choose_language">Змінити мову</string>
     <string name="auto">Авто</string>
     <string name="pref_app_language">Мова</string>
@@ -760,7 +760,7 @@
     <string name="hardware">Модель</string>
     <string name="selinux">Стан SELinux</string>
     <string name="backup_skip_signature_checks_description">Відновлення резервних копій, котрі не працюють через помилку перевірки контрольної суми або мають інший підпис APK, ніж підпис резервної копії.</string>
-    <string name="backup_multiple_description">Використовувати особливе <i>найменування</i> резервної копії, замість базового.</string>
+    <string name="backup_multiple_description">Створити окрему <i>іменовану</i> резервну копію замість основної резервної копії.</string>
     <string name="backup_rules_description">Резервне копіювання правил, налаштованих в App Manager.</string>
     <string name="backup_extras_description">Резервне копіювання дозволів, економії заряду, опцій використання даних, стану MagiskHide, SSAID, тощо.</string>
     <string name="backup_extras">Додатково</string>
@@ -840,9 +840,9 @@
     <string name="backup_msg">Резервне копіювання додатків із даними</string>
     <string name="restore_latest_msg">Відновлення вже встановлених додатків, коди версій котрих вищий, ніж код встановлених.</string>
     <string name="restore_latest">Відновлення останніх резервних копій</string>
-    <string name="restore_not_installed_msg">Відновлення базової резервної копії не встановленних додатків.</string>
+    <string name="restore_not_installed_msg">Відновлення основної резервної копії не встановленних додатків.</string>
     <string name="restore_not_installed">Відновити невстановлені додатки</string>
-    <string name="restore_all_msg">Відновити базову резервну копію з усіх резервних копій додатків.</string>
+    <string name="restore_all_msg">Відновити основну резервну копію усіх резервних копій додатків.</string>
     <string name="restore_all">Відновлення всіх додатків</string>
     <string name="backup_apps_with_changes_msg">Повторити резервне копіювання додатків, які змінилися після останнього резервного копіювання. Вони включають зміни в розмірі, версії, часі останнього запуску.</string>
     <string name="backup_apps_with_changes">Резервне копіювання додатків із змінами</string>
@@ -886,7 +886,7 @@
     <string name="isolated">Ізольовано</string>
     <string name="working_on_adb_mode">Робота в режимі ADB</string>
     <string name="screen_lock_not_enabled">Виберіть блокування екрана в налаштуваннях Android або очистіть дані додатку.</string>
-    <string name="input_app_ops_description_profile">Введіть імена та/або константи додатків із пробілами, наприклад <tt>WAKE_LOCK 63 72 КАМЕРА</tt> тощо. Використовуйте <tt>*</tt>, щоб застосувати до всіх налаштованих app ops.</string>
+    <string name="input_app_ops_description_profile">Введіть імена та/або константи додатків із пробілами, наприклад <tt>WAKE_LOCK 63 72 CAMERA</tt> тощо. Використовуйте <tt>*</tt>, щоб застосувати до всіх налаштованих app ops.</string>
     <string name="installer_app_message">Натисніть <b>вибрати</b> для використання одного з встановлених додатків, або натисніть <b>користувацький</b>, щоб вказати власне ім\'я пакета.</string>
     <string name="filter_apps_without_backups">Додатки без резервних копій</string>
     <string name="uninstalled_apps">Видалені додатки</string>
@@ -976,7 +976,7 @@
     <string name="gz_bz2_compressed">%1$s стиснутий</string>
     <string name="pgp_aes_rsa_encrypted">%1$s зашифровано</string>
     <string name="no_encryption">Без шифрування</string>
-    <string name="base_backup">Базова резервна копія</string>
+    <string name="base_backup">Основна резервна копія</string>
     <string name="trackers_unblocked_successfully">Тепер трекери розблоковано</string>
     <string name="trackers_blocked_successfully">Тепер трекери заблоковані</string>
     <string name="failed_to_unblock_trackers">Не вдалося розблокувати трекери</string>
@@ -1217,7 +1217,7 @@
     <string name="primary_abi">Головний ABI</string>
     <string name="zygote_preload_name">Назва підвантаження Zygote</string>
     <string name="hidden_api_enforcement_policy">Політика контролю прихованого API</string>
-    <string name="hidden_api_enf_default_policy">Усталено (залежно від типу застосунку)</string>
+    <string name="hidden_api_enf_default_policy">За замовчуванням (залежно від типу додатку)</string>
     <string name="hidden_api_enf_policy_none">Вимкнено (повний доступ до прихованого API)</string>
     <string name="hidden_api_enf_policy_warn">М\'яко (повний доступ до прихованого API з попередженнями)</string>
     <string name="hidden_api_enf_policy_black">Строго (лише списки блокування)</string>
@@ -1254,7 +1254,7 @@
     <string name="apk_checksums">Контрольні суми APK</string>
     <string name="item_select">Обрати</string>
     <string name="app_explorer">Дослідження додатків</string>
-    <string name="netpolicy_cannot_be_modified_for_core_apps">Неможливо змінити мережеву політику системних застосунків Android.</string>
+    <string name="netpolicy_cannot_be_modified_for_core_apps">Неможливо змінити мережеву політику системних додатків Android.</string>
     <string name="pref_pure_black_theme">Цілковито чорна тема</string>
     <string name="pref_pure_black_theme_msg">Використовувати повністю чорне тло, коли ввімкнено нічний режим.</string>
     <string name="open_developer_options_page">Відкрийте сторінку параметрів розробника в налаштуваннях Android</string>
@@ -1264,8 +1264,8 @@
     <string name="usage_wifi_data">Дані Wi-Fi</string>
     <string name="backup_no_backups_present">Немає запасних копій.</string>
     <string name="restore_dots">Відновити…</string>
-    <string name="backup_apps_cannot_be_restored">Наступні застосунки неможливо відновити, оскільки щодо них немає опорної запасної копії:</string>
-    <string name="backup_apps_cannot_be_backed_up">Наступні застосунки не встановлені, тому неможливо створити їх запасну копію:</string>
+    <string name="backup_apps_cannot_be_restored">Наступні додатки неможливо відновити, оскільки вони не мають основної резервної копії:</string>
+    <string name="backup_apps_cannot_be_backed_up">Наступні додатки не встановлені, тому неможливо створити їх резервну копію:</string>
     <string name="restart_device">Перезапустити пристрій</string>
     <string name="import_backups_warning_delete_backups_after_import">Видалити запасні копії після їх імпорту у App Manager\? Кожна запасна копія видаляється окремо після її успішного імпорту. Виберіть <b>Ні</b>, якщо не впевнені.</string>
     <string name="frozen">Заморожено</string>
@@ -1275,6 +1275,6 @@
     <string name="changelog_type_new">Нове</string>
     <string name="changelog_type_fix">Виправлення</string>
     <string name="changelog_type_improve">Поліпшення</string>
-    <string name="pref_reload_apps">Перезавантажити застосунки</string>
-    <string name="pref_reload_apps_msg">Перезавантажувати список застосунків, що зберігаються в базі даних App Manager, у разі неочікуваної поведінки.</string>
+    <string name="pref_reload_apps">Перезавантажити додатки</string>
+    <string name="pref_reload_apps_msg">Перезавантажувати список додатків, що зберігаються в базі даних App Manager, у разі неочікуваної поведінки.</string>
 </resources>
