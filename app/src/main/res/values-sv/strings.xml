@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="permissions">användarbehörigheter</string>
-    <string name="uninstall">Avinstallera</string>
+    <string name="uninstall">avinstallera</string>
+    <string name="launch">starta</string>
+    <string name="no_service">inga tjänster</string>
+    <string name="group">grupp</string>
+    <string name="no_receivers">inga mottagare</string>
+    <string name="service">tjänst</string>
+    <string name="launch_mode">startläge</string>
+    <string name="error">fel</string>
+    <string name="authority">auktoritet</string>
+    <string name="receivers">mottagare</string>
+    <string name="write">skriv</string>
+    <string name="providers">leverantörer</string>
+    <string name="read">läs</string>
+    <string name="no_providers">inga leverantörer</string>
+    <string name="require_no_permission">inga behörigheter krävs</string>
+    <string name="refresh">uppdatera</string>
+    <string name="activities">aktiviteter</string>
+    <string name="signatures">signaturer</string>
+    <string name="no_activities">inga aktiviteter</string>
+    <string name="sort_by_last_update">senaste uppdateringen</string>
 </resources>
