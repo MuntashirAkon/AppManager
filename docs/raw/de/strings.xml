@@ -426,12 +426,12 @@
 \n\\end{itemize}</string>
     <string name="pages$app-details-page$horizontal-action-panel">Die horizontale Aktionsleiste, wie im vorherigen Abschnitt beschrieben, besteht aus verschiedenen anwendungsbezogenen Aktionen, wie z. B..
 \n\\begin{itemize}
-\n \\item \\textbf{Starten.} Starten Sie die Anwendung, sofern sie einen Starter \\hyperref[subsubsec:activities]{Aktivität} hat.
+\n \\item \\textbf{Starten.} Starten Sie die Anwendung, sofern sie eine Starter \\hyperref[subsubsec:activities]{Aktivität} hat.
 \n
 \n \\item \\textbf{Deaktivieren.} Deaktivieren Sie die Anwendung. Diese Schaltfläche wird nicht angezeigt, wenn sie bereits deaktiviert ist oder der Benutzer
 \n nicht über ausreichende Berechtigungen verfügt. Nachdem die Anwendung deaktiviert wurde, wird sie aus der Anwendungsschublade ausgeblendet. Verknüpfungen
 \n für die Anwendung können ebenfalls entfernt werden. Die Anwendung kann nur über den App-Manager oder ein anderes Tool, das dies unterstützt, wieder aktiviert werden.
-\n das sie unterstützt. In den Android-Einstellungen gibt es keine Option, um eine deaktivierte Benutzeranwendung zu aktivieren.
+\n In den Android-Einstellungen gibt es keine Option, um eine deaktivierte Benutzeranwendung zu aktivieren.
 \n
 \n \\item \\textbf {Deinstallieren.} Deinstallieren Sie die Anwendung.
 \n
@@ -443,7 +443,7 @@
 \n \\item \\textbf{Daten löschen.} Löscht Daten aus der Anwendung. Dies schließt alle Informationen ein, die in den internen
 \n und neuerdings auch in den externen Verzeichnissen gespeicherten Informationen, einschließlich Konten (falls von der Anwendung festgelegt), Cache usw. Das Löschen von Daten
 \n aus dem App-Manager werden beispielsweise alle in der Anwendung gespeicherten Regeln entfernt (die Sperrung wird jedoch nicht aufgehoben).
-\n Anwendung gespeichert sind. Aus diesem Grund sollten Sie immer Sicherungskopien Ihrer Regeln erstellen. Diese Schaltfläche wird nicht angezeigt, wenn der Benutzer
+\n Aus diesem Grund sollten Sie immer Sicherungskopien Ihrer Regeln erstellen. Diese Schaltfläche wird nicht angezeigt, wenn der Benutzer
 \n über ausreichende Rechte verfügt.
 \n
 \n \\item \\textbf{Cache löschen.} Anwendungscache löschen. Es gibt keine Android-Möglichkeit, den Cache einer bestimmten
@@ -453,7 +453,7 @@
 \n angezeigt, wenn die Anwendung noch nicht installiert wurde.
 \n
 \n \\item \\textbf{Was gibt\'s Neues.} Diese Schaltfläche wird für eine externe Anwendung angezeigt, wenn sie bereits installiert ist. Wenn Sie auf
-\n auf diese Schaltfläche wird ein Dialogfeld angezeigt, in dem die Unterschiede zwischen der geöffneten und der installierten Version im Sinne einer
+\n diese Schaltfläche wird ein Dialogfeld angezeigt, in dem die Unterschiede zwischen der geöffneten und der installierten Version im Sinne einer
 \n Versionskontrolle an. Die angezeigten Informationen umfassen \\textit{Version}, \\textit{Tracker},
 \n \\textit{Zulassungen}, \\textit{Komponenten}, \\textit{Signaturen} (Prüfsummenänderungen), \\textit{Merkmale},
 \n \\textit{Gemeinsame Bibliotheken} und \\textit{SDK}.
@@ -544,19 +544,19 @@
 \n\\textit{Hauptseite} und \\textit{App-Detailseite} sind zwei Aktivitäten). Jede Aktivität kann mehrere UI-Komponenten haben
 \nbekannt als \\textit{Steuerelemente}oder \\textit{Fragmente}, und jede Komponente kann verschachtelt oder übereinander platziert werden. Der
 \nEntwickler kann sich auch dafür entscheiden, externe Dateien, Links usw. innerhalb einer Aktivität zu öffnen, indem er eine Methode namens
-\n\\textit{intent filters}. Wenn Sie zum Beispiel eine Datei mit Ihrem Dateimanager öffnen, durchsucht entweder Ihr Dateimanager oder
-\nBetriebssystem die Absichtsfilter über PackageManager, um die Aktivitäten zu finden, die die Datei öffnen können, und
+\n\\textit{Intent Filter}. Wenn Sie zum Beispiel eine Datei mit Ihrem Dateimanager öffnen, durchsucht entweder Ihr Dateimanager oder
+\ndas Betriebssystem die Absichtsfilter über PackageManager, um die Aktivitäten zu finden, die die Datei öffnen können, und
 \nbietet Ihnen an, die Datei mit diesen Aktivitäten zu öffnen.
 \n
 \nAktivitäten, die exportierbar sind, können in der Regel von beliebigen Drittanbieteranwendungen geöffnet werden. Einige Aktivitäten erfordern
 \nBerechtigungen, und wenn das der Fall ist, kann nur eine Anwendung mit diesen Berechtigungen sie öffnen. In der
 \n\\textit{Aktivitäten} können Aktivitäten über die Schaltfläche \\textbf{Launch} gestartet werden. Wenn es erforderlich ist, zusätzliche
-\nzusätzliche Informationen wie Intent-Extras, Daten oder Aktionen anzugeben, öffnet ein langer Klick auf die Schaltfläche \\textbf{Launch} das Fenster
+\nInformationen wie Intent-Extras, Daten oder Aktionen anzugeben, öffnet ein langer Klick auf die Schaltfläche \\textbf{Launch} das Fenster
 \n\\hyperref[sec:interceptor-page]{Activity Interceptor} Seite, die solche Funktionen bietet.
 \n
 \n\\begin{tip}{Hinweis}
 \n Wenn Sie eine Aktivität nicht öffnen können, ist es wahrscheinlich, dass bestimmte Abhängigkeiten nicht erfüllt sind, z.B. \\ Sie
-\n Sie können z. B. die Seite \\textit{App-Details} nicht öffnen, weil Sie dafür zumindest einen Paketnamen angeben müssen. Da diese
+\n können z. B. die Seite \\textit{App-Details} nicht öffnen, weil Sie dafür zumindest einen Paketnamen angeben müssen. Da diese
 \n Abhängigkeiten nicht programmatisch hergeleitet werden können, können diese Aktivitäten standardmäßig nicht über den App Manager geöffnet werden.
 \n\\end{tip}
 \n
@@ -570,7 +570,7 @@
 \n\\textit{foreground service}, um den Inhalt herunterzuladen.
 \n
 \nWenn eine Aktivität geschlossen oder aus dem Abschnitt \\textit{Ereignisse} entfernt wird, kann sie sofort zerstört werden, abhängig von
-\nabhängig von vielen Faktoren, z. B. davon, wie viel freier Speicherplatz auf dem Telefon vorhanden ist. Dienste können jedoch auf Wunsch unbegrenzt ausgeführt werden. Wenn mehr
+\nvielen Faktoren, z. B. davon, wie viel freier Speicherplatz auf dem Telefon vorhanden ist. Dienste können jedoch auf Wunsch unbegrenzt ausgeführt werden. Wenn mehr
 \nDienste im Hintergrund ausgeführt werden, kann das Telefon aufgrund des Mangels an Speicher und/oder Verarbeitungsleistung langsamer werden, und
 \nder Akku des Telefons wird schneller entladen. Bei neueren Android-Versionen ist die Funktion zur Akkuoptimierung
 \nstandardmäßig für alle Anwendungen aktiviert. Wenn diese Funktion aktiviert ist, kann das System jeden Dienst willkürlich beenden. Allerdings,
@@ -579,7 +579,7 @@
 \naggressivere Optimierung bieten. MIUI verfügt beispielsweise über eine sehr aggressive Optimierungsfunktion, die als \\textit{MIUI Optimierung} bekannt ist.
 \n
 \nBeide Aktivitäten und Dienste werden im selben \\href{https://stackoverflow.com/questions/7597742}{looper} ausgeführt, dem
-\ndem Hauptlooper, was bedeutet, dass die Dienste nicht wirklich im Hintergrund ausgeführt werden. Es ist die Aufgabe des Entwicklers, dies
+\nHauptlooper, was bedeutet, dass die Dienste nicht wirklich im Hintergrund ausgeführt werden. Es ist die Aufgabe des Entwicklers, dies
 \nsicherzustellen. Wie kommuniziert die Anwendung mit dem Dienst\? Sie verwendet
 \n\\hyperref[subsubsec:app-details-receivers]{Broadcast Empfänger} oder Binder.</string>
     <string name="pages$app-details-page$receivers">\\textbf{Empfänger} (auch \\textit{Broadcast Empfänger} genannt) können für die Ausführung bestimmter Aufgaben für
@@ -763,10 +763,7 @@
 \n\\end{tip}
 \n
 \nEs ist möglich, die Berechtigungen nach ihrem Namen (in aufsteigender Reihenfolge) zu sortieren oder zu wählen, ob zuerst die verweigerten oder gefährlichen
-\nBerechtigungen zuerst anzuzeigen, indem Sie die entsprechenden Optionen im Menü verwenden.
-\n
-\nBenutzer können die Berechtigungen nach Berechtigungsnamen (in aufsteigender Reihenfolge) sortieren oder wählen, ob verweigerte oder gefährliche
-\nBerechtigungen zuerst anzeigen lassen, indem sie die entsprechenden Optionen im Menü verwenden.</string>
+\nBerechtigungen zuerst anzuzeigen, indem Sie die entsprechenden Optionen im Menü verwenden.</string>
     <string name="pages$app-details-page$signatures-tab_1">\\textbf{Signaturen} werden eigentlich Signierinformationen genannt. Eine Anwendung wird mit einem oder mehreren Signierzertifikaten
 \nsigniert, bevor sie veröffentlicht wird. Die Integrität einer Anwendung, d.h. ob die
 \nAnwendung vom tatsächlichen Entwickler stammt und nicht von anderen Personen verändert wurde, kann anhand der Signierinformationen überprüft werden.
@@ -836,7 +833,7 @@
 \n\\seealsoinline{\\hyperref[ch:app-ops]{Anhang: App Ops}}</string>
     <string name="pages$app-details-page$permissions">\\textbf{Berechtigungen} sind normalerweise benutzerdefinierte Berechtigungen, die von der Anwendung selbst festgelegt werden. Diese Art von Berechtigungen werden
 \nals \\textit{interne} Berechtigungen gekennzeichnet. Sie enthält auch in anderen Anwendungen deklarierte Berechtigungen, die als
-\n\\textit{Externe} Berechtigungen. Externe Berechtigungen werden in den Anwendungskomponenten als Abhängigkeiten angegeben, d. h.
+\n\\textit{Externe} Berechtigungen bezeichnet werden. Externe Berechtigungen werden in den Anwendungskomponenten als Abhängigkeiten angegeben, d. h.
 \neine Anwendung darf die Komponente nur aufrufen, wenn sie die angegebene Berechtigung besitzt. Hier ist eine vollständige Beschreibung der einzelnen
 \nElement, das dort angezeigt wird:
 \n\\begin{itemize}
@@ -850,11 +847,11 @@
 \n wird das Feld nicht angezeigt.
 \n
 \n \\item \\textbf{Flags.} (Verwendet das Flaggensymbol oder den Namen \\textbf{Schutzstufe}) Hier werden verschiedene Berechtigungen
-\n Flaggen wie \\textit{Normal}, \\textit{Entwicklung}, \\textit{Gefährlich}, \\textit{instant}, \\textit{gewährt},
+\n Flaggen wie \\textit{Normal}, \\textit{Entwicklung}, \\textit{Gefährlich}, \\textit{instant}, \\textit{Gewährt},
 \n \\textit{Widerrufen}, \\textit{Signatur}, \\textit{Privilegiert}, usw.
 \n
 \n \\item \\textbf{Paketname.} Bezeichnet den mit der Berechtigung verbundenen Paketnamen, d. h. das Paket, das die
-\n die Berechtigung definiert.
+\n Berechtigung definiert.
 \n
 \n \\Eintrag \\textbf{Gruppe.} Der Gruppenname, der mit der Berechtigung verbunden ist (falls vorhanden). Mehrere zusammengehörige Berechtigungen können oft
 \n zusammen gruppiert werden.
@@ -907,31 +904,37 @@
 \nDie Hashes der Verzeichnisse werden während des Sicherungsvorgangs erfasst und in einer Datenbank gespeichert.
 \nBei der Ausführung dieses Vorgangs werden neue Hashes erstellt und mit den in der Datenbank gespeicherten verglichen.</string>
     <string name="pages$one-click-ops-page$$1-click-restore-title">Wiederherstellen</string>
-    <string name="pages$profiles-page$options-menu">Auf dieser Seite gibt es zwei Optionsmenüs. Das Menü mit den drei Punkten oben rechts bietet zwei Optionen, nämlich
+    <string name="pages$profiles-page$options-menu">Auf dieser Seite gibt es zwei Optionsmenüs. Das Menü mit den drei Punkten in der oberen rechten Ecke bietet zwei Optionen:
 \n\\textit{Voreinstellungen} und \\textit{Importieren}.
 \n\\begin{itemize}
-\n \\item \\textbf{Voreinstellungen} Die Option Voreinstellungen listet eine Reihe von integrierten Profilen auf, die als Ausgangspunkt verwendet werden können.
+\n \\item{textbf}{Voreinstellungen} Diese Option listet eine Reihe von integrierten Profilen auf, die als Ausgangspunkt verwendet werden können.
 \n Die Profile werden aus dem Projekt \\href{https://gitlab.com/W1nst0n/universal-android-debloater}{Universal
-\n Android Debloater} erzeugt.\\\\
+\n Android Debloater}.\\\\
 \n \\seealsoinline{\\hyperref[subsec:faq:what-are-bloatware]{FAQ: Was ist Bloatware und wie entfernt man sie\?}}
 \n
-\n \\item \\textbf{Importieren.} Diese Option kann verwendet werden, um ein bestehendes Profil zu importieren.
+\n \\item \\textbf{Importieren.} Mit dieser Option können Sie ein vorhandenes Profil importieren, das zuvor aus dem App Manager exportiert wurde.
 \n\\end{itemize}
 \n
-\nEin weiteres Optionsmenü erscheint, wenn Sie lange auf ein beliebiges Profil klicken. Es enthält Optionen wie.
+\nWenn Sie lange auf ein Profilelement klicken, wird ein weiteres Optionsmenü angezeigt. Es bietet die folgenden Optionen:
 \n\\begin{itemize}
 \n \\item \\textbf{Jetzt anwenden}. Diese Option kann verwendet werden, um das Profil direkt anzuwenden. Wenn Sie darauf klicken, wird ein Dialog
-\n angezeigt, in dem Sie einen \\hyperref[subsubsec:profile-state]{Profilzustand} auswählen können. Wenn Sie eine der Optionen auswählen,
-\n wird das Profil sofort angewendet.
-\n \\item \\textbf {Löschen.} Wenn Sie auf Löschen klicken, wird das Profil sofort und ohne Warnung entfernt.
-\n \\item \\textbf{Duplizieren.} Diese Option kann verwendet werden, um das Profil zu duplizieren. Wenn Sie darauf klicken, wird ein Eingabefeld
-\n angezeigt, in dem Sie den Namen des Profils eingeben können. Wenn Sie auf ``OK\'\' klicken, wird ein neues Profil erstellt und die
-\n \\hyperref[sec:profile-page]{Profilseite} wird geladen. Das Profil wird nicht gespeichert, bis Sie es manuell speichern.
-\n \\item \\textbf{Exportieren.} Exportiert das Profil auf einen externen Speicher. Auf diese Weise exportierte Profile können unter Verwendung
-\n der Option \\textit{Import} im Drei-Punkte-Menü importiert werden.
-\n \\item \\textbf{Verknüpfung erstellen.} Diese Option kann verwendet werden, um eine Verknüpfung für das Profil zu erstellen. Wenn Sie darauf klicken, werden
-\n zwei Optionen angezeigt: \\textit{Einfach} und \\textit{Erweitert}. Mit der letzteren Option können Sie den Profilstatus festlegen
-\n bevor Sie es anwenden, während die erste Option den Standardstatus verwendet, der beim letzten Speichern des Profils konfiguriert wurde.
+\n angezeigt, in dem ein \\hyperref[subsubsec:profile-state]{Profilzustand} ausgewählt werden kann.
+\n Wenn Sie eine der Optionen auswählen, wird das Profil sofort angewendet.
+\n
+\n \\Textbf{Löschen} Wenn Sie auf Löschen klicken, wird das Profil sofort und ohne Warnung entfernt.
+\n
+\n \\item \\textbf{Duplizieren.} Diese Option kann verwendet werden, um das Profil zu duplizieren. Wenn Sie darauf klicken, wird ein Dialog
+\n angezeigt, in dem ein Name für das neue Profil festgelegt werden kann. Wenn Sie auf ``OK\'\' klicken, wird \\hyperref[sec:profile-page]{Profilseite}
+\n geladen, wobei alle Konfigurationen, die dieses Profil hat, dupliziert werden. Das Profil wird jedoch nicht gespeichert,
+\n bis es manuell gespeichert wird.
+\n
+\n \\item \\textbf{Export.} Exportiert das Profil auf einen externen Speicher. Auf diese Weise exportierte Profile können über
+\n die Option \\textit{import} wie oben erwähnt importiert werden.
+\n
+\n \\it{Textbf}{Verknüpfung erstellen} Mit dieser Option können Sie eine Verknüpfung für das Profil erstellen. Wenn Sie darauf klicken,
+\n werden zwei Optionen angezeigt: \\textit{Einfach} und \\textit{Erweitert}. Bei der Konfiguration mit der letzteren Option wird der Benutzer aufgefordert,
+\n einen Profilstatus auszuwählen, wenn die Verknüpfung aufgerufen wird. Bei der ersten Option wird dagegen immer der
+\n Standardstatus, der beim letzten Speichern des Profils konfiguriert wurde.
 \n\\end{itemize}</string>
     <string name="pages$profile-page$$section-title">Seite Profil</string>
     <string name="pages$profile-page$$options-menu-title">Menü Optionen</string>
@@ -968,11 +971,11 @@
 \nSie zeigt in erster Linie eine Liste der konfigurierten Profile zusammen mit den typischen Optionen zur Durchführung von Operationen mit ihnen an.
 \nNeue Profile können auch über die Schaltfläche \\textit{plus} in der rechten unteren Ecke hinzugefügt oder importiert werden,
 \ndupliziert oder aus einer der Voreinstellungen erstellt werden. Wenn Sie auf ein Profilelement klicken, wird die zugehörige Seite \\hyperref[sec:profile-page]{Profilseite} geöffnet.</string>
-    <string name="pages$profile-page$state">Gibt an, wie sich bestimmte konfigurierte Optionen verhalten werden. Wenn zum Beispiel die Option \\textit{Deaktivieren} aktiviert ist, werden die Anwendungen
-\ndeaktiviert, wenn der Status \\textit{Ein} ist, und wird aktiviert, wenn der Status \\textit{Aus} ist. Derzeit unterstützt der Status nur
-\n\\textit{Ein} und \\textit{Aus} Werte.</string>
+    <string name="pages$profile-page$state">Gibt an, wie sich bestimmte konfigurierte Optionen standardmäßig verhalten werden. Wenn zum Beispiel die Option \\textit{deaktivieren} aktiviert ist,
+\nwerden die Anwendungen deaktiviert, wenn der Zustand \\textit{Ein} ist, und aktiviert, wenn der Zustand \\textit{Aus} ist.
+\nDerzeit werden nur die Werte \\textit{Ein} und \\textit{On} unterstützt.</string>
     <string name="pages$profile-page$intro">Die Seite Profil zeigt die Konfigurationen für ein Profil an. Sie bietet auch die Möglichkeit, sie zu bearbeiten.</string>
-    <string name="pages$profile-page$apps-tab">Auf der Registerkarte Apps werden die unter diesem Profil konfigurierten Pakete aufgelistet. Pakete können hinzugefügt oder entfernt werden, indem Sie die Schaltfläche \\textit{Plus}
+    <string name="pages$profile-page$apps-tab">Auf der Registerkarte Apps werden die in diesem Profil konfigurierten Pakete aufgelistet. Pakete können hinzugefügt oder entfernt werden, indem Sie die Schaltfläche \\textit{Plus}
 \nunten nutzen. Pakete können auch entfernt werden, indem Sie lange auf sie klicken (in diesem Fall wird ein
 \nPopup mit der einzigen Option \\textit{Löschen} angezeigt).</string>
     <string name="pages$profile-page$options-menu">Das Menü mit den drei Punkten in der oberen rechten Ecke öffnet das Menü Optionen. Es enthält verschiedene Optionen wie.
@@ -980,15 +983,20 @@
 \n \\item \\textbf{Anwenden}. Diese Option kann verwendet werden, um das Profil anzuwenden. Wenn Sie darauf klicken, wird ein Dialogfeld angezeigt, in dem
 \n Sie einen \\hyperref[subsubsec:profile-state]{Profilzustand} auswählen können. Wenn Sie eine der Optionen auswählen, wird das Profil
 \n sofort angewendet.
+\n
 \n \\item \\textbf{Speichern.} Ermöglicht es Ihnen, das Profil zu speichern.
 \n \\begin{warning}{Hinweis}
 \n Änderungen werden nie automatisch gespeichert. Sie müssen sie von hier aus manuell speichern.
 \n \\end{warning}
+\n
 \n \\item \\textbf{Verwerfen.} Verwirft alle Änderungen, die seit der letzten Speicherung vorgenommen wurden.
+\n
 \n \\item \\textbf{Löschen.} Wenn Sie auf Löschen klicken, wird das Profil sofort und ohne Warnung gelöscht.
+\n
 \n \\item \\textbf{Duplizieren.} Diese Option kann verwendet werden, um das Profil zu duplizieren. Wenn Sie darauf klicken, wird ein Eingabefeld
 \n angezeigt, in dem Sie den Namen des Profils eingeben können. Wenn Sie auf ``OK\'\' klicken, wird ein neues Profil erstellt, und die Seite wird
 \n neu geladen. Das Profil wird nicht gespeichert, bis Sie es manuell speichern.
+\n
 \n \\item \\textbf {Verknüpfung erstellen} Diese Option kann verwendet werden, um eine Verknüpfung für das Profil zu erstellen. Wenn Sie darauf klicken, werden
 \n zwei Optionen angezeigt: \\textit{Einfach} und \\textit{Erweitert}. Mit der letzteren Option können Sie den Profilstatus festlegen
 \n bevor Sie ihn anwenden, während die erste Option den Standardstatus verwendet, der beim letzten Speichern des Profils konfiguriert wurde.
@@ -1130,15 +1138,12 @@
 \nmüssen die Berechtigungen durch Leerzeichen getrennt werden. Wenn der \\hyperref[subsubsec:profile-state]{Status} \\textit{Ein} ist, werden die
 \nBerechtigungen entzogen, und wenn der Status \\textit{Aus} ist, werden die Berechtigungen erlaubt. Die Option kann
 \ndeaktiviert werden (unabhängig von den eingegebenen Werten), indem Sie im Eingabedialog auf die Schaltfläche \\textit{deaktiviert} klicken.</string>
-    <string name="pages$profile-page$block-trackers">Ermöglicht die Sperrung/Entsperrung der Tracker-Komponenten der ausgewählten Pakete in Abhängigkeit vom
-\n\\hyperref[subsubsec:profile-state]{Status}. Wenn der Zustand \\textit{Ein} ist, werden die Tracker blockiert, und wenn der Zustand
-\n\\textit{Aus} ist, werden die Tracker entsperrt.</string>
+    <string name="pages$profile-page$block-trackers">Aktiviert die Sperrung oder Entsperrung der Tracker-Komponenten der ausgewählten Pakete je nach dem Wert von \\hyperref[subsubsec:profile-state]{Status}.
+\nWenn der Zustand \\textit{EIN} ist, werden die Tracker blockiert, und wenn der Zustand \\textit{AUS} ist, werden die Tracker entsperrt.</string>
     <string name="pages$profile-page$disable">Aktiviert/deaktiviert die ausgewählten Pakete je nach dem Zustand von \\hyperref[subsubsec:profile-state]{Status}. Wenn der Status
 \n\\textit{Ein} ist, werden die Pakete deaktiviert, und wenn der Zustand \\textit{Aus} ist, werden die Pakete aktiviert.</string>
     <string name="pages$settings-page$$backup-apps-with-keystore-title">Anwendungen mit Android KeyStore sichern</string>
-    <string name="pages$profile-page$export-blocking-rules">Mit dieser Option können Sie Blockierungsregeln exportieren.
-\n
-\n\\begin{danger}{Gefahr}
+    <string name="pages$profile-page$export-blocking-rules">\\begin{danger}{Achtung}
 \n Diese Option ist noch nicht implementiert.
 \n\\end{danger}</string>
     <string name="pages$profile-page$force-stop">Ermöglicht das erzwungene Anhalten der ausgewählten Pakete.</string>
@@ -1152,8 +1157,7 @@
     <string name="pages$settings-page$$import-export-blocking-rules-title">Import/Export-Sperrregeln</string>
     <string name="pages$settings-page$$device-info-title">Über das Gerät selbst</string>
     <string name="pages$settings-page$intro">Die Einstellungen können verwendet werden, um das Verhalten der App anzupassen.</string>
-    <string name="pages$settings-page$language">Konfigurieren Sie die In-App-Sprache.
-\nApp Manager unterstützt derzeit 19 (neunzehn) Sprachen.</string>
+    <string name="pages$settings-page$language">Konfigurieren Sie die In-App-Sprache. App Manager unterstützt derzeit 21 (einundzwanzig) Sprachen.</string>
     <string name="pages$settings-page$app-theme">In-App-Thema konfigurieren.</string>
     <string name="pages$settings-page$screen-lock">Sperren Sie den App Manager mit der Android-Bildschirmsperre, sofern eine Bildschirmsperre konfiguriert ist.
 \n
@@ -1185,24 +1189,30 @@
 \nHier wird auch der aktuell abgeleitete Betriebsmodus angezeigt. Die tatsächlichen Betriebsmodi sind \\textit{root}, \\textit{ABD} und \\textit{no-root}.</string>
     <string name="pages$settings-page$enable-disable-features">Aktivieren oder deaktivieren Sie bestimmte Funktionen im App Manager, z. B.
 \n\\begin{itemize}
-\n \\item Interceptor
-\n \\item Manifest-Betrachter
-\n \\item Scanner
-\n \\item Paket-Installer
-\n \\item Verwendungszugang: Wenn diese Option deaktiviert ist, fragt App Manager nie nach der Berechtigung \\textit{Benutzungszugriff}.
-\n \\item Protokoll-Viewer
+\n \\item \\textbf{Interceptor}
+\n \\item \\textbf{Manifest Betrachter}
+\n \\item \\textbf{Scanner}
+\n \\item \\textbf{Paketinstallationsprogramm}
+\n \\item \\textbf{Benutzungszugriff} Wenn diese Funktion deaktiviert ist, fragt der App Manager nie nach der Berechtigung \\textit{Benutzungszugriff}.
+\n \\Eintrag \\textbf{Protokollanzeige}
+\n \\item \\textbf{App Explorer.} Die Option ``Explore\'\' wird nicht verfügbar sein, wenn versucht wird, eine APK-Datei zu öffnen.
+\n \\item \\textbf{Nutze das Internet.} Alle Internetfunktionen sind deaktiviert, wenn diese Funktion ausgeschaltet ist.
+\n Derzeit ist die einzige Internetfunktion das Abrufen von Scanberichten über VirusTotal.
 \n\\end{itemize}</string>
-    <string name="pages$settings-page$signature-schemes">Wählen Sie die zu verwendenden \\href{https://source.android.com/security/apksigning}{Signaturschemata} aus.
-\nEs wird empfohlen, mindestens die Signaturschemata v1 und v2 zu verwenden.
-\nVerwenden Sie die Schaltfläche \\textit{Zurücksetzen auf Standard}, falls Sie verwirrt sind.</string>
-    <string name="pages$settings-page$signing-key">Konfigurieren Sie einen benutzerdefinierten Signierschlüssel zum Signieren von APK-Dateien.
-\nSchlüssel aus einem bestehenden KeyStore können in den App Manager importiert werden, oder es kann ein neuer Schlüssel generiert werden.
+    <string name="pages$settings-page$signature-schemes">Konfigurieren Sie die \\href{https://source.android.com/security/apksigning}{Signaturschemata}, die verwendet werden sollen, wenn die APK-Signierung aktiviert ist.
+\nDie Signaturschemata v1 und v2 sind standardmäßig aktiviert, aber v3 sollte ebenfalls aktiviert werden, um eine angemessene Sicherheit in Android 9 oder höher zu gewährleisten.</string>
+    <string name="pages$settings-page$signing-key">Konfigurieren Sie einen benutzerdefinierten Signierschlüssel zum Signieren von APK-Dateien. Schlüssel aus einem bestehenden KeyStore können in den App Manager importiert werden,
+\noder es kann ein neuer Schlüssel generiert werden.
 \n
-\n\\begin{warning}{Hinweis}
-\n App Manager verwaltet einen KeyStore, in dem die in der App verwendeten Schlüssel gespeichert werden.
-\n Das Passwort für den Keystore wird bei Bedarf abgefragt.
-\n Achten Sie darauf, das Passwort an einem sicheren Ort zu speichern, da der KeyStore sonst bei Bedarf nicht wiederhergestellt werden kann.
-\n\\end{warning}</string>
+\n\\begin{danger}{Gefahr}
+\n Verwenden Sie nicht den Schlüssel, der mit App Manager geliefert wird, da er für jeden öffentlich zugänglich ist. In Zukunft wird
+\n wird der Standardschlüssel entfernt werden.
+\n\\end{danger}
+\n
+\n\\begin{tip}{Tipp}
+\n Wenn Sie den Schlüssel in Zukunft verwenden müssen, empfiehlt es sich, selbst einen KeyStore zu erstellen und den Schlüssel
+\n zu importieren. Bei Schlüsseln, die im App Manager generiert wurden, besteht die Gefahr, dass sie ohne eine ordnungsgemäße Sicherung gelöscht werden.
+\n\\end{tip}</string>
     <string name="pages$profile-page$backup-restore">Diese Option kann verwendet werden, um ein Backup der ausgewählten Anwendungen und ihrer Daten zu erstellen oder sie wiederherzustellen. Es sind zwei Optionen
 \nverfügbar: \\textit{Backup-Optionen} und \\textit{Backup-Name}.
 \n\\begin{itemize}
