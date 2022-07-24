@@ -298,15 +298,18 @@
     <string name="class_viewer">Visualizzatore Classi</string>
     <string name="credits_message">Agli autori di
 \n- The Android Open Source Project
+\n- <a href="https://github.com/zhaobozhen/libraries">Absinthe\'s libraries</a>
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/gabrielemariotti/changeloglib">ChangeLog Library</a>
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a>
 \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
 \n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a>
 \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
 \n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a>
+\n- <a href="https://github.com/topjohnwu/Magisk">Magisk</a>
 \n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
 \n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
 \n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
@@ -315,7 +318,6 @@
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
 \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
-\n- <a href="https://github.com/zhaobozhen/librariest">Absinthe\'s libraries</a>
 \nCrediti logo originale: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="credits">Crediti</string>
     <string name="sdk_flags">Flags</string>
@@ -412,7 +414,7 @@
     <string name="open_in_termux">Apri su Termux</string>
     <string name="export_icon">Estrai icona</string>
     <string name="no_matching_package_found">Non è stato possibile trovare tale app</string>
-    <string name="block_unblock_trackers">Blocca/sblocca trackers</string>
+    <string name="block_unblock_trackers">Blocca/sblocca i tracker</string>
     <string name="clear_data_message">Vuoi davvero cancellare i dati di questa applicazione\?</string>
     <string name="skip_signature_checks">Salta controlli firme</string>
     <string name="yes">Sì</string>
@@ -509,7 +511,7 @@
     <string name="changes_not_saved">Modifiche non salvate</string>
     <string name="new_profile">Nuovo profilo</string>
     <string name="rsa">RSA</string>
-    <string name="sort_by_memory_usage">Uso della memoria</string>
+    <string name="sort_by_memory_usage">Memoria utilizzata</string>
     <string name="other">Altro</string>
     <string name="rsa_modulus">Modulo</string>
     <string name="format">Formato</string>
@@ -558,7 +560,7 @@
     <string name="apply_now">Applica ora…</string>
     <string name="routine_ops">Operazioni di routine</string>
     <string name="sort_by_process_name">Nome processo</string>
-    <string name="sort_by_apps_first">Prima le app</string>
+    <string name="sort_by_apps_first">Prima le App</string>
     <string name="pref_compression_method">Metodo di compressione</string>
     <string name="allow_open_pgp_operation">Tocca per permettere ad App Manager di usare OpenPGP</string>
     <string name="update_uninstalled_successfully">Gli aggiornamenti per <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> sono stati disinstallati.</string>
@@ -575,15 +577,15 @@
     <string name="failed_to_duplicate_profile">Impossibile duplicare il profilo</string>
     <string name="pref_show_users_in_installer">Mostra utenti nell\'installatore</string>
     <string name="pref_show_users_in_installer_msg">Visualizza un elenco di utenti da selezionare prima di installare un\'app esterna. Richiede root o ADB.</string>
-    <string name="pref_encryption_msg">Crittografia per i salvataggi.</string>
+    <string name="pref_encryption_msg">Crittografa i backup.</string>
     <string name="none">Nessuno</string>
     <string name="allow_routine_ops">Permetti operazioni di routine</string>
     <string name="profile_state">Stato del profilo</string>
     <string name="allow_routine_ops_msg">Permetti l\'uso del profilo nelle operazioni di routine</string>
     <string name="profile_force_stop_msg">Arresto forzata delle app</string>
     <string name="profile_clear_cache_msg">Pulisci la cache delle app</string>
-    <string name="profile_clear_data_msg">Pulisci i dati delle app</string>
-    <string name="profile_block_trackers_msg">Blocca i trackers nelle app</string>
+    <string name="profile_clear_data_msg">Pulisci i dati delle App</string>
+    <string name="profile_block_trackers_msg">Blocca i tracker nelle app</string>
     <string name="profile_state_msg">Stato on/off personalizzato per questo profilo</string>
     <string name="off">Spento</string>
     <string name="options">Opzioni</string>
@@ -658,7 +660,7 @@
     <string name="rules">Regole</string>
     <string name="pref_mode_of_operations">Modalità di funzionamento</string>
     <string name="public_key">Chiave pubblica</string>
-    <string name="clear_app_cache">Pulisci la cache dell\'app</string>
+    <string name="clear_app_cache">Pulisci la cache dell\'App</string>
     <string name="sys_config">Configurazione di sistema</string>
     <string name="keystore">KeyStore</string>
     <string name="pref_backup_flags_msg">L\'aggiunta di un predefinito per le opzioni di backup rimuove l\'onere di selezionare le flag ogni volta che si fa il backup/ripristino.</string>
@@ -757,7 +759,7 @@
     <string name="external_data">Dati esterni</string>
     <string name="internal_data">Dati interni</string>
     <string name="data">Dati</string>
-    <string name="backup">Salvataggio</string>
+    <string name="backup">Backup</string>
     <plurals name="alert_failed_to_set_app_ops">
         <item quantity="one">Impossibile impostare operazioni applicazione per %1$d applicazione</item>
         <item quantity="other">Impossibile impostare operazioni applicazione per %1$d applicazioni</item>
@@ -778,7 +780,7 @@
         <item quantity="one">Verificato con %d avviso</item>
         <item quantity="other">Verificato con %d avvisi</item>
     </plurals>
-    <string name="apply_to_system_apps">Applica alle applicazioni di sistema</string>
+    <string name="apply_to_system_apps">Applica alle app di sistema</string>
     <string name="clear">Pulisci</string>
     <string name="block">Blocca</string>
     <string name="pref_remove_all_rules_msg">I permessi saranno concessi, operazioni applicazione e componenti torneranno al loro valore predefinito.</string>
@@ -936,7 +938,7 @@
         <item quantity="one">Impossibile salvare %1$d applicazione</item>
         <item quantity="other">Impossibile salvare %1$d applicazioni</item>
     </plurals>
-    <string name="backup_options">Opzioni Salvataggio</string>
+    <string name="backup_options">Opzioni backup</string>
     <string name="base_apk">APK Base</string>
     <string name="process_state">Stato: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g></string>
     <plurals name="failed_to_backup_some_apk_files">
@@ -1196,4 +1198,10 @@
     <string name="backup_apps_cannot_be_backed_up">Le seguenti applicazioni non sono installate e non possono essere sottoposte a backup:</string>
     <string name="restart_device">Riavvia dispositivo</string>
     <string name="import_backups_warning_delete_backups_after_import">Eliminare i backup dopo averli importati in App Manager\? Ogni backup viene eliminato singolarmente dopo essere stato importato con successo. Seleziona <b>No</b> se non sei sicuro.</string>
+    <string name="troubleshooting">Risoluzione dei problemi</string>
+    <string name="pref_reload_apps">Ricarica le app</string>
+    <string name="pref_reload_apps_msg">Ricarica l\'elenco delle app archiviate nel database di App Manager in caso di comportamenti imprevisti.</string>
+    <string name="changelog_type_new">Nuovo</string>
+    <string name="changelog_type_fix">Correggi</string>
+    <string name="changelog_type_improve">Migliora</string>
 </resources>
