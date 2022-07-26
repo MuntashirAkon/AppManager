@@ -18,4 +18,6 @@
 \n %\\sourceatright
 \n {--- Friar Laurence, \\textit{Romeu e Julieta}}
 \n \\end{quotation}</string>
+    <string name="keywords$end_of_keyword_in_alert">\\newcommand{\\KeywordEndOfKeyWordInAlert}{.}</string>
+    <string name="keywords$chapter">\\newcommand{\\KeywordChapter}{Capítulo}</string>
 </resources>
