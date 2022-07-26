@@ -18,6 +18,45 @@
 \n %\\sourceatright
 \n {--- Friar Laurence, \\textit{Romeu e Julieta}}
 \n \\end{quotation}</string>
-    <string name="keywords$end_of_keyword_in_alert">\\newcommand{\\KeywordEndOfKeyWordInAlert}{.}</string>
+    <string name="keywords$end_of_keyword_in_alert">\\newcommand{\\FimDaPalavraChaveEmAlerta}{.}</string>
     <string name="keywords$chapter">\\newcommand{\\KeywordChapter}{Capítulo}</string>
+    <string name="intro$main$intro">App Manager é um gerenciador de pacotes avançado para Android. Oferece inúmeros recursos e, consequentemente, exige um usuário
+\nmanual para auxiliar seus usuários. Este documento funciona como um manual do usuário para o App Manager no sentido de que visa descrever
+\ntodos os recursos que o App Manager tem a oferecer. Este documento também pode ser considerado como as diretrizes ``oficiais\'\' para
+\nApp Manager e representa o comportamento esperado do App Manager. As traduções podem interpretar mal este documento (que é
+\nescrito em inglês). Portanto, todo usuário competente deve ler a versão em inglês do documento para obter o melhor
+\ndo Gerenciador de Aplicativos. Também pode haver outros recursos não oficiais ou de terceiros, como artigos de blog, vídeos, bate-papo
+\ngrupos, etc. Embora esses recursos possam ser úteis para muitas pessoas, eles podem não estar atualizados com o atual
+\nversão do Gerenciador de Aplicativos. Se quaisquer desvios forem detectados no App Manager a partir deste documento, eles devem ser relatados no
+\n\\href{https://github.com/MuntashirAkon/AppManager/issues}{Rastreador de problemas do App Manager}.</string>
+    <string name="intro$main$terminologies">\\begin{itemize}
+\n \\item \\textbf{AM} --- nome curto para Gerenciador de aplicativos.
+\n \\item \\textbf{Block/Unblock} --- Usado para bloquear ou desbloquear componentes. Como os componentes são bloqueados depende
+\n as preferências do usuário.
+\n \\item \\textbf{IFW} --- forma curta de Firewall de Intenção.
+\n \\item \\textbf{Ops} --- Nome curto para operações, ops de aplicativos por exemplo, ops em lote, ops de 1 clique
+\n \\item \\textbf{SSAID} --- forma curta de \\texttt{Configurações.Secure.ANDROID\\_ID}. É um identificador de dispositivo atribuído a
+\n cada aplicativo (Android Oreo e em diante). É gerado a partir da combinação do certificado de assinatura do aplicativo
+\n e o conjunto SSAID para o pacote \\texttt{android}. Como resultado, é garantido ser o mesmo para um aplicativo, a menos que
+\n o usuário opta por formatar o dispositivo. É amplamente utilizado para rastreamento.
+\n \\item \\textbf{Tracker} --- Denota componentes rastreadores em todo o documento e no Gerenciador de Aplicativos, exceto no App Manager, exceto no
+\n \\hyperref[sec:scanner-page]{página do scanner}. Os rastreadores incluem bibliotecas como repórteres de acidentes, análises,
+\n perfil, identificação, anúncio, localização, etc. Assim, não são iguais em funções. Não há distinção ou preconceito
+\n entre bibliotecas de código aberto e de código fechado que promovem o rastreamento.
+\n\\end{itemize}</string>
+    <string name="intro$main$bin-sources">O App Manager é distribuído usando as seguintes fontes. Fontes não oficiais podem distribuir versões modificadas do App
+\nGerente, e ninguém além de você será responsável pelas consequências do uso de tais distribuições.
+\n\\begin{enumerate}
+\n \\item Official F-Droid repository.\\footnote{For distributing normal releases only}\\\\
+\n \\textit{Link:} \\url{https://f-droid.org/packages/io.github.muntashirakon.AppManager}
+\n \\item GitHub repository.\\\\
+\n \\textit{Normal releases:} \\url{https://github.com/MuntashirAkon/AppManager/releases}\\\\
+\n \\textit{Debug releases:} \\url{https://github.com/MuntashirAkon/AppManager/actions}
+\n \\item Telegram.\\\\
+\n \\textit{Normal releases:} \\url{https://t.me/AppManagerChannel}\\\\
+\n \\textit{Debug releases:} \\url{https://t.me/AppManagerDebug}
+\n\\end{enumerate}</string>
+    <string name="titlepage$user_manual">{\\huge\\bfseries Manual do Usuário\\par}</string>
+    <string name="intro$main$supported-versions">Atualmente, as versões suportadas são v2.6.0 (estável), v3.0.0 (alpha e de debug). Verções anteriores do App
+\nManager pode conter vulnerabilidades de segurança e não deve usal-las.</string>
 </resources>
