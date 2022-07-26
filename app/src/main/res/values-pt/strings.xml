@@ -277,14 +277,20 @@
     <string name="toggle_class_listing">Alternar lista de classes</string>
     <string name="class_viewer">Visualizador de classe</string>
     <string name="word_wrap">Alternar quebra de palavra</string>
-    <string name="credits_message">Aos autores do
+    <string name="credits_message">Aos autores de
 \n- The Android Open Source Project
+\n- <a href="https://github.com/zhaobozhen/libraries">Absinthe\'s libraries</a>
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/gabrielemariotti/changeloglib">ChangeLog Library</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a>
 \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a>
 \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a>
+\n- <a href="https://github.com/topjohnwu/Magisk">Magisk</a>
 \n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
 \n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
 \n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
@@ -293,7 +299,7 @@
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
 \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
-\nCréditos do logótipo original: <a href="https://github.com/Atrate">Atrate</a>. </string>
+\nCréditos ao logotipo original: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="credits">Méritos</string>
     <string name="third_party">Bibliotecas e Ícones de terceiros</string>
     <string name="license">Licença</string>
@@ -1175,4 +1181,26 @@
     <string name="open_in_new_window">Nova janela</string>
     <string name="type_string_set">Conjunto de strings</string>
     <string name="app_explorer">Explorador de aplicações</string>
+    <string name="frozen">Congelado</string>
+    <string name="freeze">Congelar</string>
+    <string name="unfreeze">Descongelar</string>
+    <string name="restore_dots">Restaurar…</string>
+    <string name="backup_apps_cannot_be_backed_up">Os seguintes apps não podem ser instalados nem serem armazenados seus backups:</string>
+    <string name="restart_device">Reiniciar dispositivo</string>
+    <string name="pref_pure_black_theme">Tema escuro puro</string>
+    <string name="backup_no_backups_present">Sem backups.</string>
+    <string name="import_backups_warning_delete_backups_after_import">Deletar os backups após importar para o App Manager\? O backup é individualmente deletado após importado com sucesso. Selecione <b>Não</b> se não tiver certeza.</string>
+    <string name="open_developer_options_page">Abrir opções de desenvolvedor nas opções do Android</string>
+    <string name="backup_apps_cannot_be_restored">Os seguintes apps não podem ser restaurados por não terem base de backup:</string>
+    <string name="pref_pure_black_theme_msg">Use um plano de fundo totalmente preto quando o modo noturno está habilitado.</string>
+    <string name="usage_last_used">Usado recentemente</string>
+    <string name="usage_mobile_data">Dados moveis</string>
+    <string name="usage_wifi_data">Dados Wi-Fi</string>
+    <string name="usage_times_opened">Vezes aberto</string>
+    <string name="pref_reload_apps_msg">Recarregar a lista de apps armazenados na App Manager database em caso de algo inesperado.</string>
+    <string name="troubleshooting">Solucionar problemas</string>
+    <string name="pref_reload_apps">Recarregar apps</string>
+    <string name="changelog_type_new">Novo</string>
+    <string name="changelog_type_fix">Arrumar</string>
+    <string name="changelog_type_improve">Renovar</string>
 </resources>
