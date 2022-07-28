@@ -6,7 +6,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.0.4'
+        classpath 'com.android.tools.build:gradle:7.2.1'
         classpath 'dev.rikka.tools.refine:gradle-plugin:3.0.3'
         classpath "com.google.protobuf:protobuf-gradle-plugin:0.8.6"
     }
@@ -31,7 +31,7 @@ allprojects {
 
 project.ext {
     compileSdk = 32
-    buildTools = "30.0.3"
+    buildTools = "33.0.0"
     minSdk = 21
     targetSdk = 32
 
