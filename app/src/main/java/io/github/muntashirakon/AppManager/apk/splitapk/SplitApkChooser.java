@@ -18,6 +18,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
+import aosp.libcore.util.EmptyArray;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
@@ -89,6 +90,7 @@ public class SplitApkChooser extends DialogFragment {
                         pm.getApplicationIcon(appInfo), versionInfo))
                 .showSelectAll(false)
                 .addSelections(getInitialSelections(apkEntries))
+                .addDisabledItems(getUnsupportedOrRequiredSplits())
                 .setPositiveButton(actionName == null ? getString(R.string.install) : actionName, (dialog, which, selectedItems) ->
                         installInterface.triggerInstall())
                 .setNegativeButton(R.string.cancel, (dialog, which, selectedItems) -> onCancel(dialog))
@@ -213,16 +215,32 @@ public class SplitApkChooser extends DialogFragment {
     }
 
     @NonNull
+    private List<ApkFile.Entry> getUnsupportedOrRequiredSplits() {
+        List<ApkFile.Entry> apkEntries = apkFile.getEntries();
+        List<ApkFile.Entry> unsupportedOrRequiredSplits = new ArrayList<>();
+        for (ApkFile.Entry apkEntry : apkEntries) {
+            if (!apkEntry.supported() || apkEntry.isRequired()) {
+                unsupportedOrRequiredSplits.add(apkEntry);
+            }
+        }
+        return unsupportedOrRequiredSplits;
+    }
+
+    @NonNull
     private int[] select(int index) {
         List<Integer> selections = new ArrayList<>();
+        apkFile.select(index);
         List<ApkFile.Entry> apkEntries = apkFile.getEntries();
         ApkFile.Entry entry = apkEntries.get(index);
         String feature = entry.getFeature();
-        HashSet<Integer> types = new HashSet<>();
-        seenSplits.put(feature, types);
+        HashSet<Integer> types = seenSplits.get(feature);
+        if (types == null) {
+            types = new HashSet<>();
+            seenSplits.put(feature, types);
+        }
         for (int i = 0; i < apkEntries.size(); ++i) {
             ApkFile.Entry apkEntry = apkEntries.get(i);
-            if (Objects.equals(apkEntry.getFeature(), feature)) {
+            if (Objects.equals(apkEntry.getFeature(), feature) && apkEntry.type != entry.type) {
                 if (apkEntry.isSelected()) {
                     // Deselect unwanted items
                     apkFile.deselect(i);
@@ -270,21 +288,47 @@ public class SplitApkChooser extends DialogFragment {
         List<ApkFile.Entry> apkEntries = apkFile.getEntries();
         ApkFile.Entry entry = apkEntries.get(index);
         if (entry.isRequired()) {
-            // Can't be unselected
+            // 1. This is a required split, can't be unselected
             return null;
         }
-        List<Integer> selections = new ArrayList<>();
+        boolean featureSplit = entry.type == ApkFile.APK_SPLIT_FEATURE;
         String feature = entry.getFeature();
-        seenSplits.remove(feature);
-        for (int i = 0; i < apkEntries.size(); ++i) {
-            ApkFile.Entry apkEntry = apkEntries.get(i);
-            if (Objects.equals(apkEntry.getFeature(), feature)) {
-                if (apkEntry.isSelected()) {
-                    selections.add(i);
-                    apkFile.deselect(i);
+        if (featureSplit) {
+            // 2. If this is a feature split (base.apk is always a required split), unselect all the associated splits
+            List<Integer> deselectedSplits = new ArrayList<>();
+            seenSplits.remove(feature);
+            for (int i = 0; i < apkEntries.size(); ++i) {
+                ApkFile.Entry apkEntry = apkEntries.get(i);
+                if (Objects.equals(apkEntry.getFeature(), feature)) {
+                    // Split has the same feature
+                    if (apkEntry.isSelected()) {
+                        deselectedSplits.add(i);
+                        apkFile.deselect(i);
+                    }
                 }
             }
+            return ArrayUtils.convertToIntArray(deselectedSplits);
+        } else {
+            // 3. This isn't a feature split. Find all the splits by the same type and see if at least one split is
+            // selected. If not, this split can't be unselected.
+            boolean selectedAnySplits = false;
+            for (int i = 0; i < apkEntries.size(); ++i) {
+                ApkFile.Entry apkEntry = apkEntries.get(i);
+                if (i != index
+                        && entry.type == apkEntry.type
+                        && Objects.equals(apkEntry.getFeature(), feature)
+                        && apkEntry.isSelected()) {
+                    // Split has the same type and is selected
+                    selectedAnySplits = true;
+                    break;
+                }
+            }
+            if (selectedAnySplits) {
+                // At least one item is selected, deselect the current one
+                apkFile.deselect(index);
+                return EmptyArray.INT;
+            }
+            return null;
         }
-        return ArrayUtils.convertToIntArray(selections);
     }
 }

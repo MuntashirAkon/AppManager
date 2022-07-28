@@ -11,8 +11,10 @@ import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.os.RemoteException;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.format.Formatter;
+import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
@@ -22,6 +24,8 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
+
+import com.google.android.material.color.MaterialColors;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -66,9 +70,7 @@ import io.github.muntashirakon.util.LocalizedString;
 import static io.github.muntashirakon.AppManager.apk.ApkUtils.getDensityFromName;
 import static io.github.muntashirakon.AppManager.apk.ApkUtils.getManifestAttributes;
 import static io.github.muntashirakon.AppManager.apk.ApkUtils.getManifestFromApk;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getTitleText;
 
 public final class ApkFile implements AutoCloseable {
     public static final String TAG = "ApkFile";
@@ -877,12 +879,24 @@ public final class ApkFile implements AutoCloseable {
             return forFeature != null;
         }
 
+        /**
+         * Whether the split supported by this platform
+         */
+        public boolean supported() {
+            if (type == APK_SPLIT_ABI) {
+                // Not all ABIs are supported by all platforms.
+                // This can be deduced by checking the rank of the ABI.
+                return rank != Integer.MAX_VALUE;
+            }
+            return true;
+        }
+
         @Override
         @NonNull
         public CharSequence toLocalizedString(@NonNull Context context) {
             CharSequence localizedString = toShortLocalizedString(context);
             SpannableStringBuilder builder = new SpannableStringBuilder()
-                    .append(context.getString(R.string.size)).append(": ")
+                    .append(context.getString(R.string.size)).append(LangUtils.getSeparatorString())
                     .append(Formatter.formatFileSize(context, getFileSize()));
             if (isRequired()) {
                 builder.append(", ").append(context.getString(R.string.required));
@@ -890,8 +904,14 @@ public final class ApkFile implements AutoCloseable {
             if (isIsolated()) {
                 builder.append(", ").append(context.getString(R.string.isolated));
             }
-            return new SpannableStringBuilder(getTitleText(context, localizedString)).append("\n")
-                    .append(getSmallerText(getSecondaryText(context, builder)));
+            if (!supported()) {
+                builder.append(", ");
+                int start = builder.length();
+                builder.append(context.getString(R.string.unsupported_split_apk));
+                builder.setSpan(new ForegroundColorSpan(MaterialColors.getColor(context, R.attr.colorError, "null")),
+                        start, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+            return new SpannableStringBuilder(localizedString).append("\n").append(getSmallerText(builder));
         }
 
         public CharSequence toShortLocalizedString(Context context) {
