@@ -1,19 +1,60 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?><!DOCTYPE changelog [
+
+    <!ELEMENT changelog (release+)><!ATTLIST changelog bullet CDATA #IMPLIED>
+
+    <!ELEMENT release ((note|new|improve|fix)*)><!ATTLIST release type CDATA #REQUIRED><!ATTLIST release version CDATA #REQUIRED><!ATTLIST release code CDATA #REQUIRED><!ATTLIST release date CDATA #REQUIRED>
+
+    <!ELEMENT note (#PCDATA)><!ATTLIST note title CDATA #IMPLIED><!ATTLIST note bullet CDATA #IMPLIED><!ATTLIST note subtext CDATA #IMPLIED>
+
+    <!ELEMENT new (#PCDATA)><!ATTLIST new title CDATA #IMPLIED><!ATTLIST new bullet CDATA #IMPLIED><!ATTLIST new subtext CDATA #IMPLIED>
+
+    <!ELEMENT improve (#PCDATA)><!ATTLIST improve title CDATA #IMPLIED><!ATTLIST improve bullet CDATA #IMPLIED><!ATTLIST improve subtext CDATA #IMPLIED>
+
+    <!ELEMENT fix (#PCDATA)><!ATTLIST fix title CDATA #IMPLIED><!ATTLIST fix bullet CDATA #IMPLIED><!ATTLIST fix subtext CDATA #IMPLIED>
+
+    <!ENTITY settings "io.github.muntashirakon.appmanager.settings">
+
+    ]>
 <changelog>
-    <release type="stable release" version="v2.6.0" code="385" date="25 Apr 2021">
-        <new>[b]New Feature:[/b] Log Viewer (accessible from the main menu, “running” tag in the app info page and three-dots menu in each item of the running apps page).</new>
+    <release
+        type="stable release"
+        version="v2.6.0"
+        code="385"
+        date="25 Apr 2021">
+        <new>
+            [b]New Feature:[/b] Log Viewer (accessible from the main menu, “running” tag in the app info page and
+            three-dots menu in each item of the running apps page).
+        </new>
         <new>[b]New language:[/b] Arabic</new>
         <new>Added AES and RSA encryption (AES/GCM/NoPadding with 12 bytes IV) for backups</new>
         <new>Added clear cache option in ADB mode</new>
         <new>Added filter by profile in the main page</new>
         <new>Added options to disable log viewer</new>
-        <new>Added the ability to import (JKS, BKS and PKCS #12 KeyStores and PK8 formatted private key and PEM certificate) and generate signing keys</new>
-        <new>Added the option to import/export App Manager's KeyStore. It's a typical Bouncy Castle KeyStore in BKS extension</new>
-        <new>Added SAF tag in the app info page for apps that uses storage access framework. Clicking on it lists the granted URIs.</new>
-        <new>Added [b]Verify and redo backups[/b] and [b]back up apps with changes[/b] in 1-click ops page (in the backup section)</new>
-        <improve>Removed unAPKM from the app as newer APKMs are no longer encrypted. (Use UnAPKM extension from F-Droid to continue to decrypt the encrypted APKM files.)</improve>
+        <new>
+            Added the ability to import (JKS, BKS and PKCS #12 KeyStores and PK8 formatted private key and PEM
+            certificate) and generate signing keys
+        </new>
+        <new>
+            Added the option to import/export App Manager's KeyStore. It's a typical Bouncy Castle KeyStore in BKS
+            extension
+        </new>
+        <new>
+            Added SAF tag in the app info page for apps that uses storage access framework. Clicking on it lists the
+            granted URIs.
+        </new>
+        <new>
+            Added [b]Verify and redo backups[/b] and [b]back up apps with changes[/b] in 1-click ops page (in the backup
+            section)
+        </new>
+        <improve>
+            Removed unAPKM from the app as newer APKMs are no longer encrypted. (Use UnAPKM extension from F-Droid to
+            continue to decrypt the encrypted APKM files.)
+        </improve>
         <improve>Added compatibility support for mobile data usage in old operating systems</improve>
-        <improve>Added colour codes to the “backup” tag in the main page denoting the age of the backups: Red => Uninstalled, Dark cyan => Up to date backup, Orange => Outdated backup</improve>
+        <improve>
+            Added colour codes to the “backup” tag in the main page denoting the age of the backups: Red => Uninstalled,
+            Dark cyan => Up to date backup, Orange => Outdated backup
+        </improve>
         <improve>Added select all button in various multiple choice dialogs</improve>
         <improve>Display native libraries alongside shared libraries in the shared libs tab</improve>
         <improve>Display file names that could not be imported (when importing files from Blocker or Watt)</improve>
@@ -26,13 +67,19 @@
         <fix>Renamed global component blocking to instant component blocking</fix>
         <fix>Renamed [b]Backup APK[/b] to [b]Save APK[/b]</fix>
         <fix>Removed the backup option [b]Source[/b] and renamed [b]APK only[/b] to [b]APK files[/b]</fix>
-        <fix>Replaced the backup option [b]Data[/b] with [b]Internal data[/b]. [b]External data[/b] no longer depends on this option.</fix>
+        <fix>
+            Replaced the backup option [b]Data[/b] with [b]Internal data[/b]. [b]External data[/b] no longer depends on
+            this option
+        </fix>
         <fix>Replaced the backup option [b]Exclude cache[/b] with [b]Cache[/b] (i.e., the flag has been inverted).</fix>
-        <fix>Avoided crash in the app details page when device configuration (night mode, orientation, etc.) changes</fix>
+        <fix>Avoided crash in the app details page when device configuration (night mode, orientation, etc.) changes
+        </fix>
         <fix>Backup URI grants only for the given users</fix>
         <fix>Fixed a crash occurs occasionally when detecting whether an app is running</fix>
         <fix>Fixed a crash when yesterday data isn't available in the app usage page</fix>
-        <fix>Fixed a crash when back button is pressed immediately after pressing the add button in the profile page</fix>
+        <fix>
+            Fixed a crash when back button is pressed immediately after pressing the add button in the profile page
+        </fix>
         <fix>Fixed backup service from hanging if it encounters invalid file types</fix>
         <fix>Fixed fetching storage info for users other than the current user</fix>
         <fix>Fixed hidden API restriction bypass issue for Android 11 (which unfortunately increased the APK size)</fix>
@@ -45,14 +92,21 @@
             If you are in confusion, make sure to restart your device after restoring a backup.
         </note>
     </release>
-    <release type="pre-release" version="v2.5.24" code="383" date="21 Mar 2021">
+    <release
+        type="pre-release"
+        version="v2.5.24"
+        code="383"
+        date="21 Mar 2021">
         <new>New language: Tradition Chinese</new>
         <new>Added filter by uninstalled apps, apps without backups in the main page</new>
         <new>Allow specifying custom installer package which may or may not be installed</new>
         <new>Copy package name on clicking on the package name in the app info tab</new>
         <new>Display file size, requirement, etc. for split APKs in the APK selection dialog</new>
         <new>Display version and tracker info in the installation confirmation dialog</new>
-        <improve>Added wildcard support for app ops and permissions for profiles. [tt]*[/tt] can be used instead of specifying app ops or permissions to revoke all configured/dangerous permissions/app ops</improve>
+        <improve>
+            Added wildcard support for app ops and permissions for profiles. [tt]*[/tt] can be used instead of
+            specifying app ops or permissions to revoke all configured/dangerous permissions/app ops
+        </improve>
         <improve>App icons are cached to improve load time</improve>
         <improve>Complete rewrite of running apps internals in Java</improve>
         <improve>Display uninstalled system apps and display installation prompt on clicking them</improve>
@@ -60,7 +114,10 @@
         <improve>Removed toybox along with its dependencies</improve>
         <improve>Updated trackers and libraries</improve>
         <improve>Utilise multiple CPUs for back up/restore</improve>
-        <improve>Verify copied checksum with the checksum of the signing certificate of the app on clicking on the app icon in the app info page</improve>
+        <improve>
+            Verify copied checksum with the checksum of the signing certificate of the app on clicking on the app icon
+            in the app info page
+        </improve>
         <fix>Added additional verifications to ensure that screen lock is not bypassed</fix>
         <fix>Fixed back up/restore failure on some Android devices</fix>
         <fix>Fixed crashes in the app details page when system configuration changes</fix>
@@ -71,23 +128,36 @@
         <fix>Hide backup option if one of the selected apps is not installed</fix>
         <fix>Verify KeyStore backups during restoring a backup</fix>
     </release>
-    <release type="pre-release" version="v2.5.23" code="381" date="4 Feb 2021">
+    <release
+        type="pre-release"
+        version="v2.5.23"
+        code="381"
+        date="4 Feb 2021">
         <new>Added screen lock</new>
         <new>Added [b]Add to profile[/b] in the batch ops and app info tab</new>
         <new>Added enable/disable features in settings (replacing interceptor setting)</new>
         <new>Added leanback launcher support with banner (Android TV)</new>
         <new>Backup/restore SSAID (requires immediate restart)</new>
         <new>Backup APK in external SD card</new>
-        <new>AppInfo: Added options to configure battery optimization, net policy, SSAID. For each of them, tag clouds will be displayed if the values are not default.</new>
+        <new>
+            AppInfo: Added options to configure battery optimization, net policy, SSAID. For each of them, tag clouds
+            will be displayed if the values are not default.
+        </new>
         <new>Interceptor: add/remove extras</new>
         <new>Made settings page accessible from Android Settings</new>
-        <new>Main: Added filter by installed app, sort by number of trackers and last actions (the latter is not stable yet)</new>
+        <new>
+            Main: Added filter by installed app, sort by number of trackers and last actions (the latter is not stable
+            yet)
+        </new>
         <new>New language: Japanese</new>
         <new>Search using app initials in the main page (e.g. TS will list TrebleShot in the search results)</new>
         <new>Use of database as a middle man to improve load time</new>
         <improve>AppInfo: Added options to select tracker components to block/unblock</improve>
         <improve>Improved backup volume selection</improve>
-        <improve>Main: Batch selection on long click after the selection mode is turned on (i.e. selection mode is turned on if you click on any app icon or long click on any app)</improve>
+        <improve>
+            Main: Batch selection on long click after the selection mode is turned on (i.e. selection mode is turned on
+            if you click on any app icon or long click on any app)
+        </improve>
         <improve>Main: Replaced sort and filter with list options</improve>
         <improve>Main: Set [b]backup[/b] to red if the app is not installed</improve>
         <improve>Removed F-Droid, Aurora Droid in favour of F-Droid links (to support user preferred clients)</improve>
@@ -99,9 +169,15 @@
         <fix>Remove rules for all users (rather than the current user) in settings</fix>
         <fix>Replaced AppManager/tmp with AppManager/.tmp</fix>
         <fix>Replaced image buttons with material buttons (fixes crash when using Substratum themes)</fix>
-        <note>Don't set folders inside [tt]/mnt/media_rw/[/tt] as the backup volume. It doesn't work for backup/restore.</note>
+        <note>
+            Don't set folders inside [tt]/mnt/media_rw/[/tt] as the backup volume. It doesn't work for backup/restore.
+        </note>
     </release>
-    <release type="pre-release" version="v2.5.22" code="379" date="16 Jan 20201">
+    <release
+        type="pre-release"
+        version="v2.5.22"
+        code="379"
+        date="16 Jan 20201">
         <new>1-Click Ops: add backup/restore options</new>
         <new>Added the ability to freeze backup (by creating [tt].freeze[/tt] in the corresponding backup)</new>
         <new>Added option to enable/disable MagiskHide in the App Info tab (enable option in the overflow menu)</new>
@@ -122,7 +198,9 @@
         <improve>Sort apps by labels, display user/system tag in the profile page</improve>
         <improve>Replace backup all users with custom users</improve>
         <improve>Updated trackers and libraries</improve>
-        <improve>Remove [tt]FLAG_ACTIVITY_FORWARD_RESULT[/tt] from list of flags (if present) in the interceptor</improve>
+        <improve>
+            Remove [tt]FLAG_ACTIVITY_FORWARD_RESULT[/tt] from list of flags (if present) in the interceptor
+        </improve>
         <fix>Add [tt].nomedia[/tt] file in the backup folder</fix>
         <fix>Fixed crash on clicking the about device item in Settings</fix>
         <fix>Fixed crash in the profile page</fix>
@@ -131,9 +209,16 @@
         <fix>Migrate to PackageManager API instead of using unreliable pm command</fix>
         <fix>Update theme name on changing app theme</fix>
         <fix>Use package name from metadata instead of directory name for backups</fix>
-        <note>Backup/restore feature is now beta. From now on, backward compatibility for backup/restorer will be provided.</note>
+        <note>
+            Backup/restore feature is now beta. From now on, backward compatibility for backup/restorer will be
+            provided.
+        </note>
     </release>
-    <release type="pre-release" version="v2.5.21" code="377" date="1 Jan 2021">
+    <release
+        type="pre-release"
+        version="v2.5.21"
+        code="377"
+        date="1 Jan 2021">
         <new>New language: Farsi</new>
         <new>Added about device in the settings page</new>
         <new>Added an installation button in the scanner page for the external APK files</new>
@@ -144,7 +229,9 @@
         <improve>Display icon for uninstalled but backed up apps in the main page</improve>
         <improve>Display tracker count in a new line instead of under brackets in the 1-click ops page</improve>
         <improve>Improved app install time for ADB users</improve>
-        <improve>Renamed “deny app ops” to “set mode for app ops”, added the option to specify modes in 1-click ops page</improve>
+        <improve>
+            Renamed “deny app ops” to “set mode for app ops”, added the option to specify modes in 1-click ops page
+        </improve>
         <improve>Reordered backup options along with description for each items</improve>
         <improve>Updated ADBLib</improve>
         <improve>Updated trackers and libraries</improve>

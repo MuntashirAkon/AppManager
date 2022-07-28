@@ -66,6 +66,7 @@ public class ChangelogParser {
 
     private static final String ATTR_TITLE = "title";
     private static final String ATTR_BULLET = "bullet";
+    private static final String ATTR_SUBTEXT = "subtext";
 
     private static final List<String> CHANGE_LOG_TAGS = new ArrayList<String>() {{
         add(TAG_NEW);
@@ -183,6 +184,7 @@ public class ChangelogParser {
         // Read attributes
         String title = parser.getAttributeValue(null, ATTR_TITLE);
         String showBullet = parser.getAttributeValue(null, ATTR_BULLET);
+        String subtext = parser.getAttributeValue(null, ATTR_SUBTEXT);
 
         // Read text
         String changeText = null;
@@ -212,6 +214,7 @@ public class ChangelogParser {
         ChangelogItem changelogItem = changeText == null ? new ChangelogItem(type) : new ChangelogItem(changeText, type);
         changelogItem.setChangeTitle(title);
         changelogItem.setBulletedList("true".equals(showBullet) || changeLog.isBulletedList());
+        changelogItem.setSubtext("true".equals(subtext));
         changeLog.addItem(changelogItem);
     }
 }

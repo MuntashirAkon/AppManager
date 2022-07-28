@@ -30,6 +30,7 @@ public class ChangelogItem {
     public final int type;
 
     private boolean bulletedList;
+    private boolean subtext;
     @Nullable
     private String changeTitle;
 
@@ -56,6 +57,14 @@ public class ChangelogItem {
         this.bulletedList = bulletedList;
     }
 
+    public boolean isSubtext() {
+        return subtext;
+    }
+
+    public void setSubtext(boolean subtext) {
+        this.subtext = subtext;
+    }
+
     @NonNull
     public CharSequence getChangeText() {
         return changeText;
@@ -66,7 +75,7 @@ public class ChangelogItem {
         return changeTitle;
     }
 
-    public void setChangeTitle(@Nullable String changeTitle) {
+    void setChangeTitle(@Nullable String changeTitle) {
         this.changeTitle = changeTitle;
     }
 
