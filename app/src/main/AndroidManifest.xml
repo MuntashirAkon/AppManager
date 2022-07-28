@@ -59,6 +59,7 @@
     <application
         android:name=".AppManager"
         android:allowBackup="false"
+        android:dataExtractionRules="@xml/backup_rules"
         android:banner="@mipmap/ic_banner"
         android:extractNativeLibs="true"
         android:hasFragileUserData="true"
@@ -69,7 +70,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="UnusedAttribute">
+        tools:ignore="DataExtractionRules,UnusedAttribute">
         <activity
             android:name=".oneclickops.OneClickOpsActivity"
             android:exported="false"

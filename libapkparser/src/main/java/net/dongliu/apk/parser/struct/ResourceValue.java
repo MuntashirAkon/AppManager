@@ -42,9 +42,9 @@ public class ResourceValue extends TypedValue {
             case TYPE_STRING:
                 return stringValue;
             case TYPE_REFERENCE:
-                return "@" + Long.toHexString(data & 0xFFFFFFFFL).toUpperCase();
+                return "@" + Long.toHexString(data & 0xFFFFFFFFL).toUpperCase(Locale.ROOT);
             case TYPE_ATTRIBUTE:
-                return "?" + Long.toHexString(data & 0xFFFFFFFFL).toUpperCase();
+                return "?" + Long.toHexString(data & 0xFFFFFFFFL).toUpperCase(Locale.ROOT);
         }
         return coerceToString(type, data);
     }
@@ -54,7 +54,7 @@ public class ResourceValue extends TypedValue {
     }
 
     /**
-     * ReferenceResource ref one another resources, and may has different value for different resource config(locale, density, etc)
+     * ReferenceResource ref one another resources, and may have different value for different resource config (locale, density, etc)
      */
     public static class ReferenceResourceValue extends ResourceValue {
 

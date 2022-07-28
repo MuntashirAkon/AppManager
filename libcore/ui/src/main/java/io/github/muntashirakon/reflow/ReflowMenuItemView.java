@@ -777,6 +777,7 @@ public final class ReflowMenuItemView extends MaterialCardView implements MenuVi
         badgeDrawable = null;
     }
 
+    @SuppressLint("UnsafeOptInUsageError")
     @Nullable
     private FrameLayout getCustomParentForBadge(View anchorView) {
         if (anchorView == icon) {

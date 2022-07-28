@@ -36,8 +36,8 @@ project.ext {
     targetSdk = 32
 
     libsu_version = "5.0.1"
-    room_version = "2.4.2"
-    annotation_version = "1.3.0"
+    room_version = "2.4.3"
+    annotation_version = "1.4.0"
     appcompat_version = "1.4.2"
     material_version = "1.6.1"
     refine_version = "3.0.3"
