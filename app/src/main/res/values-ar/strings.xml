@@ -1355,4 +1355,5 @@
     <string name="changelog_type_new">جديد</string>
     <string name="changelog_type_fix">اصلاح</string>
     <string name="changelog_type_improve">تحسين</string>
+    <string name="unsupported_split_apk">غير مدعوم</string>
 </resources>
