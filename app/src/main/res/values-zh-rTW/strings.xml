@@ -441,7 +441,7 @@
     <string name="skip_signature_checks">跳過簽名檢查</string>
     <string name="yes">是</string>
     <string name="no">否</string>
-    <string name="apply_to_system_apps_question">也適用於系統應用程式嗎？如果不確定，請選擇否。</string>
+    <string name="apply_to_system_apps_question">也套用於系統應用程式嗎？如果不確定，請選擇否。</string>
     <string name="apply_to_system_apps">套用於系統應用程式</string>
     <plurals name="app_signing_signature_schemes_pl">
         <item quantity="other">簽名方案</item>
@@ -974,7 +974,7 @@
     <string name="import_from_oab">從 OAndBackup 匯入</string>
     <string name="pref_import_backups_msg">從 OAndBackup、Swift Backup (3.0–3.2) 或 Titanium Backup 匯入備份。</string>
     <string name="pref_import_backups">匯入備份</string>
-    <string name="help_app_ops_tab">單擊項目以 <b> 允許 </b> 或 <b> 忽略 </b>。長按一個項目以查看其他支援的模式。</string>
+    <string name="help_app_ops_tab">單擊項目以 <b> 允許 </b> 或 <b> 忽略 </b>。長按一個項目以檢視其他支援的模式。</string>
     <string name="help_permissions_tab">這些權限由該應用程式定義且無法撤銷。</string>
     <string name="help_uses_permissions_tab">點擊一個項目來<b>授予</b>或<b>撤銷</b>它。只有 <b>dangerous</b> 和 <b>development</b> 權限可以被授予或撤銷。</string>
     <string name="minimum_version">最低版本： %d</string>
@@ -998,7 +998,7 @@
     <string name="paired_successfully">已配對。</string>
     <string name="pem_and_pk8">PEM 與 PKCS #8 (PK8)</string>
     <string name="pref_block_trackers_msg">使用App Manager安裝應用後封鎖跟蹤元件。</string>
-    <string name="running_services_logcat_hint">按兩下項目以相應的流程ID作為預設篩選器打開日誌查看器。</string>
+    <string name="running_services_logcat_hint">按兩下項目以相應的流程ID作為預設篩選器開啟日誌檢視器。</string>
     <string name="pid">處理程序 ID</string>
     <plurals name="pref_thread_count_msg">
         <item quantity="other">最多同時執行 %1$d 操作</item>
@@ -1096,7 +1096,7 @@
     <string name="pref_disable_description">僅停用元件。不建議root使用者使用，因為應用程式可以繞過此操作。在ADB模式下，可以使用此方法停用僅限測試的應用程式。</string>
     <string name="file_modified_are_you_sure">檔案已修改。捨棄所有變更並離開？</string>
     <string name="pref_vt_apikey_summary">啟用透過 VirusTotal 掃描 APK 檔案。</string>
-    <string name="uses_play_app_signing_description">此應用包含某些標記，指示它 <i> 可能 </i> 正在使用 <a href="https://support.google.com/googleplay/android-developer/answer/9842756">播放應用簽名 </a>。透過此方案，簽名金鑰存儲在Google的伺服器中，Google負責對應用程式進行簽名。請注意，相符的簽名資訊是驗證應用是否未被開發者以外的任何人（在本例中為Google）修改的唯一方法。</string>
+    <string name="uses_play_app_signing_description">此應用程式包含某些標記，指示它 <i> 可能 </i> 正在使用 <a href="https://support.google.com/googleplay/android-developer/answer/9842756"> Play 應用程式簽名 </a>。透過此方案，簽名金鑰儲存在Google的伺服器中，Google負責對應用程式進行簽名。請注意，相符的簽名資訊是驗證應用是否未被開發人員以外的任何人（在本例中為Google）修改的唯一方法。</string>
     <string name="vt_disclaimer">VirusTotal 及其標誌是 Chronicle LLC 的商標。 App Manager（API 客戶端）及其作者均不對您可能傳送給 VirusTotal 的任何資料負責。</string>
     <string name="vt_scan_date">掃描日期：%1$s</string>
     <string name="primary_abi">主要 ABI</string>
@@ -1152,4 +1152,12 @@
     <string name="changelog_type_fix">修復</string>
     <string name="changelog_type_improve">改進</string>
     <string name="restore_dots">還原…</string>
+    <string name="unsupported_split_apk">不支援</string>
+    <string name="pref_pure_black_theme_msg">啟用夜間模式時使用全黑背景。</string>
+    <string name="netpolicy_cannot_be_modified_for_core_apps">無法針對 Android 核心應用程式變更網路策略。</string>
+    <string name="pref_pure_black_theme">純黑色主題</string>
+    <string name="open_developer_options_page">在 Android 設定中開啟開發人員選項頁面</string>
+    <string name="log_stop_recording">停止錄製</string>
+    <string name="apk_checksums">APK 校驗和</string>
+    <string name="item_select">選擇</string>
 </resources>
