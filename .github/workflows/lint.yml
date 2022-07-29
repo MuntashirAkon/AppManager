@@ -34,11 +34,10 @@ jobs:
           cache: 'gradle'
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-      - name: Run tests
-        run: ./gradlew test
-      - name: Upload test results
+      - name: Run lint
+        run: ./gradlew lint
+      - name: Upload lint results
         if: ${{ always() }}
         uses: actions/upload-artifact@v3
         with:
-          name: unitTestResults
-          path: ./app/build/reports/tests/testDebugUnitTest/
+          path: ./app/build/reports/lint-results-debug.html
