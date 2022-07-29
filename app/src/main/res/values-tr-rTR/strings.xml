@@ -1203,4 +1203,5 @@
     <string name="changelog_type_improve">İyileştirme</string>
     <string name="pref_reload_apps">Uygulamaları yeniden yükle</string>
     <string name="troubleshooting">Sorun giderme</string>
+    <string name="unsupported_split_apk">Desteklenmiyor</string>
 </resources>
