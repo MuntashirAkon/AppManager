@@ -1203,4 +1203,5 @@
     <string name="pref_reload_apps_msg">Recharge la liste des applications enregistrées dans la base du Gestionnaire d\'Applications en cas de comportement inattendu.</string>
     <string name="changelog_type_new">Nouveau</string>
     <string name="changelog_type_fix">Corriger</string>
+    <string name="unsupported_split_apk">Non pris en charge</string>
 </resources>
