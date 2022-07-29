@@ -7,4 +7,28 @@
     <string name="intro$main$$official-sources-title">Sources Officielles</string>
     <string name="intro$main$$supported-versions-title">Versions Supportées</string>
     <string name="intro$main$$terminologies-title">Terminologies</string>
+    <string name="intro$main$intro">App Manager est un gestionnaire avancé de packets pour Android. Il offre un multitude de fonctionnalités, et par conséquent, requiert
+\nun manuel utilisateur pour aider ses utilisateurs. Ce document fait office de manuel utilisateur pour App Manage, au sens qu\'il s\'efforce de décrire
+\nchaque fonctionnalité qu\'App Manager a à offrir. Ce document peut aussi être considéré comme directives officielles
+\npour App Manager, et représente le comportement attendu de App Manager. Les traductions peuvent mésinterpréter ce document (qui est
+\nécrite en anglais). C\'est pourquoi tout utilisateur capable de le faire, devrait lire la version anglaise du document pour tirer le meilleur
+\nde App Manager. Il pourrait y avoir d\'autres ressources tierces ou non-officielles telles que des articles de blogs, vidéos, groupes de
+\ndiscussion, etc. Bien que ces ressources puissent être utiles pour certains, elles pourraient ne pas être à jour avec la version actuelle de
+\nApp Manager. S\'il y a des differences entre App Manager et ce document, elles devraient être signalées sur
+\n\\href{https://github.com/MuntashirAkon/AppManager/issues}{App Manager issue tracker}.</string>
+    <string name="intro$main$translations">App Manager n\'accepte pas des traductions directement via des requêtes pull/merge. Les traductions sont automatiquement merge via
+\nWeblate. Pour rejoindre l\'équipe de traduction, allez sur \\url{https://hosted.weblate.org/engage/app-manager/}.</string>
+    <string name="intro$main$buiding">Des instructions de build sont disponibles dans le fichier BUILDING situé à la racine du code source.</string>
+    <string name="keywords$chapter">\\newcommand{\\KeywordChapter}{Chapitre}</string>
+    <string name="keywords$see_also">\\newcommand{\\KeywordSeeAlso}{Voir aussi:}</string>
+    <string name="keywords$end_of_keyword_in_alert">\\newcommand{\\KeywordEndOfKeyWordInAlert}{:}</string>
+    <string name="titlepage$user_manual">{\\huge\\bfseries Manuel Utilisateur\\par}</string>
+    <string name="intro$main$$introduction-chapter-title">Introduction</string>
+    <string name="intro$main$supported-versions">Actuellement, les versions maintenues sont v2.6.0 (stable), v3.0.0 (versions alpha et debug). Les versions précédentes de App
+\nManager pourraient contenir des vulnérabilités et ne devraient pas être utilisées.</string>
+    <string name="intro$main$source-code-links">Tous sauf GitHub sont des liens miroirs. Les étiquettes devraient toujours être à jour, mais la branche master n\'est pas garantie
+\nd\'être à jour. Si le but est de cloner la branche master, utilisez le lien GitHub plutôt que les autres.</string>
+    <string name="intro$main$contributing">Il y a plusieurs possibilités pour un utilisateur de contribuer, comme poser des questions utiles, participer aux discussions, améliorer
+\nla documentation et les traductions, ajouter des librairies ou des trackers non reconnus, examiner le code source ainsi que
+\nsignaler des vulnérabilités de sécurité.</string>
 </resources>
