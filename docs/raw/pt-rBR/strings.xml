@@ -18,7 +18,7 @@
 \n %\\sourceatright
 \n {--- Friar Laurence, \\textit{Romeu e Julieta}}
 \n \\end{quotation}</string>
-    <string name="keywords$end_of_keyword_in_alert">\\newcommand{\\FimDaPalavraChaveEmAlerta}{.}</string>
+    <string name="keywords$end_of_keyword_in_alert">\\newcommand{\\KeywordEndOfKeyWordInAlert}{.}</string>
     <string name="keywords$chapter">\\newcommand{\\KeywordChapter}{Capítulo}</string>
     <string name="intro$main$intro">App Manager é um gerenciador de pacotes avançado para Android. Oferece inúmeros recursos e, consequentemente, exige um usuário
 \nmanual para auxiliar seus usuários. Este documento funciona como um manual do usuário para o App Manager no sentido de que visa descrever
