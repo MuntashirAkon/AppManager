@@ -10,7 +10,6 @@ import android.os.UserHandleHidden;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -75,11 +74,8 @@ public class ProfileManager {
     private ProfileLogger mLogger;
     private boolean mRequiresRestart;
 
-    public ProfileManager(@NonNull ProfileMetaManager metaManager) throws FileNotFoundException {
-        if (metaManager.profile == null) {
-            throw new FileNotFoundException("Profile cannot be empty.");
-        }
-        profile = metaManager.profile;
+    public ProfileManager(@NonNull ProfileMetaManager metaManager) {
+        profile = metaManager.getProfile();
         try {
             mLogger = new ProfileLogger(profile.name);
         } catch (IOException e) {

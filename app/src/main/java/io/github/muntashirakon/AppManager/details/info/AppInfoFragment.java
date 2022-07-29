@@ -479,13 +479,11 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     .setNegativeButton(R.string.cancel, null)
                     .setPositiveButton(R.string.add, (dialog, which, selectedItems) -> {
                         for (ProfileMetaManager metaManager : selectedItems) {
-                            if (metaManager.profile != null) {
-                                try {
-                                    metaManager.appendPackages(Collections.singletonList(mPackageName));
-                                    metaManager.writeProfile();
-                                } catch (Throwable e) {
-                                    e.printStackTrace();
-                                }
+                            try {
+                                metaManager.appendPackages(Collections.singletonList(mPackageName));
+                                metaManager.writeProfile();
+                            } catch (Throwable e) {
+                                e.printStackTrace();
                             }
                         }
                     })

@@ -11,6 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringDef;
 import androidx.annotation.WorkerThread;
 
+import org.jetbrains.annotations.Contract;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,12 +26,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import aosp.libcore.util.EmptyArray;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
+import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.util.LocalizedString;
@@ -84,15 +87,44 @@ public class ProfileMetaManager implements LocalizedString {
         public boolean blockTrackers = false;  // misc.block_trackers (false = remove)
         public boolean saveApk = false;  // misc.save_apk (false = remove)
 
-        Profile(@NonNull String profileName, @NonNull String[] packageNames) {
+        private Profile(@NonNull String profileName, @NonNull String[] packageNames) {
             name = profileName;
             packages = packageNames;
+        }
+
+        private Profile(@NonNull String profileName, @NonNull Profile profile) {
+            name = profileName;
+            type = profile.type;
+            version = profile.version;
+            allowRoutine = profile.allowRoutine;
+            state = profile.state;
+            users =  profile.users != null ? profile.users.clone() : null;
+            packages = profile.packages.clone();
+            comment = profile.comment;
+            components = profile.components != null ? profile.components.clone() : null;
+            appOps = profile.appOps != null ? profile.appOps.clone() : null;
+            permissions = profile.permissions != null ? profile.permissions.clone() : null;
+            backupData = profile.backupData != null ? new BackupInfo(profile.backupData) : null;
+            exportRules = profile.exportRules != null ? profile.exportRules : null;
+            disable = profile.disable;
+            forceStop = profile.forceStop;
+            clearCache = profile.clearCache;
+            clearData = profile.clearData;
+            blockTrackers = profile.blockTrackers;
+            saveApk = profile.saveApk;
         }
 
         public static class BackupInfo {
             @Nullable
             public String name;
             public int flags = (int) AppPref.get(AppPref.PrefKey.PREF_BACKUP_FLAGS_INT);
+
+            public BackupInfo() {}
+
+            public BackupInfo(@NonNull BackupInfo backupInfo) {
+                name = backupInfo.name;
+                flags = backupInfo.flags;
+            }
         }
     }
 
@@ -114,94 +146,74 @@ public class ProfileMetaManager implements LocalizedString {
     public static ProfileMetaManager fromJSONString(@NonNull String profileName,
                                                     @NonNull String profileContents)
             throws JSONException {
-        return new ProfileMetaManager(profileName, profileContents);
+        return new ProfileMetaManager(profileName, Objects.requireNonNull(readProfile(profileContents)));
     }
 
-    @NonNull
-    private final String mProfileName;
     @NonNull
     private final Path mProfilePath;
-    @Nullable
-    public Profile profile;
+    @NonNull
+    private final Profile mProfile;
 
     public ProfileMetaManager(@NonNull String profileName) {
-        this(profileName, null, null);
-    }
-
-    public ProfileMetaManager(@NonNull String profileName, boolean require) throws ProfileNotFoundException {
-        this(profileName, null, null);
-        if (require && this.profile == null) {
-            throw new ProfileNotFoundException("Profile " + profileName + " not found.");
-        }
-    }
-
-    public ProfileMetaManager(@NonNull String profileName, @Nullable String jsonContent) {
-        this(profileName, null, jsonContent);
-    }
-
-    public ProfileMetaManager(@NonNull String profileName, @Nullable String[] packages) {
-        this(profileName, packages, null);
-    }
-
-    public ProfileMetaManager(@NonNull String profileName, @Nullable String[] packages, @Nullable String jsonContent) {
         Path profilesDir = getProfilesDir();
         if (!profilesDir.exists()) {
-            //noinspection ResultOfMethodCallIgnored
             profilesDir.mkdirs();
         }
         mProfilePath = Objects.requireNonNull(Paths.build(profilesDir, getCleanedProfileName(profileName) + PROFILE_EXT));
-        if (jsonContent != null) {
-            try {
-                profile = readProfile(jsonContent);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        } else if (mProfilePath.exists()) {
+        Profile profile = null;
+        if (mProfilePath.exists()) {
             try {
                 profile = readProfile(FileUtils.getFileContent(mProfilePath));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-        if (packages != null) {
-            if (profile != null) {
-                profile.packages = packages;
-            } else {
-                profile = new Profile(profileName, packages);
-            }
+        if (profile == null) {
+            profile = new Profile(profileName, EmptyArray.STRING);
         }
-        mProfileName = profile != null ? profile.name : profileName;
+        if (!profile.name.equals(profileName)) {
+            // Adjust profile name
+            profile = new Profile(profileName, profile);
+        }
+        mProfile = profile;
     }
 
-    @NonNull
-    public Profile newProfile(@NonNull String[] packages) {
-        return profile = new Profile(mProfileName, packages);
+    public ProfileMetaManager(@NonNull String profileName, @NonNull Profile profile) {
+        Path profilesDir = getProfilesDir();
+        if (!profilesDir.exists()) {
+            profilesDir.mkdirs();
+        }
+        mProfilePath = Objects.requireNonNull(Paths.build(profilesDir, getCleanedProfileName(profileName) + PROFILE_EXT));
+        mProfile = new Profile(profileName, profile);
     }
 
     @NonNull
     public String getProfileName() {
-        return mProfileName;
-    }
-
-    public void appendPackages(@NonNull Collection<String> packageList) {
-        if (profile == null) {
-            newProfile(packageList.toArray(new String[0]));
-            return;
-        }
-        List<String> uniquePackages = new ArrayList<>();
-        for (String newPackage : packageList) {
-            if (!ArrayUtils.contains(profile.packages, newPackage)) {
-                uniquePackages.add(newPackage);
-            }
-        }
-        profile.packages = ArrayUtils.concatElements(String.class, profile.packages, uniquePackages.toArray(new String[0]));
+        return mProfile.name;
     }
 
     @NonNull
+    public Profile getProfile() {
+        return mProfile;
+    }
+
+    public void appendPackages(@NonNull Collection<String> packageList) {
+        List<String> uniquePackages = new ArrayList<>();
+        for (String newPackage : packageList) {
+            if (!ArrayUtils.contains(mProfile.packages, newPackage)) {
+                uniquePackages.add(newPackage);
+            }
+        }
+        mProfile.packages = ArrayUtils.concatElements(String.class, mProfile.packages, uniquePackages.toArray(new String[0]));
+    }
+
+    @Contract("null -> null")
+    @Nullable
     public static Profile readProfile(@Nullable String profileStr) throws JSONException {
-        if (TextUtils.isEmpty(profileStr)) throw new JSONException("Empty JSON string");
-        @SuppressWarnings("ConstantConditions")  // Never null here
-                JSONObject profileObj = new JSONObject(profileStr);
+        if (TextUtilsCompat.isEmpty(profileStr)) {
+            return null;
+        }
+        JSONObject profileObj = new JSONObject(profileStr);
         String profileName = profileObj.getString("name");
         String[] packageNames = JSONUtils.getArray(String.class, profileObj.getJSONArray("packages"));
         Profile profile = new Profile(profileName, packageNames);
@@ -257,38 +269,37 @@ public class ProfileMetaManager implements LocalizedString {
     }
 
     public void writeProfile(OutputStream outputStream) throws IOException, JSONException {
-        if (profile == null) throw new IOException("Profile is not set");
         JSONObject profileObj = new JSONObject();
-        profileObj.put("type", profile.type);
-        profileObj.put("version", profile.version);
-        if (!profile.allowRoutine) {
+        profileObj.put("type", mProfile.type);
+        profileObj.put("version", mProfile.version);
+        if (!mProfile.allowRoutine) {
             // Only save allow_routine if it's set to false
             profileObj.put("allow_routine", false);
         }
-        profileObj.put("name", profile.name);
-        profileObj.put("comment", profile.comment);
-        profileObj.put("state", profile.state);
-        profileObj.put("users", JSONUtils.getJSONArray(profile.users));
-        profileObj.put("packages", JSONUtils.getJSONArray(profile.packages));
-        profileObj.put("components", JSONUtils.getJSONArray(profile.components));
-        profileObj.put("app_ops", JSONUtils.getJSONArray(profile.appOps));
-        profileObj.put("permissions", JSONUtils.getJSONArray(profile.permissions));
+        profileObj.put("name", mProfile.name);
+        profileObj.put("comment", mProfile.comment);
+        profileObj.put("state", mProfile.state);
+        profileObj.put("users", JSONUtils.getJSONArray(mProfile.users));
+        profileObj.put("packages", JSONUtils.getJSONArray(mProfile.packages));
+        profileObj.put("components", JSONUtils.getJSONArray(mProfile.components));
+        profileObj.put("app_ops", JSONUtils.getJSONArray(mProfile.appOps));
+        profileObj.put("permissions", JSONUtils.getJSONArray(mProfile.permissions));
         // Backup info
-        if (profile.backupData != null) {
+        if (mProfile.backupData != null) {
             JSONObject backupInfo = new JSONObject();
-            backupInfo.put("name", profile.backupData.name);
-            backupInfo.put("flags", profile.backupData.flags);
+            backupInfo.put("name", mProfile.backupData.name);
+            backupInfo.put("flags", mProfile.backupData.flags);
             profileObj.put("backup_data", backupInfo);
         }
-        profileObj.put("export_rules", profile.exportRules);
+        profileObj.put("export_rules", mProfile.exportRules);
         // Misc
         JSONArray jsonArray = new JSONArray();
-        if (profile.disable) jsonArray.put("disable");
-        if (profile.forceStop) jsonArray.put("force_stop");
-        if (profile.clearCache) jsonArray.put("clear_cache");
-        if (profile.clearData) jsonArray.put("clear_data");
-        if (profile.blockTrackers) jsonArray.put("block_trackers");
-        if (profile.saveApk) jsonArray.put("save_apk");
+        if (mProfile.disable) jsonArray.put("disable");
+        if (mProfile.forceStop) jsonArray.put("force_stop");
+        if (mProfile.clearCache) jsonArray.put("clear_cache");
+        if (mProfile.clearData) jsonArray.put("clear_data");
+        if (mProfile.blockTrackers) jsonArray.put("block_trackers");
+        if (mProfile.saveApk) jsonArray.put("save_apk");
         if (jsonArray.length() > 0) profileObj.put("misc", jsonArray);
         outputStream.write(profileObj.toString().getBytes());
     }
@@ -298,27 +309,27 @@ public class ProfileMetaManager implements LocalizedString {
             return mProfilePath.delete();
         }
         // Profile doesn't exist
-        return true;
+        return false;
     }
 
     @NonNull
     public List<String> getLocalisedSummaryOrComment(Context context) {
-        if (profile != null && profile.comment != null)
-            return Collections.singletonList(profile.comment);
+        if (mProfile.comment != null) {
+            return Collections.singletonList(mProfile.comment);
+        }
 
         List<String> arrayList = new ArrayList<>();
-        if (profile == null) return arrayList;
-        if (profile.components != null) arrayList.add(context.getString(R.string.components));
-        if (profile.appOps != null) arrayList.add(context.getString(R.string.app_ops));
-        if (profile.permissions != null) arrayList.add(context.getString(R.string.permissions));
-        if (profile.backupData != null) arrayList.add(context.getString(R.string.backup_restore));
-        if (profile.exportRules != null) arrayList.add(context.getString(R.string.blocking_rules));
-        if (profile.disable) arrayList.add(context.getString(R.string.disable));
-        if (profile.forceStop) arrayList.add(context.getString(R.string.force_stop));
-        if (profile.clearCache) arrayList.add(context.getString(R.string.clear_cache));
-        if (profile.clearData) arrayList.add(context.getString(R.string.clear_data));
-        if (profile.blockTrackers) arrayList.add(context.getString(R.string.trackers));
-        if (profile.saveApk) arrayList.add(context.getString(R.string.save_apk));
+        if (mProfile.components != null) arrayList.add(context.getString(R.string.components));
+        if (mProfile.appOps != null) arrayList.add(context.getString(R.string.app_ops));
+        if (mProfile.permissions != null) arrayList.add(context.getString(R.string.permissions));
+        if (mProfile.backupData != null) arrayList.add(context.getString(R.string.backup_restore));
+        if (mProfile.exportRules != null) arrayList.add(context.getString(R.string.blocking_rules));
+        if (mProfile.disable) arrayList.add(context.getString(R.string.disable));
+        if (mProfile.forceStop) arrayList.add(context.getString(R.string.force_stop));
+        if (mProfile.clearCache) arrayList.add(context.getString(R.string.clear_cache));
+        if (mProfile.clearData) arrayList.add(context.getString(R.string.clear_data));
+        if (mProfile.blockTrackers) arrayList.add(context.getString(R.string.trackers));
+        if (mProfile.saveApk) arrayList.add(context.getString(R.string.save_apk));
         return arrayList;
     }
 

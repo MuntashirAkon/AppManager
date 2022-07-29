@@ -127,8 +127,7 @@ public class ProfileViewModel extends AndroidViewModel {
     private void loadProfileInternal() {
         synchronized (profileLock) {
             profileMetaManager = new ProfileMetaManager(profileName);
-            profile = profileMetaManager.profile;
-            if (profile == null) profile = profileMetaManager.newProfile(new String[]{});
+            profile = profileMetaManager.getProfile();
         }
     }
 
@@ -145,13 +144,9 @@ public class ProfileViewModel extends AndroidViewModel {
                     profileMetaManager = new ProfileMetaManager(profileName);
                 }
             } else {
-                ProfileMetaManager.Profile profile1 = profile;
-                profileMetaManager = null;
-                profileMetaManager = new ProfileMetaManager(profileName);
-                profileMetaManager.profile = profile1;
+                profileMetaManager = new ProfileMetaManager(profileName, profile);
             }
-            profile = profileMetaManager.profile;
-            if (profile == null) profile = profileMetaManager.newProfile(new String[]{});
+            profile = profileMetaManager.getProfile();
         }
     }
 
@@ -168,7 +163,9 @@ public class ProfileViewModel extends AndroidViewModel {
     @AnyThread
     public void loadAndCloneProfile(String profileName, boolean isPreset, String oldProfileName) {
         executor.submit(() -> {
-            if (profileMetaManager == null) loadProfileInternal();
+            if (profileMetaManager == null) {
+                loadProfileInternal();
+            }
             cloneProfileInternal(profileName, isPreset, oldProfileName);
             profileLoaded.postValue(profileMetaManager == null);
         });
@@ -199,7 +196,6 @@ public class ProfileViewModel extends AndroidViewModel {
     public void save() {
         executor.submit(() -> {
             synchronized (profileLock) {
-                profileMetaManager.profile = profile;
                 try {
                     profileMetaManager.writeProfile();
                     toast.postValue(new Pair<>(R.string.saved_successfully, false));

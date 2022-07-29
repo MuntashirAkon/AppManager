@@ -12,14 +12,11 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import java.io.FileNotFoundException;
-
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsResultsActivity;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
-import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.types.ForegroundService;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 
@@ -65,15 +62,10 @@ public class ProfileApplierService extends ForegroundService {
         profileName = intent.getStringExtra(EXTRA_PROFILE_NAME);
         if (profileName == null) return;
         String state = intent.getStringExtra(EXTRA_PROFILE_STATE);
-        try {
-            ProfileManager profileManager = new ProfileManager(new ProfileMetaManager(profileName));
-            profileManager.applyProfile(state);
-            profileManager.conclude();
-            sendNotification(Activity.RESULT_OK, profileManager.requiresRestart());
-        } catch (FileNotFoundException e) {
-            Log.e("ProfileApplier", "Could not apply the profile");
-            sendNotification(Activity.RESULT_CANCELED, false);
-        }
+        ProfileManager profileManager = new ProfileManager(new ProfileMetaManager(profileName));
+        profileManager.applyProfile(state);
+        profileManager.conclude();
+        sendNotification(Activity.RESULT_OK, profileManager.requiresRestart());
     }
 
     @Override

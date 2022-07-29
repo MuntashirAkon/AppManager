@@ -409,14 +409,12 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
                     .setNegativeButton(R.string.cancel, null)
                     .setPositiveButton(R.string.add, (dialog, which, selectedItems) -> {
                         for (ProfileMetaManager metaManager : selectedItems) {
-                            if (metaManager.profile != null) {
-                                try {
-                                    metaManager.appendPackages(mModel.getSelectedPackages().keySet());
-                                    multiSelectionView.cancel();
-                                    metaManager.writeProfile();
-                                } catch (Throwable e) {
-                                    e.printStackTrace();
-                                }
+                            try {
+                                metaManager.appendPackages(mModel.getSelectedPackages().keySet());
+                                multiSelectionView.cancel();
+                                metaManager.writeProfile();
+                            } catch (Throwable e) {
+                                e.printStackTrace();
                             }
                         }
                         UIUtils.displayShortToast(R.string.done);

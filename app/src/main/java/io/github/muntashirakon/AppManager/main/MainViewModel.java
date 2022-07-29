@@ -315,16 +315,14 @@ public class MainViewModel extends AndroidViewModel {
             List<ApplicationItem> candidateApplicationItems = new ArrayList<>();
             if (mFilterProfileName != null) {
                 ProfileMetaManager profileMetaManager = new ProfileMetaManager(mFilterProfileName);
-                if (profileMetaManager.profile != null) {
-                    for (String packageName : profileMetaManager.profile.packages) {
-                        ApplicationItem item = new ApplicationItem();
-                        item.packageName = packageName;
-                        int index = applicationItems.indexOf(item);
-                        if (index != -1) {
-                            candidateApplicationItems.add(applicationItems.get(index));
-                        }
+                for (String packageName : profileMetaManager.getProfile().packages) {
+                    ApplicationItem item = new ApplicationItem();
+                    item.packageName = packageName;
+                    int index = applicationItems.indexOf(item);
+                    if (index != -1) {
+                        candidateApplicationItems.add(applicationItems.get(index));
                     }
-                } // else profile doesn't exist, display empty list
+                }
             } else candidateApplicationItems.addAll(applicationItems);
             // Other filters
             if (mFilterFlags == ListOptions.FILTER_NO_FILTER) {
