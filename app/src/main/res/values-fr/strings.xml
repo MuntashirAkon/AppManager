@@ -979,7 +979,7 @@
     <string name="screen_lock_msg">Verrouiller App Manager en utilisant le verrouillage d\'écran Android</string>
     <string name="no_battery_optimization">Pas d\'optimisation de batterie</string>
     <string name="unlock_app_manager">Déverrouiller App Manager</string>
-    <string name="type_null">Pas de données</string>
+    <string name="type_null">Pas de valeur</string>
     <string name="restore_not_installed_msg">Restaurer la sauvegarde de base pour les applications qui ne sont pas actuellement installées.</string>
     <string name="battery_optimization">Optimisation de batterie</string>
     <string name="has_net_policy">Politique réseau</string>
