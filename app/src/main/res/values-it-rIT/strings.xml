@@ -1204,4 +1204,5 @@
     <string name="changelog_type_new">Nuovo</string>
     <string name="changelog_type_fix">Correggi</string>
     <string name="changelog_type_improve">Migliora</string>
+    <string name="unsupported_split_apk">Non supportato</string>
 </resources>
