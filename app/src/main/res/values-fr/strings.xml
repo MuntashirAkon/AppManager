@@ -751,9 +751,9 @@
     <string name="new_alias_password">Nouveau mot de passe d\'alias</string>
     <string name="import_key">Importer la clé</string>
     <string name="pem_file">Fichier PEM</string>
-    <string name="pk8_file">PKCS #8 (PK8) file</string>
+    <string name="pk8_file">Fichier PKCS #8 (PK8)</string>
     <string name="pem_and_pk8">PEM and PKCS #8 (PK8)</string>
-    <string name="pkcs12_keystore">PKCS #12 KeyStore (P12)</string>
+    <string name="pkcs12_keystore">Magasin de clefs PKCS #12 (P12)</string>
     <string name="type_long_array">Tableau d\'entiers longs</string>
     <string name="type_int_array_list">Liste d\'entiers</string>
     <string name="type_int_array">Tableau d\'entiers</string>
@@ -823,7 +823,7 @@
     <string name="next">Suivant</string>
     <string name="installer_app_installed">Application installée</string>
     <string name="paste">Coller</string>
-    <string name="paired_successfully">Couplé</string>
+    <string name="paired_successfully">Couplé.</string>
     <string name="adb_wifi_paring_code">Code d\'appairage Wi-Fi</string>
     <string name="invalid_password">Mot de passe invalide, réessayez.</string>
     <string name="pref_log_viewer_msg">Configurer l\'affichage des journaux.</string>
