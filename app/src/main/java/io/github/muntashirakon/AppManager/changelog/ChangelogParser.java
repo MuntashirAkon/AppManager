@@ -89,8 +89,8 @@ public class ChangelogParser {
      * @param changeLogFileResourceId reference for a custom xml file
      */
     public ChangelogParser(@NonNull Context context, @RawRes int changeLogFileResourceId) {
-        this.mContext = context;
-        this.mChangeLogFileResourceId = changeLogFileResourceId;
+        mContext = context;
+        mChangeLogFileResourceId = changeLogFileResourceId;
     }
 
     /**
@@ -106,7 +106,7 @@ public class ChangelogParser {
             Changelog changelog = new Changelog();
             XmlPullParser parser = Xml.newPullParser();
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-            parser.setInput(is, null);
+            parser.setInput(is, "UTF-8");
             parser.nextTag();
             // Read changelog tag
             readChangelogTag(parser, changelog);

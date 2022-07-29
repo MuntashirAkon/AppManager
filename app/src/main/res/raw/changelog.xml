@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?><!DOCTYPE changelog [
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<!DOCTYPE changelog [
 
     <!ELEMENT changelog (release+)><!ATTLIST changelog bullet CDATA #IMPLIED>
 
@@ -11,8 +12,6 @@
     <!ELEMENT improve (#PCDATA)><!ATTLIST improve title CDATA #IMPLIED><!ATTLIST improve bullet CDATA #IMPLIED><!ATTLIST improve subtext CDATA #IMPLIED>
 
     <!ELEMENT fix (#PCDATA)><!ATTLIST fix title CDATA #IMPLIED><!ATTLIST fix bullet CDATA #IMPLIED><!ATTLIST fix subtext CDATA #IMPLIED>
-
-    <!ENTITY settings "io.github.muntashirakon.appmanager.settings">
 
     ]>
 <changelog>
