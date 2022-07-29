@@ -31,4 +31,8 @@
     <string name="intro$main$contributing">Il y a plusieurs possibilités pour un utilisateur de contribuer, comme poser des questions utiles, participer aux discussions, améliorer
 \nla documentation et les traductions, ajouter des librairies ou des trackers non reconnus, examiner le code source ainsi que
 \nsignaler des vulnérabilités de sécurité.</string>
+    <string name="intro$main$$bin-sources-title">Sources de distribution de binaires</string>
+    <string name="intro$main$$source-code-links-title">Liens vers code source</string>
+    <string name="intro$main$$buiding-title">Instructions de build</string>
+    <string name="intro$main$$submit-patches-title">Soumettre des patchs</string>
 </resources>
