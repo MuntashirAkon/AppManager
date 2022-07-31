@@ -32,6 +32,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.xmlpull.v1.XmlPullParserException;
 
@@ -41,6 +42,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
+import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.dialog.BackupRestoreDialogFragment;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
@@ -551,29 +553,35 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
     }
 
     private void displayChangelogIfRequired() {
-        if (AppPref.getBoolean(AppPref.PrefKey.PREF_DISPLAY_CHANGELOG_BOOL)) {
-            AppPref.set(AppPref.PrefKey.PREF_DISPLAY_CHANGELOG_BOOL, false);
-            mModel.executor.submit(() -> {
-                Changelog changelog;
-                try {
-                    changelog = new ChangelogParser(getApplication(), R.raw.changelog).parse();
-                } catch (IOException | XmlPullParserException e) {
-                    return;
-                }
-                runOnUiThread(() -> {
-                    RecyclerView recyclerView = (RecyclerView) View.inflate(this, R.layout.dialog_whats_new, null);
-                    recyclerView.setHasFixedSize(true);
-                    recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
-                    ChangelogRecyclerAdapter adapter = new ChangelogRecyclerAdapter();
-                    recyclerView.setAdapter(adapter);
-                    adapter.setAdapterList(changelog.getChangelogItems());
-                    new AlertDialogBuilder(this, true)
-                            .setTitle(R.string.changelog)
-                            .setView(recyclerView)
-                            .show();
-                });
-            });
+        if (!AppPref.getBoolean(AppPref.PrefKey.PREF_DISPLAY_CHANGELOG_BOOL)) {
+            return;
         }
+        Snackbar.make(findViewById(android.R.id.content), R.string.view_changelog, Snackbar.LENGTH_LONG)
+                .setAction(R.string.ok, v -> {
+                    long lastVersion = (long) AppPref.get(AppPref.PrefKey.PREF_DISPLAY_CHANGELOG_LAST_VERSION_LONG);
+                    AppPref.set(AppPref.PrefKey.PREF_DISPLAY_CHANGELOG_BOOL, false);
+                    AppPref.set(AppPref.PrefKey.PREF_DISPLAY_CHANGELOG_LAST_VERSION_LONG, (long) BuildConfig.VERSION_CODE);
+                    mModel.executor.submit(() -> {
+                        Changelog changelog;
+                        try {
+                            changelog = new ChangelogParser(getApplication(), R.raw.changelog, lastVersion).parse();
+                        } catch (IOException | XmlPullParserException e) {
+                            return;
+                        }
+                        runOnUiThread(() -> {
+                            RecyclerView recyclerView = (RecyclerView) View.inflate(this, R.layout.dialog_whats_new, null);
+                            recyclerView.setHasFixedSize(true);
+                            recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
+                            ChangelogRecyclerAdapter adapter = new ChangelogRecyclerAdapter();
+                            recyclerView.setAdapter(adapter);
+                            adapter.setAdapterList(changelog.getChangelogItems());
+                            new AlertDialogBuilder(this, true)
+                                    .setTitle(R.string.changelog)
+                                    .setView(recyclerView)
+                                    .show();
+                        });
+                    });
+                }).show();
     }
 
     private void handleBatchOp(@BatchOpsManager.OpType int op) {

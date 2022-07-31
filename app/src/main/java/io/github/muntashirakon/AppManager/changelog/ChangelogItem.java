@@ -13,16 +13,26 @@ import java.lang.annotation.RetentionPolicy;
 // Copyright 2013 Gabriele Mariotti <gabri.mariotti@gmail.com>
 // Copyright 2022 Muntashir Al-Islam
 public class ChangelogItem {
-    @IntDef({HEADER, NOTE, NEW, IMPROVE, FIX})
+    @IntDef({HEADER, TITLE, NOTE, NEW, IMPROVE, FIX})
     @Retention(RetentionPolicy.SOURCE)
     public @interface ChangelogType {
     }
 
     public static final int HEADER = -1;
-    public static final int NOTE = 0;
-    public static final int NEW = 1;
-    public static final int IMPROVE = 2;
-    public static final int FIX = 3;
+    public static final int TITLE = 0;
+    public static final int NOTE = 1;
+    public static final int NEW = 2;
+    public static final int IMPROVE = 3;
+    public static final int FIX = 4;
+
+    @IntDef({TEXT_SMALL, TEXT_MEDIUM, TEXT_LARGE})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface ChangeTextType {
+    }
+
+    public static final int TEXT_SMALL = 0;
+    public static final int TEXT_MEDIUM = 1;
+    public static final int TEXT_LARGE = 2;
 
     @NonNull
     private final CharSequence changeText;
@@ -33,6 +43,8 @@ public class ChangelogItem {
     private boolean subtext;
     @Nullable
     private String changeTitle;
+    @ChangeTextType
+    private int changeTextType;
 
     public ChangelogItem(@ChangelogType int type) {
         changeText = "";
@@ -63,6 +75,7 @@ public class ChangelogItem {
 
     public void setSubtext(boolean subtext) {
         this.subtext = subtext;
+        changeTextType = subtext ? TEXT_SMALL : TEXT_MEDIUM;
     }
 
     @NonNull
@@ -77,6 +90,15 @@ public class ChangelogItem {
 
     void setChangeTitle(@Nullable String changeTitle) {
         this.changeTitle = changeTitle;
+    }
+
+    @ChangeTextType
+    public int getChangeTextType() {
+        return changeTextType;
+    }
+
+    public void setChangeTextType(@ChangeTextType int changeTextType) {
+        this.changeTextType = changeTextType;
     }
 
     @NonNull

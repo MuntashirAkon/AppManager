@@ -1,9 +1,10 @@
-<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<!DOCTYPE changelog [
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><!DOCTYPE changelog [
 
     <!ELEMENT changelog (release+)><!ATTLIST changelog bullet CDATA #IMPLIED>
 
-    <!ELEMENT release ((note|new|improve|fix)*)><!ATTLIST release type CDATA #REQUIRED><!ATTLIST release version CDATA #REQUIRED><!ATTLIST release code CDATA #REQUIRED><!ATTLIST release date CDATA #REQUIRED>
+    <!ELEMENT release ((title|note|new|improve|fix)*)><!ATTLIST release type CDATA #REQUIRED><!ATTLIST release version CDATA #REQUIRED><!ATTLIST release code CDATA #REQUIRED><!ATTLIST release date CDATA #REQUIRED>
+
+    <!ELEMENT title (#PCDATA)><!ATTLIST title type CDATA #IMPLIED>
 
     <!ELEMENT note (#PCDATA)><!ATTLIST note title CDATA #IMPLIED><!ATTLIST note bullet CDATA #IMPLIED><!ATTLIST note subtext CDATA #IMPLIED>
 
@@ -201,7 +202,7 @@
             Remove [tt]FLAG_ACTIVITY_FORWARD_RESULT[/tt] from list of flags (if present) in the interceptor
         </improve>
         <fix>Add [tt].nomedia[/tt] file in the backup folder</fix>
-        <fix>Fixed crash on clicking the about device item in Settings</fix>
+        <fix>Fixed crash on clicking [i]about device[/i] item in Settings</fix>
         <fix>Fixed crash in the profile page</fix>
         <fix>Fixed compatibility issue of IFW in Android M or prior versions</fix>
         <fix>Get correct user ID before performing uninstall</fix>

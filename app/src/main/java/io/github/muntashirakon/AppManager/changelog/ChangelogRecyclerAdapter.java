@@ -15,6 +15,8 @@ import android.widget.TextView;
 import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
+import androidx.annotation.StyleRes;
+import androidx.core.widget.TextViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.chip.ChipDrawable;
@@ -24,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.util.UiUtils;
 
 
@@ -75,10 +76,15 @@ public class ChangelogRecyclerAdapter extends RecyclerView.Adapter<ChangelogRecy
                 holder.subtitle.setText(((ChangelogHeader) changelogItem).getReleaseDate());
                 break;
             default:
+            case ChangelogItem.TITLE:
+                TextViewCompat.setTextAppearance(holder.subtitle, getTitleTextAppearance(changelogItem.getChangeTextType()));
+                holder.subtitle.setText(getChangeText(context, changelogItem));
+                break;
             case ChangelogItem.FIX:
             case ChangelogItem.IMPROVE:
             case ChangelogItem.NEW:
             case ChangelogItem.NOTE:
+                TextViewCompat.setTextAppearance(holder.subtitle, getChangeTextAppearance(changelogItem.getChangeTextType()));
                 holder.subtitle.setText(getChangeText(context, changelogItem));
                 break;
         }
@@ -120,6 +126,7 @@ public class ChangelogRecyclerAdapter extends RecyclerView.Adapter<ChangelogRecy
                     break;
                 default:
                 case ChangelogItem.HEADER:
+                case ChangelogItem.TITLE:
                 case ChangelogItem.NOTE:
                     tagNameRes = 0;
                     colorRes = 0;
@@ -127,7 +134,7 @@ public class ChangelogRecyclerAdapter extends RecyclerView.Adapter<ChangelogRecy
             }
 
             if (tagNameRes != 0) {
-                ChipDrawable chip = ChipDrawable.createFromAttributes(context, null, R.attr.chipStandaloneStyle, R.style.Widget_AppTheme_Chip_Assist_Elevated);
+                ChipDrawable chip = ChipDrawable.createFromAttributes(context, null, R.attr.chipStandaloneStyle, R.style.Widget_Material3_Chip_Assist_Elevated);
                 chip.setTextResource(tagNameRes);
                 chip.setTextColor(MaterialColors.getColor(context, R.attr.colorSurface, "LinearLayoutCompat"));
                 chip.setTextSize(UiUtils.spToPx(context, 10));
@@ -135,7 +142,7 @@ public class ChangelogRecyclerAdapter extends RecyclerView.Adapter<ChangelogRecy
                 chip.setCloseIconVisible(false);
                 chip.setChipStartPadding(0);
                 chip.setChipEndPadding(0);
-                chip.setBounds(0, 0, chip.getIntrinsicWidth(), UiUtils.dpToPx(context, 14));
+                chip.setBounds(0, 0, chip.getIntrinsicWidth(), UiUtils.dpToPx(context, 20));
                 ImageSpan span = new ImageSpan(chip);
                 sb.append(" ");
                 sb.setSpan(span, sb.length() - 1, sb.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
@@ -145,8 +152,33 @@ public class ChangelogRecyclerAdapter extends RecyclerView.Adapter<ChangelogRecy
         if (item.getChangeTitle() != null) {
             sb.append('[').append(item.getChangeTitle()).append("] ");
         }
-        sb.append(item.getChangeText());
-        return item.isSubtext() ? UIUtils.getSmallerText(sb) : sb;
+        return sb.append(item.getChangeText());
+    }
+
+    @StyleRes
+    public static int getChangeTextAppearance(@ChangelogItem.ChangeTextType int type) {
+        switch(type) {
+            default:
+            case ChangelogItem.TEXT_MEDIUM:
+                return R.style.TextAppearance_Material3_BodyMedium;
+            case ChangelogItem.TEXT_LARGE:
+                return R.style.TextAppearance_Material3_BodyLarge;
+            case ChangelogItem.TEXT_SMALL:
+                return R.style.TextAppearance_Material3_BodySmall;
+        }
+    }
+
+    @StyleRes
+    public static int getTitleTextAppearance(@ChangelogItem.ChangeTextType int type) {
+        switch(type) {
+            default:
+            case ChangelogItem.TEXT_MEDIUM:
+                return R.style.TextAppearance_Material3_TitleMedium;
+            case ChangelogItem.TEXT_LARGE:
+                return R.style.TextAppearance_Material3_TitleLarge;
+            case ChangelogItem.TEXT_SMALL:
+                return R.style.TextAppearance_Material3_TitleSmall;
+        }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

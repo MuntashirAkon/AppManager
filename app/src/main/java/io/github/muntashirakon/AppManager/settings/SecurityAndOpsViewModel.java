@@ -56,9 +56,10 @@ public class SecurityAndOpsViewModel extends AndroidViewModel implements Ops.Adb
             // Migration
             long thisVersion = BuildConfig.VERSION_CODE;
             long lastVersion = (long) AppPref.get(AppPref.PrefKey.PREF_LAST_VERSION_CODE_LONG);
-            if (lastVersion != 0) {
+            if (lastVersion == 0) {
                 // First version: set this as the last version
                 AppPref.set(AppPref.PrefKey.PREF_LAST_VERSION_CODE_LONG, (long) BuildConfig.VERSION_CODE);
+                AppPref.set(AppPref.PrefKey.PREF_DISPLAY_CHANGELOG_LAST_VERSION_LONG, (long) BuildConfig.VERSION_CODE);
             }
             if (lastVersion < thisVersion) {
                 Log.d(TAG, "Start migration");

@@ -74,7 +74,10 @@ public class AppPref {
          */
         PREF_CONCURRENCY_THREAD_COUNT_INT,
         PREF_CUSTOM_LOCALE_STR,
+
         PREF_DISPLAY_CHANGELOG_BOOL,
+        PREF_DISPLAY_CHANGELOG_LAST_VERSION_LONG,
+
         PREF_ENABLE_KILL_FOR_SYSTEM_BOOL,
         PREF_ENABLE_SCREEN_LOCK_BOOL,
         PREF_ENABLED_FEATURES_INT,
@@ -475,6 +478,7 @@ public class AppPref {
             case PREF_APP_THEME_CUSTOM_INT:
                 return 0;
             case PREF_LAST_VERSION_CODE_LONG:
+            case PREF_DISPLAY_CHANGELOG_LAST_VERSION_LONG:
                 return 0L;
             case PREF_ENABLED_FEATURES_INT:
                 return 0xffff_ffff;  /* All features enabled */
