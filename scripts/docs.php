@@ -11,7 +11,7 @@ VERBS:
  rebase         Extract strings from the TeX files and re-create the base
                 translation file.
  update <lang>  Rebuild HTML from strings.xml for the given language.
- deploy         Rebuild HTML and deploy it to the GitHub pages.
+ deploy [force] Rebuild HTML and deploy it to the GitHub pages.
  pdf            Build PDF from TeX using pdflatex (English-only).
  debug          Do experiments.
 
@@ -427,13 +427,13 @@ function update_translations(string $lang): void {
     }
 }
 
-function deploy(): void {
+function deploy(bool $force = false): void {
     $languages = collect_languages();
     // Rebuild HTML
     foreach ($languages as $language) {
         $output_file = RAW_DIR . '/' . $language . '/' . OUTPUT_FILENAME;
         $strings_file = RAW_DIR . '/' . $language . '/' . STRINGS_XML;
-        if (!need_update($output_file, $strings_file)) {
+        if (!$force && !need_update($output_file, $strings_file)) {
             fprintf(STDERR, "Skipped updating HTML for language $language\n");
             continue;
         }
@@ -595,7 +595,8 @@ switch($verb) {
         }
         break;
     case 'deploy':
-        deploy();
+        $force = isset($argv[2]) && $argv[2] == 'force';
+        deploy($force);
         break;
     case 'pdf':
         create_transient_tex(BASE_DIR);

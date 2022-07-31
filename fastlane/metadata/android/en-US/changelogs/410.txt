@@ -1,0 +1,11 @@
+Support for v2.6.5 and earlier have been ended. Visit in-app changelog for a more detailed changelog.
+
+- Material 3 and other UI improvements
+- Full support for wireless debugging
+- New feature: App explorer, VirusTotal scanning, import backups from other apps
+- New widgets: Screen time and clear cache
+- Triggering profile from third-party apps
+- Advanced component blocking
+- Advanced searching
+- Improve interceptor, shared libraries, backups, etc.
+- Bug fixes.

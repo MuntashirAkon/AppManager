@@ -27,8 +27,8 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
 
 public class SettingsActivity extends BaseActivity implements PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
-    private static final String SCHEME = "app";
-    private static final String HOST = "io.github.muntashirakon.appmanager.settings";
+    private static final String SCHEME = "app-manager";
+    private static final String HOST = "settings";
 
     @NonNull
     public static Intent getIntent(@NonNull Context context, @Nullable String... paths) {

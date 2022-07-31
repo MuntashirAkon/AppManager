@@ -18,6 +18,273 @@
 <changelog>
     <release
         type="stable release"
+        version="v3.0.0"
+        code="410"
+        date="4 August 2022">
+        <note subtext="true">
+            Credit goes to [a href="https://github.com/PookaMustard"]Pooka Mustard[/a] for compiling the release notes
+            from an incredible number of commits.
+        </note>
+        <new>
+            [b]App Explorer.[/b] It can be used to view and open the internal file structure of an APK. It is visible
+            when opening an APK using an external application such as a file explorer. This option can be disabled in [a
+            href="app-manager://settings/enabled_features"]settings[/a].
+        </new>
+        <new>
+            [b]VirusTotal.[/b] Added ability to fetch reports from and send APK files to VirusTotal, using an API key
+            obtained from [a href="https://virustotal.com"]https://virustotal.com[/a]. To use the feature, the
+            [a href="app-manager://settings/enabled_features"]Internet feature[/a] must be
+            enabled and the API key must be
+            [a href="app-manager://settings/vt_apikey"]inserted[/a]
+        </new>
+
+        <!-- Main page -->
+        <title type="medium">Main page</title>
+        <new>Add sort by [i]installation date[/i]</new>
+        <new title="Batch Ops">New batch operations such as clearing cache, controlling net policies</new>
+        <improve>Enabled [i]Running apps[/i] filter in no-root mode</improve>
+        <improve>Reduced waiting time for updating the app list</improve>
+        <improve title="Batch Ops">
+            The logs from the last batch operation can be viewed or copied if it fails
+        </improve>
+        <improve title="Batch Ops">
+            Hide actions in the multi-selection view if the screen height of App Manager is too small. Actions can be
+            revealed by tapping the selected-apps counter in the top-middle part of the view
+        </improve>
+        <improve title="Batch Ops">Enable only the actions that can be executed based on the selected apps</improve>
+        <fix>Fixed incomplete list of applications</fix>
+        <fix>Fixed listing running applications if they are running in different processes</fix>
+
+        <!-- App Details page -->
+        <title type="medium">App Details page</title>
+        <new title="Services tab">Added a launch button to launch a service</new>
+        <improve title="Components tab">
+            Enabled advanced component blocking, accessible by long clicking on the block/unblock button
+        </improve>
+        <improve title="Components tab">Display process name</improve>
+        <improve title="Activities tab">
+            Merged two shortcut buttons into one button, namely [i]Create Shortcut[/i], and add a new button, namely
+            [i]launch[/i] button to launch the activities
+        </improve>
+        <improve title="Activities tab">Enabled opening non-exported activities via Activity Interceptor</improve>
+        <note subtext="true">
+            To open an activity in the Activity Interceptor, long click on the [i]Launch[/i] button.
+        </note>
+        <improve title="Shared Libraries tab">
+            Display library description including its file type such as shared object, executable, jar or APK
+        </improve>
+        <improve title="Permissions tab">Display external permissions required by an app</improve>
+        <fix title="Uses Permissions tab">Fixed displaying unsupported or unused permissions</fix>
+        <fix title="Signatures tab">Fixed retrieving signing info in older Android versions</fix>
+
+        <!-- App Info tab -->
+        <title type="small">App Info tab</title>
+        <new>Display primary ABI, hidden API and SELinux info</new>
+        <note subtext="true">
+            Hidden APIs are the methods and classes deliberately hidden by the OS (since Android Pie) and are
+            inaccessible to any third-party applications by default.
+        </note>
+        <new>Added [i]Play App Signing[/i] tag</new>
+        <improve>
+            Tapping any entry in the dialog accessible from the [i]running[/i] tag opens the Log Viewer page with the
+            process ID (PID) of the selected service filtered by deault.
+        </improve>
+        <improve>Display [i]Trackers[/i] in green if all the trackers are blocked</improve>
+        <note subtext="true">The associated dialog also marks all the blocked trackers in green.</note>
+        <improve>Display warning if the user attempts to disable App Manager</improve>
+        <improve>Enabled editing the SSAID field</improve>
+        <improve>Display [i]View in Settings[/i] as an action in no-root mode</improve>
+        <improve>Action buttons match Android 12-style</improve>
+        <fix>Fixed displaying app info of an APK without a valid signature</fix>
+        <fix>Fixed clearing caches in Android 7.1 and older in ADB mode</fix>
+        <note subtext="true">
+            In Android Marshmallow and Nougat, the only way to clear cache is to list all the applications then clear
+            their caches individually.
+        </note>
+
+        <!-- Profile -->
+        <title type="medium">Profile</title>
+        <new>
+            Added the ability to trigger profiles via third-party apps such as
+            [a href="https://f-droid.org/en/packages/com.jens.automation2/"]Automation[/a] or Tasker.
+            See [a href="https://muntashirakon.github.io/AppManager/#sec:automating-tasks"]docs[/a] for details
+        </new>
+        <fix>Fixed displaying apps from all users</fix>
+        <fix>Prevented adding duplicate application items</fix>
+        <fix>Fixed displaying apps from all users</fix>
+
+        <!-- Backup/Restore -->
+        <title type="medium">Backup/Restore</title>
+        <new>
+            Ability to import backups from old or discontinued applications such as Titanium Backup, OAndBackup and
+            Swift Backup (version 3.0–3.2)
+        </new>
+        <improve>
+            Backup/restore MagiskHide and Magisk DenyList rules. If MagiskHide rule is detected but only Magisk DenyList
+            is present, it will fall back to Magisk DenyList
+        </improve>
+        <improve>Restore last modification time</improve>
+        <improve>Display backup date in the backup info</improve>
+        <improve>Improved backup speed by removing recursive functions</improve>
+        <improve>
+            Improved backup/restore dialog to include separate tabs for backup and restore as well as the options to
+            freeze or unfreeze a backup
+        </improve>
+        <improve>Force select [i]APK files[/i] option in the restore tab if the apps aren't installed</improve>
+        <fix>Fixed restoring backups with KeyStore</fix>
+        <note subtext="true">Restoring KeyStore backups may not work if they are restored in a different device.</note>
+
+        <!-- Activity Interceptor page -->
+        <title type="medium">Activity Interceptor page</title>
+        <new>Added option to create shortcuts and copy-and-paste contents</new>
+        <note subtext="true">
+            The copied text contains [tt]tab[/tt] separated entries. So, directly pasting them to messaging platforms
+            may not work.
+        </note>
+        <new>Added [i]class[/i], [i]package[/i] and [i]identifier[/i] fields</new>
+        <new>Added option to resolve and open activities using root</new>
+
+        <!-- Running Apps page -->
+        <title type="medium">Running Apps page</title>
+        <new>Display memory (RAM) and swap information on top of the page</new>
+        <new>
+            View the details of a process by clicking on the item. For Android packages, the relevant App Info page
+            can be accessed by tapping the [i]info[/i] button in the top-right corner of the sheet
+        </new>
+        <fix>Fixed detecting running apps with zygote preload</fix>
+
+        <!-- Installer -->
+        <title type="medium">Installer</title>
+        <new>
+            Added [i]App Info[/i] button in the top-right corner of the installation-completed dialog, which opens the
+            App Details page
+        </new>
+        <improve>Added the ability to install multiple applications by maintaining a queue</improve>
+        <improve>
+            In Android 12 and later, applications previous installed with App Manager can be updated without any user
+            interactions in the no-root mode
+        </improve>
+        <improve>Added the option to downgrade apps in the no-root mode</improve>
+        <improve>Improved how splits are selected during installation</improve>
+        <fix>Prevented the installer from hanging forever in the Knox-enabled Samsung devices</fix>
+        <fix>Fixed support for applications uninstalled without clearing data</fix>
+        <fix>Fixed handling applications with proof-of-rotation</fix>
+        <fix>Fixed extracting OBB files</fix>
+
+        <!-- Settings page -->
+        <title type="medium">Settings</title>
+        <new>
+            Added [a href="app-manager://settings/saved_apk_format"]the option[/a] to specify
+            a format for the APK files saved using batch operations or profiles
+        </new>
+        <new>
+            Added [a href="app-manager://settings/selected_users"]the option[/a] to select
+            the users App Manager should work with if the device has multiple users
+        </new>
+        <new>
+            Added [a href="app-manager://settings/installer"]an option[/a] to block trackers
+            immediately after installing an application if it is installed with App Manager's installer
+        </new>
+        <new>
+            Added the option to select a [a
+            href="app-manager://settings/rules_prefs/default_blocking_method"]default
+            blocking method[/a]
+        </new>
+        <new>
+            Added an option to reload apps in the [i]Troubleshooting[/i] category
+        </new>
+        <improve>
+            Added [a href="app-manager://settings/installer"]the ability[/a] to install apps
+            in the background
+        </improve>
+        <improve>Implement the new-style changelog</improve>
+        <improve>Fallback to no-root mode if root or ADB is not detected.</improve>
+        <improve>
+            Full implementation of wireless debugging. See [a
+            href="https://muntashirakon.github.io/AppManager/#sec:wireless-debugging"]docs[/a] for details
+        </improve>
+        <improve>Improved auto-detection of ADB</improve>
+        <fix>Fixed changing application locale</fix>
+        <fix>
+            Fixed compatibility issues preventing pre-Marshmallow devices from displaying the [i]About the Device[/i]
+            page
+        </fix>
+        <fix>Fixed importing keys from PKCS12 KeyStore file</fix>
+        <fix>Fixed generating RSA keypair in Android Lollipop</fix>
+
+        <!-- Others -->
+        <title type="medium">Others</title>
+        <new title="UI">Material 3 and dynamic colours</new>
+        <new title="UI">
+            Advanced searching and filtering, including the option to search by suffix, prefix or the regular
+            expressions
+        </new>
+        <new title="1-Click Ops page">
+            Added [i]Trim caches in all apps[/i] operation, which deletes the cache files of all applications, including
+            Android system applications
+        </new>
+        <new title="Widget">A widget to help clear caches in all applications as in the 1-click ops page</new>
+        <new title="Widget">
+            A Digital Wellbeing-style widget with three resize options that displays the screen time along with the
+            three mostly used applications
+        </new>
+        <new title="Documentation">New style single-page documentation</new>
+        <new title="Language">Added Indonesian and Italian</new>
+        <note subtext="true">Removed Bengali due to lack of translators.</note>
+        <new title="Shared Preferences Editor">Added support for [tt]set[/tt] data</new>
+        <new title="Profile page">
+            Added [i]log viewer[/i] section where logs from the past profile triggers are displayed
+        </new>
+        <new title="Log Viewer">
+            Changed extension of saved logs from [tt].log[/tt] to [tt].am.log[/tt] which can be opened in App Manager
+            from the external apps or the system's [i]Sharing[/i] feature
+        </new>
+        <new title="Magisk">Added support for Magisk DenyList rules.</new>
+        <new title="Magisk">Multi-process support for MagiskHide and Magisk DenyList</new>
+
+        <improve title="App Usage page">Improved app usage details dialog to include more usage information</improve>
+        <improve title="App Usage page">
+            Data usage for mobile and Wi-Fi networks are shown with the Android phone and Wi-Fi icons respectively
+            instead of the 'M' and 'W' prefixes
+        </improve>
+        <improve title="Documentation">Redirect to the docs site in case the WebView is unavailable</improve>
+        <improve title="UI">
+            Added Fast-scroller in the app info tab, the Running Apps page, the App Usage page and in the Manifest/Code
+            Viewer page
+        </improve>
+        <improve title="UI">
+            Key generator, changelog and about dialogs in the settings page are displayed in full-screen on small
+            screens
+        </improve>
+        <improve title="Security">Use TLS 1.3 for connecting to ADB in Android 9 and later</improve>
+        <improve title="Shared Preferences Editor">Display exit prompt if the file was edited</improve>
+        <improve title="Scanner page">Display [tt].smali[/tt] content and a preview of its [tt].java[/tt] file</improve>
+        <improve title="Scanner page">Renamed [i]Source Directory[/i] to [i]APK Checksums[/i]</improve>
+        <improve title="Log Viewer">
+            Clicking the settings menu opens the Log Viewer settings instead of the general settings page
+        </improve>
+        <improve title="Log Viewer">Replaced [b]Save Partial[/b] with multi-selection mode</improve>
+        <improve title="UX">Improved navigating the app using a keyboard or a TV remote</improve>
+        <improve title="Manifest Viewer">Reduced font-size to improve readability</improve>
+        <improve>Updated trackers and libraries</improve>
+
+        <fix title="Manifest Viewer">Fixed displaying certain manifest files</fix>
+        <fix title="Documentation">Fixed [i]File not found[/i] issue in some versions of Android</fix>
+        <fix title="Language">Fixed punctuation issues in French</fix>
+        <fix title="UI">Fix prominent RTL layout issues</fix>
+        <fix>App Manager files are now cached in the cache directory instead of data directory</fix>
+        <fix>fixed checking for root in some devices</fix>
+        <fix>Fixed granting or revoking some app ops and permissions</fix>
+        <fix>Fixed restoring application permissions while applying rules or restoring backups</fix>
+        <fix>Fixed crashes on attempting to disable net policies for the core applications</fix>
+
+        <note>
+            [br /][b]Full list of changes:[/b] [a
+            href="https://github.com/MuntashirAkon/AppManager/compare/c504b30...v3.0.0"]v2.6.0...v3.0.0[/a]
+        </note>
+    </release>
+    <release
+        type="stable release"
         version="v2.6.0"
         code="385"
         date="25 Apr 2021">
@@ -47,7 +314,7 @@
             section)
         </new>
         <improve>
-            Removed unAPKM from the app as newer APKMs are no longer encrypted. (Use UnAPKM extension from F-Droid to
+            Removed UnAPKM from the app as newer APKMs are no longer encrypted. (Use UnAPKM extension from F-Droid to
             continue to decrypt the encrypted APKM files.)
         </improve>
         <improve>Added compatibility support for mobile data usage in old operating systems</improve>

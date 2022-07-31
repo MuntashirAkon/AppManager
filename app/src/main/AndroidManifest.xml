@@ -94,8 +94,8 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
 
-                <data android:scheme="app" />
-                <data android:host="io.github.muntashirakon.appmanager.settings" />
+                <data android:scheme="app-manager" />
+                <data android:host="settings" />
             </intent-filter>
         </activity>
         <activity

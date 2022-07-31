@@ -1,6 +1,81 @@
 % SPDX-License-Identifier: GPL-3.0-or-later OR CC-BY-SA-4.0
 \chapter{Changelogs}\label{ch:changelogs} %%##$chapter-title>>
 
+\section{v3.0.0 (410)}\label{sec:v3.0.0-(410)}
+
+App Manager v3.0.0 comes with a lot of features and improvements.
+See \href{intent://settings/changelog#Intent;scheme=app-manager;end}{Settings > Changelog} to see a more detailed changelog.
+
+\subsection{Material 3 and More}
+Material 3, somewhat similar to \textit{Material You}, is a significant improvement over Material Design 2 with support for dynamic colours in Android 12 and later.
+In addition, many design changes have been made in App Manager without any significant changes in the overall user experience.
+
+\paragraph{Known issue} Switches are still based on Material Design 2 which will be fixed in a future release.
+
+\subsection{Wireless Debugging}
+Wireless debugging support has been fully implemented. Head over to \Sref{sec:wireless-debugging} for instructions on how to configure wireless debugging.
+
+\begin{tip}{No-root users}
+    Due to auto-detection feature, startup time might be large for no-root users when the mode of operation is set to \textit{auto}.
+    Instead, no-root users should select \textit{no-root} instead of \textit{auto}.
+\end{tip}
+
+\subsection{Languages}
+App Manager is fully translated into Indonesian and Italian languages and can be enabled in settings. Bengali is removed due to lack of translators.
+
+\subsection{Introducing App Explorer}
+App Explorer can be used to browse the contents of an application. This includes binary XML files, DEX contents or any other media files.
+DEX contents can only be explored in Android Oreo (Android 8) and later. It's also possible to convert an \texttt{.smali} file into \texttt{.java} for a better understanding of the reversed code.
+This feature, if not needed, can be disabled in Settings > Enable/disable features.
+
+\subsection{Import Backups from Other Applications}
+It is possible to import backups from discontinued or obsolete applications such as Titanium Backup, OAndBackup and Swift Backup (version 3.0 to 3.2).
+Go to Setting > Backup/restore to find this option.
+
+\subsection{VirusTotal}
+VirusTotal is a widely used tool to scan files and URLs for viruses. In the scanner page and in the running apps page, an option to scan files with VirusTotal has been added.
+But the option is hidden by default. To enable the option, it is necessary to obtain an API key from VirusTotal. Go to Settings > VirusTotal API Key for more information.
+
+\begin{warning}{Internet feature}
+    This is currently the only feature which require an Internet connection. If you do not wish to use any Internet feature that might also be added in the future,
+    disable \textit{Use the Internet} in Settings > Enable/disable features.
+\end{warning}
+
+\subsection{Trigger Profiles from the Automation Software}
+As the implementation of routine operations is being delayed, an option to trigger profiles from the external automation software is added.
+See \Sref{sec:automating-tasks} for instructions on how to configure profile automation.
+
+\subsection{Improved Application Installer}
+Application installer includes several improvements including the ability to downgrade applications in no-root mode, installing multiple applications at once and blocking trackers after installation.
+In Android 12 and later, no-root users can update applications without any user interactions.
+
+\subsection{Component Blocking}
+It is now possible to configure how App Manager should block a component. Visit Settings > Rules > Default blocking method for more information.
+In the components tab, long clicking the block/unblock button opens a context menu which allows per-component blocking in a similar manner.
+ADB users can also block the components of a \textit{Test only} app.
+
+\subsection{Advanced Searching}
+In some pages, the search bar supports additional searching which includes searching via prefix, suffix or even regular expressions.
+In the main page, it is also possible to search for applications using the first letters of each word, e.g.\ \textit{App Manager} can be listed by searching for \textit{am}.
+
+\subsection{Shared Libraries}
+Shared libraries tab has received a significant improvements. It can display three types of libraries, such as native, jar and APK files.
+
+\subsection{Make the Best Use of Interceptor}
+Activity interceptor can be opened directly from the activities tab by long clicking on the launch button, and similarly, activities can be launched from the activity interceptor page with or without root, for any users.
+
+\begin{tip}{Notice}
+    Currently, activities opened via root cannot send the results back to the original applications.
+\end{tip}
+
+\subsection{Widget: Screen Time}
+Screen time widget is quite similar to Digital Wellbeing's widget by the same name.
+It displays the total screen time for the day along with the top three apps from all users.
+
+\subsection{Widget: Clear Cache}
+Clear cache widget can be to clear cache from all the applications directly from the home screen.
+
+
 \section{v2.6.0 (385)}\label{sec:v2.6.0-(385)}
 
 \subsection{Introducing Backups}
@@ -132,7 +207,7 @@ the app. This is useful if the app has introduced tracker components, new permis
 
 \paragraph{Known Limitations}
 \begin{itemize}
-    \item Large app can take a long time to fetch app info and therefore it may take a long time display the installation prompt.
+    \item Large app can take a long time to fetch app info, and therefore, it may take a long time display the installation prompt.
     \item If the apk is not located in the internal storage, the app has to be cached first which might also take
     a long time depending on the size of the apk.
 \end{itemize}
@@ -206,7 +281,7 @@ the platform default method is used.
 \begin{itemize}
     \item Currently \textit{all} splits apks are installed. But this behaviour is going to change in the next release.
     If you only need a few splits instead of all, extract the \textbf{APKS} or \textbf{XAPK} file, and then, create a new zip
-    file with your desired split apks and replace the \textbf{ZIP} extension with \textbf{APKS}. Now, open it with AM.
+    file with your desired split apks and replace the \textbf{ZIP} extension with \textbf{APKS}. Now, open it with AM\@.
     \item There is no progress dialog to display the installation progress.
 \end{itemize}
 
