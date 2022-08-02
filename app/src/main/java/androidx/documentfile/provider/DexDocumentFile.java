@@ -2,11 +2,8 @@
 
 package androidx.documentfile.provider;
 
-import android.os.Build;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 
 import org.jf.dexlib2.iface.ClassDef;
 
@@ -21,7 +18,6 @@ import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.scanner.DexClasses;
 
-@RequiresApi(Build.VERSION_CODES.O)
 public class DexDocumentFile extends VirtualDocumentFile<ClassDef> {
     @NonNull
     private final DexClasses dexClasses;

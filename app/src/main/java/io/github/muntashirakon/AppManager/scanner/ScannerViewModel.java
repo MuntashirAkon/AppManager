@@ -12,7 +12,6 @@ import android.util.Pair;
 import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.annotation.WorkerThread;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -37,7 +36,6 @@ import java.util.regex.Pattern;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.StaticDataset;
-import io.github.muntashirakon.AppManager.scanner.reflector.Reflector;
 import io.github.muntashirakon.AppManager.scanner.vt.VirusTotal;
 import io.github.muntashirakon.AppManager.scanner.vt.VtFileReport;
 import io.github.muntashirakon.AppManager.scanner.vt.VtFileScanMeta;
@@ -55,9 +53,7 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
     private boolean mIsApkCached;
     private boolean mIsSummaryLoaded = false;
     private Uri mApkUri;
-    @RequiresApi(Build.VERSION_CODES.O)
     private int mDexVfsId;
-    private DexClassesPreOreo mDexClassesPreOreo;
     @Nullable
     private final VirusTotal mVt;
     @Nullable
@@ -96,9 +92,7 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
             FileUtils.deleteSilently(mApkFile);
         }
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                VirtualFileSystem.unmount(mDexVfsId);
-            } else mDexClassesPreOreo.close();
+            VirtualFileSystem.unmount(mDexVfsId);
         } catch (Throwable e) {
             e.printStackTrace();
         }
@@ -210,20 +204,12 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
         return mNativeLibraries;
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     public Uri getUriFromClassName(String className) throws FileNotFoundException {
         Path fsRoot = VirtualFileSystem.getFsRoot(mDexVfsId);
         if (fsRoot == null) {
             throw new FileNotFoundException("FS Root not found.");
         }
         return fsRoot.findFile(className.replace('.', '/') + ".smali").getUri();
-    }
-
-    @Deprecated
-    public String getClassContent(@NonNull String className) throws ClassNotFoundException {
-        Reflector reflector = mDexClassesPreOreo.getReflector(className);
-        reflector.generateClassData();
-        return reflector.toString();
     }
 
     @WorkerThread
@@ -289,17 +275,12 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
         } catch (Throwable e) {
             mNativeLibraries = Collections.emptyList();
         }
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            try {
-                VirtualFileSystem.DexFileSystem dfs = new VirtualFileSystem.DexFileSystem(Uri.fromFile(mApkFile), mApkFile);
-                mDexVfsId = VirtualFileSystem.mount(dfs);
-                mAllClasses = dfs.getDexClasses().getClassNames();
-            } catch (Throwable e) {
-                mAllClasses = Collections.emptyList();
-            }
-        } else {
-            mDexClassesPreOreo = new DexClassesPreOreo(getApplication(), mApkFile);
-            mAllClasses = mDexClassesPreOreo.getClassNames();
+        try {
+            VirtualFileSystem.DexFileSystem dfs = new VirtualFileSystem.DexFileSystem(Uri.fromFile(mApkFile), mApkFile);
+            mDexVfsId = VirtualFileSystem.mount(dfs);
+            mAllClasses = dfs.getDexClasses().getClassNames();
+        } catch (Throwable e) {
+            mAllClasses = Collections.emptyList();
         }
         mAllClassesLiveData.postValue(mAllClasses);
         // Load tracker and library info

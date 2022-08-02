@@ -20,7 +20,6 @@ import android.webkit.MimeTypeMap;
 import androidx.annotation.CheckResult;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.core.util.Pair;
 import androidx.documentfile.provider.DexDocumentFile;
 import androidx.documentfile.provider.DocumentFile;
@@ -192,7 +191,6 @@ public class Path implements Comparable<Path> {
     }
 
     /* package */
-    @RequiresApi(Build.VERSION_CODES.O)
     Path(@NonNull Context context, int vfsId, @NonNull DexClasses dexClasses, @Nullable String path) {
         mContext = context;
         mDocumentFile = new DexDocumentFile(getParentFile(context, vfsId), vfsId, dexClasses, path);

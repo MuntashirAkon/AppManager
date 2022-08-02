@@ -5,7 +5,6 @@ package io.github.muntashirakon.AppManager.scanner;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -90,11 +89,7 @@ public class ClassListingFragment extends Fragment implements AdvancedSearchView
                     .get((int) (parent.getAdapter()).getItemId(position));
             try {
                 Intent intent = new Intent(mActivity, ClassViewerActivity.class);
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    intent.putExtra(ClassViewerActivity.EXTRA_URI, mViewModel.getUriFromClassName(className));
-                } else {
-                    intent.putExtra(ClassViewerActivity.EXTRA_CLASS_CONTENT, mViewModel.getClassContent(className));
-                }
+                intent.putExtra(ClassViewerActivity.EXTRA_URI, mViewModel.getUriFromClassName(className));
                 intent.putExtra(ClassViewerActivity.EXTRA_APP_NAME, mActivity.getTitle());
                 intent.putExtra(ClassViewerActivity.EXTRA_CLASS_NAME, className);
                 startActivity(intent);

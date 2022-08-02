@@ -2,10 +2,7 @@
 
 package io.github.muntashirakon.AppManager.scanner;
 
-import android.os.Build;
-
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 
 import org.jf.baksmali.Adaptors.ClassDefinition;
 import org.jf.baksmali.BaksmaliOptions;
@@ -32,7 +29,6 @@ import java.util.Objects;
 import io.github.muntashirakon.AppManager.BuildConfig;
 
 // FIXME: 8/2/22 Add support for lower SDKs by fixing Smali/Baksmali
-@RequiresApi(Build.VERSION_CODES.O)
 public class DexClasses implements Closeable {
     private final HashMap<String, ClassDef> classDefArraySet = new HashMap<>();
     // TODO: 18/10/21 Load frameworks.jar and add its dex files as options.classPath
