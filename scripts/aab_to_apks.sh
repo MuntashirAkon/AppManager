@@ -39,8 +39,6 @@ SUPPORTED_ARCHS=(armeabi_v7a arm64_v8a x86 x86_64)
 #KEYSTORE_PASS=
 #KEY_ALIAS_PASS=
 
-source ./scripts/KeyStore.sh
-
 if [[ "${KEYSTORE}" == "" ]]; then
   read -rp "KeyStore file: " KEYSTORE
   echo
