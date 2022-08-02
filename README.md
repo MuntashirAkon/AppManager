@@ -18,7 +18,7 @@
 
 ### General features
 - Fully reproducible, copylefted libre software (GPLv3+)
-- Material design 3
+- Material 3 with dynamic colours
 - Displays as much information as possible in the main page
 - Lists activities, broadcast receivers, services, providers, app ops, permissions, signatures, shared libraries, etc.
   of an application
@@ -27,7 +27,7 @@
 - [Intercept activities](https://muntashirakon.github.io/AppManager/#sec:interceptor-page)
 - Scan for trackers and libraries in apps and list (all or only) tracking classes (and their code dump)
 - View/save the manifest of an app
-- Display app usage, data usage (mobile and wifi), and app storage info (requires “Usage Access” permission)
+- Display app usage, data usage (mobile and Wi-Fi), and app storage info (requires “Usage Access” permission)
 - Install/uninstall APK files (including APKS, APKM and XAPK with OBB files)
 - Share APK files
 - Back up/restore APK files
@@ -92,13 +92,7 @@ Help translate [the app strings](https://hosted.weblate.org/engage/app-manager/)
 
 ## Screenshots
 
-### Dark
-
-<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/6.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/14.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/8.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/10.png" height="500dp" />
-
-### Light
-
-<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/13.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/7.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/9.png" height="500dp" />
+<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/6.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/7.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/8.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/9.png" height="500dp" />
 
 ## Build Instructions
 See [BUILDING.rst](BUILDING.rst)
