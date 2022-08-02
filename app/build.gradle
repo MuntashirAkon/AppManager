@@ -99,7 +99,7 @@ dependencies {
 
     implementation "com.google.android.material:material:${material_version}"
     implementation "androidx.appcompat:appcompat:${appcompat_version}"
-    // AppCompat 1.4.1 still includes the buggy implementation of documentfile library (1.0.0)
+    // AppCompat 1.4.2 still includes the buggy implementation of documentfile library (1.0.0)
     implementation "androidx.documentfile:documentfile:1.0.1"
     implementation "androidx.core:core-splashscreen:${splashscreen_version}"
     implementation 'androidx.preference:preference:1.2.0'

@@ -41,5 +41,5 @@ project.ext {
     appcompat_version = "1.4.2"
     material_version = "1.6.1"
     refine_version = "3.0.3"
-    splashscreen_version = "1.0.0-rc01"
+    splashscreen_version = "1.0.0"
 }
