@@ -556,7 +556,7 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
         if (!AppPref.getBoolean(AppPref.PrefKey.PREF_DISPLAY_CHANGELOG_BOOL)) {
             return;
         }
-        Snackbar.make(findViewById(android.R.id.content), R.string.view_changelog, Snackbar.LENGTH_LONG)
+        Snackbar.make(findViewById(android.R.id.content), R.string.view_changelog, 3 * 60 * 1000)
                 .setAction(R.string.ok, v -> {
                     long lastVersion = (long) AppPref.get(AppPref.PrefKey.PREF_DISPLAY_CHANGELOG_LAST_VERSION_LONG);
                     AppPref.set(AppPref.PrefKey.PREF_DISPLAY_CHANGELOG_BOOL, false);
