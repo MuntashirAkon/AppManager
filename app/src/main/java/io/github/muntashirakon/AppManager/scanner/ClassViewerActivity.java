@@ -4,6 +4,7 @@ package io.github.muntashirakon.AppManager.scanner;
 
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -172,6 +173,7 @@ public class ClassViewerActivity extends BaseActivity {
                 try {
                     javaContent = ScannerUtils.toJavaCode(Objects.requireNonNull(formattedSmaliContent).toString(), -1);
                 } catch (Throwable e) {
+                    e.printStackTrace();
                     runOnUiThread(() -> {
                         Toast.makeText(this, e.toString(), Toast.LENGTH_LONG).show();
                         finish();
@@ -278,6 +280,7 @@ public class ClassViewerActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_any_viewer_actions, menu);
+        menu.findItem(R.id.action_java_smali_toggle).setVisible(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O);
         return super.onCreateOptionsMenu(menu);
     }
 

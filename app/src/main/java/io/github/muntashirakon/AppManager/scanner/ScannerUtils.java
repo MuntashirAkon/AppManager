@@ -95,11 +95,12 @@ public final class ScannerUtils {
         args.setSkipResources(true);
         args.setShowInconsistentCode(true);
         args.setDebugInfo(BuildConfig.DEBUG);
-        JadxDecompiler decompiler = new JadxDecompiler(args);
-        decompiler.load();
-        JavaClass javaClass = decompiler.getClasses().iterator().next();
-        javaClass.decompile();
-        return javaClass.getCode();
+        try (JadxDecompiler decompiler = new JadxDecompiler(args)) {
+            decompiler.load();
+            JavaClass javaClass = decompiler.getClasses().iterator().next();
+            javaClass.decompile();
+            return javaClass.getCode();
+        }
     }
 
     @NonNull
