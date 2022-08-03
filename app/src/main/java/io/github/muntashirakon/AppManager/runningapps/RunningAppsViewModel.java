@@ -33,6 +33,7 @@ import java.util.concurrent.TimeUnit;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.ipc.ps.DeviceMemoryInfo;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.scanner.vt.VirusTotal;
 import io.github.muntashirakon.AppManager.scanner.vt.VtFileReport;
@@ -136,18 +137,18 @@ public class RunningAppsViewModel extends AndroidViewModel {
         });
     }
 
-    private MutableLiveData<List<ProcessItem>> mProcessLiveData;
+    @NonNull
+    private final MutableLiveData<List<ProcessItem>> mProcessLiveData = new MutableLiveData<>();
 
+    @NonNull
     public LiveData<List<ProcessItem>> getProcessLiveData() {
-        if (mProcessLiveData == null) {
-            mProcessLiveData = new MutableLiveData<>();
-        }
         return mProcessLiveData;
     }
 
-
+    @NonNull
     private final MutableLiveData<ProcessItem> mProcessItemLiveData = new MutableLiveData<>();
 
+    @NonNull
     public LiveData<ProcessItem> observeProcessDetails() {
         return mProcessItemLiveData;
     }
@@ -170,6 +171,26 @@ public class RunningAppsViewModel extends AndroidViewModel {
                 mProcessList.addAll(new ProcessParser().parse());
                 filterAndSort();
             }
+        });
+    }
+
+    @NonNull
+    private final MutableLiveData<DeviceMemoryInfo> mDeviceMemoryInfo = new MutableLiveData<>();
+
+    @NonNull
+    public MutableLiveData<DeviceMemoryInfo> getDeviceMemoryInfo() {
+        return mDeviceMemoryInfo;
+    }
+
+    @AnyThread
+    public void loadMemoryInfo() {
+        mExecutor.submit(() -> {
+            DeviceMemoryInfo deviceMemoryInfo = mDeviceMemoryInfo.getValue();
+            if (deviceMemoryInfo == null) {
+                deviceMemoryInfo = new DeviceMemoryInfo();
+            }
+            deviceMemoryInfo.reload();
+            mDeviceMemoryInfo.postValue(deviceMemoryInfo);
         });
     }
 

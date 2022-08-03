@@ -2,10 +2,13 @@
 
 package io.github.muntashirakon.AppManager.runningapps;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
+import android.text.Spannable;
 import android.text.TextUtils;
 import android.text.format.Formatter;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,8 +17,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.AttrRes;
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.PopupMenu;
 
 import com.google.android.material.button.MaterialButton;
@@ -24,10 +29,12 @@ import com.google.android.material.color.MaterialColors;
 import com.google.android.material.divider.MaterialDivider;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.ipc.ps.DeviceMemoryInfo;
 import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
 import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
 import io.github.muntashirakon.AppManager.main.MainRecyclerAdapter;
@@ -39,11 +46,18 @@ import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
-public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAdapter.ViewHolder> {
+public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectionView.ViewHolder> {
+    private static final int VIEW_TYPE_MEMORY_INFO = 1;
+    private static final int VIEW_TYPE_PROCESS_INFO = 2;
+
     private final RunningAppsActivity mActivity;
     private final RunningAppsViewModel mModel;
     private final int mQueryStringHighlightColor;
-    private final ArrayList<ProcessItem> mProcessItems = new ArrayList<>();
+    private final Object mLock = new Object();
+    @NonNull
+    private List<ProcessItem> mProcessItems = Collections.emptyList();
+    private DeviceMemoryInfo mDeviceMemoryInfo;
+
     private final int mColorSurface;
     @ColorInt
     private final int mHighlightColor;
@@ -57,13 +71,17 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAd
         mHighlightColor = ColorCodes.getListItemSelectionColor(activity);
     }
 
-    void setDefaultList(List<ProcessItem> processItems) {
-        synchronized (mProcessItems) {
-            this.mProcessItems.clear(); // We do not clear any selections
-            this.mProcessItems.addAll(processItems);
+    void setDefaultList(@NonNull List<ProcessItem> processItems) {
+        synchronized (mLock) {
+            mProcessItems = processItems;
         }
         notifyDataSetChanged();
         notifySelectionChange();
+    }
+
+    public void setDeviceMemoryInfo(DeviceMemoryInfo deviceMemoryInfo) {
+        mDeviceMemoryInfo = deviceMemoryInfo;
+        notifyItemChanged(0);
     }
 
     @Override
@@ -71,18 +89,95 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAd
         return mHighlightColor;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        if (position == 0) return VIEW_TYPE_MEMORY_INFO;
+        return VIEW_TYPE_PROCESS_INFO;
+    }
+
     @NonNull
     @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_running_app, parent, false);
-        return new ViewHolder(view);
+    public MultiSelectionView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        if (viewType == VIEW_TYPE_MEMORY_INFO) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.header_running_apps_memory_info, parent, false);
+            return new HeaderViewHolder(view);
+        }
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_running_app, parent, false);
+        return new BodyViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MultiSelectionView.ViewHolder holder, int position) {
+        if (position == 0) {
+            onBindViewHolder((HeaderViewHolder) holder);
+        } else {
+            onBindViewHolder((BodyViewHolder) holder, position);
+            super.onBindViewHolder(holder, position);
+        }
+    }
+
+    public void onBindViewHolder(@NonNull HeaderViewHolder holder) {
+        if (mDeviceMemoryInfo == null) {
+            return;
+        }
+        Context context = holder.itemView.getContext();
+        // Memory
+        long appMemory = mDeviceMemoryInfo.getApplicationMemory();
+        long cachedMemory = mDeviceMemoryInfo.getCachedMemory();
+        long buffers = mDeviceMemoryInfo.getBuffers();
+        long freeMemory = mDeviceMemoryInfo.getFreeMemory();
+        double total = appMemory + cachedMemory + buffers + freeMemory;
+        if (total == 0) {
+            // Error due to parsing failure, etc.
+            holder.mMemoryInfoChart.setVisibility(View.GONE);
+            holder.mMemoryShortInfoView.setVisibility(View.GONE);
+            holder.mMemoryInfoView.setVisibility(View.GONE);
+            return;
+        }
+        holder.mMemoryInfoChart.post(() -> {
+            int width = holder.mMemoryInfoChart.getWidth();
+            setLayoutWidth(holder.mMemoryInfoChartChildren[0], (int) (width * appMemory / total));
+            setLayoutWidth(holder.mMemoryInfoChartChildren[1], (int) (width * cachedMemory / total));
+            setLayoutWidth(holder.mMemoryInfoChartChildren[2], (int) (width * buffers / total));
+        });
+        holder.mMemoryShortInfoView.setText(UIUtils.getStyledKeyValue(context, R.string.memory, Formatter
+                .formatFileSize(context, mDeviceMemoryInfo.getUsedMemory()) + "/" + Formatter
+                .formatFileSize(context, mDeviceMemoryInfo.getTotalMemory())));
+        // Set color info
+        Spannable memInfo = UIUtils.charSequenceToSpannable(context.getString(R.string.memory_chart_info, Formatter
+                        .formatShortFileSize(context, appMemory), Formatter.formatShortFileSize(context, cachedMemory),
+                Formatter.formatShortFileSize(context, buffers), Formatter.formatShortFileSize(context, freeMemory)));
+        setColors(holder.itemView, memInfo, new int[]{R.attr.colorOnSurface, R.attr.colorPrimary, R.attr.colorTertiary,
+                R.attr.colorSurfaceVariant});
+        holder.mMemoryInfoView.setText(memInfo);
+
+        // Swap
+        long usedSwap = mDeviceMemoryInfo.getUsedSwap();
+        long totalSwap = mDeviceMemoryInfo.getTotalSwap();
+        if (totalSwap == 0) {
+            holder.mSwapInfoChart.setVisibility(View.GONE);
+            holder.mSwapShortInfoView.setVisibility(View.GONE);
+            holder.mSwapInfoView.setVisibility(View.GONE);
+            // No swap
+            return;
+        }
+        holder.mSwapInfoChart.post(() -> {
+            int width = holder.mSwapInfoChart.getWidth();
+            setLayoutWidth(holder.mSwapInfoChartChildren[0], (int) (width * usedSwap / totalSwap));
+        });
+        holder.mSwapShortInfoView.setText(UIUtils.getStyledKeyValue(context, R.string.swap, Formatter
+                .formatFileSize(context, usedSwap) + "/" + Formatter.formatFileSize(context, totalSwap)));
+        // Set color and size info
+        Spannable swapInfo = UIUtils.charSequenceToSpannable(context.getString(R.string.swap_chart_info, Formatter
+                .formatShortFileSize(context, usedSwap), Formatter.formatShortFileSize(context, totalSwap - usedSwap)));
+        setColors(holder.itemView, swapInfo, new int[]{R.attr.colorOnSurface, R.attr.colorSurfaceVariant});
+        holder.mSwapInfoView.setText(swapInfo);
+    }
+
+    public void onBindViewHolder(@NonNull BodyViewHolder holder, int position) {
         ProcessItem processItem;
-        synchronized (mProcessItems) {
-            processItem = mProcessItems.get(position);
+        synchronized (mLock) {
+            processItem = mProcessItems.get(position - 1);
         }
         ApplicationInfo applicationInfo;
         if (processItem instanceof AppProcessItem) {
@@ -191,34 +286,45 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAd
                 mModel.requestDisplayProcessDetails(processItem);
             }
         });
-        super.onBindViewHolder(holder, position);
     }
 
     @Override
     public long getItemId(int position) {
-        synchronized (mProcessItems) {
-            return mProcessItems.get(position).hashCode();
+        if (position == 0) {
+            return mDeviceMemoryInfo != null ? mDeviceMemoryInfo.hashCode() : View.NO_ID;
+        }
+        synchronized (mLock) {
+            return mProcessItems.get(position - 1).hashCode();
         }
     }
 
     @Override
     protected void select(int position) {
-        synchronized (mProcessItems) {
-            mModel.select(mProcessItems.get(position));
+        if (position == 0) {
+            return;
+        }
+        synchronized (mLock) {
+            mModel.select(mProcessItems.get(position - 1));
         }
     }
 
     @Override
     protected void deselect(int position) {
-        synchronized (mProcessItems) {
-            mModel.deselect(mProcessItems.get(position));
+        if (position == 0) {
+            return;
+        }
+        synchronized (mLock) {
+            mModel.deselect(mProcessItems.get(position - 1));
         }
     }
 
     @Override
     protected boolean isSelected(int position) {
-        synchronized (mProcessItems) {
-            return mModel.isSelected(mProcessItems.get(position));
+        if (position == 0) {
+            return false;
+        }
+        synchronized (mLock) {
+            return mModel.isSelected(mProcessItems.get(position - 1));
         }
     }
 
@@ -245,12 +351,60 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAd
 
     @Override
     public int getItemCount() {
-        synchronized (mProcessItems) {
-            return mProcessItems.size();
+        synchronized (mLock) {
+            return mProcessItems.size() + 1;
         }
     }
 
-    static class ViewHolder extends MultiSelectionView.ViewHolder {
+    private static void setColors(@NonNull View v, @NonNull Spannable text, @NonNull @AttrRes int[] colors) {
+        int idx = 0;
+        for (int color : colors) {
+            idx = text.toString().indexOf('●', idx);
+            if (idx == -1) break;
+            text.setSpan(new ForegroundColorSpan(MaterialColors.getColor(v, color)), idx, idx + 1,
+                    Spannable.SPAN_INCLUSIVE_EXCLUSIVE);
+            ++idx;
+        }
+    }
+
+    private static void setLayoutWidth(@NonNull View view, int width) {
+        ViewGroup.LayoutParams lp = view.getLayoutParams();
+        lp.width = width;
+        view.setLayoutParams(lp);
+    }
+
+    static class HeaderViewHolder extends MultiSelectionView.ViewHolder {
+        private final TextView mMemoryShortInfoView;
+        private final TextView mMemoryInfoView;
+        private final View[] mMemoryInfoChartChildren;
+        private final LinearLayoutCompat mMemoryInfoChart;
+        private final TextView mSwapShortInfoView;
+        private final TextView mSwapInfoView;
+        private final View[] mSwapInfoChartChildren;
+        private final LinearLayoutCompat mSwapInfoChart;
+
+        public HeaderViewHolder(@NonNull View itemView) {
+            super(itemView);
+            mMemoryShortInfoView = itemView.findViewById(R.id.memory_usage);
+            mMemoryInfoView = itemView.findViewById(R.id.memory_usage_info);
+            mMemoryInfoChart = itemView.findViewById(R.id.memory_usage_chart);
+            int childCount = mMemoryInfoChart.getChildCount();
+            mMemoryInfoChartChildren = new View[childCount];
+            for (int i = 0; i < childCount; ++i) {
+                mMemoryInfoChartChildren[i] = mMemoryInfoChart.getChildAt(i);
+            }
+            mSwapShortInfoView = itemView.findViewById(R.id.swap_usage);
+            mSwapInfoView = itemView.findViewById(R.id.swap_usage_info);
+            mSwapInfoChart = itemView.findViewById(R.id.swap_usage_chart);
+            childCount = mSwapInfoChart.getChildCount();
+            mSwapInfoChartChildren = new View[childCount];
+            for (int i = 0; i < childCount; ++i) {
+                mSwapInfoChartChildren[i] = mSwapInfoChart.getChildAt(i);
+            }
+        }
+    }
+
+    static class BodyViewHolder extends MultiSelectionView.ViewHolder {
         MaterialCardView itemView;
         ImageView icon;
         MaterialButton more;
@@ -262,7 +416,7 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<RunningAppsAd
         TextView selinuxContext;
         MaterialDivider divider;
 
-        public ViewHolder(@NonNull View itemView) {
+        public BodyViewHolder(@NonNull View itemView) {
             super(itemView);
             this.itemView = (MaterialCardView) itemView;
             icon = itemView.findViewById(R.id.icon);
