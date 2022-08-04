@@ -4,11 +4,9 @@ package io.github.muntashirakon.AppManager.crypto.ks;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.net.Uri;
 import android.sun.misc.BASE64Decoder;
 import android.sun.misc.BASE64Encoder;
-import android.sun.security.pkcs.PKCS8Key;
 import android.sun.security.provider.JavaKeyStoreProvider;
 import android.sun.security.provider.X509Factory;
 import android.sun.security.x509.AlgorithmId;
@@ -82,23 +80,6 @@ import io.github.muntashirakon.io.IoUtils;
 
 public class KeyStoreUtils {
     public static final String TAG = KeyStoreUtils.class.getSimpleName();
-
-    @NonNull
-    public static KeyPair loadDefaultKey(@NonNull Context context)
-            throws IOException, InvalidKeyException, CertificateException {
-        AssetManager assets = context.getAssets();
-        PrivateKey privateKey;
-        X509Certificate certificate;
-        try (InputStream key = assets.open("key/testkey.pk8")) {
-            PKCS8Key pkcs8Key = new PKCS8Key();
-            pkcs8Key.decode(key);
-            privateKey = pkcs8Key;
-        }
-        try (InputStream cert = assets.open("key/testkey.x509.pem")) {
-            certificate = (X509Certificate) CertificateFactory.getInstance("X.509").generateCertificate(cert);
-        }
-        return new KeyPair(privateKey, certificate);
-    }
 
     /**
      * Must be kept in sync with {@link #TYPES}.

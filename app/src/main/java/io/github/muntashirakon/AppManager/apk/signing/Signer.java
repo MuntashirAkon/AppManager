@@ -2,7 +2,6 @@
 
 package io.github.muntashirakon.AppManager.apk.signing;
 
-import android.content.Context;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
@@ -29,7 +28,6 @@ import java.util.List;
 import aosp.libcore.util.HexEncoding;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyPair;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
-import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 
@@ -37,14 +35,21 @@ public class Signer {
     public static final String TAG = "Signer";
     public static final String SIGNING_KEY_ALIAS = "signing_key";
 
+    public static boolean canSign() {
+        try {
+            // In order to sign an APK, a signing key must be inserted
+            return KeyStoreManager.getInstance().containsKey(Signer.SIGNING_KEY_ALIAS);
+        } catch (Exception e) {
+            // Signing not configured
+            return false;
+        }
+    }
+
     @NonNull
-    public static Signer getInstance(SigSchemes sigSchemes, Context context) throws SignatureException {
+    public static Signer getInstance(SigSchemes sigSchemes) throws SignatureException {
         try {
             KeyStoreManager manager = KeyStoreManager.getInstance();
-            KeyPair signingKey;
-            if (!manager.containsKey(SIGNING_KEY_ALIAS)) {
-                signingKey = KeyStoreUtils.loadDefaultKey(context);
-            } else signingKey = manager.getKeyPair(SIGNING_KEY_ALIAS);
+            KeyPair signingKey = manager.getKeyPair(SIGNING_KEY_ALIAS);
             if (signingKey == null) {
                 throw new KeyStoreException("Alias " + SIGNING_KEY_ALIAS + " does not exist in KeyStore.");
             }

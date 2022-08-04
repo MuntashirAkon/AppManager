@@ -529,7 +529,7 @@ public final class PackageInstallerCompat {
             Log.d(TAG, "Install: selected entries: " + selectedEntries.size());
             // Write apk files
             for (ApkFile.Entry entry : selectedEntries) {
-                try (InputStream apkInputStream = entry.getSignedInputStream(context);
+                try (InputStream apkInputStream = entry.getSignedInputStream();
                      OutputStream apkOutputStream = session.openWrite(entry.getFileName(), 0, entry.getFileSize())) {
                     IoUtils.copy(apkInputStream, apkOutputStream);
                     session.fsync(apkOutputStream);

@@ -487,7 +487,7 @@ public final class ApkFile implements AutoCloseable {
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean needSigning() {
-        return (boolean) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_SIGN_APK_BOOL);
+        return AppPref.canSignApk();
     }
 
     @Override
@@ -703,7 +703,7 @@ public final class ApkFile implements AutoCloseable {
          *
          * @throws IOException If the APK cannot be signed or cached.
          */
-        public File getSignedFile(@NonNull Context context) throws IOException {
+        public File getSignedFile() throws IOException {
             if (signedFile != null) return signedFile;
             File realFile = getRealCachedFile();
             if (!needSigning()) {
@@ -713,7 +713,7 @@ public final class ApkFile implements AutoCloseable {
             signedFile = FileUtils.getTempFile();
             SigSchemes sigSchemes = SigSchemes.fromPref();
             try {
-                Signer signer = Signer.getInstance(sigSchemes, Objects.requireNonNull(context));
+                Signer signer = Signer.getInstance(sigSchemes);
                 if (signer.isV4SchemeEnabled()) {
                     idsigFile = FileUtils.getTempFile();
                     signer.setIdsigFile(idsigFile);
@@ -730,16 +730,16 @@ public final class ApkFile implements AutoCloseable {
         }
 
         /**
-         * Same as {@link #getSignedFile(Context)} except that it returns an {@link InputStream}.
+         * Same as {@link #getSignedFile()} except that it returns an {@link InputStream}.
          *
          * @throws IOException If the APK cannot be signed or cached.
          */
-        public InputStream getSignedInputStream(@NonNull Context context) throws IOException {
+        public InputStream getSignedInputStream() throws IOException {
             if (!needSigning()) {
                 // Return original/real input stream if signing is not requested
                 return getRealInputStream();
             }
-            return new FileInputStream(getSignedFile(context));
+            return new FileInputStream(getSignedFile());
         }
 
         /**

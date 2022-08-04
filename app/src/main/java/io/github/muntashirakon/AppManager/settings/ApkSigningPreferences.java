@@ -52,11 +52,7 @@ public class ApkSigningPreferences extends PreferenceFragment {
         customSig = Objects.requireNonNull(findPreference("signing_keys"));
         new Thread(this::updateSigningPref).start();
         customSig.setOnPreferenceClickListener(preference -> {
-            RSACryptoSelectionDialogFragment fragment = new RSACryptoSelectionDialogFragment();
-            Bundle args = new Bundle();
-            args.putString(RSACryptoSelectionDialogFragment.EXTRA_ALIAS, Signer.SIGNING_KEY_ALIAS);
-            args.putBoolean(RSACryptoSelectionDialogFragment.EXTRA_ALLOW_DEFAULT, true);
-            fragment.setArguments(args);
+            RSACryptoSelectionDialogFragment fragment = RSACryptoSelectionDialogFragment.getInstance(Signer.SIGNING_KEY_ALIAS);
             fragment.setOnKeyPairUpdatedListener((keyPair, certificateBytes) -> {
                 if (keyPair != null && certificateBytes != null) {
                     String hash = DigestUtils.getHexDigest(DigestUtils.SHA_256, certificateBytes);

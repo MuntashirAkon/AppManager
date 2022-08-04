@@ -3,8 +3,10 @@
 package io.github.muntashirakon.AppManager.settings;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 
@@ -20,9 +22,11 @@ import java.util.List;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.apk.signing.Signer;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagMatchUninstalled;
@@ -48,17 +52,17 @@ public class InstallerPreferences extends PreferenceFragment {
         pm = activity.getPackageManager();
         // Display users in installer
         ((SwitchPreferenceCompat) Objects.requireNonNull(findPreference("installer_display_users")))
-                .setChecked((boolean) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_DISPLAY_USERS_BOOL));
-        // Set install locations
+                .setChecked(AppPref.getBoolean(AppPref.PrefKey.PREF_INSTALLER_DISPLAY_USERS_BOOL));
+        // Set installation locations
         Preference installLocationPref = Objects.requireNonNull(findPreference("installer_install_location"));
-        int installLocation = (int) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_INSTALL_LOCATION_INT);
+        int installLocation = AppPref.getInt(AppPref.PrefKey.PREF_INSTALLER_INSTALL_LOCATION_INT);
         installLocationPref.setSummary(installLocationNames[installLocation]);
         installLocationPref.setOnPreferenceClickListener(preference -> {
             CharSequence[] installLocationTexts = new CharSequence[installLocationNames.length];
             for (int i = 0; i < installLocationNames.length; ++i) {
                 installLocationTexts[i] = getString(installLocationNames[i]);
             }
-            int choice = (int) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_INSTALL_LOCATION_INT);
+            int choice = AppPref.getInt(AppPref.PrefKey.PREF_INSTALLER_INSTALL_LOCATION_INT);
             new MaterialAlertDialogBuilder(activity)
                     .setTitle(R.string.install_location)
                     .setSingleChoiceItems(installLocationTexts, choice, (dialog, newInstallLocation) -> {
@@ -75,7 +79,7 @@ public class InstallerPreferences extends PreferenceFragment {
         });
         // Set installer app
         Preference installerAppPref = Objects.requireNonNull(findPreference("installer_installer_app"));
-        installerApp = (String) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_INSTALLER_APP_STR);
+        installerApp = AppPref.getString(AppPref.PrefKey.PREF_INSTALLER_INSTALLER_APP_STR);
         installerAppPref.setSummary(PackageUtils.getPackageLabel(pm, installerApp));
         installerAppPref.setOnPreferenceClickListener(preference -> {
             new MaterialAlertDialogBuilder(activity)
@@ -137,20 +141,37 @@ public class InstallerPreferences extends PreferenceFragment {
                     .show();
             return true;
         });
-        // Sign apk before install
-        ((SwitchPreferenceCompat) Objects.requireNonNull(findPreference("installer_sign_apk")))
-                .setChecked((boolean) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_SIGN_APK_BOOL));
+        // Sign apk before installing
+        SwitchPreferenceCompat signApk = Objects.requireNonNull(findPreference("installer_sign_apk"));
+        signApk.setChecked(AppPref.canSignApk());
+        signApk.setOnPreferenceChangeListener((preference, enabled) -> {
+            if ((boolean) enabled && !Signer.canSign()) {
+                new ScrollableDialogBuilder(activity)
+                        .setTitle(R.string.pref_sign_apk_no_signing_key)
+                        .setMessage(R.string.pref_sign_apk_error_signing_key_not_added)
+                        .enableAnchors()
+                        .setPositiveButton(R.string.add, (dialog, which, isChecked) -> {
+                            Intent intent = new Intent()
+                                    .setData(Uri.parse("app-manager://settings/apk_signing_prefs/signing_keys"));
+                            startActivity(intent);
+                        })
+                        .setNegativeButton(R.string.cancel, null)
+                        .show();
+                return false;
+            }
+            return true;
+        });
         // Display changes
         ((SwitchPreferenceCompat) Objects.requireNonNull(findPreference("installer_display_changes")))
-                .setChecked((boolean) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_DISPLAY_CHANGES_BOOL));
+                .setChecked(AppPref.getBoolean(AppPref.PrefKey.PREF_INSTALLER_DISPLAY_CHANGES_BOOL));
         // Block trackers
         SwitchPreferenceCompat blockTrackersPref = Objects.requireNonNull(findPreference("installer_block_trackers"));
         blockTrackersPref.setVisible(Ops.isRoot());
-        blockTrackersPref.setChecked((boolean) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_BLOCK_TRACKERS_BOOL));
+        blockTrackersPref.setChecked(AppPref.getBoolean(AppPref.PrefKey.PREF_INSTALLER_BLOCK_TRACKERS_BOOL));
         // Running installer in the background
         SwitchPreferenceCompat backgroundPref = Objects.requireNonNull(findPreference("installer_always_on_background"));
         backgroundPref.setVisible(Utils.canDisplayNotification(activity));
-        backgroundPref.setChecked((boolean) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_ALWAYS_ON_BACKGROUND_BOOL));
+        backgroundPref.setChecked(AppPref.getBoolean(AppPref.PrefKey.PREF_INSTALLER_ALWAYS_ON_BACKGROUND_BOOL));
     }
 
     @Override

@@ -30,6 +30,7 @@ import java.util.Objects;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.signing.SigSchemes;
+import io.github.muntashirakon.AppManager.apk.signing.Signer;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.crypto.auth.AuthManager;
@@ -351,6 +352,14 @@ public class AppPref {
 
     public static void setPureBlackTheme(boolean enabled) {
         set(PrefKey.PREF_APP_THEME_CUSTOM_INT, enabled ? 1 : 0);
+    }
+
+    public static boolean canSignApk() {
+        if (!getBoolean(PrefKey.PREF_INSTALLER_SIGN_APK_BOOL)) {
+            // Signing not enabled
+            return false;
+        }
+        return Signer.canSign();
     }
 
     public static void set(PrefKey key, Object value) {

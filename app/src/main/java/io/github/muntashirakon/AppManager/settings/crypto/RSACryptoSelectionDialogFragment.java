@@ -36,10 +36,18 @@ import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
 
 public class RSACryptoSelectionDialogFragment extends DialogFragment {
-    public static final String TAG = "RSACryptoSelectionDialogFragment";
+    public static final String TAG = RSACryptoSelectionDialogFragment.class.getSimpleName();
 
-    public static final String EXTRA_ALIAS = "alias";
-    public static final String EXTRA_ALLOW_DEFAULT = "show_default";
+    private static final String EXTRA_ALIAS = "alias";
+
+    @NonNull
+    public static RSACryptoSelectionDialogFragment getInstance(@NonNull String alias) {
+        RSACryptoSelectionDialogFragment fragment = new RSACryptoSelectionDialogFragment();
+        Bundle args = new Bundle();
+        args.putString(EXTRA_ALIAS, alias);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     public interface OnKeyPairUpdatedListener {
         @UiThread
@@ -51,7 +59,6 @@ public class RSACryptoSelectionDialogFragment extends DialogFragment {
     @Nullable
     private OnKeyPairUpdatedListener listener;
     private String targetAlias;
-    private boolean allowDefault;
     @Nullable
     private RSACryptoSelectionViewModel model;
 
@@ -83,24 +90,17 @@ public class RSACryptoSelectionDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         targetAlias = requireArguments().getString(EXTRA_ALIAS);
-        allowDefault = requireArguments().getBoolean(EXTRA_ALLOW_DEFAULT, false);
         builder = new ScrollableDialogBuilder(requireActivity())
                 .setTitle(R.string.rsa)
                 .setNegativeButton(R.string.pref_import, null)
                 .setNeutralButton(R.string.generate_key, null)
-                .setPositiveButton(allowDefault ? R.string.use_default : R.string.ok, null);
+                .setPositiveButton(R.string.ok, null);
         Objects.requireNonNull(model).loadSigningInfo(targetAlias);
         AlertDialog dialog = Objects.requireNonNull(builder).create();
         dialog.setOnShowListener(dialog3 -> {
             AlertDialog dialog1 = (AlertDialog) dialog3;
-            Button defaultButton = dialog1.getButton(AlertDialog.BUTTON_POSITIVE);
             Button importButton = dialog1.getButton(AlertDialog.BUTTON_NEGATIVE);
             Button generateButton = dialog1.getButton(AlertDialog.BUTTON_NEUTRAL);
-            defaultButton.setOnClickListener(v -> {
-                if (allowDefault && model != null) {
-                    model.addDefaultKeyPair(targetAlias);
-                }
-            });
             importButton.setOnClickListener(v -> {
                 KeyPairImporterDialogFragment fragment = new KeyPairImporterDialogFragment();
                 Bundle args = new Bundle();
@@ -129,7 +129,7 @@ public class RSACryptoSelectionDialogFragment extends DialogFragment {
                 return getString(R.string.failed_to_load_key);
             }
         }
-        return getString(allowDefault ? R.string.default_key_used : R.string.key_not_set);
+        return getString(R.string.key_not_set);
     }
 
     public static class RSACryptoSelectionViewModel extends AndroidViewModel {
@@ -164,24 +164,6 @@ public class RSACryptoSelectionDialogFragment extends DialogFragment {
         @AnyThread
         public void loadSigningInfo(String targetAlias) {
             executor.submit(() -> signingInfo.postValue(getKeyPair(targetAlias)));
-        }
-
-        @AnyThread
-        private void addDefaultKeyPair(String targetAlias) {
-            executor.submit(() -> {
-                try {
-                    KeyStoreManager keyStoreManager = KeyStoreManager.getInstance();
-                    if (keyStoreManager.containsKey(targetAlias)) {
-                        keyStoreManager.removeItem(targetAlias);
-                    }
-                    status.postValue(new Pair<>(R.string.done, false));
-                    keyPairUpdated(targetAlias);
-                    signingInfo.postValue(null);
-                } catch (Exception e) {
-                    Log.e(TAG, e);
-                    status.postValue(new Pair<>(R.string.failed_to_save_key, false));
-                }
-            });
         }
 
         @AnyThread

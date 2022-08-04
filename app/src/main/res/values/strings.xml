@@ -906,7 +906,6 @@
     <string name="invalid_rsa_key_size">Invalid key size for RSA encryption. Key size can be 1024, 2048 or 4096 bits.</string>
     <string name="use_default">Use default</string>
     <string name="key_not_set">Not set.</string>
-    <string name="default_key_used">Default key is used.</string>
     <string name="failed_to_load_key">Could not load the key.</string>
     <string name="input_key_password">Key password</string>
     <string name="common_name">Common name (CN)</string>
@@ -1241,4 +1240,6 @@
     <string name="view_changelog">Find out what\'s new in this release</string>
     <string name="sort_by_total_size">Total size</string>
     <string name="am_command"><tt>am</tt> command</string>
+    <string name="pref_sign_apk_error_signing_key_not_added">A valid signing key is required for signing an APK file.</string>
+    <string name="pref_sign_apk_no_signing_key">No signing key</string>
 </resources>

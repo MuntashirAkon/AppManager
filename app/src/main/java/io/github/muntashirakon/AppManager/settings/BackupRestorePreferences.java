@@ -166,11 +166,7 @@ public class BackupRestorePreferences extends PreferenceFragment {
                                 break;
                             }
                             case CryptoUtils.MODE_RSA: {
-                                RSACryptoSelectionDialogFragment fragment = new RSACryptoSelectionDialogFragment();
-                                Bundle args = new Bundle();
-                                args.putString(RSACryptoSelectionDialogFragment.EXTRA_ALIAS, RSACrypto.RSA_KEY_ALIAS);
-                                args.putBoolean(RSACryptoSelectionDialogFragment.EXTRA_ALLOW_DEFAULT, false);
-                                fragment.setArguments(args);
+                                RSACryptoSelectionDialogFragment fragment = RSACryptoSelectionDialogFragment.getInstance(RSACrypto.RSA_KEY_ALIAS);
                                 fragment.setOnKeyPairUpdatedListener((keyPair, certificateBytes) -> {
                                     if (keyPair != null) {
                                         AppPref.set(AppPref.PrefKey.PREF_ENCRYPTION_STR, CryptoUtils.MODE_RSA);
