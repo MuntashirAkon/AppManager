@@ -1,0 +1,7 @@
+- [Main] Added option to sort the app list by size
+- [Main] Added support for market://search?q=<query>
+- [Backup] Added support for elliptic-curve cryptography (ECC)
+- [Interceptor] Added option to copy as `am` command
+- [App Info] Added option to disable opening App Info page from the third-party applications
+- [Installer] Removed default signing key
+- [Running Apps] Fixed double scrollbars

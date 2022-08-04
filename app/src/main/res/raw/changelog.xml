@@ -17,6 +17,44 @@
     ]>
 <changelog>
     <release
+        type="alpha release"
+        version="v3.1.0-alpha01"
+        code="411"
+        date="4 August 2022">
+        <new title="Main page">Added option to sort the app list by size</new>
+        <note subtext="true">
+            The loading time has been increased by a few seconds which will be fixed in a later build
+        </note>
+        <new title="Main page">Added support for [tt]market://search?q=query[/tt]</new>
+        <new title="Backup/Restore">Added support for elliptic-curve cryptography (ECC)</new>
+        <note subtext="true">
+            ECC in App Manager uses curve 25519 with ECDH which is wrapped with SHA512withECDSA when storing the key in
+            the Bouncy Castle KeyStore.
+        </note>
+        <new title="Activity Interceptor page">Added option to copy as [tt]am[/tt] command</new>
+        <note subtext="true">
+            [tt]am[/tt] (short for activity manager) or [tt]cmd activity[/tt] (Android 9 and later) can be used to start
+            an activity from the terminal. This option let user copy the Intent as an [tt]am[/tt] command so that the
+            same Intent can be invoked in the terminal. But not all extras are supported, only the supported extras are
+            copied during the operation.
+        </note>
+        <new title="Setting">
+            Added [a href="app-manager://settings/enabled_features"]option[/a] to disable opening App Info page from the
+            third-party applications
+        </new>
+        <improve title="Security">Removed default signing key</improve>
+        <note subtext="true">
+            Default signing key was publicly available and could have be used by others to distribute malware. Instead,
+            enabling APK signing before installing an app now requires a signing key to be added (which can be either
+            generated or imported).
+        </note>
+        <fix title="Running Apps page">Fixed double scrollbars</fix>
+        <note>
+            [br /][b]Full list of changes:[/b] [a
+            href="https://github.com/MuntashirAkon/AppManager/compare/v3.0.0...v3.1.0-alpha01"]v3.0.0...v3.1.0-alpha01[/a]
+        </note>
+    </release>
+    <release
         type="stable release"
         version="v3.0.0"
         code="410"
