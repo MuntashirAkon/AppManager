@@ -40,6 +40,8 @@ import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.util.ParcelUtils;
 
 public class AppDetailsActivity extends BaseActivity {
+    public static final String ALIAS_APP_INFO = "io.github.muntashirakon.AppManager.details.AppInfoActivity";
+
     private static final String EXTRA_PACKAGE_NAME = "pkg";
     private static final String EXTRA_USER_HANDLE = "user";
     private static final String EXTRA_BACK_TO_MAIN = "main";

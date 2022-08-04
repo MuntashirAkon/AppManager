@@ -22,6 +22,7 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.explorer.AppExplorerActivity;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
+import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.details.ManifestViewerActivity;
 import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
 import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
@@ -38,6 +39,7 @@ public class FeatureController {
             FEAT_LOG_VIEWER,
             FEAT_INTERNET,
             FEAT_APP_EXPLORER,
+            FEAT_APP_INFO,
     })
     public @interface FeatureFlags {
     }
@@ -50,6 +52,7 @@ public class FeatureController {
     public static final int FEAT_LOG_VIEWER = 1 << 5;
     public static final int FEAT_INTERNET = 1 << 6;
     public static final int FEAT_APP_EXPLORER = 1 << 7;
+    public static final int FEAT_APP_INFO = 1 << 8;
 
     @NonNull
     public static FeatureController getInstance() {
@@ -75,6 +78,8 @@ public class FeatureController {
             put(FEAT_LOG_VIEWER, R.string.log_viewer);
             featureFlags.add(FEAT_APP_EXPLORER);
             put(FEAT_APP_EXPLORER, R.string.app_explorer);
+            featureFlags.add(FEAT_APP_INFO);
+            put(FEAT_APP_INFO, R.string.app_info);
             featureFlags.add(FEAT_INTERNET);
             put(FEAT_INTERNET, R.string.toggle_internet);
         }
@@ -157,6 +162,9 @@ public class FeatureController {
             case FEAT_APP_EXPLORER:
                 cn = getComponentName(key, AppExplorerActivity.class);
                 break;
+            case FEAT_APP_INFO:
+                cn = getComponentName(key, AppDetailsActivity.ALIAS_APP_INFO);
+                break;
             default:
                 throw new IllegalArgumentException();
         }
@@ -197,6 +205,9 @@ public class FeatureController {
             case FEAT_APP_EXPLORER:
                 modifyState(key, AppExplorerActivity.class, enabled);
                 break;
+            case FEAT_APP_INFO:
+                modifyState(key, AppDetailsActivity.ALIAS_APP_INFO, enabled);
+                break;
         }
         // Modify flags
         flags = enabled ? (flags | key) : (flags & ~key);
@@ -211,12 +222,30 @@ public class FeatureController {
         pm.setComponentEnabledSetting(cn, state, PackageManager.DONT_KILL_APP);
     }
 
+    private void modifyState(@FeatureFlags int key, @Nullable String name, boolean enabled) {
+        ComponentName cn = getComponentName(key, name);
+        if (cn == null) return;
+        int state = enabled ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED : PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
+        pm.setComponentEnabledSetting(cn, state, PackageManager.DONT_KILL_APP);
+    }
+
     @Nullable
     private ComponentName getComponentName(@FeatureFlags int key, @Nullable Class<? extends AppCompatActivity> clazz) {
         if (clazz == null) return null;
         ComponentName cn = componentCache.get(key);
         if (cn == null) {
             cn = new ComponentName(packageName, clazz.getName());
+            componentCache.put(key, cn);
+        }
+        return cn;
+    }
+
+    @Nullable
+    private ComponentName getComponentName(@FeatureFlags int key, @Nullable String name) {
+        if (name == null) return null;
+        ComponentName cn = componentCache.get(key);
+        if (cn == null) {
+            cn = new ComponentName(packageName, name);
             componentCache.put(key, cn);
         }
         return cn;
