@@ -12,7 +12,6 @@
         android:id="@+id/item_subtitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/padding_small"
         android:textColor="?android:attr/textColorSecondary"
         android:textIsSelectable="true"
         android:gravity="center_vertical"

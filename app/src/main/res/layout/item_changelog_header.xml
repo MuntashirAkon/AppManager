@@ -3,30 +3,62 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:focusable="true"
+    android:orientation="vertical"
     android:paddingHorizontal="@dimen/padding_medium"
-    android:paddingVertical="@dimen/padding_medium">
+    android:paddingTop="@dimen/padding_medium"
+    android:paddingBottom="@dimen/padding_small">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/item_title"
-        android:layout_width="wrap_content"
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="start"
-        android:textAlignment="viewStart"
-        android:layout_weight="1"
-        android:textAppearance="?attr/textAppearanceTitleMedium"
-        tools:text="@tools:sample/lorem[5]" />
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/padding_small">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/item_subtitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="end"
-        android:textAlignment="viewEnd"
-        android:layout_weight="1"
-        android:textColor="?android:attr/textColorSecondary"
-        android:textIsSelectable="true"
-        tools:text="@tools:sample/lorem[5]" />
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/item_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end|center_vertical"
+                android:textAlignment="viewEnd"
+                android:textAppearance="@style/TextAppearance.AppTheme.LabelSmall"
+                android:textSize="9sp"
+                android:textStyle="normal"
+                android:textAllCaps="true"
+                android:letterSpacing="0.3"
+                tools:text="stable release"
+                tools:ignore="SmallSp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/item_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start|center_vertical"
+                android:textAlignment="viewStart"
+                android:textAppearance="?attr/textAppearanceTitleMedium"
+                tools:text="Version v3.0.0 (410)" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/item_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="end|center_vertical"
+            android:textAlignment="viewEnd"
+            android:layout_weight="1"
+            android:textColor="?android:attr/textColorSecondary"
+            android:textIsSelectable="true"
+            tools:text="4 August 2022" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

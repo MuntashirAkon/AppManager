@@ -72,6 +72,7 @@ public class ChangelogRecyclerAdapter extends RecyclerView.Adapter<ChangelogRecy
         Context context = holder.itemView.getContext();
         switch (changelogItem.type) {
             case ChangelogItem.HEADER:
+                holder.label.setText(((ChangelogHeader) changelogItem).getReleaseType());
                 holder.title.setText(changelogItem.getChangeText());
                 holder.subtitle.setText(((ChangelogHeader) changelogItem).getReleaseDate());
                 break;
@@ -182,11 +183,13 @@ public class ChangelogRecyclerAdapter extends RecyclerView.Adapter<ChangelogRecy
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
+        public final TextView label;
         public final TextView title;
         public final TextView subtitle;
 
         public ViewHolder(@NonNull View itemView, @ChangelogItem.ChangelogType int viewType) {
             super(itemView);
+            label = itemView.findViewById(R.id.item_label);
             title = itemView.findViewById(R.id.item_title);
             subtitle = itemView.findViewById(R.id.item_subtitle);
             subtitle.setMovementMethod(LinkMovementMethod.getInstance());

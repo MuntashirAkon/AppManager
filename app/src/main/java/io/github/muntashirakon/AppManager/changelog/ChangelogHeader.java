@@ -18,7 +18,7 @@ public class ChangelogHeader extends ChangelogItem {
     private final String releaseDate;
 
     public ChangelogHeader(@NonNull String versionName, long versionCode, @NonNull String releaseType, @NonNull String releaseDate) {
-        super(parseHeaderText(versionName, versionCode, releaseType), HEADER);
+        super(parseHeaderText(versionName, versionCode), HEADER);
         this.versionName = versionName;
         this.versionCode = versionCode;
         this.releaseType = releaseType;
@@ -46,7 +46,7 @@ public class ChangelogHeader extends ChangelogItem {
     }
 
     @NonNull
-    private static CharSequence parseHeaderText(@NonNull String versionName, long versionCode, @NonNull String releaseType) {
-        return String.format(Locale.getDefault(), "Version %s (%d) %s", versionName, versionCode, releaseType);
+    private static CharSequence parseHeaderText(@NonNull String versionName, long versionCode) {
+        return String.format(Locale.getDefault(), "Version %s (%d)", versionName, versionCode);
     }
 }
