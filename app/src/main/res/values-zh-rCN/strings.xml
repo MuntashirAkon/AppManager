@@ -1167,4 +1167,7 @@
     <string name="changelog_type_fix">修复</string>
     <string name="changelog_type_improve">改进</string>
     <string name="unsupported_split_apk">不支持</string>
+    <string name="view_changelog">了解此版本中的新增功能</string>
+    <string name="sort_by_total_size">总大小</string>
+    <string name="am_command"><tt>am</tt>命令</string>
 </resources>
