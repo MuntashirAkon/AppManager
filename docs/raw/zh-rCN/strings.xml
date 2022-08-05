@@ -673,4 +673,6 @@
 \n
 \n\\seealsoinline{\\hyperref[ch:app-ops]{附录: App Ops}}</string>
     <string name="keywords$chapter">\\newcommand{\\KeywordChapter}{Chapter}</string>
+    <string name="pages$main-page$1-click-ops">\\textbf{1-Click Ops}代表单击操作。
+\n这将在新活动中打开\\hyperref[sec:1-click-ops-page]{相应页面}。</string>
 </resources>
