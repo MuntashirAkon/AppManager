@@ -404,18 +404,18 @@
         <item quantity="one">%1$d rastreador</item>
         <item quantity="other">%1$d rastreadores</item>
     </plurals>
-    <string name="manifest_viewer">Visualizador de Manifest</string>
-    <string name="external_apk_no_app_op">APKs externos não possuem nenhuma operação de app</string>
+    <string name="manifest_viewer">Visualizador de Manifesto</string>
+    <string name="external_apk_no_app_op">APKs externos não possuem nenhuma operação da app</string>
     <string name="never_ask">Nunca perguntar</string>
     <string name="launch_app">Iniciar</string>
     <string name="failed_to_deny_dangerous_app_ops">Não foi possível negar todas as operações de apps perigosas</string>
     <string name="failed_to_deny_dangerous_perms">Não foi possível negar todas as permissões perigosas</string>
     <string name="failed_to_reset_app_ops">Não foi possível redefinir as operações da app</string>
     <string name="failed_to_revoke_permission">Não foi possível revogar a permissão</string>
-    <string name="failed_to_grant_permission">A permissão não pôde ser concedida</string>
+    <string name="failed_to_grant_permission">A permissão não foi concedida</string>
     <plurals name="alert_failed_to_disable_trackers">
-        <item quantity="one">Não foi possível desativar os rasteadores de %1$d aplicação</item>
-        <item quantity="other">Não foi possível desativar os rasteadores de %1$d aplicações</item>
+        <item quantity="one">Não foi possível desativar os rasteadores da %1$d app</item>
+        <item quantity="other">Não foi possível desativar os rasteadores das %1$d apps</item>
     </plurals>
     <string name="unknown_op">Operação desconhecida</string>
     <string name="sort_by_tracker_components">Rastreadores primeiro</string>
@@ -990,7 +990,7 @@
         <item quantity="other">%1$d componentes</item>
     </plurals>
     <string name="changelog">Histórico de Atualizações</string>
-    <string name="one_click_ops">Operações em 1 Clique</string>
+    <string name="one_click_ops">Operações num Clique</string>
     <string name="user_with_id">Utilizador: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
     <plurals name="other_trackers_and_classes">
         <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> rastreadores com classes <xliff:g id="class_no" example="50">%2$d</xliff:g></item>
