@@ -672,4 +672,5 @@
 \n可以以升序方式按 App Ops 名称和其编号对列表排序，也可以优先显示拒绝的 App Ops。
 \n
 \n\\seealsoinline{\\hyperref[ch:app-ops]{附录: App Ops}}</string>
+    <string name="keywords$chapter">\\newcommand{\\KeywordChapter}{Chapter}</string>
 </resources>
