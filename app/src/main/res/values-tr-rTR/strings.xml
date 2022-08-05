@@ -1204,4 +1204,7 @@
     <string name="pref_reload_apps">Uygulamaları yeniden yükle</string>
     <string name="troubleshooting">Sorun giderme</string>
     <string name="unsupported_split_apk">Desteklenmiyor</string>
+    <string name="view_changelog">Bu sürümdeki yenilikleri öğrenin</string>
+    <string name="sort_by_total_size">Toplam boyut</string>
+    <string name="am_command"><tt>am</tt> komutu</string>
 </resources>
