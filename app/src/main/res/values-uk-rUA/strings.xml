@@ -1282,4 +1282,5 @@
     <string name="unsupported_split_apk">Не підтримується</string>
     <string name="view_changelog">Дізнайтеся, що нового в цьому випуску</string>
     <string name="sort_by_total_size">Загальний розмір</string>
+    <string name="am_command"><tt>am</tt> команда</string>
 </resources>
