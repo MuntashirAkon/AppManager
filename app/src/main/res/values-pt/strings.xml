@@ -414,8 +414,8 @@
     <string name="failed_to_revoke_permission">A permissão não pôde ser revogada</string>
     <string name="failed_to_grant_permission">A permissão não pôde ser concedida</string>
     <plurals name="alert_failed_to_disable_trackers">
-        <item quantity="one">Não foi possível desativar rasteadores da %1$d app</item>
-        <item quantity="other">Não foi possível desativar rasteadores das %1$d apps</item>
+        <item quantity="one">Não foi possível desativar os rasteadores da%1$d app</item>
+        <item quantity="other">Não foi possível desativar os rasteadores dad %1$d apps</item>
     </plurals>
     <string name="unknown_op">Operação desconhecida</string>
     <string name="sort_by_tracker_components">Rastreadores primeiro</string>
