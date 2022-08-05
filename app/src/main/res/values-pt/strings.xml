@@ -378,19 +378,19 @@
     <string name="failed_to_parse_some_numbers">Não foi possível analisar alguns números</string>
     <string name="only_works_in_root_or_adb_mode">Somente funciona no modo Root ou ADB</string>
     <string name="filtered_packages">Pacotes filtrados</string>
-    <string name="input_signatures_description">assinaturas de input com espaços, ex. <tt>com.facebook org.app2 com.app3</tt> etc.</string>
-    <string name="input_signatures">Assinaturas de input</string>
+    <string name="input_signatures_description">assinaturas de entrada com espaços, ex. <tt>com.facebook org.app2 com.app3</tt> etc.</string>
+    <string name="input_signatures">Assinaturas de entrada</string>
     <string name="failed_packages">Pacotes que falharam</string>
     <string name="no_tracker_found">Nenhum rastreador encontrado</string>
     <string name="clear_app_cache_description">Limpar o cache de todas as apps</string>
-    <string name="clear_app_cache">Limpar cache do app</string>
-    <string name="clear_data_from_uninstalled_apps_description">Limpar os dados das aplicações que foram desinstaladas e que continham a flag <tt>DONT_DELETE_DATA</tt></string>
-    <string name="clear_data_from_uninstalled_apps">Limpar dados dos apps desinstalados</string>
+    <string name="clear_app_cache">Limpar cache da app</string>
+    <string name="clear_data_from_uninstalled_apps_description">Limpar os dados das aplicações que foram desinstaladas com <tt>DONT_DELETE_DATA</tt></string>
+    <string name="clear_data_from_uninstalled_apps">Limpar dados das apps desinstaladas</string>
     <string name="block_components_description">Bloquear todos os componentes identificados pelas assinaturas especificadas</string>
     <string name="block_components_dots">Bloquear componentes…</string>
-    <string name="block_unblock_trackers_description">Bloquear ou desbloquear componentes de propagandas e rastreamento em todos as apps instaladas</string>
+    <string name="block_unblock_trackers_description">Bloquear ou desbloquear componentes com anúncios e rastreamento em todos as apps instaladas</string>
     <string name="clear_cache">Limpar cache</string>
-    <string name="pref_import_existing_msg">Adicione componentes desativados por outros apps ao App Manager. Tenha cuidado ao usar essa ferramenta, pois podem haver muitos falsos positivos. Escolha apenas as apps sobre os quais tem certeza.</string>
+    <string name="pref_import_existing_msg">Adicione componentes desativados por outras apps ao App Manager. Tenha cuidado ao usar essa ferramenta, pois podem haver muitos falsos positivos. Escolha apenas as apps sobre os quais tem certeza.</string>
     <string name="pref_import_existing">Importar regras existentes</string>
     <string name="source_code">Código fonte</string>
     <string name="update">Atualizar</string>
@@ -405,12 +405,12 @@
     <string name="launch_app">Iniciar</string>
     <string name="failed_to_deny_dangerous_app_ops">Não foi possível negar todas as operações de apps perigosas</string>
     <string name="failed_to_deny_dangerous_perms">Não foi possível negar todas as permissões perigosas</string>
-    <string name="failed_to_reset_app_ops">Não foi possível redefinir as operações de app</string>
+    <string name="failed_to_reset_app_ops">Não foi possível redefinir as operações da app</string>
     <string name="failed_to_revoke_permission">A permissão não pôde ser revogada</string>
     <string name="failed_to_grant_permission">A permissão não pôde ser concedida</string>
     <plurals name="alert_failed_to_disable_trackers">
-        <item quantity="one">Não foi possível desativar rasteadores de %1$d app</item>
-        <item quantity="other">Não foi possível desativar rasteadores de %1$d apps</item>
+        <item quantity="one">Não foi possível desativar rasteadores da %1$d app</item>
+        <item quantity="other">Não foi possível desativar rasteadores das %1$d apps</item>
     </plurals>
     <string name="unknown_op">Operação desconhecida</string>
     <string name="sort_by_tracker_components">Rastreadores primeiro</string>
@@ -975,7 +975,7 @@
     <string name="input_app_ops_description_profile">Insira nomes de operações de app e/ou constantes com espaços, p. ex. <tt>WAKE_LOCK 63 72 CAMERA</tt> etc. Use <tt>*</tt> para solicitar todas as operações de app configuradas.</string>
     <string name="input_app_ops_description">Insira nomes e/ou constantes de operações de app com espaços, por exemplo <tt>WAKE_LOCK 63 72 CAMERA</tt> etc.</string>
     <string name="input_app_ops">Inserir operações de app</string>
-    <string name="deny_app_ops_description">Defina um modo para as operações de app identificadas pelos valores das constantes, ou seja, <tt>63</tt> ou <tt>RUN_IN_BACKGROUND</tt></string>
+    <string name="deny_app_ops_description">Defina um modo para as operações da app identificadas pelos valores das constantes, ou seja, <tt>63</tt> ou <tt>RUN_IN_BACKGROUND</tt></string>
     <string name="source_code_links">GitHub: https://github.com/MuntashirAkon/AppManager
 \nGitLab: https://gitlab.com/muntashir/AppManager
 \nRiseup: https://0xacab.org/muntashir/AppManager
@@ -1204,4 +1204,5 @@
     <string name="changelog_type_fix">Arrumar</string>
     <string name="changelog_type_improve">Renovar</string>
     <string name="unsupported_split_apk">Não suportado</string>
+    <string name="view_changelog">Descobre o que há de novo nesta versão</string>
 </resources>
