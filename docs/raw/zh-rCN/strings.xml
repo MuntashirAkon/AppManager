@@ -279,26 +279,26 @@
 \n可以点击图标，进行与剪贴板中的 SHA 或 MD5 进行 APK 签名验证.
 \n \\item \\textbf{应用标签}: 应用程序名.
 \n \\item \\textbf{包名}: 应用程序包名，点击复制.
-\n \\item \\textbf{版本}: 版本分为两部分: 
-\n第一部分称 \\textit{版本名(Version Name)}. 格式各不相同，但常由多个以点分隔的整数组成. 
-\n第二部分称 \\textit{版本号}. 其被第一个括号括起来. 版本代码是一个整数，用于 区分应用程序版本 (因为机器无法读取版本名). 简言之, 新版本的应用程序具有比旧版本更高的版本代码. 如，如果 \\texttt{123} 和 \\texttt{125} 是一个应用程序的两个版本代码，我们可以说后者比前者更新(后者的版本代码更高). 
+\n \\item \\textbf{版本}: 版本分为两部分:
+\n第一部分称 \\textit{版本名(Version Name)}. 格式各不相同，但常由多个以点分隔的整数组成.
+\n第二部分称 \\textit{版本号}. 其被第一个括号括起来. 版本代码是一个整数，用于 区分应用程序版本 (因为机器无法读取版本名). 简言之, 新版本的应用程序具有比旧版本更高的版本代码. 如，如果 \\texttt{123} 和 \\texttt{125} 是一个应用程序的两个版本代码，我们可以说后者比前者更新(后者的版本代码更高).
 \n在不同平台（移动、平板、桌面等）或架构（32/64 位、ARM 或 Intel）上为同一版本提供不同 APK 文件的应用程序，版本号可能会产生误导，因为它们通常会为每个平台添加前缀 .
 \n
 \n \\item \\textbf{标签}: (也称标签云) 标签包括应用程序最基本、最简洁、有用的信息，如--- \\begin{itemize}
 \n \\item \\textit{追踪器信息} 应用程序中跟踪器组件的数量 (如, \\textit{5 个追踪器}).
-\n如果跟踪器未被阻止，则标记颜色显示为橙色，如果跟踪器在App Manager中被阻止，则标记颜色显示为深青色. 
-\n单击标签会打开一个对话框，其包含跟踪器组件列表，如果 App Manager 具有足够的权限，可以阻止或取消阻止这些组件. 
+\n如果跟踪器未被阻止，则标记颜色显示为橙色，如果跟踪器在App Manager中被阻止，则标记颜色显示为深青色.
+\n单击标签会打开一个对话框，其包含跟踪器组件列表，如果 App Manager 具有足够的权限，可以阻止或取消阻止这些组件.
 \n \\item \\textit{应用类型} 用户应用或系统应用。系统应用程序的更新版本和通过 Magisk 无系统安装的应用也被认为是系统应用.
 \n \\item \\textit{Split APK 信息} APK 中的拆分包数量，不包括基本 APK (e.g., \\textit{5 分包}). 单击标签会打开一个对话框，其中包含分包 APK 信息，例如类型和大小.
 \n \\item \\textit{可调试} 应用可以通过 ADB调试.可调试应用可以享受常规应用无法使用的某些功能. 应用的数据可以通过 ADB 访问 (如使用\\texttt{run-as} 命令无需任何额外权限).
 \n \\item \\textit{仅测试} 应用是仅测试应用程序. 仅测试应用可以享受常规应用无法使用的某些功能. 应用的数据可以通过 ADB 访问 (如使用\\texttt{run-as} 命令无需任何额外权限).
 \n \\item \\textit{大(堆/Heap)内存} 应用将请求较大的堆内存, 即需要更多内存 (RAM) 空间用于动态分配.
 \n 是否为应用程序分配大空间仍由操作系统决定. 如，App Manager 请求较大的堆大小，因为它在 Android 8 之前需要在扫描的 APK 时将整个 APK 加载到内存中App.
-\n \\item \\textit{无代码} 该应用无任何相关代码,如不含Dex文件. 
+\n \\item \\textit{无代码} 该应用不含任何与之相关代码，如不含Dex文件.
 \n在某些系统应用中，实际代码可能位于其他位置.
 \n \\item \\textit{运行中} 应用的一项或多项服务正在后台运行.
 \n单击标签将打开一个对话框，其中包含正在运行的服务列表.
-\n如果启用了日志查看器功能，单击任何服务会将在日志查看器中它. 
+\n如果启用了日志查看器功能，单击任何服务会将在日志查看器中它.
 \n \\item \\textit{已停止} 应用被强制停止. 这可能不会阻止它以后自动启动.
 \n \\item \\textit{已禁用} 应用被禁用 (在启动器无图标).
 \n \\item \\textit{已挂起} 表示应用程序已挂起 (在启动器中显示为灰色).
@@ -328,7 +328,7 @@
 \n \\item \\textbf{更多信息} 例如--
 \n \\begin{itemize}
 \n \\item \\textbf{SDK} 显示与 Android SDK 相关的信息. 存在两个（旧设备只有一个）值:
-\n \\textit{最高} 目标 SDK 与\\textit{最低} 最低SDK (后者不适用于旧设备). 
+\n \\textit{最高} 目标 SDK 与\\textit{最低} 最低SDK (后者不适用于旧设备).
 \n最佳实践是使用平台当前支持的最大 SDK 的应用程序，以确保应用程序未在兼容模式下运行(以便使用隐私规避功能).
 \n SDK 已称为 \\textbf{等级(API Level)}.
 \n \\seealsoinline{\\href{https://en.wikipedia.org/wiki/Android_version_history\\#Overview}{Android Version History}}
@@ -339,7 +339,7 @@
 \n
 \n \\item \\textbf{更新日期}: 上次更新应用程序的日期. 如果应用程序尚未更新，这与 \\textit{安装日期} 相同.
 \n
-\n \\item \\textbf{安装器}: 安装此应用的应用. 
+\n \\item \\textbf{安装器}: 安装此应用的应用.
 \n并非所有应用程序都提供包管理器用来注册安装程序应用程序的信息. 因此，这个值不应被视为理所当然。
 \n
 \n \\item \\textbf{User ID}: Android系统给应用设置的唯一用户ID.
@@ -351,7 +351,7 @@
 \n
 \n \\item \\textbf{Zygote preload name}: 负责预加载应用程序代码和在所有使用应用程序 zygote 的隔离服务之间共享的数据.
 \n
-\n \\item \\textbf{隐藏 API 使用策略}: 从 Android 9 开始，Android Framework 中的许多方法和类第三方应用程序无法通过隐藏 API 强制访问. 
+\n \\item \\textbf{隐藏 API 使用策略}: 从 Android 9 开始，Android Framework 中的许多方法和类第三方应用程序无法通过隐藏 API 强制访问.
 \n存在以下选项:
 \n \\begin{itemize}
 \n \\item \\textit{默认(Default}: 基于应用的类型。 对于系统应用程序，它应该被禁用，而对于其他应用，它应该被强制执行.
@@ -367,7 +367,7 @@
 \n
 \n \\item \\textbf{SELinux}: 操作系统通过 SELinux 设置的强制访问控制 (MAC) 策略.
 \n
-\n \\item \\textbf{主活动}: 应用的主要入口点. 
+\n \\item \\textbf{主活动}: 应用的主要入口点.
 \n这仅在应用程序具有 \\hyperref[subsubsec:activities]{活动} 并且其中任何一个都可以从启动器中打开时显示. 右侧还有一个启动按钮，可用于启动此活动.
 \n \\end{itemize}
 \n\\end{itemize}</string>
@@ -383,13 +383,13 @@
 \n
 \n \\item \\textbf{导出屏蔽规则}: 导出应用配置规则.
 \n
-\n \\item \\textbf{在 Termux 中打开}: 在 Termux 中打开应用. 实际以 \\texttt{su - user\\_id} 命令运行且该 \\texttt{用户ID} 为应用的(内核)用户 ID (参见§\\ref{subsubsec:app-info-general-information}).
+\n \\item \\textbf{在 Termux 中打开}: 在 Termux 中打开应用. 实际以 \\texttt{su - user\\_id} 命令运行且该 \\texttt{用户ID} 为应用的(内核)用户 ID (参见 §\\Sref{subsubsec:app-info-general-information} 描述).
 \n 此选项仅适用于 Root 用户.
-\n 请参阅 §\\ref{subsubsec:config-termux} 以了解如何配置 Termux 以运行来自第三方应用的命令.
+\n 请参阅 §\\Sref{subsubsec:config-termux} 以了解如何配置 Termux 以运行来自第三方应用的命令.
 \n
 \n \\item \\textbf{在 Termux 中运行}: 在Termux中通过 \\texttt{run-as package\\_name} 打开应用.
 \n 此选项仅对可调式应用有效并适用于 Root 与 Adb 用户.
-\n 请参阅 §\\ref{subsubsec:config-termux} 以了解如何配置 Termux 以运行来自第三方应用的命令.
+\n 请参阅 §\\Sref{subsubsec:config-termux} 以了解如何配置 Termux 以运行来自第三方应用的命令.
 \n
 \n \\item \\textbf{MagiskHide}: 打开一个对话框，其中包含应用程序中可以从 MagiskHide 列表中添加或删除的进程列表.
 \n
@@ -455,7 +455,7 @@
     <string name="pages$settings-page$$compression-method-title">压缩方法</string>
     <string name="pages$settings-page$$backup-options-title">备份选项</string>
     <string name="pages$settings-page$$backup-apps-with-keystore-title">备份带 Android 密钥库的应用程序</string>
-    <string name="pages$settings-page$app-theme">配置应用内主题</string>
+    <string name="pages$settings-page$app-theme">配置应用内主题。</string>
     <string name="pages$settings-page$$import-export-keystore-title">导入/导出密钥库</string>
     <string name="pages$settings-page$$device-info-title">关于设备</string>
     <string name="pages$settings-page$install-location">定义 APK 安装位置，可以是 \\textit{自动}、\\textit{仅内部存储} 和\\textit{偏好外部存储}。
