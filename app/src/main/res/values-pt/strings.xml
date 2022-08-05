@@ -411,11 +411,11 @@
     <string name="failed_to_deny_dangerous_app_ops">Não foi possível negar todas as operações de apps perigosas</string>
     <string name="failed_to_deny_dangerous_perms">Não foi possível negar todas as permissões perigosas</string>
     <string name="failed_to_reset_app_ops">Não foi possível redefinir as operações da app</string>
-    <string name="failed_to_revoke_permission">A permissão não pôde ser revogada</string>
+    <string name="failed_to_revoke_permission">Não foi possível revogar a permissão</string>
     <string name="failed_to_grant_permission">A permissão não pôde ser concedida</string>
     <plurals name="alert_failed_to_disable_trackers">
-        <item quantity="one">Não foi possível desativar os rasteadores da%1$d app</item>
-        <item quantity="other">Não foi possível desativar os rasteadores dad %1$d apps</item>
+        <item quantity="one">Não foi possível desativar os rasteadores de %1$d aplicação</item>
+        <item quantity="other">Não foi possível desativar os rasteadores de %1$d aplicações</item>
     </plurals>
     <string name="unknown_op">Operação desconhecida</string>
     <string name="sort_by_tracker_components">Rastreadores primeiro</string>
@@ -924,7 +924,7 @@
     <string name="downgrade">Downgrade</string>
     <string name="process_state_with_extra">Estado: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g> (<xliff:g id="state_extra" example="High priority">%2$s</xliff:g>)</string>
     <string name="process_state">Estado: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g></string>
-    <string name="state_multithreaded">Multithreaded</string>
+    <string name="state_multithreaded">Multiprocessamento</string>
     <string name="state_foreground">Primeiro plano</string>
     <string name="state_waking">Acordando</string>
     <string name="state_wake_kill">Encerrado ao acordar</string>
