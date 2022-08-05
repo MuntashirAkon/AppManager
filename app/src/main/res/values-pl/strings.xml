@@ -1279,4 +1279,8 @@
     <string name="changelog_type_new">Nowy</string>
     <string name="changelog_type_fix">Napraw</string>
     <string name="changelog_type_improve">Polepsz</string>
+    <string name="unsupported_split_apk">Nieobsługiwany</string>
+    <string name="view_changelog">Dowiedz się, co nowego w tej wersji</string>
+    <string name="sort_by_total_size">Całkowity rozmiar</string>
+    <string name="am_command">Polecenie <tt>am</tt></string>
 </resources>
