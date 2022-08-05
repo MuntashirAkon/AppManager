@@ -1280,4 +1280,6 @@
     <string name="pref_reload_apps">Перезавантажити додатки</string>
     <string name="pref_reload_apps_msg">Перезавантажувати список додатків, що зберігаються в базі даних App Manager, у разі неочікуваної поведінки.</string>
     <string name="unsupported_split_apk">Не підтримується</string>
+    <string name="view_changelog">Дізнайтеся, що нового в цьому випуску</string>
+    <string name="sort_by_total_size">Загальний розмір</string>
 </resources>
