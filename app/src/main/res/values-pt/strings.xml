@@ -1203,4 +1203,5 @@
     <string name="changelog_type_new">Novo</string>
     <string name="changelog_type_fix">Arrumar</string>
     <string name="changelog_type_improve">Renovar</string>
+    <string name="unsupported_split_apk">Não suportado</string>
 </resources>
