@@ -1205,4 +1205,7 @@
     <string name="changelog_type_fix">Correggi</string>
     <string name="changelog_type_improve">Migliora</string>
     <string name="unsupported_split_apk">Non supportato</string>
+    <string name="view_changelog">Scopri le novità di questa versione</string>
+    <string name="sort_by_total_size">Dimensione totale</string>
+    <string name="am_command"><tt>am</tt> comando</string>
 </resources>
