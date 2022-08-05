@@ -1356,4 +1356,7 @@
     <string name="changelog_type_fix">اصلاح</string>
     <string name="changelog_type_improve">تحسين</string>
     <string name="unsupported_split_apk">غير مدعوم</string>
+    <string name="view_changelog">اكتشف الجديد في هذا الإصدار</string>
+    <string name="sort_by_total_size">الحجم الإجمالي</string>
+    <string name="am_command">الأمر <tt>am</tt></string>
 </resources>
