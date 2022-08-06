@@ -2,9 +2,9 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <resources>
     <array name="lib_native_signatures">
-        <item>libbugrpt\\.so</item>
         <item>libjiagu(_a64)\?\\.so|libjiagu(_x64|_x86)\?\\.so|libX86Bridge\\.so</item>
         <item>lib7-Zip-JBinding\\.so</item>
+        <item>libapssdk\\.so|libAMapSDK_NAVI_.*\\.so</item>
         <item>libhuawei_arengine(_impl|_jni|_ndk)\?\\.so</item>
         <item>libarcore_sdk_jni\\.so</item>
         <item>libAVPro(Local|Video2Native)\?\\.so|libAudio360(-JNI)\?\\.so</item>
@@ -25,9 +25,10 @@
         <item>libbdpush_.*\\.so</item>
         <item>libDexHelper(-x86)\?\\.so|libSecShell(-x86)\?\\.so|libdexjni\\.so|libsecexe\\.so</item>
         <item>libbmob\\.so</item>
+        <item>libbmob\\.so</item>
         <item>libboost(_filesystem|_system)\?\\.so</item>
         <item>libboost_multidex\\.so</item>
-        <item>libBugly(-rqd|-ext)\?\\.so</item>
+        <item>libBugly(-rqd)\?\\.so</item>
         <item>libbugsnag-(ndk|plugin-android-anr|root-detection|unity)\?\\.so</item>
         <item>libBurstLinker\\.so</item>
         <item>libc\\+\\+_shared\\.so|libgnustl_shared\\.so|libCXXCommonKit\\.so</item>
@@ -36,6 +37,7 @@
         <item>chaquopy\\.so|libcrypto_chaquopy\\.so|libssl_chaquopy\\.so|libchaquopy_java\\.so|chaquopy_android\\.so|libsqlite3_chaquopy\\.so</item>
         <item>libchilkat\\.so</item>
         <item>libclash\\.so</item>
+        <item>libcomScore\\.so</item>
         <item>libcomScore\\.so</item>
         <item>libconscrypt_jni\\.so</item>
         <item>libcrashlytics(-common|-handler|-trampoline|-envelope)\?\\.so|libFirebaseCppCrashlytics\\.so|libunwind-crashlytics\\.so</item>
@@ -102,6 +104,7 @@
         <item>libwtecdh\\.so</item>
         <item>libmobileffmpeg(_abidetect)\?\\.so</item>
         <item>libnspr4\\.so|libplc4\\.so|libplds4\\.so</item>
+        <item>libbugrpt\\.so</item>
         <item>libobjectbox(-jni)\?\\.so</item>
         <item>libolm\\.so</item>
         <item>libopencc\\.so</item>
@@ -111,6 +114,7 @@
         <item>libopus(JNI)\?\\.so|libogg\\.so|libogg_opus_encoder(_translate)\?\\.so|libopus(V2JNI|file|vadjava)+\\.so</item>
         <item>libQPlayer\\.so</item>
         <item>libbuffer_pg\\.so|libfile_lock_pg\\.so|libmetasec_ml\\.so|libnms\\.so|libtobEmbedEncrypt\\.so|libpangleflipped\\.so</item>
+        <item>libtpnsSecurity\\.so|libxguardian\\.so</item>
         <item>libpingpp\\.so</item>
         <item>libQt[1-9].*\\.so|libplugins_.*\\.so|libqml_Qt(3D)\?.*\\.so</item>
         <item>libquickjs\\.so</item>
@@ -148,7 +152,7 @@
         <item>libtencentloc\\.so|libtxmapengine\\.so</item>
         <item>libMtaNativeCrash\\.so|libmtanativecrash_v2\\.so</item>
         <item>libtersafe2\\.so</item>
-        <item>libxgVipSecurity\\.so|libtpnsSecurity\\.so|libxguardian\\.so</item>
+        <item>libxgVipSecurity\\.so</item>
         <item>libtraeimp-rtmp\\.so</item>
         <item>libtensorflowlite(_gpu)\?_jni\\.so|libtensorflow_jni\\.so</item>
         <item>libtesseract\\.so</item>
@@ -181,7 +185,6 @@
         <item>libzstd-jni\\.so</item>
         <item>libzstd-jni-.*\\.so</item>
         <item>libpl_droidsonroids_gif\\.so</item>
-        <item>libpl_droidsonroids_gif\\.so</item>
         <item>libcardioDecider\\.so|libcardioRecognizer(_tegra2)\?\\.so</item>
         <item>libcocos2dcpp\\.so</item>
         <item>libjlibtorrent-.*\\.so</item>
@@ -211,9 +214,9 @@
         <item>libxlua\\.so</item>
     </array>
     <array name="lib_native_names">
-        <item>163 Crash</item>
         <item>360 Security</item>
         <item>7-Zip-JBinding</item>
+        <item>AMAP SDK</item>
         <item>AR Engine</item>
         <item>ARCore</item>
         <item>AVPro Video</item>
@@ -233,6 +236,7 @@
         <item>Baidu LBS</item>
         <item>Baidu Push</item>
         <item>Bangcle</item>
+        <item>Bmob</item>
         <item>Bmob Android SDK</item>
         <item>Boost</item>
         <item>BoostMultiDex</item>
@@ -245,6 +249,7 @@
         <item>Chaquopy</item>
         <item>Chilkat</item>
         <item>Clash Core</item>
+        <item>ComScore</item>
         <item>Comscore Analytics</item>
         <item>Conscrypt</item>
         <item>Crashlytics</item>
@@ -311,6 +316,7 @@
         <item>Midas</item>
         <item>MobileFFmpeg</item>
         <item>NSPR</item>
+        <item>NetEase Cloud Capture</item>
         <item>ObjectBox Java</item>
         <item>Olm</item>
         <item>OpenCC</item>
@@ -320,6 +326,7 @@
         <item>Opus</item>
         <item>PLDroidPlayer</item>
         <item>Pangle SDK</item>
+        <item>Pigeon Push</item>
         <item>Ping++ SDK</item>
         <item>Qt</item>
         <item>QuickJS</item>
@@ -390,7 +397,6 @@
         <item>Zstandard</item>
         <item>Zstd-jni</item>
         <item>android-gif-drawable</item>
-        <item>android-gif-drawable</item>
         <item>card.io SDK for Android</item>
         <item>cocos2d-cpp</item>
         <item>frostwire-jlibtorrent</item>
@@ -421,155 +427,8 @@
     </array>
     <integer-array name="lib_native_is_tracker">
         <item>1</item>
-        <item>1</item>
         <item>0</item>
         <item>1</item>
-        <item>0</item>
-        <item>0</item>
-        <item>1</item>
-        <item>1</item>
-        <item>1</item>
-        <item>1</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>1</item>
-        <item>1</item>
-        <item>1</item>
-        <item>1</item>
-        <item>1</item>
-        <item>0</item>
-        <item>0</item>
-        <item>1</item>
-        <item>1</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>1</item>
-        <item>1</item>
-        <item>1</item>
-        <item>0</item>
-        <item>1</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>1</item>
-        <item>0</item>
-        <item>1</item>
-        <item>1</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>1</item>
-        <item>1</item>
-        <item>0</item>
-        <item>0</item>
-        <item>1</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>1</item>
-        <item>0</item>
-        <item>1</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>1</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>1</item>
-        <item>0</item>
-        <item>0</item>
-        <item>1</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>1</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>1</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>1</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>1</item>
-        <item>1</item>
-        <item>1</item>
-        <item>1</item>
-        <item>1</item>
-        <item>0</item>
-        <item>1</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
-        <item>1</item>
-        <item>0</item>
-        <item>1</item>
-        <item>1</item>
-        <item>1</item>
-        <item>0</item>
-        <item>1</item>
-        <item>1</item>
-        <item>1</item>
-        <item>1</item>
-        <item>1</item>
-        <item>1</item>
-        <item>0</item>
-        <item>0</item>
-        <item>0</item>
         <item>1</item>
         <item>0</item>
         <item>0</item>
@@ -585,6 +444,157 @@
         <item>0</item>
         <item>0</item>
         <item>0</item>
+        <item>1</item>
+        <item>1</item>
+        <item>1</item>
+        <item>1</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>1</item>
+        <item>1</item>
+        <item>1</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>1</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>1</item>
+        <item>1</item>
+        <item>1</item>
+        <item>1</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>1</item>
+        <item>1</item>
+        <item>1</item>
+        <item>0</item>
+        <item>1</item>
+        <item>1</item>
+        <item>1</item>
+        <item>1</item>
+        <item>1</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
         <item>0</item>
         <item>1</item>
         <item>0</item>
@@ -595,7 +605,6 @@
         <item>0</item>
         <item>1</item>
         <item>1</item>
-        <item>0</item>
         <item>0</item>
         <item>0</item>
         <item>0</item>
@@ -629,16 +638,16 @@
         <item>0</item>
     </integer-array>
     <array name="lib_native_website">
-        <item>http://crash.163.com/index.do</item>
         <item>https://jiagu.360.cn/</item>
-        <item>https://sourceforge.net/projects/sevenzipjbind/</item>
+        <item>http://sevenzipjbind.sourceforge.net/</item>
+        <item>https://lbs.amap.com/api/android-sdk/summary/</item>
         <item>https://developer.huawei.com/consumer/cn/doc/development/HMSCore-Guides/introduction-0000001050130900</item>
         <item>https://developers.google.com/ar/discover/</item>
         <item>https://renderheads.com/products/avpro-video/</item>
-        <item>https://github.com/AdColony/AdColony-Android-SDK</item>
+        <item>http://adcolony.com/</item>
         <item>https://www.agora.io/en/</item>
         <item>https://jaq-doc.alibaba.com/docs/doc.htm\?treeId=243&amp;articleId=106477&amp;docType=1</item>
-        <item>https://lbs.amap.com/api/android-sdk/summary/</item>
+        <item>https://lbs.amap.com/api/android-location-sdk/locationsummary</item>
         <item>https://github.com/alibaba/AndFix</item>
         <item>https://github.com/mkottman/AndroLua/</item>
         <item>https://chromium.googlesource.com/chromium/src.git/+/refs/heads/main/third_party/android_crazy_linker</item>
@@ -652,29 +661,31 @@
         <item>http://push.baidu.com/doc/android/api</item>
         <item>https://www.bangcle.com/products/productindex/</item>
         <item>http://doc.bmob.cn/</item>
+        <item>https://github.com/bmob/bmob-android-sdk</item>
         <item>https://www.boost.org/</item>
         <item>https://github.com/bytedance/BoostMultiDex</item>
-        <item>https://bugly.qq.com/</item>
+        <item>https://bugly.qq.com/v2/</item>
         <item>https://github.com/bugsnag/bugsnag-android</item>
         <item>https://github.com/bilibili/BurstLinker</item>
         <item>https://developer.android.com/ndk/guides/cpp-support/</item>
         <item>https://github.com/pytorch/cpuinfo</item>
-        <item>https://github.com/googlevr/cardboard</item>
+        <item>https://developers.google.com/cardboard</item>
         <item>https://chaquo.com/chaquopy/</item>
         <item>https://www.chilkatsoft.com/</item>
         <item>https://github.com/Dreamacro/clash</item>
-        <item>https://www.comscore.com</item>
+        <item>https://comscore.com/</item>
+        <item>http://www.comscore.com/</item>
         <item>https://github.com/google/conscrypt</item>
         <item>https://firebase.google.com/docs/crashlytics/</item>
-        <item>https://assetstore.unity.com/packages/tools/audio/cri-adx2-unity-plugin-assetstore-100086</item>
+        <item>https://www.criware.com/en/</item>
         <item>https://developer.android.com/guide/topics/connectivity/cronet/</item>
         <item>https://github.com/bilibili/DanmakuFlameMaster/</item>
         <item>https://github.com/baidu/ar-sdk/</item>
-        <item>https://github.com/svaarala/duktape/</item>
+        <item>https://search.maven.org/artifact/com.squareup.duktape/duktape-android</item>
         <item>http://docs-im.easemob.com/im/android/sdk/import</item>
         <item>https://www.easymobile.sglibgames.com/</item>
         <item>https://github.com/tiann/epic/</item>
-        <item>https://dev.epicgames.com/docs/services/en-US/GameServices/Platforms/Android/index.html</item>
+        <item>https://dev.epicgames.com/docs/services/en-US/Platforms/Android/index.html</item>
         <item>http://www.ffmpeg.org/libavcodec.html</item>
         <item>https://github.com/tanersener/ffmpeg-kit</item>
         <item>https://fmod.com/</item>
@@ -683,7 +694,7 @@
         <item>https://flutter.dev/</item>
         <item>https://android.googlesource.com/platform/frameworks/ex/</item>
         <item>https://www.freetype.org/</item>
-        <item>https://github.com/facebook/fresco/</item>
+        <item>https://github.com/facebook/fresco</item>
         <item>https://alibaba.github.io/GCanvas/</item>
         <item>https://github.com/cats-oss/android-gpuimage</item>
         <item>http://docs.getui.com/getui/start/product/</item>
@@ -700,7 +711,7 @@
         <item>https://github.com/facebook/hermes</item>
         <item>https://github.com/Tencent/Hippy/</item>
         <item>https://cloud.hpplay.cn/</item>
-        <item>https://github.com/bilibili/ijkplayer/</item>
+        <item>https://github.com/Bilibili/ijkplayer</item>
         <item>https://appguard.nprotect.com/en/index.html</item>
         <item>https://zhaobozhen.github.io/Anywhere-Docs</item>
         <item>https://docs.jiguang.cn/jpush/guideline/intro/</item>
@@ -712,7 +723,7 @@
         <item>https://github.com/danbloomberg/leptonica</item>
         <item>https://github.com/curl/curl</item>
         <item>https://github.com/LibRaw/LibRaw</item>
-        <item>https://github.com/videolan/vlc-android</item>
+        <item>https://code.videolan.org/videolan/vlc-android</item>
         <item>https://libav.org/documentation/doxygen/master/group__lavr.html</item>
         <item>https://docs.live2d.com/cubism-sdk-manual/top/</item>
         <item>https://sourceforge.net/projects/log4cpp/</item>
@@ -729,23 +740,25 @@
         <item>https://wiki.midas.qq.com/index/index/1/</item>
         <item>https://github.com/tanersener/mobile-ffmpeg</item>
         <item>https://www.linuxfromscratch.org/blfs/view/svn/general/nspr.html</item>
+        <item>https://crash.163.com/</item>
         <item>https://github.com/objectbox/objectbox-java</item>
         <item>https://gitlab.matrix.org/matrix-org/olm</item>
         <item>https://github.com/BYVoid/OpenCC</item>
-        <item>https://github.com/opencv/opencv/</item>
+        <item>https://opencv.org/</item>
         <item>https://github.com/openssl/openssl</item>
         <item>https://github.com/schwabe/ics-openvpn</item>
         <item>https://gitlab.xiph.org/xiph/opus</item>
         <item>https://github.com/pili-engineering/PLDroidPlayer</item>
         <item>https://partner.oceanengine.com/</item>
+        <item>https://xg.qq.com/docs/</item>
         <item>https://github.com/PingPlusPlus/pingpp-android</item>
         <item>https://www.qt.io</item>
-        <item>https://bellard.org/quickjs/</item>
+        <item>https://github.com/cashapp/quickjs-java</item>
         <item>https://github.com/MuntashirAkon/rapidfuzz-android</item>
         <item>https://github.com/rclone/rclone</item>
-        <item>https://reactnative.dev/</item>
+        <item>https://github.com/facebook/react-native</item>
         <item>https://jaq-doc.alibaba.com/docs/doc.htm\?spm=a313e.7629140.0.0.246751c3G9nvDl&amp;treeId=243&amp;articleId=105524&amp;docType=1</item>
-        <item>https://github.com/realm/</item>
+        <item>https://github.com/realm/realm-java</item>
         <item>https://github.com/renpy/renpy</item>
         <item>https://developer.android.com/guide/topics/renderscript/compute/</item>
         <item>https://github.com/rime/librime</item>
@@ -753,7 +766,7 @@
         <item>https://github.com/scottyab/rootbeer</item>
         <item>https://github.com/MuntashirAkon/spake2-java</item>
         <item>https://github.com/sqlcipher/sqlcipher/</item>
-        <item>https://www.sqlite.org/docs.html</item>
+        <item>https://developer.android.com/jetpack/androidx/releases/sqlite</item>
         <item>https://www.sensetime.com/en/product-business\?categoryId=33106&amp;gioNav=1</item>
         <item>https://sentry.io/for/android/</item>
         <item>https://shanyan.253.com/</item>
@@ -773,7 +786,7 @@
         <item>https://cloud.tencent.com/product/im/getting-started/</item>
         <item>https://cloud.tencent.com/document/product/283</item>
         <item>https://lbs.qq.com/mobile/androidLocationSDK/androidGeoGuide/androidGeoOverview/</item>
-        <item>https://mta.qq.com/docs/</item>
+        <item>https://mta.qq.com/</item>
         <item>https://cloud.tencent.com/document/product/654/30316</item>
         <item>https://cloud.tencent.com/product/tpns</item>
         <item>https://cloud.tencent.com/document/product/647/16788</item>
@@ -784,7 +797,7 @@
         <item>https://github.com/p4gefau1t/trojan-go</item>
         <item>https://www.twilio.com/video-api</item>
         <item>https://docs.jiguang.cn/jverification/client/android_guide/</item>
-        <item>https://developer.umeng.com/docs/119267/detail/126061</item>
+        <item>http://www.umeng.com/</item>
         <item>https://open.unionpay.com/</item>
         <item>https://docs.unity3d.com/Manual/IL2CPP.html</item>
         <item>https://docs.unity3d.com/Manual/com.unity.burst.html</item>
@@ -792,11 +805,11 @@
         <item>https://v8.dev/</item>
         <item>https://developer.android.com/ndk/guides/cpp-support/</item>
         <item>https://gitlab.xiph.org/xiph/vorbis</item>
-        <item>https://github.com/Tencent/wcdb/</item>
+        <item>https://github.com/Tencent/wcdb</item>
         <item>https://webrtc.org/</item>
         <item>https://weex.apache.org/</item>
         <item>https://github.com/sinaweibosdk/weibo_android_sdk</item>
-        <item>https://dotnet.microsoft.com/apps/xamarin/</item>
+        <item>https://xamarin.com/</item>
         <item>https://xiaoai.mi.com/documents/Home\?type=/api/doc/render_markdown/Home/</item>
         <item>https://dev.mi.com/console/app/gamecenter.html</item>
         <item>https://dev.mi.com/console/doc/detail\?pId=4/</item>
@@ -804,10 +817,9 @@
         <item>https://github.com/facebook/yoga/</item>
         <item>https://youme.im/en/</item>
         <item>https://yueying-docs.effirst.com/</item>
-        <item>http://zbar.sourceforge.net/</item>
+        <item>https://github.com/ZBar/ZBar</item>
         <item>https://github.com/facebook/zstd</item>
         <item>https://github.com/luben/zstd-jni</item>
-        <item>https://github.com/koral--/android-gif-drawable/</item>
         <item>https://github.com/koral--/android-gif-drawable</item>
         <item>https://github.com/card-io/card.io-Android-SDK</item>
         <item>https://github.com/cocos2d-cpp/cocos2d-cpp</item>
@@ -829,9 +841,9 @@
         <item>https://github.com/aldenml/libtorrent4j</item>
         <item>https://github.com/webmproject/libvpx/</item>
         <item>https://wiki.mozilla.org/XUL:Lib_XUL</item>
-        <item>https://github.com/kivy/python-for-android/tree/master</item>
+        <item>https://github.com/renpy/python-for-android</item>
         <item>https://github.com/strongswan/strongswan</item>
-        <item>https://github.com/Yalantis/uCrop/</item>
+        <item>https://github.com/Yalantis/uCrop</item>
         <item></item>
         <item>https://github.com/iqiyi/xCrash/</item>
         <item>https://github.com/iqiyi/xHook</item>
