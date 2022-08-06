@@ -1,3 +1,6 @@
 [submodule "scripts/universal-android-debloater"]
 	path = scripts/universal-android-debloater
 	url = https://gitlab.com/W1nst0n/universal-android-debloater.git
+[submodule "scripts/android-libraries"]
+	path = scripts/android-libraries
+	url = https://github.com/MuntashirAkon/android-libraries.git
