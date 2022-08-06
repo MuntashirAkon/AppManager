@@ -1211,4 +1211,6 @@
     <string name="view_changelog">Descubra o que há de novo nesta versão</string>
     <string name="sort_by_total_size">Tamanho total</string>
     <string name="am_command"><tt>am</tt> comando</string>
+    <string name="pref_sign_apk_error_signing_key_not_added">É necessário uma chave válida para assinar um ficheiro APK</string>
+    <string name="pref_sign_apk_no_signing_key">Sem chave de assinatura</string>
 </resources>
