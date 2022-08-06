@@ -1169,4 +1169,6 @@
     <string name="view_changelog">了解此版本中的新增功能</string>
     <string name="sort_by_total_size">总大小</string>
     <string name="am_command"><tt>am</tt>命令</string>
+    <string name="pref_sign_apk_no_signing_key">无签名秘钥</string>
+    <string name="pref_sign_apk_error_signing_key_not_added">签署 APK 文件需要有效的签名秘钥。</string>
 </resources>
