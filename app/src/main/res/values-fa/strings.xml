@@ -830,7 +830,6 @@
     <string name="failed_to_initialize_key_store">ذخیره کلید مدیریت برنامه راه اندازی نشد.</string>
     <string name="crypto_key_size">اندازه کلید</string>
     <string name="key_not_set">تنظیم نشده.</string>
-    <string name="default_key_used">کلید پیش فرض استفاده شده.</string>
     <string name="input_key_password">کلید رمز</string>
     <string name="invalid_aes_key_size">اندازه کلید برای رمزگذاری پیشرفته نامعتبر است. اندازه کلید می تواند 128 یا 256 بیت باشد.</string>
     <string name="failed_to_load_key">نمی‌توان کلید را بارگذاری کرد.</string>

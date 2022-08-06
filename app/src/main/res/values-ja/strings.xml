@@ -834,7 +834,6 @@
     <string name="organization_unit">組織単位名 (OU)</string>
     <string name="common_name">コモンネーム (CN)</string>
     <string name="failed_to_load_key">キー情報の読み込みに失敗しました。</string>
-    <string name="default_key_used">標準のキーが使用されます。</string>
     <string name="key_not_set">設定されていません</string>
     <string name="use_default">規定</string>
     <string name="expiry_date_cannot_be_empty">失効日は空白にできません。</string>

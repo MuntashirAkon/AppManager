@@ -841,7 +841,6 @@
     <string name="common_name">通用名（CN）</string>
     <string name="input_key_password">密钥密码</string>
     <string name="failed_to_load_key">无法加载密钥。</string>
-    <string name="default_key_used">使用了默认密钥。</string>
     <string name="key_not_set">未设置。</string>
     <string name="use_default">使用默认</string>
     <string name="invalid_rsa_key_size">RSA加密的密钥大小无效。 密钥大小可以是1024位、2048位或4096位。</string>

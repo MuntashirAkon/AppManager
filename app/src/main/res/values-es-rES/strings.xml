@@ -926,7 +926,6 @@
     <string name="common_name">Nombre común (CN)</string>
     <string name="input_key_password">Contraseña de clave</string>
     <string name="failed_to_load_key">No se pudo cargar la clave.</string>
-    <string name="default_key_used">Se utiliza la clave predeterminada.</string>
     <string name="key_not_set">No se ha definido.</string>
     <string name="use_default">Utilizar predeterminado</string>
     <string name="crypto_key_size">Tamaño de clave</string>

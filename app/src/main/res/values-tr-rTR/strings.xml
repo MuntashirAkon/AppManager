@@ -872,7 +872,6 @@
     <string name="common_name">Yaygın ad (CN)</string>
     <string name="input_key_password">Anahtar parolası</string>
     <string name="failed_to_load_key">Anahtar yüklenemedi.</string>
-    <string name="default_key_used">Öntanımlı anahtar kullanıldı.</string>
     <string name="key_not_set">Ayarlanmadı.</string>
     <string name="use_default">Öntanımlı değeri kullan</string>
     <string name="invalid_rsa_key_size">RSA şifrelemesi için geçersiz anahtar boyutu. Anahtar boyutu 1024, 2048 veya 4096 bit olabilir.</string>

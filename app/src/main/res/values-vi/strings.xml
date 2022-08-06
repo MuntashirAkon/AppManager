@@ -760,7 +760,6 @@
     <string name="common_name">Tên phổ biến (CN)</string>
     <string name="input_key_password">Mật khẩu mã khoá</string>
     <string name="failed_to_load_key">Không thể tải mã khoá.</string>
-    <string name="default_key_used">Mã khoá mặc định được sử dụng.</string>
     <string name="key_not_set">Không được đặt.</string>
     <string name="use_default">Sử dụng mặc định</string>
     <string name="invalid_rsa_key_size">Kích cỡ mã khoá không hợp lệ cho mã hoá RSA. Kích cỡ mã khoá có thể là 1024, 2048 hoặc 4096 bit.</string>

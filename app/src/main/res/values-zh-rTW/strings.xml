@@ -833,7 +833,6 @@
     <string name="common_name">通用名稱（CN）</string>
     <string name="input_key_password">金鑰密碼</string>
     <string name="failed_to_load_key">無法載入金鑰。</string>
-    <string name="default_key_used">使用預設金鑰。</string>
     <string name="key_not_set">未設定</string>
     <string name="use_default">使用預設值</string>
     <string name="invalid_rsa_key_size">RSA 加密的密鑰大小無效。密鑰大小可以是1024、2048 或 4096 位元。</string>

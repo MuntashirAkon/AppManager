@@ -1032,7 +1032,6 @@
     <string name="invalid_rsa_key_size">حجم المفتاح غير صالح لتشفير RSA. يسمح أن يكون حجم المفتاح 1024 أو 2048 أو 4096 بت.</string>
     <string name="use_default">استخدم الافتراضيّ</string>
     <string name="key_not_set">لم يتم تعيينه.</string>
-    <string name="default_key_used">يتم استخدام المفتاح الافتراضي.</string>
     <string name="failed_to_load_key">تعذر تحميل المفتاح.</string>
     <string name="input_key_password">كلمة السر الرئيسية</string>
     <string name="common_name">الاسم الشائع (CN)</string>

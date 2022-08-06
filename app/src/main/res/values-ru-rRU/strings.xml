@@ -938,7 +938,6 @@
     <string name="common_name">Общее имя (CN)</string>
     <string name="input_key_password">Пароль ключа</string>
     <string name="failed_to_load_key">Не удалось загрузить ключ.</string>
-    <string name="default_key_used">Используется ключ по умолчанию.</string>
     <string name="key_not_set">Не задано.</string>
     <string name="use_default">По умолчанию</string>
     <string name="invalid_rsa_key_size">Неверный размер ключа для шифрования RSA. Размер ключа может составлять 1024, 2048 или 4096 бит.</string>

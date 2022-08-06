@@ -1130,7 +1130,6 @@
     <string name="common_name">Nazwa zwyczajowa (CN)</string>
     <string name="input_key_password">Hasło klucza</string>
     <string name="failed_to_load_key">Nie można załadować klucza.</string>
-    <string name="default_key_used">Używany jest klucz domyślny.</string>
     <string name="key_not_set">Nie ustawiono.</string>
     <string name="use_default">Użyj domyślnego</string>
     <string name="invalid_rsa_key_size">Nieprawidłowy rozmiar klucza dla szyfrowania RSA. Rozmiar klucza może wynosić 1024, 2048 lub 4096 bitów.</string>

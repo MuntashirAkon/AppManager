@@ -919,7 +919,6 @@
     <string name="common_name">Gebräuchliche Bezeichnung (CN)</string>
     <string name="input_key_password">Schlüssel-Passwort</string>
     <string name="failed_to_load_key">Der Schlüssel konnte nicht geladen werden.</string>
-    <string name="default_key_used">Der Standardschlüssel wird verwendet.</string>
     <string name="key_not_set">Nicht angegeben.</string>
     <string name="use_default">Standard verwenden</string>
     <string name="invalid_rsa_key_size">Ungültige Schlüsselgröße für die RSA-Verschlüsselung. Die Schlüsselgröße kann 1024, 2048 oder 4096 Bit betragen.</string>

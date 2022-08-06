@@ -716,7 +716,6 @@
     <string name="pem_file">PEM-fil</string>
     <string name="input_key_password">Nøkkelpassord</string>
     <string name="failed_to_load_key">Kunne ikke laste inn nøkkelen.</string>
-    <string name="default_key_used">Forvalgt nøkkel blir brukt.</string>
     <string name="key_not_set">Ikke satt.</string>
     <string name="use_default">Bruk forvalg</string>
     <string name="crypto_key_size">Nøkkelstørrelse</string>

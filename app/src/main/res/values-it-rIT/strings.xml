@@ -733,7 +733,6 @@
     <string name="type_float_array">Vettore di numeri decimali</string>
     <string name="failed_to_initialize_key_store">Impossibile inizializzare il keystore App Manager.</string>
     <string name="use_default">Usa predefinita</string>
-    <string name="default_key_used">La chiave predefinita è in uso.</string>
     <string name="components">Componenti</string>
     <string name="installer_error_conflict">Impossibile installare l\'app perché il pacchetto è in uso</string>
     <string name="state_dead">Morto</string>

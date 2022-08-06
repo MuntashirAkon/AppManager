@@ -876,7 +876,6 @@
     <string name="common_name">Nome comum (CN)</string>
     <string name="input_key_password">Senha da chave</string>
     <string name="failed_to_load_key">Não foi possível carregar a chave.</string>
-    <string name="default_key_used">A chave padrão é usada.</string>
     <string name="key_not_set">Não inserida.</string>
     <string name="use_default">Usar padrão</string>
     <string name="invalid_rsa_key_size">Tamanho da chave inválida para criptografia RSA. O tamanho da chave pode ser 1024, 2048 ou 4096 bits.</string>

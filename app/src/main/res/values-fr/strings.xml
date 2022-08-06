@@ -703,7 +703,6 @@
     <string name="orientation_sensor_landscape">Capteur mode paysage</string>
     <string name="text_include_device_info">Inclure les informations de l\'appareil</string>
     <string name="record_log">Journaux d\'enregistrement</string>
-    <string name="default_key_used">Clé par défaut utilisée.</string>
     <string name="disable_background_run_description">Défini le mode <i>Ignore</i> pour les opérations d\'application suivantes : <tt>RUN_IN_BACKGROUND</tt> (depuis Android 7.0) et <tt>RUN_ANY_IN_BACKGROUND</tt> (depuis Android 9).</string>
     <string name="community_links">Telegram : https://t.me/AppManagerChannel
 \nTwitter : https://twitter.com/AppManagerNews</string>
