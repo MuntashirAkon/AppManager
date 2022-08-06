@@ -1,2 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="disclaimer_header">Mohim përgjegjësie</string>
+    <string name="disclaimer_agree">Une Pranoj</string>
+    <string name="disclaimer_exit">Dalje</string>
+    <string name="disclaimer_footer">© 2020–2022 Muntashir Al-Islam</string>
+    <string name="disclaimer_agree_forever">Mos e shfaq më kurrë këtë</string>
+    <string name="disclaimer_body">Menaxheri i aplikacionit ofron funksione rrënjësore që mund të dëmtojnë pajisjen tuaj nëse përdoret gabimisht. Menaxheri i aplikacionit nuk është përgjegjës për çdo dëmtim të shkaktuar nga përdorimi i këtij aplikacioni. Nëse nuk jeni plotësisht të vetëdijshëm se si funksionon root, atëherë duhet të shmangni përdorimin e opsioneve root derisa të jeni plotësisht të vetëdijshëm për rreziqet.
+\n
+\nÇdo lidhje që unë ofroj me aplikacione dhe faqe interneti të tjera është për përfitimin e përdoruesve. Unë nuk jam përgjegjës për çdo përmbajtje që mund të gjeni duke shkuar në lidhje të jashtme.
+\n
+\nDuke përdorur \"App Manager\", ju pranoni përgjegjësinë e plotë të përdorimit tuaj dhe nuk pranoni asnjë dëmtim, pretendim ose vlerë monetare për shkak të keqpërdorimit.
+\n
+\nDuke përdorur këtë aplikacion, ju pranoni të gjithë përgjegjësinë duke e përdorur atë dhe pranoni që unë nuk jam përgjegjës për çdo veprim që bëni që ka një efekt negativ në pajisjen tuaj.</string>
+</resources>
