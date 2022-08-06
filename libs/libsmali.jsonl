@@ -1,14 +1,10 @@
-{"id":"\/org\/brotli","path":"\/org\/brotli","name":"Brotli","type":"Utility","perms":"","url":"https:\/\/github.com\/google\/brotli\/tree\/master\/java\/org\/brotli"}
 {"id":"\/org\/json","path":"\/org\/json","name":"JSON-java","type":"Utility","perms":"","url":"https:\/\/www.json.org\/json-en.html"}
 {"id":"\/dalvik\/system","path":"\/dalvik\/system","name":"dalvik.system","type":"Utility","perms":"","url":"https:\/\/developer.android.com\/reference\/dalvik\/system\/package-summary"}
 {"id":"\/im\/dacer\/androidcharts","path":"\/im\/dacer\/androidcharts","name":"AndroidCharts","type":"UI Component","perms":"","url":"https:\/\/github.com\/HackPlan\/AndroidCharts"}
 {"id":"\/org\/jetbrains\/annotations","path":"\/org\/jetbrains\/annotations","name":"JetBrains' java-annotations","type":"Development Aid","perms":"","url":"https:\/\/github.com\/JetBrains\/java-annotations"}
-{"id":"\/com\/xwray\/groupie","path":"\/com\/xwray\/groupie","name":"Groupie","type":"UI Component","perms":"","url":"https:\/\/github.com\/lisawray\/groupie"}
 {"id":"\/org\/h2\/","path":"\/org\/h2\/","name":"H2 Database Engine","type":"Utility","perms":"","url":"https:\/\/github.com\/h2database\/h2database"}
 {"id":"\/com\/hbb20","path":"\/com\/hbb20","name":"Country Code Picker Library","type":"Utility","perms":"","url":"https:\/\/github.com\/hbb20\/CountryCodePickerProject"}
 {"id":"\/io\/lbry\/lbrysdk","path":"\/io\/lbry\/lbrysdk","name":"LBRY Android SDK","type":"Utility","perms":"","url":"https:\/\/github.com\/lbryio\/lbry-android-sdk"}
-{"id":"\/joptsimple","path":"\/joptsimple","name":"JOpt Simple","type":"Development Aid","perms":"","url":"http:\/\/jopt-simple.github.io\/jopt-simple\/"}
-{"id":"\/com\/arthenica\/mobileffmpeg","path":"\/com\/arthenica\/mobileffmpeg","name":"MobileFFmpeg","type":"Utility","perms":"","url":"https:\/\/github.com\/tanersener\/mobile-ffmpeg"}
 {"id":"\/org\/apache\/sanselan","path":"\/org\/apache\/sanselan","name":"Apache Sanselan","type":"Utility","perms":"","url":"http:\/\/commons.apache.org\/sanselan\/"}
 {"id":"\/com\/pixplicity\/htmlcompat","path":"\/com\/pixplicity\/htmlcompat","name":"Pixplicity HtmlCompat","type":"Development Aid","perms":"","url":"https:\/\/github.com\/Pixplicity\/HtmlCompat"}
 {"id":"\/com\/google\/vr\/sdk","path":"\/com\/google\/vr\/sdk","name":"Google VR SDK for Android","type":"Development Framework","perms":"","url":"https:\/\/github.com\/googlevr\/gvr-android-sdk"}
@@ -22,11 +18,8 @@
 {"id":"\/io\/noties\/prism4j","path":"\/io\/noties\/prism4j","name":"Prism4j","type":"Utility","perms":"","url":"https:\/\/github.com\/noties\/Prism4j"}
 {"id":"\/com\/googlecode\/javaewah","path":"\/com\/googlecode\/javaewah","name":"JavaEWAH","type":"Utility","perms":"","url":"https:\/\/github.com\/lemire\/javaewah"}
 {"id":"\/com\/hierynomus\/asn1","path":"\/com\/hierynomus\/asn1","name":"ASN.1 library for Java","type":"Development Aid","perms":"","url":"https:\/\/github.com\/hierynomus\/asn-one"}
-{"id":"\/com\/bytedance\/sdk\/openadsdk","path":"\/com\/bytedance\/sdk\/openadsdk","name":"Pangle SDK","type":"Advertisement","perms":"","url":"https:\/\/www.pangleglobal.com"}
-{"id":"\/com\/vungle\/warren\/","path":"\/com\/vungle\/warren\/","name":"Vungle Android SDK","type":"Advertisement","perms":"","url":"https:\/\/vungle.com"}
 {"id":"\/com\/beint\/zangi","path":"\/com\/beint\/zangi","name":"Zangi","type":"App Market","perms":"","url":"https:\/\/zangi.com\/sip-provider"}
 {"id":"\/com\/paypal\/android\/sdk\/payments\/","path":"\/com\/paypal\/android\/sdk\/payments\/","name":"Paypal Android SDK","type":"Development Aid","perms":"","url":"https:\/\/github.com\/paypal\/PayPal-Android-SDK"}
-{"id":"\/com\/amazonaws\/services\/s3\/","path":"\/com\/amazonaws\/services\/s3\/","name":"Amazon S3","type":"Development Aid","perms":"","url":"https:\/\/docs.aws.amazon.com\/AWSJavaSDK\/latest\/javadoc\/com\/amazonaws\/services\/s3\/package-summary.html"}
 {"id":"\/com\/alipay\/mobile\/framework","path":"\/com\/alipay\/mobile\/framework","name":"Alipay","type":"Payment","perms":"","url":"http:\/\/www.alipay.com"}
 {"id":"\/sun\/misc\/Unsafe","path":"\/sun\/misc\/Unsafe","name":"Java Unsafe","type":"Utility","perms":"","url":"http:\/\/mishadoff.github.io\/blog\/java-magic-part-4-sun-dot-misc-dot-unsafe\/"}
 {"id":"\/io\/vavr\/","path":"\/io\/vavr\/","name":"v\u028cvr (formerly Javaslang)","type":"Development Framework","perms":"","url":"https:\/\/github.com\/vavr-io\/vavr"}
