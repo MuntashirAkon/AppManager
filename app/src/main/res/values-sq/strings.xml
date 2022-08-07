@@ -114,4 +114,220 @@
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
 \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
 \nOriginal logo credit: <a href="https://github.com/Atrate">Atrate</a>. </string>
+    <string name="key_name_cannot_be_null">Emri i çelës nuk mund të jetë bosh</string>
+    <string name="pref_import_blocker">Importo nga Blocker</string>
+    <string name="disable_background_run">Parandaloni funksionimin ne sfond</string>
+    <string name="usage_weekly">Javore</string>
+    <string name="storage_and_cache">Magazinimi dhe cache</string>
+    <string name="total_size">Totali</string>
+    <string name="app_size">Aplikacioni</string>
+    <string name="apk_updater">Përditësuesi i APK-së</string>
+    <string name="kill_process">Vrite</string>
+    <string name="pid_and_ppid">ID-ja e procesit: %1$d, ID e procesit prind: %2$d</string>
+    <string name="disable_background">Parandalo funksionimin ne sfond</string>
+    <string name="running">Në ekzekutim</string>
+    <string name="duration">Kohëzgjatja</string>
+    <string name="accept_time">Prano Kohen</string>
+    <string name="import_failed">Importi dështoi!</string>
+    <string name="export_failed">Eksporti dështoi</string>
+    <string name="keyboard_type">Lloji i tastierës</string>
+    <string name="touchscreen">Ekran me prekje</string>
+    <string name="force_stop">Ndalo me forcë</string>
+    <string name="sort_by_disabled_app">Te ç\'aktivizuarat së pari</string>
+    <string name="view_in_settings">Shiko te Cilësimet</string>
+    <string name="add_item">Shto artikull</string>
+    <string name="day">Ditë</string>
+    <string name="failed_to_extract_apk_file">Skedari APK nuk mund të estraktohet</string>
+    <string name="menu_remove_rules">Hiç rregullat</string>
+    <string name="menu_apply_rules">Apliko rregullat</string>
+    <string name="dev_protected_data_dir">Vëndodhja e të dhënave e mbrojtur nga pajisja</string>
+    <string name="process_name">Emri i procesit</string>
+    <string name="saving_failed">Ruajtja dëahtoj, provo sërisht</string>
+    <string name="type_int">I plotë</string>
+    <string name="uninstall_app_message">Dëshiron ta ç\'instalosh këtë aplikacion\?</string>
+    <string name="failed_to_uninstall_app">C\'instalimi dështoj</string>
+    <string name="pref_global_blocking_enabled_msg">Ju lejon të bllokoni çdo komponent të çdo aplikacioni pa aktivizuar në mënyrë të qartë bllokimin për aplikacionin.</string>
+    <string name="memory_virtual_memory">Memoria: %1$s, memoria virtuale: %2$s</string>
+    <string name="the_operation_was_successful">U krye</string>
+    <string name="toggle_kill_for_system_apps">Aktivizo vrasjen e aplikacioneve të sistemit</string>
+    <string name="usage_today">Sot</string>
+    <string name="usage_7_days">7 ditët e fundit</string>
+    <string name="native_library_dir">Vëndndodhja e Librarisë Native JNI</string>
+    <string name="no_code">S\'ka kode</string>
+    <string name="updated_app">Përditësuar</string>
+    <string name="shared_prefs">Preferencat e shperndara</string>
+    <string name="integer_value">Vlera e plotë</string>
+    <string name="decimal_value">Vlera deçimale</string>
+    <string name="done">U krye</string>
+    <string name="type_boolean">E vërtetë / e rreme</string>
+    <string name="uninstalled_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> është çinstaluar.</string>
+    <string name="stopped">Ndaluar</string>
+    <string name="disable">Ç\'aktivizo</string>
+    <string name="app_ops">Operacinet e aplikacionit</string>
+    <string name="exodus_link">Lidhja për εxodus</string>
+    <string name="sort_by_screen_time">Koha e ekranit</string>
+    <string name="user_and_uid">Perdorues: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
+    <string name="pref_import_export_blocking_rules">Rregullat e bllokimit të import/eksportit</string>
+    <string name="the_export_was_successful">I eksportuar</string>
+    <plurals name="failed_to_import_files">
+        <item quantity="one">%1$d skedar nuk mund të importohej.</item>
+        <item quantity="other">%1$d skedaret nuk mund të importohej.</item>
+    </plurals>
+    <string name="backup_restore">Rekupero/Rivendos</string>
+    <string name="export_blocking_rules">eksporto rregullat e bllokimit</string>
+    <string name="export_options">Opsionet e Eksportit</string>
+    <string name="pref_app_theme">Emri aplikacionit</string>
+    <string name="battery_mode">Modaliteti i baterisë</string>
+    <string name="block_trackers">Blloko gjurmuesit</string>
+    <string name="sort_by_component_name">Emri komponetëve</string>
+    <string name="external_data_dir">Vedndodhja e të dhënave të jashtme</string>
+    <string name="store">Dyqani</string>
+    <string name="user_with_id">Prdorues: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
+    <string name="import_options">Opsionet e Importit</string>
+    <string name="pref_import_msg">Importoni rregullat e bllokimit të eksportuara më parë nga \"Menaxheri i aplikacionit\".</string>
+    <string name="pref_import_watt_msg">Importoni rregullat e bllokimit nga Watt, çdo skedar përmban rregulla për një paketë të vetme të emërtuar si <tt>packagename.xml</tt> etj.</string>
+    <string name="version">Versioni</string>
+    <string name="grant_usage_acess_message">Përdoret për të shfaqur informacionin e përdorimit të app-it</string>
+    <string name="search">Kërko</string>
+    <string name="follow_system">Ndiqni sistemin</string>
+    <string name="ago">më parë</string>
+    <string name="pref_import">Importo</string>
+    <string name="deny_dangerous_app_ops">Moho funksionet e rrezikshme të aplikacionit</string>
+    <string name="databases">Baza e të dhënave</string>
+    <string name="long_integer_value">Vlera e gjatë e plotë</string>
+    <string name="usage_access">Qasja e përdorimit</string>
+    <string name="pref_about_msg">Versioni i menaxherit të aplikacionit, licenca, kreditet, etj.</string>
+    <string name="navigation">Navigimi</string>
+    <string name="pref_import_watt">Importo nga Watt</string>
+    <string name="night">Natë</string>
+    <string name="pref_import_export_blocking_rules_msg">Rregullat e importit/eksportit, importoni rregullat e jashtme nga Watt ose Blocker.</string>
+    <string name="pref_import_blocker_msg">Importoni rregullat e bllokimit nga Blocker, çdo skedar përmban rregulla për një paketë të vetme.</string>
+    <string name="select_theme">Tema</string>
+    <string name="pref_export_msg">Eksporto rregullat e bllokimit të konfiguruara brenda Menaxherit të Aplikacioneve në hapësirën ruajtëse të jashtme.</string>
+    <string name="error_evaluating_input">Imput-i nuk mund të vlerësohej</string>
+    <string name="test_only">Vetëm test</string>
+    <string name="boolean_value">Vlera Boolean</string>
+    <string name="type_float">Numer deçimal</string>
+    <string name="str_logo">Logoja</string>
+    <string name="no_content">S\'ka përmbajtje</string>
+    <string name="sort_by_last_used">Përdorur për herë të fundit</string>
+    <string name="grant_usage_access">Lejo aksesin e përdorimit</string>
+    <string name="saved_successfully">U ruajt</string>
+    <string name="reset_to_default">Rivendos si ishte më parë</string>
+    <string name="share_apk">Shpërnda APK-në</string>
+    <string name="sort_by_times_opened">Kohët u hapën</string>
+    <string name="select_type">Zgjidh tipin</string>
+    <string name="uninstall_system_app_message">Ky është një aplikacion sistemi. Je i sigurt që dëshiron ta ç\'instalosh këtë aplikacion\?</string>
+    <string name="pref_global_blocking_enabled">Bllokim i menjëhershëm i komponentëve</string>
+    <string name="rules_not_applied">Rregullat nuk jane te aplikuara</string>
+    <string name="save">Ruaj</string>
+    <string name="type_long">i plotë i gjatë</string>
+    <string name="string_value">Vlerat e vargut</string>
+    <string name="sort_by_wifi_data">Të dhënat Wi-Fi</string>
+    <string name="sort_by_app_ops_names">Emri i funksioneve të aplikacionit</string>
+    <string name="deleted_successfully">E fshirë</string>
+    <string name="failed_to_uninstall">Could not uninstall <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="failed_to_disable_op">Operacioni i aplikacionit të kërkuar nuk mund të ç,tivizohet</string>
+    <string name="second_degree_tracker_note">² prefiksi tregon se gjurmuesit janë në <a href="https://etip.exodus-privacy.eu.org/">ETIP stand-by list</a> i.e. nëse ata janë gjurmues të vërtetë janë ende duke u hetuar.</string>
+    <string name="delete">Fshije</string>
+    <string name="no_usage_in_this_time_range">Nuk ka përdorim në këtë interval kohor</string>
+    <string name="debuggable">Debuggable</string>
+    <string name="sort_by_mobile_data">Të dhënat celulare</string>
+    <string name="failed_to_stop">Nuk mund të ndalohet <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="sort_by_blocked_components">Të blllokuarat se pari</string>
+    <string name="requested_large_heap">Grumbull i madh</string>
+    <string name="failed_to_enable_op">Operacioni i aplikacionit të kërkuar nuk mund të aktivizohet</string>
+    <string name="sort_by_denied_app_ops">Të mohuarat së pari</string>
+    <string name="type_string">Karakteret</string>
+    <string name="no_app_ops">Asnjë operacion aplikacioni</string>
+    <string name="apply">Apliko</string>
+    <string name="disabled_app">Ç\'aktivizuar</string>
+    <string name="deletion_failed">Fshirja dështoi</string>
+    <string name="the_import_was_successful">I importuar</string>
+    <string name="go_back">Kthehu mbrapa</string>
+    <string name="permission_name">Emri i lejes</string>
+    <string name="go">Shko</string>
+    <string name="mode">Modaliteti</string>
+    <plurals name="usage_hours">
+        <item quantity="one">%1$d hr</item>
+        <item quantity="other">%1$d hrs</item>
+    </plurals>
+    <plurals name="alert_failed_to_disable">
+        <item quantity="one">%1$d aplikacion nuk mund të çaktivizohet</item>
+        <item quantity="other">%1$d aplikacionet nuk mund të çaktivizohen</item>
+    </plurals>
+    <plurals name="tracker_and_classes">
+        <item quantity="one">1 tracker with <xliff:g id="class_no" example="50">%1$d</xliff:g> class</item>
+        <item quantity="other">1 tracker with <xliff:g id="class_no" example="50">%1$d</xliff:g> classes</item>
+    </plurals>
+    <plurals name="two_trackers_and_classes">
+        <item quantity="one">2 trackers with <xliff:g id="class_no" example="50">%1$d</xliff:g> classes</item>
+        <item quantity="other">2 trackers with <xliff:g id="class_no" example="50">%1$d</xliff:g> classes</item>
+    </plurals>
+    <plurals name="main_list_date_days">
+        <item quantity="one"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> day</item>
+        <item quantity="other"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> days</item>
+    </plurals>
+    <plurals name="usage_seconds">
+        <item quantity="one">%1$d sec</item>
+        <item quantity="other">%1$d secs</item>
+    </plurals>
+    <plurals name="no_of_times_opened">
+        <item quantity="one">%1$d koh</item>
+        <item quantity="other">%1$d kohet</item>
+    </plurals>
+    <plurals name="alert_failed_to_clear_data">
+        <item quantity="one">Nuk mund të pastrohen të dhënat nga aplikacioni %1$d</item>
+        <item quantity="other">Nuk mund të pastrohen të dhënat nga %1$d aplikacionet</item>
+    </plurals>
+    <plurals name="alert_failed_to_force_stop">
+        <item quantity="one">Aplikacioni %1$d nuk mund të ndalohet me forcë</item>
+        <item quantity="other">Aplikacionet %1$d nuk mund të ndalohen me forcë</item>
+    </plurals>
+    <plurals name="alert_failed_to_uninstall">
+        <item quantity="one">%1$d aplikacioni nuk mund të çinstalohet</item>
+        <item quantity="other">%1$d aplikacionet nuk mund të çinstalohen</item>
+    </plurals>
+    <plurals name="usage_minutes">
+        <item quantity="one">%1$d min</item>
+        <item quantity="other">%1$d mins</item>
+    </plurals>
+    <string name="usage_less_than_a_minute">Më pak se një minutë</string>
+    <string name="discard">Hidhe</string>
+    <string name="usage_yesterday">Dje</string>
+    <string name="app_usage">Përdorimi aplikacionit</string>
+    <string name="key_name">Emri kyç</string>
+    <string name="enable">Aktivizo</string>
+    <string name="failed_to_disable">Nuk mund të Ç\'aktivizohet<xliff:g id="emri-app-it" shembull="App Manager">%1$s</xliff:g>.</string>
+    <string name="failed_to_enable">Nuk mund të aktivizohet <xliff:g id="emri_app-it" shembull="App Manager">%1$s</xliff:g>.</string>
+    <string name="external_multiple_data_dir">Vendndodhja e të dhënave të jashtme <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
+    <string name="app_settings">Cilësimet</string>
+    <string name="running_apps">Aplikacionet ne ekzekutim</string>
+    <string name="clear_data">Pastro te dhënat</string>
+    <plurals name="alert_failed_to_disable_background">
+        <item quantity="one">Nuk mund të parandalohet %1$d aplikacioni që ekzekutohet në sfond</item>
+        <item quantity="other">Nuk mund të parandalohen %1$d aplikacionet që ekzekutohen në sfond</item>
+    </plurals>
+    <string name="reject_time">Refuzo kohën</string>
+    <string name="pref_export">Eksporto</string>
+    <string name="class_viewer">Shikuesi i klasës</string>
+    <string name="toggle_class_listing">Aktivizo/Ç\'aktivizo listën e klasave</string>
+    <string name="found_trackers">Gjurmuesit e gjetur:</string>
+    <string name="tracker_details">Detajet e gjurmuesit</string>
+    <string name="tracker_classes">Klasat e gjrmuesit</string>
+    <string name="all_classes">Të gjitha klasat</string>
+    <string name="no_shared_libs">S\'ka librari te shperndara</string>
+    <string name="no_tracker_class">S\'ka klasa gjurmuesi</string>
+    <plurals name="other_trackers_and_classes">
+        <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> trackers with <xliff:g id="class_no" example="50">%2$d</xliff:g> classes</item>
+        <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> trackers with <xliff:g id="class_no" example="50">%2$d</xliff:g> classes</item>
+    </plurals>
+    <plurals name="usage_months">
+        <item quantity="one">%1$d mo</item>
+        <item quantity="other">%1$d mos</item>
+    </plurals>
+    <plurals name="usage_days">
+        <item quantity="one">%1$d day</item>
+        <item quantity="other">%1$d days</item>
+    </plurals>
 </resources>
