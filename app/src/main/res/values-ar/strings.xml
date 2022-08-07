@@ -1358,4 +1358,6 @@
     <string name="view_changelog">اكتشف الجديد في هذا الإصدار</string>
     <string name="sort_by_total_size">الحجم الإجمالي</string>
     <string name="am_command">الأمر <tt>am</tt></string>
+    <string name="pref_sign_apk_error_signing_key_not_added">مطلوب مفتاح توقيع صالح لتوقيع ملف APK.</string>
+    <string name="pref_sign_apk_no_signing_key">لا يوجد مفتاح توقيع</string>
 </resources>
