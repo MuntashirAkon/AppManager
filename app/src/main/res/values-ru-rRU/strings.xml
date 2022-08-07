@@ -1280,4 +1280,9 @@
     <string name="changelog_type_fix">Исправления</string>
     <string name="changelog_type_improve">Улучшения</string>
     <string name="unsupported_split_apk">Не поддерживается</string>
+    <string name="view_changelog">Узнайте, что нового в этом релизе</string>
+    <string name="sort_by_total_size">Общий размер</string>
+    <string name="am_command">Команда <tt>am</tt></string>
+    <string name="pref_sign_apk_no_signing_key">Нет ключа подписи</string>
+    <string name="pref_sign_apk_error_signing_key_not_added">Для подписи APK-файла требуется действительный ключ подписи.</string>
 </resources>
