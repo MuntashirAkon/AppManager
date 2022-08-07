@@ -112,30 +112,6 @@
         <item>rollback-whitelisted-app</item>
         <item>whitelisted-staged-installer</item>
     </string-array>
-    <string-array name="profiles">
-        <item>aosp</item>
-        <item>asus</item>
-        <item>us_carriers</item>
-        <item>french_carriers</item>
-        <item>german_carriers</item>
-        <item>google</item>
-        <item>huawei</item>
-        <item>lge</item>
-        <item>amazon</item>
-        <item>facebook</item>
-        <item>microsoft</item>
-        <item>qualcomm</item>
-        <item>misc</item>
-        <item>mediatek</item>
-        <item>motorola</item>
-        <item>nokia</item>
-        <item>oneplus</item>
-        <item>oppo</item>
-        <item>samsung</item>
-        <item>sony</item>
-        <item>xiaomi</item>
-        <item>zte</item>
-    </string-array>
     <string-array name="sig_schemes">
         <item>@string/v1_scheme</item>
         <item>@string/v2_scheme</item>

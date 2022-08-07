@@ -49,7 +49,6 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
     public static final String EXTRA_PROFILE_NAME = "prof";
     public static final String EXTRA_NEW_PROFILE_NAME = "new_prof";
     public static final String EXTRA_NEW_PROFILE = "new";
-    public static final String EXTRA_IS_PRESET = "preset";
     public static final String EXTRA_SHORTCUT_TYPE = "shortcut";
     public static final String EXTRA_STATE = "state";
 
@@ -91,7 +90,6 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
             } else shortcutType = ST_NONE;
         }
         boolean newProfile = getIntent().getBooleanExtra(EXTRA_NEW_PROFILE, false);
-        boolean isPreset = getIntent().getBooleanExtra(EXTRA_IS_PRESET, false);
         @Nullable String newProfileName;
         if (newProfile) {
             newProfileName = getIntent().getStringExtra(EXTRA_NEW_PROFILE_NAME);
@@ -137,7 +135,7 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
         model.setProfileName(profileName == null ? newProfileName : profileName, newProfile);
         if (newProfileName != null) {
             // Requested a new profile, clone profile
-            model.loadAndCloneProfile(newProfileName, isPreset, profileName);
+            model.loadAndCloneProfile(newProfileName);
         } else model.loadProfile();
         mViewPager = findViewById(R.id.pager);
         mViewPager.addOnPageChangeListener(this);
@@ -224,7 +222,7 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
                             getSupportActionBar().setTitle(profName.toString());
                         }
                         //noinspection ConstantConditions
-                        model.cloneProfile(profName.toString(), false, "");
+                        model.cloneProfile(profName.toString());
                     })
                     .show();
         } else if (id == R.id.action_shortcut) {

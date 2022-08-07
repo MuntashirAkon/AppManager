@@ -137,14 +137,6 @@ public class ProfileMetaManager implements LocalizedString {
     }
 
     @NonNull
-    public static ProfileMetaManager fromPreset(@NonNull String profileName,
-                                                @NonNull String presetName)
-            throws JSONException {
-        String fileContents = FileUtils.getContentFromAssets(AppManager.getContext(), "profiles/" + presetName + ".am.json");
-        return fromJSONString(profileName, fileContents);
-    }
-
-    @NonNull
     public static ProfileMetaManager fromJSONString(@NonNull String profileName,
                                                     @NonNull String profileContents)
             throws JSONException {

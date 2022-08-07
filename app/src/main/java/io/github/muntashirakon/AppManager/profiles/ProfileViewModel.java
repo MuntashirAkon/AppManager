@@ -143,40 +143,31 @@ public class ProfileViewModel extends AndroidViewModel {
 
     @WorkerThread
     @GuardedBy("profileLock")
-    public void cloneProfileInternal(String profileName, boolean isPreset, String oldProfileName) {
+    public void cloneProfileInternal(String profileName) {
         setProfileName(profileName, true);
         synchronized (profileLock) {
-            if (isPreset) {
-                try {
-                    profileMetaManager = ProfileMetaManager.fromPreset(profileName, oldProfileName);
-                } catch (JSONException e) {
-                    // Fallback to default
-                    profileMetaManager = new ProfileMetaManager(profileName);
-                }
-            } else {
-                profileMetaManager = new ProfileMetaManager(profileName, profile);
-            }
+            profileMetaManager = new ProfileMetaManager(profileName, profile);
             profile = profileMetaManager.getProfile();
         }
     }
 
     @AnyThread
-    public void cloneProfile(String profileName, boolean isPreset, String oldProfileName) {
+    public void cloneProfile(String profileName) {
         executor.submit(() -> {
             if (profileMetaManager == null) loadProfileInternal();
-            cloneProfileInternal(profileName, isPreset, oldProfileName);
+            cloneProfileInternal(profileName);
             toast.postValue(new Pair<>(R.string.done, false));
             profileLoaded.postValue(profileMetaManager == null);
         });
     }
 
     @AnyThread
-    public void loadAndCloneProfile(String profileName, boolean isPreset, String oldProfileName) {
+    public void loadAndCloneProfile(String profileName) {
         executor.submit(() -> {
             if (profileMetaManager == null) {
                 loadProfileInternal();
             }
-            cloneProfileInternal(profileName, isPreset, oldProfileName);
+            cloneProfileInternal(profileName);
             profileLoaded.postValue(profileMetaManager == null);
         });
     }

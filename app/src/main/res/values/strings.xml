@@ -622,7 +622,6 @@
     <string name="systemless_app">Systemless App</string>
     <string name="open_pgp_provider">OpenPGP Provider</string>
     <string name="profiles">Profiles</string>
-    <string name="presets">Presets</string>
     <string name="no_profiles">No profiles</string>
     <string name="keystore">KeyStore</string>
     <string name="apply_now">Apply now…</string>
@@ -1365,4 +1364,8 @@
     <string name="search_option_regex">Regex</string>
     <string name="uninstall_app_again_message">The application was uninstalled without clearing data and signature. Do you want to completely uninstall it?</string>
     <string name="uninstall_app">Uninstall %1$s</string>
+    <string name="debloat_list_type">List</string>
+    <string name="debloat_removal_type">Type</string>
+    <string name="system_app_put_back">Put back</string>
+    <string name="debloater_title">Debloater</string>
 </resources>
