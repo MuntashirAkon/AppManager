@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
-import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.material.divider.MaterialDivider;
 import com.google.android.material.textview.MaterialTextView;
@@ -39,7 +38,7 @@ public class DebloaterRecyclerViewAdapter extends MultiSelectionView.Adapter<Deb
     private final Object mLock = new Object();
     private final ImageLoader mImageLoader = new ImageLoader();
 
-    public DebloaterRecyclerViewAdapter(FragmentActivity activity) {
+    public DebloaterRecyclerViewAdapter(DebloaterActivity activity) {
         highlightColor = ColorCodes.getListItemSelectionColor(activity);
         removalSafeColor = ColorCodes.getRemovalSafeIndicatorColor(activity);
         removalReplaceColor = ColorCodes.getRemovalReplaceIndicatorColor(activity);
@@ -119,26 +118,35 @@ public class DebloaterRecyclerViewAdapter extends MultiSelectionView.Adapter<Deb
 
     @Override
     protected void select(int position) {
-
+        // TODO: 7/8/22
     }
 
     @Override
     protected void deselect(int position) {
+        // TODO: 7/8/22
+    }
 
+    @Override
+    protected void cancelSelection() {
+        super.cancelSelection();
+        // TODO: 7/8/22
     }
 
     @Override
     protected boolean isSelected(int position) {
+        // TODO: 7/8/22
         return false;
     }
 
     @Override
     protected int getSelectedItemCount() {
+        // TODO: 7/8/22
         return 0;
     }
 
     @Override
     protected int getTotalItemCount() {
+        // TODO: 7/8/22
         return 0;
     }
 

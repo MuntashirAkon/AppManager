@@ -32,62 +32,11 @@
     </io.github.muntashirakon.widget.AppBarLayout>
 
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:focusable="false"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
-
-        <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:visibility="gone">
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.AppTheme.TextInputLayout.ExposedDropdownMenu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="@string/debloat_list_type"
-                android:paddingStart="@dimen/padding_medium"
-                android:paddingEnd="@dimen/padding_small"
-                app:hintAnimationEnabled="true"
-                app:hintEnabled="true">
-
-                <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                    android:id="@+id/action_list_type"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textNoSuggestions"
-                    android:maxLines="1"
-                    tools:text="@tools:sample/full_names" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.AppTheme.TextInputLayout.ExposedDropdownMenu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="@string/debloat_removal_type"
-                android:paddingStart="@dimen/padding_small"
-                android:paddingEnd="@dimen/padding_medium"
-                app:hintAnimationEnabled="true"
-                app:hintEnabled="true">
-
-                <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                    android:id="@+id/action_removal_type"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textNoSuggestions"
-                    android:maxLines="1"
-                    tools:text="@tools:sample/full_names" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-        </androidx.appcompat.widget.LinearLayoutCompat>
 
         <com.google.android.material.switchmaterial.SwitchMaterial
             android:id="@+id/filter_installed_apps"

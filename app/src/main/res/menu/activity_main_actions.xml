@@ -46,6 +46,11 @@
         android:title="@string/apk_updater" />
 
     <item
+        android:id="@+id/action_debloater"
+        android:icon="@drawable/ic_clear"
+        android:title="@string/debloater_title" />
+
+    <item
         android:id="@+id/action_labs"
         android:icon="@drawable/ic_package"
         android:title="@string/title_labs_activity" />
