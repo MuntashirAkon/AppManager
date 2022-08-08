@@ -2,27 +2,58 @@
 
 package io.github.muntashirakon.AppManager.debloat;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.switchmaterial.SwitchMaterial;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
+import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
+import io.github.muntashirakon.AppManager.profiles.ProfileManager;
+import io.github.muntashirakon.AppManager.profiles.ProfileMetaManager;
+import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
+import io.github.muntashirakon.AppManager.utils.StoragePermission;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.reflow.ReflowMenuViewWrapper;
 import io.github.muntashirakon.widget.MultiSelectionView;
 import io.github.muntashirakon.widget.RecyclerView;
+
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
 public class DebloaterActivity extends BaseActivity implements MultiSelectionView.OnSelectionChangeListener, ReflowMenuViewWrapper.OnItemSelectedListener {
     DebloaterViewModel viewModel;
 
     private LinearProgressIndicator mProgressIndicator;
+    private MultiSelectionView mMultiSelectionView;
+
+    private final StoragePermission mStoragePermission = StoragePermission.init(this);
+    private final BroadcastReceiver mBatchOpsBroadCastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (mProgressIndicator != null) {
+                mProgressIndicator.hide();
+            }
+        }
+    };
 
     @Override
     protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
@@ -40,17 +71,29 @@ public class DebloaterActivity extends BaseActivity implements MultiSelectionVie
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         DebloaterRecyclerViewAdapter adapter = new DebloaterRecyclerViewAdapter(this);
         recyclerView.setAdapter(adapter);
-        MultiSelectionView multiSelectionView = findViewById(R.id.selection_view);
-        multiSelectionView.setAdapter(adapter);
-        multiSelectionView.hide();
-        multiSelectionView.setOnItemSelectedListener(this);
-        multiSelectionView.setOnSelectionChangeListener(this);
+        mMultiSelectionView = findViewById(R.id.selection_view);
+        mMultiSelectionView.setAdapter(adapter);
+        mMultiSelectionView.hide();
+        mMultiSelectionView.setOnItemSelectedListener(this);
+        mMultiSelectionView.setOnSelectionChangeListener(this);
 
         viewModel.getDebloatObjectLiveData().observe(this, debloatObjects -> {
             mProgressIndicator.hide();
             adapter.setAdapterList(debloatObjects);
         });
         viewModel.loadPackages();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(mBatchOpsBroadCastReceiver, new IntentFilter(BatchOpsService.ACTION_BATCH_OPS_COMPLETED));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(mBatchOpsBroadCastReceiver);
     }
 
     @Override
@@ -69,7 +112,87 @@ public class DebloaterActivity extends BaseActivity implements MultiSelectionVie
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // TODO: 7/8/22
-        return false;
+        int id = item.getItemId();
+        if (id == R.id.action_uninstall) {
+            handleBatchOpWithWarning(BatchOpsManager.OP_UNINSTALL);
+        } else if (id == R.id.action_put_back) {
+            // TODO: 8/8/22
+        } else if (id == R.id.action_enable_disable) {
+            new MaterialAlertDialogBuilder(this)
+                    .setTitle(R.string.enable_disable)
+                    .setMessage(R.string.choose_what_to_do)
+                    .setPositiveButton(R.string.disable, (dialog, which) -> handleBatchOp(BatchOpsManager.OP_DISABLE))
+                    .setNegativeButton(R.string.cancel, null)
+                    .setNeutralButton(R.string.enable, (dialog, which) -> handleBatchOp(BatchOpsManager.OP_ENABLE))
+                    .show();
+        } else if (id == R.id.action_save_apk) {
+            mStoragePermission.request(granted -> {
+                if (granted) handleBatchOp(BatchOpsManager.OP_BACKUP_APK);
+            });
+        } else if (id == R.id.action_block_unblock_trackers) {
+            new MaterialAlertDialogBuilder(this)
+                    .setTitle(R.string.block_unblock_trackers)
+                    .setMessage(R.string.choose_what_to_do)
+                    .setPositiveButton(R.string.block, (dialog, which) ->
+                            handleBatchOp(BatchOpsManager.OP_BLOCK_TRACKERS))
+                    .setNegativeButton(R.string.cancel, null)
+                    .setNeutralButton(R.string.unblock, (dialog, which) ->
+                            handleBatchOp(BatchOpsManager.OP_UNBLOCK_TRACKERS))
+                    .show();
+        } else if (id == R.id.action_new_profile) {
+            // TODO: 8/8/22
+        } else if (id == R.id.action_add_to_profile) {
+            List<ProfileMetaManager> profiles = ProfileManager.getProfileMetadata();
+            List<CharSequence> profileNames = new ArrayList<>(profiles.size());
+            for (ProfileMetaManager profileMetaManager : profiles) {
+                profileNames.add(new SpannableStringBuilder(profileMetaManager.getProfileName()).append("\n")
+                        .append(getSecondaryText(this, getSmallerText(profileMetaManager.toLocalizedString(this)))));
+            }
+            new SearchableMultiChoiceDialogBuilder<>(this, profiles, profileNames)
+                    .setTitle(R.string.add_to_profile)
+                    .setNegativeButton(R.string.cancel, null)
+                    .setPositiveButton(R.string.add, (dialog, which, selectedItems) -> {
+                        for (ProfileMetaManager metaManager : selectedItems) {
+                            try {
+                                metaManager.appendPackages(viewModel.getSelectedPackages().keySet());
+                                mMultiSelectionView.cancel();
+                                metaManager.writeProfile();
+                            } catch (Throwable e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        UIUtils.displayShortToast(R.string.done);
+                    })
+                    .show();
+        } else return false;
+        return true;
+    }
+
+    private void handleBatchOpWithWarning(@BatchOpsManager.OpType int op) {
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(R.string.are_you_sure)
+                .setMessage(R.string.this_action_cannot_be_undone)
+                .setPositiveButton(R.string.yes, (dialog, which) -> handleBatchOp(op))
+                .setNegativeButton(R.string.no, null)
+                .show();
+    }
+
+    private void handleBatchOp(@BatchOpsManager.OpType int op) {
+        handleBatchOp(op, null);
+    }
+
+    private void handleBatchOp(@BatchOpsManager.OpType int op, @Nullable Bundle args) {
+        if (viewModel == null) return;
+        if (mProgressIndicator != null) {
+            mProgressIndicator.show();
+        }
+        Intent intent = new Intent(this, BatchOpsService.class);
+        BatchOpsManager.Result input = new BatchOpsManager.Result(viewModel.getSelectedPackagesWithUsers());
+        intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, input.getFailedPackages());
+        intent.putIntegerArrayListExtra(BatchOpsService.EXTRA_OP_USERS, input.getAssociatedUserHandles());
+        intent.putExtra(BatchOpsService.EXTRA_OP, op);
+        intent.putExtra(BatchOpsService.EXTRA_OP_EXTRA_ARGS, args);
+        ContextCompat.startForegroundService(this, intent);
+        mMultiSelectionView.cancel();
     }
 }

@@ -288,7 +288,7 @@
         <activity
             android:name=".debloat.DebloaterActivity"
             android:label="@string/debloater_title"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".details.AppDetailsActivity"
             android:exported="false" />

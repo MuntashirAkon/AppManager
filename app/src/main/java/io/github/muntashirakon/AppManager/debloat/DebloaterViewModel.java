@@ -7,6 +7,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.RemoteException;
+import android.os.UserHandleHidden;
 
 import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
@@ -19,14 +20,17 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.db.entity.App;
 import io.github.muntashirakon.AppManager.db.utils.AppDb;
+import io.github.muntashirakon.AppManager.types.UserPackagePair;
+import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -35,7 +39,7 @@ public class DebloaterViewModel extends AndroidViewModel {
     private boolean filterInstalledApps = true;
     private DebloatObject[] mDebloatObjects;
 
-    private final Set<String> mSelectedPackages = new HashSet<>();
+    private final Map<String, int[]> mSelectedPackages = new HashMap<>();
     private final MutableLiveData<List<DebloatObject>> mDebloatObjectLiveData = new MutableLiveData<>();
     private final ExecutorService mExecutor = MultithreadedExecutor.getNewInstance();
     private final Gson mGson = new Gson();
@@ -62,7 +66,7 @@ public class DebloaterViewModel extends AndroidViewModel {
     }
 
     public void select(@NonNull DebloatObject debloatObject) {
-        mSelectedPackages.add(debloatObject.packageName);
+        mSelectedPackages.put(debloatObject.packageName, debloatObject.getUsers());
     }
 
     public void deselect(@NonNull DebloatObject debloatObject) {
@@ -74,7 +78,32 @@ public class DebloaterViewModel extends AndroidViewModel {
     }
 
     public boolean isSelected(@NonNull DebloatObject debloatObject) {
-        return mSelectedPackages.contains(debloatObject.packageName);
+        return mSelectedPackages.containsKey(debloatObject.packageName);
+    }
+
+    public Map<String, int[]> getSelectedPackages() {
+        return mSelectedPackages;
+    }
+
+    @NonNull
+    public ArrayList<UserPackagePair> getSelectedPackagesWithUsers() {
+        ArrayList<UserPackagePair> userPackagePairs = new ArrayList<>();
+        int myUserId = UserHandleHidden.myUserId();
+        int[] userIds = Users.getUsersIds();
+        for (String packageName : mSelectedPackages.keySet()) {
+            int[] userHandles = mSelectedPackages.get(packageName);
+            if (userHandles == null || userHandles.length == 0) {
+                // Could be a backup only item
+                // Assign current user in it
+                userPackagePairs.add(new UserPackagePair(packageName, myUserId));
+            } else {
+                for (int userHandle : userHandles) {
+                    if (!ArrayUtils.contains(userIds, userHandle)) continue;
+                    userPackagePairs.add(new UserPackagePair(packageName, userHandle));
+                }
+            }
+        }
+        return userPackagePairs;
     }
 
     @AnyThread
