@@ -52,6 +52,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
+                android:textIsSelectable="true"
+                android:ellipsize="end"
                 android:textAppearance="?attr/textAppearanceTitleSmall"
                 tools:text="@string/app_name" />
 
@@ -60,6 +62,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
+                android:textIsSelectable="true"
+                android:ellipsize="end"
                 android:textAppearance="?attr/textAppearanceBodyMedium"
                 android:textStyle="italic"
                 tools:text="io.github.muntashirakon.AppManager" />
@@ -71,6 +75,7 @@
                 android:textAppearance="?attr/textAppearanceBodySmall"
                 android:textSize="10sp"
                 android:autoLink="web"
+                android:textIsSelectable="true"
                 tools:text="@tools:sample/lorem/random"
                 tools:ignore="SmallSp" />
 

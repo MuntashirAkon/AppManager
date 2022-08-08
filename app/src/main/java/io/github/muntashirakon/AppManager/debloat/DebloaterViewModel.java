@@ -19,7 +19,9 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
@@ -33,6 +35,7 @@ public class DebloaterViewModel extends AndroidViewModel {
     private boolean filterInstalledApps = true;
     private DebloatObject[] mDebloatObjects;
 
+    private final Set<String> mSelectedPackages = new HashSet<>();
     private final MutableLiveData<List<DebloatObject>> mDebloatObjectLiveData = new MutableLiveData<>();
     private final ExecutorService mExecutor = MultithreadedExecutor.getNewInstance();
     private final Gson mGson = new Gson();
@@ -48,6 +51,30 @@ public class DebloaterViewModel extends AndroidViewModel {
 
     public LiveData<List<DebloatObject>> getDebloatObjectLiveData() {
         return mDebloatObjectLiveData;
+    }
+
+    public int getTotalItemCount() {
+        return mDebloatObjects != null ? mDebloatObjects.length : 0;
+    }
+
+    public int getSelectedItemCount() {
+        return mSelectedPackages.size();
+    }
+
+    public void select(@NonNull DebloatObject debloatObject) {
+        mSelectedPackages.add(debloatObject.packageName);
+    }
+
+    public void deselect(@NonNull DebloatObject debloatObject) {
+        mSelectedPackages.remove(debloatObject.packageName);
+    }
+
+    public void deselectAll() {
+        mSelectedPackages.clear();
+    }
+
+    public boolean isSelected(@NonNull DebloatObject debloatObject) {
+        return mSelectedPackages.contains(debloatObject.packageName);
     }
 
     @AnyThread
@@ -81,20 +108,21 @@ public class DebloaterViewModel extends AndroidViewModel {
         for (DebloatObject debloatObject : mDebloatObjects) {
             List<App> apps = appDb.getAllApplications(debloatObject.packageName);
             for (App app : apps) {
-                if (app.isInstalled) {
-                    debloatObject.setInstalled(true);
-                    debloatObject.addUser(app.userId);
-                    if (debloatObject.getPackageInfo() == null) {
-                        try {
-                            PackageInfo pi = PackageManagerCompat.getPackageInfo(debloatObject.packageName, PackageUtils.flagMatchUninstalled, app.userId);
-                            ApplicationInfo ai = pi.applicationInfo;
-                            if ((ai.flags & ApplicationInfo.FLAG_INSTALLED) != 0) {
-                                // Reset installed
-                                debloatObject.setInstalled(true);
-                            }
-                            debloatObject.setPackageInfo(pi);
-                        } catch (RemoteException | PackageManager.NameNotFoundException ignore) {
+                if (!app.isInstalled) {
+                    continue;
+                }
+                debloatObject.setInstalled(true);
+                debloatObject.addUser(app.userId);
+                if (debloatObject.getPackageInfo() == null) {
+                    try {
+                        PackageInfo pi = PackageManagerCompat.getPackageInfo(debloatObject.packageName, PackageUtils.flagMatchUninstalled, app.userId);
+                        ApplicationInfo ai = pi.applicationInfo;
+                        if ((ai.flags & ApplicationInfo.FLAG_INSTALLED) != 0) {
+                            // Reset installed
+                            debloatObject.setInstalled(true);
                         }
+                        debloatObject.setPackageInfo(pi);
+                    } catch (RemoteException | PackageManager.NameNotFoundException ignore) {
                     }
                 }
             }

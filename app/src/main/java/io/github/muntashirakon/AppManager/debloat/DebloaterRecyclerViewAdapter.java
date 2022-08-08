@@ -11,6 +11,8 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.color.MaterialColors;
 import com.google.android.material.divider.MaterialDivider;
 import com.google.android.material.textview.MaterialTextView;
 
@@ -35,8 +37,11 @@ public class DebloaterRecyclerViewAdapter extends MultiSelectionView.Adapter<Deb
     private final int removalCautionColor;
     @ColorInt
     private final int removalUnsafeColor;
+    @ColorInt
+    private final int colorSurface;
     private final Object mLock = new Object();
     private final ImageLoader mImageLoader = new ImageLoader();
+    private final DebloaterViewModel mViewModel;
 
     public DebloaterRecyclerViewAdapter(DebloaterActivity activity) {
         highlightColor = ColorCodes.getListItemSelectionColor(activity);
@@ -44,6 +49,8 @@ public class DebloaterRecyclerViewAdapter extends MultiSelectionView.Adapter<Deb
         removalReplaceColor = ColorCodes.getRemovalReplaceIndicatorColor(activity);
         removalCautionColor = ColorCodes.getRemovalCautionIndicatorColor(activity);
         removalUnsafeColor = ColorCodes.getRemovalUnsafeIndicatorColor(activity);
+        colorSurface = MaterialColors.getColor(activity, R.attr.colorSurface, DebloaterRecyclerViewAdapter.class.getCanonicalName());
+        mViewModel = activity.viewModel;
     }
 
     public void setAdapterList(List<DebloatObject> adapterList) {
@@ -99,6 +106,17 @@ public class DebloaterRecyclerViewAdapter extends MultiSelectionView.Adapter<Deb
                 holder.removalIndicator.setDividerColor(removalUnsafeColor);
                 break;
         }
+        holder.itemView.setOnLongClickListener(v -> {
+            toggleSelection(position);
+            return true;
+        });
+        holder.imageView.setOnClickListener(v -> toggleSelection(position));
+        holder.itemView.setOnClickListener(v -> {
+            if (isInSelectionMode()) {
+                toggleSelection(position);
+            }
+        });
+        holder.itemView.setCardBackgroundColor(colorSurface);
         super.onBindViewHolder(holder, position);
     }
 
@@ -118,39 +136,43 @@ public class DebloaterRecyclerViewAdapter extends MultiSelectionView.Adapter<Deb
 
     @Override
     protected void select(int position) {
-        // TODO: 7/8/22
+        synchronized (mLock) {
+            mViewModel.select(mAdapterList.get(position));
+        }
     }
 
     @Override
     protected void deselect(int position) {
-        // TODO: 7/8/22
+        synchronized (mLock) {
+            mViewModel.deselect(mAdapterList.get(position));
+        }
     }
 
     @Override
     protected void cancelSelection() {
         super.cancelSelection();
-        // TODO: 7/8/22
+        mViewModel.deselectAll();
     }
 
     @Override
     protected boolean isSelected(int position) {
-        // TODO: 7/8/22
-        return false;
+        synchronized (mLock) {
+            return mViewModel.isSelected(mAdapterList.get(position));
+        }
     }
 
     @Override
     protected int getSelectedItemCount() {
-        // TODO: 7/8/22
-        return 0;
+        return mViewModel.getSelectedItemCount();
     }
 
     @Override
     protected int getTotalItemCount() {
-        // TODO: 7/8/22
-        return 0;
+        return mViewModel.getTotalItemCount();
     }
 
     public static class ViewHolder extends MultiSelectionView.ViewHolder {
+        public final MaterialCardView itemView;
         public final MaterialDivider removalIndicator;
         public final AppCompatImageView imageView;
         public final MaterialTextView listTypeView;
@@ -160,6 +182,7 @@ public class DebloaterRecyclerViewAdapter extends MultiSelectionView.Adapter<Deb
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
+            this.itemView = (MaterialCardView) itemView;
             removalIndicator = itemView.findViewById(R.id.divider);
             imageView = itemView.findViewById(R.id.icon);
             listTypeView = itemView.findViewById(R.id.list_type);

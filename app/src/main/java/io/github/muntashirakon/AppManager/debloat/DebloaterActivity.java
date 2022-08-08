@@ -15,11 +15,13 @@ import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.reflow.ReflowMenuViewWrapper;
 import io.github.muntashirakon.widget.MultiSelectionView;
 import io.github.muntashirakon.widget.RecyclerView;
 
-public class DebloaterActivity extends BaseActivity {
-    private DebloaterViewModel mViewModel;
+public class DebloaterActivity extends BaseActivity implements MultiSelectionView.OnSelectionChangeListener, ReflowMenuViewWrapper.OnItemSelectedListener {
+    DebloaterViewModel viewModel;
+
     private LinearProgressIndicator mProgressIndicator;
 
     @Override
@@ -27,12 +29,12 @@ public class DebloaterActivity extends BaseActivity {
         setContentView(R.layout.activity_debloater);
         setSupportActionBar(findViewById(R.id.toolbar));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mViewModel = new ViewModelProvider(this).get(DebloaterViewModel.class);
+        viewModel = new ViewModelProvider(this).get(DebloaterViewModel.class);
 
         mProgressIndicator = findViewById(R.id.progress_linear);
         mProgressIndicator.show();
         SwitchMaterial filterInstalled = findViewById(R.id.filter_installed_apps);
-        filterInstalled.setOnCheckedChangeListener((buttonView, isChecked) -> mViewModel.setFilterInstalledApps(isChecked));
+        filterInstalled.setOnCheckedChangeListener((buttonView, isChecked) -> viewModel.setFilterInstalledApps(isChecked));
 
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -41,12 +43,14 @@ public class DebloaterActivity extends BaseActivity {
         MultiSelectionView multiSelectionView = findViewById(R.id.selection_view);
         multiSelectionView.setAdapter(adapter);
         multiSelectionView.hide();
+        multiSelectionView.setOnItemSelectedListener(this);
+        multiSelectionView.setOnSelectionChangeListener(this);
 
-        mViewModel.getDebloatObjectLiveData().observe(this, debloatObjects -> {
+        viewModel.getDebloatObjectLiveData().observe(this, debloatObjects -> {
             mProgressIndicator.hide();
             adapter.setAdapterList(debloatObjects);
         });
-        mViewModel.loadPackages();
+        viewModel.loadPackages();
     }
 
     @Override
@@ -56,5 +60,16 @@ public class DebloaterActivity extends BaseActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSelectionChange(int selectionCount) {
+        // TODO: 7/8/22
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        // TODO: 7/8/22
+        return false;
     }
 }
