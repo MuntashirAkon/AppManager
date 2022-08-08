@@ -100,9 +100,7 @@ public class ProfilesActivity extends BaseActivity {
                     // Reload page
                     new Thread(() -> model.loadProfiles()).start();
                     // Load imported profile
-                    Intent intent = new Intent(this, AppsProfileActivity.class);
-                    intent.putExtra(AppsProfileActivity.EXTRA_PROFILE_NAME, manager.getProfileName());
-                    startActivity(intent);
+                    startActivity(AppsProfileActivity.getProfileIntent(this, manager.getProfileName()));
                 } catch (IOException | JSONException | RemoteException e) {
                     Log.e(TAG, "Error: ", e);
                     Toast.makeText(this, R.string.import_failed, Toast.LENGTH_SHORT).show();
@@ -130,11 +128,8 @@ public class ProfilesActivity extends BaseActivity {
                 .setNegativeButton(R.string.cancel, null)
                 .setPositiveButton(R.string.go, (dialog, which, profName, isChecked) -> {
                     if (!TextUtils.isEmpty(profName)) {
-                        Intent intent = new Intent(this, AppsProfileActivity.class);
                         //noinspection ConstantConditions
-                        intent.putExtra(AppsProfileActivity.EXTRA_NEW_PROFILE_NAME, profName.toString());
-                        intent.putExtra(AppsProfileActivity.EXTRA_NEW_PROFILE, true);
-                        startActivity(intent);
+                        startActivity(AppsProfileActivity.getNewProfileIntent(this, profName.toString()));
                     }
                 })
                 .show());
@@ -238,11 +233,8 @@ public class ProfilesActivity extends BaseActivity {
             }
             CharSequence value = mAdapterMap.get(profName);
             holder.summary.setText(value != null ? value : "");
-            holder.itemView.setOnClickListener(v -> {
-                Intent intent = new Intent(activity, AppsProfileActivity.class);
-                intent.putExtra(AppsProfileActivity.EXTRA_PROFILE_NAME, profName);
-                activity.startActivity(intent);
-            });
+            holder.itemView.setOnClickListener(v ->
+                    activity.startActivity(AppsProfileActivity.getProfileIntent(activity, profName)));
             holder.itemView.setOnLongClickListener(v -> {
                 PopupMenu popupMenu = new PopupMenu(activity, v);
                 popupMenu.inflate(R.menu.activity_profiles_popup_actions);
@@ -286,12 +278,9 @@ public class ProfilesActivity extends BaseActivity {
                                 .setNegativeButton(R.string.cancel, null)
                                 .setPositiveButton(R.string.go, (dialog, which, newProfName, isChecked) -> {
                                     if (!TextUtils.isEmpty(newProfName)) {
-                                        Intent intent = new Intent(activity, AppsProfileActivity.class);
-                                        intent.putExtra(AppsProfileActivity.EXTRA_PROFILE_NAME, profName);
                                         //noinspection ConstantConditions
-                                        intent.putExtra(AppsProfileActivity.EXTRA_NEW_PROFILE_NAME, newProfName.toString());
-                                        intent.putExtra(AppsProfileActivity.EXTRA_NEW_PROFILE, true);
-                                        activity.startActivity(intent);
+                                        activity.startActivity(AppsProfileActivity.getCloneProfileIntent(activity,
+                                                profName, newProfName.toString()));
                                     }
                                 })
                                 .show();
@@ -310,9 +299,7 @@ public class ProfilesActivity extends BaseActivity {
                                     if (!isChecked) {
                                         return;
                                     }
-                                    Intent intent = new Intent(activity, AppsProfileActivity.class);
-                                    intent.putExtra(AppsProfileActivity.EXTRA_PROFILE_NAME, profName);
-                                    intent.putExtra(AppsProfileActivity.EXTRA_SHORTCUT_TYPE, shortcutTypes[which]);
+                                    Intent intent = AppsProfileActivity.getShortcutIntent(activity, profName, shortcutTypes[which], null);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                     LauncherIconCreator.createLauncherIcon(activity,

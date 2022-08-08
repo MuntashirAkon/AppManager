@@ -162,7 +162,18 @@ public class ProfileViewModel extends AndroidViewModel {
     }
 
     @AnyThread
-    public void loadAndCloneProfile(String profileName) {
+    public void loadNewProfile(@Nullable String[] initialPackages) {
+        executor.submit(() -> {
+            loadProfileInternal();
+            if (initialPackages != null) {
+                profile.packages = initialPackages;
+            }
+            profileLoaded.postValue(profileMetaManager == null);
+        });
+    }
+
+    @AnyThread
+    public void loadAndCloneProfile(@NonNull String profileName) {
         executor.submit(() -> {
             if (profileMetaManager == null) {
                 loadProfileInternal();

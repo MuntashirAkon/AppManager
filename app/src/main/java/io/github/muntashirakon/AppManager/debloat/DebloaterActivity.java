@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
@@ -27,11 +28,13 @@ import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
+import io.github.muntashirakon.AppManager.profiles.AppsProfileActivity;
 import io.github.muntashirakon.AppManager.profiles.ProfileManager;
 import io.github.muntashirakon.AppManager.profiles.ProfileMetaManager;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.StoragePermission;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 import io.github.muntashirakon.reflow.ReflowMenuViewWrapper;
 import io.github.muntashirakon.widget.MultiSelectionView;
 import io.github.muntashirakon.widget.RecyclerView;
@@ -140,7 +143,19 @@ public class DebloaterActivity extends BaseActivity implements MultiSelectionVie
                             handleBatchOp(BatchOpsManager.OP_UNBLOCK_TRACKERS))
                     .show();
         } else if (id == R.id.action_new_profile) {
-            // TODO: 8/8/22
+            new TextInputDialogBuilder(this, R.string.input_profile_name)
+                    .setTitle(R.string.new_profile)
+                    .setHelperText(R.string.input_profile_name_description)
+                    .setNegativeButton(R.string.cancel, null)
+                    .setPositiveButton(R.string.go, (dialog, which, profName, isChecked) -> {
+                        if (!TextUtils.isEmpty(profName)) {
+                            //noinspection ConstantConditions
+                            startActivity(AppsProfileActivity.getNewProfileIntent(this, profName.toString(),
+                                    viewModel.getSelectedPackages().keySet().toArray(new String[0])));
+                            mMultiSelectionView.cancel();
+                        }
+                    })
+                    .show();
         } else if (id == R.id.action_add_to_profile) {
             List<ProfileMetaManager> profiles = ProfileManager.getProfileMetadata();
             List<CharSequence> profileNames = new ArrayList<>(profiles.size());
