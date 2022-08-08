@@ -1282,4 +1282,6 @@
     <string name="view_changelog">Dowiedz się, co nowego w tej wersji</string>
     <string name="sort_by_total_size">Całkowity rozmiar</string>
     <string name="am_command">Polecenie <tt>am</tt></string>
+    <string name="pref_sign_apk_no_signing_key">Brak klucza podpisującego</string>
+    <string name="pref_sign_apk_error_signing_key_not_added">Do podpisania pliku APK wymagany jest ważny klucz podpisujący.</string>
 </resources>
