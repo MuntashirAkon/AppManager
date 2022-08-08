@@ -50,6 +50,8 @@ public class DebloatObject {
     private PackageInfo packageInfo;
     private int[] users;
     private boolean installed;
+    @Nullable
+    private Boolean systemApp = null;
 
     public String[] getDependencies() {
         return dependencies;
@@ -123,5 +125,17 @@ public class DebloatObject {
 
     public void setInstalled(boolean installed) {
         this.installed = installed;
+    }
+
+    public boolean isSystemApp() {
+        return Boolean.TRUE.equals(systemApp);
+    }
+
+    public boolean isUserApp() {
+        return Boolean.FALSE.equals(systemApp);
+    }
+
+    public void setSystemApp(@Nullable Boolean systemApp) {
+        this.systemApp = systemApp;
     }
 }

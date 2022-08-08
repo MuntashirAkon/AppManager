@@ -34,13 +34,15 @@ import io.github.muntashirakon.AppManager.db.utils.AppDb;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 public class DebloaterViewModel extends AndroidViewModel {
-    private boolean filterInstalledApps = true;
+    @DebloaterListOptions.Filter
+    private int mFilterFlags;
     private String mQueryString = null;
     @AdvancedSearchView.SearchType
     private int mQueryType;
@@ -53,10 +55,22 @@ public class DebloaterViewModel extends AndroidViewModel {
 
     public DebloaterViewModel(@NonNull Application application) {
         super(application);
+        mFilterFlags = AppPref.getInt(AppPref.PrefKey.PREF_DEBLOATER_FILTER_FLAGS_INT);
     }
 
-    public void setFilterInstalledApps(boolean filterInstalledApps) {
-        this.filterInstalledApps = filterInstalledApps;
+    public boolean hasFilterFlag(@DebloaterListOptions.Filter int flag) {
+        return (mFilterFlags & flag) != 0;
+    }
+
+    public void addFilterFlag(@DebloaterListOptions.Filter int flag) {
+        mFilterFlags |= flag;
+        AppPref.set(AppPref.PrefKey.PREF_DEBLOATER_FILTER_FLAGS_INT, mFilterFlags);
+        loadPackages();
+    }
+
+    public void removeFilterFlag(@DebloaterListOptions.Filter int flag) {
+        mFilterFlags &= ~flag;
+        AppPref.set(AppPref.PrefKey.PREF_DEBLOATER_FILTER_FLAGS_INT, mFilterFlags);
         loadPackages();
     }
 
@@ -106,7 +120,6 @@ public class DebloaterViewModel extends AndroidViewModel {
         for (String packageName : mSelectedPackages.keySet()) {
             int[] userHandles = mSelectedPackages.get(packageName);
             if (userHandles == null || userHandles.length == 0) {
-                // Could be a backup only item
                 // Assign current user in it
                 userPackagePairs.add(new UserPackagePair(packageName, myUserId));
             } else {
@@ -124,8 +137,54 @@ public class DebloaterViewModel extends AndroidViewModel {
         mExecutor.submit(() -> {
             loadDebloatObjects();
             List<DebloatObject> debloatObjects = new ArrayList<>();
-            for (DebloatObject debloatObject : mDebloatObjects) {
-                if (filterInstalledApps && debloatObject.isInstalled()) {
+            if (mFilterFlags != DebloaterListOptions.FILTER_NO_FILTER) {
+                for (DebloatObject debloatObject : mDebloatObjects) {
+                    // List
+                    if ((mFilterFlags & DebloaterListOptions.FILTER_LIST_AOSP) == 0 && debloatObject.type.equals("Aosp")) {
+                        continue;
+                    }
+                    if ((mFilterFlags & DebloaterListOptions.FILTER_LIST_OEM) == 0 && debloatObject.type.equals("Oem")) {
+                        continue;
+                    }
+                    if ((mFilterFlags & DebloaterListOptions.FILTER_LIST_CARRIER) == 0 && debloatObject.type.equals("Carrier")) {
+                        continue;
+                    }
+                    if ((mFilterFlags & DebloaterListOptions.FILTER_LIST_GOOGLE) == 0 && debloatObject.type.equals("Google")) {
+                        continue;
+                    }
+                    if ((mFilterFlags & DebloaterListOptions.FILTER_LIST_MISC) == 0 && debloatObject.type.equals("Misc")) {
+                        continue;
+                    }
+                    if ((mFilterFlags & DebloaterListOptions.FILTER_LIST_PENDING) == 0 && debloatObject.type.equals("Pending")) {
+                        continue;
+                    }
+                    // Removal
+                    int removalType = debloatObject.getRemoval();
+                    if ((mFilterFlags & DebloaterListOptions.FILTER_REMOVAL_SAFE) == 0 && removalType == DebloatObject.REMOVAL_SAFE) {
+                        continue;
+                    }
+                    if ((mFilterFlags & DebloaterListOptions.FILTER_REMOVAL_REPLACE) == 0 && removalType == DebloatObject.REMOVAL_REPLACE) {
+                        continue;
+                    }
+                    if ((mFilterFlags & DebloaterListOptions.FILTER_REMOVAL_CAUTION) == 0 && removalType == DebloatObject.REMOVAL_CAUTION) {
+                        continue;
+                    }
+                    if ((mFilterFlags & DebloaterListOptions.FILTER_REMOVAL_UNSAFE) == 0 && removalType == DebloatObject.REMOVAL_UNSAFE) {
+                        continue;
+                    }
+                    // Filter others
+                    if ((mFilterFlags & DebloaterListOptions.FILTER_INSTALLED_APPS) != 0 && !debloatObject.isInstalled()) {
+                        continue;
+                    }
+                    if ((mFilterFlags & DebloaterListOptions.FILTER_UNINSTALLED_APPS) != 0 && debloatObject.isInstalled()) {
+                        continue;
+                    }
+                    if ((mFilterFlags & DebloaterListOptions.FILTER_USER_APPS) != 0 && !debloatObject.isUserApp()) {
+                        continue;
+                    }
+                    if ((mFilterFlags & DebloaterListOptions.FILTER_SYSTEM_APPS) != 0 && !debloatObject.isSystemApp()) {
+                        continue;
+                    }
                     debloatObjects.add(debloatObject);
                 }
             }
@@ -166,6 +225,7 @@ public class DebloaterViewModel extends AndroidViewModel {
                 }
                 debloatObject.setInstalled(true);
                 debloatObject.addUser(app.userId);
+                debloatObject.setSystemApp((app.flags & ApplicationInfo.FLAG_SYSTEM) != 0);
                 if (debloatObject.getPackageInfo() == null) {
                     try {
                         PackageInfo pi = PackageManagerCompat.getPackageInfo(debloatObject.packageName, PackageUtils.flagMatchUninstalled, app.userId);
@@ -174,6 +234,8 @@ public class DebloaterViewModel extends AndroidViewModel {
                             // Reset installed
                             debloatObject.setInstalled(true);
                         }
+                        // Reset system app
+                        debloatObject.setSystemApp((ai.flags & ApplicationInfo.FLAG_SYSTEM) != 0);
                         debloatObject.setPackageInfo(pi);
                         debloatObject.setLabel(ai.loadLabel(pm));
                     } catch (RemoteException | PackageManager.NameNotFoundException ignore) {

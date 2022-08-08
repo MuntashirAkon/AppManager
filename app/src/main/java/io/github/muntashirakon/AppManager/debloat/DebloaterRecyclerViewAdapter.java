@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
+import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
@@ -49,7 +49,8 @@ public class DebloaterRecyclerViewAdapter extends MultiSelectionView.Adapter<Deb
         removalReplaceColor = ColorCodes.getRemovalReplaceIndicatorColor(activity);
         removalCautionColor = ColorCodes.getRemovalCautionIndicatorColor(activity);
         removalUnsafeColor = ColorCodes.getRemovalUnsafeIndicatorColor(activity);
-        colorSurface = MaterialColors.getColor(activity, R.attr.colorSurface, DebloaterRecyclerViewAdapter.class.getCanonicalName());
+        colorSurface = MaterialColors.getColor(activity, com.google.android.material.R.attr.colorSurface,
+                DebloaterRecyclerViewAdapter.class.getCanonicalName());
         mViewModel = activity.viewModel;
     }
 

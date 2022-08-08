@@ -21,7 +21,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
-import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,9 +33,9 @@ import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.profiles.AppsProfileActivity;
 import io.github.muntashirakon.AppManager.profiles.ProfileManager;
 import io.github.muntashirakon.AppManager.profiles.ProfileMetaManager;
-import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.StoragePermission;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 import io.github.muntashirakon.reflow.ReflowMenuViewWrapper;
 import io.github.muntashirakon.widget.MultiSelectionView;
@@ -76,8 +75,6 @@ public class DebloaterActivity extends BaseActivity implements MultiSelectionVie
 
         mProgressIndicator = findViewById(R.id.progress_linear);
         mProgressIndicator.show();
-        SwitchMaterial filterInstalled = findViewById(R.id.filter_installed_apps);
-        filterInstalled.setOnCheckedChangeListener((buttonView, isChecked) -> viewModel.setFilterInstalledApps(isChecked));
 
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -121,7 +118,9 @@ public class DebloaterActivity extends BaseActivity implements MultiSelectionVie
             finish();
             return true;
         } else if (id == R.id.action_list_options) {
-            // TODO: 8/8/22
+            DebloaterListOptions dialog = new DebloaterListOptions();
+            dialog.show(getSupportFragmentManager(), DebloaterListOptions.TAG);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -138,13 +137,13 @@ public class DebloaterActivity extends BaseActivity implements MultiSelectionVie
             handleBatchOpWithWarning(BatchOpsManager.OP_UNINSTALL);
         } else if (id == R.id.action_put_back) {
             // TODO: 8/8/22
-        } else if (id == R.id.action_enable_disable) {
+        } else if (id == R.id.action_freeze_unfreeze) {
             new MaterialAlertDialogBuilder(this)
-                    .setTitle(R.string.enable_disable)
+                    .setTitle(R.string.freeze_unfreeze)
                     .setMessage(R.string.choose_what_to_do)
-                    .setPositiveButton(R.string.disable, (dialog, which) -> handleBatchOp(BatchOpsManager.OP_DISABLE))
+                    .setPositiveButton(R.string.freeze, (dialog, which) -> handleBatchOp(BatchOpsManager.OP_FREEZE))
                     .setNegativeButton(R.string.cancel, null)
-                    .setNeutralButton(R.string.enable, (dialog, which) -> handleBatchOp(BatchOpsManager.OP_ENABLE))
+                    .setNeutralButton(R.string.unfreeze, (dialog, which) -> handleBatchOp(BatchOpsManager.OP_UNFREEZE))
                     .show();
         } else if (id == R.id.action_save_apk) {
             mStoragePermission.request(granted -> {

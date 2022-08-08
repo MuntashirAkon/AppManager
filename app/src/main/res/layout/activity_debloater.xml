@@ -31,33 +31,17 @@
 
     </io.github.muntashirakon.widget.AppBarLayout>
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <io.github.muntashirakon.widget.RecyclerView
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:scrollbars="none"
         android:focusable="false"
-        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
-
-        <com.google.android.material.switchmaterial.SwitchMaterial
-            android:id="@+id/filter_installed_apps"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/padding_medium"
-            android:text="@string/installed_apps"
-            android:checked="true" />
-
-        <io.github.muntashirakon.widget.RecyclerView
-            android:id="@+id/recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="none"
-            android:focusable="false"
-            android:clipToPadding="false"
-            android:fitsSystemWindows="true"
-            app:fastScrollerEnabled="true"
-            tools:listitem="@layout/item_main" />
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
+        android:clipToPadding="false"
+        android:fitsSystemWindows="true"
+        app:fastScrollerEnabled="true"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        tools:listitem="@layout/item_main" />
 
     <io.github.muntashirakon.widget.MultiSelectionView
         android:id="@+id/selection_view"
