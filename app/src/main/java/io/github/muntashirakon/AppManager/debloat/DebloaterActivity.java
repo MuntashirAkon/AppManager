@@ -9,10 +9,12 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -28,6 +30,7 @@ import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
+import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.profiles.AppsProfileActivity;
 import io.github.muntashirakon.AppManager.profiles.ProfileManager;
 import io.github.muntashirakon.AppManager.profiles.ProfileMetaManager;
@@ -42,7 +45,8 @@ import io.github.muntashirakon.widget.RecyclerView;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
-public class DebloaterActivity extends BaseActivity implements MultiSelectionView.OnSelectionChangeListener, ReflowMenuViewWrapper.OnItemSelectedListener {
+public class DebloaterActivity extends BaseActivity implements MultiSelectionView.OnSelectionChangeListener,
+        ReflowMenuViewWrapper.OnItemSelectedListener, AdvancedSearchView.OnQueryTextListener {
     DebloaterViewModel viewModel;
 
     private LinearProgressIndicator mProgressIndicator;
@@ -62,7 +66,12 @@ public class DebloaterActivity extends BaseActivity implements MultiSelectionVie
     protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
         setContentView(R.layout.activity_debloater);
         setSupportActionBar(findViewById(R.id.toolbar));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowCustomEnabled(true);
+            UIUtils.setupAdvancedSearchView(actionBar, this);
+        }
         viewModel = new ViewModelProvider(this).get(DebloaterViewModel.class);
 
         mProgressIndicator = findViewById(R.id.progress_linear);
@@ -100,10 +109,19 @@ public class DebloaterActivity extends BaseActivity implements MultiSelectionVie
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.activity_debloater_actions, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
             finish();
             return true;
+        } else if (id == R.id.action_list_options) {
+            // TODO: 8/8/22
         }
         return super.onOptionsItemSelected(item);
     }
@@ -181,6 +199,17 @@ public class DebloaterActivity extends BaseActivity implements MultiSelectionVie
                     .show();
         } else return false;
         return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText, int type) {
+        viewModel.setQuery(newText, type);
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query, int type) {
+        return false;
     }
 
     private void handleBatchOpWithWarning(@BatchOpsManager.OpType int op) {

@@ -43,6 +43,8 @@ public class DebloatObject {
     private String removal;
 
     @Nullable
+    private CharSequence label;
+    @Nullable
     private App app;
     @Nullable
     private PackageInfo packageInfo;
@@ -74,6 +76,15 @@ public class DebloatObject {
             case "Unsafe":
                 return REMOVAL_UNSAFE;
         }
+    }
+
+    @Nullable
+    public CharSequence getLabel() {
+        return label;
+    }
+
+    public void setLabel(@Nullable CharSequence label) {
+        this.label = label;
     }
 
     @Nullable

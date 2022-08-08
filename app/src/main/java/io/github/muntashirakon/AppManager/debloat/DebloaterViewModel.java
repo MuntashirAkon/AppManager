@@ -8,6 +8,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.RemoteException;
 import android.os.UserHandleHidden;
+import android.text.TextUtils;
 
 import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
@@ -20,14 +21,17 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.db.entity.App;
 import io.github.muntashirakon.AppManager.db.utils.AppDb;
+import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
@@ -37,6 +41,9 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 public class DebloaterViewModel extends AndroidViewModel {
     private boolean filterInstalledApps = true;
+    private String mQueryString = null;
+    @AdvancedSearchView.SearchType
+    private int mQueryType;
     private DebloatObject[] mDebloatObjects;
 
     private final Map<String, int[]> mSelectedPackages = new HashMap<>();
@@ -50,6 +57,12 @@ public class DebloaterViewModel extends AndroidViewModel {
 
     public void setFilterInstalledApps(boolean filterInstalledApps) {
         this.filterInstalledApps = filterInstalledApps;
+        loadPackages();
+    }
+
+    public void setQuery(String queryString, @AdvancedSearchView.SearchType int searchType) {
+        mQueryString = queryString;
+        mQueryType = searchType;
         loadPackages();
     }
 
@@ -110,18 +123,28 @@ public class DebloaterViewModel extends AndroidViewModel {
     public void loadPackages() {
         mExecutor.submit(() -> {
             loadDebloatObjects();
-            List<DebloatObject> debloatObjects;
-            if (filterInstalledApps) {
-                debloatObjects = new ArrayList<>();
-                for (DebloatObject debloatObject : mDebloatObjects) {
-                    if (debloatObject.isInstalled()) {
-                        debloatObjects.add(debloatObject);
-                    }
+            List<DebloatObject> debloatObjects = new ArrayList<>();
+            for (DebloatObject debloatObject : mDebloatObjects) {
+                if (filterInstalledApps && debloatObject.isInstalled()) {
+                    debloatObjects.add(debloatObject);
                 }
-            } else {
-                debloatObjects = Arrays.asList(mDebloatObjects);
             }
-            mDebloatObjectLiveData.postValue(debloatObjects);
+            if (TextUtils.isEmpty(mQueryString)) {
+                mDebloatObjectLiveData.postValue(debloatObjects);
+                return;
+            }
+            // Apply searching
+            List<DebloatObject> newList = AdvancedSearchView.matches(mQueryString, debloatObjects,
+                    (AdvancedSearchView.ChoicesGenerator<DebloatObject>) item -> {
+                        CharSequence label = item.getLabel();
+                        if (label != null) {
+                            return Arrays.asList(item.packageName, label.toString().toLowerCase(Locale.getDefault()));
+                        } else {
+                            return Collections.singletonList(item.packageName);
+                        }
+                    },
+                    mQueryType);
+            mDebloatObjectLiveData.postValue(newList);
         });
     }
 
@@ -132,6 +155,7 @@ public class DebloaterViewModel extends AndroidViewModel {
         }
         String jsonContent = FileUtils.getContentFromAssets(getApplication(), "debloat.json");
         mDebloatObjects = mGson.fromJson(jsonContent, DebloatObject[].class);
+        PackageManager pm = getApplication().getPackageManager();
         // Fetch package info for all users
         AppDb appDb = new AppDb();
         for (DebloatObject debloatObject : mDebloatObjects) {
@@ -151,6 +175,7 @@ public class DebloaterViewModel extends AndroidViewModel {
                             debloatObject.setInstalled(true);
                         }
                         debloatObject.setPackageInfo(pi);
+                        debloatObject.setLabel(ai.loadLabel(pm));
                     } catch (RemoteException | PackageManager.NameNotFoundException ignore) {
                     }
                 }

@@ -1,0 +1,9 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_list_options"
+        android:icon="@drawable/ic_list_status"
+        android:title="@string/list_options"
+        app:showAsAction="always" />
+</menu>

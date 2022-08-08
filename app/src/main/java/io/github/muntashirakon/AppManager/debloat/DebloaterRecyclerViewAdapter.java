@@ -86,9 +86,10 @@ public class DebloaterRecyclerViewAdapter extends MultiSelectionView.Adapter<Deb
         holder.listTypeView.setText(debloatObject.type);
         holder.packageNameView.setText(debloatObject.packageName);
         holder.descriptionView.setText(debloatObject.description.trim());
-        if (applicationInfo != null) {
+        CharSequence label = debloatObject.getLabel();
+        if (label != null) {
             holder.labelView.setVisibility(View.VISIBLE);
-            holder.labelView.setText(applicationInfo.loadLabel(holder.itemView.getContext().getPackageManager()));
+            holder.labelView.setText(label);
         } else {
             holder.labelView.setVisibility(View.GONE);
         }
