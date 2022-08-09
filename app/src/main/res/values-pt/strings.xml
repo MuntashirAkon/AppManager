@@ -174,8 +174,8 @@
     <string name="external_multiple_data_dir">Diretório de dados externo
 \n<xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
     <string name="external_data_dir">Diretório de dados externo</string>
-    <string name="sort_by_blocked_components">Bloqueado primeiro</string>
-    <string name="sort_by_disabled_app">Desativado primeiro</string>
+    <string name="sort_by_blocked_components">Bloqueados primeiro</string>
+    <string name="sort_by_disabled_app">Desativados primeiro</string>
     <string name="exodus_link">Ligação do εxodus</string>
     <string name="usage_yesterday">Ontem</string>
     <string name="app_settings">Configurações</string>
@@ -454,7 +454,7 @@
     <string name="launch">Iniciar</string>
     <string name="activities">Atividades</string>
     <string name="require_no_permission">Nenhuma permissão necessária</string>
-    <string name="permissions">Usa permissões</string>
+    <string name="permissions">Utiliza permissões</string>
     <string name="uninstall">Desinstalar</string>
     <string name="battery">Bateria</string>
     <string name="graphics">Gráficos</string>
