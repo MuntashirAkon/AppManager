@@ -86,7 +86,7 @@
     <string name="backup">Backup</string>
     <string name="data">Dados</string>
     <string name="external_data">Dados externos</string>
-    <string name="sort_by_denied_app_ops">Receitadas primeiro</string>
+    <string name="sort_by_denied_app_ops">Negadas primeiro</string>
     <string name="sort_by_app_ops_names">Nome das operações da aplicação</string>
     <string name="deny_dangerous_app_ops">Negar operações de aplicações perigosas</string>
     <string name="reset_to_default">Restaurar à predefinição</string>
@@ -103,7 +103,7 @@
     <string name="follow_system">Seguir o sistema</string>
     <string name="pref_app_theme">Tema da aplicação</string>
     <string name="pref_import_blocker_msg">Importar regras de bloqueio do Blocker, cada ficheiro contém regras para um único pacote.</string>
-    <string name="pref_import_watt_msg">Importar regras de bloqueio do Watt, cada ficheiro contendo regras para um único pacote nomeado como <tt>packagename.xml</tt> etc.</string>
+    <string name="pref_import_watt_msg">Importar regras de bloqueio do Watt, cada ficheiro contem regras para um único pacote nomeado como <tt>packagename.xml</tt> etc.</string>
     <string name="pref_import_msg">Importar regras de bloqueio anteriormente guardadas do App Manager.</string>
     <string name="pref_export_msg">Exportar regras de bloqueio desta aplicação para o armazenamento externo.</string>
     <string name="navigation">Navegação</string>
@@ -124,7 +124,7 @@
         <item quantity="one">Não foi possível forçar a paragem de %1$d aplicação</item>
         <item quantity="other">Não foi possível forçar a paragem de %1$d aplicações</item>
     </plurals>
-    <string name="the_operation_was_successful">Feito</string>
+    <string name="the_operation_was_successful">Efetuado</string>
     <plurals name="alert_failed_to_disable_background">
         <item quantity="one">Não foi possível impedir a execução de %1$d aplicação em segundo plano</item>
         <item quantity="other">Na foi possível impedir a execução de %1$d aplicações em segundo plano</item>
@@ -171,8 +171,7 @@
         <item quantity="one">%1$d vez</item>
         <item quantity="other">%1$d vezes</item>
     </plurals>
-    <string name="external_multiple_data_dir">Diretório de dados externo
-\n<xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
+    <string name="external_multiple_data_dir">Diretório de dados externo<xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
     <string name="external_data_dir">Diretório de dados externo</string>
     <string name="sort_by_blocked_components">Bloqueados primeiro</string>
     <string name="sort_by_disabled_app">Desativados primeiro</string>
@@ -191,20 +190,16 @@
     <string name="app_size">App</string>
     <string name="total_size">Total</string>
     <string name="storage_and_cache">Armazenamento e Cache</string>
-    <string name="failed_to_stop">Não foi possível parar
-\n<xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
+    <string name="failed_to_stop">Não foi possível parar<xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="force_stop">Forçar paragem</string>
-    <string name="failed_to_enable">Não foi possível ativar
-\n<xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
-    <string name="failed_to_disable">Não foi possível desativar
-\n&lt;kxliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"app_name\" example=\"App Manager\"&gt;%1$s&lt;/xliff:g&gt;</string>
+    <string name="failed_to_enable">Não foi possível ativar<xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="failed_to_disable">Não foi possível desativar <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="enable">Ativar</string>
     <string name="disable">Desativar</string>
     <string name="stopped">Parado</string>
     <string name="uninstall_system_app_message">Isto é uma aplicação de sistema. Tem a certeza que quer desinstalar esta aplicação\?</string>
     <string name="uninstalled_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> foi desinstalado.</string>
-    <string name="failed_to_uninstall">Não foi possível desinstalar
-\n<xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
+    <string name="failed_to_uninstall">Não foi possível desinstalar<xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="uninstall_app_message">Quer desinstalar esta aplicação\?</string>
     <string name="view_in_settings">Ver nas configurações</string>
     <string name="no_content">Nenhum conteúdo</string>
@@ -217,7 +212,7 @@
     <string name="type_int">Inteiro</string>
     <string name="type_float">Número decimal</string>
     <string name="type_boolean">Verdadeiro/Falso</string>
-    <string name="done">Feito</string>
+    <string name="done">Efetuado</string>
     <string name="add_item">Adicionar item</string>
     <string name="select_type">Selecione um tipo</string>
     <string name="key_name">Nome da Chave</string>
@@ -276,7 +271,7 @@
         <item quantity="other"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> dias</item>
     </plurals>
     <string name="all_classes">Todas as classes</string>
-    <string name="tracker_classes">Classes do rastreador</string>
+    <string name="tracker_classes">Classe do rastreador</string>
     <string name="tracker_details">Detalhes do reastreador</string>
     <string name="found_trackers">Rastreadores encontrados:</string>
     <string name="toggle_class_listing">Alternar lista de classes</string>
@@ -414,7 +409,7 @@
     <string name="failed_to_revoke_permission">Não foi possível revogar a permissão</string>
     <string name="failed_to_grant_permission">A permissão não foi concedida</string>
     <plurals name="alert_failed_to_disable_trackers">
-        <item quantity="one">Não foi possível desativar os rasteadores da %1$d app</item>
+        <item quantity="one">Não foi possível desativar os rastreadores da %1$d app</item>
         <item quantity="other">Não foi possível desativar os rasteadores das %1$d apps</item>
     </plurals>
     <string name="unknown_op">Operação desconhecida</string>
@@ -923,7 +918,7 @@
     <string name="downgrade">Downgrade</string>
     <string name="process_state_with_extra">Estado: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g> (<xliff:g id="state_extra" example="High priority">%2$s</xliff:g>)</string>
     <string name="process_state">Estado: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g></string>
-    <string name="state_multithreaded">Multiprocessamento</string>
+    <string name="state_multithreaded">Multi processamento</string>
     <string name="state_foreground">Primeiro plano</string>
     <string name="state_waking">Acordando</string>
     <string name="state_wake_kill">Encerrado ao acordar</string>
@@ -996,8 +991,8 @@
         <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> rastreadores com classes <xliff:g id="class_no" example="50">%2$d</xliff:g></item>
     </plurals>
     <plurals name="two_trackers_and_classes">
-        <item quantity="one">2 rastreadores com classes <xliff:g id="class_no" example="50">%1$d</xliff:g></item>
-        <item quantity="other">2 rastreadores com classes <xliff:g id="class_no" example="50">%1$d</xliff:g></item>
+        <item quantity="one">2 rastreadores <xliff:g id="class_no" example="50">%1$d</xliff:g>com classes</item>
+        <item quantity="other">2 rastreadores <xliff:g id="class_no" example="50">%1$d</xliff:g>com classes</item>
     </plurals>
     <string name="app_signing_signatures">Assinaturas</string>
     <string name="no_changes">Sem modificações</string>
@@ -1075,7 +1070,7 @@
     <string name="set_package_name_first">Defina primeiro o nome do pacote!</string>
     <string name="identifier">Identificador</string>
     <string name="backup_volume_dialog_description">Volumes com o prefixo <tt>/tree</tt> são pastas selecionadas usando o Storage Access Framework (SAF). Excetuando estas pastas, o diretório padrão do App Manager é uma subpasta chamada <tt>AppManager</tt>.</string>
-    <string name="second_degree_tracker_note">²prefixo indica que os rastreadores estão na <a href="https://etip.exodus-privacy.eu.org/">Lista de espera ETIP</a>, ou seja, que são rastreadores \u0020que ainda estão a ser investigados.</string>
+    <string name="second_degree_tracker_note">²prefixo indica que os rastreadores estão na <a href="https://etip.exodus-privacy.eu.org/">Lista de espera ETIP</a>, ou seja, que são rastreadores que ainda estão a ser investigados.</string>
     <string name="failed_to_uninstall_app">Falha ao desinstalar</string>
     <string name="type_uri_array">Matriz de URIs</string>
     <string name="import_from_sb">Importar de Swift Backup 3.0 – 3.2</string>
@@ -1211,6 +1206,6 @@
     <string name="view_changelog">Descubra o que há de novo nesta versão</string>
     <string name="sort_by_total_size">Tamanho total</string>
     <string name="am_command"><tt>am</tt> comando</string>
-    <string name="pref_sign_apk_error_signing_key_not_added">É necessário uma chave válida para assinar um ficheiro APK</string>
+    <string name="pref_sign_apk_error_signing_key_not_added">É necessário uma chave válida para assinar um ficheiro APK.</string>
     <string name="pref_sign_apk_no_signing_key">Sem chave de assinatura</string>
 </resources>
