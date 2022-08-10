@@ -31,7 +31,6 @@ import com.google.android.material.divider.MaterialDivider;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.ipc.ps.DeviceMemoryInfo;
@@ -187,16 +186,11 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
         // Load icon
         mActivity.imageLoader.displayImage(processName, applicationInfo, holder.icon);
         // Set process name
-        if (mModel.getQuery() != null && processName.toLowerCase(Locale.ROOT).contains(mModel.getQuery())) {
-            // Highlight searched query
-            holder.processName.setText(UIUtils.getHighlightedText(processName, mModel.getQuery(), mQueryStringHighlightColor));
-        } else {
-            holder.processName.setText(processName);
-        }
+        holder.processName.setText(UIUtils.getHighlightedText(processName, mModel.getQuery(), mQueryStringHighlightColor));
         // Set package name
         if (applicationInfo != null) {
             holder.packageName.setVisibility(View.VISIBLE);
-            holder.packageName.setText(applicationInfo.packageName);
+            holder.packageName.setText(UIUtils.getHighlightedText(applicationInfo.packageName, mModel.getQuery(), mQueryStringHighlightColor));
         } else holder.packageName.setVisibility(View.GONE);
         // Set process IDs
         holder.processIds.setText(mActivity.getString(R.string.pid_and_ppid, processItem.pid, processItem.ppid));

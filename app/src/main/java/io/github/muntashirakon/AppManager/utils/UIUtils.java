@@ -52,9 +52,12 @@ public class UIUtils {
     static final Spannable.Factory sSpannableFactory = Spannable.Factory.getInstance();
 
     @NonNull
-    public static Spannable getHighlightedText(@NonNull String text, @NonNull String constraint,
+    public static Spannable getHighlightedText(@NonNull String text, @Nullable String constraint,
                                                @ColorInt int color) {
         Spannable spannable = sSpannableFactory.newSpannable(text);
+        if (TextUtilsCompat.isEmpty(constraint)) {
+            return spannable;
+        }
         int start = text.toLowerCase(Locale.ROOT).indexOf(constraint);
         if (start == -1) return spannable;
         int end = start + constraint.length();

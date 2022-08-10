@@ -56,8 +56,8 @@ public class RunningAppsViewModel extends AndroidViewModel {
 
     public RunningAppsViewModel(@NonNull Application application) {
         super(application);
-        mSortOrder = (int) AppPref.get(AppPref.PrefKey.PREF_RUNNING_APPS_SORT_ORDER_INT);
-        mFilter = (int) AppPref.get(AppPref.PrefKey.PREF_RUNNING_APPS_FILTER_FLAGS_INT);
+        mSortOrder = AppPref.getInt(AppPref.PrefKey.PREF_RUNNING_APPS_SORT_ORDER_INT);
+        mFilter = AppPref.getInt(AppPref.PrefKey.PREF_RUNNING_APPS_FILTER_FLAGS_INT);
         mVt = VirusTotal.getInstance();
     }
 
@@ -294,7 +294,7 @@ public class RunningAppsViewModel extends AndroidViewModel {
     private String mQuery;
 
     public void setQuery(@Nullable String query) {
-        this.mQuery = query == null ? null : query.toLowerCase(Locale.ROOT);
+        mQuery = query == null ? null : query.toLowerCase(Locale.ROOT);
         mExecutor.submit(this::filterAndSort);
     }
 
@@ -340,8 +340,11 @@ public class RunningAppsViewModel extends AndroidViewModel {
         ApplicationInfo info;
         for (ProcessItem item : mProcessList) {
             // Filter by query
-            if (hasQuery && !item.name.toLowerCase(Locale.ROOT).contains(mQuery)) {
-                continue;
+            if (hasQuery) {
+                if (!item.name.toLowerCase(Locale.ROOT).contains(mQuery) && (!(item instanceof AppProcessItem)
+                        || !((AppProcessItem) item).packageInfo.packageName.contains(mQuery))) {
+                    continue;
+                }
             }
             // Filter by apps
             if (filterApps && !(item instanceof AppProcessItem)) {
