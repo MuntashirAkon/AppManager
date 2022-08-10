@@ -18,7 +18,6 @@ import android.content.pm.ServiceInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PatternMatcher;
-import android.os.RemoteException;
 import android.os.UserHandleHidden;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -1123,9 +1122,9 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                     try {
                         ActivityManagerCompat.startService(mActivity, intent,
                                 Objects.requireNonNull(mMainModel).getUserHandle(), true);
-                    } catch (RemoteException e) {
-                        e.printStackTrace();
-                        Toast.makeText(mActivity, e.toString(), Toast.LENGTH_LONG).show();
+                    } catch (Throwable th) {
+                        th.printStackTrace();
+                        Toast.makeText(mActivity, th.toString(), Toast.LENGTH_LONG).show();
                     }
                 });
                 holder.launchBtn.setVisibility(View.VISIBLE);
