@@ -46,6 +46,7 @@ public class ProfileViewModel extends AndroidViewModel {
     private final MutableLiveData<Pair<Integer, Boolean>> toast = new MutableLiveData<>();
     private final MutableLiveData<ArrayList<Pair<CharSequence, ApplicationInfo>>> installedApps = new MutableLiveData<>();
     private final MutableLiveData<Boolean> profileLoaded = new MutableLiveData<>();
+    private final MutableLiveData<String> logs = new MutableLiveData<>();
     @GuardedBy("profileLock")
     private String profileName;
     private boolean isNew;
@@ -70,6 +71,10 @@ public class ProfileViewModel extends AndroidViewModel {
 
     public LiveData<Boolean> observeProfileLoaded() {
         return profileLoaded;
+    }
+
+    public LiveData<String> getLogs() {
+        return logs;
     }
 
     @AnyThread
@@ -120,6 +125,11 @@ public class ProfileViewModel extends AndroidViewModel {
             loadProfileInternal();
             profileLoaded.postValue(profileMetaManager == null);
         });
+    }
+
+    @AnyThread
+    public void loadLogs() {
+        executor.submit(() -> logs.postValue(ProfileLogger.getAllLogs(profileName)));
     }
 
     @WorkerThread
