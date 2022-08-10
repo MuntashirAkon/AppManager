@@ -40,7 +40,8 @@ public class LogViewerFragment extends Fragment {
             ProfileLogger.clearLogs(model.getProfileName());
             tv.setText("");
         });
-        tv.setText(getFormattedLogs(ProfileLogger.getAllLogs(model.getProfileName())));
+        model.getLogs().observe(getViewLifecycleOwner(), logs -> tv.setText(getFormattedLogs(logs)));
+        model.loadLogs();
     }
 
     @Override
