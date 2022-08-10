@@ -20,7 +20,7 @@
     <string name="user">Utilizator</string>
     <string name="sdk_max">Țintă</string>
     <string name="class_name">Nume Clasă</string>
-    <string name="edit_shortcut">Editeză Scurtătură</string>
+    <string name="edit_shortcut">Editează Scurtătură</string>
     <string name="toggle_class_listing">Activează Listare Clase</string>
     <string name="uninstall">Dezinstalare</string>
     <string name="require_no_permission">Nu necesită permisiuni</string>
@@ -91,6 +91,6 @@
     <string name="word_wrap">Activează limitare cuvinte</string>
     <string name="class_viewer">Vizualizare Clasă</string>
     <string name="flags">Marcaje</string>
-    <string name="version_name_with_code">Versiunea <xliff:g id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g id="version_code" example="365">%2$d</xliff:g> )</string>
+    <string name="version_name_with_code">Versiune <xliff:g id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g id="version_code" example="365">%2$d</xliff:g> )</string>
     <string name="starting_activity">Activitate de pornire: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
 </resources>
