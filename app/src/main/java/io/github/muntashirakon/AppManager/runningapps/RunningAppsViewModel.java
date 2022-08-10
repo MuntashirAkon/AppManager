@@ -258,7 +258,7 @@ public class RunningAppsViewModel extends AndroidViewModel {
                 canRun |= (mode != AppOpsManager.MODE_IGNORED && mode != AppOpsManager.MODE_ERRORED);
             }
             return canRun;
-        } catch (RemoteException e) {
+        } catch (RemoteException | SecurityException e) {
             return true;
         }
     }
