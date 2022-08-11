@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -46,6 +47,9 @@ public abstract class PackageChangeReceiver extends BroadcastReceiver {
      */
     public static final String ACTION_PACKAGE_REMOVED = BuildConfig.APPLICATION_ID + ".action.PACKAGE_REMOVED";
 
+    private static final String ACTION_PACKAGES_SUSPENDED = "android.intent.action.PACKAGES_SUSPENDED";
+    private static final String ACTION_PACKAGES_UNSUSPENDED = "android.intent.action.PACKAGES_UNSUSPENDED";
+
     public PackageChangeReceiver(@NonNull Context context) {
         IntentFilter filter = new IntentFilter(Intent.ACTION_PACKAGE_ADDED);
         filter.addAction(Intent.ACTION_PACKAGE_REMOVED);
@@ -54,6 +58,10 @@ public abstract class PackageChangeReceiver extends BroadcastReceiver {
         context.registerReceiver(this, filter);
         // Other filters
         IntentFilter sdFilter = new IntentFilter();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            sdFilter.addAction(ACTION_PACKAGES_SUSPENDED);
+            sdFilter.addAction(ACTION_PACKAGES_UNSUSPENDED);
+        }
         sdFilter.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE);
         sdFilter.addAction(Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE);
         sdFilter.addAction(Intent.ACTION_LOCALE_CHANGED);
@@ -102,6 +110,8 @@ public abstract class PackageChangeReceiver extends BroadcastReceiver {
                 case ACTION_PACKAGE_ADDED:
                 case ACTION_PACKAGE_ALTERED:
                 case ACTION_PACKAGE_REMOVED:
+                case ACTION_PACKAGES_SUSPENDED:
+                case ACTION_PACKAGES_UNSUSPENDED:
                 case Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE:
                 case Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE: {
                     String[] packages = intent.getStringArrayExtra(Intent.EXTRA_CHANGED_PACKAGE_LIST);
