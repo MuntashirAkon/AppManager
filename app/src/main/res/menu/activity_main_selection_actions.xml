@@ -7,9 +7,9 @@
         android:icon="@drawable/ic_trash_can"
         android:title="@string/uninstall" />
     <item
-        android:id="@+id/action_enable_disable"
-        android:icon="@drawable/ic_block"
-        android:title="@string/enable_disable" />
+        android:id="@+id/action_freeze_unfreeze"
+        android:icon="@drawable/ic_snowflake"
+        android:title="@string/freeze_unfreeze" />
     <item
         android:id="@+id/action_force_stop"
         android:title="@string/force_stop"

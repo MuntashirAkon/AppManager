@@ -75,12 +75,12 @@ public class ProfileMetaManager implements LocalizedString {
         @Nullable
         public Integer exportRules;  // export_rules
         /**
-         * Whether to enable or disable the selected packages. This only functions when the value is
-         * set to {@code true} and {@link #state} {@code on} means disable and
-         * {@code off} means enable. If it is set to {@code false}, it will be removed from
+         * Whether to freeze or unfreeze the selected packages. This only functions when the value is
+         * set to {@code true} and {@link #state} {@code on} means freeze and
+         * {@code off} means unfreeze. If it is set to {@code false}, it will be removed from
          * the profile.
          */
-        public boolean disable = false;  // misc.disable (false = remove)
+        public boolean freeze = false;  // misc.disable or misc.freeze (false = remove)
         public boolean forceStop = false;  // misc.force_stop (false = remove)
         public boolean clearCache = false;  // misc.clear_cache (false = remove)
         public boolean clearData = false;  // misc.clear_data (false = remove)
@@ -106,7 +106,7 @@ public class ProfileMetaManager implements LocalizedString {
             permissions = profile.permissions != null ? profile.permissions.clone() : null;
             backupData = profile.backupData != null ? new BackupInfo(profile.backupData) : null;
             exportRules = profile.exportRules != null ? profile.exportRules : null;
-            disable = profile.disable;
+            freeze = profile.freeze;
             forceStop = profile.forceStop;
             clearCache = profile.clearCache;
             clearData = profile.clearData;
@@ -250,7 +250,7 @@ public class ProfileMetaManager implements LocalizedString {
         // Misc
         try {
             List<String> miscConfig = JSONUtils.getArray(profileObj.getJSONArray("misc"));
-            profile.disable = miscConfig.contains("disable");
+            profile.freeze = miscConfig.contains("disable") || miscConfig.contains("freeze");
             profile.forceStop = miscConfig.contains("force_stop");
             profile.clearCache = miscConfig.contains("clear_cache");
             profile.clearData = miscConfig.contains("clear_data");
@@ -294,7 +294,7 @@ public class ProfileMetaManager implements LocalizedString {
         profileObj.put("export_rules", mProfile.exportRules);
         // Misc
         JSONArray jsonArray = new JSONArray();
-        if (mProfile.disable) jsonArray.put("disable");
+        if (mProfile.freeze) jsonArray.put("freeze");
         if (mProfile.forceStop) jsonArray.put("force_stop");
         if (mProfile.clearCache) jsonArray.put("clear_cache");
         if (mProfile.clearData) jsonArray.put("clear_data");
@@ -324,7 +324,7 @@ public class ProfileMetaManager implements LocalizedString {
         if (mProfile.permissions != null) arrayList.add(context.getString(R.string.permissions));
         if (mProfile.backupData != null) arrayList.add(context.getString(R.string.backup_restore));
         if (mProfile.exportRules != null) arrayList.add(context.getString(R.string.blocking_rules));
-        if (mProfile.disable) arrayList.add(context.getString(R.string.disable));
+        if (mProfile.freeze) arrayList.add(context.getString(R.string.freeze));
         if (mProfile.forceStop) arrayList.add(context.getString(R.string.force_stop));
         if (mProfile.clearCache) arrayList.add(context.getString(R.string.clear_cache));
         if (mProfile.clearData) arrayList.add(context.getString(R.string.clear_data));

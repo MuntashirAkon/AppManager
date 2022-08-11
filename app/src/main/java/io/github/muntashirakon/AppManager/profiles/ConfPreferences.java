@@ -236,8 +236,8 @@ public class ConfPreferences extends PreferenceFragmentCompat {
             return true;
         });
         // Set others
-        ((SwitchPreferenceCompat) Objects.requireNonNull(findPreference("disable")))
-                .setChecked(model.getBoolean("disable", false));
+        ((SwitchPreferenceCompat) Objects.requireNonNull(findPreference("freeze")))
+                .setChecked(model.getBoolean("freeze", false));
         ((SwitchPreferenceCompat) Objects.requireNonNull(findPreference("force_stop")))
                 .setChecked(model.getBoolean("force_stop", false));
         ((SwitchPreferenceCompat) Objects.requireNonNull(findPreference("clear_cache")))

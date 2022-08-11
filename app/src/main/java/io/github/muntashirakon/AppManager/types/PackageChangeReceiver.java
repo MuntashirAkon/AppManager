@@ -6,18 +6,23 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Looper;
+import android.os.Message;
+import android.os.Process;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
+import androidx.annotation.WorkerThread;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-import android.os.*;
-import android.os.Process;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.UiThread;
-import androidx.annotation.WorkerThread;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
@@ -110,8 +115,8 @@ public abstract class PackageChangeReceiver extends BroadcastReceiver {
                     // Trigger for all ops except disable, force-stop and uninstall
                     @BatchOpsManager.OpType int op;
                     op = intent.getIntExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_NONE);
-                    if (op != BatchOpsManager.OP_NONE && op != BatchOpsManager.OP_DISABLE &&
-                            op != BatchOpsManager.OP_ENABLE && op != BatchOpsManager.OP_UNINSTALL) {
+                    if (op != BatchOpsManager.OP_NONE && op != BatchOpsManager.OP_FREEZE &&
+                            op != BatchOpsManager.OP_UNFREEZE && op != BatchOpsManager.OP_UNINSTALL) {
                         String[] packages = intent.getStringArrayExtra(BatchOpsService.EXTRA_OP_PKG);
                         String[] failedPackages = intent.getStringArrayExtra(BatchOpsService.EXTRA_FAILED_PKG);
                         if (packages != null && failedPackages != null) {

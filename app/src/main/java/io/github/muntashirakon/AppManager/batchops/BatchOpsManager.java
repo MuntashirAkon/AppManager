@@ -6,7 +6,6 @@ import android.annotation.UserIdInt;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.IPackageManager;
 import android.content.pm.PackageManager;
 import android.net.NetworkPolicyManager;
 import android.net.Uri;
@@ -56,6 +55,7 @@ import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.rules.compontents.ExternalComponentsImporter;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
@@ -121,9 +121,9 @@ public class BatchOpsManager {
             OP_CLEAR_CACHE,
             OP_CLEAR_DATA,
             OP_DELETE_BACKUP,
-            OP_DISABLE,
+            OP_FREEZE,
             OP_DISABLE_BACKGROUND,
-            OP_ENABLE,
+            OP_UNFREEZE,
             OP_EXPORT_RULES,
             OP_FORCE_STOP,
             OP_IMPORT_BACKUPS,
@@ -146,7 +146,7 @@ public class BatchOpsManager {
     public static final int OP_BLOCK_TRACKERS = 2;
     public static final int OP_CLEAR_DATA = 3;
     public static final int OP_DELETE_BACKUP = 4;
-    public static final int OP_DISABLE = 5;
+    public static final int OP_FREEZE = 5;
     public static final int OP_DISABLE_BACKGROUND = 6;
     public static final int OP_EXPORT_RULES = 7;
     public static final int OP_FORCE_STOP = 8;
@@ -155,7 +155,7 @@ public class BatchOpsManager {
     public static final int OP_UNINSTALL = 11;
     public static final int OP_BLOCK_COMPONENTS = 12;
     public static final int OP_SET_APP_OPS = 13;
-    public static final int OP_ENABLE = 14;
+    public static final int OP_UNFREEZE = 14;
     public static final int OP_UNBLOCK_COMPONENTS = 15;
     public static final int OP_CLEAR_CACHE = 16;
     public static final int OP_GRANT_PERMISSIONS = 17;
@@ -224,12 +224,12 @@ public class BatchOpsManager {
                 return opClearData();
             case OP_DELETE_BACKUP:
                 return opBackupRestore(BackupRestoreDialogFragment.MODE_DELETE);
-            case OP_DISABLE:
-                return opAppEnabledSetting(PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER);
+            case OP_FREEZE:
+                return opFreeze(true);
             case OP_DISABLE_BACKGROUND:
                 return opDisableBackground();
-            case OP_ENABLE:
-                return opAppEnabledSetting(PackageManager.COMPONENT_ENABLED_STATE_ENABLED);
+            case OP_UNFREEZE:
+                return opFreeze(false);
             case OP_EXPORT_RULES:
                 break;  // Done in the main activity
             case OP_FORCE_STOP:
@@ -451,14 +451,17 @@ public class BatchOpsManager {
     }
 
     @NonNull
-    private Result opAppEnabledSetting(@PackageManagerCompat.EnabledState int newState) {
+    private Result opFreeze(boolean freeze) {
         List<UserPackagePair> failedPackages = new ArrayList<>();
-        IPackageManager pm = PackageManagerCompat.getPackageManager();
         for (UserPackagePair pair : userPackagePairs) {
             try {
-                pm.setApplicationEnabledSetting(pair.getPackageName(), newState, 0, pair.getUserHandle(), null);
+                if (freeze) {
+                    FreezeUtils.freeze(pair.getPackageName(), pair.getUserHandle());
+                } else {
+                    FreezeUtils.unfreeze(pair.getPackageName(), pair.getUserHandle());
+                }
             } catch (Throwable e) {
-                log("====> op=APP_ENABLED_SETTING, pkg=" + pair, e);
+                log("====> op=APP_FREEZE, pkg=" + pair + ", freeze = " + freeze, e);
                 failedPackages.add(pair);
             }
         }

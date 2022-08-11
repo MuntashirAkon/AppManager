@@ -169,15 +169,15 @@ public class ProfileManager {
             // TODO(18/11/20): Export rules
         } else Log.d(TAG, "Skipped export rules.");
         // Disable/enable
-        if (profile.disable) {
-            log("====> Started disable/enable. State: " + state);
+        if (profile.freeze) {
+            log("====> Started freeze/unfreeze. State: " + state);
             switch (state) {
                 case ProfileMetaManager.STATE_ON:
-                    result = batchOpsManager.performOp(BatchOpsManager.OP_DISABLE, userPackagePairs);
+                    result = batchOpsManager.performOp(BatchOpsManager.OP_FREEZE, userPackagePairs);
                     break;
                 case ProfileMetaManager.STATE_OFF:
                 default:
-                    result = batchOpsManager.performOp(BatchOpsManager.OP_ENABLE, userPackagePairs);
+                    result = batchOpsManager.performOp(BatchOpsManager.OP_UNFREEZE, userPackagePairs);
             }
             if (!result.isSuccessful()) {
                 Log.d(TAG, "Failed packages: " + result);

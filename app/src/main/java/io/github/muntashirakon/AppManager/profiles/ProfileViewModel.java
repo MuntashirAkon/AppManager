@@ -263,8 +263,8 @@ public class ProfileViewModel extends AndroidViewModel {
 
     public void putBoolean(@NonNull String key, boolean value) {
         switch (key) {
-            case "disable":
-                profile.disable = value;
+            case "freeze":
+                profile.freeze = value;
                 break;
             case "force_stop":
                 profile.forceStop = value;
@@ -289,8 +289,8 @@ public class ProfileViewModel extends AndroidViewModel {
 
     public boolean getBoolean(@NonNull String key, boolean defValue) {
         switch (key) {
-            case "disable":
-                return profile.disable;
+            case "freeze":
+                return profile.freeze;
             case "force_stop":
                 return profile.forceStop;
             case "clear_cache":

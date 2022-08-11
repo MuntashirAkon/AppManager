@@ -51,9 +51,9 @@
         app:iconSpaceReserved="false" />
 
     <SwitchPreferenceCompat
-        app:key="disable"
-        app:title="@string/disable"
-        app:summary="@string/profile_disable_msg"
+        app:key="freeze"
+        app:title="@string/freeze"
+        app:summary="@string/profile_freeze_msg"
         app:iconSpaceReserved="false" />
 
     <SwitchPreferenceCompat

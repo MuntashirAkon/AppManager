@@ -301,10 +301,6 @@
         <item quantity="one">Could not clear data from %1$d app</item>
         <item quantity="other">Could not clear data from %1$d apps</item>
     </plurals>
-    <plurals name="alert_failed_to_disable">
-        <item quantity="one">Could not disable %1$d app</item>
-        <item quantity="other">Could not disable %1$d apps</item>
-    </plurals>
     <plurals name="alert_failed_to_uninstall">
         <item quantity="one">Could not uninstall %1$d app</item>
         <item quantity="other">Could not uninstall %1$d apps</item>
@@ -470,10 +466,6 @@
     <plurals name="alert_failed_to_set_app_ops">
         <item quantity="one">Could not set app ops for %1$d app</item>
         <item quantity="other">Could not set app ops for %1$d apps</item>
-    </plurals>
-    <plurals name="alert_failed_to_enable">
-        <item quantity="one">Could not enable %1$d app</item>
-        <item quantity="other">Could not enable %1$d apps</item>
     </plurals>
     <plurals name="backup_exists_are_you_sure">
         <item quantity="one">Backup already exists. Are you sure?</item>
@@ -709,7 +701,6 @@
     <string name="allow_routine_ops">Allow routine ops</string>
     <string name="profile_state">Profile state</string>
     <string name="allow_routine_ops_msg">Allow the profile to be used in the routine operations</string>
-    <string name="profile_disable_msg">Disables or enables apps based on state</string>
     <string name="profile_force_stop_msg">Force-stops apps</string>
     <string name="profile_clear_cache_msg">Clears the app cache of apps</string>
     <string name="profile_clear_data_msg">Clears the data of apps</string>
@@ -1077,7 +1068,6 @@
     <string name="permission_flags">Permission flags</string>
     <string name="saved_filters">Saved filters</string>
     <string name="error_with_details">Error: %s</string>
-    <string name="enable_disable">Enable/disable</string>
     <string name="notice">Notice</string>
     <string name="notice_saf">Unlike the volumes, the selected directory will be used to store all the files related to App Manager, including saved APKs and backups. Storage Access Framework (SAF) is very slow, therefore, you should only use this option when others cannot be used.</string>
     <string name="backup_volume_dialog_description">Volumes with <tt>/tree</tt> prefix are folders selected using Storage Access Framework (SAF). Except these folders, the default directory for App Manager is a subfolder named <tt>AppManager</tt>.</string>
@@ -1242,4 +1232,14 @@
     <string name="pref_sign_apk_no_signing_key">No signing key</string>
     <string name="failed_to_freeze">Could not freeze <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="failed_to_unfreeze">Could not unfreeze <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="freeze_unfreeze">Freeze/unfreeze</string>
+    <string name="profile_freeze_msg">Freezes or unfreezes apps based on state</string>
+    <plurals name="alert_failed_to_freeze">
+        <item quantity="one">Could not freeze %1$d app</item>
+        <item quantity="other">Could not freeze %1$d apps</item>
+    </plurals>
+    <plurals name="alert_failed_to_unfreeze">
+        <item quantity="one">Could not unfreeze %1$d app</item>
+        <item quantity="other">Could not unfreeze %1$d apps</item>
+    </plurals>
 </resources>

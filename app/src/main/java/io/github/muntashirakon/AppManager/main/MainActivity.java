@@ -358,15 +358,16 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
                     .setNeutralButton(R.string.clear_data, (dialog, which) ->
                             handleBatchOp(BatchOpsManager.OP_CLEAR_DATA))
                     .show();
-        } else if (id == R.id.action_enable_disable) {
+        } else if (id == R.id.action_freeze_unfreeze) {
             new MaterialAlertDialogBuilder(this)
-                    .setTitle(R.string.enable_disable)
+                    .setIcon(R.drawable.ic_snowflake)
+                    .setTitle(R.string.freeze_unfreeze)
                     .setMessage(R.string.choose_what_to_do)
-                    .setPositiveButton(R.string.disable, (dialog, which) ->
-                            handleBatchOp(BatchOpsManager.OP_DISABLE))
+                    .setPositiveButton(R.string.freeze, (dialog, which) ->
+                            handleBatchOp(BatchOpsManager.OP_FREEZE))
                     .setNegativeButton(R.string.cancel, null)
-                    .setNeutralButton(R.string.enable, (dialog, which) ->
-                            handleBatchOp(BatchOpsManager.OP_ENABLE))
+                    .setNeutralButton(R.string.unfreeze, (dialog, which) ->
+                            handleBatchOp(BatchOpsManager.OP_UNFREEZE))
                     .show();
         } else if (id == R.id.action_disable_background) {
             new MaterialAlertDialogBuilder(this)
@@ -442,7 +443,7 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
         //  2. Check for properties during selection
         ArrayList<ApplicationItem> selectedItems = mModel.getSelectedApplicationItems();
         MenuItem uninstallMenu = selectionMenu.findItem(R.id.action_uninstall);
-        MenuItem enableDisableMenu = selectionMenu.findItem(R.id.action_enable_disable);
+        MenuItem enableDisableMenu = selectionMenu.findItem(R.id.action_freeze_unfreeze);
         MenuItem forceStopMenu = selectionMenu.findItem(R.id.action_force_stop);
         MenuItem clearDataCacheMenu = selectionMenu.findItem(R.id.action_clear_data_cache);
         MenuItem saveApkMenu = selectionMenu.findItem(R.id.action_save_apk);

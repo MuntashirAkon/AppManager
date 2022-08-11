@@ -337,12 +337,12 @@ public class BatchOpsService extends ForegroundService {
                 return getString(R.string.clear_data);
             case BatchOpsManager.OP_CLEAR_CACHE:
                 return getString(R.string.clear_cache);
-            case BatchOpsManager.OP_DISABLE:
-                return getString(R.string.disable);
+            case BatchOpsManager.OP_FREEZE:
+                return getString(R.string.freeze);
             case BatchOpsManager.OP_DISABLE_BACKGROUND:
                 return getString(R.string.disable_background);
-            case BatchOpsManager.OP_ENABLE:
-                return getString(R.string.enable);
+            case BatchOpsManager.OP_UNFREEZE:
+                return getString(R.string.unfreeze);
             case BatchOpsManager.OP_EXPORT_RULES:
                 return getString(R.string.export_blocking_rules);
             case BatchOpsManager.OP_FORCE_STOP:
@@ -380,10 +380,10 @@ public class BatchOpsService extends ForegroundService {
                 return getResources().getQuantityString(R.plurals.alert_failed_to_disable_trackers, failedCount, failedCount);
             case BatchOpsManager.OP_CLEAR_DATA:
                 return getResources().getQuantityString(R.plurals.alert_failed_to_clear_data, failedCount, failedCount);
-            case BatchOpsManager.OP_DISABLE:
-                return getResources().getQuantityString(R.plurals.alert_failed_to_disable, failedCount, failedCount);
-            case BatchOpsManager.OP_ENABLE:
-                return getResources().getQuantityString(R.plurals.alert_failed_to_enable, failedCount, failedCount);
+            case BatchOpsManager.OP_FREEZE:
+                return getResources().getQuantityString(R.plurals.alert_failed_to_freeze, failedCount, failedCount);
+            case BatchOpsManager.OP_UNFREEZE:
+                return getResources().getQuantityString(R.plurals.alert_failed_to_unfreeze, failedCount, failedCount);
             case BatchOpsManager.OP_DISABLE_BACKGROUND:
                 return getResources().getQuantityString(R.plurals.alert_failed_to_disable_background, failedCount, failedCount);
             case BatchOpsManager.OP_FORCE_STOP:
