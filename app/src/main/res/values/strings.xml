@@ -262,7 +262,6 @@
     <string name="usage_yesterday">Yesterday</string>
     <string name="exodus_link">\u03b5xodus Link</string>
     <string name="second_degree_tracker_note">² prefix indicates that the trackers are in the <a href="https://etip.exodus-privacy.eu.org/">ETIP stand-by list</a> i.e. whether they are actual trackers are still being investigated.</string>
-    <string name="sort_by_disabled_app">Disabled first</string>
     <string name="sort_by_blocked_components">Blocked first</string>
     <string name="external_data_dir">External Data Directory</string>
     <string name="external_multiple_data_dir">External Data Directory <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
@@ -424,7 +423,6 @@
     <string name="filter_system_apps">System apps</string>
     <string name="filter_apps_with_rules">Apps with rules</string>
     <string name="select_all">Select All</string>
-    <string name="filter_disabled_apps">Disabled apps</string>
     <string name="installed_version">Installed Version</string>
     <string name="trackers">Trackers</string>
     <string name="components">Components</string>
@@ -1249,4 +1247,6 @@
     <string name="suspend_app_description">This is the weakest freezing method. A suspended app may still appear in the launcher but will be grayed out and cannot be launched.</string>
     <string name="disable_app_description">Recommended freezing method. It disables the app and along with all its components, but all the shortcuts will be lost.</string>
     <string name="hide_app_description">This method is only recommended for day to day use. A hidden app appears as if it is uninstalled. But the app could reappear if it is reinstalled or updated.</string>
+    <string name="sort_by_frozen_app">Frozen first</string>
+    <string name="filter_frozen_apps">Frozen apps</string>
 </resources>

@@ -363,7 +363,7 @@ public class MainViewModel extends AndroidViewModel {
                         continue;
                     }
                     // Filter rests
-                    if ((mFilterFlags & ListOptions.FILTER_DISABLED_APPS) != 0 && !item.isDisabled) {
+                    if ((mFilterFlags & ListOptions.FILTER_FROZEN_APPS) != 0 && !item.isDisabled) {
                         continue;
                     } else if ((mFilterFlags & ListOptions.FILTER_APPS_WITH_RULES) != 0 && item.blockedCount <= 0) {
                         continue;
@@ -458,7 +458,7 @@ public class MainViewModel extends AndroidViewModel {
                             return -mode * o1.blockedCount.compareTo(o2.blockedCount);
                         }
                         break;
-                    case ListOptions.SORT_BY_DISABLED_APP:
+                    case ListOptions.SORT_BY_FROZEN_APP:
                         return -mode * Boolean.compare(o1.isDisabled, o2.isDisabled);
                     case ListOptions.SORT_BY_BACKUP:
                         return -mode * Boolean.compare(o1.backup != null, o2.backup != null);

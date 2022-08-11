@@ -41,7 +41,7 @@ public class ListOptions extends CapsuleBottomSheetDialogFragment {
             SORT_BY_SHARED_ID,
             SORT_BY_TARGET_SDK,
             SORT_BY_SHA,
-            SORT_BY_DISABLED_APP,
+            SORT_BY_FROZEN_APP,
             SORT_BY_BLOCKED_COMPONENTS,
             SORT_BY_BACKUP,
             SORT_BY_TRACKERS,
@@ -60,7 +60,7 @@ public class ListOptions extends CapsuleBottomSheetDialogFragment {
     public static final int SORT_BY_SHARED_ID = 4;
     public static final int SORT_BY_TARGET_SDK = 5;
     public static final int SORT_BY_SHA = 6;  // Signature
-    public static final int SORT_BY_DISABLED_APP = 7;
+    public static final int SORT_BY_FROZEN_APP = 7;
     public static final int SORT_BY_BLOCKED_COMPONENTS = 8;
     public static final int SORT_BY_BACKUP = 9;
     public static final int SORT_BY_TRACKERS = 10;
@@ -72,7 +72,7 @@ public class ListOptions extends CapsuleBottomSheetDialogFragment {
             FILTER_NO_FILTER,
             FILTER_USER_APPS,
             FILTER_SYSTEM_APPS,
-            FILTER_DISABLED_APPS,
+            FILTER_FROZEN_APPS,
             FILTER_APPS_WITH_RULES,
             FILTER_APPS_WITH_ACTIVITIES,
             FILTER_APPS_WITH_BACKUPS,
@@ -89,7 +89,7 @@ public class ListOptions extends CapsuleBottomSheetDialogFragment {
     public static final int FILTER_NO_FILTER = 0;
     public static final int FILTER_USER_APPS = 1;
     public static final int FILTER_SYSTEM_APPS = 1 << 1;
-    public static final int FILTER_DISABLED_APPS = 1 << 2;
+    public static final int FILTER_FROZEN_APPS = 1 << 2;
     public static final int FILTER_APPS_WITH_RULES = 1 << 3;
     public static final int FILTER_APPS_WITH_ACTIVITIES = 1 << 4;
     public static final int FILTER_APPS_WITH_BACKUPS = 1 << 5;
@@ -101,13 +101,13 @@ public class ListOptions extends CapsuleBottomSheetDialogFragment {
 
     private static final int[] SORT_ITEMS_MAP = {R.string.sort_by_domain, R.string.sort_by_app_label,
             R.string.sort_by_package_name, R.string.sort_by_last_update, R.string.sort_by_shared_user_id,
-            R.string.sort_by_target_sdk, R.string.sort_by_sha, R.string.sort_by_disabled_app,
+            R.string.sort_by_target_sdk, R.string.sort_by_sha, R.string.sort_by_frozen_app,
             R.string.sort_by_blocked_components, R.string.sort_by_backup, R.string.trackers, R.string.last_actions,
             R.string.sort_by_installation_date, R.string.sort_by_total_size};
     private static final SparseIntArray FILTER_MAP = new SparseIntArray() {{
         put(FILTER_USER_APPS, R.string.filter_user_apps);
         put(FILTER_SYSTEM_APPS, R.string.filter_system_apps);
-        put(FILTER_DISABLED_APPS, R.string.filter_disabled_apps);
+        put(FILTER_FROZEN_APPS, R.string.filter_frozen_apps);
         put(FILTER_APPS_WITH_RULES, R.string.filter_apps_with_rules);
         put(FILTER_APPS_WITH_ACTIVITIES, R.string.filter_apps_with_activities);
         put(FILTER_APPS_WITH_BACKUPS, R.string.filter_apps_with_backups);
