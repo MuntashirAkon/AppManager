@@ -801,7 +801,7 @@
     <string name="density">Densidade</string>
     <string name="screen">Ecrã</string>
     <string name="hardware">Hardware</string>
-    <string name="permissive">Permissive</string>
+    <string name="permissive">Permissivo</string>
     <string name="enforcing">Enforcing</string>
     <string name="selinux">SELinux</string>
     <string name="patch_level">Nível do Patch</string>
