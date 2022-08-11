@@ -244,8 +244,6 @@
     <string name="stopped">Stopped</string>
     <string name="disable">Disable</string>
     <string name="enable">Enable</string>
-    <string name="failed_to_disable">Could not disable <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
-    <string name="failed_to_enable">Could not enable <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="force_stop">Force-stop</string>
     <string name="failed_to_stop">Could not stop <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="storage_and_cache">Storage and Cache</string>
@@ -1242,4 +1240,6 @@
     <string name="am_command"><tt>am</tt> command</string>
     <string name="pref_sign_apk_error_signing_key_not_added">A valid signing key is required for signing an APK file.</string>
     <string name="pref_sign_apk_no_signing_key">No signing key</string>
+    <string name="failed_to_freeze">Could not freeze <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="failed_to_unfreeze">Could not unfreeze <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
 </resources>

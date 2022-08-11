@@ -20,6 +20,7 @@ import android.content.pm.PermissionInfo;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ResolveInfo;
 import android.content.pm.ServiceInfo;
+import android.content.pm.SuspendDialogInfo;
 import android.os.Build;
 import android.os.DeadObjectException;
 import android.os.RemoteException;
@@ -239,6 +240,36 @@ public final class PackageManagerCompat {
                                                     @EnabledFlags int flags, @UserIdInt int userId)
             throws RemoteException {
         getPackageManager().setApplicationEnabledSetting(packageName, newState, flags, userId, null);
+    }
+
+    public static int getApplicationEnabledSetting(String packageName, @UserIdInt int userId) throws RemoteException {
+        return getPackageManager().getApplicationEnabledSetting(packageName, userId);
+    }
+
+    @SuppressWarnings("deprecation")
+    public static void suspendPackages(String[] packageNames, @UserIdInt int userId, boolean suspend) throws RemoteException {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            getPackageManager().setPackagesSuspendedAsUser(packageNames, suspend, null, null, (SuspendDialogInfo) null, ActivityManagerCompat.SHELL_PACKAGE_NAME, userId);
+        } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.P) {
+            getPackageManager().setPackagesSuspendedAsUser(packageNames, suspend, null, null, (String) null, ActivityManagerCompat.SHELL_PACKAGE_NAME, userId);
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            getPackageManager().setPackagesSuspendedAsUser(packageNames, suspend, userId);
+        }
+    }
+
+    public static boolean isPackageSuspended(String packageName, @UserIdInt int userId) throws RemoteException {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return getPackageManager().isPackageSuspendedForUser(packageName, userId);
+        }
+        return false;
+    }
+
+    public static void hidePackage(String packageName, @UserIdInt int userId, boolean hide) throws RemoteException {
+        getPackageManager().setApplicationHiddenSettingAsUser(packageName, hide, userId);
+    }
+
+    public static boolean isPackageHidden(String packageName, @UserIdInt int userId) throws RemoteException {
+        return getPackageManager().getApplicationHiddenSettingAsUser(packageName, userId);
     }
 
     public static String getInstallerPackage(String packageName) throws RemoteException {

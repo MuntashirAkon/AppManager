@@ -121,6 +121,7 @@ import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
+import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 import io.github.muntashirakon.AppManager.utils.IntentUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
@@ -872,6 +873,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private void setHorizontalActions() {
         mHorizontalLayout.removeAllViews();
         if (mainModel != null && !mainModel.getIsExternalApk()) {
+            boolean isFrozen = FreezeUtils.isFrozen(mApplicationInfo);
             // Set open
             final Intent launchIntentForPackage = mPackageManager.getLaunchIntentForPackage(mPackageName);
             if (launchIntentForPackage != null) {
@@ -885,18 +887,17 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         });
             }
             // Set disable
-            if (isRootEnabled || isAdbEnabled) {
-                if (mApplicationInfo.enabled) {
-                    addToHorizontalLayout(R.string.disable, R.drawable.ic_block).setOnClickListener(v -> {
-                        if (BuildConfig.APPLICATION_ID.equals(mPackageName)) {
-                            new MaterialAlertDialogBuilder(mActivity)
-                                    .setMessage(R.string.are_you_sure)
-                                    .setPositiveButton(R.string.yes, (d, w) -> disable())
-                                    .setNegativeButton(R.string.no, null)
-                                    .show();
-                        } else disable();
-                    });
-                }
+            if (Ops.isPrivileged() && !isFrozen) {
+                // TODO: 11/8/22
+                addToHorizontalLayout(R.string.freeze, R.drawable.ic_block).setOnClickListener(v -> {
+                    if (BuildConfig.APPLICATION_ID.equals(mPackageName)) {
+                        new MaterialAlertDialogBuilder(mActivity)
+                                .setMessage(R.string.are_you_sure)
+                                .setPositiveButton(R.string.yes, (d, w) -> freeze(true))
+                                .setNegativeButton(R.string.no, null)
+                                .show();
+                    } else freeze(true);
+                });
             }
             // Set uninstall
             addToHorizontalLayout(R.string.uninstall, R.drawable.ic_trash_can).setOnClickListener(v -> {
@@ -940,22 +941,12 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 }
             });
             // Enable/disable app (root/ADB only)
-            if (isRootEnabled || isAdbEnabled) {
-                if (!mApplicationInfo.enabled) {
-                    // Enable app
-                    addToHorizontalLayout(R.string.enable, R.drawable.ic_get_app).setOnClickListener(v -> {
-                        try {
-                            PackageManagerCompat.setApplicationEnabledSetting(mPackageName,
-                                    PackageManager.COMPONENT_ENABLED_STATE_ENABLED, 0,
-                                    mainModel.getUserHandle());
-                        } catch (RemoteException | SecurityException e) {
-                            Log.e(TAG, e);
-                            displayLongToast(R.string.failed_to_enable, mPackageLabel);
-                        }
-                    });
-                }
+            if (Ops.isPrivileged() && isFrozen) {
+                // Enable app
+                addToHorizontalLayout(R.string.unfreeze, R.drawable.ic_get_app)
+                        .setOnClickListener(v -> freeze(false));
             }
-            if (isAdbEnabled || isRootEnabled || ServiceHelper.checkIfServiceIsRunning(mActivity,
+            if (Ops.isPrivileged() || ServiceHelper.checkIfServiceIsRunning(mActivity,
                     NoRootAccessibilityService.class)) {
                 // Force stop
                 if ((mApplicationInfo.flags & ApplicationInfo.FLAG_STOPPED) == 0) {
@@ -1534,15 +1525,17 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     @MainThread
-    private void disable() {
+    private void freeze(boolean freeze) {
         if (mainModel == null) return;
         try {
-            PackageManagerCompat.setApplicationEnabledSetting(mPackageName,
-                    PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER,
-                    0, mainModel.getUserHandle());
+            if (freeze) {
+                FreezeUtils.freeze(mPackageName, mainModel.getUserHandle());
+            } else {
+                FreezeUtils.unfreeze(mPackageName, mainModel.getUserHandle());
+            }
         } catch (RemoteException | SecurityException e) {
             Log.e(TAG, e);
-            displayLongToast(R.string.failed_to_disable, mPackageLabel);
+            displayLongToast(freeze ? R.string.failed_to_freeze : R.string.failed_to_unfreeze, mPackageLabel);
         }
     }
 

@@ -84,6 +84,8 @@ public class AppPref {
         PREF_ENABLED_FEATURES_INT,
         PREF_ENCRYPTION_STR,
 
+        PREF_FREEZE_TYPE_INT,
+
         PREF_GLOBAL_BLOCKING_ENABLED_BOOL,
         PREF_DEFAULT_BLOCKING_METHOD_STR,
 
@@ -558,6 +560,8 @@ public class AppPref {
                 return "%label%_%version%";
             case PREF_AUTHORIZATION_KEY_STR:
                 return AuthManager.generateKey();
+            case PREF_FREEZE_TYPE_INT:
+                return FreezeUtils.FREEZE_DISABLE;
         }
         throw new IllegalArgumentException("Pref key not found.");
     }
