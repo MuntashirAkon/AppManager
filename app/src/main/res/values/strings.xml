@@ -1234,6 +1234,10 @@
     <string name="failed_to_unfreeze">Could not unfreeze <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="freeze_unfreeze">Freeze/unfreeze</string>
     <string name="profile_freeze_msg">Freezes or unfreezes apps based on state</string>
+    <string name="pref_default_freezing_method">Default freezing method</string>
+    <string name="pref_default_freezing_method_description">Method to be used by default in places where there is no option to select a freezing method.</string>
+    <string name="suspend_app">Suspend</string>
+    <string name="hide_app">Hide</string>
     <plurals name="alert_failed_to_freeze">
         <item quantity="one">Could not freeze %1$d app</item>
         <item quantity="other">Could not freeze %1$d apps</item>
@@ -1242,4 +1246,7 @@
         <item quantity="one">Could not unfreeze %1$d app</item>
         <item quantity="other">Could not unfreeze %1$d apps</item>
     </plurals>
+    <string name="suspend_app_description">This is the weakest freezing method. A suspended app may still appear in the launcher but will be grayed out and cannot be launched.</string>
+    <string name="disable_app_description">Recommended freezing method. It disables the app and along with all its components, but all the shortcuts will be lost.</string>
+    <string name="hide_app_description">This method is only recommended for day to day use. A hidden app appears as if it is uninstalled. But the app could reappear if it is reinstalled or updated.</string>
 </resources>

@@ -338,6 +338,15 @@ public class AppPref {
         return selectedStatus;
     }
 
+    @FreezeUtils.FreezeType
+    public static int getDefaultFreezingMethod() {
+        int freezeType = getInt(PrefKey.PREF_FREEZE_TYPE_INT);
+        if (freezeType == FreezeUtils.FREEZE_HIDE && !Ops.isRoot()) {
+            return FreezeUtils.FREEZE_DISABLE;
+        }
+        return freezeType;
+    }
+
     public static int getLayoutOrientation() {
         return getInt(PrefKey.PREF_LAYOUT_ORIENTATION_INT);
     }

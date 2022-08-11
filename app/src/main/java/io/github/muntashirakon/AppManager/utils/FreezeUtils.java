@@ -8,12 +8,21 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.RemoteException;
 
+import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 
 public final class FreezeUtils {
+    @IntDef({FREEZE_DISABLE, FREEZE_SUSPEND, FREEZE_HIDE})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface FreezeType {
+    }
+
     public static final int FREEZE_DISABLE = 1;
     public static final int FREEZE_SUSPEND = 1 << 1;
     public static final int FREEZE_HIDE = 1 << 2;
@@ -30,10 +39,14 @@ public final class FreezeUtils {
     }
 
     public static void freeze(@NonNull String packageName, @UserIdInt int userId) throws RemoteException {
-        int type = AppPref.getInt(AppPref.PrefKey.PREF_FREEZE_TYPE_INT);
-        if (type == FREEZE_HIDE) {
+        freeze(packageName, userId, AppPref.getDefaultFreezingMethod());
+    }
+
+    public static void freeze(@NonNull String packageName, @UserIdInt int userId, @FreezeType int freezeType)
+            throws RemoteException {
+        if (freezeType == FREEZE_HIDE) {
             PackageManagerCompat.hidePackage(packageName, userId, true);
-        } else if (type == FREEZE_SUSPEND && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        } else if (freezeType == FREEZE_SUSPEND && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             PackageManagerCompat.suspendPackages(new String[]{packageName}, userId, true);
         } else {
             PackageManagerCompat.setApplicationEnabledSetting(packageName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER, 0, userId);
