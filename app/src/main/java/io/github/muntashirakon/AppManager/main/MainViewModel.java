@@ -317,13 +317,18 @@ public class MainViewModel extends AndroidViewModel {
             List<ApplicationItem> candidateApplicationItems = new ArrayList<>();
             if (mFilterProfileName != null) {
                 ProfileMetaManager profileMetaManager = new ProfileMetaManager(mFilterProfileName);
+                List<Integer> indexes = new ArrayList<>();
                 for (String packageName : profileMetaManager.getProfile().packages) {
                     ApplicationItem item = new ApplicationItem();
                     item.packageName = packageName;
                     int index = applicationItems.indexOf(item);
                     if (index != -1) {
-                        candidateApplicationItems.add(applicationItems.get(index));
+                        indexes.add(index);
                     }
+                }
+                Collections.sort(indexes);
+                for (int index : indexes) {
+                    candidateApplicationItems.add(applicationItems.get(index));
                 }
             } else candidateApplicationItems.addAll(applicationItems);
             // Other filters
