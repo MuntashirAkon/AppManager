@@ -20,6 +20,7 @@ import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
+import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 @SuppressWarnings("NotNullFieldNotInitialized")
@@ -123,7 +124,7 @@ public class App implements Serializable {
         app.isInstalled = (applicationInfo.flags & ApplicationInfo.FLAG_INSTALLED) != 0
                 && applicationInfo.publicSourceDir != null && new File(applicationInfo.publicSourceDir).exists();
         app.flags = applicationInfo.flags;
-        app.isEnabled = applicationInfo.enabled;
+        app.isEnabled = !FreezeUtils.isFrozen(applicationInfo);
         app.packageLabel = applicationInfo.loadLabel(context.getPackageManager()).toString();
         app.sdk = applicationInfo.targetSdkVersion;
         app.versionName = packageInfo.versionName;
