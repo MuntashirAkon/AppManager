@@ -889,7 +889,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             // Set disable
             if (Ops.isPrivileged() && !isFrozen) {
                 // TODO: 11/8/22
-                addToHorizontalLayout(R.string.freeze, R.drawable.ic_block).setOnClickListener(v -> {
+                addToHorizontalLayout(R.string.freeze, R.drawable.ic_snowflake).setOnClickListener(v -> {
                     if (BuildConfig.APPLICATION_ID.equals(mPackageName)) {
                         new MaterialAlertDialogBuilder(mActivity)
                                 .setMessage(R.string.are_you_sure)
@@ -943,7 +943,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             // Enable/disable app (root/ADB only)
             if (Ops.isPrivileged() && isFrozen) {
                 // Enable app
-                addToHorizontalLayout(R.string.unfreeze, R.drawable.ic_get_app)
+                addToHorizontalLayout(R.string.unfreeze, R.drawable.ic_snowflake_off)
                         .setOnClickListener(v -> freeze(false));
             }
             if (Ops.isPrivileged() || ServiceHelper.checkIfServiceIsRunning(mActivity,
