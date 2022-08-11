@@ -63,10 +63,6 @@ public class AdvancedSearchView extends SearchView {
      * Search using {@link String#matches(String)} or {@link java.util.regex.Pattern}.
      */
     public static final int SEARCH_TYPE_REGEX = 1 << 3;
-    /**
-     * Perform fuzzy search.
-     */
-    public static final int SEARCH_TYPE_FUZZY = 1 << 4;
 
     @SearchType
     private int mType = SEARCH_TYPE_CONTAINS;

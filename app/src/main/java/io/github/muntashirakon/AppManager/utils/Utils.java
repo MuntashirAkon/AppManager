@@ -58,6 +58,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
+import aosp.libcore.util.EmptyArray;
 import aosp.libcore.util.HexEncoding;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -91,10 +92,10 @@ public class Utils {
         return builder.toString().toLowerCase(Locale.ROOT);
     }
 
-    // https://commons.apache.org/proper/commons-lang/javadocs/api-3.1/src-html/org/apache/commons/lang3/StringUtils.html#line.3164
+    // https://github.com/apache/commons-lang/blob/master/src/main/java/org/apache/commons/lang3/StringUtils.java#L7514
     @NonNull
     public static String[] splitByCharacterType(@NonNull String str, boolean camelCase) {
-        if (str.length() == 0) return new String[]{};
+        if (str.length() == 0) return EmptyArray.STRING;
         char[] c = str.toCharArray();
         List<String> list = new ArrayList<>();
         int tokenStart = 0;
