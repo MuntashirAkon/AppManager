@@ -99,6 +99,7 @@ import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.dialog.TextInputDropdownDialogBuilder;
+import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.util.LocalizedString;
 import io.github.muntashirakon.util.ProgressIndicatorCompat;
@@ -1509,35 +1510,38 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             holder.textView1.setText(item.name);
             if (item.vanillaItem instanceof File) {
                 File libFile = (File) item.vanillaItem;
-                StringBuilder sb = new StringBuilder(Formatter.formatFileSize(mActivity, libFile.length()))
+                StringBuilder sb = new StringBuilder(Formatter.formatFileSize(context, libFile.length()))
                         .append("\n").append(libFile.getAbsolutePath());
                 holder.textView2.setText(sb);
                 holder.chipType.setText(libFile.getName().endsWith(".so") ? "SO" : "JAR");
                 holder.launchBtn.setVisibility(View.VISIBLE);
                 holder.launchBtn.setIconResource(R.drawable.ic_open_in_new);
-                holder.launchBtn.setOnClickListener(openAsFolderInFM(mActivity, libFile.getParent()));
+                holder.launchBtn.setOnClickListener(openAsFolderInFM(context, libFile.getParent()));
             } else if (item.vanillaItem instanceof PackageInfo) {
                 PackageInfo packageInfo = (PackageInfo) item.vanillaItem;
-                File apkFile = new File(packageInfo.applicationInfo.publicSourceDir);
+                String apkFileStr = packageInfo.applicationInfo.publicSourceDir;
+                Path apkFile = apkFileStr != null ? Paths.get(apkFileStr) : null;
                 StringBuilder sb = new StringBuilder()
                         .append(packageInfo.packageName)
-                        .append("\n")
-                        .append(Formatter.formatFileSize(mActivity, apkFile.length()))
-                        .append(", ")
-                        .append(getString(R.string.version_name_with_code, packageInfo.versionName,
-                                PackageInfoCompat.getLongVersionCode(packageInfo)))
-                        .append("\n")
-                        .append(apkFile.getAbsolutePath());
+                        .append("\n");
+                if (apkFile != null) {
+                    sb.append(Formatter.formatFileSize(context, apkFile.length())).append(", ");
+                }
+                sb.append(getString(R.string.version_name_with_code, packageInfo.versionName,
+                                PackageInfoCompat.getLongVersionCode(packageInfo)));
+                if (apkFile != null) {
+                    sb.append("\n").append(apkFile.getFilePath());
+                    holder.launchBtn.setVisibility(View.VISIBLE);
+                    holder.launchBtn.setIconResource(R.drawable.ic_information);
+                    holder.launchBtn.setOnClickListener(v -> {
+                        Intent intent = AppDetailsActivity.getIntent(context, apkFile, false);
+                        startActivity(intent);
+                    });
+                } else holder.launchBtn.setVisibility(View.GONE);
                 holder.textView2.setText(sb);
                 holder.chipType.setText("APK");
-                holder.launchBtn.setVisibility(View.VISIBLE);
-                holder.launchBtn.setIconResource(R.drawable.ic_information);
-                holder.launchBtn.setOnClickListener(v -> {
-                    Intent intent = AppDetailsActivity.getIntent(mActivity, Paths.get(apkFile), false);
-                    startActivity(intent);
-                });
             } else if (item.vanillaItem instanceof NativeLibraries.NativeLib) {
-                holder.textView2.setText(((LocalizedString) item.vanillaItem).toLocalizedString(mActivity));
+                holder.textView2.setText(((LocalizedString) item.vanillaItem).toLocalizedString(context));
                 String type;
                 switch (((NativeLibraries.NativeLib) item.vanillaItem).getType()) {
                     case NativeLibraries.NativeLib.TYPE_DYN:
