@@ -9,7 +9,7 @@ import android.util.Log;
 
 import androidx.fragment.app.FragmentActivity;
 import androidx.preference.Preference;
-import androidx.preference.SwitchPreference;
+import androidx.preference.SwitchPreferenceCompat;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -47,13 +47,13 @@ public class LogViewerPreferences extends PreferenceFragment {
 
         FragmentActivity activity = requireActivity();
 
-        SwitchPreference expandByDefault = Objects.requireNonNull(findPreference("log_viewer_expand_by_default"));
+        SwitchPreferenceCompat expandByDefault = Objects.requireNonNull(findPreference("log_viewer_expand_by_default"));
         expandByDefault.setChecked(AppPref.getBoolean(AppPref.PrefKey.PREF_LOG_VIEWER_EXPAND_BY_DEFAULT_BOOL));
 
-        SwitchPreference showPidTidTimestamp = Objects.requireNonNull(findPreference("log_viewer_show_pid_tid_timestamp"));
+        SwitchPreferenceCompat showPidTidTimestamp = Objects.requireNonNull(findPreference("log_viewer_show_pid_tid_timestamp"));
         showPidTidTimestamp.setChecked(AppPref.getBoolean(AppPref.PrefKey.PREF_LOG_VIEWER_SHOW_PID_TID_TIMESTAMP_BOOL));
 
-        SwitchPreference omitSensitiveInfo = Objects.requireNonNull(findPreference("log_viewer_omit_sensitive_info"));
+        SwitchPreferenceCompat omitSensitiveInfo = Objects.requireNonNull(findPreference("log_viewer_omit_sensitive_info"));
         omitSensitiveInfo.setChecked(AppPref.getBoolean(AppPref.PrefKey.PREF_LOG_VIEWER_OMIT_SENSITIVE_INFO_BOOL));
         omitSensitiveInfo.setOnPreferenceChangeListener((preference, newValue) -> {
             LogLine.omitSensitiveInfo = (boolean) newValue;

@@ -6,13 +6,13 @@
         app:title="@string/pref_cat_appearance"
         app:iconSpaceReserved="false">
 
-        <SwitchPreference
+        <SwitchPreferenceCompat
             app:key="log_viewer_expand_by_default"
             app:summary="@string/pref_expanded_by_default_summary"
             app:title="@string/pref_expanded_by_default_title"
             app:iconSpaceReserved="false" />
 
-        <SwitchPreference
+        <SwitchPreferenceCompat
             app:key="log_viewer_show_pid_tid_timestamp"
             app:summary="@string/pref_show_timestamp_summary"
             app:title="@string/pref_show_timestamp_title"
@@ -60,7 +60,7 @@
             app:summary="@string/pref_filter_pattern_summary"
             app:iconSpaceReserved="false" />
 
-        <SwitchPreference
+        <SwitchPreferenceCompat
             app:key="log_viewer_omit_sensitive_info"
             app:title="@string/omit_sensitive_info"
             app:summary="@string/omit_sensitive_info_summary"
