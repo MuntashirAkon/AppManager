@@ -151,7 +151,7 @@ public class AdvancedSearchView extends SearchView {
         context = getContext();
         mSearchSrcTextView = findViewById(R.id.search_src_text);
         mSearchTypeSelectionButton = findViewById(R.id.search_mag_icon);
-        mSearchTypeSelectionButton.setImageResource(R.drawable.ic_filter_menu_outline);
+        mSearchTypeSelectionButton.setImageResource(R.drawable.ic_filter_menu);
         mSearchTypeSelectionButton.setBackground(UiUtils.getDrawable(context, android.R.attr.selectableItemBackgroundBorderless));
         mSearchTypeSelectionButton.setOnClickListener(onClickSearchIcon);
         final TintTypedArray a = TintTypedArray.obtainStyledAttributes(context,

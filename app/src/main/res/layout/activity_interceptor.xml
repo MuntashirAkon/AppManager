@@ -187,7 +187,7 @@
                 android:paddingStart="@dimen/padding_medium"
                 android:paddingEnd="@dimen/padding_medium"
                 app:endIconMode="custom"
-                app:endIconDrawable="@drawable/ic_baseline_autorenew_24"
+                app:endIconDrawable="@drawable/ic_autorenew"
                 app:hintAnimationEnabled="true"
                 app:hintEnabled="true">
 
@@ -247,7 +247,7 @@
                     android:layout_height="30dp"
                     android:layout_weight="0"
                     android:focusable="true"
-                    app:icon="@drawable/ic_baseline_add_24" />
+                    app:icon="@drawable/ic_add" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -283,7 +283,7 @@
                     android:layout_height="30dp"
                     android:layout_weight="0"
                     android:focusable="true"
-                    app:icon="@drawable/ic_baseline_add_24" />
+                    app:icon="@drawable/ic_add" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -319,7 +319,7 @@
                     android:layout_height="30dp"
                     android:layout_weight="0"
                     android:focusable="true"
-                    app:icon="@drawable/ic_baseline_add_24" />
+                    app:icon="@drawable/ic_add" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 

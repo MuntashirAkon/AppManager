@@ -907,10 +907,10 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
 
         private void handleBlock(@NonNull ViewHolder holder, @NonNull AppDetailsComponentItem item, RuleType ruleType) {
             if (item.isBlocked()) {
-                holder.blockBtn.setIconResource(R.drawable.ic_restore_black_24dp);
+                holder.blockBtn.setIconResource(R.drawable.ic_restore);
                 holder.blockBtn.setContentDescription(getString(R.string.unblock));
             } else {
-                holder.blockBtn.setIconResource(R.drawable.ic_block_black_24dp);
+                holder.blockBtn.setIconResource(R.drawable.ic_block);
                 holder.blockBtn.setContentDescription(getString(R.string.block));
             }
             holder.blockBtn.setVisibility(View.VISIBLE);
@@ -1514,7 +1514,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                 holder.textView2.setText(sb);
                 holder.chipType.setText(libFile.getName().endsWith(".so") ? "SO" : "JAR");
                 holder.launchBtn.setVisibility(View.VISIBLE);
-                holder.launchBtn.setIconResource(R.drawable.ic_open_in_new_black_24dp);
+                holder.launchBtn.setIconResource(R.drawable.ic_open_in_new);
                 holder.launchBtn.setOnClickListener(openAsFolderInFM(mActivity, libFile.getParent()));
             } else if (item.vanillaItem instanceof PackageInfo) {
                 PackageInfo packageInfo = (PackageInfo) item.vanillaItem;
@@ -1531,7 +1531,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                 holder.textView2.setText(sb);
                 holder.chipType.setText("APK");
                 holder.launchBtn.setVisibility(View.VISIBLE);
-                holder.launchBtn.setIconResource(R.drawable.ic_information_variant);
+                holder.launchBtn.setIconResource(R.drawable.ic_information);
                 holder.launchBtn.setOnClickListener(v -> {
                     Intent intent = AppDetailsActivity.getIntent(mActivity, Paths.get(apkFile), false);
                     startActivity(intent);

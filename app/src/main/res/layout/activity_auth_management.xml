@@ -37,7 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:endIconMode="custom"
-                app:endIconDrawable="@drawable/ic_baseline_autorenew_24">
+                app:endIconDrawable="@drawable/ic_autorenew">
 
                 <io.github.muntashirakon.widget.TextInputTextView
                     android:id="@android:id/text1"

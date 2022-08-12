@@ -4,17 +4,17 @@
 
     <item
         android:id="@+id/action_apply"
-        android:icon="@drawable/ic_baseline_clear_24"
+        android:icon="@drawable/ic_clear"
         android:title="@string/apply_now" />
 
     <item
         android:id="@+id/action_delete"
-        android:icon="@drawable/ic_baseline_power_settings_new_24"
+        android:icon="@drawable/ic_power_settings"
         android:title="@string/delete" />
 
     <item
         android:id="@+id/action_routine_ops"
-        android:icon="@drawable/ic_view_list_black_24dp"
+        android:icon="@drawable/ic_view_list"
         android:title="@string/routine_ops" />
 
     <item
@@ -24,12 +24,12 @@
 
     <item
         android:id="@+id/action_export"
-        android:icon="@drawable/ic_file_export_outline"
+        android:icon="@drawable/ic_file_export"
         android:title="@string/pref_export" />
 
     <item
         android:id="@+id/action_shortcut"
-        android:icon="@drawable/ic_image_outline"
+        android:icon="@drawable/ic_image"
         android:title="@string/create_shortcut" />
 
 </menu>

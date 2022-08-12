@@ -5,18 +5,18 @@
 
     <item
         android:id="@+id/action_save"
-        android:icon="@drawable/ic_content_save_outline"
+        android:icon="@drawable/ic_content_save"
         android:title="@string/save" />
     <item
         android:id="@+id/action_discard"
-        android:icon="@drawable/ic_file_undo_outline"
+        android:icon="@drawable/ic_file_undo"
         android:title="@string/discard" />
     <item
         android:id="@+id/action_delete"
-        android:icon="@drawable/ic_trash_can_outline"
+        android:icon="@drawable/ic_trash_can"
         android:title="@string/delete" />
     <item
         android:id="@+id/action_separate_window"
-        android:icon="@drawable/ic_open_in_new_black_24dp"
+        android:icon="@drawable/ic_open_in_new"
         android:title="@string/open_in_new_window" />
 </menu>

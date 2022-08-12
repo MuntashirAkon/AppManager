@@ -1222,7 +1222,7 @@ public class ActivityInterceptor extends BaseActivity {
                 title = itemView.findViewById(R.id.item_title);
                 subtitle = itemView.findViewById(R.id.item_subtitle);
                 actionIcon = itemView.findViewById(R.id.item_open);
-                actionIcon.setIconResource(R.drawable.ic_trash_can_outline);
+                actionIcon.setIconResource(R.drawable.ic_trash_can);
                 icon = itemView.findViewById(R.id.item_icon);
                 icon.setVisibility(View.GONE);
             }

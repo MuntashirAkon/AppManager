@@ -875,7 +875,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             // Set open
             final Intent launchIntentForPackage = mPackageManager.getLaunchIntentForPackage(mPackageName);
             if (launchIntentForPackage != null) {
-                addToHorizontalLayout(R.string.launch_app, R.drawable.ic_open_in_new_black_24dp)
+                addToHorizontalLayout(R.string.launch_app, R.drawable.ic_open_in_new)
                         .setOnClickListener(v -> {
                             try {
                                 startActivity(launchIntentForPackage);
@@ -887,7 +887,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             // Set disable
             if (isRootEnabled || isAdbEnabled) {
                 if (mApplicationInfo.enabled) {
-                    addToHorizontalLayout(R.string.disable, R.drawable.ic_block_black_24dp).setOnClickListener(v -> {
+                    addToHorizontalLayout(R.string.disable, R.drawable.ic_block).setOnClickListener(v -> {
                         if (BuildConfig.APPLICATION_ID.equals(mPackageName)) {
                             new MaterialAlertDialogBuilder(mActivity)
                                     .setMessage(R.string.are_you_sure)
@@ -899,7 +899,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 }
             }
             // Set uninstall
-            addToHorizontalLayout(R.string.uninstall, R.drawable.ic_trash_can_outline).setOnClickListener(v -> {
+            addToHorizontalLayout(R.string.uninstall, R.drawable.ic_trash_can).setOnClickListener(v -> {
                 final boolean isSystemApp = (mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
                 if (Ops.isPrivileged()) {
                     ScrollableDialogBuilder builder = new ScrollableDialogBuilder(mActivity,
@@ -943,7 +943,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             if (isRootEnabled || isAdbEnabled) {
                 if (!mApplicationInfo.enabled) {
                     // Enable app
-                    addToHorizontalLayout(R.string.enable, R.drawable.ic_baseline_get_app_24).setOnClickListener(v -> {
+                    addToHorizontalLayout(R.string.enable, R.drawable.ic_get_app).setOnClickListener(v -> {
                         try {
                             PackageManagerCompat.setApplicationEnabledSetting(mPackageName,
                                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED, 0,
@@ -959,7 +959,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     NoRootAccessibilityService.class)) {
                 // Force stop
                 if ((mApplicationInfo.flags & ApplicationInfo.FLAG_STOPPED) == 0) {
-                    addToHorizontalLayout(R.string.force_stop, R.drawable.ic_baseline_power_settings_new_24)
+                    addToHorizontalLayout(R.string.force_stop, R.drawable.ic_power_settings)
                             .setOnClickListener(v -> {
                                 if (isAdbEnabled || isRootEnabled) {
                                     executor.submit(() -> {
@@ -1031,13 +1031,13 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         });
             } else {
                 // Display Android settings button
-                addToHorizontalLayout(R.string.view_in_settings, R.drawable.ic_baseline_settings_24)
+                addToHorizontalLayout(R.string.view_in_settings, R.drawable.ic_settings)
                         .setOnClickListener(v -> startActivity(IntentUtils.getAppDetailsSettings(mPackageName)));
             }
         } else if (FeatureController.isInstallerEnabled()) {
             if (mInstalledPackageInfo == null) {
                 // App not installed
-                addToHorizontalLayout(R.string.install, R.drawable.ic_baseline_get_app_24)
+                addToHorizontalLayout(R.string.install, R.drawable.ic_get_app)
                         .setOnClickListener(v -> install());
             } else {
                 // App is installed
@@ -1045,7 +1045,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 long thisVersionCode = PackageInfoCompat.getLongVersionCode(mPackageInfo);
                 if (installedVersionCode < thisVersionCode) {
                     // Needs update
-                    addToHorizontalLayout(R.string.whats_new, R.drawable.ic_information_variant)
+                    addToHorizontalLayout(R.string.whats_new, R.drawable.ic_information)
                             .setOnClickListener(v -> {
                                 Bundle args = new Bundle();
                                 args.putParcelable(WhatsNewDialogFragment.ARG_NEW_PKG_INFO, mPackageInfo);
@@ -1054,16 +1054,16 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                 dialogFragment.setArguments(args);
                                 dialogFragment.show(mActivity.getSupportFragmentManager(), WhatsNewDialogFragment.TAG);
                             });
-                    addToHorizontalLayout(R.string.update, R.drawable.ic_baseline_get_app_24)
+                    addToHorizontalLayout(R.string.update, R.drawable.ic_get_app)
                             .setOnClickListener(v -> install());
                 } else if (installedVersionCode == thisVersionCode) {
                     // Needs reinstall
-                    addToHorizontalLayout(R.string.reinstall, R.drawable.ic_baseline_get_app_24)
+                    addToHorizontalLayout(R.string.reinstall, R.drawable.ic_get_app)
                             .setOnClickListener(v -> install());
                 } else {
                     // Needs downgrade
                     if (Ops.isPrivileged()) {
-                        addToHorizontalLayout(R.string.downgrade, R.drawable.ic_baseline_get_app_24)
+                        addToHorizontalLayout(R.string.downgrade, R.drawable.ic_get_app)
                                 .setOnClickListener(v -> install());
                     }
                 }
@@ -1071,14 +1071,14 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         }
         // Set manifest
         if (FeatureController.isManifestEnabled()) {
-            addToHorizontalLayout(R.string.manifest, R.drawable.ic_package_variant).setOnClickListener(v -> {
+            addToHorizontalLayout(R.string.manifest, R.drawable.ic_package).setOnClickListener(v -> {
                 Intent intent = new Intent(mActivity, ManifestViewerActivity.class);
                 startActivityForSplit(intent);
             });
         }
         // Set scanner
         if (FeatureController.isScannerEnabled()) {
-            addToHorizontalLayout(R.string.scanner, R.drawable.ic_baseline_security_24).setOnClickListener(v -> {
+            addToHorizontalLayout(R.string.scanner, R.drawable.ic_security).setOnClickListener(v -> {
                 Intent intent = new Intent(mActivity, ScannerActivity.class);
                 intent.putExtra(ScannerActivity.EXTRA_IS_EXTERNAL, isExternalApk);
                 startActivityForSplit(intent);
@@ -1099,7 +1099,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 for (int i = 0; i < sharedPrefs.size(); ++i) {
                     sharedPrefNames[i] = sharedPrefs.get(i).getName();
                 }
-                addToHorizontalLayout(R.string.shared_prefs, R.drawable.ic_view_list_black_24dp)
+                addToHorizontalLayout(R.string.shared_prefs, R.drawable.ic_view_list)
                         .setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
                                 .setTitle(R.string.shared_prefs)
                                 .setItems(sharedPrefNames, (dialog, which) -> {
@@ -1146,7 +1146,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         fdroid_intent.setData(Uri.parse("https://f-droid.org/packages/" + mPackageName));
         List<ResolveInfo> resolvedActivities = mPackageManager.queryIntentActivities(fdroid_intent, 0);
         if (resolvedActivities.size() > 0) {
-            addToHorizontalLayout(R.string.fdroid, R.drawable.ic_frost_fdroid_black_24dp)
+            addToHorizontalLayout(R.string.fdroid, R.drawable.ic_frost_fdroid)
                     .setOnClickListener(v -> {
                         try {
                             startActivity(fdroid_intent);
@@ -1161,7 +1161,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 // Aurora Store is disabled or the installed version has promotional apps
                 throw new PackageManager.NameNotFoundException();
             }
-            addToHorizontalLayout(R.string.store, R.drawable.ic_frost_aurorastore_black_24dp)
+            addToHorizontalLayout(R.string.store, R.drawable.ic_frost_aurorastore)
                     .setOnClickListener(v -> {
                         Intent intent = new Intent(Intent.ACTION_VIEW);
                         intent.setPackage(PACKAGE_NAME_AURORA_STORE);
@@ -1273,7 +1273,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                     UserHandleHidden.myUserId());
                             mActivity.startActivity(appDetailsIntent);
                         });
-                listItem.setActionIcon(R.drawable.ic_information_variant);
+                listItem.setActionIcon(R.drawable.ic_information);
                 mListItems.add(listItem);
             }
 

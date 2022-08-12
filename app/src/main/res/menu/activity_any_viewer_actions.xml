@@ -10,13 +10,13 @@
 
     <item
         android:id="@+id/action_wrap"
-        android:icon="@drawable/ic_wrap_text_black_24dp"
+        android:icon="@drawable/ic_wrap_text"
         android:title="@string/word_wrap"
         app:showAsAction="always" />
 
     <item
         android:id="@+id/action_save"
-        android:icon="@drawable/ic_content_save_outline"
+        android:icon="@drawable/ic_content_save"
         android:title="@string/save"
         app:showAsAction="ifRoom" />
 

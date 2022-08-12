@@ -5,18 +5,18 @@
 
     <item
         android:id="@+id/action_refresh_details"
-        android:icon="@drawable/ic_refresh_black_24dp"
+        android:icon="@drawable/ic_refresh"
         android:title="@string/refresh"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_deny_dangerous_permissions"
-        android:icon="@drawable/ic_block_black_24dp"
+        android:icon="@drawable/ic_block"
         android:title="@string/deny_dangerous_permissions"
         app:showAsAction="never" />
 
     <item
-        android:icon="@drawable/ic_sort_black_24dp"
+        android:icon="@drawable/ic_sort"
         android:title="@string/sort"
         app:showAsAction="never">
 

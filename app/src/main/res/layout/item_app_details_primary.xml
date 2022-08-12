@@ -117,7 +117,7 @@
                 android:layout_gravity="center"
                 android:layout_weight="0"
                 app:iconSize="30dp"
-                tools:icon="@drawable/ic_block_black_24dp" />
+                tools:icon="@drawable/ic_block" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

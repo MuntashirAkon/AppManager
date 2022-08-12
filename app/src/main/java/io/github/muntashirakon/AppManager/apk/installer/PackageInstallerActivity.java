@@ -184,7 +184,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
             if (newPackageInfo == null) {
                 new MaterialAlertDialogBuilder(this)
                         .setTitle(R.string._undefined)
-                        .setIcon(R.drawable.ic_baseline_get_app_24)
+                        .setIcon(R.drawable.ic_get_app)
                         .setMessage(R.string.failed_to_fetch_package_info)
                         .setCancelable(false)
                         .setNegativeButton(R.string.close, (dialog, which) -> {
@@ -566,7 +566,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
                 .setSubtitle(getVersionInfoWithTrackers(model.getNewPackageInfo()))
                 .setStartIcon(model.getAppIcon());
         if (displayOpenAndAppInfo) {
-            title.setEndIcon(R.drawable.ic_information_variant, v -> {
+            title.setEndIcon(R.drawable.ic_information, v -> {
                 Intent appDetailsIntent = AppDetailsActivity.getIntent(this, packageName, lastUserId, true);
                 appDetailsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(appDetailsIntent);
@@ -605,7 +605,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
         tv.setText(R.string.staging_apk_files);
         return new MaterialAlertDialogBuilder(this)
                 .setTitle(R.string._undefined)
-                .setIcon(R.drawable.ic_baseline_get_app_24)
+                .setIcon(R.drawable.ic_get_app)
                 .setCancelable(false)
                 .setNegativeButton(R.string.cancel, (dialog, which) -> {
                     dialog.dismiss();

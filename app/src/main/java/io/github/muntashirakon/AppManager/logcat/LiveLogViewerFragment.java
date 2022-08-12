@@ -85,10 +85,10 @@ public class LiveLogViewerFragment extends AbsLogViewerFragment implements LogVi
         if (id == R.id.action_play_pause) {
             if (mViewModel.isLogcatPaused()) {
                 mViewModel.resumeLogcat();
-                item.setIcon(R.drawable.ic_pause_white_24dp);
+                item.setIcon(R.drawable.ic_pause);
             } else {
                 mViewModel.pauseLogcat();
-                item.setIcon(R.drawable.ic_play_arrow_white_24dp);
+                item.setIcon(R.drawable.ic_play_arrow);
             }
         } else if (id == R.id.action_clear) {
             if (mLogListAdapter != null) {

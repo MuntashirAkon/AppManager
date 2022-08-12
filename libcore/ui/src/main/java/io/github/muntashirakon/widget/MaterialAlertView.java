@@ -162,7 +162,7 @@ public class MaterialAlertView extends TextInputLayout {
                 break;
             default:
             case ALERT_TYPE_INFO: {
-                setStartIconDrawable(R.drawable.ic_information_variant);
+                setStartIconDrawable(R.drawable.ic_information);
                 ColorStateList foreground = ColorStateList.valueOf(MaterialColors.getColor(this, R.attr.colorOnPrimaryContainer));
                 ColorStateList background = ColorStateList.valueOf(MaterialColors.getColor(this, R.attr.colorPrimaryContainer));
                 setBoxBackgroundColorStateList(background);
