@@ -30,6 +30,7 @@ import androidx.core.view.WindowInsetsControllerCompat;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.google.android.material.bottomsheet.BottomSheetDragHandleView;
 import com.google.android.material.shape.MaterialShapeDrawable;
 import com.google.android.material.shape.ShapeAppearanceModel;
 
@@ -51,7 +52,7 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
     public static final String TAG = CapsuleBottomSheetDialogFragment.class.getSimpleName();
 
     private LinearLayoutCompat mBottomSheetContainer;
-    private View mCapsule;
+    private BottomSheetDragHandleView mDragHandle;
     private LinearLayoutCompat mHeaderContainer;
     private FrameLayout mMainContainer;
     private LinearLayoutCompat mBodyContainer;
@@ -151,8 +152,17 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
     public void setHeader(@Nullable View header) {
         mHeader = header;
         mHeaderContainer.removeAllViews();
-        mHeaderContainer.addView(header, new LinearLayoutCompat.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        if (header != null) {
+            // Remove top padding
+            // TODO: 12/8/22 Fix this workaround by unsetting the top padding in the DialogTitleBuilder
+            if (header.isPaddingRelative()) {
+                header.setPaddingRelative(header.getPaddingStart(), 0, header.getPaddingEnd(), header.getPaddingBottom());
+            } else {
+                header.setPadding(header.getPaddingStart(), 0, header.getPaddingEnd(), header.getPaddingBottom());
+            }
+            mHeaderContainer.addView(header, new LinearLayoutCompat.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        }
     }
 
     @Px
@@ -195,10 +205,10 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
     @Override
     public final View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mBottomSheetContainer = (LinearLayoutCompat) inflater.inflate(R.layout.dialog_bottom_sheet_capsule, container, false);
-        mCapsule = mBottomSheetContainer.findViewById(R.id.capsule);
-        mCapsule.setBackground(new TransitionDrawable(new Drawable[]{
-                ContextCompat.getDrawable(requireContext(), R.drawable.bottom_sheet_capsule),
-                ContextCompat.getDrawable(requireContext(), R.drawable.bottom_sheet_capsule_activated)
+        mDragHandle = mBottomSheetContainer.findViewById(R.id.capsule);
+        mDragHandle.setImageDrawable(new TransitionDrawable(new Drawable[]{
+                ContextCompat.getDrawable(requireContext(), R.drawable.bottom_sheet_drag_handle),
+                ContextCompat.getDrawable(requireContext(), R.drawable.bottom_sheet_drag_handle_activated)
         }));
         mHeaderContainer = mBottomSheetContainer.findViewById(R.id.header);
         mBodyContainer = mBottomSheetContainer.findViewById(R.id.body);
@@ -291,9 +301,9 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
 
     public void onCapsuleActivated(boolean activated) {
         if (activated) {
-            ((TransitionDrawable) mCapsule.getBackground()).startTransition(150);
+            ((TransitionDrawable) mDragHandle.getDrawable()).startTransition(150);
         } else {
-            ((TransitionDrawable) mCapsule.getBackground()).reverseTransition(150);
+            ((TransitionDrawable) mDragHandle.getDrawable()).reverseTransition(150);
         }
     }
 
