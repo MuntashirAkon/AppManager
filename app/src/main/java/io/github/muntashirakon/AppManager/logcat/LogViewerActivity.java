@@ -228,12 +228,10 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
 
     @Override
     public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
-            if (!mSearchView.isIconified()) {
-                mSearchView.setIconified(true);
-            }
-            super.onBackPressed();
-        } else this.finish();
+        if (!mSearchView.isIconified()) {
+            mSearchView.setIconified(true);
+        }
+        super.onBackPressed();
     }
 
     public void loadNewFragment(Fragment fragment) {
@@ -337,17 +335,14 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
         mProgressIndicator.hide();
         mProgressIndicator.setIndeterminate(true);
         mProgressIndicator.show();
-        if (getSupportFragmentManager().getBackStackEntryCount() > 0) {
-            if (getSupportFragmentManager().findFragmentByTag(LiveLogViewerFragment.TAG) != null) {
-                // Fragment already exists, just restart logcat
-                mViewModel.restartLogcat();
-                return;
-            }
+        if (getSupportFragmentManager().findFragmentByTag(LiveLogViewerFragment.TAG) != null) {
+            // Fragment already exists, just restart logcat
+            mViewModel.restartLogcat();
+            return;
         }
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.main_layout, new LiveLogViewerFragment(), LiveLogViewerFragment.TAG)
-                .addToBackStack(null)
                 .commit();
     }
 

@@ -119,7 +119,6 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
                 args.putIntArray(RulesTypeSelectionDialogFragment.ARG_USERS, Users.getUsersIds());
                 dialogFragment.setArguments(args);
                 dialogFragment.show(getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
-                multiSelectionView.cancel();
             });
 
     private final BroadcastReceiver mBatchOpsBroadCastReceiver = new BroadcastReceiver() {
@@ -334,7 +333,6 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
                 fragment.setOnActionBeginListener(mode -> showProgressIndicator(true));
                 fragment.setOnActionCompleteListener((mode, failedPackages) -> showProgressIndicator(false));
                 fragment.show(getSupportFragmentManager(), BackupRestoreDialogFragment.TAG);
-                multiSelectionView.cancel();
             }
         } else if (id == R.id.action_save_apk) {
             storagePermission.request(granted -> {
@@ -422,7 +420,6 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
                         for (ProfileMetaManager metaManager : selectedItems) {
                             try {
                                 metaManager.appendPackages(mModel.getSelectedPackages().keySet());
-                                multiSelectionView.cancel();
                                 metaManager.writeProfile();
                             } catch (Throwable e) {
                                 e.printStackTrace();
@@ -432,7 +429,6 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
                     })
                     .show();
         } else {
-            multiSelectionView.cancel();
             return false;
         }
         return true;
@@ -607,7 +603,6 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
         intent.putExtra(BatchOpsService.EXTRA_OP, op);
         intent.putExtra(BatchOpsService.EXTRA_OP_EXTRA_ARGS, args);
         ContextCompat.startForegroundService(this, intent);
-        multiSelectionView.cancel();
     }
 
     private void handleBatchOpWithWarning(@BatchOpsManager.OpType int op) {

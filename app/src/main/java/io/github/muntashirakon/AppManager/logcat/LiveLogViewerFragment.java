@@ -142,8 +142,6 @@ public class LiveLogViewerFragment extends AbsLogViewerFragment implements LogVi
         } else if (id == R.id.action_share) {
             displaySaveDebugLogsDialog(true, true);
         } else return false;
-        // Handled successfully
-        mMultiSelectionView.hide();
         return true;
     }
 }
