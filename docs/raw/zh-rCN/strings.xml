@@ -10,11 +10,15 @@
 \n要加入翻译团队，请访问 \\url{https://hosted.weblate.org/engage/app-manager/}。</string>
     <string name="intro$main$supported-versions">当前，支持的版本是v2.6.0（稳定版），v3.0.0（alpha和debug版）。先前版本的 App
 \nManager 可能包含安全漏洞，不应继续使用。</string>
-    <string name="intro$main$intro">App Manager 是一个提供大量功能的高级的 Android 软件包管理器，因此，需要用户手册来帮助用户正确使用。本文作为 App Manager 的用户手册，旨在描述 App Manager 所提供的每一个功能。
-\n本文也可以被认为是 App Manager 的 ``官方\'\' 指南，并指明 App Manager 的预期行为。翻译可能有误 (原文为英文)。因此，每个有能力的用户应该阅读该文件的英文版本，以获得最佳的体验。
-\n此外还可能有其他非官方的或第三方的资源，如博客文章、视频、聊天群组等。虽然这些资源可能对许多人有用，但它们可能不是针对最新版本。
-\n如果在App Manager中发现任何偏离本文档的情况，应在
-\n\\href{https://github.com/MuntashirAkon/AppManager/issues}{App Manager 问题追踪}内反映。</string>
+    <string name="intro$main$intro">App Manager 是一个高级的 Android 包管理器。
+\n它提供了不计其数的功能，因此需要用户手册来帮助用户。本文档作为 App Manager 的用户手册，旨在描述 App Manager 提供的每一个功能。
+\n本文档也可以被认为是 App Manager 的“官方”指南，
+\n并代表了 App Manager 的预期行为。翻译对文档理解可能有误（原文是用英语写的）。
+\n因此，每个有能力的用户都应该阅读英文版本的文档，以充分发挥 App Manager 的作用。
+\n可能还有其他非官方或第三方资源，如博客文章、视频、聊天、群组等。
+\n虽然这些资源可能对很多人有用，但它们的内容可能跟不上最新的 App Manager 版本。
+\n如果在 App Manager 中发现任何偏离本文档的情况，应在
+\n\\href{https://github.com/MuntashirAkon/AppManager/issues}{App Manager 问题追踪}进行报告。</string>
     <string name="intro$main$bin-sources">App Manager 通过以下渠道发布。
 \n非官方来源可能分发 App Manager 的修改版本，后果自负。
 \n\\begin{enumerate}
