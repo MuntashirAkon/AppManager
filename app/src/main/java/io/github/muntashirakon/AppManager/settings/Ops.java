@@ -242,7 +242,7 @@ public class Ops {
                                                 @NonNull AdbConnectionInterface callback) {
         DialogTitleBuilder builder = new DialogTitleBuilder(activity)
                 .setTitle(R.string.wireless_debugging)
-                .setEndIcon(R.drawable.ic_open_in_new_black_24dp, v -> {
+                .setEndIcon(R.drawable.ic_open_in_new, v -> {
                     Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS)
                             .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     activity.startActivity(intent);

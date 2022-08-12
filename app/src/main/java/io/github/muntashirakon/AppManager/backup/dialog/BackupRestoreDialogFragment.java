@@ -272,7 +272,7 @@ public class BackupRestoreDialogFragment extends CapsuleBottomSheetDialogFragmen
 
     public void updateMultipleRestoreHeader() {
         // Display delete button
-        mDialogTitleBuilder.setEndIcon(R.drawable.ic_trash_can_outline, v -> handleDeleteBaseBackup())
+        mDialogTitleBuilder.setEndIcon(R.drawable.ic_trash_can, v -> handleDeleteBaseBackup())
                 .setEndIconContentDescription(R.string.delete_backup);
         setHeader(mDialogTitleBuilder.build());
     }

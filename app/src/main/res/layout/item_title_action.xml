@@ -29,7 +29,7 @@
         android:layout_weight="0"
         android:paddingVertical="@dimen/padding_small"
         android:layout_marginEnd="@dimen/padding_small"
-        app:icon="@drawable/ic_baseline_clear_24"
+        app:icon="@drawable/ic_clear"
         app:iconSize="20dp" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

@@ -2,12 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/action_apps"
-        android:icon="@drawable/ic_view_list_black_24dp"
+        android:icon="@drawable/ic_view_list"
         android:title="@string/apps" />
 
     <item
         android:id="@+id/action_conf"
-        android:icon="@drawable/ic_tune_black_24dp"
+        android:icon="@drawable/ic_tune"
         android:title="@string/configurations" />
 
     <item

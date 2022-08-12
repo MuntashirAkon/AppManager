@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/action_copy"
-        android:icon="@drawable/ic_baseline_content_copy_24"
+        android:icon="@drawable/ic_content_copy"
         android:title="@string/copy"
         app:showAsAction="always">
         <menu>
@@ -19,7 +19,7 @@
 
     <item
         android:id="@+id/action_paste"
-        android:icon="@drawable/ic_baseline_content_paste_24"
+        android:icon="@drawable/ic_content_paste"
         android:title="@string/paste"
         app:showAsAction="never" />
 

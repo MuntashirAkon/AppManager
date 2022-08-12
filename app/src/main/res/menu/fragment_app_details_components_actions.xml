@@ -5,13 +5,13 @@
 
     <item
         android:id="@+id/action_refresh_details"
-        android:icon="@drawable/ic_refresh_black_24dp"
+        android:icon="@drawable/ic_refresh"
         android:title="@string/refresh"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_toggle_blocking"
-        android:icon="@drawable/ic_block_black_24dp"
+        android:icon="@drawable/ic_block"
         android:title=""
         app:showAsAction="never" />
 
@@ -22,7 +22,7 @@
         app:showAsAction="never" />
 
     <item
-        android:icon="@drawable/ic_sort_black_24dp"
+        android:icon="@drawable/ic_sort"
         android:title="@string/sort"
         app:showAsAction="never">
 

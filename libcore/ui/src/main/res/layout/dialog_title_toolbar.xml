@@ -13,7 +13,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:navigationIcon="@drawable/ic_baseline_clear_24"
+        app:navigationIcon="@drawable/ic_clear"
         tools:title="Full-screen dialog">
 
         <com.google.android.material.button.MaterialButton

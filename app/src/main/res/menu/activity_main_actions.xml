@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/action_instructions"
-        android:icon="@drawable/ic_information_variant"
+        android:icon="@drawable/ic_information"
         android:title="@string/instructions"
         app:showAsAction="never" />
 
@@ -16,18 +16,18 @@
 
     <item
         android:id="@+id/action_refresh"
-        android:icon="@drawable/ic_refresh_black_24dp"
+        android:icon="@drawable/ic_refresh"
         android:title="@string/refresh"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_one_click_ops"
-        android:icon="@drawable/ic_cursor_default_click_outline"
+        android:icon="@drawable/ic_cursor_default_click"
         android:title="@string/one_click_ops" />
 
     <item
         android:id="@+id/action_app_usage"
-        android:icon="@drawable/ic_data_usage_black_24dp"
+        android:icon="@drawable/ic_data_usage"
         android:title="@string/app_usage" />
 
     <item
@@ -37,22 +37,22 @@
 
     <item
         android:id="@+id/action_sys_config"
-        android:icon="@drawable/ic_view_list_black_24dp"
+        android:icon="@drawable/ic_view_list"
         android:title="@string/sys_config" />
 
     <item
         android:id="@+id/action_profiles"
-        android:icon="@drawable/ic_file_document_multiple_outline"
+        android:icon="@drawable/ic_file_document_multiple"
         android:title="@string/profiles" />
 
     <item
         android:id="@+id/action_log_viewer"
-        android:icon="@drawable/ic_view_list_black_24dp"
+        android:icon="@drawable/ic_view_list"
         android:title="@string/log_viewer" />
 
     <item
         android:id="@+id/action_apk_updater"
-        android:icon="@drawable/ic_baseline_sync_24"
+        android:icon="@drawable/ic_sync"
         android:title="@string/apk_updater" />
 
     <item
@@ -62,7 +62,7 @@
 
     <item
         android:id="@+id/action_settings"
-        android:icon="@drawable/ic_baseline_settings_24"
+        android:icon="@drawable/ic_settings"
         android:title="@string/app_settings" />
 
 </menu>

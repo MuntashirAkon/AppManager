@@ -5,25 +5,25 @@
 
     <item
         android:id="@+id/action_apply"
-        android:icon="@drawable/ic_baseline_sync_24"
+        android:icon="@drawable/ic_sync"
         android:title="@string/apply"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_save"
-        android:icon="@drawable/ic_content_save_outline"
+        android:icon="@drawable/ic_content_save"
         android:title="@string/save"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_discard"
-        android:icon="@drawable/ic_file_undo_outline"
+        android:icon="@drawable/ic_file_undo"
         android:title="@string/discard"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_delete"
-        android:icon="@drawable/ic_trash_can_outline"
+        android:icon="@drawable/ic_trash_can"
         android:title="@string/delete"
         app:showAsAction="never" />
 
@@ -34,7 +34,7 @@
 
     <item
         android:id="@+id/action_shortcut"
-        android:icon="@drawable/ic_image_outline"
+        android:icon="@drawable/ic_image"
         android:title="@string/create_shortcut" />
 
 </menu>

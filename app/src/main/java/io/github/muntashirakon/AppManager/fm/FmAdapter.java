@@ -59,11 +59,11 @@ public class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> 
         holder.subtitle.setText(Formatter.formatFileSize(fmActivity, item.path.length()));
         // Set icon
         if (item.type == FileType.DIRECTORY) {
-            holder.icon.setImageResource(R.drawable.ic_folder_outline);
+            holder.icon.setImageResource(R.drawable.ic_folder);
             holder.itemView.setOnClickListener(v -> fmActivity.loadNewFragment(
                     FmFragment.getNewInstance(item.path.getUri())));
         } else {
-            holder.icon.setImageResource(R.drawable.ic_file_document_outline);
+            holder.icon.setImageResource(R.drawable.ic_file_document);
             holder.itemView.setOnClickListener(v -> {
 //                if (ApkFile.SUPPORTED_EXTENSIONS.contains(item.extension)) {
 //                    Intent intent = new Intent(AppManager.getContext(), AppDetailsActivity.class);
@@ -143,7 +143,7 @@ public class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> 
             action = itemView.findViewById(R.id.item_open);
             title = itemView.findViewById(R.id.item_title);
             subtitle = itemView.findViewById(R.id.item_subtitle);
-            action.setIconResource(R.drawable.ic_more_vert_black_24dp);
+            action.setIconResource(R.drawable.ic_more_vert);
         }
     }
 }

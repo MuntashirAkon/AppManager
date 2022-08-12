@@ -134,10 +134,10 @@ public abstract class AbsLogViewerFragment extends Fragment implements LogViewer
         MenuItem expandMenu = menu.findItem(R.id.action_expand_collapse);
         if (expandMenu != null) {
             if (mViewModel.isCollapsedMode()) {
-                expandMenu.setIcon(R.drawable.ic_expand_more_white_24dp);
+                expandMenu.setIcon(R.drawable.ic_expand_more);
                 expandMenu.setTitle(R.string.expand_all);
             } else {
-                expandMenu.setIcon(R.drawable.ic_expand_less_white_24dp);
+                expandMenu.setIcon(R.drawable.ic_expand_less);
                 expandMenu.setTitle(R.string.collapse_all);
             }
         }

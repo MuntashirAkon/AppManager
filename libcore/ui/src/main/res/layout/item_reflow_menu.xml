@@ -24,7 +24,7 @@
             android:layout_gravity="center"
             android:contentDescription="@null"
             android:duplicateParentState="true"
-            tools:src="@drawable/ic_baseline_clear_24" />
+            tools:src="@drawable/ic_clear" />
     </FrameLayout>
 
     <com.google.android.material.internal.BaselineLayout

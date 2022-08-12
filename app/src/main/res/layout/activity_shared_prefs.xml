@@ -58,7 +58,7 @@
         android:layout_width="wrap_content"
         android:clickable="true"
         android:focusable="true"
-        android:src="@drawable/ic_baseline_add_24"
+        android:src="@drawable/ic_add"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/padding_medium"
         android:contentDescription="@string/add_item" />

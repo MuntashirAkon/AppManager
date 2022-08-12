@@ -61,7 +61,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center_vertical"
-                app:icon="@drawable/ic_expand_less_white_24dp"
+                app:icon="@drawable/ic_expand_less"
                 app:iconSize="30dp" />
 
             <com.google.android.material.button.MaterialButton
@@ -70,7 +70,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"
                 android:layout_gravity="center_vertical"
-                app:icon="@drawable/ic_expand_more_white_24dp"
+                app:icon="@drawable/ic_expand_more"
                 app:iconSize="30dp" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>

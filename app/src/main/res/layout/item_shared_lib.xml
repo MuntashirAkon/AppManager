@@ -60,7 +60,7 @@
             android:layout_marginStart="@dimen/padding_medium"
             android:layout_weight="0"
             android:nextFocusLeft="@id/item_subtitle"
-            app:icon="@drawable/ic_open_in_new_black_24dp"
+            app:icon="@drawable/ic_open_in_new"
             app:iconSize="24dp" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>

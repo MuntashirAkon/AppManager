@@ -275,7 +275,7 @@ public class BackupRestorePreferences extends PreferenceFragment {
                 .setTitle(R.string.backup_volume)
                 .setSubtitle(R.string.backup_volume_dialog_description)
                 .setStartIcon(R.drawable.ic_zip_disk)
-                .setEndIcon(R.drawable.ic_baseline_add_24, v -> new MaterialAlertDialogBuilder(activity)
+                .setEndIcon(R.drawable.ic_add, v -> new MaterialAlertDialogBuilder(activity)
                         .setTitle(R.string.notice)
                         .setMessage(R.string.notice_saf)
                         .setPositiveButton(R.string.go, (dialog1, which1) -> {

@@ -64,7 +64,7 @@
                 android:layout_marginStart="@dimen/padding_small"
                 android:layout_gravity="center"
                 app:iconSize="30dp"
-                app:icon="@drawable/ic_information_variant" />
+                app:icon="@drawable/ic_information" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

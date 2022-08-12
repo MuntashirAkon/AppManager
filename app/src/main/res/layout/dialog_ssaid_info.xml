@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         app:counterEnabled="true"
         app:endIconMode="custom"
-        app:endIconDrawable="@drawable/ic_baseline_autorenew_24">
+        app:endIconDrawable="@drawable/ic_autorenew">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@android:id/text1"

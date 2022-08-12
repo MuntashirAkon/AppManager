@@ -5,36 +5,36 @@
 
     <item
         android:id="@+id/action_refresh_details"
-        android:icon="@drawable/ic_refresh_black_24dp"
+        android:icon="@drawable/ic_refresh"
         android:title="@string/refresh"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_reset_to_default"
-        android:icon="@drawable/ic_restore_black_24dp"
+        android:icon="@drawable/ic_restore"
         android:title="@string/reset_to_default"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_deny_dangerous_app_ops"
-        android:icon="@drawable/ic_block_black_24dp"
+        android:icon="@drawable/ic_block"
         android:title="@string/deny_dangerous_app_ops"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_toggle_default_app_ops"
-        android:icon="@drawable/ic_view_list_black_24dp"
+        android:icon="@drawable/ic_view_list"
         android:title="@string/toggle_default_app_ops"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/action_custom_app_op"
-        android:icon="@drawable/ic_baseline_add_24"
+        android:icon="@drawable/ic_add"
         android:title="@string/set_custom_app_op"
         app:showAsAction="never" />
 
     <item
-        android:icon="@drawable/ic_sort_black_24dp"
+        android:icon="@drawable/ic_sort"
         android:title="@string/sort"
         app:showAsAction="never">
 

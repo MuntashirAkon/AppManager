@@ -18,7 +18,7 @@
         android:layout_marginEnd="8dp"
         android:layout_weight="0"
         android:layout_gravity="top"
-        tools:srcCompat="@drawable/ic_baseline_clear_24" />
+        tools:srcCompat="@drawable/ic_clear" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -51,7 +51,7 @@
                 android:layout_weight="0"
                 android:layout_marginStart="8dp"
                 android:layout_gravity="end"
-                app:icon="@drawable/ic_more_vert_black_24dp"
+                app:icon="@drawable/ic_more_vert"
                 app:iconSize="24dp" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>

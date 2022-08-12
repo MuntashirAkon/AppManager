@@ -73,9 +73,7 @@
             android:minWidth="48dp"
             android:maxWidth="0dp"
             android:maxHeight="0dp"
-            app:icon="@drawable/ic_more_vert_black_24dp"
-            app:iconPadding="0dp"
-            app:iconGravity="textTop"
+            app:icon="@drawable/ic_more_vert"
             app:iconSize="24dp"
             android:visibility="gone"
             tools:visibility="visible" />

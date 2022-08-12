@@ -7,7 +7,7 @@
     </style>
 
     <style name="AppTheme" parent="AppThemeOverlay">
-        <item name="navigationIcon">@drawable/ic_keyboard_backspace_black_24dp</item>
+        <item name="navigationIcon">@drawable/ic_keyboard_backspace</item>
 
         <item name="materialFullScreenAlertDialogTheme">@style/AppTheme</item>
         <item name="bottomSheetDialogTheme">@style/AppTheme.BottomSheetDialog</item>
@@ -203,7 +203,7 @@
     <style name="Widget.AppTheme.PopupMenu.Overflow" parent="Widget.Material3.PopupMenu.Overflow" />
     <!-- Overflow menu button -->
     <style name="Widget.AppTheme.PopupMenu.OverflowButton" parent="@style/Widget.AppCompat.ActionButton.Overflow">
-        <item name="android:src">@drawable/ic_more_vert_black_24dp</item>
+        <item name="android:src">@drawable/ic_more_vert</item>
     </style>
 
     <!-- ProgressIndicator -->
@@ -238,7 +238,7 @@
         <item name="boxBackgroundColor">?attr/colorPrimaryContainer</item>
         <item name="boxStrokeWidth">0dp</item>
         <item name="boxStrokeWidthFocused">0dp</item>
-        <item name="startIconDrawable">@drawable/ic_information_variant</item>
+        <item name="startIconDrawable">@drawable/ic_information</item>
         <item name="startIconTint">?attr/colorOnPrimaryContainer</item>
         <item name="android:textColor">?attr/colorOnPrimaryContainer</item>
         <item name="android:textAppearance">?attr/textAppearanceBodyMedium</item>
@@ -315,16 +315,13 @@
     <style name="Widget.AppTheme.Button.TextButton.Icon" parent="Widget.Material3.Button.TextButton.Icon" />
 
     <style name="Widget.AppTheme.Button.IconButton" parent="Widget.Material3.Button.IconButton">
-        <item name="android:background">?android:selectableItemBackgroundBorderless</item>
-        <item name="iconPadding">0dp</item>
-        <item name="iconGravity">textTop</item>
+        <item name="iconGravity">textStart</item>
     </style>
 
     <style name="Widget.AppTheme.Button.IconButton.InverseColor" parent="Widget.Material3.Button.IconButton">
         <item name="backgroundTint">@color/sixty_percent_black</item>
         <item name="iconTint">?attr/colorSurface</item>
-        <item name="iconPadding">0dp</item>
-        <item name="iconGravity">textTop</item>
+        <item name="iconGravity">textStart</item>
     </style>
 
     <style name="Widget.AppTheme.Button.FAB" parent="Widget.Material3.FloatingActionButton.Primary" />

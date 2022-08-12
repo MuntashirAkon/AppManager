@@ -4,22 +4,22 @@
 
     <item
         android:id="@+id/action_kill"
-        android:icon="@drawable/ic_baseline_clear_24"
+        android:icon="@drawable/ic_clear"
         android:title="@string/kill_process" />
 
     <item
         android:id="@+id/action_force_stop"
-        android:icon="@drawable/ic_baseline_power_settings_new_24"
+        android:icon="@drawable/ic_power_settings"
         android:title="@string/force_stop" />
 
     <item
         android:id="@+id/action_disable_background"
-        android:icon="@drawable/ic_block_black_24dp"
+        android:icon="@drawable/ic_block"
         android:title="@string/disable_background_run" />
 
     <item
         android:id="@+id/action_view_logs"
-        android:icon="@drawable/ic_view_list_black_24dp"
+        android:icon="@drawable/ic_view_list"
         android:title="@string/view_logs" />
 
     <item

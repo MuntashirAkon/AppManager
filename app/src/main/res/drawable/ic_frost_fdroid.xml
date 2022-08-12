@@ -1,0 +1,14 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48"
+    android:tint="?attr/colorControlNormal">
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="m8.1331,23.032c-1.507,0 -3.0115,1.506 -3,3l0.1169,15.218c0.0115,1.494 1.493,3 3,3h31.5c1.507,0 3.0115,-1.506 3,-3l-0.1169,-15.218c-0.0115,-1.494 -1.493,-3 -3,-3z" />
+    <path
+        android:fillColor="@android:color/white"
+        android:pathData="m43.777,3.75c-0.5236,0.0003 -1.0256,0.209 -1.395,0.58l-2.43,2.42h-31.905l-2.43,-2.42c-0.7693,-0.7731 -2.0207,-0.7731 -2.79,0 -0.772,0.7698 -0.772,2.0202 0,2.79l2.423,2.43v8.8279c0,1.494 1.493,3 3,3h31.5c1.507,0 3,-1.506 3,-3v-8.8279l2.423,-2.428c0.772,-0.7698 0.772,-2.0202 0,-2.79 -0.369,-0.372 -0.8711,-0.5814 -1.395,-0.582zM16.107,10.4372c5.26,0 5.26,7.89 0,7.89s-5.26,-7.89 0,-7.89zM31.892,10.4372c5.26,0 5.26,7.89 0,7.89s-5.26,-7.89 0,-7.89z" />
+</vector>

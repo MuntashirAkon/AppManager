@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:icon="@drawable/ic_sort_black_24dp"
+        android:icon="@drawable/ic_sort"
         android:title="@string/sort"
         app:showAsAction="ifRoom">
         <menu>
@@ -33,7 +33,7 @@
     </item>
 
     <item
-        android:icon="@drawable/ic_baseline_outlined_flag_24"
+        android:icon="@drawable/ic_flag"
         android:title="@string/filter"
         app:showAsAction="ifRoom">
         <menu>
@@ -55,13 +55,13 @@
 
     <item
         android:id="@+id/action_toggle_kill"
-        android:icon="@drawable/ic_baseline_clear_24"
+        android:icon="@drawable/ic_clear"
         app:showAsAction="never"
         android:title="@string/toggle_kill_for_system_apps" />
 
     <item
         android:id="@+id/action_refresh"
-        android:icon="@drawable/ic_refresh_black_24dp"
+        android:icon="@drawable/ic_refresh"
         android:title="@string/refresh"
         app:showAsAction="never" />
 
