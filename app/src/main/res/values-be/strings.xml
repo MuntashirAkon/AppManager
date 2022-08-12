@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="uninstall">Удалiць</string>
+    <string name="permissions">Дазволы</string>
+    <string name="require_no_permission">Не трэба дазволаў</string>
 </resources>
