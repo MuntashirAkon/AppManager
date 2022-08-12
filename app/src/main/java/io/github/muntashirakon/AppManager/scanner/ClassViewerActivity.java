@@ -104,7 +104,7 @@ public class ClassViewerActivity extends BaseActivity {
     private String className;
     private boolean isDisplayingSmali = true;
     private final ActivityResultLauncher<String> saveJavaOrSmali = registerForActivityResult(
-            new ActivityResultContracts.CreateDocument(),
+            new ActivityResultContracts.CreateDocument("*/*"),
             uri -> {
                 if (uri == null) {
                     // Back button pressed.

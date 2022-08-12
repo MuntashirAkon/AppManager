@@ -61,7 +61,7 @@ public class ProfilesActivity extends BaseActivity {
     private String profileName;
 
     private final ActivityResultLauncher<String> exportProfile = registerForActivityResult(
-            new ActivityResultContracts.CreateDocument(),
+            new ActivityResultContracts.CreateDocument("application/json"),
             uri -> {
                 if (uri == null) {
                     // Back button pressed.

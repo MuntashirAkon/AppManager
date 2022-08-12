@@ -45,7 +45,7 @@ public class ImportExportRulesDialogFragment extends CapsuleBottomSheetDialogFra
     private final int userHandle = UserHandleHidden.myUserId();
     private SettingsActivity activity;
     private final ActivityResultLauncher<String> exportRules = registerForActivityResult(
-            new ActivityResultContracts.CreateDocument(),
+            new ActivityResultContracts.CreateDocument("text/tab-separated-values"),
             uri -> {
                 if (uri == null) {
                     // Back button pressed.
