@@ -22,7 +22,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.switchmaterial.SwitchMaterial;
+import com.google.android.material.materialswitch.MaterialSwitch;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -225,8 +225,8 @@ public class AddIntentExtraFragment extends DialogFragment {
                 if (keyValue != null) {
                     // FIXME: 25/1/21 Reformat the string to support parsing
                     TextView tv = mValues[TYPE_FLOAT];
-                    if (tv instanceof SwitchMaterial) {
-                        ((SwitchMaterial) tv).setChecked((boolean) keyValue);
+                    if (tv instanceof MaterialSwitch) {
+                        ((MaterialSwitch) tv).setChecked((boolean) keyValue);
                     } else tv.setText(keyValue.toString());
                 }
             }
@@ -253,7 +253,7 @@ public class AddIntentExtraFragment extends DialogFragment {
                     }
                     try {
                         if (currentType == TYPE_BOOLEAN) {
-                            newExtraItem.keyValue = ((SwitchMaterial) mValues[currentType]).isChecked();
+                            newExtraItem.keyValue = ((MaterialSwitch) mValues[currentType]).isChecked();
                         } else {
                             newExtraItem.keyValue = parseExtraValue(currentType, mValues[currentType].getText().toString().trim());
                         }

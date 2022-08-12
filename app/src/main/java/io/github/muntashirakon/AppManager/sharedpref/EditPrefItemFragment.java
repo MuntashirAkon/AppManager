@@ -23,7 +23,7 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.switchmaterial.SwitchMaterial;
+import com.google.android.material.materialswitch.MaterialSwitch;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.lang.annotation.Retention;
@@ -169,7 +169,7 @@ public class EditPrefItemFragment extends DialogFragment {
             if (keyValue instanceof Boolean) {
                 currentType = TYPE_BOOLEAN;
                 mLayoutTypes[TYPE_BOOLEAN].setVisibility(View.VISIBLE);
-                ((SwitchMaterial) mValues[TYPE_BOOLEAN]).setChecked((Boolean) keyValue);
+                ((MaterialSwitch) mValues[TYPE_BOOLEAN]).setChecked((Boolean) keyValue);
                 spinner.setSelection(TYPE_BOOLEAN);
             } else if (keyValue instanceof Float) {
                 currentType = TYPE_FLOAT;
@@ -217,7 +217,7 @@ public class EditPrefItemFragment extends DialogFragment {
                     try {
                         switch (currentType) {
                             case TYPE_BOOLEAN:
-                                newPrefItem.keyValue = ((SwitchMaterial) mValues[currentType]).isChecked();
+                                newPrefItem.keyValue = ((MaterialSwitch) mValues[currentType]).isChecked();
                                 break;
                             case TYPE_FLOAT:
                                 newPrefItem.keyValue = Float.valueOf(mValues[currentType].getText().toString());

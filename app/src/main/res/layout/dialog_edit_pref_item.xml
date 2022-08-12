@@ -70,7 +70,7 @@
                 android:text="@string/boolean_value"
                 android:textAllCaps="true" />
 
-            <com.google.android.material.switchmaterial.SwitchMaterial
+            <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/input_bool"
                 android:layout_width="56dp"
                 android:layout_height="wrap_content"

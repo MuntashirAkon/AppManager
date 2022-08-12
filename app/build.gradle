@@ -99,10 +99,15 @@ dependencies {
 
     implementation "com.google.android.material:material:${material_version}"
     implementation "androidx.appcompat:appcompat:${appcompat_version}"
-    // AppCompat 1.4.2 still includes the buggy implementation of documentfile library (1.0.0)
+    // Fix duplicate classes issue in material
+    configurations {
+        all {
+            exclude group: 'androidx.lifecycle', module: 'lifecycle-viewmodel-ktx'
+        }
+    }
+    // AppCompat 1.5.0 still includes the buggy implementation of documentfile library (1.0.0)
     implementation "androidx.documentfile:documentfile:1.0.1"
     implementation "androidx.core:core-splashscreen:${splashscreen_version}"
-    implementation 'androidx.preference:preference:1.2.0'
     implementation 'androidx.webkit:webkit:1.4.0'
     implementation "androidx.room:room-runtime:${room_version}"
     annotationProcessor "androidx.room:room-compiler:${room_version}"

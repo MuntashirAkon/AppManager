@@ -25,5 +25,6 @@ dependencies {
     api "androidx.appcompat:appcompat:${appcompat_version}"
     api "com.google.android.material:material:${material_version}"
     api 'androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01'
+    api 'androidx.preference:preference:1.2.0'
     api 'me.zhanghai.android.fastscroll:library:1.1.8'
 }

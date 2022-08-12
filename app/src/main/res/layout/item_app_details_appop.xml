@@ -85,7 +85,7 @@
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <com.google.android.material.switchmaterial.SwitchMaterial
+        <com.google.android.material.materialswitch.MaterialSwitch
             android:id="@+id/perm_toggle_btn"
             android:layout_width="56dp"
             android:layout_height="wrap_content"
