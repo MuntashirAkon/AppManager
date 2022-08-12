@@ -51,8 +51,8 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.divider.MaterialDivider;
+import com.google.android.material.materialswitch.MaterialSwitch;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
-import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.io.File;
 import java.lang.annotation.Retention;
@@ -682,7 +682,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             MaterialButton blockBtn;
             Button shortcutBtn;
             MaterialButton launchBtn;
-            SwitchMaterial toggleSwitch;
+            MaterialSwitch toggleSwitch;
             MaterialDivider divider;
             Chip chipType;
 
