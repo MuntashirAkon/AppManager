@@ -26,6 +26,7 @@ public class Permission {
 
     private boolean mGranted;
     private boolean mAppOpAllowed;
+    @PermissionCompat.PermissionFlags
     private int mFlags;
 
     public Permission(String name, boolean granted, int appOp, boolean appOpAllowed,
@@ -55,6 +56,7 @@ public class Permission {
         return mAppOp;
     }
 
+    @PermissionCompat.PermissionFlags
     public int getFlags() {
         return mFlags;
     }
