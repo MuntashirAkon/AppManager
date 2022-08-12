@@ -94,8 +94,6 @@ public class SavedLogViewerFragment extends AbsLogViewerFragment implements LogV
         } else if (id == R.id.action_share) {
             displaySaveDebugLogsDialog(true, true);
         } else return false;
-        // Handled successfully
-        mMultiSelectionView.hide();
         return true;
     }
 }

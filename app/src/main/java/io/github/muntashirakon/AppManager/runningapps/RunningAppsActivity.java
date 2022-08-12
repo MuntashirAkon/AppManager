@@ -401,9 +401,6 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
         intent.putIntegerArrayListExtra(BatchOpsService.EXTRA_OP_USERS, input.getAssociatedUserHandles());
         intent.putExtra(BatchOpsService.EXTRA_OP, op);
         ContextCompat.startForegroundService(this, intent);
-        if (mMultiSelectionView != null) {
-            mMultiSelectionView.cancel();
-        }
     }
 
     private void handleBatchOpWithWarning(@BatchOpsManager.OpType int op) {
