@@ -145,8 +145,14 @@ public class ProfilesActivity extends BaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        progressIndicator.show();
-        new Thread(() -> model.loadProfiles()).start();
+        if (progressIndicator != null) {
+            progressIndicator.show();
+        }
+        new Thread(() -> {
+            if (model != null) {
+                model.loadProfiles();
+            }
+        }).start();
     }
 
     @Override
