@@ -104,7 +104,7 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
     private final StoragePermission storagePermission = StoragePermission.init(this);
 
     private final ActivityResultLauncher<String> batchExportRules = registerForActivityResult(
-            new ActivityResultContracts.CreateDocument(),
+            new ActivityResultContracts.CreateDocument("text/tab-separated-values"),
             uri -> {
                 if (uri == null) {
                     // Back button pressed.

@@ -189,7 +189,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @GuardedBy("mListItems")
     private final List<ListItem> mListItems = new ArrayList<>();
     private final BetterActivityResult<String, Uri> export = BetterActivityResult
-            .registerForActivityResult(this, new ActivityResultContracts.CreateDocument());
+            .registerForActivityResult(this, new ActivityResultContracts.CreateDocument("*/*"));
     private final BetterActivityResult<String, Boolean> requestPerm = BetterActivityResult
             .registerForActivityResult(this, new ActivityResultContracts.RequestPermission());
     private final BetterActivityResult<Intent, ActivityResult> activityLauncher = BetterActivityResult

@@ -67,7 +67,7 @@ public class ManifestViewerActivity extends BaseActivity {
     private String packageName;
     private ApkFile apkFile;
     private final ActivityResultLauncher<String> exportManifest = registerForActivityResult(
-            new ActivityResultContracts.CreateDocument(),
+            new ActivityResultContracts.CreateDocument("application/xml"),
             uri -> {
                 if (uri == null) {
                     // Back button pressed.

@@ -113,7 +113,7 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
             BetterActivityResult.registerActivityForResult(this);
     private final StoragePermission storagePermission = StoragePermission.init(this);
     private final BetterActivityResult<String, Uri> saveLauncher = BetterActivityResult
-            .registerForActivityResult(this, new ActivityResultContracts.CreateDocument());
+            .registerForActivityResult(this, new ActivityResultContracts.CreateDocument("*/*"));
 
     public static void startChooser(@NonNull Context context, @Nullable String subject,
                                     @NonNull String attachmentType, @NonNull Path attachment) {

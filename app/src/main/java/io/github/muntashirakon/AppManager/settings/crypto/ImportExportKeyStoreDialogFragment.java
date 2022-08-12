@@ -37,7 +37,7 @@ public class ImportExportKeyStoreDialogFragment extends DialogFragment {
 
     private FragmentActivity activity;
     private final ActivityResultLauncher<String> exportKeyStore = registerForActivityResult(
-            new ActivityResultContracts.CreateDocument(), uri -> {
+            new ActivityResultContracts.CreateDocument("application/octet-stream"), uri -> {
                 if (uri == null) {
                     dismiss();
                     return;
