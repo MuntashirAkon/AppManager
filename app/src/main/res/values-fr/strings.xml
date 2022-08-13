@@ -1203,4 +1203,8 @@
     <string name="changelog_type_new">Nouveau</string>
     <string name="changelog_type_fix">Corriger</string>
     <string name="unsupported_split_apk">Non pris en charge</string>
+    <string name="view_changelog">Découvrez les nouveautés de cette version</string>
+    <string name="sort_by_total_size">Taille totale</string>
+    <string name="pref_sign_apk_error_signing_key_not_added">Une clé de signature valide est nécessaire pour signer un fichier APK.</string>
+    <string name="pref_sign_apk_no_signing_key">Aucune clé de signature</string>
 </resources>
