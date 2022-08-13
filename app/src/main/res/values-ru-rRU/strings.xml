@@ -808,8 +808,8 @@
     <string name="backup_external_data_description">Резервное копирование внешних папок данных.</string>
     <string name="backup_internal_data_description">Резервное копирование папок с данными. Если выбран этот параметр, по умолчанию будут созданы резервные копии внутренних папок с данными.</string>
     <string name="backup_apk_files_description">Резервное копирование APK файлов из исходного каталога, включая сплиты.</string>
-    <string name="permissive">Permissive</string>
-    <string name="enforcing">Enforcing</string>
+    <string name="permissive">Разрешающий</string>
+    <string name="enforcing">Применение</string>
     <string name="window_size">Размер окна</string>
     <string name="size">Размер</string>
     <string name="hardware">Модель</string>
@@ -1027,8 +1027,8 @@
     <string name="copy_to_clipboard">Скопировать в буфер обмена</string>
     <string name="add_filter_ellipsis">Добавить фильтр…</string>
     <string name="add_filter">Добавить фильтр</string>
-    <string name="log_level_fatal">Fatal</string>
-    <string name="log_level_warn">Warn</string>
+    <string name="log_level_fatal">Фатальный</string>
+    <string name="log_level_warn">Предупреждение</string>
     <string name="log_level_verbose">Verbose</string>
     <string name="log_level_info">Info</string>
     <string name="log_level_error">Error</string>
@@ -1195,10 +1195,10 @@
     <string name="magisk_denylist">Magisk DenyList</string>
     <string name="failed_to_enable_magisk_deny_list">Не удалось включить Magisk DenyList</string>
     <plurals name="usage_seconds">
-        <item quantity="one">%1$d с.</item>
-        <item quantity="few">%1$d с.</item>
-        <item quantity="many">%1$d с.</item>
-        <item quantity="other">%1$d с.</item>
+        <item quantity="one">%1$d сек.</item>
+        <item quantity="few">%1$d сек.</item>
+        <item quantity="many">%1$d сек.</item>
+        <item quantity="other">%1$d сек.</item>
     </plurals>
     <plurals name="usage_minutes">
         <item quantity="one">%1$d мин.</item>
