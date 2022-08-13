@@ -4,19 +4,16 @@ package io.github.muntashirakon.AppManager.settings;
 
 import android.os.Bundle;
 
+import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.Preference;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import java.security.cert.Certificate;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.signing.SigSchemes;
 import io.github.muntashirakon.AppManager.apk.signing.Signer;
-import io.github.muntashirakon.AppManager.crypto.ks.KeyPair;
-import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
-import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.settings.crypto.RSACryptoSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
@@ -30,6 +27,7 @@ public class ApkSigningPreferences extends PreferenceFragment {
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences_signature, rootKey);
         getPreferenceManager().setPreferenceDataStore(new SettingsDataStore());
+        MainPreferencesViewModel model = new ViewModelProvider(requireActivity()).get(MainPreferencesViewModel.class);
         activity = (SettingsActivity) requireActivity();
         // Set signature schemes
         Preference sigSchemes = Objects.requireNonNull(findPreference("signature_schemes"));
@@ -50,7 +48,6 @@ public class ApkSigningPreferences extends PreferenceFragment {
             return true;
         });
         customSig = Objects.requireNonNull(findPreference("signing_keys"));
-        new Thread(this::updateSigningPref).start();
         customSig.setOnPreferenceClickListener(preference -> {
             RSACryptoSelectionDialogFragment fragment = RSACryptoSelectionDialogFragment.getInstance(Signer.SIGNING_KEY_ALIAS);
             fragment.setOnKeyPairUpdatedListener((keyPair, certificateBytes) -> {
@@ -60,7 +57,7 @@ public class ApkSigningPreferences extends PreferenceFragment {
                         keyPair.destroy();
                     } catch (Exception ignore) {
                     }
-                    activity.runOnUiThread(() -> customSig.setSummary(hash));
+                    customSig.setSummary(hash);
                 } else {
                     customSig.setSummary(R.string.key_not_set);
                 }
@@ -68,33 +65,19 @@ public class ApkSigningPreferences extends PreferenceFragment {
             fragment.show(getParentFragmentManager(), RSACryptoSelectionDialogFragment.TAG);
             return true;
         });
+        model.getSigningKeySha256HashLiveData().observe(this, hash -> {
+            if (hash != null) {
+                customSig.setSummary(hash);
+            } else {
+                customSig.setSummary(R.string.key_not_set);
+            }
+        });
+        model.loadSigningKeySha256Hash();
     }
 
     @Override
     public void onResume() {
         super.onResume();
         requireActivity().setTitle(R.string.apk_signing);
-    }
-
-    private void updateSigningPref() {
-        try {
-            KeyStoreManager keyStoreManager = KeyStoreManager.getInstance();
-            if (keyStoreManager.containsKey(Signer.SIGNING_KEY_ALIAS)) {
-                KeyPair keyPair = keyStoreManager.getKeyPair(Signer.SIGNING_KEY_ALIAS);
-                if (keyPair != null) {
-                    Certificate certificate = keyPair.getCertificate();
-                    String hash = DigestUtils.getHexDigest(DigestUtils.SHA_256, certificate.getEncoded());
-                    try {
-                        keyPair.destroy();
-                    } catch (Exception ignore) {
-                    }
-                    activity.runOnUiThread(() -> customSig.setSummary(hash));
-                    return;
-                }
-            }
-        } catch (Exception e) {
-            Log.e(TAG, e);
-        }
-        activity.runOnUiThread(() -> customSig.setSummary(R.string.key_not_set));
     }
 }

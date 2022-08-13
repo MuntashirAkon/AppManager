@@ -1,0 +1,22 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <Preference
+        app:key="selected_users"
+        app:title="@string/pref_selected_users"
+        app:summary="@string/pref_selected_users_msg"
+        app:iconSpaceReserved="false" />
+
+    <Preference
+        app:key="saved_apk_format"
+        app:title="@string/pref_saved_apk_name_format"
+        app:summary="@string/pref_saved_apk_name_format_msg"
+        app:iconSpaceReserved="false" />
+
+    <Preference
+        app:key="thread_count"
+        app:title="@string/pref_thread_count"
+        tools:summary="Execute at most 5 operations in parallel"
+        app:iconSpaceReserved="false" />
+
+</PreferenceScreen>

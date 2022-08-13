@@ -1,0 +1,27 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <Preference
+        app:key="app_theme"
+        app:title="@string/pref_app_theme"
+        tools:summary="Follow system"
+        app:iconSpaceReserved="false" />
+
+    <SwitchPreferenceCompat
+        app:key="app_theme_pure_black"
+        app:title="@string/pref_pure_black_theme"
+        app:summary="@string/pref_pure_black_theme_msg"
+        app:iconSpaceReserved="false" />
+
+    <Preference
+        app:key="layout_orientation"
+        app:title="@string/pref_layout_orientation"
+        tools:summary="Left to right"
+        app:iconSpaceReserved="false" />
+
+    <Preference
+        app:key="enabled_features"
+        app:title="@string/enable_disable_features"
+        app:summary="@string/pref_enable_disable_features_msg"
+        app:iconSpaceReserved="false" />
+</PreferenceScreen>

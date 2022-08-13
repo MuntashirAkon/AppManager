@@ -5,123 +5,83 @@
 
     <Preference
         app:key="custom_locale"
+        app:icon="@drawable/ic_translate"
         app:title="@string/pref_app_language"
-        tools:summary="Auto"
-        app:iconSpaceReserved="false" />
+        tools:summary="Auto" />
 
     <Preference
-        app:key="app_theme"
-        app:title="@string/pref_app_theme"
-        tools:summary="Follow system"
-        app:iconSpaceReserved="false" />
-
-    <SwitchPreferenceCompat
-        app:key="app_theme_pure_black"
-        app:title="@string/pref_pure_black_theme"
-        app:summary="@string/pref_pure_black_theme_msg"
-        app:iconSpaceReserved="false" />
+        app:key="appearance_prefs"
+        app:icon="@drawable/ic_palette_swatch"
+        app:title="@string/pref_cat_appearance"
+        app:summary="@string/pref_appearance_description"
+        android:fragment="io.github.muntashirakon.AppManager.settings.AppearancePreferences" />
 
     <Preference
-        app:key="layout_orientation"
-        app:title="@string/pref_layout_orientation"
-        tools:summary="Left to right"
-        app:iconSpaceReserved="false" />
-
-    <SwitchPreferenceCompat
-        app:key="enable_screen_lock"
-        app:title="@string/screen_lock"
-        app:summary="@string/screen_lock_msg"
-        app:iconSpaceReserved="false" />
+        app:key="privacy_prefs"
+        app:icon="@drawable/ic_security"
+        app:title="@string/pref_privacy"
+        app:summary="@string/pref_privacy_description"
+        android:fragment="io.github.muntashirakon.AppManager.settings.PrivacyPreferences" />
 
     <Preference
         app:key="mode_of_operations"
+        app:icon="@drawable/ic_run_fast"
         app:title="@string/pref_mode_of_operations"
-        tools:summary="Auto"
-        app:iconSpaceReserved="false" />
-
-    <Preference
-        app:key="selected_users"
-        app:title="@string/pref_selected_users"
-        app:summary="@string/pref_selected_users_msg"
-        app:iconSpaceReserved="false" />
-
-    <Preference
-        app:key="enabled_features"
-        app:title="@string/enable_disable_features"
-        app:summary="@string/pref_enable_disable_features_msg"
-        app:iconSpaceReserved="false" />
-
-    <Preference
-        app:key="saved_apk_format"
-        app:title="@string/pref_saved_apk_name_format"
-        app:summary="@string/pref_saved_apk_name_format_msg"
-        app:iconSpaceReserved="false" />
+        tools:summary="Auto" />
 
     <Preference
         app:key="apk_signing_prefs"
+        app:icon="@drawable/ic_shield_key"
         app:title="@string/apk_signing"
         app:summary="@string/pref_apk_signing_msg"
-        android:fragment="io.github.muntashirakon.AppManager.settings.ApkSigningPreferences"
-        app:iconSpaceReserved="false" />
+        android:fragment="io.github.muntashirakon.AppManager.settings.ApkSigningPreferences" />
 
     <Preference
         app:key="installer"
+        app:icon="@drawable/ic_get_app"
         app:title="@string/installer"
         app:summary="@string/pref_installer_msg"
-        android:fragment="io.github.muntashirakon.AppManager.settings.InstallerPreferences"
-        app:iconSpaceReserved="false" />
+        android:fragment="io.github.muntashirakon.AppManager.settings.InstallerPreferences" />
 
     <Preference
         app:key="backup_restore_prefs"
+        app:icon="@drawable/ic_backup_restore"
         app:title="@string/backup_restore"
         app:summary="@string/pref_backup_restore_msg"
-        android:fragment="io.github.muntashirakon.AppManager.settings.BackupRestorePreferences"
-        app:iconSpaceReserved="false" />
+        android:fragment="io.github.muntashirakon.AppManager.settings.BackupRestorePreferences" />
 
     <Preference
         app:key="log_viewer_prefs"
+        app:icon="@drawable/ic_view_list"
         app:title="@string/log_viewer"
         app:summary="@string/pref_log_viewer_msg"
-        android:fragment="io.github.muntashirakon.AppManager.settings.LogViewerPreferences"
-        app:iconSpaceReserved="false" />
+        android:fragment="io.github.muntashirakon.AppManager.settings.LogViewerPreferences" />
 
     <Preference
         app:key="rules_prefs"
+        app:icon="@drawable/ic_list_status"
         app:title="@string/rules"
         app:summary="@string/pref_rules_msg"
-        android:fragment="io.github.muntashirakon.AppManager.settings.RulesPreferences"
-        app:iconSpaceReserved="false" />
-
-    <Preference
-        app:key="thread_count"
-        app:title="@string/pref_thread_count"
-        tools:summary="Execute at most 5 operations in parallel"
-        app:iconSpaceReserved="false" />
+        android:fragment="io.github.muntashirakon.AppManager.settings.RulesPreferences" />
 
     <Preference
         app:key="vt_apikey"
+        app:icon="@drawable/ic_vt"
         app:title="@string/pref_vt_apikey"
-        app:summary="@string/pref_vt_apikey_summary"
-        app:iconSpaceReserved="false" />
+        app:summary="@string/pref_vt_apikey_summary" />
 
-    <PreferenceCategory
-        app:key="troubleshooting"
+    <Preference
+        app:key="advanced_prefs"
+        app:icon="@drawable/ic_tune"
+        app:title="@string/pref_cat_advanced"
+        app:summary="@string/pref_advanced_pref"
+        android:fragment="io.github.muntashirakon.AppManager.settings.AdvancedPreferences" />
+
+    <Preference
+        app:key="troubleshooting_prefs"
+        app:icon="@drawable/ic_hammer_wrench"
         app:title="@string/troubleshooting"
-        app:iconSpaceReserved="false">
-
-        <Preference
-            app:key="import_export_keystore"
-            app:title="@string/pref_import_export_keystore"
-            app:summary="@string/pref_import_export_keystore_msg"
-            app:iconSpaceReserved="false" />
-
-        <Preference
-            app:key="reload_apps"
-            app:title="@string/pref_reload_apps"
-            app:summary="@string/pref_reload_apps_msg"
-            app:iconSpaceReserved="false" />
-
-    </PreferenceCategory>
+        android:fragment="io.github.muntashirakon.AppManager.settings.TroubleshootingPreferences" />
 
     <PreferenceCategory
         app:key="other_category"
@@ -146,8 +106,13 @@
             app:iconSpaceReserved="false" />
 
         <Preference
-            app:key="auth_manager"
-            app:title="@string/auth_manager_title"
+            app:key="user_manual"
+            app:title="@string/user_manual"
+            app:iconSpaceReserved="false" />
+
+        <Preference
+            app:key="get_help"
+            app:title="@string/get_help"
             app:iconSpaceReserved="false" />
 
     </PreferenceCategory>

@@ -505,6 +505,7 @@
     <string name="run_in_termux">Run in Termux</string>
     <string name="website">Website</string>
     <string name="website_message" translatable="false">https://muntashirakon.github.io/AppManager</string>
+    <string name="discussions_site" translatable="false">https://github.com/MuntashirAkon/AppManager/discussions</string>
     <string name="pref_remove_all_rules">Remove all rules</string>
     <string name="pref_remove_all_rules_msg">Permissions will be granted, app ops and components will return to their default values.</string>
     <string name="are_you_sure">Are you sure?</string>
@@ -1249,4 +1250,10 @@
     <string name="hide_app_description">This method is only recommended for day to day use. A hidden app appears as if it is uninstalled. But the app could reappear if it is reinstalled or updated.</string>
     <string name="sort_by_frozen_app">Frozen first</string>
     <string name="filter_frozen_apps">Frozen apps</string>
+    <string name="pref_appearance_description">Theme, orientation, features, etc.</string>
+    <string name="pref_privacy">Privacy</string>
+    <string name="pref_privacy_description">Screen lock, authorization, etc.</string>
+    <string name="user_manual">User manual</string>
+    <string name="get_help">Get help</string>
+    <string name="pref_advanced_pref">Users, APK name format, parallel execution, etc.</string>
 </resources>

@@ -17,6 +17,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.collection.ArrayMap;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.Preference;
 import androidx.preference.SwitchPreferenceCompat;
 
@@ -28,7 +29,6 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
@@ -37,14 +37,12 @@ import io.github.muntashirakon.AppManager.backup.convert.ImportType;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.crypto.RSACrypto;
-import io.github.muntashirakon.AppManager.db.utils.AppDb;
 import io.github.muntashirakon.AppManager.settings.crypto.AESCryptoSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.settings.crypto.ECCCryptoSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.settings.crypto.OpenPgpKeySelectionDialogFragment;
 import io.github.muntashirakon.AppManager.settings.crypto.RSACryptoSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
-import io.github.muntashirakon.AppManager.utils.StorageUtils;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
 import io.github.muntashirakon.io.Path;
 
@@ -58,7 +56,7 @@ public class BackupRestorePreferences extends PreferenceFragment {
             R.string.open_pgp_provider,
             R.string.aes,
             R.string.rsa,
-             R.string.ecc,
+            R.string.ecc,
     };
 
     private SettingsActivity activity;
@@ -67,6 +65,7 @@ public class BackupRestorePreferences extends PreferenceFragment {
     @ImportType
     private int importType;
     private boolean deleteBackupsAfterImport;
+    private MainPreferencesViewModel model;
 
     private final ActivityResultLauncher<Intent> safSelectBackupVolume = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -82,7 +81,7 @@ public class BackupRestorePreferences extends PreferenceFragment {
                     requireContext().getContentResolver().takePersistableUriPermission(treeUri, takeFlags);
                 } finally {
                     // Display backup volumes again
-                    displayVolumeSelectionDialog();
+                    model.loadStorageVolumes();
                 }
             });
     private final ActivityResultLauncher<Intent> safSelectImportDirectory = registerForActivityResult(
@@ -103,6 +102,7 @@ public class BackupRestorePreferences extends PreferenceFragment {
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences_backup_restore, rootKey);
         getPreferenceManager().setPreferenceDataStore(new SettingsDataStore());
+        model = new ViewModelProvider(requireActivity()).get(MainPreferencesViewModel.class);
         activity = (SettingsActivity) requireActivity();
         // Backup compression method
         String[] tarTypes = MetadataManager.TAR_TYPES;
@@ -200,7 +200,7 @@ public class BackupRestorePreferences extends PreferenceFragment {
         this.backupVolume = AppPref.getSelectedDirectory();
         ((Preference) Objects.requireNonNull(findPreference("backup_volume")))
                 .setOnPreferenceClickListener(preference -> {
-                    displayVolumeSelectionDialog();
+                    model.loadStorageVolumes();
                     return true;
                 });
         // Import backups
@@ -245,6 +245,7 @@ public class BackupRestorePreferences extends PreferenceFragment {
                             .show();
                     return true;
                 });
+        model.getStorageVolumesLiveData().observe(this, this::displayVolumeSelectionDialog);
     }
 
     @Override
@@ -269,7 +270,8 @@ public class BackupRestorePreferences extends PreferenceFragment {
         ContextCompat.startForegroundService(activity, intent);
     }
 
-    private void displayVolumeSelectionDialog() {
+    private void displayVolumeSelectionDialog(@NonNull ArrayMap<String, Uri> storageLocations) {
+        // TODO: 13/8/22 Move to a separate BottomSheet dialog fragment
         AtomicReference<AlertDialog> alertDialog = new AtomicReference<>(null);
         DialogTitleBuilder titleBuilder = new DialogTitleBuilder(activity)
                 .setTitle(R.string.backup_volume)
@@ -279,51 +281,48 @@ public class BackupRestorePreferences extends PreferenceFragment {
                         .setTitle(R.string.notice)
                         .setMessage(R.string.notice_saf)
                         .setPositiveButton(R.string.go, (dialog1, which1) -> {
-                            if (alertDialog.get() != null) alertDialog.get().dismiss();
+                            if (alertDialog.get() != null) {
+                                alertDialog.get().dismiss();
+                            }
                             safSelectBackupVolume.launch(getSafIntent("AppManager"));
                         })
                         .setNeutralButton(R.string.cancel, null)
                         .show());
-        new Thread(() -> {
-            ArrayMap<String, Uri> storageLocations = StorageUtils.getAllStorageLocations(activity, false);
-            if (storageLocations.size() == 0) {
-                activity.runOnUiThread(() -> {
-                    if (isDetached()) return;
-                    alertDialog.set(new MaterialAlertDialogBuilder(activity)
-                            .setCustomTitle(titleBuilder.build())
-                            .setMessage(R.string.no_volumes_found)
-                            .setNegativeButton(R.string.ok, null)
-                            .show());
-                });
-            } else {
-                Uri[] backupVolumes = new Uri[storageLocations.size()];
-                CharSequence[] backupVolumesStr = new CharSequence[storageLocations.size()];
-                AtomicInteger selectedIndex = new AtomicInteger(-1);
-                for (int i = 0; i < storageLocations.size(); ++i) {
-                    backupVolumes[i] = storageLocations.valueAt(i);
-                    backupVolumesStr[i] = new SpannableStringBuilder(storageLocations.keyAt(i)).append("\n")
-                            .append(getSecondaryText(activity, getSmallerText(backupVolumes[i].getPath())));
-                    if (backupVolumes[i].equals(this.backupVolume)) {
-                        selectedIndex.set(i);
-                    }
+
+        if (storageLocations.size() == 0) {
+            alertDialog.set(new MaterialAlertDialogBuilder(activity)
+                    .setCustomTitle(titleBuilder.build())
+                    .setMessage(R.string.no_volumes_found)
+                    .setNegativeButton(R.string.ok, null)
+                    .show());
+        } else {
+            Uri[] backupVolumes = new Uri[storageLocations.size()];
+            CharSequence[] backupVolumesStr = new CharSequence[storageLocations.size()];
+            AtomicInteger selectedIndex = new AtomicInteger(-1);
+            for (int i = 0; i < storageLocations.size(); ++i) {
+                backupVolumes[i] = storageLocations.valueAt(i);
+                backupVolumesStr[i] = new SpannableStringBuilder(storageLocations.keyAt(i)).append("\n")
+                        .append(getSecondaryText(activity, getSmallerText(backupVolumes[i].getPath())));
+                if (backupVolumes[i].equals(backupVolume)) {
+                    selectedIndex.set(i);
                 }
-                activity.runOnUiThread(() -> {
-                    if (isDetached()) return;
-                    alertDialog.set(new MaterialAlertDialogBuilder(activity)
-                            .setCustomTitle(titleBuilder.build())
-                            .setSingleChoiceItems(backupVolumesStr, selectedIndex.get(), (dialog, which) -> {
-                                this.backupVolume = backupVolumes[which];
-                                selectedIndex.set(which);
-                            })
-                            .setNegativeButton(R.string.cancel, null)
-                            .setPositiveButton(R.string.save, (dialog, which) -> {
-                                AppPref.set(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR, this.backupVolume.toString());
-                                new Thread(() -> new AppDb().updateBackups(AppManager.getContext())).start();
-                            })
-                            .show());
-                });
             }
-        }).start();
+            alertDialog.set(new MaterialAlertDialogBuilder(activity)
+                    .setCustomTitle(titleBuilder.build())
+                    .setSingleChoiceItems(backupVolumesStr, selectedIndex.get(), (dialog, which) -> {
+                        backupVolume = backupVolumes[which];
+                        selectedIndex.set(which);
+                    })
+                    .setNegativeButton(R.string.cancel, null)
+                    .setPositiveButton(R.string.save, (dialog, which) -> {
+                        Uri lastBackupVolume = AppPref.getSelectedDirectory();
+                        if (!lastBackupVolume.equals(backupVolume)) {
+                            AppPref.set(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR, backupVolume.toString());
+                            model.updateBackups();
+                        }
+                    })
+                    .show());
+        }
     }
 
     private Intent getSafIntent(String path) {
