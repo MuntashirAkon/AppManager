@@ -808,8 +808,8 @@
     <string name="backup_external_data_description">Резервное копирование внешних папок данных.</string>
     <string name="backup_internal_data_description">Резервное копирование папок с данными. Если выбран этот параметр, по умолчанию будут созданы резервные копии внутренних папок с данными.</string>
     <string name="backup_apk_files_description">Резервное копирование APK файлов из исходного каталога, включая сплиты.</string>
-    <string name="permissive">Разрешающий</string>
-    <string name="enforcing">Применение</string>
+    <string name="permissive">Permissive</string>
+    <string name="enforcing">Enforcing</string>
     <string name="window_size">Размер окна</string>
     <string name="size">Размер</string>
     <string name="hardware">Модель</string>
@@ -1027,8 +1027,8 @@
     <string name="copy_to_clipboard">Скопировать в буфер обмена</string>
     <string name="add_filter_ellipsis">Добавить фильтр…</string>
     <string name="add_filter">Добавить фильтр</string>
-    <string name="log_level_fatal">Фатальный</string>
-    <string name="log_level_warn">Предупреждение</string>
+    <string name="log_level_fatal">Fatal</string>
+    <string name="log_level_warn">Warn</string>
     <string name="log_level_verbose">Verbose</string>
     <string name="log_level_info">Info</string>
     <string name="log_level_error">Error</string>
