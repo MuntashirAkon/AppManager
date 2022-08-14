@@ -342,7 +342,7 @@
     <string name="data_size">Dados</string>
     <string name="about">Sobre</string>
     <string name="data_usage_msg">Utilização de dados</string>
-    <string name="data_transmitted">Dados transmitidos</string>
+    <string name="data_transmitted">Dados enviados</string>
     <string name="data_received">Dados recebidos</string>
     <string name="sort_by_target_sdk">SDK de destino</string>
     <string name="sort_by_domain">Apps do utilizador primeiro</string>
@@ -570,8 +570,8 @@
     <string name="reject_time">Tempo de Rejeição</string>
     <string name="accept_time">Tempo de aceitação</string>
     <plurals name="tracker_and_classes">
-        <item quantity="one">1 tracker com <xliff:g id="class_no" example="50">%1$d</xliff:g> class</item>
-        <item quantity="other">1 tracker com <xliff:g id="class_no" example="50">%1$d</xliff:g> classes</item>
+        <item quantity="one">1 rastreador com <xliff:g id="class_no" example="50">%1$d</xliff:g> class</item>
+        <item quantity="other">1 rastreador com <xliff:g id="class_no" example="50">%1$d</xliff:g> classes</item>
     </plurals>
     <string name="backup_internal_data_description">Fazer backup de pastas de dados internos.</string>
     <string name="backup_apk_files_description">Fazer backup de ficheiros APK do diretório de origem, e incluir divisões.</string>
