@@ -44,20 +44,21 @@ import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.StorageUtils;
 import io.github.muntashirakon.adb.android.AdbMdns;
+import io.github.muntashirakon.lifecycle.SingleLiveEvent;
 
 public class MainPreferencesViewModel extends AndroidViewModel implements Ops.AdbConnectionInterface {
     private AdbMdns mAdbMdnsPairing;
 
     private final Object mRulesLock = new Object();
-    private final MutableLiveData<List<UserInfo>> mSelectUsers = new MutableLiveData<>();
-    private final MutableLiveData<Changelog> mChangeLog = new MutableLiveData<>();
-    private final MutableLiveData<DeviceInfo2> mDeviceInfo = new MutableLiveData<>();
-    private final MutableLiveData<Integer> mModeOfOpsStatus = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> mOperationCompletedLiveData = new MutableLiveData<>();
-    private final MutableLiveData<ArrayMap<String, Uri>> mStorageVolumesLiveData = new MutableLiveData<>();
-    private final MutableLiveData<String> mSigningKeySha256HashLiveData = new MutableLiveData<>();
-    private final MutableLiveData<List<Pair<String, CharSequence>>> mPackageNameLabelPairLiveData = new MutableLiveData<>();
-    private final MutableLiveData<Integer> mAdbPairingPort = new MutableLiveData<>();
+    private final MutableLiveData<List<UserInfo>> mSelectUsers = new SingleLiveEvent<>();
+    private final MutableLiveData<Changelog> mChangeLog = new SingleLiveEvent<>();
+    private final MutableLiveData<DeviceInfo2> mDeviceInfo = new SingleLiveEvent<>();
+    private final MutableLiveData<Integer> mModeOfOpsStatus = new SingleLiveEvent<>();
+    private final MutableLiveData<Boolean> mOperationCompletedLiveData = new SingleLiveEvent<>();
+    private final MutableLiveData<ArrayMap<String, Uri>> mStorageVolumesLiveData = new SingleLiveEvent<>();
+    private final MutableLiveData<String> mSigningKeySha256HashLiveData = new SingleLiveEvent<>();
+    private final MutableLiveData<List<Pair<String, CharSequence>>> mPackageNameLabelPairLiveData = new SingleLiveEvent<>();
+    private final MutableLiveData<Integer> mAdbPairingPort = new SingleLiveEvent<>();
     private final ExecutorService mExecutor = Executors.newFixedThreadPool(1);
 
     public MainPreferencesViewModel(@NonNull Application application) {

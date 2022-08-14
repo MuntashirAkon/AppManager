@@ -78,43 +78,22 @@
         android:fragment="io.github.muntashirakon.AppManager.settings.AdvancedPreferences" />
 
     <Preference
+        app:key="about_device"
+        app:icon="@drawable/ic_phone_android"
+        app:title="@string/about_device"
+        app:summary="@string/pref_about_device_msg" />
+
+    <Preference
+        app:key="about"
+        app:icon="@drawable/ic_information"
+        app:title="@string/about"
+        app:summary="@string/pref_about_msg"
+        android:fragment="io.github.muntashirakon.AppManager.settings.AboutPreferences" />
+
+    <Preference
         app:key="troubleshooting_prefs"
         app:icon="@drawable/ic_hammer_wrench"
         app:title="@string/troubleshooting"
         android:fragment="io.github.muntashirakon.AppManager.settings.TroubleshootingPreferences" />
-
-    <PreferenceCategory
-        app:key="other_category"
-        app:title="@string/other"
-        app:iconSpaceReserved="false">
-
-        <Preference
-            app:key="about_device"
-            app:title="@string/about_device"
-            app:summary="@string/pref_about_device_msg"
-            app:iconSpaceReserved="false" />
-
-        <Preference
-            app:key="about"
-            app:title="@string/about"
-            app:summary="@string/pref_about_msg"
-            app:iconSpaceReserved="false" />
-
-        <Preference
-            app:key="changelog"
-            app:title="@string/changelog"
-            app:iconSpaceReserved="false" />
-
-        <Preference
-            app:key="user_manual"
-            app:title="@string/user_manual"
-            app:iconSpaceReserved="false" />
-
-        <Preference
-            app:key="get_help"
-            app:title="@string/get_help"
-            app:iconSpaceReserved="false" />
-
-    </PreferenceCategory>
 
 </PreferenceScreen>

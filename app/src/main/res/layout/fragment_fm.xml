@@ -21,7 +21,7 @@
             android:clipToPadding="false"
             android:fitsSystemWindows="true"
             app:fastScrollerEnabled="true"
-            tools:listitem="@layout/item_icon_title_subtitle" />
+            tools:listitem="@layout/m3_preference" />
 
     </io.github.muntashirakon.widget.SwipeRefreshLayout>
 

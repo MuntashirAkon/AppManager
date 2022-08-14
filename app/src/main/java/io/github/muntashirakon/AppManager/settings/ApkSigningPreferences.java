@@ -3,7 +3,10 @@
 package io.github.muntashirakon.AppManager.settings;
 
 import android.os.Bundle;
+import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.Preference;
 
@@ -21,13 +24,14 @@ import io.github.muntashirakon.AppManager.utils.DigestUtils;
 public class ApkSigningPreferences extends PreferenceFragment {
     public static final String TAG = "ApkSigningPreferences";
     private SettingsActivity activity;
-    private Preference customSig;
+    private Preference customSigPref;
+    private MainPreferencesViewModel model;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences_signature, rootKey);
         getPreferenceManager().setPreferenceDataStore(new SettingsDataStore());
-        MainPreferencesViewModel model = new ViewModelProvider(requireActivity()).get(MainPreferencesViewModel.class);
+        model = new ViewModelProvider(requireActivity()).get(MainPreferencesViewModel.class);
         activity = (SettingsActivity) requireActivity();
         // Set signature schemes
         Preference sigSchemes = Objects.requireNonNull(findPreference("signature_schemes"));
@@ -47,8 +51,8 @@ public class ApkSigningPreferences extends PreferenceFragment {
                     .show();
             return true;
         });
-        customSig = Objects.requireNonNull(findPreference("signing_keys"));
-        customSig.setOnPreferenceClickListener(preference -> {
+        customSigPref = Objects.requireNonNull(findPreference("signing_keys"));
+        customSigPref.setOnPreferenceClickListener(preference -> {
             RSACryptoSelectionDialogFragment fragment = RSACryptoSelectionDialogFragment.getInstance(Signer.SIGNING_KEY_ALIAS);
             fragment.setOnKeyPairUpdatedListener((keyPair, certificateBytes) -> {
                 if (keyPair != null && certificateBytes != null) {
@@ -57,19 +61,24 @@ public class ApkSigningPreferences extends PreferenceFragment {
                         keyPair.destroy();
                     } catch (Exception ignore) {
                     }
-                    customSig.setSummary(hash);
+                    customSigPref.setSummary(hash);
                 } else {
-                    customSig.setSummary(R.string.key_not_set);
+                    customSigPref.setSummary(R.string.key_not_set);
                 }
             });
             fragment.show(getParentFragmentManager(), RSACryptoSelectionDialogFragment.TAG);
             return true;
         });
-        model.getSigningKeySha256HashLiveData().observe(this, hash -> {
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        model.getSigningKeySha256HashLiveData().observe(getViewLifecycleOwner(), hash -> {
             if (hash != null) {
-                customSig.setSummary(hash);
+                customSigPref.setSummary(hash);
             } else {
-                customSig.setSummary(R.string.key_not_set);
+                customSigPref.setSummary(R.string.key_not_set);
             }
         });
         model.loadSigningKeySha256Hash();

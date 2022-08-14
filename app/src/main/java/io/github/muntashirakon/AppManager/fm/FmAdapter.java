@@ -12,8 +12,11 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +51,10 @@ public class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_file, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.m3_preference, parent, false);
+        View actionView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_right_standalone_action, parent, false);
+        LinearLayoutCompat layout = view.findViewById(android.R.id.widget_frame);
+        layout.addView(actionView);
         return new ViewHolder(view);
     }
 
@@ -56,14 +62,16 @@ public class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         FmItem item = adapterList.get(position);
         holder.title.setText(item.name);
-        holder.subtitle.setText(Formatter.formatFileSize(fmActivity, item.path.length()));
         // Set icon
         if (item.type == FileType.DIRECTORY) {
             holder.icon.setImageResource(R.drawable.ic_folder);
+            holder.subtitle.setVisibility(View.GONE);
             holder.itemView.setOnClickListener(v -> fmActivity.loadNewFragment(
                     FmFragment.getNewInstance(item.path.getUri())));
         } else {
             holder.icon.setImageResource(R.drawable.ic_file_document);
+            holder.subtitle.setVisibility(View.VISIBLE);
+            holder.subtitle.setText(Formatter.formatFileSize(fmActivity, item.path.length()));
             holder.itemView.setOnClickListener(v -> {
 //                if (ApkFile.SUPPORTED_EXTENSIONS.contains(item.extension)) {
 //                    Intent intent = new Intent(AppManager.getContext(), AppDetailsActivity.class);
@@ -82,7 +90,7 @@ public class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> 
             });
         }
         // Set background colors
-        holder.itemView.setBackgroundResource(position % 2 == 0 ? R.drawable.item_semi_transparent : R.drawable.item_transparent);
+        holder.itemView.setCardBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), android.R.color.transparent));
         // Set selections
         holder.icon.setOnClickListener(v -> toggleSelection(position));
         super.onBindViewHolder(holder, position);
@@ -132,6 +140,7 @@ public class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> 
     }
 
     protected static class ViewHolder extends MultiSelectionView.ViewHolder {
+        final MaterialCardView itemView;
         final AppCompatImageView icon;
         final MaterialButton action;
         final AppCompatTextView title;
@@ -139,11 +148,13 @@ public class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            icon = itemView.findViewById(R.id.item_icon);
-            action = itemView.findViewById(R.id.item_open);
-            title = itemView.findViewById(R.id.item_title);
-            subtitle = itemView.findViewById(R.id.item_subtitle);
+            this.itemView = (MaterialCardView) itemView;
+            icon = itemView.findViewById(android.R.id.icon);
+            action = itemView.findViewById(android.R.id.button1);
+            title = itemView.findViewById(android.R.id.title);
+            subtitle = itemView.findViewById(android.R.id.summary);
             action.setIconResource(R.drawable.ic_more_vert);
+            itemView.findViewById(R.id.divider).setVisibility(View.GONE);
         }
     }
 }

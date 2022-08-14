@@ -383,13 +383,13 @@
     <string name="install">Install</string>
     <string name="update">Update</string>
     <string name="source_code">Source Code</string>
-    <string name="source_code_links">GitHub: https://github.com/MuntashirAkon/AppManager
-        \nGitLab: https://gitlab.com/muntashir/AppManager
-        \nRiseup: https://0xacab.org/muntashir/AppManager
-        \nCodeberg: https://codeberg.org/muntashir/AppManager</string>
+    <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">GitHub</a> •
+        <a href="https://gitlab.com/muntashir/AppManager">GitLab</a> •
+        <a href="https://0xacab.org/muntashir/AppManager">Riseup</a> •
+        <a href="https://codeberg.org/muntashir/AppManager">Codeberg</a></string>
     <string name="community">Community</string>
-    <string name="community_links">Telegram: https://t.me/AppManagerChannel
-        \nTwitter: https://twitter.com/AppManagerNews</string>
+    <string name="community_links"><a href="https://t.me/AppManagerChannel">Telegram channel</a> •
+        <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
     <string name="pref_import_existing">Import existing rules</string>
     <string name="pref_import_existing_msg">Add components disabled by others apps to App Manager.
         Be careful when using this tool as there can be many false positives. Choose only the apps you\'re certain about.</string>
@@ -1256,4 +1256,5 @@
     <string name="user_manual">User manual</string>
     <string name="get_help">Get help</string>
     <string name="pref_advanced_pref">Users, APK name format, parallel execution, etc.</string>
+    <string name="pref_version_changelog">Version/Changelog</string>
 </resources>

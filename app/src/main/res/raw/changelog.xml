@@ -39,8 +39,8 @@
             copied during the operation.
         </note>
         <new title="Setting">
-            Added [a href="app-manager://settings/enabled_features"]option[/a] to disable opening App Info page from the
-            third-party applications
+            Added [a href="app-manager://settings/appearance_prefs/enabled_features"]option[/a] to disable opening App
+            Info page from the third-party applications
         </new>
         <improve title="Security">Removed default signing key</improve>
         <note subtext="true">
@@ -66,14 +66,13 @@
         <new>
             [b]App Explorer.[/b] It can be used to view and open the internal file structure of an APK. It is visible
             when opening an APK using an external application such as a file explorer. This option can be disabled in [a
-            href="app-manager://settings/enabled_features"]settings[/a].
+            href="app-manager://settings/appearance_prefs/enabled_features"]settings[/a].
         </new>
         <new>
             [b]VirusTotal.[/b] Added ability to fetch reports from and send APK files to VirusTotal, using an API key
             obtained from [a href="https://virustotal.com"]https://virustotal.com[/a]. To use the feature, the
-            [a href="app-manager://settings/enabled_features"]Internet feature[/a] must be
-            enabled and the API key must be
-            [a href="app-manager://settings/vt_apikey"]inserted[/a]
+            [a href="app-manager://settings/appearance_prefs/enabled_features"]Internet feature[/a] must be enabled and
+            the API key must be [a href="app-manager://settings/vt_apikey"]inserted[/a]
         </new>
 
         <!-- Main page -->
@@ -212,28 +211,26 @@
         <!-- Settings page -->
         <title type="medium">Settings</title>
         <new>
-            Added [a href="app-manager://settings/saved_apk_format"]the option[/a] to specify
-            a format for the APK files saved using batch operations or profiles
+            Added [a href="app-manager://settings/advanced_prefs/saved_apk_format"]the option[/a] to specify a format
+            for the APK files saved using batch operations or profiles
         </new>
         <new>
-            Added [a href="app-manager://settings/selected_users"]the option[/a] to select
-            the users App Manager should work with if the device has multiple users
+            Added [a href="app-manager://settings/advanced_prefs/selected_users"]the option[/a] to select the users App
+            Manager should work with if the device has multiple users
         </new>
         <new>
-            Added [a href="app-manager://settings/installer"]an option[/a] to block trackers
-            immediately after installing an application if it is installed with App Manager's installer
+            Added [a href="app-manager://settings/installer"]an option[/a] to block trackers immediately after
+            installing an application if it is installed with App Manager's installer
         </new>
         <new>
-            Added the option to select a [a
-            href="app-manager://settings/rules_prefs/default_blocking_method"]default
+            Added the option to select a [a href="app-manager://settings/rules_prefs/default_blocking_method"]default
             blocking method[/a]
         </new>
         <new>
             Added an option to reload apps in the [i]Troubleshooting[/i] category
         </new>
         <improve>
-            Added [a href="app-manager://settings/installer"]the ability[/a] to install apps
-            in the background
+            Added [a href="app-manager://settings/installer"]the ability[/a] to install apps in the background
         </improve>
         <improve>Implement the new-style changelog</improve>
         <improve>Fallback to no-root mode if root or ADB is not detected.</improve>

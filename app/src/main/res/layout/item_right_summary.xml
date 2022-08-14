@@ -1,0 +1,13 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<com.google.android.material.textview.MaterialTextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@android:id/text1"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="end"
+    android:textAlignment="viewEnd"
+    android:textColor="?android:attr/textColorSecondary"
+    android:textAppearance="?android:attr/textAppearanceListItemSecondary"
+    android:textIsSelectable="true"
+    tools:text="@tools:sample/lorem[5]" />

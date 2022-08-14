@@ -19,4 +19,10 @@
         tools:summary="Execute at most 5 operations in parallel"
         app:iconSpaceReserved="false" />
 
+    <Preference
+        app:key="import_export_keystore"
+        app:title="@string/pref_import_export_keystore"
+        app:summary="@string/pref_import_export_keystore_msg"
+        app:iconSpaceReserved="false" />
+
 </PreferenceScreen>

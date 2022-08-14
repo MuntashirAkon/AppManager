@@ -9,6 +9,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.Preference;
 
@@ -24,6 +25,7 @@ import java.util.List;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.settings.crypto.ImportExportKeyStoreDialogFragment;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
@@ -42,12 +44,13 @@ public class AdvancedPreferences extends PreferenceFragment {
     };
 
     private int threadCount;
+    private MainPreferencesViewModel model;
 
     @Override
     public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
         setPreferencesFromResource(R.xml.preferences_advanced, rootKey);
         getPreferenceManager().setPreferenceDataStore(new SettingsDataStore());
-        MainPreferencesViewModel model = new ViewModelProvider(requireActivity()).get(MainPreferencesViewModel.class);
+        model = new ViewModelProvider(requireActivity()).get(MainPreferencesViewModel.class);
         // Selected users
         Preference usersPref = Objects.requireNonNull(findPreference("selected_users"));
         usersPref.setOnPreferenceClickListener(preference -> {
@@ -107,8 +110,19 @@ public class AdvancedPreferences extends PreferenceFragment {
                     .show();
             return true;
         });
+        // Import/export App Manager's KeyStore
+        ((Preference) Objects.requireNonNull(findPreference("import_export_keystore")))
+                .setOnPreferenceClickListener(preference -> {
+                    DialogFragment fragment = new ImportExportKeyStoreDialogFragment();
+                    fragment.show(getParentFragmentManager(), ImportExportKeyStoreDialogFragment.TAG);
+                    return true;
+                });
+    }
 
-        model.selectUsers().observe(this, users -> {
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        model.selectUsers().observe(getViewLifecycleOwner(), users -> {
             if (users == null) return;
             int[] selectedUsers = AppPref.getSelectedUsers();
             int[] userIds = new int[users.size()];

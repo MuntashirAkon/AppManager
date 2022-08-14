@@ -1,0 +1,29 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:minWidth="49dp"
+    android:orientation="horizontal">
+
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/divider"
+        android:layout_width="1dp"
+        android:layout_height="48dp"
+        android:layout_centerVertical="true"
+        app:dividerThickness="1dp" />
+
+    <com.google.android.material.button.MaterialButton
+        style="@style/Widget.AppTheme.Button.IconButton"
+        android:id="@android:id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_toEndOf="@id/divider"
+        android:maxWidth="48dp"
+        android:maxHeight="48dp"
+        app:iconSize="24dp"
+        tools:icon="@drawable/ic_more_vert" />
+
+</RelativeLayout>

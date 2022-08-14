@@ -1,0 +1,57 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <io.github.muntashirakon.preference.HyperlinkPreference
+        app:title="@string/app_name"
+        app:summary="@string/copyright_message"
+        app:iconSpaceReserved="false" />
+
+    <Preference
+        app:key="version"
+        app:title="@string/pref_version_changelog"
+        tools:summary="v3.0.0 (410)"
+        app:iconSpaceReserved="false" />
+
+    <io.github.muntashirakon.preference.HyperlinkPreference
+        app:key="license"
+        app:title="@string/license"
+        app:summary="@string/license_message"
+        app:iconSpaceReserved="false" />s
+
+    <io.github.muntashirakon.preference.HyperlinkPreference
+        app:title="@string/source_code"
+        app:summary="@string/source_code_links"
+        app:iconSpaceReserved="false" />
+
+    <io.github.muntashirakon.preference.HyperlinkPreference
+        app:title="@string/community"
+        app:summary="@string/community_links"
+        app:iconSpaceReserved="false" />
+
+    <Preference
+        app:key="website"
+        app:title="@string/website"
+        app:iconSpaceReserved="false" />
+
+    <Preference
+        app:key="user_manual"
+        app:title="@string/user_manual"
+        app:iconSpaceReserved="false" />
+
+    <Preference
+        app:key="get_help"
+        app:title="@string/get_help"
+        app:iconSpaceReserved="false" />
+
+    <Preference
+        app:key="third_party_libraries"
+        app:title="@string/third_party"
+        app:iconSpaceReserved="false" />
+
+    <Preference
+        app:key="credits"
+        app:title="@string/credits"
+        app:iconSpaceReserved="false" />
+
+</PreferenceScreen>

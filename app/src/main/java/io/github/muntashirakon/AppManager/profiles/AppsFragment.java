@@ -112,7 +112,7 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_icon_title_subtitle, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.m3_preference, parent, false);
             return new ViewHolder(view);
         }
 
@@ -136,6 +136,7 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 holder.subtitle.setVisibility(View.VISIBLE);
                 holder.subtitle.setText(packageName);
             }
+            holder.itemView.setOnClickListener(v -> {});
             holder.itemView.setOnLongClickListener(v -> {
                 PopupMenu popupMenu = new PopupMenu(activity, holder.itemView);
                 popupMenu.getMenu().add(R.string.delete).setOnMenuItemClickListener(item -> {
@@ -159,11 +160,9 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
-                icon = itemView.findViewById(R.id.item_icon);
-                title = itemView.findViewById(R.id.item_title);
-                subtitle = itemView.findViewById(R.id.item_subtitle);
-                // Hide action button
-                itemView.findViewById(R.id.item_open).setVisibility(View.GONE);
+                icon = itemView.findViewById(android.R.id.icon);
+                title = itemView.findViewById(android.R.id.title);
+                subtitle = itemView.findViewById(android.R.id.summary);
             }
         }
     }

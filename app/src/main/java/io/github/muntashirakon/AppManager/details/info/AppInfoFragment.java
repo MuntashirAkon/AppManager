@@ -1244,7 +1244,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 mListItems.add(ListItem.newSelectableRegularItem(getString(R.string.native_library_dir), appInfo.jniDir,
                         openAsFolderInFM(requireContext(), appInfo.jniDir)));
             }
-            mListItems.add(ListItem.newGroupEnd());
         }
     }
 
@@ -1331,7 +1330,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             view -> startActivity(appInfo.mainActivity)));
                 }
             }
-            mListItems.add(ListItem.newGroupEnd());
         }
     }
 
@@ -1360,7 +1358,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             mListItems.add(ListItem.newGroupStart(getString(R.string.data_usage_msg)));
             mListItems.add(ListItem.newInlineItem(getString(R.string.data_transmitted), getReadableSize(dataUsage.getTx())));
             mListItems.add(ListItem.newInlineItem(getString(R.string.data_received), getReadableSize(dataUsage.getRx())));
-            mListItems.add(ListItem.newGroupEnd());
         }
     }
 
@@ -1498,7 +1495,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 mListItems.add(ListItem.newInlineItem(getString(R.string.media_size), getReadableSize(sizeInfo.mediaSize)));
             }
             mListItems.add(ListItem.newInlineItem(getString(R.string.total_size), getReadableSize(sizeInfo.getTotalSize())));
-            mListItems.add(ListItem.newGroupEnd());
         }
     }
 

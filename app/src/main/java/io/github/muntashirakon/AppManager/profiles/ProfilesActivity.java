@@ -3,7 +3,6 @@
 package io.github.muntashirakon.AppManager.profiles;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.text.TextUtils;
@@ -208,22 +207,17 @@ public class ProfilesActivity extends BaseActivity {
         private String[] mAdapterList;
         private HashMap<String, CharSequence> mAdapterMap;
         private final ProfilesActivity activity;
-
-        private final int mColorTransparent;
-        private final int mColorSemiTransparent;
         private final int mQueryStringHighlightColor;
 
         static class ViewHolder {
-            TextView item_name;
-            TextView item_value;
+            TextView title;
+            TextView summary;
         }
 
         ProfilesAdapter(@NonNull ProfilesActivity activity) {
             this.activity = activity;
             mLayoutInflater = activity.getLayoutInflater();
 
-            mColorTransparent = Color.TRANSPARENT;
-            mColorSemiTransparent = ContextCompat.getColor(activity, R.color.semi_transparent);
             mQueryStringHighlightColor = ColorCodes.getQueryStringHighlightColor(activity);
         }
 
@@ -253,10 +247,11 @@ public class ProfilesActivity extends BaseActivity {
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder viewHolder;
             if (convertView == null) {
-                convertView = mLayoutInflater.inflate(R.layout.item_shared_pref, parent, false);
+                convertView = mLayoutInflater.inflate(R.layout.m3_preference, parent, false);
                 viewHolder = new ViewHolder();
-                viewHolder.item_name = convertView.findViewById(R.id.item_title);
-                viewHolder.item_value = convertView.findViewById(R.id.item_subtitle);
+                viewHolder.title = convertView.findViewById(android.R.id.title);
+                viewHolder.summary = convertView.findViewById(android.R.id.summary);
+                convertView.findViewById(R.id.icon_frame).setVisibility(View.GONE);
                 convertView.setTag(viewHolder);
             } else {
                 viewHolder = (ViewHolder) convertView.getTag();
@@ -264,13 +259,12 @@ public class ProfilesActivity extends BaseActivity {
             String profName = mAdapterList[position];
             if (mConstraint != null && profName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
-                viewHolder.item_name.setText(UIUtils.getHighlightedText(profName, mConstraint, mQueryStringHighlightColor));
+                viewHolder.title.setText(UIUtils.getHighlightedText(profName, mConstraint, mQueryStringHighlightColor));
             } else {
-                viewHolder.item_name.setText(profName);
+                viewHolder.title.setText(profName);
             }
             CharSequence value = mAdapterMap.get(profName);
-            viewHolder.item_value.setText(value != null ? value : "");
-            convertView.setBackgroundColor(position % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
+            viewHolder.summary.setText(value != null ? value : "");
             convertView.setOnClickListener(v -> {
                 Intent intent = new Intent(activity, AppsProfileActivity.class);
                 intent.putExtra(AppsProfileActivity.EXTRA_PROFILE_NAME, profName);

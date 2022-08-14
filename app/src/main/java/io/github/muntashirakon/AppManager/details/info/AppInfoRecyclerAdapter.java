@@ -14,33 +14,25 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.divider.MaterialDivider;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 import static io.github.muntashirakon.AppManager.details.info.ListItem.LIST_ITEM_GROUP_BEGIN;
-import static io.github.muntashirakon.AppManager.details.info.ListItem.LIST_ITEM_GROUP_END;
 import static io.github.muntashirakon.AppManager.details.info.ListItem.LIST_ITEM_INLINE;
 import static io.github.muntashirakon.AppManager.details.info.ListItem.LIST_ITEM_REGULAR;
+import static io.github.muntashirakon.AppManager.details.info.ListItem.LIST_ITEM_REGULAR_ACTION;
 
 class AppInfoRecyclerAdapter extends RecyclerView.Adapter<AppInfoRecyclerAdapter.ViewHolder> {
     private final Context context;
     private final List<ListItem> adapterList;
-    private final int accentColor;
-    private final int paddingMedium;
-    private final int paddingSmall;
-    private final int paddingVerySmall;
 
     AppInfoRecyclerAdapter(Context context) {
         this.context = context;
         adapterList = new ArrayList<>();
-        accentColor = UIUtils.getAccentColor(context);
-        paddingVerySmall = context.getResources().getDimensionPixelOffset(R.dimen.padding_very_small);
-        paddingSmall = context.getResources().getDimensionPixelOffset(R.dimen.padding_small);
-        paddingMedium = context.getResources().getDimensionPixelOffset(R.dimen.padding_medium);
     }
 
     void setAdapterList(@NonNull List<ListItem> list) {
@@ -61,16 +53,26 @@ class AppInfoRecyclerAdapter extends RecyclerView.Adapter<AppInfoRecyclerAdapter
         final View view;
         switch (viewType) {
             case LIST_ITEM_GROUP_BEGIN:
-            case LIST_ITEM_REGULAR:
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.m3_preference_category, parent, false);
+                break;
             default:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_icon_title_subtitle, parent, false);
+            case LIST_ITEM_REGULAR:
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.m3_preference, parent, false);
                 break;
-            case LIST_ITEM_GROUP_END:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_divider_horizontal, parent, false);
+            case LIST_ITEM_REGULAR_ACTION: {
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.m3_preference, parent, false);
+                View action = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_right_standalone_action, parent, false);
+                LinearLayoutCompat layoutCompat = view.findViewById(android.R.id.widget_frame);
+                layoutCompat.addView(action);
                 break;
-            case LIST_ITEM_INLINE:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_title_subtitle_inline, parent, false);
+            }
+            case LIST_ITEM_INLINE: {
+                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.m3_preference, parent, false);
+                View action = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_right_summary, parent, false);
+                LinearLayoutCompat layoutCompat = view.findViewById(android.R.id.widget_frame);
+                layoutCompat.addView(action);
                 break;
+            }
         }
         return new ViewHolder(view, viewType);
     }
@@ -78,34 +80,20 @@ class AppInfoRecyclerAdapter extends RecyclerView.Adapter<AppInfoRecyclerAdapter
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ListItem listItem = adapterList.get(position);
-        if (listItem.type == LIST_ITEM_GROUP_END) {
-            return;
-        }
         // Set title
         holder.title.setText(listItem.getTitle());
         if (listItem.type == LIST_ITEM_GROUP_BEGIN) {
-            holder.itemView.setFocusable(false);
-            holder.title.setTextColor(accentColor);
-            LinearLayoutCompat itemLayout = holder.itemView.findViewById(R.id.item_layout);
-            itemLayout.setPadding(paddingMedium, paddingSmall, paddingMedium, paddingVerySmall);
             return;
         }
         // Set common properties
         holder.subtitle.setText(listItem.getSubtitle());
-        holder.subtitle.setFocusable(listItem.isSelectable());
         holder.subtitle.setTextIsSelectable(listItem.isSelectable());
-        holder.subtitle.setBackgroundResource(listItem.isSelectable() ? R.drawable.item_transparent : 0);
-        if (listItem.isMonospace()) {
-            holder.subtitle.setTypeface(Typeface.MONOSPACE);
-        } else holder.subtitle.setTypeface(Typeface.DEFAULT);
+        holder.subtitle.setTypeface(listItem.isMonospace() ? Typeface.MONOSPACE : Typeface.DEFAULT);
         if (listItem.type == LIST_ITEM_INLINE) {
-            // Inline items aren't focusable if text selection mode is on
-            holder.itemView.setFocusable(!listItem.isSelectable());
             return;
         }
-        if (listItem.type == LIST_ITEM_REGULAR) {
-            // Having an action listener makes focusing the whole item redundant
-            holder.itemView.setFocusable(listItem.getOnActionClickListener() == null);
+        if (listItem.type == LIST_ITEM_REGULAR_ACTION) {
+            holder.actionDivider.setVisibility(listItem.getOnActionClickListener() != null ? View.VISIBLE : View.GONE);
             if (listItem.getActionIconRes() != 0) {
                 holder.actionIcon.setIconResource(listItem.getActionIconRes());
             }
@@ -130,29 +118,30 @@ class AppInfoRecyclerAdapter extends RecyclerView.Adapter<AppInfoRecyclerAdapter
         TextView title;
         TextView subtitle;
         MaterialButton actionIcon;
+        MaterialDivider actionDivider;
 
         public ViewHolder(@NonNull View itemView, @ListItem.ListItemType int viewType) {
             super(itemView);
-            if (viewType != LIST_ITEM_GROUP_END) {
-                itemView.findViewById(R.id.item_icon).setVisibility(View.GONE);
-            }
+            itemView.findViewById(R.id.icon_frame).setVisibility(View.GONE);
             switch (viewType) {
-                case LIST_ITEM_GROUP_BEGIN:
-                    title = itemView.findViewById(R.id.item_title);
-                    itemView.findViewById(R.id.item_subtitle).setVisibility(View.GONE);
-                    itemView.findViewById(R.id.item_open).setVisibility(View.GONE);
+                case LIST_ITEM_GROUP_BEGIN: {
+                    title = itemView.findViewById(android.R.id.title);
+                    itemView.findViewById(android.R.id.summary).setVisibility(View.GONE);
                     break;
+                }
                 case LIST_ITEM_REGULAR:
-                    title = itemView.findViewById(R.id.item_title);
-                    subtitle = itemView.findViewById(R.id.item_subtitle);
-                    actionIcon = itemView.findViewById(R.id.item_open);
+                case LIST_ITEM_REGULAR_ACTION:
+                    title = itemView.findViewById(android.R.id.title);
+                    subtitle = itemView.findViewById(android.R.id.summary);
+                    actionDivider = itemView.findViewById(R.id.divider);
+                    actionIcon = itemView.findViewById(android.R.id.button1);
                     break;
-                case LIST_ITEM_GROUP_END:
                 default:
                     break;
                 case LIST_ITEM_INLINE:
-                    title = itemView.findViewById(R.id.item_title);
-                    subtitle = itemView.findViewById(R.id.item_subtitle);
+                    title = itemView.findViewById(android.R.id.title);
+                    subtitle = itemView.findViewById(android.R.id.text1);
+                    itemView.findViewById(android.R.id.summary).setVisibility(View.GONE);
                     break;
             }
         }

@@ -7,8 +7,10 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
+import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.util.Pair;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.Preference;
@@ -43,12 +45,13 @@ public class InstallerPreferences extends PreferenceFragment {
     private PackageManager pm;
     private String installerApp;
     private Preference installerAppPref;
+    private MainPreferencesViewModel model;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences_installer, rootKey);
         getPreferenceManager().setPreferenceDataStore(new SettingsDataStore());
-        MainPreferencesViewModel model = new ViewModelProvider(requireActivity()).get(MainPreferencesViewModel.class);
+        model = new ViewModelProvider(requireActivity()).get(MainPreferencesViewModel.class);
         activity = (SettingsActivity) requireActivity();
         pm = activity.getPackageManager();
         // Display users in installer
@@ -140,8 +143,13 @@ public class InstallerPreferences extends PreferenceFragment {
         SwitchPreferenceCompat backgroundPref = Objects.requireNonNull(findPreference("installer_always_on_background"));
         backgroundPref.setVisible(Utils.canDisplayNotification(requireContext()));
         backgroundPref.setChecked(AppPref.getBoolean(AppPref.PrefKey.PREF_INSTALLER_ALWAYS_ON_BACKGROUND_BOOL));
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         // Observe installer app selection
-        model.getPackageNameLabelPairLiveData().observe(this, this::displayInstallerAppSelectionDialog);
+        model.getPackageNameLabelPairLiveData().observe(getViewLifecycleOwner(), this::displayInstallerAppSelectionDialog);
     }
 
     @Override

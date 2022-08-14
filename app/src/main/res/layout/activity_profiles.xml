@@ -40,7 +40,7 @@
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             android:clipToPadding="false"
-            tools:listitem="@layout/item_shared_pref" />
+            tools:listitem="@layout/m3_preference" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@android:id/empty"

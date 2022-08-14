@@ -2,7 +2,6 @@
 <androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:paddingHorizontal="@dimen/padding_medium"
     android:paddingVertical="@dimen/padding_large">
@@ -21,7 +20,6 @@
         style="@style/Widget.AppTheme.LinearProgressIndicator"
         android:indeterminate="true"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:indicatorColor="?colorAccent" />
+        android:layout_height="wrap_content" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

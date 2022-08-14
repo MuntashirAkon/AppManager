@@ -10,19 +10,21 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 
+import io.github.muntashirakon.AppManager.R;
+
 class ListItem {
     @IntDef(value = {
             LIST_ITEM_GROUP_BEGIN,
-            LIST_ITEM_GROUP_END,
             LIST_ITEM_REGULAR,
+            LIST_ITEM_REGULAR_ACTION,
             LIST_ITEM_INLINE
     })
     @interface ListItemType {
     }
 
     static final int LIST_ITEM_GROUP_BEGIN = 0;  // Group header
-    static final int LIST_ITEM_GROUP_END = 1;  // Group divider
-    static final int LIST_ITEM_REGULAR = 2;
+    static final int LIST_ITEM_REGULAR = 1;
+    static final int LIST_ITEM_REGULAR_ACTION = 2;
     static final int LIST_ITEM_INLINE = 3;
 
     @ListItemType
@@ -48,11 +50,6 @@ class ListItem {
         ListItem listItem = new ListItem(LIST_ITEM_GROUP_BEGIN);
         listItem.mTitle = header;
         return listItem;
-    }
-
-    @NonNull
-    public static ListItem newGroupEnd() {
-        return new ListItem(LIST_ITEM_GROUP_END);
     }
 
     @NonNull
@@ -84,10 +81,11 @@ class ListItem {
     public static ListItem newSelectableRegularItem(@Nullable CharSequence title,
                                                     @Nullable CharSequence subtitle,
                                                     @Nullable View.OnClickListener actionListener) {
-        ListItem listItem = new ListItem(LIST_ITEM_REGULAR);
+        ListItem listItem = new ListItem(LIST_ITEM_REGULAR_ACTION);
         listItem.mIsSelectable = true;
         listItem.mTitle = title;
         listItem.mSubtitle = subtitle;
+        listItem.mActionIconRes = R.drawable.ic_open_in_new;
         listItem.mOnActionClickListener = actionListener;
         return listItem;
     }

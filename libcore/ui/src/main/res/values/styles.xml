@@ -11,6 +11,9 @@
 
         <item name="android:colorBackground">?colorSurface</item>
 
+        <!-- Medium title should've been 18sp, not 16 -->
+        <item name="textAppearanceTitleMedium">@style/TextAppearance.AppTheme.TitleMedium</item>
+
         <item name="materialFullScreenAlertDialogTheme">@style/AppTheme</item>
         <item name="bottomSheetDialogTheme">@style/AppTheme.BottomSheetDialog</item>
         <item name="checkboxStyle">@style/Widget.AppTheme.CompoundButton.CheckBox</item>
@@ -24,15 +27,42 @@
         <item name="materialDividerStyle">@style/Widget.AppTheme.Divider</item>
         <item name="popupMenuStyle">@style/Widget.AppTheme.PopupMenu</item>
         <item name="listPopupWindowStyle">@style/Widget.AppTheme.PopupMenu.ListPopupWindow</item>
-        <item name="android:contextPopupMenuStyle" tools:targetApi="N">@style/Widget.AppTheme.PopupMenu.ContextMenu
+        <item name="android:contextPopupMenuStyle" tools:targetApi="N">
+            @style/Widget.AppTheme.PopupMenu.ContextMenu
         </item>
         <item name="actionOverflowButtonStyle">@style/Widget.AppTheme.PopupMenu.OverflowButton</item>
         <item name="actionOverflowMenuStyle">@style/Widget.AppTheme.PopupMenu.Overflow</item>
         <item name="searchViewStyle">@style/Widget.AppTheme.SearchView</item>
         <item name="textInputStyle">@style/Widget.AppTheme.TextInputLayout</item>
 
-        <item name="switchPreferenceCompatStyle">@style/Preference.MaterialSwitchPreference</item>
+        <!-- Preferences -->
+        <item name="preferenceStyle">@style/Preference.M3</item>
+        <item name="checkBoxPreferenceStyle">@style/Preference.M3.CheckBoxPreference</item>
+        <item name="dialogPreferenceStyle">@style/Preference.M3.DialogPreference</item>
 
+        <item name="dropdownPreferenceStyle">@style/Preference.DropDown.Material</item>
+
+        <item name="editTextPreferenceStyle">@style/Preference.M3.DialogPreference.EditTextPreference</item>
+        <item name="preferenceCategoryStyle">@style/Preference.M3.Category</item>
+        <item name="preferenceCategoryTitleTextAppearance">?attr/textAppearanceLabelLarge</item>
+        <item name="preferenceCategoryTitleTextColor">?attr/colorPrimary</item>
+
+        <item name="preferenceFragmentCompatStyle">@style/PreferenceFragment.Material</item>
+        <item name="preferenceFragmentListStyle">@style/PreferenceFragmentList.Material</item>
+        <item name="preferenceFragmentStyle">@style/PreferenceFragment.Material</item>
+
+        <item name="preferenceScreenStyle">@style/Preference.M3.PreferenceScreen</item>
+
+        <item name="seekBarPreferenceStyle">@style/Preference.SeekBarPreference.Material</item>
+
+        <item name="switchPreferenceStyle">@style/Preference.M3.SwitchPreference</item>
+        <item name="switchPreferenceCompatStyle">@style/Preference.M3.SwitchPreferenceCompat</item>
+
+        <!-- List items -->
+        <item name="android:textAppearanceListItem">?attr/textAppearanceTitleMedium</item>
+        <item name="android:textAppearanceListItemSecondary">@style/TextAppearance.AppTheme.BodyMedium.Secondary</item>
+
+        <!-- Misc -->
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
@@ -255,8 +285,38 @@
     </style>
 
     <!-- Preferences -->
-    <style name="Preference.MaterialSwitchPreference" parent="Preference.SwitchPreferenceCompat.Material">
-        <item name="android:widgetLayout">@layout/preference_widget_material_switch</item>
+    <style name="Preference.M3" parent="Preference.Material">
+        <item name="android:layout">@layout/m3_preference</item>
+    </style>
+
+    <style name="Preference.M3.Category" parent="Preference.Category.Material">
+        <item name="android:layout">@layout/m3_preference_category</item>
+        <item name="allowDividerAbove">false</item>
+    </style>
+
+    <style name="Preference.M3.CheckBoxPreference" parent="Preference.CheckBoxPreference.Material">
+        <item name="android:layout">@layout/m3_preference</item>
+    </style>
+
+    <style name="Preference.M3.DialogPreference" parent="Preference.DialogPreference.Material">
+        <item name="android:layout">@layout/m3_preference</item>
+    </style>
+
+    <style name="Preference.M3.DialogPreference.EditTextPreference" parent="Preference.DialogPreference.EditTextPreference.Material">
+        <item name="android:layout">@layout/m3_preference</item>
+    </style>
+
+    <style name="Preference.M3.PreferenceScreen" parent="Preference.PreferenceScreen.Material">
+        <item name="android:layout">@layout/m3_preference</item>
+    </style>
+
+    <style name="Preference.M3.SwitchPreference" parent="Preference.SwitchPreference.Material">
+        <item name="android:layout">@layout/m3_preference</item>
+    </style>
+
+    <style name="Preference.M3.SwitchPreferenceCompat" parent="Preference.SwitchPreferenceCompat.Material">
+        <item name="android:layout">@layout/m3_preference</item>
+        <item name="android:widgetLayout">@layout/m3_preference_widget_material_switch</item>
     </style>
 
     <!-- TextInputLayout -->
@@ -394,13 +454,22 @@
 
     <style name="TextAppearance.AppTheme.TitleLarge" parent="TextAppearance.Material3.TitleLarge" />
 
-    <style name="TextAppearance.AppTheme.TitleMedium" parent="TextAppearance.Material3.TitleMedium" />
+    <style name="TextAppearance.AppTheme.TitleMedium" parent="TextAppearance.Material3.TitleMedium">
+        <item name="android:letterSpacing">0</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">@macro/m3_ref_typeface_brand_regular</item>
+        <item name="fontFamily">@macro/m3_ref_typeface_brand_regular</item>
+    </style>
 
     <style name="TextAppearance.AppTheme.TitleSmall" parent="TextAppearance.Material3.TitleSmall" />
 
     <style name="TextAppearance.AppTheme.BodyLarge" parent="TextAppearance.Material3.BodyLarge" />
 
     <style name="TextAppearance.AppTheme.BodyMedium" parent="TextAppearance.Material3.BodyMedium" />
+
+    <style name="TextAppearance.AppTheme.BodyMedium.Secondary" parent="TextAppearance.AppTheme.BodyMedium">
+        <item name="android:textColor">?android:attr/textColorSecondary</item>
+    </style>
 
     <style name="TextAppearance.AppTheme.BodySmall" parent="TextAppearance.Material3.BodySmall" />
 

@@ -1,0 +1,24 @@
+<!-- SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later -->
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/icon_frame"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:minWidth="56dp"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:paddingStart="0dp"
+    android:paddingEnd="8dp"
+    android:paddingTop="4dp"
+    android:paddingBottom="4dp">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@android:id/icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="48dp"
+        android:maxHeight="48dp"
+        android:adjustViewBounds="true"
+        tools:srcCompat="@tools:sample/avatars" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

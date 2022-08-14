@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.collection.ArraySet;
+import androidx.core.widget.TextViewCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -37,8 +38,6 @@ import io.github.muntashirakon.widget.CheckBox;
 import io.github.muntashirakon.widget.SearchView;
 
 public class SearchableMultiChoiceDialogBuilder<T> {
-    @NonNull
-    private final Context context;
     @NonNull
     private final MaterialAlertDialogBuilder builder;
     private final SearchView searchView;
@@ -69,7 +68,6 @@ public class SearchableMultiChoiceDialogBuilder<T> {
 
     @SuppressLint("InflateParams")
     public SearchableMultiChoiceDialogBuilder(@NonNull Context context, @NonNull List<T> items, @NonNull List<CharSequence> itemNames) {
-        this.context = context;
         View view = View.inflate(context, R.layout.dialog_searchable_multi_choice, null);
         RecyclerView recyclerView = view.findViewById(android.R.id.list);
         recyclerView.setHasFixedSize(true);
@@ -435,10 +433,11 @@ public class SearchableMultiChoiceDialogBuilder<T> {
         class ViewHolder extends RecyclerView.ViewHolder {
             CheckedTextView item;
 
+            @SuppressLint("RestrictedApi")
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
                 item = itemView.findViewById(android.R.id.text1);
-                // textAppearanceBodyLarge
+                TextViewCompat.setTextAppearance(item, MaterialAttributes.resolveInteger(item.getContext(), R.attr.textAppearanceBodyLarge, 0));
                 item.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
                 item.setTextColor(UIUtils.getTextColorSecondary(item.getContext()));
             }

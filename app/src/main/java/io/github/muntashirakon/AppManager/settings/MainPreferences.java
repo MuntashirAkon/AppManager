@@ -2,8 +2,6 @@
 
 package io.github.muntashirakon.AppManager.settings;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -18,8 +16,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.Preference;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -28,11 +24,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.changelog.ChangelogRecyclerAdapter;
 import io.github.muntashirakon.AppManager.misc.DeviceInfo2;
-import io.github.muntashirakon.AppManager.misc.HelpActivity;
 import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
@@ -62,6 +55,9 @@ public class MainPreferences extends PreferenceFragment {
     @Ops.Mode
     private String currentMode;
     private MainPreferencesViewModel model;
+    private AlertDialog modeOfOpsAlertDialog;
+    private Preference modePref;
+    private String[] modes;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -93,13 +89,13 @@ public class MainPreferences extends PreferenceFragment {
             return true;
         });
         // Mode of operation
-        Preference mode = Objects.requireNonNull(findPreference("mode_of_operations"));
-        AlertDialog modeOfOpsAlertDialog = UIUtils.getProgressDialog(activity, getString(R.string.loading));
-        final String[] modes = getResources().getStringArray(R.array.modes);
+        modePref = Objects.requireNonNull(findPreference("mode_of_operations"));
+        modeOfOpsAlertDialog = UIUtils.getProgressDialog(activity, getString(R.string.loading));
+        modes = getResources().getStringArray(R.array.modes);
         currentMode = Ops.getMode(requireContext());
-        mode.setSummary(getString(R.string.mode_of_op_with_inferred_mode_of_op, modes[MODE_NAMES.indexOf(currentMode)],
+        modePref.setSummary(getString(R.string.mode_of_op_with_inferred_mode_of_op, modes[MODE_NAMES.indexOf(currentMode)],
                 getInferredMode()));
-        mode.setOnPreferenceClickListener(preference -> {
+        modePref.setOnPreferenceClickListener(preference -> {
             new MaterialAlertDialogBuilder(activity)
                     .setTitle(R.string.pref_mode_of_operations)
                     .setSingleChoiceItems(modes, MODE_NAMES.indexOf(currentMode), (dialog, which) -> {
@@ -116,7 +112,7 @@ public class MainPreferences extends PreferenceFragment {
                     })
                     .setPositiveButton(R.string.apply, (dialog, which) -> {
                         AppPref.set(AppPref.PrefKey.PREF_MODE_OF_OPS_STR, currentMode);
-                        mode.setSummary(modes[MODE_NAMES.indexOf(currentMode)]);
+                        modePref.setSummary(modes[MODE_NAMES.indexOf(currentMode)]);
                         modeOfOpsAlertDialog.show();
                         model.setModeOfOps();
                     })
@@ -148,41 +144,28 @@ public class MainPreferences extends PreferenceFragment {
                     model.loadDeviceInfo(new DeviceInfo2(activity));
                     return true;
                 });
-        // About
-        ((Preference) Objects.requireNonNull(findPreference("about"))).setOnPreferenceClickListener(preference -> {
-            View view = View.inflate(activity, R.layout.dialog_about, null);
-            ((TextView) view.findViewById(R.id.version)).setText(String.format(Locale.getDefault(),
-                    "%s (%d)", BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
-            new AlertDialogBuilder(activity, true)
-                    .setTitle(R.string.about)
-                    .setView(view)
-                    .show();
-            return true;
-        });
-        // Changelog
-        ((Preference) Objects.requireNonNull(findPreference("changelog")))
-                .setOnPreferenceClickListener(preference -> {
-                    model.loadChangeLog();
-                    return true;
-                });
-        // User manual
-        ((Preference) Objects.requireNonNull(findPreference("user_manual")))
-                .setOnPreferenceClickListener(preference -> {
-                    Intent helpIntent = new Intent(requireContext(), HelpActivity.class);
-                    startActivity(helpIntent);
-                    return true;
-                });
-        // Get help
-        ((Preference) Objects.requireNonNull(findPreference("get_help")))
-                .setOnPreferenceClickListener(preference -> {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.discussions_site)));
-                    startActivity(intent);
-                    return true;
-                });
 
+        // Hide preferences for disabled features
+        if (!FeatureController.isInstallerEnabled()) {
+            ((Preference) Objects.requireNonNull(findPreference("installer"))).setVisible(false);
+        }
+        if (!FeatureController.isLogViewerEnabled()) {
+            ((Preference) Objects.requireNonNull(findPreference("log_viewer_prefs"))).setVisible(false);
+        }
+        model.getOperationCompletedLiveData().observe(requireActivity(), completed -> {
+            if (requireActivity() instanceof SettingsActivity) {
+                ((SettingsActivity) requireActivity()).progressIndicator.hide();
+            }
+            Toast.makeText(activity, R.string.the_operation_was_successful, Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         // Preference loaders
         // Mode of ops
-        model.getModeOfOpsStatus().observe(this, status -> {
+        model.getModeOfOpsStatus().observe(getViewLifecycleOwner(), status -> {
             switch (status) {
                 case Ops.STATUS_AUTO_CONNECT_WIRELESS_DEBUGGING:
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -208,42 +191,16 @@ public class MainPreferences extends PreferenceFragment {
                 case Ops.STATUS_SUCCESS:
                 case Ops.STATUS_FAILURE:
                     modeOfOpsAlertDialog.dismiss();
-                    mode.setSummary(getString(R.string.mode_of_op_with_inferred_mode_of_op,
+                    modePref.setSummary(getString(R.string.mode_of_op_with_inferred_mode_of_op,
                             modes[MODE_NAMES.indexOf(currentMode)], getInferredMode()));
             }
         });
-        // Changelog
-        model.getChangeLog().observe(this, changelog -> {
-            RecyclerView recyclerView = (RecyclerView) View.inflate(activity, R.layout.dialog_whats_new, null);
-            recyclerView.setHasFixedSize(true);
-            recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));
-            ChangelogRecyclerAdapter adapter = new ChangelogRecyclerAdapter();
-            recyclerView.setAdapter(adapter);
-            adapter.setAdapterList(changelog.getChangelogItems());
-            new AlertDialogBuilder(activity, true)
-                    .setTitle(R.string.changelog)
-                    .setView(recyclerView)
-                    .show();
-        });
         // Device info
-        model.getDeviceInfo().observe(this, deviceInfo -> {
-            View view = View.inflate(activity, R.layout.dialog_scrollable_text_view, null);
-            ((TextView) view.findViewById(android.R.id.content)).setText(deviceInfo.toLocalizedString(activity));
-            view.findViewById(android.R.id.checkbox).setVisibility(View.GONE);
-            new AlertDialogBuilder(activity, true).setTitle(R.string.about_device).setView(view).show();
-        });
-        // Hide preferences for disabled features
-        if (!FeatureController.isInstallerEnabled()) {
-            ((Preference) Objects.requireNonNull(findPreference("installer"))).setVisible(false);
-        }
-        if (!FeatureController.isLogViewerEnabled()) {
-            ((Preference) Objects.requireNonNull(findPreference("log_viewer_prefs"))).setVisible(false);
-        }
-        model.getOperationCompletedLiveData().observe(requireActivity(), completed -> {
-            if (requireActivity() instanceof SettingsActivity) {
-                ((SettingsActivity) requireActivity()).progressIndicator.hide();
-            }
-            Toast.makeText(activity, R.string.the_operation_was_successful, Toast.LENGTH_SHORT).show();
+        model.getDeviceInfo().observe(getViewLifecycleOwner(), deviceInfo -> {
+            View v = View.inflate(activity, R.layout.dialog_scrollable_text_view, null);
+            ((TextView) v.findViewById(android.R.id.content)).setText(deviceInfo.toLocalizedString(activity));
+            v.findViewById(android.R.id.checkbox).setVisibility(View.GONE);
+            new AlertDialogBuilder(activity, true).setTitle(R.string.about_device).setView(v).show();
         });
     }
 

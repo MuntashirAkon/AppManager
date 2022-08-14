@@ -1,0 +1,49 @@
+<!-- SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later -->
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+    android:paddingRight="?android:attr/listPreferredItemPaddingRight"
+    android:background="?android:attr/selectableItemBackground"
+    android:baselineAligned="false"
+    android:layout_marginTop="16dp"
+    android:gravity="center_vertical"
+    android:layout_marginHorizontal="8dp">
+
+    <include layout="@layout/m3_preference_image_frame" />
+
+    <RelativeLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@android:id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:textAlignment="viewStart"
+            android:textAppearance="?attr/preferenceCategoryTitleTextAppearance"
+            android:textColor="?attr/preferenceCategoryTitleTextColor"
+            tools:text="@tools:sample/lorem[10]" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@android:id/summary"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@android:id/title"
+            android:layout_alignLeft="@android:id/title"
+            android:layout_alignStart="@android:id/title"
+            android:layout_gravity="start"
+            android:textAlignment="viewStart"
+            android:maxLines="10"
+            android:textAppearance="?attr/textAppearanceListItemSecondary"
+            tools:text="@tools:sample/lorem[10]" />
+
+    </RelativeLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>

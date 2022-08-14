@@ -24,8 +24,7 @@
                 style="@style/Widget.AppTheme.LinearProgressIndicator"
                 android:indeterminate="true"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:indicatorColor="?colorAccent" />
+                android:layout_height="wrap_content" />
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
@@ -118,7 +117,7 @@
                 android:layout_height="wrap_content"
                 android:overScrollMode="never"
                 android:nextFocusUp="@id/horizontal_layout"
-                tools:listitem="@layout/item_icon_title_subtitle" />
+                tools:listitem="@layout/m3_preference" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

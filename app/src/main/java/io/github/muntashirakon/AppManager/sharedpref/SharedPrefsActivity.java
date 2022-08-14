@@ -250,8 +250,9 @@ public class SharedPrefsActivity extends BaseActivity implements
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
-                itemName = itemView.findViewById(R.id.item_title);
-                itemValue = itemView.findViewById(R.id.item_subtitle);
+                itemName = itemView.findViewById(android.R.id.title);
+                itemValue = itemView.findViewById(android.R.id.summary);
+                itemView.findViewById(R.id.icon_frame).setVisibility(View.GONE);
             }
         }
 
@@ -278,7 +279,7 @@ public class SharedPrefsActivity extends BaseActivity implements
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_shared_pref, parent, false);
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.m3_preference, parent, false);
             return new ViewHolder(v);
         }
 
@@ -296,7 +297,6 @@ public class SharedPrefsActivity extends BaseActivity implements
             holder.itemValue.setText(strValue.length() > REASONABLE_STR_SIZE ?
                     strValue.substring(0, REASONABLE_STR_SIZE) : strValue);
             holder.itemView.setOnClickListener(v -> mActivity.displayEditor(prefName));
-            holder.itemView.setBackgroundResource(position % 2 == 0 ? R.drawable.item_semi_transparent : R.drawable.item_transparent);
         }
 
         @Override
