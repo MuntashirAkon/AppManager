@@ -1334,4 +1334,75 @@
     <string name="pages$app-details-page$shared-libs-tab">\\textbf{Gemeinsame Bibliotheken} listet alle JAR-Legacy-Abhängigkeiten sowie die JNI-Bibliotheken (Java Native Interface) auf.
 \nFür JNI-Bibliotheken wird die Plattform (x86/x86\\_64/ARM/AArch64), die Architektur (32/64 Bit), der Objekttyp (Shared Object
 \noder ausführbar), usw.</string>
+    <string name="pages$scanner-page$$missing-signatures-title">Fehlende Signaturen</string>
+    <string name="pages$scanner-page$missing-signatures">Unten auf der Seite befindet sich ein spezieller Punkt, der die Anzahl der fehlenden Signaturen (d. h. der fehlenden Klassen) angibt.
+\nDie fehlenden Signaturen sind diejenigen, die AM nicht mit bekannten Bibliotheken abgleichen konnte. Die Zahl selbst hat keine
+\nBedeutung, da viele Bibliotheken Hunderte von Klassen enthalten, aber ein Klick auf das Element öffnet ein Dialogfeld
+\nder die Signaturen enthält, was bei der Überprüfung der fehlenden Signaturen hilfreich ist. \\textbf{Diese Funktion ist nur für Personen
+\ngedacht, die wissen, was eine fehlende Signatur ist und was damit zu tun ist. Andere Benutzer sollten sie ignorieren.}</string>
+    <string name="pages$settings-page$device-info">Anzeige von Android-Version, Sicherheit, CPU, GPU, Akku, Speicher, Bildschirm, Sprachen, Benutzerinformationen usw.</string>
+    <string name="pages$scanner-page$$section-title">Scanner-Seite</string>
+    <string name="pages$scanner-page$intro">\\textbf{Scanner-Seite} wird angezeigt, nachdem Sie auf die Schaltfläche \\emph{Scanner} in der Registerkarte \\hyperref[subsec:app-info-tab]{App-Info} geklickt haben.
+\nExterne APK-Dateien können auch über Dateimanager, Webbrowser usw. zum Scannen geöffnet werden.
+\n
+\nEs wird nach Trackern und Bibliotheken gescannt und die Anzahl der Tracker und Bibliotheken als Zusammenfassung angezeigt. Es zeigt auch
+\nPrüfsummen der APK-Datei sowie die Signierzertifikate. Wenn VirusTotal in den Einstellungen konfiguriert ist,
+\nversucht es auch, Berichte von VirusTotal abzurufen, oder lädt die APK-Datei hoch, wenn sie sich nicht in der Datenbank befindet.
+\n
+\n\\begin{danger}{Disclaimer}
+\n App Manager scannt eine Anwendung nur statisch und ohne Vorurteile. Die Anwendung kann Optionen für die Ablehnung anbieten,
+\n oder in einigen Fällen werden bestimmte Funktionen des Trackers von der Anwendung überhaupt nicht genutzt (z. B. F-Droid),
+\n oder manche Anwendungen verwenden sie einfach als Platzhalter, um den Ausfall bestimmter Funktionen zu verhindern (z. B. \\ Fennec F-Droid).
+\n \\textbf{Die Absicht des Scanners ist es, Ihnen eine Vorstellung davon zu geben, was die APK enthalten könnte. Er sollte als erster Schritt für weitere Untersuchungen angesehen werden.}
+\n\\end{danger}
+\n
+\nEin Klick auf den ersten Punkt (d.h. die Anzahl der Klassen) öffnet eine neue Seite mit einer Liste der Tracker-Klassen für die Anwendung.
+\nAlle Klassen können auch durch Anklicken des Menüs \\textit{Toggle Class Listing} angezeigt werden.
+\nEine Vorschau auf jede Klasse kann durch einfaches Klicken auf ein beliebiges Klassenelement angezeigt werden. In Android 8 (Oreo) und später,
+\nenthält dies die gesamte SMALI-Version der Klasse und kann mit der entsprechenden Option in Java konvertiert werden.
+\n
+\n\\begin{tip}{Hinweis}
+\n Aufgrund verschiedener Einschränkungen ist es nicht möglich, alle Komponenten einer APK-Datei zu scannen. Dies gilt insbesondere, wenn
+\n eine APK stark verschleiert ist. Der Scanner prüft auch keine Zeichenketten (oder Website-Signaturen).
+\n\\end{tip}
+\n
+\nDer zweite Punkt listet die Anzahl der Tracker zusammen mit deren Namen auf. Wenn Sie auf diesen Punkt klicken, wird ein Dialog angezeigt, der
+\nden Namen der Tracker, die übereinstimmenden Signaturen und die Anzahl der Klassen für jede Signatur. Einige Tracker-Namen können ein
+\n$^2$ vorangestellt, was anzeigt, dass die Tracker in der \\href{https://etip.exodus-privacy.eu.org}{ETIP} Stand-by-Liste stehen
+\nd.h. ob es sich um tatsächliche Tracker handelt, wird noch untersucht.
+\n
+\nDer dritte Punkt listet die Anzahl der Bibliotheken zusammen mit ihren Namen auf. Die Informationen stammen größtenteils aus dem
+\n\\href{https://gitlab.com/IzzyOnDroid/repo}{IzzyOnDroid Repository}.
+\n
+\n\\seealsoinline{\\hyperref[subsec:tracker-classes-versus-tracker-components]{FAQ: Tracker-Klassen vs. Tracker-Komponenten}}</string>
+    <string name="pages$interceptor-page$$section-title">Interceptor-Seite</string>
+    <string name="pages$interceptor-page$$intent-filters-title">Intent-Filter</string>
+    <string name="pages$interceptor-page$$action-title">Aktion</string>
+    <string name="pages$interceptor-page$$data-title">Daten</string>
+    <string name="pages$interceptor-page$$mime-type-title">MIME-Typ</string>
+    <string name="pages$interceptor-page$$categories-title">Kategorien</string>
+    <string name="pages$interceptor-page$$flags-title">Flaggen</string>
+    <string name="pages$interceptor-page$$extras-title">Extras</string>
+    <string name="pages$interceptor-page$$uri-title">URI</string>
+    <string name="pages$interceptor-page$$matching-activities-title">Übereinstimmende Aktivitäten</string>
+    <string name="pages$interceptor-page$intro">Interceptor kann verwendet werden, um die Kommunikation zwischen Anwendungen mit Hilfe von \\texttt{Intent} abzufangen.
+\nEr arbeitet als Man-in-the-Middle zwischen der Quell- und der Zielanwendung.
+\nEr bietet eine funktionsreiche Benutzeroberfläche zur Bearbeitung von \\texttt{Intent}s.
+\n
+\n\\begin{warning}{Warning}
+\n Interceptor funktioniert nur für \\textit{implicit}-Intents, bei denen die \\hyperref[subsec:faq:what-are-app-components]{App-Komponente} nicht angegeben ist.
+\n\\end{warning}
+\n
+\n\\begin{amseealso}
+\n \\item \\href{https://developer.android.com/guide/components/intents-common}{Gemeinsame Intents}
+\n \\item \\href{https://developer.android.com/guide/components/intents-filters}{Intents und Intent-Filter}
+\n\\end{amseealso}</string>
+    <string name="pages$interceptor-page$$reset-to-default-title">Zurücksetzen auf Standard</string>
+    <string name="pages$interceptor-page$$send-edited-intent-title">Geänderte Absicht senden</string>
+    <string name="pages$interceptor-page$intent-filters">Intent-Filter werden von den Anwendungen verwendet, um die Aufgaben zu spezifizieren, die sie ausführen können oder die sie mit anderen Anwendungen ausführen werden.
+\nWenn Sie zum Beispiel eine PDF-Datei mit einem Dateimanager öffnen, versucht der Dateimanager, die Anwendungen zu finden, mit denen die PDF-Datei geöffnet werden soll.
+\nUm die richtigen Anwendungen zu finden, erstellt der Dateimanager einen Intent mit Filtern wie dem MIME-Typ und bittet das System, die Anwendungen abzurufen, die diesen Filter öffnen können.
+\nDas System durchsucht das Manifest der installierten Anwendungen nach dem Filter und listet die Anwendungskomponenten auf, die in der Lage sind, diesen Filter (in unserem Fall das PDF) zu öffnen.
+\nDaraufhin öffnet entweder der Dateimanager die gewünschte Anwendungskomponente von selbst oder es wird eine vom System bereitgestellte Option verwendet, um sie zu öffnen.
+\nWenn mehrere Anwendungskomponenten in der Lage sind, das Dokument zu öffnen, und keine Standardeinstellung festgelegt ist, erhalten Sie möglicherweise eine Aufforderung, die richtige Anwendungskomponente auszuwählen.</string>
 </resources>
