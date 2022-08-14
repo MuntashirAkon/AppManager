@@ -1203,4 +1203,10 @@
     <string name="pref_reload_apps">Apps neu laden</string>
     <string name="changelog_type_new">Neu</string>
     <string name="changelog_type_improve">Verbessern</string>
+    <string name="unsupported_split_apk">Nicht unterstützt</string>
+    <string name="view_changelog">Erfahren Sie, was in dieser Version neu ist</string>
+    <string name="pref_sign_apk_no_signing_key">Kein Signaturschlüssel</string>
+    <string name="sort_by_total_size">Gesamtgröße</string>
+    <string name="am_command"><tt>am</tt> Befehl</string>
+    <string name="pref_sign_apk_error_signing_key_not_added">Zum Signieren einer APK-Datei ist ein gültiger Signaturschlüssel erforderlich.</string>
 </resources>
