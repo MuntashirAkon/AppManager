@@ -8,12 +8,11 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.LinearLayoutCompat;
-
-import com.google.android.material.button.MaterialButton;
 
 import io.github.muntashirakon.AppManager.R;
 
@@ -27,7 +26,6 @@ public class ListItemCreator {
     public TextView itemTitle;
     public TextView itemSubtitle;
     public ImageView itemIcon;
-    public MaterialButton itemOpen;
 
     public ListItemCreator(@NonNull Activity activity, @IdRes int resIdMenuContainer) {
         mListContainer = activity.findViewById(resIdMenuContainer);
@@ -46,28 +44,27 @@ public class ListItemCreator {
     /**
      * Add a menu item to the main menu container.
      *
-     * @param title Title
-     * @param subtitle Subtitle (null to remove it)
+     * @param title     Title
+     * @param subtitle  Subtitle (null to remove it)
      * @param resIdIcon Resource ID for icon (ListItemCreator.EMPTY to leave it empty)
      * @return The menu item is returned which can be used for other purpose
      */
     private View addItemWithIconTitleSubtitle(@NonNull CharSequence title,
-                                              @Nullable CharSequence subtitle, int resIdIcon) {
-        listItem = mLayoutInflater.inflate(R.layout.item_icon_title_subtitle, mListContainer, false);
+                                              @Nullable CharSequence subtitle,
+                                              @DrawableRes int resIdIcon) {
+        listItem = mLayoutInflater.inflate(R.layout.m3_preference, mListContainer, false);
+        listItem.findViewById(R.id.icon_frame).setVisibility(View.GONE);
         // Item title
-        itemTitle = listItem.findViewById(R.id.item_title);
+        itemTitle = listItem.findViewById(android.R.id.title);
         itemTitle.setText(title);
         // Item subtitle
-        itemSubtitle = listItem.findViewById(R.id.item_subtitle);
+        itemSubtitle = listItem.findViewById(android.R.id.summary);
         if (subtitle != null) itemSubtitle.setText(subtitle);
         else itemSubtitle.setVisibility(View.GONE);
         // Item icon
-        itemIcon = listItem.findViewById(R.id.item_icon);
+        itemIcon = listItem.findViewById(android.R.id.icon);
         if (resIdIcon != EMPTY) itemIcon.setImageResource(resIdIcon);
         else itemIcon.setVisibility(View.GONE);
-        // Remove open with button if not requested
-        itemOpen = listItem.findViewById(R.id.item_open);
-        itemOpen.setVisibility(View.GONE);
         // Add new menu to the container
         mListContainer.addView(listItem);
         return listItem;

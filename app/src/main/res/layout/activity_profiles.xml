@@ -12,7 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true"
-        app:liftOnScroll="true">
+        app:liftOnScroll="true"
+        app:liftOnScrollTargetViewId="@android:id/list">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
@@ -34,12 +35,13 @@
         android:layout_height="match_parent"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
 
-        <ListView
+        <io.github.muntashirakon.widget.RecyclerView
             android:id="@android:id/list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fitsSystemWindows="true"
             android:clipToPadding="false"
+            app:fastScrollerEnabled="true"
             tools:listitem="@layout/m3_preference" />
 
         <androidx.appcompat.widget.AppCompatTextView

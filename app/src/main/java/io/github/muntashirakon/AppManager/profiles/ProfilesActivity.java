@@ -11,10 +11,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +23,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -49,6 +48,7 @@ import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 import io.github.muntashirakon.util.UiUtils;
+import io.github.muntashirakon.widget.RecyclerView;
 
 public class ProfilesActivity extends BaseActivity {
     private static final String TAG = "ProfilesActivity";
@@ -114,7 +114,8 @@ public class ProfilesActivity extends BaseActivity {
         model = new ViewModelProvider(this).get(ProfilesViewModel.class);
         progressIndicator = findViewById(R.id.progress_linear);
         progressIndicator.setVisibilityAfterHide(View.GONE);
-        ListView listView = findViewById(android.R.id.list);
+        RecyclerView listView = findViewById(android.R.id.list);
+        listView.setLayoutManager(new LinearLayoutManager(this));
         listView.setEmptyView(findViewById(android.R.id.empty));
         UiUtils.applyWindowInsetsAsPaddingNoTop(listView);
         adapter = new ProfilesAdapter(this);
@@ -199,8 +200,7 @@ public class ProfilesActivity extends BaseActivity {
         return true;
     }
 
-    static class ProfilesAdapter extends BaseAdapter implements Filterable {
-        private final LayoutInflater mLayoutInflater;
+    static class ProfilesAdapter extends RecyclerView.Adapter<ProfilesAdapter.ViewHolder> implements Filterable {
         private Filter mFilter;
         private String mConstraint;
         private String[] mDefaultList;
@@ -209,15 +209,20 @@ public class ProfilesActivity extends BaseActivity {
         private final ProfilesActivity activity;
         private final int mQueryStringHighlightColor;
 
-        static class ViewHolder {
+        static class ViewHolder extends RecyclerView.ViewHolder {
             TextView title;
             TextView summary;
+
+            public ViewHolder(@NonNull View itemView) {
+                super(itemView);
+                title = itemView.findViewById(android.R.id.title);
+                summary = itemView.findViewById(android.R.id.summary);
+                itemView.findViewById(R.id.icon_frame).setVisibility(View.GONE);
+            }
         }
 
         ProfilesAdapter(@NonNull ProfilesActivity activity) {
             this.activity = activity;
-            mLayoutInflater = activity.getLayoutInflater();
-
             mQueryStringHighlightColor = ColorCodes.getQueryStringHighlightColor(activity);
         }
 
@@ -229,50 +234,40 @@ public class ProfilesActivity extends BaseActivity {
         }
 
         @Override
-        public int getCount() {
+        public int getItemCount() {
             return mAdapterList == null ? 0 : mAdapterList.length;
         }
 
         @Override
-        public String getItem(int position) {
-            return mAdapterList[position];
-        }
-
-        @Override
         public long getItemId(int position) {
-            return position;
+            return mAdapterList[position].hashCode();
+        }
+
+        @NonNull
+        @Override
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.m3_preference, parent, false);
+            return new ViewHolder(view);
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder viewHolder;
-            if (convertView == null) {
-                convertView = mLayoutInflater.inflate(R.layout.m3_preference, parent, false);
-                viewHolder = new ViewHolder();
-                viewHolder.title = convertView.findViewById(android.R.id.title);
-                viewHolder.summary = convertView.findViewById(android.R.id.summary);
-                convertView.findViewById(R.id.icon_frame).setVisibility(View.GONE);
-                convertView.setTag(viewHolder);
-            } else {
-                viewHolder = (ViewHolder) convertView.getTag();
-            }
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             String profName = mAdapterList[position];
             if (mConstraint != null && profName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
-                viewHolder.title.setText(UIUtils.getHighlightedText(profName, mConstraint, mQueryStringHighlightColor));
+                holder.title.setText(UIUtils.getHighlightedText(profName, mConstraint, mQueryStringHighlightColor));
             } else {
-                viewHolder.title.setText(profName);
+                holder.title.setText(profName);
             }
             CharSequence value = mAdapterMap.get(profName);
-            viewHolder.summary.setText(value != null ? value : "");
-            convertView.setOnClickListener(v -> {
+            holder.summary.setText(value != null ? value : "");
+            holder.itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(activity, AppsProfileActivity.class);
                 intent.putExtra(AppsProfileActivity.EXTRA_PROFILE_NAME, profName);
                 activity.startActivity(intent);
             });
-            View finalConvertView = convertView;
-            convertView.setOnLongClickListener(v -> {
-                PopupMenu popupMenu = new PopupMenu(activity, finalConvertView);
+            holder.itemView.setOnLongClickListener(v -> {
+                PopupMenu popupMenu = new PopupMenu(activity, v);
                 popupMenu.inflate(R.menu.activity_profiles_popup_actions);
                 popupMenu.setOnMenuItemClickListener(item -> {
                     int id = item.getItemId();
@@ -348,7 +343,6 @@ public class ProfilesActivity extends BaseActivity {
                 popupMenu.show();
                 return true;
             });
-            return convertView;
         }
 
         @Override
