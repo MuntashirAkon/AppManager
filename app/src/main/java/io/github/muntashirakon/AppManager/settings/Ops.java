@@ -225,7 +225,7 @@ public class Ops {
         }
         // Root not granted
         if (!PermissionUtils.hasPermission(context, Manifest.permission.INTERNET)) {
-            // INTERNET permission is not granted (e.g. GrapheneOS), skip checking for ADB.
+            // INTERNET permission is not granted, skip checking for ADB.
             return;
         }
         // Check for ADB
@@ -233,7 +233,7 @@ public class Ops {
         try {
             ServerConfig.setAdbPort(findAdbPortNoThrow(context, 7, ServerConfig.getAdbPort()));
             LocalServer.restart();
-        } catch (RemoteException | IOException e) {
+        } catch (Throwable e) {
             Log.e("ADB", e);
         }
         sIsAdb = LocalServer.isAMServiceAlive();
