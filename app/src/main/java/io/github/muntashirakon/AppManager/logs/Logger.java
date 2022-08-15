@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.BuildConfig;
 
 public class Logger implements Closeable {
     public static File getLoggingDirectory() {
@@ -47,6 +48,9 @@ public class Logger implements Closeable {
             if (tr != null) {
                 tr.printStackTrace(mWriter);
             }
+            if (BuildConfig.DEBUG) {
+                mWriter.flush();
+            }
         }
     }
 
@@ -59,7 +63,7 @@ public class Logger implements Closeable {
     }
 
     @Override
-    protected void finalize() throws Throwable {
+    protected void finalize() {
         // Closing is mandatory in order to make sure the logs are written correctly
         if (!mIsClosed) {
             mWriter.flush();
