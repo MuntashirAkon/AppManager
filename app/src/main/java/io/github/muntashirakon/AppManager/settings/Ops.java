@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.settings;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -42,6 +43,7 @@ import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
@@ -221,7 +223,12 @@ public class Ops {
             sIsRoot = LocalServer.isAMServiceAlive();
             return;
         }
-        // Root not granted, check ADB
+        // Root not granted
+        if (!PermissionUtils.hasPermission(context, Manifest.permission.INTERNET)) {
+            // INTERNET permission is not granted (e.g. GrapheneOS), skip checking for ADB.
+            return;
+        }
+        // Check for ADB
         sIsAdb = true; // First enable ADB
         try {
             ServerConfig.setAdbPort(findAdbPortNoThrow(context, 7, ServerConfig.getAdbPort()));
@@ -229,8 +236,8 @@ public class Ops {
         } catch (RemoteException | IOException e) {
             Log.e("ADB", e);
         }
-        //noinspection AssignmentUsedAsCondition
-        if (sIsAdb = LocalServer.isAMServiceAlive()) {
+        sIsAdb = LocalServer.isAMServiceAlive();
+        if (sIsAdb) {
             UiThreadHandler.run(() -> UIUtils.displayShortToast(R.string.working_on_adb_mode));
         }
     }
