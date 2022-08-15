@@ -28,14 +28,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="?android:attr/textColorSecondary"
+                android:textAppearance="?android:attr/textAppearanceListItemSecondary"
                 android:text="@string/backup_all_apps_msg" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <View
+        <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/ten_percent_black" />
+            android:layout_height="1dp" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/redo_existing_backups"
@@ -56,14 +56,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="?android:attr/textColorSecondary"
+                android:textAppearance="?android:attr/textAppearanceListItemSecondary"
                 android:text="@string/redo_existing_backups_msg" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <View
+        <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/ten_percent_black" />
+            android:layout_height="1dp" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/backup_apps_without_backup"
@@ -84,14 +84,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="?android:attr/textColorSecondary"
+                android:textAppearance="?android:attr/textAppearanceListItemSecondary"
                 android:text="@string/backup_apps_without_backups_msg" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <View
+        <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/ten_percent_black" />
+            android:layout_height="1dp" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/verify_and_redo_backups"
@@ -112,14 +112,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="?android:attr/textColorSecondary"
+                android:textAppearance="?android:attr/textAppearanceListItemSecondary"
                 android:text="@string/verify_and_redo_backups_msg" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <View
+        <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/ten_percent_black" />
+            android:layout_height="1dp" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/backup_apps_with_changes"
@@ -140,6 +140,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="?android:attr/textColorSecondary"
+                android:textAppearance="?android:attr/textAppearanceListItemSecondary"
                 android:text="@string/backup_apps_with_changes_msg" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>

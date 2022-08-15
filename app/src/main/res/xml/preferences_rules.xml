@@ -1,5 +1,6 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <Preference
         app:key="freeze_type"
@@ -21,6 +22,7 @@
         app:key="import_export_rules"
         app:title="@string/pref_import_export_blocking_rules"
         app:summary="@string/pref_import_export_blocking_rules_msg"
+        android:fragment="io.github.muntashirakon.AppManager.settings.ImportExportRulesPreferences"
         app:iconSpaceReserved="false" />
 
     <Preference

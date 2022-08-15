@@ -1,0 +1,34 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <Preference
+        app:key="export"
+        app:title="@string/pref_export"
+        app:summary="@string/pref_export_msg"
+        app:iconSpaceReserved="false" />
+
+    <Preference
+        app:key="import"
+        app:title="@string/pref_import"
+        app:summary="@string/pref_import_msg"
+        app:iconSpaceReserved="false" />
+
+    <Preference
+        app:key="import_existing"
+        app:title="@string/pref_import_existing"
+        app:summary="@string/pref_import_existing_msg"
+        app:iconSpaceReserved="false" />
+
+    <Preference
+        app:key="import_watt"
+        app:title="@string/pref_import_watt"
+        app:summary="@string/pref_import_watt_msg"
+        app:iconSpaceReserved="false" />
+
+    <Preference
+        app:key="import_blocker"
+        app:title="@string/pref_import_blocker"
+        app:summary="@string/pref_import_blocker_msg"
+        app:iconSpaceReserved="false" />
+
+</PreferenceScreen>

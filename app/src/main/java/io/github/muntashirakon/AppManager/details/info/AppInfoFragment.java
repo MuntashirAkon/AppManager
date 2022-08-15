@@ -1440,6 +1440,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @NonNull
     private MaterialButton addToHorizontalLayout(@StringRes int stringResId, @DrawableRes int iconResId) {
         MaterialButton button = (MaterialButton) getLayoutInflater().inflate(R.layout.item_app_info_action, mHorizontalLayout, false);
+        button.setBackgroundTintList(ColorStateList.valueOf(ColorCodes.getListItemColor1(requireContext())));
         button.setText(stringResId);
         button.setIconResource(iconResId);
         mHorizontalLayout.addView(button);

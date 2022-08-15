@@ -135,11 +135,6 @@ public class RulesPreferences extends PreferenceFragment {
             }
             return true;
         });
-        // Import/export rules
-        ((Preference) Objects.requireNonNull(findPreference("import_export_rules"))).setOnPreferenceClickListener(preference -> {
-            new ImportExportRulesDialogFragment().show(getParentFragmentManager(), ImportExportRulesDialogFragment.TAG);
-            return true;
-        });
         // Remove all rules
         ((Preference) Objects.requireNonNull(findPreference("remove_all_rules"))).setOnPreferenceClickListener(preference -> {
             new MaterialAlertDialogBuilder(activity)

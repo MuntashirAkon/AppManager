@@ -30,14 +30,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="?android:attr/textColorSecondary"
+                android:textAppearance="?android:attr/textAppearanceListItemSecondary"
                 android:text="@string/restore_all_msg" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <View
+        <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/ten_percent_black" />
+            android:layout_height="1dp" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/restore_not_installed"
@@ -60,14 +60,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="?android:attr/textColorSecondary"
+                android:textAppearance="?android:attr/textAppearanceListItemSecondary"
                 android:text="@string/restore_not_installed_msg" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-        <View
+        <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/ten_percent_black" />
+            android:layout_height="1dp" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:id="@+id/restore_latest"
@@ -90,6 +90,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="?android:attr/textColorSecondary"
+                android:textAppearance="?android:attr/textAppearanceListItemSecondary"
                 android:text="@string/restore_latest_msg" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>

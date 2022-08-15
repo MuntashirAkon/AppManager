@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <io.github.muntashirakon.widget.NestedScrollView
@@ -17,16 +18,17 @@
             android:orientation="vertical">
 
             <com.google.android.material.card.MaterialCardView
-                style="@style/Widget.AppTheme.CardView.Elevated.Padded"
+                style="@style/Widget.AppTheme.CardView.ListItem.Padded"
                 android:id="@+id/classes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:cardElevation="0dp"
                 android:focusable="true">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/padding_small"
+                    android:padding="@dimen/padding_medium"
                     android:orientation="vertical">
 
                     <androidx.appcompat.widget.AppCompatTextView
@@ -48,16 +50,17 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                style="@style/Widget.AppTheme.CardView.Elevated.Padded"
+                style="@style/Widget.AppTheme.CardView.ListItem.Padded"
                 android:id="@+id/tracker"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:cardElevation="0dp"
                 android:focusable="true">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/padding_small"
+                    android:padding="@dimen/padding_medium"
                     android:orientation="vertical">
 
                     <androidx.appcompat.widget.AppCompatTextView
@@ -79,16 +82,17 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                style="@style/Widget.AppTheme.CardView.Elevated.Padded"
+                style="@style/Widget.AppTheme.CardView.ListItem.Padded"
                 android:id="@+id/vt"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:cardElevation="0dp"
                 android:focusable="true">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/padding_small"
+                    android:padding="@dimen/padding_medium"
                     android:orientation="vertical">
 
                     <androidx.appcompat.widget.AppCompatTextView
@@ -112,16 +116,17 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                style="@style/Widget.AppTheme.CardView.Elevated.Padded"
+                style="@style/Widget.AppTheme.CardView.ListItem.Padded"
                 android:id="@+id/libs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:cardElevation="0dp"
                 android:focusable="true">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/padding_small"
+                    android:padding="@dimen/padding_medium"
                     android:orientation="vertical">
 
                     <androidx.appcompat.widget.AppCompatTextView
@@ -143,16 +148,17 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                style="@style/Widget.AppTheme.CardView.Elevated.Padded"
+                style="@style/Widget.AppTheme.CardView.ListItem.Padded"
                 android:id="@+id/apk"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:cardElevation="0dp"
                 android:focusable="true">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/padding_small"
+                    android:padding="@dimen/padding_medium"
                     android:orientation="vertical">
 
                     <androidx.appcompat.widget.AppCompatTextView
@@ -175,16 +181,17 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                style="@style/Widget.AppTheme.CardView.Elevated.Padded"
+                style="@style/Widget.AppTheme.CardView.ListItem.Padded"
                 android:id="@+id/signatures"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:cardElevation="0dp"
                 android:focusable="true">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/padding_small"
+                    android:padding="@dimen/padding_medium"
                     android:orientation="vertical">
 
                     <androidx.appcompat.widget.AppCompatTextView
@@ -207,19 +214,18 @@
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
-                style="@style/Widget.AppTheme.CardView.Elevated.Padded"
+                style="@style/Widget.AppTheme.CardView.ListItem.Padded"
                 android:id="@+id/missing_libs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:focusable="true"
-                android:layout_marginTop="@dimen/padding_small"
+                app:cardElevation="0dp"
                 android:visibility="gone"
                 tools:visibility="visible">
 
                 <androidx.appcompat.widget.LinearLayoutCompat
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/padding_small"
+                    android:padding="@dimen/padding_medium"
                     android:orientation="vertical">
 
                     <androidx.appcompat.widget.AppCompatTextView

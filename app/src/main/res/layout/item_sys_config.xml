@@ -1,57 +1,71 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.AppTheme.CardView.ListItem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="horizontal"
+    android:minHeight="?android:attr/listPreferredItemHeightSmall"
     android:focusable="true"
-    android:paddingHorizontal="@dimen/padding_medium"
-    android:paddingVertical="@dimen/padding_very_small">
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/item_icon"
-        android:layout_width="40dp"
-        android:layout_height="match_parent"
-        android:layout_marginEnd="@dimen/padding_small"
-        android:layout_weight="0"
-        android:contentDescription="@string/str_logo" />
+    android:layout_marginHorizontal="?attr/listItemMarginHorizontal"
+    android:layout_marginVertical="?attr/listItemMarginVertical">
 
     <androidx.appcompat.widget.LinearLayoutCompat
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:orientation="vertical">
+        android:orientation="horizontal"
+        android:focusable="true"
+        android:paddingHorizontal="?attr/listItemPaddingHorizontal"
+        android:paddingVertical="?attr/listItemPaddingVertical">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/item_title"
-            android:layout_width="wrap_content"
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@android:id/icon"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="@dimen/padding_small"
+            android:layout_weight="0"
+            android:scaleType="fitStart"
+            android:contentDescription="@string/str_logo"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:layout_gravity="center_vertical"
-            android:gravity="center"
-            android:singleLine="true"
-            android:textIsSelectable="true"
-            android:textAppearance="?android:attr/textAppearanceListItem"
-            tools:text="@tools:sample/lorem" />
+            android:orientation="vertical">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/package_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textIsSelectable="true"
-            android:textAppearance="?attr/textAppearanceBodySmall"
-            android:textSize="11sp"
-            tools:text="@tools:sample/lorem"
-            tools:ignore="SmallSp" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@android:id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:gravity="center"
+                android:singleLine="true"
+                android:textIsSelectable="true"
+                android:textAppearance="?android:attr/textAppearanceListItem"
+                tools:text="@tools:sample/lorem" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/item_subtitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:textIsSelectable="true"
-            android:textAppearance="?attr/textAppearanceBodySmall"
-            tools:text="@tools:sample/lorem" />
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/package_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textIsSelectable="true"
+                android:textAppearance="?attr/textAppearanceBodySmall"
+                android:textSize="11sp"
+                tools:text="@tools:sample/lorem"
+                tools:ignore="SmallSp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@android:id/summary"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:textIsSelectable="true"
+                android:textAppearance="?attr/textAppearanceBodySmall"
+                tools:text="@tools:sample/lorem/random" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+</com.google.android.material.card.MaterialCardView>

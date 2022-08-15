@@ -62,7 +62,7 @@ public class ScannerFragment extends Fragment {
     private ScannerViewModel mViewModel;
     private ScannerActivity mActivity;
 
-    private View vtContainerView;
+    private MaterialCardView vtContainerView;
     private TextView vtTitleView;
     private TextView vtDescriptionView;
 
@@ -76,6 +76,21 @@ public class ScannerFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         mViewModel = new ViewModelProvider(requireActivity()).get(ScannerViewModel.class);
         mActivity = (ScannerActivity) requireActivity();
+        int cardColor = ColorCodes.getListItemColor1(mActivity);
+        MaterialCardView classesView = view.findViewById(R.id.classes);
+        classesView.setCardBackgroundColor(cardColor);
+        MaterialCardView trackersView = view.findViewById(R.id.tracker);
+        trackersView.setCardBackgroundColor(cardColor);
+        vtContainerView = view.findViewById(R.id.vt);
+        vtContainerView.setCardBackgroundColor(cardColor);
+        MaterialCardView libsView = view.findViewById(R.id.libs);
+        libsView.setCardBackgroundColor(cardColor);
+        MaterialCardView apkInfoView = view.findViewById(R.id.apk);
+        apkInfoView.setCardBackgroundColor(cardColor);
+        MaterialCardView signaturesView = view.findViewById(R.id.signatures);
+        signaturesView.setCardBackgroundColor(cardColor);
+        MaterialCardView missingLibsView = view.findViewById(R.id.missing_libs);
+        missingLibsView.setCardBackgroundColor(cardColor);
         // Checksum
         mViewModel.apkChecksumsLiveData().observe(getViewLifecycleOwner(), checksums -> {
             List<CharSequence> lines = new ArrayList<>();
@@ -117,8 +132,7 @@ public class ScannerFragment extends Fragment {
         mViewModel.allClassesLiveData().observe(getViewLifecycleOwner(), allClasses -> {
             ((TextView) view.findViewById(R.id.classes_title)).setText(getResources().getQuantityString(R.plurals.classes,
                     allClasses.size(), allClasses.size()));
-            view.findViewById(R.id.classes).setOnClickListener(v ->
-                    mActivity.loadNewFragment(new ClassListingFragment()));
+            classesView.setOnClickListener(v -> mActivity.loadNewFragment(new ClassListingFragment()));
         });
         // List tracker classes
         mViewModel.trackerClassesLiveData().observe(getViewLifecycleOwner(), trackerClasses ->
@@ -133,9 +147,8 @@ public class ScannerFragment extends Fragment {
         mViewModel.missingClassesLiveData().observe(getViewLifecycleOwner(), missingClasses -> {
             if (missingClasses.size() > 0) {
                 ((TextView) view.findViewById(R.id.missing_libs_title)).setText(getResources().getQuantityString(R.plurals.missing_signatures, missingClasses.size(), missingClasses.size()));
-                View v = view.findViewById(R.id.missing_libs);
-                v.setVisibility(View.VISIBLE);
-                v.setOnClickListener(v2 -> new SearchableMultiChoiceDialogBuilder<>(mActivity, missingClasses,
+                missingLibsView.setVisibility(View.VISIBLE);
+                missingLibsView.setOnClickListener(v2 -> new SearchableMultiChoiceDialogBuilder<>(mActivity, missingClasses,
                         ArrayUtils.toCharSequence(missingClasses))
                         .setTitle(R.string.signatures)
                         .showSelectAll(false)
@@ -152,7 +165,6 @@ public class ScannerFragment extends Fragment {
             }
         });
         // VirusTotal
-        vtContainerView = view.findViewById(R.id.vt);
         if (!FeatureController.isInternetEnabled() || AppPref.getVtApiKey() == null) {
             vtContainerView.setVisibility(View.GONE);
             view.findViewById(R.id.vt_disclaimer).setVisibility(View.GONE);
@@ -324,9 +336,15 @@ public class ScannerFragment extends Fragment {
             coloredSummary = getColoredText(summary, ColorCodes.getScannerTrackerIndicatorColor(mActivity));
         }
 
-        ((TextView) view.findViewById(R.id.tracker_title)).setText(coloredSummary);
-        ((TextView) view.findViewById(R.id.tracker_description)).setText(foundTrackerList);
-        if (totalTrackersFound == 0) return;
+        TextView trackerInfoTitle = view.findViewById(R.id.tracker_title);
+        TextView trackerInfoDescription = view.findViewById(R.id.tracker_description);
+        trackerInfoTitle.setText(coloredSummary);
+        if (totalTrackersFound == 0) {
+            trackerInfoDescription.setVisibility(View.GONE);
+            return;
+        }
+        trackerInfoDescription.setVisibility(View.VISIBLE);
+        trackerInfoDescription.setText(foundTrackerList);
         MaterialCardView trackersView = view.findViewById(R.id.tracker);
         boolean finalHasSecondDegree = hasSecondDegree;
         trackersView.setOnClickListener(v -> {

@@ -32,7 +32,6 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.card.MaterialCardView;
-import com.google.android.material.color.MaterialColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.divider.MaterialDivider;
 
@@ -67,8 +66,8 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
     private final List<ApplicationItem> mAdapterList = new ArrayList<>();
     final ImageLoader imageLoader;
 
-    private final int mColorSurface;
-    private final int mColorSurfaceVariant;
+    private final int mCardColor;
+    private final int mDefaultIndicatorColor;
     private final int mColorGreen;
     private final int mColorOrange;
     private final int mColorPrimary;
@@ -83,9 +82,8 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
         mPackageManager = activity.getPackageManager();
         imageLoader = new ImageLoader(mActivity.mModel.executor);
 
-        mColorSurface = MaterialColors.getColor(mActivity, R.attr.colorSurface, MainRecyclerAdapter.class.getCanonicalName());
-        mColorSurfaceVariant = MaterialColors.getColor(mActivity, R.attr.colorSurfaceVariant, MainRecyclerAdapter.class.getCanonicalName());
-
+        mCardColor = ColorCodes.getListItemColor1(activity);
+        mDefaultIndicatorColor = ColorCodes.getListItemDefaultIndicatorColor(activity);
         mColorGreen = ContextCompat.getColor(mActivity, R.color.stopped);
         mColorOrange = ContextCompat.getColor(mActivity, R.color.orange);
         mColorPrimary = ContextCompat.getColor(mActivity, R.color.textColorPrimary);
@@ -273,7 +271,7 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
             return true;
         });
         holder.icon.setOnClickListener(v -> toggleSelection(position));
-        holder.itemView.setCardBackgroundColor(mColorSurface);
+        holder.itemView.setCardBackgroundColor(mCardColor);
         // Divider colors: disabled > regular
         if (!item.isInstalled) {
             holder.divider.setDividerColor(ColorCodes.getAppUninstalledIndicatorColor(mActivity));
@@ -282,7 +280,7 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
         } else if ((item.flags & ApplicationInfo.FLAG_STOPPED) != 0) { // Force-stopped: Dark cyan
             holder.divider.setDividerColor(ColorCodes.getAppForceStoppedIndicatorColor(mActivity));
         } else {
-            holder.divider.setDividerColor(mColorSurfaceVariant);
+            holder.divider.setDividerColor(mDefaultIndicatorColor);
         }
         // Add yellow star if the app is in debug mode
         holder.debugIcon.setVisibility(item.debuggable ? View.VISIBLE : View.INVISIBLE);

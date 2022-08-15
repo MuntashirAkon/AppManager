@@ -23,6 +23,7 @@
         android:layout_toEndOf="@id/divider"
         android:maxWidth="48dp"
         android:maxHeight="48dp"
+        app:iconTint="?attr/colorPrimary"
         app:iconSize="24dp"
         tools:icon="@drawable/ic_more_vert" />
 

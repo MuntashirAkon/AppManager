@@ -2,24 +2,24 @@
 
 package io.github.muntashirakon.AppManager.settings;
 
+import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.os.UserHandleHidden;
 import android.text.SpannableStringBuilder;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.preference.Preference;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.db.entity.App;
@@ -33,11 +33,8 @@ import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
-import io.github.muntashirakon.dialog.CapsuleBottomSheetDialogFragment;
 
-public class ImportExportRulesDialogFragment extends CapsuleBottomSheetDialogFragment {
-    public static final String TAG = ImportExportRulesDialogFragment.class.getSimpleName();
-
+public class ImportExportRulesPreferences extends PreferenceFragment {
     private static final String MIME_JSON = "application/json";
     private static final String MIME_TSV = "text/tab-separated-values";
     private static final String MIME_XML = "text/xml";
@@ -89,7 +86,6 @@ public class ImportExportRulesDialogFragment extends CapsuleBottomSheetDialogFra
                     if (isDetached()) return;
                     activity.runOnUiThread(() -> displayImportExternalRulesFailedPackagesDialog(failedFiles));
                 }).start();
-                requireDialog().dismiss();
             });
     private final ActivityResultLauncher<String> importFromBlocker = registerForActivityResult(
             new ActivityResultContracts.GetMultipleContents(),
@@ -103,33 +99,50 @@ public class ImportExportRulesDialogFragment extends CapsuleBottomSheetDialogFra
                     if (isDetached()) return;
                     activity.runOnUiThread(() -> displayImportExternalRulesFailedPackagesDialog(failedFiles));
                 }).start();
-                requireDialog().dismiss();
             });
 
-    @NonNull
     @Override
-    public View initRootView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.dialog_settings_import_export, container, false);
+    public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
+        addPreferencesFromResource(R.xml.preferences_rules_import_export);
+        getPreferenceManager().setPreferenceDataStore(new SettingsDataStore());
+        activity = (SettingsActivity) requireActivity();
+        ((Preference) Objects.requireNonNull(findPreference("export")))
+                .setOnPreferenceClickListener(preference -> {
+                    final String fileName = "app_manager_rules_export-" + DateUtils.formatDateTime(System.currentTimeMillis()) + ".am.tsv";
+                    exportRules.launch(fileName);
+                    return true;
+                });
+        ((Preference) Objects.requireNonNull(findPreference("import")))
+                .setOnPreferenceClickListener(preference -> {
+                    importRules.launch(MIME_TSV);
+                    return true;
+                });
+        ((Preference) Objects.requireNonNull(findPreference("import_existing")))
+                .setOnPreferenceClickListener(preference -> {
+                    new MaterialAlertDialogBuilder(requireActivity())
+                            .setTitle(R.string.pref_import_existing)
+                            .setMessage(R.string.apply_to_system_apps_question)
+                            .setPositiveButton(R.string.no, (dialog, which) -> importExistingRules(false))
+                            .setNegativeButton(R.string.yes, ((dialog, which) -> importExistingRules(true)))
+                            .show();
+                    return true;
+                });
+        ((Preference) Objects.requireNonNull(findPreference("import_watt")))
+                .setOnPreferenceClickListener(preference -> {
+                    importFromWatt.launch(MIME_XML);
+                    return true;
+                });
+        ((Preference) Objects.requireNonNull(findPreference("import_blocker")))
+                .setOnPreferenceClickListener(preference -> {
+                    importFromBlocker.launch(MIME_JSON);
+                    return true;
+                });
     }
 
     @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        activity = (SettingsActivity) requireActivity();
-        view.findViewById(R.id.export_internal).setOnClickListener(v -> {
-            final String fileName = "app_manager_rules_export-" + DateUtils.formatDateTime(System.currentTimeMillis()) + ".am.tsv";
-            exportRules.launch(fileName);
-        });
-        view.findViewById(R.id.import_internal).setOnClickListener(v -> importRules.launch(MIME_TSV));
-        view.findViewById(R.id.import_existing).setOnClickListener(v ->
-                new MaterialAlertDialogBuilder(requireActivity())
-                        .setTitle(R.string.pref_import_existing)
-                        .setMessage(R.string.apply_to_system_apps_question)
-                        .setPositiveButton(R.string.no, (dialog, which) -> importExistingRules(false))
-                        .setNegativeButton(R.string.yes, ((dialog, which) -> importExistingRules(true)))
-                        .show());
-        view.findViewById(R.id.import_watt).setOnClickListener(v -> importFromWatt.launch(MIME_XML));
-        view.findViewById(R.id.import_blocker).setOnClickListener(v -> importFromBlocker.launch(MIME_JSON));
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        requireActivity().setTitle(R.string.pref_import_export_blocking_rules);
     }
 
     private void importExistingRules(final boolean systemApps) {

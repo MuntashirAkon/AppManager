@@ -43,6 +43,7 @@ import io.github.muntashirakon.AppManager.settings.crypto.AESCryptoSelectionDial
 import io.github.muntashirakon.AppManager.settings.crypto.ECCCryptoSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.settings.crypto.OpenPgpKeySelectionDialogFragment;
 import io.github.muntashirakon.AppManager.settings.crypto.RSACryptoSelectionDialogFragment;
+import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
@@ -129,17 +130,19 @@ public class BackupRestorePreferences extends PreferenceFragment {
         BackupFlags flags = BackupFlags.fromPref();
         ((Preference) Objects.requireNonNull(findPreference("backup_flags"))).setOnPreferenceClickListener(preference -> {
             List<Integer> supportedBackupFlags = BackupFlags.getSupportedBackupFlagsAsArray();
-            new MaterialAlertDialogBuilder(activity)
+            new SearchableMultiChoiceDialogBuilder<>(requireActivity(), supportedBackupFlags, BackupFlags.getFormattedFlagNames(requireContext(), supportedBackupFlags))
                     .setTitle(R.string.backup_options)
-                    .setMultiChoiceItems(BackupFlags.getFormattedFlagNames(activity, supportedBackupFlags),
-                            flags.flagsToCheckedItems(supportedBackupFlags),
-                            (dialog, index, isChecked) -> {
-                                if (isChecked) {
-                                    flags.addFlag(supportedBackupFlags.get(index));
-                                } else flags.removeFlag(supportedBackupFlags.get(index));
-                            })
-                    .setPositiveButton(R.string.save, (dialog, which) ->
-                            AppPref.set(AppPref.PrefKey.PREF_BACKUP_FLAGS_INT, flags.getFlags()))
+                    .addSelections(flags.flagsToCheckedIndexes(supportedBackupFlags))
+                    .hideSearchBar(true)
+                    .showSelectAll(false)
+                    .setPositiveButton(R.string.save, (dialog, which, selectedItems) -> {
+                        int flagsInt = 0;
+                        for (int flag : selectedItems) {
+                            flagsInt |= flag;
+                        }
+                        flags.setFlags(flagsInt);
+                        AppPref.set(AppPref.PrefKey.PREF_BACKUP_FLAGS_INT, flags.getFlags());
+                    })
                     .setNegativeButton(R.string.cancel, null)
                     .show();
             return true;

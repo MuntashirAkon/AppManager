@@ -2,12 +2,13 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/Widget.AppTheme.CardView.Elevated"
+    style="@style/Widget.AppTheme.CardView.ListItem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    app:cardElevation="0dp"
     android:focusable="true"
-    android:layout_marginHorizontal="@dimen/padding_small"
-    android:layout_marginVertical="2dp">
+    android:layout_marginHorizontal="?attr/listItemMarginHorizontal"
+    android:layout_marginVertical="?attr/listItemMarginVertical">
 
     <com.google.android.material.chip.Chip
         android:id="@+id/lib_type"
@@ -24,8 +25,8 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="@drawable/item_transparent"
-        android:paddingHorizontal="@dimen/padding_medium"
-        android:paddingVertical="@dimen/padding_medium">
+        android:paddingHorizontal="?attr/listItemPaddingHorizontal"
+        android:paddingVertical="?attr/listItemPaddingVertical">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
@@ -61,13 +62,14 @@
             android:layout_weight="0"
             android:nextFocusLeft="@id/item_subtitle"
             app:icon="@drawable/ic_open_in_new"
+            app:iconTint="?attr/colorPrimary"
             app:iconSize="24dp" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <com.google.android.material.divider.MaterialDivider
         android:id="@+id/divider"
-        android:layout_width="6dp"
+        android:layout_width="?attr/listItemIndicatorWidth"
         android:layout_height="match_parent"
         android:layout_gravity="start" />
 

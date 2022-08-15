@@ -24,7 +24,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textAppearance="@style/TextAppearance.AppTheme.TitleSmall"
+                android:paddingVertical="8dp"
+                android:textAppearance="?attr/preferenceCategoryTitleTextAppearance"
+                android:textColor="?attr/preferenceCategoryTitleTextColor"
                 android:text="@string/sort" />
 
             <com.google.android.material.checkbox.MaterialCheckBox
@@ -50,7 +52,10 @@
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppTheme.TitleSmall"
+            android:layout_marginTop="16dp"
+            android:paddingVertical="8dp"
+            android:textAppearance="?attr/preferenceCategoryTitleTextAppearance"
+            android:textColor="?attr/preferenceCategoryTitleTextColor"
             android:text="@string/filter" />
 
         <com.google.android.material.chip.ChipGroup

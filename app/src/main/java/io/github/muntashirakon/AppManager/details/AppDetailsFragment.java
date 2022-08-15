@@ -47,8 +47,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.chip.Chip;
-import com.google.android.material.color.MaterialColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.divider.MaterialDivider;
 import com.google.android.material.materialswitch.MaterialSwitch;
@@ -81,7 +81,6 @@ import io.github.muntashirakon.AppManager.details.struct.AppDetailsPermissionIte
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsServiceItem;
 import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
-import io.github.muntashirakon.AppManager.main.MainRecyclerAdapter;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
@@ -644,11 +643,15 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
         private boolean mIsRootEnabled = true;
         private boolean mIsADBEnabled = true;
         private boolean mTestOnlyApp;
-        private final int mColorSurfaceVariant;
+        private final int mCardColor0;
+        private final int mCardColor1;
+        private final int mDefaultIndicatorColor;
 
         AppDetailsRecyclerAdapter() {
             mAdapterList = new ArrayList<>();
-            mColorSurfaceVariant = MaterialColors.getColor(mActivity, R.attr.colorSurfaceVariant, MainRecyclerAdapter.class.getCanonicalName());
+            mCardColor0 = ColorCodes.getListItemColor0(mActivity);
+            mCardColor1 = ColorCodes.getListItemColor1(mActivity);
+            mDefaultIndicatorColor = ColorCodes.getListItemDefaultIndicatorColor(mActivity);
         }
 
         @UiThread
@@ -806,6 +809,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                         textView2.setTextIsSelectable(true);
                         break;
                     case SIGNATURES:
+                        textView1 = itemView.findViewById(R.id.checksum_description);
                     case NONE:
                     case APP_INFO:
                     default:
@@ -842,7 +846,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                     view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_app_details_tertiary, parent, false);
                     break;
                 case SIGNATURES:
-                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_text_view, parent, false);
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_app_details_signature, parent, false);
                     break;
                 case SHARED_LIBRARIES:
                     view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_shared_lib, parent, false);
@@ -964,7 +968,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             } else if (componentItem.isTracker()) {
                 holder.divider.setDividerColor(ColorCodes.getComponentTrackerIndicatorColor(context));
             } else {
-                holder.divider.setDividerColor(mColorSurfaceVariant);
+                holder.divider.setDividerColor(mDefaultIndicatorColor);
             }
             if (componentItem.isTracker()) {
                 holder.chipType.setText(R.string.tracker);
@@ -1029,7 +1033,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                 });
                 if (FeatureController.isInterceptorEnabled()) {
                     boolean needRoot = mIsRootEnabled && (!isExported || (activityInfo.permission != null
-                            && ContextCompat.checkSelfPermission(mActivity, activityInfo.permission)
+                            && ContextCompat.checkSelfPermission(context, activityInfo.permission)
                             != PackageManager.PERMISSION_GRANTED));
                     holder.launchBtn.setOnLongClickListener(v -> {
                         Intent intent = new Intent(mActivity, ActivityInterceptor.class);
@@ -1060,6 +1064,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             if (!mIsExternalApk && (Ops.isRoot() || (Ops.isPrivileged() && mTestOnlyApp))) {
                 handleBlock(holder, componentItem, RuleType.ACTIVITY);
             } else holder.blockBtn.setVisibility(View.GONE);
+            ((MaterialCardView) holder.itemView).setCardBackgroundColor(mCardColor1);
         }
 
         private void getServicesView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
@@ -1079,7 +1084,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             } else if (serviceItem.isTracker()) {
                 holder.divider.setDividerColor(ColorCodes.getComponentTrackerIndicatorColor(context));
             } else {
-                holder.divider.setDividerColor(mColorSurfaceVariant);
+                holder.divider.setDividerColor(mDefaultIndicatorColor);
             }
             if (serviceItem.isTracker()) {
                 holder.chipType.setText(R.string.tracker);
@@ -1098,9 +1103,12 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             // Icon
             mImageLoader.displayImage(mPackageName + "_" + serviceInfo.name, serviceInfo, holder.imageView);
             // Flags and Permission
-            holder.textView3.setText(String.format(Locale.ROOT, "%s\n%s",
-                    Utils.getServiceFlagsString(serviceInfo.flags),
-                    (serviceInfo.permission != null ? serviceInfo.permission : "")));
+            StringBuilder flagsAndPermission = new StringBuilder(Utils.getServiceFlagsString(serviceInfo.flags));
+            if (flagsAndPermission.length() != 0) {
+                flagsAndPermission.append("\n");
+            }
+            flagsAndPermission.append(serviceInfo.permission != null ? serviceInfo.permission : getString(R.string.require_no_permission));
+            holder.textView3.setText(flagsAndPermission);
             // Process name
             String processName = serviceInfo.processName;
             if (processName != null && !processName.equals(mPackageName)) {
@@ -1125,7 +1133,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                                 Objects.requireNonNull(mMainModel).getUserHandle(), true);
                     } catch (Throwable th) {
                         th.printStackTrace();
-                        Toast.makeText(mActivity, th.toString(), Toast.LENGTH_LONG).show();
+                        Toast.makeText(context, th.toString(), Toast.LENGTH_LONG).show();
                     }
                 });
                 holder.launchBtn.setVisibility(View.VISIBLE);
@@ -1136,6 +1144,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             if (!mIsExternalApk && (Ops.isRoot() || (Ops.isPrivileged() && mTestOnlyApp))) {
                 handleBlock(holder, serviceItem, RuleType.SERVICE);
             } else holder.blockBtn.setVisibility(View.GONE);
+            ((MaterialCardView) holder.itemView).setCardBackgroundColor(mCardColor1);
         }
 
         private void getReceiverView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
@@ -1152,7 +1161,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             } else if (componentItem.isTracker()) {
                 holder.divider.setDividerColor(ColorCodes.getComponentTrackerIndicatorColor(context));
             } else {
-                holder.divider.setDividerColor(mColorSurfaceVariant);
+                holder.divider.setDividerColor(mDefaultIndicatorColor);
             }
             if (componentItem.isTracker()) {
                 holder.chipType.setText(R.string.tracker);
@@ -1194,6 +1203,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             if (!mIsExternalApk && (Ops.isRoot() || (Ops.isPrivileged() && mTestOnlyApp))) {
                 handleBlock(holder, componentItem, RuleType.RECEIVER);
             } else holder.blockBtn.setVisibility(View.GONE);
+            ((MaterialCardView) holder.itemView).setCardBackgroundColor(mCardColor1);
         }
 
         private void getProviderView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
@@ -1211,7 +1221,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             } else if (componentItem.isTracker()) {
                 holder.divider.setDividerColor(ColorCodes.getComponentTrackerIndicatorColor(context));
             } else {
-                holder.divider.setDividerColor(mColorSurfaceVariant);
+                holder.divider.setDividerColor(mDefaultIndicatorColor);
             }
             if (componentItem.isTracker()) {
                 holder.chipType.setText(R.string.tracker);
@@ -1275,6 +1285,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             if (!mIsExternalApk && (Ops.isRoot() || (Ops.isPrivileged() && mTestOnlyApp))) {
                 handleBlock(holder, componentItem, RuleType.PROVIDER);
             } else holder.blockBtn.setVisibility(View.GONE);
+            ((MaterialCardView) holder.itemView).setCardBackgroundColor(mCardColor1);
         }
 
         private void getAppOpsView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
@@ -1296,16 +1307,16 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             holder.textView1.setText(opName);
             // Set op mode, running and duration
             StringBuilder opRunningInfo = new StringBuilder()
-                    .append(mActivity.getString(R.string.mode))
+                    .append(context.getString(R.string.mode))
                     .append(LangUtils.getSeparatorString())
                     .append(AppOpsManager.modeToName(opEntry.getMode()));
             if (opEntry.isRunning()) {
-                opRunningInfo.append(", ").append(mActivity.getString(R.string.running));
+                opRunningInfo.append(", ").append(context.getString(R.string.running));
             }
             if (opEntry.getDuration() != 0) {
-                opRunningInfo.append(", ").append(mActivity.getString(R.string.duration))
+                opRunningInfo.append(", ").append(context.getString(R.string.duration))
                         .append(LangUtils.getSeparatorString())
-                        .append(DateUtils.getFormattedDuration(mActivity, opEntry.getDuration(), true));
+                        .append(DateUtils.getFormattedDuration(context, opEntry.getDuration(), true));
             }
             holder.textView7.setText(opRunningInfo);
             // Set accept-time and/or reject-time
@@ -1315,17 +1326,17 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             if (hasAcceptTime || hasRejectTime) {
                 StringBuilder opTime = new StringBuilder();
                 if (hasAcceptTime) {
-                    opTime.append(mActivity.getString(R.string.accept_time))
+                    opTime.append(context.getString(R.string.accept_time))
                             .append(LangUtils.getSeparatorString())
-                            .append(DateUtils.getFormattedDuration(mActivity, currentTime - opEntry.getTime()))
-                            .append(" ").append(mActivity.getString(R.string.ago));
+                            .append(DateUtils.getFormattedDuration(context, currentTime - opEntry.getTime()))
+                            .append(" ").append(context.getString(R.string.ago));
                 }
                 if (hasRejectTime) {
                     opTime.append(opTime.length() == 0 ? "" : "\n")
-                            .append(mActivity.getString(R.string.reject_time))
+                            .append(context.getString(R.string.reject_time))
                             .append(LangUtils.getSeparatorString())
-                            .append(DateUtils.getFormattedDuration(mActivity, currentTime - opEntry.getRejectTime()))
-                            .append(" ").append(mActivity.getString(R.string.ago));
+                            .append(DateUtils.getFormattedDuration(context, currentTime - opEntry.getRejectTime()))
+                            .append(" ").append(context.getString(R.string.ago));
                 }
                 holder.textView8.setVisibility(View.VISIBLE);
                 holder.textView8.setText(opTime);
@@ -1335,7 +1346,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                 // Set permission name
                 holder.textView6.setVisibility(View.VISIBLE);
                 holder.textView6.setText(String.format(Locale.ROOT, "%s%s%s",
-                        mActivity.getString(R.string.permission_name),
+                        context.getString(R.string.permission_name),
                         LangUtils.getSeparatorString(),
                         permissionInfo.name));
                 // Description
@@ -1353,14 +1364,14 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                 if (permissionInfo.packageName != null) {
                     holder.textView4.setVisibility(View.VISIBLE);
                     holder.textView4.setText(String.format(Locale.ROOT, "%s%s%s",
-                            mActivity.getString(R.string.package_name), LangUtils.getSeparatorString(),
+                            context.getString(R.string.package_name), LangUtils.getSeparatorString(),
                             permissionInfo.packageName));
                 } else holder.textView4.setVisibility(View.GONE);
                 // Set group name
                 if (permissionInfo.group != null) {
                     holder.textView5.setVisibility(View.VISIBLE);
                     holder.textView5.setText(String.format(Locale.ROOT, "%s%s%s",
-                            mActivity.getString(R.string.group), LangUtils.getSeparatorString(), permissionInfo.group));
+                            context.getString(R.string.group), LangUtils.getSeparatorString(), permissionInfo.group));
                 } else {
                     holder.textView5.setVisibility(View.GONE);
                 }
@@ -1375,7 +1386,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             if (item.isDangerous) {
                 holder.divider.setDividerColor(ColorCodes.getPermissionDangerousIndicatorColor(context));
             } else {
-                holder.divider.setDividerColor(mColorSurfaceVariant);
+                holder.divider.setDividerColor(mDefaultIndicatorColor);
             }
             if (!mIsRootEnabled && !mIsADBEnabled) {
                 // No root or ADB, hide toggle buttons
@@ -1419,6 +1430,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                         .show();
                 return true;
             });
+            ((MaterialCardView) holder.itemView).setCardBackgroundColor(mCardColor1);
         }
 
         private void getUsesPermissionsView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
@@ -1448,18 +1460,18 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             if (permissionItem.isDangerous) {
                 holder.divider.setDividerColor(ColorCodes.getPermissionDangerousIndicatorColor(context));
             } else {
-                holder.divider.setDividerColor(mColorSurfaceVariant);
+                holder.divider.setDividerColor(mDefaultIndicatorColor);
             }
             // Set package name
             if (permissionInfo.packageName != null) {
                 holder.textView4.setVisibility(View.VISIBLE);
-                holder.textView4.setText(String.format("%s%s%s", mActivity.getString(R.string.package_name),
+                holder.textView4.setText(String.format("%s%s%s", context.getString(R.string.package_name),
                         LangUtils.getSeparatorString(), permissionInfo.packageName));
             } else holder.textView4.setVisibility(View.GONE);
             // Set group name
             if (permissionInfo.group != null) {
                 holder.textView5.setVisibility(View.VISIBLE);
-                holder.textView5.setText(String.format("%s%s%s", mActivity.getString(R.string.group),
+                holder.textView5.setText(String.format("%s%s%s", context.getString(R.string.group),
                         LangUtils.getSeparatorString(), permissionInfo.group));
             } else holder.textView5.setVisibility(View.GONE);
             // Permission Switch
@@ -1500,6 +1512,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                 return true;
             });
             holder.itemView.setLongClickable(flags != 0);
+            ((MaterialCardView) holder.itemView).setCardBackgroundColor(mCardColor1);
         }
 
         private void getSharedLibsView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
@@ -1556,7 +1569,8 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                 holder.chipType.setText(type);
                 holder.launchBtn.setVisibility(View.GONE);
             }
-            holder.divider.setDividerColor(mColorSurfaceVariant);
+            holder.divider.setDividerColor(mDefaultIndicatorColor);
+            ((MaterialCardView) holder.itemView).setCardBackgroundColor(mCardColor1);
         }
 
         private void getPermissionsView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
@@ -1580,7 +1594,13 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             // Icon
             mImageLoader.displayImage(mPackageName + "_" + permissionInfo.name, permissionInfo, holder.imageView);
             // Description
-            holder.textView3.setText(permissionInfo.loadDescription(mPackageManager));
+            CharSequence description = permissionInfo.loadDescription(mPackageManager);
+            if (description != null) {
+                holder.textView3.setVisibility(View.VISIBLE);
+                holder.textView3.setText(description);
+            } else {
+                holder.textView3.setVisibility(View.GONE);
+            }
             // LaunchMode
             holder.textView4.setText(String.format(Locale.ROOT, "%s: %s",
                     getString(R.string.group), permissionInfo.group + permAppOp(permissionInfo.name)));
@@ -1591,13 +1611,14 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             if (protectionLevel.contains("dangerous")) {
                 holder.divider.setDividerColor(ColorCodes.getPermissionDangerousIndicatorColor(context));
             } else {
-                holder.divider.setDividerColor(mColorSurfaceVariant);
+                holder.divider.setDividerColor(mDefaultIndicatorColor);
             }
+            ((MaterialCardView) holder.itemView).setCardBackgroundColor(mCardColor1);
         }
 
         @SuppressLint("SetTextI18n")
         private void getFeaturesView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
-            View view = holder.itemView;
+            MaterialCardView view = (MaterialCardView) holder.itemView;
             final FeatureInfo featureInfo;
             synchronized (mAdapterList) {
                 featureInfo = (FeatureInfo) mAdapterList.get(index).vanillaItem;
@@ -1606,7 +1627,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             boolean isRequired = (featureInfo.flags & FeatureInfo.FLAG_REQUIRED) != 0;
             boolean isAvailable;
             if (featureInfo.name.equals(OPEN_GL_ES)) {
-                ActivityManager activityManager = (ActivityManager) mActivity.getSystemService(Context.ACTIVITY_SERVICE);
+                ActivityManager activityManager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
                 int glEsVersion = activityManager.getDeviceConfigurationInfo().reqGlEsVersion;
                 isAvailable = featureInfo.reqGlEsVersion <= glEsVersion;
             } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -1616,11 +1637,11 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             }
             // Set background
             if (isRequired && !isAvailable) {
-                view.setBackgroundResource(R.drawable.item_red);
+                view.setCardBackgroundColor(ContextCompat.getColor(context, R.color.red));
             } else if (!isAvailable) {
-                view.setBackgroundResource(R.drawable.item_disabled);
+                view.setCardBackgroundColor(ContextCompat.getColor(context, R.color.disabled_user));
             } else {
-                view.setBackgroundResource(index % 2 == 0 ? R.drawable.item_semi_transparent : R.drawable.item_transparent);
+                view.setCardBackgroundColor(index % 2 == 0 ? mCardColor1 : mCardColor0);
             }
             if (featureInfo.name.equals(OPEN_GL_ES)) {
                 // OpenGL ES
@@ -1644,12 +1665,12 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
         }
 
         private void getConfigurationView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
-            View view = holder.itemView;
+            MaterialCardView view = (MaterialCardView) holder.itemView;
             final ConfigurationInfo configurationInfo;
             synchronized (mAdapterList) {
                 configurationInfo = (ConfigurationInfo) mAdapterList.get(index).vanillaItem;
             }
-            view.setBackgroundResource(index % 2 == 0 ? R.drawable.item_semi_transparent : R.drawable.item_transparent);
+            view.setCardBackgroundColor(index % 2 == 0 ? mCardColor1 : mCardColor0);
             // GL ES version
             holder.textView1.setText(String.format(Locale.ROOT, "%s %s",
                     getString(R.string.gles_version), Utils.getGlEsVersion(configurationInfo.reqGlEsVersion)));
@@ -1665,7 +1686,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
         }
 
         private void getSignatureView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
-            TextView textView = (TextView) holder.itemView;
+            TextView textView = holder.textView1;
             AppDetailsItem<?> item;
             synchronized (mAdapterList) {
                 item = mAdapterList.get(index);
@@ -1674,22 +1695,18 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             final SpannableStringBuilder builder = new SpannableStringBuilder();
             if (index == 0) {
                 // Display verifier info
-                builder.append(PackageUtils.getApkVerifierInfo(Objects.requireNonNull(mMainModel).getApkVerifierResult(), mActivity));
+                builder.append(PackageUtils.getApkVerifierInfo(Objects.requireNonNull(mMainModel).getApkVerifierResult(), context));
             }
             if (!TextUtils.isEmpty(item.name)) {
-                builder.append(UIUtils.getTitleText(mActivity, item.name)).append("\n");
+                builder.append(UIUtils.getTitleText(context, item.name)).append("\n");
             }
             try {
-                builder.append(PackageUtils.getSigningCertificateInfo(mActivity, signature));
+                builder.append(PackageUtils.getSigningCertificateInfo(context, signature));
             } catch (CertificateEncodingException ignore) {
             }
             textView.setText(builder);
-            textView.setBackgroundResource(index % 2 == 0 ? R.drawable.item_semi_transparent : R.drawable.item_transparent);
             textView.setTextIsSelectable(true);
-            int medium_size = mActivity.getResources().getDimensionPixelSize(R.dimen.padding_medium);
-            int small_size = mActivity.getResources().getDimensionPixelSize(R.dimen.padding_small);
-            textView.setTextSize(12);
-            textView.setPadding(medium_size, small_size, medium_size, small_size);
+            ((MaterialCardView) holder.itemView).setCardBackgroundColor(index % 2 == 0 ? mCardColor1 : mCardColor0);
         }
     }
 }

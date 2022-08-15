@@ -1,7 +1,15 @@
 <!-- SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later -->
 <resources>
+    <attr name="listItemMarginVertical" format="dimension" />
+    <attr name="listItemMarginHorizontal" format="dimension" />
+    <attr name="listItemPaddingVertical" format="dimension" />
+    <attr name="listItemPaddingHorizontal" format="dimension" />
+    <attr name="listItemCornerRadius" format="dimension" />
+    <attr name="listItemIndicatorWidth" format="dimension" />
+
     <attr name="materialAlertViewStyle" format="reference" />
     <attr name="materialFullScreenAlertDialogTheme" format="reference" />
+
     <declare-styleable name="SearchView">
         <!-- Tint to apply to the SearchView's close icon. -->
         <attr name="closeIconTint" />

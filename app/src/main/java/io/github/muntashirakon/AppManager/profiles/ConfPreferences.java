@@ -164,18 +164,21 @@ public class ConfPreferences extends PreferenceFragmentCompat {
             else flags = BackupFlags.fromPref();
             final AtomicInteger backupFlags = new AtomicInteger(flags.getFlags());
             List<Integer> supportedBackupFlags = BackupFlags.getSupportedBackupFlagsAsArray();
-            view.findViewById(R.id.dialog_button).setOnClickListener(v -> new MaterialAlertDialogBuilder(activity)
+            new SearchableMultiChoiceDialogBuilder<>(requireActivity(), supportedBackupFlags, BackupFlags.getFormattedFlagNames(requireContext(), supportedBackupFlags))
                     .setTitle(R.string.backup_options)
-                    .setMultiChoiceItems(BackupFlags.getFormattedFlagNames(activity, supportedBackupFlags),
-                            flags.flagsToCheckedItems(supportedBackupFlags),
-                            (dialog, index, isChecked) -> {
-                                if (isChecked) {
-                                    flags.addFlag(supportedBackupFlags.get(index));
-                                } else flags.removeFlag(supportedBackupFlags.get(index));
-                            })
-                    .setPositiveButton(R.string.save, (dialog, which) -> backupFlags.set(flags.getFlags()))
+                    .addSelections(flags.flagsToCheckedIndexes(supportedBackupFlags))
+                    .hideSearchBar(true)
+                    .showSelectAll(false)
+                    .setPositiveButton(R.string.save, (dialog, which, selectedItems) -> {
+                        int flagsInt = 0;
+                        for (int flag : selectedItems) {
+                            flagsInt |= flag;
+                        }
+                        flags.setFlags(flagsInt);
+                        backupFlags.set(flags.getFlags());
+                    })
                     .setNegativeButton(R.string.cancel, null)
-                    .show());
+                    .show();
             final TextInputEditText editText = view.findViewById(android.R.id.input);
             if (backupInfo != null) {
                 editText.setText(backupInfo.name);

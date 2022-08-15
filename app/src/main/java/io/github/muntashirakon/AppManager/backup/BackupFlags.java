@@ -12,7 +12,6 @@ import androidx.core.util.Pair;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
@@ -21,6 +20,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
@@ -189,13 +189,15 @@ public final class BackupFlags {
     }
 
     @NonNull
-    public boolean[] flagsToCheckedItems(List<Integer> enabledFlags) {
-        boolean[] checkedItems = new boolean[enabledFlags.size()];
-        Arrays.fill(checkedItems, false);
-        for (int i = 0; i < checkedItems.length; ++i) {
-            if ((flags & enabledFlags.get(i)) != 0) checkedItems[i] = true;
+    public int[] flagsToCheckedIndexes(@NonNull List<Integer> enabledFlags) {
+        List<Integer> indexes = new ArrayList<>();
+        for (int i = 0; i < enabledFlags.size(); ++i) {
+            int flag = enabledFlags.get(i);
+            if ((flags & flag) != 0) {
+                indexes.add(i);
+            }
         }
-        return checkedItems;
+        return ArrayUtils.convertToIntArray(indexes);
     }
 
     public boolean isEmpty() {

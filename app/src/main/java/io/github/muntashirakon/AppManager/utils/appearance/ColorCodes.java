@@ -8,9 +8,27 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
+import com.google.android.material.color.MaterialColors;
+import com.google.android.material.elevation.SurfaceColors;
+
 import io.github.muntashirakon.AppManager.R;
 
 public final class ColorCodes {
+    @ColorInt
+    public static int getListItemColor0(@NonNull Context context) {
+        return MaterialColors.getColor(context, R.attr.colorSurface, ColorCodes.class.getCanonicalName());
+    }
+
+    @ColorInt
+    public static int getListItemColor1(@NonNull Context context) {
+        return SurfaceColors.SURFACE_1.getColor(context);
+    }
+
+    @ColorInt
+    public static int getListItemDefaultIndicatorColor(@NonNull Context context) {
+        return SurfaceColors.SURFACE_3.getColor(context);
+    }
+
     @ColorInt
     public static int getListItemSelectionColor(@NonNull Context context) {
         return ContextCompat.getColor(context, R.color.highlight);

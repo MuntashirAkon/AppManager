@@ -36,7 +36,6 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.ipc.ps.DeviceMemoryInfo;
 import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
 import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
-import io.github.muntashirakon.AppManager.main.MainRecyclerAdapter;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
@@ -57,7 +56,7 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
     private List<ProcessItem> mProcessItems = Collections.emptyList();
     private DeviceMemoryInfo mDeviceMemoryInfo;
 
-    private final int mColorSurface;
+    private final int mCardColor;
     @ColorInt
     private final int mHighlightColor;
 
@@ -65,7 +64,7 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
         super();
         mActivity = activity;
         mModel = activity.mModel;
-        mColorSurface = MaterialColors.getColor(mActivity, R.attr.colorSurface, MainRecyclerAdapter.class.getCanonicalName());
+        mCardColor = ColorCodes.getListItemColor1(activity);
         mQueryStringHighlightColor = ColorCodes.getQueryStringHighlightColor(activity);
         mHighlightColor = ColorCodes.getListItemSelectionColor(activity);
     }
@@ -265,7 +264,7 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
             popupMenu.show();
         });
         // Set background color
-        holder.itemView.setCardBackgroundColor(mColorSurface);
+        holder.itemView.setCardBackgroundColor(mCardColor);
         // Set selections
         holder.icon.setOnClickListener(v -> toggleSelection(position));
         holder.itemView.setOnLongClickListener(v -> {

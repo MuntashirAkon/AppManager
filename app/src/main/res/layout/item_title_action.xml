@@ -1,35 +1,45 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/item_layout"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.AppTheme.CardView.ListItem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:minHeight="?android:attr/listPreferredItemHeightSmall"
     android:focusable="true"
-    android:orientation="horizontal">
+    android:layout_marginHorizontal="8dp">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/item_title"
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/item_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginStart="@dimen/padding_medium"
-        android:layout_marginEnd="@dimen/padding_very_small"
-        android:layout_weight="1"
-        android:paddingVertical="@dimen/padding_small"
-        android:textColor="?android:attr/textColorSecondary"
-        tools:text="@tools:sample/lorem[15]" />
+        android:focusable="true"
+        android:orientation="horizontal">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/item_action"
-        style="@style/Widget.AppTheme.Button.IconButton"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_gravity="center"
-        android:layout_weight="0"
-        android:paddingVertical="@dimen/padding_small"
-        android:layout_marginEnd="@dimen/padding_small"
-        app:icon="@drawable/ic_clear"
-        app:iconSize="20dp" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/item_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/padding_medium"
+            android:layout_marginEnd="@dimen/padding_very_small"
+            android:layout_weight="1"
+            android:paddingVertical="@dimen/padding_small"
+            android:textColor="?android:attr/textColorSecondary"
+            tools:text="@tools:sample/lorem[15]" />
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/item_action"
+            style="@style/Widget.AppTheme.Button.IconButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:layout_weight="0"
+            android:paddingVertical="@dimen/padding_small"
+            android:layout_marginEnd="@dimen/padding_small"
+            app:icon="@drawable/ic_clear"
+            app:iconSize="20dp" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</com.google.android.material.card.MaterialCardView>

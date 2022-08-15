@@ -1,14 +1,12 @@
 <!-- SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later -->
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/Widget.AppTheme.CardView.Elevated"
+    style="@style/Widget.AppTheme.CardView.ListItem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="?android:attr/listPreferredItemHeightSmall"
     android:focusable="true"
-    app:cardElevation="0dp"
-    android:layout_marginHorizontal="8dp">
+    android:layout_marginHorizontal="?attr/listItemMarginHorizontal">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"

@@ -4,7 +4,7 @@ package io.github.muntashirakon.AppManager.scanner;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -12,20 +12,19 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.android.internal.util.TextUtils;
+import com.google.android.material.card.MaterialCardView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,6 +36,7 @@ import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.util.UiUtils;
+import io.github.muntashirakon.widget.RecyclerView;
 
 import static io.github.muntashirakon.AppManager.misc.AdvancedSearchView.SEARCH_TYPE_REGEX;
 
@@ -76,28 +76,13 @@ public class ClassListingFragment extends Fragment implements AdvancedSearchView
 
         mTrackerClassesOnly = false;
 
-        ListView listView = view.findViewById(R.id.list_item);
+        RecyclerView listView = view.findViewById(R.id.list_item);
         UiUtils.applyWindowInsetsAsPaddingNoTop(listView);
-        listView.setTextFilterEnabled(true);
-        listView.setDividerHeight(0);
         mEmptyView = view.findViewById(android.R.id.empty);
         listView.setEmptyView(mEmptyView);
-        mClassListingAdapter = new ClassListingAdapter(mActivity);
+        mClassListingAdapter = new ClassListingAdapter(mActivity, mViewModel);
+        listView.setLayoutManager(new LinearLayoutManager(mActivity));
         listView.setAdapter(mClassListingAdapter);
-        listView.setOnItemClickListener((parent, view1, position, id) -> {
-            String className = (!mTrackerClassesOnly ? mTrackerClasses : mAllClasses)
-                    .get((int) (parent.getAdapter()).getItemId(position));
-            try {
-                Intent intent = new Intent(mActivity, ClassViewerActivity.class);
-                intent.putExtra(ClassViewerActivity.EXTRA_URI, mViewModel.getUriFromClassName(className));
-                intent.putExtra(ClassViewerActivity.EXTRA_APP_NAME, mActivity.getTitle());
-                intent.putExtra(ClassViewerActivity.EXTRA_CLASS_NAME, className);
-                startActivity(intent);
-            } catch (Exception e) {
-                e.printStackTrace();
-                UIUtils.displayLongToast(e.toString());
-            }
-        });
         showProgress(true);
         setAdapterList();
     }
@@ -158,25 +143,25 @@ public class ClassListingFragment extends Fragment implements AdvancedSearchView
         mEmptyView.setText(willShow ? R.string.loading : R.string.no_tracker_class);
     }
 
-    static class ClassListingAdapter extends BaseAdapter implements Filterable {
-        private final LayoutInflater mLayoutInflater;
+    static class ClassListingAdapter extends RecyclerView.Adapter<ClassListingAdapter.ViewHolder> implements Filterable {
         private Filter mFilter;
         private String mConstraint;
         @AdvancedSearchView.SearchType
         private int mFilterType = AdvancedSearchView.SEARCH_TYPE_CONTAINS;
         private List<String> mDefaultList;
+        private final Activity mActivity;
+        private final ScannerViewModel mViewModel;
         @NonNull
         private final List<String> mAdapterList = new ArrayList<>();
-
-        private final int mColorTransparent;
-        private final int mColorSemiTransparent;
+        private final int mCardColor0;
+        private final int mCardColor1;
         private final int mQueryStringHighlightColor;
 
-        ClassListingAdapter(@NonNull Activity activity) {
-            mLayoutInflater = activity.getLayoutInflater();
-
-            mColorTransparent = Color.TRANSPARENT;
-            mColorSemiTransparent = ContextCompat.getColor(activity, R.color.semi_transparent);
+        ClassListingAdapter(@NonNull Activity activity, @NonNull ScannerViewModel viewModel) {
+            mActivity = activity;
+            mViewModel = viewModel;
+            mCardColor0 = ColorCodes.getListItemColor0(activity);
+            mCardColor1 = ColorCodes.getListItemColor1(activity);
             mQueryStringHighlightColor = ColorCodes.getQueryStringHighlightColor(activity);
         }
 
@@ -204,16 +189,9 @@ public class ClassListingFragment extends Fragment implements AdvancedSearchView
         }
 
         @Override
-        public int getCount() {
+        public int getItemCount() {
             synchronized (mAdapterList) {
                 return mAdapterList.size();
-            }
-        }
-
-        @Override
-        public String getItem(int position) {
-            synchronized (mAdapterList) {
-                return mAdapterList.get(position);
             }
         }
 
@@ -224,24 +202,40 @@ public class ClassListingFragment extends Fragment implements AdvancedSearchView
             }
         }
 
+        @NonNull
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            if (convertView == null) {
-                convertView = mLayoutInflater.inflate(android.R.layout.simple_list_item_1, parent, false);
-            }
+        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.m3_preference, parent, false);
+            return new ViewHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             String className;
             synchronized (mAdapterList) {
                 className = mAdapterList.get(position);
             }
-            TextView textView = (TextView) convertView;
+            TextView textView = holder.classNameView;
+            textView.setTypeface(Typeface.MONOSPACE);
             if (mConstraint != null && className.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
                 textView.setText(UIUtils.getHighlightedText(className, mConstraint, mQueryStringHighlightColor));
             } else {
                 textView.setText(className);
             }
-            convertView.setBackgroundColor(position % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
-            return convertView;
+            holder.itemView.setCardBackgroundColor(position % 2 == 0 ? mCardColor1 : mCardColor0);
+            holder.itemView.setOnClickListener(v -> {
+                try {
+                    Intent intent = new Intent(mActivity, ClassViewerActivity.class);
+                    intent.putExtra(ClassViewerActivity.EXTRA_URI, mViewModel.getUriFromClassName(className));
+                    intent.putExtra(ClassViewerActivity.EXTRA_APP_NAME, mActivity.getTitle());
+                    intent.putExtra(ClassViewerActivity.EXTRA_CLASS_NAME, className);
+                    mActivity.startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    UIUtils.displayLongToast(e.toString());
+                }
+            });
         }
 
         @Override
@@ -286,6 +280,19 @@ public class ClassListingFragment extends Fragment implements AdvancedSearchView
                     }
                 };
             return mFilter;
+        }
+
+        public static class ViewHolder extends RecyclerView.ViewHolder {
+            final MaterialCardView itemView;
+            final TextView classNameView;
+
+            public ViewHolder(@NonNull View itemView) {
+                super(itemView);
+                this.itemView = (MaterialCardView) itemView;
+                itemView.findViewById(android.R.id.title).setVisibility(View.GONE);
+                itemView.findViewById(R.id.icon_frame).setVisibility(View.GONE);
+                classNameView = itemView.findViewById(android.R.id.summary);
+            }
         }
     }
 }

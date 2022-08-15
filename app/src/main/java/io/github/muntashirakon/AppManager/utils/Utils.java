@@ -277,7 +277,7 @@ public class Utils {
 
     // FIXME Add translation support
     @NonNull
-    public static String getServiceFlagsString(int flag) {
+    public static CharSequence getServiceFlagsString(int flag) {
         StringBuilder builder = new StringBuilder();
         if ((flag & ServiceInfo.FLAG_STOP_WITH_TASK) != 0)
             builder.append("Stop with task, ");
@@ -298,7 +298,7 @@ public class Utils {
         }
         checkStringBuilderEnd(builder);
         String result = builder.toString();
-        return result.equals("") ? "\u2690" : "\u2691 " + result;
+        return TextUtils.isEmpty(result) ? "" : ("\u2691 " + result);
     }
 
     // FIXME Add translation support

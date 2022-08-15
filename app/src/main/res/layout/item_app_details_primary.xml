@@ -2,13 +2,14 @@
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    style="@style/Widget.AppTheme.CardView.Elevated"
+    style="@style/Widget.AppTheme.CardView.ListItem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:focusable="true"
     android:descendantFocusability="beforeDescendants"
-    android:layout_marginHorizontal="@dimen/padding_small"
-    android:layout_marginVertical="2dp">
+    app:cardElevation="0dp"
+    android:layout_marginHorizontal="?attr/listItemMarginHorizontal"
+    android:layout_marginVertical="?attr/listItemMarginVertical">
 
     <com.google.android.material.chip.Chip
         android:id="@+id/type"
@@ -24,8 +25,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingHorizontal="@dimen/padding_medium"
-        android:paddingVertical="@dimen/padding_medium">
+        android:paddingHorizontal="?attr/listItemPaddingHorizontal"
+        android:paddingVertical="?attr/listItemPaddingVertical">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
@@ -35,7 +36,7 @@
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/icon"
                 android:layout_width="40dp"
-                android:layout_height="match_parent"
+                android:layout_height="40dp"
                 android:layout_marginEnd="@dimen/padding_small"
                 android:layout_weight="0"
                 android:contentDescription="@string/str_logo" />
@@ -46,7 +47,7 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-                <androidx.appcompat.widget.AppCompatTextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -57,53 +58,13 @@
                     android:textAppearance="?android:attr/textAppearanceListItem"
                     tools:text="@tools:sample/lorem" />
 
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/launchMode"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textIsSelectable="true"
-                    android:textAppearance="?attr/textAppearanceBodySmall"
-                    android:textSize="11sp"
-                    tools:text="@tools:sample/lorem"
-                    tools:ignore="SmallSp" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/taskAffinity"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:textIsSelectable="true"
-                    android:textAppearance="?attr/textAppearanceBodySmall"
-                    tools:text="@tools:sample/lorem" />
-
-                <androidx.appcompat.widget.AppCompatTextView
+                <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/orientation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textIsSelectable="true"
                     android:textAppearance="?attr/textAppearanceBodySmall"
                     android:textSize="10sp"
-                    tools:text="@tools:sample/lorem"
-                    tools:ignore="SmallSp" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/softInput"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textIsSelectable="true"
-                    android:textAppearance="?attr/textAppearanceBodySmall"
-                    android:textSize="9sp"
-                    tools:text="@tools:sample/lorem"
-                    tools:ignore="SmallSp" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/process_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textIsSelectable="true"
-                    android:textAppearance="?attr/textAppearanceBodySmall"
-                    android:textSize="9sp"
-                    android:visibility="gone"
                     tools:text="@tools:sample/lorem"
                     tools:ignore="SmallSp" />
 
@@ -117,9 +78,50 @@
                 android:layout_gravity="center"
                 android:layout_weight="0"
                 app:iconSize="30dp"
+                app:iconTint="?attr/colorPrimary"
                 tools:icon="@drawable/ic_block" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/softInput"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textIsSelectable="true"
+            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:textSize="9sp"
+            tools:text="@tools:sample/lorem"
+            tools:ignore="SmallSp" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/launchMode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textIsSelectable="true"
+            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:textSize="11sp"
+            tools:text="@tools:sample/lorem"
+            tools:ignore="SmallSp" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/process_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textIsSelectable="true"
+            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:textSize="9sp"
+            android:visibility="gone"
+            tools:text="@tools:sample/lorem"
+            tools:ignore="SmallSp" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/taskAffinity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:textIsSelectable="true"
+            android:textAppearance="?attr/textAppearanceBodySmall"
+            tools:text="@tools:sample/lorem" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/name"
@@ -166,7 +168,7 @@
 
     <com.google.android.material.divider.MaterialDivider
         android:id="@+id/divider"
-        android:layout_width="6dp"
+        android:layout_width="?attr/listItemIndicatorWidth"
         android:layout_height="match_parent"
         android:layout_gravity="start" />
 

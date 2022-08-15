@@ -61,8 +61,15 @@
         <!-- List items -->
         <item name="android:textAppearanceListItem">?attr/textAppearanceTitleMedium</item>
         <item name="android:textAppearanceListItemSecondary">@style/TextAppearance.AppTheme.BodyMedium.Secondary</item>
+        <item name="listItemMarginVertical">1dp</item>
+        <item name="listItemMarginHorizontal">@dimen/padding_small</item>
+        <item name="listItemPaddingVertical">@dimen/padding_small</item>
+        <item name="listItemPaddingHorizontal">?android:attr/listPreferredItemPaddingStart</item>
+        <item name="listItemCornerRadius">24dp</item>
+        <item name="listItemIndicatorWidth">9dp</item>
 
         <!-- Misc -->
+        <item name="android:windowActivityTransitions">true</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowAllowEnterTransitionOverlap">true</item>
         <item name="android:windowAllowReturnTransitionOverlap">true</item>
@@ -201,9 +208,16 @@
     </style>
 
     <!-- MaterialCardView -->
-    <style name="Widget.AppTheme.CardView.Elevated" parent="Widget.Material3.CardView.Elevated" />
+    <style name="Widget.AppTheme.CardView.Elevated" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardCornerRadius">24dp</item>
+    </style>
 
-    <style name="Widget.AppTheme.CardView.Elevated.Padded" parent="Widget.AppTheme.CardView.Elevated">
+    <style name="Widget.AppTheme.CardView.ListItem" parent="Widget.Material3.CardView.Elevated">
+        <item name="cardCornerRadius">?attr/listItemCornerRadius</item>
+        <item name="cardElevation">0dp</item>
+    </style>
+
+    <style name="Widget.AppTheme.CardView.ListItem.Padded" parent="Widget.AppTheme.CardView.ListItem">
         <!-- Fix margin issue -->
         <item name="android:layout_marginTop">@dimen/padding_very_small</item>
         <item name="android:layout_marginBottom">@dimen/padding_very_small</item>
@@ -255,7 +269,7 @@
         <item name="searchIcon">@drawable/ic_search</item>
         <item name="queryHint">@android:string/search_go</item>
         <item name="frameMarginHorizontal">8dp</item>
-        <item name="android:backgroundTint">@color/ten_percent_black</item>
+        <item name="android:backgroundTint">?attr/colorSurfaceVariant</item>
         <item name="android:textAppearance">?attr/textAppearanceBodyLarge</item>
         <item name="shapeAppearanceOverlay">@style/ShapeAppearance.AppTheme.LargeComponent</item>
     </style>

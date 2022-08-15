@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later -->
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -20,19 +20,11 @@
         android:paddingVertical="?attr/listItemPaddingVertical">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/name"
+            android:id="@+id/checksum_description"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textIsSelectable="true"
-            android:textAppearance="?android:attr/textAppearanceListItem"
-            tools:text="@tools:sample/lorem" />
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/gles_ver"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textIsSelectable="true"
-            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:textAppearance="?android:attr/textAppearanceListItemSecondary"
             tools:text="@tools:sample/lorem" />
 
     </androidx.appcompat.widget.LinearLayoutCompat>

@@ -24,6 +24,7 @@ import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
+import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.widget.RecyclerView;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getStyledKeyValue;
@@ -112,10 +114,14 @@ public class SysConfigActivity extends BaseActivity {
         private final List<SysConfigInfo> list = new ArrayList<>();
         private final SysConfigActivity activity;
         private final PackageManager pm;
+        private final int mCardColor0;
+        private final int mCardColor1;
 
         SysConfigRecyclerAdapter(SysConfigActivity activity) {
             this.activity = activity;
             pm = activity.getPackageManager();
+            mCardColor0 = ColorCodes.getListItemColor0(activity);
+            mCardColor1 = ColorCodes.getListItemColor1(activity);
         }
 
         @NonNull
@@ -135,7 +141,7 @@ public class SysConfigActivity extends BaseActivity {
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             holder.icon.setImageDrawable(null);
 
-            holder.itemView.setBackgroundResource(position % 2 == 0 ? R.drawable.item_semi_transparent : R.drawable.item_transparent);
+            holder.itemView.setCardBackgroundColor(position % 2 == 0 ? mCardColor1 : mCardColor0);
 
             SysConfigInfo info = list.get(position);
             if (info.isPackage) {
@@ -343,6 +349,7 @@ public class SysConfigActivity extends BaseActivity {
         }
 
         public static class ViewHolder extends RecyclerView.ViewHolder {
+            public MaterialCardView itemView;
             public TextView title;
             public TextView packageName;
             public TextView subtitle;
@@ -350,10 +357,11 @@ public class SysConfigActivity extends BaseActivity {
 
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
-                title = itemView.findViewById(R.id.item_title);
+                this.itemView = (MaterialCardView) itemView;
+                title = itemView.findViewById(android.R.id.title);
                 packageName = itemView.findViewById(R.id.package_name);
-                subtitle = itemView.findViewById(R.id.item_subtitle);
-                icon = itemView.findViewById(R.id.item_icon);
+                subtitle = itemView.findViewById(android.R.id.summary);
+                icon = itemView.findViewById(android.R.id.icon);
             }
         }
     }

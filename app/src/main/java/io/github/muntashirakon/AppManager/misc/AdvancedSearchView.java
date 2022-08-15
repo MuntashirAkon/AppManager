@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.misc;
 import android.annotation.SuppressLint;
 import android.app.SearchableInfo;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
@@ -21,8 +22,9 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.PopupMenu;
-import androidx.appcompat.widget.TintTypedArray;
 import androidx.customview.view.AbsSavedState;
+
+import com.google.android.material.internal.ThemeEnforcement;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -36,6 +38,8 @@ import java.util.regex.PatternSyntaxException;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.util.UiUtils;
 import io.github.muntashirakon.widget.SearchView;
+
+import static com.google.android.material.theme.overlay.MaterialThemeOverlay.wrap;
 
 public class AdvancedSearchView extends SearchView {
     @IntDef(flag = true, value = {
@@ -63,6 +67,8 @@ public class AdvancedSearchView extends SearchView {
      * Search using {@link String#matches(String)} or {@link java.util.regex.Pattern}.
      */
     public static final int SEARCH_TYPE_REGEX = 1 << 3;
+
+    private static final int DEF_STYLE_RES = R.style.Widget_AppTheme_SearchView;
 
     @SearchType
     private int mType = SEARCH_TYPE_CONTAINS;
@@ -143,15 +149,15 @@ public class AdvancedSearchView extends SearchView {
 
     @SuppressLint("RestrictedApi")
     public AdvancedSearchView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+        super(wrap(context, attrs, defStyleAttr, DEF_STYLE_RES), attrs, defStyleAttr);
         context = getContext();
         mSearchSrcTextView = findViewById(R.id.search_src_text);
         mSearchTypeSelectionButton = findViewById(R.id.search_mag_icon);
         mSearchTypeSelectionButton.setImageResource(R.drawable.ic_filter_menu);
         mSearchTypeSelectionButton.setBackground(UiUtils.getDrawable(context, android.R.attr.selectableItemBackgroundBorderless));
         mSearchTypeSelectionButton.setOnClickListener(onClickSearchIcon);
-        final TintTypedArray a = TintTypedArray.obtainStyledAttributes(context,
-                attrs, R.styleable.SearchView, defStyleAttr, 0);
+        final TypedArray a = ThemeEnforcement.obtainStyledAttributes(
+                context, attrs, R.styleable.SearchView, defStyleAttr, DEF_STYLE_RES);
         mQueryHint = a.getText(R.styleable.SearchView_queryHint);
         mSearchHintIcon = a.getDrawable(R.styleable.SearchView_searchHintIcon);
         a.recycle();
