@@ -1156,4 +1156,16 @@
     <string name="usage_last_used">Sử dụng lần cuối</string>
     <string name="usage_mobile_data">Dữ liệu di động</string>
     <string name="usage_wifi_data">Dữ liệu Wi-Fi</string>
+    <string name="unsupported_split_apk">Không được hỗ trợ</string>
+    <string name="view_changelog">Tìm hiểu những gì mới trong bản phát hành này</string>
+    <string name="pref_sign_apk_error_signing_key_not_added">Bắt buộc phải có mã khoá ký hợp lệ để ký tệp APK.</string>
+    <string name="troubleshooting">Xử lý sự cố</string>
+    <string name="pref_reload_apps">Tải lại các ứng dụng</string>
+    <string name="pref_reload_apps_msg">Tải lại danh sách ứng dụng được lưu trong cơ sở dữ liệu của App Manager trong trường hợp xảy ra hành vi không mong đợi.</string>
+    <string name="changelog_type_new">Mới</string>
+    <string name="changelog_type_fix">Sửa</string>
+    <string name="changelog_type_improve">Cải thiện</string>
+    <string name="sort_by_total_size">Tổng kích cỡ</string>
+    <string name="am_command">Lệnh <tt>am</tt></string>
+    <string name="pref_sign_apk_no_signing_key">Không có mã ký</string>
 </resources>
