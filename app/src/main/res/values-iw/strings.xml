@@ -1,2 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="read">לקרוא</string>
+    <string name="write">לכתוב</string>
+    <string name="no_receivers">אין מקלטים</string>
+    <string name="providers">ספקים</string>
+    <string name="no_providers">אין ספקים</string>
+    <string name="launch_mode">מצב הפעלה</string>
+    <string name="task_affinity">זיקה למשימה</string>
+    <string name="app_signing_signatures">חתימות</string>
+    <string name="soft_input">מצב קלט רך</string>
+    <string name="no_feature">אין תכונות</string>
+    <string name="launch">להריץ</string>
+    <string name="orientation">נטייה</string>
+    <string name="shared_libs">ליבות משותפות</string>
+    <string name="authority">רשות</string>
+    <string name="permissions">משתמש בהרשאות</string>
+    <string name="no_service">אין שירות</string>
+    <string name="patterns_allowed">דפוסים מותרים</string>
+    <string name="group">קבוצה</string>
+    <string name="configurations">תצורות</string>
+    <string name="flags">דגלים</string>
+    <string name="sort_by_sha">חתימה</string>
+    <string name="shared_user_id">שתף מזהה משתמש</string>
+    <string name="service">שירות</string>
+    <string name="no_activities">אין פעילויות</string>
+    <string name="signatures">חתימות</string>
+    <string name="app_signing_no_signatures">אין חתימות תקפות</string>
+    <string name="declared_permission">הרשאות</string>
+    <string name="input_features">תכונות קלט</string>
+    <string name="refresh">רענן</string>
+    <string name="uses_feature">משתמש בתכונות</string>
+    <string name="path_permissions">הרשאות נתיב</string>
+    <string name="require_no_permission">אין צורך באישור</string>
+    <string name="receivers">מקלטים</string>
+    <string name="uninstall">הסר התקנה</string>
+    <string name="grant_uri_permission">הענק הרשאות URI</string>
+    <string name="no_configurations">אין תצורות</string>
+    <string name="activities">פעילויות</string>
+    <string name="sort_by_shared_user_id">שתף מזהה משתמש</string>
+    <string name="sort_by_last_update">העדכון אחרון</string>
+</resources>
