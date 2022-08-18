@@ -918,7 +918,7 @@
     <string name="downgrade">Downgrade</string>
     <string name="process_state_with_extra">Estado: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g> (<xliff:g id="state_extra" example="High priority">%2$s</xliff:g>)</string>
     <string name="process_state">Estado: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g></string>
-    <string name="state_multithreaded">Multi processamento</string>
+    <string name="state_multithreaded">Multitarefa</string>
     <string name="state_foreground">Primeiro plano</string>
     <string name="state_waking">Acordando</string>
     <string name="state_wake_kill">Encerrado ao acordar</string>
