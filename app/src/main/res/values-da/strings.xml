@@ -1,2 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources>
+    <string name="refresh">Opdater</string>
+    <string name="activities">Aktiviteter</string>
+    <string name="no_receivers">Ingen modtagere</string>
+    <string name="providers">Udbydere</string>
+    <string name="uninstall">Afinstaller</string>
+    <string name="no_activities">Ingen aktiviteter</string>
+    <string name="require_no_permission">Der kræves ingen tilladelse</string>
+    <string name="permissions">Bruger tilladelser</string>
+</resources>
