@@ -1159,4 +1159,10 @@
     <string name="log_stop_recording">停止錄製</string>
     <string name="apk_checksums">APK 校驗和</string>
     <string name="item_select">選擇</string>
+    <string name="view_changelog">瞭解此版本的新增功能</string>
+    <string name="app_explorer">應用程式瀏覽器</string>
+    <string name="sort_by_total_size">大小總計</string>
+    <string name="am_command"><tt>am</tt> 命令</string>
+    <string name="pref_sign_apk_error_signing_key_not_added">簽署 APK 檔案需要一個有效的簽署金鑰。</string>
+    <string name="pref_sign_apk_no_signing_key">沒有簽署金鑰</string>
 </resources>
