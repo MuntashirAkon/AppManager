@@ -41,15 +41,21 @@
     <string name="error">Error</string>
     <string name="loading">Cargando…</string>
     <!-- &#8230; = ... -->
-    <string name="credits_message">A los autores de
+    <string name="credits_message">A los autores del
 \n- El proyecto de código abierto Android
-\n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
-\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
-\n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
+\n- <a href="https://github.com/zhaobozhen/libraries">Bibliotecas de absenta</a>
+\n- <a href="https://github.com/butzist/ActivityLauncher">Lanzador de actividades</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Información sobre paquetes de aplicaciones</a>
+\n- <a href="https://github.com/zhaobao/AppsMonitor">Monitor de aplicaciones</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/gabrielemariotti/changeloglib">Biblioteca de registro de cambios</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a>
 \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
-\n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
-\n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
+\n- <a href="https://github.com/nex3z/FlowLayout">Esquema de flujo</a>
+\n- <a href="https://github.com/k3b/intent-intercept">Intento de interceptación</a>
+\n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a>
+\n- <a href="https://github.com/topjohnwu/Magisk">Magisk</a>
+\n- <a href="https://github.com/zhanghai/MaterialFiles">Archivos de materiales</a>
 \n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
 \n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
 \n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
@@ -57,7 +63,7 @@
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
 \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
-\nCrédito del logo original: <a href="https://github.com/Atrate">Atrate</a>. </string>
+\nCrédito del logotipo original: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="word_wrap">Alternar ajuste de texto</string>
     <string name="touchscreen">Pantalla táctil</string>
     <string name="navigation">Navegación</string>
@@ -239,7 +245,7 @@
     <string name="manifest">Manifiesto</string>
     <string name="_undefined">Indefinido</string>
     <string name="required">Requerido</string>
-    <string name="orientation_sensor">Sensor</string>
+    <string name="orientation_sensor">Sensor de orientación</string>
     <string name="orientation_user">Usuario</string>
     <string name="orientation_portrait">Vertical</string>
     <string name="orientation_no_sensor">Sin sensor</string>
@@ -911,8 +917,11 @@
     <string name="pref_log_viewer_msg">Configure la manera en que se muestran los registros.</string>
     <string name="log_viewer">Visor de registros</string>
     <string name="source_code_links">GitHub: https://github.com/MuntashirAkon/AppManager
+\n
 \nGitLab: https://gitlab.com/muntashir/AppManager
+\n
 \nRiseup: https://0xacab.org/muntashir/AppManager
+\n
 \nCodeberg: https://codeberg.org/muntashir/AppManager</string>
     <string name="new_alias_password">Contraseña de alias nuevo</string>
     <string name="bouncy_castle_keystore">Almacén de claves Bouncy Castle (BKS)</string>
@@ -1011,6 +1020,7 @@
     <string name="pref_import_backups_msg">Importe copias de respaldo desde OAndBackup, Swift Backup (3.0–3.2) o Titanium Backup.</string>
     <string name="pref_import_backups">Importar copias de respaldo</string>
     <string name="community_links">Telegram: https://t.me/AppManagerChannel
+\n
 \nTwitter: https://twitter.com/AppManagerNews</string>
     <string name="community">Comunidad</string>
     <plurals name="alert_failed_to_import_backups">
@@ -1202,4 +1212,5 @@
     <string name="changelog_type_new">Nuevo</string>
     <string name="changelog_type_fix">Corregir</string>
     <string name="changelog_type_improve">Mejorar</string>
+    <string name="am_command">Comando <tt>am</tt></string>
 </resources>
