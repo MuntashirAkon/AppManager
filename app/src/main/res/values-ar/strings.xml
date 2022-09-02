@@ -534,7 +534,7 @@
     <string name="apps">التطبيقات</string>
     <string name="routine_ops">العمليات الروتينية</string>
     <string name="apply_now">تطبيق الان…</string>
-    <string name="keystore">تخزين المفاتيح</string>
+    <string name="keystore">مخزن المفتاح</string>
     <string name="no_profiles">لا توجد ملفات تعريف</string>
     <string name="profiles">الأوضاع</string>
     <string name="open_pgp_provider">موفر OpenPGP</string>
@@ -637,7 +637,7 @@
     <string name="failed">فشل</string>
     <string name="pref_rules_msg">حظر فوري، استيراد / تصدير / إزالة القواعد، الخ.</string>
     <string name="saf">SAF</string>
-    <string name="java_keystore">مخزن مفاتيح الجافا (JKS)</string>
+    <string name="java_keystore">مخزن المفتاح الجافا (JKS)</string>
     <string name="update_uninstalled_successfully">التحديثات الخاصة ب <xliff:g id="app_name" example="App Manager"> %1$s </xliff:g>تم إلغاء تثبيتها.</string>
     <plurals name="alert_failed_to_set_app_ops">
         <item quantity="zero">تعذر تعيين عمليات التطبيق لتطبيق %1$d</item>
@@ -1040,8 +1040,8 @@
     <string name="locality_name">اسم المنطقة (المدينة) (L)</string>
     <string name="state_name">اسم الدولة (ST)</string>
     <string name="country_name" tools:ignore="TypographyOther">اسم الدولة (ج)</string>
-    <string name="keystore_file">ملف سجل المفاتيح</string>
-    <string name="keystore_pass">كلمة مرور سجل المفاتيح</string>
+    <string name="keystore_file">ملف مخزن المفتاح</string>
+    <string name="keystore_pass">كلمة مرور مخزن المفتاح</string>
     <string name="bouncy_castle_keystore">سجل مفاتيح قلعة النطاط (BKS)</string>
     <string name="pkcs12_keystore">PKCS # 12 سجل مفاتيح (P12)</string>
     <string name="pem_and_pk8">#8 PEM و PKCS (PK8)</string>
@@ -1185,8 +1185,8 @@
     <string name="adb_pair">اقتران</string>
     <string name="adb_wifi_paring_code">رمز اقتران Wi-Fi</string>
     <string name="invalid_password">كلمة مرور غير صالحة، حاول مرة أخرى.</string>
-    <string name="keystore_pass_cannot_be_empty">لا يمكن أن تكون كلمة مرور سجل المفاتيح فارغة.</string>
-    <string name="keystore_password_info">فيما يلي كلمة مرور سجل المفاتيح لمدير التطبيقات. يرجى تخزينه في مكان آمن إذا كنت تريد إجراء نسخة احتياطية / استعادة مدير التطبيقات KeyStore.<b> لن يتم عرض هذه الرسالة مرة أخرى.</b></string>
+    <string name="keystore_pass_cannot_be_empty">لا يمكن أن تكون كلمة مرور مخزن المفتاح فارغة.</string>
+    <string name="keystore_password_info">فيما يلي كلمة مرور مخزن المفتاح لمدير التطبيقات. يرجى تخزينه في مكان آمن إذا كنت تريد إجراء نسخة احتياطية / استعادة مدير التطبيقات KeyStore.<b> لن يتم عرض هذه الرسالة مرة أخرى.</b></string>
     <plurals name="pref_thread_count_msg">
         <item quantity="zero">قم بتنفيذ على الاقل %1$d عملية او أكثر بالتوازي</item>
         <item quantity="one">قم بتنفيذ على الاقل %1$d عملية او أكثر بالتوازي</item>
