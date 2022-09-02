@@ -3,7 +3,7 @@
     <string name="disclaimer_header">DESCARGO DE RESPONSABILIDAD</string>
     <string name="disclaimer_exit">Salir</string>
     <string name="disclaimer_agree">Estoy de acuerdo</string>
-    <string name="disclaimer_agree_forever">No mostrar de nuevo</string>
+    <string name="disclaimer_agree_forever">No volver a mostrar</string>
     <string name="disclaimer_footer">© 2020–2022 Muntashir Al-Islam</string>
     <string name="disclaimer_body">App Manager ofrece funcionalidades de root que podrían dañar tu dispositivo si se usan incorrectamente. App Manager no se hace responsable de los daños causados por el uso de esta aplicación. Si no eres plenamente consciente de cómo el root trabaja, entonces debes evitar usar opciones de root hasta que seas plenamente consciente de los riesgos.
 \n
