@@ -917,11 +917,8 @@
     <string name="pref_log_viewer_msg">Configure la manera en que se muestran los registros.</string>
     <string name="log_viewer">Visor de registros</string>
     <string name="source_code_links">GitHub: https://github.com/MuntashirAkon/AppManager
-\n
 \nGitLab: https://gitlab.com/muntashir/AppManager
-\n
 \nRiseup: https://0xacab.org/muntashir/AppManager
-\n
 \nCodeberg: https://codeberg.org/muntashir/AppManager</string>
     <string name="new_alias_password">Contraseña de alias nuevo</string>
     <string name="bouncy_castle_keystore">Almacén de claves Bouncy Castle (BKS)</string>
