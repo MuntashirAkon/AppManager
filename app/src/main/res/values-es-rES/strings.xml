@@ -143,7 +143,7 @@
     <string name="no_code">Sin código</string>
     <string name="process_name">Nombre del proceso</string>
     <string name="native_library_dir">Directorio de la biblioteca nativa JNI</string>
-    <string name="dev_protected_data_dir">Directorio de datos protegidos por el dispositivo</string>
+    <string name="dev_protected_data_dir">Directorio de datos protegido por el dispositivo</string>
     <string name="search">Buscar</string>
     <string name="menu_apply_rules">Aplicar reglas</string>
     <string name="menu_remove_rules">Quitar reglas</string>
@@ -710,13 +710,13 @@
     <string name="root">Raíz (root)</string>
     <string name="user_profile_with_id">Perfil: %1$s (%2$d)</string>
     <string name="advanced">Avanzado</string>
-    <string name="simple">Simple</string>
+    <string name="simple">Sencillo</string>
     <string name="enabled">Activado</string>
     <string name="options">Opciones</string>
     <string name="off">Apagado</string>
     <string name="on">Encendido</string>
     <string name="profile_state_msg">Estado personalizado de encendido/apagado para este perfil</string>
-    <string name="interceptor">Interceptor</string>
+    <string name="interceptor">Interceptador</string>
     <string name="backup_internal_data_description">Hacer copia de respaldo de las carpetas de datos internos.</string>
     <string name="backup_apk_files_description">Respaldo solo de los archivos APK del directorio de origen, «splits» incluidos.</string>
     <string name="backup_obb_media_description">Respaldo de OBB y multimedia.</string>
@@ -1017,7 +1017,6 @@
     <string name="pref_import_backups_msg">Importe copias de respaldo desde OAndBackup, Swift Backup (3.0–3.2) o Titanium Backup.</string>
     <string name="pref_import_backups">Importar copias de respaldo</string>
     <string name="community_links">Telegram: https://t.me/AppManagerChannel
-\n
 \nTwitter: https://twitter.com/AppManagerNews</string>
     <string name="community">Comunidad</string>
     <plurals name="alert_failed_to_import_backups">
