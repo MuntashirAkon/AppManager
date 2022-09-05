@@ -115,10 +115,12 @@ public class PackageInstallerService extends ForegroundService {
                     ComponentUtils.blockTrackingComponents(Collections.singletonList(
                             new UserPackagePair(packageName, userHandle)));
                 }
-                if (onInstallFinished != null) {
-                    UiThreadHandler.run(() -> onInstallFinished.onFinished(packageName, result, blockingPackage,
-                            statusMessage));
-                } else sendNotification(result, appLabel, blockingPackage, statusMessage);
+
+                UiThreadHandler.run(() -> {
+                    if (onInstallFinished != null) {
+                        onInstallFinished.onFinished(packageName, result, blockingPackage, statusMessage);
+                    } else sendNotification(result, appLabel, blockingPackage, statusMessage);
+                });
             }
         });
         pi.setAppLabel(appLabel);
