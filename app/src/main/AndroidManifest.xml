@@ -237,7 +237,7 @@
             android:name=".details.AppDetailsActivity"
             android:exported="false" />
         <activity
-            android:name=".details.ManifestViewerActivity"
+            android:name=".details.manifest.ManifestViewerActivity"
             android:exported="true"
             android:label="@string/manifest_viewer">
             <intent-filter>
