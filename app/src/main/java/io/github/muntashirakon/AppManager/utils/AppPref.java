@@ -264,6 +264,17 @@ public class AppPref {
         return path;
     }
 
+    public static boolean backupDirectoryExists(Context context) {
+        Uri uri = getSelectedDirectory();
+        Path path;
+        if (uri.getScheme().equals(ContentResolver.SCHEME_FILE)) {
+            // Append AppManager only if storage permissions are granted
+            String newPath = uri.getPath() + (PermissionUtils.hasStoragePermission(context) ? File.separator + "AppManager" : "");
+            path = Paths.get(newPath);
+        } else path = Paths.get(uri);
+        return path.exists();
+    }
+
     public static Uri getSelectedDirectory() {
         String uriOrBareFile = getString(PrefKey.PREF_BACKUP_VOLUME_STR);
         if (uriOrBareFile.startsWith("/")) {
