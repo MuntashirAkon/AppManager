@@ -1,0 +1,7 @@
+This release contains a number of bug fixes and feature improvements.
+
+- Handled the Internet permission in GrapheneOS
+- Replaced MD2 switches with M3 switches
+- Fixed icon theming issues in Android 12
+- Fixed crashes in the Main, App Details, Profiles, Running Apps and Scanner pages
+- Fixed displaying volume unavailable message in the Main page.

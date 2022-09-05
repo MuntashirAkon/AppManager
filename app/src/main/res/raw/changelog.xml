@@ -18,6 +18,38 @@
 <changelog>
     <release
         type="stable release"
+        version="v3.0.1"
+        code="412"
+        date="5 September 2022">
+        <improve>Display inferred mode of operation in the crash logs</improve>
+        <improve>Handled the Internet permission in GrapheneOS</improve>
+        <improve>Prevented closing multi-selection panel after starting an operation</improve>
+        <improve>Replaced MD2 (Material Design 2) switches with M3 (Material 3) switches</improve>
+        <fix>Fixed icon theming issues in Android 12</fix>
+
+        <fix title="App Details page">
+            Display failure message instead of crashing if a service cannot be launched from the Services tab
+        </fix>
+        <fix title="App Details page">Fixed crashes in the Shared Libs tab</fix>
+        <fix title="Installer">
+            Fixed a rare crash used to occur due to the accidental closing of the installer page
+        </fix>
+        <fix title="Main page">Fixed sorting when a profile is selected in the list options</fix>
+        <fix title="Main page">
+            Fixed displaying backup volume unavailable messages when [tt]/sdcard/AppManager[/tt] was inaccessible or
+            unavailable
+        </fix>
+        <fix title="Profile page">Fixed crashes in the log viewer tab</fix>
+        <fix title="Running Apps page">Fixed double scrollbars</fix>
+        <fix title="Running Apps page">Fixed crashes in no-root mode while checking for [tt]RUN_IN_BACKGROUND[/tt]</fix>
+        <fix title="Scanner page">Fixed a rare crash used to occur when the activity is accidentally closed</fix>
+        <note>
+            [br /][b]Full list of changes:[/b] [a
+            href="https://github.com/MuntashirAkon/AppManager/compare/v3.0.0...v3.0.1"]v3.0.0...v3.0.1[/a]
+        </note>
+    </release>
+    <release
+        type="stable release"
         version="v3.0.0"
         code="410"
         date="4 August 2022">
