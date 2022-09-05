@@ -144,11 +144,25 @@ public class Ops {
         }
     }
 
+    public static String getMode(Context context) {
+        String mode = AppPref.getString(AppPref.PrefKey.PREF_MODE_OF_OPS_STR);
+        // Backward compatibility for v2.6.0
+        if (mode.equals("adb")) {
+            mode = Ops.MODE_ADB_OVER_TCP;
+        }
+        if ((MODE_ADB_OVER_TCP.equals(mode) || MODE_ADB_WIFI.equals(mode))
+                && !PermissionUtils.hasPermission(context, Manifest.permission.INTERNET)) {
+            // ADB enabled but the INTERNET permission is not granted, replace current with auto.
+            return MODE_AUTO;
+        }
+        return mode;
+    }
+
     @WorkerThread
     @NoOps // Although we've used Ops checks, its overall usage does not affect anything
     @Status
     public static int init(@NonNull Context context, boolean force) {
-        String mode = AppPref.getString(AppPref.PrefKey.PREF_MODE_OF_OPS_STR);
+        String mode = getMode(context);
         if (MODE_AUTO.equals(mode)) {
             autoDetectRootOrAdb(context);
             return STATUS_SUCCESS;
@@ -175,12 +189,6 @@ public class Ops {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                         return STATUS_AUTO_CONNECT_WIRELESS_DEBUGGING;
                     } // else fallback to ADB over TCP
-                case "adb":
-                    if (mode.equals("adb")) {
-                        // Backward compatibility for v2.6.0 or earlier
-                        AppPref.set(AppPref.PrefKey.PREF_MODE_OF_OPS_STR, MODE_ADB_OVER_TCP);
-                    }
-                    // fallback to ADB over TCP
                 case MODE_ADB_OVER_TCP:
                     sIsAdb = true;
                     sIsRoot = false;

@@ -196,9 +196,7 @@ public class MainPreferences extends PreferenceFragment {
         Preference mode = Objects.requireNonNull(findPreference("mode_of_operations"));
         AlertDialog modeOfOpsAlertDialog = UIUtils.getProgressDialog(activity, getString(R.string.loading));
         final String[] modes = getResources().getStringArray(R.array.modes);
-        currentMode = AppPref.getString(AppPref.PrefKey.PREF_MODE_OF_OPS_STR);
-        // Backward compatibility for v2.6.0
-        if (currentMode.equals("adb")) currentMode = Ops.MODE_ADB_OVER_TCP;
+        currentMode = Ops.getMode(requireContext());
         mode.setSummary(getString(R.string.mode_of_op_with_inferred_mode_of_op, modes[MODE_NAMES.indexOf(currentMode)],
                 getInferredMode()));
         mode.setOnPreferenceClickListener(preference -> {
@@ -211,7 +209,7 @@ public class MainPreferences extends PreferenceFragment {
                                 UIUtils.displayShortToast(R.string.wireless_debugging_not_supported);
                                 return;
                             }
-                        } else {
+                        } else if (Ops.MODE_ADB_OVER_TCP.equals(modeName)) {
                             ServerConfig.setAdbPort(ServerConfig.DEFAULT_ADB_PORT);
                         }
                         currentMode = modeName;

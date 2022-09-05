@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.settings;
 
+import android.Manifest;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -28,6 +29,7 @@ import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
 import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
 import io.github.muntashirakon.AppManager.scanner.ScannerActivity;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 
 public class FeatureController {
     @IntDef(flag = true, value = {
@@ -153,9 +155,11 @@ public class FeatureController {
                 cn = getComponentName(key, ScannerActivity.class);
                 break;
             case FEAT_USAGE_ACCESS:
-            case FEAT_INTERNET:
                 // Only depends on flag
                 return (flags & key) != 0;
+            case FEAT_INTERNET:
+                return (flags & key) != 0
+                        && PermissionUtils.hasPermission(AppManager.getContext(), Manifest.permission.INTERNET);
             case FEAT_LOG_VIEWER:
                 cn = getComponentName(key, LogViewerActivity.class);
                 break;
