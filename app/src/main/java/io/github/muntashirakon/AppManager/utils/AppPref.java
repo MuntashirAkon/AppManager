@@ -270,7 +270,10 @@ public class AppPref {
         Path path;
         if (uri.getScheme().equals(ContentResolver.SCHEME_FILE)) {
             // Append AppManager only if storage permissions are granted
-            String newPath = uri.getPath() + (PermissionUtils.hasStoragePermission(context) ? File.separator + "AppManager" : "");
+            String newPath = uri.getPath();
+            if (PermissionUtils.hasStoragePermission(context) || Ops.isPrivileged()) {
+                newPath += File.separator + "AppManager";
+            }
             path = Paths.get(newPath);
         } else path = Paths.get(uri);
         return path.exists();
