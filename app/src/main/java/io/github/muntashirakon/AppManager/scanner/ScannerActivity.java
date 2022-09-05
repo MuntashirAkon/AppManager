@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.fragment.app.Fragment;
@@ -34,9 +35,13 @@ import io.github.muntashirakon.AppManager.utils.FileUtils;
 public class ScannerActivity extends BaseActivity {
     public static final String EXTRA_IS_EXTERNAL = "is_external";
 
+    @Nullable
     private ActionBar mActionBar;
+    @Nullable
     private LinearProgressIndicator mProgressIndicator;
+    @Nullable
     private ParcelFileDescriptor fd;
+    @Nullable
     private Uri apkUri;
     private boolean isExternalApk;
 
@@ -138,6 +143,9 @@ public class ScannerActivity extends BaseActivity {
     }
 
     void showProgress(boolean willShow) {
+        if (mProgressIndicator == null) {
+            return;
+        }
         if (willShow) {
             mProgressIndicator.show();
         } else {
