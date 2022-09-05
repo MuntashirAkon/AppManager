@@ -7,12 +7,14 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 
-import java.util.Arrays;
-import java.util.Locale;
-
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.core.content.pm.PackageInfoCompat;
+
+import java.util.Arrays;
+import java.util.Locale;
+
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 
 public class DeviceInfo {
@@ -69,6 +71,17 @@ public class DeviceInfo {
                 + "ABIs (64bit): " + Arrays.toString(abis64Bits) + "\n"
                 + "System language: " + Locale.getDefault().toLanguageTag() + "\n"
                 + "In-App Language: " + AppPref.get(AppPref.PrefKey.PREF_CUSTOM_LOCALE_STR) + "\n"
-                + "Mode: " + AppPref.get(AppPref.PrefKey.PREF_MODE_OF_OPS_STR);
+                + "Mode: " + AppPref.get(AppPref.PrefKey.PREF_MODE_OF_OPS_STR) + "\n"
+                + "Inferred Mode: " + getInferredMode();
+    }
+
+    public String getInferredMode() {
+        if (Ops.isRoot()) {
+            return "root";
+        }
+        if (Ops.isAdb()) {
+            return "ADB";
+        }
+        return "no_root";
     }
 }
