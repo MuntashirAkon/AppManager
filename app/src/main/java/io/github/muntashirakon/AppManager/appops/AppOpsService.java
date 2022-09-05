@@ -38,7 +38,11 @@ public class AppOpsService {
                         PermissionUtils.PERMISSION_GET_APP_OPS_STATS,
                         UserHandleHidden.myUserId());
             } catch (RemoteException e) {
-                throw new RuntimeException("Couldn't connect to appOpsService locally", e);
+                String message = "Couldn't grant GET_APP_OPS_STATS.";
+                if (Ops.isAdb()) {
+                    message += " Additional developer options might not be enabled as stated in https://muntashirakon.github.io/AppManager/#subsec:enable-usb-debugging";
+                }
+                throw new RuntimeException(message, e);
             }
         }
         // Local/remote services are handled automatically
