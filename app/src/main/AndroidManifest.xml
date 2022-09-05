@@ -746,6 +746,8 @@
             android:authorities="${applicationId}.file"
             android:exported="false"
             android:grantUriPermissions="true" />
+
+        <meta-data android:name="android.permission.INTERNET.mode" android:value="runtime" />
     </application>
 
 </manifest>
