@@ -96,7 +96,7 @@ public final class OsEnvironment {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                 final StorageVolume[] volumes = StorageManagerCompat.getVolumeList(AppManager.getContext(),
                         mUserHandle, StorageManagerHidden.FLAG_FOR_WRITE);
-                Log.e(TAG, Arrays.toString(volumes));
+                Log.d(TAG, Arrays.toString(volumes));
                 final List<Path> files = new ArrayList<>();
                 File tmpFile;
                 for (@NonNull StorageVolume volume : volumes) {

@@ -531,7 +531,7 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
             }
         }
         // Check for backup volume
-        if (!AppPref.getAppManagerDirectory().exists()) {
+        if (!AppPref.backupDirectoryExists(this)) {
             new MaterialAlertDialogBuilder(this)
                     .setTitle(R.string.backup_volume)
                     .setMessage(R.string.backup_volume_unavailable_warning)
