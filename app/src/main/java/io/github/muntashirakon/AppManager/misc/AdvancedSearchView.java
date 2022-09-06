@@ -181,25 +181,25 @@ public class AdvancedSearchView extends SearchView {
         super.setOnSearchClickListener(mOnSearchIconClickListenerSuper);
     }
 
-    static class SavedState extends AbsSavedState {
+    protected static class SavedState extends AbsSavedState {
         int type;
         int enabledTypes;
 
-        SavedState(Parcelable superState) {
+        SavedState(@NonNull Parcelable superState) {
             super(superState);
         }
 
-        public SavedState(Parcel source, ClassLoader loader) {
+        public SavedState(@NonNull Parcel source, @Nullable ClassLoader loader) {
             super(source, loader);
             type = source.readInt();
             enabledTypes = source.readInt();
         }
 
         @Override
-        public void writeToParcel(Parcel dest, int flags) {
+        public void writeToParcel(@NonNull Parcel dest, int flags) {
             super.writeToParcel(dest, flags);
-            dest.writeValue(type);
-            dest.writeValue(enabledTypes);
+            dest.writeInt(type);
+            dest.writeInt(enabledTypes);
         }
 
         @NonNull
