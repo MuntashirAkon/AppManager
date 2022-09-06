@@ -93,4 +93,45 @@
     <string name="flags">Marcaje</string>
     <string name="version_name_with_code">Versiune <xliff:g id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g id="version_code" example="365">%2$d</xliff:g> )</string>
     <string name="starting_activity">Activitate de pornire: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
+    <plurals name="usage_days">
+        <item quantity="one">%1$d zi</item>
+        <item quantity="few">%1$d zile</item>
+        <item quantity="other">%1$d zile</item>
+    </plurals>
+    <string name="usage_today">Astăzi</string>
+    <string name="usage_7_days">Ultimele 7 zile</string>
+    <plurals name="usage_hours">
+        <item quantity="one">%1$d oră</item>
+        <item quantity="few">%1$d ore</item>
+        <item quantity="other">%1$d ore</item>
+    </plurals>
+    <plurals name="usage_minutes">
+        <item quantity="one">%1$d minut</item>
+        <item quantity="few">%1$d minute</item>
+        <item quantity="other">%1$d minute</item>
+    </plurals>
+    <plurals name="usage_seconds">
+        <item quantity="one">%1$d secundă</item>
+        <item quantity="few">%1$d secunde</item>
+        <item quantity="other">%1$d secunde</item>
+    </plurals>
+    <string name="menu_remove_rules">Eliminare reguli</string>
+    <string name="grant_usage_acess_message">Se utilizează pentru afișarea informațiilor despre utilizarea aplicațiilor.</string>
+    <string name="grant_usage_access">Acordați acces la utilizare</string>
+    <string name="menu_apply_rules">Aplicare reguli</string>
+    <string name="go">Accesare</string>
+    <string name="go_back">Înapoi</string>
+    <string name="usage_less_than_a_minute">Mai puțin de un minut</string>
+    <string name="search">Căutare</string>
+    <string name="failed_to_extract_apk_file">Nu a putut extrage fișierul APK</string>
+    <string name="share_apk">Partajare APK</string>
+    <string name="usage_weekly">Săptămânal</string>
+    <string name="app_usage">Utilizare aplicații</string>
+    <plurals name="usage_months">
+        <item quantity="one">%1$d lună</item>
+        <item quantity="few">%1$d luni</item>
+        <item quantity="other">%1$d luni</item>
+    </plurals>
+    <string name="no_shared_libs">Nu există biblioteci partajate</string>
+    <string name="no_tracker_class">Nu există clase de urmăritori</string>
 </resources>
