@@ -115,15 +115,18 @@
     <string name="usage_less_than_a_minute">Meno di un minuto</string>
     <plurals name="usage_hours">
         <item quantity="one">%1$d ora</item>
+        <item quantity="many">%1$d ore</item>
         <item quantity="other">%1$d ore</item>
     </plurals>
     <plurals name="usage_days">
         <item quantity="one">%1$d giorno</item>
+        <item quantity="many">%1$d giorni</item>
         <item quantity="other">%1$d giorni</item>
     </plurals>
     <plurals name="usage_months">
-        <item quantity="one">%1$d Mese</item>
-        <item quantity="other">%1$d Mesi</item>
+        <item quantity="one">%1$d mese</item>
+        <item quantity="many">%1$d mesi</item>
+        <item quantity="other">%1$d mesi</item>
     </plurals>
     <string name="usage_weekly">Settimanale</string>
     <string name="app_usage">Utilizzo app</string>
@@ -180,6 +183,7 @@
     <string name="update">Aggiorna</string>
     <plurals name="no_of_trackers">
         <item quantity="one">%1$d tracker</item>
+        <item quantity="many">%1$d tracker</item>
         <item quantity="other">%1$d tracker</item>
     </plurals>
     <string name="manifest_viewer">Visualizzatore manifesto</string>
@@ -191,8 +195,9 @@
     <string name="failed_to_revoke_permission">Impossibile revocare autorizzazione</string>
     <string name="failed_to_grant_permission">Impossibile concedere autorizzazione</string>
     <plurals name="alert_failed_to_disable_trackers">
-        <item quantity="one">Impossibile disabilitare i tracker dall\'app %1$d</item>
-        <item quantity="other">Impossibile disabilitare i tracker dalle app %1$d</item>
+        <item quantity="one">Impossibile disabilitare i tracker da %1$d app</item>
+        <item quantity="many">Impossibile disabilitare i tracker da %1$d app</item>
+        <item quantity="other">Impossibile disabilitare i tracker da %1$d app</item>
     </plurals>
     <string name="sort_by_permission_names">Nome autorizzazione</string>
     <string name="deny_dangerous_permissions">Nega autorizzazioni pericolose</string>
@@ -214,25 +219,29 @@
     <string name="mode">Modalità</string>
     <string name="permission_name">Nome autorizzazione</string>
     <plurals name="alert_failed_to_force_stop">
-        <item quantity="one">Impossibile forzare arresto dell\'app %1$d</item>
-        <item quantity="other">Impossibile forzare arresto delle app %1$d</item>
+        <item quantity="one">Impossibile forzare arresto di%1$d app</item>
+        <item quantity="many">Impossibile forzare arresto di%1$d app</item>
+        <item quantity="other">Impossibile forzare arresto di%1$d app</item>
     </plurals>
     <string name="the_operation_was_successful">Fatto</string>
     <plurals name="alert_failed_to_disable_background">
-        <item quantity="one">Impossibile impedire l\'esecuzione in background dell\'app %1$d</item>
-        <item quantity="other">Impossibile impedire l\'esecuzione in background delle app %1$d</item>
+        <item quantity="one">Impossibile impedire l\'esecuzione in background di %1$d app</item>
+        <item quantity="many">Impossibile impedire l\'esecuzione in background di %1$d app</item>
+        <item quantity="other">Impossibile impedire l\'esecuzione in background di %1$d app</item>
     </plurals>
     <plurals name="alert_failed_to_uninstall">
-        <item quantity="one">Impossibile disinstallare l\'app %1$d</item>
-        <item quantity="other">Impossibile disinstallare le app %1$d</item>
+        <item quantity="one">Impossibile disinstallare %1$d app</item>
+        <item quantity="many">Impossibile disinstallare %1$d app</item>
+        <item quantity="other">Impossibile disinstallare %1$d app</item>
     </plurals>
     <plurals name="alert_failed_to_disable">
         <item quantity="one">Impossibile disattivare l\'app %1$d</item>
         <item quantity="other">Impossibile disattivare le app %1$d</item>
     </plurals>
     <plurals name="alert_failed_to_clear_data">
-        <item quantity="one">Impossibile cancellare i dati dall\'app %1$d</item>
-        <item quantity="other">Impossibile cancellare i dati dalle app %1$d</item>
+        <item quantity="one">Impossibile cancellare i dati da %1$d app</item>
+        <item quantity="many">Impossibile cancellare i dati da %1$d app</item>
+        <item quantity="other">Impossibile cancellare i dati da %1$d app</item>
     </plurals>
     <string name="export_blocking_rules">Esporta regole di blocco</string>
     <string name="disable_background">Impedisci operazioni in background</string>
@@ -247,8 +256,9 @@
     <string name="store">Negozio</string>
     <string name="apk_updater">Aggiornamento APK</string>
     <plurals name="failed_to_import_files">
-        <item quantity="one">Impossibile importare il file %1$d.</item>
-        <item quantity="other">Impossibile importare i file %1$d.</item>
+        <item quantity="one">Impossibile importare %1$d file.</item>
+        <item quantity="many">Impossibile importare %1$d file.</item>
+        <item quantity="other">Impossibile importare %1$d file.</item>
     </plurals>
     <string name="the_export_was_successful">Esportato</string>
     <string name="the_import_was_successful">Importato</string>
@@ -262,6 +272,7 @@
     <string name="sort_by_last_used">Ultimo utilizzo</string>
     <plurals name="no_of_times_opened">
         <item quantity="one">%1$d volta</item>
+        <item quantity="many">%1$d volte</item>
         <item quantity="other">%1$d volte</item>
     </plurals>
     <string name="external_multiple_data_dir">Directory dati esterni <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
@@ -426,23 +437,28 @@
     <string name="apply_to_system_apps_question">Applico anche alle app di sistema\? Seleziona \"No\" se non sei sicuro.</string>
     <plurals name="missing_signatures">
         <item quantity="one">%1$d firma mancante</item>
+        <item quantity="many">%1$d firme mancanti</item>
         <item quantity="other">%1$d firme mancanti</item>
     </plurals>
     <plurals name="libraries">
         <item quantity="one">%1$d libreria</item>
+        <item quantity="many">%1$d librerie</item>
         <item quantity="other">%1$d librerie</item>
     </plurals>
     <plurals name="classes">
         <item quantity="one">%1$d classe</item>
+        <item quantity="many">%1$d classi</item>
         <item quantity="other">%1$d classi</item>
     </plurals>
     <plurals name="backup_exists_are_you_sure">
         <item quantity="one">Il backup esiste già. Sei sicuro\?</item>
+        <item quantity="many">Più di un\'app ha già un backup. Sei sicuro\?</item>
         <item quantity="other">Più di un\'app ha già un backup. Sei sicuro\?</item>
     </plurals>
     <plurals name="alert_failed_to_delete_backup">
         <item quantity="one">Impossibile eliminare %1$d backup</item>
-        <item quantity="other">Impossibile eliminare %1$d backups</item>
+        <item quantity="many">Impossibile eliminare %1$d backup</item>
+        <item quantity="other">Impossibile eliminare %1$d backup</item>
     </plurals>
     <string name="delete_backup">Elimina backup</string>
     <string name="restore">Ripristino</string>
@@ -465,6 +481,7 @@
 \nCodeberg: https://codeberg.org/muntashir/AppManager</string>
     <plurals name="no_of_components">
         <item quantity="one">%1$d componente</item>
+        <item quantity="many">%1$d componenti</item>
         <item quantity="other">%1$d componenti</item>
     </plurals>
     <string name="changelog">Registro delle modifiche</string>
@@ -475,11 +492,13 @@
     <string name="key_name">Nome chiave</string>
     <plurals name="usage_seconds">
         <item quantity="one">%1$d secondo</item>
+        <item quantity="many">%1$d secondi</item>
         <item quantity="other">%1$d secondi</item>
     </plurals>
     <string name="failed_to_uninstall_app">Disinstallazione non riuscita</string>
     <plurals name="usage_minutes">
         <item quantity="one">%1$d minuto</item>
+        <item quantity="many">%1$d minuti</item>
         <item quantity="other">%1$d minuti</item>
     </plurals>
     <string name="sort_by_blocked_components">Prima i bloccati</string>
@@ -684,6 +703,7 @@
     <string name="confirm_import_keystore">Sei sicuro di voler sostituire il KeyStore esistente\? Questa azione non può essere annullata.</string>
     <plurals name="alert_failed_to_import_backups">
         <item quantity="one">Impossibile importare %1$d backup</item>
+        <item quantity="many">Impossibile importare %1$d backup</item>
         <item quantity="other">Impossibile importare %1$d backup</item>
     </plurals>
     <string name="help_permissions_tab">Queste autorizzazioni sono definite da questa app e non possono essere revocate.</string>
@@ -719,6 +739,7 @@
     <string name="screen_time">Tempo schermo</string>
     <plurals name="pref_thread_count_msg">
         <item quantity="one">Esegui al massimo %1$d operazione in parallelo</item>
+        <item quantity="many">Esegui al massimo %1$d operazioni in parallelo</item>
         <item quantity="other">Esegui al massimo %1$d operazioni in parallelo</item>
     </plurals>
     <string name="community_links">Telegram: https://t.me/AppManagerChannel
@@ -764,23 +785,28 @@
     <string name="data">Dati</string>
     <string name="backup">Backup</string>
     <plurals name="alert_failed_to_set_app_ops">
-        <item quantity="one">Impossibile impostare le operazioni dell\'app per l\'app %1$d</item>
-        <item quantity="other">Impossibile impostare le operazioni dell\'app per le app %1$d</item>
+        <item quantity="one">Impossibile impostare le operazioni dell\'app per %1$d app</item>
+        <item quantity="many">Impossibile impostare le operazioni dell\'app per %1$d app</item>
+        <item quantity="other">Impossibile impostare le operazioni dell\'app per %1$d app</item>
     </plurals>
     <plurals name="alert_failed_to_block_components">
-        <item quantity="one">Impossibile bloccare i componenti per l\'app %1$d</item>
-        <item quantity="other">Impossibile bloccare i componenti per le app %1$d</item>
+        <item quantity="one">Impossibile bloccare i componenti da %1$d app</item>
+        <item quantity="many">Impossibile bloccare i componenti da %1$d app</item>
+        <item quantity="other">Impossibile bloccare i componenti da %1$d app</item>
     </plurals>
     <plurals name="app_signing_signature_schemes_pl">
         <item quantity="one">Schema firma</item>
+        <item quantity="many">Schemi firme</item>
         <item quantity="other">Schemi firme</item>
     </plurals>
     <plurals name="alert_failed_to_enable">
-        <item quantity="one">Impossibile abilitare l\'app %1$d</item>
-        <item quantity="other">Impossibile abilitare le app %1$d</item>
+        <item quantity="one">Impossibile abilitare %1$d app</item>
+        <item quantity="many">Impossibile abilitare %1$d app</item>
+        <item quantity="other">Impossibile abilitare %1$d app</item>
     </plurals>
     <plurals name="verified_with_warning">
         <item quantity="one">Verificato con %d avviso</item>
+        <item quantity="many">Verificato con %d avvisi</item>
         <item quantity="other">Verificato con %d avvisi</item>
     </plurals>
     <string name="apply_to_system_apps">Applica alle app di sistema</string>
@@ -938,19 +964,22 @@
     <string name="input_app_ops">Inserisci operazioni applicazione</string>
     <string name="installer_error_blocked">Installazione bloccata da <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
     <plurals name="alert_failed_to_backup">
-        <item quantity="one">Impossibile eseguire backup dell\'app %1$d</item>
-        <item quantity="other">Impossibile eseguire backup delle app %1$d</item>
+        <item quantity="one">Impossibile eseguire il backup di %1$d app</item>
+        <item quantity="many">Impossibile eseguire il backup di %1$d app</item>
+        <item quantity="other">Impossibile eseguire il backup di %1$d app</item>
     </plurals>
     <string name="backup_options">Opzioni backup</string>
     <string name="base_apk">APK base</string>
     <string name="process_state">Stato: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g></string>
     <plurals name="failed_to_backup_some_apk_files">
-        <item quantity="one">Impossibile eseguire backup dell\'app %1$d</item>
-        <item quantity="other">Impossibile eseguire backup delle app %1$d</item>
+        <item quantity="one">Impossibile eseguire il backup di %1$d app</item>
+        <item quantity="many">Impossibile eseguire il backup di %1$d app</item>
+        <item quantity="other">Impossibile eseguire il backup di %1$d app</item>
     </plurals>
     <plurals name="alert_failed_to_restore">
-        <item quantity="one">Impossibile ripristinare l\'app %1$d</item>
-        <item quantity="other">Impossibile ripristinare le app %1$d</item>
+        <item quantity="one">Impossibile ripristinare %1$d app</item>
+        <item quantity="many">Impossibile ripristinare %1$d app</item>
+        <item quantity="other">Impossibile ripristinare %1$d app</item>
     </plurals>
     <string name="enabled">Abilitato</string>
     <string name="install_location_prefer_external">Preferisci esterni</string>
@@ -981,13 +1010,15 @@
     <string name="enable_disable_features">Abilita o disabilita funzionalità</string>
     <string name="invalid_aes_key_size">Dimensione chiave non valida per la crittografia AES. La dimensione della chiave può essere 128 o 256 bit.</string>
     <plurals name="alert_failed_to_unblock_trackers">
-        <item quantity="one">Impossibile sbloccare i tracker dall\'app %1$d</item>
-        <item quantity="other">Impossibile sbloccare i tracker dalle app %1$d</item>
+        <item quantity="one">Impossibile sbloccare i tracker da %1$d app</item>
+        <item quantity="many">Impossibile sbloccare i tracker da %1$d app</item>
+        <item quantity="other">Impossibile sbloccare i tracker da %1$d app</item>
     </plurals>
     <string name="toggle_kill_for_system_apps">Attiva o disattiva arresto app di sistema</string>
     <string name="add">Aggiungi</string>
     <plurals name="no_of_splits">
         <item quantity="one">%1$d diviso</item>
+        <item quantity="many">%1$d divisi</item>
         <item quantity="other">%1$d divisi</item>
     </plurals>
     <string name="input_app_ops_description_profile">Immetti nomi delle operazioni dell\'app e/o le costanti con spazi, ad es. <tt>WAKE_LOCK 63 72 CAMERA</tt> ecc. Usa <tt>*</tt> per richiedere tutte le operazioni app configurate.</string>
@@ -1118,11 +1149,13 @@
     <string name="item_select">Seleziona</string>
     <plurals name="toast_log_truncated">
         <item quantity="one">Log troppo grande, mostra l\'ultima riga %d.</item>
-        <item quantity="other">Log troppo grande, mostra le ultime righe %d.</item>
+        <item quantity="many">Log troppo grande, mostra le ultime %d righe .</item>
+        <item quantity="other">Log troppo grande, mostra le ultime %d righe .</item>
     </plurals>
     <plurals name="file_deletion_confirmation">
-        <item quantity="one">Il file %d verrà eliminato</item>
-        <item quantity="other">I file %d verranno eliminati</item>
+        <item quantity="one">%d file verrà eliminato</item>
+        <item quantity="many">%d file verranno eliminati</item>
+        <item quantity="other">%d file verranno eliminati</item>
     </plurals>
     <string name="expiry_date_cannot_be_empty">La data di scadenza non può essere vuota.</string>
     <string name="pref_installer_msg">Configura comportamenti del programma di installazione dell\'app.</string>
