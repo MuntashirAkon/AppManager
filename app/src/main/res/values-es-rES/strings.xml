@@ -156,14 +156,17 @@
     <string name="usage_less_than_a_minute">Menos de un minuto</string>
     <plurals name="usage_hours">
         <item quantity="one">%1$d hora</item>
+        <item quantity="many">%1$d horas</item>
         <item quantity="other">%1$d horas</item>
     </plurals>
     <plurals name="usage_days">
         <item quantity="one">%1$d día</item>
+        <item quantity="many">%1$d días</item>
         <item quantity="other">%1$d días</item>
     </plurals>
     <plurals name="usage_months">
         <item quantity="one">%1$d mes</item>
+        <item quantity="many">%1$d meses</item>
         <item quantity="other">%1$d meses</item>
     </plurals>
     <string name="usage_7_days">Últimos 7 días</string>
@@ -174,6 +177,7 @@
     <string name="no_shared_libs">Sin bibliotecas compartidas</string>
     <plurals name="main_list_date_days">
         <item quantity="one"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> día</item>
+        <item quantity="many"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> días</item>
         <item quantity="other"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> días</item>
     </plurals>
     <string name="all_classes">Todas las clases</string>
@@ -181,16 +185,19 @@
     <string name="tracker_details">Detalles del rastreador</string>
     <string name="found_trackers">Rastreadores encontrados:</string>
     <plurals name="other_trackers_and_classes">
-        <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> rastreadores con <xliff:g id="class_no" example="50">%2$d</xliff:g> clases</item>
+        <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> rastreador con <xliff:g id="class_no" example="50">%2$d</xliff:g> clases</item>
+        <item quantity="many"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> rastreadores con <xliff:g id="class_no" example="50">%2$d</xliff:g> clases</item>
         <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> rastreadores con <xliff:g id="class_no" example="50">%2$d</xliff:g> clases</item>
     </plurals>
     <plurals name="two_trackers_and_classes">
         <item quantity="one">2 rastreadores con <xliff:g id="class_no" example="50">%1$d</xliff:g> clases</item>
-        <item quantity="other">2 rastreadores con <xliff:g id="class_no" example="50">%1$d</xliff:g> clases</item>
+        <item quantity="many">Varios rastreadores <xliff:g id="class_no" example="50">%1$d</xliff:g> clases</item>
+        <item quantity="other">Varios rastreadores <xliff:g id="class_no" example="50">%1$d</xliff:g> clases</item>
     </plurals>
     <plurals name="tracker_and_classes">
         <item quantity="one">1 rastreador con <xliff:g id="class_no" example="50">%1$d</xliff:g> clase</item>
-        <item quantity="other">1 rastreador con <xliff:g id="class_no" example="50">%1$d</xliff:g> clases</item>
+        <item quantity="many">Varios rastreadores con <xliff:g id="class_no" example="50">%1$d</xliff:g> clases</item>
+        <item quantity="other">Varios rastreadores con <xliff:g id="class_no" example="50">%1$d</xliff:g> clases</item>
     </plurals>
     <string name="toggle_class_listing">Alternar catalogación de clase</string>
     <string name="class_viewer">Visor de clases</string>
@@ -308,12 +315,14 @@
     <string name="apply_to_system_apps_question">¿Quiere aplicarlo también a las aplicaciones del sistema\? Seleccione «No» si no está seguro.</string>
     <string name="apply_to_system_apps">Aplicar a aplicaciones del sistema</string>
     <plurals name="app_signing_signature_schemes_pl">
-        <item quantity="one">Esquema de firma</item>
-        <item quantity="other">Esquema de firmas</item>
+        <item quantity="one">Sistema de firma</item>
+        <item quantity="many">Sistemas de firmas</item>
+        <item quantity="other">Sistemas de firmas</item>
     </plurals>
     <plurals name="backup_exists_are_you_sure">
         <item quantity="one">La copia de respaldo ya existe. ¿Quiere continuar\?</item>
-        <item quantity="other">Ya existe una copia de respaldo para más de una aplicación. ¿Quiere continuar\?</item>
+        <item quantity="many">Más de una aplicación ya tiene una copia de seguridad. ¿Estás seguro\?</item>
+        <item quantity="other">Más de una aplicación ya tiene una copia de seguridad. ¿Estás seguro\?</item>
     </plurals>
     <string name="backup_options">Opciones de respaldo</string>
     <string name="delete_backup">Eliminar respaldo</string>
@@ -357,6 +366,7 @@
     <string name="install">Instalar</string>
     <plurals name="no_of_trackers">
         <item quantity="one">%1$d rastreador</item>
+        <item quantity="many">%1$d rastreadores</item>
         <item quantity="other">%1$d rastreadores</item>
     </plurals>
     <string name="manifest_viewer">Visor de manifiestos</string>
@@ -372,6 +382,7 @@
     <string name="failed_to_grant_permission">No se pudo conceder el permiso</string>
     <plurals name="alert_failed_to_disable_trackers">
         <item quantity="one">No se pudieron desactivar los rastreadores de %1$d aplicación</item>
+        <item quantity="many">No se han podido desactivar los rastreadores de %1$d aplicaciones</item>
         <item quantity="other">No se pudieron desactivar los rastreadores de %1$d aplicaciones</item>
     </plurals>
     <string name="unknown_op">Operación desconocida</string>
@@ -404,14 +415,16 @@
     <string name="keyboard_type">Tipo de teclado</string>
     <string name="the_operation_was_successful">Hecho</string>
     <plurals name="alert_failed_to_clear_data">
-        <item quantity="one">No se pudo limpiar datos desde %1$d app</item>
-        <item quantity="other">No se pudo limpiar datos desde %1$d apps</item>
+        <item quantity="one">No se ha podido borrar el dato de la aplicación %1$d</item>
+        <item quantity="many">No se han podido borrar los datos de la aplicación %1$d</item>
+        <item quantity="other">No se han podido borrar los datos de la aplicación %1$d</item>
     </plurals>
     <string name="backup_restore">Respaldo/restauración</string>
     <string name="memory_virtual_memory">Memoria: %1$s, memoria virtual: %2$s</string>
     <plurals name="failed_to_import_files">
-        <item quantity="one">No se pudo importar %1$d archivo.</item>
-        <item quantity="other">No se pudo importar %1$d archivos.</item>
+        <item quantity="one">No se ha podido importar el fichero %1$d.</item>
+        <item quantity="many">No se han podido importar los ficheros %1$d.</item>
+        <item quantity="other">No se han podido importar los ficheros %1$d.</item>
     </plurals>
     <string name="sort_by_times_opened">Veces abierto</string>
     <string name="no_app_ops">No hay operaciones de aplicación</string>
@@ -431,39 +444,47 @@
     <string name="density_split_for_feature"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) recursos para la función <xliff:g id="feature_name" example="Visualizer">%3$s</xliff:g></string>
     <string name="split_feature_name">Función: <xliff:g id="feature_name" example="Visualizer">%1$s</xliff:g></string>
     <plurals name="alert_failed_to_block_components">
-        <item quantity="one">No se pudieron bloquear los componentes de %1$d aplicación</item>
-        <item quantity="other">No se pudieron bloquear los componentes de %1$d aplicaciones</item>
+        <item quantity="one">No se han podido bloquear los componentes de la aplicación %1$d</item>
+        <item quantity="many">No se han podido bloquear componentes para %1$d aplicaciones</item>
+        <item quantity="other">No se han podido bloquear componentes para %1$d aplicaciones</item>
     </plurals>
     <plurals name="alert_failed_to_unblock_trackers">
-        <item quantity="one">No se pudieron desbloquear los rastreadores de %1$d aplicación</item>
-        <item quantity="other">No se pudieron desbloquear los rastreadores de %1$d aplicaciones</item>
+        <item quantity="one">No se han podido desbloquear los rastreadores de la aplicación %1$d</item>
+        <item quantity="many">No se han podido desbloquear los rastreadores de %1$d aplicaciones</item>
+        <item quantity="other">No se han podido desbloquear los rastreadores de %1$d aplicaciones</item>
     </plurals>
     <plurals name="alert_failed_to_delete_backup">
-        <item quantity="one">No se pudo eliminar %1$d respaldo</item>
-        <item quantity="other">No se pudieron eliminar %1$d respaldos</item>
+        <item quantity="one">No se ha podido eliminar la copia de seguridad %1$d</item>
+        <item quantity="many">No se han podido eliminar %1$d copias de seguridad</item>
+        <item quantity="other">No se han podido eliminar %1$d copias de seguridad</item>
     </plurals>
     <plurals name="alert_failed_to_restore">
-        <item quantity="one">No se pudo restaurar %1$d aplicación</item>
-        <item quantity="other">No se pudieron restaurar %1$d aplicaciones</item>
+        <item quantity="one">No se ha podido restaurar la aplicación %1$d</item>
+        <item quantity="many">No se han podido restaurar %1$d aplicaciones</item>
+        <item quantity="other">No se han podido restaurar %1$d aplicaciones</item>
     </plurals>
     <plurals name="alert_failed_to_backup">
         <item quantity="one">No se pudo respaldar %1$d aplicación</item>
-        <item quantity="other">No se pudieron respaldar %1$d aplicaciones</item>
+        <item quantity="many">No se ha podido hacer una copia de seguridad de %1$d aplicaciones</item>
+        <item quantity="other">No se ha podido hacer una copia de seguridad de %1$d aplicaciones</item>
     </plurals>
     <plurals name="failed_to_backup_some_apk_files">
-        <item quantity="one">No se pudo respaldar %1$d aplicación</item>
-        <item quantity="other">No se pudieron respaldar %1$d aplicaciones</item>
+        <item quantity="one">No se ha podido hacer una copia de seguridad de la aplicación %1$d</item>
+        <item quantity="many">No se han podido hacer una copias de seguridad de %1$d aplicaciones</item>
+        <item quantity="other">No se han podido hacer una copias de seguridad de %1$d aplicaciones</item>
     </plurals>
     <string name="restore">Restaurar</string>
     <string name="input_app_ops_description">Introducir nombre y/o constantes de la app op con espacios, por ejemplo <tt>WAKE_LOCK 63 72 CAMERA</tt> etc.</string>
     <plurals name="alert_failed_to_disable_background">
         <item quantity="one">No se pudo evitar que la app %1$d se ejecutara en segundo plano</item>
+        <item quantity="many">No se pudo evitar que %1$d aplicaciones se ejecutaran en segundo plano</item>
         <item quantity="other">No se pudo evitar que la apps %1$d se ejecutaran en segundo plano</item>
     </plurals>
     <string name="uses_feature">Objetivos de las funciones</string>
     <plurals name="no_of_splits">
-        <item quantity="one">%1$d parte</item>
-        <item quantity="other">%1$d partes</item>
+        <item quantity="one">%1$d dividido</item>
+        <item quantity="many">%1$d divididos</item>
+        <item quantity="other">%1$d divididos</item>
     </plurals>
     <string name="launch_mode_single_top">Parte superior</string>
     <string name="installer_error_lidl_rom">Su ROM no es compatible con Rootless Installer.</string>
@@ -473,6 +494,7 @@
     <string name="pid_and_ppid">Id. de proceso: %1$d, id. de proceso primario: %2$d</string>
     <plurals name="no_of_times_opened">
         <item quantity="one">%1$d vez</item>
+        <item quantity="many">%1$d veces</item>
         <item quantity="other">%1$d veces</item>
     </plurals>
     <string name="input_permissions_description">Permisos de acceso con espacios, p. ej. <tt>com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION</tt> etc. Usa <tt>*</tt> para solicitar todos los permisos.</string>
@@ -612,39 +634,47 @@
     <string name="installer_error_session_commit">No se pudo confirmar los archivos APK</string>
     <string name="installer_error_session_write">No se pudo escribir en la sesión del instalador</string>
     <plurals name="verified_with_warning">
-        <item quantity="one">Verificado con %d advertencia</item>
-        <item quantity="other">Verificado con %d advertencias</item>
+        <item quantity="one">Verificado con la advertencia de %d</item>
+        <item quantity="many">Verificado con las advertencias de %d</item>
+        <item quantity="other">Verificado con las advertencias de %d</item>
     </plurals>
     <plurals name="missing_signatures">
-        <item quantity="one">%1$d firma faltante</item>
-        <item quantity="other">%1$d firmas faltantes</item>
+        <item quantity="one">Falta la firma %1$d</item>
+        <item quantity="many">Faltan %1$d firmas</item>
+        <item quantity="other">Faltan %1$d firmas</item>
     </plurals>
     <plurals name="libraries">
-        <item quantity="one">%1$d biblioteca</item>
-        <item quantity="other">%1$d bibliotecas</item>
+        <item quantity="one">Biblioteca %1$d</item>
+        <item quantity="many">bibliotecas %1$d</item>
+        <item quantity="other">bibliotecas %1$d</item>
     </plurals>
     <plurals name="classes">
         <item quantity="one">%1$d clase</item>
+        <item quantity="many">%1$d classes</item>
         <item quantity="other">%1$d clases</item>
     </plurals>
     <plurals name="alert_failed_to_enable">
-        <item quantity="one">No se pudo activar %1$d aplicación</item>
-        <item quantity="other">No se pudieron activar %1$d aplicaciones</item>
+        <item quantity="one">No se ha podido activar la aplicación %1$d</item>
+        <item quantity="many">No se han podido activar %1$d aplicaciones</item>
+        <item quantity="other">No se han podido activar %1$d aplicaciones</item>
     </plurals>
     <string name="input_app_ops">Introducir app ops</string>
     <string name="clear_data_from_uninstalled_apps_description">Limpiar datos desde las aplicaciones que son desinstaladas con <tt>DONT_DELETE_DATA</tt> flag</string>
     <string name="ago">hace</string>
     <plurals name="alert_failed_to_force_stop">
         <item quantity="one">No se pudo forzar la detención de %1$d aplicación</item>
+        <item quantity="many">No se pudo forzar la detención de %1$d aplicaciones</item>
         <item quantity="other">No se pudo forzar la detención de %1$d aplicaciones</item>
     </plurals>
     <plurals name="alert_failed_to_uninstall">
-        <item quantity="one">No se pudo desinstalar %1$d app</item>
-        <item quantity="other">No se pudo desinstalar %1$d apps</item>
+        <item quantity="one">No se ha podido desinstalar %1$d app</item>
+        <item quantity="many">No se han podido desinstalar %1$d aplicaciones</item>
+        <item quantity="other">No se han podido desinstalar %1$d aplicaciones</item>
     </plurals>
     <plurals name="alert_failed_to_disable">
         <item quantity="one">No se pudo deshabilitar %1$d app</item>
-        <item quantity="other">No se pudo deshabilitar %1$d apps</item>
+        <item quantity="many">No se han podido desactivar %1$d aplicaciones</item>
+        <item quantity="other">No se han podido desactivar %1$d aplicaciones</item>
     </plurals>
     <string name="store">Tienda</string>
     <string name="apk_updater">Actualizador APK</string>
@@ -792,11 +822,13 @@
     <string name="about_device">Acerca del dispositivo</string>
     <string name="app_signing_signature_schemes">Esquemas de la firma</string>
     <plurals name="alert_failed_to_set_app_ops">
-        <item quantity="one">No se pudieron establecer app ops para %1$d aplicación</item>
-        <item quantity="other">No se pudieron establecer app ops para %1$d aplicaciones</item>
+        <item quantity="one">No se han podido establecer las operaciones de la aplicación %1$d</item>
+        <item quantity="many">No se han podido establecer las operaciones para %1$d aplicaciones</item>
+        <item quantity="other">No se han podido establecer las operaciones para %1$d aplicaciones</item>
     </plurals>
     <plurals name="no_of_components">
         <item quantity="one">%1$d componente</item>
+        <item quantity="many">%1$d componentes</item>
         <item quantity="other">%1$d componentes</item>
     </plurals>
     <string name="installer_app_message">Seleccione <b>Elegir</b> para escoger de entre las aplicaciones instaladas, o bien, <b>Personalizado</b> para especificar un nombre de paquete personalizado.</string>
@@ -863,8 +895,9 @@
 \nregistro</string>
     <string name="widget_recording_in_progress">Grabando…</string>
     <plurals name="toast_log_truncated">
-        <item quantity="one">El registro es demasiado extenso; se muestra el último renglón.</item>
-        <item quantity="other">El registro es demasiado extenso; se muestran los últimos %d renglones.</item>
+        <item quantity="one">Registro demasiado grande, mostrando la última línea %d.</item>
+        <item quantity="many">Registro demasiado grande, mostrando las últimas %d líneas.</item>
+        <item quantity="other">Registro demasiado grande, mostrando las últimas %d líneas.</item>
     </plurals>
     <string name="toast_invalid_selection">La selección no es válida. Inténtelo de nuevo.</string>
     <string name="gz_bz2_compressed">Comprimido con %1$s</string>
@@ -956,6 +989,7 @@
     <string name="copy_to_clipboard">Copiar en el portapapeles</string>
     <plurals name="file_deletion_confirmation">
         <item quantity="one">Se eliminará %d archivo</item>
+        <item quantity="many">Se eliminarán %d archivos</item>
         <item quantity="other">Se eliminarán %d archivos</item>
     </plurals>
     <string name="add_filter_ellipsis">Añadir filtro…</string>
@@ -1020,8 +1054,9 @@
 \nTwitter: https://twitter.com/AppManagerNews</string>
     <string name="community">Comunidad</string>
     <plurals name="alert_failed_to_import_backups">
-        <item quantity="one">No se pudo importar %1$d copia de respaldo</item>
-        <item quantity="other">No se pudieron importar %1$d copias de respaldo</item>
+        <item quantity="one">No se ha podido importar la copia de seguridad %1$d</item>
+        <item quantity="many">No se han podido importar %1$d copias de seguridad</item>
+        <item quantity="other">No se han podido importar %1$d copias de seguridad</item>
     </plurals>
     <string name="import_from_tb">Importar desde Titanium Backup</string>
     <string name="notice_saf">A diferencia de los volúmenes, el directorio escogido se usará para almacenar todos los archivos relacionados con App Manager, incluyendo APKs y respaldos guardados. El framework de acceso al almacenamiento (SAF) es muy lento, por lo cual se recomienda usar esta opción solo cuando otras no puedan ser utilizadas.</string>
@@ -1052,6 +1087,7 @@
     <string name="pid">ID del proceso</string>
     <plurals name="pref_thread_count_msg">
         <item quantity="one">Ejecutar como máximo %1$d operación en paralelo</item>
+        <item quantity="many">Ejecutar como máximo %1$d operaciones en paralelo</item>
         <item quantity="other">Ejecutar como máximo %1$d operaciones en paralelo</item>
     </plurals>
     <string name="pref_thread_count_hint">El valor debe estar entre 0 y %1$d donde 0 significa <i>número máximo de operaciones en un momento dado</i>.</string>
@@ -1098,8 +1134,9 @@
     <string name="pref_disable_description">Deshabilita sólo los componentes. No se recomienda a usuarios root ya que las apps pueden eludir esto. En modo ADB, las aplicaciones de prueba se pueden deshabilitar con este método.</string>
     <string name="intent_firewall">IFW</string>
     <plurals name="usage_seconds">
-        <item quantity="one">%1$d seg</item>
-        <item quantity="other">%1$d segs</item>
+        <item quantity="one">%1$d segundo</item>
+        <item quantity="many">%1$d segundos</item>
+        <item quantity="other">%1$d segundos</item>
     </plurals>
     <string name="toggle_internet">Usar el Internet</string>
     <string name="vt_checking">VirusTotal: Comprobando…</string>
@@ -1135,6 +1172,7 @@
     <string name="failed_to_disable_magisk_deny_list">No se pudo deshabilitar Magisk DenyList</string>
     <plurals name="usage_minutes">
         <item quantity="one">%1$d minuto</item>
+        <item quantity="many">%1$d minutos</item>
         <item quantity="other">%1$d minutos</item>
     </plurals>
     <string name="uses_play_app_signing_description">Está aplicación contiene algunos marcadores que indican que <i>posiblemente</i> usen <a href="https://support.google.com/googleplay/android-developer/answer/9842756">Play App Signing</a>. Con este mecanismo, las claves de inicio son guardadas en los servidores de Google, y Google es el responsable por el inicio de sesión en la app. Tenga en cuenta que emparejar la información de inicio es la única forma de verificar que la app no fue modificada por una persona diferente al desarrollador (y en este caso, también Google).</string>
@@ -1193,7 +1231,7 @@
     <string name="backup_apps_cannot_be_backed_up">Las siguientes aplicaciones no están instaladas y no pueden ser respaldadas:</string>
     <string name="sort_by_total_size">Tamaño total</string>
     <string name="pref_sign_apk_error_signing_key_not_added">Se requiere una clave válida para firmar un archivo APK.</string>
-    <string name="pref_sign_apk_no_signing_key">Sin clave de firma</string>
+    <string name="pref_sign_apk_no_signing_key">No se puede firmar la clave de acceso</string>
     <string name="usage_times_opened">Veces abierto</string>
     <string name="usage_last_used">Último uso</string>
     <string name="usage_mobile_data">Datos móviles</string>
