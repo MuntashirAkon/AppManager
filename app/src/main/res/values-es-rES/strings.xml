@@ -2,8 +2,8 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
     <string name="_lang_tag" translatable="false">es-ES</string>
     <string name="uninstall">Desinstalar</string>
-    <string name="permissions">Requiere autorizaciones</string>
-    <string name="require_no_permission">No requiere autorización</string>
+    <string name="permissions">Usa permisos</string>
+    <string name="require_no_permission">No se requiere permiso</string>
     <string name="activities">Actividades</string>
     <string name="launch">Iniciar</string>
     <string name="refresh">Actualizar</string>
@@ -649,9 +649,9 @@
         <item quantity="other">bibliotecas %1$d</item>
     </plurals>
     <plurals name="classes">
-        <item quantity="one">%1$d clase</item>
-        <item quantity="many">%1$d classes</item>
-        <item quantity="other">%1$d clases</item>
+        <item quantity="one">Clase %1$d</item>
+        <item quantity="many">Clases %1$d</item>
+        <item quantity="other">Clases %1$d</item>
     </plurals>
     <plurals name="alert_failed_to_enable">
         <item quantity="one">No se ha podido activar la aplicación %1$d</item>
@@ -1050,8 +1050,10 @@
     <string name="import_from_oab">Importar desde OAndBackup</string>
     <string name="pref_import_backups_msg">Importe copias de respaldo desde OAndBackup, Swift Backup (3.0–3.2) o Titanium Backup.</string>
     <string name="pref_import_backups">Importar copias de respaldo</string>
-    <string name="community_links">Telegram: https://t.me/AppManagerChannel
-\nTwitter: https://twitter.com/AppManagerNews</string>
+    <string name="community_links">Telegram: 
+\nhttps://t.me/AppManagerChannel
+\nTwitter: 
+\nhttps://twitter.com/AppManagerNews</string>
     <string name="community">Comunidad</string>
     <plurals name="alert_failed_to_import_backups">
         <item quantity="one">No se ha podido importar la copia de seguridad %1$d</item>
@@ -1226,9 +1228,9 @@
     <string name="restore_dots">Restaurar…</string>
     <string name="unsupported_split_apk">Sin soporte</string>
     <string name="pref_pure_black_theme">Tema negro puro</string>
-    <string name="view_changelog">Descubra que hay de nuevo en esta versión</string>
-    <string name="backup_apps_cannot_be_restored">Las siguientes aplicaciones no pueden ser restauradas porque no tienen un respaldo base:</string>
-    <string name="backup_apps_cannot_be_backed_up">Las siguientes aplicaciones no están instaladas y no pueden ser respaldadas:</string>
+    <string name="view_changelog">Descubra las novedades de esta versión</string>
+    <string name="backup_apps_cannot_be_restored">Las siguientes aplicaciones no se pueden restaurar porque no tienen una copia de seguridad:</string>
+    <string name="backup_apps_cannot_be_backed_up">Las siguientes aplicaciones no están instaladas y no se puede realizar una copia de seguridad:</string>
     <string name="sort_by_total_size">Tamaño total</string>
     <string name="pref_sign_apk_error_signing_key_not_added">Se requiere una clave válida para firmar un archivo APK.</string>
     <string name="pref_sign_apk_no_signing_key">No se puede firmar la clave de acceso</string>
@@ -1239,12 +1241,12 @@
     <string name="open_developer_options_page">Abrir opciones de desarrollador en los ajustes de Android</string>
     <string name="pref_pure_black_theme_msg">Usa un fondo completamente negro cuando el modo nocturno está activado.</string>
     <string name="restart_device">Reiniciar dispositivo</string>
-    <string name="import_backups_warning_delete_backups_after_import">¿Desea borrar los respaldos tras importarlos a App Manager\? Cada respaldo será borrado individualmente en caso de ser importado con éxito. Seleccione <b>No</b> si no está seguro.</string>
+    <string name="import_backups_warning_delete_backups_after_import">¿Eliminar las copias de seguridad después de importarlas al Administrador de aplicaciones\? Cada copia de seguridad se elimina individualmente después de importarla con éxito. Seleccione <b>No</b> sino está seguro.</string>
     <string name="troubleshooting">Solución de problemas</string>
     <string name="pref_reload_apps">Recargar aplicaciones</string>
-    <string name="pref_reload_apps_msg">Recarga la lista de aplicaciones almacenadas en la base de datos de App Manager en caso de algún comportamiento extraño.</string>
+    <string name="pref_reload_apps_msg">Vuelva a cargar la lista de aplicaciones almacenadas en la base de datos del Administrador de aplicaciones en caso de comportamiento inesperado.</string>
     <string name="changelog_type_new">Nuevo</string>
     <string name="changelog_type_fix">Corregir</string>
     <string name="changelog_type_improve">Mejorar</string>
-    <string name="am_command">Comando <tt>am</tt></string>
+    <string name="am_command"><tt>comando am</tt></string>
 </resources>
