@@ -35,6 +35,7 @@ import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.ipc.ps.DeviceMemoryInfo;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.scanner.vt.VirusTotal;
@@ -167,9 +168,13 @@ public class RunningAppsViewModel extends AndroidViewModel {
     public void loadProcesses() {
         mExecutor.submit(() -> {
             synchronized (mProcessList) {
-                mProcessList.clear();
-                mProcessList.addAll(new ProcessParser().parse());
-                filterAndSort();
+                try {
+                    mProcessList.clear();
+                    mProcessList.addAll(new ProcessParser().parse());
+                    filterAndSort();
+                } catch (Throwable th) {
+                    Log.e("RunningApps", th);
+                }
             }
         });
     }
