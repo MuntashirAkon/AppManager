@@ -34,6 +34,8 @@ import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.ipc.ps.DeviceMemoryInfo;
+import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.scanner.vt.VirusTotal;
 import io.github.muntashirakon.AppManager.scanner.vt.VtFileReport;
@@ -56,8 +58,8 @@ public class RunningAppsViewModel extends AndroidViewModel {
 
     public RunningAppsViewModel(@NonNull Application application) {
         super(application);
-        mSortOrder = (int) AppPref.get(AppPref.PrefKey.PREF_RUNNING_APPS_SORT_ORDER_INT);
-        mFilter = (int) AppPref.get(AppPref.PrefKey.PREF_RUNNING_APPS_FILTER_FLAGS_INT);
+        mSortOrder = AppPref.getInt(AppPref.PrefKey.PREF_RUNNING_APPS_SORT_ORDER_INT);
+        mFilter = AppPref.getInt(AppPref.PrefKey.PREF_RUNNING_APPS_FILTER_FLAGS_INT);
         mVt = VirusTotal.getInstance();
     }
 
@@ -167,9 +169,13 @@ public class RunningAppsViewModel extends AndroidViewModel {
     public void loadProcesses() {
         mExecutor.submit(() -> {
             synchronized (mProcessList) {
-                mProcessList.clear();
-                mProcessList.addAll(new ProcessParser().parse());
-                filterAndSort();
+                try {
+                    mProcessList.clear();
+                    mProcessList.addAll(new ProcessParser().parse());
+                    filterAndSort();
+                } catch (Throwable th) {
+                    Log.e("RunningApps", th);
+                }
             }
         });
     }
