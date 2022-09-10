@@ -1033,4 +1033,6 @@
     <string name="pref_show_users_in_installer_msg">Vis liste over brukere du kan velge før installasjon av ekstern app. Krever root eller ADB.</string>
     <string name="input_permissions">Inndata tillatelser</string>
     <string name="installer">Installer</string>
+    <string name="matching_activities">Samsvarende aktiviteter</string>
+    <string name="extras">Ekstra</string>
 </resources>
