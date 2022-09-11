@@ -7,13 +7,13 @@
     </style>
 
     <style name="AppTheme.Black" parent="AppTheme">
-        <item name="android:colorBackground">#000</item>
-        <item name="colorSurface">#000</item>
+        <item name="colorSurface">@android:color/black</item>
+        <item name="android:windowBackground">@android:drawable/screen_background_dark</item>
         <item name="materialFullScreenAlertDialogTheme">@style/AppTheme.Black</item>
     </style>
 
     <style name="AppTheme.TransparentBackground.Black" parent="AppTheme.TransparentBackground">
-        <item name="colorSurface">#000</item>
+        <item name="colorSurface">@android:color/black</item>
         <item name="materialFullScreenAlertDialogTheme">@style/AppTheme.Black</item>
     </style>
 </resources>

@@ -9,6 +9,8 @@
     <style name="AppTheme" parent="AppThemeOverlay">
         <item name="navigationIcon">@drawable/ic_keyboard_backspace</item>
 
+        <item name="android:colorBackground">?colorSurface</item>
+
         <item name="materialFullScreenAlertDialogTheme">@style/AppTheme</item>
         <item name="bottomSheetDialogTheme">@style/AppTheme.BottomSheetDialog</item>
         <item name="checkboxStyle">@style/Widget.AppTheme.CompoundButton.CheckBox</item>

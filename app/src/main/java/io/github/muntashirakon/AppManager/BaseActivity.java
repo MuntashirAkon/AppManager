@@ -58,8 +58,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected final void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         AppearanceUtils.applyToActivity(this, getTransparentBackground());
+        super.onCreate(savedInstanceState);
         if (Ops.isAuthenticated()) {
             Log.d(TAG, "Already authenticated.");
             onAuthenticated(savedInstanceState);
