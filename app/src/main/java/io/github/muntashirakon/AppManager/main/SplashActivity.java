@@ -19,6 +19,8 @@ import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.core.splashscreen.SplashScreen;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.color.DynamicColors;
+
 import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
@@ -60,6 +62,7 @@ public class SplashActivity extends AppCompatActivity {
         setTheme(AppPref.isPureBlackTheme() ? R.style.AppTheme_Splash_Black : R.style.AppTheme_Splash);
         super.onCreate(savedInstanceState);
         SplashScreen.installSplashScreen(this);
+        DynamicColors.applyToActivityIfAvailable(this);
         setContentView(R.layout.activity_authentication);
         ((TextView) findViewById(R.id.version)).setText(String.format(Locale.ROOT, "%s (%d)",
                 BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
