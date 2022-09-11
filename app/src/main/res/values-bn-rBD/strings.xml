@@ -13,9 +13,9 @@
     <string name="declared_permission">অনুমতি</string>
     <string name="group">গ্রুপ</string>
     <string name="no_feature">কোনো ফিচার্স নেই</string>
-    <string name="error">Error</string>
+    <string name="error">ত্রুটি</string>
     <string name="loading">লোড হচ্ছে…</string>
-    <string name="sort_by_app_label">App label</string>
+    <string name="sort_by_app_label">আ্যপ লেবেল</string>
     <string name="sort_by_package_name">প্যাকেজের নাম</string>
     <string name="sort_by_domain">প্রথমে ব্যবহারকারীর এপ</string>
     <string name="data_received">প্রাপ্ত ডাটা</string>
@@ -23,7 +23,7 @@
     <string name="data_usage_msg">সর্বশেষ বুট থেকে ডাটা ইউসেজ</string>
     <string name="data_size">ডাটা</string>
     <string name="cache_size">ক্যাশ</string>
-    <string name="obb_size">ওবিবি</string>
+    <string name="obb_size">ওব</string>
     <string name="media_size">মিডিয়া</string>
     <string name="app_not_installed">অ্যাপটি ইনস্টল হয়নি</string>
     <string name="system">সিস্টেম</string>
@@ -324,10 +324,10 @@
     <string name="touchscreen">টাচস্ক্রিন</string>
     <string name="keyboard_type">কীবোর্ডের ধরন</string>
     <string name="import_failed">ইম্পোর্ট করতে ব্যর্থ!</string>
-    <string name="shared_libs">শেয়ার্ড libs</string>
-    <string name="configurations">কনফিগারেশন</string>
-    <string name="read">রিড</string>
-    <string name="task_affinity">টাস্ক অ্যাফিনিটি</string>
+    <string name="shared_libs">শেয়ার্ড লাইব্রেরি সমূহ</string>
+    <string name="configurations">সাজানোর পদ্ধতি</string>
+    <string name="read">পড়ুন</string>
+    <string name="task_affinity">কার্য সখ্যতা</string>
     <string name="launch_mode">লঞ্চ মোড</string>
     <string name="uses_feature">ব্যবহৃত ফিচার্স</string>
     <string name="paths_and_directories">পাথ এবং ডিরেক্টরি</string>
@@ -371,9 +371,9 @@
     <string name="error_creating_shortcut">শর্টকাট তৈরি করতে ব্যর্থ</string>
     <string name="app_signing_no_signatures">কোন স্বাক্ষর নেই</string>
     <string name="signatures">স্বাক্ষর</string>
-    <string name="write">রাইট</string>
+    <string name="write">লিখুন</string>
     <string name="path_permissions">পথের অনুমতিসমূহ</string>
-    <string name="orientation">ওরিয়েন্টেশন</string>
+    <string name="orientation">দিক</string>
     <string name="shared_prefs">শেয়ারকৃত প্রিফেস</string>
     <string name="debuggable">ডিবাগযোগ্য</string>
     <string name="requested_large_heap">বড় স্তূপ</string>
@@ -428,5 +428,5 @@
     <string name="pref_compression_method">সংকোচন পদ্ধতি</string>
     <string name="rules">বিধি গুলো</string>
     <string name="size">আকার</string>
-    <string name="app_signing_signatures">সাক্ষর</string>
+    <string name="app_signing_signatures">স্বাক্ষর</string>
 </resources>
