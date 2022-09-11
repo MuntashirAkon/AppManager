@@ -12,12 +12,10 @@
     <string name="intro$main$$submit-patches-title">Envío de parches</string>
     <string name="intro$main$$donation-title">Donación y Financiamiento</string>
     <string name="intro$main$$contact-title">Contacto</string>
-    <string name="intro$main$supported-versions">"Actualmente, las versiones soportadas son v2.6.0 (estable), v3.0.0 (versiones alfa y de depuración).  Versiones anteriores de App
-\nManager puede contener vulnerabilidades de seguridad y no debe utilizarse."</string>
+    <string name="intro$main$supported-versions">Actualmente, las versiones soportadas son v2.6.0 (estable), v3.0.0 (versiones beta y de depuración). Versiones anteriores de App Manager puede contener vulnerabilidades de seguridad y no debe utilizarse.</string>
     <string name="intro$main$source-code-links">"Todos menos GitHub son los enlaces espejo.  Las etiquetas siempre deben estar actualizadas, pero no se garantiza que la rama principal lo esté.  
 \nSi el objetivo es clonar la rama maestra, use el enlace de GitHub en lugar de los demás."</string>
-    <string name="intro$main$translations">"App Manager no acepta traducciones directamente a través de solicitudes pull/merge.  Las traducciones se gestionan automáticamente a través de
-\n Weblate.  Para unirse al equipo de traducción, visite \\url{https://hosted.weblate.org/engage/app-manager/}."</string>
+    <string name="intro$main$translations">App Manager no acepta traducciones directamente a través de pull/merge requests. Las traducciones se gestionan automáticamente a través de Weblate. Para unirse al equipo de traducción, visite \\url{https://hosted.weblate.org/engage/app-manager/}.</string>
     <string name="intro$main$buiding">Las instrucciones de compilación están disponibles en el archivo BUILDING ubicado en el directorio raíz de la fuente.</string>
     <string name="pages$main-page$$section-title">Página principal</string>
     <string name="pages$main-page$$batch-operations-title">Operaciones por lotes</string>
@@ -99,7 +97,7 @@
     <string name="pages$settings-page$show-users-in-installer">Para usuarios raíz/ADB, se mostrará una lista de usuarios antes de instalar la aplicación.
 \n La aplicación se instalará solo para el usuario especificado (o para todos los usuarios si se selecciona).</string>
     <string name="pages$settings-page$backup-restore">Configuración relacionada con \\hyperref[sec:backup-restore]{back up/restore}.</string>
-    <string name="pages$settings-page$backup-options">Personalice el cuadro de diálogo de copia de seguridad/restauración.</string>
+    <string name="pages$settings-page$backup-options">Personalice el \\textit{back up/restore dialog} que se muestra al realizar una copia de seguridad. \\seealsoinline{\\hyperref[subsec:backup-restore-backup-options]{Backup options}}</string>
     <string name="pages$scanner-page$$section-title">Página del escáner</string>
     <string name="pages$scanner-page$$missing-signatures-title">Firmas faltantes</string>
     <string name="pages$interceptor-page$$categories-title">Categorías</string>
@@ -130,9 +128,10 @@
 \n usuario para ayudar a sus usuarios.  Este documento actúa como un manual de usuario para App Manager en el sentido de que pretende describir
 \n todas las características que App Manager tiene para ofrecer.  Este documento también puede considerarse como las directrices \"oficiales\" para App Manager y representa el comportamiento esperado de App Manager.  Las traducciones pueden malinterpretar el contenido de este documento (que está
 \nescrito en inglés).  Por lo tanto, todo usuario capacitado debe leer la versión en inglés del documento para sacar el máximo provecho del App Manager.  También podría haber otros recursos no oficiales o de terceros, como artículos de blog, videos, chat, 
+\n
 \ngrupos, etc. Si bien estos recursos pueden ser útiles para muchas personas, es posible que no estén actualizados con la versión actual.
 \n de App Manager.  Si se detectan desviaciones en App Manager de este documento, deben informarse en el
-\n \\href{https://github.com/MuntashirAkon/AppManager/issues}{Rastreador de problemas de App Manager}."</string>
+\n \\href{https://github.com/MuntashirAkon/AppManager/issues}{App Manager issue tracker}."</string>
     <string name="intro$main$contributing">Hay varias formas en que un usuario puede contribuir, como crear problemas útiles, asistir a debates, mejorar documentaciones y traducciones, agregar bibliotecas o rastreadores no reconocidos, revisar el código fuente y reportar vulnerabilidades de seguridad.</string>
     <string name="pages$main-page$$how-app-ops-work-title">Un elemento de la lista de aplicaciones en la página principal</string>
     <string name="pages$main-page$$termux-title">Termux</string>
@@ -180,19 +179,18 @@
     <string name="pages$profiles-page$$options-menu-title">Opciones de menú</string>
     <string name="pages$profile-page$$options-menu-title">Opciones de menú</string>
     <string name="pages$profile-page$$users-title">Usuarios</string>
-    <string name="pages$profile-page$configurations-tab">"La pestaña Configuraciones se puede utilizar para configurar los paquetes seleccionados.  La descripción de cada artículo se da a continuación:"</string>
+    <string name="pages$profile-page$configurations-tab">La pestaña Configuraciones se puede utilizar para configurar los paquetes seleccionados.</string>
     <string name="pages$profile-page$$section-title">Página de perfil</string>
     <string name="pages$profile-page$$state-title">Estado</string>
     <string name="pages$settings-page$$backup-apps-with-keystore-title">Aplicaciones de copia de seguridad con Android KeyStore</string>
-    <string name="pages$settings-page$screen-lock">Bloquee el Administrador de aplicaciones usando el bloqueo de pantalla de Android, siempre que se haya configurado un bloqueo de pantalla.</string>
+    <string name="pages$settings-page$screen-lock">Bloquee el Administrador de aplicaciones usando el bloqueo de pantalla de Android, siempre que se haya configurado un bloqueo de pantalla. \\begin{advertencia}{Advertencia} Si el bloqueo de pantalla está deshabilitado en Android después de habilitar esta configuración, el Administrador de aplicaciones no se abrirá hasta que se vuelva a habilitar. \\end{advertencia}</string>
     <string name="pages$settings-page$$signature-schemes-title">Esquemas de firma</string>
     <string name="pages$settings-page$$show-users-in-installer-title">Mostrar usuarios en el instalador</string>
     <string name="pages$settings-page$$compression-method-title">Método de compresión</string>
     <string name="pages$settings-page$$backup-options-title">Opciones de copia de seguridad</string>
     <string name="pages$settings-page$$instant-component-blocking-title">Bloqueo instantáneo de componentes</string>
     <string name="pages$settings-page$intro">La configuración se puede utilizar para personalizar el comportamiento de la aplicación.</string>
-    <string name="pages$settings-page$installer-app">Seleccione la aplicación de instalación, útil para algunas aplicaciones que verifican explícitamente su instalador.
-\n Esto solo funciona para usuarios root/ADB.</string>
+    <string name="pages$settings-page$installer-app">Seleccione la aplicación de instalación, útil para aplicaciones que verifican explícitamente el instalador como una forma de verificar si la aplicación se instaló legítimamente. Esto solo funciona para usuarios root o ADB. \\begin{tip}{Aviso} Si bien la verificación del instalador puede parecer una preocupación legítima para una aplicación, el marco de trabajo de Android ya se ocupa de esto durante la instalación. Verificar el instalador es simplemente la forma incorrecta de probar la legitimidad de la fuente de una aplicación. \\end{tip}</string>
     <string name="pages$settings-page$compression-method">Establezca qué método de compresión se utilizará durante las copias de seguridad.
 \n App Manager admite los métodos de compresión GZip y BZip2, siendo GZip el método de compresión predeterminado.
 \n No afecta la restauración de una copia de seguridad existente.</string>
@@ -228,4 +226,6 @@
     <string name="guide$aot$aot-lineage-os">"Los usuarios de Lineage OS (o sus derivados) pueden habilitar directamente ADB sobre TCP usando las opciones de desarrollador.  Para habilitar eso,
 \n vaya a \\textbf{Developer options}, desplácese hacia abajo hasta que encuentre \\textbf{ADB over Network}.  Ahora, use el botón de alternar
 \n en el lado derecho para habilitarlo y vaya a §\\cref{subsubsec:adb-mode-on-app-manager}."</string>
+    <string name="appendices$changelogs$$chapter-title">Registros de cambios</string>
+    <string name="keywords$chapter">\\newcommand{\\KeywordChapter}{Chapter}</string>
 </resources>
