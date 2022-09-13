@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="intro$main$$introduction-chapter-title">Giới thiệu</string>
+    <string name="titlepage$user_manual">{\\huge\\bfseries Hướng dẫn sử dụng cho người dùng\\par}</string>
+    <string name="keywords$see_also">\\newcommand{\\KeywordSeeAlso}{Bạn cũng có thể xem:}</string>
+    <string name="keywords$end_of_keyword_in_alert">\\newcommand{\\KeywordEndOfKeyWordInAlert}{.}</string>
+    <string name="keywords$chapter">\\newcommand{\\KeywordChapter}{Chương}</string>
+    <string name="titlepage$quotation">\\begin{quotation}
+\n ``Khôn ngoan và chậm rãi. Những người chạy nhanh sẽ bị vấp.\'\'
+\n %\\sourceatright
+\n {--- Friar Laurence, \\textit{Romeo và Juliet}}
+\n \\end{quotation}</string>
 </resources>
