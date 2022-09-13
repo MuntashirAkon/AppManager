@@ -10,4 +10,24 @@
 \n %\\sourceatright
 \n {--- Friar Laurence, \\textit{Romeo và Juliet}}
 \n \\end{quotation}</string>
+    <string name="intro$main$$submit-patches-title">Gửi bản vá</string>
+    <string name="intro$main$$donation-title">Ủng hộ \\&amp; Tài chính</string>
+    <string name="intro$main$$contact-title">Liên hệ</string>
+    <string name="intro$main$intro">App Manager là ứng dụng quản lý các ứng dụng khác dành cho Android. Nó có vô số các tính năng, và do đó cần hướng dẫn
+\nsử dụng để hỗ trợ người dùng. Tài liệu này đóng vai trò là hướng dẫn sử dụng cho App Manager theo nghĩa là nó miêu tả
+\nmọi tính năng mà App Manager có. Tài liệu này cũng có thể được coi là ``hướng dẫn\'\' chính thức cho
+\nApp Manager, và đại diện cho hành vi thông thường của App Manager. Các bản dịch có thể làm lệch ý của tài liệu (được viết bằng
+\ntiếng Anh) này. Do đó, những người dùng có hiểu biết nên đọc bản tiếng Anh của tài liệu để tận dụng tối đa
+\ncông năng của App Manager. Ngoài ra có thể có các tài nguyên không chính thức khác như bài viết blog, video, nhóm
+\nchat, v.v. Các tài nguyên đó có thể giúp ích được nhiều người, nhưng chúng có khả năng là cũ hơn phiên bản
+\nhiện tại của App Manager. Nếu App Manager có hoạt động sai lệch so với tài liệu này, thì bạn nên báo cáo ở 
+\n\\href{https://github.com/MuntashirAkon/AppManager/issues}{nơi theo dõi vấn đề của App Manager}.</string>
+    <string name="intro$main$$terminologies-title">Thuật ngữ</string>
+    <string name="intro$main$$supported-versions-title">Phiên bản được hỗ trợ</string>
+    <string name="intro$main$$official-sources-title">Nguồn chính thức</string>
+    <string name="intro$main$$bin-sources-title">Nguồn phân phối tệp nhị phân</string>
+    <string name="intro$main$$source-code-links-title">Liên kết đến mã nguồn</string>
+    <string name="intro$main$$translations-title">Bản dịch</string>
+    <string name="intro$main$$contributing-title">Đóng góp</string>
+    <string name="intro$main$$buiding-title">Hướng dẫn xây dựng</string>
 </resources>
