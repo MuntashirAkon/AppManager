@@ -1151,4 +1151,9 @@
     <string name="usage_mobile_data">data seluler</string>
     <string name="usage_wifi_data">data Wi-Fi</string>
     <string name="app_explorer">Penjelajah Aplikasi</string>
+    <string name="unsupported_split_apk">Tidak didukung</string>
+    <string name="view_changelog">Cari tahu apa yang baru dalam rilis ini</string>
+    <string name="changelog_type_new">Baru</string>
+    <string name="pref_reload_apps">Muat ulang aplikasi</string>
+    <string name="pref_reload_apps_msg">Muat ulang daftar aplikasi yang disimpan di database Manajer Aplikasi jika terjadi perilaku tak terduga.</string>
 </resources>
