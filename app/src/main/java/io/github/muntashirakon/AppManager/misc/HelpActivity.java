@@ -4,7 +4,6 @@ package io.github.muntashirakon.AppManager.misc;
 
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.KeyEvent;
@@ -12,7 +11,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebResourceRequest;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.Button;
 
@@ -23,9 +21,7 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.SearchView;
 import androidx.transition.Transition;
 import androidx.transition.TransitionManager;
-import androidx.webkit.WebSettingsCompat;
 import androidx.webkit.WebViewClientCompat;
-import androidx.webkit.WebViewFeature;
 
 import com.google.android.material.transition.MaterialSharedAxis;
 
@@ -71,16 +67,6 @@ public class HelpActivity extends BaseActivity {
 
         webView.setWebViewClient(new WebViewClientImpl());
         webView.setNetworkAvailable(false);
-        WebSettings webSettings = webView.getSettings();
-        int nightModeFlags = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-        if (nightModeFlags == Configuration.UI_MODE_NIGHT_YES) {
-            if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK)) {
-                WebSettingsCompat.setForceDark(webSettings, WebSettingsCompat.FORCE_DARK_ON);
-            }
-            if (WebViewFeature.isFeatureSupported(WebViewFeature.FORCE_DARK_STRATEGY)) {
-                WebSettingsCompat.setForceDarkStrategy(webSettings, WebSettingsCompat.DARK_STRATEGY_WEB_THEME_DARKENING_ONLY);
-            }
-        }
         webView.loadUrl("file:///android_res/raw/index.html");
 
         searchContainer = findViewById(R.id.search_container);
