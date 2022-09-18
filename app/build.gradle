@@ -108,10 +108,10 @@ dependencies {
     // AppCompat 1.5.0 still includes the buggy implementation of documentfile library (1.0.0)
     implementation "androidx.documentfile:documentfile:1.0.1"
     implementation "androidx.core:core-splashscreen:${splashscreen_version}"
-    implementation 'androidx.webkit:webkit:1.4.0'
+    implementation 'androidx.webkit:webkit:1.5.0'
     implementation "androidx.room:room-runtime:${room_version}"
     annotationProcessor "androidx.room:room-compiler:${room_version}"
-    implementation 'com.google.code.gson:gson:2.9.0'
+    implementation 'com.google.code.gson:gson:2.9.1'
 
     implementation "com.github.topjohnwu.libsu:core:${libsu_version}"
 
