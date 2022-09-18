@@ -20,13 +20,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.utils.ResourceUtil;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
 
 // Copyright 2017 Adam M. Szalkowski
@@ -78,7 +78,7 @@ public class EditShortcutDialogFragment extends DialogFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                mShortcutIconSelectionBtn.setImageDrawable(getIcon(s.toString()));
+                mShortcutIconSelectionBtn.setImageDrawable(getDrawable(s.toString()));
             }
         });
 
@@ -107,19 +107,9 @@ public class EditShortcutDialogFragment extends DialogFragment {
 
                     Drawable icon = null;
                     try {
-                        final String iconResourceString = mShortcutIconField.getText().toString();
-                        final String pack = iconResourceString.substring(0, iconResourceString.indexOf(':'));
-                        final String type = iconResourceString.substring(iconResourceString.indexOf(':') + 1, iconResourceString.indexOf('/'));
-                        final String name = iconResourceString.substring(iconResourceString.indexOf('/') + 1);
-
-                        Resources resources = mPackageManager.getResourcesForApplication(pack);
-                        int iconResource = resources.getIdentifier(name, type, pack);
-                        if (iconResource != 0) {
-                            icon = ResourcesCompat.getDrawable(resources, iconResource, activity.getTheme());
-                        } else {
-                            Toast.makeText(activity, R.string.error_invalid_icon_resource, Toast.LENGTH_LONG).show();
-                        }
-                    } catch (PackageManager.NameNotFoundException e) {
+                        String iconResourceString = mShortcutIconField.getText().toString();
+                        icon = ResourceUtil.getResourceFromName(mPackageManager, iconResourceString).getDrawable(activity.getTheme());
+                    } catch (PackageManager.NameNotFoundException | Resources.NotFoundException e) {
                         Toast.makeText(activity, R.string.error_invalid_icon_resource, Toast.LENGTH_LONG).show();
                     } catch (Exception e) {
                         Toast.makeText(getActivity(), R.string.error_invalid_icon_format, Toast.LENGTH_LONG).show();
@@ -134,17 +124,12 @@ public class EditShortcutDialogFragment extends DialogFragment {
                 }).create();
     }
 
-    private Drawable getIcon(String icon_resource_string) {
+    @NonNull
+    public Drawable getDrawable(@NonNull String iconResString) {
         try {
-            String pack = icon_resource_string.substring(0, icon_resource_string.indexOf(':'));
-            String type = icon_resource_string.substring(icon_resource_string.indexOf(':') + 1, icon_resource_string.indexOf('/'));
-            String name = icon_resource_string.substring(icon_resource_string.indexOf('/') + 1);
-            Resources res = mPackageManager.getResourcesForApplication(pack);
-            return ResourcesCompat.getDrawable(res, res.getIdentifier(name, type, pack),
-                    getActivity() == null ? null : getActivity().getTheme());
-        } catch (Exception e) {
+            return ResourceUtil.getResourceFromName(mPackageManager, iconResString).getDrawable(requireActivity().getTheme());
+        } catch (PackageManager.NameNotFoundException ignore) {
             return mPackageManager.getDefaultActivityIcon();
         }
-
     }
 }

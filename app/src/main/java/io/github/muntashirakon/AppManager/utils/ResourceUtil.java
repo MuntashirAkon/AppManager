@@ -5,10 +5,64 @@ package io.github.muntashirakon.AppManager.utils;
 import android.content.ComponentName;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 
 public final class ResourceUtil {
+    public static class ParsedResource {
+        private final String mPackageName;
+        private final Resources mRes;
+        private final int mResId;
+
+        private ParsedResource(@NonNull String packageName, @NonNull Resources res, int resId) {
+            mPackageName = packageName;
+            mRes = res;
+            mResId = resId;
+        }
+
+        public String getPackageName() {
+            return mPackageName;
+        }
+
+        /**
+         * @see ResourcesCompat#getDrawable(Resources, int, Resources.Theme)
+         */
+        public Drawable getDrawable() {
+            return getDrawable(null);
+        }
+
+        /**
+         * @see ResourcesCompat#getDrawable(Resources, int, Resources.Theme)
+         */
+        public Drawable getDrawable(@Nullable Resources.Theme theme) {
+            return ResourcesCompat.getDrawable(mRes, mResId, theme);
+        }
+    }
+
+    /**
+     * Parse a resource name having the following format:
+     * <p>
+     * <code>
+     * package-name:type/res-name
+     * </code>
+     */
+    @NonNull
+    public static ParsedResource getResourceFromName(@NonNull PackageManager pm, @NonNull String resName)
+            throws PackageManager.NameNotFoundException, Resources.NotFoundException {
+        String packageName = resName.substring(0, resName.indexOf(':'));
+        String type = resName.substring(resName.indexOf(':') + 1, resName.indexOf('/'));
+        String name = resName.substring(resName.indexOf('/') + 1);
+        Resources res = pm.getResourcesForApplication(packageName);
+        int resId = res.getIdentifier(name, type, packageName);
+        if (resId == 0) {
+            throw new Resources.NotFoundException("Resource " + name + " of type " + type + " is not found in package " + packageName);
+        }
+        return new ParsedResource(packageName, res, resId);
+    }
+
     public String packageName;
     public String className;
     public Resources resources;
