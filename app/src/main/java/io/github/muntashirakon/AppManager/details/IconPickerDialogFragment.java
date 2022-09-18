@@ -2,17 +2,14 @@
 
 package io.github.muntashirakon.AppManager.details;
 
-import android.annotation.SuppressLint;
 import android.app.Application;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageItemInfo;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -21,8 +18,8 @@ import android.widget.GridView;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.AndroidViewModel;
@@ -40,38 +37,38 @@ import java.util.concurrent.Executors;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
+import io.github.muntashirakon.AppManager.utils.ResourceUtil;
 
 // Copyright 2017 Adam M. Szalkowski
 public class IconPickerDialogFragment extends DialogFragment {
     public static final String TAG = "IconPickerDialogFragment";
 
-    private IconPickerListener listener = null;
+    private IconPickerListener listener;
     private IconListingAdapter adapter;
+    private IconPickerViewModel model;
     private final ExecutorService executor = Executors.newFixedThreadPool(5);
     private final ImageLoader imageLoader = new ImageLoader(executor);
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        adapter = new IconListingAdapter(requireActivity());
-        IconPickerViewModel model = new ViewModelProvider(this).get(IconPickerViewModel.class);
-        model.resolveIcons(executor).observe(this, icons -> {
-            adapter.icons = icons;
-            adapter.notifyDataSetChanged();
-        });
-    }
 
     public void attachIconPickerListener(IconPickerListener listener) {
         this.listener = listener;
     }
 
-    @SuppressLint("InflateParams")
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        model = new ViewModelProvider(this).get(IconPickerViewModel.class);
+        model.getIconsLiveData().observe(this, icons -> {
+            if (adapter == null) return;
+            adapter.icons = icons;
+            adapter.notifyDataSetChanged();
+        });
+    }
+
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        LayoutInflater inflater = LayoutInflater.from(requireActivity());
-        if (inflater == null) return super.onCreateDialog(savedInstanceState);
-        GridView grid = (GridView) inflater.inflate(R.layout.dialog_icon_picker, null);
+        adapter = new IconListingAdapter(requireActivity());
+        GridView grid = (GridView) View.inflate(requireActivity(), R.layout.dialog_icon_picker, null);
         grid.setAdapter(adapter);
         grid.setOnItemClickListener((view, item, index, id) -> {
             if (listener != null) {
@@ -79,12 +76,11 @@ public class IconPickerDialogFragment extends DialogFragment {
                 if (getDialog() != null) getDialog().dismiss();
             }
         });
+        model.resolveIcons(executor);
         return new MaterialAlertDialogBuilder(requireActivity())
                 .setTitle(R.string.icon_picker)
                 .setView(grid)
-                .setNegativeButton(R.string.cancel, (dialog, which) -> {
-                    if (getDialog() != null) getDialog().cancel();
-                }).create();
+                .setNegativeButton(R.string.cancel, null).create();
     }
 
     @Override
@@ -140,14 +136,18 @@ public class IconPickerDialogFragment extends DialogFragment {
 
     public static class IconPickerViewModel extends AndroidViewModel {
         private final PackageManager pm;
+        private final MutableLiveData<IconItemInfo[]> iconsLiveData = new MutableLiveData<>();
 
         public IconPickerViewModel(@NonNull Application application) {
             super(application);
             pm = application.getPackageManager();
         }
 
-        public LiveData<IconItemInfo[]> resolveIcons(ExecutorService executor) {
-            MutableLiveData<IconItemInfo[]> iconLiveData = new MutableLiveData<>();
+        public LiveData<IconItemInfo[]> getIconsLiveData() {
+            return iconsLiveData;
+        }
+
+        public void resolveIcons(@NonNull ExecutorService executor) {
             executor.submit(() -> {
                 TreeSet<IconItemInfo> icons = new TreeSet<>();
                 List<PackageInfo> installedPackages = pm.getInstalledPackages(0);
@@ -160,9 +160,8 @@ public class IconPickerDialogFragment extends DialogFragment {
                     } catch (PackageManager.NameNotFoundException | RuntimeException ignored) {
                     }
                 }
-                iconLiveData.postValue(icons.toArray(new IconItemInfo[0]));
+                iconsLiveData.postValue(icons.toArray(new IconItemInfo[0]));
             });
-            return iconLiveData;
         }
     }
 
@@ -176,14 +175,9 @@ public class IconPickerDialogFragment extends DialogFragment {
         }
 
         @Override
-        public Drawable loadIcon(PackageManager pm) {
+        public Drawable loadIcon(@NonNull PackageManager pm) {
             try {
-                String pack = iconResourceString.substring(0, iconResourceString.indexOf(':'));
-                String type = iconResourceString.substring(iconResourceString.indexOf(':') + 1,
-                        iconResourceString.indexOf('/'));
-                String name = iconResourceString.substring(iconResourceString.indexOf('/') + 1);
-                Resources res = pm.getResourcesForApplication(pack);
-                return ResourcesCompat.getDrawable(res, res.getIdentifier(name, type, pack), context.getTheme());
+                return ResourceUtil.getResourceFromName(pm, iconResourceString).getDrawable(context.getTheme());
             } catch (Exception e) {
                 return pm.getDefaultActivityIcon();
             }
