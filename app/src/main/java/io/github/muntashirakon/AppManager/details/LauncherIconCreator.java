@@ -68,7 +68,8 @@ public class LauncherIconCreator {
         intent.setAction(Intent.ACTION_CREATE_SHORTCUT);
 
         ShortcutInfoCompat shortcutInfo = new ShortcutInfoCompat.Builder(context, shortcutId)
-                .setShortLabel(name)
+                // Enforce shortcut name to be a String
+                .setShortLabel(name.toString())
                 .setLongLabel(name)
                 .setIcon(IconCompat.createWithBitmap(bitmap))
                 .setIntent(intent)
