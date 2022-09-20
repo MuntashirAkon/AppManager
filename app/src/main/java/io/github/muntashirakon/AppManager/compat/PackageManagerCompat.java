@@ -367,7 +367,7 @@ public final class PackageManagerCompat {
         return IPackageManager.Stub.asInterface(ProxyBinder.getService("package"));
     }
 
-    private static IPackageManager getUnprivilegedPackageManager() {
+    public static IPackageManager getUnprivilegedPackageManager() {
         return IPackageManager.Stub.asInterface(ProxyBinder.getUnprivilegedService("package"));
     }
 }

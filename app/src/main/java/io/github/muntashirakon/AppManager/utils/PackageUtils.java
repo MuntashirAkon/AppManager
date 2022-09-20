@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.ComponentInfo;
+import android.content.pm.IPackageManager;
 import android.content.pm.IPackageStatsObserver;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -284,12 +285,21 @@ public final class PackageUtils {
 
     @WorkerThread
     @Nullable
-    public static PackageSizeInfo getPackageSizeInfo(@NonNull Context context, @NonNull String packageName, int userHandle, @Nullable UUID storageUuid) {
+    public static PackageSizeInfo getPackageSizeInfo(@NonNull Context context, @NonNull String packageName,
+                                                     @UserIdInt int userHandle, @Nullable UUID storageUuid) {
         AtomicReference<PackageSizeInfo> packageSizeInfo = new AtomicReference<>();
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
             CountDownLatch waitForStats = new CountDownLatch(1);
             try {
-                PackageManagerCompat.getPackageManager().getPackageSizeInfo(packageName, userHandle,
+                IPackageManager pm;
+                if (UserHandleHidden.myUserId() == userHandle) {
+                    // Since GET_PACKAGE_SIZE is a normal permission, there's no need to use a privileged service
+                    pm = PackageManagerCompat.getUnprivilegedPackageManager();
+                } else {
+                    // May return SecurityException in the ADB mode
+                    pm = PackageManagerCompat.getPackageManager();
+                }
+                pm.getPackageSizeInfo(packageName, userHandle,
                         new IPackageStatsObserver.Stub() {
                             @SuppressWarnings("deprecation")
                             @Override
@@ -302,10 +312,10 @@ public final class PackageUtils {
                             }
                         });
                 waitForStats.await(5, TimeUnit.SECONDS);
-            } catch (RemoteException | InterruptedException e) {
+            } catch (RemoteException | InterruptedException | SecurityException e) {
                 Log.e(TAG, e);
             }
-        } else {
+        } else if (PermissionUtils.hasUsageStatsPermission(context)) {
             try {
                 IStorageStatsManager storageStatsManager = IStorageStatsManager.Stub.asInterface(ProxyBinder
                         .getService(Context.STORAGE_STATS_SERVICE));
