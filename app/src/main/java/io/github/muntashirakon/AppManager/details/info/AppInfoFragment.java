@@ -876,7 +876,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             boolean isFrozen = FreezeUtils.isFrozen(mApplicationInfo);
             // Set open
             final Intent launchIntentForPackage = mPackageManager.getLaunchIntentForPackage(mPackageName);
-            if (launchIntentForPackage != null) {
+            if (launchIntentForPackage != null && !isFrozen) {
                 addToHorizontalLayout(R.string.launch_app, R.drawable.ic_open_in_new)
                         .setOnClickListener(v -> {
                             try {
@@ -888,7 +888,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             }
             // Set disable
             if (Ops.isPrivileged() && !isFrozen) {
-                // TODO: 11/8/22
                 addToHorizontalLayout(R.string.freeze, R.drawable.ic_snowflake).setOnClickListener(v -> {
                     if (BuildConfig.APPLICATION_ID.equals(mPackageName)) {
                         new MaterialAlertDialogBuilder(mActivity)
