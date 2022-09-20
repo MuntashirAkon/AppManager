@@ -1,0 +1,7 @@
+This release contains a number of bug fixes.
+
+- Removed dark theme hacks for the WebView in the help page
+- Fixed loading dynamic colours in the splash screen
+- Fixed shortcut creation issues in some launchers
+- Prevented a crash in the ADB mode which used to occur on attempting to fetch application data size
+- Prevented a nasty crash used to occur when an activity is needed to be recreated.

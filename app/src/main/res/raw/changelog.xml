@@ -18,6 +18,21 @@
 <changelog>
     <release
         type="stable release"
+        version="v3.0.2"
+        code="413"
+        date="20 September 2022">
+        <improve>Removed dark theme hacks for the WebView in the help page</improve>
+        <fix>Fixed loading dynamic colours in the splash screen</fix>
+        <fix>Fixed shortcut creation issues in some launchers</fix>
+        <fix>Prevented a crash in the ADB mode which used to occur on attempting to fetch application data size</fix>
+        <fix>Prevented a nasty crash used to occur when an activity is needed to be recreated</fix>
+        <note>
+            [br /][b]Full list of changes:[/b] [a
+            href="https://github.com/MuntashirAkon/AppManager/compare/v3.0.1...v3.0.2"]v3.0.1...v3.0.2[/a]
+        </note>
+    </release>
+    <release
+        type="stable release"
         version="v3.0.1"
         code="412"
         date="5 September 2022">
