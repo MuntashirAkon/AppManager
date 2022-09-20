@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="_lang_tag" translatable="false">ro</string>
     <string name="input_features">Introducere caracteristici</string>
     <string name="permissions">Folosește permisiunile</string>
     <string name="service">Servicii</string>
