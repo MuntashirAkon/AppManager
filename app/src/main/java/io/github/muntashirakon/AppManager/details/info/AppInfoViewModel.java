@@ -288,10 +288,8 @@ public class AppInfoViewModel extends AndroidViewModel {
                 e.printStackTrace();
             }
             // Set sizes
-            if (PermissionUtils.hasUsageStatsPermission(getApplication())) {
-                appInfo.sizeInfo = PackageUtils.getPackageSizeInfo(getApplication(), packageName, userHandle,
-                        Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? applicationInfo.storageUuid : null);
-            }
+            appInfo.sizeInfo = PackageUtils.getPackageSizeInfo(getApplication(), packageName, userHandle,
+                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? applicationInfo.storageUuid : null);
             // Set installer app
             try {
                 @SuppressWarnings("deprecation")
