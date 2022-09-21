@@ -14,6 +14,8 @@ import androidx.preference.Preference;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.transition.MaterialSharedAxis;
+
 import java.util.Locale;
 import java.util.Objects;
 
@@ -84,6 +86,13 @@ public class AboutPreferences extends PreferenceFragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setEnterTransition(new MaterialSharedAxis(MaterialSharedAxis.Z, true));
+        setReturnTransition(new MaterialSharedAxis(MaterialSharedAxis.Z, false));
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // Observe Changelog
@@ -102,8 +111,7 @@ public class AboutPreferences extends PreferenceFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        requireActivity().setTitle(R.string.about);
+    public int getTitle() {
+        return R.string.about;
     }
 }

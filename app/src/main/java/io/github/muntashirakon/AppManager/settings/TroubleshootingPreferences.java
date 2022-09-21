@@ -8,6 +8,8 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.Preference;
 
+import com.google.android.material.transition.MaterialSharedAxis;
+
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
@@ -27,8 +29,14 @@ public class TroubleshootingPreferences extends PreferenceFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        requireActivity().setTitle(R.string.troubleshooting);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setEnterTransition(new MaterialSharedAxis(MaterialSharedAxis.Z, true));
+        setReturnTransition(new MaterialSharedAxis(MaterialSharedAxis.Z, false));
+    }
+
+    @Override
+    public int getTitle() {
+        return R.string.troubleshooting;
     }
 }

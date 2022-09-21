@@ -9,6 +9,8 @@ import androidx.annotation.Nullable;
 import androidx.preference.Preference;
 import androidx.preference.SwitchPreferenceCompat;
 
+import com.google.android.material.transition.MaterialSharedAxis;
+
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
@@ -32,8 +34,14 @@ public class PrivacyPreferences extends PreferenceFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        requireActivity().setTitle(R.string.pref_privacy);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setEnterTransition(new MaterialSharedAxis(MaterialSharedAxis.Z, true));
+        setReturnTransition(new MaterialSharedAxis(MaterialSharedAxis.Z, false));
+    }
+
+    @Override
+    public int getTitle() {
+        return R.string.pref_privacy;
     }
 }

@@ -6,8 +6,10 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,6 +23,7 @@ public abstract class PreferenceFragment extends PreferenceFragmentCompat {
     @Nullable
     private String prefKey;
 
+    @CallSuper
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -35,11 +38,16 @@ public abstract class PreferenceFragment extends PreferenceFragmentCompat {
         UiUtils.applyWindowInsetsAsPaddingNoTop(recyclerView);
     }
 
+    @CallSuper
     @Override
     public void onStart() {
+        requireActivity().setTitle(getTitle());
         super.onStart();
         updateUi();
     }
+
+    @StringRes
+    public abstract int getTitle();
 
     public void setPrefKey(@Nullable String prefKey) {
         this.prefKey = prefKey;

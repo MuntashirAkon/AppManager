@@ -2,7 +2,6 @@
 
 package io.github.muntashirakon.AppManager.settings;
 
-import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.os.UserHandleHidden;
@@ -16,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.preference.Preference;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.transition.MaterialSharedAxis;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -140,9 +140,15 @@ public class ImportExportRulesPreferences extends PreferenceFragment {
     }
 
     @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        requireActivity().setTitle(R.string.pref_import_export_blocking_rules);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setEnterTransition(new MaterialSharedAxis(MaterialSharedAxis.Z, true));
+        setReturnTransition(new MaterialSharedAxis(MaterialSharedAxis.Z, false));
+    }
+
+    @Override
+    public int getTitle() {
+        return R.string.pref_import_export_blocking_rules;
     }
 
     private void importExistingRules(final boolean systemApps) {

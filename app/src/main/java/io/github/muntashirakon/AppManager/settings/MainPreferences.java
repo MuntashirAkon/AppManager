@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.Preference;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.transition.MaterialSharedAxis;
 
 import java.util.Arrays;
 import java.util.List;
@@ -161,6 +162,13 @@ public class MainPreferences extends PreferenceFragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setExitTransition(new MaterialSharedAxis(MaterialSharedAxis.Z, true));
+        setReenterTransition(new MaterialSharedAxis(MaterialSharedAxis.Z, false));
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // Preference loaders
@@ -205,9 +213,8 @@ public class MainPreferences extends PreferenceFragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        requireActivity().setTitle(R.string.settings);
+    public int getTitle() {
+        return R.string.settings;
     }
 
     @NonNull
