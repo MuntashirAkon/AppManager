@@ -1,0 +1,22 @@
+name: Help wanted
+description: Ask for help regarding a feature or an improvement in the docs
+labels: [Help Wanted]
+
+body:
+
+  - type: textarea
+    attributes:
+        label: Describe the existing feature/documentation
+        description: A short and concise description of the already existing feature or documentation, e.g. uninstall in batch operations. The purpose of this template is to improve your knowledge regarding the feature.  For new features, use the feature request template. Use the bug report template if the feature is not working as expected.
+      
+
+  - type: textarea
+    attributes:
+        label: Describe your problem(s)
+        description: Describe the problem(s) you've faced while using the feature or reading the documentation.
+        
+        
+  - type: textarea
+    attributes:
+        label: Additional context
+        description: Add any other context or screenshots about the feature/documentation here.

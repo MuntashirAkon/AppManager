@@ -1,0 +1,33 @@
+name: Request inclusion of ad/tracker
+description: Request inclusion of ad/tracker
+labels: [Ad/Tracker]
+
+body:
+  - type: checkboxes
+    attributes:
+       label: Please check before submitting an issue
+       options:
+          - label: Tracking signature isn't already listed <a href="https://github.com/MuntashirAkon/AppManager/blob/master/app/src/main/res/values/trackers.xml">here</a>
+            required: true
+            
+          - label: It isn't listed in <a href="https://etip.exodus-privacy.eu.org/trackers/all">Exodus</a>
+            required: true
+
+
+  - type: textarea
+    attributes:
+        label: Tracker description
+        placeholder: |
+          - - **Name:** Name of the tracker, e.g. Google AdMob
+          - - **Description:** An optional, brief description
+          - - **Code signature:** Code signature, e.g. com.google.ads
+          - - **Network signature:** Network signature if exists, e.g. doubleclick.net
+          - - **Website:** Website or library source, e.g. https://google.com
+    validations:
+        required: true
+          
+
+  - type: textarea
+    attributes:
+        label: Additional context
+        description: Specify any additional contexts
