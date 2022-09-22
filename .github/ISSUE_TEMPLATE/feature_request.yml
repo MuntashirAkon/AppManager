@@ -1,0 +1,43 @@
+name: Feature request
+description: Suggest an idea for this project
+labels: [Feature]
+
+body:
+  - type: checkboxes
+    attributes:
+       label: Please check before submitting an issue
+       description: Checking the <a href="https://muntashirakon.github.io/AppManager/">docs</a> before submitting an issue may solve your problem.
+       options:
+          - label: I am using the latest version of App Manager
+            required: true
+            
+          - label: I have searched the issues and haven't found anything relevant
+            required: true
+            
+          - label: I have read the docs
+            required: true
+
+
+  - type: textarea
+    attributes:
+        label: Describe a description of the new feature
+        description: A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+    validations:
+        required: true
+      
+
+  - type: textarea
+    attributes:
+        label: Describe the solution you'd like
+        description: A clear and concise description of what you want to happen.
+
+
+  - type: textarea
+    attributes:
+        label: Describe alternatives you've considered
+        description: A clear and concise description of any alternative solutions or features you've considered
+        
+  - type: textarea
+    attributes:
+        label: Additional context
+        description: Add any other context or screenshots about the feature request here.
