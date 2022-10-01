@@ -14,6 +14,8 @@
 
 ---
 
+App Manager is an advanced yet friendly tool for managing your applications. It provides a lot of powerful functionality that you may need on your Android device.
+
 ## Features
 
 ### General features
