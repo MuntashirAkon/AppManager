@@ -101,20 +101,27 @@ public final class ApkFile implements AutoCloseable {
             throw new IllegalArgumentException("ApkFile not found for key " + sparseArrayKey);
         }
         synchronized (instanceCount) {
-            if (advancedInstanceCount.get(sparseArrayKey) > 0) {
-                advancedInstanceCount.put(sparseArrayKey, advancedInstanceCount.get(sparseArrayKey) - 1);
-            } else instanceCount.put(sparseArrayKey, instanceCount.get(sparseArrayKey) + 1);
+            int advancedCount = advancedInstanceCount.get(sparseArrayKey);
+            if (advancedCount > 0) {
+                // One or more instances are requested in advance, decrement the advanced instance counter
+                advancedInstanceCount.put(sparseArrayKey, advancedCount - 1);
+            } else {
+                // No advanced instance, increment the number of active instances
+                instanceCount.put(sparseArrayKey, instanceCount.get(sparseArrayKey) + 1);
+            }
         }
         return apkFile;
     }
 
     /**
-     * Get a new instance in advance, thereby preventing any attempt at closing the APK file
+     * Request a new instance in advance, thereby, preventing any attempt at closing the APK file via {@link #close()}.
      */
     @AnyThread
     public static void getInAdvance(int sparseArrayKey) {
         synchronized (instanceCount) {
+            // Add this to the instance count to avoid closing when close() is called
             instanceCount.put(sparseArrayKey, instanceCount.get(sparseArrayKey) + 1);
+            // Add this to the advance instance counter
             advancedInstanceCount.put(sparseArrayKey, advancedInstanceCount.get(sparseArrayKey) + 1);
         }
     }
