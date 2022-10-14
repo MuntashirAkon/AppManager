@@ -913,7 +913,7 @@
         <item quantity="other">%1$d podziałów</item>
     </plurals>
     <string name="second_degree_tracker_note">² prefiks wskazuje, że trackery znajdują się w <a href="https://etip.exodus-privacy.eu.org/">Lista rezerwowa ETIP </a> np. to, czy są to rzeczywiste urządzenia śledzące, jest nadal badane.</string>
-    <string name="orientation_behind">Za</string>
+    <string name="orientation_behind">Z tyłu</string>
     <string name="running_services_logcat_hint">Dotknij elementu, aby otworzyć log viewer z odpowiednim identyfikatorem procesu jako domyślnym filtrem.</string>
     <string name="trim_caches_in_all_apps_description">Usuwa pliki pamięci podręcznej ze wszystkich aplikacji, również w systemie Android</string>
     <string name="trim_caches_in_all_apps">Przytnij pamięć podręczną we wszystkich aplikacjach</string>
