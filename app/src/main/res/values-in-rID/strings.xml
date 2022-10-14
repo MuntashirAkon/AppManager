@@ -108,7 +108,6 @@
     <string name="storage_and_cache">Penyimpanan dan Cache</string>
     <string name="failed_to_stop">Tidak dapat menghentikan <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="force_stop">Paksa-berhenti</string>
-    <string name="failed_to_enable">Tidak dapat mengaktifkan <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="failed_to_disable">Tidak dapat menon-aktifkan <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="enable">Aktifkan</string>
     <string name="disable">Non-aktifkan</string>
@@ -271,7 +270,6 @@
     </plurals>
     <string name="external_data_dir">Penyimpanan Data Eksternal</string>
     <string name="sort_by_blocked_components">Dihalang Pertama</string>
-    <string name="sort_by_disabled_app">Dinonaktifkan Pertama</string>
     <string name="exodus_link">Link εxodus</string>
     <string name="usage_yesterday">Kemarin</string>
     <string name="pref_global_blocking_enabled">Pemblokiran komponen secara instan</string>
@@ -285,9 +283,6 @@
     </plurals>
     <plurals name="alert_failed_to_uninstall">
         <item quantity="other">Tak dapat menghapus aplikasi %1$d</item>
-    </plurals>
-    <plurals name="alert_failed_to_disable">
-        <item quantity="other">Tidak bisa menonaktifkan aplikasi %1$d</item>
     </plurals>
     <plurals name="alert_failed_to_clear_data">
         <item quantity="other">Tidak dapat membersihkan data dari aplikasi %1$d</item>
@@ -345,9 +340,6 @@
     </plurals>
     <plurals name="classes">
         <item quantity="other">kelas %1$d</item>
-    </plurals>
-    <plurals name="alert_failed_to_enable">
-        <item quantity="other">Tidak dapat mengaktifkan %1$d aplikasi</item>
     </plurals>
     <plurals name="alert_failed_to_set_app_ops">
         <item quantity="other">Tidak dapat mengatur operasi aplikasi untuk %1$d aplikasi</item>
@@ -551,7 +543,6 @@
     <string name="profile_clear_data_msg">Bersihkan data dari aplikasi</string>
     <string name="profile_clear_cache_msg">Bersihkan cache aplikasi dari berbagai aplikasi</string>
     <string name="profile_force_stop_msg">Paksa-berhenti aplikasi</string>
-    <string name="profile_disable_msg">Nonaktifkan/aktifkan aplikasi berdasarkan status</string>
     <string name="allow_routine_ops_msg">Izinkan profil digunakan dalam operasi rutin</string>
     <string name="profile_state">Status Profil</string>
     <string name="allow_routine_ops">Izinkan oprs rutin</string>
@@ -756,7 +747,6 @@
     <string name="components">Komponen</string>
     <string name="trackers">Pelacak</string>
     <string name="installed_version">Versi yang diinstal</string>
-    <string name="filter_disabled_apps">Aplikasi Dinonaktifkan</string>
     <string name="select_all">Pilih Semua</string>
     <string name="filter_apps_with_rules">Aplikasi dengan aturan</string>
     <string name="filter_system_apps">Aplikasi Sistem</string>
@@ -994,7 +984,6 @@
     <string name="files">Dokumen</string>
     <string name="storage">Penyimpanan</string>
     <string name="notice">Pemberitahuan</string>
-    <string name="enable_disable">Aktifkan/nonaktifkan</string>
     <string name="error_with_details">Eror:%s</string>
     <string name="saved_filters">Filter tersimpan</string>
     <string name="notice_saf">Tidak seperti volume, direktori yang dipilih akan digunakan untuk menyimpan seluruh file yang berhubungan dengan App Manager, termasuk APK yang disimpan dan backup. Storage Access Framework (SAF) sangat lambat, untuk itu, anda sebaiknya hanya menggunakan opsi ini ketika yang lain tidak dapat digunakan.</string>

@@ -52,10 +52,6 @@
     <string name="no">Não</string>
     <string name="apply_to_system_apps_question">Também aplicar às apps do sistema\? Selecione \"Não\" se não tiver certeza.</string>
     <string name="apply_to_system_apps">Aplicar aos apps de sistema</string>
-    <plurals name="alert_failed_to_enable">
-        <item quantity="one">Não foi possível ativar %1$d app</item>
-        <item quantity="other">Não foi possível ativar %1$d apps</item>
-    </plurals>
     <plurals name="alert_failed_to_block_components">
         <item quantity="one">Não foi possível bloquear componentes de %1$d app</item>
         <item quantity="other">Não foi possível bloquear componentes de %1$d apps</item>
@@ -133,10 +129,6 @@
         <item quantity="one">Não foi possível desinstalar %1$d aplicação</item>
         <item quantity="other">Não foi possível desinstalar %1$d aplicações</item>
     </plurals>
-    <plurals name="alert_failed_to_disable">
-        <item quantity="one">Não foi possível desativar %1$d aplicação</item>
-        <item quantity="other">Não foi possível desativar %1$d aplicações</item>
-    </plurals>
     <plurals name="alert_failed_to_clear_data">
         <item quantity="one">Não foi possível limpar os dados de %1$d aplicação</item>
         <item quantity="other">Não foi possível limpar os dados de %1$d aplicações</item>
@@ -174,7 +166,6 @@
     <string name="external_multiple_data_dir">Diretório de dados externo<xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
     <string name="external_data_dir">Diretório de dados externo</string>
     <string name="sort_by_blocked_components">Bloqueados primeiro</string>
-    <string name="sort_by_disabled_app">Desativados primeiro</string>
     <string name="exodus_link">Ligação do εxodus</string>
     <string name="usage_yesterday">Ontem</string>
     <string name="app_settings">Configurações</string>
@@ -192,7 +183,6 @@
     <string name="storage_and_cache">Armazenamento e Cache</string>
     <string name="failed_to_stop">Não foi possível parar<xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="force_stop">Forçar paragem</string>
-    <string name="failed_to_enable">Não foi possível ativar<xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="failed_to_disable">Não foi possível desativar <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="enable">Ativar</string>
     <string name="disable">Desativar</string>
@@ -364,7 +354,6 @@
     <string name="components">Componentes</string>
     <string name="trackers">Rastreadores</string>
     <string name="installed_version">Versão instalada</string>
-    <string name="filter_disabled_apps">Apps desativados</string>
     <string name="select_all">Selecionar todos</string>
     <string name="filter_apps_with_rules">Apps com regras</string>
     <string name="filter_system_apps">Apps do sistema</string>
@@ -481,7 +470,6 @@
     <string name="off">Desligado</string>
     <string name="on">Ligado</string>
     <string name="profile_clear_data_msg">Limpa os dados de apps</string>
-    <string name="profile_disable_msg">Desativa ou ativa apps com base no estado</string>
     <string name="profile_state">Estado do perfil</string>
     <string name="pref_mode_of_operations">Modo de operação</string>
     <string name="none">Nenhum</string>
@@ -1034,7 +1022,6 @@
     <string name="permission_flags">Bandeiras de permissão</string>
     <string name="pref_selected_users_msg">Restringir o App Manager a trabalhar apenas com os utilizadores selecionados.</string>
     <string name="pref_selected_users">Utilizadores selecionados</string>
-    <string name="enable_disable">Ativar/desativar</string>
     <string name="error_with_details">Erro: %s</string>
     <string name="files">Ficheiros</string>
     <string name="storage">Armazenamento</string>

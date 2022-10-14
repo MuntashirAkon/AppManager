@@ -133,7 +133,6 @@
     <string name="keyboard_type">Lloji i tastierës</string>
     <string name="touchscreen">Ekran me prekje</string>
     <string name="force_stop">Ndalo me forcë</string>
-    <string name="sort_by_disabled_app">Te ç\'aktivizuarat së pari</string>
     <string name="view_in_settings">Shiko te Cilësimet</string>
     <string name="add_item">Shto artikull</string>
     <string name="day">Ditë</string>
@@ -252,10 +251,6 @@
         <item quantity="one">%1$d hr</item>
         <item quantity="other">%1$d hrs</item>
     </plurals>
-    <plurals name="alert_failed_to_disable">
-        <item quantity="one">%1$d aplikacion nuk mund të çaktivizohet</item>
-        <item quantity="other">%1$d aplikacionet nuk mund të çaktivizohen</item>
-    </plurals>
     <plurals name="tracker_and_classes">
         <item quantity="one">1 tracker with <xliff:g id="class_no" example="50">%1$d</xliff:g> class</item>
         <item quantity="other">1 tracker with <xliff:g id="class_no" example="50">%1$d</xliff:g> classes</item>
@@ -298,7 +293,6 @@
     <string name="app_usage">Përdorimi aplikacionit</string>
     <string name="key_name">Emri kyç</string>
     <string name="enable">Aktivizo</string>
-    <string name="failed_to_disable">Nuk mund të Ç\'aktivizohet<xliff:g id="emri-app-it" shembull="App Manager">%1$s</xliff:g>.</string>
     <string name="failed_to_enable">Nuk mund të aktivizohet <xliff:g id="emri_app-it" shembull="App Manager">%1$s</xliff:g>.</string>
     <string name="external_multiple_data_dir">Vendndodhja e të dhënave të jashtme <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
     <string name="app_settings">Cilësimet</string>

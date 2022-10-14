@@ -19,7 +19,6 @@
     <string name="share_apk">分享 APK</string>
     <string name="saved_successfully">已儲存</string>
     <string name="saving_failed">儲存失敗，請重試。</string>
-    <string name="failed_to_enable">無法啟用 <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="failed_to_disable">無法停用 <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="uninstalled_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> 已被解除安裝。</string>
     <string name="failed_to_uninstall">無法解除安裝 <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
@@ -63,9 +62,6 @@
     <string name="pref_remove_all_rules_msg">將授予權限，應用程式操作和元件將還原為其預設值。</string>
     <plurals name="verified_with_warning">
         <item quantity="other">Verified with%d warning</item>
-    </plurals>
-    <plurals name="alert_failed_to_enable">
-        <item quantity="other">無法啟用%1$d應用程式</item>
     </plurals>
     <plurals name="alert_failed_to_set_app_ops">
         <item quantity="other">無法為 %1$d 應用設置應用操作</item>
@@ -118,9 +114,6 @@
     </plurals>
     <plurals name="alert_failed_to_uninstall">
         <item quantity="other">Could not uninstall%1$d app</item>
-    </plurals>
-    <plurals name="alert_failed_to_disable">
-        <item quantity="other">Could not disable%1$d app</item>
     </plurals>
     <plurals name="alert_failed_to_clear_data">
         <item quantity="other">Could not clear data from%1$d app</item>
@@ -250,7 +243,6 @@
     <string name="profile_clear_data_msg">資料將從應用程式中清除</string>
     <string name="profile_clear_cache_msg">快取將從應用程式中清除</string>
     <string name="profile_force_stop_msg">應用程式將被強制停止</string>
-    <string name="profile_disable_msg">據狀態值停用/啟用應用程式</string>
     <string name="allow_routine_ops_msg">允許在常規操作中使用配置檔案</string>
     <string name="profile_state">設定檔狀態</string>
     <string name="allow_routine_ops">允許例行操作</string>
@@ -470,7 +462,6 @@
     <string name="components">成分</string>
     <string name="trackers">追蹤器</string>
     <string name="installed_version">安裝版本</string>
-    <string name="filter_disabled_apps">停用的應用程式</string>
     <string name="select_all">全選</string>
     <string name="filter_apps_with_rules">有規則的應用程式</string>
     <string name="filter_system_apps">系統應用程式</string>
@@ -569,7 +560,6 @@
     </plurals>
     <string name="external_data_dir">外部資料目錄</string>
     <string name="sort_by_blocked_components">先封鎖</string>
-    <string name="sort_by_disabled_app">首先停用</string>
     <string name="exodus_link">εxodus鏈接</string>
     <string name="usage_yesterday">昨天</string>
     <string name="patch_level">Android 安全性更新</string>
@@ -983,7 +973,6 @@
     <string name="permission_flags">權限標誌</string>
     <string name="saved_filters">已儲存的過濾器</string>
     <string name="error_with_details">錯誤: %s</string>
-    <string name="enable_disable">啟用/停用</string>
     <string name="notice">通知</string>
     <string name="notice_saf">與卷不同，所選目錄將用於儲存與 App Manager相關的所有檔案，包括已儲存的 APK 和備份。儲存空間存取框架 （SAF） 非常緩慢，因此，您只能在無法使用其他選項時使用此選項。</string>
     <string name="storage">儲存空間</string>

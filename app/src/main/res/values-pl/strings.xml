@@ -65,12 +65,6 @@
     <string name="skip_signature_checks">Pomiń sprawdzanie podpisów</string>
     <string name="yes">Tak</string>
     <string name="clear_app_cache_description">Czyści pamięć podręczną wszystkich aplikacji</string>
-    <plurals name="alert_failed_to_disable">
-        <item quantity="one">Nie udało się wyłączyć %1$d aplikacji</item>
-        <item quantity="few">Nie udało się wyłączyć %1$d aplikacji</item>
-        <item quantity="many">Nie udało się wyłączyć %1$d aplikacji</item>
-        <item quantity="other">Nie udało się wyłączyć %1$d aplikacji</item>
-    </plurals>
     <plurals name="alert_failed_to_clear_data">
         <item quantity="one">Nie można wyczyścić danych %1$d aplikacji</item>
         <item quantity="few">Nie można wyczyścić danych %1$d aplikacji</item>
@@ -193,12 +187,6 @@
     <string name="operation_running">Praca w toku…</string>
     <string name="apply_to_system_apps_question">Zastosować też do aplikacji systemowych\? Wybierz „Nie”, jeśli nie masz pewności.</string>
     <string name="apply_to_system_apps">Zastosuj do aplikacji systemowych</string>
-    <plurals name="alert_failed_to_enable">
-        <item quantity="one">Nie udało się włączyć %1$d aplikacji</item>
-        <item quantity="few">Nie udało się włączyć %1$d aplikacji</item>
-        <item quantity="many">Nie udało się włączyć %1$d aplikacji</item>
-        <item quantity="other">Nie udało się włączyć %1$d aplikacji</item>
-    </plurals>
     <plurals name="alert_failed_to_block_components">
         <item quantity="one">Nie udało się zablokować komponentów dla %1$d aplikacji</item>
         <item quantity="few">Nie udało się zablokować komponentów dla %1$d aplikacji</item>
@@ -239,7 +227,6 @@
     <string name="delete_backup">Usuń kopię zapasową</string>
     <string name="data">Dane</string>
     <string name="installed_version">Zainstalowana wersja</string>
-    <string name="filter_disabled_apps">Wyłączone aplikacje</string>
     <string name="select_all">Zaznacz wszystko</string>
     <string name="filter_apps_with_rules">Aplikacje z regułami</string>
     <string name="filter_system_apps">Aplikacje systemowe</string>
@@ -390,7 +377,6 @@
     <string name="storage_and_cache">Dane i pamięć podręczna</string>
     <string name="failed_to_stop">Nie udało się zatrzymać <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="force_stop">Wymuś zatrzymanie</string>
-    <string name="failed_to_enable">Nie udało się włączyć <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="failed_to_disable">Nie udało się wyłączyć <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="enable">Włącz</string>
     <string name="uninstall_system_app_message">To jest aplikacja systemowa. Czy na pewno chcesz odinstalować tę aplikację\?</string>
@@ -594,7 +580,6 @@
     <string name="patch_level">Poziom łatki</string>
     <string name="external_data_dir">Zewnętrzny katalog danych</string>
     <string name="sort_by_blocked_components">Najpierw zablokowane</string>
-    <string name="sort_by_disabled_app">Najpierw wyłączone</string>
     <string name="usage_yesterday">Wczoraj</string>
     <string name="usage_access">Dostęp do danych użytkowania</string>
     <string name="total_size">Łącznie</string>
@@ -625,7 +610,6 @@
     <string name="profile_clear_data_msg">Dane aplikacji zostaną wyczyszczone</string>
     <string name="profile_clear_cache_msg">Pamięć podręczna aplikacji zostanie wyczyszczona</string>
     <string name="profile_force_stop_msg">Jeśli ta opcja jest włączona, aplikacje zostaną zatrzymane</string>
-    <string name="profile_disable_msg">Aplikacje zostaną wyłączone/włączone na podstawie wybranego stanu</string>
     <string name="profile_state">Stan profilu</string>
     <string name="not_verified">Nie zweryfikowane</string>
     <string name="verified">Zweryfikowane</string>
@@ -953,7 +937,6 @@
     <string name="backup_volume_dialog_description">Woluminy z prefiksem <tt>/tree</tt> to foldery wybrane za pomocą Storage Access Framework (SAF). Oprócz tych folderów domyślnym katalogiem App Managera jest podfolder o nazwie <tt>AppManager</tt>.</string>
     <string name="notice_saf">W przeciwieństwie do woluminów, wybrany katalog będzie używany do przechowywania wszystkich plików związanych z App Manager, w tym zapisanych pakietów APK i kopii zapasowych. Storage Access Framework (SAF) jest bardzo powolny, dlatego należy używać tej opcji tylko wtedy, gdy nie można użyć innych.</string>
     <string name="notice">Notyfikacja</string>
-    <string name="enable_disable">Włącz/wyłącz</string>
     <string name="error_with_details">Błąd: %s</string>
     <string name="saved_filters">Zapisane filtry</string>
     <string name="permission_flags">Flagi uprawnień</string>

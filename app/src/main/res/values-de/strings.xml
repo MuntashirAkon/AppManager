@@ -197,7 +197,6 @@
     <string name="stopped">Beendet</string>
     <string name="disable">Deaktivieren</string>
     <string name="enable">Aktivieren</string>
-    <string name="failed_to_disable"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> konnte nicht deaktiviert werden..</string>
     <string name="failed_to_enable"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> konnte nicht aktiviert werden.</string>
     <string name="force_stop">Erzwungener Stopp</string>
     <string name="failed_to_stop">Konnte <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> nicht beenden.</string>
@@ -216,7 +215,6 @@
     <string name="app_settings">Einstellungen</string>
     <string name="usage_yesterday">Gestern</string>
     <string name="exodus_link">\u03b5xodus-Link</string>
-    <string name="sort_by_disabled_app">Deaktivierte zuerst</string>
     <string name="sort_by_blocked_components">Blockierte zuerst</string>
     <string name="external_data_dir">Externes Daten-Verzeichnis</string>
     <string name="external_multiple_data_dir">Externes Daten-Verzeichnis <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
@@ -253,10 +251,6 @@
     <plurals name="alert_failed_to_clear_data">
         <item quantity="one">Löschen der Daten von %1$d Anwendung nicht möglich</item>
         <item quantity="other">Löschen der Daten von %1$d Anwendungen nicht möglich</item>
-    </plurals>
-    <plurals name="alert_failed_to_disable">
-        <item quantity="one">Deaktivieren von %1$d Anwendung nicht möglich</item>
-        <item quantity="other">Deaktivieren von %1$d Anwendungen nicht möglich</item>
     </plurals>
     <plurals name="alert_failed_to_uninstall">
         <item quantity="one">Deinstallieren von %1$d Anwendung nicht möglich</item>
@@ -368,7 +362,6 @@
     <string name="filter_system_apps">System-Anwendungen</string>
     <string name="filter_apps_with_rules">Anwendungen mit Regeln</string>
     <string name="select_all">Alle auswählen</string>
-    <string name="filter_disabled_apps">Deaktivierte Anwendungen</string>
     <string name="installed_version">Installierte Version</string>
     <string name="trackers">Verfolger</string>
     <string name="components">Komponenten</string>
@@ -495,10 +488,6 @@
     <string name="unknown_split_for_base_apk"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> für die Basis-APK</string>
     <string name="unknown_split_for_feature"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> für Merkmal <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
     <string name="split_feature_name">Merkmal: <xliff:g id="feature_name" example="Visualizer">%1$s</xliff:g></string>
-    <plurals name="alert_failed_to_enable">
-        <item quantity="one">%1$d Anwendung konnte nicht aktiviert werden</item>
-        <item quantity="other">%1$d Anwendungen konnten nicht aktiviert werden</item>
-    </plurals>
     <plurals name="alert_failed_to_block_components">
         <item quantity="one">Komponenten für %1$d Anwendung konnte nicht blockiert werden</item>
         <item quantity="other">Komponenten für %1$d Anwendungen konnten nicht blockiert werden</item>
@@ -652,7 +641,6 @@
     <string name="profile_clear_data_msg">Löscht die Daten von Apps</string>
     <string name="profile_clear_cache_msg">Löscht den App-Cache von Apps</string>
     <string name="profile_force_stop_msg">Erzwingt das Stoppen von Apps</string>
-    <string name="profile_disable_msg">Deaktiviert oder aktiviert Apps basierend auf dem Status</string>
     <string name="allow_routine_ops_msg">Erlauben Sie die Verwendung des Profils in den Routineoperationen</string>
     <string name="profile_state">Profilstatus</string>
     <string name="allow_routine_ops">Routineoperationen zulassen</string>
@@ -1031,7 +1019,6 @@
     <string name="help_uses_permissions_tab">Klicken Sie auf ein Element, um es <b>zu gewähren</b> oder <b>zu entziehen</b>. Nur die Berechtigungen <b>Gefahr</b> und <b>Entwicklung</b> können gewährt oder entzogen werden.</string>
     <string name="help_permissions_tab">Diese Berechtigungen werden von dieser App festgelegt und können nicht widerrufen werden.</string>
     <string name="help_app_ops_tab">Klicken Sie auf ein Element, um es zu <b>zulassen</b> oder <b>zu ignorieren</b>. Klicken Sie lange auf ein Element, um andere unterstützte Modi anzuzeigen.</string>
-    <string name="enable_disable">Aktivieren/Deaktivieren</string>
     <string name="error_with_details">Fehler: %s</string>
     <string name="saved_filters">Gespeicherte Filter</string>
     <string name="permission_flags">Berechtigungskennzeichen</string>

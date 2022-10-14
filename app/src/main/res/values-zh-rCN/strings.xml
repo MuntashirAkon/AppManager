@@ -193,7 +193,6 @@
     <string name="stopped">已停止</string>
     <string name="disable">禁用</string>
     <string name="enable">启用</string>
-    <string name="failed_to_disable">无法禁用 <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="failed_to_enable">无法启用 <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="force_stop">强行停止</string>
     <string name="failed_to_stop">无法停用 <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
@@ -212,7 +211,6 @@
     <string name="app_settings">设置</string>
     <string name="usage_yesterday">昨天</string>
     <string name="exodus_link">\u03b5xodus 链接</string>
-    <string name="sort_by_disabled_app">已禁用</string>
     <string name="sort_by_blocked_components">已拦截组件优先</string>
     <string name="external_data_dir">外部资料目录</string>
     <string name="external_multiple_data_dir">外部数据目录 <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
@@ -246,9 +244,6 @@
     <string name="export_blocking_rules">导出屏蔽规则</string>
     <plurals name="alert_failed_to_clear_data">
         <item quantity="other">无法清除数据从%1$d个应用</item>
-    </plurals>
-    <plurals name="alert_failed_to_disable">
-        <item quantity="other">无法禁用%1$d个应用</item>
     </plurals>
     <plurals name="alert_failed_to_uninstall">
         <item quantity="other">无法卸载%1$d个应用</item>
@@ -354,7 +349,6 @@
     <string name="filter_system_apps">系统应用</string>
     <string name="filter_apps_with_rules">被阻止</string>
     <string name="select_all">全选</string>
-    <string name="filter_disabled_apps">已停用</string>
     <string name="installed_version">已安装版本</string>
     <string name="trackers">跟踪器</string>
     <string name="components">组件</string>
@@ -453,9 +447,6 @@
     <string name="launch_mode_single_instance">单实例</string>
     <string name="base_apk">基础 APK</string>
     <string name="split_feature_name">特性: <xliff:g id="feature_name" example="Visualizer">%1$s</xliff:g></string>
-    <plurals name="alert_failed_to_enable">
-        <item quantity="other">无法启用%1$d个应用</item>
-    </plurals>
     <string name="unknown_split_for_feature"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> 用于特性 <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
     <string name="density_split_for_feature"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) 资源, 用于特性 <xliff:g id="feature_name" example="Visualizer">%3$s</xliff:g></string>
     <string name="density_split_for_base_apk"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) 资源, 用于基础APK</string>
@@ -616,7 +607,6 @@
     <string name="profile_clear_data_msg">清理应用程序的数据</string>
     <string name="profile_clear_cache_msg">清理应用程序的缓存</string>
     <string name="profile_force_stop_msg">强行停止应用</string>
-    <string name="profile_disable_msg">基于状态值禁用/启用应用程序</string>
     <string name="allow_routine_ops_msg">允许在例行操作中使用该配置文件</string>
     <string name="profile_state">配置文件状态</string>
     <string name="allow_routine_ops">允许例行操作</string>
@@ -1000,7 +990,6 @@
     <string name="permission_flags">权限标志位</string>
     <string name="pref_selected_users_msg">限制 App Manager 仅与选定的用户一起工作。</string>
     <string name="pref_selected_users">选中的用户</string>
-    <string name="enable_disable">启用/禁用</string>
     <string name="error_with_details">错误: %s</string>
     <string name="files">文件</string>
     <string name="storage">存储</string>

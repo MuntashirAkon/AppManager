@@ -155,7 +155,6 @@
     <string name="storage_and_cache">التخزين وذاكرة التخزين المؤقت</string>
     <string name="failed_to_stop">لا يمكن ايقافه <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="force_stop">إيقاف إجباري</string>
-    <string name="failed_to_enable">تعذر تمكين التطبيق <xliff:g id="app_name" example="App Manager"> %1$s </xliff:g>.</string>
     <string name="failed_to_disable">تعذر التعطيل <xliff:g id="app_name" example="App Manager"> %1$s </xliff:g>.</string>
     <string name="enable">تفعيل</string>
     <string name="disable">تعطيل</string>
@@ -285,7 +284,6 @@
     <string name="components">المكونات</string>
     <string name="trackers">المقتعقبون</string>
     <string name="installed_version">النسخة المُثبتة</string>
-    <string name="filter_disabled_apps">التطبيقات المعطلة</string>
     <string name="select_all">اختر الكل</string>
     <string name="filter_apps_with_rules">التطبيقات ذات القواعد</string>
     <string name="filter_system_apps">تطبيقات النظام</string>
@@ -401,7 +399,6 @@
     <string name="external_multiple_data_dir">مسار البيانات الخارجي <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
     <string name="external_data_dir">مسار البيانات الخارجية</string>
     <string name="sort_by_blocked_components">المحظورة أولاً</string>
-    <string name="sort_by_disabled_app">المعطلة أولا</string>
     <string name="exodus_link">رابط εxodus</string>
     <string name="usage_yesterday">في الامس</string>
     <string name="app_settings">اﻹعدادات</string>
@@ -459,7 +456,6 @@
     <string name="profile_block_trackers_msg">حظر برمجيات التتبع في التطبيقات</string>
     <string name="profile_clear_data_msg">مسح بيانات التطبيقات</string>
     <string name="profile_clear_cache_msg">مسح ذاكرة التخزين المؤقت للتطبيقات</string>
-    <string name="profile_disable_msg">تعطيل التطبيقات أو تمكينها استنادا إلى الحالة</string>
     <string name="allow_routine_ops_msg">السماح باستخدام ملف التعريف في العمليات الروتينية</string>
     <string name="profile_state">حالة الملف الشخصي</string>
     <string name="allow_routine_ops">السماح بالعمليات الروتينية</string>
@@ -695,14 +691,6 @@
         <item quantity="many">تعذر استعادة %1$d تطبيق</item>
         <item quantity="other">تعذر استعادة %1$d تطبيق</item>
     </plurals>
-    <plurals name="alert_failed_to_enable">
-        <item quantity="zero">تعذر تمكين %1$d تطبيق</item>
-        <item quantity="one">تعذر تمكين %1$d تطبيق</item>
-        <item quantity="two">تعذر تمكين %1$d تطبيق</item>
-        <item quantity="few">تعذر تمكين %1$d تطبيقات</item>
-        <item quantity="many">تعذر تمكين %1$d تطبيقات</item>
-        <item quantity="other">تعذر تمكين %1$d تطبيق</item>
-    </plurals>
     <plurals name="backup_exists_are_you_sure">
         <item quantity="zero">النسخة الاحتياطية موجودة بالفعل. هل أنت متأكد؟</item>
         <item quantity="one">النسخة الاحتياطية موجودة بالفعل. هل أنت متأكد؟</item>
@@ -868,14 +856,6 @@
         <item quantity="few">تعذر إلغاء تثبيت %1$d التطبيق</item>
         <item quantity="many">تعذر إلغاء تثبيت %1$d التطبيقات</item>
         <item quantity="other">تعذر إلغاء تثبيت %1$d التطبيق</item>
-    </plurals>
-    <plurals name="alert_failed_to_disable">
-        <item quantity="zero">تعذر تعطيل %1$d تطبيق</item>
-        <item quantity="one">تعذر تعطيل %1$d تطبيق</item>
-        <item quantity="two">تعذر تعطيل %1$d تطبيق</item>
-        <item quantity="few">تعذر تعطيل %1$d تطبيقات</item>
-        <item quantity="many">تعذر تعطيل %1$d تطبيق</item>
-        <item quantity="other">تعذر تعطيل %1$d تطبيق</item>
     </plurals>
     <plurals name="alert_failed_to_clear_data">
         <item quantity="zero">تعذر مسح البيانات من %1$d تطبيق</item>
@@ -1174,7 +1154,6 @@
     <string name="permission_flags">إشارات الصلاحيات</string>
     <string name="pref_selected_users_msg">تقييد مدير التطبيقات للعمل مع المستخدمين المحددين فقط.</string>
     <string name="pref_selected_users">المستخدمون المحددون</string>
-    <string name="enable_disable">تمكين/تعطيل</string>
     <string name="error_with_details">خطأ: %s</string>
     <string name="files">الملفات</string>
     <string name="storage">التخزين</string>

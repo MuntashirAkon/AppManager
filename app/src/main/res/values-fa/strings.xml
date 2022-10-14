@@ -4,7 +4,6 @@
     <string name="external_multiple_data_dir">دایرکتوری داده‌های خارجی <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
     <string name="external_data_dir">دایرکتوری داده های خارجی</string>
     <string name="sort_by_blocked_components">اول مسدود</string>
-    <string name="sort_by_disabled_app">اول غیرفعال</string>
     <string name="exodus_link">پیوند εxodus</string>
     <string name="usage_yesterday">دیروز</string>
     <string name="app_settings">تنظیمات</string>
@@ -22,7 +21,6 @@
     <string name="storage_and_cache">ذخیره سازی و حافظه پنهان</string>
     <string name="failed_to_stop">نتوانست <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> را متوقف کند.</string>
     <string name="force_stop">توقف اجباری</string>
-    <string name="failed_to_enable">نمی توان <xliff:g id="app_name" example="App Manager"> %1$s </xliff:g> را فعال کرد.</string>
     <string name="failed_to_disable">نتوانست<xliff:g id="app_name" example="App Manager">%1$s</xliff:g> را غیر‌فعال کند.</string>
     <string name="enable">فعال کن</string>
     <string name="disable">غیرفعال کردن</string>
@@ -270,10 +268,6 @@
         <item quantity="one">نتوانست %1$d برنامه را پاک کند</item>
         <item quantity="other">نتوانست %1$d برنامه را پاک کند</item>
     </plurals>
-    <plurals name="alert_failed_to_disable">
-        <item quantity="one">نتوانست %1$d برنامه را غیر فعال کند</item>
-        <item quantity="other">نتوانست %1$d برنامه را غیر فعال کند</item>
-    </plurals>
     <plurals name="alert_failed_to_clear_data">
         <item quantity="one">نتوانست داده های %1$d برنامه را پاک کند</item>
         <item quantity="other">نتوانست داده های %1$d برنامه را پاک کند</item>
@@ -357,7 +351,6 @@
     <string name="components">اجزاء</string>
     <string name="trackers">ردیاب‌ها</string>
     <string name="installed_version">نسخه نصب شده</string>
-    <string name="filter_disabled_apps">برنامه‌های غیرفعال شده</string>
     <string name="select_all">انتخاب همه</string>
     <string name="filter_apps_with_rules">برنامه‌های دارای قوانین</string>
     <string name="filter_system_apps">برنامه‌های سیستم</string>
@@ -451,10 +444,6 @@
     <plurals name="backup_exists_are_you_sure">
         <item quantity="one">فایل پشتیبان موجود است. آیا اطمینان دارید؟</item>
         <item quantity="other">پشتیبان‌گیری برای بیش از یک برنامه وجود دارد. بیش از یک برنامه از قبل یک نسخه پشتیبان دارد. آیا اطمینان دارید؟</item>
-    </plurals>
-    <plurals name="alert_failed_to_enable">
-        <item quantity="one">نتوانست %1$d برنامه را فعال کند</item>
-        <item quantity="other">نتوانست %1$d برنامه را فعال کند</item>
     </plurals>
     <plurals name="alert_failed_to_set_app_ops">
         <item quantity="one">نتوانست عملیات برنامه را برای %1$d برنامه تنظیم کند</item>
@@ -729,7 +718,6 @@
     <string name="allow_routine_ops">عملیات روتین را مجاز کنید</string>
     <string name="profile_state">وضعیت حالت</string>
     <string name="allow_routine_ops_msg">اجازه دهید حالت در عملیات معمولی استفاده شود</string>
-    <string name="profile_disable_msg">برنامه های غیرفعال یا فعال بر اساس وضعیت</string>
     <string name="profile_force_stop_msg">توقف اجباری برنامه ها</string>
     <string name="profile_clear_cache_msg">پاک کردن حافظه کش برنامه ها</string>
     <string name="profile_clear_data_msg">پاک کردن داده های برنامه ها</string>
@@ -934,7 +922,6 @@
     <string name="port_number_invalid">شماره درگاه اشتباه.</string>
     <string name="paired_successfully">جفت شده.</string>
     <string name="error_with_details">خطا:%s</string>
-    <string name="enable_disable">فعال/غیرفعال</string>
     <string name="storage">ذخیره سازی</string>
     <string name="files">فایل ها</string>
     <string name="keystore_password_info">رمز عبور فروشگاه کلید مدیریت برنامه در زیر آمده است. اگر می‌خواهید از فروشگاه کلید مدیریت برنامه پشتیبان‌گیری یا بازیابی کنید، لطفاً آن را در مکانی امن ذخیره کنید. <b>این پیام دیگر نمایش داده نخواهد شد.</b></string>

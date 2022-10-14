@@ -195,7 +195,6 @@
     <string name="stopped">停止</string>
     <string name="disable">無効化</string>
     <string name="enable">有効化</string>
-    <string name="failed_to_disable"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g>を無効にできませんでした。</string>
     <string name="failed_to_enable"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g>を有効にできませんでした。</string>
     <string name="force_stop">強制終了</string>
     <string name="failed_to_stop"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g>を停止できませんでした。</string>
@@ -214,7 +213,6 @@
     <string name="app_settings">設定</string>
     <string name="usage_yesterday">昨日</string>
     <string name="exodus_link">\u03b5xodusのリンク</string>
-    <string name="sort_by_disabled_app">無効のものを優先</string>
     <string name="sort_by_blocked_components">ブロック済みのものを優先</string>
     <string name="external_data_dir">外部データディレクトリ</string>
     <string name="external_multiple_data_dir">外部データの場所 <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
@@ -248,9 +246,6 @@
     <string name="export_blocking_rules">ﾙｰﾙをｴｸｽﾎﾟｰﾄ</string>
     <plurals name="alert_failed_to_clear_data">
         <item quantity="other">%1$d 個のアプリからデータを消去できませんでした</item>
-    </plurals>
-    <plurals name="alert_failed_to_disable">
-        <item quantity="other">%1$d 個のアプリを無効にできませんでした</item>
     </plurals>
     <plurals name="alert_failed_to_uninstall">
         <item quantity="other">%1$d 個のアプリをアンインストールできませんでした</item>
@@ -364,7 +359,6 @@
     <string name="filter_system_apps">システムアプリ</string>
     <string name="filter_apps_with_rules">ルールを適用済み</string>
     <string name="select_all">全て選択</string>
-    <string name="filter_disabled_apps">無効になっているアプリ</string>
     <string name="installed_version">インストール済みのバージョン</string>
     <string name="trackers">トラッカー</string>
     <string name="components">コンポーネント</string>
@@ -398,9 +392,6 @@
     </plurals>
     <plurals name="alert_failed_to_set_app_ops">
         <item quantity="other">%1$d 個のアプリのAppOpsを設定できませんでした</item>
-    </plurals>
-    <plurals name="alert_failed_to_enable">
-        <item quantity="other">%1$d 個のアプリを有効にできませんでした</item>
     </plurals>
     <plurals name="backup_exists_are_you_sure">
         <item quantity="other">２つ以上のアプリに既存のバックアップがあります。宜しいですか？</item>
@@ -627,7 +618,6 @@
     <string name="allow_routine_ops">規則的操作を許可</string>
     <string name="profile_state">プロファイルの状態</string>
     <string name="allow_routine_ops_msg">規則的操作をプロファイルで使用することを許可します</string>
-    <string name="profile_disable_msg">状態に応じて無効化/有効化されます</string>
     <string name="profile_force_stop_msg">アプリを強制終了する</string>
     <string name="profile_clear_cache_msg">アプリのキャッシュを自動的にクリアする</string>
     <string name="profile_clear_data_msg">アプリのデータは自動的に消去する</string>
@@ -990,7 +980,6 @@
     <string name="community_links">Telegram: https://t.me/AppManagerChannel
 \nTwitter: https://twitter.com/AppManagerNews</string>
     <string name="community">コミュニティ</string>
-    <string name="enable_disable">有効化/無効化</string>
     <string name="error_with_details">エラー:%s</string>
     <string name="saved_filters">保存されたフィルタ</string>
     <string name="permission_flags">権限フラグ</string>

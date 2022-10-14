@@ -205,7 +205,6 @@
     <string name="stopped">Остановлено</string>
     <string name="disable">Отключить</string>
     <string name="enable">Включить</string>
-    <string name="failed_to_disable">Не удалось отключить <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="failed_to_enable">Не удалось включить <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="force_stop">Остановить принудительно</string>
     <string name="failed_to_stop">Не удалось остановить <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
@@ -224,7 +223,6 @@
     <string name="app_settings">Настройки</string>
     <string name="usage_yesterday">Вчера</string>
     <string name="exodus_link">Ссылка на \u03b5xodus</string>
-    <string name="sort_by_disabled_app">Сначала отключенные</string>
     <string name="sort_by_blocked_components">Сначала заблокированные</string>
     <string name="external_data_dir">Внешний каталог данных</string>
     <string name="external_multiple_data_dir">Внешний каталог данных <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
@@ -267,12 +265,6 @@
         <item quantity="few">Не удалось очистить данные %1$d приложений</item>
         <item quantity="many">Не удалось очистить данные %1$d приложений</item>
         <item quantity="other">Не удалось очистить данные %1$d приложений</item>
-    </plurals>
-    <plurals name="alert_failed_to_disable">
-        <item quantity="one">Не удалось отключить %1$d приложение</item>
-        <item quantity="few">Не удалось отключить %1$d приложения</item>
-        <item quantity="many">Не удалось отключить %1$d приложений</item>
-        <item quantity="other">Не удалось отключить %1$d приложений</item>
     </plurals>
     <plurals name="alert_failed_to_uninstall">
         <item quantity="one">Не удалось удалить %1$d приложение</item>
@@ -396,7 +388,6 @@
     <string name="filter_system_apps">Системные приложения</string>
     <string name="filter_apps_with_rules">Приложения с правилами</string>
     <string name="select_all">Выбрать все</string>
-    <string name="filter_disabled_apps">Отключенные</string>
     <string name="installed_version">Установленная версия</string>
     <string name="trackers">Трекеры</string>
     <string name="components">Компоненты</string>
@@ -541,12 +532,6 @@
     <string name="unknown_split_for_feature"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> для функции <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
     <string name="split_feature_name">Функции: <xliff:g id="feature_name" example="Visualizer">%1$s</xliff:g></string>
     <string name="base_apk">Базовый APK</string>
-    <plurals name="alert_failed_to_enable">
-        <item quantity="one">Не удалось включить %1$d приложение</item>
-        <item quantity="few">Не удалось включить %1$d приложения</item>
-        <item quantity="many">Не удалось включить %1$d приложений</item>
-        <item quantity="other">Не удалось включить %1$d приложений</item>
-    </plurals>
     <string name="routine_ops">Повторяющиеся операции</string>
     <string name="no_profiles">Нет профилей</string>
     <string name="presets">Предустановки</string>
@@ -713,7 +698,6 @@
     <string name="profile_clear_data_msg">Очистка данных приложений</string>
     <string name="profile_clear_cache_msg">Очистка кеш приложений</string>
     <string name="profile_force_stop_msg">Принудительная остановка приложений</string>
-    <string name="profile_disable_msg">Отключенные или включенные приложения в зависимости от состояния</string>
     <string name="profile_state">Состояние профиля</string>
     <string name="adb_over_tcp">ADB через TCP</string>
     <string name="pref_mode_of_operations">Режим работы</string>
@@ -1105,7 +1089,6 @@
     <string name="permission_flags">Флаги разрешений</string>
     <string name="pref_selected_users_msg">Разрешить App Manager работу только с выбранными пользователями.</string>
     <string name="pref_selected_users">Выбранные пользователи</string>
-    <string name="enable_disable">Включение/отключение</string>
     <string name="error_with_details">Ошибка: %s</string>
     <string name="files">Файлы</string>
     <string name="storage">Хранилище</string>

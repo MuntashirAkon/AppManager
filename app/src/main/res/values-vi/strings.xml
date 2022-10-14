@@ -99,13 +99,9 @@
     <string name="sdk_flags">Cờ</string>
     <string name="sdk_max">Mục tiêu</string>
     <string name="sdk_min">Thấp nhất</string>
-    <plurals name="alert_failed_to_enable">
-        <item quantity="other">Không thể bật %1$d ứng dụng</item>
-    </plurals>
     <string name="filter_running_apps">Ứng dụng đang chạy</string>
     <string name="trackers">Trình theo dõi</string>
     <string name="installed_version">Phiên bản đã cài đặt</string>
-    <string name="filter_disabled_apps">Ứng dụng đã tắt</string>
     <string name="select_all">Chọn tất cả</string>
     <string name="security">Bảo mật</string>
     <string name="battery">Pin</string>
@@ -124,9 +120,6 @@
     </plurals>
     <plurals name="alert_failed_to_uninstall">
         <item quantity="other">Không thể gỡ cài đặt %1$d ứng dụng</item>
-    </plurals>
-    <plurals name="alert_failed_to_disable">
-        <item quantity="other">Không thể tắt %1$d ứng dụng</item>
     </plurals>
     <string name="copy">Sao chép</string>
     <string name="close">Đóng</string>
@@ -159,7 +152,6 @@
     <string name="state_high_priority">Ưu tiên cao</string>
     <string name="failed_to_stop">Không thể dừng <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="force_stop">Buộc dừng</string>
-    <string name="failed_to_enable">Không thể bật <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="failed_to_disable">Không thể tắt <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="enable">Bật</string>
     <string name="disable">Tắt</string>
@@ -268,7 +260,6 @@
     <string name="external_multiple_data_dir">Thư mục dữ liệu ngoài <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
     <string name="external_data_dir">Thư mục dữ liệu ngoài</string>
     <string name="sort_by_blocked_components">Đã chặn trước</string>
-    <string name="sort_by_disabled_app">Đã tắt trước</string>
     <string name="exodus_link">Liên kết εxodus</string>
     <string name="usage_yesterday">Hôm qua</string>
     <string name="app_settings">Cài đặt</string>
@@ -964,7 +955,6 @@
     <string name="profile_clear_data_msg">Xoá dữ liệu của các ứng dụng</string>
     <string name="profile_clear_cache_msg">Xoá bộ nhớ đệm của các ứng dụng</string>
     <string name="profile_force_stop_msg">Buộc dừng các ứng dụng</string>
-    <string name="profile_disable_msg">Tắt hoặc bật các ứng dụng dựa trên trạng thái</string>
     <string name="allow_routine_ops_msg">Cho phép cấu hình được sử dụng trong các hoạt động thường ngày</string>
     <string name="profile_state">Trạng thái cấu hình</string>
     <string name="allow_routine_ops">Cho phép các hoạt động thường ngày</string>
@@ -999,7 +989,6 @@
     <string name="permission_flags">Thuộc tính quyền</string>
     <string name="pref_selected_users_msg">Giới hạn App Manager chỉ hoạt động với những người dùng đã chọn.</string>
     <string name="pref_selected_users">Người dùng đã chọn</string>
-    <string name="enable_disable">Bật/tắt</string>
     <string name="error_with_details">Lỗi: %s</string>
     <string name="files">Tệp</string>
     <string name="storage">Bộ nhớ</string>

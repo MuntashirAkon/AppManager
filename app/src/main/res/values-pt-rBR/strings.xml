@@ -175,7 +175,6 @@
     <string name="stopped">Parado</string>
     <string name="disable">Desativar</string>
     <string name="enable">Ativar</string>
-    <string name="failed_to_disable"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> não pôde ser desativado.</string>
     <string name="failed_to_enable"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> não pôde ser ativado.</string>
     <string name="force_stop">Forçar parada</string>
     <string name="failed_to_stop"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> não pôde ser parado.</string>
@@ -192,7 +191,6 @@
     <string name="app_settings">Configurações</string>
     <string name="usage_yesterday">Ontem</string>
     <string name="exodus_link">Link do εxodus</string>
-    <string name="sort_by_disabled_app">Desativado primeiro</string>
     <string name="sort_by_blocked_components">Bloqueado primeiro</string>
     <string name="external_data_dir">Diretório de Dados Externo</string>
     <string name="external_multiple_data_dir">Diretório de Dados Externo <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
@@ -229,10 +227,6 @@
     <plurals name="alert_failed_to_clear_data">
         <item quantity="one">%1$d aplicativo não pôde ter os dados limpos</item>
         <item quantity="other">%1$d aplicativos não puderam ter os dados limpos</item>
-    </plurals>
-    <plurals name="alert_failed_to_disable">
-        <item quantity="one">%1$d aplicativo não pôde ser desativado</item>
-        <item quantity="other">%1$d aplicativos não puderam ser desativados</item>
     </plurals>
     <plurals name="alert_failed_to_uninstall">
         <item quantity="one">%1$d aplicativo não pôde ser desinstalado</item>
@@ -334,7 +328,6 @@
     <string name="filter_system_apps">Aplicativos do sistema</string>
     <string name="filter_apps_with_rules">Aplicativos com regras</string>
     <string name="select_all">Selecionar Tudo</string>
-    <string name="filter_disabled_apps">Aplicativos desativados</string>
     <string name="installed_version">Versão Instalada</string>
     <string name="trackers">Rastreadores</string>
     <string name="components">Componentes</string>
@@ -448,10 +441,6 @@
     <string name="type_long">Número inteiro longo</string>
     <string name="key_name">Nome da Chave</string>
     <string name="long_integer_value">Valor do número inteiro longo</string>
-    <plurals name="alert_failed_to_enable">
-        <item quantity="one">%1$d aplicativo não pôde ser ativado</item>
-        <item quantity="other">%1$d aplicativos não puderam ser ativados</item>
-    </plurals>
     <plurals name="backup_exists_are_you_sure">
         <item quantity="one">O backup já existe. Tem certeza\?</item>
         <item quantity="other">Mais de um aplicativo já tem um backup. Tem certeza\?</item>
@@ -652,7 +641,6 @@
     <string name="profile_clear_data_msg">Limpa os dados dos aplicativos</string>
     <string name="profile_clear_cache_msg">Limpa o cache de aplicativo dos aplicativos</string>
     <string name="profile_force_stop_msg">Força a parada dos aplicativos</string>
-    <string name="profile_disable_msg">Desativa ou ativa aplicativos com base no estado</string>
     <string name="allow_routine_ops_msg">Permitir que o perfil seja usado nas operações de rotina</string>
     <string name="profile_state">Estado do perfil</string>
     <string name="allow_routine_ops">Permitir operações de rotina</string>
@@ -1035,7 +1023,6 @@
     <string name="permission_flags">Bandeiras de permissão</string>
     <string name="pref_selected_users_msg">Restringir o App Manager a trabalhar apenas com os usuários selecionados.</string>
     <string name="pref_selected_users">Usuários selecionados</string>
-    <string name="enable_disable">Ativar/desativar</string>
     <string name="error_with_details">Erro: %s</string>
     <string name="files">Arquivos</string>
     <string name="storage">Armazenamento</string>

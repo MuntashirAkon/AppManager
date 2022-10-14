@@ -83,10 +83,6 @@
         <item quantity="one">%1$d ऐप को अनइंस्टॉल नहीं कर सका</item>
         <item quantity="other">%1$d ऐप्स को अनइंस्टॉल नहीं कर सका</item>
     </plurals>
-    <plurals name="alert_failed_to_disable">
-        <item quantity="one">%1$d ऐप को बंद नही किया जा सका</item>
-        <item quantity="other">%1$d ऐप्स को बंद नही किया जा सका</item>
-    </plurals>
     <plurals name="alert_failed_to_clear_data">
         <item quantity="one">%1$d ऐप से डेटा नहीं मिटा सका</item>
         <item quantity="other">%1$d ऐप्स से डेटा नहीं मिटा सका</item>
@@ -124,7 +120,6 @@
     <string name="external_multiple_data_dir">एक्सटर्नल डेटा डायरेक्टरी <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
     <string name="external_data_dir">एक्सटर्नल डेटा डायरेक्टरी</string>
     <string name="sort_by_blocked_components">पहले ब्लॉक्ड किये हुए</string>
-    <string name="sort_by_disabled_app">पहले बंद किये हुए</string>
     <string name="exodus_link">εxodus लिंक</string>
     <string name="usage_yesterday">पिछले दिन</string>
     <string name="app_settings">सेटिंग्स</string>
@@ -142,7 +137,6 @@
     <string name="storage_and_cache">स्टोरेज और कैश</string>
     <string name="failed_to_stop"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> को नहीं रोक सके।</string>
     <string name="force_stop">ज़बरदस्ती रोकें</string>
-    <string name="failed_to_enable"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> को चालू नहीं किया जा सका।</string>
     <string name="failed_to_disable"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> को बंद नहीं किया जा सका।</string>
     <string name="enable">चालू करें</string>
     <string name="disable">बंद करें</string>
@@ -325,7 +319,6 @@
     <string name="components">कंपोनेंट्स</string>
     <string name="trackers">ट्रैकर्स</string>
     <string name="installed_version">इंस्टॉल्ड संस्करण</string>
-    <string name="filter_disabled_apps">बंद किए हुए ऐप्स</string>
     <string name="select_all">सभी का चयन करें</string>
     <string name="filter_apps_with_rules">ऐप्स रूल्स के साथ</string>
     <string name="filter_system_apps">सिस्टम ऐप्स</string>
@@ -552,10 +545,6 @@
         <item quantity="one">बैकअप मौजूद है। क्या आपको यकीन है\?</item>
         <item quantity="other">एक से ज्यादा ऐप के लिए बैकअप मौजूद है। क्या आपको यकीन है\?</item>
     </plurals>
-    <plurals name="alert_failed_to_enable">
-        <item quantity="one">%1$d ऐप को चालू नहीं कर सका</item>
-        <item quantity="other">%1$d ऐप्स को चालू नहीं कर सके</item>
-    </plurals>
     <plurals name="alert_failed_to_block_components">
         <item quantity="one">%1$d ऐप के कंपोनेंट्स को ब्लॉक नहीं किया जा सका</item>
         <item quantity="other">%1$d ऐप्स के कंपोनेंट्स को ब्लॉक नहीं किया जा सका</item>
@@ -699,7 +688,6 @@
     <string name="profile_clear_data_msg">सक्षम होने पर ऐप्स के डेटा को साफ कर दिया</string>
     <string name="profile_clear_cache_msg">सक्षम होने पर ऐप्स के कैश को साफ कर दिया जाएगा</string>
     <string name="profile_force_stop_msg">सक्षम होने पर ऐप्स को ज़बरदस्ती रोक दिया जाएगा</string>
-    <string name="profile_disable_msg">यदि सक्षम हो, तो ऐप्स को स्तिथि की वैल्यू के आधार पर बंद/चालू किया जाएगा</string>
     <string name="allow_routine_ops_msg">रूटीन ऑपरेशंस में प्रोफाइल का इस्तेमाल करने की अनुमति दें</string>
     <string name="profile_state">प्रोफाइल स्तिथि</string>
     <string name="allow_routine_ops">रूटीन ऑप्स की अनुमति दें</string>

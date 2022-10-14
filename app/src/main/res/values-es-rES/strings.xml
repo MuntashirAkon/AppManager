@@ -95,7 +95,6 @@
     <string name="sort_by_last_used">Último uso</string>
     <string name="external_data_dir">Directorio de datos externos</string>
     <string name="sort_by_blocked_components">Bloqueadas primero</string>
-    <string name="sort_by_disabled_app">Desactivadas primero</string>
     <string name="exodus_link">Enlace de εxodus</string>
     <string name="usage_yesterday">Ayer</string>
     <string name="app_settings">Configuración</string>
@@ -336,7 +335,6 @@
     <string name="components">Componentes</string>
     <string name="trackers">Rastreadores</string>
     <string name="installed_version">Versión instalada</string>
-    <string name="filter_disabled_apps">Aplicaciones desactivadas</string>
     <string name="select_all">Seleccionar todo</string>
     <string name="filter_apps_with_rules">Aplicaciones con reglas</string>
     <string name="filter_system_apps">Aplicaciones del sistema</string>
@@ -500,7 +498,6 @@
     <string name="input_permissions_description">Permisos de acceso con espacios, p. ej. <tt>com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION</tt> etc. Usa <tt>*</tt> para solicitar todos los permisos.</string>
     <string name="input_permissions">Permisos de entrada</string>
     <string name="profile_clear_cache_msg">Vacía la antememoria de las aplicaciones</string>
-    <string name="profile_disable_msg">Desactiva o activa las aplicaciones en función del estado</string>
     <string name="allow_routine_ops_msg">Permitir que el perfil se utilice en las operaciones de rutinarias</string>
     <string name="profile_state">Estado del perfil</string>
     <string name="allow_routine_ops">Permitir ops rutinarias</string>
@@ -653,11 +650,6 @@
         <item quantity="many">Clases %1$d</item>
         <item quantity="other">Clases %1$d</item>
     </plurals>
-    <plurals name="alert_failed_to_enable">
-        <item quantity="one">No se ha podido activar la aplicación %1$d</item>
-        <item quantity="many">No se han podido activar %1$d aplicaciones</item>
-        <item quantity="other">No se han podido activar %1$d aplicaciones</item>
-    </plurals>
     <string name="input_app_ops">Introducir app ops</string>
     <string name="clear_data_from_uninstalled_apps_description">Limpiar datos desde las aplicaciones que son desinstaladas con <tt>DONT_DELETE_DATA</tt> flag</string>
     <string name="ago">hace</string>
@@ -671,18 +663,12 @@
         <item quantity="many">No se han podido desinstalar %1$d aplicaciones</item>
         <item quantity="other">No se han podido desinstalar %1$d aplicaciones</item>
     </plurals>
-    <plurals name="alert_failed_to_disable">
-        <item quantity="one">No se pudo deshabilitar %1$d app</item>
-        <item quantity="many">No se han podido desactivar %1$d aplicaciones</item>
-        <item quantity="other">No se han podido desactivar %1$d aplicaciones</item>
-    </plurals>
     <string name="store">Tienda</string>
     <string name="apk_updater">Actualizador APK</string>
     <string name="external_multiple_data_dir">Directorio de datos externos <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
     <string name="failed_to_disable_op">No se pudo deshabilitar la app op solicitada</string>
     <string name="failed_to_enable_op">No se pudo activar la app op solicitada</string>
     <string name="failed_to_stop">No se pudo detener <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
-    <string name="failed_to_enable">No se pudo activar <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="failed_to_disable">No se pudo desactivar <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="failed_to_uninstall">No se pudo desinstalar <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="type_long">Entero largo</string>
@@ -1070,7 +1056,6 @@
     <string name="pref_selected_users">Usuarios seleccionados</string>
     <string name="pref_selected_users_msg">Restringe App Manager para que funcione sólo con los usuarios seleccionados.</string>
     <string name="permission_flags">Marcas de permiso</string>
-    <string name="enable_disable">Activar/desactivar</string>
     <string name="error_with_details">Error: %s</string>
     <string name="saved_filters">Filtros guardados</string>
     <string name="notice">Aviso</string>

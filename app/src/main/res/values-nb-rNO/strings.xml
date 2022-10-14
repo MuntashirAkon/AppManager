@@ -151,7 +151,6 @@
     <string name="components">Komponenter</string>
     <string name="trackers">Sporere</string>
     <string name="installed_version">Installert versjon</string>
-    <string name="filter_disabled_apps">Avskrudde programmer</string>
     <string name="select_all">Velg alle</string>
     <string name="filter_apps_with_rules">Programmer med regler</string>
     <string name="filter_system_apps">Systemprogrammer</string>
@@ -228,10 +227,6 @@
     <plurals name="alert_failed_to_uninstall">
         <item quantity="one">Kunne ikke avinstallere %1$d program</item>
         <item quantity="other">Kunne ikke avinstallere %1$d programmer</item>
-    </plurals>
-    <plurals name="alert_failed_to_disable">
-        <item quantity="one">Kunne ikke skru av %1$d program</item>
-        <item quantity="other">Kunne ikke skru av %1$d programmer</item>
     </plurals>
     <plurals name="failed_to_import_files">
         <item quantity="one">Kunne ikke importere %1$d fil.</item>
@@ -344,11 +339,9 @@
     <string name="external_multiple_data_dir">Ekstern datamappe <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
     <string name="external_data_dir">Ekstern datamappe</string>
     <string name="sort_by_blocked_components">Blokkerte først</string>
-    <string name="sort_by_disabled_app">Avskrudde først</string>
     <string name="exodus_link">εxodus-lenke</string>
     <string name="failed_to_stop">Kunne ikke stoppe <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="force_stop">Tving stopp</string>
-    <string name="failed_to_enable">Kunne ikke skru på <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="failed_to_disable">Kunne ikke skru av <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="enable">Skru på</string>
     <string name="disable">Skru av</string>
@@ -451,10 +444,6 @@
     <string name="input_profile_name">Profilnavn</string>
     <string name="full_stop_tap_to_see_details">. Trykk for å se detaljer.</string>
     <string name="no_matching_package_found">Kunne ikke funne noe slik program</string>
-    <plurals name="alert_failed_to_enable">
-        <item quantity="one">Kunne ikke skru på %1$d program</item>
-        <item quantity="other">Kunne ikke skru på %1$d programmer</item>
-    </plurals>
     <string name="cache">Utelukk hurtiglager</string>
     <string name="failed_packages">Feilede pakker</string>
     <string name="no_tracker_found">Fant ingen sporer</string>
@@ -822,7 +811,6 @@
     <string name="backup_volume">Sikkerhetskopier dataområde</string>
     <string name="backup_extras_description">Sikkerhetskopier programtilganger, batterisparings- og databruksinnstillinger, MagiskHide-status, SSAID, osv.</string>
     <string name="app_signing_install_without_data_loss">Hvis du har skrudd av signaturbekreftelse kan du bruke <b>Kun installer</b>-valget for å installere programmet uten å miste data.</string>
-    <string name="profile_disable_msg">Skrur av eller på programmer basert på tilstand</string>
     <string name="usage_access_not_supported">Kunne ikke forespørre brukstilgang. Tilhørende innstillingsside finnes ikke.</string>
     <string name="rsa_exponent">Eksponent</string>
     <string name="pref_backup_flags_msg">Å legge til en forhåndsinnstilling for sikkerhetskopivalg lar deg unngå å velge flagg hver gang du sikkerhetskopierer/gjenoppretter.</string>

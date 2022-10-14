@@ -89,7 +89,6 @@
     <string name="requested_large_heap">Büyük metin</string>
     <string name="updated_app">Güncelleme</string>
     <string name="select_all">Tümünü Seç</string>
-    <string name="filter_disabled_apps">Pasif uygulamalar</string>
     <string name="installed_version">Kurulu Sürüm</string>
     <string name="trackers">İzleyiciler</string>
     <string name="components">Bileşenler</string>
@@ -280,10 +279,6 @@
         <item quantity="one">Yedek zaten var. Emin misiniz\?</item>
         <item quantity="other">Birden fazla uygulamanın zaten yedeği var. Emin misiniz\?</item>
     </plurals>
-    <plurals name="alert_failed_to_enable">
-        <item quantity="one">%1$d uygulama etkinleştirilemedi</item>
-        <item quantity="other">%1$d uygulama etkinleştirilemedi</item>
-    </plurals>
     <plurals name="alert_failed_to_block_components">
         <item quantity="one">%1$d uygulama için bileşenler engellenemedi</item>
         <item quantity="other">%1$d uygulama için bileşenler engellenemedi</item>
@@ -418,16 +413,11 @@
         <item quantity="one">%1$d uygulama kaldırılamadı</item>
         <item quantity="other">%1$d uygulama kaldırılamadı</item>
     </plurals>
-    <plurals name="alert_failed_to_disable">
-        <item quantity="one">%1$d uygulama devre dışı bırakılamadı</item>
-        <item quantity="other">%1$d uygulama devre dışı bırakılamadı</item>
-    </plurals>
     <plurals name="alert_failed_to_clear_data">
         <item quantity="one">%1$d uygulamadan veriler temizlenemedi</item>
         <item quantity="other">%1$d uygulamadan veriler temizlenemedi</item>
     </plurals>
     <string name="sort_by_blocked_components">Önce engellenen</string>
-    <string name="sort_by_disabled_app">Önce devre dışı bırakılan</string>
     <string name="error_evaluating_input">Giriş değerlendirilemedi</string>
     <string name="shared_prefs">Paylaşılan Tercihler</string>
     <string name="test_only">Yalnızca test</string>
@@ -483,7 +473,6 @@
     <string name="storage_and_cache">Depolama ve Önbellek</string>
     <string name="failed_to_stop"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> durdurulamadı.</string>
     <string name="force_stop">Zorla durdur</string>
-    <string name="failed_to_enable"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> etkinleştirilemedi.</string>
     <string name="failed_to_disable"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> devre dışı bırakılamadı.</string>
     <string name="enable">Etkinleştir</string>
     <string name="disable">Devre dışı bırak</string>
@@ -654,7 +643,6 @@
     <string name="profile_clear_data_msg">Uygulamaların verilerini temizler</string>
     <string name="profile_clear_cache_msg">Uygulamaların uygulama önbelleğini temizler</string>
     <string name="profile_force_stop_msg">Uygulamaları zorla durdurur</string>
-    <string name="profile_disable_msg">Duruma göre uygulamaları devre dışı bırakır veya etkinleştirir</string>
     <string name="allow_routine_ops_msg">Profilin rutin işlemlerde kullanılmasına izin ver</string>
     <string name="profile_state">Profil durumu</string>
     <string name="allow_routine_ops">Rutin işlemlere izin ver</string>
@@ -1034,7 +1022,6 @@
     <string name="permission_flags">İzin işaretleri</string>
     <string name="pref_selected_users_msg">App Manager\'i yalnızca seçilen kullanıcılarla çalışacak şekilde kısıtlayın.</string>
     <string name="pref_selected_users">Seçilen kullanıcılar</string>
-    <string name="enable_disable">Etkinleştir/devre dışı bırak</string>
     <string name="error_with_details">Hata: %s</string>
     <string name="notice_saf">Birimlerin aksine, seçilen dizin, kaydedilmiş APK\'lar ve yedekler dahil olmak üzere App Manager ile ilgili tüm dosyaları depolamak için kullanılacaktır. Depolama Erişim Sistemi (SAF) çok yavaştır, bu nedenle bu seçeneği yalnızca diğerleri kullanılamadığında kullanmalısınız.</string>
     <string name="files">Dosyalar</string>

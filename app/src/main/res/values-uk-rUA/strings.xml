@@ -237,12 +237,6 @@
         <item quantity="many">Більше одного додатка вже має резервну копію. Ви впевнені\?</item>
         <item quantity="other">Більше одного додатка вже має резервну копію. Ви впевнені\?</item>
     </plurals>
-    <plurals name="alert_failed_to_enable">
-        <item quantity="one">Не вдалося ввімкнути %1$d додаток</item>
-        <item quantity="few">Не вдалося ввімкнути %1$d додатки</item>
-        <item quantity="many">Не вдалося ввімкнути %1$d додатків</item>
-        <item quantity="other">Не вдалося ввімкнути %1$d додатків</item>
-    </plurals>
     <plurals name="alert_failed_to_block_components">
         <item quantity="one">Не вдалося заблокувати компоненти в %1$d додатку</item>
         <item quantity="few">Не вдалося заблокувати компоненти в %1$d додатках</item>
@@ -285,7 +279,6 @@
     <string name="components">Компоненти</string>
     <string name="trackers">Трекери</string>
     <string name="installed_version">Установлена версія</string>
-    <string name="filter_disabled_apps">Вимкнені додатки</string>
     <string name="select_all">Вибрати все</string>
     <string name="filter_apps_with_rules">Додатки з правилами</string>
     <string name="filter_system_apps">Системні додатки</string>
@@ -380,12 +373,6 @@
         <item quantity="many">Не вдалося видалити %1$d додатків</item>
         <item quantity="other">Не вдалося видалити %1$d додатків</item>
     </plurals>
-    <plurals name="alert_failed_to_disable">
-        <item quantity="one">Не вдалося вимкнути %1$d додаток</item>
-        <item quantity="few">Не вдалося вимкнути %1$d додатки</item>
-        <item quantity="many">Не вдалося вимкнути %1$d додатків</item>
-        <item quantity="other">Не вдалося вимкнути %1$d додатків</item>
-    </plurals>
     <plurals name="alert_failed_to_clear_data">
         <item quantity="one">Не вдалося очистити дані %1$d додатку</item>
         <item quantity="few">Не вдалося очистити дані %1$d додатків</item>
@@ -425,7 +412,6 @@
     <string name="external_multiple_data_dir">Каталог зовнішніх даних <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
     <string name="external_data_dir">Каталог зовнішніх даних</string>
     <string name="sort_by_blocked_components">Спочатку заблоковані</string>
-    <string name="sort_by_disabled_app">Спочатку вимкнені</string>
     <string name="exodus_link">εxodus посилання</string>
     <string name="usage_yesterday">Вчора</string>
     <string name="app_settings">Налаштування</string>
@@ -437,7 +423,6 @@
     <string name="storage_and_cache">Сховище і кеш</string>
     <string name="failed_to_stop">Не вдалося зупинити <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="force_stop">Зупинити примусово</string>
-    <string name="failed_to_enable">Не вдалося ввімкнути <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="failed_to_disable">Не вдалося вимкнути <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="enable">Ввімкнути</string>
     <string name="disable">Вимкнути</string>
@@ -695,7 +680,6 @@
     <string name="profile_clear_data_msg">Очищення даних додатків</string>
     <string name="profile_clear_cache_msg">Очищення кешу додатків</string>
     <string name="profile_force_stop_msg">Примусова зупинка додатків</string>
-    <string name="profile_disable_msg">Вимкненя або увімкнення додатків, залежно від значення стану</string>
     <string name="install_location">Місце встановлення</string>
     <string name="installer">Інсталятор</string>
     <string name="comment">Коментар</string>
@@ -1105,7 +1089,6 @@
     <string name="storage">Сховище</string>
     <string name="notice_saf">На відміну від томів, обраний каталог буде використовуватися для зберігання всіх файлів, пов\'язаних з App Manager, включаючи збережені APK і резервні копії. Storage Access Framework (SAF) працює дуже повільно, тому ви повинні використовувати цей варіант тільки тоді, коли інші не можуть бути використані.</string>
     <string name="notice">Сповіщення</string>
-    <string name="enable_disable">Увімкнення/вимкнення</string>
     <string name="error_with_details">Помилка: %s</string>
     <string name="saved_filters">Збережені фільтри</string>
     <string name="community_links">Telegram: https://t.me/AppManagerChannel

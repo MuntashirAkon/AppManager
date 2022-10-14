@@ -119,7 +119,6 @@
     <string name="stopped">স্থগিত</string>
     <string name="disable">নিষ্ক্রিয় করুন</string>
     <string name="enable">সক্রিয় করুন</string>
-    <string name="failed_to_disable"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g>টি নিষ্ক্রিয় করতে ব্যর্থ।</string>
     <string name="failed_to_enable"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g>টি সক্রিয় করতে ব্যর্থ।</string>
     <string name="force_stop">কাটুন</string>
     <string name="failed_to_stop"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g>টি কাটতে ব্যার্থ.</string>
@@ -132,7 +131,6 @@
     <string name="app_settings">সেটিংস</string>
     <string name="usage_yesterday">গতকাল</string>
     <string name="exodus_link">\\u03b5xodus লিঙ্ক</string>
-    <string name="sort_by_disabled_app">নিষ্ক্রিয় গুলো প্রথমে</string>
     <string name="sort_by_blocked_components">ব্লকড গুলো প্রথমে</string>
     <string name="external_data_dir">বাহ্যিক ডাটা ডিরেক্টরি</string>
     <string name="external_multiple_data_dir">বাহ্যিক ডাটা ডিরেক্টরি <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
@@ -160,10 +158,6 @@
     <plurals name="alert_failed_to_clear_data">
         <item quantity="one">%1$dটি অ্যাপ থেকে ডাটা মুছতে ব্যর্থ</item>
         <item quantity="other">%1$dটি অ্যাপ থেকে ডাটা মুছতে ব্যর্থ</item>
-    </plurals>
-    <plurals name="alert_failed_to_disable">
-        <item quantity="one">%1$d অ্যাপটি ডিজ্যাবল করতে ব্যর্থ</item>
-        <item quantity="other">%1$d অ্যাপ গুলো ডিজ্যাবল করতে ব্যর্থ</item>
     </plurals>
     <plurals name="alert_failed_to_uninstall">
         <item quantity="one">%1$d অ্যাপটি আনইনস্টল করতে ব্যর্থ</item>
@@ -227,7 +221,6 @@
     <string name="filter_user_apps">ব্যবহারকারীর এপ</string>
     <string name="filter_system_apps">সিস্টেম এপ্স</string>
     <string name="select_all">সবগুলো নির্বাচন করুন</string>
-    <string name="filter_disabled_apps">নিষ্ক্রিয় অ্যাপস</string>
     <string name="installed_version">ইনস্টলকৃত সংস্করণ</string>
     <string name="trackers">ট্র্যাকারসমূহ</string>
     <string name="features">বৈশিষ্ট্যসমূহ</string>

@@ -74,7 +74,6 @@
     <string name="profile_clear_data_msg">Efface les données des applications</string>
     <string name="profile_clear_cache_msg">Efface le cache des applications</string>
     <string name="profile_force_stop_msg">Arrêt forcé des application</string>
-    <string name="profile_disable_msg">Active/désactive en fonction de la valeur de leur état</string>
     <string name="profile_state">État du profil</string>
     <string name="adb_over_tcp">ADB via TCP</string>
     <string name="pref_mode_of_operations">Type d\'opération</string>
@@ -272,10 +271,6 @@
         <item quantity="one">Une sauvegarde existe déjà. Êtes-vous sûr \?</item>
         <item quantity="other">Une sauvegarde existe déjà pour plus d\'une application. Êtes-vous sûr \?</item>
     </plurals>
-    <plurals name="alert_failed_to_enable">
-        <item quantity="one">Impossible d\'activer %1$d application</item>
-        <item quantity="other">Impossible d\'activer %1$d applications</item>
-    </plurals>
     <plurals name="alert_failed_to_block_components">
         <item quantity="one">Impossible de bloquer les composants d\'%1$d application</item>
         <item quantity="other">Impossible de bloquer les composants de %1$d applications</item>
@@ -313,7 +308,6 @@
     <string name="components">Composants</string>
     <string name="trackers">Traqueurs</string>
     <string name="installed_version">Version installée</string>
-    <string name="filter_disabled_apps">Applications désactivées</string>
     <string name="select_all">Tout sélectionner</string>
     <string name="filter_apps_with_rules">Applications avec des règles</string>
     <string name="filter_system_apps">Applications système</string>
@@ -405,10 +399,6 @@
         <item quantity="one">Impossible de désinstaller %1$d application</item>
         <item quantity="other">Impossible de désinstaller %1$d applications</item>
     </plurals>
-    <plurals name="alert_failed_to_disable">
-        <item quantity="one">Impossible de désactiver %1$d application</item>
-        <item quantity="other">Impossible de désactiver %1$d applications</item>
-    </plurals>
     <plurals name="alert_failed_to_clear_data">
         <item quantity="one">Impossible d\'effacer les données d\'%1$d application</item>
         <item quantity="other">Impossible d\'effacer les données de %1$d applications</item>
@@ -441,7 +431,6 @@
         <item quantity="other">%1$d fois</item>
     </plurals>
     <string name="sort_by_blocked_components">Bloquées en premier</string>
-    <string name="sort_by_disabled_app">Désactivées en premier</string>
     <string name="exodus_link">Lien εxodus</string>
     <string name="usage_yesterday">Hier</string>
     <string name="app_settings">Paramètres</string>
@@ -453,7 +442,6 @@
     <string name="storage_and_cache">Stockage et cache</string>
     <string name="failed_to_stop">Impossible d\'arrêter <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="force_stop">Forcer l\'arrêt</string>
-    <string name="failed_to_enable">Impossible d\'activer <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="failed_to_disable">Impossible de désactiver <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="enable">Activer</string>
     <string name="disable">Désactiver</string>
@@ -829,7 +817,6 @@
     <string name="files">Fichiers</string>
     <string name="storage">Stockage</string>
     <string name="notice">Notification</string>
-    <string name="enable_disable">Activer/désactiver</string>
     <string name="error_with_details">Erreur : %s</string>
     <string name="saved_filters">Filtres enregistrés</string>
     <string name="pref_selected_users">Utilisateurs sélectionnés</string>

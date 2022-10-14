@@ -71,7 +71,6 @@
     <string name="app_ops">Operazioni app</string>
     <string name="total_size">Totale</string>
     <string name="failed_to_stop">Impossibile arrestare <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
-    <string name="failed_to_enable">Impossibile abilitare <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="failed_to_disable">Impossibile disabilitare <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="stopped">Fermato</string>
     <string name="uninstall_system_app_message">Questa è un app di sistema. Sei sicuro di volerla disinstallare\?</string>
@@ -233,10 +232,6 @@
         <item quantity="one">Impossibile disinstallare %1$d app</item>
         <item quantity="many">Impossibile disinstallare %1$d app</item>
         <item quantity="other">Impossibile disinstallare %1$d app</item>
-    </plurals>
-    <plurals name="alert_failed_to_disable">
-        <item quantity="one">Impossibile disattivare l\'app %1$d</item>
-        <item quantity="other">Impossibile disattivare le app %1$d</item>
     </plurals>
     <plurals name="alert_failed_to_clear_data">
         <item quantity="one">Impossibile cancellare i dati da %1$d app</item>
@@ -464,7 +459,6 @@
     <string name="restore">Ripristino</string>
     <string name="whats_new">Cosa c\'è di nuovo</string>
     <string name="installed_version">Versione installata</string>
-    <string name="filter_disabled_apps">App disabilitate</string>
     <string name="select_all">Seleziona tutto</string>
     <string name="filter_system_apps">App sistema</string>
     <string name="filter_user_apps">App utente</string>
@@ -510,7 +504,6 @@
     <string name="failed_to_prevent_background_run">Impossibile impedire l\'esecuzione di %1$s in background</string>
     <string name="minimum_version">Versione minima: %d</string>
     <string name="pref_selected_users_msg">Restringi il funzionamento di App Manager solo agli utenti selezionati.</string>
-    <string name="enable_disable">Abilita o disabilita</string>
     <string name="notice">Avviso</string>
     <string name="notice_saf">A differenza dei volumi, la directory selezionata verrà utilizzata per archiviare tutti i file relativi ad App Manager, inclusi APK e backup salvati. Storage Access Framework (SAF) è molto lento, pertanto dovresti usare questa opzione solo quando non è possibile usarne altre.</string>
     <string name="adb_pair">Associa</string>
@@ -519,7 +512,6 @@
     <string name="exit_confirmation">Conferma uscita</string>
     <string name="vt_slowness_warning">A seconda della velocità di Internet e del carico sul server, l\'operazione potrebbe richiedere del tempo.</string>
     <string name="vt_disclaimer">VirusTotal e i suoi loghi sono un marchio di Chronicle LLC. Né App Manager, il client API, né i suoi autori sono responsabili per i dati che potresti inviare a VirusTotal.</string>
-    <string name="sort_by_disabled_app">Prima i disabilitati</string>
     <string name="confirm_installation">Conferma installazione</string>
     <string name="sort_by_backup">Prima con backup</string>
     <string name="checksums">Checksum</string>
@@ -559,7 +551,6 @@
     <string name="am_crashed">App Manager si è appena arrestato in modo anomalo</string>
     <string name="in_progress">In corso</string>
     <string name="input_profile_name">Nome profilo</string>
-    <string name="profile_disable_msg">Disabilita o abilita app in base allo stato</string>
     <string name="security_providers">Fornitori di sicurezza</string>
     <string name="trackers_unblocked_successfully">I tracker sono ora sbloccati</string>
     <string name="no_encryption">Nessuna crittografia</string>
@@ -798,11 +789,6 @@
         <item quantity="one">Schema firma</item>
         <item quantity="many">Schemi firme</item>
         <item quantity="other">Schemi firme</item>
-    </plurals>
-    <plurals name="alert_failed_to_enable">
-        <item quantity="one">Impossibile abilitare %1$d app</item>
-        <item quantity="many">Impossibile abilitare %1$d app</item>
-        <item quantity="other">Impossibile abilitare %1$d app</item>
     </plurals>
     <plurals name="verified_with_warning">
         <item quantity="one">Verificato con %d avviso</item>
