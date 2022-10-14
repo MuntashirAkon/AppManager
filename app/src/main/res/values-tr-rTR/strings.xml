@@ -473,7 +473,6 @@
     <string name="storage_and_cache">Depolama ve Önbellek</string>
     <string name="failed_to_stop"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> durdurulamadı.</string>
     <string name="force_stop">Zorla durdur</string>
-    <string name="failed_to_disable"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> devre dışı bırakılamadı.</string>
     <string name="enable">Etkinleştir</string>
     <string name="disable">Devre dışı bırak</string>
     <string name="stopped">Durduruldu</string>
@@ -870,10 +869,7 @@
     <string name="generate_key">Oluştur</string>
     <string name="input_key">Anahtarı girin (onaltılık olarak)</string>
     <string name="input_keystore_alias_pass_msg">%1$s parolasını girmek için buraya dokunun</string>
-    <string name="source_code_links">GitHub: https://github.com/MuntashirAkon/AppManager
-\nGitLab: https://gitlab.com/muntashir/AppManager
-\nRiseup: https://0xacab.org/muntashir/AppManager
-\nCodeberg: https://codeberg.org/muntashir/AppManager</string>
+    <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">GitHub</a> • <a href="https://gitlab.com/muntashir/AppManager">GitLab</a> • <a href="https://0xacab.org/muntashir/AppManager">Riseup</a> • <a href="https://codeberg.org/muntashir/AppManager">Codeberg</a></string>
     <string name="pref_installer_msg">Uygulama kurucusunun davranışlarını yapılandırın.</string>
     <string name="trackers_unblocked_successfully">İzleyicilerin engeli artık kaldırıldı</string>
     <string name="trackers_blocked_successfully">İzleyiciler artık engellendi</string>
@@ -1002,8 +998,7 @@
     <string name="unknown_net_policy">Bilinmeyen ağ politikası (%1$s - %2$X)</string>
     <string name="failed_to_prevent_background_run">%1$s arka planda çalışması engellenemedi</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">İmza uyuşmazlığı nedeniyle uygulama kurulamadı. Uygulama, verileri temizlenmeden kaldırıldı.</string>
-    <string name="community_links">Telegram: https://t.me/AppManagerChannel
-\nTwitter: https://twitter.com/AppManagerNews</string>
+    <string name="community_links"><a href="https://t.me/AppManagerChannel">Telegram kanalı</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
     <string name="community">Topluluk</string>
     <plurals name="alert_failed_to_import_backups">
         <item quantity="one">%1$d yedek içe aktarılamadı</item>
@@ -1195,4 +1190,32 @@
     <string name="am_command"><tt>am</tt> komutu</string>
     <string name="pref_sign_apk_error_signing_key_not_added">Bir APK dosyasını imzalamak için geçerli bir imzalama anahtarı gereklidir.</string>
     <string name="pref_sign_apk_no_signing_key">İmzalama anahtarı yok</string>
+    <string name="failed_to_freeze"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> dondurulamadı.</string>
+    <string name="freeze_unfreeze">Dondur/çöz</string>
+    <string name="profile_freeze_msg">Uygulamaları duruma göre dondurur veya çözer</string>
+    <string name="suspend_app">Askıya al</string>
+    <plurals name="alert_failed_to_unfreeze">
+        <item quantity="one">%1$d uygulama çözülemedi</item>
+        <item quantity="other">%1$d uygulama çözülemedi</item>
+    </plurals>
+    <string name="sort_by_frozen_app">Önce dondurulan</string>
+    <string name="filter_frozen_apps">Dondurulan uygulamalar</string>
+    <string name="pref_version_changelog">Sürüm/Değişiklik günlüğü</string>
+    <string name="hide_app">Gizle</string>
+    <string name="failed_to_unfreeze"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> çözülemedi.</string>
+    <string name="pref_default_freezing_method">Öntanımlı dondurma yöntemi</string>
+    <string name="pref_default_freezing_method_description">Bir dondurma yöntemi seçme seçeneğinin olmadığı yerlerde öntanımlı olarak kullanılacak yöntem.</string>
+    <plurals name="alert_failed_to_freeze">
+        <item quantity="one">%1$d uygulama dondurulamadı</item>
+        <item quantity="other">%1$d uygulama dondurulamadı</item>
+    </plurals>
+    <string name="suspend_app_description">Bu en zayıf dondurma yöntemidir. Askıya alınan bir uygulama başlatıcıda görünmeye devam edebilir ancak gri renkte olur ve başlatılamaz.</string>
+    <string name="disable_app_description">Tavsiye edilen dondurma yöntemi. Uygulamayı ve tüm bileşenlerini devre dışı bırakır, ancak tüm kısayollar kaybolacaktır.</string>
+    <string name="hide_app_description">Bu yöntem yalnızca günlük kullanım için tavsiye edilir. Gizli bir uygulama kaldırılmış gibi görünür. Ancak uygulama yeniden kurulursa veya güncellenirse yeniden görünebilir.</string>
+    <string name="pref_privacy">Gizlilik</string>
+    <string name="pref_appearance_description">Tema, yönlendirme, özellikler, vb.</string>
+    <string name="pref_privacy_description">Ekran kilidi, yetkilendirme, vb.</string>
+    <string name="user_manual">Kullanıcı kılavuzu</string>
+    <string name="get_help">Yardım alın</string>
+    <string name="pref_advanced_pref">Kullanıcılar, APK adı biçimi, paralel çalıştırma, vb.</string>
 </resources>
