@@ -337,10 +337,10 @@
     <string name="go_back">Wróć</string>
     <string name="usage_less_than_a_minute">Mniej niż minuta</string>
     <plurals name="usage_hours">
-        <item quantity="one">%1$d h</item>
-        <item quantity="few">%1$d h</item>
-        <item quantity="many">%1$d h</item>
-        <item quantity="other">%1$d h</item>
+        <item quantity="one">%1$d godz</item>
+        <item quantity="few">%1$d godz</item>
+        <item quantity="many">%1$d godz</item>
+        <item quantity="other">%1$d godz</item>
     </plurals>
     <plurals name="usage_days">
         <item quantity="one">%1$d dzień</item>
@@ -377,7 +377,6 @@
     <string name="storage_and_cache">Dane i pamięć podręczna</string>
     <string name="failed_to_stop">Nie udało się zatrzymać <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="force_stop">Wymuś zatrzymanie</string>
-    <string name="failed_to_disable">Nie udało się wyłączyć <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="enable">Włącz</string>
     <string name="uninstall_system_app_message">To jest aplikacja systemowa. Czy na pewno chcesz odinstalować tę aplikację\?</string>
     <string name="uninstalled_successfully">Aplikacja <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> została odinstalowana.</string>
@@ -469,7 +468,7 @@
     <string name="app_size">Aplikacja</string>
     <string name="failed_to_enable_op">Nie można włączyć pożądanej funkcji App Op</string>
     <string name="no_app_ops">Brak operacji</string>
-    <string name="app_ops">App Ops</string>
+    <string name="app_ops">Działania aplikacji</string>
     <string name="disable">Wyłącz</string>
     <string name="failed_to_uninstall">Nie można usunąć <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="integer_value">Wartość liczby całkowitej</string>
@@ -825,14 +824,10 @@
     <string name="battery_mode">Tryb wykorzystania baterii</string>
     <string name="app_signing_signatures">Sygnatury</string>
     <string name="soft_input">Tryb delikatnego wprowadzenia</string>
-    <string name="authority">Autoryzacja</string>
-    <string name="community_links">Telegram:https://t.me/AppManagerChannel
-\nTwitter:https://twitter.com/AppManagerNews</string>
+    <string name="authority">Autorytet</string>
+    <string name="community_links"><a href="https://t.me/AppManagerChannel">Kanał na Telegramie</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
     <string name="community">Społeczność</string>
-    <string name="source_code_links">GitHub:https://github.com/MuntashirAkon/AppManager
-\nGitLab:https://gitlab.com/muntashir/AppManager
-\nRiseup:https://0xacab.org/muntashir/AppManager
-\nCodeberg:https://codeberg.org/muntashir/AppManager</string>
+    <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">GitHub</a> • <a href="https://gitlab.com/muntashir/AppManager">GitLab</a> • <a href="https://0xacab.org/muntashir/AppManager">Riseup</a> • <a href="https://codeberg.org/muntashir/AppManager">Codeberg</a></string>
     <string name="subject">Temat</string>
     <string name="state_foreground">Procesy w tle</string>
     <string name="state_locked_memory">Pamięć zablokowana</string>
@@ -913,9 +908,9 @@
     <string name="density_split_for_feature"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) zasoby dla funkcji <xliff:g id="feature_name" example="Visualizer">%3$s</xliff:g></string>
     <plurals name="no_of_splits">
         <item quantity="one">%1$d podział</item>
-        <item quantity="few">%1$d podziałów</item>
-        <item quantity="many"/>
-        <item quantity="other"/>
+        <item quantity="few">%1$d podziały</item>
+        <item quantity="many">%1$d podziałów</item>
+        <item quantity="other">%1$d podziałów</item>
     </plurals>
     <string name="second_degree_tracker_note">² prefiks wskazuje, że trackery znajdują się w <a href="https://etip.exodus-privacy.eu.org/">Lista rezerwowa ETIP </a> np. to, czy są to rzeczywiste urządzenia śledzące, jest nadal badane.</string>
     <string name="orientation_behind">Za</string>
@@ -1082,7 +1077,7 @@
     <string name="filename">Nazwa pliku</string>
     <string name="restart_log_viewer_to_see_changes">Uruchom ponownie okno log viewer, aby zobaczyć zmiany.</string>
     <string name="pref_log_viewer_msg">Skonfiguruj sposób wyświetlania dzienników.</string>
-    <string name="log_viewer">Log Viewer</string>
+    <string name="log_viewer">Przeglądarka dziennika</string>
     <string name="import_from_tb">Importuj z Titanium Backup</string>
     <string name="import_from_oab">Importuj z OAndBackup</string>
     <string name="pref_import_backups_msg">Importuj kopie zapasowe z programów OAndBackup, Swift Backup (3.0-3.2) lub Titanium Backup.</string>
@@ -1267,4 +1262,36 @@
     <string name="am_command">Polecenie <tt>am</tt></string>
     <string name="pref_sign_apk_no_signing_key">Brak klucza podpisującego</string>
     <string name="pref_sign_apk_error_signing_key_not_added">Do podpisania pliku APK wymagany jest ważny klucz podpisujący.</string>
+    <string name="disable_app_description">Zalecana metoda zamrażania. Wyłącza aplikację wraz ze wszystkimi jej składnikami, ale wszystkie skróty zostaną utracone.</string>
+    <string name="hide_app_description">Ta metoda jest zalecana tylko do codziennego użytku. Ukryta aplikacja pojawia się tak, jakby była odinstalowana. Ale aplikacja może pojawić się ponownie, jeśli zostanie ponownie zainstalowana lub zaktualizowana.</string>
+    <string name="pref_advanced_pref">Użytkownicy, format nazwy APK, równoległe wykonywanie itp.</string>
+    <string name="pref_version_changelog">Wersja/Lista zmian</string>
+    <string name="get_help">Uzyskaj pomoc</string>
+    <string name="user_manual">Podręcznik użytkownika</string>
+    <string name="failed_to_freeze">Nie można zamrozić <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="suspend_app_description">Jest to najsłabsza metoda zamrażania. Zawieszona aplikacja może nadal pojawiać się w launcherze, ale będzie wyszarzona i nie będzie można jej uruchomić.</string>
+    <plurals name="alert_failed_to_freeze">
+        <item quantity="one">Nie można zamrozić %1$d aplikacji</item>
+        <item quantity="few">Nie można zamrozić %1$d aplikacji</item>
+        <item quantity="many">Nie można zamrozić %1$d aplikacji</item>
+        <item quantity="other">Nie można zamrozić %1$d aplikacji</item>
+    </plurals>
+    <plurals name="alert_failed_to_unfreeze">
+        <item quantity="one">Nie można odmrozić %1$d aplikacji</item>
+        <item quantity="few">Nie można odmrozić %1$d aplikacji</item>
+        <item quantity="many">Nie można odmrozić %1$d aplikacji</item>
+        <item quantity="other">Nie można odmrozić %1$d aplikacji</item>
+    </plurals>
+    <string name="freeze_unfreeze">Zamróź/odmróź</string>
+    <string name="profile_freeze_msg">Zamraża lub odmraża aplikacje na podstawie ich stanu</string>
+    <string name="pref_default_freezing_method">Domyślna metoda mrożenia</string>
+    <string name="pref_default_freezing_method_description">Metoda stosowana domyślnie w miejscach, gdzie nie ma możliwości wyboru metody zamrażania.</string>
+    <string name="suspend_app">Zawieś</string>
+    <string name="hide_app">Ukryj</string>
+    <string name="sort_by_frozen_app">Najpierw zamrożone</string>
+    <string name="filter_frozen_apps">Zamrożone aplikacje</string>
+    <string name="pref_appearance_description">Motyw, orientacja, funkcje itp.</string>
+    <string name="pref_privacy">Prywatność</string>
+    <string name="pref_privacy_description">Blokada ekranu, autoryzacja itp.</string>
+    <string name="failed_to_unfreeze">Nie można odmrozić <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
 </resources>
