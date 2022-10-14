@@ -93,7 +93,7 @@ dependencies {
     implementation 'com.github.MuntashirAkon:unapkm-android:1.2'
     implementation 'com.github.MuntashirAkon:sun-security-android:1.1'
     implementation 'com.github.MuntashirAkon:libadb-android:2.2.0'
-    implementation 'org.bouncycastle:bcprov-jdk15on:1.70'
+    implementation "org.bouncycastle:bcprov-jdk15on:${bouncycastle_version}"
     implementation 'com.github.MuntashirAkon.jadx:jadx-core:5a62a8e625'
     implementation 'com.github.MuntashirAkon.jadx:jadx-dex-input:5a62a8e625'
 
@@ -126,7 +126,7 @@ dependencies {
 //    androidTestImplementation "com.android.support.test.espresso:espresso-intents:3.0.2"
 
     testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.robolectric:robolectric:4.8.1'
+    testImplementation 'org.robolectric:robolectric:4.9'
 }
 
 preBuild.dependsOn ":server:build"

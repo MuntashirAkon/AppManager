@@ -35,11 +35,12 @@ project.ext {
     minSdk = 21
     targetSdk = 32
 
-    libsu_version = "5.0.1"
-    room_version = "2.4.3"
-    annotation_version = "1.4.0"
+    annotation_version = "1.5.0"
     appcompat_version = "1.5.1"
+    bouncycastle_version = "1.70"
+    libsu_version = "5.0.1"
     material_version = "1.7.0-rc01"
     refine_version = "3.0.3"
+    room_version = "2.4.3"
     splashscreen_version = "1.0.0"
 }
