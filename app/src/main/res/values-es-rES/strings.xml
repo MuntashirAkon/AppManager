@@ -341,7 +341,7 @@
     <string name="filter_user_apps">Aplicaciones de usuario</string>
     <string name="filter">Filtro</string>
     <string name="package_name_is_installed_successfully">Se instaló <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
-    <string name="termux">Termux</string>
+    <string name="termux">Termux (Emulador de terminal para Android)</string>
     <string name="failed_to_parse_some_numbers">No se pudo analizar algunos números</string>
     <string name="only_works_in_root_or_adb_mode">Sólo funcionan en modo root o ADB</string>
     <string name="filtered_packages">Paquetes filtrados</string>
@@ -516,7 +516,7 @@
     <string name="failed_to_duplicate_profile">No se pudo duplicar el perfil</string>
     <string name="duplicate">Duplicar</string>
     <string name="new_profile">Perfil nuevo</string>
-    <string name="un_apkm">UnApkm</string>
+    <string name="un_apkm">UnApkm (APKM a APKS)</string>
     <string name="in_progress">En proceso</string>
     <string name="conversion_failed">Falló la conversión.</string>
     <string name="select_apk">Seleccionar APK</string>
@@ -669,7 +669,6 @@
     <string name="failed_to_disable_op">No se pudo deshabilitar la app op solicitada</string>
     <string name="failed_to_enable_op">No se pudo activar la app op solicitada</string>
     <string name="failed_to_stop">No se pudo detener <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
-    <string name="failed_to_disable">No se pudo desactivar <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="failed_to_uninstall">No se pudo desinstalar <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="type_long">Entero largo</string>
     <string name="type_int">Entero</string>
@@ -844,7 +843,7 @@
     <string name="type_int_array">Matriz de enteros</string>
     <string name="type_component_name">Nombre del componente</string>
     <string name="type_null">Sin valor</string>
-    <string name="screen_lock_msg">Bloquee App Manager usando el bloqueo de pantalla de Android</string>
+    <string name="screen_lock_msg">Bloquear App Manager con el bloqueo de pantalla de Android</string>
     <string name="screen_lock">Bloqueo de pantalla</string>
     <string name="unlock_app_manager">Desbloquear gestor de aplicaciones</string>
     <string name="sd_card">Tarjeta SD</string>
@@ -935,10 +934,10 @@
     <string name="restart_log_viewer_to_see_changes">Reinicie la ventana del visor de registros para ver los cambios.</string>
     <string name="pref_log_viewer_msg">Configure la manera en que se muestran los registros.</string>
     <string name="log_viewer">Visor de registros</string>
-    <string name="source_code_links">"GitHub: https://github.com/MuntashirAkon/AppManager  
-\nGitLab: https://gitlab.com/muntashir/AppManager  
-\nRiseup: https://0xacab.org/muntashir/AppManager  
-\nCodeberg: https://codeberg.org/muntashir/AppManager"</string>
+    <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">GitHub</a>•
+\n<a href="https://gitlab.com/muntashir/AppManager">GitLab</a>•
+\n<a href="https://0xacab.org/muntashir/AppManager">Riseup</a>•
+\n<a href="https://codeberg.org/muntashir/AppManager">Codeberg</a></string>
     <string name="new_alias_password">Contraseña de alias nuevo</string>
     <string name="bouncy_castle_keystore">Almacén de claves Bouncy Castle (BKS)</string>
     <string name="invalid_rsa_key_size">El tamaño de la clave no es válido para el cifrado RSA. Este puede ser de 1024, 2048 o 4096 bits.</string>
@@ -1036,10 +1035,7 @@
     <string name="import_from_oab">Importar desde OAndBackup</string>
     <string name="pref_import_backups_msg">Importe copias de respaldo desde OAndBackup, Swift Backup (3.0–3.2) o Titanium Backup.</string>
     <string name="pref_import_backups">Importar copias de respaldo</string>
-    <string name="community_links">Telegram: 
-\nhttps://t.me/AppManagerChannel
-\nTwitter: 
-\nhttps://twitter.com/AppManagerNews</string>
+    <string name="community_links"><a href="https://t.me/AppManagerChannel">Canal de Telegram</a> - <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
     <string name="community">Comunidad</string>
     <plurals name="alert_failed_to_import_backups">
         <item quantity="one">No se ha podido importar la copia de seguridad %1$d</item>
@@ -1098,7 +1094,7 @@
     <string name="failed_to_uninstall_app">Desinstalación fallida</string>
     <string name="backup_volume_dialog_description">Volúmenes con prefijo <tt>tree</tt> son carpetas seleccionadas mediante el framework de acceso al almacenamiento (SAF). Exceptuando estas carpetas, el directorio por defecto para App Manager es una subcarpeta llamada <tt>AppManager</tt>.</string>
     <string name="java">Java</string>
-    <string name="smali">Smali</string>
+    <string name="smali">Smali o Baksmali (descompilar los ejecutables de android)</string>
     <string name="accessibility_service_description">Servicio genérico de accesibilidad para realizar ciertas operaciones como limpiar caché en modo no-root.</string>
     <string name="explore">Explorar</string>
     <string name="system_partition">Root Android</string>
@@ -1234,4 +1230,34 @@
     <string name="changelog_type_fix">Corregir</string>
     <string name="changelog_type_improve">Mejorar</string>
     <string name="am_command"><tt>comando am</tt></string>
+    <string name="failed_to_unfreeze">No se pudo descongelar <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="freeze_unfreeze">Congelar/descongelar</string>
+    <string name="profile_freeze_msg">Congela o descongela las aplicaciones en función de su estado</string>
+    <string name="pref_default_freezing_method">Método de congelación por defecto</string>
+    <string name="pref_default_freezing_method_description">Método que se utilizará por defecto en los lugares en los que no hay opción de seleccionar un método de congelación.</string>
+    <string name="suspend_app">Suspender</string>
+    <string name="hide_app">Ocultar</string>
+    <plurals name="alert_failed_to_freeze">
+        <item quantity="one">No se pudo congelar la aplicación %1$d</item>
+        <item quantity="many">No se pudieron congelar %1$d aplicaciones</item>
+        <item quantity="other">No se pudieron congelar %1$d aplicaciones</item>
+    </plurals>
+    <string name="suspend_app_description">Este es el método de congelación más débil. Una aplicación suspendida puede seguir apareciendo en el lanzador, pero aparecerá en gris y no se podrá iniciar.</string>
+    <string name="disable_app_description">Método de congelación recomendado. Deshabilita la aplicación y todos sus componentes, pero se perderán todos los accesos directos.</string>
+    <string name="hide_app_description">Este método solo se recomienda para el uso diario. Una aplicación oculta aparece como si estuviera desinstalada. Pero la aplicación podría reaparecer si está instalada o actualizada.</string>
+    <string name="sort_by_frozen_app">Congelado primero</string>
+    <string name="filter_frozen_apps">Aplicaciones congeladas</string>
+    <string name="pref_appearance_description">Tema, orientación, características, etc.</string>
+    <string name="pref_privacy">Privacidad</string>
+    <string name="pref_advanced_pref">Usuarios, formato del nombre del APK, ejecución paralela, etc.</string>
+    <string name="pref_version_changelog">Versión/registro de cambios</string>
+    <string name="failed_to_freeze">No se ha podido congelar <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="user_manual">Manual de usuario</string>
+    <string name="get_help">Consigue ayuda</string>
+    <plurals name="alert_failed_to_unfreeze">
+        <item quantity="one">No se pudo descongelar la aplicación %1$d</item>
+        <item quantity="many">No se pudieron descongelar %1$d aplicaciones</item>
+        <item quantity="other">No se pudieron descongelar %1$d aplicaciones</item>
+    </plurals>
+    <string name="pref_privacy_description">Bloqueo de pantalla, autorización, etc.</string>
 </resources>
