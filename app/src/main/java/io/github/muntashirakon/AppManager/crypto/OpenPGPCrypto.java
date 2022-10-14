@@ -194,7 +194,7 @@ public class OpenPGPCrypto implements Crypto {
             newFiles.add(outputPath);
             Log.i(TAG, "Input: " + inputPath + "\nOutput: " + outputPath);
             InputStream is = inputPath.openInputStream();
-            OutputStream os = inputPath.openOutputStream();
+            OutputStream os = outputPath.openOutputStream();
             OpenPgpApi api = new OpenPgpApi(context, service.getService());
             Intent result = api.executeApi(intent, is, os);
             handler.post(() -> handleResult(result));
