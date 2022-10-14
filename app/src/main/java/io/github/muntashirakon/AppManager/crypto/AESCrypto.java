@@ -36,13 +36,17 @@ public class AESCrypto implements Crypto {
 
     public static final String AES_EXT = ".aes";
     public static final String AES_KEY_ALIAS = "backup_aes";
-    public static final int GCM_IV_LENGTH = 12; // in bytes
+    public static final int GCM_IV_SIZE_BYTES = 12;
+    public static final int MAC_SIZE_BITS_OLD = 32;
+    public static final int MAC_SIZE_BITS = 128;
 
     private final SecretKey mSecretKey;
-    private final AEADParameters mParameters;
+    private final byte[] mIv;
     @CryptoUtils.Mode
     private final String mParentMode;
     private final List<Path> mNewFiles = new ArrayList<>();
+
+    private int mMacSizeBits = MAC_SIZE_BITS;
 
     public AESCrypto(@NonNull byte[] iv) throws CryptoException {
         this(iv, CryptoUtils.MODE_AES, null);
@@ -50,6 +54,7 @@ public class AESCrypto implements Crypto {
 
     protected AESCrypto(@NonNull byte[] iv, @NonNull @CryptoUtils.Mode String mode, @Nullable byte[] encryptedAesKey)
             throws CryptoException {
+        mIv = iv;
         mParentMode = mode;
         switch (mParentMode) {
             case CryptoUtils.MODE_AES:
@@ -86,7 +91,18 @@ public class AESCrypto implements Crypto {
             default:
                 throw new CryptoException("Unsupported mode " + mParentMode);
         }
-        mParameters = new AEADParameters(new KeyParameter(mSecretKey.getEncoded()), mSecretKey.getEncoded().length, iv);
+    }
+
+    public void setMacSizeBits(int macSizeBits) {
+        if (macSizeBits == MAC_SIZE_BITS || macSizeBits == MAC_SIZE_BITS_OLD) {
+            mMacSizeBits = macSizeBits;
+        }
+    }
+
+    @NonNull
+    private AEADParameters getParams() {
+        // We need to generate it dynamically due to MAC size issues
+        return new AEADParameters(new KeyParameter(mSecretKey.getEncoded()), mMacSizeBits, mIv);
     }
 
     @CallSuper
@@ -115,7 +131,7 @@ public class AESCrypto implements Crypto {
             throws IOException {
         // Init cipher
         GCMBlockCipher cipher = new GCMBlockCipher(new AESEngine());
-        cipher.init(true, mParameters);
+        cipher.init(true, getParams());
         // Convert unencrypted stream to encrypted stream
         try (OutputStream cipherOS = new CipherOutputStream(encryptedStream, cipher)) {
             FileUtils.copy(unencryptedStream, cipherOS);
@@ -133,7 +149,7 @@ public class AESCrypto implements Crypto {
             throws IOException {
         // Init cipher
         GCMBlockCipher cipher = new GCMBlockCipher(new AESEngine());
-        cipher.init(false, mParameters);
+        cipher.init(false, getParams());
         // Convert encrypted stream to unencrypted stream
         try (InputStream cipherIS = new CipherInputStream(encryptedStream, cipher)) {
             FileUtils.copy(cipherIS, unencryptedStream);
@@ -150,7 +166,7 @@ public class AESCrypto implements Crypto {
         }
         // Init cipher
         GCMBlockCipher cipher = new GCMBlockCipher(new AESEngine());
-        cipher.init(forEncryption, mParameters);
+        cipher.init(forEncryption, getParams());
         // Get desired extension
         String ext = CryptoUtils.getExtension(mParentMode);
         // Encrypt/decrypt files

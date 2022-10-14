@@ -87,14 +87,14 @@ public final class MetadataManager {
         public String keyIds;  // key_ids
         /**
          * Metadata version.
-         * <p>
-         * {@code 1} indicates that it was part of an alpha version which is no longer supported.
-         * <p>
-         * {@code 2} was used in the beta versions but it is used to simulate that the permissions are not preserved.
-         * <p>
-         * {@code 3} is the currently used version and it preserves permissions.
+         * <ul>
+         *     <li>{@code 1} - Alpha version, no longer supported</li>
+         *     <li>{@code 2} - Beta version (v2.5.2x), permissions aren't preserved (special action needed)</li>
+         *     <li>{@code 3} - From v2.6.x to v3.0.2 and v3.1.0-alpha01, permissions are preserved, AES GCM MAC size is 32 bits</li>
+         *     <li>{@code 4} - Since v3.0.3 and v3.1.0-alpha02, AES GCM MAC size is 128 bits</li>
+         * </ul>
          */
-        public int version = 3;  // version
+        public int version = 4;  // version
         public String apkName;  // apk_name
         public String instructionSet = VMRuntime.getInstructionSet(Build.SUPPORTED_ABIS[0]);  // instruction_set
         public BackupFlags flags;  // flags
