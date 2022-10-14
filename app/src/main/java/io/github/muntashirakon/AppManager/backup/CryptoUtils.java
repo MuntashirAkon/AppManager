@@ -76,10 +76,20 @@ public class CryptoUtils {
         switch (metadata.crypto) {
             case MODE_OPEN_PGP:
                 return new OpenPGPCrypto(metadata.keyIds);
-            case MODE_AES:
-                return new AESCrypto(metadata.iv);
+            case MODE_AES: {
+                AESCrypto aesCrypto = new AESCrypto(metadata.iv);
+                if (metadata.version < 4) {
+                    // Old backups use 32 bit MAC
+                    aesCrypto.setMacSizeBits(AESCrypto.MAC_SIZE_BITS_OLD);
+                }
+                return aesCrypto;
+            }
             case MODE_RSA:
                 RSACrypto rsaCrypto = new RSACrypto(metadata.iv, metadata.aes);
+                if (metadata.version < 4) {
+                    // Old backups use 32 bit MAC
+                    rsaCrypto.setMacSizeBits(AESCrypto.MAC_SIZE_BITS_OLD);
+                }
                 if (metadata.aes == null) {
                     metadata.aes = rsaCrypto.getEncryptedAesKey();
                 }
@@ -100,7 +110,7 @@ public class CryptoUtils {
             case MODE_AES:
             case MODE_RSA:
                 SecureRandom random = new SecureRandom();
-                metadata.iv = new byte[AESCrypto.GCM_IV_LENGTH];
+                metadata.iv = new byte[AESCrypto.GCM_IV_SIZE_BYTES];
                 random.nextBytes(metadata.iv);
                 break;
             case MODE_NO_ENCRYPTION:
