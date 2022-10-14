@@ -183,7 +183,6 @@
     <string name="storage_and_cache">Armazenamento e Cache</string>
     <string name="failed_to_stop">Não foi possível parar<xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="force_stop">Forçar paragem</string>
-    <string name="failed_to_disable">Não foi possível desativar <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="enable">Ativar</string>
     <string name="disable">Desativar</string>
     <string name="stopped">Parado</string>
@@ -418,7 +417,7 @@
     <string name="patterns_allowed">Padrões permitidos</string>
     <string name="write">Escrever</string>
     <string name="read">Ler</string>
-    <string name="path_permissions">Permissões do caminho</string>
+    <string name="path_permissions">Caminho para permissões</string>
     <string name="grant_uri_permission">Conceder permissões de URI</string>
     <string name="flags">Bandeiras</string>
     <string name="soft_input">Modo de introdução suave</string>
@@ -432,7 +431,7 @@
     <string name="no_providers">Nenhum fornecedor</string>
     <string name="providers">Fornecedores</string>
     <string name="no_receivers">Nenhum receptor</string>
-    <string name="receivers">Receptores</string>
+    <string name="receivers">Recetores</string>
     <string name="no_activities">Nenhuma atividade</string>
     <string name="refresh">Atualizar</string>
     <string name="launch">Iniciar</string>
@@ -963,10 +962,7 @@
     <string name="input_app_ops_description">Insira nomes e/ou constantes de operações de app com espaços, por exemplo <tt>WAKE_LOCK 63 72 CAMERA</tt> etc.</string>
     <string name="input_app_ops">Inserir operações de app</string>
     <string name="deny_app_ops_description">Defina um modo para as operações da app identificadas pelos valores das constantes, ou seja, <tt>63</tt> ou <tt>RUN_IN_BACKGROUND</tt></string>
-    <string name="source_code_links">GitHub: https://github.com/MuntashirAkon/AppManager
-\nGitLab: https://gitlab.com/muntashir/AppManager
-\nRiseup: https://0xacab.org/muntashir/AppManager
-\nCodeberg: https://codeberg.org/muntashir/AppManager</string>
+    <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">GitHub</a> • <a href="https://gitlab.com/muntashir/AppManager">GitLab</a> • <a href="https://0xacab.org/muntashir/AppManager">Riseup</a> • <a href="https://codeberg.org/muntashir/AppManager">Codeberg</a></string>
     <plurals name="no_of_components">
         <item quantity="one">%1$d componente</item>
         <item quantity="other">%1$d componentes</item>
@@ -1010,8 +1006,7 @@
     <string name="import_from_oab">Importar de OAndBackup</string>
     <string name="pref_import_backups_msg">Importar cópias de segurança de OAndBackup, Swift Backup (3.0–3.2) ou Titanium Backup.</string>
     <string name="pref_import_backups">Importar cópias de segurança</string>
-    <string name="community_links">Telegram: https://t.me/AppManagerChannel;
-\nTwitter: https://twitter.com/AppManagerNews</string>
+    <string name="community_links"><a href="https://t.me/AppManagerChannel">Telegram channel</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
     <string name="community">Comunidade</string>
     <string name="added_to_queue">Adicionado à fila</string>
     <string name="minimum_version">Versão mínima: %d</string>
@@ -1195,4 +1190,34 @@
     <string name="am_command"><tt>am</tt> comando</string>
     <string name="pref_sign_apk_error_signing_key_not_added">É necessário uma chave válida para assinar um ficheiro APK.</string>
     <string name="pref_sign_apk_no_signing_key">Sem chave de assinatura</string>
+    <string name="suspend_app">Suspender</string>
+    <string name="hide_app">Ocultar</string>
+    <string name="disable_app_description">Método de congelamento recomendado. Ele desativa a aplicação e todos os seus componentes, mas todos os atalhos serão perdidos.</string>
+    <string name="sort_by_frozen_app">Congeladas primeiro</string>
+    <string name="filter_frozen_apps">Aplicações congeladas</string>
+    <string name="pref_appearance_description">Tema, orientação, recursos, etc</string>
+    <string name="pref_privacy">Privacidade</string>
+    <string name="failed_to_unfreeze">Não foi possível congelar <xliff:g id="app_name" exemplo="App Manager">%1$s</xliff:g>.</string>
+    <string name="failed_to_freeze">Could not freeze <xliff:g id="app_name" exemplo="App Manager">%1$s</xliff:g>.</string>
+    <string name="pref_default_freezing_method_description">Método a ser usado por defeito onde não houver opção de congelamento</string>
+    <plurals name="alert_failed_to_freeze">
+        <item quantity="one">N0ão foi possível congelar %1$d app</item>
+        <item quantity="many">Não foi possível congelar %1$d apps</item>
+        <item quantity="other">Não foi possível congelar %1$d apps</item>
+    </plurals>
+    <plurals name="alert_failed_to_unfreeze">
+        <item quantity="one">Não foi possível congelar %1$d app</item>
+        <item quantity="many">Não foi possível congelar %1$d apps</item>
+        <item quantity="other">Não foi possível congelar %1$d apps</item>
+    </plurals>
+    <string name="suspend_app_description">Este é o método de congelamento mais fraco. Uma aplicação suspensa ainda pode aparecer no launcher, mas ficará cinzento e não poderá ser iniciada.</string>
+    <string name="hide_app_description">Este método é recomendado apenas para uso diário. Uma aplicação oculta aparece como se estivesse desinstalada. Mas a aplicação pode reaparecer se for reinstalada ou atualizada.</string>
+    <string name="user_manual">Manual do utilizador</string>
+    <string name="get_help">Obter ajuda</string>
+    <string name="pref_privacy_description">Bloqueio de ecrã, autorização, etc</string>
+    <string name="pref_advanced_pref">Utilizadores, formato de nome do APK, execução paralela etc.</string>
+    <string name="pref_version_changelog">Versão/Registo de alterações</string>
+    <string name="freeze_unfreeze">Congelar/Descongelar</string>
+    <string name="profile_freeze_msg">Congelar ou descongelar aplicações baseada no estado</string>
+    <string name="pref_default_freezing_method">Método de congelação por defeito</string>
 </resources>
