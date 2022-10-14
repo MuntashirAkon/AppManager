@@ -12,6 +12,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import androidx.collection.ArrayMap;
 import androidx.core.content.ContextCompat;
@@ -66,7 +67,7 @@ public class StorageUtils {
     /**
      * unified test function to add storage if fitting
      */
-    private static void addStorage(String label, Path entry, Map<String, Uri> storageLocations) {
+    private static void addStorage(@NonNull String label, @Nullable Path entry, @NonNull Map<String, Uri> storageLocations) {
         if (entry != null && !storageLocations.containsValue(entry.getUri())) {
             storageLocations.put(label, entry.getUri());
         } else if (entry != null) {
@@ -100,7 +101,7 @@ public class StorageUtils {
             if (listExternalDir != null) {
                 String path = listExternalDir.getAbsolutePath();
                 int indexMountRoot = path.indexOf("/Android/data/");
-                if (indexMountRoot >= 0 && indexMountRoot <= path.length()) {
+                if (indexMountRoot >= 0) {
                     // Get the root path for the external directory
                     Path file = new Path(context, path.substring(0, indexMountRoot));
                     addStorage(file.getName(), file, storageLocations);
@@ -128,7 +129,7 @@ public class StorageUtils {
                 File dir = vol.getPathFile();
                 if (dir == null) continue;
                 String label = vol.getUserLabel();
-                addStorage(label, new Path(context, dir), storageLocations);
+                addStorage(label == null ? dir.getName() : label, new Path(context, dir), storageLocations);
             }
             Log.d(TAG, "used storagemanager");
         } catch (Exception e) {
