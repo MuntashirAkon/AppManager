@@ -34,16 +34,22 @@
             android:layout_gravity="center_vertical"
             android:orientation="vertical">
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@android:id/title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:gravity="center"
-                android:singleLine="true"
-                android:textIsSelectable="true"
-                android:textAppearance="?android:attr/textAppearanceListItem"
-                tools:text="@tools:sample/lorem" />
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@android:id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center"
+                    android:singleLine="true"
+                    android:textIsSelectable="true"
+                    android:textAppearance="?android:attr/textAppearanceListItem"
+                    tools:text="@tools:sample/lorem" />
+
+            </HorizontalScrollView>
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/package_name"
