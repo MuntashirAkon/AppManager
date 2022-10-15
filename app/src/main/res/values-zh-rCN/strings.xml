@@ -193,7 +193,6 @@
     <string name="stopped">已停止</string>
     <string name="disable">禁用</string>
     <string name="enable">启用</string>
-    <string name="failed_to_enable">无法启用 <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="force_stop">强行停止</string>
     <string name="failed_to_stop">无法停用 <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="storage_and_cache">存储和缓存</string>
@@ -841,10 +840,7 @@
     <string name="generate_key">生成</string>
     <string name="input_key">输入密钥 (以十六进制表示）</string>
     <string name="input_keystore_alias_pass_msg">轻按此处提供 %1$s 的密码</string>
-    <string name="source_code_links">GitHub 地址: https://github.com/MuntashirAkon/AppManager
-\nGitLab 地址: https://gitlab.com/muntashir/AppManager
-\nRiseup 地址: https://0xacab.org/muntashir/AppManager
-\nCodeberg 地址: https://codeberg.org/muntashir/AppManager</string>
+    <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">GitHub</a> • <a href="https://gitlab.com/muntashir/AppManager">GitLab</a> • <a href="https://0xacab.org/muntashir/AppManager">Riseup</a> • <a href="https://codeberg.org/muntashir/AppManager">Codeberg</a></string>
     <string name="pref_installer_msg">配置应用安装程序的行为。</string>
     <string name="filter_choice_tag">标签</string>
     <string name="filter_choice_pid">PID</string>
@@ -971,8 +967,7 @@
     <string name="unknown_net_policy">未知的 netpolicy (%1$s - %2$X)</string>
     <string name="failed_to_prevent_background_run">无法防止 %1$s 在后台运行</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">由于签名不匹配，无法安装应用程序。该应用程序已被卸载，但没有清除数据。</string>
-    <string name="community_links">Telegram 群: https://t.me/AppManagerChannel
-\nTwitter: https://twitter.com/AppManagerNews</string>
+    <string name="community_links"><a href="https://t.me/AppManagerChannel">Telegram 频道</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
     <string name="community">社区</string>
     <plurals name="alert_failed_to_import_backups">
         <item quantity="other">无法导入 %1$d 个备份</item>
@@ -1160,4 +1155,30 @@
     <string name="am_command"><tt>am</tt>命令</string>
     <string name="pref_sign_apk_no_signing_key">无签名秘钥</string>
     <string name="pref_sign_apk_error_signing_key_not_added">签署 APK 文件需要有效的签名秘钥。</string>
+    <string name="pref_advanced_pref">用户、APK 名称格式、并行执行等。</string>
+    <string name="hide_app_description">这种方法只推荐日常使用。一个隐藏的应用看起来像被卸载了。但如果重新安装或更新，该应用会重新出现。</string>
+    <string name="failed_to_freeze">无法冻结 <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>。</string>
+    <string name="failed_to_unfreeze">无法解冻 <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>。</string>
+    <string name="freeze_unfreeze">冻结/解冻</string>
+    <string name="profile_freeze_msg">根据状态冻结或解冻应用</string>
+    <string name="pref_default_freezing_method">默认冻结方式</string>
+    <string name="pref_default_freezing_method_description">没有选择冻结方式选项时默认使用的方式。</string>
+    <string name="suspend_app">暂停</string>
+    <string name="hide_app">隐藏</string>
+    <plurals name="alert_failed_to_freeze">
+        <item quantity="other">无法冻结 %1$d 个应用</item>
+    </plurals>
+    <plurals name="alert_failed_to_unfreeze">
+        <item quantity="other">无法解冻 %1$d 个应用</item>
+    </plurals>
+    <string name="suspend_app_description">这是最弱的冻结方式。被暂停的应用仍可出现在启动器中，但图标会变灰且无法被启动。</string>
+    <string name="disable_app_description">推荐的冻结方式。它会禁用应用及其所有部件，但所有快捷方式会丢失。</string>
+    <string name="sort_by_frozen_app">先冻结</string>
+    <string name="filter_frozen_apps">冻结应用</string>
+    <string name="pref_appearance_description">主题、方向、功能等。</string>
+    <string name="pref_privacy">隐私</string>
+    <string name="pref_privacy_description">屏幕锁、授权等。</string>
+    <string name="user_manual">用户手册</string>
+    <string name="get_help">获取帮助</string>
+    <string name="pref_version_changelog">版本/变更日志</string>
 </resources>
