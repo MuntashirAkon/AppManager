@@ -142,7 +142,7 @@
     <string name="no_code">Sin código</string>
     <string name="process_name">Nombre del proceso</string>
     <string name="native_library_dir">Directorio de la biblioteca nativa JNI</string>
-    <string name="dev_protected_data_dir">Directorio de datos protegido por el dispositivo</string>
+    <string name="dev_protected_data_dir">Directorio de datos protegido por dispositivo</string>
     <string name="search">Buscar</string>
     <string name="menu_apply_rules">Aplicar reglas</string>
     <string name="menu_remove_rules">Quitar reglas</string>
@@ -843,7 +843,7 @@
     <string name="type_int_array">Matriz de enteros</string>
     <string name="type_component_name">Nombre del componente</string>
     <string name="type_null">Sin valor</string>
-    <string name="screen_lock_msg">Bloquear App Manager con el bloqueo de pantalla de Android</string>
+    <string name="screen_lock_msg">Bloquear App Manager usando Android bloqueo de pantalla</string>
     <string name="screen_lock">Bloqueo de pantalla</string>
     <string name="unlock_app_manager">Desbloquear gestor de aplicaciones</string>
     <string name="sd_card">Tarjeta SD</string>
@@ -934,10 +934,7 @@
     <string name="restart_log_viewer_to_see_changes">Reinicie la ventana del visor de registros para ver los cambios.</string>
     <string name="pref_log_viewer_msg">Configure la manera en que se muestran los registros.</string>
     <string name="log_viewer">Visor de registros</string>
-    <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">GitHub</a>•
-\n<a href="https://gitlab.com/muntashir/AppManager">GitLab</a>•
-\n<a href="https://0xacab.org/muntashir/AppManager">Riseup</a>•
-\n<a href="https://codeberg.org/muntashir/AppManager">Codeberg</a></string>
+    <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">GitHub</a> - <a href="https://gitlab.com/muntashir/AppManager">GitLab</a> - <a href="https://0xacab.org/muntashir/AppManager">Riseup</a> - <a href="https://codeberg.org/muntashir/AppManager">Codeberg</a></string>
     <string name="new_alias_password">Contraseña de alias nuevo</string>
     <string name="bouncy_castle_keystore">Almacén de claves Bouncy Castle (BKS)</string>
     <string name="invalid_rsa_key_size">El tamaño de la clave no es válido para el cifrado RSA. Este puede ser de 1024, 2048 o 4096 bits.</string>
@@ -1124,7 +1121,7 @@
     <string name="toggle_internet">Usar el Internet</string>
     <string name="vt_checking">VirusTotal: Comprobando…</string>
     <string name="vt_uploading">VirusTotal: Subiendo…</string>
-    <string name="vt_success">VirusTotal: %1$d/%2$d</string>
+    <string name="vt_success">Analisis con VirusTotal: %1$d/%2$d</string>
     <string name="vt_scan_date">Fecha de escaneo: %1$s</string>
     <string name="vt_slowness_warning">Dependiendo de la velocidad de Internet y la carga del servidor, esto podría tardar un rato.</string>
     <string name="pref_vt_apikey">Clave API de VirusTotal</string>
