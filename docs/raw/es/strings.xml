@@ -127,15 +127,15 @@
     <string name="guide$aot$miui-usb-debug">Habilite \\textbf{Depuración USB (Configuración de seguridad)} también.</string>
     <string name="guide$aot$lg-usb-debug">Aseguraré de tener \\textbf{USB tethering} habilitado.</string>
     <string name="pages$main$$pages-chapter-title">Páginas</string>
-    <string name="intro$main$intro">App Manager es un gestor de paquetes avanzado para Android. Ofrece innumerables características, y en consecuencia, requiere un manual de usuario
-\npara ayudar a sus usuarios. Este documento actúa como un manual de usuario para App Manager en el sentido de que pretende describir
-\ntodas las funciones que ofrece App Manager. Este documento también puede considerarse como las directrices ``oficiales \" de
-\nApp Manager, y representa el comportamiento esperado de App Manager. Las traducciones pueden malinterpretar este documento (que está
-\nescrito en inglés). Por lo tanto, todo usuario capacitado debe leer la versión en inglés del documento para obtener lo mejor de
-\nde App Manager. También puede haber otros recursos no oficiales o de terceros, como artículos de blog, vídeos, grupos de chat
-\ngrupos de chat, etc. Aunque estos recursos pueden ser útiles para muchas personas, es posible que no estén actualizados con la versión actual de App Manager.
+    <string name="intro$main$intro">App Manager es un gestor de paquetes avanzado para Android. Ofrece innumerables funciones y, en consecuencia, requiere un usuario
+\nmanual para ayudar a sus usuarios. Este documento actúa como un manual de usuario para App Manager en el sentido de que pretende describir
+\ntodas las características que App Manager tiene para ofrecer. Este documento también puede ser considerado como el ``oficial\'\' directrices para
+\nApp Manager, y representa el comportamiento esperado de App Manager. Las traducciones pueden malinterpretar este documento (que es
+\nescrito en inglés). Por lo tanto, cada usuario capaz debe leer la versión en inglés del documento para obtener el mejor
+\nde App Manager. También podría haber otros recursos no oficiales o de terceros como artículos de blog, vídeos, chat
+\ngrupos, etc. Si bien estos recursos pueden ser útiles para muchas personas, es posible que no estén actualizados con la versión actual de App Manager.
 \nversión de App Manager. Si se detectan desviaciones en App Manager con respecto a este documento, deben notificarse en el
-\n\\href{https://github.com/MuntashirAkon/AppManager/issues}{Rastreador de problemas de App Manager}.</string>
+\n|https://github.com/MuntashirAkon/AppManager/issues}{Rastreador de problemas de App Manager}.</string>
     <string name="intro$main$contributing">Hay múltiples formas en las que un usuario puede contribuir, como crear problemas útiles, asistir a debates, mejorar
 \ndocumentación y traducciones, añadiendo bibliotecas o rastreadores no reconocidos, revisando el código fuente, así como
 \ninformar de las vulnerabilidades de seguridad.</string>
@@ -238,4 +238,69 @@
 \nen el lado derecho para habilitarlo y pasar a \\Sref{subsec:adb-mode-in-app-manager}.</string>
     <string name="appendices$changelogs$$chapter-title">Registros de cambios</string>
     <string name="keywords$chapter">\\\\\\nuevo comando{\\Palabra clave Capítulo}{Capítulo}}}</string>
+    <string name="titlepage$user_manual">{\\enorme\\Manual de Usuario bfseries\\par}</string>
+    <string name="keywords$see_also">\\nuevo comando{\\Palabra clave Ver también}{Ver también:}</string>
+    <string name="keywords$end_of_keyword_in_alert">\\nuevo comando{\\Palabra clave Fin de palabra clave en alerta}{.}</string>
+    <string name="titlepage$quotation">\\begin {quotation}
+\n ``Sabio y lento. Tropiezan los que corren rápido\'\'.
+\n %\\sourceatright
+\n {--- Fray Laurence, \\textear{Romeo y Julieta}}
+\n \\end{quotation}</string>
+    <string name="intro$main$submit-patches">Los repositorios ubicados en sitios distintos de GitHub se consideran actualmente réplicas, y las solicitudes de pull/merge enviadas en
+\nNota: Los pull requests de GitHub se fusionarán manualmente utilizando los parches correspondientes.
+\nComo resultado, GitHub puede marcarlos erróneamente como cerrados en lugar de fusionados.} En su lugar, los parches (como archivos \\texttt{.patch}) pueden
+\npueden ser enviados a través de archivos adjuntos de correo electrónico. \\textit{La firma es un requisito.} Consulte el archivo CONTRIBUIR ubicado en el directorio raíz
+\nde la fuente para obtener más información.
+\n
+\n\\begin{advertencia}{Aviso}
+\n En caso de enviar parches por correo electrónico, toda la conversación puede ser accesible públicamente en el futuro. Por lo tanto, no
+\n incluya ninguna información personal identificable (PII) que no sea su nombre o dirección de correo electrónico.
+\n\\fin{advertencia}</string>
+    <string name="intro$main$contact">Muntashir Al-Islam {nota de pie} {también puede dirigirse a mí como ``Muntashir Akon\'}}
+\nCorreo electrónico: \\href{mailto:muntashirakon@riseup.net}{muntashirakon [arroba] riseup [punto] net}\\href
+\nHuella digital de la llave: \\texttt{7bad37c2981e41f8f6abea7f58f0b4f26c346fce}\\\\
+\nGitHub: \\https://github.com/MuntashirAkon
+\nTwitter: \\https://twitter.com/Muntashir</string>
+    <string name="intro$main$terminologies">\\begin{itemize}
+\n \\item \\textbf{AM} --- Nombre corto para App Manager.
+\n \\item \\textbf{Block/Unblock} --- Se utiliza para bloquear o desbloquear componentes. La forma en que se bloquean los componentes depende de
+\n las preferencias del usuario.
+\n \\item \\textbf{IFW} --- Forma abreviada de Intent Firewall.
+\n \\item \\textbf{Ops} --- Nombre abreviado de las operaciones, p. ej., operaciones de aplicación, operaciones por lotes, operaciones de 1 clic.
+\n \\item \\textbf{SSAID} --- Forma abreviada de \\texttt{Settings.Secure.ANDROID\\_ID}. Es un identificador de dispositivo asignado a
+\n cada aplicación (Android Oreo y en adelante). Se genera a partir de la combinación del certificado de firma de la app
+\n y el SSAID establecido para el paquete \\texttt{android}. Como resultado, se garantiza que sea el mismo para una app a menos que
+\n que el usuario decida formatear el dispositivo. Se utiliza mucho para el seguimiento.
+\n \\item \\textbf{Tracker} --- Denota los componentes del rastreador en todo el documento y en el App Manager, excepto en el
+\n \\hyperref[sec:scanner-page]{página del rastreador}. Los rastreadores incluyen librerías como crash reporters, analytics
+\n perfilado, identificación, anuncio, localización, etc. Por lo tanto, no son iguales en funciones. No hay distinción ni sesgo
+\n entre las bibliotecas de código abierto y las de código cerrado que promueven el rastreo.
+\n\\end{itemize}</string>
+    <string name="intro$main$bin-sources">App Manager se distribuye utilizando las siguientes fuentes. Las fuentes no oficiales pueden distribuir versiones modificadas de App
+\nManager, y nadie más que usted será responsable de las consecuencias de utilizar dichas distribuciones.
+\n\\begin{enumerate}
+\n \\item Repositorio oficial de F-Droid.\\item Nota a pie de página{para distribuir versiones normales}\\item
+\n \\textit{enlace:} \\url{https://f-droid.org/packages/io.github.muntashirakon.AppManager}
+\n \\item Repositorio GitHub.\\item
+\n \\textit{Los lanzamientos normales:} \\URL: https://github.com/MuntashirAkon/AppManager/releases
+\n \\Título del texto: \"Liberaciones de depuración\". \\url{https://github.com/MuntashirAkon/AppManager/actions}
+\n |Telegrama.\\N-
+\n \\Texto de la publicación normal |https://t.me/AppManagerChannel
+\n \\Texto de las versiones de depuración |https://t.me/AppManagerDebug
+\n\\end{enumerate}</string>
+    <string name="intro$main$donation">\\{emph}La donación o la compra no es un requisito para utilizar App Manager.} Aunque App Manager no admite ninguna
+\nAunque App Manager no admite ninguna compra, se pueden enviar donaciones al propietario de App Manager a través de Open Source Collective.
+\n
+\nOpen Source Collective es un host fiscal en la plataforma Open Collective que ayuda a los proyectos de código abierto a gestionar
+\nsus finanzas. En la actualidad, admite pagos a través de cuentas bancarias, PayPal, tarjetas de crédito o débito y
+\ncriptomonedas.
+\n
+\n\\textit{Link:} \\url{https://opencollective.com/muntashir}.
+\n
+\nAl enviar las donaciones, los remitentes se comprometen a no utilizarlas como palanca para priorizar sus
+\ncaracterísticas solicitadas. Las solicitudes de características no requieren recompensas ni donaciones, y se priorizan de acuerdo con
+\ncon las preferencias del propietario.
+\n
+\n\\emph{El gestor de aplicaciones acepta cualquier oferta de financiación o subvención.} Los representantes de la organización interesada pueden ponerse en contacto
+\ndirectamente con el propietario utilizando las opciones que se indican en \\Sref{sec:contacto}.</string>
 </resources>
