@@ -82,13 +82,22 @@ public class Signer {
         this.idsigFile = idsigFile;
     }
 
+    public boolean sign(File in, File out) {
+        return sign(in, out, -1);
+    }
+
     public boolean sign(File in, File out, int minSdk) {
+        return sign(in, out, minSdk, false);
+    }
+
+    public boolean sign(File in, File out, int minSdk, boolean alignFileSize) {
         ApkSigner.SignerConfig signerConfig = new ApkSigner.SignerConfig.Builder("CERT",
                 privateKey, Collections.singletonList(certificate)).build();
         ApkSigner.Builder builder = new ApkSigner.Builder(Collections.singletonList(signerConfig));
         builder.setInputApk(in);
         builder.setOutputApk(out);
         builder.setCreatedBy("AppManager");
+        builder.setAlignFileSize(alignFileSize);
         if (minSdk != -1) builder.setMinSdkVersion(minSdk);
         if (sigSchemes.v1SchemeEnabled()) {
             builder.setV1SigningEnabled(true);

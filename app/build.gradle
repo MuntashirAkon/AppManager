@@ -89,7 +89,7 @@ dependencies {
     implementation project(path: ':libserver')
     implementation project(path: ':docs')
 
-    implementation 'com.github.MuntashirAkon:apksig-android:178a05e4c9'
+    implementation 'com.github.MuntashirAkon:apksig-android:4.4.0'
     implementation 'com.github.MuntashirAkon:unapkm-android:1.2'
     implementation 'com.github.MuntashirAkon:sun-security-android:1.1'
     implementation 'com.github.MuntashirAkon:libadb-android:2.2.0'

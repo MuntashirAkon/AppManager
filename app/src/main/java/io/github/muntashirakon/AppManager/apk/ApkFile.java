@@ -725,7 +725,7 @@ public final class ApkFile implements AutoCloseable {
                     idsigFile = FileUtils.getTempFile();
                     signer.setIdsigFile(idsigFile);
                 }
-                if (signer.sign(realFile, signedFile, -1)) {
+                if (signer.sign(realFile, signedFile)) {
                     if (Signer.verify(sigSchemes, signedFile, idsigFile)) {
                         return signedFile;
                     }
