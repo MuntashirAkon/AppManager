@@ -1,0 +1,126 @@
+<!-- Identificador de la licencia SPDX: GPL-3.0-or-later OR CC-BY-SA-4.0 -->
+
+<p align="center">
+  <img src="docs/raw/images/icon.png" alt="Logotipo de App Manager" height="150dp">
+</p>
+
+<h1 align="center">APP MANAGER</h1>
+
+<p align=center>
+  <a href="https://muntashirakon.github.io/AppManager">Información</a> -
+  <a href="https://github.com/MuntashirAkon/AppManager/releases">Versiones de App Manager</a> -
+  <a href="https://t.me/AppManagerChannel">Nuestro canal en telegram</a>
+</p>
+
+---
+
+## Características
+
+### Características generales:
+
+- Software libre de libre uso y distribución (GPLv3+) 
+- Posee 3 colores para mejorar su uso
+- Todala información posible, la encontrará en la página principal
+- Enumera las actividades, espias, servicios, proveedores, permisos, firmas, etc. de una aplicación
+- Crear accesos directos a las actividades de las aplicaciones
+- [Intercepte las actividades raras] (https://muntashirakon.github.io/AppManager/#sec:interceptor-page) 
+- Escanea en busca de rastreadores en las plicaciones, muestralos y bloquealos todos o sólo los que quieras. Junto a la información que obtienen de nosotros
+- Ver/guardar el manifiesto de una aplicación
+- Mostrar el uso de datos móviles o wifi, y la información que almacenan las aplicaciones (requiere «Acceso al uso» permiso) 
+- Instalar o desinstalar archivos APK, APKS, APKM, XAPK u OBB)
+- Compartir los archivos para instalar una aplicación
+- Realice una copia de seguridad o restaure el archivo de instalición de las  aplicaciones
+- Realice varias operaciones juntaw
+- Realice operaciones con un solo clic
+- Visor de fallos
+- [Perfiles] (https://muntashirakon.github.io/AppManager/#sec:profiles-page) (incluyendo presets para descomponer rápidamente) 
+- Abra una aplicación en Aurora Store o en su cliente F-Droid favorito directamente desde App Manager
+- Firme archivos APK de forma personalizada antes de instalarlo
+- Respaldo del cifrado: OpenPGP a través de OpenKeychain, RSA (cifrado híbrido con AES) y AES.
+
+### Funciones de root/ADB:
+
+- Revocar el tiempo de ejecución (también peligroso) y permisos de desarrollo
+- Cambiar el modo de una aplicación
+- Mostrar/matar/forzar la detención de las plicaciones o procesos que estean ejecutandose
+- Borrar los datos de las aplicaciones o  la caché de las aplicaciones
+- Ver/cambiar la forma en que las aplicaciones usan los diferentes tipos de conexión
+- Optimización de la batería
+
+### Funciones para móviles rooteados:
+
+- Bloquee cualquier actividad, espia, servicio o proveedor de una aplicación.  Con importación/exportación nativa, así como compatibilidad con Watt y Blocker
+- Ver/editar/eliminar las preferencias de cualquier aplicación
+- Realice una copia de seguridad, para restaurar sus aplicaciones tal cual las usaba.
+- Vea las configuraciones del sistema, incluidas las aplicaciones permitidas o bloqueadas, los permisos, etc.
+- Ver o cambiar nombre de una red wifi
+
+…¡Y MUCHISIMOS MÁS! ¡ESTA APLICACIÓN  ES ÚNICA!. ¡YA QUE PODRA HACER EN UNA SÓLA APLICACIÓN, LO QUE DE OTRA FORMA NECESITARÍA MÁS DE SEIS APLICACIONES!
+
+### Próximas funciones:
+
+- Edite el archivo apk
+- Operaciones rutinarias
+- Cifrado de la copia de seguridad: fallos en la ram (ECC) 
+- Encuentra componentes, permisos, etc. en todas las aplicaciones de su dispositivo
+- Habilite o deshabilite lasaplicaciones, así como que se ejecuten cuando enciende su dispositivo
+- Bloquee la criptomoneda Ripple
+- Monitoree los fallos
+- Desactive o desinstale las aplicaciones del sistema
+- Importar/exportar una lista de sus aplicaciones
+- Emulador de terminal
+- Edite y vea las bases de datos
+
+[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
+alt="Consígua la aplicación en F-Droid"
+height="80" />](https://f-droid.org/packages/io.github.muntashirakon.AppManager)
+
+## Traducción de App Manager:
+
+Ayude en la traducción de la aplicación [las cadenas de aplicación] (https://hosted.weblate.org/engage/app-manager/) y
+[los documentos] (https://hosted.weblate.org/projects/app-manager/docs/) en Hosted Weblate.
+
+
+[![Como vá la traducción de App Manager] (https://hosted.weblate.org/widgets/app-manager/-/multi-auto.svg)](https://hosted.weblate.org/engage/app-manager/) 
+
+
+## Otros enlaces a App Manager:
+
+[GitLab] (https://gitlab.com/muntashir/AppManager) · [Riseup] (https://0xacab.org/muntashir/AppManager) ·
+[Codeberg] (https://codeberg.org/muntashir/AppManager) 
+
+## Capturas de pantalla:
+
+<img src="fastlane/metadata/android/en-US/images/phoneScreenshots/1.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/2.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/3.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/4.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/5.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/6.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/7.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/8.png" height="500dp" /><img src="fastlane/metadata/android/en-US/images/phoneScreenshots/9.png" height="500dp" />
+
+## Instrucciones para el desarrollo:
+Vea [BUILDING.rst](BUILDING.rst)
+
+## Contribuir al Proyecto:
+
+Vea [CONTRIBUTING.rst](CONTRIBUTING.rst)
+
+## Donación y financiamiento:
+
+_La donación o la compra no es un requisito para utilizar el Administrador de aplicaciones._ Mientras que App Manager no es compatible con ninguna
+compras, las donaciones se pueden enviar al propietario de App Manager a través de Open Source Collective.
+
+Open Source Collective es un host fiscal en la plataforma Open Collective que ayuda a los proyectos de código abierto a gestionar
+sus finanzas. En la actualidad, admite pagos a través de:
+
+• Cuentas bancarias
+• PayPal
+• Tarjetas bancarias (credito o debito)
+• Criptomonedas
+
+Enlace: https://opencollective.com/muntashir
+
+Al enviar sus donaciones, los remitentes aceptan que no utilizarán las mismas, para priorizar las
+características que solicite. Las solicitudes no requieren recompensas ni donaciones, y su prioridad está bajo las preferencias del propietario.
+
+**El gestor de la aplicación acepta cualquier oferta de financiación/subvenciones.** Los representantes de la organización interesada pueden ponerse en contacto con el
+propietario directamente en muntashirakon [at] riseup [dot] net (HUELLA DACTILAR DEL PROYECTO: `7bad37c2981e41f8f6abea7f58f0b4f26c346fce`).
+
+## Acerca de:
+
+Consigua más información en **Sobre** de la aplicación.
