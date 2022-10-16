@@ -1,0 +1,10 @@
+<b>App Manager</b> la mayor y más completa solución para gestionar sus aplicaciones. Y con una facilicidad de uso inmejorable. Además de las funciones básicas de desinstalar, instalar, detener, congelar, desactivar etc. de las aplicaciones, proporciona muchisimas otras más características súper útiles, como: <ul> <li>Maneja los permisos, limpia los archivos residuales y la cache, copia de seguridad, bloqueo de los rastreadores y muchisimo más de tus aplicaciónes. Tanto las aplicaciones del propio sistema como las que instales o tengas instaladas.
+</li>
+<li>Gestiona todolos permisos para todalas  aplicaciones de tú móvil</li>
+<li>Bloqueo de anuncios, rastreadores y permisos peligrosos de las aplicaciones de todo tú móvil</li>
+<li>Copia de seguridad de los datos de tus aplicaciones</li>
+</ul> 
+
+Y <b>¡MUCHISIMO MÁS!</b>
+
+<i>Una aplicación todo en uno, para gestionar las aplicaciones de tú movil. De otra forma necesitarías más de seis aplicaciones, para hacer lo mismo que hace App Manager. <b>¡TOMA EL CONTROL DE LAS APLICACIONES CON APP MANAGER!</b></i>

@@ -14,6 +14,8 @@
 
 ---
 
+**Read this page in other languages**: [English,](README.md) [Español](readme/README_es.md)
+
 ## Features
 
 ### General features
