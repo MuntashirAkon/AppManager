@@ -1,15 +1,15 @@
 <!-- Identificador de la licencia SPDX: GPL-3.0-or-later OR CC-BY-SA-4.0 -->
 
 <p align="center">
-  <img src="docs/raw/images/icon.png" alt="Logotipo de App Manager" height="150dp">
+  <img src="docs/raw/images/icon.png" alt="App Manager Logo" height="150dp">
 </p>
 
-<h1 align="center">APP MANAGER</h1>
+<h1 align="center">App Manager</h1>
 
 <p align=center>
-  <a href="https://muntashirakon.github.io/AppManager">Información</a> -
-  <a href="https://github.com/MuntashirAkon/AppManager/releases">Versiones de App Manager</a> -
-  <a href="https://t.me/AppManagerChannel">Nuestro canal en telegram</a>
+  <a href="https://muntashirakon.github.io/AppManager">Docs</a> ·
+  <a href="https://github.com/MuntashirAkon/AppManager/releases">Releases</a> ·
+  <a href="https://t.me/AppManagerChannel">Telegram Channel</a>
 </p>
 
 ---
