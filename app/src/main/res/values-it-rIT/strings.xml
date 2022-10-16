@@ -71,7 +71,6 @@
     <string name="app_ops">Operazioni app</string>
     <string name="total_size">Totale</string>
     <string name="failed_to_stop">Impossibile arrestare <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
-    <string name="failed_to_disable">Impossibile disabilitare <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="stopped">Fermato</string>
     <string name="uninstall_system_app_message">Questa è un app di sistema. Sei sicuro di volerla disinstallare\?</string>
     <string name="uninstalled_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> è stato disinstallato.</string>
@@ -469,10 +468,7 @@
     <string name="filtered_packages">Pacchetti filtrati</string>
     <string name="no_tracker_found">Nessun tracker trovato</string>
     <string name="clear_app_cache_description">Svuota cache tutte le app</string>
-    <string name="source_code_links">GitHub: https://github.com/MuntashirAkon/AppManager
-\nGitLab: https://gitlab.com/muntashir/AppManager
-\nRiseup: https://0xacab.org/muntashir/AppManager
-\nCodeberg: https://codeberg.org/muntashir/AppManager</string>
+    <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">GitHub</a> • <a href="https://gitlab.com/muntashir/AppManager">GitLab</a> • <a href="https://0xacab.org/muntashir/AppManager">Riseup</a> • <a href="https://codeberg.org/muntashir/AppManager">Codeberg</a></string>
     <plurals name="no_of_components">
         <item quantity="one">%1$d componente</item>
         <item quantity="many">%1$d componenti</item>
@@ -733,8 +729,7 @@
         <item quantity="many">Esegui al massimo %1$d operazioni in parallelo</item>
         <item quantity="other">Esegui al massimo %1$d operazioni in parallelo</item>
     </plurals>
-    <string name="community_links">Telegram: https://t.me/AppManagerChannel
-\nTwitter: https://twitter.com/AppManagerNews</string>
+    <string name="community_links"><a href="https://t.me/AppManagerChannel">Canale Telegram</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
     <string name="pref_remove_all_rules">Rimuovi tutte le regole</string>
     <string name="installer_error_session_abandon">Impossibile abbandonare la sessione di installazione</string>
     <string name="unencrypted">Non crittografato</string>
@@ -1232,4 +1227,34 @@
     <string name="am_command">Comando <tt>am</tt></string>
     <string name="pref_sign_apk_no_signing_key">Nessuna chiave per firmare</string>
     <string name="pref_sign_apk_error_signing_key_not_added">Per firmare un file APK è necessaria una chiave di firma valida.</string>
+    <string name="suspend_app_description">Questo è il metodo di congelamento più debole. Un\'app sospesa potrebbe ancora essere visualizzata nel programma di avvio, ma sarà disattivata e non potrà essere avviata.</string>
+    <string name="pref_advanced_pref">Utenti, formato del nome APK, esecuzione parallela, ecc.</string>
+    <string name="failed_to_unfreeze">Impossibile scongelare <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="failed_to_freeze">Impossibile congelare <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="pref_default_freezing_method_description">Metodo da utilizzare per impostazione predefinita quando non è disponibile l\'opzione per selezionare un metodo di congelamento.</string>
+    <string name="suspend_app">Sospendi</string>
+    <string name="freeze_unfreeze">Congela/scongela</string>
+    <string name="profile_freeze_msg">Congela o scongela le app in base allo stato</string>
+    <string name="pref_default_freezing_method">Metodo di congelamento predefinito</string>
+    <string name="hide_app">Nascondi</string>
+    <plurals name="alert_failed_to_freeze">
+        <item quantity="one">Impossibile congelare l\'app %1$d</item>
+        <item quantity="many">Impossibile congelare le app %1$d</item>
+        <item quantity="other">Impossibile congelare le app %1$d</item>
+    </plurals>
+    <plurals name="alert_failed_to_unfreeze">
+        <item quantity="one">Impossibile scongelare l\'app %1$d</item>
+        <item quantity="many">Impossibile scongelare le app %1$d</item>
+        <item quantity="other">Impossibile scongelare le app %1$d</item>
+    </plurals>
+    <string name="disable_app_description">Metodo di congelamento consigliato. Disabilita l\'app e insieme a tutti i suoi componenti, ma tutte le scorciatoie andranno perse.</string>
+    <string name="hide_app_description">Questo metodo è consigliato solo per l\'uso quotidiano. Un\'app nascosta appare come se fosse disinstallata. Ma l\'app potrebbe riapparire se viene reinstallata o aggiornata.</string>
+    <string name="filter_frozen_apps">App congelate</string>
+    <string name="sort_by_frozen_app">Prima congelata</string>
+    <string name="pref_appearance_description">Tema, orientamento, caratteristiche, ecc.</string>
+    <string name="pref_privacy">Privacy</string>
+    <string name="user_manual">Manuale utente</string>
+    <string name="get_help">Ottieni aiuto</string>
+    <string name="pref_privacy_description">Blocco schermo, autorizzazione, ecc.</string>
+    <string name="pref_version_changelog">Versione/Registro delle modifiche</string>
 </resources>
