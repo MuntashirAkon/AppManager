@@ -12,7 +12,7 @@
     <string name="installer_error_session_commit">O commit dos ficheiros APK não pôde ser feito</string>
     <string name="installer_error_session_write">Não foi possível gravar na sessão de instalação</string>
     <string name="installer_error_session_create">Uma sessão de instalação não pôde ser criada</string>
-    <string name="installer_error_security">Não foi possível acessar os ficheiros APK</string>
+    <string name="installer_error_security">Não foi possível aceder aos ficheiros APK</string>
     <string name="install_in_progress">A instalar…</string>
     <string name="package_installer">Instalador de pacotes</string>
     <string name="unblock_trackers">Desbloquear rastreadores</string>
@@ -24,7 +24,7 @@
     <string name="batch_ops">Operações em lote</string>
     <string name="failed_to_fetch_package_info">Não foi possível obter informações do pacote</string>
     <string name="installer_error_lidl_rom">A sua ROM é incompatível com o Instalador Rootless.</string>
-    <string name="installer_error_generic">Falha na instalação</string>
+    <string name="installer_error_generic">A instalação falhou</string>
     <string name="installer_error_storage">Não há espaço suficiente no armazenamento para instalar a aplicação</string>
     <string name="installer_error_bad_apks">Os ficheiros APK são inválidos</string>
     <string name="installer_error_incompatible">Está aplicação é incompatível com o seu dispositivo</string>
@@ -47,42 +47,42 @@
     <string name="block">Bloquear</string>
     <string name="clear">Limpar</string>
     <string name="clear_data_message">Tem certeza que deseja eliminar os dados desta aplicação\?</string>
-    <string name="skip_signature_checks">Saltar a verificação de assinatura</string>
+    <string name="skip_signature_checks">Ignorar verificação de assinatura</string>
     <string name="yes">Sim</string>
     <string name="no">Não</string>
-    <string name="apply_to_system_apps_question">Aplicar também às aplicações do sistema\? Selecione \"Não\" se não tiver certeza.</string>
+    <string name="apply_to_system_apps_question">Aplicar também ás aplicações do sistema\? Selecione \"Não\" se não tiver certeza.</string>
     <string name="apply_to_system_apps">Aplicar ás aplicações do sistema</string>
     <plurals name="alert_failed_to_block_components">
         <item quantity="one">Não foi possível bloquear os componentes da %1$d aplicação</item>
         <item quantity="many"></item>
-        <item quantity="other">Não foi possível bloquear os componentes da %1$d aplicação</item>
+        <item quantity="other">Não foi possível bloquear os componentes das %1$d aplicações</item>
     </plurals>
     <plurals name="alert_failed_to_unblock_trackers">
-        <item quantity="one">Não foi possível desbloquear osrastreadores da %1$d aplicação</item>
+        <item quantity="one">Não foi possível desbloquear os rastreadores da %1$d aplicação</item>
         <item quantity="many"></item>
         <item quantity="other">Não foi possível desbloquear os rastreadores das %1$d aplicações</item>
     </plurals>
     <plurals name="alert_failed_to_delete_backup">
         <item quantity="one">Não foi possível eliminar a %1$d cópia de segurança</item>
         <item quantity="many"></item>
-        <item quantity="other">Não foi possível eliminar as %1$d cópias de seguranças</item>
+        <item quantity="other">Não foi possível eliminar as %1$d cópias de segurança</item>
     </plurals>
     <plurals name="alert_failed_to_restore">
         <item quantity="one">Não foi possível restaurar a %1$d aplicação</item>
-        <item quantity="many"></item>
+        <item quantity="many"/>
         <item quantity="other">Não foi possível restaurar as %1$d aplicações</item>
     </plurals>
     <plurals name="alert_failed_to_backup">
-        <item quantity="one">Não foi possível fazer backup da %1$d aplicação</item>
-        <item quantity="many">Não foi possível fazer backup das %1$d aplicações</item>
-        <item quantity="other">Não foi possível fazer backup das %1$d aplicações</item>
+        <item quantity="one">Não foi possível fazer o backup da %1$d aplicação</item>
+        <item quantity="many">Não foi possível fazer o backup das %1$d aplicações</item>
+        <item quantity="other">Não foi possível fazer o backup das %1$d aplicações</item>
     </plurals>
     <plurals name="failed_to_backup_some_apk_files">
         <item quantity="one">Não foi possível fazer backup da %1$da aplicação</item>
         <item quantity="many">Não foi possível fazer o backup de %1$d várias aplicações</item>
         <item quantity="other">Não foi possível fazer o backup das %1$d aplicações</item>
     </plurals>
-    <string name="backup_options">Opções do backup</string>
+    <string name="backup_options">Opções de backup</string>
     <string name="delete_backup">Eliminar cópia de segurança</string>
     <string name="restore">Restaurar</string>
     <string name="backup">Backup</string>
@@ -106,14 +106,14 @@
     <string name="pref_app_theme">Temas</string>
     <string name="pref_import_blocker_msg">Importar regras de bloqueio do Blocker, cada ficheiro contém regras para um único pacote.</string>
     <string name="pref_import_watt_msg">Importar regras de bloqueio do Watt, cada ficheiro contem regras para um único pacote nomeado como <tt>packagename.xml</tt> etc.</string>
-    <string name="pref_import_msg">Importar regras de bloqueio anteriormente guardadas do App Manager.</string>
+    <string name="pref_import_msg">Importar regras de bloqueio do App Manager anteriormente guardadas.</string>
     <string name="pref_export_msg">Exportar regras de bloqueio desta aplicação para o armazenamento externo.</string>
     <string name="navigation">Navegação</string>
     <string name="keyboard_type">Tipo de teclado</string>
     <string name="export_failed">Falha ao exportar!</string>
     <string name="import_failed">Falha ao importar!</string>
-    <string name="export_options">Exportar opções</string>
-    <string name="import_options">Importar opções</string>
+    <string name="export_options">Opções de exportação</string>
+    <string name="import_options">Opções de importação</string>
     <string name="pref_export">Exportar</string>
     <string name="pref_import">Importar</string>
     <string name="ago">atrás</string>
@@ -386,11 +386,11 @@
     <string name="clear_app_cache">Limpar cache da aplicação</string>
     <string name="clear_data_from_uninstalled_apps_description">Limpar os dados das aplicações que foram desinstaladas com <tt>DONT_DELETE_DATA</tt></string>
     <string name="clear_data_from_uninstalled_apps">Limpar dados das aplicações desinstaladas</string>
-    <string name="block_components_description">Bloquear todos os componentes identificados pelas assinaturas especificadas</string>
+    <string name="block_components_description">Bloquear todos os componentes identificados pelas assinaturas fornecidas</string>
     <string name="block_components_dots">Bloquear componentes…</string>
     <string name="block_unblock_trackers_description">Bloquear ou desbloquear componentes com anúncios e rastreamento em todos as aplicações instaladas</string>
     <string name="clear_cache">Limpar cache</string>
-    <string name="pref_import_existing_msg">Adicione componentes desativados por outras aplicações ao App Manager. Tenha cuidado ao usar essa ferramenta, pois podem haver muitos falsos positivos. Escolha apenas as aplicações sobre as quais tem certeza.</string>
+    <string name="pref_import_existing_msg">Adicione componentes desativados por outras aplicações ao App Manager. Tenha cuidado ao usar esta ferramenta, pois podem haver muitos falsos positivos. Escolha apenas as aplicações sobre as quais tem certeza.</string>
     <string name="pref_import_existing">Importar regras guardadas</string>
     <string name="source_code">Código fonte</string>
     <string name="update">Atualizar</string>
@@ -410,8 +410,9 @@
     <string name="failed_to_revoke_permission">Não foi possível revogar a permissão</string>
     <string name="failed_to_grant_permission">Permissão não concedida</string>
     <plurals name="alert_failed_to_disable_trackers">
-        <item quantity="one">Não foi possível desativar os rastreadores da %1$d app</item>
-        <item quantity="other">Não foi possível desativar os rasteadores das %1$d apps</item>
+        <item quantity="one">Não foi possível desativar os rastreadores da %1$d aplicação</item>
+        <item quantity="many"></item>
+        <item quantity="other">Não foi possível desativar os rasteadores das %1$d aplicações</item>
     </plurals>
     <string name="unknown_op">Operação desconhecida</string>
     <string name="sort_by_tracker_components">Rastreadores</string>
@@ -560,7 +561,7 @@
     <string name="launch_mode_single_instance">Um único caso</string>
     <plurals name="app_signing_signature_schemes_pl">
         <item quantity="one">Esquema da assinatura</item>
-        <item quantity="many"></item>
+        <item quantity="many"/>
         <item quantity="other">Esquemas de assinatura</item>
     </plurals>
     <plurals name="missing_signatures">
@@ -953,7 +954,7 @@
     <string name="backup_obb_media">OBB e Mídia</string>
     <plurals name="verified_with_warning">
         <item quantity="one">Verificado com %d aviso</item>
-        <item quantity="many"></item>
+        <item quantity="many"/>
         <item quantity="other">Verificadas com %d avisos</item>
     </plurals>
     <plurals name="libraries">
@@ -966,19 +967,19 @@
     </plurals>
     <plurals name="backup_exists_are_you_sure">
         <item quantity="one">O backup já existe. Tem a certeza\?</item>
-        <item quantity="many"></item>
+        <item quantity="many"/>
         <item quantity="other">Várias aplicações já tem um backup. Tem certeza\?</item>
     </plurals>
     <plurals name="alert_failed_to_set_app_ops">
         <item quantity="one">%1$d Não foi possível configurar a operação da aplicação selecionada</item>
         <item quantity="many">%1$d Não foi possível configurar as operações das várias aplicações selecionadas</item>
-        <item quantity="other">%1$d Não foi possível configurar as operações das aplicações selecionadas</item>
+        <item quantity="other">%1$d Não foi possível configurar a operação das aplicações selecionadas</item>
     </plurals>
     <string name="internal_data">Dados internos</string>
     <string name="termux">Termux</string>
     <string name="input_app_ops_description_profile">Insira nomes de operações de aplicações e/ou constantes com espaços, p. ex. <tt>WAKE_LOCK 63 72 CAMERA</tt> etc. Use <tt>*</tt> para solicitar todas as operações de aplicações configuradas.</string>
     <string name="input_app_ops_description">Insira nomes e/ou constantes de operações de aplicações com espaços, por exemplo <tt>WAKE_LOCK 63 72 CAMERA</tt> etc.</string>
-    <string name="input_app_ops">Inserir operações da aplicação</string>
+    <string name="input_app_ops">Inserir operações na aplicação</string>
     <string name="deny_app_ops_description">Defina um modo para as operações da aplicação identificadas pelos valores das constantes, ou seja, <tt>63</tt> ou <tt>RUN_IN_BACKGROUND</tt></string>
     <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">GitHub</a> • <a href="https://gitlab.com/muntashir/AppManager">GitLab</a> • <a href="https://0xacab.org/muntashir/AppManager">Riseup</a> • <a href="https://codeberg.org/muntashir/AppManager">Codeberg</a></string>
     <plurals name="no_of_components">
