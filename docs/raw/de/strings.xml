@@ -542,21 +542,21 @@
 \nÜberlauf-Menü.</string>
     <string name="pages$app-details-page$activities">\\textbf{Aktivitäten} sind die Fenster oder Seiten, die vom Android-Betriebssystem eindeutig identifiziert werden können (z. B.,
 \n\\textit{Hauptseite} und \\textit{App-Detailseite} sind zwei Aktivitäten). Jede Aktivität kann mehrere UI-Komponenten haben
-\nbekannt als \\textit{Steuerelemente}oder \\textit{Fragmente}, und jede Komponente kann verschachtelt oder übereinander platziert werden. Der
+\nbekannt als \\textit{Widgets} oder \\textit{Fragmente}, und jede Komponente kann verschachtelt oder übereinander gelegt werden. Der
 \nEntwickler kann sich auch dafür entscheiden, externe Dateien, Links usw. innerhalb einer Aktivität zu öffnen, indem er eine Methode namens
-\n\\textit{Intent Filter}. Wenn Sie zum Beispiel eine Datei mit Ihrem Dateimanager öffnen, durchsucht entweder Ihr Dateimanager oder
-\ndas Betriebssystem die Absichtsfilter über PackageManager, um die Aktivitäten zu finden, die die Datei öffnen können, und
+\n\\textit{Inhaltsfilter}. Wenn Sie zum Beispiel eine Datei mit Ihrem Dateimanager öffnen, durchsucht entweder Ihr Dateimanager oder
+\nBetriebssystem die Inhaltsfilter über PackageManager, um die Aktivitäten zu finden, die die Datei öffnen können, und
 \nbietet Ihnen an, die Datei mit diesen Aktivitäten zu öffnen.
 \n
 \nAktivitäten, die exportierbar sind, können in der Regel von beliebigen Drittanbieteranwendungen geöffnet werden. Einige Aktivitäten erfordern
 \nBerechtigungen, und wenn das der Fall ist, kann nur eine Anwendung mit diesen Berechtigungen sie öffnen. In der
 \n\\textit{Aktivitäten} können Aktivitäten über die Schaltfläche \\textbf{Launch} gestartet werden. Wenn es erforderlich ist, zusätzliche
-\nInformationen wie Intent-Extras, Daten oder Aktionen anzugeben, öffnet ein langer Klick auf die Schaltfläche \\textbf{Launch} das Fenster
+\nzusätzliche Informationen, wie z. B. Intent-Extras, Daten oder Aktionen, einzugeben, öffnet ein langer Klick auf die Schaltfläche \\textbf{Starten} das Fenster
 \n\\hyperref[sec:interceptor-page]{Activity Interceptor} Seite, die solche Funktionen bietet.
 \n
 \n\\begin{tip}{Hinweis}
 \n Wenn Sie eine Aktivität nicht öffnen können, ist es wahrscheinlich, dass bestimmte Abhängigkeiten nicht erfüllt sind, z.B. \\ Sie
-\n können z. B. die Seite \\textit{App-Details} nicht öffnen, weil Sie dafür zumindest einen Paketnamen angeben müssen. Da diese
+\n Sie können z. B. die Seite \\textit{App-Details} nicht öffnen, weil Sie dafür zumindest einen Paketnamen angeben müssen. Da diese
 \n Abhängigkeiten nicht programmatisch hergeleitet werden können, können diese Aktivitäten standardmäßig nicht über den App Manager geöffnet werden.
 \n\\end{tip}
 \n
@@ -565,9 +565,9 @@
 \n\\begin{danger}{Vorsicht}
 \n Wenn Sie App Manager deinstallieren, gehen alle von App Manager erstellten Verknüpfungen verloren.
 \n\\end{danger}</string>
-    <string name="pages$app-details-page$servcies">Im Gegensatz zu \\hyperref[subsubsec:activities]{Aktivitäten}, die Benutzer sehen können, erledigen \\textbf{Services} Hintergrundaufgaben. Zum Beispiel,
+    <string name="pages$app-details-page$servcies">Im Gegensatz zu \\hyperref[subsubsec:activities]{Aktivitäten}, die Benutzer sehen können, erledigen \\textbf{Dienste} Hintergrundaufgaben. Zum Beispiel,
 \nwenn Sie mit dem Internetbrowser Ihres Telefons ein Video aus dem Internet herunterladen, verwendet der Internetbrowser einen
-\n\\textit{foreground service}, um den Inhalt herunterzuladen.
+\n\\textit{Hintergrunddienst}, um den Inhalt herunterzuladen.
 \n
 \nWenn eine Aktivität geschlossen oder aus dem Abschnitt \\textit{Ereignisse} entfernt wird, kann sie sofort zerstört werden, abhängig von
 \nvielen Faktoren, z. B. davon, wie viel freier Speicherplatz auf dem Telefon vorhanden ist. Dienste können jedoch auf Wunsch unbegrenzt ausgeführt werden. Wenn mehr
@@ -978,28 +978,32 @@
     <string name="pages$profile-page$apps-tab">Auf der Registerkarte Apps werden die in diesem Profil konfigurierten Pakete aufgelistet. Pakete können hinzugefügt oder entfernt werden, indem Sie die Schaltfläche \\textit{Plus}
 \nunten nutzen. Pakete können auch entfernt werden, indem Sie lange auf sie klicken (in diesem Fall wird ein
 \nPopup mit der einzigen Option \\textit{Löschen} angezeigt).</string>
-    <string name="pages$profile-page$options-menu">Das Menü mit den drei Punkten in der oberen rechten Ecke öffnet das Menü Optionen. Es enthält verschiedene Optionen wie.
+    <string name="pages$profile-page$options-menu">Das Menü mit den drei Punkten in der oberen rechten Ecke öffnet das Optionen-Menü. Es enthält verschiedene Optionen wie.
 \n\\begin{itemize}
-\n \\item \\textbf{Anwenden}. Diese Option kann verwendet werden, um das Profil anzuwenden. Wenn Sie darauf klicken, wird ein Dialogfeld angezeigt, in dem
+\n\\item \\textbf{Anwenden}. Diese Option kann verwendet werden, um das Profil anzuwenden. Wenn Sie darauf klicken, wird ein Dialogfeld angezeigt, in dem
 \n Sie einen \\hyperref[subsubsec:profile-state]{Profilzustand} auswählen können. Wenn Sie eine der Optionen auswählen, wird das Profil
 \n sofort angewendet.
+\n \\begin{tip}{Hinweis}
+\n Wenn Sie ein Profil anwenden, werden einige Pakete, die den Kriterien nicht entsprechen, einfach ignoriert.
+\n \\end{tip}
 \n
-\n \\item \\textbf{Speichern.} Ermöglicht es Ihnen, das Profil zu speichern.
+\n \\item \\textbf{Speichern.} Speichern Sie die Änderungen am Profil.
 \n \\begin{warning}{Hinweis}
 \n Änderungen werden nie automatisch gespeichert. Sie müssen sie von hier aus manuell speichern.
 \n \\end{warning}
 \n
-\n \\item \\textbf{Verwerfen.} Verwirft alle Änderungen, die seit der letzten Speicherung vorgenommen wurden.
+\n \\item \\textbf{Verwerfen.} Verwirft alle Änderungen, die seit dem letzten Speichervorgang vorgenommen wurden.
 \n
-\n \\item \\textbf{Löschen.} Wenn Sie auf Löschen klicken, wird das Profil sofort und ohne Warnung gelöscht.
+\n\\item \\textbf{Löschen.} Wenn Sie auf Löschen klicken, wird das Profil sofort und ohne Warnung gelöscht.
 \n
-\n \\item \\textbf{Duplizieren.} Diese Option kann verwendet werden, um das Profil zu duplizieren. Wenn Sie darauf klicken, wird ein Eingabefeld
-\n angezeigt, in dem Sie den Namen des Profils eingeben können. Wenn Sie auf ``OK\'\' klicken, wird ein neues Profil erstellt, und die Seite wird
-\n neu geladen. Das Profil wird nicht gespeichert, bis Sie es manuell speichern.
+\n \\item \\textbf{Duplizieren.} Mit dieser Option können Sie das Profil duplizieren. Wenn Sie darauf klicken, wird ein Dialogfeld angezeigt
+\n in dem man einen Namen für das neue Profil festlegen kann. Wenn Sie auf ``OK\'\' klicken, wird diese Seite neu geladen, indem
+\n alle Konfigurationen, die dieses Profil hat, dupliziert. Das Profil wird jedoch nicht gespeichert, bis es manuell gespeichert wird.
 \n
-\n \\item \\textbf {Verknüpfung erstellen} Diese Option kann verwendet werden, um eine Verknüpfung für das Profil zu erstellen. Wenn Sie darauf klicken, werden
-\n zwei Optionen angezeigt: \\textit{Einfach} und \\textit{Erweitert}. Mit der letzteren Option können Sie den Profilstatus festlegen
-\n bevor Sie ihn anwenden, während die erste Option den Standardstatus verwendet, der beim letzten Speichern des Profils konfiguriert wurde.
+\n\\item \\textbf{Erstellen einer Verknüpfung} Mit dieser Option können Sie eine Verknüpfung für das Profil erstellen. Wenn Sie darauf klicken, gibt es
+\n werden zwei Optionen angezeigt: \\textit{Einfach} und \\textit{Erweitert}. Bei der Konfiguration mit der letzteren Option wird der Benutzer aufgefordert
+\n Benutzer aufgefordert, einen Profilstatus auszuwählen, wenn die Verknüpfung aufgerufen wird. Bei der ersten Option wird dagegen immer der
+\n Standardstatus, der beim letzten Speichern des Profils konfiguriert wurde.
 \n\\end{itemize}</string>
     <string name="pages$profile-page$users">Wählen Sie die Benutzer aus, auf die das Profil angewendet werden soll. Standardmäßig sind alle Benutzer ausgewählt.</string>
     <string name="pages$settings-page$$app-theme-title">App-Design</string>
@@ -1101,9 +1105,9 @@
 \nDateien unter \\texttt{/data/data/io.github.muntashirakon.AppManager/Files/conf} gespeichert.</string>
     <string name="appendices$specifications$$internal-title">Intern</string>
     <string name="appendices$specifications$$rules-file-format-title">Regeln Dateiformat</string>
-    <string name="faq$aot$feature-adb">Die meisten der vom ADB-Modus unterstützten Funktionen sind standardmäßig aktiviert, sobald die ADB-Unterstützung von AM erkannt wird. Dazu gehören
-\nDeaktivieren, Zwangsstoppen, Daten löschen, App-Ops und Berechtigungen gewähren/entziehen. Sie können auch Anwendungen ohne eine
-\nAufforderung installieren und \\hyperref[subsubsec:main:running-apps]{Laufende Apps/Prozesse} anzeigen.</string>
+    <string name="faq$aot$feature-adb">Die unterstützten Funktionen werden im ADB-Modus automatisch aktiviert. Zu den unterstützten Funktionen gehören Deaktivieren, erzwungenes Anhalten,
+\nLöschen von Anwendungsdaten, Gewähren oder Entziehen von App-Ops und Berechtigungen usw. Es ist auch möglich, Anwendungen zu installieren oder
+\nAnwendungen ohne Aufforderung durch das System zu installieren oder zu deinstallieren.</string>
     <string name="faq$misc$$shizuku-title">Gibt es Pläne für Shizuku\?</string>
     <string name="faq$misc$i-dont-use-root-adb">Ja. AM kann keine Systemeinstellungen ohne Root oder ADB over TCP\\@ ändern.</string>
     <string name="faq$misc$how-tracker-updated">Tracker und Bibliotheken werden manuell aktualisiert, bevor eine neue Version veröffentlicht wird.</string>
@@ -1123,32 +1127,32 @@
     <string name="pages$settings-page$$installer-title">Installationsprogramm</string>
     <string name="pages$settings-page$$show-users-in-installer-title">Benutzer im Installationsprogramm anzeigen</string>
     <string name="pages$settings-page$$sign-apk-title">APK signieren</string>
-    <string name="pages$settings-page$$install-location-title">Speicherort</string>
+    <string name="pages$settings-page$$install-location-title">Installationsort</string>
     <string name="pages$settings-page$$backup-restore-title">Sichern/Wiederherstellen</string>
-    <string name="pages$profile-page$save-apk">Ermöglicht das Speichern von APK-Dateien unter \\texttt{AppManager/apks} für die ausgewählten Pakete.</string>
+    <string name="pages$profile-page$save-apk">Aktiviert die Speicherung von APK-Dateien unter \\texttt{AppManager/apks} (oder in dem auf der Einstellungsseite ausgewählten Verzeichnis) der ausgewählten Pakete.</string>
     <string name="pages$settings-page$$compression-method-title">Komprimierungsverfahren</string>
     <string name="pages$settings-page$$backup-options-title">Sicherungsoptionen</string>
     <string name="pages$settings-page$$instant-component-blocking-title">Sofortige Komponentensperre</string>
     <string name="pages$profile-page$app-ops">Dies verhält sich genauso wie die Option \\hyperref[subsec:set-mode-for-app-ops-dots]{Modus für App Ops einstellen\\dots} auf der
-\nSeite 1-Click Ops. Allerdings gilt dies nur für die ausgewählten Pakete. Wenn die Option
-\n\\hyperref[subsubsec:profile-state]{Status} \\textit{Ein} ist, werden die App Ops verweigert (d.h. ignoriert), und wenn der Status
-\n\\textit{Aus} ist, werden die App-OPs zugelassen. Die Option kann (unabhängig von den eingegebenen Werten) deaktiviert werden, indem Sie auf
-\ndie Schaltfläche \\textit{deaktiviert} im Eingabedialog klicken.</string>
-    <string name="pages$profile-page$permissions">Diese Option kann verwendet werden, um bestimmte Berechtigungen für die ausgewählten Pakete zu gewähren oder zu entziehen. Wie andere oben,
-\nmüssen die Berechtigungen durch Leerzeichen getrennt werden. Wenn der \\hyperref[subsubsec:profile-state]{Status} \\textit{Ein} ist, werden die
-\nBerechtigungen entzogen, und wenn der Status \\textit{Aus} ist, werden die Berechtigungen erlaubt. Die Option kann
-\ndeaktiviert werden (unabhängig von den eingegebenen Werten), indem Sie im Eingabedialog auf die Schaltfläche \\textit{deaktiviert} klicken.</string>
+\nder Seite 1-Klick-Ops. Allerdings wird der Vorgang hier nur auf die ausgewählten Pakete angewendet.
+\nWenn der Status von \\hyperref[subsubsec:profile-state]{Status} \\textit{Ein} ist, werden die App-Ops verweigert (d. h. ignoriert),
+\nund wenn der Status \\textit{Aus} ist, werden die App-Ops zugelassen. Die Option kann deaktiviert werden (unabhängig von den eingegebenen
+\nWerte) durch Klicken auf die Schaltfläche \\textit{deaktivieren} im Eingabedialog deaktiviert werden.</string>
+    <string name="pages$profile-page$permissions">Mit dieser Option können Sie bestimmte Rechte für die ausgewählten Pakete gewähren oder entziehen. Wie andere oben,
+\nmüssen die Berechtigungen durch Leerzeichen getrennt werden. Wenn der \\hyperref[subsubsec:profile-state]{Staus} \\textit{Ein} ist, werden die
+\nwerden die Berechtigungen entzogen, und wenn der Status \\textit{Aus} ist, werden die Berechtigungen erlaubt. Die Option kann
+\ndeaktiviert werden (unabhängig von den eingegebenen Werten), indem Sie im Eingabedialog auf die Schaltfläche \\textit{deaktivieren} klicken.</string>
     <string name="pages$profile-page$block-trackers">Aktiviert die Sperrung oder Entsperrung der Tracker-Komponenten der ausgewählten Pakete je nach dem Wert von \\hyperref[subsubsec:profile-state]{Status}.
 \nWenn der Zustand \\textit{EIN} ist, werden die Tracker blockiert, und wenn der Zustand \\textit{AUS} ist, werden die Tracker entsperrt.</string>
-    <string name="pages$profile-page$disable">Aktiviert/deaktiviert die ausgewählten Pakete je nach dem Zustand von \\hyperref[subsubsec:profile-state]{Status}. Wenn der Status
-\n\\textit{Ein} ist, werden die Pakete deaktiviert, und wenn der Zustand \\textit{Aus} ist, werden die Pakete aktiviert.</string>
+    <string name="pages$profile-page$disable">Ermöglicht die Aktivierung oder Deaktivierung der ausgewählten Pakete in Abhängigkeit vom Wert von \\hyperref[subsubsec:profile-state]{Status}.
+\nWenn der Zustand \\textit{Ein} ist, werden die Pakete deaktiviert, und wenn der Zustand \\textit{Aus} ist, werden die Pakete aktiviert.</string>
     <string name="pages$settings-page$$backup-apps-with-keystore-title">Anwendungen mit Android KeyStore sichern</string>
     <string name="pages$profile-page$export-blocking-rules">\\begin{danger}{Achtung}
 \n Diese Option ist noch nicht implementiert.
 \n\\end{danger}</string>
-    <string name="pages$profile-page$force-stop">Ermöglicht das erzwungene Anhalten der ausgewählten Pakete.</string>
-    <string name="pages$profile-page$clear-data">Ermöglicht das Löschen von Daten für die ausgewählten Pakete.</string>
-    <string name="pages$profile-page$clear-cache">Ermöglicht das Löschen des Cache für die ausgewählten Pakete.</string>
+    <string name="pages$profile-page$force-stop">Ermöglicht, dass die ausgewählten Pakete zwangsgestoppt werden.</string>
+    <string name="pages$profile-page$clear-data">Aktiviert das Löschen von Daten für die ausgewählten Pakete.</string>
+    <string name="pages$profile-page$clear-cache">Aktiviert das Löschen des Cache für die ausgewählten Pakete.</string>
     <string name="pages$settings-page$$encryption-title">Verschlüsselung</string>
     <string name="pages$settings-page$$rules-title">Regeln</string>
     <string name="pages$settings-page$$backup-volume-title">Sicherungsvolumen</string>
@@ -1156,7 +1160,7 @@
     <string name="pages$settings-page$$import-export-keystore-title">Schlüsselspeicher importieren/exportieren</string>
     <string name="pages$settings-page$$import-export-blocking-rules-title">Import/Export-Sperrregeln</string>
     <string name="pages$settings-page$$device-info-title">Über das Gerät selbst</string>
-    <string name="pages$settings-page$intro">Die Einstellungen können verwendet werden, um das Verhalten der App anzupassen.</string>
+    <string name="pages$settings-page$intro">Die Seite Einstellungen kann verwendet werden, um das Verhalten des App Manager anzupassen.</string>
     <string name="pages$settings-page$language">Konfigurieren Sie die In-App-Sprache. App Manager unterstützt derzeit 21 (einundzwanzig) Sprachen.</string>
     <string name="pages$settings-page$app-theme">In-App-Thema konfigurieren.</string>
     <string name="pages$settings-page$screen-lock">Sperren Sie den App Manager mit der Android-Bildschirmsperre, sofern eine Bildschirmsperre konfiguriert ist.
@@ -1206,26 +1210,26 @@
 \n
 \n\\begin{danger}{Gefahr}
 \n Verwenden Sie nicht den Schlüssel, der mit App Manager geliefert wird, da er für jeden öffentlich zugänglich ist. In Zukunft wird
-\n wird der Standardschlüssel entfernt werden.
+\n der Standardschlüssel entfernt werden.
 \n\\end{danger}
 \n
 \n\\begin{tip}{Tipp}
 \n Wenn Sie den Schlüssel in Zukunft verwenden müssen, empfiehlt es sich, selbst einen KeyStore zu erstellen und den Schlüssel
 \n zu importieren. Bei Schlüsseln, die im App Manager generiert wurden, besteht die Gefahr, dass sie ohne eine ordnungsgemäße Sicherung gelöscht werden.
 \n\\end{tip}</string>
-    <string name="pages$profile-page$backup-restore">Diese Option kann verwendet werden, um ein Backup der ausgewählten Anwendungen und ihrer Daten zu erstellen oder sie wiederherzustellen. Es sind zwei Optionen
-\nverfügbar: \\textit{Backup-Optionen} und \\textit{Backup-Name}.
+    <string name="pages$profile-page$backup-restore">Mit dieser Option können Sie ein Backup der ausgewählten Anwendungen und ihrer Daten erstellen oder diese wiederherstellen.
+\nHier sind zwei Optionen verfügbar: \\textit{Sicherungsoptionen} und \\textit{Sicherungsname}.
 \n\\begin{itemize}
-\n \\item \\textbf{Backup-Optionen} Dasselbe wie die \\hyperref[subsec:backup-restore-backup-options]{Sicherungsoptionen} der
+\n \\textbf{Backup-Optionen} Dasselbe wie die \\hyperref[subsec:backup-restore-backup-options]{Sicherungsoptionen} der
 \n Sicherungs-/Wiederherstellungsfunktion. Wenn nicht festgelegt, werden die Standardoptionen verwendet.
-\n \\item \\textbf{Sicherungsname} Legen Sie einen benutzerdefinierten Namen für die Sicherung fest. Wenn der Name der Sicherung festgelegt ist, erhält sie bei jeder Erstellung einer Sicherung
+\n \\item \\textbf{Backup-Name} Legen Sie einen benutzerdefinierten Namen für die Sicherung fest. Wenn der Name der Sicherung festgelegt ist, erhält sie bei jeder Erstellung einer Sicherung
 \n einen eindeutigen Namen mit dem Suffix backup-name erhalten. Dieses Verhalten wird in einer zukünftigen Version korrigiert werden.
-\n Lassen Sie dieses Feld für reguläre oder ``Basis\'\' Backups leer (stellen Sie auch sicher, dass Sie nicht \\textit{backup multiple} in den
+\n Lassen Sie dieses Feld für reguläre ``Basis\'\'-Sicherungen leer (stellen Sie außerdem sicher, dass Sie \\textit{Mehrfachsicherung} in den
 \n Sicherungsoptionen aktivieren).
 \n\\end{itemize}
 \n
-\nWenn der Status von \\hyperref[subsubsec:profile-state]{Status} \\textit{Ein} ist, werden die Pakete gesichert, und wenn der Status
-\n\\textit{Aus}, werden die Pakete wiederhergestellt. Die Option kann deaktiviert werden, indem Sie auf die Schaltfläche \\textit{deaktiviert} im
+\nWenn der Status von \\hyperref[subsubsec:profile-state]{Staus} \\textit{Ein} ist, werden die Pakete gesichert, und wenn der Status
+\n\\textit{off}, werden die Pakete wiederhergestellt. Die Option kann deaktiviert werden, indem Sie auf die Schaltfläche \\textit{deaktivieren} im
 \ndem Eingabedialog.</string>
     <string name="pages$app-details-page$$shared-libs-tab-title">Registerkarte Gemeinsame Bibliotheken</string>
     <string name="keywords$see_also">\\newcommand{\\KeywordSeeAlso}{Siehe auch:}</string>
@@ -1405,4 +1409,18 @@
 \nDas System durchsucht das Manifest der installierten Anwendungen nach dem Filter und listet die Anwendungskomponenten auf, die in der Lage sind, diesen Filter (in unserem Fall das PDF) zu öffnen.
 \nDaraufhin öffnet entweder der Dateimanager die gewünschte Anwendungskomponente von selbst oder es wird eine vom System bereitgestellte Option verwendet, um sie zu öffnen.
 \nWenn mehrere Anwendungskomponenten in der Lage sind, das Dokument zu öffnen, und keine Standardeinstellung festgelegt ist, erhalten Sie möglicherweise eine Aufforderung, die richtige Anwendungskomponente auszuwählen.</string>
+    <string name="pages$interceptor-page$categories">Dies ist ähnlich wie \\hyperref[subsubsec:action]{Aktion} in dem Sinne, dass es auch vom System zum Filtern von Anwendungskomponenten verwendet wird.
+\nDies hat keine weiteren Vorteile. Im Gegensatz zu \\textit{Aktion} kann es mehr als eine Kategorie geben. Wenn Sie auf die Schaltfläche \\textit{plus} neben dem Titel klicken, können Sie weitere Kategorien hinzufügen.</string>
+    <string name="pages$interceptor-page$data">Daten sind ursprünglich als URI (Uniform Resource Identifier) bekannt, die in \\href{http://www.faqs.org/rfcs/rfc2396.html}{RFC 2396} definiert sind.
+\nEs kann sich um Weblinks, Dateispeicherorte oder eine spezielle Funktion namens \\textit{Inhalt} handeln. Inhalte sind eine Android-Funktion, die von den \\hyperref[appdetails:providers]{Inhaltsanbietern} verwaltet wird.
+\nDaten sind oft mit einem \\hyperref[subsubsec:mime-type]{MIME-Typ} verbunden.
+\n
+\nBeispiele:</string>
+    <string name="pages$interceptor-page$mime-type">MIME-Typ des Feldes \\hyperref[subsubsec:data]{Daten}. Wenn das Datenfeld zum Beispiel auf \\texttt{file:///sdcard/AppManager.apk} eingestellt ist,
+\nkann der zugehörige MIME-Typ \\texttt{application/vnd.android.package-archive} sein.</string>
+    <string name="pages$interceptor-page$action">Aktion gibt die auszuführende allgemeine Aktion an, z. B. \\texttt{android.intent.action.VIEW}. Anwendungen deklarieren oft
+\ndie relevanten Aktionen in der Manifestdatei an, um die gewünschten Intents abzufangen. Die Aktion ist besonders nützlich für Broadcast
+\nIntent, wo sie eine wichtige Rolle spielt. In anderen Fällen dient sie als erste Möglichkeit, die relevanten Anwendungskomponenten herauszufiltern.
+\nGenerische Aktionen wie \\texttt{android.intent.action.VIEW} und \\texttt{android.intent.action.SEND} werden von vielen Anwendungen verwendet.
+\nDaher kann diese Einstellung allein viele Anwendungskomponenten abdecken.</string>
 </resources>
