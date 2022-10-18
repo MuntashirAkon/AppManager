@@ -137,7 +137,6 @@
     <string name="storage_and_cache">स्टोरेज और कैश</string>
     <string name="failed_to_stop"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> को नहीं रोक सके।</string>
     <string name="force_stop">ज़बरदस्ती रोकें</string>
-    <string name="failed_to_disable"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> को बंद नहीं किया जा सका।</string>
     <string name="enable">चालू करें</string>
     <string name="disable">बंद करें</string>
     <string name="stopped">रोका गया</string>
@@ -777,4 +776,5 @@
     <string name="size">आकार</string>
     <string name="screen">स्क्रीन</string>
     <string name="action">कार्रवाई</string>
+    <string name="app_signing_signature_mismatch_for_data_only_app">"हस्ताक्षर मैल ना  होने  के कारन  ऐप इंस्टॉल नहीं हो सकता। ऐप उनिंस्टल्ल होगाय बिना अपना डेटा क्लीर करे।"</string>
 </resources>
