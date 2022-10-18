@@ -197,7 +197,6 @@
     <string name="stopped">Beendet</string>
     <string name="disable">Deaktivieren</string>
     <string name="enable">Aktivieren</string>
-    <string name="failed_to_enable"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> konnte nicht aktiviert werden.</string>
     <string name="force_stop">Erzwungener Stopp</string>
     <string name="failed_to_stop">Konnte <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> nicht beenden.</string>
     <string name="storage_and_cache">Speicher und Cache</string>
@@ -917,13 +916,10 @@
     <string name="generate_key">Erzeugen</string>
     <string name="input_key">Eingabeschlüssel (in hexadezimaler Form)</string>
     <string name="input_keystore_alias_pass_msg">Tippen Sie hier, um das Passwort für %1$s anzugeben</string>
-    <string name="source_code_links">GitHub: https://github.com/MuntashirAkon/AppManager
-\nGitLab: https://gitlab.com/muntashir/AppManager
-\nRiseup: https://0xacab.org/muntashir/AppManager
-\nCodeberg: https://codeberg.org/muntashir/AppManager</string>
+    <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">GitHub</a> • <a href="https://gitlab.com/muntashir/AppManager">GitLab</a> •<a href="https://0xacab.org/muntashir/AppManager">Riseup</a> • <a href="https://codeberg.org/muntashir/AppManager">Codeberg</a></string>
     <string name="app_signing_signatures">Signaturen</string>
     <string name="orientation_right_to_left">Von Rechts nach Links</string>
-    <string name="orientation_left_to_right">Von Links nach Rechts</string>
+    <string name="orientation_left_to_right">Von links nach rechts</string>
     <string name="orientation_follow_locale">Lokale folgen</string>
     <string name="pref_layout_orientation">Ausrichtung des Layouts</string>
     <string name="saf">SAF</string>
@@ -1004,8 +1000,7 @@
     <string name="failed_to_prevent_background_run">Konnte nicht verhindern, dass %1$s im Hintergrund läuft</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">Konnte die App aufgrund von Signaturfehlern nicht installieren. Die App wurde deinstalliert, ohne ihre Daten zu löschen.</string>
     <string name="community">Gemeinschaft</string>
-    <string name="community_links">Telegram: https://t.me/AppManagerChannel
-\nTwitter: https://twitter.com/AppManagerNews</string>
+    <string name="community_links"><a href="https://t.me/AppManagerChannel">Telegrammkanal</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
     <plurals name="alert_failed_to_import_backups">
         <item quantity="one">Konnte %1$d Sicherung nicht importieren</item>
         <item quantity="other">Konnte %1$d Sicherung en nicht importieren</item>
@@ -1196,4 +1191,32 @@
     <string name="sort_by_total_size">Gesamtgröße</string>
     <string name="am_command"><tt>am</tt> Befehl</string>
     <string name="pref_sign_apk_error_signing_key_not_added">Zum Signieren einer APK-Datei ist ein gültiger Signaturschlüssel erforderlich.</string>
+    <string name="hide_app">Verbergen</string>
+    <string name="pref_appearance_description">Thema, Ausrichtung, Funktionen, usw.</string>
+    <string name="pref_version_changelog">Version/Änderungsprotokoll</string>
+    <plurals name="alert_failed_to_unfreeze">
+        <item quantity="one">Konnte die Anwendung %1$d nicht freigeben</item>
+        <item quantity="other">Konnte %1$d Anwendungen nicht freigeben</item>
+    </plurals>
+    <string name="sort_by_frozen_app">Eingefrorenes zuerst</string>
+    <string name="pref_privacy_description">Bildschirmsperre, Autorisierung usw.</string>
+    <string name="user_manual">Benutzerhandbuch</string>
+    <string name="get_help">Hilfe erhalten</string>
+    <string name="pref_advanced_pref">Benutzer, APK-Namensformat, parallele Ausführung, usw.</string>
+    <string name="pref_default_freezing_method">Standardmethode zum Einfrieren</string>
+    <string name="suspend_app">Aussetzen</string>
+    <string name="failed_to_freeze">Konnte <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> nicht einfrieren.</string>
+    <string name="freeze_unfreeze">Einfrieren/Freigeben</string>
+    <plurals name="alert_failed_to_freeze">
+        <item quantity="one">Konnte %1$d Anwendung nicht einfrieren</item>
+        <item quantity="other">Konnte %1$d Anwendungen nicht einfrieren</item>
+    </plurals>
+    <string name="filter_frozen_apps">Eingefrorene Apps</string>
+    <string name="failed_to_unfreeze">Konnte nicht <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> freigeben.</string>
+    <string name="pref_default_freezing_method_description">Methode, die standardmäßig an Stellen verwendet wird, an denen keine Option zur Auswahl einer Einfriermethode vorhanden ist.</string>
+    <string name="profile_freeze_msg">Friert Anwendungen je nach Status ein oder gibt sie frei</string>
+    <string name="suspend_app_description">Dies ist die schwächste Methode des Einfrierens. Eine angehaltene App kann immer noch im Launcher angezeigt werden, ist aber ausgegraut und kann nicht gestartet werden.</string>
+    <string name="hide_app_description">Diese Methode wird nur für den alltäglichen Gebrauch empfohlen. Eine ausgeblendete App erscheint, als wäre sie deinstalliert. Die App kann jedoch wieder erscheinen, wenn sie neu installiert oder aktualisiert wird.</string>
+    <string name="disable_app_description">Empfohlene Methode zum Einfrieren. Es deaktiviert die App und alle ihre Komponenten, aber alle Verknüpfungen gehen verloren.</string>
+    <string name="pref_privacy">Privatsphäre</string>
 </resources>
