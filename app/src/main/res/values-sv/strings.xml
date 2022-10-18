@@ -22,4 +22,6 @@
     <string name="no_activities">inga aktiviteter</string>
     <string name="sort_by_last_update">senaste uppdateringen</string>
     <string name="settings">Inställningar</string>
+    <string name="flags">Flaggor</string>
+    <string name="patterns_allowed">tillåtna mönster</string>
 </resources>
