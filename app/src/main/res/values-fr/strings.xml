@@ -442,7 +442,6 @@
     <string name="storage_and_cache">Stockage et cache</string>
     <string name="failed_to_stop">Impossible d\'arrêter <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="force_stop">Forcer l\'arrêt</string>
-    <string name="failed_to_disable">Impossible de désactiver <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="enable">Activer</string>
     <string name="disable">Désactiver</string>
     <string name="stopped">Arrêté</string>
@@ -670,10 +669,7 @@
     <string name="app_ops">Opérations de l\'appli</string>
     <string name="internal_data">Données internes</string>
     <string name="requested_large_heap">Grand tas</string>
-    <string name="source_code_links">GitHub : https://github.com/MuntashirAkon/AppManager
-\nGitLab : https://gitlab.com/muntashir/AppManager
-\nRiseup : https://0xacab.org/muntashir/AppManager
-\nCodeberg : https://codeberg.org/muntashir/AppManager</string>
+    <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">GitHub</a> • <a href="https://gitlab.com/muntashir/AppManager">GitLab</a> • <a href="https://0xacab.org/muntashir/AppManager">Riseup</a> • <a href="https://codeberg.org/muntashir/AppManager">Codeberg</a></string>
     <string name="omit_sensitive_info_summary">Omettez les informations sensibles comme les URL, les numéros de téléphone ou les adresses courriel.</string>
     <string name="app_signing_signatures">Signatures</string>
     <plurals name="alert_failed_to_set_app_ops">
@@ -692,8 +688,7 @@
     <string name="text_include_device_info">Inclure les informations de l\'appareil</string>
     <string name="record_log">Journaux d\'enregistrement</string>
     <string name="disable_background_run_description">Défini le mode <i>Ignore</i> pour les opérations d\'application suivantes : <tt>RUN_IN_BACKGROUND</tt> (depuis Android 7.0) et <tt>RUN_ANY_IN_BACKGROUND</tt> (depuis Android 9).</string>
-    <string name="community_links">Telegram : https://t.me/AppManagerChannel
-\nTwitter : https://twitter.com/AppManagerNews</string>
+    <string name="community_links"><a href="https://t.me/AppManagerChannel">Canal Telegram</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
     <string name="community">Communauté</string>
     <string name="pref_selected_users_msg">Restreindre l\'utilisation d\'App Manager aux seuls utilisateurs sélectionnés.</string>
     <string name="backup_extras_description">Sauvegarder les permissions d\'application, les options de l\'économiseur de batterie et de l\'utilisation des données, le statut MagiskHide, SSAID, etc.</string>
