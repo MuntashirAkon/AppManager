@@ -1189,5 +1189,10 @@
     <string name="sort_by_total_size">Taille totale</string>
     <string name="pref_sign_apk_error_signing_key_not_added">Une clé de signature valide est nécessaire pour signer un fichier APK.</string>
     <string name="pref_sign_apk_no_signing_key">Aucune clé de signature</string>
-    <string name="am_command">commande <tt>am</tt></string>
+    <string name="am_command">Commande <tt>am</tt></string>
+    <string name="hide_app">Masquer</string>
+    <string name="user_manual">Manuel utilisateur</string>
+    <string name="get_help">Obtenir de l\'aide</string>
+    <string name="pref_privacy">Confidentialité</string>
+    <string name="pref_version_changelog">Version/Journal des modifications</string>
 </resources>
