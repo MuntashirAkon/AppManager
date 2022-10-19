@@ -188,4 +188,16 @@
 \n к различным страницам.</string>
     <string name="pages$main-page$list-options">\\textbf{Параметры списка} содержат параметры для сортировки или фильтрации списка приложений.</string>
     <string name="titlepage$user_manual">{\\huge\\bfseries Руководство пользователя\\par}</string>
+    <string name="keywords$chapter">\\newcommand{\\KeywordChapter}{Раздел}</string>
+    <string name="keywords$see_also">\\newcommand{\\KeywordSeeAlso}{Смотрите также:}</string>
+    <string name="keywords$end_of_keyword_in_alert">\\newcommand{\\KeywordEndOfKeyWordInAlert}{.}</string>
+    <string name="intro$main$donation">\\emph{Подношения или покупки не требуются для использования App Manager.} В данный момент App Manager не поддерживает покупки, подношения владельцам App Manager могут быть отправлены через Open Source Collective.
+\n
+\nOpen Source Collective это фискальный хост на платформе Open Collective, который помогает проектам с открытым исходным кодом управлять финансами. В данный момент он поддерживает оплату с помощью банковских аккаунтов, PayPal, кредитных или дебетовых карт, а также криптовалют.
+\n
+\n\\textit{Link:} \\url{https://opencollective.com/muntashir}.
+\n
+\nОтправляя подношения, отправитель соглашается с тем, что подношение не используется для приоритизации предложенных ими идей. Предложение идей не требует никаких наград или подношений, и их приоритизация осуществляется по усмотрению владельца.
+\n
+\n\\emph{App Manager принимает любые предложения по финансированию или гранты.} Представители заинтересованной организации могут связаться с владельцами напрямую, используя опции в \\Sref{sec:contact}.</string>
 </resources>
