@@ -108,7 +108,6 @@
     <string name="storage_and_cache">Penyimpanan dan Cache</string>
     <string name="failed_to_stop">Tidak dapat menghentikan <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="force_stop">Paksa-berhenti</string>
-    <string name="failed_to_disable">Tidak dapat menon-aktifkan <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="enable">Aktifkan</string>
     <string name="disable">Non-aktifkan</string>
     <string name="stopped">Dihentikan</string>
@@ -834,10 +833,7 @@
     <string name="generate_key">Hasilkan</string>
     <string name="input_key">Kunci input (dalam heksadesimal)</string>
     <string name="input_keystore_alias_pass_msg">Ketuk disini untuk menyediakan kata sandi untuk %1$s</string>
-    <string name="source_code_links">GitHub: https://github.com/MuntashirAkon/AppManager
-\nGitLab: https://gitlab.com/muntashir/AppManager
-\nRiseup: https://0xacab.org/muntashir/AppManager
-\nCodeberg: https://codeberg.org/muntashir/AppManager</string>
+    <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">GitHub</a> • <a href="https://gitlab.com/muntashir/AppManager">GitLab</a> • <a href="https://0xacab.org/muntashir/AppManager">Riseup</a> • <a href="https://codeberg.org/muntashir/AppManager">Codeberg</a></string>
     <string name="trackers_unblocked_successfully">Pelacak sekarang dibatalkan diblokir</string>
     <string name="trackers_blocked_successfully">Pelacak sekarang diblokir</string>
     <string name="failed_to_unblock_trackers">Tidak dapat batal memblokir pelacak</string>
@@ -963,8 +959,7 @@
     <string name="unknown_net_policy">Netpolicy yang tidak dikenal (%1$s - %2$X)</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">Tidak dapat memasang aplikasi dikarenakan ketidakcocokan tanda tangan. Aplikasi dicopot tanpa membersihkan datanya.</string>
     <string name="failed_to_prevent_background_run">Tidak dapat mencegah %1$s untuk berjalan di latar belakang</string>
-    <string name="community_links">Telegram: https://t.me/AppManagerChannel
-\nTwitter: https://twitter.com/AppManagerNews</string>
+    <string name="community_links"><a href="https://t.me/AppManagerChannel">Telegram channel</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
     <string name="community">Komunitas</string>
     <plurals name="alert_failed_to_import_backups">
         <item quantity="other">Tidak dapat mengimpor %1$d cadangan</item>
@@ -1145,4 +1140,21 @@
     <string name="changelog_type_new">Baru</string>
     <string name="pref_reload_apps">Muat ulang aplikasi</string>
     <string name="pref_reload_apps_msg">Muat ulang daftar aplikasi yang disimpan di database Manajer Aplikasi jika terjadi perilaku tak terduga.</string>
+    <string name="troubleshooting">Penyelesaian masalah</string>
+    <string name="failed_to_freeze">Tidak dapat membekukan <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="failed_to_unfreeze">Tidak dapat mencairkan <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="freeze_unfreeze">Bekukan/cairkan</string>
+    <string name="suspend_app">Menangguhkan</string>
+    <string name="hide_app">Sembunyikan</string>
+    <string name="hide_app_description">Metode ini hanya disarankan untuk penggunaan sehari-hari. Sebuah aplikasi tersembunyi muncul seolah-olah itu dihapus. Tetapi aplikasi dapat muncul kembali jika diinstal ulang atau diperbarui.</string>
+    <string name="pref_appearance_description">Tema, orientasi, fitur, dll.</string>
+    <string name="pref_privacy">Privasi</string>
+    <string name="pref_privacy_description">Kunci layar, otorisasi, dll.</string>
+    <string name="user_manual">Panduan pengguna</string>
+    <string name="get_help">Dapatkan bantuan</string>
+    <string name="pref_advanced_pref">Pengguna, format nama APK, eksekusi paralel, dll.</string>
+    <string name="pref_version_changelog">Versi/Changelog</string>
+    <string name="changelog_type_fix">Memperbaiki</string>
+    <string name="sort_by_total_size">Ukuran keseluruhan</string>
+    <string name="am_command"><tt>am</tt> perintah</string>
 </resources>
