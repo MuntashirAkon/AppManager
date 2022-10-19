@@ -360,22 +360,27 @@
     </plurals>
     <plurals name="alert_failed_to_backup">
         <item quantity="one">%1$d aplicativo não pôde ter o backup feito</item>
+        <item quantity="many">%1$d aplicativos não puderam ter o backup feito</item>
         <item quantity="other">%1$d aplicativos não puderam ter o backup feito</item>
     </plurals>
     <plurals name="alert_failed_to_restore">
         <item quantity="one">%1$d aplicativo não pôde ser restaurado</item>
+        <item quantity="many">%1$d aplicativos não puderam ser restaurados</item>
         <item quantity="other">%1$d aplicativos não puderam ser restaurados</item>
     </plurals>
     <plurals name="alert_failed_to_delete_backup">
         <item quantity="one">%1$d backup não pôde ser excluído</item>
+        <item quantity="many">%1$d backups não puderam ser excluídos</item>
         <item quantity="other">%1$d backups não puderam ser excluídos</item>
     </plurals>
     <plurals name="alert_failed_to_unblock_trackers">
         <item quantity="one">%1$d aplicativo não pôde ter os rastreadores desbloqueados</item>
+        <item quantity="many">%1$d aplicativos não puderam ter os rastreadores desbloqueados</item>
         <item quantity="other">%1$d aplicativos não puderam ter os rastreadores desbloqueados</item>
     </plurals>
     <plurals name="alert_failed_to_block_components">
         <item quantity="one">%1$d aplicativo não pôde ter os componentes bloqueados</item>
+        <item quantity="many">%1$d aplicativos não puderam ter os componentes bloqueados</item>
         <item quantity="other">%1$d aplicativos não puderam ter os componentes bloqueados</item>
     </plurals>
     <string name="apply_to_system_apps">Aplicar aos aplicativos do sistema</string>
@@ -456,6 +461,7 @@
     <string name="long_integer_value">Valor do número inteiro longo</string>
     <plurals name="backup_exists_are_you_sure">
         <item quantity="one">O backup já existe. Tem certeza\?</item>
+        <item quantity="many">Mais de um aplicativo já tem um backup. Tem certeza\?</item>
         <item quantity="other">Mais de um aplicativo já tem um backup. Tem certeza\?</item>
     </plurals>
     <string name="pref_backup_flags_msg">Adicionar uma predefinição para opções de backup remove o fardo de selecionar flags toda vez que você faz backup/restaura.</string>
@@ -492,14 +498,17 @@
     <string name="backup_obb_media">OBB e Mídia</string>
     <plurals name="missing_signatures">
         <item quantity="one">%1$d assinatura ausente</item>
+        <item quantity="many">%1$d assinaturas ausentes</item>
         <item quantity="other">%1$d assinaturas ausentes</item>
     </plurals>
     <plurals name="libraries">
         <item quantity="one">%1$d biblioteca</item>
+        <item quantity="many">%1$d bibliotecas</item>
         <item quantity="other">%1$d bibliotecas</item>
     </plurals>
     <plurals name="classes">
         <item quantity="one">%1$d classe</item>
+        <item quantity="many">%1$d classes</item>
         <item quantity="other">%1$d classes</item>
     </plurals>
     <string name="type">Tipo</string>
@@ -688,11 +697,13 @@
     <string name="not_verified">Não verificado</string>
     <string name="verified">Verificado</string>
     <plurals name="verified_with_warning">
-        <item quantity="one">Verificado com %d aviso</item>
-        <item quantity="other">Verificado com %d avisos</item>
+        <item quantity="one">Verificado com %d alerta</item>
+        <item quantity="many">Verificado com %d alertas</item>
+        <item quantity="other">Verificado com %d alertas</item>
     </plurals>
     <plurals name="app_signing_signature_schemes_pl">
         <item quantity="one">Esquema de assinatura</item>
+        <item quantity="many">Esquemas de assinatura</item>
         <item quantity="other">Esquemas de assinatura</item>
     </plurals>
     <string name="input_keystore_pass_description">Insere a senha do KeyStore do App Manager. Se é tua primeira vez vendo isto, use um gerador de senha para gerar uma e salve-a num lugar seguro antes de inseri-la aqui.</string>
@@ -743,6 +754,7 @@
     <string name="about_device">Sobre o dispositivo</string>
     <plurals name="alert_failed_to_set_app_ops">
         <item quantity="one">%1$d aplicativo não pôde ter operações de aplicativo definidas</item>
+        <item quantity="many">%1$d aplicativos não puderam ter operações de aplicativo definidas</item>
         <item quantity="other">%1$d aplicativos não puderam ter operações de aplicativo definidas</item>
     </plurals>
     <string name="set_mode_for_app_ops_dots">Definir modo para operações de aplicativo…</string>
@@ -917,6 +929,7 @@
     <string name="unable_to_save_log">Não é possível salvar o registro. Você inseriu um nome de arquivo válido\?</string>
     <plurals name="toast_log_truncated">
         <item quantity="one">Registro muito grande, mostrando última %d linha.</item>
+        <item quantity="many">Registro muito grande, mostrando últimas %d linhas.</item>
         <item quantity="other">Registro muito grande, mostrando últimas %d linhas.</item>
     </plurals>
     <string name="toast_invalid_selection">Seleção inválida. Por favor, tente de novo.</string>
@@ -994,6 +1007,7 @@
     <string name="pref_layout_orientation">Orientação do layout</string>
     <plurals name="file_deletion_confirmation">
         <item quantity="one">%d arquivo será excluído</item>
+        <item quantity="many">%d arquivos serão excluídos</item>
         <item quantity="other">%d arquivos serão excluídos</item>
     </plurals>
     <string name="hidden">Oculto</string>
@@ -1021,6 +1035,7 @@
     <string name="community">Comunidade</string>
     <plurals name="alert_failed_to_import_backups">
         <item quantity="one">%1$d backup não pôde ser importado</item>
+        <item quantity="many">%1$d backups não puderam ser importados</item>
         <item quantity="other">%1$d backups não puderam ser importados</item>
     </plurals>
     <string name="import_from_tb">Importar do Titanium Backup</string>
@@ -1052,6 +1067,7 @@
     <string name="pid">ID do processo</string>
     <plurals name="pref_thread_count_msg">
         <item quantity="one">Execute no máximo %1$d operação em paralelo</item>
+        <item quantity="many">Execute no máximo %1$d operações em paralelo</item>
         <item quantity="other">Execute no máximo %1$d operações em paralelo</item>
     </plurals>
     <string name="pref_thread_count_hint">O valor deve estar entre 0 e %1$d onde 0 significa <i>número máximo de operações em determinado momento</i>.</string>
@@ -1157,7 +1173,7 @@
     <string name="primary_abi">ABI primária</string>
     <string name="zygote_preload_name">Nome de pré-carregamento do Zygote</string>
     <string name="endianness_little_endian">Little endian</string>
-    <string name="hidden_api_enf_policy_warn">Warn (acesso total à API oculta, mas emite avisos)</string>
+    <string name="hidden_api_enf_policy_warn">Warn (acesso total à API oculta, mas emite alertas)</string>
     <string name="pref_saved_apk_name_format">Formato de Nome de APK Salvo</string>
     <string name="pref_saved_apk_name_format_msg">O formato a ser usado para nomear os arquivos APK ao salvá-los.</string>
     <string name="auth_manager_description">Para iniciar um Intent a partir de um aplicativo externo, é necessário fornecer um campo extra chamado <tt>auth</tt>, e deve conter a seguinte chave:</string>
