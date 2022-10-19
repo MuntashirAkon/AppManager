@@ -78,29 +78,29 @@
     <string name="license">Licença</string>
     <string name="third_party">Bibliotecas e Ícones de terceiros</string>
     <string name="credits">Créditos</string>
-    <string name="credits_message">"Aos autores de
+    <string name="credits_message">Aos autores do
 \n- The Android Open Source Project
-\n- &lt;a href=\"https://github.com/zhaobozhen/libraries\"&gt;Absinthe\'s libraries&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/butzist/ActivityLauncher\"&gt;Activity Launcher&lt;/a&gt;
-\n- &lt;a href=\"https://bitbucket.org/oF2pks/fdroid-applications-info\"&gt;Apps_packages Info&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/zhaobao/AppsMonitor\"&gt;AppsMonitor&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/8enet/AppOpsX\"&gt;AppOpsX&lt;/a&gt;ChangeLog Library&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/gabrielemariotti/changeloglib\"&gt;
-\n- &lt;a href=\"https://bitbucket.org/oF2pks/fdroid-classyshark3xodus\"&gt;ClassySharkAndroid&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/billthefarmer/editor\"&gt;Editor&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/nex3z/FlowLayout\"&gt;FlowLayout&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/k3b/intent-intercept\"&gt;Intent Intercept&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/YarikSOffice/lingver\"&gt;Lingver&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/topjohnwu/Magisk\"&gt;Magisk&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/zhanghai/MaterialFiles\"&gt;Material Files&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/pluscubed/matlog\"&gt;MatLog&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/matrix-org/matrix-android-sdk\"&gt;Matrix Android SDK&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/jensstein/oandbackup\"&gt;OAndBackup&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/open-keychain/open-keychain\"&gt;Open Keychain&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/Aefyr/SAI\"&gt;SAI&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/RikkaApps/Shizuku\"&gt;Shizuku&lt;/a&gt;
-\n- &lt;a href=\"https://github.com/tuyafeng/Watt\"&gt;Watt&lt;/a&gt;
-\nCrédito do logo original: &lt;a href=\"https://github.com/Atrate\"&gt;Atrate&lt;/a&gt;. "</string>
+\n- <a href="https://github.com/zhaobozhen/libraries">Absinthe\'s libraries</a>
+\n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
+\n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
+\n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/gabrielemariotti/changeloglib">ChangeLog Library</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a>
+\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a>
+\n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a>
+\n- <a href="https://github.com/topjohnwu/Magisk">Magisk</a>
+\n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
+\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+\n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
+\n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
+\n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a>
+\n- <a href="https://github.com/Aefyr/SAI">SAI</a>
+\n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+\nOriginal logo credit: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="word_wrap">Alternar quebra de palavra</string>
     <string name="class_viewer">Visualizador de Classe</string>
     <string name="toggle_class_listing">Alternar Lista de Classes</string>
@@ -110,6 +110,7 @@
     <string name="all_classes">Todas as classes</string>
     <plurals name="main_list_date_days">
         <item quantity="one"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> dia</item>
+        <item quantity="many"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> dias</item>
         <item quantity="other"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> dias</item>
     </plurals>
     <string name="no_shared_libs">Nenhuma biblioteca compartilhada</string>
@@ -120,14 +121,17 @@
     <string name="usage_7_days">Últimos 7 dias</string>
     <plurals name="usage_months">
         <item quantity="one">%1$d mês</item>
+        <item quantity="many">%1$d meses</item>
         <item quantity="other">%1$d meses</item>
     </plurals>
     <plurals name="usage_days">
         <item quantity="one">%1$d dia</item>
+        <item quantity="many">%1$d dias</item>
         <item quantity="other">%1$d dias</item>
     </plurals>
     <plurals name="usage_hours">
         <item quantity="one">%1$d hora</item>
+        <item quantity="many">%1$d horas</item>
         <item quantity="other">%1$d horas</item>
     </plurals>
     <string name="usage_less_than_a_minute">Menos de um minuto</string>
@@ -175,7 +179,6 @@
     <string name="stopped">Parado</string>
     <string name="disable">Desativar</string>
     <string name="enable">Ativar</string>
-    <string name="failed_to_enable"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> não pôde ser ativado.</string>
     <string name="force_stop">Forçar parada</string>
     <string name="failed_to_stop"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> não pôde ser parado.</string>
     <string name="storage_and_cache">Armazenamento e Cache</string>
@@ -196,6 +199,7 @@
     <string name="external_multiple_data_dir">Diretório de Dados Externo <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
     <plurals name="no_of_times_opened">
         <item quantity="one">%1$d vez</item>
+        <item quantity="many">%1$d vezes</item>
         <item quantity="other">%1$d vezes</item>
     </plurals>
     <string name="sort_by_last_used">Último usado</string>
@@ -210,6 +214,7 @@
     <string name="the_export_was_successful">Exportado</string>
     <plurals name="failed_to_import_files">
         <item quantity="one">%1$d arquivo não pôde ser importado.</item>
+        <item quantity="many">%1$d arquivos não puderam ser importados.</item>
         <item quantity="other">%1$d arquivos não puderam ser importados.</item>
     </plurals>
     <string name="apk_updater">APK Updater</string>
@@ -226,19 +231,23 @@
     <string name="export_blocking_rules">Exportar Regras de Bloqueio</string>
     <plurals name="alert_failed_to_clear_data">
         <item quantity="one">%1$d aplicativo não pôde ter os dados limpos</item>
+        <item quantity="many">%1$d aplicativos não puderam ter os dados limpos</item>
         <item quantity="other">%1$d aplicativos não puderam ter os dados limpos</item>
     </plurals>
     <plurals name="alert_failed_to_uninstall">
         <item quantity="one">%1$d aplicativo não pôde ser desinstalado</item>
+        <item quantity="many">%1$d aplicativos não puderam ser desinstalados</item>
         <item quantity="other">%1$d aplicativos não puderam ser desinstalados</item>
     </plurals>
     <plurals name="alert_failed_to_disable_background">
         <item quantity="one">Inapto de deter %1$d aplicativo de executar em segundo plano</item>
+        <item quantity="many">Inapto de deter %1$d aplicativos de executar em segundo plano</item>
         <item quantity="other">Inapto de deter %1$d aplicativos de executar em segundo plano</item>
     </plurals>
     <string name="the_operation_was_successful">Feito</string>
     <plurals name="alert_failed_to_force_stop">
         <item quantity="one">%1$d aplicativo não pôde ser forçado a parar</item>
+        <item quantity="many">%1$d aplicativos não puderam ser forçados a parar</item>
         <item quantity="other">%1$d aplicativos não puderam ser forçados a parar</item>
     </plurals>
     <string name="toggle_kill_for_system_apps">Alternar encerramento de aplicativos de sistema</string>
@@ -284,6 +293,7 @@
     <string name="unknown_op">Operação Desconhecida</string>
     <plurals name="alert_failed_to_disable_trackers">
         <item quantity="one">%1$d aplicativo não pôde ter os rastreadores desativados</item>
+        <item quantity="many">%1$d aplicativos não puderam ter os rastreadores desativados</item>
         <item quantity="other">%1$d aplicativos não puderam ter os rastreadores desativados</item>
     </plurals>
     <string name="failed_to_grant_permission">A permissão não pôde ser concedida</string>
@@ -297,6 +307,7 @@
     <string name="manifest_viewer">Visualizador de Manifest</string>
     <plurals name="no_of_trackers">
         <item quantity="one">%1$d rastreador</item>
+        <item quantity="many">%1$d rastreadores</item>
         <item quantity="other">%1$d rastreadores</item>
     </plurals>
     <string name="install">Instalar</string>
@@ -320,6 +331,7 @@
     <string name="failed_to_parse_some_numbers">Não foi possível analisar alguns números</string>
     <plurals name="no_of_splits">
         <item quantity="one">%1$d divisão</item>
+        <item quantity="many">%1$d divisões</item>
         <item quantity="other">%1$d divisões</item>
     </plurals>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> instalado</string>
@@ -343,6 +355,7 @@
     <string name="backup_options">Opções de Backup</string>
     <plurals name="failed_to_backup_some_apk_files">
         <item quantity="one">%1$d aplicativo não pôde ter o backup feito</item>
+        <item quantity="many">%1$d aplicativos não puderam ter o backup feito</item>
         <item quantity="other">%1$d aplicativos não puderam ter o backup feito</item>
     </plurals>
     <plurals name="alert_failed_to_backup">
@@ -459,14 +472,17 @@
     <string name="orientation_no_sensor">Nenhum sensor</string>
     <plurals name="other_trackers_and_classes">
         <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> rastreadores com <xliff:g id="class_no" example="50">%2$d</xliff:g> classes</item>
+        <item quantity="many"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> rastreadores com <xliff:g id="class_no" example="50">%2$d</xliff:g> classes</item>
         <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> rastreadores com <xliff:g id="class_no" example="50">%2$d</xliff:g> classes</item>
     </plurals>
     <plurals name="two_trackers_and_classes">
         <item quantity="one">2 rastreadores com <xliff:g id="class_no" example="50">%1$d</xliff:g> classes</item>
+        <item quantity="many">2 rastreadores com <xliff:g id="class_no" example="50">%1$d</xliff:g> classes</item>
         <item quantity="other">2 rastreadores com <xliff:g id="class_no" example="50">%1$d</xliff:g> classes</item>
     </plurals>
     <plurals name="tracker_and_classes">
         <item quantity="one">1 rastreador com <xliff:g id="class_no" example="50">%1$d</xliff:g> classe</item>
+        <item quantity="many">1 rastreador com <xliff:g id="class_no" example="50">%1$d</xliff:g> classes</item>
         <item quantity="other">1 rastreador com <xliff:g id="class_no" example="50">%1$d</xliff:g> classes</item>
     </plurals>
     <string name="termux">Termux</string>
@@ -757,6 +773,7 @@
     <string name="disable_background_run_description">Define o modo <i>ignore</i> para as seguintes operações de aplicativo: <tt>RUN_IN_BACKGROUND</tt> (do Android 7.0) e <tt>RUN_ANY_IN_BACKGROUND</tt> (do Android 9).</string>
     <plurals name="no_of_components">
         <item quantity="one">%1$d componente</item>
+        <item quantity="many">%1$d componentes</item>
         <item quantity="other">%1$d componentes</item>
     </plurals>
     <string name="backup_custom_users_description">Realizar backups apenas para os usuários especificados</string>
@@ -838,10 +855,7 @@
     <string name="uninstalled_apps">Aplicativos desinstalados</string>
     <string name="internal_data">Dados internos</string>
     <string name="pkcs12_keystore">PKCS #12 KeyStore (P12)</string>
-    <string name="source_code_links">GitHub: https://github.com/MuntashirAkon/AppManager
-\nGitLab: https://gitlab.com/muntashir/AppManager
-\nRiseup: https://0xacab.org/muntashir/AppManager
-\nCodeberg: https://codeberg.org/muntashir/AppManager</string>
+    <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">GitHub</a> • <a href="https://gitlab.com/muntashir/AppManager">GitLab</a> • <a href="https://0xacab.org/muntashir/AppManager">Riseup</a> • <a href="https://codeberg.org/muntashir/AppManager">Codeberg</a></string>
     <string name="bouncy_castle_keystore">Bouncy Castle KeyStore (BKS)</string>
     <string name="input_key">Insira uma chave (em hexadecimal)</string>
     <string name="expiry_date_cannot_be_empty">A data de validade não pode estar vazia.</string>
@@ -1003,8 +1017,7 @@
     <string name="unknown_net_policy">Política de rede desconhecida (%1$s - %2$X)</string>
     <string name="failed_to_prevent_background_run">Inapto de deter %1$s de executar em segundo plano</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">Não foi possível instalar o aplicativo devido ao descompasso de assinatura. O aplicativo foi desinstalado sem limpar seus dados.</string>
-    <string name="community_links">Telegram: https://t.me/AppManagerChannel
-\nTwitter: https://twitter.com/AppManagerNews</string>
+    <string name="community_links"><a href="https://t.me/AppManagerChannel">Canal no Telegram</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
     <string name="community">Comunidade</string>
     <plurals name="alert_failed_to_import_backups">
         <item quantity="one">%1$d backup não pôde ser importado</item>
@@ -1086,6 +1099,7 @@
     <string name="pref_disable_description">Desative apenas componentes. Não recomendado para usuários root, pois os aplicativos podem contornar isso. Nos modos ADB, os aplicativos somente de teste podem ser desabilitados com este método.</string>
     <plurals name="usage_minutes">
         <item quantity="one">%1$d min</item>
+        <item quantity="many">%1$d mins</item>
         <item quantity="other">%1$d mins</item>
     </plurals>
     <string name="vt_checking">VirusTotal: Verificando…</string>
@@ -1106,6 +1120,7 @@
     <string name="process_id">ID do Processo</string>
     <plurals name="usage_seconds">
         <item quantity="one">%1$d seg</item>
+        <item quantity="many">%1$d segs</item>
         <item quantity="other">%1$d segs</item>
     </plurals>
     <string name="toggle_internet">Usar a internet</string>
@@ -1196,4 +1211,34 @@
     <string name="troubleshooting">Solução de problemas</string>
     <string name="pref_reload_apps">Recarregar apps</string>
     <string name="changelog_type_new">Novo</string>
+    <string name="suspend_app_description">Este é o método de congelamento mais fraco. Um aplicativo suspenso ainda pode aparecer no iniciador, mas ficará esmaecido e não poderá ser iniciado.</string>
+    <string name="hide_app_description">Este método é recomendado apenas para uso diário. Um aplicativo oculto aparece como se estivesse desinstalado. Mas o aplicativo pode reaparecer se for reinstalado ou atualizado.</string>
+    <string name="pref_appearance_description">Tema, orientação, recursos, etc.</string>
+    <string name="failed_to_freeze">Não foi possível congelar <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="failed_to_unfreeze">Não foi possível descongelar <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="freeze_unfreeze">Congelar/descongelar</string>
+    <string name="profile_freeze_msg">Congela ou descongela aplicativos com base no estado</string>
+    <string name="pref_default_freezing_method">Método de congelamento padrão</string>
+    <string name="pref_default_freezing_method_description">Método a ser usado por padrão em locais onde não há opção de selecionar um método de congelamento.</string>
+    <string name="suspend_app">Suspender</string>
+    <string name="hide_app">Esconder</string>
+    <plurals name="alert_failed_to_freeze">
+        <item quantity="one">Não foi possível congelar %1$d aplicativo</item>
+        <item quantity="many">Não foi possível congelar %1$d aplicativos</item>
+        <item quantity="other">Não foi possível congelar %1$d aplicativos</item>
+    </plurals>
+    <plurals name="alert_failed_to_unfreeze">
+        <item quantity="one">Não foi possível descongelar %1$d aplicativo</item>
+        <item quantity="many">Não foi possível descongelar %1$d aplicativos</item>
+        <item quantity="other">Não foi possível descongelar %1$d aplicativos</item>
+    </plurals>
+    <string name="disable_app_description">Método de congelamento recomendado. Ele desativa o aplicativo e todos os seus componentes, mas todos os atalhos serão perdidos.</string>
+    <string name="sort_by_frozen_app">Congelado primeiro</string>
+    <string name="filter_frozen_apps">Aplicativos congelados</string>
+    <string name="pref_privacy">Privacidade</string>
+    <string name="pref_privacy_description">Bloqueio de tela, autorização, etc.</string>
+    <string name="user_manual">Manual do usuário</string>
+    <string name="get_help">Obter ajuda</string>
+    <string name="pref_advanced_pref">Usuários, formato de nome do APK, execução paralela, etc.</string>
+    <string name="pref_version_changelog">Versão/Registro de alterações</string>
 </resources>
