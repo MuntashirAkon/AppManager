@@ -54,17 +54,17 @@
     <string name="apply_to_system_apps">Aplicar ás aplicações do sistema</string>
     <plurals name="alert_failed_to_block_components">
         <item quantity="one">Não foi possível bloquear os componentes da %1$d aplicação</item>
-        <item quantity="many"></item>
+        <item quantity="many"/>
         <item quantity="other">Não foi possível bloquear os componentes das %1$d aplicações</item>
     </plurals>
     <plurals name="alert_failed_to_unblock_trackers">
         <item quantity="one">Não foi possível desbloquear os rastreadores da %1$d aplicação</item>
-        <item quantity="many"></item>
+        <item quantity="many"/>
         <item quantity="other">Não foi possível desbloquear os rastreadores das %1$d aplicações</item>
     </plurals>
     <plurals name="alert_failed_to_delete_backup">
         <item quantity="one">Não foi possível eliminar a %1$d cópia de segurança</item>
-        <item quantity="many"></item>
+        <item quantity="many"/>
         <item quantity="other">Não foi possível eliminar as %1$d cópias de segurança</item>
     </plurals>
     <plurals name="alert_failed_to_restore">
@@ -331,7 +331,7 @@
     <string name="user_app">Aplicação do utilizador</string>
     <string name="system_app">Aplicação do sistema</string>
     <string name="app_info">Informações da aplicação</string>
-    <string name="version_name_with_code">Versão <xliff:g id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g id="version_code" exemplo="365">%2$d</xliff:g>)</string>
+    <string name="version_name_with_code">Versão <xliff:g id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g id="version_code" example="365">%2$d</xliff:g>)</string>
     <string name="sort">Ordenar</string>
     <string name="user">Utilizador</string>
     <string name="system">Sistema</string>
@@ -411,7 +411,7 @@
     <string name="failed_to_grant_permission">Permissão não concedida</string>
     <plurals name="alert_failed_to_disable_trackers">
         <item quantity="one">Não foi possível desativar os rastreadores da %1$d aplicação</item>
-        <item quantity="many"></item>
+        <item quantity="many"/>
         <item quantity="other">Não foi possível desativar os rasteadores das %1$d aplicações</item>
     </plurals>
     <string name="unknown_op">Operação desconhecida</string>
