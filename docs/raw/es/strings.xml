@@ -252,16 +252,16 @@
 \npueden ser enviados a través de archivos adjuntos de correo electrónico. \\textit{La firma es un requisito.} Consulte el archivo CONTRIBUIR ubicado en el directorio raíz
 \nde la fuente para obtener más información.
 \n
-\n\\begin{advertencia}{Aviso}
+\n\\begin{warning}{Notice}
 \n En caso de enviar parches por correo electrónico, toda la conversación puede ser accesible públicamente en el futuro. Por lo tanto, no
 \n incluya ninguna información personal identificable (PII) que no sea su nombre o dirección de correo electrónico.
-\n\\fin{advertencia}</string>
+\n\\end{warning}</string>
     <string name="intro$main$contact">Muntashir Al-Islam {nota de pie} {también puede dirigirse a mí como ``Muntashir Akon\'}}
 \nCorreo electrónico: \\href{mailto:muntashirakon@riseup.net}{muntashirakon [arroba] riseup [punto] net}\\href
 \nHuella digital de la llave: \\texttt{7bad37c2981e41f8f6abea7f58f0b4f26c346fce}\\\\
 \nGitHub: \\https://github.com/MuntashirAkon
 \nTwitter: \\https://twitter.com/Muntashir</string>
-    <string name="intro$main$terminologies">\\begin{itemize}
+    <string name="intro$main$terminologies">\\N - Inicio
 \n \\item \\textbf{AM} --- Nombre corto para App Manager.
 \n \\item \\textbf{Block/Unblock} --- Se utiliza para bloquear o desbloquear componentes. La forma en que se bloquean los componentes depende de
 \n las preferencias del usuario.
@@ -275,7 +275,7 @@
 \n \\hyperref[sec:scanner-page]{página del rastreador}. Los rastreadores incluyen librerías como crash reporters, analytics
 \n perfilado, identificación, anuncio, localización, etc. Por lo tanto, no son iguales en funciones. No hay distinción ni sesgo
 \n entre las bibliotecas de código abierto y las de código cerrado que promueven el rastreo.
-\n\\end{itemize}</string>
+\n\\N - fin{em&gt; de cuentas}</string>
     <string name="intro$main$bin-sources">App Manager se distribuye utilizando las siguientes fuentes. Las fuentes no oficiales pueden distribuir versiones modificadas de App
 \nManager, y nadie más que usted será responsable de las consecuencias de utilizar dichas distribuciones.
 \n\\begin{enumerate}
