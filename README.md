@@ -119,7 +119,7 @@ requested features. Feature requests do not require any bounties or donations, a
 with the preferences of the owner.
 
 **App Manager accepts any offers of funding/grants.** Representatives of the interested organization can contact the
-owner directly at muntashirakon at Riseup.net (FINGERPRINT: `7bad37c2981e41f8f6abea7f58f0b4f26c346fce`).
+owner directly at muntashirakon in Riseup.net (FINGERPRINT: `7bad37c2981e41f8f6abea7f58f0b4f26c346fce`).
 
 ## Credits and Libraries
 
