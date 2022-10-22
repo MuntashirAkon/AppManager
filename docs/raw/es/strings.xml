@@ -275,7 +275,7 @@
 \n \\hyperref[sec:scanner-page]{página del rastreador}. Los rastreadores incluyen librerías como crash reporters, analytics
 \n perfilado, identificación, anuncio, localización, etc. Por lo tanto, no son iguales en funciones. No hay distinción ni sesgo
 \n entre las bibliotecas de código abierto y las de código cerrado que promueven el rastreo.
-\n\\N - fin{em&gt; de cuentas}</string>
+\n\\end{itemize}</string>
     <string name="intro$main$bin-sources">App Manager se distribuye utilizando las siguientes fuentes. Las fuentes no oficiales pueden distribuir versiones modificadas de App
 \nManager, y nadie más que usted será responsable de las consecuencias de utilizar dichas distribuciones.
 \n\\begin{enumerate}
@@ -288,7 +288,7 @@
 \n \\Texto de la publicación normal |https://t.me/AppManagerChannel
 \n \\Texto de las versiones de depuración |https://t.me/AppManagerDebug
 \n\\end{enumerate}</string>
-    <string name="intro$main$donation">\\{emph}La donación o la compra no es un requisito para utilizar App Manager.} Aunque App Manager no admite ninguna
+    <string name="intro$main$donation">\\emph{La donación o la compra no es un requisito para utilizar App Manager. Aunque App Manager no admite ninguna
 \nAunque App Manager no admite ninguna compra, se pueden enviar donaciones al propietario de App Manager a través de Open Source Collective.
 \n
 \nOpen Source Collective es un host fiscal en la plataforma Open Collective que ayuda a los proyectos de código abierto a gestionar
@@ -301,6 +301,6 @@
 \ncaracterísticas solicitadas. Las solicitudes de características no requieren recompensas ni donaciones, y se priorizan de acuerdo con
 \ncon las preferencias del propietario.
 \n
-\n\\emph{El gestor de aplicaciones acepta cualquier oferta de financiación o subvención.} Los representantes de la organización interesada pueden ponerse en contacto
-\ndirectamente con el propietario utilizando las opciones que se indican en \\Sref{sec:contacto}.</string>
+\n\\emph{App Manager acepta cualquier oferta de financiación o subvención. Los representantes de la organización interesada pueden ponerse en contacto
+\ndirectamente con el propietario utilizando las opciones que se indican en \\Sref{sec:contact}.</string>
 </resources>
