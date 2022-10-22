@@ -23,7 +23,7 @@
 * Software libre totalmente reproducible con licencia (GPLv3+)
 * Posee 3 colores para una mejor experienza visual
 * La máxima información posible, la encontrará en la página principal
-* Enumera las actividades, espias, servicios, proveedores, permisos, firmas y un largo etcétera de todalas aplicaciones
+* Enumera y bloquue los permisos, espias, servicios, firmas y un largo etcétera de todalas aplicaciones
 * Cree accesos directos a las actividades de las aplicaciones
 * [Intercepte las actividades raras](https://muntashirakon.github.io/AppManager/#sec:interceptor-page)
 * Escaneé en busquede y captura de los rastreadores de las aplicaciones. Y bloqueelos todos o sólo los que quiera, además de todala información que obtienen de nosotros
@@ -38,7 +38,7 @@
 * [Perfiles](https://muntashirakon.github.io/AppManager/#sec:profiles-page) (incluyendo presets para descomponer rápidamente)
 * Abra una aplicación en Aurora Store o en su cliente F-Droid favorito directamente desde App Manager
 * Firme los archivos APK de forma personalizada antes de su instalación
-* Respalde el cifrado: OpenPGP a través de OpenKeychain, RSA (cifrado híbrido con AES) y AES.
+* Respalde el cifrado: OpenPGP a través de OpenKeychain, RSA (cifrado híbrido con AES) y AES
 
 ### Funciones de root/ADB:
 
@@ -87,7 +87,7 @@ Ayude en la traducción de la aplicación [Cadenas de la aplicación](https://ho
 ## Otros enlaces a App Manager:
 
 * [GitLab](https://gitlab.com/muntashir/AppManager)
-* [Riseup](https://0xacab.org/muntashir/AppManager) ·
+* [Riseup](https://0xacab.org/muntashir/AppManager) 
 * [Codeberg](https://codeberg.org/muntashir/AppManager)
 
 ## Capturas de pantalla:
