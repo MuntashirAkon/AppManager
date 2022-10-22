@@ -20,20 +20,20 @@
 
 ### Generales:
 
-* Software libre totalmente reproducible con licencia (GPLv3+)
-* Posee 3 colores para una mejor experienza visual
+* Software libre totalmente reproducible (GPLv3+)
+* Posee 3 colores para una mejor experiecia visual
 * La máxima información posible, la encontrará en la página principal
-* Enumera y bloquue los permisos, espias, servicios, firmas y un largo etcétera de todalas aplicaciones
+* Enumera y bloquue los permisos, espias, servicios, firmas y un largo etcétera de todas las aplicaciones
 * Cree accesos directos a las actividades de las aplicaciones
-* [Intercepte las actividades raras](https://muntashirakon.github.io/AppManager/#sec:interceptor-page)
-* Escaneé en busquede y captura de los rastreadores de las aplicaciones. Y bloqueelos todos o sólo los que quiera, además de todala información que obtienen de nosotros
+* [Intercepte las actividades](https://muntashirakon.github.io/AppManager/#sec:interceptor-page)
+* Escaneé en busquede y captura de los rastreadores de las aplicaciones. Y bloqueelos todos o solo los que quiera, además de todala información que obtienen de nosotros
 * Vea y guarde el manifiesto de una aplicación
 * Muestre el uso de datos móviles o wifi y la información que almacenan las aplicaciones (requiere «Acceso al uso» permiso) 
 * Instale o desinstale archivos APK, APKS, APKM, XAPK u OBB
 * Comparta los archivos necesarios para instalar una aplicación
 * Realice una copia de seguridad o restaure las aplicaciones
 * Realice varias operaciones a la vez
-* Realice operaciones con un sólo clic
+* Realice operaciones con un solo clic
 * Visualice los fallos de su dispositivo
 * [Perfiles](https://muntashirakon.github.io/AppManager/#sec:profiles-page) (incluyendo presets para descomponer rápidamente)
 * Abra una aplicación en Aurora Store o en su cliente F-Droid favorito directamente desde App Manager
@@ -44,10 +44,10 @@
 
 * Ajuste el tiempo en ejecución (también peligroso) y con permisos de desarrollo
 * Cambie el modo de una aplicación
-* Mostrar, matar, congelar o hibernar y fuerce que se detenga las aplicaciones o procesos que estean ejecutandose
+* "Habilite o deshabilite las aplicaciones, así como que se ejecuten cuando enciende su dispositivo" cuando encienda su dispositivo
 * Borre los datos de las aplicaciones o  la memoria caché de las mismas
 * Vea y cambie la forma en que las aplicaciones usan los diferentes tipos de conexiones
-* Optimize la batería de sú terminal
+* Optimize la batería de su terminal
 
 ### Funciones para móviles rooteados:
 
@@ -120,7 +120,7 @@ Al enviar sus donaciones, los donantes aceptan que no utilizarán las mismas, pa
 
 **El gestor de la aplicación acepta cualquier oferta de financiación o subvención**
 
-Los representantes de la organización interesada pueden ponerse en contacto con el propietario (desarrollador) de App Manager directamente a Muntashirakon en Riseup.net (EN LA HUELLA DACTILAR DEL PROYECTO: `7bad37c2981e41f8f6abea7f58f0b4f26c346fce`).
+Los representantes de la organización interesada pueden ponerse en contacto con el propietario (desarrollador) de App Manager directamente a Muntashirakon en Riseup.net (FINGERPRINT: `7bad37c2981e41f8f6abea7f58f0b4f26c346fce`).
 
 ## Más:
 
