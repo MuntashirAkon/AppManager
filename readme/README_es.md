@@ -20,7 +20,7 @@
 
 ### Generales:
 
-* Software de código abierto libre en el uso y distribución (GPLv3+) 
+* Software libre totalmente reproducible con licencia (GPLv3+)
 * Posee 3 colores para una mejor experienza visual
 * La máxima información posible, la encontrará en la página principal
 * Enumera las actividades, espias, servicios, proveedores, permisos, firmas y un largo etcétera de todalas aplicaciones
@@ -118,7 +118,8 @@ Enlace: https://opencollective.com/muntashir
 
 Al enviar sus donaciones, los donantes aceptan que no utilizarán las mismas, para priorizar las características que soliciten. Las solicitudes no requieren recompensas ni donaciones, y su prioridad está bajo las preferencias del propietario (desarrollador principal) de App Manager.
 
-**El gestor de la aplicación acepta cualquier oferta de financiación o subvencion**
+**El gestor de la aplicación acepta cualquier oferta de financiación o subvención*
+
 Los representantes de la organización interesada pueden ponerse en contacto con el propietario (desarrollador) de App Manager directamente en Muntashirakon [at] Riseup [dot] net (EN LA HUELLA DACTILAR DEL PROYECTO: `7bad37c2981e41f8f6abea7f58f0b4f26c346fce`).
 
 ## Más:
