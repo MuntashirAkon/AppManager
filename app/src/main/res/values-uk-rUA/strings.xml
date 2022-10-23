@@ -423,7 +423,6 @@
     <string name="storage_and_cache">Сховище і кеш</string>
     <string name="failed_to_stop">Не вдалося зупинити <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="force_stop">Зупинити примусово</string>
-    <string name="failed_to_disable">Не вдалося вимкнути <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="enable">Ввімкнути</string>
     <string name="disable">Вимкнути</string>
     <string name="stopped">Зупинено</string>

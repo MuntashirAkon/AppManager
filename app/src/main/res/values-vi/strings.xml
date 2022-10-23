@@ -152,7 +152,6 @@
     <string name="state_high_priority">Ưu tiên cao</string>
     <string name="failed_to_stop">Không thể dừng <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="force_stop">Buộc dừng</string>
-    <string name="failed_to_disable">Không thể tắt <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="enable">Bật</string>
     <string name="disable">Tắt</string>
     <string name="stopped">Đã dừng</string>

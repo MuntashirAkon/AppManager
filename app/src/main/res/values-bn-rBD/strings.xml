@@ -119,7 +119,6 @@
     <string name="stopped">স্থগিত</string>
     <string name="disable">নিষ্ক্রিয় করুন</string>
     <string name="enable">সক্রিয় করুন</string>
-    <string name="failed_to_enable"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g>টি সক্রিয় করতে ব্যর্থ।</string>
     <string name="force_stop">কাটুন</string>
     <string name="failed_to_stop"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g>টি কাটতে ব্যার্থ.</string>
     <string name="storage_and_cache">স্টোরেজ এবং ক্যাশে</string>

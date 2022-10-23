@@ -293,7 +293,6 @@
     <string name="app_usage">Përdorimi aplikacionit</string>
     <string name="key_name">Emri kyç</string>
     <string name="enable">Aktivizo</string>
-    <string name="failed_to_enable">Nuk mund të aktivizohet <xliff:g id="emri_app-it" shembull="App Manager">%1$s</xliff:g>.</string>
     <string name="external_multiple_data_dir">Vendndodhja e të dhënave të jashtme <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
     <string name="app_settings">Cilësimet</string>
     <string name="running_apps">Aplikacionet ne ekzekutim</string>

@@ -21,7 +21,6 @@
     <string name="storage_and_cache">ذخیره سازی و حافظه پنهان</string>
     <string name="failed_to_stop">نتوانست <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> را متوقف کند.</string>
     <string name="force_stop">توقف اجباری</string>
-    <string name="failed_to_disable">نتوانست<xliff:g id="app_name" example="App Manager">%1$s</xliff:g> را غیر‌فعال کند.</string>
     <string name="enable">فعال کن</string>
     <string name="disable">غیرفعال کردن</string>
     <string name="stopped">متوقف</string>

@@ -19,7 +19,6 @@
     <string name="share_apk">分享 APK</string>
     <string name="saved_successfully">已儲存</string>
     <string name="saving_failed">儲存失敗，請重試。</string>
-    <string name="failed_to_disable">無法停用 <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="uninstalled_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> 已被解除安裝。</string>
     <string name="failed_to_uninstall">無法解除安裝 <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <plurals name="main_list_date_days">

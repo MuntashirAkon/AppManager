@@ -195,7 +195,6 @@
     <string name="stopped">停止</string>
     <string name="disable">無効化</string>
     <string name="enable">有効化</string>
-    <string name="failed_to_enable"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g>を有効にできませんでした。</string>
     <string name="force_stop">強制終了</string>
     <string name="failed_to_stop"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g>を停止できませんでした。</string>
     <string name="storage_and_cache">ストレージとキャッシュ</string>
