@@ -99,6 +99,7 @@ public class PackageInstallerViewModel extends AndroidViewModel {
         return newPackageInfo;
     }
 
+    @Nullable
     public PackageInfo getInstalledPackageInfo() {
         return installedPackageInfo;
     }

@@ -195,40 +195,8 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
                 triggerCancel();
                 return;
             }
-            if (model.getInstalledPackageInfo() == null) {
-                // App not installed or data not cleared
-                actionName = R.string.install;
-                if (model.getApkFile().isSplit() || !Ops.isPrivileged()) {
-                    install();
-                } else {
-                    new MaterialAlertDialogBuilder(this)
-                            .setCancelable(false)
-                            .setCustomTitle(getDialogTitle(this, model.getAppLabel(), model.getAppIcon(),
-                                    getVersionInfoWithTrackers(newPackageInfo)))
-                            .setMessage(R.string.install_app_message)
-                            .setPositiveButton(R.string.install, (dialog, which) -> install())
-                            .setNegativeButton(R.string.cancel, (dialog, which) -> triggerCancel())
-                            .show();
-                }
-            } else {
-                // App is installed or the app is uninstalled without clearing data or the app is uninstalled,
-                // but it's a system app
-                long installedVersionCode = PackageInfoCompat.getLongVersionCode(model.getInstalledPackageInfo());
-                long thisVersionCode = PackageInfoCompat.getLongVersionCode(newPackageInfo);
-                if (installedVersionCode < thisVersionCode) {
-                    // Needs update
-                    actionName = R.string.update;
-                    displayWhatsNewDialog();
-                } else if (installedVersionCode == thisVersionCode) {
-                    // Issue reinstall
-                    actionName = R.string.reinstall;
-                    displayWhatsNewDialog();
-                } else {
-                    // Downgrade
-                    actionName = R.string.downgrade;
-                    displayWhatsNewDialog();
-                }
-            }
+            // TODO: Resolve dependencies
+            displayInitialPrompt(newPackageInfo, model.getInstalledPackageInfo());
         });
     }
 
@@ -239,6 +207,43 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
         }
         unsetInstallFinishedListener();
         super.onDestroy();
+    }
+
+    private void displayInitialPrompt(@NonNull PackageInfo newPackageInfo, @Nullable PackageInfo installedPackageInfo) {
+        if (installedPackageInfo == null) {
+            // App not installed or data not cleared
+            actionName = R.string.install;
+            if (model.getApkFile().isSplit() || !Ops.isPrivileged()) {
+                install();
+            } else {
+                new MaterialAlertDialogBuilder(this)
+                        .setCancelable(false)
+                        .setCustomTitle(getDialogTitle(this, model.getAppLabel(), model.getAppIcon(),
+                                getVersionInfoWithTrackers(newPackageInfo)))
+                        .setMessage(R.string.install_app_message)
+                        .setPositiveButton(R.string.install, (dialog, which) -> install())
+                        .setNegativeButton(R.string.cancel, (dialog, which) -> triggerCancel())
+                        .show();
+            }
+        } else {
+            // App is installed or the app is uninstalled without clearing data or the app is uninstalled,
+            // but it's a system app
+            long installedVersionCode = PackageInfoCompat.getLongVersionCode(installedPackageInfo);
+            long thisVersionCode = PackageInfoCompat.getLongVersionCode(newPackageInfo);
+            if (installedVersionCode < thisVersionCode) {
+                // Needs update
+                actionName = R.string.update;
+                displayWhatsNewDialog();
+            } else if (installedVersionCode == thisVersionCode) {
+                // Issue reinstall
+                actionName = R.string.reinstall;
+                displayWhatsNewDialog();
+            } else {
+                // Downgrade
+                actionName = R.string.downgrade;
+                displayWhatsNewDialog();
+            }
+        }
     }
 
     @UiThread
@@ -398,7 +403,10 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
     @UiThread
     @Override
     public void triggerInstall() {
-        long installedVersionCode = PackageInfoCompat.getLongVersionCode(model.getInstalledPackageInfo());
+        long installedVersionCode;
+        if (model.getInstalledPackageInfo() != null) {
+            installedVersionCode = PackageInfoCompat.getLongVersionCode(model.getInstalledPackageInfo());
+        } else installedVersionCode = 0L;
         long thisVersionCode = PackageInfoCompat.getLongVersionCode(model.getNewPackageInfo());
         if (installedVersionCode > thisVersionCode && !Ops.isPrivileged()) {
             // Need to uninstall and install again

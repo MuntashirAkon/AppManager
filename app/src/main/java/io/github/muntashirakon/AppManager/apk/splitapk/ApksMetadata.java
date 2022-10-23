@@ -10,6 +10,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringDef;
 import androidx.core.content.pm.PackageInfoCompat;
 
 import org.json.JSONArray;
@@ -17,6 +18,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +30,7 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
+import io.github.muntashirakon.AppManager.utils.JSONUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 
@@ -35,12 +39,22 @@ public class ApksMetadata {
     public static final String ICON_FILE = "icon.png";
 
     public static class Dependency {
+        public static final String DEPENDENCY_MATCH_EXACT = "exact";
+        public static final String DEPENDENCY_MATCH_GREATER = "greater";
+        public static final String DEPENDENCY_MATCH_LESS = "less";
+
+        @StringDef({DEPENDENCY_MATCH_EXACT, DEPENDENCY_MATCH_GREATER, DEPENDENCY_MATCH_LESS})
+        @Retention(RetentionPolicy.SOURCE)
+        public @interface DependencyMatch {
+        }
+
         public String packageName;
         public String displayName;
         public String versionName;
         public long versionCode;
         @Nullable
         public String[] signatures;
+        @DependencyMatch
         public String match;
         public boolean required;
         @Nullable
@@ -48,14 +62,26 @@ public class ApksMetadata {
     }
 
     public static class BuildInfo {
-        public final long timestamp = System.currentTimeMillis();
-        public final String builderId = BuildConfig.APPLICATION_ID;
+        public final long timestamp;
+        public final String builderId;
         public final String builderLabel;
-        public final String builderVersion = BuildConfig.VERSION_NAME;
-        public final String platform = "android";
+        public final String builderVersion;
+        public final String platform;
 
         public BuildInfo() {
+            timestamp = System.currentTimeMillis();
+            builderId = BuildConfig.APPLICATION_ID;
             builderLabel = AppManager.getContext().getString(R.string.app_name);
+            builderVersion = BuildConfig.VERSION_NAME;
+            platform = "android";
+        }
+
+        public BuildInfo(long timestamp, String builderId, String builderLabel, String builderVersion, String platform) {
+            this.timestamp = timestamp;
+            this.builderId = builderId;
+            this.builderLabel = builderLabel;
+            this.builderVersion = builderVersion;
+            this.platform = platform;
         }
     }
 
@@ -67,16 +93,57 @@ public class ApksMetadata {
     public long versionCode;
     public long minSdk = 0L;
     public long targetSdk;
+    public BuildInfo buildInfo;
     public final List<Dependency> dependencies = new ArrayList<>();
 
-    private PackageInfo mPackageInfo;
+    private final PackageInfo mPackageInfo;
+
+    public ApksMetadata() {
+        mPackageInfo = null;
+    }
 
     public ApksMetadata(PackageInfo packageInfo) {
         mPackageInfo = packageInfo;
     }
 
-    public void readMetadata() {
-        // TODO: 10/7/22
+    public void readMetadata(String jsonString) throws JSONException {
+        JSONObject jsonObject = new JSONObject(jsonString);
+        metaVersion = jsonObject.getLong("info_version");
+        packageName = jsonObject.getString("package_name");
+        displayName = jsonObject.getString("display_name");
+        versionName = jsonObject.getString("version_name");
+        versionCode = jsonObject.getLong("version_code");
+        minSdk = JSONUtils.getLong(jsonObject, "min_sdk", 0);
+        targetSdk = jsonObject.getLong("target_sdk");
+        // Build info
+        JSONObject buildInfoObject = JSONUtils.getJSONObject(jsonObject, "build_info");
+        if (buildInfoObject != null) {
+            buildInfo = new BuildInfo(buildInfoObject.getLong("timestamp"),
+                    buildInfoObject.getString("builder_id"),
+                    buildInfoObject.getString("builder_label"),
+                    buildInfoObject.getString("builder_version"),
+                    buildInfoObject.getString("platform"));
+        }
+        // Dependencies
+        JSONArray dependencyInfoArray = JSONUtils.getJSONArray(jsonObject, "dependencies");
+        if (dependencyInfoArray != null) {
+            for (int i = 0; i < dependencyInfoArray.length(); ++i) {
+                JSONObject dependencyInfoObject = dependencyInfoArray.getJSONObject(i);
+                Dependency dependency = new Dependency();
+                dependency.packageName = dependencyInfoObject.getString("package_name");
+                dependency.displayName = dependencyInfoObject.getString("display_name");
+                dependency.versionName = dependencyInfoObject.getString("version_name");
+                dependency.versionCode = dependencyInfoObject.getLong("version_code");
+                String signatures = JSONUtils.getString(dependencyInfoObject, "signature", null);
+                if (signatures != null) {
+                    dependency.signatures = signatures.split(",");
+                }
+                dependency.match = dependencyInfoObject.getString("match");
+                dependency.required = dependencyInfoObject.getBoolean("required");
+                dependency.path = JSONUtils.getString(dependencyInfoObject, "path", null);
+                dependencies.add(dependency);
+            }
+        }
     }
 
     public void writeMetadata(@NonNull ZipOutputStream zipOutputStream) throws IOException {
@@ -115,18 +182,18 @@ public class ApksMetadata {
                 dependency.versionCode = PackageInfoCompat.getLongVersionCode(packageInfo);
                 dependency.required = true;
                 dependency.signatures = null;
-                dependency.match = "exact";
+                dependency.match = Dependency.DEPENDENCY_MATCH_EXACT;
                 dependency.path = path;
                 dependencies.add(dependency);
             }
         }
         // Write meta
-        byte[] meta = getMetadata().getBytes(StandardCharsets.UTF_8);
+        byte[] meta = getMetadataAsJson().getBytes(StandardCharsets.UTF_8);
         SplitApkExporter.addBytes(zipOutputStream, meta, ApksMetadata.META_FILE, exportTimestamp);
     }
 
     @NonNull
-    public String getMetadata() {
+    public String getMetadataAsJson() {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("info_version", metaVersion);

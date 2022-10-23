@@ -27,6 +27,8 @@ import androidx.annotation.WorkerThread;
 
 import com.google.android.material.color.MaterialColors;
 
+import org.json.JSONException;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -185,6 +187,8 @@ public final class ApkFile implements AutoCloseable {
     private Entry baseEntry;
     @Nullable
     private Path idsigFile;
+    @Nullable
+    private ApksMetadata apksMetadata;
     @NonNull
     private final String packageName;
     @NonNull
@@ -332,8 +336,14 @@ public final class ApkFile implements AutoCloseable {
                         throw new ApkFileException(e);
                     }
                 } else if (fileName.equals(ApksMetadata.META_FILE)) {
-                    // TODO: 10/7/22
-                    //  Parse metadata to get dependencies
+                    try {
+                        String jsonString = FileUtils.getInputStreamContent(zipFile.getInputStream(zipEntry));
+                        apksMetadata = new ApksMetadata();
+                        apksMetadata.readMetadata(jsonString);
+                    } catch (IOException | JSONException e) {
+                        apksMetadata = null;
+                        throw new ApkFileException(e);
+                    }
                 } else if (fileName.endsWith(".obb")) {
                     obbFiles.add(zipEntry);
                 } else if (fileName.endsWith(".idsig")) {
@@ -460,6 +470,11 @@ public final class ApkFile implements AutoCloseable {
             if (tmpEntry.isSelected() || tmpEntry.isRequired()) selectedEntries.add(tmpEntry);
         }
         return selectedEntries;
+    }
+
+    @Nullable
+    public ApksMetadata getApksMetadata() {
+        return apksMetadata;
     }
 
     @NonNull

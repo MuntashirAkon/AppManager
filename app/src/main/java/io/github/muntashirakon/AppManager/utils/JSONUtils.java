@@ -2,6 +2,9 @@
 
 package io.github.muntashirakon.AppManager.utils;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,9 +12,6 @@ import org.json.JSONObject;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 
 public final class JSONUtils {
     @Nullable
@@ -66,6 +66,24 @@ public final class JSONUtils {
         return arrayList;
     }
 
+    @Nullable
+    public static JSONArray getJSONArray(@NonNull final JSONObject jsonObject, @NonNull String key) {
+        try {
+            return jsonObject.getJSONArray(key);
+        } catch (JSONException e) {
+            return null;
+        }
+    }
+
+    @Nullable
+    public static JSONObject getJSONObject(@NonNull final JSONObject jsonObject, @NonNull String key) {
+        try {
+            return jsonObject.getJSONObject(key);
+        } catch (JSONException e) {
+            return null;
+        }
+    }
+
     public static String getString(@NonNull final JSONObject jsonObject, @NonNull String key, String defaultValue) {
         try {
             return jsonObject.getString(key);
@@ -89,5 +107,13 @@ public final class JSONUtils {
         } catch (JSONException ignore) {
         }
         return null;
+    }
+
+    public static long getLong(@NonNull final JSONObject jsonObject, @NonNull String key, long defaultValue) {
+        try {
+            return jsonObject.getLong(key);
+        } catch (JSONException ignore) {
+        }
+        return defaultValue;
     }
 }
