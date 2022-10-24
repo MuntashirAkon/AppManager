@@ -1,0 +1,7 @@
+This release contains a number of fixes for the backup/restore feature.
+
+- Backup metadata version updated to 4
+- Use 128 bit tag size for AES encryption
+- Fixed encryption/decryption for AES 128
+- Fixed an issue with saving the PGP encrypted files
+- Fixed crashing if a storage media does not have a label

@@ -18,6 +18,21 @@
 <changelog>
     <release
         type="stable release"
+        version="v3.0.3"
+        code="414"
+        date="24 October 2022">
+        <new>Backup metadata version updated to 4</new>
+        <improve>Use 128 bit tag size for AES encryption</improve>
+        <fix>Fixed encryption/decryption for AES 128</fix>
+        <fix>Fixed an issue with saving the PGP encrypted files</fix>
+        <fix>Fixed crashing if a storage media does not have a label</fix>
+        <note>
+            [br /][b]Full list of changes:[/b] [a
+            href="https://github.com/MuntashirAkon/AppManager/compare/v3.0.2...v3.0.3"]v3.0.2...v3.0.3[/a]
+        </note>
+    </release>
+    <release
+        type="stable release"
         version="v3.0.2"
         code="413"
         date="20 September 2022">
