@@ -248,8 +248,7 @@
 \n \\end{quotation}</string>
     <string name="intro$main$submit-patches">Los repositorios ubicados en sitios distintos de GitHub se consideran actualmente réplicas, y las solicitudes de pull/merge enviadas en
 \nNota: Los pull requests de GitHub se fusionarán manualmente utilizando los parches correspondientes.
-\nComo resultado, GitHub puede marcarlos erróneamente como cerrados en lugar de fusionados.} En su lugar, los parches (como archivos \\texttt{.patch}) pueden
-\npueden ser enviados a través de archivos adjuntos de correo electrónico. \\textit{La firma es un requisito.} Consulte el archivo CONTRIBUIR ubicado en el directorio raíz
+\nComo resultado, GitHub puede marcarlos erróneamente como cerrados en lugar de fusionados.} En su lugar, los parches (como archivos \\texttt{.patch}) pueden ser enviados a través de archivos adjuntos de correo electrónico. \\textit{La firma es un requisito.} Consulte el archivo CONTRIBUIR ubicado en el directorio raíz
 \nde la fuente para obtener más información.
 \n
 \n\\begin{warning}{Notice}
@@ -261,7 +260,7 @@
 \nHuella digital de la llave: \\texttt{7bad37c2981e41f8f6abea7f58f0b4f26c346fce}\\\\
 \nGitHub: \\https://github.com/MuntashirAkon
 \nTwitter: \\https://twitter.com/Muntashir</string>
-    <string name="intro$main$terminologies">\\N - Inicio
+    <string name="intro$main$terminologies">\\begin{itemize}
 \n \\item \\textbf{AM} --- Nombre corto para App Manager.
 \n \\item \\textbf{Block/Unblock} --- Se utiliza para bloquear o desbloquear componentes. La forma en que se bloquean los componentes depende de
 \n las preferencias del usuario.
@@ -270,7 +269,7 @@
 \n \\item \\textbf{SSAID} --- Forma abreviada de \\texttt{Settings.Secure.ANDROID\\_ID}. Es un identificador de dispositivo asignado a
 \n cada aplicación (Android Oreo y en adelante). Se genera a partir de la combinación del certificado de firma de la app
 \n y el SSAID establecido para el paquete \\texttt{android}. Como resultado, se garantiza que sea el mismo para una app a menos que
-\n que el usuario decida formatear el dispositivo. Se utiliza mucho para el seguimiento.
+\n el usuario decida formatear el dispositivo. Se utiliza mucho para el seguimiento.
 \n \\item \\textbf{Tracker} --- Denota los componentes del rastreador en todo el documento y en el App Manager, excepto en el
 \n \\hyperref[sec:scanner-page]{página del rastreador}. Los rastreadores incluyen librerías como crash reporters, analytics
 \n perfilado, identificación, anuncio, localización, etc. Por lo tanto, no son iguales en funciones. No hay distinción ni sesgo
@@ -299,8 +298,29 @@
 \n
 \nAl enviar las donaciones, los remitentes se comprometen a no utilizarlas como palanca para priorizar sus
 \ncaracterísticas solicitadas. Las solicitudes de características no requieren recompensas ni donaciones, y se priorizan de acuerdo con
-\ncon las preferencias del propietario.
+\nlas preferencias del propietario.
 \n
 \n\\emph{App Manager acepta cualquier oferta de financiación o subvención. Los representantes de la organización interesada pueden ponerse en contacto
 \ndirectamente con el propietario utilizando las opciones que se indican en \\Sref{sec:contact}.</string>
+    <string name="pages$main-page$batch-operations">En esta página también se pueden realizar operaciones por lotes o en varias aplicaciones. El modo de selección múltiple puede
+\nactivarse haciendo clic en el icono de cualquier aplicación o haciendo un clic prolongado en cualquier elemento de la lista. Una vez activado, un solo clic en
+\nun elemento de la lista lo selecciona en lugar de abrir la página de detalles de la aplicación. En este modo, las operaciones por lotes se encuentran en el
+\nmenú de selección múltiple en la parte inferior de la página. Las operaciones incluyen:
+\n\\N - Empezar {itemize}
+\n \\Añadir las aplicaciones seleccionadas a un perfil.
+\n \\item \\hyperref [sec:backup-restore]{Hacer una copia de seguridad, restaurar o eliminar} las aplicaciones
+\n \\item Bloquear los rastreadores de las aplicaciones
+\n \\item Borrar los datos o la caché de las aplicaciones
+\n \\item Habilitar/deshabilitar/forzar la desinstalación de las aplicaciones
+\n \\item Exportar las reglas de bloqueo guardadas en App Manager
+\n \\item Impedir las operaciones en segundo plano de las aplicaciones (Android 7 y posteriores)
+\n \\Guardar los archivos APK en el texto de AppManager/apks
+\n \\item Establecer \\perref[sec:net-policy]{políticas de red}
+\n\\fin{punto}
+\n
+\n\\N - Inicio {consejo} {Accesibilidad}
+\n Una vez activado el modo de selección múltiple, es posible navegar dentro o fuera del menú de selección múltiple
+\n de selección múltiple utilizando las teclas derecha o izquierda del teclado o del mando a distancia.
+\n\\fin{consejo}</string>
+    <string name="pages$main-page$colour-codes">\\begin{itemize} \\item \\colorbox{AMLightGreyishOrange}{\\textcolor{black}{Naranja grisáceo claro (día)}} / \\colorbox{AMDarkBlue}{ \\textcolor{blanco}{Azul oscuro (noche)}} -- El la aplicación está seleccionada para la operación por lotes \\item \\colorbox{AMLightRed}{\\textcolor{black}{Light red (day)}} / \\colorbox{AMVeryDarkRed}{\\textcolor{white} {dark red (night)}} -- Disabled app \\item \\colorbox{AMYellow}{\\textcolor{black}{Yellow Star}} -- Aplicación depurable \\item \\textcolor{AMOrange}{Orange \\textit{Date}} -- La aplicación tiene acceso a los registros del sistema \\item \\textcolor{AMOrange}{Orange \\textit{UID}} -- La ID de usuario se comparte entre múltiples aplicaciones \\item \\textcolor{AMOrange}{Orange \\textit{SDK}} -- La aplicación posiblemente usa texto simple (es decir, HTTP ) tráfico \\item \\textcolor{red}{Red \\textit{package name}} -- La aplicación no permite borrar sus datos \\item \\textcolor{red}{Red \\textit{backup}} -- La aplicación desinstalada con una o más copias de seguridad presentes en App Manager \\item \\textcolor{AMOrange} {Orange \\textit{backup}} -- Copia de seguridad obsoleta, es decir, la copia de seguridad base contiene una versión anterior de la aplicación instalada \\item \\textcolor{AMDarkCyan}{Cian oscuro \\textit{backup}} -- Copia de seguridad actualizada, es decir \\ la copia de seguridad base contiene la misma versión de la aplicación instalada o una superior. version}} -- Aplicación inactiva \\item \\textcolor{magenta}{Magenta} -- Aplicación persistente, es decir, permanece ejecutándose todo el tiempo. \\end{elemento}</string>
 </resources>
