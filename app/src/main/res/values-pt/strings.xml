@@ -11,7 +11,7 @@
     <string name="installer_error_session_abandon">A sessão de instalação não pôde ser abandonada</string>
     <string name="installer_error_session_commit">O commit dos ficheiros APK não pôde ser feito</string>
     <string name="installer_error_session_write">Não foi possível gravar na sessão de instalação</string>
-    <string name="installer_error_session_create">Uma sessão de instalação não pôde ser criada</string>
+    <string name="installer_error_session_create">Não foi possível criar uma sessão de instalação</string>
     <string name="installer_error_security">Não foi possível aceder aos ficheiros APK</string>
     <string name="install_in_progress">A instalar…</string>
     <string name="package_installer">Instalador de pacotes</string>
@@ -23,7 +23,7 @@
     <string name="operation_running">Operação em execução…</string>
     <string name="batch_ops">Operações em lote</string>
     <string name="failed_to_fetch_package_info">Não foi possível obter informações do pacote</string>
-    <string name="installer_error_lidl_rom">A sua ROM é incompatível com o Instalador Rootless.</string>
+    <string name="installer_error_lidl_rom">A sua ROM é incompatível com o Rootless Installer.</string>
     <string name="installer_error_generic">A instalação falhou</string>
     <string name="installer_error_storage">Não há espaço suficiente no armazenamento para instalar a aplicação</string>
     <string name="installer_error_bad_apks">Os ficheiros APK são inválidos</string>
@@ -32,7 +32,7 @@
     <string name="installer_error_blocked">Instalação bloqueada por <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
     <string name="installer_error_blocked_device">aparelho</string>
     <string name="installer_error_aborted">A instalação falhou porque foi cancelada ou a sessão foi encerrada inesperadamente</string>
-    <string name="toggle_default_app_ops">Alternar app ops padrões</string>
+    <string name="toggle_default_app_ops">Repor app ops</string>
     <string name="filter_apps_with_activities">Com atividades</string>
     <string name="are_you_sure">Tem a certeza\?</string>
     <string name="pref_remove_all_rules_msg">As permissões serão concedidas, as operações das aplicações e dos componentes retornarão aos valores de origem.</string>
@@ -411,7 +411,7 @@
     <string name="failed_to_grant_permission">Permissão não concedida</string>
     <plurals name="alert_failed_to_disable_trackers">
         <item quantity="one">Não foi possível desativar os rastreadores da %1$d aplicação</item>
-        <item quantity="many"/>
+        <item quantity="many">Não foi possível desativar os rasteadores de várias %1$d aplicações</item>
         <item quantity="other">Não foi possível desativar os rasteadores das %1$d aplicações</item>
     </plurals>
     <string name="unknown_op">Operação desconhecida</string>
