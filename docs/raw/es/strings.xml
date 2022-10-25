@@ -116,8 +116,8 @@
     <string name="guide$aot$$location-dev-options-title">Ubicación de las opciones de desarrollador</string>
     <string name="guide$aot$$how-to-enable-dev-options-title">Cómo activar las opciones del desarrollador</string>
     <string name="guide$aot$$enable-usb-debugging-title">Habilitar depuración USB</string>
-    <string name="guide$aot$$miui-usb-debug-title">Xiaomi Mi</string>
-    <string name="guide$aot$$emui-usb-debug-title">HUAWEI EMUI</string>
+    <string name="guide$aot$$miui-usb-debug-title">Xiaomi (MIUI)</string>
+    <string name="guide$aot$$emui-usb-debug-title">HUAWEI (EMUI)</string>
     <string name="guide$aot$$troubleshooting-usb-debug-title">Solución de problemas</string>
     <string name="guide$aot$$setup-adb-on-pc-title">Configurar ADB en PC o Mac</string>
     <string name="guide$aot$$setup-adb-win-title">Windows</string>
@@ -135,7 +135,7 @@
 \nde App Manager. También podría haber otros recursos no oficiales o de terceros como artículos de blog, vídeos, chat
 \ngrupos, etc. Si bien estos recursos pueden ser útiles para muchas personas, es posible que no estén actualizados con la versión actual de App Manager.
 \nversión de App Manager. Si se detectan desviaciones en App Manager con respecto a este documento, deben notificarse en el
-\n|https://github.com/MuntashirAkon/AppManager/issues}{Rastreador de problemas de App Manager}.</string>
+\n\\href{https://github.com/MuntashirAkon/AppManager/issues}{Rastreador de problemas de App Manager}.</string>
     <string name="intro$main$contributing">Hay múltiples formas en las que un usuario puede contribuir, como crear problemas útiles, asistir a debates, mejorar
 \ndocumentación y traducciones, añadiendo bibliotecas o rastreadores no reconocidos, revisando el código fuente, así como
 \ninformar de las vulnerabilidades de seguridad.</string>
@@ -144,17 +144,17 @@
     <string name="pages$main-page$$options-menu-title">Opciones de menú</string>
     <string name="pages$main-page$$log-viewer-title">Visor de registro</string>
     <string name="pages$main-page$intro">La página principal muestra todas las aplicaciones instaladas, desinstaladas y con copia de seguridad. Un solo clic en cualquier elemento de la aplicación instalada
-\nabre la respectiva \\hyperref[sec:app-details-page]/página de detalles de la aplicación}. Para las aplicaciones del sistema desinstaladas, se muestra un
+\nabre la respectiva \\hyperref[sec:app-details-page]{página de detalles de la aplicación}. Para las aplicaciones del sistema desinstaladas, se muestra un
 \ndiálogo que puede utilizarse para reinstalar la aplicación. Utilizando la opción \\hyperlink{par:main-page-sort}{ordenación} de las
 \nopciones de la lista, los elementos de la aplicación pueden ordenarse de varias maneras y conservarse al salir. También es posible filtrar los elementos
 \nutilizando la opción \\hyperlink{par:main-page-filter}{filtro} de las opciones de la lista. El filtrado también es posible a través de la barra de búsqueda
 \ncon soporte adicional para las expresiones regulares.</string>
     <string name="pages$main-page$version-info">El nombre de la versión va seguido de los siguientes prefijos:
-\n\\N - Inicio {itemize}
+\n\\begin{itemize}
 \n \\item \\texttt{\\_} -- Sin aceleración por hardware (rompiendo las animaciones o transparencias in-app)
-\n \\item \\texttt{{textasciitilde} -- Aplicación de prueba
-\n \\elemento {texttt{debug}} -- Aplicación depurable
-\n|itemize</string>
+\n \\item \\texttt{textasciitilde} -- Aplicación de prueba
+\n \\item \\texttt{debug} -- Aplicación depurable
+\n\end{itemize}</string>
     <string name="pages$main-page$instructions">Al hacer clic en \\textbf{Instrucciones} se abre la versión sin conexión del manual de usuario de App Manager. También puede abrir la
 \nversión en línea si la función correspondiente no está instalada, o si no hay una WebView en el sistema para cargar el manual.
 \npresente en el sistema para cargar el manual.</string>
@@ -191,9 +191,9 @@
     <string name="pages$settings-page$$backup-apps-with-keystore-title">Aplicaciones de copia de seguridad con Android KeyStore</string>
     <string name="pages$settings-page$screen-lock">Bloquear App Manager usando el bloqueo de pantalla de Android siempre que se configure un bloqueo de pantalla.
 \n
-\n| Advertencia
+\n\\begin{warning}{Advertencia}
 \n Si se desactiva el bloqueo de pantalla en Android después de activar esta configuración, App Manager no se abrirá hasta que se vuelva a activar.
-\n\\fin{advertencia}</string>
+\n\\end{warning}</string>
     <string name="pages$settings-page$$signature-schemes-title">Esquemas de firma</string>
     <string name="pages$settings-page$$show-users-in-installer-title">Mostrar usuarios en el instalador</string>
     <string name="pages$settings-page$$compression-method-title">Método de compresión</string>
@@ -237,17 +237,17 @@
 \nvaya a las \\textbf{opciones de desarrollador}, desplácese hacia abajo hasta encontrar \\textbf{ADB sobre red}. Ahora, utilice el botón de conmutación
 \nen el lado derecho para habilitarlo y pasar a \\Sref{subsec:adb-mode-in-app-manager}.</string>
     <string name="appendices$changelogs$$chapter-title">Registros de cambios</string>
-    <string name="keywords$chapter">\\\\\\nuevo comando{\\Palabra clave Capítulo}{Capítulo}}}</string>
-    <string name="titlepage$user_manual">{\\enorme\\Manual de Usuario bfseries\\par}</string>
-    <string name="keywords$see_also">\\nuevo comando{\\Palabra clave Ver también}{Ver también:}</string>
-    <string name="keywords$end_of_keyword_in_alert">\\nuevo comando{\\Palabra clave Fin de palabra clave en alerta}{.}</string>
-    <string name="titlepage$quotation">\\begin {quotation}
+    <string name="keywords$chapter">\\newcommand{\\KeywordChapter}{Capítulo}</string>
+    <string name="titlepage$user_manual">{\\huge\\bfseries Manual de Usuario\\par}</string>
+    <string name="keywords$see_also">\\newcommand{\\KeywordSeeAlso}{Ver también:}</string>
+    <string name="keywords$end_of_keyword_in_alert">\\newcommand{\\KeywordEndOfKeyWordInAlert}{.}</string>
+    <string name="titlepage$quotation">\\begin{quotation}
 \n ``Sabio y lento. Tropiezan los que corren rápido\'\'.
 \n %\\sourceatright
-\n {--- Fray Laurence, \\textear{Romeo y Julieta}}
+\n {--- Fray Laurence, \\textit{Romeo y Julieta}}
 \n \\end{quotation}</string>
-    <string name="intro$main$submit-patches">Los repositorios ubicados en sitios distintos de GitHub se consideran actualmente réplicas, y las solicitudes de pull/merge enviadas en
-\nNota: Los pull requests de GitHub se fusionarán manualmente utilizando los parches correspondientes.
+    <string name="intro$main$submit-patches">Los repositorios ubicados en sitios distintos de GitHub se consideran actualmente réplicas, y las solicitudes de pull/merge enviadas en.
+\n\\footnote{Los pull requests de GitHub se fusionarán manualmente utilizando los parches correspondientes.
 \nComo resultado, GitHub puede marcarlos erróneamente como cerrados en lugar de fusionados.} En su lugar, los parches (como archivos \\texttt{.patch}) pueden ser enviados a través de archivos adjuntos de correo electrónico. \\textit{La firma es un requisito.} Consulte el archivo CONTRIBUIR ubicado en el directorio raíz
 \nde la fuente para obtener más información.
 \n
@@ -255,11 +255,11 @@
 \n En caso de enviar parches por correo electrónico, toda la conversación puede ser accesible públicamente en el futuro. Por lo tanto, no
 \n incluya ninguna información personal identificable (PII) que no sea su nombre o dirección de correo electrónico.
 \n\\end{warning}</string>
-    <string name="intro$main$contact">Muntashir Al-Islam {nota de pie} {también puede dirigirse a mí como ``Muntashir Akon\'}}
-\nCorreo electrónico: \\href{mailto:muntashirakon@riseup.net}{muntashirakon [arroba] riseup [punto] net}\\href
+    <string name="intro$main$contact">Muntashir Al-Islam\\footnote{también puede dirigirse a mí como ``Muntashir Akon\'\'}\\\\
+\nCorreo electrónico: \\href{mailto:muntashirakon\@riseup.net}{muntashirakon [arroba] riseup [punto] net}\\\\
 \nHuella digital de la llave: \\texttt{7bad37c2981e41f8f6abea7f58f0b4f26c346fce}\\\\
-\nGitHub: \\https://github.com/MuntashirAkon
-\nTwitter: \\https://twitter.com/Muntashir</string>
+\nGitHub: \\url{https://github.com/MuntashirAkon}\\\\
+\nTwitter: \\url{https://twitter.com/Muntashir}</string>
     <string name="intro$main$terminologies">\\begin{itemize}
 \n \\item \\textbf{AM} --- Nombre corto para App Manager.
 \n \\item \\textbf{Block/Unblock} --- Se utiliza para bloquear o desbloquear componentes. La forma en que se bloquean los componentes depende de
@@ -275,19 +275,7 @@
 \n perfilado, identificación, anuncio, localización, etc. Por lo tanto, no son iguales en funciones. No hay distinción ni sesgo
 \n entre las bibliotecas de código abierto y las de código cerrado que promueven el rastreo.
 \n\\end{itemize}</string>
-    <string name="intro$main$bin-sources">App Manager se distribuye utilizando las siguientes fuentes. Las fuentes no oficiales pueden distribuir versiones modificadas de App
-\nManager, y nadie más que usted será responsable de las consecuencias de utilizar dichas distribuciones.
-\n\\begin{enumerate}
-\n \\item Repositorio oficial de F-Droid.\\item Nota a pie de página{para distribuir versiones normales}\\item
-\n \\textit{enlace:} \\url{https://f-droid.org/packages/io.github.muntashirakon.AppManager}
-\n \\item Repositorio GitHub.\\item
-\n \\textit{Los lanzamientos normales:} \\URL: https://github.com/MuntashirAkon/AppManager/releases
-\n \\Título del texto: \"Liberaciones de depuración\". \\url{https://github.com/MuntashirAkon/AppManager/actions}
-\n |Telegrama.\\N-
-\n \\Texto de la publicación normal |https://t.me/AppManagerChannel
-\n \\Texto de las versiones de depuración |https://t.me/AppManagerDebug
-\n\\end{enumerate}</string>
-    <string name="intro$main$donation">\\emph{La donación o la compra no es un requisito para utilizar App Manager. Aunque App Manager no admite ninguna
+    <string name="intro$main$donation">\\emph{La donación o la compra no es un requisito para utilizar App Manager.} Aunque App Manager no admite ninguna
 \nAunque App Manager no admite ninguna compra, se pueden enviar donaciones al propietario de App Manager a través de Open Source Collective.
 \n
 \nOpen Source Collective es un host fiscal en la plataforma Open Collective que ayuda a los proyectos de código abierto a gestionar
@@ -300,27 +288,26 @@
 \ncaracterísticas solicitadas. Las solicitudes de características no requieren recompensas ni donaciones, y se priorizan de acuerdo con
 \nlas preferencias del propietario.
 \n
-\n\\emph{App Manager acepta cualquier oferta de financiación o subvención. Los representantes de la organización interesada pueden ponerse en contacto
+\n\\emph{App Manager acepta cualquier oferta de financiación o subvención.} Los representantes de la organización interesada pueden ponerse en contacto
 \ndirectamente con el propietario utilizando las opciones que se indican en \\Sref{sec:contact}.</string>
     <string name="pages$main-page$batch-operations">En esta página también se pueden realizar operaciones por lotes o en varias aplicaciones. El modo de selección múltiple puede
 \nactivarse haciendo clic en el icono de cualquier aplicación o haciendo un clic prolongado en cualquier elemento de la lista. Una vez activado, un solo clic en
 \nun elemento de la lista lo selecciona en lugar de abrir la página de detalles de la aplicación. En este modo, las operaciones por lotes se encuentran en el
 \nmenú de selección múltiple en la parte inferior de la página. Las operaciones incluyen:
-\n\\N - Empezar {itemize}
-\n \\Añadir las aplicaciones seleccionadas a un perfil.
-\n \\item \\hyperref [sec:backup-restore]{Hacer una copia de seguridad, restaurar o eliminar} las aplicaciones
+\n\\begin{itemize}
+\n \\item Añadir las aplicaciones seleccionadas a un perfil.
+\n \\item \\hyperref[sec:backup-restore]{Hacer una copia de seguridad, restaurar o eliminar} las aplicaciones
 \n \\item Bloquear los rastreadores de las aplicaciones
 \n \\item Borrar los datos o la caché de las aplicaciones
 \n \\item Habilitar/deshabilitar/forzar la desinstalación de las aplicaciones
 \n \\item Exportar las reglas de bloqueo guardadas en App Manager
 \n \\item Impedir las operaciones en segundo plano de las aplicaciones (Android 7 y posteriores)
-\n \\Guardar los archivos APK en el texto de AppManager/apks
-\n \\item Establecer \\perref[sec:net-policy]{políticas de red}
-\n\\fin{punto}
+\n \\item Guardar los archivos APK en \\texttt{AppManager/apks}
+\n \\item Establecer \\hyperref[sec:net-policy]{políticas de red}
+\n\\end{itemize}
 \n
-\n\\N - Inicio {consejo} {Accesibilidad}
+\n\\begin{tip}{Accesibilidad}
 \n Una vez activado el modo de selección múltiple, es posible navegar dentro o fuera del menú de selección múltiple
 \n de selección múltiple utilizando las teclas derecha o izquierda del teclado o del mando a distancia.
-\n\\fin{consejo}</string>
-    <string name="pages$main-page$colour-codes">\\begin{itemize} \\item \\colorbox{AMLightGreyishOrange}{\\textcolor{black}{Naranja grisáceo claro (día)}} / \\colorbox{AMDarkBlue}{ \\textcolor{blanco}{Azul oscuro (noche)}} -- El la aplicación está seleccionada para la operación por lotes \\item \\colorbox{AMLightRed}{\\textcolor{black}{Light red (day)}} / \\colorbox{AMVeryDarkRed}{\\textcolor{white} {dark red (night)}} -- Disabled app \\item \\colorbox{AMYellow}{\\textcolor{black}{Yellow Star}} -- Aplicación depurable \\item \\textcolor{AMOrange}{Orange \\textit{Date}} -- La aplicación tiene acceso a los registros del sistema \\item \\textcolor{AMOrange}{Orange \\textit{UID}} -- La ID de usuario se comparte entre múltiples aplicaciones \\item \\textcolor{AMOrange}{Orange \\textit{SDK}} -- La aplicación posiblemente usa texto simple (es decir, HTTP ) tráfico \\item \\textcolor{red}{Red \\textit{package name}} -- La aplicación no permite borrar sus datos \\item \\textcolor{red}{Red \\textit{backup}} -- La aplicación desinstalada con una o más copias de seguridad presentes en App Manager \\item \\textcolor{AMOrange} {Orange \\textit{backup}} -- Copia de seguridad obsoleta, es decir, la copia de seguridad base contiene una versión anterior de la aplicación instalada \\item \\textcolor{AMDarkCyan}{Cian oscuro \\textit{backup}} -- Copia de seguridad actualizada, es decir \\ la copia de seguridad base contiene la misma versión de la aplicación instalada o una superior. version}} -- Aplicación inactiva \\item \\textcolor{magenta}{Magenta} -- Aplicación persistente, es decir, permanece ejecutándose todo el tiempo. \\end{elemento}</string>
+\n\\end{tip}</string>
 </resources>
