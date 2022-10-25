@@ -54,32 +54,26 @@
     <string name="apply_to_system_apps">Aplicar ás aplicações do sistema</string>
     <plurals name="alert_failed_to_block_components">
         <item quantity="one">Não foi possível bloquear os componentes da %1$d aplicação</item>
-        <item quantity="many"/>
         <item quantity="other">Não foi possível bloquear os componentes das %1$d aplicações</item>
     </plurals>
     <plurals name="alert_failed_to_unblock_trackers">
         <item quantity="one">Não foi possível desbloquear os rastreadores da %1$d aplicação</item>
-        <item quantity="many"/>
         <item quantity="other">Não foi possível desbloquear os rastreadores das %1$d aplicações</item>
     </plurals>
     <plurals name="alert_failed_to_delete_backup">
         <item quantity="one">Não foi possível eliminar a %1$d cópia de segurança</item>
-        <item quantity="many"/>
         <item quantity="other">Não foi possível eliminar as %1$d cópias de segurança</item>
     </plurals>
     <plurals name="alert_failed_to_restore">
         <item quantity="one">Não foi possível restaurar a %1$d aplicação</item>
-        <item quantity="many"/>
         <item quantity="other">Não foi possível restaurar as %1$d aplicações</item>
     </plurals>
     <plurals name="alert_failed_to_backup">
         <item quantity="one">Não foi possível fazer o backup da %1$d aplicação</item>
-        <item quantity="many">Não foi possível fazer o backup das %1$d aplicações</item>
         <item quantity="other">Não foi possível fazer o backup das %1$d aplicações</item>
     </plurals>
     <plurals name="failed_to_backup_some_apk_files">
         <item quantity="one">Não foi possível fazer backup da %1$da aplicação</item>
-        <item quantity="many">Não foi possível fazer o backup de %1$d várias aplicações</item>
         <item quantity="other">Não foi possível fazer o backup das %1$d aplicações</item>
     </plurals>
     <string name="backup_options">Opções de backup</string>
@@ -124,13 +118,11 @@
     <string name="toggle_kill_for_system_apps">Alternar a paragem de aplicações do sistema</string>
     <plurals name="alert_failed_to_force_stop">
         <item quantity="one">Não foi possível forçar a paragem de %1$d aplicação</item>
-        <item quantity="many">Não foi possível forçar a paragem de várias %1$d aplicações</item>
         <item quantity="other">Não foi possível forçar a paragem de %1$d aplicações</item>
     </plurals>
     <string name="the_operation_was_successful">Efetuado</string>
     <plurals name="alert_failed_to_disable_background">
         <item quantity="one">Não foi possível impedir a execução de %1$d aplicação em segundo plano</item>
-        <item quantity="many">Não foi possível impedir a execução de várias %1$d aplicações em segundo plano</item>
         <item quantity="other">Não foi possível impedir a execução de %1$d aplicações em segundo plano</item>
     </plurals>
     <plurals name="alert_failed_to_uninstall">
@@ -155,7 +147,6 @@
     <string name="apk_updater">Atualizador de APK</string>
     <plurals name="failed_to_import_files">
         <item quantity="one">Não foi possível importar %1$d ficheiro.</item>
-        <item quantity="many">Não foi possível importar %1$d todos os ficheiros</item>
         <item quantity="other">Não foi possível importar %1$d ficheiros.</item>
     </plurals>
     <string name="the_export_was_successful">Exportado</string>
@@ -170,7 +161,6 @@
     <string name="sort_by_last_used">Última utilização</string>
     <plurals name="no_of_times_opened">
         <item quantity="one">%1$d vez</item>
-        <item quantity="many">%1$d muitas vezes</item>
         <item quantity="other">%1$d vezes</item>
     </plurals>
     <string name="external_multiple_data_dir">Diretório de dados externo<xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
@@ -372,7 +362,6 @@
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> instalado</string>
     <plurals name="no_of_splits">
         <item quantity="one">%1$d APK</item>
-        <item quantity="many">%1$d Muitos APKs</item>
         <item quantity="other">%1$d APKs</item>
     </plurals>
     <string name="failed_to_parse_some_numbers">Não foi possível analisar alguns números</string>
@@ -397,7 +386,6 @@
     <string name="install">Instalar</string>
     <plurals name="no_of_trackers">
         <item quantity="one">%1$d rastreador</item>
-        <item quantity="many">%1$d muitos rastreadores</item>
         <item quantity="other">%1$d rastreadores</item>
     </plurals>
     <string name="manifest_viewer">Visualizar manifesto</string>
@@ -411,7 +399,6 @@
     <string name="failed_to_grant_permission">Permissão não concedida</string>
     <plurals name="alert_failed_to_disable_trackers">
         <item quantity="one">Não foi possível desativar os rastreadores da %1$d aplicação</item>
-        <item quantity="many">Não foi possível desativar os rasteadores de várias %1$d aplicações</item>
         <item quantity="other">Não foi possível desativar os rasteadores das %1$d aplicações</item>
     </plurals>
     <string name="unknown_op">Operação desconhecida</string>
@@ -561,7 +548,6 @@
     <string name="launch_mode_single_instance">Um único caso</string>
     <plurals name="app_signing_signature_schemes_pl">
         <item quantity="one">Esquema da assinatura</item>
-        <item quantity="many"/>
         <item quantity="other">Esquemas de assinatura</item>
     </plurals>
     <plurals name="missing_signatures">
@@ -573,7 +559,6 @@
     <string name="accept_time">Tempo de aceitação</string>
     <plurals name="tracker_and_classes">
         <item quantity="one">1 rastreador com <xliff:g id="class_no" example="50">%1$d</xliff:g> class</item>
-        <item quantity="many">Vários rastreadores com <xliff:g id="class_no" example="50">%1$d</xliff:g> classes</item>
         <item quantity="other">1 rastreador com <xliff:g id="class_no" example="50">%1$d</xliff:g> classes</item>
     </plurals>
     <string name="backup_internal_data_description">Fazer backup de pastas de dados internos.</string>
@@ -954,7 +939,6 @@
     <string name="backup_obb_media">OBB e Mídia</string>
     <plurals name="verified_with_warning">
         <item quantity="one">Verificado com %d aviso</item>
-        <item quantity="many"/>
         <item quantity="other">Verificadas com %d avisos</item>
     </plurals>
     <plurals name="libraries">
@@ -967,12 +951,10 @@
     </plurals>
     <plurals name="backup_exists_are_you_sure">
         <item quantity="one">O backup já existe. Tem a certeza\?</item>
-        <item quantity="many"/>
         <item quantity="other">Várias aplicações já tem um backup. Tem certeza\?</item>
     </plurals>
     <plurals name="alert_failed_to_set_app_ops">
         <item quantity="one">%1$d Não foi possível configurar a operação da aplicação selecionada</item>
-        <item quantity="many">%1$d Não foi possível configurar as operações das várias aplicações selecionadas</item>
         <item quantity="other">%1$d Não foi possível configurar a operação das aplicações selecionadas</item>
     </plurals>
     <string name="internal_data">Dados internos</string>
@@ -984,7 +966,6 @@
     <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">GitHub</a> • <a href="https://gitlab.com/muntashir/AppManager">GitLab</a> • <a href="https://0xacab.org/muntashir/AppManager">Riseup</a> • <a href="https://codeberg.org/muntashir/AppManager">Codeberg</a></string>
     <plurals name="no_of_components">
         <item quantity="one">%1$d componente</item>
-        <item quantity="many">%1$d muitos componentes</item>
         <item quantity="other">%1$d componentes</item>
     </plurals>
     <string name="changelog">Histórico de Atualizações</string>
@@ -1100,12 +1081,10 @@
     <string name="pref_disable_description">Desativar apenas componentes. Não recomendado para utilizadores root, pois as apps podem contorná-lo. Nos modos ADB, as aps somente de teste podem ser desativados com este método.</string>
     <plurals name="usage_minutes">
         <item quantity="one">%1$d min</item>
-        <item quantity="many">%1$d muito tempo</item>
         <item quantity="other">%1$d mins</item>
     </plurals>
     <plurals name="usage_seconds">
         <item quantity="one">%1$d segundo</item>
-        <item quantity="many">%1$d muito tempo</item>
         <item quantity="other">%1$d segundos</item>
     </plurals>
     <string name="vt_checking">VirusTotal: a verificar…</string>
@@ -1219,17 +1198,15 @@
     <string name="filter_frozen_apps">Aplicações congeladas</string>
     <string name="pref_appearance_description">Tema, orientação, recursos, etc</string>
     <string name="pref_privacy">Privacidade</string>
-    <string name="failed_to_unfreeze">Não foi possível congelar <xliff:g id="app_name" exemplo="App Manager">%1$s</xliff:g>.</string>
-    <string name="failed_to_freeze">Could not freeze <xliff:g id="app_name" exemplo="App Manager">%1$s</xliff:g>.</string>
+    <string name="failed_to_unfreeze">Não foi possível congelar <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="failed_to_freeze">Could not freeze <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="pref_default_freezing_method_description">Método a ser usado por defeito onde não houver opção de congelamento</string>
     <plurals name="alert_failed_to_freeze">
         <item quantity="one">N0ão foi possível congelar %1$d app</item>
-        <item quantity="many">Não foi possível congelar %1$d apps</item>
         <item quantity="other">Não foi possível congelar %1$d apps</item>
     </plurals>
     <plurals name="alert_failed_to_unfreeze">
         <item quantity="one">Não foi possível congelar %1$d app</item>
-        <item quantity="many">Não foi possível congelar %1$d apps</item>
         <item quantity="other">Não foi possível congelar %1$d apps</item>
     </plurals>
     <string name="suspend_app_description">Este é o método de congelamento mais fraco. Uma aplicação suspensa ainda pode aparecer no launcher, mas ficará cinzento e não poderá ser iniciada.</string>

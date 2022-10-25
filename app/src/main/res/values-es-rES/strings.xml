@@ -341,7 +341,7 @@
     <string name="filter_user_apps">Aplicaciones de usuario</string>
     <string name="filter">Filtro</string>
     <string name="package_name_is_installed_successfully">Se instaló <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
-    <string name="termux">Termux (Emulador de terminal para Android)</string>
+    <string name="termux">Termux</string>
     <string name="failed_to_parse_some_numbers">No se pudo analizar algunos números</string>
     <string name="only_works_in_root_or_adb_mode">Sólo funcionan en modo root o ADB</string>
     <string name="filtered_packages">Paquetes filtrados</string>
@@ -516,7 +516,7 @@
     <string name="failed_to_duplicate_profile">No se pudo duplicar el perfil</string>
     <string name="duplicate">Duplicar</string>
     <string name="new_profile">Perfil nuevo</string>
-    <string name="un_apkm">UnApkm (APKM a APKS)</string>
+    <string name="un_apkm">UnApkm</string>
     <string name="in_progress">En proceso</string>
     <string name="conversion_failed">Falló la conversión.</string>
     <string name="select_apk">Seleccionar APK</string>
@@ -1091,7 +1091,7 @@
     <string name="failed_to_uninstall_app">Desinstalación fallida</string>
     <string name="backup_volume_dialog_description">Volúmenes con prefijo <tt>tree</tt> son carpetas seleccionadas mediante el framework de acceso al almacenamiento (SAF). Exceptuando estas carpetas, el directorio por defecto para App Manager es una subcarpeta llamada <tt>AppManager</tt>.</string>
     <string name="java">Java</string>
-    <string name="smali">Smali o Baksmali (descompilar los ejecutables de android)</string>
+    <string name="smali">Smali</string>
     <string name="accessibility_service_description">Servicio genérico de accesibilidad para realizar ciertas operaciones como limpiar caché en modo no-root.</string>
     <string name="explore">Explorar</string>
     <string name="system_partition">Root Android</string>
@@ -1121,7 +1121,7 @@
     <string name="toggle_internet">Usar el Internet</string>
     <string name="vt_checking">VirusTotal: Comprobando…</string>
     <string name="vt_uploading">VirusTotal: Subiendo…</string>
-    <string name="vt_success">Analisis con VirusTotal: %1$d/%2$d</string>
+    <string name="vt_success">VirusTotal: %1$d/%2$d</string>
     <string name="vt_scan_date">Fecha de escaneo: %1$s</string>
     <string name="vt_slowness_warning">Dependiendo de la velocidad de Internet y la carga del servidor, esto podría tardar un rato.</string>
     <string name="pref_vt_apikey">Clave API de VirusTotal</string>
