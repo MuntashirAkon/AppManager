@@ -1,4 +1,4 @@
-<!doctype html><html xmlns=http://www.w3.org/1999/xhtml lang=de xml:lang=de><meta charset=utf-8><meta name=generator content="pandoc"><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=yes"><meta name=author content="Muntashir Al-Islam"><title>App Manager</title><style>code{white-space:pre-wrap}span.smallcaps{font-variant:small-caps}span.underline{text-decoration:underline}div.column{display:inline-block;vertical-align:top;width:50%}div.hanging-indent{margin-left:1.5em;text-indent:-1.5em}ul.task-list{list-style:none}pre>code.sourceCode{white-space:pre;position:relative}pre>code.sourceCode>span{display:inline-block;line-height:1.25}pre>code.sourceCode>span:empty{height:1.2em}.sourceCode{overflow:visible}code.sourceCode>span{color:inherit;text-decoration:inherit}div.sourceCode{margin:1em 0}pre.sourceCode{margin:0}@media screen{div.sourceCode{overflow:auto}}@media print{pre>code.sourceCode{white-space:pre-wrap}pre>code.sourceCode>span{text-indent:-5em;padding-left:5em}}pre.numberSource code{counter-reset:source-line 0}pre.numberSource code>span{position:relative;left:-4em;counter-increment:source-line}pre.numberSource code>span>a:first-child::before{content:counter(source-line);position:relative;left:-1em;text-align:right;vertical-align:baseline;border:none;display:inline-block;-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;padding:0 4px;width:4em}pre.numberSource{margin-left:3em;padding-left:4px}div.sourceCode{}@media screen{pre>code.sourceCode>span>a:first-child::before{text-decoration:underline}}code span.al{font-weight:700}code span.an{font-style:italic}code span.cf{font-weight:700}code span.co{font-style:italic}code span.cv{font-style:italic}code span.do{font-style:italic}code span.dt{text-decoration:underline}code span.er{font-weight:700}code span.in{font-style:italic}code span.kw{font-weight:700}code span.pp{font-weight:700}code span.wa{font-style:italic}.display.math{display:block;text-align:center;margin:.5rem auto}</style><link rel=stylesheet href=../css/custom.css><header id=title-block-header><h1 class=title>App Manager</h1><p class=author>Muntashir Al-Islam</header><nav id=TOC role=doc-toc><ul class=incremental><li><span><span class=toc-section-number>1</span> <a href=#ch:introduction id=toc:ch:introduction>Einleitung</a></span><ul class=incremental><li><span><span class=toc-section-number>1.1</span> <a href=#sec:terminologies id=toc:sec:terminologies>Fachbegriffe</a></span><li><span><span class=toc-section-number>1.2</span> <a href=#sec:supported-versions id=toc:sec:supported-versions>Unterstützte Versionen</a></span><li><span><span class=toc-section-number>1.3</span> <a href=#sec:official-sources id=toc:sec:official-sources>Offizielle
+<!doctype html><html xmlns=http://www.w3.org/1999/xhtml lang=de xml:lang=de><meta charset=utf-8><meta name=generator content="pandoc"><meta name=viewport content="width=device-width,initial-scale=1,user-scalable=yes"><meta name=author content="Muntashir Al-Islam"><title>App Manager</title><style>code{white-space:pre-wrap}span.smallcaps{font-variant:small-caps}div.columns{display:flex;gap:min(4vw,1.5em)}div.column{flex:auto;overflow-x:auto}div.hanging-indent{margin-left:1.5em;text-indent:-1.5em}ul.task-list{list-style:none}ul.task-list li input[type=checkbox]{width:.8em;margin:0 .8em .2em -1.6em;vertical-align:middle}pre>code.sourceCode{white-space:pre;position:relative}pre>code.sourceCode>span{display:inline-block;line-height:1.25}pre>code.sourceCode>span:empty{height:1.2em}.sourceCode{overflow:visible}code.sourceCode>span{color:inherit;text-decoration:inherit}div.sourceCode{margin:1em 0}pre.sourceCode{margin:0}@media screen{div.sourceCode{overflow:auto}}@media print{pre>code.sourceCode{white-space:pre-wrap}pre>code.sourceCode>span{text-indent:-5em;padding-left:5em}}pre.numberSource code{counter-reset:source-line 0}pre.numberSource code>span{position:relative;left:-4em;counter-increment:source-line}pre.numberSource code>span>a:first-child::before{content:counter(source-line);position:relative;left:-1em;text-align:right;vertical-align:baseline;border:none;display:inline-block;-webkit-touch-callout:none;-webkit-user-select:none;-khtml-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;padding:0 4px;width:4em}pre.numberSource{margin-left:3em;padding-left:4px}div.sourceCode{}@media screen{pre>code.sourceCode>span>a:first-child::before{text-decoration:underline}}code span.al{font-weight:700}code span.an{font-style:italic}code span.cf{font-weight:700}code span.co{font-style:italic}code span.cv{font-style:italic}code span.do{font-style:italic}code span.dt{text-decoration:underline}code span.er{font-weight:700}code span.in{font-style:italic}code span.kw{font-weight:700}code span.pp{font-weight:700}code span.wa{font-style:italic}.display.math{display:block;text-align:center;margin:.5rem auto}</style><link rel=stylesheet href=../css/custom.css><header id=title-block-header><h1 class=title>App Manager</h1><p class=author>Muntashir Al-Islam</header><nav id=TOC role=doc-toc><ul class=incremental><li><span><span class=toc-section-number>1</span> <a href=#ch:introduction id=toc:ch:introduction>Einleitung</a></span><ul class=incremental><li><span><span class=toc-section-number>1.1</span> <a href=#sec:terminologies id=toc:sec:terminologies>Fachbegriffe</a></span><li><span><span class=toc-section-number>1.2</span> <a href=#sec:supported-versions id=toc:sec:supported-versions>Unterstützte Versionen</a></span><li><span><span class=toc-section-number>1.3</span> <a href=#sec:official-sources id=toc:sec:official-sources>Offizielle
 Quellen</a></span><ul class=incremental><li><span><span class=toc-section-number>1.3.1</span> <a href=#subsec:binary-distribution-sources id=toc:subsec:binary-distribution-sources>Quellen der binären
 Verteilung</a></span><li><span><span class=toc-section-number>1.3.2</span> <a href=#subsec:links-to-source-code id=toc:subsec:links-to-source-code>Links zum Quellcode</a></span><li><span><span class=toc-section-number>1.3.3</span> <a href=#subsec:translations id=toc:subsec:translations>Übersetzungen</a></span></ul><li><span><span class=toc-section-number>1.4</span> <a href=#sec:contributing id=toc:sec:contributing>Mitwirkende</a></span><ul class=incremental><li><span><span class=toc-section-number>1.4.1</span> <a href=#subsec:build-instructions id=toc:subsec:build-instructions>Hinweise zur
 Erstellung</a></span><li><span><span class=toc-section-number>1.4.2</span> <a href=#subsec:submitting-patches id=toc:subsec:submitting-patches>Einreichen von
@@ -23,12 +23,10 @@ Benutzer</a></span><li><span><span class=toc-section-number>2.6.6</span> <a href
 Funktionen</a></span><li><span><span class=toc-section-number>2.6.7</span> <a href=#subsec:saved-apk-name-format id=toc:subsec:saved-apk-name-format>Gespeichertes
 APK-Namensformat</a></span><li><span><span class=toc-section-number>2.6.8</span> <a href=#subsec:apk-signing id=toc:subsec:apk-signing>APK-Signierung</a></span><li><span><span class=toc-section-number>2.6.9</span> <a href=#subsec:installer id=toc:subsec:installer>Installationsprogramm</a></span><li><span><span class=toc-section-number>2.6.10</span> <a href=#subsec:backup/restore id=toc:subsec:backup/restore>Sichern/Wiederherstellen</a></span><li><span><span class=toc-section-number>2.6.11</span> <a href=#subsec:rules id=toc:subsec:rules>Regeln</a></span><li><span><span class=toc-section-number>2.6.12</span> <a href=#subsec:import/export-keystore id=toc:subsec:import/export-keystore>Schlüsselspeicher
 importieren/exportieren</a></span><li><span><span class=toc-section-number>2.6.13</span> <a href=#subsec:device-info id=toc:subsec:device-info>Über das Gerät
-selbst</a></span></ul><li><span><span class=toc-section-number>2.7</span> <a href=#sec:scanner-page id=toc:sec:scanner-page>Scanner
-Page</a></span><ul class=incremental><li><span><span class=toc-section-number>2.7.1</span> <a href=#subsec:missing-signatures id=toc:subsec:missing-signatures>Missing Signatures</a></span></ul><li><span><span class=toc-section-number>2.8</span> <a href=#sec:interceptor-page id=toc:sec:interceptor-page>Interceptor
-Page</a></span><ul class=incremental><li><span><span class=toc-section-number>2.8.1</span> <a href=#subsec:intent-filters id=toc:subsec:intent-filters>Intent
-Filters</a></span><li><span><span class=toc-section-number>2.8.2</span> <a href=#subsec:matching-activities id=toc:subsec:matching-activities>Matching Activities</a></span><li><span><span class=toc-section-number>2.8.3</span> <a href=#subsec:interceptor-reset-to-default id=toc:subsec:interceptor-reset-to-default>Reset to
-Default</a></span><li><span><span class=toc-section-number>2.8.4</span> <a href=#subsec:interceptor-send-edited-intent id=toc:subsec:interceptor-send-edited-intent>Send Edited
-Intent</a></span></ul><li><span><span class=toc-section-number>2.9</span> <a href=#sec:shared-preferences-editor-page id=toc:sec:shared-preferences-editor-page>Shared Preferences Editor
+selbst</a></span></ul><li><span><span class=toc-section-number>2.7</span> <a href=#sec:scanner-page id=toc:sec:scanner-page>Scanner-Seite</a></span><ul class=incremental><li><span><span class=toc-section-number>2.7.1</span> <a href=#subsec:missing-signatures id=toc:subsec:missing-signatures>Fehlende Signaturen</a></span></ul><li><span><span class=toc-section-number>2.8</span> <a href=#sec:interceptor-page id=toc:sec:interceptor-page>Interceptor-Seite</a></span><ul class=incremental><li><span><span class=toc-section-number>2.8.1</span> <a href=#subsec:intent-filters id=toc:subsec:intent-filters>Intent-Filter</a></span><li><span><span class=toc-section-number>2.8.2</span> <a href=#subsec:matching-activities id=toc:subsec:matching-activities>Übereinstimmende
+Aktivitäten</a></span><li><span><span class=toc-section-number>2.8.3</span> <a href=#subsec:interceptor-reset-to-default id=toc:subsec:interceptor-reset-to-default>Zurücksetzen auf
+Standard</a></span><li><span><span class=toc-section-number>2.8.4</span> <a href=#subsec:interceptor-send-edited-intent id=toc:subsec:interceptor-send-edited-intent>Geänderte Absicht
+senden</a></span></ul><li><span><span class=toc-section-number>2.9</span> <a href=#sec:shared-preferences-editor-page id=toc:sec:shared-preferences-editor-page>Shared Preferences Editor
 Page</a></span></ul><li><span><span class=toc-section-number>3</span> <a href=#ch:guides id=toc:ch:guides>Guides</a></span><ul class=incremental><li><span><span class=toc-section-number>3.1</span> <a href=#sec:adb-over-tcp id=toc:sec:adb-over-tcp>ADB over
 TCP</a></span><ul class=incremental><li><span><span class=toc-section-number>3.1.1</span> <a href=#subsec:enable-developer-options id=toc:subsec:enable-developer-options>Enable developer
 options</a></span><li><span><span class=toc-section-number>3.1.2</span> <a href=#subsec:enable-usb-debugging id=toc:subsec:enable-usb-debugging>Enable USB
@@ -118,7 +116,7 @@ Backup/Sharing</a></span><li><span><span class=toc-section-number>6.5.8</span> <
 Backup</a></span></ul></ul><li><span><span class=toc-section-number>7</span> <a href=#ch:app-ops id=toc:ch:app-ops>App Ops</a></span><ul class=incremental><li><span><span class=toc-section-number>7.1</span> <a href=#sec:app-ops-background id=toc:sec:app-ops-background>Background</a></span><li><span><span class=toc-section-number>7.2</span> <a href=#sec:introduction-to-app-ops id=toc:sec:introduction-to-app-ops>Introduction to App
 Ops</a></span><li><span><span class=toc-section-number>7.3</span> <a href=#sec:appopsmanager id=toc:sec:appopsmanager>AppOpsManager</a></span><ul class=incremental><li><span><span class=toc-section-number>7.3.1</span> <a href=#subsec:op-constants id=toc:subsec:op-constants><code>OP_*</code> Constants</a></span><li><span><span class=toc-section-number>7.3.2</span> <a href=#subsec:mode-constants id=toc:subsec:mode-constants><code>MODE_*</code>
 Constants</a></span><li><span><span class=toc-section-number>7.3.3</span> <a href=#subsec:package-ops id=toc:subsec:package-ops>PackageOps</a></span><li><span><span class=toc-section-number>7.3.4</span> <a href=#subsec:opentry id=toc:subsec:opentry>OpEntry</a></span><li><span><span class=toc-section-number>7.3.5</span> <a href=#subsec:usage id=toc:subsec:usage>Usage</a></span></ul><li><span><span class=toc-section-number>7.4</span> <a href=#sec:appopsservice id=toc:sec:appopsservice>AppOpsService</a></span><li><span><span class=toc-section-number>7.5</span> <a href=#sec:appops-xml id=toc:sec:appops-xml>appops.xml</a></span><li><span><span class=toc-section-number>7.6</span> <a href=#sec:appops-cli id=toc:sec:appops-cli>Command Line
-Interface</a></span></ul></ul></nav><div class=titlingpage><div class=center><p><img src=../images/icon.png style=width:1in alt=image><p><strong><span class=smallcaps>App Manager</span></strong><p><strong>Nutzerhandbuch</strong><p><em>v3.0.0</em><p>2 August 2022<p>Copyright © 2020–2022 Muntashir Al-Islam<blockquote><p>“Weise und langsam. Wer schnell läuft, der stolpert.” <span>— Bruder
+Interface</a></span></ul></ul></nav><div class=titlingpage><div class=center><p><img src=../images/icon.png style=width:1in alt=image><p><strong><span class=smallcaps>App Manager</span></strong><p><strong>Nutzerhandbuch</strong><p><em>v3.1.0-alpha01</em><p>25 Oktober 2022<p>Copyright © 2020–2022 Muntashir Al-Islam<blockquote><p>“Weise und langsam. Wer schnell läuft, der stolpert.” <span>— Bruder
 Lorenz, <em>Romeo und Julia</em></span></blockquote></div></div><section id=ch:introduction class=level1 data-number=1><h1 data-number=1><span class=header-section-number>1</span> <a href=#toc:ch:introduction>Einleitung</a><a href=#ch:introduction class=anchor aria-hidden=true></a></h1><p>App Manager ist ein fortschrittlicher Paketmanager für Android. Er
 bietet zahllose Funktionen und benötigt daher ein Benutzer- handbuch, um
 seine Benutzer zu unterstützen. Dieses Dokument fungiert als
@@ -241,7 +239,7 @@ Anwendung, d.h. sie bleibt die ganze Zeit über aktiv.</ul></section><section id
 <a href=#toc:subsec:main-page-application-types>Anwendungstypen</a><a href=#subsec:main-page-application-types class=anchor aria-hidden=true></a></h3><p>Eine Anwendung kann entweder eine <strong>Benutzer</strong>- oder
 eine <strong>System</strong>-Anwendung mit den folgenden Suffixen
 sein:<ul class=incremental><li><p><code>X</code> – Unterstützt mehrere Architekturen<li><p><code>0</code> – Keine Dex-Dateien in der Anwendung
-vorhanden<li><p><code></code> – Unterbrochene Anwendung<li><p><code>#</code> – Die Anwendung hat das System aufgefordert, einen
+vorhanden<li><p>– Unterbrochene Anwendung<li><p><code>#</code> – Die Anwendung hat das System aufgefordert, einen
 großen Heap, d. h. großen Laufzeitspeicher, zuzuweisen<li><p><code>?</code> – Die Anwendung forderte die virtuelle Maschine
 auf, in den sicheren Modus zu wechseln.</ul></section><section id=subsec:main-page-version-info class=level3 data-number=2.1.4><h3 data-number=2.1.4><span class=header-section-number>2.1.4</span>
 <a href=#toc:subsec:main-page-version-info>Infos zur Version</a><a href=#subsec:main-page-version-info class=anchor aria-hidden=true></a></h3><p>Auf den Versionsnamen folgen die nachstehenden Präfixe:<ul class=incremental><li><p><code>_</code> – Keine Hardware-Beschleunigung (was die
@@ -642,35 +640,35 @@ werden, und zwar über die Option <strong>Sortieren</strong> im Menü
 Android-Betriebssystem eindeutig identifiziert werden können (z. B.,
 <em>Hauptseite</em> und <em>App-Detailseite</em> sind zwei Aktivitäten).
 Jede Aktivität kann mehrere UI-Komponenten haben bekannt als
-<em>Steuerelemente</em>oder <em>Fragmente</em>, und jede Komponente kann
-verschachtelt oder übereinander platziert werden. Der Entwickler kann
-sich auch dafür entscheiden, externe Dateien, Links usw. innerhalb einer
-Aktivität zu öffnen, indem er eine Methode namens <em>Intent
-Filter</em>. Wenn Sie zum Beispiel eine Datei mit Ihrem Dateimanager
-öffnen, durchsucht entweder Ihr Dateimanager oder das Betriebssystem die
-Absichtsfilter über PackageManager, um die Aktivitäten zu finden, die
-die Datei öffnen können, und bietet Ihnen an, die Datei mit diesen
-Aktivitäten zu öffnen.<p>Aktivitäten, die exportierbar sind, können in der Regel von
+<em>Widgets</em> oder <em>Fragmente</em>, und jede Komponente kann
+verschachtelt oder übereinander gelegt werden. Der Entwickler kann sich
+auch dafür entscheiden, externe Dateien, Links usw. innerhalb einer
+Aktivität zu öffnen, indem er eine Methode namens
+<em>Inhaltsfilter</em>. Wenn Sie zum Beispiel eine Datei mit Ihrem
+Dateimanager öffnen, durchsucht entweder Ihr Dateimanager oder
+Betriebssystem die Inhaltsfilter über PackageManager, um die Aktivitäten
+zu finden, die die Datei öffnen können, und bietet Ihnen an, die Datei
+mit diesen Aktivitäten zu öffnen.<p>Aktivitäten, die exportierbar sind, können in der Regel von
 beliebigen Drittanbieteranwendungen geöffnet werden. Einige Aktivitäten
 erfordern Berechtigungen, und wenn das der Fall ist, kann nur eine
 Anwendung mit diesen Berechtigungen sie öffnen. In der
 <em>Aktivitäten</em> können Aktivitäten über die Schaltfläche
 <strong>Launch</strong> gestartet werden. Wenn es erforderlich ist,
-zusätzliche Informationen wie Intent-Extras, Daten oder Aktionen
-anzugeben, öffnet ein langer Klick auf die Schaltfläche
-<strong>Launch</strong> das Fenster <a href=#sec:interceptor-page>Activity Interceptor</a> Seite, die solche
+zusätzliche zusätzliche Informationen, wie z. B. Intent-Extras, Daten
+oder Aktionen, einzugeben, öffnet ein langer Klick auf die Schaltfläche
+<strong>Starten</strong> das Fenster <a href=#sec:interceptor-page>Activity Interceptor</a> Seite, die solche
 Funktionen bietet.<div class="amalert tip"><p><strong><em>Hinweis:</em></strong><p>Wenn Sie eine Aktivität nicht öffnen können, ist es wahrscheinlich,
-dass bestimmte Abhängigkeiten nicht erfüllt sind, z.B.  Sie können z. B.
-die Seite <em>App-Details</em> nicht öffnen, weil Sie dafür zumindest
-einen Paketnamen angeben müssen. Da diese Abhängigkeiten nicht
+dass bestimmte Abhängigkeiten nicht erfüllt sind, z.B.  Sie Sie können
+z. B. die Seite <em>App-Details</em> nicht öffnen, weil Sie dafür
+zumindest einen Paketnamen angeben müssen. Da diese Abhängigkeiten nicht
 programmatisch hergeleitet werden können, können diese Aktivitäten
 standardmäßig nicht über den App Manager geöffnet werden.</div><p>Es ist auch möglich, über die Schaltfläche <strong>Verknüpfung
 erstellen</strong> Verknüpfungen zu den Aktivitäten zu erstellen.<div class="amalert danger"><p><strong><em>Vorsicht:</em></strong><p>Wenn Sie App Manager deinstallieren, gehen alle von App Manager
 erstellten Verknüpfungen verloren.</div></section><section id=subsubsec:details:servcies class=level4 data-number=2.2.3.2><h4 data-number=2.2.3.2><span class=header-section-number>2.2.3.2</span> Dienste<a href=#subsubsec:details:servcies class=anchor aria-hidden=true></a></h4><p>Im Gegensatz zu <a href=#subsubsec:activities>Aktivitäten</a>, die
-Benutzer sehen können, erledigen <strong>Services</strong>
+Benutzer sehen können, erledigen <strong>Dienste</strong>
 Hintergrundaufgaben. Zum Beispiel, wenn Sie mit dem Internetbrowser
 Ihres Telefons ein Video aus dem Internet herunterladen, verwendet der
-Internetbrowser einen <em>foreground service</em>, um den Inhalt
+Internetbrowser einen <em>Hintergrunddienst</em>, um den Inhalt
 herunterzuladen.<p>Wenn eine Aktivität geschlossen oder aus dem Abschnitt
 <em>Ereignisse</em> entfernt wird, kann sie sofort zerstört werden,
 abhängig von vielen Faktoren, z. B. davon, wie viel freier Speicherplatz
@@ -995,26 +993,27 @@ der Standardstatus, der beim letzten Speichern des Profils konfiguriert
 wurde.</em></ul></section></section><section id=sec:profile-page class=level2 data-number=2.5><h2 data-number=2.5><span class=header-section-number>2.5</span> <a href=#toc:sec:profile-page>Seite Profil</a><a href=#sec:profile-page class=anchor aria-hidden=true></a></h2><p>Die Seite Profil zeigt die Konfigurationen für ein Profil an. Sie
 bietet auch die Möglichkeit, sie zu bearbeiten.<section id=subsec:profile-options-menu class=level3 data-number=2.5.1><h3 data-number=2.5.1><span class=header-section-number>2.5.1</span>
 <a href=#toc:subsec:profile-options-menu>Menü Optionen</a><a href=#subsec:profile-options-menu class=anchor aria-hidden=true></a></h3><p>Das Menü mit den drei Punkten in der oberen rechten Ecke öffnet das
-Menü Optionen. Es enthält verschiedene Optionen wie.<ul class=incremental><li><p><strong>Anwenden</strong>. Diese Option kann verwendet werden, um
+Optionen-Menü. Es enthält verschiedene Optionen wie.<ul class=incremental><li><p><strong>Anwenden</strong>. Diese Option kann verwendet werden, um
 das Profil anzuwenden. Wenn Sie darauf klicken, wird ein Dialogfeld
 angezeigt, in dem Sie einen <a href=#subsubsec:profile-state>Profilzustand</a> auswählen können. Wenn
-Sie eine der Optionen auswählen, wird das Profil sofort
-angewendet.<li><p><strong>Speichern.</strong> Ermöglicht es Ihnen, das Profil zu
-speichern.<div class="amalert warning"><p><strong><em>Hinweis:</em></strong><p>Änderungen werden nie automatisch gespeichert. Sie müssen sie von
+Sie eine der Optionen auswählen, wird das Profil sofort angewendet.<div class="amalert tip"><p><strong><em>Hinweis:</em></strong><p>Wenn Sie ein Profil anwenden, werden einige Pakete, die den Kriterien
+nicht entsprechen, einfach ignoriert.</div><li><p><strong>Speichern.</strong> Speichern Sie die Änderungen am
+Profil.<div class="amalert warning"><p><strong><em>Hinweis:</em></strong><p>Änderungen werden nie automatisch gespeichert. Sie müssen sie von
 hier aus manuell speichern.</div><li><p><strong>Verwerfen.</strong> Verwirft alle Änderungen, die seit
-der letzten Speicherung vorgenommen wurden.<li><p><strong>Löschen.</strong> Wenn Sie auf Löschen klicken, wird das
-Profil sofort und ohne Warnung gelöscht.<li><p><strong>Duplizieren.</strong> Diese Option kann verwendet werden,
-um das Profil zu duplizieren. Wenn Sie darauf klicken, wird ein
-Eingabefeld angezeigt, in dem Sie den Namen des Profils eingeben können.
-Wenn Sie auf “OK” klicken, wird ein neues Profil erstellt, und die Seite
-wird neu geladen. Das Profil wird nicht gespeichert, bis Sie es manuell
-speichern.<li><p><strong>Verknüpfung erstellen</strong> Diese Option kann
-verwendet werden, um eine Verknüpfung für das Profil zu erstellen. Wenn
-Sie darauf klicken, werden zwei Optionen angezeigt: <em>Einfach</em> und
-<em>Erweitert</em>. Mit der letzteren Option können Sie den Profilstatus
-festlegen bevor Sie ihn anwenden, während die erste Option den
-Standardstatus verwendet, der beim letzten Speichern des Profils
-konfiguriert wurde.</ul></section><section id=subsec:profile-apps-tab class=level3 data-number=2.5.2><h3 data-number=2.5.2><span class=header-section-number>2.5.2</span>
+dem letzten Speichervorgang vorgenommen wurden.<li><p><strong>Löschen.</strong> Wenn Sie auf Löschen klicken, wird das
+Profil sofort und ohne Warnung gelöscht.<li><p><strong>Duplizieren.</strong> Mit dieser Option können Sie das
+Profil duplizieren. Wenn Sie darauf klicken, wird ein Dialogfeld
+angezeigt in dem man einen Namen für das neue Profil festlegen kann.
+Wenn Sie auf “OK” klicken, wird diese Seite neu geladen, indem alle
+Konfigurationen, die dieses Profil hat, dupliziert. Das Profil wird
+jedoch nicht gespeichert, bis es manuell gespeichert wird.<li><p><strong>Erstellen einer Verknüpfung</strong> Mit dieser Option
+können Sie eine Verknüpfung für das Profil erstellen. Wenn Sie darauf
+klicken, gibt es werden zwei Optionen angezeigt: <em>Einfach</em> und
+<em>Erweitert</em>. Bei der Konfiguration mit der letzteren Option wird
+der Benutzer aufgefordert Benutzer aufgefordert, einen Profilstatus
+auszuwählen, wenn die Verknüpfung aufgerufen wird. Bei der ersten Option
+wird dagegen immer der Standardstatus, der beim letzten Speichern des
+Profils konfiguriert wurde.</ul></section><section id=subsec:profile-apps-tab class=level3 data-number=2.5.2><h3 data-number=2.5.2><span class=header-section-number>2.5.2</span>
 <a href=#toc:subsec:profile-apps-tab>Registerkarte Anwendungen</a><a href=#subsec:profile-apps-tab class=anchor aria-hidden=true></a></h3><p>Auf der Registerkarte Apps werden die in diesem Profil konfigurierten
 Pakete aufgelistet. Pakete können hinzugefügt oder entfernt werden,
 indem Sie die Schaltfläche <em>Plus</em> unten nutzen. Pakete können
@@ -1038,43 +1037,44 @@ Komponenten entsperrt. Die Option kann (unabhängig von den eingegebenen
 Werten) durch Klicken auf die Schaltfläche <em>deaktiviert</em> im
 Eingabedialog deaktiviert werden.<div class=seealso-inline><p><em>Siehe auch: <span><a href=#subsec:faq:what-are-app-components>Was sind die
 App-Komponenten?</a></span></em></div></section><section id=anwendungsoperationen class=level4 data-number=2.5.3.5><h4 data-number=2.5.3.5><span class=header-section-number>2.5.3.5</span> Anwendungsoperationen<a href=#anwendungsoperationen class=anchor aria-hidden=true></a></h4><p>Dies verhält sich genauso wie die Option <a href=#subsec:set-mode-for-app-ops-dots>Modus für App Ops
-einstellen…</a> auf der Seite 1-Click Ops. Allerdings gilt dies nur für
-die ausgewählten Pakete. Wenn die Option <a href=#subsubsec:profile-state>Status</a> <em>Ein</em> ist, werden die
-App Ops verweigert (d.h. ignoriert), und wenn der Status <em>Aus</em>
-ist, werden die App-OPs zugelassen. Die Option kann (unabhängig von den
-eingegebenen Werten) deaktiviert werden, indem Sie auf die Schaltfläche
-<em>deaktiviert</em> im Eingabedialog klicken.</section><section id=berechtigungen class=level4 data-number=2.5.3.6><h4 data-number=2.5.3.6><span class=header-section-number>2.5.3.6</span> Berechtigungen<a href=#berechtigungen class=anchor aria-hidden=true></a></h4><p>Diese Option kann verwendet werden, um bestimmte Berechtigungen für
-die ausgewählten Pakete zu gewähren oder zu entziehen. Wie andere oben,
-müssen die Berechtigungen durch Leerzeichen getrennt werden. Wenn der <a href=#subsubsec:profile-state>Status</a> <em>Ein</em> ist, werden die
-Berechtigungen entzogen, und wenn der Status <em>Aus</em> ist, werden
-die Berechtigungen erlaubt. Die Option kann deaktiviert werden
-(unabhängig von den eingegebenen Werten), indem Sie im Eingabedialog auf
-die Schaltfläche <em>deaktiviert</em> klicken.</section><section id=sichernwiederherstellen class=level4 data-number=2.5.3.7><h4 data-number=2.5.3.7><span class=header-section-number>2.5.3.7</span> Sichern/Wiederherstellen<a href=#sichernwiederherstellen class=anchor aria-hidden=true></a></h4><p>Diese Option kann verwendet werden, um ein Backup der ausgewählten
-Anwendungen und ihrer Daten zu erstellen oder sie wiederherzustellen. Es
-sind zwei Optionen verfügbar: <em>Backup-Optionen</em> und
-<em>Backup-Name</em>.<ul class=incremental><li><p><strong>Backup-Optionen</strong> Dasselbe wie die <a href=#subsec:backup-restore-backup-options>Sicherungsoptionen</a> der
-Sicherungs-/Wiederherstellungsfunktion. Wenn nicht festgelegt, werden
-die Standardoptionen verwendet.<li><p><strong>Sicherungsname</strong> Legen Sie einen
-benutzerdefinierten Namen für die Sicherung fest. Wenn der Name der
-Sicherung festgelegt ist, erhält sie bei jeder Erstellung einer
-Sicherung einen eindeutigen Namen mit dem Suffix backup-name erhalten.
-Dieses Verhalten wird in einer zukünftigen Version korrigiert werden.
-Lassen Sie dieses Feld für reguläre oder “Basis” Backups leer (stellen
-Sie auch sicher, dass Sie nicht <em>backup multiple</em> in den
-Sicherungsoptionen aktivieren).</ul><p>Wenn der Status von <a href=#subsubsec:profile-state>Status</a>
+einstellen…</a> auf der der Seite 1-Klick-Ops. Allerdings wird der
+Vorgang hier nur auf die ausgewählten Pakete angewendet. Wenn der Status
+von <a href=#subsubsec:profile-state>Status</a> <em>Ein</em> ist,
+werden die App-Ops verweigert (d. h. ignoriert), und wenn der Status
+<em>Aus</em> ist, werden die App-Ops zugelassen. Die Option kann
+deaktiviert werden (unabhängig von den eingegebenen Werte) durch Klicken
+auf die Schaltfläche <em>deaktivieren</em> im Eingabedialog deaktiviert
+werden.</section><section id=berechtigungen class=level4 data-number=2.5.3.6><h4 data-number=2.5.3.6><span class=header-section-number>2.5.3.6</span> Berechtigungen<a href=#berechtigungen class=anchor aria-hidden=true></a></h4><p>Mit dieser Option können Sie bestimmte Rechte für die ausgewählten
+Pakete gewähren oder entziehen. Wie andere oben, müssen die
+Berechtigungen durch Leerzeichen getrennt werden. Wenn der <a href=#subsubsec:profile-state>Staus</a> <em>Ein</em> ist, werden die
+werden die Berechtigungen entzogen, und wenn der Status <em>Aus</em>
+ist, werden die Berechtigungen erlaubt. Die Option kann deaktiviert
+werden (unabhängig von den eingegebenen Werten), indem Sie im
+Eingabedialog auf die Schaltfläche <em>deaktivieren</em> klicken.</section><section id=sichernwiederherstellen class=level4 data-number=2.5.3.7><h4 data-number=2.5.3.7><span class=header-section-number>2.5.3.7</span> Sichern/Wiederherstellen<a href=#sichernwiederherstellen class=anchor aria-hidden=true></a></h4><p>Mit dieser Option können Sie ein Backup der ausgewählten Anwendungen
+und ihrer Daten erstellen oder diese wiederherstellen. Hier sind zwei
+Optionen verfügbar: <em>Sicherungsoptionen</em> und
+<em>Sicherungsname</em>.<ul class=incremental><li><p><strong>Backup-Name</strong> Legen Sie einen benutzerdefinierten
+Namen für die Sicherung fest. Wenn der Name der Sicherung festgelegt
+ist, erhält sie bei jeder Erstellung einer Sicherung einen eindeutigen
+Namen mit dem Suffix backup-name erhalten. Dieses Verhalten wird in
+einer zukünftigen Version korrigiert werden. Lassen Sie dieses Feld für
+reguläre “Basis”-Sicherungen leer (stellen Sie außerdem sicher, dass Sie
+<em>Mehrfachsicherung</em> in den Sicherungsoptionen
+aktivieren).</ul><p>Wenn der Status von <a href=#subsubsec:profile-state>Staus</a>
 <em>Ein</em> ist, werden die Pakete gesichert, und wenn der Status
-<em>Aus</em>, werden die Pakete wiederhergestellt. Die Option kann
-deaktiviert werden, indem Sie auf die Schaltfläche <em>deaktiviert</em>
+<em>off</em>, werden die Pakete wiederhergestellt. Die Option kann
+deaktiviert werden, indem Sie auf die Schaltfläche <em>deaktivieren</em>
 im dem Eingabedialog.</section><section id=regeln-für-die-exportsperre class=level4 data-number=2.5.3.8><h4 data-number=2.5.3.8><span class=header-section-number>2.5.3.8</span> Regeln für die
-Exportsperre<a href=#regeln-für-die-exportsperre class=anchor aria-hidden=true></a></h4><div class="amalert danger"><p><strong><em>Achtung:</em></strong><p>Diese Option ist noch nicht implementiert.</div></section><section id=deaktivieren class=level4 data-number=2.5.3.9><h4 data-number=2.5.3.9><span class=header-section-number>2.5.3.9</span> Deaktivieren<a href=#deaktivieren class=anchor aria-hidden=true></a></h4><p>Aktiviert/deaktiviert die ausgewählten Pakete je nach dem Zustand von
-<a href=#subsubsec:profile-state>Status</a>. Wenn der Status
+Exportsperre<a href=#regeln-für-die-exportsperre class=anchor aria-hidden=true></a></h4><div class="amalert danger"><p><strong><em>Achtung:</em></strong><p>Diese Option ist noch nicht implementiert.</div></section><section id=deaktivieren class=level4 data-number=2.5.3.9><h4 data-number=2.5.3.9><span class=header-section-number>2.5.3.9</span> Deaktivieren<a href=#deaktivieren class=anchor aria-hidden=true></a></h4><p>Ermöglicht die Aktivierung oder Deaktivierung der ausgewählten Pakete
+in Abhängigkeit vom Wert von <a href=#subsubsec:profile-state>Status</a>. Wenn der Zustand
 <em>Ein</em> ist, werden die Pakete deaktiviert, und wenn der Zustand
-<em>Aus</em> ist, werden die Pakete aktiviert.</section><section id=zwangsstopp class=level4 data-number=2.5.3.10><h4 data-number=2.5.3.10><span class=header-section-number>2.5.3.10</span> Zwangsstopp<a href=#zwangsstopp class=anchor aria-hidden=true></a></h4><p>Ermöglicht das erzwungene Anhalten der ausgewählten Pakete.</section><section id=zwischenspeicher-löschen class=level4 data-number=2.5.3.11><h4 data-number=2.5.3.11><span class=header-section-number>2.5.3.11</span> Zwischenspeicher löschen<a href=#zwischenspeicher-löschen class=anchor aria-hidden=true></a></h4><p>Ermöglicht das Löschen des Cache für die ausgewählten Pakete.</section><section id=daten-löschen class=level4 data-number=2.5.3.12><h4 data-number=2.5.3.12><span class=header-section-number>2.5.3.12</span> Daten löschen<a href=#daten-löschen class=anchor aria-hidden=true></a></h4><p>Ermöglicht das Löschen von Daten für die ausgewählten Pakete.</section><section id=tracker-blockieren class=level4 data-number=2.5.3.13><h4 data-number=2.5.3.13><span class=header-section-number>2.5.3.13</span> Tracker blockieren<a href=#tracker-blockieren class=anchor aria-hidden=true></a></h4><p>Aktiviert die Sperrung oder Entsperrung der Tracker-Komponenten der
+<em>Aus</em> ist, werden die Pakete aktiviert.</section><section id=zwangsstopp class=level4 data-number=2.5.3.10><h4 data-number=2.5.3.10><span class=header-section-number>2.5.3.10</span> Zwangsstopp<a href=#zwangsstopp class=anchor aria-hidden=true></a></h4><p>Ermöglicht, dass die ausgewählten Pakete zwangsgestoppt werden.</section><section id=zwischenspeicher-löschen class=level4 data-number=2.5.3.11><h4 data-number=2.5.3.11><span class=header-section-number>2.5.3.11</span> Zwischenspeicher löschen<a href=#zwischenspeicher-löschen class=anchor aria-hidden=true></a></h4><p>Aktiviert das Löschen des Cache für die ausgewählten Pakete.</section><section id=daten-löschen class=level4 data-number=2.5.3.12><h4 data-number=2.5.3.12><span class=header-section-number>2.5.3.12</span> Daten löschen<a href=#daten-löschen class=anchor aria-hidden=true></a></h4><p>Aktiviert das Löschen von Daten für die ausgewählten Pakete.</section><section id=tracker-blockieren class=level4 data-number=2.5.3.13><h4 data-number=2.5.3.13><span class=header-section-number>2.5.3.13</span> Tracker blockieren<a href=#tracker-blockieren class=anchor aria-hidden=true></a></h4><p>Aktiviert die Sperrung oder Entsperrung der Tracker-Komponenten der
 ausgewählten Pakete je nach dem Wert von <a href=#subsubsec:profile-state>Status</a>. Wenn der Zustand
 <em>EIN</em> ist, werden die Tracker blockiert, und wenn der Zustand
-<em>AUS</em> ist, werden die Tracker entsperrt.</section><section id=apk-speichern class=level4 data-number=2.5.3.14><h4 data-number=2.5.3.14><span class=header-section-number>2.5.3.14</span> APK speichern<a href=#apk-speichern class=anchor aria-hidden=true></a></h4><p>Ermöglicht das Speichern von APK-Dateien unter
-<code>AppManager/apks</code> für die ausgewählten Pakete.</section></section></section><section id=sec:settings-page class=level2 data-number=2.6><h2 data-number=2.6><span class=header-section-number>2.6</span> <a href=#toc:sec:settings-page>Seite Einstellungen</a><a href=#sec:settings-page class=anchor aria-hidden=true></a></h2><p>Die Einstellungen können verwendet werden, um das Verhalten der App
-anzupassen.<section id=subsec:language class=level3 data-number=2.6.1><h3 data-number=2.6.1><span class=header-section-number>2.6.1</span>
+<em>AUS</em> ist, werden die Tracker entsperrt.</section><section id=apk-speichern class=level4 data-number=2.5.3.14><h4 data-number=2.5.3.14><span class=header-section-number>2.5.3.14</span> APK speichern<a href=#apk-speichern class=anchor aria-hidden=true></a></h4><p>Aktiviert die Speicherung von APK-Dateien unter
+<code>AppManager/apks</code> (oder in dem auf der Einstellungsseite
+ausgewählten Verzeichnis) der ausgewählten Pakete.</section></section></section><section id=sec:settings-page class=level2 data-number=2.6><h2 data-number=2.6><span class=header-section-number>2.6</span> <a href=#toc:sec:settings-page>Seite Einstellungen</a><a href=#sec:settings-page class=anchor aria-hidden=true></a></h2><p>Die Seite Einstellungen kann verwendet werden, um das Verhalten des
+App Manager anzupassen.<section id=subsec:language class=level3 data-number=2.6.1><h3 data-number=2.6.1><span class=header-section-number>2.6.1</span>
 <a href=#toc:subsec:language>Sprache</a><a href=#subsec:language class=anchor aria-hidden=true></a></h3><p>Konfigurieren Sie die In-App-Sprache. App Manager unterstützt derzeit
 21 (einundzwanzig) Sprachen.</section><section id=subsec:app-theme class=level3 data-number=2.6.2><h3 data-number=2.6.2><span class=header-section-number>2.6.2</span>
 <a href=#toc:subsec:app-theme>App-Design</a><a href=#subsec:app-theme class=anchor aria-hidden=true></a></h3><p>In-App-Thema konfigurieren.</section><section id=subsec:screen-lock class=level3 data-number=2.6.3><h3 data-number=2.6.3><span class=header-section-number>2.6.3</span>
@@ -1143,8 +1143,8 @@ oder höher zu gewährleisten.</section><section id=signierschlüssel class=leve
 Signieren von APK-Dateien. Schlüssel aus einem bestehenden KeyStore
 können in den App Manager importiert werden, oder es kann ein neuer
 Schlüssel generiert werden.<div class="amalert danger"><p><strong><em>Gefahr:</em></strong><p>Verwenden Sie nicht den Schlüssel, der mit App Manager geliefert
-wird, da er für jeden öffentlich zugänglich ist. In Zukunft wird wird
-der Standardschlüssel entfernt werden.</div><div class="amalert tip"><p><strong><em>Tipp:</em></strong><p>Wenn Sie den Schlüssel in Zukunft verwenden müssen, empfiehlt es
+wird, da er für jeden öffentlich zugänglich ist. In Zukunft wird der
+Standardschlüssel entfernt werden.</div><div class="amalert tip"><p><strong><em>Tipp:</em></strong><p>Wenn Sie den Schlüssel in Zukunft verwenden müssen, empfiehlt es
 sich, selbst einen KeyStore zu erstellen und den Schlüssel zu
 importieren. Bei Schlüsseln, die im App Manager generiert wurden,
 besteht die Gefahr, dass sie ohne eine ordnungsgemäße Sicherung gelöscht
@@ -1154,7 +1154,7 @@ Installationsprogramm anzeigen<a href=#benutzer-im-installationsprogramm-anzeige
 Anwendung eine Liste der Benutzer angezeigt. Die Anwendung wird nur für
 die angegebenen Benutzer installiert.</section><section id=apk-signieren class=level4 data-number=2.6.9.2><h4 data-number=2.6.9.2><span class=header-section-number>2.6.9.2</span> APK signieren<a href=#apk-signieren class=anchor aria-hidden=true></a></h4><p>Ob die APK-Dateien vor der Installation der Anwendung signiert werden
 sollen. Die Seite <a href=#subsec:apk-signing>APK Signierung</a> kann
-verwendet werden, um die Signierung zu konfigurieren.</section><section id=speicherort class=level4 data-number=2.6.9.3><h4 data-number=2.6.9.3><span class=header-section-number>2.6.9.3</span> Speicherort<a href=#speicherort class=anchor aria-hidden=true></a></h4><p>Definieren Sie den APK-Installationsort. Dies kann eine der Optionen
+verwendet werden, um die Signierung zu konfigurieren.</section><section id=installationsort class=level4 data-number=2.6.9.3><h4 data-number=2.6.9.3><span class=header-section-number>2.6.9.3</span> Installationsort<a href=#installationsort class=anchor aria-hidden=true></a></h4><p>Definieren Sie den APK-Installationsort. Dies kann eine der Optionen
 <em>auto</em>, <em>nur intern</em> und <em>vorzugsweise extern</em>
 sein. Bei neueren Android-Versionen garantiert die Auswahl der letzten
 Option nicht, dass die Anwendung auf dem externen Speicher installiert
@@ -1246,90 +1246,106 @@ KeyStore. Dies ist ein Bouncy Castle KeyStore mit der Erweiterung
 <code>bks</code>. Daher werden andere KeyStore wie Java KeyStore (JKS)
 oder PKCS #12 nicht unterstützt. Wenn ein Schlüssel aus einem solchen
 KeyStore importiert werden muss, sollten die entsprechenden Optionen wie
-oben angegeben gewählt werden.</section><section id=subsec:device-info class=level3 data-number=2.6.13><h3 data-number=2.6.13><span class=header-section-number>2.6.13</span> <a href=#toc:subsec:device-info>Über das Gerät selbst</a><a href=#subsec:device-info class=anchor aria-hidden=true></a></h3><p>Display Android version, security, CPU, GPU, battery, memory, screen,
-languages, user info, etc.</section></section><section id=sec:scanner-page class=level2 data-number=2.7><h2 data-number=2.7><span class=header-section-number>2.7</span> <a href=#toc:sec:scanner-page>Scanner Page</a><a href=#sec:scanner-page class=anchor aria-hidden=true></a></h2><p><strong>Scanner page</strong> appears after clicking on the
-<em>scanner</em> button in the <a href=#subsec:app-info-tab>App Info
-tab</a>. External APK files can also be opened for scanning from file
-managers, web browsers, etc.<p>It scans for trackers and libraries, and displays the number of
-trackers and libraries as a summary. It also displays checksums of the
-APK file as well as the signing certificates. If VirusTotal is
-configured in the settings, it also attempts to retrieve reports from
-VirusTotal, or uploads the APK file if it is not in the database.<div class="amalert danger"><p><strong><em>Disclaimer:</em></strong><p>App Manager only scans an application statically without prejudice.
-The application may provide the options for opting out, or in some
-cases, certain features of the tracker may not be used at all by the
-application (e.g. F-Droid), or some applications may simply use them as
-placeholders to prevent the breaking of certain features (e.g. Fennec
-F-Droid). <strong>The intention of the scanner is to give you an idea
-about what the APK might contain. It should be taken as an initial step
-for further investigations.</strong></div><p>Clicking on the first item (i.e. number of classes) opens a new page
-containing a list of tracker classes for the application. All classes
-can also be viewed by clicking on the <em>Toggle Class Listing</em>
-menu. A sneak-peek of each class can be viewed by simply clicking on any
-class item. In Android 8 (Oreo) and later, this includes the whole SMALI
-version of the class, and can be converted into Java using the
-corresponding option.<div class="amalert tip"><p><strong><em>Notice:</em></strong><p>Due to various limitations, it is not possible to scan all the
-components of an APK file. This is especially true if an APK is highly
-obfuscated. The scanner also does not check strings (or website
-signatures).</div><p>The second item lists the number of trackers along with their names.
-Clicking on the item displays a dialog containing the name of trackers,
-matched signatures, and the number of classes against each signature.
-Some tracker names may have <span class="math inline"><sup>2</sup></span> prefix which indicates that the
-trackers are in the <a href=https://etip.exodus-privacy.eu.org>ETIP</a> stand-by list
-i.e. whether they are actual trackers is still being investigated.<p>The third item lists the number of libraries along with their names.
-The information are mostly taken from <a href=https://gitlab.com/IzzyOnDroid/repo>IzzyOnDroid repo</a>.<div class=seealso-inline><p><em>Siehe auch: <span><a href=#subsec:tracker-classes-versus-tracker-components>FAQ: Tracker
-classes vs tracker components</a></span></em></div><section id=subsec:missing-signatures class=level3 data-number=2.7.1><h3 data-number=2.7.1><span class=header-section-number>2.7.1</span>
-<a href=#toc:subsec:missing-signatures>Missing Signatures</a><a href=#subsec:missing-signatures class=anchor aria-hidden=true></a></h3><p>At the bottom of the page, there is a special item denoting the
-number of missing signatures (i.e. missing classes). The missing
-signatures are the ones that AM has failed to match against any known
-libraries. The number itself has no particular meaning as many libraries
-contain hundreds of classes, but clicking on the item will bring up a
-dialog containing the signatures which is helpful in inspecting the
-missing signatures. <strong>This feature is only intended for people who
-know what a missing signature is and what to do with it, other users
-should ignore it.</strong></section></section><section id=sec:interceptor-page class=level2 data-number=2.8><h2 data-number=2.8><span class=header-section-number>2.8</span> <a href=#toc:sec:interceptor-page>Interceptor Page</a><a href=#sec:interceptor-page class=anchor aria-hidden=true></a></h2><p>Interceptor can be used to intercept communication between
-applications using <code>Intent</code>. It works as a man-in-the-middle
-between the source and the destination applications. It offers a
-feature-complete user interface for editing <code>Intent</code>s.<div class="amalert warning"><p><strong><em>Warning:</em></strong><p>Interceptor only works for <em>implicit</em> intents where the <a href=#subsec:faq:what-are-app-components>app component</a> isn’t
-specified.</div><div class=seealso><p><em>Siehe auch:</em><ul class=incremental><li><p><a href=https://developer.android.com/guide/components/intents-common>Common
+oben angegeben gewählt werden.</section><section id=subsec:device-info class=level3 data-number=2.6.13><h3 data-number=2.6.13><span class=header-section-number>2.6.13</span> <a href=#toc:subsec:device-info>Über das Gerät selbst</a><a href=#subsec:device-info class=anchor aria-hidden=true></a></h3><p>Anzeige von Android-Version, Sicherheit, CPU, GPU, Akku, Speicher,
+Bildschirm, Sprachen, Benutzerinformationen usw.</section></section><section id=sec:scanner-page class=level2 data-number=2.7><h2 data-number=2.7><span class=header-section-number>2.7</span> <a href=#toc:sec:scanner-page>Scanner-Seite</a><a href=#sec:scanner-page class=anchor aria-hidden=true></a></h2><p><strong>Scanner-Seite</strong> wird angezeigt, nachdem Sie auf die
+Schaltfläche <em>Scanner</em> in der Registerkarte <a href=#subsec:app-info-tab>App-Info</a> geklickt haben. Externe
+APK-Dateien können auch über Dateimanager, Webbrowser usw. zum Scannen
+geöffnet werden.<p>Es wird nach Trackern und Bibliotheken gescannt und die Anzahl der
+Tracker und Bibliotheken als Zusammenfassung angezeigt. Es zeigt auch
+Prüfsummen der APK-Datei sowie die Signierzertifikate. Wenn VirusTotal
+in den Einstellungen konfiguriert ist, versucht es auch, Berichte von
+VirusTotal abzurufen, oder lädt die APK-Datei hoch, wenn sie sich nicht
+in der Datenbank befindet.<div class="amalert danger"><p><strong><em>Disclaimer:</em></strong><p>App Manager scannt eine Anwendung nur statisch und ohne Vorurteile.
+Die Anwendung kann Optionen für die Ablehnung anbieten, oder in einigen
+Fällen werden bestimmte Funktionen des Trackers von der Anwendung
+überhaupt nicht genutzt (z. B. F-Droid), oder manche Anwendungen
+verwenden sie einfach als Platzhalter, um den Ausfall bestimmter
+Funktionen zu verhindern (z. B.  Fennec F-Droid). <strong>Die Absicht
+des Scanners ist es, Ihnen eine Vorstellung davon zu geben, was die APK
+enthalten könnte. Er sollte als erster Schritt für weitere
+Untersuchungen angesehen werden.</strong></div><p>Ein Klick auf den ersten Punkt (d.h. die Anzahl der Klassen) öffnet
+eine neue Seite mit einer Liste der Tracker-Klassen für die Anwendung.
+Alle Klassen können auch durch Anklicken des Menüs <em>Toggle Class
+Listing</em> angezeigt werden. Eine Vorschau auf jede Klasse kann durch
+einfaches Klicken auf ein beliebiges Klassenelement angezeigt werden. In
+Android 8 (Oreo) und später, enthält dies die gesamte SMALI-Version der
+Klasse und kann mit der entsprechenden Option in Java konvertiert
+werden.<div class="amalert tip"><p><strong><em>Hinweis:</em></strong><p>Aufgrund verschiedener Einschränkungen ist es nicht möglich, alle
+Komponenten einer APK-Datei zu scannen. Dies gilt insbesondere, wenn
+eine APK stark verschleiert ist. Der Scanner prüft auch keine
+Zeichenketten (oder Website-Signaturen).</div><p>Der zweite Punkt listet die Anzahl der Tracker zusammen mit deren
+Namen auf. Wenn Sie auf diesen Punkt klicken, wird ein Dialog angezeigt,
+der den Namen der Tracker, die übereinstimmenden Signaturen und die
+Anzahl der Klassen für jede Signatur. Einige Tracker-Namen können ein
+<span class="math inline"><sup>2</sup></span> vorangestellt, was
+anzeigt, dass die Tracker in der <a href=https://etip.exodus-privacy.eu.org>ETIP</a> Stand-by-Liste stehen
+d.h. ob es sich um tatsächliche Tracker handelt, wird noch
+untersucht.<p>Der dritte Punkt listet die Anzahl der Bibliotheken zusammen mit
+ihren Namen auf. Die Informationen stammen größtenteils aus dem <a href=https://gitlab.com/IzzyOnDroid/repo>IzzyOnDroid
+Repository</a>.<div class=seealso-inline><p><em>Siehe auch: <span><a href=#subsec:tracker-classes-versus-tracker-components>FAQ:
+Tracker-Klassen vs. Tracker-Komponenten</a></span></em></div><section id=subsec:missing-signatures class=level3 data-number=2.7.1><h3 data-number=2.7.1><span class=header-section-number>2.7.1</span>
+<a href=#toc:subsec:missing-signatures>Fehlende Signaturen</a><a href=#subsec:missing-signatures class=anchor aria-hidden=true></a></h3><p>Unten auf der Seite befindet sich ein spezieller Punkt, der die
+Anzahl der fehlenden Signaturen (d. h. der fehlenden Klassen) angibt.
+Die fehlenden Signaturen sind diejenigen, die AM nicht mit bekannten
+Bibliotheken abgleichen konnte. Die Zahl selbst hat keine Bedeutung, da
+viele Bibliotheken Hunderte von Klassen enthalten, aber ein Klick auf
+das Element öffnet ein Dialogfeld der die Signaturen enthält, was bei
+der Überprüfung der fehlenden Signaturen hilfreich ist. <strong>Diese
+Funktion ist nur für Personen gedacht, die wissen, was eine fehlende
+Signatur ist und was damit zu tun ist. Andere Benutzer sollten sie
+ignorieren.</strong></section></section><section id=sec:interceptor-page class=level2 data-number=2.8><h2 data-number=2.8><span class=header-section-number>2.8</span> <a href=#toc:sec:interceptor-page>Interceptor-Seite</a><a href=#sec:interceptor-page class=anchor aria-hidden=true></a></h2><p>Interceptor kann verwendet werden, um die Kommunikation zwischen
+Anwendungen mit Hilfe von <code>Intent</code> abzufangen. Er arbeitet
+als Man-in-the-Middle zwischen der Quell- und der Zielanwendung. Er
+bietet eine funktionsreiche Benutzeroberfläche zur Bearbeitung von
+<code>Intent</code>s.<div class="amalert warning"><p><strong><em>Warning:</em></strong><p>Interceptor funktioniert nur für <em>implicit</em>-Intents, bei denen
+die <a href=#subsec:faq:what-are-app-components>App-Komponente</a>
+nicht angegeben ist.</div><div class=seealso><p><em>Siehe auch:</em><ul class=incremental><li><p><a href=https://developer.android.com/guide/components/intents-common>Gemeinsame
 Intents</a><li><p><a href=https://developer.android.com/guide/components/intents-filters>Intents
-and Intent Filters</a></ul></div><section id=subsec:intent-filters class=level3 data-number=2.8.1><h3 data-number=2.8.1><span class=header-section-number>2.8.1</span>
-<a href=#toc:subsec:intent-filters>Intent Filters</a><a href=#subsec:intent-filters class=anchor aria-hidden=true></a></h3><p>Intent filters are used by the applications to specify the tasks they
-are able to perform or the tasks they are going to perform using other
-applications. For example, when you’re opening a PDF file using a file
-manager, the file manager will try to find the applications to open the
-PDF with. To find the right applications, the file manager will create
-an Intent with filters such as the MIME type and ask the system to
-retrieve the applications capable of opening this filter. The system
-will search through the Manifest of the installed applications to match
-the filter and list the application components that are able to open
-this filter (in our case the PDF). At this, either the file manager will
-open the desired application component all by itself or use a system
-provided option to open it. If multiple application components are able
-to open it and no default is set, you may get a prompt where you have to
-choose the right application component.<section id=subsubsec:action class=level4 data-number=2.8.1.1><h4 data-number=2.8.1.1><span class=header-section-number>2.8.1.1</span> Action<a href=#subsubsec:action class=anchor aria-hidden=true></a></h4><p>Action specifies the generic action to perform such as
-<code>android.intent.action.VIEW</code>. Applications often declare the
-relevant actions in the Manifest file to catch the desired Intents. The
-action is particularly useful for broadcast Intent where it plays a
-vital rule. In other cases, it works as an initial way to filter out the
-relevant application components. Generic actions such as
-<code>android.intent.action.VIEW</code> and
-<code>android.intent.action.SEND</code> are widely used by applications.
-Hence, setting this alone may match many application components.</section><section id=subsubsec:data class=level4 data-number=2.8.1.2><h4 data-number=2.8.1.2><span class=header-section-number>2.8.1.2</span> Data<a href=#subsubsec:data class=anchor aria-hidden=true></a></h4><p>Data is originally known as URI (Uniform Resource Identifier) defined
-in <a href=http://www.faqs.org/rfcs/rfc2396.html>RFC 2396</a>. It can
-be web links, file location, or a special feature called
-<em>content</em>. Contents are an Android feature managed by the <a href=#appdetails:providers>content providers</a>. Data are often
-associated with a <a href=#subsubsec:mime-type>MIME type</a>.<p>Examples:<pre><code>http://search.disroot.org/?q=URI%20in%20Android%20scheme&amp;categories=general&amp;language=en-US
+und Intent-Filter</a></ul></div><section id=subsec:intent-filters class=level3 data-number=2.8.1><h3 data-number=2.8.1><span class=header-section-number>2.8.1</span>
+<a href=#toc:subsec:intent-filters>Intent-Filter</a><a href=#subsec:intent-filters class=anchor aria-hidden=true></a></h3><p>Intent-Filter werden von den Anwendungen verwendet, um die Aufgaben
+zu spezifizieren, die sie ausführen können oder die sie mit anderen
+Anwendungen ausführen werden. Wenn Sie zum Beispiel eine PDF-Datei mit
+einem Dateimanager öffnen, versucht der Dateimanager, die Anwendungen zu
+finden, mit denen die PDF-Datei geöffnet werden soll. Um die richtigen
+Anwendungen zu finden, erstellt der Dateimanager einen Intent mit
+Filtern wie dem MIME-Typ und bittet das System, die Anwendungen
+abzurufen, die diesen Filter öffnen können. Das System durchsucht das
+Manifest der installierten Anwendungen nach dem Filter und listet die
+Anwendungskomponenten auf, die in der Lage sind, diesen Filter (in
+unserem Fall das PDF) zu öffnen. Daraufhin öffnet entweder der
+Dateimanager die gewünschte Anwendungskomponente von selbst oder es wird
+eine vom System bereitgestellte Option verwendet, um sie zu öffnen. Wenn
+mehrere Anwendungskomponenten in der Lage sind, das Dokument zu öffnen,
+und keine Standardeinstellung festgelegt ist, erhalten Sie
+möglicherweise eine Aufforderung, die richtige Anwendungskomponente
+auszuwählen.<section id=subsubsec:action class=level4 data-number=2.8.1.1><h4 data-number=2.8.1.1><span class=header-section-number>2.8.1.1</span> Aktion<a href=#subsubsec:action class=anchor aria-hidden=true></a></h4><p>Aktion gibt die auszuführende allgemeine Aktion an, z. B.
+<code>android.intent.action.VIEW</code>. Anwendungen deklarieren oft die
+relevanten Aktionen in der Manifestdatei an, um die gewünschten Intents
+abzufangen. Die Aktion ist besonders nützlich für Broadcast Intent, wo
+sie eine wichtige Rolle spielt. In anderen Fällen dient sie als erste
+Möglichkeit, die relevanten Anwendungskomponenten herauszufiltern.
+Generische Aktionen wie <code>android.intent.action.VIEW</code> und
+<code>android.intent.action.SEND</code> werden von vielen Anwendungen
+verwendet. Daher kann diese Einstellung allein viele
+Anwendungskomponenten abdecken.</section><section id=subsubsec:data class=level4 data-number=2.8.1.2><h4 data-number=2.8.1.2><span class=header-section-number>2.8.1.2</span> Daten<a href=#subsubsec:data class=anchor aria-hidden=true></a></h4><p>Daten sind ursprünglich als URI (Uniform Resource Identifier)
+bekannt, die in <a href=http://www.faqs.org/rfcs/rfc2396.html>RFC
+2396</a> definiert sind. Es kann sich um Weblinks, Dateispeicherorte
+oder eine spezielle Funktion namens <em>Inhalt</em> handeln. Inhalte
+sind eine Android-Funktion, die von den <a href=#appdetails:providers>Inhaltsanbietern</a> verwaltet wird. Daten
+sind oft mit einem <a href=#subsubsec:mime-type>MIME-Typ</a>
+verbunden.<p>Beispiele:<pre><code>http://search.disroot.org/?q=URI%20in%20Android%20scheme&amp;categories=general&amp;language=en-US
 https://developer.android.com/reference/android/net/Uri
 file:///sdcard/AppManager.apk
 mailto:email@example.com
-content://io.github.muntashirakon.AppManager.provider/23485af89b08d87e898a90c7e/AppManager.apk</code></pre></section><section id=subsubsec:mime-type class=level4 data-number=2.8.1.3><h4 data-number=2.8.1.3><span class=header-section-number>2.8.1.3</span> MIME Type<a href=#subsubsec:mime-type class=anchor aria-hidden=true></a></h4><p>MIME type of the <a href=#subsubsec:data>data</a>. For example, if
-the data field is set to <code>file:///sdcard/AppManager.apk</code>, the
-associated MIME type can be
-<code>application/vnd.android.package-archive</code>.</section><section id=categories class=level4 data-number=2.8.1.4><h4 data-number=2.8.1.4><span class=header-section-number>2.8.1.4</span> Categories<a href=#categories class=anchor aria-hidden=true></a></h4><p>This is similar to <a href=#subsubsec:action>action</a> in the
-sense that it is also used by the system to filter application
-components. This has no further benefits. Unlike <em>action</em>, there
-can be more than one category. Clicking on the <em>plus</em> button next
-to the title allows adding more categories.</section><section id=flags class=level4 data-number=2.8.1.5><h4 data-number=2.8.1.5><span class=header-section-number>2.8.1.5</span> Flags<a href=#flags class=anchor aria-hidden=true></a></h4><p>Flags are useful in determining how system should behave during the
+content://io.github.muntashirakon.AppManager.provider/23485af89b08d87e898a90c7e/AppManager.apk</code></pre></section><section id=subsubsec:mime-type class=level4 data-number=2.8.1.3><h4 data-number=2.8.1.3><span class=header-section-number>2.8.1.3</span> MIME-Typ<a href=#subsubsec:mime-type class=anchor aria-hidden=true></a></h4><p>MIME-Typ des Feldes <a href=#subsubsec:data>Daten</a>. Wenn das
+Datenfeld zum Beispiel auf <code>file:///sdcard/AppManager.apk</code>
+eingestellt ist, kann der zugehörige MIME-Typ
+<code>application/vnd.android.package-archive</code> sein.</section><section id=kategorien class=level4 data-number=2.8.1.4><h4 data-number=2.8.1.4><span class=header-section-number>2.8.1.4</span> Kategorien<a href=#kategorien class=anchor aria-hidden=true></a></h4><p>Dies ist ähnlich wie <a href=#subsubsec:action>Aktion</a> in dem
+Sinne, dass es auch vom System zum Filtern von Anwendungskomponenten
+verwendet wird. Dies hat keine weiteren Vorteile. Im Gegensatz zu
+<em>Aktion</em> kann es mehr als eine Kategorie geben. Wenn Sie auf die
+Schaltfläche <em>plus</em> neben dem Titel klicken, können Sie weitere
+Kategorien hinzufügen.</section><section id=flaggen class=level4 data-number=2.8.1.5><h4 data-number=2.8.1.5><span class=header-section-number>2.8.1.5</span> Flaggen<a href=#flaggen class=anchor aria-hidden=true></a></h4><p>Flags are useful in determining how system should behave during the
 launch or after the launch of an activity. This should not be touched as
 it requires some technical background. The <em>plus</em> button next to
 the title can be used to add one or more flags.</section><section id=extras class=level4 data-number=2.8.1.6><h4 data-number=2.8.1.6><span class=header-section-number>2.8.1.6</span> Extras<a href=#extras class=anchor aria-hidden=true></a></h4><p>Extras are the key-value pairs used for supplying additional
@@ -1337,14 +1353,15 @@ information to the destination component. More extras can be added using
 the <em>plus</em> button next to the title.</section><section id=uri class=level4 data-number=2.8.1.7><h4 data-number=2.8.1.7><span class=header-section-number>2.8.1.7</span> URI<a href=#uri class=anchor aria-hidden=true></a></h4><p>Represents the entire Intent as a URI (e.g. <code>intent://…</code>).
 Some data cannot be converted to string, and as a result, they might not
 appear here.</section></section><section id=subsec:matching-activities class=level3 data-number=2.8.2><h3 data-number=2.8.2><span class=header-section-number>2.8.2</span>
-<a href=#toc:subsec:matching-activities>Matching Activities</a><a href=#subsec:matching-activities class=anchor aria-hidden=true></a></h3><p>List all the activity components that matches the Intent. This is
+<a href=#toc:subsec:matching-activities>Übereinstimmende
+Aktivitäten</a><a href=#subsec:matching-activities class=anchor aria-hidden=true></a></h3><p>List all the activity components that matches the Intent. This is
 internally determined by the system (rather than App Manager). The
 launch button next to each component can be used to launch them directly
 from App Manager.</section><section id=subsec:interceptor-reset-to-default class=level3 data-number=2.8.3><h3 data-number=2.8.3><span class=header-section-number>2.8.3</span>
-<a href=#toc:subsec:interceptor-reset-to-default>Reset to
-Default</a><a href=#subsec:interceptor-reset-to-default class=anchor aria-hidden=true></a></h3><p>Reset the Intent to its initial state.</section><section id=subsec:interceptor-send-edited-intent class=level3 data-number=2.8.4><h3 data-number=2.8.4><span class=header-section-number>2.8.4</span>
-<a href=#toc:subsec:interceptor-send-edited-intent>Send Edited
-Intent</a><a href=#subsec:interceptor-send-edited-intent class=anchor aria-hidden=true></a></h3><p>Resend the edited Intent to the destination application. This may
+<a href=#toc:subsec:interceptor-reset-to-default>Zurücksetzen auf
+Standard</a><a href=#subsec:interceptor-reset-to-default class=anchor aria-hidden=true></a></h3><p>Reset the Intent to its initial state.</section><section id=subsec:interceptor-send-edited-intent class=level3 data-number=2.8.4><h3 data-number=2.8.4><span class=header-section-number>2.8.4</span>
+<a href=#toc:subsec:interceptor-send-edited-intent>Geänderte Absicht
+senden</a><a href=#subsec:interceptor-send-edited-intent class=anchor aria-hidden=true></a></h3><p>Resend the edited Intent to the destination application. This may
 open a list of applications where the desired application is needed to
 be selected. The result received from the target application will be
 sent to the source application. As a result, the source application will
@@ -1416,8 +1433,8 @@ support for further assistant</ol></section></section><section id=subsec:setup-a
 Mac</a><a href=#subsec:setup-adb-on-pc-or-mac class=anchor aria-hidden=true></a></h3><p>In order to enable ADB over TCP, you have to set up ADB in your PC or
 Mac. <strong><em>Lineage OS users can skip to §<a href=#subsubsec:lineage-os data-reference-type=ref data-reference=subsubsec:lineage-os>3.1.4.1</a>.</em></strong><section id=windows class=level4 data-number=3.1.3.1><h4 data-number=3.1.3.1><span class=header-section-number>3.1.3.1</span> Windows<a href=#windows class=anchor aria-hidden=true></a></h4><ol class=incremental><li><p>Download the latest version of <a href=https://dl.google.com/android/repository/platform-tools-latest-windows.zip>Android
 SDK Platform-Tools</a> for Windows<li><p>Extract the contents of the zip file into any directory (such as
-<code>C:\adb</code>) and navigate to that directory using
-<em>Explorer</em><li><p>Open <strong>Command Prompt</strong> or
+<code>C:\</code><span><code>adb</code></span>) and navigate to that
+directory using <em>Explorer</em><li><p>Open <strong>Command Prompt</strong> or
 <strong>PowerShell</strong> from this directory. You can do it manually
 from the start menu or by holding <code>Shift</code> and Right clicking
 within the directory in <em>File Explorer</em> and then clicking either
@@ -1790,12 +1807,12 @@ components of a <em>test-only</em> app can be controlled via ADB. If App
 Manager detects such an application, it enables the blocking options
 automatically.</section><section id=subsec:faq:adb-features class=level3 data-number=4.2.4><h3 data-number=4.2.4><span class=header-section-number>4.2.4</span>
 <a href=#toc:subsec:faq:adb-features>Which features can be used in ADB
-mode?</a><a href=#subsec:faq:adb-features class=anchor aria-hidden=true></a></h3><p>Die meisten der vom ADB-Modus unterstützten Funktionen sind
-standardmäßig aktiviert, sobald die ADB-Unterstützung von AM erkannt
-wird. Dazu gehören Deaktivieren, Zwangsstoppen, Daten löschen, App-Ops
-und Berechtigungen gewähren/entziehen. Sie können auch Anwendungen ohne
-eine Aufforderung installieren und <a href=#subsubsec:main:running-apps>Laufende Apps/Prozesse</a>
-anzeigen.</section></section><section id=sec:faq:miscellanea class=level2 data-number=4.3><h2 data-number=4.3><span class=header-section-number>4.3</span> <a href=#toc:sec:faq:miscellanea>Sonstiges</a><a href=#sec:faq:miscellanea class=anchor aria-hidden=true></a></h2><section id=subsec:faq:no-root-no-harms class=level3 data-number=4.3.1><h3 data-number=4.3.1><span class=header-section-number>4.3.1</span>
+mode?</a><a href=#subsec:faq:adb-features class=anchor aria-hidden=true></a></h3><p>Die unterstützten Funktionen werden im ADB-Modus automatisch
+aktiviert. Zu den unterstützten Funktionen gehören Deaktivieren,
+erzwungenes Anhalten, Löschen von Anwendungsdaten, Gewähren oder
+Entziehen von App-Ops und Berechtigungen usw. Es ist auch möglich,
+Anwendungen zu installieren oder Anwendungen ohne Aufforderung durch das
+System zu installieren oder zu deinstallieren.</section></section><section id=sec:faq:miscellanea class=level2 data-number=4.3><h2 data-number=4.3><span class=header-section-number>4.3</span> <a href=#toc:sec:faq:miscellanea>Sonstiges</a><a href=#sec:faq:miscellanea class=anchor aria-hidden=true></a></h2><section id=subsec:faq:no-root-no-harms class=level3 data-number=4.3.1><h3 data-number=4.3.1><span class=header-section-number>4.3.1</span>
 <a href=#toc:subsec:faq:no-root-no-harms>Ich verwende kein root/ADB.
 Bin ich völlig vor irgendwelchen Schäden sicher?</a><a href=#subsec:faq:no-root-no-harms class=anchor aria-hidden=true></a></h3><p>Ja. AM kann keine Systemeinstellungen ohne Root oder ADB over
 TCPändern.</section><section id=subsec:faq:how-trackers-libs-updated class=level3 data-number=4.3.2><h3 data-number=4.3.2><span class=header-section-number>4.3.2</span>
@@ -2368,9 +2385,7 @@ options:
 &lt;OP&gt;      an AppOps operation.
 &lt;MODE&gt;    one of allow, ignore, deny, or default
 &lt;USER_ID&gt; the user id under which the package is installed. If --user is not
-specified, the current user is assumed.</code></pre></section></section><section class="footnotes footnotes-end-of-document" role=doc-endnotes><hr><ol><li id=fn1 role=doc-endnote><p>Nur für die Verteilung normaler
-Versionen<a href=#fnref1 class=footnote-back role=doc-backlink>↩︎</a><li id=fn2 role=doc-endnote><p>GitHub Pull Anträge werden manuell
-mit den entsprechenden Patches zusammengeführt. Daher kann es sein, dass
-GitHub sie fälschlicherweise als geschlossen markiert, anstatt sie
-zusammenzuführen.<a href=#fnref2 class=footnote-back role=doc-backlink>↩︎</a><li id=fn3 role=doc-endnote><p>Sie können mich auch als “Muntashir
-Akon” ansprechen<a href=#fnref3 class=footnote-back role=doc-backlink>↩︎</a></ol></section>
+specified, the current user is assumed.</code></pre></section></section><section id=footnotes class="footnotes footnotes-end-of-document" role=doc-endnotes><hr><ol><li id=fn1><p>Nur für die Verteilung normaler Versionen<a href=#fnref1 class=footnote-back role=doc-backlink>↩︎</a><li id=fn2><p>GitHub Pull Anträge werden manuell mit den
+entsprechenden Patches zusammengeführt. Daher kann es sein, dass GitHub
+sie fälschlicherweise als geschlossen markiert, anstatt sie
+zusammenzuführen.<a href=#fnref2 class=footnote-back role=doc-backlink>↩︎</a><li id=fn3><p>Sie können mich auch als “Muntashir Akon” ansprechen<a href=#fnref3 class=footnote-back role=doc-backlink>↩︎</a></ol></section>
