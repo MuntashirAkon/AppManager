@@ -199,4 +199,33 @@
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
 \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
 \nקרדיט לוגו מקורי: <a href="https://github.com/Atrate">Atrate</a>. </string>
+    <plurals name="tracker_and_classes">
+        <item quantity="one">עם גשש 1</item>
+        <item quantity="two">עם גשש 1</item>
+        <item quantity="many">עם גשש 1</item>
+        <item quantity="other">עם גשש 1</item>
+    </plurals>
+    <string name="failed_to_stop">לא ניתן היה לעצור את <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="view_in_settings">‌הצג בהגדרות</string>
+    <string name="disable">השבת</string>
+    <string name="enable">אפשר</string>
+    <string name="no_content">ללא תוכן</string>
+    <string name="no_usage_in_this_time_range">אין שימוש בטווח הזמן הזה</string>
+    <string name="force_stop">עצור בכוח</string>
+    <string name="disabled_app">כבה</string>
+    <string name="uninstall_app_message">האם ברצונך להסיר את ההתקנה של האפליקציה הזו\?</string>
+    <string name="failed_to_uninstall_app">הסרת ההתקנה נכשלה</string>
+    <string name="uninstall_system_app_message">זוהי אפליקציית מערכת. האם אתה בטוח שברצונך להסיר את ההתקנה של האפליקציה הזו\?</string>
+    <string name="storage_and_cache">אחסון ומטמון</string>
+    <string name="stopped">נעצר</string>
+    <string name="failed_to_uninstall">לא ניתן להסיר את ההתקנה <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="total_size">סך הכל</string>
+    <string name="app_size">אפליקציה</string>
+    <string name="uninstalled_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> הוסר.</string>
+    <plurals name="two_trackers_and_classes">
+        <item quantity="one">עם 2 גששים</item>
+        <item quantity="two">עם 2 גששים</item>
+        <item quantity="many">עם 2 גששים</item>
+        <item quantity="other">עם 2 גששים</item>
+    </plurals>
 </resources>
