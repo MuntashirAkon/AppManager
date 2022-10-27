@@ -8,7 +8,7 @@
     <string name="titlepage$user_manual">{\\huge\\bfseries 用户手册\\par}</string>
     <string name="intro$main$translations">App Manager 不接受直接通过PR/MR进行的翻译。翻译仅通过 Weblate 进行自动化管理。
 \n要加入翻译团队，请访问 \\url{https://hosted.weblate.org/engage/app-manager/}。</string>
-    <string name="intro$main$supported-versions">当前，支持的版本是v2.6.0（稳定版），v3.0.0（alpha和debug版）。先前版本的 App
+    <string name="intro$main$supported-versions">当前，支持的版本是 v3.0.0 -- v3.0.3（稳定版），v3.1.0（alpha 和 debug 版）。先前版本的 App
 \nManager 可能包含安全漏洞，不应继续使用。</string>
     <string name="intro$main$intro">App Manager 是一个高级的 Android 包管理器。
 \n它提供了不计其数的功能，因此需要用户手册来帮助用户。本文档作为 App Manager 的用户手册，旨在描述 App Manager 提供的每一个功能。
