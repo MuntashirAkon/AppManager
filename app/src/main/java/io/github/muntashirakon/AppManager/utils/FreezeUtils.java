@@ -42,7 +42,7 @@ public final class FreezeUtils {
         freeze(packageName, userId, AppPref.getDefaultFreezingMethod());
     }
 
-    public static void freeze(@NonNull String packageName, @UserIdInt int userId, @FreezeType int freezeType)
+    private static void freeze(@NonNull String packageName, @UserIdInt int userId, @FreezeType int freezeType)
             throws RemoteException {
         if (freezeType == FREEZE_HIDE) {
             PackageManagerCompat.hidePackage(packageName, userId, true);

@@ -264,12 +264,24 @@ public final class PackageManagerCompat {
         return false;
     }
 
-    public static void hidePackage(String packageName, @UserIdInt int userId, boolean hide) throws RemoteException {
-        getPackageManager().setApplicationHiddenSettingAsUser(packageName, hide, userId);
+    public static boolean hidePackage(String packageName, @UserIdInt int userId, boolean hide) throws RemoteException {
+        if (Ops.isRoot() || (Ops.isAdb() && Build.VERSION.SDK_INT < Build.VERSION_CODES.N)) {
+            return getPackageManager().setApplicationHiddenSettingAsUser(packageName, hide, userId);
+        }
+        return false;
     }
 
     public static boolean isPackageHidden(String packageName, @UserIdInt int userId) throws RemoteException {
-        return getPackageManager().getApplicationHiddenSettingAsUser(packageName, userId);
+        if (Ops.isRoot() || (Ops.isAdb() && Build.VERSION.SDK_INT < Build.VERSION_CODES.N)) {
+            return getPackageManager().getApplicationHiddenSettingAsUser(packageName, userId);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // Find using private flags
+            ApplicationInfo info = getApplicationInfo(packageName, 0, userId);
+            return (ApplicationInfoCompat.getPrivateFlags(info) & ApplicationInfoCompat.PRIVATE_FLAG_HIDDEN) != 0;
+        }
+        // Otherwise, there is no way to detect if the package is hidden
+        return false;
     }
 
     public static String getInstallerPackage(String packageName) throws RemoteException {

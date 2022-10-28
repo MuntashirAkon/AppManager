@@ -7,8 +7,11 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.os.UserHandleHidden;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -33,6 +36,7 @@ import io.github.muntashirakon.AppManager.apk.signing.SigSchemes;
 import io.github.muntashirakon.AppManager.apk.signing.Signer;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
+import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 import io.github.muntashirakon.AppManager.crypto.auth.AuthManager;
 import io.github.muntashirakon.AppManager.details.AppDetailsFragment;
 import io.github.muntashirakon.AppManager.logcat.helper.LogcatHelper;
@@ -341,7 +345,10 @@ public class AppPref {
     @FreezeUtils.FreezeType
     public static int getDefaultFreezingMethod() {
         int freezeType = getInt(PrefKey.PREF_FREEZE_TYPE_INT);
-        if (freezeType == FreezeUtils.FREEZE_HIDE && !Ops.isRoot()) {
+        if (freezeType == FreezeUtils.FREEZE_HIDE && PermissionCompat.checkSelfPermission(PermissionUtils.PERMISSION_MANAGE_USERS, UserHandleHidden.myUserId()) != PackageManager.PERMISSION_GRANTED) {
+            return FreezeUtils.FREEZE_DISABLE;
+        }
+        if (freezeType == FreezeUtils.FREEZE_SUSPEND && Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
             return FreezeUtils.FREEZE_DISABLE;
         }
         return freezeType;

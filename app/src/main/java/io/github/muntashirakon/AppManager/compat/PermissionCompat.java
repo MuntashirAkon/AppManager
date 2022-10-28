@@ -7,6 +7,7 @@ import android.annotation.UserIdInt;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageManager;
 import android.content.pm.IPackageManagerN;
+import android.content.pm.PackageManager;
 import android.content.pm.PermissionGroupInfo;
 import android.content.pm.PermissionInfo;
 import android.content.pm.permission.SplitPermissionInfoParcelable;
@@ -26,7 +27,10 @@ import java.util.Collections;
 import java.util.List;
 
 import dev.rikka.tools.refine.Refine;
+import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
+import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.settings.Ops;
 
 public final class PermissionCompat {
     public static final int FLAG_PERMISSION_NONE = 0;
@@ -350,6 +354,32 @@ public final class PermissionCompat {
             return pm.checkPermission(permissionName, packageName, userId);
         } else {
             return pm.checkPermission(permissionName, packageName);
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    public static int checkSelfPermission(@NonNull String permissionName, @UserIdInt int userId) {
+        IPackageManager pm = PackageManagerCompat.getPackageManager();
+        if (Ops.isRoot()) {
+            // Root has all the permissions(?)
+            return PackageManager.PERMISSION_GRANTED;
+        }
+        String packageName;
+        if (Ops.isAdb()) {
+            packageName = ActivityManagerCompat.SHELL_PACKAGE_NAME;
+        } else {
+            packageName = BuildConfig.APPLICATION_ID;
+        }
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                return pm.checkPermission(permissionName, packageName, userId);
+            } else {
+                return pm.checkPermission(permissionName, packageName);
+            }
+        } catch (RemoteException e) {
+            Log.e(PermissionCompat.class.getSimpleName(), "Couldn't check permission " + permissionName
+                    + " for package " + packageName + " with user " + userId, e);
+            return PackageManager.PERMISSION_DENIED;
         }
     }
 
