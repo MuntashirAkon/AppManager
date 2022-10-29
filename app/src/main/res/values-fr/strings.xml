@@ -521,16 +521,19 @@
     <string name="tracker_details">Détails du traqueur</string>
     <string name="found_trackers">Traqueurs trouvés :</string>
     <plurals name="other_trackers_and_classes">
-        <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> traqueurs avec <xliff:g id="class_no" example="50">%2$d</xliff:g> classes</item>
-        <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> traqueurs avec <xliff:g id="class_no" example="50">%2$d</xliff:g> classes</item>
+        <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> traqueurs avec les classes <xliff:g id="class_no" example="50">%2$d</xliff:g></item>
+        <item quantity="many"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> traqueurs avec les classes <xliff:g id="class_no" example="50">%2$d</xliff:g></item>
+        <item quantity="other"></item>
     </plurals>
     <plurals name="two_trackers_and_classes">
-        <item quantity="one">2 traqueurs avec <xliff:g id="class_no" example="50">%1$d</xliff:g> classe</item>
-        <item quantity="other">2 traqueurs avec <xliff:g id="class_no" example="50">%1$d</xliff:g> classes</item>
+        <item quantity="one">2 traqueurs avec la classe <xliff:g id="class_no" example="50">%1$d</xliff:g></item>
+        <item quantity="many">2 traqueurs avec les classes <xliff:g id="class_no" example="50">%1$d</xliff:g></item>
+        <item quantity="other"></item>
     </plurals>
     <plurals name="tracker_and_classes">
-        <item quantity="one">1 traqueur avec <xliff:g id="class_no" example="50">%1$d</xliff:g> classe</item>
-        <item quantity="other">1 traqueur avec <xliff:g id="class_no" example="50">%1$d</xliff:g> classes</item>
+        <item quantity="one">1 traqueur avec la classe <xliff:g id="class_no" example="50">%1$d</xliff:g></item>
+        <item quantity="many">1 traqueur avec les classes <xliff:g id="class_no" example="50">%1$d</xliff:g></item>
+        <item quantity="other"></item>
     </plurals>
     <string name="toggle_class_listing">Activer/Désactiver l\'affichage en liste des classes</string>
     <string name="class_viewer">Visualiseur de classe</string>
