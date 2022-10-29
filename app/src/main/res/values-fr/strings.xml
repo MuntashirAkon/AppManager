@@ -769,7 +769,7 @@
     <string name="routine_ops">Opérations de routine</string>
     <string name="touchscreen_no_touch">Pas de tactile</string>
     <string name="bouncy_castle_keystore">Bouncy Castle KeyStore (Magasin de clés BKS)</string>
-    <string name="java_keystore">Java KeyStore (JKS: magasin de cléfs)</string>
+    <string name="java_keystore">Magasin de clefs Java (JKS)</string>
     <string name="failed_to_load_key">Impossible de charger la clé.</string>
     <string name="key_not_set">Non défini.</string>
     <string name="use_default">Utiliser la valeur par défaut</string>
@@ -1201,12 +1201,12 @@
     <plurals name="alert_failed_to_freeze">
         <item quantity="one">Impossible de geler l\'appli %1$d</item>
         <item quantity="many">Impossible de geler les applis %1$d</item>
-        <item quantity="other"></item>
+        <item quantity="other"/>
     </plurals>
     <plurals name="alert_failed_to_unfreeze">
         <item quantity="one">Impossible de dégeler l\'appli %1$d</item>
         <item quantity="many">Impossible de dégeler les applis %1$d</item>
-        <item quantity="other"></item>
+        <item quantity="other"/>
     </plurals>
     <string name="suspend_app_description">C\'est la méthode de congélation la plus faible. Une application suspendue peut toujours apparaître dans le lanceur mais sera grisée et ne pourra pas être lancée.</string>
     <string name="disable_app_description">Méthode de congélation recommandée. Il désactive l\'application et ainsi que tous ses composants, mais tous les raccourcis seront perdus.</string>
