@@ -323,4 +323,37 @@
         <item quantity="one">%1$d day</item>
         <item quantity="other">%1$d days</item>
     </plurals>
+    <string name="external_apk_no_app_op">APK-ja e jashtme nuk ka asnje veprim aplikacioni</string>
+    <string name="install">Instaloje</string>
+    <plurals name="no_of_trackers">
+        <item quantity="one">Gjurmuesi %1$d</item>
+        <item quantity="other">Gjurmuesat %1$d</item>
+    </plurals>
+    <plurals name="no_of_components">
+        <item quantity="one">Përbërësi %1$d</item>
+        <item quantity="other">Përbërësit %1$d</item>
+    </plurals>
+    <string name="failed_to_deny_dangerous_perms">Num munda t\'i heq të gjitha lejet e rrezikshme</string>
+    <string name="sort_by_denied_permissions">Të refuzuarat në fillim</string>
+    <string name="deny_dangerous_permissions">Refuzoji lejet e rrezikshme</string>
+    <string name="unknown_op">Veprim i panjohur</string>
+    <string name="failed_to_reset_app_ops">Nuk munda t\'i zeroj opset e aplikacionit</string>
+    <string name="launch_app">Lançoje</string>
+    <string name="changelog">Regjistri i ndryshimeve</string>
+    <string name="source_code">Kodi i burimit</string>
+    <string name="never_ask">Mos pyet kurrë</string>
+    <string name="one_click_ops">Opse me 1 klikim</string>
+    <string name="manifest_viewer">Shikuesi i manifestuar</string>
+    <string name="failed_to_deny_dangerous_app_ops">Nuk munda t\'i heq të gjitha opset e rrezikshme të aplikacionit</string>
+    <string name="sort_by_dangerous_permissions">Të rrezikshmet në fillim</string>
+    <string name="failed_to_grant_permission">Num munda t\'i jap lejen</string>
+    <string name="sort_by_app_ops_values">Vlera ops e aplikacionit</string>
+    <string name="failed_to_revoke_permission">Nuk munda t\'i heq lejen</string>
+    <string name="sort_by_permission_names">Emri i lejes</string>
+    <plurals name="alert_failed_to_disable_trackers">
+        <item quantity="one">Nuk munda t\'i heq gjurmuesit nga aplikacioni %1$d</item>
+        <item quantity="other">Nuk munda t\'i heq gjurmuesit nga aplikacionet %1$d</item>
+    </plurals>
+    <string name="update">Përditësoje</string>
+    <string name="sort_by_tracker_components">Gjurmuesit në fillim</string>
 </resources>
