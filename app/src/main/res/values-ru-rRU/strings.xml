@@ -791,8 +791,8 @@
     <string name="backup_external_data_description">Резервное копирование внешних папок данных.</string>
     <string name="backup_internal_data_description">Резервное копирование папок с данными. Если выбран этот параметр, по умолчанию будут созданы резервные копии внутренних папок с данными.</string>
     <string name="backup_apk_files_description">Резервное копирование APK файлов из исходного каталога, включая сплиты.</string>
-    <string name="permissive">Permissive</string>
-    <string name="enforcing">Enforcing</string>
+    <string name="permissive">Разрешающий</string>
+    <string name="enforcing">Применение</string>
     <string name="window_size">Размер окна</string>
     <string name="size">Размер</string>
     <string name="hardware">Модель</string>
@@ -896,10 +896,7 @@
     <string name="installer_app_message">Нажмите <b>выбрать</b> для использования одного из установленных приложений, или нажмите <b>пользовательское</b>, чтобы ввести имя пользовательского пакета.</string>
     <string name="specify_custom_name">Пользовательское</string>
     <string name="internal_data">Внутренние данные</string>
-    <string name="source_code_links">GitHub: https://github.com/MuntashirAkon/AppManager
-\nGitLab: https://gitlab.com/muntashir/AppManager
-\nRiseup: https://0xacab.org/muntashir/AppManager
-\nCodeberg: https://codeberg.org/muntashir/AppManager</string>
+    <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">GitHub</a> - <a href="https://gitlab.com/muntashir/AppManager">GitLab</a> - <a href="https://0xacab.org/muntashir/AppManager">Riseup</a> - <a href="https://codeberg.org/muntashir/AppManager">Codeberg</a></string>
     <string name="expiry_date_cannot_be_empty">Срок действия не может быть пустым.</string>
     <string name="signing_key">Ключ подписи</string>
     <string name="failed_to_read_keystore">Не удалось прочитать хранилище ключей.</string>
@@ -911,7 +908,7 @@
     <string name="pem_file">PEM-файл</string>
     <string name="pem_and_pk8">PEM и PKCS #8 (PK8)</string>
     <string name="keystore_file">Файл хранилища ключей</string>
-    <string name="java_keystore">Java KeyStore (JKS)</string>
+    <string name="java_keystore">Хранилище ключей Java (JKS)</string>
     <string name="keystore_pass">Пароль хранилища ключей</string>
     <string name="country_name" tools:ignore="TypographyOther">Название страны (C)</string>
     <string name="state_name">Название государства (ST)</string>
@@ -1010,9 +1007,9 @@
     <string name="copy_to_clipboard">Скопировать в буфер обмена</string>
     <string name="add_filter_ellipsis">Добавить фильтр…</string>
     <string name="add_filter">Добавить фильтр</string>
-    <string name="log_level_fatal">Fatal</string>
-    <string name="log_level_warn">Warn</string>
-    <string name="log_level_verbose">Verbose</string>
+    <string name="log_level_fatal">Фатальный</string>
+    <string name="log_level_warn">Предупреждение</string>
+    <string name="log_level_verbose">Подробный</string>
     <string name="log_level_info">Info</string>
     <string name="log_level_error">Error</string>
     <string name="log_level_debug">Debug</string>
@@ -1054,7 +1051,7 @@
     <string name="netpolicy_reject_cellular_data">Отклонить передачу мобильных данных</string>
     <string name="netpolicy_allow_background_data">Разрешить фоновую передачу данных, когда включена экономия трафика</string>
     <string name="netpolicy_reject_background_data">Отклонить фоновую передачу данных</string>
-    <string name="pkcs12_keystore">PKCS #12 KeyStore (P12)</string>
+    <string name="pkcs12_keystore">Хранилище ключей PKCS #12 (P12)</string>
     <string name="saf">SAF</string>
     <string name="port_number_invalid">Недействительный номер порта.</string>
     <string name="port_number_empty">Номер порта пуст.</string>
@@ -1067,8 +1064,7 @@
     <string name="failed_to_prevent_background_run">Не удалось предотвратить работу в фоне для приложения %1$s</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">Не удалось установить приложение из-за несоответствия подписи. Приложение было удалено без очистки данных.</string>
     <string name="community">Сообщество</string>
-    <string name="community_links">Telegram: https://t.me/AppManagerChannel
-\nТвиттер: https://twitter.com/AppManagerNews</string>
+    <string name="community_links"><a href="https://t.me/AppManagerChannel">Telegram-канал</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
     <plurals name="alert_failed_to_import_backups">
         <item quantity="one">Не удалось импортировать %1$d резервную копию</item>
         <item quantity="few">Не удалось импортировать %1$d резервных копии</item>
@@ -1177,16 +1173,16 @@
     <string name="magisk_denylist">Magisk DenyList</string>
     <string name="failed_to_enable_magisk_deny_list">Не удалось включить Magisk DenyList</string>
     <plurals name="usage_seconds">
-        <item quantity="one">%1$d сек.</item>
-        <item quantity="few">%1$d сек.</item>
-        <item quantity="many">%1$d сек.</item>
-        <item quantity="other">%1$d сек.</item>
+        <item quantity="one">%1$d секунда</item>
+        <item quantity="few">%1$d секунды</item>
+        <item quantity="many">%1$d секунд</item>
+        <item quantity="other">%1$d секунд</item>
     </plurals>
     <plurals name="usage_minutes">
-        <item quantity="one">%1$d мин.</item>
-        <item quantity="few">%1$d мин.</item>
-        <item quantity="many">%1$d мин.</item>
-        <item quantity="other">%1$d мин.</item>
+        <item quantity="one">%1$d минута</item>
+        <item quantity="few">%1$d минуты</item>
+        <item quantity="many">%1$d минут</item>
+        <item quantity="other">%1$d минут</item>
     </plurals>
     <string name="vt_checking">VirusTotal: проверка…</string>
     <string name="vt_uploading">VirusTotal: загрузка…</string>
@@ -1268,4 +1264,35 @@
     <string name="pref_sign_apk_no_signing_key">Нет ключа подписи</string>
     <string name="pref_sign_apk_error_signing_key_not_added">Для подписи APK-файла требуется действительный ключ подписи.</string>
     <string name="freeze_unfreeze">Блокировать/разбролировать</string>
+    <string name="failed_to_freeze">Не удалось заморозить <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> .</string>
+    <plurals name="alert_failed_to_freeze">
+        <item quantity="one">Не удалось заморозить %1$d приложение</item>
+        <item quantity="few">Не удалось заморозить %1$d приложения</item>
+        <item quantity="many">Не удалось заморозить %1$d приложений</item>
+        <item quantity="other">Не удалось заморозить %1$d приложений</item>
+    </plurals>
+    <plurals name="alert_failed_to_unfreeze">
+        <item quantity="one">Не удалось разморозить %1$d приложение</item>
+        <item quantity="few">Не удалось разморозить %1$d приложения</item>
+        <item quantity="many">Не удалось разморозить %1$d приложений</item>
+        <item quantity="other">Не удалось разморозить %1$d приложений</item>
+    </plurals>
+    <string name="suspend_app_description">Это самый слабый метод замораживания. Приостановленное приложение может по-прежнему отображаться в лончере, но будет выделено серым цветом и не может быть запущено.</string>
+    <string name="sort_by_frozen_app">Сначала замороженные</string>
+    <string name="filter_frozen_apps">Замороженные приложения</string>
+    <string name="get_help">Получить помощь</string>
+    <string name="failed_to_unfreeze">Не удалось разморозить <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> .</string>
+    <string name="profile_freeze_msg">Замораживает или размораживает приложения в зависимости от состояния</string>
+    <string name="hide_app">Скрыть</string>
+    <string name="hide_app_description">Этот метод рекомендуется только для ежедневного использования. Скрытое приложение выглядит так, как будто оно удалено. Но оно может появиться снова, если его переустановить или обновить.</string>
+    <string name="pref_appearance_description">Тема, ориентация, функции и т.д.</string>
+    <string name="pref_privacy">Конфиденциальность</string>
+    <string name="pref_privacy_description">Блокировка экрана, авторизация и т.д.</string>
+    <string name="user_manual">Руководство пользователя</string>
+    <string name="pref_version_changelog">Версия/Журнал изменений</string>
+    <string name="pref_default_freezing_method">Метод заморозки по умолчанию</string>
+    <string name="suspend_app">Приостановить</string>
+    <string name="pref_default_freezing_method_description">Метод, который будет использоваться по умолчанию в местах, где нет возможности выбрать метод замораживания.</string>
+    <string name="disable_app_description">Рекомендуемый метод замораживания. Он отключает приложение и вместе с ним все его компоненты, но все ярлыки будут потеряны.</string>
+    <string name="pref_advanced_pref">Пользователи, формат имени APK, параллельное выполнение и т.д.</string>
 </resources>
