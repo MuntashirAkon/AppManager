@@ -89,7 +89,7 @@
         <item>org.appcelerator.titanium.analytics</item>
         <item>com.appdynamics.</item>
         <item>com.applause.android.</item>
-        <item>com.appnext.</item>
+        <item>com.appnext.sdk</item>
         <item>com.appodeal.ads.</item>
         <item>com.appodealx.</item>
         <item>com.explorestack.</item>
@@ -483,7 +483,7 @@
         <item>com.tapdaq.adapters.</item>
         <item>com.tapjoy.</item>
         <item>com.taplytics.sdk</item>
-        <item>com.tappx.sdk.</item>
+        <item>com.tappx.sdk.android</item>
         <item>com.tapstream.sdk</item>
         <item>tv.teads.</item>
         <item>teads.tv.</item>
@@ -506,7 +506,8 @@
         <item>com.tune</item>
         <item>com.mobileapptracker</item>
         <item>com.tutelatechnologies.sdk</item>
-        <item>org.lasque.tusdk</item>
+        <item>org.lasque.tusdk.core</item>
+        <item>org.lasque.tusdkpulse.core</item>
         <item>com.twine.sdk</item>
         <item>com.mopub.</item>
         <item>com.uxcam.</item>
@@ -666,7 +667,7 @@
         <item>com.clearblade.platform.api.</item>
         <item>com.contentsquare.android.</item>
         <item>com.crashsdk.</item>
-        <item>io.inventiv.critic.</item>
+        <item>io.inventiv.critic.android</item>
         <item>com.evidon.</item>
         <item>cat.ereza.customactivityoncrash</item>
         <item>com.thinkyeah.common.</item>
@@ -723,6 +724,7 @@
         <item>com.growthpush.</item>
         <item>com.growthbeat.</item>
         <item>com.heytap.nearx.track</item>
+        <item>com.heytap.msp.</item>
         <item>com.hotmob.sdk.</item>
         <item>.houseads</item>
         <item>com.iac.notification.</item>
@@ -746,7 +748,7 @@
         <item>io.karte.android.tracker.</item>
         <item>com.kakao.ad.</item>
         <item>com.kakao.kakaolink</item>
-        <item>com.adzerk.android.sdk</item>
+        <item>com.adzerk</item>
         <item>com.zestadz.android.</item>
         <item>com.linecorp.line.admolin</item>
         <item>com.five_corp.ad.</item>
@@ -1496,6 +1498,7 @@
         <item>Tune</item>
         <item>Tutela</item>
         <item>Tutucloud</item>
+        <item>Tutucloud</item>
         <item>Twine Data</item>
         <item>Twitter MoPub</item>
         <item>UXCam</item>
@@ -1711,6 +1714,7 @@
         <item>²GrowingIO</item>
         <item>²Growth Push</item>
         <item>²Growth Push</item>
+        <item>²HeyTap</item>
         <item>²HeyTap</item>
         <item>²Hotmob SDK</item>
         <item>²Houseads</item>

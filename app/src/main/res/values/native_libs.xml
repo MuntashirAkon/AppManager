@@ -2,6 +2,7 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
 <resources>
     <array name="lib_native_signatures">
+        <item>libbugrpt\\.so</item>
         <item>libjiagu(_a64)\?\\.so|libjiagu(_x64|_x86)\?\\.so|libX86Bridge\\.so</item>
         <item>lib7-Zip-JBinding\\.so</item>
         <item>libapssdk\\.so|libAMapSDK_NAVI_.*\\.so</item>
@@ -28,7 +29,7 @@
         <item>libbmob\\.so</item>
         <item>libboost(_filesystem|_system)\?\\.so</item>
         <item>libboost_multidex\\.so</item>
-        <item>libBugly(-rqd)\?\\.so</item>
+        <item>libBugly(-rqd|-ext)\?\\.so</item>
         <item>libbugsnag-(ndk|plugin-android-anr|root-detection|unity)\?\\.so</item>
         <item>libBurstLinker\\.so</item>
         <item>libc\\+\\+_shared\\.so|libgnustl_shared\\.so|libCXXCommonKit\\.so</item>
@@ -152,7 +153,7 @@
         <item>libtencentloc\\.so|libtxmapengine\\.so</item>
         <item>libMtaNativeCrash\\.so|libmtanativecrash_v2\\.so</item>
         <item>libtersafe2\\.so</item>
-        <item>libxgVipSecurity\\.so</item>
+        <item>libxgVipSecurity\\.so|libtpnsSecurity\\.so|libxguardian\\.so</item>
         <item>libtraeimp-rtmp\\.so</item>
         <item>libtensorflowlite(_gpu)\?_jni\\.so|libtensorflow_jni\\.so</item>
         <item>libtesseract\\.so</item>
@@ -214,6 +215,7 @@
         <item>libxlua\\.so</item>
     </array>
     <array name="lib_native_names">
+        <item>163 Crash</item>
         <item>360 Security</item>
         <item>7-Zip-JBinding</item>
         <item>AMAP SDK</item>
@@ -427,6 +429,7 @@
     </array>
     <integer-array name="lib_native_is_tracker">
         <item>1</item>
+        <item>1</item>
         <item>0</item>
         <item>1</item>
         <item>1</item>
@@ -638,6 +641,7 @@
         <item>0</item>
     </integer-array>
     <array name="lib_native_website">
+        <item>http://crash.163.com/index.do</item>
         <item>https://jiagu.360.cn/</item>
         <item>http://sevenzipjbind.sourceforge.net/</item>
         <item>https://lbs.amap.com/api/android-sdk/summary/</item>
@@ -664,7 +668,7 @@
         <item>https://github.com/bmob/bmob-android-sdk</item>
         <item>https://www.boost.org/</item>
         <item>https://github.com/bytedance/BoostMultiDex</item>
-        <item>https://bugly.qq.com/v2/</item>
+        <item>https://bugly.qq.com/</item>
         <item>https://github.com/bugsnag/bugsnag-android</item>
         <item>https://github.com/bilibili/BurstLinker</item>
         <item>https://developer.android.com/ndk/guides/cpp-support/</item>
@@ -694,7 +698,7 @@
         <item>https://flutter.dev/</item>
         <item>https://android.googlesource.com/platform/frameworks/ex/</item>
         <item>https://www.freetype.org/</item>
-        <item>https://github.com/facebook/fresco</item>
+        <item>https://github.com/facebook/fresco/</item>
         <item>https://alibaba.github.io/GCanvas/</item>
         <item>https://github.com/cats-oss/android-gpuimage</item>
         <item>http://docs.getui.com/getui/start/product/</item>
@@ -742,7 +746,7 @@
         <item>https://www.linuxfromscratch.org/blfs/view/svn/general/nspr.html</item>
         <item>https://crash.163.com/</item>
         <item>https://github.com/objectbox/objectbox-java</item>
-        <item>https://gitlab.matrix.org/matrix-org/olm</item>
+        <item>https://github.com/Evans-Cai/matrix-org_olm</item>
         <item>https://github.com/BYVoid/OpenCC</item>
         <item>https://opencv.org/</item>
         <item>https://github.com/openssl/openssl</item>
@@ -756,7 +760,7 @@
         <item>https://github.com/cashapp/quickjs-java</item>
         <item>https://github.com/MuntashirAkon/rapidfuzz-android</item>
         <item>https://github.com/rclone/rclone</item>
-        <item>https://github.com/facebook/react-native</item>
+        <item>https://reactnative.dev/</item>
         <item>https://jaq-doc.alibaba.com/docs/doc.htm\?spm=a313e.7629140.0.0.246751c3G9nvDl&amp;treeId=243&amp;articleId=105524&amp;docType=1</item>
         <item>https://github.com/realm/realm-java</item>
         <item>https://github.com/renpy/renpy</item>
