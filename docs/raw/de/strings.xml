@@ -85,7 +85,7 @@
     <string name="intro$main$$bin-sources-title">Quellen der binären Verteilung</string>
     <string name="intro$main$$donation-title">Spende \\&amp; Förderung</string>
     <string name="intro$main$$contact-title">Ansprechpartner</string>
-    <string name="intro$main$supported-versions">Derzeit werden die Versionen v2.6.0 (stable) und v3.0.0 (alpha und Debug Versionen) unterstützt. Frühere Versionen von App
+    <string name="intro$main$supported-versions">Derzeit werden die Versionen v3.0.0 -- v3.0.3 (stable) und v3.1.0 (alpha und Debug Versionen) unterstützt. Frühere Versionen von App
 \nManager können Sicherheitslücken enthalten und sollten nicht verwendet werden.</string>
     <string name="intro$main$source-code-links">Alle außer GitHub sind die Spiegel-Links. Die Tags sollten immer auf dem neuesten Stand sein, aber beim Master-Zweig ist nicht garantiert, dass er
 \naktuell zu sein. Wenn das Ziel ist, den Master-Zweig zu klonen, verwenden Sie den GitHub-Link statt der anderen.</string>
@@ -1423,4 +1423,15 @@
 \nIntent, wo sie eine wichtige Rolle spielt. In anderen Fällen dient sie als erste Möglichkeit, die relevanten Anwendungskomponenten herauszufiltern.
 \nGenerische Aktionen wie \\texttt{android.intent.action.VIEW} und \\texttt{android.intent.action.SEND} werden von vielen Anwendungen verwendet.
 \nDaher kann diese Einstellung allein viele Anwendungskomponenten abdecken.</string>
+    <string name="guide$aot$$references-title">Verweise</string>
+    <string name="guide$aot$$aot-lineage-os-title">Lineage OS 17.1 und vorherige</string>
+    <string name="guide$aot$$enable-aot-via-pc-title">ADB über TCP mittels einem PC oder Mac</string>
+    <string name="guide$aot$$adb-mode-am-title">ADB-Modus im App Manager aktivieren</string>
+    <string name="guide$aot$$lg-usb-debug-title">LG</string>
+    <string name="guide$aot$$troubleshooting-usb-debug-title">Fehlersuche</string>
+    <string name="guide$aot$$setup-adb-on-pc-title">ADB auf einem PC oder Mac einrichten</string>
+    <string name="guide$aot$$setup-adb-win-title">Windows</string>
+    <string name="guide$aot$$setup-adb-mac-title">macOS</string>
+    <string name="guide$aot$$setup-adb-linux-title">Linux</string>
+    <string name="guide$aot$$configure-aot-title">ADB über TCP einrichten</string>
 </resources>
