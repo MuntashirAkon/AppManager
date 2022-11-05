@@ -1,0 +1,37 @@
+name: Docs improvement
+description: Improve Docs and Readme
+labels: [Documentation]
+
+body:
+  - type: checkboxes
+    attributes:
+       label: Please check before submitting an issue
+       description: You must be familiar with the technical terms in the documentation. Also, if your problem comes from the translated version rather than the English original, please correct it from Weblate.
+       options:
+          - label: This issue is not related to tranlated version of Docs
+            required: true
+
+          - label: I know technical terms used in documentation
+            required: true
+
+  - type: textarea
+    attributes:
+        label: Describe what your problem
+    validations:
+        required: true
+
+  - type: textarea
+    attributes:
+        label: Fill in the current description in docs if it exists.
+
+  - type: textarea
+    attributes:
+        label: Describe what needs to be modified
+    validations:
+        required: true
+
+  - type: textarea
+    attributes:
+        label: Additional context
+        description: Add any other context or screenshots about the feature request here.
+
