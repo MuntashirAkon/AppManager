@@ -791,8 +791,8 @@
     <string name="backup_external_data_description">Резервное копирование внешних папок данных.</string>
     <string name="backup_internal_data_description">Резервное копирование папок с данными. Если выбран этот параметр, по умолчанию будут созданы резервные копии внутренних папок с данными.</string>
     <string name="backup_apk_files_description">Резервное копирование APK файлов из исходного каталога, включая сплиты.</string>
-    <string name="permissive">Разрешающий</string>
-    <string name="enforcing">Применение</string>
+    <string name="permissive">Permissive</string>
+    <string name="enforcing">Enforcing</string>
     <string name="window_size">Размер окна</string>
     <string name="size">Размер</string>
     <string name="hardware">Модель</string>
@@ -1007,9 +1007,9 @@
     <string name="copy_to_clipboard">Скопировать в буфер обмена</string>
     <string name="add_filter_ellipsis">Добавить фильтр…</string>
     <string name="add_filter">Добавить фильтр</string>
-    <string name="log_level_fatal">Фатальный</string>
-    <string name="log_level_warn">Предупреждение</string>
-    <string name="log_level_verbose">Подробный</string>
+    <string name="log_level_fatal">Fatal</string>
+    <string name="log_level_warn">Warn</string>
+    <string name="log_level_verbose">Verbose</string>
     <string name="log_level_info">Info</string>
     <string name="log_level_error">Error</string>
     <string name="log_level_debug">Debug</string>
@@ -1197,7 +1197,7 @@
     <string name="hidden_api_enforcement_policy">Политика применения скрытых API</string>
     <string name="hidden_api_enf_default_policy">По умолчанию (основано на типе приложения)</string>
     <string name="hidden_api_enf_policy_none">Ничего (полный доступ к скрытым API)</string>
-    <string name="hidden_api_enf_policy_warn">Предупреждать (полный доступ к скрытым API, но выдаёт предупреждения)</string>
+    <string name="hidden_api_enf_policy_warn">Предупреждение (полный доступ к скрытым API, но с выдачей предупреждения)</string>
     <string name="binary_32_bit">32 бит</string>
     <string name="uses_play_app_signing">Подпись Play App</string>
     <string name="zygote_preload_name">Название предварительной загрузки Zygot</string>
@@ -1263,7 +1263,7 @@
     <string name="am_command">Команда <tt>am</tt></string>
     <string name="pref_sign_apk_no_signing_key">Нет ключа подписи</string>
     <string name="pref_sign_apk_error_signing_key_not_added">Для подписи APK-файла требуется действительный ключ подписи.</string>
-    <string name="freeze_unfreeze">Блокировать/разбролировать</string>
+    <string name="freeze_unfreeze">Заморозка/разморозка</string>
     <string name="failed_to_freeze">Не удалось заморозить <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> .</string>
     <plurals name="alert_failed_to_freeze">
         <item quantity="one">Не удалось заморозить %1$d приложение</item>
@@ -1282,7 +1282,7 @@
     <string name="filter_frozen_apps">Замороженные приложения</string>
     <string name="get_help">Получить помощь</string>
     <string name="failed_to_unfreeze">Не удалось разморозить <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> .</string>
-    <string name="profile_freeze_msg">Замораживает или размораживает приложения в зависимости от состояния</string>
+    <string name="profile_freeze_msg">Заморозка или разморозка приложения в зависимости от состояния</string>
     <string name="hide_app">Скрыть</string>
     <string name="hide_app_description">Этот метод рекомендуется только для ежедневного использования. Скрытое приложение выглядит так, как будто оно удалено. Но оно может появиться снова, если его переустановить или обновить.</string>
     <string name="pref_appearance_description">Тема, ориентация, функции и т.д.</string>
@@ -1292,7 +1292,7 @@
     <string name="pref_version_changelog">Версия/Журнал изменений</string>
     <string name="pref_default_freezing_method">Метод заморозки по умолчанию</string>
     <string name="suspend_app">Приостановить</string>
-    <string name="pref_default_freezing_method_description">Метод, который будет использоваться по умолчанию в местах, где нет возможности выбрать метод замораживания.</string>
-    <string name="disable_app_description">Рекомендуемый метод замораживания. Он отключает приложение и вместе с ним все его компоненты, но все ярлыки будут потеряны.</string>
+    <string name="pref_default_freezing_method_description">Метод, который будет использоваться по умолчанию в местах, где нет возможности выбрать метод заморозки.</string>
+    <string name="disable_app_description">Рекомендуемый метод заморозки. Он отключает приложение и вместе с ним все его компоненты, но все ярлыки будут потеряны.</string>
     <string name="pref_advanced_pref">Пользователи, формат имени APK, параллельное выполнение и т.д.</string>
 </resources>
