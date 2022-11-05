@@ -52,9 +52,14 @@ public final class ResourceUtil {
     @NonNull
     public static ParsedResource getResourceFromName(@NonNull PackageManager pm, @NonNull String resName)
             throws PackageManager.NameNotFoundException, Resources.NotFoundException {
-        String packageName = resName.substring(0, resName.indexOf(':'));
-        String type = resName.substring(resName.indexOf(':') + 1, resName.indexOf('/'));
-        String name = resName.substring(resName.indexOf('/') + 1);
+        int indexOfColon = resName.indexOf(':');
+        int indexOfSlash = resName.indexOf('/');
+        if (indexOfColon == -1 || indexOfSlash == -1) {
+            throw new Resources.NotFoundException("Resource " + resName + " is not found.");
+        }
+        String packageName = resName.substring(0, indexOfColon);
+        String type = resName.substring(indexOfColon + 1, indexOfSlash);
+        String name = resName.substring(indexOfSlash + 1);
         Resources res = pm.getResourcesForApplication(packageName);
         int resId = res.getIdentifier(name, type, packageName);
         if (resId == 0) {
