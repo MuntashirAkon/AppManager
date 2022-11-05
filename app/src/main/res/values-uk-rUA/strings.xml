@@ -1211,7 +1211,7 @@
     <string name="so_type_shared_library">Спільна бібліотека</string>
     <string name="so_type_executable">Виконуваний файл</string>
     <string name="file_modified_are_you_sure">Файл було змінено. Відкинути всі ваші зміни й вийти\?</string>
-    <string name="save_and_exit">Зберегти й вийти</string>
+    <string name="save_and_exit">Зберегти та вийти</string>
     <string name="hidden_api_enf_policy_dark_grey_and_black">Строго (списки обмеження й блокування)</string>
     <string name="auth_manager_title">Менеджер авторизації</string>
     <string name="regenerate_auth_key">Перестворити ключ авторизації</string>
@@ -1266,4 +1266,36 @@
     <string name="am_command"><tt>am</tt> команда</string>
     <string name="pref_sign_apk_no_signing_key">Немає ключа підписання</string>
     <string name="pref_sign_apk_error_signing_key_not_added">Для підписання APK-файлу необхідний прийнятний ключ підпису.</string>
+    <string name="suspend_app">Призупинити</string>
+    <string name="hide_app">Приховати</string>
+    <string name="failed_to_unfreeze">Не вдалося розморозити <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="failed_to_freeze">Не вдалося заморозити <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="pref_default_freezing_method">Спосіб заморозки за замовчуванням</string>
+    <string name="pref_default_freezing_method_description">Спосіб котрий буде використано за замовчуванням в місцях, де немає можливості вибрати метод заморозки.</string>
+    <plurals name="alert_failed_to_freeze">
+        <item quantity="one">Не вдалося заморозити %1$d додаток</item>
+        <item quantity="few">Не вдалося заморозити %1$d додатки</item>
+        <item quantity="many">Не вдалося заморозити %1$d додатків</item>
+        <item quantity="other">Не вдалося заморозити %1$d додатків</item>
+    </plurals>
+    <plurals name="alert_failed_to_unfreeze">
+        <item quantity="one">Не вдалося розморозити %1$d додаток</item>
+        <item quantity="few">Не вдалося розморозити %1$d додатки</item>
+        <item quantity="many">Не вдалося розморозити %1$d додатків</item>
+        <item quantity="other">Не вдалося розморозити %1$d додатків</item>
+    </plurals>
+    <string name="disable_app_description">Рекомендований спосіб заморозки. Він відключає додаток разом з усіма його компонентами, але всі ярлики будуть втрачені.</string>
+    <string name="pref_appearance_description">Тема, орієнтація, особливості тощо.</string>
+    <string name="freeze_unfreeze">Заморозка/розморозка</string>
+    <string name="profile_freeze_msg">Заморозка або розморозка додатку, в залежності від стану</string>
+    <string name="suspend_app_description">Це найслабший метод заморозки. Призупинений додаток все ще може відображатися в панелі запуску, але він буде виділений сірим кольором і не може бути запущеним.</string>
+    <string name="hide_app_description">Цей метод рекомендується лише для щоденного використання. Прихований додаток виглядає так, ніби його видалено. Але він може з\'явитися знову, після перевстановлення або оновлення.</string>
+    <string name="sort_by_frozen_app">Спочатку заморожені</string>
+    <string name="filter_frozen_apps">Заморожені програми</string>
+    <string name="pref_privacy">Конфіденційність</string>
+    <string name="pref_privacy_description">Блокування екрану, авторизація тощо.</string>
+    <string name="user_manual">Керівництво користувача</string>
+    <string name="get_help">Отримати допомогу</string>
+    <string name="pref_advanced_pref">Користувачі, формат імені APK, паралельне виконання тощо.</string>
+    <string name="pref_version_changelog">Версія/Журнал змін</string>
 </resources>
