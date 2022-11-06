@@ -1,0 +1,40 @@
+name: Docs improvement
+description: Improve Docs and Readme
+labels: [Documentation]
+
+body:
+  - type: checkboxes
+    attributes:
+       label: Please check before submitting an issue
+       description: You must be familiar with the technical terms specified in the documentation. Also, if your problem comes from the translated version rather than the English original, please correct it from Weblate.
+       options:
+          - label: This issue is not related to the translated version of the documentation
+            required: true
+
+          - label: I know technical terms used in the documentation
+            required: true
+
+  - type: textarea
+    attributes:
+        label: Describe the problem area
+        description: A short and concise description of the already existing feature or documentation, e.g. uninstall in batch operations.
+    validations:
+        required: true
+
+  - type: textarea
+    attributes:
+        label: Current documentation if it present
+        description: Link or copy-and-paste the current description or refer by section number and title
+
+  - type: textarea
+    attributes:
+        label: Describe your suggestion
+        description: A clear and concise description of what you expect the documentation to contain, e.g. it should've been noted that uninstall in batch operations does not work in no-root mode
+    validations:
+        required: true
+
+  - type: textarea
+    attributes:
+        label: Additional context
+        description: Add any other context or screenshots about the documentation here.
+
