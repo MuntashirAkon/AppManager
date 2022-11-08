@@ -11,7 +11,6 @@ import android.content.Intent;
 import android.content.pm.PackageInstaller;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.NotificationCompat;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
@@ -41,6 +40,7 @@ class PackageInstallerBroadcastReceiver extends BroadcastReceiver {
         this.appLabel = appLabel;
     }
 
+    @SuppressLint("WrongConstant")
     @Override
     public void onReceive(Context context, @NonNull Intent intent) {
         int status = intent.getIntExtra(PackageInstaller.EXTRA_STATUS, -1);
@@ -73,8 +73,7 @@ class PackageInstallerBroadcastReceiver extends BroadcastReceiver {
                     broadcastCancel.putExtra(PackageInstaller.EXTRA_STATUS, PackageInstallerCompat.STATUS_FAILURE_ABORTED);
                     broadcastCancel.putExtra(PackageInstaller.EXTRA_SESSION_ID, sessionId);
                     // Ask user for permission
-                    @SuppressLint("WrongConstant")
-                    NotificationCompat.Builder builder = NotificationUtils.getHighPriorityNotificationBuilder(context)
+                    NotificationUtils.displayInstallConfirmNotification(context, builder -> builder
                             .setAutoCancel(true)
                             .setDefaults(Notification.DEFAULT_ALL)
                             .setWhen(System.currentTimeMillis())
@@ -87,8 +86,8 @@ class PackageInstallerBroadcastReceiver extends BroadcastReceiver {
                                     PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_UPDATE_CURRENT
                                             | PendingIntentCompat.FLAG_IMMUTABLE))
                             .setDeleteIntent(PendingIntent.getBroadcast(context, 0, broadcastCancel,
-                                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntentCompat.FLAG_IMMUTABLE));
-                    NotificationUtils.displayHighPriorityNotification(context, builder.build());
+                                    PendingIntent.FLAG_UPDATE_CURRENT | PendingIntentCompat.FLAG_IMMUTABLE))
+                            .build());
                 }
                 break;
             case PackageInstaller.STATUS_SUCCESS:
