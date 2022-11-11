@@ -342,7 +342,7 @@ public final class ApkFile implements AutoCloseable {
                         apksMetadata.readMetadata(jsonString);
                     } catch (IOException | JSONException e) {
                         apksMetadata = null;
-                        throw new ApkFileException(e);
+                        Log.w(TAG, "The contents of info.json in the bundle is invalid", e);
                     }
                 } else if (fileName.endsWith(".obb")) {
                     obbFiles.add(zipEntry);
