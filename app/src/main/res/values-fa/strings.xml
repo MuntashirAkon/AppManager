@@ -830,8 +830,7 @@
     <string name="second_degree_tracker_note">² پیشوند نشان می دهد که ردیاب ها در <a href="https://etip.exodus-privacy.eu.org/">لیست آماده به کار ETIP</a> i.e. آیا آنها ردیاب واقعی هستند هنوز در حال بررسی است.</string>
     <string name="failed_to_uninstall_app">حذف نصب ناموفق بود</string>
     <string name="community">انجمن</string>
-    <string name="community_links">تلگرام: https://t.me/AppManagerChannel
-\nتویتر: https://twitter.com/AppManagerNews</string>
+    <string name="community_links"><a href="https://t.me/AppManagerChannel">کانال تلگرام</a> • <a href="https://twitter.com/AppManagerNews">توییتر</a></string>
     <string name="input_app_ops_description_profile">نام‌های عملیات برنامه و/یا بقیه را با فاصله وارد کنید، به عنوان مثال.. <tt>قفل کردن دوربین ۶۳ ۷۲ </tt> و غیره. استفاده <tt>*</tt> برای درخواست برای همه عملیات برنامه های پیکربندی شده.</string>
     <string name="internal_data">داده های داخلی</string>
     <string name="installer_error_session_commit">نمی‌توان فایل‌های نصبی را اجرا کرد</string>
@@ -1093,4 +1092,20 @@
     <string name="pref_intent_firewall_description">اجزاء را فقط با استفاده از فایروال Intent مسدود کنید. توصیه نمی شود زیرا برخی از برنامه های سیستم می توانند فایروال ها را دور بزنند.</string>
     <string name="intent_firewall_and_disable">IFW + غیرفعال کردن</string>
     <string name="pref_intent_firewall_and_disable_description">کامپوننت ها را با استفاده از فایروال Intent مسدود کنید و همچنین آنها را غیرفعال کنید. روش پیشنهادی برای کاربران با دسترسی روت.</string>
+    <string name="uses_play_app_signing">واردشدن به گوگل پلی</string>
+    <string name="parent_process_id">شناسه فرآیند والد</string>
+    <string name="threads">تعداد رشته‌‌ها</string>
+    <string name="cpu_percent">%% پردازنده</string>
+    <string name="process_id">شناسه فرایند</string>
+    <string name="virtual_memory">حافظه مجازی</string>
+    <string name="pref_vt_apikey_summary">اسکن فایل های APK از طریق VirusTotal را فعال کنید.</string>
+    <string name="scan_in_vt">آنالیز در VirusTotal</string>
+    <string name="commandline_args">آرگومان‌های خط فرمان</string>
+    <string name="search_type_regular_expressions">رجکس</string>
+    <string name="cpu_time">زمان پردازنده</string>
+    <string name="state">وضعیت پردازنده</string>
+    <string name="failed_to_change_app_op_mode">امکان تغییر حالت عملکرد برنامه وجود ندارد.</string>
+    <string name="failed_to_use_the_current_mode_of_operation">امکان استفاده از حالت عملکرد فعلی وجود ندارد. برای این جلسه به حالت غیر روت برگردید.</string>
+    <string name="priority">اولویت</string>
+    <string name="swap_chart_info">● %1$s استفاده شده ● %2$s آزاد</string>
 </resources>
