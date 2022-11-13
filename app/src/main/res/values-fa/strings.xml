@@ -126,8 +126,8 @@
 \n- <a href="https://github.com/billthefarmer/editor">ویرایش کننده</a>
 \n- <a href="https://github.com/k3b/intent-intercept">رهگیری قصد</a>
 \n- <a href="https://github.com/zhanghai/MaterialFiles">فایل های مواد</a>
-\n- <a href="https://github.com/pluscubed/matlog">ورود تشک</a>
-\n- <a href="https://github.com/matrix-org/matrix-android-sdk">اندروید ماتری SDK</a>
+\n- <a href="https://github.com/pluscubed/matlog">لاگ تشک</a>
+\n- <a href="https://github.com/matrix-org/matrix-android-sdk">اندروید ماتریکس SDK</a>
 \n- <a href="https://github.com/jensstein/oandbackup">و بک آپ</a>
 \n- <a href="https://github.com/open-keychain/open-keychain">جاکلیدی را باز کنید</a>
 \n- <a href="https://github.com/Aefyr/SAI">نصب کننده اسپلیت</a>
@@ -484,8 +484,7 @@
     <string name="install_location">محل نصب</string>
     <string name="kernel">هسته</string>
     <string name="security_providers">ارائه دهندگان امنیت</string>
-    <string name="profile_save_apk_msg">فایل های نصبی را ذخیره می‌کند در <tt>
-\nمدیریت کننده برنامه/ برنامه ها</tt></string>
+    <string name="profile_save_apk_msg">فایل های APK را ذخیره می‌کند در <tt> مدیر برنامه/ برنامه ها</tt></string>
     <string name="dsa_affine_y">نسبت مختصات y</string>
     <string name="root">روت</string>
     <string name="close">بستن</string>
@@ -619,7 +618,7 @@
     <string name="vendor">فروشنده</string>
     <string name="memory">حافظه</string>
     <string name="battery_capacity">ظرفیت</string>
-    <string name="users">کابران</string>
+    <string name="users">کاربران</string>
     <string name="cpu">پردازنده</string>
     <string name="graphics">گرافیک</string>
     <string name="security">امنیت</string>
@@ -963,7 +962,7 @@
     <string name="port_number">درگاه</string>
     <string name="routine_ops">عملیات روتین</string>
     <string name="source_code_links">گیت هاب: https://github.com/MuntashirAkon/AppManager
-\nگیت لاب: https://gitlab.com/muntashir/AppManager
+\nگیت لب: https://gitlab.com/muntashir/AppManager
 \nریسویپ: https://0xacab.org/muntashir/AppManager
 \nپل کد: https://codeberg.org/muntashir/AppManager</string>
     <string name="locale_split_for_feature"><xliff:g id="split_name" example="English">%1$s</xliff:g>محل ویژگی <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
@@ -1078,7 +1077,7 @@
     <string name="pref_default_blocking_method">روش پیش فرض مسدودسازی</string>
     <string name="search_type_contains">شامل</string>
     <string name="vt_uploading">VirusTotal: در حال بارگذاری…</string>
-    <string name="vt_success">VirusTotal: %1$d/%2$d</string>
+    <string name="vt_success">ویروس‌توتال: %1$d/%2$d</string>
     <string name="vt_scan_date">تاریخ اسکن: %1$s</string>
     <string name="vt_permalink">لینک دائمی به VirusTotal</string>
     <string name="vt_slowness_warning">با توجه به سرعت اینترنت و ترافیک سرور ممکن است کمی طول بکشد.</string>
@@ -1108,4 +1107,17 @@
     <string name="failed_to_use_the_current_mode_of_operation">امکان استفاده از حالت عملکرد فعلی وجود ندارد. برای این جلسه به حالت غیر روت برگردید.</string>
     <string name="priority">اولویت</string>
     <string name="swap_chart_info">● %1$s استفاده شده ● %2$s آزاد</string>
+    <string name="binary_64_bit">64 بیت</string>
+    <string name="auth_manager_title">مدیر مجوز</string>
+    <string name="regenerate_auth_key">بازسازی کلید مجوز</string>
+    <string name="suspend_app">ساسپند</string>
+    <string name="hide_app">پنهان</string>
+    <string name="endianness_little_endian">اندیان کوچک</string>
+    <string name="endianness_big_endian">ادیان بزرگ</string>
+    <string name="save_and_exit">ذخیره و خروج</string>
+    <string name="vt_queued">VirusTotal: در صف</string>
+    <string name="binary_32_bit">32 بیت</string>
+    <string name="so_type_executable">قابل اجرا</string>
+    <string name="pref_saved_apk_name_format">فرمت نام APK ذخیره شد</string>
+    <string name="app_explorer">کاوشگر برنامه</string>
 </resources>
