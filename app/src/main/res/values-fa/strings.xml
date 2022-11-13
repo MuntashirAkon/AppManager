@@ -917,7 +917,7 @@
     <string name="orientation_left_to_right">چپ به راست</string>
     <string name="pref_display_changes_msg">تغییرات نسخه، ردیاب ها، اجزا، مجوزها، امضاها، کیت نرم افزاری و غیره را به صورت کنترل شده نمایش دهید.</string>
     <string name="port_number_invalid">شماره درگاه اشتباه.</string>
-    <string name="paired_successfully">جفت شده.</string>
+    <string name="paired_successfully">جفت شد.</string>
     <string name="error_with_details">خطا:%s</string>
     <string name="storage">ذخیره سازی</string>
     <string name="files">فایل ها</string>
