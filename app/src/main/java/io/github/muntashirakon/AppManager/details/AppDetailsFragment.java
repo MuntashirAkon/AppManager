@@ -1540,20 +1540,24 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                 } else holder.launchBtn.setVisibility(View.GONE);
                 holder.textView2.setText(sb);
                 holder.chipType.setText("APK");
-            } else if (item.vanillaItem instanceof NativeLibraries.NativeLib) {
+            } else if (item.vanillaItem instanceof NativeLibraries.ElfLib) {
                 holder.textView2.setText(((LocalizedString) item.vanillaItem).toLocalizedString(context));
                 String type;
-                switch (((NativeLibraries.NativeLib) item.vanillaItem).getType()) {
-                    case NativeLibraries.NativeLib.TYPE_DYN:
+                switch (((NativeLibraries.ElfLib) item.vanillaItem).getType()) {
+                    case NativeLibraries.ElfLib.TYPE_DYN:
                         type = "SHARED";
                         break;
-                    case NativeLibraries.NativeLib.TYPE_EXEC:
+                    case NativeLibraries.ElfLib.TYPE_EXEC:
                         type = "EXEC";
                         break;
                     default:
                         type = "SO";
                 }
                 holder.chipType.setText(type);
+                holder.launchBtn.setVisibility(View.GONE);
+            } else if (item.vanillaItem instanceof NativeLibraries.InvalidLib) {
+                holder.textView2.setText(((LocalizedString) item.vanillaItem).toLocalizedString(context));
+                holder.chipType.setText("⚠️");
                 holder.launchBtn.setVisibility(View.GONE);
             }
             holder.divider.setDividerColor(mColorSurfaceVariant);
