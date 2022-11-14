@@ -171,7 +171,7 @@
     <string name="integer_value">정수 값</string>
     <string name="type_string">캐릭터</string>
     <string name="no_content">연결할 수 없음</string>
-    <string name="rules_not_applied">규칙을 적용하지 않음</string>
+    <string name="rules_not_applied">규칙이 적용되지 않음</string>
     <string name="dev_protected_data_dir">장치-보호된 데이터 저장소</string>
     <string name="process_name">프로세스 이름</string>
     <string name="save">저장</string>
@@ -198,15 +198,15 @@
     <string name="failed_to_uninstall"><xliff:g id="app_name" example="앱 관리자">%1$s</xliff:g> 를 제거할 수 없습니다.</string>
     <string name="uninstall_system_app_message">시스템에서 사용되는 앱입니다. 정말 제거 하시겠습니까\?</string>
     <string name="stopped">중지됨</string>
-    <string name="disable">불가능하다</string>
-    <string name="enable">사용</string>
-    <string name="force_stop">힘-정지</string>
+    <string name="disable">비활성화</string>
+    <string name="enable">활성화</string>
+    <string name="force_stop">강제 중지</string>
     <string name="app_size">앱</string>
     <string name="app_ops">앱 설정</string>
     <string name="no_app_ops">앱에 작업이 없음</string>
     <string name="failed_to_uninstall_app">제거를 실패</string>
-    <string name="total_size">앱의 총 크기</string>
-    <string name="storage_and_cache">저장공간과 캐쉬</string>
+    <string name="total_size">전체 앱 크기</string>
+    <string name="storage_and_cache">저장공간과 캐시</string>
     <string name="failed_to_enable_op">요청한 작업을 활성화 할 수 없음</string>
     <string name="pref_global_blocking_enabled">구성요소 차단</string>
     <string name="discard">사용하지 않음</string>
@@ -219,4 +219,12 @@
     <string name="key_name">열쇠 이름</string>
     <string name="type_float">10 진수</string>
     <string name="type_long">롱 타입 정수</string>
+    <string name="sort_by_last_used">마지막 사용 시각</string>
+    <string name="app_settings">설정</string>
+    <string name="pref_import_export_blocking_rules">차단 규칙 불러오기/내보내기</string>
+    <string name="running_apps">실행 중인 앱</string>
+    <string name="sort_by_times_opened">연 횟수</string>
+    <string name="the_import_was_successful">불러오기 성공</string>
+    <string name="the_export_was_successful">내보내기 성공</string>
+    <string name="external_data_dir">외부 데이터 디렉터리</string>
 </resources>
