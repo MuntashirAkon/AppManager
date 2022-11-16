@@ -150,7 +150,7 @@ public class Path implements Comparable<Path> {
                 FileSystemManager fs = LocalServices.getFileSystemManager();
                 return new ExtendedRawDocumentFile(fs.getFile(path));
             } catch (RemoteException e) {
-                Log.w(TAG, "Could not get privileged access to path " + path, e);
+                Log.w(TAG, "Could not get privileged access to path " + path + " due to \"" + e.getMessage() + "\"");
                 // Fall-back to unprivileged access
             }
         }
