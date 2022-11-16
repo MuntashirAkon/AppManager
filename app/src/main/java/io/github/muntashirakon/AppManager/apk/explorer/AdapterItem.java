@@ -36,7 +36,7 @@ public class AdapterItem implements Comparable<AdapterItem> {
     public static final int ACTION_CREATE = 1 << 3;
 
     final String extension;
-    final FileType type;
+    final int type;
     @NonNull
     final Path path;
 

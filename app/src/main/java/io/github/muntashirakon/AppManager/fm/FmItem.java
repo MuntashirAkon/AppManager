@@ -11,7 +11,7 @@ import io.github.muntashirakon.io.Path;
 
 public class FmItem implements Comparable<FmItem> {
     final String extension;
-    final FileType type;
+    final int type;
     final String name;
     @NonNull
     final Path path;
