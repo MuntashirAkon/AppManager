@@ -176,9 +176,9 @@
     <string name="data_size">داده‌ها</string>
     <string name="about">درباره</string>
     <string name="data_usage_msg">مصرف دیتا</string>
-    <string name="data_transmitted">داده‌های منتقل شده</string>
-    <string name="data_received">داده دریافت‌شده</string>
-    <string name="sort_by_target_sdk">SDK هدف</string>
+    <string name="data_transmitted">داده‌ها منتقل شدند</string>
+    <string name="data_received">داده ها دریافت شدند</string>
+    <string name="sort_by_target_sdk">کیت نرم افزاری هدف</string>
     <string name="sort_by_domain">برنامه های کاربر در ابتدای لیست</string>
     <string name="sort_by_package_name">نام بسته</string>
     <string name="sort_by_app_label">برچسب برنامه</string>
@@ -198,7 +198,7 @@
     <string name="group">گروه</string>
     <string name="shared_libs">کتاب‌خانه های مشترک</string>
     <string name="declared_permission">مجوزها</string>
-    <string name="patterns_allowed">الگوها مجاز است</string>
+    <string name="patterns_allowed">الگوها مجاز هستند</string>
     <string name="write">بنویس</string>
     <string name="read">بخوان</string>
     <string name="path_permissions">مجوزهای مسیر</string>
@@ -220,7 +220,7 @@
     <string name="refresh">نوسازی</string>
     <string name="launch">راه‌اندازی</string>
     <string name="activities">فعالیت ها</string>
-    <string name="require_no_permission">مجوز لازم نیست</string>
+    <string name="require_no_permission">مجوزی لازم نیست</string>
     <string name="permissions">از مجوزها استفاده می کند</string>
     <string name="uninstall">حذف نصب</string>
     <string name="export_blocking_rules">قوانین مسدود سازی را صادر کن</string>
@@ -478,7 +478,7 @@
         <item quantity="other">نتوانست از %1$d برنامه پشتیبان بگیرد</item>
     </plurals>
     <string name="clear_data_from_uninstalled_apps_description">پاک کردن اطلاعات برنامه هایی که حذف نصب شده‌اند<tt> با عنوان </tt> اطلاعات را حذف نکنید</string>
-    <string name="app_signing_signatures">امضا</string>
+    <string name="app_signing_signatures">امضاها</string>
     <string name="apps">برنامه ها</string>
     <string name="valid">معتبر</string>
     <string name="install_location">محل نصب</string>
