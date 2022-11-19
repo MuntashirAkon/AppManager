@@ -81,23 +81,41 @@ android {
 dependencies {
     compileOnly project(path: ':hiddenapi')
 
+    // Deprecated: This is being replaced
     implementation project(path: ':libapkparser')
+
+    // Core Libraries
     implementation project(path: ':libcore:compat')
     implementation project(path: ':libcore:io')
     implementation project(path: ':libcore:ui')
-    implementation project(path: ':libopenpgp')
     implementation project(path: ':libserver')
     implementation project(path: ':docs')
 
-    implementation 'com.github.MuntashirAkon:apksig-android:4.4.0'
-    implementation 'com.github.MuntashirAkon:unapkm-android:1.2'
-    implementation 'com.github.MuntashirAkon:sun-security-android:1.1'
+    // ADB
     implementation 'com.github.MuntashirAkon:libadb-android:2.2.0'
+
+    // API
+    implementation 'com.github.MuntashirAkon:unapkm-android:1.2'
+    implementation project(path: ':libopenpgp')
+
+    // APK Editing
+    implementation 'com.github.MuntashirAkon:apksig-android:4.4.0'
+    implementation 'com.github.MuntashirAkon:sun-security-android:1.1'
     implementation "org.bouncycastle:bcprov-jdk15on:${bouncycastle_version}"
     implementation "org.bouncycastle:bcpkix-jdk15on:${bouncycastle_version}"
     implementation 'com.github.MuntashirAkon.jadx:jadx-core:5a62a8e625'
     implementation 'com.github.MuntashirAkon.jadx:jadx-dex-input:5a62a8e625'
 
+    // DB
+    implementation "androidx.room:room-runtime:${room_version}"
+    annotationProcessor "androidx.room:room-compiler:${room_version}"
+
+    // Privileged
+    implementation "com.github.topjohnwu.libsu:core:${libsu_version}"
+    implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:4.3'
+    implementation "dev.rikka.tools.refine:runtime:${refine_version}"
+
+    // UI
     implementation "com.google.android.material:material:${material_version}"
     implementation "androidx.appcompat:appcompat:${appcompat_version}"
     // Fix duplicate classes issue in material
@@ -110,14 +128,9 @@ dependencies {
     implementation "androidx.documentfile:documentfile:1.0.1"
     implementation "androidx.core:core-splashscreen:${splashscreen_version}"
     implementation 'androidx.webkit:webkit:1.5.0'
-    implementation "androidx.room:room-runtime:${room_version}"
-    annotationProcessor "androidx.room:room-compiler:${room_version}"
+
+    // Utility
     implementation 'com.google.code.gson:gson:2.9.1'
-
-    implementation "com.github.topjohnwu.libsu:core:${libsu_version}"
-
-    implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:4.3'
-    implementation "dev.rikka.tools.refine:runtime:${refine_version}"
 
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.9.1'
 
@@ -126,6 +139,7 @@ dependencies {
     // Optional if you need to detect intents.
 //    androidTestImplementation "com.android.support.test.espresso:espresso-intents:3.0.2"
 
+    // Unit Testing
     testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.robolectric:robolectric:4.9'
 }
