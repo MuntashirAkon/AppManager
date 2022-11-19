@@ -24,4 +24,5 @@
     <string name="settings">Inställningar</string>
     <string name="flags">Flaggor</string>
     <string name="patterns_allowed">tillåtna mönster</string>
+    <string name="source_code">Källkod</string>
 </resources>
