@@ -95,7 +95,19 @@ dependencies {
     implementation 'com.github.MuntashirAkon:libadb-android:2.2.0'
     implementation "org.bouncycastle:bcprov-jdk15on:${bouncycastle_version}"
     implementation 'com.github.MuntashirAkon.jadx:jadx-core:5a62a8e625'
+    // Replace SLF4J with a placeholder
+    configurations {
+        all {
+            exclude group: 'org.slf4j', module: 'slf4j-api'
+        }
+    }
     implementation 'com.github.MuntashirAkon.jadx:jadx-dex-input:5a62a8e625'
+    // Replace SLF4J with a placeholder
+    configurations {
+        all {
+            exclude group: 'org.slf4j', module: 'slf4j-api'
+        }
+    }
 
     implementation "com.google.android.material:material:${material_version}"
     implementation "androidx.appcompat:appcompat:${appcompat_version}"
