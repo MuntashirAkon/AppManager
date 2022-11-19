@@ -563,7 +563,7 @@
     <string name="failed_to_enable_op">Kunne ikke sette i verk forespurt app-operasjon</string>
     <string name="no_app_ops">Ingen app-operasjoner</string>
     <string name="app_ops">App-operasjoner</string>
-    <string name="total_size">Totalt</string>
+    <string name="total_size">Total</string>
     <string name="error_evaluating_input">Kunne ikke vurdere inngang</string>
     <string name="type_boolean">Sant/usant</string>
     <string name="long_integer_value">Lang heltallsverdi</string>
