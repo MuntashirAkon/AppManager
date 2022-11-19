@@ -118,6 +118,26 @@ public abstract class ExtendedFile extends File {
     public abstract boolean isSocket();
 
     /**
+     * Returns the time that the file denoted by this abstract pathname was created.
+     *
+     * @return A <code>long</code> value representing the time the file was
+     * created, measured in milliseconds since the epoch
+     * (00:00:00 GMT, January 1, 1970), or <code>0L</code> if the
+     * file does not exist or if an I/O error occurs
+     */
+    public abstract long creationTime() throws ErrnoException;
+
+    /**
+     * Returns the time that the file denoted by this abstract pathname was last accessed.
+     *
+     * @return A <code>long</code> value representing the time the file was
+     * last accessed, measured in milliseconds since the epoch
+     * (00:00:00 GMT, January 1, 1970), or <code>0L</code> if the
+     * file does not exist or if an I/O error occurs
+     */
+    public abstract long lastAccess() throws ErrnoException;
+
+    /**
      * Creates a new hard link named by this abstract pathname of an existing file
      * if and only if a file with this name does not yet exist.
      *

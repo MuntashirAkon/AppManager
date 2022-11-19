@@ -75,6 +75,30 @@ class FileSystemService extends IFileSystemService.Stub {
     }
 
     @Override
+    public ParcelValues lastAccess(String path) {
+        ParcelValues values = new ParcelValues();
+        values.add(null);
+        try {
+            values.add(Os.lstat(path).st_atime * 1000);
+        } catch (ErrnoException e) {
+            values.set(0, e);
+        }
+        return values;
+    }
+
+    @Override
+    public ParcelValues creationTime(String path) {
+        ParcelValues values = new ParcelValues();
+        values.add(null);
+        try {
+            values.add(Os.lstat(path).st_ctime * 1000);
+        } catch (ErrnoException e) {
+            values.set(0, e);
+        }
+        return values;
+    }
+
+    @Override
     public long length(String path) {
         return mCache.get(path).length();
     }

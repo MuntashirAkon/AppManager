@@ -109,6 +109,16 @@ class LocalFile extends FileImpl<LocalFile> {
         }
     }
 
+    @Override
+    public long creationTime() throws ErrnoException {
+        return Os.lstat(getPath()).st_ctime * 1000;
+    }
+
+    @Override
+    public long lastAccess() throws ErrnoException {
+        return Os.lstat(getPath()).st_atime * 1000;
+    }
+
     @NonNull
     @Override
     public FileInputStream newInputStream() throws IOException {

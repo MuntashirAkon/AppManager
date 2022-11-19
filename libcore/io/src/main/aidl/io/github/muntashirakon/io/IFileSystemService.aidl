@@ -12,6 +12,8 @@ interface IFileSystemService {
     boolean isFile(String path);
     boolean isHidden(String path);
     long lastModified(String path);
+    /* (err, long) */ParcelValues lastAccess(String path);
+    /* (err, long) */ParcelValues creationTime(String path);
     long length(String path);
     /* (err, bool) */ ParcelValues createNewFile(String path);
     boolean delete(String path);

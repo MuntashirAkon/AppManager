@@ -205,6 +205,24 @@ class RemoteFile extends FileImpl<RemoteFile> {
     }
 
     @Override
+    public long creationTime() throws ErrnoException {
+        try {
+            return FileUtils.tryErrnoAndGet(fs.creationTime(getPath()));
+        } catch (RemoteException e) {
+            return 0;
+        }
+    }
+
+    @Override
+    public long lastAccess() throws ErrnoException {
+        try {
+            return FileUtils.tryErrnoAndGet(fs.lastAccess(getPath()));
+        } catch (RemoteException e) {
+            return 0;
+        }
+    }
+
+    @Override
     public long length() {
         try {
             return fs.length(getPath());
