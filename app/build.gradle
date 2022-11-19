@@ -104,7 +104,19 @@ dependencies {
     implementation "org.bouncycastle:bcprov-jdk15on:${bouncycastle_version}"
     implementation "org.bouncycastle:bcpkix-jdk15on:${bouncycastle_version}"
     implementation 'com.github.MuntashirAkon.jadx:jadx-core:5a62a8e625'
+    // Replace SLF4J with a placeholder
+    configurations {
+        all {
+            exclude group: 'org.slf4j', module: 'slf4j-api'
+        }
+    }
     implementation 'com.github.MuntashirAkon.jadx:jadx-dex-input:5a62a8e625'
+    // Replace SLF4J with a placeholder
+    configurations {
+        all {
+            exclude group: 'org.slf4j', module: 'slf4j-api'
+        }
+    }
 
     // DB
     implementation "androidx.room:room-runtime:${room_version}"
