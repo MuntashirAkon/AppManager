@@ -20,8 +20,10 @@ import com.google.android.material.card.MaterialCardView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
@@ -62,16 +64,18 @@ public class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         FmItem item = adapterList.get(position);
         holder.title.setText(item.name);
+        String modificationDate = DateUtils.formatDateTime(item.path.lastModified());
         // Set icon
         if (item.type == FileType.DIRECTORY) {
             holder.icon.setImageResource(R.drawable.ic_folder);
-            holder.subtitle.setVisibility(View.GONE);
+            holder.subtitle.setText(String.format(Locale.getDefault(), "%d • %s", item.path.listFiles().length,
+                    modificationDate));
             holder.itemView.setOnClickListener(v -> fmActivity.loadNewFragment(
                     FmFragment.getNewInstance(item.path.getUri())));
         } else {
             holder.icon.setImageResource(R.drawable.ic_file_document);
-            holder.subtitle.setVisibility(View.VISIBLE);
-            holder.subtitle.setText(Formatter.formatFileSize(fmActivity, item.path.length()));
+            holder.subtitle.setText(String.format(Locale.getDefault(), "%s • %s",
+                    Formatter.formatShortFileSize(fmActivity, item.path.length()), modificationDate));
             holder.itemView.setOnClickListener(v -> {
 //                if (ApkFile.SUPPORTED_EXTENSIONS.contains(item.extension)) {
 //                    Intent intent = new Intent(AppManager.getContext(), AppDetailsActivity.class);
