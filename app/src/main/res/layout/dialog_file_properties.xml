@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/padding_small"
+        android:paddingVertical="@dimen/padding_medium">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/icon"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
+                android:layout_weight="0"
+                android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/padding_small"
+                tools:srcCompat="@mipmap/ic_launcher_round" />
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textIsSelectable="true"
+                    android:textAppearance="?attr/textAppearanceTitleMedium"
+                    tools:text="AppManager_v3.0.3.apk" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/summary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textIsSelectable="true"
+                    android:textAppearance="?attr/textAppearanceBodySmall"
+                    tools:text="4/11/22 15:28 ● 14.1 MB" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/more"
+                style="@style/Widget.AppTheme.Button.IconButton.InverseColor"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
+                android:layout_weight="0"
+                android:layout_marginStart="@dimen/padding_small"
+                android:layout_gravity="center"
+                app:iconSize="30dp"
+                app:icon="@drawable/ic_more_vert" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.AppTheme.TextInputLayout.Small"            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/padding_small"
+            android:hint="@string/file"
+            app:hintEnabled="true">
+
+            <io.github.muntashirakon.widget.TextInputTextView
+                android:id="@+id/path"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:textIsSelectable="true"
+                tools:text="/storage/emulated/0/AppManager_v3.0.3.apk" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.AppTheme.TextInputLayout.Small"            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/padding_small"
+            android:hint="@string/type"
+            app:hintEnabled="true">
+
+            <io.github.muntashirakon.widget.TextInputTextView
+                android:id="@+id/type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:textIsSelectable="true"
+                tools:text="application/vnd.android.package-archive" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.AppTheme.TextInputLayout.Small"            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/padding_small"
+            android:hint="@string/file_shortcut_target_file"
+            app:endIconMode="custom"
+            app:endIconDrawable="@drawable/ic_open_in_new"
+            app:endIconContentDescription="@string/open_in_new_window"
+            app:hintEnabled="true">
+
+            <io.github.muntashirakon.widget.TextInputTextView
+                android:id="@+id/target_file"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:textIsSelectable="true"
+                tools:text="/storage/emulated/0/AppManager_v3.0.3.apk" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.AppTheme.TextInputLayout.Small"
+            android:id="@+id/open_with_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/padding_small"
+            android:hint="@string/file_open_with"
+            app:startIconDrawable="@null"
+            app:startIconContentDescription="@string/str_logo"
+            app:endIconMode="custom"
+            app:endIconDrawable="@drawable/ic_file_replace"
+            app:endIconContentDescription="@string/file_change_open_with"
+            app:hintEnabled="true">
+
+            <io.github.muntashirakon.widget.TextInputTextView
+                android:id="@+id/open_with"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:textIsSelectable="true"
+                android:text="@string/_undefined"
+                tools:text="App Manager - installer" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.AppTheme.TextInputLayout.Small"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/padding_small"
+            android:hint="@string/size"
+            app:hintEnabled="true">
+
+            <io.github.muntashirakon.widget.TextInputTextView
+                android:id="@+id/size"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:textIsSelectable="true"
+                android:maxLines="2"
+                tools:text="14.1 MB (13,831,425 bytes)" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.AppTheme.TextInputLayout.Small"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/padding_small"
+            android:hint="@string/file_creation_date"
+            app:hintEnabled="true">
+
+            <io.github.muntashirakon.widget.TextInputTextView
+                android:id="@+id/date_created"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:textIsSelectable="true"
+                android:maxLines="2"
+                tools:text="4/11/22 15:24" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.AppTheme.TextInputLayout.Small"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/padding_small"
+            android:hint="@string/file_modification_date"
+            app:hintEnabled="true">
+
+            <io.github.muntashirakon.widget.TextInputTextView
+                android:id="@+id/date_modified"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:textIsSelectable="true"
+                android:maxLines="2"
+                tools:text="4/11/22 15:28" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.AppTheme.TextInputLayout.Small"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/padding_small"
+            android:hint="@string/file_accessed_date"
+            app:hintEnabled="true">
+
+            <io.github.muntashirakon.widget.TextInputTextView
+                android:id="@+id/date_accessed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:textIsSelectable="true"
+                android:maxLines="2"
+                tools:text="16/11/22 12:53" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.AppTheme.TextInputLayout.Small"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/padding_small"
+            android:hint="@string/more_info"
+            app:hintEnabled="true">
+
+            <io.github.muntashirakon.widget.TextInputTextView
+                android:id="@+id/more_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:textIsSelectable="true"
+                android:maxLines="2"
+                tools:text="@tools:sample/lorem/random" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</ScrollView>

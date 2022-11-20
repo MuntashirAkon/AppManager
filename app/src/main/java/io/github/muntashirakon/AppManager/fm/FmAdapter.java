@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.fm;
 import android.content.Intent;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -13,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.button.MaterialButton;
@@ -24,6 +26,7 @@ import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
@@ -86,6 +89,8 @@ public class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> 
         holder.itemView.setCardBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), android.R.color.transparent));
         // Set selections
         holder.icon.setOnClickListener(v -> toggleSelection(position));
+        // Set actions
+        holder.action.setOnClickListener(v -> displayActions(holder.action, item));
         super.onBindViewHolder(holder, position);
     }
 
@@ -130,6 +135,48 @@ public class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> 
     @Override
     protected int getTotalItemCount() {
         return adapterList.size();
+    }
+
+    private void displayActions(View anchor, FmItem item) {
+        PopupMenu popupMenu = new PopupMenu(anchor.getContext(), anchor);
+        popupMenu.inflate(R.menu.fragment_fm_item_actions);
+        Menu menu = popupMenu.getMenu();
+        menu.findItem(R.id.action_open_with).setOnMenuItemClickListener(menuItem -> {
+            OpenWithDialogFragment fragment = OpenWithDialogFragment.getInstance(item.path);
+            fragment.show(fmActivity.getSupportFragmentManager(), OpenWithDialogFragment.TAG);
+            return true;
+        });
+        menu.findItem(R.id.action_cut).setOnMenuItemClickListener(menuItem -> {
+            UIUtils.displayLongToast("Not implemented.");
+            return false;
+        });
+        menu.findItem(R.id.action_copy).setOnMenuItemClickListener(menuItem -> {
+            UIUtils.displayLongToast("Not implemented.");
+            return false;
+        });
+        menu.findItem(R.id.action_rename).setOnMenuItemClickListener(menuItem -> {
+            UIUtils.displayLongToast("Not implemented.");
+            return false;
+        });
+        menu.findItem(R.id.action_delete).setOnMenuItemClickListener(menuItem -> {
+            UIUtils.displayLongToast("Not implemented.");
+            return false;
+        });
+        menu.findItem(R.id.action_share).setOnMenuItemClickListener(menuItem -> {
+            Intent intent = new Intent(Intent.ACTION_SEND)
+                    .setType(item.path.getType())
+                    .putExtra(Intent.EXTRA_STREAM, FmProvider.getContentUri(item.path))
+                    .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            fmActivity.startActivity(Intent.createChooser(intent, item.path.getName())
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            return true;
+        });
+        menu.findItem(R.id.action_properties).setOnMenuItemClickListener(menuItem -> {
+            FilePropertiesDialogFragment dialogFragment = FilePropertiesDialogFragment.getInstance(item.path);
+            dialogFragment.show(fmActivity.getSupportFragmentManager(), FilePropertiesDialogFragment.TAG);
+            return true;
+        });
+        popupMenu.show();
     }
 
     protected static class ViewHolder extends MultiSelectionView.ViewHolder {
