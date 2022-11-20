@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
     <string name="_lang_tag" translatable="false">id</string>
-    <string name="uninstall">Hapus Pemasangan</string>
+    <string name="uninstall">Copot pemasangan</string>
     <string name="permissions">Memerlukan Izin</string>
     <string name="require_no_permission">Tidak memerlukan izin</string>
     <string name="activities">Aktifitas</string>
@@ -59,12 +59,12 @@
     <string name="orientation">Orientasi</string>
     <string name="no_service">Tidak ada layanan</string>
     <string name="service">Layanan</string>
-    <string name="authority">Wewenang</string>
-    <string name="sort_by_last_update">Terakhir di perbaharui</string>
+    <string name="authority">Otoritas</string>
+    <string name="sort_by_last_update">Pembaruan terakhir</string>
     <string name="launch_mode">Mode peluncuran</string>
     <string name="no_providers">Tidak ada penyedia</string>
     <string name="providers">Penyedia</string>
-    <string name="no_receivers">Tidak Ada Penerima</string>
+    <string name="no_receivers">Tidak ada penerima</string>
     <string name="os_version">Versi OS</string>
     <string name="copied_to_clipboard">Disalin ke papanklip.</string>
     <string name="pref_enable_disable_features_msg">Hidupkan atau matikan fitur di App Manager.</string>
@@ -234,7 +234,7 @@
     <string name="group">Grup</string>
     <string name="shared_libs">Libs berbagi</string>
     <string name="path_permissions">Perizinan path</string>
-    <string name="grant_uri_permission">Perbolehkan perizinan UI</string>
+    <string name="grant_uri_permission">Berikan izin URI</string>
     <string name="flags">Tanda</string>
     <string name="soft_input">Mode masukan lunak</string>
     <string name="task_affinity">Afinitas Tugas</string>
