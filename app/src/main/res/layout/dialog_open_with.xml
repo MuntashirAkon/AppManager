@@ -1,0 +1,30 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/intent_matching_activities"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:scrollbars="vertical"
+        tools:listitem="@layout/item_icon_title_subtitle" />
+
+    <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/always_open"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:text="@string/fm_always_open_with" />
+
+    <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/only_for_this_file"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0"
+        android:text="@string/fm_open_with_for_this_file_only" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

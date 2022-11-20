@@ -1257,4 +1257,17 @@
     <string name="get_help">Get help</string>
     <string name="pref_advanced_pref">Users, APK name format, parallel execution, etc.</string>
     <string name="pref_version_changelog">Version/Changelog</string>
+    <string name="file_creation_date">Created</string>
+    <string name="file_modification_date">Modified</string>
+    <string name="file_accessed_date">Accessed</string>
+    <string name="file_open_with">Open with</string>
+    <string name="file_change_open_with">Change open with</string>
+    <string name="file_shortcut_target_file">Target file</string>
+    <string name="file_properties">Properties</string>
+    <string name="file_cut">Cut</string>
+    <string name="fm_always_open_with">Always open</string>
+    <string name="fm_open_with_for_this_file_only">Only for this file</string>
+    <string name="file_open_as">Open as</string>
+    <string name="file_open_with_custom_activity">Custom</string>
+    <string name="file_open_with_os_default_dialog">Open with OS-default dialog</string>
 </resources>

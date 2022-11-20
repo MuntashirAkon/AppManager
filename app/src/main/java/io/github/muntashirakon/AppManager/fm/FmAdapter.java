@@ -77,20 +77,9 @@ public class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> 
             holder.subtitle.setText(String.format(Locale.getDefault(), "%s • %s",
                     Formatter.formatShortFileSize(fmActivity, item.path.length()), modificationDate));
             holder.itemView.setOnClickListener(v -> {
-//                if (ApkFile.SUPPORTED_EXTENSIONS.contains(item.extension)) {
-//                    Intent intent = new Intent(AppManager.getContext(), AppDetailsActivity.class);
-//                    intent.setData(item.path.getUri());
-//                    fmActivity.startActivity(intent);
-//                } else {
-                Intent openFile = new Intent(Intent.ACTION_VIEW);
-                openFile.setDataAndType(FmProvider.getContentUri(item.path), item.path.getType());
-                openFile.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_GRANT_READ_URI_PERMISSION
-                        | Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION
-                        | Intent.FLAG_GRANT_PREFIX_URI_PERMISSION);
-                if (openFile.resolveActivityInfo(fmActivity.getPackageManager(), 0) != null) {
-                    fmActivity.startActivity(openFile);
-                }
-//                }
+                // TODO: 16/11/22 Retrieve default open with from DB and open the file with it
+                OpenWithDialogFragment fragment = OpenWithDialogFragment.getInstance(item.path);
+                fragment.show(fmActivity.getSupportFragmentManager(), OpenWithDialogFragment.TAG);
             });
         }
         // Set background colors

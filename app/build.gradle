@@ -122,6 +122,9 @@ dependencies {
     implementation "androidx.room:room-runtime:${room_version}"
     annotationProcessor "androidx.room:room-compiler:${room_version}"
 
+    // FM
+    implementation "com.j256.simplemagic:simplemagic:1.17"
+
     // Privileged
     implementation "com.github.topjohnwu.libsu:core:${libsu_version}"
     implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:4.3'

@@ -261,6 +261,16 @@ public class Path implements Comparable<Path> {
         return Objects.requireNonNull(mDocumentFile.getName());
     }
 
+    @Nullable
+    public String getExtension() {
+        String name = getName();
+        int lastIndexOfDot = name.lastIndexOf('.');
+        if (lastIndexOfDot == -1 || lastIndexOfDot + 1 == name.length()) {
+            return null;
+        }
+        return name.substring(lastIndexOfDot + 1);
+    }
+
     /**
      * Return a URI for the underlying document represented by this file. This
      * can be used with other platform APIs to manipulate or share the
@@ -314,6 +324,15 @@ public class Path implements Comparable<Path> {
     @Nullable
     public String getType() {
         return mDocumentFile.getType();
+    }
+
+    /**
+     * Return the content info of the path.
+     * <p>
+     * This is an expensive operation and should be done in a non-UI thread.
+     */
+    public PathContentInfo getPathContentInfo() {
+        return PathContentInfo.fromPath(this);
     }
 
     /**
