@@ -125,6 +125,7 @@ public class FmProvider extends ContentProvider {
                     if (filePath == null
                             || !new File(filePath).canRead()
                             || Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        row.add(null);
                         continue;
                     }
                     row.add(filePath);

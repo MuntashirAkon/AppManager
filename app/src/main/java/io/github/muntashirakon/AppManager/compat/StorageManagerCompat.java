@@ -21,6 +21,7 @@ import androidx.annotation.NonNull;
 import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.Locale;
 
 import dev.rikka.tools.refine.Refine;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
@@ -95,8 +96,8 @@ public final class StorageManagerCompat {
                         os.write(buf, 0, size);
                         currOffset += size;
                     }
-                    if (totalSize > 0 && currOffset + 1 != totalSize) {
-                        throw new IOException("Could not read the whole resource");
+                    if (totalSize > 0 && currOffset != totalSize) {
+                        throw new IOException(String.format(Locale.ROOT, "Could not read the whole resource (total = %d, read = %d)", totalSize, currOffset));
                     }
                 } catch (IOException | ErrnoException e) {
                     Log.e(TAG, "Failed to read file.", e);
@@ -122,8 +123,8 @@ public final class StorageManagerCompat {
                         currOffset += size;
                     }
                     long totalSize = callback.onGetSize();
-                    if (totalSize > 0 && currOffset + 1 != totalSize) {
-                        throw new IOException("Could not write the whole resource");
+                    if (totalSize > 0 && currOffset != totalSize) {
+                        throw new IOException(String.format(Locale.ROOT, "Could not write the whole resource (total = %d, read = %d)", totalSize, currOffset));
                     }
                 } catch (IOException | ErrnoException e) {
                     Log.e(TAG, "Failed to write file.", e);
