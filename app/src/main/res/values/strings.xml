@@ -1276,4 +1276,6 @@
     <string name="open_as_archive">Archive</string>
     <string name="open_as_folder">Folder</string>
     <string name="open_as_other">Other</string>
+    <string name="delete_filename">Delete %s</string>
+    <string name="confirm_file_deletion">Yes, delete</string>
 </resources>

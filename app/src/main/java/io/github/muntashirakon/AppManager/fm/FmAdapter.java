@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -19,6 +20,7 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,11 +34,13 @@ import io.github.muntashirakon.widget.MultiSelectionView;
 
 public class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
     private final List<FmItem> adapterList = new ArrayList<>();
+    private FmViewModel viewModel;
     private final FmActivity fmActivity;
     @ColorInt
     private final int highlightColor;
 
-    public FmAdapter(FmActivity activity) {
+    public FmAdapter(FmViewModel viewModel, FmActivity activity) {
+        this.viewModel = viewModel;
         this.fmActivity = activity;
         highlightColor = ColorCodes.getListItemSelectionColor(activity);
     }
@@ -141,26 +145,57 @@ public class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> 
         PopupMenu popupMenu = new PopupMenu(anchor.getContext(), anchor);
         popupMenu.inflate(R.menu.fragment_fm_item_actions);
         Menu menu = popupMenu.getMenu();
-        menu.findItem(R.id.action_open_with).setOnMenuItemClickListener(menuItem -> {
+        MenuItem openWithAction = menu.findItem(R.id.action_open_with);
+        MenuItem cutAction = menu.findItem(R.id.action_cut);
+        MenuItem copyAction = menu.findItem(R.id.action_copy);
+        MenuItem renameAction = menu.findItem(R.id.action_rename);
+        MenuItem deleteAction = menu.findItem(R.id.action_delete);
+        MenuItem shareAction = menu.findItem(R.id.action_share);
+        // Disable actions based on criteria
+        boolean canRead = item.path.canRead();
+        boolean canWrite = item.path.canWrite();
+        openWithAction.setEnabled(canRead);
+        cutAction.setEnabled(canRead && canWrite);
+        copyAction.setEnabled(canRead);
+        renameAction.setEnabled(canRead && canWrite);
+        deleteAction.setEnabled(canRead && canWrite);
+        shareAction.setEnabled(canRead);
+        // Set actions
+        openWithAction.setOnMenuItemClickListener(menuItem -> {
             OpenWithDialogFragment fragment = OpenWithDialogFragment.getInstance(item.path);
             fragment.show(fmActivity.getSupportFragmentManager(), OpenWithDialogFragment.TAG);
             return true;
         });
         menu.findItem(R.id.action_cut).setOnMenuItemClickListener(menuItem -> {
+            // TODO: 21/11/22
             UIUtils.displayLongToast("Not implemented.");
             return false;
         });
         menu.findItem(R.id.action_copy).setOnMenuItemClickListener(menuItem -> {
+            // TODO: 21/11/22
             UIUtils.displayLongToast("Not implemented.");
             return false;
         });
         menu.findItem(R.id.action_rename).setOnMenuItemClickListener(menuItem -> {
+            // TODO: 21/11/22
             UIUtils.displayLongToast("Not implemented.");
             return false;
         });
         menu.findItem(R.id.action_delete).setOnMenuItemClickListener(menuItem -> {
-            UIUtils.displayLongToast("Not implemented.");
-            return false;
+            new MaterialAlertDialogBuilder(fmActivity)
+                    .setTitle(fmActivity.getString(R.string.delete_filename, item.path.getName()))
+                    .setMessage(R.string.are_you_sure)
+                    .setNegativeButton(R.string.cancel, null)
+                    .setPositiveButton(R.string.confirm_file_deletion, (dialog, which) -> {
+                        if (item.path.delete()) {
+                            UIUtils.displayShortToast(R.string.deleted_successfully);
+                            viewModel.reload();
+                        } else {
+                            UIUtils.displayShortToast(R.string.failed);
+                        }
+                    })
+                    .show();
+            return true;
         });
         menu.findItem(R.id.action_share).setOnMenuItemClickListener(menuItem -> {
             Intent intent = new Intent(Intent.ACTION_SEND)

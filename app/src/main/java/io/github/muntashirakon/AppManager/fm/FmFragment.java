@@ -85,7 +85,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         RecyclerView recyclerView = view.findViewById(R.id.list_item);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));
-        adapter = new FmAdapter(activity);
+        adapter = new FmAdapter(model, activity);
         recyclerView.setAdapter(adapter);
         multiSelectionView = view.findViewById(R.id.selection_view);
         multiSelectionView.hide();
