@@ -1267,7 +1267,13 @@
     <string name="file_cut">Cut</string>
     <string name="fm_always_open_with">Always open</string>
     <string name="fm_open_with_for_this_file_only">Only for this file</string>
-    <string name="file_open_as">Open as</string>
+    <string name="file_open_as">Open as…</string>
     <string name="file_open_with_custom_activity">Custom</string>
     <string name="file_open_with_os_default_dialog">Open with OS-default dialog</string>
+    <string name="open_as_text">Text</string>
+    <string name="open_as_image">Image</string>
+    <string name="open_as_video">Video</string>
+    <string name="open_as_archive">Archive</string>
+    <string name="open_as_folder">Folder</string>
+    <string name="open_as_other">Other</string>
 </resources>

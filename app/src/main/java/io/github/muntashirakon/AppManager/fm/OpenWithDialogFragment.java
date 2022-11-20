@@ -14,12 +14,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -89,27 +91,47 @@ public class OpenWithDialogFragment extends DialogFragment {
         CheckBox openForThisFileOnly = mDialogView.findViewById(R.id.only_for_this_file);
         alwaysOpen.setVisibility(View.GONE);
         openForThisFileOnly.setVisibility(View.GONE);
-        return new MaterialAlertDialogBuilder(requireActivity())
-                .setCustomTitle(new DialogTitleBuilder(requireActivity())
-                        .setTitle(R.string.file_open_with)
-                        .setSubtitle(mPath.getUri().toString())
-                        .setEndIcon(R.drawable.ic_open_in_new, v1 -> {
-                            if (mAdapter != null && mAdapter.getIntent().resolveActivityInfo(requireActivity()
-                                    .getPackageManager(), 0) != null) {
-                                startActivity(mAdapter.getIntent());
-                            }
-                            dismiss();
-                        })
-                        .setEndIconContentDescription(R.string.file_open_with_os_default_dialog)
-                        .build())
+        DialogTitleBuilder titleBuilder = new DialogTitleBuilder(requireActivity())
+                .setTitle(R.string.file_open_with)
+                .setSubtitle(mPath.getUri().toString())
+                .setEndIcon(R.drawable.ic_open_in_new, v1 -> {
+                    if (mAdapter != null && mAdapter.getIntent().resolveActivityInfo(requireActivity()
+                            .getPackageManager(), 0) != null) {
+                        startActivity(mAdapter.getIntent());
+                    }
+                    dismiss();
+                })
+                .setEndIconContentDescription(R.string.file_open_with_os_default_dialog);
+        AlertDialog alertDialog = new MaterialAlertDialogBuilder(requireActivity())
+                .setCustomTitle(titleBuilder.build())
                 .setView(mDialogView)
-//                .setPositiveButton(R.string.file_open_as, (dialog, which) -> {
-//                    // TODO: 19/11/22
-//                })
-//                .setNeutralButton(R.string.file_open_with_custom_activity, (dialog, which) -> {
-//                    // TODO: 19/11/22
-//                })
+                .setPositiveButton(R.string.file_open_as, null)
+                .setNeutralButton(R.string.file_open_with_custom_activity, null)
                 .create();
+        alertDialog.setOnShowListener(dialog -> {
+            Button fileOpenAsButton = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            Button customButton = alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL);
+            fileOpenAsButton.setOnClickListener(v -> {
+                String[] customTypes = requireContext().getResources().getStringArray(R.array.file_open_as_option_types);
+                new MaterialAlertDialogBuilder(requireActivity())
+                        .setTitle(R.string.file_open_as)
+                        .setItems(R.array.file_open_as_options, (dialog1, which) -> {
+                            mCustomType = customTypes[which];
+                            if (mAdapter != null) {
+                                mAdapter.setIntent(getIntent(mPath, mCustomType));
+                                if (mViewModel != null) {
+                                    // Reload activities
+                                    mViewModel.loadMatchingActivities(mAdapter.getIntent());
+                                }
+                            }
+                        })
+                        .setNegativeButton(R.string.close, null)
+                        .show();
+            });
+            // TODO: 20/11/22 Add option to set custom activity
+            customButton.setVisibility(View.GONE);
+        });
+        return alertDialog;
     }
 
     @Nullable
