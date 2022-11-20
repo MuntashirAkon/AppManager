@@ -321,9 +321,16 @@ public class Path implements Comparable<Path> {
     /**
      * Return the MIME type of the path
      */
-    @Nullable
+    @NonNull
     public String getType() {
-        return mDocumentFile.getType();
+        String type = mDocumentFile.getType();
+        if (type == null) {
+            type = PathContentInfo.fromExtension(this).getMimeType();
+        }
+        if (type == null) {
+            type = "application/octet-stream";
+        }
+        return type;
     }
 
     /**
@@ -331,6 +338,7 @@ public class Path implements Comparable<Path> {
      * <p>
      * This is an expensive operation and should be done in a non-UI thread.
      */
+    @NonNull
     public PathContentInfo getPathContentInfo() {
         return PathContentInfo.fromPath(this);
     }

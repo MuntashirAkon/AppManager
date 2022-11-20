@@ -19,6 +19,23 @@ public class PathContentInfo {
     private static ContentInfoUtil contentInfoUtil;
 
     @NonNull
+    public static PathContentInfo fromExtension(@NonNull Path path) {
+        if (path.isDirectory()) {
+            return DIRECTORY;
+        }
+        String ext = path.getExtension();
+        ContentInfo extInfo = ext != null ? ContentInfoUtil.findExtensionMatch(ext) : null;
+        ContentType2 extType2 = ext != null ? ContentType2.fromFileExtension(ext) : null;
+        if (extInfo != null) {
+            return fromContentInfo(extInfo);
+        }
+        if (extType2 != null) {
+            return fromContentType2(extType2);
+        }
+        return fromContentType2(ContentType2.OTHER);
+    }
+
+    @NonNull
     public static PathContentInfo fromPath(@NonNull Path path) {
         if (path.isDirectory()) {
             return DIRECTORY;
@@ -68,7 +85,8 @@ public class PathContentInfo {
                 contentType2.getFileExtensions(), false);
     }
 
-    public static final PathContentInfo DIRECTORY = new PathContentInfo("Directory", null, "resource/folder", null, false);
+    public static final PathContentInfo DIRECTORY = new PathContentInfo("Directory", null,
+            "resource/folder", null, false);
 
     @NonNull
     private final String mName;
