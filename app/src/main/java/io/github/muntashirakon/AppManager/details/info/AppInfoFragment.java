@@ -93,6 +93,7 @@ import io.github.muntashirakon.AppManager.details.AppDetailsViewModel;
 import io.github.muntashirakon.AppManager.details.manifest.ManifestViewerActivity;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.fm.FmProvider;
+import io.github.muntashirakon.AppManager.fm.OpenWithDialogFragment;
 import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
 import io.github.muntashirakon.AppManager.logcat.helper.ServiceHelper;
 import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
@@ -1124,15 +1125,10 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                 .setTitle(R.string.databases)
                                 .setItems(databases2, (dialog, i) -> {
                                     // TODO: 7/7/21 VACUUM the database before opening it
-                                    Context ctx = AppManager.getContext();
-                                    Intent openFile = new Intent(Intent.ACTION_VIEW);
-                                    openFile.setDataAndType(FmProvider.getContentUri(databases.get(i)), "application/vnd.sqlite3");
-                                    openFile.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                                    if (openFile.resolveActivityInfo(ctx.getPackageManager(), 0) != null) {
-                                        ctx.startActivity(openFile);
-                                    }
+                                    OpenWithDialogFragment fragment = OpenWithDialogFragment.getInstance(databases.get(i), "application/vnd.sqlite3");
+                                    fragment.show(getChildFragmentManager(), OpenWithDialogFragment.TAG);
                                 })
-                                .setNegativeButton(R.string.ok, null)
+                                .setNegativeButton(R.string.close, null)
                                 .show());
             }
         }  // End root only features
