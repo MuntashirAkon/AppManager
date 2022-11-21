@@ -25,4 +25,17 @@
     <string name="flags">Flaggor</string>
     <string name="patterns_allowed">tillåtna mönster</string>
     <string name="source_code">Källkod</string>
+    <string name="app_signing_signatures">Signaturer</string>
+    <string name="app_signing_no_signatures">Inga giltiga signaturer</string>
+    <string name="shared_user_id">Delat användar-ID</string>
+    <string name="sort_by_shared_user_id">Delat användar-ID</string>
+    <string name="orientation">Orientering</string>
+    <string name="sort_by_sha">Signatur</string>
+    <string name="declared_permission">Behörigheter</string>
+    <string name="uses_feature">Använder funktioner</string>
+    <string name="configurations">Konfigurationer</string>
+    <string name="shared_libs">Delade bibliotek</string>
+    <string name="path_permissions">Sökvägsbehörigheter</string>
+    <string name="no_feature">Inga funktioner</string>
+    <string name="no_configurations">Inga konfigurationer</string>
 </resources>
