@@ -55,7 +55,7 @@ public abstract class VirtualFileSystem {
     }
 
     @NonNull
-    public static ZipFileSystem fromZipFile(@NonNull Uri mountPoint, @NonNull File zipFile) {
+    public static VirtualFileSystem fromZipFile(@NonNull Uri mountPoint, @NonNull File zipFile) {
         return new ZipFileSystem(mountPoint, zipFile);
     }
 

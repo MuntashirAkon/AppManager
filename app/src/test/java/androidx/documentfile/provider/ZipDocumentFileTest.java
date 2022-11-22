@@ -17,7 +17,6 @@ import java.util.List;
 
 import io.github.muntashirakon.AppManager.backup.convert.OABConverter;
 import io.github.muntashirakon.io.fs.VirtualFileSystem;
-import io.github.muntashirakon.io.fs.ZipFileSystem;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -39,7 +38,7 @@ public class ZipDocumentFileTest {
     @Test
     public void testZipDocument() throws Throwable {
         List<String> level1 = Arrays.asList("AndroidManifest.xml", "META-INF", "classes.dex", "res", "resources.arsc");
-        ZipFileSystem fs = VirtualFileSystem.fromZipFile(Uri.fromFile(new File("/tmp/zip1")), apkFile);
+        VirtualFileSystem fs = VirtualFileSystem.fromZipFile(Uri.fromFile(new File("/tmp/zip1")), apkFile);
         VirtualFileSystem.mount(fs);
         VirtualDocumentFile doc = new VirtualDocumentFile(null, fs);
         assertTrue(doc.isDirectory());

@@ -77,13 +77,19 @@ public class ExtendedRawDocumentFile extends DocumentFile {
     }
 
     @Override
-    @NonNull
+    @Nullable
     public String getType() {
         if (mFile.isDirectory()) {
             return "resource/folder";
-        } else {
-            return getTypeForName(mFile.getName());
+        } else if (mFile.isFile()) {
+            String name = mFile.getName();
+            final int lastDot = name.lastIndexOf('.');
+            if (lastDot >= 0) {
+                final String extension = name.substring(lastDot + 1).toLowerCase();
+                return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+            }
         }
+        return null;
     }
 
     @Override

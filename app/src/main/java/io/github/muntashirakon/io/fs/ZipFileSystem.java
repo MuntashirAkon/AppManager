@@ -25,7 +25,7 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.Path;
 
-public class ZipFileSystem extends VirtualFileSystem {
+class ZipFileSystem extends VirtualFileSystem {
     private final LruCache<String, Node<ZipEntry>> cache = new LruCache<>(100);
     @NonNull
     private final File zipFilePath;

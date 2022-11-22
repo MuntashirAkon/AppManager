@@ -80,7 +80,7 @@ public class VirtualDocumentFile extends DocumentFile {
         return fs;
     }
 
-    @Nullable
+    @NonNull
     @Override
     public String getName() {
         if (fullPath.equals(File.separator)) {
@@ -93,7 +93,11 @@ public class VirtualDocumentFile extends DocumentFile {
     @Override
     public String getType() {
         if (fs.isFile(fullPath)) {
-            return "text/x-smali";
+            String extension = FileUtils.getExtension(getName());
+            if (extension.equals("")) {
+                return null;
+            }
+            return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
         } else if (fs.isDirectory(fullPath)) {
             return "resource/folder";
         }

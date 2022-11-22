@@ -15,7 +15,6 @@ import java.util.Collections;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.backup.convert.OABConverter;
-import io.github.muntashirakon.io.fs.DexFileSystem;
 import io.github.muntashirakon.io.fs.VirtualFileSystem;
 
 import static androidx.documentfile.provider.ZipDocumentFileTest.getChildNames;
@@ -23,6 +22,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
@@ -39,7 +39,7 @@ public class DexDocumentFileTest {
     @Test
     public void testDexFile() throws Throwable {
         List<String> level1 = Arrays.asList("a", "ademar");
-        DexFileSystem fs = VirtualFileSystem.fromDexFile(Uri.fromFile(new File("/tmp/dex1")), dexFile);
+        VirtualFileSystem fs = VirtualFileSystem.fromDexFile(Uri.fromFile(new File("/tmp/dex1")), dexFile);
         VirtualFileSystem.mount(fs);
         VirtualDocumentFile doc = new VirtualDocumentFile(null, fs);
         assertTrue(doc.isDirectory());
@@ -60,5 +60,11 @@ public class DexDocumentFileTest {
         assertFalse(activityXml.isDirectory());
         assertNotEquals(activityXml.length(), 0);
         assertEquals("/ademar/textlauncher/Activity.smali", activityXml.getFullPath());
+        // Sanitization check
+        VirtualDocumentFile activityXml2 = doc.findFile("/ademar/textlauncher/Activity.smali");
+        assertNotNull(activityXml2);
+        assertEquals(activityXml.getUri(), activityXml2.getUri());
+        VirtualDocumentFile invalidFile = doc.findFile("ademar/textlauncher/Invalid.smali");
+        assertNull(invalidFile);
     }
 }
