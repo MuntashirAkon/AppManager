@@ -3,6 +3,8 @@
 package androidx.documentfile.provider;
 
 import android.net.Uri;
+import android.os.ParcelFileDescriptor;
+import android.system.OsConstants;
 import android.webkit.MimeTypeMap;
 
 import androidx.annotation.NonNull;
@@ -10,15 +12,17 @@ import androidx.annotation.Nullable;
 import androidx.core.util.Pair;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Locale;
+import java.nio.channels.FileChannel;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.utils.FileUtils;
+import io.github.muntashirakon.io.fs.VirtualFileSystem;
 
 // Mother of all virtual documents
-public abstract class VirtualDocumentFile<T> extends DocumentFile {
+public class VirtualDocumentFile extends DocumentFile {
     public static final String SCHEME = "vfs";
 
     @Nullable
@@ -30,220 +34,167 @@ public abstract class VirtualDocumentFile<T> extends DocumentFile {
         }
     }
 
-    protected final int VFS_ID;
     @NonNull
-    protected final Node<T> rootNode;
-    @Nullable
-    protected final Node<T> currentNode;
-    protected final Uri mUri;
+    private final VirtualFileSystem fs;
+    @NonNull
+    private final String fullPath;
 
-    public VirtualDocumentFile(@Nullable DocumentFile parent,
-                               int vfsId,
-                               @NonNull Node<T> rootNode,
-                               @Nullable String basePath) {
+    public VirtualDocumentFile(@Nullable DocumentFile parent, @NonNull VirtualFileSystem fs) {
         super(parent);
-        this.rootNode = rootNode;
-        if (basePath != null) {
-            basePath = getSanitizedPath(basePath);
-            if (basePath.equals("")) basePath = null;
+        this.fs = fs;
+        this.fullPath = File.separator;
+    }
+
+    protected VirtualDocumentFile(@NonNull VirtualDocumentFile parent, @NonNull String relativePath) {
+        super(Objects.requireNonNull(parent));
+        this.fs = parent.fs;
+        this.fullPath = FileUtils.addSegmentAtEnd(parent.fullPath, relativePath);
+    }
+
+    @Nullable
+    @Override
+    public DocumentFile createFile(@NonNull String mimeType, @NonNull String displayName) {
+        // Tack on extension when valid MIME type provided
+        String extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
+        if (extension != null) {
+            displayName += "." + extension;
         }
-        this.currentNode = this.rootNode.getLastChild(basePath);
-        this.VFS_ID = vfsId;
-        this.mUri = generateUri();
-    }
-
-    public VirtualDocumentFile(@NonNull VirtualDocumentFile<T> parent, @NonNull String relativePath) {
-        super(parent);
-        this.VFS_ID = parent.VFS_ID;
-        this.rootNode = parent.rootNode;
-        this.currentNode = parent.currentNode == null ? null : parent.currentNode.getLastChild(getSanitizedPath(relativePath));
-        this.mUri = generateUri();
-    }
-
-    public VirtualDocumentFile(@NonNull VirtualDocumentFile<T> parent, @NonNull Node<T> currentNode) {
-        super(parent);
-        this.VFS_ID = parent.VFS_ID;
-        this.rootNode = parent.rootNode;
-        this.currentNode = currentNode;
-        this.mUri = generateUri();
-    }
-
-    @NonNull
-    protected String getScheme() {
-        return SCHEME;
-    }
-
-    @Override
-    public final boolean isVirtual() {
-        return true;
-    }
-
-    @NonNull
-    @Override
-    public Uri getUri() {
-        return mUri;
-    }
-
-    @Nullable
-    public final String getFullPath() {
-        if (currentNode == null) return null;
-        return currentNode.getFullPath();
+        String newFilePath = FileUtils.addSegmentAtEnd(fullPath, displayName);
+        return fs.createNewFile(newFilePath) ? new VirtualDocumentFile(this, displayName) : null;
     }
 
     @Nullable
     @Override
-    public final String getName() {
-        if (currentNode == null) return null;
-        return currentNode.getName();
+    public DocumentFile createDirectory(@NonNull String displayName) {
+        String newFilePath = FileUtils.addSegmentAtEnd(fullPath, displayName);
+        return fs.mkdir(newFilePath) ? new VirtualDocumentFile(this, displayName) : null;
+    }
+
+    @NonNull
+    public String getFullPath() {
+        return fullPath;
+    }
+
+    @NonNull
+    public VirtualFileSystem getFileSystem() {
+        return fs;
+    }
+
+    @Nullable
+    @Override
+    public String getName() {
+        if (fullPath.equals(File.separator)) {
+            return File.separator;
+        }
+        return FileUtils.getLastPathComponent(fullPath);
     }
 
     @Nullable
     @Override
     public String getType() {
-        if (currentNode == null) return null;
-        if (isDirectory()) {
+        if (fs.isFile(fullPath)) {
+            return "text/x-smali";
+        } else if (fs.isDirectory(fullPath)) {
             return "resource/folder";
-        } else if (isFile()) {
-            return getTypeForName(currentNode.getName());
         }
         return null;
     }
 
     @Override
-    public boolean isDirectory() {
-        if (currentNode != null) {
-            return currentNode.isDirectory();
-        }
-        return false;
+    public boolean isVirtual() {
+        return true;
     }
 
     @Override
     public boolean isFile() {
-        if (currentNode != null) {
-            return currentNode.isFile();
-        }
-        return false;
+        return fs.isFile(fullPath);
     }
 
     @Override
-    public boolean canRead() {
-        return exists();
+    public boolean isDirectory() {
+        return fs.isDirectory(fullPath);
     }
 
     @Override
     public boolean exists() {
-        return currentNode != null;
+        return fs.checkAccess(fullPath, OsConstants.F_OK);
+    }
+
+    @Override
+    public boolean canRead() {
+        return fs.checkAccess(fullPath, OsConstants.R_OK);
+    }
+
+    @Override
+    public boolean canWrite() {
+        return fs.checkAccess(fullPath, OsConstants.W_OK);
+    }
+
+    @Override
+    public boolean delete() {
+        return fs.delete(fullPath);
+    }
+
+    @NonNull
+    @Override
+    public Uri getUri() {
+        return VirtualFileSystem.getUri(fs.getFsId(), fullPath);
+    }
+
+    @NonNull
+    public FileInputStream openInputStream() throws IOException {
+        return fs.newInputStream(fullPath);
+    }
+
+    @NonNull
+    public FileOutputStream openOutputStream(boolean append) throws IOException {
+        return fs.newOutputStream(fullPath, append);
+    }
+
+    public FileChannel openChannel(int mode) throws IOException {
+        return fs.openChannel(fullPath, mode);
+    }
+
+    public ParcelFileDescriptor openFileDescriptor(int mode) throws IOException {
+        return fs.openFileDescriptor(fullPath, mode);
+    }
+
+    @Override
+    public long lastModified() {
+        return fs.lastModified(fullPath);
+    }
+
+    @Override
+    public long length() {
+        return fs.length(fullPath);
     }
 
     @Nullable
     @Override
-    public abstract VirtualDocumentFile<T> findFile(@NonNull String displayName);
-
-    @NonNull
-    public abstract InputStream openInputStream() throws IOException;
-
-    private Uri generateUri() {
-        // Since VFS_ID is unique per virtual FS, the paths are guaranteed to be unique.
-        return Uri.parse(getScheme() + "://" + VFS_ID + getFullPath()); // Force authority by adding `//`
-    }
-
-    @Nullable
-    private static <T> Node<T> getLastNode(@NonNull Node<T> baseNode, @Nullable String dirtyPath) {
-        if (dirtyPath == null) return baseNode;
-        String[] components = getSanitizedPath(dirtyPath).split(File.separator);
-        Node<T> lastNode = baseNode;
-        for (String component : components) {
-            lastNode = lastNode.getChild(component);
-            if (lastNode == null) {
-                // File do not exist
-                return null;
-            }
+    public VirtualDocumentFile findFile(@NonNull String displayName) {
+        VirtualDocumentFile documentFile = new VirtualDocumentFile(this, FileUtils.getSanitizedPath(displayName));
+        if (documentFile.exists()) {
+            return documentFile;
         }
-        return lastNode;
+        return null;
     }
 
     @NonNull
-    protected static String getSanitizedPath(@NonNull String name) {
-        return FileUtils.getSanitizedPath(name);
+    @Override
+    public VirtualDocumentFile[] listFiles() {
+        String[] children = fs.list(fullPath);
+        if (children == null) return new VirtualDocumentFile[0];
+        VirtualDocumentFile[] documentFiles = new VirtualDocumentFile[children.length];
+        for (int i = 0; i < children.length; ++i) {
+            documentFiles[i] = new VirtualDocumentFile(this, children[i]);
+        }
+        return documentFiles;
     }
 
-    @NonNull
-    protected static String getTypeForName(@NonNull String name) {
-        final int lastDot = name.lastIndexOf('.');
-        if (lastDot >= 0) {
-            final String extension = name.substring(lastDot + 1).toLowerCase(Locale.ROOT);
-            final String mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
-            if (mime != null) {
-                return mime;
-            }
-        }
-        return "application/octet-stream";
-    }
-
-    protected static class Node<T> {
-        private HashMap<String, Node<T>> children = null;
-        @NonNull
-        private final String name;
-        private final String fullPath;
-        @Nullable
-        private final T object;
-
-        protected Node(@Nullable String basePath, @NonNull String name) {
-            this(basePath == null ? File.separator : basePath, name, null);
-        }
-
-        protected Node(@NonNull String basePath, @NonNull String name, @Nullable T object) {
-            this.name = name;
-            this.fullPath = (basePath.equals(File.separator) ? (name.equals(File.separator) ? "" : File.separator)
-                    : basePath + File.separatorChar) + name;
-            this.object = object;
-        }
-
-        @NonNull
-        public String getName() {
-            return name;
-        }
-
-        public String getFullPath() {
-            return fullPath;
-        }
-
-        @Nullable
-        public T getObject() {
-            return object;
-        }
-
-        public boolean isDirectory() {
-            return object == null;
-        }
-
-        public boolean isFile() {
-            return object != null;
-        }
-
-        @Nullable
-        public Node<T> getChild(String name) {
-            if (children == null) return null;
-            return children.get(name);
-        }
-
-        @Nullable
-        public Node<T> getLastChild(@Nullable String name) {
-            if (children == null) return null;
-            return getLastNode(this, name);
-        }
-
-        @SuppressWarnings("unchecked")
-        @Nullable
-        public Node<T>[] listChildren() {
-            if (children == null) return null;
-            return children.values().toArray(new Node[0]);
-        }
-
-        public void addChild(@Nullable Node<T> child) {
-            if (child == null) return;
-            if (children == null) children = new HashMap<>();
-            children.put(child.name, child);
-        }
+    @Override
+    public boolean renameTo(@NonNull String displayName) {
+        String parent = FileUtils.removeLastPathSegment(fullPath);
+        String newFile = FileUtils.addSegmentAtEnd(parent, displayName);
+        return fs.renameTo(fullPath, newFile);
     }
 }

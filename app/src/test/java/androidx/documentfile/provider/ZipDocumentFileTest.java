@@ -2,20 +2,22 @@
 
 package androidx.documentfile.provider;
 
+import android.net.Uri;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.zip.ZipFile;
 
 import io.github.muntashirakon.AppManager.backup.convert.OABConverter;
+import io.github.muntashirakon.io.fs.VirtualFileSystem;
+import io.github.muntashirakon.io.fs.ZipFileSystem;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -35,10 +37,11 @@ public class ZipDocumentFileTest {
     }
 
     @Test
-    public void testZipDocument() throws IOException {
+    public void testZipDocument() throws Throwable {
         List<String> level1 = Arrays.asList("AndroidManifest.xml", "META-INF", "classes.dex", "res", "resources.arsc");
-        ZipFile zipFile = new ZipFile(apkFile);
-        ZipDocumentFile doc = new ZipDocumentFile(10, zipFile, null);
+        ZipFileSystem fs = VirtualFileSystem.fromZipFile(Uri.fromFile(new File("/tmp/zip1")), apkFile);
+        VirtualFileSystem.mount(fs);
+        VirtualDocumentFile doc = new VirtualDocumentFile(null, fs);
         assertTrue(doc.isDirectory());
         assertFalse(doc.isFile());
         assertTrue(doc.exists());
@@ -49,7 +52,7 @@ public class ZipDocumentFileTest {
         Collections.sort(tmpList);
         assertEquals(level1, tmpList);
         // Arbitrary Directory level check
-        ZipDocumentFile activityXml = doc.findFile("res/layout/activity.xml");
+        VirtualDocumentFile activityXml = doc.findFile("res/layout/activity.xml");
         assertNotNull(activityXml);
         assertTrue(activityXml.exists());
         assertTrue(activityXml.canRead());

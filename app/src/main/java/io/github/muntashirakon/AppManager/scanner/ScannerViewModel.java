@@ -44,7 +44,8 @@ import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
-import io.github.muntashirakon.io.VirtualFileSystem;
+import io.github.muntashirakon.io.fs.DexFileSystem;
+import io.github.muntashirakon.io.fs.VirtualFileSystem;
 
 public class ScannerViewModel extends AndroidViewModel implements VirusTotal.FullScanResponseInterface {
     private static final Pattern SIG_TO_IGNORE = Pattern.compile("^(android(|x)|com\\.android|com\\.google\\.android|java(|x)|j\\$\\.(util|time)|\\w\\d?(\\.\\w\\d?)+)\\..*$");
@@ -276,7 +277,7 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
             mNativeLibraries = Collections.emptyList();
         }
         try {
-            VirtualFileSystem.DexFileSystem dfs = new VirtualFileSystem.DexFileSystem(Uri.fromFile(mApkFile), mApkFile);
+            DexFileSystem dfs = VirtualFileSystem.fromDexFile(Uri.fromFile(mApkFile), mApkFile);
             mDexVfsId = VirtualFileSystem.mount(dfs);
             mAllClasses = dfs.getDexClasses().getClassNames();
             Collections.sort(mAllClasses);

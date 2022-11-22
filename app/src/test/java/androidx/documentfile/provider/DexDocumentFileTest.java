@@ -2,19 +2,21 @@
 
 package androidx.documentfile.provider;
 
+import android.net.Uri;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.backup.convert.OABConverter;
-import io.github.muntashirakon.AppManager.scanner.DexClasses;
+import io.github.muntashirakon.io.fs.DexFileSystem;
+import io.github.muntashirakon.io.fs.VirtualFileSystem;
 
 import static androidx.documentfile.provider.ZipDocumentFileTest.getChildNames;
 import static org.junit.Assert.assertEquals;
@@ -35,21 +37,22 @@ public class DexDocumentFileTest {
     }
 
     @Test
-    public void testDexFile() throws IOException {
+    public void testDexFile() throws Throwable {
         List<String> level1 = Arrays.asList("a", "ademar");
-        DexClasses dexClasses = new DexClasses(dexFile);
-        DexDocumentFile doc = new DexDocumentFile(11, dexClasses, null);
+        DexFileSystem fs = VirtualFileSystem.fromDexFile(Uri.fromFile(new File("/tmp/dex1")), dexFile);
+        VirtualFileSystem.mount(fs);
+        VirtualDocumentFile doc = new VirtualDocumentFile(null, fs);
         assertTrue(doc.isDirectory());
         assertFalse(doc.isFile());
         assertTrue(doc.exists());
         assertEquals(doc.length(), 0);
-        assertEquals(doc.getName(), File.separator);
+        assertEquals(File.separator, doc.getName());
         // Children checks
         List<String> tmpList = getChildNames(doc);
         Collections.sort(tmpList);
         assertEquals(level1, tmpList);
         // Arbitrary Directory level check
-        DexDocumentFile activityXml = doc.findFile("ademar/textlauncher/Activity.smali");
+        VirtualDocumentFile activityXml = doc.findFile("ademar/textlauncher/Activity.smali");
         assertNotNull(activityXml);
         assertTrue(activityXml.exists());
         assertTrue(activityXml.canRead());

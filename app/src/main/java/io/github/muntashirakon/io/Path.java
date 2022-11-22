@@ -21,11 +21,9 @@ import androidx.annotation.CheckResult;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.util.Pair;
-import androidx.documentfile.provider.DexDocumentFile;
 import androidx.documentfile.provider.DocumentFile;
 import androidx.documentfile.provider.ExtendedRawDocumentFile;
 import androidx.documentfile.provider.VirtualDocumentFile;
-import androidx.documentfile.provider.ZipDocumentFile;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -38,16 +36,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
-import java.util.zip.ZipFile;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.compat.StorageManagerCompat;
 import io.github.muntashirakon.AppManager.ipc.LocalServices;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
-import io.github.muntashirakon.AppManager.scanner.DexClasses;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
+import io.github.muntashirakon.io.fs.VirtualFileSystem;
 
 /**
  * Provide an interface to {@link File} and {@link DocumentFile} with basic functionalities.
@@ -175,7 +172,7 @@ public class Path implements Comparable<Path> {
         mDocumentFile = getRequiredRawDocument(fileLocation.getAbsolutePath());
     }
 
-    /* package */ Path(@NonNull Context context, @NonNull String fileLocation, boolean privileged) throws RemoteException {
+    public Path(@NonNull Context context, @NonNull String fileLocation, boolean privileged) throws RemoteException {
         mContext = context;
         if (privileged) {
             FileSystemManager fs = LocalServices.getFileSystemManager();
@@ -185,15 +182,9 @@ public class Path implements Comparable<Path> {
         }
     }
 
-    /* package */ Path(@NonNull Context context, int vfsId, @NonNull ZipFile zipFile, @Nullable String path) {
+    public Path(@NonNull Context context, @NonNull VirtualFileSystem fs) {
         mContext = context;
-        mDocumentFile = new ZipDocumentFile(getParentFile(context, vfsId), vfsId, zipFile, path);
-    }
-
-    /* package */
-    Path(@NonNull Context context, int vfsId, @NonNull DexClasses dexClasses, @Nullable String path) {
-        mContext = context;
-        mDocumentFile = new DexDocumentFile(getParentFile(context, vfsId), vfsId, dexClasses, path);
+        mDocumentFile = new VirtualDocumentFile(getParentFile(context, fs), fs);
     }
 
     private Path(@NonNull Context context, @NonNull DocumentFile documentFile) {
@@ -871,24 +862,23 @@ public class Path implements Comparable<Path> {
 
     @NonNull
     public Path[] listFiles() {
-        VirtualFileSystem.FileSystem[] fileSystems = VirtualFileSystem.getFileSystemsAtUri(getUri());
+        // Get all file systems mounted at this Uri
+        VirtualFileSystem[] fileSystems = VirtualFileSystem.getFileSystemsAtUri(getUri());
         HashMap<String, Path> namePathMap = new HashMap<>(fileSystems.length);
-        for (VirtualFileSystem.FileSystem fs : fileSystems) {
+        for (VirtualFileSystem fs : fileSystems) {
             namePathMap.put(fs.getMountPoint().getLastPathSegment(), fs.getRootPath());
         }
+        // List documents at this folder and add only those which are not mount points.
         DocumentFile[] ss = mDocumentFile.listFiles();
         List<Path> paths = new ArrayList<>(ss.length + fileSystems.length);
         for (DocumentFile s : ss) {
             Path p = namePathMap.get(s.getName());
-            if (p != null) {
-                // Mount points have higher priority
-                paths.add(p);
-                namePathMap.remove(s.getName());
-            } else {
+            if (p == null) {
+                // No mount point exists, add it
                 paths.add(new Path(mContext, s));
             }
         }
-        // Add rests
+        // Add all the mount points
         paths.addAll(namePathMap.values());
         return paths.toArray(new Path[0]);
     }
@@ -972,12 +962,8 @@ public class Path implements Comparable<Path> {
         } else if (mDocumentFile instanceof VirtualDocumentFile) {
             if (!mDocumentFile.isFile()) return null;
             int modeBits = ParcelFileDescriptor.parseMode(mode);
-            if ((modeBits & ParcelFileDescriptor.MODE_READ_ONLY) == 0) {
-                throw new FileNotFoundException("Read-only file");
-            }
             try {
-                return StorageManagerCompat.openProxyFileDescriptor(modeBits, new VirtualStorageCallback(
-                        (VirtualDocumentFile<?>) mDocumentFile, callbackThread));
+                return ((VirtualDocumentFile) mDocumentFile).openFileDescriptor(modeBits);
             } catch (IOException e) {
                 throw (FileNotFoundException) new FileNotFoundException(e.getMessage()).initCause(e);
             }
@@ -998,8 +984,7 @@ public class Path implements Comparable<Path> {
                 throw new IOException("Could not open file for writing: " + mDocumentFile.getUri());
             }
         } else if (mDocumentFile instanceof VirtualDocumentFile) {
-            // For now, none of the virtual document files support writing
-            throw new IOException("VFS does not yet support writing.");
+            return ((VirtualDocumentFile) mDocumentFile).openOutputStream(append);
         }
         String mode = "w" + (append ? "a" : "t");
         OutputStream os = mContext.getContentResolver().openOutputStream(mDocumentFile.getUri(), mode);
@@ -1011,14 +996,14 @@ public class Path implements Comparable<Path> {
 
     @NonNull
     public InputStream openInputStream() throws IOException {
+        if (mDocumentFile instanceof ExtendedRawDocumentFile) {
         try {
-            if (mDocumentFile instanceof ExtendedRawDocumentFile) {
                 return Objects.requireNonNull(getFile()).newInputStream();
-            } else if (mDocumentFile instanceof VirtualDocumentFile) {
-                return ((VirtualDocumentFile<?>) mDocumentFile).openInputStream();
-            }
         } catch (IOException e) {
             throw new IOException("Could not open file for reading: " + mDocumentFile.getUri(), e);
+        }
+        } else if (mDocumentFile instanceof VirtualDocumentFile) {
+            return ((VirtualDocumentFile) mDocumentFile).openInputStream();
         }
         InputStream is = mContext.getContentResolver().openInputStream(mDocumentFile.getUri());
         if (is == null) {
@@ -1126,15 +1111,11 @@ public class Path implements Comparable<Path> {
         return new Path(path.mContext, documentFile);
     }
 
-    @Nullable
-    private static DocumentFile getParentFile(Context context, int vfsId) {
-        Uri mountPoint = VirtualFileSystem.getMountPoint(vfsId);
-        DocumentFile parentFile = null;
-        if (mountPoint != null) {
-            Uri parentUri = FileUtils.removeLastPathSegment(mountPoint);
-            parentFile = new Path(context, parentUri).mDocumentFile;
-        }
-        return parentFile;
+    @NonNull
+    private static DocumentFile getParentFile(@NonNull Context context, @NonNull VirtualFileSystem vfs) {
+        Uri mountPoint = vfs.getMountPoint();
+        Uri parentUri = FileUtils.removeLastPathSegment(mountPoint);
+        return new Path(context, parentUri).mDocumentFile;
     }
 
     @NonNull
@@ -1168,7 +1149,7 @@ public class Path implements Comparable<Path> {
         private final InputStream mIs;
         private boolean mClosed;
 
-        public VirtualStorageCallback(VirtualDocumentFile<?> document, HandlerThread callbackThread) throws IOException {
+        public VirtualStorageCallback(VirtualDocumentFile document, HandlerThread callbackThread) throws IOException {
             super(callbackThread);
             mIs = document.openInputStream();
             // FIXME: 9/5/22 We really cannot use an InputStream because we need to support seeking. For now, we will

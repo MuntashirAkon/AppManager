@@ -29,7 +29,7 @@ import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
-import io.github.muntashirakon.io.VirtualFileSystem;
+import io.github.muntashirakon.io.fs.VirtualFileSystem;
 
 public class AppExplorerViewModel extends AndroidViewModel {
     private final ExecutorService executor = Executors.newFixedThreadPool(3);
@@ -95,7 +95,7 @@ public class AppExplorerViewModel extends AndroidViewModel {
                     ApkFile.Entry baseEntry = apkFile.getBaseEntry();
                     File cachedFile = baseEntry.getRealCachedFile();
                     cachedFiles.add(cachedFile);
-                    int vfsId = VirtualFileSystem.mount(new VirtualFileSystem.ZipFileSystem(apkUri, cachedFile));
+                    int vfsId = VirtualFileSystem.mount(VirtualFileSystem.fromZipFile(apkUri, cachedFile));
                     vfsIds.add(vfsId);
                     zipFileRoot = VirtualFileSystem.getFsRoot(vfsId);
                 } catch (Throwable e) {
@@ -158,7 +158,7 @@ public class AppExplorerViewModel extends AndroidViewModel {
                 return;
             }
             try {
-                int vfsId = VirtualFileSystem.mount(new VirtualFileSystem.DexFileSystem(item.getUri(), item.path));
+                int vfsId = VirtualFileSystem.mount(VirtualFileSystem.fromDexFile(item.getUri(), item.path));
                 vfsIds.add(vfsId);
                 uriChangeObserver.postValue(item.getUri());
             } catch (Throwable th) {
@@ -172,7 +172,7 @@ public class AppExplorerViewModel extends AndroidViewModel {
                     File cachedFile = FileUtils.getCachedFile(is);
                     addCachedFile(item, cachedFile);
                     if (isZipFile) {
-                        int vfsId = VirtualFileSystem.mount(new VirtualFileSystem.ZipFileSystem(item.getUri(), cachedFile));
+                        int vfsId = VirtualFileSystem.mount(VirtualFileSystem.fromZipFile(item.getUri(), cachedFile));
                         vfsIds.add(vfsId);
                         uriChangeObserver.postValue(item.getUri());
                     } else openObserver.postValue(item);

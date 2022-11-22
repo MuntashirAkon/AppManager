@@ -160,21 +160,40 @@ public final class FileUtils {
                 .build();
     }
 
+    @NonNull
+    public static String addSegmentAtEnd(@NonNull String path, @NonNull String lastPathSegment) {
+        if (lastPathSegment.startsWith(File.separator)) {
+            if (lastPathSegment.length() == 1) {
+                return path;
+            }
+            lastPathSegment = lastPathSegment.substring(1);
+        }
+        if (path.endsWith(File.separator)) {
+            return path + lastPathSegment;
+        }
+        return path + File.separator + lastPathSegment;
+    }
+
     public static Uri removeLastPathSegment(@NonNull Uri uri) {
-        String strValue = uri.getPath();
-        if (strValue.equals(File.separator)) return uri;
-        if (strValue.endsWith(File.separator)) {
-            strValue = strValue.substring(0, strValue.length() - 1);
-        }
-        int index = strValue.lastIndexOf('/');
-        if (index > 0) {
-            strValue = strValue.substring(0, index);
-        }
+        String path = uri.getPath();
+        if (path.equals(File.separator)) return uri;
         return new Uri.Builder()
                 .scheme(uri.getScheme())
                 .authority(uri.getAuthority())
-                .path(strValue)
+                .path(removeLastPathSegment(path))
                 .build();
+    }
+
+    public static String removeLastPathSegment(@NonNull String path) {
+        if (path.equals(File.separator)) return path;
+        if (path.endsWith(File.separator)) {
+            path = path.substring(0, path.length() - 1);
+        }
+        int index = path.lastIndexOf('/');
+        if (index > 0) {
+            path = path.substring(0, index);
+        }
+        return path;
     }
 
     @NonNull
