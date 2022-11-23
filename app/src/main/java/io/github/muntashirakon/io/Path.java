@@ -34,6 +34,7 @@ import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.AppManager;
@@ -224,7 +225,7 @@ public class Path implements Comparable<Path> {
         if (lastIndexOfDot == -1 || lastIndexOfDot + 1 == name.length()) {
             return null;
         }
-        return name.substring(lastIndexOfDot + 1);
+        return name.substring(lastIndexOfDot + 1).toLowerCase(Locale.ROOT);
     }
 
     /**

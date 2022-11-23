@@ -204,20 +204,17 @@ public final class ApkFile implements AutoCloseable {
         this.sparseArrayKey = sparseArrayKey;
         Context context = AppManager.getContext();
         ContentResolver cr = context.getContentResolver();
+        Path apkSource = Paths.get(apkUri);
         @NonNull String extension;
         // Check type
-        if (mimeType == null) mimeType = cr.getType(apkUri);
-        if (mimeType == null || !SUPPORTED_MIMES.contains(mimeType)) {
+        if (mimeType == null) mimeType = apkSource.getType();
+        if (!SUPPORTED_MIMES.contains(mimeType)) {
             Log.e(TAG, "Invalid mime: " + mimeType);
             // Check extension
-            String name = FileUtils.getFileName(cr, apkUri);
-            if (name == null) {
-                throw new ApkFileException("Could not extract package name from the URI.");
-            }
-            extension = FileUtils.getExtension(name).toLowerCase(Locale.ROOT);
-            if (!SUPPORTED_EXTENSIONS.contains(extension)) {
+            if (!SUPPORTED_EXTENSIONS.contains(apkSource.getExtension())) {
                 throw new ApkFileException("Invalid package extension.");
             }
+            extension = Objects.requireNonNull(apkSource.getExtension());
         } else {
             if (mimeType.equals("application/xapk-package-archive")) {
                 extension = "xapk";
@@ -227,7 +224,7 @@ public final class ApkFile implements AutoCloseable {
         }
         if (extension.equals("apkm")) {
             try {
-                if (FileUtils.isInputFileZip(cr, apkUri)) {
+                if (FileUtils.isInputFileZip(apkSource)) {
                     // DRM-free APKM file, mark it as APKS
                     // FIXME(#227): Give it a special name and verify integrity
                     extension = "apks";
@@ -268,9 +265,9 @@ public final class ApkFile implements AutoCloseable {
                 }
             }
             File cacheFilePath = this.fd != null ? FileUtils.getFileFromFd(fd) : null;
-            if (cacheFilePath == null || !cacheFilePath.canRead()) {
+            if (cacheFilePath == null || !FileUtils.canRead(cacheFilePath)) {
                 // Cache manually
-                try (InputStream is = cr.openInputStream(apkUri)) {
+                try (InputStream is = apkSource.openInputStream()) {
                     this.cacheFilePath = FileUtils.getCachedFile(is, extension);
                 } catch (IOException e) {
                     throw new ApkFileException("Could not cache the input file.", e);

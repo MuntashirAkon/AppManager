@@ -32,11 +32,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigInteger;
+import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
+import java.util.Locale;
 import java.util.zip.ZipEntry;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.io.FileSystemManager;
 import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
@@ -45,9 +48,9 @@ public final class FileUtils {
     public static final String TAG = FileUtils.class.getSimpleName();
 
     @AnyThread
-    public static boolean isInputFileZip(@NonNull ContentResolver cr, Uri uri) throws IOException {
+    public static boolean isInputFileZip(@NonNull Path path) throws IOException {
         int header;
-        try (InputStream is = cr.openInputStream(uri)) {
+        try (InputStream is = path.openInputStream()) {
             byte[] headerBytes = new byte[4];
             is.read(headerBytes);
             header = new BigInteger(headerBytes).intValue();
@@ -272,7 +275,7 @@ public final class FileUtils {
         String str = getLastPathComponent(path);
         int lastIndexOfDot = str.lastIndexOf('.');
         if (lastIndexOfDot == -1) return "";
-        return str.substring(str.lastIndexOf('.') + 1);
+        return str.substring(str.lastIndexOf('.') + 1).toLowerCase(Locale.ROOT);
     }
 
     @WorkerThread
@@ -493,5 +496,16 @@ public final class FileUtils {
             Log.e(TAG, "Failed to apply mode 644 to " + file);
             throw new IOException(e);
         }
+    }
+
+    public static boolean canRead(@NonNull File file) {
+        if (file.canRead()) {
+            try (FileChannel ignored = FileSystemManager.getLocal().openChannel(file, FileSystemManager.MODE_READ_ONLY)) {
+                return true;
+            } catch (IOException | SecurityException e) {
+                return false;
+            }
+        }
+        return false;
     }
 }
