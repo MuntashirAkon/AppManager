@@ -6,11 +6,10 @@ import android.os.RemoteException;
 
 import androidx.annotation.NonNull;
 
-import java.io.File;
 import java.io.IOException;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 
 public class PseudoRules extends RulesStorageManager {
     public PseudoRules(@NonNull String packageName, int userHandle) {
@@ -35,6 +34,6 @@ public class PseudoRules extends RulesStorageManager {
     @NonNull
     @Override
     protected Path getDesiredFile(boolean create) {
-        return new Path(AppManager.getContext(), new File("/dev/null"));
+        return Paths.get("/dev/null");
     }
 }

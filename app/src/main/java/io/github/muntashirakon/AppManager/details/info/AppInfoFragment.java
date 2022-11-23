@@ -730,7 +730,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             } else chip = addChip(R.string.keystore);
             chip.setOnClickListener(view -> new MaterialAlertDialogBuilder(mActivity)
                     .setTitle(R.string.keystore)
-                    .setItems(KeyStoreUtils.getKeyStoreFiles(mActivity, mApplicationInfo.uid,
+                    .setItems(KeyStoreUtils.getKeyStoreFiles(mApplicationInfo.uid,
                             mainModel.getUserHandle()).toArray(new String[0]), null)
                     .setNegativeButton(R.string.close, null)
                     .show());

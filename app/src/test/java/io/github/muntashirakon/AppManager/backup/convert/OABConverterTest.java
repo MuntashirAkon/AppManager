@@ -2,8 +2,6 @@
 
 package io.github.muntashirakon.AppManager.backup.convert;
 
-import android.content.Context;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,12 +13,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.backup.BackupException;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtilsTest;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -32,7 +30,6 @@ public class OABConverterTest {
     private static final String PACKAGE_NAME_INT = "ca.cmetcalfe.locationshare";
     private static final String PACKAGE_NAME_APK = "ademar.textlauncher";
     private final ClassLoader classLoader = getClass().getClassLoader();
-    private final Context context = AppManager.getContext();
 
     @Before
     public void setUp() {
@@ -69,7 +66,7 @@ public class OABConverterTest {
         Collections.sort(internalStorage);
         Collections.sort(externalStorage);
         assert classLoader != null;
-        Path backupLocation = new Path(context, new File(classLoader.getResource(OABConverter.PATH_SUFFIX).getFile()))
+        Path backupLocation = Paths.get(classLoader.getResource(OABConverter.PATH_SUFFIX).getFile())
                 .findFile(PACKAGE_NAME_FULL);
         OABConverter oabConvert = new OABConverter(backupLocation);
         oabConvert.convert();
@@ -90,7 +87,7 @@ public class OABConverterTest {
     public void convertApkInternalStorageTest() throws BackupException, IOException {
         final List<String> internalStorage = Collections.singletonList("shared_prefs/org.billthefarmer.editor_preferences.xml");
         assert classLoader != null;
-        Path backupLocation = new Path(context, new File(classLoader.getResource(OABConverter.PATH_SUFFIX).getFile()))
+        Path backupLocation = Paths.get(classLoader.getResource(OABConverter.PATH_SUFFIX).getFile())
                 .findFile(PACKAGE_NAME_APK_INT);
         OABConverter oabConvert = new OABConverter(backupLocation);
         oabConvert.convert();
@@ -109,7 +106,7 @@ public class OABConverterTest {
         final List<String> internalStorage = Arrays.asList("shared_prefs/ca.cmetcalfe.locationshare_preferences.xml",
                 "shared_prefs/_has_set_default_values.xml");
         assert classLoader != null;
-        Path backupLocation = new Path(context, new File(classLoader.getResource(OABConverter.PATH_SUFFIX).getFile()))
+        Path backupLocation = Paths.get(classLoader.getResource(OABConverter.PATH_SUFFIX).getFile())
                 .findFile(PACKAGE_NAME_INT);
         OABConverter oabConvert = new OABConverter(backupLocation);
         oabConvert.convert();
@@ -125,7 +122,7 @@ public class OABConverterTest {
     @Test
     public void convertApkOnlyTest() throws BackupException, IOException {
         assert classLoader != null;
-        Path backupLocation = new Path(context, new File(classLoader.getResource(OABConverter.PATH_SUFFIX).getFile()))
+        Path backupLocation = Paths.get(classLoader.getResource(OABConverter.PATH_SUFFIX).getFile())
                 .findFile(PACKAGE_NAME_APK);
         OABConverter oabConvert = new OABConverter(backupLocation);
         oabConvert.convert();

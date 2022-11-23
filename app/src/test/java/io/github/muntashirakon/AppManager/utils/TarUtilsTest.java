@@ -2,8 +2,6 @@
 
 package io.github.muntashirakon.AppManager.utils;
 
-import android.content.Context;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
@@ -25,7 +23,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.io.SplitInputStream;
@@ -37,7 +34,6 @@ import static org.junit.Assert.assertNotEquals;
 @RunWith(RobolectricTestRunner.class)
 public class TarUtilsTest {
     private final ClassLoader classLoader = getClass().getClassLoader();
-    private final Context context = AppManager.getContext();
     private Path testRoot;
     private Path tmpRoot;
     private Path[] tarGzFilesForExtractTest;
@@ -46,12 +42,12 @@ public class TarUtilsTest {
     public void setUp() throws Throwable {
         assert classLoader != null;
         List<Path> resFiles = new ArrayList<>();
-        resFiles.add(new Path(context, new File(classLoader.getResource("plain.txt").getFile())));
-        resFiles.add(new Path(context, new File(classLoader.getResource("raw/exclude.txt").getFile())));
-        resFiles.add(new Path(context, new File(classLoader.getResource("raw/include.txt").getFile())));
-        resFiles.add(new Path(context, new File(classLoader.getResource("prefixed/prefixed_exclude.txt").getFile())));
-        resFiles.add(new Path(context, new File(classLoader.getResource("prefixed/prefixed_include.txt").getFile())));
-        tmpRoot = new Path(context, new File("/tmp"));
+        resFiles.add(Paths.get(classLoader.getResource("plain.txt").getFile()));
+        resFiles.add(Paths.get(classLoader.getResource("raw/exclude.txt").getFile()));
+        resFiles.add(Paths.get(classLoader.getResource("raw/include.txt").getFile()));
+        resFiles.add(Paths.get(classLoader.getResource("prefixed/prefixed_exclude.txt").getFile()));
+        resFiles.add(Paths.get(classLoader.getResource("prefixed/prefixed_include.txt").getFile()));
+        tmpRoot = Paths.get("/tmp");
         List<Path> tmpFiles = new ArrayList<>();
         testRoot = tmpRoot.findOrCreateDirectory("test");
         testRoot.findOrCreateDirectory("raw");

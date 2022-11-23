@@ -19,11 +19,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Objects;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.fm.ContentType2;
 import io.github.muntashirakon.AppManager.scanner.DexClasses;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 
 public class DexFileSystem extends VirtualFileSystem {
     public static final String TYPE = ContentType2.DEX.getMimeType();
@@ -59,7 +59,7 @@ public class DexFileSystem extends VirtualFileSystem {
             dexClasses = new DexClasses(is);
         }
         rootNode = buildTree(Objects.requireNonNull(dexClasses));
-        return new Path(AppManager.getContext(), this);
+        return Paths.get(this);
     }
 
     @Override

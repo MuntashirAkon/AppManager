@@ -118,7 +118,7 @@ public final class ConvertUtils {
         // TODO: 10/7/21 Use ProxyRandomAccessFile when possible
         File cachedFile;
         try (InputStream is = apkFile.openInputStream()) {
-            cachedFile = FileUtils.getCachedFile(is);
+            cachedFile = FileUtils.getCachedFile(is, apkFile.getExtension());
         }
         List<String> checksums = new ArrayList<>(1);
         ApkVerifier verifier = new ApkVerifier.Builder(cachedFile)

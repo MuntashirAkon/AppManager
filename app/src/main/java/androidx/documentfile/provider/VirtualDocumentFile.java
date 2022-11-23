@@ -23,8 +23,6 @@ import io.github.muntashirakon.io.fs.VirtualFileSystem;
 
 // Mother of all virtual documents
 public class VirtualDocumentFile extends DocumentFile {
-    public static final String SCHEME = "vfs";
-
     @Nullable
     public static Pair<Integer, String> parseUri(@NonNull Uri uri) {
         try {

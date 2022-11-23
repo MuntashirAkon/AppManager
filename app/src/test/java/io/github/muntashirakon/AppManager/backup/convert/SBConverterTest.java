@@ -2,8 +2,6 @@
 
 package io.github.muntashirakon.AppManager.backup.convert;
 
-import android.content.Context;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,12 +13,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.backup.BackupException;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtilsTest;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -34,7 +32,6 @@ public class SBConverterTest {
     private static final String PACKAGE_NAME_APK_OBB = "com.test.app";
 
     private final ClassLoader classLoader = getClass().getClassLoader();
-    private final Context context = AppManager.getContext();
     private File backupLocation;
 
     @Before
@@ -56,7 +53,7 @@ public class SBConverterTest {
         Collections.sort(internalStorage);
         Collections.sort(externalStorage);
 
-        Path xmlFile = new Path(context, new File(backupLocation, PACKAGE_NAME_FULL + ".xml"));
+        Path xmlFile = Paths.get(new File(backupLocation, PACKAGE_NAME_FULL + ".xml"));
         SBConverter sbConvert = new SBConverter(xmlFile);
         sbConvert.convert();
         Path newBackupLocation = AppPref.getAppManagerDirectory().findFile(PACKAGE_NAME_FULL).findFile("0_SB");
@@ -77,7 +74,7 @@ public class SBConverterTest {
                 "shared_prefs/",
                 "shared_prefs/org.billthefarmer.editor_preferences.xml");
         Collections.sort(internalStorage);
-        Path xmlFile = new Path(context, new File(backupLocation, PACKAGE_NAME_APK_INT + ".xml"));
+        Path xmlFile = Paths.get(new File(backupLocation, PACKAGE_NAME_APK_INT + ".xml"));
         SBConverter sbConvert = new SBConverter(xmlFile);
         sbConvert.convert();
         Path newBackupLocation = AppPref.getAppManagerDirectory().findFile(PACKAGE_NAME_APK_INT).findFile("0_SB");
@@ -92,7 +89,7 @@ public class SBConverterTest {
 
     @Test
     public void convertApkOnlyTest() throws BackupException, IOException {
-        Path xmlFile = new Path(context, new File(backupLocation, PACKAGE_NAME_APK + ".xml"));
+        Path xmlFile = Paths.get(new File(backupLocation, PACKAGE_NAME_APK + ".xml"));
         SBConverter sbConvert = new SBConverter(xmlFile);
         sbConvert.convert();
         Path newBackupLocation = AppPref.getAppManagerDirectory().findFile(PACKAGE_NAME_APK).findFile("0_SB");
@@ -110,7 +107,7 @@ public class SBConverterTest {
 //                "split_config.en.apk",
 //                "split_config.hdpi.apk");
 //        Collections.sort(expectedApkFiles);
-//        Path xmlFile = new Path(context, new File(backupLocation, PACKAGE_NAME_APK_SPLITS + ".xml"));
+//        Path xmlFile = Paths.get(new File(backupLocation, PACKAGE_NAME_APK_SPLITS + ".xml"));
 //        SBConverter sbConvert = new SBConverter(xmlFile);
 //        sbConvert.convert();
 //        Path newBackupLocation = AppPref.getAppManagerDirectory().findFile(PACKAGE_NAME_APK_SPLITS).findFile("0_SB");
@@ -126,7 +123,7 @@ public class SBConverterTest {
 //
 //    @Test
 //    public void convertApkObbTest() throws BackupException, IOException {
-//        Path xmlFile = new Path(context, new File(backupLocation, PACKAGE_NAME_APK_OBB + ".xml"));
+//        Path xmlFile = Paths.get(new File(backupLocation, PACKAGE_NAME_APK_OBB + ".xml"));
 //        SBConverter sbConvert = new SBConverter(xmlFile);
 //        sbConvert.convert();
 //        Path newBackupLocation = AppPref.getAppManagerDirectory().findFile(PACKAGE_NAME_APK_OBB).findFile("0_SB");

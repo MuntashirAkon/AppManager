@@ -421,8 +421,8 @@ public final class FileUtils {
 
     @WorkerThread
     @NonNull
-    public static File getCachedFile(InputStream inputStream) throws IOException {
-        File tempFile = getTempFile();
+    public static File getCachedFile(InputStream inputStream, @Nullable String extension) throws IOException {
+        File tempFile = getTempFile(extension);
         try (OutputStream outputStream = new FileOutputStream(tempFile)) {
             IoUtils.copy(inputStream, outputStream);
         }
@@ -431,13 +431,7 @@ public final class FileUtils {
 
     @AnyThread
     @NonNull
-    public static File getTempFile() throws IOException {
-        return getTempFile(".cached");
-    }
-
-    @AnyThread
-    @NonNull
-    public static File getTempFile(String extension) throws IOException {
+    public static File getTempFile(@Nullable String extension) throws IOException {
         return File.createTempFile("file_" + System.currentTimeMillis(), extension, getCachePath());
     }
 

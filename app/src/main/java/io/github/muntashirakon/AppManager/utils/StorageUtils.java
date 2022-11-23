@@ -32,6 +32,7 @@ import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.PathReader;
+import io.github.muntashirakon.io.Paths;
 
 public class StorageUtils {
     public static final String TAG = "StorageUtils";
@@ -43,16 +44,16 @@ public class StorageUtils {
     public static ArrayMap<String, Uri> getAllStorageLocations(@NonNull Context context, boolean includeInternal) {
         ArrayMap<String, Uri> storageLocations = new ArrayMap<>(10);
         if (includeInternal) {
-            Path internal = new Path(context, Environment.getDataDirectory());
+            Path internal = Paths.get(Environment.getDataDirectory());
             addStorage(context.getString(R.string.internal_storage), internal, storageLocations);
             addStorage(context.getString(R.string.system_partition), OsEnvironment.getRootDirectory(), storageLocations);
         }
         @SuppressWarnings("deprecation")
-        Path sdCard = new Path(context, Environment.getExternalStorageDirectory());
+        Path sdCard = Paths.get(Environment.getExternalStorageDirectory());
         addStorage(context.getString(R.string.external_storage), sdCard, storageLocations);
         getStorageEnv(context, storageLocations);
         retrieveStorageManager(context, storageLocations);
-        retrieveStorageFilesystem(context, storageLocations);
+        retrieveStorageFilesystem(storageLocations);
         getStorageExternalFilesDir(context, storageLocations);
         // Get SAF persisted directories
         ArrayMap<Uri, Long> grantedUrisAndDate = SAFUtils.getUrisWithDate(context);
@@ -103,7 +104,7 @@ public class StorageUtils {
                 int indexMountRoot = path.indexOf("/Android/data/");
                 if (indexMountRoot >= 0) {
                     // Get the root path for the external directory
-                    Path file = new Path(context, path.substring(0, indexMountRoot));
+                    Path file = Paths.get(path.substring(0, indexMountRoot));
                     addStorage(file.getName(), file, storageLocations);
                 }
             }
@@ -129,7 +130,7 @@ public class StorageUtils {
                 File dir = vol.getPathFile();
                 if (dir == null) continue;
                 String label = vol.getUserLabel();
-                addStorage(label == null ? dir.getName() : label, new Path(context, dir), storageLocations);
+                addStorage(label == null ? dir.getName() : label, Paths.get(dir), storageLocations);
             }
             Log.d(TAG, "used storagemanager");
         } catch (Exception e) {
@@ -140,8 +141,8 @@ public class StorageUtils {
     /**
      * Get storage via /proc/mounts, probably never works
      */
-    private static void retrieveStorageFilesystem(Context context, Map<String, Uri> storageLocations) {
-        Path mountFile = new Path(context, "/proc/mounts");
+    private static void retrieveStorageFilesystem(Map<String, Uri> storageLocations) {
+        Path mountFile = Paths.get("/proc/mounts");
         if (!mountFile.isDirectory()) {
             return;
         }
@@ -150,7 +151,7 @@ public class StorageUtils {
             while ((line = reader.readLine()) != null) {
                 if (line.startsWith("/dev/block/vold/")) {
                     String[] lineElements = line.split(" ");
-                    Path element = new Path(context, lineElements[1]);
+                    Path element = Paths.get(lineElements[1]);
                     // Don't add the default mount path since it's already in the list.
                     addStorage(element.getName(), element, storageLocations);
                 }

@@ -220,8 +220,9 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
         // Test if this path is readable
         if (this.mApkFile == null || !mApkFile.canRead()) {
             // Not readable, cache the file
-            try (InputStream uriStream = getApplication().getContentResolver().openInputStream(mApkUri)) {
-                mApkFile = FileUtils.getCachedFile(uriStream);
+            Path apkPath = Paths.get(mApkUri);
+            try (InputStream uriStream = apkPath.openInputStream()) {
+                mApkFile = FileUtils.getCachedFile(uriStream, apkPath.getExtension());
                 mIsApkCached = true;
             } catch (IOException e) {
                 e.printStackTrace();

@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.io;
 
+import android.content.ContentResolver;
 import android.net.Uri;
 import android.os.RemoteException;
 import android.system.ErrnoException;
@@ -18,9 +19,19 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 
 import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.io.fs.VirtualFileSystem;
 
 public final class Paths {
     public static final String TAG = Paths.class.getSimpleName();
+
+    @NonNull
+    public static Path getPrimaryPath(@Nullable String path) {
+        return get(new Uri.Builder()
+                .scheme(ContentResolver.SCHEME_CONTENT)
+                .authority("com.android.externalstorage.documents")
+                .path("/tree/primary:" + (path == null ? "" : path))
+                .build());
+    }
 
     @NonNull
     public static Path getUnprivileged(@NonNull File pathName) {
@@ -47,18 +58,23 @@ public final class Paths {
     }
 
     @NonNull
-    public static Path get(String pathName) {
+    public static Path get(@NonNull String pathName) {
         return new Path(AppManager.getContext(), pathName);
     }
 
     @NonNull
-    public static Path get(File pathName) {
-        return new Path(AppManager.getContext(), pathName);
+    public static Path get(@NonNull File pathName) {
+        return new Path(AppManager.getContext(), pathName.getAbsolutePath());
     }
 
     @NonNull
-    public static Path get(Uri pathUri) {
+    public static Path get(@NonNull Uri pathUri) {
         return new Path(AppManager.getContext(), pathUri);
+    }
+
+    @NonNull
+    public static Path get(@NonNull VirtualFileSystem fs) {
+        return new Path(AppManager.getContext(), fs);
     }
 
     @NonNull

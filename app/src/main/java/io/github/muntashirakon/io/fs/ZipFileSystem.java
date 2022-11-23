@@ -22,9 +22,9 @@ import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 
 class ZipFileSystem extends VirtualFileSystem {
     public static final String TYPE = ContentType.ZIP.getMimeType();
@@ -55,7 +55,7 @@ class ZipFileSystem extends VirtualFileSystem {
     protected Path onMount() throws IOException {
         zipFile = new ZipFile(zipFilePath);
         rootNode = buildTree(Objects.requireNonNull(zipFile));
-        return new Path(AppManager.getContext(), this);
+        return Paths.get(this);
     }
 
     @Override

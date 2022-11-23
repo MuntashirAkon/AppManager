@@ -11,12 +11,12 @@ import androidx.annotation.WorkerThread;
 
 import java.io.BufferedReader;
 import java.io.Closeable;
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
@@ -38,6 +38,7 @@ import io.github.muntashirakon.AppManager.rules.struct.UriGrantRule;
 import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.PathReader;
+import io.github.muntashirakon.io.Paths;
 
 public class RulesStorageManager implements Closeable {
     @NonNull
@@ -257,7 +258,7 @@ public class RulesStorageManager implements Closeable {
     @NonNull
     public static Path getConfDir() {
         Context ctx = AppManager.getContext();
-        return new Path(ctx, new File(ctx.getFilesDir(), "conf"));
+        return Objects.requireNonNull(Paths.build(ctx.getFilesDir(), "conf"));
     }
 
     @NonNull

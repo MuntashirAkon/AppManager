@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
@@ -80,8 +79,6 @@ class RestoreOp implements Closeable {
     static final String TAG = RestoreOp.class.getSimpleName();
     private static final Object sLock = new Object();
 
-    @NonNull
-    private final Context context = AppManager.getContext();
     @NonNull
     private final String packageName;
     @NonNull
@@ -227,7 +224,7 @@ class RestoreOp implements Closeable {
         String oldChecksum = checksum.get(MASTER_KEY);
         Path masterKey;
         try {
-            masterKey = KeyStoreUtils.getMasterKey(context, userHandle);
+            masterKey = KeyStoreUtils.getMasterKey(userHandle);
         } catch (FileNotFoundException e) {
             if (oldChecksum == null) return;
             else throw new BackupException("Master key existed when the checksum was made but now it doesn't.");
@@ -296,7 +293,7 @@ class RestoreOp implements Closeable {
                 synchronized (sLock) {
                     PackageUtils.ensurePackageStagingDirectoryPrivileged();
                 }
-                packageStagingDirectory = new Path(context, PackageUtils.PACKAGE_STAGING_DIRECTORY);
+                packageStagingDirectory = Paths.get(PackageUtils.PACKAGE_STAGING_DIRECTORY);
             } catch (Exception e) {
                 throw new BackupException("Could not ensure the existence of /data/local/tmp", e);
             }
@@ -377,7 +374,7 @@ class RestoreOp implements Closeable {
             throw new BackupException("Failed to decrypt " + Arrays.toString(keyStoreFiles), e);
         }
         // Restore KeyStore files to the /data/misc/keystore folder
-        Path keyStorePath = KeyStoreUtils.getKeyStorePath(context, userHandle);
+        Path keyStorePath = KeyStoreUtils.getKeyStorePath(userHandle);
         // Note down UID/GID
         UidGidPair uidGidPair;
         int mode;
@@ -398,7 +395,7 @@ class RestoreOp implements Closeable {
         }
         // Rename files
         int uid = packageInfo.applicationInfo.uid;
-        List<String> keyStoreFileNames = KeyStoreUtils.getKeyStoreFiles(context, KEYSTORE_PLACEHOLDER, userHandle);
+        List<String> keyStoreFileNames = KeyStoreUtils.getKeyStoreFiles(KEYSTORE_PLACEHOLDER, userHandle);
         for (String keyStoreFileName : keyStoreFileNames) {
             try {
                 String newFilename = Utils.replaceOnce(keyStoreFileName, String.valueOf(KEYSTORE_PLACEHOLDER), String.valueOf(uid));

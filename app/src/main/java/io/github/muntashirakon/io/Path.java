@@ -5,7 +5,6 @@ package io.github.muntashirakon.io;
 import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.UriPermission;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
@@ -49,7 +48,6 @@ import io.github.muntashirakon.io.fs.VirtualFileSystem;
 /**
  * Provide an interface to {@link File} and {@link DocumentFile} with basic functionalities.
  */
-// TODO: 8/5/22 Move all URI handling logic to Paths and keep only business logic here
 public class Path implements Comparable<Path> {
     public static final String TAG = Path.class.getSimpleName();
 
@@ -114,22 +112,6 @@ public class Path implements Comparable<Path> {
         }
     }};
 
-    @NonNull
-    public static Path getPrimaryPath(@NonNull Context context, @Nullable String path) {
-        return new Path(context, new Uri.Builder()
-                .scheme(ContentResolver.SCHEME_CONTENT)
-                .authority("com.android.externalstorage.documents")
-                .path("/tree/primary:" + (path == null ? "" : path))
-                .build());
-    }
-
-    private static Uri uriWithAppendedPath(@NonNull Uri basePath, @NonNull String[] children) {
-        for (String child : children) {
-            basePath = Uri.withAppendedPath(basePath, child);
-        }
-        return basePath;
-    }
-
     private static boolean needPrivilegedAccess(@NonNull String path) {
         for (int i = 0; i < EXCLUSIVE_ACCESS_PATHS.size(); ++i) {
             if (path.startsWith(EXCLUSIVE_ACCESS_PATHS.get(i))) {
@@ -162,17 +144,17 @@ public class Path implements Comparable<Path> {
     @NonNull
     private DocumentFile mDocumentFile;
 
-    public Path(@NonNull Context context, @NonNull String fileLocation) {
+    /* package */ Path(@NonNull Context context, @NonNull String fileLocation) {
         mContext = context;
         mDocumentFile = getRequiredRawDocument(fileLocation);
     }
 
-    public Path(@NonNull Context context, @NonNull File fileLocation) {
+    /* package */ Path(@NonNull Context context, @NonNull VirtualFileSystem fs) {
         mContext = context;
-        mDocumentFile = getRequiredRawDocument(fileLocation.getAbsolutePath());
+        mDocumentFile = new VirtualDocumentFile(getParentFile(context, fs), fs);
     }
 
-    public Path(@NonNull Context context, @NonNull String fileLocation, boolean privileged) throws RemoteException {
+    /* package */ Path(@NonNull Context context, @NonNull String fileLocation, boolean privileged) throws RemoteException {
         mContext = context;
         if (privileged) {
             FileSystemManager fs = LocalServices.getFileSystemManager();
@@ -182,18 +164,9 @@ public class Path implements Comparable<Path> {
         }
     }
 
-    public Path(@NonNull Context context, @NonNull VirtualFileSystem fs) {
-        mContext = context;
-        mDocumentFile = new VirtualDocumentFile(getParentFile(context, fs), fs);
-    }
-
-    private Path(@NonNull Context context, @NonNull DocumentFile documentFile) {
-        mContext = context;
-        mDocumentFile = documentFile;
-    }
-
     /* package */ Path(@NonNull Context context, @NonNull Uri uri) {
         mContext = context;
+        // At first check if the Uri is in VFS since it gets higher priority.
         Path fsRoot = VirtualFileSystem.getFsRoot(uri);
         if (fsRoot != null) {
             mDocumentFile = fsRoot.mDocumentFile;
@@ -208,7 +181,7 @@ public class Path implements Comparable<Path> {
             case ContentResolver.SCHEME_FILE:
                 documentFile = getRequiredRawDocument(uri.getPath());
                 break;
-            case VirtualDocumentFile.SCHEME: {
+            case VirtualFileSystem.SCHEME: {
                 Pair<Integer, String> parsedUri = VirtualDocumentFile.parseUri(uri);
                 if (parsedUri != null) {
                     Path rootPath = VirtualFileSystem.getFsRoot(parsedUri.first);
@@ -230,17 +203,9 @@ public class Path implements Comparable<Path> {
         mDocumentFile = documentFile;
     }
 
-    /* package */ Path(@NonNull Context context, @NonNull UriPermission uriPermission) throws FileNotFoundException {
+    private Path(@NonNull Context context, @NonNull DocumentFile documentFile) {
         mContext = context;
-        mDocumentFile = Objects.requireNonNull(DocumentFile.fromTreeUri(context, uriPermission.getUri()));
-    }
-
-    /* package */ Path(@NonNull Path path, @NonNull String child) {
-        this(path.mContext, Uri.withAppendedPath(path.getUri(), Uri.encode(child)));
-    }
-
-    /* package */ Path(@NonNull Path path, @NonNull String... children) {
-        this(path.mContext, uriWithAppendedPath(path.getUri(), children));
+        mDocumentFile = documentFile;
     }
 
     /**
@@ -314,7 +279,7 @@ public class Path implements Comparable<Path> {
      */
     @NonNull
     public String getType() {
-        String type = mDocumentFile.getType();
+        String type = getRealDocumentFile(mDocumentFile).getType();
         if (type == null) {
             type = PathContentInfo.fromExtension(this).getMimeType();
         }
@@ -341,28 +306,38 @@ public class Path implements Comparable<Path> {
      */
     @CheckResult
     public long length() {
-        return mDocumentFile.length();
+        return getRealDocumentFile(mDocumentFile).length();
     }
 
     /**
-     * Recreate this path if it denotes a file.
+     * Recreate this path if required.
+     * <p>
+     * This only recreates files and not directories in order to avoid potential mass destructive operation.
      *
      * @return {@code true} iff the path has been recreated.
      */
     @CheckResult
     public boolean recreate() {
-        if (isDirectory() || isMountPoint()) return false;
-        if (mDocumentFile instanceof ExtendedRawDocumentFile) {
+        DocumentFile documentFile = getRealDocumentFile(mDocumentFile);
+        if (documentFile.isDirectory()) {
+            // Directory does not need to be created again.
+            return true;
+        }
+        if (documentFile.exists() && !documentFile.isFile()) return false;
+        // For Linux documents, recreate using file APIs
+        if (documentFile instanceof ExtendedRawDocumentFile) {
             try {
-                File f = Objects.requireNonNull(getFile());
+                File f = Objects.requireNonNull(((ExtendedRawDocumentFile) documentFile).getFile());
                 if (f.exists()) f.delete();
                 return f.createNewFile();
             } catch (IOException | SecurityException e) {
                 return false;
             }
         }
-        try (OutputStream os = mContext.getContentResolver().openOutputStream(mDocumentFile.getUri())) {
-            return os != null;
+        // In other cases, open OutputStream to make the file empty.
+        // We can directly use openOutputStream because if it were a mount point, it would be a directory.
+        try (OutputStream ignored = openOutputStream(false)) {
+            return true;
         } catch (IOException e) {
             return false;
         }
@@ -404,12 +379,12 @@ public class Path implements Comparable<Path> {
         if (displayName.indexOf(File.separatorChar) != -1) {
             throw new IllegalArgumentException("Display name contains file separator.");
         }
-        if (!isDirectory()) {
+        DocumentFile documentFile = getRealDocumentFile(mDocumentFile);
+        if (!documentFile.isDirectory()) {
             throw new IOException("Current file is not a directory.");
         }
-        checkVfs(FileUtils.addSegmentAtEnd(getUri(), displayName));
-        // TODO: 17/10/21 Handle already existing file/directory
-        DocumentFile file = mDocumentFile.createDirectory(displayName);
+        checkVfs(FileUtils.addSegmentAtEnd(documentFile.getUri(), displayName));
+        DocumentFile file = documentFile.createDirectory(displayName);
         if (file == null) throw new IOException("Could not create directory named " + displayName);
         return new Path(mContext, file);
     }
@@ -468,8 +443,7 @@ public class Path implements Comparable<Path> {
         if (isMountPoint()) {
             return false;
         }
-        mDocumentFile.delete();
-        return !exists();
+        return mDocumentFile.delete();
     }
 
     /**
@@ -480,7 +454,7 @@ public class Path implements Comparable<Path> {
      */
     @Nullable
     public Path getParentFile() {
-        DocumentFile file = mDocumentFile.getParentFile();
+        DocumentFile file = getRealDocumentFile(mDocumentFile).getParentFile();
         return file == null ? null : new Path(mContext, file);
     }
 
@@ -493,7 +467,7 @@ public class Path implements Comparable<Path> {
      * @return {@code true} if the file denoted by this abstract name exists.
      */
     public boolean hasFile(@NonNull String displayName) {
-        return findFileInternal(this, displayName) != null;
+        return findFileInternal(mDocumentFile, displayName) != null;
     }
 
     /**
@@ -508,9 +482,9 @@ public class Path implements Comparable<Path> {
      */
     @NonNull
     public Path findFile(@NonNull String displayName) throws FileNotFoundException {
-        Path nextPath = findFileInternal(this, displayName);
+        DocumentFile nextPath = findFileInternal(mDocumentFile, displayName);
         if (nextPath == null) throw new FileNotFoundException("Cannot find " + this + File.separatorChar + displayName);
-        return nextPath;
+        return new Path(mContext, nextPath);
     }
 
     /**
@@ -532,24 +506,26 @@ public class Path implements Comparable<Path> {
         if (displayName.indexOf(File.separatorChar) != -1) {
             throw new IllegalArgumentException("Display name contains file separator.");
         }
-        if (!isDirectory()) {
+        DocumentFile documentFile = getRealDocumentFile(mDocumentFile);
+        if (!documentFile.isDirectory()) {
             throw new IOException("Current file is not a directory.");
         }
         String extension = null;
         if (mimeType != null) {
             extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
         } else mimeType = DEFAULT_MIME;
-        checkVfs(FileUtils.addSegmentAtEnd(mDocumentFile.getUri(), displayName + (extension != null ? "." + extension : "")));
-        DocumentFile file = mDocumentFile.findFile(displayName);
+        String nameWithExtension = displayName + (extension != null ? "." + extension : "");
+        checkVfs(FileUtils.addSegmentAtEnd(documentFile.getUri(), nameWithExtension));
+        DocumentFile file = documentFile.findFile(displayName);
         if (file != null) {
             if (file.isDirectory()) {
                 throw new IOException("Directory cannot be converted to file");
             }
             return new Path(mContext, file);
         }
-        file = mDocumentFile.createFile(mimeType, displayName);
+        file = documentFile.createFile(mimeType, displayName);
         if (file == null) {
-            throw new IOException("Could not create " + mDocumentFile.getUri() + File.separatorChar + displayName + " with type " + mimeType);
+            throw new IOException("Could not create " + documentFile.getUri() + File.separatorChar + nameWithExtension + " with type " + mimeType);
         }
         return new Path(mContext, file);
     }
@@ -572,19 +548,20 @@ public class Path implements Comparable<Path> {
         if (displayName.indexOf(File.separatorChar) != -1) {
             throw new IllegalArgumentException("Display name contains file separator.");
         }
-        if (!isDirectory()) {
+        DocumentFile documentFile = getRealDocumentFile(mDocumentFile);
+        if (!documentFile.isDirectory()) {
             throw new IOException("Current file is not a directory.");
         }
-        Path fsRoot = VirtualFileSystem.getFsRoot(FileUtils.addSegmentAtEnd(getUri(), displayName));
+        Path fsRoot = VirtualFileSystem.getFsRoot(FileUtils.addSegmentAtEnd(documentFile.getUri(), displayName));
         if (fsRoot != null) return fsRoot;
-        DocumentFile file = mDocumentFile.findFile(displayName);
+        DocumentFile file = documentFile.findFile(displayName);
         if (file != null) {
             if (!file.isDirectory()) {
                 throw new IOException("Existing file is not a directory");
             }
             return new Path(mContext, file);
         }
-        file = mDocumentFile.createDirectory(displayName);
+        file = documentFile.createDirectory(displayName);
         if (file == null) throw new IOException("Could not create directory named " + displayName);
         return new Path(mContext, file);
     }
@@ -599,7 +576,7 @@ public class Path implements Comparable<Path> {
      */
     @CheckResult
     public boolean exists() {
-        return mDocumentFile.exists();
+        return getRealDocumentFile(mDocumentFile).exists();
     }
 
     /**
@@ -613,7 +590,7 @@ public class Path implements Comparable<Path> {
      */
     @CheckResult
     public boolean isDirectory() {
-        return mDocumentFile.isDirectory() || isMountPoint();
+        return getRealDocumentFile(mDocumentFile).isDirectory();
     }
 
     /**
@@ -626,7 +603,7 @@ public class Path implements Comparable<Path> {
      */
     @CheckResult
     public boolean isFile() {
-        return mDocumentFile.isFile() && !isMountPoint();
+        return getRealDocumentFile(mDocumentFile).isFile();
     }
 
     /**
@@ -636,7 +613,7 @@ public class Path implements Comparable<Path> {
      */
     @CheckResult
     public boolean isVirtual() {
-        return mDocumentFile.isVirtual();
+        return getRealDocumentFile(mDocumentFile).isVirtual();
     }
 
     /**
@@ -646,7 +623,7 @@ public class Path implements Comparable<Path> {
      * is a symbolic link.
      */
     public boolean isSymbolicLink() {
-        if (mDocumentFile instanceof ExtendedRawDocumentFile) {
+        if (getRealDocumentFile(mDocumentFile) instanceof ExtendedRawDocumentFile) {
             return Objects.requireNonNull(getFile()).isSymlink();
         }
         return false;
@@ -660,7 +637,7 @@ public class Path implements Comparable<Path> {
      * @return {@code true} if target did not exist and the link was successfully created, and {@code false} otherwise.
      */
     public boolean createNewSymbolicLink(String target) {
-        if (mDocumentFile instanceof ExtendedRawDocumentFile) {
+        if (getRealDocumentFile(mDocumentFile) instanceof ExtendedRawDocumentFile) {
             try {
                 return Objects.requireNonNull(getFile()).createNewSymlink(target);
             } catch (IOException e) {
@@ -676,7 +653,7 @@ public class Path implements Comparable<Path> {
      * @return {@code true} if it can be read.
      */
     public boolean canRead() {
-        return mDocumentFile.canRead();
+        return getRealDocumentFile(mDocumentFile).canRead();
     }
 
     /**
@@ -685,7 +662,7 @@ public class Path implements Comparable<Path> {
      * @return {@code true} if it can be written.
      */
     public boolean canWrite() {
-        return mDocumentFile.canWrite();
+        return getRealDocumentFile(mDocumentFile).canWrite();
     }
 
     /**
@@ -694,7 +671,7 @@ public class Path implements Comparable<Path> {
      * @return {@code true} if it can be executed.
      */
     public boolean canExecute() {
-        if (mDocumentFile instanceof ExtendedRawDocumentFile) {
+        if (getRealDocumentFile(mDocumentFile) instanceof ExtendedRawDocumentFile) {
             return Objects.requireNonNull(getFile()).canExecute();
         }
         return false;
@@ -706,15 +683,18 @@ public class Path implements Comparable<Path> {
      * @return {@code true} if this is a mount point.
      */
     public boolean isMountPoint() {
-        return VirtualFileSystem.getFileSystem(getUri()) != null;
+        return VirtualFileSystem.isMountPoint(getUri());
     }
 
     public boolean mkdir() {
-        if (exists() || isMountPoint()) return true;
-        if (mDocumentFile instanceof ExtendedRawDocumentFile) {
+        DocumentFile documentFile = getRealDocumentFile(mDocumentFile);
+        if (documentFile.exists()) {
+            return false;
+        }
+        if (documentFile instanceof ExtendedRawDocumentFile) {
             return Objects.requireNonNull(getFile()).mkdir();
         } else {
-            DocumentFile parent = mDocumentFile.getParentFile();
+            DocumentFile parent = documentFile.getParentFile();
             if (parent != null) {
                 DocumentFile thisFile = parent.createDirectory(getName());
                 if (thisFile != null) {
@@ -727,26 +707,67 @@ public class Path implements Comparable<Path> {
     }
 
     public boolean mkdirs() {
-        if (exists() || isMountPoint()) return true;
-        if (mDocumentFile instanceof ExtendedRawDocumentFile) {
+        DocumentFile documentFile = getRealDocumentFile(mDocumentFile);
+        if (documentFile.exists()) {
+            return false;
+        }
+        if (documentFile instanceof ExtendedRawDocumentFile) {
             return Objects.requireNonNull(getFile()).mkdirs();
         }
         // For others, directory can't be created recursively as parent must exist
-        return mkdir();
+        DocumentFile parent = documentFile.getParentFile();
+        if (parent != null) {
+            DocumentFile thisFile = parent.createDirectory(getName());
+            if (thisFile != null) {
+                mDocumentFile = thisFile;
+                return true;
+            }
+        }
+        return false;
     }
 
+    /**
+     * Renames this file to {@code displayName}, both containing in the same directory.
+     * <p>
+     * Note that this method does <i>not</i> throw {@code IOException} on
+     * failure. Callers must check the return value.
+     * <p>
+     * Some providers may need to create a new document to reflect the rename,
+     * potentially with a different MIME type, so {@link #getUri()} and
+     * {@link #getType()} may change to reflect the rename.
+     * <p>
+     * When renaming a directory, children previously enumerated through
+     * {@link #listFiles()} may no longer be valid.
+     *
+     * @param displayName the new display name.
+     * @return {@code true} on success. It returns {@code false} if the displayName is invalid or if it already exists.
+     * @throws UnsupportedOperationException when working with a single document
+     */
     public boolean renameTo(@NonNull String displayName) {
-        if (!exists()) return false;
         displayName = FileUtils.getSanitizedPath(displayName);
         if (displayName.contains(File.separator)) {
             // display name must belong to the same directory.
             return false;
         }
-        Uri oldMountPoint = getUri();
+        DocumentFile parent = mDocumentFile.getParentFile();
+        if (parent == null) {
+            return false;
+        }
+        DocumentFile file = parent.findFile(displayName);
+        if (file != null) {
+            // File exists
+            return false;
+        }
+        Path fsRoot = VirtualFileSystem.getFsRoot(FileUtils.addSegmentAtEnd(parent.getUri(), displayName));
+        if (fsRoot != null) {
+            // Mount point exists
+            return false;
+        }
+        Uri oldMountPoint = mDocumentFile.getUri();
         if (mDocumentFile.renameTo(displayName)) {
             if (VirtualFileSystem.getFileSystem(oldMountPoint) != null) {
                 // Change mount point
-                VirtualFileSystem.alterMountPoint(oldMountPoint, getUri());
+                VirtualFileSystem.alterMountPoint(oldMountPoint, mDocumentFile.getUri());
             }
             return true;
         }
@@ -757,7 +778,7 @@ public class Path implements Comparable<Path> {
      * Move the given path based on the following criteria:
      * <ol>
      *     <li>If both paths are physical (i.e. uses File API), use normal move behaviour
-     *     <li>If one of the paths are virtual, use special copy and delete operation
+     *     <li>If one of the paths is virtual, use special copy and delete operation
      * </ol>
      * <p>
      * Move behavior is as follows:
@@ -771,68 +792,114 @@ public class Path implements Comparable<Path> {
      * @return {@code true} on success and {@code false} on failure
      */
     public boolean moveTo(@NonNull Path path) {
-        // TODO: 16/10/21 Find some way to handle move in VFS
-        if (path.exists() && !path.canWrite()) {
-            // There's no point is attempting to move if the destination is read-only
+        DocumentFile source = getRealDocumentFile(mDocumentFile);
+        DocumentFile dest = getRealDocumentFile(path.mDocumentFile);
+        if (!source.exists()) {
+            // Source itself does not exist.
             return false;
         }
-        if (mDocumentFile instanceof ExtendedRawDocumentFile && path.mDocumentFile instanceof ExtendedRawDocumentFile) {
-            // Try using the default option
-            File src = Objects.requireNonNull(getFile());
-            File dst = Objects.requireNonNull(path.getFile());
-            if (src.renameTo(dst)) {
-                mDocumentFile = path.mDocumentFile;
+        if (dest.exists() && !dest.canWrite()) {
+            // There's no point is attempting to move if the destination is read-only.
+            return false;
+        }
+        if (source instanceof ExtendedRawDocumentFile && dest instanceof ExtendedRawDocumentFile) {
+            // Try Linux-default file move
+            File srcFile = Objects.requireNonNull(((ExtendedRawDocumentFile) source).getFile());
+            File dstFile = Objects.requireNonNull(((ExtendedRawDocumentFile) dest).getFile());
+            if (srcFile.renameTo(dstFile)) {
+                mDocumentFile = dest;
+                if (VirtualFileSystem.getFileSystem(Uri.fromFile(srcFile)) != null) {
+                    // Move mount point
+                    VirtualFileSystem.alterMountPoint(Uri.fromFile(srcFile), Uri.fromFile(dstFile));
+                }
                 return true;
             }
         }
-        Path srcParent = getParentFile();
-        Path dstParent = path.getParentFile();
-        if (!path.isDirectory() && srcParent != null && srcParent.equals(dstParent)) {
+        // Try Path#renameTo if both are located in the same directory. Mount point is already handled here.
+        DocumentFile sourceParent = source.getParentFile();
+        DocumentFile destParent = dest.getParentFile();
+        if (sourceParent != null && sourceParent.equals(destParent)) {
             // If both path are located in the same directory, rename them
-            return renameTo(path.getName());
+            if (renameTo(path.getName())) {
+                return true;
+            }
         }
-        if (isDirectory()) {
-            if (path.isDirectory()) { // Rename (copy and delete original)
+        // Try copy and delete approach
+        if (source.isDirectory()) {
+            if (dest.isDirectory()) {
+                // Both are directories: Recreate destination and apply copy-and-delete
                 // Make sure that parent exists, and it is a directory
-                if (dstParent == null || !dstParent.isDirectory()) return false;
+                if (destParent == null || !destParent.isDirectory()) {
+                    return false;
+                }
+                // Recreate this directory
+                dest.delete();
+                DocumentFile newPath = destParent.createDirectory(path.getName());
+                if (newPath == null || newPath.listFiles().length != 0) {
+                    // Couldn't recreate directory
+                    return false;
+                }
                 try {
-                    // Recreate path
-                    path.delete();
-                    Path newPath = dstParent.createNewDirectory(path.getName());
                     // Copy all the directory items to the path
-                    copyDirectory(this, newPath);
-                    delete();
-                    mDocumentFile = newPath.mDocumentFile;
+                    copyDirectory(mContext, source, newPath);
+                    source.delete();
+                    mDocumentFile = newPath;
                     return true;
                 } catch (IOException e) {
                     return false;
                 }
-            } else {
-                // Current path is a directory but target is a file
-                return false;
             }
-        } else {
-            Path newPath;
-            if (path.isDirectory()) {
-                // Move the file inside the directory
+            if (!dest.exists()) {
+                // Destination does not exist, simply create and copy
+                // Make sure that parent exists, and it is a directory
+                if (destParent == null || !destParent.isDirectory()) {
+                    return false;
+                }
+                DocumentFile newPath = destParent.createDirectory(path.getName());
+                if (newPath == null || newPath.listFiles().length != 0) {
+                    // Couldn't recreate directory
+                    return false;
+                }
                 try {
-                    newPath = path.createNewFile(getName(), null);
+                    // Copy all the directory items to the path
+                    copyDirectory(mContext, source, newPath);
+                    source.delete();
+                    mDocumentFile = newPath;
+                    return true;
                 } catch (IOException e) {
                     return false;
                 }
+            }
+            // Current path is a directory but target is not a directory
+            return false;
+        }
+        if (source.isFile()) {
+            DocumentFile newPath;
+            if (dest.isDirectory()) {
+                // Move the file inside the directory
+                newPath = dest.createFile(DEFAULT_MIME, getName());
             } else {
                 // Rename the file
-                newPath = path;
+                newPath = dest;
+            }
+            if (newPath == null) {
+                return false;
             }
             try {
-                copyFile(this, newPath);
-                delete();
-                mDocumentFile = newPath.mDocumentFile;
+                copyFile(mContext, source, newPath);
+                source.delete();
+                mDocumentFile = newPath;
                 return true;
             } catch (IOException e) {
                 return false;
             }
         }
+        return false;
+    }
+
+    private static void copyFile(@NonNull Context context, @NonNull DocumentFile src, @NonNull DocumentFile dst)
+            throws IOException {
+        copyFile(new Path(context, src), new Path(context, dst));
     }
 
     private static void copyFile(@NonNull Path src, @NonNull Path dst) throws IOException {
@@ -843,14 +910,20 @@ public class Path implements Comparable<Path> {
     }
 
     // Copy directory content
+    private static void copyDirectory(@NonNull Context context, @NonNull DocumentFile src, @NonNull DocumentFile dst)
+            throws IOException {
+        copyDirectory(new Path(context, src), new Path(context, dst));
+    }
+
     private static void copyDirectory(@NonNull Path src, @NonNull Path dst) throws IOException {
-        // TODO: 16/10/21 Find some way to handle VFS
-        if (!src.isDirectory() || !dst.isDirectory()) {
-            throw new IOException("Both source and destination have to be directory.");
-        }
         for (Path file : src.listFiles()) {
             if (file.isDirectory()) {
-                copyDirectory(file, dst.createNewDirectory(file.getName()));
+                Path newDir = dst.createNewDirectory(file.getName());
+                Path fsRoot = VirtualFileSystem.getFsRoot(file.getUri());
+                if (fsRoot != null) {
+                    VirtualFileSystem.alterMountPoint(file.getUri(), newDir.getUri());
+                }
+                copyDirectory(file, newDir);
             } else {
                 Path newFile = dst.createNewFile(file.getName(), null);
                 copyFile(file, newFile);
@@ -859,11 +932,11 @@ public class Path implements Comparable<Path> {
     }
 
     public long lastModified() {
-        return mDocumentFile.lastModified();
+        return getRealDocumentFile(mDocumentFile).lastModified();
     }
 
     public void setLastModified(long time) {
-        if (mDocumentFile instanceof ExtendedRawDocumentFile) {
+        if (getRealDocumentFile(mDocumentFile) instanceof ExtendedRawDocumentFile) {
             Objects.requireNonNull(getFile()).setLastModified(time);
         }
     }
@@ -871,13 +944,14 @@ public class Path implements Comparable<Path> {
     @NonNull
     public Path[] listFiles() {
         // Get all file systems mounted at this Uri
-        VirtualFileSystem[] fileSystems = VirtualFileSystem.getFileSystemsAtUri(getUri());
+        DocumentFile documentFile = getRealDocumentFile(mDocumentFile);
+        VirtualFileSystem[] fileSystems = VirtualFileSystem.getFileSystemsAtUri(documentFile.getUri());
         HashMap<String, Path> namePathMap = new HashMap<>(fileSystems.length);
         for (VirtualFileSystem fs : fileSystems) {
             namePathMap.put(Objects.requireNonNull(fs.getMountPoint()).getLastPathSegment(), fs.getRootPath());
         }
         // List documents at this folder and add only those which are not mount points.
-        DocumentFile[] ss = mDocumentFile.listFiles();
+        DocumentFile[] ss = documentFile.listFiles();
         List<Path> paths = new ArrayList<>(ss.length + fileSystems.length);
         for (DocumentFile s : ss) {
             Path p = namePathMap.get(s.getName());
@@ -956,7 +1030,8 @@ public class Path implements Comparable<Path> {
     @Nullable
     public ParcelFileDescriptor openFileDescriptor(@NonNull String mode, @NonNull HandlerThread callbackThread)
             throws FileNotFoundException {
-        if (mDocumentFile instanceof ExtendedRawDocumentFile) {
+        DocumentFile documentFile = getRealDocumentFile(mDocumentFile);
+        if (documentFile instanceof ExtendedRawDocumentFile) {
             ExtendedFile file = Objects.requireNonNull(getFile());
             if (file instanceof RemoteFile) {
                 int modeBits = ParcelFileDescriptor.parseMode(mode);
@@ -967,16 +1042,15 @@ public class Path implements Comparable<Path> {
                     throw (FileNotFoundException) new FileNotFoundException(e.getMessage()).initCause(e);
                 }
             } // else use the default content provider
-        } else if (mDocumentFile instanceof VirtualDocumentFile) {
-            if (!mDocumentFile.isFile()) return null;
+        } else if (documentFile instanceof VirtualDocumentFile) {
             int modeBits = ParcelFileDescriptor.parseMode(mode);
             try {
-                return ((VirtualDocumentFile) mDocumentFile).openFileDescriptor(modeBits);
+                return ((VirtualDocumentFile) documentFile).openFileDescriptor(modeBits);
             } catch (IOException e) {
                 throw (FileNotFoundException) new FileNotFoundException(e.getMessage()).initCause(e);
             }
         }
-        return mContext.getContentResolver().openFileDescriptor(mDocumentFile.getUri(), mode);
+        return mContext.getContentResolver().openFileDescriptor(documentFile.getUri(), mode);
     }
 
     public OutputStream openOutputStream() throws IOException {
@@ -985,37 +1059,39 @@ public class Path implements Comparable<Path> {
 
     @NonNull
     public OutputStream openOutputStream(boolean append) throws IOException {
-        if (mDocumentFile instanceof ExtendedRawDocumentFile) {
+        DocumentFile documentFile = getRealDocumentFile(mDocumentFile);
+        if (documentFile instanceof ExtendedRawDocumentFile) {
             try {
                 return Objects.requireNonNull(getFile()).newOutputStream(append);
             } catch (IOException e) {
-                throw new IOException("Could not open file for writing: " + mDocumentFile.getUri());
+                throw new IOException("Could not open file for writing: " + documentFile.getUri());
             }
-        } else if (mDocumentFile instanceof VirtualDocumentFile) {
-            return ((VirtualDocumentFile) mDocumentFile).openOutputStream(append);
+        } else if (documentFile instanceof VirtualDocumentFile) {
+            return ((VirtualDocumentFile) documentFile).openOutputStream(append);
         }
         String mode = "w" + (append ? "a" : "t");
-        OutputStream os = mContext.getContentResolver().openOutputStream(mDocumentFile.getUri(), mode);
+        OutputStream os = mContext.getContentResolver().openOutputStream(documentFile.getUri(), mode);
         if (os == null) {
-            throw new IOException("Could not resolve Uri: " + mDocumentFile.getUri());
+            throw new IOException("Could not resolve Uri: " + documentFile.getUri());
         }
         return os;
     }
 
     @NonNull
     public InputStream openInputStream() throws IOException {
-        if (mDocumentFile instanceof ExtendedRawDocumentFile) {
-        try {
+        DocumentFile documentFile = getRealDocumentFile(mDocumentFile);
+        if (documentFile instanceof ExtendedRawDocumentFile) {
+            try {
                 return Objects.requireNonNull(getFile()).newInputStream();
-        } catch (IOException e) {
-            throw new IOException("Could not open file for reading: " + mDocumentFile.getUri(), e);
+            } catch (IOException e) {
+                throw new IOException("Could not open file for reading: " + documentFile.getUri(), e);
+            }
+        } else if (documentFile instanceof VirtualDocumentFile) {
+            return ((VirtualDocumentFile) documentFile).openInputStream();
         }
-        } else if (mDocumentFile instanceof VirtualDocumentFile) {
-            return ((VirtualDocumentFile) mDocumentFile).openInputStream();
-        }
-        InputStream is = mContext.getContentResolver().openInputStream(mDocumentFile.getUri());
+        InputStream is = mContext.getContentResolver().openInputStream(documentFile.getUri());
         if (is == null) {
-            throw new IOException("Could not resolve Uri: " + mDocumentFile.getUri());
+            throw new IOException("Could not resolve Uri: " + documentFile.getUri());
         }
         return is;
     }
@@ -1079,6 +1155,7 @@ public class Path implements Comparable<Path> {
         if (displayName.indexOf(File.separatorChar) != -1) {
             throw new IllegalArgumentException("Display name contains file separator.");
         }
+        documentFile = getRealDocumentFile(documentFile);
         if (!documentFile.isDirectory()) {
             throw new IOException("Current file is not a directory.");
         }
@@ -1086,7 +1163,8 @@ public class Path implements Comparable<Path> {
         if (mimeType != null) {
             extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
         } else mimeType = DEFAULT_MIME;
-        checkVfs(FileUtils.addSegmentAtEnd(documentFile.getUri(), displayName + (extension != null ? "." + extension : "")));
+        String nameWithExtension = displayName + (extension != null ? "." + extension : "");
+        checkVfs(FileUtils.addSegmentAtEnd(documentFile.getUri(), nameWithExtension));
         DocumentFile f = documentFile.findFile(displayName);
         if (f != null) {
             if (f.isDirectory()) {
@@ -1097,26 +1175,24 @@ public class Path implements Comparable<Path> {
         }
         DocumentFile file = documentFile.createFile(mimeType, displayName);
         if (file == null) {
-            throw new IOException("Could not create " + documentFile.getUri() + File.separatorChar + displayName + " with type " + mimeType);
+            throw new IOException("Could not create " + documentFile.getUri() + File.separatorChar + nameWithExtension + " with type " + mimeType);
         }
         return new Path(context, file);
     }
 
     @Nullable
-    private static Path findFileInternal(@NonNull Path path, @NonNull String dirtyDisplayName) {
+    private static DocumentFile findFileInternal(@NonNull DocumentFile documentFile, @NonNull String dirtyDisplayName) {
         String[] parts = FileUtils.getSanitizedPath(dirtyDisplayName).split(File.separator);
-        DocumentFile documentFile = path.mDocumentFile;
+        documentFile = getRealDocumentFile(documentFile);
         for (String part : parts) {
             // Check for mount point
             Uri newUri = FileUtils.addSegmentAtEnd(documentFile.getUri(), part);
             Path fsRoot = VirtualFileSystem.getFsRoot(newUri);
-            if (fsRoot != null) {
-                // Mount point has the higher priority
-                documentFile = fsRoot.mDocumentFile;
-            } else documentFile = documentFile.findFile(part);
+            // Mount point has the higher priority
+            documentFile = fsRoot != null ? fsRoot.mDocumentFile : documentFile.findFile(part);
             if (documentFile == null) return null;
         }
-        return new Path(path.mContext, documentFile);
+        return documentFile;
     }
 
     @Nullable
@@ -1133,7 +1209,7 @@ public class Path implements Comparable<Path> {
     private static DocumentFile createArbitraryDirectories(@NonNull DocumentFile documentFile,
                                                            @NonNull String[] names,
                                                            int length) throws IOException {
-        DocumentFile file = documentFile;
+        DocumentFile file = getRealDocumentFile(documentFile);
         for (int i = 0; i < length; ++i) {
             Path fsRoot = VirtualFileSystem.getFsRoot(FileUtils.addSegmentAtEnd(file.getUri(), names[i]));
             DocumentFile t = fsRoot != null ? fsRoot.mDocumentFile : file.findFile(names[i]);
@@ -1148,6 +1224,15 @@ public class Path implements Comparable<Path> {
             file = t;
         }
         return file;
+    }
+
+    @NonNull
+    private static DocumentFile getRealDocumentFile(@NonNull DocumentFile documentFile) {
+        Path fsRoot = VirtualFileSystem.getFsRoot(documentFile.getUri());
+        if (fsRoot != null) {
+            return fsRoot.mDocumentFile;
+        }
+        return documentFile;
     }
 
     private static void checkVfs(Uri uri) throws IOException {

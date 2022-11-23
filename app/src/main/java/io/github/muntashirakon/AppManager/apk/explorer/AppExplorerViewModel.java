@@ -135,7 +135,7 @@ public class AppExplorerViewModel extends AndroidViewModel {
                 if (convertXml) {
                     byte[] fileBytes = IoUtils.readFully(is, -1, true);
                     ByteBuffer byteBuffer = ByteBuffer.wrap(fileBytes);
-                    File cachedFile = FileUtils.getTempFile();
+                    File cachedFile = FileUtils.getTempFile(item.extension);
                     try (PrintStream ps = new PrintStream(cachedFile)) {
                         if (AndroidBinXmlDecoder.isBinaryXml(byteBuffer)) {
                             AndroidBinXmlDecoder.decode(byteBuffer, ps);
@@ -145,7 +145,7 @@ public class AppExplorerViewModel extends AndroidViewModel {
                         addCachedFile(item, cachedFile);
                     }
                 } else {
-                    addCachedFile(item, FileUtils.getCachedFile(is));
+                    addCachedFile(item, FileUtils.getCachedFile(is, item.extension));
                 }
             } catch (Throwable e) {
                 e.printStackTrace();
@@ -172,7 +172,7 @@ public class AppExplorerViewModel extends AndroidViewModel {
                 }
                 try (InputStream is = new BufferedInputStream(item.openInputStream())) {
                     boolean isZipFile = FileUtils.isInputFileZip(is);
-                    File cachedFile = FileUtils.getCachedFile(is);
+                    File cachedFile = FileUtils.getCachedFile(is, item.extension);
                     addCachedFile(item, cachedFile);
                     if (isZipFile) {
                         int vfsId = VirtualFileSystem.mount(item.getUri(), Paths.get(cachedFile), ContentType.ZIP.getMimeType());

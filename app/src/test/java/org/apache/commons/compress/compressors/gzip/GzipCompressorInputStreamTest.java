@@ -2,8 +2,6 @@
 
 package org.apache.commons.compress.compressors.gzip;
 
-import android.content.Context;
-
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.junit.Test;
@@ -19,7 +17,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.Path;
@@ -31,7 +28,6 @@ import static org.junit.Assert.assertEquals;
 @RunWith(RobolectricTestRunner.class)
 public class GzipCompressorInputStreamTest {
     private final ClassLoader classLoader = getClass().getClassLoader();
-    private final Context context = AppManager.getContext();
 
     @Test
     public void testUnTarGzip() throws IOException {
@@ -76,8 +72,8 @@ public class GzipCompressorInputStreamTest {
     public void testSplitUnTarGzip() throws IOException {
         List<Path> pathList = new ArrayList<>();
         assert classLoader != null;
-        pathList.add(new Path(context, new File(classLoader.getResource("AppManager_v2.5.22.apks.tar.gz.0").getFile())));
-        pathList.add(new Path(context, new File(classLoader.getResource("AppManager_v2.5.22.apks.tar.gz.1").getFile())));
+        pathList.add(Paths.get(classLoader.getResource("AppManager_v2.5.22.apks.tar.gz.0").getFile()));
+        pathList.add(Paths.get(classLoader.getResource("AppManager_v2.5.22.apks.tar.gz.1").getFile()));
 
         try (SplitInputStream sis = new SplitInputStream(pathList);
              BufferedInputStream bis = new BufferedInputStream(sis);

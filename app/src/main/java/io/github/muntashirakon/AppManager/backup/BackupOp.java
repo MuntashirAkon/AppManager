@@ -78,8 +78,6 @@ class BackupOp implements Closeable {
     static final String TAG = BackupOp.class.getSimpleName();
 
     @NonNull
-    private final Context mContext = AppManager.getContext();
-    @NonNull
     private final String mPackageName;
     @NonNull
     private final BackupFiles.BackupFile mBackupFile;
@@ -103,7 +101,7 @@ class BackupOp implements Closeable {
     private final BackupFiles.Checksum mChecksum;
     // We don't need privileged package manager here
     @NonNull
-    private final PackageManager mPm = mContext.getPackageManager();
+    private final PackageManager mPm = AppManager.getContext().getPackageManager();
 
     BackupOp(@NonNull String packageName, @NonNull MetadataManager metadataManager, @NonNull BackupFlags backupFlags,
              @NonNull BackupFiles.BackupFile backupFile, @UserIdInt int userId) throws BackupException {
@@ -299,9 +297,9 @@ class BackupOp implements Closeable {
     }
 
     private void backupKeyStore() throws BackupException {  // Called only when the app has an keystore item
-        Path keyStorePath = KeyStoreUtils.getKeyStorePath(mContext, mUserId);
+        Path keyStorePath = KeyStoreUtils.getKeyStorePath(mUserId);
         try {
-            Path masterKeyFile = KeyStoreUtils.getMasterKey(mContext, mUserId);
+            Path masterKeyFile = KeyStoreUtils.getMasterKey(mUserId);
             // Master key exists, so take its checksum to verify it during the restore
             mChecksum.add(MASTER_KEY, DigestUtils.getHexDigest(mMetadata.checksumAlgo,
                     FileUtils.getFileContent(masterKeyFile).getBytes()));
@@ -311,7 +309,7 @@ class BackupOp implements Closeable {
         Path cachePath = Paths.get(FileUtils.getCachePath());
         List<String> cachedKeyStoreFileNames = new ArrayList<>();
         List<String> keyStoreFilters = new ArrayList<>();
-        for (String keyStoreFileName : KeyStoreUtils.getKeyStoreFiles(mContext, mApplicationInfo.uid, mUserId)) {
+        for (String keyStoreFileName : KeyStoreUtils.getKeyStoreFiles(mApplicationInfo.uid, mUserId)) {
             try {
                 String newFileName = Utils.replaceOnce(keyStoreFileName, String.valueOf(mApplicationInfo.uid),
                         String.valueOf(KEYSTORE_PLACEHOLDER));

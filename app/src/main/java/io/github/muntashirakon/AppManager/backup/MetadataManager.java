@@ -372,7 +372,7 @@ public final class MetadataManager {
             // Unknown tar type, set default
             mMetadata.tarType = TarUtils.TAR_GZIP;
         }
-        mMetadata.keyStore = KeyStoreUtils.hasKeyStore(mContext, applicationInfo.uid);
+        mMetadata.keyStore = KeyStoreUtils.hasKeyStore(applicationInfo.uid);
         mMetadata.label = applicationInfo.loadLabel(pm).toString();
         mMetadata.packageName = packageInfo.packageName;
         mMetadata.versionName = packageInfo.versionName;

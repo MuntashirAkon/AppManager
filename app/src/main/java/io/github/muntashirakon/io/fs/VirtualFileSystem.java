@@ -44,14 +44,14 @@ import static io.github.muntashirakon.io.FileSystemManager.MODE_WRITE_ONLY;
 @SuppressWarnings("unused")
 public abstract class VirtualFileSystem {
     public static final String TAG = VirtualFileSystem.class.getSimpleName();
+    public static final String SCHEME = "vfs";
 
     public static Uri getUri(int fsId, @Nullable String path) {
-        // Force authority by adding `//`
-        if (path == null) {
-            return Uri.parse("vfs://" + fsId + File.separator);
-        }
-        return Uri.parse("vfs://" + fsId + (path.startsWith(File.separator) ? path :
-                (File.separator + path)));
+        return new Uri.Builder()
+                .scheme(SCHEME)
+                .authority(String.valueOf(fsId))
+                .path(path != null ? path : File.separator)
+                .build();
     }
 
     @NonNull
@@ -155,6 +155,10 @@ public abstract class VirtualFileSystem {
         fs.mountPoint = newMountPoint;
         Log.d(TAG, String.format(Locale.ROOT, "Mount point of %d altered from %s to %s", fs.getFsId(),
                 oldMountPoint, newMountPoint));
+    }
+
+    public static boolean isMountPoint(@NonNull Uri uri) {
+        return getFileSystem(uri) != null;
     }
 
     /**

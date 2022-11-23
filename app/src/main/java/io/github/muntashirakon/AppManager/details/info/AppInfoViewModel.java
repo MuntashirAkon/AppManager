@@ -167,8 +167,8 @@ public class AppInfoViewModel extends AndroidViewModel {
                 }
             }
             tagCloud.isMagiskDenyListEnabled = !mainModel.getIsExternalApk() && magiskDenyListEnabled;
-            tagCloud.hasKeyStoreItems = KeyStoreUtils.hasKeyStore(getApplication(), applicationInfo.uid);
-            tagCloud.hasMasterKeyInKeyStore = KeyStoreUtils.hasMasterKey(getApplication(), applicationInfo.uid);
+            tagCloud.hasKeyStoreItems = KeyStoreUtils.hasKeyStore(applicationInfo.uid);
+            tagCloud.hasMasterKeyInKeyStore = KeyStoreUtils.hasMasterKey(applicationInfo.uid);
             tagCloud.usesPlayAppSigning = PackageUtils.usesPlayAppSigning(applicationInfo);
             try {
                 tagCloud.backups = MetadataManager.getMetadata(packageName);

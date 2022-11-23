@@ -163,7 +163,7 @@ public final class ApkUtils {
             }
         }
         // This could be due to a Zip error, try caching the APK
-        File cachedApk = FileUtils.getCachedFile(apkInputStream);
+        File cachedApk = FileUtils.getCachedFile(apkInputStream, "apk");
         ByteBuffer byteBuffer;
         try {
             byteBuffer = getManifestFromApk(cachedApk);

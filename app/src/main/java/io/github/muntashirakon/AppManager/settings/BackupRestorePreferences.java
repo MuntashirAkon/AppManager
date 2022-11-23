@@ -48,7 +48,7 @@ import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuild
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
-import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
@@ -345,7 +345,7 @@ public class BackupRestorePreferences extends PreferenceFragment {
     private Intent getSafIntent(String path) {
         return new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
                 .putExtra("android.provider.extra.SHOW_ADVANCED", true)
-                .putExtra("android.provider.extra.INITIAL_URI", Path.getPrimaryPath(activity, path).getUri());
+                .putExtra("android.provider.extra.INITIAL_URI", Paths.getPrimaryPath(path).getUri());
     }
 
     @CryptoUtils.Mode

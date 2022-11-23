@@ -271,7 +271,7 @@ public final class ApkFile implements AutoCloseable {
             if (cacheFilePath == null || !cacheFilePath.canRead()) {
                 // Cache manually
                 try (InputStream is = cr.openInputStream(apkUri)) {
-                    this.cacheFilePath = FileUtils.getCachedFile(is);
+                    this.cacheFilePath = FileUtils.getCachedFile(is, extension);
                 } catch (IOException e) {
                     throw new ApkFileException("Could not cache the input file.", e);
                 }
@@ -735,12 +735,12 @@ public final class ApkFile implements AutoCloseable {
                 // Return original/real file if signing is not requested
                 return realFile;
             }
-            signedFile = FileUtils.getTempFile();
+            signedFile = FileUtils.getTempFile("apk");
             SigSchemes sigSchemes = SigSchemes.fromPref();
             try {
                 Signer signer = Signer.getInstance(sigSchemes);
                 if (signer.isV4SchemeEnabled()) {
-                    idsigFile = FileUtils.getTempFile();
+                    idsigFile = FileUtils.getTempFile("idsig");
                     signer.setIdsigFile(idsigFile);
                 }
                 if (signer.sign(realFile, signedFile)) {

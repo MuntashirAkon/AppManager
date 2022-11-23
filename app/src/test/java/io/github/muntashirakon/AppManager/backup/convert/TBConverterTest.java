@@ -2,8 +2,6 @@
 
 package io.github.muntashirakon.AppManager.backup.convert;
 
-import android.content.Context;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,12 +13,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.backup.BackupException;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtilsTest;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -33,7 +31,6 @@ public class TBConverterTest {
     private static final String PACKAGE_NAME_APK = "ademar.textlauncher";
 
     private final ClassLoader classLoader = getClass().getClassLoader();
-    private final Context context = AppManager.getContext();
     private File backupLocation;
 
     @Before
@@ -77,7 +74,7 @@ public class TBConverterTest {
                 "files/PersonalDNSFilter/FILTERHOSTS.TXT.DLD_CNT");
         Collections.sort(internalStorage);
         Collections.sort(externalStorage);
-        Path propFile = new Path(context, new File(backupLocation, PACKAGE_NAME_FULL + "-20210529-164214.properties"));
+        Path propFile = Paths.get(new File(backupLocation, PACKAGE_NAME_FULL + "-20210529-164214.properties"));
         TBConverter tbConvert = new TBConverter(propFile);
         tbConvert.convert();
         Path newBackupLocation = AppPref.getAppManagerDirectory().findFile(PACKAGE_NAME_FULL).findFile("0_TB");
@@ -99,7 +96,7 @@ public class TBConverterTest {
                 "shared_prefs/",
                 "shared_prefs/org.billthefarmer.editor_preferences.xml");
         Collections.sort(internalStorage);
-        Path propFile = new Path(context, new File(backupLocation, PACKAGE_NAME_APK_INT + "-20210529-164210.properties"));
+        Path propFile = Paths.get(new File(backupLocation, PACKAGE_NAME_APK_INT + "-20210529-164210.properties"));
         TBConverter tbConvert = new TBConverter(propFile);
         tbConvert.convert();
         Path newBackupLocation = AppPref.getAppManagerDirectory().findFile(PACKAGE_NAME_APK_INT).findFile("0_TB");
@@ -120,7 +117,7 @@ public class TBConverterTest {
                 "shared_prefs/ca.cmetcalfe.locationshare_preferences.xml",
                 "shared_prefs/_has_set_default_values.xml");
         Collections.sort(internalStorage);
-        Path propFile = new Path(context, new File(backupLocation, PACKAGE_NAME_INT + "-20210529-164219.properties"));
+        Path propFile = Paths.get(new File(backupLocation, PACKAGE_NAME_INT + "-20210529-164219.properties"));
         TBConverter tbConvert = new TBConverter(propFile);
         tbConvert.convert();
         Path newBackupLocation = AppPref.getAppManagerDirectory().findFile(PACKAGE_NAME_INT).findFile("0_TB");
@@ -134,7 +131,7 @@ public class TBConverterTest {
 
     @Test
     public void convertApkOnlyTest() throws BackupException, IOException {
-        Path propFile = new Path(context, new File(backupLocation, PACKAGE_NAME_APK + "-20210530-111646.properties"));
+        Path propFile = Paths.get(new File(backupLocation, PACKAGE_NAME_APK + "-20210530-111646.properties"));
         TBConverter tbConvert = new TBConverter(propFile);
         tbConvert.convert();
         Path newBackupLocation = AppPref.getAppManagerDirectory().findFile(PACKAGE_NAME_APK).findFile("0_TB");

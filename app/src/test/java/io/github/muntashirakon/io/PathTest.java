@@ -2,8 +2,6 @@
 
 package io.github.muntashirakon.io;
 
-import android.content.Context;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,8 +16,6 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
 
-import io.github.muntashirakon.AppManager.AppManager;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -28,13 +24,12 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(RobolectricTestRunner.class)
 public class PathTest {
-    private final Context context = AppManager.getContext();
     private Path tmpPath;
     private Path tmpFile;
 
     @Before
     public void setUp() throws Exception {
-        tmpPath = new Path(context, new File("/tmp"));
+        tmpPath = Paths.get("/tmp");
         tmpFile = tmpPath.createNewFile("am_tmp", null);
     }
 
@@ -254,7 +249,7 @@ public class PathTest {
 
     @Test
     public void findFileExistingDirectory() throws FileNotFoundException {
-        Path path = new Path(context, new File("/")).findFile("tmp");
+        Path path = Paths.get(File.separator).findFile("tmp");
         assertEquals(tmpPath, path);
         assertTrue(path.isDirectory());
     }

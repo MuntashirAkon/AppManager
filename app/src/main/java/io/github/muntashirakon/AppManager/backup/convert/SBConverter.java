@@ -253,7 +253,7 @@ public class SBConverter extends Converter {
                         File tmpFile = null;
                         if (!zipEntry.isDirectory()) {
                             // We need to use a temporary file
-                            tmpFile = FileUtils.getTempFile();
+                            tmpFile = FileUtils.getTempFile(dataFile.getExtension());
                             try (OutputStream fos = new FileOutputStream(tmpFile)) {
                                 FileUtils.copy(zis, fos);
                             } catch (Throwable th) {
