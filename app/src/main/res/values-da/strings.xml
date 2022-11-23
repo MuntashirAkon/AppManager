@@ -8,4 +8,6 @@
     <string name="no_activities">Ingen aktiviteter</string>
     <string name="require_no_permission">Der kræves ingen tilladelse</string>
     <string name="permissions">Bruger tilladelser</string>
+    <string name="launch">Start</string>
+    <string name="receivers">Modtagere</string>
 </resources>
