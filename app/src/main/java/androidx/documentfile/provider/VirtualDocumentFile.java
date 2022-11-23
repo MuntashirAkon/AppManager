@@ -37,7 +37,7 @@ public class VirtualDocumentFile extends DocumentFile {
     @NonNull
     private final VirtualFileSystem fs;
     @NonNull
-    private final String fullPath;
+    private String fullPath;
 
     public VirtualDocumentFile(@Nullable DocumentFile parent, @NonNull VirtualFileSystem fs) {
         super(parent);
@@ -199,6 +199,10 @@ public class VirtualDocumentFile extends DocumentFile {
     public boolean renameTo(@NonNull String displayName) {
         String parent = FileUtils.removeLastPathSegment(fullPath);
         String newFile = FileUtils.addSegmentAtEnd(parent, displayName);
-        return fs.renameTo(fullPath, newFile);
+        if(fs.renameTo(fullPath, newFile)) {
+            fullPath = newFile;
+            return true;
+        }
+        return false;
     }
 }

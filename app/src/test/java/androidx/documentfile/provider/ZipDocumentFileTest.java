@@ -4,6 +4,8 @@ package androidx.documentfile.provider;
 
 import android.net.Uri;
 
+import com.j256.simplemagic.ContentType;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,8 +16,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.backup.convert.OABConverter;
+import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.io.fs.VirtualFileSystem;
 
 import static org.junit.Assert.assertEquals;
@@ -38,9 +42,8 @@ public class ZipDocumentFileTest {
     @Test
     public void testZipDocument() throws Throwable {
         List<String> level1 = Arrays.asList("AndroidManifest.xml", "META-INF", "classes.dex", "res", "resources.arsc");
-        VirtualFileSystem fs = VirtualFileSystem.fromZipFile(Uri.fromFile(new File("/tmp/zip1")), apkFile);
-        VirtualFileSystem.mount(fs);
-        VirtualDocumentFile doc = new VirtualDocumentFile(null, fs);
+        int fsId = VirtualFileSystem.mount(Uri.fromFile(new File("/tmp/zip1")), Paths.get(apkFile), ContentType.ZIP.getMimeType());
+        VirtualDocumentFile doc = new VirtualDocumentFile(null, Objects.requireNonNull(VirtualFileSystem.getFileSystem(fsId)));
         assertTrue(doc.isDirectory());
         assertFalse(doc.isFile());
         assertTrue(doc.exists());

@@ -2,7 +2,6 @@
 
 package io.github.muntashirakon.io.fs;
 
-import android.net.Uri;
 import android.system.OsConstants;
 import android.util.LruCache;
 
@@ -21,31 +20,29 @@ import java.util.List;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.fm.ContentType2;
 import io.github.muntashirakon.AppManager.scanner.DexClasses;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.Path;
 
 public class DexFileSystem extends VirtualFileSystem {
+    public static final String TYPE = ContentType2.DEX.getMimeType();
+
     private final LruCache<String, Node<ClassDef>> cache = new LruCache<>(100);
-    @Nullable
-    private final File filePath;
-    @Nullable
+    @NonNull
     private final Path dexPath;
     @Nullable
     private DexClasses dexClasses;
     @Nullable
     private Node<ClassDef> rootNode;
 
-    public DexFileSystem(@NonNull Uri mountPoint, @NonNull File filePath) {
-        super(mountPoint);
-        this.filePath = filePath;
-        this.dexPath = null;
+    public DexFileSystem(@NonNull Path dexPath) {
+        this.dexPath = dexPath;
     }
 
-    public DexFileSystem(@NonNull Uri mountPoint, @NonNull Path dexPath) {
-        super(mountPoint);
-        this.filePath = null;
-        this.dexPath = dexPath;
+    @Override
+    public String getType() {
+        return TYPE;
     }
 
     @NonNull
@@ -58,12 +55,8 @@ public class DexFileSystem extends VirtualFileSystem {
 
     @Override
     protected Path onMount() throws IOException {
-        if (filePath != null) {
-            dexClasses = new DexClasses(filePath);
-        } else if (dexPath != null) {
-            try (InputStream is = dexPath.openInputStream()) {
-                dexClasses = new DexClasses(is);
-            }
+        try (InputStream is = dexPath.openInputStream()) {
+            dexClasses = new DexClasses(is);
         }
         rootNode = buildTree(Objects.requireNonNull(dexClasses));
         return new Path(AppManager.getContext(), this);
@@ -100,7 +93,7 @@ public class DexFileSystem extends VirtualFileSystem {
 
     @Override
     public long lastModified(String path) {
-        return filePath != null ? filePath.lastModified() : 0L;
+        return dexPath.lastModified();
     }
 
     @Override

@@ -13,10 +13,11 @@ import java.util.List;
 import java.util.Map;
 
 public enum ContentType2 {
+    DEX("application/x-dex", "dex", "dex"),
     PEM("application/pem-certificate-chain", "pem", "pem"),
     PK8("application/pkcs8", "pkcs8", "pk8"),
-    M4A("audio/mp4a-latm", "MP4A-LATM", "m4a"),
-    SMALI("text/x-smali", "Smali", "smali"),
+    M4A("audio/mp4a-latm", "mp4a-latm", "m4a"),
+    SMALI("text/x-smali", "smali", "smali"),
     /** default if no specific match to the mime-type */
     OTHER("application/octet-stream", "other"),
     ;

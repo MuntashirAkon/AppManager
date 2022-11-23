@@ -13,8 +13,11 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.backup.convert.OABConverter;
+import io.github.muntashirakon.AppManager.fm.ContentType2;
+import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.io.fs.VirtualFileSystem;
 
 import static androidx.documentfile.provider.ZipDocumentFileTest.getChildNames;
@@ -39,9 +42,8 @@ public class DexDocumentFileTest {
     @Test
     public void testDexFile() throws Throwable {
         List<String> level1 = Arrays.asList("a", "ademar");
-        VirtualFileSystem fs = VirtualFileSystem.fromDexFile(Uri.fromFile(new File("/tmp/dex1")), dexFile);
-        VirtualFileSystem.mount(fs);
-        VirtualDocumentFile doc = new VirtualDocumentFile(null, fs);
+        int fsId = VirtualFileSystem.mount(Uri.fromFile(new File("/tmp/dex1")), Paths.get(dexFile), ContentType2.DEX.getMimeType());
+        VirtualDocumentFile doc = new VirtualDocumentFile(null, Objects.requireNonNull(VirtualFileSystem.getFileSystem(fsId)));
         assertTrue(doc.isDirectory());
         assertFalse(doc.isFile());
         assertTrue(doc.exists());

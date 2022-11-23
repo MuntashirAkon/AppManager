@@ -55,44 +55,44 @@ public abstract class VirtualFileSystem {
     }
 
     @NonNull
-    public static VirtualFileSystem fromZipFile(@NonNull Uri mountPoint, @NonNull File zipFile) {
-        return new ZipFileSystem(mountPoint, zipFile);
-    }
-
-    @NonNull
-    public static DexFileSystem fromDexFile(@NonNull Uri mountPoint, @NonNull File dexFile) {
-        return new DexFileSystem(mountPoint, dexFile);
-    }
-
-    @NonNull
-    public static DexFileSystem fromDexFile(@NonNull Uri mountPoint, @NonNull Path dexFile) {
-        return new DexFileSystem(mountPoint, dexFile);
+    private static VirtualFileSystem getNewInstance(@NonNull Path file, @NonNull String type) {
+        if (ZipFileSystem.TYPE.equals(type)) {
+            return new ZipFileSystem(file);
+        }
+        if (DexFileSystem.TYPE.equals(type)) {
+            return new DexFileSystem(file);
+        }
+        throw new IllegalArgumentException("Invalid type " + type);
     }
 
     private static final SparseArrayCompat<VirtualFileSystem> fileSystems = new SparseArrayCompat<>(3);
     private static final HashMap<Uri, Integer> uriVfsIdsMap = new HashMap<>(3);
     private static final HashMap<Uri, List<Integer>> parentUriVfsIdsMap = new HashMap<>(3);
 
+    public static int mount(@NonNull Uri mountPoint, @NonNull Path file, @NonNull String type) throws IOException {
+        return mount(mountPoint, getNewInstance(file, type));
+    }
+
     @WorkerThread
-    public static int mount(@NonNull VirtualFileSystem fs) throws Throwable {
+    public static int mount(@NonNull Uri mountPoint, @NonNull VirtualFileSystem fs) throws IOException {
         int vfsId;
         synchronized (fileSystems) {
             synchronized (uriVfsIdsMap) {
-                if (uriVfsIdsMap.get(fs.getMountPoint()) != null) {
-                    throw new Exception(String.format("Mount point (%s) is already in use.", fs.getMountPoint()));
+                if (uriVfsIdsMap.get(mountPoint) != null) {
+                    throw new IOException(String.format("Mount point (%s) is already in use.", mountPoint));
                 }
             }
             do {
                 vfsId = ThreadLocalRandom.current().nextInt();
             } while (vfsId == 0 || fileSystems.get(vfsId) != null);
-            fs.mount(vfsId);
+            fs.mount(mountPoint, vfsId);
             fileSystems.put(vfsId, fs);
         }
         synchronized (uriVfsIdsMap) {
-            uriVfsIdsMap.put(fs.getMountPoint(), vfsId);
+            uriVfsIdsMap.put(mountPoint, vfsId);
         }
         synchronized (parentUriVfsIdsMap) {
-            Uri uri = FileUtils.removeLastPathSegment(fs.getMountPoint());
+            Uri uri = FileUtils.removeLastPathSegment(mountPoint);
             List<Integer> vfsIds = parentUriVfsIdsMap.get(uri);
             if (vfsIds == null) {
                 vfsIds = new ArrayList<>(1);
@@ -100,50 +100,61 @@ public abstract class VirtualFileSystem {
             }
             vfsIds.add(vfsId);
         }
-        Log.d(TAG, String.format(Locale.ROOT, "Mounted %d at %s", vfsId, fs.getMountPoint()));
+        Log.d(TAG, String.format(Locale.ROOT, "Mounted %d at %s", vfsId, mountPoint));
         return vfsId;
-    }
-
-    public static void unmount(@NonNull VirtualFileSystem fs) throws Throwable {
-        unmount(fs.getFsId());
     }
 
     @WorkerThread
     public static void unmount(int vfsId) throws Throwable {
-        VirtualFileSystem fs;
-        synchronized (fileSystems) {
-            fs = fileSystems.get(vfsId);
-        }
+        VirtualFileSystem fs = getFileSystem(vfsId);
         if (fs == null) return;
+        Uri mountPoint = fs.getMountPoint();
         fs.unmount();
         synchronized (fileSystems) {
             fileSystems.remove(vfsId);
         }
         synchronized (uriVfsIdsMap) {
-            uriVfsIdsMap.remove(fs.getMountPoint());
+            uriVfsIdsMap.remove(mountPoint);
         }
         synchronized (parentUriVfsIdsMap) {
-            Uri uri = FileUtils.removeLastPathSegment(fs.getMountPoint());
-            List<Integer> vfsIds = parentUriVfsIdsMap.get(uri);
-            if (vfsIds != null && vfsIds.contains(vfsId)) {
-                if (vfsIds.size() == 1) parentUriVfsIdsMap.remove(uri);
-                else vfsIds.remove((Integer) vfsId);
+            if (mountPoint != null) {
+                Uri uri = FileUtils.removeLastPathSegment(mountPoint);
+                List<Integer> vfsIds = parentUriVfsIdsMap.get(uri);
+                if (vfsIds != null && vfsIds.contains(vfsId)) {
+                    if (vfsIds.size() == 1) parentUriVfsIdsMap.remove(uri);
+                    else vfsIds.remove((Integer) vfsId);
+                }
             }
         }
-        Log.d(TAG, String.format(Locale.ROOT, "%d unmounted at %s", vfsId, fs.getMountPoint()));
+        Log.d(TAG, String.format(Locale.ROOT, "%d unmounted at %s", vfsId, mountPoint));
     }
 
-    /**
-     * @see #getMountPoint()
-     */
-    @Nullable
-    public static Uri getMountPoint(int vfsId) {
-        VirtualFileSystem fs;
-        synchronized (fileSystems) {
-            fs = fileSystems.get(vfsId);
+    public static void alterMountPoint(Uri oldMountPoint, Uri newMountPoint) {
+        VirtualFileSystem fs = getFileSystem(oldMountPoint);
+        if (fs == null) return;
+        synchronized (uriVfsIdsMap) {
+            uriVfsIdsMap.remove(oldMountPoint);
+            uriVfsIdsMap.put(newMountPoint, fs.getFsId());
         }
-        if (fs == null) return null;
-        return fs.getMountPoint();
+        synchronized (parentUriVfsIdsMap) {
+            // Remove old mount point
+            Uri oldParent = FileUtils.removeLastPathSegment(oldMountPoint);
+            List<Integer> oldFsIds = parentUriVfsIdsMap.get(oldParent);
+            if (oldFsIds != null) {
+                oldFsIds.remove((Integer) fs.getFsId());
+            }
+            // Add new mount point
+            Uri newParent = FileUtils.removeLastPathSegment(newMountPoint);
+            List<Integer> newFsIds = parentUriVfsIdsMap.get(newParent);
+            if (newFsIds == null) {
+                newFsIds = new ArrayList<>(1);
+                parentUriVfsIdsMap.put(newParent, newFsIds);
+            }
+            newFsIds.add(fs.getFsId());
+        }
+        fs.mountPoint = newMountPoint;
+        Log.d(TAG, String.format(Locale.ROOT, "Mount point of %d altered from %s to %s", fs.getFsId(),
+                oldMountPoint, newMountPoint));
     }
 
     /**
@@ -151,12 +162,8 @@ public abstract class VirtualFileSystem {
      */
     @Nullable
     public static Path getFsRoot(int vfsId) {
-        VirtualFileSystem fs;
-        synchronized (fileSystems) {
-            fs = fileSystems.get(vfsId);
-        }
-        if (fs == null) return null;
-        return fs.getRootPath();
+        VirtualFileSystem fs = getFileSystem(vfsId);
+        return fs != null ? fs.getRootPath() : null;
     }
 
     /**
@@ -169,12 +176,7 @@ public abstract class VirtualFileSystem {
             vfsId = uriVfsIdsMap.get(mountPoint);
         }
         if (vfsId == null) return null;
-        VirtualFileSystem fs;
-        synchronized (fileSystems) {
-            fs = fileSystems.get(vfsId);
-        }
-        if (fs == null) return null;
-        return fs.getRootPath();
+        return getFsRoot(vfsId);
     }
 
     @Nullable
@@ -184,9 +186,7 @@ public abstract class VirtualFileSystem {
             vfsId = uriVfsIdsMap.get(mountPoint);
         }
         if (vfsId == null) return null;
-        synchronized (fileSystems) {
-            return fileSystems.get(vfsId);
-        }
+        return getFileSystem(vfsId);
     }
 
     @Nullable
@@ -278,14 +278,16 @@ public abstract class VirtualFileSystem {
     @NonNull
     private final List<Action> actions = new ArrayList<>();
     private final Map<String, FileCache> fileCacheMap = new HashMap<>();
-    @NonNull
-    private final Uri mountPoint;
+
+    @Nullable
+    private Uri mountPoint;
     private int fsId = 0;
     private Path rootPath;
 
-    protected VirtualFileSystem(@NonNull Uri mountPoint) {
-        this.mountPoint = mountPoint;
+    protected VirtualFileSystem() {
     }
+
+    public abstract String getType();
 
     public int getFsId() {
         return fsId;
@@ -295,7 +297,7 @@ public abstract class VirtualFileSystem {
      * Return the abstract location where the file system is mounted. This is similar to the mount point returned by the
      * {@code mount} command.
      */
-    @NonNull
+    @Nullable
     public final Uri getMountPoint() {
         return mountPoint;
     }
@@ -313,11 +315,12 @@ public abstract class VirtualFileSystem {
     /**
      * Mount the file system.
      *
-     * @param vfsId Unique file system ID to locate it.
+     * @param fsId Unique file system ID to locate it.
      * @throws IOException If the file system cannot be mounted.
      */
-    private void mount(int vfsId) throws IOException {
-        this.fsId = vfsId;
+    private void mount(@NonNull Uri mountPoint, int fsId) throws IOException {
+        this.mountPoint = mountPoint;
+        this.fsId = fsId;
         onPreMount();
         this.rootPath = onMount();
         onMounted();
@@ -363,6 +366,7 @@ public abstract class VirtualFileSystem {
         }
         onUnmount(actions);
         this.fsId = 0;
+        this.mountPoint = null;
         // Cleanup
         for (FileCache fileCache : fileCacheMap.values()) {
             fileCache.cachedFile.delete();

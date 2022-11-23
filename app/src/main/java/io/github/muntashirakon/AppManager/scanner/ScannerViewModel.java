@@ -30,12 +30,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.StaticDataset;
+import io.github.muntashirakon.AppManager.fm.ContentType2;
 import io.github.muntashirakon.AppManager.scanner.vt.VirusTotal;
 import io.github.muntashirakon.AppManager.scanner.vt.VtFileReport;
 import io.github.muntashirakon.AppManager.scanner.vt.VtFileScanMeta;
@@ -277,8 +279,8 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
             mNativeLibraries = Collections.emptyList();
         }
         try {
-            DexFileSystem dfs = VirtualFileSystem.fromDexFile(Uri.fromFile(mApkFile), mApkFile);
-            mDexVfsId = VirtualFileSystem.mount(dfs);
+            mDexVfsId = VirtualFileSystem.mount(Uri.fromFile(mApkFile), Paths.get(mApkFile), ContentType2.DEX.getMimeType());
+            DexFileSystem dfs = (DexFileSystem) Objects.requireNonNull(VirtualFileSystem.getFileSystem(mDexVfsId));
             mAllClasses = dfs.getDexClasses().getClassNames();
             Collections.sort(mAllClasses);
         } catch (Throwable e) {

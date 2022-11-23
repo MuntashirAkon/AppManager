@@ -2,13 +2,14 @@
 
 package io.github.muntashirakon.io.fs;
 
-import android.net.Uri;
 import android.os.Build;
 import android.system.OsConstants;
 import android.util.LruCache;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.j256.simplemagic.ContentType;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -26,6 +27,8 @@ import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.Path;
 
 class ZipFileSystem extends VirtualFileSystem {
+    public static final String TYPE = ContentType.ZIP.getMimeType();
+
     private final LruCache<String, Node<ZipEntry>> cache = new LruCache<>(100);
     @NonNull
     private final File zipFilePath;
@@ -34,9 +37,13 @@ class ZipFileSystem extends VirtualFileSystem {
     @Nullable
     private Node<ZipEntry> rootNode;
 
-    protected ZipFileSystem(@NonNull Uri mountPoint, @NonNull File zipFile) {
-        super(mountPoint);
-        this.zipFilePath = zipFile;
+    protected ZipFileSystem(@NonNull Path zipFile) {
+        this.zipFilePath = Objects.requireNonNull(zipFile.getFile());
+    }
+
+    @Override
+    public String getType() {
+        return TYPE;
     }
 
     @Nullable

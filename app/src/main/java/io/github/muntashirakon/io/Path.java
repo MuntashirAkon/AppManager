@@ -736,13 +736,21 @@ public class Path implements Comparable<Path> {
     }
 
     public boolean renameTo(@NonNull String displayName) {
-        // TODO: 16/10/21 Change mount point too
+        if (!exists()) return false;
         displayName = FileUtils.getSanitizedPath(displayName);
         if (displayName.contains(File.separator)) {
             // display name must belong to the same directory.
             return false;
         }
-        return mDocumentFile.renameTo(displayName);
+        Uri oldMountPoint = getUri();
+        if (mDocumentFile.renameTo(displayName)) {
+            if (VirtualFileSystem.getFileSystem(oldMountPoint) != null) {
+                // Change mount point
+                VirtualFileSystem.alterMountPoint(oldMountPoint, getUri());
+            }
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -866,7 +874,7 @@ public class Path implements Comparable<Path> {
         VirtualFileSystem[] fileSystems = VirtualFileSystem.getFileSystemsAtUri(getUri());
         HashMap<String, Path> namePathMap = new HashMap<>(fileSystems.length);
         for (VirtualFileSystem fs : fileSystems) {
-            namePathMap.put(fs.getMountPoint().getLastPathSegment(), fs.getRootPath());
+            namePathMap.put(Objects.requireNonNull(fs.getMountPoint()).getLastPathSegment(), fs.getRootPath());
         }
         // List documents at this folder and add only those which are not mount points.
         DocumentFile[] ss = mDocumentFile.listFiles();
@@ -1111,9 +1119,12 @@ public class Path implements Comparable<Path> {
         return new Path(path.mContext, documentFile);
     }
 
-    @NonNull
+    @Nullable
     private static DocumentFile getParentFile(@NonNull Context context, @NonNull VirtualFileSystem vfs) {
         Uri mountPoint = vfs.getMountPoint();
+        if (mountPoint == null) {
+            return null;
+        }
         Uri parentUri = FileUtils.removeLastPathSegment(mountPoint);
         return new Path(context, parentUri).mDocumentFile;
     }
@@ -1142,49 +1153,6 @@ public class Path implements Comparable<Path> {
     private static void checkVfs(Uri uri) throws IOException {
         if (VirtualFileSystem.getFileSystem(uri) != null) {
             throw new IOException("Destination is a mount point.");
-        }
-    }
-
-    private static class VirtualStorageCallback extends StorageManagerCompat.ProxyFileDescriptorCallbackCompat {
-        private final InputStream mIs;
-        private boolean mClosed;
-
-        public VirtualStorageCallback(VirtualDocumentFile document, HandlerThread callbackThread) throws IOException {
-            super(callbackThread);
-            mIs = document.openInputStream();
-            // FIXME: 9/5/22 We really cannot use an InputStream because we need to support seeking. For now, we will
-            //  skip the offset since the streams are fetched sequentially.
-        }
-
-        @Override
-        public long onGetSize() {
-            return -1; // Not a real file
-        }
-
-        @Override
-        public int onRead(long offset, int size, byte[] data) throws ErrnoException {
-            try {
-                return mIs.read(data, 0, size);
-            } catch (IOException e) {
-                throw new ErrnoException(e.getMessage(), OsConstants.EBADF);
-            }
-        }
-
-        @Override
-        protected void onRelease() {
-            try {
-                mIs.close();
-                mClosed = true;
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-
-        @Override
-        protected void finalize() throws Throwable {
-            if (!mClosed) {
-                mIs.close();
-            }
         }
     }
 

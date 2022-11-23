@@ -12,6 +12,8 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.j256.simplemagic.ContentType;
+
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.InputStream;
@@ -25,6 +27,7 @@ import java.util.concurrent.Executors;
 
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.parser.AndroidBinXmlDecoder;
+import io.github.muntashirakon.AppManager.fm.ContentType2;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
@@ -95,7 +98,7 @@ public class AppExplorerViewModel extends AndroidViewModel {
                     ApkFile.Entry baseEntry = apkFile.getBaseEntry();
                     File cachedFile = baseEntry.getRealCachedFile();
                     cachedFiles.add(cachedFile);
-                    int vfsId = VirtualFileSystem.mount(VirtualFileSystem.fromZipFile(apkUri, cachedFile));
+                    int vfsId = VirtualFileSystem.mount(apkUri, Paths.get(cachedFile), ContentType.ZIP.getMimeType());
                     vfsIds.add(vfsId);
                     zipFileRoot = VirtualFileSystem.getFsRoot(vfsId);
                 } catch (Throwable e) {
@@ -158,7 +161,7 @@ public class AppExplorerViewModel extends AndroidViewModel {
                 return;
             }
             try {
-                int vfsId = VirtualFileSystem.mount(VirtualFileSystem.fromDexFile(item.getUri(), item.path));
+                int vfsId = VirtualFileSystem.mount(item.getUri(), item.path, ContentType2.DEX.getMimeType());
                 vfsIds.add(vfsId);
                 uriChangeObserver.postValue(item.getUri());
             } catch (Throwable th) {
@@ -172,7 +175,7 @@ public class AppExplorerViewModel extends AndroidViewModel {
                     File cachedFile = FileUtils.getCachedFile(is);
                     addCachedFile(item, cachedFile);
                     if (isZipFile) {
-                        int vfsId = VirtualFileSystem.mount(VirtualFileSystem.fromZipFile(item.getUri(), cachedFile));
+                        int vfsId = VirtualFileSystem.mount(item.getUri(), Paths.get(cachedFile), ContentType.ZIP.getMimeType());
                         vfsIds.add(vfsId);
                         uriChangeObserver.postValue(item.getUri());
                     } else openObserver.postValue(item);
