@@ -776,23 +776,32 @@ public class Path implements Comparable<Path> {
     }
 
     /**
+     * Same as {@link #moveTo(Path, boolean)} with override enabled
+     */
+    public boolean moveTo(@NonNull Path dest) {
+        return moveTo(dest, true);
+    }
+
+    /**
      * Move the given path based on the following criteria:
      * <ol>
      *     <li>If both paths are physical (i.e. uses File API), use normal move behaviour
-     *     <li>If one of the paths is virtual, use special copy and delete operation
+     *     <li>If one of the paths is virtual or the above fails, use special copy and delete operation
      * </ol>
      * <p>
      * Move behavior is as follows:
      * <ul>
-     *     <li>If both are files or directories, rename applies (destination file is cleared if exists)
-     *     <li>If target is a directory, move the file inside the directory
-     *     <li>If the target is a file, exception occurs
+     *     <li>If both are directories, move {@code this} inside {@code path}
+     *     <li>If both are files, move {@code this} to {@code path} overriding it
+     *     <li>If {@code this} is a file and {@code path} is a directory, move the file inside the directory
+     *     <li>If {@code path} does not exist, it is created based on {@code this}.
      * </ul>
      *
-     * @param path Target file/directory.
+     * @param path Target file/directory which may or may not exist
+     * @param override Whether to override the files in the destination
      * @return {@code true} on success and {@code false} on failure
      */
-    public boolean moveTo(@NonNull Path path) {
+    public boolean moveTo(@NonNull Path path, boolean override) {
         DocumentFile source = getRealDocumentFile(mDocumentFile);
         DocumentFile dest = getRealDocumentFile(path.mDocumentFile);
         if (!source.exists()) {
@@ -807,8 +816,34 @@ public class Path implements Comparable<Path> {
             // Try Linux-default file move
             File srcFile = Objects.requireNonNull(((ExtendedRawDocumentFile) source).getFile());
             File dstFile = Objects.requireNonNull(((ExtendedRawDocumentFile) dest).getFile());
+            // Java rename cannot infer anything about the source and destination. Therefore, hacks are needed
+            if (srcFile.isFile()) { // Source is a file
+                if (dstFile.isDirectory()) {
+                    // Move source file inside this directory
+                    dstFile = new File(dstFile, srcFile.getName());
+                } else if (dstFile.isFile()) {
+                    // If destination is a file, it overrides it
+                    if (!override) {
+                        // Overriding is disabled
+                        return false;
+                    }
+                }
+                // else destination does not exist and Java is able to create it
+            } else if (srcFile.isDirectory()) { // Source is a directory
+                if (dstFile.isDirectory()) {
+                    // Move source directory inside this directory
+                    dstFile = new File(dstFile, srcFile.getName());
+                } else if (dstFile.isFile()) {
+                    // Destination cannot be a file
+                    return false;
+                }
+                // else destination does not exist and Java is able to create it
+            } else {
+                // Unsupported file
+                return false;
+            }
             if (srcFile.renameTo(dstFile)) {
-                mDocumentFile = dest;
+                mDocumentFile = getRequiredRawDocument(dstFile.getAbsolutePath());
                 if (VirtualFileSystem.getFileSystem(Uri.fromFile(srcFile)) != null) {
                     // Move mount point
                     VirtualFileSystem.alterMountPoint(Uri.fromFile(srcFile), Uri.fromFile(dstFile));
@@ -826,22 +861,16 @@ public class Path implements Comparable<Path> {
             }
         }
         // Try copy and delete approach
-        if (source.isDirectory()) {
+        if (source.isDirectory()) { // Source is a directory
             if (dest.isDirectory()) {
-                // Both are directories: Recreate destination and apply copy-and-delete
-                // Make sure that parent exists, and it is a directory
-                if (destParent == null || !destParent.isDirectory()) {
-                    return false;
-                }
-                // Recreate this directory
-                dest.delete();
-                DocumentFile newPath = destParent.createDirectory(path.getName());
+                // Destination is a directory: Apply copy-and-delete inside the dest
+                DocumentFile newPath = dest.createDirectory(Objects.requireNonNull(source.getName()));
                 if (newPath == null || newPath.listFiles().length != 0) {
-                    // Couldn't recreate directory
+                    // Couldn't create directory or the directory is not empty
                     return false;
                 }
                 try {
-                    // Copy all the directory items to the path
+                    // Copy all the directory items to the new path and delete source
                     copyDirectory(mContext, source, newPath);
                     source.delete();
                     mDocumentFile = newPath;
@@ -856,13 +885,13 @@ public class Path implements Comparable<Path> {
                 if (destParent == null || !destParent.isDirectory()) {
                     return false;
                 }
-                DocumentFile newPath = destParent.createDirectory(path.getName());
+                DocumentFile newPath = destParent.createDirectory(Objects.requireNonNull(dest.getName()));
                 if (newPath == null || newPath.listFiles().length != 0) {
-                    // Couldn't recreate directory
+                    // Couldn't create directory or the directory is not empty
                     return false;
                 }
                 try {
-                    // Copy all the directory items to the path
+                    // Copy all the directory items to the new path and delete source
                     copyDirectory(mContext, source, newPath);
                     source.delete();
                     mDocumentFile = newPath;
@@ -874,19 +903,31 @@ public class Path implements Comparable<Path> {
             // Current path is a directory but target is not a directory
             return false;
         }
-        if (source.isFile()) {
+        if (source.isFile()) { // Source is a file
             DocumentFile newPath;
             if (dest.isDirectory()) {
                 // Move the file inside the directory
                 newPath = dest.createFile(DEFAULT_MIME, getName());
-            } else {
-                // Rename the file
+            } else if (dest.isFile()) {
+                // Rename the file and override the existing dest
+                if (!override) {
+                    // overriding is disabled
+                    return false;
+                }
                 newPath = dest;
+            } else if (destParent != null) {
+                // File does not exist, create a new one
+                newPath = destParent.createFile(DEFAULT_MIME, Objects.requireNonNull(dest.getName()));
+            } else {
+                // File does not exist, but nothing could be done about it
+                return false;
             }
             if (newPath == null) {
+                // For some reason, newPath could not be created
                 return false;
             }
             try {
+                // Copy the contents of the source file and delete it
                 copyFile(mContext, source, newPath);
                 source.delete();
                 mDocumentFile = newPath;
