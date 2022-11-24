@@ -410,8 +410,13 @@ public class Path implements Comparable<Path> {
     public Path createNewArbitraryFile(@NonNull String displayName, @Nullable String mimeType) throws IOException {
         displayName = FileUtils.getSanitizedPath(displayName);
         String[] names = displayName.split(File.separator);
-        if (names.length < 1) {
-            throw new IllegalArgumentException("Display name is empty");
+        if (names.length == 0) {
+            throw new IllegalArgumentException("Display name is empty.");
+        }
+        for (String name : names) {
+            if (name.equals("..")) {
+                throw new IOException("Could not create directories in the parent directory.");
+            }
         }
         DocumentFile file = createArbitraryDirectories(mDocumentFile, names, names.length - 1);
         return createFileAsDirectChild(mContext, file, names[names.length - 1], mimeType);
@@ -430,8 +435,27 @@ public class Path implements Comparable<Path> {
     public Path createDirectories(@NonNull String displayName) throws IOException {
         displayName = FileUtils.getSanitizedPath(displayName);
         String[] dirNames = displayName.split(File.separator);
-        DocumentFile file = createArbitraryDirectories(mDocumentFile, dirNames, dirNames.length);
-        return new Path(mContext, file);
+        if (dirNames.length == 0) {
+            throw new IllegalArgumentException("Display name is empty");
+        }
+        for (String name : dirNames) {
+            if (name.equals("..")) {
+                throw new IOException("Could not create directories in the parent directory.");
+            }
+        }
+        DocumentFile file = createArbitraryDirectories(mDocumentFile, dirNames, dirNames.length - 1);
+        // Special case for the last segment
+        String lastSegment = dirNames[dirNames.length - 1];
+        Path fsRoot = VirtualFileSystem.getFsRoot(FileUtils.addSegmentAtEnd(file.getUri(), lastSegment));
+        DocumentFile t = fsRoot != null ? fsRoot.mDocumentFile : file.findFile(lastSegment);
+        if (t != null) {
+            throw new IOException(t + " already exists.");
+        }
+        t = file.createDirectory(lastSegment);
+        if (t == null) {
+            throw new IOException("Directory" + file + File.separator + lastSegment + " could not be created.");
+        }
+        return new Path(mContext, t);
     }
 
     /**
@@ -797,7 +821,7 @@ public class Path implements Comparable<Path> {
      *     <li>If {@code path} does not exist, it is created based on {@code this}.
      * </ul>
      *
-     * @param path Target file/directory which may or may not exist
+     * @param path     Target file/directory which may or may not exist
      * @param override Whether to override the files in the destination
      * @return {@code true} on success and {@code false} on failure
      */
