@@ -57,6 +57,6 @@
 \n \\textit{Debug releases:} \\url{https://t.me/AppManagerDebug}
 \n\\end{enumerate}</string>
     <string name="titlepage$user_manual">{\\huge\\bfseries Manual do Usuário\\par}</string>
-    <string name="intro$main$supported-versions">Atualmente, as versões suportadas são v2.6.0 (estável), v3.0.0 (alpha e de debug). Verções anteriores do App
+    <string name="intro$main$supported-versions">Atualmente, as versões suportadas são v3.0.0 -- v3.0.3 (estável), v3.1.0 (alpha e de debug). Verções anteriores do App
 \nManager pode conter vulnerabilidades de segurança e não deve usal-las.</string>
 </resources>
