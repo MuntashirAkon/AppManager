@@ -19,6 +19,8 @@ import java.util.Locale;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 
@@ -490,6 +492,13 @@ public class PathTest {
     }
 
     @Test
+    public void moveToSameFile() throws IOException {
+        Path src = tmpPath.createNewFile("am_new_file", null);
+        assertFalse(src.moveTo(src));
+        assertTrue(src.delete());
+    }
+
+    @Test
     public void moveFileToFileNoOverride() throws IOException {
         Path src = tmpPath.createNewFile("am_new_file", null);
         Path dst = tmpPath.createNewFile("moved_file", null);
@@ -542,6 +551,13 @@ public class PathTest {
     }
 
     @Test
+    public void moveToSameDir() throws IOException {
+        Path src = tmpPath.createNewDirectory("am_new_dir");
+        assertFalse(src.moveTo(src));
+        assertTrue(src.delete());
+    }
+
+    @Test
     public void moveDirToExistingDir() throws IOException {
         Path src = tmpPath.createNewDirectory("am_new_dir_src");
         Path dst = tmpPath.createNewDirectory("am_new_dir_dst");
@@ -562,6 +578,112 @@ public class PathTest {
         Path child = tmpPath.createNewDirectory("am_new_dir");
         child.createNewFile("some_file", null);
         assertFalse(child.moveTo(dst));
+        assertTrue(tmpPath.hasFile("am_new_file"));
+        assertTrue(tmpPath.hasFile("am_new_dir"));
+        assertTrue(child.delete());
+        assertTrue(dst.delete());
+    }
+
+    @Test
+    public void copyFileToFile() throws IOException {
+        Path src = tmpPath.createNewFile("am_new_file", null);
+        Path dst = tmpPath.createNewFile("copied_file", null);
+        assertNotNull(src.copyTo(dst));
+        assertTrue(tmpPath.hasFile("am_new_file"));
+        assertTrue(tmpPath.hasFile("copied_file"));
+        assertNotEquals(dst, src);
+        assertTrue(src.delete());
+        assertTrue(dst.delete());
+    }
+
+    @Test
+    public void copyToSameFile() throws IOException {
+        Path src = tmpPath.createNewFile("am_new_file", null);
+        assertNull(src.copyTo(src));
+        assertTrue(src.delete());
+    }
+
+    @Test
+    public void copyFileToFileNoOverride() throws IOException {
+        Path src = tmpPath.createNewFile("am_new_file", null);
+        Path dst = tmpPath.createNewFile("copied_file", null);
+        assertNull(src.copyTo(dst, false));
+        assertTrue(tmpPath.hasFile("am_new_file"));
+        assertTrue(tmpPath.hasFile("copied_file"));
+        assertNotEquals(dst, src);
+        assertTrue(src.delete());
+        assertTrue(dst.delete());
+    }
+
+    @Test
+    public void copyFileToDir() throws IOException {
+        Path src = tmpPath.createNewFile("am_new_file", null);
+        Path dst = tmpPath.createNewDirectory("am_new_dir");
+        assertNotNull(src.copyTo(dst));
+        assertTrue(dst.hasFile("am_new_file"));
+        assertTrue(tmpPath.hasFile("am_new_file"));
+        assertNotEquals(dst.findFile("am_new_file"), src);
+        assertTrue(dst.delete());
+        assertTrue(src.delete());
+    }
+
+    @Test
+    public void copyFileToDirAndFile() throws IOException {
+        Path src = tmpPath.createNewFile("am_new_file", null);
+        Path child = tmpPath.createNewDirectory("am_new_dir");
+        Path dst = child.createNewFile("copied_file", null);
+        assertNotNull(src.copyTo(dst));
+        assertTrue(child.hasFile("copied_file"));
+        assertTrue(tmpPath.hasFile("am_new_file"));
+        assertNotEquals(dst, src);
+        assertTrue(child.delete());
+        assertTrue(src.delete());
+    }
+
+    @Test
+    public void copyDirToDir() throws IOException {
+        Path src = tmpPath.createNewDirectory("am_new_dir_src");
+        Path dst = tmpPath.createNewDirectory("am_new_dir_dst");
+        src.createNewFile("some_file", null);
+        assertTrue(dst.delete());
+        assertNotNull(src.copyTo(dst));
+        assertTrue(tmpPath.hasFile("am_new_dir_src"));
+        assertTrue(tmpPath.hasFile("am_new_dir_dst"));
+        assertTrue(src.hasFile("some_file"));
+        assertTrue(dst.hasFile("some_file"));
+        assertNotEquals(dst, src);
+        assertTrue(dst.delete());
+        assertTrue(src.delete());
+    }
+
+    @Test
+    public void copyToSameDir() throws IOException {
+        Path src = tmpPath.createNewDirectory("am_new_dir");
+        assertNull(src.copyTo(src));
+        assertTrue(src.delete());
+    }
+
+    @Test
+    public void copyDirToExistingDir() throws IOException {
+        Path src = tmpPath.createNewDirectory("am_new_dir_src");
+        Path dst = tmpPath.createNewDirectory("am_new_dir_dst");
+        src.createNewFile("some_file", null);
+        assertNotNull(src.copyTo(dst));
+        assertTrue(tmpPath.hasFile("am_new_dir_src"));
+        assertTrue(tmpPath.hasFile("am_new_dir_dst"));
+        assertTrue(dst.hasFile("am_new_dir_src"));
+        assertTrue(dst.findFile("am_new_dir_src").hasFile("some_file"));
+        assertNotEquals(dst.findFile("am_new_dir_src"), src);
+        assertTrue(dst.delete());
+        assertTrue(src.delete());
+    }
+
+    @Test
+    public void copyDirToFileFails() throws IOException {
+        Path dst = tmpPath.createNewFile("am_new_file", null);
+        Path child = tmpPath.createNewDirectory("am_new_dir");
+        child.createNewFile("some_file", null);
+        assertNull(child.copyTo(dst));
         assertTrue(tmpPath.hasFile("am_new_file"));
         assertTrue(tmpPath.hasFile("am_new_dir"));
         assertTrue(child.delete());

@@ -836,6 +836,10 @@ public class Path implements Comparable<Path> {
             // There's no point is attempting to move if the destination is read-only.
             return false;
         }
+        if (source.equals(dest)) {
+            // Source and dest cannot be the same
+            return false;
+        }
         if (source instanceof ExtendedRawDocumentFile && dest instanceof ExtendedRawDocumentFile) {
             // Try Linux-default file move
             File srcFile = Objects.requireNonNull(((ExtendedRawDocumentFile) source).getFile());
@@ -963,6 +967,101 @@ public class Path implements Comparable<Path> {
         return false;
     }
 
+
+    @Nullable
+    public Path copyTo(@NonNull Path path) {
+        return copyTo(path, true);
+    }
+
+    @Nullable
+    public Path copyTo(@NonNull Path path, boolean override) {
+        DocumentFile source = getRealDocumentFile(mDocumentFile);
+        DocumentFile dest = getRealDocumentFile(path.mDocumentFile);
+        if (!source.exists()) {
+            // Source itself does not exist.
+            return null;
+        }
+        if (dest.exists() && !dest.canWrite()) {
+            // There's no point is attempting to copy if the destination is read-only.
+            return null;
+        }
+        if (source.equals(dest)) {
+            // Source and dest cannot be the same
+            return null;
+        }
+        DocumentFile destParent = dest.getParentFile();
+        if (source.isDirectory()) { // Source is a directory
+            if (dest.isDirectory()) {
+                // Destination is a directory: Apply copy source inside the dest
+                DocumentFile newPath = dest.createDirectory(Objects.requireNonNull(source.getName()));
+                if (newPath == null) {
+                    // Couldn't create directory
+                    return null;
+                }
+                try {
+                    // Copy all the directory items to the new path
+                    copyDirectory(mContext, source, newPath, override);
+                    return new Path(mContext, newPath);
+                } catch (IOException e) {
+                    return null;
+                }
+            }
+            if (!dest.exists()) {
+                // Destination does not exist, simply create and copy
+                // Make sure that parent exists, and it is a directory
+                if (destParent == null || !destParent.isDirectory()) {
+                    return null;
+                }
+                DocumentFile newPath = destParent.createDirectory(Objects.requireNonNull(dest.getName()));
+                if (newPath == null) {
+                    // Couldn't create directory or the directory is not empty
+                    return null;
+                }
+                try {
+                    // Copy all the directory items to the new path
+                    copyDirectory(mContext, source, newPath, override);
+                    return new Path(mContext, newPath);
+                } catch (IOException e) {
+                    return null;
+                }
+            }
+            // Current path is a directory but target is not a directory
+            return null;
+        }
+        if (source.isFile()) { // Source is a file
+            DocumentFile newPath;
+            if (dest.isDirectory()) {
+                // Move the file inside the directory
+                newPath = dest.createFile(DEFAULT_MIME, getName());
+            } else if (dest.isFile()) {
+                // Override the existing dest
+                if (!override) {
+                    // overriding is disabled
+                    return null;
+                }
+                newPath = dest;
+            } else if (destParent != null) {
+                // File does not exist, create a new one
+                newPath = destParent.createFile(DEFAULT_MIME, Objects.requireNonNull(dest.getName()));
+            } else {
+                // File does not exist, but nothing could be done about it
+                return null;
+            }
+            if (newPath == null) {
+                // For some reason, newPath could not be created
+                return null;
+            }
+            try {
+                // Copy the contents of the source file
+                copyFile(mContext, source, newPath);
+                return new Path(mContext, newPath);
+            } catch (IOException e) {
+                return null;
+            }
+        }
+        return null;
+    }
+
     private static void copyFile(@NonNull Context context, @NonNull DocumentFile src, @NonNull DocumentFile dst)
             throws IOException {
         copyFile(new Path(context, src), new Path(context, dst));
@@ -976,22 +1075,32 @@ public class Path implements Comparable<Path> {
     }
 
     // Copy directory content
-    private static void copyDirectory(@NonNull Context context, @NonNull DocumentFile src, @NonNull DocumentFile dst)
-            throws IOException {
-        copyDirectory(new Path(context, src), new Path(context, dst));
+    private static void copyDirectory(@NonNull Context context, @NonNull DocumentFile src, @NonNull DocumentFile dst,
+                                      boolean override) throws IOException {
+        copyDirectory(new Path(context, src), new Path(context, dst), override);
     }
 
-    private static void copyDirectory(@NonNull Path src, @NonNull Path dst) throws IOException {
+    private static void copyDirectory(@NonNull Context context, @NonNull DocumentFile src, @NonNull DocumentFile dst)
+            throws IOException {
+        copyDirectory(new Path(context, src), new Path(context, dst), true);
+    }
+
+    private static void copyDirectory(@NonNull Path src, @NonNull Path dst, boolean override) throws IOException {
         for (Path file : src.listFiles()) {
+            String name = file.getName();
             if (file.isDirectory()) {
-                Path newDir = dst.createNewDirectory(file.getName());
+                Path newDir = dst.createNewDirectory(name);
                 Path fsRoot = VirtualFileSystem.getFsRoot(file.getUri());
                 if (fsRoot != null) {
                     VirtualFileSystem.alterMountPoint(file.getUri(), newDir.getUri());
                 }
-                copyDirectory(file, newDir);
-            } else {
-                Path newFile = dst.createNewFile(file.getName(), null);
+                copyDirectory(file, newDir, override);
+            } else if (file.isFile()) {
+                if (dst.hasFile(name) && !override) {
+                    // Override disabled
+                    continue;
+                }
+                Path newFile = dst.createNewFile(name, null);
                 copyFile(file, newFile);
             }
         }
