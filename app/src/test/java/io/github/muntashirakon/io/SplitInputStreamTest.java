@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.io;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,6 +23,7 @@ import static org.junit.Assert.assertEquals;
 @RunWith(RobolectricTestRunner.class)
 public class SplitInputStreamTest {
     private final List<Path> fileList = new ArrayList<>();
+    private final List<File> junkFiles = new ArrayList<>();
     private final ClassLoader classLoader = getClass().getClassLoader();
 
     @Before
@@ -37,9 +39,17 @@ public class SplitInputStreamTest {
         fileList.add(Paths.get(classLoader.getResource("AppManager_v2.5.22.apks.7").getFile()));
     }
 
+    @After
+    public void tearDown() {
+        for (File file : junkFiles) {
+            file.delete();
+        }
+    }
+
     @Test
     public void read() throws IOException {
         File file = new File("/tmp/AppManager_v2.5.22.apks");
+        junkFiles.add(file);
         try (SplitInputStream splitInputStream = new SplitInputStream(fileList);
              OutputStream outputStream = new FileOutputStream(file)) {
             FileUtils.copy(splitInputStream, outputStream);

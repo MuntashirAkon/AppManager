@@ -27,6 +27,7 @@ import static org.junit.Assert.assertEquals;
 public class SplitOutputStreamTest {
     private SplitOutputStream splitOutputStream;
     private InputStream inputStream;
+    private final List<File> junkFiles = new ArrayList<>();
     private final ClassLoader classLoader = getClass().getClassLoader();
 
     @Before
@@ -42,6 +43,9 @@ public class SplitOutputStreamTest {
     public void tearDown() throws Exception {
         splitOutputStream.close();
         inputStream.close();
+        for (File file : junkFiles) {
+            file.delete();
+        }
     }
 
     @Test
@@ -88,6 +92,7 @@ public class SplitOutputStreamTest {
                 throw new FileNotFoundException(file + " does not exist.");
             }
             actualHashes.add(DigestUtils.getHexDigest(DigestUtils.SHA_256, file));
+            junkFiles.add(file);
         }
         return actualHashes;
     }

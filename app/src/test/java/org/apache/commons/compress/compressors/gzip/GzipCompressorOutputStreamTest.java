@@ -6,12 +6,14 @@ import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -32,9 +34,18 @@ import static org.junit.Assert.assertEquals;
 @RunWith(RobolectricTestRunner.class)
 public class GzipCompressorOutputStreamTest {
     private final ClassLoader classLoader = getClass().getClassLoader();
+    private final List<File> junkFiles = new ArrayList<>();
+
+    @After
+    public void tearDown() {
+        for (File file : junkFiles) {
+            file.delete();
+        }
+    }
 
     @Test
     public void testTarGzip() throws IOException {
+        File base = new File("/tmp/AppManager_v2.5.22.apks.tar.gz");
         List<String> fileNames = Arrays.asList("AppManager_v2.5.22.apks.0", "AppManager_v2.5.22.apks.1");
         List<Path> fileList = new ArrayList<>();
         assert classLoader != null;
@@ -42,7 +53,7 @@ public class GzipCompressorOutputStreamTest {
             fileList.add(Paths.get(classLoader.getResource(fileName).getFile()));
         }
 
-        try (FileOutputStream fos = new FileOutputStream("/tmp/AppManager_v2.5.22.apks.tar.gz");
+        try (FileOutputStream fos = new FileOutputStream(base);
              BufferedOutputStream bos = new BufferedOutputStream(fos);
              GzipCompressorOutputStream gos = new GzipCompressorOutputStream(bos);
              TarArchiveOutputStream tos = new TarArchiveOutputStream(gos)) {
@@ -59,7 +70,7 @@ public class GzipCompressorOutputStreamTest {
 
         // Check integrity
         List<String> actualFileNames = new ArrayList<>();
-        try (FileInputStream sis = new FileInputStream("/tmp/AppManager_v2.5.22.apks.tar.gz");
+        try (FileInputStream sis = new FileInputStream(base);
              BufferedInputStream bis = new BufferedInputStream(sis);
              GzipCompressorInputStream gcis = new GzipCompressorInputStream(bis);
              TarArchiveInputStream tis = new TarArchiveInputStream(gcis)) {
@@ -73,6 +84,7 @@ public class GzipCompressorOutputStreamTest {
         Collections.sort(fileNames);
         Collections.sort(actualFileNames);
         assertEquals(fileNames, actualFileNames);
+        junkFiles.add(base);
     }
 
     @Test
@@ -118,5 +130,8 @@ public class GzipCompressorOutputStreamTest {
         Collections.sort(fileNames);
         Collections.sort(actualFileNames);
         assertEquals(fileNames, actualFileNames);
+        for (Path path : pathList) {
+            junkFiles.add(path.getFile());
+        }
     }
 }

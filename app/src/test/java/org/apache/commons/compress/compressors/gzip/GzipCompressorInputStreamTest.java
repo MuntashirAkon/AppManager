@@ -4,6 +4,7 @@ package org.apache.commons.compress.compressors.gzip;
 
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
@@ -28,6 +29,14 @@ import static org.junit.Assert.assertEquals;
 @RunWith(RobolectricTestRunner.class)
 public class GzipCompressorInputStreamTest {
     private final ClassLoader classLoader = getClass().getClassLoader();
+    private final List<File> junkFiles = new ArrayList<>();
+
+    @After
+    public void tearDown() {
+        for (File file : junkFiles) {
+            file.delete();
+        }
+    }
 
     @Test
     public void testUnTarGzip() throws IOException {
@@ -64,6 +73,7 @@ public class GzipCompressorInputStreamTest {
                 throw new FileNotFoundException(file + " does not exist.");
             }
             actualHashes.add(DigestUtils.getHexDigest(DigestUtils.SHA_256, file));
+            junkFiles.add(file);
         }
         assertEquals(expectedHashes, actualHashes);
     }
@@ -107,6 +117,7 @@ public class GzipCompressorInputStreamTest {
                 throw new FileNotFoundException(file + " does not exist.");
             }
             actualHashes.add(DigestUtils.getHexDigest(DigestUtils.SHA_256, file));
+            junkFiles.add(file);
         }
         assertEquals(expectedHashes, actualHashes);
     }

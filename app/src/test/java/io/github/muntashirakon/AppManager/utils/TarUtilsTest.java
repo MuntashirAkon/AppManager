@@ -17,6 +17,7 @@ import org.robolectric.RobolectricTestRunner;
 
 import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -66,9 +67,12 @@ public class TarUtilsTest {
     }
 
     @After
-    public void tearDown() {
+    public void tearDown() throws FileNotFoundException {
         testRoot.delete();
         tarGzFilesForExtractTest[0].delete();
+        if (tmpRoot.hasFile("am.tar.gz.0")) {
+            tmpRoot.findFile("am.tar.gz.0").delete();
+        }
     }
 
     @Test

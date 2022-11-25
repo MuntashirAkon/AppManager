@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.backup.convert;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,6 +40,11 @@ public class TBConverterTest {
         FileUtils.deleteDir(new File("/tmp/AppManager"));
         assert classLoader != null;
         backupLocation = new File(classLoader.getResource(TBConverter.PATH_SUFFIX).getFile());
+    }
+
+    @After
+    public void tearDown() {
+        FileUtils.deleteDir(new File("/tmp/AppManager"));
     }
 
     @Test

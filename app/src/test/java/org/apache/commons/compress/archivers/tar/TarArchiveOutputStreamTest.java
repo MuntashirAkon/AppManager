@@ -3,12 +3,14 @@
 package org.apache.commons.compress.archivers.tar;
 
 import org.apache.commons.compress.archivers.ArchiveEntry;
+import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -29,6 +31,14 @@ import static org.junit.Assert.assertEquals;
 @RunWith(RobolectricTestRunner.class)
 public class TarArchiveOutputStreamTest {
     private final ClassLoader classLoader = getClass().getClassLoader();
+    private final List<File> junkFiles = new ArrayList<>();
+
+    @After
+    public void tearDown() {
+        for (File file : junkFiles) {
+            file.delete();
+        }
+    }
 
     @Test
     public void testTarSplit() throws IOException {
@@ -72,10 +82,14 @@ public class TarArchiveOutputStreamTest {
         Collections.sort(fileNames);
         Collections.sort(actualFileNames);
         assertEquals(fileNames, actualFileNames);
+        for (Path path : pathList) {
+            junkFiles.add(path.getFile());
+        }
     }
 
     @Test
     public void testTar() throws IOException {
+        File base = new File("/tmp/AppManager_v2.5.22.apks.tar");
         List<String> fileNames = Arrays.asList("AppManager_v2.5.22.apks.0", "AppManager_v2.5.22.apks.1");
         List<Path> fileList = new ArrayList<>();
         assert classLoader != null;
@@ -84,7 +98,7 @@ public class TarArchiveOutputStreamTest {
         }
 
         // Always run tests using SplitOutputStream
-        try (FileOutputStream sot = new FileOutputStream("/tmp/AppManager_v2.5.22.apks.tar");
+        try (FileOutputStream sot = new FileOutputStream(base);
              BufferedOutputStream bot = new BufferedOutputStream(sot);
              TarArchiveOutputStream tot = new TarArchiveOutputStream(bot)) {
             for (Path file : fileList) {
@@ -100,7 +114,7 @@ public class TarArchiveOutputStreamTest {
 
         // Check integrity
         List<String> actualFileNames = new ArrayList<>();
-        try (FileInputStream sis = new FileInputStream("/tmp/AppManager_v2.5.22.apks.tar");
+        try (FileInputStream sis = new FileInputStream(base);
              BufferedInputStream bis = new BufferedInputStream(sis);
              TarArchiveInputStream tis = new TarArchiveInputStream(bis)) {
             ArchiveEntry entry;
@@ -112,5 +126,6 @@ public class TarArchiveOutputStreamTest {
         Collections.sort(fileNames);
         Collections.sort(actualFileNames);
         assertEquals(fileNames, actualFileNames);
+        junkFiles.add(base);
     }
 }
