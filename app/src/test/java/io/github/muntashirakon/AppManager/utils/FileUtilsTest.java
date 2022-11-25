@@ -70,4 +70,23 @@ public class FileUtilsTest {
         assertEquals("e", FileUtils.getExtension("a/b.c.d.e"));
         assertEquals("ext", FileUtils.getExtension("asdkjrejvncnmiet/eru43jffn/ewrjpoewiwfjfpwrejtp.ext"));
     }
+
+    @Test
+    public void removeLastPathSegment() {
+        assertEquals("", FileUtils.removeLastPathSegment(""));
+        assertEquals("/", FileUtils.removeLastPathSegment("/"));
+        assertEquals("/", FileUtils.removeLastPathSegment("/."));
+        assertEquals("", FileUtils.removeLastPathSegment(".ext"));
+        assertEquals("/", FileUtils.removeLastPathSegment("/.ext"));
+        assertEquals("", FileUtils.removeLastPathSegment("a/"));
+        assertEquals("a/b", FileUtils.removeLastPathSegment("a/b/."));
+        assertEquals("a/b", FileUtils.removeLastPathSegment("a/b/.."));
+        assertEquals("a", FileUtils.removeLastPathSegment("a/b/"));
+        assertEquals("a", FileUtils.removeLastPathSegment("a/b.c"));
+        assertEquals("a", FileUtils.removeLastPathSegment("a/b.c/"));
+        assertEquals("a/b.c", FileUtils.removeLastPathSegment("a/b.c/d"));
+        assertEquals("a", FileUtils.removeLastPathSegment("a/b.c.d"));
+        assertEquals("a", FileUtils.removeLastPathSegment("a/b.c.d.e"));
+        assertEquals("asdkjrejvncnmiet/eru43jffn", FileUtils.removeLastPathSegment("asdkjrejvncnmiet/eru43jffn/ewrjpoewiwfjfpwrejtp.ext"));
+    }
 }

@@ -193,10 +193,13 @@ public final class FileUtils {
             path = path.substring(0, path.length() - 1);
         }
         int index = path.lastIndexOf('/');
-        if (index > 0) {
-            path = path.substring(0, index);
+        if (index == 0) {
+            return File.separator;
         }
-        return path;
+        if (index < 0) {
+            return "";
+        }
+        return path.substring(0, index);
     }
 
     @NonNull
