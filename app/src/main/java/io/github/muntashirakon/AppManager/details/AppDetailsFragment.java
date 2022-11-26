@@ -683,7 +683,6 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             TextView textView7;
             TextView textView8;
             ImageView imageView;
-            MaterialButton blockBtn;
             Button shortcutBtn;
             MaterialButton launchBtn;
             MaterialSwitch toggleSwitch;
@@ -703,7 +702,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                         textView6 = itemView.findViewById(R.id.softInput);
                         textView7 = itemView.findViewById(R.id.process_name);
                         launchBtn = itemView.findViewById(R.id.launch);
-                        blockBtn = itemView.findViewById(R.id.block_component);
+                        toggleSwitch = itemView.findViewById(R.id.toggle_button);
                         shortcutBtn = itemView.findViewById(R.id.edit_shortcut_btn);
                         divider = itemView.findViewById(R.id.divider);
                         chipType = itemView.findViewById(R.id.type);
@@ -715,7 +714,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                         textView3 = itemView.findViewById(R.id.orientation);
                         textView7 = itemView.findViewById(R.id.process_name);
                         launchBtn = itemView.findViewById(R.id.launch);
-                        blockBtn = itemView.findViewById(R.id.block_component);
+                        toggleSwitch = itemView.findViewById(R.id.toggle_button);
                         divider = itemView.findViewById(R.id.divider);
                         chipType = itemView.findViewById(R.id.type);
                         itemView.findViewById(R.id.taskAffinity).setVisibility(View.GONE);
@@ -732,7 +731,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                         textView5 = itemView.findViewById(R.id.orientation);
                         textView6 = itemView.findViewById(R.id.softInput);
                         textView7 = itemView.findViewById(R.id.process_name);
-                        blockBtn = itemView.findViewById(R.id.block_component);
+                        toggleSwitch = itemView.findViewById(R.id.toggle_button);
                         divider = itemView.findViewById(R.id.divider);
                         chipType = itemView.findViewById(R.id.type);
                         itemView.findViewById(R.id.launch).setVisibility(View.GONE);
@@ -747,7 +746,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                         textView5 = itemView.findViewById(R.id.softInput);
                         textView6 = itemView.findViewById(R.id.taskAffinity);
                         textView7 = itemView.findViewById(R.id.process_name);
-                        blockBtn = itemView.findViewById(R.id.block_component);
+                        toggleSwitch = itemView.findViewById(R.id.toggle_button);
                         divider = itemView.findViewById(R.id.divider);
                         chipType = itemView.findViewById(R.id.type);
                         itemView.findViewById(R.id.launch).setVisibility(View.GONE);
@@ -765,7 +764,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                         itemView.findViewById(R.id.softInput).setVisibility(View.GONE);
                         itemView.findViewById(R.id.launch).setVisibility(View.GONE);
                         itemView.findViewById(R.id.edit_shortcut_btn).setVisibility(View.GONE);
-                        itemView.findViewById(R.id.block_component).setVisibility(View.GONE);
+                        itemView.findViewById(R.id.toggle_button).setVisibility(View.GONE);
                         break;
                     case APP_OPS:
                         textView1 = itemView.findViewById(R.id.op_name);
@@ -911,22 +910,16 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
         }
 
         private void handleBlock(@NonNull ViewHolder holder, @NonNull AppDetailsComponentItem item, RuleType ruleType) {
-            if (item.isBlocked()) {
-                holder.blockBtn.setIconResource(R.drawable.ic_restore);
-                holder.blockBtn.setContentDescription(getString(R.string.unblock));
-            } else {
-                holder.blockBtn.setIconResource(R.drawable.ic_block);
-                holder.blockBtn.setContentDescription(getString(R.string.block));
-            }
-            holder.blockBtn.setVisibility(View.VISIBLE);
-            holder.blockBtn.setOnClickListener(v -> {
+            holder.toggleSwitch.setChecked(item.isBlocked());
+            holder.toggleSwitch.setVisibility(View.VISIBLE);
+            holder.toggleSwitch.setOnClickListener(buttonView -> {
                 String componentStatus = item.isBlocked()
                         ? ComponentRule.COMPONENT_TO_BE_DEFAULTED
                         : AppPref.getDefaultComponentStatus();
                 applyRules(item, ruleType, componentStatus);
             });
-            holder.blockBtn.setOnLongClickListener(v -> {
-                PopupMenu popupMenu = new PopupMenu(mActivity, holder.blockBtn);
+            holder.toggleSwitch.setOnLongClickListener(v -> {
+                PopupMenu popupMenu = new PopupMenu(mActivity, holder.toggleSwitch);
                 popupMenu.inflate(R.menu.fragment_app_details_components_selection_actions);
                 popupMenu.setOnMenuItemClickListener(item1 -> {
                     int id = item1.getItemId();
@@ -1063,7 +1056,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             // Blocking
             if (!mIsExternalApk && (Ops.isRoot() || (Ops.isPrivileged() && mTestOnlyApp))) {
                 handleBlock(holder, componentItem, RuleType.ACTIVITY);
-            } else holder.blockBtn.setVisibility(View.GONE);
+            } else holder.toggleSwitch.setVisibility(View.GONE);
             ((MaterialCardView) holder.itemView).setCardBackgroundColor(mCardColor1);
         }
 
@@ -1143,7 +1136,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             // Blocking
             if (!mIsExternalApk && (Ops.isRoot() || (Ops.isPrivileged() && mTestOnlyApp))) {
                 handleBlock(holder, serviceItem, RuleType.SERVICE);
-            } else holder.blockBtn.setVisibility(View.GONE);
+            } else holder.toggleSwitch.setVisibility(View.GONE);
             ((MaterialCardView) holder.itemView).setCardBackgroundColor(mCardColor1);
         }
 
@@ -1202,7 +1195,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             // Blocking
             if (!mIsExternalApk && (Ops.isRoot() || (Ops.isPrivileged() && mTestOnlyApp))) {
                 handleBlock(holder, componentItem, RuleType.RECEIVER);
-            } else holder.blockBtn.setVisibility(View.GONE);
+            } else holder.toggleSwitch.setVisibility(View.GONE);
             ((MaterialCardView) holder.itemView).setCardBackgroundColor(mCardColor1);
         }
 
@@ -1284,7 +1277,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             // Blocking
             if (!mIsExternalApk && (Ops.isRoot() || (Ops.isPrivileged() && mTestOnlyApp))) {
                 handleBlock(holder, componentItem, RuleType.PROVIDER);
-            } else holder.blockBtn.setVisibility(View.GONE);
+            } else holder.toggleSwitch.setVisibility(View.GONE);
             ((MaterialCardView) holder.itemView).setCardBackgroundColor(mCardColor1);
         }
 
