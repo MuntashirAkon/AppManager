@@ -34,6 +34,7 @@ import java.util.regex.Pattern;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.dex.DexUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
@@ -171,7 +172,7 @@ public class ClassViewerActivity extends BaseActivity {
             if (formattedJavaContent == null) {
                 String javaContent;
                 try {
-                    javaContent = ScannerUtils.toJavaCode(Objects.requireNonNull(formattedSmaliContent).toString(), -1);
+                    javaContent = DexUtils.toJavaCode(Objects.requireNonNull(formattedSmaliContent).toString(), -1);
                 } catch (Throwable e) {
                     e.printStackTrace();
                     runOnUiThread(() -> {

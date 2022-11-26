@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-package io.github.muntashirakon.AppManager.scanner;
+package io.github.muntashirakon.AppManager.dex;
 
+import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 
 import org.jf.baksmali.Adaptors.ClassDefinition;
@@ -33,8 +34,10 @@ public class DexClasses implements Closeable {
     private final HashMap<String, ClassDef> classDefArraySet = new HashMap<>();
     // TODO: 18/10/21 Load frameworks.jar and add its dex files as options.classPath
     private final BaksmaliOptions options;
+    private final Opcodes opcodes;
 
-    public DexClasses(@NonNull File apkFile) throws IOException {
+    public DexClasses(@NonNull File apkFile, @IntRange(from = -1) int apiLevel) throws IOException {
+        this.opcodes = apiLevel < 0 ? Opcodes.getDefault() : Opcodes.forApi(apiLevel);
         this.options = new BaksmaliOptions();
         // options
         options.deodex = false;
@@ -48,7 +51,7 @@ public class DexClasses implements Closeable {
         options.registerInfo = 0;
         options.inlineResolver = null;
         BaksmaliFormatter formatter = new BaksmaliFormatter();
-        MultiDexContainer<? extends DexBackedDexFile> container = ScannerUtils.loadApk(apkFile, -1);
+        MultiDexContainer<? extends DexBackedDexFile> container = DexUtils.loadApk(apkFile, apiLevel);
         List<String> dexEntryNames = container.getDexEntryNames();
         for (String dexEntryName : dexEntryNames) {
             MultiDexContainer.DexEntry<? extends DexBackedDexFile> dexEntry =
@@ -73,7 +76,8 @@ public class DexClasses implements Closeable {
         }
     }
 
-    public DexClasses(@NonNull InputStream inputStream) throws IOException {
+    public DexClasses(@NonNull InputStream inputStream, @IntRange(from = -1) int apiLevel) throws IOException {
+        this.opcodes = apiLevel < 0 ? Opcodes.getDefault() : Opcodes.forApi(apiLevel);
         this.options = new BaksmaliOptions();
         // options
         options.deodex = false;
@@ -88,7 +92,7 @@ public class DexClasses implements Closeable {
         options.inlineResolver = null;
         BaksmaliFormatter formatter = new BaksmaliFormatter();
         InputStream is = new BufferedInputStream(inputStream);
-        DexBackedDexFile dexFile = ScannerUtils.loadDexContainer(is, -1);
+        DexBackedDexFile dexFile = DexUtils.loadDexContainer(is, apiLevel);
         // Store list of classes
         for (ClassDef classDef : dexFile.getClasses()) {
             String name = formatter.getType(classDef.getType());
@@ -123,7 +127,7 @@ public class DexClasses implements Closeable {
     public String getJavaCode(@NonNull String className) throws ClassNotFoundException {
         try {
             ClassDef classDef = getClassDef(className);
-            return ScannerUtils.toJavaCode(classDef, Opcodes.getDefault());
+            return DexUtils.toJavaCode(classDef, this.opcodes);
         } catch (IOException e) {
             throw new ClassNotFoundException(e.getMessage(), e);
         }
@@ -137,13 +141,13 @@ public class DexClasses implements Closeable {
     @NonNull
     public String getClassContents(@NonNull ClassDef classdef) throws ClassNotFoundException {
         StringWriter stringWriter = new StringWriter();
-        try (BaksmaliWriter baksmaliWriter = new BaksmaliFormatter().getWriter(stringWriter)) {
+        try (BaksmaliWriter baksmaliWriter = new BaksmaliWriter(stringWriter)) {
             ClassDefinition classDefinition = new ClassDefinition(this.options, classdef);
             classDefinition.writeTo(baksmaliWriter);
+            return stringWriter.toString();
         } catch (IOException e) {
             throw new ClassNotFoundException(e.getMessage(), e);
         }
-        return stringWriter.toString();
     }
 
     @Override

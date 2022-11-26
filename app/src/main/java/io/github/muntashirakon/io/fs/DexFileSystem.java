@@ -8,7 +8,9 @@ import android.util.LruCache;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.antlr.runtime.RecognitionException;
 import org.jf.dexlib2.iface.ClassDef;
+import org.jf.dexlib2.writer.io.FileDataStore;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -16,18 +18,39 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+import io.github.muntashirakon.AppManager.dex.DexClasses;
+import io.github.muntashirakon.AppManager.dex.DexUtils;
 import io.github.muntashirakon.AppManager.fm.ContentType2;
-import io.github.muntashirakon.AppManager.scanner.DexClasses;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 
 public class DexFileSystem extends VirtualFileSystem {
     public static final String TYPE = ContentType2.DEX.getMimeType();
+
+    private static class ClassInfo {
+        @Nullable
+        public final File cachedFile;
+        public final boolean physical;
+        public final boolean directory;
+
+        private ClassInfo(@Nullable File cachedFile, boolean physical) {
+            this(cachedFile, physical, false);
+        }
+
+        private ClassInfo(@Nullable File cachedFile, boolean physical, boolean directory) {
+            this.cachedFile = cachedFile;
+            this.physical = physical;
+            this.directory = directory;
+        }
+    }
 
     private final LruCache<String, Node<ClassDef>> cache = new LruCache<>(100);
     @Nullable
@@ -37,6 +60,11 @@ public class DexFileSystem extends VirtualFileSystem {
 
     protected DexFileSystem(@NonNull Path dexPath) {
         super(dexPath);
+    }
+
+    public int getApiLevel() {
+        // TODO: 26/11/22 Set via MountOptions
+        return -1;
     }
 
     @Override
@@ -53,7 +81,7 @@ public class DexFileSystem extends VirtualFileSystem {
     @Override
     protected Path onMount() throws IOException {
         try (InputStream is = getFile().openInputStream()) {
-            dexClasses = new DexClasses(is);
+            dexClasses = new DexClasses(is, getApiLevel());
         }
         rootNode = buildTree(Objects.requireNonNull(dexClasses));
         return Paths.get(this);
@@ -61,12 +89,95 @@ public class DexFileSystem extends VirtualFileSystem {
 
     @Override
     protected File onUnmount(@NonNull Map<String, List<Action>> actions) throws IOException {
+        File cachedFile = getUpdatedDexFile(actions);
         if (dexClasses != null) {
             dexClasses.close();
         }
         rootNode = null;
         cache.evictAll();
-        return null;
+        return cachedFile;
+    }
+
+    @Nullable
+    private File getUpdatedDexFile(@NonNull Map<String, List<Action>> actionList) throws IOException {
+        if (!Objects.requireNonNull(getOptions()).readWrite || actionList.isEmpty()) {
+            return null;
+        }
+        String extension = getFile().getExtension();
+        File file = FileUtils.getTempFile(extension);
+        Map<String, ClassInfo> classInfoMap = new HashMap<>();
+        for (String className : Objects.requireNonNull(dexClasses).getClassNames()) {
+            classInfoMap.put(File.separator + className, new ClassInfo(null, true));
+        }
+        for (String path : actionList.keySet()) {
+            // Perform action for each path
+            List<Action> actions = actionList.get(path);
+            if (actions == null) continue;
+            for (Action action : actions) {
+                Node<?> targetNode = action.targetNode;
+                // Actions are linear
+                switch (action.action) {
+                    case ACTION_CREATE:
+                        // This must be a new file/folder. So, override the existing one.
+                        classInfoMap.put(targetNode.getFullPath(), new ClassInfo(null, false, targetNode.isDirectory()));
+                        break;
+                    case ACTION_DELETE:
+                        // Delete the entry
+                        classInfoMap.remove(targetNode.getFullPath());
+                        break;
+                    case ACTION_UPDATE: {
+                        // It's a file and it's updated. So, cached file must exist.
+                        File cachedFile = Objects.requireNonNull(action.getCachedPath());
+                        String targetPath = targetNode.getFullPath();
+                        ClassInfo classInfo = classInfoMap.get(targetPath);
+                        classInfoMap.put(targetPath, new ClassInfo(cachedFile, classInfo != null && classInfo.physical));
+                        break;
+                    }
+                    case ACTION_MOVE:
+                        // File/directory move
+                        String sourcePath = Objects.requireNonNull(action.getSourcePath());
+                        ClassInfo classInfo = classInfoMap.get(sourcePath);
+                        if (classInfo != null) {
+                            classInfoMap.put(targetNode.getFullPath(), classInfo);
+                        } else {
+                            classInfoMap.put(targetNode.getFullPath(), new ClassInfo(null, false, targetNode.isDirectory()));
+                        }
+                        classInfoMap.remove(sourcePath);
+                        break;
+                }
+            }
+        }
+        // Build dex
+        List<String> paths = new ArrayList<>(classInfoMap.keySet());
+        Collections.sort(paths);
+        List<ClassDef> classDefList = new ArrayList<>(paths.size());
+        for (String path : paths) {
+            String className = path.substring(1);
+            ClassInfo classInfo = Objects.requireNonNull(classInfoMap.get(path));
+            if (classInfo.directory) {
+                // Skip all directories
+                continue;
+            }
+            if (classInfo.cachedFile != null) {
+                // The class was modified
+                try {
+                    classDefList.add(DexUtils.toClassDef(classInfo.cachedFile, getApiLevel()));
+                } catch (RecognitionException e) {
+                    throw new IOException(e);
+                }
+                continue;
+            }
+            if (classInfo.physical) {
+                try {
+                    classDefList.add(dexClasses.getClassDef(className));
+                } catch (ClassNotFoundException e) {
+                    throw new IOException(e);
+                }
+            }
+            // Skip other non-physical classes because they were never modified and will fail
+        }
+        DexUtils.storeDex(classDefList, new FileDataStore(file), getApiLevel());
+        return file;
     }
 
     @Nullable
