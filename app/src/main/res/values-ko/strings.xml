@@ -227,4 +227,5 @@
     <string name="the_import_was_successful">불러오기 성공</string>
     <string name="the_export_was_successful">내보내기 성공</string>
     <string name="external_data_dir">외부 데이터 디렉터리</string>
+    <string name="uninstalled_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g>가 성공적으로 제거되었습니다.</string>
 </resources>
