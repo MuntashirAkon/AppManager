@@ -558,6 +558,14 @@ public class PathTest {
     }
 
     @Test
+    public void moveToSameChildDir() throws IOException {
+        Path src = tmpPath.createNewDirectory("am_new_dir");
+        Path child = src.createNewDirectory("am_child_dir");
+        assertFalse(src.moveTo(child));
+        assertTrue(src.delete());
+    }
+
+    @Test
     public void moveDirToExistingDir() throws IOException {
         Path src = tmpPath.createNewDirectory("am_new_dir_src");
         Path dst = tmpPath.createNewDirectory("am_new_dir_dst");
@@ -660,6 +668,14 @@ public class PathTest {
     public void copyToSameDir() throws IOException {
         Path src = tmpPath.createNewDirectory("am_new_dir");
         assertNull(src.copyTo(src));
+        assertTrue(src.delete());
+    }
+
+    @Test
+    public void copyToSameChildDir() throws IOException {
+        Path src = tmpPath.createNewDirectory("am_new_dir");
+        Path child = src.createNewDirectory("am_child_dir");
+        assertNull(src.copyTo(child));
         assertTrue(src.delete());
     }
 

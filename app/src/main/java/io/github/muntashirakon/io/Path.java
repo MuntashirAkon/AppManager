@@ -836,8 +836,8 @@ public class Path implements Comparable<Path> {
             // There's no point is attempting to move if the destination is read-only.
             return false;
         }
-        if (source.equals(dest)) {
-            // Source and dest cannot be the same
+        if (dest.getUri().toString().startsWith(source.getUri().toString())) {
+            // Destination cannot be the same or a subdirectory of source
             return false;
         }
         if (source instanceof ExtendedRawDocumentFile && dest instanceof ExtendedRawDocumentFile) {
@@ -985,8 +985,8 @@ public class Path implements Comparable<Path> {
             // There's no point is attempting to copy if the destination is read-only.
             return null;
         }
-        if (source.equals(dest)) {
-            // Source and dest cannot be the same
+        if (dest.getUri().toString().startsWith(source.getUri().toString())) {
+            // Destination cannot be the same or a subdirectory of source
             return null;
         }
         DocumentFile destParent = dest.getParentFile();
