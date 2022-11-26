@@ -4,11 +4,12 @@ package io.github.muntashirakon.AppManager.users;
 
 import android.annotation.UserIdInt;
 import android.content.Context;
-import android.content.pm.UserInfo;
 import android.os.Build;
 import android.os.IUserManager;
 import android.os.RemoteException;
+import android.os.UserHandle;
 import android.os.UserHandleHidden;
+import android.os.UserManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,6 +18,7 @@ import androidx.annotation.WorkerThread;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -25,13 +27,15 @@ import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 public final class Users {
     public static final String TAG = "Users";
 
-    public static List<UserInfo> userInfoList;
+    private static List<UserInfo> sUserInfoList;
 
     @WorkerThread
     @Nullable
     public static List<UserInfo> getAllUsers() {
-        if (userInfoList == null) {
+        if (sUserInfoList == null) {
+            sUserInfoList = new ArrayList<>();
             try {
+                List<android.content.pm.UserInfo> userInfoList;
                 IUserManager userManager = IUserManager.Stub.asInterface(ProxyBinder.getService(Context.USER_SERVICE));
                 try {
                     userInfoList = userManager.getUsers(true);
@@ -40,21 +44,33 @@ public final class Users {
                         userInfoList = userManager.getUsers(true, true, true);
                     } else throw new SecurityException(e);
                 }
+                if (userInfoList == null) {
+                    throw new SecurityException();
+                }
+                for (android.content.pm.UserInfo userInfo : userInfoList) {
+                    sUserInfoList.add(new UserInfo(userInfo));
+                }
             } catch (RemoteException | SecurityException e) {
-                Log.e(TAG, "Could not get list of users", e);
+                // Try other means in no-root mode
+                Log.d(TAG, "Could not fetch list of users using privileged mode, falling back to no-root check");
+                Context ctx = AppManager.getContext();
+                UserManager manager = (UserManager) ctx.getSystemService(Context.USER_SERVICE);
+                for (UserHandle userHandle : manager.getUserProfiles()) {
+                    sUserInfoList.add(new UserInfo(userHandle, null));
+                }
             }
         }
-        return userInfoList;
+        return sUserInfoList;
     }
 
     @WorkerThread
     @Nullable
     public static List<UserInfo> getUsers() {
         getAllUsers();
-        if (userInfoList == null) return null;
+        if (sUserInfoList == null) return null;
         int[] selectedUserIds = AppPref.getSelectedUsers();
         List<UserInfo> users = new ArrayList<>();
-        for (UserInfo userInfo : userInfoList) {
+        for (UserInfo userInfo : sUserInfoList) {
             if (selectedUserIds == null || ArrayUtils.contains(selectedUserIds, userInfo.id)) {
                 users.add(userInfo);
             }
@@ -67,12 +83,12 @@ public final class Users {
     @UserIdInt
     public static int[] getUsersIds() {
         getAllUsers();
-        if (userInfoList == null) {
+        if (sUserInfoList == null) {
             return new int[]{UserHandleHidden.myUserId()};
         }
         int[] selectedUserIds = AppPref.getSelectedUsers();
         List<Integer> users = new ArrayList<>();
-        for (UserInfo userInfo : userInfoList) {
+        for (UserInfo userInfo : sUserInfoList) {
             if (selectedUserIds == null || ArrayUtils.contains(selectedUserIds, userInfo.id)) {
                 users.add(userInfo.id);
             }

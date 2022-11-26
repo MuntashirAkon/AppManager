@@ -3,7 +3,6 @@
 package io.github.muntashirakon.AppManager.settings;
 
 import android.app.Application;
-import android.content.pm.UserInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.UserHandleHidden;
@@ -40,6 +39,7 @@ import io.github.muntashirakon.AppManager.db.utils.AppDb;
 import io.github.muntashirakon.AppManager.misc.DeviceInfo2;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.users.UserInfo;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.StorageUtils;

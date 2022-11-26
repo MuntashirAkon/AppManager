@@ -3,7 +3,6 @@
 package io.github.muntashirakon.AppManager.backup.dialog;
 
 import android.app.Application;
-import android.content.pm.UserInfo;
 import android.os.UserHandleHidden;
 
 import androidx.annotation.AnyThread;
@@ -32,6 +31,7 @@ import io.github.muntashirakon.AppManager.db.entity.App;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.db.utils.AppDb;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
+import io.github.muntashirakon.AppManager.users.UserInfo;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;

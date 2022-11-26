@@ -88,4 +88,8 @@ public class UserHandleHidden implements Parcelable {
     public static int myUserId() {
         return HiddenUtil.throwUOE();
     }
+
+    public int getIdentifier() {
+        return HiddenUtil.throwUOE();
+    }
 }

@@ -2,7 +2,6 @@
 
 package io.github.muntashirakon.AppManager.profiles;
 
-import android.content.pm.UserInfo;
 import android.os.Bundle;
 import android.view.View;
 
@@ -26,6 +25,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
+import io.github.muntashirakon.AppManager.users.UserInfo;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
