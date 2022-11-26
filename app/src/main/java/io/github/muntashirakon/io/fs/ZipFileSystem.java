@@ -12,16 +12,25 @@ import androidx.annotation.Nullable;
 import com.j256.simplemagic.ContentType;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.attribute.FileTime;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 
+import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
@@ -29,16 +38,30 @@ import io.github.muntashirakon.io.Paths;
 class ZipFileSystem extends VirtualFileSystem {
     public static final String TYPE = ContentType.ZIP.getMimeType();
 
+    private static class VirtualZipEntry extends ZipEntry {
+        private File cachedFile;
+
+        public VirtualZipEntry(String name) {
+            super(name);
+        }
+
+        public File getCachedFile() {
+            return cachedFile;
+        }
+
+        public void setCachedFile(File cachedFile) {
+            this.cachedFile = cachedFile;
+        }
+    }
+
     private final LruCache<String, Node<ZipEntry>> cache = new LruCache<>(100);
-    @NonNull
-    private final File zipFilePath;
     @Nullable
     private ZipFile zipFile;
     @Nullable
     private Node<ZipEntry> rootNode;
 
     protected ZipFileSystem(@NonNull Path zipFile) {
-        this.zipFilePath = Objects.requireNonNull(zipFile.getFile());
+        super(zipFile);
     }
 
     @Override
@@ -46,33 +69,159 @@ class ZipFileSystem extends VirtualFileSystem {
         return TYPE;
     }
 
-    @Nullable
-    public ZipFile getZipFile() {
-        return zipFile;
-    }
-
     @Override
     protected Path onMount() throws IOException {
-        zipFile = new ZipFile(zipFilePath);
+        if (Objects.requireNonNull(getOptions()).remount && zipFile != null && rootNode != null) {
+            // Remount requested, no need to generate anything if they're already generated.
+            return Paths.get(this);
+        }
+        zipFile = new ZipFile(Objects.requireNonNull(getFile().getFile()));
         rootNode = buildTree(Objects.requireNonNull(zipFile));
         return Paths.get(this);
     }
 
+    @Nullable
     @Override
-    protected void onUnmount(List<Action> actions) throws IOException {
-        if (zipFile != null) {
-            zipFile.close();
-        }
+    protected File onUnmount(@NonNull Map<String, List<Action>> actionList) throws IOException {
+        File cachedFile = getUpdatedZipFile(actionList);
         rootNode = null;
         cache.evictAll();
+        if (zipFile != null) {
+            zipFile.close();
+            zipFile = null;
+        }
+        return cachedFile;
+    }
+
+    @Nullable
+    private File getUpdatedZipFile(@NonNull Map<String, List<Action>> actionList) throws IOException {
+        if (!Objects.requireNonNull(getOptions()).readWrite || actionList.isEmpty()) {
+            return null;
+        }
+        String extension = getFile().getExtension();
+        File file = FileUtils.getTempFile(extension);
+        Map<String, ZipEntry> zipEntries = new HashMap<>();
+        for (ZipEntry zipEntry : Collections.list(Objects.requireNonNull(zipFile).entries())) {
+            zipEntries.put(File.separator + FileUtils.getSanitizedPath(zipEntry.getName()), zipEntry);
+        }
+        for (String path : actionList.keySet()) {
+            // Perform action for each path
+            List<Action> actions = actionList.get(path);
+            if (actions == null) continue;
+            for (Action action : actions) {
+                Node<?> targetNode = action.targetNode;
+                // Actions are linear
+                switch (action.action) {
+                    case ACTION_CREATE:
+                        // This must be a new file/folder. So, override the existing one.
+                        zipEntries.put(targetNode.getFullPath(), getNewZipEntry(targetNode));
+                        break;
+                    case ACTION_DELETE:
+                        // Delete the entry
+                        zipEntries.remove(targetNode.getFullPath());
+                        break;
+                    case ACTION_UPDATE:
+                        // It's a file and it's updated. So, cached file must exist.
+                        File cachedFile = Objects.requireNonNull(action.getCachedPath());
+                        zipEntries.put(targetNode.getFullPath(), getZipEntry(targetNode, cachedFile));
+                        break;
+                    case ACTION_MOVE:
+                        // File/directory move
+                        String sourcePath = Objects.requireNonNull(action.getSourcePath());
+                        ZipEntry zipEntry = zipEntries.get(sourcePath);
+                        if (zipEntry != null) {
+                            zipEntries.put(targetNode.getFullPath(), zipEntry);
+                        } else {
+                            zipEntries.put(targetNode.getFullPath(), getNewZipEntry(targetNode));
+                        }
+                        zipEntries.remove(sourcePath);
+                        break;
+                }
+            }
+        }
+        try (FileOutputStream os = new FileOutputStream(file);
+             ZipOutputStream zos = new ZipOutputStream(os)) {
+            zos.setMethod(ZipOutputStream.DEFLATED);
+            zos.setLevel(Deflater.BEST_COMPRESSION);
+            List<String> paths = new ArrayList<>(zipEntries.keySet());
+            Collections.sort(paths);
+            for (String path : paths) {
+                ZipEntry zipEntry = zipEntries.get(path);
+                if (zipEntry == null) continue;
+                if (zipEntry instanceof VirtualZipEntry) {
+                    // Our custom zip files
+                    zos.putNextEntry(zipEntry);
+                    if (zipEntry.isDirectory()) {
+                        zos.closeEntry();
+                        continue;
+                    }
+                    // Entry is a file
+                    File cachedFile = ((VirtualZipEntry) zipEntry).getCachedFile();
+                    if (cachedFile != null) {
+                        try (InputStream is = new FileInputStream(cachedFile)) {
+                            FileUtils.copy(is, zos);
+                        }
+                    } // else cached file was not created because the file was only created and never written to
+                    zos.closeEntry();
+                } else {
+                    // Not our custom files, need to copy from zipEntry everything except the name
+                    ZipEntry newZipEntry = getZipEntry(path, zipEntry);
+                    zos.putNextEntry(newZipEntry);
+                    if (zipEntry.isDirectory()) {
+                        zos.closeEntry();
+                        continue;
+                    }
+                    // Entry is a file
+                    try (InputStream is = zipFile.getInputStream(zipEntry)) {
+                        FileUtils.copy(is, zos);
+                    }
+                    zos.closeEntry();
+                }
+            }
+        }
+        return file;
+    }
+
+    @NonNull
+    private ZipEntry getNewZipEntry(@NonNull Node<?> node) {
+        String name = FileUtils.getSanitizedPath(node.getFullPath());
+        ZipEntry zipEntry = new VirtualZipEntry(name + (node.isDirectory() ? File.separator : ""));
+        zipEntry.setMethod(ZipEntry.DEFLATED);
+        if (node.isFile()) {
+            zipEntry.setSize(0L);
+        }
+        zipEntry.setTime(System.currentTimeMillis());
+        return zipEntry;
+    }
+
+    @NonNull
+    private ZipEntry getZipEntry(@NonNull Node<?> node, @NonNull File cachedFile) throws IOException {
+        String name = FileUtils.getSanitizedPath(node.getFullPath());
+        VirtualZipEntry zipEntry = new VirtualZipEntry(name + (node.isDirectory() ? File.separator : ""));
+        zipEntry.setMethod(ZipEntry.DEFLATED);
+        zipEntry.setCachedFile(cachedFile);
+        zipEntry.setSize(cachedFile.length());
+        zipEntry.setCrc(DigestUtils.calculateCrc32(Paths.get(cachedFile)));
+        zipEntry.setTime(cachedFile.lastModified());
+        return zipEntry;
+    }
+
+    @NonNull
+    private ZipEntry getZipEntry(@NonNull String path, @NonNull ZipEntry zipEntry) {
+        ZipEntry zipEntry1 = new VirtualZipEntry(path + (zipEntry.isDirectory() ? File.separator : ""));
+        zipEntry1.setMethod(ZipEntry.DEFLATED);
+        zipEntry1.setSize(zipEntry.getSize());
+        zipEntry1.setCrc(zipEntry.getCrc());
+        zipEntry1.setTime(zipEntry.getTime());
+        zipEntry1.setComment(zipEntry.getComment());
+        zipEntry1.setExtra(zipEntry.getExtra());
+        return zipEntry1;
     }
 
     @Nullable
     @Override
     protected Node<?> getNode(String path) {
-        if (getFsId() == 0) {
-            throw new NotMountedException("Not mounted");
-        }
+        checkMounted();
         Node<ZipEntry> targetNode = cache.get(path);
         if (targetNode == null) {
             if (path.equals(File.separator)) {
@@ -88,10 +237,15 @@ class ZipFileSystem extends VirtualFileSystem {
     }
 
     @Override
+    protected void invalidate(String path) {
+        cache.remove(path);
+    }
+
+    @Override
     public long lastModified(String path) {
         Node<?> targetNode = getNode(path);
         if (targetNode == null || targetNode.getObject() == null) {
-            return zipFilePath.lastModified();
+            return getFile().lastModified();
         }
         return ((ZipEntry) targetNode.getObject()).getTime();
     }
@@ -103,7 +257,7 @@ class ZipFileSystem extends VirtualFileSystem {
         }
         Node<?> targetNode = getNode(path);
         if (targetNode == null || targetNode.getObject() == null) {
-            return zipFilePath.lastModified();
+            return getFile().lastModified();
         }
         FileTime ft = ((ZipEntry) targetNode.getObject()).getLastAccessTime();
         if (ft != null) {
@@ -119,7 +273,7 @@ class ZipFileSystem extends VirtualFileSystem {
         }
         Node<?> targetNode = getNode(path);
         if (targetNode == null || targetNode.getObject() == null) {
-            return zipFilePath.lastModified();
+            return getFile().lastModified();
         }
         FileTime ft = ((ZipEntry) targetNode.getObject()).getCreationTime();
         if (ft != null) {
@@ -135,48 +289,39 @@ class ZipFileSystem extends VirtualFileSystem {
             return -1;
         }
         if (targetNode.isDirectory()) {
-            return 0L;
+            return 0;
         }
-        if (!targetNode.isFile() || targetNode.getObject() == null) {
+        if (!targetNode.isFile()) {
             return -1;
+        }
+        if (targetNode.getObject() == null) {
+            // Check for cache
+            File cachedFile = findCachedFile(targetNode);
+            if (cachedFile != null) {
+                return cachedFile.length();
+            }
+            return targetNode.isPhysical() ? -1 : 0;
         }
         return ((ZipEntry) targetNode.getObject()).getSize();
     }
 
-    @SuppressWarnings({"PointlessBooleanExpression", "ConstantConditions"})
     @Override
     public boolean checkAccess(String path, int access) {
         Node<?> targetNode = getNode(path);
         if (access == OsConstants.F_OK) {
-            return targetNode != null && targetNode.exists();
+            return targetNode != null;
         }
-        boolean canAccess = true;
-        if ((access & OsConstants.R_OK) != 0) {
-            canAccess &= true;
+        if (access == OsConstants.R_OK) {
+            return true;
         }
-        if ((access & OsConstants.W_OK) != 0) {
-            canAccess &= false;
+        if (access == OsConstants.W_OK) {
+            return Objects.requireNonNull(getOptions()).readWrite;
         }
-        if ((access & OsConstants.X_OK) != 0) {
-            canAccess &= false;
+        if (access == (OsConstants.R_OK | OsConstants.W_OK)) {
+            return Objects.requireNonNull(getOptions()).readWrite;
         }
-        return canAccess;
-    }
-
-    @SuppressWarnings("OctalInteger")
-    @Override
-    public int getMode(String path) {
-        Node<?> targetNode = getNode(path);
-        if (targetNode == null) {
-            return 0;
-        }
-        if (targetNode.isDirectory()) {
-            return 0444 | OsConstants.S_IFDIR;
-        }
-        if (targetNode.isFile()) {
-            return 0444 | OsConstants.S_IFREG;
-        }
-        return 0;
+        // X_OK, R_OK|X_OK, R_OK|W_OK|X_OK are false
+        return false;
     }
 
     @NonNull

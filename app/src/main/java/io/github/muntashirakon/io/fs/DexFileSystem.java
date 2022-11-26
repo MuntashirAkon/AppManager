@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.fm.ContentType2;
@@ -29,15 +30,13 @@ public class DexFileSystem extends VirtualFileSystem {
     public static final String TYPE = ContentType2.DEX.getMimeType();
 
     private final LruCache<String, Node<ClassDef>> cache = new LruCache<>(100);
-    @NonNull
-    private final Path dexPath;
     @Nullable
     private DexClasses dexClasses;
     @Nullable
     private Node<ClassDef> rootNode;
 
-    public DexFileSystem(@NonNull Path dexPath) {
-        this.dexPath = dexPath;
+    protected DexFileSystem(@NonNull Path dexPath) {
+        super(dexPath);
     }
 
     @Override
@@ -47,15 +46,13 @@ public class DexFileSystem extends VirtualFileSystem {
 
     @NonNull
     public final DexClasses getDexClasses() {
-        if (getFsId() == 0) {
-            throw new NotMountedException("Not mounted");
-        }
+        checkMounted();
         return Objects.requireNonNull(dexClasses);
     }
 
     @Override
     protected Path onMount() throws IOException {
-        try (InputStream is = dexPath.openInputStream()) {
+        try (InputStream is = getFile().openInputStream()) {
             dexClasses = new DexClasses(is);
         }
         rootNode = buildTree(Objects.requireNonNull(dexClasses));
@@ -63,20 +60,19 @@ public class DexFileSystem extends VirtualFileSystem {
     }
 
     @Override
-    protected void onUnmount(List<Action> actions) throws IOException {
+    protected File onUnmount(@NonNull Map<String, List<Action>> actions) throws IOException {
         if (dexClasses != null) {
             dexClasses.close();
         }
         rootNode = null;
         cache.evictAll();
+        return null;
     }
 
     @Nullable
     @Override
     protected Node<?> getNode(String path) {
-        if (getFsId() == 0) {
-            throw new NotMountedException("Not mounted");
-        }
+        checkMounted();
         Node<ClassDef> targetNode = cache.get(path);
         if (targetNode == null) {
             if (path.equals(File.separator)) {
@@ -92,8 +88,14 @@ public class DexFileSystem extends VirtualFileSystem {
     }
 
     @Override
+    protected void invalidate(String path) {
+        cache.remove(path);
+    }
+
+    @Override
     public long lastModified(String path) {
-        return dexPath.lastModified();
+        checkMounted();
+        return getFile().lastModified();
     }
 
     @Override
@@ -123,7 +125,7 @@ public class DexFileSystem extends VirtualFileSystem {
     public boolean checkAccess(String path, int access) {
         Node<?> targetNode = getNode(path);
         if (access == OsConstants.F_OK) {
-            return targetNode != null && targetNode.exists();
+            return targetNode != null;
         }
         boolean canAccess = true;
         if ((access & OsConstants.R_OK) != 0) {
@@ -136,22 +138,6 @@ public class DexFileSystem extends VirtualFileSystem {
             canAccess &= false;
         }
         return canAccess;
-    }
-
-    @SuppressWarnings("OctalInteger")
-    @Override
-    public int getMode(String path) {
-        Node<?> targetNode = getNode(path);
-        if (targetNode == null) {
-            return 0;
-        }
-        if (targetNode.isDirectory()) {
-            return 0444 | OsConstants.S_IFDIR;
-        }
-        if (targetNode.isFile()) {
-            return 0444 | OsConstants.S_IFREG;
-        }
-        return 0;
     }
 
     @NonNull
