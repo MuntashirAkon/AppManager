@@ -8,9 +8,11 @@ import android.content.Context;
 import android.content.ContextWrapper;
 import android.os.IBinder;
 import android.os.Looper;
+import android.os.Process;
 import android.os.RemoteException;
 import android.util.Log;
 
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.concurrent.Callable;
@@ -71,6 +73,19 @@ public class RootServiceMain extends ContextWrapper implements Callable<Object[]
         }
     }
 
+    private static boolean allowBinderCommunication() {
+        try {
+            Class<?> SELinuxClass = Class.forName("android.os.SELinux");
+            Method getContext = SELinuxClass.getMethod("getContext");
+            String context = (String) getContext.invoke(null);
+            Method checkSELinuxAccess = SELinuxClass.getMethod("checkSELinuxAccess", String.class, String.class, String.class, String.class);
+            return Boolean.TRUE.equals(checkSELinuxAccess.invoke(null, "u:r:untrusted_app:s0", context, "binder", "call"))
+                    && Boolean.TRUE.equals(checkSELinuxAccess.invoke(null, "u:r:untrusted_app:s0", context, "binder", "transfer"));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static void main(String[] args) {
         // Close STDOUT/STDERR since it belongs to the parent shell
         System.out.close();
@@ -82,7 +97,7 @@ public class RootServiceMain extends ContextWrapper implements Callable<Object[]
 
         try {
             new RootServiceMain(args);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             Log.e("IPC", "Error in IPCMain", e);
             System.exit(1);
         }
@@ -107,6 +122,10 @@ public class RootServiceMain extends ContextWrapper implements Callable<Object[]
 
     public RootServiceMain(String[] args) throws Exception {
         super(null);
+
+        if (Process.myPid() == 0 && !allowBinderCommunication()) {
+            throw new IOException("Current su does not allow Binder communication.");
+        }
 
         ComponentName name = ComponentName.unflattenFromString(args[0]);
         uid = Integer.parseInt(args[1]);
