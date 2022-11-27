@@ -123,7 +123,7 @@ public class RootServiceMain extends ContextWrapper implements Callable<Object[]
     public RootServiceMain(String[] args) throws Exception {
         super(null);
 
-        if (Process.myPid() == 0 && !allowBinderCommunication()) {
+        if (Process.myUid() == 0 && !allowBinderCommunication()) {
             throw new IOException("Current su does not allow Binder communication.");
         }
 
