@@ -33,7 +33,6 @@ import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 
@@ -44,7 +43,7 @@ public final class ActivityManagerCompat {
     public static int startActivity(Context context, Intent intent, @UserIdInt int userHandle)
             throws RemoteException {
         IActivityManager am = getActivityManager();
-        String callingPackage = LocalServer.isAMServiceAlive() ? SHELL_PACKAGE_NAME : context.getPackageName();
+        String callingPackage = Ops.isReallyPrivileged() ? SHELL_PACKAGE_NAME : context.getPackageName();
         int result;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             result = am.startActivityAsUserWithFeature(null, callingPackage,
@@ -63,7 +62,7 @@ public final class ActivityManagerCompat {
                                              @UserIdInt int userHandle, boolean asForeground)
             throws RemoteException {
         IActivityManager am = getActivityManager();
-        String callingPackage = LocalServer.isAMServiceAlive() ? SHELL_PACKAGE_NAME : context.getPackageName();
+        String callingPackage = Ops.isReallyPrivileged() ? SHELL_PACKAGE_NAME : context.getPackageName();
         ComponentName cn;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             cn = am.startService(null, intent, intent.getType(), asForeground, callingPackage, null, userHandle);

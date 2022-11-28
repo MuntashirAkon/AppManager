@@ -16,7 +16,7 @@ import androidx.core.content.ContextCompat;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.compat.PermissionCompat;
-import io.github.muntashirakon.AppManager.servermanager.LocalServer;
+import io.github.muntashirakon.AppManager.settings.Ops;
 
 @SuppressWarnings("BooleanMethodIsAlwaysInverted")
 public final class PermissionUtils {
@@ -30,7 +30,7 @@ public final class PermissionUtils {
         if (hasPermission(context, Manifest.permission.DUMP)) {
             return true;
         }
-        if (LocalServer.isAMServiceAlive()) {
+        if (Ops.isPrivileged()) {
             try {
                 PermissionCompat.grantPermission(context.getPackageName(), Manifest.permission.DUMP,
                         UserHandleHidden.myUserId());
@@ -48,7 +48,7 @@ public final class PermissionUtils {
                 || hasPermission(context, PERMISSION_MANAGE_USERS)) {
             return true;
         }
-        if (LocalServer.isAMServiceAlive()) {
+        if (Ops.isPrivileged()) {
             try {
                 PermissionCompat.grantPermission(context.getPackageName(), PERMISSION_INTERACT_ACROSS_USERS,
                         UserHandleHidden.myUserId());
@@ -76,6 +76,10 @@ public final class PermissionUtils {
 
     public static boolean hasAppOpsPermission(Context context) {
         return hasPermission(context, PERMISSION_GET_APP_OPS_STATS);
+    }
+
+    public static boolean hasInternet(Context context) {
+        return PermissionUtils.hasPermission(context, Manifest.permission.INTERNET);
     }
 
     public static boolean hasPermission(Context context, String permissionName) {

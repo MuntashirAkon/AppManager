@@ -193,6 +193,7 @@ public class LocalServer {
             manager.closeBgServer();
             manager.stop();
             manager.start();
+            launchAmService();
         } else {
             getInstance();
         }

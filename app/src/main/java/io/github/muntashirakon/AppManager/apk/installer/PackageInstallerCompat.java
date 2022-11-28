@@ -52,7 +52,7 @@ import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.servermanager.LocalServer;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -496,7 +496,7 @@ public final class PackageInstallerCompat {
     private final boolean isPrivileged;
 
     private PackageInstallerCompat(@UserIdInt int userHandle) {
-        this.isPrivileged = LocalServer.isAMServiceAlive();
+        this.isPrivileged = Ops.isReallyPrivileged();
         this.allUsers = isPrivileged && userHandle == UserHandleHidden.USER_ALL;
         this.userHandle = allUsers ? UserHandleHidden.myUserId() : userHandle;
         Log.d(TAG, "Installing for " + (allUsers ? "all users" : "user " + userHandle));
@@ -775,7 +775,7 @@ public final class PackageInstallerCompat {
         IPackageInstaller pi = PackageManagerCompat.getPackageInstaller();
         LocalIntentReceiver receiver = new LocalIntentReceiver();
         IntentSender sender = receiver.getIntentSender();
-        boolean isPrivileged = LocalServer.isAMServiceAlive();
+        boolean isPrivileged = Ops.isReallyPrivileged();
         int flags = 0;
         if (!isPrivileged || userHandle != UserHandleHidden.USER_ALL) {
             PackageInfo info = PackageManagerCompat.getPackageInfo(packageName, 0, userHandle);

@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
+import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.adb.android.AdbMdns;
 
 public class AdbUtils {
@@ -64,5 +65,15 @@ public class AdbUtils {
             throw new IOException("Could not find any valid host address or port");
         }
         return new Pair<>(host, port);
+    }
+
+    public static boolean startAdb(int port) {
+        return Runner.runCommand(new String[]{"setprop", "service.adb.tcp.port", String.valueOf(port)}).isSuccessful()
+                && Runner.runCommand(new String[]{"setprop", "ctl.restart", "adbd"}).isSuccessful();
+    }
+
+    public static boolean stopAdb() {
+        return Runner.runCommand(new String[]{"setprop", "service.adb.tcp.port", "-1"}).isSuccessful()
+                && Runner.runCommand(new String[]{"setprop", "ctl.restart", "adbd"}).isSuccessful();
     }
 }

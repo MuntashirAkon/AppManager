@@ -50,7 +50,7 @@ import io.github.muntashirakon.AppManager.rules.PseudoRules;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.servermanager.LocalServer;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.ssaid.SsaidSettings;
 import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -408,7 +408,7 @@ class BackupOp implements Closeable {
             INotificationManager notificationManager = INotificationManager.Stub.asInterface(ProxyBinder.getService(Context.NOTIFICATION_SERVICE));
             try {
                 List<ComponentName> notificationComponents;
-                if (LocalServer.isAMServiceAlive()) {
+                if (Ops.isPrivileged()) {
                     notificationComponents = notificationManager.getEnabledNotificationListeners(mUserId);
                 } else notificationComponents = Collections.emptyList();
                 List<String> componentsForThisPkg = new ArrayList<>();

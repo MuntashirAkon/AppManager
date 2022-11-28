@@ -43,7 +43,6 @@ import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.ssaid.SsaidSettings;
@@ -182,7 +181,7 @@ public class AppInfoViewModel extends AndroidViewModel {
             } else {
                 tagCloud.isBatteryOptimized = true;
             }
-            if (!mainModel.getIsExternalApk() && LocalServer.isAMServiceAlive()) {
+            if (!mainModel.getIsExternalApk() && Ops.isPrivileged()) {
                 tagCloud.netPolicies = NetworkPolicyManagerCompat.getUidPolicy(applicationInfo.uid);
             } else {
                 tagCloud.netPolicies = 0;

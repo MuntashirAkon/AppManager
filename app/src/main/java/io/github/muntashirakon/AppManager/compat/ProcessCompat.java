@@ -11,11 +11,11 @@ import java.io.IOException;
 
 import io.github.muntashirakon.AppManager.ipc.LocalServices;
 import io.github.muntashirakon.AppManager.ipc.RemoteProcess;
-import io.github.muntashirakon.AppManager.servermanager.LocalServer;
+import io.github.muntashirakon.AppManager.settings.Ops;
 
 public final class ProcessCompat {
     public static Process exec(@Nullable String[] cmd, @Nullable String[] env, @Nullable File dir) throws IOException {
-        if (LocalServer.isAMServiceAlive()) {
+        if (Ops.isPrivileged()) {
             try {
                 return new RemoteProcess(LocalServices.getAmService().newProcess(cmd, env, dir == null ? null :
                         dir.getAbsolutePath()));
