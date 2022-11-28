@@ -1127,4 +1127,8 @@
     <string name="change_backup_volume">Endre dataområde</string>
     <string name="help_uses_permissions_tab">Klikk på et element for å <b>innvilge</b> eller <b>tilbakekalle</b> det. Kun tilgangene <b>farlig</b> og <b>utvikling</b> kan innvilges eller tilbakekalles.</string>
     <string name="keystore_password_info">Dette er App Manager-passordet for nøkkellageret. Lagre det på et sikkert sted hvis du vil sikkerhetskopiere/gjenopprette App Manager-nøkkellageret.<b>Denne meldingen vil ikke bli vist igjen.</b></string>
+    <string name="state_name">Tilstandsnavn (ST)</string>
+    <string name="troubleshooting">Feilsøking</string>
+    <string name="pref_advanced_pref">Brukere, APK-navneformat, samkjøring, osv.</string>
+    <string name="pref_sign_apk_error_signing_key_not_added">En gyldig signeringsnøkkel kreves for å signere en APK-fil.</string>
 </resources>
