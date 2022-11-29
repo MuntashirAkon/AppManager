@@ -1088,7 +1088,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         MutableLiveData<UserInfo> userInfoMutableLiveData = new MutableLiveData<>();
         mExecutor.submit(() -> {
             final List<UserInfo> userInfoList;
-            if (!mIsExternalApk && Ops.isPrivileged()) {
+            if (!mIsExternalApk) {
                 userInfoList = Users.getUsers();
             } else userInfoList = null;
             if (userInfoList != null && userInfoList.size() > 1) {
