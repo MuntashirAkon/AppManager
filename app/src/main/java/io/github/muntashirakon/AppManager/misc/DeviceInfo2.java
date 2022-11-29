@@ -141,13 +141,8 @@ public class DeviceInfo2 implements LocalizedString {
         windowHeightPx = displayMetrics.heightPixels;
         refreshRate = display.getRefreshRate();
         users = Users.getAllUsers();
-        if (users != null) {
-            for (UserInfo info : users) {
-                userPackages.put(info.id, getPackageStats(info.id));
-            }
-        } else {
-            int myId = UserHandleHidden.myUserId();
-            userPackages.put(myId, getPackageStats(myId));
+        for (UserInfo info : users) {
+            userPackages.put(info.id, getPackageStats(info.id));
         }
         features = pm.getSystemAvailableFeatures();
     }

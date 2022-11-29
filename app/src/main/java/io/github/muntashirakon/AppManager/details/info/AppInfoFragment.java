@@ -85,6 +85,7 @@ import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
 import io.github.muntashirakon.AppManager.backup.dialog.BackupRestoreDialogFragment;
+import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
@@ -881,12 +882,14 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         if (mainModel != null && !mainModel.getIsExternalApk()) {
             boolean isFrozen = FreezeUtils.isFrozen(mApplicationInfo);
             // Set open
-            final Intent launchIntentForPackage = mPackageManager.getLaunchIntentForPackage(mPackageName);
-            if (launchIntentForPackage != null && !isFrozen) {
+            Intent launchIntent = PackageUtils.getLaunchIntentForPackage(requireContext(), mPackageName,
+                    mainModel.getUserHandle());
+            if (launchIntent != null && !isFrozen) {
                 addToHorizontalLayout(R.string.launch_app, R.drawable.ic_open_in_new)
                         .setOnClickListener(v -> {
                             try {
-                                startActivity(launchIntentForPackage);
+                                ActivityManagerCompat.startActivity(requireContext(), launchIntent,
+                                        mainModel.getUserHandle());
                             } catch (Throwable th) {
                                 UIUtils.displayLongToast(th.getLocalizedMessage());
                             }
@@ -1028,7 +1031,15 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             } else {
                 // Display Android settings button
                 addToHorizontalLayout(R.string.view_in_settings, R.drawable.ic_settings)
-                        .setOnClickListener(v -> startActivity(IntentUtils.getAppDetailsSettings(mPackageName)));
+                        .setOnClickListener(v -> {
+                            try {
+                                ActivityManagerCompat.startActivity(requireContext(),
+                                        IntentUtils.getAppDetailsSettings(mPackageName),
+                                        mainModel.getUserHandle());
+                            } catch (Throwable th) {
+                                UIUtils.displayLongToast(th.getLocalizedMessage());
+                            }
+                        });
             }
         } else if (FeatureController.isInstallerEnabled()) {
             if (mInstalledPackageInfo == null) {

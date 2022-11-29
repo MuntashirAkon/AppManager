@@ -8,11 +8,14 @@ import android.app.usage.IStorageStatsManager;
 import android.app.usage.StorageStats;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.ComponentInfo;
 import android.content.pm.IPackageManager;
 import android.content.pm.IPackageStatsObserver;
+import android.content.pm.LauncherActivityInfo;
+import android.content.pm.LauncherApps;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.PackageStats;
@@ -20,6 +23,7 @@ import android.content.pm.Signature;
 import android.content.pm.SigningInfo;
 import android.os.Build;
 import android.os.RemoteException;
+import android.os.UserHandle;
 import android.os.UserHandleHidden;
 import android.os.storage.StorageManagerHidden;
 import android.system.ErrnoException;
@@ -438,6 +442,36 @@ public final class PackageUtils {
             throws PackageManager.NameNotFoundException, RemoteException {
         PackageInfo info = PackageManagerCompat.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS, userId);
         return info.requestedPermissions;
+    }
+
+    @Nullable
+    public static Intent getLaunchIntentForPackage(@NonNull Context context,
+                                                   @NonNull String packageName,
+                                                   @UserIdInt int userId) {
+        if (userId == UserHandleHidden.myUserId()) {
+            return context.getPackageManager().getLaunchIntentForPackage(packageName);
+        }
+        UserHandle userHandle = Users.getUserHandle(userId);
+        if (userHandle != null) {
+            LauncherApps launcherApps = (LauncherApps) context.getSystemService(Context.LAUNCHER_APPS_SERVICE);
+            try {
+                if (!launcherApps.isPackageEnabled(packageName, userHandle)) {
+                    return null;
+                }
+                List<LauncherActivityInfo> activityInfoList = launcherApps.getActivityList(packageName, userHandle);
+                if (activityInfoList.size() > 0) {
+                    Intent launchIntent = new Intent(Intent.ACTION_MAIN);
+                    launchIntent.addCategory(Intent.CATEGORY_LAUNCHER);
+                    launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                            | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+                    launchIntent.setComponent(activityInfoList.get(0).getComponentName());
+                    return launchIntent;
+                }
+            } catch (Throwable th) {
+                th.printStackTrace();
+            }
+        }
+        return null;
     }
 
     @NonNull

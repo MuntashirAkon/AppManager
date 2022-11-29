@@ -8,12 +8,10 @@ import android.os.Build;
 import android.os.IUserManager;
 import android.os.RemoteException;
 import android.os.UserHandle;
-import android.os.UserHandleHidden;
 import android.os.UserManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.WorkerThread;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,13 +25,11 @@ import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 public final class Users {
     public static final String TAG = "Users";
 
-    private static List<UserInfo> sUserInfoList;
+    private static final List<UserInfo> sUserInfoList = new ArrayList<>();
 
-    @WorkerThread
-    @Nullable
+    @NonNull
     public static List<UserInfo> getAllUsers() {
-        if (sUserInfoList == null) {
-            sUserInfoList = new ArrayList<>();
+        if (sUserInfoList.isEmpty()) {
             try {
                 List<android.content.pm.UserInfo> userInfoList;
                 IUserManager userManager = IUserManager.Stub.asInterface(ProxyBinder.getService(Context.USER_SERVICE));
@@ -63,11 +59,9 @@ public final class Users {
         return sUserInfoList;
     }
 
-    @WorkerThread
-    @Nullable
+    @NonNull
     public static List<UserInfo> getUsers() {
         getAllUsers();
-        if (sUserInfoList == null) return null;
         int[] selectedUserIds = AppPref.getSelectedUsers();
         List<UserInfo> users = new ArrayList<>();
         for (UserInfo userInfo : sUserInfoList) {
@@ -78,14 +72,10 @@ public final class Users {
         return users;
     }
 
-    @WorkerThread
     @NonNull
     @UserIdInt
     public static int[] getUsersIds() {
         getAllUsers();
-        if (sUserInfoList == null) {
-            return new int[]{UserHandleHidden.myUserId()};
-        }
         int[] selectedUserIds = AppPref.getSelectedUsers();
         List<Integer> users = new ArrayList<>();
         for (UserInfo userInfo : sUserInfoList) {
@@ -94,5 +84,16 @@ public final class Users {
             }
         }
         return ArrayUtils.convertToIntArray(users);
+    }
+
+    @Nullable
+    public static UserHandle getUserHandle(@UserIdInt int userId) {
+        getAllUsers();
+        for (UserInfo userInfo : sUserInfoList) {
+            if (userInfo.id == userId) {
+                return userInfo.userHandle;
+            }
+        }
+        return null;
     }
 }

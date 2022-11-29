@@ -232,13 +232,6 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
             }
             String[] userNames = new String[item.userHandles.length];
             List<UserInfo> users = Users.getUsers();
-            if (users == null) {
-                if (ArrayUtils.contains(item.userHandles, UserHandleHidden.myUserId())) {
-                    Intent intent = AppDetailsActivity.getIntent(mActivity, item.packageName, UserHandleHidden.myUserId());
-                    mActivity.startActivity(intent);
-                }
-                return;
-            }
             for (UserInfo info : users) {
                 for (int i = 0; i < item.userHandles.length; ++i) {
                     if (info.id == item.userHandles[i]) {
