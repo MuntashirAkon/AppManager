@@ -191,6 +191,7 @@ public class RestoreSingleFragment extends Fragment {
             mSelectionListener = selectionListener;
             mLayoutId = MaterialAttributes.resolveInteger(context, R.attr.multiChoiceItemLayout,
                     R.layout.mtrl_alert_select_dialog_multichoice);
+            mSelectionListener.onSelectionChanged(null, mSelectedPositions.size(), false);
             for (int i = 0; i < backups.size(); ++i) {
                 MetadataManager.Metadata backup = backups.get(i);
                 mBackups.add(backup);
