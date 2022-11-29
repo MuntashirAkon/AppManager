@@ -496,12 +496,12 @@
     <string name="input_profile_name">Nome do perfil</string>
     <string name="in_progress">Em progresso</string>
     <string name="conversion_failed">A conversão falhou.</string>
-    <string name="tap_to_submit_crash_report">Toque para apresentar o relatório do acidente.</string>
+    <string name="tap_to_submit_crash_report">Toque para submeter o relatório do acidente.</string>
     <string name="copy">Copiar</string>
     <string name="only_install">Apenas instalar</string>
     <string name="app_data_will_be_lost">Os dados existentes serão perdidos.</string>
     <string name="app_signing_signature_mismatch_for_system_apps">Não foi possível instalar uma aplicação porque uma aplicação de sistema com uma assinatura diferente tem este nome de pacote.</string>
-    <string name="do_you_want_to_uninstall_and_install">Quer desinstalar e instalar novamente o aplicativo\?</string>
+    <string name="do_you_want_to_uninstall_and_install">Deseja desinstalar e instalar novamente a aplicação\?</string>
     <string name="usage_access_not_supported">Não foi possível solicitar o acesso de utilização, uma vez que a página de definições correspondente não existe.</string>
     <string name="non_critical_exts">Extensões não críticas</string>
     <string name="critical_exts">Extensões Críticas</string>
@@ -887,8 +887,8 @@
     <string name="pref_show_users_in_installer">Mostrar utilizadores no instalador</string>
     <string name="un_apkm">UnApkm</string>
     <string name="select_apk">Selecionar APK</string>
-    <string name="send_crash_report">Enviar relatório de travamento</string>
-    <string name="am_crashed">O App Manager acabou de travar</string>
+    <string name="send_crash_report">Enviar relatório de paragem</string>
+    <string name="am_crashed">O App Manager acabou de parar</string>
     <string name="filter_running_apps">Apps em execução</string>
     <string name="view_missing_signatures">Toque para visualizar ou enviar assinaturas ainda não presentes no banco de dados de bibliotecas do App Manager.</string>
     <string name="tap_to_see_details">Toque para ver detalhes</string>
