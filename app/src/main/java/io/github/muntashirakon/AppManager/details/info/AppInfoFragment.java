@@ -943,9 +943,13 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     }
                     builder.show();
                 } else {
-                    Intent uninstallIntent = new Intent(Intent.ACTION_DELETE);
-                    uninstallIntent.setData(Uri.parse("package:" + mPackageName));
-                    startActivity(uninstallIntent);
+                    try {
+                        Intent uninstallIntent = new Intent(Intent.ACTION_DELETE);
+                        uninstallIntent.setData(Uri.parse("package:" + mPackageName));
+                        ActivityManagerCompat.startActivity(requireContext(), uninstallIntent, mainModel.getUserHandle());
+                    } catch (Throwable th) {
+                        UIUtils.displayLongToast(th.getLocalizedMessage());
+                    }
                 }
             });
             // Enable/disable app (root/ADB only)
