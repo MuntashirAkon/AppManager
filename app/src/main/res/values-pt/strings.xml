@@ -500,7 +500,7 @@
     <string name="copy">Copiar</string>
     <string name="only_install">Apenas instalar</string>
     <string name="app_data_will_be_lost">Os dados existentes serão perdidos.</string>
-    <string name="app_signing_signature_mismatch_for_system_apps">Não foi possível instalar uma aplicação porque uma aplicação de sistema com uma assinatura diferente tem este nome de pacote.</string>
+    <string name="app_signing_signature_mismatch_for_system_apps">Não foi possível instalar uma aplicação porque existe uma aplicação de sistema com uma assinatura diferente mas tem este nome de pacote.</string>
     <string name="do_you_want_to_uninstall_and_install">Deseja desinstalar e instalar novamente a aplicação\?</string>
     <string name="usage_access_not_supported">Não foi possível solicitar o acesso de utilização, uma vez que a página de definições correspondente não existe.</string>
     <string name="non_critical_exts">Extensões não críticas</string>
