@@ -9,7 +9,7 @@
     <string name="failed_to_extract_obb_files">Não foi possível extrair ficheiros OBB</string>
     <string name="backup_apk_files">Ficheiros APK</string>
     <string name="installer_error_session_abandon">A sessão de instalação não pôde ser abandonada</string>
-    <string name="installer_error_session_commit">O commit dos ficheiros APK não pôde ser feito</string>
+    <string name="installer_error_session_commit">Não foi possível fazer o commit dos ficheiros APK</string>
     <string name="installer_error_session_write">Não foi possível gravar na sessão de instalação</string>
     <string name="installer_error_session_create">Não foi possível criar uma sessão de instalação</string>
     <string name="installer_error_security">Não foi possível aceder aos ficheiros APK</string>
@@ -908,7 +908,7 @@
     <string name="failed_to_uninstall_updates">Não foi possível desinstalar as atualizações da app <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="update_uninstalled_successfully">As atualizações da app <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> foram desinstaladas.</string>
     <string name="allow_open_pgp_operation">Toque para permitir que o App Manager use o OpenPGP</string>
-    <string name="pref_backup_flags_msg">Adicionar uma predefinição para opções de backup remove o fardo de selecionar flags toda vez que faz backup/restaura.</string>
+    <string name="pref_backup_flags_msg">Adicionar uma predefinição para opções de cópias de segurança remove o incómodo de selecionar flags de cada vez que faz cópias de segurança/restaura.</string>
     <string name="sort_by_apps_first">Apps primeiro</string>
     <string name="sort_by_process_id">ID do processo</string>
     <string name="filter_apps">Apps</string>
@@ -926,7 +926,7 @@
     <string name="state_multithreaded">Multitarefa</string>
     <string name="state_foreground">Primeiro plano</string>
     <string name="state_waking">Acordado</string>
-    <string name="state_wake_kill">Parado ao iniciar</string>
+    <string name="state_wake_kill">Encerrar ao iniciar</string>
     <string name="state_idle">Parado</string>
     <string name="state_zombie">Zombie</string>
     <string name="state_trace_stop">Rastreamento parado</string>
