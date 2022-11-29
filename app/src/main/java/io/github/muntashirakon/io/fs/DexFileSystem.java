@@ -29,6 +29,7 @@ import io.github.muntashirakon.AppManager.dex.DexClasses;
 import io.github.muntashirakon.AppManager.dex.DexUtils;
 import io.github.muntashirakon.AppManager.fm.ContentType2;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
+import io.github.muntashirakon.io.ExtendedFile;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 
@@ -80,8 +81,20 @@ public class DexFileSystem extends VirtualFileSystem {
 
     @Override
     protected Path onMount() throws IOException {
-        try (InputStream is = getFile().openInputStream()) {
-            dexClasses = new DexClasses(is, getApiLevel());
+        if (".dex".equals(getFile().getExtension())) {
+            try (InputStream is = getFile().openInputStream()) {
+                dexClasses = new DexClasses(is, getApiLevel());
+            }
+        } else { // APK/Zip file, may need caching
+            ExtendedFile file = getFile().getFile();
+            if (file != null) {
+                dexClasses = new DexClasses(file, getApiLevel());
+            } else {
+                try (InputStream is = getFile().openInputStream()) {
+                    File cachedFile = FileUtils.getCachedFile(is, getFile().getExtension());
+                    dexClasses = new DexClasses(cachedFile, getApiLevel());
+                }
+            }
         }
         rootNode = buildTree(Objects.requireNonNull(dexClasses));
         return Paths.get(this);

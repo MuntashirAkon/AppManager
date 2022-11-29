@@ -285,6 +285,7 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
             mAllClasses = dfs.getDexClasses().getClassNames();
             Collections.sort(mAllClasses);
         } catch (Throwable e) {
+            e.printStackTrace();
             mAllClasses = Collections.emptyList();
         }
         mAllClassesLiveData.postValue(mAllClasses);

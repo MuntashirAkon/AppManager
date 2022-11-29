@@ -438,7 +438,7 @@ public final class FileUtils {
     @AnyThread
     @NonNull
     public static File getTempFile(@Nullable String extension) throws IOException {
-        return File.createTempFile("file_" + System.currentTimeMillis(), extension, getCachePath());
+        return File.createTempFile("file_" + System.currentTimeMillis(), "." + extension, getCachePath());
     }
 
     @AnyThread
