@@ -81,6 +81,7 @@ import io.github.muntashirakon.AppManager.accessibility.AccessibilityMultiplexer
 import io.github.muntashirakon.AppManager.accessibility.NoRootAccessibilityService;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
+import io.github.muntashirakon.AppManager.apk.behavior.FreezeUnfreeze;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
@@ -91,6 +92,7 @@ import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.details.AppDetailsFragment;
 import io.github.muntashirakon.AppManager.details.AppDetailsViewModel;
+import io.github.muntashirakon.AppManager.details.LauncherIconCreator;
 import io.github.muntashirakon.AppManager.details.manifest.ManifestViewerActivity;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.fm.FmProvider;
@@ -122,7 +124,6 @@ import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 import io.github.muntashirakon.AppManager.utils.IntentUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
@@ -144,6 +145,8 @@ import static io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat.HI
 import static io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat.HIDDEN_API_ENFORCEMENT_DISABLED;
 import static io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat.HIDDEN_API_ENFORCEMENT_ENABLED;
 import static io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat.HIDDEN_API_ENFORCEMENT_JUST_WARN;
+import static io.github.muntashirakon.AppManager.utils.FileUtils.dimBitmap;
+import static io.github.muntashirakon.AppManager.utils.FileUtils.getBitmapFromDrawable;
 import static io.github.muntashirakon.AppManager.utils.PermissionUtils.TERMUX_PERM_RUN_COMMAND;
 import static io.github.muntashirakon.AppManager.utils.PermissionUtils.hasDumpPermission;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.displayLongToast;
@@ -460,7 +463,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         if (outputStream == null) {
                             throw new IOException("Unable to open output stream.");
                         }
-                        Bitmap bitmap = FileUtils.getBitmapFromDrawable(mApplicationInfo.loadIcon(mPackageManager));
+                        Bitmap bitmap = getBitmapFromDrawable(mApplicationInfo.loadIcon(mPackageManager));
                         bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
                         outputStream.flush();
                         displayShortToast(R.string.saved_successfully);
@@ -895,9 +898,10 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             }
                         });
             }
-            // Set disable
+            // Set freeze/unfreeze
             if (Ops.isPrivileged() && !isFrozen) {
-                addToHorizontalLayout(R.string.freeze, R.drawable.ic_snowflake).setOnClickListener(v -> {
+                MaterialButton freezeButton = addToHorizontalLayout(R.string.freeze, R.drawable.ic_snowflake);
+                freezeButton.setOnClickListener(v -> {
                     if (BuildConfig.APPLICATION_ID.equals(mPackageName)) {
                         new MaterialAlertDialogBuilder(mActivity)
                                 .setMessage(R.string.are_you_sure)
@@ -905,6 +909,10 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                 .setNegativeButton(R.string.no, null)
                                 .show();
                     } else freeze(true);
+                });
+                freezeButton.setOnLongClickListener(v -> {
+                    createFreezeShortcut(false);
+                    return true;
                 });
             }
             // Set uninstall
@@ -955,8 +963,12 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             // Enable/disable app (root/ADB only)
             if (Ops.isPrivileged() && isFrozen) {
                 // Enable app
-                addToHorizontalLayout(R.string.unfreeze, R.drawable.ic_snowflake_off)
-                        .setOnClickListener(v -> freeze(false));
+                MaterialButton unfreezeButton = addToHorizontalLayout(R.string.unfreeze, R.drawable.ic_snowflake_off);
+                unfreezeButton.setOnClickListener(v -> freeze(false));
+                unfreezeButton.setOnLongClickListener(v -> {
+                    createFreezeShortcut(true);
+                    return true;
+                });
             }
             if (Ops.isPrivileged() || ServiceHelper.checkIfServiceIsRunning(mActivity,
                     NoRootAccessibilityService.class)) {
@@ -1549,6 +1561,33 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             Log.e(TAG, e);
             displayLongToast(freeze ? R.string.failed_to_freeze : R.string.failed_to_unfreeze, mPackageLabel);
         }
+    }
+
+    private void createFreezeShortcut(boolean isFrozen) {
+        if (mainModel == null) return;
+        AtomicInteger flags = new AtomicInteger();
+        new MaterialAlertDialogBuilder(mActivity)
+                .setTitle(R.string.freeze_unfreeze)
+                .setMultiChoiceItems(R.array.freeze_unfreeze_flags, null, (dialog, which, isChecked) -> {
+                    int flag =  1 << which;
+                    if (isChecked) {
+                        flags.set(flags.get() | flag);
+                    } else flags.set(flags.get() & ~flag);
+                })
+                .setPositiveButton(R.string.create_shortcut, (dialog, which) -> {
+                    FreezeUnfreeze.ShortcutInfo shortcutInfo = new FreezeUnfreeze.ShortcutInfo(mPackageName,
+                            mainModel.getUserHandle(), flags.get());
+                    Intent shortcutIntent = FreezeUnfreeze.getShortcutIntent(requireContext(), shortcutInfo);
+                    shortcutInfo.setLabel(mPackageLabel.toString());
+                    Bitmap icon = getBitmapFromDrawable(iconView.getDrawable());
+                    if (isFrozen) {
+                        dimBitmap(icon);
+                    }
+                    shortcutInfo.setIcon(icon);
+                    LauncherIconCreator.createLauncherIcon(requireContext(), shortcutInfo.shortcutId,
+                            shortcutInfo.getLabel(), shortcutInfo.getIcon(), shortcutIntent);
+                })
+                .show();
     }
 
     /**

@@ -611,6 +611,11 @@
         <activity
             android:name=".details.ActivityLauncherShortcutActivity"
             android:exported="false" />
+        <activity android:name=".apk.behavior.FreezeUnfreezeActivity"
+            android:taskAffinity=""
+            android:launchMode="singleInstance"
+            android:noHistory="true"
+            android:exported="false" />
         <activity
             android:name=".main.SplashActivity"
             android:exported="true"
