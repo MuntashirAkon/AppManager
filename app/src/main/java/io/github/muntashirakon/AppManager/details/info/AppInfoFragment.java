@@ -1166,7 +1166,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 // Aurora Store is disabled or the installed version has promotional apps
                 throw new PackageManager.NameNotFoundException();
             }
-            addToHorizontalLayout(R.string.store, R.drawable.ic_frost_aurorastore)
+            addToHorizontalLayout(R.string.open_in_aurora_store, R.drawable.ic_frost_aurorastore)
                     .setOnClickListener(v -> {
                         Intent intent = new Intent(Intent.ACTION_VIEW);
                         intent.setPackage(PACKAGE_NAME_AURORA_STORE);

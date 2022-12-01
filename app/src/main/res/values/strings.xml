@@ -287,7 +287,7 @@
         <item quantity="other">Could not import %1$d files.</item>
     </plurals>
     <string name="apk_updater">APK Updater</string>
-    <string name="store">Store</string>
+    <string name="open_in_aurora_store" translatable="false">Store</string>
     <string name="running_apps">Running Apps</string>
     <string name="kill_process">Kill</string>
     <string name="disable_background_run">Prevent background operation</string>
