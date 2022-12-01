@@ -228,4 +228,26 @@
     <string name="the_export_was_successful">내보내기 성공</string>
     <string name="external_data_dir">외부 데이터 디렉터리</string>
     <string name="uninstalled_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g>가 성공적으로 제거되었습니다.</string>
+    <string name="pid_and_ppid">프로세스 ID: %1$d, 상위 프로세스 ID: %2$d</string>
+    <string name="pref_import_export_blocking_rules_msg">규칙 가져오기/내보내기, Watt 또는 Blocker에서 외부 규칙 가져오기.</string>
+    <plurals name="failed_to_import_files">
+        <item quantity="other">%1$d 파일들을 가져올 수 없습니다.</item>
+    </plurals>
+    <string name="sort_by_blocked_components">우선 차단</string>
+    <string name="exodus_link">εxodus 링크</string>
+    <plurals name="no_of_times_opened">
+        <item quantity="other">%1$d 번</item>
+    </plurals>
+    <string name="sort_by_mobile_data">모바일 데이터</string>
+    <string name="kill_process">종료</string>
+    <string name="second_degree_tracker_note">² 접두사는 트래커들이 <a href="https://etip.exodus-privacy.eu.org/">대기자 명단</a> 에 있음을 나타냅니다. 즉, 실제로 여전히 조사 중인 트래커들인지 여부를 확인합니다.</string>
+    <string name="pref_global_blocking_enabled_msg">앱에 대한 차단을 명시적으로 설정하지 않고 앱의 구성 요소를 차단할 수 있도록 합니다.</string>
+    <string name="pref_import_watt">Watt에서 가져오기</string>
+    <string name="pref_import_blocker">Blocker에서 가져오기</string>
+    <string name="sort_by_screen_time">상영 시간</string>
+    <string name="apk_updater">APK Updater</string>
+    <string name="store">저장</string>
+    <string name="memory_virtual_memory">메모: %1$s, 가상 메모리: %2$s</string>
+    <string name="external_multiple_data_dir">외부 데이터 디렉토리 <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
+    <string name="disable_background_run">백그라운드 작업 방지</string>
 </resources>
