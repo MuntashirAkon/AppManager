@@ -318,6 +318,7 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
         cancelSelectionView.performClick();
     }
 
+    @SuppressWarnings("deprecation")
     @UiThread
     public void hide() {
         Transition sharedAxis = new MaterialSharedAxis(MaterialSharedAxis.Y, false);
@@ -396,6 +397,7 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
         requestLayout();
     }
 
+    @SuppressWarnings("deprecation")
     private void updateMarginAndPosition() {
         ViewGroup.LayoutParams params = getLayoutParams();
         if (params instanceof MarginLayoutParams) {

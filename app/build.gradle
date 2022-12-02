@@ -4,13 +4,12 @@ apply plugin: 'com.android.application'
 apply plugin: 'dev.rikka.tools.refine.gradle-plugin'
 
 android {
-    compileSdkVersion rootProject.ext.compileSdk
-    buildToolsVersion rootProject.ext.buildTools
+    compileSdk rootProject.ext.compileSdk
 
     defaultConfig {
         applicationId 'io.github.muntashirakon.AppManager'
-        minSdkVersion rootProject.ext.minSdk
-        targetSdkVersion rootProject.ext.targetSdk
+        minSdk rootProject.ext.minSdk
+        targetSdk rootProject.ext.targetSdk
         versionCode 411
         versionName "3.1.0-alpha01"
         javaCompileOptions {
@@ -42,7 +41,7 @@ android {
             resValue "string", "app_name", "AM Debug"
         }
     }
-    lintOptions {
+    lint {
         checkReleaseBuilds false
         // Or, if you prefer, you can continue to check for errors in release builds,
         // but continue the build even when errors are found:
@@ -65,7 +64,7 @@ android {
             universalApk true
         }
     }
-    aaptOptions {
+    androidResources {
         noCompress 'jar', 'sh'
     }
     testOptions {

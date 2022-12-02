@@ -220,6 +220,7 @@ public final class UiUtils {
         ViewUtils.requestApplyInsetsWhenAttached(view);
     }
 
+    @SuppressWarnings("deprecation")
     public static boolean isDarkMode() {
         switch (AppCompatDelegate.getDefaultNightMode()) {
             case AppCompatDelegate.MODE_NIGHT_YES:

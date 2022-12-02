@@ -23,6 +23,7 @@ public class AppBarLayout extends com.google.android.material.appbar.AppBarLayou
         this(context, attrs, R.attr.appBarLayoutStyle);
     }
 
+    @SuppressWarnings("deprecation")
     @SuppressLint("RestrictedApi")
     public AppBarLayout(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);

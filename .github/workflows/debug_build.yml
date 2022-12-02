@@ -41,7 +41,7 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew packageDebugUniversalApk
       - name: Rename the APK file
-        run: mv ./app/build/outputs/universal_apk/debug/app-debug-universal.apk ./${{ env.APP_NAME }}.apk
+        run: mv ./app/build/outputs/apk_from_bundle/debug/app-debug-universal.apk ./${{ env.APP_NAME }}.apk
       - name: Store generated APK file
         uses: actions/upload-artifact@v3
         with:

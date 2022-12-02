@@ -42,10 +42,10 @@ public class AnyFilterArrayAdapter<T> extends ArrayAdapter<T> {
             return filterResults;
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         protected void publishResults(CharSequence constraint, @NonNull FilterResults results) {
             clear();
-            //noinspection unchecked
             addAll((List<T>) results.values);
             notifyDataSetChanged();
         }
