@@ -18,6 +18,107 @@
 <changelog>
     <release
         type="alpha release"
+        version="v3.1.0-alpha02"
+        code="415"
+        date="02 December 2022">
+        <new>Added support for v3.1 signing scheme</new>
+        <new>
+            Export APKS using the new [a href="https://github.com/MuntashirAkon/AppManager/discussions/358"]APKS
+            specification[/a]. This is still in pre-alpha stage.
+        </new>
+        <new>New language: Romanian</new>
+        <new>Replaced enable/disable with freeze/unfreeze</new>
+        <note subtext="true">
+            Freeze/unfreeze can be [a href="app-manager://settings/rules_prefs/freeze_type"]customised[/a] to disable,
+            suspend or hide the applications instead of only disabling it. The colour codes used for disabling is used
+            for freezing.
+        </note>
+        <new>Added freeze/unfreeze toggle shortcut in the App Info tab</new>
+        <note subtext="true">
+            Long clicking on the freeze or unfreeze buttons in the App Info tab opens a dialog where how the shortcut
+            shall work apart from freezing/unfreezing can be configured. If a shortcut already exists, the existing
+            shortcut shall be updated.[br /]
+            It offers the following options:[br /]
+            1. Open application after unfreezing it[br /]
+            2. Open application (requires 1 to be enabled) but without an entry in Recents[br /]
+            3. Refreeze the application when the phone is locked.
+        </note>
+        <improve>Check whether Binder transaction is supported in root mode before initiating a connection</improve>
+        <note subtext="true">
+            Certain superuser implementations did not enable communications through Binder (that, is binder
+            transactions) from user applications. A check has been added to ensure that the currently used superuser
+            supports such communications before attempting to create a remote service.
+        </note>
+        <improve>Display inferred mode of operation in the crash logs</improve>
+        <improve>Handle multiple users including work profile in no-root mode</improve>
+        <note subtext="true">
+            Apps in the work profile can be opened in the App Details page. They can also be launched, uninstalled, and
+            the corresponding settings page can also be opened in no-root mode.
+        </note>
+        <improve>Fall back to ADB if root mode is not supported</improve>
+        <note subtext="true">
+            If App Manager cannot connect using root, root itself is used to start ADB over TCP and connect to it. This
+            is also useful for certain rooting solutions which do not support Binder transactions.
+        </note>
+        <improve>Fall back to root mode while reading the APK file</improve>
+        <note subtext="true">
+            Some applications erroneously provide private files that aren't accessible to any installer other than the
+            system ones. Therefore, root mode is used to read those files if available.
+        </note>
+        <improve>Handled the Internet permission in Graphene OS</improve>
+        <improve>Removed dark theme hacks for the WebView in the help page</improve>
+        <improve>Replaced SLF4J dependency with Android compatible classes</improve>
+        <improve>Updated trackers and libraries</improve>
+        <fix title="Profile page">Fixed crashes in the log viewer tab</fix>
+        <fix title="Scanner page">Fixed a rare crash used to occur when the activity is accidentally closed</fix>
+        <fix>Prevented a nasty crash used to occur when an activity is needed to be recreated</fix>
+
+        <title type="medium">Backup</title>
+        <new>Backup metadata version updated to 4</new>
+        <improve>Use 128 bit tag size for AES encryption</improve>
+        <fix>Fixed encryption/decryption for AES 128</fix>
+        <fix>Fixed a crash if no backup is selected but restore is clicked</fix>
+        <fix>Fixed an issue with saving the PGP encrypted files</fix>
+        <fix>Fixed crashing if a storage media does not have a label</fix>
+
+        <title type="medium">App Details page</title>
+        <improve>Display invalid native libraries in the Shared libs tab</improve>
+        <improve>Replaced block/unblock button with material switch</improve>
+        <fix>
+            Display failure message instead of crashing if a service cannot be launched from the Services tab
+        </fix>
+        <fix>Fixed a crash on specifying an invalid icon resource in the edit shortcut dialog</fix>
+        <fix>Fixed crashes in the Shared Libs tab</fix>
+        <fix>Fixed shortcut creation issues in some launchers</fix>
+        <fix>Prevented a crash in the ADB mode which used to occur on attempting to fetch application data size</fix>
+
+        <title type="medium">Installer page</title>
+        <improve>Ensured all the installation confirmation notifications are different in no-root mode</improve>
+        <fix>Fixed a rare crash used to occur due to the accidental closing of the installer page</fix>
+
+        <title type="medium">Main page</title>
+        <fix>Fixed sorting when a profile is selected in the list options</fix>
+        <fix>
+            Fixed displaying backup volume unavailable messages when [tt]/sdcard/AppManager[/tt] was inaccessible or
+            unavailable
+        </fix>
+
+        <title type="medium">Running Apps page</title>
+        <new>Added searching by package name</new>
+        <new>Enabled advanced searching</new>
+        <fix>Fixed double scrollbars</fix>
+        <fix>Fixed crashes in no-root mode while checking for [tt]RUN_IN_BACKGROUND[/tt]</fix>
+
+        <title type="medium">UI</title>
+        <improve>Migrated to Material 3-style preferences</improve>
+        <improve>Prevented closing multi-selection panel after starting an operation</improve>
+        <improve>Replaced MD2 (Material Design 2) switches with M3 (Material 3) switches</improve>
+        <fix>Fixed icon theming issues in Android 12</fix>
+        <fix>Fixed loading dynamic colours in the splash screen</fix>
+        <fix>Fixed applying the pure black theme on some devices</fix>
+    </release>
+    <release
+        type="alpha release"
         version="v3.1.0-alpha01"
         code="411"
         date="4 August 2022">
