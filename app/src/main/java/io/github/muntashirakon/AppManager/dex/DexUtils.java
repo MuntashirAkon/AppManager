@@ -14,6 +14,7 @@ import org.jf.dexlib2.dexbacked.DexBackedDexFile;
 import org.jf.dexlib2.dexbacked.DexBackedOdexFile;
 import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.iface.MultiDexContainer;
+import org.jf.dexlib2.writer.builder.DexBuilder;
 import org.jf.dexlib2.writer.io.DexDataStore;
 import org.jf.dexlib2.writer.io.FileDataStore;
 import org.jf.dexlib2.writer.pool.DexPool;
@@ -70,12 +71,13 @@ public final class DexUtils {
     @NonNull
     public static ClassDef toClassDef(@NonNull Reader smaliReader, int apiLevel)
             throws IOException, RecognitionException {
-        smaliFlexLexer lexer = new smaliFlexLexer(smaliReader, apiLevel);
+        Opcodes opcodes = apiLevel < 0 ? Opcodes.getDefault() : Opcodes.forApi(apiLevel);
+        smaliFlexLexer lexer = new smaliFlexLexer(smaliReader, opcodes.api);
         CommonTokenStream tokens = new CommonTokenStream(lexer);
         smaliParser parser = new smaliParser(tokens);
         parser.setVerboseErrors(false);
         parser.setAllowOdex(false);
-        parser.setApiLevel(apiLevel);
+        parser.setApiLevel(opcodes.api);
         smaliParser.smali_file_return result = parser.smali_file();
         if (parser.getNumberOfSyntaxErrors() > 0 || lexer.getNumberOfSyntaxErrors() > 0) {
             throw new IOException((parser.getNumberOfSyntaxErrors() + lexer.getNumberOfSyntaxErrors())
@@ -86,9 +88,11 @@ public final class DexUtils {
         CommonTreeNodeStream treeStream = new CommonTreeNodeStream(t);
         treeStream.setTokenStream(tokens);
 
+        DexBuilder dexBuilder = new DexBuilder(opcodes);
         smaliTreeWalker dexGen = new smaliTreeWalker(treeStream);
-        dexGen.setApiLevel(apiLevel);
+        dexGen.setApiLevel(opcodes.api);
         dexGen.setVerboseErrors(false);
+        dexGen.setDexBuilder(dexBuilder);
         ClassDef classDef = dexGen.smali_file();
 
         if (dexGen.getNumberOfSyntaxErrors() > 0) {
