@@ -696,6 +696,9 @@
             android:name=".logcat.LogcatRecordingService"
             android:exported="false" />
         <service
+            android:name=".apk.behavior.FreezeUnfreezeService"
+            android:exported="false" />
+        <service
             android:name=".accessibility.NoRootAccessibilityService"
             android:exported="false"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">

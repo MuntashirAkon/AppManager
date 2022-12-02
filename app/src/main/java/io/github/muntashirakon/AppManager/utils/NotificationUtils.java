@@ -88,8 +88,8 @@ public final class NotificationUtils {
     }
 
     public static int displayFreezeUnfreezeNotification(@NonNull Context context,
-                                                       @NonNull NotificationBuilder notification) {
-        int notificationId = getNotificationId(FREEZE_UNFREEZE_CHANNEL_ID);
+                                                        int notificationId,
+                                                        @NonNull NotificationBuilder notification) {
         displayNotification(context, FREEZE_UNFREEZE_CHANNEL_ID, "Freeze",
                 NotificationManagerCompat.IMPORTANCE_DEFAULT, notificationId,
                 NotificationCompat.PRIORITY_DEFAULT, notification);
@@ -113,6 +113,12 @@ public final class NotificationUtils {
         NotificationManagerCompat manager = getNewNotificationManager(context, channelId, channelName, importance);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId).setPriority(priority);
         manager.notify(notificationId, notification.build(builder));
+    }
+
+    @NonNull
+    public static NotificationManagerCompat getFreezeUnfreezeNotificationManager(@NonNull Context context) {
+        return getNewNotificationManager(context, FREEZE_UNFREEZE_CHANNEL_ID, "Freeze",
+                NotificationManagerCompat.IMPORTANCE_DEFAULT);
     }
 
     @NonNull

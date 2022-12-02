@@ -1280,6 +1280,8 @@
     <string name="confirm_file_deletion">Yes, delete</string>
     <string name="on_unfreeze_open_application">Open app after unfreezing</string>
     <string name="on_open_application_no_recents">Do not show launched app in Recents</string>
-    <string name="freeze_on_screen_off">Automatically freeze app when the screen is turned off</string>
+    <string name="freeze_on_phone_locked">Automatically freeze app when the phone is locked</string>
     <string name="tap_to_freeze_app">Tap to freeze</string>
+    <string name="waiting_for_the_phone_to_be_locked">Waiting for the phone to be locked…</string>
+    <string name="action_stop_service">Stop</string>
 </resources>

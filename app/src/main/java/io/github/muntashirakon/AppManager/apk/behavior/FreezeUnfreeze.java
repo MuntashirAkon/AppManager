@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.apk.behavior;
 
+import android.annotation.SuppressLint;
 import android.annotation.UserIdInt;
 import android.app.Notification;
 import android.app.PendingIntent;
@@ -13,12 +14,15 @@ import android.os.UserHandleHidden;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -27,7 +31,7 @@ public final class FreezeUnfreeze {
     @IntDef(flag = true, value = {
             FLAG_ON_UNFREEZE_OPEN_APP,
             FLAG_ON_OPEN_APP_NO_TASK,
-            FLAG_FREEZE_ON_SCREEN_OFF,
+            FLAG_FREEZE_ON_PHONE_LOCKED,
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface FreezeFlags {
@@ -35,7 +39,9 @@ public final class FreezeUnfreeze {
 
     public static final int FLAG_ON_UNFREEZE_OPEN_APP = 1 << 0;
     public static final int FLAG_ON_OPEN_APP_NO_TASK = 1 << 1;
-    public static final int FLAG_FREEZE_ON_SCREEN_OFF = 1 << 2;
+    public static final int FLAG_FREEZE_ON_PHONE_LOCKED = 1 << 2;
+
+    public static final int PRIVATE_FLAG_FREEZE_FORCE = 1 << 0;
 
     public static class ShortcutInfo {
         public final String shortcutId;
@@ -48,6 +54,7 @@ public final class FreezeUnfreeze {
 
         private Bitmap icon;
         private String label;
+        private int privateFlags;
 
         public ShortcutInfo(@NonNull String packageName, int userId, int flags) {
             this.shortcutId = "freeze:u=" + userId + ",p=" + packageName;
@@ -71,11 +78,33 @@ public final class FreezeUnfreeze {
         public void setLabel(String label) {
             this.label = label;
         }
+
+        public int getPrivateFlags() {
+            return privateFlags;
+        }
+
+        public void setPrivateFlags(int privateFlags) {
+            this.privateFlags = privateFlags;
+        }
+
+        public void addPrivateFlags(int privateFlags) {
+            this.privateFlags |= privateFlags;
+        }
+
+        public void removePrivateFlags(int privateFlags) {
+            this.privateFlags &= ~privateFlags;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(packageName, userId);
+        }
     }
 
-    static final String EXTRA_PACKAGE_NAME = "pkg";
-    static final String EXTRA_USER_ID = "user";
-    static final String EXTRA_FLAGS = "flags";
+    private static final String EXTRA_PACKAGE_NAME = "pkg";
+    private static final String EXTRA_USER_ID = "user";
+    private static final String EXTRA_FLAGS = "flags";
+    private static final String EXTRA_FORCE_FREEZE = "force";
 
     @NonNull
     public static Intent getShortcutIntent(@NonNull Context context, @NonNull ShortcutInfo shortcutInfo) {
@@ -95,7 +124,12 @@ public final class FreezeUnfreeze {
         }
         int userId = intent.getIntExtra(EXTRA_USER_ID, UserHandleHidden.myUserId());
         int flags = intent.getIntExtra(EXTRA_FLAGS, 0);
-        return new ShortcutInfo(packageName, userId, flags);
+        boolean force = intent.getBooleanExtra(EXTRA_FORCE_FREEZE, false);
+        ShortcutInfo shortcutInfo = new ShortcutInfo(packageName, userId, flags);
+        if (force) {
+            shortcutInfo.addPrivateFlags(PRIVATE_FLAG_FREEZE_FORCE);
+        }
+        return shortcutInfo;
     }
 
     static void launchApp(@NonNull FragmentActivity activity, @NonNull ShortcutInfo shortcutInfo) {
@@ -108,15 +142,17 @@ public final class FreezeUnfreeze {
             return;
         }
         if ((shortcutInfo.flags & FLAG_ON_OPEN_APP_NO_TASK) != 0) {
-            launchIntent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            launchIntent.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
         }
-        int notificationId = -1;
         try {
             activity.startActivity(launchIntent);
-            PendingIntent pendingIntent = PendingIntent.getActivity(activity, 0,
-                    getShortcutIntent(activity, shortcutInfo), Intent.FLAG_ACTIVITY_NEW_TASK);
-            notificationId = NotificationUtils.displayFreezeUnfreezeNotification(activity, builder -> builder
-                    .setAutoCancel(true)
+            Intent intent = getShortcutIntent(activity, shortcutInfo);
+            intent.putExtra(EXTRA_FORCE_FREEZE, true);
+            @SuppressLint("WrongConstant")
+            PendingIntent pendingIntent = PendingIntent.getActivity(activity, 0, intent,
+                    PendingIntentCompat.FLAG_IMMUTABLE | PendingIntent.FLAG_ONE_SHOT);
+            int notificationId = shortcutInfo.hashCode();
+            NotificationUtils.displayFreezeUnfreezeNotification(activity, notificationId, builder -> builder
                     .setDefaults(Notification.DEFAULT_ALL)
                     .setWhen(System.currentTimeMillis())
                     .setSmallIcon(R.drawable.ic_launcher_foreground)
@@ -124,14 +160,14 @@ public final class FreezeUnfreeze {
                     .setContentTitle(shortcutInfo.getLabel())
                     .setContentText(activity.getString(R.string.tap_to_freeze_app))
                     .setContentIntent(pendingIntent)
-                    .setAutoCancel(true)
                     .build());
+            if ((shortcutInfo.flags & FLAG_FREEZE_ON_PHONE_LOCKED) != 0) {
+                Intent service = new Intent(intent)
+                        .setClassName(activity, FreezeUnfreezeService.class.getName());
+                ContextCompat.startForegroundService(activity, service);
+            }
         } catch (Throwable th) {
             UIUtils.displayLongToast(th.getLocalizedMessage());
-            return;
-        }
-        if ((shortcutInfo.flags & FLAG_FREEZE_ON_SCREEN_OFF) != 0) {
-            // TODO: 29/11/22 Run a foreground service that would put all the configured packages back to freeze
         }
     }
 }

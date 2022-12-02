@@ -256,6 +256,6 @@
     <string-array name="freeze_unfreeze_flags">
         <item>@string/on_unfreeze_open_application</item>
         <item>@string/on_open_application_no_recents</item>
-        <item>@string/freeze_on_screen_off</item>
+        <item>@string/freeze_on_phone_locked</item>
     </string-array>
 </resources>
