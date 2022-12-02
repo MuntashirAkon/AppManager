@@ -1118,7 +1118,7 @@
     <string name="installer_app_message">Zaznacz <b>Wybierz</b>, aby wybrać spośród zainstalowanych aplikacji lub zaznacz <b>Własny</b>, aby określić własną nazwę pakietu.</string>
     <string name="net_policy">Reguły sieciowe</string>
     <string name="has_net_policy">Polityka netto</string>
-    <string name="backup_volume">Ilość kopii zapasowych</string>
+    <string name="backup_volume">Miejsce zapisu</string>
     <string name="failed_to_disable_magisk_hide">Nie można wyłączyć MagiskHide</string>
     <string name="disable_background_run_description">Ustawia tryb <i>Ignoruj</i> dla następujących operacji aplikacji: <tt>RUN_IN_BACKGROUND</tt> (z Androida 7.0) i <tt>RUN_ANY_IN_BACKGROUND</tt> (z Androida 9).</string>
     <string name="density">Gęstość</string>
