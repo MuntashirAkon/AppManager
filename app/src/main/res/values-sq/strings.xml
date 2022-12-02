@@ -180,7 +180,6 @@
     <string name="block_trackers">Blloko gjurmuesit</string>
     <string name="sort_by_component_name">Emri komponetëve</string>
     <string name="external_data_dir">Vedndodhja e të dhënave të jashtme</string>
-    <string name="store">Dyqani</string>
     <string name="user_with_id">Prdorues: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
     <string name="import_options">Opsionet e Importit</string>
     <string name="pref_import_msg">Importoni rregullat e bllokimit të eksportuara më parë nga \"Menaxheri i aplikacionit\".</string>

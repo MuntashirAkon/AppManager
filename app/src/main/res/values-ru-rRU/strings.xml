@@ -248,7 +248,6 @@
         <item quantity="other">Ошибка импортирования %1$d файлов.</item>
     </plurals>
     <string name="apk_updater">APK Updater</string>
-    <string name="store">Магазин</string>
     <string name="running_apps">Работающие приложения</string>
     <string name="kill_process">Закрыть</string>
     <string name="disable_background_run">Предотвращение работы в фоне</string>

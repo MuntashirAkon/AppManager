@@ -233,7 +233,6 @@
     <string name="disable_background_run">غیرفعال کردن جلوگیری از فعالیت پس‌زمینه</string>
     <string name="kill_process">بکش</string>
     <string name="running_apps">برنامه های در حال اجرا</string>
-    <string name="store">فروشگاه</string>
     <string name="apk_updater">به‌روزرسان APK</string>
     <plurals name="failed_to_import_files">
         <item quantity="one">نتوانست %1$d پرونده را وارد کند.</item>

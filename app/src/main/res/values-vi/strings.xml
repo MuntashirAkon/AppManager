@@ -239,7 +239,6 @@
     <string name="disable_background_run">Ngăn chặn hoạt động trong nền</string>
     <string name="kill_process">Giết</string>
     <string name="running_apps">Ứng dụng đang chạy</string>
-    <string name="store">Cửa hàng</string>
     <string name="apk_updater">APK Updater</string>
     <plurals name="failed_to_import_files">
         <item quantity="other">Không thể nhập %1$d tệp.</item>

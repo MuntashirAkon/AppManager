@@ -413,7 +413,6 @@
     <string name="disable_background_run">Empêcher le fonctionnement en arrière-plan</string>
     <string name="kill_process">Tuer</string>
     <string name="running_apps">Applications en cours d\'exécution</string>
-    <string name="store">Magasin</string>
     <string name="apk_updater">Mise à jour d\'APK</string>
     <plurals name="failed_to_import_files">
         <item quantity="one">Impossible d\'importer %1$d fichier.</item>
@@ -523,17 +522,17 @@
     <plurals name="other_trackers_and_classes">
         <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> traqueurs avec les classes <xliff:g id="class_no" example="50">%2$d</xliff:g></item>
         <item quantity="many"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> traqueurs avec les classes <xliff:g id="class_no" example="50">%2$d</xliff:g></item>
-        <item quantity="other"></item>
+        <item quantity="other"/>
     </plurals>
     <plurals name="two_trackers_and_classes">
         <item quantity="one">2 traqueurs avec la classe <xliff:g id="class_no" example="50">%1$d</xliff:g></item>
         <item quantity="many">2 traqueurs avec les classes <xliff:g id="class_no" example="50">%1$d</xliff:g></item>
-        <item quantity="other"></item>
+        <item quantity="other"/>
     </plurals>
     <plurals name="tracker_and_classes">
         <item quantity="one">1 traqueur avec la classe <xliff:g id="class_no" example="50">%1$d</xliff:g></item>
         <item quantity="many">1 traqueur avec les classes <xliff:g id="class_no" example="50">%1$d</xliff:g></item>
-        <item quantity="other"></item>
+        <item quantity="other"/>
     </plurals>
     <string name="toggle_class_listing">Activer/Désactiver l\'affichage en liste des classes</string>
     <string name="class_viewer">Visualiseur de classe</string>

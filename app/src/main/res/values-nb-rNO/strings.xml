@@ -24,7 +24,6 @@
     <string name="memory_virtual_memory">Minne: %1$s, virtuelt minne: %2$s</string>
     <string name="kill_process">Drep</string>
     <string name="running_apps">Kjørende programmer</string>
-    <string name="store">Butikk</string>
     <string name="apk_updater">APK-oppdaterer</string>
     <string name="usage_yesterday">I går</string>
     <string name="app_settings">Innstillinger</string>

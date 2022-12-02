@@ -232,7 +232,6 @@
         <item quantity="other">%1$d 個のファイルをインポートできませんでした。</item>
     </plurals>
     <string name="apk_updater">APKアップデータ</string>
-    <string name="store">ストア</string>
     <string name="running_apps">実行中のアプリ</string>
     <string name="kill_process">停止</string>
     <string name="disable_background_run">ﾊﾞｯｸｸﾞﾗｳﾝﾄﾞ実行を防止</string>

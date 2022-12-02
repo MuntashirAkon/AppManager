@@ -247,7 +247,6 @@
     <string name="disable_background_run">Impedisci operazioni in background</string>
     <string name="kill_process">Forza arresto</string>
     <string name="running_apps">App attive</string>
-    <string name="store">Negozio</string>
     <string name="apk_updater">Aggiornamento APK</string>
     <plurals name="failed_to_import_files">
         <item quantity="one">Impossibile importare %1$d file.</item>

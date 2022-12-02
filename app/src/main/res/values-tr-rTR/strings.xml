@@ -434,7 +434,6 @@
     <string name="disable_background_run">Arka planda çalışmayı engelle</string>
     <string name="kill_process">Sonlandır</string>
     <string name="running_apps">Çalışan Uygulamalar</string>
-    <string name="store">Mağaza</string>
     <string name="apk_updater">APK Güncelleyici</string>
     <plurals name="failed_to_import_files">
         <item quantity="one">%1$d dosya içe aktarılamadı.</item>

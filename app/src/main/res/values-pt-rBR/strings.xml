@@ -218,7 +218,6 @@
         <item quantity="other">%1$d arquivos não puderam ser importados.</item>
     </plurals>
     <string name="apk_updater">APK Updater</string>
-    <string name="store">Loja</string>
     <string name="running_apps">Aplicativos em Execução</string>
     <string name="kill_process">Encerrar</string>
     <string name="disable_background_run">Deter a operação em segundo plano</string>

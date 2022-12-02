@@ -545,7 +545,6 @@
     <string name="disable_background_run">防止後台操作</string>
     <string name="kill_process">殺</string>
     <string name="running_apps">正在執行的應用程式</string>
-    <string name="store">店鋪</string>
     <string name="apk_updater">APK 更新器</string>
     <string name="the_export_was_successful">已匯出</string>
     <string name="the_import_was_successful">匯入完成</string>

@@ -475,7 +475,6 @@
     <string name="flags">Прапорці</string>
     <string name="soft_input">Режим \"софт\" введення</string>
     <string name="task_affinity">Спорідненість завдань</string>
-    <string name="store">Aurora Store</string>
     <string name="orientation_user_landscape">Користувацька, горизонтальна</string>
     <string name="orientation_sensor">Датник</string>
     <string name="orientation_sensor_portrait">Вертикальна по датнику</string>

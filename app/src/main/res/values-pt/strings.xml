@@ -153,7 +153,6 @@
     <string name="disable_background_run">Desativar a operação em segundo plano</string>
     <string name="kill_process">Forçar paragem</string>
     <string name="running_apps">Em execução</string>
-    <string name="store">Loja</string>
     <string name="apk_updater">Atualizador de APK</string>
     <plurals name="failed_to_import_files">
         <item quantity="one">Não foi possível importar %1$d ficheiro.</item>

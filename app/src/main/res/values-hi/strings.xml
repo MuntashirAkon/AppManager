@@ -97,7 +97,6 @@
     <string name="disable_background_run">बैकग्राउंड कार्रवाई रोकें</string>
     <string name="kill_process">जबरदस्ती रोकें</string>
     <string name="running_apps">चल रहे ऐप</string>
-    <string name="store">स्टोर</string>
     <string name="apk_updater">एपीके अपडेटर</string>
     <plurals name="failed_to_import_files">
         <item quantity="one">%1$d फ़ाइल आयात नहीं कर सका।</item>

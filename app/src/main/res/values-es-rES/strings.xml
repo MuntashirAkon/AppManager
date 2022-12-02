@@ -663,7 +663,6 @@
         <item quantity="many">No se han podido desinstalar %1$d aplicaciones</item>
         <item quantity="other">No se han podido desinstalar %1$d aplicaciones</item>
     </plurals>
-    <string name="store">Tienda</string>
     <string name="apk_updater">Actualizador APK</string>
     <string name="external_multiple_data_dir">Directorio de datos externos <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
     <string name="failed_to_disable_op">No se pudo deshabilitar la app op solicitada</string>

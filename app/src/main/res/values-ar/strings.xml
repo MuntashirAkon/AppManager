@@ -380,7 +380,6 @@
     <string name="disable_background_run">منع التشغيل في الخلفية</string>
     <string name="kill_process">قتل</string>
     <string name="running_apps">التطبيقات المشغلة</string>
-    <string name="store">متجر التطبيقات</string>
     <string name="apk_updater">محدث APK</string>
     <string name="the_export_was_successful">تمت عملية التصدير</string>
     <string name="the_import_was_successful">تمَّت عملية الإستيراد</string>

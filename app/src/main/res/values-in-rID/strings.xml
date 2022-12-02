@@ -249,7 +249,6 @@
     <string name="disable_background_run">Nonaktifkan Berjalan di Latar Belakang</string>
     <string name="kill_process">Hentikan</string>
     <string name="running_apps">Aplikasi Berjalan</string>
-    <string name="store">Toko</string>
     <string name="apk_updater">Pengupdate APK</string>
     <plurals name="failed_to_import_files">
         <item quantity="other">Tak dapat memulihkan file %1$d.</item>

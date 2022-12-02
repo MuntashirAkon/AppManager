@@ -769,7 +769,6 @@
     <string name="accept_time">Czas zatwierdzenia</string>
     <string name="toggle_kill_for_system_apps">Przełącz zamykanie aplikacji systemowych</string>
     <string name="user_with_id">Użytkownik: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
-    <string name="store">Sklep</string>
     <string name="apk_updater">APK Updater</string>
     <string name="sort_by_times_opened">Ilości otwarć</string>
     <string name="sort_by_screen_time">Czas ekranowy</string>

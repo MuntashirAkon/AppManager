@@ -210,7 +210,6 @@
     <string name="str_logo">Logo</string>
     <string name="sort_by_blocked_components">Blocat primul</string>
     <string name="sort_by_times_opened">Timpii de deschidere</string>
-    <string name="store">Magazin</string>
     <string name="running_apps">Aplicații în curs de execuție</string>
     <string name="kill_process">Ucide</string>
     <string name="backup_restore">Copie de rezervă/Restaurare</string>

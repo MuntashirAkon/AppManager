@@ -246,7 +246,6 @@
     <string name="pref_import_blocker">Blocker에서 가져오기</string>
     <string name="sort_by_screen_time">상영 시간</string>
     <string name="apk_updater">APK Updater</string>
-    <string name="store">저장</string>
     <string name="memory_virtual_memory">메모: %1$s, 가상 메모리: %2$s</string>
     <string name="external_multiple_data_dir">외부 데이터 디렉토리 <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
     <string name="disable_background_run">백그라운드 작업 방지</string>

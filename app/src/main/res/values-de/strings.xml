@@ -236,7 +236,6 @@
         <item quantity="other">%1$d Dateien konnten nicht importiert werden.</item>
     </plurals>
     <string name="apk_updater">APK-Aktualisierung</string>
-    <string name="store">Speicher</string>
     <string name="running_apps">Laufende Anwendungen</string>
     <string name="kill_process">Beenden erzwingen</string>
     <string name="disable_background_run">Hintergrundbetrieb verhindern</string>

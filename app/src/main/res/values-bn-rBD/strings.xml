@@ -145,7 +145,6 @@
     <string name="the_import_was_successful">ইমপোর্টেড</string>
     <string name="the_export_was_successful">এক্সপোর্টেড</string>
     <string name="apk_updater">এপিকে আপডেটর</string>
-    <string name="store">স্টোর</string>
     <string name="running_apps">চলমান এপ্স</string>
     <string name="kill_process">কাটুন</string>
     <string name="pid_and_ppid">প্রসেস আইডি: %1$d, প্যারেন্ট প্রসেস আইডি: %2$d</string>
