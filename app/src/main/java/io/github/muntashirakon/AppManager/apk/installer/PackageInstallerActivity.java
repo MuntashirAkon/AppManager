@@ -2,6 +2,21 @@
 
 package io.github.muntashirakon.AppManager.apk.installer;
 
+import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_ABORTED;
+import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_BLOCKED;
+import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_CONFLICT;
+import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_INCOMPATIBLE;
+import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_INCOMPATIBLE_ROM;
+import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_INVALID;
+import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_SECURITY;
+import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_SESSION_ABANDON;
+import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_SESSION_COMMIT;
+import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_SESSION_CREATE;
+import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_SESSION_WRITE;
+import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_STORAGE;
+import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_SUCCESS;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getDialogTitle;
+
 import android.annotation.UserIdInt;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -35,8 +50,9 @@ import androidx.lifecycle.ViewModelProvider;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.File;
-import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -59,21 +75,6 @@ import io.github.muntashirakon.AppManager.utils.StoragePermission;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
-
-import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_ABORTED;
-import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_BLOCKED;
-import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_CONFLICT;
-import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_INCOMPATIBLE;
-import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_INCOMPATIBLE_ROM;
-import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_INVALID;
-import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_SECURITY;
-import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_SESSION_ABANDON;
-import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_SESSION_COMMIT;
-import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_SESSION_CREATE;
-import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_SESSION_WRITE;
-import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_STORAGE;
-import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_SUCCESS;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getDialogTitle;
 
 public class PackageInstallerActivity extends BaseActivity implements WhatsNewDialogFragment.InstallInterface {
     public static final String EXTRA_APK_FILE_KEY = "EXTRA_APK_FILE_KEY";
@@ -98,11 +99,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
                 } // else let the original activity decide what to do
             });
 
-    @SuppressWarnings("FieldCanBeLocal") // Cannot be local
-    @Nullable
-    private List<Uri> apkUris;
-    @Nullable
-    private Iterator<Uri> uriIterator;
+    private final Queue<Uri> apkUris = new LinkedList<>();
     @Nullable
     private String mimeType;
     private int actionName;
@@ -169,8 +166,12 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
         fm = getSupportFragmentManager();
         progressDialog.show();
         mimeType = intent.getType();
-        apkUris = IntentCompat.getDataUris(intent);
-        if (apkUris != null) uriIterator = apkUris.listIterator();
+        List<Uri> uris = IntentCompat.getDataUris(intent);
+        if (uris != null) {
+            synchronized (apkUris) {
+                apkUris.addAll(uris);
+            }
+        }
         int apkFileKey = intent.getIntExtra(EXTRA_APK_FILE_KEY, -1);
         if (apkFileKey != -1) {
             model.getPackageInfo(apkFileKey);
@@ -397,6 +398,15 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
                     finish();
                 } // else let the original activity decide what to do
             }
+            return;
+        }
+        // Check for new Uris
+        List<Uri> uris = IntentCompat.getDataUris(intent);
+        if (uris != null) {
+            synchronized (apkUris) {
+                apkUris.addAll(uris);
+            }
+            UIUtils.displayShortToast(R.string.added_to_queue);
         }
     }
 
@@ -505,8 +515,9 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
         if (hasNext()) {
             isDealingWithApk = true;
             progressDialog.show();
-            //noinspection ConstantConditions Checked earlier
-            model.getPackageInfo(uriIterator.next(), mimeType);
+            synchronized (apkUris) {
+                model.getPackageInfo(apkUris.poll(), mimeType);
+            }
         } else {
             isDealingWithApk = false;
             finish();
@@ -514,7 +525,9 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
     }
 
     private boolean hasNext() {
-        return uriIterator != null && uriIterator.hasNext();
+        synchronized (apkUris) {
+            return !apkUris.isEmpty();
+        }
     }
 
     @NonNull
