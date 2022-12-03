@@ -1193,7 +1193,7 @@
     <string name="open_as_video">视频</string>
     <string name="open_as_archive">压缩文件</string>
     <string name="open_as_folder">文件夹</string>
-    <string name="confirm_file_deletion">是，删除</string>
+    <string name="confirm_file_deletion">确定，删除</string>
     <string name="on_unfreeze_open_application">解冻后打开应用</string>
     <string name="on_open_application_no_recents">不要在“最近”中显示启动过的应用</string>
     <string name="tap_to_freeze_app">轻按冻结</string>
