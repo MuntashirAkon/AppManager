@@ -1284,4 +1284,7 @@
     <string name="tap_to_freeze_app">Tap to freeze</string>
     <string name="waiting_for_the_phone_to_be_locked">Waiting for the phone to be locked…</string>
     <string name="action_stop_service">Stop</string>
+    <string name="app_manager_build_expired">Update Required</string>
+    <string name="app_manager_build_expired_message">To ensure the safety of your device and data, the version of App Manager you\'re using has been retired. You have to update it to the latest version to continue to use it, or uninstall it if no update is available.</string>
+    <string name="app_manager_build_expiring_soon_warning">This version of App Manager will expire very soon. Please update it to the latest version.</string>
 </resources>

@@ -17,6 +17,8 @@ android {
                 arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
             }
         }
+        // Add build time to BuildConfig
+        buildConfigField "long", "BUILD_TIME_MILLIS", "${buildTime()}"
     }
 
     signingConfigs {
@@ -159,3 +161,7 @@ dependencies {
 }
 
 preBuild.dependsOn ":server:build"
+
+static def buildTime() {
+    return System.currentTimeMillis();
+}

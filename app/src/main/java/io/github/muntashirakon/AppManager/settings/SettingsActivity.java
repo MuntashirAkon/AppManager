@@ -25,6 +25,7 @@ import java.util.Objects;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.self.life.BuildExpiryChecker;
 
 public class SettingsActivity extends BaseActivity implements PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
     private static final String SCHEME = "app-manager";
@@ -62,6 +63,9 @@ public class SettingsActivity extends BaseActivity implements PreferenceFragment
         progressIndicator = findViewById(R.id.progress_linear);
         progressIndicator.setVisibilityAfterHide(View.GONE);
         progressIndicator.hide();
+
+        View buildExpiringNotice = findViewById(R.id.app_manager_expiring_notice);
+        buildExpiringNotice.setVisibility(BuildExpiryChecker.buildExpired() == null ? View.VISIBLE : View.GONE);
 
         Uri uri = getIntent().getData();
         if (uri != null && SCHEME.equals(uri.getScheme()) && HOST.equals(uri.getHost()) && uri.getPath() != null) {

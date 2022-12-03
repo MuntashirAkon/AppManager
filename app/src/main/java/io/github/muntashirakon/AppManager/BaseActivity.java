@@ -26,6 +26,7 @@ import java.util.Objects;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreActivity;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.self.life.BuildExpiryChecker;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.SecurityAndOpsViewModel;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -63,6 +64,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (Ops.isAuthenticated()) {
             Log.d(TAG, "Already authenticated.");
             onAuthenticated(savedInstanceState);
+            return;
+        }
+        if (Boolean.TRUE.equals(BuildExpiryChecker.buildExpired())) {
+            // Build has expired
+            BuildExpiryChecker.getBuildExpiredDialog(this).show();
             return;
         }
         // Run authentication
