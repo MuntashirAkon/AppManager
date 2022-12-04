@@ -18,7 +18,8 @@ import java.io.OutputStream;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.io.IoUtils;
 
 class FileCache {
     private static final long sLastModifiedDate = System.currentTimeMillis() - 604_800_000;
@@ -37,12 +38,12 @@ class FileCache {
     public void putImage(String name, InputStream inputStream) throws IOException {
         File iconFile = getImageFile(name);
         try (OutputStream os = new FileOutputStream(iconFile)) {
-            FileUtils.copy(inputStream, os);
+            IoUtils.copy(inputStream, os);
         }
     }
 
     public void putImage(String name, Drawable drawable) throws IOException {
-        putImage(name, FileUtils.getBitmapFromDrawable(drawable));
+        putImage(name, UIUtils.getBitmapFromDrawable(drawable));
     }
 
     public void putImage(String name, Bitmap bitmap) throws IOException {

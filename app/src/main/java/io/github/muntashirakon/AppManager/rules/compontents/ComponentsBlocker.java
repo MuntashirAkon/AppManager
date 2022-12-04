@@ -2,6 +2,10 @@
 
 package io.github.muntashirakon.AppManager.rules.compontents;
 
+import static io.github.muntashirakon.AppManager.appops.AppOpsManager.OP_NONE;
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagMatchUninstalled;
+
 import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
@@ -39,14 +43,9 @@ import io.github.muntashirakon.AppManager.rules.struct.RuleEntry;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.io.AtomicExtendedFile;
 import io.github.muntashirakon.io.Paths;
-
-import static io.github.muntashirakon.AppManager.appops.AppOpsManager.OP_NONE;
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagMatchUninstalled;
 
 /**
  * Block application components: activities, broadcasts, services and providers.
@@ -190,7 +189,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
         if (packageNamesWithTSVExt != null) {
             // Apply rules
             for (String packageNameWithTSVExt : packageNamesWithTSVExt) {
-                try (ComponentsBlocker cb = getMutableInstance(FileUtils.trimExtension(packageNameWithTSVExt), userHandle)) {
+                try (ComponentsBlocker cb = getMutableInstance(Paths.trimPathExtension(packageNameWithTSVExt), userHandle)) {
                     isSuccessful &= cb.applyRules(true);
                 }
             }

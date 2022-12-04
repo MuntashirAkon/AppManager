@@ -2,6 +2,15 @@
 
 package io.github.muntashirakon.AppManager.backup;
 
+import static io.github.muntashirakon.AppManager.backup.BackupManager.CERT_PREFIX;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.DATA_PREFIX;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.ICON_FILE;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.KEYSTORE_PLACEHOLDER;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.KEYSTORE_PREFIX;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.MASTER_KEY;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.SOURCE_PREFIX;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.getExt;
+
 import android.annotation.UserIdInt;
 import android.app.INotificationManager;
 import android.content.ComponentName;
@@ -60,18 +69,11 @@ import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
-
-import static io.github.muntashirakon.AppManager.backup.BackupManager.CERT_PREFIX;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.DATA_PREFIX;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.ICON_FILE;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.KEYSTORE_PLACEHOLDER;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.KEYSTORE_PREFIX;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.MASTER_KEY;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.SOURCE_PREFIX;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.getExt;
 
 @WorkerThread
 class BackupOp implements Closeable {
@@ -224,7 +226,7 @@ class BackupOp implements Closeable {
         try {
             Path iconFile = mTempBackupPath.createNewFile(ICON_FILE, null);
             try (OutputStream outputStream = iconFile.openOutputStream()) {
-                Bitmap bitmap = FileUtils.getBitmapFromDrawable(mApplicationInfo.loadIcon(mPm));
+                Bitmap bitmap = UIUtils.getBitmapFromDrawable(mApplicationInfo.loadIcon(mPm));
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
                 outputStream.flush();
             }
@@ -302,7 +304,7 @@ class BackupOp implements Closeable {
             Path masterKeyFile = KeyStoreUtils.getMasterKey(mUserId);
             // Master key exists, so take its checksum to verify it during the restore
             mChecksum.add(MASTER_KEY, DigestUtils.getHexDigest(mMetadata.checksumAlgo,
-                    FileUtils.getFileContent(masterKeyFile).getBytes()));
+                    masterKeyFile.getContentAsString().getBytes()));
         } catch (FileNotFoundException ignore) {
         }
         // Store the KeyStore files
@@ -313,7 +315,7 @@ class BackupOp implements Closeable {
             try {
                 String newFileName = Utils.replaceOnce(keyStoreFileName, String.valueOf(mApplicationInfo.uid),
                         String.valueOf(KEYSTORE_PLACEHOLDER));
-                FileUtils.copy(keyStorePath.findFile(keyStoreFileName), cachePath.findOrCreateFile(newFileName, null));
+                IoUtils.copy(keyStorePath.findFile(keyStoreFileName), cachePath.findOrCreateFile(newFileName, null));
                 cachedKeyStoreFileNames.add(newFileName);
                 keyStoreFilters.add(Pattern.quote(newFileName));
             } catch (Throwable e) {

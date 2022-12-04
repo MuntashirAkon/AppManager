@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.io;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,9 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
-
-import static org.junit.Assert.assertEquals;
 
 @RunWith(RobolectricTestRunner.class)
 public class SplitInputStreamTest {
@@ -52,7 +51,7 @@ public class SplitInputStreamTest {
         junkFiles.add(file);
         try (SplitInputStream splitInputStream = new SplitInputStream(fileList);
              OutputStream outputStream = new FileOutputStream(file)) {
-            FileUtils.copy(splitInputStream, outputStream);
+            IoUtils.copy(splitInputStream, outputStream);
         }
         assert classLoader != null;
         String expectedHash = DigestUtils.getHexDigest(DigestUtils.SHA_256, new File(classLoader.getResource("AppManager_v2.5.22.apks").getFile()));

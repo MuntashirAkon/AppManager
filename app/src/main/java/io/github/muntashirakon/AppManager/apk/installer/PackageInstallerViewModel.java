@@ -2,6 +2,11 @@
 
 package io.github.muntashirakon.AppManager.apk.installer;
 
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagMatchUninstalled;
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfoApk;
+
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.pm.PackageInfo;
@@ -27,13 +32,8 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.users.UserInfo;
 import io.github.muntashirakon.AppManager.users.Users;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
-
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagMatchUninstalled;
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfoApk;
+import io.github.muntashirakon.io.IoUtils;
 
 public class PackageInstallerViewModel extends AndroidViewModel {
     private final PackageManager packageManager;
@@ -58,7 +58,7 @@ public class PackageInstallerViewModel extends AndroidViewModel {
 
     @Override
     protected void onCleared() {
-        FileUtils.closeQuietly(apkFile);
+        IoUtils.closeQuietly(apkFile);
         executor.shutdownNow();
         super.onCleared();
     }

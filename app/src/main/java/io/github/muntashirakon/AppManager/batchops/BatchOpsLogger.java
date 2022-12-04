@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.IOException;
 
 import io.github.muntashirakon.AppManager.logs.Logger;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
+import io.github.muntashirakon.io.Paths;
 
 public class BatchOpsLogger extends Logger {
     private static final File LOG_FILE = new File(getLoggingDirectory(), "batch_ops.log");
@@ -19,7 +19,7 @@ public class BatchOpsLogger extends Logger {
 
     @NonNull
     public static String getAllLogs() {
-        return FileUtils.getFileContent(LOG_FILE);
+        return Paths.get(LOG_FILE).getContentAsString();
     }
 
     public static void clearLogs() {

@@ -3,6 +3,7 @@
 package io.github.muntashirakon.AppManager.utils;
 
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
@@ -66,6 +67,10 @@ public final class ResourceUtil {
             throw new Resources.NotFoundException("Resource " + name + " of type " + type + " is not found in package " + packageName);
         }
         return new ParsedResource(packageName, res, resId);
+    }
+
+    public static int getRawDataId(@NonNull Context context, @NonNull String name) {
+        return context.getResources().getIdentifier(name, "raw", context.getPackageName());
     }
 
     public String packageName;

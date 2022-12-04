@@ -2,6 +2,8 @@
 
 package org.apache.commons.compress.archivers.tar;
 
+import static org.junit.Assert.assertEquals;
+
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.junit.After;
 import org.junit.Test;
@@ -17,12 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
+import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.io.SplitInputStream;
-
-import static org.junit.Assert.assertEquals;
 
 @RunWith(RobolectricTestRunner.class)
 public class TarArchiveInputStreamTest {
@@ -53,7 +53,7 @@ public class TarArchiveInputStreamTest {
                 File file = new File("/tmp", entry.getName());
                 // copy TarArchiveInputStream to newPath
                 try (OutputStream os = Paths.get(file).openOutputStream()) {
-                    FileUtils.copy(tis, os);
+                    IoUtils.copy(tis, os);
                 }
             }
         }

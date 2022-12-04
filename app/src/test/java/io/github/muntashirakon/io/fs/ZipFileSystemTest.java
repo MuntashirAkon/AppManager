@@ -2,6 +2,14 @@
 
 package io.github.muntashirakon.io.fs;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThrows;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,17 +23,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThrows;
-import static org.junit.Assert.assertTrue;
 
 // Note: We don't have to test weird paths such as ./, ../, etc. because they're taken care of by the Path API.
 @RunWith(RobolectricTestRunner.class)
@@ -141,7 +140,7 @@ public class ZipFileSystemTest {
         assertTrue(mountPoint.findFile("res").isDirectory());
         assertTrue(mountPoint.findFile("resources.arsc").isFile());
         assertTrue(mountPoint.findFile("test.txt").isFile());
-        assertEquals("This is a test file", FileUtils.getFileContent(mountPoint.findFile("test.txt")));
+        assertEquals("This is a test file", mountPoint.findFile("test.txt").getContentAsString());
         VirtualFileSystem.unmount(fsId);
         assertTrue(modifiedApk.get().delete());
     }
@@ -175,7 +174,7 @@ public class ZipFileSystemTest {
         assertTrue(mountPoint.findFile("res").isDirectory());
         assertTrue(mountPoint.findFile("resources.arsc").isFile());
         assertTrue(mountPoint.findFile("test.txt").isFile());
-        assertEquals("This is a test file", FileUtils.getFileContent(mountPoint.findFile("test.txt")));
+        assertEquals("This is a test file", mountPoint.findFile("test.txt").getContentAsString());
         VirtualFileSystem.unmount(fsId);
         assertTrue(tmpApkFile.delete());
     }
@@ -707,7 +706,7 @@ public class ZipFileSystemTest {
         });
         int fsId = VirtualFileSystem.mount(mountPoint.getUri(), apkFile, "application/zip", options);
         VirtualFileSystem fs = Objects.requireNonNull(VirtualFileSystem.getFileSystem(fsId));
-        String manifestContents = FileUtils.getFileContent(mountPoint.findFile("AndroidManifest.xml"));
+        String manifestContents = mountPoint.findFile("AndroidManifest.xml").getContentAsString();
         assertTrue(fs.renameTo("/AndroidManifest.xml", "/assets/dnsfilter.conf"));
         assertFalse(mountPoint.hasFile("AndroidManifest.xml"));
         assertTrue(mountPoint.findFile("assets").isDirectory());
@@ -726,7 +725,7 @@ public class ZipFileSystemTest {
         assertTrue(mountPoint.findFile("META-INF").isDirectory());
         assertTrue(mountPoint.findFile("res").isDirectory());
         assertTrue(mountPoint.findFile("resources.arsc").isFile());
-        assertEquals(manifestContents, FileUtils.getFileContent(mountPoint.findFile("assets").findFile("dnsfilter.conf")));
+        assertEquals(manifestContents, mountPoint.findFile("assets").findFile("dnsfilter.conf").getContentAsString());
         VirtualFileSystem.unmount(fsId);
     }
 
@@ -771,7 +770,7 @@ public class ZipFileSystemTest {
         assertTrue(mountPoint.findFile("res").isDirectory());
         assertTrue(mountPoint.findFile("resources.arsc").isFile());
         assertTrue(mountPoint.findFile("test.txt").isFile());
-        assertEquals("This is a test file", FileUtils.getFileContent(mountPoint.findFile("test.txt")));
+        assertEquals("This is a test file", mountPoint.findFile("test.txt").getContentAsString());
         VirtualFileSystem.unmount(fsId);
         assertTrue(modifiedApk.get().delete());
     }

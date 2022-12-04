@@ -35,7 +35,6 @@ import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.rules.struct.PermissionRule;
 import io.github.muntashirakon.AppManager.rules.struct.RuleEntry;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
@@ -166,7 +165,7 @@ public final class ComponentUtils {
         Path confDir = RulesStorageManager.getConfDir();
         Path[] paths = confDir.listFiles((dir, name) -> name.endsWith(".tsv"));
         for (Path path : paths) {
-            packages.add(FileUtils.trimExtension(path.getUri().getLastPathSegment()));
+            packages.add(Paths.trimPathExtension(path.getUri().getLastPathSegment()));
         }
         return packages;
     }

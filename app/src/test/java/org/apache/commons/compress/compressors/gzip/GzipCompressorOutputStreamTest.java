@@ -2,6 +2,8 @@
 
 package org.apache.commons.compress.compressors.gzip;
 
+import static org.junit.Assert.assertEquals;
+
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
@@ -23,13 +25,11 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import io.github.muntashirakon.AppManager.utils.FileUtils;
+import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.io.SplitInputStream;
 import io.github.muntashirakon.io.SplitOutputStream;
-
-import static org.junit.Assert.assertEquals;
 
 @RunWith(RobolectricTestRunner.class)
 public class GzipCompressorOutputStreamTest {
@@ -61,7 +61,7 @@ public class GzipCompressorOutputStreamTest {
                 TarArchiveEntry tarEntry = new TarArchiveEntry(file, file.getName());
                 tos.putArchiveEntry(tarEntry);
                 try (InputStream is = file.openInputStream()) {
-                    FileUtils.copy(is, tos);
+                    IoUtils.copy(is, tos);
                 }
                 tos.closeArchiveEntry();
             }
@@ -105,7 +105,7 @@ public class GzipCompressorOutputStreamTest {
                 TarArchiveEntry tarEntry = new TarArchiveEntry(file, file.getName());
                 tos.putArchiveEntry(tarEntry);
                 try (InputStream is = file.openInputStream()) {
-                    FileUtils.copy(is, tos);
+                    IoUtils.copy(is, tos);
                 }
                 tos.closeArchiveEntry();
             }

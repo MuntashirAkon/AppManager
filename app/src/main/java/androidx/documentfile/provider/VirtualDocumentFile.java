@@ -18,7 +18,7 @@ import java.io.IOException;
 import java.nio.channels.FileChannel;
 import java.util.Objects;
 
-import io.github.muntashirakon.AppManager.utils.FileUtils;
+import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.io.fs.VirtualFileSystem;
 
 // Mother of all virtual documents
@@ -46,7 +46,7 @@ public class VirtualDocumentFile extends DocumentFile {
     protected VirtualDocumentFile(@NonNull VirtualDocumentFile parent, @NonNull String relativePath) {
         super(Objects.requireNonNull(parent));
         this.fs = parent.fs;
-        this.fullPath = FileUtils.addSegmentAtEnd(parent.fullPath, relativePath);
+        this.fullPath = Paths.appendPathSegment(parent.fullPath, relativePath);
     }
 
     @Nullable
@@ -57,14 +57,14 @@ public class VirtualDocumentFile extends DocumentFile {
         if (extension != null) {
             displayName += "." + extension;
         }
-        String newFilePath = FileUtils.addSegmentAtEnd(fullPath, displayName);
+        String newFilePath = Paths.appendPathSegment(fullPath, displayName);
         return fs.createNewFile(newFilePath) ? new VirtualDocumentFile(this, displayName) : null;
     }
 
     @Nullable
     @Override
     public DocumentFile createDirectory(@NonNull String displayName) {
-        String newFilePath = FileUtils.addSegmentAtEnd(fullPath, displayName);
+        String newFilePath = Paths.appendPathSegment(fullPath, displayName);
         return fs.mkdir(newFilePath) ? new VirtualDocumentFile(this, displayName) : null;
     }
 
@@ -84,14 +84,14 @@ public class VirtualDocumentFile extends DocumentFile {
         if (fullPath.equals(File.separator)) {
             return File.separator;
         }
-        return FileUtils.getLastPathComponent(fullPath);
+        return Paths.getLastPathSegment(fullPath);
     }
 
     @Nullable
     @Override
     public String getType() {
         if (fs.isFile(fullPath)) {
-            String extension = FileUtils.getExtension(getName());
+            String extension = Paths.getPathExtension(getName());
             if (extension.equals("")) {
                 return null;
             }
@@ -174,7 +174,11 @@ public class VirtualDocumentFile extends DocumentFile {
     @Nullable
     @Override
     public VirtualDocumentFile findFile(@NonNull String displayName) {
-        VirtualDocumentFile documentFile = new VirtualDocumentFile(this, FileUtils.getSanitizedPath(displayName));
+        displayName =  Paths.getSanitizedPath(displayName, true);
+        if (displayName == null) {
+            return null;
+        }
+        VirtualDocumentFile documentFile = new VirtualDocumentFile(this, displayName);
         if (documentFile.exists()) {
             return documentFile;
         }
@@ -195,8 +199,8 @@ public class VirtualDocumentFile extends DocumentFile {
 
     @Override
     public boolean renameTo(@NonNull String displayName) {
-        String parent = FileUtils.removeLastPathSegment(fullPath);
-        String newFile = FileUtils.addSegmentAtEnd(parent, displayName);
+        String parent = Paths.removeLastPathSegment(fullPath);
+        String newFile = Paths.appendPathSegment(parent, displayName);
         if(fs.renameTo(fullPath, newFile)) {
             fullPath = newFile;
             return true;

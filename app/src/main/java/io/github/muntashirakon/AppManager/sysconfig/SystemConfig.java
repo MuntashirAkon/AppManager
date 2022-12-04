@@ -36,7 +36,7 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.misc.SystemProperties;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
+import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 
@@ -627,7 +627,7 @@ public class SystemConfig {
     }
 
     private void readPermissionsFromXml(Path permFile, int permissionFlag) {
-        StringReader permReader = new StringReader(FileUtils.getFileContent(permFile));
+        StringReader permReader = new StringReader(permFile.getContentAsString());
         Log.i(TAG, "Reading permissions from " + permFile);
 
 //        final boolean lowRam = ActivityManager.isLowRamDeviceStatic();
@@ -1241,7 +1241,7 @@ public class SystemConfig {
         } catch (XmlPullParserException | IOException e) {
             Log.w(TAG, "Got exception parsing permissions.", e);
         } finally {
-            FileUtils.closeQuietly(permReader);
+            IoUtils.closeQuietly(permReader);
         }
 
         // Some devices can be field-converted to FBE, so offer to splice in

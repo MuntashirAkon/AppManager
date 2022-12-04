@@ -2,8 +2,8 @@
 
 package io.github.muntashirakon.AppManager.apk.behavior;
 
-import static io.github.muntashirakon.AppManager.utils.FileUtils.dimBitmap;
-import static io.github.muntashirakon.AppManager.utils.FileUtils.getBitmapFromDrawable;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.dimBitmap;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getBitmapFromDrawable;
 
 import android.app.Application;
 import android.content.Intent;

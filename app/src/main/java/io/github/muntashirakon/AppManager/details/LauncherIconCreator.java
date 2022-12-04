@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.details;
 
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getBitmapFromDrawable;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -19,8 +21,6 @@ import java.util.UUID;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
-
-import static io.github.muntashirakon.AppManager.utils.FileUtils.getBitmapFromDrawable;
 
 // Copyright 2017 Adam M. Szalkowski
 public class LauncherIconCreator {

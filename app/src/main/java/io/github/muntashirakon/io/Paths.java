@@ -8,6 +8,7 @@ import android.os.RemoteException;
 import android.system.ErrnoException;
 import android.system.OsConstants;
 
+import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -15,6 +16,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
@@ -107,6 +109,176 @@ public final class Paths {
         } catch (FileNotFoundException e) {
             return null;
         }
+    }
+
+    @Nullable
+    public static String getSanitizedPath(@NonNull String name) {
+        return getSanitizedPath(name, false);
+    }
+
+    @Nullable
+    public static String getSanitizedPath(@NonNull String name, boolean omitRoot) {
+        // Replace multiple separators with a single separator
+        //noinspection RegExpRedundantEscape,RegExpSimplifiable
+        name = name.replaceAll("[\\/\\\\]+", File.separator);
+        if (name.equals(File.separator)) {
+            return File.separator;
+        }
+        if (name.startsWith("./")) {
+            // Omit ./
+            name = name.substring(2);
+        }
+        if (name.endsWith(File.separator)) {
+            // Omit last separator if present
+            name = name.substring(0, name.length() - 1);
+        }
+        if (omitRoot && name.startsWith(File.separator)) {
+            // Omit root
+            name = name.substring(1);
+        }
+        return name.isEmpty() ? null : name;
+    }
+
+    /**
+     * Return the last segment from the given path. If the path has a trailing `/`, it removes it and attempt to find
+     * the last segment again. If it contains only `/` or no `/` at all, it returns empty string.
+     * <p>
+     * TODO: It should return null when no last path segment is found
+     *
+     * @param path An abstract path, may or may not start and/or end with `/`.
+     */
+    @AnyThread
+    @NonNull
+    public static String getLastPathSegment(@NonNull String path) {
+        if (path.isEmpty()) return "";
+        int lastIndexOfSeparator;
+        int lastIndexOfPath;
+        for (; ; ) {
+            lastIndexOfSeparator = path.lastIndexOf(File.separator);
+            if (lastIndexOfSeparator == -1) {
+                // There are no `/` in the string, so return as is.
+                return path;
+            }
+            lastIndexOfPath = path.length() - 1;
+            if (lastIndexOfSeparator == lastIndexOfPath) {
+                // `/` is the last character.
+                // Therefore, trim it and find the last path again.
+                path = path.substring(0, lastIndexOfPath);
+                continue;
+            }
+            // No more `/` at the end
+            break;
+        }
+        // There are path components, so return the last one.
+        return path.substring(lastIndexOfSeparator + 1);
+    }
+
+    @NonNull
+    public static String removeLastPathSegment(@NonNull String path) {
+        if (path.isEmpty()) return "";
+        int lastIndexOfSeparator;
+        int lastIndexOfPath;
+        for (; ; ) {
+            lastIndexOfSeparator = path.lastIndexOf(File.separator);
+            if (lastIndexOfSeparator == -1) {
+                // There are no `/` in the string, so return as is
+                return "";
+            }
+            if (lastIndexOfSeparator == 0 && path.length() == 1) {
+                // Only `/` exists
+                return File.separator;
+            }
+            lastIndexOfPath = path.length() - 1;
+            if (lastIndexOfSeparator == lastIndexOfPath) {
+                // `/` is the last character.
+                // Therefore, trim it and find the last path again.
+                path = path.substring(0, lastIndexOfPath);
+                continue;
+            }
+            // No more `/` at the end
+            break;
+        }
+        // Remove the last segment
+        path = path.substring(0, lastIndexOfSeparator);
+        if (path.isEmpty()) {
+            return File.separator;
+        }
+        // Remove `/` from the end
+        for (; ; ) {
+            lastIndexOfSeparator = path.lastIndexOf(File.separator);
+            if (lastIndexOfSeparator == -1) {
+                // There are no `/` in the string, so return as is
+                return path;
+            }
+            if (lastIndexOfSeparator == 0 && path.length() == 1) {
+                // Only `/` exists
+                return File.separator;
+            }
+            lastIndexOfPath = path.length() - 1;
+            if (lastIndexOfSeparator == lastIndexOfPath) {
+                // `/` is the last character.
+                // Therefore, trim it and find the last path again.
+                path = path.substring(0, lastIndexOfPath);
+                continue;
+            }
+            // No more `/` at the end
+            break;
+        }
+        return path;
+    }
+
+    @NonNull
+    public static String appendPathSegment(@NonNull String path, @NonNull String lastPathSegment) {
+        // TODO: 3/12/22 Add tests
+        if (lastPathSegment.startsWith(File.separator)) {
+            if (lastPathSegment.length() == 1) {
+                return path;
+            }
+            lastPathSegment = lastPathSegment.substring(1);
+        }
+        if (path.endsWith(File.separator)) {
+            return path + lastPathSegment;
+        }
+        return path + File.separator + lastPathSegment;
+    }
+
+    @AnyThread
+    @NonNull
+    public static String trimPathExtension(@NonNull String path) {
+        String filename = getLastPathSegment(path);
+        int lastIndexOfDot = filename.lastIndexOf('.');
+        int lastIndexOfPath = filename.length() - 1;
+        if (lastIndexOfDot == 0 || lastIndexOfDot == -1 || lastIndexOfDot == lastIndexOfPath) {
+            return path;
+        }
+        return path.substring(0, path.lastIndexOf('.'));
+    }
+
+    @AnyThread
+    @NonNull
+    public static String getPathExtension(@NonNull String path) {
+        String str = Paths.getLastPathSegment(path);
+        int lastIndexOfDot = str.lastIndexOf('.');
+        if (lastIndexOfDot == -1) return "";
+        return str.substring(str.lastIndexOf('.') + 1).toLowerCase(Locale.ROOT);
+    }
+
+    public static Uri appendPathSegment(@NonNull Uri uri, @NonNull String lastPathSegment) {
+        return new Uri.Builder()
+                .scheme(uri.getScheme())
+                .authority(uri.getAuthority())
+                .path(getSanitizedPath(uri.getPath() + File.separator + lastPathSegment, false))
+                .build();
+    }
+
+    public static Uri removeLastPathSegment(@NonNull Uri uri) {
+        String path = uri.getPath();
+        if (path.equals(File.separator)) return uri;
+        return new Uri.Builder()
+                .scheme(uri.getScheme())
+                .authority(uri.getAuthority())
+                .path(Paths.removeLastPathSegment(path))
+                .build();
     }
 
     public static long size(@Nullable Path root) {

@@ -60,7 +60,7 @@ public class StorageUtils {
         for (int i = 0; i < grantedUrisAndDate.size(); ++i) {
             Uri uri = grantedUrisAndDate.keyAt(i);
             long time = grantedUrisAndDate.valueAt(i);
-            storageLocations.put(FileUtils.getLastPathComponent(uri.getPath()) + " " + DateUtils.formatDate(time), uri);
+            storageLocations.put(Paths.getLastPathSegment(uri.getPath()) + " " + DateUtils.formatDate(time), uri);
         }
         return storageLocations;
     }

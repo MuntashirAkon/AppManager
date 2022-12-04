@@ -15,6 +15,7 @@ import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
+import io.github.muntashirakon.io.Paths;
 
 public class Migrations {
     public static final String TAG = Migrations.class.getSimpleName();
@@ -39,7 +40,7 @@ public class Migrations {
             }
             // Delete old cache dir (removed in v2.6.4 (394))
             File oldCacheDir = context.getExternalFilesDir("cache");
-            FileUtils.deleteDir(oldCacheDir);
+            Paths.get(oldCacheDir).delete();
             // Disable Internet feature by default
             FeatureController.getInstance().modifyState(FeatureController.FEAT_INTERNET, false);
         }

@@ -202,7 +202,7 @@ public class DexFileSystem extends VirtualFileSystem {
             if (path.equals(File.separator)) {
                 targetNode = rootNode;
             } else {
-                targetNode = Objects.requireNonNull(rootNode).getLastChild(FileUtils.getSanitizedPath(path));
+                targetNode = Objects.requireNonNull(rootNode).getLastChild(Paths.getSanitizedPath(path, true));
             }
             if (targetNode != null) {
                 cache.put(path, targetNode);
@@ -296,7 +296,11 @@ public class DexFileSystem extends VirtualFileSystem {
 
     // Build nodes as needed by the entry, entry itself is the last node in the tree if it is not a directory
     private static void buildTree(@NonNull Node<ClassDef> rootNode, @NonNull String className, @NonNull ClassDef classDef) {
-        String[] components = FileUtils.getSanitizedPath(className).split("\\.");
+        String filename = Paths.getSanitizedPath(className, true);
+        if (filename == null) {
+            return;
+        }
+        String[] components = filename.split("\\.");
         if (components.length < 1) return;
         Node<ClassDef> lastNode = rootNode;
         for (int i = 0; i < components.length - 1 /* last one will be set manually */; ++i) {

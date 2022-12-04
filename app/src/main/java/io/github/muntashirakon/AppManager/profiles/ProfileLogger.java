@@ -8,7 +8,7 @@ import java.io.File;
 import java.io.IOException;
 
 import io.github.muntashirakon.AppManager.logs.Logger;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
+import io.github.muntashirakon.io.Paths;
 
 public class ProfileLogger extends Logger {
     @NonNull
@@ -23,7 +23,7 @@ public class ProfileLogger extends Logger {
 
     @NonNull
     public static String getAllLogs(@NonNull String profileName) {
-        return FileUtils.getFileContent(getLogFile(profileName));
+        return Paths.get(getLogFile(profileName)).getContentAsString();
     }
 
     public static void clearLogs(@NonNull String profileName) {

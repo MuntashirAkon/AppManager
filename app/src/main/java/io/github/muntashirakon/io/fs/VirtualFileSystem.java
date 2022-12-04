@@ -2,6 +2,10 @@
 
 package io.github.muntashirakon.io.fs;
 
+import static io.github.muntashirakon.io.FileSystemManager.MODE_READ_ONLY;
+import static io.github.muntashirakon.io.FileSystemManager.MODE_READ_WRITE;
+import static io.github.muntashirakon.io.FileSystemManager.MODE_WRITE_ONLY;
+
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.system.OsConstants;
@@ -34,13 +38,10 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.FileSystemManager;
+import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.io.UidGidPair;
-
-import static io.github.muntashirakon.io.FileSystemManager.MODE_READ_ONLY;
-import static io.github.muntashirakon.io.FileSystemManager.MODE_READ_WRITE;
-import static io.github.muntashirakon.io.FileSystemManager.MODE_WRITE_ONLY;
 
 @SuppressWarnings("unused")
 public abstract class VirtualFileSystem {
@@ -163,7 +164,7 @@ public abstract class VirtualFileSystem {
             uriVfsIdsMap.put(mountPoint, vfsId);
         }
         synchronized (parentUriVfsIdsMap) {
-            Uri uri = FileUtils.removeLastPathSegment(mountPoint);
+            Uri uri = Paths.removeLastPathSegment(mountPoint);
             List<Integer> vfsIds = parentUriVfsIdsMap.get(uri);
             if (vfsIds == null) {
                 vfsIds = new ArrayList<>(1);
@@ -188,7 +189,7 @@ public abstract class VirtualFileSystem {
         }
         synchronized (parentUriVfsIdsMap) {
             if (mountPoint != null) {
-                Uri uri = FileUtils.removeLastPathSegment(mountPoint);
+                Uri uri = Paths.removeLastPathSegment(mountPoint);
                 List<Integer> vfsIds = parentUriVfsIdsMap.get(uri);
                 if (vfsIds != null && vfsIds.contains(vfsId)) {
                     if (vfsIds.size() == 1) parentUriVfsIdsMap.remove(uri);
@@ -209,13 +210,13 @@ public abstract class VirtualFileSystem {
         }
         synchronized (parentUriVfsIdsMap) {
             // Remove old mount point
-            Uri oldParent = FileUtils.removeLastPathSegment(oldMountPoint);
+            Uri oldParent = Paths.removeLastPathSegment(oldMountPoint);
             List<Integer> oldFsIds = parentUriVfsIdsMap.get(oldParent);
             if (oldFsIds != null) {
                 oldFsIds.remove((Integer) fs.getFsId());
             }
             // Add new mount point
-            Uri newParent = FileUtils.removeLastPathSegment(newMountPoint);
+            Uri newParent = Paths.removeLastPathSegment(newMountPoint);
             List<Integer> newFsIds = parentUriVfsIdsMap.get(newParent);
             if (newFsIds == null) {
                 newFsIds = new ArrayList<>(1);
@@ -625,8 +626,8 @@ public abstract class VirtualFileSystem {
         if (checkAccess(path, OsConstants.F_OK)) {
             return false;
         }
-        String filename = FileUtils.getLastPathComponent(path);
-        String parent = FileUtils.removeLastPathSegment(path);
+        String filename = Paths.getLastPathSegment(path);
+        String parent = Paths.removeLastPathSegment(path);
         if (!checkAccess(parent, OsConstants.W_OK)) {
             return false;
         }
@@ -682,8 +683,8 @@ public abstract class VirtualFileSystem {
             // File/folder exists
             return false;
         }
-        String filename = FileUtils.getLastPathComponent(path);
-        String parent = FileUtils.removeLastPathSegment(path);
+        String filename = Paths.getLastPathSegment(path);
+        String parent = Paths.removeLastPathSegment(path);
         if (!checkAccess(parent, OsConstants.W_OK)) {
             return false;
         }
@@ -708,8 +709,8 @@ public abstract class VirtualFileSystem {
         String parent = path;
         Node<?> parentNode;
         do {
-            String filename = FileUtils.getLastPathComponent(parent);
-            parent = FileUtils.removeLastPathSegment(parent);
+            String filename = Paths.getLastPathSegment(parent);
+            parent = Paths.removeLastPathSegment(parent);
             parts.add(filename);
             parentNode = getNode(parent);
         } while (parentNode == null && !parent.equals(File.separator));
@@ -755,8 +756,8 @@ public abstract class VirtualFileSystem {
         }
         if (sourceNode.isDirectory()) {
             // Source node is a directory, so create some directories and move whatever this directory has.
-            String filename = FileUtils.getLastPathComponent(dest);
-            String parent = FileUtils.removeLastPathSegment(dest);
+            String filename = Paths.getLastPathSegment(dest);
+            String parent = Paths.removeLastPathSegment(dest);
             mkdirs(parent);
             Node<?> targetNode = getNode(parent);
             if (targetNode == null) {
@@ -799,8 +800,8 @@ public abstract class VirtualFileSystem {
         } else if (sourceNode.isFile()) {
             // Source node is a file, create some directories up to this point and move this file to there
             // Overriding the existing one if necessary.
-            String filename = FileUtils.getLastPathComponent(dest);
-            String parent = FileUtils.removeLastPathSegment(dest);
+            String filename = Paths.getLastPathSegment(dest);
+            String parent = Paths.removeLastPathSegment(dest);
             // Output of mkdirs is not relevant
             mkdirs(parent);
             Node<?> targetNode = getNode(parent);
@@ -1053,12 +1054,12 @@ public abstract class VirtualFileSystem {
             return fileCache.cachedFile;
         }
         // File hasn't been cached.
-        File cachedFile = FileUtils.getTempFile(FileUtils.getExtension(node.getName()));
+        File cachedFile = FileUtils.getTempFile(Paths.getPathExtension(node.getName()));
         if (node.isPhysical()) {
             // The file exists physically. It has to be cached first.
             try (InputStream is = getInputStream(node);
                  FileOutputStream os = new FileOutputStream(cachedFile)) {
-                FileUtils.copy(is, os);
+                IoUtils.copy(is, os);
             }
         }
         fileCache = new FileCache(cachedFile);
@@ -1206,7 +1207,11 @@ public abstract class VirtualFileSystem {
         @Nullable
         private static <T> Node<T> getLastNode(@NonNull Node<T> baseNode, @Nullable String dirtyPath) {
             if (dirtyPath == null) return baseNode;
-            String[] components = FileUtils.getSanitizedPath(dirtyPath).split(File.separator);
+            String path = Paths.getSanitizedPath(dirtyPath, true);
+            if (path == null) {
+                return baseNode;
+            }
+            String[] components = path.split(File.separator);
             Node<T> lastNode = baseNode;
             for (String component : components) {
                 lastNode = lastNode.getChild(component);

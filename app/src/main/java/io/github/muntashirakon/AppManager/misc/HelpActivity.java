@@ -29,8 +29,8 @@ import java.lang.reflect.Method;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
+import io.github.muntashirakon.AppManager.utils.ResourceUtil;
 import io.github.muntashirakon.util.UiUtils;
 
 public class HelpActivity extends BaseActivity {
@@ -53,7 +53,7 @@ public class HelpActivity extends BaseActivity {
         findViewById(R.id.progress_linear).setVisibility(View.GONE);
         // Check if docs are available
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_WEBVIEW)
-                || FileUtils.getRawDataId(this, "index") == 0) {
+                || ResourceUtil.getRawDataId(this, "index") == 0) {
             // Docs split not installed
             openDocsSite();
             return;

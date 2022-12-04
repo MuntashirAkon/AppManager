@@ -48,10 +48,10 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
+import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
 
 // Copyright 2022 Muntashir Al-Islam
@@ -337,7 +337,7 @@ public class LogViewerViewModel extends AndroidViewModel {
             }
             try (OutputStream output = path.openOutputStream()) {
                 try (InputStream input = sendLogDetails.getAttachment().openInputStream()) {
-                    FileUtils.copy(input, output);
+                    IoUtils.copy(input, output);
                 }
                 mLogSavedLiveData.postValue(path);
             } catch (IOException e) {

@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.apk;
 
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagMatchUninstalled;
+
 import android.annotation.UserIdInt;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
@@ -43,8 +45,6 @@ import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
-
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagMatchUninstalled;
 
 public final class ApkUtils {
     public static final String EXT_APK = ".apk";
@@ -97,7 +97,7 @@ public final class ApkUtils {
         } else {
             // Regular apk
             apkFile = backupPath.createNewFile(outputName + EXT_APK, null);
-            FileUtils.copy(Paths.get(info.publicSourceDir), apkFile);
+            IoUtils.copy(Paths.get(info.publicSourceDir), apkFile);
         }
     }
 
@@ -150,7 +150,7 @@ public final class ApkUtils {
         try (ZipInputStream zipInputStream = new ZipInputStream(new BufferedInputStream(apkInputStream))) {
             ZipEntry zipEntry;
             while ((zipEntry = zipInputStream.getNextEntry()) != null) {
-                if (!FileUtils.getLastPathComponent(zipEntry.getName()).equals(MANIFEST_FILE)) {
+                if (!Paths.getLastPathSegment(zipEntry.getName()).equals(MANIFEST_FILE)) {
                     continue;
                 }
                 ByteArrayOutputStream buffer = new ByteArrayOutputStream();

@@ -5,6 +5,8 @@ package io.github.muntashirakon.AppManager.logs;
 import androidx.annotation.CallSuper;
 import androidx.annotation.Nullable;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.BufferedWriter;
 import java.io.Closeable;
 import java.io.File;
@@ -12,16 +14,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 
 public class Logger implements Closeable {
+    @NotNull
     public static File getLoggingDirectory() {
-        File cacheDir = AppManager.getContext().getExternalCacheDir();
-        if (cacheDir != null && cacheDir.canWrite()) {
-            return cacheDir;
-        }
-        return AppManager.getContext().getCacheDir();
+        return FileUtils.getCachePath();
     }
 
     private final PrintWriter mWriter;

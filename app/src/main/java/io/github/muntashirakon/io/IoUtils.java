@@ -2,26 +2,26 @@
 
 package io.github.muntashirakon.io;
 
-import android.os.Build;
-import android.util.Log;
-
-import androidx.annotation.AnyThread;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.WorkerThread;
-
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Arrays;
-
 import static android.system.OsConstants.O_APPEND;
 import static android.system.OsConstants.O_CREAT;
 import static android.system.OsConstants.O_RDONLY;
 import static android.system.OsConstants.O_RDWR;
 import static android.system.OsConstants.O_TRUNC;
 import static android.system.OsConstants.O_WRONLY;
+
+import android.os.Build;
+import android.util.Log;
+
+import androidx.annotation.AnyThread;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.nio.charset.Charset;
+import java.util.Arrays;
 
 public final class IoUtils {
     public static final String TAG = IoUtils.class.getSimpleName();
@@ -38,7 +38,6 @@ public final class IoUtils {
      * @return Desired byte array
      * @throws IOException If maximum capacity exceeded.
      */
-    @WorkerThread
     public static byte[] readFully(InputStream is, int length, boolean readAll)
             throws IOException {
         byte[] output = {};
@@ -70,7 +69,11 @@ public final class IoUtils {
         return output;
     }
 
-    @WorkerThread
+    @NonNull
+    public static String getInputStreamContent(@NonNull InputStream inputStream) throws IOException {
+        return new String(IoUtils.readFully(inputStream, -1, true), Charset.defaultCharset());
+    }
+
     public static long copy(Path from, Path to) throws IOException {
         try (InputStream in = from.openInputStream();
              OutputStream out = to.openOutputStream()) {
@@ -78,7 +81,6 @@ public final class IoUtils {
         }
     }
 
-    @WorkerThread
     public static long copy(InputStream inputStream, OutputStream outputStream) throws IOException {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             return android.os.FileUtils.copy(inputStream, outputStream);
@@ -100,7 +102,6 @@ public final class IoUtils {
         }
     }
 
-    @WorkerThread
     private static long copyLarge(@NonNull InputStream inputStream, OutputStream outputStream) throws IOException {
         byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
         long count = 0;

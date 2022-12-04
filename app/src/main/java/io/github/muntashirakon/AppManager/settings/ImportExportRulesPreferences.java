@@ -81,8 +81,7 @@ public class ImportExportRulesPreferences extends PreferenceFragment {
                     return;
                 }
                 new Thread(() -> {
-                    List<String> failedFiles = ExternalComponentsImporter.applyFromWatt(requireContext(), uris,
-                            Users.getUsersIds());
+                    List<String> failedFiles = ExternalComponentsImporter.applyFromWatt(uris, Users.getUsersIds());
                     if (isDetached()) return;
                     activity.runOnUiThread(() -> displayImportExternalRulesFailedPackagesDialog(failedFiles));
                 }).start();
@@ -95,7 +94,7 @@ public class ImportExportRulesPreferences extends PreferenceFragment {
                     return;
                 }
                 new Thread(() -> {
-                    List<String> failedFiles = ExternalComponentsImporter.applyFromBlocker(requireContext(), uris, Users.getUsersIds());
+                    List<String> failedFiles = ExternalComponentsImporter.applyFromBlocker(uris, Users.getUsersIds());
                     if (isDetached()) return;
                     activity.runOnUiThread(() -> displayImportExternalRulesFailedPackagesDialog(failedFiles));
                 }).start();

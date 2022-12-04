@@ -16,8 +16,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.fm.FileType;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 
 public class AdapterItem implements Comparable<AdapterItem> {
     @IntDef(flag = true, value = {
@@ -50,7 +50,7 @@ public class AdapterItem implements Comparable<AdapterItem> {
     public AdapterItem(@NonNull Path path) {
         this.path = path;
         name = path.getName();
-        extension = FileUtils.getExtension(name);
+        extension = Paths.getPathExtension(name);
         if (path.isDirectory()) {
             type = FileType.DIRECTORY;
         } else type = FileType.FILE;

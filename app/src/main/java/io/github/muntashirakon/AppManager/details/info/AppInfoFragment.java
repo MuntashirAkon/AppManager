@@ -2,6 +2,24 @@
 
 package io.github.muntashirakon.AppManager.details.info;
 
+import static io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat.HIDDEN_API_ENFORCEMENT_BLACK;
+import static io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat.HIDDEN_API_ENFORCEMENT_DEFAULT;
+import static io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat.HIDDEN_API_ENFORCEMENT_DISABLED;
+import static io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat.HIDDEN_API_ENFORCEMENT_ENABLED;
+import static io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat.HIDDEN_API_ENFORCEMENT_JUST_WARN;
+import static io.github.muntashirakon.AppManager.utils.PermissionUtils.TERMUX_PERM_RUN_COMMAND;
+import static io.github.muntashirakon.AppManager.utils.PermissionUtils.hasDumpPermission;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.dimBitmap;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.displayLongToast;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.displayShortToast;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getBitmapFromDrawable;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getColoredText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getStyledKeyValue;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getTitleText;
+import static io.github.muntashirakon.AppManager.utils.Utils.openAsFolderInFM;
+
 import android.Manifest;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -139,24 +157,6 @@ import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.widget.SwipeRefreshLayout;
-
-import static io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat.HIDDEN_API_ENFORCEMENT_BLACK;
-import static io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat.HIDDEN_API_ENFORCEMENT_DEFAULT;
-import static io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat.HIDDEN_API_ENFORCEMENT_DISABLED;
-import static io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat.HIDDEN_API_ENFORCEMENT_ENABLED;
-import static io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat.HIDDEN_API_ENFORCEMENT_JUST_WARN;
-import static io.github.muntashirakon.AppManager.utils.FileUtils.dimBitmap;
-import static io.github.muntashirakon.AppManager.utils.FileUtils.getBitmapFromDrawable;
-import static io.github.muntashirakon.AppManager.utils.PermissionUtils.TERMUX_PERM_RUN_COMMAND;
-import static io.github.muntashirakon.AppManager.utils.PermissionUtils.hasDumpPermission;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.displayLongToast;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.displayShortToast;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getColoredText;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getStyledKeyValue;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getTitleText;
-import static io.github.muntashirakon.AppManager.utils.Utils.openAsFolderInFM;
 
 public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     public static final String TAG = "AppInfoFragment";
@@ -1569,7 +1569,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         new MaterialAlertDialogBuilder(mActivity)
                 .setTitle(R.string.freeze_unfreeze)
                 .setMultiChoiceItems(R.array.freeze_unfreeze_flags, null, (dialog, which, isChecked) -> {
-                    int flag =  1 << which;
+                    int flag = 1 << which;
                     if (isChecked) {
                         flags.set(flags.get() | flag);
                     } else flags.set(flags.get() & ~flag);

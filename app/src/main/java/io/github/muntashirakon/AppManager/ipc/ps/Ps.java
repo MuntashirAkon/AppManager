@@ -19,8 +19,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import io.github.muntashirakon.AppManager.utils.CpuUtils;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 
 /**
  * This is a generic Java-way of parsing processes from /proc. This is a work in progress and by no means perfect. To
@@ -38,7 +39,9 @@ public class Ps {
             STAT_EXIT_SIGNAL, STAT_TASK_CPU, STAT_RT_PRIORITY, STAT_POLICY, STAT_BLKIO_TICKS, STAT_GTIME, STAT_CGTIME,
             STAT_START_DATA, STAT_END_DATA, STAT_START_BRK, STAT_ARG_START, STAT_ARG_END, STAT_ENV_START, STAT_ENV_END,
             STAT_EXIT_CODE})
-    public @interface ProcStats {}
+    public @interface ProcStats {
+    }
+
     // /proc/$PID/stat fields
     public static final int STAT_PID = 0;
     public static final int STAT_TCOMM = 1;
@@ -99,7 +102,8 @@ public class Ps {
      * Used for accessing contents from /proc/$PID/statm. See Table 1-3 in https://www.kernel.org/doc/Documentation/filesystems/proc.txt
      */
     @IntDef({MEM_STAT_SIZE, MEM_STAT_RESIDENT, MEM_STAT_SHARED, MEM_STAT_TRS, MEM_STAT_LRS, MEM_STAT_DRS, MEM_STAT_DT})
-    public @interface ProcMemStats{}
+    public @interface ProcMemStats {
+    }
 
     public static final int MEM_STAT_SIZE = 0;
     public static final int MEM_STAT_RESIDENT = 1;
@@ -211,8 +215,10 @@ public class Ps {
             if (procFileArr != null) {
                 procPidFiles.addAll(Arrays.asList(procFileArr));
             }
-            uptime = Double.valueOf(FileUtils.getFileContent(new File(procFile, UPTIME),
-                    "" + (SystemClock.elapsedRealtime() / 1000.)).split("\\s")[0]).longValue();
+            long currentTimeSeconds = SystemClock.elapsedRealtime() / 1000;
+            Path uptimePath = Paths.build(procFile, UPTIME);
+            uptime = uptimePath != null ? Double.valueOf(uptimePath.getContentAsString("" + currentTimeSeconds)
+                    .split("\\s")[0]).longValue() : currentTimeSeconds;
             if (!Utils.isRoboUnitTest()) {
                 clockTicks = CpuUtils.getClockTicksPerSecond();
             } else clockTicks = 100; // To prevent error due to native library
@@ -220,24 +226,24 @@ public class Ps {
             for (File pidFile : procPidFiles) {
                 ProcItem procItem = new ProcItem();
                 // Parse stat
-                File statFile = new File(pidFile, STAT);
-                procItem.stat = FileUtils.getFileContent(statFile).split("\\s");
+                Path statFile = Paths.get(new File(pidFile, STAT));
+                procItem.stat = statFile.getContentAsString().split("\\s");
                 if (procItem.stat.length != STAT_COUNT) continue;
                 // Parse statm
-                File memStatFile = new File(pidFile, MEM_STAT);
-                procItem.memStat = FileUtils.getFileContent(memStatFile).split("\\s");
+                Path memStatFile = Paths.get(new File(pidFile, MEM_STAT));
+                procItem.memStat = memStatFile.getContentAsString().split("\\s");
                 if (procItem.memStat.length != MEM_STAT_COUNT) continue;
                 // Parse status
-                File statusFile = new File(pidFile, STATUS);
-                for (String line : FileUtils.getFileContent(statusFile).split("\\n")) {
+                Path statusFile = Paths.get(new File(pidFile, STATUS));
+                for (String line : statusFile.getContentAsString().split("\\n")) {
                     int idxOfColon = line.indexOf(':');
                     if (idxOfColon != -1) {
                         procItem.status.put(line.substring(0, idxOfColon), line.substring(idxOfColon + 1).trim());
                     }
                 }
-                procItem.name = FileUtils.getFileContent(new File(pidFile, NAME)).trim();
-                procItem.sepol = FileUtils.getFileContent(new File(pidFile, SEPOL)).trim();
-                procItem.wchan = FileUtils.getFileContent(new File(pidFile, WCHAN)).trim();
+                procItem.name = Paths.get(new File(pidFile, NAME)).getContentAsString().trim();
+                procItem.sepol = Paths.get(new File(pidFile, SEPOL)).getContentAsString().trim();
+                procItem.wchan = Paths.get(new File(pidFile, WCHAN)).getContentAsString().trim();
                 processEntries.add(newProcess(procItem));
             }
         }

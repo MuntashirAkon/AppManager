@@ -2,21 +2,10 @@
 
 package io.github.muntashirakon.AppManager.utils;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
-import android.database.Cursor;
-import android.database.CursorIndexOutOfBoundsException;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Matrix;
-import android.graphics.Paint;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
-import android.provider.OpenableColumns;
 import android.system.ErrnoException;
 import android.system.Os;
 import android.text.TextUtils;
@@ -26,9 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -36,8 +23,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigInteger;
 import java.nio.channels.FileChannel;
-import java.nio.charset.Charset;
-import java.util.Locale;
 import java.util.zip.ZipEntry;
 
 import io.github.muntashirakon.AppManager.AppManager;
@@ -51,7 +36,7 @@ public final class FileUtils {
     public static final String TAG = FileUtils.class.getSimpleName();
 
     @AnyThread
-    public static boolean isInputFileZip(@NonNull Path path) throws IOException {
+    public static boolean isZip(@NonNull Path path) throws IOException {
         int header;
         try (InputStream is = path.openInputStream()) {
             byte[] headerBytes = new byte[4];
@@ -62,7 +47,7 @@ public final class FileUtils {
     }
 
     @AnyThread
-    public static boolean isInputFileZip(@NonNull InputStream is) throws IOException {
+    public static boolean isZip(@NonNull InputStream is) throws IOException {
         if (!is.markSupported()) throw new IOException("InputStream must support mark.");
         int header;
         byte[] headerBytes = new byte[4];
@@ -71,24 +56,6 @@ public final class FileUtils {
         is.reset();
         header = new BigInteger(headerBytes).intValue();
         return header == 0x504B0304 || header == 0x504B0506 || header == 0x504B0708;
-    }
-
-    @WorkerThread
-    public static void bytesToFile(byte[] bytes, File file) throws IOException {
-        try (BufferedOutputStream bos = new BufferedOutputStream(new FileOutputStream(file))) {
-            bos.write(bytes);
-            bos.flush();
-        }
-    }
-
-    @WorkerThread
-    public static long copy(Path from, Path to) throws IOException {
-        return IoUtils.copy(from, to);
-    }
-
-    @WorkerThread
-    public static long copy(InputStream inputStream, OutputStream outputStream) throws IOException {
-        return IoUtils.copy(inputStream, outputStream);
     }
 
     @WorkerThread
@@ -110,109 +77,9 @@ public final class FileUtils {
     }
 
     @AnyThread
-    @Nullable
-    public static String getFileName(@NonNull ContentResolver resolver, @NonNull Uri uri) {
-        if (uri.getScheme() == null) return null;
-        switch (uri.getScheme()) {
-            case ContentResolver.SCHEME_CONTENT:
-                try (Cursor cursor = resolver.query(uri, null, null, null, null)) {
-                    if (cursor == null) return null;
-                    int nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-                    cursor.moveToFirst();
-                    return cursor.getString(nameIndex);
-                } catch (CursorIndexOutOfBoundsException ignore) {
-                }
-            case ContentResolver.SCHEME_FILE:
-                if (uri.getPath() == null) return null;
-                return new File(uri.getPath()).getName();
-            default:
-                return null;
-        }
-    }
-
-    @AnyThread
     @NonNull
     public static String getFileNameFromZipEntry(@NonNull ZipEntry zipEntry) {
-        String path = zipEntry.getName();
-        int lastIndexOfSeparator = path.lastIndexOf("/");
-        if (lastIndexOfSeparator == -1)
-            return path;
-        return path.substring(lastIndexOfSeparator + 1);
-    }
-
-    @AnyThread
-    @NonNull
-    public static String getLastPathComponent(@NonNull String path) {
-        if (path.length() == 0) return path;
-        int lastIndexOfSeparator = path.lastIndexOf("/");
-        int lastIndexOfPath = path.length() - 1;
-        if (lastIndexOfSeparator == -1) {
-            // There are no `/` in the string, so return as is.
-            return path;
-        } else if (lastIndexOfSeparator == lastIndexOfPath) {
-            // `/` is the last character.
-            // Therefore, trim it and find the last path again.
-            return getLastPathComponent(path.substring(0, lastIndexOfPath));
-        }
-        // There are path components, so return the last one.
-        return path.substring(lastIndexOfSeparator + 1);
-    }
-
-    public static Uri addSegmentAtEnd(@NonNull Uri uri, @NonNull String lastPathSegment) {
-        return new Uri.Builder()
-                .scheme(uri.getScheme())
-                .authority(uri.getAuthority())
-                .path(uri.getPath() + File.separator + lastPathSegment)
-                .build();
-    }
-
-    @NonNull
-    public static String addSegmentAtEnd(@NonNull String path, @NonNull String lastPathSegment) {
-        if (lastPathSegment.startsWith(File.separator)) {
-            if (lastPathSegment.length() == 1) {
-                return path;
-            }
-            lastPathSegment = lastPathSegment.substring(1);
-        }
-        if (path.endsWith(File.separator)) {
-            return path + lastPathSegment;
-        }
-        return path + File.separator + lastPathSegment;
-    }
-
-    public static Uri removeLastPathSegment(@NonNull Uri uri) {
-        String path = uri.getPath();
-        if (path.equals(File.separator)) return uri;
-        return new Uri.Builder()
-                .scheme(uri.getScheme())
-                .authority(uri.getAuthority())
-                .path(removeLastPathSegment(path))
-                .build();
-    }
-
-    public static String removeLastPathSegment(@NonNull String path) {
-        if (path.equals(File.separator)) return path;
-        if (path.endsWith(File.separator)) {
-            path = path.substring(0, path.length() - 1);
-        }
-        int index = path.lastIndexOf('/');
-        if (index == 0) {
-            return File.separator;
-        }
-        if (index < 0) {
-            return "";
-        }
-        return path.substring(0, index);
-    }
-
-    @NonNull
-    public static String getSanitizedPath(@NonNull String name) {
-        //noinspection RegExpRedundantEscape
-        name = name.replaceAll("[\\/]+", File.separator);
-        if (name.startsWith("./")) name = name.substring(2);
-        else if (name.startsWith(File.separator)) name = name.substring(1);
-        if (name.endsWith(File.separator)) name = name.substring(0, name.length() - 1);
-        return name;
+        return Paths.getLastPathSegment(zipEntry.getName());
     }
 
     @AnyThread
@@ -233,30 +100,8 @@ public final class FileUtils {
 
     @AnyThread
     @NonNull
-    public static String trimExtension(@NonNull String path) {
-        String filename = getLastPathComponent(path);
-        int lastIndexOfDot = filename.lastIndexOf('.');
-        int lastIndexOfPath = filename.length() - 1;
-        if (lastIndexOfDot == 0 || lastIndexOfDot == -1 || lastIndexOfDot == lastIndexOfPath) {
-            return path;
-        }
-        return path.substring(0, path.lastIndexOf('.'));
-    }
-
-    @AnyThread
-    @NonNull
     public static File getFileFromFd(@NonNull ParcelFileDescriptor fd) {
         return new File("/proc/self/fd/" + fd.getFd());
-    }
-
-    @AnyThread
-    public static void closeQuietly(@Nullable AutoCloseable closeable) {
-        if (closeable == null) return;
-        try {
-            closeable.close();
-        } catch (Exception e) {
-            Log.w(TAG, String.format("Unable to close %s", closeable.getClass().getCanonicalName()), e);
-        }
     }
 
     @AnyThread
@@ -275,96 +120,15 @@ public final class FileUtils {
         }
     }
 
-    @AnyThread
-    @NonNull
-    public static String getExtension(@NonNull String path) {
-        String str = getLastPathComponent(path);
-        int lastIndexOfDot = str.lastIndexOf('.');
-        if (lastIndexOfDot == -1) return "";
-        return str.substring(str.lastIndexOf('.') + 1).toLowerCase(Locale.ROOT);
-    }
-
-    @WorkerThread
-    @NonNull
-    public static String getFileContent(@NonNull File file) {
-        return getFileContent(file, "");
-    }
-
-    @WorkerThread
-    @NonNull
-    public static String getFileContent(@NonNull Path file) {
-        return getFileContent(file, "");
-    }
-
-    /**
-     * Read the full content of a file.
-     *
-     * @param file       The file to be read
-     * @param emptyValue Empty value if no content has been found
-     * @return File content as string
-     */
-    @WorkerThread
-    @NonNull
-    public static String getFileContent(@NonNull File file, @NonNull String emptyValue) {
-        if (!file.exists() || file.isDirectory()) return emptyValue;
-        try (InputStream inputStream = new FileInputStream(file)) {
-            return getInputStreamContent(inputStream);
-        } catch (IOException e) {
-            if (!(e.getCause() instanceof ErrnoException)) {
-                // This isn't just another EACCESS exception
-                e.printStackTrace();
-            }
-        }
-        return emptyValue;
-    }
-
-    /**
-     * Read the full content of a file.
-     *
-     * @param file       The file to be read
-     * @param emptyValue Empty value if no content has been found
-     * @return File content as string
-     */
-    @WorkerThread
-    @NonNull
-    public static String getFileContent(@NonNull Path file, @NonNull String emptyValue) {
-        if (!file.exists() || file.isDirectory()) return emptyValue;
-        try (InputStream inputStream = file.openInputStream()) {
-            return getInputStreamContent(inputStream);
-        } catch (IOException e) {
-            if (!(e.getCause() instanceof ErrnoException)) {
-                // This isn't just another EACCESS exception
-                e.printStackTrace();
-            }
-        }
-        return emptyValue;
-    }
-
-    @WorkerThread
-    @NonNull
-    public static String getInputStreamContent(@NonNull InputStream inputStream) throws IOException {
-        return new String(IoUtils.readFully(inputStream, -1, true), Charset.defaultCharset());
-    }
-
     @WorkerThread
     @NonNull
     public static String getContentFromAssets(@NonNull Context context, String fileName) {
         try (InputStream inputStream = context.getResources().getAssets().open(fileName)) {
-            return getInputStreamContent(inputStream);
+            return IoUtils.getInputStreamContent(inputStream);
         } catch (IOException e) {
             e.printStackTrace();
         }
         return "";
-    }
-
-    @WorkerThread
-    @NonNull
-    public static String getFileContent(@NonNull ContentResolver contentResolver, @NonNull Uri file)
-            throws IOException {
-        try (InputStream inputStream = contentResolver.openInputStream(file)) {
-            if (inputStream == null) throw new IOException("Failed to open " + file);
-            return getInputStreamContent(inputStream);
-        }
     }
 
     @AnyThread
@@ -377,50 +141,6 @@ public final class FileUtils {
             return false;
         }
         return files != null && files.length > 0;
-    }
-
-    public static int getRawDataId(@NonNull Context context, @NonNull String name) {
-        return context.getResources().getIdentifier(name, "raw", context.getPackageName());
-    }
-
-    /**
-     * Delete a directory by recursively deleting its children
-     *
-     * @param dir The directory to delete
-     * @return True on success, false on failure
-     */
-    @AnyThread
-    public static boolean deleteDir(File dir) {
-        if (dir != null && dir.isDirectory()) {
-            File[] children = dir.listFiles();
-            if (children == null) return false;
-            for (File child : children) {
-                boolean success = deleteDir(child);
-                if (!success) return false;
-            }
-            return dir.delete();
-        } else if (dir != null && dir.isFile()) {
-            return dir.delete();
-        } else return false;
-    }
-
-    @AnyThread
-    @NonNull
-    public static Bitmap getBitmapFromDrawable(@NonNull Drawable drawable) {
-        if (drawable instanceof BitmapDrawable) {
-            return ((BitmapDrawable) drawable).getBitmap();
-        }
-        final Bitmap bmp = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        final Canvas canvas = new Canvas(bmp);
-        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-        drawable.draw(canvas);
-        return bmp;
-    }
-
-    public static void dimBitmap(@NonNull Bitmap bitmap) {
-        Canvas canvas = new Canvas(bitmap);
-        canvas.drawARGB(150, 0, 0, 0);
-        canvas.drawBitmap(bitmap, new Matrix(), new Paint());
     }
 
     @WorkerThread
@@ -491,16 +211,6 @@ public final class FileUtils {
             throw new FileNotFoundException("External media not present");
         }
         return extDir;
-    }
-
-    @AnyThread
-    public static void chmod711(@NonNull File file) throws IOException {
-        try {
-            Os.chmod(file.getAbsolutePath(), 457);
-        } catch (ErrnoException e) {
-            Log.e(TAG, "Failed to apply mode 711 to " + file);
-            throw new IOException(e);
-        }
     }
 
     @AnyThread

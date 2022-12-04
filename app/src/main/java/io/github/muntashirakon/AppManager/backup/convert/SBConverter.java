@@ -2,6 +2,15 @@
 
 package io.github.muntashirakon.AppManager.backup.convert;
 
+import static io.github.muntashirakon.AppManager.backup.BackupManager.CERT_PREFIX;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.DATA_PREFIX;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.ICON_FILE;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.SOURCE_PREFIX;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.getExt;
+import static io.github.muntashirakon.AppManager.utils.TarUtils.DEFAULT_SPLIT_SIZE;
+import static io.github.muntashirakon.AppManager.utils.TarUtils.TAR_BZIP2;
+import static io.github.muntashirakon.AppManager.utils.TarUtils.TAR_GZIP;
+
 import android.annotation.SuppressLint;
 import android.annotation.UserIdInt;
 import android.content.pm.ApplicationInfo;
@@ -48,17 +57,11 @@ import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.io.SplitOutputStream;
-
-import static io.github.muntashirakon.AppManager.backup.BackupManager.CERT_PREFIX;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.DATA_PREFIX;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.ICON_FILE;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.SOURCE_PREFIX;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.getExt;
-import static io.github.muntashirakon.AppManager.utils.TarUtils.DEFAULT_SPLIT_SIZE;
-import static io.github.muntashirakon.AppManager.utils.TarUtils.TAR_BZIP2;
-import static io.github.muntashirakon.AppManager.utils.TarUtils.TAR_GZIP;
 
 public class SBConverter extends Converter {
     public static final String TAG = SBConverter.class.getSimpleName();
@@ -81,7 +84,7 @@ public class SBConverter extends Converter {
 
     public SBConverter(@NonNull Path xmlFile) {
         mBackupLocation = xmlFile.getParentFile();
-        mPackageName = FileUtils.trimExtension(xmlFile.getName());
+        mPackageName = Paths.trimPathExtension(xmlFile.getName());
         mBackupTime = xmlFile.lastModified();
         mUserId = UserHandleHidden.myUserId();
         mPm = AppManager.getContext().getPackageManager();
@@ -255,7 +258,7 @@ public class SBConverter extends Converter {
                             // We need to use a temporary file
                             tmpFile = FileUtils.getTempFile(dataFile.getExtension());
                             try (OutputStream fos = new FileOutputStream(tmpFile)) {
-                                FileUtils.copy(zis, fos);
+                                IoUtils.copy(zis, fos);
                             } catch (Throwable th) {
                                 tmpFile.delete();
                                 throw th;
@@ -272,7 +275,7 @@ public class SBConverter extends Converter {
                         if (tmpFile != null) {
                             // Copy from the temporary file
                             try (FileInputStream fis = new FileInputStream(tmpFile)) {
-                                FileUtils.copy(fis, tos);
+                                IoUtils.copy(fis, tos);
                             } finally {
                                 tmpFile.delete();
                             }
@@ -297,7 +300,7 @@ public class SBConverter extends Converter {
         mCachedApk = FileUtils.getTempPath(mPackageName, "base.apk");
         try (InputStream pis = getApkFile().openInputStream()) {
             try (OutputStream fos = mCachedApk.openOutputStream()) {
-                FileUtils.copy(pis, fos);
+                IoUtils.copy(pis, fos);
             }
             mFilesToBeDeleted.add(getApkFile());
         } catch (IOException e) {
@@ -406,7 +409,7 @@ public class SBConverter extends Converter {
                 splits.add(splitName);
                 Path file = Objects.requireNonNull(mCachedApk.getParentFile()).findOrCreateFile(splitName, null);
                 try (OutputStream fos = file.openOutputStream()) {
-                    FileUtils.copy(zis, fos);
+                    IoUtils.copy(zis, fos);
                 } catch (IOException e) {
                     file.delete();
                     throw e;
@@ -420,7 +423,7 @@ public class SBConverter extends Converter {
         try {
             Path iconFile = mTempBackupPath.findOrCreateFile(ICON_FILE, null);
             try (OutputStream outputStream = iconFile.openOutputStream()) {
-                Bitmap bitmap = FileUtils.getBitmapFromDrawable(mPackageInfo.applicationInfo.loadIcon(mPm));
+                Bitmap bitmap = UIUtils.getBitmapFromDrawable(mPackageInfo.applicationInfo.loadIcon(mPm));
                 bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
                 outputStream.flush();
             }

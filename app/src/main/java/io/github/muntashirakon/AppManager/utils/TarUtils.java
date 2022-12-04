@@ -32,6 +32,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.io.SplitInputStream;
@@ -104,7 +105,7 @@ public final class TarUtils {
                         tos.putArchiveEntry(tarEntry);
                         if (!file.isDirectory()) {
                             try (InputStream is = file.openInputStream()) {
-                                FileUtils.copy(is, tos);
+                                IoUtils.copy(is, tos);
                             }
                         }
                     }
@@ -202,7 +203,7 @@ public final class TarUtils {
                         }
                         if (!entry.isDirectory()) {
                             try (OutputStream os = file.openOutputStream()) {
-                                FileUtils.copy(tis, os);
+                                IoUtils.copy(tis, os);
                             }
                         }
                     }

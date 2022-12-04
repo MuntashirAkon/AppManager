@@ -63,7 +63,7 @@ public class AppExplorerViewModel extends AndroidViewModel {
                 e.printStackTrace();
             }
         }
-        FileUtils.closeQuietly(apkFile);
+        IoUtils.closeQuietly(apkFile);
         for (File cachedFile : cachedFiles) {
             FileUtils.deleteSilently(cachedFile);
         }
@@ -171,7 +171,7 @@ public class AppExplorerViewModel extends AndroidViewModel {
                     return;
                 }
                 try (InputStream is = new BufferedInputStream(item.openInputStream())) {
-                    boolean isZipFile = FileUtils.isInputFileZip(is);
+                    boolean isZipFile = FileUtils.isZip(is);
                     File cachedFile = FileUtils.getCachedFile(is, item.extension);
                     addCachedFile(item, cachedFile);
                     if (isZipFile) {

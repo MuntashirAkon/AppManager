@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.io;
 
+import static org.junit.Assert.assertEquals;
+
 import androidx.annotation.NonNull;
 
 import org.junit.After;
@@ -19,9 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
-
-import static org.junit.Assert.assertEquals;
 
 @RunWith(RobolectricTestRunner.class)
 public class SplitOutputStreamTest {
@@ -50,7 +49,7 @@ public class SplitOutputStreamTest {
 
     @Test
     public void write() throws IOException {
-        FileUtils.copy(inputStream, splitOutputStream);
+        IoUtils.copy(inputStream, splitOutputStream);
         List<String> expectedHashes = getExpectedHashes();
         List<String> actualHashes = getActualHashes();
         assertEquals(expectedHashes, actualHashes);

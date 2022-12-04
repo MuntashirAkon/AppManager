@@ -52,7 +52,6 @@ import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.UsageUtils;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
@@ -339,8 +338,8 @@ public class AppInfoViewModel extends AndroidViewModel {
             try {
                 Path txFile = uidStatsDir.findFile(UID_STATS_TX);
                 Path rxFile = uidStatsDir.findFile(UID_STATS_RX);
-                tx = Long.parseLong(FileUtils.getFileContent(txFile, "0").trim());
-                rx = Long.parseLong(FileUtils.getFileContent(rxFile, "0").trim());
+                tx = Long.parseLong(txFile.getContentAsString("0").trim());
+                rx = Long.parseLong(rxFile.getContentAsString("0").trim());
             } catch (FileNotFoundException ignore) {
             }
         }

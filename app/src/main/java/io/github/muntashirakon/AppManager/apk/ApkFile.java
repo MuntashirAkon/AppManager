@@ -2,6 +2,11 @@
 
 package io.github.muntashirakon.AppManager.apk;
 
+import static io.github.muntashirakon.AppManager.apk.ApkUtils.getDensityFromName;
+import static io.github.muntashirakon.AppManager.apk.ApkUtils.getManifestAttributes;
+import static io.github.muntashirakon.AppManager.apk.ApkUtils.getManifestFromApk;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
+
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
@@ -65,15 +70,11 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
+import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.unapkm.api.UnApkm;
 import io.github.muntashirakon.util.LocalizedString;
-
-import static io.github.muntashirakon.AppManager.apk.ApkUtils.getDensityFromName;
-import static io.github.muntashirakon.AppManager.apk.ApkUtils.getManifestAttributes;
-import static io.github.muntashirakon.AppManager.apk.ApkUtils.getManifestFromApk;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
 public final class ApkFile implements AutoCloseable {
     public static final String TAG = "ApkFile";
@@ -224,7 +225,7 @@ public final class ApkFile implements AutoCloseable {
         }
         if (extension.equals("apkm")) {
             try {
-                if (FileUtils.isInputFileZip(apkSource)) {
+                if (FileUtils.isZip(apkSource)) {
                     // DRM-free APKM file, mark it as APKS
                     // FIXME(#227): Give it a special name and verify integrity
                     extension = "apks";
@@ -334,7 +335,7 @@ public final class ApkFile implements AutoCloseable {
                     }
                 } else if (fileName.equals(ApksMetadata.META_FILE)) {
                     try {
-                        String jsonString = FileUtils.getInputStreamContent(zipFile.getInputStream(zipEntry));
+                        String jsonString = IoUtils.getInputStreamContent(zipFile.getInputStream(zipEntry));
                         apksMetadata = new ApksMetadata();
                         apksMetadata.readMetadata(jsonString);
                     } catch (IOException | JSONException e) {
@@ -398,7 +399,7 @@ public final class ApkFile implements AutoCloseable {
             }
             String fileName;
             for (File apk : apks) {
-                fileName = FileUtils.getLastPathComponent(apk.getAbsolutePath());
+                fileName = Paths.getLastPathSegment(apk.getAbsolutePath());
                 // Get manifest attributes
                 ByteBuffer manifest;
                 HashMap<String, String> manifestAttrs;
@@ -527,8 +528,8 @@ public final class ApkFile implements AutoCloseable {
         for (Entry entry : entries) {
             entry.close();
         }
-        FileUtils.closeQuietly(zipFile);
-        FileUtils.closeQuietly(fd);
+        IoUtils.closeQuietly(zipFile);
+        IoUtils.closeQuietly(fd);
         FileUtils.deleteSilently(idsigFile);
         if (!cacheFilePath.getAbsolutePath().startsWith("/data/app")) {
             FileUtils.deleteSilently(cacheFilePath);

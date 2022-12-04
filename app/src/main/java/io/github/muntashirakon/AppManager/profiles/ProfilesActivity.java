@@ -43,10 +43,11 @@ import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.details.LauncherIconCreator;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
+import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.util.UiUtils;
 import io.github.muntashirakon.widget.RecyclerView;
 
@@ -87,10 +88,10 @@ public class ProfilesActivity extends BaseActivity {
                 }
                 try {
                     // Verify
-                    String fileName = FileUtils.getFileName(getContentResolver(), uri);
-                    if (fileName == null) throw new IOException("File name cannot be empty.");
-                    fileName = FileUtils.trimExtension(fileName);
-                    String fileContent = FileUtils.getFileContent(getContentResolver(), uri);
+                    Path profilePath = Paths.get(uri);
+                    String fileName = profilePath.getName();
+                    fileName = Paths.trimPathExtension(fileName);
+                    String fileContent = profilePath.getContentAsString();
                     ProfileMetaManager manager = ProfileMetaManager.fromJSONString(fileName, fileContent);
                     // Save
                     manager.writeProfile();

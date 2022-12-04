@@ -202,7 +202,7 @@ public class AppPref {
     @NonNull
     public static AppPref getInstance() {
         if (appPref == null) {
-            appPref = new AppPref(AppManager.getInstance());
+            appPref = new AppPref(AppManager.getContext());
         }
         return appPref;
     }

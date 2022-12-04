@@ -2,6 +2,15 @@
 
 package io.github.muntashirakon.AppManager.backup.convert;
 
+import static io.github.muntashirakon.AppManager.backup.BackupManager.CERT_PREFIX;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.DATA_PREFIX;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.ICON_FILE;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.SOURCE_PREFIX;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.getExt;
+import static io.github.muntashirakon.AppManager.utils.TarUtils.DEFAULT_SPLIT_SIZE;
+import static io.github.muntashirakon.AppManager.utils.TarUtils.TAR_BZIP2;
+import static io.github.muntashirakon.AppManager.utils.TarUtils.TAR_GZIP;
+
 import android.annotation.UserIdInt;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -45,17 +54,10 @@ import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
+import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.io.SplitOutputStream;
-
-import static io.github.muntashirakon.AppManager.backup.BackupManager.CERT_PREFIX;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.DATA_PREFIX;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.ICON_FILE;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.SOURCE_PREFIX;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.getExt;
-import static io.github.muntashirakon.AppManager.utils.TarUtils.DEFAULT_SPLIT_SIZE;
-import static io.github.muntashirakon.AppManager.utils.TarUtils.TAR_BZIP2;
-import static io.github.muntashirakon.AppManager.utils.TarUtils.TAR_GZIP;
 
 public class TBConverter extends Converter {
     public static final String TAG = TBConverter.class.getSimpleName();
@@ -219,7 +221,7 @@ public class TBConverter extends Converter {
             }
             try (OutputStream fos = baseApkFile.openOutputStream()) {
                 // The whole file is the APK
-                FileUtils.copy(is, fos);
+                IoUtils.copy(is, fos);
             } finally {
                 is.close();
             }
@@ -261,7 +263,7 @@ public class TBConverter extends Converter {
     private void backupData() throws BackupException {
         Path dataFile;
         try {
-            dataFile = getDataFile(FileUtils.trimExtension(mPropFile.getName()), mSourceMetadata.tarType);
+            dataFile = getDataFile(Paths.trimPathExtension(mPropFile.getName()), mSourceMetadata.tarType);
         } catch (FileNotFoundException e) {
             throw new BackupException("Could not get data file", e);
         }
@@ -343,11 +345,11 @@ public class TBConverter extends Converter {
                 if (!inTarEntry.isDirectory() && !inTarEntry.isSymbolicLink()) {
                     if (isExternal) {
                         if (extTos != null) {
-                            FileUtils.copy(tis, extTos);
+                            IoUtils.copy(tis, extTos);
                         }
                     } else {
                         if (intTos != null) {
-                            FileUtils.copy(tis, intTos);
+                            IoUtils.copy(tis, intTos);
                         }
                     }
                 }
@@ -427,7 +429,7 @@ public class TBConverter extends Converter {
             // Flags
             mSourceMetadata.flags = new BackupFlags(BackupFlags.BACKUP_MULTIPLE);
             try {
-                mFilesToBeDeleted.add(getDataFile(FileUtils.trimExtension(mPropFile.getName()), mSourceMetadata.tarType));
+                mFilesToBeDeleted.add(getDataFile(Paths.trimPathExtension(mPropFile.getName()), mSourceMetadata.tarType));
                 // No error = data file exists
                 mSourceMetadata.flags.addFlag(BackupFlags.BACKUP_INT_DATA);
                 if ("1".equals(prop.getProperty("has_external_data"))) {

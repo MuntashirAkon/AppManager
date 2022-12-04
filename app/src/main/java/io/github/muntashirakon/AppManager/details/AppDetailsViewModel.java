@@ -2,6 +2,11 @@
 
 package io.github.muntashirakon.AppManager.details;
 
+import static io.github.muntashirakon.AppManager.appops.AppOpsManager.OP_NONE;
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagMatchUninstalled;
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
+
 import android.annotation.SuppressLint;
 import android.annotation.UserIdInt;
 import android.app.ActivityManager;
@@ -92,14 +97,9 @@ import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
 import io.github.muntashirakon.AppManager.users.UserInfo;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
-
-import static io.github.muntashirakon.AppManager.appops.AppOpsManager.OP_NONE;
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagMatchUninstalled;
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
+import io.github.muntashirakon.io.IoUtils;
 
 public class AppDetailsViewModel extends AndroidViewModel {
     public static final String TAG = AppDetailsViewModel.class.getSimpleName();
@@ -163,7 +163,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             getApplication().unregisterReceiver(mReceiver);
         }
         mReceiver = null;
-        FileUtils.closeQuietly(mApkFile);
+        IoUtils.closeQuietly(mApkFile);
         mExecutor.shutdownNow();
     }
 

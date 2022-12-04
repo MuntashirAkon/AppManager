@@ -2,6 +2,10 @@
 
 package io.github.muntashirakon.AppManager.utils;
 
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
@@ -24,13 +28,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.io.SplitInputStream;
-
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
 
 @RunWith(RobolectricTestRunner.class)
 public class TarUtilsTest {
@@ -60,7 +61,7 @@ public class TarUtilsTest {
         tmpFiles.add(testRoot.findOrCreateDirectory("prefixed").findOrCreateFile("prefixed_include.txt", null));
         // Copy files to tmpRoot
         for (int i = 0; i < resFiles.size(); ++i) {
-            FileUtils.copy(resFiles.get(i), tmpFiles.get(i));
+            IoUtils.copy(resFiles.get(i), tmpFiles.get(i));
         }
         tarGzFilesForExtractTest = TarUtils.create(TarUtils.TAR_GZIP, testRoot, tmpRoot, "am_ex.tar.gz",
                 null, null, null, false).toArray(new Path[0]);

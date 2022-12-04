@@ -35,7 +35,7 @@ import java.util.regex.Pattern;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.dex.DexUtils;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
+import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 
@@ -138,7 +138,7 @@ public class ClassViewerActivity extends BaseActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             CharSequence appName = getIntent().getCharSequenceExtra(EXTRA_APP_NAME);
-            String barName = FileUtils.trimExtension(uri.getLastPathSegment());
+            String barName = Paths.trimPathExtension(uri.getLastPathSegment());
             actionBar.setSubtitle(barName);
             if (appName != null) actionBar.setTitle(appName);
             else actionBar.setTitle(R.string.class_viewer);
@@ -231,7 +231,7 @@ public class ClassViewerActivity extends BaseActivity {
                 String smaliContent;
                 try {
                     try (InputStream is = smaliPath.openInputStream()) {
-                        smaliContent = FileUtils.getInputStreamContent(is);
+                        smaliContent = IoUtils.getInputStreamContent(is);
                     }
                 } catch (IOException e) {
                     runOnUiThread(() -> {
@@ -293,7 +293,7 @@ public class ClassViewerActivity extends BaseActivity {
         } else if (id == R.id.action_wrap) {
             updateUi();
         } else if (id == R.id.action_save) {
-            String fileName = FileUtils.trimExtension(uri.getLastPathSegment())
+            String fileName = Paths.trimPathExtension(uri.getLastPathSegment())
                     + (isDisplayingSmali ? ".smali" : ".java");
             saveJavaOrSmali.launch(fileName);
         } else if (id == R.id.action_java_smali_toggle) {

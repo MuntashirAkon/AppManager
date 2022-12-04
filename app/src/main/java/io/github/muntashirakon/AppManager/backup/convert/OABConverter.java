@@ -2,6 +2,14 @@
 
 package io.github.muntashirakon.AppManager.backup.convert;
 
+import static io.github.muntashirakon.AppManager.backup.BackupManager.CERT_PREFIX;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.DATA_PREFIX;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.SOURCE_PREFIX;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.getExt;
+import static io.github.muntashirakon.AppManager.utils.TarUtils.DEFAULT_SPLIT_SIZE;
+import static io.github.muntashirakon.AppManager.utils.TarUtils.TAR_BZIP2;
+import static io.github.muntashirakon.AppManager.utils.TarUtils.TAR_GZIP;
+
 import android.annotation.UserIdInt;
 import android.os.UserHandleHidden;
 import android.text.TextUtils;
@@ -42,16 +50,9 @@ import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
+import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.SplitOutputStream;
-
-import static io.github.muntashirakon.AppManager.backup.BackupManager.CERT_PREFIX;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.DATA_PREFIX;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.SOURCE_PREFIX;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.getExt;
-import static io.github.muntashirakon.AppManager.utils.TarUtils.DEFAULT_SPLIT_SIZE;
-import static io.github.muntashirakon.AppManager.utils.TarUtils.TAR_BZIP2;
-import static io.github.muntashirakon.AppManager.utils.TarUtils.TAR_GZIP;
 
 /**
  * A documentation about OAndBackup is located at
@@ -204,7 +205,7 @@ public class OABConverter extends Converter {
     private void readLogFile() throws BackupException {
         try {
             Path logFile = mBackupLocation.findFile(mPackageName + ".log");
-            String jsonString = FileUtils.getFileContent(logFile);
+            String jsonString = logFile.getContentAsString();
             if (TextUtils.isEmpty(jsonString)) throw new JSONException("Empty JSON string.");
             JSONObject jsonObject = new JSONObject(jsonString);
             mSourceMetadata.label = jsonObject.getString("label");
@@ -363,7 +364,7 @@ public class OABConverter extends Converter {
                             // We need to use a temporary file
                             tmpFile = FileUtils.getTempFile(files[0].getExtension());
                             try (OutputStream fos = new FileOutputStream(tmpFile)) {
-                                FileUtils.copy(zis, fos);
+                                IoUtils.copy(zis, fos);
                             } catch (Throwable th) {
                                 tmpFile.delete();
                                 throw th;
@@ -380,7 +381,7 @@ public class OABConverter extends Converter {
                         if (tmpFile != null) {
                             // Copy from the temporary file
                             try (FileInputStream fis = new FileInputStream(tmpFile)) {
-                                FileUtils.copy(fis, tos);
+                                IoUtils.copy(fis, tos);
                             } finally {
                                 tmpFile.delete();
                             }

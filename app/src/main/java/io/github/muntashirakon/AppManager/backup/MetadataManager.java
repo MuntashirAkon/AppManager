@@ -2,6 +2,10 @@
 
 package io.github.muntashirakon.AppManager.backup;
 
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getTitleText;
+
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -40,7 +44,6 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
@@ -49,10 +52,6 @@ import io.github.muntashirakon.AppManager.utils.TarUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.util.LocalizedString;
-
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getTitleText;
 
 public final class MetadataManager {
     public static final String TAG = MetadataManager.class.getSimpleName();
@@ -253,7 +252,7 @@ public final class MetadataManager {
     private final Context mContext;
 
     private MetadataManager() {
-        mContext = AppManager.getInstance();
+        mContext = AppManager.getContext();
     }
 
     public Metadata getMetadata() {
@@ -266,7 +265,7 @@ public final class MetadataManager {
 
     @WorkerThread
     synchronized public void readMetadata(@NonNull BackupFiles.BackupFile backupFile) throws IOException {
-        String metadata = FileUtils.getFileContent(backupFile.getMetadataFile());
+        String metadata = backupFile.getMetadataFile().getContentAsString();
         if (TextUtils.isEmpty(metadata)) {
             throw new IOException("Empty JSON string for path " + backupFile.getBackupPath());
         }

@@ -2,6 +2,16 @@
 
 package io.github.muntashirakon.AppManager.backup;
 
+import static io.github.muntashirakon.AppManager.appops.AppOpsManager.OP_NONE;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.DATA_PREFIX;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.EXT_DATA;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.EXT_MEDIA;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.EXT_OBB;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.KEYSTORE_PLACEHOLDER;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.KEYSTORE_PREFIX;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.MASTER_KEY;
+import static io.github.muntashirakon.AppManager.backup.BackupManager.SOURCE_PREFIX;
+
 import android.annotation.SuppressLint;
 import android.app.INotificationManager;
 import android.content.ComponentName;
@@ -55,7 +65,6 @@ import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.ssaid.SsaidSettings;
 import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
@@ -63,16 +72,6 @@ import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.io.UidGidPair;
-
-import static io.github.muntashirakon.AppManager.appops.AppOpsManager.OP_NONE;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.DATA_PREFIX;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.EXT_DATA;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.EXT_MEDIA;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.EXT_OBB;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.KEYSTORE_PLACEHOLDER;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.KEYSTORE_PREFIX;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.MASTER_KEY;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.SOURCE_PREFIX;
 
 @WorkerThread
 class RestoreOp implements Closeable {
@@ -232,8 +231,7 @@ class RestoreOp implements Closeable {
         if (oldChecksum == null) {
             throw new BackupException("Master key exists but it didn't exist when the backup was made.");
         }
-        String newChecksum = DigestUtils.getHexDigest(metadata.checksumAlgo,
-                FileUtils.getFileContent(masterKey).getBytes());
+        String newChecksum = DigestUtils.getHexDigest(metadata.checksumAlgo, masterKey.getContentAsString().getBytes());
         if (!newChecksum.equals(oldChecksum)) {
             throw new BackupException("Checksums for master key did not match.");
         }

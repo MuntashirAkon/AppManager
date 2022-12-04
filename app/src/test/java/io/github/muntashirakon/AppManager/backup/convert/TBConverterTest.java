@@ -2,6 +2,9 @@
 
 package io.github.muntashirakon.AppManager.backup.convert;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,13 +19,9 @@ import java.util.List;
 
 import io.github.muntashirakon.AppManager.backup.BackupException;
 import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtilsTest;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 
 @RunWith(RobolectricTestRunner.class)
 public class TBConverterTest {
@@ -37,14 +36,14 @@ public class TBConverterTest {
     @Before
     public void setUp() {
         AppPref.set(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR, "file:///tmp");
-        FileUtils.deleteDir(new File("/tmp/AppManager"));
+        Paths.get("/tmp/AppManager").delete();
         assert classLoader != null;
         backupLocation = new File(classLoader.getResource(TBConverter.PATH_SUFFIX).getFile());
     }
 
     @After
     public void tearDown() {
-        FileUtils.deleteDir(new File("/tmp/AppManager"));
+        Paths.get("/tmp/AppManager").delete();
     }
 
     @Test

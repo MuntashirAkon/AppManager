@@ -29,7 +29,7 @@ import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.parser.AndroidBinXmlDecoder;
 import io.github.muntashirakon.AppManager.apk.parser.AndroidBinXmlParser;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
+import io.github.muntashirakon.io.IoUtils;
 
 public class ManifestViewerViewModel extends AndroidViewModel {
     public static final String TAG = ManifestViewerViewModel.class.getSimpleName();
@@ -64,7 +64,7 @@ public class ManifestViewerViewModel extends AndroidViewModel {
 
     @Override
     protected void onCleared() {
-        FileUtils.closeQuietly(apkFile);
+        IoUtils.closeQuietly(apkFile);
         mExecutor.shutdownNow();
         super.onCleared();
     }

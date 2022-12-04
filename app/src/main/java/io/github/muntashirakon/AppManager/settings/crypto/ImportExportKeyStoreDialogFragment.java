@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.settings.crypto;
 
+import static io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager.AM_KEYSTORE_FILE;
+
 import android.app.Dialog;
 import android.os.Bundle;
 import android.widget.Button;
@@ -27,10 +29,8 @@ import java.util.concurrent.TimeUnit;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
-
-import static io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager.AM_KEYSTORE_FILE;
+import io.github.muntashirakon.io.IoUtils;
 
 public class ImportExportKeyStoreDialogFragment extends DialogFragment {
     public static final String TAG = "IEKeyStoreDialogFragment";
@@ -46,7 +46,7 @@ public class ImportExportKeyStoreDialogFragment extends DialogFragment {
                     try (InputStream is = new FileInputStream(AM_KEYSTORE_FILE);
                          OutputStream os = activity.getContentResolver().openOutputStream(uri)) {
                         if (os == null) throw new IOException("Unable to open URI");
-                        FileUtils.copy(is, os);
+                        IoUtils.copy(is, os);
                         activity.runOnUiThread(() -> {
                             UIUtils.displayShortToast(R.string.done);
                             dismiss();
@@ -77,7 +77,7 @@ public class ImportExportKeyStoreDialogFragment extends DialogFragment {
                             try (InputStream is = activity.getContentResolver().openInputStream(uri);
                                  OutputStream os = new FileOutputStream(AM_KEYSTORE_FILE)) {
                                 if (is == null) throw new IOException("Unable to open URI");
-                                FileUtils.copy(is, os);
+                                IoUtils.copy(is, os);
                                 if (KeyStoreManager.hasKeyStorePassword()) {
                                     CountDownLatch waitForKs = new CountDownLatch(1);
                                     KeyStoreManager.inputKeyStorePassword(activity, waitForKs::countDown);

@@ -163,7 +163,7 @@ public class ProfileMetaManager implements LocalizedString {
         Profile profile = null;
         if (mProfilePath.exists()) {
             try {
-                profile = readProfile(FileUtils.getFileContent(mProfilePath));
+                profile = readProfile(mProfilePath.getContentAsString());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
