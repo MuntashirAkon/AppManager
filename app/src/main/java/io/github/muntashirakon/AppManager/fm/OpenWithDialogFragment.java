@@ -37,8 +37,8 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
+import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;

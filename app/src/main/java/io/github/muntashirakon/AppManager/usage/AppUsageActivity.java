@@ -2,6 +2,11 @@
 
 package io.github.muntashirakon.AppManager.usage;
 
+import static io.github.muntashirakon.AppManager.usage.UsageUtils.USAGE_LAST_BOOT;
+import static io.github.muntashirakon.AppManager.usage.UsageUtils.USAGE_TODAY;
+import static io.github.muntashirakon.AppManager.usage.UsageUtils.USAGE_WEEKLY;
+import static io.github.muntashirakon.AppManager.usage.UsageUtils.USAGE_YESTERDAY;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Application;
@@ -54,8 +59,8 @@ import java.util.Set;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.usage.UsageUtils.IntervalType;
 import io.github.muntashirakon.AppManager.users.Users;
@@ -66,11 +71,6 @@ import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.widget.RecyclerView;
 import io.github.muntashirakon.widget.SwipeRefreshLayout;
-
-import static io.github.muntashirakon.AppManager.usage.UsageUtils.USAGE_LAST_BOOT;
-import static io.github.muntashirakon.AppManager.usage.UsageUtils.USAGE_TODAY;
-import static io.github.muntashirakon.AppManager.usage.UsageUtils.USAGE_WEEKLY;
-import static io.github.muntashirakon.AppManager.usage.UsageUtils.USAGE_YESTERDAY;
 
 public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
     @IntDef(value = {

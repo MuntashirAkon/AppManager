@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.sysconfig;
 
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getStyledKeyValue;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -35,12 +37,10 @@ import java.util.List;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
-import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
+import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.widget.RecyclerView;
-
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getStyledKeyValue;
 
 public class SysConfigActivity extends BaseActivity {
     private SysConfigRecyclerAdapter adapter;

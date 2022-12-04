@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-package io.github.muntashirakon.AppManager.imagecache;
+package io.github.muntashirakon.AppManager.self.imagecache;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -16,8 +16,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.io.IoUtils;
 
@@ -27,12 +27,10 @@ class FileCache {
     private final File mCacheDir;
 
     public FileCache() {
-        if (AppManager.getContext().getExternalCacheDir() != null) {
-            mCacheDir = new File(AppManager.getContext().getExternalCacheDir(), "images");
-        } else {
-            mCacheDir = new File(AppManager.getContext().getCacheDir(), "images");
+        mCacheDir = new File(FileUtils.getCachePath(), "images");
+        if (!mCacheDir.exists()) {
+            mCacheDir.mkdirs();
         }
-        if (!mCacheDir.exists()) mCacheDir.mkdirs();
     }
 
     public void putImage(String name, InputStream inputStream) throws IOException {

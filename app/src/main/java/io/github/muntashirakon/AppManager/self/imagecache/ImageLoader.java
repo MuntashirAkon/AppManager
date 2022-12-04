@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-package io.github.muntashirakon.AppManager.imagecache;
+package io.github.muntashirakon.AppManager.self.imagecache;
 
 import android.content.pm.PackageItemInfo;
 import android.content.pm.PackageManager;
@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
 
+import java.io.Closeable;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Map;
@@ -27,7 +28,7 @@ import java.util.concurrent.Executors;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 
-public class ImageLoader implements AutoCloseable {
+public class ImageLoader implements Closeable {
     private final MemoryCache mMemoryCache = new MemoryCache();
     private final FileCache mFileCache = new FileCache();
     private final Map<ImageView, String> mImageViews = Collections.synchronizedMap(new WeakHashMap<>());
@@ -70,6 +71,13 @@ public class ImageLoader implements AutoCloseable {
         }
         mMemoryCache.clear();
         mFileCache.clear();
+    }
+
+    @Override
+    protected void finalize() {
+        if (!mIsClosed) {
+            close();
+        }
     }
 
     @AnyThread
@@ -119,7 +127,6 @@ public class ImageLoader implements AutoCloseable {
     }
 
     // Used to display bitmap in the UI thread
-    @UiThread
     private class LoadImageInImageView implements Runnable {
         private final Bitmap mImage;
         private final ImageLoaderQueueItem mQueueItem;
@@ -129,6 +136,7 @@ public class ImageLoader implements AutoCloseable {
             this.mQueueItem = queueItem;
         }
 
+        @UiThread
         public void run() {
             if (imageViewReusedOrClosed(mQueueItem)) return;
             mQueueItem.imageView.setImageBitmap(mImage);

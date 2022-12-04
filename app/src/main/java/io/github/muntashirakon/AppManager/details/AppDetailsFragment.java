@@ -2,6 +2,13 @@
 
 package io.github.muntashirakon.AppManager.details;
 
+import static io.github.muntashirakon.AppManager.details.AppDetailsViewModel.OPEN_GL_ES;
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpModeNames;
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpModes;
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpNames;
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOps;
+import static io.github.muntashirakon.AppManager.utils.Utils.openAsFolderInFM;
+
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.Context;
@@ -79,13 +86,13 @@ import io.github.muntashirakon.AppManager.details.struct.AppDetailsDefinedPermis
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsPermissionItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsServiceItem;
-import io.github.muntashirakon.AppManager.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.scanner.NativeLibraries;
+import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
@@ -105,13 +112,6 @@ import io.github.muntashirakon.util.ProgressIndicatorCompat;
 import io.github.muntashirakon.widget.MaterialAlertView;
 import io.github.muntashirakon.widget.RecyclerView;
 import io.github.muntashirakon.widget.SwipeRefreshLayout;
-
-import static io.github.muntashirakon.AppManager.details.AppDetailsViewModel.OPEN_GL_ES;
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpModeNames;
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpModes;
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpNames;
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOps;
-import static io.github.muntashirakon.AppManager.utils.Utils.openAsFolderInFM;
 
 public class AppDetailsFragment extends Fragment implements AdvancedSearchView.OnQueryTextListener,
         SwipeRefreshLayout.OnRefreshListener {
