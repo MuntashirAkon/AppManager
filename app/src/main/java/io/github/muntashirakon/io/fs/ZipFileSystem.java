@@ -11,6 +11,8 @@ import androidx.annotation.Nullable;
 
 import com.j256.simplemagic.ContentType;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -253,12 +255,11 @@ class ZipFileSystem extends VirtualFileSystem {
     }
 
     @Override
-    public long lastModified(String path) {
-        Node<?> targetNode = getNode(path);
-        if (targetNode == null || targetNode.getObject() == null) {
+    public long lastModified(@NotNull Node<?> node) {
+        if (node.getObject() == null) {
             return getFile().lastModified();
         }
-        return ((ZipEntry) targetNode.getObject()).getTime();
+        return ((ZipEntry) node.getObject()).getTime();
     }
 
     @Override

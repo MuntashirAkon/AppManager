@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.system.OsConstants;
 
-import androidx.annotation.CallSuper;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -613,7 +612,19 @@ public abstract class VirtualFileSystem {
         return targetNode.getName().startsWith(".");
     }
 
-    public abstract long lastModified(String path);
+    protected abstract long lastModified(@NonNull Node<?> path);
+
+    public long lastModified(String path) {
+        Node<?> targetNode = getNode(path);
+        if (targetNode == null) {
+            return getFile().lastModified();
+        }
+        File cachedFile = findCachedFile(targetNode);
+        if (cachedFile != null) {
+            return cachedFile.lastModified();
+        }
+        return lastModified(targetNode);
+    }
 
     public long lastAccess(String path) {
         return lastModified(path);
@@ -625,7 +636,6 @@ public abstract class VirtualFileSystem {
 
     public abstract long length(String path);
 
-    @CallSuper
     public boolean createNewFile(String path) {
         if (checkAccess(path, OsConstants.F_OK)) {
             return false;
@@ -647,7 +657,6 @@ public abstract class VirtualFileSystem {
         return true;
     }
 
-    @CallSuper
     public boolean delete(String path) {
         if (!checkAccess(path, OsConstants.W_OK)) {
             return false;
