@@ -1287,4 +1287,5 @@
     <string name="app_manager_build_expired">Update Required</string>
     <string name="app_manager_build_expired_message">To ensure the safety of your device and data, the version of App Manager you\'re using has been retired. You have to update it to the latest version to continue to use it, or uninstall it if no update is available.</string>
     <string name="app_manager_build_expiring_soon_warning">This version of App Manager will expire very soon. Please update it to the latest version.</string>
+    <string name="app_can_write_and_execute_in_same_place">The app violates <a href="https://en.wikipedia.org/wiki/W%5EX">W^X policy</a> and is capable of writing and executing in the same directory or in the same portion of memory. This allows the execution of arbitrary executables either by the modification of executables embedded within the app or by downloading them from the Internet. Unless this is the intended behaviour of the app (e.g. terminal emulators), it is recommended to find a newer version of the app that targets SDK 29 (Android 10) and later, or find alternatives.</string>
 </resources>

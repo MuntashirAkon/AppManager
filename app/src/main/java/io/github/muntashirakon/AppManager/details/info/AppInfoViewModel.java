@@ -165,6 +165,8 @@ public class AppInfoViewModel extends AndroidViewModel {
                 }
             }
             tagCloud.isMagiskDenyListEnabled = !mainModel.getIsExternalApk() && magiskDenyListEnabled;
+            tagCloud.canWriteAndExecute = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+                    && applicationInfo.targetSdkVersion < Build.VERSION_CODES.Q;
             tagCloud.hasKeyStoreItems = KeyStoreUtils.hasKeyStore(applicationInfo.uid);
             tagCloud.hasMasterKeyInKeyStore = KeyStoreUtils.hasMasterKey(applicationInfo.uid);
             tagCloud.usesPlayAppSigning = PackageUtils.usesPlayAppSigning(applicationInfo);
@@ -366,6 +368,7 @@ public class AppInfoViewModel extends AndroidViewModel {
         public boolean isAppSuspended;
         public boolean isMagiskHideEnabled;
         public boolean isMagiskDenyListEnabled;
+        public boolean canWriteAndExecute;
         public boolean hasKeyStoreItems;
         public boolean hasMasterKeyInKeyStore;
         public boolean usesPlayAppSigning;

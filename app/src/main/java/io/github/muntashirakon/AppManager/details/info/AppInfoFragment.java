@@ -727,6 +727,16 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         if (tagCloud.isMagiskDenyListEnabled) {
             addChip(R.string.magisk_denylist).setOnClickListener(v -> displayMagiskDenyListDialog());
         }
+        if (tagCloud.canWriteAndExecute) {
+            addChip("WX", ColorCodes.getAppWriteAndExecuteIndicatorColor(mActivity))
+                    .setOnClickListener(v ->
+                            new ScrollableDialogBuilder(mActivity)
+                                    .setTitle("WX")
+                                    .setMessage(R.string.app_can_write_and_execute_in_same_place)
+                                    .enableAnchors()
+                                    .setNegativeButton(R.string.close, null)
+                                    .show());
+        }
         if (tagCloud.hasKeyStoreItems) {
             Chip chip;
             if (tagCloud.hasMasterKeyInKeyStore) {
