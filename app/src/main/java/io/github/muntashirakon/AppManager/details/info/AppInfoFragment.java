@@ -791,7 +791,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         if (tagCloud.usesPlayAppSigning) {
             addChip(R.string.uses_play_app_signing, ColorCodes.getAppPlayAppSigningIndicatorColor(mActivity))
                     .setOnClickListener(v ->
-                            new MaterialAlertDialogBuilder(mActivity)
+                            new ScrollableDialogBuilder(mActivity)
                                     .setTitle(R.string.uses_play_app_signing)
                                     .setMessage(R.string.uses_play_app_signing_description)
                                     .setNegativeButton(R.string.close, null)
