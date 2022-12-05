@@ -910,7 +910,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
         }
 
         private void handleBlock(@NonNull ViewHolder holder, @NonNull AppDetailsComponentItem item, RuleType ruleType) {
-            holder.toggleSwitch.setChecked(item.isBlocked());
+            holder.toggleSwitch.setChecked(!item.isBlocked());
             holder.toggleSwitch.setVisibility(View.VISIBLE);
             holder.toggleSwitch.setOnClickListener(buttonView -> {
                 String componentStatus = item.isBlocked()
