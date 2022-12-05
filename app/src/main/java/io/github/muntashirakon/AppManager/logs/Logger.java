@@ -3,9 +3,8 @@
 package io.github.muntashirakon.AppManager.logs;
 
 import androidx.annotation.CallSuper;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
-import org.jetbrains.annotations.NotNull;
 
 import java.io.BufferedWriter;
 import java.io.Closeable;
@@ -18,7 +17,7 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 
 public class Logger implements Closeable {
-    @NotNull
+    @NonNull
     public static File getLoggingDirectory() {
         return FileUtils.getCachePath();
     }

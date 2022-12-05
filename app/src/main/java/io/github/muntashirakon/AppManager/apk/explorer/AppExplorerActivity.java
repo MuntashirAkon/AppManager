@@ -36,7 +36,7 @@ public class AppExplorerActivity extends BaseActivity {
             finish();
             return;
         }
-        model.setApkUri(uri);
+        model.setUri(uri);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setTitle(model.getName());

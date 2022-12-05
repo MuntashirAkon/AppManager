@@ -3,7 +3,6 @@
 package io.github.muntashirakon.AppManager.apk.explorer;
 
 import android.net.Uri;
-import android.webkit.MimeTypeMap;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -36,6 +35,7 @@ public class AdapterItem implements Comparable<AdapterItem> {
     public static final int ACTION_CREATE = 1 << 3;
 
     final String extension;
+    @FileType
     final int type;
     @NonNull
     final Path path;
@@ -71,9 +71,7 @@ public class AdapterItem implements Comparable<AdapterItem> {
         if (path.isDirectory()) {
             return "application/octet-stream";
         }
-        String type = path.getType();
-        if (type != null) return type;
-        return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+        return path.getType();
     }
 
     public long length() {

@@ -28,7 +28,7 @@ import java.util.Objects;
 import io.github.muntashirakon.AppManager.dex.DexClasses;
 import io.github.muntashirakon.AppManager.dex.DexUtils;
 import io.github.muntashirakon.AppManager.fm.ContentType2;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
+import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.io.ExtendedFile;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
@@ -90,10 +90,8 @@ public class DexFileSystem extends VirtualFileSystem {
             if (file != null) {
                 dexClasses = new DexClasses(file, getApiLevel());
             } else {
-                try (InputStream is = getFile().openInputStream()) {
-                    File cachedFile = FileUtils.getCachedFile(is, getFile().getExtension());
-                    dexClasses = new DexClasses(cachedFile, getApiLevel());
-                }
+                File cachedFile = FileCache.getGlobalFileCache().getCachedFile(getFile());
+                dexClasses = new DexClasses(cachedFile, getApiLevel());
             }
         }
         rootNode = buildTree(Objects.requireNonNull(dexClasses));
@@ -117,7 +115,7 @@ public class DexFileSystem extends VirtualFileSystem {
             return null;
         }
         String extension = getFile().getExtension();
-        File file = FileUtils.getTempFile(extension);
+        File file = FileCache.getGlobalFileCache().createCachedFile(extension);
         Map<String, ClassInfo> classInfoMap = new HashMap<>();
         for (String className : Objects.requireNonNull(dexClasses).getClassNames()) {
             classInfoMap.put(File.separator + className, new ClassInfo(null, true));

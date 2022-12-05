@@ -44,11 +44,11 @@ import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.crypto.Crypto;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
 import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
@@ -362,12 +362,9 @@ public class OABConverter extends Converter {
                         File tmpFile = null;
                         if (!zipEntry.isDirectory()) {
                             // We need to use a temporary file
-                            tmpFile = FileUtils.getTempFile(files[0].getExtension());
+                            tmpFile = FileCache.getGlobalFileCache().createCachedFile(files[0].getExtension());
                             try (OutputStream fos = new FileOutputStream(tmpFile)) {
                                 IoUtils.copy(zis, fos);
-                            } catch (Throwable th) {
-                                tmpFile.delete();
-                                throw th;
                             }
                         }
                         String fileName = zipEntry.getName().replaceFirst(mPackageName + "/", "");
@@ -383,7 +380,7 @@ public class OABConverter extends Converter {
                             try (FileInputStream fis = new FileInputStream(tmpFile)) {
                                 IoUtils.copy(fis, tos);
                             } finally {
-                                tmpFile.delete();
+                                FileCache.getGlobalFileCache().delete(tmpFile);
                             }
                         }
                         tos.closeArchiveEntry();

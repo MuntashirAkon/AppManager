@@ -30,8 +30,8 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
+import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
@@ -100,7 +100,7 @@ class ZipFileSystem extends VirtualFileSystem {
             return null;
         }
         String extension = getFile().getExtension();
-        File file = FileUtils.getTempFile(extension);
+        File file = FileCache.getGlobalFileCache().createCachedFile(extension);
         Map<String, ZipEntry> zipEntries = new HashMap<>();
         for (ZipEntry zipEntry : Collections.list(Objects.requireNonNull(zipFile).entries())) {
             zipEntries.put(Paths.getSanitizedPath(File.separator + zipEntry.getName(), false), zipEntry);

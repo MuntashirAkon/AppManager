@@ -27,6 +27,7 @@ import java.util.zip.ZipEntry;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.io.FileSystemManager;
 import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
@@ -157,31 +158,10 @@ public final class FileUtils {
         }
     }
 
-    @WorkerThread
-    @NonNull
-    public static File getCachedFile(InputStream inputStream, @Nullable String extension) throws IOException {
-        File tempFile = getTempFile(extension);
-        try (OutputStream outputStream = new FileOutputStream(tempFile)) {
-            IoUtils.copy(inputStream, outputStream);
-        }
-        return tempFile;
-    }
-
     @AnyThread
     @NonNull
-    public static File getTempFile(@Nullable String extension) throws IOException {
-        return File.createTempFile("file_", "." + extension, getCachePath());
-    }
-
-    @AnyThread
-    @NonNull
-    public static Path getTempPath(String relativeDir, String filename) {
-        File newDir = new File(getCachePath() + File.separator + relativeDir);
-        int i = 1;
-        while (newDir.exists()) {
-            newDir = new File(getCachePath() + File.separator + (relativeDir + "_" + i));
-        }
-        newDir.mkdirs();
+    public static Path getTempPath(@NonNull String relativeDir, @NonNull String filename) {
+        File newDir = FileCache.getGlobalFileCache().createCachedDir(relativeDir);
         return Paths.get(new File(newDir, filename));
     }
 

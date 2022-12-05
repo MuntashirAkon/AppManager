@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.backup.convert;
 
+import static io.github.muntashirakon.AppManager.backup.MetadataManager.TAR_TYPES;
+
 import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Build;
@@ -10,10 +12,13 @@ import androidx.annotation.NonNull;
 
 import com.android.apksig.ApkVerifier;
 import com.android.apksig.apk.ApkFormatException;
+import com.android.apksig.util.DataSource;
+import com.android.apksig.util.DataSources;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.RandomAccessFile;
+import java.nio.channels.FileChannel;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
@@ -25,15 +30,14 @@ import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.crypto.Crypto;
 import io.github.muntashirakon.AppManager.crypto.CryptoException;
+import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
+import io.github.muntashirakon.io.FileSystemManager;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
-
-import static io.github.muntashirakon.AppManager.backup.MetadataManager.TAR_TYPES;
 
 public final class ConvertUtils {
     @NonNull
@@ -112,16 +116,19 @@ public final class ConvertUtils {
     }
 
     @NonNull
-    static String[] getChecksumsFromApk(Path apkFile, @DigestUtils.Algorithm String algo)
+    static String[] getChecksumsFromApk(@NonNull Path apkFile, @DigestUtils.Algorithm String algo)
             throws IOException, ApkFormatException, NoSuchAlgorithmException, CertificateEncodingException {
         // Since we can't directly work with ProxyFile, we need to cache it and read the signature
-        // TODO: 10/7/21 Use ProxyRandomAccessFile when possible
-        File cachedFile;
-        try (InputStream is = apkFile.openInputStream()) {
-            cachedFile = FileUtils.getCachedFile(is, apkFile.getExtension());
+        FileChannel fileChannel;
+        try {
+            fileChannel = apkFile.openFileChannel(FileSystemManager.MODE_READ_ONLY);
+        } catch (IOException e) {
+            File cachedFile = FileCache.getGlobalFileCache().getCachedFile(apkFile);
+            fileChannel = new RandomAccessFile(cachedFile, "r").getChannel();
         }
+        DataSource dataSource = DataSources.asDataSource(fileChannel);
         List<String> checksums = new ArrayList<>(1);
-        ApkVerifier verifier = new ApkVerifier.Builder(cachedFile)
+        ApkVerifier verifier = new ApkVerifier.Builder(dataSource)
                 .setMaxCheckedPlatformVersion(Build.VERSION.SDK_INT)
                 .build();
         ApkVerifier.Result apkVerifierResult = verifier.verify();

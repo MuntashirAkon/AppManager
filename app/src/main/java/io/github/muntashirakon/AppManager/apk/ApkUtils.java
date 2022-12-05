@@ -39,6 +39,7 @@ import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkExporter;
 import io.github.muntashirakon.AppManager.backup.BackupFiles;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
+import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
@@ -163,12 +164,12 @@ public final class ApkUtils {
             }
         }
         // This could be due to a Zip error, try caching the APK
-        File cachedApk = FileUtils.getCachedFile(apkInputStream, "apk");
+        File cachedApk = FileCache.getGlobalFileCache().getCachedFile(apkInputStream, "apk");
         ByteBuffer byteBuffer;
         try {
             byteBuffer = getManifestFromApk(cachedApk);
         } finally {
-            FileUtils.deleteSilently(cachedApk);
+            FileCache.getGlobalFileCache().delete(cachedApk);
         }
         return byteBuffer;
     }

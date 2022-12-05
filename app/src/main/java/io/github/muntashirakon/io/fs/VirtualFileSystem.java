@@ -35,8 +35,8 @@ import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.FileSystemManager;
 import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
@@ -369,13 +369,13 @@ public abstract class VirtualFileSystem {
         }
     }
 
-    private static class FileCache {
+    private static class FileCacheItem {
         @NonNull
         public final File cachedFile;
 
         private boolean modified;
 
-        private FileCache(@NonNull File cachedFile) {
+        private FileCacheItem(@NonNull File cachedFile) {
             this.cachedFile = cachedFile;
         }
 
@@ -390,9 +390,9 @@ public abstract class VirtualFileSystem {
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (!(o instanceof FileCache)) return false;
-            FileCache fileCache = (FileCache) o;
-            return cachedFile.equals(fileCache.cachedFile);
+            if (!(o instanceof FileCacheItem)) return false;
+            FileCacheItem fileCacheItem = (FileCacheItem) o;
+            return cachedFile.equals(fileCacheItem.cachedFile);
         }
 
         @Override
@@ -404,7 +404,8 @@ public abstract class VirtualFileSystem {
     private final Object lock = new Object();
     @NonNull
     private final Map<String, List<Action>> actions = new HashMap<>();
-    private final Map<String, FileCache> fileCacheMap = new HashMap<>();
+    private final Map<String, FileCacheItem> fileCacheMap = new HashMap<>();
+    private final FileCache fileCache = new FileCache();
     @NonNull
     private final Path file;
 
@@ -502,12 +503,12 @@ public abstract class VirtualFileSystem {
         synchronized (lock) {
             // Update actions
             for (String path : fileCacheMap.keySet()) {
-                FileCache fileCache = Objects.requireNonNull(fileCacheMap.get(path));
-                if (fileCache.isModified()) {
+                FileCacheItem fileCacheItem = Objects.requireNonNull(fileCacheMap.get(path));
+                if (fileCacheItem.isModified()) {
                     Node<?> node = getNode(path);
                     if (node != null) {
                         Action action = new Action(ACTION_UPDATE, node);
-                        action.setCachedPath(fileCache.cachedFile);
+                        action.setCachedPath(fileCacheItem.cachedFile);
                         addAction(node.getFullPath(), action);
                     }
                 }
@@ -516,10 +517,8 @@ public abstract class VirtualFileSystem {
             this.fsId = 0;
             this.mountPoint = null;
             // Cleanup
-            for (FileCache fileCache : fileCacheMap.values()) {
-                fileCache.cachedFile.delete();
-            }
             fileCacheMap.clear();
+            fileCache.deleteAll();
             actions.clear();
             // Handle cached file
             if (cachedFile != null) {
@@ -537,6 +536,11 @@ public abstract class VirtualFileSystem {
             this.options = null;
             onUnmounted();
         }
+    }
+
+    @Override
+    protected void finalize() {
+        fileCache.close();
     }
 
     /**
@@ -835,7 +839,7 @@ public abstract class VirtualFileSystem {
             }
             addAction(dest, action);
             // Check if it's cached
-            FileCache cache = fileCacheMap.remove(source);
+            FileCacheItem cache = fileCacheMap.remove(source);
             if (cache != null) {
                 // Cache exists, alter it
                 fileCacheMap.put(dest, cache);
@@ -860,7 +864,7 @@ public abstract class VirtualFileSystem {
             action.setSourcePath(source);
             addAction(dest, action);
             // Check if it's cached
-            FileCache cache = fileCacheMap.remove(source);
+            FileCacheItem cache = fileCacheMap.remove(source);
             if (cache != null) {
                 // Cache exists, alter it
                 fileCacheMap.put(dest, cache);
@@ -1041,20 +1045,20 @@ public abstract class VirtualFileSystem {
 
     @Nullable
     protected File findCachedFile(@NonNull Node<?> node) {
-        FileCache fileCache = fileCacheMap.get(node.getFullPath());
-        return fileCache != null ? fileCache.cachedFile : null;
+        FileCacheItem fileCacheItem = fileCacheMap.get(node.getFullPath());
+        return fileCacheItem != null ? fileCacheItem.cachedFile : null;
     }
 
     private File getCachedFile(@NonNull Node<?> node, boolean write) throws IOException {
-        FileCache fileCache = fileCacheMap.get(node.getFullPath());
-        if (fileCache != null) {
+        FileCacheItem fileCacheItem = fileCacheMap.get(node.getFullPath());
+        if (fileCacheItem != null) {
             if (write) {
-                fileCache.setModified(true);
+                fileCacheItem.setModified(true);
             }
-            return fileCache.cachedFile;
+            return fileCacheItem.cachedFile;
         }
         // File hasn't been cached.
-        File cachedFile = FileUtils.getTempFile(Paths.getPathExtension(node.getName()));
+        File cachedFile = fileCache.createCachedFile(Paths.getPathExtension(node.getName()));
         if (node.isPhysical()) {
             // The file exists physically. It has to be cached first.
             try (InputStream is = getInputStream(node);
@@ -1062,12 +1066,12 @@ public abstract class VirtualFileSystem {
                 IoUtils.copy(is, os);
             }
         }
-        fileCache = new FileCache(cachedFile);
+        fileCacheItem = new FileCacheItem(cachedFile);
         if (write) {
-            fileCache.setModified(true);
+            fileCacheItem.setModified(true);
         }
-        fileCacheMap.put(node.getFullPath(), fileCache);
-        return fileCache.cachedFile;
+        fileCacheMap.put(node.getFullPath(), fileCacheItem);
+        return fileCacheItem.cachedFile;
     }
 
     /* File tree */

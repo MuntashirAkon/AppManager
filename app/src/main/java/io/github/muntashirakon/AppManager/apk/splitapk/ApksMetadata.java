@@ -17,6 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -29,7 +30,7 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
+import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
@@ -170,21 +171,26 @@ public class ApksMetadata {
                     continue;
                 }
                 // Save as APKS first
-                Path tempFile = Paths.get(FileUtils.getTempFile(".apks"));
-                SplitApkExporter.saveApks(packageInfo, tempFile);
-                String path = packageInfo.packageName + ApkUtils.EXT_APKS;
-                SplitApkExporter.addFile(zipOutputStream, tempFile, path, exportTimestamp);
-                // Add as dependency
-                Dependency dependency = new Dependency();
-                dependency.packageName = packageInfo.packageName;
-                dependency.displayName = packageInfo.applicationInfo.loadLabel(pm).toString();
-                dependency.versionName = packageInfo.versionName;
-                dependency.versionCode = PackageInfoCompat.getLongVersionCode(packageInfo);
-                dependency.required = true;
-                dependency.signatures = null;
-                dependency.match = Dependency.DEPENDENCY_MATCH_EXACT;
-                dependency.path = path;
-                dependencies.add(dependency);
+                File tempFile = FileCache.getGlobalFileCache().createCachedFile("apks");
+                try {
+                    Path tempPath = Paths.get(tempFile);
+                    SplitApkExporter.saveApks(packageInfo, tempPath);
+                    String path = packageInfo.packageName + ApkUtils.EXT_APKS;
+                    SplitApkExporter.addFile(zipOutputStream, tempPath, path, exportTimestamp);
+                    // Add as dependency
+                    Dependency dependency = new Dependency();
+                    dependency.packageName = packageInfo.packageName;
+                    dependency.displayName = packageInfo.applicationInfo.loadLabel(pm).toString();
+                    dependency.versionName = packageInfo.versionName;
+                    dependency.versionCode = PackageInfoCompat.getLongVersionCode(packageInfo);
+                    dependency.required = true;
+                    dependency.signatures = null;
+                    dependency.match = Dependency.DEPENDENCY_MATCH_EXACT;
+                    dependency.path = path;
+                    dependencies.add(dependency);
+                } finally {
+                    FileCache.getGlobalFileCache().delete(tempFile);
+                }
             }
         }
         // Write meta

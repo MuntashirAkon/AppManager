@@ -10,8 +10,6 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
@@ -40,7 +38,7 @@ public final class BuildExpiryChecker {
             3L * 30 * 24 * 60 * 60_000, // 3 months
     };
 
-    @NotNull
+    @NonNull
     public static AlertDialog getBuildExpiredDialog(@NonNull FragmentActivity activity) {
         return new MaterialAlertDialogBuilder(activity)
                 .setTitle(R.string.app_manager_build_expired)

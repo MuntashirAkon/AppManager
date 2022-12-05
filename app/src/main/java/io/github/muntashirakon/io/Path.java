@@ -1302,6 +1302,24 @@ public class Path implements Comparable<Path> {
         return is;
     }
 
+    public FileChannel openFileChannel(int mode) throws IOException {
+        DocumentFile documentFile = getRealDocumentFile(mDocumentFile);
+        if (documentFile instanceof ExtendedRawDocumentFile) {
+            ExtendedFile file = Objects.requireNonNull(getFile());
+            if (file instanceof RemoteFile) {
+                try {
+                    return LocalServices.getFileSystemManager().openChannel(file, mode);
+                } catch (RemoteException e) {
+                    throw new IOException(e);
+                }
+            }
+            return FileSystemManager.getLocal().openChannel(file, mode);
+        } else if (documentFile instanceof VirtualDocumentFile) {
+            return ((VirtualDocumentFile) documentFile).openChannel(mode);
+        }
+        throw new IOException("Target is not backed by a real file");
+    }
+
     public byte[] getContentAsBinary() {
         return getContentAsBinary(EmptyArray.BYTE);
     }

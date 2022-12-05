@@ -21,30 +21,32 @@ import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.io.IoUtils;
 
-class FileCache {
+class ImageFileCache {
     private static final long sLastModifiedDate = System.currentTimeMillis() - 604_800_000;
 
     private final File mCacheDir;
 
-    public FileCache() {
+    public ImageFileCache() {
         mCacheDir = new File(FileUtils.getCachePath(), "images");
         if (!mCacheDir.exists()) {
-            mCacheDir.mkdirs();
+            if (!mCacheDir.mkdirs()) {
+                throw new IllegalStateException("Could not create cache. Is this OS broken?");
+            }
         }
     }
 
-    public void putImage(String name, InputStream inputStream) throws IOException {
+    public void putImage(@NonNull String name, @NonNull InputStream inputStream) throws IOException {
         File iconFile = getImageFile(name);
         try (OutputStream os = new FileOutputStream(iconFile)) {
             IoUtils.copy(inputStream, os);
         }
     }
 
-    public void putImage(String name, Drawable drawable) throws IOException {
+    public void putImage(@NonNull String name, @NonNull Drawable drawable) throws IOException {
         putImage(name, UIUtils.getBitmapFromDrawable(drawable));
     }
 
-    public void putImage(String name, Bitmap bitmap) throws IOException {
+    public void putImage(@NonNull String name, @NonNull Bitmap bitmap) throws IOException {
         File iconFile = getImageFile(name);
         try (OutputStream os = new FileOutputStream(iconFile)) {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, os);

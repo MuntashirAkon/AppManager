@@ -41,9 +41,10 @@ import io.github.muntashirakon.AppManager.fm.ContentType2;
 import io.github.muntashirakon.AppManager.scanner.vt.VirusTotal;
 import io.github.muntashirakon.AppManager.scanner.vt.VtFileReport;
 import io.github.muntashirakon.AppManager.scanner.vt.VtFileScanMeta;
+import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
+import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.io.fs.DexFileSystem;
@@ -53,7 +54,6 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
     private static final Pattern SIG_TO_IGNORE = Pattern.compile("^(android(|x)|com\\.android|com\\.google\\.android|java(|x)|j\\$\\.(util|time)|\\w\\d?(\\.\\w\\d?)+)\\..*$");
 
     private File mApkFile;
-    private boolean mIsApkCached;
     private boolean mIsSummaryLoaded = false;
     private Uri mApkUri;
     private int mDexVfsId;
@@ -68,6 +68,7 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
     private Collection<String> mNativeLibraries;
 
     private CountDownLatch mWaitForFile;
+    private final FileCache fileCache = new FileCache();
     private final MultithreadedExecutor mExecutor = MultithreadedExecutor.getNewInstance();
     private final MutableLiveData<Pair<String, String>[]> mApkChecksumsLiveData = new MutableLiveData<>();
     private final MutableLiveData<ApkVerifier.Result> mApkVerifierResultLiveData = new MutableLiveData<>();
@@ -90,10 +91,7 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
     protected void onCleared() {
         super.onCleared();
         mExecutor.shutdownNow();
-        if (mIsApkCached && mApkFile != null) {
-            // Only attempt to delete the apk file if it's cached
-            FileUtils.deleteSilently(mApkFile);
-        }
+        IoUtils.closeQuietly(fileCache);
         try {
             VirtualFileSystem.unmount(mDexVfsId);
         } catch (Throwable e) {
@@ -105,7 +103,6 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
     public void loadSummary() {
         if (mIsSummaryLoaded) return;
         mIsSummaryLoaded = true;
-        mIsApkCached = false;
         mWaitForFile = new CountDownLatch(1);
         // Cache files
         mExecutor.submit(() -> {
@@ -220,10 +217,8 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
         // Test if this path is readable
         if (this.mApkFile == null || !mApkFile.canRead()) {
             // Not readable, cache the file
-            Path apkPath = Paths.get(mApkUri);
-            try (InputStream uriStream = apkPath.openInputStream()) {
-                mApkFile = FileUtils.getCachedFile(uriStream, apkPath.getExtension());
-                mIsApkCached = true;
+            try {
+                mApkFile = fileCache.getCachedFile(Paths.get(mApkUri));
             } catch (IOException e) {
                 e.printStackTrace();
             }

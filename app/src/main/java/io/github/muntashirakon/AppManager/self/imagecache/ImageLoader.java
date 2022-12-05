@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
+import androidx.collection.LruCache;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -29,8 +30,8 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 
 public class ImageLoader implements Closeable {
-    private final MemoryCache mMemoryCache = new MemoryCache();
-    private final FileCache mFileCache = new FileCache();
+    private final LruCache<String, Bitmap> mMemoryCache = new LruCache<>(300);
+    private final ImageFileCache mImageFileCache = new ImageFileCache();
     private final Map<ImageView, String> mImageViews = Collections.synchronizedMap(new WeakHashMap<>());
     private final ExecutorService mExecutor;
     private final boolean mShutdownExecutor;
@@ -69,8 +70,8 @@ public class ImageLoader implements Closeable {
         if (mShutdownExecutor) {
             mExecutor.shutdownNow();
         }
-        mMemoryCache.clear();
-        mFileCache.clear();
+        mMemoryCache.evictAll();
+        mImageFileCache.clear();
     }
 
     @Override
@@ -105,14 +106,14 @@ public class ImageLoader implements Closeable {
         @WorkerThread
         public void run() {
             if (imageViewReusedOrClosed(mQueueItem)) return;
-            Bitmap image = mFileCache.getImage(mQueueItem.name);
+            Bitmap image = mImageFileCache.getImage(mQueueItem.name);
             if (image == null) { // Cache miss
                 Drawable drawable;
                 if (mQueueItem.info != null) {
                     drawable = mQueueItem.info.loadIcon(mQueueItem.pm);
                     image = getScaledBitmap(mQueueItem.imageView, drawable, 1.0f);
                     try {
-                        mFileCache.putImage(mQueueItem.name, image);
+                        mImageFileCache.putImage(mQueueItem.name, image);
                     } catch (IOException ignore) {
                     }
                 } else {

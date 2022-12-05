@@ -16,6 +16,7 @@ import com.j256.simplemagic.ContentType;
 
 import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.nio.ByteBuffer;
@@ -25,9 +26,9 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.parser.AndroidBinXmlDecoder;
 import io.github.muntashirakon.AppManager.fm.ContentType2;
+import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
@@ -40,12 +41,12 @@ public class AppExplorerViewModel extends AndroidViewModel {
     private final MutableLiveData<Boolean> modificationObserver = new MutableLiveData<>();
     private final MutableLiveData<AdapterItem> openObserver = new MutableLiveData<>();
     private final MutableLiveData<Uri> uriChangeObserver = new MutableLiveData<>();
-    private Uri apkUri;
-    private ApkFile apkFile;
-    private Path zipFileRoot;
+    private Path filePath;
+    private File cachedFile;
+    private Path baseFsRoot;
     private boolean modified;
     private final List<Integer> vfsIds = new ArrayList<>();
-    private final List<File> cachedFiles = new ArrayList<>();
+    private final FileCache fileCache = new FileCache();
 
     public AppExplorerViewModel(@NonNull Application application) {
         super(application);
@@ -53,7 +54,6 @@ public class AppExplorerViewModel extends AndroidViewModel {
 
     @Override
     protected void onCleared() {
-        super.onCleared();
         executor.shutdownNow();
         // Unmount file systems
         for (int vsfId : vfsIds) {
@@ -63,14 +63,12 @@ public class AppExplorerViewModel extends AndroidViewModel {
                 e.printStackTrace();
             }
         }
-        IoUtils.closeQuietly(apkFile);
-        for (File cachedFile : cachedFiles) {
-            FileUtils.deleteSilently(cachedFile);
-        }
+        IoUtils.closeQuietly(fileCache);
+        super.onCleared();
     }
 
-    public void setApkUri(Uri apkUri) {
-        this.apkUri = apkUri;
+    public void setUri(Uri apkUri) {
+        this.filePath = Paths.get(apkUri);
     }
 
     public boolean isModified() {
@@ -79,7 +77,7 @@ public class AppExplorerViewModel extends AndroidViewModel {
 
     @NonNull
     public String getName() {
-        if (apkUri != null) return apkUri.getLastPathSegment();
+        if (filePath != null) return filePath.getName();
         return "";
     }
 
@@ -91,16 +89,12 @@ public class AppExplorerViewModel extends AndroidViewModel {
     @AnyThread
     public void loadFiles(@Nullable Uri uri) {
         executor.submit(() -> {
-            if (apkFile == null) {
+            if (cachedFile == null) {
                 try {
-                    int key = ApkFile.createInstance(apkUri, null);
-                    apkFile = ApkFile.getInstance(key);
-                    ApkFile.Entry baseEntry = apkFile.getBaseEntry();
-                    File cachedFile = baseEntry.getRealCachedFile();
-                    cachedFiles.add(cachedFile);
-                    int vfsId = VirtualFileSystem.mount(apkUri, Paths.get(cachedFile), ContentType.ZIP.getMimeType());
+                    cachedFile = fileCache.getCachedFile(filePath);
+                    int vfsId = VirtualFileSystem.mount(filePath.getUri(), Paths.get(cachedFile), ContentType.ZIP.getMimeType());
                     vfsIds.add(vfsId);
-                    zipFileRoot = VirtualFileSystem.getFsRoot(vfsId);
+                    baseFsRoot = VirtualFileSystem.getFsRoot(vfsId);
                 } catch (Throwable e) {
                     e.printStackTrace();
                     this.fmItems.postValue(Collections.emptyList());
@@ -111,7 +105,7 @@ public class AppExplorerViewModel extends AndroidViewModel {
             Path path;
             if (uri == null) {
                 // Null URI always means root of the zip file
-                path = zipFileRoot;
+                path = baseFsRoot;
             } else {
                 path = Paths.get(uri);
             }
@@ -131,24 +125,28 @@ public class AppExplorerViewModel extends AndroidViewModel {
             return;
         }
         executor.submit(() -> {
-            try (InputStream is = item.openInputStream()) {
-                if (convertXml) {
+            if (convertXml) {
+                try (InputStream is = item.openInputStream()) {
                     byte[] fileBytes = IoUtils.readFully(is, -1, true);
                     ByteBuffer byteBuffer = ByteBuffer.wrap(fileBytes);
-                    File cachedFile = FileUtils.getTempFile(item.extension);
+                    File cachedFile = fileCache.createCachedFile(item.path.getExtension());
                     try (PrintStream ps = new PrintStream(cachedFile)) {
                         if (AndroidBinXmlDecoder.isBinaryXml(byteBuffer)) {
                             AndroidBinXmlDecoder.decode(byteBuffer, ps);
                         } else {
                             ps.write(fileBytes);
                         }
-                        addCachedFile(item, cachedFile);
+                        item.setCachedFile(Paths.get(cachedFile));
                     }
-                } else {
-                    addCachedFile(item, FileUtils.getCachedFile(is, item.extension));
+                } catch (Throwable e) {
+                    e.printStackTrace();
                 }
-            } catch (Throwable e) {
-                e.printStackTrace();
+            } else {
+                try {
+                    item.setCachedFile(Paths.get(fileCache.getCachedFile(item.path)));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
             openObserver.postValue(item);
         });
@@ -170,15 +168,17 @@ public class AppExplorerViewModel extends AndroidViewModel {
                     openObserver.postValue(item);
                     return;
                 }
-                try (InputStream is = new BufferedInputStream(item.openInputStream())) {
-                    boolean isZipFile = FileUtils.isZip(is);
-                    File cachedFile = FileUtils.getCachedFile(is, item.extension);
-                    addCachedFile(item, cachedFile);
-                    if (isZipFile) {
-                        int vfsId = VirtualFileSystem.mount(item.getUri(), Paths.get(cachedFile), ContentType.ZIP.getMimeType());
-                        vfsIds.add(vfsId);
-                        uriChangeObserver.postValue(item.getUri());
-                    } else openObserver.postValue(item);
+                try {
+                    File cachedFile = fileCache.getCachedFile(item.path);
+                    item.setCachedFile(Paths.get(cachedFile));
+                    try (InputStream is = new BufferedInputStream(item.openInputStream())) {
+                        boolean isZipFile = FileUtils.isZip(is);
+                        if (isZipFile) {
+                            int vfsId = VirtualFileSystem.mount(item.getUri(), Paths.get(cachedFile), ContentType.ZIP.getMimeType());
+                            vfsIds.add(vfsId);
+                            uriChangeObserver.postValue(item.getUri());
+                        } else openObserver.postValue(item);
+                    }
                 } catch (Throwable e) {
                     e.printStackTrace();
                 }
@@ -200,10 +200,5 @@ public class AppExplorerViewModel extends AndroidViewModel {
 
     public LiveData<Uri> observeUriChange() {
         return uriChangeObserver;
-    }
-
-    private void addCachedFile(@NonNull AdapterItem item, File file) {
-        item.setCachedFile(Paths.get(file));
-        cachedFiles.add(file);
     }
 }

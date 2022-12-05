@@ -52,6 +52,7 @@ import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.crypto.Crypto;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
@@ -256,12 +257,9 @@ public class SBConverter extends Converter {
                         File tmpFile = null;
                         if (!zipEntry.isDirectory()) {
                             // We need to use a temporary file
-                            tmpFile = FileUtils.getTempFile(dataFile.getExtension());
+                            tmpFile = FileCache.getGlobalFileCache().createCachedFile(dataFile.getExtension());
                             try (OutputStream fos = new FileOutputStream(tmpFile)) {
                                 IoUtils.copy(zis, fos);
-                            } catch (Throwable th) {
-                                tmpFile.delete();
-                                throw th;
                             }
                         }
                         String fileName = zipEntry.getName().replaceFirst(mPackageName + "/", "");
@@ -277,7 +275,7 @@ public class SBConverter extends Converter {
                             try (FileInputStream fis = new FileInputStream(tmpFile)) {
                                 IoUtils.copy(fis, tos);
                             } finally {
-                                tmpFile.delete();
+                                FileCache.getGlobalFileCache().delete(tmpFile);
                             }
                         }
                         tos.closeArchiveEntry();

@@ -66,6 +66,7 @@ import io.github.muntashirakon.AppManager.apk.splitapk.ApksMetadata;
 import io.github.muntashirakon.AppManager.fm.FmProvider;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.VMRuntime;
+import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
@@ -194,12 +195,14 @@ public final class ApkFile implements AutoCloseable {
     private final String packageName;
     @NonNull
     private final List<ZipEntry> obbFiles = new ArrayList<>();
+    private final FileCache fileCache = new FileCache();
     @NonNull
     private final File cacheFilePath;
     @Nullable
     private ParcelFileDescriptor fd;
     @Nullable
     private ZipFile zipFile;
+    private boolean closed;
 
     private ApkFile(@NonNull Uri apkUri, @Nullable String mimeType, int sparseArrayKey) throws ApkFileException {
         this.sparseArrayKey = sparseArrayKey;
@@ -238,7 +241,7 @@ public final class ApkFile implements AutoCloseable {
         if (extension.equals("apkm")) {
             // Convert to APKS
             try {
-                this.cacheFilePath = FileUtils.getTempFile(".apks");
+                this.cacheFilePath = fileCache.createCachedFile("apks");
                 try (ParcelFileDescriptor inputFD = cr.openFileDescriptor(apkUri, "r");
                      OutputStream outputStream = new FileOutputStream(this.cacheFilePath)) {
                     if (inputFD == null) {
@@ -268,8 +271,8 @@ public final class ApkFile implements AutoCloseable {
             File cacheFilePath = this.fd != null ? FileUtils.getFileFromFd(fd) : null;
             if (cacheFilePath == null || !FileUtils.canRead(cacheFilePath)) {
                 // Cache manually
-                try (InputStream is = apkSource.openInputStream()) {
-                    this.cacheFilePath = FileUtils.getCachedFile(is, extension);
+                try {
+                    this.cacheFilePath = fileCache.getCachedFile(apkSource);
                 } catch (IOException e) {
                     throw new ApkFileException("Could not cache the input file.", e);
                 }
@@ -515,6 +518,7 @@ public final class ApkFile implements AutoCloseable {
 
     @Override
     public void close() {
+        closed = true;
         synchronized (instanceCount) {
             if (instanceCount.get(sparseArrayKey) > 1) {
                 // This isn't the only instance, do not close yet
@@ -530,14 +534,19 @@ public final class ApkFile implements AutoCloseable {
         }
         IoUtils.closeQuietly(zipFile);
         IoUtils.closeQuietly(fd);
+        IoUtils.closeQuietly(fileCache);
         FileUtils.deleteSilently(idsigFile);
-        if (!cacheFilePath.getAbsolutePath().startsWith("/data/app")) {
-            FileUtils.deleteSilently(cacheFilePath);
-        }
         // Ensure that entries are not accessible if accidentally accessed
         entries.clear();
         baseEntry = null;
         obbFiles.clear();
+    }
+
+    @Override
+    protected void finalize() {
+        if (!closed) {
+            close();
+        }
     }
 
     @NonNull
@@ -727,18 +736,18 @@ public final class ApkFile implements AutoCloseable {
          * @throws IOException If the APK cannot be signed or cached.
          */
         public File getSignedFile() throws IOException {
-            if (signedFile != null) return signedFile;
+            if (signedFile != null && signedFile.exists()) return signedFile;
             File realFile = getRealCachedFile();
             if (!needSigning()) {
                 // Return original/real file if signing is not requested
                 return realFile;
             }
-            signedFile = FileUtils.getTempFile("apk");
+            signedFile = fileCache.createCachedFile("apk");
             SigSchemes sigSchemes = SigSchemes.fromPref();
             try {
                 Signer signer = Signer.getInstance(sigSchemes);
                 if (signer.isV4SchemeEnabled()) {
-                    idsigFile = FileUtils.getTempFile("idsig");
+                    idsigFile = fileCache.createCachedFile("idsig");
                     signer.setIdsigFile(idsigFile);
                 }
                 if (signer.sign(realFile, signedFile)) {
