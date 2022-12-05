@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.dex;
 
+import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
 
 import org.antlr.runtime.CommonTokenStream;
@@ -29,16 +30,29 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.io.Path;
 import jadx.api.JadxArgs;
 import jadx.api.JadxDecompiler;
 import jadx.api.JavaClass;
 import jadx.core.utils.files.FileUtils;
 
 public final class DexUtils {
+    @AnyThread
+    public static boolean isDex(@NonNull Path path) throws IOException {
+        int header;
+        try (InputStream is = path.openInputStream()) {
+            byte[] headerBytes = new byte[4];
+            is.read(headerBytes);
+            header = new BigInteger(headerBytes).intValue();
+        }
+        return header == 0x6465780A;
+    }
+
     public static MultiDexContainer<? extends DexBackedDexFile> loadApk(File apkFile, int apiLevel) throws IOException {
         return DexFileFactory.loadDexContainer(apkFile, apiLevel < 0 ? Opcodes.getDefault() : Opcodes.forApi(apiLevel));
     }

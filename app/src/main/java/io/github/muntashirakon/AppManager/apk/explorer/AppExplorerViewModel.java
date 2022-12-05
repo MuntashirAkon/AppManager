@@ -27,6 +27,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import io.github.muntashirakon.AppManager.apk.parser.AndroidBinXmlDecoder;
+import io.github.muntashirakon.AppManager.dex.DexUtils;
 import io.github.muntashirakon.AppManager.fm.ContentType2;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
@@ -44,6 +45,7 @@ public class AppExplorerViewModel extends AndroidViewModel {
     private Path filePath;
     private File cachedFile;
     private Path baseFsRoot;
+    private String baseType;
     private boolean modified;
     private final List<Integer> vfsIds = new ArrayList<>();
     private final FileCache fileCache = new FileCache();
@@ -92,9 +94,22 @@ public class AppExplorerViewModel extends AndroidViewModel {
             if (cachedFile == null) {
                 try {
                     cachedFile = fileCache.getCachedFile(filePath);
-                    int vfsId = VirtualFileSystem.mount(filePath.getUri(), Paths.get(cachedFile), ContentType.ZIP.getMimeType());
+                    Path cachedPath = Paths.get(cachedFile);
+                    int vfsId;
+                    if (FileUtils.isZip(cachedPath)) {
+                        vfsId = VirtualFileSystem.mount(filePath.getUri(), cachedPath, ContentType.ZIP.getMimeType());
+                    } else if (DexUtils.isDex(cachedPath)) {
+                        vfsId = VirtualFileSystem.mount(filePath.getUri(), cachedPath, ContentType2.DEX.getMimeType());
+                    } else {
+                        vfsId = VirtualFileSystem.mount(filePath.getUri(), cachedPath, cachedPath.getType());
+                    }
+                    VirtualFileSystem fs = VirtualFileSystem.getFileSystem(vfsId);
+                    if (fs == null) {
+                        throw new IOException("Could not mount " + uri);
+                    }
                     vfsIds.add(vfsId);
-                    baseFsRoot = VirtualFileSystem.getFsRoot(vfsId);
+                    baseFsRoot = fs.getRootPath();
+                    baseType = fs.getType();
                 } catch (Throwable e) {
                     e.printStackTrace();
                     this.fmItems.postValue(Collections.emptyList());

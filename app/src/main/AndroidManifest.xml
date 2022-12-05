@@ -137,13 +137,16 @@
             android:name=".apk.explorer.AppExplorerActivity"
             android:enabled="true"
             android:exported="true"
-            android:label="@string/explore">
+            android:label="@string/explore"
+            android:taskAffinity="">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
 
                 <category android:name="android.intent.category.DEFAULT" />
 
                 <data android:mimeType="application/vnd.android.package-archive" />
+                <data android:mimeType="application/java-archive" />
+                <data android:mimeType="application/x-dex" />
                 <data android:mimeType="application/octet-stream" />
             </intent-filter>
             <intent-filter>
@@ -156,6 +159,8 @@
                 <data android:scheme="content" />
                 <data android:host="*" />
                 <data android:mimeType="application/vnd.android.package-archive" />
+                <data android:mimeType="application/java-archive" />
+                <data android:mimeType="application/x-dex" />
                 <data android:mimeType="application/octet-stream" />
             </intent-filter>
         </activity>
