@@ -249,4 +249,192 @@
     <string name="memory_virtual_memory">메모: %1$s, 가상 메모리: %2$s</string>
     <string name="external_multiple_data_dir">외부 데이터 디렉토리 <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
     <string name="disable_background_run">백그라운드 작업 방지</string>
+    <string name="filter">필터링하기</string>
+    <string name="sort_by_dangerous_permissions">위험 우선</string>
+    <string name="sort_by_app_ops_values">앱 권한 값</string>
+    <string name="sort_by_permission_names">권한 이름</string>
+    <string name="sort_by_tracker_components">트래커 우선</string>
+    <string name="unknown_op">알 수 없는 작업</string>
+    <string name="failed_to_deny_dangerous_app_ops">모든 위험한 앱들 권한 박탈 실패</string>
+    <string name="launch_app">실행</string>
+    <string name="external_apk_no_app_op">외부 APK는 앱 작업이 없습니다</string>
+    <string name="never_ask">다시 물어보지 않기</string>
+    <string name="one_click_ops">원클릭 권한</string>
+    <string name="changelog">변경 로그</string>
+    <string name="installed_version">설치된 버전</string>
+    <string name="trackers">트래커</string>
+    <string name="features">기능</string>
+    <string name="whats_new">새소식</string>
+    <plurals name="backup_exists_are_you_sure">
+        <item quantity="other">하나 이상의 앱이 이미 백업을 갖고 있습니다. 진행 하시겠습니까\?</item>
+    </plurals>
+    <string name="block_unblock_trackers">트래커 차단/차단 해제</string>
+    <string name="export_icon">아이콘 추출</string>
+    <string name="pref_remove_all_rules">모든 규칙 삭제</string>
+    <string name="import_failed">가져오기 실패!</string>
+    <string name="block_trackers">트래커 차단</string>
+    <plurals name="no_of_components">
+        <item quantity="other">%1$d 구성요소</item>
+    </plurals>
+    <string name="clear_app_cache_description">모든 앱 캐시를 삭제한다</string>
+    <plurals name="failed_to_backup_some_apk_files">
+        <item quantity="other">%1$d 앱 백업이 실패했습니다</item>
+    </plurals>
+    <string name="installer_error_incompatible">이 장치는 이 앱과 호환되지 않습니다</string>
+    <string name="installer_error_conflict">패키지 이름이 이미 사용 중이므로 앱을 설치할 수 없습니다</string>
+    <string name="reset_to_default">기본값로 초기화</string>
+    <string name="deny_dangerous_app_ops">위험한 앱 권한 거부</string>
+    <string name="failed_to_reset_app_ops">앱 권한 초기화 실패</string>
+    <string name="manifest_viewer">뷰어 표시</string>
+    <string name="install">설치</string>
+    <string name="update">업데이트</string>
+    <string name="input_app_ops_description">띄어쓰기 포함 앱 권한 이름 그리고/또는 상수값 입력, 예) <tt>WAKE_LOCK 63 72 CAMERA</tt> 등.</string>
+    <string name="clear_cache">캐시 삭제</string>
+    <string name="input_signatures">서명 입력</string>
+    <string name="apply">적용</string>
+    <string name="night">밤</string>
+    <string name="sort_by_denied_permissions">우선 거부</string>
+    <string name="internal_data">내부 데이터</string>
+    <string name="ago">전</string>
+    <plurals name="alert_failed_to_disable_background">
+        <item quantity="other">%1$d 앱 백그라운드 재생 방지 실패</item>
+    </plurals>
+    <string name="toggle_kill_for_system_apps">시스템 종료 앱 전환</string>
+    <string name="backup_restore">백업/복구</string>
+    <string name="running">실행 중</string>
+    <plurals name="no_of_trackers">
+        <item quantity="other">%1$d 트래커</item>
+    </plurals>
+    <string name="reject_time">거절 시간</string>
+    <string name="export_options">내보내기 옵션</string>
+    <string name="export_failed">내보내기 실패!</string>
+    <string name="the_operation_was_successful">완료</string>
+    <string name="touchscreen">터치스크린</string>
+    <string name="keyboard_type">키보드 타입</string>
+    <string name="navigation">탐색</string>
+    <string name="pref_export_msg">앱 매니저 내에서 설정된 차단 규칙을 외부 장치로 내보내기.</string>
+    <string name="pref_import_msg">이전에 앱 매니저에서 내보낸 차단 규칙을 가져오기.</string>
+    <string name="pref_import_blocker_msg">Blocker에서 차단 규칙 가져오기, 각 파일은 단일 패키지에 대한 규칙을 포함한다.</string>
+    <plurals name="alert_failed_to_disable_trackers">
+        <item quantity="other">%1$d 앱에서 트래커 비활성화 실패</item>
+    </plurals>
+    <string name="sort_by_denied_app_ops">우선 거부</string>
+    <string name="source_code">소스 코드</string>
+    <string name="community_links"><a href="https://t.me/AppManagerChannel">텔레그램 채널</a> • <a href="https://twitter.com/AppManagerNews">트위터</a></string>
+    <string name="pref_import_existing">기존 규칙 가져오기</string>
+    <string name="block_unblock_trackers_description">설치된 모든 앱에서 광고 및 트래킹 구성 요소 차단 또는 차단 해제</string>
+    <string name="block_components_description">주어진 서명으로 식별된 모든 구성 요소 차단</string>
+    <string name="deny_app_ops_description">다음 상수값으로 식별되는 앱 작업 모드 설정하기, <tt>63</tt> 또는 <tt>RUN_IN_BACKGROUND</tt></string>
+    <string name="clear_app_cache">앱 캐시 삭제</string>
+    <string name="no_tracker_found">트래커가 발견되지 않았습니다</string>
+    <string name="community">커뮤니티</string>
+    <string name="clear_data_from_uninstalled_apps">제거한 앱 데이터 삭제</string>
+    <string name="termux">Termux</string>
+    <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> 설치 완료</string>
+    <string name="filter_apps_with_rules">규칙있는 앱</string>
+    <string name="failed_to_parse_some_numbers">일부 숫자 파싱 실패</string>
+    <string name="filter_system_apps">시스템 앱</string>
+    <string name="blocking_rules">차단 규칙</string>
+    <string name="cache">캐시</string>
+    <string name="external_data">외부 데이터</string>
+    <string name="restore">복구</string>
+    <string name="backup_options">백업 옵션</string>
+    <plurals name="alert_failed_to_backup">
+        <item quantity="other">%1$d 앱 백업이 실패했습니다</item>
+    </plurals>
+    <plurals name="alert_failed_to_restore">
+        <item quantity="other">%1$d 앱 복구 실패했습니다</item>
+    </plurals>
+    <plurals name="alert_failed_to_delete_backup">
+        <item quantity="other">%1$d 백업 삭제 실패했습니다</item>
+    </plurals>
+    <plurals name="alert_failed_to_unblock_trackers">
+        <item quantity="other">%1$d 앱에서 트래커 차단 해제 실패했습니다</item>
+    </plurals>
+    <plurals name="alert_failed_to_block_components">
+        <item quantity="other">%1$d 앱 구성 요소 차단 실패했습니다</item>
+    </plurals>
+    <plurals name="missing_signatures">
+        <item quantity="other">%1$d 서명 누락</item>
+    </plurals>
+    <plurals name="app_signing_signature_schemes_pl">
+        <item quantity="other">서명 방식</item>
+    </plurals>
+    <plurals name="verified_with_warning">
+        <item quantity="other">%d개 경고와 검증</item>
+    </plurals>
+    <string name="no">아니오</string>
+    <string name="pref_remove_all_rules_msg">권한이 부여되고, 앱 권한과 구성 요소는 기본값으로 초기화 됩니다.</string>
+    <string name="are_you_sure">확실하십니까\?</string>
+    <string name="installer_error_aborted">설치가 취소되었거나 세션이 예기치 않게 닫혀서 설치에 실패했습니다.</string>
+    <string name="installer_error_blocked"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g>에 의해 설치 차단</string>
+    <string name="installer_error_blocked_device">장치</string>
+    <string name="installer_error_bad_apks">유효하지 않은 APK 파일이 선택 되었습니다</string>
+    <plurals name="alert_failed_to_set_app_ops">
+        <item quantity="other">%1$d 앱 권한 설정에 실패했습니다</item>
+    </plurals>
+    <string name="pref_about_msg">앱 매니저 버전, 라이선스, 크레딧, 등.</string>
+    <string name="follow_system">시스템 따르기</string>
+    <string name="select_theme">테마</string>
+    <string name="apply_to_system_apps_question">시스템 앱에도 적용하시겠습니까\? 불확실한 경우 \'아니오\'를 선택하십시오.</string>
+    <string name="clear_data_message">이 앱에서 데이터를 삭제하시겠습니까\?</string>
+    <string name="clear">삭제</string>
+    <string name="apply_to_system_apps">시스템 앱에 적용</string>
+    <string name="pref_export">내보내기</string>
+    <string name="failed_to_stop"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g>를 정지할 수 없습니다.</string>
+    <string name="unblock">차단 해제</string>
+    <string name="failed_to_revoke_permission">권한 박탈 실패</string>
+    <string name="pref_import_watt_msg">Watt에서 차단 규칙 가져오기, 각 파일은 이름이 지정된 단일 패키지 <tt>packagename.xml</tt> 등에 대한 규칙을 포함한다.</string>
+    <string name="pref_import_existing_msg">다른 이들의 앱에서 비활성화 된 구성요소를 앱 매니저에 추가합니다. 이 기능 사용시 거짓 긍정이 많이 발생할 수 있으므로 주의하십시오. 확실한 앱만 선택하십시오.</string>
+    <string name="import_options">가져오기 옵션</string>
+    <string name="website">웹사이트</string>
+    <string name="pref_app_theme">앱 테마</string>
+    <string name="failed_to_deny_dangerous_perms">모든 위험한 권한 박탈 실패</string>
+    <string name="open_in_termux">Termux에서 열기</string>
+    <string name="clear_data">데이터 삭제</string>
+    <string name="sort_by_component_name">구성요소 이름</string>
+    <string name="skip_signature_checks">서명 검증 건너뛰기</string>
+    <string name="toggle_default_app_ops">기본 앱 권한 설정</string>
+    <string name="deny_dangerous_permissions">위험한 권한 거부</string>
+    <string name="input_app_ops">앱 권한 입력</string>
+    <string name="input_app_ops_description_profile">띄어쓰기 포함 앱 권한 이름 그리고/또는 상수값 입력, 예) <tt>WAKE_LOCK 63 72 CAMERA</tt> 등. 설정된 모든 앱에 적용하기 위해서는 <tt>*</tt> 를 사용하십시오.</string>
+    <string name="version">버전</string>
+    <string name="delete_backup">백업 삭제</string>
+    <string name="no_matching_package_found">해당 앱을 찾을 수 없습니다</string>
+    <string name="backup">백업</string>
+    <string name="block">차단</string>
+    <string name="sort_by_app_ops_names">앱 권한 이름</string>
+    <string name="filter_user_apps">사용자 앱</string>
+    <string name="run_in_termux">Termux에서 실행</string>
+    <string name="sort_by_wifi_data">와이파이 데이터</string>
+    <string name="failed_packages">실패한 패키지</string>
+    <plurals name="alert_failed_to_clear_data">
+        <item quantity="other">%1$d 앱에서 데이터 삭제 실패</item>
+    </plurals>
+    <string name="data">데이터</string>
+    <plurals name="alert_failed_to_uninstall">
+        <item quantity="other">%1$d 앱 제거 실패</item>
+    </plurals>
+    <plurals name="alert_failed_to_force_stop">
+        <item quantity="other">%1$d 앱 강제 종료 실패</item>
+    </plurals>
+    <string name="failed_to_grant_permission">권한 부여 실패</string>
+    <string name="day">낮</string>
+    <string name="input_signatures_description">띄어쓰기 포함 서명 입력, 예) <tt>com.facebook org.app2 com.app3</tt> 등.</string>
+    <string name="only_works_in_root_or_adb_mode">루트 또는 ADB 모드에서만 작동합니다</string>
+    <string name="pref_import">가져오기</string>
+    <string name="disable_background">백그라운드 작업 방지</string>
+    <string name="select_all">전체 선택</string>
+    <string name="permission_name">권한 이름</string>
+    <string name="user_and_uid">사용자: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
+    <string name="components">구성 요소</string>
+    <string name="user_with_id">사용자: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
+    <string name="yes">예</string>
+    <string name="mode">모드</string>
+    <string name="accept_time">수락 시간</string>
+    <string name="filtered_packages">필터링된 패키지</string>
+    <string name="export_blocking_rules">차단 규칙 내보내기</string>
+    <string name="duration">실행 시간</string>
+    <string name="battery_mode">배터리 모드</string>
+    <string name="block_components_dots">구성 요소 차단…</string>
 </resources>
