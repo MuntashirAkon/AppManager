@@ -1,6 +1,7 @@
 package io.github.muntashirakon.io;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
@@ -74,21 +75,22 @@ public class PathsTest {
 
     @Test
     public void getPathExtension() {
-        assertEquals("", Paths.getPathExtension(""));
-        assertEquals("", Paths.getPathExtension("/"));
-        assertEquals("", Paths.getPathExtension("/."));
+        assertNull(Paths.getPathExtension(""));
+        assertNull(Paths.getPathExtension("/"));
+        assertNull(Paths.getPathExtension("/."));
         assertEquals("ext", Paths.getPathExtension(".ext"));
         assertEquals("ext", Paths.getPathExtension("/.ext"));
-        assertEquals("", Paths.getPathExtension("a/"));
-        assertEquals("", Paths.getPathExtension("a/b/."));
-        assertEquals("", Paths.getPathExtension("a/b/.."));
-        assertEquals("", Paths.getPathExtension("a/b/"));
-        assertEquals("", Paths.getPathExtension("a/b/"));
+        assertNull(Paths.getPathExtension("a/"));
+        assertNull(Paths.getPathExtension("a/b/."));
+        assertNull(Paths.getPathExtension("a/b/.."));
+        assertNull(Paths.getPathExtension("a/b/"));
+        assertNull(Paths.getPathExtension("a/b/"));
         assertEquals("c", Paths.getPathExtension("a/b.c"));
         assertEquals("c", Paths.getPathExtension("a/b.c/"));
-        assertEquals("", Paths.getPathExtension("a/b.c/d"));
+        assertNull(Paths.getPathExtension("a/b.c/d"));
         assertEquals("d", Paths.getPathExtension("a/b.c.d"));
         assertEquals("e", Paths.getPathExtension("a/b.c.d.e"));
+        assertNull(Paths.getPathExtension("a/b.c.d.e."));
         assertEquals("ext", Paths.getPathExtension("asdkjrejvncnmiet/eru43jffn/ewrjpoewiwfjfpwrejtp.ext"));
     }
 }

@@ -255,12 +255,19 @@ public final class Paths {
     }
 
     @AnyThread
-    @NonNull
+    @Nullable
     public static String getPathExtension(@NonNull String path) {
+        return getPathExtension(path, true);
+    }
+
+    @AnyThread
+    @Nullable
+    public static String getPathExtension(@NonNull String path, boolean forceLowercase) {
         String str = Paths.getLastPathSegment(path);
         int lastIndexOfDot = str.lastIndexOf('.');
-        if (lastIndexOfDot == -1) return "";
-        return str.substring(str.lastIndexOf('.') + 1).toLowerCase(Locale.ROOT);
+        if (lastIndexOfDot == -1 || lastIndexOfDot == str.length() - 1) return null;
+        String extension = str.substring(lastIndexOfDot + 1);
+        return forceLowercase ? extension.toLowerCase(Locale.ROOT) : extension;
     }
 
     public static Uri appendPathSegment(@NonNull Uri uri, @NonNull String lastPathSegment) {

@@ -28,6 +28,7 @@ import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
+import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.widget.MultiSelectionView;
@@ -70,7 +71,7 @@ public class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         FmItem item = adapterList.get(position);
-        holder.title.setText(item.name);
+        holder.title.setText(item.path.getName());
         String modificationDate = DateUtils.formatDateTime(item.path.lastModified());
         // Set icon
         if (item.type == FileType.DIRECTORY) {
@@ -177,8 +178,21 @@ public class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> 
             return false;
         });
         menu.findItem(R.id.action_rename).setOnMenuItemClickListener(menuItem -> {
-            // TODO: 21/11/22
-            UIUtils.displayLongToast("Not implemented.");
+            RenameDialogFragment dialog = RenameDialogFragment.getInstance(item.path.getName(), (prefix, extension) -> {
+                String displayName;
+                if (!TextUtilsCompat.isEmpty(extension)) {
+                    displayName = prefix + "." + extension;
+                } else {
+                    displayName = prefix;
+                }
+                if (item.path.renameTo(displayName)) {
+                    UIUtils.displayShortToast(R.string.renamed_successfully);
+                    viewModel.reload();
+                } else {
+                    UIUtils.displayShortToast(R.string.failed);
+                }
+            });
+            dialog.show(fmActivity.getSupportFragmentManager(), RenameDialogFragment.TAG);
             return false;
         });
         menu.findItem(R.id.action_delete).setOnMenuItemClickListener(menuItem -> {

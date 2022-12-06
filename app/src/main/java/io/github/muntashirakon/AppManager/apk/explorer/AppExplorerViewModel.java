@@ -134,7 +134,7 @@ public class AppExplorerViewModel extends AndroidViewModel {
 
     @AnyThread
     public void cacheAndOpen(@NonNull AdapterItem item, boolean convertXml) {
-        if (item.getCachedFile() != null || item.extension.equals("smali")) {
+        if (item.getCachedFile() != null || "smali".equals(item.path.getExtension())) {
             // Already cached
             openObserver.postValue(item);
             return;

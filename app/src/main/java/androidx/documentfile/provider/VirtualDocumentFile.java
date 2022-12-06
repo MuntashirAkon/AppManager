@@ -92,7 +92,7 @@ public class VirtualDocumentFile extends DocumentFile {
     public String getType() {
         if (fs.isFile(fullPath)) {
             String extension = Paths.getPathExtension(getName());
-            if (extension.equals("")) {
+            if (extension == null) {
                 return null;
             }
             return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);

@@ -7,32 +7,16 @@ import androidx.annotation.NonNull;
 import java.util.Objects;
 
 import io.github.muntashirakon.io.Path;
-import io.github.muntashirakon.io.Paths;
 
 public class FmItem implements Comparable<FmItem> {
-    final String extension;
     final int type;
-    final String name;
     @NonNull
     final Path path;
 
     FmItem(@NonNull Path path) {
         this.path = path;
-        name = path.getName();
-        extension = Paths.getPathExtension(name);
         if (path.isFile()) type = FileType.FILE;
         else if (path.isDirectory()) type = FileType.DIRECTORY;
-        else if (path.isVirtual()) type = FileType.VIRTUAL;
-        else type = FileType.UNKNOWN;
-    }
-
-    FmItem(@NonNull String name, @NonNull Path path) {
-        this.path = path;
-        this.name = name;
-        extension = Paths.getPathExtension(name);
-        if (path.isFile()) type = FileType.FILE;
-        else if (path.isDirectory()) type = FileType.DIRECTORY;
-        else if (path.isVirtual()) type = FileType.VIRTUAL;
         else type = FileType.UNKNOWN;
     }
 
@@ -57,7 +41,7 @@ public class FmItem implements Comparable<FmItem> {
         else if (type == FileType.DIRECTORY) typeComp = -1;
         else typeComp = 1;
         if (typeComp == 0) {
-            return name.compareToIgnoreCase(o.name);
+            return path.getName().compareToIgnoreCase(o.path.getName());
         } else return typeComp;
     }
 }

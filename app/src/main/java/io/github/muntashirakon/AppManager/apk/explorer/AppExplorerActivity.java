@@ -47,7 +47,7 @@ public class AppExplorerActivity extends BaseActivity {
         });
         model.observeOpen().observe(this, adapterItem -> {
             Intent intent;
-            if ("smali".equals(adapterItem.extension)) {
+            if ("smali".equals(adapterItem.path.getExtension())) {
                 intent = new Intent(this, ClassViewerActivity.class);
                 intent.putExtra(ClassViewerActivity.EXTRA_APP_NAME, model.getName());
                 intent.putExtra(ClassViewerActivity.EXTRA_URI, adapterItem.getUri());
