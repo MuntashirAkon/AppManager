@@ -9,7 +9,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import org.antlr.runtime.RecognitionException;
-import org.jetbrains.annotations.NotNull;
 import org.jf.dexlib2.iface.ClassDef;
 import org.jf.dexlib2.writer.io.FileDataStore;
 
@@ -216,7 +215,7 @@ public class DexFileSystem extends VirtualFileSystem {
     }
 
     @Override
-    public long lastModified(@NotNull Node<?> node) {
+    public long lastModified(@NonNull Node<?> node) {
         return getFile().lastModified();
     }
 
