@@ -97,6 +97,7 @@ import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
 import io.github.muntashirakon.AppManager.users.UserInfo;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.io.IoUtils;
@@ -1019,7 +1020,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
                                 | PackageManager.GET_SERVICES | PackageManager.GET_CONFIGURATIONS | flagSigningInfo
                                 | PackageManager.GET_SHARED_LIBRARY_FILES | PackageManager.GET_URI_PERMISSION_PATTERNS,
                         mUserHandle);
-                if (!new File(mInstalledPackageInfo.applicationInfo.publicSourceDir).exists()) {
+                ApplicationInfo applicationInfo = mInstalledPackageInfo.applicationInfo;
+                if (!new File(applicationInfo.publicSourceDir).exists()) {
                     throw new ApkFile.ApkFileException("App not installed. It only has data.");
                 }
             } catch (Throwable e) {
@@ -1272,6 +1274,9 @@ public class AppDetailsViewModel extends AndroidViewModel {
     }
 
     public boolean isComponentDisabled(@NonNull ComponentInfo componentInfo) {
+        if (mInstalledPackageInfo == null || FreezeUtils.isFrozen(mInstalledPackageInfo.applicationInfo)) {
+            return true;
+        }
         ComponentName componentName = new ComponentName(componentInfo.packageName, componentInfo.name);
         try {
             int componentEnabledSetting = PackageManagerCompat.getComponentEnabledSetting(componentName, mUserHandle);
