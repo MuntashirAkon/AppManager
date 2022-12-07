@@ -17,7 +17,7 @@
     <string name="loading">লোড হচ্ছে…</string>
     <string name="sort_by_app_label">আ্যপ লেবেল</string>
     <string name="sort_by_package_name">প্যাকেজের নাম</string>
-    <string name="sort_by_domain">প্রথমে ব্যবহারকারীর এপ</string>
+    <string name="sort_by_domain">প্রথমে ব্যবহারকারীর অ্যাপ</string>
     <string name="data_received">প্রাপ্ত ডাটা</string>
     <string name="data_transmitted">প্রেরিত ডাটা</string>
     <string name="data_usage_msg">সর্বশেষ বুট থেকে ডাটা ইউসেজ</string>
@@ -36,7 +36,7 @@
     <string name="source_dir">মূল ডিরেক্টরি</string>
     <string name="data_dir">ডাটা ডিরেক্টরি</string>
     <string name="sdk_min">সর্বনিম্ন</string>
-    <string name="sdk_max">সর্বোচ্চ</string>
+    <string name="sdk_max">সর্বোচ্চ লক্ষ্য</string>
     <string name="sdk_flags">ফ্ল্যাগসমূহ</string>
     <string name="more_info">আরো তথ্য</string>
     <string name="date_installed">ইনস্টলের তারিখ</string>
@@ -420,4 +420,12 @@
     <string name="rules">বিধি গুলো</string>
     <string name="size">আকার</string>
     <string name="app_signing_signatures">স্বাক্ষর</string>
+    <plurals name="usage_minutes">
+        <item quantity="one">একক</item>
+        <item quantity="other">গুলো</item>
+    </plurals>
+    <string name="type_string">অক্ষর</string>
+    <string name="pref_global_blocking_enabled_msg">এরি মাধ্যমে আপনি যেকোনো অ্যাপের যেকোনো অংশ ব্লক করতে পারবে, তা করতে নির্দিষ্টভাবে অ্যাপটির জন্য ব্লকিং চালু করতে হবে না।</string>
+    <string name="failed_to_uninstall_app">আনইন্সটল ব্যর্থ হয়েছে</string>
+    <string name="sort_by_times_opened">কতবার খোলা হয়েছে</string>
 </resources>
