@@ -2,6 +2,20 @@
 
 package io.github.muntashirakon.io;
 
+import static android.system.OsConstants.ENOSYS;
+import static android.system.OsConstants.O_APPEND;
+import static android.system.OsConstants.O_CREAT;
+import static android.system.OsConstants.O_RDONLY;
+import static android.system.OsConstants.O_RDWR;
+import static android.system.OsConstants.O_TRUNC;
+import static android.system.OsConstants.O_WRONLY;
+import static io.github.muntashirakon.io.FileSystemManager.MODE_APPEND;
+import static io.github.muntashirakon.io.FileSystemManager.MODE_CREATE;
+import static io.github.muntashirakon.io.FileSystemManager.MODE_READ_ONLY;
+import static io.github.muntashirakon.io.FileSystemManager.MODE_READ_WRITE;
+import static io.github.muntashirakon.io.FileSystemManager.MODE_TRUNCATE;
+import static io.github.muntashirakon.io.FileSystemManager.MODE_WRITE_ONLY;
+
 import android.annotation.SuppressLint;
 import android.os.Build;
 import android.system.ErrnoException;
@@ -22,20 +36,6 @@ import java.lang.reflect.Method;
 import java.nio.file.OpenOption;
 import java.nio.file.StandardOpenOption;
 import java.util.Set;
-
-import static android.system.OsConstants.ENOSYS;
-import static android.system.OsConstants.O_APPEND;
-import static android.system.OsConstants.O_CREAT;
-import static android.system.OsConstants.O_RDONLY;
-import static android.system.OsConstants.O_RDWR;
-import static android.system.OsConstants.O_TRUNC;
-import static android.system.OsConstants.O_WRONLY;
-import static io.github.muntashirakon.io.FileSystemManager.MODE_APPEND;
-import static io.github.muntashirakon.io.FileSystemManager.MODE_CREATE;
-import static io.github.muntashirakon.io.FileSystemManager.MODE_READ_ONLY;
-import static io.github.muntashirakon.io.FileSystemManager.MODE_READ_WRITE;
-import static io.github.muntashirakon.io.FileSystemManager.MODE_TRUNCATE;
-import static io.github.muntashirakon.io.FileSystemManager.MODE_WRITE_ONLY;
 
 // Copyright 2022 John "topjohnwu" Wu
 @SuppressWarnings({"ConstantConditions", "JavaReflectionMemberAccess"})
@@ -159,6 +159,7 @@ class FileUtils {
     }
 
     @SuppressWarnings("deprecation")
+    @SuppressLint("NewApi")
     static long sendfile(
             FileDescriptor outFd, FileDescriptor inFd,
             MutableLong inOffset, long byteCount) throws ErrnoException {

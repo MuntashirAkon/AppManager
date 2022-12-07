@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.io;
 
+import android.annotation.SuppressLint;
 import android.os.Build;
 import android.system.ErrnoException;
 import android.system.Int64Ref;
@@ -74,6 +75,7 @@ class FileHolder implements Closeable {
             throw new ClosedChannelException();
     }
 
+    @SuppressLint("NewApi")
     int fdToPipe(int len, long offset) throws ErrnoException, IOException {
         if (fd == null || write == null)
             throw new ClosedChannelException();
@@ -107,6 +109,7 @@ class FileHolder implements Closeable {
         return (int) result;
     }
 
+    @SuppressLint("NewApi")
     int pipeToFd(int len, long offset, boolean exact) throws ErrnoException, IOException {
         if (fd == null || read == null)
             throw new ClosedChannelException();

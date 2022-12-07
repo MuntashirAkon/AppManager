@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.io;
 
+import android.annotation.SuppressLint;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
@@ -42,6 +43,7 @@ public final class NIOFactory {
                 return new LocalFile(parent, child);
             }
 
+            @SuppressLint("NewApi")
             @NonNull
             @Override
             public FileChannel openChannel(@NonNull File file, int mode) throws IOException {
