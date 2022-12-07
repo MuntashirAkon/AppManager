@@ -38,4 +38,10 @@
     <string name="path_permissions">Sökvägsbehörigheter</string>
     <string name="no_feature">Inga funktioner</string>
     <string name="no_configurations">Inga konfigurationer</string>
+    <string name="loading">Laddar…</string>
+    <string name="user">Användare</string>
+    <string name="sort">Sortera</string>
+    <string name="system_app">Systemapp</string>
+    <string name="user_app">Användarapp</string>
+    <string name="license">Licens</string>
 </resources>
