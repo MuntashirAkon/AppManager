@@ -3,5 +3,7 @@
 apply from: "$gradle.ext.appManagerRoot/common.gradle"
 
 dependencies {
+    compileOnly project(path: ':hiddenapi')
+
     api "androidx.documentfile:documentfile:1.0.1"
 }

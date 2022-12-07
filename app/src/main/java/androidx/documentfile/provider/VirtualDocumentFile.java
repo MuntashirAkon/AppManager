@@ -19,6 +19,7 @@ import java.nio.channels.FileChannel;
 import java.util.Objects;
 
 import io.github.muntashirakon.io.Paths;
+import io.github.muntashirakon.io.UidGidPair;
 import io.github.muntashirakon.io.fs.VirtualFileSystem;
 
 // Mother of all virtual documents
@@ -132,6 +133,25 @@ public class VirtualDocumentFile extends DocumentFile {
         return fs.checkAccess(fullPath, OsConstants.W_OK);
     }
 
+    public int getMode() {
+        return fs.getMode(fullPath);
+    }
+
+    public boolean setMode(int mode) {
+        fs.setMode(fullPath, mode);
+        return true;
+    }
+
+    @Nullable
+    public UidGidPair getUidGid() {
+        return fs.getUidGid(fullPath);
+    }
+
+    public boolean setUidGid(@NonNull UidGidPair uidGidPair) {
+        fs.setUidGid(fullPath, uidGidPair.uid, uidGidPair.gid);
+        return true;
+    }
+
     @Override
     public boolean delete() {
         return fs.delete(fullPath);
@@ -164,6 +184,18 @@ public class VirtualDocumentFile extends DocumentFile {
     @Override
     public long lastModified() {
         return fs.lastModified(fullPath);
+    }
+
+    public boolean setLastModified(long millis) {
+        return fs.setLastModified(fullPath, millis);
+    }
+
+    public long lastAccess() {
+        return fs.lastAccess(fullPath);
+    }
+
+    public long creationTime() {
+        return fs.creationTime(fullPath);
     }
 
     @Override

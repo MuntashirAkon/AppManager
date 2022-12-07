@@ -936,6 +936,7 @@ public abstract class VirtualFileSystem {
     }
 
     public void setMode(String path, int mode) {
+        // TODO: 7/12/22 This should either throw ErrnoException or a boolean value
         checkMounted();
     }
 
@@ -946,6 +947,7 @@ public abstract class VirtualFileSystem {
     }
 
     public void setUidGid(String path, int uid, int gid) {
+        // TODO: 7/12/22 This should either throw ErrnoException or a boolean value
         checkMounted();
     }
 

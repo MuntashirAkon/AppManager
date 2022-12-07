@@ -36,6 +36,7 @@ import java.net.URI;
  * all files returned in the array will also be using the same remote file system backend.
  */
 // Copyright 2022 John "topjohnwu" Wu
+// Copyright 2022 Muntashir Al-Islam
 public abstract class ExtendedFile extends File {
 
     /**
@@ -91,6 +92,11 @@ public abstract class ExtendedFile extends File {
      * @see Os#chown(String, int, int)
      */
     public abstract boolean setUidGid(int uid, int gid) throws ErrnoException;
+
+    @Nullable
+    public abstract String getSelinuxContext();
+    public abstract boolean restoreSelinuxContext();
+    public abstract boolean setSelinuxContext(@NonNull String context);
 
     /**
      * @return true if the abstract pathname denotes a block device.

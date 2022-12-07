@@ -8,6 +8,7 @@ import android.system.ErrnoException;
 import android.system.OsConstants;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,6 +16,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 // Copyright 2022 John "topjohnwu" Wu
+// Copyright 2022 Muntashir Al-Islam
 class RemoteFile extends FileImpl<RemoteFile> {
 
     private final IFileSystemService fs;
@@ -136,6 +138,34 @@ class RemoteFile extends FileImpl<RemoteFile> {
         try {
             FileUtils.checkErrnoException(fs.setUidGid(getPath(), uid, gid));
             return true;
+        } catch (RemoteException e) {
+            return false;
+        }
+    }
+
+    @Nullable
+    @Override
+    public String getSelinuxContext() {
+        try {
+            return fs.getSelinuxContext(getPath());
+        } catch (RemoteException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public boolean restoreSelinuxContext() {
+        try {
+            return fs.restoreSelinuxContext(getPath());
+        } catch (RemoteException e) {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean setSelinuxContext(@NonNull String context) {
+        try {
+            return fs.setSelinuxContext(getPath(), context);
         } catch (RemoteException e) {
             return false;
         }

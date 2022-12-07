@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.io;
 
+import android.os.SELinux;
 import android.system.ErrnoException;
 import android.system.Os;
 import android.system.OsConstants;
@@ -15,6 +16,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 // Copyright 2022 John "topjohnwu" Wu
+// Copyright 2022 Muntashir Al-Islam
 class LocalFile extends FileImpl<LocalFile> {
 
     LocalFile(@NonNull String pathname) {
@@ -62,6 +64,21 @@ class LocalFile extends FileImpl<LocalFile> {
     public boolean setUidGid(int uid, int gid) throws ErrnoException {
         Os.chown(getPath(), uid, gid);
         return true;
+    }
+
+    @Override
+    public String getSelinuxContext() {
+        return SELinux.getFileContext(getPath());
+    }
+
+    @Override
+    public boolean restoreSelinuxContext() {
+        return SELinux.restorecon(getPath());
+    }
+
+    @Override
+    public boolean setSelinuxContext(String context) {
+        return SELinux.setFileContext(getPath(), context);
     }
 
     @Override

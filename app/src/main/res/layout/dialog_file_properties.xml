@@ -64,7 +64,8 @@
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.AppTheme.TextInputLayout.Small"            android:layout_width="match_parent"
+            style="@style/Widget.AppTheme.TextInputLayout.Small"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/padding_small"
             android:hint="@string/file"
@@ -81,7 +82,8 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.AppTheme.TextInputLayout.Small"            android:layout_width="match_parent"
+            style="@style/Widget.AppTheme.TextInputLayout.Small"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/padding_small"
             android:hint="@string/type"
@@ -98,7 +100,8 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.AppTheme.TextInputLayout.Small"            android:layout_width="match_parent"
+            style="@style/Widget.AppTheme.TextInputLayout.Small"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/padding_small"
             android:hint="@string/file_shortcut_target_file"
@@ -142,81 +145,104 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.AppTheme.TextInputLayout.Small"
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/padding_small"
-            android:hint="@string/size"
-            app:hintEnabled="true">
+            android:orientation="horizontal">
 
-            <io.github.muntashirakon.widget.TextInputTextView
-                android:id="@+id/size"
-                android:layout_width="match_parent"
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.AppTheme.TextInputLayout.Small"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:inputType="none"
-                android:textIsSelectable="true"
-                android:maxLines="2"
-                tools:text="14.1 MB (13,831,425 bytes)" />
+                android:layout_weight="1"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="@dimen/padding_small"
+                android:hint="@string/size"
+                app:hintEnabled="true">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <io.github.muntashirakon.widget.TextInputTextView
+                    android:id="@+id/size"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:textIsSelectable="true"
+                    android:maxLines="2"
+                    android:text="@string/calculating_file_size"
+                    tools:text="14.1 MB (13,831,425 bytes)" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.AppTheme.TextInputLayout.Small"
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.AppTheme.TextInputLayout.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:layout_marginStart="4dp"
+                android:layout_marginBottom="@dimen/padding_small"
+                android:hint="@string/file_creation_date"
+                app:hintEnabled="true">
+
+                <io.github.muntashirakon.widget.TextInputTextView
+                    android:id="@+id/date_created"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:textIsSelectable="true"
+                    android:maxLines="2"
+                    tools:text="4/11/22 15:24" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/padding_small"
-            android:hint="@string/file_creation_date"
-            app:hintEnabled="true">
+            android:orientation="horizontal">
 
-            <io.github.muntashirakon.widget.TextInputTextView
-                android:id="@+id/date_created"
-                android:layout_width="match_parent"
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.AppTheme.TextInputLayout.Small"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:inputType="none"
-                android:textIsSelectable="true"
-                android:maxLines="2"
-                tools:text="4/11/22 15:24" />
+                android:layout_weight="1"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="@dimen/padding_small"
+                android:hint="@string/file_modification_date"
+                app:hintEnabled="true">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <io.github.muntashirakon.widget.TextInputTextView
+                    android:id="@+id/date_modified"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:textIsSelectable="true"
+                    android:maxLines="2"
+                    tools:text="4/11/22 15:28" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.AppTheme.TextInputLayout.Small"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/padding_small"
-            android:hint="@string/file_modification_date"
-            app:hintEnabled="true">
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <io.github.muntashirakon.widget.TextInputTextView
-                android:id="@+id/date_modified"
-                android:layout_width="match_parent"
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.AppTheme.TextInputLayout.Small"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:inputType="none"
-                android:textIsSelectable="true"
-                android:maxLines="2"
-                tools:text="4/11/22 15:28" />
+                android:layout_weight="1"
+                android:layout_marginStart="4dp"
+                android:layout_marginBottom="@dimen/padding_small"
+                android:hint="@string/file_accessed_date"
+                app:hintEnabled="true">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <io.github.muntashirakon.widget.TextInputTextView
+                    android:id="@+id/date_accessed"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:textIsSelectable="true"
+                    android:maxLines="2"
+                    tools:text="16/11/22 12:53" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.AppTheme.TextInputLayout.Small"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/padding_small"
-            android:hint="@string/file_accessed_date"
-            app:hintEnabled="true">
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <io.github.muntashirakon.widget.TextInputTextView
-                android:id="@+id/date_accessed"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="none"
-                android:textIsSelectable="true"
-                android:maxLines="2"
-                tools:text="16/11/22 12:53" />
-
-        </com.google.android.material.textfield.TextInputLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.AppTheme.TextInputLayout.Small"
@@ -236,6 +262,104 @@
                 tools:text="@tools:sample/lorem/random" />
 
         </com.google.android.material.textfield.TextInputLayout>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.AppTheme.TextInputLayout.Small"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="@dimen/padding_small"
+                android:hint="@string/file_owner_id"
+                app:hintEnabled="true">
+
+                <io.github.muntashirakon.widget.TextInputTextView
+                    android:id="@+id/owner_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:textIsSelectable="true"
+                    android:maxLines="2"
+                    tools:text="root (0)" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.AppTheme.TextInputLayout.Small"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="4dp"
+                android:layout_marginBottom="@dimen/padding_small"
+                android:hint="@string/file_group_id"
+                app:hintEnabled="true">
+
+                <io.github.muntashirakon.widget.TextInputTextView
+                    android:id="@+id/group_id"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:textIsSelectable="true"
+                    android:maxLines="2"
+                    tools:text="everybody (9997)" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.AppTheme.TextInputLayout.Small"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="4dp"
+                android:layout_marginBottom="@dimen/padding_small"
+                android:hint="@string/unix_file_permissions"
+                app:hintEnabled="true">
+
+                <io.github.muntashirakon.widget.TextInputTextView
+                    android:id="@+id/file_mode"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:textIsSelectable="true"
+                    android:maxLines="2"
+                    tools:text="rw-rw---- (660)" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.AppTheme.TextInputLayout.Small"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="4dp"
+                android:layout_marginBottom="@dimen/padding_small"
+                android:hint="@string/selinux_context"
+                app:hintEnabled="true">
+
+                <io.github.muntashirakon.widget.TextInputTextView
+                    android:id="@+id/selinux_context"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="none"
+                    android:textIsSelectable="true"
+                    android:maxLines="2"
+                    tools:text="u:object_r:fuse:s0" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 

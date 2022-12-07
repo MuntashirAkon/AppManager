@@ -729,6 +729,82 @@ public class Path implements Comparable<Path> {
         return false;
     }
 
+    public int getMode() {
+        if (mDocumentFile instanceof ExtendedRawDocumentFile) {
+            try {
+                return Objects.requireNonNull(getFile()).getMode();
+            } catch (ErrnoException e) {
+                return 0;
+            }
+        }
+        if (mDocumentFile instanceof VirtualDocumentFile) {
+            return ((VirtualDocumentFile) mDocumentFile).getMode();
+        }
+        return 0;
+    }
+
+    public boolean setMode(int mode) {
+        if (mDocumentFile instanceof ExtendedRawDocumentFile) {
+            try {
+                Objects.requireNonNull(getFile()).setMode(mode);
+                return true;
+            } catch (ErrnoException e) {
+                return false;
+            }
+        }
+        if (mDocumentFile instanceof VirtualDocumentFile) {
+            return ((VirtualDocumentFile) mDocumentFile).setMode(mode);
+        }
+        return false;
+    }
+
+    @Nullable
+    public UidGidPair getUidGid() {
+        if (mDocumentFile instanceof ExtendedRawDocumentFile) {
+            try {
+                return Objects.requireNonNull(getFile()).getUidGid();
+            } catch (ErrnoException e) {
+                return null;
+            }
+        }
+        if (mDocumentFile instanceof VirtualDocumentFile) {
+            return ((VirtualDocumentFile) mDocumentFile).getUidGid();
+        }
+        return null;
+    }
+
+    public boolean setUidGid(UidGidPair uidGidPair) {
+        if (mDocumentFile instanceof ExtendedRawDocumentFile) {
+            try {
+                return Objects.requireNonNull(getFile()).setUidGid(uidGidPair.uid, uidGidPair.gid);
+            } catch (ErrnoException e) {
+                return false;
+            }
+        }
+        if (mDocumentFile instanceof VirtualDocumentFile) {
+            return ((VirtualDocumentFile) mDocumentFile).setUidGid(uidGidPair);
+        }
+        return false;
+    }
+
+    @Nullable
+    public String getSelinuxContext() {
+        if (mDocumentFile instanceof ExtendedRawDocumentFile) {
+            return Objects.requireNonNull(getFile()).getSelinuxContext();
+        }
+        return null;
+    }
+
+    public boolean setSelinuxContext(@Nullable String context) {
+        if (mDocumentFile instanceof ExtendedRawDocumentFile) {
+            if (context == null) {
+                return Objects.requireNonNull(getFile()).restoreSelinuxContext();
+            }
+            return Objects.requireNonNull(getFile()).setSelinuxContext(context);
+        }
+        return false;
+    }
+
     /**
      * Whether the file is a mount point, thereby, is being overridden by another file system.
      *
@@ -1138,13 +1214,45 @@ public class Path implements Comparable<Path> {
     }
 
     public long lastModified() {
-        return getRealDocumentFile(mDocumentFile).lastModified();
+        return mDocumentFile.lastModified();
     }
 
-    public void setLastModified(long time) {
-        if (getRealDocumentFile(mDocumentFile) instanceof ExtendedRawDocumentFile) {
-            Objects.requireNonNull(getFile()).setLastModified(time);
+    public boolean setLastModified(long time) {
+        if (mDocumentFile instanceof ExtendedRawDocumentFile) {
+            return Objects.requireNonNull(getFile()).setLastModified(time);
         }
+        if (mDocumentFile instanceof VirtualDocumentFile) {
+            return ((VirtualDocumentFile) mDocumentFile).setLastModified(time);
+        }
+        return false;
+    }
+
+    public long lastAccess() {
+        if (mDocumentFile instanceof ExtendedRawDocumentFile) {
+            try {
+                return Objects.requireNonNull(getFile()).lastAccess();
+            } catch (ErrnoException e) {
+                return 0;
+            }
+        }
+        if (mDocumentFile instanceof VirtualDocumentFile) {
+            return ((VirtualDocumentFile) mDocumentFile).lastAccess();
+        }
+        return 0;
+    }
+
+    public long creationTime() {
+        if (mDocumentFile instanceof ExtendedRawDocumentFile) {
+            try {
+                return Objects.requireNonNull(getFile()).creationTime();
+            } catch (ErrnoException e) {
+                return 0;
+            }
+        }
+        if (mDocumentFile instanceof VirtualDocumentFile) {
+            return ((VirtualDocumentFile) mDocumentFile).creationTime();
+        }
+        return 0;
     }
 
     @NonNull

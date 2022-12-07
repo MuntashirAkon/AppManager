@@ -5,7 +5,6 @@ package io.github.muntashirakon.AppManager.fm;
 import android.app.Application;
 import android.net.Uri;
 import android.os.Bundle;
-import android.system.ErrnoException;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,10 +30,10 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.dialog.CapsuleBottomSheetDialogFragment;
-import io.github.muntashirakon.io.ExtendedFile;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.PathContentInfo;
 import io.github.muntashirakon.io.Paths;
+import io.github.muntashirakon.io.UidGidPair;
 
 public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragment {
     public static final String TAG = FilePropertiesDialogFragment.class.getSimpleName();
@@ -76,6 +75,10 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
         TextView dateAccessedView = bodyView.findViewById(R.id.date_accessed);
         TextView moreInfoView = bodyView.findViewById(R.id.more_info);
         ((View) moreInfoView.getParent()).setVisibility(View.GONE);
+        TextView modeView = bodyView.findViewById(R.id.file_mode);
+        TextView ownerView = bodyView.findViewById(R.id.owner_id);
+        TextView groupView = bodyView.findViewById(R.id.group_id);
+        TextView selinuxContextView = bodyView.findViewById(R.id.selinux_context);
 
         // Set values
         iconView.setImageResource(path.isDirectory() ? R.drawable.ic_folder : R.drawable.ic_file_document);
@@ -97,19 +100,21 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
         // TODO: 16/11/22 Handle open with
         openWithLayoutView.setVisibility(View.GONE);
         dateModifiedView.setText(modificationDate);
-        ExtendedFile file = path.getFile();
         dateCreatedView.setText("--");
         dateAccessedView.setText("--");
-        if (file != null) {
-            try {
-                dateCreatedView.setText(DateUtils.formatDateTime(file.creationTime()));
-            } catch (ErrnoException ignore) {
-            }
-            try {
-                dateAccessedView.setText(DateUtils.formatDateTime(file.lastAccess()));
-            } catch (ErrnoException ignore) {
-            }
-        }
+        long creationTime = path.creationTime();
+        long lastAccessTime = path.lastAccess();
+        dateCreatedView.setText(creationTime > 0 ? DateUtils.formatDateTime(creationTime) : "--");
+        dateAccessedView.setText(lastAccessTime > 0 ? DateUtils.formatDateTime(lastAccessTime) : "--");
+        int mode = path.getMode();
+        modeView.setText(mode != 0 ? getFormattedMode(mode) : "--");
+        UidGidPair uidGidPair = path.getUidGid();
+        // TODO: 7/12/22 Display owner and group name using syscall (setpwent, getpwent, endpwent)
+        ownerView.setText(uidGidPair != null ? String.valueOf(uidGidPair.uid) : "--");
+        groupView.setText(uidGidPair != null ? String.valueOf(uidGidPair.gid) : "--");
+        String context = path.getSelinuxContext();
+        selinuxContextView.setText(context != null ? context : "--");
+
         // Live data
         viewModel.getFileSizeLiveData().observe(getViewLifecycleOwner(), size -> {
             summaryView.setText(String.format(Locale.getDefault(), "%s • %s", modificationDate,
@@ -134,6 +139,21 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
         // Load live data
         viewModel.loadFileSize(path);
         viewModel.loadFileContentInfo(path);
+    }
+
+    @SuppressWarnings("OctalInteger")
+    @NonNull
+    private String getFormattedMode(int mode) {
+        String s = ((mode & 0400) != 0 ? "r" : "-") +
+                ((mode & 0200) != 0 ? "w" : "-") +
+                ((mode & 0100) != 0 ? "x" : "-") +
+                ((mode & 040) != 0 ? "r" : "-") +
+                ((mode & 020) != 0 ? "w" : "-") +
+                ((mode & 010) != 0 ? "x" : "-") +
+                ((mode & 04) != 0 ? "r" : "-") +
+                ((mode & 02) != 0 ? "w" : "-") +
+                ((mode & 01) != 0 ? "x" : "-");
+        return String.format(Locale.ROOT, "%s (%o)", s, mode & 0777);
     }
 
     public static class FilePropertiesViewModel extends AndroidViewModel {

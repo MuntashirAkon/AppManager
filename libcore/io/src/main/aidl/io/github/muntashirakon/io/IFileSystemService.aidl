@@ -5,6 +5,7 @@ package io.github.muntashirakon.io;
 import io.github.muntashirakon.io.ParcelValues;
 
 // Copyright 2022 John "topjohnwu" Wu
+// Copyright 2022 Muntashir Al-Islam
 interface IFileSystemService {
     // File APIs
     /* (err, String) */ ParcelValues getCanonicalPath(String path);
@@ -34,6 +35,9 @@ interface IFileSystemService {
     /* (err) */ ParcelValues setMode(String path, int mode);
     /* (err, int, int) */ ParcelValues getUidGid(String path);
     /* (err) */ ParcelValues setUidGid(String path, int uid, int gid);
+    String getSelinuxContext(String path);
+    boolean restoreSelinuxContext(String path);
+    boolean setSelinuxContext(String path, String context);
     /* (err, bool) */ ParcelValues createLink(String link, String target, boolean soft);
 
     // I/O APIs

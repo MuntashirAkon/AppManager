@@ -2,11 +2,22 @@
 
 package io.github.muntashirakon.io;
 
+import static android.system.OsConstants.O_APPEND;
+import static android.system.OsConstants.O_CREAT;
+import static android.system.OsConstants.O_NONBLOCK;
+import static android.system.OsConstants.O_RDONLY;
+import static android.system.OsConstants.O_TRUNC;
+import static android.system.OsConstants.O_WRONLY;
+import static android.system.OsConstants.SEEK_CUR;
+import static android.system.OsConstants.SEEK_END;
+import static android.system.OsConstants.SEEK_SET;
+
 import android.annotation.SuppressLint;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.ParcelFileDescriptor;
 import android.os.RemoteException;
+import android.os.SELinux;
 import android.system.ErrnoException;
 import android.system.Os;
 import android.system.OsConstants;
@@ -18,17 +29,8 @@ import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static android.system.OsConstants.O_APPEND;
-import static android.system.OsConstants.O_CREAT;
-import static android.system.OsConstants.O_NONBLOCK;
-import static android.system.OsConstants.O_RDONLY;
-import static android.system.OsConstants.O_TRUNC;
-import static android.system.OsConstants.O_WRONLY;
-import static android.system.OsConstants.SEEK_CUR;
-import static android.system.OsConstants.SEEK_END;
-import static android.system.OsConstants.SEEK_SET;
-
 // Copyright 2022 John "topjohnwu" Wu
+// Copyright 2022 Muntashir Al-Islam
 class FileSystemService extends IFileSystemService.Stub {
 
     static final int PIPE_CAPACITY = 16 * 4096;
@@ -243,6 +245,21 @@ class FileSystemService extends IFileSystemService.Stub {
     }
 
     @Override
+    public String getSelinuxContext(String path) {
+        return SELinux.getFileContext(path);
+    }
+
+    @Override
+    public boolean restoreSelinuxContext(String path) {
+        return SELinux.restorecon(path);
+    }
+
+    @Override
+    public boolean setSelinuxContext(String path, String context) {
+        return SELinux.setFileContext(path, context);
+    }
+
+    @Override
     public ParcelValues createLink(String link, String target, boolean soft) {
         ParcelValues p = new ParcelValues();
         try {
@@ -273,7 +290,8 @@ class FileSystemService extends IFileSystemService.Stub {
         int pid = Binder.getCallingPid();
         try {
             client.linkToDeath(() -> openFiles.pidDied(pid), 0);
-        } catch (RemoteException ignored) {}
+        } catch (RemoteException ignored) {
+        }
     }
 
     @SuppressWarnings("OctalInteger")
@@ -304,7 +322,7 @@ class FileSystemService extends IFileSystemService.Stub {
             ioPool.execute(() -> {
                 try {
                     h.write = FileUtils.createFileDescriptor(fd.detachFd());
-                    while (h.fdToPipe(PIPE_CAPACITY, -1) > 0);
+                    while (h.fdToPipe(PIPE_CAPACITY, -1) > 0) ;
                 } catch (ErrnoException | IOException ignored) {
                 } finally {
                     h.close();
@@ -329,7 +347,7 @@ class FileSystemService extends IFileSystemService.Stub {
             ioPool.execute(() -> {
                 try {
                     h.read = FileUtils.createFileDescriptor(fd.detachFd());
-                    while (h.pipeToFd(PIPE_CAPACITY, -1, false) > 0);
+                    while (h.pipeToFd(PIPE_CAPACITY, -1, false) > 0) ;
                 } catch (ErrnoException | IOException ignored) {
                 } finally {
                     h.close();

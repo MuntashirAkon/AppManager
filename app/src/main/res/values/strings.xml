@@ -1289,4 +1289,9 @@
     <string name="app_manager_build_expiring_soon_warning">This version of App Manager will expire very soon. Please update it to the latest version.</string>
     <string name="app_can_write_and_execute_in_same_place">The app violates <a href="https://en.wikipedia.org/wiki/W%5EX">W^X policy</a> and is capable of writing and executing in the same directory or in the same portion of memory. This allows the execution of arbitrary executables either by the modification of executables embedded within the app or by downloading them from the Internet. Unless this is the intended behaviour of the app (e.g. terminal emulators), it is recommended to find a newer version of the app that targets SDK 29 (Android 10) and later, or find alternatives.</string>
     <string name="renamed_successfully">Renamed</string>
+    <string name="selinux_context">SELinux context</string>
+    <string name="unix_file_permissions">Mode</string>
+    <string name="file_group_id">Group (GID)</string>
+    <string name="file_owner_id">Owner (UID)</string>
+    <string name="calculating_file_size">Calculating…</string>
 </resources>
