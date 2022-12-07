@@ -437,4 +437,42 @@
     <string name="duration">실행 시간</string>
     <string name="battery_mode">배터리 모드</string>
     <string name="block_components_dots">구성 요소 차단…</string>
+    <string name="installer_error_generic">설치 실패</string>
+    <string name="failed_to_fetch_package_info">패키지 정보를 가져올 수 없습니다</string>
+    <string name="installer_error_session_create">설치 관리자 세션을 생성할 수 없습니다</string>
+    <string name="backup_obb_media">OBB랑 미디어</string>
+    <string name="unknown_split_for_base_apk"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> 기본 APK를 위해</string>
+    <string name="installer_error_session_write">설치 관리자 세션에 쓸 수 없습니다</string>
+    <string name="base_apk">기본 APK</string>
+    <string name="unknown_split_for_feature"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> 다음 기능을 위해 <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="density_split_for_feature"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) 다음 기능을 위한 자원 <xliff:g id="feature_name" example="Visualizer">%3$s</xliff:g></string>
+    <string name="operation_running">작업 실행 중…</string>
+    <string name="abi_split_for_base_apk"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> 기본 APK를 위한 코드</string>
+    <string name="pref_app_language">언어</string>
+    <string name="installer_error_storage">앱을 설치할 공간이 부족합니다</string>
+    <string name="installer_error_lidl_rom">ROM이 Rootless Installer와 호환되지 않습니다.</string>
+    <string name="reinstall">재설치</string>
+    <string name="installer_error_session_commit">APK 파일을 커밋할 수 없습니다</string>
+    <string name="failed_to_extract_obb_files">OBB 파일 추출 실패</string>
+    <string name="batch_ops">일괄 작업</string>
+    <string name="installer_error_security">APK 파일에 접근할 수 없습니다</string>
+    <string name="obb_files_extracted_successfully">OBB 파일 추출 성공</string>
+    <string name="backup_all_users">모든 사용자</string>
+    <string name="density_split_for_base_apk"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) 기본 APK를 위한 자원</string>
+    <string name="abi_split_for_feature"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> 다음 기능을 위한 코드 <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="locale_split_for_feature"><xliff:g id="split_name" example="English">%1$s</xliff:g> 다음 기능을 위한 로캘 <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="backup_multiple">여러 개 백업</string>
+    <string name="full_stop_tap_to_see_details">. 세부 정보 표시.</string>
+    <string name="try_again">재시도</string>
+    <string name="install_app_message">앱을 설치하시겠습니까\?</string>
+    <string name="package_installer">패키지 설치 관리자</string>
+    <string name="install_in_progress">설치 중…</string>
+    <string name="backup_apk_files">APK 파일</string>
+    <string name="locale_split_for_base_apk"><xliff:g id="split_name" example="English">%1$s</xliff:g> 기본 APK를 위한 로캘</string>
+    <string name="installer_error_session_abandon">설치 관리자 세션을 종료할 수 없습니다</string>
+    <string name="choose_language">언어 변경</string>
+    <string name="unblock_trackers">트래커 차단 해제</string>
+    <string name="launch_mode_multiple">여러개</string>
+    <string name="auto">자동</string>
+    <string name="split_feature_name">기능: <xliff:g id="feature_name" example="Visualizer">%1$s</xliff:g></string>
 </resources>
