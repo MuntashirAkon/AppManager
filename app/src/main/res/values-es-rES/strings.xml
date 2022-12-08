@@ -1256,4 +1256,7 @@
         <item quantity="other">No se pudieron descongelar %1$d aplicaciones</item>
     </plurals>
     <string name="pref_privacy_description">Bloqueo de pantalla, autorización, etc.</string>
+    <string name="file_creation_date">Creado</string>
+    <string name="file_modification_date">Modificado</string>
+    <string name="file_open_with">Abrir con</string>
 </resources>
