@@ -5,7 +5,7 @@
     <item
         android:id="@+id/action_instructions"
         android:icon="@drawable/ic_information"
-        android:title="@string/instructions"
+        android:title="@string/user_manual"
         app:showAsAction="never" />
 
     <item
