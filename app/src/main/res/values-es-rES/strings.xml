@@ -1259,4 +1259,19 @@
     <string name="file_creation_date">Creado</string>
     <string name="file_modification_date">Modificado</string>
     <string name="file_open_with">Abrir con</string>
+    <string name="file_accessed_date">Accesado</string>
+    <string name="file_change_open_with">Cambie abrir con</string>
+    <string name="file_shortcut_target_file">Documento objectivo</string>
+    <string name="file_properties">Propiedades</string>
+    <string name="file_cut">Cortar</string>
+    <string name="fm_always_open_with">Siempre abierto</string>
+    <string name="fm_open_with_for_this_file_only">Solo abierto para este documento</string>
+    <string name="file_open_as">Abrir como…</string>
+    <string name="open_as_text">Texto</string>
+    <string name="open_as_image">Imagen</string>
+    <string name="open_as_video">Video</string>
+    <string name="open_as_archive">Archivo</string>
+    <string name="open_as_folder">Carpeta</string>
+    <string name="open_as_other">Otro</string>
+    <string name="action_stop_service">Parar</string>
 </resources>
