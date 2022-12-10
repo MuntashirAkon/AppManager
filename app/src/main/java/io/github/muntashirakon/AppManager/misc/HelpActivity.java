@@ -49,7 +49,7 @@ public class HelpActivity extends BaseActivity {
         }
         setSupportActionBar(findViewById(R.id.toolbar));
         ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) actionBar.setTitle(R.string.instructions);
+        if (actionBar != null) actionBar.setTitle(R.string.user_manual);
         findViewById(R.id.progress_linear).setVisibility(View.GONE);
         // Check if docs are available
         if (!getPackageManager().hasSystemFeature(PackageManager.FEATURE_WEBVIEW)

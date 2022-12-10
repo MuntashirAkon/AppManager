@@ -79,7 +79,6 @@
     <string name="user_id">User ID</string>
     <string name="main_activity">Main Activity</string>
     <string name="empty_package_name">Empty package name</string>
-    <string name="instructions">Instructions</string>
     <string name="error_creating_shortcut">Error creating shortcut</string>
     <string name="error_verbose_pin_shortcut">Current launcher does not support PinShortcut. Unable to create shortcut.</string>
     <string name="starting_activity">Starting activity: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
