@@ -25,7 +25,8 @@ set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} ${LINKER_FLAGS}")
 find_library(log-lib log)
 
 add_library(am SHARED
-        io_github_muntashirakon_AppManager_utils_CpuUtils.cpp)
+        io_github_muntashirakon_AppManager_utils_CpuUtils.cpp
+        io_github_muntashirakon_AppManager_compat_OsCompat.cpp)
 
 target_link_libraries(am ${log-lib})
 

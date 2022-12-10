@@ -27,6 +27,7 @@ import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.users.Owners;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.dialog.CapsuleBottomSheetDialogFragment;
@@ -110,8 +111,10 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
         modeView.setText(mode != 0 ? getFormattedMode(mode) : "--");
         UidGidPair uidGidPair = path.getUidGid();
         // TODO: 7/12/22 Display owner and group name using syscall (setpwent, getpwent, endpwent)
-        ownerView.setText(uidGidPair != null ? String.valueOf(uidGidPair.uid) : "--");
-        groupView.setText(uidGidPair != null ? String.valueOf(uidGidPair.gid) : "--");
+        if (uidGidPair == null) {
+            ownerView.setText("--");
+            groupView.setText("--");
+        }
         String context = path.getSelinuxContext();
         selinuxContextView.setText(context != null ? context : "--");
 
@@ -136,9 +139,22 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
                 moreInfoView.setText(message);
             }
         });
+        viewModel.getOwnerLiveData().observe(getViewLifecycleOwner(), ownerName -> {
+            assert uidGidPair != null;
+            ownerView.setText(String.format(Locale.ROOT, "%s (%d)", ownerName, uidGidPair.uid));
+        });
+        viewModel.getGroupLiveData().observe(getViewLifecycleOwner(), groupName -> {
+            assert uidGidPair != null;
+            groupView.setText(String.format(Locale.ROOT, "%s (%d)", groupName, uidGidPair.gid));
+        });
+
         // Load live data
         viewModel.loadFileSize(path);
         viewModel.loadFileContentInfo(path);
+        if (uidGidPair != null) {
+            viewModel.loadOwnerInfo(uidGidPair.uid);
+            viewModel.loadGroupInfo(uidGidPair.gid);
+        }
     }
 
     @SuppressWarnings("OctalInteger")
@@ -159,6 +175,8 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
     public static class FilePropertiesViewModel extends AndroidViewModel {
         private final MutableLiveData<Long> mFileSizeLiveData = new MutableLiveData<>();
         private final MutableLiveData<PathContentInfo> mFileContentInfoLiveData = new MutableLiveData<>();
+        private final MutableLiveData<String> mOwnerLiveData = new MutableLiveData<>();
+        private final MutableLiveData<String> mGroupLiveData = new MutableLiveData<>();
         private final ExecutorService mExecutor = MultithreadedExecutor.getNewInstance();
 
         public FilePropertiesViewModel(@NonNull Application application) {
@@ -182,12 +200,33 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
             mExecutor.submit(() -> mFileContentInfoLiveData.postValue(path.getPathContentInfo()));
         }
 
+        public void loadOwnerInfo(int uid) {
+            mExecutor.submit(() -> {
+                String ownerName = Owners.getOwnerName(uid);
+                mOwnerLiveData.postValue(ownerName);
+            });
+        }
+
+        public void loadGroupInfo(int gid) {
+            mExecutor.submit(() -> {
+                mGroupLiveData.postValue(null);
+            });
+        }
+
         public LiveData<Long> getFileSizeLiveData() {
             return mFileSizeLiveData;
         }
 
         public LiveData<PathContentInfo> getFileContentInfoLiveData() {
             return mFileContentInfoLiveData;
+        }
+
+        public LiveData<String> getOwnerLiveData() {
+            return mOwnerLiveData;
+        }
+
+        public LiveData<String> getGroupLiveData() {
+            return mGroupLiveData;
         }
     }
 }

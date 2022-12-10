@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.ipc.ps.ProcessEntry;
+import io.github.muntashirakon.AppManager.users.Owners;
 
 public class ProcessItem implements Parcelable {
     public final int pid;
@@ -33,7 +34,7 @@ public class ProcessItem implements Parcelable {
         rss = processEntry.residentSetSize;
         uid = processEntry.users.fsUid;
         context = processEntry.seLinuxPolicy;
-        user = ProcessParser.getNameForUid(processEntry.users.fsUid);
+        user = Owners.getOwnerName(processEntry.users.fsUid);
     }
 
     /**
