@@ -247,8 +247,6 @@ public class BatchOpsService extends ForegroundService {
     public void onDestroy() {
         unregisterReceiver(broadcastReceiver);
         stopForeground(true);
-        // Hack to remove ongoing notification
-        notificationManager.deleteNotificationChannel(CHANNEL_ID);
         super.onDestroy();
     }
 

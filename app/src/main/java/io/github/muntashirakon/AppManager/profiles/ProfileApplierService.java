@@ -109,8 +109,6 @@ public class ProfileApplierService extends ForegroundService {
     @Override
     public void onDestroy() {
         stopForeground(true);
-        // Hack to remove ongoing notification
-        notificationManager.deleteNotificationChannel(CHANNEL_ID);
         super.onDestroy();
     }
 
