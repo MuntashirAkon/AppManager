@@ -9,6 +9,14 @@ extern "C" {
 #endif
 /*
  * Class:     io_github_muntashirakon_AppManager_compat_OsCompat
+ * Method:    setgrent
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_io_github_muntashirakon_AppManager_compat_OsCompat_setgrent
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     io_github_muntashirakon_AppManager_compat_OsCompat
  * Method:    setpwent
  * Signature: ()V
  */
@@ -17,10 +25,26 @@ JNIEXPORT void JNICALL Java_io_github_muntashirakon_AppManager_compat_OsCompat_s
 
 /*
  * Class:     io_github_muntashirakon_AppManager_compat_OsCompat
+ * Method:    getgrent
+ * Signature: ()Lio/github/muntashirakon/AppManager/compat/StructGroup;
+ */
+JNIEXPORT jobject JNICALL Java_io_github_muntashirakon_AppManager_compat_OsCompat_getgrent
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     io_github_muntashirakon_AppManager_compat_OsCompat
  * Method:    getpwent
  * Signature: ()Landroid/system/StructPasswd;
  */
 JNIEXPORT jobject JNICALL Java_io_github_muntashirakon_AppManager_compat_OsCompat_getpwent
+  (JNIEnv *, jclass);
+
+/*
+ * Class:     io_github_muntashirakon_AppManager_compat_OsCompat
+ * Method:    endgrent
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_io_github_muntashirakon_AppManager_compat_OsCompat_endgrent
   (JNIEnv *, jclass);
 
 /*

@@ -27,6 +27,7 @@ import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.users.Groups;
 import io.github.muntashirakon.AppManager.users.Owners;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
@@ -209,7 +210,8 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
 
         public void loadGroupInfo(int gid) {
             mExecutor.submit(() -> {
-                mGroupLiveData.postValue(null);
+                String groupName = Groups.getGroupName(gid);
+                mGroupLiveData.postValue(groupName);
             });
         }
 

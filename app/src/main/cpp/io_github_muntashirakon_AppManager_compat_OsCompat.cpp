@@ -3,6 +3,7 @@
 #include <jni.h>
 #include <errno.h>
 #include <pwd.h>
+#include <grp.h>
 #include <unistd.h>
 #include <stdlib.h>
 
@@ -35,7 +36,29 @@
 // API < 26 does not have the functions
 #if __ANDROID_API__ < __ANDROID_API_O__
 
+static __thread gid_t getgrentGid = AID_APP_START;
 static __thread uid_t getpwentUid = AID_APP_START;
+
+void setgrent() {
+    getgrentGid = 0;
+}
+
+struct group *getgrent() {
+    while (getgrentGid < AID_APP_START) {
+        struct group *group = getgrgid(getgrentGid);
+        ++getgrentGid;
+        errno = 0;
+        if (group) {
+            return group;
+        }
+    }
+    return NULL;
+}
+
+void endgrent() {
+    setgrent();
+}
+
 
 void setpwent() {
     getpwentUid = 0;
@@ -118,12 +141,70 @@ static void throwErrnoException(JNIEnv* env, const char* functionName) {
     throwException(env, getErrnoExceptionClass(env), constructor3, constructor2, functionName, error);
 }
 
+static jclass getStringClass(JNIEnv *env) {
+    static jclass stringClass = NULL;
+    if (!stringClass) {
+        stringClass = findClass(env, "java/lang/String");
+    }
+    return stringClass;
+}
+
+static jclass getStructGroupClass(JNIEnv *env) {
+    static jclass structGroupClass = NULL;
+    if (!structGroupClass) {
+        structGroupClass = findClass(env, "io/github/muntashirakon/AppManager/compat/StructGroup");
+    }
+    return structGroupClass;
+}
+
 static jclass getStructPasswdClass(JNIEnv *env) {
     static jclass structPasswdClass = NULL;
     if (!structPasswdClass) {
         structPasswdClass = findClass(env, "android/system/StructPasswd");
     }
     return structPasswdClass;
+}
+
+static jobject newStructGroup(JNIEnv *env, const struct group *group) {
+    static jmethodID constructor = NULL;
+    if (!constructor) {
+        constructor = env->GetMethodID(getStructGroupClass(env), "<init>",
+                "(Ljava/lang/String;Ljava/lang/String;I[Ljava/lang/String;)V");
+    }
+    jstring gr_name = env->NewStringUTF(group->gr_name);
+    jstring gr_passwd = env->NewStringUTF(group->gr_passwd);
+    jobjectArray gr_mem;
+    if (group->gr_mem) {
+        jsize gr_memLength = 0;
+        for (char **gr_memIterator = group->gr_mem; *gr_memIterator; ++gr_memIterator) {
+            ++gr_memLength;
+        }
+        gr_mem = env->NewObjectArray(gr_memLength, getStringClass(env), NULL);
+        if (!gr_mem) {
+            return NULL;
+        }
+        jsize gr_memIndex = 0;
+        for (char **gr_memIterator = group->gr_mem; *gr_memIterator; ++gr_memIterator,
+                ++gr_memIndex) {
+            jstring gr_memElement = env->NewStringUTF(*gr_memIterator);
+            if (!gr_memElement) {
+                return NULL;
+            }
+            env->SetObjectArrayElement(gr_mem, gr_memIndex, gr_memElement);
+            env->DeleteLocalRef(gr_memElement);
+        }
+    } else {
+        gr_mem = NULL;
+    }
+    jobject struct_passwd = env->NewObject(getStructGroupClass(env), constructor, gr_name, gr_passwd, group->gr_gid,
+            gr_mem);
+    if (gr_name) {
+        env->DeleteLocalRef(gr_name);
+    }
+    if (gr_passwd) {
+        env->DeleteLocalRef(gr_passwd);
+    }
+    return struct_passwd;
 }
 
 static jobject newStructPasswd(JNIEnv *env, const struct passwd *passwd) {
@@ -146,16 +227,51 @@ static jobject newStructPasswd(JNIEnv *env, const struct passwd *passwd) {
     if (pw_shell) {
         env->DeleteLocalRef(pw_shell);
     }
-//    return NULL;
     return struct_passwd;
 }
 
+/** OsCompat **/
+
+JNIEXPORT void JNICALL Java_io_github_muntashirakon_AppManager_compat_OsCompat_setgrent
+  (JNIEnv *env, jclass clazz) {
+    TEMP_FAILURE_RETRY_V(setgrent());
+    if (errno) {
+        throwErrnoException(env, "setgrent");
+    }
+}
 
 JNIEXPORT void JNICALL Java_io_github_muntashirakon_AppManager_compat_OsCompat_setpwent
   (JNIEnv *env, jclass clazz) {
     TEMP_FAILURE_RETRY_V(setpwent());
     if (errno) {
         throwErrnoException(env, "setpwent");
+    }
+}
+
+JNIEXPORT jobject JNICALL Java_io_github_muntashirakon_AppManager_compat_OsCompat_getgrent
+  (JNIEnv *env, jclass clazz) {
+    while (true) {
+        struct group *group = TEMP_FAILURE_RETRY_N(getgrent());
+        if (errno) {
+            throwErrnoException(env, "getgrent");
+            return NULL;
+        }
+        if (!group) {
+            return NULL;
+        }
+        if (group->gr_name[0] == 'o' && group->gr_name[1] == 'e' && group->gr_name[2] == 'm'
+            && group->gr_name[3] == '_') {
+            continue;
+        }
+        if (group->gr_name[0] == 'u' && (group->gr_name[1] >= '0' && group->gr_name[1] <= '9')) {
+            return NULL;
+        }
+        if (group->gr_name[0] == 'a' && group->gr_name[1] == 'l' && group->gr_name[2] == 'l'
+            && group->gr_name[3] == '_' && group->gr_name[4] == 'a'
+            && (group->gr_name[5] >= '0' && group->gr_name[5] <= '9')) {
+            return NULL;
+        }
+        return newStructGroup(env, group);
     }
 }
 
@@ -178,6 +294,14 @@ JNIEXPORT jobject JNICALL Java_io_github_muntashirakon_AppManager_compat_OsCompa
             return NULL;
         }
         return newStructPasswd(env, passwd);
+    }
+}
+
+JNIEXPORT void JNICALL Java_io_github_muntashirakon_AppManager_compat_OsCompat_endgrent
+  (JNIEnv *env, jclass clazz) {
+    TEMP_FAILURE_RETRY_V(endgrent());
+    if (errno) {
+        throwErrnoException(env, "endgrent");
     }
 }
 

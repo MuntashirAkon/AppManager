@@ -12,9 +12,15 @@ public class OsCompat {
         System.loadLibrary("am");
     }
 
+    public static native void setgrent() throws ErrnoException;
+
     public static native void setpwent() throws ErrnoException;
 
+    public static native StructGroup getgrent() throws ErrnoException;
+
     public static native StructPasswd getpwent() throws ErrnoException;
+
+    public static native void endgrent() throws ErrnoException;
 
     public static native void endpwent() throws ErrnoException;
 }
