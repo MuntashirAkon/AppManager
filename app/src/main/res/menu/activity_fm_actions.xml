@@ -3,9 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_list_options"
+        android:icon="@drawable/ic_list_status"
+        android:title="@string/list_options"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/action_storage"
         android:icon="@drawable/ic_zip_disk"
         android:title="@string/storage"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 
 </menu>

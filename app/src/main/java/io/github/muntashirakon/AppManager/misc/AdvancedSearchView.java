@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.misc;
 
+import static com.google.android.material.theme.overlay.MaterialThemeOverlay.wrap;
+
 import android.annotation.SuppressLint;
 import android.app.SearchableInfo;
 import android.content.Context;
@@ -38,8 +40,6 @@ import java.util.regex.PatternSyntaxException;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.util.UiUtils;
 import io.github.muntashirakon.widget.SearchView;
-
-import static com.google.android.material.theme.overlay.MaterialThemeOverlay.wrap;
 
 public class AdvancedSearchView extends SearchView {
     @IntDef(flag = true, value = {
@@ -330,7 +330,7 @@ public class AdvancedSearchView extends SearchView {
         }
     }
 
-    public static boolean matches(String query, String text, @SearchType int type) {
+    public static boolean matches(@NonNull String query, @NonNull String text, @SearchType int type) {
         switch (type) {
             case SEARCH_TYPE_CONTAINS:
                 return text.contains(query);
@@ -353,7 +353,8 @@ public class AdvancedSearchView extends SearchView {
         List<String> getChoices(T object);
     }
 
-    public static <T> List<T> matches(String query, Collection<T> choices, ChoiceGenerator<T> generator, @SearchType int type) {
+    public static <T> List<T> matches(@NonNull String query, @Nullable Collection<T> choices,
+                                      @NonNull ChoiceGenerator<T> generator, @SearchType int type) {
         if (choices == null) return null;
         if (choices.size() == 0) return Collections.emptyList();
         List<T> results = new ArrayList<>(choices.size());
@@ -383,7 +384,8 @@ public class AdvancedSearchView extends SearchView {
         return results;
     }
 
-    public static <T> List<T> matches(String query, Collection<T> choices, ChoicesGenerator<T> generator, @SearchType int type) {
+    public static <T> List<T> matches(@NonNull String query, @Nullable Collection<T> choices,
+                                      @NonNull ChoicesGenerator<T> generator, @SearchType int type) {
         if (choices == null) return null;
         if (choices.size() == 0) return Collections.emptyList();
         List<T> results = new ArrayList<>(choices.size());

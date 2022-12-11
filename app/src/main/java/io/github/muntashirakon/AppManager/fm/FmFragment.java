@@ -2,6 +2,9 @@
 
 package io.github.muntashirakon.AppManager.fm;
 
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
@@ -28,9 +31,6 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.StorageUtils;
 import io.github.muntashirakon.widget.MultiSelectionView;
 import io.github.muntashirakon.widget.SwipeRefreshLayout;
-
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
 public class FmFragment extends Fragment implements SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener {
     public static final String TAG = FmFragment.class.getSimpleName();
@@ -138,6 +138,10 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
                 });
             }).start();
             return true;
+        } else if (id == R.id.action_list_options) {
+            FmListOptions listOptions = new FmListOptions();
+            listOptions.setListOptionActions(model);
+            listOptions.show(getChildFragmentManager(), FmListOptions.TAG);
         }
         return super.onOptionsItemSelected(item);
     }

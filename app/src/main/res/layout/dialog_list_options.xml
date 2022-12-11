@@ -21,6 +21,7 @@
             android:orientation="horizontal">
 
             <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/sort_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -50,6 +51,7 @@
             app:singleSelection="true" />
 
         <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/filter_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -66,6 +68,22 @@
             android:paddingVertical="@dimen/padding_very_small"
             app:itemSpacing="@dimen/padding_very_small"
             app:lineSpacing="@dimen/padding_very_small" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/options_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:paddingVertical="8dp"
+            android:textAppearance="?attr/preferenceCategoryTitleTextAppearance"
+            android:textColor="?attr/preferenceCategoryTitleTextColor"
+            android:text="@string/options" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/options"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@android:id/text1"

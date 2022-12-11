@@ -2,6 +2,9 @@
 
 package io.github.muntashirakon.AppManager.main;
 
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
+
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.Application;
@@ -45,6 +48,7 @@ import io.github.muntashirakon.AppManager.db.entity.App;
 import io.github.muntashirakon.AppManager.db.utils.AppDb;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
+import io.github.muntashirakon.AppManager.misc.ListOptions;
 import io.github.muntashirakon.AppManager.profiles.ProfileMetaManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.settings.Ops;
@@ -58,19 +62,16 @@ import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
-
-public class MainViewModel extends AndroidViewModel {
+public class MainViewModel extends AndroidViewModel implements ListOptions.ListOptionActions {
     private static final Collator sCollator = Collator.getInstance();
 
     private final PackageManager mPackageManager;
     private final PackageIntentReceiver mPackageObserver;
     private final Handler mHandler;
-    @ListOptions.SortOrder
+    @MainListOptions.SortOrder
     private int mSortBy;
-    private boolean mSortReverse;
-    @ListOptions.Filter
+    private boolean mReverseSort;
+    @MainListOptions.Filter
     private int mFilterFlags;
     @Nullable
     private String mFilterProfileName;
@@ -88,7 +89,7 @@ public class MainViewModel extends AndroidViewModel {
         mHandler = new Handler(application.getMainLooper());
         mPackageObserver = new PackageIntentReceiver(this);
         mSortBy = AppPref.getInt(AppPref.PrefKey.PREF_MAIN_WINDOW_SORT_ORDER_INT);
-        mSortReverse = AppPref.getBoolean(AppPref.PrefKey.PREF_MAIN_WINDOW_SORT_REVERSE_BOOL);
+        mReverseSort = AppPref.getBoolean(AppPref.PrefKey.PREF_MAIN_WINDOW_SORT_REVERSE_BOOL);
         mFilterFlags = AppPref.getInt(AppPref.PrefKey.PREF_MAIN_WINDOW_FILTER_FLAGS_INT);
         mFilterProfileName = AppPref.getString(AppPref.PrefKey.PREF_MAIN_WINDOW_FILTER_PROFILE_STR);
         if ("".equals(mFilterProfileName)) mFilterProfileName = null;
@@ -200,27 +201,31 @@ public class MainViewModel extends AndroidViewModel {
         executor.submit(this::filterItemsByFlags);
     }
 
+    @Override
     public int getSortBy() {
         return mSortBy;
     }
 
-    public void setSortReverse(boolean sortReverse) {
+    @Override
+    public void setReverseSort(boolean reverseSort) {
         executor.submit(() -> {
-            sortApplicationList(mSortBy, mSortReverse);
+            sortApplicationList(mSortBy, mReverseSort);
             filterItemsByFlags();
         });
-        mSortReverse = sortReverse;
-        AppPref.set(AppPref.PrefKey.PREF_MAIN_WINDOW_SORT_REVERSE_BOOL, mSortReverse);
+        mReverseSort = reverseSort;
+        AppPref.set(AppPref.PrefKey.PREF_MAIN_WINDOW_SORT_REVERSE_BOOL, mReverseSort);
     }
 
-    public boolean isSortReverse() {
-        return mSortReverse;
+    @Override
+    public boolean isReverseSort() {
+        return mReverseSort;
     }
 
+    @Override
     public void setSortBy(int sortBy) {
         if (mSortBy != sortBy) {
             executor.submit(() -> {
-                sortApplicationList(sortBy, mSortReverse);
+                sortApplicationList(sortBy, mReverseSort);
                 filterItemsByFlags();
             });
         }
@@ -228,17 +233,20 @@ public class MainViewModel extends AndroidViewModel {
         AppPref.set(AppPref.PrefKey.PREF_MAIN_WINDOW_SORT_ORDER_INT, mSortBy);
     }
 
-    public boolean hasFilterFlag(@ListOptions.Filter int flag) {
+    @Override
+    public boolean hasFilterFlag(@MainListOptions.Filter int flag) {
         return (mFilterFlags & flag) != 0;
     }
 
-    public void addFilterFlag(@ListOptions.Filter int filterFlag) {
+    @Override
+    public void addFilterFlag(@MainListOptions.Filter int filterFlag) {
         mFilterFlags |= filterFlag;
         AppPref.set(AppPref.PrefKey.PREF_MAIN_WINDOW_FILTER_FLAGS_INT, mFilterFlags);
         executor.submit(this::filterItemsByFlags);
     }
 
-    public void removeFilterFlag(@ListOptions.Filter int filterFlag) {
+    @Override
+    public void removeFilterFlag(@MainListOptions.Filter int filterFlag) {
         mFilterFlags &= ~filterFlag;
         AppPref.set(AppPref.PrefKey.PREF_MAIN_WINDOW_FILTER_FLAGS_INT, mFilterFlags);
         executor.submit(this::filterItemsByFlags);
@@ -259,7 +267,7 @@ public class MainViewModel extends AndroidViewModel {
 
     @AnyThread
     public void onResume() {
-        if ((mFilterFlags & ListOptions.FILTER_RUNNING_APPS) != 0) {
+        if ((mFilterFlags & MainListOptions.FILTER_RUNNING_APPS) != 0) {
             // Reload filters to get running apps again
             executor.submit(this::filterItemsByFlags);
         }
@@ -277,7 +285,7 @@ public class MainViewModel extends AndroidViewModel {
                 for (ApplicationItem item : selectedApplicationItems) {
                     select(item);
                 }
-                sortApplicationList(mSortBy, mSortReverse);
+                sortApplicationList(mSortBy, mReverseSort);
                 filterItemsByFlags();
             }
         });
@@ -332,7 +340,7 @@ public class MainViewModel extends AndroidViewModel {
                 }
             } else candidateApplicationItems.addAll(applicationItems);
             // Other filters
-            if (mFilterFlags == ListOptions.FILTER_NO_FILTER) {
+            if (mFilterFlags == MainListOptions.FILTER_NO_FILTER) {
                 if (!TextUtils.isEmpty(searchQuery)) {
                     filterItemsByQuery(candidateApplicationItems);
                 } else {
@@ -340,38 +348,38 @@ public class MainViewModel extends AndroidViewModel {
                 }
             } else {
                 List<ApplicationItem> filteredApplicationItems = new ArrayList<>();
-                if ((mFilterFlags & ListOptions.FILTER_RUNNING_APPS) != 0) {
+                if ((mFilterFlags & MainListOptions.FILTER_RUNNING_APPS) != 0) {
                     loadRunningApps();
                 }
                 for (ApplicationItem item : candidateApplicationItems) {
                     // Filter user and system apps first (if requested)
-                    if ((mFilterFlags & ListOptions.FILTER_USER_APPS) != 0 && !item.isUser) {
+                    if ((mFilterFlags & MainListOptions.FILTER_USER_APPS) != 0 && !item.isUser) {
                         continue;
-                    } else if ((mFilterFlags & ListOptions.FILTER_SYSTEM_APPS) != 0 && item.isUser) {
+                    } else if ((mFilterFlags & MainListOptions.FILTER_SYSTEM_APPS) != 0 && item.isUser) {
                         continue;
                     }
                     // Filter installed/uninstalled
-                    if ((mFilterFlags & ListOptions.FILTER_INSTALLED_APPS) != 0 && !item.isInstalled) {
+                    if ((mFilterFlags & MainListOptions.FILTER_INSTALLED_APPS) != 0 && !item.isInstalled) {
                         continue;
-                    } else if ((mFilterFlags & ListOptions.FILTER_UNINSTALLED_APPS) != 0 && item.isInstalled) {
+                    } else if ((mFilterFlags & MainListOptions.FILTER_UNINSTALLED_APPS) != 0 && item.isInstalled) {
                         continue;
                     }
                     // Filter backups
-                    if ((mFilterFlags & ListOptions.FILTER_APPS_WITH_BACKUPS) != 0 && item.backup == null) {
+                    if ((mFilterFlags & MainListOptions.FILTER_APPS_WITH_BACKUPS) != 0 && item.backup == null) {
                         continue;
-                    } else if ((mFilterFlags & ListOptions.FILTER_APPS_WITHOUT_BACKUPS) != 0 && item.backup != null) {
+                    } else if ((mFilterFlags & MainListOptions.FILTER_APPS_WITHOUT_BACKUPS) != 0 && item.backup != null) {
                         continue;
                     }
                     // Filter rests
-                    if ((mFilterFlags & ListOptions.FILTER_FROZEN_APPS) != 0 && !item.isDisabled) {
+                    if ((mFilterFlags & MainListOptions.FILTER_FROZEN_APPS) != 0 && !item.isDisabled) {
                         continue;
-                    } else if ((mFilterFlags & ListOptions.FILTER_APPS_WITH_RULES) != 0 && item.blockedCount <= 0) {
+                    } else if ((mFilterFlags & MainListOptions.FILTER_APPS_WITH_RULES) != 0 && item.blockedCount <= 0) {
                         continue;
-                    } else if ((mFilterFlags & ListOptions.FILTER_APPS_WITH_ACTIVITIES) != 0 && !item.hasActivities) {
+                    } else if ((mFilterFlags & MainListOptions.FILTER_APPS_WITH_ACTIVITIES) != 0 && !item.hasActivities) {
                         continue;
-                    } else if ((mFilterFlags & ListOptions.FILTER_APPS_WITH_SPLITS) != 0 && !item.hasSplits) {
+                    } else if ((mFilterFlags & MainListOptions.FILTER_APPS_WITH_SPLITS) != 0 && !item.hasSplits) {
                         continue;
-                    } else if ((mFilterFlags & ListOptions.FILTER_RUNNING_APPS) != 0 && !item.isRunning) {
+                    } else if ((mFilterFlags & MainListOptions.FILTER_RUNNING_APPS) != 0 && !item.isRunning) {
                         continue;
                     }
                     filteredApplicationItems.add(item);
@@ -408,40 +416,40 @@ public class MainViewModel extends AndroidViewModel {
     }
 
     @GuardedBy("applicationItems")
-    private void sortApplicationList(@ListOptions.SortOrder int sortBy, boolean reverse) {
+    private void sortApplicationList(@MainListOptions.SortOrder int sortBy, boolean reverse) {
         synchronized (applicationItems) {
             final boolean isRootEnabled = Ops.isRoot();
-            if (sortBy != ListOptions.SORT_BY_APP_LABEL) {
-                sortApplicationList(ListOptions.SORT_BY_APP_LABEL, false);
+            if (sortBy != MainListOptions.SORT_BY_APP_LABEL) {
+                sortApplicationList(MainListOptions.SORT_BY_APP_LABEL, false);
             }
             int mode = reverse ? -1 : 1;
             Collections.sort(applicationItems, (o1, o2) -> {
                 switch (sortBy) {
-                    case ListOptions.SORT_BY_APP_LABEL:
+                    case MainListOptions.SORT_BY_APP_LABEL:
                         return mode * sCollator.compare(o1.label, o2.label);
-                    case ListOptions.SORT_BY_PACKAGE_NAME:
+                    case MainListOptions.SORT_BY_PACKAGE_NAME:
                         return mode * o1.packageName.compareTo(o2.packageName);
-                    case ListOptions.SORT_BY_DOMAIN:
+                    case MainListOptions.SORT_BY_DOMAIN:
                         boolean isSystem1 = (o1.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
                         boolean isSystem2 = (o2.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
                         return mode * Boolean.compare(isSystem1, isSystem2);
-                    case ListOptions.SORT_BY_LAST_UPDATE:
+                    case MainListOptions.SORT_BY_LAST_UPDATE:
                         // Sort in decreasing order
                         return -mode * o1.lastUpdateTime.compareTo(o2.lastUpdateTime);
-                    case ListOptions.SORT_BY_TOTAL_SIZE:
+                    case MainListOptions.SORT_BY_TOTAL_SIZE:
                         // Sort in decreasing order
                         return -mode * o1.totalSize.compareTo(o2.totalSize);
-                    case ListOptions.SORT_BY_INSTALLATION_DATE:
+                    case MainListOptions.SORT_BY_INSTALLATION_DATE:
                         // Sort in decreasing order
                         return -mode * Long.compare(o1.firstInstallTime, o2.firstInstallTime);
-                    case ListOptions.SORT_BY_TARGET_SDK:
+                    case MainListOptions.SORT_BY_TARGET_SDK:
                         // null on top
                         if (o1.sdk == null) return -mode;
                         else if (o2.sdk == null) return +mode;
                         return mode * o1.sdk.compareTo(o2.sdk);
-                    case ListOptions.SORT_BY_SHARED_ID:
+                    case MainListOptions.SORT_BY_SHARED_ID:
                         return mode * Integer.compare(o1.uid, o2.uid);
-                    case ListOptions.SORT_BY_SHA:
+                    case MainListOptions.SORT_BY_SHA:
                         // null on top
                         if (o1.sha == null) {
                             return -mode;
@@ -453,18 +461,18 @@ public class MainViewModel extends AndroidViewModel {
                                 return mode * o1.sha.second.compareToIgnoreCase(o2.sha.second);
                             } else return mode * i;
                         }
-                    case ListOptions.SORT_BY_BLOCKED_COMPONENTS:
+                    case MainListOptions.SORT_BY_BLOCKED_COMPONENTS:
                         if (isRootEnabled) {
                             return -mode * o1.blockedCount.compareTo(o2.blockedCount);
                         }
                         break;
-                    case ListOptions.SORT_BY_FROZEN_APP:
+                    case MainListOptions.SORT_BY_FROZEN_APP:
                         return -mode * Boolean.compare(o1.isDisabled, o2.isDisabled);
-                    case ListOptions.SORT_BY_BACKUP:
+                    case MainListOptions.SORT_BY_BACKUP:
                         return -mode * Boolean.compare(o1.backup != null, o2.backup != null);
-                    case ListOptions.SORT_BY_LAST_ACTION:
+                    case MainListOptions.SORT_BY_LAST_ACTION:
                         return -mode * o1.lastActionTime.compareTo(o2.lastActionTime);
-                    case ListOptions.SORT_BY_TRACKERS:
+                    case MainListOptions.SORT_BY_TRACKERS:
                         return -mode * o1.trackerCount.compareTo(o2.trackerCount);
                 }
                 return 0;
@@ -505,7 +513,7 @@ public class MainViewModel extends AndroidViewModel {
                         applicationItems.remove(item);
                     }
                 }
-                sortApplicationList(mSortBy, mSortReverse);
+                sortApplicationList(mSortBy, mReverseSort);
                 break;
             case PackageChangeReceiver.ACTION_PACKAGE_ALTERED:
             case PackageChangeReceiver.ACTION_PACKAGE_ADDED:
@@ -513,14 +521,14 @@ public class MainViewModel extends AndroidViewModel {
                     ApplicationItem item = getNewApplicationItem(packageName, new AppDb().getAllApplications(packageName));
                     if (item != null) insertOrAddApplicationItem(item);
                 }
-                sortApplicationList(mSortBy, mSortReverse);
+                sortApplicationList(mSortBy, mReverseSort);
                 break;
             case Intent.ACTION_PACKAGE_CHANGED:
                 for (String packageName : packages) {
                     ApplicationItem item = getNewApplicationItem(packageName);
                     if (item != null) insertApplicationItem(item);
                 }
-                sortApplicationList(mSortBy, mSortReverse);
+                sortApplicationList(mSortBy, mReverseSort);
                 break;
             case Intent.ACTION_PACKAGE_ADDED:
             case Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE:
@@ -528,7 +536,7 @@ public class MainViewModel extends AndroidViewModel {
                     ApplicationItem item = getNewApplicationItem(packageName);
                     if (item != null) insertOrAddApplicationItem(item);
                 }
-                sortApplicationList(mSortBy, mSortReverse);
+                sortApplicationList(mSortBy, mReverseSort);
                 break;
             case BatchOpsService.ACTION_BATCH_OPS_COMPLETED:
                 for (String packageName : packages) {
@@ -536,7 +544,7 @@ public class MainViewModel extends AndroidViewModel {
                     if (item != null) insertOrAddApplicationItem(item);
                     else removePackageIfNoBackup(packageName);
                 }
-                sortApplicationList(mSortBy, mSortReverse);
+                sortApplicationList(mSortBy, mReverseSort);
                 break;
             default:
                 return;

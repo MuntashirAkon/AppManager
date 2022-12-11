@@ -2,6 +2,9 @@
 
 package io.github.muntashirakon.AppManager.main;
 
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
+
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -77,9 +80,6 @@ import io.github.muntashirakon.reflow.ReflowMenuViewWrapper;
 import io.github.muntashirakon.util.UiUtils;
 import io.github.muntashirakon.widget.MultiSelectionView;
 import io.github.muntashirakon.widget.SwipeRefreshLayout;
-
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
 public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQueryTextListener,
         SwipeRefreshLayout.OnRefreshListener, ReflowMenuViewWrapper.OnItemSelectedListener,
@@ -271,8 +271,9 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
             helpIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(helpIntent);
         } else if (id == R.id.action_list_options) {
-            ListOptions listOptions = new ListOptions();
-            listOptions.show(getSupportFragmentManager(), ListOptions.TAG);
+            MainListOptions listOptions = new MainListOptions();
+            listOptions.setListOptionActions(mModel);
+            listOptions.show(getSupportFragmentManager(), MainListOptions.TAG);
         } else if (id == R.id.action_refresh) {
             if (mModel != null) {
                 showProgressIndicator(true);
@@ -526,8 +527,8 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
         // Set sort by
         if (mModel != null) {
             if (!Ops.isPrivileged()) {
-                if (mModel.getSortBy() == ListOptions.SORT_BY_BLOCKED_COMPONENTS) {
-                    mModel.setSortBy(ListOptions.SORT_BY_APP_LABEL);
+                if (mModel.getSortBy() == MainListOptions.SORT_BY_BLOCKED_COMPONENTS) {
+                    mModel.setSortBy(MainListOptions.SORT_BY_APP_LABEL);
                 }
             }
         }

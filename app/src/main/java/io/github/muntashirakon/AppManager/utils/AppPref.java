@@ -39,8 +39,9 @@ import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 import io.github.muntashirakon.AppManager.crypto.auth.AuthManager;
 import io.github.muntashirakon.AppManager.details.AppDetailsFragment;
+import io.github.muntashirakon.AppManager.fm.FmListOptions;
 import io.github.muntashirakon.AppManager.logcat.helper.LogcatHelper;
-import io.github.muntashirakon.AppManager.main.ListOptions;
+import io.github.muntashirakon.AppManager.main.MainListOptions;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.runningapps.RunningAppsActivity;
 import io.github.muntashirakon.AppManager.settings.Ops;
@@ -89,6 +90,9 @@ public class AppPref {
         PREF_ENCRYPTION_STR,
 
         PREF_FREEZE_TYPE_INT,
+        PREF_FM_OPTIONS_INT,
+        PREF_FM_SORT_ORDER_INT,
+        PREF_FM_SORT_REVERSE_BOOL,
 
         PREF_GLOBAL_BLOCKING_ENABLED_BOOL,
         PREF_DEFAULT_BLOCKING_METHOD_STR,
@@ -508,6 +512,7 @@ public class AppPref {
             case PREF_LOG_VIEWER_OMIT_SENSITIVE_INFO_BOOL:
             case PREF_APP_THEME_PURE_BLACK_BOOL:
             case PREF_DISPLAY_CHANGELOG_BOOL:
+            case PREF_FM_SORT_REVERSE_BOOL:
                 return false;
             case PREF_APP_OP_SHOW_DEFAULT_BOOL:
             case PREF_SHOW_DISCLAIMER_BOOL:
@@ -526,9 +531,9 @@ public class AppPref {
             case PREF_APP_THEME_INT:
                 return AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM;
             case PREF_MAIN_WINDOW_FILTER_FLAGS_INT:
-                return ListOptions.FILTER_NO_FILTER;
+                return MainListOptions.FILTER_NO_FILTER;
             case PREF_MAIN_WINDOW_SORT_ORDER_INT:
-                return ListOptions.SORT_BY_APP_LABEL;
+                return MainListOptions.SORT_BY_APP_LABEL;
             case PREF_CUSTOM_LOCALE_STR:
                 return LangUtils.LANG_AUTO;
             case PREF_APP_OP_SORT_ORDER_INT:
@@ -578,6 +583,10 @@ public class AppPref {
                 return AuthManager.generateKey();
             case PREF_FREEZE_TYPE_INT:
                 return FreezeUtils.FREEZE_DISABLE;
+            case PREF_FM_OPTIONS_INT:
+                return FmListOptions.OPTIONS_DISPLAY_DOT_FILES | FmListOptions.OPTIONS_FOLDERS_FIRST;
+            case PREF_FM_SORT_ORDER_INT:
+                return FmListOptions.SORT_BY_NAME;
         }
         throw new IllegalArgumentException("Pref key not found.");
     }

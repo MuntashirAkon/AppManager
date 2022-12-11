@@ -1293,4 +1293,10 @@
     <string name="file_group_id">Group (GID)</string>
     <string name="file_owner_id">Owner (UID)</string>
     <string name="calculating_file_size">Calculating…</string>
+    <string name="sort_by_filename">Name</string>
+    <string name="sort_by_last_modified">Last modified</string>
+    <string name="sort_by_file_size">File size</string>
+    <string name="sort_by_file_type">File type</string>
+    <string name="option_display_dot_files">Dot files</string>
+    <string name="option_display_folders_on_top">Folders on top</string>
 </resources>

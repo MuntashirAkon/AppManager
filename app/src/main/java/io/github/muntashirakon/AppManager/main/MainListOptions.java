@@ -6,19 +6,11 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.SparseIntArray;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
-
-import com.google.android.material.checkbox.MaterialCheckBox;
-import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipGroup;
-import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -26,12 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.misc.ListOptions;
 import io.github.muntashirakon.AppManager.profiles.ProfileManager;
-import io.github.muntashirakon.dialog.CapsuleBottomSheetDialogFragment;
 import io.github.muntashirakon.widget.AnyFilterArrayAdapter;
 
-public class ListOptions extends CapsuleBottomSheetDialogFragment {
-    public static final String TAG = ListOptions.class.getSimpleName();
+public class MainListOptions extends ListOptions {
+    public static final String TAG = MainListOptions.class.getSimpleName();
 
     @IntDef(value = {
             SORT_BY_DOMAIN,
@@ -99,11 +91,22 @@ public class ListOptions extends CapsuleBottomSheetDialogFragment {
     public static final int FILTER_UNINSTALLED_APPS = 1 << 9;
     public static final int FILTER_APPS_WITHOUT_BACKUPS = 1 << 10;
 
-    private static final int[] SORT_ITEMS_MAP = {R.string.sort_by_domain, R.string.sort_by_app_label,
-            R.string.sort_by_package_name, R.string.sort_by_last_update, R.string.sort_by_shared_user_id,
-            R.string.sort_by_target_sdk, R.string.sort_by_sha, R.string.sort_by_frozen_app,
-            R.string.sort_by_blocked_components, R.string.sort_by_backup, R.string.trackers, R.string.last_actions,
-            R.string.sort_by_installation_date, R.string.sort_by_total_size};
+    private static final SparseIntArray SORT_ITEMS_MAP = new SparseIntArray() {{
+        put(SORT_BY_DOMAIN, R.string.sort_by_domain);
+        put(SORT_BY_APP_LABEL, R.string.sort_by_app_label);
+        put(SORT_BY_PACKAGE_NAME, R.string.sort_by_package_name);
+        put(SORT_BY_LAST_UPDATE, R.string.sort_by_last_update);
+        put(SORT_BY_SHARED_ID, R.string.sort_by_shared_user_id);
+        put(SORT_BY_TARGET_SDK, R.string.sort_by_target_sdk);
+        put(SORT_BY_SHA, R.string.sort_by_sha);
+        put(SORT_BY_FROZEN_APP, R.string.sort_by_frozen_app);
+        put(SORT_BY_BLOCKED_COMPONENTS, R.string.sort_by_blocked_components);
+        put(SORT_BY_BACKUP, R.string.sort_by_backup);
+        put(SORT_BY_TRACKERS, R.string.trackers);
+        put(SORT_BY_LAST_ACTION, R.string.last_actions);
+        put(SORT_BY_INSTALLATION_DATE, R.string.sort_by_installation_date);
+        put(SORT_BY_TOTAL_SIZE, R.string.sort_by_total_size);
+    }};
     private static final SparseIntArray FILTER_MAP = new SparseIntArray() {{
         put(FILTER_USER_APPS, R.string.filter_user_apps);
         put(FILTER_SYSTEM_APPS, R.string.filter_system_apps);
@@ -120,23 +123,12 @@ public class ListOptions extends CapsuleBottomSheetDialogFragment {
 
     private MainViewModel model;
     private final List<String> profileNames = new ArrayList<>();
-    private ChipGroup sortGroup;
-    private ViewGroup filterView;
-
-    @NonNull
-    @Override
-    public View initRootView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.dialog_list_options, container, false);
-    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         MainActivity activity = (MainActivity) requireActivity();
         model = activity.mModel;
-        sortGroup = view.findViewById(R.id.sort_options);
-        MaterialCheckBox reverseSort = view.findViewById(R.id.reverse_sort);
-        MaterialAutoCompleteTextView profileNameInput = view.findViewById(android.R.id.input);
         profileNameInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -170,42 +162,28 @@ public class ListOptions extends CapsuleBottomSheetDialogFragment {
                 });
             });
         }
-        // Add sorting indices
-        for (int i = 0; i < SORT_ITEMS_MAP.length; ++i) {
-            sortGroup.addView(getRadioChip(i, SORT_ITEMS_MAP[i]), i);
-        }
-        sortGroup.check(model.getSortBy());
-        sortGroup.setOnCheckedChangeListener((group, checkedId) -> model.setSortBy(checkedId));
-        // Reverse sort
-        reverseSort.setChecked(model.isSortReverse());
-        reverseSort.setOnCheckedChangeListener((buttonView, isChecked) -> model.setSortReverse(isChecked));
-        // Add filters
-        filterView = view.findViewById(R.id.filter_options);
-        for (int i = 0; i < FILTER_MAP.size(); ++i) {
-            filterView.addView(getFilterChip(FILTER_MAP.keyAt(i), FILTER_MAP.valueAt(i)));
-        }
-        sortGroup.getChildAt(0).requestFocus();
     }
 
-    public Chip getFilterChip(@Filter int flag, @StringRes int strRes) {
-        Chip chip = new Chip(filterView.getContext());
-        chip.setFocusable(true);
-        chip.setCloseIconVisible(false);
-        chip.setText(strRes);
-        chip.setChecked(model.hasFilterFlag(flag));
-        chip.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) model.addFilterFlag(flag);
-            else model.removeFilterFlag(flag);
-        });
-        return chip;
+    @Nullable
+    @Override
+    public SparseIntArray getSortIdLocaleMap() {
+        return SORT_ITEMS_MAP;
     }
 
-    public Chip getRadioChip(@SortOrder int sortOrder, @StringRes int strRes) {
-        Chip chip = new Chip(sortGroup.getContext());
-        chip.setFocusable(true);
-        chip.setCloseIconVisible(false);
-        chip.setId(sortOrder);
-        chip.setText(strRes);
-        return chip;
+    @Nullable
+    @Override
+    public SparseIntArray getFilterFlagLocaleMap() {
+        return FILTER_MAP;
+    }
+
+    @Nullable
+    @Override
+    public SparseIntArray getOptionIdLocaleMap() {
+        return null;
+    }
+
+    @Override
+    public boolean enableProfileNameInput() {
+        return true;
     }
 }
