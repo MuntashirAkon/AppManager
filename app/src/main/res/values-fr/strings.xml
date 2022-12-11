@@ -1222,4 +1222,31 @@
     <string name="failed_to_unfreeze">Impossible de dégeler <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="profile_freeze_msg">Gèle ou dégèle les applis en fonction de leur état</string>
     <string name="pref_default_freezing_method">Méthode de gel par défaut</string>
+    <string name="file_creation_date">Crée</string>
+    <string name="file_modification_date">Modifiée</string>
+    <string name="file_open_with">Ouvrir avec</string>
+    <string name="file_change_open_with">Changer \"Ouvrir avec\"</string>
+    <string name="file_shortcut_target_file">Fichier cible</string>
+    <string name="file_properties">Propriétés</string>
+    <string name="file_cut">Couper</string>
+    <string name="fm_always_open_with">Toujours ouvrir</string>
+    <string name="fm_open_with_for_this_file_only">Uniquement pour ce fichier</string>
+    <string name="file_open_as">Ouvert en tant que…</string>
+    <string name="file_open_with_custom_activity">Personnalisé</string>
+    <string name="file_accessed_date">Accédé</string>
+    <string name="file_open_with_os_default_dialog">Ouvrir avec la boîte de dialogue par défaut du système d\'exploitation</string>
+    <string name="open_as_text">Texte</string>
+    <string name="open_as_image">Image</string>
+    <string name="open_as_video">Vidéo</string>
+    <string name="open_as_other">Autres</string>
+    <string name="delete_filename">Supprimer %s</string>
+    <string name="confirm_file_deletion">Oui, supprimer</string>
+    <string name="on_unfreeze_open_application">Ouvrir l\'app après le déblocage</string>
+    <string name="open_as_archive">Archives</string>
+    <string name="open_as_folder">Dossier</string>
+    <string name="on_open_application_no_recents">Ne pas afficher l\'application lancée dans Récents</string>
+    <string name="freeze_on_phone_locked">Geler automatiquement l\'application lorsque le téléphone est verrouillé</string>
+    <string name="tap_to_freeze_app">Appuyez pour geler</string>
+    <string name="waiting_for_the_phone_to_be_locked">En attente que le téléphone soit verrouillé…</string>
+    <string name="action_stop_service">Arrêter</string>
 </resources>
