@@ -1293,4 +1293,31 @@
     <string name="pref_privacy">Prywatność</string>
     <string name="pref_privacy_description">Blokada ekranu, autoryzacja itp.</string>
     <string name="failed_to_unfreeze">Nie można odmrozić <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="confirm_file_deletion">Tak, usuń</string>
+    <string name="freeze_on_phone_locked">Automatycznie zamrażaj aplikację, gdy telefon jest zablokowany</string>
+    <string name="file_creation_date">Utworzono</string>
+    <string name="file_modification_date">Zmodyfikowano</string>
+    <string name="file_accessed_date">Użyto</string>
+    <string name="file_open_with">Otwórz za pomocą</string>
+    <string name="file_change_open_with">Zmień otwórz za pomocą</string>
+    <string name="file_shortcut_target_file">Plik docelowy</string>
+    <string name="file_properties">Właściwości</string>
+    <string name="file_cut">Wytnij</string>
+    <string name="fm_always_open_with">Zawsze otwieraj</string>
+    <string name="fm_open_with_for_this_file_only">Tylko dla tego pliku</string>
+    <string name="file_open_as">Otwórz jako…</string>
+    <string name="file_open_with_custom_activity">Własny</string>
+    <string name="file_open_with_os_default_dialog">Otwórz w domyślnym oknie dialogowym systemu operacyjnego</string>
+    <string name="open_as_text">Tekst</string>
+    <string name="open_as_image">Obraz</string>
+    <string name="open_as_video">Wideo</string>
+    <string name="open_as_archive">Archiwum</string>
+    <string name="open_as_folder">Katalog</string>
+    <string name="open_as_other">Inne</string>
+    <string name="delete_filename">Usuń %s</string>
+    <string name="on_unfreeze_open_application">Otwórz aplikację po odmrożeniu</string>
+    <string name="on_open_application_no_recents">Nie pokazuj uruchomionej aplikacji w Ostatnich</string>
+    <string name="tap_to_freeze_app">Dotknij, aby zamrozić</string>
+    <string name="waiting_for_the_phone_to_be_locked">Oczekiwanie na zablokowanie telefonu…</string>
+    <string name="action_stop_service">Zatrzymaj</string>
 </resources>
