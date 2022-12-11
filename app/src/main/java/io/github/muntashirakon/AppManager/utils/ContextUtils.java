@@ -6,7 +6,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.os.Build;
-import android.util.Log;
 
 // Copyright 2020 John "topjohnwu" Wu
 public final class ContextUtils {
@@ -26,7 +25,7 @@ public final class ContextUtils {
                 context = getContextImpl(c);
             } catch (Exception e) {
                 // Shall never happen
-                Log.e(TAG, e.getMessage(), e);
+                throw new RuntimeException(e);
             }
         }
         return context;

@@ -20,7 +20,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.io.fs.VirtualFileSystem;
 
 public final class Paths {
@@ -39,7 +39,7 @@ public final class Paths {
     public static Path getUnprivileged(@NonNull File pathName) {
         Path path = null;
         try {
-            path = new Path(AppManager.getContext(), pathName.getAbsolutePath(), false);
+            path = new Path(ContextUtils.getContext(), pathName.getAbsolutePath(), false);
         } catch (RemoteException ignore) {
             // This exception is never called in unprivileged mode.
         }
@@ -51,7 +51,7 @@ public final class Paths {
     public static Path getUnprivileged(@NonNull String pathName) {
         Path path = null;
         try {
-            path = new Path(AppManager.getContext(), pathName, false);
+            path = new Path(ContextUtils.getContext(), pathName, false);
         } catch (RemoteException ignore) {
             // This exception is never called in unprivileged mode.
         }
@@ -61,22 +61,22 @@ public final class Paths {
 
     @NonNull
     public static Path get(@NonNull String pathName) {
-        return new Path(AppManager.getContext(), pathName);
+        return new Path(ContextUtils.getContext(), pathName);
     }
 
     @NonNull
     public static Path get(@NonNull File pathName) {
-        return new Path(AppManager.getContext(), pathName.getAbsolutePath());
+        return new Path(ContextUtils.getContext(), pathName.getAbsolutePath());
     }
 
     @NonNull
     public static Path get(@NonNull Uri pathUri) {
-        return new Path(AppManager.getContext(), pathUri);
+        return new Path(ContextUtils.getContext(), pathUri);
     }
 
     @NonNull
     public static Path get(@NonNull VirtualFileSystem fs) {
-        return new Path(AppManager.getContext(), fs);
+        return new Path(ContextUtils.getContext(), fs);
     }
 
     @NonNull

@@ -41,10 +41,10 @@ import java.util.Locale;
 import java.util.Objects;
 
 import aosp.libcore.util.EmptyArray;
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.compat.StorageManagerCompat;
 import io.github.muntashirakon.AppManager.ipc.LocalServices;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.io.fs.VirtualFileSystem;
 
@@ -55,30 +55,40 @@ public class Path implements Comparable<Path> {
     public static final String TAG = Path.class.getSimpleName();
 
     private static final List<Boolean> EXCLUSIVE_ACCESS_GRANTED = new ArrayList<>();
-    private static final List<String> EXCLUSIVE_ACCESS_PATHS = new ArrayList<String>() {{
+    private static final List<String> EXCLUSIVE_ACCESS_PATHS = new ArrayList<>();
+
+    static {
+        setAccessPaths();
+    }
+
+    private static void setAccessPaths() {
+        if (Process.myUid() == 0 || Process.myUid() == 2000) {
+            // Root/ADB
+            return;
+        }
         // We cannot use Path API here
         // Read-only
-        add(Environment.getRootDirectory().getAbsolutePath());
+        EXCLUSIVE_ACCESS_PATHS.add(Environment.getRootDirectory().getAbsolutePath());
         EXCLUSIVE_ACCESS_GRANTED.add(true);
-        add(OsEnvironment.getDataDirectoryRaw() + "/app");
+        EXCLUSIVE_ACCESS_PATHS.add(OsEnvironment.getDataDirectoryRaw() + "/app");
         EXCLUSIVE_ACCESS_GRANTED.add(true);
-        add(OsEnvironment.getProductDirectoryRaw());
+        EXCLUSIVE_ACCESS_PATHS.add(OsEnvironment.getProductDirectoryRaw());
         EXCLUSIVE_ACCESS_GRANTED.add(true);
-        add(OsEnvironment.getVendorDirectoryRaw());
+        EXCLUSIVE_ACCESS_PATHS.add(OsEnvironment.getVendorDirectoryRaw());
         EXCLUSIVE_ACCESS_GRANTED.add(true);
         // Read-write
-        Context context = AppManager.getContext();
-        add(Objects.requireNonNull(context.getFilesDir().getParentFile()).getAbsolutePath());
+        Context context = ContextUtils.getContext();
+        EXCLUSIVE_ACCESS_PATHS.add(Objects.requireNonNull(context.getFilesDir().getParentFile()).getAbsolutePath());
         EXCLUSIVE_ACCESS_GRANTED.add(true);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            add(context.createDeviceProtectedStorageContext().getDataDir().getAbsolutePath());
+            EXCLUSIVE_ACCESS_PATHS.add(context.createDeviceProtectedStorageContext().getDataDir().getAbsolutePath());
             EXCLUSIVE_ACCESS_GRANTED.add(true);
         }
         File[] extDirs = context.getExternalCacheDirs();
         if (extDirs != null) {
             for (File dir : extDirs) {
                 if (dir == null) continue;
-                add(Objects.requireNonNull(dir.getParentFile()).getAbsolutePath());
+                EXCLUSIVE_ACCESS_PATHS.add(Objects.requireNonNull(dir.getParentFile()).getAbsolutePath());
                 EXCLUSIVE_ACCESS_GRANTED.add(true);
             }
         }
@@ -95,25 +105,25 @@ public class Path implements Comparable<Path> {
                 // Add Android/data and Android/obb to the exemption list
                 boolean canInstallApps = PermissionUtils.hasPermission(context, Manifest.permission.REQUEST_INSTALL_PACKAGES);
                 for (String card : cards) {
-                    add(card + "/Android/data");
+                    EXCLUSIVE_ACCESS_PATHS.add(card + "/Android/data");
                     EXCLUSIVE_ACCESS_GRANTED.add(false);
                     if (!canInstallApps) {
-                        add(card + "/Android/obb");
+                        EXCLUSIVE_ACCESS_PATHS.add(card + "/Android/obb");
                         EXCLUSIVE_ACCESS_GRANTED.add(false);
                     }
                 }
             }
             // Lowest priority
             for (String card : cards) {
-                add(card);
+                EXCLUSIVE_ACCESS_PATHS.add(card);
                 EXCLUSIVE_ACCESS_GRANTED.add(true);
             }
         }
         // Assert sizes
-        if (size() != EXCLUSIVE_ACCESS_GRANTED.size()) {
+        if (EXCLUSIVE_ACCESS_PATHS.size() != EXCLUSIVE_ACCESS_GRANTED.size()) {
             throw new RuntimeException();
         }
-    }};
+    }
 
     private static boolean needPrivilegedAccess(@NonNull String path) {
         if (Process.myUid() == 0 || Process.myUid() == 2000) {
