@@ -494,4 +494,13 @@
     </plurals>
     <string name="orientation_unspecified">지정되지 않음</string>
     <string name="pref_backup_volume_msg">백업이 저장될 볼륨 또는 디스크를 선택하십시오.</string>
+    <string name="launch_mode_single_task">단일 작업</string>
+    <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">GitHub</a> • <a href="https://gitlab.com/muntashir/AppManager">GitLab</a> • <a href="https://0xacab.org/muntashir/AppManager">Riseup</a> • <a href="https://codeberg.org/muntashir/AppManager">Codeberg</a></string>
+    <string name="orientation_full_sensor">전체 센서</string>
+    <string name="orientation_full_user">전체 사용자</string>
+    <string name="orientation_no_sensor">센서 없음</string>
+    <string name="orientation_sensor">센서</string>
+    <string name="orientation_sensor_portrait"></string>
+    <string name="launch_mode_single_instance">단일 인스턴스</string>
+    <string name="action_stop_service">중지</string>
 </resources>
