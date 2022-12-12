@@ -14,6 +14,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Handler;
+import android.os.RemoteException;
 import android.os.UserHandleHidden;
 import android.text.TextUtils;
 import android.util.Pair;
@@ -28,6 +29,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,6 +43,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+import io.github.muntashirakon.AppManager.apk.list.ListExporter;
 import io.github.muntashirakon.AppManager.backup.BackupUtils;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
@@ -61,6 +65,7 @@ import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.io.Path;
 
 public class MainViewModel extends AndroidViewModel implements ListOptions.ListOptionActions {
     private static final Collator sCollator = Collator.getInstance();
@@ -95,9 +100,10 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
         if ("".equals(mFilterProfileName)) mFilterProfileName = null;
     }
 
+    private final MutableLiveData<Boolean> operationStatus = new MutableLiveData<>();
     @NonNull
     private final MutableLiveData<List<ApplicationItem>> applicationItemsLiveData = new MutableLiveData<>();
-    final private List<ApplicationItem> applicationItems = new ArrayList<>();
+    private final List<ApplicationItem> applicationItems = new ArrayList<>();
 
     public int getApplicationItemCount() {
         return applicationItems.size();
@@ -109,6 +115,10 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
             loadApplicationItems();
         }
         return applicationItemsLiveData;
+    }
+
+    public LiveData<Boolean> getOperationStatus() {
+        return operationStatus;
     }
 
     @GuardedBy("applicationItems")
@@ -270,6 +280,26 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
         if ((mFilterFlags & MainListOptions.FILTER_RUNNING_APPS) != 0) {
             // Reload filters to get running apps again
             executor.submit(this::filterItemsByFlags);
+        }
+    }
+
+    public void saveExportedAppList(@ListExporter.ExportType int exportType, @NonNull Path path) {
+        try (OutputStream os = path.openOutputStream()) {
+            List<PackageInfo> packageInfoList = new ArrayList<>();
+            for (String packageName : getSelectedPackages().keySet()) {
+                int[] userIds = getSelectedPackages().get(packageName);
+                if (userIds != null) {
+                    for (int userId : userIds) {
+                        packageInfoList.add(PackageManagerCompat.getPackageInfo(packageName, 0, userId));
+                        break;
+                    }
+                }
+            }
+            os.write(ListExporter.export(getApplication(), exportType, packageInfoList).getBytes(StandardCharsets.UTF_8));
+            operationStatus.postValue(true);
+        } catch (IOException | RemoteException | PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+            operationStatus.postValue(false);
         }
     }
 
@@ -653,7 +683,7 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                 item.trackerCount = app.trackerCount;
                 item.lastActionTime = app.lastActionTime;
                 PackageSizeInfo packageSizeInfo = PackageUtils.getPackageSizeInfo(getApplication(), packageName, userId,
-                                Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? packageInfo.applicationInfo.storageUuid : null);
+                        Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? packageInfo.applicationInfo.storageUuid : null);
                 if (packageSizeInfo != null) {
                     item.totalSize += packageSizeInfo.getTotalSize();
                 }

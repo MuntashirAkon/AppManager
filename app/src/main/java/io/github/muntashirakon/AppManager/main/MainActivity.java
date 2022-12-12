@@ -48,6 +48,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.apk.list.ListExporter;
 import io.github.muntashirakon.AppManager.backup.dialog.BackupRestoreDialogFragment;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
@@ -76,6 +77,7 @@ import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.StoragePermission;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.AlertDialogBuilder;
+import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.reflow.ReflowMenuViewWrapper;
 import io.github.muntashirakon.util.UiUtils;
 import io.github.muntashirakon.widget.MultiSelectionView;
@@ -119,6 +121,28 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
                 args.putIntArray(RulesTypeSelectionDialogFragment.ARG_USERS, Users.getUsersIds());
                 dialogFragment.setArguments(args);
                 dialogFragment.show(getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
+            });
+
+    private final ActivityResultLauncher<String> exportAppListXml = registerForActivityResult(
+            new ActivityResultContracts.CreateDocument("text/xml"),
+            uri -> {
+                if (uri == null) {
+                    // Back button pressed.
+                    return;
+                }
+                mProgressIndicator.show();
+                mModel.saveExportedAppList(ListExporter.EXPORT_TYPE_XML, Paths.get(uri));
+            });
+
+    private final ActivityResultLauncher<String> exportAppListMarkdown = registerForActivityResult(
+            new ActivityResultContracts.CreateDocument("text/markdown"),
+            uri -> {
+                if (uri == null) {
+                    // Back button pressed.
+                    return;
+                }
+                mProgressIndicator.show();
+                mModel.saveExportedAppList(ListExporter.EXPORT_TYPE_MARKDOWN, Paths.get(uri));
             });
 
     private final BroadcastReceiver mBatchOpsBroadCastReceiver = new BroadcastReceiver() {
@@ -208,6 +232,14 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
             if (recyclerView.getFocusedChild() == null) {
                 View v = recyclerView.getChildAt(0);
                 if (v != null) v.requestFocus();
+            }
+        });
+        mModel.getOperationStatus().observe(this, status -> {
+            mProgressIndicator.hide();
+            if (status) {
+                UIUtils.displayShortToast(R.string.done);
+            } else {
+                UIUtils.displayLongToast(R.string.failed);
             }
         });
     }
@@ -402,8 +434,27 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
                     })
                     .show();
         } else if (id == R.id.action_export_blocking_rules) {
-            @SuppressLint("SimpleDateFormat") final String fileName = "app_manager_rules_export-" + DateUtils.formatDateTime(System.currentTimeMillis()) + ".am.tsv";
+            final String fileName = "app_manager_rules_export-" + DateUtils.formatDateTime(System.currentTimeMillis()) + ".am.tsv";
             batchExportRules.launch(fileName);
+        } else if (id == R.id.action_export_app_list) {
+            new MaterialAlertDialogBuilder(this)
+                    .setTitle(R.string.export_app_list_select_format)
+                    .setItems(R.array.export_app_list_options, (dialog, which) -> {
+                        switch (which) {
+                            case 0: { // XML
+                                final String fileName = "app_manager_app_list-" + DateUtils.formatDateTime(System.currentTimeMillis()) + ".am.xml";
+                                exportAppListXml.launch(fileName);
+                                break;
+                            }
+                            case 1: { // Markdown
+                                final String fileName = "app_manager_app_list-" + DateUtils.formatDateTime(System.currentTimeMillis()) + ".am.md";
+                                exportAppListMarkdown.launch(fileName);
+                                break;
+                            }
+                        }
+                    })
+                    .setNegativeButton(R.string.close, null)
+                    .show();
         } else if (id == R.id.action_force_stop) {
             handleBatchOp(BatchOpsManager.OP_FORCE_STOP);
         } else if (id == R.id.action_uninstall) {

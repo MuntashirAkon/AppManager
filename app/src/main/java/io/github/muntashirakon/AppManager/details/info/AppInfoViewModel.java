@@ -9,6 +9,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.RemoteException;
 import android.os.UserHandleHidden;
 
 import androidx.annotation.NonNull;
@@ -34,6 +35,7 @@ import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
+import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.details.AppDetailsViewModel;
 import io.github.muntashirakon.AppManager.magisk.MagiskDenyList;
 import io.github.muntashirakon.AppManager.magisk.MagiskHide;
@@ -292,8 +294,7 @@ public class AppInfoViewModel extends AndroidViewModel {
                     Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? applicationInfo.storageUuid : null);
             // Set installer app
             try {
-                @SuppressWarnings("deprecation")
-                String installerPackageName = pm.getInstallerPackageName(packageName);
+                String installerPackageName = PackageManagerCompat.getInstallerPackageName(packageName);
                 if (installerPackageName != null) {
                     String applicationLabel;
                     try {
@@ -304,7 +305,7 @@ public class AppInfoViewModel extends AndroidViewModel {
                     }
                     appInfo.installerApp = applicationLabel;
                 }
-            } catch (IllegalArgumentException ignore) {
+            } catch (RemoteException ignore) {
             }
             // Set main activity
             appInfo.mainActivity = pm.getLaunchIntentForPackage(packageName);

@@ -2,6 +2,14 @@
 
 package io.github.muntashirakon.AppManager.compat;
 
+import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DEFAULT;
+import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
+import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DISABLED_UNTIL_USED;
+import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER;
+import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
+import static android.content.pm.PackageManager.DONT_KILL_APP;
+import static android.content.pm.PackageManager.SYNCHRONOUS;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.UserIdInt;
@@ -46,14 +54,6 @@ import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
-
-import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DEFAULT;
-import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
-import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DISABLED_UNTIL_USED;
-import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER;
-import static android.content.pm.PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
-import static android.content.pm.PackageManager.DONT_KILL_APP;
-import static android.content.pm.PackageManager.SYNCHRONOUS;
 
 public final class PackageManagerCompat {
     @IntDef({
@@ -195,6 +195,20 @@ public final class PackageManagerCompat {
             return pm.getApplicationInfo(packageName, (long) flags, userHandle);
         }
         return pm.getApplicationInfo(packageName, flags, userHandle);
+    }
+
+    public static String getInstallerPackageName(@NonNull String packageName) throws RemoteException {
+        return getInstallSourceInfo(packageName).getInstallingPackageName();
+    }
+
+    @NonNull
+    public static InstallSourceInfoCompat getInstallSourceInfo(@NonNull String packageName) throws RemoteException {
+        IPackageManager pm = getPackageManager();
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+            return new InstallSourceInfoCompat(pm.getInstallSourceInfo(packageName));
+        }
+        String installerPackageName = getPackageManager().getInstallerPackageName(packageName);
+        return new InstallSourceInfoCompat(installerPackageName);
     }
 
     @SuppressLint("NewApi")
