@@ -22,6 +22,7 @@ import java.io.PrintStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -29,16 +30,22 @@ import java.util.concurrent.Executors;
 import io.github.muntashirakon.AppManager.apk.parser.AndroidBinXmlDecoder;
 import io.github.muntashirakon.AppManager.dex.DexUtils;
 import io.github.muntashirakon.AppManager.fm.ContentType2;
+import io.github.muntashirakon.AppManager.fm.FileType;
+import io.github.muntashirakon.AppManager.fm.FmListOptions;
+import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
+import io.github.muntashirakon.AppManager.misc.ListOptions;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
+import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.io.fs.VirtualFileSystem;
 
-public class AppExplorerViewModel extends AndroidViewModel {
+public class AppExplorerViewModel extends AndroidViewModel implements ListOptions.ListOptionActions {
     private final ExecutorService executor = Executors.newFixedThreadPool(3);
-    private final MutableLiveData<List<AdapterItem>> fmItems = new MutableLiveData<>();
+    private final MutableLiveData<List<AdapterItem>> fmItemsLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> modificationObserver = new MutableLiveData<>();
     private final MutableLiveData<AdapterItem> openObserver = new MutableLiveData<>();
     private final MutableLiveData<Uri> uriChangeObserver = new MutableLiveData<>();
@@ -49,6 +56,14 @@ public class AppExplorerViewModel extends AndroidViewModel {
     private boolean modified;
     private final List<Integer> vfsIds = new ArrayList<>();
     private final FileCache fileCache = new FileCache();
+    private final List<AdapterItem> fmItems = new ArrayList<>();
+    @FmListOptions.SortOrder
+    private int sortBy;
+    private boolean reverseSort;
+    @FmListOptions.Options
+    private int selectedOptions;
+    @Nullable
+    private String queryString;
 
     public AppExplorerViewModel(@NonNull Application application) {
         super(application);
@@ -67,6 +82,49 @@ public class AppExplorerViewModel extends AndroidViewModel {
         }
         IoUtils.closeQuietly(fileCache);
         super.onCleared();
+    }
+
+    @Override
+    public void setSortBy(@FmListOptions.SortOrder int sortBy) {
+        this.sortBy = sortBy;
+        AppPref.set(AppPref.PrefKey.PREF_FM_SORT_ORDER_INT, sortBy);
+        executor.submit(this::filterAndSort);
+    }
+
+    @FmListOptions.SortOrder
+    @Override
+    public int getSortBy() {
+        return sortBy;
+    }
+
+    @Override
+    public void setReverseSort(boolean reverseSort) {
+        this.reverseSort = reverseSort;
+        AppPref.set(AppPref.PrefKey.PREF_FM_SORT_REVERSE_BOOL, reverseSort);
+        executor.submit(this::filterAndSort);
+    }
+
+    @Override
+    public boolean isReverseSort() {
+        return reverseSort;
+    }
+
+    @Override
+    public boolean isOptionSelected(@FmListOptions.Options int option) {
+        return (selectedOptions & option) != 0;
+    }
+
+    @Override
+    public void onOptionSelected(@FmListOptions.Options int option, boolean selected) {
+        if (selected) selectedOptions |= option;
+        else selectedOptions &= ~option;
+        AppPref.set(AppPref.PrefKey.PREF_FM_OPTIONS_INT, selectedOptions);
+        executor.submit(this::filterAndSort);
+    }
+
+    public void setQueryString(@Nullable String queryString) {
+        this.queryString = queryString;
+        executor.submit(this::filterAndSort);
     }
 
     public void setUri(Uri apkUri) {
@@ -112,11 +170,10 @@ public class AppExplorerViewModel extends AndroidViewModel {
                     baseType = fs.getType();
                 } catch (Throwable e) {
                     e.printStackTrace();
-                    this.fmItems.postValue(Collections.emptyList());
+                    this.fmItemsLiveData.postValue(Collections.emptyList());
                     return;
                 }
             }
-            List<AdapterItem> adapterItems = new ArrayList<>();
             Path path;
             if (uri == null) {
                 // Null URI always means root of the zip file
@@ -125,10 +182,9 @@ public class AppExplorerViewModel extends AndroidViewModel {
                 path = Paths.get(uri);
             }
             for (Path child : path.listFiles()) {
-                adapterItems.add(new AdapterItem(child));
+                fmItems.add(new AdapterItem(child));
             }
-            Collections.sort(adapterItems);
-            this.fmItems.postValue(adapterItems);
+            filterAndSort();
         });
     }
 
@@ -202,7 +258,7 @@ public class AppExplorerViewModel extends AndroidViewModel {
     }
 
     public LiveData<List<AdapterItem>> observeFiles() {
-        return fmItems;
+        return fmItemsLiveData;
     }
 
     public LiveData<Boolean> observeModification() {
@@ -215,5 +271,59 @@ public class AppExplorerViewModel extends AndroidViewModel {
 
     public LiveData<Uri> observeUriChange() {
         return uriChangeObserver;
+    }
+
+    private void filterAndSort() {
+        boolean displayDotFiles = (selectedOptions & FmListOptions.OPTIONS_DISPLAY_DOT_FILES) != 0;
+        boolean foldersOnTop = (selectedOptions & FmListOptions.OPTIONS_FOLDERS_FIRST) != 0;
+
+        List<AdapterItem> filteredList;
+        synchronized (fmItems) {
+            if (!TextUtilsCompat.isEmpty(queryString)) {
+                filteredList = AdvancedSearchView.matches(queryString, fmItems,
+                        (AdvancedSearchView.ChoiceGenerator<AdapterItem>) object -> object.path.getName(),
+                        AdvancedSearchView.SEARCH_TYPE_CONTAINS);
+            } else filteredList = new ArrayList<>(fmItems);
+        }
+        if (!displayDotFiles) {
+            Iterator<AdapterItem> iterator = filteredList.listIterator();
+            while (iterator.hasNext()) {
+                AdapterItem fmItem = iterator.next();
+                if (fmItem.path.getName().startsWith(".")) {
+                    iterator.remove();
+                }
+            }
+        }
+        // Sort by name first
+        Collections.sort(filteredList, (o1, o2) -> o1.path.getName().compareToIgnoreCase(o2.path.getName()));
+        // Other sorting options
+        int inverse = reverseSort ? -1 : 1;
+        Collections.sort(filteredList, (o1, o2) -> {
+            int typeComp;
+            if (!foldersOnTop) {
+                typeComp = 0;
+            } else if (o1.type == o2.type) {
+                typeComp = 0;
+            } else if (o1.type == FileType.DIRECTORY) {
+                typeComp = -1 * inverse;
+            } else typeComp = 1 * inverse;
+            if (typeComp != 0 || sortBy == FmListOptions.SORT_BY_NAME) {
+                return typeComp;
+            }
+            // Apply real sort
+            Path p1 = o1.path;
+            Path p2 = o2.path;
+            if (sortBy == FmListOptions.SORT_BY_LAST_MODIFIED) {
+                return -Long.compare(p1.lastModified(), p2.lastModified()) * inverse;
+            }
+            if (sortBy == FmListOptions.SORT_BY_SIZE) {
+                return -Long.compare(p1.length(), p2.length()) * inverse;
+            }
+            if (sortBy == FmListOptions.SORT_BY_TYPE) {
+                return p1.getType().compareToIgnoreCase(p2.getType()) * inverse;
+            }
+            return typeComp;
+        });
+        this.fmItemsLiveData.postValue(filteredList);
     }
 }

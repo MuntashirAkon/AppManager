@@ -5,6 +5,9 @@ package io.github.muntashirakon.AppManager.apk.explorer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -17,9 +20,12 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.fm.FmListOptions;
 import io.github.muntashirakon.widget.MultiSelectionView;
 import io.github.muntashirakon.widget.SwipeRefreshLayout;
 
@@ -87,13 +93,32 @@ public class AppExplorerFragment extends Fragment implements SearchView.OnQueryT
     }
 
     @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.fragment_app_explorer, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull @NotNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_list_options) {
+            FmListOptions listOptions = new FmListOptions();
+            listOptions.setListOptionActions(model);
+            listOptions.show(getChildFragmentManager(), FmListOptions.TAG);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        // TODO: 11/7/21
+        if (model != null) {
+            model.setQueryString(newText);
+            return true;
+        }
         return false;
     }
 

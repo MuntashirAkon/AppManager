@@ -22,8 +22,6 @@ import com.google.android.material.materialswitch.MaterialSwitch;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputLayout;
 
-import org.jetbrains.annotations.NotNull;
-
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.dialog.CapsuleBottomSheetDialogFragment;
 
@@ -88,7 +86,7 @@ public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
 
     @CallSuper
     @Override
-    public void onViewCreated(@NonNull @NotNull View view, @Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         sortText = view.findViewById(R.id.sort_text);
         sortGroup = view.findViewById(R.id.sort_options);

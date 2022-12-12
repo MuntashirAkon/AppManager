@@ -49,7 +49,7 @@ public class RenameDialogFragment extends DialogFragment {
 
     @NonNull
     @Override
-    public Dialog onCreateDialog(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         String name = getArguments() != null ? requireArguments().getString(ARG_NAME) : null;
         mDialogView = View.inflate(requireActivity(), R.layout.dialog_rename, null);
         editText = mDialogView.findViewById(R.id.rename);
