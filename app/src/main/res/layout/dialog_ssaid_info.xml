@@ -29,6 +29,7 @@
             android:layout_height="wrap_content"
             android:textSize="25sp"
             android:inputType="text"
+            android:fontFamily="monospace"
             tools:text="@tools:sample/full_names" />
 
     </com.google.android.material.textfield.TextInputLayout>
