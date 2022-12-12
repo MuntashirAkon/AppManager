@@ -30,4 +30,20 @@
     <string name="intro$main$$submit-patches-title">패치 제출</string>
     <string name="intro$main$$donation-title">기부 \\&amp; 자금</string>
     <string name="intro$main$$contact-title">연락처</string>
+    <string name="intro$main$terminologies">\\begin{itemize}
+\n \\item \\textbf{AM} --- 앱관리자의 약칭.
+\n \\item \\textbf{Block/Unblock} --- 구성 요소 차단 또는 차단 해제에 사용됩니다. 
+\n구성 요소가 차단되는 방법은 사용자 기본 설정에 따라 다릅니다.
+\n \\item \\textbf{IFW} --- 의도된 방화벽의 약식입니다.
+\n \\item \\textbf{Ops} --- 의도된 방화벽의 단축형 작업 이름(예:\\ apps, 배치 ops, 원클릭 ops)
+\n \\item \\textbf{SSAID} --- \\texttt{Settings.Secure.ANDROID\\_ID}의 짧은 형식이다. 각 앱(안드로이드 오레오 이상)에 할당된 장치 식별자이다. 
+\n앱의 서명 인증서와 패키지 \\texttt{android}에 대한 SSAID 세트의 조합에서 생성된다. 
+\n결과적으로, 사용자가 장치를 포맷하도록 선택하지 않는 한 앱에서도 동일할 것으로 보장된다. 
+\n그것은 추적에 널리 사용된다.
+\n \\item \\textbf{Tracker} --- \\hyperref[sec:scanner-page]{scanner page}를 제외하고 문서 전체와 장치 관리자에서 추적기 구성 요소를 나타냅니다. 
+\n추적기에는 충돌 리포터, 분석, 자료 수집, 식별, 광고, 위치 등의 라이브러리가 포함된다. 
+\n따라서, 그들은 기능 면에서 같지 않다. 
+\n추적을 촉진하는 오픈 소스 라이브러리와 클로즈드 소스 라이브러리 사이에는 차이나 편견이 없다.
+\n\\end{itemize}</string>
+    <string name="keywords$chapter">\\newcommand{\\KeywordChapter}{Chapter}</string>
 </resources>
