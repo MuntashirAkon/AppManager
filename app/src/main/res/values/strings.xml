@@ -1303,4 +1303,5 @@
     <string name="export_app_list_select_format">Select format for exporting app list</string>
     <string name="export_option_xml">XML</string>
     <string name="export_option_markdown">Markdown</string>
+    <string name="funding_campaign_text">We\'re running a <b>funding campaign</b> for App Manager for a limited period. <a href="https://opencollective.com/app-manager#category-ABOUT">learn more…</a></string>
 </resources>

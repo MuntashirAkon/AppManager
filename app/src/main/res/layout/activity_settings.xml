@@ -43,6 +43,16 @@
             android:text="@string/app_manager_build_expiring_soon_warning"
             app:alertType="warn" />
 
+        <io.github.muntashirakon.widget.MaterialAlertView
+            android:id="@+id/funding_campaign_notice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="4dp"
+            android:paddingHorizontal="8dp"
+            android:text="@string/funding_campaign_text"
+            app:startIconDrawable="@drawable/ic_charity"
+            app:alertType="custom" />
+
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/main_layout"
             android:layout_width="match_parent"

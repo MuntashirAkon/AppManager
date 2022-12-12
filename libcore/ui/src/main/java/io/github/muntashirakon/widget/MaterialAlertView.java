@@ -2,9 +2,12 @@
 
 package io.github.muntashirakon.widget;
 
+import static com.google.android.material.theme.overlay.MaterialThemeOverlay.wrap;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.text.method.LinkMovementMethod;
 import android.text.method.MovementMethod;
 import android.util.AttributeSet;
 import android.view.View;
@@ -31,8 +34,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 import io.github.muntashirakon.ui.R;
-
-import static com.google.android.material.theme.overlay.MaterialThemeOverlay.wrap;
 
 public class MaterialAlertView extends TextInputLayout {
     @IntDef({ALERT_TYPE_INFO, ALERT_TYPE_WARN, ALERT_TYPE_CUSTOM})
@@ -65,6 +66,7 @@ public class MaterialAlertView extends TextInputLayout {
         context = getContext();
         // AlertView only has a single layout by default
         mTextInputTextView = new TextInputTextView(context);
+        mTextInputTextView.setMovementMethod(LinkMovementMethod.getInstance());
 
         addView(mTextInputTextView, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
