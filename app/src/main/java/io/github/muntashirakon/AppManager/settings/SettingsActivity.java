@@ -30,6 +30,9 @@ public class SettingsActivity extends BaseActivity implements PreferenceFragment
     private static final String SCHEME = "app-manager";
     private static final String HOST = "settings";
 
+    private static final long FUNDING_CAMPAIGN_START = 1671796800000L;
+    private static final long FUNDING_CAMPAIGN_END = 1680350400000L;
+
     @NonNull
     public static Intent getIntent(@NonNull Context context, @Nullable String... paths) {
         Intent intent = new Intent(context, SettingsActivity.class);
@@ -62,6 +65,11 @@ public class SettingsActivity extends BaseActivity implements PreferenceFragment
         progressIndicator = findViewById(R.id.progress_linear);
         progressIndicator.setVisibilityAfterHide(View.GONE);
         progressIndicator.hide();
+
+        View fundingCampaignNotice = findViewById(R.id.funding_campaign_notice);
+        long currentTime = System.currentTimeMillis();
+        boolean campaignOngoing = currentTime >= FUNDING_CAMPAIGN_START && currentTime <= FUNDING_CAMPAIGN_END;
+        fundingCampaignNotice.setVisibility(campaignOngoing ? View.VISIBLE : View.GONE);
 
         Uri uri = getIntent().getData();
         if (uri != null && SCHEME.equals(uri.getScheme()) && HOST.equals(uri.getHost()) && uri.getPath() != null) {

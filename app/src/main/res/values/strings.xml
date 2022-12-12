@@ -1238,4 +1238,5 @@
     <string name="changelog_type_improve">Improve</string>
     <string name="unsupported_split_apk">Unsupported</string>
     <string name="view_changelog">Find out what\'s new in this release</string>
+    <string name="funding_campaign_text">We\'re running a <b>funding campaign</b> for App Manager for a limited period. <a href="https://opencollective.com/app-manager#category-ABOUT">learn more…</a></string>
 </resources>
