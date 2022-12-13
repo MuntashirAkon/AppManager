@@ -1277,4 +1277,5 @@
     <string name="delete_filename">Eliminar %s</string>
     <string name="confirm_file_deletion">Sí, eliminar</string>
     <string name="on_open_application_no_recents">No mostrar aplicaciones en recientes</string>
+    <string name="file_open_with_custom_activity">Personalizado</string>
 </resources>
