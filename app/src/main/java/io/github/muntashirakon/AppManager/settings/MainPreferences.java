@@ -17,10 +17,10 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.Preference;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.transition.MaterialSharedAxis;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -32,6 +32,7 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.AlertDialogBuilder;
+import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 
 public class MainPreferences extends PreferenceFragment {
@@ -69,19 +70,24 @@ public class MainPreferences extends PreferenceFragment {
         // Custom locale
         currentLang = AppPref.getString(AppPref.PrefKey.PREF_CUSTOM_LOCALE_STR);
         ArrayMap<String, Locale> locales = LangUtils.getAppLanguages(activity);
-        final CharSequence[] languages = getLanguagesL(locales);
-        Preference locale = Objects.requireNonNull(findPreference("custom_locale"));
+        final CharSequence[] languageNames = getLanguagesL(locales);
+        final String[] languages = new String[languageNames.length];
+        for (int i = 0; i < locales.size(); ++i) {
+            languages[i] = locales.keyAt(i);
+        }
         int localeIndex = locales.indexOfKey(currentLang);
         if (localeIndex < 0) {
             localeIndex = locales.indexOfKey(LangUtils.LANG_AUTO);
         }
-        locale.setSummary(languages[localeIndex]);
+        Preference locale = Objects.requireNonNull(findPreference("custom_locale"));
+        locale.setSummary(languageNames[localeIndex]);
+        int finalLocaleIndex = localeIndex;
         locale.setOnPreferenceClickListener(preference -> {
-            new MaterialAlertDialogBuilder(activity)
+            new SearchableSingleChoiceDialogBuilder<>(activity, languages, languageNames)
                     .setTitle(R.string.choose_language)
-                    .setSingleChoiceItems(languages, locales.indexOfKey(currentLang),
-                            (dialog, which) -> currentLang = locales.keyAt(which))
-                    .setPositiveButton(R.string.apply, (dialog, which) -> {
+                    .setSelectionIndex(finalLocaleIndex)
+                    .setPositiveButton(R.string.apply, (dialog, which, selectedItem) -> {
+                        currentLang = selectedItem;
                         AppPref.set(AppPref.PrefKey.PREF_CUSTOM_LOCALE_STR, currentLang);
                         ActivityCompat.recreate(activity);
                     })
@@ -97,21 +103,16 @@ public class MainPreferences extends PreferenceFragment {
         modePref.setSummary(getString(R.string.mode_of_op_with_inferred_mode_of_op, modes[MODE_NAMES.indexOf(currentMode)],
                 getInferredMode()));
         modePref.setOnPreferenceClickListener(preference -> {
-            new MaterialAlertDialogBuilder(activity)
+            new SearchableSingleChoiceDialogBuilder<>(activity, MODE_NAMES, modes)
                     .setTitle(R.string.pref_mode_of_operations)
-                    .setSingleChoiceItems(modes, MODE_NAMES.indexOf(currentMode), (dialog, which) -> {
-                        String modeName = MODE_NAMES.get(which);
-                        if (Ops.MODE_ADB_WIFI.equals(modeName)) {
-                            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
-                                UIUtils.displayShortToast(R.string.wireless_debugging_not_supported);
-                                return;
-                            }
-                        } else if (Ops.MODE_ADB_OVER_TCP.equals(modeName)) {
+                    .setSelection(currentMode)
+                    .addDisabledItems(Build.VERSION.SDK_INT < Build.VERSION_CODES.R ?
+                            Collections.singletonList(Ops.MODE_ADB_OVER_TCP) : Collections.emptyList())
+                    .setPositiveButton(R.string.apply, (dialog, which, selectedItem) -> {
+                        currentMode = selectedItem;
+                        if (Ops.MODE_ADB_OVER_TCP.equals(currentMode)) {
                             ServerConfig.setAdbPort(ServerConfig.DEFAULT_ADB_PORT);
                         }
-                        currentMode = modeName;
-                    })
-                    .setPositiveButton(R.string.apply, (dialog, which) -> {
                         AppPref.set(AppPref.PrefKey.PREF_MODE_OF_OPS_STR, currentMode);
                         modePref.setSummary(modes[MODE_NAMES.indexOf(currentMode)]);
                         modeOfOpsAlertDialog.show();

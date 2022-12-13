@@ -52,8 +52,8 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Queue;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
@@ -75,6 +75,7 @@ import io.github.muntashirakon.AppManager.utils.StoragePermission;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
+import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 
 public class PackageInstallerActivity extends BaseActivity implements WhatsNewDialogFragment.InstallInterface {
     public static final String EXTRA_APK_FILE_KEY = "EXTRA_APK_FILE_KEY";
@@ -323,7 +324,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
             List<UserInfo> users = model.getUsers();
             if (users != null && users.size() > 1) {
                 String[] userNames = new String[users.size() + 1];
-                int[] userHandles = new int[users.size() + 1];
+                Integer[] userHandles = new Integer[users.size() + 1];
                 userNames[0] = getString(R.string.backup_all_users);
                 userHandles[0] = UserHandleHidden.USER_ALL;
                 int i = 1;
@@ -332,14 +333,13 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
                     userHandles[i] = info.id;
                     ++i;
                 }
-                AtomicInteger userHandle = new AtomicInteger(UserHandleHidden.USER_ALL);
-                new MaterialAlertDialogBuilder(this)
+                new SearchableSingleChoiceDialogBuilder<>(this, userHandles, userNames)
                         .setCancelable(false)
                         .setTitle(R.string.select_user)
-                        .setSingleChoiceItems(userNames, 0, (dialog, which) ->
-                                userHandle.set(userHandles[which]))
-                        .setPositiveButton(R.string.ok, (dialog, which) -> doLaunchInstallerService(userHandle.get()))
-                        .setNegativeButton(R.string.cancel, (dialog, which) -> triggerCancel())
+                        .setSelectionIndex(0)
+                        .setPositiveButton(R.string.ok, (dialog, which, selectedUserId) ->
+                                doLaunchInstallerService(Objects.requireNonNull(selectedUserId)))
+                        .setNegativeButton(R.string.cancel, (dialog, which, selectedUserId) -> triggerCancel())
                         .show();
                 return;
             }

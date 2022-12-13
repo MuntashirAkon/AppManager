@@ -32,7 +32,6 @@ import com.google.android.material.transition.MaterialSharedAxis;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.github.muntashirakon.AppManager.R;
@@ -51,11 +50,19 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
+import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 import io.github.muntashirakon.io.Paths;
 
 public class BackupRestorePreferences extends PreferenceFragment {
+    private static final String[] encryption = new String[]{
+            CryptoUtils.MODE_NO_ENCRYPTION,
+            CryptoUtils.MODE_OPEN_PGP,
+            CryptoUtils.MODE_AES,
+            CryptoUtils.MODE_RSA,
+            CryptoUtils.MODE_ECC
+    };
     @StringRes
-    private static final int[] encryptionNames = new int[]{
+    private static final Integer[] encryptionNames = new Integer[]{
             R.string.none,
             R.string.open_pgp_provider,
             R.string.aes,
@@ -109,18 +116,17 @@ public class BackupRestorePreferences extends PreferenceFragment {
         model = new ViewModelProvider(requireActivity()).get(MainPreferencesViewModel.class);
         activity = (SettingsActivity) requireActivity();
         // Backup compression method
-        String[] tarTypes = MetadataManager.TAR_TYPES;
         String[] readableTarTypes = new String[]{"GZip", "BZip2"};
-        currentCompression = ArrayUtils.indexOf(tarTypes, AppPref.get(AppPref.PrefKey.PREF_BACKUP_COMPRESSION_METHOD_STR));
+        currentCompression = ArrayUtils.indexOf(MetadataManager.TAR_TYPES, AppPref.get(AppPref.PrefKey.PREF_BACKUP_COMPRESSION_METHOD_STR));
         Preference compressionMethod = Objects.requireNonNull(findPreference("backup_compression_method"));
         compressionMethod.setSummary(readableTarTypes[currentCompression == -1 ? 0 : currentCompression]);
         compressionMethod.setOnPreferenceClickListener(preference -> {
-            new MaterialAlertDialogBuilder(activity)
+            new SearchableSingleChoiceDialogBuilder<>(activity, MetadataManager.TAR_TYPES, readableTarTypes)
                     .setTitle(R.string.pref_compression_method)
-                    .setSingleChoiceItems(readableTarTypes, currentCompression,
-                            (dialog, which) -> currentCompression = which)
-                    .setPositiveButton(R.string.save, (dialog, which) -> {
-                        AppPref.set(AppPref.PrefKey.PREF_BACKUP_COMPRESSION_METHOD_STR, tarTypes[currentCompression]);
+                    .setSelectionIndex(currentCompression)
+                    .setPositiveButton(R.string.save, (dialog, which, selectedTarType) -> {
+                        currentCompression = which;
+                        AppPref.set(AppPref.PrefKey.PREF_BACKUP_COMPRESSION_METHOD_STR, selectedTarType);
                         compressionMethod.setSummary(readableTarTypes[currentCompression == -1 ? 0 : currentCompression]);
                     })
                     .setNegativeButton(R.string.cancel, null)
@@ -157,11 +163,11 @@ public class BackupRestorePreferences extends PreferenceFragment {
             for (int i = 0; i < encryptionNames.length; ++i) {
                 encryptionNamesText[i] = getString(encryptionNames[i]);
             }
-            int choice = encModeToIndex((String) AppPref.get(AppPref.PrefKey.PREF_ENCRYPTION_STR));
-            new MaterialAlertDialogBuilder(activity)
+            new SearchableSingleChoiceDialogBuilder<>(activity, encryption, encryptionNamesText)
                     .setTitle(R.string.encryption)
-                    .setSingleChoiceItems(encryptionNamesText, choice, (dialog, which) -> {
-                        String encryptionMode = indexToEncMode(which);
+                    .setSelection(AppPref.getString(AppPref.PrefKey.PREF_ENCRYPTION_STR))
+                    .setOnSingleChoiceClickListener((dialog, which, encryptionMode, isChecked) -> {
+                        if (!isChecked) return;
                         switch (encryptionMode) {
                             case CryptoUtils.MODE_NO_ENCRYPTION:
                                 AppPref.set(AppPref.PrefKey.PREF_ENCRYPTION_STR, encryptionMode);
@@ -312,72 +318,33 @@ public class BackupRestorePreferences extends PreferenceFragment {
                     .setMessage(R.string.no_volumes_found)
                     .setNegativeButton(R.string.ok, null)
                     .show());
-        } else {
-            Uri[] backupVolumes = new Uri[storageLocations.size()];
-            CharSequence[] backupVolumesStr = new CharSequence[storageLocations.size()];
-            AtomicInteger selectedIndex = new AtomicInteger(-1);
-            for (int i = 0; i < storageLocations.size(); ++i) {
-                backupVolumes[i] = storageLocations.valueAt(i);
-                backupVolumesStr[i] = new SpannableStringBuilder(storageLocations.keyAt(i)).append("\n")
-                        .append(getSecondaryText(activity, getSmallerText(backupVolumes[i].getPath())));
-                if (backupVolumes[i].equals(backupVolume)) {
-                    selectedIndex.set(i);
-                }
-            }
-            alertDialog.set(new MaterialAlertDialogBuilder(activity)
-                    .setCustomTitle(titleBuilder.build())
-                    .setSingleChoiceItems(backupVolumesStr, selectedIndex.get(), (dialog, which) -> {
-                        backupVolume = backupVolumes[which];
-                        selectedIndex.set(which);
-                    })
-                    .setNegativeButton(R.string.cancel, null)
-                    .setPositiveButton(R.string.save, (dialog, which) -> {
-                        Uri lastBackupVolume = AppPref.getSelectedDirectory();
-                        if (!lastBackupVolume.equals(backupVolume)) {
-                            AppPref.set(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR, backupVolume.toString());
-                            model.updateBackups();
-                        }
-                    })
-                    .show());
+            return;
         }
+        Uri[] backupVolumes = new Uri[storageLocations.size()];
+        CharSequence[] backupVolumesStr = new CharSequence[storageLocations.size()];
+        for (int i = 0; i < storageLocations.size(); ++i) {
+            backupVolumes[i] = storageLocations.valueAt(i);
+            backupVolumesStr[i] = new SpannableStringBuilder(storageLocations.keyAt(i)).append("\n")
+                    .append(getSecondaryText(activity, getSmallerText(backupVolumes[i].getPath())));
+        }
+        alertDialog.set(new SearchableSingleChoiceDialogBuilder<>(activity, backupVolumes, backupVolumesStr)
+                .setTitle(titleBuilder.build())
+                .setSelection(backupVolume)
+                .setNegativeButton(R.string.cancel, null)
+                .setPositiveButton(R.string.save, (dialog, which, selectedBackupVolume) -> {
+                    backupVolume = selectedBackupVolume;
+                    Uri lastBackupVolume = AppPref.getSelectedDirectory();
+                    if (!lastBackupVolume.equals(backupVolume)) {
+                        AppPref.set(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR, backupVolume.toString());
+                        model.updateBackups();
+                    }
+                })
+                .show());
     }
 
     private Intent getSafIntent(String path) {
         return new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE)
                 .putExtra("android.provider.extra.SHOW_ADVANCED", true)
                 .putExtra("android.provider.extra.INITIAL_URI", Paths.getPrimaryPath(path).getUri());
-    }
-
-    @CryptoUtils.Mode
-    private String indexToEncMode(int index) {
-        switch (index) {
-            default:
-            case 0:
-                return CryptoUtils.MODE_NO_ENCRYPTION;
-            case 1:
-                return CryptoUtils.MODE_OPEN_PGP;
-            case 2:
-                return CryptoUtils.MODE_AES;
-            case 3:
-                return CryptoUtils.MODE_RSA;
-            case 4:
-                return CryptoUtils.MODE_ECC;
-        }
-    }
-
-    private int encModeToIndex(@NonNull @CryptoUtils.Mode String mode) {
-        switch (mode) {
-            default:
-            case CryptoUtils.MODE_NO_ENCRYPTION:
-                return 0;
-            case CryptoUtils.MODE_OPEN_PGP:
-                return 1;
-            case CryptoUtils.MODE_AES:
-                return 2;
-            case CryptoUtils.MODE_RSA:
-                return 3;
-            case CryptoUtils.MODE_ECC:
-                return 4;
-        }
     }
 }

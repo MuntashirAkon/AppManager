@@ -104,6 +104,7 @@ import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
+import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
@@ -1405,9 +1406,10 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             });
             holder.itemView.setOnLongClickListener(v -> {
                 List<Integer> modes = getAppOpModes();
-                new MaterialAlertDialogBuilder(mActivity)
+                new SearchableSingleChoiceDialogBuilder<>(mActivity, getAppOpModes(), getAppOpModeNames(modes))
                         .setTitle(R.string.set_app_op_mode)
-                        .setSingleChoiceItems(getAppOpModeNames(modes), modes.indexOf(opEntry.getMode()), (dialog, which) -> {
+                        .setSelection(opEntry.getMode())
+                        .setOnSingleChoiceClickListener((dialog, which, item1, isChecked) -> {
                             int opMode = modes.get(which);
                             int lastOpMode = opEntry.getMode();
                             mExecutor.submit(() -> {

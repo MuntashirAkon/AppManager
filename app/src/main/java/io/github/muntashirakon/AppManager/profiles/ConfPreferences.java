@@ -28,6 +28,7 @@ import io.github.muntashirakon.AppManager.users.UserInfo;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
+import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 
 public class ConfPreferences extends PreferenceFragmentCompat {
@@ -75,9 +76,13 @@ public class ConfPreferences extends PreferenceFragmentCompat {
         };
         statePref.setTitle(getString(R.string.process_state, statesL[states.indexOf(model.getState())]));
         statePref.setOnPreferenceClickListener(preference -> {
-            new MaterialAlertDialogBuilder(activity)
+            new SearchableSingleChoiceDialogBuilder<>(activity, states, statesL)
                     .setTitle(R.string.profile_state)
-                    .setSingleChoiceItems(statesL, states.indexOf(model.getState()), (dialog, which) -> {
+                    .setSelection(model.getState())
+                    .setOnSingleChoiceClickListener((dialog, which, item, isChecked) -> {
+                        if (!isChecked) {
+                            return;
+                        }
                         model.setState(states.get(which));
                         statePref.setTitle(getString(R.string.process_state, statesL[which]));
                         dialog.dismiss();

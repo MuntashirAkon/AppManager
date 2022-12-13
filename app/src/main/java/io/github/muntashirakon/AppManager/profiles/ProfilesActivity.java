@@ -45,6 +45,7 @@ import io.github.muntashirakon.AppManager.details.LauncherIconCreator;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
+import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
@@ -277,13 +278,17 @@ public class ProfilesActivity extends BaseActivity {
                                 activity.getString(R.string.on),
                                 activity.getString(R.string.off)
                         };
-                        @ProfileMetaManager.ProfileState final List<String> states = Arrays.asList(ProfileMetaManager.STATE_ON, ProfileMetaManager.STATE_OFF);
-                        new MaterialAlertDialogBuilder(activity)
+                        @ProfileMetaManager.ProfileState
+                        final List<String> states = Arrays.asList(ProfileMetaManager.STATE_ON, ProfileMetaManager.STATE_OFF);
+                        new SearchableSingleChoiceDialogBuilder<>(activity, states, statesL)
                                 .setTitle(R.string.profile_state)
-                                .setSingleChoiceItems(statesL, -1, (dialog, which) -> {
+                                .setOnSingleChoiceClickListener((dialog, which, selectedState, isChecked) -> {
+                                    if (!isChecked) {
+                                        return;
+                                    }
                                     Intent aIntent = new Intent(activity, ProfileApplierService.class);
                                     aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_NAME, profName);
-                                    aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_STATE, states.get(which));
+                                    aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_STATE, selectedState);
                                     ContextCompat.startForegroundService(activity, aIntent);
                                     dialog.dismiss();
                                 })
@@ -324,9 +329,12 @@ public class ProfilesActivity extends BaseActivity {
                                 activity.getString(R.string.advanced)
                         };
                         final String[] shortcutTypes = new String[]{AppsProfileActivity.ST_SIMPLE, AppsProfileActivity.ST_ADVANCED};
-                        new MaterialAlertDialogBuilder(activity)
+                        new SearchableSingleChoiceDialogBuilder<>(activity, shortcutTypes, shortcutTypesL)
                                 .setTitle(R.string.profile_state)
-                                .setSingleChoiceItems(shortcutTypesL, -1, (dialog, which) -> {
+                                .setOnSingleChoiceClickListener((dialog, which, item1, isChecked) -> {
+                                    if (!isChecked) {
+                                        return;
+                                    }
                                     Intent intent = new Intent(activity, AppsProfileActivity.class);
                                     intent.putExtra(AppsProfileActivity.EXTRA_PROFILE_NAME, profName);
                                     intent.putExtra(AppsProfileActivity.EXTRA_SHORTCUT_TYPE, shortcutTypes[which]);

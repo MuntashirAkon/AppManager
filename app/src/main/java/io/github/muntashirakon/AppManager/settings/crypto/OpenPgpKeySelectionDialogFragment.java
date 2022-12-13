@@ -9,8 +9,8 @@ import android.content.pm.PackageManager;
 import android.content.pm.ServiceInfo;
 import android.os.Bundle;
 import android.text.TextUtils;
-
 import android.widget.Button;
+
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.IntentSenderRequest;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -19,8 +19,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
-
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.openintents.openpgp.IOpenPgpService2;
 import org.openintents.openpgp.OpenPgpError;
@@ -37,7 +35,7 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 
 public class OpenPgpKeySelectionDialogFragment extends DialogFragment {
     public static final String TAG = "OpenPgpKeySelectionDialogFragment";
@@ -73,15 +71,14 @@ public class OpenPgpKeySelectionDialogFragment extends DialogFragment {
             packageLabels[i] = serviceInfo.loadLabel(pm);
             packageNames[i] = serviceInfo.packageName;
         }
-        int choice = ArrayUtils.indexOf(packageNames, mOpenPgpProvider);
-        dialog = new MaterialAlertDialogBuilder(activity)
+        dialog = new SearchableSingleChoiceDialogBuilder<>(activity, packageNames, packageLabels)
                 .setTitle(R.string.open_pgp_provider)
-                .setSingleChoiceItems(packageLabels, choice, (dialog, which) -> {
-                    mOpenPgpProvider = packageNames[which];
+                .setSelection(mOpenPgpProvider)
+                .setNegativeButton(R.string.cancel, null)
+                .setPositiveButton(R.string.save, (dialog1, which, selectedItem) -> {
+                    mOpenPgpProvider = selectedItem;
                     AppPref.set(AppPref.PrefKey.PREF_OPEN_PGP_PACKAGE_STR, mOpenPgpProvider);
                 })
-                .setNegativeButton(R.string.cancel, null)
-                .setPositiveButton(R.string.ok, null)
                 .create();
         dialog.setOnShowListener(dialog1 -> {
             Button positiveButton = ((AlertDialog) dialog1).getButton(AlertDialog.BUTTON_POSITIVE);

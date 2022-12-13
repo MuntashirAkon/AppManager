@@ -17,6 +17,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringDef;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
@@ -25,7 +26,6 @@ import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager.widget.ViewPager;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
@@ -40,6 +40,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.details.LauncherIconCreator;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
+import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 import io.github.muntashirakon.util.UiUtils;
 
@@ -115,17 +116,18 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
                         getString(R.string.off)
                 };
                 @ProfileMetaManager.ProfileState final List<String> states = Arrays.asList(ProfileMetaManager.STATE_ON, ProfileMetaManager.STATE_OFF);
-                new MaterialAlertDialogBuilder(this)
+                AlertDialog alertDialog = new SearchableSingleChoiceDialogBuilder<>(this, states, statesL)
                         .setTitle(R.string.profile_state)
-                        .setSingleChoiceItems(statesL, -1, (dialog, which) -> {
+                        .setOnSingleChoiceClickListener((dialog, which, newState, isChecked) -> {
                             Intent aIntent = new Intent(this, ProfileApplierService.class);
                             aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_NAME, profileName);
-                            aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_STATE, states.get(which));
+                            aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_STATE, newState);
                             ContextCompat.startForegroundService(this, aIntent);
                             dialog.dismiss();
                         })
-                        .setOnDismissListener(dialog -> finish())
-                        .show();
+                        .create();
+                alertDialog.setOnDismissListener(dialog -> finishAndRemoveTask());
+                alertDialog.show();
                 return;
         }
         if (getSupportActionBar() != null) {
@@ -186,16 +188,18 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
         } else if (id == R.id.action_apply) {
             final String[] statesL = new String[]{getString(R.string.on), getString(R.string.off)};
             @ProfileMetaManager.ProfileState final List<String> states = Arrays.asList(ProfileMetaManager.STATE_ON, ProfileMetaManager.STATE_OFF);
-            new MaterialAlertDialogBuilder(this)
+            new SearchableSingleChoiceDialogBuilder<>(this, states, statesL)
                     .setTitle(R.string.profile_state)
-                    .setSingleChoiceItems(statesL, -1, (dialog, which) -> {
+                    .setOnSingleChoiceClickListener((dialog, which, item1, isChecked) -> {
+                        if (!isChecked) {
+                            return;
+                        }
                         Intent aIntent = new Intent(this, ProfileApplierService.class);
                         aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_NAME, model.getProfileName());
                         aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_STATE, states.get(which));
                         ContextCompat.startForegroundService(this, aIntent);
                         dialog.dismiss();
                     })
-                    .setOnDismissListener(dialog -> finish())
                     .show();
         } else if (id == R.id.action_save) {
             model.save();
@@ -229,9 +233,12 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
                     getString(R.string.advanced)
             };
             final String[] shortcutTypes = new String[]{ST_SIMPLE, ST_ADVANCED};
-            new MaterialAlertDialogBuilder(this)
+            new SearchableSingleChoiceDialogBuilder<>(this, shortcutTypes, shortcutTypesL)
                     .setTitle(R.string.profile_state)
-                    .setSingleChoiceItems(shortcutTypesL, -1, (dialog, which) -> {
+                    .setOnSingleChoiceClickListener((dialog, which, item1, isChecked) -> {
+                        if (!isChecked) {
+                            return;
+                        }
                         Intent intent = new Intent(this, AppsProfileActivity.class);
                         intent.putExtra(EXTRA_PROFILE_NAME, model.getProfileName());
                         intent.putExtra(EXTRA_SHORTCUT_TYPE, shortcutTypes[which]);

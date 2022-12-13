@@ -3,6 +3,7 @@
 package io.github.muntashirakon.AppManager.settings;
 
 import android.os.Bundle;
+import android.text.SpannableStringBuilder;
 
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
@@ -22,6 +23,7 @@ import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
+import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 
 public class RulesPreferences extends PreferenceFragment {
     private final String[] blockingMethods = new String[]{
@@ -77,19 +79,20 @@ public class RulesPreferences extends PreferenceFragment {
         defaultFreezingMethod.setOnPreferenceClickListener(preference -> {
             CharSequence[] itemDescription = new CharSequence[freezingMethods.length];
             for (int i = 0; i < freezingMethods.length; ++i) {
-                itemDescription[i] = UIUtils.getStyledKeyValue(
-                        activity,
-                        getString(freezingMethodTitles[i]),
-                        UIUtils.getSecondaryText(activity, UIUtils.getSmallerText(getString(freezingMethodDescriptions[i]))),
-                        "\n");
+                itemDescription[i] = new SpannableStringBuilder(getString(freezingMethodTitles[i])).append("\n")
+                        .append(UIUtils.getSmallerText(getString(freezingMethodDescriptions[i])));
             }
-            new MaterialAlertDialogBuilder(activity)
-                    .setCustomTitle(new DialogTitleBuilder(activity)
+            new SearchableSingleChoiceDialogBuilder<>(activity, freezingMethods, itemDescription)
+                    .setTitle(new DialogTitleBuilder(activity)
                             .setTitle(R.string.pref_default_freezing_method)
                             .setSubtitle(R.string.pref_default_freezing_method_description)
                             .build())
-                    .setSingleChoiceItems(itemDescription, freezeTypeIdx.get(), (dialog, which) -> {
-                        AppPref.set(AppPref.PrefKey.PREF_FREEZE_TYPE_INT, freezingMethods[which]);
+                    .setSelection(AppPref.getDefaultFreezingMethod())
+                    .setOnSingleChoiceClickListener((dialog, which, selectedFreezingMethod, isChecked) -> {
+                        if (!isChecked) {
+                            return;
+                        }
+                        AppPref.set(AppPref.PrefKey.PREF_FREEZE_TYPE_INT, selectedFreezingMethod);
                         defaultFreezingMethod.setSummary(freezingMethodTitles[which]);
                         freezeTypeIdx.set(which);
                         dialog.dismiss();
@@ -100,28 +103,28 @@ public class RulesPreferences extends PreferenceFragment {
         });
         // Default component blocking method
         Preference defaultBlockingMethod = Objects.requireNonNull(findPreference("default_blocking_method"));
-        AtomicInteger csIdx = new AtomicInteger(ArrayUtils.indexOf(blockingMethods, AppPref.getDefaultComponentStatus()));
-        if (csIdx.get() != -1) {
-            defaultBlockingMethod.setSummary(blockingMethodTitles[csIdx.get()]);
+        int csIdx = ArrayUtils.indexOf(blockingMethods, AppPref.getDefaultComponentStatus());
+        if (csIdx != -1) {
+            defaultBlockingMethod.setSummary(blockingMethodTitles[csIdx]);
         }
         defaultBlockingMethod.setOnPreferenceClickListener(preference -> {
             CharSequence[] itemDescription = new CharSequence[blockingMethods.length];
             for (int i = 0; i < blockingMethods.length; ++i) {
-                itemDescription[i] = UIUtils.getStyledKeyValue(
-                        activity,
-                        getString(blockingMethodTitles[i]),
-                        UIUtils.getSecondaryText(activity, UIUtils.getSmallerText(getString(blockingMethodDescriptions[i]))),
-                        "\n");
+                itemDescription[i] = new SpannableStringBuilder(getString(blockingMethodTitles[i])).append("\n")
+                        .append(UIUtils.getSmallerText(getString(blockingMethodDescriptions[i])));
             }
-            new MaterialAlertDialogBuilder(activity)
-                    .setCustomTitle(new DialogTitleBuilder(activity)
+            new SearchableSingleChoiceDialogBuilder<>(activity, blockingMethods, itemDescription)
+                    .setTitle(new DialogTitleBuilder(activity)
                             .setTitle(R.string.pref_default_blocking_method)
                             .setSubtitle(R.string.pref_default_blocking_method_description)
                             .build())
-                    .setSingleChoiceItems(itemDescription, csIdx.get(), (dialog, which) -> {
-                        AppPref.set(AppPref.PrefKey.PREF_DEFAULT_BLOCKING_METHOD_STR, blockingMethods[which]);
+                    .setSelection(AppPref.getDefaultComponentStatus())
+                    .setOnSingleChoiceClickListener((dialog, which, selectedBlockingMethod, isChecked) -> {
+                        if (!isChecked) {
+                            return;
+                        }
+                        AppPref.set(AppPref.PrefKey.PREF_DEFAULT_BLOCKING_METHOD_STR, selectedBlockingMethod);
                         defaultBlockingMethod.setSummary(blockingMethodTitles[which]);
-                        csIdx.set(which);
                         dialog.dismiss();
                     })
                     .setNegativeButton(R.string.close, null)

@@ -2,7 +2,11 @@
 
 package io.github.muntashirakon.AppManager.settings;
 
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
+
 import android.content.Intent;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -30,12 +34,15 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
+import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
-
 public class InstallerPreferences extends PreferenceFragment {
+    private static final Integer[] installLocations = new Integer[] {
+            PackageInfo.INSTALL_LOCATION_AUTO,
+            PackageInfo.INSTALL_LOCATION_INTERNAL_ONLY,
+            PackageInfo.INSTALL_LOCATION_PREFER_EXTERNAL
+    };
     private static final int[] installLocationNames = new int[]{
             R.string.auto,  // PackageInfo.INSTALL_LOCATION_AUTO
             R.string.install_location_internal_only,  // PackageInfo.INSTALL_LOCATION_INTERNAL_ONLY
@@ -68,17 +75,15 @@ public class InstallerPreferences extends PreferenceFragment {
                 installLocationTexts[i] = getString(installLocationNames[i]);
             }
             int choice = AppPref.getInt(AppPref.PrefKey.PREF_INSTALLER_INSTALL_LOCATION_INT);
-            new MaterialAlertDialogBuilder(requireActivity())
+            new SearchableSingleChoiceDialogBuilder<>(requireActivity(), installLocations, installLocationTexts)
                     .setTitle(R.string.install_location)
-                    .setSingleChoiceItems(installLocationTexts, choice, (dialog, newInstallLocation) -> {
+                    .setSelection(choice)
+                    .setPositiveButton(R.string.save, (dialog, which, newInstallLocation) -> {
+                        Objects.requireNonNull(newInstallLocation);
                         AppPref.set(AppPref.PrefKey.PREF_INSTALLER_INSTALL_LOCATION_INT, newInstallLocation);
                         installLocationPref.setSummary(installLocationNames[newInstallLocation]);
                     })
-                    .setNegativeButton(R.string.cancel, (dialog, which) -> {
-                        // Revert
-                        AppPref.set(AppPref.PrefKey.PREF_INSTALLER_INSTALL_LOCATION_INT, installLocation);
-                        installLocationPref.setSummary(installLocationNames[installLocation]);
-                    })
+                    .setNegativeButton(R.string.cancel, null)
                     .show();
             return true;
         });
@@ -174,13 +179,12 @@ public class InstallerPreferences extends PreferenceFragment {
                     .append("\n")
                     .append(getSecondaryText(requireContext(), getSmallerText(pair.first))));
         }
-        int selectedApp = itemNames.indexOf(installerApp);
         activity.progressIndicator.hide();
-        new MaterialAlertDialogBuilder(requireActivity())
+        new SearchableSingleChoiceDialogBuilder<>(requireActivity(), items, itemNames)
                 .setTitle(R.string.installer_app)
-                .setSingleChoiceItems(itemNames.toArray(new CharSequence[0]),
-                        selectedApp, (dialog, which) -> installerApp = items.get(which))
-                .setPositiveButton(R.string.ok, (dialog, which) -> {
+                .setSelection(installerApp)
+                .setPositiveButton(R.string.save, (dialog, which, selectedInstallerApp) -> {
+                    installerApp = selectedInstallerApp;
                     AppPref.set(AppPref.PrefKey.PREF_INSTALLER_INSTALLER_APP_STR, installerApp);
                     installerAppPref.setSummary(PackageUtils.getPackageLabel(pm, installerApp));
                 })

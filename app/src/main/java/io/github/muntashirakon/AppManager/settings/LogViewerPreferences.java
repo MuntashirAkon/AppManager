@@ -12,13 +12,11 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.preference.Preference;
 import androidx.preference.SwitchPreferenceCompat;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.transition.MaterialSharedAxis;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logcat.helper.LogcatHelper;
@@ -27,6 +25,7 @@ import io.github.muntashirakon.AppManager.logcat.struct.LogLine;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
+import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 
 public class LogViewerPreferences extends PreferenceFragment {
@@ -146,15 +145,14 @@ public class LogViewerPreferences extends PreferenceFragment {
         Preference logLevel = Objects.requireNonNull(findPreference("log_viewer_default_log_level"));
         logLevel.setOnPreferenceClickListener(preference -> {
             CharSequence[] logLevelsLocalised = getResources().getStringArray(R.array.log_levels);
-            int idx = LOG_LEVEL_VALUES.indexOf(AppPref.getInt(AppPref.PrefKey.PREF_LOG_VIEWER_DEFAULT_LOG_LEVEL_INT));
-            AtomicInteger newIdx = new AtomicInteger(idx);
-            new MaterialAlertDialogBuilder(activity)
+            new SearchableSingleChoiceDialogBuilder<>(activity, LOG_LEVEL_VALUES, logLevelsLocalised)
                     .setTitle(R.string.pref_default_log_level_title)
-                    .setSingleChoiceItems(logLevelsLocalised, idx, (dialog, which) -> newIdx.set(which))
-                    .setPositiveButton(R.string.save, (dialog, which) -> AppPref.set(AppPref.PrefKey
-                            .PREF_LOG_VIEWER_DEFAULT_LOG_LEVEL_INT, LOG_LEVEL_VALUES.get(newIdx.get())))
+                    .setSelection(AppPref.getInt(AppPref.PrefKey.PREF_LOG_VIEWER_DEFAULT_LOG_LEVEL_INT))
+                    .setPositiveButton(R.string.save, (dialog, which, newLogLevel) -> AppPref.set(
+                            AppPref.PrefKey.PREF_LOG_VIEWER_DEFAULT_LOG_LEVEL_INT,
+                            LOG_LEVEL_VALUES.get(Objects.requireNonNull(newLogLevel))))
                     .setNegativeButton(R.string.cancel, null)
-                    .setNeutralButton(R.string.reset_to_default, (dialog, which) -> AppPref.setDefault(
+                    .setNeutralButton(R.string.reset_to_default, (dialog, which, newLogLevel) -> AppPref.setDefault(
                             AppPref.PrefKey.PREF_LOG_VIEWER_DEFAULT_LOG_LEVEL_INT))
                     .show();
             return true;
