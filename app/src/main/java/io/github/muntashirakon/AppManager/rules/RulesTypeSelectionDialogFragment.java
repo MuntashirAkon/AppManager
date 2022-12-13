@@ -14,17 +14,15 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.settings.SettingsActivity;
+import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 
 public class RulesTypeSelectionDialogFragment extends DialogFragment {
     public static final String TAG = "RulesTypeSelectionDialogFragment";
@@ -43,7 +41,7 @@ public class RulesTypeSelectionDialogFragment extends DialogFragment {
     public static final int MODE_IMPORT = 1;
     public static final int MODE_EXPORT = 2;
 
-    public static final RuleType[] types = new RuleType[]{
+    public static final RuleType[] RULE_TYPES = new RuleType[]{
             RuleType.ACTIVITY,
             RuleType.SERVICE,
             RuleType.RECEIVER,
@@ -69,24 +67,27 @@ public class RulesTypeSelectionDialogFragment extends DialogFragment {
         userHandles = args.getIntArray(ARG_USERS);
         if (userHandles == null) userHandles = new int[]{UserHandleHidden.myUserId()};
         if (mUri == null) return super.onCreateDialog(savedInstanceState);
-        final boolean[] checkedItems = new boolean[6];
-        Arrays.fill(checkedItems, true);
-        mSelectedTypes = new HashSet<>(Arrays.asList(RuleType.values()));
-        return new MaterialAlertDialogBuilder(activity)
+        List<Integer> ruleIndexes = new ArrayList<>();
+        for (int i = 0; i < RULE_TYPES.length; ++i) {
+            ruleIndexes.add(i);
+        }
+        mSelectedTypes = new HashSet<>(RULE_TYPES.length);
+        return new SearchableMultiChoiceDialogBuilder<>(activity, ruleIndexes, R.array.rule_types)
                 .setTitle(mode == MODE_IMPORT ? R.string.import_options : R.string.export_options)
-                .setMultiChoiceItems(R.array.rule_types, checkedItems, (dialog, which, isChecked) -> {
-                    if (isChecked) mSelectedTypes.add(types[which]);
-                    else mSelectedTypes.remove(types[which]);
-                })
-                .setPositiveButton(getResources().getString(mode == MODE_IMPORT ?
-                        R.string.pref_import : R.string.pref_export), (dialog1, which) -> {
-                    Log.d("TestImportExport", "Types: " + mSelectedTypes.toString() + "\nURI: " + mUri.toString());
-                    if (activity instanceof SettingsActivity) {
-                        ((SettingsActivity) activity).progressIndicator.show();
-                    }
-                    if (mode == MODE_IMPORT) handleImport();
-                    else handleExport();
-                })
+                .addSelections(ruleIndexes)
+                .setPositiveButton(mode == MODE_IMPORT ? R.string.pref_import : R.string.pref_export,
+                        (dialog1, which, selections) -> {
+                            for (int i : selections) {
+                                mSelectedTypes.add(RULE_TYPES[i]);
+                            }
+                            Log.d("TestImportExport", "Types: " + mSelectedTypes.toString() + "\nURI: " + mUri.toString());
+                            if (activity instanceof SettingsActivity) {
+                                ((SettingsActivity) activity).progressIndicator.show();
+                            }
+                            if (mode == MODE_IMPORT) {
+                                handleImport();
+                            } else handleExport();
+                        })
                 .setNegativeButton(getResources().getString(R.string.cancel), null)
                 .create();
     }

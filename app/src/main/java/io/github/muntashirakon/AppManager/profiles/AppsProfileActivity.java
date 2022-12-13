@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.profiles;
 
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
+
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
@@ -36,12 +38,10 @@ import java.util.Objects;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.details.LauncherIconCreator;
-import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 import io.github.muntashirakon.util.UiUtils;
-
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
 public class AppsProfileActivity extends BaseActivity implements NavigationBarView.OnItemSelectedListener,
         ViewPager.OnPageChangeListener {

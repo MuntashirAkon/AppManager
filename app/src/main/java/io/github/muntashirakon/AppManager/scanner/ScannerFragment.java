@@ -2,6 +2,11 @@
 
 package io.github.muntashirakon.AppManager.scanner;
 
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getColoredText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getMonospacedText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getPrimaryText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -43,19 +48,14 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.scanner.vt.VtFileReport;
 import io.github.muntashirakon.AppManager.scanner.vt.VtFileReportScanItem;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
-import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
+import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.util.UiUtils;
-
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getColoredText;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getMonospacedText;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getPrimaryText;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
 public class ScannerFragment extends Fragment {
     private CharSequence mAppName;

@@ -23,8 +23,8 @@ import java.util.concurrent.Executors;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.dialog.BackupRestoreDialogFragment;
 import io.github.muntashirakon.AppManager.main.ApplicationItem;
-import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 
 public class RestoreTasksDialogFragment extends DialogFragment {
     public static final String TAG = "RestoreTasksDialogFragment";

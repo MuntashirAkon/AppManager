@@ -1,0 +1,35 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <io.github.muntashirakon.widget.SearchView
+        style="@style/Widget.AppTheme.SearchView.Small"
+        android:id="@+id/action_search"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginHorizontal="@dimen/padding_medium"
+        app:iconifiedByDefault="false" />
+
+    <io.github.muntashirakon.widget.CheckBox
+        android:id="@android:id/checkbox"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="@dimen/padding_medium"
+        android:layout_marginEnd="@dimen/padding_medium"
+        android:text="@string/select_all" />
+
+    <io.github.muntashirakon.widget.RecyclerView
+        android:id="@android:id/list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollIndicators="top|bottom"
+        app:fastScrollerEnabled="true"
+        tools:ignore="UnusedAttribute"
+        tools:listitem="@layout/mtrl_alert_select_dialog_multichoice" />
+
+</androidx.appcompat.widget.LinearLayoutCompat>

@@ -34,8 +34,8 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
-import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.dialog.SearchableFlagsDialogBuilder;
 
 public class RestoreSingleFragment extends Fragment {
     public static RestoreSingleFragment getInstance() {
@@ -129,9 +129,8 @@ public class RestoreSingleFragment extends Fragment {
             enabledFlags.addFlag(BackupFlags.BACKUP_APK_FILES);
             disabledFlags.add(BackupFlags.BACKUP_APK_FILES);
         }
-        new SearchableMultiChoiceDialogBuilder<>(mContext, supportedBackupFlags, BackupFlags.getFormattedFlagNames(mContext, supportedBackupFlags))
+        new SearchableFlagsDialogBuilder<>(mContext, supportedBackupFlags, BackupFlags.getFormattedFlagNames(mContext, supportedBackupFlags), enabledFlags.getFlags())
                 .setTitle(R.string.backup_options)
-                .addSelections(BackupFlags.getBackupFlagsAsArray(enabledFlags.getFlags()))
                 .addDisabledItems(disabledFlags)
                 .setPositiveButton(R.string.restore, (dialog, which, selections) -> {
                     int newFlags = 0;

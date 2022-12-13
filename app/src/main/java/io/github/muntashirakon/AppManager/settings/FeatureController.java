@@ -107,6 +107,10 @@ public class FeatureController {
         flags = (int) AppPref.get(AppPref.PrefKey.PREF_ENABLED_FEATURES_INT);
     }
 
+    public int getFlags() {
+        return flags;
+    }
+
     public static boolean isInterceptorEnabled() {
         return getInstance().isEnabled(FEAT_INTERCEPTOR);
     }

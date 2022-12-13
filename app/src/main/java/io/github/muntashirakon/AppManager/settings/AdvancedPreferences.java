@@ -21,7 +21,6 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.transition.MaterialSharedAxis;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -31,6 +30,7 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 
 public class AdvancedPreferences extends PreferenceFragment {
@@ -133,34 +133,27 @@ public class AdvancedPreferences extends PreferenceFragment {
         model.selectUsers().observe(getViewLifecycleOwner(), users -> {
             if (users == null) return;
             int[] selectedUsers = AppPref.getSelectedUsers();
-            int[] userIds = new int[users.size()];
-            boolean[] choices = new boolean[users.size()];
-            Arrays.fill(choices, false);
+            Integer[] userIds = new Integer[users.size()];
             CharSequence[] userInfo = new CharSequence[users.size()];
+            List<Integer> preselectedUserIds = new ArrayList<>();
             for (int i = 0; i < users.size(); ++i) {
                 userIds[i] = users.get(i).id;
                 userInfo[i] = userIds[i] + " (" + users.get(i).name + ")";
                 if (selectedUsers == null || ArrayUtils.contains(selectedUsers, userIds[i])) {
-                    choices[i] = true;
+                    preselectedUserIds.add(userIds[i]);
                 }
             }
-            new MaterialAlertDialogBuilder(requireActivity())
+            new SearchableMultiChoiceDialogBuilder<>(requireActivity(), userIds, userInfo)
                     .setTitle(R.string.pref_selected_users)
-                    .setMultiChoiceItems(userInfo, choices, (dialog, which, isChecked) -> choices[which] = isChecked)
-                    .setPositiveButton(R.string.save, (dialog, which) -> {
-                        List<Integer> selectedUserIds = new ArrayList<>(users.size());
-                        for (int i = 0; i < choices.length; ++i) {
-                            if (choices[i]) {
-                                selectedUserIds.add(userIds[i]);
-                            }
-                        }
+                    .addSelections(preselectedUserIds)
+                    .setPositiveButton(R.string.save, (dialog, which, selectedUserIds) -> {
                         if (selectedUserIds.size() > 0) {
                             AppPref.setSelectedUsers(ArrayUtils.convertToIntArray(selectedUserIds));
                         } else AppPref.setSelectedUsers(null);
                         Utils.relaunchApp(requireActivity());
                     })
                     .setNegativeButton(R.string.cancel, null)
-                    .setNeutralButton(R.string.use_default, (dialog, which) -> {
+                    .setNeutralButton(R.string.use_default, (dialog, which, selectedUserIds) -> {
                         AppPref.setSelectedUsers(null);
                         Utils.relaunchApp(requireActivity());
                     })

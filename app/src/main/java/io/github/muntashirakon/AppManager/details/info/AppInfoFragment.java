@@ -34,7 +34,6 @@ import android.content.pm.Signature;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.net.NetworkPolicyManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -90,7 +89,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
@@ -135,7 +133,6 @@ import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.sharedpref.SharedPrefsActivity;
 import io.github.muntashirakon.AppManager.ssaid.ChangeSsaidDialog;
 import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
-import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
@@ -154,6 +151,8 @@ import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
 import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
+import io.github.muntashirakon.dialog.SearchableFlagsDialogBuilder;
+import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.widget.SwipeRefreshLayout;
@@ -421,30 +420,24 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 return true;
             }
             ArrayMap<Integer, String> netPolicyMap = NetworkPolicyManagerCompat.getAllReadablePolicies(mActivity);
-            int[] polices = new int[netPolicyMap.size()];
-            String[] policyStrings = new String[netPolicyMap.size()];
-            boolean[] choices = new boolean[netPolicyMap.size()];
-            AtomicInteger selectedPolicies = new AtomicInteger(NetworkPolicyManagerCompat.getUidPolicy(mApplicationInfo.uid));
+            Integer[] polices = new Integer[netPolicyMap.size()];
+            CharSequence[] policyStrings = new String[netPolicyMap.size()];
+            Integer selectedPolicies = NetworkPolicyManagerCompat.getUidPolicy(mApplicationInfo.uid);
             for (int i = 0; i < netPolicyMap.size(); ++i) {
                 polices[i] = netPolicyMap.keyAt(i);
                 policyStrings[i] = netPolicyMap.valueAt(i);
-                if (selectedPolicies.get() == 0) {
-                    choices[i] = polices[i] == NetworkPolicyManager.POLICY_NONE;
-                } else {
-                    choices[i] = (selectedPolicies.get() & polices[i]) != 0;
-                }
             }
-            new MaterialAlertDialogBuilder(mActivity)
+            new SearchableFlagsDialogBuilder<>(mActivity, polices, policyStrings, selectedPolicies)
                     .setTitle(R.string.net_policy)
-                    .setMultiChoiceItems(policyStrings, choices, (dialog, which, isChecked) -> {
-                        int currentPolicies = selectedPolicies.get();
-                        if (isChecked) selectedPolicies.set(currentPolicies | polices[which]);
-                        else selectedPolicies.set(currentPolicies & ~polices[which]);
-                    })
+                    .showSelectAll(false)
                     .setNegativeButton(R.string.cancel, null)
-                    .setPositiveButton(R.string.save, (dialog, which) -> {
+                    .setPositiveButton(R.string.save, (dialog, which, selections) -> {
+                        int flags = 0;
+                        for (int flag : selections) {
+                            flags |= flag;
+                        }
                         try {
-                            NetworkPolicyManagerCompat.setUidPolicy(mApplicationInfo.uid, selectedPolicies.get());
+                            NetworkPolicyManagerCompat.setUidPolicy(mApplicationInfo.uid, flags);
                             refreshDetails();
                         } catch (RemoteException e) {
                             e.printStackTrace();
@@ -1575,18 +1568,19 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private void createFreezeShortcut(boolean isFrozen) {
         if (mainModel == null) return;
-        AtomicInteger flags = new AtomicInteger();
-        new MaterialAlertDialogBuilder(mActivity)
+        List<Integer> allFlags = new ArrayList<>(3);
+        for (int i = 0; i < 3; ++i) {
+            allFlags.add(1 << i);
+        }
+        new SearchableMultiChoiceDialogBuilder<>(mActivity, allFlags, R.array.freeze_unfreeze_flags)
                 .setTitle(R.string.freeze_unfreeze)
-                .setMultiChoiceItems(R.array.freeze_unfreeze_flags, null, (dialog, which, isChecked) -> {
-                    int flag = 1 << which;
-                    if (isChecked) {
-                        flags.set(flags.get() | flag);
-                    } else flags.set(flags.get() & ~flag);
-                })
-                .setPositiveButton(R.string.create_shortcut, (dialog, which) -> {
+                .setPositiveButton(R.string.create_shortcut, (dialog, which, selections) -> {
+                    int flags = 0;
+                    for (int flag : selections) {
+                        flags |= flag;
+                    }
                     FreezeUnfreeze.ShortcutInfo shortcutInfo = new FreezeUnfreeze.ShortcutInfo(mPackageName,
-                            mainModel.getUserHandle(), flags.get());
+                            mainModel.getUserHandle(), flags);
                     Intent shortcutIntent = FreezeUnfreeze.getShortcutIntent(requireContext(), shortcutInfo);
                     shortcutInfo.setLabel(mPackageLabel.toString());
                     Bitmap icon = getBitmapFromDrawable(iconView.getDrawable());

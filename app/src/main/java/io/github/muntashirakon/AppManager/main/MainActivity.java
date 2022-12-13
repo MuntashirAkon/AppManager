@@ -11,7 +11,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.net.NetworkPolicyManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
@@ -43,7 +42,6 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.BuildConfig;
@@ -69,7 +67,6 @@ import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.SettingsActivity;
 import io.github.muntashirakon.AppManager.sysconfig.SysConfigActivity;
-import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.usage.AppUsageActivity;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -77,6 +74,7 @@ import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.StoragePermission;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.AlertDialogBuilder;
+import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.reflow.ReflowMenuViewWrapper;
 import io.github.muntashirakon.util.UiUtils;
@@ -412,24 +410,23 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
                     .show();
         } else if (id == R.id.action_net_policy) {
             ArrayMap<Integer, String> netPolicyMap = NetworkPolicyManagerCompat.getAllReadablePolicies(this);
-            int[] polices = new int[netPolicyMap.size()];
+            Integer[] polices = new Integer[netPolicyMap.size()];
             String[] policyStrings = new String[netPolicyMap.size()];
-            AtomicInteger selectedPolicies = new AtomicInteger(NetworkPolicyManager.POLICY_NONE);
             for (int i = 0; i < netPolicyMap.size(); ++i) {
                 polices[i] = netPolicyMap.keyAt(i);
                 policyStrings[i] = netPolicyMap.valueAt(i);
             }
-            new MaterialAlertDialogBuilder(this)
+            new SearchableMultiChoiceDialogBuilder<>(this, polices, policyStrings)
                     .setTitle(R.string.net_policy)
-                    .setMultiChoiceItems(policyStrings, null, (dialog, which, isChecked) -> {
-                        int currentPolicies = selectedPolicies.get();
-                        if (isChecked) selectedPolicies.set(currentPolicies | polices[which]);
-                        else selectedPolicies.set(currentPolicies & ~polices[which]);
-                    })
+                    .showSelectAll(false)
                     .setNegativeButton(R.string.cancel, null)
-                    .setPositiveButton(R.string.apply, (dialog, which) -> {
+                    .setPositiveButton(R.string.apply, (dialog, which, selections) -> {
+                        int flags = 0;
+                        for (int flag : selections) {
+                            flags |= flag;
+                        }
                         Bundle args = new Bundle();
-                        args.putInt(BatchOpsManager.ARG_NET_POLICIES, selectedPolicies.get());
+                        args.putInt(BatchOpsManager.ARG_NET_POLICIES, flags);
                         handleBatchOp(BatchOpsManager.OP_NET_POLICY, args);
                     })
                     .show();

@@ -24,10 +24,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
-import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.users.UserInfo;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 
 public class ConfPreferences extends PreferenceFragmentCompat {
@@ -212,7 +212,7 @@ public class ConfPreferences extends PreferenceFragmentCompat {
         });
         // Set export rules
         Preference exportRulesPref = Objects.requireNonNull(findPreference("export_rules"));
-        int rulesCount = RulesTypeSelectionDialogFragment.types.length;
+        int rulesCount = RulesTypeSelectionDialogFragment.RULE_TYPES.length;
         List<Integer> checkedItems = new ArrayList<>(rulesCount);
         List<Integer> selectedRules = updateExportRulesPref(exportRulesPref);
         for (int i = 0; i < rulesCount; ++i) checkedItems.add(1 << i);
@@ -266,7 +266,7 @@ public class ConfPreferences extends PreferenceFragmentCompat {
             while (rules != 0) {
                 int flag = (rules & (~(1 << i)));
                 if (flag != rules) {
-                    selectedRulesStr.add(RulesTypeSelectionDialogFragment.types[i].toString());
+                    selectedRulesStr.add(RulesTypeSelectionDialogFragment.RULE_TYPES[i].toString());
                     rules = flag;
                     selectedRules.add(1 << i);
                 }

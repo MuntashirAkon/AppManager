@@ -2,10 +2,12 @@
 
 package io.github.muntashirakon.AppManager.apk.signing;
 
-import java.util.Arrays;
-
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import io.github.muntashirakon.AppManager.utils.AppPref;
 
 public class SigSchemes {
@@ -50,6 +52,10 @@ public class SigSchemes {
         return flags;
     }
 
+    public void setFlags(int flags) {
+        this.flags = flags;
+    }
+
     public int getDefaultFlags() {
         return (int) AppPref.getInstance().getDefaultValue(AppPref.PrefKey.PREF_SIGNATURE_SCHEMES_INT);
     }
@@ -63,13 +69,12 @@ public class SigSchemes {
     }
 
     @NonNull
-    public boolean[] flagsToCheckedItems() {
-        boolean[] checkedItems = new boolean[TOTAL_SIG_SCHEME];
-        Arrays.fill(checkedItems, false);
+    public List<Integer> getAllItems() {
+        List<Integer> allItems = new ArrayList<>();
         for (int i = 0; i < TOTAL_SIG_SCHEME; ++i) {
-            if ((flags & (1 << i)) != 0) checkedItems[i] = true;
+            allItems.add(1 << i);
         }
-        return checkedItems;
+        return allItems;
     }
 
     public boolean v1SchemeEnabled() {

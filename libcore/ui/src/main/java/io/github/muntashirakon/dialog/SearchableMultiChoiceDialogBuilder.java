@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-package io.github.muntashirakon.AppManager.types;
+package io.github.muntashirakon.dialog;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -22,6 +22,7 @@ import androidx.core.widget.TextViewCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.color.MaterialColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.resources.MaterialAttributes;
 
@@ -32,8 +33,7 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.ui.R;
 import io.github.muntashirakon.widget.CheckBox;
 import io.github.muntashirakon.widget.SearchView;
 
@@ -62,7 +62,11 @@ public class SearchableMultiChoiceDialogBuilder<T> {
         this(context, items, context.getResources().getTextArray(itemNames));
     }
 
-    public SearchableMultiChoiceDialogBuilder(@NonNull Context context, @NonNull List<T> items, CharSequence[] itemNames) {
+    public SearchableMultiChoiceDialogBuilder(@NonNull Context context, @NonNull T[] items, @NonNull CharSequence[] itemNames) {
+        this(context, Arrays.asList(items), Arrays.asList(itemNames));
+    }
+
+    public SearchableMultiChoiceDialogBuilder(@NonNull Context context, @NonNull List<T> items, @NonNull CharSequence[] itemNames) {
         this(context, items, Arrays.asList(itemNames));
     }
 
@@ -91,7 +95,7 @@ public class SearchableMultiChoiceDialogBuilder<T> {
             searchView.setVisibility(View.GONE);
         }
         builder = new MaterialAlertDialogBuilder(context).setView(view);
-        @SuppressLint("RestrictedApi")
+        @SuppressLint({"RestrictedApi", "PrivateResource"})
         int layoutId = MaterialAttributes.resolveInteger(context, R.attr.multiChoiceItemLayout,
                 R.layout.mtrl_alert_select_dialog_multichoice);
         adapter = new SearchableRecyclerViewAdapter(itemNames, items, layoutId);
@@ -389,7 +393,6 @@ public class SearchableMultiChoiceDialogBuilder<T> {
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            @SuppressLint("PrivateResource")
             View view = LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false);
             return new ViewHolder(view);
         }
@@ -437,9 +440,10 @@ public class SearchableMultiChoiceDialogBuilder<T> {
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
                 item = itemView.findViewById(android.R.id.text1);
-                TextViewCompat.setTextAppearance(item, MaterialAttributes.resolveInteger(item.getContext(), R.attr.textAppearanceBodyLarge, 0));
+                int textAppearanceBodyLarge = MaterialAttributes.resolveInteger(item.getContext(), R.attr.textAppearanceBodyLarge, 0);
+                TextViewCompat.setTextAppearance(item, textAppearanceBodyLarge);
                 item.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-                item.setTextColor(UIUtils.getTextColorSecondary(item.getContext()));
+                item.setTextColor(MaterialColors.getColor(item.getContext(), R.attr.colorOnSurfaceVariant, -1));
             }
         }
     }

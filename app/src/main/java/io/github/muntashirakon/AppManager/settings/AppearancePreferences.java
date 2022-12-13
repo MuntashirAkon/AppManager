@@ -21,6 +21,7 @@ import java.util.Objects;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.dialog.SearchableFlagsDialogBuilder;
 
 public class AppearancePreferences extends PreferenceFragment {
     private static final List<Integer> THEME_CONST = Arrays.asList(
@@ -93,11 +94,10 @@ public class AppearancePreferences extends PreferenceFragment {
         FeatureController fc = FeatureController.getInstance();
         ((Preference) Objects.requireNonNull(findPreference("enabled_features")))
                 .setOnPreferenceClickListener(preference -> {
-                    new MaterialAlertDialogBuilder(requireActivity())
+                    new SearchableFlagsDialogBuilder<>(requireActivity(), FeatureController.featureFlags, FeatureController.getFormattedFlagNames(requireActivity()), fc.getFlags())
                             .setTitle(R.string.enable_disable_features)
-                            .setMultiChoiceItems(FeatureController.getFormattedFlagNames(requireActivity()),
-                                    fc.flagsToCheckedItems(),
-                                    (dialog, index, isChecked) -> fc.modifyState(FeatureController.featureFlags.get(index), isChecked))
+                            .setOnMultiChoiceClickListener((dialog, which, item, isChecked) ->
+                                    fc.modifyState(FeatureController.featureFlags.get(which), isChecked))
                             .setNegativeButton(R.string.close, null)
                             .show();
                     return true;

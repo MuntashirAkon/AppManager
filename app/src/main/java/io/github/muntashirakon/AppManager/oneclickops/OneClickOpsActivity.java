@@ -2,6 +2,12 @@
 
 package io.github.muntashirakon.AppManager.oneclickops;
 
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpModeNames;
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpModes;
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpNames;
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOps;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -34,19 +40,13 @@ import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.settings.Ops;
-import io.github.muntashirakon.AppManager.types.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.ListItemCreator;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDropdownDialogBuilder;
-
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpModeNames;
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpModes;
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpNames;
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOps;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
 public class OneClickOpsActivity extends BaseActivity {
     public static final String EXTRA_OP = "op";

@@ -20,8 +20,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.File;
 
 import io.github.muntashirakon.AppManager.R;
@@ -98,7 +96,7 @@ public class AppExplorerFragment extends Fragment implements SearchView.OnQueryT
     }
 
     @Override
-    public boolean onOptionsItemSelected(@NonNull @NotNull MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_list_options) {
             FmListOptions listOptions = new FmListOptions();

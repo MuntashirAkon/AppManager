@@ -10,7 +10,6 @@ import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.Preference;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.transition.MaterialSharedAxis;
 
 import java.util.Objects;
@@ -21,6 +20,7 @@ import io.github.muntashirakon.AppManager.apk.signing.Signer;
 import io.github.muntashirakon.AppManager.settings.crypto.RSACryptoSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
+import io.github.muntashirakon.dialog.SearchableFlagsDialogBuilder;
 
 public class ApkSigningPreferences extends PreferenceFragment {
     public static final String TAG = "ApkSigningPreferences";
@@ -38,16 +38,18 @@ public class ApkSigningPreferences extends PreferenceFragment {
         Preference sigSchemes = Objects.requireNonNull(findPreference("signature_schemes"));
         final SigSchemes sigSchemeFlags = SigSchemes.fromPref();
         sigSchemes.setOnPreferenceClickListener(preference -> {
-            new MaterialAlertDialogBuilder(activity)
+            new SearchableFlagsDialogBuilder<>(activity, sigSchemeFlags.getAllItems(), R.array.sig_schemes, sigSchemeFlags.getFlags())
                     .setTitle(R.string.app_signing_signature_schemes)
-                    .setMultiChoiceItems(R.array.sig_schemes, sigSchemeFlags.flagsToCheckedItems(), (dialog, which, isChecked) -> {
-                        if (isChecked) sigSchemeFlags.addFlag(which);
-                        else sigSchemeFlags.removeFlag(which);
+                    .setPositiveButton(R.string.save, (dialog, which, selections) -> {
+                        int flags = 0;
+                        for (int flag : selections) {
+                            flags |= flag;
+                        }
+                        sigSchemeFlags.setFlags(flags);
+                        AppPref.set(AppPref.PrefKey.PREF_SIGNATURE_SCHEMES_INT, flags);
                     })
-                    .setPositiveButton(R.string.save, (dialog, which) ->
-                            AppPref.set(AppPref.PrefKey.PREF_SIGNATURE_SCHEMES_INT, sigSchemeFlags.getFlags()))
                     .setNegativeButton(R.string.cancel, null)
-                    .setNeutralButton(R.string.reset_to_default, (dialog, which) ->
+                    .setNeutralButton(R.string.reset_to_default, (dialog, which, selections) ->
                             AppPref.set(AppPref.PrefKey.PREF_SIGNATURE_SCHEMES_INT, sigSchemeFlags.getDefaultFlags()))
                     .show();
             return true;
