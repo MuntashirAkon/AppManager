@@ -1274,4 +1274,7 @@
     <string name="open_as_folder">Carpeta</string>
     <string name="open_as_other">Otro</string>
     <string name="action_stop_service">Parar</string>
+    <string name="delete_filename">Eliminar %s</string>
+    <string name="confirm_file_deletion">Sí, eliminar</string>
+    <string name="on_open_application_no_recents">No mostrar aplicaciones en recientes</string>
 </resources>
