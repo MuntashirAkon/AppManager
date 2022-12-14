@@ -8,6 +8,8 @@ import androidx.annotation.WorkerThread;
 import com.topjohnwu.superuser.Shell;
 
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 class NormalShell extends Runner {
     private final Shell shell;
@@ -30,11 +32,13 @@ class NormalShell extends Runner {
     @NonNull
     @Override
     protected synchronized Result runCommand() {
-        Shell.Job job = shell.newJob().add(commands.toArray(new String[0]));
+        List<String> stdout = new ArrayList<>();
+        List<String> stderr = new ArrayList<>();
+        Shell.Job job = shell.newJob().add(commands.toArray(new String[0])).to(stdout, stderr);
         for (InputStream is : inputStreams) {
             job.add(is);
         }
         Shell.Result result = job.exec();
-        return new Result(result.getOut(), result.getErr(), result.getCode());
+        return new Result(stdout, stderr, result.getCode());
     }
 }
