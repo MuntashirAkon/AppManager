@@ -35,6 +35,7 @@ import io.github.muntashirakon.AppManager.logcat.struct.LogLine;
 import io.github.muntashirakon.AppManager.settings.LogViewerPreferences;
 import io.github.muntashirakon.AppManager.utils.StoragePermission;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.dialog.SearchableItemsDialogBuilder;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
@@ -289,10 +290,9 @@ public abstract class AbsLogViewerFragment extends Fragment implements LogViewer
             UIUtils.displayShortToast(R.string.no_saved_logs);
             return;
         }
-        new MaterialAlertDialogBuilder(mActivity)
+        new SearchableItemsDialogBuilder<>(mActivity, SaveLogHelper.getFormattedFilenames(mActivity, logFiles))
                 .setTitle(R.string.open)
-                .setItems(SaveLogHelper.getFormattedFilenames(mActivity, logFiles), (dialog, which) ->
-                        mActivity.openLogFile(logFiles.get(which)))
+                .setOnItemClickListener((dialog, which, item) -> mActivity.openLogFile(logFiles.get(which)))
                 .setNegativeButton(R.string.close, null)
                 .show();
     }

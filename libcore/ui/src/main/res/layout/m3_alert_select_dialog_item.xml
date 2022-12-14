@@ -1,0 +1,46 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.AppTheme.CardView.ListItem"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="?android:attr/listPreferredItemHeightSmall"
+    android:focusable="true"
+    android:layout_marginHorizontal="?attr/listItemMarginHorizontal">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:paddingStart="?android:attr/listPreferredItemPaddingStart"
+        android:paddingEnd="?android:attr/listPreferredItemPaddingEnd"
+        android:clipToPadding="false"
+        android:baselineAligned="false">
+
+        <include layout="@layout/m3_preference_image_frame" />
+
+        <TextView
+            android:id="@android:id/text1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="?attr/listPreferredItemHeightSmall"
+            style="?attr/materialAlertDialogListItemTextStyle"
+            android:gravity="center_vertical"
+            android:ellipsize="marquee"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            tools:text="@tools:sample/lorem/random" />
+
+        <!-- Preference should place its actual preference widget here. -->
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@android:id/widget_frame"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="end|center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="0dp"
+            android:orientation="vertical" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</com.google.android.material.card.MaterialCardView>

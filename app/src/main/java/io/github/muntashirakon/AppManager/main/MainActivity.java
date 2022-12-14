@@ -41,6 +41,7 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
@@ -75,6 +76,7 @@ import io.github.muntashirakon.AppManager.utils.StoragePermission;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.AlertDialogBuilder;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
+import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.reflow.ReflowMenuViewWrapper;
 import io.github.muntashirakon.util.UiUtils;
@@ -434,16 +436,20 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
             final String fileName = "app_manager_rules_export-" + DateUtils.formatDateTime(System.currentTimeMillis()) + ".am.tsv";
             batchExportRules.launch(fileName);
         } else if (id == R.id.action_export_app_list) {
-            new MaterialAlertDialogBuilder(this)
+            List<Integer> exportTypes = Arrays.asList(ListExporter.EXPORT_TYPE_XML, ListExporter.EXPORT_TYPE_MARKDOWN);
+            new SearchableSingleChoiceDialogBuilder<>(this, exportTypes, R.array.export_app_list_options)
                     .setTitle(R.string.export_app_list_select_format)
-                    .setItems(R.array.export_app_list_options, (dialog, which) -> {
-                        switch (which) {
-                            case 0: { // XML
+                    .setOnSingleChoiceClickListener((dialog, which, item1, isChecked) -> {
+                        if (!isChecked) {
+                            return;
+                        }
+                        switch (item1) {
+                            case ListExporter.EXPORT_TYPE_XML: {
                                 final String fileName = "app_manager_app_list-" + DateUtils.formatDateTime(System.currentTimeMillis()) + ".am.xml";
                                 exportAppListXml.launch(fileName);
                                 break;
                             }
-                            case 1: { // Markdown
+                            case ListExporter.EXPORT_TYPE_MARKDOWN: {
                                 final String fileName = "app_manager_app_list-" + DateUtils.formatDateTime(System.currentTimeMillis()) + ".am.md";
                                 exportAppListMarkdown.launch(fileName);
                                 break;

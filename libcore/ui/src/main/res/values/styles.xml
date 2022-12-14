@@ -68,6 +68,9 @@
         <item name="listItemCornerRadius">24dp</item>
         <item name="listItemIndicatorWidth">9dp</item>
 
+        <!-- Dialog -->
+        <item name="materialAlertDialogListItemTextStyle">@style/MaterialAlertDialog.Material3.Body.Text.Large</item>
+
         <!-- Misc -->
         <item name="android:windowActivityTransitions">true</item>
         <item name="android:windowContentTransitions">true</item>
@@ -106,6 +109,11 @@
         <item name="android:background">@drawable/spinner_rounded_border</item>
         <item name="android:paddingStart">@dimen/padding_small</item>
         <item name="android:paddingEnd">@dimen/padding_large</item>
+    </style>
+
+    <!-- MaterialAlertDialog -->
+    <style name="MaterialAlertDialog.Material3.Body.Text.Large" parent="MaterialAlertDialog.Material3.Body.Text">
+        <item name="android:textAppearance">?attr/textAppearanceBodyLarge</item>
     </style>
 
     <!-- BottomSheetDialog -->

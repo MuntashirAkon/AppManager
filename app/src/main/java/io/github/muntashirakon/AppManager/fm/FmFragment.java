@@ -29,6 +29,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.StorageUtils;
+import io.github.muntashirakon.dialog.SearchableItemsDialogBuilder;
 import io.github.muntashirakon.widget.MultiSelectionView;
 import io.github.muntashirakon.widget.SwipeRefreshLayout;
 
@@ -129,9 +130,9 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
                 }
                 activity.runOnUiThread(() -> {
                     if (isDetached()) return;
-                    new MaterialAlertDialogBuilder(activity)
+                    new SearchableItemsDialogBuilder<>(activity, backupVolumesStr)
                             .setTitle(R.string.storage)
-                            .setItems(backupVolumesStr, (dialog, which) ->
+                            .setOnItemClickListener((dialog, which, item1) ->
                                     activity.loadNewFragment(FmFragment.getNewInstance(backupVolumes[which])))
                             .setNegativeButton(R.string.cancel, null)
                             .show();

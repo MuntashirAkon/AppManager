@@ -32,6 +32,7 @@ import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
+import io.github.muntashirakon.dialog.SearchableItemsDialogBuilder;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 
 public class ImportExportRulesPreferences extends PreferenceFragment {
@@ -211,9 +212,8 @@ public class ImportExportRulesPreferences extends PreferenceFragment {
             Toast.makeText(requireContext(), R.string.the_import_was_successful, Toast.LENGTH_SHORT).show();
             return;
         }
-        new MaterialAlertDialogBuilder(requireActivity())
+        new SearchableItemsDialogBuilder<>(requireActivity(), failedPackages)
                 .setTitle(R.string.failed_packages)
-                .setItems(failedPackages.toArray(new String[0]), null)
                 .setNegativeButton(R.string.ok, null)
                 .show();
     }
@@ -224,10 +224,9 @@ public class ImportExportRulesPreferences extends PreferenceFragment {
             Toast.makeText(requireContext(), R.string.the_import_was_successful, Toast.LENGTH_SHORT).show();
             return;
         }
-        new MaterialAlertDialogBuilder(requireActivity())
+        new SearchableItemsDialogBuilder<>(requireActivity(), failedFiles)
                 .setTitle(getResources().getQuantityString(R.plurals.failed_to_import_files, failedFiles.size(),
                         failedFiles.size()))
-                .setItems(failedFiles.toArray(new String[0]), null)
                 .setNegativeButton(R.string.close, null)
                 .show();
     }

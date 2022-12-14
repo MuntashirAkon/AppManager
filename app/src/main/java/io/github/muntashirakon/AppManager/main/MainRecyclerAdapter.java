@@ -31,7 +31,6 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.card.MaterialCardView;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.divider.MaterialDivider;
 
 import java.io.File;
@@ -53,6 +52,7 @@ import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
+import io.github.muntashirakon.dialog.SearchableItemsDialogBuilder;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
 public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecyclerAdapter.ViewHolder>
@@ -239,9 +239,9 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
                     }
                 }
             }
-            new MaterialAlertDialogBuilder(mActivity)
+            new SearchableItemsDialogBuilder<>(mActivity, userNames)
                     .setTitle(R.string.select_user)
-                    .setItems(userNames, (dialog, which) -> {
+                    .setOnItemClickListener((dialog, which, item1) -> {
                         Intent intent = AppDetailsActivity.getIntent(mActivity, item.packageName, item.userHandles[which]);
                         mActivity.startActivity(intent);
                         dialog.dismiss();

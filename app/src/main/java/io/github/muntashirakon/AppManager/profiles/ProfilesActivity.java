@@ -25,7 +25,6 @@ import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
@@ -45,6 +44,7 @@ import io.github.muntashirakon.AppManager.details.LauncherIconCreator;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
+import io.github.muntashirakon.dialog.SearchableItemsDialogBuilder;
 import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 import io.github.muntashirakon.io.Path;
@@ -175,9 +175,9 @@ public class ProfilesActivity extends BaseActivity {
             new Thread(() -> model.loadProfiles()).start();
         } else if (id == R.id.action_presets) {
             String[] profiles = getResources().getStringArray(R.array.profiles);
-            new MaterialAlertDialogBuilder(this)
+            new SearchableItemsDialogBuilder<>(this, profiles)
                     .setTitle(R.string.presets)
-                    .setItems(profiles, (dialog, which) -> {
+                    .setOnItemClickListener((dialog, which, item1) -> {
                         String profile = profiles[which];
                         new TextInputDialogBuilder(this, R.string.input_profile_name)
                                 .setTitle(R.string.new_profile)

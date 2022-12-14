@@ -68,7 +68,6 @@ public class SearchableSingleChoiceDialogBuilder<T> {
         this(context, Arrays.asList(items), Arrays.asList(itemNames));
     }
 
-    @SuppressLint("InflateParams")
     public SearchableSingleChoiceDialogBuilder(@NonNull Context context, @NonNull List<T> items, @NonNull List<CharSequence> itemNames) {
         View view = View.inflate(context, R.layout.dialog_searchable_single_choice, null);
         RecyclerView recyclerView = view.findViewById(android.R.id.list);
@@ -94,7 +93,7 @@ public class SearchableSingleChoiceDialogBuilder<T> {
         builder = new MaterialAlertDialogBuilder(context)
                 .setView(view);
         @SuppressLint({"RestrictedApi", "PrivateResource"})
-        int layoutId = MaterialAttributes.resolveInteger(context, R.attr.multiChoiceItemLayout,
+        int layoutId = MaterialAttributes.resolveInteger(context, R.attr.singleChoiceItemLayout,
                 R.layout.mtrl_alert_select_dialog_singlechoice);
         adapter = new SearchableRecyclerViewAdapter(itemNames, items, layoutId);
         recyclerView.setAdapter(adapter);

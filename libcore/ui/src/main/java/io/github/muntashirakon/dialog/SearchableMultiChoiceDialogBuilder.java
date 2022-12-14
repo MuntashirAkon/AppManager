@@ -70,7 +70,6 @@ public class SearchableMultiChoiceDialogBuilder<T> {
         this(context, items, Arrays.asList(itemNames));
     }
 
-    @SuppressLint("InflateParams")
     public SearchableMultiChoiceDialogBuilder(@NonNull Context context, @NonNull List<T> items, @NonNull List<CharSequence> itemNames) {
         View view = View.inflate(context, R.layout.dialog_searchable_multi_choice, null);
         RecyclerView recyclerView = view.findViewById(android.R.id.list);

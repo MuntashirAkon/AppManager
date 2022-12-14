@@ -42,6 +42,7 @@ import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
+import io.github.muntashirakon.dialog.SearchableItemsDialogBuilder;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.PathContentInfo;
 import io.github.muntashirakon.io.Paths;
@@ -113,9 +114,10 @@ public class OpenWithDialogFragment extends DialogFragment {
             Button customButton = alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL);
             fileOpenAsButton.setOnClickListener(v -> {
                 String[] customTypes = requireContext().getResources().getStringArray(R.array.file_open_as_option_types);
-                new MaterialAlertDialogBuilder(requireActivity())
+                new SearchableItemsDialogBuilder<>(requireActivity(), R.array.file_open_as_options)
                         .setTitle(R.string.file_open_as)
-                        .setItems(R.array.file_open_as_options, (dialog1, which) -> {
+                        .hideSearchBar(true)
+                        .setOnItemClickListener((dialog1, which, item) -> {
                             mCustomType = customTypes[which];
                             if (mAdapter != null) {
                                 mAdapter.setIntent(getIntent(mPath, mCustomType));

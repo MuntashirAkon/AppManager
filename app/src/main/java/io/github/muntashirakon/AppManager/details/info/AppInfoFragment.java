@@ -17,7 +17,6 @@ import static io.github.muntashirakon.AppManager.utils.UIUtils.getColoredText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getStyledKeyValue;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getTitleText;
 import static io.github.muntashirakon.AppManager.utils.Utils.openAsFolderInFM;
 
 import android.Manifest;
@@ -152,6 +151,7 @@ import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
 import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
 import io.github.muntashirakon.dialog.SearchableFlagsDialogBuilder;
+import io.github.muntashirakon.dialog.SearchableItemsDialogBuilder;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
@@ -608,9 +608,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             })
                             .show();
                 } else {
-                    new MaterialAlertDialogBuilder(mActivity)
+                    new SearchableItemsDialogBuilder<>(mActivity, trackerComponentNames)
                             .setTitle(R.string.trackers)
-                            .setItems(trackerComponentNames, null)
                             .setNegativeButton(R.string.close, null)
                             .show();
                 }
@@ -634,9 +633,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     for (int i = 0; i < tagCloud.splitCount; ++i) {
                         entryNames[i] = apkEntries.get(i + 1).toLocalizedString(mActivity);
                     }
-                    new MaterialAlertDialogBuilder(mActivity)
+                    new SearchableItemsDialogBuilder<>(mActivity, entryNames)
                             .setTitle(R.string.splits)
-                            .setItems(entryNames, null)
                             .setNegativeButton(R.string.close, null)
                             .show();
                 }
@@ -661,7 +659,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     CharSequence[] runningServices = new CharSequence[tagCloud.runningServices.size()];
                     for (int i = 0; i < runningServices.length; ++i) {
                         runningServices[i] = new SpannableStringBuilder()
-                                .append(getTitleText(mActivity, tagCloud.runningServices.get(i).service.getShortClassName()))
+                                .append(tagCloud.runningServices.get(i).service.getShortClassName())
                                 .append("\n")
                                 .append(getSmallerText(new SpannableStringBuilder()
                                         .append(getStyledKeyValue(mActivity, R.string.process_name,
@@ -676,9 +674,9 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     }
                     runOnUiThread(() -> {
                         mProgressIndicator.hide();
-                        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(mActivity)
-                                .setCustomTitle(titleBuilder.build())
-                                .setItems(runningServices, (dialog, which) -> {
+                        new SearchableItemsDialogBuilder<>(mActivity, runningServices)
+                                .setTitle(titleBuilder.build())
+                                .setOnItemClickListener((dialog, which, item) -> {
                                     if (!FeatureController.isLogViewerEnabled()) return;
                                     Intent logViewerIntent = new Intent(mActivity.getApplicationContext(), LogViewerActivity.class)
                                             .putExtra(LogViewerActivity.EXTRA_FILTER, SearchCriteria.PID_KEYWORD + tagCloud.runningServices.get(which).pid)
@@ -694,8 +692,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                         displayLongToast(R.string.failed_to_stop, mPackageLabel);
                                     }
                                 }))
-                                .setNegativeButton(R.string.close, null);
-                        builder.show();
+                                .setNegativeButton(R.string.close, null)
+                                .show();
                     });
                 });
             });
@@ -735,10 +733,9 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             if (tagCloud.hasMasterKeyInKeyStore) {
                 chip = addChip(R.string.keystore, ColorCodes.getAppKeystoreIndicatorColor(mActivity));
             } else chip = addChip(R.string.keystore);
-            chip.setOnClickListener(view -> new MaterialAlertDialogBuilder(mActivity)
+            chip.setOnClickListener(view -> new SearchableItemsDialogBuilder<>(mActivity, KeyStoreUtils
+                    .getKeyStoreFiles(mApplicationInfo.uid, mainModel.getUserHandle()))
                     .setTitle(R.string.keystore)
-                    .setItems(KeyStoreUtils.getKeyStoreFiles(mApplicationInfo.uid,
-                            mainModel.getUserHandle()).toArray(new String[0]), null)
                     .setNegativeButton(R.string.close, null)
                     .show());
         }
@@ -767,9 +764,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         if (tagCloud.netPolicies > 0) {
             String[] readablePolicies = NetworkPolicyManagerCompat.getReadablePolicies(mActivity, tagCloud.netPolicies)
                     .values().toArray(new String[0]);
-            addChip(R.string.has_net_policy).setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
+            addChip(R.string.has_net_policy).setOnClickListener(v -> new SearchableItemsDialogBuilder<>(mActivity, readablePolicies)
                     .setTitle(R.string.net_policy)
-                    .setItems(readablePolicies, null)
                     .setNegativeButton(R.string.ok, null)
                     .show());
         }
@@ -790,9 +786,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 for (int i = 0; i < tagCloud.uriGrants.size(); ++i) {
                     uriGrants[i] = tagCloud.uriGrants.get(i).uri.toString();
                 }
-                new MaterialAlertDialogBuilder(mActivity)
+                new SearchableItemsDialogBuilder<>(mActivity, uriGrants)
                         .setTitle(R.string.saf)
-                        .setItems(uriGrants, null)
                         .setNegativeButton(R.string.close, null)
                         .show();
             });
@@ -1126,9 +1121,9 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     sharedPrefNames[i] = sharedPrefs.get(i).getName();
                 }
                 addToHorizontalLayout(R.string.shared_prefs, R.drawable.ic_view_list)
-                        .setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
+                        .setOnClickListener(v -> new SearchableItemsDialogBuilder<>(mActivity, sharedPrefNames)
                                 .setTitle(R.string.shared_prefs)
-                                .setItems(sharedPrefNames, (dialog, which) -> {
+                                .setOnItemClickListener((dialog, which, item) -> {
                                     Intent intent = new Intent(mActivity, SharedPrefsActivity.class);
                                     intent.putExtra(SharedPrefsActivity.EXTRA_PREF_LOCATION, sharedPrefs.get(which).getUri());
                                     intent.putExtra(SharedPrefsActivity.EXTRA_PREF_LABEL, mPackageLabel);
@@ -1151,11 +1146,11 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     databases2[i] = databases.get(i).getName();
                 }
                 addToHorizontalLayout(R.string.databases, R.drawable.ic_database)
-                        .setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
+                        .setOnClickListener(v -> new SearchableItemsDialogBuilder<>(mActivity, databases2)
                                 .setTitle(R.string.databases)
-                                .setItems(databases2, (dialog, i) -> {
+                                .setOnItemClickListener((dialog, which, item) -> {
                                     // TODO: 7/7/21 VACUUM the database before opening it
-                                    OpenWithDialogFragment fragment = OpenWithDialogFragment.getInstance(databases.get(i), "application/vnd.sqlite3");
+                                    OpenWithDialogFragment fragment = OpenWithDialogFragment.getInstance(databases.get(which), "application/vnd.sqlite3");
                                     fragment.show(getChildFragmentManager(), OpenWithDialogFragment.TAG);
                                 })
                                 .setNegativeButton(R.string.close, null)
@@ -1210,9 +1205,9 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 for (int i = 0; i < apkEntries.size(); ++i) {
                     entryNames[i] = apkEntries.get(i).toShortLocalizedString(requireActivity());
                 }
-                new MaterialAlertDialogBuilder(mActivity)
+                new SearchableItemsDialogBuilder<>(mActivity, entryNames)
                         .setTitle(R.string.select_apk)
-                        .setItems(entryNames, (dialog, which) -> executor.submit(() -> {
+                        .setOnItemClickListener((dialog, which, item) -> executor.submit(() -> {
                             try {
                                 File file = apkEntries.get(which).getRealCachedFile();
                                 intent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton()

@@ -8,6 +8,7 @@
     <attr name="listItemIndicatorWidth" format="dimension" />
 
     <attr name="materialAlertViewStyle" format="reference" />
+    <attr name="materialAlertDialogListItemTextStyle" format="reference" />
     <attr name="materialFullScreenAlertDialogTheme" format="reference" />
 
     <declare-styleable name="SearchView">

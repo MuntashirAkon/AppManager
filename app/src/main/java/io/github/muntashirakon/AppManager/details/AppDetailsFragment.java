@@ -104,6 +104,7 @@ import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
+import io.github.muntashirakon.dialog.SearchableItemsDialogBuilder;
 import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.io.Path;
@@ -1499,9 +1500,8 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                 for (int i = 0; i < flagStrings.length; ++i) {
                     flagStrings[i] = permissionFlags.valueAt(i);
                 }
-                new MaterialAlertDialogBuilder(mActivity)
+                new SearchableItemsDialogBuilder<>(mActivity, flagStrings)
                         .setTitle(R.string.permission_flags)
-                        .setItems(flagStrings, null)
                         .setNegativeButton(R.string.close, null)
                         .show();
                 return true;

@@ -49,6 +49,7 @@ import io.github.muntashirakon.AppManager.settings.crypto.RSACryptoSelectionDial
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
+import io.github.muntashirakon.dialog.SearchableItemsDialogBuilder;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 import io.github.muntashirakon.io.Paths;
@@ -218,12 +219,12 @@ public class BackupRestorePreferences extends PreferenceFragment {
         // Import backups
         ((Preference) Objects.requireNonNull(findPreference("import_backups")))
                 .setOnPreferenceClickListener(preference -> {
-                    new MaterialAlertDialogBuilder(activity)
-                            .setCustomTitle(new DialogTitleBuilder(activity)
+                    new SearchableItemsDialogBuilder<>(activity, R.array.import_backup_options)
+                            .setTitle(new DialogTitleBuilder(activity)
                                     .setTitle(R.string.pref_import_backups)
                                     .setSubtitle(R.string.pref_import_backups_hint)
                                     .build())
-                            .setItems(R.array.import_backup_options, (dialog, which) -> {
+                            .setOnItemClickListener((dialog, which, item) -> {
                                 importType = which;
                                 String path;
                                 switch (importType) {
