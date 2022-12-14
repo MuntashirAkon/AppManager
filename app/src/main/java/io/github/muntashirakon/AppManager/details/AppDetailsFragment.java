@@ -87,6 +87,7 @@ import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.scanner.NativeLibraries;
+import io.github.muntashirakon.AppManager.self.pref.TipsPrefs;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
@@ -241,7 +242,19 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
         mAlertView.setEndIconMode(MaterialAlertView.END_ICON_CUSTOM);
         mAlertView.setEndIconDrawable(R.drawable.mtrl_ic_cancel);
         mAlertView.setEndIconContentDescription(R.string.close);
-        mAlertView.setEndIconOnClickListener(v -> mAlertView.hide());
+        mAlertView.setEndIconOnClickListener(v -> {
+            mAlertView.hide();
+            // Check tips
+            if (mNeededProperty == APP_OPS) {
+                TipsPrefs.getInstance().setDisplayInAppOpsTab(false);
+            }
+            if (mNeededProperty == USES_PERMISSIONS) {
+                TipsPrefs.getInstance().setDisplayInUsesPermissionsTab(false);
+            }
+            if (mNeededProperty == PERMISSIONS) {
+                TipsPrefs.getInstance().setDisplayInPermissionsTab(false);
+            }
+        });
         int helpStringRes = getHelpString(mNeededProperty);
         if (helpStringRes != 0) mAlertView.setText(helpStringRes);
         if (helpStringRes == 0 || mNeededProperty >= ACTIVITIES && mNeededProperty <= PROVIDERS) {
@@ -611,14 +624,23 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             default:
                 return 0;
             case APP_OPS:
+                if (!TipsPrefs.getInstance().displayInAppOpsTab()) {
+                    return 0;
+                }
                 if (Ops.isPrivileged() || PermissionUtils.hasAppOpsPermission(mActivity)) {
                     return R.string.help_app_ops_tab;
                 } else return 0;
             case USES_PERMISSIONS:
+                if (!TipsPrefs.getInstance().displayInUsesPermissionsTab()) {
+                    return 0;
+                }
                 if (Ops.isPrivileged() || PermissionUtils.hasAppOpsPermission(mActivity)) {
                     return R.string.help_uses_permissions_tab;
                 } else return 0;
             case PERMISSIONS:
+                if (!TipsPrefs.getInstance().displayInPermissionsTab()) {
+                    return 0;
+                }
                 return R.string.help_permissions_tab;
         }
     }

@@ -124,6 +124,8 @@ public class AppPref {
         PREF_SIGNATURE_SCHEMES_INT,
         PREF_SHOW_DISCLAIMER_BOOL,
 
+        PREF_TIPS_PREFS_INT,
+
         PREF_VIRUS_TOTAL_API_KEY_STR,
         PREF_VIRUS_TOTAL_PROMPT_BEFORE_UPLOADING_BOOL,
         ;
@@ -490,6 +492,7 @@ public class AppPref {
                 return true;
             case PREF_CONCURRENCY_THREAD_COUNT_INT:
             case PREF_APP_THEME_CUSTOM_INT:
+            case PREF_TIPS_PREFS_INT:
                 return 0;
             case PREF_LAST_VERSION_CODE_LONG:
             case PREF_DISPLAY_CHANGELOG_LAST_VERSION_LONG:
