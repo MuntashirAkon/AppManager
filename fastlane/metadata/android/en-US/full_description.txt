@@ -5,7 +5,7 @@
     <li>Free and open source</li>
     <li>Material design (and a nice UI)</li>
     <li>No useless permissions requested</li>
-    <li>Doesn't connect to the internet (internet permission is required for ADB mode)</li>
+    <li>Does not connect to the Internet without explicit permission from the user</li>
     <li>Display as much information as possible in the main window</li>
     <li>Lists activities, broadcast receivers, services, providers, permissions, signatures, shared libraries, etc. of any app</li>
     <li>Launch (exportable) activities, create (customizable) shortcuts</li>
