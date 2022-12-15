@@ -1190,10 +1190,10 @@
     <string name="vt_permalink">Постійне посилання на VirusTotal</string>
     <string name="vt_slowness_warning">Залежно від швидкості Інтернету та навантаження на сервер, це може зайняти деякий час.</string>
     <string name="vt_disclaimer">VirusTotal та його логотипи є торговою маркою Chronicle LLC. Ні App Manager — клієнт API, ні його автори не несуть відповідальності за будь-які дані, які ви можете надіслати до VirusTotal.</string>
-    <string name="uses_play_app_signing_description">Ця програма містить певні маркери, які вказують на те, що вона <i>можливо </i> використовує <a href="https://support.google.com/googleplay/android-developer/answer/9842756">Play App Signing</a>. За цією схемою ключі підпису зберігаються на серверах Google, і Google відповідає за підписання програми. Зауважте, що відповідність інформації підпису — це єдиний спосіб переконатися, що додаток не був змінений кимось іншим, окрім розробника (а в цьому випадку також Google).</string>
+    <string name="uses_play_app_signing_description">Ця програма містить певні маркери, які вказують на те, що вона <i>можливо </i> використовує <a href="https://support.google.com/googleplay/android-developer/answer/9842756">Підпис Play App</a>. За цією схемою ключі підпису зберігаються на серверах Google, і Google відповідає за підписання програми. Зауважте, що відповідність інформації підпису — це єдиний спосіб переконатися, що додаток не був змінений кимось іншим, окрім розробника (а в цьому випадку також Google).</string>
     <string name="failed_to_use_the_current_mode_of_operation">Не вдалося використати поточний режим роботи. Повернення до режиму без-root для цього сеансу.</string>
     <string name="failed_to_enable_magisk_deny_list">Не вдалося ввімкнути Magisk DenyList</string>
-    <string name="uses_play_app_signing">Play App Signing</string>
+    <string name="uses_play_app_signing">Підпис Play App</string>
     <string name="swap">Підкачка</string>
     <string name="magisk_denylist">Magisk DenyList</string>
     <string name="primary_abi">Головний ABI</string>
