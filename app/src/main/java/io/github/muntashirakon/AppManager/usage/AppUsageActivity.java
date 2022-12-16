@@ -364,6 +364,9 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
                                     .getUsageStats(mCurrentInterval, userId));
                         } catch (RemoteException e) {
                             Log.e("AppUsage", e);
+                        } catch (SecurityException e) {
+                            Log.e("AppUsage", e);
+                            _try = 0;
                         }
                     } while (0 != --_try && packageUsageInfoList.size() == 0);
                 }
