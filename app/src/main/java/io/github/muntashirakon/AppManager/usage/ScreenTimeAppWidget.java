@@ -41,6 +41,9 @@ public class ScreenTimeAppWidget extends AppWidgetProvider {
                             .getUsageStats(UsageUtils.USAGE_TODAY, userId));
                 } catch (RemoteException e) {
                     e.printStackTrace();
+                } catch (SecurityException e) {
+                    e.printStackTrace();
+                    _try = 0;
                 }
             } while (0 != --_try && packageUsageInfoList.size() == 0);
         }
