@@ -1148,11 +1148,14 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 addToHorizontalLayout(R.string.databases, R.drawable.ic_database)
                         .setOnClickListener(v -> new SearchableItemsDialogBuilder<>(mActivity, databases2)
                                 .setTitle(R.string.databases)
-                                .setOnItemClickListener((dialog, which, item) -> {
-                                    // TODO: 7/7/21 VACUUM the database before opening it
-                                    OpenWithDialogFragment fragment = OpenWithDialogFragment.getInstance(databases.get(which), "application/vnd.sqlite3");
-                                    fragment.show(getChildFragmentManager(), OpenWithDialogFragment.TAG);
-                                })
+                                .setOnItemClickListener((dialog, which, item) -> executor.submit(() -> {
+                                    // Vacuum database
+                                    Runner.runCommand(new String[]{"sqlite3", databases.get(which).getFilePath(), "vacuum"});
+                                    runOnUiThread(() -> {
+                                        OpenWithDialogFragment fragment = OpenWithDialogFragment.getInstance(databases.get(which), "application/vnd.sqlite3");
+                                        fragment.show(getChildFragmentManager(), OpenWithDialogFragment.TAG);
+                                    });
+                                }))
                                 .setNegativeButton(R.string.close, null)
                                 .show());
             }
