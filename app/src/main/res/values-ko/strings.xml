@@ -500,7 +500,7 @@
     <string name="orientation_full_user">전체 사용자</string>
     <string name="orientation_no_sensor">센서 없음</string>
     <string name="orientation_sensor">센서</string>
-    <string name="orientation_sensor_portrait"/>
+    <string name="orientation_sensor_portrait">센서 세로</string>
     <string name="launch_mode_single_instance">단일 인스턴스</string>
     <string name="action_stop_service">중지</string>
     <string name="save_as">다른 이름으로 저장…</string>
@@ -1080,4 +1080,35 @@
     <string name="new_profile">새로운 프로필</string>
     <string name="failed_to_duplicate_profile">프로필을 복제할 수 없습니다</string>
     <string name="window_size">윈도우 크기</string>
+    <string name="orientation_user_landscape">사용자 가로</string>
+    <string name="state_unknown">미지 상태</string>
+    <string name="state_high_priority">높은 우선순위</string>
+    <string name="state_session_leader">세션 리더</string>
+    <string name="state_foreground">포그라운드</string>
+    <string name="state_multithreaded">멀티스레드</string>
+    <string name="orientation_reverse_landscape">뒤집어 가로</string>
+    <string name="state_device_io">장치 입출력</string>
+    <string name="keyboard_qwerty">QWERTY</string>
+    <string name="orientation_landscape">가로</string>
+    <string name="orientation_portrait">세로</string>
+    <string name="orientation_reverse_portrait">뒤집어 세로</string>
+    <string name="orientation_sensor_landscape">센서 가로</string>
+    <string name="state_trace_stop">트레이스 정지</string>
+    <string name="state_idle">유휴</string>
+    <string name="state_low_priority">낮은 우선순위</string>
+    <string name="state_locked_memory">잠긴 메모리</string>
+    <string name="touchscreen_no_touch">잠금</string>
+    <string name="input_backup_name_description">백업 이름은 숫자로 시작할 수 없고 공백을 포함할 수 없습니다. 현재 날짜-시간을 사용하려면 비워 두십시오.</string>
+    <string name="touchscreen_stylus">스타일러스</string>
+    <string name="ok">OK</string>
+    <string name="keyboard_12_keys">12키</string>
+    <string name="touchscreen_finger">손가락</string>
+    <string name="downgrade">다운그레이드</string>
+    <string name="process_state_with_extra">상태: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g> (<xliff:g id="state_extra" example="High priority">%2$s</xliff:g>)</string>
+    <string name="input_backup_name">백업 이름</string>
+    <string name="orientation_user_portrait">사용자 세로</string>
+    <string name="navigation_dial_pad">다이얼 패드</string>
+    <string name="state_sleeping">절전 모드</string>
+    <string name="process_state">상태: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g></string>
+    <string name="cancel">취소</string>
 </resources>
