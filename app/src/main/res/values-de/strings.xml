@@ -1218,4 +1218,24 @@
     <string name="hide_app_description">Diese Methode wird nur für den alltäglichen Gebrauch empfohlen. Eine ausgeblendete App erscheint, als wäre sie deinstalliert. Die App kann jedoch wieder erscheinen, wenn sie neu installiert oder aktualisiert wird.</string>
     <string name="disable_app_description">Empfohlene Methode zum Einfrieren. Es deaktiviert die App und alle ihre Komponenten, aber alle Verknüpfungen gehen verloren.</string>
     <string name="pref_privacy">Privatsphäre</string>
+    <string name="confirm_file_deletion">Ja, löschen</string>
+    <string name="file_properties">Eigenschaften</string>
+    <string name="open_as_image">Bild</string>
+    <string name="fm_open_with_for_this_file_only">Nur für diese Datei</string>
+    <string name="file_open_with_os_default_dialog">Öffnen mit BS-Standarddialog</string>
+    <string name="open_as_text">Text</string>
+    <string name="open_as_video">Video</string>
+    <string name="fm_always_open_with">Immer öffnen</string>
+    <string name="open_as_archive">Archiv</string>
+    <string name="file_creation_date">Erstellt</string>
+    <string name="file_modification_date">Geändert</string>
+    <string name="file_accessed_date">Zugegriffen</string>
+    <string name="file_open_with">Öffnen mit</string>
+    <string name="file_shortcut_target_file">Zieldatei</string>
+    <string name="file_cut">Ausschneiden</string>
+    <string name="file_open_as">Öffnen als…</string>
+    <string name="open_as_folder">Ordner</string>
+    <string name="open_as_other">Andere</string>
+    <string name="delete_filename">%s löschen</string>
+    <string name="action_stop_service">Stopp</string>
 </resources>
