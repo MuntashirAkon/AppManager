@@ -46,4 +46,261 @@
 \n추적을 촉진하는 오픈 소스 라이브러리와 클로즈드 소스 라이브러리 사이에는 차이나 편견이 없다.
 \n\\end{itemize}</string>
     <string name="keywords$chapter">\\newcommand{\\KeywordChapter}{Chapter}</string>
+    <string name="intro$main$source-code-links">GitHub를 제외한 모두 미러 링크입니다. 태그는 항상 최신 상태이지만, 마스터 브랜치는 최신 상태를 보장할 수 없습니다. 
+\n마스터 브랜치를 복제(clone)하는 것이 목적이면, 다른 링크 대신 GitHub 링크를 사용하십시오.</string>
+    <string name="intro$main$contributing">사용자가 기여할 수 있는 여러 방법이 있습니다. 예를 들어 유용한 문제를 제기, 토론에 참여,
+\n문서화 및 번역을 개선, 인식되지 않은 라이브러리와 트래커 추가,
+\n소스 코드 검토 및 보안 취약성 보고하기 등이 있습니다.</string>
+    <string name="intro$main$buiding">빌드 지침은 소스의 루트 디렉터리에 있는 BUILDING 파일에서 찾을 수 있습니다.</string>
+    <string name="pages$main-page$$section-title">메인 페이지</string>
+    <string name="pages$main-page$$how-app-ops-work-title">메인 페이지의 앱 목록 항목</string>
+    <string name="intro$main$contact">Muntashir Al-Islam\\footnote{``Muntashir Akon\'\' 이라고 불러도 됩니다}\\\\
+\n이메일: \\href{mailto:muntashirakon@riseup.net}{muntashirakon [at] riseup [dot] net}\\\\
+\nKey 지문: \\texttt{7bad37c2981e41f8f6abea7f58f0b4f26c346fce}\\\\
+\nGitHub: \\url{https://github.com/MuntashirAkon}\\\\
+\n트위터: \\url{https://twitter.com/Muntashir}</string>
+    <string name="pages$main-page$$instructions-title">지침</string>
+    <string name="pages$main-page$$options-menu-title">옵션 메뉴</string>
+    <string name="pages$main-page$$list-options-title">옵션 나열</string>
+    <string name="pages$main-page$$sort-title">정렬</string>
+    <string name="pages$main-page$$version-info-title">버전 정보</string>
+    <string name="pages$main-page$$profile_name-title">프로필 이름</string>
+    <string name="pages$main-page$$app-usage-title">앱 사용량</string>
+    <string name="pages$main-page$$system-config-title">시스템 구성</string>
+    <string name="pages$main-page$$filter-title">필터</string>
+    <string name="pages$main-page$profile_name">\\hyperref[sec:profiles-page]{프로필}에만 존재하는 앱을 나열할 수도 있습니다. 이는
+\n\\hyperref[sec:profiles-page]{프로필 페이지}에서 할 수 없는 특정 작업을 프로필에서
+\n실행하는데 유용할 수 있습니다 (예를 들어, 해당 프로필의 앱을 전부 제거하기).</string>
+    <string name="pages$main-page$system-config">이 메뉴 항목은 OEM, 공급업체, AOSP 또는 Magisk 모듈에 의해 Android에 포함된 다양한 시스템 구성,
+\n블랙리스트/화이트리스트가 표시되는 새 페이지를 엽니다. 이를 위해 루팅(rooting)이 필요합니다. 따라서 App Manager에서
+\n루트(root)권한을 사용할 수 없는 경우 이 메뉴 항목이 표시되지 않습니다.</string>
+    <string name="pages$app-details-page$$servcies-title">서비스</string>
+    <string name="pages$app-details-page$$receivers-title">수신자</string>
+    <string name="pages$app-details-page$$providers-title">공급자</string>
+    <string name="pages$app-details-page$$additional-features-for-rooted-phones-title">루팅된 폰을 위한 추가 기능</string>
+    <string name="pages$app-details-page$$app-info-options-menu-title">옵션 메뉴</string>
+    <string name="pages$app-details-page$$component-tabs-title">구성 요소 탭</string>
+    <string name="pages$app-details-page$app-info-tab">\\textbf{앱 정보} 탭에는 앱에 대한 일반 정보가 포함되어 있습니다. 또한 이 탭에서 수행할 수 있는
+\n여러 작업도 나열됩니다.</string>
+    <string name="intro$main$supported-versions">현재 지원되는 버젼은 v3.0.0 -- v3.0.3 (안정), v3.1.0 (알파 &amp; 디버그 릴리즈)입니다.
+\nApp Manager의 이전 버전에는 보안 취약점이 있을 수 있으므로 사용하지 마십시오.</string>
+    <string name="pages$main-page$$colour-codes-title">색상 코드</string>
+    <string name="pages$main-page$$application-types-title">앱 종류</string>
+    <string name="pages$main-page$$running-apps-title">실행 중인 앱</string>
+    <string name="pages$main-page$$profiles-title">프로필</string>
+    <string name="pages$main-page$$log-viewer-title">로그 뷰어</string>
+    <string name="pages$main-page$$apk-updater-title">APK 업데이터</string>
+    <string name="pages$main-page$$settings-title">설정</string>
+    <string name="pages$main-page$options-menu">옵션 메뉴는 나열된 앱을 정렬 및 필터링하고 App Manager 내부 또는 외부의 다른 페이지로 이동하는 데
+\n사용할 수 있는 여러가지 옵션을 제공합니다.</string>
+    <string name="pages$app-details-page$$section-title">앱 세부정보 페이지</string>
+    <string name="pages$app-details-page$$colour-codes-title">색상 코드</string>
+    <string name="pages$app-details-page$$app-info-tab-title">앱 정보 탭</string>
+    <string name="pages$app-details-page$$app-info-general-information-title">일반 정보</string>
+    <string name="pages$app-details-page$$permissions-title">권한</string>
+    <string name="pages$app-details-page$$signatures-tab-title">서명 탭</string>
+    <string name="pages$app-details-page$$shared-libs-tab-title">공유 라이브러리 탭</string>
+    <string name="pages$app-details-page$$other-tabs-title">기타 탭</string>
+    <string name="pages$app-details-page$intro">\\textbf{앱 세부정보} 페이지는11 (십일)개의 탭으로 구성되있습니다. Manifest의 모든 속성,
+\n\\hyperref[ch:app-ops]{앱 작업}, 서명 정보, 라이브러리 등을 포함하여
+\n앱이 가질 수 있는 거의 모든 정보를 설명합니다.</string>
+    <string name="pages$main$$pages-chapter-title">페이지</string>
+    <string name="pages$main-page$$batch-operations-title">일괄 작업</string>
+    <string name="pages$app-details-page$$uses-permissions-title">권한 사용함</string>
+    <string name="pages$app-details-page$$blocking-components-title">블로킹 구성 요소</string>
+    <string name="pages$main-page$$termux-title">Termux</string>
+    <string name="pages$main-page$sort">메인 페이지에 나열된 앱은 다음과 같은 방법으로 정렬될 수 있습니다:
+\n\\begin{itemize}
+\n \\item \\textbf{사용자 앱 우선.} 사용자 앱을 위에 표시
+\n \\item \\textbf{앱 이름.} 앱 라벨에 따라 오름차순으로 정렬 (앱 라벨이란
+\n \\textit{앱 이름}). 이것이 정렬 기본값입니다.
+\n \\item \\textbf{패키지 이름.} 패키지 이름에 따라 오름차순으로 정렬
+\n \\item \\textbf{마지막 업데이트.} 마지막 업데이트 된 날짜를 기준으로 내림차순 정렬
+\n \\item \\textbf{공유 사용자 ID.} 공유 사용자의 커널 User ID에 따라 내림차순 정렬
+\n \\item \\textbf{목표 SDK.} 목표 SDK에 따라 오름차순 정렬
+\n \\item \\textbf{서명.} 서명 정보에 따라 오름차순 정렬
+\n \\item \\textbf{비활성화 우선.} 비활성화 앱을 위에 표시
+\n \\item \\textbf{차단 우션.} 각 앱의 차단된 구성 요소 개수에 따라 내림차순 정렬
+\n \\item \\textbf{백업 완료 우선.} 백업이 된 앱을 위에 표시
+\n \\item \\textbf{트래커.} 각 앱의 트래커 요소 개수에 따라 내림차순 정렬
+\n \\item \\textbf{마지막 활동.} App Manager 내부 앱에 활동한 가장 최근 날짜와 시각에 따라 내림차순 정렬
+\n\\end{itemize}
+\n
+\n추가적으로, 목록을 역순으로 정렬하는 데 사용할 수 있는 \\textit{반대로} 옵션이 있습니다.
+\n정렬 설정에 상관없이 앱은 임의의 정렬 결과를 생성하지 않도록 처음에는
+\n알파벳 순으로 정렬됩니다.</string>
+    <string name="pages$main-page$filter">메인 페이지에 나열된 앱은 다음과 같이 필터링을 할 수 있습니다:
+\n\\begin{itemize}
+\n \\item \\textbf{사용자 앱.} 사용자 앱만 표시
+\n \\item \\textbf{시스템 앱.} 시스템 앱만 표시
+\n \\item \\textbf{비활성화 앱.} 비활성화 앱만 표시
+\n \\item \\textbf{규칙 보유 앱.} 하나 이상의 블로킹 규칙이 있는 앱 표시
+\n \\item \\textbf{활성화 앱.} 하나 이상의 활동 기록이 있는 앱 표시
+\n \\item \\textbf{백앱 된 앱.} 하나 이상의 백업이 있는 앱 표시
+\n \\item \\textbf{실행 중 앱.} 현재 실행 중인 앱 표시
+\n \\item \\textbf{분기 앱.} 하나 이상의 분기 APK 파일이 있는 앱 표시
+\n \\item \\textbf{설치된 앱.} 설치된 앱만 표시
+\n \\item \\textbf{제거된 앱.} 제거된 앱만 표시
+\n \\item \\textbf{백업 없는 앱.} 백업이 존재하지 않는 앱 표시
+\n\\end{itemize}
+\n
+\n정렬과 달리 두 개 이상의 필터링 옵션을 동시에 적용할 수 있습니다. 예를 들어, \\textit{사용자 앱} 및 \\textit{비활성화 앱} 옵션을
+\n둘 다 선택하여 사용하지 않도록 설정된 사용자 애플리케이션을 나열할 수 있습니다. 이는 특정 작업을
+\n안전하게 수행하기 위해 사용자 앱을 필터링할 필요가 있는 \\hyperref[subsec:batch-operations]{배치 작업}에
+\n특히 유용할 수 있다.</string>
+    <string name="intro$main$bin-sources">App Manager는 다음 소스들을기반으로 배포하고 있습니다. 비공식 소스들은 App Manager의
+\n변형된 버전을 배포할 수 있으며, 이러한 배포 버전을 사용했을 경우 모든 책임은 귀하에게 있습니다.
+\n\\begin{enumerate}
+\n \\item 공식 F-Droid Repository.\\footnote{For distributing normal releases only}\\\\
+\n \\textit{Link:} \\url{https://f-droid.org/packages/io.github.muntashirakon.AppManager}
+\n \\item GitHub repository.\\\\
+\n \\textit{Normal releases:} \\url{https://github.com/MuntashirAkon/AppManager/releases}\\\\
+\n \\textit{Debug releases:} \\url{https://github.com/MuntashirAkon/AppManager/actions}
+\n \\item 텔레그램.\\\\
+\n \\textit{Normal releases:} \\url{https://t.me/AppManagerChannel}\\\\
+\n \\textit{Debug releases:} \\url{https://t.me/AppManagerDebug}
+\n\\end{enumerate}</string>
+    <string name="intro$main$translations">App Manager는 직접적인 pull/merge 요청의 번역은 수락하지 않습니다. 번역은 Weblate를 통해서 자동으로 관리됩니다.
+\n번역에 참여하고 싶으시면, \\url{https://hosted.weblate.org/engage/app-manager/}로 가십시오.</string>
+    <string name="pages$main-page$colour-codes">\\begin{itemize}
+\n \\item \\colorbox{AMLightGreyishOrange}{\\textcolor{black}{Light greyish orange (day)}} / \\colorbox{AMDarkBlue}{
+\n \\textcolor{white}{dark blue (night)}} -- The application is selected for batch operation
+\n \\item \\colorbox{AMLightRed}{\\textcolor{black}{Light red (day)}} / \\colorbox{AMVeryDarkRed}{\\textcolor{white}
+\n {dark red (night)}} -- Disabled app
+\n \\item \\colorbox{AMYellow}{\\textcolor{black}{Yellow Star}} -- Debuggable application
+\n \\item \\textcolor{AMOrange}{Orange \\textit{Date}} -- 이 앱은 시스템 로그 접근 권한이 있습니다
+\n \\item \\textcolor{AMOrange}{Orange \\textit{UID}} -- 사용자 ID가 여러 앱에서 공유되고 있습니다
+\n \\item \\textcolor{AMOrange}{Orange \\textit{SDK}} -- 이 앱은 클리어텍스트를 사용할 수도 있습니다 (i.e. HTTP)
+\n \\item \\textcolor{red}{Red \\textit{package name}} -- 이 앱은 데이터 삭제를 허용하지 않습니다
+\n \\item \\textcolor{red}{Red \\textit{backup}} -- 제거된 앱이 App Manager에 하나 이상의
+\n백업을 가지고 있습니다
+\n \\item \\textcolor{AMOrange}{Orange \\textit{backup}} -- 오래된 백업, 즉 기존 백업이 설치된 앱의
+\n구 버전을 포함하고 있습니다
+\n \\item \\textcolor{AMDarkCyan}{Dark cyan \\textit{backup}} -- 최신 백업, 즉 기존 백입이 설치된 앱과 동일하거나
+\n상위 버전을 포함하고 있습니다.
+\n \\item \\textcolor{AMDarkCyan}{Dark cyan \\textit{package name}} -- 강제종료된 앱
+\n \\item \\textcolor{AMDarkCyan}{Dark cyan \\textit{version}} -- 비활성화 앱
+\n \\item \\textcolor{magenta}{Magenta} -- 자동실행 앱 i.e. 항상 실행 중인 앱.
+\n\\end{itemize}</string>
+    <string name="pages$main-page$running-apps">이 메뉴 항목은 실행 중인 앱 또는 프로세스 목록이 표시되는 새 페이지를 엽니다. 추가적으로 현재 메모리 및
+\n캐시 사용량(있을 경우)도 표시합니다. root 또는 ADB를 App Manager에서 사용할 수 없는 경우 안드로이드
+\n최신 버전에서만 표시됩니다. 실행 중인 앱 또는 프로세스는 해당 페이지 내에서 강제종료되거나 종료될
+\n수도 있습니다 .각 프로세스 ID(PID)에 대한 로그는 \\hyperref[subsec:log-viewer]{log viewer}에서도 볼 수 있습니다.
+\n추가적으로, 아이콘을 클릭하거나 항목을 길게 클릭하여 배치 작업을 수행할 수도 있습니다.
+\n항목을 그냥 클릭하면 세부정보가 표시되는 대화창이 열립니다.</string>
+    <string name="intro$main$submit-patches">GitHub 이외의 사이트에 위치한 repository는 현재 미러로 간주되며, 미러 사이트에서 pull/merge 요청은
+\n받아들여지지 않을 것입니다. \\footnote{GitHub pull 요청은 해당되는 패치를 통해 수동으로 merge됩니다.
+\n그 결과로, GitHub에 merged대신 closed로 잘못 표기될 수 있습니다.} 대신, 패치(\\texttt{.patch} 파일 형식)들은
+\n이메일 첨부 파일로 제출할 수 있습니다. \\textit{Signing-off 서명은 필수입니다.} 자세한 내용은 소스의 
+\n루트 디렉토리에 CONTRIBUTING 파일은 참고하십시오.
+\n
+\n\\begin{warning}{Notice}
+\n 이메일로 패치 제출, 향후 대화 전체를 공개적으로 접근할 수도 있습니다 . 그러므로
+\n 이름과 이메일 주소 외에는 개인 식별 정보(PII)는 포함하지 마십시오.
+\n\\end{warning}</string>
+    <string name="intro$main$donation">\\emph{기부금이나 구매는 App Manager사용을 위한 필수 조건이 아닙니다.} App Manager 어떤 구매도 지원하지 않지만,
+\nOpen Source Collective를 통해 기부금을 보낼 수 있습니다.
+\n
+\nOpen Source Collective는 오픈소스 프로젝트들의 재정 관리를 도와주는 Open Collective 플랫폼의
+\n재정 호스트입니다. 현재는 계좌 이체, 페이팔, 신용카드나 암호화폐를 통한
+\n결제를 지원하고 있습니다.
+\n
+\n\\textit{링:} \\url{https://opencollective.com/muntashir}.
+\n
+\n기부금을 보내는 사람들은 자신들이 요청하는 기능이 우선적으로 추가되도록 요구하는 지렛대가 되도록 기부금을
+\n사용해서는 안 된다는 데 동의한다. 기능 요청은 어떠한 현상금이나 기부도 필요하지 않으며,
+\n개발자의 선호도에 따라 우선순위가 정해집니다.
+\n
+\n\\emph{App Manager는 모든 지원금이나 보조금을 제안을 수락합니 .} 관심있는 조직들의 대표자분들은 
+\n\\Sref{sec:contact}에 주어진 옵션을 통해 소유자에게 직접 연락을 취할 수 있습니다.</string>
+    <string name="pages$app-details-page$$permission-tabs-title">권한 탭</string>
+    <string name="pages$main-page$intro">메인 페이지에는 설치, 제거 또는 백업된 모든 앱이 나열됩니다. 설치된 앱 항복을 클릭하면
+\n해당되는 \\hyperref[sec:app-details-page]{앱 세부정보 페이지}를 엽니다. 제거된 시스템 앱의 경우, 앱을 다시
+\n설치할 수 있는 대화 상자 프롬프트가 표시됩니다. 목록 옵션에서 \\hyperlink{par:main-page-sort}{정렬} 옵션을
+\n사용하면, 앱 항목들을 다양한 방법으로 정렬하고 종료 시 저장할 수 있습니다. 목록 옵션에서
+\n\\hyperlink{par:main-page-filter}{filter} 옵션을 사용해서 항목을 필터링할 수도 있습니다. 정규식을 추가적으로 지원하는
+\n검색창을 통해서도 필터링이 가능합니다.</string>
+    <string name="pages$main-page$batch-operations">여러 앱에서의 배치 작업 혹은 작업도 이 페이지에서 가능합니다. 앱 아이콘을 클릭하거나 목록의 항목을
+\n길게 클릭하여 다중 선택 모드를 활성화할 수 있습니다. 활성화 후, 목록 항목을 클릭하면
+\n앱 세부 정보 페이지를 여는 대신 해당 항목이 선택됩니다. 이 모드에서, 배치 작업은 페이지 하단의
+\n다중 선택 메뉴에 있습니다. 포함된 작업은:
+\n\\begin{itemize}
+\n \\item 선택된 앱을 \\hyperref[sec:profiles-page]{프로필}에 추가하기
+\n \\item 앱을 \\hyperref[sec:backup-restore]{백업, 복구 혹은 삭제} 
+\n \\item 앱에서의 트래커를 차단하기
+\n \\item 앱에서 데이터 혹은 캐시 삭제하기
+\n \\item 앱을 활성화/비활성화/강제종료/제거하기
+\n \\item App Manager에 저장된 블록킹 규칙을 내보내기
+\n \\item 앱의 백그라운드 실행을 방지하기 (안드로이드 7부터)
+\n \\item APK 파일을 \\texttt{AppManager/apks}에 저장하기
+\n \\item \\hyperref[sec:net-policy]{네트워크 정책} 설정하기
+\n\\end{itemize}
+\n
+\n\\begin{tip}{Accessibility}
+\n 다중 선택 모드 활성화 후, 키보드 혹은 리모컨의 좌우 버튼을 사용해서
+\n다중 선택 영역 탐색이 가능합니다.
+\n\\end{팁}</string>
+    <string name="pages$main-page$application-types">앱은 다음 접미사를 가지는 \\textbf{사용자} 혹은 \\textbf{시스템} 앱일 수 있습니다:
+\n\\begin{itemize}
+\n \\item \\texttt{X} -- 다수의 아키텍쳐 지원
+\n \\item \\texttt{0} -- 앱에 dex 파일이 존재하지 않습니다
+\n \\item \\texttt{°} -- 일시정지된 앱
+\n \\item \\texttt{\\#} -- 앱이 시스템에 큰 힙 할당을 요청했습니다 (i.e. 큰 런타임 메모리)
+\n \\item \\texttt{\?} -- 앱이 가상 머신이 안전 모드에 있도록 요청했습니다.
+\n\\end{itemize}</string>
+    <string name="pages$main-page$version-info">버전 이름 뒤에는 아래의 접두사가 붙습니다:
+\n\\begin{itemize}
+\n \\item \\texttt{\\_} -- 하드웨어 가속 없음(앱 내 애니메이션 또는 투명도 저하)
+\n \\item \\texttt{\\textasciitilde} -- 테스트 전용 앱
+\n \\item \\texttt{debug} -- 디버깅 가능 앱
+\n\\end{itemize}</string>
+    <string name="pages$main-page$instructions">\\textbf{Instructions} 를 클릭하면 App Manager 사용 설명서의 오프라인 버전이 열립니다. 해당 분할 기능
+\n(i.e.\\ \\texttt{feat\\_docs})이 설치되어 있지 않거나,설명서를 로드할 WebView가 시스템에 존재하지 않을 경우
+\n온라인 버전이 열릴 수 있습니다.</string>
+    <string name="pages$main-page$list-options">\\textbf{List options} 는 메인 페이지의 리스트 정렬 및 필터링을 하는 옵션이 있습니다.</string>
+    <string name="pages$app-details-page$colour-codes">이 페이지에 사용된 색상과, 각 색상의 의미:
+\n\\begin{itemize}
+\n \\item \\colorbox{AMRed}{\\textcolor{black}{Red (day)}} / \\colorbox{AMDarkRed}{\\textcolor{white}{dark red (night)}}
+\n -- 위험 플래그가 있는 앱 권한 혹은 앱 관리자 내에서 차단된 구성 요소를 나타냅니다.
+\n
+\n \\item \\colorbox{AMLightRed}{\\textcolor{black}{Light red (day)}} / \\colorbox{AMVeryDarkRed}{\\textcolor{white}{very
+\n dark red (night)}} -- App Manager 외부에서는 비활성화 되는 구성 요소를 나타냅니다.
+\n
+\n \\begin{tip}{Note}
+\n 구성 요소가 비활성화로 표시된 경우 항상 사용자에 의해 비활성화된 것은 아닙니다. 시스템에서 비활성화하거나
+\n Manifest에서 비활성화로 표시될 수도 있습니다. 비활성화된 앱의 구성 요소도 시스템(및 App Manager)에 의해
+\n비활성화된 것으로 간주됩니다.
+\n \\end{tip}
+\n
+\n \\item \\colorbox{AMVividOrange}{\\textcolor{black}{Vivid orange (day)}} / \\colorbox{AMVeryDarkOrange}{
+\n \\textcolor{white}{very dark orange (night)}} -- 트래커 구성 요소를 나타냅니다.
+\n
+\n \\item \\colorbox{AMSoftMagenta}{\\textcolor{black}{Soft magenta (day)}} / \\colorbox{AMVeryDarkViolet}{
+\n \\textcolor{white}{very dark violet (night)}} -- 실행 중인 서비스를 나타냅니다.
+\n\\end{itemize}</string>
+    <string name="pages$app-details-page$permissions">\\textbf{권한}은 보통 앱 내에서 정의된 커스텀 권한입니다. 이러한 종류의 권한은
+\n\\textit{내부} 권한으로 표시됩니다. 다른 앱에서도 선언되고 \\textit{외부} 권한으로
+\n표시된 권한도 포함됩니다. 외부 권한은 앱 구성 요소에서 종속적인 권한으로 지정됩니다.
+\n즉, 앱은 지정된 권한을 직접 보유하는 경우에만 구성 요소를 호출할 수 있습니다.
+\n다음은 표시되는 각 항목에 대한 전체 설명입니다.
+\n\\begin{itemize}
+\n \\item \\textbf{이름.} 각 권한은 \\texttt{android.permission.INTERNET}와 같은 고유한 이름이 있지만
+\n여러 앱이 동일한 권한을 요청할 수 있습니다.
+\n
+\n \\item \\textbf{아이콘.} 각 권한은 커스텀 아이콘을 가질 수 있습니다. 다른 권한 탭들은 앱 manifest에
+\n아이콘이 없기 때문에, 아이콘이 없습니다.
+\n
+\n \\item \\textbf{설명.} 이 선택 필드는 권한을 설명합니다. 권한과 관련된 설명이 없으면
+\n이 필드가 표시되지 않습니다.
+\n
+\n \\item \\textbf{플래그.} (Uses the flag symbol or \\textbf{Protection Level} name) \\textit{normal}, \\textit{development},
+\n\\textit{dangerous}, \\textit{instant}, \\textit{granted}, \\textit{revoked}, \\textit{signature}, \\textit{privileged},
+\n등과 같은 다양한 권한 플래그를 설명합니다.
+\n
+\n \\item \\textbf{패키지 이름.} 권한과 연결된 패키지 이름을 나타냅니다
+\n(권한을 정의한 패키지 이름)
+\n
+\n \\item \\textbf{그룹.} 권한과 관련된 그룹 이름(있을 경우). 서로 연관된 여러 권한이
+\n그룹으로 묶일 수 있습니다.
+\n\\end{itemize}</string>
 </resources>
