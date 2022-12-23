@@ -132,14 +132,20 @@
     <plurals name="tracker_and_classes">
         <item quantity="other"><xliff:g id="class_no" example="50">%1$d</xliff:g> 클래스가 있는 추적기 1개</item>
     </plurals>
-    <string name="credits_message">다음의 작성자들에게
-\n- 안드로이드 오픈 소스 프로젝트
-\n- <a href="https://github.com/butzist/ActivityLauncher">ActivityLauncher</a>
+    <string name="credits_message">다음 제작자들에게
+\n- 안드로이드 오픈 소스 프로젝트 (AOSP)
+\n- <a href="https://github.com/zhaobozhen/libraries">Absinthe\'s libraries</a>
+\n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
 \n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
 \n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/gabrielemariotti/changeloglib">ChangeLog Library</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a>
 \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a>
 \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a>
+\n- <a href="https://github.com/topjohnwu/Magisk">Magisk</a>
 \n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
 \n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
 \n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
@@ -148,7 +154,7 @@
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
 \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
-\nOriginal logo credit: <a href="https://github.com/Atrate">Atrate</a>. </string>
+\n오리지널 로고 크레딧: <a href="https://github.com/Atrate">Atrate</a>. </string>
     <string name="class_viewer">클래스 뷰어</string>
     <plurals name="two_trackers_and_classes">
         <item quantity="other"><xliff:g id="class_no" example="50">%1$d</xliff:g> 클래스가 있는 추적기 2개</item>
@@ -158,7 +164,7 @@
     </plurals>
     <string name="grant_usage_acess_message">앱 사용량 정보를 표시하는 데 사용됩니다.</string>
     <string name="usage_weekly">매주</string>
-    <string name="usage_access">사용량 접근권한</string>
+    <string name="usage_access">사용량 접근 권한</string>
     <string name="app_info">앱 정보</string>
     <string name="uninstall_app_message">앱을 삭제하시겠습니까\?</string>
     <string name="failed_to_extract_apk_file">APK 파일을 추출할 수 없습니다</string>
@@ -219,11 +225,11 @@
     <string name="key_name">열쇠 이름</string>
     <string name="type_float">10 진수</string>
     <string name="type_long">롱 타입 정수</string>
-    <string name="sort_by_last_used">마지막 사용 시각</string>
+    <string name="sort_by_last_used">마지막 사용</string>
     <string name="app_settings">설정</string>
     <string name="pref_import_export_blocking_rules">차단 규칙 불러오기/내보내기</string>
     <string name="running_apps">실행 중인 앱</string>
-    <string name="sort_by_times_opened">연 횟수</string>
+    <string name="sort_by_times_opened">열린 횟수</string>
     <string name="the_import_was_successful">불러오기 성공</string>
     <string name="the_export_was_successful">내보내기 성공</string>
     <string name="external_data_dir">외부 데이터 디렉터리</string>
@@ -238,7 +244,7 @@
     <plurals name="no_of_times_opened">
         <item quantity="other">%1$d 번</item>
     </plurals>
-    <string name="sort_by_mobile_data">모바일 데이터</string>
+    <string name="sort_by_mobile_data">모바일 데이터 사용량</string>
     <string name="kill_process">종료</string>
     <string name="second_degree_tracker_note">² 접두사는 트래커들이 <a href="https://etip.exodus-privacy.eu.org/">대기자 명단</a> 에 있음을 나타냅니다. 즉, 실제로 여전히 조사 중인 트래커들인지 여부를 확인합니다.</string>
     <string name="pref_global_blocking_enabled_msg">앱에 대한 차단을 명시적으로 설정하지 않고 앱의 구성 요소를 차단할 수 있도록 합니다.</string>
@@ -366,7 +372,7 @@
     <string name="no">아니오</string>
     <string name="pref_remove_all_rules_msg">권한이 부여되고, 앱 권한과 구성 요소는 기본값으로 초기화 됩니다.</string>
     <string name="are_you_sure">확실하십니까\?</string>
-    <string name="installer_error_aborted">설치가 취소되었거나 세션이 예기치 않게 닫혀서 설치에 실패했습니다.</string>
+    <string name="installer_error_aborted">설치가 취소되었거나 세션이 예기치 않게 닫혀서 설치에 실패했습니다</string>
     <string name="installer_error_blocked"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g>에 의해 설치 차단</string>
     <string name="installer_error_blocked_device">장치</string>
     <string name="installer_error_bad_apks">유효하지 않은 APK 파일이 선택 되었습니다</string>
@@ -442,7 +448,7 @@
     <string name="installer_error_session_create">설치 관리자 세션을 생성할 수 없습니다</string>
     <string name="backup_obb_media">OBB랑 미디어</string>
     <string name="unknown_split_for_base_apk"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> 기본 APK를 위해</string>
-    <string name="installer_error_session_write">설치 관리자 세션에 쓸 수 없습니다</string>
+    <string name="installer_error_session_write">설치 관리자 세션에 작성할 수 없습니다</string>
     <string name="base_apk">기본 APK</string>
     <string name="unknown_split_for_feature"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> 다음 기능을 위해 <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
     <string name="density_split_for_feature"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) 다음 기능을 위한 자원 <xliff:g id="feature_name" example="Visualizer">%3$s</xliff:g></string>
@@ -485,7 +491,7 @@
     <string name="no_volumes_found">쓰기 권한이 있는 볼륨을 찾을 수 없습니다.</string>
     <string name="unencrypted">암호화되지 않음</string>
     <string name="bootloader">부트로더</string>
-    <string name="backup_apps_without_backups">백업이 없는 앱 백업</string>
+    <string name="backup_apps_without_backups">백업이 존재하지 않는 앱 백업하기</string>
     <plurals name="no_of_splits">
         <item quantity="other">%1$d개로 분할됨</item>
     </plurals>
@@ -495,7 +501,7 @@
     <string name="orientation_unspecified">지정되지 않음</string>
     <string name="pref_backup_volume_msg">백업이 저장될 볼륨 또는 디스크를 선택하십시오.</string>
     <string name="launch_mode_single_task">단일 작업</string>
-    <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">GitHub</a> • <a href="https://gitlab.com/muntashir/AppManager">GitLab</a> • <a href="https://0xacab.org/muntashir/AppManager">Riseup</a> • <a href="https://codeberg.org/muntashir/AppManager">Codeberg</a></string>
+    <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">깃허브</a> • <a href="https://gitlab.com/muntashir/AppManager">GitLab</a> • <a href="https://0xacab.org/muntashir/AppManager">Riseup</a> • <a href="https://codeberg.org/muntashir/AppManager">Codeberg</a></string>
     <string name="orientation_full_sensor">전체 센서</string>
     <string name="orientation_full_user">전체 사용자</string>
     <string name="orientation_no_sensor">센서 없음</string>
@@ -511,7 +517,7 @@
     <string name="open">열기</string>
     <string name="pref_buffer_title">로그 버퍼(들)</string>
     <string name="screen_lock">화면 잠금</string>
-    <string name="type_uri">URI</string>
+    <string name="type_uri">URI 통합 자원 식별자</string>
     <string name="invalid_aes_key_size">AES 암호화에 대한 키 크기가 잘못되었습니다. 키 크기는 128비트 또는 256비트일 수 있습니다.</string>
     <string name="crypto_key_size">키 크기</string>
     <string name="import_from_tb">티타늄 백업에서 가져오기</string>
@@ -774,7 +780,7 @@
     <string name="rename">이름 변경</string>
     <string name="pref_show_timestamp_title">Pid 및 타임스탬프 표시</string>
     <string name="help_uses_permissions_tab">항목을 클릭하여 <b>부여</b>하거나 <b>취소</b>합니다. <b>위험</b> 및 <b>개발</b> 허가만 부여하거나 취소할 수 있습니다.</string>
-    <string name="bouncy_castle_keystore"/>
+    <string name="bouncy_castle_keystore">Bouncy Castle 키 저장소 (BKS)</string>
     <string name="pk8_file">PKCS #8(PK8) 파일</string>
     <string name="reverse">반대</string>
     <string name="failed_to_prevent_background_run">%1$s이(가) 백그라운드에서 실행되는 것을 차단할 수 없습니다</string>
@@ -984,7 +990,7 @@
     <string name="matching_activities">매칭 활동</string>
     <string name="activity_result">활동결과</string>
     <string name="value">값</string>
-    <string name="uri">URI</string>
+    <string name="uri">URI 통합 자원 식별자</string>
     <string name="resend_intent">재전송 의도</string>
     <string name="set_custom_app_op">사용자 지정 앱 설정 옵션</string>
     <string name="backup_apk_files_description">분할을 포함하여 원본 디렉터리에서 APK 파일을 백업합니다.</string>
@@ -1111,4 +1117,92 @@
     <string name="state_sleeping">절전 모드</string>
     <string name="process_state">상태: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g></string>
     <string name="cancel">취소</string>
+    <string name="update_uninstalled_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g>의 업데이트가 제거되었습니다.</string>
+    <string name="subject">대상</string>
+    <string name="format">형식</string>
+    <string name="rsa_exponent">지수</string>
+    <string name="rsa_modulus">계수</string>
+    <string name="do_you_want_to_uninstall_and_install">앱을 제거하고 다시 설치하시겠습니까\?</string>
+    <string name="app_signing_install_without_data_loss">서명 인증을 해제한 경우, <b>설치만</b> 옵션을 선택하여 데이터 손실 없이 앱을 설치할 수 있습니다.</string>
+    <string name="only_install">설치만</string>
+    <string name="no_libs">라이브러리 없음</string>
+    <string name="lib_details">라이브러리 세부사항</string>
+    <string name="tap_to_see_details">눌러서 세부 정보 보기</string>
+    <string name="navigation_no_nav">내비게이션 없음</string>
+    <string name="other">기타</string>
+    <string name="sort_by_process_id">프로세스 ID</string>
+    <string name="pref_compression_method">압축 방식</string>
+    <string name="tap_to_submit_crash_report">충돌 보고서를 제출하려면 누르십시오.</string>
+    <string name="changes_not_saved">변경사항 저장 안 됨</string>
+    <string name="sort_by_backup">백업 완료 우선</string>
+    <string name="app_signing_signature_mismatch_for_system_apps">서명이 다른 시스템 앱이 동일한 패키지 이름을 사용 중이므로 앱을 설치할 수 없습니다.</string>
+    <string name="sys_config">시스템 구성</string>
+    <string name="state_waking">깨우기</string>
+    <string name="systemless_app">시스템 독립 앱</string>
+    <string name="open_pgp_provider">OpenPGP 공급자</string>
+    <string name="select_apk">APK 선택</string>
+    <string name="conversion_failed">변환 실패.</string>
+    <string name="orientation_follow_locale">로케일 따르기</string>
+    <string name="staging_apk_files">준비 중…</string>
+    <string name="keystore">Key스토어</string>
+    <string name="uninstall_updates">업데이트 제거</string>
+    <string name="profiles">프로필</string>
+    <string name="filter_apps_with_activities">활성화</string>
+    <string name="launch_mode_single_top">싱글 탑</string>
+    <string name="orientation_locked">잠금</string>
+    <string name="navigation_trackball">트랙 볼</string>
+    <string name="navigation_wheel">휠</string>
+    <string name="state_dead">종료</string>
+    <string name="keyboard_no_keys">Key 없음</string>
+    <string name="state_parked">주차</string>
+    <string name="state_wake_kill">깨우기 죽임</string>
+    <string name="routine_ops">루틴 ops</string>
+    <string name="apps">앱</string>
+    <string name="filter_apps">앱</string>
+    <string name="sort_by_process_name">프로세스 이름</string>
+    <string name="allow_open_pgp_operation">App Manager가 OpenPGP를 사용하도록 허용</string>
+    <string name="sort_by_apps_first">앱 우선</string>
+    <string name="expiry_date">유통기한</string>
+    <string name="expired">만료</string>
+    <string name="checksums">체크섬</string>
+    <string name="public_key">공유 키</string>
+    <string name="dsa_affine_x">아핀 x 좌표</string>
+    <string name="dsa_affine_y">아핀 y 좌표</string>
+    <string name="non_critical_exts">중요하지 않은 확장프로그램</string>
+    <string name="copy">복사</string>
+    <string name="filter_running_apps">실행 중인 앱</string>
+    <string name="send_crash_report">충돌 보고서 보내기</string>
+    <string name="un_apkm">UnApkm</string>
+    <string name="interceptor">인터셉터</string>
+    <string name="no_profiles">프로필 없음</string>
+    <string name="filter_apps_with_backups">백업 존재</string>
+    <string name="failed_to_uninstall_updates"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g>의 업데이트 제거를 할 수 없습니다.</string>
+    <string name="serial_no">시리얼 번호</string>
+    <string name="type">종류</string>
+    <string name="critical_exts">중요 확장프로그램</string>
+    <string name="specify_custom_name">커스텀</string>
+    <string name="app_signing_signature">서명</string>
+    <string name="not_yet_valid">아직 유효하지 않음</string>
+    <string name="board_name">보드</string>
+    <string name="orientation_behind">거꾸로</string>
+    <string name="app_data_will_be_lost">기존 데이터가 손실됩니다.</string>
+    <string name="zygote_preload_name">자이고트 사전로딩 이름</string>
+    <string name="presets">사전 설정</string>
+    <string name="algorithm">알고리즘</string>
+    <string name="pref_cat_appearance">모습</string>
+    <string name="apk_checksums">APK 체크섬</string>
+    <string name="valid">유효</string>
+    <string name="usage_times_opened">열린 횟수</string>
+    <string name="validity">유효성</string>
+    <string name="apply_now">지금 적용…</string>
+    <string name="no_apps">앱 없음</string>
+    <string name="requested_large_heap">큰 heap</string>
+    <string name="confirm_installation">설치 확인</string>
+    <string name="state_zombie">좀비</string>
+    <string name="issued_date">발행일</string>
+    <string name="issuer">발행자</string>
+    <string name="scanner">스캐너</string>
+    <string name="view_missing_signatures">App Manager의 라이브러리 데이터베이스에 아직 저장되지 않은 서명을 보거나 보내려면 누르십시오.</string>
+    <string name="am_crashed">App Manager이 충돌이 발생했습니다</string>
+    <string name="file_change_open_with">연결 프로그램 변경</string>
 </resources>
