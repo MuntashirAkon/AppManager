@@ -1434,4 +1434,27 @@
     <string name="guide$aot$$setup-adb-mac-title">macOS</string>
     <string name="guide$aot$$setup-adb-linux-title">Linux</string>
     <string name="guide$aot$$configure-aot-title">ADB über TCP einrichten</string>
+    <string name="guide$aot$$enable-dev-options-title">Entwickleroptionen aktivieren</string>
+    <string name="guide$aot$$section-title">ADB über TCP</string>
+    <string name="pages$interceptor-page$flags">Markierungen sind nützlich, um zu bestimmen, wie sich das System während des Starts oder nach dem Start einer Aktivität verhalten soll.
+\nDies sollte nicht berührt werden, da es ein gewisses technisches Hintergrundwissen erfordert. Die Schaltfläche \\textit{plus} neben dem Titel kann verwendet werden, um eine oder mehrere Markierungen hinzuzufügen.</string>
+    <string name="pages$interceptor-page$reset-to-default">Setzt das Objekt in seinen Ausgangszustand zurück.</string>
+    <string name="pages$shared-prefs-editor-page$$section_title">Editorseite für gemeinsame Einstellungen</string>
+    <string name="pages$shared-prefs-editor-page$intro">Gemeinsame Einstellungen können auf dieser Seite bearbeitet werden. Wenn Sie auf ein Element in der Liste klicken, wird der Bearbeitungsdialog geöffnet, in dem das Element bearbeitet werden kann.
+\nÜber die schwebende Aktionsschaltfläche in der unteren rechten Ecke kann ein neues Element hinzugefügt werden. Zum Speichern oder Löschen der Datei,
+\noder um aktuelle Änderungen zu verwerfen, können die entsprechenden Optionen im Menü verwendet werden.</string>
+    <string name="guide$main$$guides-chapter-title">Leitlinien</string>
+    <string name="guide$aot$$location-dev-options-title">Ort der Entwickleroptionen</string>
+    <string name="guide$aot$$how-to-enable-dev-options-title">Aktivieren von Entwickleroptionen</string>
+    <string name="guide$aot$$enable-usb-debugging-title">USB-Debugging aktivieren</string>
+    <string name="guide$aot$$miui-usb-debug-title">Xiaomi (MIUI)</string>
+    <string name="guide$aot$$emui-usb-debug-title">Huawei (EMUI)</string>
+    <string name="guide$aot$$realme-usb-debug-title">Realme</string>
+    <string name="pages$interceptor-page$extras">Extras sind die Schlüssel-Wert-Paare, die für die Bereitstellung zusätzlicher Informationen für die Zielkomponente verwendet werden. Weitere Extras können über die Schaltfläche \\textit{plus} neben dem Titel hinzugefügt werden.</string>
+    <string name="pages$interceptor-page$uri">Stellt den gesamten Inhalt als URI dar (z. B. \\texttt{intent://\\dots}). Einige Daten können nicht in eine Zeichenkette umgewandelt werden,
+\nund werden daher hier möglicherweise nicht angezeigt.</string>
+    <string name="pages$interceptor-page$matching-activities">Listet alle Aktivitätskomponenten auf, die dem Zweck entsprechen. Dies wird intern vom System bestimmt (und nicht vom App Manager).
+\nDie Schaltfläche \"Starten\" neben jeder Komponente kann verwendet werden, um sie direkt vom App Manager aus zu starten.</string>
+    <string name="pages$interceptor-page$send-edited-intent">Sendet den bearbeiteten Inhalt erneut an die Zielanwendung. Dies kann eine Liste von Anwendungen öffnen, in der die gewünschte Anwendung ausgewählt werden muss.
+\nDas von der Zielanwendung erhaltene Ergebnis wird an die Quellanwendung gesendet. Daher weiß die Quellanwendung nicht, ob es einen Man-in-the-Middle gab.</string>
 </resources>
