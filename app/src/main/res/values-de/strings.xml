@@ -1238,4 +1238,10 @@
     <string name="open_as_other">Andere</string>
     <string name="delete_filename">%s löschen</string>
     <string name="action_stop_service">Stopp</string>
+    <string name="freeze_on_phone_locked">App automatisch einfrieren, wenn das Telefon gesperrt ist</string>
+    <string name="file_open_with_custom_activity">Benutzerdefiniert</string>
+    <string name="on_unfreeze_open_application">App nach dem Auftauen öffnen</string>
+    <string name="on_open_application_no_recents">Gestartete App nicht in „Letzte“ anzeigen</string>
+    <string name="tap_to_freeze_app">Antippen zum Einfrieren</string>
+    <string name="waiting_for_the_phone_to_be_locked">Warten, bis das Telefon gesperrt wird …</string>
 </resources>
