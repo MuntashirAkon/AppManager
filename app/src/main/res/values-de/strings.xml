@@ -1244,4 +1244,5 @@
     <string name="on_open_application_no_recents">Gestartete App nicht in „Letzte“ anzeigen</string>
     <string name="tap_to_freeze_app">Antippen zum Einfrieren</string>
     <string name="waiting_for_the_phone_to_be_locked">Warten, bis das Telefon gesperrt wird …</string>
+    <string name="file_change_open_with">Wechseln zu öffnen mit</string>
 </resources>
