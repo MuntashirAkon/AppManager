@@ -2,6 +2,10 @@
 
 package io.github.muntashirakon.AppManager.usage;
 
+import static android.net.NetworkCapabilities.TRANSPORT_CELLULAR;
+import static android.net.NetworkCapabilities.TRANSPORT_WIFI;
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagMatchUninstalled;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.UserIdInt;
@@ -41,10 +45,6 @@ import io.github.muntashirakon.AppManager.compat.UsageStatsManagerCompat;
 import io.github.muntashirakon.AppManager.utils.NonNullUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
-
-import static android.net.NetworkCapabilities.TRANSPORT_CELLULAR;
-import static android.net.NetworkCapabilities.TRANSPORT_WIFI;
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagMatchUninstalled;
 
 public class AppUsageStatsManager {
     @Retention(RetentionPolicy.SOURCE)
@@ -131,9 +131,40 @@ public class AppUsageStatsManager {
         this.context = context;
     }
 
+    /**
+     * Calculate screen time based on the assumption that no application can be run in the middle of
+     * a running application. This is a valid assumption since <code>Activity#onPause()</code> is
+     * called whenever an app goes to background and <code>Activity#onResume</code> is called
+     * whenever an app appears in foreground.
+     *
+     * @param usageInterval Usage interval
+     * @return A list of package usage
+     * @throws SecurityException If usage stats permission is not available for the user
+     * @throws RemoteException   If usage stats cannot be retrieved due to transaction error
+     */
+    @NonNull
+    public List<PackageUsageInfo> getUsageStats(@UsageUtils.IntervalType int usageInterval, @UserIdInt int userId)
+            throws RemoteException, SecurityException {
+        List<PackageUsageInfo> packageUsageInfoList = new ArrayList<>();
+        int _try = 5; // try to get usage stats at most 5 times
+        RemoteException re;
+        do {
+            try {
+                packageUsageInfoList.addAll(getUsageStatsInternal(usageInterval, userId));
+                re = null;
+            } catch (RemoteException e) {
+                re = e;
+            }
+        } while (0 != --_try && packageUsageInfoList.size() == 0);
+        if (re != null) {
+            throw re;
+        }
+        return packageUsageInfoList;
+    }
+
     public PackageUsageInfo getUsageStatsForPackage(@NonNull String packageName,
-                                                    @UsageUtils.IntervalType int usageInterval,
-                                                    @UserIdInt int userId)
+                                                     @UsageUtils.IntervalType int usageInterval,
+                                                     @UserIdInt int userId)
             throws RemoteException {
         UsageUtils.TimeInterval range = UsageUtils.getTimeInterval(usageInterval);
         PackageUsageInfo packageUsageInfo = new PackageUsageInfo(context, packageName, userId,
@@ -174,7 +205,8 @@ public class AppUsageStatsManager {
      * @param usageInterval Usage interval
      * @return A list of package usage
      */
-    public List<PackageUsageInfo> getUsageStats(@UsageUtils.IntervalType int usageInterval, @UserIdInt int userId)
+    private List<PackageUsageInfo> getUsageStatsInternal(@UsageUtils.IntervalType int usageInterval,
+                                                         @UserIdInt int userId)
             throws RemoteException {
         List<PackageUsageInfo> screenTimeList = new ArrayList<>();
         Map<String, Long> screenTimes = new HashMap<>();

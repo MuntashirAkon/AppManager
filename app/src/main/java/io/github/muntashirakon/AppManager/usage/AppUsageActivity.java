@@ -357,18 +357,12 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
                 int[] userIds = Users.getUsersIds();
                 List<PackageUsageInfo> packageUsageInfoList = new ArrayList<>();
                 for (int userId : userIds) {
-                    int _try = 5; // try to get usage stats at most 5 times
-                    do {
-                        try {
-                            packageUsageInfoList.addAll(AppUsageStatsManager.getInstance(getApplication())
-                                    .getUsageStats(mCurrentInterval, userId));
-                        } catch (RemoteException e) {
-                            Log.e("AppUsage", e);
-                        } catch (SecurityException e) {
-                            Log.e("AppUsage", e);
-                            _try = 0;
-                        }
-                    } while (0 != --_try && packageUsageInfoList.size() == 0);
+                    try {
+                        packageUsageInfoList.addAll(AppUsageStatsManager.getInstance(getApplication())
+                                .getUsageStats(mCurrentInterval, userId));
+                    } catch (RemoteException | SecurityException e) {
+                        Log.e("AppUsage", e);
+                    }
                 }
                 mTotalScreenTime = 0;
                 Set<Integer> users = new HashSet<>(3);

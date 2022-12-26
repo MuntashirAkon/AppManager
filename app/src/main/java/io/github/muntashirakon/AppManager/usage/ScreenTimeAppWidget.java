@@ -34,18 +34,12 @@ public class ScreenTimeAppWidget extends AppWidgetProvider {
         int[] userIds = Users.getUsersIds();
         List<PackageUsageInfo> packageUsageInfoList = new ArrayList<>();
         for (int userId : userIds) {
-            int _try = 5; // try to get usage stats at most 5 times
-            do {
                 try {
                     packageUsageInfoList.addAll(AppUsageStatsManager.getInstance(context)
                             .getUsageStats(UsageUtils.USAGE_TODAY, userId));
-                } catch (RemoteException e) {
+                } catch (RemoteException | SecurityException e) {
                     e.printStackTrace();
-                } catch (SecurityException e) {
-                    e.printStackTrace();
-                    _try = 0;
                 }
-            } while (0 != --_try && packageUsageInfoList.size() == 0);
         }
         Collections.sort(packageUsageInfoList, (o1, o2) -> -Long.compare(o1.screenTime, o2.screenTime));
         long totalScreenTime = 0;
