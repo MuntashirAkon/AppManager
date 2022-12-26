@@ -76,6 +76,10 @@ android {
     sourceSets {
         androidTest.assets.srcDirs += files("$projectDir/schemas".toString())
     }
+    dependenciesInfo {
+        includeInApk false
+        includeInBundle false
+    }
 }
 
 dependencies {
