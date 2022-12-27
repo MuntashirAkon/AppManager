@@ -59,4 +59,12 @@
     <string name="titlepage$user_manual">{\\huge\\bfseries Manual do Usuário\\par}</string>
     <string name="intro$main$supported-versions">Atualmente, as versões suportadas são v3.0.0 -- v3.0.3 (estável), v3.1.0 (alpha e de debug). Verções anteriores do App
 \nManager pode conter vulnerabilidades de segurança e não deve usal-las.</string>
+    <string name="intro$main$buiding">As instruções de compilação estão disponíveis no arquivo BUILDING localizado no diretório raiz do código.</string>
+    <string name="intro$main$translations">O App Manager não aceita traduções diretamente por meio de solicitações pull/merge. As traduções são gerenciadas automaticamente via 
+\nWeblate. Para participar da equipe de tradução, visite \\url{https://hosted.weblate.org/engage/app-manager/}.</string>
+    <string name="intro$main$contributing">Há várias maneiras pelas quais um usuário pode contribuir,
+\ncriando tópicos de ajuda, participar de discussões, melhorando
+\ndocumentações e traduções, adicionando bibliotecas ou rastreadores não reconhecidos, revisando o código-fonte,bem como
+\n
+\nrelatar vulnerabilidades de segurança.</string>
 </resources>
