@@ -199,8 +199,7 @@
     <string name="stopped">Parado</string>
     <string name="uninstall_system_app_message">Esta é uma aplicação de sistema. Tem a certeza que deseja desinstalar esta app\?</string>
     <string name="uninstalled_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> foi desinstalada.</string>
-    <string name="failed_to_uninstall">Não foi possível desinstalar
-\n<xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="failed_to_uninstall">Não foi possível desinstalar <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
     <string name="uninstall_app_message">Deseja desinstalar esta app\?</string>
     <string name="view_in_settings">Ver nas configurações</string>
     <string name="no_content">Sem conteúdo</string>
@@ -251,14 +250,17 @@
     <string name="usage_less_than_a_minute">Há menos de um minuto</string>
     <plurals name="usage_hours">
         <item quantity="one">%1$d hora</item>
+        <item quantity="many">%1$d horas</item>
         <item quantity="other">%1$d horas</item>
     </plurals>
     <plurals name="usage_days">
         <item quantity="one">%1$d dia</item>
+        <item quantity="many">%1$d dias</item>
         <item quantity="other">%1$d dias</item>
     </plurals>
     <plurals name="usage_months">
         <item quantity="one">%1$d mês</item>
+        <item quantity="many">%1$d meses</item>
         <item quantity="other">%1$d meses</item>
     </plurals>
     <string name="usage_7_days">Últimos 7 dias</string>
@@ -269,6 +271,7 @@
     <string name="no_shared_libs">Sem bibliotecas partilhadas</string>
     <plurals name="main_list_date_days">
         <item quantity="one"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> dia</item>
+        <item quantity="many"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> dias</item>
         <item quantity="other"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> dias</item>
     </plurals>
     <string name="all_classes">Todas as classes</string>
@@ -574,13 +577,15 @@
     <string name="reject_time">Tempo de Rejeição</string>
     <string name="accept_time">Tempo de aceitação</string>
     <plurals name="tracker_and_classes">
-        <item quantity="one">1 rastreador com <xliff:g id="class_no" example="50">%1$d</xliff:g> class</item>
-        <item quantity="other">1 rastreador com <xliff:g id="class_no" example="50">%1$d</xliff:g> classes</item>
+        <item quantity="one">1 rasteador com <xliff:g id="class_no" example="50">%1$d</xliff:g> class</item>
+        <item quantity="many">1 rasteador com <xliff:g id="class_no" example="50">%1$d</xliff:g> classes</item>
+        <item quantity="other">1 rasteador com <xliff:g id="class_no" example="50">%1$d</xliff:g> classes</item>
     </plurals>
     <string name="backup_internal_data_description">Fazer backup de pastas de dados internos.</string>
     <string name="backup_apk_files_description">Fazer backup de ficheiros APK do diretório de origem, e incluir divisões.</string>
     <plurals name="toast_log_truncated">
         <item quantity="one">Registo grande demais, a mostrar a última %d linha.</item>
+        <item quantity="many">Registo grande demais, a mostrar as últimas %d linhas.</item>
         <item quantity="other">Registo grande demais, a mostrar as últimas %d linhas.</item>
     </plurals>
     <string name="hidden">Oculto</string>
@@ -672,6 +677,7 @@
     <string name="copy_to_clipboard">Copiar para área de transferência</string>
     <plurals name="file_deletion_confirmation">
         <item quantity="one">%d ficheiro será eliminado</item>
+        <item quantity="many">%d ficheiros serão eliminados</item>
         <item quantity="other">%d ficheiros serão eliminados</item>
     </plurals>
     <string name="add_filter_ellipsis">Adicionar filtro…</string>
@@ -924,7 +930,7 @@
     <string name="process_state">Estado: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g></string>
     <string name="state_multithreaded">Multitarefa</string>
     <string name="state_foreground">Primeiro plano</string>
-    <string name="state_waking">Acordado</string>
+    <string name="state_waking">Acordando</string>
     <string name="state_wake_kill">Encerrar ao iniciar</string>
     <string name="state_idle">Parado</string>
     <string name="state_zombie">Zombie</string>
@@ -939,7 +945,7 @@
     <string name="orientation_sensor">Sensor</string>
     <string name="orientation_sensor_portrait">Retrato, seguindo o sensor</string>
     <string name="orientation_sensor_landscape">Paisagem, seguindo o sensor</string>
-    <string name="launch_mode_single_top">Top único</string>
+    <string name="launch_mode_single_top">Topo único</string>
     <string name="launch_mode_multiple">Vários</string>
     <string name="locale_split_for_base_apk"><xliff:g id="split_name" example="English">%1$s</xliff:g> para o APK base</string>
     <string name="locale_split_for_feature">Idioma <xliff:g id="split_name" example="English">%1$s</xliff:g> para a função <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
@@ -987,18 +993,21 @@
     <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">GitHub</a> • <a href="https://gitlab.com/muntashir/AppManager">GitLab</a> • <a href="https://0xacab.org/muntashir/AppManager">Riseup</a> • <a href="https://codeberg.org/muntashir/AppManager">Codeberg</a></string>
     <plurals name="no_of_components">
         <item quantity="one">%1$d componente</item>
+        <item quantity="many">%1$d componentes</item>
         <item quantity="other">%1$d componentes</item>
     </plurals>
     <string name="changelog">Histórico de Atualizações</string>
     <string name="one_click_ops">Operações num Clique</string>
     <string name="user_with_id">Utilizador: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
     <plurals name="other_trackers_and_classes">
-        <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> rastreadores com classes <xliff:g id="class_no" example="50">%2$d</xliff:g></item>
-        <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> rastreadores com classes <xliff:g id="class_no" example="50">%2$d</xliff:g></item>
+        <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> rasteadores com classes <xliff:g id="class_no" example="50">%2$d</xliff:g></item>
+        <item quantity="many"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> rasteadores com classes <xliff:g id="class_no" example="50">%2$d</xliff:g></item>
+        <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> rasteadores com classes <xliff:g id="class_no" example="50">%2$d</xliff:g></item>
     </plurals>
     <plurals name="two_trackers_and_classes">
-        <item quantity="one">2 rastreadores <xliff:g id="class_no" example="50">%1$d</xliff:g>com classes</item>
-        <item quantity="other">2 rastreadores <xliff:g id="class_no" example="50">%1$d</xliff:g>com classes</item>
+        <item quantity="one">2 rasteadores <xliff:g id="class_no" example="50">%1$d</xliff:g>com classes</item>
+        <item quantity="many">2 rasteadores <xliff:g id="class_no" example="50">%1$d</xliff:g>com classes</item>
+        <item quantity="other">2 rasteadores <xliff:g id="class_no" example="50">%1$d</xliff:g>com classes</item>
     </plurals>
     <string name="app_signing_signatures">Assinaturas</string>
     <string name="no_changes">Sem modificações</string>
@@ -1022,13 +1031,14 @@
     <string name="netpolicy_reject_background_data">Rejeitar dados em segundo plano</string>
     <plurals name="alert_failed_to_import_backups">
         <item quantity="one">Não foi possível importar %1$d cópia de segurança</item>
+        <item quantity="many">Não foi possível importar %1$d cópias de segurança</item>
         <item quantity="other">Não foi possível importar %1$d cópias de segurança</item>
     </plurals>
     <string name="import_from_tb">Importar de Titanium Backup</string>
     <string name="import_from_oab">Importar de OAndBackup</string>
     <string name="pref_import_backups_msg">Importar cópias de segurança de OAndBackup, Swift Backup (3.0–3.2) ou Titanium Backup.</string>
     <string name="pref_import_backups">Importar cópias de segurança</string>
-    <string name="community_links"><a href="https://t.me/AppManagerChannel">Telegram channel</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
+    <string name="community_links"><a href="https://t.me/AppManagerChannel">Canal do Telegram</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
     <string name="community">Comunidade</string>
     <string name="added_to_queue">Adicionado à fila</string>
     <string name="minimum_version">Versão mínima: %d</string>
@@ -1057,6 +1067,7 @@
     <string name="pid">ID do processo</string>
     <plurals name="pref_thread_count_msg">
         <item quantity="one">Executar no máximo %1$d operação em paralelo</item>
+        <item quantity="many">Executar no máximo %1$d operações em paralelo</item>
         <item quantity="other">Executar no máximo %1$d operações em paralelo</item>
     </plurals>
     <string name="pref_thread_count_hint">O valor deve estar entre 0 e %1$d onde 0 significa <i> que o número máximo de operações no dado momento</i>.</string>
@@ -1219,27 +1230,56 @@
     <string name="disable_app_description">Método de congelamento recomendado. Ele desativa a aplicação e todos os seus componentes, mas todos os atalhos serão perdidos.</string>
     <string name="sort_by_frozen_app">Congeladas primeiro</string>
     <string name="filter_frozen_apps">Aplicações congeladas</string>
-    <string name="pref_appearance_description">Tema, orientação, recursos, etc</string>
+    <string name="pref_appearance_description">Tema, orientação, recursos, etc.</string>
     <string name="pref_privacy">Privacidade</string>
     <string name="failed_to_unfreeze">Não foi possível congelar <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
-    <string name="failed_to_freeze">Could not freeze <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
-    <string name="pref_default_freezing_method_description">Método a ser usado por defeito onde não houver opção de congelamento</string>
+    <string name="failed_to_freeze">Não foi possível congelar <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="pref_default_freezing_method_description">Método a ser usado por padrão em locais onde não há opção de selecionar um método de congelamento.</string>
     <plurals name="alert_failed_to_freeze">
         <item quantity="one">N0ão foi possível congelar %1$d app</item>
+        <item quantity="many">Não foi possível congelar %1$d apps</item>
         <item quantity="other">Não foi possível congelar %1$d apps</item>
     </plurals>
     <plurals name="alert_failed_to_unfreeze">
-        <item quantity="one">Não foi possível congelar %1$d app</item>
-        <item quantity="other">Não foi possível congelar %1$d apps</item>
+        <item quantity="one">Não foi possível descongelar %1$d app</item>
+        <item quantity="many">Não foi possível descongelar %1$d apps</item>
+        <item quantity="other">Não foi possível descongelar %1$d apps</item>
     </plurals>
     <string name="suspend_app_description">Este é o método de congelamento mais fraco. Uma aplicação suspensa ainda pode aparecer no launcher, mas ficará cinzento e não poderá ser iniciada.</string>
     <string name="hide_app_description">Este método é recomendado apenas para uso diário. Uma aplicação oculta aparece como se estivesse desinstalada. Mas a aplicação pode reaparecer se for reinstalada ou atualizada.</string>
     <string name="user_manual">Manual do utilizador</string>
     <string name="get_help">Obter ajuda</string>
-    <string name="pref_privacy_description">Bloqueio de ecrã, autorização, etc</string>
+    <string name="pref_privacy_description">Bloqueio de ecrã, autorização, etc.</string>
     <string name="pref_advanced_pref">Utilizadores, formato de nome do APK, execução paralela etc.</string>
     <string name="pref_version_changelog">Versão/Registo de alterações</string>
     <string name="freeze_unfreeze">Congelar/Descongelar</string>
     <string name="profile_freeze_msg">Congelar ou descongelar aplicações baseada no estado</string>
     <string name="pref_default_freezing_method">Método de congelação por defeito</string>
+    <string name="file_accessed_date">Acedido</string>
+    <string name="file_open_with">Abrir com</string>
+    <string name="file_change_open_with">Alterar abrir com</string>
+    <string name="file_shortcut_target_file">Ficheiro de destino</string>
+    <string name="file_open_as">Abrir como…</string>
+    <string name="file_open_with_custom_activity">Personalizado</string>
+    <string name="file_open_with_os_default_dialog">Abrir com a caixa de diálogo padrão do SO</string>
+    <string name="open_as_text">Texto</string>
+    <string name="file_properties">Propriedades</string>
+    <string name="file_cut">Cortar</string>
+    <string name="fm_always_open_with">Sempre aberto</string>
+    <string name="fm_open_with_for_this_file_only">Apenas para este ficheiro</string>
+    <string name="open_as_image">Imagem</string>
+    <string name="open_as_video">Vídeo</string>
+    <string name="open_as_folder">Pasta</string>
+    <string name="open_as_other">Outro</string>
+    <string name="on_unfreeze_open_application">Abrir a app após o descongelamento</string>
+    <string name="delete_filename">Apagar %s</string>
+    <string name="confirm_file_deletion">Sim, apagar</string>
+    <string name="on_open_application_no_recents">Não mostrar a app iniciada nos Recentes</string>
+    <string name="freeze_on_phone_locked">Congelar a app automaticamente quando o telefone estiver bloqueado</string>
+    <string name="tap_to_freeze_app">Toque para congelar</string>
+    <string name="waiting_for_the_phone_to_be_locked">À espera que o telefone seja bloqueado…</string>
+    <string name="action_stop_service">Parar</string>
+    <string name="file_creation_date">Criado</string>
+    <string name="open_as_archive">Arquivo</string>
+    <string name="file_modification_date">Alterado</string>
 </resources>
