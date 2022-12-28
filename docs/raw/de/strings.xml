@@ -1457,4 +1457,16 @@
 \nDie Schaltfläche \"Starten\" neben jeder Komponente kann verwendet werden, um sie direkt vom App Manager aus zu starten.</string>
     <string name="pages$interceptor-page$send-edited-intent">Sendet den bearbeiteten Inhalt erneut an die Zielanwendung. Dies kann eine Liste von Anwendungen öffnen, in der die gewünschte Anwendung ausgewählt werden muss.
 \nDas von der Zielanwendung erhaltene Ergebnis wird an die Quellanwendung gesendet. Daher weiß die Quellanwendung nicht, ob es einen Man-in-the-Middle gab.</string>
+    <string name="guide$aot$intro">Viele reine Root-Funktionen können weiterhin genutzt werden, indem ADB über TCP aktiviert wird. Hierfür ist ein PC oder Mac mit installierten Android
+\nPlattform-Tools und ein Android-Telefon mit aktivierten Entwickleroptionen und USB-Debugging.
+\n
+\n\\begin{tip}{Root-Benutzer}
+\n Wenn dem App Manager die Superuser-Berechtigung erteilt wurde, kann er bereits ohne Probleme privilegierten Code ausführen.
+\n \\textbf{Daher brauchen Root-Benutzer ADB über TCP nicht zu aktivieren.} Wenn Sie ADB over TCP trotzdem verwenden wollen, müssen Sie
+\n die Superuser-Berechtigung für App Manager widerrufen und Ihr Gerät neu starten. Es kann sein, dass Sie die Meldung \\textit{working on ADB mode}
+\n ohne Neustart sehen, aber das ist nicht ganz richtig. Der Server (der als Schnittstelle zwischen System und App Manager dient)
+\n wird immer noch im Root-Modus ausgeführt. Dies ist ein bekanntes Problem und wird in einer zukünftigen Version von App Manager behoben.
+\n\\Ende{Tipp}
+\n
+\n\\seealsoinline{\\hyperref[sec:faq:adb-over-tcp]{FAQ: ADB-over-TCP}}</string>
 </resources>
