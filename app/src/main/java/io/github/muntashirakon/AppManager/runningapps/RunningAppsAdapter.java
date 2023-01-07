@@ -33,7 +33,6 @@ import java.util.Collections;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.ipc.ps.DeviceMemoryInfo;
 import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
 import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
@@ -42,6 +41,7 @@ import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.io.Paths;
+import io.github.muntashirakon.proc.ProcMemoryInfo;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
 public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectionView.ViewHolder> {
@@ -54,7 +54,7 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
     private final Object mLock = new Object();
     @NonNull
     private List<ProcessItem> mProcessItems = Collections.emptyList();
-    private DeviceMemoryInfo mDeviceMemoryInfo;
+    private ProcMemoryInfo mProcMemoryInfo;
 
     private final int mCardColor;
     @ColorInt
@@ -77,8 +77,8 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
         notifySelectionChange();
     }
 
-    public void setDeviceMemoryInfo(DeviceMemoryInfo deviceMemoryInfo) {
-        mDeviceMemoryInfo = deviceMemoryInfo;
+    public void setDeviceMemoryInfo(ProcMemoryInfo procMemoryInfo) {
+        mProcMemoryInfo = procMemoryInfo;
         notifyItemChanged(0);
     }
 
@@ -115,15 +115,15 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
     }
 
     public void onBindViewHolder(@NonNull HeaderViewHolder holder) {
-        if (mDeviceMemoryInfo == null) {
+        if (mProcMemoryInfo == null) {
             return;
         }
         Context context = holder.itemView.getContext();
         // Memory
-        long appMemory = mDeviceMemoryInfo.getApplicationMemory();
-        long cachedMemory = mDeviceMemoryInfo.getCachedMemory();
-        long buffers = mDeviceMemoryInfo.getBuffers();
-        long freeMemory = mDeviceMemoryInfo.getFreeMemory();
+        long appMemory = mProcMemoryInfo.getApplicationMemory();
+        long cachedMemory = mProcMemoryInfo.getCachedMemory();
+        long buffers = mProcMemoryInfo.getBuffers();
+        long freeMemory = mProcMemoryInfo.getFreeMemory();
         double total = appMemory + cachedMemory + buffers + freeMemory;
         if (total == 0) {
             // Error due to parsing failure, etc.
@@ -139,8 +139,8 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
             setLayoutWidth(holder.mMemoryInfoChartChildren[2], (int) (width * buffers / total));
         });
         holder.mMemoryShortInfoView.setText(UIUtils.getStyledKeyValue(context, R.string.memory, Formatter
-                .formatFileSize(context, mDeviceMemoryInfo.getUsedMemory()) + "/" + Formatter
-                .formatFileSize(context, mDeviceMemoryInfo.getTotalMemory())));
+                .formatFileSize(context, mProcMemoryInfo.getUsedMemory()) + "/" + Formatter
+                .formatFileSize(context, mProcMemoryInfo.getTotalMemory())));
         // Set color info
         Spannable memInfo = UIUtils.charSequenceToSpannable(context.getString(R.string.memory_chart_info, Formatter
                         .formatShortFileSize(context, appMemory), Formatter.formatShortFileSize(context, cachedMemory),
@@ -150,8 +150,8 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
         holder.mMemoryInfoView.setText(memInfo);
 
         // Swap
-        long usedSwap = mDeviceMemoryInfo.getUsedSwap();
-        long totalSwap = mDeviceMemoryInfo.getTotalSwap();
+        long usedSwap = mProcMemoryInfo.getUsedSwap();
+        long totalSwap = mProcMemoryInfo.getTotalSwap();
         if (totalSwap == 0) {
             holder.mSwapInfoChart.setVisibility(View.GONE);
             holder.mSwapShortInfoView.setVisibility(View.GONE);
@@ -284,7 +284,7 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
     @Override
     public long getItemId(int position) {
         if (position == 0) {
-            return mDeviceMemoryInfo != null ? mDeviceMemoryInfo.hashCode() : View.NO_ID;
+            return mProcMemoryInfo != null ? mProcMemoryInfo.hashCode() : View.NO_ID;
         }
         synchronized (mLock) {
             return mProcessItems.get(position - 1).hashCode();

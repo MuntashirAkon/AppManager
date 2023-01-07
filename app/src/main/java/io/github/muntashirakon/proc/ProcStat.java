@@ -66,7 +66,7 @@ public final class ProcStat {
     private static final int STAT_COUNT = 52;
 
     @NonNull
-    public static String[] parseStat(@NonNull char[] data) {
+    public static ProcStat parse(@NonNull char[] data) {
         String[] result = new String[STAT_COUNT];
         // See: https://www.openwall.com/lists/oss-security/2022/12/21/6
         int bracketCount = 0;
@@ -90,6 +90,26 @@ public final class ProcStat {
             Log.w(ProcStat.class.getSimpleName(), "Field counts did not match, expected: " + STAT_COUNT
                     + ", actual: " + (fieldIndex + 1));
         }
-        return result;
+        return new ProcStat(result);
+    }
+
+    @NonNull
+    private final String[] mStat;
+
+    private ProcStat(@NonNull String[] stat) {
+        mStat = stat;
+    }
+
+    @NonNull
+    public String getString(int index) {
+        return mStat[index];
+    }
+
+    public int getInteger(int index) {
+        return Integer.decode(mStat[index]);
+    }
+
+    public long getLong(int index) {
+        return Long.decode(mStat[index]);
     }
 }

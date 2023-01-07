@@ -22,6 +22,7 @@ android {
 dependencies {
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.0'
 
+    api "androidx.annotation:annotation:${annotation_version}"
     api 'org.smali:baksmali:2.5.2'
     api 'org.smali:smali:2.5.2'
 }

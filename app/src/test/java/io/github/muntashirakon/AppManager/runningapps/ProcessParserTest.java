@@ -2,15 +2,17 @@
 
 package io.github.muntashirakon.AppManager.runningapps;
 
+import static org.junit.Assert.assertEquals;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Objects;
 
-import static org.junit.Assert.assertEquals;
+import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
 
 @RunWith(RobolectricTestRunner.class)
 public class ProcessParserTest {
@@ -19,7 +21,7 @@ public class ProcessParserTest {
     @Test
     public void parse() {
         assert classLoader != null;
-        File procDir = new File(classLoader.getResource("proc").getFile());
+        Path procDir = Paths.get(classLoader.getResource("proc").getFile());
         ProcessParser pp = new ProcessParser();
         HashMap<Integer, String> processStrings = new HashMap<Integer, String>(5) {
             {

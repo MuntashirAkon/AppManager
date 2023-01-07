@@ -3,6 +3,7 @@
 package io.github.muntashirakon.proc;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -68,7 +69,7 @@ public class ProcStatus {
     public static final String STATUS_NON_VOLUNTARY_CTX_SWITCHES = "nonvoluntary_ctxt_switches";
 
     @NonNull
-    public static Map<String, String> parseStatus(@NonNull String data) {
+    public static ProcStatus parse(@NonNull String data) {
         Map<String, String> result = new HashMap<>(56);
         for (String line : data.split("\\n")) {
             int idxOfColon = line.indexOf(':');
@@ -76,6 +77,28 @@ public class ProcStatus {
                 result.put(line.substring(0, idxOfColon).trim(), line.substring(idxOfColon + 1).trim());
             }
         }
-        return result;
+        return new ProcStatus(result);
+    }
+
+    @NonNull
+    private final Map<String, String> mStatus;
+
+    private ProcStatus(@NonNull Map<String, String> status) {
+        mStatus = status;
+    }
+
+    @Nullable
+    public String getString(@NonNull String key) {
+        return mStatus.get(key);
+    }
+
+    public int getInteger(@NonNull String key, int defaultValue) {
+        String string = getString(key);
+        return string != null ? Integer.decode(string) : defaultValue;
+    }
+
+    public long getLong(@NonNull String key, long defaultValue) {
+        String string = getString(key);
+        return string != null ? Long.decode(string) : defaultValue;
     }
 }

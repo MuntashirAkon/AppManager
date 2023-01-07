@@ -43,6 +43,15 @@ public class ExUtils {
         }
     }
 
+    @Nullable
+    public static <T> T asRuntimeException(ThrowingRunnable<T> r) {
+        try {
+            return r.run();
+        } catch (Throwable th) {
+            throw new RuntimeException(th);
+        }
+    }
+
     public static void exceptionAsIgnored(ThrowingRunnableNoReturn r) {
         try {
             r.run();

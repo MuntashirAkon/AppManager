@@ -21,12 +21,23 @@ public final class ProcMemStat {
     private static final int MEM_STAT_COUNT = 7;
 
     @NonNull
-    public static String[] parseMemStat(@NonNull String data) {
+    public static ProcMemStat parse(@NonNull String data) {
         String[] result = data.split("\\s");
         if (result.length != MEM_STAT_COUNT) {
             Log.w(ProcMemStat.class.getSimpleName(), "Field counts did not match, expected: " + MEM_STAT_COUNT
                     + ", actual: " + result.length);
         }
-        return result;
+        return new ProcMemStat(result);
+    }
+
+    @NonNull
+    private final String[] mMemStat;
+
+    private ProcMemStat(@NonNull String[] memStat) {
+        mMemStat = memStat;
+    }
+
+    public long getLong(int index) {
+        return Long.decode(mMemStat[index]);
     }
 }

@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.VisibleForTesting;
 import androidx.annotation.WorkerThread;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +25,7 @@ import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
+import io.github.muntashirakon.io.Path;
 
 @WorkerThread
 public final class ProcessParser {
@@ -76,7 +76,7 @@ public final class ProcessParser {
 
     @VisibleForTesting
     @NonNull
-    HashMap<Integer, ProcessItem> parse(@NonNull File procDir) {
+    HashMap<Integer, ProcessItem> parse(@NonNull Path procDir) {
         HashMap<Integer, ProcessItem> processItems = new HashMap<>();
         Ps ps = new Ps(procDir);
         ps.loadProcesses();

@@ -34,7 +34,6 @@ import java.util.concurrent.TimeUnit;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
-import io.github.muntashirakon.AppManager.ipc.ps.DeviceMemoryInfo;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.runner.Runner;
@@ -47,6 +46,8 @@ import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
+import io.github.muntashirakon.proc.ProcFs;
+import io.github.muntashirakon.proc.ProcMemoryInfo;
 
 public class RunningAppsViewModel extends AndroidViewModel {
     @RunningAppsActivity.SortOrder
@@ -180,23 +181,16 @@ public class RunningAppsViewModel extends AndroidViewModel {
     }
 
     @NonNull
-    private final MutableLiveData<DeviceMemoryInfo> mDeviceMemoryInfo = new MutableLiveData<>();
+    private final MutableLiveData<ProcMemoryInfo> mDeviceMemoryInfo = new MutableLiveData<>();
 
     @NonNull
-    public MutableLiveData<DeviceMemoryInfo> getDeviceMemoryInfo() {
+    public MutableLiveData<ProcMemoryInfo> getDeviceMemoryInfo() {
         return mDeviceMemoryInfo;
     }
 
     @AnyThread
     public void loadMemoryInfo() {
-        mExecutor.submit(() -> {
-            DeviceMemoryInfo deviceMemoryInfo = mDeviceMemoryInfo.getValue();
-            if (deviceMemoryInfo == null) {
-                deviceMemoryInfo = new DeviceMemoryInfo();
-            }
-            deviceMemoryInfo.reload();
-            mDeviceMemoryInfo.postValue(deviceMemoryInfo);
-        });
+        mExecutor.submit(() -> mDeviceMemoryInfo.postValue(ProcFs.getInstance().getMemoryInfo()));
     }
 
     private final MutableLiveData<Pair<ProcessItem, Boolean>> mKillProcessResult = new MutableLiveData<>();

@@ -26,6 +26,8 @@ import androidx.documentfile.provider.DocumentFile;
 import androidx.documentfile.provider.ExtendedRawDocumentFile;
 import androidx.documentfile.provider.VirtualDocumentFile;
 
+import org.jetbrains.annotations.Contract;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -1458,7 +1460,9 @@ public class Path implements Comparable<Path> {
         return getContentAsString("");
     }
 
-    public String getContentAsString(String emptyValue) {
+    @Nullable
+    @Contract("!null -> !null")
+    public String getContentAsString(@Nullable String emptyValue) {
         try (InputStream inputStream = openInputStream()) {
             return new String(IoUtils.readFully(inputStream, -1, true), Charset.defaultCharset());
         } catch (IOException e) {
