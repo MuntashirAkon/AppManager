@@ -181,8 +181,11 @@ public class AppExplorerViewModel extends AndroidViewModel implements ListOption
             } else {
                 path = Paths.get(uri);
             }
-            for (Path child : path.listFiles()) {
-                fmItems.add(new AdapterItem(child));
+            synchronized (fmItems) {
+                fmItems.clear();
+                for (Path child : path.listFiles()) {
+                    fmItems.add(new AdapterItem(child));
+                }
             }
             filterAndSort();
         });
