@@ -158,15 +158,23 @@ public class ProcFs {
 
     @Nullable
     public String getCurrentContext(int pid) {
-        return getStringOrNull(Paths.build(procRoot, String.valueOf(pid), ATTR, CURRENT));
+        String context = getStringOrNull(Paths.build(procRoot, String.valueOf(pid), ATTR, CURRENT));
+        if (context == null) {
+            return null;
+        }
+        return context.trim();
     }
 
     @Nullable
     public String getPreviousContext(int pid) {
-        return getStringOrNull(Paths.build(procRoot, String.valueOf(pid), ATTR, PREV));
+        String context = getStringOrNull(Paths.build(procRoot, String.valueOf(pid), ATTR, PREV));
+        if (context == null) {
+            return null;
+        }
+        return context.trim();
     }
 
     private String getStringOrNull(@Nullable Path file) {
-        return file != null ? file.getContentAsString() : null;
+        return file != null ? file.getContentAsString(null) : null;
     }
 }
