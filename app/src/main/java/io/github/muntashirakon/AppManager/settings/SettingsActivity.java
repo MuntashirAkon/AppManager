@@ -26,13 +26,11 @@ import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.self.life.BuildExpiryChecker;
+import io.github.muntashirakon.AppManager.self.life.FundingCampaignChecker;
 
 public class SettingsActivity extends BaseActivity implements PreferenceFragmentCompat.OnPreferenceStartFragmentCallback {
     private static final String SCHEME = "app-manager";
     private static final String HOST = "settings";
-
-    private static final long FUNDING_CAMPAIGN_START = 1671796800000L;
-    private static final long FUNDING_CAMPAIGN_END = 1680350400000L;
 
     @NonNull
     public static Intent getIntent(@NonNull Context context, @Nullable String... paths) {
@@ -70,9 +68,7 @@ public class SettingsActivity extends BaseActivity implements PreferenceFragment
         View buildExpiringNotice = findViewById(R.id.app_manager_expiring_notice);
         buildExpiringNotice.setVisibility(BuildExpiryChecker.buildExpired() == null ? View.VISIBLE : View.GONE);
         View fundingCampaignNotice = findViewById(R.id.funding_campaign_notice);
-        long currentTime = System.currentTimeMillis();
-        boolean campaignOngoing = currentTime >= FUNDING_CAMPAIGN_START && currentTime <= FUNDING_CAMPAIGN_END;
-        fundingCampaignNotice.setVisibility(campaignOngoing ? View.VISIBLE : View.GONE);
+        fundingCampaignNotice.setVisibility(FundingCampaignChecker.campaignRunning() ? View.VISIBLE : View.GONE);
 
         Uri uri = getIntent().getData();
         if (uri != null && SCHEME.equals(uri.getScheme()) && HOST.equals(uri.getHost()) && uri.getPath() != null) {
