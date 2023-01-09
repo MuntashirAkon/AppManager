@@ -128,7 +128,7 @@ public class EditShortcutDialogFragment extends DialogFragment {
     public Drawable getDrawable(@NonNull String iconResString) {
         try {
             return ResourceUtil.getResourceFromName(mPackageManager, iconResString).getDrawable(requireActivity().getTheme());
-        } catch (PackageManager.NameNotFoundException ignore) {
+        } catch (PackageManager.NameNotFoundException | Resources.NotFoundException ignore) {
             return mPackageManager.getDefaultActivityIcon();
         }
     }
