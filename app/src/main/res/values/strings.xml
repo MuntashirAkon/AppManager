@@ -1238,5 +1238,6 @@
     <string name="changelog_type_improve">Improve</string>
     <string name="unsupported_split_apk">Unsupported</string>
     <string name="view_changelog">Find out what\'s new in this release</string>
+    <string name="funding_campaign_dialog_message">We\'re running a <b>funding campaign</b> for App Manager for a limited period. Visit <a href="https://opencollective.com/app-manager#category-ABOUT">opencollective.com/app-manager</a> to learn more about the campaign. This notice will not be displayed again, but you can find it in the Settings page during the entire campaign.</string>
     <string name="funding_campaign_text">We\'re running a <b>funding campaign</b> for App Manager for a limited period. <a href="https://opencollective.com/app-manager#category-ABOUT">learn more…</a></string>
 </resources>
