@@ -4,4 +4,5 @@
     <string name="disclaimer_agree_forever">Nu mai arăta asta niciodată</string>
     <string name="disclaimer_agree">Sunt de acord</string>
     <string name="disclaimer_exit">Ieșire</string>
+    <string name="disclaimer_header">Act de renunțare</string>
 </resources>
