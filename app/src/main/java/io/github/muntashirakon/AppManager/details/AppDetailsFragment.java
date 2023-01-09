@@ -666,15 +666,11 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
         private boolean mIsRootEnabled = true;
         private boolean mIsADBEnabled = true;
         private boolean mTestOnlyApp;
-        private final int mCardColor0;
-        private final int mCardColor1;
-        private final int mDefaultIndicatorColor;
+        private final int mColorSurfaceVariant;
 
         AppDetailsRecyclerAdapter() {
             mAdapterList = new ArrayList<>();
-            mCardColor0 = ColorCodes.getListItemColor0(mActivity);
-            mCardColor1 = ColorCodes.getListItemColor1(mActivity);
-            mDefaultIndicatorColor = ColorCodes.getListItemDefaultIndicatorColor(mActivity);
+            mColorSurfaceVariant = MaterialColors.getColor(mActivity, R.attr.colorSurfaceVariant, MainRecyclerAdapter.class.getCanonicalName());
         }
 
         @UiThread
@@ -932,7 +928,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
         }
 
         private void handleBlock(@NonNull ViewHolder holder, @NonNull AppDetailsComponentItem item, RuleType ruleType) {
-            holder.toggleSwitch.setChecked(item.isBlocked());
+            holder.toggleSwitch.setChecked(!item.isBlocked());
             holder.toggleSwitch.setVisibility(View.VISIBLE);
             holder.toggleSwitch.setOnClickListener(buttonView -> {
                 String componentStatus = item.isBlocked()

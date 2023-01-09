@@ -18,6 +18,36 @@
 <changelog>
     <release
         type="stable release"
+        version="v3.0.4"
+        code="416"
+        date="9 January 2023">
+        <new>Added notice for the funding campaign</new>
+
+        <improve title="App Details page">Display invalid native libraries (e.g. zip/APK files)</improve>
+        <improve title="App Details page">Hide tips forever if close button is clicked</improve>
+        <improve title="App Details page">Replaced block/unblock button with material switch</improve>
+
+        <improve>Replaced “Instructions” with “User Manual”</improve>
+        <improve>Replaced SLF4J dependency with Android compatible classes</improve>
+        <improve>Used monospace font in SSAID fields</improve>
+
+        <fix title="App Info tab">Fixed links not working in Play App Signing dialog</fix>
+        <fix title="Installer">
+            Prevented installer from running forever in no-root mode due to the mismanagement of installer queue
+        </fix>
+
+        <fix>Fixed crashes by avoiding the deletion of channels of the ongoing notifications</fix>
+        <fix>Fixed crashing if the resource string to be parsed is ill-formatted</fix>
+        <fix>Fixed crashing if no backup is selected but [b]restore[/b] is clicked</fix>
+        <fix>Fixed retrieving usage stats in no-root mode</fix>
+        <fix>Fixed some broken features (e.g. MagiskHide, DenyList) due to I/O errors in libsu</fix>
+        <note>
+            [br /][b]Full list of changes:[/b] [a
+            href="https://github.com/MuntashirAkon/AppManager/compare/v3.0.3...v3.0.4"]v3.0.3...v3.0.4[/a]
+        </note>
+    </release>
+    <release
+        type="stable release"
         version="v3.0.3"
         code="414"
         date="24 October 2022">

@@ -1,0 +1,8 @@
+This contains a number of bug fixes and improvements.
+
+- Added notice for the funding campaign
+- Display invalid native libraries (e.g. zip/APK files)
+- Hide tips forever if close button is clicked
+- Replaced block/unblock button with material switch
+- Prevented installer from running forever in no-root mode due to the mismanagement of installer queue
+- Fixed some broken features (e.g. MagiskHide, DenyList) due to I/O errors in libsu.
