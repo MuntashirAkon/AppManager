@@ -220,7 +220,7 @@
     <string name="decimal_value">Valor decimal</string>
     <string name="integer_value">Valor inteiro</string>
     <string name="long_integer_value">Valor inteiro longo</string>
-    <string name="string_value">Valor da string</string>
+    <string name="string_value">Valor da cadeia</string>
     <string name="saving_failed">Falha ao gravar, tente novamente.</string>
     <string name="saved_successfully">Guardado</string>
     <string name="deletion_failed">Falha ao eliminar</string>
@@ -1183,7 +1183,7 @@
     <string name="regenerate_auth_key">Regenerar chave de autorização</string>
     <string name="shortcut_icon">Ícone do atalho</string>
     <string name="regenerate_auth_key_warning">Tem certeza\? Todas as aplicações de terceiros têm de ser reconfiguradas com a nova chave de autorização.</string>
-    <string name="input_ssaid_instruction">SSAID é um número hexadecimal de byte %1$d, ou seja, uma string de comprimento %2$d contendo 0 a 9 e \"a\" a \"f\".</string>
+    <string name="input_ssaid_instruction">SSAID é um número hexadecimal de byte %1$d, ou seja, uma cadeia de comprimento %2$d contendo 0 a 9 e \"a\" a \"f\".</string>
     <string name="vt_confirm_upload_and_scan">Sim, enviar e analisar</string>
     <string name="screen_time">Tempo de ecrã</string>
     <string name="vt_confirm_uploading_file">O ficheiro não foi encontrado na base de dados do VirusTotal. Quer enviá-lo\?</string>
@@ -1195,7 +1195,7 @@
     <string name="apk_checksums">Checksums do APK</string>
     <string name="item_select">Selecionar</string>
     <string name="open_in_new_window">Nova janela</string>
-    <string name="type_string_set">Conjunto de strings</string>
+    <string name="type_string_set">Conjunto de cadeias</string>
     <string name="app_explorer">Explorador de aplicações</string>
     <string name="frozen">Congelado</string>
     <string name="freeze">Congelar</string>
