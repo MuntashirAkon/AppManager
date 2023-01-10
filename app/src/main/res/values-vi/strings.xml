@@ -597,10 +597,7 @@
     <string name="pref_apk_signing_msg">Đặt đề án chữ ký, mã ký tuỳ chỉnh, v.v.</string>
     <string name="apk_signing">Ký APK</string>
     <string name="app_signing_signature_schemes">Đề án chữ ký</string>
-    <string name="source_code_links">GitHub: https://github.com/MuntashirAkon/AppManager
-\nGitLab: https://gitlab.com/muntashir/AppManager
-\nRiseup: https://0xacab.org/muntashir/AppManager
-\nCodeberg: https://codeberg.org/muntashir/AppManager</string>
+    <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">GitHub</a> • <a href="https://gitlab.com/muntashir/AppManager">GitLab</a> • <a href="https://0xacab.org/muntashir/AppManager">Riseup</a> • <a href="https://codeberg.org/muntashir/AppManager">Codeberg</a></string>
     <string name="key_name_cannot_be_null">Tên mã không thể trống</string>
     <string name="key_name">Tên mã</string>
     <string name="boolean_value">Giá trị sự thật</string>
@@ -936,8 +933,7 @@
     <string name="launch_mode_single_top">Một hoạt động ở trên</string>
     <string name="launch_mode_single_instance">Một bản sao</string>
     <string name="installer_error_session_commit">Không thể hành động với các tệp APK</string>
-    <string name="community_links">Telegram: https://t.me/AppManagerChannel
-\nTwitter: https://twitter.com/AppManagerNews</string>
+    <string name="community_links"><a href="https://t.me/AppManagerChannel">Kênh Telegram</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
     <string name="community">Cộng đồng</string>
     <string name="native_library_dir">Thư mục thư viện JNI gốc</string>
     <string name="input_key">Nhập mã (ở hệ thập lục phân)</string>
@@ -1157,4 +1153,57 @@
     <string name="sort_by_total_size">Tổng kích cỡ</string>
     <string name="am_command">Lệnh <tt>am</tt></string>
     <string name="pref_sign_apk_no_signing_key">Không có mã ký</string>
+    <string name="freeze_unfreeze">Đóng băng/ngừng đóng băng</string>
+    <string name="pref_default_freezing_method">Phương pháp đóng băng mặc định</string>
+    <string name="suspend_app">Ngừng</string>
+    <string name="hide_app">Ẩn</string>
+    <plurals name="alert_failed_to_freeze">
+        <item quantity="other">Không thể đóng băng %1$d ứng dụng</item>
+    </plurals>
+    <plurals name="alert_failed_to_unfreeze">
+        <item quantity="other">Không thể ngừng đóng băng %1$d ứng dụng</item>
+    </plurals>
+    <string name="disable_app_description">Phương pháp đóng băng được khuyên dùng. Phương pháp này tắt ứng dụng và tất cả thành phần của nó, nhưng tất cả lối tắt sẽ bị mất.</string>
+    <string name="filter_frozen_apps">Ứng dụng đã đóng băng</string>
+    <string name="user_manual">Hướng dẫn sử dụng cho người dùng</string>
+    <string name="get_help">Tìm sự giúp đỡ</string>
+    <string name="pref_advanced_pref">Người dùng, định dạng tên tệp APK, thực thi song song, v.v.</string>
+    <string name="pref_version_changelog">Phiên bản/Nhật ký thay đổi</string>
+    <string name="failed_to_freeze">Không thể đóng băng <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="profile_freeze_msg">Đóng băng hoặc ngừng đóng băng các ứng dụng dựa trên trạng thái</string>
+    <string name="suspend_app_description">Đây là phương pháp đóng băng yếu nhất. Ứng dụng bị ngừng có thể vẫn hiện trên launcher nhưng sẽ bị bôi xám và không thể khởi chạy.</string>
+    <string name="pref_privacy_description">Khóa màn hình, ủy quyền, v.v.</string>
+    <string name="pref_default_freezing_method_description">Phương pháp được sử dụng mặc định ở những nơi không có lựa chọn phương pháp đóng băng.</string>
+    <string name="hide_app_description">Phương pháp này chỉ được khuyên dùng cho việc sử dụng hàng ngày. Ứng dụng bị ẩn trông như là bị gỡ cài đặt, nhưng có thể xuất hiện lại nếu được cài đặt lại hoặc cập nhật.</string>
+    <string name="sort_by_frozen_app">Đã đóng băng trước</string>
+    <string name="pref_privacy">Riêng tư</string>
+    <string name="pref_appearance_description">Chủ đề, hướng xoay, tính năng, v.v.</string>
+    <string name="file_creation_date">Đã tạo</string>
+    <string name="freeze_on_phone_locked">Tự động đóng băng ứng dụng khi điện thoại bị khóa</string>
+    <string name="failed_to_unfreeze">Không thể ngừng đóng băng <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="file_modification_date">Đã sửa đổi</string>
+    <string name="file_accessed_date">Đã truy cập</string>
+    <string name="file_open_with">Mở bằng</string>
+    <string name="file_change_open_with">Đổi việc mở bằng</string>
+    <string name="file_shortcut_target_file">Tệp mục tiêu</string>
+    <string name="file_properties">Thuộc tính</string>
+    <string name="file_cut">Cắt</string>
+    <string name="fm_always_open_with">Luôn mở</string>
+    <string name="fm_open_with_for_this_file_only">Chỉ đối với tệp này</string>
+    <string name="file_open_as">Mở dưới dạng…</string>
+    <string name="file_open_with_custom_activity">Tùy chỉnh</string>
+    <string name="file_open_with_os_default_dialog">Mở bằng hộp thoại mặc định của HĐH</string>
+    <string name="open_as_text">Văn bản</string>
+    <string name="open_as_image">Hình ảnh</string>
+    <string name="open_as_video">Video</string>
+    <string name="open_as_archive">Tệp nén</string>
+    <string name="open_as_folder">Thư mục</string>
+    <string name="open_as_other">Khác</string>
+    <string name="delete_filename">Xóa %s</string>
+    <string name="confirm_file_deletion">Có, xóa đi</string>
+    <string name="on_unfreeze_open_application">Mở ứng dụng sau khi ngừng đóng băng</string>
+    <string name="on_open_application_no_recents">Không hiện ứng dụng đã khởi chạy ở mục Gần đây</string>
+    <string name="tap_to_freeze_app">Nhấn để đóng băng</string>
+    <string name="waiting_for_the_phone_to_be_locked">Đang đợi điện thoại khóa…</string>
+    <string name="action_stop_service">Dừng</string>
 </resources>
