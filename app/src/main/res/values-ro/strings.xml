@@ -732,4 +732,7 @@
     <string name="checksums">Checksums</string>
     <string name="app_signing_signature">Semnătură</string>
     <string name="on">Pornit</string>
+    <string name="this_action_cannot_be_undone">Această acțiune nu poate fi anulată.</string>
+    <string name="keep_data_and_app_signing_signatures">Păstrarea datelor și semnăturilor</string>
+    <string name="no_app_ops_permission">Nu aveți permisiunea de a afișa operațiunile aplicației</string>
 </resources>
