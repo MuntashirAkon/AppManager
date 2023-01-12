@@ -24,7 +24,7 @@ import io.github.muntashirakon.AppManager.logs.Log;
 
 // Converted from https://github.com/tmo1/sms-ie/blob/75d2c3da3ef190731970f97414ac2bb5e483ebe2/app/src/main/java/com/github/tmo1/sms_ie/ImportExportContacts.kt
 // to suit our needs.
-public class BackupRestoreContacts extends BackupRestoreSpecial {
+class BackupRestoreContacts extends BackupRestoreSpecial {
     public static final String TAG = BackupRestoreContacts.class.getSimpleName();
 
     public BackupRestoreContacts(@NonNull Context context) {

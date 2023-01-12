@@ -35,7 +35,7 @@ import io.github.muntashirakon.io.IoUtils;
 
 // Converted from https://github.com/tmo1/sms-ie/blob/75d2c3da3ef190731970f97414ac2bb5e483ebe2/app/src/main/java/com/github/tmo1/sms_ie/ImportExportMessages.kt
 // to suit our needs
-public class BackupRestoreMessages extends BackupRestoreSpecial {
+class BackupRestoreMessages extends BackupRestoreSpecial {
     public static final String TAG = BackupRestoreMessages.class.getSimpleName();
     // PduHeaders are referenced here https://developer.android.com/reference/android/provider/Telephony.Mms.Addr#TYPE
     // and defined here https://android.googlesource.com/platform/frameworks/opt/mms/+/4bfcd8501f09763c10255442c2b48fad0c796baa/src/java/com/google/android/mms/pdu/PduHeaders.java
@@ -189,7 +189,8 @@ public class BackupRestoreMessages extends BackupRestoreSpecial {
                 // thread_id that we haven't yet encountered and so isn't yet in
                 // threadIdMap), then we need to get a new thread_id and record the mapping
                 // between the old and new ones in threadIdMap
-                if (!messageMetadata.containsKey(Telephony.Sms.THREAD_ID)) {
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M
+                        && !messageMetadata.containsKey(Telephony.Sms.THREAD_ID)) {
                     Set<String> addressesSet = new HashSet<>();
                     for (ContentValues address : addresses) {
                         addressesSet.add(address.getAsString(Telephony.Mms.Addr.ADDRESS));
