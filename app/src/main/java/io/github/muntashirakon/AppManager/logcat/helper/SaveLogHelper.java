@@ -30,6 +30,7 @@ import java.util.List;
 import io.github.muntashirakon.AppManager.backup.BackupFiles;
 import io.github.muntashirakon.AppManager.logcat.struct.SavedLog;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.io.Path;
@@ -39,17 +40,17 @@ import io.github.muntashirakon.io.Paths;
 public class SaveLogHelper {
     public static final String TAG = SaveLogHelper.class.getSimpleName();
 
-    public static final String TEMP_DEVICE_INFO_FILENAME = "device_info.txt";
-    public static final String TEMP_LOG_FILENAME = "logcat.am.log";
-    public static final String TEMP_DMESG_FILENAME = "dmesg.txt";
+    public static final String DEVICE_INFO_FILENAME = "device_info.txt";
+    public static final String LOG_FILENAME = "logcat.am.log";
+    public static final String DMESG_FILENAME = "dmesg.txt";
     public static final String SAVED_LOGS_DIR = "saved_logs";
     private static final String TEMP_ZIP_FILENAME = "logs";
     private static final int BUFFER = 0x1000; // 4K
 
     @Nullable
-    public static Path saveTemporaryFile(String filename, CharSequence text, Collection<String> lines) {
+    public static Path saveTemporaryFile(String extension, CharSequence text, Collection<String> lines) {
         try {
-            Path tempFile = getTempDirectory().createNewFile(filename, null);
+            Path tempFile = Paths.get(FileCache.getGlobalFileCache().createCachedFile(extension));
             try (PrintStream out = new PrintStream(new BufferedOutputStream(tempFile.openOutputStream(), BUFFER))) {
                 if (text != null) { // one big string
                     out.print(text);
@@ -157,11 +158,6 @@ public class SaveLogHelper {
             }
         }
         return newFile;
-    }
-
-    @NonNull
-    private static Path getTempDirectory() throws IOException {
-        return BackupFiles.getTemporaryDirectory();
     }
 
     @NonNull

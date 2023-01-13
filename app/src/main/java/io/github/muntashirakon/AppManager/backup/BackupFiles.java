@@ -14,6 +14,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.io.Path;
@@ -37,11 +38,6 @@ public class BackupFiles {
         return AppPref.getAppManagerDirectory();
     }
 
-    @NonNull
-    public static Path getTemporaryDirectory() throws IOException {
-        return getBackupDirectory().findOrCreateDirectory(TEMPORARY_DIRECTORY);
-    }
-
     @Deprecated
     @NonNull
     public static Path getPackagePath(@NonNull String packageName, boolean create) throws IOException {
@@ -51,10 +47,9 @@ public class BackupFiles {
     }
 
     @NonNull
-    private static synchronized Path getTemporaryBackupPath() throws IOException {
-        // FIXME: 9/7/21 Temporary backup path should be in the package path in order to make it easy to rename it in SAF
-        Path tmpDir = getTemporaryDirectory();
-        String tmpFilename = "backup_" + System.currentTimeMillis();
+    private static synchronized Path getTemporaryBackupPath(@NonNull Path originalBackupPath) throws IOException {
+        Path tmpDir = Objects.requireNonNull(originalBackupPath.getParentFile());
+        String tmpFilename = "." + originalBackupPath.getName();
         String newFilename = tmpFilename;
         int i = 0;
         while (tmpDir.hasFile(newFilename)) {
@@ -83,12 +78,12 @@ public class BackupFiles {
         private final boolean mIsTemporary;
 
         public BackupFile(@NonNull Path backupPath, boolean hasTemporary) throws IOException {
-            this.mBackupPath = backupPath;
-            this.mIsTemporary = hasTemporary;
-            if (hasTemporary) {
-                backupPath.mkdirs();  // Create backup path if not exists
-                mTempBackupPath = getTemporaryBackupPath();
-            } else mTempBackupPath = this.mBackupPath;
+            mBackupPath = backupPath;
+            mIsTemporary = hasTemporary;
+            if (mIsTemporary) {
+                mBackupPath.mkdirs();  // Create backup path if not exists
+                mTempBackupPath = getTemporaryBackupPath(mBackupPath);
+            } else mTempBackupPath = mBackupPath;
         }
 
         @NonNull
@@ -188,15 +183,15 @@ public class BackupFiles {
      *                    null, the backup names will have the format {@code userHandle_backupName}.
      */
     public BackupFiles(@NonNull String packageName, int userHandle, @Nullable String[] backupNames) throws IOException {
-        this.mPackageName = packageName;
-        this.mUserHandle = userHandle;
+        mPackageName = packageName;
+        mUserHandle = userHandle;
         if (backupNames == null) {
-            this.mBackupNames = new String[]{String.valueOf(userHandle)};
+            mBackupNames = new String[]{String.valueOf(userHandle)};
         } else {
             // Add user handle before the backup name
-            this.mBackupNames = new String[backupNames.length];
+            mBackupNames = new String[backupNames.length];
             for (int i = 0; i < backupNames.length; ++i) {
-                this.mBackupNames[i] = userHandle + "_" + backupNames[i].trim();
+                mBackupNames[i] = userHandle + "_" + backupNames[i].trim();
             }
         }
         mPackagePath = getPackagePath(packageName, true);
@@ -255,7 +250,7 @@ public class BackupFiles {
         }
 
         public Checksum(@NonNull Path checksumFile, String mode) throws IOException {
-            this.mMode = mode;
+            mMode = mode;
             if ("w".equals(mode)) {
                 mWriter = new PrintWriter(new BufferedWriter(new PathWriter(checksumFile)));
             } else if ("r".equals(mode)) {
@@ -269,7 +264,7 @@ public class BackupFiles {
                         if (lineSplits.length != 2) {
                             throw new RuntimeException("Illegal lines found in the checksum file.");
                         }
-                        this.mChecksums.put(lineSplits[1], lineSplits[0]);
+                        mChecksums.put(lineSplits[1], lineSplits[0]);
                     }
                     reader.close();
                 }
@@ -280,7 +275,7 @@ public class BackupFiles {
             synchronized (mChecksums) {
                 if (!"w".equals(mMode)) throw new IllegalStateException("add is inaccessible in mode " + mMode);
                 mWriter.println(String.format("%s\t%s", checksum, fileName));
-                this.mChecksums.put(fileName, checksum);
+                mChecksums.put(fileName, checksum);
                 mWriter.flush();
             }
         }
