@@ -49,7 +49,7 @@
 \n\\begin{itemize}
 \n \\item \\texttt{X} -- Поддерживает несколько архитектур
 \n \\item \\texttt{0} -- В приложении нет файлов dex
-\n \\item \\texttt{\\textdegree°} -- Приложение приостановлено
+\n \\item \\texttt{°}-- Приложение приостановлено
 \n \\item \\texttt{\\#} -- Приложение запросило у системы выделение большого количества оперативной памяти
 \n \\item \\texttt{\?} -- Приложение запросило, чтобы виртуальная машина находилась в безопасном режиме
 \n\\end{itemize}</string>
@@ -107,8 +107,8 @@
     <string name="intro$main$$translations-title">Переводы</string>
     <string name="intro$main$$buiding-title">Инструкции по сборке</string>
     <string name="intro$main$$submit-patches-title">Отправка исправлений</string>
-    <string name="intro$main$supported-versions">Сейчас поддерживаемые версии это v2.6.0 (стабильная), v3.0.0 (альфа релизы). Предыдущие версии App
-\nManager могут содержать уязвимости безопасности и не должны быть использованы.</string>
+    <string name="intro$main$supported-versions">"Сейчас поддерживаемые версии это v3.0.0 -- v3.0.3  (стабильные), v3.1.0 (альфа релизы). Предыдущие версии App
+\nManager могут содержать уязвимости безопасности и не должны быть использованы."</string>
     <string name="intro$main$source-code-links">Все, кроме GitHub, являются зеркальными ссылками. Теги всегда должны быть актуальными, но не гарантируется, что master-ветка будет
 \nактуальной. Если цель состоит в том, чтобы клонировать master-ветку, используйте ссылку GitHub вместо других.</string>
     <string name="intro$main$terminologies">\\begin{itemize}
@@ -200,4 +200,35 @@
 \nОтправляя подношения, отправитель соглашается с тем, что подношение не используется для приоритизации предложенных ими идей. Предложение идей не требует никаких наград или подношений, и их приоритизация осуществляется по усмотрению владельца.
 \n
 \n\\emph{App Manager принимает любые предложения по финансированию или гранты.} Представители заинтересованной организации могут связаться с владельцами напрямую, используя опции в \\Sref{sec:contact}.</string>
+    <string name="pages$main-page$1-click-ops">\\textbf{1-Click Ops} отвечает за операции с одним кликом. Он открывает \\hyperref[sec:1-click-ops-page]{corresponding
+\npage} в новом действии.</string>
+    <string name="pages$main-page$profile_name">Также можно отобразить приложения, которые находятся только в \\hyperref[sec:profiles-page]{profile}.
+\nЭто может быть полезно для переноса некоторых операций в профиль (к примеру удаление всех приложений в профиле),
+\nчто не может быть сделано через \\hyperref[sec:profiles-page]{Profiles page}.</string>
+    <string name="pages$main-page$filter">Приложения, перечисленные на главной странице, могут быть отфильтрованы следующими способами:
+\n\\ begin {itemize}
+\n \\item \\textbf{User apps.} Список только пользовательских приложений
+\n \\item \\textbf{System Apps.} Список только системных приложений
+\n \\item \\textbf{Disabled apps.} Список только отключенных приложений
+\n \\item \\textbf{Apps with rules.} Список приложений с одним или несколькими правилами блокировок
+\n \\item \\textbf{Apps with activities.} Список приложений с одним или несколькими действиями
+\n \\item \\textbf{Apps with backups.} Список приложений с одним или несколькими резервными копиями
+\n \\item \\textbf{Running apps.} Список приложений, которые в настоящее время запущены
+\n \\item \\textbf{Apps with splits.} Список приложений с одним или несколькими файлами APK
+\n \\item \\textbf{Installed apps.} Список только установленных приложений
+\n \\item \\textbf{Uninstalled apps.} Список только удаленных приложений
+\n \\item \\textbf{Apps without backups.} Список приложений без резервного копирования.
+\n\\end{itemize}
+\n
+\nКроме сортировки, можно использовать более одного параметра фильтрации одновременно. Например, 
+\nприложения отключенные пользователями могут быть выбраны как \\textit{User apps}, так и \\textit{Disabled apps}. Это может быть
+\n особенно полезно для \\hyperref[subsec:batch-operations]{batch operations}, где может потребоваться фильтрация пользовательских приложений
+\n для безопасного выполнения определенных операций.</string>
+    <string name="pages$main-page$app-usage">Статистики использования приложений, таких как \\textit{screen time}, \\textit{data usage} (both mobile and Wi-Fi), \\textit{the number of
+\ntimes an app was opened} можно получить кликнув на опцию \\textbf{App Usage} в меню. Однако это требует разрешения
+\n\\textit{Usage Access}. Этот пункт меню не будет указан, если функция доступа к использованию отключена в
+\n\\hyperref[subsec:enable/disable-features]{settings}.</string>
+    <string name="pages$main-page$system-config">Этот пункт меню открывает новую страницу, на которой отображаются различные системные конфигурации, такие как, черные/белые списки включенные
+\nв Android по OEM, поставщики, AOSP или модули Magisk. Требуется root. Следовательно, этого пункта меню не будет в списке,
+\nесли нет прав root для App Manager.</string>
 </resources>
