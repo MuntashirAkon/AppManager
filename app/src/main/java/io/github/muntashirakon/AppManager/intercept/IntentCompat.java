@@ -17,6 +17,7 @@ import androidx.core.util.Pair;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.StringTokenizer;
 
@@ -41,7 +42,10 @@ import static io.github.muntashirakon.AppManager.intercept.AddIntentExtraFragmen
 import static io.github.muntashirakon.AppManager.intercept.AddIntentExtraFragment.TYPE_URI_ARR;
 import static io.github.muntashirakon.AppManager.intercept.AddIntentExtraFragment.Type;
 
-public class IntentCompat {
+import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.utils.MotorolaUtils;
+
+public final class IntentCompat {
     @Nullable
     public static Uri getDataUri(@NonNull Intent intent) {
         if (Intent.ACTION_SEND.equals(intent.getAction())) {
@@ -622,5 +626,14 @@ public class IntentCompat {
             intent.setType(type);
         }
         return intent;
+    }
+
+    public static void validateIntent(@NonNull Intent intent) {
+        if (MotorolaUtils.isMotorola()) {
+            // FIXME: 14/1/23 Find a way to fix the integer overflow error during parsing
+            Log.e("Interceptor", String.format(Locale.ROOT, "Original flags: 0x%x, Integer.toHexString: 0x%s",
+                    intent.getFlags(), Integer.toHexString(intent.getFlags())));
+            intent.setFlags(intent.getFlags());
+        }
     }
 }

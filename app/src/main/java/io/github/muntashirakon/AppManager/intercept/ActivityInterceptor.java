@@ -319,6 +319,7 @@ public class ActivityInterceptor extends BaseActivity {
         findViewById(R.id.progress_linear).setVisibility(View.GONE);
         // Get Intent
         Intent intent = new Intent(getIntent());
+        IntentCompat.validateIntent(intent);
         mUseRoot = intent.getBooleanExtra(EXTRA_ROOT, false);
         mUserHandle = intent.getIntExtra(EXTRA_USER_HANDLE, UserHandleHidden.myUserId());
         intent.removeExtra(EXTRA_ROOT);
