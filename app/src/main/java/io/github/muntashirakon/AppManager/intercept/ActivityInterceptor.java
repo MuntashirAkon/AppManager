@@ -58,6 +58,7 @@ import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
+import io.github.muntashirakon.AppManager.compat.IntegerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.crypto.auth.AuthManager;
 import io.github.muntashirakon.AppManager.details.LauncherIconCreator;
@@ -319,7 +320,6 @@ public class ActivityInterceptor extends BaseActivity {
         findViewById(R.id.progress_linear).setVisibility(View.GONE);
         // Get Intent
         Intent intent = new Intent(getIntent());
-        IntentCompat.validateIntent(intent);
         mUseRoot = intent.getBooleanExtra(EXTRA_ROOT, false);
         mUserHandle = intent.getIntExtra(EXTRA_USER_HANDLE, UserHandleHidden.myUserId());
         intent.removeExtra(EXTRA_ROOT);
@@ -618,7 +618,7 @@ public class ActivityInterceptor extends BaseActivity {
                                     mMutableIntent.addFlags(INTENT_FLAG_TO_STRING.keyAt(i));
                                 } else {
                                     try {
-                                        int flag = Integer.decode(String.valueOf(inputText).trim());
+                                        int flag = IntegerCompat.decode(String.valueOf(inputText).trim());
                                         mMutableIntent.addFlags(flag);
                                     } catch (NumberFormatException e) {
                                         return;
@@ -1033,7 +1033,7 @@ public class ActivityInterceptor extends BaseActivity {
     @Nullable
     private static String getUri(@Nullable Intent src) {
         try {
-            return (src != null) ? src.toUri(Intent.URI_INTENT_SCHEME) : null;
+            return (src != null) ? IntentCompat.toUri(src, Intent.URI_INTENT_SCHEME) : null;
         } catch (BadParcelableException e) {
             // TODO: 4/2/22 Add support for invalid classes. This could be done in the following way:
             //  1. Upon detecting a BPE (and the class name), ask the user to select the source application
