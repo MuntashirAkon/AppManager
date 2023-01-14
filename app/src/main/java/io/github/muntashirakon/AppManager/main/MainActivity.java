@@ -231,10 +231,6 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
         mModel.getApplicationItems().observe(this, applicationItems -> {
             if (mAdapter != null) mAdapter.setDefaultList(applicationItems);
             showProgressIndicator(false);
-            if (recyclerView.getFocusedChild() == null) {
-                View v = recyclerView.getChildAt(0);
-                if (v != null) v.requestFocus();
-            }
         });
         mModel.getOperationStatus().observe(this, status -> {
             mProgressIndicator.hide();
