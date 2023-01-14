@@ -139,9 +139,6 @@ public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
             }
             sortGroup.check(requireListOptionActions().getSortBy());
             sortGroup.setOnCheckedStateChangeListener((group, checkedIds) -> {
-                if (checkedIds.size() != 1) {
-                    throw new IllegalStateException("Only a single item should be checked");
-                }
                 requireListOptionActions().setSortBy(sortGroup.getCheckedChipId());
             });
             reverseSort.setChecked(requireListOptionActions().isReverseSort());
