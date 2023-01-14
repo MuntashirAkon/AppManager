@@ -92,6 +92,7 @@ public class AppDetailsActivity extends BaseActivity {
     protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
         setContentView(R.layout.activity_app_details);
         setSupportActionBar(findViewById(R.id.toolbar));
+        setTitle("…");
         model = new ViewModelProvider(this).get(AppDetailsViewModel.class);
         // Restore instance state
         SavedState ss = savedInstanceState != null ? savedInstanceState.getParcelable("ss") : null;
@@ -153,9 +154,6 @@ public class AppDetailsActivity extends BaseActivity {
             ApplicationInfo applicationInfo = packageInfo.applicationInfo;
             // Set title as the package label
             setTitle(applicationInfo.loadLabel(getPackageManager()));
-            // Set subtitle as the username if more than one user exists
-            model.getUserInfo().observe(this, userInfo -> getSupportActionBar()
-                    .setSubtitle(getString(R.string.user_profile_with_id, userInfo.name, userInfo.id)));
         });
         // Check for the existence of package
         model.getIsPackageExistLiveData().observe(this, isPackageExist -> {
@@ -166,6 +164,9 @@ public class AppDetailsActivity extends BaseActivity {
                 finish();
             }
         });
+        // Set subtitle as the username if more than one user exists
+        model.getUserInfo().observe(this, userInfo -> getSupportActionBar()
+                .setSubtitle(getString(R.string.user_profile_with_id, userInfo.name, userInfo.id)));
         // Check for package changes
         model.getIsPackageChanged().observe(this, isPackageChanged -> {
             if (isPackageChanged && model.isPackageExist()) {
