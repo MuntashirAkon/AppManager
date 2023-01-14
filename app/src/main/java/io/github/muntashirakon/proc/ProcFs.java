@@ -10,7 +10,11 @@ import androidx.annotation.VisibleForTesting;
 
 import com.android.internal.util.TextUtils;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.PathReader;
 import io.github.muntashirakon.io.Paths;
 
 public class ProcFs {
@@ -90,6 +94,30 @@ public class ProcFs {
         this.procRoot = procRoot;
     }
 
+    @Nullable
+    public String getCpuInfoHardware() {
+        // Only hardware is the relevant output, other outputs can be parsed from
+        // /sys/devices/system/cpu/
+        Path cpuInfoPath = Paths.build(procRoot, CPU_INFO);
+        if (cpuInfoPath == null) {
+            return null;
+        }
+        try (BufferedReader reader = new BufferedReader(new PathReader(cpuInfoPath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (line.trim().startsWith("Hardware")) {
+                    int colonLoc = line.indexOf(':');
+                    if (colonLoc == -1) continue;
+                    colonLoc += 2;
+                    return line.substring(colonLoc).trim();
+                }
+            }
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public ProcMemoryInfo getMemoryInfo() {
         String statFileContents = getStringOrNull(Paths.build(procRoot, MEM_INFO));
         if (statFileContents == null) {
@@ -125,6 +153,58 @@ public class ProcFs {
     }
 
     @Nullable
+    public String getCwd(int pid) {
+        Path cwdPath = Paths.build(procRoot, String.valueOf(pid), CWD);
+        if (cwdPath != null) {
+            try {
+                return cwdPath.getRealFilePath();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public String[] getEnvVars(int pid) {
+        String data = getStringOrNull(Paths.build(procRoot, String.valueOf(pid), ENVIRON));
+        return data != null ? data.split("\0") : null;
+    }
+
+    @Nullable
+    public String getExe(int pid) {
+        Path exePath = Paths.build(procRoot, String.valueOf(pid), EXE);
+        if (exePath != null) {
+            try {
+                return exePath.getRealFilePath();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public ProcFdInfoList getFdInfo(int pid) {
+        Path fdDir = Paths.build(procRoot, String.valueOf(pid), FD);
+        Path fdInfoDir = Paths.build(procRoot, String.valueOf(pid), FD_INFO);
+        if (fdDir == null || fdInfoDir == null) {
+            return null;
+        }
+        Path[] fdList = fdDir.listFiles();
+        String[] fdInfoList = new String[fdList.length];
+        for (int i = 0; i < fdList.length; ++i) {
+            Path fdInfoFile = Paths.build(fdInfoDir, fdList[i].getName());
+            fdInfoList[i] = fdInfoFile != null ? fdInfoFile.getContentAsString(null) : null;
+        }
+        return new ProcFdInfoList(fdList, fdInfoList);
+    }
+
+    @Nullable
+    public ProcMappedFiles getMapFiles(int pid) {
+        Path mapFilesDir = Paths.build(procRoot, String.valueOf(pid), MAP_FILES);
+        return mapFilesDir != null ? new ProcMappedFiles(mapFilesDir.listFiles()) : null;
+    }
+
+    @Nullable
     public ProcStat getStat(int pid) {
         String statFileContents = getStringOrNull(Paths.build(procRoot, String.valueOf(pid), STAT));
         if (statFileContents == null) {
@@ -142,6 +222,18 @@ public class ProcFs {
         return ProcMemStat.parse(statFileContents);
     }
 
+    @Nullable
+    public String getRoot(int pid) {
+        Path rootPath = Paths.build(procRoot, String.valueOf(pid), ROOT);
+        if (rootPath != null) {
+            try {
+                return rootPath.getRealFilePath();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
     @Nullable
     public ProcStatus getStatus(int pid) {
         String statFileContents = getStringOrNull(Paths.build(procRoot, String.valueOf(pid), STATUS));

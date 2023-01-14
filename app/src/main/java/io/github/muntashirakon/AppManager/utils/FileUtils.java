@@ -2,6 +2,13 @@
 
 package io.github.muntashirakon.AppManager.utils;
 
+import static android.system.OsConstants.O_ACCMODE;
+import static android.system.OsConstants.O_APPEND;
+import static android.system.OsConstants.O_RDONLY;
+import static android.system.OsConstants.O_RDWR;
+import static android.system.OsConstants.O_TRUNC;
+import static android.system.OsConstants.O_WRONLY;
+
 import android.content.Context;
 import android.content.res.AssetFileDescriptor;
 import android.os.Environment;
@@ -212,5 +219,25 @@ public final class FileUtils {
             }
         }
         return false;
+    }
+
+    public static String translateModePosixToString(int mode) {
+        String res = "";
+        if ((mode & O_ACCMODE) == O_RDWR) {
+            res = "rw";
+        } else if ((mode & O_ACCMODE) == O_WRONLY) {
+            res = "w";
+        } else if ((mode & O_ACCMODE) == O_RDONLY) {
+            res = "r";
+        } else {
+            throw new IllegalArgumentException("Bad mode: " + mode);
+        }
+        if ((mode & O_TRUNC) == O_TRUNC) {
+            res += "t";
+        }
+        if ((mode & O_APPEND) == O_APPEND) {
+            res += "a";
+        }
+        return res;
     }
 }

@@ -2,6 +2,9 @@
 
 package io.github.muntashirakon.AppManager.misc;
 
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getStyledKeyValue;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getTitleText;
+
 import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.Context;
@@ -28,7 +31,6 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.android.internal.util.TextUtils;
 
-import java.io.BufferedReader;
 import java.security.Provider;
 import java.security.Security;
 import java.text.ParseException;
@@ -46,13 +48,8 @@ import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.users.UserInfo;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.Utils;
-import io.github.muntashirakon.io.Path;
-import io.github.muntashirakon.io.PathReader;
-import io.github.muntashirakon.io.Paths;
+import io.github.muntashirakon.proc.ProcFs;
 import io.github.muntashirakon.util.LocalizedString;
-
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getStyledKeyValue;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getTitleText;
 
 public class DeviceInfo2 implements LocalizedString {
     public final String osVersion = Build.VERSION.RELEASE;
@@ -364,21 +361,7 @@ public class DeviceInfo2 implements LocalizedString {
 
     @Nullable
     private String getCpuHardware() {
-        Path cpuInfoPath = Paths.getUnprivileged("/proc/cpuinfo");
-        try (BufferedReader reader = new BufferedReader(new PathReader(cpuInfoPath))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (line.trim().startsWith("Hardware")) {
-                    int colonLoc = line.indexOf(':');
-                    if (colonLoc == -1) continue;
-                    colonLoc += 2;
-                    return line.substring(colonLoc).trim();
-                }
-            }
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-        return null;
+        return ProcFs.getInstance().getCpuInfoHardware();
     }
 
     @SuppressLint("PrivateApi")
