@@ -2,10 +2,21 @@
 
 package io.github.muntashirakon.AppManager.uri;
 
+import static com.android.internal.util.XmlUtils.readBooleanAttribute;
+import static com.android.internal.util.XmlUtils.readIntAttribute;
+import static com.android.internal.util.XmlUtils.readLongAttribute;
+import static com.android.internal.util.XmlUtils.writeBooleanAttribute;
+import static com.android.internal.util.XmlUtils.writeIntAttribute;
+import static com.android.internal.util.XmlUtils.writeLongAttribute;
+import static org.xmlpull.v1.XmlPullParser.END_DOCUMENT;
+import static org.xmlpull.v1.XmlPullParser.START_TAG;
+
 import android.net.Uri;
+import android.os.Build;
 import android.os.RemoteException;
 import android.os.UserHandleHidden;
 import android.util.Xml;
+import android.util.XmlHidden;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,6 +25,7 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
 
+import java.io.BufferedInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -29,15 +41,6 @@ import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.io.AtomicExtendedFile;
 import io.github.muntashirakon.io.Paths;
-
-import static com.android.internal.util.XmlUtils.readBooleanAttribute;
-import static com.android.internal.util.XmlUtils.readIntAttribute;
-import static com.android.internal.util.XmlUtils.readLongAttribute;
-import static com.android.internal.util.XmlUtils.writeBooleanAttribute;
-import static com.android.internal.util.XmlUtils.writeIntAttribute;
-import static com.android.internal.util.XmlUtils.writeLongAttribute;
-import static org.xmlpull.v1.XmlPullParser.END_DOCUMENT;
-import static org.xmlpull.v1.XmlPullParser.START_TAG;
 
 public class UriManager {
     public static final String TAG = "UriManager";
@@ -97,8 +100,13 @@ public class UriManager {
         FileOutputStream fos = null;
         try {
             fos = mGrantFile.startWrite();
-            XmlSerializer out = Xml.newSerializer();
-            out.setOutput(fos, "utf-8");
+            XmlSerializer out;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                out = XmlHidden.resolveSerializer(fos);
+            } else {
+                out = Xml.newSerializer();
+                out.setOutput(fos, "utf-8");
+            }
             out.startDocument(null, true);
             out.startTag(null, TAG_URI_GRANTS);
             for (UriGrant perm : persist) {
@@ -127,9 +135,14 @@ public class UriManager {
 
     private void readGrantedUriPermissions() {
         final long now = System.currentTimeMillis();
-        try (InputStream fis = mGrantFile.openRead()) {
-            final XmlPullParser in = Xml.newPullParser();
-            in.setInput(fis, null);
+        try (InputStream is = new BufferedInputStream(mGrantFile.openRead())) {
+            final XmlPullParser in;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                in = XmlHidden.resolvePullParser(is);
+            } else {
+                in = Xml.newPullParser();
+                in.setInput(is, null);
+            }
 
             int type;
             while ((type = in.next()) != END_DOCUMENT) {
