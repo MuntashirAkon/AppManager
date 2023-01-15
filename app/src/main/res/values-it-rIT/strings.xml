@@ -32,7 +32,6 @@
     <string name="date_installed">Data installazione</string>
     <string name="date_updated">Data aggiornamento</string>
     <string name="user_id">ID utente</string>
-    <string name="instructions">Istruzioni</string>
     <string name="license">Licenza</string>
     <string name="usage_today">Oggi</string>
     <string name="usage_7_days">Ultimi 7 giorni</string>
@@ -493,7 +492,6 @@
     <string name="sort_by_blocked_components">Prima i bloccati</string>
     <string name="no_changes">Nessun cambiamento</string>
     <string name="netpolicy_disable_network_access">Disabilita accesso alla rete</string>
-    <string name="wireless_debugging_not_supported">Il debug wireless non è supportato in questa piattaforma.</string>
     <string name="port_number">Porta</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">Impossibile installare l\'app a causa della mancata corrispondenza della firma. L\'app è stata disinstallata senza cancellare i suoi dati.</string>
     <string name="failed_to_prevent_background_run">Impossibile impedire l\'esecuzione di %1$s in background</string>

@@ -35,7 +35,6 @@
     </plurals>
     <string name="starting_activity">開始活動：<xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="pref_about_msg">App Manager 版本，授權協議，致謝名單等。</string>
-    <string name="instructions">說明</string>
     <string name="flags">旗標</string>
     <string name="launch_mode">開啟方式</string>
     <string name="ssaid_info">SSAID（<tt> Settings.Secure.ANDROID_ID </tt>）是分配給每個應用程式的裝置標識字串（從 Android 8“ Oreo”開始）。應用程式廣泛使用它來追蹤使用者。</string>
@@ -949,7 +948,6 @@
     <string name="adb_connect_port_number_description">埠編號位於 <b> IP 位址 &amp; 連接埠 </b> 部分下方 <b> 裝置名稱 </b> 部分正下方。</string>
     <string name="port_number">連接埠</string>
     <string name="adb_connect">連線</string>
-    <string name="wireless_debugging_not_supported">此平臺不支援無線偵錯。</string>
     <string name="wireless_debugging">無線偵錯</string>
     <string name="community">社群</string>
     <string name="failed_to_prevent_background_run">無法防止 %1$s 在背景執行</string>

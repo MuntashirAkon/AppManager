@@ -55,7 +55,6 @@
     <string name="class_name">Název Třídy</string>
     <string name="date_installed">Datum Instalace</string>
     <string name="user_id">ID Uživatele</string>
-    <string name="instructions">Instrukce</string>
     <string name="error_creating_shortcut">Chyba vytváření zástupce</string>
     <string name="app_info">Informace o aplikaci</string>
     <string name="system_app">Systémová aplikace</string>

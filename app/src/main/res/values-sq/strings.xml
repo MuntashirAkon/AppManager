@@ -81,7 +81,6 @@
     <string name="signatures">Firmat</string>
     <string name="configurations">Konfigurimet</string>
     <string name="source_dir">Direktoria e burimit</string>
-    <string name="instructions">Udhëzimet</string>
     <string name="error_verbose_pin_shortcut">Lëshuesi aktual nuk e mbështet PinShortcut. Nuk mund të krijohet shkurtore.</string>
     <string name="credits">Kreditë</string>
     <string name="grant_uri_permission">Jepni lejet URI</string>

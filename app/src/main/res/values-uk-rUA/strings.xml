@@ -26,7 +26,6 @@
     <string name="about">Про додаток</string>
     <string name="cache_size">Кеш</string>
     <string name="obb_size">Obb</string>
-    <string name="instructions">Інструкції</string>
     <string name="error_creating_shortcut">Помилка створення ярлика</string>
     <string name="create_shortcut">Створити ярлик</string>
     <string name="edit_shortcut">Редагувати ярлик</string>
@@ -1059,7 +1058,6 @@
     <string name="adb_connect_port_number_description">Номер порту знаходиться в розділі <b>IP-адреса&amp; порт</b> трохи нижче розділу <b>Назва пристрою</b>.</string>
     <string name="port_number">Порт</string>
     <string name="adb_connect">З\'єднання</string>
-    <string name="wireless_debugging_not_supported">Бездротове налагодження не підтримується в цій платформі.</string>
     <string name="wireless_debugging">Бездротове налагодження</string>
     <string name="unknown_net_policy">Невідома мережна політика (%1$s - %2$X)</string>
     <string name="failed_to_prevent_background_run">Не вдалося запобігти роботу в фоновому режимі додатку %1$s</string>

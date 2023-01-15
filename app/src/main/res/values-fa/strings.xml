@@ -148,7 +148,6 @@
     <string name="starting_activity">شروع فعالیت:<xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="error_verbose_pin_shortcut">راه انداز کنونی از PinShortcut پشتیبانی نمی‌کند. ایجاد میانبر امکان‌پذیر نیست.</string>
     <string name="error_creating_shortcut">خطا در ایجاد میانبر</string>
-    <string name="instructions">دستورالعمل‌ها</string>
     <string name="empty_package_name">نام بسته خالی</string>
     <string name="main_activity">فعالیت اصلی</string>
     <string name="user_id">شناسه کاربر</string>
@@ -509,7 +508,6 @@
     <string name="hidden">مخفی</string>
     <string name="pref_display_changes">نمایش تغییرات</string>
     <string name="netpolicy_reject_background_data">داده های پس زمینه را رد کنید</string>
-    <string name="wireless_debugging_not_supported">اشکال زدایی بی سیم در این پلتفرم پشتیبانی نمی شود.</string>
     <string name="adb_connect">متصل</string>
     <string name="added_to_queue">به صف اضافه شد</string>
     <string name="help_uses_permissions_tab">برای <b>اعطا</b> یا <b>لغو</b> روی یک مورد کلیک کنید. فقط مجوزهای <b>خطرناک</b> و <b>توسعه</b> ممکن است اعطا یا لغو شوند.</string>

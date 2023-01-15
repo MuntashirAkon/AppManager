@@ -73,7 +73,6 @@
     <string name="user_id">Kullanıcı ID</string>
     <string name="main_activity">Asıl Faaliyet</string>
     <string name="empty_package_name">Boş paket adı</string>
-    <string name="instructions">Açıklamalar</string>
     <string name="error_creating_shortcut">Kısayol oluşturulurken hata oluştu</string>
     <string name="error_verbose_pin_shortcut">Geçerli başlatıcısı \"PinShortcut\" özelliğini desteklemiyor. Kısayol oluşturulamıyor.</string>
     <string name="grant_usage_acess_message">Uygulama kullanım bilgilerini görüntülemek için kullanılır.</string>
@@ -992,7 +991,6 @@
     <string name="adb_connect_port_number_description">Bağlantı noktası numarası, <b>Aygıt adı</b> bölümünün hemen altındaki <b>IP adresi &amp; bağlantı noktası</b> bölümünün altında bulunur.</string>
     <string name="port_number">Bağlantı noktası</string>
     <string name="adb_connect">Bağlan</string>
-    <string name="wireless_debugging_not_supported">Kablosuz hata ayıklama bu platformda desteklenmiyor.</string>
     <string name="wireless_debugging">Kablosuz hata ayıklama</string>
     <string name="unknown_net_policy">Bilinmeyen ağ politikası (%1$s - %2$X)</string>
     <string name="failed_to_prevent_background_run">%1$s arka planda çalışması engellenemedi</string>

@@ -76,7 +76,6 @@
     <string name="user_id">Идентификатор пользователя</string>
     <string name="main_activity">Главное активити</string>
     <string name="empty_package_name">Пустое имя пакета</string>
-    <string name="instructions">Инструкции</string>
     <string name="error_creating_shortcut">Ошибка при создании ярлыка</string>
     <string name="error_verbose_pin_shortcut">Текущий лончер не поддерживает закрепление ярлыков. Невозможно создать ярлык.</string>
     <string name="starting_activity">Стартовое активити: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
@@ -1057,7 +1056,6 @@
     <string name="adb_connect_port_number_description">Номер порта расположен в разделе <b>IP-адрес &amp; порт</b>, чуть ниже раздела <b>Имя устройства</b>.</string>
     <string name="port_number">Порт</string>
     <string name="adb_connect">Подключение</string>
-    <string name="wireless_debugging_not_supported">Беспроводная отладка не поддерживается на этой платформе.</string>
     <string name="wireless_debugging">Беспроводная отладка</string>
     <string name="unknown_net_policy">Неизвестная сетевая политика (%1$s - %2$X)</string>
     <string name="failed_to_prevent_background_run">Не удалось предотвратить работу в фоне для приложения %1$s</string>

@@ -77,7 +77,6 @@
     <string name="date_updated">Dată Actualizare</string>
     <string name="main_activity">Activitate Principală</string>
     <string name="empty_package_name">Nume pachet lipsă</string>
-    <string name="instructions">Instrucțiuni</string>
     <string name="error_creating_shortcut">Eroare creare scurtătură</string>
     <string name="error_verbose_pin_shortcut">Aplicația curentă nu suportă PinShortcut. Nu s-a putut crea scurtătură.</string>
     <string name="create_shortcut">Crează Scurtătură</string>

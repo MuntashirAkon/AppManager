@@ -318,7 +318,6 @@
     <string name="starting_activity">A iniciar atividade: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="error_verbose_pin_shortcut">O iniciador atual não suporta PinShortcut. Não foi possível criar o atalho.</string>
     <string name="error_creating_shortcut">Erro ao criar atalho</string>
-    <string name="instructions">Instruções</string>
     <string name="empty_package_name">Pacote sem nome</string>
     <string name="main_activity">Atividade principal</string>
     <string name="user_id">ID do utilizador</string>
@@ -1021,7 +1020,6 @@
     <string name="adb_connect_port_number_description">O número da porta está localizado no <b> endereço IP e porta </b> logo abaixo da seção <b> Nome do dispositivo </b>.</string>
     <string name="port_number">Porta</string>
     <string name="adb_connect">Conectar</string>
-    <string name="wireless_debugging_not_supported">A depuração de erros Wi-Fi não é suportada nesta plataforma.</string>
     <string name="wireless_debugging">Depuração de erros Wi-Fi</string>
     <string name="netpolicy_disable_network_access">Desativar acesso à rede</string>
     <string name="netpolicy_reject_wifi_data">Rejeitar dados Wi-Fi</string>

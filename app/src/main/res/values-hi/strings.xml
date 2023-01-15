@@ -250,7 +250,6 @@
     <string name="starting_activity">एक्टिविटी शुरू: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="error_verbose_pin_shortcut">वर्तमान लांचर PinShortcut का समर्थन नहीं करता है। शॉर्टकट बनाने में असमर्थ।</string>
     <string name="error_creating_shortcut">शॉर्टकट बनाने में त्रुटि</string>
-    <string name="instructions">निर्देश</string>
     <string name="empty_package_name">पैकेज का नाम खाली है</string>
     <string name="main_activity">मुख्य एक्टिविटी</string>
     <string name="user_id">यूज़र आईडी</string>

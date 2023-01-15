@@ -63,7 +63,6 @@
     <string name="user_id">ID do Usuário</string>
     <string name="main_activity">Atividade Principal</string>
     <string name="empty_package_name">Nome do pacote vazio</string>
-    <string name="instructions">Instruções</string>
     <string name="error_creating_shortcut">Erro ao criar atalho</string>
     <string name="error_verbose_pin_shortcut">O launcher atual não aceita PinShortcut. Não foi possível criar o atalho.</string>
     <string name="starting_activity">Iniciando atividade: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
@@ -1025,7 +1024,6 @@
     <string name="port_number_empty">O número de porta está vazio.</string>
     <string name="port_number">Porta</string>
     <string name="adb_connect">Conectar</string>
-    <string name="wireless_debugging_not_supported">A depuração sem fio não é suportada nesta plataforma.</string>
     <string name="wireless_debugging">Depuração sem fio</string>
     <string name="unknown_net_policy">Política de rede desconhecida (%1$s - %2$X)</string>
     <string name="failed_to_prevent_background_run">Inapto de deter %1$s de executar em segundo plano</string>

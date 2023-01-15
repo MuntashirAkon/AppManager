@@ -87,7 +87,6 @@
     <string name="discard">להשליך</string>
     <string name="no_code">אין קוד</string>
     <string name="boolean_value">ערך בוליאני</string>
-    <string name="instructions">הוראות</string>
     <string name="string_value">ערך מחרוזת</string>
     <string name="done">סיים</string>
     <string name="error_invalid_icon_resource">משאב סמל לא חוקי</string>

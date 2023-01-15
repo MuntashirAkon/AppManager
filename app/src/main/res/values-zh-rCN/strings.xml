@@ -76,7 +76,6 @@
     <string name="user_id">用户 ID</string>
     <string name="main_activity">主活动</string>
     <string name="empty_package_name">包名为空</string>
-    <string name="instructions">说明</string>
     <string name="error_creating_shortcut">无法创建快捷方式</string>
     <string name="error_verbose_pin_shortcut">当前启动器尚不支持 “PinShortcut”。无法创建快捷方式。</string>
     <string name="starting_activity">启动活动: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
@@ -961,7 +960,6 @@
     <string name="adb_connect_port_number_description">端口号位于 <b>IP地址&amp;端口</b>部分，这部分在<b>设备名称</b>部分的下方。</string>
     <string name="port_number">端口</string>
     <string name="adb_connect">连接</string>
-    <string name="wireless_debugging_not_supported">此平台不支持无线调试。</string>
     <string name="wireless_debugging">无线调试</string>
     <string name="unknown_net_policy">未知的 netpolicy (%1$s - %2$X)</string>
     <string name="failed_to_prevent_background_run">无法防止 %1$s 在后台运行</string>

@@ -63,7 +63,6 @@
     <string name="date_installed">Ngày cài đặt</string>
     <string name="more_info">Thêm thông tin</string>
     <string name="error_creating_shortcut">Lỗi khi tạo lối tắt</string>
-    <string name="instructions">Hướng dẫn</string>
     <string name="user_app">Ứng dụng người dùng</string>
     <string name="system_app">Ứng dụng hệ thống</string>
     <string name="app_info">Thông tin ứng dụng</string>
@@ -610,7 +609,6 @@
     <string name="adb_connect_port_number_description">Số cổng được đặt dưới khu vực <b>Địa chỉ IP &amp; cổng</b> ngay ở dưới khu vực <b>Tên thiết bị</b>.</string>
     <string name="port_number">Cổng</string>
     <string name="adb_connect">Kết nối</string>
-    <string name="wireless_debugging_not_supported">Gỡ lỗi không dây không được hỗ trợ trong nền tảng này.</string>
     <string name="wireless_debugging">Gỡ lỗi không dây</string>
     <string name="netpolicy_disable_network_access">Tắt quyền truy cập mạng</string>
     <string name="netpolicy_reject_wifi_data">Từ chối dữ liệu Wi-Fi</string>

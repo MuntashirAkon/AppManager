@@ -214,7 +214,6 @@
     <string name="starting_activity">Inicio de la actividad: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="error_verbose_pin_shortcut">El iniciador actual no admite PinShortcut. No se puede crear el atajo.</string>
     <string name="error_creating_shortcut">Error al crear un atajo (shortcut)</string>
-    <string name="instructions">Instrucciones</string>
     <string name="empty_package_name">Nombre del paquete vacío</string>
     <string name="main_activity">Actividad Principal</string>
     <string name="user_id">ID de usuario</string>
@@ -1014,7 +1013,6 @@
     <string name="netpolicy_reject_wifi_data">Rechazar datos wifi</string>
     <string name="netpolicy_disable_network_access">Desactivar acceso a redes</string>
     <string name="wireless_debugging">Depuración inalámbrica</string>
-    <string name="wireless_debugging_not_supported">Esta plataforma no admite la depuración inalámbrica.</string>
     <string name="adb_connect">Conectar</string>
     <string name="port_number">Puerto</string>
     <string name="adb_connect_port_number_description">El número de puerto se localiza en la sección <b>Dirección IP y puerto</b>, justo por debajo de la sección <b>Nombre de dispositivo</b>.</string>

@@ -88,7 +88,6 @@
     <string name="main_activity">주요 활동</string>
     <string name="sdk_flags">플래그</string>
     <string name="empty_package_name">빈 패키지 이름</string>
-    <string name="instructions">지침</string>
     <string name="error_creating_shortcut">바로가기 생성 중 오류</string>
     <string name="package_name">패키지 이름</string>
     <string name="class_name">클래스 이름</string>
@@ -892,7 +891,6 @@
     <string name="subject_log_report">로그 기록</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">서명 불일치로 인해 앱을 설치할 수 없습니다. 앱이 데이터를 지우지 않고 제거되었습니다.</string>
     <string name="help_app_ops_tab">항목을 클릭하여 <b>허용</b>하거나 <b>무시</b>하십시오. 지원되는 다른 모드를 보려면 항목을 길게 클릭하십시오.</string>
-    <string name="wireless_debugging_not_supported">이 플랫폼에서는 무선 디버깅이 지원되지 않습니다.</string>
     <string name="netpolicy_disable_network_access">네트워크 액세스 사용 안 함</string>
     <string name="adb_pair">쌍</string>
     <string name="minimum_version">최소 버전: %d</string>

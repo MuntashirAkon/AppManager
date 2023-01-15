@@ -44,7 +44,6 @@
     <string name="user_id">ব্যবহারকারীর আইডি</string>
     <string name="main_activity">মূল একটিভিটি</string>
     <string name="empty_package_name">প্যাকেজের নাম খালি</string>
-    <string name="instructions">নির্দেশনা</string>
     <string name="error_verbose_pin_shortcut">বর্তমান লঞ্চার পিনশোর্টকট সমর্থন করে না। শর্টকাট তৈরি করতে ব্যর্থ।</string>
     <string name="shortcut_name">শর্টকাটের নাম</string>
     <string name="package_name">প্যাকেজের নাম</string>

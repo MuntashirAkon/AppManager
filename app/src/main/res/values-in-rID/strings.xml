@@ -13,7 +13,6 @@
     <string name="starting_activity">Aktifitas baru dimulai: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="error_verbose_pin_shortcut">Peluncur saat ini tidak mendukung Pinshortcut. Tidak dapat membuat pintasan.</string>
     <string name="error_creating_shortcut">Kesalahan dalam membuat pintasan</string>
-    <string name="instructions">Intruksi</string>
     <string name="main_activity">Aktifitas utama</string>
     <string name="user_id">ID pengguna</string>
     <string name="installer_app">Pemasang Aplikasi</string>
@@ -948,7 +947,6 @@
     <string name="netpolicy_reject_cellular_data">Tolak data seluler</string>
     <string name="netpolicy_allow_background_data">Izinkan data di latar belakang saat Penghemat Data aktif</string>
     <string name="netpolicy_reject_background_data">Tolak data di latar belakang</string>
-    <string name="wireless_debugging_not_supported">Debug nirkabel tidak didukung dalam platform ini.</string>
     <string name="wireless_debugging">Debug nirkabel</string>
     <string name="port_number_invalid">Nomor port tidak valid.</string>
     <string name="port_number_empty">Nomor port kosong.</string>

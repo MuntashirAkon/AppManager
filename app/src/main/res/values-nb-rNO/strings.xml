@@ -55,7 +55,6 @@
     <string name="create_shortcut">Opprett snarvei</string>
     <string name="error_verbose_pin_shortcut">Nåværende oppstarter støtter ikke PinShortcut. Klarte ikke å opprette snarvei.</string>
     <string name="error_creating_shortcut">Klarte ikke å opprette snarvei</string>
-    <string name="instructions">Instruks</string>
     <string name="empty_package_name">Tomt pakkenavn</string>
     <string name="main_activity">Hovedaktivitet</string>
     <string name="user_id">Bruker-ID</string>
@@ -924,7 +923,6 @@
     <string name="found_no_alias_in_keystore">Fant ingen alias i nøkkellager.</string>
     <string name="wireless_debugging">Trådløs avlusning</string>
     <string name="adb_connect">Koble til</string>
-    <string name="wireless_debugging_not_supported">Trådløs avlusning støttes ikke på denne plattformen.</string>
     <string name="notice">Merknad</string>
     <string name="failed_to_uninstall_app">Avinstallasjon mislyktes</string>
     <string name="storage">Lagring</string>

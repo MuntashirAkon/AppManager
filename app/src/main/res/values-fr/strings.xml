@@ -573,7 +573,6 @@
     <string name="create_shortcut">Créer un raccourci</string>
     <string name="starting_activity">Démarrage de l\'activité : <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="error_creating_shortcut">Erreur lors de la création du raccourci</string>
-    <string name="instructions">Instructions</string>
     <string name="empty_package_name">Nom du paquet vide</string>
     <string name="main_activity">Activité principale</string>
     <string name="user_id">Identifiant utilisateur</string>
@@ -1035,7 +1034,6 @@
     <string name="pref_display_changes_msg">Afficher les changements de version, pisteurs, composants, permissions, signatures, SDK, etc. par version.</string>
     <string name="no_changes">Pas de changements</string>
     <string name="wireless_debugging">Débogage sans fil</string>
-    <string name="wireless_debugging_not_supported">Le débogage sans fil n\'est pas supporté par cette plateforme.</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">Impossible d\'installer l\'application en raison d\'une incompatibilité de signature. L\'application a été désinstallée sans effacer ses données.</string>
     <string name="help_app_ops_tab">Cliquez sur un élément pour <b>l\'autoriser</b> ou <b>l\'ignorer</b>. Cliquez longuement sur un élément pour voir les autres modes supportés.</string>
     <string name="failed_to_prevent_background_run">Impossible d\'empêcher %1$s de s\'exécuter en arrière-plan</string>

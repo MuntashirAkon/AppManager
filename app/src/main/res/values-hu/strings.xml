@@ -55,7 +55,6 @@
     <string name="starting_activity">Kezdő tevékenység: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="error_verbose_pin_shortcut">A jelenlegi indító nem támogatja a PinShortcut-ot. Nem lehet létrehozni a linket.</string>
     <string name="error_creating_shortcut">Parancsikon létrehozási hiba</string>
-    <string name="instructions">Utasítások</string>
     <string name="empty_package_name">Üres csomagnév</string>
     <string name="main_activity">Fő tevékenység</string>
     <string name="user_id">Felh. azonosító</string>

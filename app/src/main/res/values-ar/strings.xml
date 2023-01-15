@@ -81,7 +81,6 @@
     <string name="starting_activity">بدء النشاط: <xliff:g id="activity_name" example=".main.MainActivity"> %1$s </xliff:g></string>
     <string name="error_verbose_pin_shortcut">المشغل الحالي لا يدعم تدبيس الإختصار. تعذر إنشاء الاختصار.</string>
     <string name="error_creating_shortcut">خطأ في إنشاء الاختصار</string>
-    <string name="instructions">التعليمات</string>
     <string name="empty_package_name">اسم الحزمة فارغ</string>
     <string name="main_activity">النشاط الرئيسي</string>
     <string name="user_id">معرف المستخدم</string>
@@ -1120,7 +1119,6 @@
     <string name="adb_connect_port_number_description">يوجد رقم المنفذ أسفل قسم <b>عنوان IP &amp; المنفذ</b> أسفل قسم <b>اسم الجهاز</b> مباشرةً.</string>
     <string name="port_number">المنفذ</string>
     <string name="adb_connect">اتصال</string>
-    <string name="wireless_debugging_not_supported">التصحيح اللاسلكي غير مدعوم في هذا النظام الأساسي.</string>
     <string name="wireless_debugging">التصحيح اللاسلكي</string>
     <string name="unknown_net_policy">سياسة شبكة غير معروفة (%1$s - %2$X)</string>
     <string name="failed_to_prevent_background_run">تعذر منع %1$s من العمل في الخلفية</string>

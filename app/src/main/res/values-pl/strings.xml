@@ -274,7 +274,6 @@
     <string name="icon_picker">Selektor ikon</string>
     <string name="create_shortcut">Utwórz skrót</string>
     <string name="error_creating_shortcut">Wystąpił błąd podczas tworzenia skrótu</string>
-    <string name="instructions">Instrukcje</string>
     <string name="app_not_installed">Aplikacja nie jest zainstalowana</string>
     <string name="obb_size">Obb</string>
     <string name="cache_size">Pamięć podręczna</string>
@@ -949,7 +948,6 @@
     <string name="adb_connect_port_number_description">Numer portu znajduje się w sekcji <b>adres IP &amp; port</b> tuż pod sekcją <b>Nazwa urządzenia</b>.</string>
     <string name="port_number">Port</string>
     <string name="adb_connect">Połącz</string>
-    <string name="wireless_debugging_not_supported">Bezprzewodowe debugowanie nie jest obsługiwane na tej platformie.</string>
     <string name="wireless_debugging">Bezprzewodowe debugowanie</string>
     <string name="netpolicy_disable_network_access">Wyłącz dostęp do sieci</string>
     <string name="netpolicy_reject_vpn_data">Odrzuć dane VPN</string>

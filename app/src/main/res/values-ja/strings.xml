@@ -75,7 +75,6 @@
     <string name="user_id">ユーザーID</string>
     <string name="main_activity">メインアクティビティ</string>
     <string name="empty_package_name">空のパッケージ名</string>
-    <string name="instructions">ヘルプ</string>
     <string name="error_creating_shortcut">ショートカットの作成中にエラーが発生しました</string>
     <string name="error_verbose_pin_shortcut">現在のホームアプリはショートカットに対応していません。ショートカットが作成できませんでした。</string>
     <string name="starting_activity">次のアクティビティを起動します: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
@@ -949,7 +948,6 @@
     <string name="adb_connect_port_number_description">ポート番号は<b>デバイス名</b>セクション下部の<b>IPアドレス&amp;ポート</b>内に記載されています。</string>
     <string name="port_number">ポート番号</string>
     <string name="adb_connect">接続</string>
-    <string name="wireless_debugging_not_supported">この端末ではワイヤレスデバッグに対応していません。</string>
     <string name="wireless_debugging">ワイヤレスデバッグ</string>
     <string name="netpolicy_disable_network_access">ネット接続を無効化</string>
     <string name="netpolicy_reject_wifi_data">WiFi通信を拒否</string>
