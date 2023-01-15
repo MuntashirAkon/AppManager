@@ -2,11 +2,11 @@
 
 package io.github.muntashirakon.AppManager.runner;
 
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
-
-import com.android.internal.util.TextUtils;
 
 import java.io.InputStream;
 import java.util.ArrayList;

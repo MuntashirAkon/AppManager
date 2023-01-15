@@ -3,6 +3,7 @@
 package io.github.muntashirakon.AppManager.profiles;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -11,7 +12,6 @@ import androidx.preference.PreferenceDataStore;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
 
-import com.android.internal.util.TextUtils;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -27,6 +27,7 @@ import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment
 import io.github.muntashirakon.AppManager.users.UserInfo;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
@@ -61,7 +62,7 @@ public class ConfPreferences extends PreferenceFragmentCompat {
                     .setTitle(R.string.comment)
                     .setInputText(model.getComment())
                     .setPositiveButton(R.string.ok, (dialog, which, inputText, isChecked) -> {
-                        model.setComment(TextUtils.isEmpty(inputText) ? null : inputText.toString());
+                        model.setComment(TextUtilsCompat.isEmpty(inputText) ? null : inputText.toString());
                         commentPref.setSummary(model.getComment());
                     })
                     .setNegativeButton(R.string.cancel, null)
@@ -102,7 +103,7 @@ public class ConfPreferences extends PreferenceFragmentCompat {
                     .setInputText(components == null ? "" : TextUtils.join(" ", components))
                     .setHelperText(R.string.input_signatures_description)
                     .setPositiveButton(R.string.ok, (dialog, which, inputText, isChecked) -> {
-                        if (!TextUtils.isEmpty(inputText)) {
+                        if (!TextUtilsCompat.isEmpty(inputText)) {
                             String[] newComponents = inputText.toString().split("\\s+");
                             model.setComponents(newComponents);
                         } else model.setComponents(null);
@@ -124,7 +125,7 @@ public class ConfPreferences extends PreferenceFragmentCompat {
                     .setInputText(app_ops == null ? "" : TextUtils.join(" ", app_ops))
                     .setHelperText(R.string.input_app_ops_description_profile)
                     .setPositiveButton(R.string.ok, (dialog, which, inputText, isChecked) -> {
-                        if (!TextUtils.isEmpty(inputText)) {
+                        if (!TextUtilsCompat.isEmpty(inputText)) {
                             String[] newAppOps = inputText.toString().split("\\s+");
                             model.setAppOps(newAppOps);
                         } else model.setAppOps(null);
@@ -146,7 +147,7 @@ public class ConfPreferences extends PreferenceFragmentCompat {
                     .setInputText(permissions == null ? "" : TextUtils.join(" ", permissions))
                     .setHelperText(R.string.input_permissions_description)
                     .setPositiveButton(R.string.ok, (dialog, which, inputText, isChecked) -> {
-                        if (!TextUtils.isEmpty(inputText)) {
+                        if (!TextUtilsCompat.isEmpty(inputText)) {
                             String[] newPermissions = inputText.toString().split("\\s+");
                             model.setPermissions(newPermissions);
                         } else model.setPermissions(null);
@@ -197,7 +198,7 @@ public class ConfPreferences extends PreferenceFragmentCompat {
                         }
                         CharSequence backupName = editText.getText();
                         BackupFlags backupFlags1 = new BackupFlags(backupFlags.get());
-                        if (!TextUtils.isEmpty(backupName)) {
+                        if (!TextUtilsCompat.isEmpty(backupName)) {
                             backupFlags1.addFlag(BackupFlags.BACKUP_MULTIPLE);
                             backupInfo.name = backupName.toString();
                         } else {
@@ -309,7 +310,7 @@ public class ConfPreferences extends PreferenceFragmentCompat {
     private List<Integer> selectedUsers;
     private void handleUsersPref(Preference pref) {
         List<UserInfo> users = Users.getUsers();
-        if (users != null && users.size() > 1) {
+        if (users.size() > 1) {
             pref.setVisible(true);
             CharSequence[] userNames = new String[users.size()];
             List<Integer> userHandles = new ArrayList<>(users.size());
@@ -324,7 +325,7 @@ public class ConfPreferences extends PreferenceFragmentCompat {
                 selectedUsers.add(user);
             }
             activity.runOnUiThread(() -> {
-                pref.setSummary(TextUtils.joinSpannable(", " , getUserInfo(users, selectedUsers)));
+                pref.setSummary(TextUtilsCompat.joinSpannable(", " , getUserInfo(users, selectedUsers)));
                 pref.setOnPreferenceClickListener(v -> {
                     new SearchableMultiChoiceDialogBuilder<>(activity, userHandles, userNames)
                             .setTitle(R.string.select_user)
@@ -334,7 +335,7 @@ public class ConfPreferences extends PreferenceFragmentCompat {
                                 if (selectedUserHandles.size() == 0) {
                                     selectedUsers = userHandles;
                                 } else selectedUsers = selectedUserHandles;
-                                pref.setSummary(TextUtils.joinSpannable(", " , getUserInfo(users, selectedUsers)));
+                                pref.setSummary(TextUtilsCompat.joinSpannable(", " , getUserInfo(users, selectedUsers)));
                                 model.setUsers(ArrayUtils.convertToIntArray(selectedUsers));
                             })
                             .setNegativeButton(R.string.cancel, null)

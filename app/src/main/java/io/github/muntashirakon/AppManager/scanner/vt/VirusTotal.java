@@ -2,12 +2,12 @@
 package io.github.muntashirakon.AppManager.scanner.vt;
 
 import android.os.SystemClock;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
-import com.android.internal.util.TextUtils;
 import com.google.gson.Gson;
 
 import java.io.BufferedReader;

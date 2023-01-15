@@ -18,8 +18,6 @@ import androidx.annotation.WorkerThread;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.MutableLiveData;
 
-import com.android.internal.util.TextUtils;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -57,6 +55,7 @@ import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
+import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.io.Path;
@@ -192,7 +191,7 @@ public class AppInfoViewModel extends AndroidViewModel {
             if (Ops.isRoot() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 try {
                     tagCloud.ssaid = new SsaidSettings(packageName, applicationInfo.uid).getSsaid();
-                    if (TextUtils.isEmpty(tagCloud.ssaid)) tagCloud.ssaid = null;
+                    if (TextUtilsCompat.isEmpty(tagCloud.ssaid)) tagCloud.ssaid = null;
                 } catch (IOException ignore) {
                 }
             }

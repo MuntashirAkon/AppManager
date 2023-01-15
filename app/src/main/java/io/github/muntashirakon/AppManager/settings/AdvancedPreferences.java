@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.settings;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -13,7 +14,6 @@ import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.Preference;
 
-import com.android.internal.util.TextUtils;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -29,6 +29,7 @@ import io.github.muntashirakon.AppManager.settings.crypto.ImportExportKeyStoreDi
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
+import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
@@ -82,7 +83,7 @@ public class AdvancedPreferences extends PreferenceFragment {
                     .setView(view)
                     .setPositiveButton(R.string.save, (dialog, which) -> {
                         Editable apkFormat = inputApkNameFormat.getText();
-                        if (!TextUtils.isEmpty(apkFormat)) {
+                        if (!TextUtilsCompat.isEmpty(apkFormat)) {
                             AppPref.set(AppPref.PrefKey.PREF_SAVED_APK_FORMAT_STR, apkFormat.toString().trim());
                         }
                     })

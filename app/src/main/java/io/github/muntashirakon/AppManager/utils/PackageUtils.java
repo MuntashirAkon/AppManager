@@ -38,7 +38,6 @@ import androidx.core.content.pm.PackageInfoCompat;
 
 import com.android.apksig.ApkVerifier;
 import com.android.apksig.apk.ApkFormatException;
-import com.android.internal.util.TextUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -909,13 +908,13 @@ public final class PackageUtils {
             if (result.isVerifiedUsingV4Scheme()) sigSchemes.add("v4");
             builder.append("\n").append(getPrimaryText(ctx, ctx.getResources()
                     .getQuantityString(R.plurals.app_signing_signature_schemes_pl, sigSchemes.size()) + LangUtils.getSeparatorString()));
-            builder.append(TextUtils.joinSpannable(", ", sigSchemes));
+            builder.append(TextUtilsCompat.joinSpannable(", ", sigSchemes));
         } else {
             builder.append(getColoredText(getTitleText(ctx, "\u2718 " + ctx.getString(R.string.not_verified)), colorFailure));
         }
         builder.append("\n");
         // If there are errors, no certificate info will be loaded
-        builder.append(TextUtils.joinSpannable("\n", errors)).append("\n");
+        builder.append(TextUtilsCompat.joinSpannable("\n", errors)).append("\n");
         return builder;
     }
 

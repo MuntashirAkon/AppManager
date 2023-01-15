@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,7 +28,6 @@ import androidx.collection.ArrayMap;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.android.internal.util.TextUtils;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -53,6 +53,7 @@ import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.util.UiUtils;
@@ -100,7 +101,7 @@ public class ScannerFragment extends Fragment {
                         .append(getMonospacedText(digest.second)));
             }
             ((TextView) view.findViewById(R.id.apk_title)).setText(R.string.apk_checksums);
-            ((TextView) view.findViewById(R.id.apk_description)).setText(TextUtils.joinSpannable("\n", lines));
+            ((TextView) view.findViewById(R.id.apk_description)).setText(TextUtilsCompat.joinSpannable("\n", lines));
         });
         // Package info: Title & subtitle
         mViewModel.packageInfoLiveData().observe(getViewLifecycleOwner(), packageInfo -> {
@@ -314,7 +315,7 @@ public class ScannerFragment extends Fragment {
         int totalTrackersFound = foundTrackerInfoMap.size();
         if (totalTrackersFound > 0) {
             foundTrackerList.append(getString(R.string.found_trackers)).append(" ").append(
-                    TextUtils.joinSpannable(", ", foundTrackerNames));
+                    TextUtilsCompat.joinSpannable(", ", foundTrackerNames));
         }
         int totalTrackerClasses = mViewModel.getTrackerClasses().size();
         // Get summary

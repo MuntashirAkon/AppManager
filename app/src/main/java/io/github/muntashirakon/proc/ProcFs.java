@@ -3,12 +3,11 @@
 package io.github.muntashirakon.proc;
 
 import android.os.SystemClock;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
-
-import com.android.internal.util.TextUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;

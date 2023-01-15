@@ -23,7 +23,6 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.android.internal.util.TextUtils;
 import com.google.android.material.card.MaterialCardView;
 
 import java.util.ArrayList;
@@ -33,6 +32,7 @@ import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
+import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.util.UiUtils;
@@ -90,7 +90,7 @@ public class ClassListingFragment extends Fragment implements AdvancedSearchView
     @Override
     public void onResume() {
         super.onResume();
-        if (mClassListingAdapter != null && !TextUtils.isEmpty(mClassListingAdapter.mConstraint)) {
+        if (mClassListingAdapter != null && !TextUtilsCompat.isEmpty(mClassListingAdapter.mConstraint)) {
             mClassListingAdapter.filter();
         }
     }
@@ -177,7 +177,7 @@ public class ClassListingFragment extends Fragment implements AdvancedSearchView
         }
 
         void filter() {
-            if (!TextUtils.isEmpty(mConstraint)) {
+            if (!TextUtilsCompat.isEmpty(mConstraint)) {
                 filter(mConstraint, mFilterType);
             }
         }

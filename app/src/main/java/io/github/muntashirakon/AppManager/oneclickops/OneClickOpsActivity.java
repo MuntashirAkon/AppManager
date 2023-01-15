@@ -24,7 +24,6 @@ import androidx.collection.ArraySet;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.android.internal.util.TextUtils;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
@@ -42,6 +41,7 @@ import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.ListItemCreator;
+import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
@@ -326,7 +326,7 @@ public class OneClickOpsActivity extends BaseActivity {
         List<CharSequence> packagesWithAppOpCount = new ArrayList<>();
         for (AppOpCount appOp : appOpCounts) {
             builder1 = new SpannableStringBuilder(appOp.packageLabel)
-                    .append("\n").append(getSmallerText("(" + appOp.count + ") " + TextUtils.joinSpannable(", ",
+                    .append("\n").append(getSmallerText("(" + appOp.count + ") " + TextUtilsCompat.joinSpannable(", ",
                             appOpToNames(appOp.appOps))));
             selectedPackages.add(appOp.packageName);
             packagesWithAppOpCount.add(builder1);
