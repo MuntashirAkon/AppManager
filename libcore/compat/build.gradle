@@ -17,6 +17,12 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
 }
 
 dependencies {
@@ -25,4 +31,8 @@ dependencies {
     api "androidx.annotation:annotation:${annotation_version}"
     api 'org.smali:baksmali:2.5.2'
     api 'org.smali:smali:2.5.2'
+
+    // Unit Testing
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation 'org.robolectric:robolectric:4.9'
 }

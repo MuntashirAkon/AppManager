@@ -1,0 +1,4 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<uri-grants>
+<uri-grant sourceUserId="0" targetUserId="0" sourcePkg="com.android.externalstorage" targetPkg="io.github.muntashirakon.AppManager.debug" uri="content://com.android.externalstorage.documents/tree/primary%3AAppManager" prefix="true" modeFlags="3" createdTime="1673724685372" />
+</uri-grants>

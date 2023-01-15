@@ -57,7 +57,7 @@ public final class SettingsStateV26 implements SettingsState {
     private static final boolean DEBUG = false;
     private static final boolean DEBUG_PERSISTENCE = false;
 
-    private static final String LOG_TAG = "SettingsStateV26";
+    private static final String LOG_TAG = SettingsStateV26.class.getSimpleName();
 
     static final int SETTINGS_VERSION_NEW_ENCODING = 121;
 

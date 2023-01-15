@@ -6,15 +6,12 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.os.RemoteException;
 import android.os.SystemClock;
 import android.text.TextUtils;
 import android.util.ArrayMap;
-import android.util.AtomicFile;
 import android.util.Base64;
 import android.util.Log;
-import android.util.TypedXmlPullParser;
-import android.util.TypedXmlSerializer;
-import android.util.XmlHidden;
 
 import androidx.annotation.GuardedBy;
 import androidx.annotation.NonNull;
@@ -24,7 +21,6 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -36,6 +32,9 @@ import java.util.Objects;
 import java.util.Set;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.compat.xml.TypedXmlPullParser;
+import io.github.muntashirakon.compat.xml.TypedXmlSerializer;
+import io.github.muntashirakon.compat.xml.Xml;
 import io.github.muntashirakon.io.AtomicExtendedFile;
 import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
@@ -57,7 +56,7 @@ public final class SettingsStateV31 implements SettingsState {
     private static final boolean DEBUG = false;
     private static final boolean DEBUG_PERSISTENCE = false;
 
-    private static final String LOG_TAG = "SettingsStateV31";
+    private static final String LOG_TAG = SettingsStateV31.class.getSimpleName();
 
     static final int SETTINGS_VERSION_NEW_ENCODING = 121;
 
@@ -664,7 +663,7 @@ public final class SettingsStateV31 implements SettingsState {
             try {
                 out = destination.startWrite();
 
-                TypedXmlSerializer serializer = XmlHidden.resolveSerializer(out);
+                TypedXmlSerializer serializer = Xml.resolveSerializer(out);
                 serializer.startDocument(null, true);
                 serializer.startTag(null, TAG_SETTINGS);
                 serializer.attributeInt(null, ATTR_VERSION, version);
@@ -863,11 +862,11 @@ public final class SettingsStateV31 implements SettingsState {
     @GuardedBy("mLock")
     private void readStateSyncLocked() throws IllegalStateException {
         FileInputStream in;
-        AtomicFile file = new AtomicFile(mStatePersistFile.getFile());
+        AtomicExtendedFile file = new AtomicExtendedFile(mStatePersistFile.getFile());
         try {
             in = file.openRead();
-        } catch (FileNotFoundException fnfe) {
-            Log.w(LOG_TAG, "No settings state " + mStatePersistFile);
+        } catch (IOException | RemoteException fnfe) {
+            Log.w(LOG_TAG, "No settings state " + mStatePersistFile, fnfe);
             logSettingsDirectoryInformation(mStatePersistFile);
             addHistoricalOperationLocked(HISTORICAL_OPERATION_INITIALIZE, null);
             return;
@@ -881,10 +880,10 @@ public final class SettingsStateV31 implements SettingsState {
         Log.i(LOG_TAG, "Failed parsing settings file: " + mStatePersistFile
                 + ", retrying with fallback file: " + statePersistFallbackFile);
         try {
-            in = new AtomicFile(statePersistFallbackFile.getFile()).openRead();
-        } catch (FileNotFoundException fnfe) {
+            in = new AtomicExtendedFile(statePersistFallbackFile.getFile()).openRead();
+        } catch (IOException | RemoteException fnfe) {
             final String message = "No fallback file found for: " + mStatePersistFile;
-            Log.wtf(LOG_TAG, message);
+            Log.wtf(LOG_TAG, message, fnfe);
             throw new IllegalStateException(message);
         }
         if (parseStateFromXmlStreamLocked(in)) {
@@ -904,7 +903,7 @@ public final class SettingsStateV31 implements SettingsState {
     @GuardedBy("mLock")
     private boolean parseStateFromXmlStreamLocked(FileInputStream in) {
         try {
-            TypedXmlPullParser parser = XmlHidden.resolvePullParser(in);
+            TypedXmlPullParser parser = Xml.resolvePullParser(in);
             parseStateLocked(parser);
             return true;
         } catch (XmlPullParserException | IOException e) {

@@ -54,7 +54,7 @@ public class SsaidSettings {
             throw new IOException("settings_ssaid.xml is inaccessible.");
         }
         try {
-            if (Build.VERSION.SDK_INT > Build.VERSION_CODES.S) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 settingsState = new SettingsStateV31(lock, ssaidLocation, ssaidKey,
                         SettingsState.MAX_BYTES_PER_APP_PACKAGE_UNLIMITED, thread.getLooper());
             } else {

@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='utf-8' ?>
+<settings version="-1">
+<setting id="0" name="userkey" value="1CC7C1428FF5D1F88CF0FBD9C16ABDFF3ED518A4489B368E46C43B39E54BE647" package="android" defaultValue="1CC7C1428FF5D1F88CF0FBD9C16ABDFF3ED518A4489B368E46C43B39E54BE647" defaultSysSet="true" tag="null" />
+<setting id="1" name="10105" value="55145d0ea8dfa144" package="io.github.muntashirakon.AppManager.debug" defaultValue="55145d0ea8dfa144" defaultSysSet="false" tag="null" />
+</settings>
+<namespaceHashes />
