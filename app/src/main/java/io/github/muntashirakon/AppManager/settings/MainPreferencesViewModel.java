@@ -219,7 +219,7 @@ public class MainPreferencesViewModel extends AndroidViewModel implements Ops.Ad
     @Override
     public void connectAdb(int port) {
         mExecutor.submit(() -> {
-            int status = Ops.connectAdb(port, Ops.STATUS_FAILURE);
+            int status = Ops.connectAdb(getApplication(), port, Ops.STATUS_FAILURE);
             mModeOfOpsStatus.postValue(status);
         });
     }

@@ -103,6 +103,8 @@ public abstract class BaseActivity extends AppCompatActivity {
                         Ops.pairAdbInput(this, mViewModel);
                         return;
                     } // fall-through
+                case Ops.STATUS_FAILURE_ADB_NEED_MORE_PERMS:
+                    Ops.displayIncompleteUsbDebuggingMessage(this);
                 case Ops.STATUS_SUCCESS:
                 case Ops.STATUS_FAILURE:
                     Log.d(TAG, "Authentication completed.");

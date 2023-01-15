@@ -4,8 +4,10 @@ package io.github.muntashirakon.AppManager.settings;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.RemoteException;
+import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.View;
@@ -36,6 +38,7 @@ import java.util.concurrent.TimeUnit;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
 import io.github.muntashirakon.AppManager.adb.AdbUtils;
+import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.ipc.LocalServices;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.NoOps;
@@ -44,9 +47,11 @@ import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
+import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
+import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 
 /**
@@ -71,6 +76,7 @@ public class Ops {
             STATUS_WIRELESS_DEBUGGING_CHOOSER_REQUIRED,
             STATUS_ADB_PAIRING_REQUIRED,
             STATUS_ADB_CONNECT_REQUIRED,
+            STATUS_FAILURE_ADB_NEED_MORE_PERMS,
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface Status {
@@ -82,6 +88,7 @@ public class Ops {
     public static final int STATUS_WIRELESS_DEBUGGING_CHOOSER_REQUIRED = 3;
     public static final int STATUS_ADB_PAIRING_REQUIRED = 4;
     public static final int STATUS_ADB_CONNECT_REQUIRED = 5;
+    public static final int STATUS_FAILURE_ADB_NEED_MORE_PERMS = 6;
 
     private static final int ROOT_UID = 0;
     private static final int SHELL_UID = 2000;
@@ -211,8 +218,7 @@ public class Ops {
                     sIsRoot = false;
                     ServerConfig.setAdbPort(findAdbPortNoThrow(context, 10, ServerConfig.DEFAULT_ADB_PORT));
                     LocalServer.restart();
-                    checkRootInAdb();
-                    return STATUS_SUCCESS;
+                    return checkRootOrIncompleteUsbDebuggingInAdb(context);
             }
         } catch (Throwable e) {
             Log.e("ModeOfOps", e);
@@ -301,7 +307,9 @@ public class Ops {
         }
         sIsAdb = LocalServer.isAMServiceAlive();
         if (sIsAdb) {
-            checkRootInAdb();
+            // No need to return anything here because we're in auto-mode.
+            // Any message produced by the method below is just a helpful message.
+            checkRootOrIncompleteUsbDebuggingInAdb(context);
         }
     }
 
@@ -340,8 +348,7 @@ public class Ops {
         try {
             ServerConfig.setAdbPort(findAdbPortNoThrow(context, 5, ServerConfig.getAdbPort()));
             LocalServer.restart();
-            checkRootInAdb();
-            return STATUS_SUCCESS;
+            return checkRootOrIncompleteUsbDebuggingInAdb(context);
         } catch (RemoteException | IOException e) {
             Log.e("ADB", e);
             // Failed, fall-through
@@ -354,7 +361,7 @@ public class Ops {
     @WorkerThread
     @NoOps // Although we've used Ops checks, its overall usage does not affect anything
     @Status
-    public static int connectAdb(int port, @Status int returnCodeOnFailure) {
+    public static int connectAdb(@NonNull Context context, int port, @Status int returnCodeOnFailure) {
         if (port < 0) return returnCodeOnFailure;
         boolean lastAdb = sIsAdb;
         boolean lastRoot = sIsRoot;
@@ -363,8 +370,7 @@ public class Ops {
         try {
             ServerConfig.setAdbPort(port);
             LocalServer.restart();
-            checkRootInAdb();
-            return STATUS_SUCCESS;
+            return checkRootOrIncompleteUsbDebuggingInAdb(context);
         } catch (RemoteException | IOException e) {
             Log.e("ADB", e);
             // Failed, fall-through
@@ -383,7 +389,7 @@ public class Ops {
                 .setInputText(String.valueOf(ServerConfig.getAdbPort()))
                 .setHelperText(R.string.adb_connect_port_number_description)
                 .setPositiveButton(R.string.ok, (dialog2, which2, inputText, isChecked) -> {
-                    if (TextUtils.isEmpty(inputText)) {
+                    if (TextUtilsCompat.isEmpty(inputText)) {
                         UIUtils.displayShortToast(R.string.port_number_empty);
                         callback.connectAdb(-1);
                         return;
@@ -455,13 +461,31 @@ public class Ops {
         try {
             AdbConnectionManager.getInstance().pair(ServerConfig.getAdbHost(context), port, pairingCode.trim());
             UiThreadHandler.run(() -> UIUtils.displayShortToast(R.string.paired_successfully));
-            return connectAdb(findAdbPortNoThrow(context, 7, ServerConfig.getAdbPort()), STATUS_ADB_CONNECT_REQUIRED);
+            return connectAdb(context, findAdbPortNoThrow(context, 7, ServerConfig.getAdbPort()),
+                    STATUS_ADB_CONNECT_REQUIRED);
         } catch (Exception e) {
             UiThreadHandler.run(() -> UIUtils.displayShortToast(R.string.failed));
             Log.e("ADB", e);
             // Failed, fall-through
         }
         return STATUS_FAILURE;
+    }
+
+    @UiThread
+    public static void displayIncompleteUsbDebuggingMessage(@NonNull FragmentActivity activity) {
+        new ScrollableDialogBuilder(activity)
+                .setTitle(R.string.adb_incomplete_usb_debugging_title)
+                .setMessage(R.string.adb_incomplete_usb_debugging_message)
+                .setNegativeButton(R.string.close, null)
+                .setPositiveButton(R.string.open, (dialog, which, isChecked) -> {
+                    Intent intent = new Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS)
+                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    try {
+                        activity.startActivity(intent);
+                    } catch (Throwable ignore) {
+                    }
+                })
+                .show();
     }
 
     /**
@@ -492,8 +516,7 @@ public class Ops {
             }
             if (sIsAdb) {
                 // AM service is running as ADB
-                checkRootInAdb();
-                return true;
+                return checkRootOrIncompleteUsbDebuggingInAdb(context) == STATUS_SUCCESS;
             }
             // All checks are failed, stop services
             LocalServices.stopServices();
@@ -505,15 +528,21 @@ public class Ops {
     }
 
     @NoOps // Although we've used Ops checks, its overall usage does not affect anything
-    private static void checkRootInAdb() {
+    private static int checkRootOrIncompleteUsbDebuggingInAdb(@NonNull Context context) {
         // ADB already granted and AM service is running
         if (getUid() == ROOT_UID) {
             // AM service is being run as root
             sIsRoot = true;
             sIsAdb = false;
             UiThreadHandler.run(() -> UIUtils.displayLongToast(R.string.warning_working_on_root_mode));
+        } else if (context.getPackageManager().checkPermission("android.permission.GRANT_RUNTIME_PERMISSIONS",
+                ActivityManagerCompat.SHELL_PACKAGE_NAME) != PackageManager.PERMISSION_GRANTED) {
+            // USB debugging is incomplete, revert back to no-root
+            sIsAdb = sIsRoot = false;
+            return STATUS_FAILURE_ADB_NEED_MORE_PERMS;
         }
         UiThreadHandler.run(() -> UIUtils.displayShortToast(R.string.working_on_adb_mode));
+        return STATUS_SUCCESS;
     }
 
     @NoOps

@@ -94,7 +94,7 @@ public class SecurityAndOpsViewModel extends AndroidViewModel implements Ops.Adb
     public void connectAdb(int port) {
         mExecutor.submit(() -> {
             Log.d(TAG, "Before Ops::connectAdb");
-            int status = Ops.connectAdb(port, Ops.STATUS_FAILURE);
+            int status = Ops.connectAdb(getApplication(), port, Ops.STATUS_FAILURE);
             Log.d(TAG, "After Ops::connectAdb");
             mAuthenticationStatus.postValue(status);
         });

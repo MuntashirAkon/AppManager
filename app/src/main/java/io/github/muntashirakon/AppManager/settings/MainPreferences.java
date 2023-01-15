@@ -197,6 +197,8 @@ public class MainPreferences extends PreferenceFragment {
                         Ops.pairAdbInput(activity, model);
                         return;
                     } // fall-through
+                case Ops.STATUS_FAILURE_ADB_NEED_MORE_PERMS:
+                    Ops.displayIncompleteUsbDebuggingMessage(requireActivity());
                 case Ops.STATUS_SUCCESS:
                 case Ops.STATUS_FAILURE:
                     modeOfOpsAlertDialog.dismiss();
