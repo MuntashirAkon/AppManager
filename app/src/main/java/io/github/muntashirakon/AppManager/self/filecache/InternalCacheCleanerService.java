@@ -21,7 +21,7 @@ import io.github.muntashirakon.io.FileSystemManager;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 
-// IMPORTANT: This service must be run without authentication and in a separate process.
+// IMPORTANT: This service must be run without authentication.
 public class InternalCacheCleanerService extends ForegroundService {
     public static final String TAG = InternalCacheCleanerService.class.getSimpleName();
 
@@ -45,7 +45,7 @@ public class InternalCacheCleanerService extends ForegroundService {
         alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, alarmIntent);
     }
 
-    protected InternalCacheCleanerService() {
+    public InternalCacheCleanerService() {
         super(TAG);
     }
 

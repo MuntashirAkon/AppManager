@@ -723,9 +723,7 @@
         </service>
         <service
             android:name=".self.filecache.InternalCacheCleanerService"
-            android:exported="false"
-            android:externalService="false"
-            android:isolatedProcess="true" />
+            android:exported="false" />
 
         <receiver
             android:name=".servermanager.ServerStatusChangeReceiver"
