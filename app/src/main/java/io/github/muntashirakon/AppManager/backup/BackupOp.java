@@ -449,7 +449,7 @@ class BackupOp implements Closeable {
         // Backup SSAID
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             try {
-                String ssaid = new SsaidSettings(mPackageName, mApplicationInfo.uid).getSsaid();
+                String ssaid = new SsaidSettings(mUserId).getSsaid(mPackageName, mApplicationInfo.uid);
                 if (ssaid != null) rules.setSsaid(ssaid);
             } catch (IOException e) {
                 // Ignore exception

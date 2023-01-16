@@ -6,6 +6,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.UserHandleHidden;
 import android.text.Editable;
 import android.view.View;
 import android.widget.Button;
@@ -100,8 +101,8 @@ public class ChangeSsaidDialog extends DialogFragment {
                     if (!mSsaid.matches("[0-9A-Fa-f]+")) {
                         throw new IOException("Invalid SSAID " + mSsaid.length());
                     }
-                    SsaidSettings ssaidSettings = new SsaidSettings(packageName, uid);
-                    boolean isSuccess = ssaidSettings.setSsaid(mSsaid);
+                    SsaidSettings ssaidSettings = new SsaidSettings(UserHandleHidden.getUserId(uid));
+                    boolean isSuccess = ssaidSettings.setSsaid(packageName, uid, mSsaid);
                     if (isSuccess) {
                         alertDialog.dismiss();
                     }

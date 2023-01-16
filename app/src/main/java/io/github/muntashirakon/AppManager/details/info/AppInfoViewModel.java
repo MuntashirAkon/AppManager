@@ -190,7 +190,8 @@ public class AppInfoViewModel extends AndroidViewModel {
             }
             if (Ops.isRoot() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 try {
-                    tagCloud.ssaid = new SsaidSettings(packageName, applicationInfo.uid).getSsaid();
+                    tagCloud.ssaid = new SsaidSettings(mainModel.getUserHandle())
+                            .getSsaid(packageName, applicationInfo.uid);
                     if (TextUtilsCompat.isEmpty(tagCloud.ssaid)) tagCloud.ssaid = null;
                 } catch (IOException ignore) {
                 }

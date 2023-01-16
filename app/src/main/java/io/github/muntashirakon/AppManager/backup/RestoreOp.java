@@ -574,8 +574,8 @@ class RestoreOp implements Closeable {
                         break;
                     case SSAID:
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            new SsaidSettings(packageName, packageInfo.applicationInfo.uid)
-                                    .setSsaid(((SsaidRule) entry).getSsaid());
+                            new SsaidSettings(userHandle).setSsaid(packageName, packageInfo.applicationInfo.uid,
+                                    ((SsaidRule) entry).getSsaid());
                             requiresRestart = true;
                         }
                         break;
