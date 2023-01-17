@@ -2,17 +2,12 @@
 
 package io.github.muntashirakon.AppManager.main;
 
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
-
-import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Handler;
 import android.os.RemoteException;
 import android.os.UserHandleHidden;
@@ -39,6 +34,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -54,10 +50,8 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.misc.ListOptions;
 import io.github.muntashirakon.AppManager.profiles.ProfileMetaManager;
-import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
-import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -411,6 +405,12 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                         continue;
                     } else if ((mFilterFlags & MainListOptions.FILTER_RUNNING_APPS) != 0 && !item.isRunning) {
                         continue;
+                    } else if ((mFilterFlags & MainListOptions.FILTER_APPS_WITH_KEYSTORE) != 0 && !item.hasKeystore) {
+                        continue;
+                    } else if ((mFilterFlags & MainListOptions.FILTER_APPS_WITH_SAF) != 0 && !item.usesSaf) {
+                        continue;
+                    } else if ((mFilterFlags & MainListOptions.FILTER_APPS_WITH_SSAID) != 0 && item.ssaid == null) {
+                        continue;
                     }
                     filteredApplicationItems.add(item);
                 }
@@ -469,9 +469,21 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                     case MainListOptions.SORT_BY_TOTAL_SIZE:
                         // Sort in decreasing order
                         return -mode * o1.totalSize.compareTo(o2.totalSize);
+                    case MainListOptions.SORT_BY_DATA_USAGE:
+                        // Sort in decreasing order
+                        return -mode * o1.dataUsage.compareTo(o2.dataUsage);
+                    case MainListOptions.SORT_BY_OPEN_COUNT:
+                        // Sort in decreasing order
+                        return -mode * Integer.compare(o1.openCount, o2.openCount);
                     case MainListOptions.SORT_BY_INSTALLATION_DATE:
                         // Sort in decreasing order
                         return -mode * Long.compare(o1.firstInstallTime, o2.firstInstallTime);
+                    case MainListOptions.SORT_BY_SCREEN_TIME:
+                        // Sort in decreasing order
+                        return -mode * Long.compare(o1.screenTime, o2.screenTime);
+                    case MainListOptions.SORT_BY_LAST_USAGE_TIME:
+                        // Sort in decreasing order
+                        return -mode * Long.compare(o1.lastUsageTime, o2.lastUsageTime);
                     case MainListOptions.SORT_BY_TARGET_SDK:
                         // null on top
                         if (o1.sdk == null) return -mode;
@@ -524,93 +536,55 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
         Log.d("updateInfoForPackages", "packages: " + Arrays.toString(packages));
         if (packages == null || packages.length == 0) return;
         switch (action) {
+            case PackageChangeReceiver.ACTION_PACKAGE_REMOVED:
+            case PackageChangeReceiver.ACTION_PACKAGE_ALTERED:
+            case PackageChangeReceiver.ACTION_PACKAGE_ADDED: {
+                AppDb appDb = new AppDb();
+                boolean modified = false;
+                for (String packageName : packages) {
+                    ApplicationItem item = getNewApplicationItem(packageName, appDb.getAllApplications(packageName));
+                    modified |= item != null ? insertOrAddApplicationItem(item) : deleteApplicationItem(packageName);
+                }
+                if (modified) {
+                    sortApplicationList(mSortBy, mReverseSort);
+                }
+                break;
+            }
+            case BatchOpsService.ACTION_BATCH_OPS_COMPLETED:
             case Intent.ACTION_PACKAGE_REMOVED:
             case Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE:
-                for (String packageName : packages) {
-                    try {
-                        // This works because these actions are only registered for the current user
-                        mPackageManager.getApplicationInfo(packageName, 0);
-                    } catch (PackageManager.NameNotFoundException e) {
-                        removePackageIfNoBackup(packageName);
-                    }
-                }
-                break;
-            case PackageChangeReceiver.ACTION_PACKAGE_REMOVED:
-                for (String packageName : packages) {
-                    ApplicationItem item = getApplicationItemFromApplicationItems(packageName);
-                    if (item == null) return;
-                    synchronized (applicationItems) {
-                        applicationItems.remove(item);
-                    }
-                }
-                sortApplicationList(mSortBy, mReverseSort);
-                break;
-            case PackageChangeReceiver.ACTION_PACKAGE_ALTERED:
-            case PackageChangeReceiver.ACTION_PACKAGE_ADDED:
-                for (String packageName : packages) {
-                    ApplicationItem item = getNewApplicationItem(packageName, new AppDb().getAllApplications(packageName));
-                    if (item != null) insertOrAddApplicationItem(item);
-                }
-                sortApplicationList(mSortBy, mReverseSort);
-                break;
-            case Intent.ACTION_PACKAGE_CHANGED:
-                for (String packageName : packages) {
-                    ApplicationItem item = getNewApplicationItem(packageName);
-                    if (item != null) insertApplicationItem(item);
-                }
-                sortApplicationList(mSortBy, mReverseSort);
-                break;
             case Intent.ACTION_PACKAGE_ADDED:
             case Intent.ACTION_EXTERNAL_APPLICATIONS_AVAILABLE:
+            case Intent.ACTION_PACKAGE_CHANGED: {
+                List<App> appList = new AppDb().updateApplications(getApplication(), packages);
+                boolean modified = false;
                 for (String packageName : packages) {
-                    ApplicationItem item = getNewApplicationItem(packageName);
-                    if (item != null) insertOrAddApplicationItem(item);
+                    ApplicationItem item = getNewApplicationItem(packageName, appList);
+                    modified |= item != null ? insertOrAddApplicationItem(item) : deleteApplicationItem(packageName);
                 }
-                sortApplicationList(mSortBy, mReverseSort);
-                break;
-            case BatchOpsService.ACTION_BATCH_OPS_COMPLETED:
-                for (String packageName : packages) {
-                    ApplicationItem item = getNewApplicationItem(packageName);
-                    if (item != null) insertOrAddApplicationItem(item);
-                    else removePackageIfNoBackup(packageName);
+                if (modified) {
+                    sortApplicationList(mSortBy, mReverseSort);
                 }
-                sortApplicationList(mSortBy, mReverseSort);
                 break;
+            }
             default:
                 return;
         }
         filterItemsByFlags();
     }
 
-    @WorkerThread
     @GuardedBy("applicationItems")
-    private void removePackageIfNoBackup(String packageName) {
+    private boolean insertOrAddApplicationItem(@Nullable ApplicationItem item) {
+        if (item == null) return false;
         synchronized (applicationItems) {
-            ApplicationItem item = getApplicationItemFromApplicationItems(packageName);
-            if (item != null) {
-                if (item.backup == null) {
-                    applicationItems.remove(item);
-                    AppDb appDb = new AppDb();
-                    for (int userHandle : item.userHandles) {
-                        appDb.deleteApplication(item.packageName, userHandle);
-                    }
-                } else {
-                    ApplicationItem changedItem = getNewApplicationItem(packageName);
-                    if (changedItem != null) insertOrAddApplicationItem(changedItem);
-                }
+            if (insertApplicationItem(item)) {
+                return true;
             }
-        }
-    }
-
-    @GuardedBy("applicationItems")
-    private void insertOrAddApplicationItem(ApplicationItem item) {
-        synchronized (applicationItems) {
-            if (!insertApplicationItem(item)) {
-                applicationItems.add(item);
-                if (selectedApplicationItems.contains(item)) {
-                    select(item);
-                }
+            boolean inserted = applicationItems.add(item);
+            if (selectedApplicationItems.contains(item)) {
+                select(item);
             }
+            return inserted;
         }
     }
 
@@ -631,152 +605,92 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
         }
     }
 
-    @WorkerThread
-    @Nullable
-    private ApplicationItem getNewApplicationItem(String packageName) {
-        ApplicationItem oldItem = null;
-        int thisUser = UserHandleHidden.myUserId();
-        AppDb appDb = new AppDb();
-        for (int userId : Users.getUsersIds()) {
-            try {
-                @SuppressLint("WrongConstant")
-                PackageInfo packageInfo = PackageManagerCompat.getPackageInfo(packageName,
-                        PackageManager.GET_META_DATA | flagSigningInfo | PackageManager.GET_ACTIVITIES
-                                | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
-                                | PackageManager.GET_SERVICES | flagDisabledComponents, userId);
-                App app = App.fromPackageInfo(getApplication(), packageInfo);
-                try (ComponentsBlocker cb = ComponentsBlocker.getInstance(app.packageName, app.userId, false)) {
-                    app.rulesCount = cb.entryCount();
+    private boolean deleteApplicationItem(@NonNull String packageName) {
+        synchronized (applicationItems) {
+            ListIterator<ApplicationItem> it = applicationItems.listIterator();
+            while (it.hasNext()) {
+                ApplicationItem item = it.next();
+                if (item.packageName.equals(packageName)) {
+                    it.remove();
+                    return true;
                 }
-                ApplicationItem item = new ApplicationItem(packageInfo.applicationInfo);
-                if (app.isInstalled && item.equals(oldItem)) {
-                    oldItem.userHandles = ArrayUtils.appendInt(oldItem.userHandles, userId);
-                    if (userId != thisUser) {
-                        // This user has the highest priority
-                        continue;
-                    }
-                    item = oldItem;
-                }
-                item.versionName = app.versionName;
-                item.versionCode = app.versionCode;
-                try {
-                    if (item.backup == null) {
-                        item.backup = BackupUtils.storeAllAndGetLatestBackupMetadata(packageName);
-                    }
-                } catch (IOException ignore) {
-                }
-                item.flags = app.flags;
-                item.uid = app.uid;
-                item.sharedUserId = app.sharedUserId;
-                item.label = app.packageLabel;
-                item.debuggable = (app.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
-                item.isUser = (app.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
-                item.isDisabled = !app.isEnabled;
-                item.hasActivities = app.hasActivities;
-                item.hasSplits = app.hasSplits;
-                item.firstInstallTime = app.firstInstallTime;
-                item.lastUpdateTime = app.lastUpdateTime;
-                item.sha = new Pair<>(app.certName, app.certAlgo);
-                item.sdk = app.sdk;
-                item.userHandles = ArrayUtils.appendInt(item.userHandles, userId);
-                item.blockedCount = app.rulesCount;
-                item.trackerCount = app.trackerCount;
-                item.lastActionTime = app.lastActionTime;
-                PackageSizeInfo packageSizeInfo = PackageUtils.getPackageSizeInfo(getApplication(), packageName, userId,
-                        Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? packageInfo.applicationInfo.storageUuid : null);
-                if (packageSizeInfo != null) {
-                    item.totalSize += packageSizeInfo.getTotalSize();
-                }
-                oldItem = item;
-                appDb.insert(app);
-            } catch (Exception e) {
-                e.printStackTrace();
             }
+            return false;
         }
-        return oldItem;
     }
 
     @WorkerThread
     @Nullable
-    private ApplicationItem getNewApplicationItem(String packageName, @NonNull List<App> apps) {
-        ApplicationItem oldItem = null;
+    private ApplicationItem getNewApplicationItem(@NonNull String packageName, @NonNull List<App> apps) {
+        ApplicationItem item = new ApplicationItem();
         int thisUser = UserHandleHidden.myUserId();
         for (App app : apps) {
-            try {
-                ApplicationItem item = new ApplicationItem();
-                item.packageName = app.packageName;
-                if (app.isInstalled) {
-                    if (oldItem != null) {
-                        // Item already exists, add the user handle and continue
-                        oldItem.userHandles = ArrayUtils.appendInt(oldItem.userHandles, app.userId);
-                        oldItem.isInstalled = true;
-                        if (app.userId != thisUser) {
-                            // This user has the highest priority
-                            continue;
-                        }
-                        item = oldItem;
-                    } else {
-                        // Item doesn't exist, add the user handle
-                        item.userHandles = ArrayUtils.appendInt(item.userHandles, app.userId);
-                        item.isInstalled = true;
-                    }
+            if (!packageName.equals(app.packageName)) {
+                // Package name didn't match
+                continue;
+            }
+            if (app.isInstalled) {
+                if (item.packageName == null) {
+                    item.packageName = app.packageName;
+                }
+                item.userHandles = ArrayUtils.appendInt(item.userHandles, app.userId);
+                item.isInstalled = true;
+                item.openCount += app.openCount;
+                item.screenTime += app.screenTime;
+                if (item.lastUsageTime == 0L || item.lastUsageTime < app.lastUsageTime) {
+                    item.lastUsageTime = app.lastUsageTime;
+                }
+                item.hasKeystore |= app.hasKeystore;
+                item.usesSaf |= app.usesSaf;
+                if (app.ssaid != null) {
+                    item.ssaid = app.ssaid;
+                }
+                item.totalSize += app.codeSize + app.dataSize;
+                item.dataUsage += app.wifiDataUsage + app.mobileDataUsage;
+                if (app.userId != thisUser) {
+                    // This user has the highest priority
+                    continue;
+                }
+            } else {
+                // App not installed but may be installed in other profiles
+                if (item.packageName != null) {
+                    // Item exists, use the previous status
+                    continue;
                 } else {
-                    // App not installed but may be installed in other profiles
-                    if (oldItem != null) {
-                        // Item exists, use the previous status
-                        continue;
-                    } else {
-                        // Item doesn't exist, don't add user handle
-                        item.isInstalled = false;
-                    }
+                    item.packageName = app.packageName;
+                    item.isInstalled = false;
+                    item.hasKeystore |= app.hasKeystore;
                 }
-                item.packageName = app.packageName;
-                item.versionName = app.versionName;
-                item.versionCode = app.versionCode;
-                try {
-                    if (item.backup == null) {
-                        item.backup = BackupUtils.storeAllAndGetLatestBackupMetadata(packageName);
-                    }
-                } catch (IOException ignore) {
+            }
+            item.flags = app.flags;
+            item.uid = app.uid;
+            item.debuggable = (app.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+            item.isUser = (app.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
+            item.isDisabled = !app.isEnabled;
+            item.label = app.packageLabel;
+            item.sdk = app.sdk;
+            item.versionName = app.versionName;
+            item.versionCode = app.versionCode;
+            item.sharedUserId = app.sharedUserId;
+            item.sha = new Pair<>(app.certName, app.certAlgo);
+            item.firstInstallTime = app.firstInstallTime;
+            item.lastUpdateTime = app.lastUpdateTime;
+            item.hasActivities = app.hasActivities;
+            item.hasSplits = app.hasSplits;
+            item.blockedCount = app.rulesCount;
+            item.trackerCount = app.trackerCount;
+            item.lastActionTime = app.lastActionTime;
+            try {
+                if (item.backup == null) {
+                    item.backup = BackupUtils.getLatestBackupMetadataFromDb(packageName);
                 }
-                item.flags = app.flags;
-                item.uid = app.uid;
-                item.sharedUserId = app.sharedUserId;
-                item.label = app.packageLabel;
-                item.debuggable = (app.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
-                item.isUser = (app.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
-                item.isDisabled = !app.isEnabled;
-                item.hasActivities = app.hasActivities;
-                item.hasSplits = app.hasSplits;
-                item.firstInstallTime = app.firstInstallTime;
-                item.lastUpdateTime = app.lastUpdateTime;
-                item.sha = new Pair<>(app.certName, app.certAlgo);
-                item.sdk = app.sdk;
-                item.blockedCount = app.rulesCount;
-                item.trackerCount = app.trackerCount;
-                item.lastActionTime = app.lastActionTime;
-                for (int userId : item.userHandles) {
-                    PackageSizeInfo sizeInfo = PackageUtils.getPackageSizeInfo(getApplication(), packageName, userId, null);
-                    if (sizeInfo != null) {
-                        item.totalSize += sizeInfo.getTotalSize();
-                    }
-                }
-                oldItem = item;
             } catch (Exception ignore) {
             }
         }
-        return oldItem;
-    }
-
-    @GuardedBy("applicationItems")
-    @Nullable
-    private ApplicationItem getApplicationItemFromApplicationItems(String packageName) {
-        synchronized (applicationItems) {
-            for (ApplicationItem item : applicationItems) {
-                if (item.packageName.equals(packageName)) return item;
-            }
+        if (item.packageName == null) {
             return null;
         }
+        return item;
     }
 
     @GuardedBy("applicationItems")

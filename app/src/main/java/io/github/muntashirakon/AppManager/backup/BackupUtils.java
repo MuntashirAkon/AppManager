@@ -106,6 +106,19 @@ public final class BackupUtils {
         return backupMetadata;
     }
 
+    @WorkerThread
+    @Nullable
+    public static Backup getLatestBackupMetadataFromDb(@NonNull String packageName) {
+        List<Backup> backups = AppsDb.getInstance().backupDao().get(packageName);
+        Backup latestBackup = null;
+        for (Backup backup : backups) {
+            if (latestBackup == null || backup.backupTime > latestBackup.backupTime) {
+                latestBackup = backup;
+            }
+        }
+        return latestBackup;
+    }
+
     /**
      * Retrieves all metadata for all packages
      */

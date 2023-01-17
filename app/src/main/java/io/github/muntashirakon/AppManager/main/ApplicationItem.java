@@ -84,7 +84,11 @@ public class ApplicationItem extends PackageItemInfo {
     public Integer blockedCount = 0;
     public Integer trackerCount = 0;
     public Long lastActionTime = 0L;
+    public Long dataUsage = 0L;
     public Long totalSize = 0L;
+    public int openCount = 0;
+    public Long screenTime = 0L;
+    public Long lastUsageTime = 0L;
     /**
      * Whether the item is a user app (or system app)
      */
@@ -109,6 +113,9 @@ public class ApplicationItem extends PackageItemInfo {
      * Whether the app has any splits
      */
     public boolean hasSplits = false;
+    public boolean hasKeystore = false;
+    public boolean usesSaf = false;
+    public String ssaid = null;
     /**
      * Whether the item is selected
      */

@@ -16,7 +16,7 @@ import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.db.entity.FileHash;
 import io.github.muntashirakon.AppManager.db.entity.LogFilter;
 
-@Database(entities = {App.class, LogFilter.class, FileHash.class, Backup.class}, version = 1)
+@Database(entities = {App.class, LogFilter.class, FileHash.class, Backup.class}, version = 2)
 public abstract class AppsDb extends RoomDatabase {
     private static AppsDb sAppsDb;
 

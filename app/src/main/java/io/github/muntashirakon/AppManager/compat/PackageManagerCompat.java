@@ -134,10 +134,10 @@ public final class PackageManagerCompat {
                     | PackageManager.GET_PROVIDERS | PackageManager.GET_RECEIVERS | PackageManager.GET_PERMISSIONS);
             info = getPackageInfoInternal(pm, packageName, strippedFlags, userHandle);
             if (info == null) {
-                // At this point, it should either return package info or throw RemoteException.
+                // At this point, it should return package info.
                 // Returning null denotes that it failed again even after the major flags have been stripped.
-                throw new IllegalStateException(String.format("Could not retrieve info for package %s with flags 0x%X",
-                        packageName, strippedFlags));
+                throw new PackageManager.NameNotFoundException(String.format("Could not retrieve info for package %s with flags 0x%X for user %d",
+                        packageName, strippedFlags, userHandle));
             }
             // Load info for major flags
             ActivityInfo[] activities = null;

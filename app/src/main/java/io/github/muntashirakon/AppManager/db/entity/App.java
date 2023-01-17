@@ -18,7 +18,6 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.Objects;
 
-import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -79,40 +78,45 @@ public class App implements Serializable {
     @ColumnInfo(name = "has_splits", defaultValue = "false")
     public boolean hasSplits;
 
+    @ColumnInfo(name = "has_keystore", defaultValue = "false")
+    public boolean hasKeystore;
+
+    @ColumnInfo(name = "uses_saf", defaultValue = "false")
+    public boolean usesSaf;
+
+    @ColumnInfo(name = "ssaid", defaultValue = "")
+    public String ssaid;
+
+    @ColumnInfo(name = "code_size", defaultValue = "0")
+    public long codeSize;
+
+    @ColumnInfo(name = "data_size", defaultValue = "0")
+    public long dataSize;
+
+    @ColumnInfo(name = "mobile_data", defaultValue = "0")
+    public long mobileDataUsage;
+
+    @ColumnInfo(name = "wifi_data", defaultValue = "0")
+    public long wifiDataUsage;
+
     @ColumnInfo(name = "rules_count", defaultValue = "0")
     public int rulesCount;
 
     @ColumnInfo(name = "tracker_count", defaultValue = "0")
     public int trackerCount;
 
+    @ColumnInfo(name = "open_count", defaultValue = "0")
+    public int openCount;
+
+    @ColumnInfo(name = "screen_time", defaultValue = "0")
+    public long screenTime;
+
+    @ColumnInfo(name = "last_usage_time", defaultValue = "0")
+    public long lastUsageTime;
+
     @ColumnInfo(name = "last_action_time", defaultValue = "0")
     public long lastActionTime;
 
-    @NonNull
-    public static App fromApp(@NonNull App app) {
-        App newApp = new App();
-        newApp.packageName = app.packageName;
-        newApp.uid = app.uid;
-        newApp.userId = app.userId;
-        newApp.isInstalled = app.isInstalled;
-        newApp.flags = app.flags;
-        newApp.isEnabled = app.isEnabled;
-        newApp.packageLabel = app.packageLabel;
-        newApp.sdk = app.sdk;
-        newApp.versionName = app.versionName;
-        newApp.versionCode = app.versionCode;
-        newApp.sharedUserId = app.sharedUserId;
-        newApp.certName = app.certName;
-        newApp.certAlgo = app.certAlgo;
-        newApp.firstInstallTime = app.firstInstallTime;
-        newApp.lastUpdateTime = app.lastUpdateTime;
-        newApp.hasActivities = app.hasActivities;
-        newApp.hasSplits = app.hasSplits;
-        newApp.rulesCount = 0;
-        newApp.trackerCount = app.trackerCount;
-        newApp.lastActionTime = System.currentTimeMillis();
-        return newApp;
-    }
 
     @NonNull
     public static App fromPackageInfo(@NonNull Context context, @NonNull PackageInfo packageInfo) {
@@ -144,34 +148,6 @@ public class App implements Serializable {
     }
 
     @NonNull
-    public static App fromBackupMetadata(@NonNull MetadataManager.Metadata metadata) {
-        App app = new App();
-        app.packageName = metadata.packageName;
-        app.uid = 0;
-        app.userId = metadata.userHandle;
-        app.isInstalled = false;
-        if (metadata.isSystem) {
-            app.flags |= ApplicationInfo.FLAG_SYSTEM;
-        }
-        app.isEnabled = true;
-        app.packageLabel = metadata.label;
-        app.sdk = 0;
-        app.versionName = metadata.versionName;
-        app.versionCode = metadata.versionCode;
-        app.sharedUserId = null;
-        app.certName = "";
-        app.certAlgo = "";
-        app.firstInstallTime = metadata.backupTime;
-        app.lastUpdateTime = metadata.backupTime;
-        app.hasActivities = false;
-        app.hasSplits = metadata.isSplitApk;
-        app.rulesCount = 0;
-        app.trackerCount = 0;
-        app.lastActionTime = metadata.backupTime;
-        return app;
-    }
-
-    @NonNull
     public static App fromBackup(@NonNull Backup backup) {
         App app = new App();
         app.packageName = backup.packageName;
@@ -196,6 +172,7 @@ public class App implements Serializable {
         app.rulesCount = 0;
         app.trackerCount = 0;
         app.lastActionTime = backup.backupTime;
+        app.hasKeystore = backup.hasKeyStore;
         return app;
     }
 
@@ -210,27 +187,5 @@ public class App implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(packageName, userId);
-    }
-
-    public boolean isDifferentFrom(@NonNull App app) {
-        return !packageName.equalsIgnoreCase(app.packageName)
-                || userId != app.userId
-                || !Objects.equals(packageLabel, app.packageLabel)
-                || !Objects.equals(versionName, app.versionName)
-                || versionCode != app.versionCode
-                || flags != app.flags
-                || uid != app.uid
-                || !Objects.equals(sharedUserId, app.sharedUserId)
-                || firstInstallTime != app.firstInstallTime
-                || lastUpdateTime != app.lastUpdateTime
-                || sdk != app.sdk
-                || !Objects.equals(certName, app.certName)
-                || !Objects.equals(certAlgo, app.certAlgo)
-                || isInstalled != app.isInstalled
-                || isEnabled != app.isEnabled
-                || hasActivities != app.hasActivities
-                || hasSplits != app.hasSplits
-                || rulesCount != app.rulesCount
-                || lastActionTime != app.lastActionTime;
     }
 }

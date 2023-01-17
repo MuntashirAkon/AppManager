@@ -1306,4 +1306,8 @@
     <string name="funding_campaign_text">We\'re running a <b>funding campaign</b> for App Manager for a limited period. <a href="https://opencollective.com/app-manager#category-ABOUT">learn more…</a></string>
     <string name="adb_incomplete_usb_debugging_title">Incomplete USB Debugging</string>
     <string name="adb_incomplete_usb_debugging_message">It looks like USB Debugging is not configured properly. Please read <a href="https://muntashirakon.github.io/AppManager/#subsec:enable-usb-debugging">the documentation</a> for additional steps. If you already know the steps, please click “Open” to open the developer options, or click “Close” to continue to use no-root mode.</string>
+    <string name="sort_by_data_usage">Data usage</string>
+    <string name="filter_apps_with_keystore">With KeyStore</string>
+    <string name="filter_apps_with_saf">With SAF</string>
+    <string name="filter_apps_with_ssaid">With SSAID</string>
 </resources>

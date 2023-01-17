@@ -182,40 +182,51 @@ public final class PackageUtils {
         int thisUser = UserHandleHidden.myUserId();
         // Get application items from apps
         for (App app : apps) {
-            ApplicationItem item = new ApplicationItem();
-            item.packageName = app.packageName;
+            ApplicationItem item;
+            ApplicationItem oldItem = applicationItems.get(app.packageName);
             if (app.isInstalled) {
-                ApplicationItem oldItem = applicationItems.get(app.packageName);
                 if (oldItem != null) {
-                    // Item already exists, add the user handle and continue
-                    oldItem.userHandles = ArrayUtils.appendInt(oldItem.userHandles, app.userId);
-                    oldItem.isInstalled = true;
-                    if (app.userId != thisUser) {
-                        // This user has the highest priority
-                        continue;
-                    }
+                    // Item already exists
                     item = oldItem;
                 } else {
-                    // Item doesn't exist, add the user handle
-                    item.userHandles = ArrayUtils.appendInt(item.userHandles, app.userId);
-                    item.isInstalled = true;
+                    // Item doesn't exist
+                    item = new ApplicationItem();
                     applicationItems.put(app.packageName, item);
+                    item.packageName = app.packageName;
+                }
+                item.userHandles = ArrayUtils.appendInt(item.userHandles, app.userId);
+                item.isInstalled = true;
+                item.openCount += app.openCount;
+                item.screenTime += app.screenTime;
+                if (item.lastUsageTime == 0L || item.lastUsageTime < app.lastUsageTime) {
+                    item.lastUsageTime = app.lastUsageTime;
+                }
+                item.hasKeystore |= app.hasKeystore;
+                item.usesSaf |= app.usesSaf;
+                if (app.ssaid != null) {
+                    item.ssaid = app.ssaid;
+                }
+                item.totalSize += app.codeSize + app.dataSize;
+                item.dataUsage += app.wifiDataUsage + app.mobileDataUsage;
+                if (app.userId != thisUser) {
+                    // This user has the highest priority
+                    continue;
                 }
             } else {
                 // App not installed but may be installed in other profiles
-                if (applicationItems.containsKey(app.packageName)) {
+                if (oldItem != null) {
                     // Item exists, use the previous status
                     continue;
                 } else {
                     // Item doesn't exist, don't add user handle
+                    item = new ApplicationItem();
+                    item.packageName = app.packageName;
+                    applicationItems.put(app.packageName, item);
                     item.isInstalled = false;
+                    item.hasKeystore |= app.hasKeystore;
                 }
-                applicationItems.put(app.packageName, item);
             }
-            if (backups.containsKey(item.packageName)) {
-                item.backup = backups.get(item.packageName);
-                backups.remove(item.packageName);
-            }
+            item.backup = backups.remove(item.packageName);
             item.flags = app.flags;
             item.uid = app.uid;
             item.debuggable = (app.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
@@ -234,12 +245,6 @@ public final class PackageUtils {
             item.blockedCount = app.rulesCount;
             item.trackerCount = app.trackerCount;
             item.lastActionTime = app.lastActionTime;
-            for (int userId : item.userHandles) {
-                PackageSizeInfo sizeInfo = getPackageSizeInfo(context, item.packageName, userId, null);
-                if (sizeInfo != null) {
-                    item.totalSize += sizeInfo.getTotalSize();
-                }
-            }
         }
         // Add rest of the backups
         for (String packageName : backups.keySet()) {
@@ -247,6 +252,7 @@ public final class PackageUtils {
             if (backup == null) continue;
             ApplicationItem item = new ApplicationItem();
             item.packageName = backup.packageName;
+            applicationItems.put(backup.packageName, item);
             item.backup = backup;
             item.versionName = backup.versionName;
             item.versionCode = backup.versionCode;
@@ -257,7 +263,7 @@ public final class PackageUtils {
             item.isDisabled = false;
             item.isInstalled = false;
             item.hasSplits = backup.hasSplits;
-            applicationItems.put(backup.packageName, item);
+            item.hasKeystore = backup.hasKeyStore;
         }
         return new ArrayList<>(applicationItems.values());
     }
