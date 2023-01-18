@@ -353,6 +353,8 @@ public class AppDb {
         ArrayMap<Integer, SsaidSettings> userIdSsaidSettingsMap = new ArrayMap<>();
         List<PackageUsageInfo> packageUsageInfoList = new ArrayList<>();
         for (int userId : Users.getUsersIds()) {
+            // Interrupt thread on request
+            if (Thread.currentThread().isInterrupted()) return;
             try {
                 packageUsageInfoList.addAll(AppUsageStatsManager.getInstance(context)
                         .getUsageStats(UsageUtils.USAGE_WEEKLY, userId));
@@ -370,7 +372,7 @@ public class AppDb {
         for (App app : modifiedApps) {
             boolean isSystemApp = (app.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
             if (!app.isInstalled && !isSystemApp) {
-                return;
+                continue;
             }
             int userId = app.userId;
             try (ComponentsBlocker cb = ComponentsBlocker.getInstance(app.packageName, userId, false)) {
@@ -380,9 +382,13 @@ public class AppDb {
             if (sizeInfo != null) {
                 app.codeSize = sizeInfo.codeSize + sizeInfo.obbSize;
                 app.dataSize = sizeInfo.dataSize + sizeInfo.mediaSize + sizeInfo.cacheSize;
+            } else {
+                app.codeSize = app.dataSize = 0;
             }
+            // Interrupt thread on request
+            if (Thread.currentThread().isInterrupted()) return;
             if (!app.isInstalled) {
-                return;
+                continue;
             }
             app.hasKeystore = KeyStoreUtils.hasKeyStore(app.uid);
             app.usesSaf = uriManager.getGrantedUris(app.packageName) != null;
@@ -391,19 +397,20 @@ public class AppDb {
                 if (ssaidSettings != null) {
                     String ssaid = ssaidSettings.getSsaid(app.packageName, app.uid);
                     app.ssaid = TextUtilsCompat.isEmpty(ssaid) ? null : ssaid;
+                } else {
+                    app.ssaid = null;
                 }
             }
             PackageUsageInfo usageInfo = findUsage(packageUsageInfoList, app.packageName, userId);
             if (usageInfo != null) {
-                if (usageInfo.mobileData != null) {
-                    app.mobileDataUsage = usageInfo.mobileData.getTotal();
-                }
-                if (usageInfo.wifiData != null) {
-                    app.wifiDataUsage = usageInfo.wifiData.getTotal();
-                }
+                app.mobileDataUsage = usageInfo.mobileData != null ? usageInfo.mobileData.getTotal() : 0;
+                app.wifiDataUsage = usageInfo.wifiData != null ? usageInfo.wifiData.getTotal() : 0;
                 app.openCount = usageInfo.timesOpened;
                 app.screenTime = usageInfo.screenTime;
                 app.lastUsageTime = usageInfo.lastUsageTime;
+            } else {
+                app.mobileDataUsage = app.wifiDataUsage = app.screenTime = app.lastUsageTime = 0;
+                app.openCount = 0;
             }
         }
     }
