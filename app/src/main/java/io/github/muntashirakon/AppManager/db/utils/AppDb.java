@@ -196,7 +196,7 @@ public class AppDb {
                 packageInfo = PackageManagerCompat.getPackageInfo(packageName,
                         PackageManager.GET_META_DATA | flagSigningInfo | PackageManager.GET_ACTIVITIES
                                 | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
-                                | PackageManager.GET_SERVICES | flagDisabledComponents, userId);
+                                | PackageManager.GET_SERVICES | flagDisabledComponents | flagMatchUninstalled, userId);
             } catch (RemoteException | PackageManager.NameNotFoundException e) {
                 // Package does not exist
             }
@@ -389,7 +389,7 @@ public class AppDb {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 SsaidSettings ssaidSettings = userIdSsaidSettingsMap.get(userId);
                 if (ssaidSettings != null) {
-                    String ssaid = ssaidSettings.getSsaid(app.packageName, app.uid);;
+                    String ssaid = ssaidSettings.getSsaid(app.packageName, app.uid);
                     app.ssaid = TextUtilsCompat.isEmpty(ssaid) ? null : ssaid;
                 }
             }
