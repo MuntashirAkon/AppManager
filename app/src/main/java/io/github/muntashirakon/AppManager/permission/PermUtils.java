@@ -19,6 +19,8 @@ import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.settings.Ops;
+import io.github.muntashirakon.AppManager.utils.BroadcastUtils;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 import static io.github.muntashirakon.AppManager.compat.PermissionCompat.FLAG_PERMISSION_AUTO_REVOKED;
@@ -256,6 +258,9 @@ public class PermUtils {
 
         if (mayKillBecauseOfAppOpsChange && shouldKillApp) {
             ActivityManagerCompat.killUid(uid, KILL_REASON_APP_OP_CHANGE);
+        }
+        if (userId != UserHandleHidden.myUserId()) {
+            BroadcastUtils.sendPackageAltered(ContextUtils.getContext(), new String[]{applicationInfo.packageName});
         }
     }
 

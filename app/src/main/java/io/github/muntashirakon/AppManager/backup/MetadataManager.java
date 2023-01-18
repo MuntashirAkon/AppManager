@@ -26,10 +26,8 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.regex.Pattern;
 
 import aosp.libcore.util.HexEncoding;
 import io.github.muntashirakon.AppManager.AppManager;
@@ -37,7 +35,6 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
-import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.VMRuntime;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -58,8 +55,6 @@ public final class MetadataManager {
 
     public static final String META_FILE = "meta_v2.am.json";
     public static final String[] TAR_TYPES = new String[]{TarUtils.TAR_GZIP, TarUtils.TAR_BZIP2};
-
-    public static final Pattern UUID_PATTERN = Pattern.compile("[a-f\\d]{8}(-[a-f\\d]{4}){3}-[a-f\\d]{12}");
 
     // For an extended documentation, see https://github.com/MuntashirAkon/AppManager/issues/30
     // All the attributes must be non-null
@@ -202,50 +197,18 @@ public final class MetadataManager {
 
     @WorkerThread
     @NonNull
-    public static Metadata[] getMetadata(@NonNull Path backupPath) {
-        Path[] realBackupPaths;
-        if (UUID_PATTERN.matcher(backupPath.getName()).matches()) {
-            // UUID-based backups only store one backup per folder
-            realBackupPaths = new Path[]{backupPath};
-        } else {
-            // Other backups can store multiple backups per folder
-            realBackupPaths = backupPath.listFiles(Path::isDirectory);
-        }
-        List<Metadata> metadataList = new ArrayList<>(realBackupPaths.length);
-        for (Path path : realBackupPaths) {
-            try {
-                MetadataManager metadataManager = MetadataManager.getNewInstance();
-                metadataManager.readMetadata(new BackupFiles.BackupFile(path, false));
-                metadataList.add(metadataManager.getMetadata());
-            } catch (IOException e) {
-                Log.e(TAG, e);
-            }
-        }
-        return metadataList.toArray(new Metadata[0]);
+    public static Metadata getMetadata(@NonNull Path backupPath) throws IOException {
+        MetadataManager metadataManager = MetadataManager.getNewInstance();
+        metadataManager.readMetadata(new BackupFiles.BackupFile(backupPath, false));
+        return metadataManager.getMetadata();
     }
 
     @WorkerThread
     @NonNull
-    @Deprecated
-    public static Metadata[] getMetadata(String packageName) throws IOException {
-        Path[] backupFiles = getBackupFiles(packageName);
-        List<Metadata> metadataList = new ArrayList<>(backupFiles.length);
-        for (Path backupFile : backupFiles) {
-            try {
-                MetadataManager metadataManager = MetadataManager.getNewInstance();
-                metadataManager.readMetadata(new BackupFiles.BackupFile(backupFile, false));
-                metadataList.add(metadataManager.getMetadata());
-            } catch (IOException e) {
-                Log.e("MetadataManager", e);
-            }
-        }
-        return metadataList.toArray(new Metadata[0]);
-    }
-
-    @Deprecated
-    @NonNull
-    private static Path[] getBackupFiles(String packageName) throws IOException {
-        return BackupFiles.getPackagePath(packageName, false).listFiles(Path::isDirectory);
+    public static Metadata getMetadata(@NonNull BackupFiles.BackupFile backupFile) throws IOException {
+        MetadataManager metadataManager = MetadataManager.getNewInstance();
+        metadataManager.readMetadata(backupFile);
+        return metadataManager.getMetadata();
     }
 
     private Metadata mMetadata;

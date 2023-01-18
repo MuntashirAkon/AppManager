@@ -151,6 +151,11 @@ class BackupOp implements Closeable {
         mCrypto.close();
     }
 
+    @NonNull
+    public MetadataManager.Metadata getMetadata() {
+        return mMetadata;
+    }
+
     void runBackup() throws BackupException {
         boolean backupSuccess = false;
         try {

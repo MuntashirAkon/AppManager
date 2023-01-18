@@ -739,7 +739,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     .setNegativeButton(R.string.close, null)
                     .show());
         }
-        if (tagCloud.backups.length > 0) {
+        if (!tagCloud.backups.isEmpty()) {
             addChip(R.string.backup).setOnClickListener(v -> {
                 BackupRestoreDialogFragment fragment = BackupRestoreDialogFragment.getInstance(
                         Collections.singletonList(new UserPackagePair(mPackageName, mainModel.getUserHandle())),
@@ -939,8 +939,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     if ((mApplicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) {
                         builder.setNeutralButton(R.string.uninstall_updates, (dialog, which, keepData) ->
                                 executor.submit(() -> {
-                                    Runner.Result result = RunnerUtils.uninstallPackageUpdate(mPackageName, mainModel.getUserHandle(), keepData);
-                                    if (result.isSuccessful()) {
+                                    boolean isSuccessful = RunnerUtils.uninstallPackageUpdate(mPackageName, mainModel.getUserHandle(), keepData);
+                                    if (isSuccessful) {
                                         runOnUiThread(() -> displayLongToast(R.string.update_uninstalled_successfully, mPackageLabel));
                                     } else {
                                         runOnUiThread(() -> displayLongToast(R.string.failed_to_uninstall_updates, mPackageLabel));

@@ -22,6 +22,8 @@ import java.util.Map;
 
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.NoOps;
+import io.github.muntashirakon.AppManager.utils.BroadcastUtils;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 
 public final class RunnerUtils {
     public static final String TAG = RunnerUtils.class.getSimpleName();
@@ -91,12 +93,17 @@ public final class RunnerUtils {
         return ESCAPE_XSI.translate(input);
     }
 
-    @NonNull
-    public static Runner.Result uninstallPackageUpdate(String packageName, int userHandle, boolean keepData) {
+    public static boolean uninstallPackageUpdate(@NonNull String packageName, int userHandle, boolean keepData) {
         String cmd = String.format(keepData ? CMD_UNINSTALL_PACKAGE : CMD_UNINSTALL_PACKAGE_WITH_DATA,
                 userHandleToUser(UserHandleHidden.USER_ALL), packageName) + " && "
                 + String.format(CMD_INSTALL_EXISTING_PACKAGE, userHandleToUser(userHandle), packageName);
-        return Runner.runCommand(cmd);
+        Runner.Result result = Runner.runCommand(cmd);
+        if (result.isSuccessful()) {
+            if (userHandle != UserHandleHidden.myUserId()) {
+                BroadcastUtils.sendPackageAdded(ContextUtils.getContext(), new String[]{packageName});
+            }
+        }
+        return result.isSuccessful();
     }
 
     @NonNull

@@ -45,12 +45,14 @@ import java.util.Properties;
 import io.github.muntashirakon.AppManager.backup.BackupException;
 import io.github.muntashirakon.AppManager.backup.BackupFiles;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
+import io.github.muntashirakon.AppManager.backup.BackupUtils;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.crypto.Crypto;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
@@ -187,6 +189,9 @@ public class TBConverter extends Converter {
                 }
                 if (mCrypto != null) {
                     mCrypto.close();
+                }
+                if (backupSuccess) {
+                    BackupUtils.putBackupToDbAndBroadcast(ContextUtils.getContext(), mDestMetadata);
                 }
             }
             return;

@@ -29,11 +29,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import io.github.muntashirakon.AppManager.apk.ApkFile;
-import io.github.muntashirakon.AppManager.backup.MetadataManager;
+import io.github.muntashirakon.AppManager.backup.BackupUtils;
 import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.details.AppDetailsViewModel;
 import io.github.muntashirakon.AppManager.magisk.MagiskDenyList;
 import io.github.muntashirakon.AppManager.magisk.MagiskHide;
@@ -51,7 +52,6 @@ import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.UsageUtils;
 import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
@@ -171,11 +171,7 @@ public class AppInfoViewModel extends AndroidViewModel {
             tagCloud.hasKeyStoreItems = KeyStoreUtils.hasKeyStore(applicationInfo.uid);
             tagCloud.hasMasterKeyInKeyStore = KeyStoreUtils.hasMasterKey(applicationInfo.uid);
             tagCloud.usesPlayAppSigning = PackageUtils.usesPlayAppSigning(applicationInfo);
-            try {
-                tagCloud.backups = MetadataManager.getMetadata(packageName);
-            } catch (IOException e) {
-                tagCloud.backups = ArrayUtils.emptyArray(MetadataManager.Metadata.class);
-            }
+            tagCloud.backups = BackupUtils.getBackupMetadataFromDb(packageName);
             if (!mainModel.getIsExternalApk() && PermissionUtils.hasDumpPermission()) {
                 String targetString = "user," + packageName + "," + applicationInfo.uid;
                 Runner.Result result = Runner.runCommand(new String[]{"dumpsys", "deviceidle", "whitelist"});
@@ -373,7 +369,7 @@ public class AppInfoViewModel extends AndroidViewModel {
         public boolean hasKeyStoreItems;
         public boolean hasMasterKeyInKeyStore;
         public boolean usesPlayAppSigning;
-        public MetadataManager.Metadata[] backups;
+        public List<Backup> backups;
         public boolean isBatteryOptimized;
         public int netPolicies;
         @Nullable

@@ -185,6 +185,11 @@ class RestoreOp implements Closeable {
         }
     }
 
+    @NonNull
+    public MetadataManager.Metadata getMetadata() {
+        return metadata;
+    }
+
     void runRestore() throws BackupException {
         try {
             if (requestedFlags.backupData() && metadata.keyStore && !requestedFlags.skipSignatureCheck()) {

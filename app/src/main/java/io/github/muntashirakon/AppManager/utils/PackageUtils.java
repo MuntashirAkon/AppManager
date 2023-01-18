@@ -208,7 +208,7 @@ public final class PackageUtils {
                 }
                 item.totalSize += app.codeSize + app.dataSize;
                 item.dataUsage += app.wifiDataUsage + app.mobileDataUsage;
-                if (app.userId != thisUser) {
+                if (oldItem != null && app.userId != thisUser) {
                     // This user has the highest priority
                     continue;
                 }

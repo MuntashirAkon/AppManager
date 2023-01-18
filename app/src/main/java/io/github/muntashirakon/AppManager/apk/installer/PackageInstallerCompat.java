@@ -55,6 +55,8 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.BroadcastUtils;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 import io.github.muntashirakon.io.IoUtils;
@@ -631,6 +633,9 @@ public final class PackageInstallerCompat {
         if (!installCompleted) {
             installCompleted(sessionId, finalStatus, null, statusMessage);
         }
+        if (finalStatus == PackageInstaller.STATUS_SUCCESS && userHandle != UserHandleHidden.myUserId()) {
+            BroadcastUtils.sendPackageAltered(ContextUtils.getContext(), new String[]{packageName});
+        }
         return finalStatus == PackageInstaller.STATUS_SUCCESS;
     }
 
@@ -815,6 +820,9 @@ public final class PackageInstallerCompat {
         final int status = result.getIntExtra(PackageInstaller.EXTRA_STATUS, PackageInstaller.STATUS_FAILURE);
         if (status != PackageInstaller.STATUS_SUCCESS) {
             throw new Exception(result.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE));
+        }
+        if (userHandle != UserHandleHidden.myUserId()) {
+            BroadcastUtils.sendPackageAltered(ContextUtils.getContext(), new String[]{packageName});
         }
     }
 

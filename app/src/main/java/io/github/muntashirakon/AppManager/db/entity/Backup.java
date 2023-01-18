@@ -9,12 +9,14 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.backup.BackupFiles;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
+import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.io.Path;
 
 @SuppressWarnings("NotNullFieldNotInitialized")
@@ -73,7 +75,7 @@ public class Backup {
     public String installer;
 
     @ColumnInfo(name = "info_hash")
-    public String hash;
+    public String uuid;
 
     public BackupFlags getFlags() {
         return new BackupFlags(flags);
@@ -85,13 +87,25 @@ public class Backup {
 
     @NonNull
     public Path getBackupPath() throws IOException {
-        return BackupFiles.getPackagePath(packageName, false).findFile(backupName);
+        String backupUuid = TextUtilsCompat.isEmpty(uuid) ? null : uuid;
+        return BackupFiles.findBackupDirectory(backupName, packageName, backupUuid);
     }
 
     public MetadataManager.Metadata getMetadata() throws IOException {
-        MetadataManager metadataManager = MetadataManager.getNewInstance();
-        metadataManager.readMetadata(new BackupFiles.BackupFile(getBackupPath(), false));
-        return metadataManager.getMetadata();
+        return MetadataManager.getMetadata(getBackupPath());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Backup)) return false;
+        Backup backup = (Backup) o;
+        return packageName.equals(backup.packageName) && backupName.equals(backup.backupName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(packageName, backupName);
     }
 
     @NonNull
@@ -113,6 +127,7 @@ public class Backup {
         backup.tarType = metadata.tarType;
         backup.hasKeyStore = metadata.keyStore;
         backup.installer = metadata.installer;
+        backup.uuid = "";
         return backup;
     }
 }

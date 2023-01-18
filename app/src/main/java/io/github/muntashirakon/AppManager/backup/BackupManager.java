@@ -11,6 +11,7 @@ import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
 
@@ -95,6 +96,7 @@ public class BackupManager {
                 try (BackupOp backupOp = new BackupOp(targetPackage.getPackageName(), metadataManager, requestedFlags,
                         backupFile, targetPackage.getUserHandle())) {
                     backupOp.runBackup();
+                    BackupUtils.putBackupToDbAndBroadcast(ContextUtils.getContext(), backupOp.getMetadata());
                 }
             }
         } catch (IOException e) {
@@ -170,6 +172,7 @@ public class BackupManager {
                     targetPackage.getUserHandle())) {
                 restoreOp.runRestore();
                 requiresRestart |= restoreOp.requiresRestart();
+                BackupUtils.putBackupToDbAndBroadcast(ContextUtils.getContext(), restoreOp.getMetadata());
             }
         } else {
             Log.w(RestoreOp.TAG, "No backups found.");
@@ -189,8 +192,14 @@ public class BackupManager {
                 throw new BackupException("Could not get backup files.", e);
             }
             for (BackupFiles.BackupFile backupFile : backupFileList) {
-                if (!backupFile.isFrozen() && !backupFile.delete()) {
-                    throw new BackupException("Could not delete the selected backups");
+                try {
+                    MetadataManager.Metadata metadata = MetadataManager.getMetadata(backupFile);
+                    if (!backupFile.isFrozen() && !backupFile.delete()) {
+                        throw new BackupException("Could not delete the selected backups");
+                    }
+                    BackupUtils.deleteBackupToDbAndBroadcast(ContextUtils.getContext(), metadata);
+                } catch (IOException e) {
+                    throw new BackupException("Could not delete the selected backups", e);
                 }
             }
         } else {
@@ -198,15 +207,18 @@ public class BackupManager {
             // requested for only single backups
             BackupFiles.BackupFile backupFile;
             for (String backupName : backupNames) {
+                MetadataManager.Metadata metadata;
                 try {
                     backupFile = new BackupFiles.BackupFile(BackupFiles.getPackagePath(targetPackage.getPackageName(),
                             false).findFile(backupName), false);
+                    metadata = MetadataManager.getMetadata(backupFile);
                 } catch (IOException e) {
                     throw new BackupException("Could not get backup files.", e);
                 }
                 if (!backupFile.isFrozen() && !backupFile.delete()) {
                     throw new BackupException("Could not delete the selected backups");
                 }
+                BackupUtils.deleteBackupToDbAndBroadcast(ContextUtils.getContext(), metadata);
             }
         }
     }

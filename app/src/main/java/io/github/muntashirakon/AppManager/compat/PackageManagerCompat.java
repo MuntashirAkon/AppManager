@@ -33,6 +33,7 @@ import android.os.Build;
 import android.os.DeadObjectException;
 import android.os.RemoteException;
 import android.os.SystemClock;
+import android.os.UserHandleHidden;
 import android.util.AndroidException;
 
 import androidx.annotation.IntDef;
@@ -52,6 +53,8 @@ import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.BroadcastUtils;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 
@@ -248,12 +251,18 @@ public final class PackageManagerCompat {
                                                   @UserIdInt int userId)
             throws RemoteException {
         getPackageManager().setComponentEnabledSetting(componentName, newState, flags, userId);
+        if (userId != UserHandleHidden.myUserId()) {
+            BroadcastUtils.sendPackageAltered(ContextUtils.getContext(), new String[]{componentName.getPackageName()});
+        }
     }
 
     public static void setApplicationEnabledSetting(String packageName, @EnabledState int newState,
                                                     @EnabledFlags int flags, @UserIdInt int userId)
             throws RemoteException {
         getPackageManager().setApplicationEnabledSetting(packageName, newState, flags, userId, null);
+        if (userId != UserHandleHidden.myUserId()) {
+            BroadcastUtils.sendPackageAltered(ContextUtils.getContext(), new String[]{packageName});
+        }
     }
 
     public static int getApplicationEnabledSetting(String packageName, @UserIdInt int userId) throws RemoteException {
@@ -269,6 +278,9 @@ public final class PackageManagerCompat {
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             getPackageManager().setPackagesSuspendedAsUser(packageNames, suspend, userId);
         }
+        if (userId != UserHandleHidden.myUserId()) {
+            BroadcastUtils.sendPackageAltered(ContextUtils.getContext(), packageNames);
+        }
     }
 
     public static boolean isPackageSuspended(String packageName, @UserIdInt int userId) throws RemoteException {
@@ -280,7 +292,15 @@ public final class PackageManagerCompat {
 
     public static boolean hidePackage(String packageName, @UserIdInt int userId, boolean hide) throws RemoteException {
         if (Ops.isRoot() || (Ops.isAdb() && Build.VERSION.SDK_INT < Build.VERSION_CODES.N)) {
-            return getPackageManager().setApplicationHiddenSettingAsUser(packageName, hide, userId);
+            boolean hidden = getPackageManager().setApplicationHiddenSettingAsUser(packageName, hide, userId);
+            if (userId != UserHandleHidden.myUserId()) {
+                if (hidden) {
+                    if (hide) {
+                        BroadcastUtils.sendPackageRemoved(ContextUtils.getContext(), new String[]{packageName});
+                    } else BroadcastUtils.sendPackageAdded(ContextUtils.getContext(), new String[]{packageName});
+                }
+            }
+            return hidden;
         }
         return false;
     }
@@ -318,6 +338,9 @@ public final class PackageManagerCompat {
         if (!obs.isSuccessful()) {
             throw new AndroidException("Could not clear data of package " + pair);
         }
+        if (pair.getUserHandle() != UserHandleHidden.myUserId()) {
+            BroadcastUtils.sendPackageAltered(ContextUtils.getContext(), new String[]{pair.getPackageName()});
+        }
     }
 
     public static boolean clearApplicationUserData(@NonNull String packageName, @UserIdInt int userId) {
@@ -348,6 +371,9 @@ public final class PackageManagerCompat {
         if (!obs.isSuccessful()) {
             throw new AndroidException("Could not clear cache of package " + pair);
         }
+        if (pair.getUserHandle() != UserHandleHidden.myUserId()) {
+            BroadcastUtils.sendPackageAltered(ContextUtils.getContext(), new String[]{pair.getPackageName()});
+        }
     }
 
     public static boolean deleteApplicationCacheFilesAsUser(String packageName, int userId) {
@@ -362,6 +388,9 @@ public final class PackageManagerCompat {
 
     public static void forceStopPackage(String packageName, int userId) throws RemoteException {
         ActivityManagerCompat.getActivityManager().forceStopPackage(packageName, userId);
+        if (userId != UserHandleHidden.myUserId()) {
+            BroadcastUtils.sendPackageAltered(ContextUtils.getContext(), new String[]{packageName});
+        }
     }
 
     @NonNull

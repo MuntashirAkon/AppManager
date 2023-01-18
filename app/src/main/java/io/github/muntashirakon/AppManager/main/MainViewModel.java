@@ -536,9 +536,9 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
         Log.d("updateInfoForPackages", "packages: " + Arrays.toString(packages));
         if (packages == null || packages.length == 0) return;
         switch (action) {
-            case PackageChangeReceiver.ACTION_PACKAGE_REMOVED:
-            case PackageChangeReceiver.ACTION_PACKAGE_ALTERED:
-            case PackageChangeReceiver.ACTION_PACKAGE_ADDED: {
+            case PackageChangeReceiver.ACTION_DB_PACKAGE_REMOVED:
+            case PackageChangeReceiver.ACTION_DB_PACKAGE_ALTERED:
+            case PackageChangeReceiver.ACTION_DB_PACKAGE_ADDED: {
                 AppDb appDb = new AppDb();
                 boolean modified = false;
                 for (String packageName : packages) {
@@ -550,6 +550,9 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                 }
                 break;
             }
+            case PackageChangeReceiver.ACTION_PACKAGE_REMOVED:
+            case PackageChangeReceiver.ACTION_PACKAGE_ALTERED:
+            case PackageChangeReceiver.ACTION_PACKAGE_ADDED:
             case BatchOpsService.ACTION_BATCH_OPS_COMPLETED:
             case Intent.ACTION_PACKAGE_REMOVED:
             case Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE:
@@ -630,7 +633,8 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                 continue;
             }
             if (app.isInstalled) {
-                if (item.packageName == null) {
+                boolean newItem = item.packageName == null;
+                if (newItem) {
                     item.packageName = app.packageName;
                 }
                 item.userHandles = ArrayUtils.appendInt(item.userHandles, app.userId);
@@ -647,7 +651,7 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                 }
                 item.totalSize += app.codeSize + app.dataSize;
                 item.dataUsage += app.wifiDataUsage + app.mobileDataUsage;
-                if (app.userId != thisUser) {
+                if (!newItem && app.userId != thisUser) {
                     // This user has the highest priority
                     continue;
                 }

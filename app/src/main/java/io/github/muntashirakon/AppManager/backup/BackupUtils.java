@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.backup;
 
+import android.content.Context;
+import android.content.Intent;
 import android.system.ErrnoException;
 import android.text.TextUtils;
 import android.util.Pair;
@@ -16,22 +18,34 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 import io.github.muntashirakon.AppManager.db.AppsDb;
 import io.github.muntashirakon.AppManager.db.dao.BackupDao;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.logcat.helper.SaveLogHelper;
+import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.UidGidPair;
 
 public final class BackupUtils {
+    private static final Pattern UUID_PATTERN = Pattern.compile("[a-f\\d]{8}(-[a-f\\d]{4}){3}-[a-f\\d]{12}");
+
+    public static boolean isUuid(@NonNull String name) {
+        return UUID_PATTERN.matcher(name).matches();
+    }
+
     @NonNull
     private static List<Path> getBackupPaths() {
-        Path backupPath = BackupFiles.getBackupDirectory();
+        Path baseDirectory = BackupFiles.getBaseDirectory();
         List<Path> backupPaths;
-        Path[] files = backupPath.listFiles(Path::isDirectory);
-        backupPaths = new ArrayList<>(files.length);
-        for (Path path : files) {
+        Path[] paths = baseDirectory.listFiles(Path::isDirectory);
+        backupPaths = new ArrayList<>(paths.length);
+        for (Path path : paths) {
+            if (isUuid(path.getName())) {
+                // UUID-based backups only store one backup per folder
+                backupPaths.add(path);
+            }
             if (SaveLogHelper.SAVED_LOGS_DIR.equals(path.getName())) {
                 continue;
             }
@@ -41,7 +55,8 @@ public final class BackupUtils {
             if (BackupFiles.TEMPORARY_DIRECTORY.equals(path.getName())) {
                 continue;
             }
-            backupPaths.add(path);
+            // Other backups can store multiple backups per folder
+            backupPaths.addAll(Arrays.asList(path.listFiles(Path::isDirectory)));
         }
         // We don't need to check further at this stage.
         // It's the caller's job to check the contents if needed.
@@ -74,25 +89,6 @@ public final class BackupUtils {
     }
 
     @WorkerThread
-    @Nullable
-    @Deprecated
-    public static Backup storeAllAndGetLatestBackupMetadata(String packageName) throws IOException {
-        MetadataManager.Metadata[] allBackupMetadata = MetadataManager.getMetadata(packageName);
-        List<Backup> backups = new ArrayList<>();
-        Backup latestBackup = null;
-        Backup backup;
-        for (MetadataManager.Metadata metadata : allBackupMetadata) {
-            backup = Backup.fromBackupMetadata(metadata);
-            backups.add(backup);
-            if (latestBackup == null || backup.backupTime > latestBackup.backupTime) {
-                latestBackup = backup;
-            }
-        }
-        AppsDb.getInstance().backupDao().insert(backups);
-        return latestBackup;
-    }
-
-    @WorkerThread
     @NonNull
     public static HashMap<String, Backup> getAllLatestBackupMetadataFromDb() {
         HashMap<String, Backup> backupMetadata = new HashMap<>();
@@ -106,10 +102,32 @@ public final class BackupUtils {
         return backupMetadata;
     }
 
+    public static void putBackupToDbAndBroadcast(@NonNull Context context, @NonNull MetadataManager.Metadata metadata) {
+        AppsDb.getInstance().backupDao().insert(Backup.fromBackupMetadata(metadata));
+        Intent intent = new Intent(PackageChangeReceiver.ACTION_DB_PACKAGE_ALTERED);
+        intent.setPackage(context.getPackageName());
+        intent.putExtra(Intent.EXTRA_CHANGED_PACKAGE_LIST, new String[]{metadata.packageName});
+        context.sendBroadcast(intent);
+    }
+
+    public static void deleteBackupToDbAndBroadcast(@NonNull Context context, @NonNull MetadataManager.Metadata metadata) {
+        AppsDb.getInstance().backupDao().delete(Backup.fromBackupMetadata(metadata));
+        Intent intent = new Intent(PackageChangeReceiver.ACTION_DB_PACKAGE_REMOVED);
+        intent.setPackage(context.getPackageName());
+        intent.putExtra(Intent.EXTRA_CHANGED_PACKAGE_LIST, new String[]{metadata.packageName});
+        context.sendBroadcast(intent);
+    }
+
+    @WorkerThread
+    @NonNull
+    public static List<Backup> getBackupMetadataFromDb(@NonNull String packageName) {
+        return AppsDb.getInstance().backupDao().get(packageName);
+    }
+
     @WorkerThread
     @Nullable
     public static Backup getLatestBackupMetadataFromDb(@NonNull String packageName) {
-        List<Backup> backups = AppsDb.getInstance().backupDao().get(packageName);
+        List<Backup> backups = getBackupMetadataFromDb(packageName);
         Backup latestBackup = null;
         for (Backup backup : backups) {
             if (latestBackup == null || backup.backupTime > latestBackup.backupTime) {
@@ -126,22 +144,24 @@ public final class BackupUtils {
     @NonNull
     public static HashMap<String, List<MetadataManager.Metadata>> getAllMetadata() {
         HashMap<String, List<MetadataManager.Metadata>> backupMetadata = new HashMap<>();
-        List<Path> backupFolderNames = getBackupPaths();
-        for (Path backupFolderName : backupFolderNames) {
-            MetadataManager.Metadata[] metadataList = MetadataManager.getMetadata(backupFolderName);
-            for (MetadataManager.Metadata metadata : metadataList) {
+        List<Path> backupPaths = getBackupPaths();
+        for (Path backupPath : backupPaths) {
+            try {
+                MetadataManager.Metadata metadata = MetadataManager.getMetadata(backupPath);
                 if (!backupMetadata.containsKey(metadata.packageName)) {
                     backupMetadata.put(metadata.packageName, new ArrayList<>());
                 }
                 //noinspection ConstantConditions
                 backupMetadata.get(metadata.packageName).add(metadata);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
         return backupMetadata;
     }
 
     @NonNull
-    static Pair<Integer, Integer> getUidAndGid(Path filepath, int uid) {
+    static Pair<Integer, Integer> getUidAndGid(@NonNull Path filepath, int uid) {
         try {
             UidGidPair uidGidPair = Objects.requireNonNull(filepath.getFile()).getUidGid();
             return new Pair<>(uidGidPair.uid, uidGidPair.gid);

@@ -9,6 +9,7 @@ import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningI
 import android.annotation.UserIdInt;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -24,6 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -46,6 +48,7 @@ import io.github.muntashirakon.AppManager.usage.UsageUtils;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 
 public class AppDb {
     public static final String TAG = AppDb.class.getSimpleName();
@@ -136,7 +139,7 @@ public class AppDb {
             appDao.insert(newApps);
             if (newApps.size() > 0) {
                 // New apps
-                Intent intent = new Intent(PackageChangeReceiver.ACTION_PACKAGE_ADDED);
+                Intent intent = new Intent(PackageChangeReceiver.ACTION_DB_PACKAGE_ADDED);
                 intent.setPackage(context.getPackageName());
                 intent.putExtra(Intent.EXTRA_CHANGED_PACKAGE_LIST, getPackageNamesFromApps(newApps));
                 context.sendBroadcast(intent);
@@ -175,14 +178,18 @@ public class AppDb {
         int[] userIds = Users.getUsersIds();
         List<App> oldApps = new ArrayList<>(appDao.getAll(packageName));
         List<App> appList = new ArrayList<>(userIds.length);
-        List<Backup> backups = backupDao.get(packageName);
+        List<Backup> backups = new ArrayList<>(backupDao.get(packageName));
         for (int userId : userIds) {
             int oldAppIndex = findIndexOfApp(oldApps, packageName, userId);
             PackageInfo packageInfo = null;
             Backup backup = null;
-            for (Backup b : backups) {
+            ListIterator<Backup> backupListIterator = backups.listIterator();
+            while (backupListIterator.hasNext()) {
+                Backup b = backupListIterator.next();
                 if (b.userId == userId) {
                     backup = b;
+                    backupListIterator.remove();
+                    break;
                 }
             }
             try {
@@ -216,6 +223,11 @@ public class AppDb {
             // New app
             App app = packageInfo != null ? App.fromPackageInfo(context, packageInfo) : App.fromBackup(backup);
             appList.add(app);
+        }
+
+        // Add the rest of the backups if any
+        for (Backup backup : backups) {
+            appList.add(App.fromBackup(backup));
         }
 
         // Return the list instead of triggering broadcast
@@ -303,21 +315,21 @@ public class AppDb {
             appDao.insert(modifiedApps);
             if (oldApps.size() > 0) {
                 // Delete broadcast
-                Intent intent = new Intent(PackageChangeReceiver.ACTION_PACKAGE_REMOVED);
+                Intent intent = new Intent(PackageChangeReceiver.ACTION_DB_PACKAGE_REMOVED);
                 intent.setPackage(context.getPackageName());
                 intent.putExtra(Intent.EXTRA_CHANGED_PACKAGE_LIST, getPackageNamesFromApps(oldApps));
                 context.sendBroadcast(intent);
             }
             if (newApps.size() > 0) {
                 // New apps
-                Intent intent = new Intent(PackageChangeReceiver.ACTION_PACKAGE_ADDED);
+                Intent intent = new Intent(PackageChangeReceiver.ACTION_DB_PACKAGE_ADDED);
                 intent.setPackage(context.getPackageName());
                 intent.putExtra(Intent.EXTRA_CHANGED_PACKAGE_LIST, newApps.toArray(new String[0]));
                 context.sendBroadcast(intent);
             }
             if (updatedApps.size() > 0) {
                 // Altered apps
-                Intent intent = new Intent(PackageChangeReceiver.ACTION_PACKAGE_ALTERED);
+                Intent intent = new Intent(PackageChangeReceiver.ACTION_DB_PACKAGE_ALTERED);
                 intent.setPackage(context.getPackageName());
                 intent.putExtra(Intent.EXTRA_CHANGED_PACKAGE_LIST, updatedApps.toArray(new String[0]));
                 context.sendBroadcast(intent);
@@ -356,25 +368,30 @@ public class AppDb {
             }
         }
         for (App app : modifiedApps) {
-            if (!app.isInstalled) {
+            boolean isSystemApp = (app.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
+            if (!app.isInstalled && !isSystemApp) {
                 return;
             }
             int userId = app.userId;
             try (ComponentsBlocker cb = ComponentsBlocker.getInstance(app.packageName, userId, false)) {
                 app.rulesCount = cb.entryCount();
             }
+            PackageSizeInfo sizeInfo = PackageUtils.getPackageSizeInfo(context, app.packageName, userId, null);
+            if (sizeInfo != null) {
+                app.codeSize = sizeInfo.codeSize + sizeInfo.obbSize;
+                app.dataSize = sizeInfo.dataSize + sizeInfo.mediaSize + sizeInfo.cacheSize;
+            }
+            if (!app.isInstalled) {
+                return;
+            }
             app.hasKeystore = KeyStoreUtils.hasKeyStore(app.uid);
             app.usesSaf = uriManager.getGrantedUris(app.packageName) != null;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 SsaidSettings ssaidSettings = userIdSsaidSettingsMap.get(userId);
                 if (ssaidSettings != null) {
-                    app.ssaid = ssaidSettings.getSsaid(app.packageName, app.uid);
+                    String ssaid = ssaidSettings.getSsaid(app.packageName, app.uid);;
+                    app.ssaid = TextUtilsCompat.isEmpty(ssaid) ? null : ssaid;
                 }
-            }
-            PackageSizeInfo sizeInfo = PackageUtils.getPackageSizeInfo(context, app.packageName, userId, null);
-            if (sizeInfo != null) {
-                app.codeSize = sizeInfo.codeSize + sizeInfo.obbSize;
-                app.dataSize = sizeInfo.dataSize + sizeInfo.mediaSize + sizeInfo.cacheSize;
             }
             PackageUsageInfo usageInfo = findUsage(packageUsageInfoList, app.packageName, userId);
             if (usageInfo != null) {

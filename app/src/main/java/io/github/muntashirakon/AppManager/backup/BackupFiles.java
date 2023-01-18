@@ -22,8 +22,6 @@ import io.github.muntashirakon.io.PathReader;
 import io.github.muntashirakon.io.PathWriter;
 
 public class BackupFiles {
-    public static final String BASE_BACKUP_NAME = "base";
-
     static final String APK_SAVING_DIRECTORY = "apks";
     static final String TEMPORARY_DIRECTORY = ".tmp";
 
@@ -34,16 +32,28 @@ public class BackupFiles {
     static final String NO_MEDIA = ".nomedia";
 
     @NonNull
-    public static Path getBackupDirectory() {
+    public static Path getBaseDirectory() {
         return AppPref.getAppManagerDirectory();
+    }
+
+    @NonNull
+    public static Path findBackupDirectory(@NonNull String backupName, @Nullable String packageName, @Nullable String backupUuid) throws FileNotFoundException {
+        if (packageName == null && backupUuid == null) {
+            throw new IllegalArgumentException("Neither packageName nor backupUuid is set");
+        }
+        if (backupUuid != null) {
+            return getBaseDirectory().findFile(backupUuid);
+        } else {
+            return getBaseDirectory().findFile(packageName).findFile(backupName);
+        }
     }
 
     @Deprecated
     @NonNull
     public static Path getPackagePath(@NonNull String packageName, boolean create) throws IOException {
         if (create) {
-            return getBackupDirectory().findOrCreateDirectory(packageName);
-        } else return getBackupDirectory().findFile(packageName);
+            return getBaseDirectory().findOrCreateDirectory(packageName);
+        } else return getBaseDirectory().findFile(packageName);
     }
 
     @NonNull
@@ -60,11 +70,11 @@ public class BackupFiles {
 
     @NonNull
     public static Path getApkBackupDirectory() throws IOException {
-        return getBackupDirectory().findOrCreateDirectory(APK_SAVING_DIRECTORY);
+        return getBaseDirectory().findOrCreateDirectory(APK_SAVING_DIRECTORY);
     }
 
     public static void createNoMediaIfNotExists() throws IOException {
-        Path backupDirectory = getBackupDirectory();
+        Path backupDirectory = getBaseDirectory();
         if (!backupDirectory.hasFile(NO_MEDIA)) {
             backupDirectory.createNewFile(NO_MEDIA, null);
         }
