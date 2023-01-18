@@ -25,6 +25,7 @@ import io.github.muntashirakon.AppManager.db.dao.BackupDao;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.logcat.helper.SaveLogHelper;
 import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
+import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.UidGidPair;
 
@@ -103,6 +104,9 @@ public final class BackupUtils {
     }
 
     public static void putBackupToDbAndBroadcast(@NonNull Context context, @NonNull MetadataManager.Metadata metadata) {
+        if (Utils.isRoboUnitTest()) {
+            return;
+        }
         AppsDb.getInstance().backupDao().insert(Backup.fromBackupMetadata(metadata));
         Intent intent = new Intent(PackageChangeReceiver.ACTION_DB_PACKAGE_ALTERED);
         intent.setPackage(context.getPackageName());
