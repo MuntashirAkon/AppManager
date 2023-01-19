@@ -270,10 +270,37 @@ public class AppDetailsActivity extends BaseActivity {
 
         @NonNull
         @Override
-        public Fragment getItem(int position) {
+        public Fragment getItem(@AppDetailsFragment.Property int position) {
             if (mTabFragments[position] == null) {
-                if (position == 0) mTabFragments[position] = new AppInfoFragment();
-                else mTabFragments[position] = new AppDetailsFragment(position);
+                switch (position) {
+                    case AppDetailsFragment.NONE:
+                    case AppDetailsFragment.APP_INFO:
+                        mTabFragments[position] = new AppInfoFragment();
+                        break;
+                    case AppDetailsFragment.ACTIVITIES:
+                    case AppDetailsFragment.SERVICES:
+                    case AppDetailsFragment.RECEIVERS:
+                    case AppDetailsFragment.PROVIDERS: {
+                        mTabFragments[position] = new AppDetailsComponentsFragment();
+                        Bundle args = new Bundle();
+                        args.putInt(AppDetailsComponentsFragment.ARG_TYPE, position);
+                        mTabFragments[position].setArguments(args);
+                        break;
+                    }
+                    case AppDetailsFragment.APP_OPS:
+                    case AppDetailsFragment.PERMISSIONS:
+                    case AppDetailsFragment.USES_PERMISSIONS:
+                    case AppDetailsFragment.CONFIGURATIONS:
+                    case AppDetailsFragment.FEATURES:
+                    case AppDetailsFragment.SHARED_LIBRARIES:
+                    case AppDetailsFragment.SIGNATURES: {
+                        mTabFragments[position] = new AppDetailsFragment();
+                        Bundle args = new Bundle();
+                        args.putInt(AppDetailsFragment.ARG_TYPE, position);
+                        mTabFragments[position].setArguments(args);
+                        break;
+                    }
+                }
             }
             return mTabFragments[position];
         }

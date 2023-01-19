@@ -13,19 +13,13 @@ import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.pm.ConfigurationInfo;
 import android.content.pm.FeatureInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.PathPermission;
 import android.content.pm.PermissionInfo;
-import android.content.pm.ProviderInfo;
-import android.content.pm.ServiceInfo;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.PatternMatcher;
-import android.os.UserHandleHidden;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.format.Formatter;
@@ -36,7 +30,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,10 +38,8 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
-import androidx.appcompat.widget.PopupMenu;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.pm.PackageInfoCompat;
-import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -56,7 +47,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.chip.Chip;
-import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.divider.MaterialDivider;
 import com.google.android.material.materialswitch.MaterialSwitch;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
@@ -68,7 +58,6 @@ import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -78,25 +67,16 @@ import java.util.concurrent.Executors;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.appops.OpEntry;
-import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsAppOpItem;
-import io.github.muntashirakon.AppManager.details.struct.AppDetailsComponentItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsDefinedPermissionItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsPermissionItem;
-import io.github.muntashirakon.AppManager.details.struct.AppDetailsServiceItem;
-import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
-import io.github.muntashirakon.AppManager.rules.RuleType;
-import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
-import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.scanner.NativeLibraries;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.self.pref.TipsPrefs;
-import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Ops;
-import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
@@ -172,18 +152,19 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
     public static final int SORT_BY_DANGEROUS_PERMS = 5;
     public static final int SORT_BY_DENIED_PERMS = 6;
 
-    private static final int[] sSortMenuItemIdsMap = {
+    static final int[] sSortMenuItemIdsMap = {
             R.id.action_sort_by_name, R.id.action_sort_by_blocked_components,
             R.id.action_sort_by_tracker_components, R.id.action_sort_by_app_ops_values,
             R.id.action_sort_by_denied_app_ops, R.id.action_sort_by_dangerous_permissions,
             R.id.action_sort_by_denied_permissions};
+
+    public static final String ARG_TYPE = "type";
 
     private String mPackageName;
     private PackageManager mPackageManager;
     private AppDetailsActivity mActivity;
     private AppDetailsRecyclerAdapter mAdapter;
     private SwipeRefreshLayout mSwipeRefresh;
-    private MenuItem mBlockingToggler;
     private LinearProgressIndicator mProgressIndicator;
     private MaterialAlertView mAlertView;
     private boolean mIsExternalApk;
@@ -197,21 +178,12 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
 
     private int mColorQueryStringHighlight;
 
-    public AppDetailsFragment() {
-    }
-
-    public AppDetailsFragment(@Property int neededProperty) {
-        this.mNeededProperty = neededProperty;
-    }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         mActivity = (AppDetailsActivity) requireActivity();
-        if (savedInstanceState != null) {
-            mNeededProperty = savedInstanceState.getInt("property");
-        }
+        mNeededProperty = requireArguments().getInt(ARG_TYPE);
         mMainModel = new ViewModelProvider(mActivity).get(AppDetailsViewModel.class);
         mPackageManager = mActivity.getPackageManager();
         mColorQueryStringHighlight = ColorCodes.getQueryStringHighlightColor(mActivity);
@@ -258,7 +230,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
         });
         int helpStringRes = getHelpString(mNeededProperty);
         if (helpStringRes != 0) mAlertView.setText(helpStringRes);
-        if (helpStringRes == 0 || mNeededProperty >= ACTIVITIES && mNeededProperty <= PROVIDERS) {
+        if (helpStringRes == 0) {
             mAlertView.setVisibility(View.GONE);
         } else {
             mAlertView.postDelayed(() -> mAlertView.hide(), 15_000);
@@ -284,12 +256,6 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
     }
 
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putInt("property", mNeededProperty);
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
     public void onDetach() {
         mImageLoader.close();
         mExecutor.shutdownNow();
@@ -305,29 +271,6 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         switch (mNeededProperty) {
-            case ACTIVITIES:
-            case PROVIDERS:
-            case RECEIVERS:
-            case SERVICES:
-                if (mMainModel != null && !mMainModel.getIsExternalApk() && Ops.isRoot()) {
-                    inflater.inflate(R.menu.fragment_app_details_components_actions, menu);
-                    mBlockingToggler = menu.findItem(R.id.action_toggle_blocking);
-                    mMainModel.getRuleApplicationStatus().observe(mActivity, status -> {
-                        switch (status) {
-                            case AppDetailsViewModel.RULE_APPLIED:
-                                mBlockingToggler.setVisible(!AppPref.isGlobalBlockingEnabled());
-                                mBlockingToggler.setTitle(R.string.menu_remove_rules);
-                                break;
-                            case AppDetailsViewModel.RULE_NOT_APPLIED:
-                                mBlockingToggler.setVisible(!AppPref.isGlobalBlockingEnabled());
-                                mBlockingToggler.setTitle(R.string.menu_apply_rules);
-                                break;
-                            case AppDetailsViewModel.RULE_NO_RULE:
-                                mBlockingToggler.setVisible(false);
-                        }
-                    });
-                } else inflater.inflate(R.menu.fragment_app_details_refresh_actions, menu);
-                break;
             case APP_OPS:
                 inflater.inflate(R.menu.fragment_app_details_app_ops_actions, menu);
                 break;
@@ -355,13 +298,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
         if (mMainModel == null || mMainModel.getIsExternalApk()) {
             return;
         }
-        if (mNeededProperty == APP_INFO) {
-            super.onPrepareOptionsMenu(menu);
-        } else if (mNeededProperty <= PROVIDERS) {
-            if (Ops.isRoot()) {
-                menu.findItem(sSortMenuItemIdsMap[mMainModel.getSortOrder(mNeededProperty)]).setChecked(true);
-            }
-        } else if (mNeededProperty <= USES_PERMISSIONS) {
+        if (mNeededProperty <= USES_PERMISSIONS) {
             menu.findItem(sSortMenuItemIdsMap[mMainModel.getSortOrder(mNeededProperty)]).setChecked(true);
         }
     }
@@ -371,18 +308,6 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
         int id = item.getItemId();
         if (id == R.id.action_refresh_details) {
             refreshDetails();
-        } else if (id == R.id.action_toggle_blocking) {  // Components
-            if (mMainModel != null) {
-                mExecutor.submit(() -> mMainModel.applyRules());
-            }
-        } else if (id == R.id.action_block_unblock_trackers) {  // Components
-            new MaterialAlertDialogBuilder(mActivity)
-                    .setTitle(R.string.block_unblock_trackers)
-                    .setMessage(R.string.choose_what_to_do)
-                    .setPositiveButton(R.string.block, (dialog, which) -> blockUnblockTrackers(true))
-                    .setNegativeButton(R.string.cancel, null)
-                    .setNeutralButton(R.string.unblock, (dialog, which) -> blockUnblockTrackers(false))
-                    .show();
         } else if (id == R.id.action_reset_to_default) {  // App ops
             mExecutor.submit(() -> {
                 if (mMainModel == null || !mMainModel.resetAppOps()) {
@@ -459,12 +384,6 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
         } else if (id == R.id.action_sort_by_name) {  // All
             setSortBy(SORT_BY_NAME);
             item.setChecked(true);
-        } else if (id == R.id.action_sort_by_blocked_components) {  // Components
-            setSortBy(SORT_BY_BLOCKED);
-            item.setChecked(true);
-        } else if (id == R.id.action_sort_by_tracker_components) {  // Components
-            setSortBy(SORT_BY_TRACKERS);
-            item.setChecked(true);
         } else if (id == R.id.action_sort_by_app_ops_values) {  // App ops
             setSortBy(SORT_BY_APP_OP_VALUES);
             item.setChecked(true);
@@ -486,13 +405,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
         super.onResume();
         mSwipeRefresh.setEnabled(true);
         if (mActivity.searchView != null) {
-            if (mNeededProperty > APP_INFO && mNeededProperty <= PERMISSIONS) {
-                mActivity.searchView.setVisibility(View.VISIBLE);
-                mActivity.searchView.setOnQueryTextListener(this);
-                if (mMainModel != null) {
-                    mMainModel.filterAndSortItems(mNeededProperty);
-                }
-            } else mActivity.searchView.setVisibility(View.GONE);
+            mActivity.searchView.setVisibility(View.GONE);
         }
     }
 
@@ -522,27 +435,6 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
         return false;
     }
 
-    public void blockUnblockTrackers(boolean block) {
-        if (mMainModel == null) return;
-        List<UserPackagePair> userPackagePairs = Collections.singletonList(new UserPackagePair(mPackageName,
-                UserHandleHidden.myUserId()));
-        mExecutor.submit(() -> {
-            List<UserPackagePair> failedPkgList = block ? ComponentUtils.blockTrackingComponents(userPackagePairs)
-                    : ComponentUtils.unblockTrackingComponents(userPackagePairs);
-            if (failedPkgList.size() > 0) {
-                runOnUiThread(() -> Toast.makeText(mActivity, block ? R.string.failed_to_block_trackers
-                        : R.string.failed_to_unblock_trackers, Toast.LENGTH_SHORT).show());
-            } else {
-                runOnUiThread(() -> {
-                    Toast.makeText(mActivity, block ? R.string.trackers_blocked_successfully
-                            : R.string.trackers_unblocked_successfully, Toast.LENGTH_SHORT).show();
-                    refreshDetails();
-                });
-            }
-            mMainModel.setRuleApplicationStatus();
-        });
-    }
-
     private void runOnUiThread(Runnable runnable) {
         mActivity.runOnUiThread(runnable);
     }
@@ -551,13 +443,6 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
         showProgressIndicator(true);
         if (mMainModel == null) return;
         mMainModel.setSortOrder(sortBy, mNeededProperty);
-    }
-
-    private void applyRules(@NonNull AppDetailsComponentItem componentItem, @NonNull RuleType type,
-                            @NonNull @ComponentRule.ComponentStatus String componentStatus) {
-        if (mMainModel != null) {
-            mExecutor.submit(() -> mMainModel.updateRulesForComponent(componentItem, type, componentStatus));
-        }
     }
 
     private void refreshDetails() {
@@ -575,12 +460,6 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
      */
     private int getNotFoundString(@Property int index) {
         switch (index) {
-            case SERVICES:
-                return R.string.no_service;
-            case RECEIVERS:
-                return R.string.no_receivers;
-            case PROVIDERS:
-                return R.string.no_providers;
             case APP_OPS:
                 if (mIsExternalApk) {
                     return R.string.external_apk_no_app_op;
@@ -598,11 +477,8 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                 return R.string.app_signing_no_signatures;
             case SHARED_LIBRARIES:
                 return R.string.no_shared_libs;
-            case ACTIVITIES:
-            case APP_INFO:
-            case NONE:
             default:
-                return R.string.no_activities;
+                return 0;
         }
     }
 
@@ -611,11 +487,6 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
      */
     private int getHelpString(@Property int index) {
         switch (index) {
-            case ACTIVITIES:
-            case SERVICES:
-            case RECEIVERS:
-            case PROVIDERS:
-                return R.string.rules_not_applied;
             case APP_INFO:
             case FEATURES:
             case CONFIGURATIONS:
@@ -666,7 +537,6 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
         private String mConstraint;
         private boolean mIsRootEnabled = true;
         private boolean mIsADBEnabled = true;
-        private boolean mTestOnlyApp;
         private final int mCardColor0;
         private final int mCardColor1;
         private final int mDefaultIndicatorColor;
@@ -684,7 +554,6 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             mIsADBEnabled = Ops.isAdb();
             mRequestedProperty = mNeededProperty;
             mConstraint = mMainModel == null ? null : mMainModel.getSearchQuery();
-            mTestOnlyApp = mMainModel != null && mMainModel.isTestOnlyApp();
             showProgressIndicator(false);
             synchronized (mAdapterList) {
                 mAdapterList.clear();
@@ -707,7 +576,6 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             TextView textView7;
             TextView textView8;
             ImageView imageView;
-            Button shortcutBtn;
             MaterialButton launchBtn;
             MaterialSwitch toggleSwitch;
             MaterialDivider divider;
@@ -716,66 +584,6 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
                 switch (mRequestedProperty) {
-                    case ACTIVITIES:
-                        imageView = itemView.findViewById(R.id.icon);
-                        textView1 = itemView.findViewById(R.id.label);
-                        textView2 = itemView.findViewById(R.id.name);
-                        textView3 = itemView.findViewById(R.id.taskAffinity);
-                        textView4 = itemView.findViewById(R.id.launchMode);
-                        textView5 = itemView.findViewById(R.id.orientation);
-                        textView6 = itemView.findViewById(R.id.softInput);
-                        textView7 = itemView.findViewById(R.id.process_name);
-                        launchBtn = itemView.findViewById(R.id.launch);
-                        toggleSwitch = itemView.findViewById(R.id.toggle_button);
-                        shortcutBtn = itemView.findViewById(R.id.edit_shortcut_btn);
-                        divider = itemView.findViewById(R.id.divider);
-                        chipType = itemView.findViewById(R.id.type);
-                        break;
-                    case SERVICES:
-                        imageView = itemView.findViewById(R.id.icon);
-                        textView1 = itemView.findViewById(R.id.label);
-                        textView2 = itemView.findViewById(R.id.name);
-                        textView3 = itemView.findViewById(R.id.orientation);
-                        textView7 = itemView.findViewById(R.id.process_name);
-                        launchBtn = itemView.findViewById(R.id.launch);
-                        toggleSwitch = itemView.findViewById(R.id.toggle_button);
-                        divider = itemView.findViewById(R.id.divider);
-                        chipType = itemView.findViewById(R.id.type);
-                        itemView.findViewById(R.id.taskAffinity).setVisibility(View.GONE);
-                        itemView.findViewById(R.id.launchMode).setVisibility(View.GONE);
-                        itemView.findViewById(R.id.softInput).setVisibility(View.GONE);
-                        itemView.findViewById(R.id.edit_shortcut_btn).setVisibility(View.GONE);
-                        break;
-                    case RECEIVERS:
-                        imageView = itemView.findViewById(R.id.icon);
-                        textView1 = itemView.findViewById(R.id.label);
-                        textView2 = itemView.findViewById(R.id.name);
-                        textView3 = itemView.findViewById(R.id.taskAffinity);
-                        textView4 = itemView.findViewById(R.id.launchMode);
-                        textView5 = itemView.findViewById(R.id.orientation);
-                        textView6 = itemView.findViewById(R.id.softInput);
-                        textView7 = itemView.findViewById(R.id.process_name);
-                        toggleSwitch = itemView.findViewById(R.id.toggle_button);
-                        divider = itemView.findViewById(R.id.divider);
-                        chipType = itemView.findViewById(R.id.type);
-                        itemView.findViewById(R.id.launch).setVisibility(View.GONE);
-                        itemView.findViewById(R.id.edit_shortcut_btn).setVisibility(View.GONE);
-                        break;
-                    case PROVIDERS:
-                        imageView = itemView.findViewById(R.id.icon);
-                        textView1 = itemView.findViewById(R.id.label);
-                        textView2 = itemView.findViewById(R.id.name);
-                        textView3 = itemView.findViewById(R.id.launchMode);
-                        textView4 = itemView.findViewById(R.id.orientation);
-                        textView5 = itemView.findViewById(R.id.softInput);
-                        textView6 = itemView.findViewById(R.id.taskAffinity);
-                        textView7 = itemView.findViewById(R.id.process_name);
-                        toggleSwitch = itemView.findViewById(R.id.toggle_button);
-                        divider = itemView.findViewById(R.id.divider);
-                        chipType = itemView.findViewById(R.id.type);
-                        itemView.findViewById(R.id.launch).setVisibility(View.GONE);
-                        itemView.findViewById(R.id.edit_shortcut_btn).setVisibility(View.GONE);
-                        break;
                     case PERMISSIONS:
                         imageView = itemView.findViewById(R.id.icon);
                         textView1 = itemView.findViewById(R.id.label);
@@ -846,10 +654,6 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             @SuppressLint("InflateParams") final View view;
             switch (mRequestedProperty) {
-                case ACTIVITIES:
-                case SERVICES:
-                case RECEIVERS:
-                case PROVIDERS:
                 case PERMISSIONS:
                 case NONE:
                 case APP_INFO:
@@ -882,15 +686,6 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             Context context = holder.itemView.getContext();
             switch (mRequestedProperty) {
-                case SERVICES:
-                    getServicesView(context, holder, position);
-                    break;
-                case RECEIVERS:
-                    getReceiverView(context, holder, position);
-                    break;
-                case PROVIDERS:
-                    getProviderView(context, holder, position);
-                    break;
                 case APP_OPS:
                     getAppOpsView(context, holder, position);
                     break;
@@ -912,11 +707,8 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                 case SHARED_LIBRARIES:
                     getSharedLibsView(context, holder, position);
                     break;
-                case ACTIVITIES:
                 case NONE:
-                case APP_INFO:
                 default:
-                    getActivityView(context, holder, position);
                     break;
             }
         }
@@ -931,378 +723,6 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             synchronized (mAdapterList) {
                 return mAdapterList.size();
             }
-        }
-
-        private void handleBlock(@NonNull ViewHolder holder, @NonNull AppDetailsComponentItem item, RuleType ruleType) {
-            holder.toggleSwitch.setChecked(!item.isBlocked());
-            holder.toggleSwitch.setVisibility(View.VISIBLE);
-            holder.toggleSwitch.setOnClickListener(buttonView -> {
-                String componentStatus = item.isBlocked()
-                        ? ComponentRule.COMPONENT_TO_BE_DEFAULTED
-                        : AppPref.getDefaultComponentStatus();
-                applyRules(item, ruleType, componentStatus);
-            });
-            holder.toggleSwitch.setOnLongClickListener(v -> {
-                PopupMenu popupMenu = new PopupMenu(mActivity, holder.toggleSwitch);
-                popupMenu.inflate(R.menu.fragment_app_details_components_selection_actions);
-                popupMenu.setOnMenuItemClickListener(item1 -> {
-                    int id = item1.getItemId();
-                    String componentStatus;
-                    if (id == R.id.action_ifw_and_disable) {
-                        componentStatus = ComponentRule.COMPONENT_TO_BE_BLOCKED_IFW_DISABLE;
-                    } else if (id == R.id.action_ifw) {
-                        componentStatus = ComponentRule.COMPONENT_TO_BE_BLOCKED_IFW;
-                    } else if (id == R.id.action_disable) {
-                        componentStatus = ComponentRule.COMPONENT_TO_BE_DISABLED;
-                    } else if (id == R.id.action_enable) {
-                        componentStatus = ComponentRule.COMPONENT_TO_BE_ENABLED;
-                    } else if (id == R.id.action_default) {
-                        componentStatus = ComponentRule.COMPONENT_TO_BE_DEFAULTED;
-                    } else {
-                        componentStatus = ComponentRule.COMPONENT_TO_BE_BLOCKED_IFW_DISABLE;
-                    }
-                    applyRules(item, ruleType, componentStatus);
-                    return true;
-                });
-                popupMenu.show();
-                return true;
-            });
-        }
-
-        private void getActivityView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
-            final AppDetailsComponentItem componentItem;
-            synchronized (mAdapterList) {
-                componentItem = (AppDetailsComponentItem) mAdapterList.get(index);
-            }
-            final ActivityInfo activityInfo = (ActivityInfo) componentItem.vanillaItem;
-            final String activityName = componentItem.name;
-            final boolean isDisabled = !mIsExternalApk && componentItem.isDisabled();
-            // Background color: regular < tracker < disabled < blocked
-            if (!mIsExternalApk && componentItem.isBlocked()) {
-                holder.divider.setDividerColor(ColorCodes.getComponentBlockedIndicatorColor(context));
-            } else if (isDisabled) {
-                holder.divider.setDividerColor(ColorCodes.getComponentExternallyBlockedIndicatorColor(context));
-            } else if (componentItem.isTracker()) {
-                holder.divider.setDividerColor(ColorCodes.getComponentTrackerIndicatorColor(context));
-            } else {
-                holder.divider.setDividerColor(mDefaultIndicatorColor);
-            }
-            if (componentItem.isTracker()) {
-                holder.chipType.setText(R.string.tracker);
-                holder.chipType.setVisibility(View.VISIBLE);
-            } else holder.chipType.setVisibility(View.GONE);
-            // Name
-            if (mConstraint != null && activityName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
-                // Highlight searched query
-                holder.textView2.setText(UIUtils.getHighlightedText(activityName, mConstraint, mColorQueryStringHighlight));
-            } else {
-                holder.textView2.setText(activityName.startsWith(mPackageName) ?
-                        activityName.replaceFirst(mPackageName, "") : activityName);
-            }
-            // Icon
-            mImageLoader.displayImage(mPackageName + "_" + activityName, activityInfo, holder.imageView);
-            // TaskAffinity
-            holder.textView3.setText(String.format(Locale.ROOT, "%s: %s",
-                    getString(R.string.task_affinity), activityInfo.taskAffinity));
-            // LaunchMode
-            holder.textView4.setText(String.format(Locale.ROOT, "%s: %s | %s: %s",
-                    getString(R.string.launch_mode), getString(Utils.getLaunchMode(activityInfo.launchMode)),
-                    getString(R.string.orientation), getString(Utils.getOrientationString(activityInfo.screenOrientation))));
-            // Orientation
-            holder.textView5.setText(Utils.getActivitiesFlagsString(activityInfo.flags));
-            // SoftInput
-            holder.textView6.setText(String.format(Locale.ROOT, "%s: %s | %s",
-                    getString(R.string.soft_input), Utils.getSoftInputString(activityInfo.softInputMode),
-                    (activityInfo.permission == null ? getString(R.string.require_no_permission) : activityInfo.permission)));
-            // Label
-            String appLabel = activityInfo.applicationInfo.loadLabel(mPackageManager).toString();
-            String activityLabel = activityInfo.loadLabel(mPackageManager).toString();
-            String label = (activityLabel.equals(appLabel) || TextUtils.isEmpty(activityLabel))
-                    ? Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(activityName))
-                    : activityLabel;
-            holder.textView1.setText(label);
-            // Process name
-            String processName = activityInfo.processName;
-            if (processName != null && !processName.equals(mPackageName)) {
-                holder.textView7.setVisibility(View.VISIBLE);
-                holder.textView7.setText(String.format(Locale.ROOT, "%s: %s",
-                        getString(R.string.process_name), processName));
-            } else holder.textView7.setVisibility(View.GONE);
-            boolean isExported = activityInfo.exported;
-            // An activity is allowed to launch only if it's
-            // 1) Not from an external APK
-            // 2) Root enabled or the activity is exportable
-            // 3) App or the activity is not disabled and/or blocked
-            boolean canLaunch = !mIsExternalApk && (mIsRootEnabled || isExported)
-                    && !isDisabled
-                    && !componentItem.isBlocked();
-            if (canLaunch) {
-                holder.launchBtn.setOnClickListener(v -> {
-                    Intent intent = new Intent();
-                    intent.setClassName(mPackageName, activityName);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    try {
-                        ActivityManagerCompat.startActivity(mActivity, intent,
-                                Objects.requireNonNull(mMainModel).getUserHandle());
-                    } catch (Throwable e) {
-                        UIUtils.displayLongToast(e.getLocalizedMessage());
-                    }
-                });
-                if (FeatureController.isInterceptorEnabled()) {
-                    boolean needRoot = mIsRootEnabled && (!isExported || (activityInfo.permission != null
-                            && ContextCompat.checkSelfPermission(context, activityInfo.permission)
-                            != PackageManager.PERMISSION_GRANTED));
-                    holder.launchBtn.setOnLongClickListener(v -> {
-                        Intent intent = new Intent(mActivity, ActivityInterceptor.class);
-                        intent.putExtra(ActivityInterceptor.EXTRA_PACKAGE_NAME, mPackageName);
-                        intent.putExtra(ActivityInterceptor.EXTRA_CLASS_NAME, activityName);
-                        intent.putExtra(ActivityInterceptor.EXTRA_USER_HANDLE,
-                                Objects.requireNonNull(mMainModel).getUserHandle());
-                        intent.putExtra(ActivityInterceptor.EXTRA_ROOT, needRoot);
-                        startActivity(intent);
-                        return true;
-                    });
-                }
-                holder.shortcutBtn.setOnClickListener(v -> {
-                    DialogFragment dialog = new EditShortcutDialogFragment();
-                    Bundle args = new Bundle();
-                    args.putParcelable(EditShortcutDialogFragment.ARG_ACTIVITY_INFO, activityInfo);
-                    args.putCharSequence(EditShortcutDialogFragment.ARG_SHORTCUT_NAME, label);
-                    dialog.setArguments(args);
-                    dialog.show(getParentFragmentManager(), EditShortcutDialogFragment.TAG);
-                });
-                holder.shortcutBtn.setVisibility(View.VISIBLE);
-                holder.launchBtn.setVisibility(View.VISIBLE);
-            } else {
-                holder.shortcutBtn.setVisibility(View.GONE);
-                holder.launchBtn.setVisibility(View.GONE);
-            }
-            // Blocking
-            if (!mIsExternalApk && (Ops.isRoot() || (Ops.isPrivileged() && mTestOnlyApp))) {
-                handleBlock(holder, componentItem, RuleType.ACTIVITY);
-            } else holder.toggleSwitch.setVisibility(View.GONE);
-            ((MaterialCardView) holder.itemView).setCardBackgroundColor(mCardColor1);
-        }
-
-        private void getServicesView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
-            final AppDetailsServiceItem serviceItem;
-            synchronized (mAdapterList) {
-                serviceItem = (AppDetailsServiceItem) mAdapterList.get(index);
-            }
-            final ServiceInfo serviceInfo = (ServiceInfo) serviceItem.vanillaItem;
-            final boolean isDisabled = !mIsExternalApk && serviceItem.isDisabled();
-            // Background color: regular < tracker < disabled < blocked < running
-            if (serviceItem.isRunning()) {
-                holder.divider.setDividerColor(ColorCodes.getComponentRunningIndicatorColor(context));
-            } else if (!mIsExternalApk && serviceItem.isBlocked()) {
-                holder.divider.setDividerColor(ColorCodes.getComponentBlockedIndicatorColor(context));
-            } else if (isDisabled) {
-                holder.divider.setDividerColor(ColorCodes.getComponentExternallyBlockedIndicatorColor(context));
-            } else if (serviceItem.isTracker()) {
-                holder.divider.setDividerColor(ColorCodes.getComponentTrackerIndicatorColor(context));
-            } else {
-                holder.divider.setDividerColor(mDefaultIndicatorColor);
-            }
-            if (serviceItem.isTracker()) {
-                holder.chipType.setText(R.string.tracker);
-                holder.chipType.setVisibility(View.VISIBLE);
-            } else holder.chipType.setVisibility(View.GONE);
-            // Label
-            holder.textView1.setText(Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(serviceInfo.name)));
-            // Name
-            if (mConstraint != null && serviceInfo.name.toLowerCase(Locale.ROOT).contains(mConstraint)) {
-                // Highlight searched query
-                holder.textView2.setText(UIUtils.getHighlightedText(serviceInfo.name, mConstraint, mColorQueryStringHighlight));
-            } else {
-                holder.textView2.setText(serviceInfo.name.startsWith(mPackageName) ?
-                        serviceInfo.name.replaceFirst(mPackageName, "") : serviceInfo.name);
-            }
-            // Icon
-            mImageLoader.displayImage(mPackageName + "_" + serviceInfo.name, serviceInfo, holder.imageView);
-            // Flags and Permission
-            StringBuilder flagsAndPermission = new StringBuilder(Utils.getServiceFlagsString(serviceInfo.flags));
-            if (flagsAndPermission.length() != 0) {
-                flagsAndPermission.append("\n");
-            }
-            flagsAndPermission.append(serviceInfo.permission != null ? serviceInfo.permission : getString(R.string.require_no_permission));
-            holder.textView3.setText(flagsAndPermission);
-            // Process name
-            String processName = serviceInfo.processName;
-            if (processName != null && !processName.equals(mPackageName)) {
-                holder.textView7.setVisibility(View.VISIBLE);
-                holder.textView7.setText(String.format(Locale.ROOT, "%s: %s",
-                        getString(R.string.process_name), processName));
-            } else holder.textView7.setVisibility(View.GONE);
-            // A service is allowed to launch only if it's
-            // 1) Not from an external APK
-            // 2) Root enabled or the service is exportable without any permission
-            // 3) App or the service is not disabled and/or blocked
-            boolean canLaunch = !mIsExternalApk
-                    && (mIsRootEnabled || (serviceInfo.exported && serviceInfo.permission == null))
-                    && !isDisabled
-                    && !serviceItem.isBlocked();
-            if (canLaunch) {
-                holder.launchBtn.setOnClickListener(v -> {
-                    Intent intent = new Intent();
-                    intent.setClassName(mPackageName, serviceInfo.name);
-                    try {
-                        ActivityManagerCompat.startService(mActivity, intent,
-                                Objects.requireNonNull(mMainModel).getUserHandle(), true);
-                    } catch (Throwable th) {
-                        th.printStackTrace();
-                        Toast.makeText(context, th.toString(), Toast.LENGTH_LONG).show();
-                    }
-                });
-                holder.launchBtn.setVisibility(View.VISIBLE);
-            } else {
-                holder.launchBtn.setVisibility(View.GONE);
-            }
-            // Blocking
-            if (!mIsExternalApk && (Ops.isRoot() || (Ops.isPrivileged() && mTestOnlyApp))) {
-                handleBlock(holder, serviceItem, RuleType.SERVICE);
-            } else holder.toggleSwitch.setVisibility(View.GONE);
-            ((MaterialCardView) holder.itemView).setCardBackgroundColor(mCardColor1);
-        }
-
-        private void getReceiverView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
-            final AppDetailsComponentItem componentItem;
-            synchronized (mAdapterList) {
-                componentItem = (AppDetailsComponentItem) mAdapterList.get(index);
-            }
-            final ActivityInfo activityInfo = (ActivityInfo) componentItem.vanillaItem;
-            // Background color: regular < tracker < disabled < blocked
-            if (!mIsExternalApk && componentItem.isBlocked()) {
-                holder.divider.setDividerColor(ColorCodes.getComponentBlockedIndicatorColor(context));
-            } else if (!mIsExternalApk && componentItem.isDisabled()) {
-                holder.divider.setDividerColor(ColorCodes.getComponentExternallyBlockedIndicatorColor(context));
-            } else if (componentItem.isTracker()) {
-                holder.divider.setDividerColor(ColorCodes.getComponentTrackerIndicatorColor(context));
-            } else {
-                holder.divider.setDividerColor(mDefaultIndicatorColor);
-            }
-            if (componentItem.isTracker()) {
-                holder.chipType.setText(R.string.tracker);
-                holder.chipType.setVisibility(View.VISIBLE);
-            } else holder.chipType.setVisibility(View.GONE);
-            // Label
-            holder.textView1.setText(Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(activityInfo.name)));
-            // Name
-            if (mConstraint != null && activityInfo.name.toLowerCase(Locale.ROOT).contains(mConstraint)) {
-                // Highlight searched query
-                holder.textView2.setText(UIUtils.getHighlightedText(activityInfo.name, mConstraint, mColorQueryStringHighlight));
-            } else {
-                holder.textView2.setText(activityInfo.name.startsWith(mPackageName) ?
-                        activityInfo.name.replaceFirst(mPackageName, "")
-                        : activityInfo.name);
-            }
-            // Icon
-            mImageLoader.displayImage(mPackageName + "_" + activityInfo.name, activityInfo, holder.imageView);
-            // TaskAffinity
-            holder.textView3.setText(String.format(Locale.ROOT, "%s: %s",
-                    getString(R.string.task_affinity), activityInfo.taskAffinity));
-            // LaunchMode
-            holder.textView4.setText(String.format(Locale.ROOT, "%s: %s | %s: %s",
-                    getString(R.string.launch_mode), getString(Utils.getLaunchMode(activityInfo.launchMode)),
-                    getString(R.string.orientation), getString(Utils.getOrientationString(activityInfo.screenOrientation))));
-            // Orientation
-            holder.textView5.setText(activityInfo.permission == null ? getString(R.string.require_no_permission) : activityInfo.permission);
-            // SoftInput
-            holder.textView6.setText(String.format(Locale.ROOT, "%s: %s",
-                    getString(R.string.soft_input), Utils.getSoftInputString(activityInfo.softInputMode)));
-            // Process name
-            String processName = activityInfo.processName;
-            if (processName != null && !processName.equals(mPackageName)) {
-                holder.textView7.setVisibility(View.VISIBLE);
-                holder.textView7.setText(String.format(Locale.ROOT, "%s: %s",
-                        getString(R.string.process_name), processName));
-            } else holder.textView7.setVisibility(View.GONE);
-            // Blocking
-            if (!mIsExternalApk && (Ops.isRoot() || (Ops.isPrivileged() && mTestOnlyApp))) {
-                handleBlock(holder, componentItem, RuleType.RECEIVER);
-            } else holder.toggleSwitch.setVisibility(View.GONE);
-            ((MaterialCardView) holder.itemView).setCardBackgroundColor(mCardColor1);
-        }
-
-        private void getProviderView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
-            final AppDetailsComponentItem componentItem;
-            synchronized (mAdapterList) {
-                componentItem = (AppDetailsComponentItem) mAdapterList.get(index);
-            }
-            final ProviderInfo providerInfo = (ProviderInfo) componentItem.vanillaItem;
-            final String providerName = providerInfo.name;
-            // Background color: regular < tracker < disabled < blocked
-            if (!mIsExternalApk && componentItem.isBlocked()) {
-                holder.divider.setDividerColor(ColorCodes.getComponentBlockedIndicatorColor(context));
-            } else if (!mIsExternalApk && componentItem.isDisabled()) {
-                holder.divider.setDividerColor(ColorCodes.getComponentExternallyBlockedIndicatorColor(context));
-            } else if (componentItem.isTracker()) {
-                holder.divider.setDividerColor(ColorCodes.getComponentTrackerIndicatorColor(context));
-            } else {
-                holder.divider.setDividerColor(mDefaultIndicatorColor);
-            }
-            if (componentItem.isTracker()) {
-                holder.chipType.setText(R.string.tracker);
-                holder.chipType.setVisibility(View.VISIBLE);
-            } else holder.chipType.setVisibility(View.GONE);
-            // Label
-            holder.textView1.setText(Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(providerName)));
-            // Icon
-            mImageLoader.displayImage(mPackageName + "_" + providerName, providerInfo, holder.imageView);
-            // Uri permission
-            holder.textView3.setText(String.format(Locale.ROOT, "%s: %s", getString(R.string.grant_uri_permission), providerInfo.grantUriPermissions));
-            // Path permissions
-            PathPermission[] pathPermissions = providerInfo.pathPermissions;
-            String finalString;
-            if (pathPermissions != null) {
-                StringBuilder builder = new StringBuilder();
-                String read = getString(R.string.read);
-                String write = getString(R.string.write);
-                for (PathPermission permission : pathPermissions) {
-                    builder.append(read).append(": ").append(permission.getReadPermission());
-                    builder.append("/");
-                    builder.append(write).append(": ").append(permission.getWritePermission());
-                    builder.append(", ");
-                }
-                Utils.checkStringBuilderEnd(builder);
-                finalString = builder.toString();
-            } else finalString = "null";
-            holder.textView4.setText(String.format(Locale.ROOT, "%s: %s", getString(R.string.path_permissions), finalString)); // +"\n"+providerInfo.readPermission +"\n"+providerInfo.writePermission);
-            // Pattern matchers
-            PatternMatcher[] patternMatchers = providerInfo.uriPermissionPatterns;
-            String finalString1;
-            if (patternMatchers != null) {
-                StringBuilder builder = new StringBuilder();
-                for (PatternMatcher patternMatcher : patternMatchers) {
-                    builder.append(patternMatcher.toString());
-                    builder.append(", ");
-                }
-                Utils.checkStringBuilderEnd(builder);
-                finalString1 = builder.toString();
-            } else
-                finalString1 = "null";
-            holder.textView5.setText(String.format(Locale.ROOT, "%s: %s", getString(R.string.patterns_allowed), finalString1));
-            // Authority
-            holder.textView6.setText(String.format(Locale.ROOT, "%s: %s", getString(R.string.authority), providerInfo.authority));
-            // Name
-            if (mConstraint != null && providerName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
-                // Highlight searched query
-                holder.textView2.setText(UIUtils.getHighlightedText(providerName, mConstraint, mColorQueryStringHighlight));
-            } else {
-                holder.textView2.setText(providerName.startsWith(mPackageName) ?
-                        providerName.replaceFirst(mPackageName, "") : providerName);
-            }
-            // Process name
-            String processName = providerInfo.processName;
-            if (processName != null && !processName.equals(mPackageName)) {
-                holder.textView7.setVisibility(View.VISIBLE);
-                holder.textView7.setText(String.format(Locale.ROOT, "%s: %s",
-                        getString(R.string.process_name), processName));
-            } else holder.textView7.setVisibility(View.GONE);
-            // Blocking
-            if (!mIsExternalApk && (Ops.isRoot() || (Ops.isPrivileged() && mTestOnlyApp))) {
-                handleBlock(holder, componentItem, RuleType.PROVIDER);
-            } else holder.toggleSwitch.setVisibility(View.GONE);
-            ((MaterialCardView) holder.itemView).setCardBackgroundColor(mCardColor1);
         }
 
         private void getAppOpsView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
@@ -1376,7 +796,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                 String protectionLevel = Utils.getProtectionLevelString(permissionInfo);
                 protectionLevel += '|' + (Objects.requireNonNull(item.permission).isGranted() ? "granted" : "revoked");
                 holder.textView3.setVisibility(View.VISIBLE);
-                holder.textView3.setText(String.format(Locale.ROOT, "\u2691 %s", protectionLevel));
+                holder.textView3.setText(String.format(Locale.ROOT, "⚑ %s", protectionLevel));
                 // Set package name
                 if (permissionInfo.packageName != null) {
                     holder.textView4.setVisibility(View.VISIBLE);
@@ -1473,7 +893,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             // Protection level
             String protectionLevel = Utils.getProtectionLevelString(permissionInfo);
             protectionLevel += '|' + (permissionItem.permission.isGranted() ? "granted" : "revoked");
-            holder.textView3.setText(String.format(Locale.ROOT, "\u2691 %s", protectionLevel));
+            holder.textView3.setText(String.format(Locale.ROOT, "⚑ %s", protectionLevel));
             // Set background color
             if (permissionItem.isDangerous) {
                 holder.divider.setDividerColor(ColorCodes.getPermissionDangerousIndicatorColor(context));
@@ -1627,7 +1047,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                     getString(R.string.group), permissionInfo.group + permAppOp(permissionInfo.name)));
             // Protection level
             String protectionLevel = Utils.getProtectionLevelString(permissionInfo);
-            holder.textView5.setText(String.format(Locale.ROOT, "\u2691 %s", protectionLevel));
+            holder.textView5.setText(String.format(Locale.ROOT, "⚑ %s", protectionLevel));
             // Set border color
             if (protectionLevel.contains("dangerous")) {
                 holder.divider.setDividerColor(ColorCodes.getPermissionDangerousIndicatorColor(context));
