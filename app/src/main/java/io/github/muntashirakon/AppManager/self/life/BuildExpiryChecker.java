@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.self.life;
 import android.content.Intent;
 import android.net.Uri;
 
+import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -12,12 +13,18 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 
 public final class BuildExpiryChecker {
+    @IntDef({BUILD_TYPE_DEBUG, BUILD_TYPE_ALPHA, BUILD_TYPE_BETA, BUILD_TYPE_RC, BUILD_TYPE_STABLE})
+    @Retention(RetentionPolicy.SOURCE)
+    private @interface BuildType {}
+
     private static final int BUILD_TYPE_DEBUG = 0;
     private static final int BUILD_TYPE_ALPHA = 1;
     private static final int BUILD_TYPE_BETA = 2;
@@ -42,7 +49,7 @@ public final class BuildExpiryChecker {
 
     @NonNull
     public static AlertDialog getBuildExpiredDialog(@NonNull FragmentActivity activity) {
-        return new MaterialAlertDialogBuilder(activity)
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity)
                 .setTitle(R.string.app_manager_build_expired)
                 .setMessage(R.string.app_manager_build_expired_message)
                 .setCancelable(false)
@@ -59,8 +66,11 @@ public final class BuildExpiryChecker {
                     intent.setData(Uri.parse("package:" + BuildConfig.APPLICATION_ID));
                     activity.startActivity(intent);
                     activity.finishAndRemoveTask();
-                })
-                .create();
+                });
+        if (getBuildType() == BUILD_TYPE_STABLE) {
+            builder.setNeutralButton(R.string.action_continue, null);
+        }
+        return builder.create();
     }
 
     @Nullable
@@ -99,6 +109,7 @@ public final class BuildExpiryChecker {
         return Uri.parse("https://github.com/MuntashirAkon/AppManager/releases");
     }
 
+    @BuildType
     private static int getBuildType() {
         if (BuildConfig.DEBUG) {
             return BUILD_TYPE_DEBUG;
