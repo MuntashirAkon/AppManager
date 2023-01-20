@@ -18,6 +18,90 @@
 <changelog>
     <release
         type="alpha release"
+        version="v3.1.0-alpha03"
+        code="417"
+        date="20 January 2023">
+        <new>Added notice for the funding campaign</new>
+        <new>
+            Set an expiry date for each release
+        </new>
+        <note subtext="true">
+            To ensure the safety of the users, App Manager is set to expire several months after it is published. A
+            warning shall be issued for a certain period before the expiry date. After that, App Manager shall
+            completely stop responding to any requests and prompt user to update or uninstall the application. However,
+            for stable releases, it will still be possible to use the application but the warning shall be displayed
+            every time the application is launched.
+        </note>
+        <improve>Enabled searching in various selection dialogs</improve>
+        <improve>Handle incomplete USB debugging</improve>
+        <note subtext="true">
+            On certain devices, enabling USB debugging may not be enough to use ADB. In such cases, App Manager will
+            report incomplete USB debugging along with a potential way to solve the issue.
+        </note>
+        <improve>
+            Improved cache management in the app by periodically cleaning the obsolete files from the cache
+        </improve>
+        <improve>Removed the necessity of [tt].tmp[/tt] directory</improve>
+        <improve>Replaced “Instructions” with “User Manual”</improve>
+        <improve>Resolve OID names of the X509 certificates</improve>
+        <fix title="Installer">
+            Prevented installer from running forever in no-root mode due to the mismanagement of installer queue
+        </fix>
+        <fix title="Interceptor">Fixed crashing in Motorola devices</fix>
+        <fix title="TV">Fixed cropping the banner icon</fix>
+        <fix>Fixed [tt]/proc/$PID/stat[/tt] parsing bug</fix>
+        <fix>Fixed crashes by avoiding the deletion of channels of the ongoing notifications</fix>
+        <fix>Fixed crashing if the resource string to be parsed is ill-formatted</fix>
+        <fix>Fixed loading/storing URI grants (SAF) in Android 12 and later</fix>
+        <fix>Fixed retrieving usage stats in no-root mode</fix>
+        <fix>Fixed some broken features (e.g. MagiskHide, DenyList) due to I/O errors in libsu</fix>
+        <fix>Fixed SSAID not working in Android 12 and later</fix>
+        <fix>Fixed various memory leaks</fix>
+
+        <title type="medium">App Details page</title>
+        <new title="App Info tab">New tag: WX</new>
+        <note subtext="true">
+            WX tag is displayed in Android 10 and later if the application targets Android 9 or earlier. It indicates
+            [a href="https://en.wikipedia.org/wiki/W%5EX"]W^X[/a] violation which allows the app to execute arbitrary
+            executable files either by the modification of executables embedded within the app or by downloading them
+            from the Internet.
+        </note>
+        <improve>Hide tips forever if close button is clicked</improve>
+        <improve>Try [tt]vacuum[/tt]-ing the databases before displaying the open with dialog</improve>
+        <note subtext="true">
+            To improve speed, databases are often stored in multiple files. Therefore, simply opening the main database
+            may not cover all the data in the database. By [tt]vacuum[/tt]-ing the database, all the files are merged
+            into a single database file, thereby, preventing any consistency issues.
+        </note>
+        <improve>Used monospace font in SSAID fields</improve>
+        <fix>Disabled launch buttons in the component tabs if the app is frozen</fix>
+        <fix>Fixed links not working in Play App Signing dialog</fix>
+
+        <title type="medium">Explorer page</title>
+        <new>Added list options containing various sorting and folder options</new>
+        <new>Allowed opening [b]jar[/b] and [b]dex[/b] files</new>
+
+        <title type="medium">Main page</title>
+        <new title="Batch Ops">Added an option to export app list</new>
+        <note subtext="true">
+            App list can be exported in either XML or Markdown format, making it easier to store or share. List exported
+            in XML format may be also imported to App Manager in the future.
+        </note>
+        <new>New sorting options: data usage, launch count, screen time, last usage time</new>
+        <new>
+            New filtering options: apps using Android KeyStore, apps using SAF (Storage Access Framework), apps with
+            SSAID.
+        </new>
+        <improve>Improve updating the list of applications</improve>
+        <fix>Fixed searching issues in non-virtual keyboard</fix>
+        <fix>Fixed crashing on clicking items in list options</fix>
+        <note>
+            [br /][b]Full list of changes:[/b] [a
+            href="https://github.com/MuntashirAkon/AppManager/compare/v3.1.0-alpha02...v3.1.0-alpha03"]v3.1.0-alpha02...v3.1.0-alpha03[/a]
+        </note>
+    </release>
+    <release
+        type="alpha release"
         version="v3.1.0-alpha02"
         code="415"
         date="02 December 2022">
@@ -116,6 +200,10 @@
         <fix>Fixed icon theming issues in Android 12</fix>
         <fix>Fixed loading dynamic colours in the splash screen</fix>
         <fix>Fixed applying the pure black theme on some devices</fix>
+        <note>
+            [br /][b]Full list of changes:[/b] [a
+            href="https://github.com/MuntashirAkon/AppManager/compare/v3.1.0-alpha01...v3.1.0-alpha02"]v3.1.0-alpha01...v3.1.0-alpha02[/a]
+        </note>
     </release>
     <release
         type="alpha release"
