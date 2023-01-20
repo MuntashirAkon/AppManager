@@ -76,6 +76,7 @@ import io.github.muntashirakon.AppManager.db.utils.AppDb;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.main.ApplicationItem;
+import io.github.muntashirakon.AppManager.misc.OidMap;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
@@ -860,8 +861,9 @@ public final class PackageUtils {
         if (critSet != null && !critSet.isEmpty()) {
             builder.append("\n").append(getTitleText(ctx, ctx.getString(R.string.critical_exts)));
             for (String oid : critSet) {
+                String oidName = OidMap.getName(oid);
                 builder.append("\n- ")
-                        .append(getPrimaryText(ctx, oid + separator))
+                        .append(getPrimaryText(ctx, (oidName != null ? oidName : oid) + separator))
                         .append(getMonospacedText(Utils.bytesToHex(certificate.getExtensionValue(oid))));
             }
         }
@@ -869,8 +871,9 @@ public final class PackageUtils {
         if (nonCritSet != null && !nonCritSet.isEmpty()) {
             builder.append("\n").append(getTitleText(ctx, ctx.getString(R.string.non_critical_exts)));
             for (String oid : nonCritSet) {
+                String oidName = OidMap.getName(oid);
                 builder.append("\n- ")
-                        .append(getPrimaryText(ctx, oid + separator))
+                        .append(getPrimaryText(ctx, (oidName != null ? oidName : oid) + separator))
                         .append(getMonospacedText(Utils.bytesToHex(certificate.getExtensionValue(oid))));
             }
         }
@@ -898,14 +901,14 @@ public final class PackageUtils {
         }
         if (result.isVerified()) {
             if (warnCount == 0) {
-                builder.append(getColoredText(getTitleText(ctx, "\u2714 " +
+                builder.append(getColoredText(getTitleText(ctx, "✔ " +
                         ctx.getString(R.string.verified)), colorSuccess));
             } else {
-                builder.append(getColoredText(getTitleText(ctx, "\u2714 " + ctx.getResources()
+                builder.append(getColoredText(getTitleText(ctx, "✔ " + ctx.getResources()
                         .getQuantityString(R.plurals.verified_with_warning, warnCount, warnCount)), colorSuccess));
             }
             if (result.isSourceStampVerified()) {
-                builder.append("\n\u2714 ").append(ctx.getString(R.string.source_stamp_verified));
+                builder.append("\n✔ ").append(ctx.getString(R.string.source_stamp_verified));
             }
             List<CharSequence> sigSchemes = new LinkedList<>();
             if (result.isVerifiedUsingV1Scheme()) sigSchemes.add("v1");
@@ -916,7 +919,7 @@ public final class PackageUtils {
                     .getQuantityString(R.plurals.app_signing_signature_schemes_pl, sigSchemes.size()) + LangUtils.getSeparatorString()));
             builder.append(TextUtilsCompat.joinSpannable(", ", sigSchemes));
         } else {
-            builder.append(getColoredText(getTitleText(ctx, "\u2718 " + ctx.getString(R.string.not_verified)), colorFailure));
+            builder.append(getColoredText(getTitleText(ctx, "✘ " + ctx.getString(R.string.not_verified)), colorFailure));
         }
         builder.append("\n");
         // If there are errors, no certificate info will be loaded
