@@ -48,6 +48,7 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
+import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
@@ -426,9 +427,7 @@ public final class PackageInstallerCompat {
 
     @NonNull
     public static PackageInstallerCompat getNewInstance(int userHandle, @NonNull String installerPackageName) {
-        PackageInstallerCompat packageInstaller = new PackageInstallerCompat(userHandle);
-        packageInstaller.installerPackageName = installerPackageName;
-        return packageInstaller;
+        return new PackageInstallerCompat(userHandle, installerPackageName);
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -494,19 +493,21 @@ public final class PackageInstallerCompat {
     private IPackageInstaller packageInstaller;
     private PackageInstaller.Session session;
     private final boolean allUsers;
-    private String installerPackageName;
+    private final String installerPackageName;
+    private final String callerPackageName;
     private final boolean isPrivileged;
 
     private PackageInstallerCompat(@UserIdInt int userHandle) {
+        this(userHandle, Ops.isReallyPrivileged() ? AppPref.getString(AppPref.PrefKey.PREF_INSTALLER_INSTALLER_APP_STR) : context.getPackageName());
+    }
+
+    private PackageInstallerCompat(@UserIdInt int userHandle, @NonNull String installerPackageName) {
         this.isPrivileged = Ops.isReallyPrivileged();
         this.allUsers = isPrivileged && userHandle == UserHandleHidden.USER_ALL;
         this.userHandle = allUsers ? UserHandleHidden.myUserId() : userHandle;
-        Log.d(TAG, "Installing for " + (allUsers ? "all users" : "user " + userHandle));
-        if (isPrivileged) {
-            this.installerPackageName = (String) AppPref.get(AppPref.PrefKey.PREF_INSTALLER_INSTALLER_APP_STR);
-        } else {
-            this.installerPackageName = context.getPackageName();
-        }
+        this.installerPackageName = installerPackageName;
+        this.callerPackageName = isPrivileged ? ActivityManagerCompat.SHELL_PACKAGE_NAME : context.getPackageName();
+        Log.d(TAG, "(Un)Installing for " + (allUsers ? "all users" : "user " + userHandle));
         Log.d(TAG, "Installer app: " + installerPackageName);
     }
 
@@ -776,11 +777,89 @@ public final class PackageInstallerCompat {
     }
 
     @SuppressWarnings("deprecation")
-    public static void uninstall(String packageName, @UserIdInt int userHandle, boolean keepData) throws Exception {
-        IPackageInstaller pi = PackageManagerCompat.getPackageInstaller();
-        LocalIntentReceiver receiver = new LocalIntentReceiver();
-        IntentSender sender = receiver.getIntentSender();
-        boolean isPrivileged = Ops.isReallyPrivileged();
+    public boolean uninstall(String packageName, boolean keepData) {
+        this.packageName = packageName;
+        int flags;
+        try {
+            flags = getUninstallFlags(packageName, keepData);
+        } catch (Exception e) {
+            callFinish(STATUS_FAILURE_SESSION_CREATE);
+            Log.e(TAG, "Uninstall: Could not get PackageInstaller.", e);
+            return false;
+        }
+        int userId = getCorrectUserId(packageName, this.userHandle);
+        try {
+            packageInstaller = PackageManagerCompat.getPackageInstaller();
+        } catch (RemoteException e) {
+            callFinish(STATUS_FAILURE_SESSION_CREATE);
+            Log.e(TAG, "Uninstall: Could not get PackageInstaller.", e);
+            return false;
+        }
+
+        // Perform uninstallation
+        IntentSender sender;
+        LocalIntentReceiver intentReceiver;
+        if (isPrivileged) {
+            Log.d(TAG, "Uninstall: Uninstall via LocalIntentReceiver...");
+            try {
+                intentReceiver = new LocalIntentReceiver();
+                sender = intentReceiver.getIntentSender();
+            } catch (Exception e) {
+                callFinish(STATUS_FAILURE_SESSION_COMMIT);
+                Log.e(TAG, "Uninstall: Could not uninstall " + packageName, e);
+                return false;
+            }
+        } else {
+            Log.d(TAG, "Uninstall: Calling activity to request permission...");
+            initBroadcastReceiver();
+            intentReceiver = null;
+            Intent callbackIntent = new Intent(PackageInstallerBroadcastReceiver.ACTION_PI_RECEIVER);
+            @SuppressLint("WrongConstant")
+            PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, callbackIntent,
+                    PendingIntentCompat.FLAG_MUTABLE);
+            sender = pendingIntent.getIntentSender();
+        }
+        Log.d(TAG, "Uninstall: Uninstalling...");
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                packageInstaller.uninstall(new VersionedPackage(packageName, PackageManager.VERSION_CODE_HIGHEST),
+                        callerPackageName, flags, sender, userId);
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                packageInstaller.uninstall(packageName, callerPackageName, flags, sender, userId);
+            } else packageInstaller.uninstall(packageName, flags, sender, userId);
+        } catch (Throwable th) { // primarily RemoteException
+            callFinish(STATUS_FAILURE_SESSION_COMMIT);
+            Log.e(TAG, "Uninstall: Could not uninstall " + packageName, th);
+            return false;
+        }
+        if (!isPrivileged) {
+            Log.d(TAG, "Uninstall: Waiting for user interaction...");
+            // Wait for user interaction (if needed)
+            try {
+                // Wait for user interaction
+                interactionWatcher.await();
+                // Wait for the installation to complete
+                installWatcher.await(1, TimeUnit.MINUTES);
+            } catch (InterruptedException e) {
+                Log.e("PIS", "Installation interrupted.", e);
+            }
+        } else {
+            Intent resultIntent = intentReceiver.getResult();
+            finalStatus = resultIntent.getIntExtra(PackageInstaller.EXTRA_STATUS, PackageInstaller.STATUS_FAILURE);
+            statusMessage = resultIntent.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE);
+        }
+        Log.d(TAG, "Uninstall: Finishing...");
+        if (!installCompleted) {
+            installCompleted(sessionId, finalStatus, null, statusMessage);
+        }
+        if (finalStatus == PackageInstaller.STATUS_SUCCESS && userHandle != UserHandleHidden.myUserId()) {
+            BroadcastUtils.sendPackageAltered(ContextUtils.getContext(), new String[]{packageName});
+        }
+        return finalStatus == PackageInstaller.STATUS_SUCCESS;
+    }
+
+    private int getUninstallFlags(@NonNull String packageName, boolean keepData)
+            throws PackageManager.NameNotFoundException, RemoteException {
         int flags = 0;
         if (!isPrivileged || userHandle != UserHandleHidden.USER_ALL) {
             PackageInfo info = PackageManagerCompat.getPackageInfo(packageName, 0, userHandle);
@@ -798,32 +877,23 @@ public final class PackageInstallerCompat {
             }
             if (userHandle == UserHandleHidden.USER_ALL) {
                 flags |= DELETE_ALL_USERS;
-                // Get correct user handle
-                int[] users = Users.getUsersIds();
-                for (int user : users) {
-                    try {
-                        PackageManagerCompat.getPackageInfo(packageName, 0, user);
-                        userHandle = user;
-                        break;
-                    } catch (Throwable ignore) {
-                    }
+            }
+        }
+        return flags;
+    }
+
+    private static int getCorrectUserId(@NonNull String packageName, @UserIdInt int userId) {
+        if (userId == UserHandleHidden.USER_ALL) {
+            int[] users = Users.getUsersIds();
+            for (int user : users) {
+                try {
+                    PackageManagerCompat.getPackageInfo(packageName, 0, user);
+                    return user;
+                } catch (Throwable ignore) {
                 }
             }
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            pi.uninstall(new VersionedPackage(packageName, PackageManager.VERSION_CODE_HIGHEST),
-                    null, flags, sender, userHandle);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            pi.uninstall(packageName, null, flags, sender, userHandle);
-        } else pi.uninstall(packageName, flags, sender, userHandle);
-        final Intent result = receiver.getResult();
-        final int status = result.getIntExtra(PackageInstaller.EXTRA_STATUS, PackageInstaller.STATUS_FAILURE);
-        if (status != PackageInstaller.STATUS_SUCCESS) {
-            throw new Exception(result.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE));
-        }
-        if (userHandle != UserHandleHidden.myUserId()) {
-            BroadcastUtils.sendPackageAltered(ContextUtils.getContext(), new String[]{packageName});
-        }
+        return userId;
     }
 
     // https://cs.android.com/android/platform/superproject/+/master:frameworks/base/services/core/java/com/android/server/pm/PackageManagerShellCommand.java;l=3855;drc=d31ee388115d17c2fd337f2806b37390c7d29834

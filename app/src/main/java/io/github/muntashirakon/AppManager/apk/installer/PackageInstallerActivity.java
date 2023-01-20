@@ -486,23 +486,16 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
     }
 
     private void reinstall() {
-        if (Ops.isPrivileged()) {
-            // User must be all
-            try {
-                PackageInstallerCompat.uninstall(model.getPackageName(),
-                        UserHandleHidden.USER_ALL, false);
-                install();
-            } catch (Exception e) {
-                getInstallationFinishedDialog(model.getPackageName(), getString(R.string.failed_to_uninstall_app),
-                        e.getMessage(), false).show();
-            }
-        } else {
+        if (!Ops.isPrivileged()) {
             multiplexer.enableUninstall(true);
-            // Uninstall using service, not guaranteed to work
-            // since it only uninstalls for the current user
-            Intent intent = new Intent(Intent.ACTION_DELETE);
-            intent.setData(Uri.parse("package:" + model.getPackageName()));
-            uninstallIntentLauncher.launch(intent);
+        }
+        PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance(UserHandleHidden.USER_ALL);
+        installer.setAppLabel(model.getAppLabel());
+        if (installer.uninstall(model.getPackageName(), false)) {
+            install();
+        } else {
+            getInstallationFinishedDialog(model.getPackageName(), getString(R.string.failed_to_uninstall_app),
+                    null, false).show();
         }
     }
 

@@ -281,12 +281,11 @@ class RestoreOp implements Closeable {
         if (!isVerified) {
             // Signature verification failed but still here because signature check is disabled.
             // The only way to restore is to reinstall the app
-            try {
-                synchronized (sLock) {
-                    PackageInstallerCompat.uninstall(packageName, userHandle, false);
+            synchronized (sLock) {
+                PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance(userHandle);
+                if (installer.uninstall(packageName, false)) {
+                    throw new BackupException("An uninstallation was necessary but couldn't perform it.");
                 }
-            } catch (Exception e) {
-                throw new BackupException("An uninstall was necessary but couldn't perform it.", e);
             }
         }
         // Setup package staging directory

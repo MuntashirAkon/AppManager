@@ -916,47 +916,39 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             // Set uninstall
             addToHorizontalLayout(R.string.uninstall, R.drawable.ic_trash_can).setOnClickListener(v -> {
                 final boolean isSystemApp = (mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
-                if (Ops.isPrivileged()) {
-                    ScrollableDialogBuilder builder = new ScrollableDialogBuilder(mActivity,
-                            isSystemApp ? R.string.uninstall_system_app_message : R.string.uninstall_app_message)
-                            .setCheckboxLabel(R.string.keep_data_and_app_signing_signatures)
-                            .setTitle(mPackageLabel)
-                            .setPositiveButton(R.string.uninstall, (dialog, which, keepData) -> executor.submit(() -> {
-                                try {
-                                    PackageInstallerCompat.uninstall(mPackageName, mainModel.getUserHandle(), keepData);
-                                    runOnUiThread(() -> {
-                                        displayLongToast(R.string.uninstalled_successfully, mPackageLabel);
-                                        mActivity.finish();
-                                    });
-                                } catch (Exception e) {
-                                    Log.e(TAG, e);
-                                    runOnUiThread(() -> displayLongToast(R.string.failed_to_uninstall, mPackageLabel));
+                ScrollableDialogBuilder builder = new ScrollableDialogBuilder(mActivity,
+                        isSystemApp ? R.string.uninstall_system_app_message : R.string.uninstall_app_message)
+                        .setCheckboxLabel(R.string.keep_data_and_app_signing_signatures)
+                        .setTitle(mPackageLabel)
+                        .setPositiveButton(R.string.uninstall, (dialog, which, keepData) -> executor.submit(() -> {
+                            PackageInstallerCompat installer = PackageInstallerCompat
+                                    .getNewInstance(mainModel.getUserHandle());
+                            installer.setAppLabel(mPackageLabel);
+                            boolean uninstalled = installer.uninstall(mPackageName, keepData);
+                            runOnUiThread(() -> {
+                                if (uninstalled) {
+                                    displayLongToast(R.string.uninstalled_successfully, mPackageLabel);
+                                    mActivity.finish();
+                                } else {
+                                    displayLongToast(R.string.failed_to_uninstall, mPackageLabel);
                                 }
-                            }))
-                            .setNegativeButton(R.string.cancel, (dialog, which, keepData) -> {
-                                if (dialog != null) dialog.cancel();
                             });
-                    if ((mApplicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) {
-                        builder.setNeutralButton(R.string.uninstall_updates, (dialog, which, keepData) ->
-                                executor.submit(() -> {
-                                    boolean isSuccessful = RunnerUtils.uninstallPackageUpdate(mPackageName, mainModel.getUserHandle(), keepData);
-                                    if (isSuccessful) {
-                                        runOnUiThread(() -> displayLongToast(R.string.update_uninstalled_successfully, mPackageLabel));
-                                    } else {
-                                        runOnUiThread(() -> displayLongToast(R.string.failed_to_uninstall_updates, mPackageLabel));
-                                    }
-                                }));
-                    }
-                    builder.show();
-                } else {
-                    try {
-                        Intent uninstallIntent = new Intent(Intent.ACTION_DELETE);
-                        uninstallIntent.setData(Uri.parse("package:" + mPackageName));
-                        ActivityManagerCompat.startActivity(requireContext(), uninstallIntent, mainModel.getUserHandle());
-                    } catch (Throwable th) {
-                        UIUtils.displayLongToast(th.getLocalizedMessage());
-                    }
+                        }))
+                        .setNegativeButton(R.string.cancel, (dialog, which, keepData) -> {
+                            if (dialog != null) dialog.cancel();
+                        });
+                if ((mApplicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) {
+                    builder.setNeutralButton(R.string.uninstall_updates, (dialog, which, keepData) ->
+                            executor.submit(() -> {
+                                boolean isSuccessful = RunnerUtils.uninstallPackageUpdate(mPackageName, mainModel.getUserHandle(), keepData);
+                                if (isSuccessful) {
+                                    runOnUiThread(() -> displayLongToast(R.string.update_uninstalled_successfully, mPackageLabel));
+                                } else {
+                                    runOnUiThread(() -> displayLongToast(R.string.failed_to_uninstall_updates, mPackageLabel));
+                                }
+                            }));
                 }
+                builder.show();
             });
             // Enable/disable app (root/ADB only)
             if (Ops.isPrivileged() && isFrozen) {

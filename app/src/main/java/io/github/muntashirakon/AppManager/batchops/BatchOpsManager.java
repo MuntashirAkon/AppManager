@@ -631,10 +631,9 @@ public class BatchOpsManager {
     private Result opUninstall() {
         List<UserPackagePair> failedPackages = new ArrayList<>();
         for (UserPackagePair pair : userPackagePairs) {
-            try {
-                PackageInstallerCompat.uninstall(pair.getPackageName(), pair.getUserHandle(), false);
-            } catch (Throwable e) {
-                log("====> op=UNINSTALL, pkg=" + pair, e);
+            PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance(pair.getUserHandle());
+            if (!installer.uninstall(pair.getPackageName(), false)) {
+                log("====> op=UNINSTALL, pkg=" + pair);
                 failedPackages.add(pair);
             }
         }
