@@ -112,7 +112,7 @@ public class Backup {
     public static Backup fromBackupMetadata(@NonNull MetadataManager.Metadata metadata) {
         Backup backup = new Backup();
         backup.packageName = metadata.packageName;
-        backup.backupName = metadata.backupName;
+        backup.backupName = metadata.backupName != null ? metadata.backupName : String.valueOf(metadata.userHandle);
         backup.label = metadata.label;
         backup.versionName = metadata.versionName;
         backup.versionCode = metadata.versionCode;

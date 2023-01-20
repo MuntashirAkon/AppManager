@@ -41,7 +41,6 @@ import java.util.Set;
 
 import io.github.muntashirakon.AppManager.apk.list.ListExporter;
 import io.github.muntashirakon.AppManager.backup.BackupUtils;
-import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.db.entity.App;
@@ -553,7 +552,7 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
             case PackageChangeReceiver.ACTION_PACKAGE_REMOVED:
             case PackageChangeReceiver.ACTION_PACKAGE_ALTERED:
             case PackageChangeReceiver.ACTION_PACKAGE_ADDED:
-            case BatchOpsService.ACTION_BATCH_OPS_COMPLETED:
+            // case BatchOpsService.ACTION_BATCH_OPS_COMPLETED:
             case Intent.ACTION_PACKAGE_REMOVED:
             case Intent.ACTION_EXTERNAL_APPLICATIONS_UNAVAILABLE:
             case Intent.ACTION_PACKAGE_ADDED:

@@ -165,19 +165,12 @@ public final class PackageUtils {
         HashMap<String, ApplicationItem> applicationItems = new HashMap<>();
         AppDb appDb = new AppDb();
         List<App> apps = appDb.getAllApplications();
-        if (apps.size() == 0 || executor == null) {
+        boolean loadInBackground = !(apps.size() == 0 || executor == null);
+        if (!loadInBackground) {
             // Load app list for the first time
             Log.d(TAG, "Loading apps for the first time.");
             appDb.loadInstalledOrBackedUpApplications(context);
             apps = appDb.getAllApplications();
-        } else {
-            // Update list of apps safely in the background
-            executor.submit(() -> {
-                appDb.updateApplications(context);
-                if (loadBackups) {
-                    appDb.updateBackups(context);
-                }
-            });
         }
         HashMap<String, Backup> backups = BackupUtils.getAllLatestBackupMetadataFromDb();
         int thisUser = UserHandleHidden.myUserId();
@@ -265,6 +258,16 @@ public final class PackageUtils {
             item.isInstalled = false;
             item.hasSplits = backup.hasSplits;
             item.hasKeystore = backup.hasKeyStore;
+        }
+        if (loadInBackground) {
+            // Update list of apps safely in the background.
+            // We need to do this here to avoid locks in AppDb
+            executor.submit(() -> {
+                appDb.updateApplications(context);
+                if (loadBackups) {
+                    appDb.updateBackups(context);
+                }
+            });
         }
         return new ArrayList<>(applicationItems.values());
     }

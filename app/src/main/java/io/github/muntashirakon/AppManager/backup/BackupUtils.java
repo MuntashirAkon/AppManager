@@ -20,10 +20,10 @@ import java.util.List;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
-import io.github.muntashirakon.AppManager.db.AppsDb;
-import io.github.muntashirakon.AppManager.db.dao.BackupDao;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
+import io.github.muntashirakon.AppManager.db.utils.AppDb;
 import io.github.muntashirakon.AppManager.logcat.helper.SaveLogHelper;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.io.Path;
@@ -67,7 +67,7 @@ public final class BackupUtils {
     @WorkerThread
     @NonNull
     public static HashMap<String, Backup> storeAllAndGetLatestBackupMetadata() {
-        BackupDao backupDao = AppsDb.getInstance().backupDao();
+        AppDb appDb = new AppDb();
         HashMap<String, Backup> backupMetadata = new HashMap<>();
         HashMap<String, List<MetadataManager.Metadata>> allBackupMetadata = getAllMetadata();
         List<Backup> backups = new ArrayList<>();
@@ -84,8 +84,8 @@ public final class BackupUtils {
             }
             backupMetadata.put(latestBackup.packageName, latestBackup);
         }
-        backupDao.deleteAll();
-        backupDao.insert(backups);
+        appDb.deleteAllBackups();
+        appDb.insertBackups(backups);
         return backupMetadata;
     }
 
@@ -93,8 +93,7 @@ public final class BackupUtils {
     @NonNull
     public static HashMap<String, Backup> getAllLatestBackupMetadataFromDb() {
         HashMap<String, Backup> backupMetadata = new HashMap<>();
-        List<Backup> backups = AppsDb.getInstance().backupDao().getAll();
-        for (Backup backup : backups) {
+        for (Backup backup : new AppDb().getAllBackups()) {
             Backup latestBackup = backupMetadata.get(backup.packageName);
             if (latestBackup == null || backup.backupTime > latestBackup.backupTime) {
                 backupMetadata.put(backup.packageName, backup);
@@ -107,7 +106,7 @@ public final class BackupUtils {
         if (Utils.isRoboUnitTest()) {
             return;
         }
-        AppsDb.getInstance().backupDao().insert(Backup.fromBackupMetadata(metadata));
+        new AppDb().insert(Backup.fromBackupMetadata(metadata));
         Intent intent = new Intent(PackageChangeReceiver.ACTION_DB_PACKAGE_ALTERED);
         intent.setPackage(context.getPackageName());
         intent.putExtra(Intent.EXTRA_CHANGED_PACKAGE_LIST, new String[]{metadata.packageName});
@@ -115,7 +114,7 @@ public final class BackupUtils {
     }
 
     public static void deleteBackupToDbAndBroadcast(@NonNull Context context, @NonNull MetadataManager.Metadata metadata) {
-        AppsDb.getInstance().backupDao().delete(Backup.fromBackupMetadata(metadata));
+        new AppDb().deleteBackup(Backup.fromBackupMetadata(metadata));
         Intent intent = new Intent(PackageChangeReceiver.ACTION_DB_PACKAGE_REMOVED);
         intent.setPackage(context.getPackageName());
         intent.putExtra(Intent.EXTRA_CHANGED_PACKAGE_LIST, new String[]{metadata.packageName});
@@ -125,7 +124,7 @@ public final class BackupUtils {
     @WorkerThread
     @NonNull
     public static List<Backup> getBackupMetadataFromDb(@NonNull String packageName) {
-        return AppsDb.getInstance().backupDao().get(packageName);
+        return new AppDb().getAllBackups(packageName);
     }
 
     @WorkerThread

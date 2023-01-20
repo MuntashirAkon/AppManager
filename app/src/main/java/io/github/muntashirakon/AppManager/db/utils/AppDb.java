@@ -81,9 +81,33 @@ public class AppDb {
         }
     }
 
+    public List<Backup> getAllBackups() {
+        synchronized (sLock) {
+            return backupDao.getAll();
+        }
+    }
+
+    public List<Backup> getAllBackups(String packageName) {
+        synchronized (sLock) {
+            return backupDao.get(packageName);
+        }
+    }
+
     public void insert(App app) {
         synchronized (sLock) {
             appDao.insert(app);
+        }
+    }
+
+    public void insert(Backup backup) {
+        synchronized (sLock) {
+            backupDao.insert(backup);
+        }
+    }
+
+    public void insertBackups(List<Backup> backups) {
+        synchronized (sLock) {
+            backupDao.insert(backups);
         }
     }
 
@@ -102,6 +126,12 @@ public class AppDb {
     public void deleteAllBackups() {
         synchronized (sLock) {
             backupDao.deleteAll();
+        }
+    }
+
+    public void deleteBackup(Backup backup) {
+        synchronized (sLock) {
+            backupDao.delete(backup);
         }
     }
 
