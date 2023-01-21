@@ -32,6 +32,7 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.accessibility.AccessibilityMultiplexer;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
 import io.github.muntashirakon.AppManager.appops.AppOpsManager;
@@ -53,6 +54,7 @@ import io.github.muntashirakon.AppManager.logs.Logger;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.rules.compontents.ExternalComponentsImporter;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
@@ -630,6 +632,10 @@ public class BatchOpsManager {
     @NonNull
     private Result opUninstall() {
         List<UserPackagePair> failedPackages = new ArrayList<>();
+        AccessibilityMultiplexer accessibility = AccessibilityMultiplexer.getInstance();
+        if (!Ops.isPrivileged()) {
+            accessibility.enableUninstall(true);
+        }
         for (UserPackagePair pair : userPackagePairs) {
             PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance(pair.getUserHandle());
             if (!installer.uninstall(pair.getPackageName(), false)) {
@@ -637,6 +643,7 @@ public class BatchOpsManager {
                 failedPackages.add(pair);
             }
         }
+        accessibility.enableUninstall(false);
         return lastResult = new Result(failedPackages);
     }
 

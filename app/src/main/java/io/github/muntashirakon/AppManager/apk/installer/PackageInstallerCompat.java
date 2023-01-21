@@ -906,7 +906,7 @@ public final class PackageInstallerCompat {
                                   @Nullable String blockingPackage,
                                   @Nullable String statusMessage) {
         // No need to check package name since it's been checked before
-        if (finalStatus == STATUS_FAILURE_SESSION_CREATE || (sessionId != -1 && this.sessionId == sessionId)) {
+        if (finalStatus == STATUS_FAILURE_SESSION_CREATE || (this.sessionId == sessionId)) {
             if (onInstallListener != null) {
                 onInstallListener.onFinishedInstall(sessionId, packageName, finalStatus,
                         blockingPackage, statusMessage);
@@ -999,7 +999,7 @@ public final class PackageInstallerCompat {
                 finalStatus = resultIntent.getIntExtra(PackageInstaller.EXTRA_STATUS, PackageInstaller.STATUS_FAILURE);
                 statusMessage = resultIntent.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE);
             }
-            Log.d(TAG, "Uninstall: Finishing with status " + finalStatus);
+            Log.d(TAG, "Uninstall: Finished with status " + finalStatus);
             if (!installCompleted) {
                 installCompleted(sessionId, finalStatus, null, statusMessage);
             }

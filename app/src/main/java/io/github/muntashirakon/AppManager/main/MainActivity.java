@@ -544,7 +544,6 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
         addToProfileMenu.setEnabled(nonZeroSelection);
         /* === Visible/Invisible === */
         boolean privileged = Ops.isPrivileged();
-        uninstallMenu.setVisible(privileged);
         enableDisableMenu.setVisible(privileged);
         forceStopMenu.setVisible(privileged);
         clearDataCacheMenu.setVisible(privileged);
