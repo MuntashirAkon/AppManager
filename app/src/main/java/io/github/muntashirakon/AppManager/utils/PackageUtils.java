@@ -336,7 +336,7 @@ public final class PackageUtils {
                 StorageStats storageStats = storageStatsManager.queryStatsForPackage(uuidString, packageName,
                         userHandle, context.getPackageName());
                 packageSizeInfo.set(new PackageSizeInfo(packageName, storageStats, userHandle));
-            } catch (RemoteException e) {
+            } catch (Throwable e) {
                 Log.e(TAG, e);
             }
         }

@@ -318,6 +318,19 @@ public final class PackageManagerCompat {
         return false;
     }
 
+    @SuppressWarnings("deprecation")
+    public static int installExistingPackageAsUser(@NonNull String packageName, @UserIdInt int userId, int installFlags,
+                                                   int installReason, @Nullable List<String> whiteListedPermissions)
+            throws RemoteException {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            return getPackageManager().installExistingPackageAsUser(packageName, userId, installFlags, installReason, whiteListedPermissions);
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            return getPackageManager().installExistingPackageAsUser(packageName, userId, installFlags, installReason);
+        }
+        return getPackageManager().installExistingPackageAsUser(packageName, userId);
+    }
+
     public static String getInstallerPackage(String packageName) throws RemoteException {
         return getPackageManager().getInstallerPackageName(packageName);
     }

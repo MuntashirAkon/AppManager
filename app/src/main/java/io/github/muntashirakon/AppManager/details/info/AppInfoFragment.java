@@ -125,7 +125,6 @@ import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.runner.Runner;
-import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.scanner.ScannerActivity;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Ops;
@@ -918,7 +917,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 final boolean isSystemApp = (mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
                 ScrollableDialogBuilder builder = new ScrollableDialogBuilder(mActivity,
                         isSystemApp ? R.string.uninstall_system_app_message : R.string.uninstall_app_message)
-                        .setCheckboxLabel(R.string.keep_data_and_app_signing_signatures)
                         .setTitle(mPackageLabel)
                         .setPositiveButton(R.string.uninstall, (dialog, which, keepData) -> executor.submit(() -> {
                             PackageInstallerCompat installer = PackageInstallerCompat
@@ -937,10 +935,15 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         .setNegativeButton(R.string.cancel, (dialog, which, keepData) -> {
                             if (dialog != null) dialog.cancel();
                         });
+                if (Ops.isPrivileged()) {
+                    builder.setCheckboxLabel(R.string.keep_data_and_app_signing_signatures);
+                }
                 if ((mApplicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) {
                     builder.setNeutralButton(R.string.uninstall_updates, (dialog, which, keepData) ->
                             executor.submit(() -> {
-                                boolean isSuccessful = RunnerUtils.uninstallPackageUpdate(mPackageName, mainModel.getUserHandle(), keepData);
+                                PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance(UserHandleHidden.USER_ALL);
+                                installer.setAppLabel(mPackageLabel);
+                                boolean isSuccessful = installer.uninstallUpdate(mPackageName, keepData);
                                 if (isSuccessful) {
                                     runOnUiThread(() -> displayLongToast(R.string.update_uninstalled_successfully, mPackageLabel));
                                 } else {
