@@ -735,8 +735,14 @@ public final class PackageInstallerCompat {
         return flags;
     }
 
-    public static boolean installExisting(@NonNull String packageName, @UserIdInt int userId) {
+    public boolean installExisting(@NonNull String packageName, @UserIdInt int userId) {
+        if (onInstallListener != null) {
+            onInstallListener.onStartInstall(sessionId, packageName);
+        }
+        installWatcher = new CountDownLatch(0);
+        interactionWatcher = new CountDownLatch(0);
         if (!Ops.isReallyPrivileged()) {
+            installCompleted(sessionId, STATUS_FAILURE_BLOCKED, "android", "STATUS_FAILURE_BLOCKED: Insufficient permission.");
             Log.d(TAG, "InstallExisting: Only works in privileged mode.");
             return false;
         }
@@ -755,6 +761,7 @@ public final class PackageInstallerCompat {
                 break;
             }
             case UserHandleHidden.USER_NULL:
+                installCompleted(sessionId, STATUS_FAILURE_INVALID, null, "STATUS_FAILURE_INVALID: No user is selected.");
                 Log.d(TAG, "InstallExisting: No user is selected.");
                 return false;
             default:
@@ -765,6 +772,7 @@ public final class PackageInstallerCompat {
                 }
         }
         if (userIdWithoutInstalledPkg.isEmpty()) {
+            installCompleted(sessionId, STATUS_FAILURE_INVALID, null, "STATUS_FAILURE_INVALID: Could not find a valid user to perform install-existing.");
             Log.d(TAG, "InstallExisting: Could not find any valid user.");
             return false;
         }
@@ -780,6 +788,7 @@ public final class PackageInstallerCompat {
             try {
                 int res = PackageManagerCompat.installExistingPackageAsUser(packageName, u, installFlags, installReason, null);
                 if (res != 1 /* INSTALL_SUCCEEDED */) {
+                    installCompleted(sessionId, res, null, null);
                     Log.e(TAG, "InstallExisting: Install failed with code " + res);
                     return false;
                 }
@@ -787,10 +796,12 @@ public final class PackageInstallerCompat {
                     BroadcastUtils.sendPackageAdded(ContextUtils.getContext(), new String[]{packageName});
                 }
             } catch (Throwable th) {
+                installCompleted(sessionId, STATUS_FAILURE_ABORTED, null, "STATUS_FAILURE_ABORTED: " + th.getMessage());
                 Log.e(TAG, "InstallExisting: Could not install package for user " + u, th);
                 return false;
             }
         }
+        installCompleted(sessionId, STATUS_SUCCESS, null, null);
         return true;
     }
 

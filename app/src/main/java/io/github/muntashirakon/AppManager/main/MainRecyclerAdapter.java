@@ -41,10 +41,12 @@ import java.util.concurrent.TimeUnit;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
+import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.users.UserInfo;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
@@ -207,11 +209,15 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
                 try {
                     @SuppressLint("WrongConstant")
                     ApplicationInfo info = mPackageManager.getApplicationInfo(item.packageName, PackageUtils.flagMatchUninstalled);
+                    if (Ops.isPrivileged() && ApplicationInfoCompat.isSystemApp(info)) {
+                        // Install existing app instead of installing as an update
+                        mActivity.startActivity(PackageInstallerActivity.getLaunchableInstance(mActivity, item.packageName));
+                        return;
+                    }
                     if (info.publicSourceDir != null && new File(info.publicSourceDir).exists()
                             && FeatureController.isInstallerEnabled()) {
-                        Intent intent = new Intent(mActivity, PackageInstallerActivity.class);
-                        intent.setData(Uri.fromFile(new File(info.publicSourceDir)));
-                        mActivity.startActivity(intent);
+                        mActivity.startActivity(PackageInstallerActivity.getLaunchableInstance(mActivity,
+                                Uri.fromFile(new File(info.publicSourceDir))));
                     }
                 } catch (PackageManager.NameNotFoundException ignore) {
                 }

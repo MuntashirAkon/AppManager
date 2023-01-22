@@ -124,10 +124,10 @@ public class ScannerActivity extends BaseActivity {
             onBackPressed();
             return true;
         } else if (id == R.id.action_install) {
-            Intent openApk = new Intent(getBaseContext(), PackageInstallerActivity.class);
-            openApk.setData(apkUri);
-            startActivity(openApk);
-            return true;
+            if (apkUri != null) {
+                startActivity(PackageInstallerActivity.getLaunchableInstance(getApplicationContext(), apkUri));
+                return true;
+            }
         }
         return super.onOptionsItemSelected(item);
     }

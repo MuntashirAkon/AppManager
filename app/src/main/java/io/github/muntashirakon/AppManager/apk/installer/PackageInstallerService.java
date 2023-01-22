@@ -20,7 +20,6 @@ import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.os.UserHandleHidden;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,9 +44,7 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 
 public class PackageInstallerService extends ForegroundService {
-    public static final String EXTRA_APK_FILE_KEY = "EXTRA_APK_FILE_KEY";
-    public static final String EXTRA_APP_LABEL = "EXTRA_APP_LABEL";
-    public static final String EXTRA_USER_ID = "EXTRA_USER_ID";
+    public static final String EXTRA_QUEUE_ITEM = "queue_item";
     public static final String CHANNEL_ID = BuildConfig.APPLICATION_ID + ".channel.INSTALL";
     public static final int NOTIFICATION_ID = 3;
 
@@ -92,13 +89,14 @@ public class PackageInstallerService extends ForegroundService {
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         if (intent == null) return;
-        int apkFileKey = intent.getIntExtra(EXTRA_APK_FILE_KEY, -1);
-        if (apkFileKey == -1) return;
-        String appLabel = intent.getStringExtra(EXTRA_APP_LABEL);
-        int userHandle = intent.getIntExtra(EXTRA_USER_ID, UserHandleHidden.myUserId());
+        ApkQueueItem apkQueueItem = intent.getParcelableExtra(EXTRA_QUEUE_ITEM);
+        if (apkQueueItem == null) {
+            return;
+        }
         // Install package
-        PackageInstallerCompat pi = PackageInstallerCompat.getNewInstance();
-        pi.setOnInstallListener(new PackageInstallerCompat.OnInstallListener() {
+        PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance();
+        installer.setAppLabel(apkQueueItem.getAppLabel());
+        installer.setOnInstallListener(new PackageInstallerCompat.OnInstallListener() {
             @Override
             public void onStartInstall(int sessionId, String packageName) {
                 PackageInstallerService.this.sessionId = sessionId;
@@ -113,24 +111,59 @@ public class PackageInstallerService extends ForegroundService {
                         && Ops.isRoot()
                         && AppPref.getBoolean(AppPref.PrefKey.PREF_INSTALLER_BLOCK_TRACKERS_BOOL)) {
                     ComponentUtils.blockTrackingComponents(Collections.singletonList(
-                            new UserPackagePair(packageName, userHandle)));
+                            new UserPackagePair(packageName, apkQueueItem.getUserId())));
                 }
-
                 UiThreadHandler.run(() -> {
                     if (onInstallFinished != null) {
                         onInstallFinished.onFinished(packageName, result, blockingPackage, statusMessage);
-                    } else sendNotification(result, appLabel, blockingPackage, statusMessage);
+                    } else sendNotification(result, apkQueueItem.getAppLabel(), blockingPackage, statusMessage);
                 });
             }
         });
-        pi.setAppLabel(appLabel);
-        pi.install(ApkFile.getInstance(apkFileKey), userHandle);
+        // Two possibilities: 1. Install-existing, 2. ApkFile/Uri
+        if (apkQueueItem.isInstallExisting()) {
+            // Install existing
+            String packageName = apkQueueItem.getPackageName();
+            if (packageName == null) {
+                // No package name supplied, abort
+                return;
+            }
+            installer.installExisting(packageName, apkQueueItem.getUserId());
+        } else {
+            // ApkFile/Uri
+            ApkFile apkFile = null;
+            int apkFileKey = apkQueueItem.getApkFileKey();
+            if (apkFileKey != -1) {
+                // ApkFile set
+                try {
+                    apkFile = ApkFile.getInstance(apkFileKey);
+                } catch (Throwable th) {
+                    // Could not get ApkFile for some reason, fallback to use Uri
+                    th.printStackTrace();
+                    apkFileKey = -1;
+                }
+            }
+            if (apkFileKey == -1) {
+                try {
+                    apkFileKey = ApkFile.createInstance(apkQueueItem.getUri(), apkQueueItem.getMimeType());
+                    apkFile = ApkFile.getInstance(apkFileKey);
+                } catch (ApkFile.ApkFileException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (apkFile == null) {
+                // No apk file, abort
+                return;
+            }
+            installer.install(apkFile, apkQueueItem.getUserId());
+        }
     }
 
     @Override
     protected void onQueued(@Nullable Intent intent) {
         if (intent == null) return;
-        String appLabel = intent.getStringExtra(EXTRA_APP_LABEL);
+        ApkQueueItem apkQueueItem = intent.getParcelableExtra(EXTRA_QUEUE_ITEM);
+        String appLabel = apkQueueItem != null ? apkQueueItem.getAppLabel() : null;
         NotificationCompat.Builder builder = NotificationUtils.getHighPriorityNotificationBuilder(this)
                 .setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
@@ -147,7 +180,9 @@ public class PackageInstallerService extends ForegroundService {
     protected void onStartIntent(@Nullable Intent intent) {
         if (intent == null) return;
         // Set app name in the ongoing notification
-        builder.setContentTitle(intent.getStringExtra(EXTRA_APP_LABEL));
+        ApkQueueItem apkQueueItem = intent.getParcelableExtra(EXTRA_QUEUE_ITEM);
+        String appLabel = apkQueueItem != null ? apkQueueItem.getAppLabel() : null;
+        builder.setContentTitle(appLabel);
         notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 

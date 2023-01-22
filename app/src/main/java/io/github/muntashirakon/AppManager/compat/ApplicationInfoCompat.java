@@ -319,4 +319,8 @@ public final class ApplicationInfoCompat {
         }
         return HIDDEN_API_ENFORCEMENT_DISABLED;
     }
+
+    public static boolean isSystemApp(@NonNull ApplicationInfo info) {
+        return (info.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
+    }
 }

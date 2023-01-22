@@ -538,16 +538,15 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private void install() {
         if (mainModel == null) return;
-        Intent intent = new Intent(this.getContext(), PackageInstallerActivity.class);
-        intent.putExtra(PackageInstallerActivity.EXTRA_APK_FILE_KEY, mainModel.getApkFileKey());
+        int apkFileKey = mainModel.getApkFileKey();
         try {
             // Reserve ApkFile in case the activity is destroyed
-            ApkFile.getInAdvance(mainModel.getApkFileKey());
-            startActivity(intent);
+            ApkFile.getInAdvance(apkFileKey);
+            startActivity(PackageInstallerActivity.getLaunchableInstance(requireContext(), apkFileKey));
         } catch (Exception e) {
             // Error occurred, so the APK file wasn't used by the installer.
             // Close the APK file to remove one instance.
-            ApkFile.getInstance(mainModel.getApkFileKey()).close();
+            ApkFile.getInstance(apkFileKey).close();
         }
     }
 
