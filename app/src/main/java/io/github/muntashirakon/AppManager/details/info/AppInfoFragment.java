@@ -914,6 +914,19 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             }
             // Set uninstall
             addToHorizontalLayout(R.string.uninstall, R.drawable.ic_trash_can).setOnClickListener(v -> {
+                int userId = mainModel.getUserHandle();
+                if (!Ops.isPrivileged() && userId != UserHandleHidden.myUserId()) {
+                    // Could be work profile
+                    // FIXME: 22/1/23 Find a way to communicate the result to App Manager
+                    try {
+                        Intent uninstallIntent = new Intent(Intent.ACTION_DELETE);
+                        uninstallIntent.setData(Uri.parse("package:" + mPackageName));
+                        ActivityManagerCompat.startActivity(requireContext(), uninstallIntent, userId);
+                    } catch (Throwable th) {
+                        UIUtils.displayLongToast(th.getLocalizedMessage());
+                    }
+                    return;
+                }
                 final boolean isSystemApp = (mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
                 ScrollableDialogBuilder builder = new ScrollableDialogBuilder(mActivity,
                         isSystemApp ? R.string.uninstall_system_app_message : R.string.uninstall_app_message)
@@ -922,7 +935,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             PackageInstallerCompat installer = PackageInstallerCompat
                                     .getNewInstance();
                             installer.setAppLabel(mPackageLabel);
-                            boolean uninstalled = installer.uninstall(mPackageName, mainModel.getUserHandle(), keepData);
+                            boolean uninstalled = installer.uninstall(mPackageName, userId, keepData);
                             runOnUiThread(() -> {
                                 if (uninstalled) {
                                     displayLongToast(R.string.uninstalled_successfully, mPackageLabel);
