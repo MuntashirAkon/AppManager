@@ -282,8 +282,8 @@ class RestoreOp implements Closeable {
             // Signature verification failed but still here because signature check is disabled.
             // The only way to restore is to reinstall the app
             synchronized (sLock) {
-                PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance(userHandle);
-                if (installer.uninstall(packageName, false)) {
+                PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance();
+                if (installer.uninstall(packageName, userHandle, false)) {
                     throw new BackupException("An uninstallation was necessary but couldn't perform it.");
                 }
             }
@@ -331,9 +331,9 @@ class RestoreOp implements Closeable {
                 throw new BackupException("Failed to extract the apk file(s).", th);
             }
             // A normal update will do it now
-            PackageInstallerCompat packageInstaller = PackageInstallerCompat.getNewInstance(userHandle, metadata.installer);
+            PackageInstallerCompat packageInstaller = PackageInstallerCompat.getNewInstance(metadata.installer);
             try {
-                if (!packageInstaller.install(allApks, packageName)) {
+                if (!packageInstaller.install(allApks, packageName, userHandle)) {
                     throw new BackupException("A (re)install was necessary but couldn't perform it.");
                 }
             } finally {

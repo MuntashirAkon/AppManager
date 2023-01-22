@@ -41,7 +41,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 import aosp.libcore.util.EmptyArray;
@@ -428,13 +427,13 @@ public final class PackageInstallerCompat {
     }
 
     @NonNull
-    public static PackageInstallerCompat getNewInstance(int userHandle) {
-        return new PackageInstallerCompat(userHandle);
+    public static PackageInstallerCompat getNewInstance() {
+        return new PackageInstallerCompat();
     }
 
     @NonNull
-    public static PackageInstallerCompat getNewInstance(int userHandle, @NonNull String installerPackageName) {
-        return new PackageInstallerCompat(userHandle, installerPackageName);
+    public static PackageInstallerCompat getNewInstance(@NonNull String installerPackageName) {
+        return new PackageInstallerCompat(installerPackageName);
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -451,8 +450,6 @@ public final class PackageInstallerCompat {
     @Nullable
     private CharSequence appLabel;
     private int sessionId = -1;
-    @UserIdInt
-    private final int userHandle;
     @Status
     private int finalStatus = STATUS_FAILURE_INVALID;
     @Nullable
@@ -503,19 +500,15 @@ public final class PackageInstallerCompat {
     private IPackageInstaller packageInstaller;
     private PackageInstaller.Session session;
     private final String installerPackageName;
-    private final String callerPackageName;
     private final boolean isPrivileged;
 
-    private PackageInstallerCompat(@UserIdInt int userHandle) {
-        this(userHandle, Ops.isReallyPrivileged() ? AppPref.getString(AppPref.PrefKey.PREF_INSTALLER_INSTALLER_APP_STR) : context.getPackageName());
+    private PackageInstallerCompat() {
+        this(Ops.isReallyPrivileged() ? AppPref.getString(AppPref.PrefKey.PREF_INSTALLER_INSTALLER_APP_STR) : context.getPackageName());
     }
 
-    private PackageInstallerCompat(@UserIdInt int userHandle, @NonNull String installerPackageName) {
+    private PackageInstallerCompat(@NonNull String installerPackageName) {
         this.isPrivileged = Ops.isReallyPrivileged();
-        this.userHandle = isPrivileged ? userHandle : UserHandleHidden.myUserId();
         this.installerPackageName = installerPackageName;
-        this.callerPackageName = isPrivileged ? ActivityManagerCompat.SHELL_PACKAGE_NAME : context.getPackageName();
-        Log.d(TAG, "(Un)Installing for " + (isAllUsers() ? "all users" : "user " + userHandle));
         Log.d(TAG, "Installer app: " + installerPackageName);
     }
 
@@ -527,16 +520,8 @@ public final class PackageInstallerCompat {
         this.appLabel = appLabel;
     }
 
-    public boolean isAllUsers() {
-        return isPrivileged && getUserId() == UserHandleHidden.USER_ALL;
-    }
-
-    public int getUserId() {
-        return userHandle;
-    }
-
     @NonNull
-    public static int[] getAllRequestedUsers(int userId) {
+    private static int[] getAllRequestedUsers(int userId) {
         switch (userId) {
             case UserHandleHidden.USER_ALL:
                 return Users.getUsersIds();
@@ -547,31 +532,26 @@ public final class PackageInstallerCompat {
         }
     }
 
-    public boolean install(@NonNull ApkFile apkFile) {
+    public boolean install(@NonNull ApkFile apkFile, @UserIdInt int userId) {
         try {
             this.apkFile = apkFile;
             this.packageName = apkFile.getPackageName();
             initBroadcastReceiver();
-            if (installExisting(apkFile.getPackageName())) {
-                // Set arbitrary session ID to enable install completion
-                sessionId = ThreadLocalRandom.current().nextInt(0, Integer.MAX_VALUE);
-                installCompleted(sessionId, PackageInstaller.STATUS_SUCCESS, null, null);
-                return true;
-            }
-            int[] allRequestedUsers = getAllRequestedUsers(getUserId());
+            int installFlags = getInstallFlags(userId);
+            int[] allRequestedUsers = getAllRequestedUsers(userId);
             if (allRequestedUsers.length == 0) {
                 Log.d(TAG, "Install: no users.");
                 callFinish(STATUS_FAILURE_INVALID);
                 return false;
             }
             new Thread(() -> {
-                for (int userId : allRequestedUsers) {
-                    copyObb(userId);
+                for (int u : allRequestedUsers) {
+                    copyObb(apkFile, u);
                 }
             }).start();
-            int userId = allRequestedUsers[0];
+            userId = allRequestedUsers[0];
             Log.d(TAG, "Install: opening session...");
-            if (!openSession(userId)) return false;
+            if (!openSession(userId, installFlags)) return false;
             List<ApkFile.Entry> selectedEntries = apkFile.getSelectedEntries();
             Log.d(TAG, "Install: selected entries: " + selectedEntries.size());
             // Write apk files
@@ -593,45 +573,26 @@ public final class PackageInstallerCompat {
             }
             Log.d(TAG, "Install: Running installation...");
             // Commit
-            boolean success = commit(userId);
-            if (success) {
-                // Install for other users
-                for (int u : allRequestedUsers) {
-                    if (u != userId) {
-                        installExisting(packageName);
-                    }
-                }
-            }
-            return success;
+            return commit(userId);
         } finally {
             unregisterReceiver();
         }
     }
 
-    public boolean install(@NonNull Path[] apkFiles, String packageName) {
+    public boolean install(@NonNull Path[] apkFiles, @NonNull String packageName, @UserIdInt int userId) {
         try {
             this.apkFile = null;
             this.packageName = packageName;
             initBroadcastReceiver();
-            if (installExisting(packageName)) {
-                // Set arbitrary session ID to enable install completion
-                sessionId = ThreadLocalRandom.current().nextInt(0, Integer.MAX_VALUE);
-                installCompleted(sessionId, PackageInstaller.STATUS_SUCCESS, null, null);
-                return true;
-            }
-            int[] allRequestedUsers = getAllRequestedUsers(getUserId());
+            int installFlags = getInstallFlags(userId);
+            int[] allRequestedUsers = getAllRequestedUsers(userId);
             if (allRequestedUsers.length == 0) {
                 Log.d(TAG, "Install: no users.");
                 callFinish(STATUS_FAILURE_INVALID);
                 return false;
             }
-            new Thread(() -> {
-                for (int userId : allRequestedUsers) {
-                    copyObb(userId);
-                }
-            }).start();
-            int userId = allRequestedUsers[0];
-            if (!openSession(userId)) return false;
+            userId = allRequestedUsers[0];
+            if (!openSession(userId, installFlags)) return false;
             // Write apk files
             for (Path apkFile : apkFiles) {
                 try (InputStream apkInputStream = apkFile.openInputStream();
@@ -649,16 +610,7 @@ public final class PackageInstallerCompat {
                 }
             }
             // Commit
-            boolean success = commit(userId);
-            if (success) {
-                // Install for other users
-                for (int u : allRequestedUsers) {
-                    if (u != userId) {
-                        installExisting(packageName);
-                    }
-                }
-            }
-            return success;
+            return commit(userId);
         } finally {
             unregisterReceiver();
         }
@@ -723,7 +675,7 @@ public final class PackageInstallerCompat {
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    private boolean openSession(int userId) {
+    private boolean openSession(@UserIdInt int userId, @InstallFlags int installFlags) {
         try {
             packageInstaller = PackageManagerCompat.getPackageInstaller();
         } catch (RemoteException e) {
@@ -735,15 +687,7 @@ public final class PackageInstallerCompat {
         cleanOldSessions();
         // Create install session
         PackageInstaller.SessionParams sessionParams = new PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL);
-        // Set flags
-        int flags = INSTALL_ALLOW_TEST | INSTALL_REPLACE_EXISTING | INSTALL_ALLOW_DOWNGRADE;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            flags |= INSTALL_ALLOW_DOWNGRADE_API29;
-        }
-        if (isAllUsers()) {
-            flags |= INSTALL_ALL_USERS;
-        }
-        Refine.<PackageInstallerHidden.SessionParams>unsafeCast(sessionParams).installFlags |= flags;
+        Refine.<PackageInstallerHidden.SessionParams>unsafeCast(sessionParams).installFlags |= installFlags;
         // Set installation location
         sessionParams.setInstallLocation(AppPref.getInt(AppPref.PrefKey.PREF_INSTALLER_INSTALL_LOCATION_INT));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -779,15 +723,26 @@ public final class PackageInstallerCompat {
         return true;
     }
 
-    public boolean installExisting(String packageName) {
-        if (!isPrivileged) {
+    @InstallFlags
+    private static int getInstallFlags(@UserIdInt int userId) {
+        int flags = INSTALL_ALLOW_TEST | INSTALL_REPLACE_EXISTING | INSTALL_ALLOW_DOWNGRADE;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            flags |= INSTALL_ALLOW_DOWNGRADE_API29;
+        }
+        if (Ops.isReallyPrivileged() && userId == UserHandleHidden.USER_ALL) {
+            flags |= INSTALL_ALL_USERS;
+        }
+        return flags;
+    }
+
+    public static boolean installExisting(@NonNull String packageName, @UserIdInt int userId) {
+        if (!Ops.isReallyPrivileged()) {
             Log.d(TAG, "InstallExisting: Only works in privileged mode.");
             return false;
         }
-        this.packageName = packageName;
         // User ID must be a real user
         List<Integer> userIdWithoutInstalledPkg = new ArrayList<>();
-        switch (getUserId()) {
+        switch (userId) {
             case UserHandleHidden.USER_ALL: {
                 int[] userIds = Users.getUsersIds();
                 for (int u : userIds) {
@@ -804,9 +759,9 @@ public final class PackageInstallerCompat {
                 return false;
             default:
                 try {
-                    PackageManagerCompat.getPackageInfo(packageName, 0, getUserId());
+                    PackageManagerCompat.getPackageInfo(packageName, 0, userId);
                 } catch (Throwable th) {
-                    userIdWithoutInstalledPkg.add(getUserId());
+                    userIdWithoutInstalledPkg.add(userId);
                 }
         }
         if (userIdWithoutInstalledPkg.isEmpty()) {
@@ -821,18 +776,18 @@ public final class PackageInstallerCompat {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             installReason = PackageManager.INSTALL_REASON_USER;
         } else installReason = 0;
-        for (int userId : userIdWithoutInstalledPkg) {
+        for (int u : userIdWithoutInstalledPkg) {
             try {
-                int res = PackageManagerCompat.installExistingPackageAsUser(packageName, userId, installFlags, installReason, null);
+                int res = PackageManagerCompat.installExistingPackageAsUser(packageName, u, installFlags, installReason, null);
                 if (res != 1 /* INSTALL_SUCCEEDED */) {
                     Log.e(TAG, "InstallExisting: Install failed with code " + res);
                     return false;
                 }
-                if (userId != UserHandleHidden.myUserId()) {
+                if (u != UserHandleHidden.myUserId()) {
                     BroadcastUtils.sendPackageAdded(ContextUtils.getContext(), new String[]{packageName});
                 }
             } catch (Throwable th) {
-                Log.e(TAG, "InstallExisting: Could not install package for user " + userId, th);
+                Log.e(TAG, "InstallExisting: Could not install package for user " + u, th);
                 return false;
             }
         }
@@ -840,8 +795,8 @@ public final class PackageInstallerCompat {
     }
 
     @WorkerThread
-    private void copyObb(int userId) {
-        if (apkFile == null || !apkFile.hasObb()) return;
+    private void copyObb(@NonNull ApkFile apkFile, @UserIdInt int userId) {
+        if (!apkFile.hasObb()) return;
         boolean tmpCloseApkFile = closeApkFile;
         // Disable closing apk file in case the installation is finished already.
         closeApkFile = false;
@@ -919,27 +874,21 @@ public final class PackageInstallerCompat {
         }
     }
 
-    public boolean uninstallUpdate(String packageName, boolean keepData) {
-        if (!uninstall(packageName, keepData)) {
-            return false;
-        }
-        return installExisting(packageName);
-    }
-
     @SuppressWarnings("deprecation")
-    public boolean uninstall(String packageName, boolean keepData) {
+    public boolean uninstall(String packageName, @UserIdInt int userId, boolean keepData) {
         this.packageName = packageName;
+        String callerPackageName = isPrivileged ? ActivityManagerCompat.SHELL_PACKAGE_NAME : context.getPackageName();
         initBroadcastReceiver();
         try {
             int flags;
             try {
-                flags = getDeleteFlags(packageName, keepData);
+                flags = getDeleteFlags(packageName, userId, keepData);
             } catch (Exception e) {
                 callFinish(STATUS_FAILURE_SESSION_CREATE);
                 Log.e(TAG, "Uninstall: Could not get PackageInstaller.", e);
                 return false;
             }
-            int userId = getCorrectUserIdForUninstallation(packageName, getUserId());
+            userId = getCorrectUserIdForUninstallation(packageName, userId);
             try {
                 packageInstaller = PackageManagerCompat.getPackageInstaller();
             } catch (RemoteException e) {
@@ -1013,11 +962,16 @@ public final class PackageInstallerCompat {
     }
 
     @DeleteFlags
-    private int getDeleteFlags(@NonNull String packageName, boolean keepData)
+    private static int getDeleteFlags(@NonNull String packageName, @UserIdInt int userId, boolean keepData)
             throws PackageManager.NameNotFoundException, RemoteException {
+        boolean isPrivileged = Ops.isReallyPrivileged();
         int flags = 0;
-        if (!isAllUsers()) {
-            PackageInfo info = PackageManagerCompat.getPackageInfo(packageName, 0, getUserId());
+        if (!isPrivileged || userId != UserHandleHidden.USER_ALL) {
+            if (!isPrivileged && userId == UserHandleHidden.USER_ALL) {
+                // PackageInfo expects a valid user ID
+                userId = UserHandleHidden.myUserId();
+            }
+            PackageInfo info = PackageManagerCompat.getPackageInfo(packageName, 0, userId);
             final boolean isSystem = (info.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
             // If we are being asked to delete a system app for just one
             // user set flag so it disables rather than reverting to system

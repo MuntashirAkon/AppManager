@@ -13,6 +13,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.UserHandleHidden;
 
 import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
@@ -49,7 +50,8 @@ public class PackageInstallerViewModel extends AndroidViewModel {
     private List<UserInfo> users;
     private int trackerCount;
     private final ExecutorService executor = Executors.newSingleThreadExecutor();
-    private final MutableLiveData<PackageInfo> packageInfoMutableLiveData = new MutableLiveData<>();
+    private final MutableLiveData<PackageInfo> packageInfoLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> packageUninstalledLiveData = new MutableLiveData<>();
 
     public PackageInstallerViewModel(@NonNull Application application) {
         super(application);
@@ -64,7 +66,11 @@ public class PackageInstallerViewModel extends AndroidViewModel {
     }
 
     public LiveData<PackageInfo> packageInfoLiveData() {
-        return packageInfoMutableLiveData;
+        return packageInfoLiveData;
+    }
+
+    public LiveData<Boolean> packageUninstalledLiveData() {
+        return packageUninstalledLiveData;
     }
 
     @AnyThread
@@ -76,7 +82,7 @@ public class PackageInstallerViewModel extends AndroidViewModel {
                 getPackageInfoInternal();
             } catch (Throwable th) {
                 Log.e("PIVM", "Couldn't fetch package info", th);
-                packageInfoMutableLiveData.postValue(null);
+                packageInfoLiveData.postValue(null);
             }
         });
     }
@@ -90,8 +96,16 @@ public class PackageInstallerViewModel extends AndroidViewModel {
                 getPackageInfoInternal();
             } catch (Throwable th) {
                 Log.e("PIVM", "Couldn't fetch package info", th);
-                packageInfoMutableLiveData.postValue(null);
+                packageInfoLiveData.postValue(null);
             }
+        });
+    }
+
+    public void uninstallPackage() {
+        executor.submit(() -> {
+            PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance();
+            installer.setAppLabel(appLabel);
+            packageUninstalledLiveData.postValue(installer.uninstall(packageName, UserHandleHidden.USER_ALL, false));
         });
     }
 
@@ -152,7 +166,7 @@ public class PackageInstallerViewModel extends AndroidViewModel {
             isSignatureDifferent = PackageUtils.isSignatureDifferent(newPackageInfo, installedPackageInfo);
         }
         users = Users.getUsers();
-        packageInfoMutableLiveData.postValue(newPackageInfo);
+        packageInfoLiveData.postValue(newPackageInfo);
     }
 
     @WorkerThread

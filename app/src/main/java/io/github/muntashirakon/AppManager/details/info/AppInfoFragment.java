@@ -920,9 +920,9 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         .setTitle(mPackageLabel)
                         .setPositiveButton(R.string.uninstall, (dialog, which, keepData) -> executor.submit(() -> {
                             PackageInstallerCompat installer = PackageInstallerCompat
-                                    .getNewInstance(mainModel.getUserHandle());
+                                    .getNewInstance();
                             installer.setAppLabel(mPackageLabel);
-                            boolean uninstalled = installer.uninstall(mPackageName, keepData);
+                            boolean uninstalled = installer.uninstall(mPackageName, mainModel.getUserHandle(), keepData);
                             runOnUiThread(() -> {
                                 if (uninstalled) {
                                     displayLongToast(R.string.uninstalled_successfully, mPackageLabel);
@@ -941,9 +941,9 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 if ((mApplicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) {
                     builder.setNeutralButton(R.string.uninstall_updates, (dialog, which, keepData) ->
                             executor.submit(() -> {
-                                PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance(UserHandleHidden.USER_ALL);
+                                PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance();
                                 installer.setAppLabel(mPackageLabel);
-                                boolean isSuccessful = installer.uninstallUpdate(mPackageName, keepData);
+                                boolean isSuccessful = installer.uninstall(mPackageName, UserHandleHidden.USER_ALL, keepData);
                                 if (isSuccessful) {
                                     runOnUiThread(() -> displayLongToast(R.string.update_uninstalled_successfully, mPackageLabel));
                                 } else {

@@ -637,8 +637,8 @@ public class BatchOpsManager {
             accessibility.enableUninstall(true);
         }
         for (UserPackagePair pair : userPackagePairs) {
-            PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance(pair.getUserHandle());
-            if (!installer.uninstall(pair.getPackageName(), false)) {
+            PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance();
+            if (!installer.uninstall(pair.getPackageName(), pair.getUserHandle(), false)) {
                 log("====> op=UNINSTALL, pkg=" + pair);
                 failedPackages.add(pair);
             }

@@ -97,7 +97,7 @@ public class PackageInstallerService extends ForegroundService {
         String appLabel = intent.getStringExtra(EXTRA_APP_LABEL);
         int userHandle = intent.getIntExtra(EXTRA_USER_ID, UserHandleHidden.myUserId());
         // Install package
-        PackageInstallerCompat pi = PackageInstallerCompat.getNewInstance(userHandle);
+        PackageInstallerCompat pi = PackageInstallerCompat.getNewInstance();
         pi.setOnInstallListener(new PackageInstallerCompat.OnInstallListener() {
             @Override
             public void onStartInstall(int sessionId, String packageName) {
@@ -124,7 +124,7 @@ public class PackageInstallerService extends ForegroundService {
             }
         });
         pi.setAppLabel(appLabel);
-        pi.install(ApkFile.getInstance(apkFileKey));
+        pi.install(ApkFile.getInstance(apkFileKey), userHandle);
     }
 
     @Override

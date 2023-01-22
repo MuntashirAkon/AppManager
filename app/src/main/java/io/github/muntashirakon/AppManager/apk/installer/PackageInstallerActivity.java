@@ -24,7 +24,6 @@ import android.content.ServiceConnection;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageInstaller;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
@@ -115,18 +114,6 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
     private PackageInstallerService service;
     private final AccessibilityMultiplexer multiplexer = AccessibilityMultiplexer.getInstance();
     private final StoragePermission storagePermission = StoragePermission.init(this);
-    private final ActivityResultLauncher<Intent> uninstallIntentLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                try {
-                    // No need for user handle since it is only applicable for the current user (no-root)
-                    getPackageManager().getPackageInfo(model.getPackageName(), 0);
-                    // The package is still installed meaning that the app uninstall wasn't successful
-                    getInstallationFinishedDialog(model.getPackageName(), STATUS_FAILURE_CONFLICT, null, null).show();
-                } catch (PackageManager.NameNotFoundException e) {
-                    install();
-                }
-            });
     private final ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -199,6 +186,14 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
             }
             // TODO: Resolve dependencies
             displayInitialPrompt(newPackageInfo, model.getInstalledPackageInfo());
+        });
+        model.packageUninstalledLiveData().observe(this, success -> {
+            if (success) {
+                install();
+            } else {
+                getInstallationFinishedDialog(model.getPackageName(), getString(R.string.failed_to_uninstall_app),
+                        null, false).show();
+            }
         });
     }
 
@@ -489,14 +484,9 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
         if (!Ops.isPrivileged()) {
             multiplexer.enableUninstall(true);
         }
-        PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance(UserHandleHidden.USER_ALL);
+        PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance();
         installer.setAppLabel(model.getAppLabel());
-        if (installer.uninstall(model.getPackageName(), false)) {
-            install();
-        } else {
-            getInstallationFinishedDialog(model.getPackageName(), getString(R.string.failed_to_uninstall_app),
-                    null, false).show();
-        }
+        model.uninstallPackage();
     }
 
     /**
