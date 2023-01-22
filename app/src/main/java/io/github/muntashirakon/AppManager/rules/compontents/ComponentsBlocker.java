@@ -131,9 +131,10 @@ public final class ComponentsBlocker extends RulesStorageManager {
      */
     @NonNull
     public static ComponentsBlocker getInstance(@NonNull String packageName, int userHandle, boolean reloadFromDisk) {
+        Objects.requireNonNull(packageName);
         if (sInstance == null) {
             sInstance = new ComponentsBlocker(packageName, userHandle);
-        } else if (reloadFromDisk || !sInstance.packageName.equals(packageName)) {
+        } else if (reloadFromDisk || !Objects.equals(sInstance.packageName, packageName)) {
             sInstance.close();
             sInstance = new ComponentsBlocker(packageName, userHandle);
         }
@@ -152,7 +153,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
     @Nullable
     private PackageInfo mPackageInfo;
 
-    private ComponentsBlocker(String packageName, int userHandle) {
+    private ComponentsBlocker(@NonNull String packageName, int userHandle) {
         super(packageName, userHandle);
         mRulesFile = new AtomicExtendedFile(Objects.requireNonNull(Paths.get(SYSTEM_RULES_PATH).getFile())
                 .getChildFile(packageName + ".xml"));
