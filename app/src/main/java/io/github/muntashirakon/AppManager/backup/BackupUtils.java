@@ -106,7 +106,9 @@ public final class BackupUtils {
         if (Utils.isRoboUnitTest()) {
             return;
         }
-        new AppDb().insert(Backup.fromBackupMetadata(metadata));
+        AppDb appDb = new AppDb();
+        appDb.insert(Backup.fromBackupMetadata(metadata));
+        appDb.updateApplication(context, metadata.packageName);
         Intent intent = new Intent(PackageChangeReceiver.ACTION_DB_PACKAGE_ALTERED);
         intent.setPackage(context.getPackageName());
         intent.putExtra(Intent.EXTRA_CHANGED_PACKAGE_LIST, new String[]{metadata.packageName});
@@ -114,7 +116,9 @@ public final class BackupUtils {
     }
 
     public static void deleteBackupToDbAndBroadcast(@NonNull Context context, @NonNull MetadataManager.Metadata metadata) {
-        new AppDb().deleteBackup(Backup.fromBackupMetadata(metadata));
+        AppDb appDb = new AppDb();
+        appDb.deleteBackup(Backup.fromBackupMetadata(metadata));
+        appDb.updateApplication(context, metadata.packageName);
         Intent intent = new Intent(PackageChangeReceiver.ACTION_DB_PACKAGE_REMOVED);
         intent.setPackage(context.getPackageName());
         intent.putExtra(Intent.EXTRA_CHANGED_PACKAGE_LIST, new String[]{metadata.packageName});

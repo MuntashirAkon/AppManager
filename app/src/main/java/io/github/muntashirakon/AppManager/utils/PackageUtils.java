@@ -55,6 +55,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
@@ -172,7 +173,7 @@ public final class PackageUtils {
             appDb.loadInstalledOrBackedUpApplications(context);
             apps = appDb.getAllApplications();
         }
-        HashMap<String, Backup> backups = BackupUtils.getAllLatestBackupMetadataFromDb();
+        Map<String, Backup> backups = appDb.getBackups(false);
         int thisUser = UserHandleHidden.myUserId();
         // Get application items from apps
         for (App app : apps) {
@@ -263,10 +264,9 @@ public final class PackageUtils {
             // Update list of apps safely in the background.
             // We need to do this here to avoid locks in AppDb
             executor.submit(() -> {
-                appDb.updateApplications(context);
                 if (loadBackups) {
-                    appDb.updateBackups(context);
-                }
+                    appDb.loadInstalledOrBackedUpApplications(context);
+                } else appDb.updateApplications(context);
             });
         }
         return new ArrayList<>(applicationItems.values());

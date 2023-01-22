@@ -42,6 +42,7 @@ import org.xmlpull.v1.XmlPullParserException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
@@ -495,7 +496,7 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
         // TODO: 11/10/21 There is an efficient way to handle this:
         //  1. Declare MenuItems as field variables
         //  2. Check for properties during selection
-        ArrayList<ApplicationItem> selectedItems = mModel.getSelectedApplicationItems();
+        Collection<ApplicationItem> selectedItems = mModel.getSelectedApplicationItems();
         MenuItem uninstallMenu = selectionMenu.findItem(R.id.action_uninstall);
         MenuItem enableDisableMenu = selectionMenu.findItem(R.id.action_freeze_unfreeze);
         MenuItem forceStopMenu = selectionMenu.findItem(R.id.action_force_stop);

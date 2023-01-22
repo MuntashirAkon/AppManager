@@ -337,7 +337,7 @@ public class BackupRestorePreferences extends PreferenceFragment {
                     Uri lastBackupVolume = AppPref.getSelectedDirectory();
                     if (!lastBackupVolume.equals(backupVolume)) {
                         AppPref.set(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR, backupVolume.toString());
-                        model.updateBackups();
+                        model.reloadApps();
                     }
                 })
                 .show());

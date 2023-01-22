@@ -137,44 +137,8 @@ public class AppDb {
 
     @WorkerThread
     public void loadInstalledOrBackedUpApplications(@NonNull Context context) {
-        updateBackups(context);
+        getBackups(true);
         updateApplications(context);
-    }
-
-    @WorkerThread
-    public void updateBackups(@NonNull Context context) {
-        synchronized (sLock) {
-            Map<String, Backup> backups = getBackups(true);
-            // Interrupt thread on request
-            if (Thread.currentThread().isInterrupted()) return;
-
-            Set<App> allApps = new HashSet<>(appDao.getAll());
-            List<App> newApps = new ArrayList<>();
-            // Add the backup items, i.e., items that aren't already present
-            for (Backup backup : backups.values()) {
-                // Interrupt thread on request
-                if (Thread.currentThread().isInterrupted()) return;
-
-                if (backup == null) continue;
-                App app = App.fromBackup(backup);
-                if (allApps.contains(app)) {
-                    // Already has this entry, skip
-                    continue;
-                }
-                try (ComponentsBlocker cb = ComponentsBlocker.getInstance(app.packageName, app.userId, false)) {
-                    app.rulesCount = cb.entryCount();
-                }
-                newApps.add(app);
-            }
-            appDao.insert(newApps);
-            if (newApps.size() > 0) {
-                // New apps
-                Intent intent = new Intent(PackageChangeReceiver.ACTION_DB_PACKAGE_ADDED);
-                intent.setPackage(context.getPackageName());
-                intent.putExtra(Intent.EXTRA_CHANGED_PACKAGE_LIST, getPackageNamesFromApps(newApps));
-                context.sendBroadcast(intent);
-            }
-        }
     }
 
     @WorkerThread
@@ -369,7 +333,7 @@ public class AppDb {
 
     @WorkerThread
     @NonNull
-    private Map<String, Backup> getBackups(boolean loadBackups) {
+    public Map<String, Backup> getBackups(boolean loadBackups) {
         if (loadBackups) {
             // Very long operation
             return BackupUtils.storeAllAndGetLatestBackupMetadata();
@@ -481,6 +445,11 @@ public class AppDb {
             return false;
         }
         // App was not installed
+        if (currentApp.sdk != 0) {
+            // The app is a system app
+            return false;
+        }
+        // The app is a backed up app
         return currentApp.lastUpdateTime == backup.backupTime;
     }
 

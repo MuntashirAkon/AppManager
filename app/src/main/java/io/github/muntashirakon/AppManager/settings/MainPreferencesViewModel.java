@@ -108,14 +108,6 @@ public class MainPreferencesViewModel extends AndroidViewModel implements Ops.Ad
         });
     }
 
-    public void updateBackups() {
-        mExecutor.submit(() -> {
-            AppDb appDb = new AppDb();
-            appDb.deleteAllBackups();
-            appDb.updateBackups(getApplication());
-        });
-    }
-
     public LiveData<Integer> getModeOfOpsStatus() {
         return mModeOfOpsStatus;
     }

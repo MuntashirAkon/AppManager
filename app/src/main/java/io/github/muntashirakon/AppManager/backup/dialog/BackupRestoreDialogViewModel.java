@@ -26,7 +26,6 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
-import io.github.muntashirakon.AppManager.db.AppsDb;
 import io.github.muntashirakon.AppManager.db.entity.App;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.db.utils.AppDb;
@@ -133,8 +132,9 @@ public class BackupRestoreDialogViewModel extends AndroidViewModel {
                 }
                 backupInfo = new BackupInfo(userPackagePair.getPackageName(), userPackagePair.getUserHandle());
                 backupInfoMap.put(userPackagePair.getPackageName(), backupInfo);
-                List<App> apps = new AppDb().getAllApplications(userPackagePair.getPackageName());
-                List<Backup> backups = AppsDb.getInstance().backupDao().get(userPackagePair.getPackageName());
+                AppDb appDb = new AppDb();
+                List<App> apps = appDb.getAllApplications(userPackagePair.getPackageName());
+                List<Backup> backups = appDb.getAllBackups(userPackagePair.getPackageName());
                 // Fetch backup info
                 List<MetadataManager.Metadata> metadata = new ArrayList<>();
                 for (Backup backup : backups) {
