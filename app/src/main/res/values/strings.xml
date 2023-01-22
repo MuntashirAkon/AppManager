@@ -1311,4 +1311,5 @@
     <string name="filter_apps_with_saf">With SAF</string>
     <string name="filter_apps_with_ssaid">With SSAID</string>
     <string name="action_continue">Continue</string>
+    <string name="install_for_another_user">Install for…</string>
 </resources>

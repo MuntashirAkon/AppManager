@@ -19,6 +19,7 @@ import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerC
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 
 import androidx.annotation.NonNull;
@@ -218,7 +219,7 @@ public class PackageInstallerService extends ForegroundService {
                                   @Nullable String statusMessage) {
         Intent intent = getPackageManager().getLaunchIntentForPackage(packageName);
         NotificationCompat.Builder builder = NotificationUtils.getHighPriorityNotificationBuilder(this);
-        String subject = getStringFromStatus(status, appLabel, blockingPackage);
+        String subject = getStringFromStatus(this, status, appLabel, blockingPackage);
         builder.setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setWhen(System.currentTimeMillis())
@@ -238,41 +239,42 @@ public class PackageInstallerService extends ForegroundService {
     }
 
     @NonNull
-    private String getStringFromStatus(@PackageInstallerCompat.Status int status,
-                                       @Nullable String appLabel,
-                                       @Nullable String blockingPackage) {
+    public static String getStringFromStatus(@NonNull Context context,
+                                             @PackageInstallerCompat.Status int status,
+                                             @Nullable CharSequence appLabel,
+                                             @Nullable String blockingPackage) {
         switch (status) {
             case STATUS_SUCCESS:
-                return getString(R.string.package_name_is_installed_successfully, appLabel);
+                return context.getString(R.string.package_name_is_installed_successfully, appLabel);
             case STATUS_FAILURE_ABORTED:
-                return getString(R.string.installer_error_aborted);
+                return context.getString(R.string.installer_error_aborted);
             case STATUS_FAILURE_BLOCKED:
-                String blocker = getString(R.string.installer_error_blocked_device);
+                String blocker = context.getString(R.string.installer_error_blocked_device);
                 if (blockingPackage != null) {
-                    blocker = PackageUtils.getPackageLabel(getPackageManager(), blockingPackage);
+                    blocker = PackageUtils.getPackageLabel(context.getPackageManager(), blockingPackage);
                 }
-                return getString(R.string.installer_error_blocked, blocker);
+                return context.getString(R.string.installer_error_blocked, blocker);
             case STATUS_FAILURE_CONFLICT:
-                return getString(R.string.installer_error_conflict);
+                return context.getString(R.string.installer_error_conflict);
             case STATUS_FAILURE_INCOMPATIBLE:
-                return getString(R.string.installer_error_incompatible);
+                return context.getString(R.string.installer_error_incompatible);
             case STATUS_FAILURE_INVALID:
-                return getString(R.string.installer_error_bad_apks);
+                return context.getString(R.string.installer_error_bad_apks);
             case STATUS_FAILURE_STORAGE:
-                return getString(R.string.installer_error_storage);
+                return context.getString(R.string.installer_error_storage);
             case STATUS_FAILURE_SECURITY:
-                return getString(R.string.installer_error_security);
+                return context.getString(R.string.installer_error_security);
             case STATUS_FAILURE_SESSION_CREATE:
-                return getString(R.string.installer_error_session_create);
+                return context.getString(R.string.installer_error_session_create);
             case STATUS_FAILURE_SESSION_WRITE:
-                return getString(R.string.installer_error_session_write);
+                return context.getString(R.string.installer_error_session_write);
             case STATUS_FAILURE_SESSION_COMMIT:
-                return getString(R.string.installer_error_session_commit);
+                return context.getString(R.string.installer_error_session_commit);
             case STATUS_FAILURE_SESSION_ABANDON:
-                return getString(R.string.installer_error_session_abandon);
+                return context.getString(R.string.installer_error_session_abandon);
             case STATUS_FAILURE_INCOMPATIBLE_ROM:
-                return getString(R.string.installer_error_lidl_rom);
+                return context.getString(R.string.installer_error_lidl_rom);
         }
-        return getString(R.string.installer_error_generic);
+        return context.getString(R.string.installer_error_generic);
     }
 }

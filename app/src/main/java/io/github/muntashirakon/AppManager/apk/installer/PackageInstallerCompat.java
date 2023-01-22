@@ -767,6 +767,9 @@ public final class PackageInstallerCompat {
             default:
                 try {
                     PackageManagerCompat.getPackageInfo(packageName, 0, userId);
+                    installCompleted(sessionId, STATUS_FAILURE_ABORTED, null, "STATUS_FAILURE_ABORTED: Already installed.");
+                    Log.d(TAG, "InstallExisting: Already installed.");
+                    return false;
                 } catch (Throwable th) {
                     userIdWithoutInstalledPkg.add(userId);
                 }

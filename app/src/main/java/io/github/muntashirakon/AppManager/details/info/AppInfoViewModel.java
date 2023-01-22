@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.details.info;
 
+import android.annotation.UserIdInt;
 import android.app.ActivityManager;
 import android.app.Application;
 import android.content.Intent;
@@ -15,7 +16,9 @@ import android.os.UserHandleHidden;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
+import androidx.core.util.Pair;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import java.io.File;
@@ -25,10 +28,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import io.github.muntashirakon.AppManager.apk.ApkFile;
+import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
+import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerService;
 import io.github.muntashirakon.AppManager.backup.BackupUtils;
 import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
@@ -65,6 +71,7 @@ public class AppInfoViewModel extends AndroidViewModel {
     private final MutableLiveData<CharSequence> packageLabel = new MutableLiveData<>();
     private final MutableLiveData<TagCloud> tagCloud = new MutableLiveData<>();
     private final MutableLiveData<AppInfo> appInfo = new MutableLiveData<>();
+    private final MutableLiveData<Pair<Integer, CharSequence>> installExistingResult = new MutableLiveData<>();
     private final ExecutorService executor = Executors.newFixedThreadPool(4);
     @Nullable
     private AppDetailsViewModel mainModel;
@@ -83,16 +90,20 @@ public class AppInfoViewModel extends AndroidViewModel {
         this.mainModel = mainModel;
     }
 
-    public MutableLiveData<CharSequence> getPackageLabel() {
+    public LiveData<CharSequence> getPackageLabel() {
         return packageLabel;
     }
 
-    public MutableLiveData<TagCloud> getTagCloud() {
+    public LiveData<TagCloud> getTagCloud() {
         return tagCloud;
     }
 
-    public MutableLiveData<AppInfo> getAppInfo() {
+    public LiveData<AppInfo> getAppInfo() {
         return appInfo;
+    }
+
+    public LiveData<Pair<Integer, CharSequence>> getInstallExistingResult() {
+        return installExistingResult;
     }
 
     @WorkerThread
@@ -317,6 +328,30 @@ public class AppInfoViewModel extends AndroidViewModel {
         this.appInfo.postValue(appInfo);
     }
 
+    public void installExisting(@UserIdInt int userId) {
+        if (mainModel == null) return;
+        executor.submit(() -> {
+            PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance();
+            installer.setOnInstallListener(new PackageInstallerCompat.OnInstallListener() {
+                @Override
+                public void onStartInstall(int sessionId, String packageName) {
+                }
+
+                @Override
+                public void onFinishedInstall(int sessionId, String packageName, int result,
+                                              @Nullable String blockingPackage, @Nullable String statusMessage) {
+                    StringBuilder sb = new StringBuilder();
+                    sb.append(PackageInstallerService.getStringFromStatus(getApplication(), result,
+                            getPackageLabel().getValue(), blockingPackage));
+                    if (statusMessage != null) {
+                        sb.append("\n\n").append(statusMessage);
+                    }
+                    installExistingResult.postValue(new Pair<>(result, sb));
+                }
+            });
+            installer.installExisting(Objects.requireNonNull(mainModel.getPackageName()), userId);
+        });
+    }
 
     private static final String UID_STATS_PATH = "/proc/uid_stat/";
     private static final String UID_STATS_TX = "tcp_snd";

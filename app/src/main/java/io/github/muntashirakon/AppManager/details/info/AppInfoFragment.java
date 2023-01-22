@@ -133,6 +133,8 @@ import io.github.muntashirakon.AppManager.ssaid.ChangeSsaidDialog;
 import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
+import io.github.muntashirakon.AppManager.users.UserInfo;
+import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
@@ -301,6 +303,13 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         });
         model.getTagCloud().observe(getViewLifecycleOwner(), this::setupTagCloud);
         model.getAppInfo().observe(getViewLifecycleOwner(), this::setupVerticalView);
+        model.getInstallExistingResult().observe(getViewLifecycleOwner(), statusMessagePair ->
+                new MaterialAlertDialogBuilder(requireActivity())
+                        .setTitle(mPackageLabel)
+                        .setIcon(mApplicationInfo.loadIcon(mPackageManager))
+                        .setMessage(statusMessagePair.second)
+                        .setNegativeButton(R.string.close, null)
+                        .show());
     }
 
     @Override
@@ -312,6 +321,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             menu.findItem(R.id.action_open_in_termux).setVisible(Ops.isRoot());
             menu.findItem(R.id.action_battery_opt).setVisible(Ops.isPrivileged());
             menu.findItem(R.id.action_net_policy).setVisible(Ops.isPrivileged());
+            menu.findItem(R.id.action_install).setVisible(Ops.isPrivileged() && Users.getUsersIds().length > 1);
         }
     }
 
@@ -465,6 +475,21 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     displayShortToast(R.string.saving_failed);
                 }
             });
+        } else if (itemId == R.id.action_install) {
+            List<UserInfo> users = Users.getUsers();
+            String[] userNames = new String[users.size()];
+            int i = 0;
+            for (UserInfo info : users) {
+                userNames[i++] = info.name == null ? String.valueOf(info.id) : info.name;
+            }
+            new SearchableItemsDialogBuilder<>(mActivity, userNames)
+                    .setTitle(R.string.select_user)
+                    .setOnItemClickListener((dialog, which, item1) -> {
+                        model.installExisting(users.get(which).id);
+                        dialog.dismiss();
+                    })
+                    .setNegativeButton(R.string.cancel, null)
+                    .show();
         } else if (itemId == R.id.action_add_to_profile) {
             List<ProfileMetaManager> profiles = ProfileManager.getProfileMetadata();
             List<CharSequence> profileNames = new ArrayList<>(profiles.size());

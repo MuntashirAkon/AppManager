@@ -81,4 +81,10 @@
         android:title="@string/add_to_profile"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/action_install"
+        android:icon="@drawable/ic_get_app"
+        android:title="@string/install_for_another_user"
+        app:showAsAction="never" />
+
 </menu>
