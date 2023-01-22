@@ -81,7 +81,8 @@ class PackageInstallerBroadcastReceiver extends BroadcastReceiver {
                             .setTicker(appLabel)
                             .setContentTitle(appLabel)
                             .setSubText(context.getString(R.string.package_installer))
-                            .setContentText(context.getString(R.string.confirm_installation))
+                            // A neat way to find the title is to check for sessionId
+                            .setContentText(context.getString(sessionId == -1 ? R.string.confirm_uninstallation : R.string.confirm_installation))
                             .setContentIntent(PendingIntent.getActivity(context, 0, intent2,
                                     PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_UPDATE_CURRENT
                                             | PendingIntentCompat.FLAG_IMMUTABLE))
