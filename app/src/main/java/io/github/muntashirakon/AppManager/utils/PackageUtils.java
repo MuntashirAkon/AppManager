@@ -180,6 +180,7 @@ public final class PackageUtils {
             ApplicationItem item;
             ApplicationItem oldItem = applicationItems.get(app.packageName);
             if (app.isInstalled) {
+                boolean newItem = oldItem == null || !oldItem.isInstalled;
                 if (oldItem != null) {
                     // Item already exists
                     item = oldItem;
@@ -203,7 +204,7 @@ public final class PackageUtils {
                 }
                 item.totalSize += app.codeSize + app.dataSize;
                 item.dataUsage += app.wifiDataUsage + app.mobileDataUsage;
-                if (oldItem != null && app.userId != thisUser) {
+                if (!newItem && app.userId != thisUser) {
                     // This user has the highest priority
                     continue;
                 }

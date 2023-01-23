@@ -633,8 +633,8 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                 continue;
             }
             if (app.isInstalled) {
-                boolean newItem = item.packageName == null;
-                if (newItem) {
+                boolean newItem = item.packageName == null || !item.isInstalled;
+                if (item.packageName == null) {
                     item.packageName = app.packageName;
                 }
                 item.userHandles = ArrayUtils.appendInt(item.userHandles, app.userId);

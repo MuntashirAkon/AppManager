@@ -447,7 +447,7 @@ public class AppDb {
         // App was not installed
         if (currentApp.sdk != 0) {
             // The app is a system app
-            return false;
+            return true;
         }
         // The app is a backed up app
         return currentApp.lastUpdateTime == backup.backupTime;
