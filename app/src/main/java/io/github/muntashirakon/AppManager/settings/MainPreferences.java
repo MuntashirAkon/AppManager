@@ -107,7 +107,7 @@ public class MainPreferences extends PreferenceFragment {
                     .setTitle(R.string.pref_mode_of_operations)
                     .setSelection(currentMode)
                     .addDisabledItems(Build.VERSION.SDK_INT < Build.VERSION_CODES.R ?
-                            Collections.singletonList(Ops.MODE_ADB_OVER_TCP) : Collections.emptyList())
+                            Collections.singletonList(Ops.MODE_ADB_WIFI) : Collections.emptyList())
                     .setPositiveButton(R.string.apply, (dialog, which, selectedItem) -> {
                         currentMode = selectedItem;
                         if (Ops.MODE_ADB_OVER_TCP.equals(currentMode)) {
