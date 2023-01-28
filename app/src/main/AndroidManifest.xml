@@ -179,6 +179,12 @@
                     android:host="search" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".runner.TermActivity"
+            android:label="Term"
+            android:exported="true"
+            android:taskAffinity=""
+            android:windowSoftInputMode="stateUnchanged" />
 
         <activity-alias
             android:name=".details.AppInfoActivity"

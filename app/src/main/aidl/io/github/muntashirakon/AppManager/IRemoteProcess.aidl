@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager;
 // Copyright 2020 Rikka
 interface IRemoteProcess {
     ParcelFileDescriptor getOutputStream();
+    void closeOutputStream();
     ParcelFileDescriptor getInputStream();
     ParcelFileDescriptor getErrorStream();
     int waitFor();

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: Apache-2.0
+// SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later
 
 package io.github.muntashirakon.AppManager.ipc;
 
@@ -8,6 +8,9 @@ import android.os.ParcelFileDescriptor;
 import android.os.Parcelable;
 import android.os.RemoteException;
 
+import androidx.annotation.NonNull;
+
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.concurrent.TimeUnit;
@@ -15,6 +18,7 @@ import java.util.concurrent.TimeUnit;
 import io.github.muntashirakon.AppManager.IRemoteProcess;
 
 // Copyright 2020 Rikka
+// Copyright 2023 Muntashir Al-Islam
 public class RemoteProcess extends Process implements Parcelable {
     private final IRemoteProcess mRemote;
     private OutputStream os;
@@ -27,11 +31,7 @@ public class RemoteProcess extends Process implements Parcelable {
     @Override
     public OutputStream getOutputStream() {
         if (os == null) {
-            try {
-                os = new ParcelFileDescriptor.AutoCloseOutputStream(mRemote.getOutputStream());
-            } catch (RemoteException e) {
-                throw new RuntimeException(e);
-            }
+            os = new RemoteOutputStream(mRemote);
         }
         return os;
     }
@@ -128,5 +128,55 @@ public class RemoteProcess extends Process implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeStrongBinder(mRemote.asBinder());
+    }
+
+    private static class RemoteOutputStream extends OutputStream {
+        @NonNull
+        private final IRemoteProcess mRemoteProcess;
+        private OutputStream mOutputStream;
+        private boolean mIsClosed = false;
+
+        public RemoteOutputStream(@NonNull IRemoteProcess remoteProcess) {
+            mRemoteProcess = remoteProcess;
+        }
+
+        @Override
+        public void write(int b) throws IOException {
+            if (mIsClosed) {
+                throw new IOException("Remote is closed.");
+            }
+            if (mOutputStream == null) {
+                try {
+                    mOutputStream = new ParcelFileDescriptor.AutoCloseOutputStream(mRemoteProcess.getOutputStream());
+                } catch (RemoteException e) {
+                    throw new IOException(e);
+                }
+            }
+            mOutputStream.write(b);
+        }
+
+        @Override
+        public void flush() throws IOException {
+            if (mIsClosed) {
+                throw new IOException("Remote is closed.");
+            }
+            if (mOutputStream != null) {
+                mOutputStream.close();
+            }
+            mOutputStream = null;
+        }
+
+        @Override
+        public void close() throws IOException {
+            mIsClosed = true;
+            if (mOutputStream != null) {
+                mOutputStream.close();
+            }
+            try {
+                mRemoteProcess.closeOutputStream();
+            } catch (RemoteException e) {
+                throw new IOException(e);
+            }
+        }
     }
 }

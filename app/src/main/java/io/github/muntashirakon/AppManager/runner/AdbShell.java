@@ -20,7 +20,7 @@ import io.github.muntashirakon.AppManager.utils.ParcelFileDescriptorUtil;
 class AdbShell extends Runner {
     @Override
     public boolean isRoot() {
-        // TODO: 13/7/22 Add support for root over ADB
+        // ADB shell in App Manager always runs in no-root
         return false;
     }
 
