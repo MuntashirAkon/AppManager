@@ -632,7 +632,9 @@
             android:taskAffinity=""
             android:launchMode="singleInstance"
             android:noHistory="true"
-            android:exported="false" />
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:theme="@style/AppTheme.TransparentBackground" />
         <activity
             android:name=".main.SplashActivity"
             android:exported="true"
