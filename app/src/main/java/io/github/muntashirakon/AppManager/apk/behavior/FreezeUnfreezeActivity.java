@@ -33,9 +33,11 @@ import java.util.concurrent.Executors;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class FreezeUnfreezeActivity extends BaseActivity {
     private FreezeUnfreezeViewModel viewModel;
@@ -43,6 +45,11 @@ public class FreezeUnfreezeActivity extends BaseActivity {
     @Override
     protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
         viewModel = new ViewModelProvider(this).get(FreezeUnfreezeViewModel.class);
+        if (!Ops.isPrivileged()) {
+            UIUtils.displayShortToast(R.string.only_works_in_root_or_adb_mode);
+            finishAndRemoveTask();
+            return;
+        }
         FreezeUnfreeze.ShortcutInfo i = FreezeUnfreeze.getShortcutInfo(getIntent());
         if (i != null) {
             hideNotification(i);
@@ -87,6 +94,11 @@ public class FreezeUnfreezeActivity extends BaseActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        if (!Ops.isPrivileged()) {
+            UIUtils.displayShortToast(R.string.only_works_in_root_or_adb_mode);
+            finishAndRemoveTask();
+            return;
+        }
         FreezeUnfreeze.ShortcutInfo shortcutInfo = FreezeUnfreeze.getShortcutInfo(getIntent());
         if (viewModel != null && shortcutInfo != null) {
             hideNotification(shortcutInfo);
