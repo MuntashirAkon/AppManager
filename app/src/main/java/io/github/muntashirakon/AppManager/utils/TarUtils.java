@@ -27,8 +27,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -215,79 +213,11 @@ public final class TarUtils {
                         file.setLastModified(entry.getModTime().getTime());
                     }
                 }
-                // Delete unwanted files
-                validateFiles(dest, dest, filterPatterns, exclusionPatterns);
             } catch (ErrnoException e) {
                 throw new IOException(e);
             } finally {
                 is.close();
             }
-        }
-    }
-
-    private static void validateFiles(@NonNull Path basePath,
-                                      @NonNull Path source,
-                                      @Nullable Pattern[] filters,
-                                      @Nullable Pattern[] exclusions) {
-        if (!source.isDirectory()) {
-            // Not a directory, skip
-            return;
-        }
-        // List matched and unmatched children for top-level directory
-        LinkedList<Path> matchedChildren = new LinkedList<>();
-        List<Path> unmatchedChildren = new ArrayList<>();
-        for (Path childPath : source.listFiles()) {
-            if (childPath.isDirectory() || (Paths.isUnderFilter(childPath, basePath, filters)
-                    && !Paths.willExclude(childPath, basePath, exclusions))) {
-                // Matches the filter or it is a directory
-                matchedChildren.add(childPath);
-            } else unmatchedChildren.add(childPath);
-        }
-        if (matchedChildren.isEmpty()) {
-            // No children have matched, delete this directory
-            if (!basePath.equals(source)) {
-                // Only delete if the source is not the base path
-                source.delete();
-            }
-            // Create this directory again if it matches one of the filters
-            if (Paths.isUnderFilter(source, basePath, filters) && !Paths.willExclude(source, basePath, exclusions)) {
-                source.mkdirs();
-            }
-            return;
-        }
-        // Validate matched children
-        while (!matchedChildren.isEmpty()) {
-            Path removedChild = matchedChildren.removeFirst();
-            if (!removedChild.isDirectory()) {
-                // Not a directory, skip
-                continue;
-            }
-            // List matched and unmatched children
-            int matchedCount = 0;
-            for (Path childPath : removedChild.listFiles()) {
-                if (childPath.isDirectory() || (Paths.isUnderFilter(childPath, basePath, filters)
-                        && !Paths.willExclude(childPath, basePath, exclusions))) {
-                    // Matches the filter or it is a directory
-                    matchedChildren.add(childPath);
-                    ++matchedCount;
-                } else unmatchedChildren.add(childPath);
-            }
-            if (matchedCount == 0) {
-                // No children have matched, delete this directory
-                if (!basePath.equals(removedChild)) {
-                    // Only delete if the source is not the base path
-                    removedChild.delete();
-                }
-                // Create this directory again if it matches one of the filters
-                if (Paths.isUnderFilter(removedChild, basePath, filters) && !Paths.willExclude(removedChild, basePath, exclusions)) {
-                    removedChild.mkdirs();
-                }
-            }
-        }
-        // Delete unmatched children
-        for (Path child : unmatchedChildren) {
-            // No need to check return value as some paths may not exist
-            child.delete();
         }
     }
 

@@ -97,7 +97,7 @@ public class TarUtilsTest {
     @Test
     public void testExtractTarGZipWithDirectoryFilter() throws Throwable {
         extractTest(tarGzFilesForExtractTest, testRoot, /* language=regexp */ new String[]{"prefixed/.*"}, null,
-                Arrays.asList("", "prefixed/", "prefixed/prefixed_include.txt", "prefixed/prefixed_exclude.txt"));
+                Arrays.asList("", "prefixed/", "prefixed/prefixed_include.txt", "prefixed/prefixed_exclude.txt", "raw/"));
     }
 
     @Test
@@ -204,7 +204,7 @@ public class TarUtilsTest {
     public void testExtractTarGZipWithFilterAndExcludeContainingDirectory() throws Throwable {
         extractTest(tarGzFilesForExtractTest, testRoot, /* language=regexp */ new String[]{".*\\.txt", "include/.*"},
                 /* language=regexp */ new String[]{".*exclude\\.txt", "raw/.*"}, Arrays.asList("", "prefixed/",
-                        "prefixed/prefixed_include.txt", "plain.txt"));
+                        "prefixed/prefixed_include.txt", "plain.txt", "raw/"));
     }
 
     @Test
