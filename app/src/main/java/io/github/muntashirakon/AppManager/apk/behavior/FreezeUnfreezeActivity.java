@@ -145,7 +145,7 @@ public class FreezeUnfreezeActivity extends BaseActivity {
                     } else {
                         dimBitmap(icon);
                         shortcutInfo.setIcon(icon);
-                        if ((shortcutInfo.flags & FreezeUnfreeze.FLAG_ON_UNFREEZE_OPEN_APP) != 0) {
+                        if (!forceFreeze && (shortcutInfo.flags & FreezeUnfreeze.FLAG_ON_UNFREEZE_OPEN_APP) != 0) {
                             // Ask whether to open or freeze the app
                             openAppOrFreeze.postValue(shortcutInfo);
                             return;
