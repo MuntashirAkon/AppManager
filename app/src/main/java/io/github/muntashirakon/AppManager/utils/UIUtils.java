@@ -6,6 +6,9 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Typeface;
@@ -33,6 +36,8 @@ import android.widget.Toast;
 
 import androidx.annotation.AnyThread;
 import androidx.annotation.ColorInt;
+import androidx.annotation.FloatRange;
+import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.PluralsRes;
@@ -348,8 +353,19 @@ public class UIUtils {
     }
 
     public static void dimBitmap(@NonNull Bitmap bitmap) {
-        Canvas canvas = new Canvas(bitmap);
-        canvas.drawARGB(150, 0, 0, 0);
-        canvas.drawBitmap(bitmap, new Matrix(), new Paint());
+        setBrightness(bitmap, -120f);
+    }
+
+    public static void setBrightness(Bitmap bmp, @FloatRange(from = -255, to = 255) float brightness) {
+        ColorMatrix cm = new ColorMatrix(new float[]{
+                1, 0, 0, 0, brightness,
+                0, 1, 0, 0, brightness,
+                0, 0, 1, 0, brightness,
+                0, 0, 0, 1, 0
+        });
+        Canvas canvas = new Canvas(bmp);
+        Paint paint = new Paint();
+        paint.setColorFilter(new ColorMatrixColorFilter(cm));
+        canvas.drawBitmap(bmp, 0, 0, paint);
     }
 }
