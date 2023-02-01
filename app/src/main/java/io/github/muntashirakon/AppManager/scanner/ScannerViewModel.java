@@ -29,8 +29,10 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
@@ -277,7 +279,19 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
         try {
             mDexVfsId = VirtualFileSystem.mount(Uri.fromFile(mApkFile), Paths.get(mApkFile), ContentType2.DEX.getMimeType());
             DexFileSystem dfs = (DexFileSystem) Objects.requireNonNull(VirtualFileSystem.getFileSystem(mDexVfsId));
-            mAllClasses = dfs.getDexClasses().getClassNames();
+            List<String> allClasses = dfs.getDexClasses().getClassNames();
+            Set<String> allClassesSet = new HashSet<>(allClasses.size());
+            // Filter out classes with $
+            for (String className : allClasses) {
+                int idxOfDollar = findFirstInnerClassIndex(className);
+                if (idxOfDollar >= 0) {
+                    // Skip inner classes
+                    allClassesSet.add(className.substring(0, idxOfDollar));
+                } else {
+                    allClassesSet.add(className);
+                }
+            }
+            mAllClasses = new ArrayList<>(allClassesSet);
             Collections.sort(mAllClasses);
         } catch (Throwable e) {
             e.printStackTrace();
@@ -287,6 +301,25 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
         // Load tracker and library info
         mExecutor.submit(this::loadTrackers);
         mExecutor.submit(this::loadLibraries);
+    }
+
+    private static int findFirstInnerClassIndex(@NonNull String className) {
+        // Find first $ but without matching any .
+        // This is better than String#indexOf(char) because it stops searching as soon as it finds a .
+        int validDollarIndex = -1;
+        for (int i = className.length() - 1; i >= 0; --i) {
+            int ch = className.charAt(i);
+            if (ch == '.') {
+                // Found a ., no need to look any further
+                return validDollarIndex;
+            }
+            if (ch == '$') {
+                // Found a valid index
+                validDollarIndex = i;
+                // But there can be many, so look again
+            }
+        }
+        return validDollarIndex;
     }
 
     @WorkerThread
