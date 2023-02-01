@@ -7,6 +7,7 @@ import android.content.Context;
 import android.os.Build;
 import android.sun.security.provider.JavaKeyStoreProvider;
 
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
 import com.google.android.material.color.DynamicColors;
@@ -40,6 +41,7 @@ public class AppManager extends Application {
         return instance.getBaseContext();
     }
 
+    @Keep
     @Override
     public void onCreate() {
         instance = this;
@@ -50,6 +52,7 @@ public class AppManager extends Application {
         Security.addProvider(new JavaKeyStoreProvider());
     }
 
+    @Keep
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);

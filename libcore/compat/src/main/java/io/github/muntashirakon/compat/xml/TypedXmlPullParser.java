@@ -46,13 +46,15 @@ public interface TypedXmlPullParser extends XmlPullParser {
      * @return decoded strongly-typed {@link #getAttributeValue}
      * @throws XmlPullParserException if the value is malformed
      */
-    @NonNull byte[] getAttributeBytesHex(int index) throws XmlPullParserException;
+    @NonNull
+    byte[] getAttributeBytesHex(int index) throws XmlPullParserException;
 
     /**
      * @return decoded strongly-typed {@link #getAttributeValue}
      * @throws XmlPullParserException if the value is malformed
      */
-    @NonNull byte[] getAttributeBytesBase64(int index) throws XmlPullParserException;
+    @NonNull
+    byte[] getAttributeBytesBase64(int index) throws XmlPullParserException;
 
     /**
      * @return decoded strongly-typed {@link #getAttributeValue}
@@ -101,7 +103,7 @@ public interface TypedXmlPullParser extends XmlPullParser {
      * @throws XmlPullParserException if the value is malformed or undefined
      */
     default @NonNull byte[] getAttributeBytesHex(@Nullable String namespace,
-            @NonNull String name) throws XmlPullParserException {
+                                                 @NonNull String name) throws XmlPullParserException {
         return getAttributeBytesHex(getAttributeIndexOrThrow(namespace, name));
     }
 
@@ -110,7 +112,7 @@ public interface TypedXmlPullParser extends XmlPullParser {
      * @throws XmlPullParserException if the value is malformed or undefined
      */
     default @NonNull byte[] getAttributeBytesBase64(@Nullable String namespace,
-            @NonNull String name) throws XmlPullParserException {
+                                                    @NonNull String name) throws XmlPullParserException {
         return getAttributeBytesBase64(getAttributeIndexOrThrow(namespace, name));
     }
 
@@ -179,10 +181,10 @@ public interface TypedXmlPullParser extends XmlPullParser {
 
     /**
      * @return decoded strongly-typed {@link #getAttributeValue}, otherwise
-     *         default value if the value is malformed or undefined
+     * default value if the value is malformed or undefined
      */
     default @Nullable byte[] getAttributeBytesHex(@Nullable String namespace,
-            @NonNull String name, @Nullable byte[] defaultValue) {
+                                                  @NonNull String name, @Nullable byte[] defaultValue) {
         final int index = getAttributeIndex(namespace, name);
         if (index == -1) return defaultValue;
         try {
@@ -194,10 +196,10 @@ public interface TypedXmlPullParser extends XmlPullParser {
 
     /**
      * @return decoded strongly-typed {@link #getAttributeValue}, otherwise
-     *         default value if the value is malformed or undefined
+     * default value if the value is malformed or undefined
      */
     default @Nullable byte[] getAttributeBytesBase64(@Nullable String namespace,
-            @NonNull String name, @Nullable byte[] defaultValue) {
+                                                     @NonNull String name, @Nullable byte[] defaultValue) {
         final int index = getAttributeIndex(namespace, name);
         if (index == -1) return defaultValue;
         try {
@@ -209,10 +211,10 @@ public interface TypedXmlPullParser extends XmlPullParser {
 
     /**
      * @return decoded strongly-typed {@link #getAttributeValue}, otherwise
-     *         default value if the value is malformed or undefined
+     * default value if the value is malformed or undefined
      */
     default int getAttributeInt(@Nullable String namespace, @NonNull String name,
-            int defaultValue) {
+                                int defaultValue) {
         final int index = getAttributeIndex(namespace, name);
         if (index == -1) return defaultValue;
         try {
@@ -224,10 +226,10 @@ public interface TypedXmlPullParser extends XmlPullParser {
 
     /**
      * @return decoded strongly-typed {@link #getAttributeValue}, otherwise
-     *         default value if the value is malformed or undefined
+     * default value if the value is malformed or undefined
      */
     default int getAttributeIntHex(@Nullable String namespace, @NonNull String name,
-            int defaultValue) {
+                                   int defaultValue) {
         final int index = getAttributeIndex(namespace, name);
         if (index == -1) return defaultValue;
         try {
@@ -239,10 +241,10 @@ public interface TypedXmlPullParser extends XmlPullParser {
 
     /**
      * @return decoded strongly-typed {@link #getAttributeValue}, otherwise
-     *         default value if the value is malformed or undefined
+     * default value if the value is malformed or undefined
      */
     default long getAttributeLong(@Nullable String namespace, @NonNull String name,
-            long defaultValue) {
+                                  long defaultValue) {
         final int index = getAttributeIndex(namespace, name);
         if (index == -1) return defaultValue;
         try {
@@ -254,10 +256,10 @@ public interface TypedXmlPullParser extends XmlPullParser {
 
     /**
      * @return decoded strongly-typed {@link #getAttributeValue}, otherwise
-     *         default value if the value is malformed or undefined
+     * default value if the value is malformed or undefined
      */
     default long getAttributeLongHex(@Nullable String namespace, @NonNull String name,
-            long defaultValue) {
+                                     long defaultValue) {
         final int index = getAttributeIndex(namespace, name);
         if (index == -1) return defaultValue;
         try {
@@ -269,10 +271,10 @@ public interface TypedXmlPullParser extends XmlPullParser {
 
     /**
      * @return decoded strongly-typed {@link #getAttributeValue}, otherwise
-     *         default value if the value is malformed or undefined
+     * default value if the value is malformed or undefined
      */
     default float getAttributeFloat(@Nullable String namespace, @NonNull String name,
-            float defaultValue) {
+                                    float defaultValue) {
         final int index = getAttributeIndex(namespace, name);
         if (index == -1) return defaultValue;
         try {
@@ -284,10 +286,10 @@ public interface TypedXmlPullParser extends XmlPullParser {
 
     /**
      * @return decoded strongly-typed {@link #getAttributeValue}, otherwise
-     *         default value if the value is malformed or undefined
+     * default value if the value is malformed or undefined
      */
     default double getAttributeDouble(@Nullable String namespace, @NonNull String name,
-            double defaultValue) {
+                                      double defaultValue) {
         final int index = getAttributeIndex(namespace, name);
         if (index == -1) return defaultValue;
         try {
@@ -299,10 +301,10 @@ public interface TypedXmlPullParser extends XmlPullParser {
 
     /**
      * @return decoded strongly-typed {@link #getAttributeValue}, otherwise
-     *         default value if the value is malformed or undefined
+     * default value if the value is malformed or undefined
      */
     default boolean getAttributeBoolean(@Nullable String namespace, @NonNull String name,
-            boolean defaultValue) {
+                                        boolean defaultValue) {
         final int index = getAttributeIndex(namespace, name);
         if (index == -1) return defaultValue;
         try {

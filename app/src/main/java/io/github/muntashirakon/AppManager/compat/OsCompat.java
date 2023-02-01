@@ -5,6 +5,9 @@ package io.github.muntashirakon.AppManager.compat;
 import android.system.ErrnoException;
 import android.system.StructPasswd;
 
+import androidx.annotation.Keep;
+
+@Keep
 public class OsCompat {
     // Lists the syscalls unavailable in Os
 

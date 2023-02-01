@@ -2,6 +2,9 @@
 
 package io.github.muntashirakon.AppManager.rules;
 
+import androidx.annotation.Keep;
+
+@Keep
 public enum RuleType {
     ACTIVITY,
     PROVIDER,

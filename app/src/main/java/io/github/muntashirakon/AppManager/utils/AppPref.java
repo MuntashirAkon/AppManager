@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.IntDef;
+import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StyleRes;
@@ -59,6 +60,7 @@ public class AppPref {
      * <br/>
      * Keep these in sync with {@link #getDefaultValue(PrefKey)}.
      */
+    @Keep
     public enum PrefKey {
         PREF_APP_OP_SHOW_DEFAULT_BOOL,
         PREF_APP_OP_SORT_ORDER_INT,

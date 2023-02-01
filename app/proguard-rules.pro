@@ -21,10 +21,28 @@
 }
 # Keep all class members that implement the percelable interface
 -keepclassmembers class * implements android.os.Parcelable {
-    static ** CREATOR;
+    public static final ** CREATOR;
+    public int describeContents();
+    public void writeToParcel(android.os.Parcel, int);
 }
-# Don't minify server-related classes
+# Keep preference fragments
+-keep public class * extends androidx.preference.PreferenceFragmentCompat {}
+# Keep XmlPullParsers FIXME: Otherwise abstract method exception would occur
+-keep public class * extends org.xmlpull.v1.XmlPullParser { *; }
+-keep public class * extends org.xmlpull.v1.XmlSerializer { *; }
+# Don't minify server-related classes FIXME
 -keep public class io.github.muntashirakon.AppManager.servermanager.** { *; }
 -keep public class io.github.muntashirakon.AppManager.server.** { *; }
+-keep public class io.github.muntashirakon.AppManager.ipc.** { *; }
 # Don't minify debug-sepcific resource file
--keep class io.github.muntashirakon.AppManager.debug.R$raw {*;}
+-keep public class io.github.muntashirakon.AppManager.debug.R$raw {*;}
+# Don't minify OpenPGP API
+-keep public class org.openintents.openpgp.IOpenPgpService { *; }
+-keep public class org.openintents.openpgp.IOpenPgpService2 { *; }
+# Don't minify Spake2 library
+-keep public class io.github.muntashirakon.crypto.spake2.** { *; }
+# Don't minify AOSP private APIs
+-keep class android.** { *; }
+-keep class com.android.** { *; }
+-keep class libcore.util.** { *; }
+-keep class org.xmlpull.v1.** { *; }
