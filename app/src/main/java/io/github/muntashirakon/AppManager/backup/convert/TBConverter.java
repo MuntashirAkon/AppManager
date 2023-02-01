@@ -137,7 +137,7 @@ public class TBConverter extends Converter {
                 mTempBackupPath = backupFile.getBackupPath();
                 mCrypto = ConvertUtils.setupCrypto(mDestMetadata);
                 try {
-                    mChecksum = new BackupFiles.Checksum(backupFile.getChecksumFile(CryptoUtils.MODE_NO_ENCRYPTION), "w");
+                    mChecksum = backupFile.getChecksum(CryptoUtils.MODE_NO_ENCRYPTION);
                 } catch (IOException e) {
                     throw new BackupException("Failed to create checksum file.", e);
                 }

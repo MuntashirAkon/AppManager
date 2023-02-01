@@ -116,6 +116,11 @@ public class BackupFiles {
         }
 
         @NonNull
+        public Checksum getChecksum(@CryptoUtils.Mode String mode) throws IOException {
+            return new Checksum(getChecksumFile(mode), mIsTemporary ? "w" : "r");
+        }
+
+        @NonNull
         public Path getMiscFile(@CryptoUtils.Mode String mode) throws IOException {
             if (mIsTemporary) {
                 return getBackupPath().findOrCreateFile(MISC_TSV + CryptoUtils.getExtension(mode), null);

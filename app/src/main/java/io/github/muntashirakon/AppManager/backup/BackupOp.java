@@ -133,9 +133,7 @@ class BackupOp implements Closeable {
             throw new BackupException("Failed to get crypto " + mMetadata.crypto, e);
         }
         try {
-            this.mChecksum = new BackupFiles.Checksum(
-                    this.mBackupFile.getChecksumFile(CryptoUtils.MODE_NO_ENCRYPTION),
-                    "w");
+            this.mChecksum = this.mBackupFile.getChecksum(CryptoUtils.MODE_NO_ENCRYPTION);
             String[] certChecksums = PackageUtils.getSigningCertChecksums(mMetadata.checksumAlgo, mPackageInfo, false);
             for (int i = 0; i < certChecksums.length; ++i) {
                 mChecksum.add(CERT_PREFIX + i, certChecksums[i]);

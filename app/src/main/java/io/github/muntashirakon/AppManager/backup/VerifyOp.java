@@ -76,8 +76,7 @@ class VerifyOp implements Closeable {
         }
         // Get checksums
         try {
-            checksumFile = this.backupFile.getChecksumFile(CryptoUtils.MODE_NO_ENCRYPTION);
-            this.checksum = new BackupFiles.Checksum(checksumFile, "r");
+            this.checksum = this.backupFile.getChecksum(CryptoUtils.MODE_NO_ENCRYPTION);
         } catch (Throwable e) {
             this.backupFile.cleanup();
             throw new BackupException("Could not get checksums.", e);
