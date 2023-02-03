@@ -9,6 +9,7 @@ import android.webkit.MimeTypeMap;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -35,6 +36,10 @@ public class ExtendedRawDocumentFile extends DocumentFile {
     @Override
     @Nullable
     public DocumentFile createFile(@NonNull String mimeType, @NonNull String displayName) {
+        if (displayName.contains(File.separator)) {
+            // displayName cannot contain a separator
+            return null;
+        }
         // Tack on extension when valid MIME type provided
         String extension = MimeTypeMap.getSingleton().getExtensionFromMimeType(mimeType);
         if (extension != null) {
@@ -53,6 +58,10 @@ public class ExtendedRawDocumentFile extends DocumentFile {
     @Override
     @Nullable
     public DocumentFile createDirectory(@NonNull String displayName) {
+        if (displayName.contains(File.separator)) {
+            // displayName cannot contain a separator
+            return null;
+        }
         final ExtendedFile target = mFile.getChildFile(displayName);
         if (target.isDirectory() || target.mkdir()) {
             return new ExtendedRawDocumentFile(this, target);
@@ -141,6 +150,10 @@ public class ExtendedRawDocumentFile extends DocumentFile {
     @Nullable
     @Override
     public DocumentFile findFile(@NonNull String displayName) {
+        if (displayName.contains(File.separator)) {
+            // displayName cannot contain a separator
+            return null;
+        }
         ExtendedFile file = mFile.getChildFile(displayName);
         return file.exists() ? new ExtendedRawDocumentFile(this, file) : null;
     }
@@ -160,6 +173,10 @@ public class ExtendedRawDocumentFile extends DocumentFile {
 
     @Override
     public boolean renameTo(@NonNull String displayName) {
+        if (displayName.contains(File.separator)) {
+            // displayName cannot contain a separator
+            return false;
+        }
         ExtendedFile parent = mFile.getParentFile();
         if (parent == null) return false;
         ExtendedFile target = mFile.getParentFile().getChildFile(displayName);

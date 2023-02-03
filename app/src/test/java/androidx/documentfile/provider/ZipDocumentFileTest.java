@@ -54,7 +54,11 @@ public class ZipDocumentFileTest {
         Collections.sort(tmpList);
         assertEquals(level1, tmpList);
         // Arbitrary Directory level check
-        VirtualDocumentFile activityXml = doc.findFile("res/layout/activity.xml");
+        VirtualDocumentFile resDir = doc.findFile("res");
+        assertNotNull(resDir);
+        VirtualDocumentFile layoutDir = resDir.findFile("layout");
+        assertNotNull(layoutDir);
+        VirtualDocumentFile activityXml = layoutDir.findFile("activity.xml");
         assertNotNull(activityXml);
         assertTrue(activityXml.exists());
         assertTrue(activityXml.canRead());

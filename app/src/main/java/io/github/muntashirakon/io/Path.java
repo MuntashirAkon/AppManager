@@ -48,6 +48,7 @@ import io.github.muntashirakon.AppManager.ipc.LocalServices;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
+import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.io.fs.VirtualFileSystem;
 
 /**
@@ -205,11 +206,18 @@ public class Path implements Comparable<Path> {
                 if (parsedUri != null) {
                     Path rootPath = VirtualFileSystem.getFsRoot(parsedUri.first);
                     if (rootPath != null) {
-                        if (parsedUri.second == null || parsedUri.second.equals(File.separator)) {
+                        String path = Paths.getSanitizedPath(parsedUri.second, true);
+                        if (TextUtilsCompat.isEmpty(path) || path.equals(File.separator)) {
+                            // Root requested
                             documentFile = rootPath.mDocumentFile;
                         } else {
                             // Find file is acceptable here since the file always exists
-                            documentFile = Objects.requireNonNull(rootPath.mDocumentFile.findFile(parsedUri.second));
+                            String[] pathComponents = path.split(File.separator);
+                            DocumentFile finalDocumentFile = rootPath.mDocumentFile;
+                            for (String pathComponent : pathComponents) {
+                                finalDocumentFile = Objects.requireNonNull(finalDocumentFile.findFile(pathComponent));
+                            }
+                            documentFile = finalDocumentFile;
                         }
                         break;
                     }

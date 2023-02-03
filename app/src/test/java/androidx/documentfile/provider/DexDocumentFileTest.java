@@ -54,19 +54,29 @@ public class DexDocumentFileTest {
         Collections.sort(tmpList);
         assertEquals(level1, tmpList);
         // Arbitrary Directory level check
-        VirtualDocumentFile activityXml = doc.findFile("ademar/textlauncher/Activity.smali");
-        assertNotNull(activityXml);
-        assertTrue(activityXml.exists());
-        assertTrue(activityXml.canRead());
-        assertTrue(activityXml.isFile());
-        assertFalse(activityXml.isDirectory());
-        assertNotEquals(activityXml.length(), 0);
-        assertEquals("/ademar/textlauncher/Activity.smali", activityXml.getFullPath());
-        // Sanitization check
-        VirtualDocumentFile activityXml2 = doc.findFile("/ademar/textlauncher/Activity.smali");
-        assertNotNull(activityXml2);
-        assertEquals(activityXml.getUri(), activityXml2.getUri());
-        VirtualDocumentFile invalidFile = doc.findFile("ademar/textlauncher/Invalid.smali");
+        VirtualDocumentFile ademarDir = doc.findFile("ademar");
+        assertNotNull(ademarDir);
+        VirtualDocumentFile textLauncherDir = ademarDir.findFile("textlauncher");
+        assertNotNull(textLauncherDir);
+        VirtualDocumentFile activitySmali = textLauncherDir.findFile("Activity.smali");
+        assertNotNull(activitySmali);
+        assertTrue(activitySmali.exists());
+        assertTrue(activitySmali.canRead());
+        assertTrue(activitySmali.isFile());
+        assertFalse(activitySmali.isDirectory());
+        assertNotEquals(activitySmali.length(), 0);
+        assertEquals("/ademar/textlauncher/Activity.smali", activitySmali.getFullPath());
+        // Parent check
+        DocumentFile parent = activitySmali.getParentFile();
+        assertNotNull(parent);
+        assertTrue(parent.exists());
+        assertTrue(parent.canRead());
+        assertFalse(parent.isFile());
+        assertTrue(parent.isDirectory());
+        assertEquals(parent.length(), 0);
+        assertEquals("/ademar/textlauncher", ((VirtualDocumentFile) parent).getFullPath());
+        assertEquals(textLauncherDir.getUri(), parent.getUri());
+        VirtualDocumentFile invalidFile = textLauncherDir.findFile("Invalid.smali");
         assertNull(invalidFile);
     }
 }
