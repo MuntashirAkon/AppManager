@@ -53,6 +53,21 @@ public class PathsTest {
         assertEquals("asdkjrejvncnmiet/eru43jffn", Paths.removeLastPathSegment("asdkjrejvncnmiet/eru43jffn/ewrjpoewiwfjfpwrejtp.ext"));
     }
 
+    @Test
+    public void appendPathSegment() {
+        assertEquals("", Paths.appendPathSegment("", ""));
+        assertEquals("", Paths.appendPathSegment("", "/"));
+        assertEquals("/", Paths.appendPathSegment("/", ""));
+        assertEquals("/", Paths.appendPathSegment("/", "/"));
+        assertEquals("/a", Paths.appendPathSegment("/", "a"));
+        assertEquals("/a", Paths.appendPathSegment("/", "/a"));
+        assertEquals("/a/", Paths.appendPathSegment("/", "a/"));
+        assertEquals("/a/", Paths.appendPathSegment("/", "/a/"));
+        assertEquals("/a/b/c/d", Paths.appendPathSegment("/a/b/c", "d"));
+        assertEquals("/a/b/c/d", Paths.appendPathSegment("/a/b/c/", "d"));
+        assertEquals("/a/b/c/d", Paths.appendPathSegment("/a/b/c/", "/d"));
+        assertEquals("/a/b/c/d/", Paths.appendPathSegment("/a/b/c/", "/d/"));
+    }
 
     @Test
     public void trimPathExtension() {
