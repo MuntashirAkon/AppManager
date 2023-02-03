@@ -9,7 +9,7 @@ import dev.rikka.tools.refine.RefineAs;
 import misc.utils.HiddenUtil;
 
 @RefineAs(UserHandle.class)
-public class UserHandleHidden implements Parcelable {
+public class UserHandleHidden {
     /**
      * A user id to indicate all users on the device
      */

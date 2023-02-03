@@ -2,6 +2,7 @@
 
 package android.content.pm.permission;
 
+import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.IntRange;
@@ -52,4 +53,16 @@ public class SplitPermissionInfoParcelable implements Parcelable {
     public int getTargetSdk() {
         return HiddenUtil.throwUOE();
     }
+
+    @Override
+    public int describeContents() {
+        return HiddenUtil.throwUOE();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        HiddenUtil.throwUOE(dest, flags);
+    }
+
+    public static final Creator<SplitPermissionInfoParcelable> CREATOR = HiddenUtil.creator();
 }

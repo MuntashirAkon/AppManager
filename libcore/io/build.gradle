@@ -2,6 +2,10 @@
 
 apply from: "$gradle.ext.appManagerRoot/common.gradle"
 
+android {
+    namespace 'io.github.muntashirakon.io'
+}
+
 dependencies {
     compileOnly project(path: ':hiddenapi')
 

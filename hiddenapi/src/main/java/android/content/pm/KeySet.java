@@ -3,6 +3,7 @@
 package android.content.pm;
 
 import android.os.IBinder;
+import android.os.Parcel;
 import android.os.Parcelable;
 
 import misc.utils.HiddenUtil;
@@ -20,4 +21,16 @@ public class KeySet implements Parcelable {
     public IBinder getToken() {
         return HiddenUtil.throwUOE();
     }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        HiddenUtil.throwUOE(dest, flags);
+    }
+
+    @Override
+    public int describeContents() {
+        return HiddenUtil.throwUOE();
+    }
+
+    public static final Creator<KeySet> CREATOR = HiddenUtil.creator();
 }

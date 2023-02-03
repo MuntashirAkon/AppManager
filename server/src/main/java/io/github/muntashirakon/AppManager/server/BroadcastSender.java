@@ -2,7 +2,6 @@
 
 package io.github.muntashirakon.AppManager.server;
 
-import android.app.ActivityThread;
 import android.app.Application;
 import android.content.Intent;
 
@@ -12,7 +11,9 @@ import io.github.muntashirakon.AppManager.server.common.FLog;
 class BroadcastSender {
     static void sendBroadcast(Intent intent) {
         try {
-            Application app = ActivityThread.currentApplication();
+            Application app = (Application) Class.forName("android.app.ActivityThread")
+                    .getMethod("currentApplication")
+                    .invoke(null);
             if (app == null) {
                 FLog.log("BroadcastSender: NullPointerException " + intent.toString());
                 return;

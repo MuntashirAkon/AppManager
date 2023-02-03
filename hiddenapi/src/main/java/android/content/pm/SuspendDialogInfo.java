@@ -2,12 +2,15 @@
 
 package android.content.pm;
 
+import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
+
+import java.util.Locale;
 
 import misc.utils.HiddenUtil;
 
@@ -56,6 +59,19 @@ public final class SuspendDialogInfo implements Parcelable {
     SuspendDialogInfo(Builder b) {
         HiddenUtil.throwUOE(b);
     }
+
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        HiddenUtil.throwUOE(dest, flags);
+    }
+
+    @Override
+    public int describeContents() {
+        return HiddenUtil.throwUOE();
+    }
+
+    public static final Creator<SuspendDialogInfo> CREATOR = HiddenUtil.creator();
 
     /**
      * Builder to build a {@link SuspendDialogInfo} object.

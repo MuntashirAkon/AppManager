@@ -3,6 +3,7 @@
 package android.app;
 
 import android.net.Uri;
+import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
@@ -18,4 +19,16 @@ public class GrantedUriPermission implements Parcelable {
         HiddenUtil.throwUOE(uri, packageName);
         throw new UnsupportedOperationException();
     }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        HiddenUtil.throwUOE(dest, flags);
+    }
+
+    @Override
+    public int describeContents() {
+        return HiddenUtil.throwUOE();
+    }
+
+    public static final Creator<GrantedUriPermission> CREATOR = HiddenUtil.creator();
 }

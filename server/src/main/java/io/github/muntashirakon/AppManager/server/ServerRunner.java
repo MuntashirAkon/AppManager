@@ -2,7 +2,6 @@
 
 package io.github.muntashirakon.AppManager.server;
 
-import android.app.ActivityThread;
 import android.os.Looper;
 import android.os.Process;
 import android.os.SystemClock;
@@ -61,7 +60,9 @@ public final class ServerRunner {
             // Make it main looper
             //noinspection deprecation
             Looper.prepareMainLooper();
-            ActivityThread.systemMain();
+            Class.forName("android.app.ActivityThread")
+                    .getMethod("systemMain")
+                    .invoke(null);
             // Parse arguments
             String[] split = paramsStr.split(",");
             final ConfigParams configParams = new ConfigParams();

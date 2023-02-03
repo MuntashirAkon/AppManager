@@ -2,6 +2,7 @@
 
 package android.content.pm;
 
+import android.os.Parcel;
 import android.os.Parcelable;
 
 import misc.utils.HiddenUtil;
@@ -29,4 +30,16 @@ public class VerifierDeviceIdentity implements Parcelable {
             throws IllegalArgumentException {
         return HiddenUtil.throwUOE(deviceIdentity);
     }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        HiddenUtil.throwUOE(dest, flags);
+    }
+
+    @Override
+    public int describeContents() {
+        return HiddenUtil.throwUOE();
+    }
+
+    public static final Creator<VerifierDeviceIdentity> CREATOR = HiddenUtil.creator();
 }

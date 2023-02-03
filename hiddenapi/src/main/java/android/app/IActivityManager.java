@@ -18,6 +18,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.IInterface;
+import android.os.Parcel;
 import android.os.ParcelFileDescriptor;
 import android.os.Parcelable;
 import android.os.RemoteException;
@@ -25,6 +26,8 @@ import android.os.RemoteException;
 import androidx.annotation.RequiresApi;
 
 import java.util.List;
+
+import misc.utils.HiddenUtil;
 
 /**
  * System private API for talking with the activity manager service.  This
@@ -118,6 +121,18 @@ public interface IActivityManager extends IInterface {
     @Deprecated
     class ContentProviderHolder implements Parcelable {
         public IContentProvider provider;
+
+        public static final Creator<ContentProviderHolder> CREATOR = HiddenUtil.creator();
+
+        @Override
+        public int describeContents() {
+            return HiddenUtil.throwUOE();
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            HiddenUtil.throwUOE(dest, flags);
+        }
     }
 
     /**

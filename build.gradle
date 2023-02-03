@@ -7,7 +7,6 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.4.0-beta02'
-        classpath 'dev.rikka.tools.refine:gradle-plugin:3.0.3'
         classpath "com.google.protobuf:protobuf-gradle-plugin:0.8.6"
     }
 }
@@ -39,7 +38,7 @@ project.ext {
     bouncycastle_version = "1.70"
     libsu_version = "5.0.3"
     material_version = "1.7.0"
-    refine_version = "3.0.3"
+    refine_version = "4.0.0"
     room_version = "2.4.3"
     splashscreen_version = "1.0.0"
 }

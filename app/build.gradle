@@ -1,9 +1,12 @@
 // SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later
 
-apply plugin: 'com.android.application'
-apply plugin: 'dev.rikka.tools.refine.gradle-plugin'
+plugins {
+    id('com.android.application')
+    id('dev.rikka.tools.refine') version '4.0.0'
+}
 
 android {
+    namespace 'io.github.muntashirakon.AppManager'
     compileSdk rootProject.ext.compileSdk
 
     defaultConfig {

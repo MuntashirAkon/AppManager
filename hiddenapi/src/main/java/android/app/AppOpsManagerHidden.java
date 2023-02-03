@@ -3,6 +3,7 @@
 package android.app;
 
 import android.os.Build;
+import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
@@ -16,7 +17,7 @@ import misc.utils.HiddenUtil;
 
 @RefineAs(AppOpsManager.class)
 public class AppOpsManagerHidden {
-    public static int _NUM_OP;
+    public static final int _NUM_OP = 121;
 
     public static class PackageOps implements Parcelable {
         @NonNull
@@ -32,9 +33,33 @@ public class AppOpsManagerHidden {
         public List<Parcelable> getOps() {
             return HiddenUtil.throwUOE();
         }
+
+        public static final Creator<PackageOps> CREATOR = HiddenUtil.creator();
+
+        @Override
+        public int describeContents() {
+            return HiddenUtil.throwUOE();
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            HiddenUtil.throwUOE(dest, flags);
+        }
     }
 
     public static class OpEntry implements Parcelable {
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            HiddenUtil.throwUOE(dest, flags);
+        }
+
+        @Override
+        public int describeContents() {
+            return HiddenUtil.throwUOE();
+        }
+
+        public static final Creator<OpEntry> CREATOR = HiddenUtil.creator();
+
         public int getOp() {
             return HiddenUtil.throwUOE();
         }

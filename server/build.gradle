@@ -2,6 +2,10 @@
 
 apply from: "$gradle.ext.appManagerRoot/common.gradle"
 
+android {
+    namespace 'io.github.muntashirakon.AppManager.server'
+}
+
 android.libraryVariants.all { variant ->
     variant.assembleProvider.get().doLast {
         makeJars(variant.buildType.name)
@@ -31,7 +35,6 @@ def makeJars(String buildType) {
 
     String debugClassDir = project.rootDir.absolutePath + '/server/build/intermediates/javac/' + buildType + '/classes'
     String libserverClassDir = project.rootDir.absolutePath + '/libserver/build/intermediates/javac/' + buildType + '/classes'
-    def hiddenApiClassDir = project.rootDir.absolutePath + '/hiddenapi/build/classes/java/main'
     def amJar = project.rootDir.absolutePath + '/app/src/main/assets/am.jar'
     def mainJar = project.rootDir.absolutePath + '/app/src/main/assets/main.jar'
 
@@ -39,7 +42,6 @@ def makeJars(String buildType) {
     def buildArgs = ['--release', '--output', amJar]
     buildArgs.addAll(getClassFiles(libserverClassDir, ["io/github/muntashirakon/AppManager/server/common/"]))
     buildArgs.addAll(getClassFiles(debugClassDir, ["io/github/muntashirakon/AppManager/server/"]))
-    buildArgs.add(hiddenApiClassDir + "/android/app/ActivityThread.class")
     buildArgs.addAll(['--lib', "${android.sdkDirectory.path}/platforms/android-${rootProject.ext.targetSdk}/android.jar"])
     println(buildArgs.toString())
     exec {

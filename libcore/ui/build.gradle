@@ -1,8 +1,11 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-apply plugin: 'com.android.library'
+plugins {
+    id('com.android.library')
+}
 
 android {
+    namespace 'io.github.muntashirakon.ui'
     compileSdk rootProject.ext.compileSdk
 
     defaultConfig {

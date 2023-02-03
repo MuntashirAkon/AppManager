@@ -1,16 +1,27 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-apply plugin: 'java-library'
+plugins {
+    id('com.android.library')
+}
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+android {
+    namespace 'io.github.muntashirakon.hiddenapi'
+    compileSdk rootProject.ext.compileSdk
+
+    defaultConfig {
+        minSdk rootProject.ext.minSdk
+        targetSdk rootProject.ext.targetSdk
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
     annotationProcessor "dev.rikka.tools.refine:annotation-processor:${refine_version}"
     compileOnly "dev.rikka.tools.refine:annotation:${refine_version}"
     compileOnly 'org.jetbrains:annotations:23.0.0'
-
-    implementation "androidx.annotation:annotation:${annotation_version}"
+    compileOnly "androidx.annotation:annotation:${annotation_version}"
 }

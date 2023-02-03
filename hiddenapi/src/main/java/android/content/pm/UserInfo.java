@@ -3,6 +3,7 @@
 package android.content.pm;
 
 import android.os.Build;
+import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.UserHandle;
 
@@ -162,4 +163,26 @@ public class UserInfo implements Parcelable {
     public UserHandle getUserHandle() {
         return HiddenUtil.throwUOE();
     }
+
+    @Override
+    public int describeContents() {
+        return HiddenUtil.throwUOE();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        HiddenUtil.throwUOE(dest, flags);
+    }
+
+    public static final Creator<UserInfo> CREATOR = new Creator<UserInfo>() {
+        @Override
+        public UserInfo createFromParcel(Parcel in) {
+            return HiddenUtil.throwUOE(in);
+        }
+
+        @Override
+        public UserInfo[] newArray(int size) {
+            return HiddenUtil.throwUOE(size);
+        }
+    };
 }

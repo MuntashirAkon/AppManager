@@ -2,6 +2,7 @@
 
 package android.app;
 
+import android.os.Parcel;
 import android.os.ParcelFileDescriptor;
 import android.os.Parcelable;
 
@@ -64,5 +65,17 @@ public class ProfilerInfo implements Parcelable {
      */
     public void closeFd() {
         HiddenUtil.throwUOE();
+    }
+
+    public static final Creator<ProfilerInfo> CREATOR = HiddenUtil.creator();
+
+    @Override
+    public int describeContents() {
+        return HiddenUtil.throwUOE();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        HiddenUtil.throwUOE(dest, flags);
     }
 }

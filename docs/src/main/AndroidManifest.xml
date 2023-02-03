@@ -1,6 +1,5 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<manifest xmlns:dist="http://schemas.android.com/apk/distribution"
-    package="io.github.muntashirakon.AppManager.docs">
+<manifest xmlns:dist="http://schemas.android.com/apk/distribution">
 
     <dist:module
         dist:instant="false"

@@ -2,9 +2,9 @@
 
 package android.telephony;
 
-import android.annotation.Nullable;
 import android.os.Build;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
 import dev.rikka.tools.refine.RefineAs;
