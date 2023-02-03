@@ -28,6 +28,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,6 +38,7 @@ import java.util.regex.Pattern;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.dex.DexUtils;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
@@ -44,7 +48,6 @@ import io.github.muntashirakon.io.Paths;
 public class ClassViewerActivity extends BaseActivity {
     public static final String EXTRA_APP_NAME = "app_name";
     public static final String EXTRA_URI = "uri";
-    public static final String EXTRA_CLASS_NAME = "class_name";
 
     private static final Pattern SMALI_KEYWORDS = Pattern.compile(
             "\\b(invoke-(virtual(/range|)|direct|static|interface|super|polymorphic|custom)|" +
@@ -100,9 +103,7 @@ public class ClassViewerActivity extends BaseActivity {
     private boolean isWrapped = true;  // Wrap by default
     private AppCompatEditText container;
     private LinearProgressIndicator mProgressIndicator;
-    private Uri uri;
     private Path smaliPath;
-    private String className;
     private boolean isDisplayingSmali = true;
     private final ActivityResultLauncher<String> saveJavaOrSmali = registerForActivityResult(
             new ActivityResultContracts.CreateDocument("*/*"),
@@ -129,12 +130,12 @@ public class ClassViewerActivity extends BaseActivity {
         setSupportActionBar(findViewById(R.id.toolbar));
         mProgressIndicator = findViewById(R.id.progress_linear);
         mProgressIndicator.setVisibilityAfterHide(View.GONE);
-        className = getIntent().getStringExtra(EXTRA_CLASS_NAME);
-        uri = getIntent().getParcelableExtra(EXTRA_URI);
+        Uri uri = getIntent().getParcelableExtra(EXTRA_URI);
         if (uri == null) {
             finish();
             return;
         }
+        smaliPath = Paths.get(uri);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             CharSequence appName = getIntent().getCharSequenceExtra(EXTRA_APP_NAME);
@@ -143,7 +144,6 @@ public class ClassViewerActivity extends BaseActivity {
             if (appName != null) actionBar.setTitle(appName);
             else actionBar.setTitle(R.string.class_viewer);
         }
-        smaliPath = Paths.get(uri);
         updateUi();
     }
 
@@ -171,8 +171,24 @@ public class ClassViewerActivity extends BaseActivity {
         new Thread(() -> {
             if (formattedJavaContent == null) {
                 String javaContent;
+                Path parent = smaliPath.getParentFile();
+                String baseName = DexUtils.getClassNameWithoutInnerClasses(Paths.trimPathExtension(smaliPath.getName()));
+                String baseSmali = baseName + ".smali";
+                String baseStartWith = baseName + "$";
+                Path[] paths = parent != null ? parent.listFiles((dir, name) -> name.equals(baseSmali) || name.startsWith(baseStartWith))
+                        : new Path[] {smaliPath};
+                List<String> smaliContents = new ArrayList<>(paths.length);
                 try {
-                    javaContent = DexUtils.toJavaCode(Objects.requireNonNull(formattedSmaliContent).toString(), -1);
+                    if (parent != null) {
+                        Log.e(TAG, "Base name: " + Arrays.toString(parent.listFiles()));
+                    }
+                    Log.e(TAG, "Class paths: " + Arrays.toString(paths));
+                    for (Path path : paths) {
+                        try (InputStream is = path.openInputStream()) {
+                            smaliContents.add(IoUtils.getInputStreamContent(is));
+                        }
+                    }
+                    javaContent = DexUtils.toJavaCode(smaliContents, -1);
                 } catch (Throwable e) {
                     e.printStackTrace();
                     runOnUiThread(() -> {
@@ -293,7 +309,7 @@ public class ClassViewerActivity extends BaseActivity {
         } else if (id == R.id.action_wrap) {
             updateUi();
         } else if (id == R.id.action_save) {
-            String fileName = Paths.trimPathExtension(uri.getLastPathSegment())
+            String fileName = Paths.trimPathExtension(smaliPath.getName())
                     + (isDisplayingSmali ? ".smali" : ".java");
             saveJavaOrSmali.launch(fileName);
         } else if (id == R.id.action_java_smali_toggle) {

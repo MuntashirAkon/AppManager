@@ -279,19 +279,7 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
         try {
             mDexVfsId = VirtualFileSystem.mount(Uri.fromFile(mApkFile), Paths.get(mApkFile), ContentType2.DEX.getMimeType());
             DexFileSystem dfs = (DexFileSystem) Objects.requireNonNull(VirtualFileSystem.getFileSystem(mDexVfsId));
-            List<String> allClasses = dfs.getDexClasses().getClassNames();
-            Set<String> allClassesSet = new HashSet<>(allClasses.size());
-            // Filter out classes with $
-            for (String className : allClasses) {
-                int idxOfDollar = findFirstInnerClassIndex(className);
-                if (idxOfDollar >= 0) {
-                    // Skip inner classes
-                    allClassesSet.add(className.substring(0, idxOfDollar));
-                } else {
-                    allClassesSet.add(className);
-                }
-            }
-            mAllClasses = new ArrayList<>(allClassesSet);
+            mAllClasses = dfs.getDexClasses().getBaseClassNames();
             Collections.sort(mAllClasses);
         } catch (Throwable e) {
             e.printStackTrace();
@@ -301,25 +289,6 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
         // Load tracker and library info
         mExecutor.submit(this::loadTrackers);
         mExecutor.submit(this::loadLibraries);
-    }
-
-    private static int findFirstInnerClassIndex(@NonNull String className) {
-        // Find first $ but without matching any .
-        // This is better than String#indexOf(char) because it stops searching as soon as it finds a .
-        int validDollarIndex = -1;
-        for (int i = className.length() - 1; i >= 0; --i) {
-            int ch = className.charAt(i);
-            if (ch == '.') {
-                // Found a ., no need to look any further
-                return validDollarIndex;
-            }
-            if (ch == '$') {
-                // Found a valid index
-                validDollarIndex = i;
-                // But there can be many, so look again
-            }
-        }
-        return validDollarIndex;
     }
 
     @WorkerThread

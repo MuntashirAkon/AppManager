@@ -31,7 +31,8 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 
 // FIXME: 8/2/22 Add support for lower SDKs by fixing Smali/Baksmali
 public class DexClasses implements Closeable {
-    private final HashMap<String, ClassDef> classDefArraySet = new HashMap<>();
+    private final HashMap<String, ClassDef> classNameClassDefMap = new HashMap<>();
+    private final HashMap<String, List<String>> baseClassNestedClassMap = new HashMap<>();
     // TODO: 18/10/21 Load frameworks.jar and add its dex files as options.classPath
     private final BaksmaliOptions options;
     private final Opcodes opcodes;
@@ -64,7 +65,14 @@ public class DexClasses implements Closeable {
                 if (name.startsWith("L")) {
                     name = name.substring(1).replace('/', '.');
                 }
-                classDefArraySet.put(name, classDef);
+                classNameClassDefMap.put(name, classDef);
+                String baseClass = DexUtils.getClassNameWithoutInnerClasses(name);
+                List<String> classes = baseClassNestedClassMap.get(baseClass);
+                if (classes == null) {
+                    classes = new ArrayList<>();
+                    baseClassNestedClassMap.put(baseClass, classes);
+                }
+                classes.add(name);
             }
             if (dexFile.supportsOptimizedOpcodes()) {
                 throw new IOException("ODEX isn't supported.");
@@ -100,7 +108,14 @@ public class DexClasses implements Closeable {
             if (name.startsWith("L")) {
                 name = name.substring(1).replace('/', '.');
             }
-            classDefArraySet.put(name, classDef);
+            classNameClassDefMap.put(name, classDef);
+            String baseClass = DexUtils.getClassNameWithoutInnerClasses(name);
+            List<String> classes = baseClassNestedClassMap.get(baseClass);
+            if (classes == null) {
+                classes = new ArrayList<>();
+                baseClassNestedClassMap.put(baseClass, classes);
+            }
+            classes.add(name);
         }
         if (dexFile.supportsOptimizedOpcodes()) {
             throw new IOException("ODEX isn't supported.");
@@ -113,12 +128,17 @@ public class DexClasses implements Closeable {
 
     @NonNull
     public List<String> getClassNames() {
-        return new ArrayList<>(classDefArraySet.keySet());
+        return new ArrayList<>(classNameClassDefMap.keySet());
+    }
+
+    @NonNull
+    public List<String> getBaseClassNames() {
+        return new ArrayList<>(baseClassNestedClassMap.keySet());
     }
 
     @NonNull
     public ClassDef getClassDef(@NonNull String className) throws ClassNotFoundException {
-        ClassDef classDef = classDefArraySet.get(className);
+        ClassDef classDef = classNameClassDefMap.get(className);
         if (classDef == null) throw new ClassNotFoundException(className + " could not be found.");
         return classDef;
     }
@@ -126,8 +146,16 @@ public class DexClasses implements Closeable {
     @NonNull
     public String getJavaCode(@NonNull String className) throws ClassNotFoundException {
         try {
-            ClassDef classDef = getClassDef(className);
-            return DexUtils.toJavaCode(classDef, this.opcodes);
+            String baseClass = DexUtils.getClassNameWithoutInnerClasses(className);
+            List<String> classes = baseClassNestedClassMap.get(baseClass);
+            if (classes == null || classes.isEmpty() || !classes.contains(className)) {
+                throw new ClassNotFoundException();
+            }
+            List<ClassDef> classDefs = new ArrayList<>(classes.size());
+            for (String cls : classes) {
+                classDefs.add(getClassDef(cls));
+            }
+            return DexUtils.toJavaCode(classDefs, this.opcodes);
         } catch (IOException e) {
             throw new ClassNotFoundException(e.getMessage(), e);
         }
