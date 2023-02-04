@@ -1280,22 +1280,25 @@ public class Path implements Comparable<Path> {
         // Get all file systems mounted at this Uri
         DocumentFile documentFile = getRealDocumentFile(mDocumentFile);
         VirtualFileSystem[] fileSystems = VirtualFileSystem.getFileSystemsAtUri(documentFile.getUri());
-        HashMap<String, Path> namePathMap = new HashMap<>(fileSystems.length);
+        HashMap<String, Uri> nameMountPointMap = new HashMap<>(fileSystems.length);
         for (VirtualFileSystem fs : fileSystems) {
-            namePathMap.put(Objects.requireNonNull(fs.getMountPoint()).getLastPathSegment(), fs.getRootPath());
+            Uri mountPoint = Objects.requireNonNull(fs.getMountPoint());
+            nameMountPointMap.put(mountPoint.getLastPathSegment(), mountPoint);
         }
-        // List documents at this folder and add only those which are not mount points.
+        // List documents at this folder and remove mount points
         DocumentFile[] ss = documentFile.listFiles();
         List<Path> paths = new ArrayList<>(ss.length + fileSystems.length);
         for (DocumentFile s : ss) {
-            Path p = namePathMap.get(s.getName());
-            if (p == null) {
-                // No mount point exists, add it
-                paths.add(new Path(mContext, s));
+            if (nameMountPointMap.get(s.getName()) != null) {
+                // Mount point exists, remove it from map
+                nameMountPointMap.remove(s.getName());
             }
+            paths.add(new Path(mContext, s));
         }
-        // Add all the mount points
-        paths.addAll(namePathMap.values());
+        // Add all the other mount points
+        for (Uri mountPoint : nameMountPointMap.values()) {
+            paths.add(new Path(mContext, mountPoint));
+        }
         return paths.toArray(new Path[0]);
     }
 
