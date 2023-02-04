@@ -2,17 +2,17 @@
 
 plugins {
     id('com.android.application')
-    id('dev.rikka.tools.refine') version '4.0.0'
+    id('dev.rikka.tools.refine') version "${refine_version}"
 }
 
 android {
     namespace 'io.github.muntashirakon.AppManager'
-    compileSdk rootProject.ext.compileSdk
+    compileSdk compile_sdk
 
     defaultConfig {
         applicationId 'io.github.muntashirakon.AppManager'
-        minSdk rootProject.ext.minSdk
-        targetSdk rootProject.ext.targetSdk
+        minSdk min_sdk
+        targetSdk target_sdk
         versionCode 417
         versionName "3.1.0-alpha03"
         javaCompileOptions {
@@ -100,28 +100,28 @@ dependencies {
     implementation project(path: ':docs')
 
     // ADB
-    implementation 'com.github.MuntashirAkon:libadb-android:2.2.0'
+    implementation "com.github.MuntashirAkon:libadb-android:${libadb_version}"
 
     // API
-    implementation 'com.github.MuntashirAkon:unapkm-android:1.2'
+    implementation "com.github.MuntashirAkon:unapkm-android:${unapkm_version}"
     implementation project(path: ':libopenpgp')
 
     // APK Editing
-    implementation 'com.github.MuntashirAkon:apksig-android:4.4.0'
-    implementation 'com.github.MuntashirAkon:sun-security-android:1.1'
+    implementation "com.github.MuntashirAkon:apksig-android:${apksig_version}"
+    implementation "com.github.MuntashirAkon:sun-security-android:${sun_security_version}"
     implementation "org.bouncycastle:bcprov-jdk15on:${bouncycastle_version}"
     implementation "org.bouncycastle:bcpkix-jdk15on:${bouncycastle_version}"
-    implementation 'com.github.MuntashirAkon.jadx:jadx-core:5a62a8e625'
+    implementation "com.github.MuntashirAkon.jadx:jadx-core:${jadx_version}"
     // Replace SLF4J with a placeholder
     configurations {
-        all {
+        configureEach {
             exclude group: 'org.slf4j', module: 'slf4j-api'
         }
     }
-    implementation 'com.github.MuntashirAkon.jadx:jadx-dex-input:5a62a8e625'
+    implementation "com.github.MuntashirAkon.jadx:jadx-dex-input:${jadx_version}"
     // Replace SLF4J with a placeholder
     configurations {
-        all {
+        configureEach {
             exclude group: 'org.slf4j', module: 'slf4j-api'
         }
     }
@@ -131,11 +131,11 @@ dependencies {
     annotationProcessor "androidx.room:room-compiler:${room_version}"
 
     // FM
-    implementation "com.j256.simplemagic:simplemagic:1.17"
+    implementation "com.j256.simplemagic:simplemagic:${simplemagic_version}"
 
     // Privileged
     implementation "com.github.topjohnwu.libsu:core:${libsu_version}"
-    implementation 'org.lsposed.hiddenapibypass:hiddenapibypass:4.3'
+    implementation "org.lsposed.hiddenapibypass:hiddenapibypass:${hiddenapibypass_version}"
     implementation "dev.rikka.tools.refine:runtime:${refine_version}"
 
     // UI
@@ -143,17 +143,17 @@ dependencies {
     implementation "androidx.appcompat:appcompat:${appcompat_version}"
     // Fix duplicate classes issue in material
     configurations {
-        all {
+        configureEach {
             exclude group: 'androidx.lifecycle', module: 'lifecycle-viewmodel-ktx'
         }
     }
     // AppCompat 1.5.0 still includes the buggy implementation of documentfile library (1.0.0)
-    implementation "androidx.documentfile:documentfile:1.0.1"
+    implementation "androidx.documentfile:documentfile:${documentfile_version}"
     implementation "androidx.core:core-splashscreen:${splashscreen_version}"
-    implementation 'androidx.webkit:webkit:1.5.0'
+    implementation "androidx.webkit:webkit:${webkit_version}"
 
     // Utility
-    implementation 'com.google.code.gson:gson:2.9.1'
+    implementation "com.google.code.gson:gson:${gson_version}"
 
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.9.1'
 
@@ -163,8 +163,8 @@ dependencies {
 //    androidTestImplementation "com.android.support.test.espresso:espresso-intents:3.0.2"
 
     // Unit Testing
-    testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.robolectric:robolectric:4.9'
+    testImplementation "junit:junit:${junit_version}"
+    testImplementation "org.robolectric:robolectric:${robolectric_version}"
 }
 
 preBuild.dependsOn ":server:build"

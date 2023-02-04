@@ -6,11 +6,11 @@ plugins {
 
 android {
     namespace 'io.github.muntashirakon.hiddenapi'
-    compileSdk rootProject.ext.compileSdk
+    compileSdk compile_sdk
 
     defaultConfig {
-        minSdk rootProject.ext.minSdk
-        targetSdk rootProject.ext.targetSdk
+        minSdk min_sdk
+        targetSdk target_sdk
     }
 
     compileOptions {
@@ -22,6 +22,6 @@ android {
 dependencies {
     annotationProcessor "dev.rikka.tools.refine:annotation-processor:${refine_version}"
     compileOnly "dev.rikka.tools.refine:annotation:${refine_version}"
-    compileOnly 'org.jetbrains:annotations:23.0.0'
+    compileOnly "org.jetbrains:annotations:${jb_annotation_version}"
     compileOnly "androidx.annotation:annotation:${annotation_version}"
 }

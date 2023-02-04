@@ -1,28 +1,39 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-apply from: "$gradle.ext.appManagerRoot/common.gradle"
+plugins {
+    id('com.android.library')
+}
 
 android {
     namespace 'io.github.muntashirakon.AppManager.server'
-}
+    compileSdk compile_sdk
 
-android.libraryVariants.all { variant ->
-    variant.assembleProvider.get().doLast {
-        makeJars(variant.buildType.name)
+    defaultConfig {
+        minSdk min_sdk
+        targetSdk target_sdk
+    }
+
+    compileOptions {
+        encoding "UTF-8"
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    libraryVariants.configureEach { variant ->
+        variant.assembleProvider.configure() {
+            it.doLast {
+                makeJars(variant.buildType.name)
+            }
+        }
     }
 }
 
 dependencies {
     compileOnly project(path: ':hiddenapi')
-    api project(path: ':libserver')
-}
 
-android.libraryVariants.all { variant ->
-    variant.assembleProvider.configure() {
-        it.doLast {
-            makeJars(variant.buildType.name)
-        }
-    }
+    api project(path: ':libserver')
+
+    implementation "androidx.annotation:annotation:${annotation_version}"
 }
 
 def makeJars(String buildType) {
@@ -42,7 +53,7 @@ def makeJars(String buildType) {
     def buildArgs = ['--release', '--output', amJar]
     buildArgs.addAll(getClassFiles(libserverClassDir, ["io/github/muntashirakon/AppManager/server/common/"]))
     buildArgs.addAll(getClassFiles(debugClassDir, ["io/github/muntashirakon/AppManager/server/"]))
-    buildArgs.addAll(['--lib', "${android.sdkDirectory.path}/platforms/android-${rootProject.ext.targetSdk}/android.jar"])
+    buildArgs.addAll(['--lib', "${android.sdkDirectory.path}/platforms/android-${target_sdk}/android.jar"])
     println(buildArgs.toString())
     exec {
         workingDir = project.rootDir
@@ -54,7 +65,7 @@ def makeJars(String buildType) {
     buildArgs = ['--release', '--output', mainJar]
     buildArgs.add("${debugClassDir}/io/github/muntashirakon/AppManager/server/RootServiceMain.class")
     buildArgs.add("${libserverClassDir}/io/github/muntashirakon/AppManager/server/common/ServerUtils.class")
-    buildArgs.addAll(['--lib', "${android.sdkDirectory.path}/platforms/android-${rootProject.ext.targetSdk}/android.jar"])
+    buildArgs.addAll(['--lib', "${android.sdkDirectory.path}/platforms/android-${target_sdk}/android.jar"])
     exec {
         workingDir = project.rootDir
         executable = file("${android.sdkDirectory.path}/build-tools/${android.buildToolsVersion}/d8")
@@ -99,7 +110,7 @@ def loadClsFiles(File f, List paths) {
     }
 }
 
-task cleanupJar() {
+tasks.register('cleanupJar') {
     doLast {
         file("${rootProject.projectDir.absolutePath}/app/src/main/assets/am.jar").delete()
         file("${rootProject.projectDir.absolutePath}/app/src/main/assets/main.jar").delete()

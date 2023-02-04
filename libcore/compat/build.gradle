@@ -6,11 +6,11 @@ plugins {
 
 android {
     namespace 'io.github.muntashirakon.AppManager.compat'
-    compileSdk rootProject.ext.compileSdk
+    compileSdk compile_sdk
 
     defaultConfig {
-        minSdk rootProject.ext.minSdk
-        targetSdk rootProject.ext.targetSdk
+        minSdk min_sdk
+        targetSdk target_sdk
     }
 
     compileOptions {
@@ -29,13 +29,13 @@ android {
 }
 
 dependencies {
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.0'
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:${desugar_jdk_version}"
 
     api "androidx.annotation:annotation:${annotation_version}"
-    api 'org.smali:baksmali:2.5.2'
-    api 'org.smali:smali:2.5.2'
+    api "org.smali:baksmali:${baksmali_version}"
+    api "org.smali:smali:${baksmali_version}"
 
     // Unit Testing
-    testImplementation 'junit:junit:4.13.2'
-    testImplementation 'org.robolectric:robolectric:4.9'
+    testImplementation "junit:junit:${junit_version}"
+    testImplementation "org.robolectric:robolectric:${robolectric_version}"
 }

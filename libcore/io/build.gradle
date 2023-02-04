@@ -1,13 +1,29 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-apply from: "$gradle.ext.appManagerRoot/common.gradle"
+plugins {
+    id('com.android.library')
+}
 
 android {
     namespace 'io.github.muntashirakon.io'
+    compileSdk compile_sdk
+
+    defaultConfig {
+        minSdk min_sdk
+        targetSdk target_sdk
+    }
+
+    compileOptions {
+        encoding "UTF-8"
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
     compileOnly project(path: ':hiddenapi')
 
-    api "androidx.documentfile:documentfile:1.0.1"
+    api "androidx.documentfile:documentfile:${documentfile_version}"
+
+    implementation "androidx.annotation:annotation:${annotation_version}"
 }

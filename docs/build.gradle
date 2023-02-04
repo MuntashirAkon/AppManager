@@ -6,11 +6,11 @@ plugins {
 
 android {
     namespace 'io.github.muntashirakon.AppManager.docs'
-    compileSdk rootProject.ext.compileSdk
+    compileSdk compile_sdk
 
     defaultConfig {
-        minSdk rootProject.ext.minSdk
-        targetSdk rootProject.ext.targetSdk
+        minSdk min_sdk
+        targetSdk target_sdk
     }
 
     compileOptions {
@@ -18,7 +18,7 @@ android {
     }
 }
 
-task buildDocs {
+tasks.register('buildDocs') {
     doLast {
         println("=== docs: start ===")
         String buildExec = "${rootProject.projectDir.absolutePath}/scripts/make_docs.sh"
@@ -30,7 +30,7 @@ task buildDocs {
     }
 }
 
-task cleanupDocs {
+tasks.register('cleanupDocs') {
     doLast {
         File file = new File("${rootProject.projectDir.absolutePath}/docs/src/main/res")
         if (file.exists()) {

@@ -1,0 +1,41 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+
+ext {
+    compile_sdk = 32
+    min_sdk = 21
+    target_sdk = 32
+
+    // Gradle plugins
+    agp_version = "7.4.0-beta02"
+    protobuf_gradle_version = "0.8.6"
+
+    // Library dependencies
+    annotation_version = "1.5.0"
+    apksig_version = "4.4.0"
+    appcompat_version = "1.5.1"
+    baksmali_version = "2.5.2"
+    bouncycastle_version = "1.70"
+    desugar_jdk_version = "2.0.0"
+    documentfile_version = "1.0.1"
+    fastscroll_version = "1.1.8"
+    gson_version = "2.9.1"
+    hiddenapibypass_version = "4.3"
+    jadx_version = "5a62a8e625"
+    jb_annotation_version = "23.0.0" // Compile-only
+    libadb_version = "2.2.0"
+    libsu_version = "5.0.3"
+    material_version = "1.7.0"
+    preferences_version = "1.2.0"
+    refine_version = "4.0.0"
+    room_version = "2.4.3"
+    simplemagic_version = "1.17"
+    splashscreen_version = "1.0.0"
+    sun_security_version = "1.1"
+    swipe_refresh_version = "1.2.0-alpha01"
+    unapkm_version = "1.2"
+    webkit_version = "1.5.0"
+
+    // Test dependencies
+    junit_version = "4.13.2"
+    robolectric_version = "4.9"
+}
