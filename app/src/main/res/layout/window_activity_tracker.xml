@@ -1,0 +1,146 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/icon"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        app:srcCompat="@mipmap/ic_launcher_round"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.AppTheme.CircleComponent" />
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/content"
+        style="@style/Widget.AppTheme.CardView.Outlined"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minWidth="200dp">
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingVertical="@dimen/padding_small"
+            android:paddingHorizontal="@dimen/padding_small">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.AppTheme.TextInputLayout.Small"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/package_name"
+                    app:hintEnabled="true">
+
+                    <io.github.muntashirakon.widget.TextInputTextView
+                        android:id="@+id/package_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        android:maxLines="1"
+                        android:fontFamily="monospace"
+                        tools:text="io.github.muntashirakon.AppManager" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.AppTheme.TextInputLayout.Small"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/class_name"
+                    app:hintEnabled="true">
+
+                    <io.github.muntashirakon.widget.TextInputTextView
+                        android:id="@+id/class_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="none"
+                        android:maxLines="1"
+                        android:fontFamily="monospace"
+                        tools:text=".accessibility.activity.LeadingActivityTrackerActivity" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.AppTheme.TextInputLayout.Small"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/class_hierarchy"
+                    app:hintEnabled="true">
+
+                    <io.github.muntashirakon.widget.TextInputTextView
+                        android:id="@+id/class_hierarchy"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="top|start"
+                        android:lines="4"
+                        android:maxLines="4"
+                        android:inputType="none"
+                        android:fontFamily="monospace"
+                        tools:text=".accessibility.activity.LeadingActivityTrackerActivity" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="0"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    style="@style/Widget.AppTheme.Button.IconButton"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:clickable="false"
+                    app:icon="@drawable/ic_drag" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/info"
+                    style="@style/Widget.AppTheme.Button.IconButton"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    app:icon="@drawable/ic_information" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/mini"
+                    style="@style/Widget.AppTheme.Button.IconButton"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    app:icon="@drawable/ic_fold_vertical" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/action_play_pause"
+                    style="@style/Widget.AppTheme.Button.IconButton"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    app:icon="@drawable/ic_pause" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@android:id/closeButton"
+                    style="@style/Widget.AppTheme.Button.IconButton"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    app:icon="@drawable/ic_power_settings" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+    </com.google.android.material.card.MaterialCardView>
+</FrameLayout>

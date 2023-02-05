@@ -17,6 +17,7 @@ public class AccessibilityMultiplexer {
     private static final int M_CLEAR_DATA = 1 << 3;
     private static final int M_FORCE_STOP = 1 << 4;
     private static final int M_NAVIGATE_TO_STORAGE_AND_CACHE = 1 << 5;
+    private static final int M_LEADING_ACTIVITY_TRACKER = 1 << 6;
 
     @Retention(RetentionPolicy.SOURCE)
     @IntDef(flag = true, value = {
@@ -26,6 +27,7 @@ public class AccessibilityMultiplexer {
             M_CLEAR_DATA,
             M_FORCE_STOP,
             M_NAVIGATE_TO_STORAGE_AND_CACHE,
+            M_LEADING_ACTIVITY_TRACKER,
     })
     private @interface Flags {
     }
@@ -63,6 +65,9 @@ public class AccessibilityMultiplexer {
     public boolean isNavigateToStorageAndCache() {
         return (flags & M_NAVIGATE_TO_STORAGE_AND_CACHE) != 0;
     }
+    public boolean isLeadingActivityTracker() {
+        return (flags & M_LEADING_ACTIVITY_TRACKER) != 0;
+    }
 
     public void clearFlags() {
         flags = 0;
@@ -90,6 +95,10 @@ public class AccessibilityMultiplexer {
 
     public void enableNavigateToStorageAndCache(boolean enable) {
         addOrRemoveFlag(M_NAVIGATE_TO_STORAGE_AND_CACHE, enable);
+    }
+
+    public void enableLeadingActivityTracker(boolean enable) {
+        addOrRemoveFlag(M_LEADING_ACTIVITY_TRACKER, enable);
     }
 
     @Nullable

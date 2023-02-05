@@ -2,17 +2,19 @@
 
 package io.github.muntashirakon.AppManager.accessibility;
 
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.Build;
 import android.os.SystemClock;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
+import io.github.muntashirakon.AppManager.accessibility.activity.TrackerWindow;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.ResourceUtil;
 
@@ -23,6 +25,8 @@ public class NoRootAccessibilityService extends BaseAccessibilityService {
     private final AccessibilityMultiplexer multiplexer = AccessibilityMultiplexer.getInstance();
     private PackageManager pm;
     private int tries = 1;
+    @Nullable
+    private TrackerWindow trackerWindow;
 
     @Override
     public void onCreate() {
@@ -32,7 +36,15 @@ public class NoRootAccessibilityService extends BaseAccessibilityService {
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-        Log.d("ACCESSIBILITY", event.toString());
+        if (multiplexer.isLeadingActivityTracker()) {
+            if (trackerWindow == null) {
+                trackerWindow = new TrackerWindow(this);
+            }
+            trackerWindow.showOrUpdate(event);
+        } else if (trackerWindow != null) {
+            trackerWindow.dismiss();
+            trackerWindow = null;
+        }
         if (event.getEventType() != AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
             return;
         }
@@ -97,6 +109,15 @@ public class NoRootAccessibilityService extends BaseAccessibilityService {
 
     @Override
     public void onInterrupt() {
+    }
+
+    @Override
+    public boolean onUnbind(Intent intent) {
+        if (trackerWindow != null) {
+            trackerWindow.dismiss();
+            trackerWindow = null;
+        }
+        return super.onUnbind(intent);
     }
 
     private void automateInstallationUninstallation(@NonNull AccessibilityEvent event) {

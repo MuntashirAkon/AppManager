@@ -1313,4 +1313,8 @@
     <string name="action_continue">Continue</string>
     <string name="install_for_another_user">Install for…</string>
     <string name="confirm_uninstallation">Confirm uninstallation</string>
+    <string name="grant_required_permission">Grant required permission</string>
+    <string name="grant_overlay_permission_message">Allow App Manager to display a floating window on top of all other windows</string>
+    <string name="grant_accessibility_permission_for_tracking_window_contents">Allow App Manager to utilise the accessibility feature to track the contents of the leading window.</string>
+    <string name="class_hierarchy">Hierarchy</string>
 </resources>

@@ -4,6 +4,7 @@ package io.github.muntashirakon.AppManager.accessibility;
 
 import android.accessibilityservice.AccessibilityService;
 import android.accessibilityservice.AccessibilityServiceInfo;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -31,9 +32,10 @@ public abstract class BaseAccessibilityService extends AccessibilityService {
         AccessibilityManager accessibilityManager = (AccessibilityManager)
                 context.getSystemService(Context.ACCESSIBILITY_SERVICE);
         List<AccessibilityServiceInfo> accessibilityServices =
-                accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_GENERIC);
+                accessibilityManager.getEnabledAccessibilityServiceList(AccessibilityServiceInfo.FEEDBACK_ALL_MASK);
         for (AccessibilityServiceInfo info : accessibilityServices) {
-            if (info.getId().equals(context.getPackageName())) {
+            ComponentName componentName = ComponentName.unflattenFromString(info.getId());
+            if (componentName.getPackageName().equals(context.getPackageName())) {
                 return true;
             }
         }
