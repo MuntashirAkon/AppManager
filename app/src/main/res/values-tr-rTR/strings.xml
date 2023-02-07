@@ -1242,4 +1242,42 @@
     <string name="waiting_for_the_phone_to_be_locked">Telefonun kilitlenmesi bekleniyor…</string>
     <string name="open_as_other">Diğer</string>
     <string name="on_open_application_no_recents">Başlatılan uygulamayı son kullanılanlarda gösterme</string>
+    <string name="sort_by_data_usage">Veri kullanımı</string>
+    <string name="filter_apps_with_keystore">KeyStore ile</string>
+    <string name="filter_apps_with_saf">SAF ile</string>
+    <string name="filter_apps_with_ssaid">SSAID ile</string>
+    <string name="action_continue">Devam et</string>
+    <string name="export_app_list_select_format">Uygulama listesini dışa aktarmak için biçim seçin</string>
+    <string name="install_for_another_user">Şunun için kur…</string>
+    <string name="adb_incomplete_usb_debugging_message">USB Hata Ayıklama düzgün yapılandırılmamış gibi görünüyor. Lütfen ek adımlar için <a href="https://muntashirakon.github.io/AppManager/#subsec:enable-usb-debugging">belgelendirmeyi</a> okuyun. Adımları zaten biliyorsanız, lütfen geliştirici seçeneklerini açmak için “Aç” düğmesine, veya root yok modunu kullanmaya devam etmek için “Kapat” düğmesine tıklayın.</string>
+    <string name="grant_overlay_permission_message">App Manager\'in diğer tüm pencerelerin üstünde kayan bir pencere görüntülemesine izin verin</string>
+    <string name="grant_required_permission">Gerekli izni ver</string>
+    <string name="option_display_dot_files">Noktayla başlayan dosyalar</string>
+    <string name="export_option_markdown">Markdown</string>
+    <string name="export_app_list">Uygulama listesini dışa aktar</string>
+    <string name="export_option_xml">XML</string>
+    <string name="option_display_folders_on_top">Klasörler üstte</string>
+    <string name="adb_incomplete_usb_debugging_title">Eksik USB Hata Ayıklama</string>
+    <string name="funding_campaign_dialog_message">Sınırlı bir süre boyunca App Manager için bir <b>fonlama kampanyası</b> yapıyoruz. Kampanya hakkında daha fazla bilgi edinmek için <a href="https://opencollective.com/app-manager#category-ABOUT">opencollective.com/app-manager</a> adresini ziyaret edin. Bu bildirim bir daha gösterilmeyecektir, ancak tüm kampanya süresince Ayarlar sayfasında bulabilirsiniz.</string>
+    <string name="funding_campaign_text">Sınırlı bir süre boyunca App Manager için bir <b>fonlama kampanyası</b> yapıyoruz. <a href="https://opencollective.com/app-manager#category-ABOUT">Daha fazla bilgi edinin…</a></string>
+    <string name="confirm_uninstallation">Kaldırma işlemini onayla</string>
+    <string name="class_hierarchy">Hiyerarşi</string>
+    <string name="title_ui_tracker">Kullanıcı Arayüzü İzleyici</string>
+    <string name="grant_accessibility_permission_for_tracking_window_contents">App Manager\'ın öndeki pencerenin içeriğini izlemek için erişilebilirlik özelliğini kullanmasına izin verin.</string>
+    <string name="title_terminal_emulator">Terminal</string>
+    <string name="title_labs_activity">Laboratuvarlar</string>
+    <string name="app_manager_build_expired">Güncelleme Gerekli</string>
+    <string name="app_manager_build_expired_message">Aygıtınızın ve verilerinizin güvenliğini sağlamak için, kullanmakta olduğunuz App Manager sürümü kullanımdan kaldırıldı. Kullanmaya devam etmek için en son sürüme güncellemeniz veya güncelleme yoksa kaldırmanız gerekir.</string>
+    <string name="app_manager_build_expiring_soon_warning">App Manager\'ın bu sürümünün süresi çok yakında dolacak. Lütfen en son sürüme güncelleyin.</string>
+    <string name="app_can_write_and_execute_in_same_place">Uygulama <a href="https://en.wikipedia.org/wiki/W%5EX">W^X politikasını</a> ihlal ediyor ve aynı dizinde veya belleğin aynı bölümünde yazma ve çalıştırma yeteneğine sahiptir. Bu, uygulama içine gömülü çalıştırılabilir dosyaların değiştirilmesi ya da internetten indirilmesi yoluyla herhangi bir dosyanın çalıştırılmasına izin verir. Uygulamanın amaçlanan davranışı bu olmadığı sürece (örn. terminal öykünücüleri), uygulamanın SDK 29 (Android 10) ve sonrasını hedefleyen daha yeni bir sürümünü veya alternatiflerini bulmanız tavsiye edilir.</string>
+    <string name="renamed_successfully">Yeniden adlandırıldı</string>
+    <string name="selinux_context">SELinux bağlamı</string>
+    <string name="unix_file_permissions">Mod</string>
+    <string name="file_group_id">Grup (GID)</string>
+    <string name="file_owner_id">Sahip (UID)</string>
+    <string name="calculating_file_size">Hesaplanıyor…</string>
+    <string name="sort_by_filename">Ad</string>
+    <string name="sort_by_last_modified">Son değiştirilme</string>
+    <string name="sort_by_file_size">Dosya boyutu</string>
+    <string name="sort_by_file_type">Dosya türü</string>
 </resources>
