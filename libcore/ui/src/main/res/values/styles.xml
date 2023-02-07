@@ -395,6 +395,18 @@
     </style>
 
     <style name="Widget.AppTheme.Button.TextButton" parent="Widget.Material3.Button.TextButton" />
+    <style name="Widget.AppTheme.Button.TextIconButton" parent="Widget.AppTheme.Button.TextButton">
+        <item name="android:minWidth">120dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceListItem</item>
+        <item name="android:textColor">?attr/colorOnSurfaceVariant</item>
+        <item name="android:textSize">14sp</item>
+        <item name="iconGravity">textTop</item>
+        <item name="iconSize">30dp</item>
+        <item name="iconTint">?attr/colorOnSurfaceVariant</item>
+        <item name="shapeAppearanceOverlay">@style/ShapeAppearance.AppTheme.None</item>
+    </style>
 
     <style name="Widget.AppTheme.Button.TextButton.Icon" parent="Widget.Material3.Button.TextButton.Icon" />
 

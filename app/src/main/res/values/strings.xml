@@ -1317,4 +1317,7 @@
     <string name="grant_overlay_permission_message">Allow App Manager to display a floating window on top of all other windows</string>
     <string name="grant_accessibility_permission_for_tracking_window_contents">Allow App Manager to utilise the accessibility feature to track the contents of the leading window.</string>
     <string name="class_hierarchy">Hierarchy</string>
+    <string name="title_ui_tracker">UI Tracker</string>
+    <string name="title_terminal_emulator">Terminal</string>
+    <string name="title_labs_activity">Labs</string>
 </resources>

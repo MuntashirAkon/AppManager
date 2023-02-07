@@ -181,16 +181,20 @@
         </activity>
         <activity
             android:name=".runner.TermActivity"
-            android:label="Term"
-            android:exported="true"
+            android:label="@string/title_terminal_emulator"
+            android:exported="false"
             android:taskAffinity=""
             android:windowSoftInputMode="stateUnchanged" />
         <activity
             android:name=".accessibility.activity.LeadingActivityTrackerActivity"
-            android:label="Leading Activity"
-            android:exported="true"
+            android:label="@string/title_ui_tracker"
+            android:exported="false"
             android:excludeFromRecents="true"
             android:theme="@style/AppTheme.TransparentBackground" />
+        <activity
+            android:name=".misc.LabsActivity"
+            android:exported="true"
+            android:label="@string/title_labs_activity" />
 
         <activity-alias
             android:name=".details.AppInfoActivity"
