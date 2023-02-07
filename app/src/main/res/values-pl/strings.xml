@@ -1332,4 +1332,29 @@
     <string name="export_option_markdown">Markdown (formatowanie tekstu)</string>
     <string name="funding_campaign_dialog_message">Prowadzimy <b>kampanię finansowania</b> dla aplikacji App Manager przez ograniczony czas. Odwiedź
 \n stronę <a href="https://opencollective.com/app-manager#category-ABOUT">opencollective.com/app-manager</a>, aby dowiedzieć się więcej o kampanii. To powiadomienie nie zostanie wyświetlone ponownie, ale można je znaleźć na stronie ustawień podczas trwania kampanii.</string>
+    <string name="sort_by_data_usage">Użycie danych</string>
+    <string name="install_for_another_user">Zainstaluj dla…</string>
+    <string name="confirm_uninstallation">Potwierdź odinstalowanie</string>
+    <string name="grant_required_permission">Udziel wymaganego pozwolenia</string>
+    <string name="grant_overlay_permission_message">Pozwól, aby App Manager wyświetlał pływające okno nad wszystkimi innymi oknami</string>
+    <string name="title_terminal_emulator">Terminal</string>
+    <string name="title_labs_activity">Laboratoria</string>
+    <string name="grant_accessibility_permission_for_tracking_window_contents">Zezwól Menedżerowi aplikacji na korzystanie z funkcji ułatwień dostępu w celu śledzenia zawartości głównego okna.</string>
+    <string name="app_manager_build_expired">Wymagana jest aktualizacja</string>
+    <string name="app_manager_build_expiring_soon_warning">Ta wersja App Managera niedługo wygaśnie. Proszę zaktualizować ją do najnowszej wersji.</string>
+    <string name="sort_by_filename">Nazwa</string>
+    <string name="file_group_id">Grupa (GID)</string>
+    <string name="file_owner_id">Właściciel (UID)</string>
+    <string name="sort_by_last_modified">Ostatnio zmodyfikowane</string>
+    <string name="sort_by_file_size">Rozmiar pliku</string>
+    <string name="sort_by_file_type">Typ pliku</string>
+    <string name="option_display_dot_files">Ukryte pliki</string>
+    <string name="option_display_folders_on_top">Foldery na górze</string>
+    <string name="app_manager_build_expired_message">Aby zapewnić bezpieczeństwo Twojego urządzenia i danych, wersja App Managera, z której korzystasz, została wycofana. Musisz zaktualizować ją do najnowszej wersji, aby nadal z niej korzystać, lub odinstalować ją, jeśli nie jest dostępna żadna aktualizacja.</string>
+    <string name="export_option_xml">XML</string>
+    <string name="export_app_list">Eksportuj listę aplikacji</string>
+    <string name="export_app_list_select_format">Wybierz format eksportu listy aplikacji</string>
+    <string name="adb_incomplete_usb_debugging_title">Niekompletne debugowanie USB</string>
+    <string name="funding_campaign_text">Prowadzimy <b>kampanię finansowania</b> dla App Managera przez ograniczony okres. <a href="https://opencollective.com/app-manager#category-ABOUT">dowiedz się więcej...</a></string>
+    <string name="adb_incomplete_usb_debugging_message">Wygląda na to, że debugowanie USB nie jest skonfigurowane prawidłowo. Proszę przeczytać <a href="https://muntashirakon.github.io/AppManager/#subsec:enable-usb-debugging">dokumentację</a> w celu uzyskania dodatkowych kroków. Jeśli znasz już te kroki, kliknij \"Otwórz\", aby otworzyć opcje deweloperskie, lub kliknij \"Zamknij\", aby kontynuować korzystanie z trybu no-root.</string>
 </resources>
