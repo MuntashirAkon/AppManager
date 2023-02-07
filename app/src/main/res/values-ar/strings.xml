@@ -1394,4 +1394,42 @@
     <string name="file_shortcut_target_file">الملف المستهدف</string>
     <string name="file_open_with">فتح بواسطة</string>
     <string name="fm_open_with_for_this_file_only">فقط لهذا الملف</string>
+    <string name="sort_by_data_usage">استخدام البيانات</string>
+    <string name="filter_apps_with_keystore">مع تخزين المفاتيح</string>
+    <string name="filter_apps_with_saf">مع SAF</string>
+    <string name="filter_apps_with_ssaid">مع SSAID</string>
+    <string name="action_continue">أستمرار</string>
+    <string name="install_for_another_user">التثبيت لـ …</string>
+    <string name="confirm_uninstallation">تأكيد إلغاء التثبيت</string>
+    <string name="grant_required_permission">الحصول على إذن</string>
+    <string name="grant_overlay_permission_message">السماح لمدير التطبيقات بعرض نافذة عائمة أعلى جميع النوافذ الأخرى</string>
+    <string name="grant_accessibility_permission_for_tracking_window_contents">اسمح لمدير التطبيقات باستخدام ميزة إمكانية الوصول لتتبع محتويات النافذة البادئة.</string>
+    <string name="class_hierarchy">تَسَلسُل</string>
+    <string name="title_ui_tracker">متقفي واجهة المستخدم</string>
+    <string name="title_terminal_emulator">الطرفية</string>
+    <string name="title_labs_activity">المختبرات</string>
+    <string name="app_can_write_and_execute_in_same_place">ينتهك التطبيق <a href="https://en.wikipedia.org/wiki/W%5EX"> سياسة W ^ X </a> ويمكنه الكتابة والتنفيذ في نفس الدليل أو في نفس الجزء من الذاكرة. يتيح ذلك تنفيذ الملفات التنفيذية التعسفية إما عن طريق تعديل الملفات التنفيذية المضمنة داخل التطبيق أو عن طريق تنزيلها من الإنترنت. ما لم يكن هذا هو السلوك المقصود للتطبيق (مثل المحاكيات الطرفية) ، يوصى بالعثور على إصدار أحدث من التطبيق يستهدف SDK 29 (Android 10) والإصدارات الأحدث ، أو البحث عن بدائل.</string>
+    <string name="app_manager_build_expired_message">لضمان سلامة جهازك وبياناتك ، تم إيقاف إصدار App Manager الذي تستخدمه. يجب عليك تحديثه إلى أحدث إصدار لمتابعة استخدامه ، أو إلغاء تثبيته في حالة عدم توفر تحديث.</string>
+    <string name="app_manager_build_expiring_soon_warning">ستنتهي صلاحية هذا الإصدار من App Manager قريبا جدا. يرجى تحديثه إلى أحدث إصدار.</string>
+    <string name="renamed_successfully">أعيدت تسميته</string>
+    <string name="selinux_context">سياق SELinux</string>
+    <string name="unix_file_permissions">الوضع</string>
+    <string name="file_group_id">مجموعة (GID)</string>
+    <string name="app_manager_build_expired">تحتاج إلى تحديث</string>
+    <string name="file_owner_id">المالك (UID)</string>
+    <string name="calculating_file_size">تُجرى عملية الحساب…</string>
+    <string name="sort_by_filename">الاسم</string>
+    <string name="sort_by_last_modified">آخر تعديل</string>
+    <string name="sort_by_file_size">حجم الملف</string>
+    <string name="sort_by_file_type">نوع الملف</string>
+    <string name="option_display_dot_files">ملفات نقطية</string>
+    <string name="option_display_folders_on_top">المجلدات في الأعلى</string>
+    <string name="export_app_list">تصدير قائمة التطبيقات</string>
+    <string name="export_app_list_select_format">حدد تنسيقا لتصدير قائمة التطبيقات</string>
+    <string name="export_option_xml">ملف XML</string>
+    <string name="export_option_markdown">ماركداون</string>
+    <string name="funding_campaign_dialog_message">نحن ندير حملة تمويل <b> </b> لمدير التطبيقات لفترة محدودة. قم بزيارة <a href="https://opencollective.com/app-manager#category-ABOUT"> opencollective.com/app-manager </a> لمعرفة المزيد عن الحملة. لن يتم عرض هذا الإشعار مرة أخرى ، ولكن يمكنك العثور عليه في صفحة الإعدادات أثناء الحملة بأكملها.</string>
+    <string name="funding_campaign_text">نحن ندير حملة تمويل <b> </b> لمدير التطبيقات لفترة محدودة. <a href="https://opencollective.com/app-manager#category-ABOUT"> تعرف على المزيد... </a></string>
+    <string name="adb_incomplete_usb_debugging_title">تصحيح أخطاء USB غير مكتمل</string>
+    <string name="adb_incomplete_usb_debugging_message">يبدو أن تصحيح أخطاء USB لم يتم تكوينه بشكل صحيح. يرجى قراءة <a href="https://muntashirakon.github.io/AppManager/#subsec:enable-usb-debugging"> الوثائق </a> للحصول على خطوات إضافية. إذا كنت تعرف الخطوات بالفعل ، فالرجاء النقر فوق \"فتح\" لفتح خيارات المطور ، أو النقر فوق \"إغلاق\" لمواصلة استخدام وضع عدم الجذر.</string>
 </resources>
