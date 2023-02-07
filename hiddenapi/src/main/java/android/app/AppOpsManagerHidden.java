@@ -17,7 +17,7 @@ import misc.utils.HiddenUtil;
 
 @RefineAs(AppOpsManager.class)
 public class AppOpsManagerHidden {
-    public static final int _NUM_OP = 121;
+    public static /*final*/ int _NUM_OP = 121;
 
     public static class PackageOps implements Parcelable {
         @NonNull
