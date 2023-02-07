@@ -1013,14 +1013,10 @@
         <item quantity="other">%d файлів буде видалено</item>
     </plurals>
     <string name="launch_mode_single_top">Один зверху</string>
-    <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">
-\nGitHub</a> •
-\n<a href="https://gitlab.com/muntashir/AppManager">
-\nGitLab</a> •
-\n<a href="https://0xacab.org/muntashir/AppManager">
-\nRiseup</a> •
-\n<a href="https://codeberg.org/muntashir/AppManager">
-\nCodeberg</a></string>
+    <string name="source_code_links"><a href="https://github.com/MuntashirAkon/AppManager">GitHub</a> •
+        <a href="https://gitlab.com/muntashir/AppManager">GitLab</a> •
+        <a href="https://0xacab.org/muntashir/AppManager">Riseup</a> •
+        <a href="https://codeberg.org/muntashir/AppManager">Codeberg</a></string>
     <string name="apk_updater">APK Updater</string>
     <string name="enforcing">Enforcing</string>
     <string name="uri">URI</string>
@@ -1093,10 +1089,8 @@
     <string name="notice">Сповіщення</string>
     <string name="error_with_details">Помилка: %s</string>
     <string name="saved_filters">Збережені фільтри</string>
-    <string name="community_links"><a href="https://t.me/AppManagerChannel">
-\nTelegram channel</a> •
-\n<a href="https://twitter.com/AppManagerNews">
-\nTwitter</a></string>
+    <string name="community_links"><a href="https://t.me/AppManagerChannel">Telegram channel</a> •
+        <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
     <string name="paired_successfully">Сполучено.</string>
     <string name="port_number_pairing_code_empty">Порожній номер порту або код сполучення.</string>
     <string name="adb_pair">Сполука</string>
