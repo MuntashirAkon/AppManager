@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
 
 /**
  * API for interacting with "application operation" tracking.
@@ -365,7 +366,7 @@ public class AppOpsManager {
     public static final int OP_ACCESS_RESTRICTED_SETTINGS = 119;
     public static final int OP_RECEIVE_AMBIENT_TRIGGER_AUDIO = 120;
 
-    public static final int _NUM_OP = AppOpsManagerHidden._NUM_OP;
+    public static final int _NUM_OP = Utils.isRoboUnitTest() ? 121 : AppOpsManagerHidden._NUM_OP;
 
     // MIUI app ops taken from framework.jar
     public static final int MIUI_OP_START = 10000;

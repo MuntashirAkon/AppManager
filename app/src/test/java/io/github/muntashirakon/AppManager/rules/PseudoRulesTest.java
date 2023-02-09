@@ -5,6 +5,8 @@ package io.github.muntashirakon.AppManager.rules;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 
 import java.util.List;
 
@@ -23,6 +25,7 @@ import io.github.muntashirakon.AppManager.rules.struct.SsaidRule;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 
+@RunWith(RobolectricTestRunner.class)
 public class PseudoRulesTest {
     private static final String PACKAGE_NAME = "sample.package";
 
