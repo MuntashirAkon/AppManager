@@ -864,7 +864,7 @@
     <string name="screen_lock_not_enabled">कृपया एंड्रॉइड सेटिंग्स में स्क्रीन लॉक चुनें, या ऐप डेटा साफ़ करें।</string>
     <string name="invalid_aes_key_size">एइएस एन्क्रिप्शन के लिए अमान्य कुंजी आकार। कुंजी आकार या तो 128 या 256 बिट्स हो सकता है।</string>
     <string name="use_default">डिफ़ॉल्ट उपयोग करें</string>
-    <string name="failed_to_load_key">कुंजी लोड नहीं की जा सकी |</string>
+    <string name="failed_to_load_key">कुंजी लोड नहीं की जा सकी।</string>
     <string name="screen_lock">स्क्रीन लॉक</string>
     <string name="screen_lock_msg">एंड्राइड स्क्रीन लॉक का उपयोग करके ऐप मैनेजर लॉक करें</string>
     <string name="back_up">बैकअप</string>
@@ -908,4 +908,6 @@
     <string name="restart_log_viewer_to_see_changes">परिवर्तन देखने के लिए लॉग व्यूअर विंडो पुनरारंभ करें।</string>
     <string name="filename">फ़ाइल का नाम</string>
     <string name="log_level_info">जानकारी</string>
+    <string name="choose_an_alias">उपनाम चुनें</string>
+    <string name="common_name">सामान्य नाम (सीएन)</string>
 </resources>
