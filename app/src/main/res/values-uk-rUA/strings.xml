@@ -1323,12 +1323,12 @@
     <string name="action_stop_service">Стоп</string>
     <string name="sort_by_data_usage">Використання даних</string>
     <string name="grant_overlay_permission_message">Дозволити App Manager показувати плаваюче вікно поверх всіх інших вікон</string>
-    <string name="grant_accessibility_permission_for_tracking_window_contents">Дозволити App Manager використовувати функцію спеціальних можливостей для відстеження вмісту провідного вікна.</string>
+    <string name="grant_accessibility_permission_for_tracking_window_contents">Дозволити App Manager використовувати функцію спеціальних можливостей для відстеження вмісту головного вікна.</string>
     <string name="class_hierarchy">Ієрархія</string>
-    <string name="title_ui_tracker">UI Трекер</string>
+    <string name="title_ui_tracker">UI трекер</string>
     <string name="title_terminal_emulator">Термінал</string>
     <string name="title_labs_activity">Лабораторія</string>
-    <string name="app_manager_build_expiring_soon_warning">Термін дії цієї версії App Manager дуже скоро закінчиться. Оновіть його до останньої версії.</string>
+    <string name="app_manager_build_expiring_soon_warning">Термін дії цієї версії App Manager дуже скоро закінчиться. Оновіть додаток до останньої версії.</string>
     <string name="renamed_successfully">Перейменовано</string>
     <string name="selinux_context">Контекст SELinux</string>
     <string name="unix_file_permissions">Режим</string>
@@ -1336,27 +1336,27 @@
     <string name="file_owner_id">Власник (UID)</string>
     <string name="calculating_file_size">Розрахунок…</string>
     <string name="sort_by_filename">Ім’я</string>
-    <string name="sort_by_last_modified">Остання зміна</string>
+    <string name="sort_by_last_modified">Востаннє змінено</string>
     <string name="sort_by_file_size">Розмір файлу</string>
     <string name="sort_by_file_type">Тип файлу</string>
-    <string name="option_display_dot_files">Dot-файли</string>
+    <string name="option_display_dot_files">Dot файли</string>
     <string name="option_display_folders_on_top">Папки зверху</string>
-    <string name="export_app_list">Експорт списку застосунків</string>
-    <string name="export_app_list_select_format">Виберіть формат для експорту списку застосунків</string>
+    <string name="export_app_list">Експорт списку додатків</string>
+    <string name="export_app_list_select_format">Виберіть формат для експорту списку додатків</string>
     <string name="export_option_xml">XML</string>
     <string name="export_option_markdown">Markdown</string>
-    <string name="funding_campaign_text">Ми проводимо <b>кампанію фінансування</b> для App Manager протягом обмеженого періоду. <a href="https://opencollective.com/app-manager#category-ABOUT">дізнатися більше…</a></string>
+    <string name="funding_campaign_text">Ми проводимо <b>кампанію фінансування</b> App Manager протягом обмеженого періоду. <a href="https://opencollective.com/app-manager#category-ABOUT">дізнатися більше…</a></string>
     <string name="adb_incomplete_usb_debugging_title">Незавершене налагодження USB</string>
     <string name="app_manager_build_expired_message">Щоб забезпечити безпеку вашого пристрою та даних, версія App Manager, якою ви користуєтеся, припинена. Вам потрібно оновити його до останньої версії, щоб продовжити його використання, або видалити його, якщо оновлення недоступне.</string>
-    <string name="app_can_write_and_execute_in_same_place">Програма порушує <a href="https://en.wikipedia.org/wiki/W%5EX">політику W^X</a> і може записувати та виконувати в тому самому каталозі або в тій самій частині пам\'ять. Це дозволяє виконувати довільні виконувані файли шляхом модифікації виконуваних файлів, вбудованих у застосунок, або шляхом їх завантаження з Інтернету. Якщо це не передбачена поведінка застосунку (наприклад, емулятори терміналу), рекомендується знайти новішу версію застосунку, яка націлена на SDK 29 (Android 10) і пізніших, або знайти альтернативи.</string>
-    <string name="funding_campaign_dialog_message">Ми проводимо <b>кампанію фінансування</b> для App Manager протягом обмеженого періоду. Перейдіть на сторінку<a href="https://opencollective.com/app-manager#category-ABOUT"> opencollective.com/app-manager</a>, щоб дізнатися більше про кампанію. Це сповіщення більше не відображатиметься, але ви можете знайти його на сторінці налаштувань протягом усієї кампанії.</string>
+    <string name="app_can_write_and_execute_in_same_place">Додаток порушує <a href="https://en.wikipedia.org/wiki/W%5EX">політику W^X</a> і може проводити запис та виконання в тому самому каталозі або в тій самій частині пам\'яті. Це дозволяє виконувати довільні виконувані файли шляхом модифікації виконуваних файлів, вбудованих у програму, або шляхом їх завантаження з Інтернету. Якщо це не передбачена поведінка програми (наприклад, емулятори терміналу), рекомендується знайти новішу версію програми, яка націлена на SDK 29 (Android 10) і пізніших, або знайти альтернативи.</string>
+    <string name="funding_campaign_dialog_message">Ми проводимо <b>кампанію фінансування</b> App Manager протягом обмеженого періоду. Перейдіть на сторінку<a href="https://opencollective.com/app-manager#category-ABOUT"> opencollective.com/app-manager</a>, щоб дізнатися більше про кампанію. Це сповіщення більше не відображатиметься, але ви можете знайти його на сторінці налаштувань протягом усієї кампанії.</string>
     <string name="app_manager_build_expired">Потрібне оновлення</string>
     <string name="filter_apps_with_saf">З SAF</string>
     <string name="filter_apps_with_ssaid">З SSAID</string>
     <string name="action_continue">Продовжити</string>
     <string name="confirm_uninstallation">Підтвердити видалення</string>
     <string name="adb_incomplete_usb_debugging_message">Схоже, налагодження USB налаштовано неправильно. Будь ласка<a href="https://muntashirakon.github.io/AppManager/#subsec:enable-usb-debugging">, ознайомтеся з документацією</a> для додаткових кроків. Якщо ви вже знаєте кроки, натисніть \"Відкрити\", щоб відкрити параметри розробника, або натисніть \"Закрити\", щоб продовжити використовувати режим без root-прав.</string>
-    <string name="filter_apps_with_keystore">З KeyStore</string>
+    <string name="filter_apps_with_keystore">З сховищем ключів</string>
     <string name="install_for_another_user">Встановити для…</string>
     <string name="grant_required_permission">Надати необхідний дозвіл</string>
 </resources>
