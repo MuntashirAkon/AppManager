@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2" xmlns:tools="http://schemas.android.com/tools">
     <string name="_lang_tag" translatable="false">hi</string>
     <string name="deny_app_ops_description">ऐप संचालन के लिए एक मोड सेट करें जो निरंतर मानों द्वारा पहचाना जाता है, अर्थात <tt>63</tt> या <tt>RUN_IN_BACKGROUND</tt></string>
     <string name="block_components_description">दिए गए हस्ताक्षर द्वारा पहचाने गए सभी कंपोनेंट को ब्लॉक करें</string>
@@ -873,4 +873,39 @@
     <string name="failed_to_save_key">कुंजी सहेजी नहीं जा सकी।</string>
     <string name="generate_key">उत्पन्न करें</string>
     <string name="external_storage">बाहरी स्टोरेज</string>
+    <string name="pref_import_backups_msg">ओएंडबैकअप, स्विफ्ट बैकअप (3.0-3.2) या टाइटेनियम बैकअप से बैकअप आयात करें।</string>
+    <string name="pref_import_backups">बैकअप आयात करें</string>
+    <string name="keystore_pass">कीस्टोर पासवर्ड</string>
+    <string name="locality_name">इलाके (शहर) का नाम (एल)</string>
+    <string name="pkcs12_keystore">पीकेसीएस # 12 कीस्टोर (पी 12)</string>
+    <string name="country_name" tools:ignore="TypographyOther">देश का नाम (सी)</string>
+    <string name="new_alias_password">नया उपनाम पासवर्ड</string>
+    <string name="keystore_file">कीस्टोर फ़ाइल</string>
+    <string name="java_keystore">जावा कीस्टोर (जेकेएस)</string>
+    <string name="signing_key">हस्ताक्षर कुंजी</string>
+    <string name="expiry_date_cannot_be_empty">समाप्ति तिथि रिक्त नहीं हो सकता.</string>
+    <string name="pref_installer_msg">ऐप इंस्टॉलर के व्यवहार को कॉन्फ़िगर करें।</string>
+    <string name="pk8_file">पीकेसीएस # 8 (पीके 8) फाइल</string>
+    <string name="log_level_warn">चेतावनी देना</string>
+    <string name="import_key">आयात कुंजी</string>
+    <string name="log_viewer">लॉग व्यूअर</string>
+    <string name="log_level_error">त्रुटि</string>
+    <string name="import_from_oab">ओएंडबैकअप से आयात करें</string>
+    <string name="found_no_alias_in_keystore">कीस्टोर में कोई उपनाम नहीं मिला!</string>
+    <string name="import_from_tb">टाइटेनियम बैकअप से आयात करें</string>
+    <string name="log_level_debug">डीबग</string>
+    <string name="pref_log_viewer_msg">कॉन्फ़िगर करें कि लॉग कैसे प्रदर्शित हों।</string>
+    <string name="log_level_verbose">शब्दाडंबरपूर्ण</string>
+    <string name="bouncy_castle_keystore">बाउंसी कैसल कीस्टोर (बीकेएस)</string>
+    <string name="pem_file">पीईएम फ़ाइल</string>
+    <string name="alias_pass">उपनाम पासवर्ड</string>
+    <string name="state_name">राज्य का नाम (एसटी)</string>
+    <string name="failed_to_read_keystore">कीस्टोर नहीं पढ़ सका।</string>
+    <string name="pem_and_pk8">पीईएम और पीकेसीएस # 8 (पीके 8)</string>
+    <string name="input_key_password">कुंजी पासवर्ड</string>
+    <string name="organization_unit">संगठन इकाई (ओयू)</string>
+    <string name="organization_name">संगठन का नाम (ओ)</string>
+    <string name="restart_log_viewer_to_see_changes">परिवर्तन देखने के लिए लॉग व्यूअर विंडो पुनरारंभ करें।</string>
+    <string name="filename">फ़ाइल का नाम</string>
+    <string name="log_level_info">जानकारी</string>
 </resources>
