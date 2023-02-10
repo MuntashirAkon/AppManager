@@ -1279,5 +1279,43 @@
     <string name="action_stop_service">Parar</string>
     <string name="file_creation_date">Criado</string>
     <string name="open_as_archive">Arquivo</string>
-    <string name="file_modification_date">Alterado</string>
+    <string name="file_modification_date">Modificado</string>
+    <string name="sort_by_data_usage">Utilização de dados</string>
+    <string name="adb_incomplete_usb_debugging_message">Parece que a depuração USB não está configurada corretamente. Leia <a href="https://muntashirakon.github.io/AppManager/#subsec:enable-usb-debugging">a documentação</a> para obter etapas adicionais. Se já conhece as etapas, clique em \"Abrir\" para abrir as opções de programador ou clique em \"Fechar\" para continuar a usar o modo \"no-root\".</string>
+    <string name="grant_accessibility_permission_for_tracking_window_contents">Permita que o App Manager use o recurso de acessibilidade para rastrear o conteúdo da janela principal.</string>
+    <string name="app_manager_build_expired_message">Para garantir a segurança do seu dispositivo e dos seus dados, a versão do App Manager que está a utilizar foi desativada. Tem de atualizá-lo para a versão mais recente para continuar a usá-lo ou desinstalá-lo se não estiver disponível nenhuma atualização.</string>
+    <string name="app_manager_build_expired">Necessário atualizar</string>
+    <string name="app_can_write_and_execute_in_same_place">A aplicação viola a <a href="https://en.wikipedia.org/wiki/W%5EX">política W^X </a> e é capaz de gravar e executar no mesmo diretório ou na mesma parte da memória. Isto permite a execução de executáveis arbitrários pela modificação de executáveis incorporados na aplicação ou descarregando-os da Internet. A não ser que esse seja o comportamento pretendido da aplicação (por exemplo, emuladores de terminal), recomenda-se encontrar uma versão mais recente da aplicação que tenha como alvo o SDK 29 (Android 10) e posterior, ou encontrar alternativas.</string>
+    <string name="filter_apps_with_saf">Com SAF</string>
+    <string name="option_display_folders_on_top">Pastas no topo</string>
+    <string name="funding_campaign_dialog_message">Estamos a realizar uma <b>campanha de financiamento</b> para o App Manager por um período limitado. Visite <a href="https://opencollective.com/app-manager#category-ABOUT">opencollective.com/app-manager</a> para saber mais sobre a campanha. Este aviso não será mostrado novamente, mas poderá encontrá-lo no ecrã \"Configurações\" durante toda a campanha.</string>
+    <string name="filter_apps_with_keystore">Com KeyStore</string>
+    <string name="filter_apps_with_ssaid">Com SSAID</string>
+    <string name="action_continue">Continuar</string>
+    <string name="install_for_another_user">Instalar para…</string>
+    <string name="confirm_uninstallation">Confirmar desinstalação</string>
+    <string name="grant_required_permission">Conceder permissão necessária</string>
+    <string name="grant_overlay_permission_message">Permitir que o App Manager mostre uma janela flutuante sobre todas as outras janelas</string>
+    <string name="class_hierarchy">Hierarquia</string>
+    <string name="title_ui_tracker">Rastreador de IU</string>
+    <string name="title_terminal_emulator">Terminal</string>
+    <string name="title_labs_activity">Labs</string>
+    <string name="app_manager_build_expiring_soon_warning">Esta versão do App Manager expirará muito em breve. Atualize-o para a versão mais recente.</string>
+    <string name="renamed_successfully">Nome alterado</string>
+    <string name="selinux_context">Contexto SELinux</string>
+    <string name="unix_file_permissions">Modo</string>
+    <string name="file_group_id">Grupo (GID)</string>
+    <string name="file_owner_id">Proprietário (UID)</string>
+    <string name="calculating_file_size">A calcular…</string>
+    <string name="sort_by_filename">Nome</string>
+    <string name="sort_by_last_modified">Última alteração</string>
+    <string name="sort_by_file_size">Tamanho do ficheiro</string>
+    <string name="sort_by_file_type">Tipo de ficheiro</string>
+    <string name="option_display_dot_files">Ficheiros dot</string>
+    <string name="export_app_list">Exportar lista de aplicações</string>
+    <string name="export_app_list_select_format">Selecione o formato para exportar a lista de aplicações</string>
+    <string name="export_option_xml">XML</string>
+    <string name="export_option_markdown">Markdown</string>
+    <string name="funding_campaign_text">Estamos a realizar uma <b>campanha de financiamento</b> para o App Manager por um período limitado. <a href="https://opencollective.com/app-manager#category-ABOUT">Mais informações…</a></string>
+    <string name="adb_incomplete_usb_debugging_title">Depuração USB incompleta</string>
 </resources>
