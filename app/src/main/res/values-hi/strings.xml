@@ -775,4 +775,19 @@
     <string name="screen">स्क्रीन</string>
     <string name="action">कार्रवाई</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">"हस्ताक्षर मैल ना  होने  के कारन  ऐप इंस्टॉल नहीं हो सकता। ऐप उनिंस्टल्ल होगाय बिना अपना डेटा क्लीर करे।"</string>
+    <string name="disable_background_run_description">निम्नलिखित ऐप ऑप्स के लिए <i>अनदेखा</i> मोड सेट करता है: <tt>RUN_IN_BACKGROUND</tt> (Android 7.0 से) और <tt>RUN_ANY_IN_BACKGROUND</tt> (Android 9 से)।</string>
+    <string name="input_app_ops_description_profile">इनपुट ऐप सेशन नाम और/या रिक्त स्थान के साथ स्थिरांक, उदा। <tt>WAKE_LOCK 63 72 CAMERA</tt> आदि। सभी कॉन्फ़िगर किए गए ऐप ऑप्स के लिए आवेदन करने के लिए <tt>*</tt> का उपयोग करें।</string>
+    <string name="app_signing_signature_schemes">हस्ताक्षर योजनाएं</string>
+    <string name="pref_backup_restore_msg">बैकअप/पुनर्स्थापना अनुकूलित करें।</string>
+    <string name="source_code_links">गिटहब: https://github.com/MuntashirAkon/AppManager
+\n
+\nगिटलैब: https://gitlab.com/muntashir/AppManager
+\n
+\nराइज अप:
+\nhttps://0xacab.org/muntashir/AppManager
+\n
+\nकोडबर्ग: https://codeberg.org/muntashir/AppManager</string>
+    <string name="no_volumes_found">लिखित अनुमति के साथ कोई वॉल्यूम नहीं मिला।</string>
+    <string name="backup_volume">बैकअप वॉल्यूम</string>
+    <string name="encrypted">एन्क्रिप्टेड</string>
 </resources>
