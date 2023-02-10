@@ -17,6 +17,54 @@
     ]>
 <changelog>
     <release
+        type="beta release"
+        version="v3.1.0-beta01"
+        code="418"
+        date="10 February 2023">
+        <new>New language: Korean</new>
+        <improve>Improved Java to Smali conversion mechanism</improve>
+        <note subtext="true">
+            Now all the Smali files related to the current file (inner classes, for example) are also converted into
+            Java to make it easier to understand the code.
+        </note>
+        <improve title="Batch Ops">
+            Remove removed items from the selection list after a previous operation is finished.
+        </improve>
+        <improve title="Scanner page">Avoid scanning nested classes to improve the performance of the scanner</improve>
+        <fix title="Settings">Disabled wireless debugging, not ADB over TCP in API &lt; 30</fix>
+        <fix title="Backup">Fixed restoring backed up apps in no-root mode</fix>
+
+        <title type="medium">Freeze/unfreeze</title>
+        <improve>Display a prompt instead of freezing directly</improve>
+        <note subtext="true">
+            When “open after unfreezing” flag is enabled and the app isn't frozen, clicking on the freeze shortcut opens
+            a dialog asking whether to freeze or open the app instead of performing a freeze.
+        </note>
+        <improve>Display a warning in no-root mode on clicking a shortcut</improve>
+        <fix>Fixed drawing over the transparent pixels of an app icon</fix>
+
+        <title type="medium">Installer</title>
+        <new title="Batch Ops">Enabled batch uninstaller in no-root mode</new>
+        <new>
+            Enabled installing an existing package without requiring a complete re-installation. Requires root/ADB
+        </new>
+        <new title="App Info tab">Added option to install an existing app in another profile</new>
+        <note subtext="true">
+            A new menu item, namely “Install for…” is added in the three-dots menu which allows a privileged user to
+            quickly install the same app in another profile without performing a complete installation.
+        </note>
+        <improve>
+            Use PackageManager API instead of the [tt]pm[/tt] command to uninstall updates of a system app
+        </improve>
+        <fix>
+            Fixed installing app for all users when “all users” option is selected
+        </fix>
+        <note>
+            [br /][b]Full list of changes:[/b] [a
+            href="https://github.com/MuntashirAkon/AppManager/compare/v3.1.0-alpha03...v3.1.0-beta01"]v3.1.0-alpha03...v3.1.0-beta01[/a]
+        </note>
+    </release>
+    <release
         type="alpha release"
         version="v3.1.0-alpha03"
         code="417"

@@ -1,0 +1,10 @@
+- New language: Korean
+- Improved Java to Smali conversion
+- Avoid scanning nested classes to improve the performance of the scanner
+- Disabled wireless debugging, not ADB over TCP in API < 30
+- Fixed restoring backed up apps in no-root mode
+- Display a prompt instead of freezing directly in the shortcuts
+- Enabled batch uninstaller in no-root mode
+- Enabled installing an existing package without requiring a complete re-installation. Requires root/ADB
+- Added option to install an existing app in another profile
+- Fixed installing app for all users when “all users” option is selected
