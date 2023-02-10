@@ -793,7 +793,7 @@
     <string name="no_volumes_found">लिखित अनुमति के साथ कोई वॉल्यूम नहीं मिला।</string>
     <string name="backup_volume">बैकअप वॉल्यूम</string>
     <string name="encrypted">एन्क्रिप्टेड</string>
-    <string name="unencrypted">अनएन्क्रिप्ट</string>
+    <string name="unencrypted">अनएन्क्रिप्टड</string>
     <string name="backup_apps_with_changes_msg">पिछले बैकअप के बाद से परिवर्तनों वाले ऐप्स के लिए बैकअप फिर से करें। उनमें आकार, संस्करण, अंतिम लॉन्च समय में परिवर्तन शामिल हैं।</string>
     <string name="enable_battery_optimization">बैटरी अनुकूलन सक्षम करें\?</string>
     <string name="backup_apps_without_backups">बैकअप के बिना ऐप्स का बैकअप लें</string>
@@ -868,7 +868,7 @@
     <string name="screen_lock">स्क्रीन लॉक</string>
     <string name="screen_lock_msg">एंड्राइड स्क्रीन लॉक का उपयोग करके ऐप मैनेजर लॉक करें</string>
     <string name="back_up">बैकअप</string>
-    <string name="working_on_adb_mode">ADB मोड पर कार्य कर रहा</string>
+    <string name="working_on_adb_mode">ADB मोड पर चल रहा</string>
     <string name="type_uri">यूआरआई</string>
     <string name="failed_to_save_key">कुंजी सहेजी नहीं जा सकी।</string>
     <string name="generate_key">उत्पन्न करें</string>
@@ -886,7 +886,7 @@
     <string name="expiry_date_cannot_be_empty">समाप्ति तिथि रिक्त नहीं हो सकता.</string>
     <string name="pref_installer_msg">ऐप इंस्टॉलर के व्यवहार को कॉन्फ़िगर करें।</string>
     <string name="pk8_file">पीकेसीएस # 8 (पीके 8) फाइल</string>
-    <string name="log_level_warn">चेतावनी देना</string>
+    <string name="log_level_warn">चेतावनी दें</string>
     <string name="import_key">आयात कुंजी</string>
     <string name="log_viewer">लॉग व्यूअर</string>
     <string name="log_level_error">त्रुटि</string>
@@ -910,4 +910,11 @@
     <string name="log_level_info">जानकारी</string>
     <string name="choose_an_alias">उपनाम चुनें</string>
     <string name="common_name">सामान्य नाम (सीएन)</string>
+    <string name="filter_choice_tag">टैग</string>
+    <string name="log_cleared">लॉग साफ़ किए गए</string>
+    <string name="copy_to_clipboard">क्लिपबोर्ड पर कापी करें</string>
+    <string name="open">खोलें</string>
+    <string name="filter_choice">खोज से</string>
+    <string name="filter_choice_pid">PID</string>
+    <string name="second_degree_tracker_note">² उपसर्ग इंगित करता है कि ट्रैकर <a href="https://etip.exodus-privacy.eu.org/">ETIP स्टैंड-बाय सूची</a> में हैं, यानी वे वास्तविक ट्रैकर हैं या नहीं, इसकी अभी भी जांच की जा रही है।</string>
 </resources>
