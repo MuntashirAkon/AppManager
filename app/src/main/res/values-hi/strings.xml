@@ -917,4 +917,23 @@
     <string name="filter_choice">खोज से</string>
     <string name="filter_choice_pid">PID</string>
     <string name="second_degree_tracker_note">² उपसर्ग इंगित करता है कि ट्रैकर <a href="https://etip.exodus-privacy.eu.org/">ETIP स्टैंड-बाय सूची</a> में हैं, यानी वे वास्तविक ट्रैकर हैं या नहीं, इसकी अभी भी जांच की जा रही है।</string>
+    <string name="add_filter">फ़िल्टर जोड़ें</string>
+    <string name="add_filter_ellipsis">फ़िल्टर जोड़ें…</string>
+    <string name="dialog_compiling_log">लॉग संकलित किया जा रहा है…</string>
+    <string name="enter_filename">फ़ाइल नाम दर्ज करें</string>
+    <string name="notification_subtext">रिकॉर्डिंग रोकने के लिए स्पर्श करें</string>
+    <string name="notification_ticker">लॉग रिकॉर्डिंग प्रारंभ हुई</string>
+    <string name="pref_buffer_title">लॉग बफ़र (ओं)</string>
+    <string name="pref_cat_advanced">उन्नत</string>
+    <string name="notification_title">लॉग रिकॉर्डिंग प्रगति पर है</string>
+    <string name="log_level_fatal">घातक</string>
+    <string name="enter_good_filename">कृपया कोई मान्य फ़ाइल नाम दर्ज करें।</string>
+    <string name="delete_saved_log">सहेजे गए लॉग हटाएँ</string>
+    <string name="pref_block_trackers_msg">ऐप मैनेजर का उपयोग करके ऐप इंस्टॉल करने के बाद ट्रैकिंग घटकों को ब्लॉक करें।</string>
+    <string name="pref_default_log_level_title">डिफ़ॉल्ट लॉग स्तर</string>
+    <plurals name="file_deletion_confirmation">
+        <item quantity="one">%d फ़ाइल हटा दी जाएगी</item>
+        <item quantity="other">%d फ़ाइलें हटा दी जाएगी</item>
+    </plurals>
+    <string name="next">अगला</string>
 </resources>
