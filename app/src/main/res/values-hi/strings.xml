@@ -865,4 +865,12 @@
     <string name="invalid_aes_key_size">एइएस एन्क्रिप्शन के लिए अमान्य कुंजी आकार। कुंजी आकार या तो 128 या 256 बिट्स हो सकता है।</string>
     <string name="use_default">डिफ़ॉल्ट उपयोग करें</string>
     <string name="failed_to_load_key">कुंजी लोड नहीं की जा सकी |</string>
+    <string name="screen_lock">स्क्रीन लॉक</string>
+    <string name="screen_lock_msg">एंड्राइड स्क्रीन लॉक का उपयोग करके ऐप मैनेजर लॉक करें</string>
+    <string name="back_up">बैकअप</string>
+    <string name="working_on_adb_mode">ADB मोड पर कार्य कर रहा</string>
+    <string name="type_uri">यूआरआई</string>
+    <string name="failed_to_save_key">कुंजी सहेजी नहीं जा सकी।</string>
+    <string name="generate_key">उत्पन्न करें</string>
+    <string name="external_storage">बाहरी स्टोरेज</string>
 </resources>
