@@ -1276,6 +1276,47 @@
     <string name="confirm_file_deletion">Sí, eliminar</string>
     <string name="on_open_application_no_recents">No mostrar aplicaciones en recientes</string>
     <string name="file_open_with_custom_activity">Personalizado</string>
-    <string name="on_unfreeze_open_application">"Abrir aplicaciones luego de  descongelar"</string>
+    <string name="on_unfreeze_open_application">Abrir aplicaciones despues de descongelar</string>
     <string name="file_open_with_os_default_dialog">Abrir con dialogo por defecto del Sistema Operativo</string>
+    <string name="freeze_on_phone_locked">Congelar automáticamente la aplicación cuando el teléfono está bloqueado</string>
+    <string name="tap_to_freeze_app">Tocar para congelar</string>
+    <string name="waiting_for_the_phone_to_be_locked">Esperando a que el teléfono se bloquee…</string>
+    <string name="app_can_write_and_execute_in_same_place">La aplicación infringe la <a href="https://es.wikipedia.org/wiki/W%5EX"> Politica W^X</a> y es capaz de escribir y ejecutar en el mismo directorio o en la misma parte de memoria. Esto permite la ejecución de ejecutables arbitrarios, ya sea modificando los ejecutables integrados en la aplicación o descargándolos de Internet. A menos que este sea el comportamiento previsto de la aplicación (p. ej., emuladores de terminal), se recomienda buscar una versión más reciente de la aplicación que apunte al SDK 29 (Android 10) y versiones posteriores, o buscar alternativas.</string>
+    <string name="sort_by_filename">Nombre</string>
+    <string name="file_owner_id">Propio (UID)</string>
+    <string name="calculating_file_size">Calculando…</string>
+    <string name="sort_by_file_size">Tamaño del archivo</string>
+    <string name="export_app_list_select_format">Seleccione el formato para exportar la lista de aplicaciones</string>
+    <string name="file_group_id">Grupo (GID)</string>
+    <string name="option_display_dot_files">Archivos de respaldo</string>
+    <string name="option_display_folders_on_top">Carpetas en la parte superior</string>
+    <string name="sort_by_last_modified">Última modificación</string>
+    <string name="sort_by_file_type">Tipo de archivo</string>
+    <string name="export_app_list">Exportar lista de aplicaciones</string>
+    <string name="export_option_xml">XML</string>
+    <string name="funding_campaign_text">Estamos ejecutando una <b>campaña de financiación</b> para App Manager por un período limitado. <a href="https://opencollective.com/app-manager#category-ABOUT">más información...</a></string>
+    <string name="adb_incomplete_usb_debugging_message">Parece que la depuración de USB no está configurada correctamente. Lea <a href="https://muntashirakon.github.io/AppManager/#subsec:enable-usb-debugging">la documentación</a> para conocer los pasos adicionales. Si ya conoce los pasos, haga clic en \"Abrir\" para abrir las opciones de desarrollador, o haga clic en \"Cerrar\" para continuar usando el Root.</string>
+    <string name="funding_campaign_dialog_message">Nosotros estamos ejecutando una <b>campaña de financiación</b> para App Manager por un período limitado. Visita <a href="https://opencollective.com/app-manager#category-ABOUT">opencollective.com/app-manager</a> para saber más sobre la campaña. Este aviso no se volverá a mostrar, pero puede encontrarlo en la página Configuración durante toda la campaña.</string>
+    <string name="title_ui_tracker">Rastreador de interfaz de usuario</string>
+    <string name="title_terminal_emulator">Terminal</string>
+    <string name="class_hierarchy">Jerarquía</string>
+    <string name="title_labs_activity">Laboratorios</string>
+    <string name="export_option_markdown">Reducción</string>
+    <string name="adb_incomplete_usb_debugging_title">Depuración USB incompleta</string>
+    <string name="sort_by_data_usage">Uso de datos</string>
+    <string name="filter_apps_with_keystore">Con almacén de claves</string>
+    <string name="filter_apps_with_saf">Con SAF</string>
+    <string name="filter_apps_with_ssaid">Con SSAID</string>
+    <string name="action_continue">Continuar</string>
+    <string name="install_for_another_user">Instalar para…</string>
+    <string name="confirm_uninstallation">Confirmar desinstalación</string>
+    <string name="grant_required_permission">Otorgar el permiso requerido</string>
+    <string name="grant_overlay_permission_message">Permitir que App Manager muestre una ventana flotante</string>
+    <string name="grant_accessibility_permission_for_tracking_window_contents">Permita que App Manager utilice la función de accesibilidad para rastrear el contenido de la ventana principal.</string>
+    <string name="app_manager_build_expired">Actualización requerida</string>
+    <string name="app_manager_build_expired_message">Para garantizar la seguridad de su dispositivo y sus datos, se retiró la versión de App Manager que estába utilizando. Tienes que actualizarlo a la última versión para seguir usándolo, o desinstalarlo si no hay actualización disponible.</string>
+    <string name="app_manager_build_expiring_soon_warning">Esta versión de App Manager caducará muy pronto. Actualícelo a la última versión.</string>
+    <string name="renamed_successfully">Renombrado</string>
+    <string name="selinux_context">contexto de SELinux</string>
+    <string name="unix_file_permissions">Modo</string>
 </resources>
