@@ -1276,4 +1276,6 @@
     <string name="confirm_file_deletion">Sí, eliminar</string>
     <string name="on_open_application_no_recents">No mostrar aplicaciones en recientes</string>
     <string name="file_open_with_custom_activity">Personalizado</string>
+    <string name="on_unfreeze_open_application">"Abrir aplicaciones luego de  descongelar"</string>
+    <string name="file_open_with_os_default_dialog">Abrir con dialogo por defecto del Sistema Operativo</string>
 </resources>
