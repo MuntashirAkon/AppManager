@@ -956,7 +956,7 @@
     <string name="unknown_net_policy">Netpolicy yang tidak dikenal (%1$s - %2$X)</string>
     <string name="app_signing_signature_mismatch_for_data_only_app">Tidak dapat memasang aplikasi dikarenakan ketidakcocokan tanda tangan. Aplikasi dicopot tanpa membersihkan datanya.</string>
     <string name="failed_to_prevent_background_run">Tidak dapat mencegah %1$s untuk berjalan di latar belakang</string>
-    <string name="community_links"><a href="https://t.me/AppManagerChannel">Telegram channel</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
+    <string name="community_links"><a href="https://t.me/AppManagerChannel">Saluran Telegram</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
     <string name="community">Komunitas</string>
     <plurals name="alert_failed_to_import_backups">
         <item quantity="other">Tidak dapat mengimpor %1$d cadangan</item>
@@ -1154,4 +1154,5 @@
     <string name="changelog_type_fix">Memperbaiki</string>
     <string name="sort_by_total_size">Ukuran keseluruhan</string>
     <string name="am_command"><tt>am</tt> perintah</string>
+    <string name="changelog_type_improve">Memperbaiki</string>
 </resources>
