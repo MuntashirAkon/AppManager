@@ -1275,7 +1275,7 @@
     <string name="delete_filename">Eliminar %s</string>
     <string name="confirm_file_deletion">Sí, eliminar</string>
     <string name="on_open_application_no_recents">No mostrar aplicaciones en recientes</string>
-    <string name="file_open_with_custom_activity">Personalizado</string>
+    <string name="file_open_with_custom_activity">Personalizar</string>
     <string name="on_unfreeze_open_application">Abrir aplicaciones despues de descongelar</string>
     <string name="file_open_with_os_default_dialog">Abrir con dialogo por defecto del Sistema Operativo</string>
     <string name="freeze_on_phone_locked">Congelar automáticamente la aplicación cuando el teléfono está bloqueado</string>
