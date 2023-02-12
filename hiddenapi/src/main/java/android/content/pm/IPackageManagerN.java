@@ -33,7 +33,7 @@ public interface IPackageManagerN {
     ParceledListSlice<ResolveInfo> queryIntentActivities(Intent intent, String resolvedType, int flags, int userId)
             throws RemoteException;
 
-    @RequiresApi(Build.VERSION_CODES.T)
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     ParceledListSlice<ResolveInfo> queryIntentActivities(Intent intent, String resolvedType, long flags, int userId)
             throws RemoteException;
 
@@ -45,7 +45,7 @@ public interface IPackageManagerN {
                                                               String[] specificTypes, Intent intent,
                                                               String resolvedType, int flags, int userId) throws RemoteException;
 
-    @RequiresApi(Build.VERSION_CODES.T)
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     ParceledListSlice<ResolveInfo> queryIntentActivityOptions(ComponentName caller, Intent[] specifics,
                                                               String[] specificTypes, Intent intent,
                                                               String resolvedType, long flags, int userId) throws RemoteException;
@@ -57,7 +57,7 @@ public interface IPackageManagerN {
     ParceledListSlice<ResolveInfo> queryIntentReceivers(Intent intent, String resolvedType, int flags, int userId)
             throws RemoteException;
 
-    @RequiresApi(Build.VERSION_CODES.T)
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     ParceledListSlice<ResolveInfo> queryIntentReceivers(Intent intent, String resolvedType, long flags, int userId)
             throws RemoteException;
 
@@ -68,7 +68,7 @@ public interface IPackageManagerN {
     ParceledListSlice<ResolveInfo> queryIntentServices(Intent intent, String resolvedType, int flags, int userId)
             throws RemoteException;
 
-    @RequiresApi(Build.VERSION_CODES.T)
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     ParceledListSlice<ResolveInfo> queryIntentServices(Intent intent, String resolvedType, long flags, int userId)
             throws RemoteException;
 
@@ -79,7 +79,7 @@ public interface IPackageManagerN {
     ParceledListSlice<ResolveInfo> queryIntentContentProviders(Intent intent, String resolvedType, int flags,
                                                                int userId) throws RemoteException;
 
-    @RequiresApi(Build.VERSION_CODES.T)
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     ParceledListSlice<ResolveInfo> queryIntentContentProviders(Intent intent, String resolvedType, long flags,
                                                                int userId) throws RemoteException;
 
@@ -99,7 +99,7 @@ public interface IPackageManagerN {
     ParceledListSlice<ProviderInfo> queryContentProviders(String processName, int uid, int flags, String metaDataKey)
             throws RemoteException;
 
-    @RequiresApi(Build.VERSION_CODES.T)
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     ParceledListSlice<ProviderInfo> queryContentProviders(String processName, int uid, long flags, String metaDataKey)
             throws RemoteException;
 

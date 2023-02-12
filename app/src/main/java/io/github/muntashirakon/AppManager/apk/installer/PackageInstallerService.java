@@ -27,6 +27,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.app.ServiceCompat;
 
 import java.util.Collections;
 
@@ -76,6 +77,7 @@ public class PackageInstallerService extends ForegroundService {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent,
                 PendingIntentCompat.FLAG_IMMUTABLE);
         builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setOngoing(true)
                 .setContentTitle(null)
                 .setContentText(getString(R.string.install_in_progress))
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
@@ -196,7 +198,7 @@ public class PackageInstallerService extends ForegroundService {
 
     @Override
     public void onDestroy() {
-        stopForeground(true);
+        ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_REMOVE);
         super.onDestroy();
     }
 

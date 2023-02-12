@@ -11,6 +11,7 @@ import android.content.Intent;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.app.ServiceCompat;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
@@ -47,6 +48,7 @@ public class ProfileApplierService extends ForegroundService {
         notificationManager = NotificationUtils.getNewNotificationManager(this, CHANNEL_ID,
                 "Profile Applier", NotificationManagerCompat.IMPORTANCE_LOW);
         builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setOngoing(true)
                 .setContentText(getString(R.string.operation_running))
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setSubText(getText(R.string.profiles))
@@ -108,7 +110,7 @@ public class ProfileApplierService extends ForegroundService {
 
     @Override
     public void onDestroy() {
-        stopForeground(true);
+        ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_REMOVE);
         super.onDestroy();
     }
 

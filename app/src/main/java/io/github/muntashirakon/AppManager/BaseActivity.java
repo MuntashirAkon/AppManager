@@ -2,9 +2,11 @@
 
 package io.github.muntashirakon.AppManager;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.KeyguardManager;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Menu;
@@ -17,10 +19,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreActivity;
@@ -35,6 +39,17 @@ import io.github.muntashirakon.AppManager.utils.appearance.AppearanceUtils;
 
 public abstract class BaseActivity extends AppCompatActivity {
     public static final String TAG = BaseActivity.class.getSimpleName();
+
+    private static final String[] REQUIRED_PERMISSIONS;
+
+    static {
+        REQUIRED_PERMISSIONS = new ArrayList<String>() {{
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                add(Manifest.permission.POST_NOTIFICATIONS);
+            }
+        }}.toArray(new String[0]);
+
+    }
 
     @Nullable
     private AlertDialog mAlertDialog;
@@ -56,6 +71,14 @@ public abstract class BaseActivity extends AppCompatActivity {
                     finishAndRemoveTask();
                 }
             });
+    private final ActivityResultLauncher<String[]> mPermissionCheckActivity = registerForActivityResult(
+            new ActivityResultContracts.RequestMultiplePermissions(),
+            permissionStatusMap -> {
+                if (permissionStatusMap == null) {
+                    return;
+                }
+                initPermissionChecks();
+            });
 
     @Override
     protected final void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,6 +87,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (Ops.isAuthenticated()) {
             Log.d(TAG, "Already authenticated.");
             onAuthenticated(savedInstanceState);
+            initPermissionChecks();
             return;
         }
         if (Boolean.TRUE.equals(BuildExpiryChecker.buildExpired())) {
@@ -112,6 +136,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                     if (mAlertDialog != null) mAlertDialog.dismiss();
                     Ops.setAuthenticated(true);
                     onAuthenticated(savedInstanceState);
+                    initPermissionChecks();
             }
         });
         if (!mViewModel.isAuthenticating()) {
@@ -209,5 +234,14 @@ public abstract class BaseActivity extends AppCompatActivity {
         Log.d(TAG, "Authenticated");
         // Set mode of operation
         Objects.requireNonNull(mViewModel).setModeOfOps();
+    }
+
+    private void initPermissionChecks() {
+        for (String permission : REQUIRED_PERMISSIONS) {
+            if (ActivityCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                mPermissionCheckActivity.launch(REQUIRED_PERMISSIONS);
+                return;
+            }
+        }
     }
 }

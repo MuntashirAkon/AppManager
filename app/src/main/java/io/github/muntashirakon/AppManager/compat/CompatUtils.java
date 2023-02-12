@@ -2,26 +2,18 @@
 
 package io.github.muntashirakon.AppManager.compat;
 
-import android.content.pm.IPackageManager;
+import android.app.AppOpsManagerHidden;
 import android.os.Build;
 
 public final class CompatUtils {
-    private static Boolean sIsAndroid13Beta = null;
+    private static Boolean sIsAndroid14Beta = null;
 
-    public static boolean isAndroid13AndUp() {
-        if (sIsAndroid13Beta == null) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                sIsAndroid13Beta = Build.VERSION.SDK_INT >= 33;
-                if (!sIsAndroid13Beta) {
-                    try {
-                        IPackageManager.class.getMethod("getPackageInfo", String.class, long.class, int.class);
-                        sIsAndroid13Beta = true;
-                    } catch (NoSuchMethodException e) {
-                        sIsAndroid13Beta = false;
-                    }
-                }
-            } else sIsAndroid13Beta = false;
+    public static boolean isAndroid14AndUp() {
+        if (sIsAndroid14Beta == null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                sIsAndroid14Beta = Build.VERSION.SDK_INT >= 34 || AppOpsManagerHidden._NUM_OP == 131;
+            } else sIsAndroid14Beta = false;
         }
-        return sIsAndroid13Beta;
+        return sIsAndroid14Beta;
     }
 }

@@ -25,15 +25,13 @@ import androidx.webkit.WebViewClientCompat;
 
 import com.google.android.material.transition.MaterialSharedAxis;
 
-import java.lang.reflect.Method;
-
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.ResourceUtil;
 import io.github.muntashirakon.util.UiUtils;
 
-public class HelpActivity extends BaseActivity {
+public class HelpActivity extends BaseActivity implements SearchView.OnQueryTextListener {
     private LinearLayoutCompat container;
     private WebView webView;
     private LinearLayoutCompat searchContainer;
@@ -74,34 +72,13 @@ public class HelpActivity extends BaseActivity {
         Button previousButton = findViewById(R.id.previous_button);
         searchView = findViewById(R.id.search_bar);
         searchView.findViewById(R.id.search_close_btn).setOnClickListener(v -> {
+            webView.clearMatches();
             searchView.setQuery(null, false);
             Transition sharedAxis = new MaterialSharedAxis(MaterialSharedAxis.Y, true);
             TransitionManager.beginDelayedTransition(container, sharedAxis);
             searchContainer.setVisibility(View.GONE);
         });
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                webView.findAll(newText);
-                try {
-                    // Can't use getMethod() as it's a private method
-                    for (Method m : WebView.class.getDeclaredMethods()) {
-                        if (m.getName().equals("setFindIsUp")) {
-                            m.setAccessible(true);
-                            m.invoke(webView, true);
-                            break;
-                        }
-                    }
-                } catch (Exception ignored) {
-                }
-                return true;
-            }
-        });
+        searchView.setOnQueryTextListener(this);
         nextButton.setOnClickListener(v -> webView.findNext(true));
         previousButton.setOnClickListener(v -> webView.findNext(false));
     }
@@ -150,6 +127,17 @@ public class HelpActivity extends BaseActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        webView.findAllAsync(newText);
+        return true;
     }
 
     private void openDocsSite() {

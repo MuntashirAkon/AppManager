@@ -103,7 +103,7 @@ public final class PackageManagerCompat {
             return packageInfoList;
         }
         IPackageManager pm = getPackageManager();
-        if (CompatUtils.isAndroid13AndUp()) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             return pm.getInstalledPackages((long) flags, userHandle).getList();
         }
         return pm.getInstalledPackages(flags, userHandle).getList();
@@ -115,7 +115,7 @@ public final class PackageManagerCompat {
     public static List<ApplicationInfo> getInstalledApplications(int flags, @UserIdInt int userHandle)
             throws RemoteException {
         IPackageManager pm = getPackageManager();
-        if (CompatUtils.isAndroid13AndUp()) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             return pm.getInstalledApplications((long) flags, userHandle).getList();
         }
         return pm.getInstalledApplications(flags, userHandle).getList();
@@ -194,7 +194,7 @@ public final class PackageManagerCompat {
     public static ApplicationInfo getApplicationInfo(String packageName, int flags, @UserIdInt int userHandle)
             throws RemoteException {
         IPackageManager pm = getPackageManager();
-        if (CompatUtils.isAndroid13AndUp()) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             return pm.getApplicationInfo(packageName, (long) flags, userHandle);
         }
         return pm.getApplicationInfo(packageName, flags, userHandle);
@@ -224,7 +224,7 @@ public final class PackageManagerCompat {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             IPackageManagerN pmN = Refine.unsafeCast(pm);
             ParceledListSlice<ResolveInfo> resolveInfoList;
-            if (CompatUtils.isAndroid13AndUp()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 resolveInfoList = pmN.queryIntentActivities(intent,
                         intent.resolveTypeIfNeeded(context.getContentResolver()), (long) flags, userId);
             } else {
@@ -456,7 +456,7 @@ public final class PackageManagerCompat {
     @SuppressWarnings("deprecation")
     private static PackageInfo getPackageInfoInternal(IPackageManager pm, String packageName, int flags, @UserIdInt int userId)
             throws RemoteException {
-        if (CompatUtils.isAndroid13AndUp()) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             return pm.getPackageInfo(packageName, (long) flags, userId);
         }
         return pm.getPackageInfo(packageName, flags, userId);

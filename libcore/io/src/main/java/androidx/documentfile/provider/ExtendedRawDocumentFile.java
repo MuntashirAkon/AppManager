@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import io.github.muntashirakon.io.ExtendedFile;
 
@@ -94,7 +95,7 @@ public class ExtendedRawDocumentFile extends DocumentFile {
             String name = mFile.getName();
             final int lastDot = name.lastIndexOf('.');
             if (lastDot >= 0) {
-                final String extension = name.substring(lastDot + 1).toLowerCase();
+                final String extension = name.substring(lastDot + 1).toLowerCase(Locale.ROOT);
                 return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
             }
         }
@@ -200,7 +201,7 @@ public class ExtendedRawDocumentFile extends DocumentFile {
     private static String getTypeForName(String name) {
         final int lastDot = name.lastIndexOf('.');
         if (lastDot >= 0) {
-            final String extension = name.substring(lastDot + 1).toLowerCase();
+            final String extension = name.substring(lastDot + 1).toLowerCase(Locale.ROOT);
             final String mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
             if (mime != null) {
                 return mime;

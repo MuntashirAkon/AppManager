@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.app.ServiceCompat;
 
 import java.io.IOException;
 import java.util.Random;
@@ -101,7 +102,7 @@ public class LogcatRecordingService extends ForegroundService {
         super.onDestroy();
         killProcess();
         unregisterReceiver(mReceiver);
-        stopForeground(true);
+        ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_REMOVE);
         WidgetHelper.updateWidgets(getApplicationContext(), false);
     }
 
@@ -120,13 +121,14 @@ public class LogcatRecordingService extends ForegroundService {
 
         final String CHANNEL_ID = "matlog_logging_channel";
         // Set the icon, scrolling text and timestamp
-        NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID);
-        notification.setSmallIcon(R.drawable.ic_launcher_foreground);
-        notification.setTicker(getText(R.string.notification_ticker));
-        notification.setWhen(System.currentTimeMillis());
-        notification.setContentTitle(getString(R.string.notification_title));
-        notification.setContentText(getString(R.string.notification_subtext));
-        notification.setContentIntent(pendingIntent);
+        NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
+                .setOngoing(true)
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setTicker(getText(R.string.notification_ticker))
+                .setWhen(System.currentTimeMillis())
+                .setContentTitle(getString(R.string.notification_title))
+                .setContentText(getString(R.string.notification_subtext))
+                .setContentIntent(pendingIntent);
 
         NotificationUtils.getNewNotificationManager(this, CHANNEL_ID, "Logcat Recording Service",
                 NotificationManagerCompat.IMPORTANCE_DEFAULT);
