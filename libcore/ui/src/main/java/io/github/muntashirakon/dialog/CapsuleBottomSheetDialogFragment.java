@@ -8,7 +8,6 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.TransitionDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,34 +20,25 @@ import androidx.annotation.CallSuper;
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.Px;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.WindowCompat;
 import androidx.core.view.WindowInsetsControllerCompat;
 
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.bottomsheet.BottomSheetDragHandleView;
-import com.google.android.material.shape.MaterialShapeDrawable;
-import com.google.android.material.shape.ShapeAppearanceModel;
 
-import java.lang.reflect.Method;
-import java.util.Locale;
 import java.util.Objects;
 
 import io.github.muntashirakon.ui.R;
 import io.github.muntashirakon.util.UiUtils;
 
 /**
- * A {@link BottomSheetDialogFragment} with a capsule on top. This is a widely used design but seems to be missing
- * from the Material Components library.
+ * A {@link BottomSheetDialogFragment} with a {@link BottomSheetDragHandleView} on top
  */
 // Copyright 2022 Muntashir Al-Islam
 // Copyright 2022 Absinthe
-public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialogFragment
-        implements View.OnLayoutChangeListener {
+public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialogFragment {
     public static final String TAG = CapsuleBottomSheetDialogFragment.class.getSimpleName();
 
     private LinearLayoutCompat mBottomSheetContainer;
@@ -63,10 +53,6 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
     private boolean mIsCapsuleActivated;
     private boolean mIsLoadingFinished;
     private BottomSheetBehavior<FrameLayout> mBehavior;
-    @Px
-    private int mMaxHeight;
-    @Px
-    private int mMaxPeekHeight;
 
     private final BottomSheetBehavior.BottomSheetCallback mBottomSheetCallback = new BottomSheetBehavior.BottomSheetCallback() {
         @Override
@@ -78,20 +64,16 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
                         onCapsuleActivated(true);
                     }
                     break;
+                case BottomSheetBehavior.STATE_HALF_EXPANDED:
+                    throw new UnsupportedOperationException();
                 case BottomSheetBehavior.STATE_COLLAPSED:
-                    if (mIsCapsuleActivated) {
-                        mIsCapsuleActivated = false;
-                        onCapsuleActivated(false);
-                    }
-                    break;
+                    throw new UnsupportedOperationException();
                 case BottomSheetBehavior.STATE_EXPANDED:
                     if (mIsCapsuleActivated) {
                         mIsCapsuleActivated = false;
                         onCapsuleActivated(false);
                     }
-                    // Workaround for rounded corners in the bottom sheet
-                    bottomSheet.setBackground(createMaterialShapeDrawable(bottomSheet));
-                case BottomSheetBehavior.STATE_HALF_EXPANDED:
+                    break;
                 case BottomSheetBehavior.STATE_HIDDEN:
                 case BottomSheetBehavior.STATE_SETTLING:
                     break;
@@ -142,6 +124,7 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         } // else Body has already been set, no need to set it again
         mLoadingLayout.setVisibility(View.GONE);
+        mBehavior.setStateInternal(BottomSheetBehavior.STATE_EXPANDED);
     }
 
     @Nullable
@@ -165,39 +148,15 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
         }
     }
 
-    @Px
-    public int getMaxHeight() {
-        return mMaxHeight;
-    }
-
-    public void setMaxHeight(@Px int maxHeight) {
-        mMaxHeight = maxHeight;
-        if (mBehavior != null) {
-            mBehavior.setMaxHeight(maxHeight);
-        }
-    }
-
-    @Px
-    public int getMaxPeekHeight() {
-        return mMaxPeekHeight;
-    }
-
-    public void setMaxPeekHeight(@Px int maxPeekHeight) {
-        mMaxPeekHeight = maxPeekHeight;
-    }
-
     @CallSuper
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         BottomSheetDialog dialog = new BottomSheetDialogInternal(requireContext(), getTheme());
         mBehavior = dialog.getBehavior();
+        mBehavior.setFitToContents(true);
+        mBehavior.setSkipHalfExpanded(true);
         mBehavior.setSkipCollapsed(true);
-        if (mMaxHeight != 0) {
-            mBehavior.setMaxHeight(mMaxHeight);
-        } else {
-            mMaxHeight = mBehavior.getMaxHeight();
-        }
         return dialog;
     }
 
@@ -233,16 +192,6 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
     public void onStart() {
         super.onStart();
         mBehavior.addBottomSheetCallback(mBottomSheetCallback);
-        mBottomSheetContainer.addOnLayoutChangeListener(this);
-
-        mBottomSheetContainer.post(() -> {
-            try {
-                Method setStateInternal = BottomSheetBehavior.class.getDeclaredMethod("setStateInternal", int.class);
-                setStateInternal.setAccessible(true);
-                setStateInternal.invoke(mBehavior, BottomSheetBehavior.STATE_EXPANDED);
-            } catch (Throwable ignore) {
-            }
-        });
     }
 
     @CallSuper
@@ -250,7 +199,6 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
     public void onStop() {
         super.onStop();
         mBehavior.removeBottomSheetCallback(mBottomSheetCallback);
-        mBottomSheetContainer.removeOnLayoutChangeListener(this);
     }
 
     @CallSuper
@@ -259,44 +207,6 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
         mHeader = null;
         mBody = null;
         super.onDestroyView();
-    }
-
-    @CallSuper
-    @Override
-    public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-        int oldHeight = oldBottom - oldTop;
-        int newHeight = bottom - top;
-        if (newHeight != oldHeight) {
-            Log.d(TAG, String.format(Locale.ROOT, "onLayoutChange: %d -> %d", oldHeight, newHeight));
-            updateDialogHeight(newHeight);
-        }
-    }
-
-    @NonNull
-    private Drawable createMaterialShapeDrawable(@NonNull View bottomSheet) {
-        // Create a ShapeAppearanceModel with the same shapeAppearanceOverlay used in the style
-        ShapeAppearanceModel shapeAppearanceModel = ShapeAppearanceModel.builder(requireContext(),
-                0, R.style.ShapeAppearance_AppTheme_MediumComponent_RoundedTop).build();
-
-        // Create a new MaterialShapeDrawable (you can't use the original MaterialShapeDrawable in the BottomSheet)
-        MaterialShapeDrawable currentMaterialShapeDrawable = (MaterialShapeDrawable) bottomSheet.getBackground();
-        MaterialShapeDrawable newMaterialShapeDrawable = new MaterialShapeDrawable(shapeAppearanceModel);
-
-        // Copy the attributes in the new MaterialShapeDrawable
-        newMaterialShapeDrawable.initializeElevationOverlay(requireContext());
-        newMaterialShapeDrawable.setFillColor(currentMaterialShapeDrawable.getFillColor());
-        newMaterialShapeDrawable.setTintList(currentMaterialShapeDrawable.getTintList());
-        newMaterialShapeDrawable.setElevation(currentMaterialShapeDrawable.getElevation());
-        newMaterialShapeDrawable.setStrokeWidth(currentMaterialShapeDrawable.getStrokeWidth());
-        newMaterialShapeDrawable.setStrokeColor(currentMaterialShapeDrawable.getStrokeColor());
-        return newMaterialShapeDrawable;
-    }
-
-    private void updateDialogHeight(int newHeight) {
-        if (mMaxPeekHeight != 0 && newHeight > mMaxPeekHeight) {
-            newHeight = mMaxPeekHeight;
-        }
-        mBehavior.setPeekHeight(newHeight, true);
     }
 
     public void onCapsuleActivated(boolean activated) {

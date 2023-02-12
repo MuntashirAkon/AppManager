@@ -1,0 +1,36 @@
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:id="@+id/coordinator"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <View
+            android:id="@+id/touch_outside"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:focusable="false"
+            android:importantForAccessibility="no"
+            android:soundEffectsEnabled="false"
+            tools:ignore="UnusedAttribute"/>
+
+        <FrameLayout
+            android:id="@+id/design_bottom_sheet"
+            style="?attr/bottomSheetStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|top"
+            app:layout_behavior="io.github.muntashirakon.dialog.BottomSheetBehavior"/>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</FrameLayout>
