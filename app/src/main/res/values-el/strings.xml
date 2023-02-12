@@ -1,2 +1,223 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources></resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <string name="service">Υπηρεσίες</string>
+    <string name="no_receivers">Χωρίς παραλήπτες</string>
+    <string name="providers">Πάροχοι</string>
+    <string name="no_providers">Κανένας πάροχος</string>
+    <string name="launch_mode">Λειτουργία εκκίνησης</string>
+    <string name="task_affinity">Συγγένεια έργων</string>
+    <string name="sort_by_last_update">Τελευταία ενημέρωση</string>
+    <string name="authority">Εξουσία</string>
+    <string name="no_service">Καμία υπηρεσία</string>
+    <string name="orientation">Προσανατολισμός</string>
+    <string name="group">Ομάδα</string>
+    <string name="error">Σφάλμα</string>
+    <string name="write">Εγγραφή</string>
+    <string name="shared_libs">Κοινές βιβλιοθήκες</string>
+    <string name="grant_uri_permission">Χορήγηση αδειών URI</string>
+    <string name="path_permissions">Άδειες διαδρομής</string>
+    <string name="patterns_allowed">Επιτρεπτά μοτίβα</string>
+    <string name="declared_permission">Άδειες</string>
+    <string name="uses_feature">Χρησιμοποιεί δυνατότητες</string>
+    <string name="no_feature">Καμία δυνατότητα</string>
+    <string name="app_signing_signatures">Υπογραφές</string>
+    <string name="app_signing_no_signatures">Χωρίς έγκυρη υπογραφή</string>
+    <string name="sort_by_shared_user_id">Κοινό ID χρήστη</string>
+    <string name="signatures">Υπογραφές</string>
+    <string name="shared_user_id">Κοινό ID χρήστη</string>
+    <string name="sort_by_sha">Υπογραφή</string>
+    <string name="configurations">Διαμορφώσεις</string>
+    <string name="input_features">Δυνατότητες εισόδου</string>
+    <string name="manifest">Μανιφέστο</string>
+    <string name="loading">Φορτώνει…</string>
+    <string name="sort_by_app_label">Όνομα εφαρμογής</string>
+    <string name="sort_by_domain">Πρώτα εφαρμογές χρήστη</string>
+    <string name="tracker_classes">Κλάσεις ανιχνευτή</string>
+    <string name="sort_by_target_sdk">Επιθυμητό SDK</string>
+    <string name="data_received">Ελήφθησαν δεδομένα</string>
+    <string name="data_transmitted">Μεταδόθηκαν δεδομένα</string>
+    <string name="data_usage_msg">Χρήση δεδομένων</string>
+    <string name="cache_size">Κρυφή μνήμη</string>
+    <string name="obb_size">Obb</string>
+    <string name="app_not_installed">Η εφαρμογή δεν έχει εγκατασταθεί</string>
+    <string name="media_size">Πολυμέσα</string>
+    <string name="system">Σύστημα</string>
+    <string name="user_app">Εφαρμογή χρήστη</string>
+    <string name="user">Χρήστης</string>
+    <string name="sort">Ταξινόμηση</string>
+    <string name="version_name_with_code">Έκδοση <xliff:g id="version_name" example="2.5.17">%1$s</xliff:g> (<xliff:g id="version_code" example="365">%2$d</xliff:g>)</string>
+    <string name="app_info">Πληροφορίες εφαρμογής</string>
+    <string name="system_app">Εφαρμογή συστήματος</string>
+    <string name="paths_and_directories">Διαδρομές &amp; Φάκελοι</string>
+    <string name="source_dir">Φάκελος πηγής</string>
+    <string name="more_info">Περισσότερες πληροφορίες</string>
+    <string name="sdk_flags">Επισημάνσεις</string>
+    <string name="data_dir">Φάκελος Δεδομένων</string>
+    <string name="sdk_min">Ελαχ</string>
+    <string name="main_activity">Κύρια Δραστηριότητα</string>
+    <string name="sdk_max">Επιθυμητό</string>
+    <string name="user_id">ID χρήστη</string>
+    <string name="class_name">Όνομα Κλάσης</string>
+    <string name="empty_package_name">Κενό όνομα πακέτου</string>
+    <string name="error_creating_shortcut">Σφάλμα δημιουργίας συντόμευσης</string>
+    <string name="error_verbose_pin_shortcut">Ο τρέχων εκκινητής δεν υποστηρίζει PinShortcut. Αδυναμία δημιουργίας συντόμευσης.</string>
+    <string name="edit_shortcut">Επεξεργασία Συντόμευσης</string>
+    <string name="starting_activity">Εκκίνηση δραστηριότητας: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
+    <string name="shortcut_name">Όνομα Συντόμευσης</string>
+    <string name="package_name">Όνομα Πακέτου</string>
+    <string name="error_invalid_icon_resource">Άκυρη πηγή εικονιδίου</string>
+    <string name="error_invalid_icon_format">Άκυρο φορμάτ εικονιδίου</string>
+    <string name="icon_picker">Επιλογέας Εικονίδιου</string>
+    <plurals name="tracker_and_classes">
+        <item quantity="one">1 ανιχνευτής με <xliff:g id="class_no" example="50">%1$d</xliff:g> κλάση</item>
+        <item quantity="other">1 ανιχνευτής με <xliff:g id="class_no" example="50">%1$d</xliff:g> κλάσεις</item>
+    </plurals>
+    <string name="all_classes">Όλες οι κλάσεις</string>
+    <string name="sort_by_package_name">Όνομα πακέτου</string>
+    <plurals name="other_trackers_and_classes">
+        <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> ανιχνευτές με <xliff:g id="class_no" example="50">%2$d</xliff:g> κλάσεις</item>
+        <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> ανιχνευτές με <xliff:g id="class_no" example="50">%2$d</xliff:g> κλάσεις</item>
+    </plurals>
+    <string name="tracker_details">Λεπτομέρειες Ανιχνευτή</string>
+    <string name="no_shared_libs">Καμία κοινή βιβλιοθήκη</string>
+    <string name="app_usage">Χρήση Εφαρμογής</string>
+    <plurals name="main_list_date_days">
+        <item quantity="one"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> μέρα</item>
+        <item quantity="other"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> μέρες</item>
+    </plurals>
+    <string name="usage_7_days">Τελευταίες 7 μέρες</string>
+    <string name="usage_today">Σήμερα</string>
+    <string name="no_tracker_class">Χωρίς κλάσεις ανιχνευτή</string>
+    <string name="usage_weekly">Εβδομαδιαία</string>
+    <string name="go">Πάμε</string>
+    <string name="go_back">Πίσω</string>
+    <string name="usage_less_than_a_minute">Λιγότερο από ένα λεπτό</string>
+    <string name="grant_usage_access">Χορήγηση Πρόσβασης Χρήσης</string>
+    <string name="save">Αποθήκευση</string>
+    <string name="shared_prefs">Κοινές Προτιμήσεις</string>
+    <string name="native_library_dir">Φάκελος Βιβλιοθήκης Native JNI</string>
+    <string name="string_value">Τιμή συμβολοσειράς</string>
+    <string name="type_string">Χαρακτήρες</string>
+    <string name="key_name_cannot_be_null">Το όνομα κλειδιού δε μπορεί να είναι κενό</string>
+    <string name="add_item">Προσθήκη αντικειμένου</string>
+    <string name="no_content">Χωρίς περιεχόμενο</string>
+    <string name="failed_to_uninstall">Δεν ήταν δυνατή η απεγκατάσταση <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="uninstall_system_app_message">Πρόκειται για εφαρμογή συστήματος. Θέλετε σίγουρα να την απεγκαταστήσετε;</string>
+    <string name="uninstall">Απεγκατάσταση</string>
+    <string name="permissions">Άδειες χρησης</string>
+    <string name="require_no_permission">Δεν απαιτείται άδεια</string>
+    <string name="activities">Δραστηριότητες</string>
+    <string name="launch">Εκκίνηση</string>
+    <string name="refresh">Ανανέωση</string>
+    <string name="no_activities">Καμία δραστηριότητα</string>
+    <string name="receivers">Παραλήπτες</string>
+    <string name="soft_input">Λειτουργία τυπικής εισόδου</string>
+    <string name="flags">Επισημάνσεις</string>
+    <string name="read">Ανάγνωση</string>
+    <string name="no_configurations">Καμία διαμόρφωση</string>
+    <string name="about">Σχετικά</string>
+    <string name="data_size">Δεδομένα</string>
+    <string name="date_installed">Ημερομηνία εγκατάστασης</string>
+    <string name="date_updated">Ημερομηνία ενημέρωσης</string>
+    <string name="installer_app">Εφαρμογή εγκατάστασης</string>
+    <string name="create_shortcut">Δημιουργία Συντόμευσης</string>
+    <string name="license">Άδεια</string>
+    <string name="third_party">Βιβλιοθήκες και Εικονίδια τρίτου μέρους</string>
+    <plurals name="two_trackers_and_classes">
+        <item quantity="one">2 ανιχνευτές με <xliff:g id="class_no" example="50">%1$d</xliff:g> κλάσεις</item>
+        <item quantity="other">2 ανιχνευτές με <xliff:g id="class_no" example="50">%1$d</xliff:g> κλάσεις</item>
+    </plurals>
+    <plurals name="usage_months">
+        <item quantity="one">%1$d μήνας</item>
+        <item quantity="other">%1$d μήνες</item>
+    </plurals>
+    <plurals name="usage_days">
+        <item quantity="one">%1$d μέρα</item>
+        <item quantity="other">%1$d μέρες</item>
+    </plurals>
+    <plurals name="usage_hours">
+        <item quantity="one">%1$d ώρα</item>
+        <item quantity="other">%1$d ώρες</item>
+    </plurals>
+    <plurals name="usage_minutes">
+        <item quantity="one">%1$d λεπτό</item>
+        <item quantity="other">%1$d λεπτά</item>
+    </plurals>
+    <plurals name="usage_seconds">
+        <item quantity="one">%1$d δλ</item>
+        <item quantity="other">%1$d δλ</item>
+    </plurals>
+    <string name="failed_to_stop">Δε σταμάτησε <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="storage_and_cache">Χώρος αποθήκευσης και Κρυφή μνήμη</string>
+    <string name="total_size">Σύνολο</string>
+    <string name="app_size">Εφαρμογή</string>
+    <string name="grant_usage_acess_message">Χρησιμοποιείται για εμφάνιση πληροφορίων χρήσης εφαρμογής.</string>
+    <string name="share_apk">Κοινοποίηση APK</string>
+    <string name="failed_to_extract_apk_file">Δεν ήταν δυνατή η εξαγωγή αρχείου APK</string>
+    <string name="menu_remove_rules">Αφαίρεση κανόνων</string>
+    <string name="menu_apply_rules">Εφαρμογή κανόνων</string>
+    <string name="search">Αναζήτηση</string>
+    <string name="dev_protected_data_dir">Φάκελος Δεδομένων προστατευόμενων απ\' τη συσκευή</string>
+    <string name="process_name">Όνομα Διεργασίας</string>
+    <string name="no_code">Χωρίς κώδικα</string>
+    <string name="requested_large_heap">Μεγάλος σωρός</string>
+    <string name="updated_app">Ενημερωμένο</string>
+    <string name="debuggable">Δυνατότητα εντοπισμού σφαλμάτων</string>
+    <string name="test_only">Μόνο για τεστ</string>
+    <string name="databases">Βάσεις δεδομένων</string>
+    <string name="discard">Απόρριψη</string>
+    <string name="delete">Διαγραφή</string>
+    <string name="deleted_successfully">Διαγράφηκε</string>
+    <string name="deletion_failed">Η διαγραφή απέτυχε</string>
+    <string name="saved_successfully">Αποθηκεύτηκε</string>
+    <string name="saving_failed">Η αποθήκευση απέτυχε, προσπαθήστε ξανά.</string>
+    <string name="integer_value">Τιμή ακεραίου</string>
+    <string name="decimal_value">Τιμή δεκαδικού</string>
+    <string name="boolean_value">δυαδική τιμή</string>
+    <string name="key_name">Όνομα Κλειδιού</string>
+    <string name="select_type">Επιλογή τύπου</string>
+    <string name="done">Έγινε</string>
+    <string name="type_boolean">Αληθής/ψευδής</string>
+    <string name="type_float">Δεκαδικός Αριθμός</string>
+    <string name="type_int">Ακέραιος</string>
+    <string name="type_long">Μεγάλος ακέραιος</string>
+    <string name="error_evaluating_input">Δεν είναι δυνατή η εκτίμηση της εισόδου</string>
+    <string name="disabled_app">Απενεργοποιήθηκε</string>
+    <string name="no_usage_in_this_time_range">Καμία χρήση αυτό το χρονικό διάστημα</string>
+    <string name="view_in_settings">Εμφάνιση στις Ρυθμίσεις</string>
+    <string name="uninstall_app_message">Θέλετε να απεγκαταστήσετε την εφαρμογή;</string>
+    <string name="failed_to_uninstall_app">Η απεγκατάσταση απέτυχε</string>
+    <string name="uninstalled_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> έχει απεγκατασταθεί.</string>
+    <string name="stopped">Σταμάτησε</string>
+    <string name="disable">Απενεργοποίηση</string>
+    <string name="enable">Ενεργοποίηση</string>
+    <string name="credits">Εύσημα</string>
+    <string name="credits_message">Στους δημιουργούς των
+\n- The Android Open Source Project
+\n- <a href="https://github.com/zhaobozhen/libraries">Absinthe\'s libraries</a>
+\n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
+\n- <a href="https://github.com/zhaobao/AppsMonitor">AppsMonitor</a>
+\n- <a href="https://github.com/8enet/AppOpsX">AppOpsX</a>
+\n- <a href="https://github.com/gabrielemariotti/changeloglib">ChangeLog Library</a>
+\n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a>
+\n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a>
+\n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
+\n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a>
+\n- <a href="https://github.com/topjohnwu/Magisk">Magisk</a>
+\n- <a href="https://github.com/zhanghai/MaterialFiles">Material Files</a>
+\n- <a href="https://github.com/pluscubed/matlog">MatLog</a>
+\n- <a href="https://github.com/matrix-org/matrix-android-sdk">Matrix Android SDK</a>
+\n- <a href="https://github.com/jensstein/oandbackup">OAndBackup</a>
+\n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a>
+\n- <a href="https://github.com/Aefyr/SAI">SAI</a>
+\n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
+\nΕύσημα αρχικού λογότυπου: <a href="https://github.com/Atrate">Atrate</a>. </string>
+    <string name="word_wrap">Επιλογή αναδίπλωσης λέξης</string>
+    <string name="class_viewer">Προβολέας Κλάσης</string>
+    <string name="toggle_class_listing">Επιλογή Απαρίθμησης Κλάσεων</string>
+    <string name="found_trackers">Βρέθηκαν Ανιχνευτές:</string>
+    <string name="force_stop">Επιβολή διακοπής</string>
+</resources>
