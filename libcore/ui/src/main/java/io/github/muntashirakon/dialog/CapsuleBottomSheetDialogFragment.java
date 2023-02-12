@@ -89,6 +89,10 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
         return mBody;
     }
 
+    public BottomSheetBehavior<FrameLayout> getBehavior() {
+        return mBehavior;
+    }
+
     @MainThread
     @NonNull
     public abstract View initRootView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState);

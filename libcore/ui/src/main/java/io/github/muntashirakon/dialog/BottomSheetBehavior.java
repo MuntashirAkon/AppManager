@@ -65,6 +65,7 @@ import com.google.android.material.shape.ShapeAppearanceModel;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -1558,7 +1559,30 @@ public class BottomSheetBehavior<V extends View> extends CoordinatorLayout.Behav
             return view;
         }
         // BEGIN AppManager-changed: Fix for ViewPagers
-        if (view instanceof ViewPager || view instanceof ViewPager2) {
+        if (view instanceof ViewPager) {
+            ViewPager viewPager = (ViewPager) view;
+            for (int i = 0; i < viewPager.getChildCount(); ++i) {
+                View child = viewPager.getChildAt(i);
+                ViewPager.LayoutParams lp = (ViewPager.LayoutParams) child.getLayoutParams();
+                if (!lp.isDecor) {
+                    try {
+                        Field positionField = ViewPager.LayoutParams.class.getDeclaredField("position");
+                        positionField.setAccessible(true);
+                        int position = positionField.getInt(lp);
+                        if (position == viewPager.getCurrentItem()) {
+                            View scrollingChild = findScrollingChild(child);
+                            if (scrollingChild != null) {
+                                return scrollingChild;
+                            }
+                        }
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
+        }
+        if (view instanceof ViewPager2) {
+            // FIXME: 13/2/23 This might not work as expected
             View currentViewPagerChild = ((ViewGroup) view).getFocusedChild();
             if (currentViewPagerChild != null) {
                 View scrollingChild = findScrollingChild(currentViewPagerChild);

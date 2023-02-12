@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -42,6 +43,7 @@ import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.UserInfo;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.StoragePermission;
+import io.github.muntashirakon.dialog.BottomSheetBehavior;
 import io.github.muntashirakon.dialog.CapsuleBottomSheetDialogFragment;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
@@ -264,6 +266,7 @@ public class BackupRestoreDialogFragment extends CapsuleBottomSheetDialogFragmen
         mTabFragments[1] = RestoreMultipleFragment.getInstance();
         ViewPager viewPager = getBody().findViewById(R.id.pager);
         TabLayout tabLayout = getBody().findViewById(R.id.tab_layout);
+        viewPager.setOnPageChangeListener(new ViewPagerUpdateScrollingChildListener(viewPager, getBehavior()));
         viewPager.setVisibility(View.VISIBLE);
         finishLoading();
         viewPager.setAdapter(new BackupDialogFragmentPagerAdapter(this));
@@ -306,6 +309,7 @@ public class BackupRestoreDialogFragment extends CapsuleBottomSheetDialogFragmen
         mTabFragments[1] = RestoreSingleFragment.getInstance();
         ViewPager viewPager = getBody().findViewById(R.id.pager);
         TabLayout tabLayout = getBody().findViewById(R.id.tab_layout);
+        viewPager.setOnPageChangeListener(new ViewPagerUpdateScrollingChildListener(viewPager, getBehavior()));
         viewPager.setVisibility(View.VISIBLE);
         finishLoading();
         viewPager.setAdapter(new BackupDialogFragmentPagerAdapter(this));
@@ -399,6 +403,21 @@ public class BackupRestoreDialogFragment extends CapsuleBottomSheetDialogFragmen
         @Override
         public CharSequence getPageTitle(int position) {
             return mTabTitles.getText(position);
+        }
+    }
+
+    private static class ViewPagerUpdateScrollingChildListener extends ViewPager.SimpleOnPageChangeListener {
+        private final ViewPager mViewPager;
+        private final BottomSheetBehavior<FrameLayout> mBehavior;
+
+        private ViewPagerUpdateScrollingChildListener(ViewPager viewPager, BottomSheetBehavior<FrameLayout> behavior) {
+            mViewPager = viewPager;
+            mBehavior = behavior;
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            mViewPager.post(mBehavior::updateScrollingChild);
         }
     }
 }

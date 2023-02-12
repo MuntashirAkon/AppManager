@@ -11,18 +11,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <io.github.muntashirakon.widget.ViewPagerNoTouchIntercept
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/pager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="gone"
         android:overScrollMode="never"
         tools:visibility="visible">
-
-        <!-- Dummy nested scroll view to prevent unwanted behaviour, see material-components-android#373 -->
-        <io.github.muntashirakon.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
 
         <com.google.android.material.tabs.TabLayout
             style="@style/Widget.Material3.TabLayout.OnSurface"
@@ -48,7 +43,7 @@
 
         </com.google.android.material.tabs.TabLayout>
 
-    </io.github.muntashirakon.widget.ViewPagerNoTouchIntercept>
+    </androidx.viewpager.widget.ViewPager>
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/message"
