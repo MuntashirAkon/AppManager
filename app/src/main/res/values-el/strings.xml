@@ -220,4 +220,16 @@
     <string name="toggle_class_listing">Επιλογή Απαρίθμησης Κλάσεων</string>
     <string name="found_trackers">Βρέθηκαν Ανιχνευτές:</string>
     <string name="force_stop">Επιβολή διακοπής</string>
+    <string name="usage_access">Πρόσβαση χρήσης</string>
+    <string name="app_ops">App Ops</string>
+    <string name="no_app_ops">Χωρίς ενέργειες εφαρμογής</string>
+    <string name="failed_to_enable_op">Δεν ήταν δυνατή η ενεργοποίηση ενέργειας της εφαρμογής</string>
+    <string name="failed_to_disable_op">Δεν ήταν δυνατή η απενεργοποίηση της ενέργειας της εφαρμογής</string>
+    <string name="rules_not_applied">Οι κανόνες δεν εφαρμόζονται</string>
+    <string name="str_logo">Λογότυπο</string>
+    <string name="pref_global_blocking_enabled">Άμεσος αποκλεισμός στοιχείου</string>
+    <string name="pref_global_blocking_enabled_msg">Επιτρέπει τον αποκλεισμό οποιοδήποτε στοιχείου οποιασδήποτε εφαρμογής χωρίς να αποκλείσει την εφαρμογή.</string>
+    <string name="app_settings">Ρυθμίσεις</string>
+    <string name="usage_yesterday">Χθές</string>
+    <string name="long_integer_value">Τιμή μεγάλου ακεραίου</string>
 </resources>
