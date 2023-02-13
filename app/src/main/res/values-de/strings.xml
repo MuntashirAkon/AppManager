@@ -1243,4 +1243,41 @@
     <string name="tap_to_freeze_app">Antippen zum Einfrieren</string>
     <string name="waiting_for_the_phone_to_be_locked">Warten, bis das Telefon gesperrt wird …</string>
     <string name="file_change_open_with">Wechseln zu öffnen mit</string>
+    <string name="renamed_successfully">Umbenannt</string>
+    <string name="calculating_file_size">Berechne …</string>
+    <string name="sort_by_filename">Name</string>
+    <string name="funding_campaign_dialog_message">Wir unternehmen eine <b>Spendenaktion</b> für den App Manager für einen begrenzten Zeitraum. Besuche <a href="https://opencollective.com/app-manager#category-ABOUT">opencollective.com/app-manager</a>, um mehr über die Aktion zu erfahren. Diese Benachrichtigung wird nicht mehr angezeigt, aber du kannst sie in der Einstellungsseite während des gesamten Spendenaktionszeitraums finden.</string>
+    <string name="sort_by_data_usage">Datenbenutzung</string>
+    <string name="filter_apps_with_keystore">Mit KeyStore</string>
+    <string name="filter_apps_with_saf">Mit SAF</string>
+    <string name="filter_apps_with_ssaid">Mit SSAID</string>
+    <string name="action_continue">Weiter</string>
+    <string name="install_for_another_user">Installieren für …</string>
+    <string name="confirm_uninstallation">Deinstallation bestätigen</string>
+    <string name="grant_required_permission">Die erforderliche Berechtigung gewähren</string>
+    <string name="grant_overlay_permission_message">App Manager erlauben, ein schwebendes Fenster über allen anderen Fenstern anzuzeigen</string>
+    <string name="grant_accessibility_permission_for_tracking_window_contents">App Manager erlauben, die Bedienungshilfefunktion zu benutzen, um die Inhalte des Hauptfensters zu verfolgen.</string>
+    <string name="class_hierarchy">Hierarchie</string>
+    <string name="title_ui_tracker">UI-Tracker</string>
+    <string name="title_terminal_emulator">Terminal</string>
+    <string name="title_labs_activity">Labor</string>
+    <string name="app_manager_build_expired">Aktualisierung erfordert</string>
+    <string name="app_manager_build_expired_message">Um die Sicherheit Ihres Gerätes und Ihrer Daten zu gewährleisten, wurde die von Ihnen benutzte Version des App-Managers zurückgezogen. Sie müssen ihn auf die neueste Version aktualisieren, um ihn weiterhin benutzen zu können, oder ihn deinstallieren, wenn keine Aktualisierung verfügbar ist.</string>
+    <string name="app_manager_build_expiring_soon_warning">Diese Version des App Managers wird bald ablaufen. Bitte aktualisieren Sie ihn auf die neueste Version.</string>
+    <string name="selinux_context">SELinux-Kontext</string>
+    <string name="unix_file_permissions">Modus</string>
+    <string name="file_group_id">Gruppe (GID)</string>
+    <string name="file_owner_id">Besitzer (UID)</string>
+    <string name="sort_by_last_modified">Zuletzt verändert</string>
+    <string name="sort_by_file_size">Dateigröße</string>
+    <string name="sort_by_file_type">Dateityp</string>
+    <string name="option_display_folders_on_top">Ordner oben</string>
+    <string name="export_app_list">App-Liste exportieren</string>
+    <string name="export_app_list_select_format">Format für den Export der App-Liste auswählen</string>
+    <string name="export_option_xml">XML</string>
+    <string name="export_option_markdown">Markdown</string>
+    <string name="option_display_dot_files">Dotfiles</string>
+    <string name="funding_campaign_text">Wir unternehmen gerade eine <b>Spendenaktion</b> für den App Manager für einen begrenzten Zeitraum. <a href="https://opencollective.com/app-manager#category-ABOUT">mehr erfahren …</a></string>
+    <string name="adb_incomplete_usb_debugging_title">Unvollständiges USB-Debugging</string>
+    <string name="adb_incomplete_usb_debugging_message">Es scheint, dass USB-Debugging nicht korrekt eingestellt ist. Bitte lies <a href="https://muntashirakon.github.io/AppManager/#subsec:enable-usb-debugging">die englische Dokumentation</a> für weitere Schritte. Wenn du schon weißt, wie es geht, tippe auf „Öffnen“, um die Entwickleroptionen zu öffnen, oder „Schließen“, um weiterhin den Nicht-Root-Modus zu benutzen.</string>
 </resources>
