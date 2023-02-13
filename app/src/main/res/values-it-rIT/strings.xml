@@ -1281,4 +1281,42 @@
     <string name="tap_to_freeze_app">Tocca per congelare</string>
     <string name="waiting_for_the_phone_to_be_locked">Aspettando che il telefono venga bloccato…</string>
     <string name="action_stop_service">Stop</string>
+    <string name="app_can_write_and_execute_in_same_place">L\'app viola la <a href="https://en.wikipedia.org/wiki/W%5EX">W^X policy</a> ed è in grado di scrivere ed eseguire nella stessa directory o nella stessa porzione di memoria. Ciò consente l\'esecuzione di eseguibili arbitrari modificando gli eseguibili incorporati nell\'app o scaricandoli da Internet. A meno che questo non sia il comportamento previsto dell\'app (ad es. emulatori di terminale), si consiglia di trovare una versione più recente dell\'app destinata all\'SDK 29 (Android 10) e versioni successive o di trovare alternative.</string>
+    <string name="sort_by_data_usage">Utilizzo dati</string>
+    <string name="filter_apps_with_keystore">Con KeyStore</string>
+    <string name="filter_apps_with_saf">Con SAF</string>
+    <string name="filter_apps_with_ssaid">Con SSAID</string>
+    <string name="action_continue">Continua</string>
+    <string name="install_for_another_user">Installa per…</string>
+    <string name="confirm_uninstallation">Conferma disinstallazione</string>
+    <string name="grant_required_permission">Concedi l\'autorizzazione richiesta</string>
+    <string name="grant_overlay_permission_message">Consenti a App Manager di visualizzare una finestra mobile sopra tutte le altre finestre</string>
+    <string name="grant_accessibility_permission_for_tracking_window_contents">Consenti a App Manager di utilizzare la funzione di accessibilità per tenere traccia dei contenuti della finestra principale.</string>
+    <string name="class_hierarchy">Gerarchia</string>
+    <string name="title_ui_tracker">Tracciamento UI</string>
+    <string name="title_terminal_emulator">Terminale</string>
+    <string name="title_labs_activity">Laboratori</string>
+    <string name="app_manager_build_expired">Aggiornamento richiesto</string>
+    <string name="app_manager_build_expired_message">Per garantire la sicurezza del tuo dispositivo e dei tuoi dati, la versione di App Manager che stai utilizzando è stata ritirata. Devi aggiornarlo all\'ultima versione per continuare a usarlo o disinstallarlo se non è disponibile alcun aggiornamento.</string>
+    <string name="app_manager_build_expiring_soon_warning">Questa versione di App Manager scadrà molto presto. Si prega di aggiornarlo all\'ultima versione.</string>
+    <string name="renamed_successfully">Rinominato</string>
+    <string name="selinux_context">Contesto SELinux</string>
+    <string name="unix_file_permissions">Modalità</string>
+    <string name="file_group_id">Gruppo (GID)</string>
+    <string name="file_owner_id">Proprietario (UID)</string>
+    <string name="calculating_file_size">Calcolo in corso…</string>
+    <string name="sort_by_filename">Nome</string>
+    <string name="sort_by_last_modified">Ultima modifica</string>
+    <string name="sort_by_file_size">Dimensione file</string>
+    <string name="sort_by_file_type">Tipo file</string>
+    <string name="option_display_folders_on_top">Cartelle in alto</string>
+    <string name="export_app_list">Esporta elenco app</string>
+    <string name="export_app_list_select_format">Seleziona il formato per l\'esportazione dell\'elenco delle app</string>
+    <string name="export_option_xml">XML</string>
+    <string name="export_option_markdown">Contrassegno</string>
+    <string name="funding_campaign_dialog_message">Stiamo pubblicando una <b>campagna di finanziamento</b> per App Manager per un periodo limitato. Visita <a href="https://opencollective.com/app-manager#category-ABOUT">opencollective.com/app-manager</a> per saperne di più sulla campagna. Questo avviso non verrà più visualizzato, ma puoi trovarlo nella pagina Impostazioni durante l\'intera campagna.</string>
+    <string name="funding_campaign_text">Stiamo pubblicando una <b>campagna di finanziamento</b> per App Manager per un periodo limitato. <a href="https://opencollective.com/app-manager#category-ABOUT">scopri di più…</a></string>
+    <string name="option_display_dot_files">File di punti</string>
+    <string name="adb_incomplete_usb_debugging_title">Debug USB incompleto</string>
+    <string name="adb_incomplete_usb_debugging_message">Sembra che il debug USB non sia configurato correttamente. Si prega di leggere <a href="https://muntashirakon.github.io/AppManager/#subsec:enable-usb-debugging">la documentazione</a> per ulteriori passaggi. Se conosci già i passaggi, fai clic su \"Apri\" per aprire le opzioni sviluppatore oppure fai clic su \"Chiudi\" per continuare a utilizzare la modalità no-root.</string>
 </resources>
