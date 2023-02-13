@@ -33,6 +33,11 @@ public class AuthFeatureDemultiplexer extends BaseActivity {
         handleRequest(intent);
     }
 
+    @Override
+    protected boolean getTransparentBackground() {
+        return true;
+    }
+
     private void handleRequest(@NonNull Intent intent) {
         String auth = intent.getStringExtra(EXTRA_AUTH);
         String feature = intent.getStringExtra(EXTRA_FEATURE);

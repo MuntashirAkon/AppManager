@@ -92,6 +92,11 @@ public class FreezeUnfreezeActivity extends BaseActivity {
     }
 
     @Override
+    protected boolean getTransparentBackground() {
+        return true;
+    }
+
+    @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         if (!Ops.isPrivileged()) {

@@ -29,7 +29,7 @@ public final class LangUtils {
 
     private static ArrayMap<String, Locale> sLocaleMap;
 
-    public static void setAppLanguages(@NonNull Context context) {
+    private static void loadAppLanguages(@NonNull Context context) {
         if (sLocaleMap == null) sLocaleMap = new ArrayMap<>();
         Resources res = context.getResources();
         Configuration conf = res.getConfiguration();
@@ -51,15 +51,14 @@ public final class LangUtils {
 
     @NonNull
     public static ArrayMap<String, Locale> getAppLanguages(@NonNull Context context) {
-        if (sLocaleMap == null) setAppLanguages(context);
+        if (sLocaleMap == null) loadAppLanguages(context);
         return sLocaleMap;
     }
 
     @NonNull
     public static Locale getFromPreference(@NonNull Context context) {
         String language = AppPref.getLanguage(context);
-        getAppLanguages(context);
-        Locale locale = sLocaleMap.get(language);
+        Locale locale = getAppLanguages(context).get(language);
         if (locale != null) {
             return locale;
         }

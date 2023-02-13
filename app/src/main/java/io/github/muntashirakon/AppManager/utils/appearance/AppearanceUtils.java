@@ -46,6 +46,10 @@ public final class AppearanceUtils {
 
         @Override
         public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
+        }
+
+        @Override
+        public void onActivityPostCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
             mLastLocales.put(activity.hashCode(), LangUtils.applyLocaleToActivity(activity));
             mLastLayoutDirection.put(activity.hashCode(), AppPref.getLayoutOrientation());
             mLastAppTheme.put(activity.hashCode(), AppPref.isPureBlackTheme());
@@ -55,20 +59,27 @@ public final class AppearanceUtils {
         }
 
         @Override
-        public void onActivityStarted(@NonNull Activity activity) {
+        public void onActivityPreStarted(@NonNull Activity activity) {
+            boolean recreationNeeded = false;
             if (!Objects.equals(mLastLocales.get(activity.hashCode()), LangUtils.getFromPreference(activity))) {
                 Log.d(TAG, "Locale changed in activity " + activity.getComponentName());
-                ActivityCompat.recreate(activity);
-                return;
+                recreationNeeded = true;
             }
             if (!Objects.equals(mLastLayoutDirection.get(activity.hashCode()), AppPref.getLayoutOrientation())) {
                 Log.d(TAG, "Layout orientation changed in activity " + activity.getComponentName());
-                ActivityCompat.recreate(activity);
+                recreationNeeded = true;
             }
             if (!Objects.equals(mLastAppTheme.get(activity.hashCode()), AppPref.isPureBlackTheme())) {
                 Log.d(TAG, "App theme changed in activity " + activity.getComponentName());
+                recreationNeeded = true;
+            }
+            if (recreationNeeded) {
                 ActivityCompat.recreate(activity);
             }
+        }
+
+        @Override
+        public void onActivityStarted(@NonNull Activity activity) {
         }
 
         @Override
@@ -88,10 +99,14 @@ public final class AppearanceUtils {
         }
 
         @Override
-        public void onActivityDestroyed(@NonNull Activity activity) {
+        public void onActivityPreDestroyed(@NonNull Activity activity) {
             mLastLocales.delete(activity.hashCode());
             mLastLayoutDirection.delete(activity.hashCode());
             mLastAppTheme.delete(activity.hashCode());
+        }
+
+        @Override
+        public void onActivityDestroyed(@NonNull Activity activity) {
         }
     }
 

@@ -31,6 +31,11 @@ public class LeadingActivityTrackerActivity extends BaseActivity {
         init();
     }
 
+    @Override
+    protected boolean getTransparentBackground() {
+        return true;
+    }
+
     private void init() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
             new MaterialAlertDialogBuilder(this)
