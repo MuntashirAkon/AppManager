@@ -904,7 +904,7 @@
     <string name="notification_title">正在記錄日誌</string>
     <string name="notification_ticker">日誌錄製開始</string>
     <string name="notification_subtext">按一下即可停止錄製</string>
-    <string name="no_saved_logs">找不到已儲存的日誌。</string>
+    <string name="no_saved_logs">找不到已儲存的記錄。</string>
     <string name="manage_saved_logs">管理已儲存的日誌</string>
     <string name="log_saved">已儲存日誌。</string>
     <string name="log_recording_started">日誌錄製已開始。</string>
@@ -1133,7 +1133,7 @@
     <string name="pref_reload_apps">重新載入應用程式</string>
     <string name="pref_reload_apps_msg">重新載入儲存在 App Manager 資料庫中的應用程式清單，以防出現意外行為。</string>
     <string name="changelog_type_new">新增功能</string>
-    <string name="changelog_type_fix">修復</string>
+    <string name="changelog_type_fix">修正</string>
     <string name="changelog_type_improve">改進</string>
     <string name="restore_dots">還原…</string>
     <string name="unsupported_split_apk">不支援</string>
@@ -1150,4 +1150,51 @@
     <string name="am_command"><tt>am</tt> 命令</string>
     <string name="pref_sign_apk_error_signing_key_not_added">簽署 APK 檔案需要一個有效的簽署金鑰。</string>
     <string name="pref_sign_apk_no_signing_key">沒有簽署金鑰</string>
+    <string name="freeze_unfreeze">凍結/解凍</string>
+    <string name="profile_freeze_msg">基於狀態凍結或解凍應用程式</string>
+    <string name="hide_app">隱藏</string>
+    <string name="failed_to_freeze">無法凍結 <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="failed_to_unfreeze">無法解凍 <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="pref_default_freezing_method">預設凍結方法</string>
+    <plurals name="alert_failed_to_unfreeze">
+        <item quantity="other">無法解凍 %1$d 個應用程式</item>
+    </plurals>
+    <string name="fm_open_with_for_this_file_only">僅對此檔案</string>
+    <string name="file_creation_date">建立日期</string>
+    <string name="file_modification_date">修改日期</string>
+    <string name="file_accessed_date">存取日期</string>
+    <string name="file_open_with">開啟方式</string>
+    <string name="file_change_open_with">變更開啟方式</string>
+    <string name="fm_always_open_with">一律開啟</string>
+    <string name="file_open_as">開啟為…</string>
+    <string name="file_open_with_custom_activity">自訂</string>
+    <string name="file_properties">內容</string>
+    <string name="file_cut">剪下</string>
+    <string name="open_as_archive">壓縮檔</string>
+    <string name="open_as_text">文字</string>
+    <string name="open_as_folder">資料夾</string>
+    <string name="file_open_with_os_default_dialog">使用作業系統預設對話方塊開啟</string>
+    <string name="open_as_image">圖片</string>
+    <string name="open_as_video">影片</string>
+    <string name="open_as_other">其他</string>
+    <string name="delete_filename">刪除 %s</string>
+    <string name="on_unfreeze_open_application">解凍後開啟應用程式</string>
+    <string name="action_stop_service">停止</string>
+    <plurals name="alert_failed_to_freeze">
+        <item quantity="other">無法凍結 %1$d 個應用程式</item>
+    </plurals>
+    <string name="pref_privacy">隱私權</string>
+    <string name="pref_privacy_description">螢幕鎖定、授權等。</string>
+    <string name="user_manual">使用者手冊</string>
+    <string name="get_help">取得說明</string>
+    <string name="pref_version_changelog">版本/變更記錄</string>
+    <string name="file_shortcut_target_file">目標檔案</string>
+    <string name="confirm_file_deletion">確定，刪除</string>
+    <string name="tap_to_freeze_app">輕觸以凍結</string>
+    <string name="app_manager_build_expired">需要更新</string>
+    <string name="renamed_successfully">已重新命名</string>
+    <string name="selinux_context"></string>
+    <string name="unix_file_permissions">模式</string>
+    <string name="sort_by_file_size">檔案大小</string>
+    <string name="sort_by_file_type">檔案類型</string>
 </resources>
