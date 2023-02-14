@@ -2,6 +2,13 @@
 
 package io.github.muntashirakon.AppManager.utils;
 
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getBoldString;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getColoredText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getMonospacedText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getPrimaryText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getStyledKeyValue;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getTitleText;
+
 import android.annotation.SuppressLint;
 import android.annotation.UserIdInt;
 import android.app.usage.IStorageStatsManager;
@@ -67,9 +74,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.signing.SignerInfo;
-import io.github.muntashirakon.AppManager.appops.AppOpsManager;
-import io.github.muntashirakon.AppManager.appops.AppOpsService;
-import io.github.muntashirakon.AppManager.backup.BackupUtils;
+import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.db.entity.App;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
@@ -91,13 +96,6 @@ import io.github.muntashirakon.io.ExtendedFile;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.io.UidGidPair;
-
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getBoldString;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getColoredText;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getMonospacedText;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getPrimaryText;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getStyledKeyValue;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getTitleText;
 
 public final class PackageUtils {
     public static final String TAG = PackageUtils.class.getSimpleName();
@@ -405,11 +403,11 @@ public final class PackageUtils {
     @NonNull
     public static Collection<Integer> getFilteredAppOps(String packageName, @UserIdInt int userHandle, @NonNull int[] appOps, int mode) {
         List<Integer> filteredAppOps = new ArrayList<>();
-        AppOpsService appOpsService = new AppOpsService();
+        AppOpsManagerCompat appOpsManager = new AppOpsManagerCompat(ContextUtils.getContext());
         int uid = PackageUtils.getAppUid(new UserPackagePair(packageName, userHandle));
         for (int appOp : appOps) {
             try {
-                if (appOpsService.checkOperation(appOp, uid, packageName) != mode) {
+                if (appOpsManager.checkOperation(appOp, uid, packageName) != mode) {
                     filteredAppOps.add(appOp);
                 }
             } catch (Exception e) {
@@ -592,40 +590,10 @@ public final class PackageUtils {
     }
 
     @NonNull
-    public static List<Integer> getAppOpModes() {
-        List<Integer> appOpModes = new ArrayList<>();
-        appOpModes.add(AppOpsManager.MODE_ALLOWED);
-        appOpModes.add(AppOpsManager.MODE_IGNORED);
-        appOpModes.add(AppOpsManager.MODE_ERRORED);
-        appOpModes.add(AppOpsManager.MODE_DEFAULT);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            appOpModes.add(AppOpsManager.MODE_FOREGROUND);
-        }
-        if (MiuiUtils.isMiui()) {
-            appOpModes.add(AppOpsManager.MODE_ASK);
-        }
-        return appOpModes;
-    }
-
-    @NonNull
-    public static List<Integer> getAppOps() {
-        List<Integer> appOps = new ArrayList<>();
-        for (int i = 0; i < AppOpsManager._NUM_OP; ++i) {
-            appOps.add(i);
-        }
-        if (MiuiUtils.isMiui()) {
-            for (int op = AppOpsManager.MIUI_OP_START + 1; op < AppOpsManager.MIUI_OP_END; ++op) {
-                appOps.add(op);
-            }
-        }
-        return appOps;
-    }
-
-    @NonNull
     public static CharSequence[] getAppOpModeNames(@NonNull List<Integer> appOpModes) {
         CharSequence[] appOpModeNames = new CharSequence[appOpModes.size()];
         for (int i = 0; i < appOpModes.size(); ++i) {
-            appOpModeNames[i] = AppOpsManager.modeToName(appOpModes.get(i));
+            appOpModeNames[i] = AppOpsManagerCompat.modeToName(appOpModes.get(i));
         }
         return appOpModeNames;
     }
@@ -634,7 +602,7 @@ public final class PackageUtils {
     public static CharSequence[] getAppOpNames(@NonNull List<Integer> appOps) {
         CharSequence[] appOpNames = new CharSequence[appOps.size()];
         for (int i = 0; i < appOps.size(); ++i) {
-            appOpNames[i] = AppOpsManager.opToName(appOps.get(i));
+            appOpNames[i] = AppOpsManagerCompat.opToName(appOps.get(i));
         }
         return appOpNames;
     }

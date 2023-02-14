@@ -3,6 +3,7 @@
 package io.github.muntashirakon.AppManager.batchops;
 
 import android.annotation.UserIdInt;
+import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -35,16 +36,13 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.accessibility.AccessibilityMultiplexer;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
-import io.github.muntashirakon.AppManager.appops.AppOpsManager;
-import io.github.muntashirakon.AppManager.appops.AppOpsService;
-import io.github.muntashirakon.AppManager.appops.AppOpsUtils;
-import io.github.muntashirakon.AppManager.appops.OpEntry;
 import io.github.muntashirakon.AppManager.backup.BackupException;
 import io.github.muntashirakon.AppManager.backup.BackupManager;
 import io.github.muntashirakon.AppManager.backup.convert.ConvertUtils;
 import io.github.muntashirakon.AppManager.backup.convert.Converter;
 import io.github.muntashirakon.AppManager.backup.convert.ImportType;
 import io.github.muntashirakon.AppManager.backup.dialog.BackupRestoreDialogFragment;
+import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat.NetPolicy;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
@@ -57,6 +55,7 @@ import io.github.muntashirakon.AppManager.rules.compontents.ExternalComponentsIm
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -474,16 +473,16 @@ public class BatchOpsManager {
     private Result opDisableBackground() {
         List<UserPackagePair> failedPackages = new ArrayList<>();
         List<UserPackagePair> appliedPackages = new ArrayList<>();
-        AppOpsService appOpsService = new AppOpsService();
+        AppOpsManagerCompat appOpsManager = new AppOpsManagerCompat(ContextUtils.getContext());
         for (UserPackagePair pair : userPackagePairs) {
             int uid = PackageUtils.getAppUid(pair);
             try {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    appOpsService.setMode(AppOpsManager.OP_RUN_IN_BACKGROUND, uid,
+                    appOpsManager.setMode(AppOpsManagerCompat.OP_RUN_IN_BACKGROUND, uid,
                             pair.getPackageName(), AppOpsManager.MODE_IGNORED);
                 }
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    appOpsService.setMode(AppOpsManager.OP_RUN_ANY_IN_BACKGROUND, uid,
+                    appOpsManager.setMode(AppOpsManagerCompat.OP_RUN_ANY_IN_BACKGROUND, uid,
                             pair.getPackageName(), AppOpsManager.MODE_IGNORED);
                 }
                 appliedPackages.add(pair);
@@ -494,7 +493,12 @@ public class BatchOpsManager {
         }
         for (UserPackagePair pair : appliedPackages) {
             try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
-                cb.setAppOp(AppOpsManager.OP_RUN_IN_BACKGROUND, AppOpsManager.MODE_IGNORED);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    cb.setAppOp(AppOpsManagerCompat.OP_RUN_IN_BACKGROUND, AppOpsManager.MODE_IGNORED);
+                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                    cb.setAppOp(AppOpsManagerCompat.OP_RUN_ANY_IN_BACKGROUND, AppOpsManager.MODE_IGNORED);
+                }
             }
         }
         return new Result(failedPackages);
@@ -573,18 +577,20 @@ public class BatchOpsManager {
         int[] appOps = args.getIntArray(ARG_APP_OPS);
         int mode = args.getInt(ARG_APP_OP_MODE, AppOpsManager.MODE_IGNORED);
         List<UserPackagePair> failedPkgList = new ArrayList<>();
-        AppOpsService appOpsService = new AppOpsService();
-        if (appOps.length == 1 && appOps[0] == AppOpsManager.OP_NONE) {
+        AppOpsManagerCompat appOpsManager = new AppOpsManagerCompat(ContextUtils.getContext());
+        if (appOps.length == 1 && appOps[0] == AppOpsManagerCompat.OP_NONE) {
             // Wildcard detected
             for (UserPackagePair pair : userPackagePairs) {
                 try {
                     List<Integer> appOpList = new ArrayList<>();
                     ApplicationInfo info = PackageManagerCompat.getApplicationInfo(pair.getPackageName(), pair.getUserHandle(), 0);
-                    List<OpEntry> entries = AppOpsUtils.getChangedAppOps(appOpsService, info.packageName, info.uid);
-                    for (OpEntry entry : entries) {
+                    List<AppOpsManagerCompat.OpEntry> entries = AppOpsManagerCompat.getConfiguredOpsForPackage(
+                            appOpsManager, info.packageName, info.uid);
+                    for (AppOpsManagerCompat.OpEntry entry : entries) {
                         appOpList.add(entry.getOp());
                     }
-                    ExternalComponentsImporter.setModeToFilteredAppOps(appOpsService, pair, ArrayUtils.convertToIntArray(appOpList), mode);
+                    ExternalComponentsImporter.setModeToFilteredAppOps(appOpsManager, pair,
+                            ArrayUtils.convertToIntArray(appOpList), mode);
                 } catch (Exception e) {
                     log("====> op=SET_APP_OPS, pkg=" + pair, e);
                     failedPkgList.add(pair);
@@ -593,7 +599,7 @@ public class BatchOpsManager {
         } else {
             for (UserPackagePair pair : userPackagePairs) {
                 try {
-                    ExternalComponentsImporter.setModeToFilteredAppOps(appOpsService, pair, appOps, mode);
+                    ExternalComponentsImporter.setModeToFilteredAppOps(appOpsManager, pair, appOps, mode);
                 } catch (RemoteException e) {
                     log("====> op=SET_APP_OPS, pkg=" + pair, e);
                     failedPkgList.add(pair);

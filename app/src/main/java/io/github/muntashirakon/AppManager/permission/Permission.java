@@ -2,11 +2,6 @@
 
 package io.github.muntashirakon.AppManager.permission;
 
-import android.os.Build;
-
-import io.github.muntashirakon.AppManager.appops.AppOpsManager;
-import io.github.muntashirakon.AppManager.compat.PermissionCompat;
-
 import static io.github.muntashirakon.AppManager.compat.PermissionCompat.FLAG_PERMISSION_GRANTED_BY_DEFAULT;
 import static io.github.muntashirakon.AppManager.compat.PermissionCompat.FLAG_PERMISSION_POLICY_FIXED;
 import static io.github.muntashirakon.AppManager.compat.PermissionCompat.FLAG_PERMISSION_REVIEW_REQUIRED;
@@ -15,6 +10,11 @@ import static io.github.muntashirakon.AppManager.compat.PermissionCompat.FLAG_PE
 import static io.github.muntashirakon.AppManager.compat.PermissionCompat.FLAG_PERMISSION_SYSTEM_FIXED;
 import static io.github.muntashirakon.AppManager.compat.PermissionCompat.FLAG_PERMISSION_USER_FIXED;
 import static io.github.muntashirakon.AppManager.compat.PermissionCompat.FLAG_PERMISSION_USER_SET;
+
+import android.os.Build;
+
+import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
+import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 
 // Copyright (C) 2015 The Android Open Source Project
 public class Permission {
@@ -62,7 +62,7 @@ public class Permission {
     }
 
     public boolean hasAppOp() {
-        return mAppOp != AppOpsManager.OP_NONE;
+        return mAppOp != AppOpsManagerCompat.OP_NONE;
     }
 
     /**
@@ -74,7 +74,7 @@ public class Permission {
      * @return {@code true} if this permission affects app ops
      */
     public boolean affectsAppOp() {
-        return mAppOp != AppOpsManager.OP_NONE;
+        return mAppOp != AppOpsManagerCompat.OP_NONE;
     }
 
     public boolean isGranted() {

@@ -27,8 +27,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import io.github.muntashirakon.AppManager.appops.AppOpsManager;
-import io.github.muntashirakon.AppManager.appops.AppOpsService;
+import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.runner.Runner;
@@ -41,15 +40,15 @@ import io.github.muntashirakon.io.Paths;
  * Import components from external apps like Blocker, Watt
  */
 public class ExternalComponentsImporter {
-    public static void setModeToFilteredAppOps(@NonNull AppOpsService appOpsService,
+    public static void setModeToFilteredAppOps(@NonNull AppOpsManagerCompat appOpsManager,
                                                @NonNull UserPackagePair pair,
                                                int[] appOps,
-                                               @AppOpsManager.Mode int mode) throws RemoteException {
+                                               @AppOpsManagerCompat.Mode int mode) throws RemoteException {
         Collection<Integer> appOpList;
         appOpList = PackageUtils.getFilteredAppOps(pair.getPackageName(), pair.getUserHandle(), appOps, mode);
         try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(pair.getPackageName(), pair.getUserHandle())) {
             for (int appOp : appOpList) {
-                appOpsService.setMode(appOp, PackageUtils.getAppUid(pair), pair.getPackageName(), mode);
+                appOpsManager.setMode(appOp, PackageUtils.getAppUid(pair), pair.getPackageName(), mode);
                 cb.setAppOp(appOp, mode);
             }
             cb.applyRules(true);

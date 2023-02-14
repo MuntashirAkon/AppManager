@@ -2,11 +2,11 @@
 
 package io.github.muntashirakon.AppManager.rules.compontents;
 
-import static io.github.muntashirakon.AppManager.appops.AppOpsManager.OP_NONE;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagMatchUninstalled;
 
 import android.annotation.SuppressLint;
+import android.app.AppOpsManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.pm.PackageInfo;
@@ -28,8 +28,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import io.github.muntashirakon.AppManager.appops.AppOpsManager;
-import io.github.muntashirakon.AppManager.appops.AppOpsService;
+import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.permission.PermUtils;
@@ -43,6 +42,7 @@ import io.github.muntashirakon.AppManager.rules.struct.RuleEntry;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.io.AtomicExtendedFile;
 import io.github.muntashirakon.io.Paths;
@@ -482,11 +482,11 @@ public final class ComponentsBlocker extends RulesStorageManager {
         }
         boolean isSuccessful = true;
         int uid = mPackageInfo.applicationInfo.uid;
-        AppOpsService appOpsService = new AppOpsService();
+        AppOpsManagerCompat appOpsManager = new AppOpsManagerCompat(ContextUtils.getContext());
         // Apply all app ops
         for (AppOpRule appOp : getAll(AppOpRule.class)) {
             try {
-                appOpsService.setMode(appOp.getOp(), uid, packageName, appOp.getMode());
+                appOpsManager.setMode(appOp.getOp(), uid, packageName, appOp.getMode());
             } catch (Throwable e) {
                 isSuccessful = false;
                 Log.e(TAG, "Could not set mode " + appOp.getMode() + " for app op " + appOp.getOp(), e);
@@ -496,12 +496,12 @@ public final class ComponentsBlocker extends RulesStorageManager {
         for (PermissionRule permissionRule : getAll(PermissionRule.class)) {
             Permission permission = permissionRule.getPermission(true);
             try {
-                permission.setAppOpAllowed(permission.getAppOp() != OP_NONE && appOpsService
+                permission.setAppOpAllowed(permission.getAppOp() != AppOpsManagerCompat.OP_NONE && appOpsManager
                         .checkOperation(permission.getAppOp(), uid, packageName) == AppOpsManager.MODE_ALLOWED);
                 if (permission.isGranted()) {
-                    PermUtils.grantPermission(mPackageInfo, permission, appOpsService, true, true);
+                    PermUtils.grantPermission(mPackageInfo, permission, appOpsManager, true, true);
                 } else {
-                    PermUtils.revokePermission(mPackageInfo, permission, appOpsService, true);
+                    PermUtils.revokePermission(mPackageInfo, permission, appOpsManager, true);
                 }
             } catch (Throwable e) {
                 isSuccessful = false;

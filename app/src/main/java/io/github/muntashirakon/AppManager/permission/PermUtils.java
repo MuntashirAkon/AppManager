@@ -3,6 +3,7 @@
 package io.github.muntashirakon.AppManager.permission;
 
 import android.annotation.UserIdInt;
+import android.app.AppOpsManager;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.os.Build;
@@ -13,9 +14,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
-import io.github.muntashirakon.AppManager.appops.AppOpsManager;
-import io.github.muntashirakon.AppManager.appops.AppOpsService;
 import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
+import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.settings.Ops;
@@ -44,7 +44,7 @@ public class PermUtils {
     @WorkerThread
     public static void grantPermission(@NonNull PackageInfo packageInfo,
                                        @NonNull Permission permission,
-                                       @NonNull AppOpsService appOpsService,
+                                       @NonNull AppOpsManagerCompat appOpsManager,
                                        boolean setByTheUser,
                                        boolean fixedByTheUser)
             throws RemoteException, PermissionException {
@@ -121,7 +121,7 @@ public class PermUtils {
             }
         }
 
-        persistChanges(packageInfo.applicationInfo, permission, appOpsService, false, null);
+        persistChanges(packageInfo.applicationInfo, permission, appOpsManager, false, null);
 
         if (killApp) {
             ActivityManagerCompat.killUid(packageInfo.applicationInfo.uid, KILL_REASON_APP_OP_CHANGE);
@@ -138,7 +138,7 @@ public class PermUtils {
     @WorkerThread
     public static void revokePermission(@NonNull PackageInfo packageInfo,
                                         @NonNull Permission permission,
-                                        @NonNull AppOpsService appOpsService,
+                                        @NonNull AppOpsManagerCompat appOpsManager,
                                         boolean fixedByTheUser)
             throws RemoteException, PermissionException {
         boolean killApp = false;
@@ -198,7 +198,7 @@ public class PermUtils {
             }
         }
 
-        persistChanges(packageInfo.applicationInfo, permission, appOpsService, false, null);
+        persistChanges(packageInfo.applicationInfo, permission, appOpsManager, false, null);
 
         if (killApp) {
             ActivityManagerCompat.killUid(packageInfo.applicationInfo.uid, KILL_REASON_APP_OP_CHANGE);
@@ -208,7 +208,7 @@ public class PermUtils {
     @WorkerThread
     private static void persistChanges(@NonNull ApplicationInfo applicationInfo,
                                        @NonNull Permission permission,
-                                       @NonNull AppOpsService appOpsService,
+                                       @NonNull AppOpsManagerCompat appOpsManager,
                                        boolean mayKillBecauseOfAppOpsChange,
                                        @Nullable String revokeReason)
             throws RemoteException {
@@ -248,10 +248,10 @@ public class PermUtils {
                 // a handle to state it shouldn't have, so we have to kill the app. This matches
                 // the revoke runtime permission behavior.
                 if (permission.isAppOpAllowed()) {
-                    boolean wasChanged = allowAppOp(appOpsService, permission.getAppOp(), applicationInfo.packageName, uid);
+                    boolean wasChanged = allowAppOp(appOpsManager, permission.getAppOp(), applicationInfo.packageName, uid);
                     shouldKillApp = wasChanged && !supportsRuntimePermissions(applicationInfo);
                 } else {
-                    shouldKillApp = disallowAppOp(appOpsService, permission.getAppOp(), applicationInfo.packageName, uid);
+                    shouldKillApp = disallowAppOp(appOpsManager, permission.getAppOp(), applicationInfo.packageName, uid);
                 }
             }
         }
@@ -289,14 +289,14 @@ public class PermUtils {
                 flags, checkAdjustPolicy, userId);
     }
 
-    public static boolean allowAppOp(AppOpsService appOpsService, int appOp, String packageName, int uid)
+    public static boolean allowAppOp(AppOpsManagerCompat appOpsManager, int appOp, String packageName, int uid)
             throws RemoteException {
-        return setAppOpMode(appOpsService, appOp, packageName, uid, AppOpsManager.MODE_ALLOWED);
+        return setAppOpMode(appOpsManager, appOp, packageName, uid, AppOpsManager.MODE_ALLOWED);
     }
 
-    public static boolean disallowAppOp(AppOpsService appOpsService, int appOp, String packageName, int uid)
+    public static boolean disallowAppOp(AppOpsManagerCompat appOpsManager, int appOp, String packageName, int uid)
             throws RemoteException {
-        return setAppOpMode(appOpsService, appOp, packageName, uid, AppOpsManager.MODE_IGNORED);
+        return setAppOpMode(appOpsManager, appOp, packageName, uid, AppOpsManager.MODE_IGNORED);
     }
 
     /**
@@ -304,17 +304,17 @@ public class PermUtils {
      *
      * @return {@code true} iff app-op was changed
      */
-    public static boolean setAppOpMode(@NonNull AppOpsService appOpsService,
+    public static boolean setAppOpMode(@NonNull AppOpsManagerCompat appOpsManager,
                                        int appOp,
                                        String packageName,
                                        int uid,
-                                       @AppOpsManager.Mode int mode)
+                                       @AppOpsManagerCompat.Mode int mode)
             throws RemoteException {
-        int currentMode = appOpsService.checkOperation(appOp, uid, packageName);
+        int currentMode = appOpsManager.checkOperation(appOp, uid, packageName);
         if (currentMode == mode) {
             return false;
         }
-        appOpsService.setMode(appOp, uid, packageName, mode);
+        appOpsManager.setMode(appOp, uid, packageName, mode);
         return true;
     }
 

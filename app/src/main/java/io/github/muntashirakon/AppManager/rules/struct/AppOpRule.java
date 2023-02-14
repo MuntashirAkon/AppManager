@@ -7,15 +7,15 @@ import androidx.annotation.NonNull;
 import java.util.Objects;
 import java.util.StringTokenizer;
 
-import io.github.muntashirakon.AppManager.appops.AppOpsManager;
+import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 
 public class AppOpRule extends RuleEntry {
     private final int op;
-    @AppOpsManager.Mode
+    @AppOpsManagerCompat.Mode
     private int mode;
 
-    public AppOpRule(@NonNull String packageName, int op, @AppOpsManager.Mode int mode) {
+    public AppOpRule(@NonNull String packageName, int op, @AppOpsManagerCompat.Mode int mode) {
         super(packageName, String.valueOf(op), RuleType.APP_OP);
         this.op = op;
         this.mode = mode;
@@ -34,12 +34,12 @@ public class AppOpRule extends RuleEntry {
         return op;
     }
 
-    @AppOpsManager.Mode
+    @AppOpsManagerCompat.Mode
     public int getMode() {
         return mode;
     }
 
-    public void setMode(@AppOpsManager.Mode int mode) {
+    public void setMode(@AppOpsManagerCompat.Mode int mode) {
         this.mode = mode;
     }
 

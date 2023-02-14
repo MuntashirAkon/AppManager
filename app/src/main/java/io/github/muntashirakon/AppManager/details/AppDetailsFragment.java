@@ -4,9 +4,7 @@ package io.github.muntashirakon.AppManager.details;
 
 import static io.github.muntashirakon.AppManager.details.AppDetailsViewModel.OPEN_GL_ES;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpModeNames;
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpModes;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpNames;
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOps;
 import static io.github.muntashirakon.AppManager.utils.Utils.openAsFolderInFM;
 
 import android.annotation.SuppressLint;
@@ -65,8 +63,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.appops.AppOpsManager;
-import io.github.muntashirakon.AppManager.appops.OpEntry;
+import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsAppOpItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsDefinedPermissionItem;
@@ -338,8 +335,8 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             AppPref.set(AppPref.PrefKey.PREF_APP_OP_SHOW_DEFAULT_BOOL, !curr);
             refreshDetails();
         } else if (id == R.id.action_custom_app_op) {
-            List<Integer> modes = getAppOpModes();
-            List<Integer> appOps = getAppOps();
+            List<Integer> modes = AppOpsManagerCompat.getModeConstants();
+            List<Integer> appOps = AppOpsManagerCompat.getAllOps();
             List<CharSequence> modeNames = Arrays.asList(getAppOpModeNames(modes));
             List<CharSequence> appOpNames = Arrays.asList(getAppOpNames(appOps));
             TextInputDropdownDialogBuilder builder = new TextInputDropdownDialogBuilder(mActivity, R.string.set_custom_app_op);
@@ -523,7 +520,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
 
     @NonNull
     private String permAppOp(String s) {
-        String opStr = AppOpsManager.permissionToOp(s);
+        String opStr = AppOpsManagerCompat.permissionToOp(s);
         return opStr != null ? "\nAppOp: " + opStr : "";
     }
 
@@ -730,12 +727,11 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             synchronized (mAdapterList) {
                 item = (AppDetailsAppOpItem) mAdapterList.get(index);
             }
-            OpEntry opEntry = item.vanillaItem;
             final String opStr = item.name;
             PermissionInfo permissionInfo = item.permissionInfo;
             // Set op name
-            SpannableStringBuilder opName = new SpannableStringBuilder(opEntry.getOp() + " - ");
-            if (item.name.equals(String.valueOf(opEntry.getOp()))) {
+            SpannableStringBuilder opName = new SpannableStringBuilder(item.getOp() + " - ");
+            if (item.name.equals(String.valueOf(item.getOp()))) {
                 opName.append(getString(R.string.unknown_op));
             } else if (mConstraint != null && opStr.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
@@ -746,33 +742,33 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             StringBuilder opRunningInfo = new StringBuilder()
                     .append(context.getString(R.string.mode))
                     .append(LangUtils.getSeparatorString())
-                    .append(AppOpsManager.modeToName(opEntry.getMode()));
-            if (opEntry.isRunning()) {
+                    .append(AppOpsManagerCompat.modeToName(item.getMode()));
+            if (item.isRunning()) {
                 opRunningInfo.append(", ").append(context.getString(R.string.running));
             }
-            if (opEntry.getDuration() != 0) {
+            if (item.getDuration() != 0) {
                 opRunningInfo.append(", ").append(context.getString(R.string.duration))
                         .append(LangUtils.getSeparatorString())
-                        .append(DateUtils.getFormattedDuration(context, opEntry.getDuration(), true));
+                        .append(DateUtils.getFormattedDuration(context, item.getDuration(), true));
             }
             holder.textView7.setText(opRunningInfo);
             // Set accept-time and/or reject-time
             long currentTime = System.currentTimeMillis();
-            boolean hasAcceptTime = opEntry.getTime() != 0 && opEntry.getTime() != -1;
-            boolean hasRejectTime = opEntry.getRejectTime() != 0 && opEntry.getRejectTime() != -1;
+            boolean hasAcceptTime = item.getTime() != 0 && item.getTime() != -1;
+            boolean hasRejectTime = item.getRejectTime() != 0 && item.getRejectTime() != -1;
             if (hasAcceptTime || hasRejectTime) {
                 StringBuilder opTime = new StringBuilder();
                 if (hasAcceptTime) {
                     opTime.append(context.getString(R.string.accept_time))
                             .append(LangUtils.getSeparatorString())
-                            .append(DateUtils.getFormattedDuration(context, currentTime - opEntry.getTime()))
+                            .append(DateUtils.getFormattedDuration(context, currentTime - item.getTime()))
                             .append(" ").append(context.getString(R.string.ago));
                 }
                 if (hasRejectTime) {
                     opTime.append(opTime.length() == 0 ? "" : "\n")
                             .append(context.getString(R.string.reject_time))
                             .append(LangUtils.getSeparatorString())
-                            .append(DateUtils.getFormattedDuration(context, currentTime - opEntry.getRejectTime()))
+                            .append(DateUtils.getFormattedDuration(context, currentTime - item.getRejectTime()))
                             .append(" ").append(context.getString(R.string.ago));
                 }
                 holder.textView8.setVisibility(View.VISIBLE);
@@ -836,30 +832,26 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             holder.toggleSwitch.setChecked(item.isAllowed());
             holder.itemView.setOnClickListener(v -> {
                 boolean isAllowed = !item.isAllowed();
-                int lastOpMode = opEntry.getMode();
                 mExecutor.submit(() -> {
                     if (mMainModel != null && mMainModel.setAppOpMode(item)) {
                         runOnUiThread(() -> notifyItemChanged(index));
                     } else {
-                        opEntry.setMode(lastOpMode);
                         runOnUiThread(() -> UIUtils.displayLongToast(isAllowed
                                 ? R.string.failed_to_enable_op : R.string.failed_to_disable_op));
                     }
                 });
             });
             holder.itemView.setOnLongClickListener(v -> {
-                List<Integer> modes = getAppOpModes();
-                new SearchableSingleChoiceDialogBuilder<>(mActivity, getAppOpModes(), getAppOpModeNames(modes))
+                List<Integer> modes = AppOpsManagerCompat.getModeConstants();
+                new SearchableSingleChoiceDialogBuilder<>(mActivity, modes, getAppOpModeNames(modes))
                         .setTitle(R.string.set_app_op_mode)
-                        .setSelection(opEntry.getMode())
+                        .setSelection(item.getMode())
                         .setOnSingleChoiceClickListener((dialog, which, item1, isChecked) -> {
                             int opMode = modes.get(which);
-                            int lastOpMode = opEntry.getMode();
                             mExecutor.submit(() -> {
                                 if (mMainModel != null && mMainModel.setAppOpMode(item, opMode)) {
                                     runOnUiThread(() -> notifyItemChanged(index));
                                 } else {
-                                    opEntry.setMode(lastOpMode);
                                     runOnUiThread(() -> UIUtils.displayLongToast(R.string.failed_to_change_app_op_mode));
                                 }
                             });

@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.appops.AppOpsManager;
+import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 import io.github.muntashirakon.AppManager.magisk.MagiskProcess;
@@ -136,7 +136,7 @@ public class RulesStorageManager implements Closeable {
         addUniqueEntry(new ComponentRule(packageName, name, componentType, componentStatus));
     }
 
-    public void setAppOp(int op, @AppOpsManager.Mode int mode) {
+    public void setAppOp(int op, @AppOpsManagerCompat.Mode int mode) {
         addUniqueEntry(new AppOpRule(packageName, op, mode));
     }
 
@@ -209,7 +209,7 @@ public class RulesStorageManager implements Closeable {
     }
 
     @GuardedBy("entries")
-    protected void loadEntries(Path file, boolean isExternal) throws IOException, RemoteException {
+    protected void loadEntries(Path file, boolean isExternal) throws IOException {
         String dataRow;
         try (BufferedReader TSVFile = new BufferedReader(new PathReader(file))) {
             while ((dataRow = TSVFile.readLine()) != null) {

@@ -2,7 +2,6 @@
 
 package io.github.muntashirakon.AppManager.backup;
 
-import static io.github.muntashirakon.AppManager.appops.AppOpsManager.OP_NONE;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.DATA_PREFIX;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.EXT_DATA;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.EXT_MEDIA;
@@ -13,6 +12,7 @@ import static io.github.muntashirakon.AppManager.backup.BackupManager.MASTER_KEY
 import static io.github.muntashirakon.AppManager.backup.BackupManager.SOURCE_PREFIX;
 
 import android.annotation.SuppressLint;
+import android.app.AppOpsManager;
 import android.app.INotificationManager;
 import android.content.ComponentName;
 import android.content.Context;
@@ -37,8 +37,7 @@ import java.util.Locale;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
-import io.github.muntashirakon.AppManager.appops.AppOpsManager;
-import io.github.muntashirakon.AppManager.appops.AppOpsService;
+import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.crypto.Crypto;
@@ -64,6 +63,7 @@ import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.ssaid.SsaidSettings;
 import io.github.muntashirakon.AppManager.uri.UriManager;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -78,6 +78,8 @@ class RestoreOp implements Closeable {
     static final String TAG = RestoreOp.class.getSimpleName();
     private static final Object sLock = new Object();
 
+    @NonNull
+    private final Context context = ContextUtils.getContext();
     @NonNull
     private final String packageName;
     @NonNull
@@ -514,14 +516,14 @@ class RestoreOp implements Closeable {
         loadMiscRules(rules);
         // Apply rules
         List<RuleEntry> entries = rules.getAll();
-        AppOpsService appOpsService = new AppOpsService();
+        AppOpsManagerCompat appOpsManager = new AppOpsManagerCompat(context);
         INotificationManager notificationManager = INotificationManager.Stub.asInterface(ProxyBinder.getService(Context.NOTIFICATION_SERVICE));
         boolean magiskHideAvailable = MagiskHide.available();
         for (RuleEntry entry : entries) {
             try {
                 switch (entry.type) {
                     case APP_OP:
-                        appOpsService.setMode(Integer.parseInt(entry.name), packageInfo.applicationInfo.uid,
+                        appOpsManager.setMode(Integer.parseInt(entry.name), packageInfo.applicationInfo.uid,
                                 packageName, ((AppOpRule) entry).getMode());
                         break;
                     case NET_POLICY:
@@ -531,13 +533,13 @@ class RestoreOp implements Closeable {
                     case PERMISSION: {
                         PermissionRule permissionRule = (PermissionRule) entry;
                         Permission permission = permissionRule.getPermission(true);
-                        permission.setAppOpAllowed(permission.getAppOp() != OP_NONE && appOpsService
+                        permission.setAppOpAllowed(permission.getAppOp() != AppOpsManagerCompat.OP_NONE && appOpsManager
                                 .checkOperation(permission.getAppOp(), packageInfo.applicationInfo.uid,
                                         packageName) == AppOpsManager.MODE_ALLOWED);
                         if (permissionRule.isGranted()) {
-                            PermUtils.grantPermission(packageInfo, permission, appOpsService, true, true);
+                            PermUtils.grantPermission(packageInfo, permission, appOpsManager, true, true);
                         } else {
-                            PermUtils.revokePermission(packageInfo, permission, appOpsService, true);
+                            PermUtils.revokePermission(packageInfo, permission, appOpsManager, true);
                         }
                         break;
                     }

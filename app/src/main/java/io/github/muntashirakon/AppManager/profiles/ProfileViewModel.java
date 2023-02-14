@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.profiles;
 
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpNames;
+
 import android.app.Application;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -31,14 +33,12 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.appops.AppOpsManager;
+import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
-
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpNames;
 
 public class ProfileViewModel extends AndroidViewModel {
     private final Object profileLock = new Object();
@@ -379,12 +379,12 @@ public class ProfileViewModel extends AndroidViewModel {
             return;
         }
         Set<Integer> selectedAppOps = new HashSet<>(appOpsStr.length);
-        List<Integer> appOpList = PackageUtils.getAppOps();
+        List<Integer> appOpList = AppOpsManagerCompat.getAllOps();
         List<CharSequence> appOpNameList = Arrays.asList(getAppOpNames(appOpList));
         for (CharSequence appOpStr : appOpsStr) {
             if (appOpStr.equals("*")) {
                 // Wildcard found, ignore all app ops in favour of global wildcard
-                profile.appOps = new int[]{AppOpsManager.OP_NONE};
+                profile.appOps = new int[]{AppOpsManagerCompat.OP_NONE};
                 return;
             }
             try {

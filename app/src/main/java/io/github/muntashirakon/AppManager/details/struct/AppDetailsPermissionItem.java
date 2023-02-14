@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 import androidx.core.content.pm.PermissionInfoCompat;
 
-import io.github.muntashirakon.AppManager.appops.AppOpsService;
+import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.permission.PermUtils;
 import io.github.muntashirakon.AppManager.permission.Permission;
 import io.github.muntashirakon.AppManager.permission.PermissionException;
@@ -51,9 +51,9 @@ public class AppDetailsPermissionItem extends AppDetailsItem<PermissionInfo> {
      * <p>This also automatically grants app op if it has app op.
      */
     @WorkerThread
-    public void grantPermission(@NonNull PackageInfo packageInfo, @NonNull AppOpsService appOpsService)
+    public void grantPermission(@NonNull PackageInfo packageInfo, @NonNull AppOpsManagerCompat appOpsManager)
             throws RemoteException, PermissionException {
-        PermUtils.grantPermission(packageInfo, permission, appOpsService, true, true);
+        PermUtils.grantPermission(packageInfo, permission, appOpsManager, true, true);
     }
 
     /**
@@ -62,8 +62,8 @@ public class AppDetailsPermissionItem extends AppDetailsItem<PermissionInfo> {
      * <p>This also disallows the app op for the permission if it has app op.
      */
     @WorkerThread
-    public void revokePermission(@NonNull PackageInfo packageInfo, AppOpsService appOpsService)
+    public void revokePermission(@NonNull PackageInfo packageInfo, AppOpsManagerCompat appOpsManager)
             throws RemoteException, PermissionException {
-        PermUtils.revokePermission(packageInfo, permission, appOpsService, true);
+        PermUtils.revokePermission(packageInfo, permission, appOpsManager, true);
     }
 }

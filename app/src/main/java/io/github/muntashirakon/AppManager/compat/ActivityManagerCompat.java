@@ -29,7 +29,6 @@ import java.util.ListIterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.runner.Runner;
@@ -80,11 +79,11 @@ public final class ActivityManagerCompat {
         int res;
         IIntentReceiver receiver = new IntentReceiver();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            res = am.broadcastIntentWithFeature(null, null, intent, null, receiver, 0, null, null, null, AppOpsManager.OP_NONE, null, true, false, userHandle);
+            res = am.broadcastIntentWithFeature(null, null, intent, null, receiver, 0, null, null, null, AppOpsManagerCompat.OP_NONE, null, true, false, userHandle);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            res = am.broadcastIntent(null, intent, null, null, 0, null, null, null, AppOpsManager.OP_NONE, null, true, false, userHandle);
+            res = am.broadcastIntent(null, intent, null, null, 0, null, null, null, AppOpsManagerCompat.OP_NONE, null, true, false, userHandle);
         } else {
-            res = am.broadcastIntent(null, intent, null, null, 0, null, null, null, AppOpsManager.OP_NONE, true, false, userHandle);
+            res = am.broadcastIntent(null, intent, null, null, 0, null, null, null, AppOpsManagerCompat.OP_NONE, true, false, userHandle);
         }
         return res;
     }

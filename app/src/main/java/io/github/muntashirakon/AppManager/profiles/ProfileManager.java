@@ -3,6 +3,7 @@
 package io.github.muntashirakon.AppManager.profiles;
 
 import android.annotation.SuppressLint;
+import android.app.AppOpsManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.UserHandleHidden;
@@ -16,7 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.appops.AppOpsManager;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.logs.Log;

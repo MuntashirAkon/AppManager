@@ -2,7 +2,6 @@
 
 package io.github.muntashirakon.AppManager.details;
 
-import static io.github.muntashirakon.AppManager.appops.AppOpsManager.OP_NONE;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagMatchUninstalled;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
@@ -10,6 +9,7 @@ import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningI
 import android.annotation.SuppressLint;
 import android.annotation.UserIdInt;
 import android.app.ActivityManager;
+import android.app.AppOpsManager;
 import android.app.Application;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -53,6 +53,7 @@ import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -63,11 +64,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.github.muntashirakon.AppManager.apk.ApkFile;
-import io.github.muntashirakon.AppManager.appops.AppOpsManager;
-import io.github.muntashirakon.AppManager.appops.AppOpsService;
-import io.github.muntashirakon.AppManager.appops.AppOpsUtils;
-import io.github.muntashirakon.AppManager.appops.OpEntry;
 import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
+import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsAppOpItem;
@@ -371,13 +369,13 @@ public class AppDetailsViewModel extends AndroidViewModel {
                         case AppDetailsFragment.SORT_BY_NAME:
                             return o1.name.compareToIgnoreCase(o2.name);
                         case AppDetailsFragment.SORT_BY_APP_OP_VALUES:
-                            Integer o1Op = o1.vanillaItem.getOp();
-                            Integer o2Op = o2.vanillaItem.getOp();
+                            Integer o1Op = o1.getOp();
+                            Integer o2Op = o2.getOp();
                             return o1Op.compareTo(o2Op);
                         case AppDetailsFragment.SORT_BY_DENIED_APP_OPS:
                             // A slight hack to sort it this way: ignore > foreground > deny > default[ > ask] > allow
-                            Integer o1Mode = o1.vanillaItem.getMode();
-                            Integer o2Mode = o2.vanillaItem.getMode();
+                            Integer o1Mode = o1.getMode();
+                            Integer o2Mode = o2.getMode();
                             return -o1Mode.compareTo(o2Mode);
                     }
                     return 0;
@@ -603,10 +601,10 @@ public class AppDetailsViewModel extends AndroidViewModel {
         try {
             if (!permissionItem.isGranted()) {
                 Log.d(TAG, "Granting permission: " + permissionItem.name);
-                permissionItem.grantPermission(packageInfo, mAppOpsService);
+                permissionItem.grantPermission(packageInfo, mAppOpsManager);
             } else {
                 Log.d(TAG, "Revoking permission: " + permissionItem.name);
-                permissionItem.revokePermission(packageInfo, mAppOpsService);
+                permissionItem.revokePermission(packageInfo, mAppOpsManager);
             }
         } catch (RemoteException | PermissionException e) {
             e.printStackTrace();
@@ -639,7 +637,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             for (AppDetailsPermissionItem permissionItem : mUsesPermissionItems) {
                 if (!permissionItem.isDangerous || !permissionItem.permission.isGranted()) continue;
                 try {
-                    permissionItem.revokePermission(packageInfo, mAppOpsService);
+                    permissionItem.revokePermission(packageInfo, mAppOpsManager);
                     revokedPermissions.add(permissionItem);
                 } catch (RemoteException | PermissionException e) {
                     e.printStackTrace();
@@ -664,7 +662,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     }
 
     @NonNull
-    private final AppOpsService mAppOpsService = new AppOpsService();
+    private final AppOpsManagerCompat mAppOpsManager = new AppOpsManagerCompat(getApplication());
 
     @WorkerThread
     @GuardedBy("blockerLocker")
@@ -674,7 +672,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         if (packageInfo == null) return false;
         try {
             // Set mode
-            mAppOpsService.setMode(op, packageInfo.applicationInfo.uid, mPackageName, mode);
+            mAppOpsManager.setMode(op, packageInfo.applicationInfo.uid, mPackageName, mode);
             mExecutor.submit(() -> {
                 synchronized (mBlockerLocker) {
                     waitForBlockerOrExit();
@@ -701,16 +699,16 @@ public class AppDetailsViewModel extends AndroidViewModel {
         boolean isSuccessful = false;
         try {
             if (appOpItem.isAllowed()) {
-                isSuccessful = appOpItem.disallowAppOp(packageInfo, mAppOpsService);
+                isSuccessful = appOpItem.disallowAppOp(packageInfo, mAppOpsManager);
             } else {
-                isSuccessful = appOpItem.allowAppOp(packageInfo, mAppOpsService);
+                isSuccessful = appOpItem.allowAppOp(packageInfo, mAppOpsManager);
             }
             setAppOp(appOpItem);
             mExecutor.submit(() -> {
                 synchronized (mBlockerLocker) {
                     waitForBlockerOrExit();
                     mBlocker.setMutable();
-                    mBlocker.setAppOp(appOpItem.vanillaItem.getOp(), appOpItem.vanillaItem.getMode());
+                    mBlocker.setAppOp(appOpItem.getOp(), appOpItem.getMode());
                     mBlocker.commit();
                     mBlocker.setReadOnly();
                     mBlockerLocker.notifyAll();
@@ -724,19 +722,19 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     @WorkerThread
     @GuardedBy("blockerLocker")
-    public boolean setAppOpMode(AppDetailsAppOpItem appOpItem, @AppOpsManager.Mode int mode) {
+    public boolean setAppOpMode(AppDetailsAppOpItem appOpItem, @AppOpsManagerCompat.Mode int mode) {
         if (mIsExternalApk) return false;
         PackageInfo packageInfo = getPackageInfoInternal();
         if (packageInfo == null) return false;
         boolean isSuccessful = false;
         try {
-            isSuccessful = appOpItem.setAppOp(packageInfo, mAppOpsService, mode);
+            isSuccessful = appOpItem.setAppOp(packageInfo, mAppOpsManager, mode);
             setAppOp(appOpItem);
             mExecutor.submit(() -> {
                 synchronized (mBlockerLocker) {
                     waitForBlockerOrExit();
                     mBlocker.setMutable();
-                    mBlocker.setAppOp(appOpItem.vanillaItem.getOp(), appOpItem.vanillaItem.getMode());
+                    mBlocker.setAppOp(appOpItem.getOp(), appOpItem.getMode());
                     mBlocker.commit();
                     mBlocker.setReadOnly();
                     mBlockerLocker.notifyAll();
@@ -754,7 +752,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         if (mIsExternalApk) return false;
         if (getPackageInfoInternal() == null || mPackageName == null) return false;
         try {
-            mAppOpsService.resetAllModes(mUserHandle, mPackageName);
+            mAppOpsManager.resetAllModes(mUserHandle, mPackageName);
             mExecutor.submit(this::loadAppOps);
             // Save values to the blocking rules
             mExecutor.submit(() -> {
@@ -782,17 +780,14 @@ public class AppDetailsViewModel extends AndroidViewModel {
         if (mIsExternalApk) return false;
         PackageInfo packageInfo = getPackageInfoInternal();
         if (packageInfo == null) return false;
-        AppDetailsAppOpItem appDetailsItem;
-        OpEntry opEntry;
+        AppOpsManagerCompat.OpEntry opEntry;
         String permName;
         final List<Integer> opItems = new ArrayList<>();
         boolean isSuccessful = true;
         synchronized (mAppOpItems) {
-            for (int i = 0; i < mAppOpItems.size(); ++i) {
-                appDetailsItem = mAppOpItems.get(i);
-                opEntry = appDetailsItem.vanillaItem;
+            for (AppDetailsAppOpItem mAppOpItem : mAppOpItems) {
                 try {
-                    permName = AppOpsManager.opToPermission(opEntry.getOp());
+                    permName = AppOpsManagerCompat.opToPermission(mAppOpItem.getOp());;
                     if (permName != null) {
                         PermissionInfo permissionInfo = mPackageManager.getPermissionInfo(permName,
                                 PackageManager.GET_META_DATA);
@@ -800,14 +795,10 @@ public class AppDetailsViewModel extends AndroidViewModel {
                         if (basePermissionType == PermissionInfo.PROTECTION_DANGEROUS) {
                             // Set mode
                             try {
-                                mAppOpsService.setMode(opEntry.getOp(), packageInfo.applicationInfo.uid,
+                                mAppOpsManager.setMode(mAppOpItem.getOp(), packageInfo.applicationInfo.uid,
                                         mPackageName, AppOpsManager.MODE_IGNORED);
-                                opItems.add(opEntry.getOp());
-                                appDetailsItem.vanillaItem = new OpEntry(opEntry.getOp(),
-                                        AppOpsManager.MODE_IGNORED, opEntry.getTime(),
-                                        opEntry.getRejectTime(), opEntry.getDuration(),
-                                        opEntry.getProxyUid(), opEntry.getProxyPackageName());
-                                mAppOpItems.set(i, appDetailsItem);
+                                opItems.add(mAppOpItem.getOp());
+                                mAppOpItem.invalidate(mAppOpsManager, packageInfo);
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 isSuccessful = false;
@@ -1347,38 +1338,39 @@ public class AppDetailsViewModel extends AndroidViewModel {
             try {
                 int uid = packageInfo.applicationInfo.uid;
                 String packageName = packageInfo.packageName;
-                List<OpEntry> opEntries = new ArrayList<>(AppOpsUtils.getChangedAppOps(mAppOpsService, packageName, uid));
-                OpEntry opEntry;
+                HashMap<Integer, AppOpsManagerCompat.OpEntry> opToOpEntryMap = new HashMap<>(AppOpsManagerCompat._NUM_OP);
+                for (AppOpsManagerCompat.OpEntry opEntry : AppOpsManagerCompat
+                        .getConfiguredOpsForPackage(mAppOpsManager, packageName, uid)) {
+                    if (opToOpEntryMap.get(opEntry.getOp()) == null) {
+                        opToOpEntryMap.put(opEntry.getOp(), opEntry);
+                    }
+                }
                 // Include from permissions
                 List<String> permissions = getRawPermissions();
+                HashSet<Integer> otherOps = new HashSet<>(AppOpsManagerCompat._NUM_OP);
                 for (String permission : permissions) {
-                    int op = AppOpsManager.permissionToOpCode(permission);
-                    if (op == OP_NONE || op >= AppOpsManager._NUM_OP) {
+                    int op = AppOpsManagerCompat.permissionToOpCode(permission);
+                    if (op == AppOpsManagerCompat.OP_NONE
+                            || op >= AppOpsManagerCompat._NUM_OP
+                            || opToOpEntryMap.get(op) != null) {
                         // Invalid/unsupported app operation
                         continue;
                     }
-                    opEntry = new OpEntry(op, mAppOpsService.checkOperation(op, uid, packageName), 0,
-                            0, 0, 0, null);
-                    if (!opEntries.contains(opEntry)) opEntries.add(opEntry);
+                    otherOps.add(op);
                 }
                 // Include defaults i.e. app ops without any associated permissions if requested
                 if (AppPref.getBoolean(AppPref.PrefKey.PREF_APP_OP_SHOW_DEFAULT_BOOL)) {
-                    for (int op : AppOpsManager.sOpsWithNoPerm) {
-                        if (op >= AppOpsManager._NUM_OP) {
+                    for (int op : AppOpsManagerCompat.getOpsWithoutPermissions()) {
+                        if (op >= AppOpsManagerCompat._NUM_OP || opToOpEntryMap.get(op) != null) {
                             // Unsupported app operation
                             continue;
                         }
-                        opEntry = new OpEntry(op, AppOpsManager.opToDefaultMode(op), 0,
-                                0, 0, 0, null);
-                        if (!opEntries.contains(opEntry)) opEntries.add(opEntry);
+                        otherOps.add(op);
                     }
                 }
-                Set<String> uniqueSet = new HashSet<>();
-                for (OpEntry entry : opEntries) {
-                    String opName = AppOpsManager.opToName(entry.getOp());
-                    if (uniqueSet.contains(opName)) continue;
+                for (AppOpsManagerCompat.OpEntry entry : opToOpEntryMap.values()) {
                     AppDetailsAppOpItem appDetailsItem;
-                    String permissionName = AppOpsManager.opToPermission(entry.getOp());
+                    String permissionName = AppOpsManagerCompat.opToPermission(entry.getOp());;
                     if (permissionName != null) {
                         boolean isGranted = privileged && PermissionCompat.checkPermission(permissionName,
                                 packageName, mUserHandle) == PackageManager.PERMISSION_GRANTED;
@@ -1394,8 +1386,29 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     } else {
                         appDetailsItem = new AppDetailsAppOpItem(entry);
                     }
-                    appDetailsItem.name = opName;
-                    uniqueSet.add(opName);
+                    appDetailsItem.name = entry.getName();
+                    mAppOpItems.add(appDetailsItem);
+                }
+                // Add other ops
+                for (int op : otherOps) {
+                    AppDetailsAppOpItem appDetailsItem;
+                    String permissionName = AppOpsManagerCompat.opToPermission(op);
+                    if (permissionName != null) {
+                        boolean isGranted = privileged && PermissionCompat.checkPermission(permissionName,
+                                packageName, mUserHandle) == PackageManager.PERMISSION_GRANTED;
+                        int permissionFlags = privileged ? PermissionCompat.getPermissionFlags(permissionName,
+                                packageName, mUserHandle) : 0;
+                        PermissionInfo permissionInfo = PermissionCompat.getPermissionInfo(permissionName, packageName, 0);
+                        if (permissionInfo == null) {
+                            permissionInfo = new PermissionInfo();
+                            permissionInfo.name = permissionName;
+                        }
+                        appDetailsItem = new AppDetailsAppOpItem(op, permissionInfo, isGranted, permissionFlags,
+                                permissions.contains(permissionName));
+                    } else {
+                        appDetailsItem = new AppDetailsAppOpItem(op);
+                    }
+                    appDetailsItem.name = AppOpsManagerCompat.opToName(op);
                     mAppOpItems.add(appDetailsItem);
                 }
             } catch (Throwable e) {
@@ -1468,7 +1481,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 permissionInfo.name = permissionName;
             }
             int flags = permissionInfo.flags;
-            int appOp = AppOpsManager.permissionToOpCode(permissionName);
+            int appOp = AppOpsManagerCompat.permissionToOpCode(permissionName);
             int permissionFlags = 0;
             if (Ops.isPrivileged()) {
                 try {
@@ -1480,8 +1493,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
             }
             boolean appOpAllowed = false;
             try {
-                if (!mIsExternalApk && appOp != OP_NONE) {
-                    int mode = mAppOpsService.checkOperation(appOp, packageInfo.applicationInfo.uid, mPackageName);
+                if (!mIsExternalApk && appOp != AppOpsManagerCompat.OP_NONE) {
+                    int mode = mAppOpsManager.checkOperation(appOp, packageInfo.applicationInfo.uid, mPackageName);
                     appOpAllowed = mode == AppOpsManager.MODE_ALLOWED;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                         appOpAllowed |= mode == AppOpsManager.MODE_FOREGROUND;

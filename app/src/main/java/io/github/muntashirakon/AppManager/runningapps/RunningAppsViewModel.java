@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.runningapps;
 
+import android.app.AppOpsManager;
 import android.app.Application;
 import android.content.pm.ApplicationInfo;
 import android.os.Build;
@@ -31,8 +32,7 @@ import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import io.github.muntashirakon.AppManager.appops.AppOpsManager;
-import io.github.muntashirakon.AppManager.appops.AppOpsService;
+import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
@@ -246,14 +246,14 @@ public class RunningAppsViewModel extends AndroidViewModel {
             return true;
         }
         try {
-            AppOpsService appOpsService = new AppOpsService();
+            AppOpsManagerCompat appOpsManager = new AppOpsManagerCompat(getApplication());
             boolean canRun;
             {
-                int mode = appOpsService.checkOperation(AppOpsManager.OP_RUN_IN_BACKGROUND, info.uid, info.packageName);
+                int mode = appOpsManager.checkOperation(AppOpsManagerCompat.OP_RUN_IN_BACKGROUND, info.uid, info.packageName);
                 canRun = (mode != AppOpsManager.MODE_IGNORED && mode != AppOpsManager.MODE_ERRORED);
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                int mode = appOpsService.checkOperation(AppOpsManager.OP_RUN_ANY_IN_BACKGROUND, info.uid, info.packageName);
+                int mode = appOpsManager.checkOperation(AppOpsManagerCompat.OP_RUN_ANY_IN_BACKGROUND, info.uid, info.packageName);
                 canRun |= (mode != AppOpsManager.MODE_IGNORED && mode != AppOpsManager.MODE_ERRORED);
             }
             return canRun;
@@ -265,15 +265,16 @@ public class RunningAppsViewModel extends AndroidViewModel {
     public void preventBackgroundRun(@NonNull ApplicationInfo info) {
         mExecutor.submit(() -> {
             try {
-                AppOpsService appOpsService = new AppOpsService();
+                AppOpsManagerCompat appOpsService = new AppOpsManagerCompat(getApplication());
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                    appOpsService.setMode(AppOpsManager.OP_RUN_IN_BACKGROUND, info.uid, info.packageName,
+                    appOpsService.setMode(AppOpsManagerCompat.OP_RUN_IN_BACKGROUND, info.uid, info.packageName,
                             AppOpsManager.MODE_IGNORED);
                 }
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                    appOpsService.setMode(AppOpsManager.OP_RUN_ANY_IN_BACKGROUND, info.uid, info.packageName,
+                    appOpsService.setMode(AppOpsManagerCompat.OP_RUN_ANY_IN_BACKGROUND, info.uid, info.packageName,
                             AppOpsManager.MODE_IGNORED);
                 }
+                // TODO: 14/2/23 Store it to the rules
                 mPreventBackgroundRunResult.postValue(new Pair<>(info, true));
             } catch (RemoteException e) {
                 e.printStackTrace();

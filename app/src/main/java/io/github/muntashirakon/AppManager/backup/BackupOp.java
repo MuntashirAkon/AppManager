@@ -39,9 +39,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.appops.AppOpsService;
-import io.github.muntashirakon.AppManager.appops.OpEntry;
-import io.github.muntashirakon.AppManager.appops.PackageOps;
+import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PermissionCompat;
@@ -64,6 +62,7 @@ import io.github.muntashirakon.AppManager.ssaid.SsaidSettings;
 import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
@@ -79,6 +78,8 @@ import io.github.muntashirakon.io.Paths;
 class BackupOp implements Closeable {
     static final String TAG = BackupOp.class.getSimpleName();
 
+    @NonNull
+    private final Context context = ContextUtils.getContext();
     @NonNull
     private final String mPackageName;
     @NonNull
@@ -365,9 +366,10 @@ class BackupOp implements Closeable {
         // Backup permissions
         @NonNull String[] permissions = ArrayUtils.defeatNullable(mPackageInfo.requestedPermissions);
         int[] permissionFlags = mPackageInfo.requestedPermissionsFlags;
-        List<OpEntry> opEntries = new ArrayList<>();
+        List<AppOpsManagerCompat.OpEntry> opEntries = new ArrayList<>();
         try {
-            List<PackageOps> packageOpsList = new AppOpsService().getOpsForPackage(mPackageInfo.applicationInfo.uid, mPackageName, null);
+            List<AppOpsManagerCompat.PackageOps> packageOpsList = new AppOpsManagerCompat(context)
+                    .getOpsForPackage(mPackageInfo.applicationInfo.uid, mPackageName, null);
             if (packageOpsList.size() == 1) opEntries.addAll(packageOpsList.get(0).getOps());
         } catch (Exception ignore) {
         }
@@ -391,7 +393,7 @@ class BackupOp implements Closeable {
             }
         }
         // Backup app ops
-        for (OpEntry entry : opEntries) {
+        for (AppOpsManagerCompat.OpEntry entry : opEntries) {
             rules.setAppOp(entry.getOp(), entry.getMode());
         }
         // Backup MagiskHide data

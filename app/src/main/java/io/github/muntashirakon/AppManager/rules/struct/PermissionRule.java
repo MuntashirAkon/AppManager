@@ -11,7 +11,7 @@ import androidx.core.content.pm.PermissionInfoCompat;
 import java.util.Objects;
 import java.util.StringTokenizer;
 
-import io.github.muntashirakon.AppManager.appops.AppOpsManager;
+import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 import io.github.muntashirakon.AppManager.permission.DevelopmentPermission;
 import io.github.muntashirakon.AppManager.permission.PermUtils;
@@ -32,7 +32,7 @@ public class PermissionRule extends RuleEntry {
         super(packageName, permName, RuleType.PERMISSION);
         mIsGranted = isGranted;
         mFlags = flags;
-        mAppOp = AppOpsManager.permissionToOpCode(name);
+        mAppOp = AppOpsManagerCompat.permissionToOpCode(name);
     }
 
     public PermissionRule(@NonNull String packageName, @NonNull String permName, @NonNull StringTokenizer tokenizer)
@@ -47,7 +47,7 @@ public class PermissionRule extends RuleEntry {
             // Don't throw exception in order to provide backward compatibility
             mFlags = 0;
         }
-        mAppOp = AppOpsManager.permissionToOpCode(name);
+        mAppOp = AppOpsManagerCompat.permissionToOpCode(name);
     }
 
     public boolean isGranted() {
