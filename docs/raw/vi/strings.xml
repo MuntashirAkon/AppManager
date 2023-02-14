@@ -30,4 +30,5 @@
     <string name="intro$main$$translations-title">Bản dịch</string>
     <string name="intro$main$$contributing-title">Đóng góp</string>
     <string name="intro$main$$buiding-title">Hướng dẫn xây dựng</string>
+    <string name="intro$main$terminologies">Hieucandy</string>
 </resources>
