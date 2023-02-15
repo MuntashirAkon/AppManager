@@ -86,6 +86,9 @@ public class BackupManager {
         if (requestedFlags.isEmpty()) {
             throw new BackupException("Backup is requested without any flags.");
         }
+        if (targetPackage.getPackageName().equals("android")) {
+            throw new BackupException("Android System (android) cannot be backed up.");
+        }
         backupNames = getProcessedBackupNames(backupNames);
         try {
             // Get backup files based on the number of backupNames
@@ -132,6 +135,9 @@ public class BackupManager {
     public void restore(@Nullable String[] backupNames) throws BackupException {
         if (requestedFlags.isEmpty()) {
             throw new BackupException("Restore is requested without any flags.");
+        }
+        if (targetPackage.getPackageName().equals("android")) {
+            throw new BackupException("Android System (android) cannot be restored.");
         }
         if (backupNames != null && backupNames.length != 1) {
             throw new BackupException("Restore is requested from more than one backups!");

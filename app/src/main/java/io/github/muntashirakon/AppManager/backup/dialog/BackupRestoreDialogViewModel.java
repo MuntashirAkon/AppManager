@@ -31,7 +31,6 @@ import io.github.muntashirakon.AppManager.db.utils.AppDb;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.UserInfo;
 import io.github.muntashirakon.AppManager.users.Users;
-import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 
 public class BackupRestoreDialogViewModel extends AndroidViewModel {
@@ -124,6 +123,10 @@ public class BackupRestoreDialogViewModel extends AndroidViewModel {
             Map<String, BackupInfo> backupInfoMap = new HashMap<>();
             // Fetch info
             for (UserPackagePair userPackagePair : userPackagePairs) {
+                if (userPackagePair.getPackageName().equals("android")) {
+                    // Skip checking android package because it can't be backed up or restored.
+                    continue;
+                }
                 BackupInfo backupInfo = backupInfoMap.get(userPackagePair.getPackageName());
                 if (backupInfo != null) {
                     backupInfo.userIds.add(userPackagePair.getUserHandle());
