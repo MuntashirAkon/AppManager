@@ -46,6 +46,7 @@ import io.github.muntashirakon.AppManager.magisk.MagiskDenyList;
 import io.github.muntashirakon.AppManager.magisk.MagiskHide;
 import io.github.muntashirakon.AppManager.magisk.MagiskProcess;
 import io.github.muntashirakon.AppManager.magisk.MagiskUtils;
+import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
@@ -234,7 +235,7 @@ public class AppInfoViewModel extends AndroidViewModel {
         if (packageInfo == null) return;
         String packageName = packageInfo.packageName;
         ApplicationInfo applicationInfo = packageInfo.applicationInfo;
-        int userHandle = UserHandleHidden.getUserId(applicationInfo.uid);
+        int userId = UserHandleHidden.getUserId(applicationInfo.uid);
         PackageManager pm = getApplication().getPackageManager();
         boolean isExternalApk = mainModel.getIsExternalApk();
         AppInfo appInfo = new AppInfo();
@@ -259,22 +260,12 @@ public class AppInfoViewModel extends AndroidViewModel {
         }
         appInfo.extDataDirs = new ArrayList<>();
         if (!isExternalApk) {
-            File[] externalCacheDirs = getApplication().getExternalCacheDirs();
-            if (externalCacheDirs != null) {
-                String tmpDataDir;
-                for (File dataDir : externalCacheDirs) {
-                    if (dataDir == null) continue;
-                    tmpDataDir = dataDir.getParent();
-                    if (tmpDataDir != null) {
-                        tmpDataDir = new File(tmpDataDir).getParent();
-                    }
-                    if (tmpDataDir != null) {
-                        tmpDataDir = Utils.replaceOnce(tmpDataDir + File.separatorChar + packageName,
-                                "" + UserHandleHidden.myUserId(), "" + userHandle);
-                        if (Paths.get(tmpDataDir).exists()) {
-                            appInfo.extDataDirs.add(tmpDataDir);
-                        }
-                    }
+            OsEnvironment.UserEnvironment ue = OsEnvironment.getUserEnvironment(userId);
+            Path[] externalDataDirs = ue.buildExternalStorageAppDataDirs(packageName);
+            for (Path externalDataDir : externalDataDirs) {
+                Path accessiblePath = Paths.getAccessiblePath(externalDataDir);
+                if (accessiblePath.exists()) {
+                    appInfo.extDataDirs.add(Objects.requireNonNull(accessiblePath.getFilePath()));
                 }
             }
         }
@@ -297,7 +288,7 @@ public class AppInfoViewModel extends AndroidViewModel {
                 e.printStackTrace();
             }
             // Set sizes
-            appInfo.sizeInfo = PackageUtils.getPackageSizeInfo(getApplication(), packageName, userHandle,
+            appInfo.sizeInfo = PackageUtils.getPackageSizeInfo(getApplication(), packageName, userId,
                     Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? applicationInfo.storageUuid : null);
             // Set installer app
             try {

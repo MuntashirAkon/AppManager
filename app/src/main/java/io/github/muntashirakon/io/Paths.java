@@ -5,6 +5,7 @@ package io.github.muntashirakon.io;
 import android.content.ContentResolver;
 import android.net.Uri;
 import android.os.RemoteException;
+import android.os.UserHandleHidden;
 import android.system.ErrnoException;
 import android.system.OsConstants;
 
@@ -109,6 +110,28 @@ public final class Paths {
         } catch (FileNotFoundException e) {
             return null;
         }
+    }
+
+    /**
+     * Replace /storage/emulated with /data/media if the directory is inaccessible
+     */
+    @NonNull
+    public static Path getAccessiblePath(@NonNull Path path) {
+        if (!path.getUri().getScheme().equals(ContentResolver.SCHEME_FILE)) {
+            // Scheme other than file are already readable at their best notion
+            return path;
+        }
+        if (path.canRead()) {
+            return path;
+        }
+        String pathString = Objects.requireNonNull(path.getFilePath());
+        if (pathString.startsWith("/storage/emulated/")) {
+            // The only inaccessible path is /storage/emulated/{!myUserId} and it has to be replaced with /data/media/{!myUserId}
+            if (!String.format(Locale.ROOT, "/storage/emulated/%d", UserHandleHidden.myUserId()).equals(pathString)) {
+                return get(pathString.replaceFirst("/storage/emulated/", "/data/media/"));
+            }
+        }
+        return path;
     }
 
     @Nullable
