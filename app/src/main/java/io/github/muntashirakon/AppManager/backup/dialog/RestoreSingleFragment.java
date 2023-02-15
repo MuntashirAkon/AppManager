@@ -121,9 +121,7 @@ public class RestoreSingleFragment extends Fragment {
         List<Integer> supportedBackupFlags = BackupFlags.getBackupFlagsAsArray(flags.getFlags());
         // Inject no signatures
         supportedBackupFlags.add(BackupFlags.BACKUP_NO_SIGNATURE_CHECK);
-        if (BuildConfig.DEBUG) {
-            supportedBackupFlags.add(BackupFlags.BACKUP_CUSTOM_USERS);
-        }
+        supportedBackupFlags.add(BackupFlags.BACKUP_CUSTOM_USERS);
         List<Integer> disabledFlags = new ArrayList<>();
         if (!mViewModel.getBackupInfo().isInstalled()) {
             enabledFlags.addFlag(BackupFlags.BACKUP_APK_FILES);

@@ -588,7 +588,7 @@ public class Utils {
      */
     // Similar impl. of https://commons.apache.org/proper/commons-lang/apidocs/src-html/org/apache/commons/lang3/StringUtils.html#line.6418
     @NonNull
-    public static String replaceOnce(@NonNull final String text, @NonNull String searchString, @NonNull final String replacement) {
+    public static String replaceOnce(@NonNull String text, @NonNull CharSequence searchString, @NonNull CharSequence replacement) {
         if (TextUtils.isEmpty(text) || TextUtils.isEmpty(searchString)) {
             return text;
         }

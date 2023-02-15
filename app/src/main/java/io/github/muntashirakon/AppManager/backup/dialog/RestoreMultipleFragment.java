@@ -53,9 +53,7 @@ public class RestoreMultipleFragment extends Fragment {
         int supportedFlags = mViewModel.getWorstBackupFlag();
         // Inject no signatures
         supportedFlags |= BackupFlags.BACKUP_NO_SIGNATURE_CHECK;
-        if (BuildConfig.DEBUG) {
-            supportedFlags |= BackupFlags.BACKUP_CUSTOM_USERS;
-        }
+        supportedFlags |= BackupFlags.BACKUP_CUSTOM_USERS;
         int checkedFlags = BackupFlags.fromPref().getFlags() & supportedFlags;
         int disabledFlags = 0;
         if (mViewModel.getUninstalledApps().size() > 0) {

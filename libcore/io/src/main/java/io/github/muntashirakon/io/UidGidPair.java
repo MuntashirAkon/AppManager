@@ -6,7 +6,7 @@ public class UidGidPair {
     public final int uid;
     public final int gid;
 
-    UidGidPair(int uid, int gid) {
+    public UidGidPair(int uid, int gid) {
         this.uid = uid;
         this.gid = gid;
     }

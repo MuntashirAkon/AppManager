@@ -6,6 +6,7 @@ import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getTitleText;
 
+import android.annotation.UserIdInt;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -44,7 +45,6 @@ import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
-import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
@@ -318,7 +318,7 @@ public final class MetadataManager {
     }
 
     public Metadata setupMetadata(@NonNull PackageInfo packageInfo,
-                                  int userHandle,
+                                  @UserIdInt int userHandle,
                                   @NonNull BackupFlags requestedFlags) {
         PackageManager pm = mContext.getPackageManager();
         ApplicationInfo applicationInfo = packageInfo.applicationInfo;
@@ -327,7 +327,7 @@ public final class MetadataManager {
         requestedFlags.removeFlag(BackupFlags.BACKUP_CUSTOM_USERS | BackupFlags.BACKUP_MULTIPLE);
         mMetadata.flags = requestedFlags;
         mMetadata.userHandle = userHandle;
-        mMetadata.tarType = (String) AppPref.get(AppPref.PrefKey.PREF_BACKUP_COMPRESSION_METHOD_STR);
+        mMetadata.tarType = AppPref.getString(AppPref.PrefKey.PREF_BACKUP_COMPRESSION_METHOD_STR);
         mMetadata.crypto = CryptoUtils.getMode();
         // Verify tar type
         if (ArrayUtils.indexOf(TAR_TYPES, mMetadata.tarType) == -1) {
@@ -340,7 +340,7 @@ public final class MetadataManager {
         mMetadata.versionName = packageInfo.versionName;
         mMetadata.versionCode = PackageInfoCompat.getLongVersionCode(packageInfo);
         mMetadata.apkName = new File(applicationInfo.sourceDir).getName();
-        mMetadata.dataDirs = PackageUtils.getDataDirs(applicationInfo, requestedFlags.backupInternalData(),
+        mMetadata.dataDirs = BackupUtils.getDataDirectories(applicationInfo, requestedFlags.backupInternalData(),
                 requestedFlags.backupExternalData(), requestedFlags.backupMediaObb());
         mMetadata.isSystem = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
         mMetadata.isSplitApk = false;

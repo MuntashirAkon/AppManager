@@ -83,7 +83,6 @@ import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.main.ApplicationItem;
 import io.github.muntashirakon.AppManager.misc.OidMap;
-import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.runner.Runner;
@@ -538,41 +537,6 @@ public final class PackageUtils {
             throw new RuntimeException("Application source directory cannot be empty");
         }
         return sourceDir;
-    }
-
-    @NonNull
-    public static String[] getDataDirs(@NonNull ApplicationInfo applicationInfo, boolean loadInternal,
-                                       boolean loadExternal, boolean loadMediaObb) {
-        ArrayList<String> dataDirs = new ArrayList<>();
-        if (applicationInfo.dataDir == null) {
-            throw new RuntimeException("Data directory cannot be empty.");
-        }
-        if (loadInternal) {
-            dataDirs.add(applicationInfo.dataDir);
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && applicationInfo.deviceProtectedDataDir != null &&
-                    !applicationInfo.dataDir.equals(applicationInfo.deviceProtectedDataDir)) {
-                dataDirs.add(applicationInfo.deviceProtectedDataDir);
-            }
-        }
-        int userHandle = UserHandleHidden.getUserId(applicationInfo.uid);
-        OsEnvironment.UserEnvironment ue = OsEnvironment.getUserEnvironment(userHandle);
-        if (loadExternal) {
-            Path[] externalFiles = ue.buildExternalStorageAppDataDirs(applicationInfo.packageName);
-            for (Path externalFile : externalFiles) {
-                if (externalFile != null && externalFile.exists())
-                    dataDirs.add(externalFile.getFilePath());
-            }
-        }
-        if (loadMediaObb) {
-            List<Path> externalFiles = new ArrayList<>();
-            externalFiles.addAll(Arrays.asList(ue.buildExternalStorageAppMediaDirs(applicationInfo.packageName)));
-            externalFiles.addAll(Arrays.asList(ue.buildExternalStorageAppObbDirs(applicationInfo.packageName)));
-            for (Path externalFile : externalFiles) {
-                if (externalFile != null && externalFile.exists())
-                    dataDirs.add(externalFile.getFilePath());
-            }
-        }
-        return dataDirs.toArray(new String[0]);
     }
 
     public static String getHiddenCodePathOrDefault(String packageName, String defaultPath) {

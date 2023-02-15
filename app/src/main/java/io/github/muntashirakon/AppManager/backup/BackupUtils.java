@@ -2,14 +2,18 @@
 
 package io.github.muntashirakon.AppManager.backup;
 
+import android.annotation.SuppressLint;
+import android.annotation.UserIdInt;
 import android.content.Context;
 import android.content.Intent;
-import android.system.ErrnoException;
+import android.content.pm.ApplicationInfo;
+import android.os.Build;
+import android.os.UserHandleHidden;
 import android.text.TextUtils;
-import android.util.Pair;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import androidx.annotation.WorkerThread;
 
 import java.io.IOException;
@@ -17,19 +21,23 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.db.utils.AppDb;
 import io.github.muntashirakon.AppManager.logcat.helper.SaveLogHelper;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
+import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.io.Path;
-import io.github.muntashirakon.io.UidGidPair;
+import io.github.muntashirakon.io.Paths;
 
 public final class BackupUtils {
+    public static final String TAG = BackupUtils.class.getSimpleName();
+
     private static final Pattern UUID_PATTERN = Pattern.compile("[a-f\\d]{8}(-[a-f\\d]{4}){3}-[a-f\\d]{12}");
 
     public static boolean isUuid(@NonNull String name) {
@@ -167,17 +175,6 @@ public final class BackupUtils {
         return backupMetadata;
     }
 
-    @NonNull
-    static Pair<Integer, Integer> getUidAndGid(@NonNull Path filepath, int uid) {
-        try {
-            UidGidPair uidGidPair = Objects.requireNonNull(filepath.getFile()).getUidGid();
-            return new Pair<>(uidGidPair.uid, uidGidPair.gid);
-        } catch (ErrnoException e) {
-            // Fallback to kernel user ID
-            return new Pair<>(uid, uid);
-        }
-    }
-
     @Nullable
     public static String getShortBackupName(@NonNull String backupFileName) {
         if (TextUtils.isDigitsOnly(backupFileName)) {
@@ -225,5 +222,139 @@ public final class BackupUtils {
             excludeDirs.addAll(Arrays.asList(others));
         }
         return excludeDirs.toArray(new String[0]);
+    }
+
+    @SuppressLint("SdCardPath")
+    static boolean isInternalDirectory(@NonNull String dir) {
+        return dir.startsWith("/data/data/") || dir.startsWith("/data/user/") || dir.startsWith("/data/user_de/");
+    }
+
+    @SuppressLint("SdCardPath")
+    static boolean isExternalDirectoryMounted(@NonNull String dir, @UserIdInt int usedId) {
+        if (dir.startsWith("/sdcard")) {
+            return Paths.get("/sdcard").isDirectory();
+        }
+        if (dir.startsWith("/storage/sdcard")) {
+            return Paths.get("/storage/sdcard").isDirectory();
+        }
+        String storageEmulatedDir = String.format(Locale.ROOT, "/storage/emulated/%d/", usedId);
+        if (dir.startsWith(storageEmulatedDir)) {
+            return Paths.get(storageEmulatedDir).isDirectory();
+        }
+        String dataMediaDir = String.format(Locale.ROOT, "/data/media/%d/", usedId);
+        if (dir.startsWith(dataMediaDir)) {
+            return Paths.get(dataMediaDir).isDirectory();
+        }
+        Log.i(TAG, "isExternalDirectoryMounted: Unrecognized path " + dir + ", returning true as fallback.");
+        return true;
+    }
+
+    @SuppressLint("SdCardPath")
+    @NonNull
+    static String[] getDataDirectories(@NonNull ApplicationInfo applicationInfo, boolean loadInternal,
+                                       boolean loadExternal, boolean loadMediaObb) {
+        // Data directories *must* be readable and non-empty
+        ArrayList<String> dataDirs = new ArrayList<>();
+        if (applicationInfo.dataDir == null) {
+            throw new IllegalArgumentException("Data directory cannot be empty.");
+        }
+        int userId = UserHandleHidden.getUserId(applicationInfo.uid);
+        if (loadInternal) {
+            String dataDir = applicationInfo.dataDir;
+            if (dataDir.startsWith("/data/data/")) {
+                dataDir = Utils.replaceOnce(dataDir, "/data/data/", String.format(Locale.ROOT, "/data/user/%d/", userId));
+            }
+            dataDirs.add(dataDir);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && applicationInfo.deviceProtectedDataDir != null) {
+                // /data/user_de/{userId}
+                dataDirs.add(applicationInfo.deviceProtectedDataDir);
+            }
+        }
+        // External directories could be /sdcard, /storage/sdcard, /storage/emulated/{userId}
+        OsEnvironment.UserEnvironment ue = OsEnvironment.getUserEnvironment(userId);
+        if (loadExternal) {
+            Path[] externalFiles = ue.buildExternalStorageAppDataDirs(applicationInfo.packageName);
+            for (Path externalFile : externalFiles) {
+                // Replace /storage/emulated/{!myUserId} with /data/media/{!myUserId}
+                externalFile = Paths.getAccessiblePath(externalFile);
+                if (externalFile.listFiles().length > 0) {
+                    dataDirs.add(externalFile.getFilePath());
+                }
+            }
+        }
+        if (loadMediaObb) {
+            List<Path> externalFiles = new ArrayList<>();
+            externalFiles.addAll(Arrays.asList(ue.buildExternalStorageAppMediaDirs(applicationInfo.packageName)));
+            externalFiles.addAll(Arrays.asList(ue.buildExternalStorageAppObbDirs(applicationInfo.packageName)));
+            for (Path externalFile : externalFiles) {
+                // Replace /storage/emulated/{!myUserId} with /data/media/{!myUserId}
+                externalFile = Paths.getAccessiblePath(externalFile);
+                if (externalFile.listFiles().length > 0) {
+                    dataDirs.add(externalFile.getFilePath());
+                }
+            }
+        }
+        return dataDirs.toArray(new String[0]);
+    }
+
+    /**
+     * Get a writable data directory from the given directory. This is useful for restoring a backup.
+     */
+    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+    @SuppressLint("SdCardPath")
+    static String getWritableDataDirectory(@NonNull String dataDir, @UserIdInt int oldUserId, @UserIdInt int newUserId) {
+        if (dataDir.startsWith("/data/data/")) {
+            // /data/data/ -> /data/user/{newUserId}/
+            return Utils.replaceOnce(dataDir, "/data/data/", String.format(Locale.ROOT, "/data/user/%d/", newUserId));
+        }
+        String dataUserDir = String.format(Locale.ROOT, "/data/user/%d/", oldUserId);
+        if (dataDir.startsWith(dataUserDir)) {
+            // /data/user/{oldUserId} -> /data/user/{newUserId}/
+            return Utils.replaceOnce(dataDir, dataUserDir, String.format(Locale.ROOT, "/data/user/%d/", newUserId));
+        }
+        String dataUserDeDir = String.format(Locale.ROOT, "/data/user_de/%d/", oldUserId);
+        if (dataDir.startsWith(dataUserDeDir)) {
+            // /data/user_de/{oldUserId} -> /data/user_de/{newUserId}/
+            return Utils.replaceOnce(dataDir, dataUserDeDir, String.format(Locale.ROOT, "/data/user_de/%d/", newUserId));
+        }
+        if (dataDir.startsWith("/sdcard/")) {
+            // /sdcard/ -> /storage/emulated/{newUserId}/ or /data/media/{newUserId}/ in a multiuser system
+            return getExternalStorage(dataDir, "/sdcard/", newUserId);
+        }
+        if (dataDir.startsWith("/storage/sdcard/")) {
+            // /storage/sdcard/ -> /storage/emulated/{newUserId}/ or /data/media/{newUserId}/ in a multiuser system, otherwise /sdcard/
+            return getExternalStorage(dataDir, "/storage/sdcard/", newUserId);
+        }
+        if (dataDir.startsWith("/storage/sdcard0/")) {
+            // /storage/sdcard0/ -> /storage/emulated/{newUserId}/ or /data/media/{newUserId}/ in a multiuser system, otherwise /sdcard/
+            return getExternalStorage(dataDir, "/storage/sdcard0/", newUserId);
+        }
+        String oldStorageEmulatedDir = String.format(Locale.ROOT, "/storage/emulated/%d/", oldUserId);
+        if (dataDir.startsWith(oldStorageEmulatedDir)) {
+            // /storage/emulated/{oldUserId}/ -> /storage/emulated/{newUserId}/ or /data/media/{newUserId}/ in a multiuser system, otherwise /sdcard/
+            return getExternalStorage(dataDir, oldStorageEmulatedDir, newUserId);
+        }
+        String oldDataMediaDir = String.format(Locale.ROOT, "/data/media/%d/", oldUserId);
+        if (dataDir.startsWith(oldDataMediaDir)) {
+            // /data/media/{oldUserId}/ -> /storage/emulated/{newUserId}/ or /data/media/{newUserId}/ in a multiuser system, otherwise /sdcard/
+            return getExternalStorage(dataDir, oldDataMediaDir, newUserId);
+        }
+        Log.i(TAG, "getWritableDataDirectory: Unrecognized path " + dataDir + ", using as is.");
+        return dataDir;
+    }
+
+    @SuppressLint("SdCardPath")
+    @NonNull
+    private static String getExternalStorage(@NonNull String dataDir, @NonNull String match, @UserIdInt int userId) {
+        if (Users.getAllUsers().size() > 1) {
+            // Multiuser system, use either /storage/emulated/{userId} or /data/media/{userId}
+            String storageEmulatedDir = String.format(Locale.ROOT, "/storage/emulated/%d/", userId);
+            if (userId == UserHandleHidden.myUserId() && Paths.get(storageEmulatedDir).canRead()) {
+                return Utils.replaceOnce(dataDir, match, storageEmulatedDir);
+            }
+            return Utils.replaceOnce(dataDir, match, String.format(Locale.ROOT, "/data/media/%d/", userId));
+        }
+        // Otherwise, use /sdcard
+        return Utils.replaceOnce(dataDir, match, "/sdcard/");
     }
 }

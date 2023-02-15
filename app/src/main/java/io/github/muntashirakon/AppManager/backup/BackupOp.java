@@ -412,8 +412,8 @@ class BackupOp implements Closeable {
         }
         // Backup allowed notification listeners aka BIND_NOTIFICATION_LISTENER_SERVICE
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-            INotificationManager notificationManager = INotificationManager.Stub.asInterface(ProxyBinder.getService(Context.NOTIFICATION_SERVICE));
             try {
+                INotificationManager notificationManager = INotificationManager.Stub.asInterface(ProxyBinder.getService(Context.NOTIFICATION_SERVICE));
                 List<ComponentName> notificationComponents;
                 if (Ops.isPrivileged()) {
                     notificationComponents = notificationManager.getEnabledNotificationListeners(mUserId);
@@ -427,7 +427,8 @@ class BackupOp implements Closeable {
                 for (String component : componentsForThisPkg) {
                     rules.setNotificationListener(component, true);
                 }
-            } catch (RemoteException ignore) {
+            } catch (RemoteException e) {
+                e.printStackTrace();
             }
         }
         // Backup battery optimization
