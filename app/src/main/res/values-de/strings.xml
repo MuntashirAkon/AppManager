@@ -1276,7 +1276,7 @@
     <string name="export_app_list_select_format">Format für den Export der App-Liste auswählen</string>
     <string name="export_option_xml">XML</string>
     <string name="export_option_markdown">Markdown</string>
-    <string name="option_display_dot_files">Dotfiles</string>
+    <string name="option_display_dot_files">Versteckte Dateien</string>
     <string name="funding_campaign_text">Wir unternehmen gerade eine <b>Spendenaktion</b> für den App Manager für einen begrenzten Zeitraum. <a href="https://opencollective.com/app-manager#category-ABOUT">mehr erfahren …</a></string>
     <string name="adb_incomplete_usb_debugging_title">Unvollständiges USB-Debugging</string>
     <string name="adb_incomplete_usb_debugging_message">Es scheint, dass USB-Debugging nicht korrekt eingestellt ist. Bitte lies <a href="https://muntashirakon.github.io/AppManager/#subsec:enable-usb-debugging">die englische Dokumentation</a> für weitere Schritte. Wenn du schon weißt, wie es geht, tippe auf „Öffnen“, um die Entwickleroptionen zu öffnen, oder „Schließen“, um weiterhin den Nicht-Root-Modus zu benutzen.</string>
