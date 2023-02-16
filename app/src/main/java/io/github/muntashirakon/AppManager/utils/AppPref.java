@@ -362,7 +362,7 @@ public class AppPref {
         return freezeType;
     }
 
-    public static int getLayoutOrientation() {
+    public static int getLayoutDirection() {
         return getInt(PrefKey.PREF_LAYOUT_ORIENTATION_INT);
     }
 

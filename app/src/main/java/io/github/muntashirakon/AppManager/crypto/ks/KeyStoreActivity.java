@@ -15,8 +15,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.self.life.BuildExpiryChecker;
+import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.Utils;
-import io.github.muntashirakon.AppManager.utils.appearance.AppearanceUtils;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 
 public class KeyStoreActivity extends AppCompatActivity {
@@ -25,7 +25,7 @@ public class KeyStoreActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        AppearanceUtils.applyToActivity(this, true);
+        setTheme(AppPref.getTransparentAppTheme());
         super.onCreate(savedInstanceState);
         if (Boolean.TRUE.equals(BuildExpiryChecker.buildExpired())) {
             // Build has expired

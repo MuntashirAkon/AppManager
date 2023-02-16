@@ -10,7 +10,6 @@ import android.sun.security.provider.JavaKeyStoreProvider;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 
-import com.google.android.material.color.DynamicColors;
 import com.topjohnwu.superuser.Shell;
 
 import org.lsposed.hiddenapibypass.HiddenApiBypass;
@@ -47,7 +46,6 @@ public class AppManager extends Application {
         instance = this;
         super.onCreate();
         Thread.setDefaultUncaughtExceptionHandler(new AMExceptionHandler(this));
-        DynamicColors.applyToActivitiesIfAvailable(this);
         AppearanceUtils.init(this);
         Security.addProvider(new JavaKeyStoreProvider());
     }

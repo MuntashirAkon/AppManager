@@ -92,7 +92,7 @@ public class FreezeUnfreezeActivity extends BaseActivity {
     }
 
     @Override
-    protected boolean getTransparentBackground() {
+    public boolean getTransparentBackground() {
         return true;
     }
 

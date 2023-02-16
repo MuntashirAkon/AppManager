@@ -35,7 +35,6 @@ import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.SecurityAndOpsViewModel;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
-import io.github.muntashirakon.AppManager.utils.appearance.AppearanceUtils;
 
 public abstract class BaseActivity extends AppCompatActivity {
     public static final String TAG = BaseActivity.class.getSimpleName();
@@ -82,7 +81,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected final void onCreate(@Nullable Bundle savedInstanceState) {
-        AppearanceUtils.applyToActivity(this, getTransparentBackground());
         super.onCreate(savedInstanceState);
         if (Ops.isAuthenticated()) {
             Log.d(TAG, "Already authenticated.");
@@ -147,7 +145,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected abstract void onAuthenticated(@Nullable Bundle savedInstanceState);
 
-    protected boolean getTransparentBackground() {
+    public boolean getTransparentBackground() {
         return false;
     }
 

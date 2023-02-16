@@ -12,7 +12,7 @@ public class RecordLogDialogActivity extends BaseActivity {
     public static final String EXTRA_QUERY_SUGGESTIONS = "suggestions";
 
     @Override
-    protected boolean getTransparentBackground() {
+    public boolean getTransparentBackground() {
         return true;
     }
 

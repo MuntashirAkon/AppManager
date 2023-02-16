@@ -15,8 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import io.github.muntashirakon.AppManager.accessibility.activity.TrackerWindow;
-import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.ResourceUtil;
+import io.github.muntashirakon.AppManager.utils.appearance.AppearanceUtils;
 
 public class NoRootAccessibilityService extends BaseAccessibilityService {
     private static final CharSequence SETTING_PACKAGE = "com.android.settings";
@@ -31,7 +31,7 @@ public class NoRootAccessibilityService extends BaseAccessibilityService {
     @Override
     public void onCreate() {
         super.onCreate();
-        pm = LangUtils.wrapSystem(this).getPackageManager();
+        pm = AppearanceUtils.getSystemContext(this).getPackageManager();
     }
 
     @Override

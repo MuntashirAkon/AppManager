@@ -13,7 +13,6 @@ import android.os.Build;
 import android.os.UserHandleHidden;
 import android.text.Editable;
 import android.text.TextUtils;
-import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
@@ -36,6 +35,7 @@ import io.github.muntashirakon.AppManager.accessibility.AccessibilityMultiplexer
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.AppManager.utils.appearance.AppearanceUtils;
 import io.github.muntashirakon.widget.TextInputTextView;
 
 public class TrackerWindow {
@@ -56,7 +56,7 @@ public class TrackerWindow {
 
     @SuppressLint("ClickableViewAccessibility")
     public TrackerWindow(@NonNull Context context) {
-        Context themedContext = new ContextThemeWrapper(context, R.style.AppTheme);
+        Context themedContext = AppearanceUtils.getThemedContext(context);
         mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         int type = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
                 : WindowManager.LayoutParams.TYPE_PHONE;

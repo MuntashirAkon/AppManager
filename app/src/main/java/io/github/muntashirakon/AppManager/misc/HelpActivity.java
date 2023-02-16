@@ -27,8 +27,8 @@ import com.google.android.material.transition.MaterialSharedAxis;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.ResourceUtil;
+import io.github.muntashirakon.AppManager.utils.appearance.AppearanceUtils;
 import io.github.muntashirakon.util.UiUtils;
 
 public class HelpActivity extends BaseActivity implements SearchView.OnQueryTextListener {
@@ -61,7 +61,7 @@ public class HelpActivity extends BaseActivity implements SearchView.OnQueryText
         UiUtils.applyWindowInsetsAsPaddingNoTop(container);
 
         // Fix locale issue due to WebView (https://issuetracker.google.com/issues/37113860)
-        LangUtils.applyLocaleToActivity(this);
+        AppearanceUtils.applyOnlyLocale(this);
 
         webView.setWebViewClient(new WebViewClientImpl());
         webView.setNetworkAvailable(false);

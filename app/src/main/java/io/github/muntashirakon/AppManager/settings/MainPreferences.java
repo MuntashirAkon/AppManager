@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.collection.ArrayMap;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.Preference;
@@ -31,6 +30,7 @@ import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.AppManager.utils.appearance.AppearanceUtils;
 import io.github.muntashirakon.dialog.AlertDialogBuilder;
 import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
@@ -89,7 +89,7 @@ public class MainPreferences extends PreferenceFragment {
                     .setPositiveButton(R.string.apply, (dialog, which, selectedItem) -> {
                         currentLang = selectedItem;
                         AppPref.set(AppPref.PrefKey.PREF_CUSTOM_LOCALE_STR, currentLang);
-                        ActivityCompat.recreate(activity);
+                        AppearanceUtils.applyConfigurationChangesToActivities();
                     })
                     .setNegativeButton(R.string.cancel, null)
                     .show();

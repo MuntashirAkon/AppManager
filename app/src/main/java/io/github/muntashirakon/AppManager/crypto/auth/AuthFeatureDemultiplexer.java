@@ -34,7 +34,7 @@ public class AuthFeatureDemultiplexer extends BaseActivity {
     }
 
     @Override
-    protected boolean getTransparentBackground() {
+    public boolean getTransparentBackground() {
         return true;
     }
 
