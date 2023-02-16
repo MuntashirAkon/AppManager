@@ -96,6 +96,7 @@ import io.github.muntashirakon.AppManager.accessibility.AccessibilityMultiplexer
 import io.github.muntashirakon.AppManager.accessibility.NoRootAccessibilityService;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
+import io.github.muntashirakon.AppManager.apk.behavior.DexOptimizationDialog;
 import io.github.muntashirakon.AppManager.apk.behavior.FreezeUnfreeze;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
@@ -322,6 +323,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             menu.findItem(R.id.action_battery_opt).setVisible(Ops.isPrivileged());
             menu.findItem(R.id.action_net_policy).setVisible(Ops.isPrivileged());
             menu.findItem(R.id.action_install).setVisible(Ops.isPrivileged() && Users.getUsersIds().length > 1);
+            menu.findItem(R.id.action_optimize).setVisible(Ops.isPrivileged() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N);
         }
     }
 
@@ -511,6 +513,13 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         }
                     })
                     .show();
+        } else if (itemId == R.id.action_optimize) {
+            if (!Ops.isPrivileged()) {
+                UIUtils.displayShortToast(R.string.only_works_in_root_or_adb_mode);
+                return false;
+            }
+            DexOptimizationDialog dialog = DexOptimizationDialog.getInstance(new String[]{mPackageName});
+            dialog.show(getChildFragmentManager(), DexOptimizationDialog.TAG);
         } else return super.onOptionsItemSelected(item);
         return true;
     }

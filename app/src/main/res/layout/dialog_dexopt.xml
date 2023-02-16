@@ -1,0 +1,65 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollIndicators="top|bottom"
+    tools:ignore="UnusedAttribute">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/padding_medium">
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.AppTheme.TextInputLayout.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/select_a_dex2oat_compiler_filter"
+            app:hintAnimationEnabled="true"
+            app:hintEnabled="true">
+
+            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                android:id="@+id/compiler_filter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textNoSuggestions"
+                android:maxLines="1"
+                tools:text="@tools:sample/full_names" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/compile_layouts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/optimize_option_compile_layouts" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/clear_profile_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/optimize_option_clear_profile_data" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/check_profiles"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/optimize_option_check_profiles" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/force_compilation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/optimize_option_force_compilation" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/force_dexopt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/optimize_option_force_dexopt" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</ScrollView>

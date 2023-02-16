@@ -10,6 +10,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.view.MenuItem;
@@ -33,6 +34,7 @@ import java.util.Set;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.apk.behavior.DexOptimizationDialog;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
@@ -172,6 +174,18 @@ public class OneClickOpsActivity extends BaseActivity {
                             })
                             .show();
                 });
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            mItemCreator.addItemWithTitleSubtitle(getString(R.string.title_perform_runtime_optimization_to_apps),
+                            getString(R.string.summary_perform_runtime_optimization_to_apps))
+                    .setOnClickListener(v -> {
+                        if (!Ops.isPrivileged()) {
+                            UIUtils.displayShortToast(R.string.only_works_in_root_or_adb_mode);
+                            return;
+                        }
+                        DexOptimizationDialog dialog = DexOptimizationDialog.getInstance(null);
+                        dialog.show(getSupportFragmentManager(), DexOptimizationDialog.TAG);
+                    });
+        }
         mProgressIndicator.hide();
     }
 

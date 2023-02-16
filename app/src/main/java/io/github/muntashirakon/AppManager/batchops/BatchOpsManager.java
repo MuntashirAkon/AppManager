@@ -7,6 +7,7 @@ import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.IPackageManager;
 import android.content.pm.PackageManager;
 import android.net.NetworkPolicyManager;
 import android.net.Uri;
@@ -19,6 +20,7 @@ import androidx.annotation.CheckResult;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.annotation.WorkerThread;
 
 import java.io.IOException;
@@ -35,6 +37,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.accessibility.AccessibilityMultiplexer;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
+import io.github.muntashirakon.AppManager.apk.behavior.DexOptimizationOptions;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
 import io.github.muntashirakon.AppManager.backup.BackupException;
 import io.github.muntashirakon.AppManager.backup.BackupManager;
@@ -112,6 +115,10 @@ public class BatchOpsManager {
      * {@link Integer} value. One of the {@link NetPolicy network policies}. To be used with {@link #OP_NET_POLICY}.
      */
     public static final String ARG_NET_POLICIES = "net_policies";
+    /**
+     * {@link DexOptimizationOptions}, to be used with {@link #OP_DEXOPT}.
+     */
+    public static final String ARG_OPTIONS = "options";
 
     @IntDef(value = {
             OP_NONE,
@@ -122,20 +129,21 @@ public class BatchOpsManager {
             OP_CLEAR_CACHE,
             OP_CLEAR_DATA,
             OP_DELETE_BACKUP,
-            OP_FREEZE,
+            OP_DEXOPT,
             OP_DISABLE_BACKGROUND,
-            OP_UNFREEZE,
             OP_EXPORT_RULES,
             OP_FORCE_STOP,
+            OP_FREEZE,
+            OP_GRANT_PERMISSIONS,
             OP_IMPORT_BACKUPS,
             OP_NET_POLICY,
-            OP_SET_APP_OPS,
-            OP_GRANT_PERMISSIONS,
-            OP_RESTORE_BACKUP,
             OP_REVOKE_PERMISSIONS,
+            OP_RESTORE_BACKUP,
+            OP_SET_APP_OPS,
             OP_UNBLOCK_COMPONENTS,
             OP_UNBLOCK_TRACKERS,
             OP_UNINSTALL,
+            OP_UNFREEZE,
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface OpType {
@@ -163,6 +171,7 @@ public class BatchOpsManager {
     public static final int OP_REVOKE_PERMISSIONS = 18;
     public static final int OP_IMPORT_BACKUPS = 19;
     public static final int OP_NET_POLICY = 20;
+    public static final int OP_DEXOPT = 21;
 
     @Nullable
     public Logger mLogger;
@@ -257,6 +266,11 @@ public class BatchOpsManager {
                 return opImportBackups();
             case OP_NET_POLICY:
                 return opNetPolicy();
+            case OP_DEXOPT:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    return opPerformDexOpt();
+                }
+                return lastResult = new Result(Collections.emptyList(), false);
             case OP_NONE:
                 break;
         }
@@ -650,6 +664,61 @@ public class BatchOpsManager {
             }
         }
         accessibility.enableUninstall(false);
+        return lastResult = new Result(failedPackages);
+    }
+
+    @RequiresApi(Build.VERSION_CODES.N)
+    private Result opPerformDexOpt() {
+        List<UserPackagePair> failedPackages = new ArrayList<>();
+        DexOptimizationOptions options = args.getParcelable(ARG_OPTIONS);
+        IPackageManager pm = PackageManagerCompat.getPackageManager();
+        if (options.packages == null) {
+            // Include all packages
+            try {
+                options.packages = pm.getAllPackages().toArray(new String[0]);
+            } catch (RemoteException e) {
+                log("====> op=DEXOPT", e);
+                return lastResult = new Result(failedPackages, false);
+            }
+        }
+        for (String packageName : options.packages) {
+            try {
+                if (options.compilerFiler != null) {
+                    if (options.clearProfileData) {
+                        pm.clearApplicationProfileData(packageName);
+                    }
+                    boolean result;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+                        result = pm.performDexOptMode(packageName, options.checkProfiles, options.compilerFiler,
+                                options.forceCompilation, true, null);
+                    } else {
+                        result = pm.performDexOptMode(packageName, options.checkProfiles, options.compilerFiler,
+                                options.forceCompilation);
+                    }
+                    if (!result) {
+                        log("====> op=DEXOPT, pkg=" + packageName + ", failed=dexopt-mode");
+                        failedPackages.add(new UserPackagePair(packageName, 0));
+                        continue;
+                    }
+                }
+                if (options.compileLayouts && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    if (options.clearProfileData) {
+                        pm.clearApplicationProfileData(packageName);
+                    }
+                    if (!pm.compileLayouts(packageName)) {
+                        log("====> op=DEXOPT, pkg=" + packageName + ", failed=compile-layouts");
+                        failedPackages.add(new UserPackagePair(packageName, 0));
+                        continue;
+                    }
+                }
+                if (options.forceDexOpt) {
+                    pm.forceDexOpt(packageName);
+                }
+            } catch (Throwable e) {
+                log("====> op=DEXOPT, pkg=" + packageName, e);
+                failedPackages.add(new UserPackagePair(packageName, 0));
+            }
+        }
         return lastResult = new Result(failedPackages);
     }
 

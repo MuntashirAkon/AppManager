@@ -1320,4 +1320,19 @@
     <string name="title_ui_tracker">UI Tracker</string>
     <string name="title_terminal_emulator">Terminal</string>
     <string name="title_labs_activity">Labs</string>
+    <string name="select_a_dex2oat_compiler_filter"><tt>dex2oat</tt> compiler filter</string>
+    <string name="optimize_option_compile_layouts">Compile layout resources</string>
+    <string name="optimize_option_clear_profile_data">Clear previous profile data</string>
+    <string name="optimize_option_check_profiles">Consider profile data during DEX optimization</string>
+    <string name="optimize_option_force_compilation">Force compilation even when not required</string>
+    <string name="optimize_option_force_dexopt">Immediately perform DEX optimization</string>
+    <string name="title_perform_runtime_optimization_to_apps">Perform runtime optimization</string>
+    <string name="action_run">Run</string>
+    <string name="summary_perform_runtime_optimization_to_apps">Optimize DEX and (in Android 10 and later) layouts to improve the performance of the applications.</string>
+    <string name="action_optimize_app">Optimize</string>
+    <string name="batch_ops_runtime_optimization">Runtime optimization</string>
+    <plurals name="alert_failed_to_optimize_apps">
+        <item quantity="one">Could not optimize %1$d app</item>
+        <item quantity="other">Could not optimize %1$d apps</item>
+    </plurals>
 </resources>

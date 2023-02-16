@@ -910,7 +910,10 @@ public interface IPackageManager extends IInterface {
      * Ask the package manager to perform a dex-opt for the given reason. The package
      * manager will map the reason to a compiler filter according to the current system
      * configuration.
+     *
+     * @deprecated Removed in API 27 (Android O MR1)
      */
+    @Deprecated
     @RequiresApi(Build.VERSION_CODES.N)
     boolean performDexOpt(String packageName, boolean checkProfiles, int compileReason, boolean force) throws RemoteException;
 
@@ -919,10 +922,23 @@ public interface IPackageManager extends IInterface {
      * <p>
      * Note: exposed only for the shell command to allow moving packages explicitly to a
      * definite state.
+     *
+     * @deprecated Replaced by {@link #performDexOptMode(String, boolean, String, boolean, boolean, String)} in API 27 (Android O MR1)
      */
+    @Deprecated
     @RequiresApi(Build.VERSION_CODES.N)
     boolean performDexOptMode(String packageName, boolean checkProfiles,
                               String targetCompilerFilter, boolean force) throws RemoteException;
+
+    /**
+     * Ask the package manager to perform a dex-opt with the given compiler filter.
+     * <p>
+     * Note: exposed only for the shell command to allow moving packages explicitly to a
+     * definite state.
+     */
+    @RequiresApi(Build.VERSION_CODES.O_MR1)
+    boolean performDexOptMode(String packageName, boolean checkProfiles,
+                              String targetCompilerFilter, boolean force, boolean bootComplete, String splitName) throws RemoteException;
 
     /**
      * Ask the package manager to perform a dex-opt with the given compiler filter on the
@@ -1278,6 +1294,7 @@ public interface IPackageManager extends IInterface {
     @Deprecated
     @RequiresApi(Build.VERSION_CODES.Q)
     ParceledListSlice getDeclaredSharedLibraries(String packageName, int flags, int userId) throws RemoteException;
+
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     ParceledListSlice getDeclaredSharedLibraries(String packageName, long flags, int userId) throws RemoteException;
 

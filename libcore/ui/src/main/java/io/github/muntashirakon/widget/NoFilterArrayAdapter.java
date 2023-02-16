@@ -6,6 +6,7 @@ import android.content.Context;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 
+import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -28,7 +29,7 @@ public class NoFilterArrayAdapter<T> extends ArrayAdapter<T> {
         }
     };
 
-    public NoFilterArrayAdapter(@NonNull Context context, int resource, @NonNull List<T> objects) {
+    public NoFilterArrayAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<T> objects) {
         super(context, resource, objects);
     }
 

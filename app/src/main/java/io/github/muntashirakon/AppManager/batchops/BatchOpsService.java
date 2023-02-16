@@ -357,6 +357,8 @@ public class BatchOpsService extends ForegroundService {
                 return getString(R.string.set_mode_for_app_ops_dots);
             case BatchOpsManager.OP_IMPORT_BACKUPS:
                 return getString(R.string.pref_import_backups);
+            case BatchOpsManager.OP_DEXOPT:
+                return getString(R.string.batch_ops_runtime_optimization);
             case BatchOpsManager.OP_NONE:
                 break;
         }
@@ -398,6 +400,8 @@ public class BatchOpsService extends ForegroundService {
                 return getResources().getQuantityString(R.plurals.alert_failed_to_set_app_ops, failedCount, failedCount);
             case BatchOpsManager.OP_IMPORT_BACKUPS:
                 return getResources().getQuantityString(R.plurals.alert_failed_to_import_backups, failedCount, failedCount);
+            case BatchOpsManager.OP_DEXOPT:
+                return getResources().getQuantityString(R.plurals.alert_failed_to_optimize_apps, failedCount, failedCount);
         }
         return getString(R.string.error);
     }
