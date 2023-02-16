@@ -93,6 +93,13 @@ public class AppDb {
         }
     }
 
+    /**
+     * Fetch backups without a lock file. Necessary checks must be done to ensure that the backups actually exist.
+     */
+    public List<Backup> getAllBackupsNoLock(String packageName) {
+        return backupDao.get(packageName);
+    }
+
     public void insert(App app) {
         synchronized (sLock) {
             appDao.insert(app);

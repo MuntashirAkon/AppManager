@@ -135,14 +135,25 @@ public final class BackupUtils {
 
     @WorkerThread
     @NonNull
-    public static List<Backup> getBackupMetadataFromDb(@NonNull String packageName) {
-        return new AppDb().getAllBackups(packageName);
+    public static List<Backup> getBackupMetadataFromDbNoLockValidate(@NonNull String packageName) {
+        List<Backup> backups = new AppDb().getAllBackupsNoLock(packageName);
+        List<Backup> validatedBackups = new ArrayList<>(backups.size());
+        for (Backup backup : backups) {
+            try {
+                if (backup.getBackupPath().exists()) {
+                    validatedBackups.add(backup);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return validatedBackups;
     }
 
     @WorkerThread
     @Nullable
-    public static Backup getLatestBackupMetadataFromDb(@NonNull String packageName) {
-        List<Backup> backups = getBackupMetadataFromDb(packageName);
+    public static Backup getLatestBackupMetadataFromDbNoLockValidate(@NonNull String packageName) {
+        List<Backup> backups = getBackupMetadataFromDbNoLockValidate(packageName);
         Backup latestBackup = null;
         for (Backup backup : backups) {
             if (latestBackup == null || backup.backupTime > latestBackup.backupTime) {

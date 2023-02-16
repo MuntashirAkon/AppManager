@@ -611,9 +611,7 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
             while (it.hasNext()) {
                 ApplicationItem item = it.next();
                 if (item.packageName.equals(packageName)) {
-                    if (selectedPackageApplicationItemMap.containsKey(packageName)) {
-                        selectedPackageApplicationItemMap.remove(packageName);
-                    }
+                    selectedPackageApplicationItemMap.remove(packageName);
                     it.remove();
                     return true;
                 }
@@ -686,7 +684,7 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
             item.lastActionTime = app.lastActionTime;
             try {
                 if (item.backup == null) {
-                    item.backup = BackupUtils.getLatestBackupMetadataFromDb(packageName);
+                    item.backup = BackupUtils.getLatestBackupMetadataFromDbNoLockValidate(packageName);
                 }
             } catch (Exception ignore) {
             }

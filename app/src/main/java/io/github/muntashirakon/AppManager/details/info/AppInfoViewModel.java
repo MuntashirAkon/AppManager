@@ -64,7 +64,6 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
-import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 
@@ -183,7 +182,7 @@ public class AppInfoViewModel extends AndroidViewModel {
             tagCloud.hasKeyStoreItems = KeyStoreUtils.hasKeyStore(applicationInfo.uid);
             tagCloud.hasMasterKeyInKeyStore = KeyStoreUtils.hasMasterKey(applicationInfo.uid);
             tagCloud.usesPlayAppSigning = PackageUtils.usesPlayAppSigning(applicationInfo);
-            tagCloud.backups = BackupUtils.getBackupMetadataFromDb(packageName);
+            tagCloud.backups = BackupUtils.getBackupMetadataFromDbNoLockValidate(packageName);
             if (!mainModel.getIsExternalApk() && PermissionUtils.hasDumpPermission()) {
                 String targetString = "user," + packageName + "," + applicationInfo.uid;
                 Runner.Result result = Runner.runCommand(new String[]{"dumpsys", "deviceidle", "whitelist"});
