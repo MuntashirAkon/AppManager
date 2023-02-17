@@ -1280,4 +1280,19 @@
     <string name="sort_by_last_modified">Son değiştirilme</string>
     <string name="sort_by_file_size">Dosya boyutu</string>
     <string name="sort_by_file_type">Dosya türü</string>
+    <string name="select_a_dex2oat_compiler_filter"><tt>dex2oat</tt> derleyici filtresi</string>
+    <string name="optimize_option_clear_profile_data">Önceki profil verilerini temizle</string>
+    <string name="optimize_option_check_profiles">DEX iyileştirmesi sırasında profil verilerini göz önünde bulundur</string>
+    <string name="optimize_option_force_dexopt">DEX iyileştirmesini hemen gerçekleştir</string>
+    <string name="title_perform_runtime_optimization_to_apps">Çalışma zamanı iyileştirmesi gerçekleştir</string>
+    <string name="action_run">Çalıştır</string>
+    <string name="summary_perform_runtime_optimization_to_apps">Uygulamaların performansını artırmak için DEX\'i ve (Android 10 ve sonraki sürümlerde) düzenleri iyileştirin.</string>
+    <string name="action_optimize_app">İyileştir</string>
+    <string name="batch_ops_runtime_optimization">Çalışma zamanı iyileştirmesi</string>
+    <string name="optimize_option_compile_layouts">Düzen kaynaklarını derle</string>
+    <string name="optimize_option_force_compilation">Gerekli olmadığında bile derlemeye zorla</string>
+    <plurals name="alert_failed_to_optimize_apps">
+        <item quantity="one">%1$d uygulama iyileştirilemedi</item>
+        <item quantity="other">%1$d uygulama iyileştirilemedi</item>
+    </plurals>
 </resources>
