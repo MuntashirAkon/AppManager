@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Set;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
+import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.behavior.DexOptimizationDialog;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
@@ -174,7 +175,7 @@ public class OneClickOpsActivity extends BaseActivity {
                             })
                             .show();
                 });
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             mItemCreator.addItemWithTitleSubtitle(getString(R.string.title_perform_runtime_optimization_to_apps),
                             getString(R.string.summary_perform_runtime_optimization_to_apps))
                     .setOnClickListener(v -> {
