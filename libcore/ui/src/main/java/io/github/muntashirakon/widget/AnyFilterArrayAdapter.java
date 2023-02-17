@@ -6,6 +6,7 @@ import android.content.Context;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 
+import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ public class AnyFilterArrayAdapter<T> extends ArrayAdapter<T> {
         }
     };
 
-    public AnyFilterArrayAdapter(@NonNull Context context, int resource, @NonNull List<T> objects) {
+    public AnyFilterArrayAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<T> objects) {
         super(context, resource, new ArrayList<>(objects));
         this.mObjects = objects;
     }

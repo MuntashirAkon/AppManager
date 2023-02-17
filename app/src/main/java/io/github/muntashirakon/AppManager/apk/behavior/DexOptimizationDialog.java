@@ -27,7 +27,7 @@ import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
-import io.github.muntashirakon.widget.NoFilterArrayAdapter;
+import io.github.muntashirakon.widget.AnyFilterArrayAdapter;
 
 public class DexOptimizationDialog extends DialogFragment {
     public static final String TAG = DexOptimizationDialog.class.getSimpleName();
@@ -80,6 +80,7 @@ public class DexOptimizationDialog extends DialogFragment {
         MaterialCheckBox checkProfilesCheck = view.findViewById(R.id.check_profiles);
         MaterialCheckBox forceCompilationCheck = view.findViewById(R.id.force_compilation);
         MaterialCheckBox forceDexOptCheck = view.findViewById(R.id.force_dexopt);
+        checkProfilesCheck.setChecked(options.checkProfiles);
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             compileLayoutsCheck.setVisibility(View.GONE);
         }
@@ -88,7 +89,7 @@ public class DexOptimizationDialog extends DialogFragment {
         }
 
         // Set listeners
-        autoCompleteTextView.setAdapter(new NoFilterArrayAdapter<>(requireContext(), R.layout.item_checked_text_view,
+        autoCompleteTextView.setAdapter(new AnyFilterArrayAdapter<>(requireContext(), R.layout.item_checked_text_view,
                 COMPILER_FILTERS));
         compileLayoutsCheck.setOnCheckedChangeListener((buttonView, isChecked) -> options.compileLayouts = isChecked);
         clearProfileDataCheck.setOnCheckedChangeListener((buttonView, isChecked) -> options.clearProfileData = isChecked);
