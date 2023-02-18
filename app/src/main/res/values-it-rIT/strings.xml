@@ -1319,4 +1319,20 @@
     <string name="option_display_dot_files">File di punti</string>
     <string name="adb_incomplete_usb_debugging_title">Debug USB incompleto</string>
     <string name="adb_incomplete_usb_debugging_message">Sembra che il debug USB non sia configurato correttamente. Si prega di leggere <a href="https://muntashirakon.github.io/AppManager/#subsec:enable-usb-debugging">la documentazione</a> per ulteriori passaggi. Se conosci già i passaggi, fai clic su \"Apri\" per aprire le opzioni sviluppatore oppure fai clic su \"Chiudi\" per continuare a utilizzare la modalità no-root.</string>
+    <string name="select_a_dex2oat_compiler_filter"><tt>dex2oat</tt> filtro compilatore</string>
+    <string name="optimize_option_clear_profile_data">Cancella dati del profilo precedente</string>
+    <string name="optimize_option_check_profiles">Considera dati del profilo durante l\'ottimizzazione DEX</string>
+    <string name="optimize_option_force_compilation">Forza compilazione anche quando non richiesta</string>
+    <string name="optimize_option_force_dexopt">Esegui immediatamente l\'ottimizzazione DEX</string>
+    <string name="optimize_option_compile_layouts">Compila risorse di layout</string>
+    <string name="title_perform_runtime_optimization_to_apps">Esegui ottimizzazione runtime</string>
+    <string name="action_run">Esegui</string>
+    <string name="summary_perform_runtime_optimization_to_apps">Ottimizza DEX e (in Android 10 e versioni successive) layout per migliorare le prestazioni delle applicazioni.</string>
+    <string name="action_optimize_app">Ottimizza</string>
+    <string name="batch_ops_runtime_optimization">Ottimizzazione runtime</string>
+    <plurals name="alert_failed_to_optimize_apps">
+        <item quantity="one">Impossibile ottimizzare l\'app %1$d</item>
+        <item quantity="many">Impossibile ottimizzare le app %1$d</item>
+        <item quantity="other">Impossibile ottimizzare le app %1$d</item>
+    </plurals>
 </resources>
