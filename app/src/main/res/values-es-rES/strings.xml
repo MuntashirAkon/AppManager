@@ -1319,4 +1319,7 @@
     <string name="renamed_successfully">Renombrado</string>
     <string name="selinux_context">contexto de SELinux</string>
     <string name="unix_file_permissions">Modo</string>
+    <string name="select_a_dex2oat_compiler_filter"><tt>dex2oat</tt> filtro del compilador</string>
+    <string name="optimize_option_compile_layouts">Compilar los recursos de diseño</string>
+    <string name="optimize_option_clear_profile_data">Borrar datos de perfil anteriores</string>
 </resources>
