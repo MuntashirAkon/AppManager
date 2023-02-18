@@ -1357,4 +1357,21 @@
     <string name="adb_incomplete_usb_debugging_title">Niekompletne debugowanie USB</string>
     <string name="funding_campaign_text">Prowadzimy <b>kampanię finansowania</b> dla App Managera przez ograniczony okres. <a href="https://opencollective.com/app-manager#category-ABOUT">dowiedz się więcej...</a></string>
     <string name="adb_incomplete_usb_debugging_message">Wygląda na to, że debugowanie USB nie jest skonfigurowane prawidłowo. Proszę przeczytać <a href="https://muntashirakon.github.io/AppManager/#subsec:enable-usb-debugging">dokumentację</a> w celu uzyskania dodatkowych kroków. Jeśli znasz już te kroki, kliknij \"Otwórz\", aby otworzyć opcje deweloperskie, lub kliknij \"Zamknij\", aby kontynuować korzystanie z trybu no-root.</string>
+    <string name="select_a_dex2oat_compiler_filter"><tt>dex2oat</tt> filtr kompilatora</string>
+    <string name="optimize_option_compile_layouts">Skompiluj zasoby układu</string>
+    <string name="optimize_option_clear_profile_data">Wyczyść poprzednie dane profilu</string>
+    <string name="optimize_option_force_compilation">Wymuś kompilację, nawet jeśli nie jest wymagana</string>
+    <string name="optimize_option_force_dexopt">Natychmiast wykonaj optymalizację DEX</string>
+    <string name="title_perform_runtime_optimization_to_apps">Przeprowadź optymalizację środowiska wykonawczego</string>
+    <string name="action_run">Uruchom</string>
+    <string name="summary_perform_runtime_optimization_to_apps">Zoptymalizuj DEX oraz (w systemie Android 10 i nowszych) układy, aby poprawić wydajność aplikacji.</string>
+    <string name="action_optimize_app">Optymalizuj</string>
+    <string name="batch_ops_runtime_optimization">Optymalizacja środowiska wykonawczego</string>
+    <string name="optimize_option_check_profiles">Uwzględnij dane profilu podczas optymalizacji DEX</string>
+    <plurals name="alert_failed_to_optimize_apps">
+        <item quantity="one">Nie udało się zoptymalizować aplikacji %1$d</item>
+        <item quantity="few">Nie udało się zoptymalizować aplikacji %1$d</item>
+        <item quantity="many">Nie udało się zoptymalizować aplikacji %1$d</item>
+        <item quantity="other">Nie udało się zoptymalizować aplikacji %1$d</item>
+    </plurals>
 </resources>
