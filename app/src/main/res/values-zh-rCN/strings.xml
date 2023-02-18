@@ -1207,7 +1207,7 @@
     <string name="file_creation_date">创建日期</string>
     <string name="sort_by_data_usage">数据使用</string>
     <string name="filter_apps_with_keystore">使用密钥库</string>
-    <string name="filter_apps_with_saf">使用SAF</string>
+    <string name="filter_apps_with_saf">使用 SAF</string>
     <string name="filter_apps_with_ssaid">使用 SSAID</string>
     <string name="action_continue">继续</string>
     <string name="install_for_another_user">为...安装</string>
@@ -1216,7 +1216,7 @@
     <string name="grant_overlay_permission_message">允许 App Manager 在所有其他窗口之上显示悬浮窗</string>
     <string name="grant_accessibility_permission_for_tracking_window_contents">允许 App Manager 使用辅助功能来跟踪前台窗口的内容。</string>
     <string name="class_hierarchy">层次结构</string>
-    <string name="title_ui_tracker">UI跟踪器</string>
+    <string name="title_ui_tracker">UI 跟踪器</string>
     <string name="title_terminal_emulator">终端</string>
     <string name="title_labs_activity">实验室</string>
     <string name="optimize_option_compile_layouts">编译布局资源</string>
@@ -1251,6 +1251,6 @@
     <string name="option_display_folders_on_top">文件夹置顶</string>
     <string name="export_app_list">导出应用列表</string>
     <string name="export_option_xml">XML</string>
-    <string name="export_option_markdown">Markdown</string>
+    <string name="export_option_markdown">Markdown 格式</string>
     <string name="adb_incomplete_usb_debugging_title">不完整的 USB 调试</string>
 </resources>
