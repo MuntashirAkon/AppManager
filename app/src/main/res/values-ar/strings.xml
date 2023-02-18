@@ -1432,4 +1432,23 @@
     <string name="funding_campaign_text">نحن ندير حملة تمويل <b> </b> لمدير التطبيقات لفترة محدودة. <a href="https://opencollective.com/app-manager#category-ABOUT"> تعرف على المزيد... </a></string>
     <string name="adb_incomplete_usb_debugging_title">تصحيح أخطاء USB غير مكتمل</string>
     <string name="adb_incomplete_usb_debugging_message">يبدو أن تصحيح أخطاء USB لم يتم تكوينه بشكل صحيح. يرجى قراءة <a href="https://muntashirakon.github.io/AppManager/#subsec:enable-usb-debugging"> الوثائق </a> للحصول على خطوات إضافية. إذا كنت تعرف الخطوات بالفعل ، فالرجاء النقر فوق \"فتح\" لفتح خيارات المطور ، أو النقر فوق \"إغلاق\" لمواصلة استخدام وضع عدم الجذر.</string>
+    <string name="select_a_dex2oat_compiler_filter"><tt> dex2oat </tt> فلتر المجمع</string>
+    <string name="optimize_option_compile_layouts">موارد تجميع التصميم</string>
+    <string name="optimize_option_clear_profile_data">محو بيانات الملف الشخصي السابقة</string>
+    <string name="optimize_option_check_profiles">ضع في اعتبارك بيانات الملف الشخصي أثناء تحسين DEX</string>
+    <string name="optimize_option_force_compilation">فرض التجميع حتى عندما لا يكون مطلوبا</string>
+    <string name="optimize_option_force_dexopt">إجراء تحسين DEX على الفور</string>
+    <string name="title_perform_runtime_optimization_to_apps">إجراء تحسين وقت التشغيل</string>
+    <string name="action_run">تشغيل</string>
+    <string name="summary_perform_runtime_optimization_to_apps">قم بتحسين تخطيطات DEX و (في Android 10 والإصدارات الأحدث) لتحسين أداء التطبيقات.</string>
+    <string name="action_optimize_app">تحسين</string>
+    <string name="batch_ops_runtime_optimization">تحسين وقت التشغيل</string>
+    <plurals name="alert_failed_to_optimize_apps">
+        <item quantity="zero">تعذر تحسين تطبيق %1$d</item>
+        <item quantity="one">تعذر تحسين تطبيق %1$d</item>
+        <item quantity="two">تعذر تحسين تطبيق %1$d</item>
+        <item quantity="few">تعذر تحسين تطبيقات %1$d</item>
+        <item quantity="many">تعذر تحسين تطبيق %1$d</item>
+        <item quantity="other">تعذر تحسين تطبيق %1$d</item>
+    </plurals>
 </resources>
