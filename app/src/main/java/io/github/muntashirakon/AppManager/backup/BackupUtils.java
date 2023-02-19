@@ -236,31 +236,6 @@ public final class BackupUtils {
     }
 
     @SuppressLint("SdCardPath")
-    static boolean isInternalDirectory(@NonNull String dir) {
-        return dir.startsWith("/data/data/") || dir.startsWith("/data/user/") || dir.startsWith("/data/user_de/");
-    }
-
-    @SuppressLint("SdCardPath")
-    static boolean isExternalDirectoryMounted(@NonNull String dir, @UserIdInt int usedId) {
-        if (dir.startsWith("/sdcard")) {
-            return Paths.get("/sdcard").isDirectory();
-        }
-        if (dir.startsWith("/storage/sdcard")) {
-            return Paths.get("/storage/sdcard").isDirectory();
-        }
-        String storageEmulatedDir = String.format(Locale.ROOT, "/storage/emulated/%d/", usedId);
-        if (dir.startsWith(storageEmulatedDir)) {
-            return Paths.get(storageEmulatedDir).isDirectory();
-        }
-        String dataMediaDir = String.format(Locale.ROOT, "/data/media/%d/", usedId);
-        if (dir.startsWith(dataMediaDir)) {
-            return Paths.get(dataMediaDir).isDirectory();
-        }
-        Log.i(TAG, "isExternalDirectoryMounted: Unrecognized path " + dir + ", returning true as fallback.");
-        return true;
-    }
-
-    @SuppressLint("SdCardPath")
     @NonNull
     static String[] getDataDirectories(@NonNull ApplicationInfo applicationInfo, boolean loadInternal,
                                        boolean loadExternal, boolean loadMediaObb) {

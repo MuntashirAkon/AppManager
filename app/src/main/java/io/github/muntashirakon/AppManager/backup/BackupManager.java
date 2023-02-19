@@ -21,9 +21,6 @@ import io.github.muntashirakon.AppManager.utils.TarUtils;
 public class BackupManager {
     public static final String TAG = "BackupManager";
 
-    static final String EXT_DATA = "/Android/data/";
-    static final String EXT_MEDIA = "/Android/media/";
-    static final String EXT_OBB = "/Android/obb/";
     /* language=regexp */
     static final String[] CACHE_DIRS = new String[]{"cache/.*", "code_cache/.*", "no_backup/.*"};
     /* language=regexp */

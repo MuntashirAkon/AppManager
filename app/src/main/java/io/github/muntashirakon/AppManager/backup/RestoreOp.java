@@ -3,15 +3,11 @@
 package io.github.muntashirakon.AppManager.backup;
 
 import static io.github.muntashirakon.AppManager.backup.BackupManager.DATA_PREFIX;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.EXT_DATA;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.EXT_MEDIA;
-import static io.github.muntashirakon.AppManager.backup.BackupManager.EXT_OBB;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.KEYSTORE_PLACEHOLDER;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.KEYSTORE_PREFIX;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.MASTER_KEY;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.SOURCE_PREFIX;
 
-import android.annotation.SuppressLint;
 import android.app.AppOpsManager;
 import android.app.INotificationManager;
 import android.content.ComponentName;
@@ -414,7 +410,6 @@ class RestoreOp implements Closeable {
         Runner.runCommand(new String[]{"restorecon", "-R", keyStorePath.getFilePath()});
     }
 
-    @SuppressLint("SdCardPath")
     private void restoreData() throws BackupException {
         // Data restore is requested: Data restore is only possible if the app is actually
         // installed. So, check if it's installed first.
@@ -445,7 +440,7 @@ class RestoreOp implements Closeable {
         // Restore backups
         for (int i = 0; i < metadata.dataDirs.length; ++i) {
             String dataSource = BackupUtils.getWritableDataDirectory(metadata.dataDirs[i], metadata.userHandle, userHandle);
-            boolean isExternal = !BackupUtils.isInternalDirectory(dataSource);
+            BackupDataDirectoryInfo dataDirectoryInfo = BackupDataDirectoryInfo.getInfo(dataSource, userHandle);
             Path dataSourceFile = Paths.get(dataSource);
 
             Path[] dataFiles = getDataFiles(backupPath, i);
@@ -457,24 +452,39 @@ class RestoreOp implements Closeable {
                 // Fallback to app UID
                 uidGidPair = new UidGidPair(packageInfo.applicationInfo.uid, packageInfo.applicationInfo.uid);
             }
-            if (isExternal) {
+            if (dataDirectoryInfo.isExternal()) {
                 // Skip if external data restore is not requested
-                if (!requestedFlags.backupExternalData() && dataSource.contains(EXT_DATA))
-                    continue;
-                // Skip if media/obb restore not requested
-                if (!requestedFlags.backupMediaObb() && (dataSource.contains(EXT_MEDIA)
-                        || dataSource.contains(EXT_OBB))) continue;
+                switch (dataDirectoryInfo.subtype) {
+                    case BackupDataDirectoryInfo.TYPE_ANDROID_DATA:
+                        // Skip restoring Android/data directory if not requested
+                        if (!requestedFlags.backupExternalData()) {
+                            continue;
+                        }
+                        break;
+                    case BackupDataDirectoryInfo.TYPE_ANDROID_OBB:
+                    case BackupDataDirectoryInfo.TYPE_ANDROID_MEDIA:
+                        // Skip restoring Android/data or Android/media if media/obb restore not requested
+                        if (!requestedFlags.backupMediaObb()) {
+                            continue;
+                        }
+                        break;
+                    case BackupDataDirectoryInfo.TYPE_CREDENTIAL_PROTECTED:
+                    case BackupDataDirectoryInfo.TYPE_CUSTOM:
+                    case BackupDataDirectoryInfo.TYPE_DEVICE_PROTECTED:
+                        // NOP
+                        break;
+                }
             } else {
                 // Skip if internal data restore is not requested.
                 if (!requestedFlags.backupInternalData()) continue;
             }
             // Create data folder if not exists
             if (!dataSourceFile.exists()) {
-                if (isExternal && !BackupUtils.isExternalDirectoryMounted(dataSource, userHandle)) {
+                if (dataDirectoryInfo.isExternal() && !dataDirectoryInfo.isMounted) {
                     throw new BackupException("External directory containing " + dataSource + " is not mounted.");
                 }
                 dataSourceFile.mkdirs();
-                if (!isExternal) {
+                if (!dataDirectoryInfo.isExternal()) {
                     // Restore UID, GID
                     dataSourceFile.setUidGid(uidGidPair);
                 }
@@ -498,7 +508,9 @@ class RestoreOp implements Closeable {
                 throw new BackupException("Failed to restore ownership info for index " + i + ".");
             }
             // Restore context
-            if (!isExternal) Runner.runCommand(new String[]{"restorecon", "-R", dataSource});
+            if (!dataDirectoryInfo.isExternal()) {
+                Runner.runCommand(new String[]{"restorecon", "-R", dataSource});
+            }
         }
     }
 

@@ -5,6 +5,8 @@ package io.github.muntashirakon.AppManager.utils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.jetbrains.annotations.Contract;
+
 import java.io.IOException;
 
 import io.github.muntashirakon.AppManager.backup.BackupException;
@@ -19,6 +21,7 @@ public class ExUtils {
         void run() throws Throwable;
     }
 
+    @Contract("_ -> fail")
     public static <T> T rethrowAsIOException(@NonNull Throwable e) throws IOException {
         IOException ioException = new IOException(e.getMessage());
         //noinspection UnnecessaryInitCause
@@ -26,6 +29,7 @@ public class ExUtils {
         throw ioException;
     }
 
+    @Contract("_, _ -> fail")
     public static <T> T rethrowAsBackupException(@NonNull String message, @NonNull Throwable e) throws BackupException {
         BackupException backupException = new BackupException(message);
         //noinspection UnnecessaryInitCause
