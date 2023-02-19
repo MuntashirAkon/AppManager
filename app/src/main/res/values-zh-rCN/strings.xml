@@ -1253,4 +1253,8 @@
     <string name="export_option_xml">XML</string>
     <string name="export_option_markdown">Markdown 格式</string>
     <string name="adb_incomplete_usb_debugging_title">不完整的 USB 调试</string>
+    <string name="funding_campaign_dialog_message">我们正在限时为应用程序管理器开展 <b> 筹资活动 </b>。访问 <a href="https://opencollective.com/app-manager#category-ABOUT">opencollective.com/app-manager</a> 以了解有关该活动的更多信息。此通知不会再次显示，但您可以在整个活动期间的“设置”页面中找到它。</string>
+    <string name="app_can_write_and_execute_in_same_place">应用程序违反了<a href="https://en.wikipedia.org/wiki/W%5EX">W^X策略</a>，并且能够在同一目录或内存的同一部分中写入和执行。这允许通过修改应用程序中嵌入的可执行文件或从Internet下载来执行任意可执行文件。除非这是应用程序的预期行为（如终端模拟器），建议找到针对SDK 29（Android 10）和更高版本的应用程序的更新版本，或找到替代方案。</string>
+    <string name="adb_incomplete_usb_debugging_message">看起来USB调试配置不正确。请阅读 <a href="https://muntashirakon.github.io/AppManager/#subsec:enable-usb-debugging"> 文档 </a> 了解其他步骤。如果您已经知道步骤，请单击“打开”以打开开发人员选项，或单击“关闭”以继续使用无root模式。</string>
+    <string name="funding_campaign_text">我们正为 App Manager 举办一个限时的<b>筹款活动</b>。<a href="https://opencollective.com/app-manager#category-ABOUT">了解更多……</a></string>
 </resources>
