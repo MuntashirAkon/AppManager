@@ -1358,4 +1358,21 @@
     <string name="adb_incomplete_usb_debugging_message">Похоже, отладка по USB не настроена должным образом. Прочтите <a href="https://muntashirakon.github.io/AppManager/#subsec:enable-usb-debugging">документацию</a>, чтобы узнать о дополнительных шагах. Если вы уже известен процесс, нажмите «Открыть», чтобы открыть параметры разработчика, или нажмите «Закрыть», чтобы продолжить использовать режим без полномочий root.</string>
     <string name="class_hierarchy">Иерархия</string>
     <string name="filter_apps_with_ssaid">С SSAID</string>
+    <string name="optimize_option_clear_profile_data">Очистка данных предыдущего профиля</string>
+    <string name="select_a_dex2oat_compiler_filter">Фильтр компилятора <tt>dex2oat</tt></string>
+    <string name="optimize_option_compile_layouts">Компиляция ресурсов макета</string>
+    <string name="optimize_option_check_profiles">Учитывать данные профиля во время оптимизации DEX</string>
+    <string name="optimize_option_force_compilation">Принудительная компиляция, даже если она не требуется</string>
+    <string name="action_optimize_app">Оптимизировать</string>
+    <string name="batch_ops_runtime_optimization">Оптимизация среды выполнения</string>
+    <string name="summary_perform_runtime_optimization_to_apps">Оптимизация DEX и (в Android 10 и более поздних версиях) макетов для повышения производительности приложений.</string>
+    <string name="action_run">Пуск</string>
+    <string name="optimize_option_force_dexopt">Немедленное выполнение оптимизации DEX</string>
+    <string name="title_perform_runtime_optimization_to_apps">Оптимизация среды выполнения</string>
+    <plurals name="alert_failed_to_optimize_apps">
+        <item quantity="one">Не удалось оптимизировать %1$d приложение</item>
+        <item quantity="few">Не удалось оптимизировать %1$d приложения</item>
+        <item quantity="many">Не удалось оптимизировать %1$d приложений</item>
+        <item quantity="other">Не удалось оптимизировать %1$d приложений</item>
+    </plurals>
 </resources>
