@@ -1359,4 +1359,21 @@
     <string name="filter_apps_with_keystore">З сховищем ключів</string>
     <string name="install_for_another_user">Встановити для…</string>
     <string name="grant_required_permission">Надати необхідний дозвіл</string>
+    <string name="optimize_option_clear_profile_data">Видалення попередніх даних профілю</string>
+    <string name="select_a_dex2oat_compiler_filter">Фільтр компілятора <tt>dex2oat</tt></string>
+    <string name="optimize_option_compile_layouts">Компіляція ресурсів макета</string>
+    <string name="optimize_option_check_profiles">Враховуйте дані профілю під час оптимізації DEX</string>
+    <string name="optimize_option_force_compilation">Примусова компіляція, навіть якщо вона не потрібна</string>
+    <string name="optimize_option_force_dexopt">Негайно виконати оптимізацію DEX</string>
+    <string name="title_perform_runtime_optimization_to_apps">Виконати оптимізацію часу виконання</string>
+    <string name="action_run">Старт</string>
+    <plurals name="alert_failed_to_optimize_apps">
+        <item quantity="one">Не вдалося оптимізувати %1$d застосунок</item>
+        <item quantity="few">Не вдалося оптимізувати %1$d застосунки</item>
+        <item quantity="many">Не вдалося оптимізувати %1$d застосунків</item>
+        <item quantity="other">Не вдалося оптимізувати %1$d застосунків</item>
+    </plurals>
+    <string name="action_optimize_app">Оптимізувати</string>
+    <string name="batch_ops_runtime_optimization">Оптимізація часу виконання</string>
+    <string name="summary_perform_runtime_optimization_to_apps">Оптимізуйте DEX і (в Android 10 і новіших версіях) макети, щоб покращити продуктивність застосунків.</string>
 </resources>
