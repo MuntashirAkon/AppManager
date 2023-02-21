@@ -1322,4 +1322,17 @@
     <string name="select_a_dex2oat_compiler_filter"><tt>dex2oat</tt> filtro del compilador</string>
     <string name="optimize_option_compile_layouts">Compilar los recursos de diseño</string>
     <string name="optimize_option_clear_profile_data">Borrar datos de perfil anteriores</string>
+    <string name="optimize_option_check_profiles">Considere datos de perfil durante la optimización DEX</string>
+    <string name="optimize_option_force_compilation">Forzar la compilacion aunque no sea necesario</string>
+    <string name="optimize_option_force_dexopt">Realizar inmediatamente la optimización DEX</string>
+    <string name="title_perform_runtime_optimization_to_apps">Realizar optimización del tiempo de ejecución</string>
+    <string name="action_run">Iniciar</string>
+    <string name="summary_perform_runtime_optimization_to_apps">Optimice DEX y diseños (en Android 10 y versiones posteriores) para mejorar el rendimiento de las aplicaciones.</string>
+    <string name="action_optimize_app">Optimización</string>
+    <string name="batch_ops_runtime_optimization">Optimización del tiempo de ejecución</string>
+    <plurals name="alert_failed_to_optimize_apps">
+        <item quantity="one">No se han podido optimizar %1$d aplicacion</item>
+        <item quantity="many">No se han podido optimizar %1$d aplicaciones</item>
+        <item quantity="other">No se han podido optimizar %1$d aplicaciones</item>
+    </plurals>
 </resources>
