@@ -1,0 +1,59 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <io.github.muntashirakon.widget.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            tools:menu="@menu/activity_any_viewer_actions" />
+
+        <com.google.android.material.progressindicator.LinearProgressIndicator
+            android:id="@+id/progress_linear"
+            style="@style/Widget.AppTheme.LinearProgressIndicator"
+            android:indeterminate="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+    </io.github.muntashirakon.widget.AppBarLayout>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+        <androidx.appcompat.widget.AppCompatSpinner
+            android:id="@+id/spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="35sp"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/padding_large"
+            android:focusable="true"
+            android:nextFocusDown="@id/recycler_view"
+            style="@style/AppTheme.Spinner" />
+
+        <com.evrencoskun.tableview.TableView
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fitsSystemWindows="true"
+            app:selected_color="?attr/colorSurfaceVariant"
+            app:unselected_color="?attr/colorSurface"
+            app:separator_color="@android:color/transparent"
+            app:shadow_color="?attr/colorSurface"
+            app:show_vertical_separator="false"
+            app:show_horizontal_separator="false" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

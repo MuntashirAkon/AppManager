@@ -1,0 +1,14 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/default_row_header_width"
+    android:layout_height="@dimen/default_column_header_height">
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="1px"
+        android:layout_height="match_parent"
+        android:layout_alignParentEnd="true" />
+
+    <com.google.android.material.divider.MaterialDivider
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignParentBottom="true" />
+</RelativeLayout>

@@ -1,0 +1,46 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/column_header_container"
+    android:layout_width="wrap_content"
+    android:layout_height="@dimen/default_column_header_height"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:paddingHorizontal="8dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/column_header_textView"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:layout_weight="4"
+                android:gravity="start|center_vertical"
+                tools:text="Header Data" />
+
+            <ImageButton
+                android:id="@+id/column_header_sortButton"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:layout_gravity="end|center"
+                android:layout_marginStart="4dp"
+                android:background="@android:color/transparent"
+                android:paddingEnd="-5dp"
+                android:scaleType="fitXY"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_gravity="bottom" />
+    </FrameLayout>
+</LinearLayout>
