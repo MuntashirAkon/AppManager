@@ -155,7 +155,7 @@ public final class FreezeUnfreeze {
             NotificationUtils.displayFreezeUnfreezeNotification(activity, notificationId, builder -> builder
                     .setDefaults(Notification.DEFAULT_ALL)
                     .setWhen(System.currentTimeMillis())
-                    .setSmallIcon(R.drawable.ic_launcher_foreground)
+                    .setSmallIcon(R.drawable.ic_default_notification)
                     .setTicker(activity.getText(R.string.freeze))
                     .setContentTitle(shortcutInfo.getLabel())
                     .setContentText(activity.getString(R.string.tap_to_freeze_app))

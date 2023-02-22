@@ -123,7 +123,7 @@ public class LogcatRecordingService extends ForegroundService {
         // Set the icon, scrolling text and timestamp
         NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
                 .setOngoing(true)
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setSmallIcon(R.drawable.ic_default_notification)
                 .setTicker(getText(R.string.notification_ticker))
                 .setWhen(System.currentTimeMillis())
                 .setContentTitle(getString(R.string.notification_title))

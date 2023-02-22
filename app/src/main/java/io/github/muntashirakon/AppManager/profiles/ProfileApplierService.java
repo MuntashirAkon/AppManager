@@ -50,7 +50,7 @@ public class ProfileApplierService extends ForegroundService {
         builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setOngoing(true)
                 .setContentText(getString(R.string.operation_running))
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setSmallIcon(R.drawable.ic_default_notification)
                 .setSubText(getText(R.string.profiles))
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setProgress(0, 0, true);
@@ -78,7 +78,7 @@ public class ProfileApplierService extends ForegroundService {
                 .setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setWhen(System.currentTimeMillis())
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setSmallIcon(R.drawable.ic_default_notification)
                 .setTicker(profileName)
                 .setContentTitle(profileName)
                 .setSubText(getText(R.string.profiles))
@@ -119,7 +119,7 @@ public class ProfileApplierService extends ForegroundService {
         builder.setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)
                 .setWhen(System.currentTimeMillis())
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setSmallIcon(R.drawable.ic_default_notification)
                 .setTicker(profileName)
                 .setContentTitle(profileName)
                 .setSubText(getText(R.string.profiles));

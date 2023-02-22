@@ -77,7 +77,7 @@ class PackageInstallerBroadcastReceiver extends BroadcastReceiver {
                             .setAutoCancel(true)
                             .setDefaults(Notification.DEFAULT_ALL)
                             .setWhen(System.currentTimeMillis())
-                            .setSmallIcon(R.drawable.ic_launcher_foreground)
+                            .setSmallIcon(R.drawable.ic_default_notification)
                             .setTicker(appLabel)
                             .setContentTitle(appLabel)
                             .setSubText(context.getString(R.string.package_installer))

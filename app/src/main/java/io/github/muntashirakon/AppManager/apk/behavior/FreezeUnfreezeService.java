@@ -98,7 +98,7 @@ public class FreezeUnfreezeService extends Service {
                 .setOngoing(true)
                 .setContentTitle(null)
                 .setContentText(getString(R.string.waiting_for_the_phone_to_be_locked))
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setSmallIcon(R.drawable.ic_default_notification)
                 .setSubText(getText(R.string.freeze_unfreeze))
                 .setPriority(NotificationCompat.PRIORITY_LOW)
                 .addAction(stopServiceAction);

@@ -304,7 +304,7 @@ public class OpenPGPCrypto implements Crypto {
                         .setAutoCancel(true)
                         .setDefaults(Notification.DEFAULT_ALL)
                         .setWhen(System.currentTimeMillis())
-                        .setSmallIcon(R.drawable.ic_launcher_foreground)
+                        .setSmallIcon(R.drawable.ic_default_notification)
                         .setTicker(openPGP)
                         .setContentTitle(openPGP)
                         .setSubText(openPGP)

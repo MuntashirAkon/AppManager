@@ -519,7 +519,7 @@ public class KeyStoreManager {
                     .setAutoCancel(true)
                     .setDefaults(Notification.DEFAULT_ALL)
                     .setWhen(System.currentTimeMillis())
-                    .setSmallIcon(R.drawable.ic_launcher_foreground)
+                    .setSmallIcon(R.drawable.ic_default_notification)
                     .setTicker(ks)
                     .setContentTitle(ks)
                     .setSubText(ks)
