@@ -1318,4 +1318,12 @@
     <string name="export_option_markdown">Markdown</string>
     <string name="funding_campaign_text">Estamos a realizar uma <b>campanha de financiamento</b> para o App Manager por um período limitado. <a href="https://opencollective.com/app-manager#category-ABOUT">Mais informações…</a></string>
     <string name="adb_incomplete_usb_debugging_title">Depuração USB incompleta</string>
+    <string name="optimize_option_clear_profile_data">Limpar dados de perfil anteriores</string>
+    <string name="optimize_option_check_profiles">Considere os dados de perfil durante a otimização DEX</string>
+    <string name="optimize_option_force_compilation">Forçar compilação mesmo quando não for necessário</string>
+    <string name="optimize_option_force_dexopt">Executar imediatamente a otimização DEX</string>
+    <string name="title_perform_runtime_optimization_to_apps">Executar a otimização de tempo de execução</string>
+    <string name="action_run">Iniciar</string>
+    <string name="summary_perform_runtime_optimization_to_apps">Otimize DEX (no Android 10 e posterior) layouts para melhorar o desempenho das aplicações.</string>
+    <string name="action_optimize_app">Otimizar</string>
 </resources>
