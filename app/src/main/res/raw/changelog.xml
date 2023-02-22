@@ -18,6 +18,47 @@
 <changelog>
     <release
         type="beta release"
+        version="v3.1.0-beta02"
+        code="419"
+        date="22 February 2023">
+        <new>Target Android 13</new>
+        <new>Added monochrome icon for Android 13</new>
+
+        <improve>Ensured forward-compatibility in app ops</improve>
+        <note subtext="true">
+            App Manager now handles vendor-specific app ops, newly added app ops in the AOSP, etc. automatically to
+            prevent random crashes.
+        </note>
+        <improve>Prevented backing up the [tt]android[/tt] package</improve>
+        <note subtext="true">
+            This particular package is the heart of Android and shouldn't be backed up or restored.
+        </note>
+        <improve>Improved the loading time of the App Info tab</improve>
+        <note subtext="true">
+            At startup, App Manager attempts to invalidate backup data which can take more than half a minute if there
+            are a lot of backups. Hence, during this period, if one tries to browse the app info tab, the whole tab will
+            not be loaded as it is waiting for the previous process to complete. This issue is fixed by using the cached
+            backup data stored in a previous attempt. This cached data is also validated to ensure that they actually
+            exist.
+        </note>
+
+        <fix>Fixed issues with bottom sheet dialogs</fix>
+        <fix>Fixed restoring backups for other users</fix>
+        <fix>Fixed scrolling issues in backup/restore dialog</fix>
+        <fix>Fixed various theming issues</fix>
+        <fix>Use [tt]/data/media[/tt] instead of [tt]/storage/emulated[/tt] for other users</fix>
+        <note subtext="true">
+            In the newer versions of Android, [tt]/storage/emulated[/tt] directories belonging to another user (say, a
+            work profile) cannot be accessed even with root. However, [tt]/data/media[/tt] is only accessible with root.
+            Therefore, the later directory is used instead.
+        </note>
+        <note>
+            [br /][b]Full list of changes:[/b] [a
+            href="https://github.com/MuntashirAkon/AppManager/compare/v3.1.0-beta01...v3.1.0-beta02"]v3.1.0-beta01...v3.1.0-beta02[/a]
+        </note>
+    </release>
+    <release
+        type="beta release"
         version="v3.1.0-beta01"
         code="418"
         date="10 February 2023">
