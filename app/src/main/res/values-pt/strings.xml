@@ -1324,6 +1324,14 @@
     <string name="optimize_option_force_dexopt">Executar imediatamente a otimização DEX</string>
     <string name="title_perform_runtime_optimization_to_apps">Executar a otimização de tempo de execução</string>
     <string name="action_run">Iniciar</string>
-    <string name="summary_perform_runtime_optimization_to_apps">Otimize DEX (no Android 10 e posterior) layouts para melhorar o desempenho das aplicações.</string>
+    <string name="summary_perform_runtime_optimization_to_apps">Otimize a disposição DEX (no Android 10 e posterior) para melhorar o desempenho das aplicações.</string>
     <string name="action_optimize_app">Otimizar</string>
+    <string name="select_a_dex2oat_compiler_filter"><tt>dex2oat</tt> compilar filtro</string>
+    <string name="optimize_option_compile_layouts">Compilar a disposição dos recursos</string>
+    <string name="batch_ops_runtime_optimization">Otimização do tempo de execução</string>
+    <plurals name="alert_failed_to_optimize_apps">
+        <item quantity="one">Não foi possível optimizar a %1$d app</item>
+        <item quantity="many">Não foi possível optimizar as %1$d apps</item>
+        <item quantity="other">Não foi possível optimizar as %1$d apps</item>
+    </plurals>
 </resources>
