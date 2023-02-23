@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 
 import java.io.Closeable;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -72,6 +73,10 @@ public class FileCache implements Closeable {
 
     @NonNull
     public File getCachedFile(@NonNull Path source) throws IOException {
+        if (source.exists()) {
+            // No need for cache if the path is non-existent
+            throw new FileNotFoundException("Path " + source + " does not exist.");
+        }
         File tempFile = mFileCacheMap.get(source);
         if (tempFile == null) {
             String extension = source.getExtension();
