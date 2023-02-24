@@ -73,7 +73,7 @@ public class FileCache implements Closeable {
 
     @NonNull
     public File getCachedFile(@NonNull Path source) throws IOException {
-        if (source.exists()) {
+        if (!source.exists()) {
             // No need for cache if the path is non-existent
             throw new FileNotFoundException("Path " + source + " does not exist.");
         }
