@@ -488,11 +488,11 @@ public class Path implements Comparable<Path> {
         Path fsRoot = VirtualFileSystem.getFsRoot(Paths.appendPathSegment(file.getUri(), lastSegment));
         DocumentFile t = fsRoot != null ? fsRoot.mDocumentFile : file.findFile(lastSegment);
         if (t != null) {
-            throw new IOException(t + " already exists.");
+            throw new IOException(t.getUri() + " already exists.");
         }
         t = file.createDirectory(lastSegment);
         if (t == null) {
-            throw new IOException("Directory" + file + File.separator + lastSegment + " could not be created.");
+            throw new IOException("Directory" + file.getUri() + File.separator + lastSegment + " could not be created.");
         }
         return new Path(mContext, t);
     }
