@@ -198,7 +198,7 @@ public class AppDb {
                         PackageManager.GET_META_DATA | flagSigningInfo | PackageManager.GET_ACTIVITIES
                                 | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
                                 | PackageManager.GET_SERVICES | flagDisabledComponents | flagMatchUninstalled, userId);
-            } catch (RemoteException | PackageManager.NameNotFoundException e) {
+            } catch (RemoteException | PackageManager.NameNotFoundException | SecurityException e) {
                 // Package does not exist
             }
             if (backup == null && packageInfo == null) {
