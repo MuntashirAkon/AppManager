@@ -20,7 +20,7 @@
     <string name="refresh">Làm mới</string>
     <string name="launch">Khởi chạy</string>
     <string name="activities">Hoạt động</string>
-    <string name="require_no_permission">Không cần sự cho phép</string>
+    <string name="require_no_permission">Không yêu cầu quyền</string>
     <string name="permissions">Sử dụng quyền</string>
     <string name="uninstall">Gỡ cài đặt</string>
     <string name="configurations">Cấu hình</string>
@@ -1204,4 +1204,56 @@
     <string name="tap_to_freeze_app">Nhấn để đóng băng</string>
     <string name="waiting_for_the_phone_to_be_locked">Đang đợi điện thoại khóa…</string>
     <string name="action_stop_service">Dừng</string>
+    <string name="funding_campaign_dialog_message">Chúng tôi đang chạy <b>chiến dịch tài trợ</b> cho App Manager trong một khoảng thời gian giới hạn. Truy cập <a href="https://opencollective.com/app-manager#category-ABOUT">opencollective.com/app-manager</a> để tìm hiểu thêm về chiến dịch. Thông báo này sẽ không được hiển thị lại, nhưng bạn có thể tìm thấy nó trong trang Cài đặt trong toàn bộ chiến dịch.</string>
+    <string name="adb_incomplete_usb_debugging_message">Có vẻ như Gỡ lỗi USB không được định cấu hình đúng cách. Vui lòng đọc <a href="https://muntashirakon.github.io/AppManager/#subsec:enable-usb-debugging">tài liệu</a> để biết các bước bổ sung. Nếu bạn đã biết các bước, vui lòng nhấp vào “Mở” để mở tùy chọn nhà phát triển hoặc nhấp vào “Đóng” để tiếp tục sử dụng chế độ không root.</string>
+    <string name="sort_by_data_usage">Dữ liệu đã dùng</string>
+    <string name="filter_apps_with_keystore">Với KeyStore</string>
+    <string name="filter_apps_with_saf">Với SAF</string>
+    <string name="filter_apps_with_ssaid">Với SSAID</string>
+    <string name="action_continue">Tiếp tục</string>
+    <string name="install_for_another_user">Cài đặt cho…</string>
+    <string name="confirm_uninstallation">Xác nhận gỡ cài đặt</string>
+    <string name="grant_required_permission">Cấp quyền cần thiết</string>
+    <string name="grant_overlay_permission_message">Cho phép App Manager hiển thị một cửa sổ nổi trên tất cả các cửa sổ khác</string>
+    <string name="grant_accessibility_permission_for_tracking_window_contents">Cho phép App Manager sử dụng tính năng trợ năng để theo dõi nội dung của cửa sổ chính.</string>
+    <string name="class_hierarchy">Hệ thống cấp bậc</string>
+    <string name="title_ui_tracker">Trình theo dõi giao diện người dùng</string>
+    <string name="title_terminal_emulator">Terminal</string>
+    <string name="title_labs_activity">Phòng thí nghiệm</string>
+    <string name="select_a_dex2oat_compiler_filter"><tt>dex2oat</tt> bộ lọc trình biên dịch</string>
+    <string name="optimize_option_compile_layouts">Biên dịch tài nguyên bố trí</string>
+    <string name="optimize_option_clear_profile_data">Xóa hồ sơ trước đây</string>
+    <string name="optimize_option_check_profiles">Xem xét dữ liệu hồ sơ trong quá trình tối ưu hóa DEX</string>
+    <string name="optimize_option_force_compilation">Buộc biên dịch ngay cả khi không cần thiết</string>
+    <string name="optimize_option_force_dexopt">Ngay lập tức thực hiện tối ưu hóa DEX</string>
+    <string name="title_perform_runtime_optimization_to_apps">Thực hiện tối ưu hóa thời gian chạy</string>
+    <string name="action_run">Chạy</string>
+    <string name="summary_perform_runtime_optimization_to_apps">Tối ưu hóa bố cục DEX và (trong Android 10 trở lên) để cải thiện hiệu suất của ứng dụng.</string>
+    <string name="action_optimize_app">Tối ưu hóa</string>
+    <string name="batch_ops_runtime_optimization">Tối ưu hóa thời gian chạy</string>
+    <plurals name="alert_failed_to_optimize_apps">
+        <item quantity="other">Không thể tối ưu hóa %1$d ứng dụng</item>
+    </plurals>
+    <string name="app_manager_build_expired">Cần cập nhật</string>
+    <string name="renamed_successfully">Đã đổi tên</string>
+    <string name="selinux_context">Ngữ cảnh SELinux</string>
+    <string name="unix_file_permissions">Cách thức</string>
+    <string name="file_group_id">Nhóm (GID)</string>
+    <string name="file_owner_id">Chủ sở hữu (UID)</string>
+    <string name="calculating_file_size">Đang tính…</string>
+    <string name="app_manager_build_expired_message">Để đảm bảo an toàn cho thiết bị và dữ liệu của bạn, phiên bản App Manager bạn đang sử dụng đã ngừng hoạt động. Bạn phải cập nhật lên phiên bản mới nhất để tiếp tục sử dụng hoặc gỡ cài đặt nếu không có bản cập nhật.</string>
+    <string name="app_manager_build_expiring_soon_warning">Phiên bản App Manager này sẽ sớm hết hạn. Vui lòng cập nhật nó lên phiên bản mới nhất.</string>
+    <string name="sort_by_filename">Tên</string>
+    <string name="app_can_write_and_execute_in_same_place">Ứng dụng vi phạm <a href="https://en.wikipedia.org/wiki/W%5EX">chính sách W^X</a> và có khả năng viết và thực thi trong cùng một thư mục hoặc trong cùng một phần của bộ nhớ. Điều này cho phép thực thi các tệp thực thi tùy ý bằng cách sửa đổi các tệp thực thi được nhúng trong ứng dụng hoặc bằng cách tải chúng xuống từ Internet. Trừ khi đây là hành vi dự định của ứng dụng (ví dụ: trình giả lập thiết bị đầu cuối), bạn nên tìm phiên bản mới hơn của ứng dụng nhắm mục tiêu SDK 29 (Android 10) trở lên hoặc tìm các giải pháp thay thế.</string>
+    <string name="sort_by_last_modified">Sửa đổi gần đây</string>
+    <string name="sort_by_file_size">Cỡ tệp</string>
+    <string name="sort_by_file_type">Loại tệp</string>
+    <string name="option_display_dot_files">Tệp ẩn</string>
+    <string name="option_display_folders_on_top">Thư mục trên đầu</string>
+    <string name="export_app_list">Xuất danh sách ứng dụng</string>
+    <string name="export_app_list_select_format">Chọn định dạng xuất danh sách ứng dụng</string>
+    <string name="export_option_xml">XML</string>
+    <string name="export_option_markdown">Markdown</string>
+    <string name="adb_incomplete_usb_debugging_title">Gỡ lỗi USB chưa hoàn thành</string>
+    <string name="funding_campaign_text">Chúng tôi đang chạy <b>chiến dịch tài trợ</b> cho App Manager trong một khoảng thời gian giới hạn. <a href="https://opencollective.com/app-manager#category-ABOUT">tìm hiểu thêm…</a></string>
 </resources>
