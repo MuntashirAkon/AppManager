@@ -1254,4 +1254,25 @@
     <string name="get_help">Obter ajuda</string>
     <string name="pref_advanced_pref">Usuários, formato de nome do APK, execução paralela, etc.</string>
     <string name="pref_version_changelog">Versão/Registro de alterações</string>
+    <string name="fm_open_with_for_this_file_only">Apenas para este arquivo</string>
+    <string name="file_modification_date">Modificado</string>
+    <string name="file_accessed_date">Acessado</string>
+    <string name="file_creation_date">Criado</string>
+    <string name="file_open_as">Abrir como…</string>
+    <string name="file_open_with_custom_activity">Personalizado</string>
+    <string name="open_as_video">Vídeo</string>
+    <string name="open_as_archive">Arquivo</string>
+    <string name="open_as_folder">Pasta</string>
+    <string name="open_as_other">Outro</string>
+    <string name="delete_filename">Apagar %s</string>
+    <string name="confirm_file_deletion">Sim, apagar</string>
+    <string name="on_unfreeze_open_application">Abrir app após o descongelamento</string>
+    <string name="file_open_with">Abrir com</string>
+    <string name="file_shortcut_target_file">Arquivo de destino</string>
+    <string name="file_properties">Propriedades</string>
+    <string name="file_cut">Cortar</string>
+    <string name="fm_always_open_with">Sempre abrir</string>
+    <string name="open_as_text">Texto</string>
+    <string name="open_as_image">Imagem</string>
+    <string name="renamed_successfully">Renomeado</string>
 </resources>
