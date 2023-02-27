@@ -21,6 +21,7 @@ import java.net.Inet4Address;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.misc.NoOps;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 
 // Copyright 2016 Zheng Li
 public final class ServerConfig {
@@ -45,11 +46,7 @@ public final class ServerConfig {
             return;
         }
 
-        File externalStorage = context.getExternalCacheDir();
-        if (externalStorage == null || !externalStorage.exists()) {
-            throw new FileNotFoundException("Internal storage unavailable");
-        }
-
+        File externalStorage = FileUtils.getExternalCachePath(context);
         destJarFile = new File(externalStorage, JAR_NAME);
         destExecFile = new File(externalStorage, EXECUTABLE_FILE_NAME);
 

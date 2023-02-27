@@ -32,6 +32,7 @@ import com.topjohnwu.superuser.internal.Utils;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
@@ -152,16 +153,21 @@ public class RootServiceManager implements Handler.Callback {
             Log.e(TAG, JVMTI_ERROR);
         }
 
+        Context de = ContextUtils.getDeContext(context);
+        File mainJar;
+        try {
+            mainJar = new File(FileUtils.getExternalCachePath(de), "main.jar");
+        } catch (IOException e) {
+            throw new IllegalStateException("External directory unavailable.", e);
+        }
+        File stagingMainJar = new File(PACKAGE_STAGING_DIRECTORY, "main.jar");
+
         if (filterAction == null) {
             filterAction = UUID.randomUUID().toString();
             // Register receiver to receive binder from root process
             IntentFilter filter = new IntentFilter(filterAction);
             context.registerReceiver(new ServiceReceiver(), filter);
         }
-
-        Context de = ContextUtils.getDeContext(context);
-        File mainJar = new File(de.getExternalCacheDir(), "main.jar");
-        File stagingMainJar = new File(PACKAGE_STAGING_DIRECTORY, "main.jar");
 
         StringBuilder env = new StringBuilder();
         String params = "";

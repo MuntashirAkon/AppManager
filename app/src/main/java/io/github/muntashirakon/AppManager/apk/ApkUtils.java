@@ -41,6 +41,7 @@ import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.IoUtils;
@@ -65,7 +66,7 @@ public final class ApkUtils {
         Path tmpPublicSource;
         if (isSplitApk(info) || hasObbFiles(info.packageName, UserHandleHidden.getUserId(info.uid))) {
             // Split apk
-            tmpPublicSource = Paths.get(new File(AppManager.getContext().getExternalCacheDir(), outputName + EXT_APKS));
+            tmpPublicSource = Paths.get(new File(FileUtils.getExternalCachePath(ContextUtils.getContext()), outputName + EXT_APKS));
             SplitApkExporter.saveApks(packageInfo, tmpPublicSource);
         } else {
             // Regular apk

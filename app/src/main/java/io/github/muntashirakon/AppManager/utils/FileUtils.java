@@ -30,6 +30,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.math.BigInteger;
 import java.nio.channels.FileChannel;
+import java.util.Objects;
 import java.util.zip.ZipEntry;
 
 import io.github.muntashirakon.AppManager.AppManager;
@@ -193,8 +194,7 @@ public final class FileUtils {
         if (!extDir.exists() && !extDir.mkdirs()) {
             throw new IOException("Cannot create cache directory in the external storage.");
         }
-        String storageState = Environment.getExternalStorageState(extDir);
-        if (storageState != null && !Environment.MEDIA_MOUNTED.equals(storageState)) {
+        if (!Objects.equals(Environment.getExternalStorageState(extDir), Environment.MEDIA_MOUNTED)) {
             throw new FileNotFoundException("External media not present");
         }
         return extDir;

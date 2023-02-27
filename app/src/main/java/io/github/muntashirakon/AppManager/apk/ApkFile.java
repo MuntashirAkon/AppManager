@@ -12,7 +12,6 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.os.RemoteException;
 import android.text.SpannableStringBuilder;
@@ -69,6 +68,7 @@ import io.github.muntashirakon.AppManager.misc.VMRuntime;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.io.IoUtils;
@@ -297,8 +297,8 @@ public final class ApkFile implements AutoCloseable {
             baseEntry = new Entry(cacheFilePath, manifest);
             entries.add(baseEntry);
         } else {
-            getCachePath();
             try {
+                getCachePath();
                 zipFile = new ZipFile(cacheFilePath);
             } catch (IOException e) {
                 throw new ApkFileException(e);
@@ -550,13 +550,8 @@ public final class ApkFile implements AutoCloseable {
     }
 
     @NonNull
-    private Path getCachePath() {
-        File destDir = AppManager.getContext().getExternalCacheDir();
-        if (destDir == null || !Environment.getExternalStorageState(destDir).equals(Environment.MEDIA_MOUNTED))
-            throw new RuntimeException("External media not present");
-        if (!destDir.exists()) //noinspection ResultOfMethodCallIgnored
-            destDir.mkdirs();
-        return Paths.get(destDir);
+    private Path getCachePath() throws IOException {
+        return Paths.get(FileUtils.getExternalCachePath(ContextUtils.getContext()));
     }
 
     public class Entry implements AutoCloseable, LocalizedString {
