@@ -1275,4 +1275,17 @@
     <string name="open_as_text">Texto</string>
     <string name="open_as_image">Imagem</string>
     <string name="renamed_successfully">Renomeado</string>
+    <string name="sort_by_data_usage">Uso de dados</string>
+    <string name="confirm_uninstallation">Confirmar desinstalação</string>
+    <string name="action_optimize_app">Otimizar</string>
+    <string name="app_manager_build_expired">Atualização necessária</string>
+    <string name="action_stop_service">Parar</string>
+    <string name="tap_to_freeze_app">Toque para congelar</string>
+    <string name="unix_file_permissions">Modo</string>
+    <string name="file_owner_id">Proprietário (UID)</string>
+    <string name="calculating_file_size">Calculando…</string>
+    <string name="sort_by_filename">Nome</string>
+    <string name="sort_by_last_modified">Última alteração</string>
+    <string name="sort_by_file_size">Tamanho do arquivo</string>
+    <string name="sort_by_file_type">Tipo de arquivo</string>
 </resources>
