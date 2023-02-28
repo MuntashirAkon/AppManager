@@ -187,17 +187,25 @@ public final class FileUtils {
     @AnyThread
     @NonNull
     public static File getExternalCachePath(@NonNull Context context) throws IOException {
-        File extDir = context.getExternalCacheDir();
-        if (extDir == null) {
-            throw new FileNotFoundException("External storage unavailable.");
+        File[] extDirs = context.getExternalCacheDirs();
+        if (extDirs == null) {
+            throw new FileNotFoundException("Shared storage unavailable.");
         }
-        if (!extDir.exists() && !extDir.mkdirs()) {
-            throw new IOException("Cannot create cache directory in the external storage.");
+        for (File extDir: extDirs) {
+            // The priority is from top to bottom of the list as per Context#getExternalDir()
+            if (extDir == null) {
+                // Other external directory might exist
+                continue;
+            }
+            if (!(extDir.exists() || extDir.mkdirs())) {
+                Log.w(TAG, "Could not use " + extDir + ".");
+            }
+            if (!Objects.equals(Environment.getExternalStorageState(extDir), Environment.MEDIA_MOUNTED)) {
+                Log.w(TAG, "Path " + extDir + " not mounted.");
+            }
+            return extDir;
         }
-        if (!Objects.equals(Environment.getExternalStorageState(extDir), Environment.MEDIA_MOUNTED)) {
-            throw new FileNotFoundException("External media not present");
-        }
-        return extDir;
+        throw new FileNotFoundException("No available shared storage found.");
     }
 
     @AnyThread
