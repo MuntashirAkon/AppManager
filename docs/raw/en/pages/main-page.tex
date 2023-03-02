@@ -27,8 +27,9 @@ multiple selection menu at the bottom of the page. The operations include:
     \item \hyperref[sec:backup-restore]{Backing up, restoring or deleting} the applications
     \item Blocking the trackers from the applications
     \item Clearing data or cache from the applications
-    \item Enabling/disabling/force-stopping/uninstalling the applications
-    \item Exporting the blocking rules saved inside App Manager
+    \item Exporting the blocking rules configured inside App Manager
+    \item Exporting the list of apps in Markdown or XML format
+    \item Freezing/unfreezing/force-stopping/uninstalling the applications
     \item Preventing the background operations of the applications (Android 7 and onwards)
     \item Saving the APK files to \texttt{AppManager/apks}
     \item Setting \hyperref[sec:net-policy]{net policies}
@@ -46,11 +47,11 @@ multiple selection menu at the bottom of the page. The operations include:
     \item \colorbox{AMLightGreyishOrange}{\textcolor{black}{Light greyish orange (day)}} / \colorbox{AMDarkBlue}{
         \textcolor{white}{dark blue (night)}} -- The application is selected for batch operation
     \item \colorbox{AMLightRed}{\textcolor{black}{Light red (day)}} / \colorbox{AMVeryDarkRed}{\textcolor{white}
-    {dark red (night)}} -- Disabled app
+    {dark red (night)}} -- Frozen app
     \item \colorbox{AMYellow}{\textcolor{black}{Yellow Star}} -- Debuggable application
     \item \textcolor{AMOrange}{Orange \textit{Date}} -- The app has access to the system logs
     \item \textcolor{AMOrange}{Orange \textit{UID}} -- The user ID is being shared among multiple applications
-    \item \textcolor{AMOrange}{Orange \textit{SDK}} -- The application possibly uses cleartext (ie. HTTP) traffic
+    \item \textcolor{AMOrange}{Orange \textit{SDK}} -- The application possibly uses cleartext (i.e.\ HTTP) traffic
     \item \textcolor{red}{Red \textit{package name}} -- The application does not allow clearing its data
     \item \textcolor{red}{Red \textit{backup}} -- The uninstalled application with one or more backups present in App
     Manager
@@ -92,13 +93,6 @@ Options menu offers several options that can be used to sort and filter the list
 to different pages within or outside App Manager.
 %%!!>>
 
-\subsubsection{Instructions} %%##$instructions-title>>
-%%!!instructions<<
-Clicking on the \textbf{Instructions} opens the offline version of the App Manager user manual. It may also open the
-online version if the corresponding feature split i.e.\ \texttt{feat\_docs} is not installed, or if an WebView is not
-present in the system to load the manual.
-%%!!>>
-
 \subsubsection{List Options}\label{subsubsec:main-list-options} %%##$list-options-title>>
 %%!!list-options<<
 \textbf{List options} contain the options to sort and filter the list in the main page.
@@ -108,7 +102,7 @@ present in the system to load the manual.
 %%!!sort<<
 The applications listed in the main page can be sorted in the following ways:
 \begin{itemize}
-    \item \textbf{User apps first.} The user applications are listed on the top
+    \item \textbf{User apps first.} The user applications are listed on top
     \item \textbf{App label.} Sort the list in ascending order based on their application labels (also known as
     \textit{application names}). This is the default sorting preference
     \item \textbf{Package name.} Sort the list in ascending order based on their package names
@@ -116,7 +110,7 @@ The applications listed in the main page can be sorted in the following ways:
     \item \textbf{Shared user ID.} Sort the list in descending order based on their kernel user ID
     \item \textbf{Target SDK.} Sort the list in ascending order based on their target SDK
     \item \textbf{Signature.} Sort the list in ascending order based on their signing information
-    \item \textbf{Disabled first.} The disabled applications are listed on the top
+    \item \textbf{Frozen first.} The frozen applications are listed on the top
     \item \textbf{Blocked first.} Sort the list in descending order based on the number of blocked components each
     application has
     \item \textbf{Backed up first.} Display the applications with backups on the top
@@ -124,6 +118,12 @@ The applications listed in the main page can be sorted in the following ways:
     application has
     \item \textbf{Last actions.} Sort the list in descending order based on the latest time and date of any actions made
     to the applications within App Manager.
+    \item \textbf{Installation date.} Sort the list by the date of installation in descending order.
+    \item \textbf{Total size.} Sort the list by the total size of the apps and their data in descending order. Requires \texttt{Usage Access} permission.
+    \item \textbf{Data usage.} Sort the list by the total data usage in descending order. Requires \texttt{Usage Access} permission.
+    \item \textbf{Times opened.} List frequently used apps on top. Requires \texttt{Usage Access} permission.
+    \item \textbf{Screen time.} List apps with highest engagements on top. Requires \texttt{Usage Access} permission.
+    \item \textbf{Last used.} List last used apps on top. Requires \texttt{Usage Access} permission.
 \end{itemize}
 
 In addition, there is the \textit{reverse} option that can be used to sort the list in the reverse order. Regardless of
@@ -137,7 +137,7 @@ The applications listed in the main page can be filtered in the following ways:
 \begin{itemize}
     \item \textbf{User apps.} List only the user applications
     \item \textbf{System apps.} List only the system applications
-    \item \textbf{Disabled apps.} List only the disabled applications
+    \item \textbf{Frozen apps.} List only the frozen applications
     \item \textbf{Apps with rules.} List the applications with one or more blocking rules
     \item \textbf{Apps with activities.} List the applications with one or more activities
     \item \textbf{Apps with backups.} List the applications with one or more backups
@@ -146,10 +146,13 @@ The applications listed in the main page can be filtered in the following ways:
     \item \textbf{Installed apps.} List only the installed applications
     \item \textbf{Uninstalled apps.} List only the uninstalled applications
     \item \textbf{Apps without backups.} List the applications with no backups present.
+    \item \textbf{Apps with KeyStore.} List only the applications with Android KeyStore.
+    \item \textbf{Apps with SAF.} List only the applications with SAF access.
+    \item \textbf{Apps with SSAID.} List only the applications with a valid SSAID\@.
 \end{itemize}
 
-Unlike sorting, it is possible to apply more than one filtering options at the same time. For example, the disabled user
-applications can be listed by selecting both \textit{User apps} and \textit{Disabled apps}. This can be particularly
+Unlike sorting, it is possible to apply more than one filtering options at the same time. For example, the frozen user
+applications can be listed by selecting both \textit{User apps} and \textit{Frozen apps}. This can be particularly
 useful for \hyperref[subsec:batch-operations]{batch operations} where filtering the user applications may be necessary
 to carry out certain operations safely.
 %%!!>>
@@ -159,6 +162,13 @@ to carry out certain operations safely.
 It is also possible to list the applications that are only present in a \hyperref[sec:profiles-page]{profile}. This can
 be useful for carrying out certain operations on a profile (e.g., uninstalling all the applications in a profile) that
 cannot be done via the \hyperref[sec:profiles-page]{Profiles page}.
+%%!!>>
+
+\subsubsection{User Manual} %%##$instructions-title>>
+%%!!instructions<<
+Clicking on the \textbf{User manual} opens the offline version of the App Manager user manual. It may also open the
+online version if the corresponding feature split i.e.\ \texttt{feat\_docs} is not installed, or if an WebView is not
+present in the system to load the manual.
 %%!!>>
 
 \subsubsection{1-Click Ops}\label{subsubsec:main:1-click-ops} %%##$1-click-ops-title>>
@@ -172,7 +182,7 @@ page} in a new activity.
 App usage statistics such as \textit{screen time}, \textit{data usage} (both mobile and Wi-Fi), \textit{the number of
 times an app was opened} can be accessed by clicking on the \textbf{App Usage} option in the menu. However, it requires
 the \textit{Usage Access} permission. This menu item will not be listed if the usage access feature is disabled in
-\hyperref[subsec:enable/disable-features]{settings}.
+\hyperref[subsubsec:enable/disable-features]{settings}.
 %%!!>>
 
 \subsubsection{System Config} %%##$system-config-title>>

@@ -59,57 +59,7 @@ The list below is in the same order as listed in the App Info tab.
     numbers can be misleading as they often add prefixes for each platform.
 
     \item \textbf{Tags.} (Also known as tag clouds) Tags include the most basic, concise and useful information of an
-    application, such as---
-    \begin{itemize}
-        \item \textit{Tracker info.} Number of tracker components in the application (e.g., \textit{5 trackers}) The
-        colour of the tag appears orange if the trackers are unblocked and dark cyan if they are blocked in App Manager.
-        Clicking on the tag opens a dialog containing the list of tracker components which can be blocked or unblocked
-        if App Manager has sufficient privileges.
-        \item \textit{Application type.} User application or system application. If it is a system application, whether
-        the application is an updated version of the system application or if the application is installed systemless-ly
-        via Magisk.
-        \item \textit{Split APK info.} Number of splits in the APK excluding the base APK (e.g., \textit{5 splits}).
-        Clicking on the tag opens a dialog containing the split APK information such as type and size.
-        \item \textit{Debuggable.} The application can be debugged over ADB\@. Debuggable applications can enjoy certain
-        functions unavailable to a regular application. The data of the application might be access via ADB (e.g.\ using
-        \texttt{run-as} command) without any additional permissions.
-        \item \textit{Test only.} The application is a test-only application. Test-only applications can enjoy certain
-        functions unavailable to a regular application. The data of the application might be access via ADB (e.g.\ using
-        \texttt{run-as} command) without any additional permissions.
-        \item \textit{Large heap.} The application has requested large heap size i.e.\ more space in memory (RAM) is
-        requested for dynamic allocation. It is still up to the operating system to decide whether to allocate large
-        space for the application. App Manager, for example, requests large heap size because it needs to load an entire
-        APK into memory while scanning an APK before Android 8.
-        \item \textit{No code.} The application does not have any code associated with it i.e.\ DEX files aren't present.
-        In some system applications, the actual code might be located in another place.
-        \item \textit{Running.} One or more services of the application is currently running in the background. Clicking
-        on the tag opens a dialog containing the list of running services. Clicking on any services opens it in the log
-        viewer provided the log viewer feature is enabled.
-        \item \textit{Stopped.} The application is force stopped. This may not prevent it from running automatically
-        later.
-        \item \textit{Disabled.} Denotes that the application is disabled (hidden from the launcher).
-        \item \textit{Suspended.} Denotes that the application is suspended (grayed out in the launcher).
-        \item \textit{Hidden.} Denotes that the application is hidden (hidden from the launcher).
-        \item \textit{MagiskHide.} MagiskHide is enabled. Clicking on the tag opens a dialog containing the list of
-        processes within the application that can be added or removed from the MagiskHide list.
-        \item \textit{MagiskDenyList.} The application is present in MagiskDenyList. Clicking on the tag opens a dialog
-        containing the list of processes within the application that can be added or removed from MagiskDenyList.
-        \item \textit{KeyStore.} The application has items in the Android KeyStore. Clicking on the tag opens a dialog
-        containing all the KeyStore files that belong to the application.
-        \item \textit{Backup.} The application was backed up using App Manager at least once. Clicking on the tag
-        opens a dialog containing all the available backups along with metadata.
-        \item \textit{No battery optimisation.} Battery optimisation is disabled for the application. It is possible to
-        re-enable battery optimisation by clicking on the tag.
-        \item \hyperref[sec:net-policy]{\textit{Net policy.}} Network policy (e.g., background data usage) is configured
-        for the application. Clicking on the tag displays a dialog containing the supported policies for the platform
-        along with the options to configure them.
-        \item \hyperref[sec:terminologies]{\textit{SSAID.}} Clicking on the tag opens a dialog containing the current
-        SSAID assigned to the application. It is also possible to reset/regenerate the SSAID if needed.
-        \item \textit{SAF.} Denotes that the application has been granted to access one or more storage locations or
-        files i.e.\ URIs via Storage Access Framework (SAF). Clicking on the tag opens a dialog containing the list of
-        granted URIs.
-        \item \textit{Play App Signing.} Indicates that the application might be signed by Google.
-    \end{itemize}
+    application. See \Sref{subsubsec:tags} for a complete list of tags shown here.
 
     \item \textbf{Horizontal Action Panel.} An action panel consisting of various actions that can be carried out for
     the application. See \Sref{subsubsec:horizontal-action-panel} for a complete list of actions available here.
@@ -121,7 +71,7 @@ The list below is in the same order as listed in the App Info tab.
     libraries are used to invoke native codes usually written in C/C++. Use of native library can make the application
     run faster or help an application use third-party libraries written using languages other than Java like in most
     games. The directories can be opened via third-party file managers provided they support it and have the necessary
-    permissions by clicking on the launch icon on the right-hand side of each directory item.
+    permissions by clicking on the launch button on the right-hand side of each directory item.
 
     \item \textbf{Data Usage.} Amount of data used by the application as reported by the operating system. Depending on
     Android version, this may require a wide range of permissions including \textit{Usage Access} and \textit{Telephony}
@@ -137,7 +87,7 @@ The list below is in the same order as listed in the App Info tab.
         \textit{Max} denotes the target SDK and \textit{Min} denotes the minimum SDK (the latter is not available in old
         devices). It is best practice to use applications with maximum SDK that the platform currently supports in order
         to ensure that the application is not running in the compatibility mode in order to use privacy-evading features.
-        SDK is also known as \textbf{API Level}.
+        SDK is also known as \textbf{API Level}.\\
         \seealsoinline{\href{https://en.wikipedia.org/wiki/Android_version_history\#Overview}{Android Version History}}
 
         \item \textbf{Flags.} The application flags used at the time of building the application. For a complete list of
@@ -191,39 +141,127 @@ The list below is in the same order as listed in the App Info tab.
 \end{itemize}
 %%!!>>
 
+\subsubsection{Tags}\label{subsubsec:tags} %%##$tags-title>>
+%%!!tags-list<<
+\begin{itemize}
+    \item \textbf{Tracker info.} Number of tracker components in the application (e.g., \textit{5 trackers}) The colour
+    of the tag appears orange if the trackers are unblocked and dark cyan if they are blocked in App Manager.
+    Clicking on the tag opens a dialog containing the list of tracker components which can be blocked or unblocked if
+    App Manager has sufficient privileges.
+
+    \item \textbf{Application type.} User application or system application. If it is a system application, whether
+    the application is an updated version of the system application or if the application is installed systemless-ly
+    via Magisk.
+
+    \item \textbf{Split APK info.} Number of splits in the APK excluding the base APK (e.g., \textit{5 splits}).
+    Clicking on the tag opens a dialog containing the split APK information such as type and size.
+
+    \item \textbf{Debuggable.} The application can be debugged over ADB\@. Debuggable applications can enjoy certain
+    functions unavailable to a regular application. The data of the application might be accessible via ADB (e.g.\ using
+    \texttt{run-as} command) without any additional permissions.
+
+    \item \textbf{Test only.} The application is a test-only application. Test-only applications can enjoy certain
+    functions unavailable to a regular application. The data of the application might be accessible via ADB (e.g.\ using
+    \texttt{run-as} command) without any additional permissions.
+
+    \item \textbf{Large heap.} The application has requested large heap size i.e.\ more space in memory (RAM) is
+    requested for dynamic allocation. It is still up to the operating system to decide whether to allocate large space
+    for the application. App Manager, for example, requests large heap size because it needs to load an entire APK
+    into memory while scanning an APK before Android 8.
+
+    \item \textbf{No code.} The application does not have any code associated with it i.e.\ DEX files aren't present.
+    In some system applications, the actual code might be located in another place.
+
+    \item \textbf{Running.} One or more services of the application is currently running in the background. Clicking
+    on the tag opens a dialog containing the list of running services. Clicking on any services opens it in the log
+    viewer provided the log viewer feature is enabled. There's also an option to force-stop the application.
+
+    \item \textbf{Stopped.} The application is force stopped. This may not prevent it from running automatically later.
+
+    \item \textbf{Disabled.} Denotes that the application is disabled (hidden from the launcher).
+
+    \item \textbf{Suspended.} Denotes that the application is suspended (grayed out in the launcher).
+
+    \item \textbf{Hidden.} Denotes that the application is hidden (hidden from the launcher).
+
+    \item \textbf{MagiskHide.} MagiskHide is enabled. Clicking on the tag opens a dialog containing the list of
+    processes within the application that can be added or removed from the MagiskHide list.
+
+    \item \textbf{MagiskDenyList.} The application is present in MagiskDenyList. Clicking on the tag opens a dialog
+    containing the list of processes within the application that can be added or removed from MagiskDenyList.
+
+    \item \textbf{WX.} The app violates ``W\textasciicircum{}X policy'' and is capable of writing and executing in the same directory or
+    in the same portion of memory. This allows the execution of arbitrary executables either by the modification of
+    executables embedded within the app or by downloading them from the Internet.\\
+    \seealsoinline{\href{https://en.wikipedia.org/wiki/W\%5EX}{W\textasciicircum{}X in Wikipedia}}
+
+    \item \textbf{KeyStore.} The application has items in the Android KeyStore. Clicking on the tag opens a dialog
+    containing all the KeyStore files that belong to the application.
+
+    \item \textbf{Backup.} The application was backed up using App Manager at least once. Clicking on the tag
+    opens a dialog containing all the available backups along with metadata.
+
+    \item \textbf{No battery optimisation.} Battery optimisation is disabled for the application. It is possible to
+    re-enable battery optimisation by clicking on the tag.
+
+    \item \hyperref[sec:net-policy]{\textbf{Net policy.}} Network policy (e.g., background data usage) is configured
+    for the application. Clicking on the tag displays a dialog containing the supported policies for the platform
+    along with the options to configure them.
+
+    \item \hyperref[sec:terminologies]{\textbf{SSAID.}} Clicking on the tag opens a dialog containing the current
+    SSAID assigned to the application. It is also possible to reset/regenerate the SSAID if needed.
+
+    \item \textbf{SAF.} Denotes that the application has been granted to access one or more storage locations or
+    files i.e.\ URIs via Storage Access Framework (SAF). Clicking on the tag opens a dialog containing the list of
+    granted URIs.
+
+    \item \textbf{Play App Signing.} Indicates that the application might be signed by Google.
+\end{itemize}
+%%!!>>
+
 \subsubsection{Horizontal Action Panel}\label{subsubsec:horizontal-action-panel} %%##$horizontal-action-panel-title>>
 %%!!horizontal-action-panel<<
 Horizontal Action Panel, as described in the previous section, consists of various application-related actions, such as--
 \begin{itemize}
     \item \textbf{Launch.} Launch the application provided it has a launcher \hyperref[subsubsec:activities]{activity}.
 
-    \item \textbf{Disable.} Disable the application. This button is not displayed if it is already disabled or the user
-    does not have enough privileges. After the application is disabled, it will be hidden from the app drawer. Shortcuts
-    for the application may also be removed. The application may be re-enabled only via App Manager or any other tool
-    that supports it. There isn't any option in Android Settings to enable a disabled user application.
+    \item \textbf{Freeze.} Freeze the application. This button is not displayed if it is already frozen or the user
+    does not have enough privileges. After the application is frozen, it may be hidden from the app drawer depending on
+    how it was configured. Shortcuts configured by the application may also be removed. The application may only be
+    unfrozen via App Manager, \texttt{pm} command or any other tools that offer such a feature. Long clicking on the
+    button opens a dialog where a shortcut can be configured to quickly freeze or unfreeze the application.
 
-    \item \textbf{Uninstall.} Uninstall the application.
+    \item \textbf{Uninstall.} Uninstall the application with a prompt. In the dialog prompt, it is possible to uninstall
+    updates of a system application, or if App Manager has enough privileges or the operating system supports it, it is
+    possible to uninstall the application without clearing its data and signature. For the latter case, the installed
+    application must match the signature with the previously installed application if it is installed again.
+    \begin{tip}{Tips}
+        A better way to reinstall an application with a different signature would be to back up its data using App
+        Manager and restore it again after installing the application instead of opting to preserving data and signature
+        of the application during uninstallation as this option may cause undefined behaviour in the future.
+    \end{tip}
 
-    \item \textbf{Enable.} Enable the application. This button is not displayed if it is already enabled or the user
-    does not have enough privileges.
+    \item \textbf{Unfreeze.} Unfreeze the application. This button is not displayed if it is already enabled or the user
+    does not have enough privileges. Similar to the \textit{Freeze} button, long clicking on the button opens a dialog
+    where a shortcut can be configured to quickly freeze or unfreeze the application.
 
     \item \textbf{Force Stop.} Force-stop the application.
 
     \item \textbf{Clear Data.} Clear data from the application. This includes any information stored in the internal
     and, recently, the external directories, including accounts (if set by the application), cache, etc. Clearing data
     from App Manager, for example, removes all the rules (the blocking is not removed though) saved within the
-    application. Which is why you should always take backups of your rules. This button is not displayed if the user
-    does have enough privileges.
+    application (Which is why you should always take backups of your rules). This button is not displayed if the user
+    does not have enough privileges.
 
-    \item \textbf{Clear Cache.} Clear application cache. There is not any Android-way to clear the cache of a specific
-    application. Therefore, it needs root permission to clear the cache of the application's internal storage.
+    \item \textbf{Clear Cache.} Clear the application cache. If the application is running during the operation, the
+    cache may not be cleared as expected.
 
     \item \textbf{Install.} Action to install an application opened via a third-party application. This button is only
-    displayed if the application hasn't been installed.
+    displayed if the application hasn't been already installed.
 
-    \item \textbf{What's New.} This button is displayed for an external application if it's already installed. Clicking
-    on this button displays a dialog consisting of differences between the opened version and the installed version in a
-    version control manner. The information it displays include \textit{version}, \textit{trackers},
+    \item \textbf{What's New.} This button is displayed for an external application if it's already been installed.
+    Clicking on this button displays a dialog consisting of differences between the opened version and the installed
+    version in a version control manner. The information it displays include \textit{version}, \textit{trackers},
     \textit{permissions}, \textit{components}, \textit{signatures} (checksum changes), \textit{features},
     \textit{shared libraries} and \textit{SDK}.
 
@@ -235,9 +273,9 @@ Horizontal Action Panel, as described in the previous section, consists of vario
 
     \item \textbf{Manifest.} Clicking on this button displays the application's manifest file in a separate page. The
     manifest file can be wrapped or unwrapped using the corresponding toggle button (on the top-right side) or can be
-    saved to the storage using the save button.
+    exported using the save button.
 
-    \item \textbf{Scanner.} Scans the application in order to list potential trackers and libraries. It also scans the
+    \item \textbf{Scanner.} Scan the application in order to list potential trackers and libraries. It also scans the
     file using VirusTotal if configured.\\
     \seealsoinline{\hyperref[sec:scanner-page]{Scanner page}}
 
@@ -245,12 +283,13 @@ Horizontal Action Panel, as described in the previous section, consists of vario
     Clicking on a preference item in the list opens the \hyperref[sec:shared-preferences-editor-page]{Shared Preferences
     Editor page}. This option is only visible if the user has the required privileges.
 
-    \item \textbf{Databases.} Clicking on this button displays a list of databases used by the application. This option
-    is only visible if the user has the required privileges.
+    \item \textbf{Databases.} Clicking on this button displays a list of databases used by the application. Clicking on
+    an item opens a list of activities that can open the database. This option is only visible if the user has the
+    required privileges.
 
-    \item \textbf{F-Droid.} Opens the application in your favourite \textit{F-Droid} client.
+    \item \textbf{F-Droid.} Open the application in the selected \textit{F-Droid} client.
 
-    \item \textbf{Store.} Opens the application in \textit{Aurora Store}. The option is only visible if \textit{Aurora
+    \item \textbf{Store.} Open the application in \textit{Aurora Store}. The option is only visible if \textit{Aurora
     Store} is installed.
 \end{itemize}
 %%!!>>
@@ -260,8 +299,8 @@ Horizontal Action Panel, as described in the previous section, consists of vario
 Options-menu is located in the top-right corner of the page. A complete description of the options present there are
 given below:
 \begin{itemize}
-    \item \textbf{Share.} Share button can be used to share the APK or (if the application is has multiple splits)
-    \textit{APKS} file extracted from the application.
+    \item \textbf{Share.} Share button can be used to share the APK or (if the application is has multiple splits, OBB
+    files or any dependencies) \textit{APKS} file extracted from the application.
 
     \item \textbf{Refresh.} Refresh the App Info tab.
 
@@ -283,8 +322,8 @@ given below:
     \item \textbf{MagiskHide.} Open a dialog containing the list of processes within the application that can be added
     or removed from the MagiskHide list.
 
-    \item \textbf{MagiskDenyList.} Open a dialog containing the list of processes within the application that can be
-    added or removed from MagiskDenyList.
+    \item \textbf{Magisk DenyList.} Open a dialog containing the list of processes within the application that can be
+    added or removed from Magisk DenyList.
 
     \item \textbf{Battery optimisation.} Enable/disable battery optimisation.
 
@@ -294,6 +333,8 @@ given below:
     \item \textbf{Extract Icon.} Extract and save the application's icon in the shared storage.
 
     \item \textbf{Add to profile.} Add the application to one of the configured \hyperref[sec:profile-page]{profiles}.
+
+    \item \textbf{Install for….} Install the application for another user and/or in the work profile if configured.
 \end{itemize}
 %%!!>>
 
@@ -406,14 +447,13 @@ Unlike the no-root users who are mostly spectators in these tabs, root users can
 
 \paragraph{Blocking Components} %%##$blocking-components-title>>
 %%!!blocking-components<<
-On the right-most side of each component item, there is a ``block'' icon (which becomes a ``unblock/restore'' icon when
-the component is being blocked). This icon (actually, a button) can be used to toggle the blocking status of that
+On the right-most side of each component item, there is a switch which can be used to toggle the blocking status of that
 particular component. If \hyperref[subsubsec:instant-component-blocking]{Instant Component Blocking} is not enabled or
 blocking is never applied to the application before, it is required to apply the changes using the \textbf{Apply rules}
 option in three-dots menu. It is also possible to remove the already-applied rules using the same option (which would be
 read as \textbf{Remove rules} this time).
 
-It is also possible to block the component using one of the several method by long clicking on the icon.
+It is also possible to block the component using one of the several methods by long clicking on the button.
 
 \seealsoinline{\hyperref[sec:faq:app-components]{FAQ: App Components}}
 %%!!>>
@@ -579,5 +619,5 @@ or executable), etc.
 \subsection{Other Tabs}\label{subsec:other-tabs} %%##$other-tabs-title>>
 %%!!other-tabs<<
 Other tabs list android manifest components such as features and configurations. A complete description
-about these tabs will be available soon.
+about these tabs may be available in the future.
 %%!!>>

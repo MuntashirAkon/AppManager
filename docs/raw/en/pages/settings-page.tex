@@ -6,15 +6,43 @@ Settings page can be used to customise the behaviour of App Manager.
 
 \subsection{Language}\label{subsec:language} %%##$language-title>>
 %%!!language<<
-Configure in-app language. App Manager currently supports 21 (twenty one) languages.
+Configure in-app language. App Manager currently supports 22 (twenty-two) languages.
 %%!!>>
 
-\subsection{App Theme}\label{subsec:app-theme} %%##$app-theme-title>>
+\subsection{Appearance}\label{subsec:appearance} %%##$appearance-title>>
+
+\subsubsection{App Theme}\label{subsubsec:app-theme} %%##$app-theme-title>>
 %%!!app-theme<<
 Configure in-app theme.
 %%!!>>
 
-\subsection{Screen Lock}\label{subsec:screen-lock} %%##$screen-lock-title>>
+\subsubsection{Layout Direction}\label{subsubsec:layout-direction} %%##$layout-direction-title>>
+%%!!layout-direction<<
+Change layout direction, either left to right or right to left. This is usually set using the selected language but not
+everybody prefers the same direction.
+%%!!>>
+
+\subsubsection{Enable/Disable Features}\label{subsubsec:enable/disable-features} %%##$enable-disable-features-title>>
+%%!!enable-disable-features<<
+Enable or disable certain features in App Manager, such as
+\begin{itemize}
+    \item \textbf{Interceptor}
+    \item \textbf{Manifest viewer}
+    \item \textbf{Scanner}
+    \item \textbf{Package installer}
+    \item \textbf{Usage access.} With this feature turned off, App Manager will never ask for the \textit{Usage Access} permission.
+    \item \textbf{Log viewer}
+    \item \textbf{App explorer.} The ``Explore'' option will not be available while trying to open an APK file.
+    \item \textbf{App info.} The ``App info'' option displayed while trying to open an APK file.
+    \item \textbf{Use the internet.} All the Internet features are disabled if this feature is turned off.
+    Currently, the only Internet feature is fetching scanning reports via VirusTotal.
+\end{itemize}
+%%!!>>
+
+
+\subsection{Privacy}\label{subsec:privacy} %%##$privacy-settings-title>>
+
+\subsubsection{Screen Lock}\label{subsubsec:screen-lock} %%##$screen-lock-title>>
 %%!!screen-lock<<
 Lock App Manager using Android screen lock provided a screen lock is configured.
 
@@ -22,6 +50,7 @@ Lock App Manager using Android screen lock provided a screen lock is configured.
     If screen lock is disabled in Android after enabling this setting, App Manager will not open until it is enabled again.
 \end{warning}
 %%!!>>
+
 
 \subsection{Mode of Operation}\label{subsec:mode-of-operation} %%##$mode-of-operation-title>>
 %%!!mode-of-operation<<
@@ -50,42 +79,6 @@ Mode of operation defines how App Manager works as a whole. It has the following
 It also displays the currently inferred mode of operation. The actual mode of operations are \textit{root}, \textit{ABD} and \textit{no-root}.
 %%!!>>
 
-\subsection{Selected Users}\label{subsec:selected-users} %%##$selected-users-title>>
-%%!!selected-users<<
-This option lets you control the users App Manager should operate on. App Manager operates on all users in root or ADB mode by default.
-%%!!>>
-
-\subsection{Enable/Disable Features}\label{subsec:enable/disable-features} %%##$enable-disable-features-title>>
-%%!!enable-disable-features<<
-Enable or disable certain features in App Manager, such as
-\begin{itemize}
-    \item \textbf{Interceptor}
-    \item \textbf{Manifest viewer}
-    \item \textbf{Scanner}
-    \item \textbf{Package installer}
-    \item \textbf{Usage access.} With this feature turned off, App Manager will never ask for the \textit{Usage Access} permission.
-    \item \textbf{Log viewer}
-    \item \textbf{App Explorer.} The ``Explore'' option will not be available while trying to open an APK file.
-    \item \textbf{Use the internet.} All the Internet features are disabled if this feature is turned off.
-    Currently, the only Internet feature is fetching scanning reports via VirusTotal.
-\end{itemize}
-%%!!>>
-
-\subsection{Saved APK Name Format}\label{subsec:saved-apk-name-format} %%##$saved-apk-name-format-title>>
-%%!!saved-apk-name-format<<
-Defines the format of the APK name to be used while saving it via batch operations or through profiles.
-App Manager offers some special keywords enclosed inside \texttt{\%} (percentage) signs and available below the input box.
-These keywords are:
-\begin{itemize}
-    \item \textbf{\texttt{label}.} Denotes the name or label of the application. This can be localised to the configured language depending on the app.
-    \item \textbf{\texttt{package\_name}.} Denotes the name of the package or application ID, the unique identifier that each application has.
-    \item \textbf{\texttt{version}.} Denotes the current version of the application extracted from its manifest.
-    \item \textbf{\texttt{version\_code}.} Denotes the current version code of the application that can be used to separate two versions of the same application.
-    \item \textbf{\texttt{min\_sdk}.} Denotes the minimum SDK (i.e.\ Android framework version) that the application can operate on. This data is only available since Android 7 (Nougat).
-    \item \textbf{\texttt{target\_sdk}.} Denotes the SDK that this application targets. The application can operate on higher SDK but only in the compatibility mode.
-    \item \textbf{\texttt{datetime}.} Denotes the time and date when the APK is exported.
-\end{itemize}
-%%!!>>
 
 \subsection{APK Signing}\label{subsec:apk-signing} %%##$apk-signing-title>>
 
@@ -97,13 +90,8 @@ v1 and v2 signature schemes are enabled by default, but v3 should also be enable
 
 \subsubsection{Signing Key} %%##$signing-key-title>>
 %%!!signing-key<<
-Configure custom signing key for signing APK files. Keys from an existing KeyStore can be imported to App Manager,
+Configure the signing key for signing APK files. Keys from an existing KeyStore can be imported to App Manager,
 or a new key can be generated.
-
-\begin{danger}{Danger}
-    Do not use the key that is supplied with App Manager as it is publicly accessible by anybody. In the future,
-    the default key will be removed.
-\end{danger}
 
 \begin{tip}{Tip}
     If you need to use the key in the future, it is recommended that you create a KeyStore yourself and import the key
@@ -121,24 +109,26 @@ only for the specified users.
 
 \subsubsection{Sign APK} %%##$sign-apk-title>>
 %%!!sign-apk<<
-Whether to sign the APK files before installing the application. The \hyperref[subsec:apk-signing]{APK signing} page can
-be used to configure signing.
+Whether to sign the APK files before installing the application. A signing key has to be added or generated before this
+option can be enabled. This can be done in the \hyperref[subsec:apk-signing]{APK signing} page.
 %%!!>>
 
 \subsubsection{Install Location} %%##$install-location-title>>
 %%!!install-location<<
 Define APK installation location. This can be one of \textit{auto}, \textit{internal only} and \textit{prefer external}.
-In newer Android versions, selecting the last option does not guarantee that the application will be installed in the external storage.
+In newer Android versions, selecting the last option does not guarantee that the application will be installed in the
+external storage.
 %%!!>>
 
 \subsubsection{Installer App} %%##$installer-app-title>>
 %%!!installer-app<<
-Select the installer application, useful for applications that explicitly checks the installer as a way to verify if the application is installed legitimately.
-This only works for root or ADB users.
+Select the installer application. This is useful for applications that explicitly checks the installer as a way to
+verify if the application is installed legitimately. This only works for root or ADB users.
 
 \begin{tip}{Notice}
-    While checking for the installer might seem a legitimate concern for an application, the Android framework already deals with this during the installation.
-    Checking for the installer is simply the wrong way to prove the legitimacy of the source of an application.
+    While checking for the installer might seem a legitimate concern for an application, the Android framework already
+    deals with this during the installation. Checking for the installer is simply the wrong way to prove the legitimacy
+    of the source of an application.
 \end{tip}
 %%!!>>
 
@@ -149,13 +139,15 @@ Whether to block the tracking components immediately after installing the applic
 
 \subsubsection{Display Changes} %%##$display-changes-title>>
 %%!!display-changes<<
-Whether to display changes in version, trackers, components, permissions, signatures, SDK, etc. in a version controlled style if the application has already been installed.
+Whether to display changes in version, trackers, components, permissions, signatures, SDK, etc. in a version controlled
+style before installing the application if the application has already been installed.
 %%!!>>
 
 \subsubsection{Install in the Background} %%##$install-in-the-background-title>>
 %%!!install-in-the-background<<
 Whether to always install applications in the background. A notification will be issued once the installation is finished.
 %%!!>>
+
 
 \subsection{Back up/Restore}\label{subsec:backup/restore} %%##$backup-restore-title>>
 %%!!backup-restore<<
@@ -177,17 +169,20 @@ Customise the \textit{back up/restore dialog} displayed while taking a backup.
 
 \subsubsection{Backup apps with Android KeyStore} %%##$backup-apps-with-keystore-title>>
 %%!!backup-apps-with-keystore<<
-Allow backup of applications that has entries in the Android KeyStore. This option is disabled by default because a few apps (such as Signal) may crash if restored.
+Allow backup of applications that has entries in the Android KeyStore. This option is disabled by default because
+a few apps (such as Signal) may crash if restored.
 %%!!>>
 
 \subsubsection{Encryption}\label{subsubsec:settings-encryption} %%##$encryption-title>>
 %%!!encryption<<
 Set an encryption method for the backups. App Manager currently supports OpenPGP (via
-\href{https://f-droid.org/packages/org.sufficientlysecure.keychain/}{OpenKeyChain}), AES and RSA (hybrid encryption with AES).
-Like \hyperref[subsec:apk-signing]{APK signing}, The AES and RSA keys are stored in the KeyStore and can be imported from other KeyStores.
+\href{https://f-droid.org/packages/org.sufficientlysecure.keychain/}{OpenKeyChain}), AES, RSA and ECC\@.
+Like \hyperref[subsec:apk-signing]{APK signing}, The AES, RSA and ECC keys are stored in the KeyStore and can be
+imported from other KeyStores.
 
 \begin{danger}{Danger}
-    For your own safety, it is not recommended generating RSA keys inside App Manager. Instead, they should be imported from a KeyStore stored in a secure place.\\
+    For your own safety, it is not recommended generating RSA and ECC keys inside App Manager. Instead, they should be
+    imported from a KeyStore stored in a secure place.\\
     In case of AES, the generated key should be stored in a secure place, such as using a password manager.
 \end{danger}
 %%!!>>
@@ -207,6 +202,7 @@ Select the storage where the backups will be stored. This is also where logs and
 Import backups from old and discontinued projects such as Titanium Backup, OAndBackup, and Swift Backup (version 3.0 to 3.2).
 The backups are not deleted after importing to prevent data loss in case the imported backups cannot be restored properly.
 %%!!>>
+
 
 \subsection{Rules}\label{subsec:rules} %%##$rules-title>>
 
@@ -261,12 +257,37 @@ One-click option to remove all rules configured within App Manager.
 This will enable all blocked components, app ops will be set to their default values and permissions will be granted.
 %%!!>>
 
-\subsection{Import/Export Keystore}\label{subsec:import/export-keystore} %%##$import-export-keystore-title>>
+
+\subsection{Advanced}\label{subsec:advanced} %%##$advanced-settings-title>>
+
+\subsubsection{Selected Users}\label{subsubsec:selected-users} %%##$selected-users-title>>
+%%!!selected-users<<
+This option lets you control the users App Manager should operate on. App Manager operates on all users in root or ADB mode by default.
+%%!!>>
+
+\subsubsection{Saved APK Name Format}\label{subsubsec:saved-apk-name-format} %%##$saved-apk-name-format-title>>
+%%!!saved-apk-name-format<<
+Defines the format of the APK name to be used while saving it via batch operations or through profiles.
+App Manager offers some special keywords enclosed inside \texttt{\%} (percentage) signs and available below the input box.
+These keywords are:
+\begin{itemize}
+    \item \textbf{\texttt{label}.} Denotes the name or label of the application. This can be localised to the configured language depending on the app.
+    \item \textbf{\texttt{package\_name}.} Denotes the name of the package or application ID, the unique identifier that each application has.
+    \item \textbf{\texttt{version}.} Denotes the current version of the application extracted from its manifest.
+    \item \textbf{\texttt{version\_code}.} Denotes the current version code of the application that can be used to separate two versions of the same application.
+    \item \textbf{\texttt{min\_sdk}.} Denotes the minimum SDK (i.e.\ Android framework version) that the application can operate on. This data is only available since Android 7 (Nougat).
+    \item \textbf{\texttt{target\_sdk}.} Denotes the SDK that this application targets. The application can operate on higher SDK but only in the compatibility mode.
+    \item \textbf{\texttt{datetime}.} Denotes the time and date when the APK is exported.
+\end{itemize}
+%%!!>>
+
+\subsubsection{Import/Export Keystore}\label{subsubsec:import/export-keystore} %%##$import-export-keystore-title>>
 %%!!import-export-keystore<<
 Import or export the KeyStore used by App Manager. This is a Bouncy Castle KeyStore with \texttt{bks} extension.
 Therefore, other KeyStore such as Java KeyStore (JKS) or PKCS \#12 are not supported.
 If a key is needed to be imported from such a KeyStore, the relevant options should be should as specified above.
 %%!!>>
+
 
 \subsection{About the device}\label{subsec:device-info} %%##$device-info-title>>
 %%!!device-info<<
