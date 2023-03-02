@@ -21,7 +21,7 @@ import io.github.muntashirakon.AppManager.crypto.ECCCrypto;
 import io.github.muntashirakon.AppManager.crypto.OpenPGPCrypto;
 import io.github.muntashirakon.AppManager.crypto.RSACrypto;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
-import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 
 public class CryptoUtils {
     @StringDef(value = {
@@ -43,7 +43,7 @@ public class CryptoUtils {
 
     @Mode
     public static String getMode() {
-        String currentMode = (String) AppPref.get(AppPref.PrefKey.PREF_ENCRYPTION_STR);
+        String currentMode = Prefs.Encryption.getEncryptionMode();
         if (isAvailable(currentMode)) return currentMode;
         // Fallback to no encryption if none of the modes are available.
         return MODE_NO_ENCRYPTION;
@@ -120,7 +120,7 @@ public class CryptoUtils {
     public static void setupCrypto(@NonNull MetadataManager.Metadata metadata) {
         switch (metadata.crypto) {
             case MODE_OPEN_PGP:
-                metadata.keyIds = (String) AppPref.get(AppPref.PrefKey.PREF_OPEN_PGP_USER_ID_STR);
+                metadata.keyIds = Prefs.Encryption.getOpenPgpKeyIds();
                 break;
             case MODE_AES:
             case MODE_RSA:
@@ -138,7 +138,7 @@ public class CryptoUtils {
     public static boolean isAvailable(@NonNull @Mode String mode) {
         switch (mode) {
             case MODE_OPEN_PGP:
-                String keyIds = (String) AppPref.get(AppPref.PrefKey.PREF_OPEN_PGP_USER_ID_STR);
+                String keyIds = Prefs.Encryption.getOpenPgpKeyIds();
                 // FIXME(1/10/20): Check for the availability of the provider
                 return !TextUtils.isEmpty(keyIds);
             case MODE_AES:

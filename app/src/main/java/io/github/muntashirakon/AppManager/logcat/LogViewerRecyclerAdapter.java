@@ -30,7 +30,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logcat.struct.LogLine;
 import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.widget.MultiSelectionView;
@@ -114,7 +114,7 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
     private ArrayList<LogLine> mOriginalValues;
     private ArrayFilter mFilter;
 
-    private int logLevelLimit = AppPref.getInt(AppPref.PrefKey.PREF_LOG_VIEWER_DEFAULT_LOG_LEVEL_INT);
+    private int logLevelLimit = Prefs.LogViewer.getLogLevel();
     private final Set<LogLine> mSelectedLogLines = new LinkedHashSet<>();
     @ColorInt
     private int highlightColor;
@@ -143,7 +143,7 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
     }
 
     @GuardedBy("mLock")
-    public void readdAll(LogLine object, boolean notify) {
+    public void readAll(LogLine object, boolean notify) {
         synchronized (mLock) {
             if (mOriginalValues != null) {
                 mOriginalValues.add(object);
@@ -360,7 +360,7 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
 
         //EXPANDED INFO
         boolean extraInfoIsVisible = logLine.isExpanded() && logLine.getProcessId() != -1 // -1 marks lines like 'beginning of /dev/log...'
-                && AppPref.getBoolean(AppPref.PrefKey.PREF_LOG_VIEWER_SHOW_PID_TID_TIMESTAMP_BOOL);
+                && Prefs.LogViewer.showPidTidTimestamp();
 
         TextView pidText = holder.pid;
         pidText.setVisibility(extraInfoIsVisible ? View.VISIBLE : View.GONE);

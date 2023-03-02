@@ -18,7 +18,6 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.signing.SigSchemes;
 import io.github.muntashirakon.AppManager.apk.signing.Signer;
 import io.github.muntashirakon.AppManager.settings.crypto.RSACryptoSelectionDialogFragment;
-import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.dialog.SearchableFlagsDialogBuilder;
 
@@ -46,11 +45,13 @@ public class ApkSigningPreferences extends PreferenceFragment {
                             flags |= flag;
                         }
                         sigSchemeFlags.setFlags(flags);
-                        AppPref.set(AppPref.PrefKey.PREF_SIGNATURE_SCHEMES_INT, flags);
+                        sigSchemeFlags.updatePref();
                     })
                     .setNegativeButton(R.string.cancel, null)
-                    .setNeutralButton(R.string.reset_to_default, (dialog, which, selections) ->
-                            AppPref.set(AppPref.PrefKey.PREF_SIGNATURE_SCHEMES_INT, sigSchemeFlags.getDefaultFlags()))
+                    .setNeutralButton(R.string.reset_to_default, (dialog, which, selections) -> {
+                        sigSchemeFlags.setFlags(SigSchemes.DEFAULT_SCHEMES);
+                        sigSchemeFlags.updatePref();
+                    })
                     .show();
             return true;
         });

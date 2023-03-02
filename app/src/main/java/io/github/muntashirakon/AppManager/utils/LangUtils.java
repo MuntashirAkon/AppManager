@@ -15,6 +15,7 @@ import java.util.IllformedLocaleException;
 import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 
 public final class LangUtils {
     public static final String LANG_AUTO = "auto";
@@ -50,7 +51,7 @@ public final class LangUtils {
 
     @NonNull
     public static Locale getFromPreference(@NonNull Context context) {
-        String language = AppPref.getLanguage(context);
+        String language = Prefs.Appearance.getLanguage(context);
         Locale locale = getAppLanguages(context).get(language);
         if (locale != null) {
             return locale;

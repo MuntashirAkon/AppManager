@@ -46,7 +46,6 @@ import io.github.muntashirakon.AppManager.settings.crypto.AESCryptoSelectionDial
 import io.github.muntashirakon.AppManager.settings.crypto.ECCCryptoSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.settings.crypto.OpenPgpKeySelectionDialogFragment;
 import io.github.muntashirakon.AppManager.settings.crypto.RSACryptoSelectionDialogFragment;
-import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
 import io.github.muntashirakon.dialog.SearchableItemsDialogBuilder;
@@ -118,7 +117,7 @@ public class BackupRestorePreferences extends PreferenceFragment {
         activity = (SettingsActivity) requireActivity();
         // Backup compression method
         String[] readableTarTypes = new String[]{"GZip", "BZip2"};
-        currentCompression = ArrayUtils.indexOf(MetadataManager.TAR_TYPES, AppPref.get(AppPref.PrefKey.PREF_BACKUP_COMPRESSION_METHOD_STR));
+        currentCompression = ArrayUtils.indexOf(MetadataManager.TAR_TYPES, Prefs.BackupRestore.getCompressionMethod());
         Preference compressionMethod = Objects.requireNonNull(findPreference("backup_compression_method"));
         compressionMethod.setSummary(readableTarTypes[currentCompression == -1 ? 0 : currentCompression]);
         compressionMethod.setOnPreferenceClickListener(preference -> {
@@ -126,9 +125,11 @@ public class BackupRestorePreferences extends PreferenceFragment {
                     .setTitle(R.string.pref_compression_method)
                     .setSelectionIndex(currentCompression)
                     .setPositiveButton(R.string.save, (dialog, which, selectedTarType) -> {
-                        currentCompression = which;
-                        AppPref.set(AppPref.PrefKey.PREF_BACKUP_COMPRESSION_METHOD_STR, selectedTarType);
-                        compressionMethod.setSummary(readableTarTypes[currentCompression == -1 ? 0 : currentCompression]);
+                        if (selectedTarType != null) {
+                            currentCompression = which;
+                            Prefs.BackupRestore.setCompressionMethod(selectedTarType);
+                            compressionMethod.setSummary(readableTarTypes[currentCompression == -1 ? 0 : currentCompression]);
+                        }
                     })
                     .setNegativeButton(R.string.cancel, null)
                     .show();
@@ -149,7 +150,7 @@ public class BackupRestorePreferences extends PreferenceFragment {
                             flagsInt |= flag;
                         }
                         flags.setFlags(flagsInt);
-                        AppPref.set(AppPref.PrefKey.PREF_BACKUP_FLAGS_INT, flags.getFlags());
+                        Prefs.BackupRestore.setBackupFlags(flags.getFlags());
                     })
                     .setNegativeButton(R.string.cancel, null)
                     .show();
@@ -157,7 +158,7 @@ public class BackupRestorePreferences extends PreferenceFragment {
         });
         // Keystore toggle
         SwitchPreferenceCompat backupKeyStore = Objects.requireNonNull(findPreference("backup_android_keystore"));
-        backupKeyStore.setChecked((boolean) AppPref.get(AppPref.PrefKey.PREF_BACKUP_ANDROID_KEYSTORE_BOOL));
+        backupKeyStore.setChecked(Prefs.BackupRestore.backupAppsWithKeyStore());
         // Encryption
         ((Preference) Objects.requireNonNull(findPreference("encryption"))).setOnPreferenceClickListener(preference -> {
             CharSequence[] encryptionNamesText = new CharSequence[encryptionNames.length];
@@ -166,12 +167,12 @@ public class BackupRestorePreferences extends PreferenceFragment {
             }
             new SearchableSingleChoiceDialogBuilder<>(activity, encryption, encryptionNamesText)
                     .setTitle(R.string.encryption)
-                    .setSelection(AppPref.getString(AppPref.PrefKey.PREF_ENCRYPTION_STR))
+                    .setSelection(Prefs.Encryption.getEncryptionMode())
                     .setOnSingleChoiceClickListener((dialog, which, encryptionMode, isChecked) -> {
                         if (!isChecked) return;
                         switch (encryptionMode) {
                             case CryptoUtils.MODE_NO_ENCRYPTION:
-                                AppPref.set(AppPref.PrefKey.PREF_ENCRYPTION_STR, encryptionMode);
+                                Prefs.Encryption.setEncryptionMode(encryptionMode);
                                 break;
                             case CryptoUtils.MODE_AES: {
                                 DialogFragment fragment = new AESCryptoSelectionDialogFragment();
@@ -182,7 +183,7 @@ public class BackupRestorePreferences extends PreferenceFragment {
                                 RSACryptoSelectionDialogFragment fragment = RSACryptoSelectionDialogFragment.getInstance(RSACrypto.RSA_KEY_ALIAS);
                                 fragment.setOnKeyPairUpdatedListener((keyPair, certificateBytes) -> {
                                     if (keyPair != null) {
-                                        AppPref.set(AppPref.PrefKey.PREF_ENCRYPTION_STR, CryptoUtils.MODE_RSA);
+                                        Prefs.Encryption.setEncryptionMode(CryptoUtils.MODE_RSA);
                                     }
                                 });
                                 fragment.show(getParentFragmentManager(), RSACryptoSelectionDialogFragment.TAG);
@@ -192,14 +193,14 @@ public class BackupRestorePreferences extends PreferenceFragment {
                                 ECCCryptoSelectionDialogFragment fragment = new ECCCryptoSelectionDialogFragment();
                                 fragment.setOnKeyPairUpdatedListener((keyPair, certificateBytes) -> {
                                     if (keyPair != null) {
-                                        AppPref.set(AppPref.PrefKey.PREF_ENCRYPTION_STR, CryptoUtils.MODE_ECC);
+                                        Prefs.Encryption.setEncryptionMode(CryptoUtils.MODE_ECC);
                                     }
                                 });
                                 fragment.show(getParentFragmentManager(), RSACryptoSelectionDialogFragment.TAG);
                                 break;
                             }
                             case CryptoUtils.MODE_OPEN_PGP: {
-                                AppPref.set(AppPref.PrefKey.PREF_ENCRYPTION_STR, encryptionMode);
+                                Prefs.Encryption.setEncryptionMode(encryptionMode);
                                 DialogFragment fragment = new OpenPgpKeySelectionDialogFragment();
                                 fragment.show(getParentFragmentManager(), OpenPgpKeySelectionDialogFragment.TAG);
                             }
@@ -210,7 +211,7 @@ public class BackupRestorePreferences extends PreferenceFragment {
             return true;
         });
         // Backup volume
-        this.backupVolume = AppPref.getSelectedDirectory();
+        this.backupVolume = Prefs.Storage.getVolumePath();
         ((Preference) Objects.requireNonNull(findPreference("backup_volume")))
                 .setOnPreferenceClickListener(preference -> {
                     model.loadStorageVolumes();
@@ -334,9 +335,9 @@ public class BackupRestorePreferences extends PreferenceFragment {
                 .setNegativeButton(R.string.cancel, null)
                 .setPositiveButton(R.string.save, (dialog, which, selectedBackupVolume) -> {
                     backupVolume = selectedBackupVolume;
-                    Uri lastBackupVolume = AppPref.getSelectedDirectory();
+                    Uri lastBackupVolume = Prefs.Storage.getVolumePath();
                     if (!lastBackupVolume.equals(backupVolume)) {
-                        AppPref.set(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR, backupVolume.toString());
+                        Prefs.Storage.setVolumePath(backupVolume.toString());
                         model.reloadApps();
                     }
                 })

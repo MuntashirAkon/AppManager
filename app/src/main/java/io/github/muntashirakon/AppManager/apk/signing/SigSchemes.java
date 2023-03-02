@@ -27,15 +27,17 @@ public class SigSchemes {
 
     public static final int TOTAL_SIG_SCHEME = 4;
 
+    public static final int DEFAULT_SCHEMES = SIG_SCHEME_V1 | SIG_SCHEME_V2;
+
     @SignatureScheme
     private int flags;
 
     @NonNull
     public static SigSchemes fromPref() {
-        SigSchemes sigSchemes = new SigSchemes((Integer) AppPref.get(AppPref.PrefKey.PREF_SIGNATURE_SCHEMES_INT));
+        SigSchemes sigSchemes = new SigSchemes(AppPref.getInt(AppPref.PrefKey.PREF_SIGNATURE_SCHEMES_INT));
         if (sigSchemes.isEmpty()) {
             // Use default if no flag is set
-            return new SigSchemes(sigSchemes.getDefaultFlags());
+            return new SigSchemes(DEFAULT_SCHEMES);
         }
         return sigSchemes;
     }
@@ -54,18 +56,6 @@ public class SigSchemes {
 
     public void setFlags(int flags) {
         this.flags = flags;
-    }
-
-    public int getDefaultFlags() {
-        return (int) AppPref.getInstance().getDefaultValue(AppPref.PrefKey.PREF_SIGNATURE_SCHEMES_INT);
-    }
-
-    public void addFlag(int index) {
-        this.flags |= (1 << index);
-    }
-
-    public void removeFlag(int index) {
-        this.flags &= ~(1 << index);
     }
 
     @NonNull
@@ -88,5 +78,9 @@ public class SigSchemes {
     }
     public boolean v4SchemeEnabled() {
         return (flags & SIG_SCHEME_V4) != 0;
+    }
+
+    public void updatePref() {
+        AppPref.set(AppPref.PrefKey.PREF_SIGNATURE_SCHEMES_INT, flags);
     }
 }

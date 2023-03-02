@@ -29,7 +29,8 @@ import java.util.Objects;
 import aosp.libcore.util.EmptyArray;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.backup.BackupFlags;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
@@ -117,7 +118,8 @@ public class ProfileMetaManager implements LocalizedString {
         public static class BackupInfo {
             @Nullable
             public String name;
-            public int flags = (int) AppPref.get(AppPref.PrefKey.PREF_BACKUP_FLAGS_INT);
+            @BackupFlags.BackupFlag
+            public int flags = Prefs.BackupRestore.getBackupFlags();
 
             public BackupInfo() {}
 

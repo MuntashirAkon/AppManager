@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 
 // Copyright 2012 Nolan Lawson
 public class PreferenceHelper {
@@ -37,8 +37,7 @@ public class PreferenceHelper {
 
     @NonNull
     public static List<Integer> getBuffers() {
-        @LogcatHelper.LogBufferId int buffers = AppPref.getInt(AppPref.PrefKey.PREF_LOG_VIEWER_BUFFER_INT);
-        return getBuffers(buffers);
+        return getBuffers(Prefs.LogViewer.getBuffers());
     }
 
     @NonNull

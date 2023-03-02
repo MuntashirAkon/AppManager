@@ -104,7 +104,7 @@ public class FeatureController {
 
     private FeatureController() {
         pm = AppManager.getContext().getPackageManager();
-        flags = (int) AppPref.get(AppPref.PrefKey.PREF_ENABLED_FEATURES_INT);
+        flags = AppPref.getInt(AppPref.PrefKey.PREF_ENABLED_FEATURES_INT);
     }
 
     public int getFlags() {
@@ -177,16 +177,6 @@ public class FeatureController {
                 throw new IllegalArgumentException();
         }
         return isComponentEnabled(cn) && (flags & key) != 0;
-    }
-
-    @NonNull
-    public boolean[] flagsToCheckedItems() {
-        boolean[] checkedItems = new boolean[featureFlags.size()];
-        Arrays.fill(checkedItems, false);
-        for (int i = 0; i < checkedItems.length; ++i) {
-            if ((flags & featureFlags.get(i)) != 0) checkedItems[i] = true;
-        }
-        return checkedItems;
     }
 
     public void modifyState(@FeatureFlags int key, boolean enabled) {

@@ -35,7 +35,7 @@ import io.github.muntashirakon.AppManager.fm.FmListOptions;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.misc.ListOptions;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
-import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.io.IoUtils;
@@ -87,7 +87,7 @@ public class AppExplorerViewModel extends AndroidViewModel implements ListOption
     @Override
     public void setSortBy(@FmListOptions.SortOrder int sortBy) {
         this.sortBy = sortBy;
-        AppPref.set(AppPref.PrefKey.PREF_FM_SORT_ORDER_INT, sortBy);
+        Prefs.FileManager.setSortOrder(sortBy);
         executor.submit(this::filterAndSort);
     }
 
@@ -100,7 +100,7 @@ public class AppExplorerViewModel extends AndroidViewModel implements ListOption
     @Override
     public void setReverseSort(boolean reverseSort) {
         this.reverseSort = reverseSort;
-        AppPref.set(AppPref.PrefKey.PREF_FM_SORT_REVERSE_BOOL, reverseSort);
+        Prefs.FileManager.setReverseSort(reverseSort);
         executor.submit(this::filterAndSort);
     }
 
@@ -118,7 +118,7 @@ public class AppExplorerViewModel extends AndroidViewModel implements ListOption
     public void onOptionSelected(@FmListOptions.Options int option, boolean selected) {
         if (selected) selectedOptions |= option;
         else selectedOptions &= ~option;
-        AppPref.set(AppPref.PrefKey.PREF_FM_OPTIONS_INT, selectedOptions);
+        Prefs.FileManager.setOptions(selectedOptions);
         executor.submit(this::filterAndSort);
     }
 

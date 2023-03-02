@@ -34,8 +34,8 @@ import io.github.muntashirakon.AppManager.logcat.reader.LogcatReaderLoader;
 import io.github.muntashirakon.AppManager.logcat.struct.LogLine;
 import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.types.ForegroundService;
-import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 
 /**
@@ -145,7 +145,7 @@ public class LogcatRecordingService extends ForegroundService {
         String filename = intent.getStringExtra(EXTRA_FILENAME);
         String queryText = intent.getStringExtra(EXTRA_QUERY_FILTER);
         SearchCriteria searchCriteria = new SearchCriteria(queryText);
-        int logLevel = intent.getIntExtra(EXTRA_LEVEL, AppPref.getInt(AppPref.PrefKey.PREF_LOG_VIEWER_DEFAULT_LOG_LEVEL_INT));
+        int logLevel = intent.getIntExtra(EXTRA_LEVEL, Prefs.LogViewer.getLogLevel());
         boolean searchCriteriaWillAlwaysMatch = searchCriteria.isEmpty();
         boolean logLevelAcceptsEverything = logLevel == android.util.Log.VERBOSE;
         StringBuilder stringBuilder = new StringBuilder();
@@ -160,8 +160,8 @@ public class LogcatRecordingService extends ForegroundService {
         try {
             String line;
             int lineCount = 0;
-            int logLinePeriod = AppPref.getInt(AppPref.PrefKey.PREF_LOG_VIEWER_WRITE_PERIOD_INT);
-            Pattern filterPattern = Pattern.compile(AppPref.getString(AppPref.PrefKey.PREF_LOG_VIEWER_FILTER_PATTERN_STR));
+            int logLinePeriod = Prefs.LogViewer.getLogWritingInterval();
+            Pattern filterPattern = Pattern.compile(Prefs.LogViewer.getFilterPattern());
             while (mReader != null && (line = mReader.readLine()) != null && !mKilled) {
                 // filter
                 if (!searchCriteriaWillAlwaysMatch || !logLevelAcceptsEverything) {

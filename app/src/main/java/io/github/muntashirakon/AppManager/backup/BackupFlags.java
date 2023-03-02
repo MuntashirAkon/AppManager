@@ -18,8 +18,8 @@ import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.settings.Ops;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.users.Users;
-import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
@@ -163,8 +163,7 @@ public final class BackupFlags {
 
     @NonNull
     public static BackupFlags fromPref() {
-        int flags = AppPref.getInt(AppPref.PrefKey.PREF_BACKUP_FLAGS_INT);
-        return new BackupFlags(getSanitizedFlags(flags));
+        return new BackupFlags(getSanitizedFlags(Prefs.BackupRestore.getBackupFlags()));
     }
 
     public BackupFlags(@BackupFlag int flags) {

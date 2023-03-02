@@ -41,7 +41,7 @@ import io.github.muntashirakon.AppManager.rules.struct.PermissionRule;
 import io.github.muntashirakon.AppManager.rules.struct.RuleEntry;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.settings.Ops;
-import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.io.AtomicExtendedFile;
@@ -253,7 +253,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
      * @see #addEntry(RuleEntry)
      */
     public void addComponent(String componentName, RuleType componentType) {
-        if (!readOnly) setComponent(componentName, componentType, AppPref.getDefaultComponentStatus());
+        if (!readOnly) setComponent(componentName, componentType, Prefs.Blocking.getDefaultBlockingMethod());
     }
 
     /**

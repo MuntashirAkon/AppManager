@@ -91,10 +91,10 @@ import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.rules.struct.RuleEntry;
 import io.github.muntashirakon.AppManager.scanner.NativeLibraries;
 import io.github.muntashirakon.AppManager.settings.Ops;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
 import io.github.muntashirakon.AppManager.users.UserInfo;
 import io.github.muntashirakon.AppManager.users.Users;
-import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
@@ -124,11 +124,11 @@ public class AppDetailsViewModel extends AndroidViewModel {
     private int mApkFileKey;
     private int mUserHandle;
     @AppDetailsFragment.SortOrder
-    private int mSortOrderComponents = AppPref.getInt(AppPref.PrefKey.PREF_COMPONENTS_SORT_ORDER_INT);
+    private int mSortOrderComponents = Prefs.AppDetailsPage.getComponentsSortOrder();
     @AppDetailsFragment.SortOrder
-    private int mSortOrderAppOps = AppPref.getInt(AppPref.PrefKey.PREF_APP_OP_SORT_ORDER_INT);
+    private int mSortOrderAppOps = Prefs.AppDetailsPage.getAppOpsSortOrder();
     @AppDetailsFragment.SortOrder
-    private int mSortOrderPermissions = AppPref.getInt(AppPref.PrefKey.PREF_PERMISSIONS_SORT_ORDER_INT);
+    private int mSortOrderPermissions = Prefs.AppDetailsPage.getPermissionsSortOrder();
     private String mSearchQuery;
     @AdvancedSearchView.SearchType
     private int mSearchType;
@@ -281,15 +281,15 @@ public class AppDetailsViewModel extends AndroidViewModel {
             case AppDetailsFragment.RECEIVERS:
             case AppDetailsFragment.PROVIDERS:
                 mSortOrderComponents = sortOrder;
-                AppPref.set(AppPref.PrefKey.PREF_COMPONENTS_SORT_ORDER_INT, sortOrder);
+                Prefs.AppDetailsPage.setComponentsSortOrder(sortOrder);
                 break;
             case AppDetailsFragment.APP_OPS:
                 mSortOrderAppOps = sortOrder;
-                AppPref.set(AppPref.PrefKey.PREF_APP_OP_SORT_ORDER_INT, sortOrder);
+                Prefs.AppDetailsPage.setAppOpsSortOrder(sortOrder);
                 break;
             case AppDetailsFragment.USES_PERMISSIONS:
                 mSortOrderPermissions = sortOrder;
-                AppPref.set(AppPref.PrefKey.PREF_PERMISSIONS_SORT_ORDER_INT, sortOrder);
+                Prefs.AppDetailsPage.setPermissionsSortOrder(sortOrder);
                 break;
         }
         mExecutor.submit(() -> filterAndSortItemsInternal(property));
@@ -507,7 +507,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             // Add to the list
             mBlocker.addComponent(componentName, type, componentStatus);
             // Apply rules if global blocking enable or already applied
-            if (AppPref.getBoolean(AppPref.PrefKey.PREF_GLOBAL_BLOCKING_ENABLED_BOOL)
+            if (Prefs.Blocking.globalBlockingEnabled()
                     || (mRuleApplicationStatus.getValue() != null && RULE_APPLIED == mRuleApplicationStatus.getValue())) {
                 mBlocker.applyRules(true);
             }
@@ -549,7 +549,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 mBlocker.addComponent(componentName, entry.type);
             }
             // Apply rules if global blocking enable or already applied
-            if (forceApply || (Boolean) AppPref.get(AppPref.PrefKey.PREF_GLOBAL_BLOCKING_ENABLED_BOOL)
+            if (forceApply || Prefs.Blocking.globalBlockingEnabled()
                     || (mRuleApplicationStatus.getValue() != null && RULE_APPLIED == mRuleApplicationStatus.getValue())) {
                 mBlocker.applyRules(true);
             }
@@ -578,7 +578,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 }
             }
             // Apply rules if global blocking enable or already applied
-            if (forceApply || (Boolean) AppPref.get(AppPref.PrefKey.PREF_GLOBAL_BLOCKING_ENABLED_BOOL)
+            if (forceApply || Prefs.Blocking.globalBlockingEnabled()
                     || (mRuleApplicationStatus.getValue() != null && RULE_APPLIED == mRuleApplicationStatus.getValue())) {
                 mBlocker.applyRules(true);
             }
@@ -780,14 +780,13 @@ public class AppDetailsViewModel extends AndroidViewModel {
         if (mIsExternalApk) return false;
         PackageInfo packageInfo = getPackageInfoInternal();
         if (packageInfo == null) return false;
-        AppOpsManagerCompat.OpEntry opEntry;
         String permName;
         final List<Integer> opItems = new ArrayList<>();
         boolean isSuccessful = true;
         synchronized (mAppOpItems) {
             for (AppDetailsAppOpItem mAppOpItem : mAppOpItems) {
                 try {
-                    permName = AppOpsManagerCompat.opToPermission(mAppOpItem.getOp());;
+                    permName = AppOpsManagerCompat.opToPermission(mAppOpItem.getOp());
                     if (permName != null) {
                         PermissionInfo permissionInfo = mPackageManager.getPermissionInfo(permName,
                                 PackageManager.GET_META_DATA);
@@ -1359,7 +1358,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     otherOps.add(op);
                 }
                 // Include defaults i.e. app ops without any associated permissions if requested
-                if (AppPref.getBoolean(AppPref.PrefKey.PREF_APP_OP_SHOW_DEFAULT_BOOL)) {
+                if (Prefs.AppDetailsPage.displayDefaultAppOps()) {
                     for (int op : AppOpsManagerCompat.getOpsWithoutPermissions()) {
                         if (op >= AppOpsManagerCompat._NUM_OP || opToOpEntryMap.get(op) != null) {
                             // Unsupported app operation
@@ -1370,7 +1369,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 }
                 for (AppOpsManagerCompat.OpEntry entry : opToOpEntryMap.values()) {
                     AppDetailsAppOpItem appDetailsItem;
-                    String permissionName = AppOpsManagerCompat.opToPermission(entry.getOp());;
+                    String permissionName = AppOpsManagerCompat.opToPermission(entry.getOp());
                     if (permissionName != null) {
                         boolean isGranted = privileged && PermissionCompat.checkPermission(permissionName,
                                 packageName, mUserHandle) == PackageManager.PERMISSION_GRANTED;

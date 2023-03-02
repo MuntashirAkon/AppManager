@@ -74,7 +74,7 @@ import io.github.muntashirakon.AppManager.scanner.NativeLibraries;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.self.pref.TipsPrefs;
 import io.github.muntashirakon.AppManager.settings.Ops;
-import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -331,8 +331,8 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
         } else if (id == R.id.action_toggle_default_app_ops) {  // App ops
             showProgressIndicator(true);
             // Turn filter on/off
-            boolean curr = AppPref.getBoolean(AppPref.PrefKey.PREF_APP_OP_SHOW_DEFAULT_BOOL);
-            AppPref.set(AppPref.PrefKey.PREF_APP_OP_SHOW_DEFAULT_BOOL, !curr);
+            boolean curr = Prefs.AppDetailsPage.displayDefaultAppOps();
+            Prefs.AppDetailsPage.setDisplayDefaultAppOps(!curr);
             refreshDetails();
         } else if (id == R.id.action_custom_app_op) {
             List<Integer> modes = AppOpsManagerCompat.getModeConstants();

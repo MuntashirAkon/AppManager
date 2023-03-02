@@ -38,9 +38,9 @@ import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.main.MainActivity;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.settings.Ops;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.types.ForegroundService;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
-import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
@@ -110,9 +110,7 @@ public class PackageInstallerService extends ForegroundService {
             public void onFinishedInstall(int sessionId, String packageName, int result,
                                           @Nullable String blockingPackage, @Nullable String statusMessage) {
                 // Block trackers if requested
-                if (result == STATUS_SUCCESS
-                        && Ops.isRoot()
-                        && AppPref.getBoolean(AppPref.PrefKey.PREF_INSTALLER_BLOCK_TRACKERS_BOOL)) {
+                if (result == STATUS_SUCCESS && Ops.isRoot() && Prefs.Installer.blockTrackers()) {
                     ComponentUtils.blockTrackingComponents(Collections.singletonList(
                             new UserPackagePair(packageName, apkQueueItem.getUserId())));
                 }

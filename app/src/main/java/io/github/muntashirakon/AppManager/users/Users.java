@@ -19,7 +19,7 @@ import java.util.List;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 
 public final class Users {
@@ -62,7 +62,7 @@ public final class Users {
     @NonNull
     public static List<UserInfo> getUsers() {
         getAllUsers();
-        int[] selectedUserIds = AppPref.getSelectedUsers();
+        int[] selectedUserIds = Prefs.Misc.getSelectedUsers();
         List<UserInfo> users = new ArrayList<>();
         for (UserInfo userInfo : sUserInfoList) {
             if (selectedUserIds == null || ArrayUtils.contains(selectedUserIds, userInfo.id)) {
@@ -76,7 +76,7 @@ public final class Users {
     @UserIdInt
     public static int[] getUsersIds() {
         getAllUsers();
-        int[] selectedUserIds = AppPref.getSelectedUsers();
+        int[] selectedUserIds = Prefs.Misc.getSelectedUsers();
         List<Integer> users = new ArrayList<>();
         for (UserInfo userInfo : sUserInfoList) {
             if (selectedUserIds == null || ArrayUtils.contains(selectedUserIds, userInfo.id)) {

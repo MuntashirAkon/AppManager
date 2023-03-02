@@ -18,7 +18,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
-import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -72,7 +71,8 @@ public class RulesPreferences extends PreferenceFragment {
         activity = (SettingsActivity) requireActivity();
         // Default freezing method
         Preference defaultFreezingMethod = Objects.requireNonNull(findPreference("freeze_type"));
-        AtomicInteger freezeTypeIdx = new AtomicInteger(ArrayUtils.indexOf(freezingMethods, AppPref.getDefaultFreezingMethod()));
+        AtomicInteger freezeTypeIdx = new AtomicInteger(ArrayUtils.indexOf(freezingMethods,
+                Prefs.Blocking.getDefaultFreezingMethod()));
         if (freezeTypeIdx.get() != -1) {
             defaultFreezingMethod.setSummary(freezingMethodTitles[freezeTypeIdx.get()]);
         }
@@ -87,12 +87,12 @@ public class RulesPreferences extends PreferenceFragment {
                             .setTitle(R.string.pref_default_freezing_method)
                             .setSubtitle(R.string.pref_default_freezing_method_description)
                             .build())
-                    .setSelection(AppPref.getDefaultFreezingMethod())
+                    .setSelection(Prefs.Blocking.getDefaultFreezingMethod())
                     .setOnSingleChoiceClickListener((dialog, which, selectedFreezingMethod, isChecked) -> {
                         if (!isChecked) {
                             return;
                         }
-                        AppPref.set(AppPref.PrefKey.PREF_FREEZE_TYPE_INT, selectedFreezingMethod);
+                        Prefs.Blocking.setDefaultFreezingMethod(selectedFreezingMethod);
                         defaultFreezingMethod.setSummary(freezingMethodTitles[which]);
                         freezeTypeIdx.set(which);
                         dialog.dismiss();
@@ -103,7 +103,7 @@ public class RulesPreferences extends PreferenceFragment {
         });
         // Default component blocking method
         Preference defaultBlockingMethod = Objects.requireNonNull(findPreference("default_blocking_method"));
-        int csIdx = ArrayUtils.indexOf(blockingMethods, AppPref.getDefaultComponentStatus());
+        int csIdx = ArrayUtils.indexOf(blockingMethods, Prefs.Blocking.getDefaultBlockingMethod());
         if (csIdx != -1) {
             defaultBlockingMethod.setSummary(blockingMethodTitles[csIdx]);
         }
@@ -118,12 +118,12 @@ public class RulesPreferences extends PreferenceFragment {
                             .setTitle(R.string.pref_default_blocking_method)
                             .setSubtitle(R.string.pref_default_blocking_method_description)
                             .build())
-                    .setSelection(AppPref.getDefaultComponentStatus())
+                    .setSelection(Prefs.Blocking.getDefaultBlockingMethod())
                     .setOnSingleChoiceClickListener((dialog, which, selectedBlockingMethod, isChecked) -> {
                         if (!isChecked) {
                             return;
                         }
-                        AppPref.set(AppPref.PrefKey.PREF_DEFAULT_BLOCKING_METHOD_STR, selectedBlockingMethod);
+                        Prefs.Blocking.setDefaultBlockingMethod(selectedBlockingMethod);
                         defaultBlockingMethod.setSummary(blockingMethodTitles[which]);
                         dialog.dismiss();
                     })
@@ -133,7 +133,7 @@ public class RulesPreferences extends PreferenceFragment {
         });
         // Global blocking enabled
         final SwitchPreferenceCompat gcb = Objects.requireNonNull(findPreference("global_blocking_enabled"));
-        gcb.setChecked(AppPref.isGlobalBlockingEnabled());
+        gcb.setChecked(Prefs.Blocking.globalBlockingEnabled());
         gcb.setOnPreferenceChangeListener((preference, isEnabled) -> {
             if ((boolean) isEnabled) {
                 model.applyAllRules();

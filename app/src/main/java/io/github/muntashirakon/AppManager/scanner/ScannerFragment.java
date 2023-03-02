@@ -48,7 +48,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.scanner.vt.VtFileReport;
 import io.github.muntashirakon.AppManager.scanner.vt.VtFileReportScanItem;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
-import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
@@ -166,7 +166,7 @@ public class ScannerFragment extends Fragment {
             }
         });
         // VirusTotal
-        if (!FeatureController.isInternetEnabled() || AppPref.getVtApiKey() == null) {
+        if (!FeatureController.isInternetEnabled() || Prefs.VirusTotal.getApiKey() == null) {
             vtContainerView.setVisibility(View.GONE);
             view.findViewById(R.id.vt_disclaimer).setVisibility(View.GONE);
         }
@@ -176,7 +176,7 @@ public class ScannerFragment extends Fragment {
             if (vtFileScanMeta == null) {
                 // Uploading
                 vtTitleView.setText(R.string.vt_uploading);
-                if (AppPref.getBoolean(AppPref.PrefKey.PREF_VIRUS_TOTAL_PROMPT_BEFORE_UPLOADING_BOOL)) {
+                if (Prefs.VirusTotal.promptBeforeUpload()) {
                     new MaterialAlertDialogBuilder(mActivity)
                             .setTitle(R.string.scan_in_vt)
                             .setMessage(R.string.vt_confirm_uploading_file)

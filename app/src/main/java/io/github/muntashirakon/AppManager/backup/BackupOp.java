@@ -58,9 +58,9 @@ import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.settings.Ops;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.ssaid.SsaidSettings;
 import io.github.muntashirakon.AppManager.uri.UriManager;
-import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
@@ -159,9 +159,7 @@ class BackupOp implements Closeable {
         boolean backupSuccess = false;
         try {
             // Fail backup if the app has items in Android KeyStore and backup isn't enabled
-            if (mBackupFlags.backupData()
-                    && mMetadata.keyStore
-                    && !AppPref.getBoolean(AppPref.PrefKey.PREF_BACKUP_ANDROID_KEYSTORE_BOOL)) {
+            if (mBackupFlags.backupData() && mMetadata.keyStore && !Prefs.BackupRestore.backupAppsWithKeyStore()) {
                 throw new BackupException("The app has keystore items and KeyStore backup isn't enabled.");
             }
             // Backup icon

@@ -30,8 +30,8 @@ import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.self.life.BuildExpiryChecker;
 import io.github.muntashirakon.AppManager.settings.Ops;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.settings.SecurityAndOpsViewModel;
-import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 @SuppressLint("CustomSplashScreen")
@@ -61,7 +61,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected final void onCreate(@Nullable Bundle savedInstanceState) {
         // Set theme
-        setTheme(AppPref.isPureBlackTheme() ? R.style.AppTheme_Splash_Black : R.style.AppTheme_Splash);
+        setTheme(Prefs.Appearance.isPureBlackTheme() ? R.style.AppTheme_Splash_Black : R.style.AppTheme_Splash);
         super.onCreate(savedInstanceState);
         SplashScreen.installSplashScreen(this);
         DynamicColors.applyToActivityIfAvailable(this);
@@ -148,7 +148,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void ensureSecurityAndModeOfOp() {
-        if (!AppPref.getBoolean(AppPref.PrefKey.PREF_ENABLE_SCREEN_LOCK_BOOL)) {
+        if (!Prefs.Security.isScreenLockEnabled()) {
             // No security enabled
             handleMigrationAndModeOfOp();
             return;

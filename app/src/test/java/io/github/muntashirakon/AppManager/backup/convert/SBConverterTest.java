@@ -17,7 +17,7 @@ import java.util.Collections;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.backup.BackupException;
-import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.TarUtilsTest;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
@@ -35,7 +35,7 @@ public class SBConverterTest {
 
     @Before
     public void setUp() {
-        AppPref.set(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR, "/tmp");
+        Prefs.Storage.setVolumePath("/tmp");
         Paths.get("/tmp/AppManager").delete();
         assert classLoader != null;
         backupLocation = new File(classLoader.getResource("SwiftBackup").getFile());
@@ -55,7 +55,7 @@ public class SBConverterTest {
         Path xmlFile = Paths.get(new File(backupLocation, PACKAGE_NAME_FULL + ".xml"));
         SBConverter sbConvert = new SBConverter(xmlFile);
         sbConvert.convert();
-        Path newBackupLocation = AppPref.getAppManagerDirectory().findFile(PACKAGE_NAME_FULL).findFile("0_SB");
+        Path newBackupLocation = Prefs.Storage.getAppManagerDirectory().findFile(PACKAGE_NAME_FULL).findFile("0_SB");
         // Verify source
         assertEquals(Collections.singletonList("base.apk"), TarUtilsTest.getFileNamesGZip(Collections.singletonList(
                 newBackupLocation.findFile("source.tar.gz.0"))));
@@ -76,7 +76,7 @@ public class SBConverterTest {
         Path xmlFile = Paths.get(new File(backupLocation, PACKAGE_NAME_APK_INT + ".xml"));
         SBConverter sbConvert = new SBConverter(xmlFile);
         sbConvert.convert();
-        Path newBackupLocation = AppPref.getAppManagerDirectory().findFile(PACKAGE_NAME_APK_INT).findFile("0_SB");
+        Path newBackupLocation = Prefs.Storage.getAppManagerDirectory().findFile(PACKAGE_NAME_APK_INT).findFile("0_SB");
         // Verify source
         assertEquals(Collections.singletonList("base.apk"), TarUtilsTest.getFileNamesGZip(Collections.singletonList(
                 newBackupLocation.findFile("source.tar.gz.0"))));
@@ -91,7 +91,7 @@ public class SBConverterTest {
         Path xmlFile = Paths.get(new File(backupLocation, PACKAGE_NAME_APK + ".xml"));
         SBConverter sbConvert = new SBConverter(xmlFile);
         sbConvert.convert();
-        Path newBackupLocation = AppPref.getAppManagerDirectory().findFile(PACKAGE_NAME_APK).findFile("0_SB");
+        Path newBackupLocation = Prefs.Storage.getAppManagerDirectory().findFile(PACKAGE_NAME_APK).findFile("0_SB");
         // Verify source
         assertEquals(Collections.singletonList("base.apk"), TarUtilsTest.getFileNamesGZip(Collections.singletonList(
                 newBackupLocation.findFile("source.tar.gz.0"))));
@@ -109,7 +109,7 @@ public class SBConverterTest {
 //        Path xmlFile = Paths.get(new File(backupLocation, PACKAGE_NAME_APK_SPLITS + ".xml"));
 //        SBConverter sbConvert = new SBConverter(xmlFile);
 //        sbConvert.convert();
-//        Path newBackupLocation = AppPref.getAppManagerDirectory().findFile(PACKAGE_NAME_APK_SPLITS).findFile("0_SB");
+//        Path newBackupLocation = Prefs.Storage.getAppManagerDirectory().findFile(PACKAGE_NAME_APK_SPLITS).findFile("0_SB");
 //        // Verify source
 //        List<String> actualApkFiles = TarUtilsTest.getFileNamesGZip(Collections.singletonList(
 //                newBackupLocation.findFile("source.tar.gz.0")));
@@ -125,7 +125,7 @@ public class SBConverterTest {
 //        Path xmlFile = Paths.get(new File(backupLocation, PACKAGE_NAME_APK_OBB + ".xml"));
 //        SBConverter sbConvert = new SBConverter(xmlFile);
 //        sbConvert.convert();
-//        Path newBackupLocation = AppPref.getAppManagerDirectory().findFile(PACKAGE_NAME_APK_OBB).findFile("0_SB");
+//        Path newBackupLocation = Prefs.Storage.getAppManagerDirectory().findFile(PACKAGE_NAME_APK_OBB).findFile("0_SB");
 //        // Verify source
 //        assertEquals(Collections.singletonList("base.apk"), TarUtilsTest.getFileNamesGZip(Collections.singletonList(
 //                newBackupLocation.findFile("source.tar.gz.0"))));

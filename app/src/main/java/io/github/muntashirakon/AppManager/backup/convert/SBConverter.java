@@ -54,7 +54,7 @@ import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.crypto.Crypto;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
-import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
@@ -365,9 +365,9 @@ public class SBConverter extends Converter {
             throw new BackupException("Could not cache splits", e);
         }
         mSourceMetadata.userHandle = mUserId;
-        mSourceMetadata.tarType = ConvertUtils.getTarTypeFromPref();
+        mSourceMetadata.tarType = Prefs.BackupRestore.getCompressionMethod();
         mSourceMetadata.keyStore = false;
-        mSourceMetadata.installer = AppPref.getString(AppPref.PrefKey.PREF_INSTALLER_INSTALLER_APP_STR);
+        mSourceMetadata.installer = Prefs.Installer.getInstallerPackageName();
     }
 
     @NonNull

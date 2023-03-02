@@ -37,7 +37,7 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 import io.github.muntashirakon.io.Path;
 
@@ -95,7 +95,7 @@ public class OpenPGPCrypto implements Crypto {
         } catch (NumberFormatException e) {
             throw new CryptoException(e);
         }
-        this.provider = (String) AppPref.get(AppPref.PrefKey.PREF_OPEN_PGP_PACKAGE_STR);
+        this.provider = Prefs.Encryption.getOpenPgpProvider();
         this.handler = new Handler(Looper.getMainLooper());
         bind();
     }

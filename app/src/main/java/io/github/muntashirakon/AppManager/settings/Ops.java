@@ -169,6 +169,7 @@ public class Ops {
         }
     }
 
+    @NoOps
     public static String getMode(Context context) {
         String mode = AppPref.getString(AppPref.PrefKey.PREF_MODE_OF_OPS_STR);
         // Backward compatibility for v2.6.0
@@ -180,6 +181,11 @@ public class Ops {
             return MODE_AUTO;
         }
         return mode;
+    }
+
+    @NoOps
+    public static void setMode(@NonNull String newMode) {
+        AppPref.set(AppPref.PrefKey.PREF_MODE_OF_OPS_STR, newMode);
     }
 
     @WorkerThread

@@ -2,8 +2,6 @@
 
 package io.github.muntashirakon.AppManager.backup.convert;
 
-import static io.github.muntashirakon.AppManager.backup.MetadataManager.TAR_TYPES;
-
 import android.annotation.SuppressLint;
 import android.net.Uri;
 import android.os.Build;
@@ -31,10 +29,7 @@ import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.crypto.Crypto;
 import io.github.muntashirakon.AppManager.crypto.CryptoException;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
-import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
-import io.github.muntashirakon.AppManager.utils.TarUtils;
 import io.github.muntashirakon.io.FileSystemManager;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
@@ -90,18 +85,6 @@ public final class ConvertUtils {
             dataDirs.add("/storage/emulated/" + userHandle + "/Android/obb/" + packageName);
         }
         return dataDirs.toArray(new String[0]);
-    }
-
-    @TarUtils.TarType
-    @NonNull
-    static String getTarTypeFromPref() {
-        String tarType = (String) AppPref.get(AppPref.PrefKey.PREF_BACKUP_COMPRESSION_METHOD_STR);
-        // Verify tar type
-        if (ArrayUtils.indexOf(TAR_TYPES, tarType) == -1) {
-            // Unknown tar type, set default
-            tarType = TarUtils.TAR_GZIP;
-        }
-        return tarType;
     }
 
     @NonNull

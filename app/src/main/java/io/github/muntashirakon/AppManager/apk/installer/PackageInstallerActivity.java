@@ -66,9 +66,9 @@ import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.settings.Ops;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.types.ForegroundService;
 import io.github.muntashirakon.AppManager.users.UserInfo;
-import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.StoragePermission;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -266,7 +266,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
 
     @UiThread
     private void displayWhatsNewDialog() {
-        if (!AppPref.getBoolean(AppPref.PrefKey.PREF_INSTALLER_DISPLAY_CHANGES_BOOL)) {
+        if (!Prefs.Installer.displayChanges()) {
             if (!Ops.isPrivileged()) {
                 triggerInstall();
                 return;
@@ -337,7 +337,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
     @UiThread
     private void launchInstallService() {
         // Select user
-        if (Ops.isPrivileged() && AppPref.getBoolean(AppPref.PrefKey.PREF_INSTALLER_DISPLAY_USERS_BOOL)) {
+        if (Ops.isPrivileged() && Prefs.Installer.displayUsers()) {
             List<UserInfo> users = model.getUsers();
             if (users != null && users.size() > 1) {
                 String[] userNames = new String[users.size() + 1];
@@ -367,8 +367,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
     private void doLaunchInstallerService(@UserIdInt int userId) {
         lastUserId = userId == UserHandleHidden.USER_ALL ? UserHandleHidden.myUserId() : userId;
         boolean canDisplayNotification = Utils.canDisplayNotification(this);
-        boolean alwaysOnBackground = canDisplayNotification &&
-                AppPref.getBoolean(AppPref.PrefKey.PREF_INSTALLER_ALWAYS_ON_BACKGROUND_BOOL);
+        boolean alwaysOnBackground = canDisplayNotification && Prefs.Installer.installInBackground();
         Intent intent = new Intent(this, PackageInstallerService.class);
         intent.putExtra(PackageInstallerService.EXTRA_QUEUE_ITEM, currentItem);
         // We have to get an ApkFile instance in advance because of the queue management i.e. if this activity is closed

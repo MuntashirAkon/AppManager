@@ -38,7 +38,7 @@ import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.misc.VMRuntime;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
-import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
@@ -327,7 +327,7 @@ public final class MetadataManager {
         requestedFlags.removeFlag(BackupFlags.BACKUP_CUSTOM_USERS | BackupFlags.BACKUP_MULTIPLE);
         mMetadata.flags = requestedFlags;
         mMetadata.userHandle = userHandle;
-        mMetadata.tarType = AppPref.getString(AppPref.PrefKey.PREF_BACKUP_COMPRESSION_METHOD_STR);
+        mMetadata.tarType = Prefs.BackupRestore.getCompressionMethod();
         mMetadata.crypto = CryptoUtils.getMode();
         // Verify tar type
         if (ArrayUtils.indexOf(TAR_TYPES, mMetadata.tarType) == -1) {

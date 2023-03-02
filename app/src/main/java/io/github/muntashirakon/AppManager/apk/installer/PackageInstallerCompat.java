@@ -56,8 +56,8 @@ import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.settings.Ops;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.users.Users;
-import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.BroadcastUtils;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -503,7 +503,7 @@ public final class PackageInstallerCompat {
     private final boolean isPrivileged;
 
     private PackageInstallerCompat() {
-        this(Ops.isReallyPrivileged() ? AppPref.getString(AppPref.PrefKey.PREF_INSTALLER_INSTALLER_APP_STR) : context.getPackageName());
+        this(Ops.isReallyPrivileged() ? Prefs.Installer.getInstallerPackageName() : context.getPackageName());
     }
 
     private PackageInstallerCompat(@NonNull String installerPackageName) {
@@ -689,7 +689,7 @@ public final class PackageInstallerCompat {
         PackageInstaller.SessionParams sessionParams = new PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL);
         Refine.<PackageInstallerHidden.SessionParams>unsafeCast(sessionParams).installFlags |= installFlags;
         // Set installation location
-        sessionParams.setInstallLocation(AppPref.getInt(AppPref.PrefKey.PREF_INSTALLER_INSTALL_LOCATION_INT));
+        sessionParams.setInstallLocation(Prefs.Installer.getInstallLocation());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             sessionParams.setInstallReason(PackageManager.INSTALL_REASON_USER);
         }

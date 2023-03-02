@@ -16,6 +16,7 @@ import java.lang.annotation.RetentionPolicy;
 
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 
 public final class FreezeUtils {
     @IntDef({FREEZE_DISABLE, FREEZE_SUSPEND, FREEZE_HIDE})
@@ -39,7 +40,7 @@ public final class FreezeUtils {
     }
 
     public static void freeze(@NonNull String packageName, @UserIdInt int userId) throws RemoteException {
-        freeze(packageName, userId, AppPref.getDefaultFreezingMethod());
+        freeze(packageName, userId, Prefs.Blocking.getDefaultFreezingMethod());
     }
 
     private static void freeze(@NonNull String packageName, @UserIdInt int userId, @FreezeType int freezeType)

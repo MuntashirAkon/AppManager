@@ -34,7 +34,7 @@ import java.util.LinkedHashSet;
 import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
-import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 
 public final class AppearanceUtils {
@@ -53,7 +53,7 @@ public final class AppearanceUtils {
         // Update locale and layout direction for the application
         AppearanceOptions options = new AppearanceOptions();
         options.locale = LangUtils.getFromPreference(context);
-        options.layoutDirection = AppPref.getLayoutDirection();
+        options.layoutDirection = Prefs.Appearance.getLayoutDirection();
         updateConfiguration(context, options);
         if (!context.equals(context.getApplicationContext())) {
             updateConfiguration(context.getApplicationContext(), options);
@@ -67,9 +67,9 @@ public final class AppearanceUtils {
     public static Context getThemedContext(@NonNull Context context) {
         AppearanceOptions options = new AppearanceOptions();
         options.locale = LangUtils.getFromPreference(context);
-        options.layoutDirection = AppPref.getLayoutDirection();
-        options.theme = AppPref.getAppTheme();
-        options.nightMode = AppPref.getInt(AppPref.PrefKey.PREF_APP_THEME_INT);
+        options.layoutDirection = Prefs.Appearance.getLayoutDirection();
+        options.theme = Prefs.Appearance.getAppTheme();
+        options.nightMode = Prefs.Appearance.getNightMode();
         ContextThemeWrapper newCtx = new ContextThemeWrapper(context, options.theme);
         newCtx.applyOverrideConfiguration(createOverrideConfiguration(context, options));
         return newCtx;
@@ -114,7 +114,9 @@ public final class AppearanceUtils {
         public void onActivityPreCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
             if (activity instanceof BaseActivity) {
                 boolean transparentBackground = ((BaseActivity) activity).getTransparentBackground();
-                activity.setTheme(transparentBackground ? AppPref.getTransparentAppTheme() : AppPref.getAppTheme());
+                activity.setTheme(transparentBackground
+                        ? Prefs.Appearance.getTransparentAppTheme()
+                        : Prefs.Appearance.getAppTheme());
             }
             // Theme must be set first because the method below will add dynamic attributes to the theme
             DynamicColors.applyToActivityIfAvailable(activity);
@@ -129,7 +131,7 @@ public final class AppearanceUtils {
         @Override
         public void onActivityPostCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
             applyOnlyLocale(activity);
-            AppCompatDelegate.setDefaultNightMode(AppPref.getInt(AppPref.PrefKey.PREF_APP_THEME_INT));
+            AppCompatDelegate.setDefaultNightMode(Prefs.Appearance.getNightMode());
 
             sActivityReferences.put(activity.hashCode(), new WeakReference<>(activity));
         }

@@ -63,8 +63,8 @@ import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Ops;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
-import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -177,11 +177,11 @@ public class AppDetailsComponentsFragment extends Fragment implements AdvancedSe
             mMainModel.getRuleApplicationStatus().observe(mActivity, status -> {
                 switch (status) {
                     case AppDetailsViewModel.RULE_APPLIED:
-                        mBlockingToggler.setVisible(!AppPref.isGlobalBlockingEnabled());
+                        mBlockingToggler.setVisible(!Prefs.Blocking.globalBlockingEnabled());
                         mBlockingToggler.setTitle(R.string.menu_remove_rules);
                         break;
                     case AppDetailsViewModel.RULE_NOT_APPLIED:
-                        mBlockingToggler.setVisible(!AppPref.isGlobalBlockingEnabled());
+                        mBlockingToggler.setVisible(!Prefs.Blocking.globalBlockingEnabled());
                         mBlockingToggler.setTitle(R.string.menu_apply_rules);
                         break;
                     case AppDetailsViewModel.RULE_NO_RULE:
@@ -465,7 +465,7 @@ public class AppDetailsComponentsFragment extends Fragment implements AdvancedSe
             holder.toggleSwitch.setOnClickListener(buttonView -> {
                 String componentStatus = item.isBlocked()
                         ? ComponentRule.COMPONENT_TO_BE_DEFAULTED
-                        : AppPref.getDefaultComponentStatus();
+                        : Prefs.Blocking.getDefaultBlockingMethod();
                 applyRules(item, ruleType, componentStatus);
             });
             holder.toggleSwitch.setOnLongClickListener(v -> {

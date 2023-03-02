@@ -104,7 +104,7 @@ public class AdvancedPreferences extends PreferenceFragment {
                     .setPositiveButton(R.string.save, (dialog, which, inputText, isChecked) -> {
                         if (inputText != null && TextUtils.isDigitsOnly(inputText)) {
                             int c = Integer.decode(inputText.toString());
-                            AppPref.set(AppPref.PrefKey.PREF_CONCURRENCY_THREAD_COUNT_INT, c);
+                            MultithreadedExecutor.setThreadCount(c);
                             threadCount = MultithreadedExecutor.getThreadCount();
                             threadCountPref.setSummary(getResources().getQuantityString(R.plurals.pref_thread_count_msg, threadCount, threadCount));
                         }
@@ -133,7 +133,7 @@ public class AdvancedPreferences extends PreferenceFragment {
         super.onViewCreated(view, savedInstanceState);
         model.selectUsers().observe(getViewLifecycleOwner(), users -> {
             if (users == null) return;
-            int[] selectedUsers = AppPref.getSelectedUsers();
+            int[] selectedUsers = Prefs.Misc.getSelectedUsers();
             Integer[] userIds = new Integer[users.size()];
             CharSequence[] userInfo = new CharSequence[users.size()];
             List<Integer> preselectedUserIds = new ArrayList<>();
@@ -149,13 +149,13 @@ public class AdvancedPreferences extends PreferenceFragment {
                     .addSelections(preselectedUserIds)
                     .setPositiveButton(R.string.save, (dialog, which, selectedUserIds) -> {
                         if (selectedUserIds.size() > 0) {
-                            AppPref.setSelectedUsers(ArrayUtils.convertToIntArray(selectedUserIds));
-                        } else AppPref.setSelectedUsers(null);
+                            Prefs.Misc.setSelectedUsers(ArrayUtils.convertToIntArray(selectedUserIds));
+                        } else Prefs.Misc.setSelectedUsers(null);
                         Utils.relaunchApp(requireActivity());
                     })
                     .setNegativeButton(R.string.cancel, null)
                     .setNeutralButton(R.string.use_default, (dialog, which, selectedUserIds) -> {
-                        AppPref.setSelectedUsers(null);
+                        Prefs.Misc.setSelectedUsers(null);
                         Utils.relaunchApp(requireActivity());
                     })
                     .show();

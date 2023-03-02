@@ -21,7 +21,7 @@ import java.util.concurrent.Executors;
 
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.misc.ListOptions;
-import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
@@ -41,9 +41,9 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
 
     public FmViewModel(@NonNull Application application) {
         super(application);
-        sortBy = AppPref.getInt(AppPref.PrefKey.PREF_FM_SORT_ORDER_INT);
-        reverseSort = AppPref.getBoolean(AppPref.PrefKey.PREF_FM_SORT_REVERSE_BOOL);
-        selectedOptions = AppPref.getInt(AppPref.PrefKey.PREF_FM_OPTIONS_INT);
+        sortBy = Prefs.FileManager.getSortOrder();
+        reverseSort = Prefs.FileManager.isReverseSort();
+        selectedOptions = Prefs.FileManager.getOptions();
     }
 
     @Override
@@ -55,7 +55,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
     @Override
     public void setSortBy(@FmListOptions.SortOrder int sortBy) {
         this.sortBy = sortBy;
-        AppPref.set(AppPref.PrefKey.PREF_FM_SORT_ORDER_INT, sortBy);
+        Prefs.FileManager.setSortOrder(sortBy);
         executor.submit(this::filterAndSort);
     }
 
@@ -68,7 +68,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
     @Override
     public void setReverseSort(boolean reverseSort) {
         this.reverseSort = reverseSort;
-        AppPref.set(AppPref.PrefKey.PREF_FM_SORT_REVERSE_BOOL, reverseSort);
+        Prefs.FileManager.setReverseSort(reverseSort);
         executor.submit(this::filterAndSort);
     }
 
@@ -86,7 +86,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
     public void onOptionSelected(@FmListOptions.Options int option, boolean selected) {
         if (selected) selectedOptions |= option;
         else selectedOptions &= ~option;
-        AppPref.set(AppPref.PrefKey.PREF_FM_OPTIONS_INT, selectedOptions);
+        Prefs.FileManager.setOptions(selectedOptions);
         executor.submit(this::filterAndSort);
     }
 

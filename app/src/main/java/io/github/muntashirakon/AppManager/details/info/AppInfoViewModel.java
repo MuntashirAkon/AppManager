@@ -53,12 +53,12 @@ import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Ops;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.ssaid.SsaidSettings;
 import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
 import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.UsageUtils;
-import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
@@ -132,7 +132,7 @@ public class AppInfoViewModel extends AndroidViewModel {
                 ComponentRule componentRule = mainModel.getComponentRule(component);
                 if (componentRule == null) {
                     componentRule = new ComponentRule(packageName, component, trackerComponents.get(component),
-                            AppPref.getDefaultComponentStatus());
+                            Prefs.Blocking.getDefaultBlockingMethod());
                 }
                 tagCloud.trackerComponents.add(componentRule);
                 tagCloud.areAllTrackersBlocked &= componentRule.isBlocked();

@@ -13,8 +13,8 @@ android {
         applicationId 'io.github.muntashirakon.AppManager'
         minSdk min_sdk
         targetSdk target_sdk
-        versionCode 419
-        versionName "3.1.0-beta02"
+        versionCode 420
+        versionName "3.1.0-rc01"
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
@@ -170,5 +170,5 @@ dependencies {
 preBuild.dependsOn ":server:build"
 
 static def buildTime() {
-    return System.currentTimeMillis();
+    return System.currentTimeMillis()
 }

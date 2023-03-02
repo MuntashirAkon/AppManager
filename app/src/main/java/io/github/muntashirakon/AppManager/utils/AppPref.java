@@ -3,16 +3,11 @@
 package io.github.muntashirakon.AppManager.utils;
 
 import android.annotation.SuppressLint;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
-import android.os.UserHandleHidden;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 
@@ -20,10 +15,8 @@ import androidx.annotation.IntDef;
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.StyleRes;
 import androidx.appcompat.app.AppCompatDelegate;
 
-import java.io.File;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Arrays;
@@ -34,10 +27,8 @@ import java.util.Objects;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.signing.SigSchemes;
-import io.github.muntashirakon.AppManager.apk.signing.Signer;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
-import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 import io.github.muntashirakon.AppManager.crypto.auth.AuthManager;
 import io.github.muntashirakon.AppManager.details.AppDetailsFragment;
 import io.github.muntashirakon.AppManager.fm.FmListOptions;
@@ -46,8 +37,6 @@ import io.github.muntashirakon.AppManager.main.MainListOptions;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.runningapps.RunningAppsActivity;
 import io.github.muntashirakon.AppManager.settings.Ops;
-import io.github.muntashirakon.io.Path;
-import io.github.muntashirakon.io.Paths;
 
 public class AppPref {
     private static final String PREF_NAME = "preferences";
@@ -77,9 +66,6 @@ public class AppPref {
         PREF_BACKUP_VOLUME_STR,
 
         PREF_COMPONENTS_SORT_ORDER_INT,
-        /**
-         * 1 - total cores. 0 = Total cores.
-         */
         PREF_CONCURRENCY_THREAD_COUNT_INT,
         PREF_CUSTOM_LOCALE_STR,
 
@@ -248,167 +234,17 @@ public class AppPref {
         return (int) get(key);
     }
 
+    public static long getLong(PrefKey key) {
+        return (long) get(key);
+    }
+
     @NonNull
     public static String getString(PrefKey key) {
         return (String) get(key);
     }
 
-    public static boolean isGlobalBlockingEnabled() {
-        return getBoolean(PrefKey.PREF_GLOBAL_BLOCKING_ENABLED_BOOL);
-    }
-
-    @Nullable
-    public static String getVtApiKey() {
-        String apiKey = getString(PrefKey.PREF_VIRUS_TOTAL_API_KEY_STR);
-        if (TextUtils.isEmpty(apiKey)) {
-            return null;
-        }
-        return apiKey;
-    }
-
-    @NonNull
-    public static Path getAppManagerDirectory() {
-        Uri uri = getSelectedDirectory();
-        Path path;
-        if (uri.getScheme().equals(ContentResolver.SCHEME_FILE)) {
-            // Append AppManager
-            String newPath = uri.getPath() + File.separator + "AppManager";
-            path = Paths.get(newPath);
-        } else path = Paths.get(uri);
-        if (!path.exists()) path.mkdirs();
-        return path;
-    }
-
-    public static boolean backupDirectoryExists(Context context) {
-        Uri uri = getSelectedDirectory();
-        Path path;
-        if (uri.getScheme().equals(ContentResolver.SCHEME_FILE)) {
-            // Append AppManager only if storage permissions are granted
-            String newPath = uri.getPath();
-            if (PermissionUtils.hasStoragePermission(context) || Ops.isPrivileged()) {
-                newPath += File.separator + "AppManager";
-            }
-            path = Paths.get(newPath);
-        } else path = Paths.get(uri);
-        return path.exists();
-    }
-
-    public static Uri getSelectedDirectory() {
-        String uriOrBareFile = getString(PrefKey.PREF_BACKUP_VOLUME_STR);
-        if (uriOrBareFile.startsWith("/")) {
-            // A good URI starts with file:// or content://, if not, migrate
-            Uri uri = new Uri.Builder().scheme(ContentResolver.SCHEME_FILE).path(uriOrBareFile).build();
-            set(PrefKey.PREF_BACKUP_VOLUME_STR, uri.toString());
-            return uri;
-        }
-        return Uri.parse(uriOrBareFile);
-    }
-
-    @Nullable
-    public static int[] getSelectedUsers() {
-        if (!Ops.isPrivileged()) return null;
-        String usersStr = getString(PrefKey.PREF_SELECTED_USERS_STR);
-        if ("".equals(usersStr)) return null;
-        String[] usersSplitStr = usersStr.split(",");
-        int[] users = new int[usersSplitStr.length];
-        for (int i = 0; i < users.length; ++i) {
-            users[i] = Integer.decode(usersSplitStr[i]);
-        }
-        return users;
-    }
-
-    public static void setSelectedUsers(@Nullable int[] users) {
-        if (users == null || !Ops.isPrivileged()) {
-            set(PrefKey.PREF_SELECTED_USERS_STR, "");
-            return;
-        }
-        String[] userString = new String[users.length];
-        for (int i = 0; i < users.length; ++i) {
-            userString[i] = String.valueOf(users[i]);
-        }
-        set(PrefKey.PREF_SELECTED_USERS_STR, TextUtils.join(",", userString));
-    }
-
-    @NonNull
-    public static String getLanguage(Context context) {
-        AppPref appPref = getNewInstance(context);
-        PrefKey key = PrefKey.PREF_CUSTOM_LOCALE_STR;
-        return Objects.requireNonNull(appPref.preferences.getString(PrefKey.keys[PrefKey.indexOf(key)],
-                (String) appPref.getDefaultValue(key)));
-    }
-
-    @ComponentRule.ComponentStatus
-    public static String getDefaultComponentStatus() {
-        String selectedStatus = getString(PrefKey.PREF_DEFAULT_BLOCKING_METHOD_STR);
-        if (Ops.isAdb()) {
-            if (selectedStatus.equals(ComponentRule.COMPONENT_TO_BE_BLOCKED_IFW_DISABLE)
-                    || selectedStatus.equals(ComponentRule.COMPONENT_TO_BE_BLOCKED_IFW)) {
-                // Lower the status
-                return ComponentRule.COMPONENT_TO_BE_DISABLED;
-            }
-        }
-        return selectedStatus;
-    }
-
-    @FreezeUtils.FreezeType
-    public static int getDefaultFreezingMethod() {
-        int freezeType = getInt(PrefKey.PREF_FREEZE_TYPE_INT);
-        if (freezeType == FreezeUtils.FREEZE_HIDE && PermissionCompat.checkSelfPermission(PermissionUtils.PERMISSION_MANAGE_USERS, UserHandleHidden.myUserId()) != PackageManager.PERMISSION_GRANTED) {
-            return FreezeUtils.FREEZE_DISABLE;
-        }
-        if (freezeType == FreezeUtils.FREEZE_SUSPEND && Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            return FreezeUtils.FREEZE_DISABLE;
-        }
-        return freezeType;
-    }
-
-    public static int getLayoutDirection() {
-        return getInt(PrefKey.PREF_LAYOUT_ORIENTATION_INT);
-    }
-
-    @StyleRes
-    public static int getAppTheme() {
-        switch (getInt(PrefKey.PREF_APP_THEME_CUSTOM_INT)) {
-            case 1: // Full black theme
-                return R.style.AppTheme_Black;
-            default: // Normal theme
-                return R.style.AppTheme;
-        }
-    }
-
-    @StyleRes
-    public static int getTransparentAppTheme() {
-        switch (getInt(PrefKey.PREF_APP_THEME_CUSTOM_INT)) {
-            case 1: // Full black theme
-                return R.style.AppTheme_TransparentBackground_Black;
-            default: // Normal theme
-                return R.style.AppTheme_TransparentBackground;
-        }
-    }
-
-    public static boolean isPureBlackTheme() {
-        return getInt(PrefKey.PREF_APP_THEME_CUSTOM_INT) == 1;
-    }
-
-    public static void setPureBlackTheme(boolean enabled) {
-        set(PrefKey.PREF_APP_THEME_CUSTOM_INT, enabled ? 1 : 0);
-    }
-
-    public static boolean canSignApk() {
-        if (!getBoolean(PrefKey.PREF_INSTALLER_SIGN_APK_BOOL)) {
-            // Signing not enabled
-            return false;
-        }
-        return Signer.canSign();
-    }
-
     public static void set(PrefKey key, Object value) {
         getInstance().setPref(key, value);
-    }
-
-    public static void setDefault(PrefKey key) {
-        AppPref appPref = getInstance();
-        appPref.setPref(key, appPref.getDefaultValue(key));
     }
 
     @NonNull
@@ -467,6 +303,25 @@ public class AppPref {
                 return preferences.getLong(key, (long) defaultValue);
             case TYPE_STRING:
                 return Objects.requireNonNull(preferences.getString(key, (String) defaultValue));
+        }
+        throw new IllegalArgumentException("Unknown key or type.");
+    }
+
+    @NonNull
+    public Object getValue(PrefKey key) {
+        int index = PrefKey.indexOf(key);
+        switch (PrefKey.types[index]) {
+            case TYPE_BOOLEAN:
+                return preferences.getBoolean(PrefKey.keys[index], (boolean) getDefaultValue(key));
+            case TYPE_FLOAT:
+                return preferences.getFloat(PrefKey.keys[index], (float) getDefaultValue(key));
+            case TYPE_INTEGER:
+                return preferences.getInt(PrefKey.keys[index], (int) getDefaultValue(key));
+            case TYPE_LONG:
+                return preferences.getLong(PrefKey.keys[index], (long) getDefaultValue(key));
+            case TYPE_STRING:
+                return Objects.requireNonNull(preferences.getString(PrefKey.keys[index],
+                        (String) getDefaultValue(key)));
         }
         throw new IllegalArgumentException("Unknown key or type.");
     }
@@ -564,15 +419,15 @@ public class AppPref {
             case PREF_INSTALLER_INSTALLER_APP_STR:
                 return AppManager.getContext().getPackageName();
             case PREF_SIGNATURE_SCHEMES_INT:
-                return SigSchemes.SIG_SCHEME_V1 | SigSchemes.SIG_SCHEME_V2;
+                return SigSchemes.DEFAULT_SCHEMES;
             case PREF_BACKUP_VOLUME_STR:
                 return Uri.fromFile(Environment.getExternalStorageDirectory()).toString();
             case PREF_LOG_VIEWER_FILTER_PATTERN_STR:
                 return context.getString(R.string.pref_filter_pattern_default);
             case PREF_LOG_VIEWER_DISPLAY_LIMIT_INT:
-                return 10_000;
+                return LogcatHelper.DEFAULT_DISPLAY_LIMIT;
             case PREF_LOG_VIEWER_WRITE_PERIOD_INT:
-                return 200;
+                return LogcatHelper.DEFAULT_LOG_WRITE_INTERVAL;
             case PREF_LOG_VIEWER_DEFAULT_LOG_LEVEL_INT:
                 return Log.VERBOSE;
             case PREF_LOG_VIEWER_BUFFER_INT:

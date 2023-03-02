@@ -53,10 +53,10 @@ import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.misc.ListOptions;
 import io.github.muntashirakon.AppManager.profiles.ProfileMetaManager;
 import io.github.muntashirakon.AppManager.settings.Ops;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.Users;
-import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -88,10 +88,10 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
         mPackageManager = application.getPackageManager();
         mHandler = new Handler(application.getMainLooper());
         mPackageObserver = new PackageIntentReceiver(this);
-        mSortBy = AppPref.getInt(AppPref.PrefKey.PREF_MAIN_WINDOW_SORT_ORDER_INT);
-        mReverseSort = AppPref.getBoolean(AppPref.PrefKey.PREF_MAIN_WINDOW_SORT_REVERSE_BOOL);
-        mFilterFlags = AppPref.getInt(AppPref.PrefKey.PREF_MAIN_WINDOW_FILTER_FLAGS_INT);
-        mFilterProfileName = AppPref.getString(AppPref.PrefKey.PREF_MAIN_WINDOW_FILTER_PROFILE_STR);
+        mSortBy = Prefs.MainPage.getSortOrder();
+        mReverseSort = Prefs.MainPage.isReverseSort();
+        mFilterFlags = Prefs.MainPage.getFilters();
+        mFilterProfileName = Prefs.MainPage.getFilteredProfileName();
         if ("".equals(mFilterProfileName)) mFilterProfileName = null;
     }
 
@@ -218,7 +218,7 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
             filterItemsByFlags();
         });
         mReverseSort = reverseSort;
-        AppPref.set(AppPref.PrefKey.PREF_MAIN_WINDOW_SORT_REVERSE_BOOL, mReverseSort);
+        Prefs.MainPage.setReverseSort(mReverseSort);
     }
 
     @Override
@@ -235,7 +235,7 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
             });
         }
         mSortBy = sortBy;
-        AppPref.set(AppPref.PrefKey.PREF_MAIN_WINDOW_SORT_ORDER_INT, mSortBy);
+        Prefs.MainPage.setSortOrder(mSortBy);
     }
 
     @Override
@@ -246,14 +246,14 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
     @Override
     public void addFilterFlag(@MainListOptions.Filter int filterFlag) {
         mFilterFlags |= filterFlag;
-        AppPref.set(AppPref.PrefKey.PREF_MAIN_WINDOW_FILTER_FLAGS_INT, mFilterFlags);
+        Prefs.MainPage.setFilters(mFilterFlags);
         executor.submit(this::filterItemsByFlags);
     }
 
     @Override
     public void removeFilterFlag(@MainListOptions.Filter int filterFlag) {
         mFilterFlags &= ~filterFlag;
-        AppPref.set(AppPref.PrefKey.PREF_MAIN_WINDOW_FILTER_FLAGS_INT, mFilterFlags);
+        Prefs.MainPage.setFilters(mFilterFlags);
         executor.submit(this::filterItemsByFlags);
     }
 
@@ -262,7 +262,7 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
             if (filterProfileName == null) return;
         } else if (mFilterProfileName.equals(filterProfileName)) return;
         mFilterProfileName = filterProfileName;
-        AppPref.set(AppPref.PrefKey.PREF_MAIN_WINDOW_FILTER_PROFILE_STR, filterProfileName == null ? "" : filterProfileName);
+        Prefs.MainPage.setFilteredProfileName(filterProfileName);
         executor.submit(this::filterItemsByFlags);
     }
 

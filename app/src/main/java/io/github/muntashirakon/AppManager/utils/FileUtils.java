@@ -199,9 +199,11 @@ public final class FileUtils {
             }
             if (!(extDir.exists() || extDir.mkdirs())) {
                 Log.w(TAG, "Could not use " + extDir + ".");
+                continue;
             }
             if (!Objects.equals(Environment.getExternalStorageState(extDir), Environment.MEDIA_MOUNTED)) {
                 Log.w(TAG, "Path " + extDir + " not mounted.");
+                continue;
             }
             return extDir;
         }

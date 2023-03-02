@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.settings.crypto;
 
+import static io.github.muntashirakon.AppManager.crypto.AESCrypto.AES_KEY_ALIAS;
+
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -29,13 +31,11 @@ import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
 import io.github.muntashirakon.AppManager.crypto.ks.SecretKeyCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDropdownDialogBuilder;
-
-import static io.github.muntashirakon.AppManager.crypto.AESCrypto.AES_KEY_ALIAS;
 
 public class AESCryptoSelectionDialogFragment extends DialogFragment {
     public static final String TAG = "AESCryptoSelectionDialogFragment";
@@ -85,7 +85,7 @@ public class AESCryptoSelectionDialogFragment extends DialogFragment {
                 SecretKey secretKey = new SecretKeySpec(keyBytes, "AES");
                 try {
                     keyStoreManager.addSecretKey(AES_KEY_ALIAS, secretKey, true);
-                    AppPref.set(AppPref.PrefKey.PREF_ENCRYPTION_STR, CryptoUtils.MODE_AES);
+                    Prefs.Encryption.setEncryptionMode(CryptoUtils.MODE_AES);
                 } catch (Exception e) {
                     Log.e(TAG, e);
                     UIUtils.displayLongToast(R.string.failed_to_save_key);

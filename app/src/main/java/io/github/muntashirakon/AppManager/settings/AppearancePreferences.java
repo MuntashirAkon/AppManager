@@ -18,7 +18,6 @@ import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.appearance.AppearanceUtils;
 import io.github.muntashirakon.dialog.SearchableFlagsDialogBuilder;
 import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
@@ -43,7 +42,7 @@ public class AppearancePreferences extends PreferenceFragment {
         getPreferenceManager().setPreferenceDataStore(new SettingsDataStore());
         // App theme
         final String[] themes = getResources().getStringArray(R.array.themes);
-        currentTheme = AppPref.getInt(AppPref.PrefKey.PREF_APP_THEME_INT);
+        currentTheme = Prefs.Appearance.getNightMode();
         Preference appTheme = Objects.requireNonNull(findPreference("app_theme"));
         appTheme.setSummary(themes[THEME_CONST.indexOf(currentTheme)]);
         appTheme.setOnPreferenceClickListener(preference -> {
@@ -53,7 +52,7 @@ public class AppearancePreferences extends PreferenceFragment {
                     .setPositiveButton(R.string.apply, (dialog, which, selectedTheme) -> {
                         if (selectedTheme != null && selectedTheme != currentTheme) {
                             currentTheme = selectedTheme;
-                            AppPref.set(AppPref.PrefKey.PREF_APP_THEME_INT, currentTheme);
+                            Prefs.Appearance.setNightMode(currentTheme);
                             AppCompatDelegate.setDefaultNightMode(currentTheme);
                             appTheme.setSummary(themes[THEME_CONST.indexOf(currentTheme)]);
                         }
@@ -65,16 +64,16 @@ public class AppearancePreferences extends PreferenceFragment {
         // Black theme/custom theme
         SwitchPreferenceCompat fullBlackTheme = Objects.requireNonNull(findPreference("app_theme_pure_black"));
         fullBlackTheme.setVisible(BuildConfig.DEBUG);
-        fullBlackTheme.setChecked(AppPref.isPureBlackTheme());
+        fullBlackTheme.setChecked(Prefs.Appearance.isPureBlackTheme());
         fullBlackTheme.setOnPreferenceChangeListener((preference, newValue) -> {
             boolean enabled = (boolean) newValue;
-            AppPref.setPureBlackTheme(enabled);
+            Prefs.Appearance.setPureBlackTheme(enabled);
             AppearanceUtils.applyConfigurationChangesToActivities();
             return true;
         });
         // Layout orientation
         final String[] layoutOrientations = getResources().getStringArray(R.array.layout_orientations);
-        currentLayoutDirection = AppPref.getLayoutDirection();
+        currentLayoutDirection = Prefs.Appearance.getLayoutDirection();
         Preference layoutOrientation = Objects.requireNonNull(findPreference("layout_orientation"));
         layoutOrientation.setSummary(layoutOrientations[LAYOUT_ORIENTATION_CONST.indexOf(currentLayoutDirection)]);
         layoutOrientation.setOnPreferenceClickListener(preference -> {
@@ -83,7 +82,7 @@ public class AppearancePreferences extends PreferenceFragment {
                     .setSelection(currentLayoutDirection)
                     .setPositiveButton(R.string.apply, (dialog, which, selectedLayoutOrientation) -> {
                         currentLayoutDirection = Objects.requireNonNull(selectedLayoutOrientation);
-                        AppPref.set(AppPref.PrefKey.PREF_LAYOUT_ORIENTATION_INT, currentLayoutDirection);
+                        Prefs.Appearance.setLayoutDirection(currentLayoutDirection);
                         AppearanceUtils.applyConfigurationChangesToActivities();
                     })
                     .setNegativeButton(R.string.cancel, null)

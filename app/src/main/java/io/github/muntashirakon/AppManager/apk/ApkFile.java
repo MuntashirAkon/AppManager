@@ -66,7 +66,7 @@ import io.github.muntashirakon.AppManager.fm.FmProvider;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.VMRuntime;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
-import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
@@ -513,7 +513,7 @@ public final class ApkFile implements AutoCloseable {
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean needSigning() {
-        return AppPref.canSignApk();
+        return Prefs.Installer.canSignApk();
     }
 
     @Override

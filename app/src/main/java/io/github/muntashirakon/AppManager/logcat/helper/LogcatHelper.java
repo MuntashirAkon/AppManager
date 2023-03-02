@@ -32,8 +32,8 @@ public class LogcatHelper {
     public static final int LOG_ID_EVENTS = 1 << 2;
     public static final int LOG_ID_SYSTEM = 1 << 3;
     public static final int LOG_ID_CRASH = 1 << 4;
-    public static final int LOG_ID_ALL = LOG_ID_MAIN|LOG_ID_RADIO|LOG_ID_EVENTS|LOG_ID_SYSTEM|LOG_ID_CRASH;
-    public static final int LOG_ID_DEFAULT = LOG_ID_MAIN|LOG_ID_SYSTEM|LOG_ID_CRASH;
+    public static final int LOG_ID_ALL = LOG_ID_MAIN | LOG_ID_RADIO | LOG_ID_EVENTS | LOG_ID_SYSTEM | LOG_ID_CRASH;
+    public static final int LOG_ID_DEFAULT = LOG_ID_MAIN | LOG_ID_SYSTEM | LOG_ID_CRASH;
 
     public static final String BUFFER_MAIN = "main";
     public static final String BUFFER_RADIO = "radio";
@@ -42,6 +42,9 @@ public class LogcatHelper {
     public static final String BUFFER_CRASH = "crash";
     public static final String BUFFER_ALL = "all";
     public static final String BUFFER_DEFAULT = "default";
+
+    public static final int DEFAULT_DISPLAY_LIMIT = 10_000;
+    public static final int DEFAULT_LOG_WRITE_INTERVAL = 200;
 
     public static Process getLogcatProcess(@LogBufferId int buffers) throws IOException {
         return ProcessCompat.exec(getLogcatArgs(buffers, false));

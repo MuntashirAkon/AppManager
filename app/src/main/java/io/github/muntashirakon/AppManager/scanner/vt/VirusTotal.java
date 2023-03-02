@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.settings.FeatureController;
-import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.io.IoUtils;
 
 public class VirusTotal {
@@ -53,7 +53,7 @@ public class VirusTotal {
 
     @Nullable
     public static VirusTotal getInstance() {
-        String apiKey = AppPref.getVtApiKey();
+        String apiKey = Prefs.VirusTotal.getApiKey();
         if (FeatureController.isInternetEnabled() && apiKey != null) {
             return new VirusTotal(apiKey);
         }

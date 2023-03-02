@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 
 public class FmActivity extends BaseActivity {
     @Override
@@ -20,7 +20,7 @@ public class FmActivity extends BaseActivity {
         setContentView(R.layout.activity_fm);
         setSupportActionBar(findViewById(R.id.toolbar));
         findViewById(R.id.progress_linear).setVisibility(View.GONE);
-        loadNewFragment(FmFragment.getNewInstance(AppPref.getSelectedDirectory()));
+        loadNewFragment(FmFragment.getNewInstance(Prefs.Storage.getVolumePath()));
     }
 
     @Override

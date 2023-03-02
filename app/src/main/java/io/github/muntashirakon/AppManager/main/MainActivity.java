@@ -69,6 +69,7 @@ import io.github.muntashirakon.AppManager.self.filecache.InternalCacheCleanerSer
 import io.github.muntashirakon.AppManager.self.life.FundingCampaignChecker;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Ops;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.settings.SettingsActivity;
 import io.github.muntashirakon.AppManager.sysconfig.SysConfigActivity;
 import io.github.muntashirakon.AppManager.usage.AppUsageActivity;
@@ -586,7 +587,7 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
             }
         }
         // Check for backup volume
-        if (!AppPref.backupDirectoryExists(this)) {
+        if (!Prefs.BackupRestore.backupDirectoryExists(this)) {
             new MaterialAlertDialogBuilder(this)
                     .setTitle(R.string.backup_volume)
                     .setMessage(R.string.backup_volume_unavailable_warning)
@@ -625,7 +626,7 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
         }
         Snackbar.make(findViewById(android.R.id.content), R.string.view_changelog, 3 * 60 * 1000)
                 .setAction(R.string.ok, v -> {
-                    long lastVersion = (long) AppPref.get(AppPref.PrefKey.PREF_DISPLAY_CHANGELOG_LAST_VERSION_LONG);
+                    long lastVersion = AppPref.getLong(AppPref.PrefKey.PREF_DISPLAY_CHANGELOG_LAST_VERSION_LONG);
                     AppPref.set(AppPref.PrefKey.PREF_DISPLAY_CHANGELOG_BOOL, false);
                     AppPref.set(AppPref.PrefKey.PREF_DISPLAY_CHANGELOG_LAST_VERSION_LONG, (long) BuildConfig.VERSION_CODE);
                     mModel.executor.submit(() -> {

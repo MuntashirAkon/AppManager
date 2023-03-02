@@ -16,7 +16,7 @@ import java.util.Collections;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.backup.BackupException;
-import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.TarUtilsTest;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
@@ -31,7 +31,7 @@ public class OABConverterTest {
 
     @Before
     public void setUp() {
-        AppPref.set(AppPref.PrefKey.PREF_BACKUP_VOLUME_STR, "file:///tmp");
+        Prefs.Storage.setVolumePath("file:///tmp");
         Paths.get("/tmp/AppManager").delete();
     }
 
@@ -68,7 +68,7 @@ public class OABConverterTest {
                 .findFile(PACKAGE_NAME_FULL);
         OABConverter oabConvert = new OABConverter(backupLocation);
         oabConvert.convert();
-        Path newBackupLocation = AppPref.getAppManagerDirectory().findFile(PACKAGE_NAME_FULL).findFile("0_OAndBackup");
+        Path newBackupLocation = Prefs.Storage.getAppManagerDirectory().findFile(PACKAGE_NAME_FULL).findFile("0_OAndBackup");
         // Verify source
         assertEquals(Collections.singletonList("base.apk"), TarUtilsTest.getFileNamesGZip(Collections.singletonList(
                 newBackupLocation.findFile("source.tar.gz.0"))));
@@ -89,7 +89,7 @@ public class OABConverterTest {
                 .findFile(PACKAGE_NAME_APK_INT);
         OABConverter oabConvert = new OABConverter(backupLocation);
         oabConvert.convert();
-        Path newBackupLocation = AppPref.getAppManagerDirectory().findFile(PACKAGE_NAME_APK_INT).findFile("0_OAndBackup");
+        Path newBackupLocation = Prefs.Storage.getAppManagerDirectory().findFile(PACKAGE_NAME_APK_INT).findFile("0_OAndBackup");
         // Verify source
         assertEquals(Collections.singletonList("base.apk"), TarUtilsTest.getFileNamesGZip(Collections.singletonList(
                 newBackupLocation.findFile("source.tar.gz.0"))));
@@ -108,7 +108,7 @@ public class OABConverterTest {
                 .findFile(PACKAGE_NAME_INT);
         OABConverter oabConvert = new OABConverter(backupLocation);
         oabConvert.convert();
-        Path newBackupLocation = AppPref.getAppManagerDirectory().findFile(PACKAGE_NAME_INT).findFile("0_OAndBackup");
+        Path newBackupLocation = Prefs.Storage.getAppManagerDirectory().findFile(PACKAGE_NAME_INT).findFile("0_OAndBackup");
         // Verify source
         List<String> files = TarUtilsTest.getFileNamesGZip(Collections.singletonList(newBackupLocation
                 .findFile("data0.tar.gz.0")));
@@ -124,7 +124,7 @@ public class OABConverterTest {
                 .findFile(PACKAGE_NAME_APK);
         OABConverter oabConvert = new OABConverter(backupLocation);
         oabConvert.convert();
-        Path newBackupLocation = AppPref.getAppManagerDirectory().findFile(PACKAGE_NAME_APK).findFile("0_OAndBackup");
+        Path newBackupLocation = Prefs.Storage.getAppManagerDirectory().findFile(PACKAGE_NAME_APK).findFile("0_OAndBackup");
         // Verify source
         assertEquals(Collections.singletonList("base.apk"), TarUtilsTest.getFileNamesGZip(Collections.singletonList(
                 newBackupLocation.findFile("source.tar.gz.0"))));

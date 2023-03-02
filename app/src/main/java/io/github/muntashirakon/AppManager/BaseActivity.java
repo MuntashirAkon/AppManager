@@ -32,8 +32,8 @@ import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.self.life.BuildExpiryChecker;
 import io.github.muntashirakon.AppManager.settings.Ops;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.settings.SecurityAndOpsViewModel;
-import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -209,7 +209,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     private void ensureSecurityAndModeOfOp() {
-        if (!AppPref.getBoolean(AppPref.PrefKey.PREF_ENABLE_SCREEN_LOCK_BOOL)) {
+        if (!Prefs.Security.isScreenLockEnabled()) {
             // No security enabled
             handleMigrationAndModeOfOp();
             return;

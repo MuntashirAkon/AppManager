@@ -139,4 +139,12 @@ public class MultithreadedExecutor implements ExecutorService {
         if (configuredCount <= 0 || configuredCount > totalCores) return totalCores;
         return configuredCount;
     }
+
+    /**
+     *
+     * @param threadCount 1 - total cores. 0 = Total cores.
+     */
+    public static void setThreadCount(int threadCount) {
+        AppPref.set(AppPref.PrefKey.PREF_CONCURRENCY_THREAD_COUNT_INT, threadCount);
+    }
 }

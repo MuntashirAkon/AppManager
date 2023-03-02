@@ -34,7 +34,7 @@ import java.util.concurrent.Executors;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 
 public class OpenPgpKeySelectionDialogFragment extends DialogFragment {
@@ -60,7 +60,7 @@ public class OpenPgpKeySelectionDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         activity = requireActivity();
-        mOpenPgpProvider = (String) AppPref.get(AppPref.PrefKey.PREF_OPEN_PGP_PACKAGE_STR);
+        mOpenPgpProvider = Prefs.Encryption.getOpenPgpProvider();
         List<ServiceInfo> serviceInfoList = OpenPgpUtils.getPgpClientServices(activity);
         CharSequence[] packageLabels = new String[serviceInfoList.size()];
         String[] packageNames = new String[serviceInfoList.size()];
@@ -76,8 +76,10 @@ public class OpenPgpKeySelectionDialogFragment extends DialogFragment {
                 .setSelection(mOpenPgpProvider)
                 .setNegativeButton(R.string.cancel, null)
                 .setPositiveButton(R.string.save, (dialog1, which, selectedItem) -> {
-                    mOpenPgpProvider = selectedItem;
-                    AppPref.set(AppPref.PrefKey.PREF_OPEN_PGP_PACKAGE_STR, mOpenPgpProvider);
+                    if (selectedItem != null) {
+                        mOpenPgpProvider = selectedItem;
+                        Prefs.Encryption.setOpenPgpProvider(mOpenPgpProvider);
+                    }
                 })
                 .create();
         dialog.setOnShowListener(dialog1 -> {
@@ -115,14 +117,14 @@ public class OpenPgpKeySelectionDialogFragment extends DialogFragment {
                     long[] keyIds = result.getLongArrayExtra(OpenPgpApi.EXTRA_KEY_IDS);
                     if (keyIds == null || keyIds.length == 0) {
                         // Remove encryption
-                        AppPref.set(AppPref.PrefKey.PREF_OPEN_PGP_USER_ID_STR, "");
-                        AppPref.set(AppPref.PrefKey.PREF_OPEN_PGP_PACKAGE_STR, "");
+                        Prefs.Encryption.setOpenPgpProvider("");
+                        Prefs.Encryption.setOpenPgpKeyIds("");
                     } else {
                         String[] keyIdsStr = new String[keyIds.length];
                         for (int i = 0; i < keyIds.length; ++i) {
                             keyIdsStr[i] = String.valueOf(keyIds[i]);
                         }
-                        AppPref.set(AppPref.PrefKey.PREF_OPEN_PGP_USER_ID_STR, TextUtils.join(",", keyIdsStr));
+                        Prefs.Encryption.setOpenPgpKeyIds(TextUtils.join(",", keyIdsStr));
                     }
                     dialog.dismiss();
                     break;

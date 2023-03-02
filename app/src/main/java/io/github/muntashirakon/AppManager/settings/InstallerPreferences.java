@@ -30,7 +30,6 @@ import java.util.Objects;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.signing.Signer;
-import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
@@ -64,23 +63,22 @@ public class InstallerPreferences extends PreferenceFragment {
         pm = activity.getPackageManager();
         // Display users in installer
         ((SwitchPreferenceCompat) Objects.requireNonNull(findPreference("installer_display_users")))
-                .setChecked(AppPref.getBoolean(AppPref.PrefKey.PREF_INSTALLER_DISPLAY_USERS_BOOL));
+                .setChecked(Prefs.Installer.displayUsers());
         // Set installation locations
         Preference installLocationPref = Objects.requireNonNull(findPreference("installer_install_location"));
-        int installLocation = AppPref.getInt(AppPref.PrefKey.PREF_INSTALLER_INSTALL_LOCATION_INT);
-        installLocationPref.setSummary(installLocationNames[installLocation]);
+        installLocationPref.setSummary(installLocationNames[Prefs.Installer.getInstallLocation()]);
         installLocationPref.setOnPreferenceClickListener(preference -> {
             CharSequence[] installLocationTexts = new CharSequence[installLocationNames.length];
             for (int i = 0; i < installLocationNames.length; ++i) {
                 installLocationTexts[i] = getString(installLocationNames[i]);
             }
-            int choice = AppPref.getInt(AppPref.PrefKey.PREF_INSTALLER_INSTALL_LOCATION_INT);
+            int defaultChoice = Prefs.Installer.getInstallLocation();
             new SearchableSingleChoiceDialogBuilder<>(requireActivity(), installLocations, installLocationTexts)
                     .setTitle(R.string.install_location)
-                    .setSelection(choice)
+                    .setSelection(defaultChoice)
                     .setPositiveButton(R.string.save, (dialog, which, newInstallLocation) -> {
                         Objects.requireNonNull(newInstallLocation);
-                        AppPref.set(AppPref.PrefKey.PREF_INSTALLER_INSTALL_LOCATION_INT, newInstallLocation);
+                        Prefs.Installer.setInstallLocation(newInstallLocation);
                         installLocationPref.setSummary(installLocationNames[newInstallLocation]);
                     })
                     .setNegativeButton(R.string.cancel, null)
@@ -89,7 +87,7 @@ public class InstallerPreferences extends PreferenceFragment {
         });
         // Set installer app
         installerAppPref = Objects.requireNonNull(findPreference("installer_installer_app"));
-        installerApp = AppPref.getString(AppPref.PrefKey.PREF_INSTALLER_INSTALLER_APP_STR);
+        installerApp = Prefs.Installer.getInstallerPackageName();
         installerAppPref.setSummary(PackageUtils.getPackageLabel(pm, installerApp));
         installerAppPref.setOnPreferenceClickListener(preference -> {
             new MaterialAlertDialogBuilder(requireActivity())
@@ -106,13 +104,13 @@ public class InstallerPreferences extends PreferenceFragment {
                                     .setPositiveButton(R.string.ok, (dialog1, which1, inputText, isChecked) -> {
                                         if (inputText == null) return;
                                         installerApp = inputText.toString().trim();
-                                        AppPref.set(AppPref.PrefKey.PREF_INSTALLER_INSTALLER_APP_STR, installerApp);
+                                        Prefs.Installer.setInstallerPackageName(installerApp);
                                         installerAppPref.setSummary(PackageUtils.getPackageLabel(pm, installerApp));
                                     })
                                     .setNegativeButton(R.string.cancel, null)
                                     .show())
                     .setNeutralButton(R.string.reset_to_default, (dialog, which) -> {
-                        AppPref.set(AppPref.PrefKey.PREF_INSTALLER_INSTALLER_APP_STR, installerApp = BuildConfig.APPLICATION_ID);
+                        Prefs.Installer.setInstallerPackageName(installerApp = BuildConfig.APPLICATION_ID);
                         installerAppPref.setSummary(PackageUtils.getPackageLabel(pm, installerApp));
                     })
                     .show();
@@ -120,7 +118,7 @@ public class InstallerPreferences extends PreferenceFragment {
         });
         // Sign apk before installing
         SwitchPreferenceCompat signApk = Objects.requireNonNull(findPreference("installer_sign_apk"));
-        signApk.setChecked(AppPref.canSignApk());
+        signApk.setChecked(Prefs.Installer.canSignApk());
         signApk.setOnPreferenceChangeListener((preference, enabled) -> {
             if ((boolean) enabled && !Signer.canSign()) {
                 new ScrollableDialogBuilder(requireActivity())
@@ -140,15 +138,15 @@ public class InstallerPreferences extends PreferenceFragment {
         });
         // Display changes
         ((SwitchPreferenceCompat) Objects.requireNonNull(findPreference("installer_display_changes")))
-                .setChecked(AppPref.getBoolean(AppPref.PrefKey.PREF_INSTALLER_DISPLAY_CHANGES_BOOL));
+                .setChecked(Prefs.Installer.displayChanges());
         // Block trackers
         SwitchPreferenceCompat blockTrackersPref = Objects.requireNonNull(findPreference("installer_block_trackers"));
         blockTrackersPref.setVisible(Ops.isRoot());
-        blockTrackersPref.setChecked(AppPref.getBoolean(AppPref.PrefKey.PREF_INSTALLER_BLOCK_TRACKERS_BOOL));
+        blockTrackersPref.setChecked(Prefs.Installer.blockTrackers());
         // Running installer in the background
         SwitchPreferenceCompat backgroundPref = Objects.requireNonNull(findPreference("installer_always_on_background"));
         backgroundPref.setVisible(Utils.canDisplayNotification(requireContext()));
-        backgroundPref.setChecked(AppPref.getBoolean(AppPref.PrefKey.PREF_INSTALLER_ALWAYS_ON_BACKGROUND_BOOL));
+        backgroundPref.setChecked(Prefs.Installer.installInBackground());
     }
 
     @Override
@@ -184,9 +182,11 @@ public class InstallerPreferences extends PreferenceFragment {
                 .setTitle(R.string.installer_app)
                 .setSelection(installerApp)
                 .setPositiveButton(R.string.save, (dialog, which, selectedInstallerApp) -> {
-                    installerApp = selectedInstallerApp;
-                    AppPref.set(AppPref.PrefKey.PREF_INSTALLER_INSTALLER_APP_STR, installerApp);
-                    installerAppPref.setSummary(PackageUtils.getPackageLabel(pm, installerApp));
+                    if (selectedInstallerApp != null) {
+                        installerApp = selectedInstallerApp;
+                        Prefs.Installer.setInstallerPackageName(installerApp);
+                        installerAppPref.setSummary(PackageUtils.getPackageLabel(pm, installerApp));
+                    }
                 })
                 .setNegativeButton(R.string.cancel, null)
                 .show();

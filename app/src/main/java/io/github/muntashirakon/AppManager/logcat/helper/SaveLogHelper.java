@@ -27,11 +27,10 @@ import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
 
-import io.github.muntashirakon.AppManager.backup.BackupFiles;
 import io.github.muntashirakon.AppManager.logcat.struct.SavedLog;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
-import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
@@ -44,7 +43,6 @@ public class SaveLogHelper {
     public static final String LOG_FILENAME = "logcat.am.log";
     public static final String DMESG_FILENAME = "dmesg.txt";
     public static final String SAVED_LOGS_DIR = "saved_logs";
-    private static final String TEMP_ZIP_FILENAME = "logs";
     private static final int BUFFER = 0x1000; // 4K
 
     @Nullable
@@ -162,48 +160,31 @@ public class SaveLogHelper {
 
     @NonNull
     private static Path getSavedLogsDirectory() throws IOException {
-        return getAMDirectory().findOrCreateDirectory(SAVED_LOGS_DIR);
-    }
-
-    @NonNull
-    private static Path getAMDirectory() {
-        Path amDir = AppPref.getAppManagerDirectory();
+        Path amDir = Prefs.Storage.getAppManagerDirectory();
         if (!amDir.exists()) {
             amDir.mkdir();
         }
-        return amDir;
-    }
-
-    @NonNull
-    public static String createZipFilename(boolean withDate) {
-        return createLogFilename(TEMP_ZIP_FILENAME, ".zip", withDate);
+        return amDir.findOrCreateDirectory(SAVED_LOGS_DIR);
     }
 
     @NonNull
     public static String createLogFilename() {
-        return createLogFilename(null, ".am.log", true);
-    }
+        Date date = new Date();
+        GregorianCalendar calendar = new GregorianCalendar();
+        calendar.setTime(date);
 
-    @NonNull
-    private static String createLogFilename(@Nullable String prefix, @NonNull String extension, boolean withDate) {
-        if (withDate) {
-            Date date = new Date();
-            GregorianCalendar calendar = new GregorianCalendar();
-            calendar.setTime(date);
+        DecimalFormat twoDigitDecimalFormat = new DecimalFormat("00");
+        DecimalFormat fourDigitDecimalFormat = new DecimalFormat("0000");
 
-            DecimalFormat twoDigitDecimalFormat = new DecimalFormat("00");
-            DecimalFormat fourDigitDecimalFormat = new DecimalFormat("0000");
+        String year = fourDigitDecimalFormat.format(calendar.get(Calendar.YEAR));
+        String month = twoDigitDecimalFormat.format(calendar.get(Calendar.MONTH) + 1);
+        String day = twoDigitDecimalFormat.format(calendar.get(Calendar.DAY_OF_MONTH));
+        String hour = twoDigitDecimalFormat.format(calendar.get(Calendar.HOUR_OF_DAY));
+        String minute = twoDigitDecimalFormat.format(calendar.get(Calendar.MINUTE));
+        String second = twoDigitDecimalFormat.format(calendar.get(Calendar.SECOND));
 
-            String year = fourDigitDecimalFormat.format(calendar.get(Calendar.YEAR));
-            String month = twoDigitDecimalFormat.format(calendar.get(Calendar.MONTH) + 1);
-            String day = twoDigitDecimalFormat.format(calendar.get(Calendar.DAY_OF_MONTH));
-            String hour = twoDigitDecimalFormat.format(calendar.get(Calendar.HOUR_OF_DAY));
-            String minute = twoDigitDecimalFormat.format(calendar.get(Calendar.MINUTE));
-            String second = twoDigitDecimalFormat.format(calendar.get(Calendar.SECOND));
-
-            return (prefix == null ? "" : prefix + "-") + year + "-" + month + "-" + day + "-" + hour + "-" + minute
-                    + "-" + second + extension;
-        } else return prefix + extension;
+        return year + "-" + month + "-" + day + "-" + hour + "-" + minute
+                + "-" + second + ".am.log";
     }
 
     public static boolean isInvalidFilename(CharSequence filename) {

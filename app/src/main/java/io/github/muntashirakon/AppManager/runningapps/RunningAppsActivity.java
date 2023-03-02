@@ -41,7 +41,7 @@ import io.github.muntashirakon.AppManager.scanner.vt.VtFileScanMeta;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Ops;
-import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.reflow.ReflowMenuViewWrapper;
 import io.github.muntashirakon.widget.MultiSelectionView;
@@ -137,7 +137,7 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
         mMultiSelectionView.updateCounter(true);
         mSelectionMenu = mMultiSelectionView.getMenu();
         mSelectionMenu.findItem(R.id.action_scan_vt).setVisible(false);
-        enableKillForSystem = AppPref.getBoolean(AppPref.PrefKey.PREF_ENABLE_KILL_FOR_SYSTEM_BOOL);
+        enableKillForSystem = Prefs.RunningApps.enableKillForSystemApps();
 
         // Set observers
         mModel.observeKillProcess().observe(this, processInfo -> {
@@ -182,7 +182,7 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
             if (vtFileScanMeta == null) {
                 // Started uploading
                 UIUtils.displayShortToast(R.string.vt_uploading);
-                if (AppPref.getBoolean(AppPref.PrefKey.PREF_VIRUS_TOTAL_PROMPT_BEFORE_UPLOADING_BOOL)) {
+                if (Prefs.VirusTotal.promptBeforeUpload()) {
                     new MaterialAlertDialogBuilder(this)
                             .setTitle(R.string.scan_in_vt)
                             .setMessage(R.string.vt_confirm_uploading_file)
@@ -261,7 +261,7 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
         if (mModel == null) return true;
         if (id == R.id.action_toggle_kill) {
             enableKillForSystem = !enableKillForSystem;
-            AppPref.set(AppPref.PrefKey.PREF_ENABLE_KILL_FOR_SYSTEM_BOOL, enableKillForSystem);
+            Prefs.RunningApps.setEnableKillForSystemApps(enableKillForSystem);
             refresh();
         } else if (id == R.id.action_refresh) {
             refresh();

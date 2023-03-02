@@ -40,8 +40,8 @@ import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.scanner.vt.VirusTotal;
 import io.github.muntashirakon.AppManager.scanner.vt.VtFileReport;
 import io.github.muntashirakon.AppManager.scanner.vt.VtFileScanMeta;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
-import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.io.Path;
@@ -60,8 +60,8 @@ public class RunningAppsViewModel extends AndroidViewModel {
 
     public RunningAppsViewModel(@NonNull Application application) {
         super(application);
-        mSortOrder = AppPref.getInt(AppPref.PrefKey.PREF_RUNNING_APPS_SORT_ORDER_INT);
-        mFilter = AppPref.getInt(AppPref.PrefKey.PREF_RUNNING_APPS_FILTER_FLAGS_INT);
+        mSortOrder = Prefs.RunningApps.getSortOrder();
+        mFilter = Prefs.RunningApps.getFilters();
         mVt = VirusTotal.getInstance();
     }
 
@@ -312,8 +312,8 @@ public class RunningAppsViewModel extends AndroidViewModel {
     }
 
     public void setSortOrder(int sortOrder) {
-        this.mSortOrder = sortOrder;
-        AppPref.set(AppPref.PrefKey.PREF_RUNNING_APPS_SORT_ORDER_INT, this.mSortOrder);
+        mSortOrder = sortOrder;
+        Prefs.RunningApps.setSortOrder(mSortOrder);
         mExecutor.submit(this::filterAndSort);
     }
 
@@ -322,14 +322,14 @@ public class RunningAppsViewModel extends AndroidViewModel {
     }
 
     public void addFilter(int filter) {
-        this.mFilter |= filter;
-        AppPref.set(AppPref.PrefKey.PREF_RUNNING_APPS_FILTER_FLAGS_INT, this.mFilter);
+        mFilter |= filter;
+        Prefs.RunningApps.setFilters(mFilter);
         mExecutor.submit(this::filterAndSort);
     }
 
     public void removeFilter(int filter) {
-        this.mFilter &= ~filter;
-        AppPref.set(AppPref.PrefKey.PREF_RUNNING_APPS_FILTER_FLAGS_INT, this.mFilter);
+        mFilter &= ~filter;
+        Prefs.RunningApps.setFilters(mFilter);
         mExecutor.submit(this::filterAndSort);
     }
 

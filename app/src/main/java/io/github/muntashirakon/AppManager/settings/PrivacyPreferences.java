@@ -15,7 +15,6 @@ import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.crypto.auth.AuthManagerActivity;
-import io.github.muntashirakon.AppManager.utils.AppPref;
 
 public class PrivacyPreferences extends PreferenceFragment {
     @Override
@@ -24,7 +23,7 @@ public class PrivacyPreferences extends PreferenceFragment {
         getPreferenceManager().setPreferenceDataStore(new SettingsDataStore());
         // Screen lock
         SwitchPreferenceCompat screenLock = Objects.requireNonNull(findPreference("enable_screen_lock"));
-        screenLock.setChecked(AppPref.getBoolean(AppPref.PrefKey.PREF_ENABLE_SCREEN_LOCK_BOOL));
+        screenLock.setChecked(Prefs.Security.isScreenLockEnabled());
         // Authorization Management
         ((Preference) Objects.requireNonNull(findPreference("auth_manager")))
                 .setOnPreferenceClickListener(preference -> {
