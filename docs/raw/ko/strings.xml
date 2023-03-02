@@ -239,7 +239,7 @@
 \n\\begin{tip}{Accessibility}
 \n 다중 선택 모드 활성화 후, 키보드 혹은 리모컨의 좌우 버튼을 사용해서
 \n다중 선택 영역 탐색이 가능합니다.
-\n\\end{팁}</string>
+\n\\end{tip}</string>
     <string name="pages$main-page$application-types">앱은 다음 접미사를 가지는 \\textbf{사용자} 혹은 \\textbf{시스템} 앱일 수 있습니다:
 \n\\begin{itemize}
 \n \\item \\texttt{X} -- 다수의 아키텍쳐 지원

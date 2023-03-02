@@ -1466,7 +1466,7 @@
 \n die Superuser-Berechtigung für App Manager widerrufen und Ihr Gerät neu starten. Es kann sein, dass Sie die Meldung \\textit{working on ADB mode}
 \n ohne Neustart sehen, aber das ist nicht ganz richtig. Der Server (der als Schnittstelle zwischen System und App Manager dient)
 \n wird immer noch im Root-Modus ausgeführt. Dies ist ein bekanntes Problem und wird in einer zukünftigen Version von App Manager behoben.
-\n\\Ende{Tipp}
+\n\\end{tip}
 \n
 \n\\seealsoinline{\\hyperref[sec:faq:adb-over-tcp]{FAQ: ADB-over-TCP}}</string>
 </resources>
