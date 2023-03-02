@@ -145,8 +145,11 @@ public class LogViewerPreferences extends PreferenceFragment {
             new SearchableSingleChoiceDialogBuilder<>(activity, LOG_LEVEL_VALUES, logLevelsLocalised)
                     .setTitle(R.string.pref_default_log_level_title)
                     .setSelection(Prefs.LogViewer.getLogLevel())
-                    .setPositiveButton(R.string.save, (dialog, which, newLogLevel) -> Prefs.LogViewer.setLogLevel(
-                            LOG_LEVEL_VALUES.get(Objects.requireNonNull(newLogLevel))))
+                    .setPositiveButton(R.string.save, (dialog, which, newLogLevel) -> {
+                        if (newLogLevel != null) {
+                            Prefs.LogViewer.setLogLevel(newLogLevel);
+                        }
+                    })
                     .setNegativeButton(R.string.cancel, null)
                     .setNeutralButton(R.string.reset_to_default, (dialog, which, newLogLevel) -> Prefs.LogViewer.setLogLevel(Log.VERBOSE))
                     .show();
