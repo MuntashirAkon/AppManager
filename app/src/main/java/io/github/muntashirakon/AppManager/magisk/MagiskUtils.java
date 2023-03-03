@@ -9,7 +9,6 @@ import android.content.pm.ServiceInfo;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
-import androidx.collection.ArraySet;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,6 +17,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import io.github.muntashirakon.AppManager.runner.Runner;
@@ -32,7 +32,15 @@ public class MagiskUtils {
     public static final String ISOLATED_MAGIC = "isolated";
 
     private static final String[] SCAN_PATHS = new String[]{
-            "/system/app", "/system/priv-app", "/system/product/app", "/system/product/priv-app"
+            "/system/app", "/system/priv-app", "/system/preload",
+            "/system/product/app", "/system/product/priv-app", "/system/product/overlay",
+            "/system/vendor/app", "/system/vendor/overlay",
+            "/system/system_ext/app", "/system/system_ext/priv-app",
+            "/system_ext/app", "/system_ext/priv-app",
+
+            "/vendor/app", "/vendor/overlay",
+
+            "/product/app", "/product/priv-app", "/product/overlay",
     };
 
     @NonNull
@@ -56,7 +64,8 @@ public class MagiskUtils {
             for (Path file : modulePaths) {
                 // Get system apk files
                 for (String sysPath : SCAN_PATHS) {
-                    Path[] paths = Paths.get(file + sysPath).listFiles(Path::isDirectory);
+                    // Always NonNull since it's a Linux FS
+                    Path[] paths = Objects.requireNonNull(Paths.build(file, sysPath)).listFiles(Path::isDirectory);
                     for (Path path : paths) {
                         if (hasApkFile(path)) {
                             systemlessPaths.add(sysPath + "/" + path.getName());
@@ -69,25 +78,7 @@ public class MagiskUtils {
     }
 
     public static boolean isSystemlessPath(String path) {
-        getSystemlessPaths();
-        return systemlessPaths.contains(path);
-    }
-
-    @NonNull
-    public static Set<String> listHiddenPackages() {
-        Runner.Result result = Runner.runCommand(new String[]{"magiskhide", "ls"});
-        Set<String> packages = new ArraySet<>();
-        if (result.isSuccessful()) {
-            for (String hideInfo : result.getOutputAsList()) {
-                int pipeLoc = hideInfo.indexOf('|');
-                if (pipeLoc == -1) {
-                    packages.add(hideInfo);
-                } else {
-                    packages.add(hideInfo.substring(0, pipeLoc));
-                }
-            }
-        }
-        return packages;
+        return getSystemlessPaths().contains(path);
     }
 
     private static boolean hasApkFile(@NonNull Path file) {
