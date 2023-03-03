@@ -1288,4 +1288,9 @@
     <string name="sort_by_last_modified">Última alteração</string>
     <string name="sort_by_file_size">Tamanho do arquivo</string>
     <string name="sort_by_file_type">Tipo de arquivo</string>
+    <string name="file_open_with_os_default_dialog">Abrir com a caixa de diálogo padrão do SO</string>
+    <string name="freeze_on_phone_locked">Congelar o app automaticamente quando o telefone estiver bloqueado</string>
+    <string name="on_open_application_no_recents">Não mostrar o app iniciado nos Recentes</string>
+    <string name="file_change_open_with">Alterar abrir com</string>
+    <string name="waiting_for_the_phone_to_be_locked">Esperando que o telefone seja bloqueado…</string>
 </resources>
