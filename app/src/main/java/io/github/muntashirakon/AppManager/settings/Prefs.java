@@ -26,6 +26,7 @@ import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 import io.github.muntashirakon.AppManager.details.AppDetailsFragment;
 import io.github.muntashirakon.AppManager.fm.FmListOptions;
 import io.github.muntashirakon.AppManager.logcat.helper.LogcatHelper;
+import io.github.muntashirakon.AppManager.magisk.MagiskUtils;
 import io.github.muntashirakon.AppManager.main.MainListOptions;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.runningapps.RunningAppsActivity;
@@ -325,6 +326,11 @@ public final class Prefs {
 
         public static void setInstallerPackageName(@NonNull String packageName) {
             AppPref.set(AppPref.PrefKey.PREF_INSTALLER_INSTALLER_APP_STR, packageName);
+        }
+
+        public static boolean isSystemless() {
+            // TODO: 3/3/23 Also use Magisk prefs
+            return MagiskUtils.getModDir().exists();
         }
     }
 
