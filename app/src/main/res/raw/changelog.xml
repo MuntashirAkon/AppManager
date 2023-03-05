@@ -17,6 +17,25 @@
     ]>
 <changelog>
     <release
+        type="release candidate"
+        version="v3.1.0-rc01"
+        code="420"
+        date="5 March 2023">
+        <improve>Updated documentations</improve>
+        <improve>Ensure the existence of shared cache directory before launching App Manager</improve>
+        <note subtext="true">
+            Shared cache directory must exist in all Android devices. If it does not, the ROM is likely broken.
+        </note>
+        <improve>Added more directories to look for systemless installations in Magisk</improve>
+
+        <fix>Avoided caching non-existing files</fix>
+        <fix>Fixed setting default log level in log viewer preferences</fix>
+        <note>
+            [br /][b]Full list of changes:[/b] [a
+            href="https://github.com/MuntashirAkon/AppManager/compare/v3.1.0-beta02...v3.1.0-rc01"]v3.1.0-beta02...v3.1.0-rc01[/a]
+        </note>
+    </release>
+    <release
         type="beta release"
         version="v3.1.0-beta02"
         code="419"
