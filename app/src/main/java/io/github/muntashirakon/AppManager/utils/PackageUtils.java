@@ -539,18 +539,25 @@ public final class PackageUtils {
         return sourceDir;
     }
 
-    public static String getHiddenCodePathOrDefault(String packageName, String defaultPath) {
-        Runner.Result result = Runner.runCommand(RunnerUtils.CMD_PM + " dump " + packageName + " | grep codePath");
+    @Nullable
+    public static String getHiddenCodePathOrDefault(@NonNull ApplicationInfo applicationInfo) {
+        Runner.Result result = Runner.runCommand(RunnerUtils.CMD_PM + " dump " + applicationInfo.packageName + " | grep codePath");
         if (result.isSuccessful()) {
             List<String> paths = result.getOutputAsList();
             if (paths.size() > 0) {
                 // Get only the last path
                 String codePath = paths.get(paths.size() - 1);
                 int start = codePath.indexOf('=');
-                if (start != -1) return codePath.substring(start + 1);
+                if (start != -1) return codePath.substring(start + 1).trim();
             }
         }
-        return new File(defaultPath).getParent();
+        if (applicationInfo.sourceDir == null) {
+            return null;
+        }
+        if (applicationInfo.packageName.equals("android")) {
+            return applicationInfo.sourceDir;
+        }
+        return new File(applicationInfo.sourceDir).getParent();
     }
 
     @NonNull

@@ -44,6 +44,7 @@ import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.details.AppDetailsViewModel;
 import io.github.muntashirakon.AppManager.magisk.MagiskDenyList;
 import io.github.muntashirakon.AppManager.magisk.MagiskHide;
+import io.github.muntashirakon.AppManager.magisk.MagiskModuleInfo;
 import io.github.muntashirakon.AppManager.magisk.MagiskProcess;
 import io.github.muntashirakon.AppManager.magisk.MagiskUtils;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
@@ -138,9 +139,12 @@ public class AppInfoViewModel extends AndroidViewModel {
                 tagCloud.areAllTrackersBlocked &= componentRule.isBlocked();
             }
             tagCloud.isSystemApp = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
-            tagCloud.isSystemlessPath = !mainModel.getIsExternalApk() && Ops.isRoot()
-                    && MagiskUtils.isSystemlessPath(PackageUtils.getHiddenCodePathOrDefault(packageName,
-                    applicationInfo.publicSourceDir));
+            if (!mainModel.getIsExternalApk() && Ops.isRoot()) {
+                String codePath = PackageUtils.getHiddenCodePathOrDefault(applicationInfo);
+                if (codePath != null) {
+                    tagCloud.systemlessPathInfo = MagiskUtils.getSystemlessPathInfo(codePath);
+                }
+            }
             tagCloud.isUpdatedSystemApp = (applicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0;
             tagCloud.splitCount = mainModel.getSplitCount();
             tagCloud.isDebuggable = (applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
@@ -374,7 +378,8 @@ public class AppInfoViewModel extends AndroidViewModel {
         public List<ComponentRule> trackerComponents;
         public boolean areAllTrackersBlocked = true;
         public boolean isSystemApp;
-        public boolean isSystemlessPath;
+        @Nullable
+        public MagiskModuleInfo systemlessPathInfo;
         public boolean isUpdatedSystemApp;
         public int splitCount;
         public boolean isDebuggable;

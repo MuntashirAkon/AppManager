@@ -9,7 +9,9 @@ import android.content.pm.ServiceInfo;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -36,11 +38,6 @@ public class MagiskUtils {
             "/system/product/app", "/system/product/priv-app", "/system/product/overlay",
             "/system/vendor/app", "/system/vendor/overlay",
             "/system/system_ext/app", "/system/system_ext/priv-app",
-            "/system_ext/app", "/system_ext/priv-app",
-
-            "/vendor/app", "/vendor/overlay",
-
-            "/product/app", "/product/priv-app", "/product/overlay",
     };
 
     @NonNull
@@ -52,33 +49,57 @@ public class MagiskUtils {
         MagiskUtils.bootMode = bootMode;
     }
 
-    private static List<String> systemlessPaths;
+    private static HashMap<MagiskModuleInfo, List<String>> systemlessPaths;
 
     @NonNull
-    public static List<String> getSystemlessPaths() {
+    public static HashMap<MagiskModuleInfo, List<String>> getSystemlessPaths() {
         if (systemlessPaths == null) {
-            systemlessPaths = new ArrayList<>();
+            systemlessPaths = new HashMap<>();
             // Get module paths
             Path[] modulePaths = getModDir().listFiles(Path::isDirectory);
             // Scan module paths
-            for (Path file : modulePaths) {
-                // Get system apk files
-                for (String sysPath : SCAN_PATHS) {
-                    // Always NonNull since it's a Linux FS
-                    Path[] paths = Objects.requireNonNull(Paths.build(file, sysPath)).listFiles(Path::isDirectory);
-                    for (Path path : paths) {
-                        if (hasApkFile(path)) {
-                            systemlessPaths.add(sysPath + "/" + path.getName());
+            for (Path modulePath : modulePaths) {
+                try {
+                    // Get module info
+                    MagiskModuleInfo moduleInfo = MagiskModuleInfo.fromModule(modulePath);
+                    // Get system apk files
+                    for (String sysPath : SCAN_PATHS) {
+                        // Always NonNull since it's a Linux FS
+                        Path[] paths = Objects.requireNonNull(Paths.build(modulePath, sysPath)).listFiles(Path::isDirectory);
+                        for (Path path : paths) {
+                            if (hasApkFile(path)) {
+                                List<String> addedPaths = systemlessPaths.get(moduleInfo);
+                                if (addedPaths == null) {
+                                    addedPaths = new ArrayList<>();
+                                    systemlessPaths.put(moduleInfo, addedPaths);
+                                }
+                                addedPaths.add(sysPath + "/" + path.getName());
+                            }
                         }
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         }
         return systemlessPaths;
     }
 
-    public static boolean isSystemlessPath(String path) {
-        return getSystemlessPaths().contains(path);
+    @Nullable
+    public static MagiskModuleInfo getSystemlessPathInfo(@NonNull String path) {
+        String validPath = getValidSystemLocation(path);
+        if (validPath == null) {
+            // Invalid path
+            return null;
+        }
+        HashMap<MagiskModuleInfo, List<String>> systemlessPathInfo = getSystemlessPaths();
+        for (MagiskModuleInfo moduleInfo : systemlessPathInfo.keySet()) {
+            List<String> systemlessPaths = systemlessPathInfo.get(moduleInfo);
+            if (systemlessPaths != null && systemlessPaths.contains(path)) {
+                return moduleInfo;
+            }
+        }
+        return null;
     }
 
     private static boolean hasApkFile(@NonNull Path file) {
@@ -87,6 +108,24 @@ public class MagiskUtils {
             return files.length > 0;
         }
         return false;
+    }
+
+    @Nullable
+    public static String getValidSystemLocation(@NonNull String location) {
+        // We need to ensure that the paths are within the /system folder.
+        // Product, vendor and system_ext all have symlinks inside /system
+        if (location.startsWith("/product/")
+                || location.startsWith("/vendor/")
+                || location.startsWith("/system_ext/")) {
+            location = "/system" + location;
+        }
+        // Now, we need to check that the path is valid
+        for (String validPathPrefix : SCAN_PATHS) {
+            if (location.startsWith(validPathPrefix)) {
+                return location;
+            }
+        }
+        return null;
     }
 
     @NonNull

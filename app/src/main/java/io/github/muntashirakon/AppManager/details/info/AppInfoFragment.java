@@ -86,6 +86,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -119,6 +120,8 @@ import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.magisk.MagiskDenyList;
 import io.github.muntashirakon.AppManager.magisk.MagiskHide;
+import io.github.muntashirakon.AppManager.magisk.MagiskModule;
+import io.github.muntashirakon.AppManager.magisk.MagiskModuleInfo;
 import io.github.muntashirakon.AppManager.magisk.MagiskProcess;
 import io.github.muntashirakon.AppManager.profiles.ProfileManager;
 import io.github.muntashirakon.AppManager.profiles.ProfileMetaManager;
@@ -129,6 +132,7 @@ import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.scanner.ScannerActivity;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Ops;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.sharedpref.SharedPrefsActivity;
 import io.github.muntashirakon.AppManager.ssaid.ChangeSsaidDialog;
 import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
@@ -648,8 +652,20 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             });
         }
         if (tagCloud.isSystemApp) {
-            if (tagCloud.isSystemlessPath) {
-                addChip(R.string.systemless_app);
+            if (tagCloud.systemlessPathInfo != null) {
+                addChip(R.string.systemless_app).setOnClickListener(v -> {
+                    MagiskModuleInfo moduleInfo = tagCloud.systemlessPathInfo;
+                    ScrollableDialogBuilder dialogBuilder = new ScrollableDialogBuilder(mActivity)
+                            .setTitle(R.string.magisk_module_info_title)
+                            .setMessage(moduleInfo.toLocalizedString(mActivity))
+                            .setNegativeButton(R.string.close, null);
+                    if (Objects.equals(moduleInfo.id, MagiskModule.MODULE_NAME)) {
+                        // This is App Manager module, offer to uninstall the app
+                        dialogBuilder.setNeutralButton(R.string.uninstall, (dialog, which, isChecked) ->
+                                doUninstallSystemlessAppWithAPrompt());
+                    }
+                    dialogBuilder.show();
+                });
             } else addChip(R.string.system_app);
             if (tagCloud.isUpdatedSystemApp) {
                 addChip(R.string.updated_app);
@@ -835,6 +851,45 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         }
     }
 
+    private void doUninstallSystemlessAppWithAPrompt() {
+        new ScrollableDialogBuilder(mActivity, R.string.uninstall_app_message)
+                .setTitle(mPackageLabel)
+                .setPositiveButton(R.string.uninstall, (dialog, which, keepData) ->
+                        doUninstallSystemless(keepData))
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+    }
+
+    private void doUninstallSystemless(boolean keepData) {
+        executor.submit(() -> {
+            boolean uninstalled = false;
+            String destPath = PackageUtils.getHiddenCodePathOrDefault(mApplicationInfo);
+            if (destPath != null) {
+                try {
+                    MagiskModule magiskModule = MagiskModule.getInstance();
+                    magiskModule.uninstall(mPackageName, destPath);
+                    PackageInstallerCompat installer = PackageInstallerCompat
+                            .getNewInstance();
+                    installer.setAppLabel(mPackageLabel);
+                    installer.uninstall(mPackageName, UserHandleHidden.USER_ALL, keepData);
+                    uninstalled = true;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            boolean finalUninstalled = uninstalled;
+            runOnUiThread(() -> {
+                if (finalUninstalled) {
+                    displayLongToast(R.string.uninstalled_successfully, mPackageLabel);
+                    // TODO: 3/3/23 Ask for reboot
+                    mActivity.finish();
+                } else {
+                    displayLongToast(R.string.failed_to_uninstall, mPackageLabel);
+                }
+            });
+        });
+    }
+
     @UiThread
     private void displayMagiskHideDialog() {
         SearchableMultiChoiceDialogBuilder<MagiskProcess> builder;
@@ -964,20 +1019,26 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 ScrollableDialogBuilder builder = new ScrollableDialogBuilder(mActivity,
                         isSystemApp ? R.string.uninstall_system_app_message : R.string.uninstall_app_message)
                         .setTitle(mPackageLabel)
-                        .setPositiveButton(R.string.uninstall, (dialog, which, keepData) -> executor.submit(() -> {
-                            PackageInstallerCompat installer = PackageInstallerCompat
-                                    .getNewInstance();
-                            installer.setAppLabel(mPackageLabel);
-                            boolean uninstalled = installer.uninstall(mPackageName, userId, keepData);
-                            runOnUiThread(() -> {
-                                if (uninstalled) {
-                                    displayLongToast(R.string.uninstalled_successfully, mPackageLabel);
-                                    mActivity.finish();
-                                } else {
-                                    displayLongToast(R.string.failed_to_uninstall, mPackageLabel);
-                                }
+                        .setPositiveButton(R.string.uninstall, (dialog, which, keepData) -> {
+                            if (isSystemApp && Prefs.Installer.isSystemless()) {
+                                doUninstallSystemless(keepData);
+                                return;
+                            }
+                            executor.submit(() -> {
+                                PackageInstallerCompat installer = PackageInstallerCompat
+                                        .getNewInstance();
+                                installer.setAppLabel(mPackageLabel);
+                                boolean uninstalled = installer.uninstall(mPackageName, userId, keepData);
+                                runOnUiThread(() -> {
+                                    if (uninstalled) {
+                                        displayLongToast(R.string.uninstalled_successfully, mPackageLabel);
+                                        mActivity.finish();
+                                    } else {
+                                        displayLongToast(R.string.failed_to_uninstall, mPackageLabel);
+                                    }
+                                });
                             });
-                        }))
+                        })
                         .setNegativeButton(R.string.cancel, (dialog, which, keepData) -> {
                             if (dialog != null) dialog.cancel();
                         });
