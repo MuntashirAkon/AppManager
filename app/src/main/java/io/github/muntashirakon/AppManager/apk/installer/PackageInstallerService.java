@@ -106,6 +106,15 @@ public class PackageInstallerService extends ForegroundService {
                 PackageInstallerService.this.packageName = packageName;
             }
 
+            // MIUI-begin: MIUI 12.5+ workaround
+            @Override
+            public void onAnotherAttemptInMiui(@Nullable ApkFile apkFile) {
+                if (apkFile != null) {
+                    installer.install(apkFile, apkQueueItem.getUserId());
+                }
+            }
+            // MIUI-end
+
             @Override
             public void onFinishedInstall(int sessionId, String packageName, int result,
                                           @Nullable String blockingPackage, @Nullable String statusMessage) {

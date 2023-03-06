@@ -75,7 +75,8 @@ public class MiuiUtils {
 
     @SuppressLint("PrivateApi")
     public static boolean isMiuiOptimizationDisabled() {
-        if (!SystemProperties.getBoolean("persist.sys.miui_optimization", true)) {
+        // ApplicationPackageManager#isXOptMode()
+        if (!SystemProperties.getBoolean("persist.sys.miui_optimization", !"1".equals(SystemProperties.get("ro.miui.cts", "0")))) {
             return true;
         }
         try {

@@ -39,6 +39,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -60,6 +61,7 @@ import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.BroadcastUtils;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
+import io.github.muntashirakon.AppManager.utils.MiuiUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 import io.github.muntashirakon.io.IoUtils;
@@ -421,6 +423,17 @@ public final class PackageInstallerCompat {
         @WorkerThread
         void onStartInstall(int sessionId, String packageName);
 
+        // MIUI-begin: MIUI 12.5+ workaround
+        /**
+         * MIUI 12.5+ may require more than one tries in order to have successful installations. This is only needed
+         * during APK installations, not APK uninstallations or install-existing attempts.
+         *
+         * @param apkFile Underlying APK file if available.
+         */
+        default void onAnotherAttemptInMiui(@Nullable ApkFile apkFile) {
+        }
+        // MIUI-end
+
         @WorkerThread
         void onFinishedInstall(int sessionId, String packageName, int result, @Nullable String blockingPackage,
                                @Nullable String statusMessage);
@@ -499,6 +512,8 @@ public final class PackageInstallerCompat {
     private OnInstallListener onInstallListener;
     private IPackageInstaller packageInstaller;
     private PackageInstaller.Session session;
+    // MIUI-added: Multiple attempts may be required
+    int attempts = 1;
     private final String installerPackageName;
     private final boolean isPrivileged;
 
@@ -874,6 +889,23 @@ public final class PackageInstallerCompat {
                                   int finalStatus,
                                   @Nullable String blockingPackage,
                                   @Nullable String statusMessage) {
+        // MIUI-begin: In MIUI 12.5, it might be required try installing the APK files more than once.
+        if (finalStatus == STATUS_FAILURE_ABORTED
+                && onInstallListener != null
+                && !Ops.isPrivileged()
+                && MiuiUtils.isMiui()
+                && MiuiUtils.isActualMiuiVersionAtLeast("12.5")
+                && !MiuiUtils.isMiuiOptimizationDisabled()
+                && Objects.equals(statusMessage, "INSTALL_FAILED_ABORTED: Permission denied")
+                && attempts <= 3) {
+            // Try once more
+            ++attempts;
+            interactionWatcher.countDown();
+            installWatcher.countDown();
+            onInstallListener.onAnotherAttemptInMiui(apkFile);
+            return;
+        }
+        // MIUI-end
         // No need to check package name since it's been checked before
         if (finalStatus == STATUS_FAILURE_SESSION_CREATE || (this.sessionId == sessionId)) {
             if (onInstallListener != null) {
