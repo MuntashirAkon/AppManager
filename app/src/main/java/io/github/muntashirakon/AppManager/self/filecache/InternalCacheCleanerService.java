@@ -50,7 +50,7 @@ public class InternalCacheCleanerService extends ForegroundService {
     }
 
     @Override
-    public int onStartCommand(@Nullable @org.jetbrains.annotations.Nullable Intent intent, int flags, int startId) {
+    public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
         return super.onStartCommand(intent, flags, startId);
     }
 

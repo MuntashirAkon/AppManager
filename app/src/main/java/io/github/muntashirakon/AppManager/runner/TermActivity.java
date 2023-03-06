@@ -32,7 +32,7 @@ public class TermActivity extends BaseActivity {
     private final ExecutorService executor = Executors.newFixedThreadPool(3);
 
     @Override
-    protected void onAuthenticated(@Nullable @org.jetbrains.annotations.Nullable Bundle savedInstanceState) {
+    protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
         setContentView(R.layout.activity_term);
         setSupportActionBar(findViewById(R.id.toolbar));
         commandInput = findViewById(R.id.command_input);
