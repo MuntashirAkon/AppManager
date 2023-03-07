@@ -889,7 +889,7 @@ public final class PackageInstallerCompat {
                                   int finalStatus,
                                   @Nullable String blockingPackage,
                                   @Nullable String statusMessage) {
-        // MIUI-begin: In MIUI 12.5 and 20.2.0, it might be required try installing the APK files more than once.
+        // MIUI-begin: In MIUI 12.5 and 20.2.0, it might be required to try installing the APK files more than once.
         if (finalStatus == STATUS_FAILURE_ABORTED
                 && this.sessionId == sessionId
                 && onInstallListener != null

@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
+import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
@@ -328,6 +329,22 @@ class RestoreOp implements Closeable {
             }
             // A normal update will do it now
             PackageInstallerCompat packageInstaller = PackageInstallerCompat.getNewInstance(metadata.installer);
+            packageInstaller.setOnInstallListener(new PackageInstallerCompat.OnInstallListener() {
+                @Override
+                public void onStartInstall(int sessionId, String packageName) {
+                }
+
+                @Override
+                public void onAnotherAttemptInMiui(@Nullable ApkFile apkFile) {
+                    // This works because the parent install method still remains active until a final status is
+                    // received after all the attempts are finished, which is, then, returned to the parent.
+                    packageInstaller.install(allApks, packageName, userHandle);
+                }
+
+                @Override
+                public void onFinishedInstall(int sessionId, String packageName, int result, @Nullable String blockingPackage, @Nullable String statusMessage) {
+                }
+            });
             try {
                 if (!packageInstaller.install(allApks, packageName, userHandle)) {
                     throw new BackupException("A (re)install was necessary but couldn't perform it.");
