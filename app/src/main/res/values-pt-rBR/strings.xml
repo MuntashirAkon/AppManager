@@ -1295,4 +1295,19 @@
     <string name="waiting_for_the_phone_to_be_locked">Esperando que o telefone seja bloqueado…</string>
     <string name="option_display_folders_on_top">Pastas no topo</string>
     <string name="export_app_list">Exportar lista de aplicações</string>
+    <string name="action_continue">Continuar</string>
+    <string name="title_terminal_emulator">Terminal</string>
+    <string name="grant_required_permission">Conceder permissão necessária</string>
+    <string name="filter_apps_with_ssaid">Com SSAID</string>
+    <string name="filter_apps_with_saf">Com SAF</string>
+    <string name="filter_apps_with_keystore">Com KeyStore</string>
+    <string name="install_for_another_user">Instalar para…</string>
+    <string name="title_labs_activity">Labs</string>
+    <string name="action_run">Iniciar</string>
+    <string name="optimize_option_clear_profile_data">Limpar dados de perfil anteriores</string>
+    <string name="optimize_option_force_compilation">Forçar compilação mesmo quando não for necessário</string>
+    <string name="selinux_context">Contexto SELinux</string>
+    <string name="file_group_id">Grupo (GID)</string>
+    <string name="app_manager_build_expiring_soon_warning">Esta versão do App Manager expirará muito em breve. Atualize-o para a versão mais recente.</string>
+    <string name="adb_incomplete_usb_debugging_title">Depuração USB incompleta</string>
 </resources>
