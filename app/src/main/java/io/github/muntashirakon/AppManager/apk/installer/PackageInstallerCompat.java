@@ -889,19 +889,21 @@ public final class PackageInstallerCompat {
                                   int finalStatus,
                                   @Nullable String blockingPackage,
                                   @Nullable String statusMessage) {
-        // MIUI-begin: In MIUI 12.5, it might be required try installing the APK files more than once.
+        // MIUI-begin: In MIUI 12.5 and 20.2.0, it might be required try installing the APK files more than once.
         if (finalStatus == STATUS_FAILURE_ABORTED
+                && this.sessionId == sessionId
                 && onInstallListener != null
                 && !Ops.isPrivileged()
-                && MiuiUtils.isMiui()
-                && MiuiUtils.isActualMiuiVersionAtLeast("12.5")
-                && !MiuiUtils.isMiuiOptimizationDisabled()
+                && MiuiUtils.isActualMiuiVersionAtLeast("12.5", "20.2.0")
                 && Objects.equals(statusMessage, "INSTALL_FAILED_ABORTED: Permission denied")
                 && attempts <= 3) {
             // Try once more
             ++attempts;
+            Log.i(TAG, "MIUI: Installation attempt no " + attempts + " for package " + packageName);
             interactionWatcher.countDown();
             installWatcher.countDown();
+            // Remove old broadcast receivers
+            unregisterReceiver();
             onInstallListener.onAnotherAttemptInMiui(apkFile);
             return;
         }
