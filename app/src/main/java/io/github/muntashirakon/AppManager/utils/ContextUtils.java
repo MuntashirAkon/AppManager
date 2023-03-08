@@ -3,9 +3,12 @@
 package io.github.muntashirakon.AppManager.utils;
 
 import android.annotation.SuppressLint;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.os.Build;
+
+import androidx.annotation.NonNull;
 
 // Copyright 2020 John "topjohnwu" Wu
 public final class ContextUtils {
@@ -41,5 +44,9 @@ public final class ContextUtils {
             context = ((ContextWrapper) context).getBaseContext();
         }
         return context;
+    }
+
+    public static void unregisterReceiver(@NonNull Context context, @NonNull BroadcastReceiver receiver) {
+        ExUtils.exceptionAsIgnored(() -> context.unregisterReceiver(receiver));
     }
 }

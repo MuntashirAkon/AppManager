@@ -1097,8 +1097,10 @@ public final class PackageInstallerCompat {
     }
 
     private void unregisterReceiver() {
-        if (piReceiver != null) context.unregisterReceiver(piReceiver);
-        context.unregisterReceiver(broadcastReceiver);
+        if (piReceiver != null) {
+            ContextUtils.unregisterReceiver(context, piReceiver);
+        }
+        ContextUtils.unregisterReceiver(context, broadcastReceiver);
     }
 
     private void initBroadcastReceiver() {
