@@ -608,7 +608,11 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
             if (intent != null) {
                 builder.setPositiveButton(R.string.open, (dialog, which) -> {
                     dialog.dismiss();
-                    startActivity(intent);
+                    try {
+                        startActivity(intent);
+                    } catch (Throwable th) {
+                        UIUtils.displayLongToast(th.getMessage());
+                    }
                     goToNext();
                 });
             }
