@@ -608,7 +608,7 @@ public class AppOpsManagerCompat {
     private final IAppOpsService appOpsService;
 
     public AppOpsManagerCompat(Context context) {
-        if (!PermissionUtils.hasAppOpsPermission(context) && Ops.isPrivileged()) {
+        if (!PermissionUtils.hasAppOpsPermission(context) && Ops.isReallyPrivileged()) {
             try {
                 PermissionCompat.grantPermission(
                         context.getPackageName(),
