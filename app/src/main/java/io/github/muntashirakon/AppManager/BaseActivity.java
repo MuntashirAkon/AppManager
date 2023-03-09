@@ -54,6 +54,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     private AlertDialog mAlertDialog;
     @Nullable
     private SecurityAndOpsViewModel mViewModel;
+    private boolean displayLoader = true;
 
     private final ActivityResultLauncher<Intent> mKeyStoreActivity = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
@@ -101,26 +102,26 @@ public abstract class BaseActivity extends AppCompatActivity {
             switch (status) {
                 case Ops.STATUS_AUTO_CONNECT_WIRELESS_DEBUGGING:
                     Log.d(TAG, "Try auto-connecting to wireless debugging.");
-                    mAlertDialog = null;
+                    displayLoader = false;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                         mViewModel.autoConnectAdb(Ops.STATUS_WIRELESS_DEBUGGING_CHOOSER_REQUIRED);
                         return;
                     } // fall-through
                 case Ops.STATUS_WIRELESS_DEBUGGING_CHOOSER_REQUIRED:
                     Log.d(TAG, "Display wireless debugging chooser (pair or connect)");
-                    mAlertDialog = null;
+                    displayLoader = false;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                         Ops.connectWirelessDebugging(this, mViewModel);
                         return;
                     } // fall-through
                 case Ops.STATUS_ADB_CONNECT_REQUIRED:
                     Log.d(TAG, "Display connect dialog.");
-                    mAlertDialog = null;
+                    displayLoader = false;
                     Ops.connectAdbInput(this, mViewModel);
                     return;
                 case Ops.STATUS_ADB_PAIRING_REQUIRED:
                     Log.d(TAG, "Display pairing dialog.");
-                    mAlertDialog = null;
+                    displayLoader = false;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                         Ops.pairAdbInput(this, mViewModel);
                         return;
@@ -164,7 +165,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         if (mViewModel != null && mViewModel.isAuthenticating() && mAlertDialog != null) {
-            mAlertDialog.show();
+            if (displayLoader) {
+                mAlertDialog.show();
+            } else {
+                mAlertDialog.hide();
+            }
         }
     }
 
