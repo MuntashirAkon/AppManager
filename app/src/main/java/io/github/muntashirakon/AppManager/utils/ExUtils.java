@@ -42,7 +42,7 @@ public class ExUtils {
         try {
             return r.run();
         } catch (Throwable th) {
-            Log.e("ExUtils", "(Suppressed error)", th);
+            Log.w("ExUtils", "(Suppressed error)", th);
             return null;
         }
     }
@@ -60,7 +60,7 @@ public class ExUtils {
         try {
             r.run();
         } catch (Throwable th) {
-            Log.e("ExUtils", "(Suppressed error)", th);
+            Log.w("ExUtils", "(Suppressed error)", th);
         }
     }
 }

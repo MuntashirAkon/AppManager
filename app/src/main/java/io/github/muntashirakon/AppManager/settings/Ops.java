@@ -38,7 +38,7 @@ import java.util.concurrent.TimeUnit;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
 import io.github.muntashirakon.AppManager.adb.AdbUtils;
-import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
+import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.ipc.LocalServices;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.NoOps;
@@ -46,10 +46,12 @@ import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
+import io.github.muntashirakon.compat.ObjectsCompat;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
 import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
@@ -278,7 +280,6 @@ public class Ops {
             } else {
                 Log.d("ROOT", "Could not start ADB over TCP via root.");
             }
-            // TODO: 28/11/22 Enable ADB over TCP via root and thereby use ADB mode?
             sIsRoot = false;
             // Fall-through, in case we can use other options
         }
@@ -536,16 +537,22 @@ public class Ops {
     @NoOps // Although we've used Ops checks, its overall usage does not affect anything
     private static int checkRootOrIncompleteUsbDebuggingInAdb(@NonNull Context context) {
         // ADB already granted and AM service is running
-        if (getUid() == ROOT_UID) {
+        int uid = getUid();
+        if (uid == ROOT_UID) {
             // AM service is being run as root
             sIsRoot = true;
             sIsAdb = false;
             UiThreadHandler.run(() -> UIUtils.displayLongToast(R.string.warning_working_on_root_mode));
-        } else if (context.getPackageManager().checkPermission("android.permission.GRANT_RUNTIME_PERMISSIONS",
-                ActivityManagerCompat.SHELL_PACKAGE_NAME) != PackageManager.PERMISSION_GRANTED) {
-            // USB debugging is incomplete, revert back to no-root
-            sIsAdb = sIsRoot = false;
-            return STATUS_FAILURE_ADB_NEED_MORE_PERMS;
+        } else {
+            boolean isLimitedAdbPermission = ObjectsCompat.requireNonNullElse(
+                    ExUtils.exceptionAsNull(() -> PackageManagerCompat.getPackageManager().checkUidPermission(
+                            "android.permission.GRANT_RUNTIME_PERMISSIONS", uid)),
+                    PackageManager.PERMISSION_DENIED) != PackageManager.PERMISSION_GRANTED;
+            if (isLimitedAdbPermission) {
+                // USB debugging is incomplete, revert back to no-root
+                sIsAdb = sIsRoot = false;
+                return STATUS_FAILURE_ADB_NEED_MORE_PERMS;
+            }
         }
         UiThreadHandler.run(() -> UIUtils.displayShortToast(R.string.working_on_adb_mode));
         return STATUS_SUCCESS;
@@ -554,12 +561,9 @@ public class Ops {
     @NoOps
     @IntRange(from = -1)
     private static int getUid() {
-        try {
-            return LocalServices.getAmService().getUid();
-        } catch (RemoteException e) {
-            Log.e("Get UID", e);
-            return -1;
-        }
+        return ObjectsCompat.requireNonNullElse(
+                ExUtils.exceptionAsNull(() -> LocalServices.getAmService().getUid()),
+                -1);
     }
 
     @WorkerThread
