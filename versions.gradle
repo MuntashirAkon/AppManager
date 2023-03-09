@@ -22,7 +22,7 @@ ext {
     hiddenapibypass_version = "4.3"
     jadx_version = "5a62a8e625"
     jb_annotation_version = "23.0.0" // Compile-only
-    libadb_version = "2.2.0"
+    libadb_version = "2.2.2"
     libsu_version = "5.0.3"
     material_version = "1.8.0"
     preferences_version = "1.2.0"

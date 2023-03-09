@@ -45,16 +45,15 @@ class LocalServerManager {
     @NoOps
     @NonNull
     static LocalServerManager getInstance(@NonNull Context context) {
-        if (sLocalServerManager == null) {
-            synchronized (LocalServerManager.class) {
-                if (sLocalServerManager == null) {
-                    sLocalServerManager = new LocalServerManager(context);
-                }
+        synchronized (LocalServerManager.class) {
+            if (sLocalServerManager == null) {
+                sLocalServerManager = new LocalServerManager(context);
             }
         }
         return sLocalServerManager;
     }
 
+    private final Object mLock = new Object();
     @NonNull
     private final Context mContext;
     @Nullable
@@ -76,21 +75,23 @@ class LocalServerManager {
     @NonNull
     @NoOps(used = true)
     private ClientSession getSession() throws IOException {
-        if (mSession == null || !mSession.isRunning()) {
-            try {
-                mSession = createSession();
-            } catch (Exception ignore) {
-            }
-            if (mSession == null) {
+        synchronized (mLock) {
+            if (mSession == null || !mSession.isRunning()) {
                 try {
-                    startServer();
-                } catch (Exception e) {
-                    throw new IOException("Could not create session", e);
+                    mSession = createSession();
+                } catch (Exception ignore) {
                 }
-                mSession = createSession();
+                if (mSession == null) {
+                    try {
+                        startServer();
+                    } catch (Exception e) {
+                        throw new IOException("Could not create session", e);
+                    }
+                    mSession = createSession();
+                }
             }
+            return mSession;
         }
-        return mSession;
     }
 
     @AnyThread
@@ -152,7 +153,7 @@ class LocalServerManager {
     void closeBgServer() {
         try {
             BaseCaller baseCaller = new BaseCaller(BaseCaller.TYPE_CLOSE);
-            createSession().getDataTransmission().sendAndReceiveMessage(ParcelableUtil.marshall(baseCaller));
+            getSession().getDataTransmission().sendAndReceiveMessage(ParcelableUtil.marshall(baseCaller));
         } catch (Exception e) {
             // Since the server is closed abruptly, this should always produce error
             Log.w(TAG, "closeBgServer: " + e.getCause() + "  " + e.getMessage());
@@ -180,9 +181,11 @@ class LocalServerManager {
                 if (s.startsWith("Success!")) {
                     adbServerStarted = true;
                     adbConnectionWatcher.countDown();
+                    break;
                 } else if (s.startsWith("Error!")) {
                     adbServerStarted = false;
                     adbConnectionWatcher.countDown();
+                    break;
                 }
             }
         } catch (Throwable e) {
@@ -257,7 +260,7 @@ class LocalServerManager {
      * Create a client session
      *
      * @return New session if not running, running session otherwise
-     * @throws IOException      If session creation failed
+     * @throws IOException If session creation failed
      */
     @WorkerThread
     @NonNull
@@ -276,7 +279,7 @@ class LocalServerManager {
         InputStream is = socket.getInputStream();
         DataTransmission transfer = new DataTransmission(os, is, false);
         transfer.shakeHands(ServerConfig.getLocalToken(), DataTransmission.Role.Client);
-        return new ClientSession(transfer);
+        return new ClientSession(socket, transfer);
     }
 
     /**
@@ -285,12 +288,15 @@ class LocalServerManager {
     private static class ClientSession implements AutoCloseable {
         private volatile boolean mIsRunning;
         @NonNull
+        private final Socket mSocket;
+        @NonNull
         private final DataTransmission mDataTransmission;
 
         @AnyThread
-        ClientSession(@NonNull DataTransmission dataTransmission) {
-            this.mDataTransmission = dataTransmission;
-            this.mIsRunning = true;
+        ClientSession(@NonNull Socket socket, @NonNull DataTransmission dataTransmission) {
+            mSocket = socket;
+            mDataTransmission = dataTransmission;
+            mIsRunning = true;
         }
 
         /**
@@ -298,10 +304,11 @@ class LocalServerManager {
          */
         @AnyThread
         @Override
-        public void close() {
+        public void close() throws IOException {
             if (mIsRunning) {
                 mIsRunning = false;
                 mDataTransmission.close();
+                mSocket.close();
             }
         }
 

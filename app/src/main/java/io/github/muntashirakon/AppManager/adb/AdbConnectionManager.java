@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.adb;
 
+import android.os.Build;
+
 import androidx.annotation.NonNull;
 
 import java.security.PrivateKey;
@@ -29,7 +31,8 @@ public class AdbConnectionManager extends AbsAdbConnectionManager {
     @NonNull
     private final KeyPair mKeyPair;
 
-    private AdbConnectionManager() throws Exception {
+    public AdbConnectionManager() throws Exception {
+        setApi(Build.VERSION.SDK_INT);
         KeyStoreManager keyStoreManager = KeyStoreManager.getInstance();
         KeyPair keyPair = keyStoreManager.getKeyPairNoThrow(ADB_KEY_ALIAS);
         if (keyPair == null) {
