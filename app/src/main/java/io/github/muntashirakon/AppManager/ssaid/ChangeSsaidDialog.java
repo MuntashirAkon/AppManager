@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.UserHandleHidden;
 import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 
@@ -120,11 +121,32 @@ public class ChangeSsaidDialog extends DialogFragment {
             resetButton.get().setOnClickListener(v -> {
                 mSsaid = mOldSsaid;
                 ssaidEditText.setText(mSsaid);
+                applyButton.get().performClick();
                 resetButton.get().setVisibility(View.GONE);
                 applyButton.get().setVisibility(View.GONE);
             });
         });
         ssaidEditText.setText(mSsaid);
+        ssaidEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                boolean valid = !s.equals(mSsaid) && s.length() == (2 * sizeByte);
+                if (resetButton.get() != null) {
+                    resetButton.get().setVisibility(valid && !mOldSsaid.contentEquals(s) ? View.VISIBLE : View.GONE);
+                }
+                if (applyButton.get() != null) {
+                    applyButton.get().setVisibility(valid ? View.VISIBLE : View.GONE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
         ssaidInputLayout.setEndIconOnClickListener(v -> {
             mSsaid = SsaidSettings.generateSsaid(packageName);
             ssaidEditText.setText(mSsaid);
