@@ -103,6 +103,7 @@ import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
 import io.github.muntashirakon.AppManager.backup.dialog.BackupRestoreDialogFragment;
 import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
+import io.github.muntashirakon.AppManager.compat.DomainVerificationManagerCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
@@ -684,6 +685,41 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         if (tagCloud.hasRequestedLargeHeap) {
             addChip(R.string.requested_large_heap);
         }
+        if (BuildConfig.DEBUG && tagCloud.hostsToOpen != null) {
+            addChip(R.string.app_info_tag_open_links, tagCloud.canOpenLinks ? ColorCodes.getFailureColor(mActivity)
+                    : ColorCodes.getSuccessColor(mActivity)).setOnClickListener(v -> {
+                SearchableItemsDialogBuilder<String> builder = new SearchableItemsDialogBuilder<>(mActivity, new ArrayList<>(tagCloud.hostsToOpen.keySet()))
+                        .setTitle(R.string.title_domains_supported_by_the_app)
+                        .setNegativeButton(R.string.close, null);
+                if (PermissionUtils.hasSelfOrRemotePermission("android.permission.UPDATE_DOMAIN_VERIFICATION_USER_SELECTION")) {
+                    // Enable/disable directly from the app
+                    builder.setPositiveButton(tagCloud.canOpenLinks ? R.string.disable : R.string.enable,
+                            (dialog, which) -> executor.submit(() -> {
+                                try {
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                                        DomainVerificationManagerCompat
+                                                .setDomainVerificationLinkHandlingAllowed(mPackageName, !tagCloud.canOpenLinks, mainModel.getUserHandle());
+                                    }
+                                    UiThreadHandler.run(() -> {
+                                        UIUtils.displayShortToast(R.string.done);
+                                        refreshDetails();
+                                    });
+                                } catch (Throwable th) {
+                                    th.printStackTrace();
+                                    UiThreadHandler.run(() -> UIUtils.displayShortToast(R.string.failed));
+                                }
+                            }));
+                } else {
+                    builder.setPositiveButton(R.string.app_settings, (dialog, which) -> {
+                        try {
+                            startActivity(IntentUtils.getAppDetailsSettings(mPackageName));
+                        } catch (Throwable ignore) {
+                        }
+                    });
+                }
+                builder.show();
+            });
+        }
         if (tagCloud.runningServices.size() > 0) {
             addChip(R.string.running, ColorCodes.getComponentRunningIndicatorColor(mActivity)).setOnClickListener(v -> {
                 mProgressIndicator.show();
@@ -701,7 +737,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     }
                     DialogTitleBuilder titleBuilder = new DialogTitleBuilder(mActivity)
                             .setTitle(R.string.running_services);
-                    if (PermissionUtils.hasDumpPermission() && FeatureController.isLogViewerEnabled()) {
+                    if (hasDumpPermission() && FeatureController.isLogViewerEnabled()) {
                         titleBuilder.setSubtitle(R.string.running_services_logcat_hint);
                     }
                     runOnUiThread(() -> {

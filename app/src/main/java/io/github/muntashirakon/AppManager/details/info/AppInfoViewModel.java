@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.verify.domain.DomainVerificationUserState;
 import android.os.Build;
 import android.os.RemoteException;
 import android.os.UserHandleHidden;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -38,6 +40,7 @@ import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerService;
 import io.github.muntashirakon.AppManager.backup.BackupUtils;
 import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
+import io.github.muntashirakon.AppManager.compat.DomainVerificationManagerCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
@@ -122,6 +125,7 @@ public class AppInfoViewModel extends AndroidViewModel {
         PackageInfo packageInfo = mainModel.getPackageInfo();
         if (packageInfo == null) return;
         String packageName = packageInfo.packageName;
+        int userId = mainModel.getUserHandle();
         ApplicationInfo applicationInfo = packageInfo.applicationInfo;
         TagCloud tagCloud = new TagCloud();
         try {
@@ -142,12 +146,22 @@ public class AppInfoViewModel extends AndroidViewModel {
                     && MagiskUtils.isSystemlessPath(PackageUtils.getHiddenCodePathOrDefault(packageName,
                     applicationInfo.publicSourceDir));
             tagCloud.isUpdatedSystemApp = (applicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                DomainVerificationUserState userState = DomainVerificationManagerCompat
+                        .getDomainVerificationUserState(packageName, userId);
+                if (userState != null) {
+                    tagCloud.canOpenLinks = userState.isLinkHandlingAllowed();
+                    if (!userState.getHostToStateMap().isEmpty()) {
+                        tagCloud.hostsToOpen = userState.getHostToStateMap();
+                    }
+                }
+            }
             tagCloud.splitCount = mainModel.getSplitCount();
             tagCloud.isDebuggable = (applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
             tagCloud.isTestOnly = (applicationInfo.flags & ApplicationInfo.FLAG_TEST_ONLY) != 0;
             tagCloud.hasCode = (applicationInfo.flags & ApplicationInfo.FLAG_HAS_CODE) != 0;
             tagCloud.hasRequestedLargeHeap = (applicationInfo.flags & ApplicationInfo.FLAG_LARGE_HEAP) != 0;
-            tagCloud.runningServices = ActivityManagerCompat.getRunningServices(packageName, mainModel.getUserHandle());
+            tagCloud.runningServices = ActivityManagerCompat.getRunningServices(packageName, userId);
             tagCloud.isForceStopped = (applicationInfo.flags & ApplicationInfo.FLAG_STOPPED) != 0;
             tagCloud.isAppEnabled = applicationInfo.enabled;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -197,7 +211,7 @@ public class AppInfoViewModel extends AndroidViewModel {
             }
             if (Ops.isRoot() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 try {
-                    tagCloud.ssaid = new SsaidSettings(mainModel.getUserHandle())
+                    tagCloud.ssaid = new SsaidSettings(userId)
                             .getSsaid(packageName, applicationInfo.uid);
                     if (TextUtilsCompat.isEmpty(tagCloud.ssaid)) tagCloud.ssaid = null;
                 } catch (IOException ignore) {
@@ -210,7 +224,7 @@ public class AppInfoViewModel extends AndroidViewModel {
                     UriManager.UriGrant uriGrant;
                     while (uriGrantIterator.hasNext()) {
                         uriGrant = uriGrantIterator.next();
-                        if (uriGrant.targetUserId != mainModel.getUserHandle()) {
+                        if (uriGrant.targetUserId != userId) {
                             uriGrantIterator.remove();
                         }
                     }
@@ -250,15 +264,14 @@ public class AppInfoViewModel extends AndroidViewModel {
         for (int i = 1; i <= countSplits; ++i) {
             appInfo.splitEntries.add(apkFile.getEntries().get(i));
         }
-        // Set data dirs
         if (!isExternalApk) {
+            // Set data dirs
             appInfo.dataDir = applicationInfo.dataDir;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 appInfo.dataDeDir = applicationInfo.deviceProtectedDataDir;
             }
-        }
-        appInfo.extDataDirs = new ArrayList<>();
-        if (!isExternalApk) {
+            // Set directories
+            appInfo.extDataDirs = new ArrayList<>();
             OsEnvironment.UserEnvironment ue = OsEnvironment.getUserEnvironment(userId);
             Path[] externalDataDirs = ue.buildExternalStorageAppDataDirs(packageName);
             for (Path externalDataDir : externalDataDirs) {
@@ -267,13 +280,11 @@ public class AppInfoViewModel extends AndroidViewModel {
                     appInfo.extDataDirs.add(Objects.requireNonNull(accessiblePath.getFilePath()));
                 }
             }
-        }
-        // Set JNI dir
-        if (!isExternalApk && new File(applicationInfo.nativeLibraryDir).exists()) {
-            appInfo.jniDir = applicationInfo.nativeLibraryDir;
-        }
-        // Net statistics
-        if (!isExternalApk) {
+            // Set JNI dir
+            if (new File(applicationInfo.nativeLibraryDir).exists()) {
+                appInfo.jniDir = applicationInfo.nativeLibraryDir;
+            }
+            // Net statistics
             try {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     if (FeatureController.isUsageAccessEnabled()) {
@@ -376,6 +387,12 @@ public class AppInfoViewModel extends AndroidViewModel {
         public boolean isSystemApp;
         public boolean isSystemlessPath;
         public boolean isUpdatedSystemApp;
+        public boolean canOpenLinks;
+        /**
+         * Hosts that can be opened by the app (Android 12+). State is one of {@link DomainVerificationUserState#DOMAIN_STATE_NONE},
+         * {@link DomainVerificationUserState#DOMAIN_STATE_SELECTED}, {@link DomainVerificationUserState#DOMAIN_STATE_VERIFIED}.
+         */
+        public Map<String, Integer> hostsToOpen;
         public int splitCount;
         public boolean isDebuggable;
         public boolean isTestOnly;

@@ -4,7 +4,6 @@ package io.github.muntashirakon.AppManager.settings;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.RemoteException;
 import android.provider.Settings;
@@ -38,7 +37,6 @@ import java.util.concurrent.TimeUnit;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
 import io.github.muntashirakon.AppManager.adb.AdbUtils;
-import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.ipc.LocalServices;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.NoOps;
@@ -226,7 +224,7 @@ public class Ops {
                     sIsRoot = false;
                     ServerConfig.setAdbPort(findAdbPortNoThrow(context, 10, ServerConfig.DEFAULT_ADB_PORT));
                     LocalServer.restart();
-                    return checkRootOrIncompleteUsbDebuggingInAdb(context);
+                    return checkRootOrIncompleteUsbDebuggingInAdb();
             }
         } catch (Throwable e) {
             Log.e("ModeOfOps", e);
@@ -316,7 +314,7 @@ public class Ops {
         if (sIsAdb) {
             // No need to return anything here because we're in auto-mode.
             // Any message produced by the method below is just a helpful message.
-            checkRootOrIncompleteUsbDebuggingInAdb(context);
+            checkRootOrIncompleteUsbDebuggingInAdb();
         }
     }
 
@@ -355,7 +353,7 @@ public class Ops {
         try {
             ServerConfig.setAdbPort(findAdbPortNoThrow(context, 5, ServerConfig.getAdbPort()));
             LocalServer.restart();
-            return checkRootOrIncompleteUsbDebuggingInAdb(context);
+            return checkRootOrIncompleteUsbDebuggingInAdb();
         } catch (RemoteException | IOException e) {
             Log.e("ADB", e);
             // Failed, fall-through
@@ -377,7 +375,7 @@ public class Ops {
         try {
             ServerConfig.setAdbPort(port);
             LocalServer.restart();
-            return checkRootOrIncompleteUsbDebuggingInAdb(context);
+            return checkRootOrIncompleteUsbDebuggingInAdb();
         } catch (RemoteException | IOException e) {
             Log.e("ADB", e);
             // Failed, fall-through
@@ -523,7 +521,7 @@ public class Ops {
             }
             if (sIsAdb) {
                 // AM service is running as ADB
-                return checkRootOrIncompleteUsbDebuggingInAdb(context) == STATUS_SUCCESS;
+                return checkRootOrIncompleteUsbDebuggingInAdb() == STATUS_SUCCESS;
             }
             // All checks are failed, stop services
             LocalServices.stopServices();
@@ -535,7 +533,7 @@ public class Ops {
     }
 
     @NoOps // Although we've used Ops checks, its overall usage does not affect anything
-    private static int checkRootOrIncompleteUsbDebuggingInAdb(@NonNull Context context) {
+    private static int checkRootOrIncompleteUsbDebuggingInAdb() {
         // ADB already granted and AM service is running
         int uid = getUid();
         if (uid == ROOT_UID) {
@@ -544,11 +542,7 @@ public class Ops {
             sIsAdb = false;
             UiThreadHandler.run(() -> UIUtils.displayLongToast(R.string.warning_working_on_root_mode));
         } else {
-            boolean isLimitedAdbPermission = ObjectsCompat.requireNonNullElse(
-                    ExUtils.exceptionAsNull(() -> PackageManagerCompat.getPackageManager().checkUidPermission(
-                            "android.permission.GRANT_RUNTIME_PERMISSIONS", uid)),
-                    PackageManager.PERMISSION_DENIED) != PackageManager.PERMISSION_GRANTED;
-            if (isLimitedAdbPermission) {
+            if (!PermissionUtils.hasSelfOrRemotePermission("android.permission.GRANT_RUNTIME_PERMISSIONS")) {
                 // USB debugging is incomplete, revert back to no-root
                 sIsAdb = sIsRoot = false;
                 return STATUS_FAILURE_ADB_NEED_MORE_PERMS;

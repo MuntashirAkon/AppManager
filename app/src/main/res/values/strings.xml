@@ -1331,6 +1331,8 @@
     <string name="summary_perform_runtime_optimization_to_apps">Optimize DEX and (in Android 10 and later) layouts to improve the performance of the applications.</string>
     <string name="action_optimize_app">Optimize</string>
     <string name="batch_ops_runtime_optimization">Runtime optimization</string>
+    <string name="app_info_tag_open_links">Open links</string>
+    <string name="title_domains_supported_by_the_app">Supported Domains</string>
     <plurals name="alert_failed_to_optimize_apps">
         <item quantity="one">Could not optimize %1$d app</item>
         <item quantity="other">Could not optimize %1$d apps</item>

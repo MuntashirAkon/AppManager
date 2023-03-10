@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Environment;
+import android.os.Process;
 import android.os.RemoteException;
 import android.os.UserHandleHidden;
 
@@ -15,8 +16,11 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PermissionCompat;
+import io.github.muntashirakon.AppManager.ipc.LocalServices;
 import io.github.muntashirakon.AppManager.settings.Ops;
+import io.github.muntashirakon.compat.ObjectsCompat;
 
 @SuppressWarnings("BooleanMethodIsAlwaysInverted")
 public final class PermissionUtils {
@@ -92,16 +96,38 @@ public final class PermissionUtils {
         assert appOpsManager != null;
         final int mode;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            mode = appOpsManager.unsafeCheckOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,
-                    android.os.Process.myUid(), context.getPackageName());
+            mode = appOpsManager.unsafeCheckOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, Process.myUid(),
+                    context.getPackageName());
         } else {
-            mode = appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS,
-                    android.os.Process.myUid(), context.getPackageName());
+            mode = appOpsManager.checkOpNoThrow(AppOpsManager.OPSTR_GET_USAGE_STATS, Process.myUid(),
+                    context.getPackageName());
         }
         if (mode == AppOpsManager.MODE_DEFAULT && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             return context.checkCallingOrSelfPermission(Manifest.permission.PACKAGE_USAGE_STATS)
                     == PackageManager.PERMISSION_GRANTED;
         }
         return mode == AppOpsManager.MODE_ALLOWED;
+    }
+
+    public static boolean hasSelfOrRemotePermission(@NonNull String permissionName) {
+        int uid = getSelfOrRemoteUid();
+        if (uid == 0) {
+            // Root UID has all the permissions granted
+            return true;
+        }
+        if (uid != Process.myUid()) {
+            try {
+                return PackageManagerCompat.getPackageManager().checkUidPermission(permissionName, getSelfOrRemoteUid())
+                        == PackageManager.PERMISSION_GRANTED;
+            } catch (RemoteException ignore) {
+            }
+        }
+        return ContextCompat.checkSelfPermission(ContextUtils.getContext(), permissionName)
+                == PackageManager.PERMISSION_GRANTED;
+    }
+
+    public static int getSelfOrRemoteUid() {
+        return ObjectsCompat.requireNonNullElse(
+                ExUtils.exceptionAsNull(() -> LocalServices.getAmService().getUid()), Process.myUid());
     }
 }
