@@ -1310,4 +1310,10 @@
     <string name="file_group_id">Grupo (GID)</string>
     <string name="app_manager_build_expiring_soon_warning">Esta versão do App Manager expirará muito em breve. Atualize-o para a versão mais recente.</string>
     <string name="adb_incomplete_usb_debugging_title">Depuração USB incompleta</string>
+    <string name="class_hierarchy">Hierarquia</string>
+    <string name="title_perform_runtime_optimization_to_apps">Executar a otimização de tempo de execução</string>
+    <string name="app_manager_build_expired_message">Para garantir a segurança do seu dispositivo e dos seus dados, a versão do App Manager em uso foi desativada. Você tem de atualizá-lo para a versão mais recente para continuar a usá-lo ou desinstalá-lo se não estiver disponível nenhuma atualização.</string>
+    <string name="batch_ops_runtime_optimization">Otimização do tempo de execução</string>
+    <string name="export_option_markdown">Markdown</string>
+    <string name="export_app_list_select_format">Selecione o formato para exportar a lista de aplicativos</string>
 </resources>
