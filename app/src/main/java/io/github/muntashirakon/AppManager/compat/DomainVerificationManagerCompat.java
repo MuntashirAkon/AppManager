@@ -3,10 +3,12 @@
 package io.github.muntashirakon.AppManager.compat;
 
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.content.pm.verify.domain.DomainVerificationUserState;
 import android.content.pm.verify.domain.IDomainVerificationManager;
 import android.os.Build;
 import android.os.RemoteException;
+import android.os.ServiceSpecificException;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -20,15 +22,27 @@ public class DomainVerificationManagerCompat {
     public static DomainVerificationUserState getDomainVerificationUserState(String packageName, int userId) {
         try {
             return getDomainVerificationManager().getDomainVerificationUserState(packageName, userId);
-        } catch (RemoteException ignore) {
+        } catch (Throwable ignore) {
         }
         return null;
     }
 
     @RequiresPermission(ManifestCompat.permission.UPDATE_DOMAIN_VERIFICATION_USER_SELECTION)
     public static void setDomainVerificationLinkHandlingAllowed(String packageName, boolean allowed, int userId)
-            throws RemoteException {
-        getDomainVerificationManager().setDomainVerificationLinkHandlingAllowed(packageName, allowed, userId);
+            throws RemoteException, PackageManager.NameNotFoundException {
+        try {
+            getDomainVerificationManager().setDomainVerificationLinkHandlingAllowed(packageName, allowed, userId);
+        } catch (ServiceSpecificException e) {
+            int serviceSpecificErrorCode = e.errorCode;
+            if (packageName == null) {
+                packageName = e.getMessage();
+            }
+
+            if (serviceSpecificErrorCode == 1) {
+                throw new PackageManager.NameNotFoundException(packageName);
+            }
+            throw e;
+        }
     }
 
     public static IDomainVerificationManager getDomainVerificationManager() {

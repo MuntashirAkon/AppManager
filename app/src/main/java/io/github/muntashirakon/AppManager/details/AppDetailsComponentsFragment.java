@@ -144,7 +144,7 @@ public class AppDetailsComponentsFragment extends Fragment implements AdvancedSe
         mMainModel.get(mNeededProperty).observe(getViewLifecycleOwner(), appDetailsItems -> {
             if (appDetailsItems != null && mAdapter != null && mMainModel.isPackageExist()) {
                 mPackageName = mMainModel.getPackageName();
-                mIsExternalApk = mMainModel.getIsExternalApk();
+                mIsExternalApk = mMainModel.isExternalApk();
                 mAdapter.setDefaultList(appDetailsItems);
             } else showProgressIndicator(false);
         });
@@ -171,7 +171,7 @@ public class AppDetailsComponentsFragment extends Fragment implements AdvancedSe
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        if (mMainModel != null && !mMainModel.getIsExternalApk() && Ops.isRoot()) {
+        if (mMainModel != null && !mMainModel.isExternalApk() && Ops.isRoot()) {
             inflater.inflate(R.menu.fragment_app_details_components_actions, menu);
             mBlockingToggler = menu.findItem(R.id.action_toggle_blocking);
             mMainModel.getRuleApplicationStatus().observe(mActivity, status -> {
@@ -193,7 +193,7 @@ public class AppDetailsComponentsFragment extends Fragment implements AdvancedSe
 
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
-        if (mMainModel == null || mMainModel.getIsExternalApk()) {
+        if (mMainModel == null || mMainModel.isExternalApk()) {
             return;
         }
         if (Ops.isRoot()) {

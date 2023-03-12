@@ -238,7 +238,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
         mMainModel.get(mNeededProperty).observe(getViewLifecycleOwner(), appDetailsItems -> {
             if (appDetailsItems != null && mAdapter != null && mMainModel.isPackageExist()) {
                 mPackageName = mMainModel.getPackageName();
-                mIsExternalApk = mMainModel.getIsExternalApk();
+                mIsExternalApk = mMainModel.isExternalApk();
                 mAdapter.setDefaultList(appDetailsItems);
             } else showProgressIndicator(false);
         });
@@ -272,7 +272,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                 inflater.inflate(R.menu.fragment_app_details_app_ops_actions, menu);
                 break;
             case USES_PERMISSIONS:
-                if (mMainModel != null && !mMainModel.getIsExternalApk()) {
+                if (mMainModel != null && !mMainModel.isExternalApk()) {
                     inflater.inflate(R.menu.fragment_app_details_permissions_actions, menu);
                     break;
                 }
@@ -292,7 +292,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
 
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
-        if (mMainModel == null || mMainModel.getIsExternalApk()) {
+        if (mMainModel == null || mMainModel.isExternalApk()) {
             return;
         }
         if (mNeededProperty <= USES_PERMISSIONS) {

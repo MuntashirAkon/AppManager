@@ -142,11 +142,11 @@ public class AppInfoViewModel extends AndroidViewModel {
                 tagCloud.areAllTrackersBlocked &= componentRule.isBlocked();
             }
             tagCloud.isSystemApp = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
-            tagCloud.isSystemlessPath = !mainModel.getIsExternalApk() && Ops.isRoot()
+            tagCloud.isSystemlessPath = !mainModel.isExternalApk() && Ops.isRoot()
                     && MagiskUtils.isSystemlessPath(PackageUtils.getHiddenCodePathOrDefault(packageName,
                     applicationInfo.publicSourceDir));
             tagCloud.isUpdatedSystemApp = (applicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            if (!mainModel.isExternalApk() && android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
                 DomainVerificationUserState userState = DomainVerificationManagerCompat
                         .getDomainVerificationUserState(packageName, userId);
                 if (userState != null) {
@@ -179,7 +179,7 @@ public class AppInfoViewModel extends AndroidViewModel {
                     }
                 }
             }
-            tagCloud.isMagiskHideEnabled = !mainModel.getIsExternalApk() && magiskHideEnabled;
+            tagCloud.isMagiskHideEnabled = !mainModel.isExternalApk() && magiskHideEnabled;
             tagCloud.magiskDeniedProcesses = MagiskDenyList.getProcesses(packageInfo);
             boolean magiskDenyListEnabled = false;
             for (MagiskProcess magiskProcess : tagCloud.magiskDeniedProcesses) {
@@ -190,21 +190,21 @@ public class AppInfoViewModel extends AndroidViewModel {
                     }
                 }
             }
-            tagCloud.isMagiskDenyListEnabled = !mainModel.getIsExternalApk() && magiskDenyListEnabled;
+            tagCloud.isMagiskDenyListEnabled = !mainModel.isExternalApk() && magiskDenyListEnabled;
             tagCloud.canWriteAndExecute = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
                     && applicationInfo.targetSdkVersion < Build.VERSION_CODES.Q;
             tagCloud.hasKeyStoreItems = KeyStoreUtils.hasKeyStore(applicationInfo.uid);
             tagCloud.hasMasterKeyInKeyStore = KeyStoreUtils.hasMasterKey(applicationInfo.uid);
             tagCloud.usesPlayAppSigning = PackageUtils.usesPlayAppSigning(applicationInfo);
             tagCloud.backups = BackupUtils.getBackupMetadataFromDbNoLockValidate(packageName);
-            if (!mainModel.getIsExternalApk() && PermissionUtils.hasDumpPermission()) {
+            if (!mainModel.isExternalApk() && PermissionUtils.hasDumpPermission()) {
                 String targetString = "user," + packageName + "," + applicationInfo.uid;
                 Runner.Result result = Runner.runCommand(new String[]{"dumpsys", "deviceidle", "whitelist"});
                 tagCloud.isBatteryOptimized = !result.isSuccessful() || !result.getOutput().contains(targetString);
             } else {
                 tagCloud.isBatteryOptimized = true;
             }
-            if (!mainModel.getIsExternalApk() && Ops.isPrivileged()) {
+            if (!mainModel.isExternalApk() && Ops.isPrivileged()) {
                 tagCloud.netPolicies = NetworkPolicyManagerCompat.getUidPolicy(applicationInfo.uid);
             } else {
                 tagCloud.netPolicies = 0;
@@ -250,7 +250,7 @@ public class AppInfoViewModel extends AndroidViewModel {
         ApplicationInfo applicationInfo = packageInfo.applicationInfo;
         int userId = UserHandleHidden.getUserId(applicationInfo.uid);
         PackageManager pm = getApplication().getPackageManager();
-        boolean isExternalApk = mainModel.getIsExternalApk();
+        boolean isExternalApk = mainModel.isExternalApk();
         AppInfo appInfo = new AppInfo();
         // Set source dir
         if (!isExternalApk) {

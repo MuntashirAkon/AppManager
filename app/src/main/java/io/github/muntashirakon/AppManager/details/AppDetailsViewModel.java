@@ -133,7 +133,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @AdvancedSearchView.SearchType
     private int mSearchType;
     private boolean mWaitForBlocker;
-    private boolean mIsExternalApk = false;
+    private boolean mExternalApk = false;
 
     public AppDetailsViewModel(@NonNull Application application) {
         super(application);
@@ -177,7 +177,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         mExecutor.submit(() -> {
             try {
                 Log.d(TAG, "Package Uri is being set");
-                mIsExternalApk = true;
+                mExternalApk = true;
                 mApkFileKey = ApkFile.createInstance(packageUri, type);
                 mApkFile = ApkFile.getInstance(mApkFileKey);
                 setPackageName(mApkFile.getPackageName());
@@ -203,7 +203,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         mExecutor.submit(() -> {
             try {
                 Log.d(TAG, "Package name is being set");
-                mIsExternalApk = false;
+                mExternalApk = false;
                 setPackageName(packageName);
                 // TODO: 23/5/21 The app could be “data only”
                 setPackageInfo(false);
@@ -238,7 +238,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         if (this.mPackageName != null) return;
         Log.d(TAG, "Package name is being set for " + packageName);
         this.mPackageName = packageName;
-        if (mIsExternalApk) return;
+        if (mExternalApk) return;
         mExecutor.submit(() -> {
             synchronized (mBlockerLocker) {
                 try {
@@ -478,7 +478,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @WorkerThread
     @GuardedBy("blockerLocker")
     public void setRuleApplicationStatus() {
-        if (mPackageName == null || mIsExternalApk) {
+        if (mPackageName == null || mExternalApk) {
             mRuleApplicationStatus.postValue(RULE_NO_RULE);
             return;
         }
@@ -495,7 +495,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @GuardedBy("blockerLocker")
     public void updateRulesForComponent(@NonNull AppDetailsComponentItem componentItem, @NonNull RuleType type,
                                         @ComponentRule.ComponentStatus String componentStatus) {
-        if (mIsExternalApk) return;
+        if (mExternalApk) return;
         String componentName = componentItem.name;
         synchronized (mBlockerLocker) {
             waitForBlockerOrExit();
@@ -535,7 +535,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @WorkerThread
     @GuardedBy("blockerLocker")
     public void addRules(List<? extends RuleEntry> entries, boolean forceApply) {
-        if (mIsExternalApk) return;
+        if (mExternalApk) return;
         synchronized (mBlockerLocker) {
             waitForBlockerOrExit();
             mBlocker.setMutable();
@@ -566,7 +566,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @WorkerThread
     @GuardedBy("blockerLocker")
     public void removeRules(List<? extends RuleEntry> entries, boolean forceApply) {
-        if (mIsExternalApk) return;
+        if (mExternalApk) return;
         synchronized (mBlockerLocker) {
             waitForBlockerOrExit();
             mBlocker.setMutable();
@@ -595,7 +595,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @WorkerThread
     @GuardedBy("blockerLocker")
     public boolean togglePermission(final AppDetailsPermissionItem permissionItem) {
-        if (mIsExternalApk) return false;
+        if (mExternalApk) return false;
         PackageInfo packageInfo = getPackageInfoInternal();
         if (packageInfo == null) return false;
         try {
@@ -628,7 +628,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @WorkerThread
     @GuardedBy("blockerLocker")
     public boolean revokeDangerousPermissions() {
-        if (mIsExternalApk) return false;
+        if (mExternalApk) return false;
         PackageInfo packageInfo = getPackageInfoInternal();
         if (packageInfo == null) return false;
         List<AppDetailsPermissionItem> revokedPermissions = new ArrayList<>();
@@ -667,7 +667,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @WorkerThread
     @GuardedBy("blockerLocker")
     public boolean setAppOp(int op, int mode) {
-        if (mIsExternalApk) return false;
+        if (mExternalApk) return false;
         PackageInfo packageInfo = getPackageInfoInternal();
         if (packageInfo == null) return false;
         try {
@@ -693,7 +693,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @WorkerThread
     @GuardedBy("blockerLocker")
     public boolean setAppOpMode(AppDetailsAppOpItem appOpItem) {
-        if (mIsExternalApk) return false;
+        if (mExternalApk) return false;
         PackageInfo packageInfo = getPackageInfoInternal();
         if (packageInfo == null) return false;
         boolean isSuccessful = false;
@@ -723,7 +723,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @WorkerThread
     @GuardedBy("blockerLocker")
     public boolean setAppOpMode(AppDetailsAppOpItem appOpItem, @AppOpsManagerCompat.Mode int mode) {
-        if (mIsExternalApk) return false;
+        if (mExternalApk) return false;
         PackageInfo packageInfo = getPackageInfoInternal();
         if (packageInfo == null) return false;
         boolean isSuccessful = false;
@@ -749,7 +749,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @WorkerThread
     @GuardedBy("blockerLocker")
     public boolean resetAppOps() {
-        if (mIsExternalApk) return false;
+        if (mExternalApk) return false;
         if (getPackageInfoInternal() == null || mPackageName == null) return false;
         try {
             mAppOpsManager.resetAllModes(mUserHandle, mPackageName);
@@ -777,7 +777,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @WorkerThread
     @GuardedBy("blockerLocker")
     public boolean ignoreDangerousAppOps() {
-        if (mIsExternalApk) return false;
+        if (mExternalApk) return false;
         PackageInfo packageInfo = getPackageInfoInternal();
         if (packageInfo == null) return false;
         String permName;
@@ -828,7 +828,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @WorkerThread
     @GuardedBy("blockerLocker")
     public void applyRules() {
-        if (mIsExternalApk) return;
+        if (mExternalApk) return;
         synchronized (mBlockerLocker) {
             waitForBlockerOrExit();
             boolean oldIsRulesApplied = mBlocker.isRulesApplied();
@@ -959,7 +959,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @GuardedBy("blockerLocker")
     public void setIsPackageChanged() {
         setPackageInfo(true);
-        if (mIsExternalApk || mExecutor.isShutdown() || mExecutor.isTerminated()) return;
+        if (mExternalApk || mExecutor.isShutdown() || mExecutor.isTerminated()) return;
         mExecutor.submit(() -> {
             synchronized (mBlockerLocker) {
                 try {
@@ -974,8 +974,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
     }
 
     @AnyThread
-    public boolean getIsExternalApk() {
-        return mIsExternalApk;
+    public boolean isExternalApk() {
+        return mExternalApk;
     }
 
     @AnyThread
@@ -989,7 +989,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @WorkerThread
     @GuardedBy("blockerLocker")
     private void waitForBlockerOrExit() {
-        if (mIsExternalApk) return;
+        if (mExternalApk) return;
         if (mBlocker == null) {
             try {
                 while (mWaitForBlocker) mBlockerLocker.wait();
@@ -1034,7 +1034,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 Log.e(TAG, e);
                 mInstalledPackageInfo = null;
             }
-            if (mIsExternalApk) {
+            if (mExternalApk) {
                 // Do not get signatures via Android framework as it will simply return NULL without any clarifications.
                 // All signatures are fetched using PackageUtils where a fallback method is used in case the PackageInfo
                 // didn't load any signature. So, we should be safe from any harm.
@@ -1096,7 +1096,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         MutableLiveData<UserInfo> userInfoMutableLiveData = new MutableLiveData<>();
         mExecutor.submit(() -> {
             final List<UserInfo> userInfoList;
-            if (!mIsExternalApk) {
+            if (!mExternalApk) {
                 userInfoList = Users.getUsers();
             } else userInfoList = null;
             if (userInfoList != null && userInfoList.size() > 1) {
@@ -1146,7 +1146,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 AppDetailsComponentItem componentItem = new AppDetailsComponentItem(activityInfo);
                 componentItem.name = activityInfo.name;
                 synchronized (mBlockerLocker) {
-                    if (!mIsExternalApk) {
+                    if (!mExternalApk) {
                         componentItem.setRule(mBlocker.getComponent(activityInfo.name));
                     }
                 }
@@ -1180,7 +1180,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 AppDetailsServiceItem serviceItem = new AppDetailsServiceItem(serviceInfo);
                 serviceItem.name = serviceInfo.name;
                 synchronized (mBlockerLocker) {
-                    if (!mIsExternalApk) {
+                    if (!mExternalApk) {
                         serviceItem.setRule(mBlocker.getComponent(serviceInfo.name));
                     }
                 }
@@ -1217,7 +1217,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 AppDetailsComponentItem componentItem = new AppDetailsComponentItem(activityInfo);
                 componentItem.name = activityInfo.name;
                 synchronized (mBlockerLocker) {
-                    if (!mIsExternalApk) {
+                    if (!mExternalApk) {
                         componentItem.setRule(mBlocker.getComponent(activityInfo.name));
                     }
                 }
@@ -1249,7 +1249,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 AppDetailsComponentItem componentItem = new AppDetailsComponentItem(providerInfo);
                 componentItem.name = providerInfo.name;
                 synchronized (mBlockerLocker) {
-                    if (!mIsExternalApk) {
+                    if (!mExternalApk) {
                         componentItem.setRule(mBlocker.getComponent(providerInfo.name));
                     }
                 }
@@ -1327,7 +1327,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     private void loadAppOps() {
         boolean privileged = Ops.isPrivileged();
         PackageInfo packageInfo = getPackageInfoInternal();
-        if (packageInfo == null || mIsExternalApk || !(privileged || PermissionUtils.hasAppOpsPermission())) {
+        if (packageInfo == null || mExternalApk || !(privileged || PermissionUtils.hasAppOpsPermission())) {
             mAppOps.postValue(Collections.emptyList());
             return;
         }
@@ -1491,7 +1491,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
             }
             boolean appOpAllowed = false;
             try {
-                if (!mIsExternalApk && appOp != AppOpsManagerCompat.OP_NONE) {
+                if (!mExternalApk && appOp != AppOpsManagerCompat.OP_NONE) {
                     int mode = mAppOpsManager.checkOperation(appOp, packageInfo.applicationInfo.uid, mPackageName);
                     appOpAllowed = mode == AppOpsManager.MODE_ALLOWED;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -1724,7 +1724,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     item.name = "Signer Certificate";
                     appDetailsItems.add(item);
                 }
-                if (mIsExternalApk && packageInfo.signatures == null) {
+                if (mExternalApk && packageInfo.signatures == null) {
                     List<Signature> signatures = new ArrayList<>(certificates.size());
                     for (X509Certificate certificate : certificates) {
                         try {

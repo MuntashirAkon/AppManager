@@ -158,7 +158,7 @@ public class AppDetailsActivity extends BaseActivity {
         // Check for the existence of package
         model.getIsPackageExistLiveData().observe(this, isPackageExist -> {
             if (!isPackageExist) {
-                if (!model.getIsExternalApk()) {
+                if (!model.isExternalApk()) {
                     UIUtils.displayShortToast(R.string.app_not_installed);
                 }
                 finish();

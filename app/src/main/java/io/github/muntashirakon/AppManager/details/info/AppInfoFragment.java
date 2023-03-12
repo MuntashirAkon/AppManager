@@ -255,7 +255,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 mPackageInfo = (PackageInfo) appDetailsItem.vanillaItem;
                 mPackageName = appDetailsItem.name;
                 mInstalledPackageInfo = mainModel.getInstalledPackageInfo();
-                isExternalApk = mainModel.getIsExternalApk();
+                isExternalApk = mainModel.isExternalApk();
                 mApplicationInfo = mPackageInfo.applicationInfo;
                 // Set package name
                 packageNameView.setText(mPackageName);
@@ -317,7 +317,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        if (mainModel != null && !mainModel.getIsExternalApk()) {
+        if (mainModel != null && !mainModel.isExternalApk()) {
             inflater.inflate(R.menu.fragment_app_info_actions, menu);
             menu.findItem(R.id.action_magisk_hide).setVisible(MagiskHide.available());
             menu.findItem(R.id.action_magisk_denylist).setVisible(MagiskDenyList.available());
@@ -656,7 +656,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             if (tagCloud.isUpdatedSystemApp) {
                 addChip(R.string.updated_app);
             }
-        } else if (!mainModel.getIsExternalApk()) addChip(R.string.user_app);
+        } else if (!mainModel.isExternalApk()) addChip(R.string.user_app);
         if (tagCloud.splitCount > 0) {
             addChip(getResources().getQuantityString(R.plurals.no_of_splits, tagCloud.splitCount,
                     tagCloud.splitCount)).setOnClickListener(v -> {
@@ -949,7 +949,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private void setHorizontalActions() {
         mHorizontalLayout.removeAllViews();
-        if (mainModel != null && !mainModel.getIsExternalApk()) {
+        if (mainModel != null && !mainModel.isExternalApk()) {
             boolean isFrozen = FreezeUtils.isFrozen(mApplicationInfo);
             // Set open
             Intent launchIntent = PackageUtils.getLaunchIntentForPackage(requireContext(), mPackageName,
@@ -1184,7 +1184,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             });
         }
         // Root only features
-        if (!mainModel.getIsExternalApk()) {
+        if (!mainModel.isExternalApk()) {
             // Shared prefs (root only)
             final List<Path> sharedPrefs = new ArrayList<>();
             Path[] tmpPaths = getSharedPrefs(mApplicationInfo.dataDir);
