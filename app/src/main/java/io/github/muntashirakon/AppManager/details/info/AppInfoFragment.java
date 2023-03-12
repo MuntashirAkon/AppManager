@@ -7,7 +7,7 @@ import static io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat.HI
 import static io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat.HIDDEN_API_ENFORCEMENT_DISABLED;
 import static io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat.HIDDEN_API_ENFORCEMENT_ENABLED;
 import static io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat.HIDDEN_API_ENFORCEMENT_JUST_WARN;
-import static io.github.muntashirakon.AppManager.utils.PermissionUtils.TERMUX_PERM_RUN_COMMAND;
+import static io.github.muntashirakon.AppManager.compat.ManifestCompat.permission.TERMUX_RUN_COMMAND;
 import static io.github.muntashirakon.AppManager.utils.PermissionUtils.hasDumpPermission;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.dimBitmap;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.displayLongToast;
@@ -104,6 +104,7 @@ import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
 import io.github.muntashirakon.AppManager.backup.dialog.BackupRestoreDialogFragment;
 import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.DomainVerificationManagerCompat;
+import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
@@ -392,15 +393,15 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 dialogFragment.show(mActivity.getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
             });
         } else if (itemId == R.id.action_open_in_termux) {
-            if (PermissionUtils.hasTermuxPermission(mActivity)) {
+            if (PermissionUtils.hasTermuxPermission()) {
                 openInTermux();
-            } else requestPerm.launch(TERMUX_PERM_RUN_COMMAND, granted -> {
+            } else requestPerm.launch(TERMUX_RUN_COMMAND, granted -> {
                 if (granted) openInTermux();
             });
         } else if (itemId == R.id.action_run_in_termux) {
-            if (PermissionUtils.hasTermuxPermission(mActivity)) {
+            if (PermissionUtils.hasTermuxPermission()) {
                 runInTermux();
-            } else requestPerm.launch(TERMUX_PERM_RUN_COMMAND, granted -> {
+            } else requestPerm.launch(TERMUX_RUN_COMMAND, granted -> {
                 if (granted) runInTermux();
             });
         } else if (itemId == R.id.action_magisk_hide) {
@@ -691,7 +692,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 SearchableItemsDialogBuilder<String> builder = new SearchableItemsDialogBuilder<>(mActivity, new ArrayList<>(tagCloud.hostsToOpen.keySet()))
                         .setTitle(R.string.title_domains_supported_by_the_app)
                         .setNegativeButton(R.string.close, null);
-                if (PermissionUtils.hasSelfOrRemotePermission("android.permission.UPDATE_DOMAIN_VERIFICATION_USER_SELECTION")) {
+                if (PermissionUtils.hasSelfOrRemotePermission(ManifestCompat.permission.UPDATE_DOMAIN_VERIFICATION_USER_SELECTION)) {
                     // Enable/disable directly from the app
                     builder.setPositiveButton(tagCloud.canOpenLinks ? R.string.disable : R.string.enable,
                             (dialog, which) -> executor.submit(() -> {
@@ -1557,7 +1558,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private void setStorageAndCache(AppInfoViewModel.AppInfo appInfo) {
         if (FeatureController.isUsageAccessEnabled()) {
             // Grant optional READ_PHONE_STATE permission
-            if (!PermissionUtils.hasPermission(mActivity, Manifest.permission.READ_PHONE_STATE) &&
+            if (!PermissionUtils.hasSelfPermission(Manifest.permission.READ_PHONE_STATE) &&
                     Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
                 runOnUiThread(() -> requestPerm.launch(Manifest.permission.READ_PHONE_STATE, granted -> {
                     if (granted) model.loadAppInfo();

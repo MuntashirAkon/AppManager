@@ -100,7 +100,7 @@ public class MainPreferences extends PreferenceFragment {
         modePref = Objects.requireNonNull(findPreference("mode_of_operations"));
         modeOfOpsAlertDialog = UIUtils.getProgressDialog(activity, getString(R.string.loading));
         modes = getResources().getStringArray(R.array.modes);
-        currentMode = Ops.getMode(requireContext());
+        currentMode = Ops.getMode();
         modePref.setSummary(getString(R.string.mode_of_op_with_inferred_mode_of_op, modes[MODE_NAMES.indexOf(currentMode)],
                 getInferredMode()));
         modePref.setOnPreferenceClickListener(preference -> {

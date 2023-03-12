@@ -179,7 +179,7 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
         if (!PermissionUtils.hasUsageStatsPermission(this)) promptForUsageStatsPermission();
         else getAppUsage();
         // Grant optional READ_PHONE_STATE permission
-        if (!PermissionUtils.hasPermission(this, Manifest.permission.READ_PHONE_STATE) &&
+        if (!PermissionUtils.hasSelfPermission(Manifest.permission.READ_PHONE_STATE) &&
                 Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
             requestPerm.launch(Manifest.permission.READ_PHONE_STATE, granted -> {
                 if (granted) recreate();

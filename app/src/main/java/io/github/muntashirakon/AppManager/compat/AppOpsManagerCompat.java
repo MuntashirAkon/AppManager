@@ -608,18 +608,14 @@ public class AppOpsManagerCompat {
     private final IAppOpsService appOpsService;
 
     public AppOpsManagerCompat(Context context) {
-        if (!PermissionUtils.hasAppOpsPermission(context) && Ops.isReallyPrivileged()) {
+        if (!PermissionUtils.hasAppOpsPermission() && Ops.isReallyPrivileged()) {
             try {
                 PermissionCompat.grantPermission(
                         context.getPackageName(),
-                        PermissionUtils.PERMISSION_GET_APP_OPS_STATS,
+                        ManifestCompat.permission.GET_APP_OPS_STATS,
                         UserHandleHidden.myUserId());
             } catch (RemoteException e) {
-                String message = "Couldn't grant GET_APP_OPS_STATS.";
-                if (Ops.isAdb()) {
-                    message += " Additional developer options might not be enabled as stated in https://muntashirakon.github.io/AppManager/#subsec:enable-usb-debugging";
-                }
-                throw new RuntimeException(message, e);
+                throw new RuntimeException("Couldn't grant " + ManifestCompat.permission.GET_APP_OPS_STATS, e);
             }
         }
         // Local/remote services are handled automatically

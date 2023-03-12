@@ -392,7 +392,7 @@ public class AppUsageStatsManager {
     @Deprecated
     @NonNull
     private static List<String> getSubscriberIds(@NonNull Context context, @Transport int networkType) {
-        if (networkType != TRANSPORT_CELLULAR || !PermissionUtils.hasPermission(context,
+        if (networkType != TRANSPORT_CELLULAR || !PermissionUtils.hasSelfPermission(
                 Manifest.permission.READ_PHONE_STATE)) {
             return Collections.singletonList(null);
         }

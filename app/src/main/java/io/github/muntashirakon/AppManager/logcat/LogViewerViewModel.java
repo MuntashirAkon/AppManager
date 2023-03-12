@@ -97,7 +97,7 @@ public class LogViewerViewModel extends AndroidViewModel {
 
     @AnyThread
     public void grantReadLogsPermission() {
-        if (!PermissionUtils.hasPermission(getApplication(), Manifest.permission.READ_LOGS) && Ops.isPrivileged()) {
+        if (!PermissionUtils.hasSelfPermission(Manifest.permission.READ_LOGS) && Ops.isPrivileged()) {
             mExecutor.submit(() -> {
                 try {
                     PermissionCompat.grantPermission(getApplication().getPackageName(), Manifest.permission.READ_LOGS,

@@ -6,10 +6,8 @@ import static io.github.muntashirakon.AppManager.backup.MetadataManager.TAR_TYPE
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
-import android.os.UserHandleHidden;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -22,7 +20,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.signing.Signer;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
-import io.github.muntashirakon.AppManager.compat.PermissionCompat;
+import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.details.AppDetailsFragment;
 import io.github.muntashirakon.AppManager.fm.FmListOptions;
 import io.github.muntashirakon.AppManager.logcat.helper.LogcatHelper;
@@ -179,7 +177,7 @@ public final class Prefs {
             if (uri.getScheme().equals(ContentResolver.SCHEME_FILE)) {
                 // Append AppManager only if storage permissions are granted
                 String newPath = uri.getPath();
-                if (PermissionUtils.hasStoragePermission(context) || Ops.isPrivileged()) {
+                if (PermissionUtils.hasStoragePermission() || Ops.isPrivileged()) {
                     newPath += File.separator + "AppManager";
                 }
                 path = Paths.get(newPath);
@@ -213,7 +211,7 @@ public final class Prefs {
         @FreezeUtils.FreezeType
         public static int getDefaultFreezingMethod() {
             int freezeType = AppPref.getInt(AppPref.PrefKey.PREF_FREEZE_TYPE_INT);
-            if (freezeType == FreezeUtils.FREEZE_HIDE && PermissionCompat.checkSelfPermission(PermissionUtils.PERMISSION_MANAGE_USERS, UserHandleHidden.myUserId()) != PackageManager.PERMISSION_GRANTED) {
+            if (freezeType == FreezeUtils.FREEZE_HIDE && !PermissionUtils.hasSelfOrRemotePermission(ManifestCompat.permission.MANAGE_USERS)) {
                 return FreezeUtils.FREEZE_DISABLE;
             }
             if (freezeType == FreezeUtils.FREEZE_SUSPEND && Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {

@@ -14,7 +14,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.collection.SparseArrayCompat;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
@@ -162,8 +161,7 @@ public class FeatureController {
                 // Only depends on flag
                 return (flags & key) != 0;
             case FEAT_INTERNET:
-                return (flags & key) != 0
-                        && PermissionUtils.hasPermission(AppManager.getContext(), Manifest.permission.INTERNET);
+                return (flags & key) != 0 && PermissionUtils.hasSelfPermission(Manifest.permission.INTERNET);
             case FEAT_LOG_VIEWER:
                 cn = getComponentName(key, LogViewerActivity.class);
                 break;

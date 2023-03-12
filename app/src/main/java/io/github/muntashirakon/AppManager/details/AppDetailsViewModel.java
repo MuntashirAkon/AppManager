@@ -1327,8 +1327,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     private void loadAppOps() {
         boolean privileged = Ops.isPrivileged();
         PackageInfo packageInfo = getPackageInfoInternal();
-        if (packageInfo == null || mIsExternalApk || !(privileged
-                || PermissionUtils.hasAppOpsPermission(getApplication()))) {
+        if (packageInfo == null || mIsExternalApk || !(privileged || PermissionUtils.hasAppOpsPermission())) {
             mAppOps.postValue(Collections.emptyList());
             return;
         }

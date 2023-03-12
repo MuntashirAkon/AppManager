@@ -37,6 +37,7 @@ import java.util.concurrent.TimeUnit;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
 import io.github.muntashirakon.AppManager.adb.AdbUtils;
+import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.ipc.LocalServices;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.NoOps;
@@ -170,13 +171,13 @@ public class Ops {
     }
 
     @NoOps
-    public static String getMode(Context context) {
+    public static String getMode() {
         String mode = AppPref.getString(AppPref.PrefKey.PREF_MODE_OF_OPS_STR);
         // Backward compatibility for v2.6.0
         if (mode.equals("adb")) {
             mode = Ops.MODE_ADB_OVER_TCP;
         }
-        if ((MODE_ADB_OVER_TCP.equals(mode) || MODE_ADB_WIFI.equals(mode)) && !PermissionUtils.hasInternet(context)) {
+        if ((MODE_ADB_OVER_TCP.equals(mode) || MODE_ADB_WIFI.equals(mode)) && !PermissionUtils.hasInternet()) {
             // ADB enabled but the INTERNET permission is not granted, replace current with auto.
             return MODE_AUTO;
         }
@@ -192,7 +193,7 @@ public class Ops {
     @NoOps // Although we've used Ops checks, its overall usage does not affect anything
     @Status
     public static int init(@NonNull Context context, boolean force) {
-        String mode = getMode(context);
+        String mode = getMode();
         if (MODE_AUTO.equals(mode)) {
             autoDetectRootOrAdb(context);
             return STATUS_SUCCESS;
@@ -297,7 +298,7 @@ public class Ops {
             }
         }
         // Root not granted
-        if (!PermissionUtils.hasInternet(context)) {
+        if (!PermissionUtils.hasInternet()) {
             // INTERNET permission is not granted, skip checking for ADB
             sIsAdb = false;
             return;
@@ -542,7 +543,7 @@ public class Ops {
             sIsAdb = false;
             UiThreadHandler.run(() -> UIUtils.displayLongToast(R.string.warning_working_on_root_mode));
         } else {
-            if (!PermissionUtils.hasSelfOrRemotePermission("android.permission.GRANT_RUNTIME_PERMISSIONS")) {
+            if (!PermissionUtils.hasSelfOrRemotePermission(ManifestCompat.permission.GRANT_RUNTIME_PERMISSIONS)) {
                 // USB debugging is incomplete, revert back to no-root
                 sIsAdb = sIsRoot = false;
                 return STATUS_FAILURE_ADB_NEED_MORE_PERMS;

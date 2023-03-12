@@ -28,7 +28,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.appcompat.widget.PopupMenu;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -65,6 +64,7 @@ import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
+import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -576,8 +576,7 @@ public class AppDetailsComponentsFragment extends Fragment implements AdvancedSe
                 });
                 if (FeatureController.isInterceptorEnabled()) {
                     boolean needRoot = Ops.isRoot() && (!isExported || (activityInfo.permission != null
-                            && ContextCompat.checkSelfPermission(context, activityInfo.permission)
-                            != PackageManager.PERMISSION_GRANTED));
+                            && !PermissionUtils.hasSelfPermission(activityInfo.permission)));
                     holder.launchBtn.setOnLongClickListener(v -> {
                         Intent intent = new Intent(mActivity, ActivityInterceptor.class);
                         intent.putExtra(ActivityInterceptor.EXTRA_PACKAGE_NAME, mPackageName);

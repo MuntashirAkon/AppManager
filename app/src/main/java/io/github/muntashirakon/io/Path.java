@@ -95,7 +95,7 @@ public class Path implements Comparable<Path> {
                 EXCLUSIVE_ACCESS_GRANTED.add(true);
             }
         }
-        if (PermissionUtils.hasStoragePermission(context)) {
+        if (PermissionUtils.hasStoragePermission()) {
             int userId = UserHandleHidden.myUserId();
             String[] cards;
             if (userId == 0) {
@@ -106,7 +106,7 @@ public class Path implements Comparable<Path> {
             } else cards = new String[]{"/storage/emulated/" + userId};
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 // Add Android/data and Android/obb to the exemption list
-                boolean canInstallApps = PermissionUtils.hasPermission(context, Manifest.permission.REQUEST_INSTALL_PACKAGES);
+                boolean canInstallApps = PermissionUtils.hasSelfPermission(Manifest.permission.REQUEST_INSTALL_PACKAGES);
                 for (String card : cards) {
                     EXCLUSIVE_ACCESS_PATHS.add(card + "/Android/data");
                     EXCLUSIVE_ACCESS_GRANTED.add(false);

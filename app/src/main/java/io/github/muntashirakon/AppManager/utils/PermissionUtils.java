@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 import io.github.muntashirakon.AppManager.ipc.LocalServices;
@@ -24,14 +25,9 @@ import io.github.muntashirakon.compat.ObjectsCompat;
 
 @SuppressWarnings("BooleanMethodIsAlwaysInverted")
 public final class PermissionUtils {
-    public static final String TERMUX_PERM_RUN_COMMAND = "com.termux.permission.RUN_COMMAND";
-    public static final String PERMISSION_GET_APP_OPS_STATS = "android.permission.GET_APP_OPS_STATS";
-    public static final String PERMISSION_INTERACT_ACROSS_USERS = "android.permission.INTERACT_ACROSS_USERS";
-    public static final String PERMISSION_MANAGE_USERS = "android.permission.MANAGE_USERS";
-
     public static boolean hasDumpPermission() {
         Context context = AppManager.getContext();
-        if (hasPermission(context, Manifest.permission.DUMP)) {
+        if (hasSelfPermission(Manifest.permission.DUMP)) {
             return true;
         }
         if (Ops.isPrivileged()) {
@@ -48,13 +44,15 @@ public final class PermissionUtils {
 
     public static boolean hasAccessToUsers() {
         Context context = AppManager.getContext();
-        if (hasPermission(context, PERMISSION_INTERACT_ACROSS_USERS)
-                || hasPermission(context, PERMISSION_MANAGE_USERS)) {
+        if (hasSelfPermission(ManifestCompat.permission.INTERACT_ACROSS_USERS)
+                || hasSelfPermission(ManifestCompat.permission.MANAGE_USERS)) {
             return true;
         }
         if (Ops.isPrivileged()) {
             try {
-                PermissionCompat.grantPermission(context.getPackageName(), PERMISSION_INTERACT_ACROSS_USERS,
+                PermissionCompat.grantPermission(
+                        context.getPackageName(),
+                        ManifestCompat.permission.INTERACT_ACROSS_USERS,
                         UserHandleHidden.myUserId());
                 return true;
             } catch (RemoteException e) {
@@ -64,30 +62,30 @@ public final class PermissionUtils {
         return false;
     }
 
-    public static boolean hasStoragePermission(Context context) {
+    public static boolean hasStoragePermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             if (Utils.isRoboUnitTest()) {
                 return false;
             }
             return Environment.isExternalStorageManager();
         }
-        return hasPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        return hasSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
     }
 
-    public static boolean hasTermuxPermission(Context context) {
-        return hasPermission(context, TERMUX_PERM_RUN_COMMAND);
+    public static boolean hasTermuxPermission() {
+        return hasSelfPermission(ManifestCompat.permission.TERMUX_RUN_COMMAND);
     }
 
-    public static boolean hasAppOpsPermission(Context context) {
-        return hasPermission(context, PERMISSION_GET_APP_OPS_STATS);
+    public static boolean hasAppOpsPermission() {
+        return hasSelfPermission(ManifestCompat.permission.GET_APP_OPS_STATS);
     }
 
-    public static boolean hasInternet(Context context) {
-        return PermissionUtils.hasPermission(context, Manifest.permission.INTERNET);
+    public static boolean hasInternet() {
+        return PermissionUtils.hasSelfPermission(Manifest.permission.INTERNET);
     }
 
-    public static boolean hasPermission(Context context, String permissionName) {
-        return ContextCompat.checkSelfPermission(context, permissionName) == PackageManager.PERMISSION_GRANTED;
+    public static boolean hasSelfPermission(String permissionName) {
+        return ContextCompat.checkSelfPermission(ContextUtils.getContext(), permissionName) == PackageManager.PERMISSION_GRANTED;
     }
 
     @SuppressWarnings({"deprecation", "InlinedApi"})
@@ -122,8 +120,7 @@ public final class PermissionUtils {
             } catch (RemoteException ignore) {
             }
         }
-        return ContextCompat.checkSelfPermission(ContextUtils.getContext(), permissionName)
-                == PackageManager.PERMISSION_GRANTED;
+        return hasSelfPermission(permissionName);
     }
 
     public static int getSelfOrRemoteUid() {

@@ -18,7 +18,6 @@ import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 
 public class DeviceInfo {
-    private final Context context;
     private final String[] abis = Build.SUPPORTED_ABIS;
     private final String[] abis32Bits = Build.SUPPORTED_32_BIT_ABIS;
     private final String[] abis64Bits = Build.SUPPORTED_64_BIT_ABIS;
@@ -37,7 +36,6 @@ public class DeviceInfo {
     private final String versionName;
 
     public DeviceInfo(@NonNull Context context) {
-        this.context = context;
         PackageInfo packageInfo;
         try {
             packageInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
@@ -73,7 +71,7 @@ public class DeviceInfo {
                 + "ABIs (64bit): " + Arrays.toString(abis64Bits) + "\n"
                 + "System language: " + Locale.getDefault().toLanguageTag() + "\n"
                 + "In-App Language: " + Prefs.Appearance.getLanguage() + "\n"
-                + "Mode: " + Ops.getMode(context) + "\n"
+                + "Mode: " + Ops.getMode() + "\n"
                 + "Inferred Mode: " + getInferredMode();
     }
 

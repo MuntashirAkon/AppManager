@@ -460,7 +460,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             case APP_OPS:
                 if (mIsExternalApk) {
                     return R.string.external_apk_no_app_op;
-                } else if (Ops.isPrivileged() || PermissionUtils.hasAppOpsPermission(mActivity)) {
+                } else if (Ops.isPrivileged() || PermissionUtils.hasAppOpsPermission()) {
                     return R.string.no_app_ops;
                 } else return R.string.no_app_ops_permission;
             case USES_PERMISSIONS:
@@ -496,14 +496,14 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                 if (!TipsPrefs.getInstance().displayInAppOpsTab()) {
                     return 0;
                 }
-                if (Ops.isPrivileged() || PermissionUtils.hasAppOpsPermission(mActivity)) {
+                if (Ops.isPrivileged() || PermissionUtils.hasAppOpsPermission()) {
                     return R.string.help_app_ops_tab;
                 } else return 0;
             case USES_PERMISSIONS:
                 if (!TipsPrefs.getInstance().displayInUsesPermissionsTab()) {
                     return 0;
                 }
-                if (Ops.isPrivileged() || PermissionUtils.hasAppOpsPermission(mActivity)) {
+                if (Ops.isPrivileged() || PermissionUtils.hasAppOpsPermission()) {
                     return R.string.help_uses_permissions_tab;
                 } else return 0;
             case PERMISSIONS:

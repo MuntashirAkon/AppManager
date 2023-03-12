@@ -25,7 +25,7 @@ public class DomainVerificationManagerCompat {
         return null;
     }
 
-    @RequiresPermission("android.permission.UPDATE_DOMAIN_VERIFICATION_USER_SELECTION")
+    @RequiresPermission(ManifestCompat.permission.UPDATE_DOMAIN_VERIFICATION_USER_SELECTION)
     public static void setDomainVerificationLinkHandlingAllowed(String packageName, boolean allowed, int userId)
             throws RemoteException {
         getDomainVerificationManager().setDomainVerificationLinkHandlingAllowed(packageName, allowed, userId);

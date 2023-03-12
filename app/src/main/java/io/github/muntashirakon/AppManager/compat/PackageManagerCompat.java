@@ -48,7 +48,6 @@ import java.util.List;
 import java.util.Objects;
 
 import dev.rikka.tools.refine.Refine;
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
@@ -418,7 +417,7 @@ public final class PackageManagerCompat {
             throws RemoteException {
         IPackageManager pm;
         ClearDataObserver obs = new ClearDataObserver();
-        if (PermissionUtils.hasPermission(AppManager.getContext(), Manifest.permission.CLEAR_APP_CACHE)) {
+        if (PermissionUtils.hasSelfPermission(Manifest.permission.CLEAR_APP_CACHE)) {
             // Clear cache using unprivileged method: Mostly applicable for Android Lollipop
             pm = getUnprivilegedPackageManager();
         } else { // Use privileged mode
