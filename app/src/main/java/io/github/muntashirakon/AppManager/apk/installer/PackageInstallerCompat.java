@@ -62,8 +62,8 @@ import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.BroadcastUtils;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.MiuiUtils;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
-import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
 
@@ -430,6 +430,7 @@ public final class PackageInstallerCompat {
          *
          * @param apkFile Underlying APK file if available.
          */
+        @WorkerThread
         default void onAnotherAttemptInMiui(@Nullable ApkFile apkFile) {
         }
         // MIUI-end
@@ -502,7 +503,8 @@ public final class PackageInstallerCompat {
                     statusMessage = intent.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE);
                     // Run install completed
                     installCompleted = true;
-                    installCompleted(sessionId, finalStatus, blockingPackage, statusMessage);
+                    ThreadUtils.postOnBackgroundThread(() ->
+                            installCompleted(sessionId, finalStatus, blockingPackage, statusMessage));
                     break;
             }
         }
@@ -548,6 +550,7 @@ public final class PackageInstallerCompat {
     }
 
     public boolean install(@NonNull ApkFile apkFile, @UserIdInt int userId) {
+        ThreadUtils.ensureWorkerThread();
         try {
             this.apkFile = apkFile;
             this.packageName = apkFile.getPackageName();
@@ -595,6 +598,7 @@ public final class PackageInstallerCompat {
     }
 
     public boolean install(@NonNull Path[] apkFiles, @NonNull String packageName, @UserIdInt int userId) {
+        ThreadUtils.ensureWorkerThread();
         try {
             this.apkFile = null;
             this.packageName = packageName;
@@ -751,6 +755,7 @@ public final class PackageInstallerCompat {
     }
 
     public boolean installExisting(@NonNull String packageName, @UserIdInt int userId) {
+        ThreadUtils.ensureWorkerThread();
         if (onInstallListener != null) {
             onInstallListener.onStartInstall(sessionId, packageName);
         }
@@ -837,10 +842,10 @@ public final class PackageInstallerCompat {
                 oldFile.delete();
             }
             apkFile.extractObb(writableObbDir);
-            UiThreadHandler.run(() -> UIUtils.displayLongToast(R.string.obb_files_extracted_successfully));
+            ThreadUtils.postOnMainThread(() -> UIUtils.displayLongToast(R.string.obb_files_extracted_successfully));
         } catch (Exception e) {
             Log.e(TAG, e);
-            UiThreadHandler.run(() -> UIUtils.displayLongToast(R.string.failed_to_extract_obb_files));
+            ThreadUtils.postOnMainThread(() -> UIUtils.displayLongToast(R.string.failed_to_extract_obb_files));
         } finally {
             if (installWatcher.getCount() != 0) {
                 // Reset close apk file if the installation isn't completed
@@ -889,6 +894,7 @@ public final class PackageInstallerCompat {
                                   int finalStatus,
                                   @Nullable String blockingPackage,
                                   @Nullable String statusMessage) {
+        ThreadUtils.ensureWorkerThread();
         // MIUI-begin: In MIUI 12.5 and 20.2.0, it might be required to try installing the APK files more than once.
         if (finalStatus == STATUS_FAILURE_ABORTED
                 && this.sessionId == sessionId
@@ -924,6 +930,7 @@ public final class PackageInstallerCompat {
 
     @SuppressWarnings("deprecation")
     public boolean uninstall(String packageName, @UserIdInt int userId, boolean keepData) {
+        ThreadUtils.ensureWorkerThread();
         this.packageName = packageName;
         String callerPackageName = isPrivileged ? ActivityManagerCompat.SHELL_PACKAGE_NAME : context.getPackageName();
         initBroadcastReceiver();
