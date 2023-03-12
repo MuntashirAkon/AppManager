@@ -27,7 +27,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
 public class ImageLoader implements Closeable {
     private final LruCache<String, Bitmap> mMemoryCache = new LruCache<>(300);
@@ -123,7 +123,7 @@ public class ImageLoader implements Closeable {
             }
             mMemoryCache.put(mQueueItem.name, image);
             if (imageViewReusedOrClosed(mQueueItem)) return;
-            UiThreadHandler.run(new LoadImageInImageView(image, mQueueItem));
+            ThreadUtils.postOnMainThread(new LoadImageInImageView(image, mQueueItem));
         }
     }
 

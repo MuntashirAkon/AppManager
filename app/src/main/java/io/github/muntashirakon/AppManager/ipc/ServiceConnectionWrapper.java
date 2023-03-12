@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.NoOps;
 import io.github.muntashirakon.AppManager.settings.Ops;
-import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
 class ServiceConnectionWrapper {
     public static final String TAG = ServiceConnectionWrapper.class.getSimpleName();
@@ -114,7 +114,7 @@ class ServiceConnectionWrapper {
                 Intent intent = new Intent();
                 intent.setComponent(mComponentName);
                 synchronized (mServiceConnection) {
-                    UiThreadHandler.run(() -> RootService.bind(intent, mServiceConnection));
+                    ThreadUtils.postOnMainThread(() -> RootService.bind(intent, mServiceConnection));
                 }
             }
             // Wait for service to be bound
@@ -130,7 +130,7 @@ class ServiceConnectionWrapper {
     public void stopDaemon() {
         Intent intent = new Intent();
         intent.setComponent(mComponentName);
-        UiThreadHandler.run(() -> RootService.stop(intent));
+        ThreadUtils.postOnMainThread(() -> RootService.stop(intent));
         mIBinder = null;
     }
 }

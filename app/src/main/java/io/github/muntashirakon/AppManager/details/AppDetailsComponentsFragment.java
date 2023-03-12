@@ -65,8 +65,8 @@ import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
-import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.util.ProgressIndicatorCompat;
@@ -278,10 +278,10 @@ public class AppDetailsComponentsFragment extends Fragment implements AdvancedSe
             List<UserPackagePair> failedPkgList = block ? ComponentUtils.blockTrackingComponents(userPackagePairs)
                     : ComponentUtils.unblockTrackingComponents(userPackagePairs);
             if (failedPkgList.size() > 0) {
-                UiThreadHandler.run(() -> Toast.makeText(mActivity, block ? R.string.failed_to_block_trackers
+                ThreadUtils.postOnMainThread(() -> Toast.makeText(mActivity, block ? R.string.failed_to_block_trackers
                         : R.string.failed_to_unblock_trackers, Toast.LENGTH_SHORT).show());
             } else {
-                UiThreadHandler.run(() -> {
+                ThreadUtils.postOnMainThread(() -> {
                     Toast.makeText(mActivity, block ? R.string.trackers_blocked_successfully
                             : R.string.trackers_unblocked_successfully, Toast.LENGTH_SHORT).show();
                     refreshDetails();

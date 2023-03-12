@@ -62,7 +62,7 @@ import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
-import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.io.Path;
 
 @WorkerThread
@@ -739,7 +739,7 @@ public class BatchOpsManager {
         broadcastIntent.putExtra(BatchOpsService.EXTRA_PROGRESS_MESSAGE, message);
         broadcastIntent.putExtra(BatchOpsService.EXTRA_PROGRESS_MAX, max);
         broadcastIntent.putExtra(BatchOpsService.EXTRA_PROGRESS_CURRENT, current);
-        UiThreadHandler.run(() -> context.sendBroadcast(broadcastIntent));
+        ThreadUtils.postOnMainThread(() -> context.sendBroadcast(broadcastIntent));
     }
 
     public static class Result {

@@ -66,8 +66,8 @@ import io.github.muntashirakon.AppManager.settings.SettingsActivity;
 import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.StoragePermission;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
-import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 import io.github.muntashirakon.dialog.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
@@ -541,7 +541,7 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
                 LogFilterDao dao = AppsDb.getInstance().logFilterDao();
                 long id = dao.insert(trimmed);
                 LogFilter logFilter = dao.get(id);
-                UiThreadHandler.run(() -> {
+                ThreadUtils.postOnMainThread(() -> {
                     if (logFilter != null) {
                         logFilterAdapter.add(logFilter);
                         logFilterAdapter.sort(LogFilter.COMPARATOR);

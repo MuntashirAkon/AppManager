@@ -148,8 +148,8 @@ import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
-import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
@@ -351,7 +351,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             executor.submit(() -> {
                 try {
                     Path tmpApkSource = ApkUtils.getSharableApkFile(mPackageInfo);
-                    UiThreadHandler.run(() -> {
+                    ThreadUtils.postOnMainThread(() -> {
                         Context ctx = AppManager.getContext();
                         Intent intent = new Intent(Intent.ACTION_SEND)
                                 .setType("application/*")
@@ -701,13 +701,13 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                         DomainVerificationManagerCompat
                                                 .setDomainVerificationLinkHandlingAllowed(mPackageName, !tagCloud.canOpenLinks, mainModel.getUserHandle());
                                     }
-                                    UiThreadHandler.run(() -> {
+                                    ThreadUtils.postOnMainThread(() -> {
                                         UIUtils.displayShortToast(R.string.done);
                                         refreshDetails();
                                     });
                                 } catch (Throwable th) {
                                     th.printStackTrace();
-                                    UiThreadHandler.run(() -> UIUtils.displayShortToast(R.string.failed));
+                                    ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(R.string.failed));
                                 }
                             }));
                 } else {
@@ -1293,7 +1293,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                 File file = apkEntries.get(which).getRealCachedFile();
                                 intent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton()
                                         .getMimeTypeFromExtension("apk"));
-                                UiThreadHandler.run(() -> startActivity(intent));
+                                ThreadUtils.postOnMainThread(() -> startActivity(intent));
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -1699,6 +1699,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @AnyThread
     private void runOnUiThread(Runnable runnable) {
-        UiThreadHandler.run(runnable);
+        ThreadUtils.postOnMainThread(runnable);
     }
 }

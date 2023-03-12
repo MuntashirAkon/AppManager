@@ -43,7 +43,7 @@ import io.github.muntashirakon.AppManager.types.ForegroundService;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
-import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
 public class PackageInstallerService extends ForegroundService {
     public static final String EXTRA_QUEUE_ITEM = "queue_item";
@@ -123,7 +123,7 @@ public class PackageInstallerService extends ForegroundService {
                     ComponentUtils.blockTrackingComponents(Collections.singletonList(
                             new UserPackagePair(packageName, apkQueueItem.getUserId())));
                 }
-                UiThreadHandler.run(() -> {
+                ThreadUtils.postOnMainThread(() -> {
                     if (onInstallFinished != null) {
                         onInstallFinished.onFinished(packageName, result, blockingPackage, statusMessage);
                     } else sendNotification(result, apkQueueItem.getAppLabel(), blockingPackage, statusMessage);

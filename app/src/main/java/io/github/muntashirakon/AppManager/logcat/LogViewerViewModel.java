@@ -50,7 +50,7 @@ import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
-import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
@@ -217,7 +217,7 @@ public class LogViewerViewModel extends AndroidViewModel {
             LogLinesAvailableInterface i = logLinesAvailableInterface.get();
             List<LogLine> logLines1 = new ArrayList<>(logLines);
             if (i != null) {
-                UiThreadHandler.run(() -> i.onNewLogsAvailable(logLines1));
+                ThreadUtils.postOnMainThread(() -> i.onNewLogsAvailable(logLines1));
             }
         }
     }

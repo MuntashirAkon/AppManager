@@ -8,7 +8,7 @@ import androidx.collection.ArrayMap;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
 class Migration {
     private final ArrayMap<Long, List<MigrationTask>> migrationTaskList = new ArrayMap<>();
@@ -32,7 +32,7 @@ class Migration {
                 continue;
             }
             if (migrationTask.mainThread) {
-                UiThreadHandler.run(migrationTask);
+                ThreadUtils.postOnMainThread(migrationTask);
             } else migrationTask.run();
         }
     }

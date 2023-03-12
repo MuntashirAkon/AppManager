@@ -30,8 +30,8 @@ import io.github.muntashirakon.AppManager.rules.compontents.ExternalComponentsIm
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
-import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 import io.github.muntashirakon.dialog.SearchableItemsDialogBuilder;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 
@@ -170,7 +170,7 @@ public class ImportExportRulesPreferences extends PreferenceFragment {
                 itemCount.count = PackageUtils.getUserDisabledComponentsForPackage(app.packageName, userHandle).size();
                 if (itemCount.count > 0) itemCounts.add(itemCount);
             }
-            UiThreadHandler.run(() -> displayImportExistingRulesPackageSelectionDialog(itemCounts));
+            ThreadUtils.postOnMainThread(() -> displayImportExistingRulesPackageSelectionDialog(itemCounts));
         }).start();
     }
 
@@ -195,7 +195,7 @@ public class ImportExportRulesPreferences extends PreferenceFragment {
                         new Thread(() -> {
                             List<String> failedPackages = ExternalComponentsImporter
                                     .applyFromExistingBlockList(selectedPackages, userHandle);
-                            UiThreadHandler.run(() -> displayImportExistingRulesFailedPackagesDialog(failedPackages));
+                            ThreadUtils.postOnMainThread(() -> displayImportExistingRulesFailedPackagesDialog(failedPackages));
                         }).start();
                     })
                     .setNegativeButton(R.string.cancel, null)

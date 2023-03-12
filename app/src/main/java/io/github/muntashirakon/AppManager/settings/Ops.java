@@ -48,8 +48,8 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
-import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
 import io.github.muntashirakon.compat.ObjectsCompat;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
 import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
@@ -231,7 +231,7 @@ public class Ops {
             Log.e("ModeOfOps", e);
             // Fallback to no-root mode for this session, this does not modify the user preference
             sIsAdb = sIsRoot = false;
-            UiThreadHandler.run(() -> UIUtils.displayLongToast(R.string.failed_to_use_the_current_mode_of_operation));
+            ThreadUtils.postOnMainThread(() -> UIUtils.displayLongToast(R.string.failed_to_use_the_current_mode_of_operation));
         }
         return STATUS_FAILURE;
     }
@@ -293,7 +293,7 @@ public class Ops {
             if (uid == SHELL_UID) {
                 sIsAdb = true;
                 sIsRoot = false;
-                UiThreadHandler.run(() -> UIUtils.displayShortToast(R.string.working_on_adb_mode));
+                ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(R.string.working_on_adb_mode));
                 return;
             }
         }
@@ -466,11 +466,11 @@ public class Ops {
         if (pairingCode == null || port < 0) return STATUS_FAILURE;
         try {
             AdbConnectionManager.getInstance().pair(ServerConfig.getAdbHost(context), port, pairingCode.trim());
-            UiThreadHandler.run(() -> UIUtils.displayShortToast(R.string.paired_successfully));
+            ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(R.string.paired_successfully));
             return connectAdb(context, findAdbPortNoThrow(context, 7, ServerConfig.getAdbPort()),
                     STATUS_ADB_CONNECT_REQUIRED);
         } catch (Exception e) {
-            UiThreadHandler.run(() -> UIUtils.displayShortToast(R.string.failed));
+            ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(R.string.failed));
             Log.e("ADB", e);
             // Failed, fall-through
         }
@@ -541,7 +541,7 @@ public class Ops {
             // AM service is being run as root
             sIsRoot = true;
             sIsAdb = false;
-            UiThreadHandler.run(() -> UIUtils.displayLongToast(R.string.warning_working_on_root_mode));
+            ThreadUtils.postOnMainThread(() -> UIUtils.displayLongToast(R.string.warning_working_on_root_mode));
         } else {
             if (!PermissionUtils.hasSelfOrRemotePermission(ManifestCompat.permission.GRANT_RUNTIME_PERMISSIONS)) {
                 // USB debugging is incomplete, revert back to no-root
@@ -549,7 +549,7 @@ public class Ops {
                 return STATUS_FAILURE_ADB_NEED_MORE_PERMS;
             }
         }
-        UiThreadHandler.run(() -> UIUtils.displayShortToast(R.string.working_on_adb_mode));
+        ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(R.string.working_on_adb_mode));
         return STATUS_SUCCESS;
     }
 

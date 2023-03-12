@@ -27,8 +27,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
@@ -37,6 +35,7 @@ import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class FreezeUnfreezeActivity extends BaseActivity {
@@ -120,17 +119,10 @@ public class FreezeUnfreezeActivity extends BaseActivity {
     public static class FreezeUnfreezeViewModel extends AndroidViewModel {
         private final MutableLiveData<Pair<FreezeUnfreeze.ShortcutInfo, Boolean>> isFrozenLiveData = new MutableLiveData<>();
         private final MutableLiveData<FreezeUnfreeze.ShortcutInfo> openAppOrFreeze = new MutableLiveData<>();
-        private final ExecutorService executor = Executors.newFixedThreadPool(1);
         private final Queue<FreezeUnfreeze.ShortcutInfo> pendingShortcuts = new LinkedList<>();
 
         public FreezeUnfreezeViewModel(@NonNull Application application) {
             super(application);
-        }
-
-        @Override
-        protected void onCleared() {
-            executor.shutdownNow();
-            super.onCleared();
         }
 
         public void addToPendingShortcuts(@NonNull FreezeUnfreeze.ShortcutInfo shortcutInfo) {
@@ -140,7 +132,7 @@ public class FreezeUnfreezeActivity extends BaseActivity {
         }
 
         public void checkNextFrozen() {
-            executor.submit(() -> {
+            ThreadUtils.postOnBackgroundThread(() -> {
                 FreezeUnfreeze.ShortcutInfo shortcutInfo;
                 synchronized (pendingShortcuts) {
                     shortcutInfo = pendingShortcuts.poll();
@@ -177,7 +169,7 @@ public class FreezeUnfreezeActivity extends BaseActivity {
         }
 
         public void freezeFinal(FreezeUnfreeze.ShortcutInfo shortcutInfo) {
-            executor.submit(() -> {
+            ThreadUtils.postOnBackgroundThread(() -> {
                 try {
                     FreezeUtils.freeze(shortcutInfo.packageName, shortcutInfo.userId);
                     isFrozenLiveData.postValue(new Pair<>(shortcutInfo, true));

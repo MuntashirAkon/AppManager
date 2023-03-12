@@ -31,7 +31,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
 @RequiresApi(Build.VERSION_CODES.O)
 public class ChangeSsaidDialog extends DialogFragment {
@@ -108,12 +108,12 @@ public class ChangeSsaidDialog extends DialogFragment {
                         alertDialog.dismiss();
                     }
                     if (mSsaidChangedInterface != null) {
-                        UiThreadHandler.run(() -> mSsaidChangedInterface.onSsaidChanged(mSsaid, isSuccess));
+                        ThreadUtils.postOnMainThread(() -> mSsaidChangedInterface.onSsaidChanged(mSsaid, isSuccess));
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                     if (mSsaidChangedInterface != null) {
-                        UiThreadHandler.run(() -> mSsaidChangedInterface.onSsaidChanged(mSsaid, false));
+                        ThreadUtils.postOnMainThread(() -> mSsaidChangedInterface.onSsaidChanged(mSsaid, false));
                     }
                 }
             }));

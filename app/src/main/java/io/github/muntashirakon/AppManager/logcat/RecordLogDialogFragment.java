@@ -27,7 +27,7 @@ import io.github.muntashirakon.AppManager.logcat.helper.ServiceHelper;
 import io.github.muntashirakon.AppManager.logcat.helper.WidgetHelper;
 import io.github.muntashirakon.AppManager.settings.LogViewerPreferences;
 import io.github.muntashirakon.AppManager.settings.Prefs;
-import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDropdownDialogBuilder;
 
@@ -86,7 +86,7 @@ public class RecordLogDialogFragment extends DialogFragment {
                         new Thread(() -> {
                             Intent intent = ServiceHelper.getLogcatRecorderServiceIfNotAlreadyRunning(context, filename,
                                     mFilterQuery, mLogLevel);
-                            UiThreadHandler.run(() -> {
+                            ThreadUtils.postOnMainThread(() -> {
                                 if (intent != null) {
                                     ContextCompat.startForegroundService(context, intent);
                                 }

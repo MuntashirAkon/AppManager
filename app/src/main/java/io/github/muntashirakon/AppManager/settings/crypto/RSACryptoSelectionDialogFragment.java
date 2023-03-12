@@ -23,8 +23,6 @@ import androidx.lifecycle.ViewModelProvider;
 import java.security.cert.CertificateEncodingException;
 import java.security.cert.X509Certificate;
 import java.util.Objects;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
@@ -32,6 +30,7 @@ import io.github.muntashirakon.AppManager.crypto.ks.KeyPair;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
 
@@ -133,7 +132,6 @@ public class RSACryptoSelectionDialogFragment extends DialogFragment {
     }
 
     public static class RSACryptoSelectionViewModel extends AndroidViewModel {
-        private final ExecutorService executor = Executors.newFixedThreadPool(2);
         // StringRes, isLongToast
         private final MutableLiveData<Pair<Integer, Boolean>> status = new MutableLiveData<>();
         private final MutableLiveData<Pair<KeyPair, byte[]>> keyUpdated = new MutableLiveData<>();
@@ -141,12 +139,6 @@ public class RSACryptoSelectionDialogFragment extends DialogFragment {
 
         public RSACryptoSelectionViewModel(@NonNull Application application) {
             super(application);
-        }
-
-        @Override
-        protected void onCleared() {
-            super.onCleared();
-            executor.shutdown();
         }
 
         public LiveData<Pair<Integer, Boolean>> observeStatus() {
@@ -163,12 +155,12 @@ public class RSACryptoSelectionDialogFragment extends DialogFragment {
 
         @AnyThread
         public void loadSigningInfo(String targetAlias) {
-            executor.submit(() -> signingInfo.postValue(getKeyPair(targetAlias)));
+            ThreadUtils.postOnBackgroundThread(() -> signingInfo.postValue(getKeyPair(targetAlias)));
         }
 
         @AnyThread
         private void addKeyPair(String targetAlias, @Nullable KeyPair keyPair) {
-            executor.submit(() -> {
+            ThreadUtils.postOnBackgroundThread(() -> {
                 try {
                     if (keyPair == null) {
                         throw new Exception("Keypair can't be null.");

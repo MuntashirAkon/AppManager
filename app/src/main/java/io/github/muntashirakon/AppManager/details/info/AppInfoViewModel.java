@@ -66,7 +66,7 @@ import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
-import io.github.muntashirakon.AppManager.utils.UiThreadHandler;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 
@@ -234,7 +234,7 @@ public class AppInfoViewModel extends AndroidViewModel {
             this.tagCloud.postValue(tagCloud);
         } catch (Throwable th) {
             // Unknown behaviour
-            UiThreadHandler.run(() -> {
+            ThreadUtils.postOnMainThread(() -> {
                 // Throw Runtime exception in main thread to crash the app
                 throw new RuntimeException(th);
             });
