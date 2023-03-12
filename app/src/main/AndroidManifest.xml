@@ -12,6 +12,9 @@
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission
+        android:name="android.permission.ADJUST_RUNTIME_PERMISSIONS_POLICY"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission
         android:name="android.permission.BACKUP"
         tools:ignore="ProtectedPermissions" />
     <uses-permission
@@ -29,6 +32,12 @@
         android:maxSdkVersion="25" />
     <uses-permission
         android:name="android.permission.GET_APP_OPS_STATS"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission
+        android:name="android.permission.GET_RUNTIME_PERMISSIONS"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission
+        android:name="android.permission.GRANT_RUNTIME_PERMISSIONS"
         tools:ignore="ProtectedPermissions" />
     <uses-permission
         android:name="android.permission.INTERACT_ACROSS_USERS"
@@ -58,6 +67,9 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission
+        android:name="android.permission.REVOKE_RUNTIME_PERMISSIONS"
+        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission
         android:name="android.permission.UPDATE_DOMAIN_VERIFICATION_USER_SELECTION"

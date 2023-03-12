@@ -21,7 +21,6 @@ import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 import io.github.muntashirakon.AppManager.ipc.LocalServices;
 import io.github.muntashirakon.AppManager.settings.Ops;
-import io.github.muntashirakon.compat.ObjectsCompat;
 
 @SuppressWarnings("BooleanMethodIsAlwaysInverted")
 public final class PermissionUtils {
@@ -124,7 +123,6 @@ public final class PermissionUtils {
     }
 
     public static int getSelfOrRemoteUid() {
-        return ObjectsCompat.requireNonNullElse(
-                ExUtils.exceptionAsNull(() -> LocalServices.getAmService().getUid()), Process.myUid());
+        return ExUtils.requireNonNullElse(() -> LocalServices.getAmService().getUid(), Process.myUid());
     }
 }

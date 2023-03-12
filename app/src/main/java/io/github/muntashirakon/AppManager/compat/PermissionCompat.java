@@ -7,7 +7,6 @@ import android.annotation.UserIdInt;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageManager;
 import android.content.pm.IPackageManagerN;
-import android.content.pm.PackageManager;
 import android.content.pm.PermissionGroupInfo;
 import android.content.pm.PermissionInfo;
 import android.content.pm.permission.SplitPermissionInfoParcelable;
@@ -20,6 +19,7 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.annotation.RequiresPermission;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -268,6 +268,11 @@ public final class PermissionCompat {
     }
 
     @SuppressWarnings("deprecation")
+    @RequiresPermission(allOf = {
+            ManifestCompat.permission.GET_RUNTIME_PERMISSIONS,
+            ManifestCompat.permission.GRANT_RUNTIME_PERMISSIONS,
+            ManifestCompat.permission.REVOKE_RUNTIME_PERMISSIONS,
+    })
     @PermissionFlags
     public static int getPermissionFlags(@NonNull String permissionName,
                                          @NonNull String packageName,
@@ -288,6 +293,12 @@ public final class PermissionCompat {
      * @see <a href="https://cs.android.com/android/platform/superproject/+/master:cts/tests/tests/permission/src/android/permission/cts/PermissionFlagsTest.java">PermissionFlagsTest.java</a>
      */
     @SuppressWarnings("deprecation")
+    @RequiresPermission(allOf = {
+            ManifestCompat.permission.ADJUST_RUNTIME_PERMISSIONS_POLICY,
+            ManifestCompat.permission.GET_RUNTIME_PERMISSIONS,
+            ManifestCompat.permission.GRANT_RUNTIME_PERMISSIONS,
+            ManifestCompat.permission.REVOKE_RUNTIME_PERMISSIONS,
+    })
     public static void updatePermissionFlags(@NonNull String permissionName,
                                              @NonNull String packageName,
                                              @PermissionFlags int flagMask,
@@ -308,6 +319,10 @@ public final class PermissionCompat {
     }
 
     @SuppressWarnings("deprecation")
+    @RequiresPermission(allOf = {
+            ManifestCompat.permission.ADJUST_RUNTIME_PERMISSIONS_POLICY,
+            ManifestCompat.permission.GRANT_RUNTIME_PERMISSIONS,
+    })
     public static void grantPermission(@NonNull String packageName,
                                        @NonNull String permissionName,
                                        @UserIdInt int userId)
@@ -323,6 +338,10 @@ public final class PermissionCompat {
         }
     }
 
+    @RequiresPermission(allOf = {
+            ManifestCompat.permission.ADJUST_RUNTIME_PERMISSIONS_POLICY,
+            ManifestCompat.permission.REVOKE_RUNTIME_PERMISSIONS,
+    })
     public static void revokePermission(@NonNull String packageName,
                                         @NonNull String permissionName,
                                         @UserIdInt int userId) throws RemoteException {
@@ -330,6 +349,10 @@ public final class PermissionCompat {
     }
 
     @SuppressWarnings("deprecation")
+    @RequiresPermission(allOf = {
+            ManifestCompat.permission.ADJUST_RUNTIME_PERMISSIONS_POLICY,
+            ManifestCompat.permission.REVOKE_RUNTIME_PERMISSIONS,
+    })
     public static void revokePermission(@NonNull String packageName,
                                         @NonNull String permissionName,
                                         @UserIdInt int userId,
@@ -354,32 +377,6 @@ public final class PermissionCompat {
             return pm.checkPermission(permissionName, packageName, userId);
         } else {
             return pm.checkPermission(permissionName, packageName);
-        }
-    }
-
-    @SuppressWarnings("deprecation")
-    public static int checkSelfPermission(@NonNull String permissionName, @UserIdInt int userId) {
-        IPackageManager pm = PackageManagerCompat.getPackageManager();
-        if (Ops.isRoot()) {
-            // Root has all the permissions(?)
-            return PackageManager.PERMISSION_GRANTED;
-        }
-        String packageName;
-        if (Ops.isAdb()) {
-            packageName = ActivityManagerCompat.SHELL_PACKAGE_NAME;
-        } else {
-            packageName = BuildConfig.APPLICATION_ID;
-        }
-        try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                return pm.checkPermission(permissionName, packageName, userId);
-            } else {
-                return pm.checkPermission(permissionName, packageName);
-            }
-        } catch (RemoteException e) {
-            Log.e(PermissionCompat.class.getSimpleName(), "Couldn't check permission " + permissionName
-                    + " for package " + packageName + " with user " + userId, e);
-            return PackageManager.PERMISSION_DENIED;
         }
     }
 

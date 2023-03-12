@@ -95,6 +95,7 @@ import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
 import io.github.muntashirakon.AppManager.users.UserInfo;
 import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
@@ -1445,9 +1446,13 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 mUsesPermissions.postValue(Collections.emptyList());
                 return;
             }
+            List<AppOpsManagerCompat.OpEntry> opEntries = ExUtils.requireNonNullElse(() -> AppOpsManagerCompat
+                    .getConfiguredOpsForPackage(mAppOpsManager, packageInfo.packageName, packageInfo.applicationInfo.uid),
+                    Collections.emptyList());
             for (int i = 0; i < packageInfo.requestedPermissions.length; ++i) {
                 AppDetailsPermissionItem permissionItem = getPermissionItem(packageInfo.requestedPermissions[i],
-                        (packageInfo.requestedPermissionsFlags[i] & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0);
+                        (packageInfo.requestedPermissionsFlags[i] & PackageInfo.REQUESTED_PERMISSION_GRANTED) != 0,
+                        opEntries);
                 if (permissionItem != null) {
                     mUsesPermissionItems.add(permissionItem);
                 }
@@ -1467,7 +1472,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
     }
 
     @Nullable
-    private AppDetailsPermissionItem getPermissionItem(@NonNull String permissionName, boolean isGranted) {
+    private AppDetailsPermissionItem getPermissionItem(@NonNull String permissionName, boolean isGranted,
+                                                       @NonNull List<AppOpsManagerCompat.OpEntry> opEntries) {
         PackageInfo packageInfo = getPackageInfoInternal();
         if (packageInfo == null) return null;
         try {
@@ -1480,25 +1486,18 @@ public class AppDetailsViewModel extends AndroidViewModel {
             }
             int flags = permissionInfo.flags;
             int appOp = AppOpsManagerCompat.permissionToOpCode(permissionName);
-            int permissionFlags = 0;
-            if (Ops.isPrivileged()) {
-                try {
-                    permissionFlags = PermissionCompat.getPermissionFlags(permissionName, packageInfo.packageName,
-                            mUserHandle);
-                } catch (RemoteException e) {
-                    e.printStackTrace();
-                }
-            }
+            int permissionFlags;
             boolean appOpAllowed = false;
-            try {
-                if (!mExternalApk && appOp != AppOpsManagerCompat.OP_NONE) {
-                    int mode = mAppOpsManager.checkOperation(appOp, packageInfo.applicationInfo.uid, mPackageName);
-                    appOpAllowed = mode == AppOpsManager.MODE_ALLOWED;
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                        appOpAllowed |= mode == AppOpsManager.MODE_FOREGROUND;
-                    }
+            if (!mExternalApk) {
+                permissionFlags = ExUtils.requireNonNullElse(() -> PermissionCompat.getPermissionFlags(
+                        permissionName, packageInfo.packageName, mUserHandle), 0);
+            } else permissionFlags = 0;
+            if (!mExternalApk && appOp != AppOpsManagerCompat.OP_NONE) {
+                int mode = AppOpsManagerCompat.getModeFromOpEntriesOrDefault(appOp, opEntries);
+                appOpAllowed = mode == AppOpsManager.MODE_ALLOWED;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    appOpAllowed |= mode == AppOpsManager.MODE_FOREGROUND;
                 }
-            } catch (RemoteException ignore) {
             }
             int protection = PermissionInfoCompat.getProtection(permissionInfo);
             int protectionFlags = PermissionInfoCompat.getProtectionFlags(permissionInfo);

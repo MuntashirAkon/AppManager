@@ -11,6 +11,7 @@ import java.io.IOException;
 
 import io.github.muntashirakon.AppManager.backup.BackupException;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.compat.ObjectsCompat;
 
 public class ExUtils {
     public interface ThrowingRunnable<T> {
@@ -45,6 +46,11 @@ public class ExUtils {
             Log.w("ExUtils", "(Suppressed error)", th);
             return null;
         }
+    }
+
+    @NonNull
+    public static <T> T requireNonNullElse(ThrowingRunnable<T> r, T defaultObj) {
+        return ObjectsCompat.requireNonNullElse(exceptionAsNull(r), defaultObj);
     }
 
     @Nullable

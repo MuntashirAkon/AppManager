@@ -594,11 +594,23 @@ public class AppOpsManagerCompat {
         }
     }
 
+    public static int getModeFromOpEntriesOrDefault(int op, @Nullable List<OpEntry> opEntries) {
+        if (op <= OP_NONE || op >= _NUM_OP || opEntries == null) {
+            return AppOpsManager.MODE_IGNORED;
+        }
+        for (OpEntry opEntry : opEntries) {
+            if (opEntry.getOp() == op) {
+                return opEntry.getMode();
+            }
+        }
+        return opToDefaultMode(op);
+    }
+
     @NonNull
-    public static List<AppOpsManagerCompat.OpEntry> getConfiguredOpsForPackage(@NonNull AppOpsManagerCompat appOpsManager,
+    public static List<OpEntry> getConfiguredOpsForPackage(@NonNull AppOpsManagerCompat appOpsManager,
                                                                                @NonNull String packageName, int uid)
             throws RemoteException {
-        List<AppOpsManagerCompat.PackageOps> packageOpsList = appOpsManager.getOpsForPackage(uid, packageName, null);
+        List<PackageOps> packageOpsList = appOpsManager.getOpsForPackage(uid, packageName, null);
         if (packageOpsList.size() == 1) {
             return packageOpsList.get(0).getOps();
         }
@@ -623,7 +635,8 @@ public class AppOpsManagerCompat {
     }
 
     /**
-     * Get the mode of operation of the given package or uid.
+     * Get the mode of operation of the given package or uid. This denotes the actual working state which is not
+     * necessarily the same mode set using {@link #setMode(int, int, String, int)}.
      *
      * @param op          One of the OP_*
      * @param uid         User ID for the package(s)

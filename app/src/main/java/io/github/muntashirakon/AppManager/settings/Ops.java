@@ -50,7 +50,6 @@ import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
-import io.github.muntashirakon.compat.ObjectsCompat;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
 import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
@@ -556,9 +555,7 @@ public class Ops {
     @NoOps
     @IntRange(from = -1)
     private static int getUid() {
-        return ObjectsCompat.requireNonNullElse(
-                ExUtils.exceptionAsNull(() -> LocalServices.getAmService().getUid()),
-                -1);
+        return ExUtils.requireNonNullElse(() -> LocalServices.getAmService().getUid(), -1);
     }
 
     @WorkerThread

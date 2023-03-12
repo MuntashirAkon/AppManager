@@ -10,7 +10,7 @@
     <option name="ALWAYS_INSTALL_WITH_PM" value="false" />
     <option name="CLEAR_APP_STORAGE" value="false" />
     <option name="DYNAMIC_FEATURES_DISABLED_LIST" value="" />
-    <option name="ACTIVITY_EXTRA_FLAGS" value="-e pkg com.ibbl.cellfin" />
+    <option name="ACTIVITY_EXTRA_FLAGS" value="-e pkg org.thoughtcrime.securesms" />
     <option name="MODE" value="specific_activity" />
     <option name="CLEAR_LOGCAT" value="false" />
     <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
