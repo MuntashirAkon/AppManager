@@ -1,0 +1,8 @@
+- Added workarounds for permission denied issues in MIUI 12.5 and later
+- Fixed checking for permission limits in ADB mode
+- Fixed connecting to ADB immediately after pairing
+- Fixed issues with setting a custom SSAID
+- Fixed permission toggles in the uses permissions tab
+- Fixed the startup progress dialog from displaying indefinitely
+- Prevented the app from crashing on attempting to grant GET_APP_OPS_STATS permission
+- Prevented the installer from crashing if the activity Intent can't be opened.

@@ -18,6 +18,22 @@
 <changelog>
     <release
         type="release candidate"
+        version="v3.1.0-rc02"
+        code="421"
+        date="13 March 2023">
+        <improve>Added workarounds for permission denied issues in MIUI 12.5 and later</improve>
+        <note subtext="true">The workaround may not always work as expected and require more testing.</note>
+
+        <fix>Fixed checking for permission limits in ADB mode</fix>
+        <fix>Fixed connecting to ADB immediately after pairing</fix>
+        <fix>Fixed issues with setting a custom SSAID</fix>
+        <fix>Fixed permission toggles in the uses permissions tab</fix>
+        <fix>Fixed the startup progress dialog from displaying indefinitely</fix>
+        <fix>Prevented the app from crashing on attempting to grant GET_APP_OPS_STATS permission</fix>
+        <fix>Prevented the installer from crashing if the activity Intent can't be opened</fix>
+    </release>
+    <release
+        type="release candidate"
         version="v3.1.0-rc01"
         code="420"
         date="5 March 2023">
