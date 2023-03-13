@@ -73,6 +73,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.apk.signing.Signer;
 import io.github.muntashirakon.AppManager.apk.signing.SignerInfo;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
@@ -844,7 +845,10 @@ public final class PackageUtils {
                         .getQuantityString(R.plurals.verified_with_warning, warnCount, warnCount)), colorSuccess));
             }
             if (result.isSourceStampVerified()) {
-                builder.append("\n✔ ").append(ctx.getString(R.string.source_stamp_verified));
+                String source = Signer.getSourceStampSource(result.getSourceStampInfo());
+                if (source != null) {
+                    builder.append("\n✔ ").append(ctx.getString(R.string.source_stamp_verified_and_identified_to_be_from_source, source));
+                } else builder.append("\n✔ ").append(ctx.getString(R.string.source_stamp_verified));
             }
             List<CharSequence> sigSchemes = new LinkedList<>();
             if (result.isVerifiedUsingV1Scheme()) sigSchemes.add("v1");

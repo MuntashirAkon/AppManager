@@ -735,6 +735,7 @@
     <string name="verified">Verified</string>
     <string name="not_verified">Not verified</string>
     <string name="source_stamp_verified">SourceStamp verified.</string>
+    <string name="source_stamp_verified_and_identified_to_be_from_source">SourceStamp verified and identified to be from <xliff:g id="source" example="Google Play">%1$s</xliff:g>.</string>
     <string name="splits">Splits</string>
     <string name="input_keystore_pass">Input KeyStore password</string>
     <string name="input_keystore_pass_description">Enter the App Manager KeyStore password. If you\'re seeing this for the first time, please use a password generator to generate a password and save it in a secure place before inserting it here.</string>

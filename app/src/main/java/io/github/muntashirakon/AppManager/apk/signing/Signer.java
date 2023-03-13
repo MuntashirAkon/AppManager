@@ -30,6 +30,7 @@ import io.github.muntashirakon.AppManager.crypto.ks.KeyPair;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
 
 public class Signer {
     public static final String TAG = "Signer";
@@ -186,7 +187,20 @@ public class Signer {
         }
     }
 
-    public static void logCert(@NonNull X509Certificate x509Certificate, CharSequence charSequence) throws CertificateEncodingException {
+    @Nullable
+    public static String getSourceStampSource(@NonNull ApkVerifier.Result.SourceStampInfo sourceStampInfo) {
+        byte[] certBytes = ExUtils.exceptionAsNull(() -> sourceStampInfo.getCertificate().getEncoded());
+        if (certBytes == null) {
+            return null;
+        }
+        String sourceStampHash = DigestUtils.getHexDigest(DigestUtils.SHA_256, certBytes);
+        if (sourceStampHash.equals("3257d599a49d2c961a471ca9843f59d341a405884583fc087df4237b733bbd6d")) {
+            return "Google Play";
+        }
+        return null;
+    }
+
+    private static void logCert(@NonNull X509Certificate x509Certificate, CharSequence charSequence) throws CertificateEncodingException {
         int bitLength;
         Principal subjectDN = x509Certificate.getSubjectDN();
         Log.i(TAG, charSequence + " - Unique distinguished name: " + subjectDN);
