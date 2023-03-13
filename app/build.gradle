@@ -84,6 +84,9 @@ android {
         includeInApk false
         includeInBundle false
     }
+    packagingOptions {
+        exclude 'META-INF/*.version'
+    }
 }
 
 dependencies {
