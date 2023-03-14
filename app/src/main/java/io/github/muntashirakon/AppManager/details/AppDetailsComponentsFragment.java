@@ -2,6 +2,11 @@
 
 package io.github.muntashirakon.AppManager.details;
 
+import static io.github.muntashirakon.AppManager.details.AppDetailsFragment.ACTIVITIES;
+import static io.github.muntashirakon.AppManager.details.AppDetailsFragment.PROVIDERS;
+import static io.github.muntashirakon.AppManager.details.AppDetailsFragment.RECEIVERS;
+import static io.github.muntashirakon.AppManager.details.AppDetailsFragment.SERVICES;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -24,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
@@ -41,6 +47,8 @@ import com.google.android.material.divider.MaterialDivider;
 import com.google.android.material.materialswitch.MaterialSwitch;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -78,6 +86,16 @@ public class AppDetailsComponentsFragment extends Fragment implements AdvancedSe
         SwipeRefreshLayout.OnRefreshListener {
     public static final String ARG_TYPE = "type";
 
+    @IntDef(value = {
+            ACTIVITIES,
+            SERVICES,
+            RECEIVERS,
+            PROVIDERS,
+    })
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface ComponentProperty {
+    }
+
     private String mPackageName;
     private PackageManager mPackageManager;
     private AppDetailsActivity mActivity;
@@ -87,7 +105,7 @@ public class AppDetailsComponentsFragment extends Fragment implements AdvancedSe
     private LinearProgressIndicator mProgressIndicator;
     private MaterialAlertView mAlertView;
     private boolean mIsExternalApk;
-    @AppDetailsFragment.Property
+    @ComponentProperty
     private int mNeededProperty;
     @Nullable
     private AppDetailsViewModel mMainModel;
@@ -291,15 +309,15 @@ public class AppDetailsComponentsFragment extends Fragment implements AdvancedSe
         });
     }
 
-    private int getNotFoundString(@AppDetailsFragment.Property int index) {
+    private int getNotFoundString(@ComponentProperty int index) {
         switch (index) {
-            case AppDetailsFragment.SERVICES:
+            case SERVICES:
                 return R.string.no_service;
-            case AppDetailsFragment.RECEIVERS:
+            case RECEIVERS:
                 return R.string.no_receivers;
-            case AppDetailsFragment.PROVIDERS:
+            case PROVIDERS:
                 return R.string.no_providers;
-            case AppDetailsFragment.ACTIVITIES:
+            case ACTIVITIES:
             default:
                 return R.string.no_activities;
         }
@@ -336,7 +354,7 @@ public class AppDetailsComponentsFragment extends Fragment implements AdvancedSe
     private class AppDetailsRecyclerAdapter extends RecyclerView.Adapter<AppDetailsRecyclerAdapter.ViewHolder> {
         @NonNull
         private final List<AppDetailsItem<?>> mAdapterList;
-        @AppDetailsFragment.Property
+        @ComponentProperty
         private int mRequestedProperty;
         @Nullable
         private String mConstraint;
@@ -396,18 +414,18 @@ public class AppDetailsComponentsFragment extends Fragment implements AdvancedSe
 
                 divider = itemView.findViewById(R.id.divider);
 
-                if (mRequestedProperty == AppDetailsFragment.ACTIVITIES) {
+                if (mRequestedProperty == ACTIVITIES) {
                     textView1 = itemView.findViewById(R.id.taskAffinity);
                     textView2 = itemView.findViewById(R.id.launchMode);
                     textView3 = itemView.findViewById(R.id.orientation);
                     textView4 = itemView.findViewById(R.id.softInput);
-                } else if (mRequestedProperty == AppDetailsFragment.SERVICES) {
+                } else if (mRequestedProperty == SERVICES) {
                     textView1 = itemView.findViewById(R.id.orientation);
                     itemView.findViewById(R.id.taskAffinity).setVisibility(View.GONE);
                     itemView.findViewById(R.id.launchMode).setVisibility(View.GONE);
                     itemView.findViewById(R.id.softInput).setVisibility(View.GONE);
                     shortcutBtn.setVisibility(View.GONE);
-                } else if (mRequestedProperty == AppDetailsFragment.RECEIVERS) {
+                } else if (mRequestedProperty == RECEIVERS) {
                     textView1 = itemView.findViewById(R.id.taskAffinity);
                     textView2 = itemView.findViewById(R.id.launchMode);
                     textView3 = itemView.findViewById(R.id.orientation);
@@ -415,7 +433,7 @@ public class AppDetailsComponentsFragment extends Fragment implements AdvancedSe
                     divider = itemView.findViewById(R.id.divider);
                     launchBtn.setVisibility(View.GONE);
                     shortcutBtn.setVisibility(View.GONE);
-                } else if (mRequestedProperty == AppDetailsFragment.PROVIDERS) {
+                } else if (mRequestedProperty == PROVIDERS) {
                     textView1 = itemView.findViewById(R.id.launchMode);
                     textView2 = itemView.findViewById(R.id.orientation);
                     textView3 = itemView.findViewById(R.id.softInput);
@@ -436,13 +454,13 @@ public class AppDetailsComponentsFragment extends Fragment implements AdvancedSe
         @Override
         public void onBindViewHolder(@NonNull AppDetailsRecyclerAdapter.ViewHolder holder, int position) {
             Context context = holder.itemView.getContext();
-            if (mRequestedProperty == AppDetailsFragment.SERVICES) {
+            if (mRequestedProperty == SERVICES) {
                 getServicesView(context, holder, position);
-            } else if (mRequestedProperty == AppDetailsFragment.RECEIVERS) {
+            } else if (mRequestedProperty == RECEIVERS) {
                 getReceiverView(context, holder, position);
-            } else if (mRequestedProperty == AppDetailsFragment.PROVIDERS) {
+            } else if (mRequestedProperty == PROVIDERS) {
                 getProviderView(context, holder, position);
-            } else if (mRequestedProperty == AppDetailsFragment.ACTIVITIES) {
+            } else if (mRequestedProperty == ACTIVITIES) {
                 getActivityView(context, holder, position);
             }
         }

@@ -289,7 +289,13 @@ public class AppDetailsActivity extends BaseActivity {
                     }
                     case AppDetailsFragment.APP_OPS:
                     case AppDetailsFragment.PERMISSIONS:
-                    case AppDetailsFragment.USES_PERMISSIONS:
+                    case AppDetailsFragment.USES_PERMISSIONS: {
+                        mTabFragments[position] = new AppDetailsPermissionsFragment();
+                        Bundle args = new Bundle();
+                        args.putInt(AppDetailsPermissionsFragment.ARG_TYPE, position);
+                        mTabFragments[position].setArguments(args);
+                        break;
+                    }
                     case AppDetailsFragment.CONFIGURATIONS:
                     case AppDetailsFragment.FEATURES:
                     case AppDetailsFragment.SHARED_LIBRARIES:
