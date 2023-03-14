@@ -430,8 +430,10 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
         return false;
     }
 
-    LinearProgressIndicator getProgressBar() {
-        return mProgressIndicator;
+    void hideProgressBar() {
+        if (mProgressIndicator != null) {
+            mProgressIndicator.hide();
+        }
     }
 
     void setLogsToBeShared(boolean logsToBeShared, boolean displayLoader) {

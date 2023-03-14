@@ -74,7 +74,7 @@ public class SavedLogViewerFragment extends AbsLogViewerFragment implements LogV
 
     @Override
     public void onNewLogsAvailable(@NonNull List<LogLine> logLines) {
-        mActivity.getProgressBar().hide();
+        mActivity.hideProgressBar();
         for (LogLine logLine : logLines) {
             mLogListAdapter.addWithFilter(logLine, "", false);
             mActivity.addToAutocompleteSuggestions(logLine);
