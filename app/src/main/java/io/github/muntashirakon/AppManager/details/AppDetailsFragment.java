@@ -197,7 +197,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
         showProgressIndicator(true);
         mAlertView = view.findViewById(R.id.alert_text);
         mAlertView.setEndIconMode(MaterialAlertView.END_ICON_CUSTOM);
-        mAlertView.setEndIconDrawable(R.drawable.mtrl_ic_cancel);
+        mAlertView.setEndIconDrawable(com.google.android.material.R.drawable.mtrl_ic_cancel);
         mAlertView.setEndIconContentDescription(R.string.close);
         mSwipeRefresh.setOnChildScrollUpCallback((parent, child) -> recyclerView.canScrollVertically(-1));
         if (mMainModel == null) return;
@@ -479,7 +479,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
                 if (apkFile != null) {
                     sb.append("\n").append(apkFile.getFilePath());
                     holder.launchBtn.setVisibility(View.VISIBLE);
-                    holder.launchBtn.setIconResource(R.drawable.ic_information);
+                    holder.launchBtn.setIconResource(io.github.muntashirakon.ui.R.drawable.ic_information);
                     holder.launchBtn.setOnClickListener(v -> {
                         Intent intent = AppDetailsActivity.getIntent(context, apkFile, false);
                         startActivity(intent);
@@ -532,9 +532,9 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
             }
             // Set background
             if (isRequired && !isAvailable) {
-                view.setCardBackgroundColor(ContextCompat.getColor(context, R.color.red));
+                view.setCardBackgroundColor(ContextCompat.getColor(context, io.github.muntashirakon.ui.R.color.red));
             } else if (!isAvailable) {
-                view.setCardBackgroundColor(ContextCompat.getColor(context, R.color.disabled_user));
+                view.setCardBackgroundColor(ContextCompat.getColor(context, io.github.muntashirakon.ui.R.color.disabled_user));
             } else {
                 view.setCardBackgroundColor(index % 2 == 0 ? mCardColor1 : mCardColor0);
             }

@@ -279,7 +279,7 @@ public class SharedPrefsActivity extends BaseActivity implements
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.m3_preference, parent, false);
+            View v = LayoutInflater.from(parent.getContext()).inflate(io.github.muntashirakon.ui.R.layout.m3_preference, parent, false);
             return new ViewHolder(v);
         }
 

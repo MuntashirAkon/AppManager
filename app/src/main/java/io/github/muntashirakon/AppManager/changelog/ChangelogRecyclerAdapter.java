@@ -115,15 +115,15 @@ public class ChangelogRecyclerAdapter extends RecyclerView.Adapter<ChangelogRecy
             switch (item.type) {
                 case ChangelogItem.FIX:
                     tagNameRes = R.string.changelog_type_fix;
-                    colorRes = R.color.orange;
+                    colorRes = io.github.muntashirakon.ui.R.color.orange;
                     break;
                 case ChangelogItem.IMPROVE:
                     tagNameRes = R.string.changelog_type_improve;
-                    colorRes = R.color.purple;
+                    colorRes = io.github.muntashirakon.ui.R.color.purple;
                     break;
                 case ChangelogItem.NEW:
                     tagNameRes = R.string.changelog_type_new;
-                    colorRes = R.color.stopped;
+                    colorRes = io.github.muntashirakon.ui.R.color.stopped;
                     break;
                 default:
                 case ChangelogItem.HEADER:
@@ -135,9 +135,9 @@ public class ChangelogRecyclerAdapter extends RecyclerView.Adapter<ChangelogRecy
             }
 
             if (tagNameRes != 0) {
-                ChipDrawable chip = ChipDrawable.createFromAttributes(context, null, R.attr.chipStandaloneStyle, R.style.Widget_Material3_Chip_Assist_Elevated);
+                ChipDrawable chip = ChipDrawable.createFromAttributes(context, null, com.google.android.material.R.attr.chipStandaloneStyle, com.google.android.material.R.style.Widget_Material3_Chip_Assist_Elevated);
                 chip.setTextResource(tagNameRes);
-                chip.setTextColor(MaterialColors.getColor(context, R.attr.colorSurface, "LinearLayoutCompat"));
+                chip.setTextColor(MaterialColors.getColor(context, com.google.android.material.R.attr.colorSurface, "LinearLayoutCompat"));
                 chip.setTextSize(UiUtils.spToPx(context, 10));
                 chip.setChipBackgroundColorResource(colorRes);
                 chip.setCloseIconVisible(false);
@@ -161,11 +161,11 @@ public class ChangelogRecyclerAdapter extends RecyclerView.Adapter<ChangelogRecy
         switch(type) {
             default:
             case ChangelogItem.TEXT_MEDIUM:
-                return R.style.TextAppearance_Material3_BodyMedium;
+                return com.google.android.material.R.style.TextAppearance_Material3_BodyMedium;
             case ChangelogItem.TEXT_LARGE:
-                return R.style.TextAppearance_Material3_BodyLarge;
+                return com.google.android.material.R.style.TextAppearance_Material3_BodyLarge;
             case ChangelogItem.TEXT_SMALL:
-                return R.style.TextAppearance_Material3_BodySmall;
+                return com.google.android.material.R.style.TextAppearance_Material3_BodySmall;
         }
     }
 
@@ -174,11 +174,11 @@ public class ChangelogRecyclerAdapter extends RecyclerView.Adapter<ChangelogRecy
         switch(type) {
             default:
             case ChangelogItem.TEXT_MEDIUM:
-                return R.style.TextAppearance_Material3_TitleMedium;
+                return com.google.android.material.R.style.TextAppearance_Material3_TitleMedium;
             case ChangelogItem.TEXT_LARGE:
-                return R.style.TextAppearance_Material3_TitleLarge;
+                return com.google.android.material.R.style.TextAppearance_Material3_TitleLarge;
             case ChangelogItem.TEXT_SMALL:
-                return R.style.TextAppearance_Material3_TitleSmall;
+                return com.google.android.material.R.style.TextAppearance_Material3_TitleSmall;
         }
     }
 

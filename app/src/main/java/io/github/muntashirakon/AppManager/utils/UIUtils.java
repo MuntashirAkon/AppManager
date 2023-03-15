@@ -6,10 +6,8 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
@@ -37,7 +35,6 @@ import android.widget.Toast;
 import androidx.annotation.AnyThread;
 import androidx.annotation.ColorInt;
 import androidx.annotation.FloatRange;
-import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.PluralsRes;
@@ -212,19 +209,19 @@ public class UIUtils {
     }
 
     public static int getAccentColor(@NonNull Context context) {
-        return MaterialColors.getColor(context, R.attr.colorAccent, -1);
+        return MaterialColors.getColor(context, androidx.appcompat.R.attr.colorAccent, -1);
     }
 
     public static int getPrimaryColor(@NonNull Context context) {
-        return MaterialColors.getColor(context, R.attr.colorPrimary, -1);
+        return MaterialColors.getColor(context, androidx.appcompat.R.attr.colorPrimary, -1);
     }
 
     public static int getTextColorPrimary(@NonNull Context context) {
-        return MaterialColors.getColor(context, R.attr.colorOnSurface, -1);
+        return MaterialColors.getColor(context, com.google.android.material.R.attr.colorOnSurface, -1);
     }
 
     public static int getTextColorSecondary(@NonNull Context context) {
-        return MaterialColors.getColor(context, R.attr.colorOnSurfaceVariant, -1);
+        return MaterialColors.getColor(context, com.google.android.material.R.attr.colorOnSurfaceVariant, -1);
     }
 
     public static int getTitleSize(@NonNull Context context) {

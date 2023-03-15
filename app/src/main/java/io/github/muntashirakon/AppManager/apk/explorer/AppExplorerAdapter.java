@@ -54,7 +54,7 @@ public class AppExplorerAdapter extends MultiSelectionView.Adapter<AppExplorerAd
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.m3_preference, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(io.github.muntashirakon.ui.R.layout.m3_preference, parent, false);
         View actionView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_right_standalone_action, parent, false);
         LinearLayoutCompat layout = view.findViewById(android.R.id.widget_frame);
         layout.addView(actionView);
@@ -149,7 +149,7 @@ public class AppExplorerAdapter extends MultiSelectionView.Adapter<AppExplorerAd
             action = itemView.findViewById(android.R.id.button1);
             title = itemView.findViewById(android.R.id.title);
             subtitle = itemView.findViewById(android.R.id.summary);
-            action.setIconResource(R.drawable.ic_more_vert);
+            action.setIconResource(io.github.muntashirakon.ui.R.drawable.ic_more_vert);
             itemView.findViewById(R.id.divider).setVisibility(View.GONE);
         }
     }

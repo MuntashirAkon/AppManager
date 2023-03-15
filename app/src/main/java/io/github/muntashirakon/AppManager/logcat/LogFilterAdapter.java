@@ -54,7 +54,7 @@ public class LogFilterAdapter extends ArrayAdapter<LogFilter> {
         final LogFilter logFilter = getItem(position);
         holder.textView.setText(logFilter.name);
         View finalConvertView = convertView;
-        convertView.setBackgroundResource(R.drawable.item_transparent);
+        convertView.setBackgroundResource(io.github.muntashirakon.ui.R.drawable.item_transparent);
         convertView.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onClick(parent, finalConvertView, position, logFilter);

@@ -571,7 +571,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
     @NonNull
     public AlertDialog getInstallationFinishedDialog(String packageName, CharSequence message,
                                                      @Nullable String statusMessage, boolean displayOpenAndAppInfo) {
-        View view = getLayoutInflater().inflate(R.layout.dialog_scrollable_text_view, null);
+        View view = getLayoutInflater().inflate(io.github.muntashirakon.ui.R.layout.dialog_scrollable_text_view, null);
         view.findViewById(android.R.id.checkbox).setVisibility(View.GONE);
         TextView tv = view.findViewById(android.R.id.content);
         SpannableStringBuilder ssb = new SpannableStringBuilder(message);
@@ -585,7 +585,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
                 .setSubtitle(getVersionInfoWithTrackers(model.getNewPackageInfo()))
                 .setStartIcon(model.getAppIcon());
         if (displayOpenAndAppInfo) {
-            title.setEndIcon(R.drawable.ic_information, v -> {
+            title.setEndIcon(io.github.muntashirakon.ui.R.drawable.ic_information, v -> {
                 Intent appDetailsIntent = AppDetailsActivity.getIntent(this, packageName, lastUserId, true);
                 appDetailsIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(appDetailsIntent);

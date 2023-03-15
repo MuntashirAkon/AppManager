@@ -153,7 +153,7 @@ public class ClassViewerActivity extends BaseActivity {
         else container = findViewById(R.id.any_view);
         container.setVisibility(View.VISIBLE);
         container.setKeyListener(null);
-        container.setTextColor(ContextCompat.getColor(this, R.color.dark_orange));
+        container.setTextColor(ContextCompat.getColor(this, io.github.muntashirakon.ui.R.color.dark_orange));
         if (isDisplayingSmali) {
             displaySmaliContent();
         } else {
@@ -164,10 +164,10 @@ public class ClassViewerActivity extends BaseActivity {
 
     private void displayJavaContent() {
         mProgressIndicator.show();
-        final int typeClassColor = ContextCompat.getColor(this, R.color.ocean_blue);
-        final int keywordsColor = ContextCompat.getColor(this, R.color.purple_y);
-        final int commentColor = ContextCompat.getColor(this, R.color.textColorSecondary);
-        final int valueColor = ContextCompat.getColor(this, R.color.redder_than_you);
+        final int typeClassColor = ContextCompat.getColor(this, io.github.muntashirakon.ui.R.color.ocean_blue);
+        final int keywordsColor = ContextCompat.getColor(this, io.github.muntashirakon.ui.R.color.purple_y);
+        final int commentColor = ContextCompat.getColor(this, io.github.muntashirakon.ui.R.color.textColorSecondary);
+        final int valueColor = ContextCompat.getColor(this, io.github.muntashirakon.ui.R.color.redder_than_you);
         new Thread(() -> {
             if (formattedJavaContent == null) {
                 String javaContent;
@@ -237,11 +237,11 @@ public class ClassViewerActivity extends BaseActivity {
 
     private void displaySmaliContent() {
         mProgressIndicator.show();
-        final int typeClassColor = ContextCompat.getColor(this, R.color.ocean_blue);
-        final int keywordsColor = ContextCompat.getColor(this, R.color.purple_y);
-        final int commentColor = ContextCompat.getColor(this, R.color.textColorSecondary);
-        final int valueColor = ContextCompat.getColor(this, R.color.redder_than_you);
-        final int labelColor = ContextCompat.getColor(this, R.color.green_mountain);
+        final int typeClassColor = ContextCompat.getColor(this, io.github.muntashirakon.ui.R.color.ocean_blue);
+        final int keywordsColor = ContextCompat.getColor(this, io.github.muntashirakon.ui.R.color.purple_y);
+        final int commentColor = ContextCompat.getColor(this, io.github.muntashirakon.ui.R.color.textColorSecondary);
+        final int valueColor = ContextCompat.getColor(this, io.github.muntashirakon.ui.R.color.redder_than_you);
+        final int labelColor = ContextCompat.getColor(this, io.github.muntashirakon.ui.R.color.green_mountain);
         new Thread(() -> {
             if (formattedSmaliContent == null) {
                 String smaliContent;

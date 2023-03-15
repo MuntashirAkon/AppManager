@@ -62,7 +62,7 @@ public class KeyPairGeneratorDialogFragment extends DialogFragment {
         View view = View.inflate(activity, R.layout.dialog_certificate_generator, null);
         Spinner keySizeSpinner = view.findViewById(R.id.key_size_selector_spinner);
         if (keyType.equals(CryptoUtils.MODE_RSA)) {
-            keySizeSpinner.setAdapter(new ArrayAdapter<>(activity, R.layout.support_simple_spinner_dropdown_item,
+            keySizeSpinner.setAdapter(new ArrayAdapter<>(activity, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
                     SUPPORTED_RSA_KEY_SIZES));
             keySizeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override

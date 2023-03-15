@@ -95,8 +95,8 @@ public class SearchableMultiChoiceDialogBuilder<T> {
         }
         builder = new MaterialAlertDialogBuilder(context).setView(view);
         @SuppressLint({"RestrictedApi", "PrivateResource"})
-        int layoutId = MaterialAttributes.resolveInteger(context, R.attr.multiChoiceItemLayout,
-                R.layout.mtrl_alert_select_dialog_multichoice);
+        int layoutId = MaterialAttributes.resolveInteger(context, androidx.appcompat.R.attr.multiChoiceItemLayout,
+                com.google.android.material.R.layout.mtrl_alert_select_dialog_multichoice);
         adapter = new SearchableRecyclerViewAdapter(itemNames, items, layoutId);
         recyclerView.setAdapter(adapter);
         selectAll.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -439,10 +439,10 @@ public class SearchableMultiChoiceDialogBuilder<T> {
             public ViewHolder(@NonNull View itemView) {
                 super(itemView);
                 item = itemView.findViewById(android.R.id.text1);
-                int textAppearanceBodyLarge = MaterialAttributes.resolveInteger(item.getContext(), R.attr.textAppearanceBodyLarge, 0);
+                int textAppearanceBodyLarge = MaterialAttributes.resolveInteger(item.getContext(), com.google.android.material.R.attr.textAppearanceBodyLarge, 0);
                 TextViewCompat.setTextAppearance(item, textAppearanceBodyLarge);
                 item.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-                item.setTextColor(MaterialColors.getColor(item.getContext(), R.attr.colorOnSurfaceVariant, -1));
+                item.setTextColor(MaterialColors.getColor(item.getContext(), com.google.android.material.R.attr.colorOnSurfaceVariant, -1));
             }
         }
     }

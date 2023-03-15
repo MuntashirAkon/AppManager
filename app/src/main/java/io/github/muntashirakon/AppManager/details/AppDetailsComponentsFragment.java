@@ -150,7 +150,7 @@ public class AppDetailsComponentsFragment extends Fragment implements AdvancedSe
         showProgressIndicator(true);
         mAlertView = view.findViewById(R.id.alert_text);
         mAlertView.setEndIconMode(MaterialAlertView.END_ICON_CUSTOM);
-        mAlertView.setEndIconDrawable(R.drawable.mtrl_ic_cancel);
+        mAlertView.setEndIconDrawable(com.google.android.material.R.drawable.mtrl_ic_cancel);
         mAlertView.setEndIconContentDescription(R.string.close);
         mAlertView.setEndIconOnClickListener(v -> mAlertView.hide());
         int helpStringRes = R.string.rules_not_applied;

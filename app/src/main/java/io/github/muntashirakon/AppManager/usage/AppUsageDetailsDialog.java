@@ -71,7 +71,7 @@ public class AppUsageDetailsDialog extends CapsuleBottomSheetDialogFragment {
                 .setTitleSelectable(true)
                 .setSubtitle(usageInfo.packageName)
                 .setSubtitleSelectable(true)
-                .setEndIcon(R.drawable.ic_information, v -> {
+                .setEndIcon(io.github.muntashirakon.ui.R.drawable.ic_information, v -> {
                     Intent appDetailsIntent = AppDetailsActivity.getIntent(activity, usageInfo.packageName,
                             usageInfo.userId);
                     startActivity(appDetailsIntent);
@@ -159,7 +159,7 @@ public class AppUsageDetailsDialog extends CapsuleBottomSheetDialogFragment {
         AppUsageDetailsAdapter(@NonNull Activity activity) {
             context = activity;
             mColorTransparent = Color.TRANSPARENT;
-            mColorSemiTransparent = ContextCompat.getColor(activity, R.color.semi_transparent);
+            mColorSemiTransparent = ContextCompat.getColor(activity, io.github.muntashirakon.ui.R.color.semi_transparent);
             setHasStableIds(true);
         }
 

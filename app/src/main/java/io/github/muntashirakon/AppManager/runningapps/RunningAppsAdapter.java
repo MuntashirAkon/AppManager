@@ -145,8 +145,8 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
         Spannable memInfo = UIUtils.charSequenceToSpannable(context.getString(R.string.memory_chart_info, Formatter
                         .formatShortFileSize(context, appMemory), Formatter.formatShortFileSize(context, cachedMemory),
                 Formatter.formatShortFileSize(context, buffers), Formatter.formatShortFileSize(context, freeMemory)));
-        setColors(holder.itemView, memInfo, new int[]{R.attr.colorOnSurface, R.attr.colorPrimary, R.attr.colorTertiary,
-                R.attr.colorSurfaceVariant});
+        setColors(holder.itemView, memInfo, new int[]{com.google.android.material.R.attr.colorOnSurface, androidx.appcompat.R.attr.colorPrimary, com.google.android.material.R.attr.colorTertiary,
+                com.google.android.material.R.attr.colorSurfaceVariant});
         holder.mMemoryInfoView.setText(memInfo);
 
         // Swap
@@ -168,7 +168,7 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
         // Set color and size info
         Spannable swapInfo = UIUtils.charSequenceToSpannable(context.getString(R.string.swap_chart_info, Formatter
                 .formatShortFileSize(context, usedSwap), Formatter.formatShortFileSize(context, totalSwap - usedSwap)));
-        setColors(holder.itemView, swapInfo, new int[]{R.attr.colorOnSurface, R.attr.colorSurfaceVariant});
+        setColors(holder.itemView, swapInfo, new int[]{com.google.android.material.R.attr.colorOnSurface, com.google.android.material.R.attr.colorSurfaceVariant});
         holder.mSwapInfoView.setText(swapInfo);
     }
 

@@ -71,7 +71,7 @@ public class HelpActivity extends BaseActivity implements SearchView.OnQueryText
         Button nextButton = findViewById(R.id.next_button);
         Button previousButton = findViewById(R.id.previous_button);
         searchView = findViewById(R.id.search_bar);
-        searchView.findViewById(R.id.search_close_btn).setOnClickListener(v -> {
+        searchView.findViewById(com.google.android.material.R.id.search_close_btn).setOnClickListener(v -> {
             webView.clearMatches();
             searchView.setQuery(null, false);
             Transition sharedAxis = new MaterialSharedAxis(MaterialSharedAxis.Y, true);

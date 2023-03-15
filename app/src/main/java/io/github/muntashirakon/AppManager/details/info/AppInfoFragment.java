@@ -1144,7 +1144,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 long thisVersionCode = PackageInfoCompat.getLongVersionCode(mPackageInfo);
                 if (installedVersionCode < thisVersionCode) {
                     // Needs update
-                    addToHorizontalLayout(R.string.whats_new, R.drawable.ic_information)
+                    addToHorizontalLayout(R.string.whats_new, io.github.muntashirakon.ui.R.drawable.ic_information)
                             .setOnClickListener(v -> {
                                 Bundle args = new Bundle();
                                 args.putParcelable(WhatsNewDialogFragment.ARG_NEW_PKG_INFO, mPackageInfo);
@@ -1369,7 +1369,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                     UserHandleHidden.myUserId());
                             mActivity.startActivity(appDetailsIntent);
                         });
-                listItem.setActionIcon(R.drawable.ic_information);
+                listItem.setActionIcon(io.github.muntashirakon.ui.R.drawable.ic_information);
                 mListItems.add(listItem);
             }
 

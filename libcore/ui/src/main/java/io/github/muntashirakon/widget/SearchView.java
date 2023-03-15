@@ -39,7 +39,7 @@ public class SearchView extends androidx.appcompat.widget.SearchView implements 
     }
 
     public SearchView(@NonNull Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs, R.attr.searchViewStyle);
+        this(context, attrs, androidx.appcompat.R.attr.searchViewStyle);
     }
 
     public SearchView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
@@ -51,9 +51,9 @@ public class SearchView extends androidx.appcompat.widget.SearchView implements 
         super(wrap(context, attrs, defStyleAttr, defStyleRes), attrs, defStyleAttr);
 
         context = getContext();
-        mCloseButton = findViewById(R.id.search_close_btn);
-        mSearchSrcTextView = findViewById(R.id.search_src_text);
-        mSearchEditFrame = findViewById(R.id.search_edit_frame);
+        mCloseButton = findViewById(com.google.android.material.R.id.search_close_btn);
+        mSearchSrcTextView = findViewById(com.google.android.material.R.id.search_src_text);
+        mSearchEditFrame = findViewById(com.google.android.material.R.id.search_edit_frame);
         mElevation = getElevation();
 
         final TintTypedArray a = ThemeEnforcement.obtainTintedStyledAttributes(

@@ -87,7 +87,7 @@ public class KeyPairImporterDialogFragment extends DialogFragment {
             }
         }));
         keyTypeSpinner.setAdapter(ArrayAdapter.createFromResource(activity, R.array.crypto_import_types,
-                R.layout.support_simple_spinner_dropdown_item));
+                androidx.appcompat.R.layout.support_simple_spinner_dropdown_item));
         keyTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, @KeyStoreUtils.KeyType int position, long id) {

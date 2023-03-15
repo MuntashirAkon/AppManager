@@ -20,7 +20,7 @@ public class NestedScrollView extends FastScrollNestedScrollView {
     }
 
     public NestedScrollView(@NonNull Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs, R.attr.nestedScrollViewStyle);
+        this(context, attrs, androidx.core.R.attr.nestedScrollViewStyle);
     }
 
     public NestedScrollView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {

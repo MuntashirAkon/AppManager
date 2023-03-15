@@ -69,8 +69,8 @@ public class ManifestViewerActivity extends BaseActivity {
             showErrorAndFinish();
             return;
         }
-        mModel.setTagColor(ContextCompat.getColor(this, R.color.pink));
-        mModel.setAttrValueColor(ContextCompat.getColor(this, R.color.ocean_blue));
+        mModel.setTagColor(ContextCompat.getColor(this, io.github.muntashirakon.ui.R.color.pink));
+        mModel.setAttrValueColor(ContextCompat.getColor(this, io.github.muntashirakon.ui.R.color.ocean_blue));
         mModel.getManifestContent().observe(this, manifest -> {
             formattedContent = manifest;
             setWrapped();
@@ -117,7 +117,7 @@ public class ManifestViewerActivity extends BaseActivity {
         else container = findViewById(R.id.any_view);
         container.setVisibility(View.VISIBLE);
         container.setKeyListener(null);
-        container.setTextColor(ContextCompat.getColor(this, R.color.dark_orange));
+        container.setTextColor(ContextCompat.getColor(this, io.github.muntashirakon.ui.R.color.dark_orange));
         displayContent();
         isWrapped = !isWrapped;
     }

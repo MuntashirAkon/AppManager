@@ -86,10 +86,10 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
 
         mCardColor = ColorCodes.getListItemColor1(activity);
         mDefaultIndicatorColor = ColorCodes.getListItemDefaultIndicatorColor(activity);
-        mColorGreen = ContextCompat.getColor(mActivity, R.color.stopped);
-        mColorOrange = ContextCompat.getColor(mActivity, R.color.orange);
-        mColorPrimary = ContextCompat.getColor(mActivity, R.color.textColorPrimary);
-        mColorSecondary = ContextCompat.getColor(mActivity, R.color.textColorSecondary);
+        mColorGreen = ContextCompat.getColor(mActivity, io.github.muntashirakon.ui.R.color.stopped);
+        mColorOrange = ContextCompat.getColor(mActivity, io.github.muntashirakon.ui.R.color.orange);
+        mColorPrimary = ContextCompat.getColor(mActivity, io.github.muntashirakon.ui.R.color.textColorPrimary);
+        mColorSecondary = ContextCompat.getColor(mActivity, io.github.muntashirakon.ui.R.color.textColorSecondary);
         mQueryStringHighlight = ColorCodes.getQueryStringHighlightColor(mActivity);
         mHighlightColor = ColorCodes.getListItemSelectionColor(activity);
     }

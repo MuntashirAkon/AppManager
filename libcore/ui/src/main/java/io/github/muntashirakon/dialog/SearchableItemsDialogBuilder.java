@@ -81,7 +81,7 @@ public class SearchableItemsDialogBuilder<T extends CharSequence> {
         }
         builder = new MaterialAlertDialogBuilder(context).setView(view);
         @SuppressLint({"RestrictedApi", "PrivateResource"})
-        int layoutId = MaterialAttributes.resolveInteger(context, R.attr.listItemLayout,
+        int layoutId = MaterialAttributes.resolveInteger(context, androidx.appcompat.R.attr.listItemLayout,
                 R.layout.m3_alert_select_dialog_item);
         adapter = new SearchableRecyclerViewAdapter(itemNames, layoutId);
         recyclerView.setAdapter(adapter);

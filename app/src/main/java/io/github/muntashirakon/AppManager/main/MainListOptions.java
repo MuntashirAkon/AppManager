@@ -142,7 +142,7 @@ public class MainListOptions extends ListOptions {
                 profileNames.addAll(ProfileManager.getProfileNames());
                 if (isDetached()) return;
                 activity.runOnUiThread(() -> {
-                    profileNameInput.setAdapter(new AnyFilterArrayAdapter<>(activity, R.layout.item_checked_text_view,
+                    profileNameInput.setAdapter(new AnyFilterArrayAdapter<>(activity, io.github.muntashirakon.ui.R.layout.item_checked_text_view,
                             profileNames));
                     profileNameInput.setText(model.getFilterProfileName());
                 });

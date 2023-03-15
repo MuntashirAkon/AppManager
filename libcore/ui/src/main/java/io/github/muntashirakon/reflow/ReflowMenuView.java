@@ -40,7 +40,6 @@ import com.google.android.material.shape.ShapeAppearanceModel;
 
 import java.util.HashSet;
 
-import io.github.muntashirakon.ui.R;
 import io.github.muntashirakon.util.MotionUtils;
 import io.github.muntashirakon.widget.FlowLayout;
 
@@ -129,12 +128,12 @@ public abstract class ReflowMenuView extends FlowLayout implements MenuView {
         set.setDuration(
                 MotionUtils.resolveThemeDuration(
                         getContext(),
-                        R.attr.motionDurationLong1,
-                        getResources().getInteger(R.integer.material_motion_duration_long_1)));
+                        com.google.android.material.R.attr.motionDurationLong1,
+                        getResources().getInteger(com.google.android.material.R.integer.material_motion_duration_long_1)));
         if (!isInEditMode()) {
             set.setInterpolator(MotionUtils.resolveThemeInterpolator(
                     getContext(),
-                    R.attr.motionEasingStandard,
+                    com.google.android.material.R.attr.motionEasingStandard,
                     AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR));
         }
         set.addTransition(new TextScale());
@@ -675,7 +674,7 @@ public abstract class ReflowMenuView extends FlowLayout implements MenuView {
         ColorStateList baseColor = AppCompatResources.getColorStateList(getContext(), value.resourceId);
         if (!getContext()
                 .getTheme()
-                .resolveAttribute(R.attr.colorPrimary, value, true)) {
+                .resolveAttribute(androidx.appcompat.R.attr.colorPrimary, value, true)) {
             return null;
         }
         int colorPrimary = value.data;

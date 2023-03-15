@@ -10,15 +10,13 @@ import androidx.annotation.Nullable;
 
 import com.google.android.material.textfield.TextInputEditText;
 
-import io.github.muntashirakon.ui.R;
-
 public class TextInputTextView extends TextInputEditText {
     public TextInputTextView(@NonNull Context context) {
         this(context, null);
     }
 
     public TextInputTextView(@NonNull Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs, R.attr.editTextStyle);
+        this(context, attrs, androidx.appcompat.R.attr.editTextStyle);
     }
 
     public TextInputTextView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {

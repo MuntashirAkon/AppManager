@@ -121,11 +121,11 @@ public abstract class ReflowMenuViewWrapper extends LinearLayoutCompat {
     }
 
     public ReflowMenuViewWrapper(Context context, AttributeSet attrs) {
-        this(context, attrs, R.attr.bottomNavigationStyle);
+        this(context, attrs, com.google.android.material.R.attr.bottomNavigationStyle);
     }
 
     public ReflowMenuViewWrapper(Context context, AttributeSet attrs, @AttrRes int defStyleAttr) {
-        this(context, attrs, defStyleAttr, R.style.Widget_Design_BottomNavigationView);
+        this(context, attrs, defStyleAttr, com.google.android.material.R.style.Widget_Design_BottomNavigationView);
     }
 
     public ReflowMenuViewWrapper(
@@ -169,7 +169,7 @@ public abstract class ReflowMenuViewWrapper extends LinearLayoutCompat {
 
         setItemIconSize(attributes.getDimensionPixelSize(
                 R.styleable.ReflowMenuViewWrapper_itemIconSize,
-                getResources().getDimensionPixelSize(R.dimen.mtrl_navigation_bar_item_default_icon_size)));
+                getResources().getDimensionPixelSize(com.google.android.material.R.dimen.mtrl_navigation_bar_item_default_icon_size)));
 
         if (attributes.hasValue(R.styleable.ReflowMenuViewWrapper_itemTextAppearanceInactive)) {
             setItemTextAppearanceInactive(

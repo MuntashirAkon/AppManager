@@ -211,7 +211,7 @@ public class MainPreferences extends PreferenceFragment {
         });
         // Device info
         model.getDeviceInfo().observe(getViewLifecycleOwner(), deviceInfo -> {
-            View v = View.inflate(activity, R.layout.dialog_scrollable_text_view, null);
+            View v = View.inflate(activity, io.github.muntashirakon.ui.R.layout.dialog_scrollable_text_view, null);
             ((TextView) v.findViewById(android.R.id.content)).setText(deviceInfo.toLocalizedString(activity));
             v.findViewById(android.R.id.checkbox).setVisibility(View.GONE);
             new AlertDialogBuilder(activity, true).setTitle(R.string.about_device).setView(v).show();

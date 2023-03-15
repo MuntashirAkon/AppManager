@@ -137,7 +137,7 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
         // Make spinner the first item to focus on
         intervalSpinner.requestFocus();
         SpinnerAdapter intervalSpinnerAdapter = ArrayAdapter.createFromResource(this,
-                R.array.usage_interval_dropdown_list, R.layout.item_checked_text_view);
+                R.array.usage_interval_dropdown_list, io.github.muntashirakon.ui.R.layout.item_checked_text_view);
         intervalSpinner.setAdapter(intervalSpinnerAdapter);
         intervalSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

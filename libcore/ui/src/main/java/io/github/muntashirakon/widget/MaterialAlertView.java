@@ -165,8 +165,8 @@ public class MaterialAlertView extends TextInputLayout {
             default:
             case ALERT_TYPE_INFO: {
                 setStartIconDrawable(R.drawable.ic_information);
-                ColorStateList foreground = ColorStateList.valueOf(MaterialColors.getColor(this, R.attr.colorOnPrimaryContainer));
-                ColorStateList background = ColorStateList.valueOf(MaterialColors.getColor(this, R.attr.colorPrimaryContainer));
+                ColorStateList foreground = ColorStateList.valueOf(MaterialColors.getColor(this, com.google.android.material.R.attr.colorOnPrimaryContainer));
+                ColorStateList background = ColorStateList.valueOf(MaterialColors.getColor(this, com.google.android.material.R.attr.colorPrimaryContainer));
                 setBoxBackgroundColorStateList(background);
                 setStartIconTintList(foreground);
                 mTextInputTextView.setTextColor(foreground);
@@ -174,8 +174,8 @@ public class MaterialAlertView extends TextInputLayout {
             }
             case ALERT_TYPE_WARN: {
                 setStartIconDrawable(R.drawable.ic_caution);
-                ColorStateList foreground = ColorStateList.valueOf(MaterialColors.getColor(this, R.attr.colorOnErrorContainer));
-                ColorStateList background = ColorStateList.valueOf(MaterialColors.getColor(this, R.attr.colorErrorContainer));
+                ColorStateList foreground = ColorStateList.valueOf(MaterialColors.getColor(this, com.google.android.material.R.attr.colorOnErrorContainer));
+                ColorStateList background = ColorStateList.valueOf(MaterialColors.getColor(this, com.google.android.material.R.attr.colorErrorContainer));
                 setBoxBackgroundColorStateList(background);
                 setStartIconTintList(foreground);
                 mTextInputTextView.setTextColor(foreground);

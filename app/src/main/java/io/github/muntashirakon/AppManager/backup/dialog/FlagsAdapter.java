@@ -17,7 +17,6 @@ import com.google.android.material.resources.MaterialAttributes;
 
 import java.util.List;
 
-import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
@@ -40,8 +39,8 @@ class FlagsAdapter extends RecyclerView.Adapter<FlagsAdapter.ViewHolder> {
     @SuppressLint("RestrictedApi")
     public FlagsAdapter(@NonNull Context context, @BackupFlags.BackupFlag int flags,
                         @BackupFlags.BackupFlag int supportedFlags, @BackupFlags.BackupFlag int disabledFlags) {
-        mLayoutId = MaterialAttributes.resolveInteger(context, R.attr.multiChoiceItemLayout,
-                R.layout.mtrl_alert_select_dialog_multichoice);
+        mLayoutId = MaterialAttributes.resolveInteger(context, androidx.appcompat.R.attr.multiChoiceItemLayout,
+                com.google.android.material.R.layout.mtrl_alert_select_dialog_multichoice);
         // We list |supportedFlags| and select |flags| by default
         mSupportedBackupFlags = BackupFlags.getBackupFlagsAsArray(supportedFlags);
         mSupportedBackupFlagNames = BackupFlags.getFormattedFlagNames(context, mSupportedBackupFlags);

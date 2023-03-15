@@ -109,7 +109,7 @@ public final class ReflowMenuItemView extends MaterialCardView implements MenuVi
     }
 
     public ReflowMenuItemView(Context context, AttributeSet attrs) {
-        this(context, attrs, R.attr.materialCardViewStyle);
+        this(context, attrs, com.google.android.material.R.attr.materialCardViewStyle);
     }
 
     public ReflowMenuItemView(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -301,13 +301,13 @@ public final class ReflowMenuItemView extends MaterialCardView implements MenuVi
             activeIndicatorAnimator.setInterpolator(
                     MotionUtils.resolveThemeInterpolator(
                             getContext(),
-                            R.attr.motionEasingStandard,
+                            com.google.android.material.R.attr.motionEasingStandard,
                             AnimationUtils.FAST_OUT_SLOW_IN_INTERPOLATOR));
             activeIndicatorAnimator.setDuration(
                     MotionUtils.resolveThemeDuration(
                             getContext(),
-                            R.attr.motionDurationLong1,
-                            getResources().getInteger(R.integer.material_motion_duration_long_1)));
+                            com.google.android.material.R.attr.motionDurationLong1,
+                            getResources().getInteger(com.google.android.material.R.integer.material_motion_duration_long_1)));
             activeIndicatorAnimator.start();
         }
     }
@@ -449,7 +449,7 @@ public final class ReflowMenuItemView extends MaterialCardView implements MenuVi
             infoCompat.setClickable(false);
             infoCompat.removeAction(AccessibilityActionCompat.ACTION_CLICK);
         }
-        infoCompat.setRoleDescription(getResources().getString(R.string.item_view_role_description));
+        infoCompat.setRoleDescription(getResources().getString(com.google.android.material.R.string.item_view_role_description));
     }
 
     /**
@@ -820,6 +820,6 @@ public final class ReflowMenuItemView extends MaterialCardView implements MenuVi
      */
     @DimenRes
     protected int getItemDefaultMarginResId() {
-        return R.dimen.mtrl_navigation_bar_item_default_margin;
+        return com.google.android.material.R.dimen.mtrl_navigation_bar_item_default_margin;
     }
 }

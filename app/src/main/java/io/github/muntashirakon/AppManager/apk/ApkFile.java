@@ -935,7 +935,7 @@ public final class ApkFile implements AutoCloseable {
                 builder.append(", ");
                 int start = builder.length();
                 builder.append(context.getString(R.string.unsupported_split_apk));
-                builder.setSpan(new ForegroundColorSpan(MaterialColors.getColor(context, R.attr.colorError, "null")),
+                builder.setSpan(new ForegroundColorSpan(MaterialColors.getColor(context, androidx.appcompat.R.attr.colorError, "null")),
                         start, builder.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
             return new SpannableStringBuilder(localizedString).append("\n").append(getSmallerText(builder));

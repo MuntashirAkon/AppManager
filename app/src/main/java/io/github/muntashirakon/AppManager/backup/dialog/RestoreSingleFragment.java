@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
@@ -186,8 +185,8 @@ public class RestoreSingleFragment extends Fragment {
         public BackupAdapter(@NonNull Context context, @NonNull List<MetadataManager.Metadata> backups,
                              @NonNull OnSelectionListener selectionListener) {
             mSelectionListener = selectionListener;
-            mLayoutId = MaterialAttributes.resolveInteger(context, R.attr.multiChoiceItemLayout,
-                    R.layout.mtrl_alert_select_dialog_multichoice);
+            mLayoutId = MaterialAttributes.resolveInteger(context, androidx.appcompat.R.attr.multiChoiceItemLayout,
+                    com.google.android.material.R.layout.mtrl_alert_select_dialog_multichoice);
             mSelectionListener.onSelectionChanged(null, mSelectedPositions.size(), false);
             for (int i = 0; i < backups.size(); ++i) {
                 MetadataManager.Metadata backup = backups.get(i);

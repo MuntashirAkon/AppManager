@@ -52,7 +52,7 @@ public class ListItemCreator {
     private View addItemWithIconTitleSubtitle(@NonNull CharSequence title,
                                               @Nullable CharSequence subtitle,
                                               @DrawableRes int resIdIcon) {
-        listItem = mLayoutInflater.inflate(R.layout.m3_preference, mListContainer, false);
+        listItem = mLayoutInflater.inflate(io.github.muntashirakon.ui.R.layout.m3_preference, mListContainer, false);
         listItem.findViewById(R.id.icon_frame).setVisibility(View.GONE);
         // Item title
         itemTitle = listItem.findViewById(android.R.id.title);

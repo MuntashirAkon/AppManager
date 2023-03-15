@@ -128,7 +128,7 @@ public class EditPrefItemFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.dialog_edit_pref_item, null);
         Spinner spinner = view.findViewById(R.id.type_selector_spinner);
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(activity, R.array.shared_pref_types,
-                R.layout.item_checked_text_view);
+                io.github.muntashirakon.ui.R.layout.item_checked_text_view);
         spinner.setAdapter(spinnerAdapter);
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

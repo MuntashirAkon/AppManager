@@ -60,12 +60,12 @@ import static com.google.android.material.theme.overlay.MaterialThemeOverlay.wra
 // Copyright 2018 The Android Open Source Project
 public class AlertDialogBuilder extends AlertDialog.Builder {
     @AttrRes
-    private static final int DEF_STYLE_ATTR = R.attr.alertDialogStyle;
+    private static final int DEF_STYLE_ATTR = androidx.appcompat.R.attr.alertDialogStyle;
     @StyleRes
-    private static final int DEF_STYLE_RES = R.style.MaterialAlertDialog_Material3;
+    private static final int DEF_STYLE_RES = com.google.android.material.R.style.MaterialAlertDialog_Material3;
 
     @AttrRes
-    private static final int MATERIAL_ALERT_DIALOG_THEME_OVERLAY = R.attr.materialAlertDialogTheme;
+    private static final int MATERIAL_ALERT_DIALOG_THEME_OVERLAY = com.google.android.material.R.attr.materialAlertDialogTheme;
 
     @Nullable
     private final FullScreenDialogTitleBuilder mTitleBuilder;
@@ -142,7 +142,7 @@ public class AlertDialogBuilder extends AlertDialog.Builder {
 
         mBackgroundInsets = MaterialDialogs.getDialogBackgroundInsets(context, DEF_STYLE_ATTR, DEF_STYLE_RES);
 
-        int surfaceColor = MaterialColors.getColor(context, R.attr.colorSurface, getClass().getCanonicalName());
+        int surfaceColor = MaterialColors.getColor(context, com.google.android.material.R.attr.colorSurface, getClass().getCanonicalName());
         MaterialShapeDrawable materialShapeDrawable =
                 new MaterialShapeDrawable(context, null, DEF_STYLE_ATTR, DEF_STYLE_RES);
         materialShapeDrawable.initializeElevationOverlay(context);

@@ -16,7 +16,6 @@ import androidx.annotation.StyleRes;
 
 import java.io.File;
 
-import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.signing.Signer;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
@@ -108,9 +107,9 @@ public final class Prefs {
         public static int getAppTheme() {
             switch (AppPref.getInt(AppPref.PrefKey.PREF_APP_THEME_CUSTOM_INT)) {
                 case 1: // Full black theme
-                    return R.style.AppTheme_Black;
+                    return io.github.muntashirakon.ui.R.style.AppTheme_Black;
                 default: // Normal theme
-                    return R.style.AppTheme;
+                    return io.github.muntashirakon.ui.R.style.AppTheme;
             }
         }
 
@@ -118,9 +117,9 @@ public final class Prefs {
         public static int getTransparentAppTheme() {
             switch (AppPref.getInt(AppPref.PrefKey.PREF_APP_THEME_CUSTOM_INT)) {
                 case 1: // Full black theme
-                    return R.style.AppTheme_TransparentBackground_Black;
+                    return io.github.muntashirakon.ui.R.style.AppTheme_TransparentBackground_Black;
                 default: // Normal theme
-                    return R.style.AppTheme_TransparentBackground;
+                    return io.github.muntashirakon.ui.R.style.AppTheme_TransparentBackground;
             }
         }
 

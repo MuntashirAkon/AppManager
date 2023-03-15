@@ -53,21 +53,21 @@ class AppInfoRecyclerAdapter extends RecyclerView.Adapter<AppInfoRecyclerAdapter
         final View view;
         switch (viewType) {
             case LIST_ITEM_GROUP_BEGIN:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.m3_preference_category, parent, false);
+                view = LayoutInflater.from(parent.getContext()).inflate(io.github.muntashirakon.ui.R.layout.m3_preference_category, parent, false);
                 break;
             default:
             case LIST_ITEM_REGULAR:
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.m3_preference, parent, false);
+                view = LayoutInflater.from(parent.getContext()).inflate(io.github.muntashirakon.ui.R.layout.m3_preference, parent, false);
                 break;
             case LIST_ITEM_REGULAR_ACTION: {
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.m3_preference, parent, false);
+                view = LayoutInflater.from(parent.getContext()).inflate(io.github.muntashirakon.ui.R.layout.m3_preference, parent, false);
                 View action = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_right_standalone_action, parent, false);
                 LinearLayoutCompat layoutCompat = view.findViewById(android.R.id.widget_frame);
                 layoutCompat.addView(action);
                 break;
             }
             case LIST_ITEM_INLINE: {
-                view = LayoutInflater.from(parent.getContext()).inflate(R.layout.m3_preference, parent, false);
+                view = LayoutInflater.from(parent.getContext()).inflate(io.github.muntashirakon.ui.R.layout.m3_preference, parent, false);
                 View action = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_right_summary, parent, false);
                 LinearLayoutCompat layoutCompat = view.findViewById(android.R.id.widget_frame);
                 layoutCompat.addView(action);

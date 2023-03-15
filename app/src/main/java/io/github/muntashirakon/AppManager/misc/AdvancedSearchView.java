@@ -68,7 +68,7 @@ public class AdvancedSearchView extends SearchView {
      */
     public static final int SEARCH_TYPE_REGEX = 1 << 3;
 
-    private static final int DEF_STYLE_RES = R.style.Widget_AppTheme_SearchView;
+    private static final int DEF_STYLE_RES = io.github.muntashirakon.ui.R.style.Widget_AppTheme_SearchView;
 
     @SearchType
     private int mType = SEARCH_TYPE_CONTAINS;
@@ -144,22 +144,22 @@ public class AdvancedSearchView extends SearchView {
     }
 
     public AdvancedSearchView(@NonNull Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs, R.attr.searchViewStyle);
+        this(context, attrs, androidx.appcompat.R.attr.searchViewStyle);
     }
 
     @SuppressLint("RestrictedApi")
     public AdvancedSearchView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(wrap(context, attrs, defStyleAttr, DEF_STYLE_RES), attrs, defStyleAttr);
         context = getContext();
-        mSearchSrcTextView = findViewById(R.id.search_src_text);
-        mSearchTypeSelectionButton = findViewById(R.id.search_mag_icon);
+        mSearchSrcTextView = findViewById(com.google.android.material.R.id.search_src_text);
+        mSearchTypeSelectionButton = findViewById(com.google.android.material.R.id.search_mag_icon);
         mSearchTypeSelectionButton.setImageResource(R.drawable.ic_filter_menu);
         mSearchTypeSelectionButton.setBackground(UiUtils.getDrawable(context, android.R.attr.selectableItemBackgroundBorderless));
         mSearchTypeSelectionButton.setOnClickListener(onClickSearchIcon);
         final TypedArray a = ThemeEnforcement.obtainStyledAttributes(
-                context, attrs, R.styleable.SearchView, defStyleAttr, DEF_STYLE_RES);
-        mQueryHint = a.getText(R.styleable.SearchView_queryHint);
-        mSearchHintIcon = a.getDrawable(R.styleable.SearchView_searchHintIcon);
+                context, attrs, io.github.muntashirakon.ui.R.styleable.SearchView, defStyleAttr, DEF_STYLE_RES);
+        mQueryHint = a.getText(io.github.muntashirakon.ui.R.styleable.SearchView_queryHint);
+        mSearchHintIcon = a.getDrawable(io.github.muntashirakon.ui.R.styleable.SearchView_searchHintIcon);
         a.recycle();
         setIconified(isIconified());
         updateQueryHint();
