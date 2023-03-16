@@ -279,23 +279,25 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
     }
 
     public void saveExportedAppList(@ListExporter.ExportType int exportType, @NonNull Path path) {
-        try (OutputStream os = path.openOutputStream()) {
-            List<PackageInfo> packageInfoList = new ArrayList<>();
-            for (String packageName : getSelectedPackages().keySet()) {
-                int[] userIds = Objects.requireNonNull(getSelectedPackages().get(packageName)).userHandles;
-                if (userIds != null) {
-                    for (int userId : userIds) {
-                        packageInfoList.add(PackageManagerCompat.getPackageInfo(packageName, 0, userId));
-                        break;
+        executor.submit(() -> {
+            try (OutputStream os = path.openOutputStream()) {
+                List<PackageInfo> packageInfoList = new ArrayList<>();
+                for (String packageName : getSelectedPackages().keySet()) {
+                    int[] userIds = Objects.requireNonNull(getSelectedPackages().get(packageName)).userHandles;
+                    if (userIds != null) {
+                        for (int userId : userIds) {
+                            packageInfoList.add(PackageManagerCompat.getPackageInfo(packageName, 0, userId));
+                            break;
+                        }
                     }
                 }
+                os.write(ListExporter.export(getApplication(), exportType, packageInfoList).getBytes(StandardCharsets.UTF_8));
+                operationStatus.postValue(true);
+            } catch (IOException | RemoteException | PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+                operationStatus.postValue(false);
             }
-            os.write(ListExporter.export(getApplication(), exportType, packageInfoList).getBytes(StandardCharsets.UTF_8));
-            operationStatus.postValue(true);
-        } catch (IOException | RemoteException | PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-            operationStatus.postValue(false);
-        }
+        });
     }
 
     @GuardedBy("applicationItems")
