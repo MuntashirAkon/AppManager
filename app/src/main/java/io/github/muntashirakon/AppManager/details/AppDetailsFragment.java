@@ -199,6 +199,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
         mAlertView.setEndIconMode(MaterialAlertView.END_ICON_CUSTOM);
         mAlertView.setEndIconDrawable(com.google.android.material.R.drawable.mtrl_ic_cancel);
         mAlertView.setEndIconContentDescription(R.string.close);
+        mAlertView.setVisibility(View.GONE);
         mSwipeRefresh.setOnChildScrollUpCallback((parent, child) -> recyclerView.canScrollVertically(-1));
         if (mMainModel == null) return;
         mMainModel.get(mNeededProperty).observe(getViewLifecycleOwner(), appDetailsItems -> {
