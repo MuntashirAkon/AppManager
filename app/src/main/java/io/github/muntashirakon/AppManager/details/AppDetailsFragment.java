@@ -158,7 +158,7 @@ public class AppDetailsFragment extends Fragment implements AdvancedSearchView.O
     private AppDetailsViewModel mMainModel;
 
     private final ExecutorService mExecutor = Executors.newFixedThreadPool(3);
-    private final ImageLoader mImageLoader = new ImageLoader(mExecutor);
+    private final ImageLoader mImageLoader = new ImageLoader();
 
     private int mColorQueryStringHighlight;
 

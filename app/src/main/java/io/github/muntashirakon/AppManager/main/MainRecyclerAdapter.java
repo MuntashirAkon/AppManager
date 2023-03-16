@@ -82,7 +82,7 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
         super();
         mActivity = activity;
         mPackageManager = activity.getPackageManager();
-        imageLoader = new ImageLoader(mActivity.mModel.executor);
+        imageLoader = new ImageLoader();
 
         mCardColor = ColorCodes.getListItemColor1(activity);
         mDefaultIndicatorColor = ColorCodes.getListItemDefaultIndicatorColor(activity);

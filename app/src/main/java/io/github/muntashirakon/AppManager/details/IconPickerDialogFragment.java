@@ -46,8 +46,7 @@ public class IconPickerDialogFragment extends DialogFragment {
     private IconPickerListener listener;
     private IconListingAdapter adapter;
     private IconPickerViewModel model;
-    private final ExecutorService executor = Executors.newFixedThreadPool(5);
-    private final ImageLoader imageLoader = new ImageLoader(executor);
+    private final ImageLoader imageLoader = new ImageLoader();
 
     public void attachIconPickerListener(IconPickerListener listener) {
         this.listener = listener;
@@ -76,7 +75,7 @@ public class IconPickerDialogFragment extends DialogFragment {
                 if (getDialog() != null) getDialog().dismiss();
             }
         });
-        model.resolveIcons(executor);
+        model.resolveIcons();
         return new MaterialAlertDialogBuilder(requireActivity())
                 .setTitle(R.string.icon_picker)
                 .setView(grid)
@@ -86,7 +85,6 @@ public class IconPickerDialogFragment extends DialogFragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        executor.shutdownNow();
         imageLoader.close();
     }
 
@@ -129,12 +127,13 @@ public class IconPickerDialogFragment extends DialogFragment {
             }
             IconItemInfo info = this.icons[position];
 
-            executor.submit(() -> imageLoader.displayImage(info.packageName, info, view));
+            imageLoader.displayImage(info.packageName, info, view);
             return convertView;
         }
     }
 
     public static class IconPickerViewModel extends AndroidViewModel {
+        private final ExecutorService executor = Executors.newFixedThreadPool(5);
         private final PackageManager pm;
         private final MutableLiveData<IconItemInfo[]> iconsLiveData = new MutableLiveData<>();
 
@@ -143,11 +142,17 @@ public class IconPickerDialogFragment extends DialogFragment {
             pm = application.getPackageManager();
         }
 
+        @Override
+        protected void onCleared() {
+            executor.shutdownNow();
+            super.onCleared();
+        }
+
         public LiveData<IconItemInfo[]> getIconsLiveData() {
             return iconsLiveData;
         }
 
-        public void resolveIcons(@NonNull ExecutorService executor) {
+        public void resolveIcons() {
             executor.submit(() -> {
                 TreeSet<IconItemInfo> icons = new TreeSet<>();
                 List<PackageInfo> installedPackages = pm.getInstalledPackages(0);

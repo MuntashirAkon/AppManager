@@ -189,7 +189,7 @@ public class OpenWithDialogFragment extends DialogFragment {
 
         public MatchingActivitiesRecyclerViewAdapter(OpenWithViewModel viewModel, Activity activity) {
             mViewModel = viewModel;
-            mImageLoader = new ImageLoader(viewModel.getExecutor());
+            mImageLoader = new ImageLoader();
             mActivity = activity;
             mPm = activity.getPackageManager();
         }
@@ -307,10 +307,6 @@ public class OpenWithDialogFragment extends DialogFragment {
 
         public LiveData<Intent> getIntentLiveData() {
             return mIntentLiveData;
-        }
-
-        public ExecutorService getExecutor() {
-            return mExecutor;
         }
 
         @Override

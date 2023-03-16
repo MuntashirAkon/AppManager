@@ -32,7 +32,6 @@ import android.content.pm.ResolveInfo;
 import android.content.pm.Signature;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -129,6 +128,7 @@ import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.scanner.ScannerActivity;
+import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.sharedpref.SharedPrefsActivity;
@@ -464,7 +464,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     // Back button pressed.
                     return;
                 }
-                try {
+                executor.submit(() -> {
                     try (OutputStream outputStream = mActivity.getContentResolver().openOutputStream(uri)) {
                         if (outputStream == null) {
                             throw new IOException("Unable to open output stream.");
@@ -472,12 +472,12 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         Bitmap bitmap = getBitmapFromDrawable(mApplicationInfo.loadIcon(mPackageManager));
                         bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
                         outputStream.flush();
-                        displayShortToast(R.string.saved_successfully);
+                        ThreadUtils.postOnMainThread(() -> displayShortToast(R.string.saved_successfully));
+                    } catch (IOException e) {
+                        Log.e(TAG, e);
+                        ThreadUtils.postOnMainThread(() -> displayShortToast(R.string.saving_failed));
                     }
-                } catch (IOException e) {
-                    Log.e(TAG, e);
-                    displayShortToast(R.string.saving_failed);
-                }
+                });
             });
         } else if (itemId == R.id.action_install) {
             List<UserInfo> users = Users.getUsers();
@@ -1609,12 +1609,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @WorkerThread
     private void loadPackageInfo() {
         // Set App Icon
-        Drawable icon = mApplicationInfo.loadIcon(mPackageManager);
-        runOnUiThread(() -> {
-            if (isAdded() && !isDetached()) {
-                iconView.setImageDrawable(icon);
-            }
-        });
+        ImageLoader.displayImage(mApplicationInfo, iconView);
         // (Re)load views
         model.loadPackageLabel();
         model.loadTagCloud();

@@ -20,56 +20,62 @@ import androidx.collection.LruCache;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Objects;
 import java.util.WeakHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class ImageLoader implements Closeable {
+    public static void displayImage(@Nullable PackageItemInfo info, @Nullable ImageView imageView) {
+        WeakReference<ImageView> ivRef = new WeakReference<>(imageView);
+        ThreadUtils.postOnBackgroundThread(() -> {
+            ImageView iv = ivRef.get();
+            if (info == null || iv == null) {
+                return;
+            }
+            Drawable drawable = info.loadIcon(iv.getContext().getPackageManager());
+            ThreadUtils.postOnMainThread(() -> {
+                ImageView iv2 = ivRef.get();
+                if (iv2 != null) {
+                    iv2.setImageDrawable(drawable);
+                }
+            });
+        });
+    }
+
     private final LruCache<String, Bitmap> mMemoryCache = new LruCache<>(300);
     private final ImageFileCache mImageFileCache = new ImageFileCache();
-    private final Map<ImageView, String> mImageViews = Collections.synchronizedMap(new WeakHashMap<>());
-    private final ExecutorService mExecutor;
-    private final boolean mShutdownExecutor;
+    private final Map<Integer, String> mImageViews = Collections.synchronizedMap(new WeakHashMap<>());
     private boolean mIsClosed = false;
 
     public ImageLoader() {
-        mExecutor = Executors.newFixedThreadPool(5);
-        mShutdownExecutor = true;
-    }
-
-    public ImageLoader(@NonNull ExecutorService executor) {
-        mExecutor = executor;
-        mShutdownExecutor = false;
     }
 
     @UiThread
-    public void displayImage(@NonNull String name, @Nullable PackageItemInfo info, @NonNull ImageView imageView) {
-        mImageViews.put(imageView, name);
-        Bitmap image = mMemoryCache.get(name);
+    public void displayImage(@NonNull String tag, @Nullable PackageItemInfo info, @NonNull ImageView imageView) {
+        mImageViews.put(imageView.hashCode(), tag);
+        Bitmap image = mMemoryCache.get(tag);
         if (image != null) {
             imageView.setImageBitmap(image);
         } else {
-            queueImage(name, info, imageView);
+            queueImage(tag, info, imageView);
         }
     }
 
     @AnyThread
-    private void queueImage(@NonNull String name, @Nullable PackageItemInfo info, @NonNull ImageView imageView) {
-        ImageLoaderQueueItem queueItem = new ImageLoaderQueueItem(name, info, imageView);
-        mExecutor.submit(new LoadQueueItem(queueItem));
+    private void queueImage(@NonNull String tag, @Nullable PackageItemInfo info, @NonNull ImageView imageView) {
+        ImageLoaderQueueItem queueItem = new ImageLoaderQueueItem(tag, info, imageView);
+        ThreadUtils.postOnBackgroundThread(new LoadQueueItem(queueItem));
     }
 
     @Override
     public void close() {
         mIsClosed = true;
-        if (mShutdownExecutor) {
-            mExecutor.shutdownNow();
-        }
         mMemoryCache.evictAll();
         mImageFileCache.clear();
     }
@@ -83,15 +89,15 @@ public class ImageLoader implements Closeable {
 
     @AnyThread
     private static class ImageLoaderQueueItem {
-        public final String name;
-        public final ImageView imageView;
+        public final String tag;
+        public final WeakReference<ImageView> imageView;
         public final PackageManager pm;
         public final PackageItemInfo info;
 
-        public ImageLoaderQueueItem(@NonNull String name, @Nullable PackageItemInfo info, @NonNull ImageView imageView) {
-            this.name = name;
+        public ImageLoaderQueueItem(@NonNull String tag, @Nullable PackageItemInfo info, @NonNull ImageView imageView) {
+            this.tag = tag;
             this.info = info;
-            this.imageView = imageView;
+            this.imageView = new WeakReference<>(imageView);
             this.pm = AppManager.getContext().getPackageManager();
         }
     }
@@ -106,22 +112,23 @@ public class ImageLoader implements Closeable {
         @WorkerThread
         public void run() {
             if (imageViewReusedOrClosed(mQueueItem)) return;
-            Bitmap image = mImageFileCache.getImage(mQueueItem.name);
+            Bitmap image = mImageFileCache.getImage(mQueueItem.tag);
+            ImageView iv = mQueueItem.imageView.get();
             if (image == null) { // Cache miss
                 Drawable drawable;
                 if (mQueueItem.info != null) {
                     drawable = mQueueItem.info.loadIcon(mQueueItem.pm);
-                    image = getScaledBitmap(mQueueItem.imageView, drawable, 1.0f);
+                    image = getScaledBitmap(iv, drawable, 1.0f);
                     try {
-                        mImageFileCache.putImage(mQueueItem.name, image);
+                        mImageFileCache.putImage(mQueueItem.tag, image);
                     } catch (IOException ignore) {
                     }
                 } else {
                     drawable = mQueueItem.pm.getDefaultActivityIcon();
-                    image = getScaledBitmap(mQueueItem.imageView, drawable, 1.0f);
+                    image = getScaledBitmap(iv, drawable, 1.0f);
                 }
             }
-            mMemoryCache.put(mQueueItem.name, image);
+            mMemoryCache.put(mQueueItem.tag, image);
             if (imageViewReusedOrClosed(mQueueItem)) return;
             ThreadUtils.postOnMainThread(new LoadImageInImageView(image, mQueueItem));
         }
@@ -140,14 +147,17 @@ public class ImageLoader implements Closeable {
         @UiThread
         public void run() {
             if (imageViewReusedOrClosed(mQueueItem)) return;
-            mQueueItem.imageView.setImageBitmap(mImage);
+            ImageView iv = mQueueItem.imageView.get();
+            if (iv != null) {
+                iv.setImageBitmap(mImage);
+            }
         }
     }
 
     @AnyThread
     private boolean imageViewReusedOrClosed(@NonNull ImageLoaderQueueItem imageLoaderQueueItem) {
-        String tag = mImageViews.get(imageLoaderQueueItem.imageView);
-        return mIsClosed || tag == null || !tag.equals(imageLoaderQueueItem.name);
+        ImageView iv = imageLoaderQueueItem.imageView.get();
+        return mIsClosed || iv == null || !Objects.equals(imageLoaderQueueItem.tag, mImageViews.get(iv.hashCode()));
     }
 
     /**
@@ -158,8 +168,11 @@ public class ImageLoader implements Closeable {
      * @param scalingFactor A number between 0 and 1. E.g. 1.0 fits the frame and 0.1 only fits 10% of the frame.
      */
     @WorkerThread
-    public static Bitmap getScaledBitmap(@NonNull View frame, @NonNull Drawable drawable,
+    public static Bitmap getScaledBitmap(@Nullable View frame, @NonNull Drawable drawable,
                                          @FloatRange(from = 0.0, to = 1.0) float scalingFactor) {
+        if (frame == null) {
+            return UIUtils.getBitmapFromDrawable(drawable);
+        }
         int imgWidth = drawable.getIntrinsicWidth();
         int imgHeight = drawable.getIntrinsicHeight();
         int frameHeight = frame.getHeight();
