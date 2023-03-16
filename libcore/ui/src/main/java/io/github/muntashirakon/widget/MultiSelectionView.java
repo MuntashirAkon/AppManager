@@ -252,7 +252,8 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
     }
 
     @Override
-    public WindowInsetsCompat onApplyWindowInsets(View v, WindowInsetsCompat insets) {
+    @NonNull
+    public WindowInsetsCompat onApplyWindowInsets(@NonNull View v, @NonNull WindowInsetsCompat insets) {
         WindowInsetsCompat newInsets = null;
         if (ViewCompat.getFitsSystemWindows(this)) {
             newInsets = insets;

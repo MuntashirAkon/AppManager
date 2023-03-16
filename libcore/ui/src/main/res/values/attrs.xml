@@ -14,6 +14,8 @@
     <declare-styleable name="SearchView">
         <!-- Tint to apply to the SearchView's close icon. -->
         <attr name="closeIconTint" />
+        <attr name="queryHint" />
+        <attr name="searchHintIcon" />
         <attr name="android:textAppearance" />
         <!-- Horizontal margin of the edit frame -->
         <attr name="frameMarginHorizontal" format="dimension" />
