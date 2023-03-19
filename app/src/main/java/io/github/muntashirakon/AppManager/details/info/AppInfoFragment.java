@@ -590,11 +590,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private void refreshDetails() {
         if (mainModel == null || executor.isShutdown()) return;
         showProgressIndicator(true);
-        executor.submit(() -> {
-            if (mainModel != null) {
-                mainModel.setIsPackageChanged();
-            }
-        });
+        mainModel.triggerPackageChange();
     }
 
     @UiThread

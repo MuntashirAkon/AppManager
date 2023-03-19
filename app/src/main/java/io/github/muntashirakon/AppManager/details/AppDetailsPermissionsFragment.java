@@ -2,21 +2,11 @@
 
 package io.github.muntashirakon.AppManager.details;
 
-import static io.github.muntashirakon.AppManager.details.AppDetailsFragment.APP_OPS;
-import static io.github.muntashirakon.AppManager.details.AppDetailsFragment.PERMISSIONS;
-import static io.github.muntashirakon.AppManager.details.AppDetailsFragment.SORT_BY_APP_OP_VALUES;
-import static io.github.muntashirakon.AppManager.details.AppDetailsFragment.SORT_BY_DANGEROUS_PERMS;
-import static io.github.muntashirakon.AppManager.details.AppDetailsFragment.SORT_BY_DENIED_APP_OPS;
-import static io.github.muntashirakon.AppManager.details.AppDetailsFragment.SORT_BY_DENIED_PERMS;
-import static io.github.muntashirakon.AppManager.details.AppDetailsFragment.SORT_BY_NAME;
-import static io.github.muntashirakon.AppManager.details.AppDetailsFragment.USES_PERMISSIONS;
-import static io.github.muntashirakon.AppManager.details.AppDetailsFragment.sSortMenuItemIdsMap;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpModeNames;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpNames;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.content.pm.PermissionInfo;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
@@ -29,21 +19,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.divider.MaterialDivider;
 import com.google.android.material.materialswitch.MaterialSwitch;
-import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -52,8 +37,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
@@ -62,12 +45,11 @@ import io.github.muntashirakon.AppManager.details.struct.AppDetailsAppOpItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsDefinedPermissionItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsPermissionItem;
-import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
-import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.self.pref.TipsPrefs;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
@@ -80,12 +62,8 @@ import io.github.muntashirakon.dialog.TextInputDropdownDialogBuilder;
 import io.github.muntashirakon.util.ProgressIndicatorCompat;
 import io.github.muntashirakon.widget.MaterialAlertView;
 import io.github.muntashirakon.widget.RecyclerView;
-import io.github.muntashirakon.widget.SwipeRefreshLayout;
 
-public class AppDetailsPermissionsFragment extends Fragment implements AdvancedSearchView.OnQueryTextListener,
-        SwipeRefreshLayout.OnRefreshListener {
-    public static final String ARG_TYPE = "type";
-
+public class AppDetailsPermissionsFragment extends AppDetailsFragment {
     @IntDef(value = {
             APP_OPS,
             USES_PERMISSIONS,
@@ -96,62 +74,25 @@ public class AppDetailsPermissionsFragment extends Fragment implements AdvancedS
     }
 
     private String mPackageName;
-    private PackageManager mPackageManager;
-    private AppDetailsActivity mActivity;
     private AppDetailsRecyclerAdapter mAdapter;
-    private SwipeRefreshLayout mSwipeRefresh;
-    private LinearProgressIndicator mProgressIndicator;
-    private MaterialAlertView mAlertView;
     private boolean mIsExternalApk;
     @PermissionProperty
     private int mNeededProperty;
-    @Nullable
-    private AppDetailsViewModel mMainModel;
-
-    private final ExecutorService mExecutor = Executors.newFixedThreadPool(3);
-    private final ImageLoader mImageLoader = new ImageLoader();
-
-    private int mColorQueryStringHighlight;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-        mActivity = (AppDetailsActivity) requireActivity();
         mNeededProperty = requireArguments().getInt(ARG_TYPE);
-        mMainModel = new ViewModelProvider(mActivity).get(AppDetailsViewModel.class);
-        mPackageManager = mActivity.getPackageManager();
-        mColorQueryStringHighlight = ColorCodes.getQueryStringHighlightColor(mActivity);
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.pager_app_details, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        // Swipe refresh
-        mSwipeRefresh = view.findViewById(R.id.swipe_refresh);
-        mSwipeRefresh.setOnRefreshListener(this);
-        RecyclerView recyclerView = view.findViewById(R.id.scrollView);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
-        final TextView emptyView = view.findViewById(android.R.id.empty);
+        super.onViewCreated(view, savedInstanceState);
         emptyView.setText(getNotFoundString(mNeededProperty));
-        recyclerView.setEmptyView(emptyView);
         mAdapter = new AppDetailsRecyclerAdapter();
         recyclerView.setAdapter(mAdapter);
-        mProgressIndicator = view.findViewById(R.id.progress_linear);
-        mProgressIndicator.setVisibilityAfterHide(View.GONE);
-        showProgressIndicator(true);
-        mAlertView = view.findViewById(R.id.alert_text);
-        mAlertView.setEndIconMode(MaterialAlertView.END_ICON_CUSTOM);
-        mAlertView.setEndIconDrawable(com.google.android.material.R.drawable.mtrl_ic_cancel);
-        mAlertView.setEndIconContentDescription(R.string.close);
-        mAlertView.setEndIconOnClickListener(v -> {
-            mAlertView.hide();
+        alertView.setEndIconOnClickListener(v -> {
+            alertView.hide();
             // Check tips
             if (mNeededProperty == APP_OPS) {
                 TipsPrefs.getInstance().setDisplayInAppOpsTab(false);
@@ -164,41 +105,33 @@ public class AppDetailsPermissionsFragment extends Fragment implements AdvancedS
             }
         });
         int helpStringRes = getHelpString(mNeededProperty);
-        if (helpStringRes != 0) mAlertView.setText(helpStringRes);
+        if (helpStringRes != 0) alertView.setText(helpStringRes);
         if (helpStringRes == 0) {
-            mAlertView.setVisibility(View.GONE);
+            alertView.setVisibility(View.GONE);
         } else {
-            mAlertView.postDelayed(() -> mAlertView.hide(), 15_000);
+            alertView.postDelayed(() -> alertView.hide(), 15_000);
         }
-        mSwipeRefresh.setOnChildScrollUpCallback((parent, child) -> recyclerView.canScrollVertically(-1));
-        if (mMainModel == null) return;
-        mPackageName = mMainModel.getPackageName();
-        mMainModel.get(mNeededProperty).observe(getViewLifecycleOwner(), appDetailsItems -> {
-            if (appDetailsItems != null && mAdapter != null && mMainModel.isPackageExist()) {
-                mPackageName = mMainModel.getPackageName();
-                mIsExternalApk = mMainModel.isExternalApk();
+        if (viewModel == null) return;
+        mPackageName = viewModel.getPackageName();
+        viewModel.get(mNeededProperty).observe(getViewLifecycleOwner(), appDetailsItems -> {
+            if (appDetailsItems != null && mAdapter != null && viewModel.isPackageExist()) {
+                mPackageName = viewModel.getPackageName();
+                mIsExternalApk = viewModel.isExternalApk();
                 mAdapter.setDefaultList(appDetailsItems);
-            } else showProgressIndicator(false);
+            } else ProgressIndicatorCompat.setVisibility(progressIndicator, false);
         });
-        mMainModel.getRuleApplicationStatus().observe(getViewLifecycleOwner(), status -> {
-            mAlertView.setAlertType(MaterialAlertView.ALERT_TYPE_WARN);
+        viewModel.getRuleApplicationStatus().observe(getViewLifecycleOwner(), status -> {
+            alertView.setAlertType(MaterialAlertView.ALERT_TYPE_WARN);
             if (status == AppDetailsViewModel.RULE_NOT_APPLIED) {
-                mAlertView.show();
-            } else mAlertView.hide();
+                alertView.show();
+            } else alertView.hide();
         });
-    }
-
-    @Override
-    public void onDetach() {
-        mImageLoader.close();
-        mExecutor.shutdownNow();
-        super.onDetach();
     }
 
     @Override
     public void onRefresh() {
         refreshDetails();
-        mSwipeRefresh.setRefreshing(false);
+        swipeRefresh.setRefreshing(false);
     }
 
     @Override
@@ -208,7 +141,7 @@ public class AppDetailsPermissionsFragment extends Fragment implements AdvancedS
                 inflater.inflate(R.menu.fragment_app_details_app_ops_actions, menu);
                 break;
             case USES_PERMISSIONS:
-                if (mMainModel != null && !mMainModel.isExternalApk()) {
+                if (viewModel != null && !viewModel.isExternalApk()) {
                     inflater.inflate(R.menu.fragment_app_details_permissions_actions, menu);
                     break;
                 } // else fallthrough
@@ -220,10 +153,10 @@ public class AppDetailsPermissionsFragment extends Fragment implements AdvancedS
 
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
-        if (mMainModel == null || mMainModel.isExternalApk()) {
+        if (viewModel == null || viewModel.isExternalApk()) {
             return;
         }
-        MenuItem sortItem = menu.findItem(sSortMenuItemIdsMap[mMainModel.getSortOrder(mNeededProperty)]);
+        MenuItem sortItem = menu.findItem(sSortMenuItemIdsMap[viewModel.getSortOrder(mNeededProperty)]);
         if (sortItem != null) {
             sortItem.setChecked(true);
         }
@@ -235,31 +168,38 @@ public class AppDetailsPermissionsFragment extends Fragment implements AdvancedS
         if (id == R.id.action_refresh_details) {
             refreshDetails();
         } else if (id == R.id.action_reset_to_default) {  // App ops
-            mExecutor.submit(() -> {
-                if (mMainModel == null || !mMainModel.resetAppOps()) {
+            ProgressIndicatorCompat.setVisibility(progressIndicator, true);
+            // TODO: 19/3/23 Perform using a ViewModel
+            ThreadUtils.postOnBackgroundThread(() -> {
+                if (viewModel == null || !viewModel.resetAppOps()) {
                     ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(R.string.failed_to_reset_app_ops));
-                } else ThreadUtils.postOnMainThread(() -> showProgressIndicator(true));
+                } else {
+                    ThreadUtils.postOnMainThread(() -> {
+                        if (!isDetached()) {
+                            refreshDetails();
+                        }
+                    });
+                }
             });
         } else if (id == R.id.action_deny_dangerous_app_ops) {  // App ops
-            showProgressIndicator(true);
-            mExecutor.submit(() -> {
-                boolean isSuccessful = true;
-                try {
-                    if (mMainModel == null || !mMainModel.ignoreDangerousAppOps()) {
-                        isSuccessful = false;
-                    }
-                } catch (RuntimeException e) {
-                    isSuccessful = false;
-                }
+            ProgressIndicatorCompat.setVisibility(progressIndicator, true);
+            // TODO: 19/3/23 Perform using a ViewModel
+            ThreadUtils.postOnBackgroundThread(() -> {
+                boolean isSuccessful = ExUtils.requireNonNullElse(() -> viewModel != null
+                        && viewModel.ignoreDangerousAppOps(), false);
                 if (isSuccessful) {
-                    ThreadUtils.postOnMainThread(this::refreshDetails);
+                    ThreadUtils.postOnMainThread(() -> {
+                        if (!isDetached()) {
+                            refreshDetails();
+                        }
+                    });
                 } else {
-                    ThreadUtils.postOnMainThread(() -> Toast.makeText(mActivity,
-                            R.string.failed_to_deny_dangerous_app_ops, Toast.LENGTH_SHORT).show());
+                    ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(
+                            R.string.failed_to_deny_dangerous_app_ops));
                 }
             });
         } else if (id == R.id.action_toggle_default_app_ops) {  // App ops
-            showProgressIndicator(true);
+            ProgressIndicatorCompat.setVisibility(progressIndicator, true);
             // Turn filter on/off
             boolean curr = Prefs.AppDetailsPage.displayDefaultAppOps();
             Prefs.AppDetailsPage.setDisplayDefaultAppOps(!curr);
@@ -269,7 +209,7 @@ public class AppDetailsPermissionsFragment extends Fragment implements AdvancedS
             List<Integer> appOps = AppOpsManagerCompat.getAllOps();
             List<CharSequence> modeNames = Arrays.asList(getAppOpModeNames(modes));
             List<CharSequence> appOpNames = Arrays.asList(getAppOpNames(appOps));
-            TextInputDropdownDialogBuilder builder = new TextInputDropdownDialogBuilder(mActivity, R.string.set_custom_app_op);
+            TextInputDropdownDialogBuilder builder = new TextInputDropdownDialogBuilder(activity, R.string.set_custom_app_op);
             builder.setTitle(R.string.set_custom_app_op)
                     .setDropdownItems(appOpNames, -1, true)
                     .setAuxiliaryInput(R.string.mode, null, null, modeNames, true)
@@ -288,25 +228,33 @@ public class AppDetailsPermissionsFragment extends Fragment implements AdvancedS
                         } catch (IllegalArgumentException e) {
                             return;
                         }
-                        mExecutor.submit(() -> {
-                            if (mMainModel != null && mMainModel.setAppOp(op, mode)) {
-                                ThreadUtils.postOnMainThread(this::refreshDetails);
+                        ThreadUtils.postOnBackgroundThread(() -> {
+                            if (viewModel != null && viewModel.setAppOp(op, mode)) {
+                                ThreadUtils.postOnMainThread(() -> {
+                                    if (!isDetached()) {
+                                        refreshDetails();
+                                    }
+                                });
                             } else {
-                                ThreadUtils.postOnMainThread(() -> Toast.makeText(mActivity,
-                                        R.string.failed_to_enable_op, Toast.LENGTH_LONG).show());
+                                ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(
+                                        R.string.failed_to_enable_op));
                             }
                         });
                     })
                     .setNegativeButton(R.string.cancel, null)
                     .show();
         } else if (id == R.id.action_deny_dangerous_permissions) {  // permissions
-            showProgressIndicator(true);
-            mExecutor.submit(() -> {
-                if (mMainModel == null || !mMainModel.revokeDangerousPermissions()) {
-                    ThreadUtils.postOnMainThread(() -> Toast.makeText(mActivity,
-                            R.string.failed_to_deny_dangerous_perms, Toast.LENGTH_SHORT).show());
+            ProgressIndicatorCompat.setVisibility(progressIndicator, true);
+            ThreadUtils.postOnBackgroundThread(() -> {
+                if (viewModel == null || !viewModel.revokeDangerousPermissions()) {
+                    ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(
+                            R.string.failed_to_deny_dangerous_perms));
                 }
-                ThreadUtils.postOnMainThread(this::refreshDetails);
+                ThreadUtils.postOnMainThread(() -> {
+                    if (!isDetached()) {
+                        refreshDetails();
+                    }
+                });
             });
             // Sorting
         } else if (id == R.id.action_sort_by_name) {  // All
@@ -331,40 +279,21 @@ public class AppDetailsPermissionsFragment extends Fragment implements AdvancedS
     @Override
     public void onResume() {
         super.onResume();
-        mSwipeRefresh.setEnabled(true);
-        if (mActivity.searchView != null) {
-            mActivity.searchView.setVisibility(View.VISIBLE);
-            mActivity.searchView.setOnQueryTextListener(this);
-            if (mMainModel != null) {
-                mMainModel.filterAndSortItems(mNeededProperty);
+        if (activity.searchView != null) {
+            activity.searchView.setVisibility(View.VISIBLE);
+            activity.searchView.setOnQueryTextListener(this);
+            if (viewModel != null) {
+                viewModel.filterAndSortItems(mNeededProperty);
             }
         }
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        mSwipeRefresh.setEnabled(false);
-    }
-
-    @Override
-    public void onDestroyView() {
-        mSwipeRefresh.setRefreshing(false);
-        mSwipeRefresh.clearAnimation();
-        super.onDestroyView();
-    }
-
-    @Override
     public boolean onQueryTextChange(String searchQuery, int type) {
-        if (mMainModel != null) {
-            mMainModel.setSearchQuery(searchQuery, type, mNeededProperty);
+        if (viewModel != null) {
+            viewModel.setSearchQuery(searchQuery, type, mNeededProperty);
         }
         return true;
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String query, int type) {
-        return false;
     }
 
     private int getNotFoundString(@PermissionProperty int index) {
@@ -408,24 +337,16 @@ public class AppDetailsPermissionsFragment extends Fragment implements AdvancedS
         }
     }
 
-    private void setSortBy(@AppDetailsFragment.SortOrder int sortBy) {
-        showProgressIndicator(true);
-        if (mMainModel == null) return;
-        mMainModel.setSortOrder(sortBy, mNeededProperty);
+    private void setSortBy(@SortOrder int sortBy) {
+        ProgressIndicatorCompat.setVisibility(progressIndicator, true);
+        if (viewModel == null) return;
+        viewModel.setSortOrder(sortBy, mNeededProperty);
     }
 
     private void refreshDetails() {
-        if (mMainModel == null || mIsExternalApk) return;
-        showProgressIndicator(true);
-        mExecutor.submit(() -> {
-            if (mMainModel != null) {
-                mMainModel.setIsPackageChanged();
-            }
-        });
-    }
-
-    private void showProgressIndicator(boolean show) {
-        ProgressIndicatorCompat.setVisibility(mProgressIndicator, show);
+        if (viewModel == null || mIsExternalApk) return;
+        ProgressIndicatorCompat.setVisibility(progressIndicator, true);
+        viewModel.triggerPackageChange();
     }
 
     @UiThread
@@ -442,16 +363,16 @@ public class AppDetailsPermissionsFragment extends Fragment implements AdvancedS
 
         AppDetailsRecyclerAdapter() {
             mAdapterList = new ArrayList<>();
-            mCardColor0 = ColorCodes.getListItemColor0(mActivity);
-            mCardColor1 = ColorCodes.getListItemColor1(mActivity);
-            mDefaultIndicatorColor = ColorCodes.getListItemDefaultIndicatorColor(mActivity);
+            mCardColor0 = ColorCodes.getListItemColor0(activity);
+            mCardColor1 = ColorCodes.getListItemColor1(activity);
+            mDefaultIndicatorColor = ColorCodes.getListItemDefaultIndicatorColor(activity);
         }
 
         @UiThread
         void setDefaultList(@NonNull List<AppDetailsItem<?>> list) {
             mRequestedProperty = mNeededProperty;
-            mConstraint = mMainModel == null ? null : mMainModel.getSearchQuery();
-            showProgressIndicator(false);
+            mConstraint = viewModel == null ? null : viewModel.getSearchQuery();
+            ProgressIndicatorCompat.setVisibility(progressIndicator, false);
             synchronized (mAdapterList) {
                 mAdapterList.clear();
                 mAdapterList.addAll(list);
@@ -570,7 +491,7 @@ public class AppDetailsPermissionsFragment extends Fragment implements AdvancedS
             }
         }
 
-        private void getAppOpsView(@NonNull Context context, @NonNull AppDetailsRecyclerAdapter.ViewHolder holder, int index) {
+        private void getAppOpsView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
             AppDetailsAppOpItem item;
             synchronized (mAdapterList) {
                 item = (AppDetailsAppOpItem) mAdapterList.get(index);
@@ -583,7 +504,7 @@ public class AppDetailsPermissionsFragment extends Fragment implements AdvancedS
                 opName.append(getString(R.string.unknown_op));
             } else if (mConstraint != null && opStr.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
-                opName.append(UIUtils.getHighlightedText(opStr, mConstraint, mColorQueryStringHighlight));
+                opName.append(UIUtils.getHighlightedText(opStr, mConstraint, colorQueryStringHighlight));
             } else opName.append(opStr);
             holder.textView1.setText(opName);
             // Set op mode, running and duration
@@ -631,7 +552,7 @@ public class AppDetailsPermissionsFragment extends Fragment implements AdvancedS
                         LangUtils.getSeparatorString(),
                         permissionInfo.name));
                 // Description
-                CharSequence description = permissionInfo.loadDescription(mPackageManager);
+                CharSequence description = permissionInfo.loadDescription(packageManager);
                 if (description != null) {
                     holder.textView2.setVisibility(View.VISIBLE);
                     holder.textView2.setText(description);
@@ -680,8 +601,8 @@ public class AppDetailsPermissionsFragment extends Fragment implements AdvancedS
             holder.toggleSwitch.setChecked(item.isAllowed());
             holder.itemView.setOnClickListener(v -> {
                 boolean isAllowed = !item.isAllowed();
-                mExecutor.submit(() -> {
-                    if (mMainModel != null && mMainModel.setAppOpMode(item)) {
+                ThreadUtils.postOnBackgroundThread(() -> {
+                    if (viewModel != null && viewModel.setAppOpMode(item)) {
                         ThreadUtils.postOnMainThread(() -> notifyItemChanged(index));
                     } else {
                         ThreadUtils.postOnMainThread(() -> UIUtils.displayLongToast(isAllowed
@@ -691,13 +612,13 @@ public class AppDetailsPermissionsFragment extends Fragment implements AdvancedS
             });
             holder.itemView.setOnLongClickListener(v -> {
                 List<Integer> modes = AppOpsManagerCompat.getModeConstants();
-                new SearchableSingleChoiceDialogBuilder<>(mActivity, modes, getAppOpModeNames(modes))
+                new SearchableSingleChoiceDialogBuilder<>(activity, modes, getAppOpModeNames(modes))
                         .setTitle(R.string.set_app_op_mode)
                         .setSelection(item.getMode())
                         .setOnSingleChoiceClickListener((dialog, which, item1, isChecked) -> {
                             int opMode = modes.get(which);
-                            mExecutor.submit(() -> {
-                                if (mMainModel != null && mMainModel.setAppOpMode(item, opMode)) {
+                            ThreadUtils.postOnBackgroundThread(() -> {
+                                if (viewModel != null && viewModel.setAppOpMode(item, opMode)) {
                                     ThreadUtils.postOnMainThread(() -> notifyItemChanged(index));
                                 } else {
                                     ThreadUtils.postOnMainThread(() -> UIUtils.displayLongToast(
@@ -712,7 +633,7 @@ public class AppDetailsPermissionsFragment extends Fragment implements AdvancedS
             ((MaterialCardView) holder.itemView).setCardBackgroundColor(mCardColor1);
         }
 
-        private void getUsesPermissionsView(@NonNull Context context, @NonNull AppDetailsRecyclerAdapter.ViewHolder holder, int index) {
+        private void getUsesPermissionsView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
             AppDetailsPermissionItem permissionItem;
             synchronized (mAdapterList) {
                 permissionItem = (AppDetailsPermissionItem) mAdapterList.get(index);
@@ -722,11 +643,11 @@ public class AppDetailsPermissionsFragment extends Fragment implements AdvancedS
             // Set permission name
             if (mConstraint != null && permName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
-                holder.textView1.setText(UIUtils.getHighlightedText(permName, mConstraint, mColorQueryStringHighlight));
+                holder.textView1.setText(UIUtils.getHighlightedText(permName, mConstraint, colorQueryStringHighlight));
             } else holder.textView1.setText(permName);
             // Set others
             // Description
-            CharSequence description = permissionInfo.loadDescription(mPackageManager);
+            CharSequence description = permissionInfo.loadDescription(packageManager);
             if (description != null) {
                 holder.textView2.setVisibility(View.VISIBLE);
                 holder.textView2.setText(description);
@@ -758,9 +679,9 @@ public class AppDetailsPermissionsFragment extends Fragment implements AdvancedS
             if (canGrantOrRevokePermission) {
                 holder.toggleSwitch.setVisibility(View.VISIBLE);
                 holder.toggleSwitch.setChecked(permissionItem.isGranted());
-                holder.itemView.setOnClickListener(v -> mExecutor.submit(() -> {
+                holder.itemView.setOnClickListener(v -> ThreadUtils.postOnBackgroundThread(() -> {
                     try {
-                        if (Objects.requireNonNull(mMainModel).togglePermission(permissionItem)) {
+                        if (Objects.requireNonNull(viewModel).togglePermission(permissionItem)) {
                             ThreadUtils.postOnMainThread(() -> notifyItemChanged(index));
                         } else throw new Exception("Couldn't grant permission: " + permName);
                     } catch (Exception e) {
@@ -783,7 +704,7 @@ public class AppDetailsPermissionsFragment extends Fragment implements AdvancedS
                 for (int i = 0; i < flagStrings.length; ++i) {
                     flagStrings[i] = permissionFlags.valueAt(i);
                 }
-                new SearchableItemsDialogBuilder<>(mActivity, flagStrings)
+                new SearchableItemsDialogBuilder<>(activity, flagStrings)
                         .setTitle(R.string.permission_flags)
                         .setNegativeButton(R.string.close, null)
                         .show();
@@ -793,7 +714,7 @@ public class AppDetailsPermissionsFragment extends Fragment implements AdvancedS
             ((MaterialCardView) holder.itemView).setCardBackgroundColor(mCardColor1);
         }
 
-        private void getPermissionsView(@NonNull Context context, @NonNull AppDetailsRecyclerAdapter.ViewHolder holder, int index) {
+        private void getPermissionsView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
             AppDetailsDefinedPermissionItem permissionItem;
             synchronized (mAdapterList) {
                 permissionItem = (AppDetailsDefinedPermissionItem) mAdapterList.get(index);
@@ -802,19 +723,19 @@ public class AppDetailsPermissionsFragment extends Fragment implements AdvancedS
             // Internal or external
             holder.chipType.setText(permissionItem.isExternal ? R.string.external : R.string.internal);
             // Label
-            holder.textView1.setText(permissionInfo.loadLabel(mPackageManager));
+            holder.textView1.setText(permissionInfo.loadLabel(packageManager));
             // Name
             if (mConstraint != null && permissionInfo.name.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
-                holder.textView2.setText(UIUtils.getHighlightedText(permissionInfo.name, mConstraint, mColorQueryStringHighlight));
+                holder.textView2.setText(UIUtils.getHighlightedText(permissionInfo.name, mConstraint, colorQueryStringHighlight));
             } else {
                 holder.textView2.setText(permissionInfo.name.startsWith(mPackageName) ?
                         permissionInfo.name.replaceFirst(mPackageName, "") : permissionInfo.name);
             }
             // Icon
-            mImageLoader.displayImage(mPackageName + "_" + permissionInfo.name, permissionInfo, holder.imageView);
+            imageLoader.displayImage(mPackageName + "_" + permissionInfo.name, permissionInfo, holder.imageView);
             // Description
-            CharSequence description = permissionInfo.loadDescription(mPackageManager);
+            CharSequence description = permissionInfo.loadDescription(packageManager);
             if (description != null) {
                 holder.textView3.setVisibility(View.VISIBLE);
                 holder.textView3.setText(description);

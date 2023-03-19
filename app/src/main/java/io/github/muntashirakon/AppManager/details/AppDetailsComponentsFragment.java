@@ -2,15 +2,9 @@
 
 package io.github.muntashirakon.AppManager.details;
 
-import static io.github.muntashirakon.AppManager.details.AppDetailsFragment.ACTIVITIES;
-import static io.github.muntashirakon.AppManager.details.AppDetailsFragment.PROVIDERS;
-import static io.github.muntashirakon.AppManager.details.AppDetailsFragment.RECEIVERS;
-import static io.github.muntashirakon.AppManager.details.AppDetailsFragment.SERVICES;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
 import android.content.pm.PathPermission;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
@@ -30,14 +24,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.IntDef;
+import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
@@ -45,7 +37,6 @@ import com.google.android.material.chip.Chip;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.divider.MaterialDivider;
 import com.google.android.material.materialswitch.MaterialSwitch;
-import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -54,8 +45,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
@@ -63,11 +52,9 @@ import io.github.muntashirakon.AppManager.details.struct.AppDetailsComponentItem
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsServiceItem;
 import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
-import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
-import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.Prefs;
@@ -80,12 +67,8 @@ import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.util.ProgressIndicatorCompat;
 import io.github.muntashirakon.widget.MaterialAlertView;
 import io.github.muntashirakon.widget.RecyclerView;
-import io.github.muntashirakon.widget.SwipeRefreshLayout;
 
-public class AppDetailsComponentsFragment extends Fragment implements AdvancedSearchView.OnQueryTextListener,
-        SwipeRefreshLayout.OnRefreshListener {
-    public static final String ARG_TYPE = "type";
-
+public class AppDetailsComponentsFragment extends AppDetailsFragment {
     @IntDef(value = {
             ACTIVITIES,
             SERVICES,
@@ -97,102 +80,58 @@ public class AppDetailsComponentsFragment extends Fragment implements AdvancedSe
     }
 
     private String mPackageName;
-    private PackageManager mPackageManager;
-    private AppDetailsActivity mActivity;
     private AppDetailsRecyclerAdapter mAdapter;
-    private SwipeRefreshLayout mSwipeRefresh;
     private MenuItem mBlockingToggler;
-    private LinearProgressIndicator mProgressIndicator;
-    private MaterialAlertView mAlertView;
     private boolean mIsExternalApk;
     @ComponentProperty
     private int mNeededProperty;
-    @Nullable
-    private AppDetailsViewModel mMainModel;
-
-    private final ExecutorService mExecutor = Executors.newFixedThreadPool(3);
-    private final ImageLoader mImageLoader = new ImageLoader();
-
-    private int mColorQueryStringHighlight;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        mActivity = (AppDetailsActivity) requireActivity();
         mNeededProperty = requireArguments().getInt(ARG_TYPE);
-        mMainModel = new ViewModelProvider(mActivity).get(AppDetailsViewModel.class);
-        mPackageManager = mActivity.getPackageManager();
-        mColorQueryStringHighlight = ColorCodes.getQueryStringHighlightColor(mActivity);
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.pager_app_details, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        // Swipe refresh
-        mSwipeRefresh = view.findViewById(R.id.swipe_refresh);
-        mSwipeRefresh.setOnRefreshListener(this);
-        RecyclerView recyclerView = view.findViewById(R.id.scrollView);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
-        final TextView emptyView = view.findViewById(android.R.id.empty);
+        super.onViewCreated(view, savedInstanceState);
         emptyView.setText(getNotFoundString(mNeededProperty));
-        recyclerView.setEmptyView(emptyView);
         mAdapter = new AppDetailsRecyclerAdapter();
         recyclerView.setAdapter(mAdapter);
-        mProgressIndicator = view.findViewById(R.id.progress_linear);
-        mProgressIndicator.setVisibilityAfterHide(View.GONE);
-        showProgressIndicator(true);
-        mAlertView = view.findViewById(R.id.alert_text);
-        mAlertView.setEndIconMode(MaterialAlertView.END_ICON_CUSTOM);
-        mAlertView.setEndIconDrawable(com.google.android.material.R.drawable.mtrl_ic_cancel);
-        mAlertView.setEndIconContentDescription(R.string.close);
-        mAlertView.setEndIconOnClickListener(v -> mAlertView.hide());
+        alertView.setEndIconOnClickListener(v -> alertView.hide());
         int helpStringRes = R.string.rules_not_applied;
-        mAlertView.setText(helpStringRes);
-        mAlertView.setVisibility(View.GONE);
-        mSwipeRefresh.setOnChildScrollUpCallback((parent, child) -> recyclerView.canScrollVertically(-1));
-        if (mMainModel == null) return;
-        mPackageName = mMainModel.getPackageName();
-        mMainModel.get(mNeededProperty).observe(getViewLifecycleOwner(), appDetailsItems -> {
-            if (appDetailsItems != null && mAdapter != null && mMainModel.isPackageExist()) {
-                mPackageName = mMainModel.getPackageName();
-                mIsExternalApk = mMainModel.isExternalApk();
+        alertView.setText(helpStringRes);
+        alertView.setVisibility(View.GONE);
+        if (viewModel == null) return;
+        mPackageName = viewModel.getPackageName();
+        viewModel.get(mNeededProperty).observe(getViewLifecycleOwner(), appDetailsItems -> {
+            if (appDetailsItems != null && mAdapter != null && viewModel.isPackageExist()) {
+                mPackageName = viewModel.getPackageName();
+                mIsExternalApk = viewModel.isExternalApk();
                 mAdapter.setDefaultList(appDetailsItems);
-            } else showProgressIndicator(false);
+            } else ProgressIndicatorCompat.setVisibility(progressIndicator, false);
         });
-        mMainModel.getRuleApplicationStatus().observe(getViewLifecycleOwner(), status -> {
-            mAlertView.setAlertType(MaterialAlertView.ALERT_TYPE_WARN);
+        viewModel.getRuleApplicationStatus().observe(getViewLifecycleOwner(), status -> {
+            alertView.setAlertType(MaterialAlertView.ALERT_TYPE_WARN);
             if (status == AppDetailsViewModel.RULE_NOT_APPLIED) {
-                mAlertView.show();
-            } else mAlertView.hide();
+                alertView.show();
+            } else alertView.hide();
         });
-    }
-
-    @Override
-    public void onDetach() {
-        mImageLoader.close();
-        mExecutor.shutdownNow();
-        super.onDetach();
     }
 
     @Override
     public void onRefresh() {
         refreshDetails();
-        mSwipeRefresh.setRefreshing(false);
+        swipeRefresh.setRefreshing(false);
     }
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        if (mMainModel != null && !mMainModel.isExternalApk() && Ops.isRoot()) {
+        if (viewModel != null && !viewModel.isExternalApk() && Ops.isRoot()) {
             inflater.inflate(R.menu.fragment_app_details_components_actions, menu);
             mBlockingToggler = menu.findItem(R.id.action_toggle_blocking);
-            mMainModel.getRuleApplicationStatus().observe(mActivity, status -> {
+            viewModel.getRuleApplicationStatus().observe(activity, status -> {
                 switch (status) {
                     case AppDetailsViewModel.RULE_APPLIED:
                         mBlockingToggler.setVisible(!Prefs.Blocking.globalBlockingEnabled());
@@ -211,11 +150,11 @@ public class AppDetailsComponentsFragment extends Fragment implements AdvancedSe
 
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
-        if (mMainModel == null || mMainModel.isExternalApk()) {
+        if (viewModel == null || viewModel.isExternalApk()) {
             return;
         }
         if (Ops.isRoot()) {
-            menu.findItem(AppDetailsFragment.sSortMenuItemIdsMap[mMainModel.getSortOrder(mNeededProperty)]).setChecked(true);
+            menu.findItem(AppDetailsFragment.sSortMenuItemIdsMap[viewModel.getSortOrder(mNeededProperty)]).setChecked(true);
         }
     }
 
@@ -225,11 +164,11 @@ public class AppDetailsComponentsFragment extends Fragment implements AdvancedSe
         if (id == R.id.action_refresh_details) {
             refreshDetails();
         } else if (id == R.id.action_toggle_blocking) {  // Components
-            if (mMainModel != null) {
-                mExecutor.submit(() -> mMainModel.applyRules());
+            if (viewModel != null) {
+                viewModel.applyRules();
             }
         } else if (id == R.id.action_block_unblock_trackers) {  // Components
-            new MaterialAlertDialogBuilder(mActivity)
+            new MaterialAlertDialogBuilder(activity)
                     .setTitle(R.string.block_unblock_trackers)
                     .setMessage(R.string.choose_what_to_do)
                     .setPositiveButton(R.string.block, (dialog, which) -> blockUnblockTrackers(true))
@@ -252,60 +191,44 @@ public class AppDetailsComponentsFragment extends Fragment implements AdvancedSe
     @Override
     public void onResume() {
         super.onResume();
-        mSwipeRefresh.setEnabled(true);
-        if (mActivity.searchView != null) {
-            mActivity.searchView.setVisibility(View.VISIBLE);
-            mActivity.searchView.setOnQueryTextListener(this);
-            if (mMainModel != null) {
-                mMainModel.filterAndSortItems(mNeededProperty);
+        if (activity.searchView != null) {
+            activity.searchView.setVisibility(View.VISIBLE);
+            activity.searchView.setOnQueryTextListener(this);
+            if (viewModel != null) {
+                viewModel.filterAndSortItems(mNeededProperty);
             }
         }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mSwipeRefresh.setEnabled(false);
-    }
-
-    @Override
-    public void onDestroyView() {
-        mSwipeRefresh.setRefreshing(false);
-        mSwipeRefresh.clearAnimation();
-        super.onDestroyView();
     }
 
     @Override
     public boolean onQueryTextChange(String searchQuery, int type) {
-        if (mMainModel != null) {
-            mMainModel.setSearchQuery(searchQuery, type, mNeededProperty);
+        if (viewModel != null) {
+            viewModel.setSearchQuery(searchQuery, type, mNeededProperty);
         }
         return true;
     }
 
-    @Override
-    public boolean onQueryTextSubmit(String query, int type) {
-        return false;
-    }
-
     public void blockUnblockTrackers(boolean block) {
-        if (mMainModel == null) return;
+        if (viewModel == null) return;
+        // TODO: 19/3/23 Do it via ViewModel
         List<UserPackagePair> userPackagePairs = Collections.singletonList(new UserPackagePair(mPackageName,
                 UserHandleHidden.myUserId()));
-        mExecutor.submit(() -> {
+        ThreadUtils.postOnBackgroundThread(() -> {
             List<UserPackagePair> failedPkgList = block ? ComponentUtils.blockTrackingComponents(userPackagePairs)
                     : ComponentUtils.unblockTrackingComponents(userPackagePairs);
             if (failedPkgList.size() > 0) {
-                ThreadUtils.postOnMainThread(() -> Toast.makeText(mActivity, block ? R.string.failed_to_block_trackers
-                        : R.string.failed_to_unblock_trackers, Toast.LENGTH_SHORT).show());
+                ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(block ? R.string.failed_to_block_trackers
+                        : R.string.failed_to_unblock_trackers));
             } else {
                 ThreadUtils.postOnMainThread(() -> {
-                    Toast.makeText(mActivity, block ? R.string.trackers_blocked_successfully
-                            : R.string.trackers_unblocked_successfully, Toast.LENGTH_SHORT).show();
-                    refreshDetails();
+                    UIUtils.displayShortToast(block ? R.string.trackers_blocked_successfully
+                            : R.string.trackers_unblocked_successfully);
+                    if (!isDetached()) {
+                        refreshDetails();
+                    }
                 });
             }
-            mMainModel.setRuleApplicationStatus();
+            viewModel.setRuleApplicationStatus();
         });
     }
 
@@ -323,31 +246,24 @@ public class AppDetailsComponentsFragment extends Fragment implements AdvancedSe
         }
     }
 
-    private void setSortBy(@AppDetailsFragment.SortOrder int sortBy) {
-        showProgressIndicator(true);
-        if (mMainModel == null) return;
-        mMainModel.setSortOrder(sortBy, mNeededProperty);
+    private void setSortBy(@SortOrder int sortBy) {
+        ProgressIndicatorCompat.setVisibility(progressIndicator, true);
+        if (viewModel == null) return;
+        viewModel.setSortOrder(sortBy, mNeededProperty);
     }
 
+    @MainThread
     private void refreshDetails() {
-        if (mMainModel == null || mIsExternalApk) return;
-        showProgressIndicator(true);
-        mExecutor.submit(() -> {
-            if (mMainModel != null) {
-                mMainModel.setIsPackageChanged();
-            }
-        });
+        if (viewModel == null || mIsExternalApk) return;
+        ProgressIndicatorCompat.setVisibility(progressIndicator, true);
+        viewModel.triggerPackageChange();
     }
 
     private void applyRules(@NonNull AppDetailsComponentItem componentItem, @NonNull RuleType type,
                             @NonNull @ComponentRule.ComponentStatus String componentStatus) {
-        if (mMainModel != null) {
-            mExecutor.submit(() -> mMainModel.updateRulesForComponent(componentItem, type, componentStatus));
+        if (viewModel != null) {
+            viewModel.updateRulesForComponent(componentItem, type, componentStatus);
         }
-    }
-
-    private void showProgressIndicator(boolean show) {
-        ProgressIndicatorCompat.setVisibility(mProgressIndicator, show);
     }
 
     @UiThread
@@ -364,16 +280,16 @@ public class AppDetailsComponentsFragment extends Fragment implements AdvancedSe
 
         AppDetailsRecyclerAdapter() {
             mAdapterList = new ArrayList<>();
-            mCardColor1 = ColorCodes.getListItemColor1(mActivity);
-            mDefaultIndicatorColor = ColorCodes.getListItemDefaultIndicatorColor(mActivity);
+            mCardColor1 = ColorCodes.getListItemColor1(activity);
+            mDefaultIndicatorColor = ColorCodes.getListItemDefaultIndicatorColor(activity);
         }
 
         @UiThread
         void setDefaultList(@NonNull List<AppDetailsItem<?>> list) {
             mRequestedProperty = mNeededProperty;
-            mConstraint = mMainModel == null ? null : mMainModel.getSearchQuery();
-            mTestOnlyApp = mMainModel != null && mMainModel.isTestOnlyApp();
-            showProgressIndicator(false);
+            mConstraint = viewModel == null ? null : viewModel.getSearchQuery();
+            mTestOnlyApp = viewModel != null && viewModel.isTestOnlyApp();
+            ProgressIndicatorCompat.setVisibility(progressIndicator, false);
             synchronized (mAdapterList) {
                 mAdapterList.clear();
                 mAdapterList.addAll(list);
@@ -477,7 +393,7 @@ public class AppDetailsComponentsFragment extends Fragment implements AdvancedSe
             }
         }
 
-        private void handleBlock(@NonNull AppDetailsRecyclerAdapter.ViewHolder holder, @NonNull AppDetailsComponentItem item, RuleType ruleType) {
+        private void handleBlock(@NonNull ViewHolder holder, @NonNull AppDetailsComponentItem item, RuleType ruleType) {
             holder.toggleSwitch.setChecked(!item.isBlocked());
             holder.toggleSwitch.setVisibility(View.VISIBLE);
             holder.toggleSwitch.setOnClickListener(buttonView -> {
@@ -487,7 +403,7 @@ public class AppDetailsComponentsFragment extends Fragment implements AdvancedSe
                 applyRules(item, ruleType, componentStatus);
             });
             holder.toggleSwitch.setOnLongClickListener(v -> {
-                PopupMenu popupMenu = new PopupMenu(mActivity, holder.toggleSwitch);
+                PopupMenu popupMenu = new PopupMenu(activity, holder.toggleSwitch);
                 popupMenu.inflate(R.menu.fragment_app_details_components_selection_actions);
                 popupMenu.setOnMenuItemClickListener(item1 -> {
                     int id = item1.getItemId();
@@ -513,7 +429,7 @@ public class AppDetailsComponentsFragment extends Fragment implements AdvancedSe
             });
         }
 
-        private void getActivityView(@NonNull Context context, @NonNull AppDetailsRecyclerAdapter.ViewHolder holder, int index) {
+        private void getActivityView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
             final AppDetailsComponentItem componentItem;
             synchronized (mAdapterList) {
                 componentItem = (AppDetailsComponentItem) mAdapterList.get(index);
@@ -538,13 +454,13 @@ public class AppDetailsComponentsFragment extends Fragment implements AdvancedSe
             // Name
             if (mConstraint != null && activityName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
-                holder.nameView.setText(UIUtils.getHighlightedText(activityName, mConstraint, mColorQueryStringHighlight));
+                holder.nameView.setText(UIUtils.getHighlightedText(activityName, mConstraint, colorQueryStringHighlight));
             } else {
                 holder.nameView.setText(activityName.startsWith(mPackageName) ?
                         activityName.replaceFirst(mPackageName, "") : activityName);
             }
             // Icon
-            mImageLoader.displayImage(mPackageName + "_" + activityName, activityInfo, holder.imageView);
+            imageLoader.displayImage(mPackageName + "_" + activityName, activityInfo, holder.imageView);
             // TaskAffinity
             holder.textView1.setText(String.format(Locale.ROOT, "%s: %s",
                     getString(R.string.task_affinity), activityInfo.taskAffinity));
@@ -559,8 +475,8 @@ public class AppDetailsComponentsFragment extends Fragment implements AdvancedSe
                     getString(R.string.soft_input), Utils.getSoftInputString(activityInfo.softInputMode),
                     (activityInfo.permission == null ? getString(R.string.require_no_permission) : activityInfo.permission)));
             // Label
-            String appLabel = activityInfo.applicationInfo.loadLabel(mPackageManager).toString();
-            String activityLabel = activityInfo.loadLabel(mPackageManager).toString();
+            String appLabel = activityInfo.applicationInfo.loadLabel(packageManager).toString();
+            String activityLabel = activityInfo.loadLabel(packageManager).toString();
             String label = (activityLabel.equals(appLabel) || TextUtils.isEmpty(activityLabel))
                     ? Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(activityName))
                     : activityLabel;
@@ -586,8 +502,8 @@ public class AppDetailsComponentsFragment extends Fragment implements AdvancedSe
                     intent.setClassName(mPackageName, activityName);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     try {
-                        ActivityManagerCompat.startActivity(mActivity, intent,
-                                Objects.requireNonNull(mMainModel).getUserHandle());
+                        ActivityManagerCompat.startActivity(activity, intent,
+                                Objects.requireNonNull(viewModel).getUserHandle());
                     } catch (Throwable e) {
                         UIUtils.displayLongToast(e.getLocalizedMessage());
                     }
@@ -596,11 +512,11 @@ public class AppDetailsComponentsFragment extends Fragment implements AdvancedSe
                     boolean needRoot = Ops.isRoot() && (!isExported || (activityInfo.permission != null
                             && !PermissionUtils.hasSelfPermission(activityInfo.permission)));
                     holder.launchBtn.setOnLongClickListener(v -> {
-                        Intent intent = new Intent(mActivity, ActivityInterceptor.class);
+                        Intent intent = new Intent(activity, ActivityInterceptor.class);
                         intent.putExtra(ActivityInterceptor.EXTRA_PACKAGE_NAME, mPackageName);
                         intent.putExtra(ActivityInterceptor.EXTRA_CLASS_NAME, activityName);
                         intent.putExtra(ActivityInterceptor.EXTRA_USER_HANDLE,
-                                Objects.requireNonNull(mMainModel).getUserHandle());
+                                Objects.requireNonNull(viewModel).getUserHandle());
                         intent.putExtra(ActivityInterceptor.EXTRA_ROOT, needRoot);
                         startActivity(intent);
                         return true;
@@ -627,7 +543,7 @@ public class AppDetailsComponentsFragment extends Fragment implements AdvancedSe
             ((MaterialCardView) holder.itemView).setCardBackgroundColor(mCardColor1);
         }
 
-        private void getServicesView(@NonNull Context context, @NonNull AppDetailsRecyclerAdapter.ViewHolder holder, int index) {
+        private void getServicesView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
             final AppDetailsServiceItem serviceItem;
             synchronized (mAdapterList) {
                 serviceItem = (AppDetailsServiceItem) mAdapterList.get(index);
@@ -655,13 +571,13 @@ public class AppDetailsComponentsFragment extends Fragment implements AdvancedSe
             // Name
             if (mConstraint != null && serviceInfo.name.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
-                holder.nameView.setText(UIUtils.getHighlightedText(serviceInfo.name, mConstraint, mColorQueryStringHighlight));
+                holder.nameView.setText(UIUtils.getHighlightedText(serviceInfo.name, mConstraint, colorQueryStringHighlight));
             } else {
                 holder.nameView.setText(serviceInfo.name.startsWith(mPackageName) ?
                         serviceInfo.name.replaceFirst(mPackageName, "") : serviceInfo.name);
             }
             // Icon
-            mImageLoader.displayImage(mPackageName + "_" + serviceInfo.name, serviceInfo, holder.imageView);
+            imageLoader.displayImage(mPackageName + "_" + serviceInfo.name, serviceInfo, holder.imageView);
             // Flags and Permission
             StringBuilder flagsAndPermission = new StringBuilder(Utils.getServiceFlagsString(serviceInfo.flags));
             if (flagsAndPermission.length() != 0) {
@@ -689,8 +605,8 @@ public class AppDetailsComponentsFragment extends Fragment implements AdvancedSe
                     Intent intent = new Intent();
                     intent.setClassName(mPackageName, serviceInfo.name);
                     try {
-                        ActivityManagerCompat.startService(mActivity, intent,
-                                Objects.requireNonNull(mMainModel).getUserHandle(), true);
+                        ActivityManagerCompat.startService(activity, intent,
+                                Objects.requireNonNull(viewModel).getUserHandle(), true);
                     } catch (Throwable th) {
                         th.printStackTrace();
                         Toast.makeText(context, th.toString(), Toast.LENGTH_LONG).show();
@@ -707,7 +623,7 @@ public class AppDetailsComponentsFragment extends Fragment implements AdvancedSe
             ((MaterialCardView) holder.itemView).setCardBackgroundColor(mCardColor1);
         }
 
-        private void getReceiverView(@NonNull Context context, @NonNull AppDetailsRecyclerAdapter.ViewHolder holder, int index) {
+        private void getReceiverView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
             final AppDetailsComponentItem componentItem;
             synchronized (mAdapterList) {
                 componentItem = (AppDetailsComponentItem) mAdapterList.get(index);
@@ -732,14 +648,14 @@ public class AppDetailsComponentsFragment extends Fragment implements AdvancedSe
             // Name
             if (mConstraint != null && activityInfo.name.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
-                holder.nameView.setText(UIUtils.getHighlightedText(activityInfo.name, mConstraint, mColorQueryStringHighlight));
+                holder.nameView.setText(UIUtils.getHighlightedText(activityInfo.name, mConstraint, colorQueryStringHighlight));
             } else {
                 holder.nameView.setText(activityInfo.name.startsWith(mPackageName) ?
                         activityInfo.name.replaceFirst(mPackageName, "")
                         : activityInfo.name);
             }
             // Icon
-            mImageLoader.displayImage(mPackageName + "_" + activityInfo.name, activityInfo, holder.imageView);
+            imageLoader.displayImage(mPackageName + "_" + activityInfo.name, activityInfo, holder.imageView);
             // TaskAffinity
             holder.textView1.setText(String.format(Locale.ROOT, "%s: %s",
                     getString(R.string.task_affinity), activityInfo.taskAffinity));
@@ -766,7 +682,7 @@ public class AppDetailsComponentsFragment extends Fragment implements AdvancedSe
             ((MaterialCardView) holder.itemView).setCardBackgroundColor(mCardColor1);
         }
 
-        private void getProviderView(@NonNull Context context, @NonNull AppDetailsRecyclerAdapter.ViewHolder holder, int index) {
+        private void getProviderView(@NonNull Context context, @NonNull ViewHolder holder, int index) {
             final AppDetailsComponentItem componentItem;
             synchronized (mAdapterList) {
                 componentItem = (AppDetailsComponentItem) mAdapterList.get(index);
@@ -790,7 +706,7 @@ public class AppDetailsComponentsFragment extends Fragment implements AdvancedSe
             // Label
             holder.labelView.setText(Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(providerName)));
             // Icon
-            mImageLoader.displayImage(mPackageName + "_" + providerName, providerInfo, holder.imageView);
+            imageLoader.displayImage(mPackageName + "_" + providerName, providerInfo, holder.imageView);
             // Uri permission
             holder.textView1.setText(String.format(Locale.ROOT, "%s: %s", getString(R.string.grant_uri_permission), providerInfo.grantUriPermissions));
             // Path permissions
@@ -829,7 +745,7 @@ public class AppDetailsComponentsFragment extends Fragment implements AdvancedSe
             // Name
             if (mConstraint != null && providerName.toLowerCase(Locale.ROOT).contains(mConstraint)) {
                 // Highlight searched query
-                holder.nameView.setText(UIUtils.getHighlightedText(providerName, mConstraint, mColorQueryStringHighlight));
+                holder.nameView.setText(UIUtils.getHighlightedText(providerName, mConstraint, colorQueryStringHighlight));
             } else {
                 holder.nameView.setText(providerName.startsWith(mPackageName) ?
                         providerName.replaceFirst(mPackageName, "") : providerName);

@@ -415,7 +415,6 @@ public class AppDetailsViewModel extends AndroidViewModel {
             case AppDetailsFragment.APP_INFO:
             case AppDetailsFragment.CONFIGURATIONS:
             case AppDetailsFragment.FEATURES:
-            case AppDetailsFragment.NONE:
             case AppDetailsFragment.SHARED_LIBRARIES:
             case AppDetailsFragment.SIGNATURES:
                 // do nothing
@@ -492,35 +491,37 @@ public class AppDetailsViewModel extends AndroidViewModel {
         }
     }
 
-    @WorkerThread
+    @AnyThread
     @GuardedBy("blockerLocker")
     public void updateRulesForComponent(@NonNull AppDetailsComponentItem componentItem, @NonNull RuleType type,
                                         @ComponentRule.ComponentStatus String componentStatus) {
         if (mExternalApk) return;
-        String componentName = componentItem.name;
-        synchronized (mBlockerLocker) {
-            waitForBlockerOrExit();
-            mBlocker.setMutable();
-            if (mBlocker.hasComponentName(componentName)) {
-                // Simply delete it
-                mBlocker.deleteComponent(componentName);
+        mExecutor.submit(() -> {
+            String componentName = componentItem.name;
+            synchronized (mBlockerLocker) {
+                waitForBlockerOrExit();
+                mBlocker.setMutable();
+                if (mBlocker.hasComponentName(componentName)) {
+                    // Simply delete it
+                    mBlocker.deleteComponent(componentName);
+                }
+                // Add to the list
+                mBlocker.addComponent(componentName, type, componentStatus);
+                // Apply rules if global blocking enable or already applied
+                if (Prefs.Blocking.globalBlockingEnabled()
+                        || (mRuleApplicationStatus.getValue() != null && RULE_APPLIED == mRuleApplicationStatus.getValue())) {
+                    mBlocker.applyRules(true);
+                }
+                // Set new status
+                setRuleApplicationStatus();
+                // Commit changes
+                mBlocker.commit();
+                mBlocker.setReadOnly();
+                // FIXME: 18/1/22 Do not reload all components, only reload this component
+                // Update UI
+                reloadComponents();
             }
-            // Add to the list
-            mBlocker.addComponent(componentName, type, componentStatus);
-            // Apply rules if global blocking enable or already applied
-            if (Prefs.Blocking.globalBlockingEnabled()
-                    || (mRuleApplicationStatus.getValue() != null && RULE_APPLIED == mRuleApplicationStatus.getValue())) {
-                mBlocker.applyRules(true);
-            }
-            // Set new status
-            setRuleApplicationStatus();
-            // Commit changes
-            mBlocker.commit();
-            mBlocker.setReadOnly();
-            // FIXME: 18/1/22 Do not reload all components, only reload this component
-            // Update UI
-            reloadComponents();
-        }
+        });
     }
 
     @Nullable
@@ -826,21 +827,23 @@ public class AppDetailsViewModel extends AndroidViewModel {
         return isSuccessful;
     }
 
-    @WorkerThread
+    @AnyThread
     @GuardedBy("blockerLocker")
     public void applyRules() {
         if (mExternalApk) return;
-        synchronized (mBlockerLocker) {
-            waitForBlockerOrExit();
-            boolean oldIsRulesApplied = mBlocker.isRulesApplied();
-            mBlocker.setMutable();
-            mBlocker.applyRules(!oldIsRulesApplied);
-            mBlocker.commit();
-            mBlocker.setReadOnly();
-            reloadComponents();
-            setRuleApplicationStatus();
-            mBlockerLocker.notifyAll();
-        }
+        mExecutor.submit(() -> {
+            synchronized (mBlockerLocker) {
+                waitForBlockerOrExit();
+                boolean oldIsRulesApplied = mBlocker.isRulesApplied();
+                mBlocker.setMutable();
+                mBlocker.applyRules(!oldIsRulesApplied);
+                mBlocker.commit();
+                mBlocker.setReadOnly();
+                reloadComponents();
+                setRuleApplicationStatus();
+                mBlockerLocker.notifyAll();
+            }
+        });
     }
 
     @UiThread
@@ -870,7 +873,6 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 return getInternal(mSharedLibraries, this::loadSharedLibraries);
             case AppDetailsFragment.APP_INFO:
                 return getInternal(appInfo, this::loadAppInfo);
-            case AppDetailsFragment.NONE:
         }
         return null;
     }
@@ -924,7 +926,6 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     break;
                 case AppDetailsFragment.APP_INFO:
                     loadAppInfo();
-                case AppDetailsFragment.NONE:
                     break;
             }
         });
@@ -946,19 +947,25 @@ public class AppDetailsViewModel extends AndroidViewModel {
     }
 
     @NonNull
-    private final MutableLiveData<Boolean> mIsPackageChanged = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> mPackageChanged = new MutableLiveData<>();
 
     @UiThread
-    public LiveData<Boolean> getIsPackageChanged() {
-        if (mIsPackageChanged.getValue() == null) {
-            mIsPackageChanged.setValue(false);
+    public LiveData<Boolean> isPackageChanged() {
+        if (mPackageChanged.getValue() == null) {
+            mPackageChanged.setValue(false);
         }
-        return mIsPackageChanged;
+        return mPackageChanged;
+    }
+
+    @AnyThread
+    public void triggerPackageChange() {
+        mExecutor.submit(this::setPackageChanged);
     }
 
     @WorkerThread
     @GuardedBy("blockerLocker")
-    public void setIsPackageChanged() {
+    public void setPackageChanged() {
+        // TODO: 16/3/23 Synchronization is needed somewhere
         setPackageInfo(true);
         if (mExternalApk || mExecutor.isShutdown() || mExecutor.isTerminated()) return;
         mExecutor.submit(() -> {
@@ -1065,7 +1072,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         } catch (Throwable e) {
             Log.e(TAG, e);
         } finally {
-            mIsPackageChanged.postValue(true);
+            mPackageChanged.postValue(true);
         }
     }
 
@@ -1841,17 +1848,17 @@ public class AppDetailsViewModel extends AndroidViewModel {
         protected void onPackageChanged(Intent intent, @Nullable Integer uid, @Nullable String[] packages) {
             if (uid != null && (mModel.mPackageInfo == null || mModel.mPackageInfo.applicationInfo.uid == uid)) {
                 Log.d(TAG, "Package is changed.");
-                mModel.setIsPackageChanged();
+                mModel.setPackageChanged();
             } else if (packages != null) {
                 for (String packageName : packages) {
                     if (packageName.equals(mModel.mPackageName)) {
                         Log.d(TAG, "Package availability changed.");
-                        mModel.setIsPackageChanged();
+                        mModel.setPackageChanged();
                     }
                 }
             } else {
                 Log.d(TAG, "Locale changed.");
-                mModel.setIsPackageChanged();
+                mModel.setPackageChanged();
             }
         }
     }
