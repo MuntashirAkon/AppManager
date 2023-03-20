@@ -124,8 +124,14 @@ public final class AppearanceUtils {
 
         @Override
         public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle savedInstanceState) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                onActivityPreCreated(activity, savedInstanceState);
+            }
             Window window = activity.getWindow();
             WindowCompat.setDecorFitsSystemWindows(window, false);
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                onActivityPostCreated(activity, savedInstanceState);
+            }
         }
 
         @Override
@@ -163,6 +169,9 @@ public final class AppearanceUtils {
 
         @Override
         public void onActivityDestroyed(@NonNull Activity activity) {
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                onActivityPreDestroyed(activity);
+            }
         }
     }
 
