@@ -1374,4 +1374,7 @@
         <item quantity="many">Nie udało się zoptymalizować aplikacji %1$d</item>
         <item quantity="other">Nie udało się zoptymalizować aplikacji %1$d</item>
     </plurals>
+    <string name="title_domains_supported_by_the_app">Obsługiwane domeny</string>
+    <string name="app_info_tag_open_links">Otwórz linki</string>
+    <string name="source_stamp_verified_and_identified_to_be_from_source">SourceStamp zweryfikowany i zidentyfikowany jako pochodzący z <xliff:g id="source" example="Google Play">%1$s</xliff:g>.</string>
 </resources>
