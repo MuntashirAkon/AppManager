@@ -1451,4 +1451,7 @@
         <item quantity="many">تعذر تحسين تطبيق %1$d</item>
         <item quantity="other">تعذر تحسين تطبيق %1$d</item>
     </plurals>
+    <string name="title_domains_supported_by_the_app">النطاقات المدعومة</string>
+    <string name="source_stamp_verified_and_identified_to_be_from_source">تم التحقق من SourceStamp وتحديده على أنه من <xliff:g id="source" example="Google Play"> %1$s </xliff:g>.</string>
+    <string name="app_info_tag_open_links">افتح الرابط</string>
 </resources>
