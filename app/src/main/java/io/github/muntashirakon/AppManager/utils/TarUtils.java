@@ -164,7 +164,7 @@ public final class TarUtils {
                 while ((entry = tis.getNextEntry()) != null) {
                     Path file;
                     if (entry.isDirectory()) {
-                        file = dest.createDirectories(entry.getName());
+                        file = dest.createDirectoriesIfRequired(entry.getName());
                     } else file = dest.createNewArbitraryFile(entry.getName(), null);
                     if (!entry.isDirectory() && (!Paths.isUnderFilter(file, dest, filterPatterns)
                             || Paths.willExclude(file, dest, exclusionPatterns))) {

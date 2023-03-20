@@ -458,6 +458,7 @@ public class Path implements Comparable<Path> {
         return createFileAsDirectChild(mContext, file, names[names.length - 1], mimeType);
     }
 
+
     /**
      * Create all the non-existing directories under this directory. If mount
      * points encountered while iterating through the paths, it will try to
@@ -465,7 +466,35 @@ public class Path implements Comparable<Path> {
      *
      * @param displayName Relative path to the target directory.
      * @return The newly created directory.
-     * @throws IOException If the target is a mount point or failed for any other reason.
+     * @throws IOException If the target is a mount point, or failed for any other reason.
+     */
+    @NonNull
+    public Path createDirectoriesIfRequired(@NonNull String displayName) throws IOException {
+        displayName = Paths.getSanitizedPath(displayName, true);
+        if (displayName == null) {
+            throw new IOException("Empty display name.");
+        }
+        String[] dirNames = displayName.split(File.separator);
+        if (dirNames.length == 0) {
+            throw new IllegalArgumentException("Display name is empty");
+        }
+        for (String name : dirNames) {
+            if (name.equals("..")) {
+                throw new IOException("Could not create directories in the parent directory.");
+            }
+        }
+        DocumentFile file = createArbitraryDirectories(mDocumentFile, dirNames, dirNames.length);
+        return new Path(mContext, file);
+    }
+
+    /**
+     * Create all the non-existing directories under this directory. If mount
+     * points encountered while iterating through the paths, it will try to
+     * create a new directory under the last mount point.
+     *
+     * @param displayName Relative path to the target directory.
+     * @return The newly created directory.
+     * @throws IOException If the target exists, or it is a mount point, or failed for any other reason.
      */
     @NonNull
     public Path createDirectories(@NonNull String displayName) throws IOException {
