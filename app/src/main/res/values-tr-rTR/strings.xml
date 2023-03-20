@@ -1295,4 +1295,7 @@
         <item quantity="one">%1$d uygulama iyileştirilemedi</item>
         <item quantity="other">%1$d uygulama iyileştirilemedi</item>
     </plurals>
+    <string name="title_domains_supported_by_the_app">Desteklenen Etki Alanları</string>
+    <string name="app_info_tag_open_links">Açık bağlantılar</string>
+    <string name="source_stamp_verified_and_identified_to_be_from_source">SourceStamp doğrulandı ve <xliff:g id="source" example="Google Play">%1$s</xliff:g> kaynağından olduğu belirlendi.</string>
 </resources>
