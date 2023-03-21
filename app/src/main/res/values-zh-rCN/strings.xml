@@ -1257,4 +1257,7 @@
     <string name="app_can_write_and_execute_in_same_place">应用程序违反了<a href="https://en.wikipedia.org/wiki/W%5EX">W^X策略</a>，并且能够在同一目录或内存的同一部分中写入和执行。这允许通过修改应用程序中嵌入的可执行文件或从Internet下载来执行任意可执行文件。除非这是应用程序的预期行为（如终端模拟器），建议找到针对SDK 29（Android 10）和更高版本的应用程序的更新版本，或找到替代方案。</string>
     <string name="adb_incomplete_usb_debugging_message">看起来USB调试配置不正确。请阅读 <a href="https://muntashirakon.github.io/AppManager/#subsec:enable-usb-debugging"> 文档 </a> 了解其他步骤。如果您已经知道步骤，请单击“打开”以打开开发人员选项，或单击“关闭”以继续使用无root模式。</string>
     <string name="funding_campaign_text">我们正为 App Manager 举办一个限时的<b>筹款活动</b>。<a href="https://opencollective.com/app-manager#category-ABOUT">了解更多……</a></string>
+    <string name="title_domains_supported_by_the_app">支持的域名</string>
+    <string name="app_info_tag_open_links">打开链接</string>
+    <string name="source_stamp_verified_and_identified_to_be_from_source">已验证并查明 SourceStamp 来自 <xliff:g id="source" example="Google Play">%1$s</xliff:g>。</string>
 </resources>
