@@ -1,0 +1,5 @@
+- Display app distribution source if available in the signatures tab
+- Re-enabled searching in the permissions tabs
+- Prevented a crash in the log viewer page
+- Fixed extracting backups if the directory to be created already exists
+- Fixed applying custom language and appearance in Android 9 and earlier.

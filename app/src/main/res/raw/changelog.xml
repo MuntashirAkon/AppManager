@@ -18,6 +18,23 @@
 <changelog>
     <release
         type="release candidate"
+        version="v3.1.0-rc03"
+        code="422"
+        date="21 March 2023">
+        <improve>Display app distribution source if available in the signatures tab</improve>
+        <note subtext="true">Currently, the only known source is Google Play.</note>
+
+        <fix>Re-enabled searching in the permissions tabs</fix>
+        <fix>Prevented a crash in the log viewer page</fix>
+        <fix>Fixed extracting backups if the directory to be created already exists</fix>
+        <fix>Fixed applying custom language and appearance in Android 9 and earlier.</fix>
+        <note>
+            [br /][b]Full list of changes:[/b] [a
+            href="https://github.com/MuntashirAkon/AppManager/compare/v3.1.0-rc02...v3.1.0-rc03"]v3.1.0-rc02...v3.1.0-rc03[/a]
+        </note>
+    </release>
+    <release
+        type="release candidate"
         version="v3.1.0-rc02"
         code="421"
         date="13 March 2023">
@@ -31,6 +48,10 @@
         <fix>Fixed the startup progress dialog from displaying indefinitely</fix>
         <fix>Prevented the app from crashing on attempting to grant GET_APP_OPS_STATS permission</fix>
         <fix>Prevented the installer from crashing if the activity Intent can't be opened</fix>
+        <note>
+            [br /][b]Full list of changes:[/b] [a
+            href="https://github.com/MuntashirAkon/AppManager/compare/v3.1.0-rc01...v3.1.0-rc02"]v3.1.0-rc01...v3.1.0-rc02[/a]
+        </note>
     </release>
     <release
         type="release candidate"

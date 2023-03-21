@@ -13,8 +13,8 @@ android {
         applicationId 'io.github.muntashirakon.AppManager'
         minSdk min_sdk
         targetSdk target_sdk
-        versionCode 421
-        versionName "3.1.0-rc02"
+        versionCode 422
+        versionName "3.1.0-rc03"
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
