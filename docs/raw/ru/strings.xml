@@ -241,4 +241,24 @@
 \nдиалоговое окно, в котором отображается более подробная информация.</string>
     <string name="pages$main-page$profiles">Этот пункт меню открывает \\hyperref[sec:profiles-page]{profiles page}. Профили - это способ настройки
 \nрегулярно используемых задач. Они также могут быть вызваны с помощью ярлыков.</string>
+    <string name="pages$app-details-page$$permission-tabs-title">Вкладки разрешений</string>
+    <string name="pages$app-details-page$$servcies-title">Сервисы</string>
+    <string name="pages$app-details-page$$receivers-title">Приемники</string>
+    <string name="pages$main-page$apk-updater">Если в системе установлено приложение \\href{https://github.com/rumboalla/apkupdater}{APK Updater}, его можно открыть через этот пункт меню. Параметр остается скрытым, если приложение отсутствует в системе.</string>
+    <string name="pages$app-details-page$$app-info-general-information-title">Общая информация</string>
+    <string name="pages$app-details-page$$horizontal-action-panel-title">Горизонтальная панель действий</string>
+    <string name="pages$app-details-page$$colour-codes-title">Цветовые коды</string>
+    <string name="pages$app-details-page$$app-info-tab-title">Вкладка \"Сведения о приложении\"</string>
+    <string name="pages$app-details-page$$section-title">Страница сведений о приложении</string>
+    <string name="pages$main-page$log-viewer">Этот пункт меню открывает страницу просмотра журнала где отображаются логи с возможностью управлять ими с помощью команды \\texttt{logcat}. По умолчанию эта страница может отображать только действия диспетчера приложений. Однако она может отображать журналы со всех 
+\n обрабатываемых процессов если предоставлено разрешение \\texttt{android.permission.READ\\_LOGS}. Это разрешение предоставляется автоматически, если текущий
+\n\\hyperref[subsec:mode-of-operation]{режим работы} либо root, либо ADB\\@.</string>
+    <string name="pages$main-page$termux">Если в системе установлено приложение \\href{https://github.com/termux/termux-app}{Termux}, запущенный сеанс (или
+\nновый сеанс) можно открыть через этот пункт меню. Параметр остается скрытым, если приложение отсутствует в
+\nсистема.</string>
+    <string name="pages$app-details-page$$app-info-options-menu-title">Меню параметров</string>
+    <string name="pages$app-details-page$$tags-title">Теги</string>
+    <string name="pages$app-details-page$$config-termux-title">Настройки Termux</string>
+    <string name="pages$app-details-page$$component-tabs-title">Вкладки компонентов</string>
+    <string name="pages$app-details-page$$additional-features-for-rooted-phones-title">Дополнительные функции для устройств с root доступом</string>
 </resources>
