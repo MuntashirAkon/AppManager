@@ -1335,4 +1335,6 @@
         <item quantity="many">No se han podido optimizar %1$d aplicaciones</item>
         <item quantity="other">No se han podido optimizar %1$d aplicaciones</item>
     </plurals>
+    <string name="app_info_tag_open_links">Open links</string>
+    <string name="title_domains_supported_by_the_app">Dominios soportados</string>
 </resources>
