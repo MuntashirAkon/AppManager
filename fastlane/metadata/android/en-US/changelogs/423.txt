@@ -1,0 +1,14 @@
+App Manager v3.1.0 comes with a few new features and a lot of improvements. Visit Settings > About > Version/Changelog for a details.
+
+- Android 13 support
+- Introducing freeze/unfreeze along with shortcuts
+- Export app list using batch ops
+- ECC encryption
+- New languages: Korean and Romanian
+- More list options in the Main page
+- Improved handling of mode of operation
+- Improved handling of multiple users
+- Support for DEX and JAR in Explorer
+- New tag in app info tab: WX
+- Batch uninstallation in no-root mode
+- Some device-specific fixes for Graphene OS, MIUI and Motorola, etc.

@@ -1,6 +1,82 @@
 % SPDX-License-Identifier: GPL-3.0-or-later OR CC-BY-SA-4.0
 \chapter{Changelogs}\label{ch:changelogs} %%##$chapter-title>>
 
+\section{v3.1.0 (423)}\label{sec:v3.1.0-(423)}
+
+App Manager v3.1.0 comes with a few new features and a lot of improvements.
+Visit \href{intent://settings/about/changelog#Intent;scheme=app-manager;end}{Settings > About > Version/Changelog} for details.
+
+\subsection{Android 13 support}
+App Manager now targets Android 13 which means most issues in Android 12 and 13 has been addressed, including SSAID and SAF issues as well as monochrome icons and other theming issues.
+
+\paragraph{Known issue} KeyStore backup/restore not working in Android 12 and later.
+
+\subsection{Introducing freeze/unfreeze}
+Enable/disable is replaced with freeze/unfreeze to allow greater control on the behaviours of an app.
+It supports suspend, disable and hide functionalities which can be controlled at
+\href{intent://settings/rules_prefs/freeze_type#Intent;scheme=app-manager;end}{Settings > Rules > Default freezing method}.
+In order to make it easy to freeze or unfreeze an app, shortcuts can also be created from the App Info tab by long clicking on the freeze or unfreeze button.
+
+\subsection{Export app list}
+In the Main page, it is now possible to export the list of apps in either XML or Markdown format using batch operations.
+In the future, the XML file may also be imported to App Manager.
+
+\subsection{Elliptic Curve Crypography (ECC)}
+App Manager now fully supports encrypting backups using ECC in addition to offering AES, RSA and OpenPGP\@.
+
+\subsection{New languages}
+Two new languages are added: Korean and Romanian.
+
+\subsection{More list options}
+In the main page, more sorting and filtering options are added. Sorting options include sorting the apps by total size,
+total data usage, launch count, screen time and last usage time. Filtering options include filtering the apps having
+at least one item in the Android KeyStore, filtering apps with URIs granted via SAF, and filtering apps with SSAID\@.
+
+\subsection{Improved handling of mode of operation}
+Fixed various issues with ADB pairing, handled incomplete USB debugging. Some rooting methods cannot allow interprocess
+communication via Binder. In those cases, ADB mode is used as a fallback method by enabling it automatically if possible.
+
+\subsection{Handling multiple users}
+When possible, App Manager will be able to display apps from work profile in no-root mode in addition to allowing basic operations such as launching the app or navigating to the system settings.
+For backups, it is now possible to restore backups for other users, but for work profile, some apps may only work properly after re-enabling the work profile.
+In the installer page, selecting \textit{All users} will now install the app for all users instead of only the current user.
+Finally, in the app info tab, current app can be installed in another profile using the \textit{Install for\dots} option available in the three-dots menu.
+This is analogous to the \texttt{pm install-existing} command, thereby, making the installation process a lot faster.
+
+\subsection{Explorer enhancements}
+Explorer can now open DEX and JAR files in addition to APK files. Several sorting options as well as folder options are also added as the list options.
+
+\subsection{New tag: WX}
+In app info tab, a new tag called WX is added. It is displayed in Android 10 and later if the application targets
+Android 9 or earlier. It indicates \href{https://en.wikipedia.org/wiki/W\%5EX}{W\^{}X} violation which allows the app to execute arbitrary executable files either by the modification of executables embedded within the app or by downloading them from the Internet.
+
+\subsection{App ops management}
+App ops are now managed automatically to avoid various app ops related crashes in various platforms.
+This will also lessen the amount of crashes in an unsupported operating system.
+
+\subsection{Batch uninstallation}
+In the Main page, enabled batch uninstallation in no-root mode.
+
+\subsection{Running apps}
+Enabled advanced searching. Searching now matches not only app labels but also package names.
+
+\subsection{Interceptor}
+Copy the intercepted Intent as am command which can be run from either an ADB shell or a terminal using root with the same effectiveness.
+
+\subsection{Device-specific changes}
+\paragraph{Graphene OS} Explicitly handle the Internet permission which is a runtime permission in the OS.
+\paragraph{MIUI} Fixed permission denied issues in the installer due to a framework issue introduced in MIUI 12.5.
+\paragraph{Motorola} Fixed crashes in the Interceptor page due to a framework issue introduced in Android 11.
+
+\subsection{Others}
+\begin{itemize}
+    \item Improved Java-Smali conversion by including all the subclasses during conversion
+    \item Improved scanning performance in the Scanner page
+    \item Improved updating the list of apps in the Main page
+    \item Scan all the available paths to detect systemless-ly installed system apps
+    \item \texttt{vacuum} SQLite database before opening it for viewing or editing.
+\end{itemize}
+
 \section{v3.0.0 (410)}\label{sec:v3.0.0-(410)}
 
 App Manager v3.0.0 comes with a lot of features and improvements.
