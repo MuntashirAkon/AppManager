@@ -650,7 +650,7 @@
     <string name="search_type_suffix">Suffisso</string>
     <string name="toggle_internet">Usa Internet</string>
     <string name="vt_scan_date">Data scansione: %1$s</string>
-    <string name="vt_permalink">Collegamento permanente a VirusTotal</string>
+    <string name="vt_permalink">Link permanente a VirusTotal</string>
     <string name="pref_saved_apk_name_format">Formato nome APK salvato</string>
     <string name="pref_saved_apk_name_format_msg">Il formato da utilizzare per denominare i file APK quando li salvi.</string>
     <string name="auth_manager_title">Gestione autorizzazioni</string>
@@ -1335,4 +1335,7 @@
         <item quantity="many">Impossibile ottimizzare le app %1$d</item>
         <item quantity="other">Impossibile ottimizzare le app %1$d</item>
     </plurals>
+    <string name="title_domains_supported_by_the_app">Domini supportati</string>
+    <string name="app_info_tag_open_links">Apri link</string>
+    <string name="source_stamp_verified_and_identified_to_be_from_source">SourceStamp verificato e identificato da <xliff:g id="source" example="Google Play">%1$s</xliff:g>.</string>
 </resources>
