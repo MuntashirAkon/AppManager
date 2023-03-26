@@ -1280,4 +1280,17 @@
     <string name="funding_campaign_text">Wir unternehmen gerade eine <b>Spendenaktion</b> für den App Manager für einen begrenzten Zeitraum. <a href="https://opencollective.com/app-manager#category-ABOUT">mehr erfahren …</a></string>
     <string name="adb_incomplete_usb_debugging_title">Unvollständiges USB-Debugging</string>
     <string name="adb_incomplete_usb_debugging_message">Es scheint, dass USB-Debugging nicht korrekt eingestellt ist. Bitte lies <a href="https://muntashirakon.github.io/AppManager/#subsec:enable-usb-debugging">die englische Dokumentation</a> für weitere Schritte. Wenn du schon weißt, wie es geht, tippe auf „Öffnen“, um die Entwickleroptionen zu öffnen, oder „Schließen“, um weiterhin den Nicht-Root-Modus zu benutzen.</string>
+    <string name="source_stamp_verified_and_identified_to_be_from_source">Quellstempel verifiziert und identifiziert als von <xliff:g id="source" example="Google Play">%1$s</xliff:g>.</string>
+    <string name="optimize_option_force_dexopt">DEX-Optimierung sofort durchführen</string>
+    <string name="action_optimize_app">Optimieren</string>
+    <string name="title_perform_runtime_optimization_to_apps">Laufzeitoptimierung durchführen</string>
+    <string name="optimize_option_clear_profile_data">Frühere Profildaten löschen</string>
+    <string name="optimize_option_check_profiles">Profildaten bei der DEX-Optimierung berücksichtigen</string>
+    <string name="optimize_option_force_compilation">Kompilierung erzwingen, auch wenn sie nicht erforderlich ist</string>
+    <string name="batch_ops_runtime_optimization">Laufzeitoptimierung</string>
+    <string name="action_run">Ausführen</string>
+    <plurals name="alert_failed_to_optimize_apps">
+        <item quantity="one">Konnte %1$d App nicht optimieren</item>
+        <item quantity="other">Konnte %1$d Apps nicht optimieren</item>
+    </plurals>
 </resources>
