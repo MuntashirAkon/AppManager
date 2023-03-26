@@ -78,7 +78,7 @@ public class AppearancePreferences extends PreferenceFragment {
         layoutOrientation.setSummary(layoutOrientations[LAYOUT_ORIENTATION_CONST.indexOf(currentLayoutDirection)]);
         layoutOrientation.setOnPreferenceClickListener(preference -> {
             new SearchableSingleChoiceDialogBuilder<>(requireActivity(), LAYOUT_ORIENTATION_CONST, layoutOrientations)
-                    .setTitle(R.string.pref_layout_orientation)
+                    .setTitle(R.string.pref_layout_direction)
                     .setSelection(currentLayoutDirection)
                     .setPositiveButton(R.string.apply, (dialog, which, selectedLayoutOrientation) -> {
                         currentLayoutDirection = Objects.requireNonNull(selectedLayoutOrientation);

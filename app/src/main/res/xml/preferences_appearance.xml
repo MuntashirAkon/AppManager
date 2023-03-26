@@ -15,7 +15,7 @@
 
     <Preference
         app:key="layout_orientation"
-        app:title="@string/pref_layout_orientation"
+        app:title="@string/pref_layout_direction"
         tools:summary="Left to right"
         app:iconSpaceReserved="false" />
 
