@@ -1293,4 +1293,6 @@
         <item quantity="one">Konnte %1$d App nicht optimieren</item>
         <item quantity="other">Konnte %1$d Apps nicht optimieren</item>
     </plurals>
+    <string name="app_info_tag_open_links">Links öffnen</string>
+    <string name="title_domains_supported_by_the_app">Unterstützte Domänen</string>
 </resources>
