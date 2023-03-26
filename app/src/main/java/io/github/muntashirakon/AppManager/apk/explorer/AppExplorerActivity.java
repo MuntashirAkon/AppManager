@@ -54,7 +54,7 @@ public class AppExplorerActivity extends BaseActivity {
             } else {
                 if (adapterItem.getCachedFile() == null) return;
                 intent = new Intent(Intent.ACTION_VIEW)
-                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_GRANT_READ_URI_PERMISSION)
                         .setDataAndType(FmProvider.getContentUri(adapterItem.getCachedFile()), adapterItem.getType());
             }
             startActivity(intent);
