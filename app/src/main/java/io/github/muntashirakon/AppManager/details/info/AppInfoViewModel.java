@@ -259,11 +259,6 @@ public class AppInfoViewModel extends AndroidViewModel {
         // Set split entries
         ApkFile apkFile = ApkFile.getInstance(mainModel.getApkFileKey());
         int countSplits = apkFile.getEntries().size() - 1;
-        appInfo.splitEntries = new ArrayList<>(countSplits);
-        // Base.apk is always on top, so count from 1
-        for (int i = 1; i <= countSplits; ++i) {
-            appInfo.splitEntries.add(apkFile.getEntries().get(i));
-        }
         if (!isExternalApk) {
             // Set data dirs
             appInfo.dataDir = applicationInfo.dataDir;
@@ -424,7 +419,6 @@ public class AppInfoViewModel extends AndroidViewModel {
         // Paths & dirs
         @Nullable
         public String sourceDir;
-        public List<ApkFile.Entry> splitEntries;
         @Nullable
         public String dataDir;
         @Nullable

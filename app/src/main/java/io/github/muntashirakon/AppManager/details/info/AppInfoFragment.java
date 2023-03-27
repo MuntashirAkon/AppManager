@@ -1315,13 +1315,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 mListItems.add(ListItem.newSelectableRegularItem(getString(R.string.source_dir), appInfo.sourceDir,
                         openAsFolderInFM(requireContext(), appInfo.sourceDir)));
             }
-            // Split source directories
-            if (appInfo.splitEntries.size() > 0) {
-                for (ApkFile.Entry entry : appInfo.splitEntries) {
-                    mListItems.add(ListItem.newSelectableRegularItem(entry.toShortLocalizedString(mActivity),
-                            entry.getApkSource(), openAsFolderInFM(requireContext(), entry.getApkSource())));
-                }
-            }
             // Data dir
             if (appInfo.dataDir != null) {
                 mListItems.add(ListItem.newSelectableRegularItem(getString(R.string.data_dir), appInfo.dataDir,
