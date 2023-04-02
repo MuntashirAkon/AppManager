@@ -3,7 +3,6 @@
 package io.github.muntashirakon.AppManager.main;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.usage.UsageStatsManager;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
@@ -11,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
+import android.os.RemoteException;
 import android.os.UserHandleHidden;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -42,6 +42,7 @@ import java.util.concurrent.TimeUnit;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
+import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
@@ -195,65 +196,12 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
         }
         // Add click listeners
         holder.itemView.setOnClickListener(v -> {
-            // Click listener:
-            // 1) If selection mode is on, select/deselect the current item instead of 2 & 3.
-            // 2) If the app is not installed:
-            //    i.  Display a toast message saying that it's not installed if it's a backup-only app
-            //    ii. Offer to install the app if it can be installed
-            // 3) If installed, load the App Details page
+            // If selection mode is on, select/deselect the current item instead of the default behaviour
             if (isInSelectionMode()) {
                 toggleSelection(position);
                 return;
             }
-            if (!item.isInstalled) {
-                try {
-                    @SuppressLint("WrongConstant")
-                    ApplicationInfo info = mPackageManager.getApplicationInfo(item.packageName, PackageUtils.flagMatchUninstalled);
-                    if (Ops.isPrivileged() && ApplicationInfoCompat.isSystemApp(info)) {
-                        // Install existing app instead of installing as an update
-                        mActivity.startActivity(PackageInstallerActivity.getLaunchableInstance(mActivity, item.packageName));
-                        return;
-                    }
-                    if (info.publicSourceDir != null && new File(info.publicSourceDir).exists()
-                            && FeatureController.isInstallerEnabled()) {
-                        mActivity.startActivity(PackageInstallerActivity.getLaunchableInstance(mActivity,
-                                Uri.fromFile(new File(info.publicSourceDir))));
-                    }
-                } catch (PackageManager.NameNotFoundException ignore) {
-                }
-                Toast.makeText(mActivity, R.string.app_not_installed, Toast.LENGTH_SHORT).show();
-                return;
-            }
-            if (item.userHandles.length == 0) {
-                Intent intent = AppDetailsActivity.getIntent(mActivity, item.packageName, UserHandleHidden.myUserId());
-                mActivity.startActivity(intent);
-                return;
-            }
-            if (item.userHandles.length == 1) {
-                int[] userHandles = Users.getUsersIds();
-                if (!ArrayUtils.contains(userHandles, item.userHandles[0])) return;
-                Intent intent = AppDetailsActivity.getIntent(mActivity, item.packageName, item.userHandles[0]);
-                mActivity.startActivity(intent);
-                return;
-            }
-            String[] userNames = new String[item.userHandles.length];
-            List<UserInfo> users = Users.getUsers();
-            for (UserInfo info : users) {
-                for (int i = 0; i < item.userHandles.length; ++i) {
-                    if (info.id == item.userHandles[i]) {
-                        userNames[i] = info.name == null ? String.valueOf(info.id) : info.name;
-                    }
-                }
-            }
-            new SearchableItemsDialogBuilder<>(mActivity, userNames)
-                    .setTitle(R.string.select_user)
-                    .setOnItemClickListener((dialog, which, item1) -> {
-                        Intent intent = AppDetailsActivity.getIntent(mActivity, item.packageName, item.userHandles[which]);
-                        mActivity.startActivity(intent);
-                        dialog.dismiss();
-                    })
-                    .setNegativeButton(R.string.cancel, null)
-                    .show();
+            handleClick(item);
         });
         holder.itemView.setOnLongClickListener(v -> {
             // Long click listener: Select/deselect an app.
@@ -476,9 +424,84 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
     public Object[] getSections() {
         String[] sectionsArr = new String[sections.length()];
         for (int i = 0; i < sections.length(); i++)
-            sectionsArr[i] = "" + sections.charAt(i);
+            sectionsArr[i] = String.valueOf(sections.charAt(i));
 
         return sectionsArr;
+    }
+
+    private void handleClick(@NonNull ApplicationItem item) {
+        if (!item.isInstalled || item.userHandles.length == 0) {
+            // The app should not be installed. But make sure this is really true. (For current user only)
+            ApplicationInfo info;
+            try {
+                info = PackageManagerCompat.getApplicationInfo(item.packageName, UserHandleHidden.myUserId(),
+                        PackageUtils.flagMatchUninstalled);
+            } catch (RemoteException | PackageManager.NameNotFoundException e) {
+                Toast.makeText(mActivity, R.string.app_not_installed, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            // 1. Check if the app was really uninstalled.
+            if (ApplicationInfoCompat.isInstalled(info)) {
+                // The app is already installed, and we were wrong to assume that it was installed.
+                // Update data before opening it.
+                item.isInstalled = true;
+                item.userHandles = new int[]{UserHandleHidden.myUserId()};
+                Intent intent = AppDetailsActivity.getIntent(mActivity, item.packageName, UserHandleHidden.myUserId());
+                mActivity.startActivity(intent);
+                return;
+            }
+            // 2. If the app can be installed, offer it to install again.
+            if (FeatureController.isInstallerEnabled()) {
+                if (ApplicationInfoCompat.isSystemApp(info) && Ops.isPrivileged()) {
+                    // Install existing app instead of installing as an update
+                    mActivity.startActivity(PackageInstallerActivity.getLaunchableInstance(mActivity, item.packageName));
+                    return;
+                }
+                // Otherwise, try with APK files
+                // FIXME: 1/4/23 Include splits
+                if (info.publicSourceDir != null && new File(info.publicSourceDir).exists()
+                        && FeatureController.isInstallerEnabled()) {
+                    mActivity.startActivity(PackageInstallerActivity.getLaunchableInstance(mActivity,
+                            Uri.fromFile(new File(info.publicSourceDir))));
+                    return;
+                }
+            }
+            // 3. The app might be uninstalled without clearing data
+            // TODO: 1/4/23 Offer user to uninstall the app again
+            Toast.makeText(mActivity, R.string.app_not_installed, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // The app is installed
+        if (item.userHandles.length == 1) {
+            int[] userHandles = Users.getUsersIds();
+            if (ArrayUtils.contains(userHandles, item.userHandles[0])) {
+                Intent intent = AppDetailsActivity.getIntent(mActivity, item.packageName, item.userHandles[0]);
+                mActivity.startActivity(intent);
+                return;
+            }
+            // Outside our jurisdiction
+            Toast.makeText(mActivity, R.string.app_not_installed, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        // More than a user, ask the user to select one
+        String[] userNames = new String[item.userHandles.length];
+        List<UserInfo> users = Users.getUsers();
+        for (UserInfo info : users) {
+            for (int i = 0; i < item.userHandles.length; ++i) {
+                if (info.id == item.userHandles[i]) {
+                    userNames[i] = info.name == null ? String.valueOf(info.id) : info.name;
+                }
+            }
+        }
+        new SearchableItemsDialogBuilder<>(mActivity, userNames)
+                .setTitle(R.string.select_user)
+                .setOnItemClickListener((dialog, which, item1) -> {
+                    Intent intent = AppDetailsActivity.getIntent(mActivity, item.packageName, item.userHandles[which]);
+                    mActivity.startActivity(intent);
+                    dialog.dismiss();
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
     }
 
     static class ViewHolder extends MultiSelectionView.ViewHolder {

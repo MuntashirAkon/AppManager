@@ -8,6 +8,7 @@ import static io.github.muntashirakon.AppManager.utils.UIUtils.getBitmapFromDraw
 import android.app.Application;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.RemoteException;
@@ -162,7 +163,7 @@ public class FreezeUnfreezeActivity extends BaseActivity {
                         FreezeUtils.freeze(shortcutInfo.packageName, shortcutInfo.userId);
                     }
                     isFrozenLiveData.postValue(new Pair<>(shortcutInfo, !isFrozen));
-                } catch (RemoteException e) {
+                } catch (RemoteException | PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
                 }
             });

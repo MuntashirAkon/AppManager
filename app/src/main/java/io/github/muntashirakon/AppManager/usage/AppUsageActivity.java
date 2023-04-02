@@ -15,7 +15,6 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.provider.Settings;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
@@ -345,7 +344,7 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
                             .getUsageStatsForPackage(usageInfo.packageName, mCurrentInterval, usageInfo.userId);
                     packageUsageInfo.copyOthers(usageInfo);
                     mPackageUsageInfoLiveData.postValue(packageUsageInfo);
-                } catch (RemoteException e) {
+                } catch (Exception e) {
                     Log.e("AppUsage", e);
                 }
             });
@@ -360,7 +359,7 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
                     try {
                         packageUsageInfoList.addAll(AppUsageStatsManager.getInstance(getApplication())
                                 .getUsageStats(mCurrentInterval, userId));
-                    } catch (RemoteException | SecurityException e) {
+                    } catch (Exception e) {
                         Log.e("AppUsage", e);
                     }
                 }

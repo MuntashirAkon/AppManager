@@ -14,6 +14,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.IBinder;
 import android.os.PowerManager;
@@ -176,7 +177,7 @@ public class FreezeUnfreezeService extends Service {
                     dimBitmap(icon);
                     shortcutInfo.setIcon(icon);
                     updateShortcuts(shortcutInfo);
-                } catch (RemoteException e) {
+                } catch (RemoteException | PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
                 }
             }

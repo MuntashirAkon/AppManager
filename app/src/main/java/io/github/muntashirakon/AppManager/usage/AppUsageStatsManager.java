@@ -13,6 +13,7 @@ import android.app.usage.NetworkStats;
 import android.app.usage.NetworkStatsManager;
 import android.app.usage.UsageEvents;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -144,7 +145,7 @@ public class AppUsageStatsManager {
      */
     @NonNull
     public List<PackageUsageInfo> getUsageStats(@UsageUtils.IntervalType int usageInterval, @UserIdInt int userId)
-            throws RemoteException, SecurityException {
+            throws RemoteException, SecurityException, PackageManager.NameNotFoundException {
         List<PackageUsageInfo> packageUsageInfoList = new ArrayList<>();
         int _try = 5; // try to get usage stats at most 5 times
         RemoteException re;
@@ -165,7 +166,7 @@ public class AppUsageStatsManager {
     public PackageUsageInfo getUsageStatsForPackage(@NonNull String packageName,
                                                      @UsageUtils.IntervalType int usageInterval,
                                                      @UserIdInt int userId)
-            throws RemoteException {
+            throws RemoteException, PackageManager.NameNotFoundException {
         UsageUtils.TimeInterval range = UsageUtils.getTimeInterval(usageInterval);
         PackageUsageInfo packageUsageInfo = new PackageUsageInfo(context, packageName, userId,
                 PackageManagerCompat.getApplicationInfo(packageName, flagMatchUninstalled, userId));
@@ -207,7 +208,7 @@ public class AppUsageStatsManager {
      */
     private List<PackageUsageInfo> getUsageStatsInternal(@UsageUtils.IntervalType int usageInterval,
                                                          @UserIdInt int userId)
-            throws RemoteException {
+            throws RemoteException, PackageManager.NameNotFoundException {
         List<PackageUsageInfo> screenTimeList = new ArrayList<>();
         Map<String, Long> screenTimes = new HashMap<>();
         Map<String, Long> lastUse = new HashMap<>();
