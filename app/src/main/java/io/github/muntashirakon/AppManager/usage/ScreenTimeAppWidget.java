@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.os.RemoteException;
 import android.util.Size;
 import android.widget.RemoteViews;
 
@@ -37,7 +36,7 @@ public class ScreenTimeAppWidget extends AppWidgetProvider {
                 try {
                     packageUsageInfoList.addAll(AppUsageStatsManager.getInstance(context)
                             .getUsageStats(UsageUtils.USAGE_TODAY, userId));
-                } catch (RemoteException | SecurityException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
         }

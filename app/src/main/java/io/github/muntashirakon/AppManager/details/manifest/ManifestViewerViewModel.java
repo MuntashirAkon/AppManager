@@ -27,7 +27,6 @@ import java.util.regex.Pattern;
 
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.parser.AndroidBinXmlDecoder;
-import io.github.muntashirakon.AppManager.apk.parser.AndroidBinXmlParser;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.io.IoUtils;
 
@@ -134,8 +133,8 @@ public class ManifestViewerViewModel extends AndroidViewModel {
                 byteBuffer.position(0);
                 byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
                 try {
-                    manifestContent.postValue(getFormattedManifestContent(AndroidBinXmlDecoder.decode(byteBuffer, true)));
-                } catch (AndroidBinXmlParser.XmlParserException e) {
+                    manifestContent.postValue(getFormattedManifestContent(AndroidBinXmlDecoder.decode(byteBuffer)));
+                } catch (Throwable e) {
                     Log.e(TAG, "Could not parse APK", e);
                 }
             }

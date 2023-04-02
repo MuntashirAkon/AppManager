@@ -359,7 +359,7 @@ public class AppDb {
             try {
                 packageUsageInfoList.addAll(AppUsageStatsManager.getInstance(context)
                         .getUsageStats(UsageUtils.USAGE_WEEKLY, userId));
-            } catch (RemoteException | SecurityException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

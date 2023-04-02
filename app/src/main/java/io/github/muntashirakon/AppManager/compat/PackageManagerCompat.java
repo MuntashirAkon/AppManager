@@ -191,12 +191,16 @@ public final class PackageManagerCompat {
     @SuppressWarnings("deprecation")
     @NonNull
     public static ApplicationInfo getApplicationInfo(String packageName, int flags, @UserIdInt int userHandle)
-            throws RemoteException {
+            throws RemoteException, PackageManager.NameNotFoundException {
         IPackageManager pm = getPackageManager();
+        ApplicationInfo applicationInfo;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            return pm.getApplicationInfo(packageName, (long) flags, userHandle);
+            applicationInfo = pm.getApplicationInfo(packageName, (long) flags, userHandle);
+        } else applicationInfo = pm.getApplicationInfo(packageName, flags, userHandle);
+        if (applicationInfo == null) {
+            throw new PackageManager.NameNotFoundException("Package " + packageName + " not found.");
         }
-        return pm.getApplicationInfo(packageName, flags, userHandle);
+        return applicationInfo;
     }
 
     public static String getInstallerPackageName(@NonNull String packageName) throws RemoteException {
@@ -309,9 +313,12 @@ public final class PackageManagerCompat {
             return getPackageManager().getApplicationHiddenSettingAsUser(packageName, userId);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            // Find using private flags
-            ApplicationInfo info = getApplicationInfo(packageName, 0, userId);
-            return (ApplicationInfoCompat.getPrivateFlags(info) & ApplicationInfoCompat.PRIVATE_FLAG_HIDDEN) != 0;
+            try {
+                // Find using private flags
+                ApplicationInfo info = getApplicationInfo(packageName, 0, userId);
+                return (ApplicationInfoCompat.getPrivateFlags(info) & ApplicationInfoCompat.PRIVATE_FLAG_HIDDEN) != 0;
+            } catch (PackageManager.NameNotFoundException ignore) {
+            }
         }
         // Otherwise, there is no way to detect if the package is hidden
         return false;

@@ -323,4 +323,8 @@ public final class ApplicationInfoCompat {
     public static boolean isSystemApp(@NonNull ApplicationInfo info) {
         return (info.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
     }
+
+    public static boolean isInstalled(@NonNull ApplicationInfo info) {
+        return (info.flags & ApplicationInfo.FLAG_INSTALLED) != 0;
+    }
 }
