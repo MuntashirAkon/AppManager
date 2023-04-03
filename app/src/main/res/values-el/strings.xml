@@ -232,4 +232,9 @@
     <string name="app_settings">Ρυθμίσεις</string>
     <string name="usage_yesterday">Χθές</string>
     <string name="long_integer_value">Τιμή μεγάλου ακεραίου</string>
+    <string name="exodus_link">Σύνδεσμος εxodus</string>
+    <string name="sort_by_blocked_components">Πρώτα τα αποκλεισμένα</string>
+    <string name="external_data_dir">Φάκελος Εξωτερικών Δεδομένων</string>
+    <string name="external_multiple_data_dir">Φάκελος Εξωτερικών Δεδομένων <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
+    <string name="second_degree_tracker_note">Το πρόθεμα ² υποδηλώνει ότι οι ιχνηλάτες βρίσκονται στον <a href="https://etip.exodus-privacy.eu.org/">κατάλογο αναμονής ETIP</a>, δηλ. αν είναι πραγματικοί ιχνηλάτες, εξακολουθεί να ερευνάται.</string>
 </resources>
