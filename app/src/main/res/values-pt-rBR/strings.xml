@@ -1316,4 +1316,6 @@
     <string name="batch_ops_runtime_optimization">Otimização do tempo de execução</string>
     <string name="export_option_markdown">Markdown</string>
     <string name="export_app_list_select_format">Selecione o formato para exportar a lista de aplicativos</string>
+    <string name="title_domains_supported_by_the_app">Domínios suportados</string>
+    <string name="app_info_tag_open_links">Abrir links</string>
 </resources>
