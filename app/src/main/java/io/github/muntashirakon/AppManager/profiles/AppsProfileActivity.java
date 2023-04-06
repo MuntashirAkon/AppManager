@@ -71,6 +71,7 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
 
     @Override
     protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
+        model = new ViewModelProvider(this).get(ProfileViewModel.class);
         setContentView(R.layout.activity_apps_profile);
         setSupportActionBar(findViewById(R.id.toolbar));
         progressIndicator = findViewById(R.id.progress_linear);
@@ -133,7 +134,6 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(newProfile ? newProfileName : profileName);
         }
-        model = new ViewModelProvider(this).get(ProfileViewModel.class);
         model.setProfileName(profileName == null ? newProfileName : profileName, newProfile);
         if (newProfileName != null) {
             // Requested a new profile, clone profile
