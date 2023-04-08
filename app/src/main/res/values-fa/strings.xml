@@ -1117,4 +1117,17 @@
     <string name="so_type_executable">قابل اجرا</string>
     <string name="pref_saved_apk_name_format">فرمت نام APK ذخیره شد</string>
     <string name="app_explorer">کاوشگر برنامه</string>
+    <string name="action_optimize_app">بهینه‌سازی</string>
+    <string name="app_info_tag_open_links">باز کردن پیوندها</string>
+    <string name="title_domains_supported_by_the_app">دامنه های پشتیبانی شده</string>
+    <string name="so_type_shared_library">کتابخانه اشتراک گذاری شده</string>
+    <string name="batch_ops_runtime_optimization">زمان اجرای بهینه سازی</string>
+    <string name="action_run">اجرا</string>
+    <string name="hidden_api_enf_policy_warn">هشدار (دسترسی کامل به API مخفی اما هشدار صادر می کند)</string>
+    <string name="memory_chart_info">● %1$s برنامه‌ها ● %2$s ذخیره شده ● %3$s بافرها ● %4$s رایگان</string>
+    <string name="sort_by_installation_date">تاریخ نصب</string>
+    <string name="swap">تعویض</string>
+    <string name="hidden_api_enforcement_policy">خط مشی اجرای مخفی API</string>
+    <string name="hidden_api_enf_default_policy">پیش فرض (بر اساس نوع برنامه)</string>
+    <string name="hidden_api_enf_policy_none">هیچکدام (دسترسی کامل به API مخفی)</string>
 </resources>
