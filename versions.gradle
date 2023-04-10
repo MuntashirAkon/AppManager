@@ -27,7 +27,7 @@ ext {
     material_version = "1.8.0"
     preferences_version = "1.2.0"
     refine_version = "4.0.0"
-    room_version = "2.5.0"
+    room_version = "2.5.1"
     simplemagic_version = "1.17"
     splashscreen_version = "1.0.0"
     sun_security_version = "1.1"
