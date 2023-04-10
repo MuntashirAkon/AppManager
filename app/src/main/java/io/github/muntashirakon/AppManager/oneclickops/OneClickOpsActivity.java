@@ -175,7 +175,7 @@ public class OneClickOpsActivity extends BaseActivity {
                             })
                             .show();
                 });
-        if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             mItemCreator.addItemWithTitleSubtitle(getString(R.string.title_perform_runtime_optimization_to_apps),
                             getString(R.string.summary_perform_runtime_optimization_to_apps))
                     .setOnClickListener(v -> {

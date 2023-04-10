@@ -325,7 +325,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             menu.findItem(R.id.action_battery_opt).setVisible(Ops.isPrivileged());
             menu.findItem(R.id.action_net_policy).setVisible(Ops.isPrivileged());
             menu.findItem(R.id.action_install).setVisible(Ops.isPrivileged() && Users.getUsersIds().length > 1);
-            menu.findItem(R.id.action_optimize).setVisible(BuildConfig.DEBUG && Ops.isPrivileged() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N);
+            menu.findItem(R.id.action_optimize).setVisible(Ops.isPrivileged() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N);
         }
     }
 
@@ -682,7 +682,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         if (tagCloud.hasRequestedLargeHeap) {
             addChip(R.string.requested_large_heap);
         }
-        if (BuildConfig.DEBUG && tagCloud.hostsToOpen != null) {
+        if (tagCloud.hostsToOpen != null) {
             addChip(R.string.app_info_tag_open_links, tagCloud.canOpenLinks ? ColorCodes.getFailureColor(mActivity)
                     : ColorCodes.getSuccessColor(mActivity)).setOnClickListener(v -> {
                 SearchableItemsDialogBuilder<String> builder = new SearchableItemsDialogBuilder<>(mActivity, new ArrayList<>(tagCloud.hostsToOpen.keySet()))
