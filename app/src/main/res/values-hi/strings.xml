@@ -868,7 +868,7 @@
     <string name="screen_lock">स्क्रीन लॉक</string>
     <string name="screen_lock_msg">एंड्राइड स्क्रीन लॉक का उपयोग करके ऐप मैनेजर लॉक करें</string>
     <string name="back_up">बैकअप</string>
-    <string name="working_on_adb_mode">ADB मोड पर चल रहा</string>
+    <string name="working_on_adb_mode">ADB मोड पर कार्य कर रहा है</string>
     <string name="type_uri">यूआरआई</string>
     <string name="failed_to_save_key">कुंजी सहेजी नहीं जा सकी।</string>
     <string name="generate_key">उत्पन्न करें</string>
@@ -936,4 +936,42 @@
         <item quantity="other">%d फ़ाइलें हटा दी जाएगी</item>
     </plurals>
     <string name="next">अगला</string>
+    <string name="log_recording_started">लॉग का लिखना शुरू है.</string>
+    <string name="log_saved">लॉगो का बचत हुआ है.</string>
+    <string name="no_saved_logs">लॉगस नहीं है.</string>
+    <string name="manage_saved_logs">बचाया गए हुए लॉगस को मैनेज करे</string>
+    <string name="log_level">लॉग स्तर</string>
+    <string name="source_stamp_verified_and_identified_to_be_from_source">सोर्स स्टाम्प &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"source\" example=\"Google Play\"&gt; से है ऐसा पहचाना और साबित किया गया है</string>
+    <string name="pref_display_limit_summary" tools:ignore="PluralsCandidate">सिर्फ पिछले %1$d लॉगस दिखाओ ताकि \'आउट ऑफ मेमोरी\' से बचे.</string>
+    <string name="pref_filter_pattern_title">टॉगस छान निकाले</string>
+    <string name="pref_display_limit_title">लॉगस का प्रदर्शन सीमा</string>
+    <string name="pref_filter_pattern_summary">चुनित टाॅगस को जान निकले.</string>
+    <string name="pref_show_timestamp_title">Pid और समय चिन्ह को दिखाएं</string>
+    <string name="pref_expanded_by_default_summary">शुरू से हर लॉग को पूरा दिखाओ.</string>
+    <plurals name="toast_log_truncated">
+        <item quantity="one">लोग बहुत बड़ा था, सिर्फ अंत का %d पंक्ति दिखेगा.</item>
+        <item quantity="other">लोग बहुत बड़ा था, सिर्फ अंत के %d पंक्तियाँ दिखेगा.</item>
+    </plurals>
+    <string name="pref_log_line_period_error">1 और 1000 के बीच कोई पूर्ण अंक डालिए.</string>
+    <string name="pref_expanded_by_default_title">शुरू से पुलाओ</string>
+    <string name="save_log">लॉग सेव करे</string>
+    <string name="file">फाईल</string>
+    <string name="omit_sensitive_info">गुप्त डेटा को छोड़ो</string>
+    <string name="undo">वापसी</string>
+    <string name="collapse_all">सब सिकोड़े</string>
+    <string name="save_as">ऐसे सेव करे…</string>
+    <string name="unable_to_save_log">लॉग सेव नहीं हुआ है. क्या फाईल का नाम सही था\?</string>
+    <string name="expand_all">सब पुलाओ</string>
+    <string name="pref_log_write_period_summary" tools:ignore="PluralsCandidate">रिकॉर्डिंग के समय, हर %1$d लाइन के बाद SD कार्ड में दर्ज कीजिए.</string>
+    <string name="text_include_device_info">यंत्र का जानकारी जोड़ों</string>
+    <string name="widget_recording_in_progress">रिकॉर्डिंग चालू है…</string>
+    <string name="pref_show_timestamp_summary">फूलने पर प्रक्रिया पहचान अंक और संबंधित समय चिन्ह को दिखाएं.</string>
+    <string name="record_log">लॉग को रिकार्ड करे</string>
+    <string name="toast_invalid_level">ये नाम मान्य नहीं है: %s</string>
+    <string name="toast_invalid_selection">गलत चुनाव. वापिस चुनिए.</string>
+    <string name="pause_unpause">चलाओ/रूकाओ</string>
+    <string name="pref_log_write_period_title">लिखने की कालावधि</string>
+    <string name="pref_display_limit_hint" tools:ignore="PluralsCandidate">%1$d और %2$d के बीच कोई पूर्ण अंक डालिए.</string>
+    <string name="widget_start_recording">रिकॉर्ड
+\nलॉग</string>
 </resources>
