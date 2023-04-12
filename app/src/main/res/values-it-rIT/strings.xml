@@ -37,7 +37,7 @@
     <string name="usage_7_days">Ultimi 7 giorni</string>
     <string name="search">Cerca</string>
     <string name="process_name">Nome processo</string>
-    <string name="requested_large_heap">Grande mucchio</string>
+    <string name="requested_large_heap">Heap grande</string>
     <string name="databases">Database</string>
     <string name="save">Salva</string>
     <string name="disabled_app">Disabilitato</string>
@@ -161,7 +161,7 @@
     <string name="sort_by_app_label">Etichetta app</string>
     <string name="loading">Caricamento…</string>
     <string name="error">Errore</string>
-    <string name="shared_libs">Libbre condivise</string>
+    <string name="shared_libs">Librerie condivise</string>
     <string name="declared_permission">Autorizzazioni</string>
     <string name="patterns_allowed">Modelli ammessi</string>
     <string name="write">Scrivi</string>
