@@ -15,4 +15,10 @@
         tools:summary="Using generic keys."
         app:iconSpaceReserved="false" />
 
+    <SwitchPreferenceCompat
+        app:key="zip_align"
+        app:title="@string/pref_zip_align"
+        app:summary="@string/pref_zip_align_msg"
+        app:iconSpaceReserved="false" />
+
 </PreferenceScreen>

@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.Preference;
+import androidx.preference.SwitchPreferenceCompat;
 
 import com.google.android.material.transition.MaterialSharedAxis;
 
@@ -35,7 +36,7 @@ public class ApkSigningPreferences extends PreferenceFragment {
         activity = (SettingsActivity) requireActivity();
         // Set signature schemes
         Preference sigSchemes = Objects.requireNonNull(findPreference("signature_schemes"));
-        final SigSchemes sigSchemeFlags = SigSchemes.fromPref();
+        final SigSchemes sigSchemeFlags = Prefs.Signing.getSigSchemes();
         sigSchemes.setOnPreferenceClickListener(preference -> {
             new SearchableFlagsDialogBuilder<>(activity, sigSchemeFlags.getAllItems(), R.array.sig_schemes, sigSchemeFlags.getFlags())
                     .setTitle(R.string.app_signing_signature_schemes)
@@ -45,12 +46,12 @@ public class ApkSigningPreferences extends PreferenceFragment {
                             flags |= flag;
                         }
                         sigSchemeFlags.setFlags(flags);
-                        sigSchemeFlags.updatePref();
+                        Prefs.Signing.setSigSchemes(flags);
                     })
                     .setNegativeButton(R.string.cancel, null)
                     .setNeutralButton(R.string.reset_to_default, (dialog, which, selections) -> {
                         sigSchemeFlags.setFlags(SigSchemes.DEFAULT_SCHEMES);
-                        sigSchemeFlags.updatePref();
+                        Prefs.Signing.setSigSchemes(SigSchemes.DEFAULT_SCHEMES);
                     })
                     .show();
             return true;
@@ -73,6 +74,8 @@ public class ApkSigningPreferences extends PreferenceFragment {
             fragment.show(getParentFragmentManager(), RSACryptoSelectionDialogFragment.TAG);
             return true;
         });
+        ((SwitchPreferenceCompat) Objects.requireNonNull(findPreference("zip_align")))
+                .setChecked(Prefs.Signing.zipAlign());
     }
 
     @Override

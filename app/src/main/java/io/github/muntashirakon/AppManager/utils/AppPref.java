@@ -127,6 +127,8 @@ public class AppPref {
 
         PREF_VIRUS_TOTAL_API_KEY_STR,
         PREF_VIRUS_TOTAL_PROMPT_BEFORE_UPLOADING_BOOL,
+
+        PREF_ZIP_ALIGN_BOOL,
         ;
 
         public static final String[] keys = new String[values().length];
@@ -378,6 +380,7 @@ public class AppPref {
             case PREF_LOG_VIEWER_SHOW_PID_TID_TIMESTAMP_BOOL:
             case PREF_INSTALLER_DISPLAY_CHANGES_BOOL:
             case PREF_VIRUS_TOTAL_PROMPT_BEFORE_UPLOADING_BOOL:
+            case PREF_ZIP_ALIGN_BOOL:
                 return true;
             case PREF_CONCURRENCY_THREAD_COUNT_INT:
             case PREF_APP_THEME_CUSTOM_INT:

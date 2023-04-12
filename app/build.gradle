@@ -110,6 +110,7 @@ dependencies {
     implementation project(path: ':libopenpgp')
 
     // APK Editing
+    implementation "com.github.REAndroid:ARSCLib:${arsclib_version}"
     implementation "com.github.MuntashirAkon:apksig-android:${apksig_version}"
     implementation "com.github.MuntashirAkon:sun-security-android:${sun_security_version}"
     implementation "org.bouncycastle:bcprov-jdk15on:${bouncycastle_version}"

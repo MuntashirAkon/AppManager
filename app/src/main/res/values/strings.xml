@@ -100,6 +100,7 @@
         \n- <a href="https://github.com/LSPosed/AndroidHiddenApiBypass">AndroidHiddenApiBypass</a> (Apache 2.0)
         \n- <a href="https://github.com/MuntashirAkon/apk-parser">APK-parser</a> (BSD-2-Clause)
         \n- <a href="https://github.com/MuntashirAkon/apksig-android">apksig for android</a> (Apache 2.0)
+        \n- <a href="https://github.com/REAndroid/ARSCLib">ARSCLib</a> (Apache 2.0)
         \n- <a href="https://github.com/bcgit/bc-java">Bouncy Castle</a> (MIT)
         \n- <a href="https://commons.apache.org/proper/commons-compress/">Commons Compress</a> (Apache 2.0)
         \n- <a href="https://github.com/dkanada/frost">Frost</a> Icons (GPLv3.0)
@@ -1334,6 +1335,8 @@
     <string name="batch_ops_runtime_optimization">Runtime optimization</string>
     <string name="app_info_tag_open_links">Open links</string>
     <string name="title_domains_supported_by_the_app">Supported Domains</string>
+    <string name="pref_zip_align">Align APK files</string>
+    <string name="pref_zip_align_msg">Aligning an APK file reduces its memory usage as the files in the APK can be accessed directly without copying the data to RAM. This step is required if <tt>extractNativeLibs</tt> is set to <tt>true</tt>.</string>
     <plurals name="alert_failed_to_optimize_apps">
         <item quantity="one">Could not optimize %1$d app</item>
         <item quantity="other">Could not optimize %1$d apps</item>

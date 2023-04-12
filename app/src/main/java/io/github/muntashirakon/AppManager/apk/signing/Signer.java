@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 
 import com.android.apksig.ApkSigner;
 import com.android.apksig.ApkVerifier;
+import com.reandroid.archive.ZipAlign;
 
 import java.io.File;
 import java.security.KeyStoreException;
@@ -83,14 +84,6 @@ public class Signer {
         this.idsigFile = idsigFile;
     }
 
-    public boolean sign(File in, File out) {
-        return sign(in, out, -1);
-    }
-
-    public boolean sign(File in, File out, int minSdk) {
-        return sign(in, out, minSdk, false);
-    }
-
     public boolean sign(File in, File out, int minSdk, boolean alignFileSize) {
         ApkSigner.SignerConfig signerConfig = new ApkSigner.SignerConfig.Builder("CERT",
                 privateKey, Collections.singletonList(certificate)).build();
@@ -119,6 +112,9 @@ public class Signer {
         ApkSigner signer = builder.build();
         Log.i(TAG, String.format("SignApk: %s", in));
         try {
+            if (alignFileSize) {
+                ZipAlign.align4(in);
+            }
             signer.sign();
             Log.i(TAG, "The signature is complete and the output file is " + out);
             return true;

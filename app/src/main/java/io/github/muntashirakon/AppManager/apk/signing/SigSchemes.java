@@ -8,8 +8,6 @@ import androidx.annotation.NonNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.muntashirakon.AppManager.utils.AppPref;
-
 public class SigSchemes {
     @IntDef(flag = true, value = {
             SIG_SCHEME_V1,
@@ -31,16 +29,6 @@ public class SigSchemes {
 
     @SignatureScheme
     private int flags;
-
-    @NonNull
-    public static SigSchemes fromPref() {
-        SigSchemes sigSchemes = new SigSchemes(AppPref.getInt(AppPref.PrefKey.PREF_SIGNATURE_SCHEMES_INT));
-        if (sigSchemes.isEmpty()) {
-            // Use default if no flag is set
-            return new SigSchemes(DEFAULT_SCHEMES);
-        }
-        return sigSchemes;
-    }
 
     public SigSchemes(@SignatureScheme int flags) {
         this.flags = flags;
@@ -78,9 +66,5 @@ public class SigSchemes {
     }
     public boolean v4SchemeEnabled() {
         return (flags & SIG_SCHEME_V4) != 0;
-    }
-
-    public void updatePref() {
-        AppPref.set(AppPref.PrefKey.PREF_SIGNATURE_SCHEMES_INT, flags);
     }
 }

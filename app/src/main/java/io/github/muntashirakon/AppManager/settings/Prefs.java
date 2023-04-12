@@ -16,6 +16,7 @@ import androidx.annotation.StyleRes;
 
 import java.io.File;
 
+import io.github.muntashirakon.AppManager.apk.signing.SigSchemes;
 import io.github.muntashirakon.AppManager.apk.signing.Signer;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
@@ -480,6 +481,26 @@ public final class Prefs {
     public static final class Security {
         public static boolean isScreenLockEnabled() {
             return AppPref.getBoolean(AppPref.PrefKey.PREF_ENABLE_SCREEN_LOCK_BOOL);
+        }
+    }
+
+    public static final class Signing {
+        @NonNull
+        public static SigSchemes getSigSchemes() {
+            SigSchemes sigSchemes = new SigSchemes(AppPref.getInt(AppPref.PrefKey.PREF_SIGNATURE_SCHEMES_INT));
+            if (sigSchemes.isEmpty()) {
+                // Use default if no flag is set
+                return new SigSchemes(SigSchemes.DEFAULT_SCHEMES);
+            }
+            return sigSchemes;
+        }
+
+        public static void setSigSchemes(int flags) {
+            AppPref.set(AppPref.PrefKey.PREF_SIGNATURE_SCHEMES_INT, flags);
+        }
+
+        public static boolean zipAlign() {
+            return AppPref.getBoolean(AppPref.PrefKey.PREF_ZIP_ALIGN_BOOL);
         }
     }
 

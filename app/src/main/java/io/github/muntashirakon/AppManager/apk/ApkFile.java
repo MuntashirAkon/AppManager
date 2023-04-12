@@ -738,14 +738,15 @@ public final class ApkFile implements AutoCloseable {
                 return realFile;
             }
             signedFile = fileCache.createCachedFile("apk");
-            SigSchemes sigSchemes = SigSchemes.fromPref();
+            SigSchemes sigSchemes = Prefs.Signing.getSigSchemes();
+            boolean zipAlign = Prefs.Signing.zipAlign();
             try {
                 Signer signer = Signer.getInstance(sigSchemes);
                 if (signer.isV4SchemeEnabled()) {
                     idsigFile = fileCache.createCachedFile("idsig");
                     signer.setIdsigFile(idsigFile);
                 }
-                if (signer.sign(realFile, signedFile)) {
+                if (signer.sign(realFile, signedFile, -1, zipAlign)) {
                     if (Signer.verify(sigSchemes, signedFile, idsigFile)) {
                         return signedFile;
                     }
