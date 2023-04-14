@@ -1,0 +1,19 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cell_container"
+    android:layout_width="wrap_content"
+    android:layout_height="@dimen/default_column_header_height"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/cell_data"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:paddingHorizontal="8dp"
+        android:gravity="start|center_vertical"
+        android:maxLines="1"
+        tools:text="Cell Data" />
+
+</LinearLayout>

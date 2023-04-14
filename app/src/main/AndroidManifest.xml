@@ -733,6 +733,10 @@
             android:label="@string/files"
             android:launchMode="singleTop"
             android:taskAffinity="" />
+        <activity android:name=".sqlite.SqliteDbEditorActivity"
+            android:exported="true"
+            android:label="@string/sqlite_db_editor"
+            android:taskAffinity="" />
 
         <service
             android:name=".apk.installer.PackageInstallerService"

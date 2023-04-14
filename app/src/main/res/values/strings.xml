@@ -137,6 +137,7 @@
         \n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a>
         \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
         \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
+        \n- <a href="https://gitlab.com/vijai/SqliteDBViewer">SqliteViewer</a>
         \n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
         \nOriginal logo credit: <a href="https://github.com/Atrate">Atrate</a>.
     </string>
@@ -1341,4 +1342,7 @@
         <item quantity="one">Could not optimize %1$d app</item>
         <item quantity="other">Could not optimize %1$d apps</item>
     </plurals>
+    <string name="failed_to_open_database">Could not open the database.</string>
+    <string name="sqlite_db_editor">SQLite DB Editor</string>
+    <string name="export_csv">Export CSV</string>
 </resources>

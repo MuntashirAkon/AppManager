@@ -133,6 +133,8 @@ dependencies {
     // DB
     implementation "androidx.room:room-runtime:${room_version}"
     annotationProcessor "androidx.room:room-compiler:${room_version}"
+    implementation 'com.github.evrencoskun:TableView:v0.8.9.4'
+    implementation 'de.siegmar:fastcsv:2.2.1'
 
     // FM
     implementation "com.j256.simplemagic:simplemagic:${simplemagic_version}"
