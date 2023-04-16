@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.editor.CodeEditorActivity;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -226,9 +227,8 @@ public class ClassListingFragment extends Fragment implements AdvancedSearchView
             holder.itemView.setCardBackgroundColor(position % 2 == 0 ? mCardColor1 : mCardColor0);
             holder.itemView.setOnClickListener(v -> {
                 try {
-                    Intent intent = new Intent(mActivity, ClassViewerActivity.class);
-                    intent.putExtra(ClassViewerActivity.EXTRA_URI, mViewModel.getUriFromClassName(className));
-                    intent.putExtra(ClassViewerActivity.EXTRA_APP_NAME, mActivity.getTitle());
+                    Intent intent = CodeEditorActivity.getIntent(mActivity, mViewModel.getUriFromClassName(className), null, null, true)
+                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mActivity.startActivity(intent);
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -220,6 +220,11 @@ public final class UiUtils {
         ViewUtils.requestApplyInsetsWhenAttached(view);
     }
 
+    public static boolean isDarkMode(@NonNull Context context) {
+        return (context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK)
+                == Configuration.UI_MODE_NIGHT_YES;
+    }
+
     @SuppressWarnings("deprecation")
     public static boolean isDarkMode() {
         switch (AppCompatDelegate.getDefaultNightMode()) {

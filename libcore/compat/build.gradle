@@ -35,6 +35,9 @@ dependencies {
     api "org.smali:baksmali:${baksmali_version}"
     api "org.smali:smali:${baksmali_version}"
 
+    api "io.github.Rosemoe.sora-editor:editor:${sora_editor_version}"
+    api "io.github.Rosemoe.sora-editor:language-textmate:${sora_editor_version}"
+
     // Unit Testing
     testImplementation "junit:junit:${junit_version}"
     testImplementation "org.robolectric:robolectric:${robolectric_version}"

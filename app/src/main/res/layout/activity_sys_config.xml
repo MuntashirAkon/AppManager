@@ -16,8 +16,7 @@
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            tools:menu="@menu/activity_any_viewer_actions" />
+            android:layout_height="?attr/actionBarSize" />
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
             android:id="@+id/progress_linear"

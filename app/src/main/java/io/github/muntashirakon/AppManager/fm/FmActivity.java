@@ -10,11 +10,42 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 
 public class FmActivity extends BaseActivity {
+    public static final Set<String> SUPPORTED_EDITOR_EXTENSIONS = new HashSet<String>() {{
+        add("cmd");
+        add("conf");
+        add("css");
+        add("csv");
+        add("java");
+        add("kt");
+        add("htm");
+        add("html");
+        add("js");
+        add("json");
+        add("log");
+        add("lua");
+        add("m3u");
+        add("properties");
+        add("prop");
+        add("proto");
+        add("py");
+        add("sh");
+        add("smali");
+        add("tokens");
+        add("txt");
+        add("tsv");
+        add("xhtml");
+        add("xml");
+        add("version");
+    }};
+
     @Override
     protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
         setContentView(R.layout.activity_fm);

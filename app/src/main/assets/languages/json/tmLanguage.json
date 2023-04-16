@@ -1,0 +1,182 @@
+{
+  "scopeName": "source.json",
+  "name": "JSON",
+  "fileTypes": [
+    "avsc",
+    "babelrc",
+    "bowerrc",
+    "composer.lock",
+    "geojson",
+    "gltf",
+    "htmlhintrc",
+    "ipynb",
+    "jscsrc",
+    "jshintrc",
+    "jslintrc",
+    "json",
+    "jsonl",
+    "jsonld",
+    "languagebabel",
+    "ldj",
+    "ldjson",
+    "Pipfile.lock",
+    "schema",
+    "stylintrc",
+    "template",
+    "tern-config",
+    "tern-project",
+    "tfstate",
+    "tfstate.backup",
+    "topojson",
+    "webapp",
+    "webmanifest"
+  ],
+  "patterns": [
+    {
+      "include": "#value"
+    }
+  ],
+  "repository": {
+    "array": {
+      "begin": "\\[",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.definition.array.begin.json"
+        }
+      },
+      "end": "(,)?[\\s\\n]*(\\])",
+      "endCaptures": {
+        "1": {
+          "name": "invalid.illegal.trailing-array-separator.json"
+        },
+        "2": {
+          "name": "punctuation.definition.array.end.json"
+        }
+      },
+      "name": "meta.structure.array.json",
+      "patterns": [
+        {
+          "include": "#value"
+        },
+        {
+          "match": ",",
+          "name": "punctuation.separator.array.json"
+        },
+        {
+          "match": "[^\\s\\]]",
+          "name": "invalid.illegal.expected-array-separator.json"
+        }
+      ]
+    },
+    "constant": {
+      "match": "\\b(true|false|null)\\b",
+      "name": "constant.language.json"
+    },
+    "number": {
+      "match": "-?(?=[1-9]|0(?!\\d))\\d+(\\.\\d+)?([eE][+-]?\\d+)?",
+      "name": "constant.numeric.json"
+    },
+    "object": {
+      "begin": "{",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.definition.dictionary.begin.json"
+        }
+      },
+      "end": "}",
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.dictionary.end.json"
+        }
+      },
+      "name": "meta.structure.dictionary.json",
+      "patterns": [
+        {
+          "begin": "(?=\")",
+          "end": "(?<=\")",
+          "name": "meta.structure.dictionary.key.json",
+          "patterns": [
+            {
+              "include": "#string"
+            }
+          ]
+        },
+        {
+          "begin": ":",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.separator.dictionary.key-value.json"
+            }
+          },
+          "end": "(,)(?=[\\s\\n]*})|(,)|(?=})",
+          "endCaptures": {
+            "1": {
+              "name": "invalid.illegal.trailing-dictionary-separator.json"
+            },
+            "2": {
+              "name": "punctuation.separator.dictionary.pair.json"
+            }
+          },
+          "name": "meta.structure.dictionary.value.json",
+          "patterns": [
+            {
+              "include": "#value"
+            },
+            {
+              "match": "[^\\s,]",
+              "name": "invalid.illegal.expected-dictionary-separator.json"
+            }
+          ]
+        },
+        {
+          "match": "[^\\s}]",
+          "name": "invalid.illegal.expected-dictionary-separator.json"
+        }
+      ]
+    },
+    "string": {
+      "begin": "\"",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.begin.json"
+        }
+      },
+      "end": "\"",
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.end.json"
+        }
+      },
+      "name": "string.quoted.double.json",
+      "patterns": [
+        {
+          "match": "(?x)\n\\\\                # a literal backslash\n(                   # followed by\n  [\"\\\\/bfnrt]     # one of these characters\n  |                 # or\n  u[0-9a-fA-F]{4}   # a u and four hex digits\n)",
+          "name": "constant.character.escape.json"
+        },
+        {
+          "match": "\\\\.",
+          "name": "invalid.illegal.unrecognized-string-escape.json"
+        }
+      ]
+    },
+    "value": {
+      "patterns": [
+        {
+          "include": "#constant"
+        },
+        {
+          "include": "#number"
+        },
+        {
+          "include": "#string"
+        },
+        {
+          "include": "#array"
+        },
+        {
+          "include": "#object"
+        }
+      ]
+    }
+  }
+}

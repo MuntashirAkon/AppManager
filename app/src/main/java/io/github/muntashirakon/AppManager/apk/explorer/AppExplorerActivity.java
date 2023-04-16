@@ -18,9 +18,10 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.editor.CodeEditorActivity;
+import io.github.muntashirakon.AppManager.fm.FmActivity;
 import io.github.muntashirakon.AppManager.fm.FmProvider;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
-import io.github.muntashirakon.AppManager.scanner.ClassViewerActivity;
 
 public class AppExplorerActivity extends BaseActivity {
     AppExplorerViewModel model;
@@ -47,10 +48,13 @@ public class AppExplorerActivity extends BaseActivity {
         });
         model.observeOpen().observe(this, adapterItem -> {
             Intent intent;
-            if ("smali".equals(adapterItem.path.getExtension())) {
-                intent = new Intent(this, ClassViewerActivity.class);
-                intent.putExtra(ClassViewerActivity.EXTRA_APP_NAME, model.getName());
-                intent.putExtra(ClassViewerActivity.EXTRA_URI, adapterItem.getUri());
+            if (FmActivity.SUPPORTED_EDITOR_EXTENSIONS.contains(adapterItem.path.getExtension())) {
+                Uri contentUri;
+                if (adapterItem.getCachedFile() != null) {
+                    contentUri = Uri.fromFile(adapterItem.getCachedFile().getFile());
+                } else contentUri = adapterItem.getUri();
+                intent = CodeEditorActivity.getIntent(this, contentUri, model.getName(), adapterItem.path.getName(), true)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             } else {
                 if (adapterItem.getCachedFile() == null) return;
                 intent = new Intent(Intent.ACTION_VIEW)

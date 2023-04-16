@@ -1,0 +1,46 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_java_smali_toggle"
+        android:title="@string/java"
+        app:showAsAction="always" />
+
+    <item
+        android:id="@+id/action_undo"
+        android:icon="@drawable/ic_undo"
+        android:title="@string/undo"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_redo"
+        android:icon="@drawable/ic_redo"
+        android:title="@string/redo"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_save"
+        android:icon="@drawable/ic_content_save"
+        android:title="@string/save"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_save_as"
+        android:icon="@drawable/ic_content_save"
+        android:title="@string/save_as"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_wrap"
+        android:icon="@drawable/ic_wrap_text"
+        android:title="@string/word_wrap"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_share"
+        android:icon="@drawable/ic_share"
+        android:title="@string/share"
+        app:showAsAction="never" />
+
+</menu>
