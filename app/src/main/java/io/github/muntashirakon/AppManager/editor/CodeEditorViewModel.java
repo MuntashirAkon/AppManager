@@ -4,7 +4,6 @@ package io.github.muntashirakon.AppManager.editor;
 
 import android.app.Application;
 import android.net.Uri;
-import android.os.Build;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -93,8 +92,7 @@ public class CodeEditorViewModel extends AndroidViewModel {
         sourceFile = options.uri != null ? Paths.get(options.uri) : null;
         String extension = sourceFile != null ? sourceFile.getExtension() : null;
         language = getLanguageFromExt(extension);
-        canGenerateJava = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && (options.javaSmaliToggle
-                || "smali".equals(language));
+        canGenerateJava = options.javaSmaliToggle || "smali".equals(language);
     }
 
     @Nullable
