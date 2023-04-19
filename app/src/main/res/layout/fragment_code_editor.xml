@@ -16,7 +16,9 @@
         android:scrollbarThumbHorizontal="@drawable/afs_md2_thumb"
         android:scrollbarThumbVertical="@drawable/afs_md2_thumb"
         android:scrollbarTrackHorizontal="@drawable/afs_md2_track"
-        android:scrollbarTrackVertical="@drawable/afs_md2_track" />
+        android:scrollbarTrackVertical="@drawable/afs_md2_track"
+        app:lnPanelPosition="center"
+        app:lnPanelPositionMode="follow"/>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"

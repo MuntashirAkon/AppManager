@@ -131,6 +131,8 @@
         <activity
             android:name=".editor.CodeEditorActivity"
             android:label="@string/title_code_editor"
+            android:configChanges="orientation|keyboardHidden|screenSize|uiMode"
+            android:windowSoftInputMode="adjustResize"
             android:exported="true" />
         <activity
             android:name=".scanner.ScannerActivity"
