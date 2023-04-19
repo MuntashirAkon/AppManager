@@ -15,7 +15,7 @@ ext {
     appcompat_version = "1.6.1"
     baksmali_version = "2.5.2"
     bouncycastle_version = "1.70"
-    desugar_jdk_version = "2.0.0"
+    desugar_jdk_version = "2.0.3"
     documentfile_version = "1.0.1"
     fastscroll_version = "1.1.8"
     gson_version = "2.9.1"

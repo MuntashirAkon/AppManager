@@ -15,8 +15,6 @@ android {
 
     compileOptions {
         encoding "UTF-8"
-        // Flag to enable support for the new language APIs
-        coreLibraryDesugaringEnabled true
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -29,11 +27,7 @@ android {
 }
 
 dependencies {
-    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:${desugar_jdk_version}"
-
     api "androidx.annotation:annotation:${annotation_version}"
-    api "org.smali:baksmali:${baksmali_version}"
-    api "org.smali:smali:${baksmali_version}"
 
     // Unit Testing
     testImplementation "junit:junit:${junit_version}"

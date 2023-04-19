@@ -54,6 +54,8 @@ android {
     }
     compileOptions {
         encoding "UTF-8"
+        // Flag to enable support for the new language APIs
+        coreLibraryDesugaringEnabled true
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -91,6 +93,7 @@ android {
 
 dependencies {
     compileOnly project(path: ':hiddenapi')
+    coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:${desugar_jdk_version}"
 
     // Deprecated: This is being replaced
     implementation project(path: ':libapkparser')
@@ -114,6 +117,8 @@ dependencies {
     implementation "com.github.MuntashirAkon:sun-security-android:${sun_security_version}"
     implementation "org.bouncycastle:bcprov-jdk15on:${bouncycastle_version}"
     implementation "org.bouncycastle:bcpkix-jdk15on:${bouncycastle_version}"
+    implementation "org.smali:baksmali:${baksmali_version}"
+    implementation "org.smali:smali:${baksmali_version}"
     implementation "com.github.MuntashirAkon.jadx:jadx-core:${jadx_version}"
     // Replace SLF4J with a placeholder
     configurations {
@@ -154,6 +159,8 @@ dependencies {
     implementation "androidx.documentfile:documentfile:${documentfile_version}"
     implementation "androidx.core:core-splashscreen:${splashscreen_version}"
     implementation "androidx.webkit:webkit:${webkit_version}"
+    implementation "io.github.Rosemoe.sora-editor:editor:${sora_editor_version}"
+    implementation "io.github.Rosemoe.sora-editor:language-textmate:${sora_editor_version}"
 
     // Utility
     implementation "com.google.code.gson:gson:${gson_version}"
