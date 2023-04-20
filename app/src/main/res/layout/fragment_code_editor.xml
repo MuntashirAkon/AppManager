@@ -18,7 +18,7 @@
         android:scrollbarTrackHorizontal="@drawable/afs_md2_track"
         android:scrollbarTrackVertical="@drawable/afs_md2_track"
         app:lnPanelPosition="center"
-        app:lnPanelPositionMode="follow"/>
+        app:lnPanelPositionMode="follow" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
@@ -31,34 +31,81 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingHorizontal="@dimen/padding_medium"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:visibility="gone"
             tools:visibility="visible">
 
             <androidx.appcompat.widget.SearchView
-                android:id="@+id/search_editor"
-                android:layout_width="0dp"
+                android:id="@+id/search_bar"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 app:iconifiedByDefault="false" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/previous_button"
-                style="@style/Widget.AppTheme.Button.IconButton"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center_vertical"
-                app:icon="@drawable/ic_expand_less"
-                app:iconSize="30dp" />
+            <androidx.appcompat.widget.SearchView
+                android:id="@+id/replace_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:iconifiedByDefault="false" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/next_button"
-                style="@style/Widget.AppTheme.Button.IconButton"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center_vertical"
-                app:icon="@drawable/ic_expand_more"
-                app:iconSize="30dp" />
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="@dimen/padding_medium">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/search_result_count"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_gravity="center_vertical"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    tools:text="10 results" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/replace_all_button"
+                    style="@style/Widget.AppTheme.Button.IconButton"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="0"
+                    android:layout_gravity="center_vertical"
+                    app:icon="@drawable/ic_find_and_replace_all"
+                    app:iconSize="30dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/replace_button"
+                    style="@style/Widget.AppTheme.Button.IconButton"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="0"
+                    android:layout_gravity="center_vertical"
+                    app:icon="@drawable/ic_find_and_replace"
+                    app:iconSize="30dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/previous_button"
+                    style="@style/Widget.AppTheme.Button.IconButton"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="0"
+                    android:layout_gravity="center_vertical"
+                    app:icon="@drawable/ic_expand_less"
+                    app:iconSize="30dp" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/next_button"
+                    style="@style/Widget.AppTheme.Button.IconButton"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_weight="0"
+                    android:layout_gravity="center_vertical"
+                    app:icon="@drawable/ic_expand_more"
+                    app:iconSize="30dp" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

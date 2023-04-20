@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,6 +26,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -53,10 +55,11 @@ import io.github.rosemoe.sora.text.Cursor;
 import io.github.rosemoe.sora.text.LineSeparator;
 import io.github.rosemoe.sora.widget.CodeEditor;
 import io.github.rosemoe.sora.widget.DirectAccessProps;
+import io.github.rosemoe.sora.widget.EditorSearcher;
 import io.github.rosemoe.sora.widget.SymbolInputView;
 import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
 
-public class CodeEditorFragment extends Fragment {
+public class CodeEditorFragment extends Fragment implements SearchView.OnQueryTextListener {
     public static final String ARG_OPTIONS = "options";
 
     public static class Options implements Parcelable {
@@ -166,7 +169,14 @@ public class CodeEditorFragment extends Fragment {
     private EditorColorScheme mColorScheme;
     private CodeEditor mEditor;
     private TextView mPositionButton;
+    private View mSearchWidget;
+    private SearchView mSearchView;
+    private SearchView mReplaceView;
+    private MaterialButton mReplaceButton;
+    private MaterialButton mReplaceAllButton;
+    private TextView mSearchResultCount;
     private Options mOptions;
+    private EditorSearcher.SearchOptions mSearchOptions = new EditorSearcher.SearchOptions(false, false);
     private MenuItem mSaveMenu;
     private MenuItem mUndoMenu;
     private MenuItem mRedoMenu;
@@ -239,7 +249,10 @@ public class CodeEditorFragment extends Fragment {
             mEditor.postDelayed(this::updateLiveButtons, 50);
         });
         mEditor.subscribeEvent(SelectionChangeEvent.class, (event, unsubscribe) -> updatePositionText());
-        mEditor.subscribeEvent(PublishSearchResultEvent.class, (event, unsubscribe) -> updatePositionText());
+        mEditor.subscribeEvent(PublishSearchResultEvent.class, (event, unsubscribe) -> {
+            updatePositionText();
+            updateSearchResult();
+        });
         DirectAccessProps props = mEditor.getProps();
         props.useICULibToSelectWords = false;
         props.symbolPairAutoCompletion = false;
@@ -255,7 +268,46 @@ public class CodeEditorFragment extends Fragment {
         if (mOptions.readOnly) {
             symbolInputView.setVisibility(View.GONE);
         }
-
+        // Setup search widget
+        mSearchWidget = view.findViewById(R.id.search_container);
+        mSearchView = view.findViewById(R.id.search_bar);
+        mSearchView.setOnQueryTextListener(this);
+        mSearchResultCount = view.findViewById(R.id.search_result_count);
+        view.findViewById(R.id.previous_button).setOnClickListener(v -> {
+            if (!mEditor.getSearcher().hasQuery()) {
+                return;
+            }
+            mEditor.getSearcher().gotoPrevious();
+        });
+        view.findViewById(R.id.next_button).setOnClickListener(v -> {
+            if (!mEditor.getSearcher().hasQuery()) {
+                return;
+            }
+            mEditor.getSearcher().gotoNext();
+        });
+        mReplaceView = view.findViewById(R.id.replace_bar);
+        mReplaceButton = view.findViewById(R.id.replace_button);
+        mReplaceAllButton = view.findViewById(R.id.replace_all_button);
+        mReplaceView.setOnQueryTextListener(null);
+        mReplaceButton.setOnClickListener(v -> {
+            if (!mEditor.getSearcher().hasQuery()) {
+                return;
+            }
+            CharSequence query = mReplaceView.getQuery();
+            if (!TextUtils.isEmpty(query)) {
+                mEditor.getSearcher().replaceThis(query.toString());
+            }
+        });
+        mReplaceAllButton.setOnClickListener(v -> {
+            if (!mEditor.getSearcher().hasQuery()) {
+                return;
+            }
+            CharSequence query = mReplaceView.getQuery();
+            if (!TextUtils.isEmpty(query)) {
+                mEditor.getSearcher().replaceAll(query.toString());
+            }
+        });
+        // Setup status bar
         MaterialButton lockButton = view.findViewById(R.id.lock);
         lockButton.setOnClickListener(v -> {
             if (mViewModel.isReadOnly()) {
@@ -345,6 +397,8 @@ public class CodeEditorFragment extends Fragment {
         mViewModel.getSaveFileLiveData().observe(getViewLifecycleOwner(), successful -> {
             if (successful) {
                 UIUtils.displayShortToast(R.string.saved_successfully);
+                mTextModified = false;
+                requireActionBar().setSubtitle(mOptions.subtitle);
             } else {
                 UIUtils.displayLongToast(R.string.saving_failed);
             }
@@ -445,8 +499,34 @@ public class CodeEditorFragment extends Fragment {
             return true;
         } else if (id == R.id.action_java_smali_toggle) {
             mViewModel.generateJava(mEditor.getText().toString());
+        } else if (id == R.id.action_search) {
+            if (mSearchWidget != null) {
+                // FIXME: 21/4/23 Ideally, search widget should have cross button to close it.
+                boolean alreadyVisible = mSearchWidget.getVisibility() == View.VISIBLE;
+                mSearchWidget.setVisibility(alreadyVisible ? View.GONE : View.VISIBLE);
+                if (!alreadyVisible) {
+                    mSearchView.requestFocus();
+                } else {
+                    mEditor.getSearcher().stopSearch();
+                }
+            }
         }
         return false;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        if (TextUtils.isEmpty(newText)) {
+            mEditor.getSearcher().stopSearch();
+        } else {
+            mEditor.getSearcher().search(newText, mSearchOptions);
+        }
+        return true;
     }
 
     @NonNull
@@ -470,14 +550,24 @@ public class CodeEditorFragment extends Fragment {
     }
 
     private void updateLiveButtons() {
+        boolean readOnly = mViewModel.isReadOnly();
         if (mSaveMenu != null) {
-            mSaveMenu.setEnabled(mTextModified && !mViewModel.isReadOnly());
+            mSaveMenu.setEnabled(mTextModified && !readOnly);
         }
         if (mUndoMenu != null) {
-            mUndoMenu.setEnabled(mEditor != null && mEditor.canUndo() && !mViewModel.isReadOnly());
+            mUndoMenu.setEnabled(mEditor != null && mEditor.canUndo() && !readOnly);
         }
         if (mRedoMenu != null) {
-            mRedoMenu.setEnabled(mEditor != null && mEditor.canRedo() && !mViewModel.isReadOnly());
+            mRedoMenu.setEnabled(mEditor != null && mEditor.canRedo() && !readOnly);
+        }
+        if (mReplaceView != null) {
+            mReplaceView.setVisibility(readOnly ? View.GONE : View.VISIBLE);
+        }
+        if (mReplaceButton != null) {
+            mReplaceButton.setVisibility(readOnly ? View.GONE : View.VISIBLE);
+        }
+        if (mReplaceAllButton != null) {
+            mReplaceAllButton.setVisibility(readOnly ? View.GONE : View.VISIBLE);
         }
     }
 
@@ -504,6 +594,11 @@ public class CodeEditorFragment extends Fragment {
                     .append(" chars)");
         }
         mPositionButton.setText(text);
+    }
+
+    private void updateSearchResult() {
+        int count = mEditor.getSearcher().hasQuery() ? mEditor.getSearcher().getMatchedPositionCount() : 0;
+        mSearchResultCount.setText(getResources().getQuantityString(R.plurals.search_results, count, count));
     }
 
     private void saveFile(String content) {

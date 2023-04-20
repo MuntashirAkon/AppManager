@@ -1349,4 +1349,8 @@
     <string name="read_only_file">Read only file</string>
     <string name="read_only_file_warning">The changes cannot be written into the file, possibly because it is located in a volume that App Manager has no permission to write to. Do you want to save it in a different place?</string>
     <string name="line_separator">Line separator</string>
+    <plurals name="search_results">
+        <item quantity="one">%d result</item>
+        <item quantity="other">%d results</item>
+    </plurals>
 </resources>

@@ -132,6 +132,7 @@
             android:name=".editor.CodeEditorActivity"
             android:label="@string/title_code_editor"
             android:configChanges="orientation|keyboardHidden|screenSize|uiMode"
+            android:taskAffinity=""
             android:windowSoftInputMode="adjustResize"
             android:exported="true" />
         <activity
