@@ -10,6 +10,7 @@ import static io.github.muntashirakon.AppManager.backup.BackupManager.getExt;
 import static io.github.muntashirakon.AppManager.utils.TarUtils.DEFAULT_SPLIT_SIZE;
 import static io.github.muntashirakon.AppManager.utils.TarUtils.TAR_BZIP2;
 import static io.github.muntashirakon.AppManager.utils.TarUtils.TAR_GZIP;
+import static io.github.muntashirakon.AppManager.utils.TarUtils.TAR_ZSTD;
 
 import android.annotation.UserIdInt;
 import android.graphics.Bitmap;
@@ -19,6 +20,8 @@ import android.util.Base64;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.github.luben.zstd.ZstdOutputStream;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
@@ -296,11 +299,13 @@ public class TBConverter extends Converter {
             if (intBackupFilePrefix != null) {
                 intSos = new SplitOutputStream(mTempBackupPath, intBackupFilePrefix, DEFAULT_SPLIT_SIZE);
                 BufferedOutputStream bos = new BufferedOutputStream(intSos);
-                CompressorOutputStream cos;
+                OutputStream cos;
                 if (TAR_GZIP.equals(mDestMetadata.tarType)) {
                     cos = new GzipCompressorOutputStream(bos);
                 } else if (TAR_BZIP2.equals(mDestMetadata.tarType)) {
                     cos = new BZip2CompressorOutputStream(bos);
+                } else if (TAR_ZSTD.equals(mDestMetadata.tarType)) {
+                    cos = new ZstdOutputStream(bos);
                 } else {
                     throw new BackupException("Invalid compression type: " + mDestMetadata.tarType);
                 }
@@ -311,11 +316,13 @@ public class TBConverter extends Converter {
             if (extBackupFilePrefix != null) {
                 extSos = new SplitOutputStream(mTempBackupPath, extBackupFilePrefix, DEFAULT_SPLIT_SIZE);
                 BufferedOutputStream bos = new BufferedOutputStream(extSos);
-                CompressorOutputStream cos;
+                OutputStream cos;
                 if (TAR_GZIP.equals(mDestMetadata.tarType)) {
                     cos = new GzipCompressorOutputStream(bos);
                 } else if (TAR_BZIP2.equals(mDestMetadata.tarType)) {
                     cos = new BZip2CompressorOutputStream(bos);
+                } else if (TAR_ZSTD.equals(mDestMetadata.tarType)) {
+                    cos = new ZstdOutputStream(bos);
                 } else {
                     throw new BackupException("Invalid compression type: " + mDestMetadata.tarType);
                 }
@@ -467,6 +474,7 @@ public class TBConverter extends Converter {
     private Path getDataFile(String filePrefix, @TarUtils.TarType String tarType) throws FileNotFoundException {
         String filename = filePrefix + ".tar";
         if (TAR_BZIP2.equals(tarType)) filename += ".bz2";
+        if (TAR_ZSTD.equals(tarType)) filename += ".zst";
         else filename += ".gz";
         return mBackupLocation.findFile(filename);
     }
@@ -474,6 +482,7 @@ public class TBConverter extends Converter {
     @NonNull
     private Path getApkFile(String apkName, @TarUtils.TarType String tarType) throws FileNotFoundException {
         if (TAR_BZIP2.equals(tarType)) apkName += ".bz2";
+        if (TAR_ZSTD.equals(tarType)) apkName += ".zst";
         else apkName += ".gz";
         return mBackupLocation.findFile(apkName);
     }

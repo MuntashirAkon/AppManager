@@ -54,7 +54,8 @@ public final class MetadataManager {
     public static final String TAG = MetadataManager.class.getSimpleName();
 
     public static final String META_FILE = "meta_v2.am.json";
-    public static final String[] TAR_TYPES = new String[]{TarUtils.TAR_GZIP, TarUtils.TAR_BZIP2};
+    public static final String[] TAR_TYPES = new String[]{TarUtils.TAR_GZIP, TarUtils.TAR_BZIP2, TarUtils.TAR_ZSTD};
+    public static final String[] TAR_TYPES_READABLE = new String[]{"GZip", "BZip2", "Zstandard"};
 
     // For an extended documentation, see https://github.com/MuntashirAkon/AppManager/issues/30
     // All the attributes must be non-null
@@ -172,8 +173,7 @@ public final class MetadataManager {
                 subtitleText.append(", ").append(context.getString(R.string.pgp_aes_rsa_encrypted,
                         crypto.toUpperCase(Locale.ROOT)));
             }
-            subtitleText.append(", ").append(context.getString(R.string.gz_bz2_compressed,
-                    tarType.equals(TarUtils.TAR_GZIP) ? "GZip" : "BZip2"));
+            subtitleText.append(", ").append(context.getString(R.string.gz_bz2_compressed, getReadableTarType(tarType)));
             if (keyStore) {
                 subtitleText.append(", ").append(context.getString(R.string.keystore));
             }
@@ -375,5 +375,13 @@ public final class MetadataManager {
             mMetadata.installer = BuildConfig.APPLICATION_ID;
         }
         return mMetadata;
+    }
+
+    public static String getReadableTarType(@TarUtils.TarType String tarType) {
+        int i = ArrayUtils.indexOf(TAR_TYPES, tarType);
+        if (i == -1) {
+            return "GZip";
+        }
+        return TAR_TYPES_READABLE[i];
     }
 }

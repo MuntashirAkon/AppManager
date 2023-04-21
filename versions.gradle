@@ -36,6 +36,7 @@ ext {
     swipe_refresh_version = "1.2.0-alpha01"
     unapkm_version = "1.2"
     webkit_version = "1.6.1"
+    zstd_version = "1.5.5-1"
 
     // Test dependencies
     junit_version = "4.13.2"

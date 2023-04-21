@@ -37,6 +37,7 @@ public class BackupManager {
     @NonNull
     public static String getExt(@TarUtils.TarType String tarType) {
         if (TarUtils.TAR_BZIP2.equals(tarType)) return ".tar.bz2";
+        if (TarUtils.TAR_ZSTD.equals(tarType)) return ".tar.zst";
         else return ".tar.gz";
     }
 

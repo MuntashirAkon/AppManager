@@ -10,6 +10,9 @@ import androidx.annotation.StringDef;
 import androidx.annotation.VisibleForTesting;
 import androidx.annotation.WorkerThread;
 
+import com.github.luben.zstd.ZstdInputStream;
+import com.github.luben.zstd.ZstdOutputStream;
+
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
@@ -41,7 +44,8 @@ public final class TarUtils {
 
     @StringDef(value = {
             TAR_GZIP,
-            TAR_BZIP2
+            TAR_BZIP2,
+            TAR_ZSTD,
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface TarType {
@@ -49,6 +53,7 @@ public final class TarUtils {
 
     public static final String TAR_GZIP = "z";
     public static final String TAR_BZIP2 = "j";
+    public static final String TAR_ZSTD = "s";
 
     /**
      * Create a tar file using the given compression method and split it into multiple files based
@@ -77,6 +82,8 @@ public final class TarUtils {
                 os = new GzipCompressorOutputStream(bos);
             } else if (TAR_BZIP2.equals(type)) {
                 os = new BZip2CompressorOutputStream(bos);
+            } else if (TAR_ZSTD.equals(type)) {
+                os = new ZstdOutputStream(bos);
             } else {
                 throw new IllegalArgumentException("Invalid compression type: " + type);
             }
@@ -155,6 +162,8 @@ public final class TarUtils {
                 is = new GzipCompressorInputStream(bis, true);
             } else if (TAR_BZIP2.equals(type)) {
                 is = new BZip2CompressorInputStream(bis, true);
+            } else if (TAR_ZSTD.equals(type)) {
+                is = new ZstdInputStream(bis);
             } else {
                 throw new IllegalArgumentException("Invalid compression type: " + type);
             }

@@ -165,6 +165,7 @@ dependencies {
 
     // Utility
     implementation "com.google.code.gson:gson:${gson_version}"
+    implementation "com.github.luben:zstd-jni:${zstd_version}@aar"
 
 //    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.9.1'
 

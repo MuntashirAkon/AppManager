@@ -46,7 +46,6 @@ import io.github.muntashirakon.AppManager.settings.crypto.AESCryptoSelectionDial
 import io.github.muntashirakon.AppManager.settings.crypto.ECCCryptoSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.settings.crypto.OpenPgpKeySelectionDialogFragment;
 import io.github.muntashirakon.AppManager.settings.crypto.RSACryptoSelectionDialogFragment;
-import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
 import io.github.muntashirakon.dialog.SearchableItemsDialogBuilder;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
@@ -71,7 +70,7 @@ public class BackupRestorePreferences extends PreferenceFragment {
     };
 
     private SettingsActivity activity;
-    private int currentCompression;
+    private String currentCompressionMethod;
     private Uri backupVolume;
     @ImportType
     private int importType;
@@ -116,19 +115,18 @@ public class BackupRestorePreferences extends PreferenceFragment {
         model = new ViewModelProvider(requireActivity()).get(MainPreferencesViewModel.class);
         activity = (SettingsActivity) requireActivity();
         // Backup compression method
-        String[] readableTarTypes = new String[]{"GZip", "BZip2"};
-        currentCompression = ArrayUtils.indexOf(MetadataManager.TAR_TYPES, Prefs.BackupRestore.getCompressionMethod());
+        currentCompressionMethod = Prefs.BackupRestore.getCompressionMethod();
         Preference compressionMethod = Objects.requireNonNull(findPreference("backup_compression_method"));
-        compressionMethod.setSummary(readableTarTypes[currentCompression == -1 ? 0 : currentCompression]);
+        compressionMethod.setSummary(MetadataManager.getReadableTarType(currentCompressionMethod));
         compressionMethod.setOnPreferenceClickListener(preference -> {
-            new SearchableSingleChoiceDialogBuilder<>(activity, MetadataManager.TAR_TYPES, readableTarTypes)
+            new SearchableSingleChoiceDialogBuilder<>(activity, MetadataManager.TAR_TYPES, MetadataManager.TAR_TYPES_READABLE)
                     .setTitle(R.string.pref_compression_method)
-                    .setSelectionIndex(currentCompression)
+                    .setSelection(currentCompressionMethod)
                     .setPositiveButton(R.string.save, (dialog, which, selectedTarType) -> {
                         if (selectedTarType != null) {
-                            currentCompression = which;
-                            Prefs.BackupRestore.setCompressionMethod(selectedTarType);
-                            compressionMethod.setSummary(readableTarTypes[currentCompression == -1 ? 0 : currentCompression]);
+                            currentCompressionMethod = selectedTarType;
+                            Prefs.BackupRestore.setCompressionMethod(currentCompressionMethod);
+                            compressionMethod.setSummary(MetadataManager.getReadableTarType(currentCompressionMethod));
                         }
                     })
                     .setNegativeButton(R.string.cancel, null)
