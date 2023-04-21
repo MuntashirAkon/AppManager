@@ -196,6 +196,12 @@ public class CodeEditorFragment extends Fragment implements SearchView.OnQueryTe
     private final OnBackPressedCallback mBackPressedCallback = new OnBackPressedCallback(true) {
         @Override
         public void handleOnBackPressed() {
+            if (mSearchWidget != null && mSearchWidget.getVisibility() == View.VISIBLE) {
+                // Hide search widget
+                mSearchWidget.setVisibility(View.GONE);
+                mEditor.getSearcher().stopSearch();
+                return;
+            }
             if (mTextModified) {
                 new MaterialAlertDialogBuilder(requireContext())
                         .setTitle(R.string.exit_confirmation)
