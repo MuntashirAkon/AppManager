@@ -31,29 +31,48 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingHorizontal="@dimen/padding_medium"
+            android:paddingVertical="8dp"
             android:orientation="vertical"
             android:visibility="gone"
             tools:visibility="visible">
 
-            <androidx.appcompat.widget.SearchView
-                android:id="@+id/search_bar"
+            <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:iconifiedByDefault="false" />
+                app:hintEnabled="true"
+                android:hint="@string/search">
 
-            <androidx.appcompat.widget.SearchView
-                android:id="@+id/replace_bar"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/search_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:singleLine="true"
+                    tools:text="@tools:sample/full_names" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/replace_bar_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:iconifiedByDefault="false" />
+                app:hintEnabled="true"
+                android:hint="@string/replacement_text">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/replace_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:singleLine="true"
+                    tools:text="@tools:sample/full_names" />
+
+            </com.google.android.material.textfield.TextInputLayout>
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingHorizontal="@dimen/padding_medium">
+                android:orientation="horizontal">
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/search_result_count"
@@ -61,6 +80,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:layout_gravity="center_vertical"
+                    android:paddingHorizontal="16dp"
                     android:singleLine="true"
                     android:ellipsize="end"
                     tools:text="10 results" />
@@ -72,6 +92,7 @@
                     android:layout_height="40dp"
                     android:layout_weight="0"
                     android:layout_gravity="center_vertical"
+                    android:contentDescription="@string/replace"
                     app:icon="@drawable/ic_find_and_replace_all"
                     app:iconSize="30dp" />
 
@@ -82,6 +103,7 @@
                     android:layout_height="40dp"
                     android:layout_weight="0"
                     android:layout_gravity="center_vertical"
+                    android:contentDescription="@string/action_replace_all"
                     app:icon="@drawable/ic_find_and_replace"
                     app:iconSize="30dp" />
 

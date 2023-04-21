@@ -1353,4 +1353,6 @@
         <item quantity="one">%d result</item>
         <item quantity="other">%d results</item>
     </plurals>
+    <string name="replacement_text">Replacement</string>
+    <string name="action_replace_all">Replace All</string>
 </resources>

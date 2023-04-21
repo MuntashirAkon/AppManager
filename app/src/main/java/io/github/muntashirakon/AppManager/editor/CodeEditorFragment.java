@@ -9,7 +9,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,19 +27,25 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.PopupMenu;
-import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.transition.Transition;
+import androidx.transition.TransitionManager;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.elevation.SurfaceColors;
 import com.google.android.material.progressindicator.LinearProgressIndicator;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.android.material.transition.MaterialSharedAxis;
 
 import java.util.Objects;
+import java.util.regex.PatternSyntaxException;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.fm.FmProvider;
@@ -59,7 +67,7 @@ import io.github.rosemoe.sora.widget.EditorSearcher;
 import io.github.rosemoe.sora.widget.SymbolInputView;
 import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
 
-public class CodeEditorFragment extends Fragment implements SearchView.OnQueryTextListener {
+public class CodeEditorFragment extends Fragment {
     public static final String ARG_OPTIONS = "options";
 
     public static class Options implements Parcelable {
@@ -169,9 +177,10 @@ public class CodeEditorFragment extends Fragment implements SearchView.OnQueryTe
     private EditorColorScheme mColorScheme;
     private CodeEditor mEditor;
     private TextView mPositionButton;
-    private View mSearchWidget;
-    private SearchView mSearchView;
-    private SearchView mReplaceView;
+    private LinearLayoutCompat mSearchWidget;
+    private TextInputEditText mSearchView;
+    private TextInputEditText mReplaceView;
+    private TextInputLayout mReplaceViewContainer;
     private MaterialButton mReplaceButton;
     private MaterialButton mReplaceAllButton;
     private TextView mSearchResultCount;
@@ -197,9 +206,7 @@ public class CodeEditorFragment extends Fragment implements SearchView.OnQueryTe
         @Override
         public void handleOnBackPressed() {
             if (mSearchWidget != null && mSearchWidget.getVisibility() == View.VISIBLE) {
-                // Hide search widget
-                mSearchWidget.setVisibility(View.GONE);
-                mEditor.getSearcher().stopSearch();
+                hideSearchWidget();
                 return;
             }
             if (mTextModified) {
@@ -277,7 +284,27 @@ public class CodeEditorFragment extends Fragment implements SearchView.OnQueryTe
         // Setup search widget
         mSearchWidget = view.findViewById(R.id.search_container);
         mSearchView = view.findViewById(R.id.search_bar);
-        mSearchView.setOnQueryTextListener(this);
+        mSearchView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (TextUtils.isEmpty(s)) {
+                    mEditor.getSearcher().stopSearch();
+                } else {
+                    try {
+                        mEditor.getSearcher().search(s.toString(), mSearchOptions);
+                    } catch (PatternSyntaxException ignore) {
+                    }
+                }
+            }
+        });
         mSearchResultCount = view.findViewById(R.id.search_result_count);
         view.findViewById(R.id.previous_button).setOnClickListener(v -> {
             if (!mEditor.getSearcher().hasQuery()) {
@@ -292,14 +319,14 @@ public class CodeEditorFragment extends Fragment implements SearchView.OnQueryTe
             mEditor.getSearcher().gotoNext();
         });
         mReplaceView = view.findViewById(R.id.replace_bar);
+        mReplaceViewContainer = view.findViewById(R.id.replace_bar_container);
         mReplaceButton = view.findViewById(R.id.replace_button);
         mReplaceAllButton = view.findViewById(R.id.replace_all_button);
-        mReplaceView.setOnQueryTextListener(null);
         mReplaceButton.setOnClickListener(v -> {
             if (!mEditor.getSearcher().hasQuery()) {
                 return;
             }
-            CharSequence query = mReplaceView.getQuery();
+            CharSequence query = mReplaceView.getText();
             if (!TextUtils.isEmpty(query)) {
                 mEditor.getSearcher().replaceThis(query.toString());
             }
@@ -308,7 +335,7 @@ public class CodeEditorFragment extends Fragment implements SearchView.OnQueryTe
             if (!mEditor.getSearcher().hasQuery()) {
                 return;
             }
-            CharSequence query = mReplaceView.getQuery();
+            CharSequence query = mReplaceView.getText();
             if (!TextUtils.isEmpty(query)) {
                 mEditor.getSearcher().replaceAll(query.toString());
             }
@@ -508,31 +535,12 @@ public class CodeEditorFragment extends Fragment implements SearchView.OnQueryTe
         } else if (id == R.id.action_search) {
             if (mSearchWidget != null) {
                 // FIXME: 21/4/23 Ideally, search widget should have cross button to close it.
-                boolean alreadyVisible = mSearchWidget.getVisibility() == View.VISIBLE;
-                mSearchWidget.setVisibility(alreadyVisible ? View.GONE : View.VISIBLE);
-                if (!alreadyVisible) {
-                    mSearchView.requestFocus();
-                } else {
-                    mEditor.getSearcher().stopSearch();
-                }
+                if (mSearchWidget.getVisibility() == View.VISIBLE) {
+                    hideSearchWidget();
+                } else showSearchWidget();
             }
         }
         return false;
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        if (TextUtils.isEmpty(newText)) {
-            mEditor.getSearcher().stopSearch();
-        } else {
-            mEditor.getSearcher().search(newText, mSearchOptions);
-        }
-        return true;
     }
 
     @NonNull
@@ -566,8 +574,8 @@ public class CodeEditorFragment extends Fragment implements SearchView.OnQueryTe
         if (mRedoMenu != null) {
             mRedoMenu.setEnabled(mEditor != null && mEditor.canRedo() && !readOnly);
         }
-        if (mReplaceView != null) {
-            mReplaceView.setVisibility(readOnly ? View.GONE : View.VISIBLE);
+        if (mReplaceViewContainer != null) {
+            mReplaceViewContainer.setVisibility(readOnly ? View.GONE : View.VISIBLE);
         }
         if (mReplaceButton != null) {
             mReplaceButton.setVisibility(readOnly ? View.GONE : View.VISIBLE);
@@ -622,5 +630,23 @@ public class CodeEditorFragment extends Fragment implements SearchView.OnQueryTe
             return new EmptyLanguage();
         }
         return Languages.getLanguage(requireContext(), language, ((TextMateColorScheme) mColorScheme).getThemeSource());
+    }
+
+    public void showSearchWidget() {
+        if (mSearchWidget != null) {
+            Transition sharedAxis = new MaterialSharedAxis(MaterialSharedAxis.Y, true);
+            TransitionManager.beginDelayedTransition(mSearchWidget, sharedAxis);
+            mSearchWidget.setVisibility(View.VISIBLE);
+            mSearchView.requestFocus();
+        }
+    }
+
+    public void hideSearchWidget() {
+        if (mSearchWidget != null) {
+            Transition sharedAxis = new MaterialSharedAxis(MaterialSharedAxis.Y, false);
+            TransitionManager.beginDelayedTransition(mSearchWidget, sharedAxis);
+            mSearchWidget.setVisibility(View.GONE);
+            mEditor.getSearcher().stopSearch();
+        }
     }
 }
