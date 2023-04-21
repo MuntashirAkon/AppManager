@@ -37,10 +37,13 @@
             tools:visibility="visible">
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/search_bar_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:hintEnabled="true"
-                android:hint="@string/search">
+                android:hint="@string/search"
+                app:endIconMode="custom"
+                app:endIconDrawable="@drawable/ic_settings">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/search_bar"

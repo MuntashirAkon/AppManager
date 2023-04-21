@@ -1355,4 +1355,7 @@
     </plurals>
     <string name="replacement_text">Replacement</string>
     <string name="action_replace_all">Replace All</string>
+    <string name="search_option_match_case">Match case</string>
+    <string name="search_option_whole_word">Whole word</string>
+    <string name="search_option_regex">Regex</string>
 </resources>

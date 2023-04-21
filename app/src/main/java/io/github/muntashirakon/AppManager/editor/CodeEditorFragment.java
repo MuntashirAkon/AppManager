@@ -63,7 +63,7 @@ import io.github.rosemoe.sora.text.Cursor;
 import io.github.rosemoe.sora.text.LineSeparator;
 import io.github.rosemoe.sora.widget.CodeEditor;
 import io.github.rosemoe.sora.widget.DirectAccessProps;
-import io.github.rosemoe.sora.widget.EditorSearcher;
+import io.github.rosemoe.sora.widget.EditorSearcher.SearchOptions;
 import io.github.rosemoe.sora.widget.SymbolInputView;
 import io.github.rosemoe.sora.widget.schemes.EditorColorScheme;
 
@@ -185,7 +185,7 @@ public class CodeEditorFragment extends Fragment {
     private MaterialButton mReplaceAllButton;
     private TextView mSearchResultCount;
     private Options mOptions;
-    private EditorSearcher.SearchOptions mSearchOptions = new EditorSearcher.SearchOptions(false, false);
+    private SearchOptions mSearchOptions = new SearchOptions(false, false);
     private MenuItem mSaveMenu;
     private MenuItem mUndoMenu;
     private MenuItem mRedoMenu;
@@ -304,6 +304,44 @@ public class CodeEditorFragment extends Fragment {
                     }
                 }
             }
+        });
+        TextInputLayout searchViewContainer = view.findViewById(R.id.search_bar_container);
+        searchViewContainer.setEndIconOnClickListener(v -> {
+            PopupMenu popupMenu = new PopupMenu(v.getContext(), v);
+            Menu menu = popupMenu.getMenu();
+            menu.add(R.string.search_option_match_case)
+                    .setCheckable(true)
+                    .setChecked(!mSearchOptions.ignoreCase)
+                    .setOnMenuItemClickListener(item -> {
+                        boolean ignoreCase = item.isChecked();
+                        item.setChecked(ignoreCase);
+                        mSearchOptions = new SearchOptions(mSearchOptions.type, ignoreCase);
+                        search(mSearchView.getText());
+                        return true;
+                    });
+            menu.add(R.string.search_option_regex)
+                    .setCheckable(true)
+                    .setChecked(mSearchOptions.type == SearchOptions.TYPE_REGULAR_EXPRESSION)
+                    .setOnMenuItemClickListener(item -> {
+                        boolean regex = !item.isChecked();
+                        item.setChecked(regex);
+                        int type = regex ? SearchOptions.TYPE_REGULAR_EXPRESSION : SearchOptions.TYPE_NORMAL;
+                        mSearchOptions = new SearchOptions(type, mSearchOptions.ignoreCase);
+                        search(mSearchView.getText());
+                        return true;
+                    });
+            menu.add(R.string.search_option_whole_word)
+                    .setCheckable(true)
+                    .setChecked(mSearchOptions.type == SearchOptions.TYPE_WHOLE_WORD)
+                    .setOnMenuItemClickListener(item -> {
+                        boolean wholeWord = !item.isChecked();
+                        item.setChecked(wholeWord);
+                        int type = wholeWord ? SearchOptions.TYPE_WHOLE_WORD : SearchOptions.TYPE_NORMAL;
+                        mSearchOptions = new SearchOptions(type, mSearchOptions.ignoreCase);
+                        search(mSearchView.getText());
+                        return true;
+                    });
+            popupMenu.show();
         });
         mSearchResultCount = view.findViewById(R.id.search_result_count);
         view.findViewById(R.id.previous_button).setOnClickListener(v -> {
@@ -647,6 +685,17 @@ public class CodeEditorFragment extends Fragment {
             TransitionManager.beginDelayedTransition(mSearchWidget, sharedAxis);
             mSearchWidget.setVisibility(View.GONE);
             mEditor.getSearcher().stopSearch();
+        }
+    }
+
+    private void search(@Nullable CharSequence s) {
+        if (TextUtils.isEmpty(s)) {
+            mEditor.getSearcher().stopSearch();
+        } else {
+            try {
+                mEditor.getSearcher().search(s.toString(), mSearchOptions);
+            } catch (PatternSyntaxException ignore) {
+            }
         }
     }
 }
