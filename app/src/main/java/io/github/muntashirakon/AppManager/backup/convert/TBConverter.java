@@ -27,7 +27,6 @@ import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.compress.compressors.CompressorInputStream;
-import org.apache.commons.compress.compressors.CompressorOutputStream;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorInputStream;
 import org.apache.commons.compress.compressors.bzip2.BZip2CompressorOutputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
@@ -474,7 +473,7 @@ public class TBConverter extends Converter {
     private Path getDataFile(String filePrefix, @TarUtils.TarType String tarType) throws FileNotFoundException {
         String filename = filePrefix + ".tar";
         if (TAR_BZIP2.equals(tarType)) filename += ".bz2";
-        if (TAR_ZSTD.equals(tarType)) filename += ".zst";
+        else if (TAR_ZSTD.equals(tarType)) filename += ".zst";
         else filename += ".gz";
         return mBackupLocation.findFile(filename);
     }
@@ -482,7 +481,7 @@ public class TBConverter extends Converter {
     @NonNull
     private Path getApkFile(String apkName, @TarUtils.TarType String tarType) throws FileNotFoundException {
         if (TAR_BZIP2.equals(tarType)) apkName += ".bz2";
-        if (TAR_ZSTD.equals(tarType)) apkName += ".zst";
+        else if (TAR_ZSTD.equals(tarType)) apkName += ".zst";
         else apkName += ".gz";
         return mBackupLocation.findFile(apkName);
     }
