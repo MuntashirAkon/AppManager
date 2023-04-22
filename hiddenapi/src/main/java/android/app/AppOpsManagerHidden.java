@@ -251,8 +251,19 @@ public class AppOpsManagerHidden {
 
     /**
      * Retrieve the default mode for the operation.
+     * <p>
+     * <b>Note:</b> In some cases, this might throw {@link NoSuchMethodError} in which case, use {@link #opToDefaultMode(int, boolean)}.
      */
     public static int opToDefaultMode(int op) {
+        return HiddenUtil.throwUOE(op);
+    }
+
+    /**
+     * Retrieve the default mode for the operation.
+     * <p>
+     * <b>Note:</b> The only known case is Android 6.0.1 in Samsung devices (API 23)
+     */
+    public static int opToDefaultMode(int op, boolean isStrict) {
         return HiddenUtil.throwUOE(op);
     }
 
@@ -262,6 +273,7 @@ public class AppOpsManagerHidden {
      * @param appOp The app op name
      * @return the default mode for the app op
      */
+    @RequiresApi(Build.VERSION_CODES.Q)
     public static int opToDefaultMode(@NonNull String appOp) {
         return HiddenUtil.throwUOE(appOp);
     }

@@ -274,7 +274,11 @@ public class AppOpsManagerCompat {
      * Retrieve the default mode for the operation.
      */
     public static int opToDefaultMode(int op) {
-        return AppOpsManagerHidden.opToDefaultMode(op);
+        try {
+            return AppOpsManagerHidden.opToDefaultMode(op);
+        } catch (NoSuchMethodError e) {
+            return AppOpsManagerHidden.opToDefaultMode(op, false);
+        }
     }
 
     /**
