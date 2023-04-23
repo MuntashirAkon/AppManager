@@ -20,6 +20,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import java.util.UUID;
 
 import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 
 // Copyright 2017 Adam M. Szalkowski
@@ -34,7 +35,7 @@ public class LauncherIconCreator {
      */
     public static void createLauncherIcon(@NonNull Context context, @NonNull ActivityInfo activityInfo,
                                           @NonNull CharSequence name, @NonNull Drawable icon) {
-        createLauncherIcon(context, name, icon, activityInfo.exported ? getIntent(activityInfo) : getProxyIntent(activityInfo));
+        createLauncherIcon(context, name, icon, requireProxy(activityInfo) ? getProxyIntent(activityInfo) : getIntent(activityInfo));
     }
 
     /**
@@ -107,5 +108,9 @@ public class LauncherIconCreator {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         return intent;
+    }
+
+    private static boolean requireProxy(@NonNull ActivityInfo activityInfo) {
+        return !BuildConfig.APPLICATION_ID.equals(activityInfo.packageName);
     }
 }
