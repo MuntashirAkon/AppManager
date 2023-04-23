@@ -2,7 +2,7 @@
 
 package io.github.muntashirakon.AppManager.apk.behavior;
 
-import static io.github.muntashirakon.AppManager.utils.UIUtils.dimBitmap;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getDimmedBitmap;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getBitmapFromDrawable;
 
 import android.app.Application;
@@ -153,8 +153,7 @@ public class FreezeUnfreezeActivity extends BaseActivity {
                         FreezeUtils.unfreeze(shortcutInfo.packageName, shortcutInfo.userId);
                         shortcutInfo.setIcon(icon);
                     } else {
-                        dimBitmap(icon);
-                        shortcutInfo.setIcon(icon);
+                        shortcutInfo.setIcon(getDimmedBitmap(icon));
                         if (!forceFreeze && (shortcutInfo.flags & FreezeUnfreeze.FLAG_ON_UNFREEZE_OPEN_APP) != 0) {
                             // Ask whether to open or freeze the app
                             openAppOrFreeze.postValue(shortcutInfo);
