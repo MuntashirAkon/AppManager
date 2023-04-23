@@ -23,11 +23,12 @@ public class ActivityLauncherShortcutActivity extends BaseActivity {
     @Override
     protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
         Intent intent = getIntent();
-        if (!intent.hasExtra(EXTRA_PKG) || !intent.hasExtra(EXTRA_CLS)) {
+        if (!Intent.ACTION_CREATE_SHORTCUT.equals(intent.getAction()) || !intent.hasExtra(EXTRA_PKG) || !intent.hasExtra(EXTRA_CLS)) {
             // Invalid intent
             finishAndRemoveTask();
             return;
         }
+        intent.setAction(null);
         intent.setClassName(intent.getStringExtra(EXTRA_PKG), intent.getStringExtra(EXTRA_CLS));
         int userId = intent.getIntExtra(EXTRA_USR, UserHandleHidden.myUserId());
         intent.removeExtra(EXTRA_PKG);
