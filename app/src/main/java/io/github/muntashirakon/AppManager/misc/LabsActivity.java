@@ -21,6 +21,7 @@ import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.accessibility.activity.LeadingActivityTrackerActivity;
 import io.github.muntashirakon.AppManager.fm.FmActivity;
+import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
 import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
 import io.github.muntashirakon.AppManager.runner.TermActivity;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
@@ -67,6 +68,13 @@ public class LabsActivity extends BaseActivity {
                     Intent intent = new Intent(this, LeadingActivityTrackerActivity.class);
                     startActivity(intent);
                 });
+        if (FeatureController.isInterceptorEnabled()) {
+            addAction(this, flowLayout, R.string.interceptor, R.drawable.ic_transit_connection)
+                    .setOnClickListener(v -> {
+                        Intent intent = new Intent(this, ActivityInterceptor.class);
+                        startActivity(intent);
+                    });
+        }
     }
 
     @Override
