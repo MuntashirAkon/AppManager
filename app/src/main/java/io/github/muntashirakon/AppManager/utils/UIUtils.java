@@ -349,11 +349,14 @@ public class UIUtils {
         return bmp;
     }
 
-    public static void dimBitmap(@NonNull Bitmap bitmap) {
-        setBrightness(bitmap, -120f);
+    public static Bitmap getDimmedBitmap(@NonNull Bitmap bitmap) {
+        Bitmap newBmp = bitmap.isMutable() ? bitmap : bitmap.copy(Bitmap.Config.ARGB_8888, true);
+        setBrightness(newBmp, -120f);
+        return newBmp;
     }
 
     public static void setBrightness(Bitmap bmp, @FloatRange(from = -255, to = 255) float brightness) {
+        assert bmp.isMutable();
         ColorMatrix cm = new ColorMatrix(new float[]{
                 1, 0, 0, 0, brightness,
                 0, 1, 0, 0, brightness,

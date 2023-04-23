@@ -9,7 +9,7 @@ import static io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat.HI
 import static io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat.HIDDEN_API_ENFORCEMENT_JUST_WARN;
 import static io.github.muntashirakon.AppManager.compat.ManifestCompat.permission.TERMUX_RUN_COMMAND;
 import static io.github.muntashirakon.AppManager.utils.PermissionUtils.hasDumpPermission;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.dimBitmap;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getDimmedBitmap;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.displayLongToast;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.displayShortToast;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getBitmapFromDrawable;
@@ -1644,10 +1644,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     Intent shortcutIntent = FreezeUnfreeze.getShortcutIntent(requireContext(), shortcutInfo);
                     shortcutInfo.setLabel(mPackageLabel.toString());
                     Bitmap icon = getBitmapFromDrawable(iconView.getDrawable());
-                    if (isFrozen) {
-                        dimBitmap(icon);
-                    }
-                    shortcutInfo.setIcon(icon);
+                    shortcutInfo.setIcon(isFrozen ? getDimmedBitmap(icon) : icon);
                     LauncherIconCreator.createLauncherIcon(requireContext(), shortcutInfo.shortcutId,
                             shortcutInfo.getLabel(), shortcutInfo.getIcon(), shortcutIntent);
                 })

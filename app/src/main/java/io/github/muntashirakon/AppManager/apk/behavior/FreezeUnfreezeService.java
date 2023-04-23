@@ -2,7 +2,7 @@
 
 package io.github.muntashirakon.AppManager.apk.behavior;
 
-import static io.github.muntashirakon.AppManager.utils.UIUtils.dimBitmap;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getDimmedBitmap;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getBitmapFromDrawable;
 
 import android.annotation.SuppressLint;
@@ -174,8 +174,7 @@ public class FreezeUnfreezeService extends Service {
                     Bitmap icon = getBitmapFromDrawable(applicationInfo.loadIcon(getApplication().getPackageManager()));
                     shortcutInfo.setLabel(applicationInfo.loadLabel(getApplication().getPackageManager()).toString());
                     FreezeUtils.freeze(shortcutInfo.packageName, shortcutInfo.userId);
-                    dimBitmap(icon);
-                    shortcutInfo.setIcon(icon);
+                    shortcutInfo.setIcon(getDimmedBitmap(icon));
                     updateShortcuts(shortcutInfo);
                 } catch (RemoteException | PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
