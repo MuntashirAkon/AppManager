@@ -112,7 +112,7 @@ public class Signer {
         ApkSigner signer = builder.build();
         Log.i(TAG, String.format("SignApk: %s", in));
         try {
-            if (alignFileSize) {
+            if (alignFileSize && !ZipAlignVerifier.verify(in, 4, true)) {
                 ZipAlign.align4(in);
             }
             signer.sign();
