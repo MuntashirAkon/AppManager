@@ -9,7 +9,6 @@ import androidx.annotation.Nullable;
 
 import com.android.apksig.ApkSigner;
 import com.android.apksig.ApkVerifier;
-import com.reandroid.archive.ZipAlign;
 
 import java.io.File;
 import java.security.KeyStoreException;
@@ -112,8 +111,8 @@ public class Signer {
         ApkSigner signer = builder.build();
         Log.i(TAG, String.format("SignApk: %s", in));
         try {
-            if (alignFileSize && !ZipAlignVerifier.verify(in, 4, true)) {
-                ZipAlign.align4(in);
+            if (alignFileSize && !ZipAlign.verify(in, ZipAlign.ALIGNMENT_4, true)) {
+                ZipAlign.align(in, ZipAlign.ALIGNMENT_4, true);
             }
             signer.sign();
             Log.i(TAG, "The signature is complete and the output file is " + out);
