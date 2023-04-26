@@ -95,9 +95,6 @@ dependencies {
     compileOnly project(path: ':hiddenapi')
     coreLibraryDesugaring "com.android.tools:desugar_jdk_libs:${desugar_jdk_version}"
 
-    // Deprecated: This is being replaced
-    implementation project(path: ':libapkparser')
-
     // Core Libraries
     implementation project(path: ':libcore:compat')
     implementation project(path: ':libcore:io')
