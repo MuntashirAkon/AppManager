@@ -18,6 +18,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.PrintStream;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -204,7 +205,7 @@ public class AppExplorerViewModel extends AndroidViewModel implements ListOption
                     byte[] fileBytes = IoUtils.readFully(is, -1, true);
                     ByteBuffer byteBuffer = ByteBuffer.wrap(fileBytes);
                     File cachedFile = fileCache.createCachedFile(item.path.getExtension());
-                    try (PrintStream ps = new PrintStream(cachedFile)) {
+                    try (OutputStream ps = new PrintStream(cachedFile)) {
                         if (AndroidBinXmlDecoder.isBinaryXml(byteBuffer)) {
                             AndroidBinXmlDecoder.decode(byteBuffer, ps);
                         } else {

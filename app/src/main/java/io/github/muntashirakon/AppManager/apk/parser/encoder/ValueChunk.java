@@ -150,11 +150,11 @@ public class ValueChunk extends Chunk<Chunk.EmptyHeader> {
                         break;
                     case 2:
                         type = TypedValue.TYPE_REFERENCE;
-                        data = Integer.decode("0x" + vp.val);
+                        data = Integer.decode(vp.val);
                         break;
                     case 3:
                         type = TypedValue.TYPE_ATTRIBUTE;
-                        data = Integer.decode("0x" + vp.val);
+                        data = Integer.decode(vp.val);
                         break;
                     case 4:
                         type = TypedValue.TYPE_INT_BOOLEAN;

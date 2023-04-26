@@ -18,6 +18,10 @@ import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import androidx.core.content.pm.PackageInfoCompat;
 
+import com.reandroid.xml.XMLAttribute;
+import com.reandroid.xml.XMLDocument;
+import com.reandroid.xml.XMLElement;
+
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -34,7 +38,7 @@ import java.util.zip.ZipInputStream;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.StaticDataset;
-import io.github.muntashirakon.AppManager.apk.parser.AndroidBinXmlParser;
+import io.github.muntashirakon.AppManager.apk.parser.AndroidBinXmlDecoder;
 import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkExporter;
 import io.github.muntashirakon.AppManager.backup.BackupFiles;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
@@ -177,29 +181,19 @@ public final class ApkUtils {
 
     @NonNull
     public static HashMap<String, String> getManifestAttributes(@NonNull ByteBuffer manifestBytes)
-            throws ApkFile.ApkFileException, AndroidBinXmlParser.XmlParserException {
+            throws ApkFile.ApkFileException, IOException {
         HashMap<String, String> manifestAttrs = new HashMap<>();
-        AndroidBinXmlParser parser = new AndroidBinXmlParser(manifestBytes);
-        int eventType = parser.getEventType();
-        boolean seenManifestElement = false;
-        while (eventType != AndroidBinXmlParser.EVENT_END_DOCUMENT) {
-            if (eventType == AndroidBinXmlParser.EVENT_START_ELEMENT) {
-                if (parser.getName().equals("manifest") && parser.getDepth() == 1 && parser.getNamespace().isEmpty()) {
-                    if (seenManifestElement) {
-                        throw new ApkFile.ApkFileException("Duplicate manifest found.");
-                    }
-                    seenManifestElement = true;
-                    for (int i = 0; i < parser.getAttributeCount(); i++) {
-                        if (parser.getAttributeName(i).isEmpty())
-                            continue;
-                        String namespace = "" + (parser.getAttributeNamespace(i).isEmpty() ? "" : (parser.getAttributeNamespace(i) + ":"));
-                        manifestAttrs.put(namespace + parser.getAttributeName(i), parser.getAttributeStringValue(i));
-                    }
-                }
-            }
-            eventType = parser.next();
+        XMLDocument xmlDocument = AndroidBinXmlDecoder.decodeToXml(manifestBytes);
+        XMLElement xmlElement = xmlDocument.getDocumentElement();
+        if (!"manifest".equals(xmlElement.getTagName())) {
+            throw new ApkFile.ApkFileException("No manifest found.");
         }
-        if (!seenManifestElement) throw new ApkFile.ApkFileException("No manifest found.");
+        for (XMLAttribute attribute : xmlElement.listAttributes()) {
+            if (attribute.getName().isEmpty()) {
+                continue;
+            }
+            manifestAttrs.put(attribute.getName(), attribute.getValue());
+        }
         return manifestAttrs;
     }
 

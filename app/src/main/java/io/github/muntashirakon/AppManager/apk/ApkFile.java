@@ -58,7 +58,6 @@ import java.util.zip.ZipFile;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.StaticDataset;
-import io.github.muntashirakon.AppManager.apk.parser.AndroidBinXmlParser;
 import io.github.muntashirakon.AppManager.apk.signing.SigSchemes;
 import io.github.muntashirakon.AppManager.apk.signing.Signer;
 import io.github.muntashirakon.AppManager.apk.splitapk.ApksMetadata;
@@ -287,7 +286,7 @@ public final class ApkFile implements AutoCloseable {
             try {
                 manifest = getManifestFromApk(cacheFilePath);
                 manifestAttrs = getManifestAttributes(manifest);
-            } catch (IOException | AndroidBinXmlParser.XmlParserException e) {
+            } catch (IOException e) {
                 throw new ApkFileException("Manifest not found for base APK.", e);
             }
             if (!manifestAttrs.containsKey(ATTR_PACKAGE)) {
@@ -316,7 +315,7 @@ public final class ApkFile implements AutoCloseable {
                         try {
                             manifest = getManifestFromApk(zipInputStream);
                             manifestAttrs = getManifestAttributes(manifest);
-                        } catch (IOException | AndroidBinXmlParser.XmlParserException e) {
+                        } catch (IOException e) {
                             throw new ApkFileException("Manifest not found.", e);
                         }
                         if (manifestAttrs.containsKey("split")) {
@@ -409,7 +408,7 @@ public final class ApkFile implements AutoCloseable {
                 try {
                     manifest = getManifestFromApk(apk);
                     manifestAttrs = getManifestAttributes(manifest);
-                } catch (IOException | AndroidBinXmlParser.XmlParserException e) {
+                } catch (IOException e) {
                     throw new ApkFileException("Manifest not found.", e);
                 }
                 if (manifestAttrs.containsKey("split")) {

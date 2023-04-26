@@ -39,7 +39,7 @@ public class AndroidBinXmlEncoderTest {
     }
 
     @Test
-    public void testEncodeManifest() throws XmlPullParserException, IOException, AndroidBinXmlParser.XmlParserException {
+    public void testEncodeManifest() throws XmlPullParserException, IOException {
         // Encode
         String xml = xmlPlain.getContentAsString();
         byte[] bytes = AndroidBinXmlEncoder.encodeString(AppManager.getContext(), xml);
