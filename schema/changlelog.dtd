@@ -1,0 +1,34 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!DOCTYPE changelog [
+    <!ELEMENT changelog (release+)>
+    <!ATTLIST changelog bullet CDATA #IMPLIED>
+
+    <!ELEMENT release ((title|note|new|improve|fix)*)>
+    <!ATTLIST release type CDATA #REQUIRED>
+    <!ATTLIST release version CDATA #REQUIRED>
+    <!ATTLIST release code CDATA #REQUIRED>
+    <!ATTLIST release date CDATA #REQUIRED>
+
+    <!ELEMENT title (#PCDATA)>
+    <!ATTLIST title type CDATA #IMPLIED>
+
+    <!ELEMENT note (#PCDATA)>
+    <!ATTLIST note title CDATA #IMPLIED>
+    <!ATTLIST note bullet CDATA #IMPLIED>
+    <!ATTLIST note subtext CDATA #IMPLIED>
+
+    <!ELEMENT new (#PCDATA)>
+    <!ATTLIST new title CDATA #IMPLIED>
+    <!ATTLIST new bullet CDATA #IMPLIED>
+    <!ATTLIST new subtext CDATA #IMPLIED>
+
+    <!ELEMENT improve (#PCDATA)>
+    <!ATTLIST improve title CDATA #IMPLIED>
+    <!ATTLIST improve bullet CDATA #IMPLIED>
+    <!ATTLIST improve subtext CDATA #IMPLIED>
+
+    <!ELEMENT fix (#PCDATA)>
+    <!ATTLIST fix title CDATA #IMPLIED>
+    <!ATTLIST fix bullet CDATA #IMPLIED>
+    <!ATTLIST fix subtext CDATA #IMPLIED>
+    ]>

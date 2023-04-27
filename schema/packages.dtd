@@ -1,0 +1,18 @@
+<!-- SPDX-License-Identifier: Apache-2.0 OR GPL-3.0-or-later -->
+<!DOCTYPE packages [
+    <!ELEMENT packages (package+)>
+    <!ATTLIST packages version CDATA #REQUIRED>
+
+    <!ELEMENT package ()>
+    <!ATTLIST package name CDATA #REQUIRED>
+    <!ATTLIST package label CDATA #REQUIRED>
+    <!ATTLIST package versionCode CDATA #REQUIRED>
+    <!ATTLIST package versionName CDATA #REQUIRED>
+    <!ATTLIST package minSdk CDATA #IMPLIED>
+    <!ATTLIST package targetSdk CDATA #IMPLIED>
+    <!ATTLIST package signature CDATA #REQUIRED>
+    <!ATTLIST package firstInstallTime CDATA #IMPLIED>
+    <!ATTLIST package lastUpdateTime CDATA #IMPLIED>
+    <!ATTLIST package installerPackageName CDATA #IMPLIED>
+    <!ATTLIST package installerPackageLabel CDATA #IMPLIED>
+    ]>
