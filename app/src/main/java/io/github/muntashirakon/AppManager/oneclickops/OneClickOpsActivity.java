@@ -33,7 +33,6 @@ import java.util.List;
 import java.util.Set;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
-import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.behavior.DexOptimizationDialog;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
@@ -119,8 +118,8 @@ public class OneClickOpsActivity extends BaseActivity {
                             })
                             .show();
                 });
-        mItemCreator.addItemWithTitleSubtitle(getString(R.string.block_components_dots),
-                        getString(R.string.block_components_description))
+        mItemCreator.addItemWithTitleSubtitle(getString(R.string.block_unblock_components_dots),
+                        getString(R.string.block_unblock_components_description))
                 .setOnClickListener(v -> {
                     if (!Ops.isPrivileged()) {
                         UIUtils.displayShortToast(R.string.only_works_in_root_or_adb_mode);
@@ -269,11 +268,22 @@ public class OneClickOpsActivity extends BaseActivity {
         new SearchableMultiChoiceDialogBuilder<>(this, selectedPackages, packageNamesWithComponentCount)
                 .addSelections(selectedPackages)
                 .setTitle(R.string.filtered_packages)
-                .setPositiveButton(R.string.apply, (dialog1, which1, selectedItems) -> {
+                .setPositiveButton(R.string.block, (dialog1, which1, selectedItems) -> {
                     mProgressIndicator.show();
                     Intent intent = new Intent(this, BatchOpsService.class);
                     intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, selectedItems);
                     intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_BLOCK_COMPONENTS);
+                    intent.putExtra(BatchOpsService.EXTRA_HEADER, getString(R.string.one_click_ops));
+                    Bundle args = new Bundle();
+                    args.putStringArray(BatchOpsManager.ARG_SIGNATURES, signatures);
+                    intent.putExtra(BatchOpsService.EXTRA_OP_EXTRA_ARGS, args);
+                    ContextCompat.startForegroundService(this, intent);
+                })
+                .setNeutralButton(R.string.unblock, (dialog1, which1, selectedItems) -> {
+                    mProgressIndicator.show();
+                    Intent intent = new Intent(this, BatchOpsService.class);
+                    intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, selectedItems);
+                    intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_UNBLOCK_COMPONENTS);
                     intent.putExtra(BatchOpsService.EXTRA_HEADER, getString(R.string.one_click_ops));
                     Bundle args = new Bundle();
                     args.putStringArray(BatchOpsManager.ARG_SIGNATURES, signatures);
