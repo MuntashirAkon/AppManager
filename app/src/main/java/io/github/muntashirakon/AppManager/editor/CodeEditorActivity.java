@@ -53,7 +53,7 @@ public class CodeEditorActivity extends BaseActivity {
             if (fileUri != null) {
                 subtitle = Paths.trimPathExtension(fileUri.getLastPathSegment());
             } else {
-                subtitle = "Untitled";
+                subtitle = "Untitled.txt";
             }
         }
         if (fileUri == null) {

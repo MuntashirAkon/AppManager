@@ -60,7 +60,10 @@ public class StorageUtils {
         for (int i = 0; i < grantedUrisAndDate.size(); ++i) {
             Uri uri = grantedUrisAndDate.keyAt(i);
             long time = grantedUrisAndDate.valueAt(i);
-            storageLocations.put(Paths.getLastPathSegment(uri.getPath()) + " " + DateUtils.formatDate(time), uri);
+            if (Paths.get(uri).isDirectory()) {
+                // Only directories are locations
+                storageLocations.put(Paths.getLastPathSegment(uri.getPath()) + " " + DateUtils.formatDate(time), uri);
+            }
         }
         return storageLocations;
     }

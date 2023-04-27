@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.editor;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
@@ -138,6 +139,18 @@ public class CodeEditorFragment extends Fragment {
             private boolean javaSmaliToggle = false;
             private boolean enableSharing = true;
 
+            public Builder() {
+            }
+
+            public Builder(@NonNull Options options) {
+                uri = options.uri;
+                title = options.title;
+                subtitle = options.subtitle;
+                readOnly = options.readOnly;
+                javaSmaliToggle = options.javaSmaliToggle;
+                enableSharing = options.enableSharing;
+            }
+
             public Builder setUri(@Nullable Uri uri) {
                 this.uri = uri;
                 return this;
@@ -176,7 +189,9 @@ public class CodeEditorFragment extends Fragment {
 
     private EditorColorScheme mColorScheme;
     private CodeEditor mEditor;
+    private SymbolInputView mSymbolInputView;
     private TextView mPositionButton;
+    private MaterialButton mLockButton;
     private LinearLayoutCompat mSearchWidget;
     private TextInputEditText mSearchView;
     private TextInputEditText mReplaceView;
@@ -193,14 +208,33 @@ public class CodeEditorFragment extends Fragment {
     private MenuItem mShareMenu;
     private CodeEditorViewModel mViewModel;
     private boolean mTextModified = false;
-    private final ActivityResultLauncher<String> mSaveOpenedFile = registerForActivityResult(
-            new ActivityResultContracts.CreateDocument("*/*"),
-            uri -> {
-                if (uri == null) {
-                    // Back button pressed.
-                    return;
+    private final ActivityResultLauncher<Intent> mSaveOpenedFile = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                try {
+                    if (result.getResultCode() != Activity.RESULT_OK) {
+                        return;
+                    }
+                    Intent data = result.getData();
+                    if (data == null) return;
+                    Uri uri = data.getData();
+                    if (uri == null) return;
+                    int takeFlags = data.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+                            | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+                    requireContext().getContentResolver().takePersistableUriPermission(uri, takeFlags);
+                    saveFile(mEditor.getText().toString(), uri);
+                    if (takeFlags != 0) {
+                        // Make this URI the current URI
+                        mOptions = new Options.Builder(mOptions)
+                                .setUri(uri)
+                                .setSubtitle(Paths.get(uri).getName())
+                                .build();
+                        mViewModel.setOptions(mOptions);
+                    }
+                } finally {
+                    showProgressIndicator(false);
+                    unlockEditor();
                 }
-                saveFile(mEditor.getText().toString(), uri);
             });
     private final OnBackPressedCallback mBackPressedCallback = new OnBackPressedCallback(true) {
         @Override
@@ -271,15 +305,15 @@ public class CodeEditorFragment extends Fragment {
         props.symbolPairAutoCompletion = false;
         props.deleteMultiSpaces = -1;
         props.deleteEmptyLineFast = false;
-        SymbolInputView symbolInputView = view.findViewById(R.id.symbol_input);
-        symbolInputView.addSymbols(
+        mSymbolInputView = view.findViewById(R.id.symbol_input);
+        mSymbolInputView.addSymbols(
                 new String[]{"⇥", "{", "}", "(", ")", ",", ".", ";", "\"", "?", "+", "-", "*", "/"},
                 new String[]{"\t", "{", "}", "(", ")", ",", ".", ";", "\"", "?", "+", "-", "*", "/"});
-        symbolInputView.setTextColor(MaterialColors.getColor(symbolInputView, com.google.android.material.R.attr.colorOnSurface));
-        symbolInputView.setBackgroundColor(SurfaceColors.SURFACE_2.getColor(requireContext()));
-        symbolInputView.bindEditor(mEditor);
+        mSymbolInputView.setTextColor(MaterialColors.getColor(mSymbolInputView, com.google.android.material.R.attr.colorOnSurface));
+        mSymbolInputView.setBackgroundColor(SurfaceColors.SURFACE_2.getColor(requireContext()));
+        mSymbolInputView.bindEditor(mEditor);
         if (mOptions.readOnly) {
-            symbolInputView.setVisibility(View.GONE);
+            mSymbolInputView.setVisibility(View.GONE);
         }
         // Setup search widget
         mSearchWidget = view.findViewById(R.id.search_container);
@@ -379,20 +413,13 @@ public class CodeEditorFragment extends Fragment {
             }
         });
         // Setup status bar
-        MaterialButton lockButton = view.findViewById(R.id.lock);
-        lockButton.setOnClickListener(v -> {
-            if (mViewModel.isReadOnly()) {
-                return;
-            }
+        mLockButton = view.findViewById(R.id.lock);
+        mLockButton.setOnClickListener(v -> {
             // Toggle lock
             if (mEditor.isEditable()) {
-                mEditor.setEditable(false);
-                symbolInputView.setVisibility(View.GONE);
-                lockButton.setIconResource(R.drawable.ic_lock);
+                lockEditor();
             } else {
-                mEditor.setEditable(true);
-                symbolInputView.setVisibility(View.VISIBLE);
-                lockButton.setIconResource(R.drawable.ic_unlock);
+                unlockEditor();
             }
         });
         TextView languageButton = view.findViewById(R.id.language);
@@ -448,11 +475,11 @@ public class CodeEditorFragment extends Fragment {
             }
             mEditor.setEditorLanguage(getLanguage(mViewModel.getLanguage()));
             if (mViewModel.isReadOnly()) {
-                lockButton.setIconResource(R.drawable.ic_lock);
-                lockButton.setEnabled(false);
+                mLockButton.setIconResource(R.drawable.ic_lock);
+                mLockButton.setEnabled(false);
                 mEditor.setEditable(false);
             } else {
-                lockButton.setEnabled(true);
+                mLockButton.setEnabled(true);
             }
             languageButton.setText(mViewModel.getLanguage());
             languageButton.setEnabled(!mViewModel.isReadOnly());
@@ -543,20 +570,20 @@ public class CodeEditorFragment extends Fragment {
             }
         } else if (id == R.id.action_save) {
             if (!mViewModel.isBackedByAFile()) {
-                mSaveOpenedFile.launch(mViewModel.getFilename());
+                launchIntentSaver();
             } else if (mViewModel.canWrite()) {
                 saveFile(mEditor.getText().toString());
             } else {
                 new MaterialAlertDialogBuilder(requireContext())
                         .setTitle(R.string.read_only_file)
                         .setMessage(R.string.read_only_file_warning)
-                        .setPositiveButton(R.string.yes, (dialog, which) -> mSaveOpenedFile.launch(mViewModel.getFilename()))
+                        .setPositiveButton(R.string.yes, (dialog, which) -> launchIntentSaver())
                         .setNegativeButton(R.string.no, null)
                         .show();
             }
             return true;
         } else if (id == R.id.action_save_as) {
-            mSaveOpenedFile.launch(mViewModel.getFilename());
+            launchIntentSaver();
             return true;
         } else if (id == R.id.action_share) {
             Path filePath = mViewModel.getSourceFile();
@@ -697,5 +724,39 @@ public class CodeEditorFragment extends Fragment {
             } catch (PatternSyntaxException ignore) {
             }
         }
+    }
+
+    private void lockEditor() {
+        if (mViewModel.isReadOnly()) {
+            return;
+        }
+        if (mEditor.isEditable()) {
+            mEditor.setEditable(false);
+            mSymbolInputView.setVisibility(View.GONE);
+            mLockButton.setIconResource(R.drawable.ic_lock);
+        }
+    }
+
+    private void unlockEditor() {
+        if (mViewModel.isReadOnly()) {
+            return;
+        }
+        if (!mEditor.isEditable()) {
+            mEditor.setEditable(true);
+            mSymbolInputView.setVisibility(View.VISIBLE);
+            mLockButton.setIconResource(R.drawable.ic_unlock);
+        }
+    }
+
+    private void launchIntentSaver() {
+        showProgressIndicator(true);
+        lockEditor();
+        mSaveOpenedFile.launch(getSaveIntent());
+    }
+
+    private Intent getSaveIntent() {
+        return new Intent(Intent.ACTION_CREATE_DOCUMENT)
+                .setType("*/*")
+                .putExtra(Intent.EXTRA_TITLE, mViewModel.getFilename());
     }
 }
