@@ -20,6 +20,7 @@ import com.google.android.material.button.MaterialButton;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.accessibility.activity.LeadingActivityTrackerActivity;
+import io.github.muntashirakon.AppManager.editor.CodeEditorActivity;
 import io.github.muntashirakon.AppManager.fm.FmActivity;
 import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
 import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
@@ -75,6 +76,12 @@ public class LabsActivity extends BaseActivity {
                         startActivity(intent);
                     });
         }
+        addAction(this, flowLayout, R.string.title_code_editor, R.drawable.ic_code)
+                .setOnClickListener(v -> {
+                    Intent intent = new Intent(this, CodeEditorActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(intent);
+                });
     }
 
     @Override
