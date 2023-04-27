@@ -353,6 +353,8 @@ public class BatchOpsService extends ForegroundService {
                 return getString(R.string.unblock_trackers);
             case BatchOpsManager.OP_BLOCK_COMPONENTS:
                 return getString(R.string.block_components_dots);
+            case BatchOpsManager.OP_UNBLOCK_COMPONENTS:
+                return getString(R.string.unblock_components_dots);
             case BatchOpsManager.OP_SET_APP_OPS:
                 return getString(R.string.set_mode_for_app_ops_dots);
             case BatchOpsManager.OP_IMPORT_BACKUPS:
@@ -396,6 +398,8 @@ public class BatchOpsService extends ForegroundService {
                 return getResources().getQuantityString(R.plurals.alert_failed_to_unblock_trackers, failedCount, failedCount);
             case BatchOpsManager.OP_BLOCK_COMPONENTS:
                 return getResources().getQuantityString(R.plurals.alert_failed_to_block_components, failedCount, failedCount);
+            case BatchOpsManager.OP_UNBLOCK_COMPONENTS:
+                return getResources().getQuantityString(R.plurals.alert_failed_to_unblock_components, failedCount, failedCount);
             case BatchOpsManager.OP_SET_APP_OPS:
                 return getResources().getQuantityString(R.plurals.alert_failed_to_set_app_ops, failedCount, failedCount);
             case BatchOpsManager.OP_IMPORT_BACKUPS:

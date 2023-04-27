@@ -399,7 +399,9 @@
     <string name="clear_cache">Clear Cache</string>
     <string name="block_unblock_trackers_description">Block or unblock ad and tracking components in all the installed apps</string>
     <string name="block_components_dots">Block components…</string>
-    <string name="block_components_description">Block all components identified by the given signatures</string>
+    <string name="block_unblock_components_dots">Block/unblock components…</string>
+    <string name="unblock_components_dots">Unblock components…</string>
+    <string name="block_unblock_components_description">Block or unblock all components identified by the given signatures</string>
     <string name="deny_app_ops_description">Set a mode for app operations identified by the constant values, i.e. <tt>63</tt> or <tt>RUN_IN_BACKGROUND</tt></string>
     <string name="clear_data_from_uninstalled_apps">Clear data from uninstalled apps</string>
     <string name="clear_data_from_uninstalled_apps_description">Clear data from apps that are uninstalled with <tt>DONT_DELETE_DATA</tt> flag</string>
@@ -463,6 +465,10 @@
     <plurals name="alert_failed_to_block_components">
         <item quantity="one">Could not block components for %1$d app</item>
         <item quantity="other">Could not block components for %1$d apps</item>
+    </plurals>
+    <plurals name="alert_failed_to_unblock_components">
+        <item quantity="one">Could not unblock components for %1$d app</item>
+        <item quantity="other">Could not unblock components for %1$d apps</item>
     </plurals>
     <plurals name="alert_failed_to_set_app_ops">
         <item quantity="one">Could not set app ops for %1$d app</item>
