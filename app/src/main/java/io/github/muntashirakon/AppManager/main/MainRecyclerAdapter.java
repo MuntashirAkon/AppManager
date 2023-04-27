@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.main;
 
+import static io.github.muntashirakon.AppManager.utils.UIUtils.displayLongToast;
+
 import android.Manifest;
 import android.app.usage.UsageStatsManager;
 import android.content.Intent;
@@ -31,6 +33,7 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.divider.MaterialDivider;
 
 import java.io.File;
@@ -41,6 +44,7 @@ import java.util.concurrent.TimeUnit;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
+import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
@@ -53,6 +57,7 @@ import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.dialog.SearchableItemsDialogBuilder;
@@ -434,8 +439,8 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
             // The app should not be installed. But make sure this is really true. (For current user only)
             ApplicationInfo info;
             try {
-                info = PackageManagerCompat.getApplicationInfo(item.packageName, UserHandleHidden.myUserId(),
-                        PackageUtils.flagMatchUninstalled);
+                info = PackageManagerCompat.getApplicationInfo(item.packageName, PackageUtils.flagMatchUninstalled,
+                        UserHandleHidden.myUserId());
             } catch (RemoteException | PackageManager.NameNotFoundException e) {
                 Toast.makeText(mActivity, R.string.app_not_installed, Toast.LENGTH_SHORT).show();
                 return;
@@ -459,16 +464,35 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
                 }
                 // Otherwise, try with APK files
                 // FIXME: 1/4/23 Include splits
-                if (info.publicSourceDir != null && new File(info.publicSourceDir).exists()
-                        && FeatureController.isInstallerEnabled()) {
+                if (info.publicSourceDir != null && new File(info.publicSourceDir).exists()) {
                     mActivity.startActivity(PackageInstallerActivity.getLaunchableInstance(mActivity,
                             Uri.fromFile(new File(info.publicSourceDir))));
                     return;
                 }
             }
             // 3. The app might be uninstalled without clearing data
-            // TODO: 1/4/23 Offer user to uninstall the app again
-            Toast.makeText(mActivity, R.string.app_not_installed, Toast.LENGTH_SHORT).show();
+            if (ApplicationInfoCompat.isSystemApp(info)) {
+                // The app is a system app, there's no point in asking to uninstall it again
+                Toast.makeText(mActivity, R.string.app_not_installed, Toast.LENGTH_SHORT).show();
+                return;
+            }
+            new MaterialAlertDialogBuilder(mActivity)
+                    .setTitle(mActivity.getString(R.string.uninstall_app, item.label))
+                    .setMessage(R.string.uninstall_app_again_message)
+                    .setNegativeButton(R.string.no, null)
+                    .setPositiveButton(R.string.yes, (dialog, which) -> ThreadUtils.postOnBackgroundThread(() -> {
+                        PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance();
+                        installer.setAppLabel(item.label);
+                        boolean uninstalled = installer.uninstall(item.packageName, UserHandleHidden.myUserId(), false);
+                        ThreadUtils.postOnMainThread(() -> {
+                            if (uninstalled) {
+                                displayLongToast(R.string.uninstalled_successfully, item.label);
+                            } else {
+                                displayLongToast(R.string.failed_to_uninstall, item.label);
+                            }
+                        });
+                    }))
+                    .show();
             return;
         }
         // The app is installed

@@ -1338,4 +1338,6 @@
         <item quantity="one">Could not optimize %1$d app</item>
         <item quantity="other">Could not optimize %1$d apps</item>
     </plurals>
+    <string name="uninstall_app_again_message">The application was uninstalled without clearing data and signature. Do you want to completely uninstall it?</string>
+    <string name="uninstall_app">Uninstall %1$s</string>
 </resources>
