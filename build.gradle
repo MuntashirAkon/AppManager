@@ -9,7 +9,6 @@ buildscript {
     }
     dependencies {
         classpath "com.android.tools.build:gradle:${agp_version}"
-        classpath "com.google.protobuf:protobuf-gradle-plugin:${protobuf_gradle_version}"
     }
 }
 
