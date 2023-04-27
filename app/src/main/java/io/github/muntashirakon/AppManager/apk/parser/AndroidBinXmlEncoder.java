@@ -30,16 +30,25 @@ public class AndroidBinXmlEncoder {
 
     @NonNull
     private static byte[] encode(@NonNull XMLSource xmlSource) throws IOException {
-        EncodeMaterials encodeMaterials = new EncodeMaterials();
+        XMLEncodeSource xmlEncodeSource = new XMLEncodeSource(getDefaultEncodeMaterials(), xmlSource);
+        return xmlEncodeSource.getResXmlBlock().getBytes();
+    }
+
+    private static EncodeMaterials getDefaultEncodeMaterials() throws IOException {
+        if (sDefaultEncodeMaterials != null) {
+            return sDefaultEncodeMaterials;
+        }
         FrameworkApk frameworkApk = AndroidFrameworks.getLatest();
-        encodeMaterials.addFramework(frameworkApk);
         Collection<PackageBlock> packageBlocks = frameworkApk.getTableBlock().listPackages();
-        if (packageBlocks.size() < 1) {
+        if (packageBlocks.isEmpty()) {
             throw new IOException("Framework apk does not contain any packages!");
         }
         PackageBlock packageBlock = packageBlocks.iterator().next();
-        encodeMaterials.setCurrentPackage(packageBlock);
-        XMLEncodeSource xmlEncodeSource = new XMLEncodeSource(encodeMaterials, xmlSource);
-        return xmlEncodeSource.getResXmlBlock().getBytes();
+        sDefaultEncodeMaterials = new EncodeMaterials()
+                .addFramework(frameworkApk)
+                .setCurrentPackage(packageBlock);
+        return sDefaultEncodeMaterials;
     }
+
+    private static EncodeMaterials sDefaultEncodeMaterials;
 }

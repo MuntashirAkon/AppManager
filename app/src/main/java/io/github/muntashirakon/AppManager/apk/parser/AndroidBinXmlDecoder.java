@@ -74,10 +74,8 @@ public class AndroidBinXmlDecoder {
              PrintStream out = new PrintStream(os)) {
             ResXmlDocument resXmlDocument = new ResXmlDocument();
             resXmlDocument.readBytes(reader);
-            TableEntryStore entryStore = new TableEntryStore();
-            entryStore.add(AndroidFrameworks.getLatest().getTableBlock());
             try (ResXmlPullParser parser = new ResXmlPullParser()) {
-                parser.setDecoder(new Decoder(entryStore, 0));
+                parser.setDecoder(new Decoder(getDefaultTableEntryStore(), 0));
                 parser.setResXmlDocument(resXmlDocument);
                 StringBuilder indent = new StringBuilder(10);
                 final String indentStep = "  ";
@@ -130,9 +128,7 @@ public class AndroidBinXmlDecoder {
         ResXmlDocument xmlBlock = new ResXmlDocument();
         try (BlockReader reader = new BlockReader(byteBuffer.array())) {
             xmlBlock.readBytes(reader);
-            TableEntryStore entryStore = new TableEntryStore();
-            entryStore.add(AndroidFrameworks.getLatest().getTableBlock());
-            return xmlBlock.decodeToXml(entryStore, 0);
+            return xmlBlock.decodeToXml(getDefaultTableEntryStore(), 0);
         } catch (XMLException e) {
             throw new IOException(e);
         }
@@ -145,4 +141,16 @@ public class AndroidBinXmlDecoder {
         }
         return prefix + ":";
     }
+
+    @NonNull
+    private static TableEntryStore getDefaultTableEntryStore() throws IOException {
+        if (sDefaultTableEntryStore != null) {
+            return sDefaultTableEntryStore;
+        }
+        sDefaultTableEntryStore = new TableEntryStore();
+        sDefaultTableEntryStore.add(AndroidFrameworks.getLatest().getTableBlock());
+        return sDefaultTableEntryStore;
+    }
+
+    private static TableEntryStore sDefaultTableEntryStore;
 }
