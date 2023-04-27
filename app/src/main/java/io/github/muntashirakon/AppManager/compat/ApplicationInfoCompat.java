@@ -10,6 +10,7 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.io.File;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
@@ -325,6 +326,8 @@ public final class ApplicationInfoCompat {
     }
 
     public static boolean isInstalled(@NonNull ApplicationInfo info) {
-        return (info.flags & ApplicationInfo.FLAG_INSTALLED) != 0;
+        return (info.flags & ApplicationInfo.FLAG_INSTALLED) != 0
+                && info.publicSourceDir != null
+                && new File(info.publicSourceDir).exists();
     }
 }

@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.apk.installer;
 
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagMatchUninstalled;
+
 import android.annotation.SuppressLint;
 import android.annotation.UserIdInt;
 import android.app.PendingIntent;
@@ -1026,7 +1028,7 @@ public final class PackageInstallerCompat {
                 // PackageInfo expects a valid user ID
                 userId = UserHandleHidden.myUserId();
             }
-            PackageInfo info = PackageManagerCompat.getPackageInfo(packageName, 0, userId);
+            PackageInfo info = PackageManagerCompat.getPackageInfo(packageName, flagMatchUninstalled, userId);
             final boolean isSystem = (info.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
             // If we are being asked to delete a system app for just one
             // user set flag so it disables rather than reverting to system
@@ -1048,7 +1050,7 @@ public final class PackageInstallerCompat {
             int[] users = Users.getUsersIds();
             for (int user : users) {
                 try {
-                    PackageManagerCompat.getPackageInfo(packageName, 0, user);
+                    PackageManagerCompat.getPackageInfo(packageName, flagMatchUninstalled, user);
                     return user;
                 } catch (Throwable ignore) {
                 }

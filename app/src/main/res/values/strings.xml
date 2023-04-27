@@ -1358,4 +1358,6 @@
     <string name="search_option_match_case">Match case</string>
     <string name="search_option_whole_word">Whole word</string>
     <string name="search_option_regex">Regex</string>
+    <string name="uninstall_app_again_message">The application was uninstalled without clearing data and signature. Do you want to completely uninstall it?</string>
+    <string name="uninstall_app">Uninstall %1$s</string>
 </resources>
