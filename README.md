@@ -33,11 +33,12 @@
 - Back up/restore APK files
 - Batch operations
 - Single-click operations
-- Logcat viewer
+- Logcat viewer, manager and exporter
 - [Profiles](https://muntashirakon.github.io/AppManager/#sec:profiles-page) (including presets for quick debloating)
 - Open an app in Aurora Store or in your favourite F-Droid client directly from App Manager
 - Sign APK files with custom signatures before installing
-- Backup encryption: OpenPGP via OpenKeychain, RSA (hybrid encryption with AES) and AES.
+- Backup encryption: OpenPGP via OpenKeychain, RSA, ECC (hybrid encryption with AES) and AES.
+- Track foreground UI components
 
 ### Root/ADB-only features
 
@@ -61,15 +62,16 @@
 
 ### Upcoming features
 - APK editing
+- Code editor
 - Routine operations
-- Backup encryption: Elliptive-curve cryptography (ECC)
 - Finder: Find app components, permissions etc. in all apps
 - Enable/disable app actions such as launch on boot
 - Panic responder for Ripple
 - Crash monitor
 - Systemless disabling/uninstalling of the system apps
-- Import/export app list
-- Terminal emulator
+- Import app list exported by App Manager
+- More advance terminal emulator
+- File manager
 - Database viewer and editor, etc.
 
 [<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png"
