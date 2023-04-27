@@ -56,9 +56,9 @@ import io.github.muntashirakon.AppManager.changelog.Changelog;
 import io.github.muntashirakon.AppManager.changelog.ChangelogParser;
 import io.github.muntashirakon.AppManager.changelog.ChangelogRecyclerAdapter;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
-import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.misc.HelpActivity;
+import io.github.muntashirakon.AppManager.misc.LabsActivity;
 import io.github.muntashirakon.AppManager.oneclickops.OneClickOpsActivity;
 import io.github.muntashirakon.AppManager.profiles.ProfileManager;
 import io.github.muntashirakon.AppManager.profiles.ProfileMetaManager;
@@ -71,7 +71,6 @@ import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.settings.SettingsActivity;
-import io.github.muntashirakon.AppManager.sysconfig.SysConfigActivity;
 import io.github.muntashirakon.AppManager.usage.AppUsageActivity;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -93,8 +92,6 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
         MultiSelectionView.OnSelectionChangeListener {
     private static final String PACKAGE_NAME_APK_UPDATER = "com.apkupdater";
     private static final String ACTIVITY_NAME_APK_UPDATER = "com.apkupdater.activity.MainActivity";
-    private static final String PACKAGE_NAME_TERMUX = "com.termux";
-    private static final String ACTIVITY_NAME_TERMUX = "com.termux.app.TermuxActivity";
 
     private static boolean SHOW_DISCLAIMER = true;
 
@@ -107,7 +104,6 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
     private MultiSelectionView multiSelectionView;
     private Menu selectionMenu;
     private MenuItem appUsageMenu;
-    private MenuItem logViewerMenu;
 
     private final StoragePermission storagePermission = StoragePermission.init(this);
 
@@ -266,7 +262,6 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main_actions, menu);
         appUsageMenu = menu.findItem(R.id.action_app_usage);
-        logViewerMenu = menu.findItem(R.id.action_log_viewer);
         MenuItem apkUpdaterMenu = menu.findItem(R.id.action_apk_updater);
         try {
             if (!getPackageManager().getApplicationInfo(PACKAGE_NAME_APK_UPDATER, 0).enabled)
@@ -275,23 +270,13 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
         } catch (PackageManager.NameNotFoundException e) {
             apkUpdaterMenu.setVisible(false);
         }
-        MenuItem termuxMenu = menu.findItem(R.id.action_termux);
-        try {
-            if (!getPackageManager().getApplicationInfo(PACKAGE_NAME_TERMUX, 0).enabled)
-                throw new PackageManager.NameNotFoundException();
-            termuxMenu.setVisible(true);
-        } catch (PackageManager.NameNotFoundException e) {
-            termuxMenu.setVisible(false);
-        }
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
         super.onPrepareOptionsMenu(menu);
-        menu.findItem(R.id.action_sys_config).setVisible(Ops.isRoot());
         appUsageMenu.setVisible(FeatureController.isUsageAccessEnabled());
-        logViewerMenu.setVisible(FeatureController.isLogViewerEnabled());
         return true;
     }
 
@@ -331,28 +316,14 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
                 startActivity(intent);
             } catch (Exception ignored) {
             }
-        } else if (id == R.id.action_termux) {
-            try {
-                if (!getPackageManager().getApplicationInfo(PACKAGE_NAME_TERMUX, 0).enabled)
-                    throw new PackageManager.NameNotFoundException();
-                Intent intent = new Intent();
-                intent.setClassName(PACKAGE_NAME_TERMUX, ACTIVITY_NAME_TERMUX);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
-            } catch (Exception ignored) {
-            }
         } else if (id == R.id.action_running_apps) {
             Intent runningAppsIntent = new Intent(this, RunningAppsActivity.class);
             startActivity(runningAppsIntent);
-        } else if (id == R.id.action_sys_config) {
-            Intent sysConfigIntent = new Intent(this, SysConfigActivity.class);
-            startActivity(sysConfigIntent);
         } else if (id == R.id.action_profiles) {
             Intent profilesIntent = new Intent(this, ProfilesActivity.class);
             startActivity(profilesIntent);
-        } else if (id == R.id.action_log_viewer) {
-            Intent intent = new Intent(getApplicationContext(), LogViewerActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        } else if (id == R.id.action_labs) {
+            Intent intent = new Intent(getApplicationContext(), LabsActivity.class);
             startActivity(intent);
         } else return super.onOptionsItemSelected(item);
         return true;
@@ -573,10 +544,6 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
         // Show/hide app usage menu
         if (appUsageMenu != null) {
             appUsageMenu.setVisible(FeatureController.isUsageAccessEnabled());
-        }
-        // Show/hide log viewer menu
-        if (logViewerMenu != null) {
-            logViewerMenu.setVisible(FeatureController.isLogViewerEnabled());
         }
         // Set sort by
         if (mModel != null) {

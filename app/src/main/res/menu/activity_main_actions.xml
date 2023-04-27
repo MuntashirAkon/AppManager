@@ -36,19 +36,9 @@
         android:title="@string/running_apps" />
 
     <item
-        android:id="@+id/action_sys_config"
-        android:icon="@drawable/ic_view_list"
-        android:title="@string/sys_config" />
-
-    <item
         android:id="@+id/action_profiles"
         android:icon="@drawable/ic_file_document_multiple"
         android:title="@string/profiles" />
-
-    <item
-        android:id="@+id/action_log_viewer"
-        android:icon="@drawable/ic_view_list"
-        android:title="@string/log_viewer" />
 
     <item
         android:id="@+id/action_apk_updater"
@@ -56,9 +46,9 @@
         android:title="@string/apk_updater" />
 
     <item
-        android:id="@+id/action_termux"
-        android:icon="@drawable/ic_frost_termux"
-        android:title="@string/termux" />
+        android:id="@+id/action_labs"
+        android:icon="@drawable/ic_package"
+        android:title="@string/title_labs_activity" />
 
     <item
         android:id="@+id/action_settings"
