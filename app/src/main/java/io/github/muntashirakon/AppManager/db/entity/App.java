@@ -18,6 +18,7 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.Objects;
 
+import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -129,7 +130,7 @@ public class App implements Serializable {
                 && applicationInfo.publicSourceDir != null && new File(applicationInfo.publicSourceDir).exists();
         app.flags = applicationInfo.flags;
         app.isEnabled = !FreezeUtils.isFrozen(applicationInfo);
-        app.packageLabel = applicationInfo.loadLabel(context.getPackageManager()).toString();
+        app.packageLabel = ApplicationInfoCompat.loadLabelSafe(applicationInfo, context.getPackageManager()).toString();
         app.sdk = applicationInfo.targetSdkVersion;
         app.versionName = packageInfo.versionName;
         app.versionCode = PackageInfoCompat.getLongVersionCode(packageInfo);

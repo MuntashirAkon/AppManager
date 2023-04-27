@@ -4,6 +4,7 @@ package io.github.muntashirakon.AppManager.compat;
 
 import android.content.pm.ApplicationInfo;
 import android.content.pm.ApplicationInfoHidden;
+import android.content.pm.PackageManager;
 import android.os.Build;
 
 import androidx.annotation.IntDef;
@@ -329,5 +330,18 @@ public final class ApplicationInfoCompat {
         return (info.flags & ApplicationInfo.FLAG_INSTALLED) != 0
                 && info.publicSourceDir != null
                 && new File(info.publicSourceDir).exists();
+    }
+
+    /**
+     * {@link ApplicationInfo#loadLabel(PackageManager)} can throw NPE for uninstalled apps in unprivileged mode.
+     *
+     * @return App label or package name if an error is occurred.
+     */
+    @NonNull
+    public static CharSequence loadLabelSafe(@NonNull ApplicationInfo info, @NonNull PackageManager pm) {
+        if (info.publicSourceDir != null && new File(info.publicSourceDir).exists()) {
+            return info.loadLabel(pm);
+        }
+        return info.packageName;
     }
 }
