@@ -5,14 +5,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:focusable="true"
-    android:layout_marginHorizontal="@dimen/padding_small"
-    android:layout_marginVertical="2dp">
+    android:layout_marginHorizontal="?attr/listItemMarginHorizontal"
+    android:layout_marginVertical="?attr/listItemMarginVertical">
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:padding="@dimen/padding_small">
+        android:paddingHorizontal="?attr/listItemPaddingHorizontal"
+        android:paddingVertical="?attr/listItemPaddingVertical">
 
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="@dimen/icon_size"
@@ -54,7 +55,7 @@
                 android:singleLine="true"
                 android:textIsSelectable="true"
                 android:ellipsize="end"
-                android:textAppearance="?attr/textAppearanceTitleSmall"
+                android:textAppearance="?attr/textAppearanceListItem"
                 tools:text="@string/app_name" />
 
             <com.google.android.material.textview.MaterialTextView
@@ -64,7 +65,7 @@
                 android:singleLine="true"
                 android:textIsSelectable="true"
                 android:ellipsize="end"
-                android:textAppearance="?attr/textAppearanceBodyMedium"
+                android:textAppearance="?attr/textAppearanceListItemSecondary"
                 android:textStyle="italic"
                 tools:text="io.github.muntashirakon.AppManager" />
 
@@ -72,8 +73,7 @@
                 android:id="@+id/apk_description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textAppearance="?attr/textAppearanceBodySmall"
-                android:textSize="10sp"
+                android:textAppearance="?attr/textAppearanceListItemSecondary"
                 android:autoLink="web"
                 android:textIsSelectable="true"
                 tools:text="@tools:sample/lorem/random"
@@ -85,7 +85,7 @@
 
     <com.google.android.material.divider.MaterialDivider
         android:id="@+id/divider"
-        android:layout_width="6dp"
+        android:layout_width="?attr/listItemIndicatorWidth"
         android:layout_height="match_parent"
         android:layout_gravity="start" />
 
