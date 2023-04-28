@@ -1,0 +1,65 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:scrollbars="vertical"
+    android:scrollIndicators="top|bottom"
+    tools:ignore="UnusedAttribute">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingVertical="@dimen/padding_small"
+        android:paddingHorizontal="@dimen/padding_medium"
+        android:orientation="vertical">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppTheme.TitleSmall"
+            android:text="@string/debloat_list_type" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/list_types"
+            android:theme="@style/Widget.AppTheme.ChipGroup.Filter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="@dimen/padding_very_small"
+            app:itemSpacing="@dimen/padding_very_small"
+            app:lineSpacing="@dimen/padding_very_small" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppTheme.TitleSmall"
+            android:text="@string/debloat_removal_type" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/removal_types"
+            android:theme="@style/Widget.AppTheme.ChipGroup.Filter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="@dimen/padding_very_small"
+            app:itemSpacing="@dimen/padding_very_small"
+            app:lineSpacing="@dimen/padding_very_small" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppTheme.TitleSmall"
+            android:text="@string/filter" />
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/filter_options"
+            android:theme="@style/Widget.AppTheme.ChipGroup.Filter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingVertical="@dimen/padding_very_small"
+            app:itemSpacing="@dimen/padding_very_small"
+            app:lineSpacing="@dimen/padding_very_small" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</androidx.core.widget.NestedScrollView>

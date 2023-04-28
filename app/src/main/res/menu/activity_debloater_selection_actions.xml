@@ -1,0 +1,32 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/action_uninstall"
+        android:icon="@drawable/ic_trash_can"
+        android:title="@string/uninstall" />
+    <item
+        android:id="@+id/action_put_back"
+        android:icon="@drawable/ic_restore"
+        android:visible="false"
+        android:title="@string/system_app_put_back" />
+    <item
+        android:id="@+id/action_freeze_unfreeze"
+        android:icon="@drawable/ic_snowflake"
+        android:title="@string/freeze_unfreeze" />
+    <item
+        android:id="@+id/action_save_apk"
+        android:title="@string/save_apk"
+        android:icon="@drawable/ic_get_app" />
+    <item
+        android:id="@+id/action_block_unblock_trackers"
+        android:title="@string/block_unblock_trackers"
+        android:icon="@drawable/ic_cctv_off" />
+    <item
+        android:id="@+id/action_new_profile"
+        android:icon="@drawable/ic_file_document"
+        android:title="@string/new_profile" />
+    <item
+        android:id="@+id/action_add_to_profile"
+        android:icon="@drawable/ic_file_plus"
+        android:title="@string/add_to_profile" />
+</menu>

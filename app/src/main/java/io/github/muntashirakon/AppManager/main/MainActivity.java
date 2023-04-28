@@ -56,6 +56,7 @@ import io.github.muntashirakon.AppManager.changelog.Changelog;
 import io.github.muntashirakon.AppManager.changelog.ChangelogParser;
 import io.github.muntashirakon.AppManager.changelog.ChangelogRecyclerAdapter;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
+import io.github.muntashirakon.AppManager.debloat.DebloaterActivity;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.misc.HelpActivity;
 import io.github.muntashirakon.AppManager.misc.LabsActivity;
@@ -324,6 +325,10 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
             startActivity(profilesIntent);
         } else if (id == R.id.action_labs) {
             Intent intent = new Intent(getApplicationContext(), LabsActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        } else if (id == R.id.action_debloater) {
+            Intent intent = new Intent(getApplicationContext(), DebloaterActivity.class);
             startActivity(intent);
         } else return super.onOptionsItemSelected(item);
         return true;

@@ -4,6 +4,7 @@ package io.github.muntashirakon.AppManager.profiles;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
@@ -17,7 +18,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringDef;
-import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
@@ -46,11 +46,67 @@ import io.github.muntashirakon.util.UiUtils;
 
 public class AppsProfileActivity extends BaseActivity implements NavigationBarView.OnItemSelectedListener,
         ViewPager.OnPageChangeListener {
+
+    @NonNull
+    public static Intent getProfileIntent(@NonNull Context context, @NonNull String profileName) {
+        Intent intent = new Intent(context, AppsProfileActivity.class);
+        intent.putExtra(EXTRA_PROFILE_NAME, profileName);
+        return intent;
+    }
+
+    @NonNull
+    public static Intent getNewProfileIntent(@NonNull Context context, @NonNull String profileName) {
+        return getNewProfileIntent(context, profileName, null);
+    }
+
+    @NonNull
+    public static Intent getNewProfileIntent(@NonNull Context context, @NonNull String profileName, @Nullable String[] initialPackages) {
+        Intent intent = new Intent(context, AppsProfileActivity.class);
+        intent.putExtra(EXTRA_NEW_PROFILE_NAME, profileName);
+        if (initialPackages != null) {
+            intent.putExtra(EXTRA_NEW_PROFILE_PACKAGES, initialPackages);
+        }
+        return intent;
+    }
+
+    @NonNull
+    public static Intent getCloneProfileIntent(@NonNull Context context, @NonNull String oldProfileName,
+                                               @NonNull String newProfileName) {
+        Intent intent = new Intent(context, AppsProfileActivity.class);
+        intent.putExtra(EXTRA_PROFILE_NAME, oldProfileName);
+        intent.putExtra(EXTRA_NEW_PROFILE_NAME, newProfileName);
+        return intent;
+    }
+
+    @NonNull
+    public static Intent getShortcutIntent(@NonNull Context context, @NonNull String profileName, @Nullable String shortcutType, @Nullable String state) {
+        Intent intent = new Intent(context, AppsProfileActivity.class);
+        intent.putExtra(EXTRA_PROFILE_NAME, profileName);
+        if (shortcutType == null) {
+            if (state != null) { // State => It's a simple shortcut
+                intent.putExtra(EXTRA_SHORTCUT_TYPE, ST_SIMPLE);
+                intent.putExtra(EXTRA_STATE, state);
+            } else { // Otherwise it's an advance shortcut
+                intent.putExtra(EXTRA_SHORTCUT_TYPE, ST_ADVANCED);
+            }
+        } else {
+            intent.putExtra(EXTRA_SHORTCUT_TYPE, shortcutType);
+            if (state != null) {
+                intent.putExtra(EXTRA_STATE, state);
+            } else if (shortcutType.equals(ST_SIMPLE)) {
+                // Shortcut is set to simple but no state set
+                intent.putExtra(EXTRA_STATE, ProfileMetaManager.STATE_ON);
+            }
+        }
+        intent.putExtra(EXTRA_SHORTCUT_TYPE, shortcutType);
+        return intent;
+    }
+
+    private static final String EXTRA_NEW_PROFILE_NAME = "new_prof";
+    private static final String EXTRA_NEW_PROFILE_PACKAGES = "new_prof_pkgs";
+    private static final String EXTRA_SHORTCUT_TYPE = "shortcut";
+
     public static final String EXTRA_PROFILE_NAME = "prof";
-    public static final String EXTRA_NEW_PROFILE_NAME = "new_prof";
-    public static final String EXTRA_NEW_PROFILE = "new";
-    public static final String EXTRA_IS_PRESET = "preset";
-    public static final String EXTRA_SHORTCUT_TYPE = "shortcut";
     public static final String EXTRA_STATE = "state";
 
     @StringDef({ST_NONE, ST_SIMPLE, ST_ADVANCED})
@@ -83,62 +139,46 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
             return;
         }
         @ShortcutType String shortcutType = getIntent().getStringExtra(EXTRA_SHORTCUT_TYPE);
-        String profileState = getIntent().getStringExtra(EXTRA_STATE);
         if (shortcutType == null) {
-            if (profileState != null) {
-                // If profile state is set, it also means that it is a simple shortcut
-                shortcutType = ST_SIMPLE;
-            } else shortcutType = ST_NONE;
+            shortcutType = ST_NONE;
         }
-        boolean newProfile = getIntent().getBooleanExtra(EXTRA_NEW_PROFILE, false);
-        boolean isPreset = getIntent().getBooleanExtra(EXTRA_IS_PRESET, false);
-        @Nullable String newProfileName;
-        if (newProfile) {
-            newProfileName = getIntent().getStringExtra(EXTRA_NEW_PROFILE_NAME);
-        } else newProfileName = null;
+        @Nullable String profileState = getIntent().getStringExtra(EXTRA_STATE);
+        @Nullable String newProfileName = getIntent().getStringExtra(EXTRA_NEW_PROFILE_NAME);
+        @Nullable String[] initialPackages = getIntent().getStringArrayExtra(EXTRA_NEW_PROFILE_PACKAGES);
         @Nullable String profileName = getIntent().getStringExtra(EXTRA_PROFILE_NAME);
+        if (!shortcutType.equals(ST_NONE)) {
+            if (profileName == null) {
+                // Profile name not set
+                finish();
+                return;
+            }
+            handleShortcut(shortcutType, profileName, profileState);
+            return;
+        }
         if (profileName == null && newProfileName == null) {
+            // Neither profile name is set
             finish();
             return;
         }
-        switch (shortcutType) {
-            case ST_SIMPLE:
-                Intent intent = new Intent(this, ProfileApplierService.class);
-                intent.putExtra(ProfileApplierService.EXTRA_PROFILE_NAME, profileName);
-                if (profileState != null) {
-                    intent.putExtra(ProfileApplierService.EXTRA_PROFILE_STATE, profileState);
-                }
-                ContextCompat.startForegroundService(this, intent);
-                finish();
-                return;
-            case ST_ADVANCED:
-                final String[] statesL = new String[]{
-                        getString(R.string.on),
-                        getString(R.string.off)
-                };
-                @ProfileMetaManager.ProfileState final List<String> states = Arrays.asList(ProfileMetaManager.STATE_ON, ProfileMetaManager.STATE_OFF);
-                AlertDialog alertDialog = new SearchableSingleChoiceDialogBuilder<>(this, states, statesL)
-                        .setTitle(R.string.profile_state)
-                        .setOnSingleChoiceClickListener((dialog, which, newState, isChecked) -> {
-                            Intent aIntent = new Intent(this, ProfileApplierService.class);
-                            aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_NAME, profileName);
-                            aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_STATE, newState);
-                            ContextCompat.startForegroundService(this, aIntent);
-                            dialog.dismiss();
-                        })
-                        .create();
-                alertDialog.setOnDismissListener(dialog -> finishAndRemoveTask());
-                alertDialog.show();
-                return;
-        }
         if (getSupportActionBar() != null) {
-            getSupportActionBar().setTitle(newProfile ? newProfileName : profileName);
+            getSupportActionBar().setTitle(newProfileName != null ? newProfileName : profileName);
         }
-        model.setProfileName(profileName == null ? newProfileName : profileName, newProfile);
-        if (newProfileName != null) {
-            // Requested a new profile, clone profile
-            model.loadAndCloneProfile(newProfileName, isPreset, profileName);
-        } else model.loadProfile();
+        // Load/clone profile
+        if (newProfileName == null) {
+            model.setProfileName(profileName, false);
+            model.loadProfile();
+        } else {
+            // New profile requested
+            if (profileName != null) {
+                // Clone profile
+                model.setProfileName(profileName, false);
+                model.loadAndCloneProfile(newProfileName);
+            } else {
+                // New profile
+                model.setProfileName(newProfileName, false);
+                model.loadNewProfile(initialPackages);
+            }
+        }
         mViewPager = findViewById(R.id.pager);
         mViewPager.addOnPageChangeListener(this);
         mViewPager.setAdapter(new ProfileFragmentPagerAdapter(getSupportFragmentManager()));
@@ -224,7 +264,7 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
                             getSupportActionBar().setTitle(profName.toString());
                         }
                         //noinspection ConstantConditions
-                        model.cloneProfile(profName.toString(), false, "");
+                        model.cloneProfile(profName.toString());
                     })
                     .show();
         } else if (id == R.id.action_shortcut) {
@@ -293,6 +333,40 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
 
     @Override
     public void onPageScrollStateChanged(int state) {
+    }
+
+    private void handleShortcut(@NonNull @ShortcutType String shortcutType, @NonNull String profileName, @Nullable String state) {
+        switch (shortcutType) {
+            case ST_SIMPLE:
+                Intent intent = new Intent(this, ProfileApplierService.class);
+                intent.putExtra(ProfileApplierService.EXTRA_PROFILE_NAME, profileName);
+                // There must be a state
+                intent.putExtra(ProfileApplierService.EXTRA_PROFILE_STATE, Objects.requireNonNull(state));
+                ContextCompat.startForegroundService(this, intent);
+                finish();
+                break;
+            case ST_ADVANCED:
+                final String[] statesL = new String[]{
+                        getString(R.string.on),
+                        getString(R.string.off)
+                };
+                @ProfileMetaManager.ProfileState final List<String> states = Arrays.asList(ProfileMetaManager.STATE_ON, ProfileMetaManager.STATE_OFF);
+                new SearchableSingleChoiceDialogBuilder<>(this, states, statesL)
+                        .setTitle(R.string.profile_state)
+                        .setSelection(state)
+                        .setOnSingleChoiceClickListener((dialog, which, item, isChecked) -> {
+                            if (!isChecked) {
+                                return;
+                            }
+                            Intent aIntent = new Intent(this, ProfileApplierService.class);
+                            aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_NAME, profileName);
+                            aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_STATE, states.get(which));
+                            ContextCompat.startForegroundService(this, aIntent);
+                            dialog.dismiss();
+                        })
+                        .show();
+                break;
+        }
     }
 
     // For tab layout

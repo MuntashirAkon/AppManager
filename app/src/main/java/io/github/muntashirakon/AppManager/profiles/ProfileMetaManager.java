@@ -32,7 +32,6 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
 import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.io.Path;
@@ -134,14 +133,6 @@ public class ProfileMetaManager implements LocalizedString {
     public static Path getProfilesDir() {
         Context context = AppManager.getContext();
         return Objects.requireNonNull(Paths.build(context.getFilesDir(), "profiles"));
-    }
-
-    @NonNull
-    public static ProfileMetaManager fromPreset(@NonNull String profileName,
-                                                @NonNull String presetName)
-            throws JSONException {
-        String fileContents = FileUtils.getContentFromAssets(AppManager.getContext(), "profiles/" + presetName + ".am.json");
-        return fromJSONString(profileName, fileContents);
     }
 
     @NonNull

@@ -8,13 +8,6 @@
         android:title="@string/refresh"
         app:showAsAction="never" />
 
-
-    <item
-        android:id="@+id/action_presets"
-        android:icon="@drawable/ic_sort"
-        android:title="@string/presets"
-        app:showAsAction="never" />
-
     <item
         android:id="@+id/action_import"
         android:icon="@drawable/ic_file_import"
