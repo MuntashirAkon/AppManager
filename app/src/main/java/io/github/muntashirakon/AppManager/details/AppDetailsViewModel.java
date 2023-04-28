@@ -1032,7 +1032,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
                                 | PackageManager.GET_PERMISSIONS | PackageManager.GET_ACTIVITIES | flagDisabledComponents
                                 | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS | flagMatchUninstalled
                                 | PackageManager.GET_SERVICES | PackageManager.GET_CONFIGURATIONS | flagSigningInfo
-                                | PackageManager.GET_SHARED_LIBRARY_FILES | PackageManager.GET_URI_PERMISSION_PATTERNS,
+                                | PackageManager.GET_SHARED_LIBRARY_FILES | PackageManager.GET_URI_PERMISSION_PATTERNS
+                                | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES,
                         mUserHandle);
                 ApplicationInfo applicationInfo = mInstalledPackageInfo.applicationInfo;
                 if (!new File(applicationInfo.publicSourceDir).exists()) {

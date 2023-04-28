@@ -170,7 +170,9 @@ public class FreezeUnfreezeService extends Service {
             Integer notificationId = packagesToNotificationId.get(packageName);
             if (shortcutInfo != null) {
                 try {
-                    ApplicationInfo applicationInfo = PackageManagerCompat.getApplicationInfo(shortcutInfo.packageName, PackageUtils.flagMatchUninstalled | PackageUtils.flagDisabledComponents, shortcutInfo.userId);
+                    ApplicationInfo applicationInfo = PackageManagerCompat.getApplicationInfo(shortcutInfo.packageName,
+                            PackageUtils.flagMatchUninstalled | PackageUtils.flagDisabledComponents
+                                    | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, shortcutInfo.userId);
                     Bitmap icon = getBitmapFromDrawable(applicationInfo.loadIcon(getApplication().getPackageManager()));
                     shortcutInfo.setLabel(applicationInfo.loadLabel(getApplication().getPackageManager()).toString());
                     FreezeUtils.freeze(shortcutInfo.packageName, shortcutInfo.userId);

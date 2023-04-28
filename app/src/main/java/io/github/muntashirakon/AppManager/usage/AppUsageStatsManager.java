@@ -169,7 +169,8 @@ public class AppUsageStatsManager {
             throws RemoteException, PackageManager.NameNotFoundException {
         UsageUtils.TimeInterval range = UsageUtils.getTimeInterval(usageInterval);
         PackageUsageInfo packageUsageInfo = new PackageUsageInfo(context, packageName, userId,
-                PackageManagerCompat.getApplicationInfo(packageName, flagMatchUninstalled, userId));
+                PackageManagerCompat.getApplicationInfo(packageName, flagMatchUninstalled
+                        | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId));
         UsageEvents events = UsageStatsManagerCompat.queryEvents(range.getStartTime(), range.getEndTime(), userId);
         if (events == null) return packageUsageInfo;
         UsageEvents.Event event = new UsageEvents.Event();
@@ -272,7 +273,8 @@ public class AppUsageStatsManager {
         for (String packageName : screenTimes.keySet()) {
             // Skip uninstalled packages?
             PackageUsageInfo packageUsageInfo = new PackageUsageInfo(context, packageName, userId,
-                    PackageManagerCompat.getApplicationInfo(packageName, flagMatchUninstalled, userId));
+                    PackageManagerCompat.getApplicationInfo(packageName, flagMatchUninstalled
+                            | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId));
             packageUsageInfo.timesOpened = NonNullUtils.defeatNullable(accessCount.get(packageName));
             packageUsageInfo.lastUsageTime = NonNullUtils.defeatNullable(lastUse.get(packageName));
             packageUsageInfo.screenTime = NonNullUtils.defeatNullable(screenTimes.get(packageName));

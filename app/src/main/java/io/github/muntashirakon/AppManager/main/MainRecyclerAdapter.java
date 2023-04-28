@@ -439,7 +439,8 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
             // The app should not be installed. But make sure this is really true. (For current user only)
             ApplicationInfo info;
             try {
-                info = PackageManagerCompat.getApplicationInfo(item.packageName, PackageUtils.flagMatchUninstalled,
+                info = PackageManagerCompat.getApplicationInfo(item.packageName, PackageUtils.flagMatchUninstalled
+                                | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES,
                         UserHandleHidden.myUserId());
             } catch (RemoteException | PackageManager.NameNotFoundException e) {
                 Toast.makeText(mActivity, R.string.app_not_installed, Toast.LENGTH_SHORT).show();

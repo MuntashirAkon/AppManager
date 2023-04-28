@@ -160,7 +160,8 @@ public final class ComponentsBlocker extends RulesStorageManager {
         try {
             mPackageInfo = PackageManagerCompat.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES
                     | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS | flagDisabledComponents
-                    | flagMatchUninstalled | PackageManager.GET_SERVICES, userHandle);
+                    | flagMatchUninstalled | PackageManager.GET_SERVICES
+                    | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userHandle);
         } catch (Throwable e) {
             Log.e(TAG, "" + e.getMessage());
         }

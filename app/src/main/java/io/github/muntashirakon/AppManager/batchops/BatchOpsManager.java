@@ -597,7 +597,8 @@ public class BatchOpsManager {
             for (UserPackagePair pair : userPackagePairs) {
                 try {
                     List<Integer> appOpList = new ArrayList<>();
-                    ApplicationInfo info = PackageManagerCompat.getApplicationInfo(pair.getPackageName(), 0, pair.getUserHandle());
+                    ApplicationInfo info = PackageManagerCompat.getApplicationInfo(pair.getPackageName(),
+                            PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, pair.getUserHandle());
                     List<AppOpsManagerCompat.OpEntry> entries = AppOpsManagerCompat.getConfiguredOpsForPackage(
                             appOpsManager, info.packageName, info.uid);
                     for (AppOpsManagerCompat.OpEntry entry : entries) {

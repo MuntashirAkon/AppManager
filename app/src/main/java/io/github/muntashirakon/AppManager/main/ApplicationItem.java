@@ -137,7 +137,8 @@ public class ApplicationItem extends PackageItemInfo {
         if (userHandles.length > 0) {
             try {
                 ApplicationInfo info = PackageManagerCompat.getApplicationInfo(packageName,
-                        PackageUtils.flagMatchUninstalled, userHandles[0]);
+                        PackageUtils.flagMatchUninstalled
+                                | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userHandles[0]);
                 return info.loadIcon(pm);
             } catch (Exception ignore) {
             }

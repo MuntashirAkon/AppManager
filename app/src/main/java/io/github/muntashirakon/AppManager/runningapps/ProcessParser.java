@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
+import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.ipc.LocalServices;
 import io.github.muntashirakon.AppManager.ipc.ps.ProcessEntry;
 import io.github.muntashirakon.AppManager.ipc.ps.Ps;
@@ -141,7 +142,7 @@ public final class ProcessParser {
     }
 
     private void getInstalledPackages() {
-        List<PackageInfo> packageInfoList = PackageUtils.getAllPackages(0);
+        List<PackageInfo> packageInfoList = PackageUtils.getAllPackages(PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES);
         mInstalledPackages = new HashMap<>(packageInfoList.size());
         for (PackageInfo info : packageInfoList) {
             mInstalledPackages.put(info.packageName, info);

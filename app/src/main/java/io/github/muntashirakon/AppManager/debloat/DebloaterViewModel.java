@@ -228,7 +228,9 @@ public class DebloaterViewModel extends AndroidViewModel {
                 debloatObject.setSystemApp((app.flags & ApplicationInfo.FLAG_SYSTEM) != 0);
                 if (debloatObject.getPackageInfo() == null) {
                     try {
-                        PackageInfo pi = PackageManagerCompat.getPackageInfo(debloatObject.packageName, PackageUtils.flagMatchUninstalled, app.userId);
+                        PackageInfo pi = PackageManagerCompat.getPackageInfo(debloatObject.packageName,
+                                PackageUtils.flagMatchUninstalled
+                                        | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, app.userId);
                         ApplicationInfo ai = pi.applicationInfo;
                         if ((ai.flags & ApplicationInfo.FLAG_INSTALLED) != 0) {
                             // Reset installed

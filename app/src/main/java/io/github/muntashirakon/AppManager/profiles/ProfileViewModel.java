@@ -34,6 +34,7 @@ import java.util.concurrent.Executors;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
+import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
@@ -84,7 +85,8 @@ public class ProfileViewModel extends AndroidViewModel {
             try {
                 ArrayList<Pair<CharSequence, ApplicationInfo>> itemPairs;
                 List<ApplicationInfo> applicationInfoList;
-                applicationInfoList = PackageUtils.getAllApplications(PackageUtils.flagMatchUninstalled);
+                applicationInfoList = PackageUtils.getAllApplications(PackageUtils.flagMatchUninstalled
+                        | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES);
                 HashSet<String> applicationInfoHashMap = new HashSet<>();
                 itemPairs = new ArrayList<>();
                 for (ApplicationInfo info : applicationInfoList) {

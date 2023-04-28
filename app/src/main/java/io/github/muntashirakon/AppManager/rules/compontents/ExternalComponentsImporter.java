@@ -157,7 +157,8 @@ public class ExternalComponentsImporter {
                     packageInfoList.put(packageName, PackageManagerCompat.getPackageInfo(packageName,
                             PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS
                                     | PackageManager.GET_PROVIDERS | PackageManager.GET_SERVICES
-                                    | flagDisabledComponents, userHandle));
+                                    | flagDisabledComponents
+                                    | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userHandle));
                 } catch (Exception e) {
                     // App not installed
                     uninstalledApps.add(packageName);

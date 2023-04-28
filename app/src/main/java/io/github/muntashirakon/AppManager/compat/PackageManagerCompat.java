@@ -58,6 +58,8 @@ import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 
 public final class PackageManagerCompat {
+    public static final int MATCH_STATIC_SHARED_AND_SDK_LIBRARIES = 0x04000000;
+
     @IntDef({
             COMPONENT_ENABLED_STATE_DEFAULT,
             COMPONENT_ENABLED_STATE_ENABLED,
@@ -77,7 +79,8 @@ public final class PackageManagerCompat {
     public @interface EnabledFlags {
     }
 
-    private static final int WORKING_FLAGS = PackageManager.GET_META_DATA | PackageUtils.flagMatchUninstalled;
+    private static final int WORKING_FLAGS = PackageManager.GET_META_DATA | PackageUtils.flagMatchUninstalled
+            | MATCH_STATIC_SHARED_AND_SDK_LIBRARIES;
 
     @SuppressLint("NewApi")
     @SuppressWarnings("deprecation")
@@ -315,7 +318,8 @@ public final class PackageManagerCompat {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             try {
                 // Find using private flags
-                ApplicationInfo info = getApplicationInfo(packageName, 0, userId);
+                ApplicationInfo info = getApplicationInfo(packageName,
+                        PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId);
                 return (ApplicationInfoCompat.getPrivateFlags(info) & ApplicationInfoCompat.PRIVATE_FLAG_HIDDEN) != 0;
             } catch (PackageManager.NameNotFoundException ignore) {
             }
@@ -432,7 +436,7 @@ public final class PackageManagerCompat {
                 // IPackageManager#freeStorageAndNotify cannot be used before Android Oreo because Shell does not have
                 // the permission android.permission.CLEAR_APP_CACHE
                 for (int userId : Users.getUsersIds()) {
-                    for (ApplicationInfo info : getInstalledApplications(0, userId)) {
+                    for (ApplicationInfo info : getInstalledApplications(MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId)) {
                         deleteApplicationCacheFilesAsUser(info.packageName, userId);
                     }
                 }

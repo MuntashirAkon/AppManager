@@ -336,7 +336,7 @@ public final class PackageUtils {
                         userHandle, context.getPackageName());
                 packageSizeInfo.set(new PackageSizeInfo(packageName, storageStats, userHandle));
             } catch (Throwable e) {
-                Log.e(TAG, e);
+                Log.w(TAG, e);
             }
         }
         return packageSizeInfo.get();
@@ -347,7 +347,8 @@ public final class PackageUtils {
         try {
             PackageInfo packageInfo = PackageManagerCompat.getPackageInfo(packageName,
                     PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
-                            | flagDisabledComponents | flagMatchUninstalled | PackageManager.GET_SERVICES,
+                            | flagDisabledComponents | flagMatchUninstalled | PackageManager.GET_SERVICES
+                            | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES,
                     userHandle);
             return collectComponentClassNames(packageInfo);
         } catch (Throwable e) {
@@ -448,7 +449,8 @@ public final class PackageUtils {
     @Nullable
     public static String[] getPermissionsForPackage(String packageName, @UserIdInt int userId)
             throws PackageManager.NameNotFoundException, RemoteException {
-        PackageInfo info = PackageManagerCompat.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS, userId);
+        PackageInfo info = PackageManagerCompat.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS
+                | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId);
         return info.requestedPermissions;
     }
 
@@ -496,7 +498,8 @@ public final class PackageUtils {
     @NonNull
     public static CharSequence getPackageLabel(@NonNull PackageManager pm, String packageName, int userHandle) {
         try {
-            ApplicationInfo applicationInfo = PackageManagerCompat.getApplicationInfo(packageName, 0, userHandle);
+            ApplicationInfo applicationInfo = PackageManagerCompat.getApplicationInfo(packageName,
+                    PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userHandle);
             return applicationInfo.loadLabel(pm);
         } catch (Exception ignore) {
         }
@@ -521,7 +524,8 @@ public final class PackageUtils {
 
     public static int getAppUid(@NonNull UserPackagePair pair) {
         try {
-            return PackageManagerCompat.getApplicationInfo(pair.getPackageName(), 0, pair.getUserHandle()).uid;
+            return PackageManagerCompat.getApplicationInfo(pair.getPackageName(),
+                    PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, pair.getUserHandle()).uid;
         } catch (Exception ignore) {
         }
         return -1;

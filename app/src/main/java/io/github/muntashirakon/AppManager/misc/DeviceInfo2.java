@@ -386,7 +386,7 @@ public class DeviceInfo2 implements LocalizedString {
         int systemApps = 0;
         int userApps = 0;
         try {
-            List<ApplicationInfo> applicationInfoList = PackageManagerCompat.getInstalledApplications(0, userHandle);
+            List<ApplicationInfo> applicationInfoList = PackageManagerCompat.getInstalledApplications(PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userHandle);
             for (ApplicationInfo info : applicationInfoList) {
                 if ((info.flags & ApplicationInfo.FLAG_SYSTEM) == 1) {
                     ++systemApps;

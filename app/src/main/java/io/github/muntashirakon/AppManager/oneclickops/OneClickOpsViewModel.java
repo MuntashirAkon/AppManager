@@ -77,7 +77,8 @@ public class OneClickOpsViewModel extends AndroidViewModel {
             ItemCount trackerCount;
             for (PackageInfo packageInfo : PackageUtils.getAllPackages(PackageManager.GET_ACTIVITIES
                     | PackageManager.GET_RECEIVERS | flagDisabledComponents | flagMatchUninstalled
-                    | PackageManager.GET_PROVIDERS | PackageManager.GET_SERVICES)) {
+                    | PackageManager.GET_PROVIDERS | PackageManager.GET_SERVICES
+                    | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES)) {
                 if (packageNames.contains(packageInfo.packageName)) {
                     continue;
                 }
@@ -101,7 +102,8 @@ public class OneClickOpsViewModel extends AndroidViewModel {
         executor.submit(() -> {
             List<ItemCount> componentCounts = new ArrayList<>();
             HashSet<String> packageNames = new HashSet<>();
-            for (ApplicationInfo applicationInfo : PackageUtils.getAllApplications(flagMatchUninstalled)) {
+            for (ApplicationInfo applicationInfo : PackageUtils.getAllApplications(flagMatchUninstalled
+                    | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES)) {
                 if (packageNames.contains(applicationInfo.packageName)) {
                     continue;
                 }
@@ -128,7 +130,8 @@ public class OneClickOpsViewModel extends AndroidViewModel {
             Pair<int[], Integer> appOpsModePair = new Pair<>(appOpList, mode);
             List<AppOpCount> appOpCounts = new ArrayList<>();
             HashSet<String> packageNames = new HashSet<>();
-            for (ApplicationInfo applicationInfo : PackageUtils.getAllApplications(flagMatchUninstalled)) {
+            for (ApplicationInfo applicationInfo : PackageUtils.getAllApplications(flagMatchUninstalled
+                    | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES)) {
                 if (packageNames.contains(applicationInfo.packageName)) {
                     continue;
                 }

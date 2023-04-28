@@ -197,7 +197,8 @@ public class AppDb {
                 packageInfo = PackageManagerCompat.getPackageInfo(packageName,
                         PackageManager.GET_META_DATA | flagSigningInfo | PackageManager.GET_ACTIVITIES
                                 | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
-                                | PackageManager.GET_SERVICES | flagDisabledComponents | flagMatchUninstalled, userId);
+                                | PackageManager.GET_SERVICES | flagDisabledComponents | flagMatchUninstalled
+                                | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId);
             } catch (RemoteException | PackageManager.NameNotFoundException | SecurityException e) {
                 // Package does not exist
             }
@@ -255,7 +256,8 @@ public class AppDb {
                 try {
                     packageInfoList = PackageManagerCompat.getInstalledPackages(flagSigningInfo
                             | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
-                            | PackageManager.GET_SERVICES | flagDisabledComponents | flagMatchUninstalled, userId);
+                            | PackageManager.GET_SERVICES | flagDisabledComponents | flagMatchUninstalled
+                            | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId);
                 } catch (Exception e) {
                     Log.e(TAG, "Could not retrieve package info list for user " + userId, e);
                     continue;

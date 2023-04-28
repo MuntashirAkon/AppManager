@@ -91,7 +91,8 @@ public final class ApkUtils {
         Context ctx = AppManager.getContext();
         PackageManager pm = ctx.getPackageManager();
         PackageInfo packageInfo = PackageManagerCompat.getPackageInfo(packageName,
-                flagMatchUninstalled | PackageManager.GET_SHARED_LIBRARY_FILES, userHandle);
+                flagMatchUninstalled | PackageManager.GET_SHARED_LIBRARY_FILES
+                        | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userHandle);
         ApplicationInfo info = packageInfo.applicationInfo;
         String outputName = FileUtils.getSanitizedFileName(getFormattedApkFilename(packageInfo, pm), false);
         if (outputName == null) outputName = packageName;

@@ -775,7 +775,8 @@ public final class PackageInstallerCompat {
                 int[] userIds = Users.getUsersIds();
                 for (int u : userIds) {
                     try {
-                        PackageManagerCompat.getPackageInfo(packageName, 0, u);
+                        PackageManagerCompat.getPackageInfo(packageName,
+                                PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, u);
                     } catch (Throwable th) {
                         userIdWithoutInstalledPkg.add(u);
                     }
@@ -788,7 +789,8 @@ public final class PackageInstallerCompat {
                 return false;
             default:
                 try {
-                    PackageManagerCompat.getPackageInfo(packageName, 0, userId);
+                    PackageManagerCompat.getPackageInfo(packageName,
+                            PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId);
                     installCompleted(sessionId, STATUS_FAILURE_ABORTED, null, "STATUS_FAILURE_ABORTED: Already installed.");
                     Log.d(TAG, "InstallExisting: Already installed.");
                     return false;
@@ -1028,7 +1030,8 @@ public final class PackageInstallerCompat {
                 // PackageInfo expects a valid user ID
                 userId = UserHandleHidden.myUserId();
             }
-            PackageInfo info = PackageManagerCompat.getPackageInfo(packageName, flagMatchUninstalled, userId);
+            PackageInfo info = PackageManagerCompat.getPackageInfo(packageName, flagMatchUninstalled
+                    | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId);
             final boolean isSystem = (info.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
             // If we are being asked to delete a system app for just one
             // user set flag so it disables rather than reverting to system
@@ -1050,7 +1053,8 @@ public final class PackageInstallerCompat {
             int[] users = Users.getUsersIds();
             for (int user : users) {
                 try {
-                    PackageManagerCompat.getPackageInfo(packageName, flagMatchUninstalled, user);
+                    PackageManagerCompat.getPackageInfo(packageName, flagMatchUninstalled
+                            | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, user);
                     return user;
                 } catch (Throwable ignore) {
                 }

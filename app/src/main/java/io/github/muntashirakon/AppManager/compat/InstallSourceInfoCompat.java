@@ -29,11 +29,17 @@ public class InstallSourceInfoCompat implements Parcelable {
     private final String mInstallingPackageName;
 
     @RequiresApi(Build.VERSION_CODES.R)
-    public InstallSourceInfoCompat(@NonNull InstallSourceInfo installSourceInfo) {
-        mInitiatingPackageName = installSourceInfo.getInitiatingPackageName();
-        mInitiatingPackageSigningInfo = installSourceInfo.getInitiatingPackageSigningInfo();
-        mOriginatingPackageName = installSourceInfo.getOriginatingPackageName();
-        mInstallingPackageName = installSourceInfo.getInstallingPackageName();
+    public InstallSourceInfoCompat(@Nullable InstallSourceInfo installSourceInfo) {
+        if (installSourceInfo != null) {
+            mInitiatingPackageName = installSourceInfo.getInitiatingPackageName();
+            mInitiatingPackageSigningInfo = installSourceInfo.getInitiatingPackageSigningInfo();
+            mOriginatingPackageName = installSourceInfo.getOriginatingPackageName();
+            mInstallingPackageName = installSourceInfo.getInstallingPackageName();
+        } else {
+            mInitiatingPackageName = null;
+            mOriginatingPackageName = null;
+            mInstallingPackageName = null;
+        }
     }
 
     public InstallSourceInfoCompat(@Nullable String installingPackageName) {

@@ -116,8 +116,8 @@ class BackupOp implements Closeable {
         this.mTempBackupPath = this.mBackupFile.getBackupPath();
         try {
             mPackageInfo = PackageManagerCompat.getPackageInfo(this.mPackageName,
-                    PackageManager.GET_META_DATA | PackageUtils.flagSigningInfo
-                            | PackageManager.GET_PERMISSIONS, userId);
+                    PackageManager.GET_META_DATA | PackageUtils.flagSigningInfo | PackageManager.GET_PERMISSIONS
+                            | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId);
             this.mApplicationInfo = mPackageInfo.applicationInfo;
             // Override existing metadata
             this.mMetadata = this.mMetadataManager.setupMetadata(mPackageInfo, userId, backupFlags);

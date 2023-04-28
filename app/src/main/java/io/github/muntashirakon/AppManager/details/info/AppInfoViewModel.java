@@ -252,76 +252,84 @@ public class AppInfoViewModel extends AndroidViewModel {
         PackageManager pm = getApplication().getPackageManager();
         boolean isExternalApk = mainModel.isExternalApk();
         AppInfo appInfo = new AppInfo();
-        // Set source dir
-        if (!isExternalApk) {
-            appInfo.sourceDir = new File(applicationInfo.publicSourceDir).getParent();
-        }
-        // Set split entries
-        ApkFile apkFile = ApkFile.getInstance(mainModel.getApkFileKey());
-        int countSplits = apkFile.getEntries().size() - 1;
-        if (!isExternalApk) {
-            // Set data dirs
-            appInfo.dataDir = applicationInfo.dataDir;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                appInfo.dataDeDir = applicationInfo.deviceProtectedDataDir;
+        try {
+            // Set source dir
+            if (!isExternalApk) {
+                appInfo.sourceDir = new File(applicationInfo.publicSourceDir).getParent();
             }
-            // Set directories
-            appInfo.extDataDirs = new ArrayList<>();
-            OsEnvironment.UserEnvironment ue = OsEnvironment.getUserEnvironment(userId);
-            Path[] externalDataDirs = ue.buildExternalStorageAppDataDirs(packageName);
-            for (Path externalDataDir : externalDataDirs) {
-                Path accessiblePath = Paths.getAccessiblePath(externalDataDir);
-                if (accessiblePath.exists()) {
-                    appInfo.extDataDirs.add(Objects.requireNonNull(accessiblePath.getFilePath()));
+            // Set split entries
+            ApkFile apkFile = ApkFile.getInstance(mainModel.getApkFileKey());
+            int countSplits = apkFile.getEntries().size() - 1;
+            if (!isExternalApk) {
+                // Set data dirs
+                appInfo.dataDir = applicationInfo.dataDir;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    appInfo.dataDeDir = applicationInfo.deviceProtectedDataDir;
                 }
-            }
-            // Set JNI dir
-            if (new File(applicationInfo.nativeLibraryDir).exists()) {
-                appInfo.jniDir = applicationInfo.nativeLibraryDir;
-            }
-            // Net statistics
-            try {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                    if (FeatureController.isUsageAccessEnabled()) {
-                        appInfo.dataUsage = AppUsageStatsManager.getDataUsageForPackage(getApplication(),
-                                applicationInfo.uid, UsageUtils.USAGE_LAST_BOOT);
+                // Set directories
+                appInfo.extDataDirs = new ArrayList<>();
+                OsEnvironment.UserEnvironment ue = OsEnvironment.getUserEnvironment(userId);
+                Path[] externalDataDirs = ue.buildExternalStorageAppDataDirs(packageName);
+                for (Path externalDataDir : externalDataDirs) {
+                    Path accessiblePath = Paths.getAccessiblePath(externalDataDir);
+                    if (accessiblePath.exists()) {
+                        appInfo.extDataDirs.add(Objects.requireNonNull(accessiblePath.getFilePath()));
                     }
-                } else {
-                    appInfo.dataUsage = getNetStats(applicationInfo.uid);
                 }
-            } catch (Throwable e) {
-                e.printStackTrace();
-            }
-            // Set sizes
-            appInfo.sizeInfo = PackageUtils.getPackageSizeInfo(getApplication(), packageName, userId,
-                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? applicationInfo.storageUuid : null);
-            // Set installer app
-            try {
-                String installerPackageName = PackageManagerCompat.getInstallerPackageName(packageName);
-                if (installerPackageName != null) {
-                    String applicationLabel;
-                    try {
-                        applicationLabel = pm.getApplicationInfo(installerPackageName, 0).loadLabel(pm).toString();
-                    } catch (PackageManager.NameNotFoundException e) {
-                        e.printStackTrace();
-                        applicationLabel = installerPackageName;
+                // Set JNI dir
+                if (new File(applicationInfo.nativeLibraryDir).exists()) {
+                    appInfo.jniDir = applicationInfo.nativeLibraryDir;
+                }
+                // Net statistics
+                try {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        if (FeatureController.isUsageAccessEnabled()) {
+                            appInfo.dataUsage = AppUsageStatsManager.getDataUsageForPackage(getApplication(),
+                                    applicationInfo.uid, UsageUtils.USAGE_LAST_BOOT);
+                        }
+                    } else {
+                        appInfo.dataUsage = getNetStats(applicationInfo.uid);
                     }
-                    appInfo.installerApp = applicationLabel;
+                } catch (Throwable e) {
+                    e.printStackTrace();
                 }
-            } catch (RemoteException ignore) {
+                // Set sizes
+                appInfo.sizeInfo = PackageUtils.getPackageSizeInfo(getApplication(), packageName, userId,
+                        Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? applicationInfo.storageUuid : null);
+                // Set installer app
+                try {
+                    String installerPackageName = PackageManagerCompat.getInstallerPackageName(packageName);
+                    if (installerPackageName != null) {
+                        String applicationLabel;
+                        try {
+                            applicationLabel = pm.getApplicationInfo(installerPackageName, 0).loadLabel(pm).toString();
+                        } catch (PackageManager.NameNotFoundException e) {
+                            e.printStackTrace();
+                            applicationLabel = installerPackageName;
+                        }
+                        appInfo.installerApp = applicationLabel;
+                    }
+                } catch (RemoteException ignore) {
+                }
+                // Set main activity
+                appInfo.mainActivity = pm.getLaunchIntentForPackage(packageName);
+                // SELinux
+                appInfo.seInfo = ApplicationInfoCompat.getSeInfo(applicationInfo);
+                // Primary ABI
+                appInfo.primaryCpuAbi = ApplicationInfoCompat.getPrimaryCpuAbi(applicationInfo);
+                // zygotePreloadName
+                appInfo.zygotePreloadName = ApplicationInfoCompat.getZygotePreloadName(applicationInfo);
+                // hiddenApiEnforcementPolicy
+                appInfo.hiddenApiEnforcementPolicy = ApplicationInfoCompat.getHiddenApiEnforcementPolicy(applicationInfo);
             }
-            // Set main activity
-            appInfo.mainActivity = pm.getLaunchIntentForPackage(packageName);
-            // SELinux
-            appInfo.seInfo = ApplicationInfoCompat.getSeInfo(applicationInfo);
-            // Primary ABI
-            appInfo.primaryCpuAbi = ApplicationInfoCompat.getPrimaryCpuAbi(applicationInfo);
-            // zygotePreloadName
-            appInfo.zygotePreloadName = ApplicationInfoCompat.getZygotePreloadName(applicationInfo);
-            // hiddenApiEnforcementPolicy
-            appInfo.hiddenApiEnforcementPolicy = ApplicationInfoCompat.getHiddenApiEnforcementPolicy(applicationInfo);
+            this.appInfo.postValue(appInfo);
+        } catch (Throwable th) {
+            // Unknown behaviour
+            ThreadUtils.postOnMainThread(() -> {
+                // Throw Runtime exception in main thread to crash the app
+                throw new RuntimeException(th);
+            });
         }
-        this.appInfo.postValue(appInfo);
     }
 
     public void installExisting(@UserIdInt int userId) {

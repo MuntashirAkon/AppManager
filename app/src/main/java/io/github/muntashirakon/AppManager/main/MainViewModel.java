@@ -286,7 +286,8 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                     int[] userIds = Objects.requireNonNull(getSelectedPackages().get(packageName)).userHandles;
                     if (userIds != null) {
                         for (int userId : userIds) {
-                            packageInfoList.add(PackageManagerCompat.getPackageInfo(packageName, 0, userId));
+                            packageInfoList.add(PackageManagerCompat.getPackageInfo(packageName,
+                                    PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId));
                             break;
                         }
                     }

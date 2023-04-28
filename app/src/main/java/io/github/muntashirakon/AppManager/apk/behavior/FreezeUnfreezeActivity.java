@@ -145,7 +145,8 @@ public class FreezeUnfreezeActivity extends BaseActivity {
                 boolean forceFreeze = (shortcutInfo.getPrivateFlags() & FreezeUnfreeze.PRIVATE_FLAG_FREEZE_FORCE) != 0;
                 try {
                     ApplicationInfo applicationInfo = PackageManagerCompat.getApplicationInfo(shortcutInfo.packageName,
-                            PackageUtils.flagMatchUninstalled | PackageUtils.flagDisabledComponents, shortcutInfo.userId);
+                            PackageUtils.flagMatchUninstalled | PackageUtils.flagDisabledComponents
+                                    | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, shortcutInfo.userId);
                     Bitmap icon = getBitmapFromDrawable(applicationInfo.loadIcon(getApplication().getPackageManager()));
                     shortcutInfo.setLabel(applicationInfo.loadLabel(getApplication().getPackageManager()).toString());
                     boolean isFrozen = !forceFreeze && FreezeUtils.isFrozen(applicationInfo);

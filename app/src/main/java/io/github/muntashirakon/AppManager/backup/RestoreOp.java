@@ -166,7 +166,8 @@ class RestoreOp implements Closeable {
         // Get package info
         packageInfo = null;
         try {
-            packageInfo = PackageManagerCompat.getPackageInfo(packageName, PackageUtils.flagSigningInfo, userHandle);
+            packageInfo = PackageManagerCompat.getPackageInfo(packageName, PackageUtils.flagSigningInfo
+                    | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userHandle);
         } catch (Exception ignore) {
         }
         isInstalled = packageInfo != null;
@@ -354,7 +355,8 @@ class RestoreOp implements Closeable {
             }
             // Get package info, again
             try {
-                packageInfo = PackageManagerCompat.getPackageInfo(packageName, PackageUtils.flagSigningInfo, userHandle);
+                packageInfo = PackageManagerCompat.getPackageInfo(packageName, PackageUtils.flagSigningInfo
+                        | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userHandle);
                 isInstalled = true;
             } catch (Exception e) {
                 throw new BackupException("Apparently the install wasn't complete in the previous section.", e);
