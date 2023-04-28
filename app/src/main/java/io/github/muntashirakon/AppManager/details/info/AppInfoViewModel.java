@@ -231,6 +231,22 @@ public class AppInfoViewModel extends AndroidViewModel {
                     tagCloud.uriGrants = uriGrants;
                 }
             }
+            if (ApplicationInfoCompat.isStaticSharedLibrary(applicationInfo)) {
+                List<String> staticSharedLibraryNames = new ArrayList<>();
+                // Check for packages by the same packagename
+                List<ApplicationInfo> appList;
+                try {
+                    appList = PackageManagerCompat.getInstalledApplications(PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId);
+                    for (ApplicationInfo info : appList) {
+                        if (info.packageName.equals(packageName)) {
+                            staticSharedLibraryNames.add(info.processName);
+                        }
+                    }
+                } catch (Throwable ignore) {
+                    staticSharedLibraryNames.add(applicationInfo.processName);
+                }
+                tagCloud.staticSharedLibraryNames = staticSharedLibraryNames.toArray(new String[0]);
+            }
             this.tagCloud.postValue(tagCloud);
         } catch (Throwable th) {
             // Unknown behaviour
@@ -421,6 +437,8 @@ public class AppInfoViewModel extends AndroidViewModel {
         public String ssaid;
         @Nullable
         public List<UriManager.UriGrant> uriGrants;
+        @Nullable
+        public String[] staticSharedLibraryNames;
     }
 
     public static class AppInfo {

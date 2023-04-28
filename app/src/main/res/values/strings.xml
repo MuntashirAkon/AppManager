@@ -1378,4 +1378,5 @@
     <string name="debloat_removal_replace">Replace</string>
     <string name="debloat_removal_caution">Caution</string>
     <string name="debloat_removal_unsafe">Unsafe</string>
+    <string name="static_shared_library">Static shared library</string>
 </resources>

@@ -332,6 +332,11 @@ public final class ApplicationInfoCompat {
                 && new File(info.publicSourceDir).exists();
     }
 
+    public static boolean isStaticSharedLibrary(@NonNull ApplicationInfo info) {
+        // Android 8+
+        return (getPrivateFlags(info) & PRIVATE_FLAG_STATIC_SHARED_LIBRARY) != 0;
+    }
+
     /**
      * {@link ApplicationInfo#loadLabel(PackageManager)} can throw NPE for uninstalled apps in unprivileged mode.
      *
