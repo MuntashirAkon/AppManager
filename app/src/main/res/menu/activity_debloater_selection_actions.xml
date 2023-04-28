@@ -7,6 +7,7 @@
     <item
         android:id="@+id/action_put_back"
         android:icon="@drawable/ic_restore"
+        android:visible="false"
         android:title="@string/system_app_put_back" />
     <item
         android:id="@+id/action_freeze_unfreeze"

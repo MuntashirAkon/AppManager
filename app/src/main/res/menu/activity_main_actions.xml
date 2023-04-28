@@ -47,7 +47,7 @@
 
     <item
         android:id="@+id/action_debloater"
-        android:icon="@drawable/ic_clear"
+        android:icon="@drawable/ic_liquid_spot_off"
         android:title="@string/debloater_title" />
 
     <item
