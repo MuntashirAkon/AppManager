@@ -1375,4 +1375,7 @@
         <item quantity="many">Не удалось оптимизировать %1$d приложений</item>
         <item quantity="other">Не удалось оптимизировать %1$d приложений</item>
     </plurals>
+    <string name="app_info_tag_open_links">Открытые ссылки</string>
+    <string name="source_stamp_verified_and_identified_to_be_from_source">SourceStamp проверен и идентифицирован как принадлежащий <xliff:g id="source" example="Google Play">%1$s</xliff:g> .</string>
+    <string name="title_domains_supported_by_the_app">Поддерживаемые домены</string>
 </resources>
