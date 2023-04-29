@@ -293,7 +293,7 @@ public class AppInfoViewModel extends AndroidViewModel {
                     }
                 }
                 // Set JNI dir
-                if (new File(applicationInfo.nativeLibraryDir).exists()) {
+                if (Paths.exists(applicationInfo.nativeLibraryDir)) {
                     appInfo.jniDir = applicationInfo.nativeLibraryDir;
                 }
                 // Net statistics

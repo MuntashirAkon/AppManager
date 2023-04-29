@@ -63,6 +63,7 @@ import io.github.muntashirakon.AppManager.accessibility.AccessibilityMultiplexer
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkChooser;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
+import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.settings.Ops;
@@ -456,14 +457,14 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
         }
         // Signature is different
         ApplicationInfo info = model.getInstalledPackageInfo().applicationInfo;  // Installed package info is never null here.
-        if ((info.flags & ApplicationInfo.FLAG_SYSTEM) != 0) {
+        if (ApplicationInfoCompat.isSystemApp(info)) {
             // Cannot reinstall a system app with a different signature
             getInstallationFinishedDialog(model.getPackageName(),
                     getString(R.string.app_signing_signature_mismatch_for_system_apps), null, false).show();
             return;
         }
-        if (info.publicSourceDir == null || !new File(info.publicSourceDir).exists()) {
-            // Cannot reinstall an uninstalled app
+        if (!ApplicationInfoCompat.isInstalled(info)) {
+            // Cannot reinstall an uninstalled app with different signature stored in packages.xml
             getInstallationFinishedDialog(model.getPackageName(),
                     getString(R.string.app_signing_signature_mismatch_for_data_only_app), null, false).show();
             return;

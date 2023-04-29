@@ -17,6 +17,7 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.io.Paths;
 
 public class ZipAlign {
     public static final String TAG = ZipAlign.class.getSimpleName();
@@ -28,7 +29,7 @@ public class ZipAlign {
     public static void align(@NonNull File input, @NonNull File output, int alignment, boolean pageAlignSharedLibs)
             throws IOException {
         File dir = output.getParentFile();
-        if (dir != null && !dir.exists()) {
+        if (!Paths.exists(dir)) {
             dir.mkdirs();
         }
         Archive archive = new Archive(input);
