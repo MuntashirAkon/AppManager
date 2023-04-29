@@ -213,7 +213,15 @@ public final class PackageManagerCompat {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
             return new InstallSourceInfoCompat(pm.getInstallSourceInfo(packageName));
         }
-        String installerPackageName = getPackageManager().getInstallerPackageName(packageName);
+        String installerPackageName = null;
+        try {
+            installerPackageName = getPackageManager().getInstallerPackageName(packageName);
+        } catch (IllegalArgumentException e) {
+            String message = e.getMessage();
+            if (message != null && message.startsWith("Unknown package:")) {
+                throw new RemoteException(message);
+            }
+        }
         return new InstallSourceInfoCompat(installerPackageName);
     }
 
