@@ -1062,7 +1062,6 @@
     <string name="port_number_empty">Port number is empty.</string>
     <string name="port_number_invalid">Invalid port number.</string>
     <string name="unknown_net_policy">Unknown netpolicy (%1$s - %2$X)</string>
-    <string name="app_signing_signature_mismatch_for_data_only_app">Could not install app due to signature mismatch. The app was uninstalled without clearing its data.</string>
     <string name="failed_to_prevent_background_run">Could not prevent %1$s from running in the background</string>
     <string name="help_app_ops_tab">Click on an item to <b>allow</b> or <b>ignore</b> it. Long click on an item to see other supported modes.</string>
     <string name="help_permissions_tab">These permissions are defined by this app and cannot be revoked.</string>

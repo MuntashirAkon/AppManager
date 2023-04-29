@@ -49,7 +49,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -461,12 +460,6 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
             // Cannot reinstall a system app with a different signature
             getInstallationFinishedDialog(model.getPackageName(),
                     getString(R.string.app_signing_signature_mismatch_for_system_apps), null, false).show();
-            return;
-        }
-        if (!ApplicationInfoCompat.isInstalled(info)) {
-            // Cannot reinstall an uninstalled app with different signature stored in packages.xml
-            getInstallationFinishedDialog(model.getPackageName(),
-                    getString(R.string.app_signing_signature_mismatch_for_data_only_app), null, false).show();
             return;
         }
         // Offer user to uninstall and then install the app again
