@@ -1,6 +1,138 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?><!DOCTYPE changelog SYSTEM "https://raw.githubusercontent.com/MuntashirAkon/AppManager/master/schema/changlelog.dtd">
 <changelog>
     <release
+        type="alpha release"
+        version="v3.2.0-alpha01"
+        code="433"
+        date="30 April 2023">
+        <new>New logo for App Manager!</new>
+        <new>Added a dedicated page for debloating the phone</new>
+        <note subtext="true">
+            Debloating profiles were available as “Presets” in the Profiles page which has now been replaced with the
+            Debloater page which can be accessed from the three-dots menu in the Main page.[br /][br /]
+
+            The list is taken from [a href="https://github.com/0x192/universal-android-debloater"]UAD project[/a] and
+            kept intact for now.[br /][br /]
+
+            Colour codes for the list:[br /]
+            - Dark cyan: The app is safe to remove. It does not necessarily mean that the app should be removed as it is
+            always up to the preferences of the user[br /]
+            - Sand colour: The app is safe to remove, but removing it might break one or more features[br /]
+            - Orange: The app may or may not be safe to remove[br /]
+            - Red: The app is not safe to remove. It is not clear as to why these apps are listed in the UAD list.[br /]
+            [br /]
+
+            Batch operations:[br /]
+            - Uninstallation[br /]
+            - Enable/disable[br /]
+            - Save APK[br /]
+            - Create new profile[br /]
+            - Add to profile.[br /][br /]
+
+            In addition to the typical search option, there are several filtering options available in this page:[br /]
+            1. Categories: AOSP, OEM, Carrier/ISP, Google, Miscellany and Pending[br /]
+            2. Types: Safe (i.e. safe to remove), Replace (i.e. should be replaced with alternatives), Caution (i.e.
+            generally safe to remove but no guarantees), Unsafe (may cause bootloop)[br /]
+            3. Other: User apps, System apps (mutually exclusive), Installed apps and Uninstalled apps (mutually
+            exclusive).
+        </note>
+        <new>Integrated code editor within App Manager</new>
+        <note subtext="true">
+            Manifest viewer, code viewer, etc. have been replaced with this new editor.[br /][br /]
+
+            Among other regular features, the editor includes proper syntax highlighting, advanced searching options.
+        </note>
+        <new>Added options for runtime optimization in Android 7 or later</new>
+        <note subtext="true">
+            This option is available for all apps in the 1-click ops page and individual app in the three-dots menu in
+            the app info tab.[br /][br /]
+
+            Features:[br /]
+            - Set Compile filters such as speed-profile or everything-profile[br /]
+            - Compile layout resources[br /]
+            - Immediate optimization of DEX, i.e. somewhat similar to [tt]pm force-dex-opt[/tt]
+        </note>
+        <new title="Main page">Replaced log viewer, sys config, Termux, etc. with Labs</new>
+        <note subtext="true">
+            Labs is a new page where various handy tools are listed. They include Sys Config, Log Viewer, Terminal
+            (experimental), File Manager (experimental), UI Tracker, Interceptor and Code Editor.
+        </note>
+        <new title="Backup/restore">Enable experimental support for Zstandard (ZSTD) compression</new>
+        <note subtext="true">This option should only be used for testing purposes.</note>
+        <new title="App Info tab">New tag: Open links</new>
+        <note subtext="true">
+            “Open links” is displayed for apps capable of opening links from the verified domains without any user
+            intervention. This feature, added in Android 12, has raised privacy as well as usability concerns, because
+            it promotes tracking and reduce user's freedom of choice. Therefore, in active state, that is, when the app
+            is able to open the links directly, this tag will have a “red” background (otherwise, it will have a “green”
+            background).[br /][br /]
+
+            On clicking the tag, a list of supported domains will be displayed in a dialog (although not all domains can
+            be opened by default). If the user has enough permissions, an option to enable/disable the behaviour will be
+            displayed. Otherwise, an option to open the app details page in the Android Settings app will be displayed.
+        </note>
+        <new title="App Info tab">New tag: Static shared library</new>
+        <note subtext="true">
+            The tag is displayed for static shared libraries, that is, the apps with [tt]static-library[/tt] tag in
+            their manifest files, requires root or ADB. Clicking on the tag displays a dialog with a list of libraries
+            installed under the same package name, and offer the user to uninstall the selected libraries.
+        </note>
+        <new title="Installer">Added the option to align APK files before signing</new>
+        <note subtext="true">
+            When APK signing is enabled, enabling this option will ensure that the contents of the APK are aligned
+            properly before the APK is signed. Since it doesn't modify the contents of the APK, the option is enabled
+            by default.
+        </note>
+        <new title="1-Click Ops page">
+            Added option to uninstall apps that were previously uninstalled without clearing data.
+        </new>
+
+        <improve title="1-Click Ops page">Replace “Block components…” with “Block/unblock components…”</improve>
+        <note subtext="true">From now on, components can also be unblocked using the option.</note>
+        <improve title="App Info tab">Split APKs are no longer displayed in “Paths &amp; Directories” section</improve>
+        <note subtext="true">
+            Split APK info are already displayed in the corresponding tags above this section. There is no reason to
+            display them again in this section.
+        </note>
+        <improve title="Code viewer">Enabled Smali to Java conversion feature in Android Nougat and earlier</improve>
+        <improve title="Main page">Display static libraries in privileged mode</improve>
+        <note subtext="true">
+            Static libraries such as Trichrome Library are only visible to system, shell, root and the apps which depend
+            on it. Using privileged mode, it is possible to list them in the Main as well as perform typical operations
+            on them.[br /][br /]
+
+            For non-rooted users, these libraries are only visible in the “Shared Libs” tab (in App Details page) of the
+            apps that depend on them.
+        </note>
+        <improve title="Main page">
+            Display a prompt to fully uninstall apps that were uninstalled without clearing data
+        </improve>
+        <improve title="Settings page">Renamed “Layout orientation” to “Layout direction”</improve>
+        <improve>Improved security of the shortcuts created within App Manager</improve>
+        <note subtext="true">
+            Earlier, opening the shortcuts of exportable activities did not require any authentication. From now on,
+            authentication is required for opening any new shortcuts.
+        </note>
+
+        <fix title="App Ops">Prevented crashes in Samsung devices running Android 6.0.1</fix>
+        <fix title="Explorer page">Fixed opening files with external editor/viewer</fix>
+        <fix title="Freeze/unfreeze">Prevented the app from crashing if a shortcut icon is immutable</fix>
+        <fix title="Installer">
+            Fixed displaying re-installation prompt for apps that were uninstalled without clearing data
+        </fix>
+        <fix title="Interceptor page">Prevented crashes if the shortcut icon is invalid</fix>
+        <fix title="Main page">Prevented crashes when the installer feature is disabled</fix>
+        <fix title="Profile page">Fixed a crash due to lifecycle issue</fix>
+        <fix>Fixed parsing the manifest of some apps</fix>
+        <fix>Fixed opening certain shortcuts in Android 13</fix>
+        <fix>Fixed various security issues related to JADX</fix>
+
+        <note>
+            [br /][b]Full list of changes:[/b] [a
+            href="https://github.com/MuntashirAkon/AppManager/compare/v3.1.0...v3.2.0-alpha01"]v3.1.0...v3.2.0-alpha01[/a]
+        </note>
+    </release>
+    <release
         type="stable release"
         version="v3.1.0"
         code="423"

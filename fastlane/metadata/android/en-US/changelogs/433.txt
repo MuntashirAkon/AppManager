@@ -1,0 +1,15 @@
+What's New
+- New logo for App Manager!
+- Added a dedicated page for debloating the phone
+- Integrated code editor within App Manager
+- Added options for runtime optimization in Android 7 or later
+- Replaced log viewer, sys config, Termux, etc. with Labs
+- Enable experimental support for Zstandard (ZSTD) compression
+- New tags: Open links, Static shared library
+- Added the option to align the file contents before signing the APK
+- [1-Click Ops page] Added option to uninstall apps that were previously uninstalled without clearing data.
+- [1-Click Ops page] Replace “Block components…” with “Block/unblock components…”
+- Display static libraries in privileged mode
+- Display a prompt to fully uninstall apps that were uninstalled without clearing data
+- Renamed “Layout orientation” to “Layout direction”
+- Fixed various security issues related to JADX

@@ -1,9 +1,0 @@
-- Target Android 13
-- Added monochrome icon for Android 13
-- Ensured forward-compatibility in app ops
-- Fixed restoring backups for other users
-- Improved the loading time of the App Info tab
-- Prevented backing up the `android` package
-- Fixed scrolling issues in backup/restore dialog
-- Fixed various theming issues
-- Use `/data/media` instead of `/storage/emulated` for other users
