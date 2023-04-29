@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.utils;
 
+import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_DISABLED_COMPONENTS;
+import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_UNINSTALLED_PACKAGES;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getBoldString;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getColoredText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getMonospacedText;
@@ -101,38 +103,6 @@ public final class PackageUtils {
     public static final String TAG = PackageUtils.class.getSimpleName();
 
     public static final File PACKAGE_STAGING_DIRECTORY = new File("/data/local/tmp");
-
-    public static final int flagSigningInfo;
-    public static final int flagSigningInfoApk;
-    public static final int flagDisabledComponents;
-    public static final int flagMatchUninstalled;
-
-    static {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            flagSigningInfo = PackageManager.GET_SIGNING_CERTIFICATES;
-        } else {
-            //noinspection deprecation
-            flagSigningInfo = PackageManager.GET_SIGNATURES;
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            flagSigningInfoApk = PackageManager.GET_SIGNING_CERTIFICATES;
-        } else {
-            //noinspection deprecation
-            flagSigningInfoApk = PackageManager.GET_SIGNATURES;
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            flagDisabledComponents = PackageManager.MATCH_DISABLED_COMPONENTS;
-        } else {
-            //noinspection deprecation
-            flagDisabledComponents = PackageManager.GET_DISABLED_COMPONENTS;
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            flagMatchUninstalled = PackageManager.MATCH_UNINSTALLED_PACKAGES;
-        } else {
-            //noinspection deprecation
-            flagMatchUninstalled = PackageManager.GET_UNINSTALLED_PACKAGES;
-        }
-    }
 
     @NonNull
     public static ArrayList<UserPackagePair> getUserPackagePairs(@NonNull List<ApplicationItem> applicationItems) {
@@ -347,7 +317,7 @@ public final class PackageUtils {
         try {
             PackageInfo packageInfo = PackageManagerCompat.getPackageInfo(packageName,
                     PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
-                            | flagDisabledComponents | flagMatchUninstalled | PackageManager.GET_SERVICES
+                            | MATCH_DISABLED_COMPONENTS | MATCH_UNINSTALLED_PACKAGES | PackageManager.GET_SERVICES
                             | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES,
                     userHandle);
             return collectComponentClassNames(packageInfo);
@@ -488,7 +458,7 @@ public final class PackageUtils {
     public static String getPackageLabel(@NonNull PackageManager pm, String packageName) {
         try {
             @SuppressLint("WrongConstant")
-            ApplicationInfo applicationInfo = pm.getApplicationInfo(packageName, flagMatchUninstalled);
+            ApplicationInfo applicationInfo = pm.getApplicationInfo(packageName, MATCH_UNINSTALLED_PACKAGES);
             return pm.getApplicationLabel(applicationInfo).toString();
         } catch (PackageManager.NameNotFoundException ignore) {
         }

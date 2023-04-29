@@ -2,10 +2,10 @@
 
 package io.github.muntashirakon.AppManager.apk.installer;
 
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagMatchUninstalled;
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfoApk;
+import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_DISABLED_COMPONENTS;
+import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_UNINSTALLED_PACKAGES;
+import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.GET_SIGNING_CERTIFICATES;
+import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.GET_SIGNING_CERTIFICATES_APK;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
@@ -192,7 +192,7 @@ public class PackageInstallerViewModel extends AndroidViewModel {
         @SuppressLint("WrongConstant")
         PackageInfo packageInfo = packageManager.getPackageArchiveInfo(apkPath, PackageManager.GET_PERMISSIONS
                 | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
-                | PackageManager.GET_SERVICES | flagDisabledComponents | flagSigningInfoApk
+                | PackageManager.GET_SERVICES | MATCH_DISABLED_COMPONENTS | GET_SIGNING_CERTIFICATES_APK
                 | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_SHARED_LIBRARY_FILES);
         if (packageInfo == null) {
             throw new PackageManager.NameNotFoundException("Package cannot be parsed.");
@@ -208,7 +208,7 @@ public class PackageInstallerViewModel extends AndroidViewModel {
         @SuppressLint("WrongConstant")
         PackageInfo packageInfo = packageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS
                 | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
-                | PackageManager.GET_SERVICES | flagDisabledComponents | flagSigningInfo | flagMatchUninstalled
+                | PackageManager.GET_SERVICES | MATCH_DISABLED_COMPONENTS | GET_SIGNING_CERTIFICATES | MATCH_UNINSTALLED_PACKAGES
                 | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_SHARED_LIBRARY_FILES);
         if (packageInfo == null) throw new PackageManager.NameNotFoundException("Package not found.");
         return packageInfo;

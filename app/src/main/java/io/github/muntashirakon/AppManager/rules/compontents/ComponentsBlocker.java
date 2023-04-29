@@ -2,8 +2,8 @@
 
 package io.github.muntashirakon.AppManager.rules.compontents;
 
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagMatchUninstalled;
+import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_DISABLED_COMPONENTS;
+import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_UNINSTALLED_PACKAGES;
 
 import android.annotation.SuppressLint;
 import android.app.AppOpsManager;
@@ -159,8 +159,8 @@ public final class ComponentsBlocker extends RulesStorageManager {
                 .getChildFile(packageName + ".xml"));
         try {
             mPackageInfo = PackageManagerCompat.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES
-                    | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS | flagDisabledComponents
-                    | flagMatchUninstalled | PackageManager.GET_SERVICES
+                    | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS | MATCH_DISABLED_COMPONENTS
+                    | MATCH_UNINSTALLED_PACKAGES | PackageManager.GET_SERVICES
                     | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userHandle);
         } catch (Throwable e) {
             Log.e(TAG, "" + e.getMessage());

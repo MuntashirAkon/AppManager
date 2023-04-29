@@ -2,7 +2,7 @@
 
 package io.github.muntashirakon.AppManager.rules.compontents;
 
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
+import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_DISABLED_COMPONENTS;
 
 import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
@@ -157,7 +157,7 @@ public class ExternalComponentsImporter {
                     packageInfoList.put(packageName, PackageManagerCompat.getPackageInfo(packageName,
                             PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS
                                     | PackageManager.GET_PROVIDERS | PackageManager.GET_SERVICES
-                                    | flagDisabledComponents
+                                    | MATCH_DISABLED_COMPONENTS
                                     | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userHandle));
                 } catch (Exception e) {
                     // App not installed

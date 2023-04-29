@@ -54,11 +54,38 @@ import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.BroadcastUtils;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
-import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 
 public final class PackageManagerCompat {
     public static final int MATCH_STATIC_SHARED_AND_SDK_LIBRARIES = 0x04000000;
+    public static final int GET_SIGNING_CERTIFICATES;
+    public static final int GET_SIGNING_CERTIFICATES_APK;
+    public static final int MATCH_DISABLED_COMPONENTS;
+    public static final int MATCH_UNINSTALLED_PACKAGES;
+
+    static {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            GET_SIGNING_CERTIFICATES = PackageManager.GET_SIGNING_CERTIFICATES;
+        } else {
+            //noinspection deprecation
+            GET_SIGNING_CERTIFICATES = PackageManager.GET_SIGNATURES;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            GET_SIGNING_CERTIFICATES_APK = PackageManager.GET_SIGNING_CERTIFICATES;
+        } else {
+            //noinspection deprecation
+            GET_SIGNING_CERTIFICATES_APK = PackageManager.GET_SIGNATURES;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            MATCH_DISABLED_COMPONENTS = PackageManager.MATCH_DISABLED_COMPONENTS;
+            MATCH_UNINSTALLED_PACKAGES = PackageManager.MATCH_UNINSTALLED_PACKAGES;
+        } else {
+            //noinspection deprecation
+            MATCH_DISABLED_COMPONENTS = PackageManager.GET_DISABLED_COMPONENTS;
+            //noinspection deprecation
+            MATCH_UNINSTALLED_PACKAGES = PackageManager.GET_UNINSTALLED_PACKAGES;
+        }
+    }
 
     @IntDef({
             COMPONENT_ENABLED_STATE_DEFAULT,
@@ -79,7 +106,7 @@ public final class PackageManagerCompat {
     public @interface EnabledFlags {
     }
 
-    private static final int WORKING_FLAGS = PackageManager.GET_META_DATA | PackageUtils.flagMatchUninstalled
+    private static final int WORKING_FLAGS = PackageManager.GET_META_DATA | MATCH_UNINSTALLED_PACKAGES
             | MATCH_STATIC_SHARED_AND_SDK_LIBRARIES;
 
     @SuppressLint("NewApi")

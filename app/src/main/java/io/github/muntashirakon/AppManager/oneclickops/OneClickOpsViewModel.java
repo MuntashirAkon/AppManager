@@ -2,6 +2,9 @@
 
 package io.github.muntashirakon.AppManager.oneclickops;
 
+import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_DISABLED_COMPONENTS;
+import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_UNINSTALLED_PACKAGES;
+
 import android.app.Application;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -27,9 +30,6 @@ import io.github.muntashirakon.AppManager.compat.StorageManagerCompat;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
-
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagMatchUninstalled;
 
 public class OneClickOpsViewModel extends AndroidViewModel {
     public static final String TAG = OneClickOpsViewModel.class.getSimpleName();
@@ -76,7 +76,7 @@ public class OneClickOpsViewModel extends AndroidViewModel {
             HashSet<String> packageNames = new HashSet<>();
             ItemCount trackerCount;
             for (PackageInfo packageInfo : PackageUtils.getAllPackages(PackageManager.GET_ACTIVITIES
-                    | PackageManager.GET_RECEIVERS | flagDisabledComponents | flagMatchUninstalled
+                    | PackageManager.GET_RECEIVERS | MATCH_DISABLED_COMPONENTS | MATCH_UNINSTALLED_PACKAGES
                     | PackageManager.GET_PROVIDERS | PackageManager.GET_SERVICES
                     | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES)) {
                 if (packageNames.contains(packageInfo.packageName)) {
@@ -102,7 +102,7 @@ public class OneClickOpsViewModel extends AndroidViewModel {
         executor.submit(() -> {
             List<ItemCount> componentCounts = new ArrayList<>();
             HashSet<String> packageNames = new HashSet<>();
-            for (ApplicationInfo applicationInfo : PackageUtils.getAllApplications(flagMatchUninstalled
+            for (ApplicationInfo applicationInfo : PackageUtils.getAllApplications(MATCH_UNINSTALLED_PACKAGES
                     | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES)) {
                 if (packageNames.contains(applicationInfo.packageName)) {
                     continue;
@@ -130,7 +130,7 @@ public class OneClickOpsViewModel extends AndroidViewModel {
             Pair<int[], Integer> appOpsModePair = new Pair<>(appOpList, mode);
             List<AppOpCount> appOpCounts = new ArrayList<>();
             HashSet<String> packageNames = new HashSet<>();
-            for (ApplicationInfo applicationInfo : PackageUtils.getAllApplications(flagMatchUninstalled
+            for (ApplicationInfo applicationInfo : PackageUtils.getAllApplications(MATCH_UNINSTALLED_PACKAGES
                     | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES)) {
                 if (packageNames.contains(applicationInfo.packageName)) {
                     continue;

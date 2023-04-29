@@ -2,9 +2,9 @@
 
 package io.github.muntashirakon.AppManager.details;
 
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagMatchUninstalled;
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
+import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_DISABLED_COMPONENTS;
+import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_UNINSTALLED_PACKAGES;
+import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.GET_SIGNING_CERTIFICATES;
 
 import android.annotation.SuppressLint;
 import android.annotation.UserIdInt;
@@ -1029,9 +1029,9 @@ public class AppDetailsViewModel extends AndroidViewModel {
         try {
             try {
                 mInstalledPackageInfo = PackageManagerCompat.getPackageInfo(mPackageName, PackageManager.GET_META_DATA
-                                | PackageManager.GET_PERMISSIONS | PackageManager.GET_ACTIVITIES | flagDisabledComponents
-                                | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS | flagMatchUninstalled
-                                | PackageManager.GET_SERVICES | PackageManager.GET_CONFIGURATIONS | flagSigningInfo
+                                | PackageManager.GET_PERMISSIONS | PackageManager.GET_ACTIVITIES | MATCH_DISABLED_COMPONENTS
+                                | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS | MATCH_UNINSTALLED_PACKAGES
+                                | PackageManager.GET_SERVICES | PackageManager.GET_CONFIGURATIONS | GET_SIGNING_CERTIFICATES
                                 | PackageManager.GET_SHARED_LIBRARY_FILES | PackageManager.GET_URI_PERMISSION_PATTERNS
                                 | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES,
                         mUserHandle);
@@ -1049,7 +1049,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 // didn't load any signature. So, we should be safe from any harm.
                 mPackageInfo = mPackageManager.getPackageArchiveInfo(mApkPath, PackageManager.GET_PERMISSIONS
                         | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
-                        | PackageManager.GET_SERVICES | flagDisabledComponents | PackageManager.GET_CONFIGURATIONS
+                        | PackageManager.GET_SERVICES | MATCH_DISABLED_COMPONENTS | PackageManager.GET_CONFIGURATIONS
                         | PackageManager.GET_SHARED_LIBRARY_FILES | PackageManager.GET_URI_PERMISSION_PATTERNS
                         | PackageManager.GET_META_DATA);
                 if (mPackageInfo == null) {

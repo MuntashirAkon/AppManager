@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.main;
 
+import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_UNINSTALLED_PACKAGES;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.displayLongToast;
 
 import android.Manifest;
@@ -56,7 +57,6 @@ import io.github.muntashirakon.AppManager.users.UserInfo;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
-import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
@@ -439,7 +439,7 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
             // The app should not be installed. But make sure this is really true. (For current user only)
             ApplicationInfo info;
             try {
-                info = PackageManagerCompat.getApplicationInfo(item.packageName, PackageUtils.flagMatchUninstalled
+                info = PackageManagerCompat.getApplicationInfo(item.packageName, MATCH_UNINSTALLED_PACKAGES
                                 | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES,
                         UserHandleHidden.myUserId());
             } catch (RemoteException | PackageManager.NameNotFoundException e) {

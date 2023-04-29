@@ -2,9 +2,9 @@
 
 package io.github.muntashirakon.AppManager.db.utils;
 
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagDisabledComponents;
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagMatchUninstalled;
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagSigningInfo;
+import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_DISABLED_COMPONENTS;
+import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_UNINSTALLED_PACKAGES;
+import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.GET_SIGNING_CERTIFICATES;
 
 import android.annotation.UserIdInt;
 import android.content.Context;
@@ -195,9 +195,9 @@ public class AppDb {
             }
             try {
                 packageInfo = PackageManagerCompat.getPackageInfo(packageName,
-                        PackageManager.GET_META_DATA | flagSigningInfo | PackageManager.GET_ACTIVITIES
+                        PackageManager.GET_META_DATA | GET_SIGNING_CERTIFICATES | PackageManager.GET_ACTIVITIES
                                 | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
-                                | PackageManager.GET_SERVICES | flagDisabledComponents | flagMatchUninstalled
+                                | PackageManager.GET_SERVICES | MATCH_DISABLED_COMPONENTS | MATCH_UNINSTALLED_PACKAGES
                                 | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId);
             } catch (RemoteException | PackageManager.NameNotFoundException | SecurityException e) {
                 // Package does not exist
@@ -254,9 +254,9 @@ public class AppDb {
 
                 List<PackageInfo> packageInfoList;
                 try {
-                    packageInfoList = PackageManagerCompat.getInstalledPackages(flagSigningInfo
+                    packageInfoList = PackageManagerCompat.getInstalledPackages(GET_SIGNING_CERTIFICATES
                             | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
-                            | PackageManager.GET_SERVICES | flagDisabledComponents | flagMatchUninstalled
+                            | PackageManager.GET_SERVICES | MATCH_DISABLED_COMPONENTS | MATCH_UNINSTALLED_PACKAGES
                             | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId);
                 } catch (Exception e) {
                     Log.e(TAG, "Could not retrieve package info list for user " + userId, e);

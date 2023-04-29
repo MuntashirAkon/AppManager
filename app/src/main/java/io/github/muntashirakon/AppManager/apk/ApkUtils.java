@@ -2,7 +2,7 @@
 
 package io.github.muntashirakon.AppManager.apk;
 
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagMatchUninstalled;
+import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_UNINSTALLED_PACKAGES;
 
 import android.annotation.UserIdInt;
 import android.content.Context;
@@ -91,7 +91,7 @@ public final class ApkUtils {
         Context ctx = AppManager.getContext();
         PackageManager pm = ctx.getPackageManager();
         PackageInfo packageInfo = PackageManagerCompat.getPackageInfo(packageName,
-                flagMatchUninstalled | PackageManager.GET_SHARED_LIBRARY_FILES
+                MATCH_UNINSTALLED_PACKAGES | PackageManager.GET_SHARED_LIBRARY_FILES
                         | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userHandle);
         ApplicationInfo info = packageInfo.applicationInfo;
         String outputName = FileUtils.getSanitizedFileName(getFormattedApkFilename(packageInfo, pm), false);

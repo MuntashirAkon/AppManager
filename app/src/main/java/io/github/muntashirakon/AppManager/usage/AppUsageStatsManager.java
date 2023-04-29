@@ -4,7 +4,7 @@ package io.github.muntashirakon.AppManager.usage;
 
 import static android.net.NetworkCapabilities.TRANSPORT_CELLULAR;
 import static android.net.NetworkCapabilities.TRANSPORT_WIFI;
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagMatchUninstalled;
+import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_UNINSTALLED_PACKAGES;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -169,7 +169,7 @@ public class AppUsageStatsManager {
             throws RemoteException, PackageManager.NameNotFoundException {
         UsageUtils.TimeInterval range = UsageUtils.getTimeInterval(usageInterval);
         PackageUsageInfo packageUsageInfo = new PackageUsageInfo(context, packageName, userId,
-                PackageManagerCompat.getApplicationInfo(packageName, flagMatchUninstalled
+                PackageManagerCompat.getApplicationInfo(packageName, MATCH_UNINSTALLED_PACKAGES
                         | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId));
         UsageEvents events = UsageStatsManagerCompat.queryEvents(range.getStartTime(), range.getEndTime(), userId);
         if (events == null) return packageUsageInfo;
@@ -273,7 +273,7 @@ public class AppUsageStatsManager {
         for (String packageName : screenTimes.keySet()) {
             // Skip uninstalled packages?
             PackageUsageInfo packageUsageInfo = new PackageUsageInfo(context, packageName, userId,
-                    PackageManagerCompat.getApplicationInfo(packageName, flagMatchUninstalled
+                    PackageManagerCompat.getApplicationInfo(packageName, MATCH_UNINSTALLED_PACKAGES
                             | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId));
             packageUsageInfo.timesOpened = NonNullUtils.defeatNullable(accessCount.get(packageName));
             packageUsageInfo.lastUsageTime = NonNullUtils.defeatNullable(lastUse.get(packageName));

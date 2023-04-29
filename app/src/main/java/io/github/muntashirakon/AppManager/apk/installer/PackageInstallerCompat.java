@@ -2,7 +2,7 @@
 
 package io.github.muntashirakon.AppManager.apk.installer;
 
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.flagMatchUninstalled;
+import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_UNINSTALLED_PACKAGES;
 
 import android.annotation.SuppressLint;
 import android.annotation.UserIdInt;
@@ -1030,7 +1030,7 @@ public final class PackageInstallerCompat {
                 // PackageInfo expects a valid user ID
                 userId = UserHandleHidden.myUserId();
             }
-            PackageInfo info = PackageManagerCompat.getPackageInfo(packageName, flagMatchUninstalled
+            PackageInfo info = PackageManagerCompat.getPackageInfo(packageName, MATCH_UNINSTALLED_PACKAGES
                     | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId);
             final boolean isSystem = (info.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
             // If we are being asked to delete a system app for just one
@@ -1053,7 +1053,7 @@ public final class PackageInstallerCompat {
             int[] users = Users.getUsersIds();
             for (int user : users) {
                 try {
-                    PackageManagerCompat.getPackageInfo(packageName, flagMatchUninstalled
+                    PackageManagerCompat.getPackageInfo(packageName, MATCH_UNINSTALLED_PACKAGES
                             | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, user);
                     return user;
                 } catch (Throwable ignore) {

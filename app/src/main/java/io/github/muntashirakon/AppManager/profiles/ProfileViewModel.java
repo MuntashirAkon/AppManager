@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.profiles;
 
+import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_UNINSTALLED_PACKAGES;
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpNames;
 
 import android.app.Application;
@@ -85,7 +86,7 @@ public class ProfileViewModel extends AndroidViewModel {
             try {
                 ArrayList<Pair<CharSequence, ApplicationInfo>> itemPairs;
                 List<ApplicationInfo> applicationInfoList;
-                applicationInfoList = PackageUtils.getAllApplications(PackageUtils.flagMatchUninstalled
+                applicationInfoList = PackageUtils.getAllApplications(MATCH_UNINSTALLED_PACKAGES
                         | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES);
                 HashSet<String> applicationInfoHashMap = new HashSet<>();
                 itemPairs = new ArrayList<>();

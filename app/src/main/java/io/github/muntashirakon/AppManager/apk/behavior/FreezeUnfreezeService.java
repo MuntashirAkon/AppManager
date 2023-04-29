@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.apk.behavior;
 
+import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_DISABLED_COMPONENTS;
+import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_UNINSTALLED_PACKAGES;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getDimmedBitmap;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getBitmapFromDrawable;
 
@@ -46,7 +48,6 @@ import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
-import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 public class FreezeUnfreezeService extends Service {
     public static final String TAG = FreezeUnfreezeService.class.getSimpleName();
@@ -171,7 +172,7 @@ public class FreezeUnfreezeService extends Service {
             if (shortcutInfo != null) {
                 try {
                     ApplicationInfo applicationInfo = PackageManagerCompat.getApplicationInfo(shortcutInfo.packageName,
-                            PackageUtils.flagMatchUninstalled | PackageUtils.flagDisabledComponents
+                            MATCH_UNINSTALLED_PACKAGES | MATCH_DISABLED_COMPONENTS
                                     | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, shortcutInfo.userId);
                     Bitmap icon = getBitmapFromDrawable(applicationInfo.loadIcon(getApplication().getPackageManager()));
                     shortcutInfo.setLabel(applicationInfo.loadLabel(getApplication().getPackageManager()).toString());

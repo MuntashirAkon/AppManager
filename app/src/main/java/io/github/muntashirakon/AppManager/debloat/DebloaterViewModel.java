@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.debloat;
 
+import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_UNINSTALLED_PACKAGES;
+
 import android.app.Application;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
@@ -38,7 +40,6 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
-import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
 public class DebloaterViewModel extends AndroidViewModel {
     @DebloaterListOptions.Filter
@@ -229,7 +230,7 @@ public class DebloaterViewModel extends AndroidViewModel {
                 if (debloatObject.getPackageInfo() == null) {
                     try {
                         PackageInfo pi = PackageManagerCompat.getPackageInfo(debloatObject.packageName,
-                                PackageUtils.flagMatchUninstalled
+                                MATCH_UNINSTALLED_PACKAGES
                                         | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, app.userId);
                         ApplicationInfo ai = pi.applicationInfo;
                         if ((ai.flags & ApplicationInfo.FLAG_INSTALLED) != 0) {

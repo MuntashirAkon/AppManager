@@ -7,6 +7,7 @@ import static io.github.muntashirakon.AppManager.backup.BackupManager.KEYSTORE_P
 import static io.github.muntashirakon.AppManager.backup.BackupManager.KEYSTORE_PREFIX;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.MASTER_KEY;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.SOURCE_PREFIX;
+import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.GET_SIGNING_CERTIFICATES;
 
 import android.app.AppOpsManager;
 import android.app.INotificationManager;
@@ -166,7 +167,7 @@ class RestoreOp implements Closeable {
         // Get package info
         packageInfo = null;
         try {
-            packageInfo = PackageManagerCompat.getPackageInfo(packageName, PackageUtils.flagSigningInfo
+            packageInfo = PackageManagerCompat.getPackageInfo(packageName, GET_SIGNING_CERTIFICATES
                     | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userHandle);
         } catch (Exception ignore) {
         }
@@ -355,7 +356,7 @@ class RestoreOp implements Closeable {
             }
             // Get package info, again
             try {
-                packageInfo = PackageManagerCompat.getPackageInfo(packageName, PackageUtils.flagSigningInfo
+                packageInfo = PackageManagerCompat.getPackageInfo(packageName, GET_SIGNING_CERTIFICATES
                         | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userHandle);
                 isInstalled = true;
             } catch (Exception e) {

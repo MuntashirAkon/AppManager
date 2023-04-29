@@ -10,6 +10,7 @@ import static io.github.muntashirakon.AppManager.backup.BackupManager.KEYSTORE_P
 import static io.github.muntashirakon.AppManager.backup.BackupManager.MASTER_KEY;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.SOURCE_PREFIX;
 import static io.github.muntashirakon.AppManager.backup.BackupManager.getExt;
+import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.GET_SIGNING_CERTIFICATES;
 
 import android.annotation.UserIdInt;
 import android.app.INotificationManager;
@@ -116,7 +117,7 @@ class BackupOp implements Closeable {
         this.mTempBackupPath = this.mBackupFile.getBackupPath();
         try {
             mPackageInfo = PackageManagerCompat.getPackageInfo(this.mPackageName,
-                    PackageManager.GET_META_DATA | PackageUtils.flagSigningInfo | PackageManager.GET_PERMISSIONS
+                    PackageManager.GET_META_DATA | GET_SIGNING_CERTIFICATES | PackageManager.GET_PERMISSIONS
                             | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId);
             this.mApplicationInfo = mPackageInfo.applicationInfo;
             // Override existing metadata
