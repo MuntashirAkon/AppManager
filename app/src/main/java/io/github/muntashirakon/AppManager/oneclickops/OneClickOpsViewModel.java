@@ -30,6 +30,7 @@ import io.github.muntashirakon.AppManager.compat.StorageManagerCompat;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.io.Paths;
 
 public class OneClickOpsViewModel extends AndroidViewModel {
     public static final String TAG = OneClickOpsViewModel.class.getSimpleName();
@@ -40,6 +41,7 @@ public class OneClickOpsViewModel extends AndroidViewModel {
     private final MutableLiveData<List<ItemCount>> trackerCount = new MutableLiveData<>();
     private final MutableLiveData<Pair<List<ItemCount>, String[]>> componentCount = new MutableLiveData<>();
     private final MutableLiveData<Pair<List<AppOpCount>, Pair<int[], Integer>>> appOpsCount = new MutableLiveData<>();
+    private final MutableLiveData<List<String>> clearDataCandidates = new MutableLiveData<>();
     private final MutableLiveData<Boolean> trimCachesResult = new MutableLiveData<>();
 
     public OneClickOpsViewModel(@NonNull Application application) {
@@ -63,6 +65,10 @@ public class OneClickOpsViewModel extends AndroidViewModel {
 
     public LiveData<Pair<List<AppOpCount>, Pair<int[], Integer>>> watchAppOpsCount() {
         return appOpsCount;
+    }
+
+    public LiveData<List<String>> getClearDataCandidates() {
+        return clearDataCandidates;
     }
 
     public LiveData<Boolean> watchTrimCachesResult() {
@@ -151,6 +157,20 @@ public class OneClickOpsViewModel extends AndroidViewModel {
         });
     }
 
+    public void clearData() {
+        executor.submit(() -> {
+            HashSet<String> packageNames = new HashSet<>();
+            for (ApplicationInfo applicationInfo : PackageUtils.getAllApplications(MATCH_UNINSTALLED_PACKAGES
+                    | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES)) {
+                if (packageNames.contains(applicationInfo.packageName) || isInstalled(applicationInfo)) {
+                    continue;
+                }
+                packageNames.add(applicationInfo.packageName);
+            }
+            this.clearDataCandidates.postValue(new ArrayList<>(packageNames));
+        });
+    }
+
     @AnyThread
     public void trimCaches() {
         executor.submit(() -> {
@@ -173,5 +193,9 @@ public class OneClickOpsViewModel extends AndroidViewModel {
         trackerCount.packageLabel = packageInfo.applicationInfo.loadLabel(pm).toString();
         trackerCount.count = ComponentUtils.getTrackerComponentsForPackage(packageInfo).size();
         return trackerCount;
+    }
+
+    private boolean isInstalled(@NonNull ApplicationInfo info) {
+        return info.processName != null && Paths.exists(info.publicSourceDir);
     }
 }
