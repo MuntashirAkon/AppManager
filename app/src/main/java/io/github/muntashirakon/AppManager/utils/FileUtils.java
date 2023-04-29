@@ -123,7 +123,7 @@ public final class FileUtils {
 
     @AnyThread
     public static void deleteSilently(@Nullable File file) {
-        if (file == null || !file.exists()) return;
+        if (!Paths.exists(file)) return;
         if (!file.delete()) {
             Log.w(TAG, String.format("Unable to delete %s", file.getAbsoluteFile()));
         }

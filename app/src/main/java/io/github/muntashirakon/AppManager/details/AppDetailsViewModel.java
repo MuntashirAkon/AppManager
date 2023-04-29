@@ -66,6 +66,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
+import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsAppOpItem;
@@ -1034,8 +1035,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                                 | PackageManager.GET_SERVICES | PackageManager.GET_CONFIGURATIONS | flagSigningInfo
                                 | PackageManager.GET_SHARED_LIBRARY_FILES | PackageManager.GET_URI_PERMISSION_PATTERNS,
                         mUserHandle);
-                ApplicationInfo applicationInfo = mInstalledPackageInfo.applicationInfo;
-                if (!new File(applicationInfo.publicSourceDir).exists()) {
+                if (!ApplicationInfoCompat.isInstalled(mInstalledPackageInfo.applicationInfo)) {
                     throw new ApkFile.ApkFileException("App not installed. It only has data.");
                 }
             } catch (Throwable e) {

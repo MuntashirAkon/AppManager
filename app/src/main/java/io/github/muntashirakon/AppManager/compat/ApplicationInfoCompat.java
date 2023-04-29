@@ -11,11 +11,11 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.io.File;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 import dev.rikka.tools.refine.Refine;
+import io.github.muntashirakon.io.Paths;
 
 public final class ApplicationInfoCompat {
     /**
@@ -328,8 +328,8 @@ public final class ApplicationInfoCompat {
 
     public static boolean isInstalled(@NonNull ApplicationInfo info) {
         return (info.flags & ApplicationInfo.FLAG_INSTALLED) != 0
-                && info.publicSourceDir != null
-                && new File(info.publicSourceDir).exists();
+                && info.processName != null
+                && Paths.exists(info.publicSourceDir);
     }
 
     /**
@@ -339,7 +339,7 @@ public final class ApplicationInfoCompat {
      */
     @NonNull
     public static CharSequence loadLabelSafe(@NonNull ApplicationInfo info, @NonNull PackageManager pm) {
-        if (info.publicSourceDir != null && new File(info.publicSourceDir).exists()) {
+        if (Paths.exists(info.publicSourceDir)) {
             return info.loadLabel(pm);
         }
         return info.packageName;

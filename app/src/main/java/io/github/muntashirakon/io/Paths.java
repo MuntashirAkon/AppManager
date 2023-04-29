@@ -112,6 +112,14 @@ public final class Paths {
         }
     }
 
+    public static boolean exists(@Nullable String path) {
+        return path != null && get(path).exists();
+    }
+
+    public static boolean exists(@Nullable File path) {
+        return path != null && path.exists();
+    }
+
     /**
      * Replace /storage/emulated with /data/media if the directory is inaccessible
      */

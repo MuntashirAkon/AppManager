@@ -709,9 +709,9 @@ public final class ApkFile implements AutoCloseable {
          */
         @NonNull
         public String getFileName() {
-            if (cachedFile != null && cachedFile.exists()) return cachedFile.getName();
+            if (Paths.exists(cachedFile)) return cachedFile.getName();
             if (zipEntry != null) return FileUtils.getFileNameFromZipEntry(zipEntry);
-            if (source != null && source.exists()) return source.getName();
+            if (Paths.exists(source)) return source.getName();
             else throw new RuntimeException("Neither zipEntry nor source is defined.");
         }
 
@@ -719,9 +719,9 @@ public final class ApkFile implements AutoCloseable {
          * Get size of the entry.
          */
         public long getFileSize() {
-            if (cachedFile != null && cachedFile.exists()) return cachedFile.length();
+            if (Paths.exists(cachedFile)) return cachedFile.length();
             if (zipEntry != null) return zipEntry.getSize();
-            if (source != null && source.exists()) return source.length();
+            if (Paths.exists(source)) return source.length();
             else throw new RuntimeException("Neither zipEntry nor source is defined.");
         }
 
@@ -731,7 +731,7 @@ public final class ApkFile implements AutoCloseable {
          * @throws IOException If the APK cannot be signed or cached.
          */
         public File getSignedFile() throws IOException {
-            if (signedFile != null && signedFile.exists()) return signedFile;
+            if (Paths.exists(signedFile)) return signedFile;
             File realFile = getRealCachedFile();
             if (!needSigning()) {
                 // Return original/real file if signing is not requested
@@ -801,9 +801,9 @@ public final class ApkFile implements AutoCloseable {
          */
         @NonNull
         public InputStream getRealInputStream() throws IOException {
-            if (cachedFile != null && cachedFile.exists()) return new FileInputStream(cachedFile);
+            if (Paths.exists(cachedFile)) return new FileInputStream(cachedFile);
             if (zipEntry != null) return Objects.requireNonNull(zipFile).getInputStream(zipEntry);
-            if (source != null && source.exists()) return new FileInputStream(source);
+            if (Paths.exists(source)) return new FileInputStream(source);
             else throw new IOException("Neither zipEntry nor source is defined.");
         }
 

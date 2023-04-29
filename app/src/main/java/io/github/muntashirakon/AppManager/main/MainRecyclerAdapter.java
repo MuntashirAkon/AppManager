@@ -61,6 +61,7 @@ import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.dialog.SearchableItemsDialogBuilder;
+import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
 public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecyclerAdapter.ViewHolder>
@@ -464,7 +465,7 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
                 }
                 // Otherwise, try with APK files
                 // FIXME: 1/4/23 Include splits
-                if (info.publicSourceDir != null && new File(info.publicSourceDir).exists()) {
+                if (Paths.exists(info.publicSourceDir)) {
                     mActivity.startActivity(PackageInstallerActivity.getLaunchableInstance(mActivity,
                             Uri.fromFile(new File(info.publicSourceDir))));
                     return;
