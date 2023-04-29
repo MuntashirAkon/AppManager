@@ -333,7 +333,6 @@
     <string name="clear_cache">Cache leeren</string>
     <string name="block_unblock_trackers_description">Blockiere oder gebe Verfolger-Komponenten aller installierter Anwendungen frei</string>
     <string name="block_components_dots">Komponenten blockieren…</string>
-    <string name="block_components_description">Sperren aller Komponenten, die durch die angegebenen Signaturen identifiziert werden</string>
     <string name="deny_app_ops_description">Einstellen eines Modus für App-Operationen, die durch konstante Werte identifiziert werden (z. B. <tt>63</tt> oder <tt>RUN_IN_BACKGROUND</tt>)</string>
     <string name="clear_data_from_uninstalled_apps">Daten deinstallierter Anwendungen löschen</string>
     <string name="clear_data_from_uninstalled_apps_description">Daten von Anwendungen, die mit der <tt>DONT_DELETE_DATA</tt>-Flagge deinstalliert wurden, löschen</string>
@@ -495,7 +494,6 @@
     <string name="apply_now">Jetzt anwenden…</string>
     <string name="keystore">Schlüsselspeicher</string>
     <string name="no_profiles">Keine Profile</string>
-    <string name="presets">Voreinstellungen</string>
     <string name="profiles">Profile</string>
     <string name="open_pgp_provider">OpenPGP-Anbieter</string>
     <string name="systemless_app">Systemlose App</string>
@@ -919,7 +917,6 @@
     <string name="orientation_right_to_left">Von Rechts nach Links</string>
     <string name="orientation_left_to_right">Von links nach rechts</string>
     <string name="orientation_follow_locale">Lokale folgen</string>
-    <string name="pref_layout_orientation">Ausrichtung des Layouts</string>
     <string name="saf">SAF</string>
     <string name="pref_rules_msg">Sofortiges Sperren, Importieren/Exportieren/Entfernen von Regeln, etc.</string>
     <string name="failed">Fehlgeschlagen</string>
@@ -995,7 +992,6 @@
     <string name="wireless_debugging">Fehlersuche über WLAN</string>
     <string name="unknown_net_policy">Unbekannte Netz-Richtlinie (%1$s - %2$X)</string>
     <string name="failed_to_prevent_background_run">Konnte nicht verhindern, dass %1$s im Hintergrund läuft</string>
-    <string name="app_signing_signature_mismatch_for_data_only_app">Konnte die App aufgrund von Signaturfehlern nicht installieren. Die App wurde deinstalliert, ohne ihre Daten zu löschen.</string>
     <string name="community">Gemeinschaft</string>
     <string name="community_links"><a href="https://t.me/AppManagerChannel">Telegrammkanal</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
     <plurals name="alert_failed_to_import_backups">

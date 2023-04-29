@@ -316,7 +316,6 @@
     <string name="clear_cache">Limpar Cache</string>
     <string name="block_unblock_trackers_description">Bloquear ou desbloquear componentes de propagandas e rastreamento em todos os aplicativos instalados</string>
     <string name="block_components_dots">Bloquear componentes…</string>
-    <string name="block_components_description">Bloquear todos os componentes identificados pelas assinaturas especificadas</string>
     <string name="clear_data_from_uninstalled_apps">Limpar dados dos aplicativos desinstalados</string>
     <string name="clear_data_from_uninstalled_apps_description">Limpar dados dos aplicativos que foram desinstalados com a flag <tt>DONT_DELETE_DATA</tt></string>
     <string name="clear_app_cache">Limpar cache do aplicativo</string>
@@ -628,7 +627,6 @@
     <string name="state_sleeping">Dormindo</string>
     <string name="state_multithreaded">Multithreaded</string>
     <string name="systemless_app">Aplicativo sem Sistema</string>
-    <string name="presets">Predefinições</string>
     <string name="keystore">KeyStore</string>
     <string name="send_crash_report">Enviar relatório de travamento</string>
     <string name="tap_to_submit_crash_report">Toque para enviar o relatório de travamento.</string>
@@ -1002,7 +1000,6 @@
     <string name="orientation_right_to_left">Da direita para a esquerda</string>
     <string name="orientation_left_to_right">Da esquerda para a direita</string>
     <string name="orientation_follow_locale">Seguir o local</string>
-    <string name="pref_layout_orientation">Orientação do layout</string>
     <plurals name="file_deletion_confirmation">
         <item quantity="one">%d arquivo será excluído</item>
         <item quantity="many">%d arquivos serão excluídos</item>
@@ -1027,7 +1024,6 @@
     <string name="wireless_debugging">Depuração sem fio</string>
     <string name="unknown_net_policy">Política de rede desconhecida (%1$s - %2$X)</string>
     <string name="failed_to_prevent_background_run">Inapto de deter %1$s de executar em segundo plano</string>
-    <string name="app_signing_signature_mismatch_for_data_only_app">Não foi possível instalar o aplicativo devido ao descompasso de assinatura. O aplicativo foi desinstalado sem limpar seus dados.</string>
     <string name="community_links"><a href="https://t.me/AppManagerChannel">Canal no Telegram</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
     <string name="community">Comunidade</string>
     <plurals name="alert_failed_to_import_backups">

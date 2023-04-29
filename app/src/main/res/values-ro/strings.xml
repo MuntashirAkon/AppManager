@@ -532,7 +532,6 @@
     <string name="databases">Baze de date</string>
     <string name="external_data">Date externe</string>
     <string name="export_icon">Pictograma Extragere</string>
-    <string name="presets">Presetări</string>
     <string name="orientation_full_user">Utilizator complet</string>
     <string name="usage_yesterday">Ieri</string>
     <string name="select_all">Selectează tot</string>
@@ -561,7 +560,6 @@
     <string name="installer_error_session_commit">Nu s-au putut comite fișierele APK</string>
     <string name="sort_by_memory_usage">Utilizarea memoriei</string>
     <string name="battery_mode">Mod baterie</string>
-    <string name="block_components_description">Blochează toate componentele identificate prin semnăturile date</string>
     <string name="app_size">Aplicație</string>
     <string name="trackers">Urmăritori</string>
     <string name="run_in_termux">Rulează în Termux</string>

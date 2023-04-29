@@ -151,7 +151,6 @@
     <string name="apps">Applications</string>
     <string name="apply_now">Appliquer maintenant…</string>
     <string name="no_profiles">Aucun profil</string>
-    <string name="presets">Préréglages</string>
     <string name="profiles">Profils</string>
     <string name="open_pgp_provider">Fournisseur OpenPGP</string>
     <string name="cancel">Annuler</string>
@@ -324,7 +323,6 @@
     <string name="clear_app_cache">Effacer le cache de l\'application</string>
     <string name="clear_data_from_uninstalled_apps_description">Effacer les données des applications désinstallées avec le drapeau <tt>DONT_DELETE_DATA</tt></string>
     <string name="clear_data_from_uninstalled_apps">Effacer les données des applications désinstallées</string>
-    <string name="block_components_description">Bloquer tous les composants identifiés par les signatures données</string>
     <string name="block_components_dots">Bloquer les composants…</string>
     <string name="block_unblock_trackers_description">Bloquer ou débloquer les composants de publicité et de suivi dans toutes les applications installées</string>
     <string name="clear_cache">Effacer le cache</string>
@@ -1027,14 +1025,12 @@
     <string name="text_filter_ellipsis">Filtre…</string>
     <string name="text_filter_text">Filtrer le texte</string>
     <string name="suspended">Interrompu</string>
-    <string name="pref_layout_orientation">Orientation de la mise en page</string>
     <string name="orientation_follow_locale">Suivre les paramètres régionaux</string>
     <string name="pref_display_changes">Afficher les modifications</string>
     <string name="saf">SAF</string>
     <string name="pref_display_changes_msg">Afficher les changements de version, pisteurs, composants, permissions, signatures, SDK, etc. par version.</string>
     <string name="no_changes">Pas de changements</string>
     <string name="wireless_debugging">Débogage sans fil</string>
-    <string name="app_signing_signature_mismatch_for_data_only_app">Impossible d\'installer l\'application en raison d\'une incompatibilité de signature. L\'application a été désinstallée sans effacer ses données.</string>
     <string name="help_app_ops_tab">Cliquez sur un élément pour <b>l\'autoriser</b> ou <b>l\'ignorer</b>. Cliquez longuement sur un élément pour voir les autres modes supportés.</string>
     <string name="failed_to_prevent_background_run">Impossible d\'empêcher %1$s de s\'exécuter en arrière-plan</string>
     <string name="permission_flags">Indicateurs d\'autorisation</string>

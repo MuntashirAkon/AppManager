@@ -329,7 +329,6 @@
     <string name="community_links"><a href="https://t.me/AppManagerChannel">텔레그램 채널</a> • <a href="https://twitter.com/AppManagerNews">트위터</a></string>
     <string name="pref_import_existing">기존 규칙 가져오기</string>
     <string name="block_unblock_trackers_description">설치된 모든 앱에서 광고 및 트래킹 구성 요소 차단 또는 차단 해제</string>
-    <string name="block_components_description">주어진 서명으로 식별된 모든 구성 요소 차단</string>
     <string name="deny_app_ops_description">다음 상수값으로 식별되는 앱 작업 모드 설정하기, <tt>63</tt> 또는 <tt>RUN_IN_BACKGROUND</tt></string>
     <string name="clear_app_cache">앱 캐시 삭제</string>
     <string name="no_tracker_found">트래커가 발견되지 않았습니다</string>
@@ -557,7 +556,6 @@
     <string name="pref_display_changes">변경사항 표시</string>
     <string name="netpolicy_reject_cellular_data">셀룰러 데이터 거부</string>
     <string name="confirm_import_keystore">기존 KeyStore를 바꾸시겠습니까\? 이 작업은 취소할 수 없습니다.</string>
-    <string name="pref_layout_orientation">레이아웃 방향</string>
     <string name="orientation_right_to_left">오른쪽에서 왼쪽으로</string>
     <string name="port_number">포트</string>
     <string name="files">파일들</string>
@@ -890,7 +888,6 @@
     <string name="pref_log_write_period_summary" tools:ignore="PluralsCandidate">기록할 때 %1$d 줄마다 SD 카드에 기록하십시오.</string>
     <string name="pref_log_write_period_title">쓰는 기간</string>
     <string name="subject_log_report">로그 기록</string>
-    <string name="app_signing_signature_mismatch_for_data_only_app">서명 불일치로 인해 앱을 설치할 수 없습니다. 앱이 데이터를 지우지 않고 제거되었습니다.</string>
     <string name="help_app_ops_tab">항목을 클릭하여 <b>허용</b>하거나 <b>무시</b>하십시오. 지원되는 다른 모드를 보려면 항목을 길게 클릭하십시오.</string>
     <string name="netpolicy_disable_network_access">네트워크 액세스 사용 안 함</string>
     <string name="adb_pair">쌍</string>
@@ -1186,7 +1183,6 @@
     <string name="orientation_behind">거꾸로</string>
     <string name="app_data_will_be_lost">기존 데이터가 손실됩니다.</string>
     <string name="zygote_preload_name">자이고트 사전로딩 이름</string>
-    <string name="presets">사전 설정</string>
     <string name="algorithm">알고리즘</string>
     <string name="pref_cat_appearance">모습</string>
     <string name="apk_checksums">APK 체크섬</string>

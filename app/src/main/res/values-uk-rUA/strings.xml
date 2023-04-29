@@ -99,7 +99,6 @@
     <string name="apply_now">Застосувати зараз…</string>
     <string name="keystore">Сховище ключів</string>
     <string name="no_profiles">Немає профілів</string>
-    <string name="presets">Пресети</string>
     <string name="profiles">Профілі</string>
     <string name="open_pgp_provider">Постачальник OpenPGP</string>
     <string name="systemless_app">Позасистемний додаток</string>
@@ -294,7 +293,6 @@
     <string name="clear_app_cache_description">Очищення кешу всіх додатків</string>
     <string name="clear_app_cache">Очищення кешу додатків</string>
     <string name="clear_data_from_uninstalled_apps_description">Очистити дані видалених додатків, котрі відмічені прапорцем <tt>DONT_DELETE_DATA</tt></string>
-    <string name="block_components_description">Блокувати всі компоненти, визначені заданими підписами</string>
     <string name="block_unblock_trackers_description">Блокування або розблокування реклами і компонентів трекерів в усіх встановлених додатках</string>
     <string name="clear_cache">Очистити кеш</string>
     <string name="pref_import_existing_msg">Додати до App Manager компоненти, вимкнені іншими додатками. Будьте обережні при використанні цього інструменту, оскільки може бути багато помилково-позитивних результатів. Виберіть лише додатки, в котрих ви впевнені.</string>
@@ -1004,7 +1002,6 @@
     <string name="orientation_right_to_left">Справа наліво</string>
     <string name="orientation_left_to_right">Зліва направо</string>
     <string name="orientation_follow_locale">Згідно системної мови</string>
-    <string name="pref_layout_orientation">Орієнтація макета</string>
     <plurals name="file_deletion_confirmation">
         <item quantity="one">%d файл буде видалено</item>
         <item quantity="few">%d файли буде видалено</item>
@@ -1061,7 +1058,6 @@
     <string name="wireless_debugging">Бездротове налагодження</string>
     <string name="unknown_net_policy">Невідома мережна політика (%1$s - %2$X)</string>
     <string name="failed_to_prevent_background_run">Не вдалося запобігти роботу в фоновому режимі додатку %1$s</string>
-    <string name="app_signing_signature_mismatch_for_data_only_app">Не вдалося встановити додаток через невідповідність підпису. Додаток було видалено без очищення даних.</string>
     <string name="community">Спільнота</string>
     <plurals name="alert_failed_to_import_backups">
         <item quantity="one">Не вдалося імпортувати %1$d резервну копію</item>

@@ -265,7 +265,6 @@
     <string name="apps">Programmer</string>
     <string name="apply_now">Bruk nå…</string>
     <string name="no_profiles">Ingen profiler</string>
-    <string name="presets">Forhåndsinnstillinger</string>
     <string name="profiles">Profiler</string>
     <string name="open_pgp_provider">OpenPGP-tilbyder</string>
     <string name="cancel">Avbryt</string>
@@ -688,7 +687,6 @@
     </plurals>
     <string name="filter">Filtrer</string>
     <string name="filtered_packages">Filtrerte pakker</string>
-    <string name="block_components_description">Blokker alle komponenter identifisert av de gitte signaturene</string>
     <string name="block_unblock_trackers_description">Blokker eller avblokker reklame- og sporingskomponenter i alle de installerte programmene</string>
     <string name="pref_import_existing_msg">Legg til komponenter avskrudd av andre programmer i App Manager. Vær forsiktig med dette verktøyet, siden det kan være mange falske positiver. Velg kun programmene du er sikker på.</string>
     <string name="source_code_links">GitHub: https://github.com/MuntashirAkon/AppManager
@@ -824,7 +822,6 @@
     <string name="pref_rules_msg">Umiddelbar blokkering, importer/eksporter/fjern regler, osv.</string>
     <string name="failed">Mislykket</string>
     <string name="orientation_follow_locale">Følg systemspråk</string>
-    <string name="pref_layout_orientation">Leseretning</string>
     <string name="hidden">Skjult</string>
     <string name="orientation_right_to_left">Høyre til venstre</string>
     <string name="orientation_left_to_right">Venstre til høyre</string>

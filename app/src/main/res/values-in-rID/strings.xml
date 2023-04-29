@@ -622,7 +622,6 @@
     <string name="apply_now">Terapkan sekarang…</string>
     <string name="keystore">Keystore</string>
     <string name="no_profiles">Tanpa Profil</string>
-    <string name="presets">Preset</string>
     <string name="profiles">Profil</string>
     <string name="open_pgp_provider">Penyedia OpenPGP</string>
     <string name="systemless_app">Aplikasi tanpa Sistem</string>
@@ -766,7 +765,6 @@
     <string name="clear_app_cache_description">Kosongkan cache dari semua aplikasi</string>
     <string name="clear_app_cache">Kosongkan Cache App</string>
     <string name="clear_data_from_uninstalled_apps">Kosongkan data dari aplikasi yang dicopot</string>
-    <string name="block_components_description">Memblokir semua komponen yang diidentifikasi oleh tanda tangan yang diberikan</string>
     <string name="block_unblock_trackers_description">Blokir atau buka blokir iklan dan komponen pelacakan di semua aplikasi yang dipasang</string>
     <string name="clear_cache">Kosongkan Cache</string>
     <string name="pref_import_existing_msg">Tambahkan komponen yang dinonaktifkan oleh aplikasi lain ke App Manager. Hati-hati saat menggunakan alat ini karena ada banyak false-positif. Pilih hanya aplikasi yang Anda pasti.</string>
@@ -932,7 +930,6 @@
     <string name="orientation_right_to_left">Kanan ke kiri</string>
     <string name="orientation_left_to_right">Kiri ke kanan</string>
     <string name="orientation_follow_locale">Ikuti bahasa lokal</string>
-    <string name="pref_layout_orientation">Orientasi layout</string>
     <plurals name="file_deletion_confirmation">
         <item quantity="other">Berkas %d akan dihapus</item>
     </plurals>
@@ -954,7 +951,6 @@
     <string name="port_number">Port</string>
     <string name="adb_connect">Hbungkan</string>
     <string name="unknown_net_policy">Netpolicy yang tidak dikenal (%1$s - %2$X)</string>
-    <string name="app_signing_signature_mismatch_for_data_only_app">Tidak dapat memasang aplikasi dikarenakan ketidakcocokan tanda tangan. Aplikasi dicopot tanpa membersihkan datanya.</string>
     <string name="failed_to_prevent_background_run">Tidak dapat mencegah %1$s untuk berjalan di latar belakang</string>
     <string name="community_links"><a href="https://t.me/AppManagerChannel">Saluran Telegram</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
     <string name="community">Komunitas</string>

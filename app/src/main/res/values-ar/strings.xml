@@ -303,7 +303,6 @@
     <string name="clear_data_from_uninstalled_apps_description">امسح البيانات من التطبيقات التي تم إلغاء تثبيتها بعلامة <tt> DONT_DELETE_DATA </tt></string>
     <string name="clear_data_from_uninstalled_apps">مسح البيانات من التطبيقات التي تم إلغاء تثبيتها</string>
     <string name="deny_app_ops_description">قم بتعيين وضع لعمليات التطبيق التي تحددها القيم الثابتة، أي <tt>63</tt> أو <tt>RUN_IN_BACKGROUND</tt></string>
-    <string name="block_components_description">حظر كافة المكونات التي تم تعريفها بواسطة التواقيع المحددة</string>
     <string name="block_components_dots">حجب المكونات…</string>
     <string name="block_unblock_trackers_description">حظر أو إلغاء حظر الإعلانات ومكونات التتبع في جميع التطبيقات المثبتة</string>
     <string name="clear_cache">مسح التخزين المؤقت</string>
@@ -733,7 +732,6 @@
         <item quantity="many">تم التحقق مع تحذير %d</item>
         <item quantity="other">تم التحقق مع تحذير %d</item>
     </plurals>
-    <string name="presets">الإعدادات المسبقة</string>
     <string name="verified_using_unreliable_hash">تم التحقق باستخدام تجزئة غير موثوقة</string>
     <plurals name="alert_failed_to_backup">
         <item quantity="zero">تعذر نسخ تطبيق %1$d احتياطيًا</item>
@@ -1053,7 +1051,6 @@
     <string name="pref_filter_pattern_title">تصفية العلامات</string>
     <string name="record_log">تسجيل السجل</string>
     <string name="base_backup">النسخ الاحتياطي الأساسي</string>
-    <string name="pref_layout_orientation">اتجاه التخطيط</string>
     <string name="orientation_follow_locale">اتبع اللغة</string>
     <string name="orientation_left_to_right">من اليسار إلى اليمين</string>
     <string name="orientation_right_to_left">من اليمين الى اليسار</string>
@@ -1122,7 +1119,6 @@
     <string name="wireless_debugging">التصحيح اللاسلكي</string>
     <string name="unknown_net_policy">سياسة شبكة غير معروفة (%1$s - %2$X)</string>
     <string name="failed_to_prevent_background_run">تعذر منع %1$s من العمل في الخلفية</string>
-    <string name="app_signing_signature_mismatch_for_data_only_app">تعذر تثبيت التطبيق بسبب عدم تطابق التوقيع. تم إلغاء تثبيت التطبيق دون مسح بياناته.</string>
     <string name="community_links"><a href="https://t.me/AppManagerChannel"> قناة تيليجرام </a> • <a href="https://twitter.com/AppManagerNews"> تويتر </a></string>
     <string name="community">المجتمع</string>
     <plurals name="alert_failed_to_import_backups">

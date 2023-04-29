@@ -352,7 +352,6 @@
     <string name="clear_app_cache">Vaciar antememoria de aplicación</string>
     <string name="clear_data_from_uninstalled_apps">Limpiar datos de aplicaciones desinstaladas</string>
     <string name="deny_app_ops_description">Establecer un modo para las operaciones de las aplicaciones identificadas por los valores constantes, es decir, <tt>63</tt> o <tt>RUN_IN_BACKGROUND</tt></string>
-    <string name="block_components_description">Bloquear todos los componentes identificados por las firmas dadas</string>
     <string name="block_components_dots">Bloquear componentes…</string>
     <string name="block_unblock_trackers_description">Bloquear o desbloquear componentes de anuncios o rastreo en todas las aplicaciones instaladas</string>
     <string name="clear_cache">Vaciar antememoria</string>
@@ -578,7 +577,6 @@
     <string name="apply_now">Aplicar ahora…</string>
     <string name="keystore">Almacén de claves</string>
     <string name="no_profiles">Sin perfiles</string>
-    <string name="presets">Preajustes</string>
     <string name="profiles">Perfiles</string>
     <string name="open_pgp_provider">Proveedor de OpenPGP</string>
     <string name="systemless_app">Aplicación no de sistema</string>
@@ -910,7 +908,6 @@
     <string name="orientation_follow_locale">Según la conf. regional</string>
     <string name="orientation_right_to_left">De derecha a izquierda</string>
     <string name="orientation_left_to_right">De izquierda a derecha</string>
-    <string name="pref_layout_orientation">Orientación de disposición</string>
     <string name="confirm_import_keystore">¿Confirma que quiere reemplazar el almacén de claves actual\? Esta acción no puede deshacerse.</string>
     <string name="import_keystore">Importar almacén de claves</string>
     <string name="pref_import_export_keystore">Importar/exportar almacén de claves</string>
@@ -1020,7 +1017,6 @@
     <string name="port_number_invalid">Número de puerto no válido.</string>
     <string name="unknown_net_policy">Directiva de red desconocida (%1$s - %2$X)</string>
     <string name="pref_buffer_title">Buffer de registros</string>
-    <string name="app_signing_signature_mismatch_for_data_only_app">No se pudo instalar la aplicación a causa de una discrepancia en las firmas. Se desinstaló sin vaciarle los datos.</string>
     <string name="failed">Fallido</string>
     <string name="pref_filter_pattern_title">Filtrar etiquetas</string>
     <string name="pref_filter_pattern_summary">Filtrar las siguientes etiquetas seleccionadas de los registros.</string>

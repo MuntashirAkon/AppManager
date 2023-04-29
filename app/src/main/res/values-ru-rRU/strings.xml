@@ -357,7 +357,6 @@
     <string name="clear_cache">Очистить кэш</string>
     <string name="block_unblock_trackers_description">Блокировать или разблокировать рекламу и компоненты трекеров во всех установленных приложениях</string>
     <string name="block_components_dots">Блокировать компоненты…</string>
-    <string name="block_components_description">Заблокировать все компоненты, идентифицированные данными подписями</string>
     <string name="deny_app_ops_description">Установите режим для операций приложения, определяемых постоянными значениями, например <tt>63</tt> или <tt>RUN_IN_BACKGROUND</tt></string>
     <string name="clear_data_from_uninstalled_apps">Очистить данные удаленных приложений</string>
     <string name="clear_data_from_uninstalled_apps_description">Очистить данные приложений, которые были удалены с помощью флага <tt>DONT_DELETE_DATA</tt></string>
@@ -531,7 +530,6 @@
     <string name="base_apk">Базовый APK</string>
     <string name="routine_ops">Повторяющиеся операции</string>
     <string name="no_profiles">Нет профилей</string>
-    <string name="presets">Предустановки</string>
     <string name="open_pgp_provider">Поставщик OpenPGP</string>
     <string name="input_backup_name_description">Имя резервной копии не должно начинаться с цифры и содержать пробелы. Оставьте это поле пустым, если хотите использовать текущую дату и время.</string>
     <string name="downgrade">Понизить</string>
@@ -1030,7 +1028,6 @@
     <string name="orientation_right_to_left">Справа налево</string>
     <string name="orientation_left_to_right">Слева направо</string>
     <string name="orientation_follow_locale">В соответствии с языком</string>
-    <string name="pref_layout_orientation">Ориентация макета</string>
     <plurals name="file_deletion_confirmation">
         <item quantity="one">%d файл будет удален</item>
         <item quantity="few">%d файла будет удалено</item>
@@ -1059,7 +1056,6 @@
     <string name="wireless_debugging">Беспроводная отладка</string>
     <string name="unknown_net_policy">Неизвестная сетевая политика (%1$s - %2$X)</string>
     <string name="failed_to_prevent_background_run">Не удалось предотвратить работу в фоне для приложения %1$s</string>
-    <string name="app_signing_signature_mismatch_for_data_only_app">Не удалось установить приложение из-за несоответствия подписи. Приложение было удалено без очистки данных.</string>
     <string name="community">Сообщество</string>
     <string name="community_links"><a href="https://t.me/AppManagerChannel">Telegram-канал</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
     <plurals name="alert_failed_to_import_backups">

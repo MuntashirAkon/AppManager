@@ -177,7 +177,6 @@
     <string name="apply_now">Şimdi uygula…</string>
     <string name="keystore">KeyStore</string>
     <string name="no_profiles">Profil yok</string>
-    <string name="presets">Ön ayarlar</string>
     <string name="profiles">Profiller</string>
     <string name="open_pgp_provider">OpenPGP Sağlayıcısı</string>
     <string name="systemless_app">Sistemsiz Uygulama</string>
@@ -327,7 +326,6 @@
     <string name="clear_data_from_uninstalled_apps_description"><tt>DONT_DELETE_DATA</tt> işaretiyle kaldırılan uygulamaların verilerini temizle</string>
     <string name="clear_data_from_uninstalled_apps">Kaldırılan uygulamaların verilerini temizle</string>
     <string name="deny_app_ops_description">Sabit değerlerle tanımlanan uygulama işlemleri için bir mod ayarlayın, örn. <tt>63</tt> veya <tt>RUN_IN_BACKGROUND</tt></string>
-    <string name="block_components_description">Verilen imzalarla tanımlanan tüm bileşenleri engelle</string>
     <string name="block_components_dots">Bileşenleri engelle…</string>
     <string name="block_unblock_trackers_description">Tüm kurulu uygulamalarda reklam ve izleme bileşenlerini engelleyin veya engelini kaldırın</string>
     <string name="clear_cache">Önbelleği Temizle</string>
@@ -970,7 +968,6 @@
     <string name="orientation_right_to_left">Sağdan sola</string>
     <string name="orientation_left_to_right">Soldan sağa</string>
     <string name="orientation_follow_locale">Yerel ayarı takip et</string>
-    <string name="pref_layout_orientation">Düzen yönü</string>
     <plurals name="file_deletion_confirmation">
         <item quantity="one">%d dosya silinecek</item>
         <item quantity="other">%d dosya silinecek</item>
@@ -994,7 +991,6 @@
     <string name="wireless_debugging">Kablosuz hata ayıklama</string>
     <string name="unknown_net_policy">Bilinmeyen ağ politikası (%1$s - %2$X)</string>
     <string name="failed_to_prevent_background_run">%1$s arka planda çalışması engellenemedi</string>
-    <string name="app_signing_signature_mismatch_for_data_only_app">İmza uyuşmazlığı nedeniyle uygulama kurulamadı. Uygulama, verileri temizlenmeden kaldırıldı.</string>
     <string name="community_links"><a href="https://t.me/AppManagerChannel">Telegram kanalı</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
     <string name="community">Topluluk</string>
     <plurals name="alert_failed_to_import_backups">

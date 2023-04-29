@@ -148,7 +148,6 @@
     <string name="cancel">Anuluj</string>
     <string name="open_pgp_provider">Aplikacja OpenPGP</string>
     <string name="profiles">Profile</string>
-    <string name="presets">Szablony</string>
     <string name="no_profiles">Brak profili</string>
     <string name="keystore">KeyStore</string>
     <string name="apply_now">Zastosuj…</string>
@@ -399,7 +398,6 @@
     <string name="clear_app_cache">Wyczyść pamięć podręczną aplikacji</string>
     <string name="clear_data_from_uninstalled_apps_description">Wyczyść dane z aplikacji, które zostały odinstalowywane z flagą <tt>DONT_DELETE_DATA</tt></string>
     <string name="clear_data_from_uninstalled_apps">Wyczyść dane odinstalowanych aplikacji</string>
-    <string name="block_components_description">Zablokuj wszystkie komponenty identyfikowane przez daną sygnaturę</string>
     <string name="block_components_dots">Zablokuj komponenty…</string>
     <string name="block_unblock_trackers_description">Zablokuj lub odblokuj komponenty śledzące i reklamy we wszystkich zainstalowanych aplikacjach</string>
     <string name="clear_cache">Wyczyść pamięć podręczną</string>
@@ -941,7 +939,6 @@
     <string name="help_permissions_tab">Te uprawnienia są zdefiniowane przez tę aplikację i nie można ich cofnąć.</string>
     <string name="help_app_ops_tab">Dotknij elementu, aby <b>zezwolić</b> lub <b>zignorować</b> go. Długo przytrzymaj element, aby zobaczyć inne obsługiwane tryby.</string>
     <string name="failed_to_prevent_background_run">Nie można zapobiec %1$s działania w tle</string>
-    <string name="app_signing_signature_mismatch_for_data_only_app">Nie można zainstalować aplikacji z powodu niezgodności podpisów. Aplikacja została odinstalowana bez czyszczenia jej danych.</string>
     <string name="unknown_net_policy">Nieznane reguły sieciowe (%1$s - %2$X)</string>
     <string name="port_number_invalid">Nieprawidłowy numer portu.</string>
     <string name="port_number_empty">Numer portu jest pusty.</string>
@@ -969,7 +966,6 @@
     <string name="orientation_right_to_left">Od prawej do lewej</string>
     <string name="orientation_left_to_right">Od lewej do prawej</string>
     <string name="orientation_follow_locale">Śledź lokalizację</string>
-    <string name="pref_layout_orientation">Orientacja układu</string>
     <string name="saf">SAF</string>
     <string name="pref_rules_msg">Natychmiastowe blokowanie: importowania/eksportowania/usuwania reguł, itp.</string>
     <string name="failed">Nie powiodło się</string>

@@ -321,7 +321,6 @@
     <string name="clear_cache">清除缓存</string>
     <string name="block_unblock_trackers_description">拦截或取消屏蔽所有已安装应用的广告和跟踪组件</string>
     <string name="block_components_dots">屏蔽组件…</string>
-    <string name="block_components_description">拦截给定特征码识别出的所有部件</string>
     <string name="deny_app_ops_description">设置由常数值标识的应用操作模式，如 <tt>63</tt> 或 <tt> RUN_IN_BACKGROUND</tt></string>
     <string name="clear_data_from_uninstalled_apps">清除已卸载应用的数据</string>
     <string name="clear_data_from_uninstalled_apps_description">清除使用 <tt> DONT_DELETE_DATA </tt>标志卸载的应用中的数据</string>
@@ -488,7 +487,6 @@
     <string name="navigation_no_nav">无导航</string>
     <string name="state_wake_kill">唤醒杀死</string>
     <string name="profiles">配置</string>
-    <string name="presets">预设</string>
     <string name="no_profiles">无配置</string>
     <string name="keystore">密钥库</string>
     <string name="routine_ops">常规操作权限</string>
@@ -940,7 +938,6 @@
     <string name="orientation_right_to_left">从右至左</string>
     <string name="orientation_left_to_right">从左至右</string>
     <string name="orientation_follow_locale">遵照语言环境</string>
-    <string name="pref_layout_orientation">布局方向</string>
     <plurals name="file_deletion_confirmation">
         <item quantity="other">%d 个文件已被删除</item>
     </plurals>
@@ -963,7 +960,6 @@
     <string name="wireless_debugging">无线调试</string>
     <string name="unknown_net_policy">未知的 netpolicy (%1$s - %2$X)</string>
     <string name="failed_to_prevent_background_run">无法防止 %1$s 在后台运行</string>
-    <string name="app_signing_signature_mismatch_for_data_only_app">由于签名不匹配，无法安装应用程序。该应用程序已被卸载，但没有清除数据。</string>
     <string name="community_links"><a href="https://t.me/AppManagerChannel">Telegram 频道</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
     <string name="community">社区</string>
     <plurals name="alert_failed_to_import_backups">

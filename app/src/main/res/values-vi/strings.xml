@@ -401,7 +401,6 @@
     <string name="starting_activity">Hoạt động bắt đầu: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="clear_data_message">Bạn có chắc muốn xoá dữ liệu của ứng dụng này không\?</string>
     <string name="clear_data_from_uninstalled_apps_description">Xoá dữ liệu của các ứng dụng đã gỡ cài đặt với cờ <tt>DONT_DELETE_DATA</tt></string>
-    <string name="block_components_description">Chặn tất cả thành phần được nhận dạng bởi các chữ ký được đưa ra</string>
     <string name="block_components_dots">Chặn thành phần…</string>
     <string name="block_unblock_trackers_description">Chặn hoặc bỏ chặn các thành phần quảng cáo và theo dõi trong tất cả ứng dụng đã cài đặt</string>
     <string name="go">Đi</string>
@@ -624,7 +623,6 @@
     <string name="orientation_right_to_left">Phải sang trái</string>
     <string name="orientation_left_to_right">Trái sang phải</string>
     <string name="orientation_follow_locale">Theo ngôn ngữ</string>
-    <string name="pref_layout_orientation">Hướng bố cục</string>
     <string name="saf">SAF</string>
     <string name="pref_rules_msg">Chặn ngay lập tức, nhập/xuất/xoá các quy tắc, v.v.</string>
     <string name="failed">Thất bại</string>
@@ -903,7 +901,6 @@
     <string name="apply_now">Áp dụng ngay…</string>
     <string name="keystore">KeyStore</string>
     <string name="no_profiles">Không có cấu hình</string>
-    <string name="presets">Thiết lập trước</string>
     <string name="profiles">Cấu hình</string>
     <string name="open_pgp_provider">Nhà cung cấp OpenPGP</string>
     <string name="systemless_app">Ứng dụng không dùng hệ thống</string>
@@ -919,7 +916,6 @@
     <string name="state_session_leader">Lãnh đạo phiên làm việc</string>
     <string name="state_idle">Không hoạt động</string>
     <string name="failed_to_prevent_background_run">Không thể ngăn chặn %1$s chạy trong nền</string>
-    <string name="app_signing_signature_mismatch_for_data_only_app">Không thể cài đặt ứng dụng do chữ ký không khớp. Ứng dụng đã bị gỡ cài đặt mà không xoá dữ liệu của nó.</string>
     <string name="state_parked">Đã đỗ lại</string>
     <string name="state_zombie">Zombie</string>
     <string name="state_trace_stop">Dừng dấu vết</string>

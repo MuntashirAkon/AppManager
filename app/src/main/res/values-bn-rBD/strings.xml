@@ -272,7 +272,6 @@
     <string name="failed_to_parse_some_numbers">কিছু সংখ্যাকে পার্স করতে ব্যর্থ</string>
     <string name="input_signatures">স্বাক্ষর ইনপুট করুন</string>
     <string name="failed_packages">ব্যর্থ প্যাকেজগুলো</string>
-    <string name="block_components_description">প্রদত্ত স্বাক্ষর(গুলি) দ্বারা চিহ্নিত সকল উপাদান ব্লক করুন</string>
     <string name="external_apk_no_app_op">বহিঃস্থ এপিকের কোন অ্যাপ অপারেশন নেই</string>
     <string name="batch_ops">ব্যাচ অপারেশন</string>
     <string name="installer_error_lidl_rom">আপনার রম রুটহীন ইনস্টলারটির সাথে অসমর্থিত।</string>

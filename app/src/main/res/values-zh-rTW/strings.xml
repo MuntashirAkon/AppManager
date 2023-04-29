@@ -84,7 +84,6 @@
     </plurals>
     <string name="backup">備份</string>
     <string name="package_name_is_installed_successfully"><xliff:g id="app_name" example="App Manager">%1$s</xliff:g> 已安裝</string>
-    <string name="block_components_description">封鎖由給定簽名識別的所有元件</string>
     <string name="block_components_dots">封鎖元件…</string>
     <string name="block_unblock_trackers_description">封鎖或取消封鎖廣告並追蹤所有已安裝應用程式中的元件</string>
     <string name="pref_import_existing_msg">將其他應用程式停用的元件新增到 App Manager 。 使用此工具時要小心，因為可能會有很多誤報。僅選擇您確定的應用程式。</string>
@@ -324,7 +323,6 @@
     <string name="apply_now">現在套用…</string>
     <string name="keystore">密鑰資源庫</string>
     <string name="no_profiles">沒有設定檔</string>
-    <string name="presets">預設值</string>
     <string name="profiles">設定檔</string>
     <string name="open_pgp_provider">OpenPGP提供者</string>
     <string name="systemless_app">無系統應用程式</string>
@@ -927,7 +925,6 @@
     <string name="orientation_right_to_left">由右至左</string>
     <string name="orientation_left_to_right">由左至右</string>
     <string name="orientation_follow_locale">按照語言環境</string>
-    <string name="pref_layout_orientation">佈局方向</string>
     <plurals name="file_deletion_confirmation">
         <item quantity="other">%d 檔案將被刪除</item>
     </plurals>
@@ -951,7 +948,6 @@
     <string name="wireless_debugging">無線偵錯</string>
     <string name="community">社群</string>
     <string name="failed_to_prevent_background_run">無法防止 %1$s 在背景執行</string>
-    <string name="app_signing_signature_mismatch_for_data_only_app">由於簽名不相符而無法安裝應用程式。該應用程式在未清除其資料的情況下解除安裝。</string>
     <plurals name="alert_failed_to_import_backups">
         <item quantity="other">無法匯入 %1$d 備份</item>
     </plurals>
@@ -1193,7 +1189,7 @@
     <string name="tap_to_freeze_app">輕觸以凍結</string>
     <string name="app_manager_build_expired">需要更新</string>
     <string name="renamed_successfully">已重新命名</string>
-    <string name="selinux_context"></string>
+    <string name="selinux_context"/>
     <string name="unix_file_permissions">模式</string>
     <string name="sort_by_file_size">檔案大小</string>
     <string name="sort_by_file_type">檔案類型</string>

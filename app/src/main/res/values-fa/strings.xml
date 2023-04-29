@@ -371,7 +371,6 @@
     <string name="clear_app_cache_description">حافظه پنهان همه برنامه ها را پاک می کند</string>
     <string name="clear_app_cache">پاک کردن حافظه پنهان برنامه</string>
     <string name="clear_data_from_uninstalled_apps">داده برنامه های حذف‌نصب شده را پاک کن</string>
-    <string name="block_components_description">تمام اجزای شناسایی شده با امضاهای داده شده را مسدود کن</string>
     <string name="block_components_dots">مسدود کردن اجزا…</string>
     <string name="block_unblock_trackers_description">مسدود کردن یا رفع انسداد اجزای تبلیغات و ردیابی در همه برنامه های نصب شده</string>
     <string name="clear_cache">پاک کردن حافظه پنهان</string>
@@ -547,7 +546,6 @@
     <string name="obb_files_extracted_successfully">فایل های دیتا استخراج شدند</string>
     <string name="process_state">دولت: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g></string>
     <string name="input_backup_name">نام فایل پشتیبان</string>
-    <string name="presets">تنظیمات از پیش تعیین شده</string>
     <string name="filter_apps">برنامه ها</string>
     <string name="sort_by_process_id">مشخصات روند</string>
     <string name="sort_by_process_name">نام روند</string>
@@ -822,7 +820,6 @@
     <string name="netpolicy_reject_wifi_data">رد دادهای وای فای</string>
     <string name="notice">توجه</string>
     <string name="failed_to_prevent_background_run">نمی‌توان از اجرای %1$s در پس‌زمینه جلوگیری کرد</string>
-    <string name="app_signing_signature_mismatch_for_data_only_app">به دلیل عدم تطابق امضا، برنامه نصب نشد. برنامه بدون پاک کردن داده های آن حذف نصب شد.</string>
     <string name="second_degree_tracker_note">² پیشوند نشان می دهد که ردیاب ها در <a href="https://etip.exodus-privacy.eu.org/">لیست آماده به کار ETIP</a> i.e. آیا آنها ردیاب واقعی هستند هنوز در حال بررسی است.</string>
     <string name="failed_to_uninstall_app">حذف نصب ناموفق بود</string>
     <string name="community">انجمن</string>
@@ -909,7 +906,6 @@
     <string name="trackers_unblocked_successfully">اکنون ردیاب ها رفع انسداد شده اند</string>
     <string name="gz_bz2_compressed">%1$s فشرده شد</string>
     <string name="import_keystore">وارد کردن کلید فروشگاه</string>
-    <string name="pref_layout_orientation">جهت چیدمان</string>
     <string name="orientation_follow_locale">داخلی را دنبال کنید</string>
     <string name="orientation_left_to_right">چپ به راست</string>
     <string name="pref_display_changes_msg">تغییرات نسخه، ردیاب ها، اجزا، مجوزها، امضاها، کیت نرم افزاری و غیره را به صورت کنترل شده نمایش دهید.</string>

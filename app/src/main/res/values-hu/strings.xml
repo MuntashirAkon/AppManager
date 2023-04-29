@@ -254,7 +254,6 @@
     <string name="block_unblock_trackers_description">A hirdetések és trekkerek blokkolása és engedélyezése minden telepített appban</string>
     <string name="community_links"><a href="https://t.me/AppManagerChannel">Telegram csatorna</a> • <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
     <string name="block_components_dots">Komponensek blokkolása…</string>
-    <string name="block_components_description">Blokkolja az összes, az adott aláírással azonosított komponenst</string>
     <string name="usage_today">Ma</string>
     <string name="app_signing_signatures">Aláírások</string>
     <string name="path_permissions">Útvonal engedélyek</string>
