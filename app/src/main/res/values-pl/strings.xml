@@ -268,8 +268,7 @@
 \n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
-\nAutorskie logo: <a href="https://github.com/Atrate">Atrate</a>. </string>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a> </string>
     <string name="icon_picker">Selektor ikon</string>
     <string name="create_shortcut">Utwórz skrót</string>
     <string name="error_creating_shortcut">Wystąpił błąd podczas tworzenia skrótu</string>
@@ -1373,4 +1372,7 @@
     <string name="title_domains_supported_by_the_app">Obsługiwane domeny</string>
     <string name="app_info_tag_open_links">Otwórz linki</string>
     <string name="source_stamp_verified_and_identified_to_be_from_source">SourceStamp zweryfikowany i zidentyfikowany jako pochodzący z <xliff:g id="source" example="Google Play">%1$s</xliff:g>.</string>
+    <string name="block_unblock_components_dots">Blokowanie/odblokowywanie komponentów…</string>
+    <string name="unblock_components_dots">Odblokuj komponenty…</string>
+    <string name="block_unblock_components_description">Blokuj lub odblokowuj wszystkie komponenty zidentyfikowane przez podane sygnatury</string>
 </resources>
