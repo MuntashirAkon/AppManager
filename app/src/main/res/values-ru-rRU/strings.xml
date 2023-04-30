@@ -1333,7 +1333,7 @@
     <string name="sort_by_last_modified">Последнее изменение</string>
     <string name="sort_by_file_size">Размер файла</string>
     <string name="sort_by_file_type">Тип файла</string>
-    <string name="option_display_dot_files">Dot файлы</string>
+    <string name="option_display_dot_files">Скрытые файлы</string>
     <string name="option_display_folders_on_top">Папки сверху</string>
     <string name="export_app_list">Экспорт списка приложений</string>
     <string name="export_app_list_select_format">Выбор формата для экспорта списка приложений</string>
@@ -1374,4 +1374,5 @@
     <string name="app_info_tag_open_links">Открытые ссылки</string>
     <string name="source_stamp_verified_and_identified_to_be_from_source">SourceStamp проверен и идентифицирован как принадлежащий <xliff:g id="source" example="Google Play">%1$s</xliff:g> .</string>
     <string name="title_domains_supported_by_the_app">Поддерживаемые домены</string>
+    <string name="pref_zip_align">Выравнивание APK-файлов</string>
 </resources>
