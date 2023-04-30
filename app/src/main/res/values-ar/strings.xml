@@ -54,10 +54,11 @@
 \n- مكتبة سجل التغيير <a href="https://github.com/gabrielemariotti/changeloglib"> </a>
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus"> ClassySharkAndroid </a>
 \n- محرر <a href="https://github.com/billthefarmer/editor"> </a>
+\n- <a href="https://github.com/Raival-e/File-Explorer"> مستكشف الملفات </a>
 \n- <a href="https://github.com/nex3z/FlowLayout"> FlowLayout </a>
 \n- <a href="https://github.com/k3b/intent-intercept"> اعتراض النية </a>
 \n- <a href="https://github.com/YarikSOffice/lingver"> Lingver </a>
-\n- <a href="https://github.com/topjohnwu/Magisk"> ماجيسك </a>
+\n- <a href="https://github.com/topjohnwu/Magisk"> Magisk </a>
 \n- <a href="https://github.com/zhanghai/MaterialFiles"> ملفات المواد </a>
 \n- <a href="https://github.com/pluscubed/matlog"> MatLog </a>
 \n- <a href="https://github.com/matrix-org/matrix-android-sdk"> Matrix Android SDK </a>
@@ -65,8 +66,8 @@
 \n- <a href="https://github.com/open-keychain/open-keychain"> Open Keychain </a>
 \n- <a href="https://github.com/Aefyr/SAI"> SAI </a>
 \n- <a href="https://github.com/RikkaApps/Shizuku"> شيزوكو </a>
-\n- <a href="https://github.com/tuyafeng/Watt"> واط </a>
-\nمصدر الشعار الأصلي: <a href="https://github.com/Atrate"> Atrate </a>. </string>
+\n- <a href="https://github.com/eclipse/tm4e"> tm4e </a>
+\n- <a href="https://github.com/tuyafeng/Watt"> واط </a> </string>
     <string name="credits">الإشادات</string>
     <string name="third_party">مكتبات وأيقونات الطرف الثالث</string>
     <string name="license">الرخصة</string>
@@ -1450,4 +1451,53 @@
     <string name="title_domains_supported_by_the_app">النطاقات المدعومة</string>
     <string name="source_stamp_verified_and_identified_to_be_from_source">تم التحقق من SourceStamp وتحديده على أنه من <xliff:g id="source" example="Google Play"> %1$s </xliff:g>.</string>
     <string name="app_info_tag_open_links">افتح الرابط</string>
+    <string name="block_unblock_components_dots">حظر / إلغاء حظر المكونات …</string>
+    <string name="unblock_components_dots">إلغاء حظر المكونات…</string>
+    <string name="pref_layout_direction">اتجاه التخطيط</string>
+    <string name="title_code_editor">محرر التعليمات البرمجية</string>
+    <string name="read_only_file">ملف للقراءة فقط</string>
+    <string name="read_only_file_warning">لا يمكن كتابة التغييرات في الملف، ربما لأنه موجود في وحدة تخزين ليس لدى App Manager إذن للكتابة إليها. هل تريد حفظه في مكان مختلف؟</string>
+    <string name="replacement_text">استبدال</string>
+    <string name="action_replace_all">استبدل الكل</string>
+    <string name="search_option_match_case">مطابقة الحالة</string>
+    <string name="search_option_regex">ريجيس</string>
+    <plurals name="search_results">
+        <item quantity="zero">%d النتائج</item>
+        <item quantity="one">%d النتائج</item>
+        <item quantity="two">%d النتائج</item>
+        <item quantity="few">%d النتائج</item>
+        <item quantity="many">%d النتائج</item>
+        <item quantity="other">%d النتائج</item>
+    </plurals>
+    <string name="debloat_list_type">القائمة</string>
+    <string name="debloat_removal_type">النوع</string>
+    <string name="system_app_put_back">إعادة</string>
+    <string name="debloater_title">المنظف</string>
+    <string name="debloat_list_aosp">أوسب</string>
+    <string name="debloat_list_oem">المصنع</string>
+    <string name="debloat_list_carrier">الناقل / مزود خدمة الإنترنت</string>
+    <string name="debloat_list_google">جوجل</string>
+    <string name="debloat_list_misc">المنوعات</string>
+    <string name="debloat_list_pending">معلَّقة</string>
+    <string name="debloat_removal_safe">آمن</string>
+    <string name="debloat_removal_replace">استبدال</string>
+    <string name="debloat_removal_caution">الحذر</string>
+    <string name="debloat_removal_unsafe">غير آمن</string>
+    <string name="static_shared_library">المكتبة المشتركة الثابتة</string>
+    <string name="pref_zip_align">محاذاة ملفات APK</string>
+    <string name="block_unblock_components_description">حظر أو إلغاء حظر جميع المكونات المحددة بواسطة التوقيعات المحددة</string>
+    <string name="pref_zip_align_msg">تؤدي محاذاة ملف APK إلى تقليل استخدام الذاكرة حيث يمكن الوصول إلى الملفات الموجودة في APK مباشرة دون نسخ البيانات إلى ذاكرة الوصول العشوائي. هذه الخطوة مطلوبة إذا تم تعيين <tt> extractNativeLibs </tt> إلى <tt> true </tt>.</string>
+    <string name="redo">إعادة</string>
+    <string name="line_separator">فاصل الأسطر</string>
+    <string name="uninstall_app_again_message">تم إلغاء تثبيت التطبيق بدون مسح البيانات والتوقيع. هل تريد إلغاء تثبيته بالكامل؟</string>
+    <string name="uninstall_app">إلغاء تثبيت %1$s</string>
+    <string name="search_option_whole_word">الكلمة كلها</string>
+    <plurals name="alert_failed_to_unblock_components">
+        <item quantity="zero">تعذر إلغاء حظر مكونات تطبيقات %1$d</item>
+        <item quantity="one">تعذر إلغاء حظر مكونات تطبيقات %1$d</item>
+        <item quantity="two">تعذر إلغاء حظر مكونات تطبيقات %1$d</item>
+        <item quantity="few">تعذر إلغاء حظر مكونات تطبيقات %1$d</item>
+        <item quantity="many">تعذر إلغاء حظر مكونات تطبيقات %1$d</item>
+        <item quantity="other">تعذر إلغاء حظر مكونات تطبيقات %1$d</item>
+    </plurals>
 </resources>
