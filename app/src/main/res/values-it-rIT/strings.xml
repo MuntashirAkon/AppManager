@@ -303,7 +303,7 @@
     <string name="toggle_class_listing">Attiva o disattiva elenco classi</string>
     <string name="class_viewer">Visualizzatore classi</string>
     <string name="credits_message">Agli autori di
-\n- The Android Open Source Project
+\n- Il progetto open source Android
 \n- <a href="https://github.com/zhaobozhen/libraries">Absinthe\'s libraries</a>
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
@@ -312,6 +312,7 @@
 \n- <a href="https://github.com/gabrielemariotti/changeloglib">ChangeLog Library</a>
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a>
 \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/Raival-e/File-Explorer">File Explorer</a>
 \n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a>
 \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
 \n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a>
@@ -323,8 +324,8 @@
 \n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
-\nCrediti logo originale: <a href="https://github.com/Atrate">Atrate</a>. </string>
+\n- <a href="https://github.com/eclipse/tm4e">tm4e</a>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a> </string>
     <string name="credits">Crediti</string>
     <string name="sdk_flags">Flag</string>
     <string name="sort_by_domain">Prima le app utente</string>
@@ -1334,4 +1335,47 @@
     <string name="title_domains_supported_by_the_app">Domini supportati</string>
     <string name="app_info_tag_open_links">Apri link</string>
     <string name="source_stamp_verified_and_identified_to_be_from_source">SourceStamp verificato e identificato da <xliff:g id="source" example="Google Play">%1$s</xliff:g>.</string>
+    <string name="block_unblock_components_dots">Blocca/sblocca componenti…</string>
+    <string name="unblock_components_dots">Sblocca componenti…</string>
+    <string name="block_unblock_components_description">Blocca o sblocca tutti i componenti identificati dalle firme fornite</string>
+    <string name="pref_zip_align">Allinea file APK</string>
+    <string name="title_code_editor">Editor codice</string>
+    <string name="redo">Rifai</string>
+    <string name="replacement_text">Sostituzione</string>
+    <string name="read_only_file">File di sola lettura</string>
+    <string name="line_separator">Separatore righe</string>
+    <plurals name="search_results">
+        <item quantity="one">%d risultato</item>
+        <item quantity="many">%d risultati</item>
+        <item quantity="other">%d risultati</item>
+    </plurals>
+    <string name="action_replace_all">Sostituisci tutto</string>
+    <string name="search_option_match_case">Caso di corrispondenza</string>
+    <string name="search_option_whole_word">Parola intera</string>
+    <string name="search_option_regex">Espressione regolare</string>
+    <string name="uninstall_app_again_message">L\'applicazione è stata disinstallata senza cancellare i dati e la firma. Vuoi disinstallarla completamente\?</string>
+    <string name="uninstall_app">Disinstalla %1$s</string>
+    <string name="debloat_list_type">Elenco</string>
+    <string name="debloat_removal_type">Tipo</string>
+    <string name="system_app_put_back">Rimetti a posto</string>
+    <string name="debloater_title">Debloater</string>
+    <string name="debloat_list_aosp">AOSP</string>
+    <string name="debloat_list_oem">OEM</string>
+    <string name="debloat_list_carrier">Operatore/ISP</string>
+    <string name="debloat_list_google">Google</string>
+    <string name="debloat_list_pending">In attesa</string>
+    <string name="debloat_removal_replace">Sostituisci</string>
+    <string name="debloat_removal_caution">Attenzione</string>
+    <string name="static_shared_library">Libreria condivisa statica</string>
+    <plurals name="alert_failed_to_unblock_components">
+        <item quantity="one">Impossibile sbloccare i componenti per %1$d app</item>
+        <item quantity="many">Impossibile sbloccare i componenti per %1$d app</item>
+        <item quantity="other">Impossibile sbloccare i componenti per %1$d app</item>
+    </plurals>
+    <string name="pref_layout_direction">Direzione disposizione</string>
+    <string name="pref_zip_align_msg">L\'allineamento di un file APK ne riduce l\'utilizzo della memoria poiché è possibile accedere direttamente ai file nell\'APK senza copiare i dati nella RAM. Questo passaggio è necessario se <tt>extractNativeLibs</tt> è impostato su <tt>true</tt>.</string>
+    <string name="read_only_file_warning">Le modifiche non possono essere scritte nel file, probabilmente perché si trova in un volume su cui App Manager non ha il permesso di scrivere. Vuoi salvarlo in un posto diverso\?</string>
+    <string name="debloat_list_misc">Miscellanea</string>
+    <string name="debloat_removal_safe">Sicuro</string>
+    <string name="debloat_removal_unsafe">Non sicuro</string>
 </resources>
