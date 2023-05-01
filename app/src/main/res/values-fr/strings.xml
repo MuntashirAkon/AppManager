@@ -535,7 +535,7 @@
     <string name="toggle_class_listing">Activer/Désactiver l\'affichage en liste des classes</string>
     <string name="class_viewer">Visualiseur de classe</string>
     <string name="word_wrap">Activer/Désactiver la coupure de mots</string>
-    <string name="credits_message">À ces auteurs
+    <string name="credits_message">Aux auteurs de:
 \n- Le projet open-source Android
 \n- <a href="https://github.com/zhaobozhen/libraries">Absinthe\'s libraries</a>
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
@@ -1243,4 +1243,39 @@
     <string name="tap_to_freeze_app">Appuyez pour geler</string>
     <string name="waiting_for_the_phone_to_be_locked">En attente que le téléphone soit verrouillé…</string>
     <string name="action_stop_service">Arrêter</string>
+    <string name="unix_file_permissions">Mode</string>
+    <string name="renamed_successfully">Renommé</string>
+    <string name="selinux_context">Contexte de SELinux</string>
+    <string name="block_unblock_components_dots">Bloquer ou débloquer des composants…</string>
+    <string name="unblock_components_dots">Débloquer des composants…</string>
+    <string name="block_unblock_components_description">Bloquer ou débloquer tous les composants identifiés par la même signature</string>
+    <string name="uninstall_app">Désinstaller %1$s</string>
+    <string name="debloat_list_type">Liste</string>
+    <string name="debloat_removal_type">Type</string>
+    <string name="system_app_put_back">Remettre</string>
+    <string name="debloater_title">Débloqueur</string>
+    <string name="debloat_list_aosp">AOSP</string>
+    <string name="debloat_list_oem">Fabricant</string>
+    <string name="debloat_list_carrier">Opérateur/FAI</string>
+    <string name="debloat_list_google">Google</string>
+    <string name="debloat_list_misc">Recueil</string>
+    <string name="debloat_list_pending">En attente</string>
+    <string name="debloat_removal_safe">Sécurisé</string>
+    <string name="debloat_removal_replace">Remplacer</string>
+    <string name="debloat_removal_caution">Attention</string>
+    <string name="debloat_removal_unsafe">Non sécurisé</string>
+    <string name="source_stamp_verified_and_identified_to_be_from_source">Le SourceStamp est vérifié et provient de <xliff:g id="source" example="Google Play">%1$s</xliff:g>.</string>
+    <string name="app_manager_build_expiring_soon_warning">Cette version d\'App Manager expire bientôt. Veuillez installer la version la plus récente.</string>
+    <string name="app_manager_build_expired">Mise à jour requise</string>
+    <string name="file_group_id">Groupe (GID)</string>
+    <string name="file_owner_id">Propriétaire (UID)</string>
+    <plurals name="alert_failed_to_unblock_components">
+        <item quantity="one">Impossible de bloquer les composants d\'une application.</item>
+        <item quantity="many">Impossible de bloquer les composants de %1$d applications.</item>
+        <item quantity="other"></item>
+    </plurals>
+    <string name="app_can_write_and_execute_in_same_place">Cette application enfreint la <a href="https://en.wikipedia.org/wiki/W%5EX">politique W^X</a> et peut écrire et exécuter dans le même dossier ou la même partie de mémoire. Ceci autorise l\'exécution d\'exécutables arbitraires soit par la modification des exécutables inclus dans l\'application ou en les téléchargeant depuis Internet. Sauf si c\'est le comportement attendu de l\'application (ex. émulateurs de terminal), il est recommendé de trouver une version plus récente de l\'application prévue pour SDK 29 (Android 10) et ultérieur, ou de trouver des alternatives.</string>
+    <string name="app_manager_build_expired_message">Pour assurer la sécurité de votre appareil et de vos données, la version d\'App Manager que vous utilisez est arrivée à expiration. Vous devez installer la version la plus récente pour continuer à l\'utiliser, ou désinstaller cette version si aucune autre n\'est disponible.</string>
+    <string name="static_shared_library">Librairie statique partagée</string>
+    <string name="uninstall_app_again_message">Cette application a été désinstallée sans que les données et la signature soient supprimées. Souhaitez vous la désinstaller complètement \?</string>
 </resources>
