@@ -1430,27 +1430,27 @@
     <string name="adb_incomplete_usb_debugging_title">تصحيح أخطاء USB غير مكتمل</string>
     <string name="adb_incomplete_usb_debugging_message">يبدو أن تصحيح أخطاء USB لم يتم تكوينه بشكل صحيح. يرجى قراءة <a href="https://muntashirakon.github.io/AppManager/#subsec:enable-usb-debugging"> الوثائق </a> للحصول على خطوات إضافية. إذا كنت تعرف الخطوات بالفعل ، فالرجاء النقر فوق \"فتح\" لفتح خيارات المطور ، أو النقر فوق \"إغلاق\" لمواصلة استخدام وضع عدم الجذر.</string>
     <string name="select_a_dex2oat_compiler_filter"><tt> dex2oat </tt> فلتر المجمع</string>
-    <string name="optimize_option_compile_layouts">موارد تجميع التصميم</string>
+    <string name="optimize_option_compile_layouts">تجميع موارد التصميم</string>
     <string name="optimize_option_clear_profile_data">محو بيانات الملف الشخصي السابقة</string>
-    <string name="optimize_option_check_profiles">ضع في اعتبارك بيانات الملف الشخصي أثناء تحسين DEX</string>
+    <string name="optimize_option_check_profiles">ضع في اعتبارك بيانات الملف الشخصي أثناء تحسين ديكس</string>
     <string name="optimize_option_force_compilation">فرض التجميع حتى عندما لا يكون مطلوبا</string>
-    <string name="optimize_option_force_dexopt">إجراء تحسين DEX على الفور</string>
+    <string name="optimize_option_force_dexopt">إجراء تحسين ديكس على الفور</string>
     <string name="title_perform_runtime_optimization_to_apps">إجراء تحسين وقت التشغيل</string>
     <string name="action_run">تشغيل</string>
-    <string name="summary_perform_runtime_optimization_to_apps">قم بتحسين تخطيطات DEX و (في Android 10 والإصدارات الأحدث) لتحسين أداء التطبيقات.</string>
+    <string name="summary_perform_runtime_optimization_to_apps">قم بتحسين تخطيطات ديكس و (في اندرويد 10 والإصدارات الأحدث) لتحسين أداء التطبيقات.</string>
     <string name="action_optimize_app">تحسين</string>
     <string name="batch_ops_runtime_optimization">تحسين وقت التشغيل</string>
     <plurals name="alert_failed_to_optimize_apps">
-        <item quantity="zero">تعذر تحسين تطبيق %1$d</item>
-        <item quantity="one">تعذر تحسين تطبيق %1$d</item>
-        <item quantity="two">تعذر تحسين تطبيق %1$d</item>
-        <item quantity="few">تعذر تحسين تطبيقات %1$d</item>
-        <item quantity="many">تعذر تحسين تطبيق %1$d</item>
-        <item quantity="other">تعذر تحسين تطبيق %1$d</item>
+        <item quantity="zero">تعذر تحسين التطبيق %1$d</item>
+        <item quantity="one">تعذر تحسين التطبيق %1$d</item>
+        <item quantity="two">تعذر تحسين التطبيق %1$d</item>
+        <item quantity="few">تعذر تحسين التطبيقات %1$d</item>
+        <item quantity="many">تعذر تحسين التطبيقات %1$d</item>
+        <item quantity="other">تعذر تحسين التطبيق %1$d</item>
     </plurals>
     <string name="title_domains_supported_by_the_app">النطاقات المدعومة</string>
     <string name="source_stamp_verified_and_identified_to_be_from_source">تم التحقق من SourceStamp وتحديده على أنه من <xliff:g id="source" example="Google Play"> %1$s </xliff:g>.</string>
-    <string name="app_info_tag_open_links">افتح الرابط</string>
+    <string name="app_info_tag_open_links">افتح الروابط</string>
     <string name="block_unblock_components_dots">حظر / إلغاء حظر المكونات …</string>
     <string name="unblock_components_dots">إلغاء حظر المكونات…</string>
     <string name="pref_layout_direction">اتجاه التخطيط</string>
@@ -1460,11 +1460,11 @@
     <string name="replacement_text">استبدال</string>
     <string name="action_replace_all">استبدل الكل</string>
     <string name="search_option_match_case">مطابقة الحالة</string>
-    <string name="search_option_regex">ريجيس</string>
+    <string name="search_option_regex">قيمة السجل</string>
     <plurals name="search_results">
         <item quantity="zero">%d النتائج</item>
-        <item quantity="one">%d النتائج</item>
-        <item quantity="two">%d النتائج</item>
+        <item quantity="one">%d الناتج</item>
+        <item quantity="two">%d النتيجتين</item>
         <item quantity="few">%d النتائج</item>
         <item quantity="many">%d النتائج</item>
         <item quantity="other">%d النتائج</item>
@@ -1473,8 +1473,8 @@
     <string name="debloat_removal_type">النوع</string>
     <string name="system_app_put_back">إعادة</string>
     <string name="debloater_title">المنظف</string>
-    <string name="debloat_list_aosp">أوسب</string>
-    <string name="debloat_list_oem">المصنع</string>
+    <string name="debloat_list_aosp">تطبيقات اندرويد مفتوحة المصدر</string>
+    <string name="debloat_list_oem">برمجيات المصنع</string>
     <string name="debloat_list_carrier">الناقل / مزود خدمة الإنترنت</string>
     <string name="debloat_list_google">جوجل</string>
     <string name="debloat_list_misc">المنوعات</string>
@@ -1486,18 +1486,18 @@
     <string name="static_shared_library">المكتبة المشتركة الثابتة</string>
     <string name="pref_zip_align">محاذاة ملفات APK</string>
     <string name="block_unblock_components_description">حظر أو إلغاء حظر جميع المكونات المحددة بواسطة التوقيعات المحددة</string>
-    <string name="pref_zip_align_msg">تؤدي محاذاة ملف APK إلى تقليل استخدام الذاكرة حيث يمكن الوصول إلى الملفات الموجودة في APK مباشرة دون نسخ البيانات إلى ذاكرة الوصول العشوائي. هذه الخطوة مطلوبة إذا تم تعيين <tt> extractNativeLibs </tt> إلى <tt> true </tt>.</string>
+    <string name="pref_zip_align_msg">تؤدي محاذاة ملف APK إلى تقليل استخدام الذاكرة حيث يمكن الوصول إلى الملفات الموجودة في حزمة التطبيق مباشرة دون نسخ البيانات إلى ذاكرة الوصول العشوائي. هذه الخطوة مطلوبة إذا تم ضبط <tt> extractNativeLibs </tt> الى قيمة <tt> صحيح </tt>.</string>
     <string name="redo">إعادة</string>
     <string name="line_separator">فاصل الأسطر</string>
     <string name="uninstall_app_again_message">تم إلغاء تثبيت التطبيق بدون مسح البيانات والتوقيع. هل تريد إلغاء تثبيته بالكامل؟</string>
     <string name="uninstall_app">إلغاء تثبيت %1$s</string>
     <string name="search_option_whole_word">الكلمة كلها</string>
     <plurals name="alert_failed_to_unblock_components">
-        <item quantity="zero">تعذر إلغاء حظر مكونات تطبيقات %1$d</item>
-        <item quantity="one">تعذر إلغاء حظر مكونات تطبيقات %1$d</item>
-        <item quantity="two">تعذر إلغاء حظر مكونات تطبيقات %1$d</item>
-        <item quantity="few">تعذر إلغاء حظر مكونات تطبيقات %1$d</item>
-        <item quantity="many">تعذر إلغاء حظر مكونات تطبيقات %1$d</item>
+        <item quantity="zero">تعذر إلغاء حظر مكون التطبيق %1$d</item>
+        <item quantity="one">تعذر إلغاء حظر مكون التطبيق %1$d</item>
+        <item quantity="two">تعذر إلغاء حظر مكون التطبيقين %1$d</item>
+        <item quantity="few">تعذر إلغاء حظر مكونات التطبيقات %1$d</item>
+        <item quantity="many">تعذر إلغاء حظر مكونات التطبيقات %1$d</item>
         <item quantity="other">تعذر إلغاء حظر مكونات تطبيقات %1$d</item>
     </plurals>
 </resources>
