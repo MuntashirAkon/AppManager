@@ -12,7 +12,7 @@ ext {
     annotation_version = "1.5.0"
     apksig_version = "4.4.0"
     appcompat_version = "1.6.1"
-    arsclib_version = "00738ab580"
+    arsclib_version = "3289d33c75"
     baksmali_version = "2.5.2"
     bouncycastle_version = "1.70"
     desugar_jdk_version = "2.0.3"
