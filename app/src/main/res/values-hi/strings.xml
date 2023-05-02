@@ -938,7 +938,7 @@
     <string name="no_saved_logs">लॉगस नहीं है.</string>
     <string name="manage_saved_logs">बचाया गए हुए लॉगस को मैनेज करे</string>
     <string name="log_level">लॉग स्तर</string>
-    <string name="source_stamp_verified_and_identified_to_be_from_source">सोर्स स्टाम्प &lt;xliff:g xmlns:xliff=\"urn:oasis:names:tc:xliff:document:1.2\" id=\"source\" example=\"Google Play\"&gt; से है ऐसा पहचाना और साबित किया गया है</string>
+    <string name="source_stamp_verified_and_identified_to_be_from_source">सोर्स स्टाम्प <xliff:g id="source" example="Google Play">%1$s</xliff:g> से है ऐसा पहचाना और साबित किया गया है</string>
     <string name="pref_display_limit_summary" tools:ignore="PluralsCandidate">सिर्फ पिछले %1$d लॉगस दिखाओ ताकि \'आउट ऑफ मेमोरी\' से बचे.</string>
     <string name="pref_filter_pattern_title">टॉगस छान निकाले</string>
     <string name="pref_display_limit_title">लॉगस का प्रदर्शन सीमा</string>
