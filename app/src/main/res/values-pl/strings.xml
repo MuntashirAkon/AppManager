@@ -1375,4 +1375,46 @@
     <string name="block_unblock_components_dots">Blokowanie/odblokowywanie komponentów…</string>
     <string name="unblock_components_dots">Odblokuj komponenty…</string>
     <string name="block_unblock_components_description">Blokuj lub odblokowuj wszystkie komponenty zidentyfikowane przez podane sygnatury</string>
+    <plurals name="alert_failed_to_unblock_components">
+        <item quantity="one">Nie można odblokować komponentów dla aplikacji %1$d</item>
+        <item quantity="few">Nie można odblokować komponentów dla aplikacji %1$d</item>
+        <item quantity="many">Nie można odblokować komponentów dla aplikacji %1$d</item>
+        <item quantity="other">Nie można odblokować komponentów dla aplikacji %1$d</item>
+    </plurals>
+    <string name="pref_layout_direction">Kierunek układu</string>
+    <string name="pref_zip_align">Wyrównaj pliki APK</string>
+    <string name="title_code_editor">Edytor kodu</string>
+    <string name="redo">Ponów</string>
+    <string name="read_only_file">Plik tylko do odczytu</string>
+    <string name="line_separator">Separator liniowy</string>
+    <string name="replacement_text">Zamiennik</string>
+    <string name="action_replace_all">Zastąp wszystko</string>
+    <string name="search_option_match_case">Uwzględnij wielkość liter</string>
+    <string name="search_option_whole_word">Całe słowo</string>
+    <string name="search_option_regex">Regex</string>
+    <string name="uninstall_app_again_message">Aplikacja została odinstalowana bez wyczyszczenia danych i podpisu. Czy chcesz ją całkowicie odinstalować\?</string>
+    <string name="debloat_list_type">Lista</string>
+    <string name="debloat_removal_type">Rodzaj</string>
+    <string name="system_app_put_back">Odłóż</string>
+    <string name="debloat_list_aosp">AOSP</string>
+    <string name="debloat_list_oem">OEM</string>
+    <string name="debloat_list_carrier">Operator/dostawca usług internetowych</string>
+    <string name="debloat_list_google">Google</string>
+    <string name="debloat_list_misc">Składanka</string>
+    <string name="debloat_list_pending">Trwające</string>
+    <string name="debloat_removal_safe">Bezpieczny</string>
+    <string name="debloat_removal_replace">Zastąp</string>
+    <string name="debloat_removal_caution">Uwaga</string>
+    <string name="debloat_removal_unsafe">Niebezpieczny</string>
+    <string name="static_shared_library">Statyczna biblioteka współdzielona</string>
+    <plurals name="search_results">
+        <item quantity="one">%d wynik</item>
+        <item quantity="few">%d wyniki</item>
+        <item quantity="many">%d wyników</item>
+        <item quantity="other">%d wyników</item>
+    </plurals>
+    <string name="pref_zip_align_msg">Wyrównywanie pliku APK zmniejsza zużycie pamięci, ponieważ pliki w pliku APK są dostępne bezpośrednio bez kopiowania danych do pamięci RAM. Ten krok jest wymagany, jeśli <tt>extractNativeLibs</tt> jest ustawiona na <tt>true</tt>.</string>
+    <string name="read_only_file_warning">Zmiany nie mogą zostać zapisane w pliku, prawdopodobnie dlatego, że znajduje się on w woluminie, do którego zapisu nie ma uprawnień menedżer aplikacji. Chcesz zapisać go w innym miejscu\?</string>
+    <string name="uninstall_app">Odinstaluj %1$s</string>
+    <string name="debloater_title">Debloater</string>
 </resources>
