@@ -46,6 +46,7 @@ import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.transition.MaterialSharedAxis;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.regex.PatternSyntaxException;
 
 import io.github.muntashirakon.AppManager.R;
@@ -291,7 +292,7 @@ public class CodeEditorFragment extends Fragment {
         mEditor.subscribeEvent(ContentChangeEvent.class, (event, unsubscribe) -> {
             if (!mTextModified && event.getAction() != ContentChangeEvent.ACTION_SET_NEW_TEXT) {
                 mTextModified = true;
-                requireActionBar().setSubtitle("* " + mOptions.subtitle);
+                getActionBar().ifPresent(actionBar -> actionBar.setSubtitle("* " + mOptions.subtitle));
             }
             mEditor.postDelayed(this::updateLiveButtons, 50);
         });
@@ -496,7 +497,7 @@ public class CodeEditorFragment extends Fragment {
             if (successful) {
                 UIUtils.displayShortToast(R.string.saved_successfully);
                 mTextModified = false;
-                requireActionBar().setSubtitle(mOptions.subtitle);
+                getActionBar().ifPresent(actionBar -> actionBar.setSubtitle(mOptions.subtitle));
             } else {
                 UIUtils.displayLongToast(R.string.saving_failed);
             }
@@ -534,9 +535,10 @@ public class CodeEditorFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        ActionBar actionBar = requireActionBar();
-        actionBar.setTitle(mOptions.title);
-        actionBar.setSubtitle((mTextModified ? "* " : "") + mOptions.subtitle);
+        getActionBar().ifPresent(actionBar -> {
+            actionBar.setTitle(mOptions.title);
+            actionBar.setSubtitle((mTextModified ? "* " : "") + mOptions.subtitle);
+        });
     }
 
     @Override
@@ -609,10 +611,10 @@ public class CodeEditorFragment extends Fragment {
     }
 
     @NonNull
-    private ActionBar requireActionBar() {
+    private Optional<ActionBar> getActionBar() {
         FragmentActivity activity = requireActivity();
         if (activity instanceof AppCompatActivity) {
-            return Objects.requireNonNull(((AppCompatActivity) activity).getSupportActionBar());
+            return Optional.ofNullable(((AppCompatActivity) activity).getSupportActionBar());
         }
         throw new IllegalStateException();
     }
