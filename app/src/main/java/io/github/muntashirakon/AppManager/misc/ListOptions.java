@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.misc;
 
+import android.app.Application;
 import android.os.Bundle;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
@@ -14,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.chip.Chip;
@@ -72,9 +75,13 @@ public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
     protected MaterialAutoCompleteTextView profileNameInput;
     @Nullable
     private ListOptionActions listOptionActions;
+    @Nullable
+    private ListOptionsViewModel listOptionsViewModel;
 
     public void setListOptionActions(@Nullable ListOptionActions listOptionActions) {
-        this.listOptionActions = listOptionActions;
+        if (listOptionsViewModel != null) {
+            listOptionsViewModel.setListOptionActions(listOptionActions);
+        } else this.listOptionActions = listOptionActions;
     }
 
     @CallSuper
@@ -88,6 +95,7 @@ public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        listOptionsViewModel = new ViewModelProvider(this).get(ListOptionsViewModel.class);
         sortText = view.findViewById(R.id.sort_text);
         sortGroup = view.findViewById(R.id.sort_options);
         reverseSort = view.findViewById(R.id.reverse_sort);
@@ -118,10 +126,18 @@ public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
 
     @NonNull
     private ListOptionActions requireListOptionActions() {
-        if (listOptionActions == null) {
+        if (listOptionsViewModel == null) {
+            throw new NullPointerException("ViewModel is not initialized.");
+        }
+        if (listOptionActions != null) {
+            listOptionsViewModel.setListOptionActions(listOptionActions);
+            listOptionActions = null;
+        }
+        ListOptionActions actions = listOptionsViewModel.getListOptionActions();
+        if (actions == null) {
             throw new NullPointerException("ListOptionsActions must be set before calling init.");
         }
-        return listOptionActions;
+        return actions;
     }
 
     private void init(boolean reinit) {
@@ -228,5 +244,23 @@ public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
         chip.setId(sortOrder);
         chip.setText(strRes);
         return chip;
+    }
+
+    public static class ListOptionsViewModel extends AndroidViewModel {
+        @Nullable
+        private ListOptionActions listOptionActions;
+
+        public ListOptionsViewModel(@NonNull Application application) {
+            super(application);
+        }
+
+        public void setListOptionActions(@Nullable ListOptionActions listOptionActions) {
+            this.listOptionActions = listOptionActions;
+        }
+
+        @Nullable
+        public ListOptionActions getListOptionActions() {
+            return listOptionActions;
+        }
     }
 }
