@@ -34,16 +34,21 @@
     <string name="intro$main$source-code-links">除了GitHub外其他都是镜像链接。tags 应当始终是最新的，但 master 分支不保证是
 \n最新的。如果计划 clone master 分支，请使用 GitHub 链接而不是其他链接。</string>
     <string name="intro$main$terminologies">\\begin{itemize}
-\n \\item \\textbf{AM} --- App Manager
-\n \\item \\textbf{Block/Unblock} --- Used for component blocking or unblocking. How components are blocked depends on
-\n the user preferences.
+\n \\item \\textbf{AM} --- App Manager 应用
+\n \\item \\textbf{Block/Unblock} --- 用于拦截组件或解除组件拦截。 如何拦截取决于
+\n 用户选项。
 \n \\item \\textbf{IFW} --- Intent Firewall (意图防火墙)
 \n \\item \\textbf{Ops} --- operations (操作), e.g.\\ app ops, batch ops, 1-click ops
-\n \\item \\textbf{SSAID} --- \\texttt{Settings.Secure.ANDROID\\_ID} - 分配给每个应用的设备标识符 (Android Oreo及以上版本)，由应用签名与包\\texttt{android}的SSAID组合生成的。因此，除非用户选择格式化设备，否则它保证对每个应用来说都是独一无二的。它被广泛用于跟踪用户。
-\n \\item \\textbf{Tracker} --- Denotes tracker components throughout the document and in App Manager except in the
-\n \\hyperref[sec:scanner-page]{scanner page}. Trackers include libraries such as crash reporters, analytics,
-\n profiling, identification, ad, location, etc. Thus, they are not equal in functions. There is no distinction or bias
-\n between open source and closed source libraries that promote tracking.
+\n \\item \\textbf{SAF} --- 存储访问框架（SAF）的缩写形式，Android 系统所用的抽象概念，允许应用无需担忧底层文件系统便能
+\n 使用或提供文件。
+\n \\item \\textbf{SSAID} --- \\texttt{Settings.Secure.ANDROID\\_ID} - 分配给每个应用的设备标识符 (Android Oreo及以上版本)，
+\n 由应用签名与包\\texttt{android}的SSAID组合生成。
+\n 因此，除非用户选择格式化设备，否则它保证对每个应用来说都是独一无二的。
+\n 它被普遍用于跟踪用户。
+\n \\item \\textbf{Tracker} --- 在文档和 App Manager 中均表示跟踪器组件，
+\n \\hyperref[sec:scanner-page]{scanner page} 是个例外。
+\n 跟踪器包括用于报告崩溃、数据分析、用户画像、身份识别、广告和定位等目的的库文件。因此，这些库的功能并不相同。推广跟踪的
+\n 开源和闭源库之间不存在区别或偏向。
 \n\\end{itemize}</string>
     <string name="intro$main$$terminologies-title">术语</string>
     <string name="intro$main$$bin-sources-title">二进制(可执行)分发来源</string>
@@ -288,41 +293,12 @@
 \n第二部分称 \\textit{版本号}. 其被第一个括号括起来. 版本代码是一个整数，用于 区分应用程序版本 (因为机器无法读取版本名). 简言之, 新版本的应用程序具有比旧版本更高的版本代码. 如，如果 \\texttt{123} 和 \\texttt{125} 是一个应用程序的两个版本代码，我们可以说后者比前者更新(后者的版本代码更高).
 \n在不同平台（移动、平板、桌面等）或架构（32/64 位、ARM 或 Intel）上为同一版本提供不同 APK 文件的应用程序，版本号可能会产生误导，因为它们通常会为每个平台添加前缀 .
 \n
-\n \\item \\textbf{标签}: (也称标签云) 标签包括应用程序最基本、最简洁、有用的信息，如--- \\begin{itemize}
-\n \\item \\textit{追踪器信息} 应用程序中跟踪器组件的数量 (如, \\textit{5 个追踪器}).
-\n如果跟踪器未被阻止，则标记颜色显示为橙色，如果跟踪器在App Manager中被阻止，则标记颜色显示为深青色.
-\n单击标签会打开一个对话框，其包含跟踪器组件列表，如果 App Manager 具有足够的权限，可以阻止或取消阻止这些组件.
-\n \\item \\textit{应用类型} 用户应用或系统应用。系统应用程序的更新版本和通过 Magisk 无系统安装的应用也被认为是系统应用.
-\n \\item \\textit{Split APK 信息} APK 中的拆分包数量，不包括基本 APK (e.g., \\textit{5 分包}). 单击标签会打开一个对话框，其中包含分包 APK 信息，例如类型和大小.
-\n \\item \\textit{可调试} 应用可以通过 ADB调试.可调试应用可以享受常规应用无法使用的某些功能. 应用的数据可以通过 ADB 访问 (如使用\\texttt{run-as} 命令无需任何额外权限).
-\n \\item \\textit{仅测试} 应用是仅测试应用程序. 仅测试应用可以享受常规应用无法使用的某些功能. 应用的数据可以通过 ADB 访问 (如使用\\texttt{run-as} 命令无需任何额外权限).
-\n \\item \\textit{大(堆/Heap)内存} 应用将请求较大的堆内存, 即需要更多内存 (RAM) 空间用于动态分配.
-\n 是否为应用程序分配大空间仍由操作系统决定. 如，App Manager 请求较大的堆大小，因为它在 Android 8 之前需要在扫描的 APK 时将整个 APK 加载到内存中App.
-\n \\item \\textit{无代码} 该应用不含任何与之相关代码，如不含Dex文件.
-\n在某些系统应用中，实际代码可能位于其他位置.
-\n \\item \\textit{运行中} 应用的一项或多项服务正在后台运行.
-\n单击标签将打开一个对话框，其中包含正在运行的服务列表.
-\n如果启用了日志查看器功能，单击任何服务会将在日志查看器中它.
-\n \\item \\textit{已停止} 应用被强制停止. 这可能不会阻止它以后自动启动.
-\n \\item \\textit{已禁用} 应用被禁用 (在启动器无图标).
-\n \\item \\textit{已挂起} 表示应用程序已挂起 (在启动器中显示为灰色).
-\n \\item \\textit{被隐藏} 示应用程序是隐藏的 (在启动器无图标).
-\n \\item \\textit{MagiskHide} MagiskHide 已启用. 单击该标签会打开一个对话框，其中包含应用程序中可以从 MagiskHide 添加或删除的进程列表.
-\n \\item \\textit{MagiskDenyList} 该应用程序存在于 MagiskDenyList 中. 单击标签会打开一个对话框，其中包含应用程序中可以从 MagiskDenyList 列表中添加或删除的进程列表.
-\n \\item \\textit{密匙库} 应用在 Android KeyStore 中存有项目. 单击将打开一个对话框，其中包含属于该应用程序的所有 KeyStore 文件.
-\n \\item \\textit{备份} 应用至少使用 App Manager 备份过一次. 单击标签会打开一个对话框，其包含所有可用的备份以及元数据.
-\n \\item \\textit{不进行电池优化} 电池优化对应用不生效. 可以通过单击标签重新启用电池优化.
-\n \\item \\hyperref[sec:net-policy]{\\textit{联网策略}} 为应用配置联网策略（如，后台数据使用）. 单击标签会显示一个对话框，其中包含系统支持的策略.
-\n \\item \\hyperref[sec:terminologies]{\\textit{SSAID}} 点击打开一个对话框，其中包含分配给应用程序的当前 SSAID。若需要可以重置/重新生成 SSAID.
-\n \\item \\textit{SAF} 表示应用已被授权访问一个或多个存储位置或文件，即获得由存储访问框架 (SAF) 的 URI.
-\n单击打开一个对话框，其中包含授予的 URI.
-\n \\item \\textit{被 Google Play 签名} 表示应用程序可能由 Google 签名.
-\n \\end{itemize}
+\n \\item \\textbf{标签}: (也称标签云) 标签包括应用程序最基本、最简洁、有用的信息。参阅 \\Sref{subsubsec:tags} 查看显示在此处的完整标签列表。
 \n
-\n \\item \\textbf{水平滚动操作面板} 一个操作面板，由可以对应用执行的各种操作组成, 有关可用操作的完整列表，请参阅§\\ref{subsubsec:horizontal-action-panel}.
+\n\\item \\textbf{水平滚动操作面板} 一个操作面板，由可以对应用执行的各种操作组成, 有关可用操作的完整列表，请参阅§\\ref{subsubsec:horizontal-action-panel}.
 \n
 \n \\item \\textbf{路径与目录}: 应用有关路径的各种信息，包括 \\textit{应用目录} (where the APK files reside), \\textit{数据目录} (internal, device protected and externals), \\textit{应用分包目录} (along with the split names), and \\textit{本机原生 JNI 库} (如果有). JNI 库用于调用通常用 C/C++ 编写的本机原生代码, 使用本机原生库可以使应用程序运行得更快或帮助应用程序使用使用非 Java 语言编写的第三方库，同大多数游戏中一样.
-\n通过单击每个目录项右侧的启动图标, 可以通过第三方文件管理器打开目录，前提是它们支持并获得必要的权限.
+\n通过单击每个目录项右侧的启动按钮, 可以通过第三方文件管理器打开目录，前提是它们支持并获得必要的权限.
 \n
 \n \\item \\textbf{数据使用}: 操作系统报告的应用程序使用的数据量.
 \n 根据 Android 版本，这可能需要广泛的权限，包括 \\textit{访问应用使用情况} 和 \\textit{电话} 权限.
@@ -334,8 +310,8 @@
 \n \\item \\textbf{SDK} 显示与 Android SDK 相关的信息. 存在两个（旧设备只有一个）值:
 \n \\textit{最高} 目标 SDK 与\\textit{最低} 最低SDK (后者不适用于旧设备).
 \n最佳实践是使用平台当前支持的最大 SDK 的应用程序，以确保应用程序未在兼容模式下运行(以便使用隐私规避功能).
-\n SDK 已称为 \\textbf{等级(API Level)}.
-\n \\seealsoinline{\\href{https://en.wikipedia.org/wiki/Android_version_history\\#Overview}{Android Version History}}
+\n SDK 也称为 \\textbf{等级(API Level)}\\\\
+\n \\同样参阅在线资料{\\href{https://en.wikipedia.org/wiki/Android_version_history\\#Overview}{Android Version History}}
 \n
 \n \\item \\textbf{标志位(Flags)}: 构建应用程序时使用的应用标志, 有关标志的完整列表及其作用, 请见\\href{https://developer.android.com/reference/android/content/pm/ApplicationInfo\\#flags}{official documentation}.
 \n
@@ -463,7 +439,8 @@
     <string name="pages$settings-page$$import-export-keystore-title">导入/导出密钥库</string>
     <string name="pages$settings-page$$device-info-title">关于设备</string>
     <string name="pages$settings-page$install-location">定义 APK 安装位置，可以是 \\textit{自动}、\\textit{仅内部存储} 和\\textit{偏好外部存储}。
-\n在较新的 Android 版本中，选择最后一个选项并不保证应用将被安装在外部存储中。</string>
+\n在较新的 Android 版本中，选择最后一个选项
+\n并不保证应用将被安装在外部存储中。</string>
     <string name="pages$settings-page$enable-disable-features">启用或禁用应用 App Manager 中的某些功能，如
 \n\\begin{itemize}
 \n \\item \\textbf{拦截器}
@@ -472,7 +449,8 @@
 \n \\item \\textbf{包安装器}
 \n \\item \\textbf{使用情况.} 如关闭此功能，App Manager 永远不会请求 \\textit{使用情况} 权限.
 \n \\item \\textbf{日志查看器}
-\n``探索\'\' 选择在尝试打开 APK 文件时不可用。
+\n\\item \\textbf{App Eexplorer.} ``探索\'\' 选择在尝试打开 APK 文件时不可用。
+\n \\item \\textbf{App info.} 尝试打开 APK 文件时会显示 ``应用信息\'\'选项
 \n \\item \\textbf{使用互联网.}如果关闭此功能，则所有互联网功能都将被禁用。
 \n 目前，唯一的互联网功能是通过 VirusTotal 获取扫描报告。
 \n\\end{itemize}</string>
@@ -586,11 +564,12 @@
 \n应用程序清单是存储应用程序特定元数据的文件，Android 通过读取元数据来处理应用。
 \n
 \n这些选项卡中使用的颜色在 \\Sref{subsec:app-details-colour-codes} 中进行了解释。也可以在弹出菜单对列表进行排序.</string>
-    <string name="pages$settings-page$installer-app">选择安装程序，这对于明确检查安装程序以验证应用程序是否合法安装的应用程序很有用。
+    <string name="pages$settings-page$installer-app">选择安装程序。这对于明确检查安装程序以验证应用程序是否合法安装的应用程序很有用。
 \n这只适用于 root 或 ADB 用户。
 \n
 \n\\begin{tip}{Notice}
-\n 对于应用来说，检查安装包似乎并无不妥，但 Android 框架已经在安装过程中处理了这个问题。
+\n 对于应用来说，检查安装包似乎并无不妥，
+\n 但 Android 框架已经在安装过程中处理了这个问题。因此，
 \n 通过检查安装包是证明应用来源合法性是错误的。
 \n\\end{tip}</string>
     <string name="pages$settings-page$$enable-disable-features-title">启用/禁用功能</string>
