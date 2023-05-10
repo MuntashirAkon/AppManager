@@ -47,7 +47,7 @@
     <string name="user_app">Uživatelská aplikace</string>
     <string name="sdk_max">Cíl</string>
     <string name="starting_activity">Spouštění aktivity: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
-    <string name="error_invalid_icon_resource">Invalidní zdroj ikony</string>
+    <string name="error_invalid_icon_resource">Neplatný zdroj ikony</string>
     <string name="data_usage_msg">Využití dat</string>
     <string name="app_not_installed">Aplikace není nainstalována</string>
     <string name="word_wrap">Přepnout obtékání slov</string>
@@ -62,7 +62,7 @@
     <string name="about">O aplikaci</string>
     <string name="data_size">Data</string>
     <string name="cache_size">Mezipaměť</string>
-    <string name="sort_by_package_name">Názvu balíčku</string>
+    <string name="sort_by_package_name">Název balíčku</string>
     <string name="user">Uživatel</string>
     <string name="system">Systém</string>
     <string name="sort">Setřídit</string>
@@ -79,14 +79,14 @@
     <string name="no_receivers">Žádné přijímače</string>
     <string name="receivers">Přijímače</string>
     <string name="task_affinity">Příslušnost úlohy</string>
-    <string name="sort_by_app_label">Označení balíčlz</string>
+    <string name="sort_by_app_label">Označení aplikace</string>
     <string name="manifest">Manifest</string>
     <string name="path_permissions">Oprávnění k cestán</string>
     <string name="sdk_min">Min</string>
     <string name="sort_by_domain">Uživatelské aplikace jako první</string>
     <string name="main_activity">Hlavní činnosti</string>
-    <string name="tracker_details">Detaily o sledovači</string>
-    <string name="tracker_classes">Třídy o sledovači</string>
+    <string name="tracker_details">Detaily o trackeru</string>
+    <string name="tracker_classes">Třídy trackeru</string>
     <string name="credits_message">Autorům
 \n- Otevřený projekt Android
 \n- <a href="https://github.com/butzist/ActivityLauncher">Spouštěč činností</a>
@@ -106,12 +106,12 @@
 \nOriginální logo kreditu: <a href="https://github.com/Atrate">Atrate</a> </string>
     <string name="toggle_class_listing">Přepínač listování třídy</string>
     <plurals name="tracker_and_classes">
-        <item quantity="one">1 sledovač s <xliff:g id="class_no" example="50">%1$d</xliff:g> třídou</item>
-        <item quantity="few">1 sledovač s <xliff:g id="class_no" example="50">%1$d</xliff:g> třídami</item>
-        <item quantity="other"/>
+        <item quantity="one">1 tracker s <xliff:g id="class_no" example="50">%1$d</xliff:g> třídou</item>
+        <item quantity="few">1 tracker s <xliff:g id="class_no" example="50">%1$d</xliff:g> třídami</item>
+        <item quantity="other">1 tracker s <xliff:g id="class_no" example="50">%1$d</xliff:g> třídami</item>
     </plurals>
     <string name="obb_size">Obb</string>
-    <string name="found_trackers">Najít sledovače:</string>
+    <string name="found_trackers">Nalezené trackery:</string>
     <string name="all_classes">Všechny třídy</string>
     <string name="credits">Kredity</string>
     <string name="icon_picker">Sběrač ikon</string>
@@ -122,4 +122,556 @@
     <string name="data_received">Obdržená data</string>
     <string name="media_size">Média</string>
     <string name="class_viewer">Zobrazovač třídy</string>
+    <string name="open_pgp_provider">Poskytovatel OpenPGP</string>
+    <string name="pref_compression_method">Metoda komprese</string>
+    <string name="filter_apps_with_backups">Se zálohami</string>
+    <string name="no_matching_package_found">Nepodařilo se najít žádnou takovou aplikaci</string>
+    <string name="installed_version">Nainstalovaná verze</string>
+    <string name="disable">Vypnout</string>
+    <string name="backup_obb_media">OBB a média</string>
+    <string name="installer_error_session_create">Nepodařilo se vytvořit relaci instalačního programu</string>
+    <string name="_undefined">Nedefinováno</string>
+    <string name="rsa_exponent">Exponent</string>
+    <string name="filter_running_apps">Spuštěné aplikace</string>
+    <string name="failed_to_duplicate_profile">Profil nelze duplikovat</string>
+    <string name="sort_by_memory_usage">Využití paměti</string>
+    <string name="rsa_modulus">Modul</string>
+    <string name="conversion_failed">Konverze se nezdařila.</string>
+    <string name="pref_show_users_in_installer">Zobrazit uživatele v instalátoru</string>
+    <string name="cache">Mezipaměť</string>
+    <string name="test_only">Pouze test</string>
+    <string name="validity">Platnost</string>
+    <string name="pref_backup_flags_msg">Přidáním předvoleb pro možnosti zálohování odpadá nutnost vybírat příznaky při každém zálohování/obnovení.</string>
+    <string name="installer_error_bad_apks">Vybrané APK soubory jsou neplatné</string>
+    <string name="pref_import_existing_msg">Přidat do App Manageru součásti zakázané jinými aplikacemi. Při používání tohoto nástroje buďte opatrní, protože může dojít k mnoha falešným poplachům.. Vyberte si pouze důvěryhodné aplikace.</string>
+    <string name="orientation_reverse_landscape">Na šířku, obráceně</string>
+    <string name="input_profile_name">Název profilu</string>
+    <string name="app_signing_install_without_data_loss">Pokud jste vypnuli ověřování podpisu, můžete použít možnost <b>Only install</b> k instalaci aplikace bez ztráty dat.</string>
+    <string name="unblock">Odblokovat</string>
+    <string name="external_data">Externí data</string>
+    <plurals name="alert_failed_to_clear_data">
+        <item quantity="one">Nebylo možné vymazat data z %1$d aplikace</item>
+        <item quantity="few">Nebylo možné vymazat data z %1$d aplikací</item>
+        <item quantity="other">Nebylo možné vymazat data z %1$d aplikací</item>
+    </plurals>
+    <string name="toggle_kill_for_system_apps">Přepnout zavírání systémových aplikací</string>
+    <string name="dsa_affine_x">Afinní souřadnice x</string>
+    <string name="ecc">Kryptografie eliptických křivek</string>
+    <string name="usage_access_not_supported">Nepodařilo se požádat o přístup k údajům o využití, protože příslušná stránka nastavení neexistuje.</string>
+    <string name="backup_multiple">Zálohovat více</string>
+    <string name="choose_language">Změnit jazyk</string>
+    <string name="subject">Předmět</string>
+    <string name="input_profile_name_description">Název profilu nesmí obsahovat mezery.</string>
+    <string name="export_icon">Extrahovat ikonu</string>
+    <string name="orientation_full_user">Plný přístup</string>
+    <string name="valid">Platný</string>
+    <string name="serial_no">Sériové číslo</string>
+    <string name="touchscreen">Dotyková obrazovka</string>
+    <string name="second_degree_tracker_note">Předpona ² označuje, že trackery jsou v <a href="https://etip.exodus-privacy.eu.org/"> pohotovostní seznamu ETIP </a>, např. zda se jedná o skutečné trackery, je stále prošetřováno.</string>
+    <string name="app_usage">Použití aplikace</string>
+    <string name="checksums">Kontrolní součty</string>
+    <string name="installer_error_storage">Pro instalaci aplikace není dostatek úložiště</string>
+    <string name="enable">Povolit</string>
+    <string name="running">Spuštěno</string>
+    <string name="data">Data</string>
+    <string name="user_and_uid">Uživatel: <xliff:g id="user_name" example="root">%1$s</xliff:g> (<xliff:g id="user_id" example="0">%2$d</xliff:g>)</string>
+    <string name="error_evaluating_input">Vstup nelze vyhodnotit</string>
+    <string name="community_links"><a href="https://t.me/AppManagerChannel">Kanál na Telegramu</a>•<a href="https://twitter.com/AppManagerNews">Twitter</a></string>
+    <string name="reject_time">Doba odmítnutí</string>
+    <string name="native_library_dir">Nativní adresář knihoven JNI</string>
+    <string name="issued_date">Datum vydání</string>
+    <string name="pref_remove_all_rules">Odebrat všechna pravidla</string>
+    <string name="str_logo">Logo</string>
+    <string name="kill_process">Ukončit</string>
+    <string name="apply">Použít</string>
+    <string name="no">Ne</string>
+    <string name="open_in_termux">Otevřít v Termux</string>
+    <string name="installer_error_blocked_device">Zařízení</string>
+    <string name="storage_and_cache">Úložiště a mezipaměť</string>
+    <string name="key_name">Název klíče</string>
+    <string name="app_settings">Nastavení</string>
+    <string name="usage_yesterday">Včera</string>
+    <string name="apk_updater">APK Updater</string>
+    <string name="running_apps">Spuštěné aplikace</string>
+    <string name="export_blocking_rules">Pravidla blokování exportu</string>
+    <string name="ago">před</string>
+    <string name="filter_system_apps">Systémové aplikace</string>
+    <string name="update_uninstalled_successfully">Aktualizace pro <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> byly odinstalovány.</string>
+    <string name="dsa_affine_y">Afinní souřadnice y</string>
+    <string name="tap_to_submit_crash_report">Klepnutím odešlete zprávu o selhání.</string>
+    <string name="copy">Kopírovat</string>
+    <string name="pref_import">Importovat</string>
+    <string name="backup_apk_files">Soubory APK</string>
+    <string name="locale_split_for_base_apk"><xliff:g id="split_name" example="English">%1$s</xliff:g> místo pro základní soubor APK</string>
+    <string name="orientation_unspecified">Nespecifikováno</string>
+    <string name="no_tracker_found">Nebyl nalezen žádný trakcer</string>
+    <string name="backup_all_users">Všichni uživatelé</string>
+    <string name="pref_import_watt_msg">Import pravidel blokování z Watt, z nichž každý soubor obsahuje pravidla pro jeden balíček s názvem <tt>packagename.xml</tt> atd.</string>
+    <string name="clear_data">Vymazat údaje</string>
+    <string name="other">Další</string>
+    <string name="sort_by_mobile_data">Mobilní data</string>
+    <string name="clear_data_from_uninstalled_apps">Vymazat data z odinstalovaných aplikací</string>
+    <string name="package_name_is_installed_successfully">Aplikace <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> byla naistalována</string>
+    <string name="new_profile">Nový profil</string>
+    <string name="unknown_op">Neznámá operace</string>
+    <string name="yes">Ano</string>
+    <string name="rules_not_applied">Pravidla se neuplatňují</string>
+    <string name="failed_to_deny_dangerous_perms">Nepodařilo se zrušit všechna nebezpečná oprávnění</string>
+    <string name="deny_app_ops_description">Nastavení režimu pro operace aplikace identifikované konstantními hodnotami, např. <tt>632</tt> or 3<tt>RUN_IN_BACKGROUND4</tt></string>
+    <string name="run_in_termux">Spustit v Termux</string>
+    <string name="failed_to_fetch_package_info">Nepodařilo se získat informace o balíčku</string>
+    <string name="pref_import_existing">Importovat stávající pravidla</string>
+    <string name="filter_apps">Aplikace</string>
+    <string name="add_item">Přidat položku</string>
+    <string name="key_name_cannot_be_null">Název klíče nemůže být prázdný</string>
+    <string name="navigation">Navigace</string>
+    <string name="block_trackers">Blokovat trackery</string>
+    <string name="deny_dangerous_app_ops">Odmítnout nebezpečné aplikaci</string>
+    <string name="source_code">Zdrojový kód</string>
+    <string name="block_unblock_trackers">Blokovat/odblokovat trackery</string>
+    <string name="split_feature_name">Funkce: <xliff:g id="feature_name" example="Visualizer">%1$s</xliff:g></string>
+    <string name="orientation_user_landscape">Orientace uživatele na šířku</string>
+    <string name="cancel">Zrušit</string>
+    <string name="share_apk">Sdílet APK</string>
+    <string name="menu_apply_rules">Použít pravidla</string>
+    <string name="type_string">Znaky</string>
+    <string name="touchscreen_finger">Prst</string>
+    <string name="grant_usage_access">Udělení přístupu k použití</string>
+    <string name="decimal_value">Desetinná hodnota</string>
+    <string name="uninstall_system_app_message">Jedná se o systémovou aplikaci. Opravdu chcete tuto aplikaci odinstalovat\?</string>
+    <string name="failed_to_stop">Nepodařilo se zastavit <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="sort_by_denied_permissions">Nejprve odmítnuto</string>
+    <string name="backup_options">Možnosti zálohování</string>
+    <string name="profiles">Profily</string>
+    <string name="no_tracker_class">Žádné třídy trackerů</string>
+    <string name="reset_to_default">Obnovit výchozí</string>
+    <string name="external_apk_no_app_op">Externí soubor APK neprovádí s aplikacemi žádné operace</string>
+    <string name="failed_to_uninstall">Nelze odinstalovat <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="installer_error_blocked">Instalace blokována přes <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
+    <string name="failed_to_parse_some_numbers">Některá čísla se nepodařilo zpracovat</string>
+    <string name="input_backup_name_description">Název zálohy by neměl začínat číslicí ani by neměl obsahovat mezery. Pokud chcete použít aktuální datum a čas, nechte toto pole prázdné.</string>
+    <string name="try_again">Zkusit znovu</string>
+    <string name="skip_signature_checks">Přeskočit kontroly podpisů</string>
+    <string name="accept_time">Doba schválení</string>
+    <string name="follow_system">Systémově kompatibilní</string>
+    <string name="website">Webová stránka</string>
+    <string name="navigation_dial_pad">Číselník</string>
+    <string name="state_high_priority">S vysokou prioritou</string>
+    <string name="issuer">Vydavatel</string>
+    <string name="clear_data_message">Opravdu chcete vymazat data z této aplikace\?</string>
+    <string name="algorithm">Algoritmus</string>
+    <string name="scanner">Skener</string>
+    <string name="no_app_ops">Žádné operace aplikace</string>
+    <string name="pref_show_users_in_installer_msg">Zobrazit seznam uživatelů, které lze vybrat před instalací externí aplikace. Vyžaduje root nebo ADB.</string>
+    <string name="the_import_was_successful">Importováno</string>
+    <string name="launch_mode_single_instance">Jediná instance</string>
+    <string name="keyboard_no_keys">Žádné klíče</string>
+    <string name="process_state_with_extra">Stát: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g> (<xliff:g id="state_extra" example="High priority">%2$s</xliff:g>)</string>
+    <string name="filtered_packages">Filtrované balíčky</string>
+    <string name="locale_split_for_feature"><xliff:g id="split_name" example="English">%1$s</xliff:g> místo pro funkci <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="no_shared_libs">Žádné sdílené knihovny</string>
+    <string name="export_failed">Export se nezdařil!</string>
+    <string name="pref_import_blocker_msg">Import pravidel blokování z aplikace Blocker, z nichž každé obsahuje pravidla pro jeden balíček.</string>
+    <string name="components">Součásti</string>
+    <string name="pref_app_language">Jazyk</string>
+    <string name="boolean_value">Booleovská hodnota</string>
+    <string name="view_missing_signatures">Klepnutím zobrazíte nebo odešlete podpisy, které ještě nejsou v databázi knihoven App Manageru.</string>
+    <string name="external_multiple_data_dir">Adresář externích dat <xliff:g id="dir_no" example="1">%1$d</xliff:g></string>
+    <string name="filter_user_apps">Uživatelské aplikace</string>
+    <string name="keyboard_qwerty">QWERTY</string>
+    <string name="encryption">Šifrování</string>
+    <string name="uninstalled_successfully">Aplikace <xliff:g id="app_name" example="App Manager">%1$s</xliff:g> byla odinstalována.</string>
+    <string name="disable_background">Zabránit operacím aplikace na pozadí</string>
+    <string name="battery_mode">Režim baterie</string>
+    <string name="sort_by_app_ops_values">Hodnota operací aplikace</string>
+    <string name="trackers">Trackery</string>
+    <string name="touchscreen_no_touch">Bez dotyku</string>
+    <string name="input_signatures">Vložit podpisy</string>
+    <string name="installer_error_session_commit">Soubory APK se nepodařilo schválit</string>
+    <string name="type">Typ</string>
+    <string name="expired">Platnost skončila</string>
+    <string name="failed_to_disable_op">Nepodařilo se zakázat požadovanou operaci aplikace</string>
+    <string name="sort_by_app_ops_names">Název operace aplikace</string>
+    <string name="usage_less_than_a_minute">Méně než minuta</string>
+    <string name="go_back">Zpět</string>
+    <string name="search">Hledat</string>
+    <string name="process_name">Název procesu</string>
+    <string name="no_code">Žádný kód</string>
+    <string name="saving_failed">Uložení se nezdařilo, zkuste to znovu.</string>
+    <string name="type_float">Desetinné číslo</string>
+    <string name="uninstall_app_message">Chcete tuto aplikaci odinstalovat\?</string>
+    <string name="sort_by_blocked_components">Blokováno jako první</string>
+    <string name="pref_import_blocker">Import z Blocker</string>
+    <string name="disable_background_run">Zabránit operacím na pozadí</string>
+    <string name="memory_virtual_memory">Paměť: %1$s, Virtuální paměť: %2$s</string>
+    <string name="sort_by_dangerous_permissions">Nejprve nebezpečné</string>
+    <string name="clear_app_cache_description">Vymaže mezipaměť všech aplikací</string>
+    <string name="app_size">Aplikace</string>
+    <string name="exodus_link">Odkaz εxodus</string>
+    <string name="pref_import_watt">Import z Watt</string>
+    <string name="mode">Režim</string>
+    <string name="import_failed">Import se nezdařil!</string>
+    <string name="operation_running">Operace probíhá…</string>
+    <string name="state_foreground">Popředí</string>
+    <string name="user_with_id">Uživatel: <xliff:g id="user_id" example="0">%1$d</xliff:g></string>
+    <string name="orientation_full_sensor">Úplný senzor</string>
+    <string name="menu_remove_rules">Odstranit pravidla</string>
+    <string name="no_usage_in_this_time_range">Žádná použití v tomto časovém rozmezí</string>
+    <string name="touchscreen_stylus">Stylus</string>
+    <string name="apply_now">Přihlásit se nyní…</string>
+    <string name="debuggable">Laditelné</string>
+    <string name="databases">Databáze</string>
+    <string name="one_click_ops">Operace na 1 kliknutí</string>
+    <string name="pref_remove_all_rules_msg">Budou udělena oprávnění, operace a součásti aplikace se vrátí na výchozí hodnoty.</string>
+    <plurals name="two_trackers_and_classes">
+        <item quantity="one">2 trackery s <xliff:g id="class_no" example="50">%1$d</xliff:g> třídou</item>
+        <item quantity="few">2 trackery s <xliff:g id="class_no" example="50">%1$d</xliff:g> třídami</item>
+        <item quantity="other">2 trackery s <xliff:g id="class_no" example="50">%1$d</xliff:g> třídami</item>
+    </plurals>
+    <string name="pid_and_ppid">ID procesu: %1$d, ID nadřazeného procesu: %2$d</string>
+    <plurals name="alert_failed_to_force_stop">
+        <item quantity="one">Nelze vynutit zastavení %1$d aplikace</item>
+        <item quantity="few">Nelze vynutit zastavení %1$d aplikací</item>
+        <item quantity="other">Nelze vynutit zastavení %1$d aplikací</item>
+    </plurals>
+    <string name="string_value">Hodnota řetězce</string>
+    <string name="pref_app_theme">Motiv aplikace</string>
+    <string name="type_int">Celé číslo</string>
+    <string name="force_stop">Vynuceně zastavit</string>
+    <string name="backup_restore">Záloha/Obnovení</string>
+    <string name="import_options">Možnosti importu</string>
+    <string name="keyboard_type">Typ klávesnice</string>
+    <string name="version">Verze</string>
+    <string name="day">Den</string>
+    <string name="night">Noc</string>
+    <string name="select_theme">Motiv</string>
+    <string name="pref_about_msg">Verze App Manageru, licence, autoři, atd.</string>
+    <string name="sort_by_component_name">Název součásti</string>
+    <string name="deny_dangerous_permissions">Odmítnout nebezpečná oprávnění</string>
+    <string name="failed_to_grant_permission">Nepodařilo se udělit oprávnění</string>
+    <string name="update">Aktualizovat</string>
+    <string name="community">Komunita</string>
+    <string name="delete_backup">Odstranit zálohu</string>
+    <plurals name="failed_to_import_files">
+        <item quantity="one">Nebylo možné importovat %1$d soubor.</item>
+        <item quantity="few">Nebylo možné importovat %1$d soubory.</item>
+        <item quantity="other">Nebylo možné importovat %1$d souborů.</item>
+    </plurals>
+    <plurals name="alert_failed_to_uninstall">
+        <item quantity="one">Nebylo možné odinstalovat %1$d aplikaci</item>
+        <item quantity="few">Nebylo možné odinstalovat %1$d aplikace</item>
+        <item quantity="other">Nebylo možné odinstalovat %1$d aplikací</item>
+    </plurals>
+    <plurals name="classes">
+        <item quantity="one">%1$d třída</item>
+        <item quantity="few">%1$d třídy</item>
+        <item quantity="other">%1$d tříd</item>
+    </plurals>
+    <plurals name="app_signing_signature_schemes_pl">
+        <item quantity="one">Podpisové schéma</item>
+        <item quantity="few">Podpisová schémata</item>
+        <item quantity="other">Podpisová schémata</item>
+    </plurals>
+    <string name="pref_global_blocking_enabled_msg">Umožňuje zablokovat jakoukoli součást libovolné aplikace, aniž by bylo výslovně zapnuto blokování aplikace.</string>
+    <string name="navigation_no_nav">Bez navigace</string>
+    <string name="no_profiles">Žádné profily</string>
+    <string name="failed_to_revoke_permission">Nepodařilo se zamítnout oprávnění</string>
+    <string name="format">Formát</string>
+    <string name="state_unknown">Neznámý</string>
+    <string name="external_data_dir">Adresář externích dat</string>
+    <string name="block_unblock_trackers_description">Blokovat nebo odblokovat reklamy a trackery ve všech nainstalovaných aplikacích</string>
+    <string name="usage_access">Přístup k použití</string>
+    <string name="failed_to_uninstall_app">Odinstalace se nezdařila</string>
+    <string name="none">Žádné</string>
+    <string name="installer_error_incompatible">Aplikace není kompatibilní s tímto zařízením</string>
+    <string name="internal_data">Interní data</string>
+    <string name="filter_apps_with_rules">Aplikace s pravidly</string>
+    <string name="density_split_for_base_apk"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) rzdroje pro základní soubor APK</string>
+    <string name="only_works_in_root_or_adb_mode">Funguje pouze v režimu root nebo ADB</string>
+    <string name="orientation_user">Uživatel</string>
+    <string name="integer_value">Celočíselná hodnota</string>
+    <string name="sort_by_denied_app_ops">Nejprve zamítnuto</string>
+    <string name="required">Vyžadováno</string>
+    <string name="abi_split_for_base_apk"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> kód pro základní soubor APK</string>
+    <string name="type_long">Dlouhé celé číslo</string>
+    <string name="orientation_behind">Za</string>
+    <string name="grant_usage_acess_message">Slouží k zobrazení informací o používání aplikace.</string>
+    <string name="discard">Vyřadit</string>
+    <string name="lib_details">Podrobnosti knihovny</string>
+    <string name="pref_export">Exportovat</string>
+    <string name="sort_by_screen_time">Čas u obrazovky</string>
+    <string name="sort_by_times_opened">Počet otevření</string>
+    <string name="installer_error_session_write">Nepodařilo se psát do relace instalačního programu</string>
+    <string name="installer_error_session_abandon">Nepodařilo se opustit relaci instalačního programu</string>
+    <string name="select_type">Vybrat typ</string>
+    <string name="no_apps">Žádné aplikace</string>
+    <string name="disabled_app">Vypnuto</string>
+    <string name="updated_app">Aktualizováno</string>
+    <string name="ok">OK</string>
+    <string name="failed_to_extract_apk_file">Soubor APK nelze extrahovat</string>
+    <string name="no_content">Žádný obsah</string>
+    <string name="sort_by_backup">Nejprve zálohováno</string>
+    <string name="apps">Aplikace</string>
+    <string name="pref_import_export_blocking_rules">Pravidla blokování importu/exportu</string>
+    <string name="reinstall">Přeinstalovat</string>
+    <string name="state_waking">Probuzení</string>
+    <string name="unblock_trackers">Odblokovat trackery</string>
+    <string name="orientation_sensor">Senzor</string>
+    <string name="not_yet_valid">Zatím neplatné</string>
+    <string name="failed_to_reset_app_ops">Nepodařilo se resetovat operace aplikace</string>
+    <string name="filter">Filtrovat</string>
+    <string name="features">Vlastnosti</string>
+    <string name="requested_large_heap">Velká hromada</string>
+    <string name="sort_by_last_used">Naposledy použito</string>
+    <string name="orientation_sensor_portrait">Senzor na výšku</string>
+    <string name="sort_by_wifi_data">Wi-Fi data</string>
+    <string name="failed_to_uninstall_updates">Nepodařilo se odinstalovat aktualizace pro <xliff:g id="app_name" example="App Manager">%1$s</xliff:g>.</string>
+    <string name="app_data_will_be_lost">Stávající data budou ztracena.</string>
+    <string name="shared_prefs">Sdílené předvolby</string>
+    <string name="duration">Délka trvání</string>
+    <string name="navigation_trackball">Trackball</string>
+    <string name="select_user">Vybrat uživatele</string>
+    <string name="app_ops">Operace aplikace</string>
+    <plurals name="usage_hours">
+        <item quantity="one">%1$d hodina</item>
+        <item quantity="few">%1$d hodiny</item>
+        <item quantity="other">%1$d hodin</item>
+    </plurals>
+    <plurals name="usage_minutes">
+        <item quantity="one">%1$d minuta</item>
+        <item quantity="few">%1$d minuty</item>
+        <item quantity="other">%1$d minut</item>
+    </plurals>
+    <plurals name="alert_failed_to_disable_background">
+        <item quantity="one">Nebylo možné zabránit spuštění %1$d aplikace na pozadí</item>
+        <item quantity="few">Nebylo možné zabránit spuštění %1$d aplikací na pozadí</item>
+        <item quantity="other">Nebylo možné zabránit spuštění %1$d aplikací na pozadí</item>
+    </plurals>
+    <plurals name="no_of_times_opened">
+        <item quantity="one">%1$d krát</item>
+        <item quantity="few">%1$d krát</item>
+        <item quantity="other">%1$d krát</item>
+    </plurals>
+    <plurals name="no_of_components">
+        <item quantity="one">%1$d součást</item>
+        <item quantity="few">%1$d součásti</item>
+        <item quantity="other">%1$d součástí</item>
+    </plurals>
+    <plurals name="alert_failed_to_unblock_trackers">
+        <item quantity="one">Nepodařilo se blokovat trackery z %1$d aplikace</item>
+        <item quantity="few">Nepodařilo se blokovat trackery ze %1$d aplikací</item>
+        <item quantity="other">Nepodařilo se blokovat trackery ze %1$d aplikací</item>
+    </plurals>
+    <plurals name="alert_failed_to_block_components">
+        <item quantity="one">Nepodařilo se blokovat součásti z %1$d aplikace</item>
+        <item quantity="few">Nepodařilo se blokovat součásti ze %1$d aplikací</item>
+        <item quantity="other">Nepodařilo se blokovat součásti ze %1$d aplikací</item>
+    </plurals>
+    <string name="block_unblock_components_dots">Blokovat/odblokovat součásti…</string>
+    <string name="unblock_components_dots">Odblokovat součásti…</string>
+    <string name="block_unblock_components_description">Blokovat nebo odblokovat všechny součásti identifikované danými podpisy</string>
+    <string name="clear_data_from_uninstalled_apps_description">Vymazat data z aplikací odinstalovaných pomocí příznaku <tt>DONT_DELETE_DATA2</tt></string>
+    <string name="clear_app_cache">Vymazat mezipamět aplikace</string>
+    <string name="whats_new">Co je nového</string>
+    <string name="input_signatures_description">Vložit podpisy s mezerami, např. <tt>com.facebook org.app2 com.app32</tt> atd.</string>
+    <string name="apply_to_system_apps">Použít na systémové aplikace</string>
+    <plurals name="alert_failed_to_unblock_components">
+        <item quantity="one">Nepodařilo se odblokovat součásti z %1$d aplikace</item>
+        <item quantity="few">Nepodařilo se odblokovat součásti ze %1$d aplikací</item>
+        <item quantity="other">Nepodařilo se odblokovat součásti ze %1$d aplikací</item>
+    </plurals>
+    <string name="apply_to_system_apps_question">Použít i na systémové aplikace\? Pokud si nejste jisti, vyberte možnost \"Ne\".</string>
+    <string name="block">Blokovat</string>
+    <string name="toggle_default_app_ops">Přepnout výchozí operace aplikace</string>
+    <string name="installer_error_aborted">Instalace se nezdařila, protože byla zrušena nebo byla relace neočekávaně ukončena</string>
+    <string name="installer_error_conflict">Nepodařilo se nainstalovat aplikaci, protože se tento název balíčku se již používá</string>
+    <string name="failed_to_extract_obb_files">Soubory OBB nelze extrahovat</string>
+    <string name="obb_files_extracted_successfully">Soubory OBB byly extrahovány</string>
+    <string name="unknown_split_for_base_apk"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> pro základní soubor APK</string>
+    <string name="density_split_for_feature"><xliff:g id="split_name" example="xxdpi">%1$s</xliff:g> (<xliff:g id="dpi_no" example="480">%2$d</xliff:g> DPI) zdroje pro funkci <xliff:g id="feature_name" example="Visualizer">%3$s</xliff:g></string>
+    <string name="abi_split_for_feature"><xliff:g id="split_name" example="arm64_v8a">%1$s</xliff:g> kód pro <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <string name="orientation_locked">Zamknuto</string>
+    <string name="orientation_no_sensor">Bez senzoru</string>
+    <string name="orientation_portrait">Na výšku</string>
+    <string name="orientation_reverse_portrait">Na výšku, obráceně</string>
+    <string name="orientation_sensor_landscape">Senzor na šířku</string>
+    <string name="keyboard_12_keys">klíč 12</string>
+    <string name="state_sleeping">Spící</string>
+    <string name="state_device_io">Vstup/výstup zařízení</string>
+    <string name="state_trace_stop">Zastavit trasování</string>
+    <string name="state_dead">Mrtvý</string>
+    <string name="state_idle">Nečinný</string>
+    <string name="state_low_priority">S nízkou prioritou</string>
+    <string name="state_locked_memory">Paměť uzamčena</string>
+    <string name="state_session_leader">Vedoucí relace</string>
+    <string name="input_backup_name">Název zálohy</string>
+    <string name="routine_ops">Rutinní operace</string>
+    <string name="sort_by_process_id">ID procesu</string>
+    <string name="sort_by_process_name">Název procesu</string>
+    <string name="changes_not_saved">Změny nebyly uloženy</string>
+    <string name="rules">Pravidla</string>
+    <string name="confirm_installation">Potvrdit instalaci</string>
+    <string name="allow_open_pgp_operation">Klepnutím povolíte App Manageru používat OpenPGP</string>
+    <string name="uninstall_updates">Odinstalovat aktualizace</string>
+    <string name="app_signing_signature">Podpis</string>
+    <string name="public_key">Veřejný klíč</string>
+    <string name="critical_exts">Kritická rozšíření</string>
+    <string name="non_critical_exts">Nekritická rozšíření</string>
+    <string name="app_signing_signature_mismatch_for_system_apps">Aplikaci se nepodařilo nainstalovat, protože tento název balíčku má již systémová aplikace s jiným podpisem.</string>
+    <string name="sys_config">Konfigurace systému</string>
+    <string name="tap_to_see_details">Klepnutím zobrazíte podrobnosti</string>
+    <string name="am_crashed">App Manager právě spadl</string>
+    <string name="send_crash_report">Poslat zprávu o selhání</string>
+    <string name="in_progress">Probíhá</string>
+    <string name="pref_encryption_msg">Šifrování záloh.</string>
+    <string name="send_selected">Poslat vybrané</string>
+    <plurals name="alert_failed_to_disable_trackers">
+        <item quantity="one">Nepodařilo se zakázat trackery z %1$d aplikace</item>
+        <item quantity="few">Nepodařilo se zakázat trackery z %1$d aplikací</item>
+        <item quantity="other">Nepodařilo se zakázat trackery z %1$d aplikací</item>
+    </plurals>
+    <plurals name="backup_exists_are_you_sure">
+        <item quantity="one">Záloha již existuje. Jste si jisti\?</item>
+        <item quantity="few">Existuje záloha pro více než jednu aplikaci. Jste si jisti\?</item>
+        <item quantity="other">Existuje záloha pro více než jednu aplikaci. Jste si jisti\?</item>
+    </plurals>
+    <string name="auto">Automaticky</string>
+    <string name="state_multithreaded">Vícevláknový</string>
+    <string name="downgrade">Vrátit na starší verzi</string>
+    <string name="do_you_want_to_uninstall_and_install">Chcete aplikaci odinstalovat a znovu nainstalovat\?</string>
+    <string name="pref_import_msg">Import dříve exportovaných pravidel blokování z App Manageru.</string>
+    <string name="pref_export_msg">Export pravidel blokování nakonfigurovaných v App Manageru do externího úložiště.</string>
+    <string name="launch_app">Spustit</string>
+    <string name="never_ask">Nikdy se neptat</string>
+    <string name="install">Instalovat</string>
+    <string name="block_components_dots">Blokovat součásti…</string>
+    <string name="are_you_sure">Jste si jistí\?</string>
+    <string name="installer_error_generic">Instalace se nezdařila</string>
+    <string name="full_stop_tap_to_see_details">. Klepnutím zobrazíte podrobnosti.</string>
+    <string name="install_app_message">Chcete nainstalovat tuto aplikaci\?</string>
+    <string name="launch_mode_multiple">Mnoho</string>
+    <string name="launch_mode_single_task">Jednotlivý úkol</string>
+    <string name="duplicate">Duplikovat</string>
+    <string name="done">Hotovo</string>
+    <string name="filter_apps_with_activities">S aktivitami</string>
+    <string name="dev_protected_data_dir">Datový adresář chráněný zařízením</string>
+    <string name="delete">Odstranit</string>
+    <string name="view_in_settings">Zobrazit v nastavení</string>
+    <string name="total_size">Celkem</string>
+    <string name="select_all">Vybrat vše</string>
+    <string name="state_zombie">Zombie</string>
+    <string name="changelog">Seznam změn</string>
+    <string name="the_export_was_successful">Exportováno</string>
+    <string name="state_parked">Zaparkovaný</string>
+    <string name="orientation_landscape">Na šířku</string>
+    <string name="only_install">Pouze instalovat</string>
+    <string name="saved_successfully">Uloženo</string>
+    <string name="no_libs">Žádné knihovny</string>
+    <string name="failed_to_enable_op">Nepodařilo se povolit požadovanou operaci aplikace</string>
+    <string name="orientation_user_portrait">Orientace uživatele na výšku</string>
+    <string name="backup">Zálohovat</string>
+    <string name="export_options">Možnosti exportu</string>
+    <string name="sort_by_tracker_components">Nejprve trackery</string>
+    <string name="restore">Obnovit</string>
+    <string name="process_state">Stát: <xliff:g id="process_state" example="Sleeping">%1$s</xliff:g></string>
+    <string name="permission_name">Název oprávnění</string>
+    <string name="systemless_app">Bezsystémová aplikace</string>
+    <string name="base_apk">Základní soubor APK</string>
+    <string name="failed_to_deny_dangerous_app_ops">Nepodařilo se zrušit všechny nebezpečné operace aplikace</string>
+    <string name="sort_by_permission_names">Název oprávnění</string>
+    <string name="sort_by_apps_first">Nejprve aplikace</string>
+    <string name="pref_global_blocking_enabled">Okamžité blokování součásti</string>
+    <string name="type_boolean">Pravda/nepravda</string>
+    <string name="long_integer_value">Dlouhá celočíselná hodnota</string>
+    <string name="clear_cache">Vymazat mezipaměť</string>
+    <string name="stopped">Zastaveno</string>
+    <string name="blocking_rules">Pravidla blokování</string>
+    <string name="select_apk">Vybrat APK</string>
+    <string name="save">Uložit</string>
+    <string name="clear">Vymazat</string>
+    <string name="expiry_date">Platný do</string>
+    <plurals name="usage_days">
+        <item quantity="one">%1$d den</item>
+        <item quantity="few">%1$d dny</item>
+        <item quantity="other">%1$d dní</item>
+    </plurals>
+    <plurals name="no_of_trackers">
+        <item quantity="one">%1$d tracker</item>
+        <item quantity="few">%1$d trackery</item>
+        <item quantity="other">%1$d trackerů</item>
+    </plurals>
+    <string name="termux">Termux</string>
+    <plurals name="alert_failed_to_backup">
+        <item quantity="one">Nepodařilo se zálohovat %1$d aplikaci</item>
+        <item quantity="few">Nepodařilo se zálohovat %1$d aplikace</item>
+        <item quantity="other">Nepodařilo se zálohovat %1$d aplikací</item>
+    </plurals>
+    <plurals name="alert_failed_to_set_app_ops">
+        <item quantity="one">Nepodařilo se nastavit operace z %1$d aplikace</item>
+        <item quantity="few">Nepodařilo se nastavit operace ze %1$d aplikací</item>
+        <item quantity="other">Nepodařilo se nastavit operace ze %1$d aplikací</item>
+    </plurals>
+    <plurals name="libraries">
+        <item quantity="one">%1$d knihovna</item>
+        <item quantity="few">%1$d knihovny</item>
+        <item quantity="other">%1$d knihoven</item>
+    </plurals>
+    <plurals name="usage_seconds">
+        <item quantity="one">%1$d sekunda</item>
+        <item quantity="few">%1$d sekundy</item>
+        <item quantity="other">%1$d sekund</item>
+    </plurals>
+    <plurals name="no_of_splits">
+        <item quantity="one">%1$d rozdělení</item>
+        <item quantity="few">%1$d rozdělení</item>
+        <item quantity="other">%1$d rozdělení</item>
+    </plurals>
+    <plurals name="failed_to_backup_some_apk_files">
+        <item quantity="one">Nepodařilo se zálohovat %1$d aplikaci</item>
+        <item quantity="few">Nepodařilo se zálohovat %1$d aplikace</item>
+        <item quantity="other">Nepodařilo se zálohovat %1$d aplikací</item>
+    </plurals>
+    <plurals name="alert_failed_to_delete_backup">
+        <item quantity="one">Nepodařilo se smazat %1$d aplikaci</item>
+        <item quantity="few">Nepodařilo se smazat %1$d aplikace</item>
+        <item quantity="other">Nepodařilo se smazat %1$d aplikací</item>
+    </plurals>
+    <string name="go">Pokračovat</string>
+    <string name="deleted_successfully">Odstraněno</string>
+    <string name="deletion_failed">Odstranění se nezdařilo</string>
+    <string name="the_operation_was_successful">Hotovo</string>
+    <string name="unknown_split_for_feature"><xliff:g id="split_name" example="some_split">%1$s</xliff:g> pro funkci <xliff:g id="feature_name" example="Visualizer">%2$s</xliff:g></string>
+    <plurals name="usage_months">
+        <item quantity="one">%1$d měsíc</item>
+        <item quantity="few">%1$d měsíce</item>
+        <item quantity="other">%1$d měsíců</item>
+    </plurals>
+    <plurals name="alert_failed_to_restore">
+        <item quantity="one">Nepodařilo se obnovit %1$d aplikaci</item>
+        <item quantity="few">Nepodařilo se obnovit %1$d aplikace</item>
+        <item quantity="other">Nepodařilo se obnovit %1$d aplikací</item>
+    </plurals>
+    <plurals name="missing_signatures">
+        <item quantity="one">%1$d chybějící podpis</item>
+        <item quantity="few">%1$d chybějící podpisy</item>
+        <item quantity="other">%1$d chybějících podpisů</item>
+    </plurals>
+    <string name="install_in_progress">Instaluje se…</string>
+    <string name="installer_error_security">Nepodařilo se získat přístup k souborům APK</string>
+    <plurals name="main_list_date_days">
+        <item quantity="one"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> den</item>
+        <item quantity="few"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> dny</item>
+        <item quantity="other"><xliff:g id="last_update_date" example="20/10/2020">%1$s</xliff:g> <xliff:g id="day_no" example="5">%2$d</xliff:g> dní</item>
+    </plurals>
+    <plurals name="other_trackers_and_classes">
+        <item quantity="one"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> tracker s <xliff:g id="class_no" example="50">%2$d</xliff:g> třída</item>
+        <item quantity="few"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> trackery s <xliff:g id="class_no" example="50">%2$d</xliff:g> třídy</item>
+        <item quantity="other"><xliff:g id="tracker_no" example="8">%1$d</xliff:g> trackerů s <xliff:g id="class_no" example="50">%2$d</xliff:g> tříd</item>
+    </plurals>
+    <string name="pref_import_export_blocking_rules_msg">Pravidla importu/exportu, import externích pravidel z Watt nebo Blocker.</string>
+    <plurals name="verified_with_warning">
+        <item quantity="one">Ověřeno s %d varováním</item>
+        <item quantity="few">Ověřeno se %d varováními</item>
+        <item quantity="other">Ověřeno se %d varováními</item>
+    </plurals>
 </resources>
