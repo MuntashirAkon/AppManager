@@ -674,4 +674,30 @@
         <item quantity="few">Ověřeno se %d varováními</item>
         <item quantity="other">Ověřeno se %d varováními</item>
     </plurals>
+    <string name="profile_state">Stav profilu</string>
+    <string name="enabled">Zapnuto</string>
+    <string name="pref_sign_apk">Podepsat APK</string>
+    <string name="input_permissions_description">Zadejte oprávnění s mezerami, např. <tt>com.permission.GET_ACCOUNTS android.permission.ACCESS_MEDIA_LOCATION2</tt> etc. Použijte <tt>*</tt> abyste požádali o všechna oprávnění.</string>
+    <string name="allow_routine_ops">Povolit rutinní operace</string>
+    <string name="options">Možnosti</string>
+    <string name="profile_clear_data_msg">Vymaže data aplikací</string>
+    <string name="install_location_prefer_external">Preferovat externí</string>
+    <string name="profile_clear_cache_msg">Vymaže mezipaměť aplikací</string>
+    <string name="allow_routine_ops_msg">Povolit použití profilu v rutinních operacích</string>
+    <string name="profile_block_trackers_msg">Zablokuje trackery v aplikacích</string>
+    <string name="installer">Instalátor</string>
+    <string name="pref_mode_of_operations">Režim provozu</string>
+    <string name="simple">Jednoduchý</string>
+    <string name="input_permissions">Zadejte oprávnění</string>
+    <string name="advanced">Pokročilý</string>
+    <string name="user_profile_with_id">Profil: %1$s (%2$d)</string>
+    <string name="close">Zavřít</string>
+    <string name="install_location_internal_only">Pouze interní</string>
+    <string name="on">Na</string>
+    <string name="off">Vypnuto</string>
+    <string name="choose">Vybrat</string>
+    <string name="comment">Komentář</string>
+    <string name="profile_state_msg">Vlastní stav zapnutí/vypnutí tohoto profilu</string>
+    <string name="install_location">Umístění instalace</string>
+    <string name="pref_sign_apk_msg">Podepište soubory APK před jejich instalací.</string>
 </resources>
