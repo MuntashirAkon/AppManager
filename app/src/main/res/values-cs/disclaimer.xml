@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<resources>
+<!-- SPDX-License-Identifier: GPL-3.0-or-later --><resources>
     <string name="disclaimer_header">Zřeknutí se odpovědnosti</string>
+    <string name="disclaimer_body">App Manager poskytuje funkce root, které mohou při nesprávném použití poškodit vaše zařízení. App manager není zodpovědný za škody způsobené nesprávným používáním této aplikace. Pokud si nejste plně jistí, jak funguje root, měli byste se vyvarovat root možnostem, dokud nebudete plně seznámení s riziky.
+\n
+\nJakýkoliv odkaz na jiné aplikace, který poskytnu, je pro dobro uživatele. Nejsem ovšem zodpovědný za jakýkoliv obsah, který můžete naleznout na externích stránkách.
+\n
+\nVyužíváním aplikace App Manager přejímáte plnou zodpovědnost za své vlastní užívání a přijímáte, že žádné škody, nároky či peněžní hodnoty nebudou zaslány kvůli nesprávnému užívání aplikace.
+\n
+\nVyužíváním této aplikace přejímáte veškerou zodpovědnost na sebe a souhlasíte, že nejsem zodpovědný za jakékoliv vámi vykonané akce, které by mohly mít nepříznivý dopad na vaše zařízení.</string>
 </resources>
