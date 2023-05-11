@@ -5,7 +5,6 @@ package io.github.muntashirakon.AppManager.crypto.ks;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
-import android.security.KeyPairGeneratorSpec;
 import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
 import android.util.Base64;
@@ -132,7 +131,7 @@ public class CompatUtil {
         Calendar end = Calendar.getInstance();
         end.add(Calendar.YEAR, 10);
 
-        generator.initialize(new KeyPairGeneratorSpec.Builder(context)
+        generator.initialize(new android.security.KeyPairGeneratorSpec.Builder(context)
                 .setAlgorithmParameterSpec(new RSAKeyGenParameterSpec(2048,
                         RSAKeyGenParameterSpec.F4))
                 .setAlias(RSA_WRAP_LOCAL_PROTECTION_KEY_ALIAS)

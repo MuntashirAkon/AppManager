@@ -479,8 +479,15 @@ public interface IPackageManager extends IInterface {
 
     String getInstallerPackageName(String packageName) throws RemoteException;
 
+    /**
+     * @deprecated Removed in API 34 (Android U)
+     */
+    @Deprecated
     @RequiresApi(Build.VERSION_CODES.R)
     InstallSourceInfo getInstallSourceInfo(String packageName) throws RemoteException;
+
+    @RequiresApi(34)
+    InstallSourceInfo getInstallSourceInfo(String packageName, int userId) throws RemoteException;
 
     /**
      * @deprecated Removed in API 23 (Android M)

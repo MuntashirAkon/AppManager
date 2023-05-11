@@ -8,6 +8,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.RemoteException;
+import android.os.UserHandleHidden;
 import android.text.TextUtils;
 import android.util.Xml;
 
@@ -47,7 +48,7 @@ public final class ListExporter {
             ApplicationInfo applicationInfo = packageInfo.applicationInfo;
             AppListItem item = new AppListItem(packageInfo.packageName);
             item.setIcon(UIUtils.getBitmapFromDrawable(applicationInfo.loadIcon(pm)));
-            item.setPackageLabel(packageInfo.applicationInfo.loadLabel(pm).toString());
+            item.setPackageLabel(applicationInfo.loadLabel(pm).toString());
             item.setVersionCode(PackageInfoCompat.getLongVersionCode(packageInfo));
             item.setVersionName(packageInfo.versionName);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
@@ -59,7 +60,8 @@ public final class ListExporter {
             item.setFirstInstallTime(packageInfo.firstInstallTime);
             item.setLastUpdateTime(packageInfo.lastUpdateTime);
             try {
-                String installerPackageName = PackageManagerCompat.getInstallerPackageName(packageInfo.packageName);
+                String installerPackageName = PackageManagerCompat.getInstallerPackageName(
+                        packageInfo.packageName, UserHandleHidden.getUserId(applicationInfo.uid));
                 item.setInstallerPackageName(installerPackageName);
                 String installerPackageLabel;
                 try {

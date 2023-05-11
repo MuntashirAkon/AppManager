@@ -4,7 +4,6 @@ package io.github.muntashirakon.AppManager.types;
 
 import android.annotation.UserIdInt;
 import android.app.usage.StorageStats;
-import android.content.pm.PackageStats;
 import android.os.Build;
 
 import androidx.annotation.NonNull;
@@ -24,7 +23,7 @@ public class PackageSizeInfo {
     public final long obbSize;
 
     @SuppressWarnings("deprecation")
-    public PackageSizeInfo(@NonNull PackageStats packageStats) {
+    public PackageSizeInfo(@NonNull android.content.pm.PackageStats packageStats) {
         packageName = packageStats.packageName;
         codeSize = packageStats.codeSize + packageStats.externalCodeSize;
         dataSize = packageStats.dataSize + packageStats.externalDataSize;

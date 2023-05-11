@@ -25,7 +25,6 @@ import android.content.pm.LauncherActivityInfo;
 import android.content.pm.LauncherApps;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.PackageStats;
 import android.content.pm.Signature;
 import android.content.pm.SigningInfo;
 import android.os.Build;
@@ -315,7 +314,7 @@ public final class PackageUtils {
                         new IPackageStatsObserver.Stub() {
                             @SuppressWarnings("deprecation")
                             @Override
-                            public void onGetStatsCompleted(final PackageStats pStats, boolean succeeded) {
+                            public void onGetStatsCompleted(final android.content.pm.PackageStats pStats, boolean succeeded) {
                                 try {
                                     if (succeeded) packageSizeInfo.set(new PackageSizeInfo(pStats));
                                 } finally {
