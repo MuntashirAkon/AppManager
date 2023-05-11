@@ -314,7 +314,7 @@ public class AppInfoViewModel extends AndroidViewModel {
                         Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? applicationInfo.storageUuid : null);
                 // Set installer app
                 try {
-                    String installerPackageName = PackageManagerCompat.getInstallerPackageName(packageName);
+                    String installerPackageName = PackageManagerCompat.getInstallerPackageName(packageName, userId);
                     if (installerPackageName != null) {
                         String applicationLabel;
                         try {

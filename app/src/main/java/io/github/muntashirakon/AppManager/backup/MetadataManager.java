@@ -367,7 +367,7 @@ public final class MetadataManager {
         }
         mMetadata.backupTime = 0;
         try {
-            mMetadata.installer = PackageManagerCompat.getInstallerPackage(packageInfo.packageName);
+            mMetadata.installer = PackageManagerCompat.getInstallerPackageName(packageInfo.packageName, userHandle);
         } catch (Throwable e) {
             e.printStackTrace();
         }

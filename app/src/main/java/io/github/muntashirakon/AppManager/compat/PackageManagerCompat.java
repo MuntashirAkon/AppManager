@@ -39,7 +39,9 @@ import android.util.AndroidException;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.OptIn;
 import androidx.annotation.WorkerThread;
+import androidx.core.os.BuildCompat;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -233,14 +235,21 @@ public final class PackageManagerCompat {
         return applicationInfo;
     }
 
-    public static String getInstallerPackageName(@NonNull String packageName) throws RemoteException {
-        return getInstallSourceInfo(packageName).getInstallingPackageName();
+    public static String getInstallerPackageName(@NonNull String packageName, @UserIdInt int userId)
+            throws RemoteException {
+        return getInstallSourceInfo(packageName, userId).getInstallingPackageName();
     }
 
+    @OptIn(markerClass = BuildCompat.PrereleaseSdkCheck.class)
+    @SuppressWarnings("deprecation")
     @NonNull
-    public static InstallSourceInfoCompat getInstallSourceInfo(@NonNull String packageName) throws RemoteException {
+    public static InstallSourceInfoCompat getInstallSourceInfo(@NonNull String packageName, @UserIdInt int userId)
+            throws RemoteException {
         IPackageManager pm = getPackageManager();
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.R) {
+        if (BuildCompat.isAtLeastU()) {
+            return new InstallSourceInfoCompat(pm.getInstallSourceInfo(packageName, userId));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             return new InstallSourceInfoCompat(pm.getInstallSourceInfo(packageName));
         }
         String installerPackageName = null;
@@ -374,10 +383,6 @@ public final class PackageManagerCompat {
             return getPackageManager().installExistingPackageAsUser(packageName, userId, installFlags, installReason);
         }
         return getPackageManager().installExistingPackageAsUser(packageName, userId);
-    }
-
-    public static String getInstallerPackage(String packageName) throws RemoteException {
-        return getPackageManager().getInstallerPackageName(packageName);
     }
 
     public static void clearApplicationUserData(@NonNull UserPackagePair pair) throws AndroidException {
