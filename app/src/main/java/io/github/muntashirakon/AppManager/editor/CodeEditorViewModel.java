@@ -2,9 +2,16 @@
 
 package io.github.muntashirakon.AppManager.editor;
 
+import static org.xmlpull.v1.XmlPullParser.END_DOCUMENT;
+import static org.xmlpull.v1.XmlPullParser.END_TAG;
+import static org.xmlpull.v1.XmlPullParser.IGNORABLE_WHITESPACE;
+import static org.xmlpull.v1.XmlPullParser.START_TAG;
+import static org.xmlpull.v1.XmlPullParser.TEXT;
+
 import android.app.Application;
 import android.net.Uri;
 
+import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
@@ -12,12 +19,20 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import org.jetbrains.annotations.Contract;
+import org.xmlpull.v1.XmlPullParserException;
 
+import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.io.StringReader;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,9 +42,15 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import io.github.muntashirakon.AppManager.apk.parser.AndroidBinXmlDecoder;
+import io.github.muntashirakon.AppManager.apk.parser.AndroidBinXmlEncoder;
 import io.github.muntashirakon.AppManager.dex.DexUtils;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
+import io.github.muntashirakon.compat.xml.TypedXmlPullParser;
+import io.github.muntashirakon.compat.xml.TypedXmlSerializer;
+import io.github.muntashirakon.compat.xml.Xml;
 import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
@@ -50,9 +71,20 @@ public class CodeEditorViewModel extends AndroidViewModel {
         put("xhtml", "xml");
     }};
 
+    @IntDef({XML_TYPE_NONE, XML_TYPE_AXML, XML_TYPE_ABX})
+    @Retention(RetentionPolicy.SOURCE)
+    private @interface XmlType {
+    }
+
+    public static final int XML_TYPE_NONE = 0;
+    public static final int XML_TYPE_AXML = 1;
+    public static final int XML_TYPE_ABX = 2;
+
     @Nullable
     private String language;
     private boolean canGenerateJava;
+    @XmlType
+    private int xmlType = XML_TYPE_NONE;
     @Nullable
     private Path sourceFile;
     private CodeEditorFragment.Options options;
@@ -102,7 +134,31 @@ public class CodeEditorViewModel extends AndroidViewModel {
 
     public void loadFileContentIfAvailable() {
         if (sourceFile == null) return;
-        mExecutor.submit(() -> mContentLiveData.postValue(sourceFile.getContentAsString(null)));
+        mExecutor.submit(() -> {
+            String content = null;
+            if ("xml".equals(language)) {
+                byte[] bytes = sourceFile.getContentAsBinary();
+                ByteBuffer buffer = ByteBuffer.wrap(bytes);
+                try {
+                    if (AndroidBinXmlDecoder.isBinaryXml(buffer)) {
+                        content = AndroidBinXmlDecoder.decode(bytes);
+                        xmlType = XML_TYPE_AXML;
+                    } else if (Xml.isBinaryXml(buffer)) {
+                        // FIXME: 19/5/23 Unfortunately, converting ABX to XML is lossy. Find a way to fix this.
+                        //  Until then, the feature is disabled.
+                        // content = getXmlFromAbx(bytes);
+                        // xmlType = XML_TYPE_ABX;
+                    }
+                } catch (IOException e) {
+                    Log.e(TAG, "Unable to convert XML bytes to plain text.", e);
+                }
+            }
+            if (content == null) {
+                content = sourceFile.getContentAsString();
+                xmlType = XML_TYPE_NONE;
+            }
+            mContentLiveData.postValue(content);
+        });
     }
 
     public void saveFile(@NonNull String content, @Nullable Path alternativeFile) {
@@ -114,7 +170,19 @@ public class CodeEditorViewModel extends AndroidViewModel {
             // Important: Alternative file gets the top priority
             Path savingPath = alternativeFile != null ? alternativeFile : sourceFile;
             try (OutputStream os = savingPath.openOutputStream()) {
-                os.write(content.getBytes(StandardCharsets.UTF_8));
+                byte[] realContent;
+                switch (xmlType) {
+                    case XML_TYPE_AXML:
+                        realContent = AndroidBinXmlEncoder.encodeString(content);
+                        break;
+                    case XML_TYPE_ABX:
+                        realContent = getAbxFromXml(content);
+                        break;
+                    default:
+                    case XML_TYPE_NONE:
+                        realContent = content.getBytes(StandardCharsets.UTF_8);
+                }
+                os.write(realContent);
                 mSaveFileLiveData.postValue(true);
             } catch (IOException e) {
                 Log.e(TAG, "Could not write to file " + savingPath, e);
@@ -202,5 +270,65 @@ public class CodeEditorViewModel extends AndroidViewModel {
         String lang = EXT_TO_LANGUAGE_MAP.get(ext);
         if (lang != null) return lang;
         return ext;
+    }
+
+    private static String getXmlFromAbx(@NonNull byte[] data) throws IOException {
+        try (InputStream is = new BufferedInputStream(new ByteArrayInputStream(data));
+             ByteArrayOutputStream os = new ByteArrayOutputStream()) {
+            TypedXmlPullParser parser = Xml.newBinaryPullParser();
+            parser.setInput(is, StandardCharsets.UTF_8.name());
+            TypedXmlSerializer serializer = Xml.newFastSerializer();
+            serializer.setOutput(os, StandardCharsets.UTF_8.name());
+            copyXml(parser, serializer);
+            return os.toString();
+        } catch (XmlPullParserException e) {
+            return ExUtils.rethrowAsIOException(e);
+        }
+    }
+
+    private static byte[] getAbxFromXml(@NonNull String data) throws IOException {
+        try (StringReader is = new StringReader(data);
+             ByteArrayOutputStream os = new ByteArrayOutputStream()) {
+            TypedXmlPullParser parser = Xml.newFastPullParser();
+            parser.setInput(is);
+            TypedXmlSerializer serializer = Xml.newBinarySerializer();
+            serializer.setOutput(os, StandardCharsets.UTF_8.name());
+            copyXml(parser, serializer);
+            return os.toByteArray();
+        } catch (XmlPullParserException e) {
+            return ExUtils.rethrowAsIOException(e);
+        }
+    }
+
+    public static void copyXml(@NonNull TypedXmlPullParser parser, @NonNull TypedXmlSerializer serializer)
+            throws IOException, XmlPullParserException {
+        serializer.startDocument(null, null);
+        int event;
+        do {
+            event = parser.nextToken();
+            switch (event) {
+                case START_TAG:
+                    serializer.startTag(null, parser.getName());
+                    for (int i = 0; i < parser.getAttributeCount(); i++) {
+                        String attributeName = parser.getAttributeName(i);
+                        serializer.attribute(null, attributeName, parser.getAttributeValue(i));
+                    }
+                    break;
+                case END_TAG:
+                    serializer.endTag(null, parser.getName());
+                    break;
+                case TEXT:
+                    serializer.text(parser.getText());
+                    break;
+                case IGNORABLE_WHITESPACE:
+                    serializer.ignorableWhitespace(parser.getText());
+                    break;
+                case END_DOCUMENT:
+                    serializer.endDocument();
+                    break;
+                default:
+                    throw new UnsupportedOperationException();
+            }
+        } while (event != END_DOCUMENT);
     }
 }

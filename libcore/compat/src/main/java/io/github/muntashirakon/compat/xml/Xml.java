@@ -17,6 +17,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Objects;
@@ -56,6 +57,14 @@ public class Xml {
             in.read(magic);
             in.reset();
         }
+        return Arrays.equals(magic, BinaryXmlSerializer.PROTOCOL_MAGIC_VERSION_0);
+    }
+
+    public static boolean isBinaryXml(@NonNull ByteBuffer buffer) {
+        final byte[] magic = new byte[4];
+        buffer.mark();
+        buffer.get(magic);
+        buffer.reset();
         return Arrays.equals(magic, BinaryXmlSerializer.PROTOCOL_MAGIC_VERSION_0);
     }
 

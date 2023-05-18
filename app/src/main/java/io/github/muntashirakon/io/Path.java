@@ -1488,10 +1488,13 @@ public class Path implements Comparable<Path> {
         throw new IOException("Target is not backed by a real file");
     }
 
+    @NonNull
     public byte[] getContentAsBinary() {
         return getContentAsBinary(EmptyArray.BYTE);
     }
 
+    @Nullable
+    @Contract("!null -> !null")
     public byte[] getContentAsBinary(byte[] emptyValue) {
         try (InputStream inputStream = openInputStream()) {
             return IoUtils.readFully(inputStream, -1, true);
