@@ -46,7 +46,10 @@ import io.github.muntashirakon.AppManager.utils.MotorolaUtils;
 
 public final class IntentCompat {
     @Nullable
-    public static Uri getDataUri(@NonNull Intent intent) {
+    public static Uri getDataUri(@Nullable Intent intent) {
+        if (intent == null) {
+            return null;
+        }
         if (Intent.ACTION_SEND.equals(intent.getAction())) {
             return intent.getParcelableExtra(Intent.EXTRA_STREAM);
         }
