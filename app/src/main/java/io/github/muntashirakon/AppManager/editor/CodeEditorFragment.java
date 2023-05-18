@@ -51,6 +51,7 @@ import java.util.regex.PatternSyntaxException;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.fm.FmProvider;
+import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
@@ -217,12 +218,10 @@ public class CodeEditorFragment extends Fragment {
                         return;
                     }
                     Intent data = result.getData();
-                    if (data == null) return;
-                    Uri uri = data.getData();
+                    Uri uri = IntentCompat.getDataUri(data);
                     if (uri == null) return;
                     int takeFlags = data.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION
                             | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-                    requireContext().getContentResolver().takePersistableUriPermission(uri, takeFlags);
                     saveFile(mEditor.getText().toString(), uri);
                     if (takeFlags != 0) {
                         // Make this URI the current URI

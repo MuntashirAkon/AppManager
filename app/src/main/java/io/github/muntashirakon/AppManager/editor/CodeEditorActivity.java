@@ -17,6 +17,7 @@ import com.google.android.material.progressindicator.LinearProgressIndicator;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.io.Paths;
 
 public class CodeEditorActivity extends BaseActivity {
@@ -48,7 +49,8 @@ public class CodeEditorActivity extends BaseActivity {
             title = getString(R.string.title_code_editor);
         }
         String subtitle = getIntent().getStringExtra(Intent.EXTRA_SUBJECT);
-        Uri fileUri = getIntent().getData();
+        Uri fileUri = IntentCompat.getDataUri(getIntent());
+        boolean readOnly = getIntent().getBooleanExtra(EXTRA_READ_ONLY, false);
         if (subtitle == null) {
             if (fileUri != null) {
                 subtitle = Paths.trimPathExtension(fileUri.getLastPathSegment());
@@ -60,12 +62,12 @@ public class CodeEditorActivity extends BaseActivity {
             progressIndicator.hide();
         }
         CodeEditorFragment.Options options = new CodeEditorFragment.Options.Builder()
-                .setUri(getIntent().getData())
+                .setUri(fileUri)
                 .setTitle(title)
                 .setSubtitle(subtitle)
                 .setEnableSharing(false)
                 .setJavaSmaliToggle(false)
-                .setReadOnly(getIntent().getBooleanExtra(EXTRA_READ_ONLY, false))
+                .setReadOnly(readOnly)
                 .build();
         CodeEditorFragment fragment = new CodeEditorFragment();
         Bundle args = new Bundle();

@@ -133,9 +133,159 @@
             android:name=".editor.CodeEditorActivity"
             android:label="@string/title_code_editor"
             android:configChanges="orientation|keyboardHidden|screenSize|uiMode"
-            android:taskAffinity=""
+            android:taskAffinity=".editor.CodeEditorActivity"
             android:windowSoftInputMode="adjustResize"
-            android:exported="true" />
+            android:exported="false" />
+
+        <activity-alias
+            android:name=".editor.EditorActivity"
+            android:targetActivity=".editor.CodeEditorActivity"
+            android:label="@string/title_code_editor"
+            android:configChanges="orientation|keyboardHidden|screenSize|uiMode"
+            android:taskAffinity=".editor.CodeEditorActivity"
+            android:windowSoftInputMode="adjustResize"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.ALTERNATIVE" />
+
+                <data android:mimeType="text/*" />
+                <data android:mimeType="application/axml" />
+                <data android:mimeType="application/json" />
+                <data android:mimeType="application/xml" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="file" />
+                <data android:scheme="content" />
+                <data android:mimeType="text/*" />
+                <data android:mimeType="application/xml" />
+                <data android:mimeType="application/xhtml+xml" />
+                <data android:mimeType="application/vnd.wap.xhtml+xml" />
+                <data android:mimeType="application/javascript" />
+                <data android:mimeType="application/json" />
+                <data android:mimeType="application/x-php" />
+                <data android:mimeType="application/x-httpd-php" />
+                <data android:mimeType="application/x-tcl" />
+                <data android:mimeType="application/x-sh" />
+                <data android:mimeType="application/x-csh" />
+                <data android:mimeType="application/bat" />
+                <data android:mimeType="application/mpegurl" />
+                <data android:mimeType="application/x-mpegurl" />
+                <data android:mimeType="application/x-bittorrent" />
+                <data android:mimeType="application/vnd.google-earth.kml+xml" />
+                <data android:mimeType="application/vnd.google-earth.kmz" />
+                <data android:mimeType="application/x-sql" />
+                <data android:mimeType="application/x-latex" />
+                <data android:mimeType="application/x-subrip" />
+                <data android:mimeType="application/x-yaml" />
+                <data android:mimeType="application/axml" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.EDIT" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="file" />
+                <data android:scheme="content" />
+                <data android:pathPattern="/.*\.TXT" />
+                <data android:pathPattern="/.*\.txt" />
+                <data android:pathPattern="/.*\.txt?.*" />
+                <data android:pathPattern="/.*\..*\.TXT" />
+                <data android:pathPattern="/.*\..*\.txt" />
+                <data android:pathPattern="/.*\..*\.txt?.*" />
+                <data android:pathPattern="/.*\.tex" />
+                <data android:pathPattern="/.*\.tex?.*" />
+                <data android:pathPattern="/.*\.micfg" />
+                <data android:pathPattern="/.*\.micfg?.*" />
+                <data android:pathPattern="/.*\..*\.micfg" />
+                <data android:pathPattern="/.*\..*\.micfg?.*" />
+                <data android:pathPattern="/.*\.mic" />
+                <data android:pathPattern="/.*\.mic?.*" />
+                <data android:pathPattern="/.*\..*\.mic" />
+                <data android:pathPattern="/.*\..*\.mic?.*" />
+                <data android:pathPattern="/.*\.JAVA" />
+                <data android:pathPattern="/.*\.java" />
+                <data android:pathPattern="/.*\.java?.*" />
+                <data android:pathPattern="/.*\..*\.JAVA" />
+                <data android:pathPattern="/.*\..*\.java" />
+                <data android:pathPattern="/.*\..*\.java?.*" />
+                <data android:pathPattern="/.*\.KT" />
+                <data android:pathPattern="/.*\.kt" />
+                <data android:pathPattern="/.*\.kt?.*" />
+                <data android:pathPattern="/.*\..*\.KT" />
+                <data android:pathPattern="/.*\..*\.kt" />
+                <data android:pathPattern="/.*\..*\.kt?.*" />
+                <data android:pathPattern="/.*\.KTS" />
+                <data android:pathPattern="/.*\.kts" />
+                <data android:pathPattern="/.*\.kts?.*" />
+                <data android:pathPattern="/.*\..*\.KTS" />
+                <data android:pathPattern="/.*\..*\.kts" />
+                <data android:pathPattern="/.*\..*\.kts?.*" />
+                <data android:pathPattern="/.*\.SMALI" />
+                <data android:pathPattern="/.*\.smali" />
+                <data android:pathPattern="/.*\.smali?.*" />
+                <data android:pathPattern="/.*\..*\.SMALI" />
+                <data android:pathPattern="/.*\..*\.smali" />
+                <data android:pathPattern="/.*\..*\.smali?.*" />
+                <data android:pathPattern="/.*\.CSS" />
+                <data android:pathPattern="/.*\.css" />
+                <data android:pathPattern="/.*\.css?.*" />
+                <data android:pathPattern="/.*\..*\.CSS" />
+                <data android:pathPattern="/.*\..*\.css" />
+                <data android:pathPattern="/.*\..*\.css?.*" />
+                <data android:pathPattern="/.*\.HTM" />
+                <data android:pathPattern="/.*\.htm" />
+                <data android:pathPattern="/.*\.htm?.*" />
+                <data android:pathPattern="/.*\..*\.HTM" />
+                <data android:pathPattern="/.*\..*\.htm" />
+                <data android:pathPattern="/.*\..*\.htm?.*" />
+                <data android:pathPattern="/.*\.HTML" />
+                <data android:pathPattern="/.*\.html" />
+                <data android:pathPattern="/.*\.html?.*" />
+                <data android:pathPattern="/.*\..*\.HTML" />
+                <data android:pathPattern="/.*\..*\.html" />
+                <data android:pathPattern="/.*\..*\.html?.*" />
+                <data android:pathPattern="/.*\.PROP" />
+                <data android:pathPattern="/.*\.prop" />
+                <data android:pathPattern="/.*\.prop?.*" />
+                <data android:pathPattern="/.*\..*\.PROP" />
+                <data android:pathPattern="/.*\..*\.prop" />
+                <data android:pathPattern="/.*\..*\.prop?.*" />
+                <data android:pathPattern="/.*\.SQL" />
+                <data android:pathPattern="/.*\.sql" />
+                <data android:pathPattern="/.*\.sql?.*" />
+                <data android:pathPattern="/.*\..*\.SQL" />
+                <data android:pathPattern="/.*\..*\.sql" />
+                <data android:pathPattern="/.*\..*\.sql?.*" />
+                <data android:pathPattern="/.*\.TORRENT" />
+                <data android:pathPattern="/.*\.torrent" />
+                <data android:pathPattern="/.*\.torrent?.*" />
+                <data android:pathPattern="/.*\..*\.TORRENT" />
+                <data android:pathPattern="/.*\..*\.torrent" />
+                <data android:pathPattern="/.*\..*\.torrent?.*" />
+                <data android:pathPattern="/.*\.XML" />
+                <data android:pathPattern="/.*\.xml" />
+                <data android:pathPattern="/.*\.xml?.*" />
+                <data android:pathPattern="/.*\..*\.XML" />
+                <data android:pathPattern="/.*\..*\.xml" />
+                <data android:pathPattern="/.*\..*\.xml?.*" />
+                <data android:pathPattern="/.*\.GPG" />
+                <data android:pathPattern="/.*\.gpg" />
+                <data android:pathPattern="/.*\.gpg?.*" />
+                <data android:pathPattern="/.*\..*\.GPG" />
+                <data android:pathPattern="/.*\..*\.gpg" />
+                <data android:pathPattern="/.*\..*\.gpg?.*" />
+            </intent-filter>
+        </activity-alias>
+
         <activity
             android:name=".scanner.ScannerActivity"
             android:exported="true"
