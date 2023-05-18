@@ -13,6 +13,7 @@ import android.os.ParcelFileDescriptor;
 import android.os.Process;
 import android.os.RemoteException;
 import android.os.UserHandleHidden;
+import android.provider.DocumentsContract;
 import android.system.ErrnoException;
 import android.system.OsConstants;
 import android.util.Log;
@@ -21,9 +22,11 @@ import android.webkit.MimeTypeMap;
 import androidx.annotation.CheckResult;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.provider.DocumentsContractCompat;
 import androidx.core.util.Pair;
 import androidx.documentfile.provider.DocumentFile;
 import androidx.documentfile.provider.ExtendedRawDocumentFile;
+import androidx.documentfile.provider.MediaDocumentFile;
 import androidx.documentfile.provider.VirtualDocumentFile;
 
 import org.jetbrains.annotations.Contract;
@@ -195,8 +198,13 @@ public class Path implements Comparable<Path> {
         DocumentFile documentFile;
         switch (uri.getScheme()) {
             case ContentResolver.SCHEME_CONTENT:
-                boolean isTreeUri = uri.getPath().startsWith("/tree/");
-                documentFile = Objects.requireNonNull(isTreeUri ? DocumentFile.fromTreeUri(context, uri) : DocumentFile.fromSingleUri(context, uri));
+                if (DocumentsContract.isDocumentUri(context, uri)) {
+                    boolean isTreeUri = DocumentsContractCompat.isTreeUri(uri);
+                    documentFile = Objects.requireNonNull(isTreeUri ? DocumentFile.fromTreeUri(context, uri) : DocumentFile.fromSingleUri(context, uri));
+                } else {
+                    // Content provider
+                    documentFile = new MediaDocumentFile(null, context, uri);
+                }
                 break;
             case ContentResolver.SCHEME_FILE:
                 documentFile = getRequiredRawDocument(uri.getPath());
