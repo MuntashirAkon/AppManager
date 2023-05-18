@@ -24,6 +24,7 @@ import io.github.muntashirakon.AppManager.apk.explorer.AppExplorerActivity;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.details.manifest.ManifestViewerActivity;
+import io.github.muntashirakon.AppManager.editor.CodeEditorActivity;
 import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
 import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
 import io.github.muntashirakon.AppManager.scanner.ScannerActivity;
@@ -41,19 +42,21 @@ public class FeatureController {
             FEAT_INTERNET,
             FEAT_APP_EXPLORER,
             FEAT_APP_INFO,
+            FEAT_CODE_EDITOR,
     })
     public @interface FeatureFlags {
     }
 
-    public static final int FEAT_INTERCEPTOR = 1;
-    public static final int FEAT_MANIFEST = 1 << 1;
-    public static final int FEAT_SCANNER = 1 << 2;
-    public static final int FEAT_INSTALLER = 1 << 3;
+    private static final int FEAT_INTERCEPTOR = 1;
+    private static final int FEAT_MANIFEST = 1 << 1;
+    private static final int FEAT_SCANNER = 1 << 2;
+    private static final int FEAT_INSTALLER = 1 << 3;
     public static final int FEAT_USAGE_ACCESS = 1 << 4;
-    public static final int FEAT_LOG_VIEWER = 1 << 5;
+    private static final int FEAT_LOG_VIEWER = 1 << 5;
     public static final int FEAT_INTERNET = 1 << 6;
-    public static final int FEAT_APP_EXPLORER = 1 << 7;
-    public static final int FEAT_APP_INFO = 1 << 8;
+    private static final int FEAT_APP_EXPLORER = 1 << 7;
+    private static final int FEAT_APP_INFO = 1 << 8;
+    private static final int FEAT_CODE_EDITOR = 1 << 9;
 
     @NonNull
     public static FeatureController getInstance() {
@@ -81,6 +84,8 @@ public class FeatureController {
             put(FEAT_APP_EXPLORER, R.string.app_explorer);
             featureFlags.add(FEAT_APP_INFO);
             put(FEAT_APP_INFO, R.string.app_info);
+            featureFlags.add(FEAT_CODE_EDITOR);
+            put(FEAT_CODE_EDITOR, R.string.title_code_editor);
             featureFlags.add(FEAT_INTERNET);
             put(FEAT_INTERNET, R.string.toggle_internet);
         }
@@ -138,11 +143,7 @@ public class FeatureController {
         return getInstance().isEnabled(FEAT_INTERNET);
     }
 
-    public static boolean isAppExplorerEnabled() {
-        return getInstance().isEnabled(FEAT_APP_EXPLORER);
-    }
-
-    public boolean isEnabled(@FeatureFlags int key) {
+    private boolean isEnabled(@FeatureFlags int key) {
         ComponentName cn;
         switch (key) {
             case FEAT_INSTALLER:
@@ -170,6 +171,9 @@ public class FeatureController {
                 break;
             case FEAT_APP_INFO:
                 cn = getComponentName(key, AppDetailsActivity.ALIAS_APP_INFO);
+                break;
+            case FEAT_CODE_EDITOR:
+                cn = getComponentName(key, CodeEditorActivity.ALIAS_EDITOR);
                 break;
             default:
                 throw new IllegalArgumentException();
@@ -203,6 +207,9 @@ public class FeatureController {
                 break;
             case FEAT_APP_INFO:
                 modifyState(key, AppDetailsActivity.ALIAS_APP_INFO, enabled);
+                break;
+            case FEAT_CODE_EDITOR:
+                modifyState(key, CodeEditorActivity.ALIAS_EDITOR, enabled);
                 break;
         }
         // Modify flags

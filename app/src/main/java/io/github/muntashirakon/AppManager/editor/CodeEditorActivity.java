@@ -21,6 +21,8 @@ import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.io.Paths;
 
 public class CodeEditorActivity extends BaseActivity {
+    public static final String ALIAS_EDITOR = "io.github.muntashirakon.AppManager.editor.EditorActivity";
+
     private static final String EXTRA_READ_ONLY = "read_only";
 
     public static Intent getIntent(@NonNull Context context, @NonNull Uri uri, @Nullable String title, @Nullable String subtitle, boolean readOnly) {
