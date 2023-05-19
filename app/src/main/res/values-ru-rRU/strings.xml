@@ -1375,4 +1375,48 @@
     <string name="source_stamp_verified_and_identified_to_be_from_source">SourceStamp проверен и идентифицирован как принадлежащий <xliff:g id="source" example="Google Play">%1$s</xliff:g> .</string>
     <string name="title_domains_supported_by_the_app">Поддерживаемые домены</string>
     <string name="pref_zip_align">Выравнивание APK-файлов</string>
+    <string name="block_unblock_components_dots">Блокировать/разблокировать компоненты…</string>
+    <string name="unblock_components_dots">Разблокировать компоненты…</string>
+    <string name="block_unblock_components_description">Блокировать или разблокировать все компоненты, идентифицированные данными подписями</string>
+    <string name="pref_layout_direction">Область макета</string>
+    <string name="title_code_editor">Редактор кода</string>
+    <string name="redo">Повторить</string>
+    <string name="read_only_file_warning">Изменения не могут быть записаны в файл, возможно, из-за того, что он находится на томе, на который у диспетчера приложений нет разрешения на запись. Сохранить его в другом месте\?</string>
+    <string name="line_separator">Разделитель строк</string>
+    <plurals name="search_results">
+        <item quantity="one">%d результат</item>
+        <item quantity="few">%d результата</item>
+        <item quantity="many">%d результатов</item>
+        <item quantity="other">%d результатов</item>
+    </plurals>
+    <string name="replacement_text">Заменить</string>
+    <string name="action_replace_all">Заменить все</string>
+    <string name="search_option_match_case">Учитывать регистр</string>
+    <string name="search_option_whole_word">Целое слово</string>
+    <string name="search_option_regex">Регулярное выражение</string>
+    <string name="uninstall_app_again_message">Приложение было удалено без очистки данных и подписи. Хотите полностью удалить его\?</string>
+    <string name="uninstall_app">Удалить %1$s</string>
+    <string name="debloat_list_type">Список</string>
+    <string name="debloat_removal_type">Тип</string>
+    <string name="system_app_put_back">Вернуть</string>
+    <string name="debloat_list_misc">Разное</string>
+    <string name="debloat_list_pending">В ожидании</string>
+    <string name="debloat_removal_replace">Заменить</string>
+    <string name="debloat_removal_caution">Осторожно</string>
+    <string name="debloat_removal_unsafe">Небезопасно</string>
+    <string name="debloat_removal_safe">Безопасно</string>
+    <string name="static_shared_library">Статическая общая библиотека</string>
+    <plurals name="alert_failed_to_unblock_components">
+        <item quantity="one">Не удалось разблокировать компоненты для приложения %1$d</item>
+        <item quantity="few">Не удалось разблокировать компоненты для приложений %1$d</item>
+        <item quantity="many">Не удалось разблокировать компоненты для приложений %1$d</item>
+        <item quantity="other">Не удалось разблокировать компоненты для приложений %1$d</item>
+    </plurals>
+    <string name="pref_zip_align_msg">Выравнивание APK-файла снижает использование памяти, поскольку к файлам в APK можно обращаться напрямую, не копируя данные в ОЗУ. Этот шаг необходим, если для параметра <tt>extractNativeLibs</tt> задано значение <tt>true</tt>.</string>
+    <string name="read_only_file">Файл только для чтения</string>
+    <string name="debloat_list_google">Google</string>
+    <string name="debloater_title">Деблоатер</string>
+    <string name="debloat_list_aosp">AOSP</string>
+    <string name="debloat_list_oem">OEM</string>
+    <string name="debloat_list_carrier">Оператор связи/ISP</string>
 </resources>
