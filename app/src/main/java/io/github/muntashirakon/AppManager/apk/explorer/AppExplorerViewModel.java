@@ -18,9 +18,6 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintStream;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -28,7 +25,6 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import io.github.muntashirakon.AppManager.apk.parser.AndroidBinXmlDecoder;
 import io.github.muntashirakon.AppManager.dex.DexUtils;
 import io.github.muntashirakon.AppManager.fm.ContentType2;
 import io.github.muntashirakon.AppManager.fm.FileType;
@@ -193,35 +189,17 @@ public class AppExplorerViewModel extends AndroidViewModel implements ListOption
     }
 
     @AnyThread
-    public void cacheAndOpen(@NonNull AdapterItem item, boolean convertXml) {
+    public void cacheAndOpen(@NonNull AdapterItem item) {
         if (item.getCachedFile() != null || "smali".equals(item.path.getExtension())) {
             // Already cached
             openObserver.postValue(item);
             return;
         }
         executor.submit(() -> {
-            if (convertXml) {
-                try (InputStream is = item.openInputStream()) {
-                    byte[] fileBytes = IoUtils.readFully(is, -1, true);
-                    ByteBuffer byteBuffer = ByteBuffer.wrap(fileBytes);
-                    File cachedFile = fileCache.createCachedFile(item.path.getExtension());
-                    try (OutputStream ps = new PrintStream(cachedFile)) {
-                        if (AndroidBinXmlDecoder.isBinaryXml(byteBuffer)) {
-                            AndroidBinXmlDecoder.decode(byteBuffer, ps);
-                        } else {
-                            ps.write(fileBytes);
-                        }
-                        item.setCachedFile(Paths.get(cachedFile));
-                    }
-                } catch (Throwable e) {
-                    e.printStackTrace();
-                }
-            } else {
-                try {
-                    item.setCachedFile(Paths.get(fileCache.getCachedFile(item.path)));
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            try {
+                item.setCachedFile(Paths.get(fileCache.getCachedFile(item.path)));
+            } catch (IOException e) {
+                e.printStackTrace();
             }
             openObserver.postValue(item);
         });

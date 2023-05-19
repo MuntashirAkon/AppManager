@@ -76,12 +76,10 @@ public class AppExplorerAdapter extends MultiSelectionView.Adapter<AppExplorerAd
             holder.subtitle.setVisibility(View.VISIBLE);
             holder.subtitle.setText(Formatter.formatFileSize(activity, item.length()));
             holder.itemView.setOnClickListener(v -> {
-                if ("xml".equals(item.path.getExtension())) {
-                    activity.model.cacheAndOpen(item, true);
-                } else if (DEX_EXTENSIONS.contains(item.path.getExtension())) {
+                if (DEX_EXTENSIONS.contains(item.path.getExtension())) {
                     activity.model.browseDexOrOpenExternal(item);
                 } else {
-                    activity.model.cacheAndOpen(item, false);
+                    activity.model.cacheAndOpen(item);
                 }
             });
         }
