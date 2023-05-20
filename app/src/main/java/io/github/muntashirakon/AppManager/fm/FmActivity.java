@@ -51,7 +51,10 @@ public class FmActivity extends BaseActivity {
         setContentView(R.layout.activity_fm);
         setSupportActionBar(findViewById(R.id.toolbar));
         findViewById(R.id.progress_linear).setVisibility(View.GONE);
-        loadNewFragment(FmFragment.getNewInstance(Prefs.Storage.getVolumePath()));
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.main_layout, FmFragment.getNewInstance(Prefs.Storage.getVolumePath()))
+                .commit();
     }
 
     @Override
@@ -61,20 +64,5 @@ public class FmActivity extends BaseActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
-            super.onBackPressed();
-        } else this.finish();
-    }
-
-    public void loadNewFragment(Fragment fragment) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.main_layout, fragment)
-                .addToBackStack(null)
-                .commit();
     }
 }

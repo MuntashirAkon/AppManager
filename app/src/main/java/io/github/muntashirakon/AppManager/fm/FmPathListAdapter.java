@@ -60,6 +60,10 @@ class FmPathListAdapter extends RecyclerView.Adapter<FmPathListAdapter.PathHolde
         }
     }
 
+    public int getCurrentPosition() {
+        return currentPosition;
+    }
+
     private int calculateCurrentPosition(@NonNull Uri uri) {
         if (uri.getScheme().equals("file") && uri.getPath().startsWith(File.separator)) {
             // Needs a file separator which adds one more items at the beginning
@@ -68,7 +72,7 @@ class FmPathListAdapter extends RecyclerView.Adapter<FmPathListAdapter.PathHolde
         return uri.getPathSegments().size() - 1;
     }
 
-    private Uri calculateUri(int position) {
+    public Uri calculateUri(int position) {
         StringBuilder pathBuilder = new StringBuilder();
         for (int i = 0; i < position; ++i) {
             String pathPart = pathParts.get(i);

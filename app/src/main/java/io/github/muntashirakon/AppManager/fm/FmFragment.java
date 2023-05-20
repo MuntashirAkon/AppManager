@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.fm;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -61,6 +63,18 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
     private FmPathListAdapter pathListAdapter;
     private FmActivity activity;
     private boolean updateScrollPosition;
+
+    private final OnBackPressedCallback mBackPressedCallback = new OnBackPressedCallback(true) {
+        @Override
+        public void handleOnBackPressed() {
+            if (pathListAdapter != null && pathListAdapter.getCurrentPosition() > 0) {
+                model.loadFiles(pathListAdapter.calculateUri(pathListAdapter.getCurrentPosition() - 1));
+                return;
+            }
+            setEnabled(false);
+            requireActivity().onBackPressed();
+        }
+    };
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -121,6 +135,13 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         });
         model.loadFiles(uri);
         updateScrollPosition = true;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        // Handle back press
+        requireActivity().getOnBackPressedDispatcher().addCallback(this, mBackPressedCallback);
     }
 
     @Override
