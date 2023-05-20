@@ -9,9 +9,15 @@
         app:showAsAction="ifRoom" />
 
     <item
+        android:id="@+id/action_new_window"
+        android:icon="@drawable/ic_tab"
+        android:title="@string/open_in_new_window"
+        app:showAsAction="ifRoom" />
+
+    <item
         android:id="@+id/action_storage"
         android:icon="@drawable/ic_zip_disk"
         android:title="@string/storage"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
 
 </menu>

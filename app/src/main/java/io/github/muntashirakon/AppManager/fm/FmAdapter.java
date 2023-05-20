@@ -33,7 +33,7 @@ import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
-public class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
+class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
     private final List<FmItem> adapterList = new ArrayList<>();
     private final FmViewModel viewModel;
     private final FmActivity fmActivity;
@@ -78,8 +78,7 @@ public class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> 
             holder.icon.setImageResource(R.drawable.ic_folder);
             holder.subtitle.setText(String.format(Locale.getDefault(), "%d • %s", item.path.listFiles().length,
                     modificationDate));
-            holder.itemView.setOnClickListener(v -> fmActivity.loadNewFragment(
-                    FmFragment.getNewInstance(item.path.getUri())));
+            holder.itemView.setOnClickListener(v -> viewModel.loadFiles(item.path.getUri()));
         } else {
             holder.icon.setImageResource(R.drawable.ic_file_document);
             holder.subtitle.setText(String.format(Locale.getDefault(), "%s • %s",

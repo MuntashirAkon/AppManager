@@ -890,8 +890,7 @@
             android:name=".fm.FmActivity"
             android:exported="true"
             android:label="@string/files"
-            android:launchMode="singleTop"
-            android:taskAffinity="" />
+            android:taskAffinity=".fm.FmActivity" />
 
         <service
             android:name=".apk.installer.PackageInstallerService"

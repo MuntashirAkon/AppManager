@@ -1,0 +1,17 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.AppTheme.CardView.ListItem"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@android:id/text1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/padding_small"
+        android:paddingVertical="@dimen/padding_small"
+        android:singleLine="true"
+        tools:text="» Path" />
+
+</com.google.android.material.card.MaterialCardView>

@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.fm;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
@@ -23,14 +24,15 @@ import androidx.collection.ArrayMap;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.StorageUtils;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.dialog.SearchableItemsDialogBuilder;
 import io.github.muntashirakon.widget.MultiSelectionView;
+import io.github.muntashirakon.widget.RecyclerView;
 import io.github.muntashirakon.widget.SwipeRefreshLayout;
 
 public class FmFragment extends Fragment implements SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener {
@@ -49,12 +51,16 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
 
     private FmViewModel model;
     @Nullable
+    private RecyclerView recyclerView;
+    @Nullable
     private FmAdapter adapter;
     @Nullable
     private SwipeRefreshLayout swipeRefresh;
     @Nullable
     private MultiSelectionView multiSelectionView;
+    private FmPathListAdapter pathListAdapter;
     private FmActivity activity;
+    private boolean updateScrollPosition;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,19 +78,20 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Uri uri = requireArguments().getParcelable(ARG_URI);
+        Uri uri = model.getCurrentPath() != null
+                ? model.getCurrentPath().getUri()
+                : requireArguments().getParcelable(ARG_URI);
         activity = (FmActivity) requireActivity();
         // Set title and subtitle
         ActionBar actionBar = activity.getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setTitle(uri.getLastPathSegment());
-            actionBar.setSubtitle(uri.getPath());
-        }
         swipeRefresh = view.findViewById(R.id.swipe_refresh);
         swipeRefresh.setOnRefreshListener(this);
         swipeRefresh.post(() -> swipeRefresh.setRefreshing(true));
-        RecyclerView recyclerView = view.findViewById(R.id.list_item);
-        recyclerView.setHasFixedSize(true);
+        RecyclerView pathListView = view.findViewById(R.id.path_list);
+        pathListView.setLayoutManager(new LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false));
+        pathListAdapter = new FmPathListAdapter(model);
+        pathListView.setAdapter(pathListAdapter);
+        recyclerView = view.findViewById(R.id.list_item);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));
         adapter = new FmAdapter(model, activity);
         recyclerView.setAdapter(adapter);
@@ -94,8 +101,34 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         model.observeFiles().observe(getViewLifecycleOwner(), fmItems -> {
             if (swipeRefresh != null) swipeRefresh.setRefreshing(false);
             adapter.setFmList(fmItems);
+            if (updateScrollPosition) {
+                // Update scroll position for the first time
+                updateScrollPosition = false;
+                recyclerView.post(() -> recyclerView.scrollTo(0, model.getCurrentScrollPosition()));
+            } else {
+                // FIXME: 20/5/23 Remember scroll positions for last calls by Uris
+                recyclerView.post(() -> recyclerView.scrollToPosition(0));
+            }
+        });
+        model.getUriLiveData().observe(getViewLifecycleOwner(), uri1 -> {
+            if (actionBar != null) {
+                actionBar.setTitle(uri1.getLastPathSegment());
+            }
+            if (swipeRefresh != null) {
+                swipeRefresh.setRefreshing(true);
+            }
+            pathListAdapter.setCurrentPath(uri1);
         });
         model.loadFiles(uri);
+        updateScrollPosition = true;
+    }
+
+    @Override
+    public void onPause() {
+        if (model != null && recyclerView != null) {
+            model.setCurrentScrollPosition(recyclerView.getScrollY());
+        }
+        super.onPause();
     }
 
     @Override
@@ -108,7 +141,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_storage) {
-            new Thread(() -> {
+            ThreadUtils.postOnBackgroundThread(() -> {
                 ArrayMap<String, Uri> storageLocations = StorageUtils.getAllStorageLocations(activity, true);
                 if (storageLocations.size() == 0) {
                     activity.runOnUiThread(() -> {
@@ -132,17 +165,23 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
                     if (isDetached()) return;
                     new SearchableItemsDialogBuilder<>(activity, backupVolumesStr)
                             .setTitle(R.string.storage)
-                            .setOnItemClickListener((dialog, which, item1) ->
-                                    activity.loadNewFragment(FmFragment.getNewInstance(backupVolumes[which])))
+                            .setOnItemClickListener((dialog, which, item1) -> {
+                                model.loadFiles(backupVolumes[which]);
+                                dialog.dismiss();
+                            })
                             .setNegativeButton(R.string.cancel, null)
                             .show();
                 });
-            }).start();
+            });
             return true;
         } else if (id == R.id.action_list_options) {
             FmListOptions listOptions = new FmListOptions();
             listOptions.setListOptionActions(model);
             listOptions.show(getChildFragmentManager(), FmListOptions.TAG);
+        } else if (id == R.id.action_new_window) {
+            Intent intent = new Intent(activity, FmActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

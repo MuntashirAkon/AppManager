@@ -29,6 +29,7 @@ import io.github.muntashirakon.io.Paths;
 public class FmViewModel extends AndroidViewModel implements ListOptions.ListOptionActions {
     private final ExecutorService executor = Executors.newFixedThreadPool(3);
     private final MutableLiveData<List<FmItem>> fmItemsLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Uri> uriLiveData = new MutableLiveData<>();
     private final List<FmItem> fmItems = new ArrayList<>();
     private Path currentPath;
     @FmListOptions.SortOrder
@@ -38,6 +39,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
     private int selectedOptions;
     @Nullable
     private String queryString;
+    private int currentScrollPosition = 0;
 
     public FmViewModel(@NonNull Application application) {
         super(application);
@@ -95,6 +97,18 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
         executor.submit(this::filterAndSort);
     }
 
+    public Path getCurrentPath() {
+        return currentPath;
+    }
+
+    public void setCurrentScrollPosition(int currentScrollPosition) {
+        this.currentScrollPosition = currentScrollPosition;
+    }
+
+    public int getCurrentScrollPosition() {
+        return currentScrollPosition;
+    }
+
     @AnyThread
     public boolean hasParent() {
         if (currentPath != null) {
@@ -119,8 +133,9 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
     private void loadFiles(Path path) {
         currentPath = path;
         executor.submit(() -> {
-            if (!path.isDirectory()) return;
-            Path[] children = path.listFiles();
+            if (!currentPath.isDirectory()) return;
+            uriLiveData.postValue(currentPath.getUri());
+            Path[] children = currentPath.listFiles();
             synchronized (fmItems) {
                 fmItems.clear();
                 for (Path child : children) {
@@ -133,6 +148,10 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
 
     public LiveData<List<FmItem>> observeFiles() {
         return fmItemsLiveData;
+    }
+
+    public LiveData<Uri> getUriLiveData() {
+        return uriLiveData;
     }
 
     private void filterAndSort() {
