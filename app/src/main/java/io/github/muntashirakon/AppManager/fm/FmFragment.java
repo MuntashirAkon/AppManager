@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -166,7 +167,11 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         });
         model.getUriLiveData().observe(getViewLifecycleOwner(), uri1 -> {
             if (actionBar != null) {
-                actionBar.setTitle(uri1.getLastPathSegment());
+                String title = uri1.getLastPathSegment();
+                if (TextUtils.isEmpty(title)) {
+                    title = "Root"; // FIXME: 21/5/23 Use localisation?
+                }
+                actionBar.setTitle(title);
             }
             if (swipeRefresh != null) {
                 swipeRefresh.setRefreshing(true);
