@@ -141,8 +141,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
                     layoutManager.scrollToPositionWithOffset(scrollPosition.get(), 0);
                     scrollPosition.set(RecyclerView.NO_POSITION);
                 } else {
-                    // FIXME: 20/5/23 Remember scroll positions for last calls by Uris
-                    layoutManager.scrollToPositionWithOffset(0, 0);
+                    layoutManager.scrollToPositionWithOffset(model.getCurrentScrollPosition(), 0);
                 }
             }
         });
@@ -150,7 +149,18 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         multiSelectionView = view.findViewById(R.id.selection_view);
         multiSelectionView.hide();
         // Set observer
-        model.observeFiles().observe(getViewLifecycleOwner(), fmItems -> {
+        model.getLastUriLiveData().observe(getViewLifecycleOwner(), uri1 -> {
+            if (uri1 == null) {
+                return;
+            }
+            if (recyclerView != null) {
+                View v = recyclerView.getChildAt(0);
+                if (v != null) {
+                    model.setScrollPosition(uri1, recyclerView.getChildAdapterPosition(v));
+                }
+            }
+        });
+        model.getFmItemsLiveData().observe(getViewLifecycleOwner(), fmItems -> {
             if (swipeRefresh != null) swipeRefresh.setRefreshing(false);
             adapter.setFmList(fmItems);
         });
@@ -169,7 +179,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         if (model != null) {
-            outState.putParcelable("uri", model.getCurrentPath().getUri());
+            outState.putParcelable("uri", model.getCurrentUri());
         }
         if (recyclerView != null) {
             View v = recyclerView.getChildAt(0);
@@ -184,14 +194,6 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         super.onAttach(context);
         // Handle back press
         requireActivity().getOnBackPressedDispatcher().addCallback(this, mBackPressedCallback);
-    }
-
-    @Override
-    public void onPause() {
-        if (model != null && recyclerView != null) {
-            model.setCurrentScrollPosition(recyclerView.getScrollY());
-        }
-        super.onPause();
     }
 
     @Override

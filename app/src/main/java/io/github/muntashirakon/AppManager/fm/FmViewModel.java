@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.fm;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.net.Uri;
 
@@ -14,6 +15,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -23,6 +25,7 @@ import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.misc.ListOptions;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 
@@ -30,8 +33,10 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
     private final ExecutorService executor = Executors.newFixedThreadPool(3);
     private final MutableLiveData<List<FmItem>> fmItemsLiveData = new MutableLiveData<>();
     private final MutableLiveData<Uri> uriLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Uri> lastUriLiveData = new MutableLiveData<>();
     private final List<FmItem> fmItems = new ArrayList<>();
-    private Path currentPath;
+    private final HashMap<Uri, Integer> pathScrollPositionMap = new HashMap<>();
+    private Uri currentUri;
     @FmListOptions.SortOrder
     private int sortBy;
     private boolean reverseSort;
@@ -39,7 +44,6 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
     private int selectedOptions;
     @Nullable
     private String queryString;
-    private int currentScrollPosition = 0;
 
     public FmViewModel(@NonNull Application application) {
         super(application);
@@ -97,44 +101,39 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
         executor.submit(this::filterAndSort);
     }
 
-    public Path getCurrentPath() {
-        return currentPath;
+    public Uri getCurrentUri() {
+        return currentUri;
     }
 
-    public void setCurrentScrollPosition(int currentScrollPosition) {
-        this.currentScrollPosition = currentScrollPosition;
+    public void setScrollPosition(Uri uri, int currentScrollPosition) {
+        pathScrollPositionMap.put(uri, currentScrollPosition);
     }
 
     public int getCurrentScrollPosition() {
-        return currentScrollPosition;
-    }
-
-    @AnyThread
-    public boolean hasParent() {
-        if (currentPath != null) {
-            return currentPath.getParentFile() != null;
-        }
-        return false;
-    }
-
-    @AnyThread
-    public void loadFiles(Uri uri) {
-        Path path = Paths.get(uri);
-        loadFiles(path);
+        Integer scrollPosition = pathScrollPositionMap.get(currentUri);
+        return scrollPosition != null ? scrollPosition : 0;
     }
 
     public void reload() {
-        if (currentPath != null) {
-            loadFiles(currentPath);
+        if (currentUri != null) {
+            loadFiles(currentUri);
         }
     }
 
+    @SuppressLint("WrongThread")
     @AnyThread
-    private void loadFiles(Path path) {
-        currentPath = path;
+    public void loadFiles(@NonNull Uri uri) {
+        Uri lastUri = currentUri;
+        if (ThreadUtils.isMainThread()) {
+            lastUriLiveData.setValue(currentUri);
+        } else {
+            lastUriLiveData.postValue(lastUri);
+        }
+        currentUri = uri;
         executor.submit(() -> {
+            Path currentPath = Paths.get(currentUri);
             if (!currentPath.isDirectory()) return;
-            uriLiveData.postValue(currentPath.getUri());
+            uriLiveData.postValue(currentUri);
             Path[] children = currentPath.listFiles();
             synchronized (fmItems) {
                 fmItems.clear();
@@ -146,12 +145,16 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
         });
     }
 
-    public LiveData<List<FmItem>> observeFiles() {
+    public LiveData<List<FmItem>> getFmItemsLiveData() {
         return fmItemsLiveData;
     }
 
     public LiveData<Uri> getUriLiveData() {
         return uriLiveData;
+    }
+
+    public LiveData<Uri> getLastUriLiveData() {
+        return lastUriLiveData;
     }
 
     private void filterAndSort() {
