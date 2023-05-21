@@ -2,7 +2,9 @@
 
 package io.github.muntashirakon.AppManager.fm;
 
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -15,7 +17,6 @@ import java.util.Set;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.settings.Prefs;
 
 public class FmActivity extends BaseActivity {
     public static final Set<String> SUPPORTED_EDITOR_EXTENSIONS = new HashSet<String>() {{
@@ -51,10 +52,13 @@ public class FmActivity extends BaseActivity {
         setContentView(R.layout.activity_fm);
         setSupportActionBar(findViewById(R.id.toolbar));
         findViewById(R.id.progress_linear).setVisibility(View.GONE);
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.main_layout, FmFragment.getNewInstance(Prefs.Storage.getVolumePath()))
-                .commit();
+        if (savedInstanceState == null) {
+            Fragment fragment = FmFragment.getNewInstance(Uri.fromFile(Environment.getExternalStorageDirectory()));
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.main_layout, fragment, FmFragment.TAG)
+                    .commit();
+        }
     }
 
     @Override

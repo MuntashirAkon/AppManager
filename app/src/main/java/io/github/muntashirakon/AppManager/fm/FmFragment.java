@@ -29,6 +29,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import java.util.concurrent.atomic.AtomicInteger;
+
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.StorageUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
@@ -62,7 +64,6 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
     private MultiSelectionView multiSelectionView;
     private FmPathListAdapter pathListAdapter;
     private FmActivity activity;
-    private boolean updateScrollPosition;
 
     private final OnBackPressedCallback mBackPressedCallback = new OnBackPressedCallback(true) {
         @Override
@@ -92,15 +93,20 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Uri uri = model.getCurrentPath() != null
-                ? model.getCurrentPath().getUri()
-                : requireArguments().getParcelable(ARG_URI);
+        Uri uri = null;
+        AtomicInteger scrollPosition = new AtomicInteger(RecyclerView.NO_POSITION);
+        if (savedInstanceState != null) {
+            uri = savedInstanceState.getParcelable("uri");
+            scrollPosition.set(savedInstanceState.getInt("position", RecyclerView.NO_POSITION));
+        }
+        if (uri == null) {
+            uri = requireArguments().getParcelable(ARG_URI);
+        }
         activity = (FmActivity) requireActivity();
         // Set title and subtitle
         ActionBar actionBar = activity.getSupportActionBar();
         swipeRefresh = view.findViewById(R.id.swipe_refresh);
         swipeRefresh.setOnRefreshListener(this);
-        swipeRefresh.post(() -> swipeRefresh.setRefreshing(true));
         RecyclerView pathListView = view.findViewById(R.id.path_list);
         pathListView.setLayoutManager(new LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false));
         pathListAdapter = new FmPathListAdapter(model);
@@ -108,6 +114,23 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         recyclerView = view.findViewById(R.id.list_item);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));
         adapter = new FmAdapter(model, activity);
+        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                if (layoutManager == null) {
+                    return;
+                }
+                if (scrollPosition.get() != RecyclerView.NO_POSITION) {
+                    // Update scroll position
+                    layoutManager.scrollToPositionWithOffset(scrollPosition.get(), 0);
+                    scrollPosition.set(RecyclerView.NO_POSITION);
+                } else {
+                    // FIXME: 20/5/23 Remember scroll positions for last calls by Uris
+                    layoutManager.scrollToPositionWithOffset(0, 0);
+                }
+            }
+        });
         recyclerView.setAdapter(adapter);
         multiSelectionView = view.findViewById(R.id.selection_view);
         multiSelectionView.hide();
@@ -115,14 +138,6 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         model.observeFiles().observe(getViewLifecycleOwner(), fmItems -> {
             if (swipeRefresh != null) swipeRefresh.setRefreshing(false);
             adapter.setFmList(fmItems);
-            if (updateScrollPosition) {
-                // Update scroll position for the first time
-                updateScrollPosition = false;
-                recyclerView.post(() -> recyclerView.scrollTo(0, model.getCurrentScrollPosition()));
-            } else {
-                // FIXME: 20/5/23 Remember scroll positions for last calls by Uris
-                recyclerView.post(() -> recyclerView.scrollToPosition(0));
-            }
         });
         model.getUriLiveData().observe(getViewLifecycleOwner(), uri1 -> {
             if (actionBar != null) {
@@ -134,7 +149,19 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
             pathListAdapter.setCurrentPath(uri1);
         });
         model.loadFiles(uri);
-        updateScrollPosition = true;
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        if (model != null) {
+            outState.putParcelable("uri", model.getCurrentPath().getUri());
+        }
+        if (recyclerView != null) {
+            View v = recyclerView.getChildAt(0);
+            if (v != null) {
+                outState.putInt("position", recyclerView.getChildAdapterPosition(v));
+            }
+        }
     }
 
     @Override
