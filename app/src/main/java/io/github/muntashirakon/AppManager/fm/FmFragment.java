@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -177,6 +178,43 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
                 swipeRefresh.setRefreshing(true);
             }
             pathListAdapter.setCurrentPath(uri1);
+        });
+        model.getFolderShortInfoLiveData().observe(getViewLifecycleOwner(), folderShortInfo -> {
+            if (actionBar == null) {
+                return;
+            }
+            StringBuilder subtitle = new StringBuilder();
+            // 1. Size
+            if (folderShortInfo.size > 0) {
+                subtitle.append(Formatter.formatShortFileSize(requireContext(), folderShortInfo.size)).append(" • ");
+            }
+            // 2. Folders and files
+            if (folderShortInfo.folderCount > 0 && folderShortInfo.fileCount > 0) {
+                subtitle.append(getResources().getQuantityString(R.plurals.folder_count, folderShortInfo.folderCount,
+                        folderShortInfo.folderCount))
+                        .append(", ")
+                        .append(getResources().getQuantityString(R.plurals.file_count, folderShortInfo.fileCount,
+                                folderShortInfo.fileCount));
+            } else if (folderShortInfo.folderCount > 0) {
+                subtitle.append(getResources().getQuantityString(R.plurals.folder_count, folderShortInfo.folderCount,
+                        folderShortInfo.folderCount));
+            } else if (folderShortInfo.fileCount > 0) {
+                subtitle.append(getResources().getQuantityString(R.plurals.file_count, folderShortInfo.fileCount,
+                        folderShortInfo.fileCount));
+            } else {
+                subtitle.append(getString(R.string.empty_folder));
+            }
+            // 3. Mode
+            if (folderShortInfo.mode > 0) {
+                subtitle.append(" • ");
+                if ((folderShortInfo.mode & 0x4) != 0) {
+                    subtitle.append("R");
+                }
+                if ((folderShortInfo.mode & 0x2) != 0) {
+                    subtitle.append("W");
+                }
+            }
+            actionBar.setSubtitle(subtitle);
         });
         model.loadFiles(uri);
     }

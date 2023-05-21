@@ -1378,4 +1378,13 @@
     <string name="debloat_removal_caution">Caution</string>
     <string name="debloat_removal_unsafe">Unsafe</string>
     <string name="static_shared_library">Static shared library</string>
+    <string name="empty_folder">Empty</string>
+    <plurals name="folder_count">
+        <item quantity="one">%d folder</item>
+        <item quantity="other">%d folders</item>
+    </plurals>
+    <plurals name="file_count">
+        <item quantity="one">%d file</item>
+        <item quantity="other">%d files</item>
+    </plurals>
 </resources>
