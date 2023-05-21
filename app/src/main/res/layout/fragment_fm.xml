@@ -17,22 +17,16 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <HorizontalScrollView
+            <io.github.muntashirakon.widget.RecyclerView
+                android:id="@+id/path_list"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <io.github.muntashirakon.widget.RecyclerView
-                    android:id="@+id/path_list"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:paddingHorizontal="@dimen/padding_medium"
-                    android:scrollbars="none"
-                    android:focusable="false"
-                    android:clipToPadding="false"
-                    android:fitsSystemWindows="false"
-                    tools:listitem="@layout/m3_preference" />
-
-            </HorizontalScrollView>
+                android:layout_height="wrap_content"
+                android:paddingHorizontal="@dimen/padding_medium"
+                android:scrollbars="horizontal"
+                android:focusable="false"
+                android:clipToPadding="false"
+                android:fitsSystemWindows="false"
+                tools:listitem="@layout/m3_preference" />
 
             <io.github.muntashirakon.widget.RecyclerView
                 android:id="@+id/list_item"

@@ -110,6 +110,21 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         RecyclerView pathListView = view.findViewById(R.id.path_list);
         pathListView.setLayoutManager(new LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false));
         pathListAdapter = new FmPathListAdapter(model);
+        pathListAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onChanged() {
+                LinearLayoutManager layoutManager = (LinearLayoutManager) pathListView.getLayoutManager();
+                if (layoutManager == null) {
+                    return;
+                }
+                layoutManager.scrollToPositionWithOffset(pathListAdapter.getCurrentPosition(), 0);
+            }
+
+            @Override
+            public void onItemRangeChanged(int positionStart, int itemCount) {
+                onChanged();
+            }
+        });
         pathListView.setAdapter(pathListAdapter);
         recyclerView = view.findViewById(R.id.list_item);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));

@@ -46,7 +46,6 @@ class FmPathListAdapter extends RecyclerView.Adapter<FmPathListAdapter.PathHolde
         if (lastPathStr != null && lastPathStr.startsWith(currentPathStr)) {
             // Case 1
             setCurrentPosition(calculateCurrentPosition(currentPath));
-            // TODO: 20/5/23 RecyclerView.scrollToPosition(currentPosition);
         } else {
             // Case 2
             pathParts.clear();
