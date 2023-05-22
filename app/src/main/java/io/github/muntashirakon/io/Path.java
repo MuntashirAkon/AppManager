@@ -73,15 +73,6 @@ public class Path implements Comparable<Path> {
             return;
         }
         // We cannot use Path API here
-        // Read-only
-        EXCLUSIVE_ACCESS_PATHS.add(Environment.getRootDirectory().getAbsolutePath());
-        EXCLUSIVE_ACCESS_GRANTED.add(true);
-        EXCLUSIVE_ACCESS_PATHS.add(OsEnvironment.getDataDirectoryRaw() + "/app");
-        EXCLUSIVE_ACCESS_GRANTED.add(true);
-        EXCLUSIVE_ACCESS_PATHS.add(OsEnvironment.getProductDirectoryRaw());
-        EXCLUSIVE_ACCESS_GRANTED.add(true);
-        EXCLUSIVE_ACCESS_PATHS.add(OsEnvironment.getVendorDirectoryRaw());
-        EXCLUSIVE_ACCESS_GRANTED.add(true);
         // Read-write
         Context context = ContextUtils.getContext();
         EXCLUSIVE_ACCESS_PATHS.add(Objects.requireNonNull(context.getFilesDir().getParentFile()).getAbsolutePath());
@@ -305,6 +296,18 @@ public class Path implements Comparable<Path> {
     public String getRealFilePath() throws IOException {
         if (mDocumentFile instanceof ExtendedRawDocumentFile) {
             return Objects.requireNonNull(getFile()).getCanonicalPath();
+        }
+        return null;
+    }
+
+    /**
+     * Same as {@link #getFile()} except it returns the real path if the
+     * current path is a symbolic link.
+     */
+    @Nullable
+    public Path getRealPath() throws IOException {
+        if (mDocumentFile instanceof ExtendedRawDocumentFile) {
+            return Paths.get(Objects.requireNonNull(getFile()).getCanonicalFile());
         }
         return null;
     }

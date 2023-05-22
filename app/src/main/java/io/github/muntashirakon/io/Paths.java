@@ -338,6 +338,10 @@ public final class Paths {
         if (root.isSymbolicLink()) {
             return 0;
         }
+        if (!root.isDirectory()) {
+            // Other types of files aren't supported
+            return 0;
+        }
         long length = 0;
         Path[] files = root.listFiles();
         for (Path file : files) {
