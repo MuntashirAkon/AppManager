@@ -13,6 +13,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -129,11 +130,26 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
         // Send last URI
         lastUriLiveData.setValue(lastUri);
         currentUri = uri;
+        Path currentPath = Paths.get(uri);
+        while (currentPath.isSymbolicLink()) {
+            try {
+                Path realPath = currentPath.getRealPath();
+                if (realPath == null) {
+                    // Not a symbolic link
+                    break;
+                }
+                currentPath = realPath;
+                currentUri = realPath.getUri();
+            } catch (IOException ignore) {
+                // Since we couldn't resolve the path, try currentPath instead
+            }
+        }
+        Path path = currentPath;
+        Log.e("FM", "Loading uri: " + currentUri);
         fmFileLoaderResult = ThreadUtils.postOnBackgroundThread(() -> {
-            Path path = Paths.get(uri);
             if (!path.isDirectory()) return;
             // Send current URI as it is approved
-            uriLiveData.postValue(uri);
+            uriLiveData.postValue(currentUri);
             Path[] children = path.listFiles();
             FolderShortInfo folderShortInfo = new FolderShortInfo();
             int count = children.length;
@@ -157,7 +173,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
             if (ThreadUtils.isInterrupted()) {
                 return;
             }
-            Log.e("FM", "Loading uri 2: " + uri);
+            Log.e("FM", "Loading uri 2: " + currentUri);
             // Send folder info for the first time
             folderShortInfoLiveData.postValue(folderShortInfo);
             // Run filter and sorting options for fmItems
@@ -170,7 +186,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
                 }
                 folderShortInfoLiveData.postValue(folderShortInfo);
             }
-            Log.e("FM", "Loading uri 3: " + uri);
+            Log.e("FM", "Loading uri 3: " + currentUri);
         });
     }
 
