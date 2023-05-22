@@ -22,6 +22,7 @@ import java.util.Objects;
 import java.util.regex.Pattern;
 
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.io.fs.VirtualFileSystem;
 
 public final class Paths {
@@ -340,6 +341,10 @@ public final class Paths {
         long length = 0;
         Path[] files = root.listFiles();
         for (Path file : files) {
+            if (ThreadUtils.isInterrupted()) {
+                // Size could be too long
+                return length;
+            }
             length += size(file);
         }
         return length;
