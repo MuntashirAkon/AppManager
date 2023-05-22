@@ -205,12 +205,12 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
                 subtitle.append(getString(R.string.empty_folder));
             }
             // 3. Mode
-            if (folderShortInfo.mode > 0) {
+            if (folderShortInfo.canRead || folderShortInfo.canWrite) {
                 subtitle.append(" • ");
-                if ((folderShortInfo.mode & 0x4) != 0) {
+                if (folderShortInfo.canRead) {
                     subtitle.append("R");
                 }
-                if ((folderShortInfo.mode & 0x2) != 0) {
+                if (folderShortInfo.canWrite) {
                     subtitle.append("W");
                 }
             }

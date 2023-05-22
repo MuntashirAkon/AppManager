@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.fm;
 final class FolderShortInfo {
     public int folderCount;
     public int fileCount;
-    public int mode;
+    public boolean canRead;
+    public boolean canWrite;
     public long size = -1;
 }

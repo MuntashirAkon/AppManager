@@ -153,7 +153,8 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
             }
             folderShortInfo.folderCount = folderCount;
             folderShortInfo.fileCount = count - folderCount;
-            folderShortInfo.mode = (path.getMode() & 060) >> 3;
+            folderShortInfo.canRead = path.canRead();
+            folderShortInfo.canWrite = path.canWrite();
             if (Thread.currentThread().isInterrupted()) {
                 return;
             }
