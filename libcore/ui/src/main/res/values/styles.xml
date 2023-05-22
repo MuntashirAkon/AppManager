@@ -34,6 +34,7 @@
         <item name="actionOverflowMenuStyle">@style/Widget.AppTheme.PopupMenu.Overflow</item>
         <item name="searchViewStyle">@style/Widget.AppTheme.SearchView</item>
         <item name="textInputStyle">@style/Widget.AppTheme.TextInputLayout</item>
+        <item name="toolbarStyle">@style/Widget.AppTheme.MaterialToolbar</item>
 
         <!-- Preferences -->
         <item name="preferenceStyle">@style/Preference.M3</item>
@@ -245,6 +246,11 @@
     <style name="Widget.AppTheme.MaterialCalendar" parent="ThemeOverlay.Material3.MaterialCalendar">
         <!-- MaterialCalendar doesn't follow the M3-styled dialog -->
         <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.AppTheme.LargeComponent</item>
+    </style>
+
+    <!-- MaterialToolbar -->
+    <style name="Widget.AppTheme.MaterialToolbar" parent="Widget.Material3.Toolbar">
+        <item name="subtitleTextAppearance">@style/TextAppearance.AppTheme.BodyMedium</item>
     </style>
 
     <!-- Menu -->

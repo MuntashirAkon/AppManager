@@ -17,7 +17,6 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:subtitleTextAppearance="@style/TextAppearance.AppTheme.BodyMedium"
             tools:menu="@menu/activity_fm_actions" />
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
