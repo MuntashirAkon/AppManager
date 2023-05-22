@@ -24,6 +24,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.dialog.BackupRestoreDialogFragment;
 import io.github.muntashirakon.AppManager.main.ApplicationItem;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 
 public class RestoreTasksDialogFragment extends DialogFragment {
@@ -44,17 +45,17 @@ public class RestoreTasksDialogFragment extends DialogFragment {
         view.findViewById(R.id.restore_all).setOnClickListener(v -> {
             activity.mProgressIndicator.show();
             executor.submit(() -> {
-                if (isDetached() || Thread.currentThread().isInterrupted()) return;
+                if (isDetached() || ThreadUtils.isInterrupted()) return;
                 List<ApplicationItem> applicationItems = new ArrayList<>();
                 List<CharSequence> applicationLabels = new ArrayList<>();
                 for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), null, true)) {
-                    if (isDetached() || Thread.currentThread().isInterrupted()) return;
+                    if (isDetached() || ThreadUtils.isInterrupted()) return;
                     if (item.backup != null) {
                         applicationItems.add(item);
                         applicationLabels.add(item.label);
                     }
                 }
-                if (isDetached() || Thread.currentThread().isInterrupted()) return;
+                if (isDetached() || ThreadUtils.isInterrupted()) return;
                 requireActivity().runOnUiThread(() -> runMultiChoiceDialog(applicationItems, applicationLabels));
             });
         });
@@ -62,17 +63,17 @@ public class RestoreTasksDialogFragment extends DialogFragment {
         view.findViewById(R.id.restore_not_installed).setOnClickListener(v -> {
             activity.mProgressIndicator.show();
             executor.submit(() -> {
-                if (isDetached() || Thread.currentThread().isInterrupted()) return;
+                if (isDetached() || ThreadUtils.isInterrupted()) return;
                 List<ApplicationItem> applicationItems = new ArrayList<>();
                 List<CharSequence> applicationLabels = new ArrayList<>();
                 for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), null, true)) {
-                    if (isDetached() || Thread.currentThread().isInterrupted()) return;
+                    if (isDetached() || ThreadUtils.isInterrupted()) return;
                     if (!item.isInstalled && item.backup != null) {
                         applicationItems.add(item);
                         applicationLabels.add(item.label);
                     }
                 }
-                if (isDetached() || Thread.currentThread().isInterrupted()) return;
+                if (isDetached() || ThreadUtils.isInterrupted()) return;
                 requireActivity().runOnUiThread(() -> runMultiChoiceDialog(applicationItems, applicationLabels));
             });
         });
@@ -80,18 +81,18 @@ public class RestoreTasksDialogFragment extends DialogFragment {
         view.findViewById(R.id.restore_latest).setOnClickListener(v -> {
             activity.mProgressIndicator.show();
             executor.submit(() -> {
-                if (isDetached() || Thread.currentThread().isInterrupted()) return;
+                if (isDetached() || ThreadUtils.isInterrupted()) return;
                 List<ApplicationItem> applicationItems = new ArrayList<>();
                 List<CharSequence> applicationLabels = new ArrayList<>();
                 for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), null, true)) {
-                    if (isDetached() || Thread.currentThread().isInterrupted()) return;
+                    if (isDetached() || ThreadUtils.isInterrupted()) return;
                     if (item.isInstalled && item.backup != null
                             && item.versionCode < item.backup.versionCode) {
                         applicationItems.add(item);
                         applicationLabels.add(item.label);
                     }
                 }
-                if (isDetached() || Thread.currentThread().isInterrupted()) return;
+                if (isDetached() || ThreadUtils.isInterrupted()) return;
                 requireActivity().runOnUiThread(() -> runMultiChoiceDialog(applicationItems, applicationLabels));
             });
         });

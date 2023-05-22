@@ -6,7 +6,7 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 import android.net.Uri;
 
-import androidx.annotation.AnyThread;
+import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Future;
 
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.misc.ListOptions;
 import io.github.muntashirakon.AppManager.settings.Prefs;
@@ -110,6 +111,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
         return scrollPosition != null ? scrollPosition : 0;
     }
 
+    @MainThread
     public void reload() {
         if (currentUri != null) {
             loadFiles(currentUri);
@@ -117,18 +119,15 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
     }
 
     @SuppressLint("WrongThread")
-    @AnyThread
+    @MainThread
     public void loadFiles(@NonNull Uri uri) {
         if (fmFileLoaderResult != null) {
             fmFileLoaderResult.cancel(true);
         }
+        Log.e("FM", "Loading uri: " + uri);
         Uri lastUri = currentUri;
         // Send last URI
-        if (ThreadUtils.isMainThread()) {
-            lastUriLiveData.setValue(currentUri);
-        } else {
-            lastUriLiveData.postValue(lastUri);
-        }
+        lastUriLiveData.setValue(lastUri);
         currentUri = uri;
         fmFileLoaderResult = ThreadUtils.postOnBackgroundThread(() -> {
             Path path = Paths.get(uri);
@@ -147,7 +146,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
                     }
                     fmItems.add(new FmItem(child));
                 }
-                if (Thread.currentThread().isInterrupted()) {
+                if (ThreadUtils.isInterrupted()) {
                     return;
                 }
             }
@@ -155,9 +154,10 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
             folderShortInfo.fileCount = count - folderCount;
             folderShortInfo.canRead = path.canRead();
             folderShortInfo.canWrite = path.canWrite();
-            if (Thread.currentThread().isInterrupted()) {
+            if (ThreadUtils.isInterrupted()) {
                 return;
             }
+            Log.e("FM", "Loading uri 2: " + uri);
             // Send folder info for the first time
             folderShortInfoLiveData.postValue(folderShortInfo);
             // Run filter and sorting options for fmItems
@@ -165,11 +165,12 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
             synchronized (sizeLock) {
                 // Calculate size and send folder info again
                 folderShortInfo.size = Paths.size(path);
-                if (Thread.currentThread().isInterrupted()) {
+                if (ThreadUtils.isInterrupted()) {
                     return;
                 }
                 folderShortInfoLiveData.postValue(folderShortInfo);
             }
+            Log.e("FM", "Loading uri 3: " + uri);
         });
     }
 
@@ -201,7 +202,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
                         AdvancedSearchView.SEARCH_TYPE_CONTAINS);
             } else filteredList = new ArrayList<>(fmItems);
         }
-        if (Thread.currentThread().isInterrupted()) {
+        if (ThreadUtils.isInterrupted()) {
             return;
         }
         if (!displayDotFiles) {
@@ -213,7 +214,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
                 }
             }
         }
-        if (Thread.currentThread().isInterrupted()) {
+        if (ThreadUtils.isInterrupted()) {
             return;
         }
         // Sort by name first
@@ -246,7 +247,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
             }
             return typeComp;
         });
-        if (Thread.currentThread().isInterrupted()) {
+        if (ThreadUtils.isInterrupted()) {
             return;
         }
         this.fmItemsLiveData.postValue(filteredList);

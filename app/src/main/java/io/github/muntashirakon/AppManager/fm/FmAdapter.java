@@ -23,6 +23,7 @@ import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -34,7 +35,7 @@ import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
 class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
-    private final List<FmItem> adapterList = new ArrayList<>();
+    private final List<FmItem> adapterList = Collections.synchronizedList(new ArrayList<>());
     private final FmViewModel viewModel;
     private final FmActivity fmActivity;
     @ColorInt

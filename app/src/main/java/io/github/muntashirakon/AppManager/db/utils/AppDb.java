@@ -49,6 +49,7 @@ import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
 public class AppDb {
     public static final String TAG = AppDb.class.getSimpleName();
@@ -246,11 +247,11 @@ public class AppDb {
             Set<String> updatedApps = new HashSet<>();
 
             // Interrupt thread on request
-            if (Thread.currentThread().isInterrupted()) return;
+            if (ThreadUtils.isInterrupted()) return;
 
             for (int userId : Users.getUsersIds()) {
                 // Interrupt thread on request
-                if (Thread.currentThread().isInterrupted()) return;
+                if (ThreadUtils.isInterrupted()) return;
 
                 List<PackageInfo> packageInfoList;
                 try {
@@ -265,7 +266,7 @@ public class AppDb {
 
                 for (PackageInfo packageInfo : packageInfoList) {
                     // Interrupt thread on request
-                    if (Thread.currentThread().isInterrupted()) return;
+                    if (ThreadUtils.isInterrupted()) return;
 
                     int oldAppIndex = findIndexOfApp(oldApps, packageInfo.packageName, UserHandleHidden.getUserId(packageInfo.applicationInfo.uid));
                     if (oldAppIndex >= 0) {
@@ -295,7 +296,7 @@ public class AppDb {
             for (Backup backup : backups.values()) {
                 if (backup == null) continue;
                 // Interrupt thread on request
-                if (Thread.currentThread().isInterrupted()) return;
+                if (ThreadUtils.isInterrupted()) return;
 
                 int oldAppIndex = findIndexOfApp(oldApps, backup.packageName, backup.userId);
                 if (oldAppIndex >= 0) {
@@ -357,7 +358,7 @@ public class AppDb {
         List<PackageUsageInfo> packageUsageInfoList = new ArrayList<>();
         for (int userId : Users.getUsersIds()) {
             // Interrupt thread on request
-            if (Thread.currentThread().isInterrupted()) return;
+            if (ThreadUtils.isInterrupted()) return;
             try {
                 packageUsageInfoList.addAll(AppUsageStatsManager.getInstance(context)
                         .getUsageStats(UsageUtils.USAGE_WEEKLY, userId));
@@ -389,7 +390,7 @@ public class AppDb {
                 app.codeSize = app.dataSize = 0;
             }
             // Interrupt thread on request
-            if (Thread.currentThread().isInterrupted()) return;
+            if (ThreadUtils.isInterrupted()) return;
             if (!app.isInstalled) {
                 continue;
             }

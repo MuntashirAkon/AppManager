@@ -30,6 +30,7 @@ import io.github.muntashirakon.AppManager.compat.StorageManagerCompat;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.io.Paths;
 
 public class OneClickOpsViewModel extends AndroidViewModel {
@@ -89,7 +90,7 @@ public class OneClickOpsViewModel extends AndroidViewModel {
                     continue;
                 }
                 packageNames.add(packageInfo.packageName);
-                if (Thread.currentThread().isInterrupted()) return;
+                if (ThreadUtils.isInterrupted()) return;
                 ApplicationInfo applicationInfo = packageInfo.applicationInfo;
                 if (!Ops.isRoot() && !PackageUtils.isTestOnlyApp(applicationInfo))
                     continue;
@@ -114,7 +115,7 @@ public class OneClickOpsViewModel extends AndroidViewModel {
                     continue;
                 }
                 packageNames.add(applicationInfo.packageName);
-                if (Thread.currentThread().isInterrupted()) return;
+                if (ThreadUtils.isInterrupted()) return;
                 if (!Ops.isRoot() && !PackageUtils.isTestOnlyApp(applicationInfo))
                     continue;
                 if (!systemApps && (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0)
@@ -142,7 +143,7 @@ public class OneClickOpsViewModel extends AndroidViewModel {
                     continue;
                 }
                 packageNames.add(applicationInfo.packageName);
-                if (Thread.currentThread().isInterrupted()) return;
+                if (ThreadUtils.isInterrupted()) return;
                 if (!systemApps && (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0)
                     continue;
                 AppOpCount appOpCount = new AppOpCount();

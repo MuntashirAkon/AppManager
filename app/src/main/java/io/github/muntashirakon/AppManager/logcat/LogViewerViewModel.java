@@ -152,7 +152,7 @@ public class LogViewerViewModel extends AndroidViewModel {
 
                 String line;
                 LinkedList<LogLine> initialLines = new LinkedList<>();
-                while ((line = mReader.readLine()) != null && !Thread.currentThread().isInterrupted()) {
+                while ((line = mReader.readLine()) != null && !ThreadUtils.isInterrupted()) {
                     if (mPaused) {
                         synchronized (mLock) {
                             if (mPaused) {

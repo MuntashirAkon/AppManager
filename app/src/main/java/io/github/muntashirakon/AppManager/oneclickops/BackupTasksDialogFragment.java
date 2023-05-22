@@ -35,6 +35,7 @@ import io.github.muntashirakon.AppManager.usage.UsageUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.io.Paths;
@@ -57,11 +58,11 @@ public class BackupTasksDialogFragment extends DialogFragment {
         view.findViewById(R.id.backup_all).setOnClickListener(v -> {
             activity.mProgressIndicator.show();
             executor.submit(() -> {
-                if (isDetached() || Thread.currentThread().isInterrupted()) return;
+                if (isDetached() || ThreadUtils.isInterrupted()) return;
                 List<ApplicationItem> applicationItems = new ArrayList<>();
                 List<CharSequence> applicationLabels = new ArrayList<>();
                 for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), null, true)) {
-                    if (isDetached() || Thread.currentThread().isInterrupted()) return;
+                    if (isDetached() || ThreadUtils.isInterrupted()) return;
                     if (item.isInstalled) {
                         applicationItems.add(item);
                         applicationLabels.add(item.label);
@@ -75,17 +76,17 @@ public class BackupTasksDialogFragment extends DialogFragment {
         view.findViewById(R.id.redo_existing_backups).setOnClickListener(v -> {
             activity.mProgressIndicator.show();
             executor.submit(() -> {
-                if (isDetached() || Thread.currentThread().isInterrupted()) return;
+                if (isDetached() || ThreadUtils.isInterrupted()) return;
                 List<ApplicationItem> applicationItems = new ArrayList<>();
                 List<CharSequence> applicationLabels = new ArrayList<>();
                 for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), null, true)) {
-                    if (isDetached() || Thread.currentThread().isInterrupted()) return;
+                    if (isDetached() || ThreadUtils.isInterrupted()) return;
                     if (item.isInstalled && item.backup != null) {
                         applicationItems.add(item);
                         applicationLabels.add(item.label);
                     }
                 }
-                if (isDetached() || Thread.currentThread().isInterrupted()) return;
+                if (isDetached() || ThreadUtils.isInterrupted()) return;
                 requireActivity().runOnUiThread(() -> runMultiChoiceDialog(applicationItems, applicationLabels));
             });
         });
@@ -93,29 +94,29 @@ public class BackupTasksDialogFragment extends DialogFragment {
         view.findViewById(R.id.backup_apps_without_backup).setOnClickListener(v -> {
             activity.mProgressIndicator.show();
             executor.submit(() -> {
-                if (isDetached() || Thread.currentThread().isInterrupted()) return;
+                if (isDetached() || ThreadUtils.isInterrupted()) return;
                 List<ApplicationItem> applicationItems = new ArrayList<>();
                 List<CharSequence> applicationLabels = new ArrayList<>();
                 for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), null, true)) {
-                    if (isDetached() || Thread.currentThread().isInterrupted()) return;
+                    if (isDetached() || ThreadUtils.isInterrupted()) return;
                     if (item.isInstalled && item.backup == null) {
                         applicationItems.add(item);
                         applicationLabels.add(item.label);
                     }
                 }
-                if (isDetached() || Thread.currentThread().isInterrupted()) return;
+                if (isDetached() || ThreadUtils.isInterrupted()) return;
                 requireActivity().runOnUiThread(() -> runMultiChoiceDialog(applicationItems, applicationLabels));
             });
         });
         view.findViewById(R.id.verify_and_redo_backups).setOnClickListener(v -> {
             activity.mProgressIndicator.show();
             executor.submit(() -> {
-                if (isDetached() || Thread.currentThread().isInterrupted()) return;
+                if (isDetached() || ThreadUtils.isInterrupted()) return;
                 List<ApplicationItem> applicationItems = new ArrayList<>();
                 List<CharSequence> applicationLabels = new ArrayList<>();
                 Backup backup;
                 for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), null, true)) {
-                    if (isDetached() || Thread.currentThread().isInterrupted()) return;
+                    if (isDetached() || ThreadUtils.isInterrupted()) return;
                     backup = item.backup;
                     if (backup == null || !item.isInstalled) continue;
                     try {
@@ -133,19 +134,19 @@ public class BackupTasksDialogFragment extends DialogFragment {
                                                 .append(e.getMessage())))));
                     }
                 }
-                if (isDetached() || Thread.currentThread().isInterrupted()) return;
+                if (isDetached() || ThreadUtils.isInterrupted()) return;
                 requireActivity().runOnUiThread(() -> runMultiChoiceDialog(applicationItems, applicationLabels));
             });
         });
         view.findViewById(R.id.backup_apps_with_changes).setOnClickListener(v -> {
             activity.mProgressIndicator.show();
             executor.submit(() -> {
-                if (isDetached() || Thread.currentThread().isInterrupted()) return;
+                if (isDetached() || ThreadUtils.isInterrupted()) return;
                 List<ApplicationItem> applicationItems = new ArrayList<>();
                 List<CharSequence> applicationLabels = new ArrayList<>();
                 Backup backup;
                 for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), null, true)) {
-                    if (isDetached() || Thread.currentThread().isInterrupted()) return;
+                    if (isDetached() || ThreadUtils.isInterrupted()) return;
                     backup = item.backup;
                     if (backup == null) continue;
                     // Checks
@@ -183,7 +184,7 @@ public class BackupTasksDialogFragment extends DialogFragment {
                                 .append(UIUtils.getSmallerText(UIUtils.getSecondaryText(activity, backup.packageName))));
                     }
                 }
-                if (isDetached() || Thread.currentThread().isInterrupted()) return;
+                if (isDetached() || ThreadUtils.isInterrupted()) return;
                 requireActivity().runOnUiThread(() -> runMultiChoiceDialog(applicationItems, applicationLabels));
             });
         });

@@ -31,6 +31,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import java.util.Collections;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.github.muntashirakon.AppManager.R;
@@ -160,6 +161,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
                 if (v != null) {
                     model.setScrollPosition(uri1, recyclerView.getChildAdapterPosition(v));
                 }
+                adapter.setFmList(Collections.emptyList());
             }
         });
         model.getFmItemsLiveData().observe(getViewLifecycleOwner(), fmItems -> {

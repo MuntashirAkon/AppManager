@@ -9,6 +9,8 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
+import io.github.muntashirakon.AppManager.logs.Log;
+
 // Copyright 2016 The Android Open Source Project
 public class ThreadUtils {
     private static volatile Thread sMainThread;
@@ -52,6 +54,23 @@ public class ThreadUtils {
         if (isMainThread()) {
             throw new RuntimeException("Must be called on a worker thread");
         }
+    }
+
+    /**
+     * Tests whether this thread has been interrupted. The <i>interrupted status</i> of the thread is unaffected by this
+     * method.
+     *
+     * <p>A thread interruption ignored because a thread was not alive at the time of the interrupt will be reflected by
+     * this method returning false.
+     *
+     * @return {@code true} if this thread has been interrupted; {@code false} otherwise.
+     */
+    public static boolean isInterrupted() {
+        boolean interrupted = Thread.currentThread().isInterrupted();
+        if (interrupted) {
+            Log.d("ThreadUtils", "Thread interrupted.");
+        }
+        return interrupted;
     }
 
     /**
