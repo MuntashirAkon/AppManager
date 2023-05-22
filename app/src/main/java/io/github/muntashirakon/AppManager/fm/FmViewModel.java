@@ -21,7 +21,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Future;
 
-import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.misc.ListOptions;
 import io.github.muntashirakon.AppManager.settings.Prefs;
@@ -125,7 +124,6 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
         if (fmFileLoaderResult != null) {
             fmFileLoaderResult.cancel(true);
         }
-        Log.e("FM", "Loading uri: " + uri);
         Uri lastUri = currentUri;
         // Send last URI
         lastUriLiveData.setValue(lastUri);
@@ -145,7 +143,6 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
             }
         }
         Path path = currentPath;
-        Log.e("FM", "Loading uri: " + currentUri);
         fmFileLoaderResult = ThreadUtils.postOnBackgroundThread(() -> {
             if (!path.isDirectory()) return;
             // Send current URI as it is approved
@@ -173,7 +170,6 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
             if (ThreadUtils.isInterrupted()) {
                 return;
             }
-            Log.e("FM", "Loading uri 2: " + currentUri);
             // Send folder info for the first time
             folderShortInfoLiveData.postValue(folderShortInfo);
             // Run filter and sorting options for fmItems
@@ -186,7 +182,6 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
                 }
                 folderShortInfoLiveData.postValue(folderShortInfo);
             }
-            Log.e("FM", "Loading uri 3: " + currentUri);
         });
     }
 
@@ -235,34 +230,43 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
         }
         // Sort by name first
         Collections.sort(filteredList, (o1, o2) -> o1.path.getName().compareToIgnoreCase(o2.path.getName()));
-        // Other sorting options
-        int inverse = reverseSort ? -1 : 1;
-        Collections.sort(filteredList, (o1, o2) -> {
-            int typeComp;
-            if (!foldersOnTop) {
-                typeComp = 0;
-            } else if (o1.type == o2.type) {
-                typeComp = 0;
-            } else if (o1.type == FileType.DIRECTORY) {
-                typeComp = -1 * inverse;
-            } else typeComp = 1 * inverse;
-            if (typeComp != 0 || sortBy == FmListOptions.SORT_BY_NAME) {
-                return typeComp;
+        if (sortBy == FmListOptions.SORT_BY_NAME) {
+            if (reverseSort) {
+                Collections.reverse(filteredList);
             }
-            // Apply real sort
-            Path p1 = o1.path;
-            Path p2 = o2.path;
-            if (sortBy == FmListOptions.SORT_BY_LAST_MODIFIED) {
-                return -Long.compare(p1.lastModified(), p2.lastModified()) * inverse;
-            }
-            if (sortBy == FmListOptions.SORT_BY_SIZE) {
-                return -Long.compare(p1.length(), p2.length()) * inverse;
-            }
-            if (sortBy == FmListOptions.SORT_BY_TYPE) {
-                return p1.getType().compareToIgnoreCase(p2.getType()) * inverse;
-            }
-            return typeComp;
-        });
+        } else {
+            // Other sorting options
+            int inverse = reverseSort ? -1 : 1;
+            Collections.sort(filteredList, (o1, o2) -> {
+                Path p1 = o1.path;
+                Path p2 = o2.path;
+                if (sortBy == FmListOptions.SORT_BY_LAST_MODIFIED) {
+                    return -Long.compare(p1.lastModified(), p2.lastModified()) * inverse;
+                }
+                if (sortBy == FmListOptions.SORT_BY_SIZE) {
+                    return -Long.compare(p1.length(), p2.length()) * inverse;
+                }
+                if (sortBy == FmListOptions.SORT_BY_TYPE) {
+                    return p1.getType().compareToIgnoreCase(p2.getType()) * inverse;
+                }
+                return 0;
+            });
+        }
+        if (foldersOnTop) {
+            // Folders should be on top
+            Collections.sort(filteredList, (o1, o2) -> {
+                if (o1.type == o2.type) {
+                    return 0;
+                }
+                if (o1.type == FileType.DIRECTORY) {
+                    return -1;
+                }
+                if (o2.type == FileType.DIRECTORY) {
+                    return 1;
+                }
+                return 0;
+            });
+        }
         if (ThreadUtils.isInterrupted()) {
             return;
         }
