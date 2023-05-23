@@ -183,42 +183,42 @@ public class SearchableMultiChoiceDialogBuilder<T> {
         return this;
     }
 
-    public SearchableMultiChoiceDialogBuilder<T> setPositiveButton(@StringRes int textId, OnClickListener<T> listener) {
+    public SearchableMultiChoiceDialogBuilder<T> setPositiveButton(@StringRes int textId, @Nullable OnClickListener<T> listener) {
         builder.setPositiveButton(textId, (dialog, which) -> {
             if (listener != null) listener.onClick(dialog, which, adapter.getSelectedItems());
         });
         return this;
     }
 
-    public SearchableMultiChoiceDialogBuilder<T> setPositiveButton(@NonNull CharSequence text, OnClickListener<T> listener) {
+    public SearchableMultiChoiceDialogBuilder<T> setPositiveButton(@NonNull CharSequence text, @Nullable OnClickListener<T> listener) {
         builder.setPositiveButton(text, (dialog, which) -> {
             if (listener != null) listener.onClick(dialog, which, adapter.getSelectedItems());
         });
         return this;
     }
 
-    public SearchableMultiChoiceDialogBuilder<T> setNegativeButton(@StringRes int textId, OnClickListener<T> listener) {
+    public SearchableMultiChoiceDialogBuilder<T> setNegativeButton(@StringRes int textId, @Nullable OnClickListener<T> listener) {
         builder.setNegativeButton(textId, (dialog, which) -> {
             if (listener != null) listener.onClick(dialog, which, adapter.getSelectedItems());
         });
         return this;
     }
 
-    public SearchableMultiChoiceDialogBuilder<T> setNegativeButton(@NonNull CharSequence text, OnClickListener<T> listener) {
+    public SearchableMultiChoiceDialogBuilder<T> setNegativeButton(@NonNull CharSequence text, @Nullable OnClickListener<T> listener) {
         builder.setNegativeButton(text, (dialog, which) -> {
             if (listener != null) listener.onClick(dialog, which, adapter.getSelectedItems());
         });
         return this;
     }
 
-    public SearchableMultiChoiceDialogBuilder<T> setNeutralButton(@StringRes int textId, OnClickListener<T> listener) {
+    public SearchableMultiChoiceDialogBuilder<T> setNeutralButton(@StringRes int textId, @Nullable OnClickListener<T> listener) {
         builder.setNeutralButton(textId, (dialog, which) -> {
             if (listener != null) listener.onClick(dialog, which, adapter.getSelectedItems());
         });
         return this;
     }
 
-    public SearchableMultiChoiceDialogBuilder<T> setNeutralButton(@NonNull CharSequence text, OnClickListener<T> listener) {
+    public SearchableMultiChoiceDialogBuilder<T> setNeutralButton(@NonNull CharSequence text, @Nullable OnClickListener<T> listener) {
         builder.setNeutralButton(text, (dialog, which) -> {
             if (listener != null) listener.onClick(dialog, which, adapter.getSelectedItems());
         });

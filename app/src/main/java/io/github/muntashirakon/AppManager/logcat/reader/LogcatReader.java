@@ -4,7 +4,6 @@ package io.github.muntashirakon.AppManager.logcat.reader;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 
 // Copyright 2012 Nolan Lawson
 public interface LogcatReader {
@@ -19,8 +18,6 @@ public interface LogcatReader {
      * Kill the reader and close all resources without throwing any exceptions.
      */
     void killQuietly();
-
-    void killQuietly(ExecutorService executor);
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     boolean readyToRecord();

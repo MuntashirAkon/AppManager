@@ -10,10 +10,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
 
 import io.github.muntashirakon.AppManager.logcat.helper.LogcatHelper;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
 /**
  * Combines multiple buffered readers into a single reader that merges all input synchronously.
@@ -67,21 +67,7 @@ public class MultipleLogcatReader extends AbsLogcatReader {
             thread.killed = true;
         }
         // Kill all threads in the background
-        new Thread(() -> {
-            for (ReaderThread thread : readerThreads) {
-                thread.reader.killQuietly();
-            }
-            queue.offer(DUMMY_NULL);
-        }).start();
-    }
-
-    @Override
-    public void killQuietly(ExecutorService executor) {
-        for (ReaderThread thread : readerThreads) {
-            thread.killed = true;
-        }
-        // Kill all threads in the background
-        executor.submit(() -> {
+        ThreadUtils.postOnBackgroundThread(() -> {
             for (ReaderThread thread : readerThreads) {
                 thread.reader.killQuietly();
             }

@@ -228,6 +228,7 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
                         } catch (IllegalArgumentException e) {
                             return;
                         }
+                        // TODO: 22/5/23 Perform using a ViewModel
                         ThreadUtils.postOnBackgroundThread(() -> {
                             if (viewModel != null && viewModel.setAppOp(op, mode)) {
                                 ThreadUtils.postOnMainThread(() -> {
@@ -245,6 +246,7 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
                     .show();
         } else if (id == R.id.action_deny_dangerous_permissions) {  // permissions
             ProgressIndicatorCompat.setVisibility(progressIndicator, true);
+            // TODO: 22/5/23 Perform using a ViewModel
             ThreadUtils.postOnBackgroundThread(() -> {
                 if (viewModel == null || !viewModel.revokeDangerousPermissions()) {
                     ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(
@@ -601,6 +603,7 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
             holder.toggleSwitch.setChecked(item.isAllowed());
             holder.itemView.setOnClickListener(v -> {
                 boolean isAllowed = !item.isAllowed();
+                // TODO: 22/5/23 Perform using a ViewModel
                 ThreadUtils.postOnBackgroundThread(() -> {
                     if (viewModel != null && viewModel.setAppOpMode(item)) {
                         ThreadUtils.postOnMainThread(() -> notifyItemChanged(index));
@@ -617,6 +620,7 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
                         .setSelection(item.getMode())
                         .setOnSingleChoiceClickListener((dialog, which, item1, isChecked) -> {
                             int opMode = modes.get(which);
+                            // TODO: 22/5/23 Perform using a ViewModel
                             ThreadUtils.postOnBackgroundThread(() -> {
                                 if (viewModel != null && viewModel.setAppOpMode(item, opMode)) {
                                     ThreadUtils.postOnMainThread(() -> notifyItemChanged(index));
@@ -679,6 +683,7 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
             if (canGrantOrRevokePermission) {
                 holder.toggleSwitch.setVisibility(View.VISIBLE);
                 holder.toggleSwitch.setChecked(permissionItem.isGranted());
+                // TODO: 22/5/23 Perform using a ViewModel
                 holder.itemView.setOnClickListener(v -> ThreadUtils.postOnBackgroundThread(() -> {
                     try {
                         if (Objects.requireNonNull(viewModel).togglePermission(permissionItem)) {

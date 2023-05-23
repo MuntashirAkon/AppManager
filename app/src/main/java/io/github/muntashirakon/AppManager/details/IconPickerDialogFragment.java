@@ -31,13 +31,13 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.List;
 import java.util.TreeSet;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.utils.ResourceUtil;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
 // Copyright 2017 Adam M. Szalkowski
 public class IconPickerDialogFragment extends DialogFragment {
@@ -133,9 +133,11 @@ public class IconPickerDialogFragment extends DialogFragment {
     }
 
     public static class IconPickerViewModel extends AndroidViewModel {
-        private final ExecutorService executor = Executors.newFixedThreadPool(5);
         private final PackageManager pm;
         private final MutableLiveData<IconItemInfo[]> iconsLiveData = new MutableLiveData<>();
+
+        @Nullable
+        private Future<?> iconLoaderResult;
 
         public IconPickerViewModel(@NonNull Application application) {
             super(application);
@@ -144,7 +146,9 @@ public class IconPickerDialogFragment extends DialogFragment {
 
         @Override
         protected void onCleared() {
-            executor.shutdownNow();
+            if (iconLoaderResult != null) {
+                iconLoaderResult.cancel(true);
+            }
             super.onCleared();
         }
 
@@ -153,7 +157,10 @@ public class IconPickerDialogFragment extends DialogFragment {
         }
 
         public void resolveIcons() {
-            executor.submit(() -> {
+            if (iconLoaderResult != null) {
+                iconLoaderResult.cancel(true);
+            }
+            iconLoaderResult = ThreadUtils.postOnBackgroundThread(() -> {
                 TreeSet<IconItemInfo> icons = new TreeSet<>();
                 List<PackageInfo> installedPackages = pm.getInstalledPackages(0);
 
@@ -163,6 +170,9 @@ public class IconPickerDialogFragment extends DialogFragment {
                                 .getResourceName(pack.applicationInfo.icon);
                         if (iconResourceName != null) icons.add(new IconItemInfo(pack.packageName, iconResourceName));
                     } catch (PackageManager.NameNotFoundException | RuntimeException ignored) {
+                    }
+                    if (ThreadUtils.isInterrupted()) {
+                        return;
                     }
                 }
                 iconsLiveData.postValue(icons.toArray(new IconItemInfo[0]));

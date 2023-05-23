@@ -56,6 +56,15 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
     }
 
     @Override
+    protected void onCleared() {
+        // Ensure that file loader no longer doing anything
+        if (fmFileLoaderResult != null) {
+            fmFileLoaderResult.cancel(true);
+        }
+        super.onCleared();
+    }
+
+    @Override
     public void setSortBy(@FmListOptions.SortOrder int sortBy) {
         this.sortBy = sortBy;
         Prefs.FileManager.setSortOrder(sortBy);

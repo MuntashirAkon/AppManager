@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 
 import io.github.muntashirakon.AppManager.logcat.helper.LogcatHelper;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -32,14 +31,6 @@ public class SingleLogcatReader extends AbsLogcatReader {
 
     @Override
     public void killQuietly() {
-        if (logcatProcess != null) {
-            logcatProcess.destroy();
-            Log.d("SLR", "killed 1 logcat process");
-        }
-    }
-
-    @Override
-    public void killQuietly(ExecutorService executor) {
         if (logcatProcess != null) {
             logcatProcess.destroy();
             Log.d("SLR", "killed 1 logcat process");

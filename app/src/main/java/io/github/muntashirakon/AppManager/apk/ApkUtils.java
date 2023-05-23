@@ -56,27 +56,30 @@ public final class ApkUtils {
     public static final String EXT_APK = ".apk";
     public static final String EXT_APKS = ".apks";
 
+    private static final Object sLock = new Object();
     private static final String MANIFEST_FILE = "AndroidManifest.xml";
 
     @WorkerThread
     @NonNull
     public static Path getSharableApkFile(@NonNull PackageInfo packageInfo) throws Exception {
-        ApplicationInfo info = packageInfo.applicationInfo;
-        Context ctx = AppManager.getContext();
-        PackageManager pm = ctx.getPackageManager();
-        String outputName = FileUtils.getSanitizedFileName(info.loadLabel(pm).toString() + "_" +
-                packageInfo.versionName, false);
-        if (outputName == null) outputName = info.packageName;
-        Path tmpPublicSource;
-        if (isSplitApk(info) || hasObbFiles(info.packageName, UserHandleHidden.getUserId(info.uid))) {
-            // Split apk
-            tmpPublicSource = Paths.get(new File(FileUtils.getExternalCachePath(ContextUtils.getContext()), outputName + EXT_APKS));
-            SplitApkExporter.saveApks(packageInfo, tmpPublicSource);
-        } else {
-            // Regular apk
-            tmpPublicSource = Paths.get(packageInfo.applicationInfo.publicSourceDir);
+        synchronized (sLock) {
+            ApplicationInfo info = packageInfo.applicationInfo;
+            Context ctx = AppManager.getContext();
+            PackageManager pm = ctx.getPackageManager();
+            String outputName = FileUtils.getSanitizedFileName(info.loadLabel(pm).toString() + "_" +
+                    packageInfo.versionName, false);
+            if (outputName == null) outputName = info.packageName;
+            Path tmpPublicSource;
+            if (isSplitApk(info) || hasObbFiles(info.packageName, UserHandleHidden.getUserId(info.uid))) {
+                // Split apk
+                tmpPublicSource = Paths.get(new File(FileUtils.getExternalCachePath(ContextUtils.getContext()), outputName + EXT_APKS));
+                SplitApkExporter.saveApks(packageInfo, tmpPublicSource);
+            } else {
+                // Regular apk
+                tmpPublicSource = Paths.get(packageInfo.applicationInfo.publicSourceDir);
+            }
+            return tmpPublicSource;
         }
-        return tmpPublicSource;
     }
 
     /**

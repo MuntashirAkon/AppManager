@@ -34,13 +34,12 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
-import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
 import io.github.muntashirakon.dialog.SearchableItemsDialogBuilder;
 import io.github.muntashirakon.io.Path;
@@ -276,7 +275,6 @@ public class OpenWithDialogFragment extends DialogFragment {
         private final MutableLiveData<List<ResolveInfo>> mMatchingActivitiesLiveData = new MutableLiveData<>();
         private final MutableLiveData<PathContentInfo> mPathContentInfoLiveData = new MutableLiveData<>();
         private final SingleLiveEvent<Intent> mIntentLiveData = new SingleLiveEvent<>();
-        private final ExecutorService mExecutor = MultithreadedExecutor.getNewInstance();
         private final PackageManager mPm;
 
         public OpenWithViewModel(@NonNull Application application) {
@@ -285,12 +283,12 @@ public class OpenWithDialogFragment extends DialogFragment {
         }
 
         public void loadMatchingActivities(@NonNull Intent intent) {
-            mExecutor.submit(() ->
+            ThreadUtils.postOnBackgroundThread(() ->
                     mMatchingActivitiesLiveData.postValue(mPm.queryIntentActivities(intent, 0)));
         }
 
         public void loadFileContentInfo(@NonNull Path path) {
-            mExecutor.submit(() -> mPathContentInfoLiveData.postValue(path.getPathContentInfo()));
+            ThreadUtils.postOnBackgroundThread(() -> mPathContentInfoLiveData.postValue(path.getPathContentInfo()));
         }
 
         public void openIntent(@NonNull Intent intent) {

@@ -2,10 +2,10 @@
 
 package io.github.muntashirakon.AppManager.apk.installer;
 
-import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_DISABLED_COMPONENTS;
-import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_UNINSTALLED_PACKAGES;
 import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.GET_SIGNING_CERTIFICATES;
 import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.GET_SIGNING_CERTIFICATES_APK;
+import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_DISABLED_COMPONENTS;
+import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_UNINSTALLED_PACKAGES;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
@@ -24,8 +24,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -33,6 +32,7 @@ import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.users.UserInfo;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.io.IoUtils;
 
 public class PackageInstallerViewModel extends AndroidViewModel {
@@ -48,7 +48,8 @@ public class PackageInstallerViewModel extends AndroidViewModel {
     @Nullable
     private List<UserInfo> users;
     private int trackerCount;
-    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    @Nullable
+    private Future<?> packageInfoResult;
     private final MutableLiveData<PackageInfo> packageInfoLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> packageUninstalledLiveData = new MutableLiveData<>();
 
@@ -60,7 +61,9 @@ public class PackageInstallerViewModel extends AndroidViewModel {
     @Override
     protected void onCleared() {
         IoUtils.closeQuietly(apkFile);
-        executor.shutdownNow();
+        if (packageInfoResult != null) {
+            packageInfoResult.cancel(true);
+        }
         super.onCleared();
     }
 
@@ -74,7 +77,10 @@ public class PackageInstallerViewModel extends AndroidViewModel {
 
     @AnyThread
     public void getPackageInfo(ApkQueueItem apkQueueItem) {
-        executor.submit(() -> {
+        if (packageInfoResult != null) {
+            packageInfoResult.cancel(true);
+        }
+        packageInfoResult = ThreadUtils.postOnBackgroundThread(() -> {
             try {
                 // Three possibilities: 1. Install-existing, 2. ApkFile, 3. Uri
                 if (apkQueueItem.isInstallExisting()) {
@@ -102,7 +108,7 @@ public class PackageInstallerViewModel extends AndroidViewModel {
     }
 
     public void uninstallPackage() {
-        executor.submit(() -> {
+        ThreadUtils.postOnBackgroundThread(() -> {
             PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance();
             installer.setAppLabel(appLabel);
             packageUninstalledLiveData.postValue(installer.uninstall(packageName, UserHandleHidden.USER_ALL, false));
@@ -155,13 +161,22 @@ public class PackageInstallerViewModel extends AndroidViewModel {
         apkFile = ApkFile.getInstance(this.apkFileKey);
         newPackageInfo = loadNewPackageInfo();
         packageName = newPackageInfo.packageName;
+        if (ThreadUtils.isInterrupted()) {
+            return;
+        }
         try {
             installedPackageInfo = loadInstalledPackageInfo(packageName);
+            if (ThreadUtils.isInterrupted()) {
+                return;
+            }
         } catch (PackageManager.NameNotFoundException ignore) {
         }
         appLabel = packageManager.getApplicationLabel(newPackageInfo.applicationInfo).toString();
         appIcon = packageManager.getApplicationIcon(newPackageInfo.applicationInfo);
         trackerCount = ComponentUtils.getTrackerComponentsForPackageInfo(newPackageInfo).size();
+        if (ThreadUtils.isInterrupted()) {
+            return;
+        }
         if (newPackageInfo != null && installedPackageInfo != null) {
             isSignatureDifferent = PackageUtils.isSignatureDifferent(newPackageInfo, installedPackageInfo);
         }

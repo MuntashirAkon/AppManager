@@ -68,7 +68,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -121,19 +120,22 @@ public final class PackageUtils {
     /**
      * List all applications stored in App Manager database as well as from the system.
      *
-     * @param executor    Retrieve applications from the system using the given thread instead of the current thread.
-     * @param loadBackups Load/List backup metadata
+     * @param loadInBackground Retrieve applications from the system using the given thread instead of the current thread.
+     * @param loadBackups      Load/List backup metadata
      * @return List of applications, which could be the cached version if the executor parameter is {@code null}.
      */
     @WorkerThread
     @NonNull
     public static List<ApplicationItem> getInstalledOrBackedUpApplicationsFromDb(@NonNull Context context,
-                                                                                 @Nullable ExecutorService executor,
+                                                                                 boolean loadInBackground,
                                                                                  boolean loadBackups) {
         HashMap<String, ApplicationItem> applicationItems = new HashMap<>();
         AppDb appDb = new AppDb();
         List<App> apps = appDb.getAllApplications();
-        boolean loadInBackground = !(apps.size() == 0 || executor == null);
+        if (loadInBackground && apps.isEmpty()) {
+            // Force-load in foreground
+            loadInBackground = false;
+        }
         if (!loadInBackground) {
             // Load app list for the first time
             Log.d(TAG, "Loading apps for the first time.");
@@ -231,7 +233,7 @@ public final class PackageUtils {
         if (loadInBackground) {
             // Update list of apps safely in the background.
             // We need to do this here to avoid locks in AppDb
-            executor.submit(() -> {
+            ThreadUtils.postOnBackgroundThread(() -> {
                 if (loadBackups) {
                     appDb.loadInstalledOrBackedUpApplications(context);
                 } else appDb.updateApplications(context);
@@ -246,6 +248,9 @@ public final class PackageUtils {
         for (int userId : Users.getUsersIds()) {
             try {
                 applicationInfoList.addAll(PackageManagerCompat.getInstalledPackages(flags, userId));
+                if (ThreadUtils.isInterrupted()) {
+                    break;
+                }
             } catch (RemoteException ignore) {
             }
         }
@@ -258,6 +263,9 @@ public final class PackageUtils {
         for (int userId : Users.getUsersIds()) {
             try {
                 applicationInfoList.addAll(PackageManagerCompat.getInstalledApplications(flags, userId));
+                if (ThreadUtils.isInterrupted()) {
+                    break;
+                }
             } catch (RemoteException ignore) {
             }
         }

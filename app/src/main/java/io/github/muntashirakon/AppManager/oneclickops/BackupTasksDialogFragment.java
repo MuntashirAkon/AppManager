@@ -61,7 +61,7 @@ public class BackupTasksDialogFragment extends DialogFragment {
                 if (isDetached() || ThreadUtils.isInterrupted()) return;
                 List<ApplicationItem> applicationItems = new ArrayList<>();
                 List<CharSequence> applicationLabels = new ArrayList<>();
-                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), null, true)) {
+                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), false, true)) {
                     if (isDetached() || ThreadUtils.isInterrupted()) return;
                     if (item.isInstalled) {
                         applicationItems.add(item);
@@ -79,7 +79,7 @@ public class BackupTasksDialogFragment extends DialogFragment {
                 if (isDetached() || ThreadUtils.isInterrupted()) return;
                 List<ApplicationItem> applicationItems = new ArrayList<>();
                 List<CharSequence> applicationLabels = new ArrayList<>();
-                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), null, true)) {
+                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), false, true)) {
                     if (isDetached() || ThreadUtils.isInterrupted()) return;
                     if (item.isInstalled && item.backup != null) {
                         applicationItems.add(item);
@@ -97,7 +97,7 @@ public class BackupTasksDialogFragment extends DialogFragment {
                 if (isDetached() || ThreadUtils.isInterrupted()) return;
                 List<ApplicationItem> applicationItems = new ArrayList<>();
                 List<CharSequence> applicationLabels = new ArrayList<>();
-                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), null, true)) {
+                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), false, true)) {
                     if (isDetached() || ThreadUtils.isInterrupted()) return;
                     if (item.isInstalled && item.backup == null) {
                         applicationItems.add(item);
@@ -115,7 +115,7 @@ public class BackupTasksDialogFragment extends DialogFragment {
                 List<ApplicationItem> applicationItems = new ArrayList<>();
                 List<CharSequence> applicationLabels = new ArrayList<>();
                 Backup backup;
-                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), null, true)) {
+                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), false, true)) {
                     if (isDetached() || ThreadUtils.isInterrupted()) return;
                     backup = item.backup;
                     if (backup == null || !item.isInstalled) continue;
@@ -145,7 +145,7 @@ public class BackupTasksDialogFragment extends DialogFragment {
                 List<ApplicationItem> applicationItems = new ArrayList<>();
                 List<CharSequence> applicationLabels = new ArrayList<>();
                 Backup backup;
-                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), null, true)) {
+                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), false, true)) {
                     if (isDetached() || ThreadUtils.isInterrupted()) return;
                     backup = item.backup;
                     if (backup == null) continue;

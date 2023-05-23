@@ -18,26 +18,27 @@ public class Owners {
     private static final Map<Integer, String> uidOwnerMap = new HashMap<>();
 
     public static Map<Integer, String> getUidOwnerMap(boolean reload) {
-        if (uidOwnerMap.isEmpty() || reload) {
-            try {
-                OsCompat.setpwent();
-                StructPasswd passwd;
-                while ((passwd = OsCompat.getpwent()) != null) {
-                    uidOwnerMap.put(passwd.pw_uid, passwd.pw_name);
+        synchronized (uidOwnerMap) {
+            if (uidOwnerMap.isEmpty() || reload) {
+                try {
+                    OsCompat.setpwent();
+                    StructPasswd passwd;
+                    while ((passwd = OsCompat.getpwent()) != null) {
+                        uidOwnerMap.put(passwd.pw_uid, passwd.pw_name);
+                    }
+                } catch (ErrnoException e) {
+                    e.printStackTrace();
+                } finally {
+                    ExUtils.exceptionAsIgnored(OsCompat::endpwent);
                 }
-            } catch (ErrnoException e) {
-                e.printStackTrace();
-            } finally {
-                ExUtils.exceptionAsIgnored(OsCompat::endpwent);
             }
+            return uidOwnerMap;
         }
-        return uidOwnerMap;
     }
 
     @NonNull
     public static String getOwnerName(int uid) {
-        getUidOwnerMap(false);
-        String name = uidOwnerMap.get(uid);
+        String name = getUidOwnerMap(false).get(uid);
         if (name != null) {
             return name;
         }

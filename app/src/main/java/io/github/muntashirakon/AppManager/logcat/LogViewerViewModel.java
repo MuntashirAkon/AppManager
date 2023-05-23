@@ -277,7 +277,7 @@ public class LogViewerViewModel extends AndroidViewModel {
         if (!mKilled) {
             synchronized (mLock) {
                 if (!mKilled && mReader != null) {
-                    mReader.killQuietly(mExecutor);
+                    mReader.killQuietly();
                     mKilled = true;
                 }
             }

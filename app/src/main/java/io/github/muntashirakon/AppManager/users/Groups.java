@@ -30,26 +30,27 @@ public class Groups {
     private static final Map<Integer, String> gidGroupMap = new HashMap<>();
 
     public static Map<Integer, String> getUidGroupMap(boolean reload) {
-        if (gidGroupMap.isEmpty() || reload) {
-            try {
-                OsCompat.setgrent();
-                StructGroup passwd;
-                while ((passwd = OsCompat.getgrent()) != null) {
-                    gidGroupMap.put(passwd.gr_id, passwd.gr_name);
+        synchronized (gidGroupMap) {
+            if (gidGroupMap.isEmpty() || reload) {
+                try {
+                    OsCompat.setgrent();
+                    StructGroup passwd;
+                    while ((passwd = OsCompat.getgrent()) != null) {
+                        gidGroupMap.put(passwd.gr_id, passwd.gr_name);
+                    }
+                } catch (ErrnoException e) {
+                    e.printStackTrace();
+                } finally {
+                    ExUtils.exceptionAsIgnored(OsCompat::endgrent);
                 }
-            } catch (ErrnoException e) {
-                e.printStackTrace();
-            } finally {
-                ExUtils.exceptionAsIgnored(OsCompat::endgrent);
             }
+            return gidGroupMap;
         }
-        return gidGroupMap;
     }
 
     @NonNull
     public static String getGroupName(int uid) {
-        getUidGroupMap(false);
-        String name = gidGroupMap.get(uid);
+        String name = getUidGroupMap(false).get(uid);
         if (name != null) {
             return name;
         }

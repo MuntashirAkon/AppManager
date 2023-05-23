@@ -4,8 +4,8 @@ package io.github.muntashirakon.AppManager.apk.behavior;
 
 import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_DISABLED_COMPONENTS;
 import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_UNINSTALLED_PACKAGES;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getDimmedBitmap;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getBitmapFromDrawable;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getDimmedBitmap;
 
 import android.annotation.SuppressLint;
 import android.app.KeyguardManager;
@@ -38,8 +38,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
@@ -48,6 +47,7 @@ import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
 public class FreezeUnfreezeService extends Service {
     public static final String TAG = FreezeUnfreezeService.class.getSimpleName();
@@ -60,12 +60,14 @@ public class FreezeUnfreezeService extends Service {
     private final Map<String, FreezeUnfreeze.ShortcutInfo> packagesToShortcut = new HashMap<>();
     private final Map<String, Integer> packagesToNotificationId = new HashMap<>();
     private static final Timer timer = new Timer();
-    private static final ExecutorService executor = Executors.newFixedThreadPool(1);
     private final BroadcastReceiver screenLockedReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             try {
-                executor.submit(() -> checkLock(-1));
+                if (checkLockResult != null) {
+                    checkLockResult.cancel(true);
+                }
+                checkLockResult = ThreadUtils.postOnBackgroundThread(() -> checkLock(-1));
             } catch (Throwable th) {
                 th.printStackTrace();
             }
@@ -74,6 +76,8 @@ public class FreezeUnfreezeService extends Service {
 
     private CheckLockTask checkLockTask;
     private boolean isWorking;
+    @Nullable
+    private Future<?> checkLockResult;
 
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
@@ -116,7 +120,9 @@ public class FreezeUnfreezeService extends Service {
     public void onDestroy() {
         unregisterReceiver(screenLockedReceiver);
         ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_REMOVE);
-        executor.shutdownNow();
+        if (checkLockResult != null) {
+            checkLockResult.cancel(true);
+        }
         super.onDestroy();
     }
 

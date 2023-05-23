@@ -305,7 +305,7 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
     public void loadApplicationItems() {
         executor.submit(() -> {
             List<ApplicationItem> updatedApplicationItems = PackageUtils
-                    .getInstalledOrBackedUpApplicationsFromDb(getApplication(), executor, true);
+                    .getInstalledOrBackedUpApplicationsFromDb(getApplication(), true, true);
             synchronized (applicationItems) {
                 applicationItems.clear();
                 applicationItems.addAll(updatedApplicationItems);

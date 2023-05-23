@@ -14,6 +14,7 @@ import android.os.UserHandleHidden;
 
 import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.util.Pair;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -22,8 +23,7 @@ import androidx.lifecycle.MutableLiveData;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.compat.StorageManagerCompat;
@@ -36,14 +36,15 @@ import io.github.muntashirakon.io.Paths;
 public class OneClickOpsViewModel extends AndroidViewModel {
     public static final String TAG = OneClickOpsViewModel.class.getSimpleName();
 
-    private final ExecutorService executor = Executors.newFixedThreadPool(1);
     private final PackageManager pm;
-
     private final MutableLiveData<List<ItemCount>> trackerCount = new MutableLiveData<>();
     private final MutableLiveData<Pair<List<ItemCount>, String[]>> componentCount = new MutableLiveData<>();
     private final MutableLiveData<Pair<List<AppOpCount>, Pair<int[], Integer>>> appOpsCount = new MutableLiveData<>();
     private final MutableLiveData<List<String>> clearDataCandidates = new MutableLiveData<>();
     private final MutableLiveData<Boolean> trimCachesResult = new MutableLiveData<>();
+
+    @Nullable
+    private Future<?> futureResult;
 
     public OneClickOpsViewModel(@NonNull Application application) {
         super(application);
@@ -52,7 +53,9 @@ public class OneClickOpsViewModel extends AndroidViewModel {
 
     @Override
     protected void onCleared() {
-        executor.shutdownNow();
+        if (futureResult != null) {
+            futureResult.cancel(true);
+        }
         super.onCleared();
     }
 
@@ -78,7 +81,10 @@ public class OneClickOpsViewModel extends AndroidViewModel {
 
     @AnyThread
     public void blockTrackers(boolean systemApps) {
-        executor.submit(() -> {
+        if (futureResult != null) {
+            futureResult.cancel(true);
+        }
+        futureResult = ThreadUtils.postOnBackgroundThread(() -> {
             List<ItemCount> trackerCounts = new ArrayList<>();
             HashSet<String> packageNames = new HashSet<>();
             ItemCount trackerCount;
@@ -106,7 +112,10 @@ public class OneClickOpsViewModel extends AndroidViewModel {
     @AnyThread
     public void blockComponents(boolean systemApps, @NonNull String[] signatures) {
         if (signatures.length == 0) return;
-        executor.submit(() -> {
+        if (futureResult != null) {
+            futureResult.cancel(true);
+        }
+        futureResult = ThreadUtils.postOnBackgroundThread(() -> {
             List<ItemCount> componentCounts = new ArrayList<>();
             HashSet<String> packageNames = new HashSet<>();
             for (ApplicationInfo applicationInfo : PackageUtils.getAllApplications(MATCH_UNINSTALLED_PACKAGES
@@ -133,7 +142,10 @@ public class OneClickOpsViewModel extends AndroidViewModel {
 
     @AnyThread
     public void setAppOps(int[] appOpList, int mode, boolean systemApps) {
-        executor.submit(() -> {
+        if (futureResult != null) {
+            futureResult.cancel(true);
+        }
+        futureResult = ThreadUtils.postOnBackgroundThread(() -> {
             Pair<int[], Integer> appOpsModePair = new Pair<>(appOpList, mode);
             List<AppOpCount> appOpCounts = new ArrayList<>();
             HashSet<String> packageNames = new HashSet<>();
@@ -159,7 +171,10 @@ public class OneClickOpsViewModel extends AndroidViewModel {
     }
 
     public void clearData() {
-        executor.submit(() -> {
+        if (futureResult != null) {
+            futureResult.cancel(true);
+        }
+        futureResult = ThreadUtils.postOnBackgroundThread(() -> {
             HashSet<String> packageNames = new HashSet<>();
             for (ApplicationInfo applicationInfo : PackageUtils.getAllApplications(MATCH_UNINSTALLED_PACKAGES
                     | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES)) {
@@ -167,6 +182,9 @@ public class OneClickOpsViewModel extends AndroidViewModel {
                     continue;
                 }
                 packageNames.add(applicationInfo.packageName);
+                if (ThreadUtils.isInterrupted()) {
+                    return;
+                }
             }
             this.clearDataCandidates.postValue(new ArrayList<>(packageNames));
         });
@@ -174,7 +192,7 @@ public class OneClickOpsViewModel extends AndroidViewModel {
 
     @AnyThread
     public void trimCaches() {
-        executor.submit(() -> {
+        ThreadUtils.postOnBackgroundThread(() -> {
             long size = 1024L * 1024L * 1024L * 1024L;  // 1 TB
             try {
                 // TODO: 30/8/21 Iterate all volumes?

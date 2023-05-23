@@ -24,13 +24,13 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.IOException;
 import java.util.Locale;
-import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.users.Groups;
 import io.github.muntashirakon.AppManager.users.Owners;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
-import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.dialog.CapsuleBottomSheetDialogFragment;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.PathContentInfo;
@@ -178,7 +178,9 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
         private final MutableLiveData<PathContentInfo> mFileContentInfoLiveData = new MutableLiveData<>();
         private final MutableLiveData<String> mOwnerLiveData = new MutableLiveData<>();
         private final MutableLiveData<String> mGroupLiveData = new MutableLiveData<>();
-        private final ExecutorService mExecutor = MultithreadedExecutor.getNewInstance();
+
+        @Nullable
+        private Future<?> sizeResult;
 
         public FilePropertiesViewModel(@NonNull Application application) {
             super(application);
@@ -186,30 +188,33 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
 
         @Override
         protected void onCleared() {
-            mExecutor.shutdownNow();
+            // Size checks can take forever, so it's a good idea to terminate the process when the dialog is exited
+            if (sizeResult != null) {
+                sizeResult.cancel(true);
+            }
             super.onCleared();
         }
 
         public void loadFileSize(@NonNull Path path) {
-            mExecutor.submit(() -> {
+            sizeResult = ThreadUtils.postOnBackgroundThread(() -> {
                 long size = Paths.size(path);
                 mFileSizeLiveData.postValue(size);
             });
         }
 
         public void loadFileContentInfo(@NonNull Path path) {
-            mExecutor.submit(() -> mFileContentInfoLiveData.postValue(path.getPathContentInfo()));
+            ThreadUtils.postOnBackgroundThread(() -> mFileContentInfoLiveData.postValue(path.getPathContentInfo()));
         }
 
         public void loadOwnerInfo(int uid) {
-            mExecutor.submit(() -> {
+            ThreadUtils.postOnBackgroundThread(() -> {
                 String ownerName = Owners.getOwnerName(uid);
                 mOwnerLiveData.postValue(ownerName);
             });
         }
 
         public void loadGroupInfo(int gid) {
-            mExecutor.submit(() -> {
+            ThreadUtils.postOnBackgroundThread(() -> {
                 String groupName = Groups.getGroupName(gid);
                 mGroupLiveData.postValue(groupName);
             });

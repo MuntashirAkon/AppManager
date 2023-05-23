@@ -39,8 +39,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import io.github.muntashirakon.AppManager.apk.parser.AndroidBinXmlDecoder;
 import io.github.muntashirakon.AppManager.apk.parser.AndroidBinXmlEncoder;
@@ -48,6 +47,7 @@ import io.github.muntashirakon.AppManager.dex.DexUtils;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.compat.xml.TypedXmlPullParser;
 import io.github.muntashirakon.compat.xml.TypedXmlSerializer;
 import io.github.muntashirakon.compat.xml.Xml;
@@ -88,13 +88,16 @@ public class CodeEditorViewModel extends AndroidViewModel {
     @Nullable
     private Path sourceFile;
     private CodeEditorFragment.Options options;
+    @Nullable
+    private Future<?> contentLoaderResult;
+    @Nullable
+    private Future<?> javaConverterResult;
 
     private final FileCache fileCache = new FileCache();
     private final MutableLiveData<String> mContentLiveData = new MutableLiveData<>();
     // Only for smali
     private final SingleLiveEvent<Uri> mJavaFileLiveData = new SingleLiveEvent<>();
     private final MutableLiveData<Boolean> mSaveFileLiveData = new MutableLiveData<>();
-    private final ExecutorService mExecutor = Executors.newSingleThreadExecutor();
 
     public CodeEditorViewModel(@NonNull Application application) {
         super(application);
@@ -102,7 +105,12 @@ public class CodeEditorViewModel extends AndroidViewModel {
 
     @Override
     protected void onCleared() {
-        mExecutor.shutdownNow();
+        if (contentLoaderResult != null) {
+            contentLoaderResult.cancel(true);
+        }
+        if (javaConverterResult != null) {
+            javaConverterResult.cancel(true);
+        }
         IoUtils.closeQuietly(fileCache);
         super.onCleared();
     }
@@ -134,7 +142,10 @@ public class CodeEditorViewModel extends AndroidViewModel {
 
     public void loadFileContentIfAvailable() {
         if (sourceFile == null) return;
-        mExecutor.submit(() -> {
+        if (contentLoaderResult != null) {
+            contentLoaderResult.cancel(true);
+        }
+        contentLoaderResult = ThreadUtils.postOnBackgroundThread(() -> {
             String content = null;
             if ("xml".equals(language)) {
                 byte[] bytes = sourceFile.getContentAsBinary();
@@ -162,7 +173,7 @@ public class CodeEditorViewModel extends AndroidViewModel {
     }
 
     public void saveFile(@NonNull String content, @Nullable Path alternativeFile) {
-        mExecutor.submit(() -> {
+        ThreadUtils.postOnBackgroundThread(() -> {
             if (sourceFile == null && alternativeFile == null) {
                 mSaveFileLiveData.postValue(false);
                 return;
@@ -224,7 +235,10 @@ public class CodeEditorViewModel extends AndroidViewModel {
         if (!canGenerateJava) {
             return;
         }
-        mExecutor.submit(() -> {
+        if (javaConverterResult != null) {
+            javaConverterResult.cancel(true);
+        }
+        javaConverterResult = ThreadUtils.postOnBackgroundThread(() -> {
             List<String> smaliContents;
             if (sourceFile != null) {
                 Path parent = sourceFile.getParentFile();
@@ -250,6 +264,9 @@ public class CodeEditorViewModel extends AndroidViewModel {
                 }
             } else {
                 smaliContents = Collections.singletonList(smaliContent);
+            }
+            if (ThreadUtils.isInterrupted()) {
+                return;
             }
             try {
                 File cachedFile = fileCache.createCachedFile("java");

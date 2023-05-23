@@ -30,8 +30,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
@@ -40,11 +39,11 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class ProfileViewModel extends AndroidViewModel {
     private final Object profileLock = new Object();
-    private final ExecutorService executor = Executors.newFixedThreadPool(2);
     private final MutableLiveData<Pair<Integer, Boolean>> toast = new MutableLiveData<>();
     private final MutableLiveData<ArrayList<Pair<CharSequence, ApplicationInfo>>> installedApps = new MutableLiveData<>();
     private final MutableLiveData<Boolean> profileLoaded = new MutableLiveData<>();
@@ -52,6 +51,9 @@ public class ProfileViewModel extends AndroidViewModel {
     @GuardedBy("profileLock")
     private String profileName;
     private boolean isNew;
+    @Nullable
+    private Future<?> loadProfileResult;
+    private Future<?> loadAppsResult;
 
     public ProfileViewModel(@NonNull Application application) {
         super(application);
@@ -59,8 +61,13 @@ public class ProfileViewModel extends AndroidViewModel {
 
     @Override
     protected void onCleared() {
+        if (loadProfileResult != null) {
+            loadProfileResult.cancel(true);
+        }
+        if (loadAppsResult != null) {
+            loadAppsResult.cancel(true);
+        }
         super.onCleared();
-        executor.shutdown();
     }
 
     public LiveData<Pair<Integer, Boolean>> observeToast() {
@@ -81,7 +88,10 @@ public class ProfileViewModel extends AndroidViewModel {
 
     @AnyThread
     public void loadInstalledApps() {
-        executor.submit(() -> {
+        if (loadAppsResult != null) {
+            loadAppsResult.cancel(true);
+        }
+        loadAppsResult = ThreadUtils.postOnBackgroundThread(() -> {
             PackageManager pm = getApplication().getPackageManager();
             try {
                 ArrayList<Pair<CharSequence, ApplicationInfo>> itemPairs;
@@ -96,6 +106,9 @@ public class ProfileViewModel extends AndroidViewModel {
                     }
                     applicationInfoHashMap.add(info.packageName);
                     itemPairs.add(new Pair<>(pm.getApplicationLabel(info), info));
+                    if (ThreadUtils.isInterrupted()) {
+                        return;
+                    }
                 }
                 Collections.sort(itemPairs, (o1, o2) -> o1.first.toString().compareToIgnoreCase(o2.first.toString()));
                 installedApps.postValue(itemPairs);
@@ -124,7 +137,10 @@ public class ProfileViewModel extends AndroidViewModel {
 
     @AnyThread
     public void loadProfile() {
-        executor.submit(() -> {
+        if (loadProfileResult != null) {
+            loadProfileResult.cancel(true);
+        }
+        loadProfileResult = ThreadUtils.postOnBackgroundThread(() -> {
             loadProfileInternal();
             profileLoaded.postValue(profileMetaManager == null);
         });
@@ -132,7 +148,7 @@ public class ProfileViewModel extends AndroidViewModel {
 
     @AnyThread
     public void loadLogs() {
-        executor.submit(() -> logs.postValue(ProfileLogger.getAllLogs(profileName)));
+        ThreadUtils.postOnBackgroundThread(() -> logs.postValue(ProfileLogger.getAllLogs(profileName)));
     }
 
     @WorkerThread
@@ -156,8 +172,16 @@ public class ProfileViewModel extends AndroidViewModel {
 
     @AnyThread
     public void cloneProfile(String profileName) {
-        executor.submit(() -> {
-            if (profileMetaManager == null) loadProfileInternal();
+        if (loadProfileResult != null) {
+            loadProfileResult.cancel(true);
+        }
+        loadProfileResult = ThreadUtils.postOnBackgroundThread(() -> {
+            if (profileMetaManager == null) {
+                loadProfileInternal();
+                if (ThreadUtils.isInterrupted()) {
+                    return;
+                }
+            }
             cloneProfileInternal(profileName);
             toast.postValue(new Pair<>(R.string.done, false));
             profileLoaded.postValue(profileMetaManager == null);
@@ -166,7 +190,10 @@ public class ProfileViewModel extends AndroidViewModel {
 
     @AnyThread
     public void loadNewProfile(@Nullable String[] initialPackages) {
-        executor.submit(() -> {
+        if (loadProfileResult != null) {
+            loadProfileResult.cancel(true);
+        }
+        loadProfileResult = ThreadUtils.postOnBackgroundThread(() -> {
             loadProfileInternal();
             if (initialPackages != null) {
                 profile.packages = initialPackages;
@@ -177,9 +204,15 @@ public class ProfileViewModel extends AndroidViewModel {
 
     @AnyThread
     public void loadAndCloneProfile(@NonNull String profileName) {
-        executor.submit(() -> {
+        if (loadProfileResult != null) {
+            loadProfileResult.cancel(true);
+        }
+        loadProfileResult = ThreadUtils.postOnBackgroundThread(() -> {
             if (profileMetaManager == null) {
                 loadProfileInternal();
+                if (ThreadUtils.isInterrupted()) {
+                    return;
+                }
             }
             cloneProfileInternal(profileName);
             profileLoaded.postValue(profileMetaManager == null);
@@ -209,7 +242,7 @@ public class ProfileViewModel extends AndroidViewModel {
     @AnyThread
     @GuardedBy("profileLock")
     public void save() {
-        executor.submit(() -> {
+        ThreadUtils.postOnBackgroundThread(() -> {
             synchronized (profileLock) {
                 try {
                     profileMetaManager.writeProfile();
@@ -224,9 +257,15 @@ public class ProfileViewModel extends AndroidViewModel {
 
     @AnyThread
     public void discard() {
-        executor.submit(() -> {
+        if (loadProfileResult != null) {
+            loadProfileResult.cancel(true);
+        }
+        loadProfileResult = ThreadUtils.postOnBackgroundThread(() -> {
             synchronized (profileLock) {
                 loadProfileInternal();
+                if (ThreadUtils.isInterrupted()) {
+                    return;
+                }
                 loadPackages();
             }
         });
@@ -234,7 +273,7 @@ public class ProfileViewModel extends AndroidViewModel {
 
     @AnyThread
     public void delete() {
-        executor.submit(() -> {
+        ThreadUtils.postOnBackgroundThread(() -> {
             synchronized (profileLock) {
                 if (profileMetaManager.deleteProfile()) {
                     toast.postValue(new Pair<>(R.string.deleted_successfully, true));
@@ -258,7 +297,10 @@ public class ProfileViewModel extends AndroidViewModel {
 
     @AnyThread
     public void loadPackages() {
-        executor.submit(() -> {
+        if (loadProfileResult != null) {
+            loadProfileResult.cancel(true);
+        }
+        loadProfileResult = ThreadUtils.postOnBackgroundThread(() -> {
             synchronized (profileLock) {
                 if (profileMetaManager == null) loadProfileInternal();
                 packagesLiveData.postValue(new ArrayList<>(Arrays.asList(profile.packages)));

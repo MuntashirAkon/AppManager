@@ -6,6 +6,7 @@ import android.app.Application;
 import android.content.pm.PackageInfo;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -13,14 +14,15 @@ import androidx.lifecycle.MutableLiveData;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
 public class WhatsNewDialogViewModel extends AndroidViewModel {
-    private final ExecutorService mExecutor = Executors.newSingleThreadExecutor();
     private final MutableLiveData<List<ApkWhatsNewFinder.Change>> changesLiveData = new MutableLiveData<>();
+    @Nullable
+    private Future<?> whatsNewResult;
 
     public WhatsNewDialogViewModel(@NonNull Application application) {
         super(application);
@@ -28,7 +30,9 @@ public class WhatsNewDialogViewModel extends AndroidViewModel {
 
     @Override
     protected void onCleared() {
-        mExecutor.shutdownNow();
+        if (whatsNewResult != null) {
+            whatsNewResult.cancel(true);
+        }
         super.onCleared();
     }
 
@@ -37,7 +41,7 @@ public class WhatsNewDialogViewModel extends AndroidViewModel {
     }
 
     public void loadChanges(PackageInfo newPkgInfo, PackageInfo oldPkgInfo) {
-        mExecutor.submit(() -> {
+        whatsNewResult = ThreadUtils.postOnBackgroundThread(() -> {
             ApkWhatsNewFinder.Change[][] changes = ApkWhatsNewFinder.getInstance().getWhatsNew(newPkgInfo, oldPkgInfo);
             List<ApkWhatsNewFinder.Change> changeList = new ArrayList<>();
             for (ApkWhatsNewFinder.Change[] changes1 : changes) {

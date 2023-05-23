@@ -48,7 +48,7 @@ public class RestoreTasksDialogFragment extends DialogFragment {
                 if (isDetached() || ThreadUtils.isInterrupted()) return;
                 List<ApplicationItem> applicationItems = new ArrayList<>();
                 List<CharSequence> applicationLabels = new ArrayList<>();
-                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), null, true)) {
+                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), false, true)) {
                     if (isDetached() || ThreadUtils.isInterrupted()) return;
                     if (item.backup != null) {
                         applicationItems.add(item);
@@ -66,7 +66,7 @@ public class RestoreTasksDialogFragment extends DialogFragment {
                 if (isDetached() || ThreadUtils.isInterrupted()) return;
                 List<ApplicationItem> applicationItems = new ArrayList<>();
                 List<CharSequence> applicationLabels = new ArrayList<>();
-                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), null, true)) {
+                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), false, true)) {
                     if (isDetached() || ThreadUtils.isInterrupted()) return;
                     if (!item.isInstalled && item.backup != null) {
                         applicationItems.add(item);
@@ -84,7 +84,7 @@ public class RestoreTasksDialogFragment extends DialogFragment {
                 if (isDetached() || ThreadUtils.isInterrupted()) return;
                 List<ApplicationItem> applicationItems = new ArrayList<>();
                 List<CharSequence> applicationLabels = new ArrayList<>();
-                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), null, true)) {
+                for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), false, true)) {
                     if (isDetached() || ThreadUtils.isInterrupted()) return;
                     if (item.isInstalled && item.backup != null
                             && item.versionCode < item.backup.versionCode) {

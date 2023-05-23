@@ -57,6 +57,7 @@ import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.BroadcastUtils;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
 public final class PackageManagerCompat {
     public static final int MATCH_STATIC_SHARED_AND_SDK_LIBRARIES = 0x04000000;
@@ -126,6 +127,9 @@ public final class PackageManagerCompat {
                     if (i % 100 == 0) {
                         // Prevent DeadObjectException
                         SystemClock.sleep(300);
+                    }
+                    if (ThreadUtils.isInterrupted()) {
+                        break;
                     }
                 } catch (Exception e) {
                     throw new RemoteException(e.getMessage());
