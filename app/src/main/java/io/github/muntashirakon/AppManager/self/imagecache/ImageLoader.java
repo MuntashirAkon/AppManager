@@ -128,6 +128,8 @@ public class ImageLoader implements Closeable {
             Drawable drawable = info != null ? info.loadIcon(pm) : null;
             return new ImageFetcherResult(queueItem.tag,
                     drawable != null ? UIUtils.getBitmapFromDrawable(drawable) : null,
+                    info != null && queueItem.tag.equals(info.packageName),
+                    true,
                     new DefaultImageDrawable("android_default_icon", pm.getDefaultActivityIcon()));
         }
     }
