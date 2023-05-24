@@ -46,7 +46,6 @@ public class IconPickerDialogFragment extends DialogFragment {
     private IconPickerListener listener;
     private IconListingAdapter adapter;
     private IconPickerViewModel model;
-    private final ImageLoader imageLoader = new ImageLoader();
 
     public void attachIconPickerListener(IconPickerListener listener) {
         this.listener = listener;
@@ -82,17 +81,11 @@ public class IconPickerDialogFragment extends DialogFragment {
                 .setNegativeButton(R.string.cancel, null).create();
     }
 
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        imageLoader.close();
-    }
-
     public interface IconPickerListener {
         void iconPicked(PackageItemInfo icon);
     }
 
-    class IconListingAdapter extends BaseAdapter {
+    static class IconListingAdapter extends BaseAdapter {
         private IconItemInfo[] icons;
         private final FragmentActivity activity;
 
@@ -127,7 +120,7 @@ public class IconPickerDialogFragment extends DialogFragment {
             }
             IconItemInfo info = this.icons[position];
 
-            imageLoader.displayImage(info.packageName, info, view);
+            ImageLoader.getInstance().displayImage(info.packageName, info, view);
             return convertView;
         }
     }

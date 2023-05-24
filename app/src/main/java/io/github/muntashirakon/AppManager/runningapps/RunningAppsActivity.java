@@ -38,7 +38,6 @@ import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.scanner.vt.VtFileReport;
 import io.github.muntashirakon.AppManager.scanner.vt.VtFileScanMeta;
-import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.Prefs;
@@ -89,7 +88,6 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
     @Nullable
     RunningAppsViewModel mModel;
     boolean enableKillForSystem = false;
-    final ImageLoader imageLoader = new ImageLoader();
 
     @Nullable
     private RunningAppsAdapter mAdapter;
@@ -316,12 +314,6 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
             mSwipeRefresh.setRefreshing(false);
         }
         refresh();
-    }
-
-    @Override
-    protected void onDestroy() {
-        imageLoader.close();
-        super.onDestroy();
     }
 
     @Override

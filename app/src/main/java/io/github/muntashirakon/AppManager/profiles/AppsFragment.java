@@ -33,8 +33,6 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private LinearProgressIndicator progressIndicator;
     private ProfileViewModel model;
 
-    private final ImageLoader imageLoader = new ImageLoader();
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,12 +82,6 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
     @Override
-    public void onDestroy() {
-        imageLoader.close();
-        super.onDestroy();
-    }
-
-    @Override
     public void onRefresh() {
         swipeRefresh.setRefreshing(false);
         model.loadPackages();
@@ -124,7 +116,7 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 info = pm.getApplicationInfo(packageName, 0);
             } catch (PackageManager.NameNotFoundException ignore) {
             }
-            imageLoader.displayImage(packageName, info, holder.icon);
+            ImageLoader.getInstance().displayImage(packageName, info, holder.icon);
             String label;
             if (info != null) {
                 label = info.loadLabel(pm).toString();

@@ -24,7 +24,6 @@ import java.lang.annotation.RetentionPolicy;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
-import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.util.ProgressIndicatorCompat;
 import io.github.muntashirakon.widget.MaterialAlertView;
@@ -104,8 +103,6 @@ public abstract class AppDetailsFragment extends Fragment implements AdvancedSea
     @Nullable
     protected AppDetailsViewModel viewModel;
 
-    protected final ImageLoader imageLoader = new ImageLoader();
-
     protected int colorQueryStringHighlight;
 
     @CallSuper
@@ -143,13 +140,6 @@ public abstract class AppDetailsFragment extends Fragment implements AdvancedSea
         alertView.setEndIconDrawable(com.google.android.material.R.drawable.mtrl_ic_cancel);
         alertView.setEndIconContentDescription(R.string.close);
         swipeRefresh.setOnChildScrollUpCallback((parent, child) -> recyclerView.canScrollVertically(-1));
-    }
-
-    @CallSuper
-    @Override
-    public void onDetach() {
-        imageLoader.close();
-        super.onDetach();
     }
 
     @CallSuper

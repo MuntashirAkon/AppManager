@@ -45,6 +45,7 @@ import io.github.muntashirakon.AppManager.details.struct.AppDetailsAppOpItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsDefinedPermissionItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsPermissionItem;
+import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.self.pref.TipsPrefs;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.Prefs;
@@ -738,7 +739,7 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
                         permissionInfo.name.replaceFirst(mPackageName, "") : permissionInfo.name);
             }
             // Icon
-            imageLoader.displayImage(mPackageName + "_" + permissionInfo.name, permissionInfo, holder.imageView);
+            ImageLoader.getInstance().displayImage(mPackageName + "_" + permissionInfo.name, permissionInfo, holder.imageView);
             // Description
             CharSequence description = permissionInfo.loadDescription(packageManager);
             if (description != null) {

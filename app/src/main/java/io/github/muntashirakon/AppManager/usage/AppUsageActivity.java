@@ -102,7 +102,6 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
     private LinearProgressIndicator mProgressIndicator;
     private SwipeRefreshLayout mSwipeRefresh;
     private AppUsageAdapter mAppUsageAdapter;
-    private final ImageLoader mImageLoader = new ImageLoader();
     private final BetterActivityResult<String, Boolean> requestPerm = BetterActivityResult
             .registerForActivityResult(this, new ActivityResultContracts.RequestPermission());
 
@@ -159,12 +158,6 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
             fragment.show(getSupportFragmentManager(), AppUsageDetailsDialog.TAG);
         });
         checkPermissions();
-    }
-
-    @Override
-    protected void onDestroy() {
-        mImageLoader.close();
-        super.onDestroy();
     }
 
     @Override
@@ -487,7 +480,7 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
             // Set label (or package name on failure)
             holder.appLabel.setText(usageInfo.appLabel);
             // Set icon
-            mActivity.mImageLoader.displayImage(usageInfo.packageName, usageInfo.applicationInfo, holder.appIcon);
+            ImageLoader.getInstance().displayImage(usageInfo.packageName, usageInfo.applicationInfo, holder.appIcon);
             // Set user ID
             if (mActivity.mViewModel.hasMultipleUsers()) {
                 holder.iconFrame.setBackgroundResource(R.drawable.circle_with_padding);

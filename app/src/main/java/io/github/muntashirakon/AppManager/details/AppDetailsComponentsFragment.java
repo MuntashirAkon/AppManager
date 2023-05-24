@@ -55,6 +55,7 @@ import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
+import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.Prefs;
@@ -460,7 +461,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                         activityName.replaceFirst(mPackageName, "") : activityName);
             }
             // Icon
-            imageLoader.displayImage(mPackageName + "_" + activityName, activityInfo, holder.imageView);
+            ImageLoader.getInstance().displayImage(mPackageName + "_" + activityName, activityInfo, holder.imageView);
             // TaskAffinity
             holder.textView1.setText(String.format(Locale.ROOT, "%s: %s",
                     getString(R.string.task_affinity), activityInfo.taskAffinity));
@@ -577,7 +578,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                         serviceInfo.name.replaceFirst(mPackageName, "") : serviceInfo.name);
             }
             // Icon
-            imageLoader.displayImage(mPackageName + "_" + serviceInfo.name, serviceInfo, holder.imageView);
+            ImageLoader.getInstance().displayImage(mPackageName + "_" + serviceInfo.name, serviceInfo, holder.imageView);
             // Flags and Permission
             StringBuilder flagsAndPermission = new StringBuilder(Utils.getServiceFlagsString(serviceInfo.flags));
             if (flagsAndPermission.length() != 0) {
@@ -655,7 +656,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                         : activityInfo.name);
             }
             // Icon
-            imageLoader.displayImage(mPackageName + "_" + activityInfo.name, activityInfo, holder.imageView);
+            ImageLoader.getInstance().displayImage(mPackageName + "_" + activityInfo.name, activityInfo, holder.imageView);
             // TaskAffinity
             holder.textView1.setText(String.format(Locale.ROOT, "%s: %s",
                     getString(R.string.task_affinity), activityInfo.taskAffinity));
@@ -706,7 +707,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             // Label
             holder.labelView.setText(Utils.camelCaseToSpaceSeparatedString(Utils.getLastComponent(providerName)));
             // Icon
-            imageLoader.displayImage(mPackageName + "_" + providerName, providerInfo, holder.imageView);
+            ImageLoader.getInstance().displayImage(mPackageName + "_" + providerName, providerInfo, holder.imageView);
             // Uri permission
             holder.textView1.setText(String.format(Locale.ROOT, "%s: %s", getString(R.string.grant_uri_permission), providerInfo.grantUriPermissions));
             // Path permissions

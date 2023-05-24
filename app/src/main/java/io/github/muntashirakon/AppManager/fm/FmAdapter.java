@@ -3,7 +3,6 @@
 package io.github.muntashirakon.AppManager.fm;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -77,7 +76,7 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
         holder.title.setText(item.path.getName());
         String modificationDate = DateUtils.formatDateTime(item.path.lastModified());
         // Set icon
-        ImageLoader.getDefaultInstance().displayImage(item.tag, holder.icon, new FmIcons.FmIconFetcher(item));
+        ImageLoader.getInstance().displayImage(item.tag, holder.icon, new FmIcons.FmIconFetcher(item));
         // Set sub-icon
         // TODO: 24/5/23 Set sub-icon if needed
         if (item.type == FileType.DIRECTORY) {

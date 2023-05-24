@@ -35,6 +35,7 @@ import java.util.List;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
 import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
+import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
@@ -183,7 +184,7 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
         } else applicationInfo = null;
         String processName = processItem.name;
         // Load icon
-        mActivity.imageLoader.displayImage(processName, applicationInfo, holder.icon);
+        ImageLoader.getInstance().displayImage(processName, applicationInfo, holder.icon);
         // Set process name
         holder.processName.setText(UIUtils.getHighlightedText(processName, mModel.getQuery(), mQueryStringHighlightColor));
         // Set package name

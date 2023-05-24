@@ -40,7 +40,6 @@ public class DebloaterRecyclerViewAdapter extends MultiSelectionView.Adapter<Deb
     @ColorInt
     private final int colorSurface;
     private final Object mLock = new Object();
-    private final ImageLoader mImageLoader = new ImageLoader();
     private final DebloaterViewModel mViewModel;
 
     public DebloaterRecyclerViewAdapter(DebloaterActivity activity) {
@@ -83,7 +82,7 @@ public class DebloaterRecyclerViewAdapter extends MultiSelectionView.Adapter<Deb
         if (debloatObject.getPackageInfo() != null) {
             applicationInfo = debloatObject.getPackageInfo().applicationInfo;
         } else applicationInfo = null;
-        mImageLoader.displayImage(debloatObject.packageName, applicationInfo, holder.imageView);
+        ImageLoader.getInstance().displayImage(debloatObject.packageName, applicationInfo, holder.imageView);
         holder.listTypeView.setText(debloatObject.type);
         holder.packageNameView.setText(debloatObject.packageName);
         holder.descriptionView.setText(debloatObject.description.trim());

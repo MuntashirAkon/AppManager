@@ -53,18 +53,18 @@ public class ImageLoader implements Closeable {
         ImageFetcherResult fetchImage(@NonNull ImageLoaderQueueItem queueItem);
     }
 
-    private static final ImageLoader defaultInstance = new ImageLoader();
+    private static final ImageLoader instance = new ImageLoader();
 
     @NonNull
-    public static ImageLoader getDefaultInstance() {
-        return defaultInstance;
+    public static ImageLoader getInstance() {
+        return instance;
     }
 
     private final LruCache<String, Bitmap> mMemoryCache = new LruCache<>(300);
     private final ImageFileCache mImageFileCache = new ImageFileCache();
     private boolean mIsClosed = false;
 
-    public ImageLoader() {
+    private ImageLoader() {
     }
 
     public void displayImage(@NonNull String tag, @NonNull ImageView imageView,

@@ -43,8 +43,6 @@ public class RunningAppDetails extends CapsuleBottomSheetDialogFragment {
         return fragment;
     }
 
-    private final ImageLoader mImageLoader = new ImageLoader();
-
     @NonNull
     @Override
     public View initRootView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -100,7 +98,7 @@ public class RunningAppDetails extends CapsuleBottomSheetDialogFragment {
         if (processItem instanceof AppProcessItem) {
             PackageInfo packageInfo = ((AppProcessItem) processItem).packageInfo;
             appContainer.setVisibility(View.VISIBLE);
-            mImageLoader.displayImage(packageInfo.packageName, packageInfo.applicationInfo, appIcon);
+            ImageLoader.getInstance().displayImage(packageInfo.packageName, packageInfo.applicationInfo, appIcon);
             appLabel.setText(packageInfo.applicationInfo.loadLabel(requireContext().getPackageManager()));
             packageName.setText(packageInfo.packageName);
             openAppInfoButton.setOnClickListener(v -> {

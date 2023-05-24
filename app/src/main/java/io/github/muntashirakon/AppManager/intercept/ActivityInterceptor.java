@@ -296,7 +296,6 @@ public class ActivityInterceptor extends BaseActivity {
 
     private volatile boolean mAreTextWatchersActive;
 
-    private final ImageLoader mImageLoader = new ImageLoader();
     private final ActivityResultLauncher<Intent> mIntentLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 Intent data = result.getData();
@@ -360,12 +359,6 @@ public class ActivityInterceptor extends BaseActivity {
         // Whether the Intent was edited
         final boolean isVisible = savedInstanceState != null && savedInstanceState.getBoolean(INTENT_EDITED);
         init(intent, isVisible);
-    }
-
-    @Override
-    protected void onDestroy() {
-        mImageLoader.close();
-        super.onDestroy();
     }
 
     private void init(@NonNull Intent intent, boolean isEdited) {
@@ -1279,7 +1272,7 @@ public class ActivityInterceptor extends BaseActivity {
             String name = info.packageName + "\n" + activityName;
             holder.subtitle.setText(name);
             holder.subtitle.setTextIsSelectable(true);
-            activity.mImageLoader.displayImage(info.packageName + "_" + activityName, info, holder.icon);
+            ImageLoader.getInstance().displayImage(info.packageName + "_" + activityName, info, holder.icon);
             holder.actionIcon.setOnClickListener(v -> {
                 Intent intent = new Intent(activity.mMutableIntent);
                 intent.setClassName(info.packageName, activityName);

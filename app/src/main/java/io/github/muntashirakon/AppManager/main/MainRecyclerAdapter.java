@@ -73,7 +73,6 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
     private String mSearchQuery;
     @GuardedBy("mAdapterList")
     private final List<ApplicationItem> mAdapterList = new ArrayList<>();
-    final ImageLoader imageLoader;
 
     private final int mCardColor;
     private final int mDefaultIndicatorColor;
@@ -89,7 +88,6 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
         super();
         mActivity = activity;
         mPackageManager = activity.getPackageManager();
-        imageLoader = new ImageLoader();
 
         mCardColor = ColorCodes.getListItemColor1(activity);
         mDefaultIndicatorColor = ColorCodes.getListItemDefaultIndicatorColor(activity);
@@ -281,7 +279,7 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
             holder.sha.setVisibility(View.GONE);
         }
         // Load app icon
-        imageLoader.displayImage(item.packageName, item, holder.icon);
+        ImageLoader.getInstance().displayImage(item.packageName, item, holder.icon);
         // Set app label
         if (!TextUtils.isEmpty(mSearchQuery) && item.label.toLowerCase(Locale.ROOT).contains(mSearchQuery)) {
             // Highlight searched query

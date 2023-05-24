@@ -50,8 +50,6 @@ public class SysConfigActivity extends BaseActivity {
     private String type = SysConfigType.TYPE_GROUP;
     private SysConfigViewModel mViewModel;
 
-    private final ImageLoader imageLoader = new ImageLoader();
-
     @Override
     protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
         setContentView(R.layout.activity_sys_config);
@@ -93,12 +91,6 @@ public class SysConfigActivity extends BaseActivity {
         });
 
         mViewModel.loadSysConfigInfo(type);
-    }
-
-    @Override
-    protected void onDestroy() {
-        imageLoader.close();
-        super.onDestroy();
     }
 
     @Override
@@ -152,11 +144,11 @@ public class SysConfigActivity extends BaseActivity {
                     holder.packageName.setVisibility(View.VISIBLE);
                     holder.packageName.setText(info.name);
                     // Load icon
-                    activity.imageLoader.displayImage(applicationInfo.packageName, applicationInfo, holder.icon);
+                    ImageLoader.getInstance().displayImage(applicationInfo.packageName, applicationInfo, holder.icon);
                 } catch (PackageManager.NameNotFoundException e) {
                     holder.title.setText(info.name);
                     holder.packageName.setVisibility(View.GONE);
-                    activity.imageLoader.displayImage(info.name, null, holder.icon);
+                    ImageLoader.getInstance().displayImage(info.name, null, holder.icon);
                 }
                 holder.icon.setOnClickListener(v -> {
                     Intent appDetailsIntent = AppDetailsActivity.getIntent(activity, info.name,0);

@@ -252,14 +252,6 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
     }
 
     @Override
-    protected void onDestroy() {
-        if (mAdapter != null) {
-            mAdapter.imageLoader.close();
-        }
-        super.onDestroy();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_main_actions, menu);
         appUsageMenu = menu.findItem(R.id.action_app_usage);

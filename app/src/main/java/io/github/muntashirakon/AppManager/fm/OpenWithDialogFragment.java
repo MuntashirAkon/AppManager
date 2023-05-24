@@ -182,13 +182,11 @@ public class OpenWithDialogFragment extends DialogFragment {
         private final PackageManager mPm;
         private final Activity mActivity;
         private final OpenWithViewModel mViewModel;
-        private final ImageLoader mImageLoader;
 
         private Intent mIntent;
 
         public MatchingActivitiesRecyclerViewAdapter(OpenWithViewModel viewModel, Activity activity) {
             mViewModel = viewModel;
-            mImageLoader = new ImageLoader();
             mActivity = activity;
             mPm = activity.getPackageManager();
         }
@@ -224,7 +222,7 @@ public class OpenWithDialogFragment extends DialogFragment {
             String activityName = info.name;
             String summary = info.packageName + "\n" + getShortActivityName(activityName);
             holder.summary.setText(summary);
-            mImageLoader.displayImage(info.packageName + "_" + activityName, info, holder.icon);
+            ImageLoader.getInstance().displayImage(info.packageName + "_" + activityName, info, holder.icon);
             holder.itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(mIntent);
                 intent.setClassName(info.packageName, activityName);
