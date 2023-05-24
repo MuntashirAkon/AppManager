@@ -3,6 +3,7 @@
 package io.github.muntashirakon.AppManager.fm;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -28,6 +29,7 @@ import java.util.List;
 import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -75,13 +77,14 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
         holder.title.setText(item.path.getName());
         String modificationDate = DateUtils.formatDateTime(item.path.lastModified());
         // Set icon
+        ImageLoader.getDefaultInstance().displayImage(item.tag, holder.icon, new FmIcons.FmIconFetcher(item));
+        // Set sub-icon
+        // TODO: 24/5/23 Set sub-icon if needed
         if (item.type == FileType.DIRECTORY) {
-            holder.icon.setImageResource(R.drawable.ic_folder);
             holder.subtitle.setText(String.format(Locale.getDefault(), "%d • %s", item.path.listFiles().length,
                     modificationDate));
             holder.itemView.setOnClickListener(v -> viewModel.loadFiles(item.path.getUri()));
         } else {
-            holder.icon.setImageResource(R.drawable.ic_file_document);
             holder.subtitle.setText(String.format(Locale.getDefault(), "%s • %s",
                     Formatter.formatShortFileSize(fmActivity, item.path.length()), modificationDate));
             holder.itemView.setOnClickListener(v -> {

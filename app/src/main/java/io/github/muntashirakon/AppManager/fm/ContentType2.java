@@ -13,11 +13,20 @@ import java.util.List;
 import java.util.Map;
 
 public enum ContentType2 {
+    CONFIGURATION("text/plain", "configuration", "cnf", "conf", "cfg", "cf", "ini", "rc", "sys"),
     DEX("application/x-dex", "dex", "dex"),
+    KOTLIN("text/x-kotlin", "kotlin", "kt"),
+    LOG("text/plain", "log", "log"),
+    LUA("text/x-lua", "lua", "lua"),
+    M4A("audio/mp4a-latm", "mp4a-latm", "m4a"),
+    MARKDOWN("text/markdown", "markdown", "md", "markdown"),
     PEM("application/pem-certificate-chain", "pem", "pem"),
     PK8("application/pkcs8", "pkcs8", "pk8"),
-    M4A("audio/mp4a-latm", "mp4a-latm", "m4a"),
+    PLIST("application/x-plist", "property-list", "plist"),
+    PROPERTIES("text/plain", "properties", "prop", "properties"),
     SMALI("text/x-smali", "smali", "smali"),
+    TOML("application/toml", "toml", "toml"),
+    YAML("text/plain", "yaml", "yml", "yaml"),
     /** default if no specific match to the mime-type */
     OTHER("application/octet-stream", "other"),
     ;

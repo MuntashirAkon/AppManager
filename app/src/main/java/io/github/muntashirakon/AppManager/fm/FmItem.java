@@ -3,21 +3,40 @@
 package io.github.muntashirakon.AppManager.fm;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Objects;
 
+import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.PathContentInfo;
 
 public class FmItem implements Comparable<FmItem> {
     final int type;
     @NonNull
     final Path path;
+    @NonNull
+    final String tag;
+
+    @Nullable
+    private PathContentInfo contentInfo;
 
     FmItem(@NonNull Path path) {
         this.path = path;
         if (path.isFile()) type = FileType.FILE;
         else if (path.isDirectory()) type = FileType.DIRECTORY;
         else type = FileType.UNKNOWN;
+        tag = "fm_" + DigestUtils.getHexDigest(DigestUtils.SHA_1, path.toString().getBytes(StandardCharsets.UTF_8));
+    }
+
+    @Nullable
+    public PathContentInfo getContentInfo() {
+        return contentInfo;
+    }
+
+    public void setContentInfo(@Nullable PathContentInfo contentInfo) {
+        this.contentInfo = contentInfo;
     }
 
     @Override

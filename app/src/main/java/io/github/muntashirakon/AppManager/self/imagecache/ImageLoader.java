@@ -5,28 +5,27 @@ package io.github.muntashirakon.AppManager.self.imagecache;
 import android.content.pm.PackageItemInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
 
 import androidx.annotation.AnyThread;
+import androidx.annotation.DrawableRes;
 import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
 import androidx.collection.LruCache;
+import androidx.core.content.ContextCompat;
 
 import java.io.Closeable;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.util.Collections;
-import java.util.Map;
 import java.util.Objects;
-import java.util.WeakHashMap;
 
-import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
@@ -48,17 +47,38 @@ public class ImageLoader implements Closeable {
         });
     }
 
+    public interface ImageFetcherInterface {
+        @WorkerThread
+        @NonNull
+        ImageFetcherResult fetchImage(@NonNull ImageLoaderQueueItem queueItem);
+    }
+
+    private static final ImageLoader defaultInstance = new ImageLoader();
+
+    @NonNull
+    public static ImageLoader getDefaultInstance() {
+        return defaultInstance;
+    }
+
     private final LruCache<String, Bitmap> mMemoryCache = new LruCache<>(300);
     private final ImageFileCache mImageFileCache = new ImageFileCache();
-    private final Map<Integer, String> mImageViews = Collections.synchronizedMap(new WeakHashMap<>());
     private boolean mIsClosed = false;
 
     public ImageLoader() {
     }
 
+    public void displayImage(@NonNull String tag, @NonNull ImageView imageView,
+                             @NonNull ImageFetcherInterface imageFetcherInterface) {
+        Bitmap image = mMemoryCache.get(tag);
+        if (image != null) {
+            imageView.setImageBitmap(image);
+        } else {
+            queueImage(tag, imageView, imageFetcherInterface);
+        }
+    }
+
     @UiThread
     public void displayImage(@NonNull String tag, @Nullable PackageItemInfo info, @NonNull ImageView imageView) {
-        mImageViews.put(imageView.hashCode(), tag);
         Bitmap image = mMemoryCache.get(tag);
         if (image != null) {
             imageView.setImageBitmap(image);
@@ -69,7 +89,13 @@ public class ImageLoader implements Closeable {
 
     @AnyThread
     private void queueImage(@NonNull String tag, @Nullable PackageItemInfo info, @NonNull ImageView imageView) {
-        ImageLoaderQueueItem queueItem = new ImageLoaderQueueItem(tag, info, imageView);
+        queueImage(tag, imageView, new PackageInfoImageFetcher(info));
+    }
+
+    @AnyThread
+    private void queueImage(@NonNull String tag, @NonNull ImageView imageView,
+                            @NonNull ImageFetcherInterface imageFetcherInterface) {
+        ImageLoaderQueueItem queueItem = new ImageLoaderQueueItem(tag, imageFetcherInterface, imageView);
         ThreadUtils.postOnBackgroundThread(new LoadQueueItem(queueItem));
     }
 
@@ -87,18 +113,119 @@ public class ImageLoader implements Closeable {
         }
     }
 
+    private static class PackageInfoImageFetcher implements ImageFetcherInterface {
+        @Nullable
+        private final PackageItemInfo info;
+
+        public PackageInfoImageFetcher(@Nullable PackageItemInfo info) {
+            this.info = info;
+        }
+
+        @Override
+        @NonNull
+        public ImageFetcherResult fetchImage(@NonNull ImageLoaderQueueItem queueItem) {
+            PackageManager pm = ContextUtils.getContext().getPackageManager();
+            Drawable drawable = info != null ? info.loadIcon(pm) : null;
+            return new ImageFetcherResult(queueItem.tag,
+                    drawable != null ? UIUtils.getBitmapFromDrawable(drawable) : null,
+                    new DefaultImageDrawable("android_default_icon", pm.getDefaultActivityIcon()));
+        }
+    }
+
+    public interface DefaultImage {
+        @Nullable
+        default String getTag() {
+            return null;
+        }
+
+        @NonNull
+        Bitmap getImage();
+    }
+
+    public static class DefaultImageDrawableRes implements DefaultImage {
+        @Nullable
+        private final String tag;
+        @DrawableRes
+        private final int drawableRes;
+
+        public DefaultImageDrawableRes(@Nullable String tag, int drawableRes) {
+            this.tag = tag;
+            this.drawableRes = drawableRes;
+        }
+
+        @Override
+        @Nullable
+        public String getTag() {
+            return tag;
+        }
+
+        @NonNull
+        @Override
+        public Bitmap getImage() {
+            return UIUtils.getBitmapFromDrawable(Objects.requireNonNull(ContextCompat
+                    .getDrawable(ContextUtils.getContext(), drawableRes)));
+        }
+    }
+
+    public static class DefaultImageDrawable implements DefaultImage {
+        @Nullable
+        private final String tag;
+        @NonNull
+        private final Drawable drawable;
+
+        public DefaultImageDrawable(@Nullable String tag, @NonNull Drawable drawable) {
+            this.tag = tag;
+            this.drawable = drawable;
+        }
+
+        @Override
+        @Nullable
+        public String getTag() {
+            return tag;
+        }
+
+        @NonNull
+        @Override
+        public Bitmap getImage() {
+            return UIUtils.getBitmapFromDrawable(drawable);
+        }
+    }
+
+    public static class ImageFetcherResult {
+        @NonNull
+        public final String tag;
+        @Nullable
+        public final Bitmap bitmap;
+        public final boolean cacheInMemory;
+        public final boolean persistCache;
+        @NonNull
+        public final DefaultImage defaultImage;
+
+        public ImageFetcherResult(@NonNull String tag, @Nullable Bitmap bitmap, @NonNull DefaultImage defaultImage) {
+            this(tag, bitmap, true, true, defaultImage);
+        }
+
+        public ImageFetcherResult(@NonNull String tag, @Nullable Bitmap bitmap, boolean cacheInMemory,
+                                  boolean persistCache, @NonNull DefaultImage defaultImage) {
+            this.tag = tag;
+            this.bitmap = bitmap;
+            this.cacheInMemory = cacheInMemory;
+            this.persistCache = persistCache;
+            this.defaultImage = defaultImage;
+        }
+    }
+
     @AnyThread
-    private static class ImageLoaderQueueItem {
+    public static class ImageLoaderQueueItem {
         public final String tag;
         public final WeakReference<ImageView> imageView;
-        public final PackageManager pm;
-        public final PackageItemInfo info;
+        private final ImageFetcherInterface imageFetcherInterface;
 
-        public ImageLoaderQueueItem(@NonNull String tag, @Nullable PackageItemInfo info, @NonNull ImageView imageView) {
+        public ImageLoaderQueueItem(@NonNull String tag, @NonNull ImageFetcherInterface imageFetcherInterface,
+                                    @NonNull ImageView imageView) {
             this.tag = tag;
-            this.info = info;
+            this.imageFetcherInterface = imageFetcherInterface;
             this.imageView = new WeakReference<>(imageView);
-            this.pm = AppManager.getContext().getPackageManager();
         }
     }
 
@@ -114,21 +241,48 @@ public class ImageLoader implements Closeable {
             if (imageViewReusedOrClosed(mQueueItem)) return;
             Bitmap image = mImageFileCache.getImage(mQueueItem.tag);
             ImageView iv = mQueueItem.imageView.get();
-            if (image == null) { // Cache miss
-                Drawable drawable;
-                if (mQueueItem.info != null) {
-                    drawable = mQueueItem.info.loadIcon(mQueueItem.pm);
-                    image = getScaledBitmap(iv, drawable, 1.0f);
-                    try {
-                        mImageFileCache.putImage(mQueueItem.tag, image);
-                    } catch (IOException ignore) {
+            if (image != null) {
+                // Cache hit
+                mMemoryCache.put(mQueueItem.tag, image);
+            } else {
+                // Cache miss
+                ImageFetcherResult result = mQueueItem.imageFetcherInterface.fetchImage(mQueueItem);
+                if (result.bitmap == null) {
+                    // No image produced, try default
+                    DefaultImage defaultImage = result.defaultImage;
+                    String tag = defaultImage.getTag();
+                    if (tag == null) {
+                        // No tag listed, use the image directly
+                        image = getScaledBitmap(iv, defaultImage.getImage(), 1.0f);
+                    } else {
+                        // Listed a tag, try cache first
+                        image = mMemoryCache.get(tag);
+                        if (image == null) {
+                            image = mImageFileCache.getImage(tag);
+                        }
+                        if (image == null) {
+                            // Cache miss
+                            image = getScaledBitmap(iv, defaultImage.getImage(), 1.0f);
+                            mMemoryCache.put(tag, image);
+                            try {
+                                mImageFileCache.putImage(tag, image);
+                            } catch (IOException ignore) {
+                            }
+                        }
                     }
                 } else {
-                    drawable = mQueueItem.pm.getDefaultActivityIcon();
-                    image = getScaledBitmap(iv, drawable, 1.0f);
+                    image = getScaledBitmap(iv, result.bitmap, 1.0f);
+                    if (result.cacheInMemory) {
+                        mMemoryCache.put(mQueueItem.tag, image);
+                    }
+                    if (result.persistCache) {
+                        try {
+                            mImageFileCache.putImage(result.tag, image);
+                        } catch (IOException ignore) {
+                        }
+                    }
                 }
             }
-            mMemoryCache.put(mQueueItem.tag, image);
             if (imageViewReusedOrClosed(mQueueItem)) return;
             ThreadUtils.postOnMainThread(new LoadImageInImageView(image, mQueueItem));
         }
@@ -157,42 +311,37 @@ public class ImageLoader implements Closeable {
     @AnyThread
     private boolean imageViewReusedOrClosed(@NonNull ImageLoaderQueueItem imageLoaderQueueItem) {
         ImageView iv = imageLoaderQueueItem.imageView.get();
-        return mIsClosed || iv == null || !Objects.equals(imageLoaderQueueItem.tag, mImageViews.get(iv.hashCode()));
+        return mIsClosed || iv == null;
     }
 
     /**
      * Get a scaled {@link Bitmap} from the given {@link Drawable} that fits the frame.
      *
      * @param frame         The frame to scale. The frame must be initialised beforehand.
-     * @param drawable      The drawable to resize
+     * @param bitmap        The bitmap to resize
      * @param scalingFactor A number between 0 and 1. E.g. 1.0 fits the frame and 0.1 only fits 10% of the frame.
      */
     @WorkerThread
-    public static Bitmap getScaledBitmap(@Nullable View frame, @NonNull Drawable drawable,
+    public static Bitmap getScaledBitmap(@Nullable View frame, @NonNull Bitmap bitmap,
                                          @FloatRange(from = 0.0, to = 1.0) float scalingFactor) {
         if (frame == null) {
-            return UIUtils.getBitmapFromDrawable(drawable);
+            return bitmap;
         }
-        int imgWidth = drawable.getIntrinsicWidth();
-        int imgHeight = drawable.getIntrinsicHeight();
+        int imgWidth = bitmap.getWidth();
+        int imgHeight = bitmap.getHeight();
         int frameHeight = frame.getHeight();
         int frameWidth = frame.getWidth();
-        double scale;
+        float scale;
         if (imgHeight <= 0 || imgWidth <= 0) {
-            scale = 1;
+            return bitmap;
         } else if (frameHeight == 0 && frameWidth == 0) {
             // The view isn't initialised
-            scale = 1;
+            return bitmap;
         } else {
             scale = Math.min(Math.min(frameHeight, frameWidth) * scalingFactor / (float) Math.max(imgHeight, imgWidth), 1);
         }
-        int newWidth = (int) (imgWidth * scale);
-        int newHeight = (int) (imgHeight * scale);
-        drawable.setBounds(0, 0, newWidth, newHeight);
-        Bitmap bitmap = Bitmap.createBitmap(newWidth, newHeight, Bitmap.Config.ARGB_8888);
-        Canvas c = new Canvas();
-        c.setBitmap(bitmap);
-        drawable.draw(c);
-        return Bitmap.createScaledBitmap(bitmap, newWidth, newHeight, true);
+        Matrix matrix = new Matrix();
+        matrix.postScale(scale, scale);
+        return Bitmap.createBitmap(bitmap, 0, 0, imgWidth, imgHeight, matrix, false);
     }
 }
