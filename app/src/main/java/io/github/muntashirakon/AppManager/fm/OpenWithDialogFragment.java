@@ -125,6 +125,7 @@ public class OpenWithDialogFragment extends DialogFragment {
                                     mViewModel.loadMatchingActivities(mAdapter.getIntent());
                                 }
                             }
+                            dialog1.dismiss();
                         })
                         .setNegativeButton(R.string.close, null)
                         .show();
