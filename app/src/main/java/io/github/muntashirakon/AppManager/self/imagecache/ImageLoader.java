@@ -15,6 +15,7 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.Px;
 import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
 import androidx.collection.LruCache;
@@ -149,10 +150,17 @@ public class ImageLoader implements Closeable {
         private final String tag;
         @DrawableRes
         private final int drawableRes;
+        @Px
+        private final int padding;
 
         public DefaultImageDrawableRes(@Nullable String tag, int drawableRes) {
+            this(tag, drawableRes, 0);
+        }
+
+        public DefaultImageDrawableRes(@Nullable String tag, int drawableRes, @Px int padding) {
             this.tag = tag;
             this.drawableRes = drawableRes;
+            this.padding = padding;
         }
 
         @Override
@@ -165,7 +173,7 @@ public class ImageLoader implements Closeable {
         @Override
         public Bitmap getImage() {
             return UIUtils.getBitmapFromDrawable(Objects.requireNonNull(ContextCompat
-                    .getDrawable(ContextUtils.getContext(), drawableRes)));
+                    .getDrawable(ContextUtils.getContext(), drawableRes)), padding);
         }
     }
 
@@ -190,6 +198,30 @@ public class ImageLoader implements Closeable {
         @Override
         public Bitmap getImage() {
             return UIUtils.getBitmapFromDrawable(drawable);
+        }
+    }
+
+    public static class DefaultImageString implements DefaultImage {
+        @Nullable
+        private final String tag;
+        @NonNull
+        private final String text;
+
+        public DefaultImageString(@Nullable String tag, @NonNull String text) {
+            this.tag = tag;
+            this.text = text;
+        }
+
+        @Override
+        @Nullable
+        public String getTag() {
+            return tag;
+        }
+
+        @NonNull
+        @Override
+        public Bitmap getImage() {
+            return UIUtils.generateBitmapFromText(text, null);
         }
     }
 

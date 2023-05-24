@@ -1,23 +1,33 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-package io.github.muntashirakon.AppManager.fm;
+package io.github.muntashirakon.AppManager.fm.icons;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.pdf.PdfRenderer;
+import android.net.Uri;
 import android.provider.DocumentsContract;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
-import io.github.muntashirakon.io.PathContentInfo;
+import io.github.muntashirakon.AppManager.self.filecache.FileCache;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.io.Path;
 
 // Mostly taken from: https://github.com/zhanghai/MaterialFiles/blob/43a22b31d59a59e44a05a972269a3bd9cd0c9b8b/app/src/main/java/me/zhanghai/android/files/file/MimeTypeIcon.kt
 // Others are freelanced.
-public final class FmIcons {
+final class FmIcons {
     private static final int DRAWABLE_APK = R.drawable.ic_android;
     private static final int DRAWABLE_ARCHIVE = R.drawable.ic_archive;
     private static final int DRAWABLE_AUDIO = R.drawable.ic_audio_file;
@@ -246,31 +256,87 @@ public final class FmIcons {
         return drawable != null ? drawable : DRAWABLE_GENERIC;
     }
 
-    static class FmIconFetcher implements ImageLoader.ImageFetcherInterface {
-        @NonNull
-        private final FmItem fmItem;
+    public static boolean isImage(@DrawableRes int drawable) {
+        return drawable == DRAWABLE_IMAGE;
+    }
 
-        public FmIconFetcher(@NonNull FmItem fmItem) {
-            this.fmItem = fmItem;
-        }
+    public static boolean isAudio(@DrawableRes int drawable) {
+        return drawable == DRAWABLE_AUDIO;
+    }
 
-        @NonNull
-        @Override
-        public ImageLoader.ImageFetcherResult fetchImage(@NonNull ImageLoader.ImageLoaderQueueItem queueItem) {
-            PathContentInfo contentInfo = fmItem.getContentInfo();
-            if (contentInfo == null) {
-                contentInfo = fmItem.path.getPathContentInfo();
-                fmItem.setContentInfo(contentInfo);
+    public static boolean isVideo(@DrawableRes int drawable) {
+        return drawable == DRAWABLE_VIDEO;
+    }
+
+    public static boolean isMedia(@DrawableRes int drawable) {
+        return drawable == DRAWABLE_AUDIO || drawable == DRAWABLE_VIDEO;
+    }
+
+    public static boolean isEbook(@DrawableRes int drawable) {
+        return drawable == DRAWABLE_EBOOK;
+    }
+
+    public static boolean isFont(@DrawableRes int drawable) {
+        return drawable == DRAWABLE_FONT;
+    }
+
+    public static boolean isPdf(@DrawableRes int drawable) {
+        return drawable == DRAWABLE_PDF;
+    }
+
+    public static boolean isGeneric(@DrawableRes int drawable) {
+        return drawable == DRAWABLE_GENERIC;
+    }
+
+    @Nullable
+    public static Bitmap generateFontBitmap(@NonNull Path path) {
+        String extension = path.getExtension();
+        String text = extension != null ? extension.substring(0, Math.min(extension.length(), 4))
+                .toUpperCase(Locale.ROOT) : "FONT";
+        File f = path.getFile();
+        if (f == null) {
+            try {
+                f = FileCache.getGlobalFileCache().getCachedFile(path);
+            } catch (IOException ignore) {
+                return null;
             }
-            String mimeType = contentInfo.getMimeType();
-            // TODO: 24/5/23 Generate file-specific icon
-            int drawableRes = FmIcons.getDrawableFromType(mimeType);
-            return new ImageLoader.ImageFetcherResult(
-                    queueItem.tag,
-                    null,
-                    true,
-                    false,
-                    new ImageLoader.DefaultImageDrawableRes("drawable_" + drawableRes, drawableRes));
         }
+        f = new File(f.getPath());
+        if (!f.canRead()) {
+            try {
+                f = FileCache.getGlobalFileCache().getCachedFile(path);
+            } catch (IOException ignore) {
+                return null;
+            }
+        }
+        Typeface typeface = Typeface.createFromFile(f);
+        return UIUtils.generateBitmapFromText(text, typeface);
+    }
+
+    @Nullable
+    public static Bitmap generatePdfBitmap(@NonNull Context context, @NonNull Uri uri) {
+        PdfRenderer renderer;
+        try {
+            renderer = new PdfRenderer(context.getContentResolver().openFileDescriptor(uri, "r"));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+        PdfRenderer.Page page;
+        try {
+            page = renderer.openPage(0);
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            return null;
+        }
+        int srcWidth = page.getWidth();
+        int srcHeight = page.getHeight();
+        if (srcWidth <= 0 || srcHeight <= 0) {
+            return null;
+        }
+        Bitmap bitmap = Bitmap.createBitmap(srcWidth, srcHeight, Bitmap.Config.ARGB_8888);
+        bitmap.eraseColor(Color.WHITE);
+        page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
+        return bitmap;
     }
 }

@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.fm.icons.FmIconFetcher;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
@@ -63,7 +64,7 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(io.github.muntashirakon.ui.R.layout.m3_preference, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_fm, parent, false);
         View actionView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_right_standalone_action, parent, false);
         LinearLayoutCompat layout = view.findViewById(android.R.id.widget_frame);
         layout.addView(actionView);
@@ -76,7 +77,7 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
         holder.title.setText(item.path.getName());
         String modificationDate = DateUtils.formatDateTime(item.path.lastModified());
         // Set icon
-        ImageLoader.getInstance().displayImage(item.tag, holder.icon, new FmIcons.FmIconFetcher(item));
+        ImageLoader.getInstance().displayImage(item.tag, holder.icon, new FmIconFetcher(item));
         // Set sub-icon
         // TODO: 24/5/23 Set sub-icon if needed
         if (item.type == FileType.DIRECTORY) {

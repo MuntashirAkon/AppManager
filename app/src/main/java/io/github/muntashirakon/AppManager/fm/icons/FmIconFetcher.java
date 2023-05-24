@@ -1,0 +1,107 @@
+// SPDX-License-Identifier: GPL-3.0-or-later
+
+package io.github.muntashirakon.AppManager.fm.icons;
+
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.ThumbnailUtils;
+import android.util.Size;
+
+import androidx.annotation.NonNull;
+
+import java.io.IOException;
+import java.util.Locale;
+
+import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.compat.ThumbnailUtilsCompat;
+import io.github.muntashirakon.AppManager.fm.FmItem;
+import io.github.muntashirakon.AppManager.fm.FmProvider;
+import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
+import io.github.muntashirakon.io.PathContentInfo;
+import io.github.muntashirakon.util.UiUtils;
+
+public class FmIconFetcher implements ImageLoader.ImageFetcherInterface {
+    @NonNull
+    private final FmItem fmItem;
+
+    public FmIconFetcher(@NonNull FmItem fmItem) {
+        this.fmItem = fmItem;
+    }
+
+    @NonNull
+    @Override
+    public ImageLoader.ImageFetcherResult fetchImage(@NonNull ImageLoader.ImageLoaderQueueItem queueItem) {
+        PathContentInfo contentInfo = fmItem.getContentInfo();
+        if (contentInfo == null) {
+            contentInfo = fmItem.path.getPathContentInfo();
+            fmItem.setContentInfo(contentInfo);
+        }
+        String mimeType = contentInfo.getMimeType();
+        int drawableRes = FmIcons.getDrawableFromType(mimeType);
+        int padding = UiUtils.dpToPx(ContextUtils.getContext(), 4);
+        int length = UiUtils.dpToPx(ContextUtils.getContext(), 40);
+        ImageLoader.DefaultImage defaultImage = new ImageLoader.DefaultImageDrawableRes("drawable_" + drawableRes, drawableRes, padding);
+        Size size = new Size(length, length);
+        if (FmIcons.isAudio(drawableRes)) {
+            try {
+                Bitmap bitmap = ThumbnailUtilsCompat.createAudioThumbnail(ContextUtils.getContext(), FmProvider.getContentUri(fmItem.path), size, null);
+                return new ImageLoader.ImageFetcherResult(queueItem.tag, bitmap, false, true, defaultImage);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else if (FmIcons.isVideo(drawableRes)) {
+            try {
+                Bitmap bitmap = ThumbnailUtilsCompat.createVideoThumbnail(ContextUtils.getContext(), FmProvider.getContentUri(fmItem.path), size, null);
+                return new ImageLoader.ImageFetcherResult(queueItem.tag, getThumbnail(bitmap, size, true), false, true, defaultImage);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else if (FmIcons.isImage(drawableRes)) {
+            byte[] bytes = fmItem.path.getContentAsBinary();
+            if (bytes.length > 0) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                if (bitmap != null) {
+                    return new ImageLoader.ImageFetcherResult(queueItem.tag, getThumbnail(bitmap, size, true),
+                            false, true, defaultImage);
+                }
+            }
+        } else if (FmIcons.isEbook(drawableRes)) {
+            // TODO: 24/5/23 Return image from ebook
+        } else if (FmIcons.isFont(drawableRes)) {
+            Bitmap bitmap = FmIcons.generateFontBitmap(fmItem.path);
+            if (bitmap != null) {
+                return new ImageLoader.ImageFetcherResult(queueItem.tag, bitmap,
+                        false, true, defaultImage);
+            }
+        } else if (FmIcons.isPdf(drawableRes)) {
+            Bitmap bitmap = FmIcons.generatePdfBitmap(ContextUtils.getContext(), FmProvider.getContentUri(fmItem.path));
+            if (bitmap != null) {
+                return new ImageLoader.ImageFetcherResult(queueItem.tag, getThumbnail(bitmap, size, true),
+                        false, true, defaultImage);
+            }
+        } else if (FmIcons.isGeneric(drawableRes)) {
+            String extension = fmItem.path.getExtension();
+            if (extension != null) {
+                // Generate icon from extension (at most 4 characters)
+                int len = Math.min(extension.length(), 4);
+                String shortExt = extension.substring(0, len).toUpperCase(Locale.ROOT);
+                String tag = "fm_ext_" + shortExt;
+                return new ImageLoader.ImageFetcherResult(queueItem.tag, null,
+                        new ImageLoader.DefaultImageString(tag, shortExt));
+            }
+            if (fmItem.path.canExecute()) {
+                // Generate executable string
+                drawableRes = R.drawable.ic_frost_termux;
+                return new ImageLoader.ImageFetcherResult(queueItem.tag, null,
+                        new ImageLoader.DefaultImageDrawableRes("drawable_" + drawableRes, drawableRes, padding));
+            }
+        }
+        // TODO: 24/5/23 Check APK, XAPK, APKS, APKM icons
+        return new ImageLoader.ImageFetcherResult(queueItem.tag, null, defaultImage);
+    }
+
+    public Bitmap getThumbnail(@NonNull Bitmap bitmap, @NonNull Size size, boolean recycle) {
+        return ThumbnailUtils.extractThumbnail(bitmap, size.getWidth(), size.getHeight(), recycle ? ThumbnailUtils.OPTIONS_RECYCLE_INPUT : 0);
+    }
+}

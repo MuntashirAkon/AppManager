@@ -15,7 +15,7 @@ import io.github.muntashirakon.io.PathContentInfo;
 public class FmItem implements Comparable<FmItem> {
     final int type;
     @NonNull
-    final Path path;
+    public final Path path;
     @NonNull
     final String tag;
 

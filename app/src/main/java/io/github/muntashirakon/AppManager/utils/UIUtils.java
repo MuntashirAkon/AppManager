@@ -6,9 +6,11 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -16,6 +18,7 @@ import android.os.Build;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.BackgroundColorSpan;
 import android.text.style.ForegroundColorSpan;
@@ -38,6 +41,7 @@ import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.PluralsRes;
+import androidx.annotation.Px;
 import androidx.annotation.StringRes;
 import androidx.annotation.UiThread;
 import androidx.appcompat.app.ActionBar;
@@ -347,6 +351,42 @@ public class UIUtils {
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
         drawable.draw(canvas);
         return bmp;
+    }
+
+    @AnyThread
+    @NonNull
+    public static Bitmap getBitmapFromDrawable(@NonNull Drawable drawable, @Px int padding) {
+        if (padding == 0) {
+            return getBitmapFromDrawable(drawable);
+        }
+        int width = drawable.getIntrinsicWidth() + 2 * padding;
+        int height = drawable.getIntrinsicHeight() + 2 * padding;
+        Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bmp);
+        drawable.setBounds(padding, padding, canvas.getWidth() - padding, canvas.getHeight() - padding);
+        drawable.draw(canvas);
+        return bmp;
+    }
+
+    @NonNull
+    public static Bitmap generateBitmapFromText(@NonNull String text, @Nullable Typeface typeface) {
+        int fontSize = 100;
+        TextPaint textPaint = new TextPaint(Paint.ANTI_ALIAS_FLAG);
+        textPaint.setTextSize(fontSize);
+        textPaint.setColor(Color.WHITE);
+        textPaint.setTextAlign(Paint.Align.LEFT);
+        textPaint.setTypeface(typeface != null ? typeface : Typeface.SANS_SERIF);
+
+        Rect textRect = new Rect();
+        textPaint.getTextBounds(text, 0, text.length(), textRect);
+        int length = Math.max(textRect.width(), textRect.height()) + 80;
+        Bitmap bitmap = Bitmap.createBitmap(length, length, Bitmap.Config.ARGB_8888);
+
+        Canvas canvas = new Canvas(bitmap);
+        float x = canvas.getWidth() / 2f - textRect.width() / 2f - textRect.left;
+        float y = canvas.getHeight() / 2f + textRect.height() / 2f - textRect.bottom;
+        canvas.drawText(text, x, y, textPaint);
+        return bitmap;
     }
 
     public static Bitmap getDimmedBitmap(@NonNull Bitmap bitmap) {
