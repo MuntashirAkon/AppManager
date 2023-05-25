@@ -1387,4 +1387,5 @@
         <item quantity="one">%d file</item>
         <item quantity="other">%d files</item>
     </plurals>
+    <string name="go_to_path">Go to…</string>
 </resources>

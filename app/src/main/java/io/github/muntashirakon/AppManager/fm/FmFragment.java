@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.fm;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -29,8 +30,10 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -38,6 +41,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.StorageUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.dialog.SearchableItemsDialogBuilder;
+import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 import io.github.muntashirakon.widget.MultiSelectionView;
 import io.github.muntashirakon.widget.RecyclerView;
 import io.github.muntashirakon.widget.SwipeRefreshLayout;
@@ -129,6 +133,25 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
             }
         });
         pathListView.setAdapter(pathListAdapter);
+        MaterialButton pathEditButton = view.findViewById(R.id.uri_edit);
+        pathEditButton.setOnClickListener(v -> {
+            Uri uri1 = model.getCurrentUri();
+            String path;
+            if (ContentResolver.SCHEME_FILE.equals(uri1.getScheme())) {
+                path = uri1.getPath();
+            } else path = uri1.toString();
+            new TextInputDialogBuilder(activity, null)
+                    .setTitle(R.string.go_to_path)
+                    .setInputText(path)
+                    .setPositiveButton(R.string.go, (dialog, which, inputText, isChecked) -> {
+                        if (!TextUtils.isEmpty(inputText)) {
+                            String p = inputText.toString();
+                            model.loadFiles(p.startsWith(File.separator) ? Uri.fromFile(new File(p)) : Uri.parse(p));
+                        }
+                    })
+                    .setNegativeButton(R.string.close, null)
+                    .show();
+        });
         recyclerView = view.findViewById(R.id.list_item);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));
         adapter = new FmAdapter(model, activity);
