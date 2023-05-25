@@ -278,7 +278,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
             return true;
         } else if (id == R.id.action_storage) {
             ThreadUtils.postOnBackgroundThread(() -> {
-                ArrayMap<String, Uri> storageLocations = StorageUtils.getAllStorageLocations(activity, true);
+                ArrayMap<String, Uri> storageLocations = StorageUtils.getAllStorageLocations(activity);
                 if (storageLocations.size() == 0) {
                     activity.runOnUiThread(() -> {
                         if (isDetached()) return;

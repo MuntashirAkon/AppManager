@@ -151,7 +151,7 @@ public class MainPreferencesViewModel extends AndroidViewModel implements Ops.Ad
     }
 
     public void loadStorageVolumes() {
-        ThreadUtils.postOnBackgroundThread(() -> mStorageVolumesLiveData.postValue(StorageUtils.getAllStorageLocations(getApplication(), false)));
+        ThreadUtils.postOnBackgroundThread(() -> mStorageVolumesLiveData.postValue(StorageUtils.getAllStorageLocations(getApplication())));
     }
 
     public LiveData<String> getSigningKeySha256HashLiveData() {

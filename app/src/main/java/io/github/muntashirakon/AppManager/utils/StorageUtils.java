@@ -41,13 +41,8 @@ public class StorageUtils {
 
     @WorkerThread
     @NonNull
-    public static ArrayMap<String, Uri> getAllStorageLocations(@NonNull Context context, boolean includeInternal) {
+    public static ArrayMap<String, Uri> getAllStorageLocations(@NonNull Context context) {
         ArrayMap<String, Uri> storageLocations = new ArrayMap<>(10);
-        if (includeInternal) {
-            Path internal = Paths.get(Environment.getDataDirectory());
-            addStorage(context.getString(R.string.internal_storage), internal, storageLocations);
-            addStorage(context.getString(R.string.system_partition), OsEnvironment.getRootDirectory(), storageLocations);
-        }
         @SuppressWarnings("deprecation")
         Path sdCard = Paths.get(Environment.getExternalStorageDirectory());
         addStorage(context.getString(R.string.external_storage), sdCard, storageLocations);
