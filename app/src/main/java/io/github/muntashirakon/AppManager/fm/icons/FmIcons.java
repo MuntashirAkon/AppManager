@@ -13,6 +13,7 @@ import android.provider.DocumentsContract;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.util.Pair;
 
 import java.io.File;
 import java.io.IOException;
@@ -297,24 +298,18 @@ final class FmIcons {
         String extension = path.getExtension();
         String text = extension != null ? extension.substring(0, Math.min(extension.length(), 4))
                 .toUpperCase(Locale.ROOT) : "FONT";
-        File f = path.getFile();
-        if (f == null) {
-            try {
-                f = FileCache.getGlobalFileCache().getCachedFile(path);
-            } catch (IOException ignore) {
-                return null;
+        Pair<File, Boolean> file = getUsableFile(path);
+        if (file == null) {
+            return null;
+        }
+        try {
+            Typeface typeface = Typeface.createFromFile(file.first);
+            return UIUtils.generateBitmapFromText(text, typeface);
+        } finally {
+            if (file.second) {
+                file.first.delete();
             }
         }
-        f = new File(f.getPath());
-        if (!f.canRead()) {
-            try {
-                f = FileCache.getGlobalFileCache().getCachedFile(path);
-            } catch (IOException ignore) {
-                return null;
-            }
-        }
-        Typeface typeface = Typeface.createFromFile(f);
-        return UIUtils.generateBitmapFromText(text, typeface);
     }
 
     @Nullable
@@ -342,5 +337,41 @@ final class FmIcons {
         bitmap.eraseColor(Color.WHITE);
         page.render(bitmap, null, null, PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY);
         return bitmap;
+    }
+
+    @Nullable
+    public static Bitmap generateEpubCover(@NonNull Path path) {
+        Pair<File, Boolean> file = getUsableFile(path);
+        if (file == null) {
+            return null;
+        }
+        try {
+            return EpubCoverGenerator.generateFromFile(file.first);
+        } finally {
+            if (file.second) {
+                file.first.delete();
+            }
+        }
+    }
+
+    @Nullable
+    private static Pair<File, Boolean> getUsableFile(@NonNull Path path) {
+        File f = path.getFile();
+        if (f == null) {
+            try {
+                return new Pair<>(FileCache.getGlobalFileCache().getCachedFile(path), true);
+            } catch (IOException ignore) {
+                return null;
+            }
+        }
+        f = new File(f.getPath());
+        if (!f.canRead()) {
+            try {
+                return new Pair<>(FileCache.getGlobalFileCache().getCachedFile(path), true);
+            } catch (IOException ignore) {
+                return null;
+            }
+        }
+        return new Pair<>(f, false);
     }
 }

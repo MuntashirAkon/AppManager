@@ -84,7 +84,13 @@ public class FmIconFetcher implements ImageLoader.ImageFetcherInterface {
                 }
             }
         } else if (FmIcons.isEbook(drawableRes)) {
-            // TODO: 24/5/23 Return image from ebook
+            if (ContentType.EPUB.getMimeType().equals(mimeType)) {
+                Bitmap bitmap = FmIcons.generateEpubCover(fmItem.path);
+                if (bitmap != null) {
+                    return new ImageLoader.ImageFetcherResult(queueItem.tag, getThumbnail(bitmap, size, true),
+                            false, true, defaultImage);
+                }
+            }
         } else if (FmIcons.isFont(drawableRes)) {
             Bitmap bitmap = FmIcons.generateFontBitmap(fmItem.path);
             if (bitmap != null) {
