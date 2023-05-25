@@ -9,6 +9,7 @@ import android.net.Uri;
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.util.Pair;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -28,6 +29,7 @@ import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
+import io.github.muntashirakon.lifecycle.SingleLiveEvent;
 
 public class FmViewModel extends AndroidViewModel implements ListOptions.ListOptionActions {
     private final Object sizeLock = new Object();
@@ -36,6 +38,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
     private final MutableLiveData<Uri> uriLiveData = new MutableLiveData<>();
     private final MutableLiveData<Uri> lastUriLiveData = new MutableLiveData<>();
     private final MutableLiveData<Uri> displayPropertiesLiveData = new MutableLiveData<>();
+    private final SingleLiveEvent<Pair<Uri, String>> shortcutCreatorLiveData = new SingleLiveEvent<>();
     private final List<FmItem> fmItems = new ArrayList<>();
     private final HashMap<Uri, Integer> pathScrollPositionMap = new HashMap<>();
     private Uri currentUri;
@@ -213,6 +216,10 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
 
     public MutableLiveData<Uri> getDisplayPropertiesLiveData() {
         return displayPropertiesLiveData;
+    }
+
+    public SingleLiveEvent<Pair<Uri, String>> getShortcutCreatorLiveData() {
+        return shortcutCreatorLiveData;
     }
 
     private void filterAndSort() {

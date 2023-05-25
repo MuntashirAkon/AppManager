@@ -72,6 +72,10 @@ class FmPathListAdapter extends RecyclerView.Adapter<FmPathListAdapter.PathHolde
         return currentPosition;
     }
 
+    public String getCurrentDisplayName() {
+        return pathParts.get(currentPosition);
+    }
+
     private int calculateCurrentPosition(@NonNull Uri uri) {
         if (uri.getScheme().equals("file") && uri.getPath().startsWith(File.separator)) {
             // Needs a file separator which adds one more items at the beginning

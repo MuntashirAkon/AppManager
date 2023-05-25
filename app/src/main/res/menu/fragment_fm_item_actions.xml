@@ -32,6 +32,16 @@
         android:title="@string/share" />
 
     <item
+        android:id="@+id/action_shortcut"
+        android:icon="@drawable/ic_link"
+        android:title="@string/create_shortcut" />
+
+    <item
+        android:id="@+id/action_copy_path"
+        android:icon="@drawable/ic_content_copy"
+        android:title="@string/copy_this_path" />
+
+    <item
         android:id="@+id/action_properties"
         android:icon="@drawable/ic_information"
         android:title="@string/file_properties" />

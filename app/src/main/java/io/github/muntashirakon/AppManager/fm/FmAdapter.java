@@ -2,7 +2,12 @@
 
 package io.github.muntashirakon.AppManager.fm;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,6 +22,7 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.core.content.ContextCompat;
+import androidx.core.util.Pair;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
@@ -221,6 +227,25 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
                     .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
             fmActivity.startActivity(Intent.createChooser(intent, item.path.getName())
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            return true;
+        });
+        boolean isFolder = item.type == FileType.DIRECTORY;
+        menu.findItem(R.id.action_shortcut)
+                .setVisible(isFolder)
+                .setEnabled(isFolder)
+                .setOnMenuItemClickListener(menuItem -> {
+                    viewModel.getShortcutCreatorLiveData().setValue(new Pair<>(item.path.getUri(), item.path.getName()));
+                    return true;
+                });
+        menu.findItem(R.id.action_copy_path).setOnMenuItemClickListener(menuItem -> {
+            Uri uri = item.path.getUri();
+            String path;
+            if (ContentResolver.SCHEME_FILE.equals(uri.getScheme())) {
+                path = uri.getPath();
+            } else path = uri.toString();
+            ClipboardManager clipboard = (ClipboardManager) fmActivity.getSystemService(Context.CLIPBOARD_SERVICE);
+            clipboard.setPrimaryClip(ClipData.newPlainText("File path", path));
+            UIUtils.displayShortToast(R.string.copied_to_clipboard);
             return true;
         });
         menu.findItem(R.id.action_properties).setOnMenuItemClickListener(menuItem -> {

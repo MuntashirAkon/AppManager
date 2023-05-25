@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.DocumentsContract;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.format.Formatter;
@@ -26,6 +27,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SearchView;
 import androidx.collection.ArrayMap;
+import androidx.core.content.ContextCompat;
+import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -35,9 +38,12 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.File;
 import java.util.Collections;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.details.LauncherIconCreator;
 import io.github.muntashirakon.AppManager.utils.StorageUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.dialog.SearchableItemsDialogBuilder;
@@ -245,6 +251,13 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
             FilePropertiesDialogFragment dialogFragment = FilePropertiesDialogFragment.getInstance(uri1);
             dialogFragment.show(activity.getSupportFragmentManager(), FilePropertiesDialogFragment.TAG);
         });
+        model.getShortcutCreatorLiveData().observe(getViewLifecycleOwner(), uriNamePair -> {
+            Intent intent = new Intent(activity, FmActivity.class);
+            intent.setDataAndType(uriNamePair.first, DocumentsContract.Document.MIME_TYPE_DIR);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+            LauncherIconCreator.createLauncherIcon(activity, UUID.randomUUID().toString(), uriNamePair.second,
+                    Objects.requireNonNull(ContextCompat.getDrawable(activity, R.drawable.ic_folder)), intent);
+        });
         model.loadFiles(uri);
     }
 
@@ -279,6 +292,10 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
             model.reload();
+            return true;
+        } else if (id == R.id.action_shortcut) {
+            model.getShortcutCreatorLiveData().setValue(new Pair<>(model.getCurrentUri(),
+                    pathListAdapter.getCurrentDisplayName()));
             return true;
         } else if (id == R.id.action_storage) {
             ThreadUtils.postOnBackgroundThread(() -> {
