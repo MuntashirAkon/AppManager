@@ -2,10 +2,18 @@
 
 package io.github.muntashirakon.AppManager.fm;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.ContentResolver;
+import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
+import android.provider.DocumentsContract;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -20,6 +28,7 @@ import java.util.Collections;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 class FmPathListAdapter extends RecyclerView.Adapter<FmPathListAdapter.PathHolder> {
     private final FmViewModel viewModel;
@@ -111,6 +120,41 @@ class FmPathListAdapter extends RecyclerView.Adapter<FmPathListAdapter.PathHolde
             if (currentPosition != position) {
                 viewModel.loadFiles(calculateUri(position));
             }
+        });
+        holder.itemView.setOnLongClickListener(v -> {
+            Context context = v.getContext();
+            PopupMenu popupMenu = new PopupMenu(context, v);
+            Menu menu = popupMenu.getMenu();
+            // Copy path
+            menu.add(R.string.copy_this_path)
+                    .setOnMenuItemClickListener(menuItem -> {
+                        Uri uri = calculateUri(position);
+                        String path;
+                        if (ContentResolver.SCHEME_FILE.equals(uri.getScheme())) {
+                            path = uri.getPath();
+                        } else path = uri.toString();
+                        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+                        clipboard.setPrimaryClip(ClipData.newPlainText("File path", path));
+                        UIUtils.displayShortToast(R.string.copied_to_clipboard);
+                        return true;
+                    });
+            // Open in new window
+            menu.add(R.string.open_in_new_window)
+                    .setOnMenuItemClickListener(menuItem -> {
+                        Intent intent = new Intent(context, FmActivity.class);
+                        intent.setDataAndType(calculateUri(position), DocumentsContract.Document.MIME_TYPE_DIR);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                        context.startActivity(intent);
+                        return true;
+                    });
+            // Properties
+            menu.add(R.string.file_properties)
+                    .setOnMenuItemClickListener(menuItem -> {
+                        viewModel.getDisplayPropertiesLiveData().setValue(calculateUri(position));
+                        return true;
+                    });
+            popupMenu.show();
+            return true;
         });
         holder.textView.setTextColor(currentPosition == position
                 ? MaterialColors.getColor(holder.textView, com.google.android.material.R.attr.colorPrimary)

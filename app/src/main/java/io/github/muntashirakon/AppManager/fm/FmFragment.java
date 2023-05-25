@@ -241,6 +241,10 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
             }
             actionBar.setSubtitle(subtitle);
         });
+        model.getDisplayPropertiesLiveData().observe(getViewLifecycleOwner(), uri1 -> {
+            FilePropertiesDialogFragment dialogFragment = FilePropertiesDialogFragment.getInstance(uri1);
+            dialogFragment.show(activity.getSupportFragmentManager(), FilePropertiesDialogFragment.TAG);
+        });
         model.loadFiles(uri);
     }
 

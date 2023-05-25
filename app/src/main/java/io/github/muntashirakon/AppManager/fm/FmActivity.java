@@ -2,9 +2,11 @@
 
 package io.github.muntashirakon.AppManager.fm;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -52,12 +54,25 @@ public class FmActivity extends BaseActivity {
         setContentView(R.layout.activity_fm);
         setSupportActionBar(findViewById(R.id.toolbar));
         findViewById(R.id.progress_linear).setVisibility(View.GONE);
+        Uri uri = getIntent().getData();
         if (savedInstanceState == null) {
-            Fragment fragment = FmFragment.getNewInstance(Uri.fromFile(Environment.getExternalStorageDirectory()));
+            Fragment fragment = FmFragment.getNewInstance(uri != null ? uri : Uri.fromFile(Environment.getExternalStorageDirectory()));
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.main_layout, fragment, FmFragment.TAG)
                     .commit();
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Uri uri = intent.getData();
+        if (uri != null) {
+            Intent intent2 = new Intent(this, FmActivity.class);
+            intent2.setDataAndType(uri, DocumentsContract.Document.MIME_TYPE_DIR);
+            intent2.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+            startActivity(intent2);
         }
     }
 

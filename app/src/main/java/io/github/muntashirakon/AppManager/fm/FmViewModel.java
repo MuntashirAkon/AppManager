@@ -35,6 +35,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
     private final MutableLiveData<FolderShortInfo> folderShortInfoLiveData = new MutableLiveData<>();
     private final MutableLiveData<Uri> uriLiveData = new MutableLiveData<>();
     private final MutableLiveData<Uri> lastUriLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Uri> displayPropertiesLiveData = new MutableLiveData<>();
     private final List<FmItem> fmItems = new ArrayList<>();
     private final HashMap<Uri, Integer> pathScrollPositionMap = new HashMap<>();
     private Uri currentUri;
@@ -208,6 +209,10 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
 
     public LiveData<Uri> getLastUriLiveData() {
         return lastUriLiveData;
+    }
+
+    public MutableLiveData<Uri> getDisplayPropertiesLiveData() {
+        return displayPropertiesLiveData;
     }
 
     private void filterAndSort() {

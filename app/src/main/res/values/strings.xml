@@ -1388,4 +1388,5 @@
         <item quantity="other">%d files</item>
     </plurals>
     <string name="go_to_path">Go to…</string>
+    <string name="copy_this_path">Copy path</string>
 </resources>

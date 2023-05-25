@@ -43,10 +43,10 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
     private static final String ARG_PATH = "path";
 
     @NonNull
-    public static FilePropertiesDialogFragment getInstance(@NonNull Path path) {
+    public static FilePropertiesDialogFragment getInstance(@NonNull Uri uri) {
         FilePropertiesDialogFragment fragment = new FilePropertiesDialogFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ARG_PATH, path.getUri());
+        args.putParcelable(ARG_PATH, uri);
         fragment.setArguments(args);
         return fragment;
     }

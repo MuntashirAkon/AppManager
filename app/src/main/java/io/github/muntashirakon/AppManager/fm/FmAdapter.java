@@ -224,8 +224,7 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
             return true;
         });
         menu.findItem(R.id.action_properties).setOnMenuItemClickListener(menuItem -> {
-            FilePropertiesDialogFragment dialogFragment = FilePropertiesDialogFragment.getInstance(item.path);
-            dialogFragment.show(fmActivity.getSupportFragmentManager(), FilePropertiesDialogFragment.TAG);
+            viewModel.getDisplayPropertiesLiveData().setValue(item.path.getUri());
             return true;
         });
         popupMenu.show();
