@@ -9,7 +9,10 @@ import android.util.Size;
 
 import androidx.annotation.NonNull;
 
+import com.j256.simplemagic.ContentType;
+
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.R;
@@ -19,6 +22,8 @@ import io.github.muntashirakon.AppManager.fm.FmProvider;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.io.PathContentInfo;
+import io.github.muntashirakon.svg.SVG;
+import io.github.muntashirakon.svg.SVGParser;
 import io.github.muntashirakon.util.UiUtils;
 
 public class FmIconFetcher implements ImageLoader.ImageFetcherInterface {
@@ -58,12 +63,24 @@ public class FmIconFetcher implements ImageLoader.ImageFetcherInterface {
                 e.printStackTrace();
             }
         } else if (FmIcons.isImage(drawableRes)) {
-            byte[] bytes = fmItem.path.getContentAsBinary();
-            if (bytes.length > 0) {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                if (bitmap != null) {
-                    return new ImageLoader.ImageFetcherResult(queueItem.tag, getThumbnail(bitmap, size, true),
-                            false, true, defaultImage);
+            if (ContentType.SVG.getMimeType().equals(mimeType)) {
+                // Load SVG image
+                try (InputStream is = fmItem.path.openInputStream()) {
+                    SVG svg = SVGParser.getSVGFromInputStream(is);
+                    Bitmap bitmap = svg.getBitmap();
+                    return new ImageLoader.ImageFetcherResult(queueItem.tag, getThumbnail(bitmap, size, true), false, true, defaultImage);
+                } catch (Throwable th) {
+                    // There can be runtime exceptions
+                    th.printStackTrace();
+                }
+            } else {
+                byte[] bytes = fmItem.path.getContentAsBinary();
+                if (bytes.length > 0) {
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    if (bitmap != null) {
+                        return new ImageLoader.ImageFetcherResult(queueItem.tag, getThumbnail(bitmap, size, true),
+                                false, true, defaultImage);
+                    }
                 }
             }
         } else if (FmIcons.isEbook(drawableRes)) {
