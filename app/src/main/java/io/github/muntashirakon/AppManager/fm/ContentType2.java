@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 public enum ContentType2 {
+    APKM("application/vnd.apkm", "apkm", "apkm"),
+    APKS("application/x-apks", "apks", "apks"),
     CONFIGURATION("text/plain", "configuration", "cnf", "conf", "cfg", "cf", "ini", "rc", "sys"),
     DEX("application/x-dex", "dex", "dex"),
     KOTLIN("text/x-kotlin", "kotlin", "kt"),
@@ -27,6 +29,7 @@ public enum ContentType2 {
     SMALI("text/x-smali", "smali", "smali"),
     SQLITE3("application/vnd.sqlite3", "sqlite", "db", "db3", "s3db", "sl3", "sqlite", "sqlite3"),
     TOML("application/toml", "toml", "toml"),
+    XAPK("application/xapk-package-archive", "xapk", "xapk"),
     YAML("text/plain", "yaml", "yml", "yaml"),
     /** default if no specific match to the mime-type */
     OTHER("application/octet-stream", "other"),

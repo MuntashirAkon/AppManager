@@ -23,6 +23,10 @@ public class PathContentInfo {
         put("SQLite", "application/vnd.sqlite3");
     }};
 
+    private static final HashMap<String, Boolean> sPartialOverrides = new HashMap<String, Boolean>() {{
+        put("application/zip", true);
+    }};
+
     private static ContentInfoUtil contentInfoUtil;
 
     @NonNull
@@ -34,7 +38,7 @@ public class PathContentInfo {
         ContentInfo extInfo = ext != null ? ContentInfoUtil.findExtensionMatch(ext) : null;
         ContentType2 extType2 = ext != null ? ContentType2.fromFileExtension(ext) : null;
         if (extInfo != null) {
-            return fromContentInfo(extInfo);
+            return withPartialOverride(fromContentInfo(extInfo), extType2);
         }
         if (extType2 != null) {
             return fromContentType2(extType2);
@@ -59,10 +63,9 @@ public class PathContentInfo {
                 // FIXME: 20/11/22 This will not work for invalid extensions. A better option is to use magic-mime-db
                 //  instead which is currently a WIP.
                 if (extInfo != null) {
-                    return fromPathContentInfo(
+                    return withPartialOverride(fromPathContentInfo(
                             new PathContentInfo(extInfo.getName(), contentInfo.getMessage(), extInfo.getMimeType(),
-                                    extInfo.getFileExtensions(), contentInfo.isPartial())
-                    );
+                                    extInfo.getFileExtensions(), contentInfo.isPartial())), extType2);
                 }
                 if (extType2 != null) {
                     return fromPathContentInfo(new PathContentInfo(extType2.getSimpleName(), contentInfo.getMessage(),
@@ -74,12 +77,24 @@ public class PathContentInfo {
             Log.e(TAG, "Could not load MIME type for path " + path, e);
         }
         if (extInfo != null) {
-            return fromContentInfo(extInfo);
+            return withPartialOverride(fromContentInfo(extInfo), extType2);
         }
         if (extType2 != null) {
             return fromContentType2(extType2);
         }
         return fromContentType2(ContentType2.OTHER);
+    }
+
+    private static PathContentInfo withPartialOverride(@NonNull PathContentInfo contentInfo, @Nullable ContentType2 contentType2) {
+        if (contentType2 != null) {
+            boolean partial = contentInfo.isPartial() || Boolean.TRUE.equals(sPartialOverrides.get(contentInfo.getMimeType()));
+            if (partial) {
+                // Override MIME type, name and extension
+                return new PathContentInfo(contentType2.getSimpleName(), contentInfo.getMessage(),
+                        contentType2.getMimeType(), contentType2.getFileExtensions(), false);
+            }
+        }
+        return contentInfo;
     }
 
     @NonNull

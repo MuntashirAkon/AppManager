@@ -55,6 +55,9 @@ final class FmIcons {
     private static final Map<String, Integer> mimeTypeToIconMap = new HashMap<String, Integer>() {
         {
             put("application/vnd.android.package-archive", DRAWABLE_APK);
+            put("application/vnd.apkm", DRAWABLE_APK);
+            put("application/x-apks", DRAWABLE_APK);
+            put("application/xapk-package-archive", DRAWABLE_APK);
             put("application/gzip", DRAWABLE_ARCHIVE);
             // Not in IANA list, but Mozilla and Wikipedia say so.
             put("application/java-archive", DRAWABLE_ARCHIVE);
