@@ -9,6 +9,12 @@
         app:showAsAction="ifRoom" />
 
     <item
+        android:id="@+id/action_refresh"
+        android:icon="@drawable/ic_refresh"
+        android:title="@string/refresh"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_new_window"
         android:icon="@drawable/ic_tab"
         android:title="@string/open_in_new_window"

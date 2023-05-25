@@ -273,7 +273,10 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.action_storage) {
+        if (id == R.id.action_refresh) {
+            model.reload();
+            return true;
+        } else if (id == R.id.action_storage) {
             ThreadUtils.postOnBackgroundThread(() -> {
                 ArrayMap<String, Uri> storageLocations = StorageUtils.getAllStorageLocations(activity, true);
                 if (storageLocations.size() == 0) {
@@ -311,10 +314,12 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
             FmListOptions listOptions = new FmListOptions();
             listOptions.setListOptionActions(model);
             listOptions.show(getChildFragmentManager(), FmListOptions.TAG);
+            return true;
         } else if (id == R.id.action_new_window) {
             Intent intent = new Intent(activity, FmActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
             startActivity(intent);
+            return true;
         }
         return super.onOptionsItemSelected(item);
     }
