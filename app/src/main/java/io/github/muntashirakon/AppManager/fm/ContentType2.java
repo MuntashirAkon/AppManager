@@ -25,6 +25,7 @@ public enum ContentType2 {
     PLIST("application/x-plist", "property-list", "plist"),
     PROPERTIES("text/plain", "properties", "prop", "properties"),
     SMALI("text/x-smali", "smali", "smali"),
+    SQLITE3("application/vnd.sqlite3", "sqlite", "db", "db3", "s3db", "sl3", "sqlite", "sqlite3"),
     TOML("application/toml", "toml", "toml"),
     YAML("text/plain", "yaml", "yml", "yaml"),
     /** default if no specific match to the mime-type */

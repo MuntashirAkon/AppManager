@@ -9,12 +9,19 @@ import com.j256.simplemagic.ContentInfo;
 import com.j256.simplemagic.ContentInfoUtil;
 
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 
 import io.github.muntashirakon.AppManager.fm.ContentType2;
 import io.github.muntashirakon.AppManager.logs.Log;
 
 public class PathContentInfo {
     public static final String TAG = PathContentInfo.class.getSimpleName();
+    // Associations not present in ContentInfoUtil, they're derived from simple-name
+    private static final HashMap<String, String> sSimpleNameMimeAssociations = new HashMap<String, String>() {{
+        put("SQLite", "application/vnd.sqlite3");
+    }};
 
     private static ContentInfoUtil contentInfoUtil;
 
@@ -52,12 +59,14 @@ public class PathContentInfo {
                 // FIXME: 20/11/22 This will not work for invalid extensions. A better option is to use magic-mime-db
                 //  instead which is currently a WIP.
                 if (extInfo != null) {
-                    return new PathContentInfo(extInfo.getName(), contentInfo.getMessage(), extInfo.getMimeType(),
-                            extInfo.getFileExtensions(), contentInfo.isPartial());
+                    return fromPathContentInfo(
+                            new PathContentInfo(extInfo.getName(), contentInfo.getMessage(), extInfo.getMimeType(),
+                                    extInfo.getFileExtensions(), contentInfo.isPartial())
+                    );
                 }
                 if (extType2 != null) {
-                    return new PathContentInfo(extType2.getSimpleName(), contentInfo.getMessage(),
-                            extType2.getMimeType(), extType2.getFileExtensions(), contentInfo.isPartial());
+                    return fromPathContentInfo(new PathContentInfo(extType2.getSimpleName(), contentInfo.getMessage(),
+                            extType2.getMimeType(), extType2.getFileExtensions(), contentInfo.isPartial()));
                 }
                 return fromContentInfo(contentInfo);
             }
@@ -74,13 +83,50 @@ public class PathContentInfo {
     }
 
     @NonNull
-    public static PathContentInfo fromContentInfo(@NonNull ContentInfo contentInfo) {
+    private static PathContentInfo fromContentInfo(@NonNull ContentInfo contentInfo) {
+        String mime = sSimpleNameMimeAssociations.get(contentInfo.getName());
+        if (mime != null) {
+            ContentType2 contentType2 = ContentType2.fromMimeType(mime);
+            if (contentType2 != null) {
+                // Association exists, replace MIME type and merge file extensions
+                HashSet<String> extensions = new HashSet<>();
+                if (contentInfo.getFileExtensions() != null) {
+                    extensions.addAll(Arrays.asList(contentInfo.getFileExtensions()));
+                }
+                if (contentType2.getFileExtensions() != null) {
+                    extensions.addAll(Arrays.asList(contentType2.getFileExtensions()));
+                }
+                return new PathContentInfo(contentInfo.getName(), contentInfo.getMessage(), mime,
+                        extensions.isEmpty() ? null : extensions.toArray(new String[0]), contentInfo.isPartial());
+            }
+        }
         return new PathContentInfo(contentInfo.getName(), contentInfo.getMessage(), contentInfo.getMimeType(),
                 contentInfo.getFileExtensions(), contentInfo.isPartial());
     }
 
     @NonNull
-    public static PathContentInfo fromContentType2(@NonNull ContentType2 contentType2) {
+    private static PathContentInfo fromPathContentInfo(@NonNull PathContentInfo contentInfo) {
+        String mime = sSimpleNameMimeAssociations.get(contentInfo.getName());
+        if (mime != null) {
+            ContentType2 contentType2 = ContentType2.fromMimeType(mime);
+            if (contentType2 != null) {
+                // Association exists, replace MIME type and merge file extensions
+                HashSet<String> extensions = new HashSet<>();
+                if (contentInfo.getFileExtensions() != null) {
+                    extensions.addAll(Arrays.asList(contentInfo.getFileExtensions()));
+                }
+                if (contentType2.getFileExtensions() != null) {
+                    extensions.addAll(Arrays.asList(contentType2.getFileExtensions()));
+                }
+                return new PathContentInfo(contentInfo.getName(), contentInfo.getMessage(), mime,
+                        extensions.isEmpty() ? null : extensions.toArray(new String[0]), contentInfo.isPartial());
+            }
+        }
+        return contentInfo;
+    }
+
+    @NonNull
+    private static PathContentInfo fromContentType2(@NonNull ContentType2 contentType2) {
         return new PathContentInfo(contentType2.getSimpleName(), null, contentType2.getMimeType(),
                 contentType2.getFileExtensions(), false);
     }

@@ -161,6 +161,7 @@ final class FmIcons {
             put("text/x-yaml", DRAWABLE_CODE);
             put("text/vcard", DRAWABLE_CONTACT);
             put("text/x-vcard", DRAWABLE_CONTACT);
+            put("application/vnd.sqlite3", DRAWABLE_DATABASE);
             put("application/x-sqlite3", DRAWABLE_DATABASE);
             put("inode/directory", DRAWABLE_DIRECTORY);
             put(DocumentsContract.Document.MIME_TYPE_DIR, DRAWABLE_DIRECTORY);
