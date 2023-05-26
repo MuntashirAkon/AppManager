@@ -17,14 +17,17 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/icon"
-                android:layout_width="@dimen/icon_size"
-                android:layout_height="@dimen/icon_size"
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@android:id/icon"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
                 android:layout_weight="0"
                 android:layout_gravity="center"
                 android:layout_marginEnd="@dimen/padding_small"
-                tools:srcCompat="@mipmap/ic_launcher_round" />
+                android:background="@color/grey_blue_leaf"
+                android:contentDescription="@string/str_logo"
+                app:shapeAppearanceOverlay="@style/ShapeAppearance.AppTheme.SmallComponent"
+                tools:srcCompat="@drawable/ic_file" />
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
