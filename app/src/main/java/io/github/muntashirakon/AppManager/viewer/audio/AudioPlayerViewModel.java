@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-package io.github.muntashirakon.AppManager.misc.music;
+package io.github.muntashirakon.AppManager.viewer.audio;
 
 import android.app.Application;
 import android.graphics.BitmapFactory;
