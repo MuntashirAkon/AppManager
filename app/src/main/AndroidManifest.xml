@@ -891,6 +891,43 @@
             android:exported="true"
             android:label="@string/files"
             android:taskAffinity=".fm.FmActivity" />
+        <activity
+            android:name=".misc.music.AudioPlayerActivity"
+            android:exported="true"
+            android:label="@string/title_audio_player"
+            android:excludeFromRecents="true"
+            android:theme="@style/AppTheme.TransparentBackground"
+            android:taskAffinity=".misc.music.AudioPlayerActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEND" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.ALTERNATIVE" />
+
+                <data android:mimeType="audio/*" />
+                <data android:mimeType="vnd.android.cursor.dir/audio" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.SEND_MULTIPLE" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.ALTERNATIVE" />
+
+                <data android:mimeType="audio/*" />
+                <data android:mimeType="vnd.android.cursor.dir/audio" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="file" />
+                <data android:scheme="content" />
+                <data android:mimeType="audio/*" />
+                <data android:mimeType="vnd.android.cursor.dir/audio" />
+            </intent-filter>
+        </activity>
 
         <service
             android:name=".apk.installer.PackageInstallerService"
