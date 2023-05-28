@@ -91,7 +91,7 @@
     <string name="third_party">Сторонние библиотеки и значки</string>
     <string name="credits">Авторы</string>
     <string name="credits_message">Благодарность авторам:
-\n- The Android Open Source Project
+\n- Android Open Source Project
 \n- <a href="https://github.com/zhaobozhen/libraries">Absinthe\'s libraries</a>
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
@@ -100,6 +100,7 @@
 \n- <a href="https://github.com/gabrielemariotti/changeloglib">ChangeLog Library</a>
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a>
 \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/Raival-e/File-Explorer">File Explorer</a>
 \n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a>
 \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
 \n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a>
@@ -382,7 +383,7 @@
     <string name="filter">Фильтр</string>
     <string name="filter_user_apps">Пользовательские приложения</string>
     <string name="filter_system_apps">Системные приложения</string>
-    <string name="filter_apps_with_rules">Приложения с правилами</string>
+    <string name="filter_apps_with_rules">С правилами</string>
     <string name="select_all">Выбрать все</string>
     <string name="installed_version">Установленная версия</string>
     <string name="trackers">Трекеры</string>
@@ -793,10 +794,10 @@
     <string name="size">Размер</string>
     <string name="hardware">Модель</string>
     <plurals name="alert_failed_to_set_app_ops">
-        <item quantity="one">Не удалось настроить операции приложения для %1$d приложения</item>
-        <item quantity="few">Не удалось настроить операции приложения для %1$d приложений</item>
-        <item quantity="many">Не удалось настроить операции приложения для %1$d приложений</item>
-        <item quantity="other">Не удалось настроить операции приложения для %1$d приложений</item>
+        <item quantity="one">Не удалось настроить операции приложения %1$d приложения</item>
+        <item quantity="few">Не удалось настроить операции приложения %1$d приложений</item>
+        <item quantity="many">Не удалось настроить операции приложения %1$d приложений</item>
+        <item quantity="other">Не удалось настроить операции приложения %1$d приложений</item>
     </plurals>
     <string name="refresh_rate">Частота обновления</string>
     <string name="scaling_factor">Коэффициент масштабирования</string>
@@ -1027,7 +1028,7 @@
     <string name="pref_rules_msg">Мгновенная блокировка, импорт/экспорт/удаление правил и т. д.</string>
     <string name="orientation_right_to_left">Справа налево</string>
     <string name="orientation_left_to_right">Слева направо</string>
-    <string name="orientation_follow_locale">В соответствии с языком</string>
+    <string name="orientation_follow_locale">В соответствии с локалью</string>
     <plurals name="file_deletion_confirmation">
         <item quantity="one">%d файл будет удален</item>
         <item quantity="few">%d файла будет удалено</item>
@@ -1371,17 +1372,17 @@
         <item quantity="many">Не удалось оптимизировать %1$d приложений</item>
         <item quantity="other">Не удалось оптимизировать %1$d приложений</item>
     </plurals>
-    <string name="app_info_tag_open_links">Открытые ссылки</string>
+    <string name="app_info_tag_open_links">Открываемые ссылки</string>
     <string name="source_stamp_verified_and_identified_to_be_from_source">SourceStamp проверен и идентифицирован как принадлежащий <xliff:g id="source" example="Google Play">%1$s</xliff:g> .</string>
     <string name="title_domains_supported_by_the_app">Поддерживаемые домены</string>
     <string name="pref_zip_align">Выравнивание APK-файлов</string>
     <string name="block_unblock_components_dots">Блокировать/разблокировать компоненты…</string>
     <string name="unblock_components_dots">Разблокировать компоненты…</string>
     <string name="block_unblock_components_description">Блокировать или разблокировать все компоненты, идентифицированные данными подписями</string>
-    <string name="pref_layout_direction">Область макета</string>
+    <string name="pref_layout_direction">Направление текста</string>
     <string name="title_code_editor">Редактор кода</string>
     <string name="redo">Повторить</string>
-    <string name="read_only_file_warning">Изменения не могут быть записаны в файл, возможно, из-за того, что он находится на томе, на который у диспетчера приложений нет разрешения на запись. Сохранить его в другом месте\?</string>
+    <string name="read_only_file_warning">Изменения не могут быть записаны в файл, возможно, из-за того, что он находится в томе, на запись в который у App Manager нет разрешения. Сохранить его в другом месте\?</string>
     <string name="line_separator">Разделитель строк</string>
     <plurals name="search_results">
         <item quantity="one">%d результат</item>
@@ -1400,17 +1401,17 @@
     <string name="debloat_removal_type">Тип</string>
     <string name="system_app_put_back">Вернуть</string>
     <string name="debloat_list_misc">Разное</string>
-    <string name="debloat_list_pending">В ожидании</string>
-    <string name="debloat_removal_replace">Заменить</string>
+    <string name="debloat_list_pending">На рассмотрении</string>
+    <string name="debloat_removal_replace">Замена</string>
     <string name="debloat_removal_caution">Осторожно</string>
     <string name="debloat_removal_unsafe">Небезопасно</string>
     <string name="debloat_removal_safe">Безопасно</string>
     <string name="static_shared_library">Статическая общая библиотека</string>
     <plurals name="alert_failed_to_unblock_components">
-        <item quantity="one">Не удалось разблокировать компоненты для приложения %1$d</item>
-        <item quantity="few">Не удалось разблокировать компоненты для приложений %1$d</item>
-        <item quantity="many">Не удалось разблокировать компоненты для приложений %1$d</item>
-        <item quantity="other">Не удалось разблокировать компоненты для приложений %1$d</item>
+        <item quantity="one">Не удалось разблокировать компоненты приложения %1$d</item>
+        <item quantity="few">Не удалось разблокировать компоненты приложений %1$d</item>
+        <item quantity="many">Не удалось разблокировать компоненты приложений %1$d</item>
+        <item quantity="other">Не удалось разблокировать компоненты приложений %1$d</item>
     </plurals>
     <string name="pref_zip_align_msg">Выравнивание APK-файла снижает использование памяти, поскольку к файлам в APK можно обращаться напрямую, не копируя данные в ОЗУ. Этот шаг необходим, если для параметра <tt>extractNativeLibs</tt> задано значение <tt>true</tt>.</string>
     <string name="read_only_file">Файл только для чтения</string>
@@ -1418,5 +1419,22 @@
     <string name="debloater_title">Деблоатер</string>
     <string name="debloat_list_aosp">AOSP</string>
     <string name="debloat_list_oem">OEM</string>
-    <string name="debloat_list_carrier">Оператор связи/ISP</string>
+    <string name="debloat_list_carrier">Оператор связи/интернет-провайдер</string>
+    <plurals name="folder_count">
+        <item quantity="one">%d папка</item>
+        <item quantity="few">%d папки</item>
+        <item quantity="many">%d папок</item>
+        <item quantity="other">%d папок</item>
+    </plurals>
+    <plurals name="file_count">
+        <item quantity="one">%%d файл</item>
+        <item quantity="few">%d файла</item>
+        <item quantity="many">%d файлов</item>
+        <item quantity="other">%d файлов</item>
+    </plurals>
+    <string name="filter_force_stopped_apps">Остановленные приложения</string>
+    <string name="empty_folder">Пусто</string>
+    <string name="go_to_path">Перейти к…</string>
+    <string name="copy_this_path">Копировать путь</string>
+    <string name="title_audio_player">Аудиоплеер</string>
 </resources>
