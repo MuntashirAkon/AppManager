@@ -497,8 +497,8 @@
     <style name="TextAppearance.AppTheme.TitleMedium" parent="TextAppearance.Material3.TitleMedium">
         <item name="android:letterSpacing">0</item>
         <item name="android:textSize">18sp</item>
-        <item name="android:fontFamily">@macro/m3_ref_typeface_brand_regular</item>
-        <item name="fontFamily">@macro/m3_ref_typeface_brand_regular</item>
+        <item name="android:fontFamily">@string/m3_ref_typeface_brand_regular</item>
+        <item name="fontFamily">@string/m3_ref_typeface_brand_regular</item>
     </style>
 
     <style name="TextAppearance.AppTheme.TitleSmall" parent="TextAppearance.Material3.TitleSmall" />
