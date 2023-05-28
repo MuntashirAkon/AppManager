@@ -1500,4 +1500,24 @@
         <item quantity="many">تعذر إلغاء حظر مكونات التطبيقات %1$d</item>
         <item quantity="other">تعذر إلغاء حظر مكونات تطبيقات %1$d</item>
     </plurals>
+    <string name="empty_folder">فارغ</string>
+    <string name="title_audio_player">مشغل الصوت</string>
+    <string name="go_to_path">الانتقال إلى…</string>
+    <plurals name="file_count">
+        <item quantity="zero">%d ملف</item>
+        <item quantity="one">%d ملف</item>
+        <item quantity="two">%d ملفان</item>
+        <item quantity="few">%d ملفات</item>
+        <item quantity="many">%d ملفات</item>
+        <item quantity="other">%d ملفات</item>
+    </plurals>
+    <string name="copy_this_path">نسخ المسار</string>
+    <plurals name="folder_count">
+        <item quantity="zero">مجلد %d</item>
+        <item quantity="one">مجلد %d</item>
+        <item quantity="two">مجلدان %d</item>
+        <item quantity="few">مجلدات %d</item>
+        <item quantity="many">مجلدات %d</item>
+        <item quantity="other">مجلدات %d</item>
+    </plurals>
 </resources>
