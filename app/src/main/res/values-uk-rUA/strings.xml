@@ -789,10 +789,10 @@
     <string name="disable_background_run_description">Встановленя режиму <i>ignore</i> для app ops: <tt>RUN_IN_BACKGROUND</tt> (з Android7.0) і <tt>RUN_ANY_IN_BACKGROUND</tt> (з Android 9).</string>
     <string name="set_mode_for_app_ops_dots">Установити режим для app ops…</string>
     <plurals name="alert_failed_to_set_app_ops">
-        <item quantity="one">Не вдалося встановити app ops для %1$d додатка</item>
-        <item quantity="few">Не вдалося встановити app ops для %1$d додатків</item>
-        <item quantity="many">Не вдалося встановити app ops для %1$d додатків</item>
-        <item quantity="other">Не вдалося встановити app ops для %1$d додатків</item>
+        <item quantity="one">Не вдалося встановити app ops %1$d додатка</item>
+        <item quantity="few">Не вдалося встановити app ops %1$d додатків</item>
+        <item quantity="many">Не вдалося встановити app ops %1$d додатків</item>
+        <item quantity="other">Не вдалося встановити app ops %1$d додатків</item>
     </plurals>
     <string name="backup_custom_users_description">Виконувати резервне копіювання лише для вказаних користувачів</string>
     <string name="encrypted">Зашифровано</string>
@@ -1372,4 +1372,65 @@
     <string name="action_optimize_app">Оптимізувати</string>
     <string name="batch_ops_runtime_optimization">Оптимізація середовища виконання</string>
     <string name="summary_perform_runtime_optimization_to_apps">Оптимізація DEX і (в Android 10 і пізніших версіях) макетів, щоб підвищити продуктивність роботи додатків.</string>
+    <string name="app_info_tag_open_links">Відкриті посилання</string>
+    <string name="source_stamp_verified_and_identified_to_be_from_source">SourceStamp перевірено та ідентифіковано як джерело з <xliff:g id="source" example="Google Play">%1$s</xliff:g> .</string>
+    <string name="unblock_components_dots">Розблокувати компоненти…</string>
+    <string name="pref_zip_align">Вирівняти APK файли</string>
+    <string name="title_code_editor">Редактор коду</string>
+    <string name="read_only_file">Файл тільки для читання</string>
+    <string name="line_separator">Роздільник рядків</string>
+    <string name="replacement_text">Заміна</string>
+    <string name="action_replace_all">Замінити все</string>
+    <string name="search_option_match_case">З урахуванням регістру</string>
+    <string name="search_option_whole_word">Ціле слово</string>
+    <string name="search_option_regex">регулярний вираз</string>
+    <string name="system_app_put_back">Повернути назад</string>
+    <string name="debloat_list_carrier">Оператор/провайдер</string>
+    <string name="debloat_list_misc">Різне</string>
+    <string name="debloat_list_pending">Розглядається</string>
+    <string name="debloat_removal_caution">З обережністю</string>
+    <string name="debloat_removal_unsafe">Небезпечно</string>
+    <plurals name="alert_failed_to_unblock_components">
+        <item quantity="one">Не вдалося розблокувати компоненти %1$d додатку</item>
+        <item quantity="few">Не вдалося розблокувати компоненти %1$d додатків</item>
+        <item quantity="many">Не вдалося розблокувати компоненти %1$d додатків</item>
+        <item quantity="other">Не вдалося розблокувати компоненти %1$d додатків</item>
+    </plurals>
+    <plurals name="search_results">
+        <item quantity="one">%d результат</item>
+        <item quantity="few">%d результатів</item>
+        <item quantity="many">%d результатів</item>
+        <item quantity="other">%d результатів</item>
+    </plurals>
+    <string name="uninstall_app">Видалити %1$s</string>
+    <string name="uninstall_app_again_message">Додаток було видалено без очищення даних і підпису. Ви хочете повністю видалити його\?</string>
+    <string name="debloat_removal_type">Тип</string>
+    <string name="block_unblock_components_dots">Блокування/розблокування компонентів…</string>
+    <string name="block_unblock_components_description">Заблокувати або розблокувати всі компоненти, визначені наданими підписами</string>
+    <string name="pref_layout_direction">Напрямок макета</string>
+    <string name="title_domains_supported_by_the_app">Підтримувані домени</string>
+    <string name="debloat_list_type">Список</string>
+    <string name="debloat_removal_safe">Безпечно</string>
+    <string name="debloat_removal_replace">Заміна</string>
+    <string name="static_shared_library">Статична спільна бібліотека</string>
+    <string name="redo">Повторити</string>
+    <string name="read_only_file_warning">Зміни не можуть бути записані до файлу, можливо, тому що він знаходиться в томі, на який App Manager не має дозволу на запис. Ви хочете зберегти його в іншому місці\?</string>
+    <string name="pref_zip_align_msg">Вирівнювання APK-файлу зменшує використання пам\'яті, оскільки до файлів APK можна звертатися безпосередньо, без копіювання даних до оперативної пам\'яті. Цей крок обовʼязковий, якщо для параметра <tt>extractNativeLibs</tt> встановлено значення <tt>true</tt>.</string>
+    <plurals name="folder_count">
+        <item quantity="one">%d папка</item>
+        <item quantity="few">%d папки</item>
+        <item quantity="many">%d папок</item>
+        <item quantity="other">%d папок</item>
+    </plurals>
+    <plurals name="file_count">
+        <item quantity="one">%d файл</item>
+        <item quantity="few">%d файли</item>
+        <item quantity="many">%d файлів</item>
+        <item quantity="other">%d файлів</item>
+    </plurals>
+    <string name="filter_force_stopped_apps">Зупинені додатки</string>
+    <string name="empty_folder">Порожньо</string>
+    <string name="go_to_path">Перейти до…</string>
+    <string name="copy_this_path">Скопіювати шлях</string>
+    <string name="title_audio_player">Аудіоплеєр</string>
 </resources>
