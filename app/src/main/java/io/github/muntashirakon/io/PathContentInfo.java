@@ -102,18 +102,16 @@ public class PathContentInfo {
         String mime = sSimpleNameMimeAssociations.get(contentInfo.getName());
         if (mime != null) {
             ContentType2 contentType2 = ContentType2.fromMimeType(mime);
-            if (contentType2 != null) {
-                // Association exists, replace MIME type and merge file extensions
-                HashSet<String> extensions = new HashSet<>();
-                if (contentInfo.getFileExtensions() != null) {
-                    extensions.addAll(Arrays.asList(contentInfo.getFileExtensions()));
-                }
-                if (contentType2.getFileExtensions() != null) {
-                    extensions.addAll(Arrays.asList(contentType2.getFileExtensions()));
-                }
-                return new PathContentInfo(contentInfo.getName(), contentInfo.getMessage(), mime,
-                        extensions.isEmpty() ? null : extensions.toArray(new String[0]), contentInfo.isPartial());
+            // Association exists, replace MIME type and merge file extensions
+            HashSet<String> extensions = new HashSet<>();
+            if (contentInfo.getFileExtensions() != null) {
+                extensions.addAll(Arrays.asList(contentInfo.getFileExtensions()));
             }
+            if (contentType2.getFileExtensions() != null) {
+                extensions.addAll(Arrays.asList(contentType2.getFileExtensions()));
+            }
+            return new PathContentInfo(contentInfo.getName(), contentInfo.getMessage(), mime,
+                    extensions.isEmpty() ? null : extensions.toArray(new String[0]), contentInfo.isPartial());
         }
         return new PathContentInfo(contentInfo.getName(), contentInfo.getMessage(), contentInfo.getMimeType(),
                 contentInfo.getFileExtensions(), contentInfo.isPartial());
@@ -124,18 +122,16 @@ public class PathContentInfo {
         String mime = sSimpleNameMimeAssociations.get(contentInfo.getName());
         if (mime != null) {
             ContentType2 contentType2 = ContentType2.fromMimeType(mime);
-            if (contentType2 != null) {
-                // Association exists, replace MIME type and merge file extensions
-                HashSet<String> extensions = new HashSet<>();
-                if (contentInfo.getFileExtensions() != null) {
-                    extensions.addAll(Arrays.asList(contentInfo.getFileExtensions()));
-                }
-                if (contentType2.getFileExtensions() != null) {
-                    extensions.addAll(Arrays.asList(contentType2.getFileExtensions()));
-                }
-                return new PathContentInfo(contentInfo.getName(), contentInfo.getMessage(), mime,
-                        extensions.isEmpty() ? null : extensions.toArray(new String[0]), contentInfo.isPartial());
+            // Association exists, replace MIME type and merge file extensions
+            HashSet<String> extensions = new HashSet<>();
+            if (contentInfo.getFileExtensions() != null) {
+                extensions.addAll(Arrays.asList(contentInfo.getFileExtensions()));
             }
+            if (contentType2.getFileExtensions() != null) {
+                extensions.addAll(Arrays.asList(contentType2.getFileExtensions()));
+            }
+            return new PathContentInfo(contentInfo.getName(), contentInfo.getMessage(), mime,
+                    extensions.isEmpty() ? null : extensions.toArray(new String[0]), contentInfo.isPartial());
         }
         return contentInfo;
     }

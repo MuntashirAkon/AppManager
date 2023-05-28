@@ -16,6 +16,7 @@ import androidx.appcompat.view.menu.MenuItemImpl;
 import androidx.appcompat.view.menu.MenuPresenter;
 import androidx.appcompat.view.menu.MenuView;
 import androidx.appcompat.view.menu.SubMenuBuilder;
+import androidx.core.os.ParcelCompat;
 
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.android.material.badge.BadgeUtils;
@@ -128,7 +129,7 @@ public class ReflowMenuPresenter implements MenuPresenter {
 
         SavedState(@NonNull Parcel in) {
             selectedItemId = in.readInt();
-            badgeSavedStates = in.readParcelable(getClass().getClassLoader());
+            badgeSavedStates = ParcelCompat.readParcelable(in, getClass().getClassLoader(), ParcelableSparseArray.class);
         }
 
         @Override

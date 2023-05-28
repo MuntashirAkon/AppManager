@@ -6,6 +6,7 @@ import android.content.pm.PackageInfo;
 import android.os.Parcel;
 
 import androidx.annotation.NonNull;
+import androidx.core.os.ParcelCompat;
 
 import java.util.Objects;
 
@@ -22,7 +23,7 @@ public class AppProcessItem extends ProcessItem {
 
     protected AppProcessItem(@NonNull Parcel in) {
         super(in);
-        packageInfo = in.readParcelable(PackageInfo.class.getClassLoader());
+        packageInfo = Objects.requireNonNull(ParcelCompat.readParcelable(in, PackageInfo.class.getClassLoader(), PackageInfo.class));
     }
 
     public static final Creator<AppProcessItem> CREATOR = new Creator<AppProcessItem>() {

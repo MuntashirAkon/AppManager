@@ -17,6 +17,7 @@ import java.lang.ref.WeakReference;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.compat.BundleCompat;
 import io.github.muntashirakon.AppManager.logcat.struct.LogLine;
 import io.github.muntashirakon.reflow.ReflowMenuViewWrapper;
 
@@ -40,7 +41,7 @@ public class SavedLogViewerFragment extends AbsLogViewerFragment implements LogV
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Uri uri = requireArguments().getParcelable(ARG_FILE_URI);
+        Uri uri = BundleCompat.getParcelable(requireArguments(), ARG_FILE_URI, Uri.class);
         if (uri == null) {
             // TODO: 31/5/22 Handle invalid URI
             return;

@@ -43,6 +43,7 @@ import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.compat.BundleCompat;
 import io.github.muntashirakon.AppManager.details.LauncherIconCreator;
 import io.github.muntashirakon.AppManager.utils.StorageUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
@@ -109,11 +110,11 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         Uri uri = null;
         AtomicInteger scrollPosition = new AtomicInteger(RecyclerView.NO_POSITION);
         if (savedInstanceState != null) {
-            uri = savedInstanceState.getParcelable("uri");
+            uri = BundleCompat.getParcelable(savedInstanceState, "uri", Uri.class);
             scrollPosition.set(savedInstanceState.getInt("position", RecyclerView.NO_POSITION));
         }
         if (uri == null) {
-            uri = requireArguments().getParcelable(ARG_URI);
+            uri = Objects.requireNonNull(BundleCompat.getParcelable(requireArguments(), ARG_URI, Uri.class));
         }
         activity = (FmActivity) requireActivity();
         // Set title and subtitle

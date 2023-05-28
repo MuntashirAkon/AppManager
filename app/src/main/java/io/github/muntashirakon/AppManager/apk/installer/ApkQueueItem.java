@@ -12,6 +12,7 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.os.ParcelCompat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,7 +68,7 @@ public class ApkQueueItem implements Parcelable {
     }
 
     protected ApkQueueItem(@NonNull Parcel in) {
-        uri = in.readParcelable(Uri.class.getClassLoader());
+        uri = ParcelCompat.readParcelable(in, Uri.class.getClassLoader(), Uri.class);
         packageName = in.readString();
         appLabel = in.readString();
         mimeType = in.readString();

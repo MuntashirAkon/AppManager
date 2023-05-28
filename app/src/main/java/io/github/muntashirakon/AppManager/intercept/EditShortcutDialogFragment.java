@@ -25,6 +25,7 @@ import androidx.fragment.app.FragmentActivity;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.compat.BundleCompat;
 import io.github.muntashirakon.AppManager.details.IconPickerDialogFragment;
 import io.github.muntashirakon.AppManager.utils.ResourceUtil;
 
@@ -67,7 +68,7 @@ public class EditShortcutDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         final FragmentActivity activity = requireActivity();
-        mComponentName = requireArguments().getParcelable(EXTRA_COMPONENT_NAME);
+        mComponentName = BundleCompat.getParcelable(requireArguments(), EXTRA_COMPONENT_NAME, ComponentName.class);
         String shortcutName = requireArguments().getString(EXTRA_SHORTCUT_NAME);
         mPackageManager = activity.getPackageManager();
         LayoutInflater inflater = LayoutInflater.from(activity);
@@ -129,9 +130,12 @@ public class EditShortcutDialogFragment extends DialogFragment {
     @NonNull
     public Drawable getDrawable(@NonNull String iconResString) {
         try {
-            return ResourceUtil.getResourceFromName(mPackageManager, iconResString).getDrawable(requireActivity().getTheme());
+            Drawable drawable = ResourceUtil.getResourceFromName(mPackageManager, iconResString).getDrawable(requireActivity().getTheme());
+            if (drawable != null) {
+                return drawable;
+            }
         } catch (PackageManager.NameNotFoundException | Resources.NotFoundException ignore) {
-            return mPackageManager.getDefaultActivityIcon();
         }
+        return mPackageManager.getDefaultActivityIcon();
     }
 }

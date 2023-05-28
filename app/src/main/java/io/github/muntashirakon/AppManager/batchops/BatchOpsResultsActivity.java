@@ -55,7 +55,6 @@ public class BatchOpsResultsActivity extends BaseActivity {
         setSupportActionBar(findViewById(R.id.toolbar));
         findViewById(R.id.progress_linear).setVisibility(View.GONE);
         mRecyclerView = findViewById(R.id.list);
-        mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         MaterialButton logToggler = findViewById(R.id.action_view_logs);
         mLogViewer = findViewById(R.id.text);
@@ -95,8 +94,8 @@ public class BatchOpsResultsActivity extends BaseActivity {
         intent.removeExtra(BatchOpsService.EXTRA_FAILURE_MESSAGE);
     }
 
-    private boolean restartIfNeeded(@NonNull Intent intent) {
-        if (getIntent().getBooleanExtra(BatchOpsService.EXTRA_REQUIRES_RESTART, false)) {
+    private static boolean restartIfNeeded(@NonNull Intent intent) {
+        if (intent.getBooleanExtra(BatchOpsService.EXTRA_REQUIRES_RESTART, false)) {
             RestartUtils.restart(RestartUtils.RESTART_NORMAL);
             return true;
         }

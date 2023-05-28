@@ -115,7 +115,6 @@ public abstract class AbsLogViewerFragment extends Fragment implements LogViewer
         mMultiSelectionView.setOnItemSelectedListener(this);
         mMultiSelectionView.hide();
         mRecyclerView.setAdapter(mLogListAdapter);
-        mRecyclerView.setHasFixedSize(true);
         mRecyclerView.addOnScrollListener(mRecyclerViewScrollListener);
         // Observers
         mViewModel.getExpandLogsLiveData().observe(getViewLifecycleOwner(), expanded -> {

@@ -679,7 +679,7 @@ public class TarArchiveInputStream extends ArchiveInputStream {
         } finally {
             if (shouldReset && marked) {
                 pushedBackBytes(recordSize);
-            	inputStream.reset();
+                inputStream.reset();
             }
         }
     }

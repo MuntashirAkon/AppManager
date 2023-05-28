@@ -27,6 +27,7 @@ import java.util.Objects;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
+import io.github.muntashirakon.AppManager.compat.BundleCompat;
 
 import static io.github.muntashirakon.AppManager.batchops.BatchOpsService.ACTION_BATCH_OPS_COMPLETED;
 
@@ -116,7 +117,7 @@ public abstract class PackageChangeReceiver extends BroadcastReceiver {
 
         @Override
         public void handleMessage(@NonNull Message msg) {
-            Intent intent = msg.getData().getParcelable("intent");
+            Intent intent = BundleCompat.getParcelable(msg.getData(), "intent", Intent.class);
             switch (Objects.requireNonNull(intent.getAction())) {
                 case Intent.ACTION_PACKAGE_REMOVED:
                     if (intent.getBooleanExtra(Intent.EXTRA_REPLACING, false)) return;

@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -23,6 +24,7 @@ public final class LangUtils {
 
     private static ArrayMap<String, Locale> sLocaleMap;
 
+    @SuppressLint("AppBundleLocaleChanges") // We don't use Play Store
     private static void loadAppLanguages(@NonNull Context context) {
         if (sLocaleMap == null) sLocaleMap = new ArrayMap<>();
         Resources res = context.getResources();

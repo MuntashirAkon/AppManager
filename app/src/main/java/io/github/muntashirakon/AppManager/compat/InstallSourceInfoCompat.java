@@ -12,6 +12,7 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.core.os.ParcelCompat;
 
 public class InstallSourceInfoCompat implements Parcelable {
 
@@ -69,7 +70,7 @@ public class InstallSourceInfoCompat implements Parcelable {
     private InstallSourceInfoCompat(Parcel source) {
         mInitiatingPackageName = source.readString();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            mInitiatingPackageSigningInfo = source.readParcelable(SigningInfo.class.getClassLoader());
+            mInitiatingPackageSigningInfo = ParcelCompat.readParcelable(source, SigningInfo.class.getClassLoader(), SigningInfo.class);
         }
         mOriginatingPackageName = source.readString();
         mInstallingPackageName = source.readString();

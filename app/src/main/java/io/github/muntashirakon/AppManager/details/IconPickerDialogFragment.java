@@ -185,10 +185,13 @@ public class IconPickerDialogFragment extends DialogFragment {
         @Override
         public Drawable loadIcon(@NonNull PackageManager pm) {
             try {
-                return ResourceUtil.getResourceFromName(pm, iconResourceString).getDrawable(context.getTheme());
-            } catch (Exception e) {
-                return pm.getDefaultActivityIcon();
+                Drawable drawable = ResourceUtil.getResourceFromName(pm, iconResourceString).getDrawable(context.getTheme());
+                if (drawable != null) {
+                    return drawable;
+                }
+            } catch (Exception ignore) {
             }
+            return pm.getDefaultActivityIcon();
         }
 
         @Override

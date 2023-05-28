@@ -28,8 +28,10 @@ import com.google.android.material.textview.MaterialTextView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.compat.BundleCompat;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 
@@ -61,8 +63,8 @@ public class WhatsNewDialogFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         WhatsNewDialogViewModel viewModel = new ViewModelProvider(this).get(WhatsNewDialogViewModel.class);
         mActivity = requireActivity();
-        mNewPkgInfo = requireArguments().getParcelable(ARG_NEW_PKG_INFO);
-        mOldPkgInfo = requireArguments().getParcelable(ARG_OLD_PKG_INFO);
+        mNewPkgInfo = Objects.requireNonNull(BundleCompat.getParcelable(requireArguments(), ARG_NEW_PKG_INFO, PackageInfo.class));
+        mOldPkgInfo = Objects.requireNonNull(BundleCompat.getParcelable(requireArguments(), ARG_OLD_PKG_INFO, PackageInfo.class));
         final String installName = requireArguments().getString(ARG_INSTALL_NAME);
         String versionInfo = requireArguments().getString(ARG_VERSION_INFO);
         View view = View.inflate(mActivity, R.layout.dialog_whats_new, null);

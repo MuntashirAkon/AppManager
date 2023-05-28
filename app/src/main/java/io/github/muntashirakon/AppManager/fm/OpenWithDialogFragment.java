@@ -34,8 +34,10 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.compat.BundleCompat;
 import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
@@ -78,7 +80,7 @@ public class OpenWithDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         mViewModel = new ViewModelProvider(this).get(OpenWithViewModel.class);
-        mPath = Paths.get((Uri) requireArguments().getParcelable(ARG_PATH));
+        mPath = Paths.get(Objects.requireNonNull(BundleCompat.getParcelable(requireArguments(), ARG_PATH, Uri.class)));
         mCustomType = requireArguments().getString(ARG_TYPE, null);
         mAdapter = new MatchingActivitiesRecyclerViewAdapter(mViewModel, requireActivity());
         mAdapter.setIntent(getIntent(mPath, mCustomType));

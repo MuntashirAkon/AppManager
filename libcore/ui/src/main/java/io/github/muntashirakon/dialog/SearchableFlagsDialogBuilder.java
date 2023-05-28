@@ -5,27 +5,33 @@ package io.github.muntashirakon.dialog;
 import android.content.Context;
 import android.view.View;
 
+import androidx.annotation.ArrayRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class SearchableFlagsDialogBuilder<T extends Number> extends SearchableMultiChoiceDialogBuilder<T> {
-    public SearchableFlagsDialogBuilder(@NonNull Context context, @NonNull List<T> items, int itemNames, @NonNull T defaultFlags) {
+    public SearchableFlagsDialogBuilder(@NonNull Context context, @NonNull List<T> items, @ArrayRes int itemNames,
+                                        @NonNull T defaultFlags) {
         this(context, items, context.getResources().getTextArray(itemNames), defaultFlags);
     }
 
-    public SearchableFlagsDialogBuilder(@NonNull Context context, @NonNull T[] items, @NonNull CharSequence[] itemNames, @NonNull T defaultFlags) {
+    public SearchableFlagsDialogBuilder(@NonNull Context context, @NonNull T[] items, @NonNull CharSequence[] itemNames,
+                                        @NonNull T defaultFlags) {
         this(context, Arrays.asList(items), Arrays.asList(itemNames), defaultFlags);
     }
 
-    public SearchableFlagsDialogBuilder(@NonNull Context context, @NonNull List<T> items, @NonNull CharSequence[] itemNames, @NonNull T defaultFlags) {
+    public SearchableFlagsDialogBuilder(@NonNull Context context, @NonNull List<T> items,
+                                        @NonNull CharSequence[] itemNames, @NonNull T defaultFlags) {
         this(context, items, Arrays.asList(itemNames), defaultFlags);
     }
 
-    public SearchableFlagsDialogBuilder(@NonNull Context context, @NonNull List<T> items, @NonNull List<CharSequence> itemNames, @NonNull T defaultFlags) {
+    public SearchableFlagsDialogBuilder(@NonNull Context context, @NonNull List<T> items,
+                                        @NonNull List<CharSequence> itemNames, @NonNull T defaultFlags) {
         super(context, items, itemNames);
         List<T> selectedFlags = new ArrayList<>();
         long flags = defaultFlags.longValue();
@@ -105,49 +111,49 @@ public class SearchableFlagsDialogBuilder<T extends Number> extends SearchableMu
     }
 
     @Override
-    public SearchableFlagsDialogBuilder<T> setTitle(int title) {
+    public SearchableFlagsDialogBuilder<T> setTitle(@StringRes int title) {
         super.setTitle(title);
         return this;
     }
 
     @Override
-    public SearchableFlagsDialogBuilder<T> setTitle(View title) {
+    public SearchableFlagsDialogBuilder<T> setTitle(@Nullable View title) {
         super.setTitle(title);
         return this;
     }
 
     @Override
-    public SearchableFlagsDialogBuilder<T> setPositiveButton(int textId, OnClickListener<T> listener) {
+    public SearchableFlagsDialogBuilder<T> setPositiveButton(@StringRes int textId, @Nullable OnClickListener<T> listener) {
         super.setPositiveButton(textId, listener);
         return this;
     }
 
     @Override
-    public SearchableFlagsDialogBuilder<T> setPositiveButton(@NonNull CharSequence text, OnClickListener<T> listener) {
+    public SearchableFlagsDialogBuilder<T> setPositiveButton(@NonNull CharSequence text, @Nullable OnClickListener<T> listener) {
         super.setPositiveButton(text, listener);
         return this;
     }
 
     @Override
-    public SearchableFlagsDialogBuilder<T> setNegativeButton(int textId, OnClickListener<T> listener) {
+    public SearchableFlagsDialogBuilder<T> setNegativeButton(@StringRes int textId, @Nullable OnClickListener<T> listener) {
         super.setNegativeButton(textId, listener);
         return this;
     }
 
     @Override
-    public SearchableFlagsDialogBuilder<T> setNegativeButton(@NonNull CharSequence text, OnClickListener<T> listener) {
+    public SearchableFlagsDialogBuilder<T> setNegativeButton(@NonNull CharSequence text, @Nullable OnClickListener<T> listener) {
         super.setNegativeButton(text, listener);
         return this;
     }
 
     @Override
-    public SearchableFlagsDialogBuilder<T> setNeutralButton(int textId, OnClickListener<T> listener) {
+    public SearchableFlagsDialogBuilder<T> setNeutralButton(@StringRes int textId, @Nullable OnClickListener<T> listener) {
         super.setNeutralButton(textId, listener);
         return this;
     }
 
     @Override
-    public SearchableFlagsDialogBuilder<T> setNeutralButton(@NonNull CharSequence text, OnClickListener<T> listener) {
+    public SearchableFlagsDialogBuilder<T> setNeutralButton(@NonNull CharSequence text, @Nullable OnClickListener<T> listener) {
         super.setNeutralButton(text, listener);
         return this;
     }

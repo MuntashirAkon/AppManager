@@ -17,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
 
+import io.github.muntashirakon.AppManager.compat.BundleCompat;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
 public abstract class ForegroundService extends Service {
@@ -48,7 +49,7 @@ public abstract class ForegroundService extends Service {
 
         @Override
         public void handleMessage(Message msg) {
-            Intent intent = msg.getData().getParcelable("intent");
+            Intent intent = BundleCompat.getParcelable(msg.getData(), "intent", Intent.class);
             ThreadUtils.postOnMainThread(() -> onStartIntent(intent));
             onHandleIntent(intent);
             // It works because of Handler uses FIFO

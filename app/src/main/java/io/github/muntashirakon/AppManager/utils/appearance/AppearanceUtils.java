@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.utils.appearance;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Application;
 import android.app.UiModeManager;
@@ -213,6 +214,7 @@ public final class AppearanceUtils {
         return createOverrideConfiguration(context, options, null, false);
     }
 
+    @SuppressLint("AppBundleLocaleChanges") // We don't use Play Store
     @NonNull
     private static Configuration createOverrideConfiguration(@NonNull Context context,
                                                              @NonNull AppearanceOptions options,

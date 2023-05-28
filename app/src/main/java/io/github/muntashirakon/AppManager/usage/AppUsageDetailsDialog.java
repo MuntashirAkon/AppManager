@@ -26,6 +26,7 @@ import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.compat.BundleCompat;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.dialog.CapsuleBottomSheetDialogFragment;
@@ -60,7 +61,7 @@ public class AppUsageDetailsDialog extends CapsuleBottomSheetDialogFragment {
     @Override
     public void onBodyInitialized(@NonNull View view, @Nullable Bundle savedInstanceState) {
         FragmentActivity activity = requireActivity();
-        PackageUsageInfo usageInfo = requireArguments().getParcelable(ARG_PACKAGE_USAGE_INFO);
+        PackageUsageInfo usageInfo = BundleCompat.getParcelable(requireArguments(), ARG_PACKAGE_USAGE_INFO, PackageUsageInfo.class);
         if (usageInfo == null) {
             finishLoading();
             return;
@@ -116,19 +117,18 @@ public class AppUsageDetailsDialog extends CapsuleBottomSheetDialogFragment {
             view.findViewById(R.id.data_usage_layout).setVisibility(View.GONE);
         } else {
             if (mobileData != null && mobileData.getTotal() != 0) {
-                String dataUsage = String.format("  \u2191 %1$s \u2193 %2$s",
+                String dataUsage = String.format("  ↑ %1$s ↓ %2$s",
                         Formatter.formatFileSize(requireContext(), mobileData.first),
                         Formatter.formatFileSize(requireContext(), mobileData.second));
                 mobileDataUsage.setText(dataUsage);
             } else mobileDataUsage.setVisibility(View.GONE);
             if (wifiData != null && wifiData.getTotal() != 0) {
-                String dataUsage = String.format("  \u2191 %1$s \u2193 %2$s",
+                String dataUsage = String.format("  ↑ %1$s ↓ %2$s",
                         Formatter.formatFileSize(requireContext(), wifiData.first),
                         Formatter.formatFileSize(requireContext(), wifiData.second));
                 wifiDataUsage.setText(dataUsage);
             } else wifiDataUsage.setVisibility(View.GONE);
         }
-        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));
         recyclerView.setAdapter(adapter);
         adapter.setDefaultList(usageInfo.entries);

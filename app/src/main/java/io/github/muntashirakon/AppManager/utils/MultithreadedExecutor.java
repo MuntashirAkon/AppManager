@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.utils;
 
+import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 
@@ -21,7 +22,7 @@ import io.github.muntashirakon.AppManager.logs.Log;
 public class MultithreadedExecutor implements ExecutorService {
     private static final List<MultithreadedExecutor> executorCache = new ArrayList<>();
 
-    @WorkerThread
+    @AnyThread
     @NonNull
     public static MultithreadedExecutor getNewInstance() {
         if (executorCache.size() > 0) {

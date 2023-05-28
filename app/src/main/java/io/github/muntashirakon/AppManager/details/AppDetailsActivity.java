@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.os.ParcelCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -30,6 +31,7 @@ import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.compat.BundleCompat;
 import io.github.muntashirakon.AppManager.details.info.AppInfoFragment;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -95,7 +97,7 @@ public class AppDetailsActivity extends BaseActivity {
         setTitle("…");
         model = new ViewModelProvider(this).get(AppDetailsViewModel.class);
         // Restore instance state
-        SavedState ss = savedInstanceState != null ? savedInstanceState.getParcelable("ss") : null;
+        SavedState ss = savedInstanceState != null ? BundleCompat.getParcelable(savedInstanceState, "ss", SavedState.class) : null;
         if (ss != null) {
             mBackToMainPage = ss.backToMainPage;
             mPackageName = ss.packageName;
@@ -191,7 +193,7 @@ public class AppDetailsActivity extends BaseActivity {
         public SavedState(Parcel source, ClassLoader loader) {
             backToMainPage = ParcelUtils.readBoolean(source);
             packageName = source.readString();
-            apkUri = source.readParcelable(loader);
+            apkUri = ParcelCompat.readParcelable(source, loader, Uri.class);
             apkType = source.readString();
             userHandle = source.readInt();
         }

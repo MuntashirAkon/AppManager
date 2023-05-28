@@ -23,6 +23,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.io.File;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.compat.BundleCompat;
 import io.github.muntashirakon.AppManager.fm.FmListOptions;
 import io.github.muntashirakon.widget.MultiSelectionView;
 import io.github.muntashirakon.widget.SwipeRefreshLayout;
@@ -65,7 +66,7 @@ public class AppExplorerFragment extends Fragment implements SearchView.OnQueryT
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        uri = requireArguments().getParcelable(ARG_NAME);
+        uri = BundleCompat.getParcelable(requireArguments(), ARG_NAME, Uri.class);
         activity = (AppExplorerActivity) requireActivity();
         // Set title and subtitle
         ActionBar actionBar = activity.getSupportActionBar();

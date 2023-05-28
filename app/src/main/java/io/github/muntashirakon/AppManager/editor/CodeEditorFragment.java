@@ -30,6 +30,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.core.os.ParcelCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -50,6 +51,7 @@ import java.util.Optional;
 import java.util.regex.PatternSyntaxException;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.compat.BundleCompat;
 import io.github.muntashirakon.AppManager.fm.FmProvider;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -94,8 +96,8 @@ public class CodeEditorFragment extends Fragment {
             this.enableSharing = enableSharing;
         }
 
-        protected Options(Parcel in) {
-            uri = in.readParcelable(Uri.class.getClassLoader());
+        protected Options(@NonNull Parcel in) {
+            uri = ParcelCompat.readParcelable(in, Uri.class.getClassLoader(), Uri.class);
             title = in.readString();
             subtitle = in.readString();
             readOnly = in.readByte() != 0;
@@ -280,7 +282,7 @@ public class CodeEditorFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         mViewModel = new ViewModelProvider(this).get(CodeEditorViewModel.class);
-        mOptions = Objects.requireNonNull(requireArguments().getParcelable(ARG_OPTIONS));
+        mOptions = Objects.requireNonNull(BundleCompat.getParcelable(requireArguments(), ARG_OPTIONS, Options.class));
         mViewModel.setOptions(mOptions);
         mColorScheme = EditorThemes.getColorScheme(requireContext());
         mEditor = view.findViewById(R.id.editor);
@@ -685,7 +687,7 @@ public class CodeEditorFragment extends Fragment {
         saveFile(content, null);
     }
 
-    private void saveFile(String content, Uri uri) {
+    private void saveFile(String content, @Nullable Uri uri) {
         if (mViewModel == null) return;
         mViewModel.saveFile(content, uri == null ? null : Paths.get(uri));
     }

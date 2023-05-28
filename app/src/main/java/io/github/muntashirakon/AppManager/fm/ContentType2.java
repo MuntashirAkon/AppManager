@@ -10,6 +10,7 @@ import com.j256.simplemagic.entries.IanaEntry;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public enum ContentType2 {
@@ -43,7 +44,7 @@ public enum ContentType2 {
         for (ContentType2 type : values()) {
             if (type.mimeType != null) {
                 // NOTE: this may overwrite this mapping
-                mimeTypeMap.put(type.mimeType.toLowerCase(), type);
+                mimeTypeMap.put(type.mimeType.toLowerCase(Locale.ROOT), type);
             }
             if (type.fileExtensions != null) {
                 for (String fileExtension : type.fileExtensions) {
@@ -54,29 +55,36 @@ public enum ContentType2 {
         }
     }
 
+    @Nullable
     private final String mimeType;
+    @NonNull
     private final String simpleName;
+    @Nullable
     private final String[] fileExtensions;
+    @Nullable
     private final IanaEntry ianaEntry;
 
-    private ContentType2(String mimeType, String simpleName, String... fileExtensions) {
+    ContentType2(@Nullable String mimeType, @NonNull String simpleName, @Nullable String... fileExtensions) {
         this.mimeType = mimeType;
         this.simpleName = simpleName;
         this.fileExtensions = fileExtensions;
-        this.ianaEntry = findIanaEntryByMimeType(mimeType);
+        this.ianaEntry = mimeType != null ? findIanaEntryByMimeType(mimeType) : null;
     }
 
     /**
      * Get simple name of the type.
      */
+    @NonNull
     public String getSimpleName() {
         return simpleName;
     }
 
+    @Nullable
     public String getMimeType() {
         return mimeType;
     }
 
+    @Nullable
     public String[] getFileExtensions() {
         return fileExtensions;
     }
@@ -84,10 +92,11 @@ public enum ContentType2 {
     /**
      * Return the type associated with the mime-type string or {@link #OTHER} if not found.
      */
+    @NonNull
     public static ContentType2 fromMimeType(String mimeType) {
         // NOTE: mimeType can be null
         if (mimeType != null) {
-            mimeType = mimeType.toLowerCase();
+            mimeType = mimeType.toLowerCase(Locale.ROOT);
         }
         ContentType2 type = mimeTypeMap.get(mimeType);
         if (type == null) {
@@ -103,12 +112,13 @@ public enum ContentType2 {
      */
     @Nullable
     public static ContentType2 fromFileExtension(@NonNull String fileExtension) {
-        return fileExtensionMap.get(fileExtension.toLowerCase());
+        return fileExtensionMap.get(fileExtension.toLowerCase(Locale.ROOT));
     }
 
     /**
      * Returns the references of the mime type or null if none.
      */
+    @Nullable
     public List<String> getReferences() {
         if (ianaEntry == null) {
             return null;
@@ -120,6 +130,7 @@ public enum ContentType2 {
     /**
      * Returns the URL of the references or null if none.
      */
+    @Nullable
     public List<String> getReferenceUrls() {
         if (ianaEntry == null) {
             return null;
@@ -128,6 +139,7 @@ public enum ContentType2 {
         }
     }
 
+    @Nullable
     private static IanaEntry findIanaEntryByMimeType(String mimeType) {
         if (ianaEntries == null) {
             ianaEntries = new IanaEntries();

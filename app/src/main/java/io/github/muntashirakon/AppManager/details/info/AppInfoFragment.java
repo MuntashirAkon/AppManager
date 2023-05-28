@@ -234,7 +234,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         mSwipeRefresh.setOnRefreshListener(this);
         // Recycler view
         RecyclerView recyclerView = view.findViewById(android.R.id.list);
-        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
         // Horizontal view
         mHorizontalLayout = view.findViewById(R.id.horizontal_layout);

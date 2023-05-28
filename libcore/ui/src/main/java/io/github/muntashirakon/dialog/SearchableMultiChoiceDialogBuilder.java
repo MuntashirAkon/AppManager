@@ -178,7 +178,7 @@ public class SearchableMultiChoiceDialogBuilder<T> {
         return this;
     }
 
-    public SearchableMultiChoiceDialogBuilder<T> setTitle(View title) {
+    public SearchableMultiChoiceDialogBuilder<T> setTitle(@Nullable View title) {
         builder.setCustomTitle(title);
         return this;
     }

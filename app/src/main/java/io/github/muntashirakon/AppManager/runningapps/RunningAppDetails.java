@@ -23,6 +23,7 @@ import com.google.android.material.button.MaterialButton;
 import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.compat.BundleCompat;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
@@ -52,7 +53,7 @@ public class RunningAppDetails extends CapsuleBottomSheetDialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ProcessItem processItem = requireArguments().getParcelable(ARG_PS_ITEM);
+        ProcessItem processItem = BundleCompat.getParcelable(requireArguments(), ARG_PS_ITEM, ProcessItem.class);
         if (processItem == null) {
             dismiss();
             return;

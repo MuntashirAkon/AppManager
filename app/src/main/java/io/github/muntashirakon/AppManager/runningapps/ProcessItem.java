@@ -6,6 +6,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
+import androidx.core.os.ParcelCompat;
 
 import java.util.Objects;
 
@@ -77,7 +78,7 @@ public class ProcessItem implements Parcelable {
     }
 
     protected ProcessItem(@NonNull Parcel in) {
-        processEntry = in.readParcelable(ProcessEntry.class.getClassLoader());
+        processEntry = Objects.requireNonNull(ParcelCompat.readParcelable(in, ProcessEntry.class.getClassLoader(), ProcessEntry.class));
         pid = processEntry.pid;
         ppid = processEntry.ppid;
         rss = processEntry.residentSetSize;

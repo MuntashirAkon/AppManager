@@ -25,7 +25,10 @@ import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import java.util.Objects;
+
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.compat.BundleCompat;
 import io.github.muntashirakon.AppManager.utils.ResourceUtil;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
 
@@ -46,7 +49,7 @@ public class EditShortcutDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         final FragmentActivity activity = requireActivity();
-        mActivityInfo = requireArguments().getParcelable(ARG_ACTIVITY_INFO);
+        mActivityInfo = Objects.requireNonNull(BundleCompat.getParcelable(requireArguments(), ARG_ACTIVITY_INFO, ActivityInfo.class));
         mShortcutName = requireArguments().getCharSequence(ARG_SHORTCUT_NAME);
         mPackageManager = activity.getPackageManager();
         LayoutInflater inflater = LayoutInflater.from(activity);
@@ -127,9 +130,12 @@ public class EditShortcutDialogFragment extends DialogFragment {
     @NonNull
     public Drawable getDrawable(@NonNull String iconResString) {
         try {
-            return ResourceUtil.getResourceFromName(mPackageManager, iconResString).getDrawable(requireActivity().getTheme());
+            Drawable drawable = ResourceUtil.getResourceFromName(mPackageManager, iconResString).getDrawable(requireActivity().getTheme());
+            if (drawable != null) {
+                return drawable;
+            }
         } catch (PackageManager.NameNotFoundException | Resources.NotFoundException ignore) {
-            return mPackageManager.getDefaultActivityIcon();
         }
+        return mPackageManager.getDefaultActivityIcon();
     }
 }

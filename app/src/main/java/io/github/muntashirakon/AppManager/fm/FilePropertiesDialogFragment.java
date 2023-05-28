@@ -24,9 +24,11 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.IOException;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.Future;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.compat.BundleCompat;
 import io.github.muntashirakon.AppManager.fm.icons.FmIconFetcher;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.users.Groups;
@@ -62,7 +64,7 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
     @Override
     public void onBodyInitialized(@NonNull View bodyView, @Nullable Bundle savedInstanceState) {
         FilePropertiesViewModel viewModel = new ViewModelProvider(this).get(FilePropertiesViewModel.class);
-        Path path = Paths.get((Uri) requireArguments().getParcelable(ARG_PATH));
+        Path path = Paths.get(Objects.requireNonNull(BundleCompat.getParcelable(requireArguments(), ARG_PATH, Uri.class)));
         ImageView iconView = bodyView.findViewById(android.R.id.icon);
         TextView nameView = bodyView.findViewById(R.id.name);
         TextView summaryView = bodyView.findViewById(R.id.summary);

@@ -60,7 +60,6 @@ public class RestoreSingleFragment extends Fragment {
         MaterialButton deleteButton = view.findViewById(R.id.action_delete);
         MaterialButton moreButton = view.findViewById(R.id.more);
 
-        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
         BackupAdapter adapter = new BackupAdapter(mContext, mViewModel.getBackupInfo().getBackups(),
                 (metadata, selectionCount, added) -> {
@@ -168,7 +167,7 @@ public class RestoreSingleFragment extends Fragment {
 
     private static class BackupAdapter extends RecyclerView.Adapter<BackupAdapter.ViewHolder> {
         public interface OnSelectionListener {
-            void onSelectionChanged(MetadataManager.Metadata metadata, int selectionCount, boolean added);
+            void onSelectionChanged(@Nullable MetadataManager.Metadata metadata, int selectionCount, boolean added);
         }
 
         private final int mLayoutId;

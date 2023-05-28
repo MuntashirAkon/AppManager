@@ -46,6 +46,7 @@ import io.github.muntashirakon.AppManager.backup.convert.Converter;
 import io.github.muntashirakon.AppManager.backup.convert.ImportType;
 import io.github.muntashirakon.AppManager.backup.dialog.BackupRestoreDialogFragment;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
+import io.github.muntashirakon.AppManager.compat.BundleCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat.NetPolicy;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
@@ -359,7 +360,7 @@ public class BatchOpsManager {
     private Result opImportBackups() {
         @ImportType
         int backupType = args.getInt(ARG_BACKUP_TYPE, ImportType.OAndBackup);
-        Uri uri = Objects.requireNonNull(args.getParcelable(ARG_URI));
+        Uri uri = Objects.requireNonNull(BundleCompat.getParcelable(args, ARG_URI, Uri.class));
         boolean removeImported = args.getBoolean(ARG_REMOVE_IMPORTED, false);
         int userHandle = UserHandleHidden.myUserId();
         Path[] files;
@@ -671,7 +672,7 @@ public class BatchOpsManager {
     @RequiresApi(Build.VERSION_CODES.N)
     private Result opPerformDexOpt() {
         List<UserPackagePair> failedPackages = new ArrayList<>();
-        DexOptimizationOptions options = args.getParcelable(ARG_OPTIONS);
+        DexOptimizationOptions options = BundleCompat.getParcelable(args, ARG_OPTIONS, DexOptimizationOptions.class);
         IPackageManager pm = PackageManagerCompat.getPackageManager();
         if (options.packages == null) {
             // Include all packages

@@ -48,7 +48,6 @@ public class BackupFragment extends Fragment {
 
         MaterialAlertView messageView = view.findViewById(R.id.message);
         RecyclerView recyclerView = view.findViewById(android.R.id.list);
-        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
         int supportedFlags = BackupFlags.getSupportedBackupFlags();
         // Remove unsupported flags

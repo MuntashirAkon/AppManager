@@ -20,7 +20,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.Set;
 
-import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
@@ -48,7 +47,6 @@ public class RestoreMultipleFragment extends Fragment {
 
         MaterialAlertView messageView = view.findViewById(R.id.message);
         RecyclerView recyclerView = view.findViewById(android.R.id.list);
-        recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(mContext, LinearLayoutManager.VERTICAL, false));
         int supportedFlags = mViewModel.getWorstBackupFlag();
         // Inject no signatures

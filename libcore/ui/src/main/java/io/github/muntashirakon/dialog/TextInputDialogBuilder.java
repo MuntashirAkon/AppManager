@@ -105,52 +105,54 @@ public class TextInputDialogBuilder {
         return this;
     }
 
-    public TextInputDialogBuilder setPositiveButton(@StringRes int textId, OnClickListener listener) {
+    public TextInputDialogBuilder setPositiveButton(@StringRes int textId, @Nullable OnClickListener listener) {
         mBuilder.setPositiveButton(textId, (dialog, which) -> {
             if (listener != null) listener.onClick(dialog, which, mEditText.getText(), mCheckBox.isChecked());
         });
         return this;
     }
 
-    public TextInputDialogBuilder setPositiveButton(@NonNull CharSequence text, OnClickListener listener) {
+    public TextInputDialogBuilder setPositiveButton(@NonNull CharSequence text, @Nullable OnClickListener listener) {
         mBuilder.setPositiveButton(text, (dialog, which) -> {
             if (listener != null) listener.onClick(dialog, which, mEditText.getText(), mCheckBox.isChecked());
         });
         return this;
     }
 
-    public TextInputDialogBuilder setNegativeButton(@StringRes int textId, OnClickListener listener) {
+    public TextInputDialogBuilder setNegativeButton(@StringRes int textId, @Nullable OnClickListener listener) {
         mBuilder.setNegativeButton(textId, (dialog, which) -> {
             if (listener != null) listener.onClick(dialog, which, mEditText.getText(), mCheckBox.isChecked());
         });
         return this;
     }
 
-    public TextInputDialogBuilder setNegativeButton(@NonNull CharSequence text, OnClickListener listener) {
+    public TextInputDialogBuilder setNegativeButton(@NonNull CharSequence text, @Nullable OnClickListener listener) {
         mBuilder.setNegativeButton(text, (dialog, which) -> {
             if (listener != null) listener.onClick(dialog, which, mEditText.getText(), mCheckBox.isChecked());
         });
         return this;
     }
 
-    public TextInputDialogBuilder setNeutralButton(@StringRes int textId, OnClickListener listener) {
+    public TextInputDialogBuilder setNeutralButton(@StringRes int textId, @Nullable OnClickListener listener) {
         mBuilder.setNeutralButton(textId, (dialog, which) -> {
             if (listener != null) listener.onClick(dialog, which, mEditText.getText(), mCheckBox.isChecked());
         });
         return this;
     }
 
-    public TextInputDialogBuilder setNeutralButton(@NonNull CharSequence text, OnClickListener listener) {
+    public TextInputDialogBuilder setNeutralButton(@NonNull CharSequence text, @Nullable OnClickListener listener) {
         mBuilder.setNeutralButton(text, (dialog, which) -> {
             if (listener != null) listener.onClick(dialog, which, mEditText.getText(), mCheckBox.isChecked());
         });
         return this;
     }
 
+    @Nullable
     public Editable getInputText() {
         return mEditText.getText();
     }
 
+    @NonNull
     public AlertDialog create() {
         return mBuilder.create();
     }

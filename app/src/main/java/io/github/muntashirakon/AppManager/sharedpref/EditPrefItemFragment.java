@@ -31,6 +31,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.Set;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.compat.BundleCompat;
 
 public class EditPrefItemFragment extends DialogFragment {
     public static final String TAG = EditPrefItemFragment.class.getSimpleName();
@@ -119,7 +120,7 @@ public class EditPrefItemFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         FragmentActivity activity = requireActivity();
         Bundle args = requireArguments();
-        PrefItem prefItem = args.getParcelable(ARG_PREF_ITEM);
+        PrefItem prefItem = BundleCompat.getParcelable(args, ARG_PREF_ITEM, PrefItem.class);
         @Mode int mode = args.getInt(ARG_MODE);
 
         LayoutInflater inflater = LayoutInflater.from(activity);

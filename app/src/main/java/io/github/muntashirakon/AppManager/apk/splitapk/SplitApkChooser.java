@@ -21,6 +21,7 @@ import java.util.Objects;
 import aosp.libcore.util.EmptyArray;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
+import io.github.muntashirakon.AppManager.compat.BundleCompat;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
@@ -66,7 +67,7 @@ public class SplitApkChooser extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         int apkFileKey = requireArguments().getInt(EXTRA_APK_FILE_KEY, -1);
         String actionName = requireArguments().getString(EXTRA_ACTION_NAME);
-        ApplicationInfo appInfo = requireArguments().getParcelable(EXTRA_APP_INFO);
+        ApplicationInfo appInfo = BundleCompat.getParcelable(requireArguments(), EXTRA_APP_INFO, ApplicationInfo.class);
         String versionInfo = requireArguments().getString(EXTRA_VERSION_INFO);
         pm = requireActivity().getPackageManager();
         if (apkFileKey == -1 || appInfo == null) {
