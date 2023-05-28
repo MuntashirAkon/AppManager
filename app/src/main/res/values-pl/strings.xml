@@ -227,7 +227,7 @@
     <string name="data">Dane</string>
     <string name="installed_version">Zainstalowana wersja</string>
     <string name="select_all">Zaznacz wszystko</string>
-    <string name="filter_apps_with_rules">Aplikacje z regułami</string>
+    <string name="filter_apps_with_rules">Z regułami</string>
     <string name="filter_system_apps">Aplikacje systemowe</string>
     <string name="cache">Wyklucz pamięć podręczną</string>
     <string name="blocking_rules">Reguły blokowania</string>
@@ -1417,4 +1417,21 @@
     <string name="read_only_file_warning">Zmiany nie mogą zostać zapisane w pliku, prawdopodobnie dlatego, że znajduje się on w woluminie, do którego zapisu nie ma uprawnień menedżer aplikacji. Chcesz zapisać go w innym miejscu\?</string>
     <string name="uninstall_app">Odinstaluj %1$s</string>
     <string name="debloater_title">Debloater</string>
+    <string name="empty_folder">Pusty</string>
+    <string name="go_to_path">Idź do…</string>
+    <string name="copy_this_path">Skopiuj ścieżkę</string>
+    <string name="title_audio_player">Odtwarzacz audio</string>
+    <plurals name="folder_count">
+        <item quantity="one">%d katalog</item>
+        <item quantity="few">%d katalogi</item>
+        <item quantity="many">%d katalogów</item>
+        <item quantity="other">%d katalogów</item>
+    </plurals>
+    <plurals name="file_count">
+        <item quantity="one">%d plik</item>
+        <item quantity="few">%d pliki</item>
+        <item quantity="many">%d plików</item>
+        <item quantity="other">%d plików</item>
+    </plurals>
+    <string name="filter_force_stopped_apps">Zatrzymane aplikacje</string>
 </resources>
