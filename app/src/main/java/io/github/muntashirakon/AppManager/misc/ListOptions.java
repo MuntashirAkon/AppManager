@@ -4,7 +4,6 @@ package io.github.muntashirakon.AppManager.misc;
 
 import android.app.Application;
 import android.os.Bundle;
-import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +23,9 @@ import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.materialswitch.MaterialSwitch;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputLayout;
+
+import java.util.LinkedHashMap;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.dialog.CapsuleBottomSheetDialogFragment;
@@ -110,13 +112,13 @@ public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
     }
 
     @Nullable
-    public abstract SparseIntArray getSortIdLocaleMap();
+    public abstract LinkedHashMap<Integer, Integer> getSortIdLocaleMap();
 
     @Nullable
-    public abstract SparseIntArray getFilterFlagLocaleMap();
+    public abstract LinkedHashMap<Integer, Integer> getFilterFlagLocaleMap();
 
     @Nullable
-    public abstract SparseIntArray getOptionIdLocaleMap();
+    public abstract LinkedHashMap<Integer, Integer> getOptionIdLocaleMap();
 
     public abstract boolean enableProfileNameInput();
 
@@ -142,16 +144,17 @@ public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
 
     private void init(boolean reinit) {
         // Enable sorting
-        SparseIntArray sortIdLocaleMap = getSortIdLocaleMap();
+        LinkedHashMap<Integer, Integer> sortIdLocaleMap = getSortIdLocaleMap();
         boolean sortingEnabled = sortIdLocaleMap != null;
         sortText.setVisibility(sortingEnabled ? View.VISIBLE : View.GONE);
         sortGroup.setVisibility(sortingEnabled ? View.VISIBLE : View.GONE);
         reverseSort.setVisibility(sortingEnabled ? View.VISIBLE : View.GONE);
         if (sortingEnabled) {
-            for (int i = 0; i < sortIdLocaleMap.size(); ++i) {
-                int sortId = sortIdLocaleMap.keyAt(i);
-                int sortStringRes = sortIdLocaleMap.valueAt(i);
+            int i = 0;
+            for (int sortId : sortIdLocaleMap.keySet()) {
+                int sortStringRes = Objects.requireNonNull(sortIdLocaleMap.get(sortId));
                 sortGroup.addView(getRadioChip(sortId, sortStringRes), i);
+                ++i;
             }
             sortGroup.check(requireListOptionActions().getSortBy());
             sortGroup.setOnCheckedStateChangeListener((group, checkedIds) -> {
@@ -163,28 +166,30 @@ public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
         }
 
         // Enable filtering
-        SparseIntArray filterFlagLocaleMap = getFilterFlagLocaleMap();
+        LinkedHashMap<Integer, Integer> filterFlagLocaleMap = getFilterFlagLocaleMap();
         boolean filteringEnabled = filterFlagLocaleMap != null;
         filterText.setVisibility(filteringEnabled ? View.VISIBLE : View.GONE);
         filterOptions.setVisibility(filteringEnabled ? View.VISIBLE : View.GONE);
         if (filteringEnabled) {
-            for (int i = 0; i < filterFlagLocaleMap.size(); ++i) {
-                int flag = filterFlagLocaleMap.keyAt(i);
-                int flagStringRes = filterFlagLocaleMap.valueAt(i);
+            int i = 0;
+            for (int flag : filterFlagLocaleMap.keySet()) {
+                int flagStringRes = Objects.requireNonNull(filterFlagLocaleMap.get(flag));
                 filterOptions.addView(getFilterChip(flag, flagStringRes), i);
+                ++i;
             }
         }
 
         // Enable options
-        SparseIntArray optionIdLocaleMap = getOptionIdLocaleMap();
+        LinkedHashMap<Integer, Integer> optionIdLocaleMap = getOptionIdLocaleMap();
         boolean optionsEnabled = optionIdLocaleMap != null;
         optionsText.setVisibility(optionsEnabled ? View.VISIBLE : View.GONE);
         optionsView.setVisibility(optionsEnabled ? View.VISIBLE : View.GONE);
         if (optionsEnabled) {
-            for (int i = 0; i < optionIdLocaleMap.size(); ++i) {
-                int option = optionIdLocaleMap.keyAt(i);
-                int optionStringRes = optionIdLocaleMap.valueAt(i);
+            int i = 0;
+            for (int option : optionIdLocaleMap.keySet()) {
+                int optionStringRes = optionIdLocaleMap.get(option);
                 optionsView.addView(getOption(option, optionStringRes), i);
+                ++i;
             }
         }
 
