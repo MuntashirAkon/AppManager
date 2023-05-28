@@ -284,7 +284,7 @@
     <string name="trackers">المقتعقبون</string>
     <string name="installed_version">النسخة المُثبتة</string>
     <string name="select_all">اختر الكل</string>
-    <string name="filter_apps_with_rules">التطبيقات ذات القواعد</string>
+    <string name="filter_apps_with_rules">مع القواعد</string>
     <string name="filter_system_apps">تطبيقات النظام</string>
     <string name="filter_user_apps">تطبيقات المستخدم</string>
     <string name="filter">عامل التصفية</string>
@@ -1520,4 +1520,5 @@
         <item quantity="many">مجلدات %d</item>
         <item quantity="other">مجلدات %d</item>
     </plurals>
+    <string name="filter_force_stopped_apps">التطبيقات المتوقفة</string>
 </resources>
