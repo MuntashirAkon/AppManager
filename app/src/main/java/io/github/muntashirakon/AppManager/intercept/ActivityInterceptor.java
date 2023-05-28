@@ -61,7 +61,7 @@ import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.IntegerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.crypto.auth.AuthManager;
-import io.github.muntashirakon.AppManager.details.LauncherIconCreator;
+import io.github.muntashirakon.AppManager.shortcut.LauncherIconCreator;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;

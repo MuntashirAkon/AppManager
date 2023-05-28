@@ -40,8 +40,8 @@ import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.details.LauncherIconCreator;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.shortcut.LauncherShortcuts;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
@@ -244,8 +244,7 @@ public class ProfilesActivity extends BaseActivity {
                                 activity.getString(R.string.on),
                                 activity.getString(R.string.off)
                         };
-                        @ProfileMetaManager.ProfileState
-                        final List<String> states = Arrays.asList(ProfileMetaManager.STATE_ON, ProfileMetaManager.STATE_OFF);
+                        @ProfileMetaManager.ProfileState final List<String> states = Arrays.asList(ProfileMetaManager.STATE_ON, ProfileMetaManager.STATE_OFF);
                         new SearchableSingleChoiceDialogBuilder<>(activity, states, statesL)
                                 .setTitle(R.string.profile_state)
                                 .setOnSingleChoiceClickListener((dialog, which, selectedState, isChecked) -> {
@@ -293,17 +292,13 @@ public class ProfilesActivity extends BaseActivity {
                         };
                         final String[] shortcutTypes = new String[]{AppsProfileActivity.ST_SIMPLE, AppsProfileActivity.ST_ADVANCED};
                         new SearchableSingleChoiceDialogBuilder<>(activity, shortcutTypes, shortcutTypesL)
-                                .setTitle(R.string.profile_state)
+                                .setTitle(R.string.create_shortcut)
                                 .setOnSingleChoiceClickListener((dialog, which, item1, isChecked) -> {
                                     if (!isChecked) {
                                         return;
                                     }
-                                    Intent intent = AppsProfileActivity.getShortcutIntent(activity, profName, shortcutTypes[which], null);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                    LauncherIconCreator.createLauncherIcon(activity,
-                                            profName + " - " + shortcutTypesL[which], ContextCompat
-                                                    .getDrawable(activity, R.drawable.ic_launcher_foreground), intent);
+                                    LauncherShortcuts.createForProfile(activity, profName, shortcutTypes[which],
+                                            shortcutTypesL[which]);
                                     dialog.dismiss();
                                 })
                                 .show();

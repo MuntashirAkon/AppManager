@@ -1,6 +1,6 @@
-// SPDX-License-Identifier: ISC AND GPL-3.0-or-later
+// SPDX-License-Identifier: GPL-3.0-or-later
 
-package io.github.muntashirakon.AppManager.details;
+package io.github.muntashirakon.AppManager.shortcut;
 
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getBitmapFromDrawable;
 
@@ -22,6 +22,7 @@ import java.util.UUID;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.details.ActivityLauncherShortcutActivity;
 
 // Copyright 2017 Adam M. Szalkowski
 public class LauncherIconCreator {

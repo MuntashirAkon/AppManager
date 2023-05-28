@@ -13,7 +13,6 @@ import static io.github.muntashirakon.AppManager.utils.UIUtils.displayLongToast;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.displayShortToast;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getBitmapFromDrawable;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getColoredText;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getDimmedBitmap;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getStyledKeyValue;
@@ -95,7 +94,6 @@ import io.github.muntashirakon.AppManager.accessibility.NoRootAccessibilityServi
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
 import io.github.muntashirakon.AppManager.apk.behavior.DexOptimizationDialog;
-import io.github.muntashirakon.AppManager.apk.behavior.FreezeUnfreeze;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
@@ -110,7 +108,6 @@ import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.details.AppDetailsFragment;
 import io.github.muntashirakon.AppManager.details.AppDetailsViewModel;
-import io.github.muntashirakon.AppManager.details.LauncherIconCreator;
 import io.github.muntashirakon.AppManager.details.manifest.ManifestViewerActivity;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.fm.FmProvider;
@@ -133,6 +130,7 @@ import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.sharedpref.SharedPrefsActivity;
+import io.github.muntashirakon.AppManager.shortcut.LauncherShortcuts;
 import io.github.muntashirakon.AppManager.ssaid.ChangeSsaidDialog;
 import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
@@ -1691,14 +1689,9 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     for (int flag : selections) {
                         flags |= flag;
                     }
-                    FreezeUnfreeze.ShortcutInfo shortcutInfo = new FreezeUnfreeze.ShortcutInfo(mPackageName,
-                            mainModel.getUserHandle(), flags);
-                    Intent shortcutIntent = FreezeUnfreeze.getShortcutIntent(requireContext(), shortcutInfo);
-                    shortcutInfo.setLabel(mPackageLabel.toString());
-                    Bitmap icon = getBitmapFromDrawable(iconView.getDrawable());
-                    shortcutInfo.setIcon(isFrozen ? getDimmedBitmap(icon) : icon);
-                    LauncherIconCreator.createLauncherIcon(requireContext(), shortcutInfo.shortcutId,
-                            shortcutInfo.getLabel(), shortcutInfo.getIcon(), shortcutIntent);
+                    LauncherShortcuts.createFreezeUnfreezeShortcut(requireContext(), mPackageLabel,
+                            getBitmapFromDrawable(iconView.getDrawable()), mPackageName, mainModel.getUserHandle(),
+                            flags, isFrozen);
                 })
                 .show();
     }

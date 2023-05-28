@@ -29,6 +29,7 @@ import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.BundleCompat;
+import io.github.muntashirakon.AppManager.shortcut.LauncherIconCreator;
 import io.github.muntashirakon.AppManager.utils.ResourceUtil;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
 

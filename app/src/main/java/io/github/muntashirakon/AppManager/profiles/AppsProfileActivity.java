@@ -37,7 +37,7 @@ import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.details.LauncherIconCreator;
+import io.github.muntashirakon.AppManager.shortcut.LauncherShortcuts;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
@@ -98,7 +98,6 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
                 intent.putExtra(EXTRA_STATE, ProfileMetaManager.STATE_ON);
             }
         }
-        intent.putExtra(EXTRA_SHORTCUT_TYPE, shortcutType);
         return intent;
     }
 
@@ -274,19 +273,12 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
             };
             final String[] shortcutTypes = new String[]{ST_SIMPLE, ST_ADVANCED};
             new SearchableSingleChoiceDialogBuilder<>(this, shortcutTypes, shortcutTypesL)
-                    .setTitle(R.string.profile_state)
+                    .setTitle(R.string.create_shortcut)
                     .setOnSingleChoiceClickListener((dialog, which, item1, isChecked) -> {
                         if (!isChecked) {
                             return;
                         }
-                        Intent intent = new Intent(this, AppsProfileActivity.class);
-                        intent.putExtra(EXTRA_PROFILE_NAME, model.getProfileName());
-                        intent.putExtra(EXTRA_SHORTCUT_TYPE, shortcutTypes[which]);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        LauncherIconCreator.createLauncherIcon(this,
-                                model.getProfileName() + " - " + shortcutTypesL[which],
-                                ContextCompat.getDrawable(this, R.drawable.ic_launcher_foreground), intent);
+                        LauncherShortcuts.createForProfile(this, model.getProfileName(), shortcutTypes[which], shortcutTypesL[which]);
                         dialog.dismiss();
                     })
                     .show();
