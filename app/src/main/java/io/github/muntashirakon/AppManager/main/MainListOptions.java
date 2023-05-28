@@ -86,6 +86,7 @@ public class MainListOptions extends ListOptions {
             FILTER_APPS_WITH_KEYSTORE,
             FILTER_APPS_WITH_SAF,
             FILTER_APPS_WITH_SSAID,
+            FILTER_STOPPED_APPS,
     })
     @Retention(RetentionPolicy.SOURCE)
     public @interface Filter {
@@ -106,6 +107,7 @@ public class MainListOptions extends ListOptions {
     public static final int FILTER_APPS_WITH_KEYSTORE = 1 << 11;
     public static final int FILTER_APPS_WITH_SAF = 1 << 12;
     public static final int FILTER_APPS_WITH_SSAID = 1 << 13;
+    public static final int FILTER_STOPPED_APPS = 1 << 14;
 
     private MainViewModel model;
     private final List<String> profileNames = new ArrayList<>();
@@ -184,6 +186,7 @@ public class MainListOptions extends ListOptions {
             put(FILTER_USER_APPS, R.string.filter_user_apps);
             put(FILTER_SYSTEM_APPS, R.string.filter_system_apps);
             put(FILTER_FROZEN_APPS, R.string.filter_frozen_apps);
+            put(FILTER_STOPPED_APPS, R.string.filter_force_stopped_apps);
             put(FILTER_APPS_WITH_RULES, R.string.filter_apps_with_rules);
             put(FILTER_APPS_WITH_ACTIVITIES, R.string.filter_apps_with_activities);
             put(FILTER_APPS_WITH_BACKUPS, R.string.filter_apps_with_backups);

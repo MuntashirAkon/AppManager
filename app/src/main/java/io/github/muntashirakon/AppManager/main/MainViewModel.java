@@ -415,6 +415,8 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                         continue;
                     } else if ((mFilterFlags & MainListOptions.FILTER_APPS_WITH_SSAID) != 0 && item.ssaid == null) {
                         continue;
+                    } else if ((mFilterFlags & MainListOptions.FILTER_STOPPED_APPS) != 0 && (item.flags & ApplicationInfo.FLAG_STOPPED) == 0) {
+                        continue;
                     }
                     filteredApplicationItems.add(item);
                 }

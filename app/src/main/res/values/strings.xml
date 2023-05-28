@@ -1390,4 +1390,5 @@
     <string name="go_to_path">Go to…</string>
     <string name="copy_this_path">Copy path</string>
     <string name="title_audio_player">Audio Player</string>
+    <string name="filter_force_stopped_apps">Stopped apps</string>
 </resources>
