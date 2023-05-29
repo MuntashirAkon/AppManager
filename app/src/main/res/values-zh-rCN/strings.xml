@@ -318,7 +318,7 @@
     <string name="update">升级</string>
     <string name="source_code">源代码</string>
     <string name="pref_import_existing">导入现有规则</string>
-    <string name="pref_import_existing_msg">将被其他应用禁用的组件添加到应用管理器。在使用此工具时要小心，因为可能有许多误报。 只选择您确定的应用</string>
+    <string name="pref_import_existing_msg">将被其他应用禁用的组件添加到 App Manager.。使用此工具时要小心，因为可能有许多误报。 请只选择您确定的应用。</string>
     <string name="clear_cache">清除缓存</string>
     <string name="block_unblock_trackers_description">禁用或解禁所有已安装应用的广告和跟踪组件</string>
     <string name="block_components_dots">屏蔽组件…</string>
@@ -566,7 +566,7 @@
     <plurals name="missing_signatures">
         <item quantity="other">%1$d 个签名缺失</item>
     </plurals>
-    <string name="orientation_behind">背后</string>
+    <string name="orientation_behind">与 activity 堆栈中紧接其后的 activity 的方向相同</string>
     <string name="filter_running_apps">运行中</string>
     <string name="select_apk">选择 APK</string>
     <string name="send_crash_report">发送崩溃报告</string>
