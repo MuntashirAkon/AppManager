@@ -22,13 +22,13 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 import dev.rikka.tools.refine.Refine;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.StorageManagerCompat;
-import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.PathReader;
@@ -57,7 +57,7 @@ public class StorageUtils {
             long time = grantedUrisAndDate.valueAt(i);
             if (Paths.get(uri).isDirectory()) {
                 // Only directories are locations
-                storageLocations.put(Paths.getLastPathSegment(uri.getPath()) + " " + DateUtils.formatDate(time), uri);
+                storageLocations.put(Paths.getLastPathSegment(uri.getPath()) + " " + DateUtils.formatDate(time), getFixedTreeUri(uri));
             }
         }
         return storageLocations;
@@ -155,6 +155,37 @@ public class StorageUtils {
                 }
             }
         } catch (IOException ignore) {
+        }
+    }
+
+    @NonNull
+    private static Uri getFixedTreeUri(@NonNull Uri uri) {
+        List<String> paths = uri.getPathSegments();
+        int size = paths.size();
+        if (size < 2 || !"tree".equals(paths.get(0))) {
+            throw new IllegalArgumentException("Not a tree URI.");
+        }
+        // FORMAT: /tree/<id>/document/<id>%2F<others>
+        switch (size) {
+            case 2:
+                return uri.buildUpon()
+                        .appendPath("document")
+                        .appendPath(paths.get(1))
+                        .build();
+            case 3:
+                if (!"document".equals(paths.get(2))) {
+                    throw new IllegalArgumentException("Not a document URI.");
+                }
+                return uri.buildUpon()
+                        .appendPath(paths.get(1))
+                        .build();
+            case 4:
+                if (!"document".equals(paths.get(2))) {
+                    throw new IllegalArgumentException("Not a document URI.");
+                }
+                return uri;
+            default:
+                throw new IllegalArgumentException("Malformed URI.");
         }
     }
 }

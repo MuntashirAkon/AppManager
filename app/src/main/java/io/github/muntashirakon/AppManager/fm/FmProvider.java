@@ -34,6 +34,7 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
+import io.github.muntashirakon.io.fs.VirtualFileSystem;
 
 // Copyright 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
 // Modified from FileProvider.kt
@@ -48,12 +49,24 @@ public class FmProvider extends ContentProvider {
     @VisibleForTesting
     @NonNull
     static Uri getContentUri(@NonNull Uri uri) {
-        return new Uri.Builder()
+        Uri.Builder builder = uri.buildUpon()
                 .scheme(ContentResolver.SCHEME_CONTENT)
                 .authority(AUTHORITY)
-                .path((Uri.encode(uri.getScheme().equals(ContentResolver.SCHEME_CONTENT) ? "!" + uri.getAuthority() : "")
-                        + uri.getPath()))
-                .build();
+                .path(null);
+        // Uri could be a file, content or vfs
+        // 1. file:// Only use path
+        // 2. content:// Use ! + authority followed by path
+        // 3. vfs:// Use !! + authority (vfs ID) followed by path
+        if (ContentResolver.SCHEME_CONTENT.equals(uri.getScheme())) {
+            builder.appendPath("!" + uri.getAuthority());
+        } else if (VirtualFileSystem.SCHEME.equals(uri.getScheme())) {
+            builder.appendPath("!!" + uri.getAuthority());
+        }
+        for (String segment : uri.getPathSegments()) {
+            builder.appendPath(segment);
+        }
+        // The rests (query params, etc.) remains the same
+        return builder.build();
     }
 
     private static final String[] DEFAULT_PROJECTION = new String[]{
@@ -193,17 +206,40 @@ public class FmProvider extends ContentProvider {
         return Paths.get(getFileProviderPathInternal(uri));
     }
 
+    /**
+     * Decode path.
+     *
+     * @see #getContentUri(Uri)
+     */
     @VisibleForTesting
     @NonNull
     static Uri getFileProviderPathInternal(@NonNull Uri uri) {
-        String uriPath = Uri.decode(uri.getPath());
-        if (uriPath.startsWith("/!")) {
-            // Content provider
-            return Uri.parse(uriPath.replaceFirst("/!", "content://"));
-        } else {
-            // File
-            return Uri.parse("file://" + uriPath);
+        List<String> pathParts = uri.getPathSegments();
+        int pathStartIndex = 0;
+        String scheme = ContentResolver.SCHEME_FILE;
+        String authority = null;
+        if (pathParts.size() > 0) {
+            String firstPart = pathParts.get(0);
+            if (firstPart.startsWith("!!")) {
+                // Virtual File System
+                pathStartIndex = 1;
+                scheme = VirtualFileSystem.SCHEME;
+                authority = firstPart.substring(2);
+            } else if (firstPart.startsWith("!")) {
+                // Content provider
+                pathStartIndex = 1;
+                scheme = ContentResolver.SCHEME_CONTENT;
+                authority = firstPart.substring(1);
+            }
         }
+        Uri.Builder builder = uri.buildUpon()
+                .scheme(scheme)
+                .authority(authority)
+                .path(null);
+        for (int i = pathStartIndex; i < pathParts.size(); ++i) {
+            builder.appendPath(pathParts.get(i));
+        }
+        return builder.build();
     }
 
     @NonNull

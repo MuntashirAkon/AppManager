@@ -5,9 +5,10 @@ package io.github.muntashirakon.io;
 import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 import android.os.HandlerThread;
 import android.os.ParcelFileDescriptor;
 import android.os.Process;
@@ -48,7 +49,6 @@ import java.util.Objects;
 import aosp.libcore.util.EmptyArray;
 import io.github.muntashirakon.AppManager.compat.StorageManagerCompat;
 import io.github.muntashirakon.AppManager.ipc.LocalServices;
-import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
@@ -189,7 +189,7 @@ public class Path implements Comparable<Path> {
         DocumentFile documentFile;
         switch (uri.getScheme()) {
             case ContentResolver.SCHEME_CONTENT:
-                if (DocumentsContract.isDocumentUri(context, uri)) {
+                if (isDocumentsProvider(context, uri.getAuthority())) { // We can't use DocumentsContract.isDocumentUri() because it expects something that isn't always correct
                     boolean isTreeUri = DocumentsContractCompat.isTreeUri(uri);
                     documentFile = Objects.requireNonNull(isTreeUri ? DocumentFile.fromTreeUri(context, uri) : DocumentFile.fromSingleUri(context, uri));
                 } else {
@@ -1676,6 +1676,17 @@ public class Path implements Comparable<Path> {
         if (VirtualFileSystem.getFileSystem(uri) != null) {
             throw new IOException("Destination is a mount point.");
         }
+    }
+
+    private static boolean isDocumentsProvider(Context context, String authority) {
+        final Intent intent = new Intent(DocumentsContract.PROVIDER_INTERFACE);
+        final List<ResolveInfo> infos = context.getPackageManager().queryIntentContentProviders(intent, 0);
+        for (ResolveInfo info : infos) {
+            if (authority.equals(info.providerInfo.authority)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static class ProxyStorageCallback extends StorageManagerCompat.ProxyFileDescriptorCallbackCompat {

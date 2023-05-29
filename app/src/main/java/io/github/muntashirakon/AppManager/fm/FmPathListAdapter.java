@@ -45,25 +45,22 @@ class FmPathListAdapter extends RecyclerView.Adapter<FmPathListAdapter.PathHolde
         Uri lastPath = this.currentUri;
         String lastPathStr = lastPath != null ? lastPath.toString() : null;
         this.currentUri = currentUri;
-        String currentPathStr = this.currentUri.toString();
+        List<String> paths = FmUtils.uriToPathParts(currentUri);
+        String currentPathStr = currentUri.toString();
         if (!currentPathStr.endsWith(File.separator)) {
             currentPathStr += File.separator;
         }
         // Two cases:
         // 1. currentPath is a subset of lastPath, update currentPosition
-        // 2. Otherwise, alter pathParts and set length - 1 as the currentPosition
+        // 2. Otherwise, alter pathParts and set (length - 1) as the currentPosition
         if (lastPathStr != null && lastPathStr.startsWith(currentPathStr)) {
             // Case 1
-            setCurrentPosition(calculateCurrentPosition(currentUri));
+            setCurrentPosition(paths.size() - 1);
         } else {
             // Case 2
             pathParts.clear();
-            if (currentUri.getScheme().equals("file") && currentUri.getPath().startsWith(File.separator)) {
-                // Add file separator as the first/root item
-                pathParts.add(File.separator);
-            }
-            pathParts.addAll(currentUri.getPathSegments());
-            currentPosition = calculateCurrentPosition(currentUri);
+            pathParts.addAll(paths);
+            currentPosition = pathParts.size() - 1;
             notifyDataSetChanged();
         }
     }
@@ -77,28 +74,8 @@ class FmPathListAdapter extends RecyclerView.Adapter<FmPathListAdapter.PathHolde
         return currentPosition;
     }
 
-    private int calculateCurrentPosition(@NonNull Uri uri) {
-        if (uri.getScheme().equals("file") && uri.getPath().startsWith(File.separator)) {
-            // Needs a file separator which adds one more items at the beginning
-            return uri.getPathSegments().size();
-        }
-        return uri.getPathSegments().size() - 1;
-    }
-
     public Uri calculateUri(int position) {
-        StringBuilder pathBuilder = new StringBuilder();
-        for (int i = 0; i < position; ++i) {
-            String pathPart = pathParts.get(i);
-            if (!pathPart.equals(File.separator)) {
-                pathBuilder.append(pathPart).append(File.separator);
-            } else {
-                pathBuilder.append(File.separator);
-            }
-        }
-        pathBuilder.append(pathParts.get(position));
-        return Objects.requireNonNull(currentUri).buildUpon()
-                .path(pathBuilder.toString())
-                .build();
+        return FmUtils.uriFromPathParts(Objects.requireNonNull(currentUri), pathParts, position);
     }
 
     private void setCurrentPosition(int currentPosition) {
