@@ -743,7 +743,7 @@
     <string name="installer_error_conflict">Impossibile installare l\'app perché il nome del pacchetto è in uso</string>
     <string name="state_dead">Morto</string>
     <string name="close">Chiudi</string>
-    <string name="state_trace_stop">Fermata traccia</string>
+    <string name="state_trace_stop">Ferma traccia</string>
     <string name="state_zombie">Zombie</string>
     <string name="root">Root</string>
     <string name="backup_all_apps_msg">Esegui il backup di tutte le app installate.</string>
@@ -935,7 +935,7 @@
     <string name="failed_to_save_key">Impossibile salvare la chiave.</string>
     <string name="restore_latest">Ripristina gli ultimi backup</string>
     <string name="uninstalled_apps">App disinstallate</string>
-    <string name="filter_apps_with_rules">App con regole</string>
+    <string name="filter_apps_with_rules">Con regole</string>
     <string name="input_app_ops">Inserisci operazioni applicazione</string>
     <string name="installer_error_blocked">Installazione bloccata da <xliff:g id="app_name" example="App Manager">%1$s</xliff:g></string>
     <plurals name="alert_failed_to_backup">
@@ -1378,4 +1378,19 @@
     <string name="debloat_list_misc">Miscellanea</string>
     <string name="debloat_removal_safe">Sicuro</string>
     <string name="debloat_removal_unsafe">Non sicuro</string>
+    <string name="filter_force_stopped_apps">App fermate</string>
+    <plurals name="file_count">
+        <item quantity="one">%d file</item>
+        <item quantity="many">%d file</item>
+        <item quantity="other">%d file</item>
+    </plurals>
+    <string name="empty_folder">Vuoto</string>
+    <plurals name="folder_count">
+        <item quantity="one">%d cartella</item>
+        <item quantity="many">%d cartelle</item>
+        <item quantity="other">%d cartelle</item>
+    </plurals>
+    <string name="go_to_path">Vai a…</string>
+    <string name="copy_this_path">Copia percorso</string>
+    <string name="title_audio_player">Lettore audio</string>
 </resources>
