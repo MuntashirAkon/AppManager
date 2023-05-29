@@ -4,7 +4,6 @@ package io.github.muntashirakon.AppManager.fm;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -234,11 +233,7 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
                     return true;
                 });
         menu.findItem(R.id.action_copy_path).setOnMenuItemClickListener(menuItem -> {
-            Uri uri = item.path.getUri();
-            String path;
-            if (ContentResolver.SCHEME_FILE.equals(uri.getScheme())) {
-                path = uri.getPath();
-            } else path = uri.toString();
+            String path = FmUtils.getDisplayablePath(item.path);
             ClipboardManager clipboard = (ClipboardManager) fmActivity.getSystemService(Context.CLIPBOARD_SERVICE);
             clipboard.setPrimaryClip(ClipData.newPlainText("File path", path));
             UIUtils.displayShortToast(R.string.copied_to_clipboard);

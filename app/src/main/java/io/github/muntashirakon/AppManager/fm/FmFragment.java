@@ -5,7 +5,6 @@ package io.github.muntashirakon.AppManager.fm;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -140,11 +139,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         pathListView.setAdapter(pathListAdapter);
         MaterialButton pathEditButton = view.findViewById(R.id.uri_edit);
         pathEditButton.setOnClickListener(v -> {
-            Uri uri1 = model.getCurrentUri();
-            String path;
-            if (ContentResolver.SCHEME_FILE.equals(uri1.getScheme())) {
-                path = uri1.getPath();
-            } else path = uri1.toString();
+            String path = FmUtils.getDisplayablePath(model.getCurrentUri());
             new TextInputDialogBuilder(activity, null)
                     .setTitle(R.string.go_to_path)
                     .setInputText(path)

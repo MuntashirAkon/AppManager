@@ -4,7 +4,6 @@ package io.github.muntashirakon.AppManager.fm;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -134,11 +133,7 @@ class FmPathListAdapter extends RecyclerView.Adapter<FmPathListAdapter.PathHolde
             // Copy path
             menu.add(R.string.copy_this_path)
                     .setOnMenuItemClickListener(menuItem -> {
-                        Uri uri = calculateUri(position);
-                        String path;
-                        if (ContentResolver.SCHEME_FILE.equals(uri.getScheme())) {
-                            path = uri.getPath();
-                        } else path = uri.toString();
+                        String path = FmUtils.getDisplayablePath(calculateUri(position));
                         ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
                         clipboard.setPrimaryClip(ClipData.newPlainText("File path", path));
                         UIUtils.displayShortToast(R.string.copied_to_clipboard);

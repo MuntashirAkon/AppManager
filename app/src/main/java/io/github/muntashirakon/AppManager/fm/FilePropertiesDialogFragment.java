@@ -90,7 +90,7 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
         iconView.setImageResource(path.isDirectory() ? R.drawable.ic_folder : R.drawable.ic_file_document);
         nameView.setText(path.getName());
         String modificationDate = DateUtils.formatDateTime(path.lastModified());
-        pathView.setText(path.getUri().toString());
+        pathView.setText(FmUtils.getDisplayablePath(path));
         String realFile = null;
         if (path.isSymbolicLink()) {
             try {
