@@ -8,6 +8,7 @@ import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
@@ -26,7 +27,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.SearchView;
 import androidx.collection.ArrayMap;
-import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -46,6 +46,7 @@ import io.github.muntashirakon.AppManager.utils.StorageUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.dialog.SearchableItemsDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
+import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.widget.MultiSelectionView;
 import io.github.muntashirakon.widget.RecyclerView;
 import io.github.muntashirakon.widget.SwipeRefreshLayout;
@@ -206,7 +207,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
             if (swipeRefresh != null) {
                 swipeRefresh.setRefreshing(true);
             }
-            pathListAdapter.setCurrentPath(uri1);
+            pathListAdapter.setCurrentUri(uri1);
         });
         model.getFolderShortInfoLiveData().observe(getViewLifecycleOwner(), folderShortInfo -> {
             if (actionBar == null) {
@@ -249,8 +250,14 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
             FilePropertiesDialogFragment dialogFragment = FilePropertiesDialogFragment.getInstance(uri1);
             dialogFragment.show(activity.getSupportFragmentManager(), FilePropertiesDialogFragment.TAG);
         });
-        model.getShortcutCreatorLiveData().observe(getViewLifecycleOwner(), uriNamePair -> {
-            LauncherShortcuts.fm_createForFolder(activity, uriNamePair.second, uriNamePair.first);
+        model.getShortcutCreatorLiveData().observe(getViewLifecycleOwner(), pathBitmapPair -> {
+            Path path = pathBitmapPair.first;
+            Bitmap icon = pathBitmapPair.second;
+            if (path.isDirectory()) {
+                LauncherShortcuts.fm_createForFolder(activity, path.getName(), path.getUri());
+            } else {
+                LauncherShortcuts.fm_createForFile(activity, path.getName(), icon, path.getUri(), null);
+            }
         });
         model.loadFiles(uri);
     }
@@ -288,8 +295,10 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
             model.reload();
             return true;
         } else if (id == R.id.action_shortcut) {
-            model.getShortcutCreatorLiveData().setValue(new Pair<>(model.getCurrentUri(),
-                    pathListAdapter.getCurrentDisplayName()));
+            Uri uri = pathListAdapter.getCurrentUri();
+            if (uri != null) {
+                model.createShortcut(uri);
+            }
             return true;
         } else if (id == R.id.action_storage) {
             ThreadUtils.postOnBackgroundThread(() -> {

@@ -54,6 +54,7 @@ public class OpenWithDialogFragment extends DialogFragment {
 
     private static final String ARG_PATH = "path";
     private static final String ARG_TYPE = "type";
+    private static final String ARG_CLOSE_ACTIVITY = "close";
 
     @NonNull
     public static OpenWithDialogFragment getInstance(@NonNull Path path) {
@@ -62,16 +63,23 @@ public class OpenWithDialogFragment extends DialogFragment {
 
     @NonNull
     public static OpenWithDialogFragment getInstance(@NonNull Path path, @Nullable String type) {
+        return getInstance(path.getUri(), type, false);
+    }
+
+    @NonNull
+    public static OpenWithDialogFragment getInstance(@NonNull Uri uri, @Nullable String type, boolean closeActivity) {
         OpenWithDialogFragment fragment = new OpenWithDialogFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ARG_PATH, path.getUri());
+        args.putParcelable(ARG_PATH, uri);
         args.putString(ARG_TYPE, type);
+        args.putBoolean(ARG_CLOSE_ACTIVITY, closeActivity);
         fragment.setArguments(args);
         return fragment;
     }
 
     private Path mPath;
     private String mCustomType;
+    private boolean mCloseActivity;
     private View mDialogView;
     private OpenWithViewModel mViewModel;
     private MatchingActivitiesRecyclerViewAdapter mAdapter;
@@ -82,6 +90,7 @@ public class OpenWithDialogFragment extends DialogFragment {
         mViewModel = new ViewModelProvider(this).get(OpenWithViewModel.class);
         mPath = Paths.get(Objects.requireNonNull(BundleCompat.getParcelable(requireArguments(), ARG_PATH, Uri.class)));
         mCustomType = requireArguments().getString(ARG_TYPE, null);
+        mCloseActivity = requireArguments().getBoolean(ARG_CLOSE_ACTIVITY, false);
         mAdapter = new MatchingActivitiesRecyclerViewAdapter(mViewModel, requireActivity());
         mAdapter.setIntent(getIntent(mPath, mCustomType));
         mDialogView = View.inflate(requireActivity(), R.layout.dialog_open_with, null);
@@ -167,6 +176,14 @@ public class OpenWithDialogFragment extends DialogFragment {
             if (mAdapter != null) {
                 mViewModel.loadMatchingActivities(mAdapter.getIntent());
             }
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mCloseActivity) {
+            requireActivity().finish();
         }
     }
 

@@ -22,6 +22,7 @@ import java.util.Objects;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.behavior.FreezeUnfreeze;
 import io.github.muntashirakon.AppManager.fm.FmActivity;
+import io.github.muntashirakon.AppManager.fm.OpenWithActivity;
 import io.github.muntashirakon.AppManager.profiles.AppsProfileActivity;
 
 public final class LauncherShortcuts {
@@ -33,11 +34,14 @@ public final class LauncherShortcuts {
         LauncherIconCreator.createLauncherIcon(context, filename, icon, intent);
     }
 
-    public static void fm_createForFile(@NonNull Context context, @NonNull String filename, @NonNull Uri uri, @Nullable String mimeType) {
-        Drawable icon = Objects.requireNonNull(ContextCompat.getDrawable(context, R.drawable.ic_folder));
-        Intent intent = new Intent(context, FmActivity.class);
-        if (mimeType != null) {
-            intent.setDataAndType(uri, mimeType);
+    public static void fm_createForFile(@NonNull Context context, @NonNull String filename, @Nullable Bitmap icon,
+                                        @NonNull Uri uri, @Nullable String customMimeType) {
+        if (icon == null) {
+            icon = getBitmapFromDrawable(Objects.requireNonNull(ContextCompat.getDrawable(context, R.drawable.ic_file)));
+        }
+        Intent intent = new Intent(context, OpenWithActivity.class);
+        if (customMimeType != null) {
+            intent.setDataAndType(uri, customMimeType);
         } else {
             intent.setData(uri);
         }

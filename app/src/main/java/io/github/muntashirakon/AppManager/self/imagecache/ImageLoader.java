@@ -51,7 +51,7 @@ public class ImageLoader implements Closeable {
     public interface ImageFetcherInterface {
         @WorkerThread
         @NonNull
-        ImageFetcherResult fetchImage(@NonNull ImageLoaderQueueItem queueItem);
+        ImageFetcherResult fetchImage(@NonNull String tag);
     }
 
     private static final ImageLoader instance = new ImageLoader();
@@ -66,6 +66,17 @@ public class ImageLoader implements Closeable {
     private boolean mIsClosed = false;
 
     private ImageLoader() {
+    }
+
+    @WorkerThread
+    @Nullable
+    public Bitmap getCachedImage(@NonNull String tag) {
+        Bitmap image = mMemoryCache.get(tag);
+        if (image != null) {
+            return image;
+        }
+        // Load from file system
+        return mImageFileCache.getImage(tag);
     }
 
     public void displayImage(@NonNull String tag, @NonNull ImageView imageView,
@@ -124,13 +135,11 @@ public class ImageLoader implements Closeable {
 
         @Override
         @NonNull
-        public ImageFetcherResult fetchImage(@NonNull ImageLoaderQueueItem queueItem) {
+        public ImageFetcherResult fetchImage(@NonNull String tag) {
             PackageManager pm = ContextUtils.getContext().getPackageManager();
             Drawable drawable = info != null ? info.loadIcon(pm) : null;
-            return new ImageFetcherResult(queueItem.tag,
-                    drawable != null ? UIUtils.getBitmapFromDrawable(drawable) : null,
-                    info != null && queueItem.tag.equals(info.packageName),
-                    true,
+            return new ImageFetcherResult(tag, drawable != null ? UIUtils.getBitmapFromDrawable(drawable) : null,
+                    info != null && tag.equals(info.packageName), true,
                     new DefaultImageDrawable("android_default_icon", pm.getDefaultActivityIcon()));
         }
     }
@@ -280,7 +289,7 @@ public class ImageLoader implements Closeable {
                 mMemoryCache.put(mQueueItem.tag, image);
             } else {
                 // Cache miss
-                ImageFetcherResult result = mQueueItem.imageFetcherInterface.fetchImage(mQueueItem);
+                ImageFetcherResult result = mQueueItem.imageFetcherInterface.fetchImage(mQueueItem.tag);
                 if (result.bitmap == null) {
                     // No image produced, try default
                     DefaultImage defaultImage = result.defaultImage;

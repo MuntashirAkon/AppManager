@@ -4,6 +4,7 @@ package io.github.muntashirakon.AppManager.fm;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.graphics.Bitmap;
 import android.net.Uri;
 
 import androidx.annotation.MainThread;
@@ -22,8 +23,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Future;
 
+import io.github.muntashirakon.AppManager.fm.icons.FmIconFetcher;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.misc.ListOptions;
+import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
@@ -38,7 +41,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
     private final MutableLiveData<Uri> uriLiveData = new MutableLiveData<>();
     private final MutableLiveData<Uri> lastUriLiveData = new MutableLiveData<>();
     private final MutableLiveData<Uri> displayPropertiesLiveData = new MutableLiveData<>();
-    private final SingleLiveEvent<Pair<Uri, String>> shortcutCreatorLiveData = new SingleLiveEvent<>();
+    private final SingleLiveEvent<Pair<Path, Bitmap>> shortcutCreatorLiveData = new SingleLiveEvent<>();
     private final List<FmItem> fmItems = new ArrayList<>();
     private final HashMap<Uri, Integer> pathScrollPositionMap = new HashMap<>();
     private Uri currentUri;
@@ -198,6 +201,29 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
         });
     }
 
+    public void createShortcut(@NonNull FmItem fmItem) {
+        ThreadUtils.postOnBackgroundThread(() -> {
+            Bitmap bitmap = ImageLoader.getInstance().getCachedImage(fmItem.tag);
+            if (bitmap == null) {
+                ImageLoader.ImageFetcherResult result = new FmIconFetcher(fmItem).fetchImage(fmItem.tag);
+                bitmap = result.bitmap != null ? result.bitmap : result.defaultImage.getImage();
+            }
+            shortcutCreatorLiveData.postValue(new Pair<>(fmItem.path, bitmap));
+        });
+    }
+
+    public void createShortcut(@NonNull Uri uri) {
+        ThreadUtils.postOnBackgroundThread(() -> {
+            FmItem fmItem = new FmItem(Paths.get(uri));
+            Bitmap bitmap = ImageLoader.getInstance().getCachedImage(fmItem.tag);
+            if (bitmap == null) {
+                ImageLoader.ImageFetcherResult result = new FmIconFetcher(fmItem).fetchImage(fmItem.tag);
+                bitmap = result.bitmap != null ? result.bitmap : result.defaultImage.getImage();
+            }
+            shortcutCreatorLiveData.postValue(new Pair<>(fmItem.path, bitmap));
+        });
+    }
+
     public LiveData<List<FmItem>> getFmItemsLiveData() {
         return fmItemsLiveData;
     }
@@ -218,7 +244,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
         return displayPropertiesLiveData;
     }
 
-    public SingleLiveEvent<Pair<Uri, String>> getShortcutCreatorLiveData() {
+    public SingleLiveEvent<Pair<Path, Bitmap>> getShortcutCreatorLiveData() {
         return shortcutCreatorLiveData;
     }
 

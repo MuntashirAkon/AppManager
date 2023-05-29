@@ -55,6 +55,19 @@ public class LauncherIconCreator {
     /**
      * Create launcher icon.
      *
+     * @param context Context
+     * @param name    Name/Label of the app
+     * @param icon    App icon
+     * @param intent  Shortcut intent
+     */
+    public static void createLauncherIcon(@NonNull Context context, @NonNull CharSequence name, @NonNull Bitmap icon,
+                                          @NonNull Intent intent) {
+        createLauncherIcon(context, UUID.randomUUID().toString(), name, icon, intent);
+    }
+
+    /**
+     * Create launcher icon.
+     *
      * @param context    Context
      * @param shortcutId Shortcut ID
      * @param name       Name/Label of the app

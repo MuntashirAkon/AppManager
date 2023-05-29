@@ -26,6 +26,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -35,17 +36,17 @@ class FmPathListAdapter extends RecyclerView.Adapter<FmPathListAdapter.PathHolde
     private final List<String> pathParts = Collections.synchronizedList(new ArrayList<>());
     private int currentPosition = -1;
     @Nullable
-    private Uri currentPath;
+    private Uri currentUri;
 
     FmPathListAdapter(FmViewModel viewModel) {
         this.viewModel = viewModel;
     }
 
-    public void setCurrentPath(@NonNull Uri currentPath) {
-        Uri lastPath = this.currentPath;
+    public void setCurrentUri(@NonNull Uri currentUri) {
+        Uri lastPath = this.currentUri;
         String lastPathStr = lastPath != null ? lastPath.toString() : null;
-        this.currentPath = currentPath;
-        String currentPathStr = this.currentPath.toString();
+        this.currentUri = currentUri;
+        String currentPathStr = this.currentUri.toString();
         if (!currentPathStr.endsWith(File.separator)) {
             currentPathStr += File.separator;
         }
@@ -54,26 +55,27 @@ class FmPathListAdapter extends RecyclerView.Adapter<FmPathListAdapter.PathHolde
         // 2. Otherwise, alter pathParts and set length - 1 as the currentPosition
         if (lastPathStr != null && lastPathStr.startsWith(currentPathStr)) {
             // Case 1
-            setCurrentPosition(calculateCurrentPosition(currentPath));
+            setCurrentPosition(calculateCurrentPosition(currentUri));
         } else {
             // Case 2
             pathParts.clear();
-            if (currentPath.getScheme().equals("file") && currentPath.getPath().startsWith(File.separator)) {
+            if (currentUri.getScheme().equals("file") && currentUri.getPath().startsWith(File.separator)) {
                 // Add file separator as the first/root item
                 pathParts.add(File.separator);
             }
-            pathParts.addAll(currentPath.getPathSegments());
-            currentPosition = calculateCurrentPosition(currentPath);
+            pathParts.addAll(currentUri.getPathSegments());
+            currentPosition = calculateCurrentPosition(currentUri);
             notifyDataSetChanged();
         }
     }
 
-    public int getCurrentPosition() {
-        return currentPosition;
+    @Nullable
+    public Uri getCurrentUri() {
+        return currentUri;
     }
 
-    public String getCurrentDisplayName() {
-        return pathParts.get(currentPosition);
+    public int getCurrentPosition() {
+        return currentPosition;
     }
 
     private int calculateCurrentPosition(@NonNull Uri uri) {
@@ -95,7 +97,7 @@ class FmPathListAdapter extends RecyclerView.Adapter<FmPathListAdapter.PathHolde
             }
         }
         pathBuilder.append(pathParts.get(position));
-        return currentPath.buildUpon()
+        return Objects.requireNonNull(currentUri).buildUpon()
                 .path(pathBuilder.toString())
                 .build();
     }

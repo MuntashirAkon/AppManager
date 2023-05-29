@@ -22,7 +22,6 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.core.content.ContextCompat;
-import androidx.core.util.Pair;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
@@ -229,12 +228,9 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             return true;
         });
-        boolean isFolder = item.type == FileType.DIRECTORY;
         menu.findItem(R.id.action_shortcut)
-                .setVisible(isFolder)
-                .setEnabled(isFolder)
                 .setOnMenuItemClickListener(menuItem -> {
-                    viewModel.getShortcutCreatorLiveData().setValue(new Pair<>(item.path.getUri(), item.path.getName()));
+                    viewModel.createShortcut(item);
                     return true;
                 });
         menu.findItem(R.id.action_copy_path).setOnMenuItemClickListener(menuItem -> {

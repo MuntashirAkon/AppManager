@@ -36,7 +36,7 @@ public class FmIconFetcher implements ImageLoader.ImageFetcherInterface {
 
     @NonNull
     @Override
-    public ImageLoader.ImageFetcherResult fetchImage(@NonNull ImageLoader.ImageLoaderQueueItem queueItem) {
+    public ImageLoader.ImageFetcherResult fetchImage(@NonNull String tag) {
         PathContentInfo contentInfo = fmItem.getContentInfo();
         if (contentInfo == null) {
             contentInfo = fmItem.path.getPathContentInfo();
@@ -51,14 +51,14 @@ public class FmIconFetcher implements ImageLoader.ImageFetcherInterface {
         if (FmIcons.isAudio(drawableRes)) {
             try {
                 Bitmap bitmap = ThumbnailUtilsCompat.createAudioThumbnail(ContextUtils.getContext(), FmProvider.getContentUri(fmItem.path), size, null);
-                return new ImageLoader.ImageFetcherResult(queueItem.tag, bitmap, false, true, defaultImage);
+                return new ImageLoader.ImageFetcherResult(tag, bitmap, false, true, defaultImage);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else if (FmIcons.isVideo(drawableRes)) {
             try {
                 Bitmap bitmap = ThumbnailUtilsCompat.createVideoThumbnail(ContextUtils.getContext(), FmProvider.getContentUri(fmItem.path), size, null);
-                return new ImageLoader.ImageFetcherResult(queueItem.tag, getThumbnail(bitmap, size, true), false, true, defaultImage);
+                return new ImageLoader.ImageFetcherResult(tag, getThumbnail(bitmap, size, true), false, true, defaultImage);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -68,7 +68,7 @@ public class FmIconFetcher implements ImageLoader.ImageFetcherInterface {
                 try (InputStream is = fmItem.path.openInputStream()) {
                     SVG svg = SVGParser.getSVGFromInputStream(is);
                     Bitmap bitmap = svg.getBitmap();
-                    return new ImageLoader.ImageFetcherResult(queueItem.tag, getThumbnail(bitmap, size, true), false, true, defaultImage);
+                    return new ImageLoader.ImageFetcherResult(tag, getThumbnail(bitmap, size, true), false, true, defaultImage);
                 } catch (Throwable th) {
                     // There can be runtime exceptions
                     th.printStackTrace();
@@ -78,7 +78,7 @@ public class FmIconFetcher implements ImageLoader.ImageFetcherInterface {
                 if (bytes.length > 0) {
                     Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                     if (bitmap != null) {
-                        return new ImageLoader.ImageFetcherResult(queueItem.tag, getThumbnail(bitmap, size, true),
+                        return new ImageLoader.ImageFetcherResult(tag, getThumbnail(bitmap, size, true),
                                 false, true, defaultImage);
                     }
                 }
@@ -87,20 +87,20 @@ public class FmIconFetcher implements ImageLoader.ImageFetcherInterface {
             if (ContentType.EPUB.getMimeType().equals(mimeType)) {
                 Bitmap bitmap = FmIcons.generateEpubCover(fmItem.path);
                 if (bitmap != null) {
-                    return new ImageLoader.ImageFetcherResult(queueItem.tag, getThumbnail(bitmap, size, true),
+                    return new ImageLoader.ImageFetcherResult(tag, getThumbnail(bitmap, size, true),
                             false, true, defaultImage);
                 }
             }
         } else if (FmIcons.isFont(drawableRes)) {
             Bitmap bitmap = FmIcons.generateFontBitmap(fmItem.path);
             if (bitmap != null) {
-                return new ImageLoader.ImageFetcherResult(queueItem.tag, bitmap,
+                return new ImageLoader.ImageFetcherResult(tag, bitmap,
                         false, true, defaultImage);
             }
         } else if (FmIcons.isPdf(drawableRes)) {
             Bitmap bitmap = FmIcons.generatePdfBitmap(ContextUtils.getContext(), FmProvider.getContentUri(fmItem.path));
             if (bitmap != null) {
-                return new ImageLoader.ImageFetcherResult(queueItem.tag, getThumbnail(bitmap, size, true),
+                return new ImageLoader.ImageFetcherResult(tag, getThumbnail(bitmap, size, true),
                         false, true, defaultImage);
             }
         } else if (FmIcons.isGeneric(drawableRes)) {
@@ -109,22 +109,22 @@ public class FmIconFetcher implements ImageLoader.ImageFetcherInterface {
                 // Generate icon from extension (at most 4 characters)
                 int len = Math.min(extension.length(), 4);
                 String shortExt = extension.substring(0, len).toUpperCase(Locale.ROOT);
-                String tag = "fm_ext_" + shortExt;
-                return new ImageLoader.ImageFetcherResult(queueItem.tag, null,
-                        new ImageLoader.DefaultImageString(tag, shortExt));
+                String extTag = "fm_ext_" + shortExt;
+                return new ImageLoader.ImageFetcherResult(tag, null,
+                        new ImageLoader.DefaultImageString(extTag, shortExt));
             }
             if (fmItem.path.canExecute()) {
                 // Generate executable string
                 drawableRes = R.drawable.ic_frost_termux;
-                return new ImageLoader.ImageFetcherResult(queueItem.tag, null,
+                return new ImageLoader.ImageFetcherResult(tag, null,
                         new ImageLoader.DefaultImageDrawableRes("drawable_" + drawableRes, drawableRes, padding));
             }
         }
         // TODO: 24/5/23 Check APK, XAPK, APKS, APKM icons
-        return new ImageLoader.ImageFetcherResult(queueItem.tag, null, defaultImage);
+        return new ImageLoader.ImageFetcherResult(tag, null, defaultImage);
     }
 
-    public Bitmap getThumbnail(@NonNull Bitmap bitmap, @NonNull Size size, boolean recycle) {
+    private Bitmap getThumbnail(@NonNull Bitmap bitmap, @NonNull Size size, boolean recycle) {
         return ThumbnailUtils.extractThumbnail(bitmap, size.getWidth(), size.getHeight(), recycle ? ThumbnailUtils.OPTIONS_RECYCLE_INPUT : 0);
     }
 }
