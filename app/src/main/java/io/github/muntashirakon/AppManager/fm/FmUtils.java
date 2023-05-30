@@ -80,9 +80,13 @@ final class FmUtils {
         builder.path(null);
         switch (baseUri.getScheme()) {
             case ContentResolver.SCHEME_FILE: {
-                // Append up-to endPosition, skipping the root (index = 0)
-                for (int i = 1; i <= endPosition; ++i) {
-                    builder.appendPath(pathParts.get(i));
+                if (endPosition == 0) {
+                    builder.path("/");
+                } else {
+                    // Append up-to endPosition, skipping the root (index = 0)
+                    for (int i = 1; i <= endPosition; ++i) {
+                        builder.appendPath(pathParts.get(i));
+                    }
                 }
                 return builder.build();
             }

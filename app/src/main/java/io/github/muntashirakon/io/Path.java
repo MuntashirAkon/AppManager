@@ -147,7 +147,8 @@ public class Path implements Comparable<Path> {
                 // Fall-back to unprivileged access
             }
         }
-        return new ExtendedRawDocumentFile(FileSystemManager.getLocal().getFile(path));
+        ExtendedFile file = FileSystemManager.getLocal().getFile(path);
+        return new ExtendedRawDocumentFile(LocalFileOverlay.getOverlayFile(file));
     }
 
     // An invalid MIME so that it doesn't match any extension
@@ -174,7 +175,8 @@ public class Path implements Comparable<Path> {
             FileSystemManager fs = LocalServices.getFileSystemManager();
             mDocumentFile = new ExtendedRawDocumentFile(fs.getFile(fileLocation));
         } else {
-            mDocumentFile = new ExtendedRawDocumentFile(FileSystemManager.getLocal().getFile(fileLocation));
+            ExtendedFile file = FileSystemManager.getLocal().getFile(fileLocation);
+            mDocumentFile = new ExtendedRawDocumentFile(LocalFileOverlay.getOverlayFile(file));
         }
     }
 
