@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -41,7 +42,9 @@ import io.github.muntashirakon.AppManager.compat.BundleCompat;
 import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
 import io.github.muntashirakon.dialog.SearchableItemsDialogBuilder;
 import io.github.muntashirakon.io.Path;
@@ -75,6 +78,21 @@ public class OpenWithDialogFragment extends DialogFragment {
         args.putBoolean(ARG_CLOSE_ACTIVITY, closeActivity);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    private static class ResolvedActivityInfo {
+        @NonNull
+        public final ResolveInfo resolveInfo;
+        @NonNull
+        public final CharSequence label;
+        @NonNull
+        public final CharSequence appLabel;
+
+        private ResolvedActivityInfo(@NonNull ResolveInfo resolveInfo, @NonNull CharSequence label, @NonNull CharSequence appLabel) {
+            this.resolveInfo = resolveInfo;
+            this.label = label;
+            this.appLabel = appLabel;
+        }
     }
 
     private Path mPath;
@@ -203,17 +221,16 @@ public class OpenWithDialogFragment extends DialogFragment {
     }
 
     private static class MatchingActivitiesRecyclerViewAdapter extends RecyclerView.Adapter<MatchingActivitiesRecyclerViewAdapter.ViewHolder> {
-        private final List<ResolveInfo> mMatchingActivities = new ArrayList<>();
-        private final PackageManager mPm;
+        private final List<ResolvedActivityInfo> mMatchingActivities = new ArrayList<>();
         private final Activity mActivity;
         private final OpenWithViewModel mViewModel;
+        private final ImageLoader imageLoader = ImageLoader.getInstance();
 
         private Intent mIntent;
 
         public MatchingActivitiesRecyclerViewAdapter(OpenWithViewModel viewModel, Activity activity) {
             mViewModel = viewModel;
             mActivity = activity;
-            mPm = activity.getPackageManager();
         }
 
         public Intent getIntent() {
@@ -224,7 +241,7 @@ public class OpenWithDialogFragment extends DialogFragment {
             mIntent = intent;
         }
 
-        public void setDefaultList(@Nullable List<ResolveInfo> matchingActivities) {
+        public void setDefaultList(@Nullable List<ResolvedActivityInfo> matchingActivities) {
             mMatchingActivities.clear();
             if (matchingActivities != null) {
                 mMatchingActivities.addAll(matchingActivities);
@@ -241,13 +258,14 @@ public class OpenWithDialogFragment extends DialogFragment {
 
         @Override
         public void onBindViewHolder(@NonNull MatchingActivitiesRecyclerViewAdapter.ViewHolder holder, int position) {
-            ResolveInfo resolveInfo = mMatchingActivities.get(position);
-            ActivityInfo info = resolveInfo.activityInfo;
-            holder.title.setText(info.loadLabel(mPm));
+            ResolvedActivityInfo resolvedActivityInfo = mMatchingActivities.get(position);
+            ActivityInfo info = resolvedActivityInfo.resolveInfo.activityInfo;
+            holder.title.setText(resolvedActivityInfo.label);
             String activityName = info.name;
-            String summary = info.packageName + "\n" + getShortActivityName(activityName);
+            String summary = resolvedActivityInfo.appLabel + "\n" + getShortActivityName(activityName);
             holder.summary.setText(summary);
-            ImageLoader.getInstance().displayImage(info.packageName + "_" + activityName, info, holder.icon);
+            imageLoader.displayImage(info.packageName + "_" + resolvedActivityInfo.label, holder.icon,
+                    new ResolveInfoImageFetcher(resolvedActivityInfo.resolveInfo));
             holder.itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(mIntent);
                 intent.setClassName(info.packageName, activityName);
@@ -295,7 +313,7 @@ public class OpenWithDialogFragment extends DialogFragment {
     }
 
     public static class OpenWithViewModel extends AndroidViewModel {
-        private final MutableLiveData<List<ResolveInfo>> mMatchingActivitiesLiveData = new MutableLiveData<>();
+        private final MutableLiveData<List<ResolvedActivityInfo>> mMatchingActivitiesLiveData = new MutableLiveData<>();
         private final MutableLiveData<PathContentInfo> mPathContentInfoLiveData = new MutableLiveData<>();
         private final SingleLiveEvent<Intent> mIntentLiveData = new SingleLiveEvent<>();
         private final PackageManager mPm;
@@ -306,8 +324,16 @@ public class OpenWithDialogFragment extends DialogFragment {
         }
 
         public void loadMatchingActivities(@NonNull Intent intent) {
-            ThreadUtils.postOnBackgroundThread(() ->
-                    mMatchingActivitiesLiveData.postValue(mPm.queryIntentActivities(intent, 0)));
+            ThreadUtils.postOnBackgroundThread(() -> {
+                List<ResolveInfo> resolveInfoList = mPm.queryIntentActivities(intent, 0);
+                List<ResolvedActivityInfo> resolvedActivityInfoList = new ArrayList<>(resolveInfoList.size());
+                for (ResolveInfo resolveInfo : resolveInfoList) {
+                    CharSequence label = resolveInfo.loadLabel(mPm);
+                    CharSequence appLabel = resolveInfo.activityInfo.applicationInfo.loadLabel(mPm);
+                    resolvedActivityInfoList.add(new ResolvedActivityInfo(resolveInfo, label, appLabel));
+                }
+                mMatchingActivitiesLiveData.postValue(resolvedActivityInfoList);
+            });
         }
 
         public void loadFileContentInfo(@NonNull Path path) {
@@ -318,7 +344,7 @@ public class OpenWithDialogFragment extends DialogFragment {
             mIntentLiveData.setValue(intent);
         }
 
-        public LiveData<List<ResolveInfo>> getMatchingActivitiesLiveData() {
+        public LiveData<List<ResolvedActivityInfo>> getMatchingActivitiesLiveData() {
             return mMatchingActivitiesLiveData;
         }
 
@@ -333,6 +359,25 @@ public class OpenWithDialogFragment extends DialogFragment {
         @Override
         protected void onCleared() {
             super.onCleared();
+        }
+    }
+
+    private static class ResolveInfoImageFetcher implements ImageLoader.ImageFetcherInterface {
+        @Nullable
+        private final ResolveInfo info;
+
+        public ResolveInfoImageFetcher(@Nullable ResolveInfo info) {
+            this.info = info;
+        }
+
+        @Override
+        @NonNull
+        public ImageLoader.ImageFetcherResult fetchImage(@NonNull String tag) {
+            PackageManager pm = ContextUtils.getContext().getPackageManager();
+            Drawable drawable = info != null ? info.loadIcon(pm) : null;
+            return new ImageLoader.ImageFetcherResult(tag, drawable != null ? UIUtils.getBitmapFromDrawable(drawable) : null,
+                    false, true,
+                    new ImageLoader.DefaultImageDrawable("android_default_icon", pm.getDefaultActivityIcon()));
         }
     }
 }
