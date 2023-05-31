@@ -79,7 +79,7 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
     private String searchQuery;
     @AdvancedSearchView.SearchType
     private int searchType;
-    private final LinkedHashMap<String, ApplicationItem> selectedPackageApplicationItemMap = new LinkedHashMap<>();
+    private final Map<String, ApplicationItem> selectedPackageApplicationItemMap = Collections.synchronizedMap(new LinkedHashMap<>());
     final MultithreadedExecutor executor = MultithreadedExecutor.getNewInstance();
 
     public MainViewModel(@NonNull Application application) {
