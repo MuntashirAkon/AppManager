@@ -2,7 +2,6 @@
 
 package io.github.muntashirakon.AppManager.utils;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
@@ -67,9 +66,18 @@ public class StorageUtils {
      * unified test function to add storage if fitting
      */
     private static void addStorage(@NonNull String label, @Nullable Path entry, @NonNull Map<String, Uri> storageLocations) {
-        if (entry != null && !storageLocations.containsValue(entry.getUri())) {
-            storageLocations.put(label, entry.getUri());
-        } else if (entry != null) {
+        if (entry == null) {
+            return;
+        }
+        if (entry.isSymbolicLink()) {
+            // Use the real path
+            Path finalEntry = entry;
+            entry = ExUtils.requireNonNullElse(finalEntry::getRealPath, finalEntry);
+        }
+        Uri uri = entry.getUri();
+        if (!storageLocations.containsValue(uri)) {
+            storageLocations.put(label, uri);
+        } else {
             Log.d(TAG, entry.getUri().toString());
         }
     }
@@ -84,8 +92,7 @@ public class StorageUtils {
             String[] externalCards = rawSecondaryStorage.split(":");
             for (int i = 0; i < externalCards.length; i++) {
                 String path = externalCards[i];
-                storageLocations.put(context.getString(R.string.sd_card) + (i == 0 ? "" : " " + i), new Uri.Builder()
-                        .scheme(ContentResolver.SCHEME_FILE).path(path).build());
+                addStorage(context.getString(R.string.sd_card) + (i == 0 ? "" : " " + i), Paths.get(path), storageLocations);
             }
         }
     }
