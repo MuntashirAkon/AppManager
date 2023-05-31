@@ -20,7 +20,7 @@ import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.apk.explorer.AppExplorerActivity;
+import io.github.muntashirakon.AppManager.viewer.ExplorerActivity;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.details.manifest.ManifestViewerActivity;
@@ -167,7 +167,7 @@ public class FeatureController {
                 cn = getComponentName(key, LogViewerActivity.class);
                 break;
             case FEAT_APP_EXPLORER:
-                cn = getComponentName(key, AppExplorerActivity.class);
+                cn = getComponentName(key, ExplorerActivity.class);
                 break;
             case FEAT_APP_INFO:
                 cn = getComponentName(key, AppDetailsActivity.ALIAS_APP_INFO);
@@ -203,7 +203,7 @@ public class FeatureController {
                 modifyState(key, LogViewerActivity.class, enabled);
                 break;
             case FEAT_APP_EXPLORER:
-                modifyState(key, AppExplorerActivity.class, enabled);
+                modifyState(key, ExplorerActivity.class, enabled);
                 break;
             case FEAT_APP_INFO:
                 modifyState(key, AppDetailsActivity.ALIAS_APP_INFO, enabled);

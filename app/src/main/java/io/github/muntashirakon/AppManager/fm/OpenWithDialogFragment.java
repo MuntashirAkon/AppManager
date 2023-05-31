@@ -189,11 +189,16 @@ public class OpenWithDialogFragment extends DialogFragment {
 
     @NonNull
     private Intent getIntent(@NonNull Path path, @Nullable String customType) {
+        int flags = Intent.FLAG_ACTIVITY_NEW_TASK;
+        if (path.canRead()) {
+            flags |= Intent.FLAG_GRANT_READ_URI_PERMISSION;
+        }
+        if (path.canWrite()) {
+            flags |= Intent.FLAG_GRANT_WRITE_URI_PERMISSION;
+        }
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setDataAndType(FmProvider.getContentUri(path), customType != null ? customType : path.getType());
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_GRANT_READ_URI_PERMISSION
-                | Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_PERSISTABLE_URI_PERMISSION
-                | Intent.FLAG_GRANT_PREFIX_URI_PERMISSION);
+        intent.setFlags(flags);
         return intent;
     }
 

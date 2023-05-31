@@ -312,11 +312,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".apk.explorer.AppExplorerActivity"
+            android:name=".viewer.ExplorerActivity"
             android:enabled="true"
             android:exported="true"
             android:label="@string/explore"
-            android:taskAffinity="">
+            android:noHistory="true"
+            android:theme="@style/AppTheme.TransparentBackground">
             <intent-filter>
                 <action android:name="android.intent.action.SEND" />
 
@@ -326,6 +327,7 @@
                 <data android:mimeType="application/java-archive" />
                 <data android:mimeType="application/x-dex" />
                 <data android:mimeType="application/octet-stream" />
+                <data android:mimeType="application/zip" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -340,6 +342,7 @@
                 <data android:mimeType="application/java-archive" />
                 <data android:mimeType="application/x-dex" />
                 <data android:mimeType="application/octet-stream" />
+                <data android:mimeType="application/zip" />
             </intent-filter>
         </activity>
         <activity

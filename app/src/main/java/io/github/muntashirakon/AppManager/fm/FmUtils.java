@@ -37,12 +37,6 @@ final class FmUtils {
     @SuppressWarnings("SuspiciousRegexArgument") // We're not on Windows
     public static List<String> uriToPathParts(@NonNull Uri uri) {
         switch (uri.getScheme()) {
-            case ContentResolver.SCHEME_FILE: {
-                List<String> pathParts = new ArrayList<>();
-                pathParts.add(File.separator);
-                pathParts.addAll(uri.getPathSegments());
-                return pathParts;
-            }
             case ContentResolver.SCHEME_CONTENT: {
                 if (isDocumentsProvider(uri.getAuthority())) {
                     List<String> paths = uri.getPathSegments();
@@ -70,8 +64,13 @@ final class FmUtils {
                 // Deliberate fall-through
             }
             default:
-            case VirtualFileSystem.SCHEME:
-                return uri.getPathSegments();
+            case ContentResolver.SCHEME_FILE:
+            case VirtualFileSystem.SCHEME: {
+                List<String> pathParts = new ArrayList<>();
+                pathParts.add(File.separator);
+                pathParts.addAll(uri.getPathSegments());
+                return pathParts;
+            }
         }
     }
 
@@ -79,17 +78,6 @@ final class FmUtils {
         Uri.Builder builder = baseUri.buildUpon();
         builder.path(null);
         switch (baseUri.getScheme()) {
-            case ContentResolver.SCHEME_FILE: {
-                if (endPosition == 0) {
-                    builder.path("/");
-                } else {
-                    // Append up-to endPosition, skipping the root (index = 0)
-                    for (int i = 1; i <= endPosition; ++i) {
-                        builder.appendPath(pathParts.get(i));
-                    }
-                }
-                return builder.build();
-            }
             case ContentResolver.SCHEME_CONTENT: {
                 if (isDocumentsProvider(baseUri.getAuthority())) {
                     List<String> paths = baseUri.getPathSegments();
@@ -123,9 +111,15 @@ final class FmUtils {
                 // Deliberate fall-through
             }
             default:
+            case ContentResolver.SCHEME_FILE:
             case VirtualFileSystem.SCHEME: {
-                for (int i = 0; i <= endPosition; ++i) {
-                    builder.appendPath(pathParts.get(i));
+                if (endPosition == 0) {
+                    builder.path("/");
+                } else {
+                    // Append up-to endPosition, skipping the root (index = 0)
+                    for (int i = 1; i <= endPosition; ++i) {
+                        builder.appendPath(pathParts.get(i));
+                    }
                 }
                 return builder.build();
             }

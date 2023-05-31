@@ -54,12 +54,18 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
     public static final String TAG = FmFragment.class.getSimpleName();
 
     public static final String ARG_URI = "uri";
+    public static final String ARG_OPTIONS = "opt";
+    public static final String ARG_POSITION = "pos";
 
     @NonNull
-    public static FmFragment getNewInstance(Uri uri) {
+    public static FmFragment getNewInstance(@NonNull FmActivity.Options options, @Nullable Uri initUri) {
+        if (!options.isVfs && initUri != null) {
+            throw new IllegalArgumentException("initUri can only be set when the file system is virtual.");
+        }
         FmFragment fragment = new FmFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ARG_URI, uri);
+        args.putParcelable(ARG_OPTIONS, options);
+        args.putParcelable(ARG_URI, initUri);
         fragment.setArguments(args);
         return fragment;
     }
@@ -104,14 +110,19 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        FmActivity.Options options = null;
         Uri uri = null;
         AtomicInteger scrollPosition = new AtomicInteger(RecyclerView.NO_POSITION);
         if (savedInstanceState != null) {
-            uri = BundleCompat.getParcelable(savedInstanceState, "uri", Uri.class);
-            scrollPosition.set(savedInstanceState.getInt("position", RecyclerView.NO_POSITION));
+            uri = BundleCompat.getParcelable(savedInstanceState, ARG_URI, Uri.class);
+            options = BundleCompat.getParcelable(savedInstanceState, ARG_OPTIONS, FmActivity.Options.class);
+            scrollPosition.set(savedInstanceState.getInt(ARG_POSITION, RecyclerView.NO_POSITION));
         }
         if (uri == null) {
-            uri = Objects.requireNonNull(BundleCompat.getParcelable(requireArguments(), ARG_URI, Uri.class));
+            uri = BundleCompat.getParcelable(requireArguments(), ARG_URI, Uri.class);
+        }
+        if (options == null) {
+            options = Objects.requireNonNull(BundleCompat.getParcelable(requireArguments(), ARG_OPTIONS, FmActivity.Options.class));
         }
         activity = (FmActivity) requireActivity();
         // Set title and subtitle
@@ -254,18 +265,19 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
                 LauncherShortcuts.fm_createForFile(activity, path.getName(), icon, path.getUri(), null);
             }
         });
-        model.loadFiles(uri);
+        model.setOptions(options, uri);
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         if (model != null) {
-            outState.putParcelable("uri", model.getCurrentUri());
+            outState.putParcelable(ARG_URI, model.getCurrentUri());
+            outState.putParcelable(ARG_OPTIONS, model.getOptions());
         }
         if (recyclerView != null) {
             View v = recyclerView.getChildAt(0);
             if (v != null) {
-                outState.putInt("position", recyclerView.getChildAdapterPosition(v));
+                outState.putInt(ARG_POSITION, recyclerView.getChildAdapterPosition(v));
             }
         }
     }

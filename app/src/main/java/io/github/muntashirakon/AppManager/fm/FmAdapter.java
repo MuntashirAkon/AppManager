@@ -26,6 +26,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -40,6 +41,8 @@ import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
 class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
+    private static final List<String> DEX_EXTENSIONS = Arrays.asList("dex", "jar");
+
     private final List<FmItem> adapterList = Collections.synchronizedList(new ArrayList<>());
     private final FmViewModel viewModel;
     private final FmActivity fmActivity;
@@ -228,7 +231,11 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             return true;
         });
+        boolean isVfs = viewModel.getOptions().isVfs;
         menu.findItem(R.id.action_shortcut)
+                // TODO: 31/5/23 Enable creating shortcuts for VFS
+                .setEnabled(!isVfs)
+                .setVisible(!isVfs)
                 .setOnMenuItemClickListener(menuItem -> {
                     viewModel.createShortcut(item);
                     return true;

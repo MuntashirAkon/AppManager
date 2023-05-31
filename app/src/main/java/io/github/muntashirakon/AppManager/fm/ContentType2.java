@@ -42,10 +42,8 @@ public enum ContentType2 {
 
     static {
         for (ContentType2 type : values()) {
-            if (type.mimeType != null) {
-                // NOTE: this may overwrite this mapping
-                mimeTypeMap.put(type.mimeType.toLowerCase(Locale.ROOT), type);
-            }
+            // NOTE: this may overwrite this mapping
+            mimeTypeMap.put(type.mimeType.toLowerCase(Locale.ROOT), type);
             if (type.fileExtensions != null) {
                 for (String fileExtension : type.fileExtensions) {
                     // NOTE: this may overwrite this mapping
@@ -55,7 +53,7 @@ public enum ContentType2 {
         }
     }
 
-    @Nullable
+    @NonNull
     private final String mimeType;
     @NonNull
     private final String simpleName;
@@ -64,11 +62,11 @@ public enum ContentType2 {
     @Nullable
     private final IanaEntry ianaEntry;
 
-    ContentType2(@Nullable String mimeType, @NonNull String simpleName, @Nullable String... fileExtensions) {
+    ContentType2(@NonNull String mimeType, @NonNull String simpleName, @Nullable String... fileExtensions) {
         this.mimeType = mimeType;
         this.simpleName = simpleName;
         this.fileExtensions = fileExtensions;
-        this.ianaEntry = mimeType != null ? findIanaEntryByMimeType(mimeType) : null;
+        this.ianaEntry = findIanaEntryByMimeType(mimeType);
     }
 
     /**
@@ -79,7 +77,7 @@ public enum ContentType2 {
         return simpleName;
     }
 
-    @Nullable
+    @NonNull
     public String getMimeType() {
         return mimeType;
     }

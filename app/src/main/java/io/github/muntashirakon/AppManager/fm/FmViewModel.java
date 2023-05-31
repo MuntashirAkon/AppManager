@@ -10,11 +10,15 @@ import android.net.Uri;
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
 import androidx.core.util.Pair;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.j256.simplemagic.ContentType;
+
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -23,15 +27,20 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.Future;
 
+import io.github.muntashirakon.AppManager.dex.DexUtils;
 import io.github.muntashirakon.AppManager.fm.icons.FmIconFetcher;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.misc.ListOptions;
+import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.Prefs;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
+import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
+import io.github.muntashirakon.io.fs.VirtualFileSystem;
 import io.github.muntashirakon.lifecycle.SingleLiveEvent;
 
 public class FmViewModel extends AndroidViewModel implements ListOptions.ListOptionActions {
@@ -44,6 +53,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
     private final SingleLiveEvent<Pair<Path, Bitmap>> shortcutCreatorLiveData = new SingleLiveEvent<>();
     private final List<FmItem> fmItems = new ArrayList<>();
     private final HashMap<Uri, Integer> pathScrollPositionMap = new HashMap<>();
+    private FmActivity.Options options;
     private Uri currentUri;
     @FmListOptions.SortOrder
     private int sortBy;
@@ -54,6 +64,12 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
     private String queryString;
     @Nullable
     private Future<?> fmFileLoaderResult;
+    private Future<?> fmFileSystemLoaderResult;
+    // These are for VFS
+    private Integer vfsId;
+    private File cachedFile;
+    private Path baseFsRoot;
+    private final FileCache fileCache = new FileCache();
 
     public FmViewModel(@NonNull Application application) {
         super(application);
@@ -68,6 +84,18 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
         if (fmFileLoaderResult != null) {
             fmFileLoaderResult.cancel(true);
         }
+        if (fmFileSystemLoaderResult != null) {
+            fmFileSystemLoaderResult.cancel(true);
+        }
+        // Clear VFS related data
+        if (vfsId != null) {
+            try {
+                VirtualFileSystem.unmount(vfsId);
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+        }
+        IoUtils.closeQuietly(fileCache);
         super.onCleared();
     }
 
@@ -114,6 +142,37 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
         ThreadUtils.postOnBackgroundThread(this::filterAndSort);
     }
 
+    @MainThread
+    public void setOptions(@NonNull FmActivity.Options options, @Nullable Uri defaultUri) {
+        if (fmFileLoaderResult != null) {
+            fmFileLoaderResult.cancel(true);
+        }
+        if (fmFileSystemLoaderResult != null) {
+            fmFileSystemLoaderResult.cancel(true);
+        }
+        this.options = options;
+        if (!options.isVfs) {
+            // No need to mount anything. Options#uri is the base URI
+            loadFiles(defaultUri != null ? defaultUri : options.uri);
+            return;
+        }
+        // Need to mount the file system
+        fmFileSystemLoaderResult = ThreadUtils.postOnBackgroundThread(() -> {
+            try {
+                handleOptions();
+                // Now load files
+                ThreadUtils.postOnMainThread(() -> loadFiles(defaultUri != null ? defaultUri : baseFsRoot.getUri()));
+            } catch (IOException e) {
+                e.printStackTrace();
+                this.fmItemsLiveData.postValue(Collections.emptyList());
+            }
+        });
+    }
+
+    public FmActivity.Options getOptions() {
+        return options;
+    }
+
     public Uri getCurrentUri() {
         return currentUri;
     }
@@ -129,7 +188,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
 
     @MainThread
     public void reload() {
-        if (currentUri != null) {
+        if (options != null && currentUri != null) {
             loadFiles(currentUri);
         }
     }
@@ -318,5 +377,30 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
             return;
         }
         this.fmItemsLiveData.postValue(filteredList);
+    }
+
+    @WorkerThread
+    private void handleOptions() throws IOException {
+        if (!options.isVfs) {
+            return;
+        }
+        if (cachedFile == null) {
+            // TODO: 31/5/23 Handle read-only
+            Path filePath = Paths.get(options.uri);
+            cachedFile = fileCache.getCachedFile(filePath);
+            Path cachedPath = Paths.get(cachedFile);
+            if (FileUtils.isZip(cachedPath)) {
+                vfsId = VirtualFileSystem.mount(filePath.getUri(), cachedPath, ContentType.ZIP.getMimeType());
+            } else if (DexUtils.isDex(cachedPath)) {
+                vfsId = VirtualFileSystem.mount(filePath.getUri(), cachedPath, ContentType2.DEX.getMimeType());
+            } else {
+                vfsId = VirtualFileSystem.mount(filePath.getUri(), cachedPath, cachedPath.getType());
+            }
+            VirtualFileSystem fs = VirtualFileSystem.getFileSystem(vfsId);
+            if (fs == null) {
+                throw new IOException("Could not mount " + options.uri);
+            }
+            baseFsRoot = fs.getRootPath();
+        }
     }
 }

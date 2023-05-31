@@ -6,48 +6,72 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.provider.DocumentsContract;
 import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.os.ParcelCompat;
 import androidx.fragment.app.Fragment;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.compat.BundleCompat;
 
 public class FmActivity extends BaseActivity {
-    public static final Set<String> SUPPORTED_EDITOR_EXTENSIONS = new HashSet<String>() {{
-        add("cmd");
-        add("conf");
-        add("css");
-        add("csv");
-        add("java");
-        add("kt");
-        add("htm");
-        add("html");
-        add("js");
-        add("json");
-        add("log");
-        add("lua");
-        add("m3u");
-        add("properties");
-        add("prop");
-        add("proto");
-        add("py");
-        add("sh");
-        add("smali");
-        add("tokens");
-        add("txt");
-        add("tsv");
-        add("xhtml");
-        add("xml");
-        add("version");
-    }};
+    public static class Options implements Parcelable {
+        @NonNull
+        public final Uri uri;
+        public final boolean isVfs;
+        public final boolean readOnly;
+        public final boolean mountDexFiles;
+
+        public Options(@NonNull Uri uri, boolean isVfs, boolean readOnly, boolean mountDexFiles) {
+            this.uri = uri;
+            this.isVfs = isVfs;
+            this.readOnly = readOnly;
+            this.mountDexFiles = mountDexFiles;
+        }
+
+        protected Options(Parcel in) {
+            uri = Objects.requireNonNull(ParcelCompat.readParcelable(in, Uri.class.getClassLoader(), Uri.class));
+            isVfs = ParcelCompat.readBoolean(in);
+            readOnly = ParcelCompat.readBoolean(in);
+            mountDexFiles = ParcelCompat.readBoolean(in);
+        }
+
+        public static final Creator<Options> CREATOR = new Creator<Options>() {
+            @Override
+            public Options createFromParcel(Parcel in) {
+                return new Options(in);
+            }
+
+            @Override
+            public Options[] newArray(int size) {
+                return new Options[size];
+            }
+        };
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(@NonNull Parcel dest, int flags) {
+            dest.writeParcelable(uri, flags);
+            ParcelCompat.writeBoolean(dest, isVfs);
+            ParcelCompat.writeBoolean(dest, readOnly);
+            ParcelCompat.writeBoolean(dest, mountDexFiles);
+        }
+    }
+
+    public static final String EXTRA_OPTIONS = "opt";
 
     @Override
     protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
@@ -56,7 +80,12 @@ public class FmActivity extends BaseActivity {
         findViewById(R.id.progress_linear).setVisibility(View.GONE);
         Uri uri = getIntent().getData();
         if (savedInstanceState == null) {
-            Fragment fragment = FmFragment.getNewInstance(uri != null ? uri : Uri.fromFile(Environment.getExternalStorageDirectory()));
+            Options options = getIntent().getExtras() != null ? BundleCompat.getParcelable(getIntent().getExtras(), EXTRA_OPTIONS, Options.class) : null;
+            if (options == null) {
+                options = new Options(uri != null ? uri : Uri.fromFile(Environment.getExternalStorageDirectory()),
+                        false, false, false);
+            }
+            Fragment fragment = FmFragment.getNewInstance(options, options.isVfs ? uri : null);
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.main_layout, fragment, FmFragment.TAG)
@@ -68,6 +97,17 @@ public class FmActivity extends BaseActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         Uri uri = intent.getData();
+        Options options = intent.getExtras() != null ? BundleCompat.getParcelable(intent.getExtras(), EXTRA_OPTIONS, Options.class) : null;
+        if (options != null) {
+            Intent intent2 = new Intent(this, FmActivity.class);
+            if (uri != null) {
+                intent2.setDataAndType(uri, DocumentsContract.Document.MIME_TYPE_DIR);
+            }
+            intent2.putExtra(EXTRA_OPTIONS, options);
+            intent2.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+            startActivity(intent2);
+            return;
+        }
         if (uri != null) {
             Intent intent2 = new Intent(this, FmActivity.class);
             intent2.setDataAndType(uri, DocumentsContract.Document.MIME_TYPE_DIR);
