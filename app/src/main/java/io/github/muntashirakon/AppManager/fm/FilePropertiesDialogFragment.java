@@ -66,6 +66,7 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
         FilePropertiesViewModel viewModel = new ViewModelProvider(this).get(FilePropertiesViewModel.class);
         Path path = Paths.get(Objects.requireNonNull(BundleCompat.getParcelable(requireArguments(), ARG_PATH, Uri.class)));
         ImageView iconView = bodyView.findViewById(android.R.id.icon);
+        ImageView symbolicLinkiconView = bodyView.findViewById(R.id.symolic_link_icon);
         TextView nameView = bodyView.findViewById(R.id.name);
         TextView summaryView = bodyView.findViewById(R.id.summary);
         MaterialButton moreButton = bodyView.findViewById(R.id.more);
@@ -88,6 +89,7 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
 
         // Set values
         iconView.setImageResource(path.isDirectory() ? R.drawable.ic_folder : R.drawable.ic_file_document);
+        symbolicLinkiconView.setVisibility(path.isSymbolicLink() ? View.VISIBLE : View.GONE);
         nameView.setText(path.getName());
         String modificationDate = DateUtils.formatDateTime(path.lastModified());
         pathView.setText(FmUtils.getDisplayablePath(path));

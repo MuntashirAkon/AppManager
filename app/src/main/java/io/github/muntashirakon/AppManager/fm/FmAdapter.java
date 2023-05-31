@@ -6,7 +6,6 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,7 +15,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.PopupMenu;
@@ -25,6 +23,7 @@ import androidx.core.content.ContextCompat;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -97,6 +96,8 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
                 fragment.show(fmActivity.getSupportFragmentManager(), OpenWithDialogFragment.TAG);
             });
         }
+        // Symbolic link
+        holder.symbolicLinkIcon.setVisibility(item.path.isSymbolicLink() ? View.VISIBLE : View.GONE);
         // Set background colors
         holder.itemView.setCardBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), android.R.color.transparent));
         // Set selections
@@ -248,7 +249,8 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
 
     protected static class ViewHolder extends MultiSelectionView.ViewHolder {
         final MaterialCardView itemView;
-        final AppCompatImageView icon;
+        final ShapeableImageView icon;
+        final ShapeableImageView symbolicLinkIcon;
         final MaterialButton action;
         final AppCompatTextView title;
         final AppCompatTextView subtitle;
@@ -257,6 +259,7 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
             super(itemView);
             this.itemView = (MaterialCardView) itemView;
             icon = itemView.findViewById(android.R.id.icon);
+            symbolicLinkIcon = itemView.findViewById(R.id.symolic_link_icon);
             action = itemView.findViewById(android.R.id.button1);
             title = itemView.findViewById(android.R.id.title);
             subtitle = itemView.findViewById(android.R.id.summary);

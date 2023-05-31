@@ -25,15 +25,40 @@
             android:layout_marginEnd="@dimen/padding_small"
             android:orientation="vertical">
 
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@android:id/icon"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_gravity="center"
-                android:background="@color/grey_blue_leaf"
-                android:contentDescription="@string/str_logo"
-                app:shapeAppearanceOverlay="@style/ShapeAppearance.AppTheme.SmallComponent"
-                tools:srcCompat="@mipmap/ic_launcher_round" />
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@android:id/icon"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center"
+                    android:background="@color/fm_icon_background"
+                    android:contentDescription="@string/str_logo"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearance.AppTheme.SmallComponent"
+                    tools:srcCompat="@mipmap/ic_launcher_round" />
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/symolic_link_icon"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="start|bottom"
+                    android:visibility="gone"
+                    android:tint="@color/fm_symbolic_link"
+                    app:srcCompat="@drawable/ic_arrow_outward"
+                    tools:visibility="visible" />
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@android:id/icon1"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="end|bottom"
+                    android:visibility="gone"
+                    app:shapeAppearanceOverlay="@style/ShapeAppearance.AppTheme.SmallComponent"
+                    tools:srcCompat="@drawable/ic_repeat"
+                    tools:visibility="visible" />
+            </FrameLayout>
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

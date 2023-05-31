@@ -1,0 +1,5 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<resources>
+    <color name="fm_icon_background">@color/m3_sys_color_light_on_surface_variant</color>
+    <color name="fm_symbolic_link">#f37785</color>
+</resources>
