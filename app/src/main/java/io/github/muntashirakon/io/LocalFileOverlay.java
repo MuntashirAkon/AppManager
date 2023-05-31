@@ -22,10 +22,53 @@ import java.util.Map;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 
 final class LocalFileOverlay {
-    private static final String[] ROOT_FILES = new String[]{"apex", "bin", "d", "data", "data_mirror", "data_ramdisk",
+    private static final String[] ROOT_FILES = new String[]{"apex", "bin", "config", "d", "data", "data_mirror", "debug_ramdisk",
             "dev", "dsp", "etc", "linkerconfig", "metadata", "mnt", "odm", "odm_dklm", "oem", "oneplus", "op1",
             "postinstall", "proc", "product", "sdcard", "second_state_resources", "storage", "sys", "system",
             "system_ext", "vendor", "vendor_dlkm"};
+    // There might be more, but these are what I've got for now
+    private static final String[] APEX_PKGS = new String[]{
+            "com.android.adbd",
+            "com.android.adservices",
+            "com.android.appsearch",
+            "com.android.art",
+            "com.android.art.debug",
+            "com.android.bluetooth",
+            "com.android.bootanimation",
+            "com.android.btservices",
+            "com.android.car.framework",
+            "com.android.cellbroadcast",
+            "com.android.conscrypt",
+            "com.android.devicelock",
+            "com.android.extservices",
+            "com.android.federatedcompute",
+            "com.android.geotz",
+            "com.android.gki",
+            "com.android.healthfitness",
+            "com.android.i18n",
+            "com.android.ipsec",
+            "com.android.media",
+            "com.android.media.swcodec",
+            "com.android.mediaprovider",
+            "com.android.neuralnetworks",
+            "com.android.ondevicepersonalization",
+            "com.android.os.statsd",
+            "com.android.permission",
+            "com.android.resolv",
+            "com.android.rkpd",
+            "com.android.runtime",
+            "com.android.scheduling",
+            "com.android.sdkext",
+            "com.android.sepolicy",
+            "com.android.telephony",
+            "com.android.tethering",
+            "com.android.tzdata",
+            "com.android.uwb",
+            "com.android.virt",
+            "com.android.vndk",
+            "com.android.vndk.v" + Build.VERSION.SDK_INT,
+            "com.android.wifi",
+    };
     // Read-only here means whether this should be accessed by ReadOnlyDirectory, it has nothing to do with the actual mode of the file.
     private static final HashMap<String, String[]> pathReadOnlyMap = new HashMap<String, String[]>() {{
         int userId = UserHandleHidden.myUserId();
@@ -36,8 +79,9 @@ final class LocalFileOverlay {
             appId = "io.github.muntashirakon.AppManager" + (BuildConfig.DEBUG ? ".debug" : "");
         }
         put("/", ROOT_FILES); // Permission denied
+        put("/apex", APEX_PKGS); // Permission denied
         put("/data", new String[]{"app", "data", "user", "user_ce", "user_de"}); // Permission denied
-        put("/data/app", null); // Permission denied TODO: We need customisation here to list all apps
+        put("/data/app", null); // Permission denied
         put("/data/data", new String[]{appId}); // Permission denied
         put("/data/user", new String[]{String.valueOf(userId)}); // Permission denied
         put("/data/user/" + userId, new String[]{appId}); // Permission denied
@@ -52,7 +96,7 @@ final class LocalFileOverlay {
 
     @NonNull
     public static ExtendedFile getOverlayFile(@NonNull ExtendedFile file) {
-        String path = getSanitizedPath(file.getAbsolutePath());
+        String path = Paths.getSanitizedPath(file.getAbsolutePath(), false);
         if (path == null) {
             return file;
         }
@@ -73,7 +117,7 @@ final class LocalFileOverlay {
 
     @Nullable
     public static String[] listChildren(@NonNull File file) {
-        return listChildrenInternal(getSanitizedPath(file.getAbsolutePath()));
+        return listChildrenInternal(Paths.getSanitizedPath(file.getAbsolutePath(), false));
     }
 
     @Nullable
@@ -137,27 +181,5 @@ final class LocalFileOverlay {
             }
             pathReadOnlyMap.put("/data/app/" + part1, part2.toArray(new String[0]));
         }
-    }
-
-    @Nullable
-    private static String getSanitizedPath(@NonNull String name) {
-        // Replace multiple separators with a single separator
-        //noinspection RegExpRedundantEscape,RegExpSimplifiable
-        name = name.replaceAll("[\\/\\\\]+", File.separator);
-        if (name.equals(File.separator)) {
-            // Name is a separator AKA root
-            return File.separator;
-        }
-        // Name isn't a root but could still be ../ or ./, we only consider ./ because we cannot allow it
-        if (name.startsWith("./")) {
-            // Omit ./
-            name = name.substring(2);
-        }
-        // Omit last separator if present, this also means ../ will become ..
-        if (name.endsWith(File.separator)) {
-            name = name.substring(0, name.length() - 1);
-        }
-        // At this point, name could contain nothing at all
-        return name.isEmpty() ? null : name;
     }
 }
