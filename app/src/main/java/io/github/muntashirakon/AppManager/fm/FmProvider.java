@@ -217,7 +217,7 @@ public class FmProvider extends ContentProvider {
         List<String> pathParts = uri.getPathSegments();
         int pathStartIndex = 0;
         String scheme = ContentResolver.SCHEME_FILE;
-        String authority = null;
+        String authority = "";
         if (pathParts.size() > 0) {
             String firstPart = pathParts.get(0);
             if (firstPart.startsWith("!!")) {
