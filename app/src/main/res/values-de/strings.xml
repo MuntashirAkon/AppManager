@@ -1291,4 +1291,7 @@
     </plurals>
     <string name="app_info_tag_open_links">Links öffnen</string>
     <string name="title_domains_supported_by_the_app">Unterstützte Domänen</string>
+    <string name="block_unblock_components_description">Alle Komponenten, die durch die angegebenen Signaturen identifiziert werden, blockieren oder freigeben</string>
+    <string name="unblock_components_dots">Komponenten freigeben…</string>
+    <string name="block_unblock_components_dots">Komponenten blockieren/freigeben…</string>
 </resources>
