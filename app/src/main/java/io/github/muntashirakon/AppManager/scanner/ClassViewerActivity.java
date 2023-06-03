@@ -297,7 +297,6 @@ public class ClassViewerActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.activity_any_viewer_actions, menu);
-        menu.findItem(R.id.action_java_smali_toggle).setVisible(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O);
         return super.onCreateOptionsMenu(menu);
     }
 
