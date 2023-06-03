@@ -1035,10 +1035,14 @@ public abstract class VirtualFileSystem {
         }
 
         if (read && write && !checkAccess(path, OsConstants.R_OK | OsConstants.W_OK)) {
-            throw new IOException(path + " cannot be opened for both reading and writing.");
-        } else if (read && !checkAccess(path, OsConstants.R_OK)) {
+            write = false;
+            // The below does not work with content providers
+            // throw new IOException(path + " cannot be opened for both reading and writing.");
+        }
+        if (read && !checkAccess(path, OsConstants.R_OK)) {
             throw new IOException(path + " cannot be opened for both reading.");
-        } else if (write && !checkAccess(path, OsConstants.W_OK)) {
+        }
+        if (write && !checkAccess(path, OsConstants.W_OK)) {
             throw new IOException(path + " cannot be opened for both writing.");
         }
         Node<?> targetNode = getNode(path);

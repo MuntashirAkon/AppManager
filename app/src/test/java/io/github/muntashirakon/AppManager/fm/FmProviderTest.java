@@ -16,7 +16,7 @@ public class FmProviderTest {
     private final String noFile = "file:///storage/emulated/0/AppManager";
 
     private final String cpContent = "content://" + FmProvider.AUTHORITY + "/!com.authority/primary%3Adocument/AppManager";
-    private final String noContent = "content://com.authority/primary:document/AppManager";
+    private final String noContent = "content://com.authority/primary%3Adocument/AppManager";
 
     @Test
     public void getContentUriForFile() {

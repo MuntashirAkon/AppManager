@@ -310,6 +310,18 @@ public class Path implements Comparable<Path> {
     }
 
     /**
+     * Same as {@link #getFile()} except it returns the real path if the
+     * current path is a symbolic link.
+     */
+    @Nullable
+    public Path getRealPath() throws IOException {
+        if (mDocumentFile instanceof ExtendedRawDocumentFile) {
+            return Paths.get(Objects.requireNonNull(getFile()).getCanonicalFile());
+        }
+        return null;
+    }
+
+    /**
      * Return the MIME type of the path
      */
     @NonNull
