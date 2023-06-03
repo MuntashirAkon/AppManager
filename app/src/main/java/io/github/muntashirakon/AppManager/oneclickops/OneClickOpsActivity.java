@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Set;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
+import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.behavior.DexOptimizationDialog;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;

@@ -17,13 +17,13 @@ ext {
     desugar_jdk_version = "2.0.3"
     documentfile_version = "1.0.1"
     fastscroll_version = "1.1.8"
-    gson_version = "2.9.1"
+    gson_version = "2.10.1"
     hiddenapibypass_version = "4.3"
     jadx_version = "1.4.7"
     jb_annotation_version = "23.0.0" // Compile-only
     libadb_version = "2.2.2"
     libsu_version = "5.0.3"
-    material_version = "1.8.0"
+    material_version = "1.9.0"
     preferences_version = "1.2.0"
     refine_version = "4.0.0"
     room_version = "2.5.1"
@@ -32,7 +32,7 @@ ext {
     sun_security_version = "1.1"
     swipe_refresh_version = "1.2.0-alpha01"
     unapkm_version = "1.2"
-    webkit_version = "1.6.1"
+    webkit_version = "1.7.0"
 
     // Test dependencies
     junit_version = "4.13.2"
