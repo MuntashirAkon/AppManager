@@ -7,7 +7,6 @@ ext {
 
     // Gradle plugins
     agp_version = "7.4.0"
-    protobuf_gradle_version = "0.8.6"
 
     // Library dependencies
     annotation_version = "1.5.0"
@@ -20,7 +19,7 @@ ext {
     fastscroll_version = "1.1.8"
     gson_version = "2.9.1"
     hiddenapibypass_version = "4.3"
-    jadx_version = "5a62a8e625"
+    jadx_version = "1.4.7"
     jb_annotation_version = "23.0.0" // Compile-only
     libadb_version = "2.2.2"
     libsu_version = "5.0.3"
