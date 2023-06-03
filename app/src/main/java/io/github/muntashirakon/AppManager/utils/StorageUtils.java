@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -60,7 +61,7 @@ public class StorageUtils {
         for (int i = 0; i < grantedUrisAndDate.size(); ++i) {
             Uri uri = grantedUrisAndDate.keyAt(i);
             long time = grantedUrisAndDate.valueAt(i);
-            storageLocations.put(Paths.getLastPathSegment(uri.getPath()) + " " + DateUtils.formatDate(time), uri);
+            storageLocations.put(Paths.getLastPathSegment(uri.getPath()) + " " + DateUtils.formatDate(time), getFixedTreeUri(uri));
         }
         return storageLocations;
     }
@@ -157,6 +158,37 @@ public class StorageUtils {
                 }
             }
         } catch (IOException ignore) {
+        }
+    }
+
+    @NonNull
+    private static Uri getFixedTreeUri(@NonNull Uri uri) {
+        List<String> paths = uri.getPathSegments();
+        int size = paths.size();
+        if (size < 2 || !"tree".equals(paths.get(0))) {
+            throw new IllegalArgumentException("Not a tree URI.");
+        }
+        // FORMAT: /tree/<id>/document/<id>%2F<others>
+        switch (size) {
+            case 2:
+                return uri.buildUpon()
+                        .appendPath("document")
+                        .appendPath(paths.get(1))
+                        .build();
+            case 3:
+                if (!"document".equals(paths.get(2))) {
+                    throw new IllegalArgumentException("Not a document URI.");
+                }
+                return uri.buildUpon()
+                        .appendPath(paths.get(1))
+                        .build();
+            case 4:
+                if (!"document".equals(paths.get(2))) {
+                    throw new IllegalArgumentException("Not a document URI.");
+                }
+                return uri;
+            default:
+                throw new IllegalArgumentException("Malformed URI.");
         }
     }
 }
