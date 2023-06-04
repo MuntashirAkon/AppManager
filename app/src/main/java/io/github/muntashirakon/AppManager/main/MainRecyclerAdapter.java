@@ -256,10 +256,16 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
         } else holder.date.setTextColor(mColorSecondary);
         if (item.isInstalled) {
             // Set kernel user ID
-            holder.sharedId.setText(String.format(Locale.getDefault(), "%d", item.uid));
+            String sharedId;
+            if (item.userHandles.length > 1) {
+                int appId = UserHandleHidden.getAppId(item.uid);
+                sharedId = item.userHandles.length + "+" + appId;
+            } else sharedId = String.valueOf(item.uid);
+            holder.sharedId.setText(sharedId);
             // Set kernel user ID text color to orange if the package is shared
-            if (item.sharedUserId != null) holder.sharedId.setTextColor(mColorOrange);
-            else holder.sharedId.setTextColor(mColorSecondary);
+            if (item.sharedUserId != null) {
+                holder.sharedId.setTextColor(mColorOrange);
+            } else holder.sharedId.setTextColor(mColorSecondary);
         } else holder.sharedId.setText("");
         if (item.sha != null) {
             // Set issuer
@@ -336,7 +342,7 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
         }
         // Set SDK
         if (item.isInstalled) {
-            holder.size.setText(String.format(Locale.getDefault(), "SDK %d", item.sdk));
+            holder.size.setText(String.format(Locale.ROOT, "SDK %d", item.sdk));
         } else holder.size.setText("-");
         // Set SDK color to orange if the app is using cleartext (e.g. HTTP) traffic
         if ((item.flags & ApplicationInfo.FLAG_USES_CLEARTEXT_TRAFFIC) != 0) {
