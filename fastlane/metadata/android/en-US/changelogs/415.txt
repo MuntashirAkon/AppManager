@@ -1,6 +1,0 @@
-Only new features are specified here. View in-app changelogs for details.
-
-- Added support for v3.1 signing scheme
-- New language: Romanian
-- Replaced enable/disable with freeze/unfreeze
-- Added freeze/unfreeze toggle shortcut in the App Info tab.

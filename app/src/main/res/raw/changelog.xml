@@ -2,6 +2,41 @@
 <changelog>
     <release
         type="stable release"
+        version="v3.1.1"
+        code="424"
+        date="4 June 2023">
+        <improve>Enabled Smali to Java conversion in Android &lt; 8</improve>
+        <improve>Improved security of third-party shortcuts</improve>
+        <note subtext="true">
+            Third-party shortcuts created in the App Info tab redirects via App Manager in order to provide
+            authentication. It also fixed launching certain shortcuts in Android 13 due to mismatched Intent filters.
+        </note>
+        <improve title="1-click Ops page">Replaced “Block components…” with “Block/unblock components…”</improve>
+        <improve title="App Info tab">Skipped displaying split APKs in “Paths &amp; Directories” section</improve>
+        <note subtext="true">They're already displayed when the “Splits” tag is clicked.</note>
+        <improve title="Installer page">
+            Offer to re-install apps that were previously uninstalled without clearing data
+        </improve>
+        <improve title="Main page">Offer to fully uninstall apps that were uninstalled without clearing data</improve>
+
+        <fix>Fixed fetching installer package in Android 14</fix>
+        <fix>Fixed memory leaks while calculating the size of a folder</fix>
+        <fix>Fixed updating uninstalled apps in no-root mode</fix>
+        <fix>Fixed writing to files managed via ContentProvider (instead of a DocumentProvider)</fix>
+        <fix>Prevented crashing due to lifecycle issues in list options dialogs</fix>
+        <fix title="App Info tab">Fixed crashes in Android &lt; 11 while fetching the installer of an app</fix>
+        <fix title="App Ops tab">Fixed crashes in Samsung devices running 6.0.1 and Lenovo devices running 7.1.2</fix>
+        <fix title="Explorer page">Fixed opening files with external editor/viewer</fix>
+        <fix title="Freeze/unfreeze">
+            Prevented crashing the app if the freeze shortcut icon is immutable/unmodifiable
+        </fix>
+        <fix title="Interceptor page">Fixed crashes if the shortcut icon is invalid</fix>
+        <fix title="Main page">Prevented crashes when the installer feature is disabled</fix>
+        <fix title="Profiles page">Fixed a crash due to lifecycle issue</fix>
+        <fix title="Settings page">Fixed listing available storages in backup volume selector</fix>
+    </release>
+    <release
+        type="stable release"
         version="v3.1.0"
         code="423"
         date="25 March 2023">

@@ -1,0 +1,7 @@
+- Enabled Smali to Java conversion in Android < 8
+- Improved security of third-party shortcuts
+- Replaced “Block components…” with “Block/unblock components…”
+- Fixed fetching installer package in Android 14
+- Fixed crashes in the app ops tab on certain devices
+- Prevented crashes when the installer feature is disabled
+and many more.
