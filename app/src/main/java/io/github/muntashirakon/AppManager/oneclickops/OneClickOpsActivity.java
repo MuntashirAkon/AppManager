@@ -129,7 +129,7 @@ public class OneClickOpsActivity extends BaseActivity {
                     new TextInputDialogBuilder(this, R.string.input_signatures)
                             .setHelperText(R.string.input_signatures_description)
                             .setCheckboxLabel(R.string.apply_to_system_apps)
-                            .setTitle(R.string.block_components_dots)
+                            .setTitle(R.string.block_unblock_components_dots)
                             .setPositiveButton(R.string.search, (dialog, which, signatureNames, systemApps) -> {
                                 if (signatureNames == null) return;
                                 mProgressIndicator.show();
