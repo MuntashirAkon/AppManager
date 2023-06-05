@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.users;
 
+import android.content.Context;
 import android.os.UserHandle;
 import android.os.UserHandleHidden;
 
@@ -9,10 +10,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import dev.rikka.tools.refine.Refine;
+import io.github.muntashirakon.util.LocalizedString;
 
-public class UserInfo {
+public class UserInfo implements LocalizedString {
+    @NonNull
     public final UserHandle userHandle;
     public final int id;
+    @Nullable
     public final String name;
 
     UserInfo(@NonNull android.content.pm.UserInfo userInfo) {
@@ -27,5 +31,11 @@ public class UserInfo {
         if (name == null) {
             this.name = id == UserHandleHidden.myUserId() ? "Main" : "Work";
         } else this.name = name;
+    }
+
+    @NonNull
+    @Override
+    public CharSequence toLocalizedString(@NonNull Context context) {
+        return name == null ? String.valueOf(id) : (name + " (" + id + ")");
     }
 }

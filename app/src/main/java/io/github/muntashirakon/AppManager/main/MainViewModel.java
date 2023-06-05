@@ -76,6 +76,8 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
     private int mFilterFlags;
     @Nullable
     private String mFilterProfileName;
+    @Nullable
+    private int[] mSelectedUsers;
     private String searchQuery;
     @AdvancedSearchView.SearchType
     private int searchType;
@@ -92,6 +94,7 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
         mReverseSort = Prefs.MainPage.isReverseSort();
         mFilterFlags = Prefs.MainPage.getFilters();
         mFilterProfileName = Prefs.MainPage.getFilteredProfileName();
+        mSelectedUsers = null; // TODO: 5/6/23 Load from prefs?
         if ("".equals(mFilterProfileName)) mFilterProfileName = null;
     }
 
@@ -178,7 +181,7 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
         int[] userIds = Users.getUsersIds();
         for (String packageName : selectedPackageApplicationItemMap.keySet()) {
             int[] userHandles = Objects.requireNonNull(selectedPackageApplicationItemMap.get(packageName)).userHandles;
-            if (userHandles == null || userHandles.length == 0) {
+            if (userHandles.length == 0) {
                 // Could be a backup only item
                 // Assign current user in it
                 userPackagePairs.add(new UserPackagePair(packageName, myUserId));
@@ -266,8 +269,40 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
         executor.submit(this::filterItemsByFlags);
     }
 
+    @Nullable
     public String getFilterProfileName() {
         return mFilterProfileName;
+    }
+
+    public void setSelectedUsers(@Nullable int[] selectedUsers) {
+        if (selectedUsers == null) {
+            if (mSelectedUsers == null) {
+                // No change
+                return;
+            }
+        } else if (mSelectedUsers != null) {
+            if (mSelectedUsers.length == selectedUsers.length) {
+                boolean differs = false;
+                for (int user : selectedUsers) {
+                    if (!ArrayUtils.contains(mSelectedUsers, user)) {
+                        differs = true;
+                        break;
+                    }
+                }
+                if (!differs) {
+                    // No change detected
+                    return;
+                }
+            }
+        }
+        mSelectedUsers = selectedUsers;
+        // TODO: 5/6/23 Store value to prefs
+        executor.submit(this::filterItemsByFlags);
+    }
+
+    @Nullable
+    public int[] getSelectedUsers() {
+        return mSelectedUsers;
     }
 
     @AnyThread
@@ -284,12 +319,10 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                 List<PackageInfo> packageInfoList = new ArrayList<>();
                 for (String packageName : getSelectedPackages().keySet()) {
                     int[] userIds = Objects.requireNonNull(getSelectedPackages().get(packageName)).userHandles;
-                    if (userIds != null) {
-                        for (int userId : userIds) {
-                            packageInfoList.add(PackageManagerCompat.getPackageInfo(packageName,
-                                    PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId));
-                            break;
-                        }
+                    for (int userId : userIds) {
+                        packageInfoList.add(PackageManagerCompat.getPackageInfo(packageName,
+                                PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId));
+                        break;
                     }
                 }
                 os.write(ListExporter.export(getApplication(), exportType, packageInfoList).getBytes(StandardCharsets.UTF_8));
@@ -364,9 +397,18 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                 }
                 Collections.sort(indexes);
                 for (int index : indexes) {
-                    candidateApplicationItems.add(applicationItems.get(index));
+                    ApplicationItem item = applicationItems.get(index);
+                    if (isAmongSelectedUsers(item)) {
+                        candidateApplicationItems.add(item);
+                    }
                 }
-            } else candidateApplicationItems.addAll(applicationItems);
+            } else {
+                for (ApplicationItem item : applicationItems) {
+                    if (isAmongSelectedUsers(item)) {
+                        candidateApplicationItems.add(item);
+                    }
+                }
+            }
             // Other filters
             if (mFilterFlags == MainListOptions.FILTER_NO_FILTER) {
                 if (!TextUtils.isEmpty(searchQuery)) {
@@ -427,6 +469,19 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                 }
             }
         }
+    }
+
+    private boolean isAmongSelectedUsers(@NonNull ApplicationItem applicationItem) {
+        if (mSelectedUsers == null) {
+            // All users
+            return true;
+        }
+        for (int userId : mSelectedUsers) {
+            if (ArrayUtils.contains(applicationItem.userHandles, userId)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @GuardedBy("applicationItems")

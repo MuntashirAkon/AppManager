@@ -63,9 +63,4 @@ public class FmListOptions extends ListOptions {
     public LinkedHashMap<Integer, Integer> getOptionIdLocaleMap() {
         return OPTIONS_MAP;
     }
-
-    @Override
-    public boolean enableProfileNameInput() {
-        return false;
-    }
 }

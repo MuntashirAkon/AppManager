@@ -18,7 +18,8 @@
         <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/sort_text"
@@ -39,7 +40,6 @@
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
-
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/sort_options"
             android:theme="@style/Widget.AppTheme.ChipGroup.Filter"
@@ -50,15 +50,38 @@
             app:lineSpacing="@dimen/padding_very_small"
             app:singleSelection="true" />
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/filter_text"
+        <androidx.appcompat.widget.LinearLayoutCompat
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal"
             android:layout_marginTop="16dp"
-            android:paddingVertical="8dp"
-            android:textAppearance="?attr/preferenceCategoryTitleTextAppearance"
-            android:textColor="?attr/preferenceCategoryTitleTextColor"
-            android:text="@string/filter" />
+            android:gravity="center_vertical">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/filter_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:paddingVertical="8dp"
+                android:textAppearance="?attr/preferenceCategoryTitleTextAppearance"
+                android:textColor="?attr/preferenceCategoryTitleTextColor"
+                android:text="@string/filter" />
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.AppTheme.Button.TextButton"
+                android:id="@+id/user"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:paddingStart="8dp"
+                android:paddingEnd="8dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:minHeight="40dp"
+                android:maxWidth="200dp"
+                android:text="@string/users" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
         <com.google.android.material.chip.ChipGroup
             android:id="@+id/filter_options"

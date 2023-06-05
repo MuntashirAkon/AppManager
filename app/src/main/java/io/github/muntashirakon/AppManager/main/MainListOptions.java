@@ -16,12 +16,18 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.concurrent.Future;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.misc.ListOptions;
 import io.github.muntashirakon.AppManager.profiles.ProfileManager;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Ops;
+import io.github.muntashirakon.AppManager.users.UserInfo;
+import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
+import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.widget.AnyFilterArrayAdapter;
 
 public class MainListOptions extends ListOptions {
@@ -109,47 +115,98 @@ public class MainListOptions extends ListOptions {
     public static final int FILTER_APPS_WITH_SSAID = 1 << 13;
     public static final int FILTER_STOPPED_APPS = 1 << 14;
 
-    private MainViewModel model;
     private final List<String> profileNames = new ArrayList<>();
+    private final TextWatcher profileInputWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            MainActivity activity = (MainActivity) requireActivity();
+            if (activity.mModel == null) {
+                return;
+            }
+            if (s != null) {
+                String profileName = s.toString().trim();
+                if (profileNames.contains(profileName)) {
+                    activity.mModel.setFilterProfileName(profileName);
+                    return;
+                }
+            }
+            activity.mModel.setFilterProfileName(null);
+        }
+    };
+    private Future<?> profileSuggestionsResult;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         MainActivity activity = (MainActivity) requireActivity();
-        model = activity.mModel;
-        profileNameInput.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (s != null) {
-                    String profileName = s.toString().trim();
-                    if (profileNames.contains(profileName)) {
-                        model.setFilterProfileName(profileName);
-                        return;
-                    }
+        profileNameInput.addTextChangedListener(profileInputWatcher);
+        profileSuggestionsResult = ThreadUtils.postOnBackgroundThread(() -> {
+            profileNames.clear();
+            profileNames.addAll(ProfileManager.getProfileNames());
+            if (isDetached() || ThreadUtils.isInterrupted()) return;
+            activity.runOnUiThread(() -> {
+                profileNameInput.setAdapter(new AnyFilterArrayAdapter<>(activity,
+                        io.github.muntashirakon.ui.R.layout.item_checked_text_view, profileNames));
+                if (activity.mModel != null) {
+                    profileNameInput.setText(activity.mModel.getFilterProfileName());
                 }
-                model.setFilterProfileName(null);
-            }
-        });
-        if (activity.mModel != null) {
-            activity.mModel.executor.submit(() -> {
-                profileNames.clear();
-                profileNames.addAll(ProfileManager.getProfileNames());
-                if (isDetached()) return;
-                activity.runOnUiThread(() -> {
-                    profileNameInput.setAdapter(new AnyFilterArrayAdapter<>(activity, io.github.muntashirakon.ui.R.layout.item_checked_text_view,
-                            profileNames));
-                    profileNameInput.setText(model.getFilterProfileName());
-                });
             });
+        });
+        selectUserView.setVisibility(Users.getUsersIds().length <= 1 ? View.GONE : View.VISIBLE);
+        selectUserView.setOnClickListener(v -> {
+            List<UserInfo> userInfoList = Users.getUsers();
+            List<Integer> userIdList = new ArrayList<>(userInfoList.size());
+            CharSequence[] userInfoReadable = new CharSequence[userInfoList.size()];
+            int i = 0;
+            for (UserInfo userInfo : userInfoList) {
+                userInfoReadable[i] = userInfo.toLocalizedString(requireContext());
+                userIdList.add(userInfo.id);
+                ++i;
+            }
+            List<Integer> selections;
+            if (activity.mModel != null) {
+                int[] selectedUsers = activity.mModel.getSelectedUsers();
+                if (selectedUsers != null) {
+                    selections = new ArrayList<>();
+                    for (int userId : selectedUsers) {
+                        selections.add(userId);
+                    }
+                } else selections = userIdList;
+            } else selections = userIdList;
+            new SearchableMultiChoiceDialogBuilder<>(requireContext(), userIdList, userInfoReadable)
+                    .setTitle(R.string.filter)
+                    .setNegativeButton(R.string.close, null)
+                    .addSelections(selections)
+                    .showSelectAll(true)
+                    .hideSearchBar(true)
+                    .setPositiveButton(R.string.filter, (dialog, which, selectedItems) -> {
+                        if (activity.mModel != null) {
+                            if (selectedItems.size() == userInfoList.size()) {
+                                // All users
+                                activity.mModel.setSelectedUsers(null);
+                            } else {
+                                activity.mModel.setSelectedUsers(ArrayUtils.convertToIntArray(selectedItems));
+                            }
+                        }
+                    })
+                    .show();
+        });
+    }
+
+    @Override
+    public void onDestroy() {
+        if (profileSuggestionsResult != null) {
+            profileSuggestionsResult.cancel(true);
         }
+        super.onDestroy();
     }
 
     @Nullable
@@ -211,6 +268,11 @@ public class MainListOptions extends ListOptions {
 
     @Override
     public boolean enableProfileNameInput() {
+        return true;
+    }
+
+    @Override
+    public boolean enableSelectUser() {
         return true;
     }
 }

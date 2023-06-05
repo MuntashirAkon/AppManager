@@ -17,6 +17,7 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -75,6 +76,7 @@ public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
     private LinearLayoutCompat optionsView;
     protected TextInputLayout profileNameText;
     protected MaterialAutoCompleteTextView profileNameInput;
+    protected MaterialButton selectUserView;
     @Nullable
     private ListOptionActions listOptionActions;
     @Nullable
@@ -107,6 +109,7 @@ public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
         optionsView = view.findViewById(R.id.options);
         profileNameText = view.findViewById(android.R.id.text1);
         profileNameInput = view.findViewById(android.R.id.input);
+        selectUserView = view.findViewById(R.id.user);
 
         init(false);
     }
@@ -120,7 +123,13 @@ public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
     @Nullable
     public abstract LinkedHashMap<Integer, Integer> getOptionIdLocaleMap();
 
-    public abstract boolean enableProfileNameInput();
+    public boolean enableProfileNameInput() {
+        return false;
+    }
+
+    public boolean enableSelectUser() {
+        return false;
+    }
 
     public void reloadUi() {
         init(true);
@@ -157,9 +166,8 @@ public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
                 ++i;
             }
             sortGroup.check(requireListOptionActions().getSortBy());
-            sortGroup.setOnCheckedStateChangeListener((group, checkedIds) -> {
-                requireListOptionActions().setSortBy(sortGroup.getCheckedChipId());
-            });
+            sortGroup.setOnCheckedStateChangeListener((group, checkedIds) ->
+                    requireListOptionActions().setSortBy(sortGroup.getCheckedChipId()));
             reverseSort.setChecked(requireListOptionActions().isReverseSort());
             reverseSort.setOnCheckedChangeListener((buttonView, isChecked) ->
                     requireListOptionActions().setReverseSort(isChecked));
@@ -187,7 +195,7 @@ public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
         if (optionsEnabled) {
             int i = 0;
             for (int option : optionIdLocaleMap.keySet()) {
-                int optionStringRes = optionIdLocaleMap.get(option);
+                int optionStringRes = Objects.requireNonNull(optionIdLocaleMap.get(option));
                 optionsView.addView(getOption(option, optionStringRes), i);
                 ++i;
             }
@@ -197,6 +205,10 @@ public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
         boolean profileEnabled = enableProfileNameInput();
         profileNameText.setVisibility(profileEnabled ? View.VISIBLE : View.GONE);
         profileNameInput.setVisibility(profileEnabled ? View.VISIBLE : View.GONE);
+
+        // User
+        boolean selectUserEnabled = enableSelectUser();
+        selectUserView.setVisibility(selectUserEnabled ? View.VISIBLE : View.GONE);
 
         if (reinit) {
             return;
