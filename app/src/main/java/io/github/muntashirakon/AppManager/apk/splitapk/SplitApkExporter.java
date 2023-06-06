@@ -93,7 +93,7 @@ public final class SplitApkExporter {
         zipEntry.setTime(timestamp);
         zipOutputStream.putNextEntry(zipEntry);
         try (InputStream apkInputStream = filePath.openInputStream()) {
-            IoUtils.copy(apkInputStream, zipOutputStream);
+            IoUtils.copy(apkInputStream, zipOutputStream, -1, null);
         }
         zipOutputStream.closeEntry();
     }

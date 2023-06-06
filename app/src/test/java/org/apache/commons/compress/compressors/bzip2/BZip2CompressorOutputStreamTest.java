@@ -61,7 +61,7 @@ public class BZip2CompressorOutputStreamTest {
                 TarArchiveEntry tarEntry = new TarArchiveEntry(file, file.getName());
                 tos.putArchiveEntry(tarEntry);
                 try (InputStream is = file.openInputStream()) {
-                    IoUtils.copy(is, tos);
+                    IoUtils.copy(is, tos, -1, null);
                 }
                 tos.closeArchiveEntry();
             }
@@ -105,7 +105,7 @@ public class BZip2CompressorOutputStreamTest {
                 TarArchiveEntry tarEntry = new TarArchiveEntry(file, file.getName());
                 tos.putArchiveEntry(tarEntry);
                 try (InputStream is = file.openInputStream()) {
-                    IoUtils.copy(is, tos);
+                    IoUtils.copy(is, tos, -1, null);
                 }
                 tos.closeArchiveEntry();
             }

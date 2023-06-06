@@ -228,7 +228,7 @@ public class TBConverter extends Converter {
             }
             try (OutputStream fos = baseApkFile.openOutputStream()) {
                 // The whole file is the APK
-                IoUtils.copy(is, fos);
+                IoUtils.copy(is, fos, -1, null);
             } finally {
                 is.close();
             }
@@ -356,11 +356,11 @@ public class TBConverter extends Converter {
                 if (!inTarEntry.isDirectory() && !inTarEntry.isSymbolicLink()) {
                     if (isExternal) {
                         if (extTos != null) {
-                            IoUtils.copy(tis, extTos);
+                            IoUtils.copy(tis, extTos, -1, null);
                         }
                     } else {
                         if (intTos != null) {
-                            IoUtils.copy(tis, intTos);
+                            IoUtils.copy(tis, intTos, -1, null);
                         }
                     }
                 }

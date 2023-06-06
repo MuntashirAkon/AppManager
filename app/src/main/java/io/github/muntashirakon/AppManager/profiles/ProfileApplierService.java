@@ -4,7 +4,6 @@ package io.github.muntashirakon.AppManager.profiles;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Intent;
 
@@ -18,6 +17,8 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsResultsActivity;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
+import io.github.muntashirakon.AppManager.progress.NotificationProgressHandler;
+import io.github.muntashirakon.AppManager.progress.QueuedProgressHandler;
 import io.github.muntashirakon.AppManager.types.ForegroundService;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 
@@ -28,12 +29,11 @@ public class ProfileApplierService extends ForegroundService {
      * Notification channel ID
      */
     public static final String CHANNEL_ID = BuildConfig.APPLICATION_ID + ".channel.PROFILE_APPLIER";
-    public static final int NOTIFICATION_ID = 1;
 
     @Nullable
     private String profileName;
-    private NotificationCompat.Builder builder;
-    private NotificationManagerCompat notificationManager;
+    private QueuedProgressHandler progressHandler;
+    private NotificationProgressHandler.NotificationInfo notificationInfo;
 
     public ProfileApplierService() {
         super("ProfileApplierService");
@@ -45,16 +45,14 @@ public class ProfileApplierService extends ForegroundService {
         if (intent != null) {
             profileName = intent.getStringExtra(EXTRA_PROFILE_NAME);
         }
-        notificationManager = NotificationUtils.getNewNotificationManager(this, CHANNEL_ID,
-                "Profile Applier", NotificationManagerCompat.IMPORTANCE_LOW);
-        builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setOngoing(true)
-                .setContentText(getString(R.string.operation_running))
-                .setSmallIcon(R.drawable.ic_default_notification)
-                .setSubText(getText(R.string.profiles))
-                .setPriority(NotificationCompat.PRIORITY_LOW)
-                .setProgress(0, 0, true);
-        startForeground(NOTIFICATION_ID, builder.build());
+        progressHandler = new NotificationProgressHandler(this,
+                new NotificationProgressHandler.NotificationManagerInfo(CHANNEL_ID, "Profile Applier", NotificationManagerCompat.IMPORTANCE_LOW),
+                NotificationUtils.HIGH_PRIORITY_NOTIFICATION_INFO,
+                NotificationUtils.HIGH_PRIORITY_NOTIFICATION_INFO);
+        notificationInfo = new NotificationProgressHandler.NotificationInfo(NotificationCompat.PRIORITY_LOW)
+                .setBody(getString(R.string.operation_running))
+                .setOperationName(getText(R.string.profiles));
+        progressHandler.onAttach(this, notificationInfo);
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -74,16 +72,13 @@ public class ProfileApplierService extends ForegroundService {
     protected void onQueued(@Nullable Intent intent) {
         if (intent == null) return;
         String profileName = intent.getStringExtra(EXTRA_PROFILE_NAME);
-        NotificationCompat.Builder builder = NotificationUtils.getHighPriorityNotificationBuilder(this)
+        Object notificationInfo = new NotificationProgressHandler.NotificationInfo(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true)
-                .setDefaults(Notification.DEFAULT_ALL)
-                .setWhen(System.currentTimeMillis())
-                .setSmallIcon(R.drawable.ic_default_notification)
-                .setTicker(profileName)
-                .setContentTitle(profileName)
-                .setSubText(getText(R.string.profiles))
-                .setContentText(getString(R.string.added_to_queue));
-        NotificationUtils.displayHighPriorityNotification(this, builder.build());
+                .setTime(System.currentTimeMillis())
+                .setOperationName(getText(R.string.profiles))
+                .setTitle(profileName)
+                .setBody(getString(R.string.added_to_queue));
+        progressHandler.onQueue(notificationInfo);
     }
 
     @Override
@@ -96,15 +91,14 @@ public class ProfileApplierService extends ForegroundService {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent,
                 PendingIntentCompat.FLAG_IMMUTABLE);
         // Set app name in the ongoing notification
-        builder.setContentTitle(profileName)
-                .setContentIntent(pendingIntent);
-        notificationManager.notify(NOTIFICATION_ID, builder.build());
+        notificationInfo.setTitle(profileName).setDefaultAction(pendingIntent);
+        progressHandler.onProgressStart(-1, 0, notificationInfo);
     }
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
-        if (notificationManager != null) {
-            notificationManager.cancel(NOTIFICATION_ID);
+        if (progressHandler != null) {
+            progressHandler.onDetach(this);
         }
     }
 
@@ -115,20 +109,18 @@ public class ProfileApplierService extends ForegroundService {
     }
 
     private void sendNotification(int result, boolean requiresRestart) {
-        NotificationCompat.Builder builder = NotificationUtils.getHighPriorityNotificationBuilder(this);
-        builder.setAutoCancel(true)
-                .setDefaults(Notification.DEFAULT_ALL)
-                .setWhen(System.currentTimeMillis())
-                .setSmallIcon(R.drawable.ic_default_notification)
-                .setTicker(profileName)
-                .setContentTitle(profileName)
-                .setSubText(getText(R.string.profiles));
+        NotificationProgressHandler.NotificationInfo notificationInfo = new NotificationProgressHandler
+                .NotificationInfo(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true)
+                .setTime(System.currentTimeMillis())
+                .setOperationName(getText(R.string.profiles))
+                .setTitle(profileName);
         switch (result) {
             case Activity.RESULT_CANCELED:  // Failure
-                builder.setContentText(getString(R.string.error));
+                notificationInfo.setBody(getString(R.string.error));
                 break;
             case Activity.RESULT_OK:  // Successful
-                builder.setContentText(getString(R.string.the_operation_was_successful));
+                notificationInfo.setBody(getString(R.string.the_operation_was_successful));
         }
         if (requiresRestart) {
             Intent intent = new Intent(this, BatchOpsResultsActivity.class);
@@ -136,8 +128,8 @@ public class ProfileApplierService extends ForegroundService {
             @SuppressLint("WrongConstant")
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
                     PendingIntent.FLAG_ONE_SHOT | PendingIntentCompat.FLAG_IMMUTABLE);
-            builder.addAction(0, getString(R.string.restart_device), pendingIntent);
+            notificationInfo.addAction(0, getString(R.string.restart_device), pendingIntent);
         }
-        NotificationUtils.displayHighPriorityNotification(this, builder.build());
+        progressHandler.onResult(notificationInfo);
     }
 }

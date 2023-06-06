@@ -2,14 +2,8 @@
 
 package io.github.muntashirakon.io;
 
-import static android.system.OsConstants.O_APPEND;
-import static android.system.OsConstants.O_CREAT;
-import static android.system.OsConstants.O_RDONLY;
-import static android.system.OsConstants.O_RDWR;
-import static android.system.OsConstants.O_TRUNC;
-import static android.system.OsConstants.O_WRONLY;
-
 import android.os.Build;
+import android.os.FileUtils;
 import android.util.Log;
 
 import androidx.annotation.AnyThread;
@@ -22,6 +16,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.Arrays;
+
+import io.github.muntashirakon.AppManager.progress.ProgressHandler;
 
 public final class IoUtils {
     public static final String TAG = IoUtils.class.getSimpleName();
@@ -38,7 +34,8 @@ public final class IoUtils {
      * @return Desired byte array
      * @throws IOException If maximum capacity exceeded.
      */
-    public static byte[] readFully(InputStream is, int length, boolean readAll)
+    @AnyThread
+    public static byte[] readFully(@NonNull InputStream is, int length, boolean readAll)
             throws IOException {
         byte[] output = {};
         if (length == -1) length = Integer.MAX_VALUE;
@@ -69,25 +66,37 @@ public final class IoUtils {
         return output;
     }
 
+    @AnyThread
     @NonNull
     public static String getInputStreamContent(@NonNull InputStream inputStream) throws IOException {
         return new String(IoUtils.readFully(inputStream, -1, true), Charset.defaultCharset());
     }
 
-    public static long copy(Path from, Path to) throws IOException {
+    @AnyThread
+    public static long copy(@NonNull Path from, @NonNull Path to, @Nullable ProgressHandler progressHandler)
+            throws IOException {
         try (InputStream in = from.openInputStream();
              OutputStream out = to.openOutputStream()) {
-            return copy(in, out);
+            return copy(in, out, from.length(), progressHandler);
         }
     }
 
-    public static long copy(InputStream inputStream, OutputStream outputStream) throws IOException {
+    /**
+     * Copy the contents of one stream to another.
+
+     * @param totalSize Total size of the stream. Only used for handling progress. Set {@code -1} if unknown.
+     */
+    @AnyThread
+    public static long copy(@NonNull InputStream in, @NonNull OutputStream out, long totalSize,
+                            @Nullable ProgressHandler progressHandler) throws IOException {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            return android.os.FileUtils.copy(inputStream, outputStream);
+            return FileUtils.copy(in, out, null, null, progress -> {
+                if (progressHandler != null) {
+                    progressHandler.postUpdate(100, (int) (progress * 100 / totalSize));
+                }
+            });
         } else {
-            long count = copyLarge(inputStream, outputStream);
-            if (count > Integer.MAX_VALUE) return -1;
-            return count;
+            return copyLarge(in, out, totalSize, progressHandler);
         }
     }
 
@@ -102,47 +111,24 @@ public final class IoUtils {
         }
     }
 
-    private static long copyLarge(@NonNull InputStream inputStream, OutputStream outputStream) throws IOException {
+    @AnyThread
+    private static long copyLarge(@NonNull InputStream in, @NonNull OutputStream out, long totalSize,
+                                  @Nullable ProgressHandler progressHandler) throws IOException {
         byte[] buffer = new byte[DEFAULT_BUFFER_SIZE];
         long count = 0;
+        long checkpoint = 0;
         int n;
-        while ((n = inputStream.read(buffer)) > 0) {
-            outputStream.write(buffer, 0, n);
+        while ((n = in.read(buffer)) > 0) {
+            out.write(buffer, 0, n);
             count += n;
-        }
-        return count;
-    }
-
-    public static int translateModeStringToPosix(@NonNull String mode) {
-        // Sanity check for invalid chars
-        for (int i = 0; i < mode.length(); i++) {
-            switch (mode.charAt(i)) {
-                case 'r':
-                case 'w':
-                case 't':
-                case 'a':
-                    break;
-                default:
-                    throw new IllegalArgumentException("Bad mode: " + mode);
+            checkpoint += n;
+            if (checkpoint >= 524288) {
+                if (progressHandler != null) {
+                    progressHandler.postUpdate(100, (int) (count * 100 / totalSize));
+                }
+                checkpoint = 0;
             }
         }
-
-        int res;
-        if (mode.startsWith("rw")) {
-            res = O_RDWR | O_CREAT;
-        } else if (mode.startsWith("w")) {
-            res = O_WRONLY | O_CREAT;
-        } else if (mode.startsWith("r")) {
-            res = O_RDONLY;
-        } else {
-            throw new IllegalArgumentException("Bad mode: " + mode);
-        }
-        if (mode.indexOf('t') != -1) {
-            res |= O_TRUNC;
-        }
-        if (mode.indexOf('a') != -1) {
-            res |= O_APPEND;
-        }
-        return res;
+        return count;
     }
 }

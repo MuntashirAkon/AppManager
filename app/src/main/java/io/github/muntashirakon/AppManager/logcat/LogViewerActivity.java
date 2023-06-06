@@ -92,7 +92,7 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
     // how many suggestions to keep in the autosuggestions text
     private static final int MAX_NUM_SUGGESTIONS = 1000;
 
-    private static final String INTENT_FILENAME = "filename";
+    public static final String EXTRA_FILENAME = "filename";
 
     private LinearProgressIndicator mProgressIndicator;
     private ExtendedFloatingActionButton mStopRecordingFab;
@@ -267,7 +267,7 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
     private void startLogging() {
         applyFiltersFromIntent(getIntent());
         Uri dataUri = IntentCompat.getDataUri(getIntent());
-        String filename = getIntent().getStringExtra(INTENT_FILENAME);
+        String filename = getIntent().getStringExtra(EXTRA_FILENAME);
         if (dataUri != null) {
             openLogFile(dataUri);
         } else if (filename != null) {
@@ -310,7 +310,7 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
         super.onNewIntent(intent);
         applyFiltersFromIntent(intent);
         Uri dataUri = IntentCompat.getDataUri(intent);
-        String filename = intent.getStringExtra(INTENT_FILENAME);
+        String filename = intent.getStringExtra(EXTRA_FILENAME);
         if (dataUri != null) {
             openLogFile(dataUri);
         } else if (filename != null) {

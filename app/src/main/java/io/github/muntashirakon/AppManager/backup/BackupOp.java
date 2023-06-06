@@ -318,7 +318,7 @@ class BackupOp implements Closeable {
             try {
                 String newFileName = Utils.replaceOnce(keyStoreFileName, String.valueOf(mApplicationInfo.uid),
                         String.valueOf(KEYSTORE_PLACEHOLDER));
-                IoUtils.copy(keyStorePath.findFile(keyStoreFileName), cachePath.findOrCreateFile(newFileName, null));
+                IoUtils.copy(keyStorePath.findFile(keyStoreFileName), cachePath.findOrCreateFile(newFileName, null), null);
                 cachedKeyStoreFileNames.add(newFileName);
                 keyStoreFilters.add(Pattern.quote(newFileName));
             } catch (Throwable e) {

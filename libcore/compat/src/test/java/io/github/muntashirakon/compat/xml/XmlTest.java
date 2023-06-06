@@ -4,8 +4,14 @@ package io.github.muntashirakon.compat.xml;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.xmlpull.v1.XmlPullParser.CDSECT;
+import static org.xmlpull.v1.XmlPullParser.COMMENT;
+import static org.xmlpull.v1.XmlPullParser.DOCDECL;
 import static org.xmlpull.v1.XmlPullParser.END_DOCUMENT;
 import static org.xmlpull.v1.XmlPullParser.END_TAG;
+import static org.xmlpull.v1.XmlPullParser.ENTITY_REF;
+import static org.xmlpull.v1.XmlPullParser.IGNORABLE_WHITESPACE;
+import static org.xmlpull.v1.XmlPullParser.PROCESSING_INSTRUCTION;
 import static org.xmlpull.v1.XmlPullParser.START_TAG;
 import static org.xmlpull.v1.XmlPullParser.TEXT;
 
@@ -14,6 +20,7 @@ import androidx.annotation.NonNull;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.BufferedInputStream;
@@ -24,6 +31,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
+
+import io.github.muntashirakon.compat.HexDump;
 
 @RunWith(RobolectricTestRunner.class)
 public class XmlTest {
@@ -100,7 +109,7 @@ public class XmlTest {
 //        try (InputStream is = new BufferedInputStream(new FileInputStream(ssaidAbxFile))) {
 //            is.read(xmlExpectedBytes);
 //        }
-//        assertEquals(HexDump.toHexString(xmlExpectedBytes), HexDump.toHexString(xmlActualBytes));
+//        assertEquals(new String(xmlExpectedBytes), new String(xmlActualBytes));
 //    }
 //
 //    @Test
@@ -128,7 +137,7 @@ public class XmlTest {
         serializer.startDocument(null, null);
         int event;
         do {
-            event = parser.next();
+            event = parser.nextToken();
             switch (event) {
                 case START_TAG:
                     serializer.startTag(null, parser.getName());
@@ -143,6 +152,37 @@ public class XmlTest {
                 case TEXT:
                     serializer.text(parser.getText());
                     break;
+                case IGNORABLE_WHITESPACE:
+                    try {
+                        serializer.ignorableWhitespace(parser.getText());
+                    } catch (UnsupportedOperationException ignore) {
+                    }
+                    break;
+                case CDSECT:
+                    serializer.cdsect(parser.getText());
+                    break;
+                case PROCESSING_INSTRUCTION:
+                    serializer.processingInstruction(parser.getText());
+                    break;
+                case COMMENT:
+                    serializer.comment(parser.getText());
+                    break;
+                case ENTITY_REF:
+                    String text = parser.getText();
+                    if (text != null) {
+                        serializer.text(text);
+                        break;
+                    }
+                    int[] holder = new int[2];
+                    char[] chars = parser.getTextCharacters(holder);
+                    text = new String(chars, holder[0], holder[1]);
+                    if (text.equals("#10")) {
+                        text = "\n";
+                    }
+                    serializer.entityRef(text);
+                    break;
+                case DOCDECL:
+                    serializer.docdecl(parser.getText());
                 case END_DOCUMENT:
                     serializer.endDocument();
                     break;

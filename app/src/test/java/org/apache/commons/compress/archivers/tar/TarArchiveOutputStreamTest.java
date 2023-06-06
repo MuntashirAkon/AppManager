@@ -58,7 +58,7 @@ public class TarArchiveOutputStreamTest {
                 TarArchiveEntry tarEntry = new TarArchiveEntry(file, file.getName());
                 tot.putArchiveEntry(tarEntry);
                 try (InputStream is = file.openInputStream()) {
-                    IoUtils.copy(is, tot);
+                    IoUtils.copy(is, tot, -1, null);
                 }
                 tot.closeArchiveEntry();
             }
@@ -105,7 +105,7 @@ public class TarArchiveOutputStreamTest {
                 TarArchiveEntry tarEntry = new TarArchiveEntry(file, file.getName());
                 tot.putArchiveEntry(tarEntry);
                 try (InputStream is = file.openInputStream()) {
-                    IoUtils.copy(is, tot);
+                    IoUtils.copy(is, tot, -1, null);
                 }
                 tot.closeArchiveEntry();
             }

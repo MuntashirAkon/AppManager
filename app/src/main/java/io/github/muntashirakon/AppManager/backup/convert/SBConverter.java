@@ -269,7 +269,7 @@ public class SBConverter extends Converter {
                             // We need to use a temporary file
                             tmpFile = FileCache.getGlobalFileCache().createCachedFile(dataFile.getExtension());
                             try (OutputStream fos = new FileOutputStream(tmpFile)) {
-                                IoUtils.copy(zis, fos);
+                                IoUtils.copy(zis, fos, -1, null);
                             }
                         }
                         String fileName = zipEntry.getName().replaceFirst(mPackageName + "/", "");
@@ -283,7 +283,7 @@ public class SBConverter extends Converter {
                         if (tmpFile != null) {
                             // Copy from the temporary file
                             try (FileInputStream fis = new FileInputStream(tmpFile)) {
-                                IoUtils.copy(fis, tos);
+                                IoUtils.copy(fis, tos, -1, null);
                             } finally {
                                 FileCache.getGlobalFileCache().delete(tmpFile);
                             }
@@ -308,7 +308,7 @@ public class SBConverter extends Converter {
         mCachedApk = FileUtils.getTempPath(mPackageName, "base.apk");
         try (InputStream pis = getApkFile().openInputStream()) {
             try (OutputStream fos = mCachedApk.openOutputStream()) {
-                IoUtils.copy(pis, fos);
+                IoUtils.copy(pis, fos, -1, null);
             }
             mFilesToBeDeleted.add(getApkFile());
         } catch (IOException e) {
@@ -417,7 +417,7 @@ public class SBConverter extends Converter {
                 splits.add(splitName);
                 Path file = Objects.requireNonNull(mCachedApk.getParentFile()).findOrCreateFile(splitName, null);
                 try (OutputStream fos = file.openOutputStream()) {
-                    IoUtils.copy(zis, fos);
+                    IoUtils.copy(zis, fos, -1, null);
                 } catch (IOException e) {
                     file.delete();
                     throw e;

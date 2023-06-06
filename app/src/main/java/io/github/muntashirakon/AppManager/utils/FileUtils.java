@@ -80,7 +80,7 @@ public final class FileUtils {
     @NonNull
     public static Path saveZipFile(@NonNull InputStream zipInputStream, @NonNull Path filePath) throws IOException {
         try (OutputStream outputStream = filePath.openOutputStream()) {
-            IoUtils.copy(zipInputStream, outputStream);
+            IoUtils.copy(zipInputStream, outputStream, -1, null);
         }
         return filePath;
     }
@@ -157,7 +157,7 @@ public final class FileUtils {
         try (AssetFileDescriptor openFd = context.getAssets().openFd(fileName)) {
             try (InputStream open = openFd.createInputStream();
                  FileOutputStream fos = new FileOutputStream(destFile)) {
-                IoUtils.copy(open, fos);
+                IoUtils.copy(open, fos, -1, null);
                 fos.flush();
                 fos.getFD().sync();
             }

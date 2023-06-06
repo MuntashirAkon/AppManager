@@ -110,7 +110,7 @@ public final class TarUtils {
                         tos.putArchiveEntry(tarEntry);
                         if (!file.isDirectory()) {
                             try (InputStream is = file.openInputStream()) {
-                                IoUtils.copy(is, tos);
+                                IoUtils.copy(is, tos, -1, null);
                             }
                         }
                     }
@@ -210,7 +210,7 @@ public final class TarUtils {
                         }
                         if (!entry.isDirectory()) {
                             try (OutputStream os = file.openOutputStream()) {
-                                IoUtils.copy(tis, os);
+                                IoUtils.copy(tis, os, -1, null);
                             }
                         }
                     }

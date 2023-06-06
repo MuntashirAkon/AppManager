@@ -134,7 +134,7 @@ public class AESCrypto implements Crypto {
         cipher.init(true, getParams());
         // Convert unencrypted stream to encrypted stream
         try (OutputStream cipherOS = new CipherOutputStream(encryptedStream, cipher)) {
-            IoUtils.copy(unencryptedStream, cipherOS);
+            IoUtils.copy(unencryptedStream, cipherOS, -1, null);
         }
     }
 
@@ -152,7 +152,7 @@ public class AESCrypto implements Crypto {
         cipher.init(false, getParams());
         // Convert encrypted stream to unencrypted stream
         try (InputStream cipherIS = new CipherInputStream(encryptedStream, cipher)) {
-            IoUtils.copy(cipherIS, unencryptedStream);
+            IoUtils.copy(cipherIS, unencryptedStream, -1, null);
         }
     }
 
@@ -186,11 +186,11 @@ public class AESCrypto implements Crypto {
                  OutputStream os = outputPath.openOutputStream()) {
                 if (forEncryption) {
                     try (OutputStream cipherOS = new CipherOutputStream(os, cipher)) {
-                        IoUtils.copy(is, cipherOS);
+                        IoUtils.copy(is, cipherOS, -1, null);
                     }
                 } else {  // Cipher.DECRYPT_MODE
                     try (InputStream cipherIS = new CipherInputStream(is, cipher)) {
-                        IoUtils.copy(cipherIS, os);
+                        IoUtils.copy(cipherIS, os, -1, null);
                     }
                 }
             }

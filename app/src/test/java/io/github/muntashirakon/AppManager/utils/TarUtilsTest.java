@@ -61,7 +61,7 @@ public class TarUtilsTest {
         tmpFiles.add(testRoot.findOrCreateDirectory("prefixed").findOrCreateFile("prefixed_include.txt", null));
         // Copy files to tmpRoot
         for (int i = 0; i < resFiles.size(); ++i) {
-            IoUtils.copy(resFiles.get(i), tmpFiles.get(i));
+            IoUtils.copy(resFiles.get(i), tmpFiles.get(i), null);
         }
         tarGzFilesForExtractTest = TarUtils.create(TarUtils.TAR_GZIP, testRoot, tmpRoot, "am_ex.tar.gz",
                 null, null, null, false).toArray(new Path[0]);

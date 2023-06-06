@@ -34,9 +34,12 @@ import io.github.muntashirakon.AppManager.logcat.reader.LogcatReaderLoader;
 import io.github.muntashirakon.AppManager.logcat.struct.LogLine;
 import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.progress.NotificationProgressHandler;
+import io.github.muntashirakon.AppManager.progress.QueuedProgressHandler;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.types.ForegroundService;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
 /**
  * Reads logs.
@@ -53,11 +56,13 @@ public class LogcatRecordingService extends ForegroundService {
     public static final String EXTRA_LEVEL = "level";
 
     private static final String ACTION_STOP_RECORDING = BuildConfig.APPLICATION_ID + ".action.STOP_RECORDING";
+    public static final String CHANNEL_ID = BuildConfig.APPLICATION_ID + ".channel.LOGCAT_RECORDER";
 
     private final Object mLock = new Object();
     private LogcatReader mReader;
     private boolean mKilled;
     private Handler mHandler;
+    private QueuedProgressHandler progressHandler;
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -110,6 +115,10 @@ public class LogcatRecordingService extends ForegroundService {
     public int onStartCommand(Intent intent, int flags, int startId) {
         // Update widget
         WidgetHelper.updateWidgets(getApplicationContext());
+        progressHandler = new NotificationProgressHandler(this,
+                new NotificationProgressHandler.NotificationManagerInfo(CHANNEL_ID, "Logcat Recorder", NotificationManagerCompat.IMPORTANCE_DEFAULT),
+                NotificationUtils.HIGH_PRIORITY_NOTIFICATION_INFO,
+                null);
         Intent stopRecordingIntent = new Intent();
         stopRecordingIntent.setAction(ACTION_STOP_RECORDING);
         // Have to make this unique for God knows what reason
@@ -119,20 +128,12 @@ public class LogcatRecordingService extends ForegroundService {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0 /* no requestCode */,
                 stopRecordingIntent, PendingIntent.FLAG_ONE_SHOT | PendingIntentCompat.FLAG_IMMUTABLE);
 
-        final String CHANNEL_ID = "matlog_logging_channel";
-        // Set the icon, scrolling text and timestamp
-        NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
-                .setOngoing(true)
-                .setSmallIcon(R.drawable.ic_default_notification)
-                .setTicker(getText(R.string.notification_ticker))
-                .setWhen(System.currentTimeMillis())
-                .setContentTitle(getString(R.string.notification_title))
-                .setContentText(getString(R.string.notification_subtext))
-                .setContentIntent(pendingIntent);
-
-        NotificationUtils.getNewNotificationManager(this, CHANNEL_ID, "Logcat Recording Service",
-                NotificationManagerCompat.IMPORTANCE_DEFAULT);
-        startForeground(R.string.notification_title, notification.build());
+        Object notificationInfo = new NotificationProgressHandler.NotificationInfo(NotificationCompat.PRIORITY_DEFAULT)
+                .setTitle(getString(R.string.notification_title))
+                .setBody(getString(R.string.notification_subtext))
+                .setStatusBarText(getText(R.string.notification_ticker))
+                .setDefaultAction(pendingIntent);
+        progressHandler.onAttach(this, notificationInfo);
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -182,12 +183,19 @@ public class LogcatRecordingService extends ForegroundService {
             killProcess();
             Log.d(TAG, "Service ended");
             boolean logSaved = SaveLogHelper.saveLog(stringBuilder, filename);
+            NotificationProgressHandler.NotificationInfo notificationInfo =
+                    new NotificationProgressHandler.NotificationInfo(NotificationCompat.PRIORITY_HIGH)
+                            .setTitle(getString(R.string.notification_title))
+                            .setAutoCancel(true);
             if (logSaved) {
-                makeToast(R.string.log_saved, Toast.LENGTH_SHORT);
-                startLogcatActivityToViewSavedFile(filename);
+                notificationInfo.setTitle(getString(R.string.log_saved))
+                        .setStatusBarText(getString(R.string.log_saved))
+                        .setBody(getString(R.string.tap_to_see_details))
+                        .setDefaultAction(getLogcatActivityToViewSavedFile(filename));
             } else {
-                makeToast(R.string.unable_to_save_log, Toast.LENGTH_LONG);
+                notificationInfo.setTitle(getString(R.string.unable_to_save_log));
             }
+            ThreadUtils.postOnMainThread(() -> progressHandler.onResult(notificationInfo));
         }
     }
 
@@ -197,13 +205,14 @@ public class LogcatRecordingService extends ForegroundService {
     }
 
 
-    private void startLogcatActivityToViewSavedFile(String filename) {
+    @SuppressLint("WrongConstant")
+    private PendingIntent getLogcatActivityToViewSavedFile(String filename) {
         // Start up the logcat activity if necessary and show the saved file
         Intent targetIntent = new Intent(getApplicationContext(), LogViewerActivity.class);
         targetIntent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         targetIntent.setAction(Intent.ACTION_MAIN);
-        targetIntent.putExtra("filename", filename);
-        startActivity(targetIntent);
+        targetIntent.putExtra(LogViewerActivity.EXTRA_FILENAME, filename);
+        return PendingIntent.getActivity(this, 0, targetIntent, PendingIntent.FLAG_ONE_SHOT | PendingIntentCompat.FLAG_IMMUTABLE);
     }
 
 

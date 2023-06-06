@@ -578,7 +578,7 @@ public final class PackageInstallerCompat {
             for (ApkFile.Entry entry : selectedEntries) {
                 try (InputStream apkInputStream = entry.getSignedInputStream();
                      OutputStream apkOutputStream = session.openWrite(entry.getFileName(), 0, entry.getFileSize())) {
-                    IoUtils.copy(apkInputStream, apkOutputStream);
+                    IoUtils.copy(apkInputStream, apkOutputStream, -1, null);
                     session.fsync(apkOutputStream);
                     Log.d(TAG, "Install: copied entry " + entry.name);
                 } catch (IOException e) {
@@ -618,7 +618,7 @@ public final class PackageInstallerCompat {
             for (Path apkFile : apkFiles) {
                 try (InputStream apkInputStream = apkFile.openInputStream();
                      OutputStream apkOutputStream = session.openWrite(apkFile.getName(), 0, apkFile.length())) {
-                    IoUtils.copy(apkInputStream, apkOutputStream);
+                    IoUtils.copy(apkInputStream, apkOutputStream, -1, null);
                     session.fsync(apkOutputStream);
                 } catch (IOException e) {
                     callFinish(STATUS_FAILURE_SESSION_WRITE);

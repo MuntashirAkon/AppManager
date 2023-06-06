@@ -13,15 +13,21 @@ import androidx.core.app.NotificationManagerCompat;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.AppManager.progress.NotificationProgressHandler;
 
 public final class NotificationUtils {
     private static final String HIGH_PRIORITY_CHANNEL_ID = BuildConfig.APPLICATION_ID + ".channel.HIGH_PRIORITY";
     private static final String INSTALL_CONFIRM_CHANNEL_ID = BuildConfig.APPLICATION_ID + ".channel.INSTALL_CONFIRM";
     private static final String FREEZE_UNFREEZE_CHANNEL_ID = BuildConfig.APPLICATION_ID + ".channel.FREEZE_UNFREEZE";
+
+    public static final NotificationProgressHandler.NotificationManagerInfo HIGH_PRIORITY_NOTIFICATION_INFO =
+            new NotificationProgressHandler.NotificationManagerInfo(
+                    HIGH_PRIORITY_CHANNEL_ID, "Alerts", NotificationManagerCompat.IMPORTANCE_HIGH);
 
     @IntDef({
             NotificationManagerCompat.IMPORTANCE_UNSPECIFIED,
@@ -51,9 +57,9 @@ public final class NotificationUtils {
         Notification build(NotificationCompat.Builder builder);
     }
 
-    private static final Map<String, Integer> notificationIds = new HashMap<>();
+    private static final Map<String, Integer> notificationIds = Collections.synchronizedMap(new HashMap<>());
 
-    private static int getNotificationId(String channelId) {
+    public static int getNotificationId(String channelId) {
         Integer id = notificationIds.get(channelId);
         if (id == null) {
             notificationIds.put(channelId, 1);

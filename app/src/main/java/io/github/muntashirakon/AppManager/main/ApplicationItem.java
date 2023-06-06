@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.util.Pair;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 
@@ -122,14 +123,11 @@ public class ApplicationItem extends PackageItemInfo {
      */
     public boolean isSelected = false;
 
+    @NonNull
     public int[] userHandles = EmptyArray.INT;
 
     public ApplicationItem() {
         super();
-    }
-
-    public ApplicationItem(PackageItemInfo orig) {
-        super(orig);
     }
 
     @WorkerThread

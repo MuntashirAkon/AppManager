@@ -50,6 +50,7 @@ import aosp.libcore.util.EmptyArray;
 import io.github.muntashirakon.AppManager.compat.StorageManagerCompat;
 import io.github.muntashirakon.AppManager.ipc.LocalServices;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.io.fs.VirtualFileSystem;
@@ -1240,7 +1241,7 @@ public class Path implements Comparable<Path> {
         if (src.isMountPoint() || dst.isMountPoint()) {
             throw new IOException("Either source or destination are a mount point.");
         }
-        IoUtils.copy(src, dst);
+        IoUtils.copy(src, dst, null);
     }
 
     // Copy directory content
@@ -1512,6 +1513,7 @@ public class Path implements Comparable<Path> {
         return emptyValue;
     }
 
+    @NonNull
     public String getContentAsString() {
         return getContentAsString("");
     }
@@ -1519,15 +1521,12 @@ public class Path implements Comparable<Path> {
     @Nullable
     @Contract("!null -> !null")
     public String getContentAsString(@Nullable String emptyValue) {
-        try (InputStream inputStream = openInputStream()) {
-            return new String(IoUtils.readFully(inputStream, -1, true), Charset.defaultCharset());
-        } catch (IOException e) {
-            if (!(e.getCause() instanceof ErrnoException)) {
-                // This isn't just another EACCESS exception
-                e.printStackTrace();
+        String contents = ExUtils.exceptionAsNull(() -> {
+            try (InputStream inputStream = openInputStream()) {
+                return new String(IoUtils.readFully(inputStream, -1, true), Charset.defaultCharset());
             }
-        }
-        return emptyValue;
+        });
+        return contents != null ? contents : emptyValue;
     }
 
     @NonNull

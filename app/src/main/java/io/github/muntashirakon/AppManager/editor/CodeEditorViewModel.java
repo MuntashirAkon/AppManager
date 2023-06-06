@@ -254,10 +254,10 @@ public class CodeEditorViewModel extends AndroidViewModel {
                         // We already have this file
                         continue;
                     }
-                    try (InputStream is = path.openInputStream()) {
-                        smaliContents.add(IoUtils.getInputStreamContent(is));
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    String content = path.getContentAsString(null);
+                    if (content != null) {
+                        smaliContents.add(path.getContentAsString());
+                    } else {
                         mJavaFileLiveData.postValue(null);
                         return;
                     }

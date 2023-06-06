@@ -51,7 +51,7 @@ public class SplitInputStreamTest {
         junkFiles.add(file);
         try (SplitInputStream splitInputStream = new SplitInputStream(fileList);
              OutputStream outputStream = new FileOutputStream(file)) {
-            IoUtils.copy(splitInputStream, outputStream);
+            IoUtils.copy(splitInputStream, outputStream, -1, null);
         }
         assert classLoader != null;
         String expectedHash = DigestUtils.getHexDigest(DigestUtils.SHA_256, new File(classLoader.getResource("AppManager_v2.5.22.apks").getFile()));

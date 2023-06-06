@@ -160,7 +160,7 @@ class ZipFileSystem extends VirtualFileSystem {
                     File cachedFile = ((VirtualZipEntry) zipEntry).getCachedFile();
                     if (cachedFile != null) {
                         try (InputStream is = new FileInputStream(cachedFile)) {
-                            IoUtils.copy(is, zos);
+                            IoUtils.copy(is, zos, -1, null);
                         }
                     } // else cached file was not created because the file was only created and never written to
                     zos.closeEntry();
@@ -174,7 +174,7 @@ class ZipFileSystem extends VirtualFileSystem {
                     }
                     // Entry is a file
                     try (InputStream is = zipFile.getInputStream(zipEntry)) {
-                        IoUtils.copy(is, zos);
+                        IoUtils.copy(is, zos, -1, null);
                     }
                     zos.closeEntry();
                 }

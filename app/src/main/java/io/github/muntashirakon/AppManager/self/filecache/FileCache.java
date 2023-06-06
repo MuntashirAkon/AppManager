@@ -85,7 +85,7 @@ public class FileCache implements Closeable {
         } else if (source.lastModified() > 0 && source.lastModified() < tempFile.lastModified()) {
             return tempFile;
         }
-        IoUtils.copy(source, Paths.get(tempFile));
+        IoUtils.copy(source, Paths.get(tempFile), null);
         return tempFile;
     }
 
@@ -94,7 +94,7 @@ public class FileCache implements Closeable {
         File tempFile = File.createTempFile("file_", "." + (extension != null ? extension : "tmp"), mCacheDir);
         mFileCache.add(tempFile);
         try (OutputStream os = new FileOutputStream(tempFile)) {
-            IoUtils.copy(is, os);
+            IoUtils.copy(is, os, -1, null);
         }
         return tempFile;
     }

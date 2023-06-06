@@ -17,7 +17,6 @@ import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerC
 import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_SUCCESS;
 
 import android.annotation.SuppressLint;
-import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -36,6 +35,8 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.main.MainActivity;
+import io.github.muntashirakon.AppManager.progress.NotificationProgressHandler;
+import io.github.muntashirakon.AppManager.progress.QueuedProgressHandler;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.Prefs;
@@ -48,7 +49,6 @@ import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 public class PackageInstallerService extends ForegroundService {
     public static final String EXTRA_QUEUE_ITEM = "queue_item";
     public static final String CHANNEL_ID = BuildConfig.APPLICATION_ID + ".channel.INSTALL";
-    public static final int NOTIFICATION_ID = 3;
 
     public interface OnInstallFinished {
         @UiThread
@@ -62,30 +62,31 @@ public class PackageInstallerService extends ForegroundService {
 
     @Nullable
     private OnInstallFinished onInstallFinished;
-    private NotificationCompat.Builder builder;
-    private NotificationManagerCompat notificationManager;
     private int sessionId;
     private String packageName;
+    private QueuedProgressHandler progressHandler;
+    private NotificationProgressHandler.NotificationInfo notificationInfo;
 
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
-        if (isWorking()) return super.onStartCommand(intent, flags, startId);
-        notificationManager = NotificationUtils.getNewNotificationManager(this, CHANNEL_ID,
-                "Install Progress", NotificationManagerCompat.IMPORTANCE_LOW);
+        if (isWorking()) {
+            return super.onStartCommand(intent, flags, startId);
+        }
+        progressHandler = new NotificationProgressHandler(
+                this,
+                new NotificationProgressHandler.NotificationManagerInfo(CHANNEL_ID, "Install Progress", NotificationManagerCompat.IMPORTANCE_LOW),
+                NotificationUtils.HIGH_PRIORITY_NOTIFICATION_INFO,
+                NotificationUtils.HIGH_PRIORITY_NOTIFICATION_INFO
+        );
         Intent notificationIntent = new Intent(this, MainActivity.class);
         @SuppressLint("WrongConstant")
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent,
                 PendingIntentCompat.FLAG_IMMUTABLE);
-        builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setOngoing(true)
-                .setContentTitle(null)
-                .setContentText(getString(R.string.install_in_progress))
-                .setSmallIcon(R.drawable.ic_default_notification)
-                .setSubText(getText(R.string.package_installer))
-                .setPriority(NotificationCompat.PRIORITY_LOW)
-                .setProgress(0, 0, true)
-                .setContentIntent(pendingIntent);
-        startForeground(NOTIFICATION_ID, builder.build());
+        notificationInfo = new NotificationProgressHandler.NotificationInfo(NotificationCompat.PRIORITY_LOW)
+                .setBody(getString(R.string.install_in_progress))
+                .setOperationName(getText(R.string.package_installer))
+                .setDefaultAction(pendingIntent);
+        progressHandler.onAttach(this, notificationInfo);
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -174,16 +175,13 @@ public class PackageInstallerService extends ForegroundService {
         if (intent == null) return;
         ApkQueueItem apkQueueItem = intent.getParcelableExtra(EXTRA_QUEUE_ITEM);
         String appLabel = apkQueueItem != null ? apkQueueItem.getAppLabel() : null;
-        NotificationCompat.Builder builder = NotificationUtils.getHighPriorityNotificationBuilder(this)
+        Object notificationInfo = new NotificationProgressHandler.NotificationInfo(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true)
-                .setDefaults(Notification.DEFAULT_ALL)
-                .setWhen(System.currentTimeMillis())
-                .setSmallIcon(R.drawable.ic_default_notification)
-                .setTicker(appLabel)
-                .setContentTitle(appLabel)
-                .setSubText(getString(R.string.package_installer))
-                .setContentText(getString(R.string.added_to_queue));
-        NotificationUtils.displayHighPriorityNotification(this, builder.build());
+                .setOperationName(getString(R.string.package_installer))
+                .setTitle(appLabel)
+                .setBody(getString(R.string.added_to_queue))
+                .setTime(System.currentTimeMillis());
+        progressHandler.onQueue(notificationInfo);
     }
 
     @Override
@@ -192,14 +190,14 @@ public class PackageInstallerService extends ForegroundService {
         // Set app name in the ongoing notification
         ApkQueueItem apkQueueItem = intent.getParcelableExtra(EXTRA_QUEUE_ITEM);
         String appLabel = apkQueueItem != null ? apkQueueItem.getAppLabel() : null;
-        builder.setContentTitle(appLabel);
-        notificationManager.notify(NOTIFICATION_ID, builder.build());
+        notificationInfo.setTitle(appLabel);
+        progressHandler.onProgressStart(-1, 0, notificationInfo);
     }
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
-        if (notificationManager != null) {
-            notificationManager.cancel(NOTIFICATION_ID);
+        if (progressHandler != null) {
+            progressHandler.onDetach(this);
         }
     }
 
@@ -227,24 +225,20 @@ public class PackageInstallerService extends ForegroundService {
                                   @Nullable String blockingPackage,
                                   @Nullable String statusMessage) {
         Intent intent = getPackageManager().getLaunchIntentForPackage(packageName);
-        NotificationCompat.Builder builder = NotificationUtils.getHighPriorityNotificationBuilder(this);
+        PendingIntent defaultAction = intent != null ? PendingIntent.getActivity(this, 0, intent,
+                PendingIntent.FLAG_ONE_SHOT | PendingIntentCompat.FLAG_IMMUTABLE) : null;
         String subject = getStringFromStatus(this, status, appLabel, blockingPackage);
-        builder.setAutoCancel(true)
-                .setDefaults(Notification.DEFAULT_ALL)
-                .setWhen(System.currentTimeMillis())
-                .setSmallIcon(R.drawable.ic_default_notification)
-                .setTicker(appLabel)
-                .setContentTitle(appLabel)
-                .setSubText(getText(R.string.package_installer))
-                .setContentText(subject);
-        if (statusMessage != null) {
-            builder.setStyle(new NotificationCompat.BigTextStyle().bigText(subject + "\n\n" + statusMessage));
-        }
-        if (intent != null) {
-            builder.setContentIntent(PendingIntent.getActivity(this, 0, intent,
-                    PendingIntent.FLAG_ONE_SHOT | PendingIntentCompat.FLAG_IMMUTABLE));
-        }
-        NotificationUtils.displayHighPriorityNotification(this, builder.build());
+        NotificationCompat.Style content = statusMessage != null ? new NotificationCompat.BigTextStyle()
+                .bigText(subject + "\n\n" + statusMessage) : null;
+        Object notificationInfo = new NotificationProgressHandler.NotificationInfo(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true)
+                .setTime(System.currentTimeMillis())
+                .setOperationName(getText(R.string.package_installer))
+                .setTitle(appLabel)
+                .setBody(subject)
+                .setStyle(content)
+                .setDefaultAction(defaultAction);
+        progressHandler.onResult(notificationInfo);
     }
 
     @NonNull
