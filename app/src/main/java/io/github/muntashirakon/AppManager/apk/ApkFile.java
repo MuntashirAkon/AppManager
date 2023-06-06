@@ -730,12 +730,12 @@ public final class ApkFile implements AutoCloseable {
          * @throws IOException If the APK cannot be signed or cached.
          */
         public File getSignedFile() throws IOException {
-            if (Paths.exists(signedFile)) return signedFile;
             File realFile = getRealCachedFile();
             if (!needSigning()) {
                 // Return original/real file if signing is not requested
                 return realFile;
             }
+            if (Paths.exists(signedFile)) return signedFile;
             signedFile = fileCache.createCachedFile("apk");
             SigSchemes sigSchemes = Prefs.Signing.getSigSchemes();
             boolean zipAlign = Prefs.Signing.zipAlign();
