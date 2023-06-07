@@ -90,29 +90,35 @@ final class LocalFileOverlay {
             put("/data/user_de/" + userId, new String[]{appId}); // Permission denied
         }
         put("/mnt/sdcard", new String[]{"/storage/emulated/" + userId}); // Permission denied, but redirects to /storage/emulated/<user_id>
-        put("/storage", new String[]{"emulated", "self"}); // Permission denied, but we have more customisation
+        put("/storage", new String[]{"emulated", "self"}); // Permission denied
         put("/storage/emulated", new String[]{String.valueOf(userId)}); // Permission denied
     }};
 
     @NonNull
     public static ExtendedFile getOverlayFile(@NonNull ExtendedFile file) {
+        ExtendedFile file1 = getOverlayFileOrNull(file);
+        return file1 != null ? file1 : file;
+    }
+
+    @Nullable
+    public static ExtendedFile getOverlayFileOrNull(@NonNull ExtendedFile file) {
         String path = Paths.getSanitizedPath(file.getAbsolutePath(), false);
         if (path == null) {
-            return file;
+            return null;
         }
         String[] children = listChildrenInternal(path);
         if (children != null) {
             // Check for potential alias
             for (String child : children) {
-                if (child.startsWith("/")) {
-                    return FileSystemManager.getLocal().getFile(child);
+                if (child.startsWith(File.separator)) {
+                    return ReadOnlyLocalFile.getAliasInstance(path, child);
                 }
             }
             // No alias found
             return new ReadOnlyLocalFile(path);
         }
         // No overlay needed
-        return file;
+        return null;
     }
 
     @Nullable

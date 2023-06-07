@@ -219,9 +219,9 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
         }
         Path path = currentPath;
         fmFileLoaderResult = ThreadUtils.postOnBackgroundThread(() -> {
-            if (!path.isDirectory()) return;
-            // Send current URI as it is approved
+            // Send current URI
             uriLiveData.postValue(currentUri);
+            if (!path.isDirectory()) return;
             Path[] children = path.listFiles();
             FolderShortInfo folderShortInfo = new FolderShortInfo();
             int count = children.length;

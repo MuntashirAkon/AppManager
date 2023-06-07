@@ -234,6 +234,15 @@ public class Path implements Comparable<Path> {
 
     private Path(@NonNull Context context, @NonNull DocumentFile documentFile) {
         mContext = context;
+        if (documentFile instanceof ExtendedRawDocumentFile) {
+            ExtendedFile file = ((ExtendedRawDocumentFile) documentFile).getFile();
+            if (file instanceof LocalFile) {
+                ExtendedFile newFile = LocalFileOverlay.getOverlayFileOrNull(file);
+                if (newFile != null) {
+                    documentFile = new ExtendedRawDocumentFile(newFile);
+                }
+            }
+        }
         mDocumentFile = documentFile;
     }
 

@@ -12,12 +12,39 @@ import java.util.ArrayList;
 import java.util.List;
 
 class ReadOnlyLocalFile extends LocalFile {
+    @NonNull
+    public static ReadOnlyLocalFile getAliasInstance(@NonNull String pathname, @NonNull String alias) {
+        ReadOnlyLocalFile file = new ReadOnlyLocalFile(alias);
+        file.actualPath = pathname;
+        return file;
+    }
+
+    @Nullable
+    private String actualPath;
+
     public ReadOnlyLocalFile(@NonNull String pathname) {
         super(pathname);
     }
 
     private ReadOnlyLocalFile(@Nullable String parent, @NonNull String child) {
         super(parent, child);
+    }
+
+    @NonNull
+    @Override
+    public String getName() {
+        if (actualPath != null) {
+            return new File(actualPath).getName();
+        }
+        return super.getName();
+    }
+
+    @Override
+    public boolean isSymlink() {
+        if (actualPath != null) {
+            return true;
+        }
+        return super.isSymlink();
     }
 
     @Override
@@ -27,8 +54,9 @@ class ReadOnlyLocalFile extends LocalFile {
             // Emulated directory
             // Check for potential alias
             for (String child : children) {
-                if (child.startsWith("/")) {
-                    return super.create(child);
+                if (child.startsWith(File.separator)) {
+                    // Alias
+                    return getAliasInstance(path, child);
                 }
             }
             // No alias found
@@ -80,7 +108,7 @@ class ReadOnlyLocalFile extends LocalFile {
         }
         List<String> childList = new ArrayList<>(children.length);
         for (String child : children) {
-            if (!child.startsWith("/")) {
+            if (!child.startsWith(File.separator)) {
                 // Check if the path actually exist
                 if (new File(this, child).exists()) {
                     childList.add(child);
