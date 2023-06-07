@@ -42,10 +42,12 @@ public class NotificationProgressHandler extends QueuedProgressHandler {
     @Nullable
     private final NotificationManagerCompat mQueueNotificationManager;
     private final int mProgressNotificationId;
+    private final int mQueueNotificationId;
 
     @Nullable
     private NotificationInfo mLastProgressNotification = null;
     private int mLastMax = -1;
+    private int mLastProgress = 0;
     private boolean mAttachedToService;
 
     public NotificationProgressHandler(@NonNull Context context,
@@ -60,6 +62,7 @@ public class NotificationProgressHandler extends QueuedProgressHandler {
         mCompletionNotificationManager = getNotificationManager(context, mCompletionNotificationManagerInfo);
         mQueueNotificationManager = getNotificationManager(context, mQueueNotificationManagerInfo);
         mProgressNotificationId = NotificationUtils.getNotificationId(mProgressNotificationManagerInfo.channelId);
+        mQueueNotificationId = mQueueNotificationManagerInfo != null ? NotificationUtils.getNotificationId(mQueueNotificationManagerInfo.channelId) : -1;
     }
 
     @Override
@@ -71,8 +74,7 @@ public class NotificationProgressHandler extends QueuedProgressHandler {
         Notification notification = info
                 .getBuilder(mContext, mQueueNotificationManagerInfo)
                 .build();
-        int notificationId = NotificationUtils.getNotificationId(mQueueNotificationManagerInfo.channelId);
-        notify(mContext, mQueueNotificationManager, notificationId, notification);
+        notify(mContext, mQueueNotificationManager, mQueueNotificationId, notification);
     }
 
     @Override
@@ -100,6 +102,7 @@ public class NotificationProgressHandler extends QueuedProgressHandler {
             Objects.requireNonNull(mLastProgressNotification);
         }
         mLastMax = max;
+        mLastProgress = current;
         Notification notification = mLastProgressNotification
                 .getBuilder(mContext, mProgressNotificationManagerInfo)
                 .setOngoing(true)
@@ -119,6 +122,7 @@ public class NotificationProgressHandler extends QueuedProgressHandler {
             Objects.requireNonNull(mLastProgressNotification);
         }
         mLastMax = max;
+        mLastProgress = current;
         Notification notification = mLastProgressNotification
                 .getBuilder(mContext, mProgressNotificationManagerInfo)
                 .setOngoing(true)
@@ -159,6 +163,11 @@ public class NotificationProgressHandler extends QueuedProgressHandler {
     @Override
     public int getLastMax() {
         return mLastMax;
+    }
+
+    @Override
+    public int getLastProgress() {
+        return mLastProgress;
     }
 
     @Nullable
@@ -242,7 +251,7 @@ public class NotificationProgressHandler extends QueuedProgressHandler {
         private boolean autoCancel;
         @Nullable
         private PendingIntent defaultAction;
-        private ArrayList<NotificationCompat.Action> actions = new ArrayList<>();
+        private final ArrayList<NotificationCompat.Action> actions = new ArrayList<>();
 
 
         public NotificationInfo(@NotificationUtils.NotificationPriority int priority) {

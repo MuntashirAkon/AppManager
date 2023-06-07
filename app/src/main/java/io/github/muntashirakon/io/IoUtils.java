@@ -18,6 +18,7 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 
 import io.github.muntashirakon.AppManager.progress.ProgressHandler;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
 public final class IoUtils {
     public static final String TAG = IoUtils.class.getSimpleName();
@@ -90,9 +91,10 @@ public final class IoUtils {
     public static long copy(@NonNull InputStream in, @NonNull OutputStream out, long totalSize,
                             @Nullable ProgressHandler progressHandler) throws IOException {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            return FileUtils.copy(in, out, null, null, progress -> {
+            int lastProgress = progressHandler != null ? progressHandler.getLastProgress() : 0;
+            return FileUtils.copy(in, out, null, ThreadUtils.getBackgroundThreadExecutor(), progress -> {
                 if (progressHandler != null) {
-                    progressHandler.postUpdate(100, (int) (progress * 100 / totalSize));
+                    progressHandler.postUpdate(100, (int) (lastProgress + (progress * 100 / totalSize)));
                 }
             });
         } else {
@@ -118,13 +120,14 @@ public final class IoUtils {
         long count = 0;
         long checkpoint = 0;
         int n;
+        int lastProgress = progressHandler != null ? progressHandler.getLastProgress() : 0;
         while ((n = in.read(buffer)) > 0) {
             out.write(buffer, 0, n);
             count += n;
             checkpoint += n;
-            if (checkpoint >= 524288) {
+            if (checkpoint >= (1 << 19)) { // 512 kB
                 if (progressHandler != null) {
-                    progressHandler.postUpdate(100, (int) (count * 100 / totalSize));
+                    progressHandler.postUpdate(100, (int) (lastProgress + (count * 100 / totalSize)));
                 }
                 checkpoint = 0;
             }

@@ -58,6 +58,7 @@ import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.progress.ProgressHandler;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.users.Users;
@@ -426,6 +427,7 @@ public final class PackageInstallerCompat {
         void onStartInstall(int sessionId, String packageName);
 
         // MIUI-begin: MIUI 12.5+ workaround
+
         /**
          * MIUI 12.5+ may require more than one tries in order to have successful installations. This is only needed
          * during APK installations, not APK uninstallations or install-existing attempts.
@@ -552,6 +554,10 @@ public final class PackageInstallerCompat {
     }
 
     public boolean install(@NonNull ApkFile apkFile, @UserIdInt int userId) {
+        return install(apkFile, userId, null);
+    }
+
+    public boolean install(@NonNull ApkFile apkFile, @UserIdInt int userId, @Nullable ProgressHandler progressHandler) {
         ThreadUtils.ensureWorkerThread();
         try {
             this.apkFile = apkFile;
@@ -564,21 +570,32 @@ public final class PackageInstallerCompat {
                 callFinish(STATUS_FAILURE_INVALID);
                 return false;
             }
-            new Thread(() -> {
+            ThreadUtils.postOnBackgroundThread(() -> {
+                // TODO: 6/6/23 Wait for this task to finish before returning
                 for (int u : allRequestedUsers) {
                     copyObb(apkFile, u);
                 }
-            }).start();
+            });
             userId = allRequestedUsers[0];
             Log.d(TAG, "Install: opening session...");
             if (!openSession(userId, installFlags)) return false;
             List<ApkFile.Entry> selectedEntries = apkFile.getSelectedEntries();
             Log.d(TAG, "Install: selected entries: " + selectedEntries.size());
             // Write apk files
+            long totalSize = 0;
+            for (ApkFile.Entry entry : selectedEntries) {
+                try {
+                    totalSize += entry.getSignedFile().length();
+                } catch (IOException e) {
+                    callFinish(STATUS_FAILURE_INVALID);
+                    Log.e(TAG, "Install: Cannot retrieve the selected APK files.", e);
+                    return abandon();
+                }
+            }
             for (ApkFile.Entry entry : selectedEntries) {
                 try (InputStream apkInputStream = entry.getSignedInputStream();
                      OutputStream apkOutputStream = session.openWrite(entry.getFileName(), 0, entry.getFileSize())) {
-                    IoUtils.copy(apkInputStream, apkOutputStream, -1, null);
+                    IoUtils.copy(apkInputStream, apkOutputStream, totalSize, progressHandler);
                     session.fsync(apkOutputStream);
                     Log.d(TAG, "Install: copied entry " + entry.name);
                 } catch (IOException e) {
@@ -600,6 +617,11 @@ public final class PackageInstallerCompat {
     }
 
     public boolean install(@NonNull Path[] apkFiles, @NonNull String packageName, @UserIdInt int userId) {
+        return install(apkFiles, packageName, userId, null);
+    }
+
+    public boolean install(@NonNull Path[] apkFiles, @NonNull String packageName, @UserIdInt int userId,
+                           @Nullable ProgressHandler progressHandler) {
         ThreadUtils.ensureWorkerThread();
         try {
             this.apkFile = null;
@@ -614,11 +636,15 @@ public final class PackageInstallerCompat {
             }
             userId = allRequestedUsers[0];
             if (!openSession(userId, installFlags)) return false;
+            long totalSize = 0;
+            for (Path apkFile : apkFiles) {
+                totalSize += apkFile.length();
+            }
             // Write apk files
             for (Path apkFile : apkFiles) {
                 try (InputStream apkInputStream = apkFile.openInputStream();
                      OutputStream apkOutputStream = session.openWrite(apkFile.getName(), 0, apkFile.length())) {
-                    IoUtils.copy(apkInputStream, apkOutputStream, -1, null);
+                    IoUtils.copy(apkInputStream, apkOutputStream, totalSize, progressHandler);
                     session.fsync(apkOutputStream);
                 } catch (IOException e) {
                     callFinish(STATUS_FAILURE_SESSION_WRITE);

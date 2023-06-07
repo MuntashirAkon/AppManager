@@ -73,6 +73,8 @@ public abstract class ProgressHandler {
 
     public abstract int getLastMax();
 
+    public abstract int getLastProgress();
+
     /**
      * Update progress from any thread. Arguments from the last time are used.
      *

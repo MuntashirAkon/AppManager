@@ -111,7 +111,7 @@ public class PackageInstallerService extends ForegroundService {
             @Override
             public void onAnotherAttemptInMiui(@Nullable ApkFile apkFile) {
                 if (apkFile != null) {
-                    installer.install(apkFile, apkQueueItem.getUserId());
+                    installer.install(apkFile, apkQueueItem.getUserId(), progressHandler);
                 }
             }
             // MIUI-end
@@ -124,16 +124,18 @@ public class PackageInstallerService extends ForegroundService {
                     ComponentUtils.blockTrackingComponents(Collections.singletonList(
                             new UserPackagePair(packageName, apkQueueItem.getUserId())));
                 }
-                ThreadUtils.postOnMainThread(() -> {
-                    if (onInstallFinished != null) {
-                        onInstallFinished.onFinished(packageName, result, blockingPackage, statusMessage);
-                    } else sendNotification(result, apkQueueItem.getAppLabel(), blockingPackage, statusMessage);
-                });
+                if (onInstallFinished != null) {
+                    ThreadUtils.postOnMainThread(() -> {
+                        if (onInstallFinished != null) {
+                            onInstallFinished.onFinished(packageName, result, blockingPackage, statusMessage);
+                        }
+                    });
+                } else sendNotification(result, apkQueueItem.getAppLabel(), blockingPackage, statusMessage);
             }
         });
         // Two possibilities: 1. Install-existing, 2. ApkFile/Uri
         if (apkQueueItem.isInstallExisting()) {
-            // Install existing
+            // Install existing (need no progress)
             String packageName = apkQueueItem.getPackageName();
             if (packageName == null) {
                 // No package name supplied, abort
@@ -166,7 +168,7 @@ public class PackageInstallerService extends ForegroundService {
                 // No apk file, abort
                 return;
             }
-            installer.install(apkFile, apkQueueItem.getUserId());
+            installer.install(apkFile, apkQueueItem.getUserId(), progressHandler);
         }
     }
 
@@ -238,7 +240,7 @@ public class PackageInstallerService extends ForegroundService {
                 .setBody(subject)
                 .setStyle(content)
                 .setDefaultAction(defaultAction);
-        progressHandler.onResult(notificationInfo);
+        ThreadUtils.postOnMainThread(() -> progressHandler.onResult(notificationInfo));
     }
 
     @NonNull

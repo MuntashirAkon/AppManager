@@ -79,7 +79,7 @@ public class ThreadUtils {
      * @return A future of the task that can be monitored for updates or cancelled.
      */
     public static Future<?> postOnBackgroundThread(Runnable runnable) {
-        return getThreadExecutor().submit(runnable);
+        return getBackgroundThreadExecutor().submit(runnable);
     }
 
     /**
@@ -88,7 +88,7 @@ public class ThreadUtils {
      * @return A future of the task that can be monitored for updates or cancelled.
      */
     public static <T> Future<T> postOnBackgroundThread(Callable<T> callable) {
-        return getThreadExecutor().submit(callable);
+        return getBackgroundThreadExecutor().submit(callable);
     }
 
     /**
@@ -105,7 +105,7 @@ public class ThreadUtils {
         getUiThreadHandler().postDelayed(runnable, delayMillis);
     }
 
-    private static synchronized ExecutorService getThreadExecutor() {
+    public static synchronized ExecutorService getBackgroundThreadExecutor() {
         if (sThreadExecutor == null) {
             sThreadExecutor = MultithreadedExecutor.getNewInstance();
         }
