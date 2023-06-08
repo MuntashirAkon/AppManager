@@ -36,6 +36,7 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
+import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
@@ -297,7 +298,7 @@ public class OpenPGPCrypto implements Crypto {
                 // Intent wrapper
                 Intent intent = new Intent(context, OpenPGPCryptoActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra(OpenPgpApi.RESULT_INTENT, (PendingIntent) result.getParcelableExtra(OpenPgpApi.RESULT_INTENT));
+                intent.putExtra(OpenPgpApi.RESULT_INTENT, IntentCompat.getParcelableExtra(result, OpenPgpApi.RESULT_INTENT, PendingIntent.class));
                 String openPGP = "Open PGP";
                 // We don't need a DELETE intent since the time will be expired anyway
                 NotificationCompat.Builder builder = NotificationUtils.getHighPriorityNotificationBuilder(context)
@@ -317,7 +318,7 @@ public class OpenPGPCrypto implements Crypto {
             }
             case OpenPgpApi.RESULT_CODE_ERROR:
                 errorFlag = true;
-                OpenPgpError error = result.getParcelableExtra(OpenPgpApi.RESULT_ERROR);
+                OpenPgpError error = IntentCompat.getParcelableExtra(result, OpenPgpApi.RESULT_ERROR, OpenPgpError.class);
                 if (error != null) {
                     Log.e(TAG, "handleResult: (" + error.getErrorId() + ") " + error.getMessage());
                 } else Log.e(TAG, "handleResult: Error occurred during en/decryption process");

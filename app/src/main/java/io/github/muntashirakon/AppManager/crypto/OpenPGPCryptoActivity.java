@@ -16,6 +16,7 @@ import org.openintents.openpgp.util.OpenPgpApi;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
+import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 
 public class OpenPGPCryptoActivity extends BaseActivity {
     private final ActivityResultLauncher<IntentSenderRequest> confirmationLauncher = registerForActivityResult(
@@ -39,7 +40,7 @@ public class OpenPGPCryptoActivity extends BaseActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        PendingIntent pi = Objects.requireNonNull(intent.getParcelableExtra(OpenPgpApi.RESULT_INTENT));
+        PendingIntent pi = Objects.requireNonNull(IntentCompat.getParcelableExtra(intent, OpenPgpApi.RESULT_INTENT, PendingIntent.class));
         confirmationLauncher.launch(new IntentSenderRequest.Builder(pi).build());
     }
 }

@@ -45,13 +45,54 @@ import io.github.muntashirakon.AppManager.compat.IntegerCompat;
 import io.github.muntashirakon.AppManager.utils.MotorolaUtils;
 
 public final class IntentCompat {
+    /**
+     * Retrieve extended data from the intent.
+     *
+     * @param name  The name of the desired item.
+     * @param clazz The type of the object expected.
+     * @return the value of an item previously added with putExtra(),
+     * or null if no Parcelable value was found.
+     * @see Intent#putExtra(String, Parcelable)
+     */
+    @SuppressWarnings("deprecation")
+    @Nullable
+    public static <T extends Parcelable> T getParcelableExtra(@NonNull Intent intent, @Nullable String name,
+                                                              @NonNull Class<T> clazz) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            return intent.getParcelableExtra(name, clazz);
+        }
+        return intent.getParcelableExtra(name);
+    }
+
+    /**
+     * Retrieve extended data from the intent.
+     *
+     * @param name  The name of the desired item.
+     * @param clazz The type of the items inside the array list. This is only verified when
+     *              unparceling.
+     * @return the value of an item previously added with
+     * putParcelableArrayListExtra(), or null if no
+     * ArrayList<Parcelable> value was found.
+     * @see Intent#putParcelableArrayListExtra(String, ArrayList)
+     */
+    @SuppressWarnings("deprecation")
+    @Nullable
+    public static <T extends Parcelable> ArrayList<T> getParcelableArrayListExtra(@NonNull Intent intent,
+                                                                                  @Nullable String name,
+                                                                                  @NonNull Class<? extends T> clazz) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            return intent.getParcelableArrayListExtra(name, clazz);
+        }
+        return intent.getParcelableArrayListExtra(name);
+    }
+
     @Nullable
     public static Uri getDataUri(@Nullable Intent intent) {
         if (intent == null) {
             return null;
         }
         if (Intent.ACTION_SEND.equals(intent.getAction())) {
-            return intent.getParcelableExtra(Intent.EXTRA_STREAM);
+            return getParcelableExtra(intent, Intent.EXTRA_STREAM, Uri.class);
         }
         return intent.getData();
     }
@@ -59,9 +100,9 @@ public final class IntentCompat {
     @Nullable
     public static List<Uri> getDataUris(@NonNull Intent intent) {
         if (Intent.ACTION_SEND.equals(intent.getAction())) {
-            return Collections.singletonList(intent.getParcelableExtra(Intent.EXTRA_STREAM));
+            return Collections.singletonList(getParcelableExtra(intent, Intent.EXTRA_STREAM, Uri.class));
         } else if (Intent.ACTION_SEND_MULTIPLE.equals(intent.getAction())) {
-            return intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
+            return getParcelableArrayListExtra(intent, Intent.EXTRA_STREAM, Uri.class);
         }
         Uri data = intent.getData();
         if (data == null) return null;
@@ -724,8 +765,8 @@ public final class IntentCompat {
         return uri.toString();
     }
 
-    private static void toUriFragment(Intent intent, StringBuilder uri, String scheme, String defAction,
-                                      String defPackage, int flags) {
+    private static void toUriFragment(Intent intent, StringBuilder uri, @Nullable String scheme, String defAction,
+                                      @Nullable String defPackage, int flags) {
         StringBuilder frag = new StringBuilder(128);
 
         toUriInner(intent, frag, scheme, defAction, defPackage, flags);
@@ -745,8 +786,8 @@ public final class IntentCompat {
         }
     }
 
-    private static void toUriInner(Intent intent, StringBuilder uri, String scheme, String defAction,
-                                   String defPackage, int flags) {
+    private static void toUriInner(Intent intent, StringBuilder uri, @Nullable String scheme, String defAction,
+                                   @Nullable String defPackage, int flags) {
         if (scheme != null) {
             uri.append("scheme=").append(scheme).append(';');
         }

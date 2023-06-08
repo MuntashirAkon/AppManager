@@ -34,6 +34,7 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
+import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.main.MainActivity;
 import io.github.muntashirakon.AppManager.progress.NotificationProgressHandler;
 import io.github.muntashirakon.AppManager.progress.QueuedProgressHandler;
@@ -93,7 +94,7 @@ public class PackageInstallerService extends ForegroundService {
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         if (intent == null) return;
-        ApkQueueItem apkQueueItem = intent.getParcelableExtra(EXTRA_QUEUE_ITEM);
+        ApkQueueItem apkQueueItem = IntentCompat.getParcelableExtra(intent, EXTRA_QUEUE_ITEM, ApkQueueItem.class);
         if (apkQueueItem == null) {
             return;
         }
@@ -175,7 +176,7 @@ public class PackageInstallerService extends ForegroundService {
     @Override
     protected void onQueued(@Nullable Intent intent) {
         if (intent == null) return;
-        ApkQueueItem apkQueueItem = intent.getParcelableExtra(EXTRA_QUEUE_ITEM);
+        ApkQueueItem apkQueueItem = IntentCompat.getParcelableExtra(intent, EXTRA_QUEUE_ITEM, ApkQueueItem.class);
         String appLabel = apkQueueItem != null ? apkQueueItem.getAppLabel() : null;
         Object notificationInfo = new NotificationProgressHandler.NotificationInfo(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true)
@@ -190,7 +191,7 @@ public class PackageInstallerService extends ForegroundService {
     protected void onStartIntent(@Nullable Intent intent) {
         if (intent == null) return;
         // Set app name in the ongoing notification
-        ApkQueueItem apkQueueItem = intent.getParcelableExtra(EXTRA_QUEUE_ITEM);
+        ApkQueueItem apkQueueItem = IntentCompat.getParcelableExtra(intent, EXTRA_QUEUE_ITEM, ApkQueueItem.class);
         String appLabel = apkQueueItem != null ? apkQueueItem.getAppLabel() : null;
         notificationInfo.setTitle(appLabel);
         progressHandler.onProgressStart(-1, 0, notificationInfo);

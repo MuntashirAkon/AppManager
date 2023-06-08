@@ -64,6 +64,7 @@ import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkChooser;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
+import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.Prefs;
@@ -399,7 +400,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
         if (ACTION_PACKAGE_INSTALLED.equals(intent.getAction())) {
             sessionId = intent.getIntExtra(PackageInstaller.EXTRA_SESSION_ID, -1);
             packageName = intent.getStringExtra(PackageInstaller.EXTRA_PACKAGE_NAME);
-            Intent confirmIntent = intent.getParcelableExtra(Intent.EXTRA_INTENT);
+            Intent confirmIntent = IntentCompat.getParcelableExtra(intent, Intent.EXTRA_INTENT, Intent.class);
             try {
                 if (packageName == null || confirmIntent == null) throw new Exception("Empty confirmation intent.");
                 Log.d(TAG, "Requesting user confirmation for package " + packageName);

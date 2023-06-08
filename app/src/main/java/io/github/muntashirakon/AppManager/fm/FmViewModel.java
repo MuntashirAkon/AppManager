@@ -272,15 +272,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
     }
 
     public void createShortcut(@NonNull Uri uri) {
-        ThreadUtils.postOnBackgroundThread(() -> {
-            FmItem fmItem = new FmItem(Paths.get(uri));
-            Bitmap bitmap = ImageLoader.getInstance().getCachedImage(fmItem.tag);
-            if (bitmap == null) {
-                ImageLoader.ImageFetcherResult result = new FmIconFetcher(fmItem).fetchImage(fmItem.tag);
-                bitmap = result.bitmap != null ? result.bitmap : result.defaultImage.getImage();
-            }
-            shortcutCreatorLiveData.postValue(new Pair<>(fmItem.path, bitmap));
-        });
+        createShortcut(new FmItem(Paths.get(uri)));
     }
 
     public LiveData<List<FmItem>> getFmItemsLiveData() {

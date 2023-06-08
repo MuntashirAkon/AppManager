@@ -33,6 +33,7 @@ import java.util.Map;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.io.Paths;
@@ -55,7 +56,7 @@ public class SharedPrefsActivity extends BaseActivity implements
     protected void onAuthenticated(Bundle savedInstanceState) {
         setContentView(R.layout.activity_shared_prefs);
         setSupportActionBar(findViewById(R.id.toolbar));
-        Uri sharedPrefUri = getIntent().getParcelableExtra(EXTRA_PREF_LOCATION);
+        Uri sharedPrefUri = IntentCompat.getParcelableExtra(getIntent(), EXTRA_PREF_LOCATION, Uri.class);
         String appLabel = getIntent().getStringExtra(EXTRA_PREF_LABEL);
         if (sharedPrefUri == null) {
             finish();

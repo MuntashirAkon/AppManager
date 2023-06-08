@@ -16,6 +16,7 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
+import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -56,7 +57,7 @@ class PackageInstallerBroadcastReceiver extends BroadcastReceiver {
                 mContext.sendBroadcast(broadcastIntent2);
                 // Open confirmIntent using the PackageInstallerActivity.
                 // If the confirmIntent isn't open via an activity, it will fail for large apk files
-                Intent confirmIntent = intent.getParcelableExtra(Intent.EXTRA_INTENT);
+                Intent confirmIntent = IntentCompat.getParcelableExtra(intent, Intent.EXTRA_INTENT, Intent.class);
                 Intent intent2 = new Intent(mContext, PackageInstallerActivity.class);
                 intent2.setAction(PackageInstallerActivity.ACTION_PACKAGE_INSTALLED);
                 intent2.putExtra(Intent.EXTRA_INTENT, confirmIntent);

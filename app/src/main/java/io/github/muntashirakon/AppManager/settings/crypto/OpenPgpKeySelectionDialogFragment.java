@@ -33,6 +33,7 @@ import java.util.concurrent.Executors;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
@@ -130,12 +131,12 @@ public class OpenPgpKeySelectionDialogFragment extends DialogFragment {
                     break;
                 }
                 case OpenPgpApi.RESULT_CODE_USER_INTERACTION_REQUIRED: {
-                    PendingIntent pi = Objects.requireNonNull(result.getParcelableExtra(OpenPgpApi.RESULT_INTENT));
+                    PendingIntent pi = Objects.requireNonNull(IntentCompat.getParcelableExtra(result, OpenPgpApi.RESULT_INTENT, PendingIntent.class));
                     keyIdResultLauncher.launch(new IntentSenderRequest.Builder(pi).build());
                     break;
                 }
                 case OpenPgpApi.RESULT_CODE_ERROR: {
-                    OpenPgpError error = result.getParcelableExtra(OpenPgpApi.RESULT_ERROR);
+                    OpenPgpError error = IntentCompat.getParcelableExtra(result, OpenPgpApi.RESULT_ERROR, OpenPgpError.class);
                     if (error != null) {
                         Log.e(OpenPgpApi.TAG, "RESULT_CODE_ERROR: " + error.getMessage());
                     }
