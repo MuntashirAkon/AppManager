@@ -370,7 +370,7 @@
     <string name="faq$misc$$apks-deleted-after-installed">Are APKs deleted after installed\?</string>
     <string name="faq$misc$$shizuku-title">Any plans for Shizuku\?</string>
     <string name="faq$misc$$bloatware-title">What are bloatware and how to remove them\?</string>
-    <string name="faq$misc$i-dont-use-root-adb">Yes. AM cannot modify any system settings without root or ADB over TCP\\\@.</string>
+    <string name="faq$misc$i-dont-use-root-adb">Yes. AM cannot modify any system settings without root or ADB\\\@.</string>
     <string name="faq$misc$how-tracker-updated">Trackers and libraries are updated manually before making a new release.</string>
     <string name="faq$misc$apks-deleted-after-installed">No, APKs aren\'t deleted by App Manager after they are installed.</string>
     <string name="faq$misc$shizuku">App Manager\'s use of hidden API and privileged code execution is now much more complex and cannot be integrated with\nother third party apps such as \\href{https://shizuku.rikka.app}{Shizuku}. Here are some reasons for not considering\nShizuku (which now has Apache 2.0 license) for App Manager:\n\\begin{enumerate}\n    \\item Shizuku was initially non-free which led me to use a similar approach for App Manager to support both root\n    and ADB\n    \\item App Manager already supports both ADB and root which in some cases is more capable than Shizuku\n    \\item Relying on a third-party app for the major functionalities is not a good design choice\n    \\item Integration of Shizuku will increase the complexity of App Manager.\n\\end{enumerate}</string>
