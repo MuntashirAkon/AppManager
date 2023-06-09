@@ -231,9 +231,6 @@ public class NotificationProgressHandler extends QueuedProgressHandler {
     }
 
     public static class NotificationInfo {
-        @NotificationUtils.NotificationPriority
-        public final int priority;
-
         @DrawableRes
         private int icon = R.drawable.ic_default_notification;
         private int level;
@@ -254,8 +251,7 @@ public class NotificationProgressHandler extends QueuedProgressHandler {
         private final ArrayList<NotificationCompat.Action> actions = new ArrayList<>();
 
 
-        public NotificationInfo(@NotificationUtils.NotificationPriority int priority) {
-            this.priority = priority;
+        public NotificationInfo() {
         }
 
         public NotificationInfo setIcon(int icon) {
@@ -317,7 +313,7 @@ public class NotificationProgressHandler extends QueuedProgressHandler {
         @NonNull
         NotificationCompat.Builder getBuilder(@NonNull Context context, @NonNull NotificationManagerInfo info) {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context, info.channelId)
-                    .setPriority(priority)
+                    .setPriority(NotificationUtils.importanceToPriority(info.importance))
                     .setDefaults(Notification.DEFAULT_ALL)
                     .setSmallIcon(icon, level)
                     .setSubText(operationName)

@@ -15,7 +15,6 @@ import android.os.UserHandleHidden;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.ServiceCompat;
 
@@ -162,7 +161,7 @@ public class BatchOpsService extends ForegroundService {
         @SuppressLint("WrongConstant")
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent,
                 PendingIntentCompat.FLAG_IMMUTABLE);
-        notificationInfo = new NotificationProgressHandler.NotificationInfo(NotificationCompat.PRIORITY_LOW)
+        notificationInfo = new NotificationProgressHandler.NotificationInfo()
                 .setOperationName(header)
                 .setBody(getString(R.string.operation_running))
                 .setDefaultAction(pendingIntent);
@@ -212,7 +211,7 @@ public class BatchOpsService extends ForegroundService {
         if (intent == null) return;
         int op = intent.getIntExtra(EXTRA_OP, BatchOpsManager.OP_NONE);
         String opTitle = getDesiredOpTitle(op);
-        Object notificationInfo = new NotificationProgressHandler.NotificationInfo(NotificationCompat.PRIORITY_HIGH)
+        Object notificationInfo = new NotificationProgressHandler.NotificationInfo()
                 .setAutoCancel(true)
                 .setTime(System.currentTimeMillis())
                 .setOperationName(getHeader(intent))
@@ -262,7 +261,7 @@ public class BatchOpsService extends ForegroundService {
 
     private void sendNotification(int result, @Nullable BatchOpsManager.Result opResult) {
         String contentTitle = getDesiredOpTitle(op);
-        NotificationProgressHandler.NotificationInfo notificationInfo = new NotificationProgressHandler.NotificationInfo(NotificationCompat.PRIORITY_HIGH)
+        NotificationProgressHandler.NotificationInfo notificationInfo = new NotificationProgressHandler.NotificationInfo()
                 .setAutoCancel(true)
                 .setTime(System.currentTimeMillis())
                 .setOperationName(header)

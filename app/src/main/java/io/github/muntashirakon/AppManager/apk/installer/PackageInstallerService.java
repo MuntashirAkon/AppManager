@@ -83,7 +83,7 @@ public class PackageInstallerService extends ForegroundService {
         @SuppressLint("WrongConstant")
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent,
                 PendingIntentCompat.FLAG_IMMUTABLE);
-        notificationInfo = new NotificationProgressHandler.NotificationInfo(NotificationCompat.PRIORITY_LOW)
+        notificationInfo = new NotificationProgressHandler.NotificationInfo()
                 .setBody(getString(R.string.install_in_progress))
                 .setOperationName(getText(R.string.package_installer))
                 .setDefaultAction(pendingIntent);
@@ -178,7 +178,7 @@ public class PackageInstallerService extends ForegroundService {
         if (intent == null) return;
         ApkQueueItem apkQueueItem = IntentCompat.getParcelableExtra(intent, EXTRA_QUEUE_ITEM, ApkQueueItem.class);
         String appLabel = apkQueueItem != null ? apkQueueItem.getAppLabel() : null;
-        Object notificationInfo = new NotificationProgressHandler.NotificationInfo(NotificationCompat.PRIORITY_HIGH)
+        Object notificationInfo = new NotificationProgressHandler.NotificationInfo()
                 .setAutoCancel(true)
                 .setOperationName(getString(R.string.package_installer))
                 .setTitle(appLabel)
@@ -233,7 +233,7 @@ public class PackageInstallerService extends ForegroundService {
         String subject = getStringFromStatus(this, status, appLabel, blockingPackage);
         NotificationCompat.Style content = statusMessage != null ? new NotificationCompat.BigTextStyle()
                 .bigText(subject + "\n\n" + statusMessage) : null;
-        Object notificationInfo = new NotificationProgressHandler.NotificationInfo(NotificationCompat.PRIORITY_HIGH)
+        Object notificationInfo = new NotificationProgressHandler.NotificationInfo()
                 .setAutoCancel(true)
                 .setTime(System.currentTimeMillis())
                 .setOperationName(getText(R.string.package_installer))

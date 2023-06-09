@@ -2,11 +2,14 @@
 
 package io.github.muntashirakon.AppManager.utils;
 
+import android.Manifest;
 import android.app.Notification;
 import android.content.Context;
+import android.content.pm.PackageManager;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationChannelCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -89,24 +92,32 @@ public final class NotificationUtils {
                                                        @NonNull NotificationBuilder notification) {
         int notificationId = getNotificationId(HIGH_PRIORITY_CHANNEL_ID);
         displayNotification(context, HIGH_PRIORITY_CHANNEL_ID, "Alerts",
-                NotificationManagerCompat.IMPORTANCE_HIGH, notificationId,
-                NotificationCompat.PRIORITY_HIGH, notification);
+                NotificationManagerCompat.IMPORTANCE_HIGH, notificationId, notification);
     }
 
     public static int displayFreezeUnfreezeNotification(@NonNull Context context,
                                                         int notificationId,
                                                         @NonNull NotificationBuilder notification) {
         displayNotification(context, FREEZE_UNFREEZE_CHANNEL_ID, "Freeze",
-                NotificationManagerCompat.IMPORTANCE_DEFAULT, notificationId,
-                NotificationCompat.PRIORITY_DEFAULT, notification);
+                NotificationManagerCompat.IMPORTANCE_DEFAULT, notificationId, notification);
         return notificationId;
     }
 
-    public static void displayInstallConfirmNotification(@NonNull Context context, @NonNull NotificationBuilder notification) {
+    public static int displayInstallConfirmNotification(@NonNull Context context,
+                                                        @NonNull NotificationBuilder notification) {
         int notificationId = getNotificationId(INSTALL_CONFIRM_CHANNEL_ID);
         displayNotification(context, INSTALL_CONFIRM_CHANNEL_ID, "Confirm Installation",
-                NotificationManagerCompat.IMPORTANCE_HIGH, notificationId,
-                NotificationCompat.PRIORITY_HIGH, notification);
+                NotificationManagerCompat.IMPORTANCE_HIGH, notificationId, notification);
+        return notificationId;
+    }
+
+    public static void cancelInstallConfirmNotification(@NonNull Context context, int notificationId) {
+        if (notificationId <= 0) {
+            return;
+        }
+        NotificationManagerCompat manager = getNewNotificationManager(context, INSTALL_CONFIRM_CHANNEL_ID,
+                "Confirm Installation", NotificationManagerCompat.IMPORTANCE_HIGH);
+        manager.cancel(notificationId);
     }
 
     public static void displayNotification(@NonNull Context context,
@@ -114,11 +125,13 @@ public final class NotificationUtils {
                                            @NonNull CharSequence channelName,
                                            @NotificationImportance int importance,
                                            int notificationId,
-                                           @NotificationPriority int priority,
                                            @NonNull NotificationBuilder notification) {
         NotificationManagerCompat manager = getNewNotificationManager(context, channelId, channelName, importance);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId).setPriority(priority);
-        manager.notify(notificationId, notification.build(builder));
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
+                .setPriority(importanceToPriority(importance));
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED) {
+            manager.notify(notificationId, notification.build(builder));
+        }
     }
 
     @NonNull
@@ -138,5 +151,24 @@ public final class NotificationUtils {
         NotificationManagerCompat managerCompat = NotificationManagerCompat.from(context);
         managerCompat.createNotificationChannel(channel);
         return managerCompat;
+    }
+
+    @NotificationPriority
+    public static int importanceToPriority(@NotificationImportance int importance) {
+        switch (importance) {
+            default:
+            case NotificationManagerCompat.IMPORTANCE_DEFAULT:
+            case NotificationManagerCompat.IMPORTANCE_UNSPECIFIED:
+                return NotificationCompat.PRIORITY_DEFAULT;
+            case NotificationManagerCompat.IMPORTANCE_HIGH:
+                return NotificationCompat.PRIORITY_HIGH;
+            case NotificationManagerCompat.IMPORTANCE_LOW:
+                return NotificationCompat.PRIORITY_LOW;
+            case NotificationManagerCompat.IMPORTANCE_MAX:
+                return NotificationCompat.PRIORITY_MAX;
+            case NotificationManagerCompat.IMPORTANCE_NONE:
+            case NotificationManagerCompat.IMPORTANCE_MIN:
+                return NotificationCompat.PRIORITY_MIN;
+        }
     }
 }

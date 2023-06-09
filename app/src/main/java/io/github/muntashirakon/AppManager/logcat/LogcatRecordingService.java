@@ -15,7 +15,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.ServiceCompat;
 
@@ -129,7 +128,7 @@ public class LogcatRecordingService extends ForegroundService {
         PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0 /* no requestCode */,
                 stopRecordingIntent, PendingIntent.FLAG_ONE_SHOT | PendingIntentCompat.FLAG_IMMUTABLE);
 
-        Object notificationInfo = new NotificationProgressHandler.NotificationInfo(NotificationCompat.PRIORITY_DEFAULT)
+        Object notificationInfo = new NotificationProgressHandler.NotificationInfo()
                 .setTitle(getString(R.string.notification_title))
                 .setBody(getString(R.string.notification_subtext))
                 .setStatusBarText(getText(R.string.notification_ticker))
@@ -185,7 +184,7 @@ public class LogcatRecordingService extends ForegroundService {
             Log.d(TAG, "Service ended");
             boolean logSaved = SaveLogHelper.saveLog(stringBuilder, filename);
             NotificationProgressHandler.NotificationInfo notificationInfo =
-                    new NotificationProgressHandler.NotificationInfo(NotificationCompat.PRIORITY_HIGH)
+                    new NotificationProgressHandler.NotificationInfo()
                             .setTitle(getString(R.string.notification_title))
                             .setAutoCancel(true);
             if (logSaved) {

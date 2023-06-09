@@ -8,7 +8,6 @@ import android.app.PendingIntent;
 import android.content.Intent;
 
 import androidx.annotation.Nullable;
-import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.ServiceCompat;
 
@@ -49,7 +48,7 @@ public class ProfileApplierService extends ForegroundService {
                 new NotificationProgressHandler.NotificationManagerInfo(CHANNEL_ID, "Profile Applier", NotificationManagerCompat.IMPORTANCE_LOW),
                 NotificationUtils.HIGH_PRIORITY_NOTIFICATION_INFO,
                 NotificationUtils.HIGH_PRIORITY_NOTIFICATION_INFO);
-        notificationInfo = new NotificationProgressHandler.NotificationInfo(NotificationCompat.PRIORITY_LOW)
+        notificationInfo = new NotificationProgressHandler.NotificationInfo()
                 .setBody(getString(R.string.operation_running))
                 .setOperationName(getText(R.string.profiles));
         progressHandler.onAttach(this, notificationInfo);
@@ -72,7 +71,7 @@ public class ProfileApplierService extends ForegroundService {
     protected void onQueued(@Nullable Intent intent) {
         if (intent == null) return;
         String profileName = intent.getStringExtra(EXTRA_PROFILE_NAME);
-        Object notificationInfo = new NotificationProgressHandler.NotificationInfo(NotificationCompat.PRIORITY_HIGH)
+        Object notificationInfo = new NotificationProgressHandler.NotificationInfo()
                 .setAutoCancel(true)
                 .setTime(System.currentTimeMillis())
                 .setOperationName(getText(R.string.profiles))
@@ -110,7 +109,7 @@ public class ProfileApplierService extends ForegroundService {
 
     private void sendNotification(int result, boolean requiresRestart) {
         NotificationProgressHandler.NotificationInfo notificationInfo = new NotificationProgressHandler
-                .NotificationInfo(NotificationCompat.PRIORITY_HIGH)
+                .NotificationInfo()
                 .setAutoCancel(true)
                 .setTime(System.currentTimeMillis())
                 .setOperationName(getText(R.string.profiles))
