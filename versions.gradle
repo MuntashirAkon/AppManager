@@ -9,6 +9,7 @@ ext {
     agp_version = "7.4.0"
 
     // Library dependencies
+    androidx_core_version = "1.11.0-beta02" // Added temporarily until appcompat migrates to it
     annotation_version = "1.5.0"
     apksig_version = "4.4.0"
     appcompat_version = "1.6.1"
@@ -17,7 +18,7 @@ ext {
     bouncycastle_version = "1.70"
     desugar_jdk_version = "2.0.3"
     documentfile_version = "1.0.1"
-    fastscroll_version = "1.1.8"
+    fastscroll_version = "1.2.0"
     gson_version = "2.10.1"
     hiddenapibypass_version = "4.3"
     jadx_version = "1.4.7"
@@ -35,7 +36,7 @@ ext {
     swipe_refresh_version = "1.2.0-alpha01"
     unapkm_version = "1.2"
     webkit_version = "1.7.0"
-    zstd_version = "1.5.5-1"
+    zstd_version = "1.5.5-3"
 
     // Test dependencies
     junit_version = "4.13.2"
