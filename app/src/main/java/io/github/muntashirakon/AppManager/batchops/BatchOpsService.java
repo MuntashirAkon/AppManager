@@ -195,9 +195,13 @@ public class BatchOpsService extends ForegroundService {
             return;
         }
         sendStarted();
+        // Update progress
+        if (progressHandler != null) {
+            progressHandler.postUpdate(packages.size(), 0);
+        }
         BatchOpsManager batchOpsManager = new BatchOpsManager();
         batchOpsManager.setArgs(args);
-        BatchOpsManager.Result result = batchOpsManager.performOp(op, packages, userHandles);
+        BatchOpsManager.Result result = batchOpsManager.performOp(op, packages, userHandles, progressHandler);
         batchOpsManager.conclude();
         if (result.isSuccessful()) {
             sendResults(Activity.RESULT_OK, result);

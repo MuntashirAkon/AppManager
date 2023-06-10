@@ -91,10 +91,10 @@ public final class IoUtils {
     public static long copy(@NonNull InputStream in, @NonNull OutputStream out, long totalSize,
                             @Nullable ProgressHandler progressHandler) throws IOException {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            int lastProgress = progressHandler != null ? progressHandler.getLastProgress() : 0;
+            float lastProgress = progressHandler != null ? progressHandler.getLastProgress() : 0;
             return FileUtils.copy(in, out, null, ThreadUtils.getBackgroundThreadExecutor(), progress -> {
                 if (progressHandler != null) {
-                    progressHandler.postUpdate(100, (int) (lastProgress + (progress * 100 / totalSize)));
+                    progressHandler.postUpdate(100, lastProgress + (progress * 100f / totalSize));
                 }
             });
         } else {
@@ -120,14 +120,14 @@ public final class IoUtils {
         long count = 0;
         long checkpoint = 0;
         int n;
-        int lastProgress = progressHandler != null ? progressHandler.getLastProgress() : 0;
+        float lastProgress = progressHandler != null ? progressHandler.getLastProgress() : 0;
         while ((n = in.read(buffer)) > 0) {
             out.write(buffer, 0, n);
             count += n;
             checkpoint += n;
             if (checkpoint >= (1 << 19)) { // 512 kB
                 if (progressHandler != null) {
-                    progressHandler.postUpdate(100, (int) (lastProgress + (count * 100 / totalSize)));
+                    progressHandler.postUpdate(100, lastProgress + (count * 100f / totalSize));
                 }
                 checkpoint = 0;
             }

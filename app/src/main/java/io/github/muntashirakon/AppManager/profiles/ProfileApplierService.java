@@ -62,7 +62,7 @@ public class ProfileApplierService extends ForegroundService {
         if (profileName == null) return;
         String state = intent.getStringExtra(EXTRA_PROFILE_STATE);
         ProfileManager profileManager = new ProfileManager(new ProfileMetaManager(profileName));
-        profileManager.applyProfile(state);
+        profileManager.applyProfile(state, progressHandler);
         profileManager.conclude();
         sendNotification(Activity.RESULT_OK, profileManager.requiresRestart());
     }

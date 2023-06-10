@@ -47,7 +47,7 @@ public class NotificationProgressHandler extends QueuedProgressHandler {
     @Nullable
     private NotificationInfo mLastProgressNotification = null;
     private int mLastMax = -1;
-    private int mLastProgress = 0;
+    private float mLastProgress = 0;
     private boolean mAttachedToService;
 
     public NotificationProgressHandler(@NonNull Context context,
@@ -95,7 +95,7 @@ public class NotificationProgressHandler extends QueuedProgressHandler {
     }
 
     @Override
-    public void onProgressStart(int max, int current, @Nullable Object message) {
+    public void onProgressStart(int max, float current, @Nullable Object message) {
         if (message != null) {
             mLastProgressNotification = (NotificationInfo) message;
         } else {
@@ -109,13 +109,13 @@ public class NotificationProgressHandler extends QueuedProgressHandler {
                 .setOnlyAlertOnce(true)
                 .setGroupSummary(true)
                 .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
-                .setProgress(Math.max(max, 0), max < 0 ? 0 : current, max == -1)
+                .setProgress(Math.max(max, 0), max < 0 ? 0 : (int) current, max == -1)
                 .build();
         notify(mContext, mProgressNotificationManager, mProgressNotificationId, notification);
     }
 
     @Override
-    public void onProgressUpdate(int max, int current, @Nullable Object message) {
+    public void onProgressUpdate(int max, float current, @Nullable Object message) {
         if (message != null) {
             mLastProgressNotification = (NotificationInfo) message;
         } else {
@@ -129,7 +129,7 @@ public class NotificationProgressHandler extends QueuedProgressHandler {
                 .setOnlyAlertOnce(true)
                 .setGroupSummary(true)
                 .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
-                .setProgress(Math.max(max, 0), max < 0 ? 0 : current, max == -1)
+                .setProgress(Math.max(max, 0), max < 0 ? 0 : (int) current, max == -1)
                 .build();
         notify(mContext, mProgressNotificationManager, mProgressNotificationId, notification);
     }
@@ -166,7 +166,7 @@ public class NotificationProgressHandler extends QueuedProgressHandler {
     }
 
     @Override
-    public int getLastProgress() {
+    public float getLastProgress() {
         return mLastProgress;
     }
 

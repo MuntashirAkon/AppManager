@@ -37,14 +37,14 @@ public abstract class ProgressHandler {
     public abstract void onAttach(@Nullable Service service, @NonNull Object message);
 
     /**
-     * Initialise progress. Arguments here can be modified by calling {@link #onProgressUpdate(int, int, Object)}.
+     * Initialise progress. Arguments here can be modified by calling {@link #onProgressUpdate(int, float, Object)}.
      *
      * @param max     Maximum progress value. Use {@code -1} to switch to non-determinate mode.
      * @param current Current progress value. Should be {@code 0}. Irrelevant in non-determinate mode.
      * @param message Additional arguments to pass on. Depends on implementation.
      */
     @MainThread
-    public abstract void onProgressStart(int max, int current, @Nullable Object message);
+    public abstract void onProgressStart(int max, float current, @Nullable Object message);
 
     /**
      * Update progress
@@ -54,7 +54,7 @@ public abstract class ProgressHandler {
      * @param message Additional arguments to pass on. Depends on implementation.
      */
     @MainThread
-    public abstract void onProgressUpdate(int max, int current, @Nullable Object message);
+    public abstract void onProgressUpdate(int max, float current, @Nullable Object message);
 
     /**
      * Call when the progress is finished. If this is not attached to a foreground service, the progress also stops.
@@ -73,7 +73,7 @@ public abstract class ProgressHandler {
 
     public abstract int getLastMax();
 
-    public abstract int getLastProgress();
+    public abstract float getLastProgress();
 
     /**
      * Update progress from any thread. Arguments from the last time are used.
@@ -81,7 +81,7 @@ public abstract class ProgressHandler {
      * @param current Current progress value. Irrelevant in non-determinate mode.
      */
     @AnyThread
-    public void postUpdate(int current) {
+    public void postUpdate(float current) {
         postUpdate(getLastMax(), current, getLastMessage());
     }
 
@@ -92,7 +92,7 @@ public abstract class ProgressHandler {
      * @param current Current progress value. Irrelevant in non-determinate mode.
      */
     @AnyThread
-    public void postUpdate(int max, int current) {
+    public void postUpdate(int max, float current) {
         postUpdate(max, current, getLastMessage());
     }
 
@@ -105,7 +105,7 @@ public abstract class ProgressHandler {
      */
     @SuppressLint("WrongThread")
     @AnyThread
-    public void postUpdate(int max, int current, @Nullable Object message) {
+    public void postUpdate(int max, float current, @Nullable Object message) {
         if (ThreadUtils.isMainThread()) {
             onProgressUpdate(max, current, message);
         } else {
