@@ -1331,4 +1331,38 @@
         <item quantity="many">Não foi possível optimizar as %1$d apps</item>
         <item quantity="other">Não foi possível optimizar as %1$d apps</item>
     </plurals>
+    <string name="search_option_match_case">Correspondente</string>
+    <string name="search_option_whole_word">Palavra completa</string>
+    <string name="search_option_regex">Regex</string>
+    <string name="uninstall_app_again_message">A aplicação foi desinstalada sem limpar os dados e assinatura. Deseja desinstar completamente\?</string>
+    <string name="uninstall_app">Desinstalar %1$s</string>
+    <string name="debloat_list_type">Lista</string>
+    <string name="debloat_removal_type">Tipo</string>
+    <string name="system_app_put_back">Adiar</string>
+    <string name="debloater_title">Debloater</string>
+    <string name="debloat_list_aosp">AOSP</string>
+    <string name="debloat_list_oem">OEM</string>
+    <string name="debloat_list_carrier">Operadora/ISP</string>
+    <string name="debloat_list_google">Google</string>
+    <string name="debloat_list_pending">Pendente</string>
+    <string name="debloat_list_misc">Miscelânea</string>
+    <string name="debloat_removal_safe">Seguro</string>
+    <string name="debloat_removal_replace">Repor</string>
+    <string name="debloat_removal_caution">Cuidado</string>
+    <string name="debloat_removal_unsafe">Inseguro</string>
+    <string name="static_shared_library">Livraria partilhada estática</string>
+    <string name="empty_folder">Vazio</string>
+    <string name="go_to_path">Ir para…</string>
+    <string name="copy_this_path">Copiar caminho</string>
+    <string name="title_audio_player">Audio Player</string>
+    <plurals name="file_count">
+        <item quantity="one">%d ficheiro</item>
+        <item quantity="many">%d ficheiros</item>
+        <item quantity="other">%d ficheiros</item>
+    </plurals>
+    <plurals name="folder_count">
+        <item quantity="one">%d pasta</item>
+        <item quantity="many">%d pastas</item>
+        <item quantity="other">%d outras pastas</item>
+    </plurals>
 </resources>
