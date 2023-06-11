@@ -26,6 +26,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.main.MainActivity;
 import io.github.muntashirakon.AppManager.progress.NotificationProgressHandler;
+import io.github.muntashirakon.AppManager.progress.ProgressHandler;
 import io.github.muntashirakon.AppManager.progress.QueuedProgressHandler;
 import io.github.muntashirakon.AppManager.types.ForegroundService;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
@@ -157,6 +158,7 @@ public class BatchOpsService extends ForegroundService {
                 new NotificationProgressHandler.NotificationManagerInfo(CHANNEL_ID, "Batch Ops Progress", NotificationManagerCompat.IMPORTANCE_LOW),
                 NotificationUtils.HIGH_PRIORITY_NOTIFICATION_INFO,
                 NotificationUtils.HIGH_PRIORITY_NOTIFICATION_INFO);
+        progressHandler.setProgressTextInterface(ProgressHandler.PROGRESS_REGULAR);
         Intent notificationIntent = new Intent(this, MainActivity.class);
         @SuppressLint("WrongConstant")
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent,

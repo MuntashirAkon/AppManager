@@ -28,7 +28,6 @@ import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 public class NotificationProgressHandler extends QueuedProgressHandler {
     @NonNull
     private final Context mContext;
-
     @NonNull
     private final NotificationManagerInfo mProgressNotificationManagerInfo;
     @NonNull
@@ -96,22 +95,7 @@ public class NotificationProgressHandler extends QueuedProgressHandler {
 
     @Override
     public void onProgressStart(int max, float current, @Nullable Object message) {
-        if (message != null) {
-            mLastProgressNotification = (NotificationInfo) message;
-        } else {
-            Objects.requireNonNull(mLastProgressNotification);
-        }
-        mLastMax = max;
-        mLastProgress = current;
-        Notification notification = mLastProgressNotification
-                .getBuilder(mContext, mProgressNotificationManagerInfo)
-                .setOngoing(true)
-                .setOnlyAlertOnce(true)
-                .setGroupSummary(true)
-                .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
-                .setProgress(Math.max(max, 0), max < 0 ? 0 : (int) current, max == -1)
-                .build();
-        notify(mContext, mProgressNotificationManager, mProgressNotificationId, notification);
+        onProgressUpdate(max, current, message);
     }
 
     @Override
@@ -123,15 +107,21 @@ public class NotificationProgressHandler extends QueuedProgressHandler {
         }
         mLastMax = max;
         mLastProgress = current;
-        Notification notification = mLastProgressNotification
+        CharSequence progressText = progressTextInterface.getProgressText(this);
+        boolean indeterminate = max == -1;
+        int newMax = Math.max(max, 0);
+        int newCurrent = max < 0 ? 0 : (int) current;
+        NotificationCompat.Builder builder = mLastProgressNotification
                 .getBuilder(mContext, mProgressNotificationManagerInfo)
                 .setOngoing(true)
                 .setOnlyAlertOnce(true)
                 .setGroupSummary(true)
                 .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
-                .setProgress(Math.max(max, 0), max < 0 ? 0 : (int) current, max == -1)
-                .build();
-        notify(mContext, mProgressNotificationManager, mProgressNotificationId, notification);
+                .setProgress(newMax, newCurrent, indeterminate);
+        if (progressText != null) {
+            builder.setContentText(max > 0 ? progressText : mContext.getString(R.string.operation_running));
+        }
+        notify(mContext, mProgressNotificationManager, mProgressNotificationId, builder.build());
     }
 
     @Override

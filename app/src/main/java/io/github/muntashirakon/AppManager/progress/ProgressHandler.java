@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
@@ -21,6 +22,20 @@ import io.github.muntashirakon.AppManager.utils.ThreadUtils;
  * or progress indicator or both.
  */
 public abstract class ProgressHandler {
+    public interface ProgressTextInterface {
+        @Nullable
+        CharSequence getProgressText(@NonNull ProgressHandler progressHandler);
+    }
+
+    public static final ProgressTextInterface PROGRESS_PERCENT = progressHandler -> {
+        float current = progressHandler.getLastProgress() / progressHandler.getLastMax() * 100;
+        return String.format(Locale.getDefault(), "%d%%", (int) current);
+    };
+    public static final ProgressTextInterface PROGRESS_REGULAR = progressHandler ->
+            String.format(Locale.getDefault(), "%d/%d", (int) progressHandler.getLastProgress(),
+                    progressHandler.getLastMax());
+    protected static final ProgressTextInterface PROGRESS_DEFAULT = progressHandler -> null;
+
     @IntDef({PROGRESS_NON_DETERMINATE, PROGRESS_DETERMINATE})
     @Retention(RetentionPolicy.SOURCE)
     protected @interface ProgressType {
@@ -28,6 +43,10 @@ public abstract class ProgressHandler {
 
     protected static final int PROGRESS_NON_DETERMINATE = -1;
     protected static final int PROGRESS_DETERMINATE = 0;
+
+
+    @NonNull
+    protected ProgressTextInterface progressTextInterface = PROGRESS_DEFAULT;
 
     /**
      * Call this function if the progress handler is backed by a foreground service and a progressbar is needed to be
@@ -74,6 +93,10 @@ public abstract class ProgressHandler {
     public abstract int getLastMax();
 
     public abstract float getLastProgress();
+
+    public void setProgressTextInterface(@Nullable ProgressTextInterface progressTextInterface) {
+        this.progressTextInterface = progressTextInterface != null ? progressTextInterface : PROGRESS_DEFAULT;
+    }
 
     /**
      * Update progress from any thread. Arguments from the last time are used.
