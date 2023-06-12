@@ -45,6 +45,7 @@ import io.github.muntashirakon.AppManager.magisk.MagiskDenyList;
 import io.github.muntashirakon.AppManager.magisk.MagiskHide;
 import io.github.muntashirakon.AppManager.permission.PermUtils;
 import io.github.muntashirakon.AppManager.permission.Permission;
+import io.github.muntashirakon.AppManager.progress.ProgressHandler;
 import io.github.muntashirakon.AppManager.rules.PseudoRules;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.RulesImporter;
@@ -189,30 +190,43 @@ class RestoreOp implements Closeable {
         return metadata;
     }
 
-    void runRestore() throws BackupException {
+    void runRestore(@Nullable ProgressHandler progressHandler) throws BackupException {
         try {
             if (requestedFlags.backupData() && metadata.keyStore && !requestedFlags.skipSignatureCheck()) {
                 // Check checksum of master key first
                 checkMasterKey();
             }
+            incrementProgress(progressHandler);
             if (requestedFlags.backupApkFiles()) {
                 restoreApkFiles();
+                incrementProgress(progressHandler);
             }
             if (requestedFlags.backupData()) {
                 restoreData();
                 if (metadata.keyStore) restoreKeyStore();
+                incrementProgress(progressHandler);
             }
             if (requestedFlags.backupExtras()) {
                 restoreExtras();
+                incrementProgress(progressHandler);
             }
             if (requestedFlags.backupRules()) {
                 restoreRules();
+                incrementProgress(progressHandler);
             }
         } catch (BackupException e) {
             throw e;
         } catch (Throwable th) {
             throw new BackupException("Unknown error occurred", th);
         }
+    }
+
+    private static void incrementProgress(@Nullable ProgressHandler progressHandler) {
+        if (progressHandler == null) {
+            return;
+        }
+        float current = progressHandler.getLastProgress() + 1;
+        progressHandler.postUpdate(current);
     }
 
     public boolean requiresRestart() {

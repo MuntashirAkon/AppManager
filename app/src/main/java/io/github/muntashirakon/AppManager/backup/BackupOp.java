@@ -25,6 +25,7 @@ import android.os.Build;
 import android.os.RemoteException;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import androidx.core.content.pm.PermissionInfoCompat;
 
@@ -54,6 +55,7 @@ import io.github.muntashirakon.AppManager.magisk.MagiskDenyList;
 import io.github.muntashirakon.AppManager.magisk.MagiskHide;
 import io.github.muntashirakon.AppManager.magisk.MagiskProcess;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
+import io.github.muntashirakon.AppManager.progress.ProgressHandler;
 import io.github.muntashirakon.AppManager.rules.PseudoRules;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
@@ -156,32 +158,37 @@ class BackupOp implements Closeable {
         return mMetadata;
     }
 
-    void runBackup() throws BackupException {
+    void runBackup(@Nullable ProgressHandler progressHandler) throws BackupException {
         boolean backupSuccess = false;
         try {
             // Fail backup if the app has items in Android KeyStore and backup isn't enabled
             if (mBackupFlags.backupData() && mMetadata.keyStore && !Prefs.BackupRestore.backupAppsWithKeyStore()) {
                 throw new BackupException("The app has keystore items and KeyStore backup isn't enabled.");
             }
+            incrementProgress(progressHandler);
             // Backup icon
             backupIcon();
             // Backup source
             if (mBackupFlags.backupApkFiles()) {
                 backupApkFiles();
+                incrementProgress(progressHandler);
             }
             // Backup data
             if (mBackupFlags.backupData()) {
                 backupData();
                 // Backup KeyStore
                 if (mMetadata.keyStore) backupKeyStore();
+                incrementProgress(progressHandler);
             }
             // Backup extras
             if (mBackupFlags.backupExtras()) {
                 backupExtras();
+                incrementProgress(progressHandler);
             }
             // Export rules
             if (mMetadata.hasRules) {
                 backupRules();
+                incrementProgress(progressHandler);
             }
             // Set backup time
             mMetadata.backupTime = System.currentTimeMillis();
@@ -223,6 +230,14 @@ class BackupOp implements Closeable {
                 mBackupFile.cleanup();
             }
         }
+    }
+
+    private static void incrementProgress(@Nullable ProgressHandler progressHandler) {
+        if (progressHandler == null) {
+            return;
+        }
+        float current = progressHandler.getLastProgress() + 1;
+        progressHandler.postUpdate(current);
     }
 
     private void backupIcon() {

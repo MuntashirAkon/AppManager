@@ -4,8 +4,10 @@ package io.github.muntashirakon.AppManager.batchops;
 
 import android.annotation.UserIdInt;
 import android.app.AppOpsManager;
+import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageManager;
+import android.content.pm.PackageManager;
 import android.net.NetworkPolicyManager;
 import android.net.Uri;
 import android.os.Build;
@@ -32,6 +34,8 @@ import java.util.Objects;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.accessibility.AccessibilityMultiplexer;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
 import io.github.muntashirakon.AppManager.apk.behavior.DexOptimizationOptions;
@@ -50,6 +54,8 @@ import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 import io.github.muntashirakon.AppManager.compat.StorageManagerCompat;
 import io.github.muntashirakon.AppManager.logs.Logger;
+import io.github.muntashirakon.AppManager.progress.NotificationProgressHandler;
+import io.github.muntashirakon.AppManager.progress.NotificationProgressHandler.NotificationInfo;
 import io.github.muntashirakon.AppManager.progress.ProgressHandler;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
@@ -61,6 +67,7 @@ import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.io.Path;
 
 @WorkerThread
@@ -171,6 +178,8 @@ public class BatchOpsManager {
     public static final int OP_NET_POLICY = 20;
     public static final int OP_DEXOPT = 21;
 
+    private static final String GROUP_ID = BuildConfig.APPLICATION_ID + ".notification_group.BATCH_OPS";
+
     @Nullable
     public Logger mLogger;
     public final boolean mCustomLogger;
@@ -188,8 +197,6 @@ public class BatchOpsManager {
         mLogger = logger;
         mCustomLogger = true;
     }
-
-    private static Result lastResult;
 
     private UserPackagePair[] userPackagePairs;
     @Nullable
@@ -275,26 +282,17 @@ public class BatchOpsManager {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     return opPerformDexOpt();
                 }
-                return lastResult = new Result(Collections.emptyList(), false);
+                return new Result(Collections.emptyList(), false);
             case OP_NONE:
                 break;
         }
-        return lastResult = new Result(Arrays.asList(userPackagePairs));
+        return new Result(Arrays.asList(userPackagePairs));
     }
 
     public void conclude() {
         if (!mCustomLogger && mLogger != null) {
             mLogger.close();
         }
-    }
-
-    /**
-     * @deprecated since v2.5.22
-     */
-    @Deprecated
-    @Nullable
-    public static Result getLastResult() {
-        return lastResult;
     }
 
     private Result opBackupApk() {
@@ -314,52 +312,113 @@ public class BatchOpsManager {
                 log("====> op=BACKUP_APK, pkg=" + pair, e);
             }
         }
-        return lastResult = new Result(failedPackages);
+        return new Result(failedPackages);
     }
 
     private Result opBackupRestore(@BackupRestoreDialogFragment.ActionMode int mode) {
-        List<UserPackagePair> failedPackages = new ArrayList<>();
+        switch (mode) {
+            case BackupRestoreDialogFragment.MODE_BACKUP:
+                return backup();
+            case BackupRestoreDialogFragment.MODE_RESTORE:
+                return restoreBackups();
+            case BackupRestoreDialogFragment.MODE_DELETE:
+                return deleteBackups();
+        }
+        return new Result(Arrays.asList(userPackagePairs));
+    }
+
+    private Result backup() {
+        List<UserPackagePair> failedPackages = Collections.synchronizedList(new ArrayList<>());
+        Context context = ContextUtils.getContext();
+        PackageManager pm = context.getPackageManager();
+        CharSequence operationName = context.getString(R.string.backup_restore);
         MultithreadedExecutor executor = MultithreadedExecutor.getNewInstance();
-        AtomicBoolean requiresRestart = new AtomicBoolean();
         AtomicInteger i = new AtomicInteger(0);
         float lastProgress = progressHandler != null ? progressHandler.getLastProgress() : 0;
         try {
             String[] backupNames = args.getStringArray(ARG_BACKUP_NAMES);
             for (UserPackagePair pair : userPackagePairs) {
+                CharSequence appLabel = PackageUtils.getPackageLabel(pm, pair.getPackageName(), pair.getUserHandle());
                 executor.submit(() -> {
                     synchronized (i) {
                         i.set(i.get() + 1);
                         updateProgress(lastProgress, i.get());
                     }
+                    CharSequence title = context.getString(R.string.backing_up_app, appLabel);
+                    ProgressHandler subProgressHandler = newSubProgress(operationName, title);
                     BackupManager backupManager = BackupManager.getNewInstance(pair, args.getInt(ARG_FLAGS));
                     try {
-                        switch (mode) {
-                            case BackupRestoreDialogFragment.MODE_BACKUP:
-                                backupManager.backup(backupNames);
-                                break;
-                            case BackupRestoreDialogFragment.MODE_DELETE:
-                                backupManager.deleteBackup(backupNames);
-                                break;
-                            case BackupRestoreDialogFragment.MODE_RESTORE:
-                                backupManager.restore(backupNames);
-                                requiresRestart.set(requiresRestart.get() | backupManager.requiresRestart());
-                                break;
-                        }
+                        backupManager.backup(backupNames, subProgressHandler);
                     } catch (BackupException e) {
-                        log("====> op=BACKUP_RESTORE, mode=" + mode + " pkg=" + pair, e);
-                        synchronized (failedPackages) {
-                            failedPackages.add(pair);
-                        }
+                        log("====> op=BACKUP_RESTORE, mode=BACKUP pkg=" + pair, e);
+                        failedPackages.add(pair);
+                    }
+                    if (subProgressHandler != null) {
+                        ThreadUtils.postOnMainThread(() -> subProgressHandler.onResult(null));
                     }
                 });
             }
         } catch (Throwable th) {
-            log("====> op=BACKUP_RESTORE, mode=" + mode, th);
+            log("====> op=BACKUP_RESTORE, mode=BACKUP", th);
         }
         executor.awaitCompletion();
-        lastResult = new Result(failedPackages);
-        lastResult.setRequiresRestart(requiresRestart.get());
-        return lastResult;
+        return new Result(failedPackages);
+    }
+
+    private Result restoreBackups() {
+        List<UserPackagePair> failedPackages = Collections.synchronizedList(new ArrayList<>());
+        Context context = ContextUtils.getContext();
+        PackageManager pm = context.getPackageManager();
+        CharSequence operationName = context.getString(R.string.backup_restore);
+        MultithreadedExecutor executor = MultithreadedExecutor.getNewInstance();
+        AtomicBoolean requiresRestart = new AtomicBoolean();
+        AtomicInteger i = new AtomicInteger(0);
+        float lastProgress = progressHandler != null ? progressHandler.getLastProgress() : 0;
+        String[] backupNames = args.getStringArray(ARG_BACKUP_NAMES);
+        for (UserPackagePair pair : userPackagePairs) {
+            executor.submit(() -> {
+                synchronized (i) {
+                    i.set(i.get() + 1);
+                    updateProgress(lastProgress, i.get());
+                }
+                CharSequence appLabel = PackageUtils.getPackageLabel(pm, pair.getPackageName(), pair.getUserHandle());
+                CharSequence title = context.getString(R.string.restoring_app, appLabel);
+                ProgressHandler subProgressHandler = newSubProgress(operationName, title);
+                BackupManager backupManager = BackupManager.getNewInstance(pair, args.getInt(ARG_FLAGS));
+                try {
+                    backupManager.restore(backupNames, subProgressHandler);
+                    requiresRestart.set(requiresRestart.get() | backupManager.requiresRestart());
+                } catch (Throwable e) {
+                    log("====> op=BACKUP_RESTORE, mode=RESTORE pkg=" + pair, e);
+                    failedPackages.add(pair);
+                }
+                if (subProgressHandler != null) {
+                    ThreadUtils.postOnMainThread(() -> subProgressHandler.onResult(null));
+                }
+            });
+        }
+        executor.awaitCompletion();
+        Result result = new Result(failedPackages);
+        result.setRequiresRestart(requiresRestart.get());
+        return result;
+    }
+
+    private Result deleteBackups() {
+        List<UserPackagePair> failedPackages = new ArrayList<>();
+        float lastProgress = progressHandler != null ? progressHandler.getLastProgress() : 0;
+        int i = 0;
+        String[] backupNames = args.getStringArray(ARG_BACKUP_NAMES);
+        for (UserPackagePair pair : userPackagePairs) {
+            updateProgress(lastProgress, ++i);
+            BackupManager backupManager = BackupManager.getNewInstance(pair, args.getInt(ARG_FLAGS));
+            try {
+                backupManager.deleteBackup(backupNames);
+            } catch (BackupException e) {
+                log("====> op=BACKUP_RESTORE, mode=DELETE pkg=" + pair, e);
+                failedPackages.add(pair);
+            }
+        }
+        return new Result(failedPackages);
     }
 
     @NonNull
@@ -370,7 +429,7 @@ public class BatchOpsManager {
         boolean removeImported = args.getBoolean(ARG_REMOVE_IMPORTED, false);
         int userHandle = UserHandleHidden.myUserId();
         Path[] files;
-        final List<UserPackagePair> failedPkgList = new ArrayList<>();
+        final List<UserPackagePair> failedPkgList = Collections.synchronizedList(new ArrayList<>());
         files = ConvertUtils.getRelevantImportFiles(uri, backupType);
         MultithreadedExecutor executor = MultithreadedExecutor.getNewInstance();
         fixProgress(files.length);
@@ -392,9 +451,7 @@ public class BatchOpsManager {
                         }
                     } catch (BackupException e) {
                         log("====> op=IMPORT_BACKUP, pkg=" + converter.getPackageName(), e);
-                        synchronized (failedPkgList) {
-                            failedPkgList.add(new UserPackagePair(converter.getPackageName(), userHandle));
-                        }
+                        failedPkgList.add(new UserPackagePair(converter.getPackageName(), userHandle));
                     }
                 });
             }
@@ -418,7 +475,7 @@ public class BatchOpsManager {
                 failedPackages.add(pair);
             }
         }
-        return lastResult = new Result(failedPackages);
+        return new Result(failedPackages);
     }
 
     private Result opBlockTrackers() {
@@ -434,7 +491,7 @@ public class BatchOpsManager {
                 failedPackages.add(pair);
             }
         }
-        return lastResult = new Result(failedPackages);
+        return new Result(failedPackages);
     }
 
     @NonNull
@@ -455,7 +512,7 @@ public class BatchOpsManager {
                 failedPackages.add(pair);
             }
         }
-        return lastResult = new Result(failedPackages);
+        return new Result(failedPackages);
     }
 
     @NonNull
@@ -471,7 +528,7 @@ public class BatchOpsManager {
             log("====> op=TRIM_CACHES", e);
             isSuccessful = false;
         }
-        return lastResult = new Result(Collections.emptyList(), isSuccessful);
+        return new Result(Collections.emptyList(), isSuccessful);
     }
 
     @NonNull
@@ -488,7 +545,7 @@ public class BatchOpsManager {
                 failedPackages.add(pair);
             }
         }
-        return lastResult = new Result(failedPackages);
+        return new Result(failedPackages);
     }
 
     @NonNull
@@ -592,7 +649,7 @@ public class BatchOpsManager {
                 }
             }
         }
-        return lastResult = new Result(failedPackages);
+        return new Result(failedPackages);
     }
 
     @NonNull
@@ -609,7 +666,7 @@ public class BatchOpsManager {
                 failedPackages.add(pair);
             }
         }
-        return lastResult = new Result(failedPackages);
+        return new Result(failedPackages);
     }
 
     private Result opNetPolicy() {
@@ -627,7 +684,7 @@ public class BatchOpsManager {
                 failedPackages.add(pair);
             }
         }
-        return lastResult = new Result(failedPackages);
+        return new Result(failedPackages);
     }
 
     private Result opSetAppOps() {
@@ -669,7 +726,7 @@ public class BatchOpsManager {
                 }
             }
         }
-        return lastResult = new Result(failedPkgList);
+        return new Result(failedPkgList);
     }
 
     private Result opUnblockComponents() {
@@ -685,7 +742,7 @@ public class BatchOpsManager {
                 failedPackages.add(pair);
             }
         }
-        return lastResult = new Result(failedPackages);
+        return new Result(failedPackages);
     }
 
     private Result opUnblockTrackers() {
@@ -701,7 +758,7 @@ public class BatchOpsManager {
                 failedPackages.add(pair);
             }
         }
-        return lastResult = new Result(failedPackages);
+        return new Result(failedPackages);
     }
 
     @NonNull
@@ -722,7 +779,7 @@ public class BatchOpsManager {
             }
         }
         accessibility.enableUninstall(false);
-        return lastResult = new Result(failedPackages);
+        return new Result(failedPackages);
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
@@ -736,7 +793,7 @@ public class BatchOpsManager {
                 options.packages = pm.getAllPackages().toArray(new String[0]);
             } catch (RemoteException e) {
                 log("====> op=DEXOPT", e);
-                return lastResult = new Result(failedPackages, false);
+                return new Result(failedPackages, false);
             }
         }
         fixProgress(options.packages.length);
@@ -781,7 +838,7 @@ public class BatchOpsManager {
                 failedPackages.add(new UserPackagePair(packageName, 0));
             }
         }
-        return lastResult = new Result(failedPackages);
+        return new Result(failedPackages);
     }
 
     private void log(@Nullable String message, @Nullable Throwable th) {
@@ -811,6 +868,29 @@ public class BatchOpsManager {
         int max = progressHandler.getLastMax() + appendMax;
         float current = progressHandler.getLastProgress();
         progressHandler.postUpdate(max, current);
+    }
+
+    @Nullable
+    private ProgressHandler newSubProgress(@Nullable CharSequence operationName, @Nullable CharSequence title) {
+        if (progressHandler == null) {
+            return null;
+        }
+        Object message = progressHandler.getLastMessage();
+        if (message == null) {
+            return null;
+        }
+        ProgressHandler p = progressHandler.newSubProgressHandler();
+        if (p instanceof NotificationProgressHandler) {
+            NotificationInfo parentNotificationInfo = (NotificationInfo) message;
+            NotificationInfo notificationInfo = new NotificationInfo(parentNotificationInfo)
+                    .setOperationName(operationName)
+                    .setTitle(title);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                notificationInfo.setGroupId(GROUP_ID);
+            }
+            ThreadUtils.postOnMainThread(() -> p.onProgressStart(-1, 0, notificationInfo));
+        }
+        return p;
     }
 
     public static class Result {

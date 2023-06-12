@@ -17,6 +17,7 @@ import io.github.muntashirakon.AppManager.batchops.BatchOpsResultsActivity;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.progress.NotificationProgressHandler;
+import io.github.muntashirakon.AppManager.progress.NotificationProgressHandler.NotificationManagerInfo;
 import io.github.muntashirakon.AppManager.progress.ProgressHandler;
 import io.github.muntashirakon.AppManager.progress.QueuedProgressHandler;
 import io.github.muntashirakon.AppManager.types.ForegroundService;
@@ -45,8 +46,10 @@ public class ProfileApplierService extends ForegroundService {
         if (intent != null) {
             profileName = intent.getStringExtra(EXTRA_PROFILE_NAME);
         }
+        NotificationManagerInfo notificationManagerInfo = new NotificationManagerInfo(CHANNEL_ID,
+                "Profile Applier", NotificationManagerCompat.IMPORTANCE_LOW);
         progressHandler = new NotificationProgressHandler(this,
-                new NotificationProgressHandler.NotificationManagerInfo(CHANNEL_ID, "Profile Applier", NotificationManagerCompat.IMPORTANCE_LOW),
+                notificationManagerInfo,
                 NotificationUtils.HIGH_PRIORITY_NOTIFICATION_INFO,
                 NotificationUtils.HIGH_PRIORITY_NOTIFICATION_INFO);
         progressHandler.setProgressTextInterface(ProgressHandler.PROGRESS_REGULAR);

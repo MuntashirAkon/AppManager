@@ -5,10 +5,7 @@ package io.github.muntashirakon.AppManager.batchops;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.UserHandleHidden;
@@ -26,6 +23,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.main.MainActivity;
 import io.github.muntashirakon.AppManager.progress.NotificationProgressHandler;
+import io.github.muntashirakon.AppManager.progress.NotificationProgressHandler.NotificationManagerInfo;
 import io.github.muntashirakon.AppManager.progress.ProgressHandler;
 import io.github.muntashirakon.AppManager.progress.QueuedProgressHandler;
 import io.github.muntashirakon.AppManager.types.ForegroundService;
@@ -66,18 +64,6 @@ public class BatchOpsService extends ForegroundService {
      * Boolean value to describe whether a reboot is required.
      */
     public static final String EXTRA_REQUIRES_RESTART = "requires_restart";
-    /**
-     * The progress message to be used with {@link #ACTION_BATCH_OPS_PROGRESS}
-     */
-    public static final String EXTRA_PROGRESS_MESSAGE = "EXTRA_PROGRESS_MESSAGE";
-    /**
-     * Max value for progress, to be used with {@link #ACTION_BATCH_OPS_PROGRESS}
-     */
-    public static final String EXTRA_PROGRESS_MAX = "EXTRA_PROGRESS_MAX";
-    /**
-     * Current value for progress, to be used with {@link #ACTION_BATCH_OPS_PROGRESS}
-     */
-    public static final String EXTRA_PROGRESS_CURRENT = "EXTRA_PROGRESS_CURRENT";
 
     /**
      * Send to the appropriate broadcast receiver denoting that the batch operation is completed. It
@@ -96,23 +82,6 @@ public class BatchOpsService extends ForegroundService {
      */
     public static final String ACTION_BATCH_OPS_COMPLETED = BuildConfig.APPLICATION_ID + ".action.BATCH_OPS_COMPLETED";
     public static final String ACTION_BATCH_OPS_STARTED = BuildConfig.APPLICATION_ID + ".action.BATCH_OPS_STARTED";
-    /**
-     * Send progress info to appropriate broadcast receiver. It includes the following extras:
-     * <ul>
-     *     <li>
-     *         {@link #EXTRA_PROGRESS_MESSAGE} is the message displayed in the progress area, should
-     *         be the app label
-     *     </li>
-     *     <li>
-     *         {@link #EXTRA_PROGRESS_MAX} is the maximum progress (the upper limit), should be
-     *         equal to the package count
-     *     </li>
-     *     <li>
-     *         {@link #EXTRA_PROGRESS_CURRENT} is the current progress
-     *     </li>
-     * </ul>
-     */
-    public static final String ACTION_BATCH_OPS_PROGRESS = BuildConfig.APPLICATION_ID + ".action.BATCH_OPS_PROGRESS";
 
     /**
      * Notification channel ID
@@ -127,21 +96,6 @@ public class BatchOpsService extends ForegroundService {
     private String header;
     private QueuedProgressHandler progressHandler;
     private NotificationProgressHandler.NotificationInfo notificationInfo;
-    private final BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, @NonNull Intent intent) {
-            if (intent.getAction() == null) return;
-            if (ACTION_BATCH_OPS_PROGRESS.equals(intent.getAction())) {
-                int progressMax = intent.getIntExtra(EXTRA_PROGRESS_MAX, 0);
-                CharSequence progressMessage = intent.getCharSequenceExtra(EXTRA_PROGRESS_MESSAGE);
-                if (progressMessage == null) {
-                    progressMessage = getString(R.string.operation_running);
-                }
-                notificationInfo.setBody(progressMessage);
-                progressHandler.onProgressUpdate(progressMax, intent.getIntExtra(EXTRA_PROGRESS_CURRENT, 0), notificationInfo);
-            }
-        }
-    };
 
     public BatchOpsService() {
         super("BatchOpsService");
@@ -154,8 +108,10 @@ public class BatchOpsService extends ForegroundService {
             op = intent.getIntExtra(EXTRA_OP, BatchOpsManager.OP_NONE);
         }
         header = getHeader(intent);
+        NotificationManagerInfo notificationManagerInfo = new NotificationManagerInfo(CHANNEL_ID,
+                "Batch Ops Progress", NotificationManagerCompat.IMPORTANCE_LOW);
         progressHandler = new NotificationProgressHandler(this,
-                new NotificationProgressHandler.NotificationManagerInfo(CHANNEL_ID, "Batch Ops Progress", NotificationManagerCompat.IMPORTANCE_LOW),
+                notificationManagerInfo,
                 NotificationUtils.HIGH_PRIORITY_NOTIFICATION_INFO,
                 NotificationUtils.HIGH_PRIORITY_NOTIFICATION_INFO);
         progressHandler.setProgressTextInterface(ProgressHandler.PROGRESS_REGULAR);
@@ -168,7 +124,6 @@ public class BatchOpsService extends ForegroundService {
                 .setBody(getString(R.string.operation_running))
                 .setDefaultAction(pendingIntent);
         progressHandler.onAttach(this, notificationInfo);
-        registerReceiver(broadcastReceiver, new IntentFilter(ACTION_BATCH_OPS_PROGRESS));
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -183,7 +138,10 @@ public class BatchOpsService extends ForegroundService {
         if (packages == null) {
             packages = new ArrayList<>(0);
         }
-        if (op == BatchOpsManager.OP_NONE) return;
+        if (op == BatchOpsManager.OP_NONE) {
+            sendResults(Activity.RESULT_CANCELED, null);
+            return;
+        }
         args = intent.getBundleExtra(EXTRA_OP_EXTRA_ARGS);
         ArrayList<Integer> userHandles = intent.getIntegerArrayListExtra(EXTRA_OP_USERS);
         if (userHandles == null) {
@@ -191,10 +149,6 @@ public class BatchOpsService extends ForegroundService {
             for (String ignore : packages) {
                 userHandles.add(UserHandleHidden.myUserId());
             }
-        }
-        if (op == BatchOpsManager.OP_NONE) {
-            sendResults(Activity.RESULT_CANCELED, null);
-            return;
         }
         sendStarted();
         // Update progress
@@ -244,7 +198,6 @@ public class BatchOpsService extends ForegroundService {
 
     @Override
     public void onDestroy() {
-        unregisterReceiver(broadcastReceiver);
         ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_REMOVE);
         super.onDestroy();
     }

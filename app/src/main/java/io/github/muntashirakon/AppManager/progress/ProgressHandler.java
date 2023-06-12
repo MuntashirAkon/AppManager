@@ -6,13 +6,10 @@ import android.annotation.SuppressLint;
 import android.app.Service;
 
 import androidx.annotation.AnyThread;
-import androidx.annotation.IntDef;
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
@@ -36,13 +33,8 @@ public abstract class ProgressHandler {
                     progressHandler.getLastMax());
     protected static final ProgressTextInterface PROGRESS_DEFAULT = progressHandler -> null;
 
-    @IntDef({PROGRESS_NON_DETERMINATE, PROGRESS_DETERMINATE})
-    @Retention(RetentionPolicy.SOURCE)
-    protected @interface ProgressType {
-    }
-
-    protected static final int PROGRESS_NON_DETERMINATE = -1;
-    protected static final int PROGRESS_DETERMINATE = 0;
+    protected static final int MAX_INDETERMINATE = -1;
+    protected static final int MAX_FINISHED = -2;
 
 
     @NonNull
@@ -86,6 +78,12 @@ public abstract class ProgressHandler {
      */
     @MainThread
     public abstract void onDetach(@Nullable Service service);
+
+    /**
+     * Get a new progress handler from this handler. The handler will never have a queue handler.
+     */
+    @NonNull
+    public abstract ProgressHandler newSubProgressHandler();
 
     @Nullable
     public abstract Object getLastMessage();

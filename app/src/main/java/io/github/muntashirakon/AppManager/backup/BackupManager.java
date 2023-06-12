@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.progress.ProgressHandler;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
@@ -80,7 +81,8 @@ public class BackupManager {
      * Backup the given package belonging to the given user. If multiple backup names given, iterate
      * over the backup names and perform the identical backups several times.
      */
-    public void backup(@Nullable String[] backupNames) throws BackupException {
+    public void backup(@Nullable String[] backupNames, @Nullable ProgressHandler progressHandler)
+            throws BackupException {
         if (requestedFlags.isEmpty()) {
             throw new BackupException("Backup is requested without any flags.");
         }
@@ -93,10 +95,15 @@ public class BackupManager {
             BackupFiles backupFiles = new BackupFiles(targetPackage.getPackageName(), targetPackage.getUserHandle(), backupNames);
             BackupFiles.BackupFile[] backupFileList = requestedFlags.backupMultiple() ?
                     backupFiles.getFreshBackupPaths() : backupFiles.getBackupPaths(true);
+            if (progressHandler != null) {
+                int max = calculateMaxProgress(backupFileList.length);
+                progressHandler.setProgressTextInterface(ProgressHandler.PROGRESS_PERCENT);
+                progressHandler.postUpdate(max, 0f);
+            }
             for (BackupFiles.BackupFile backupFile : backupFileList) {
                 try (BackupOp backupOp = new BackupOp(targetPackage.getPackageName(), metadataManager, requestedFlags,
                         backupFile, targetPackage.getUserHandle())) {
-                    backupOp.runBackup();
+                    backupOp.runBackup(progressHandler);
                     BackupUtils.putBackupToDbAndBroadcast(ContextUtils.getContext(), backupOp.getMetadata());
                 }
             }
@@ -130,7 +137,8 @@ public class BackupManager {
      *                    the full name of base backup is {@code 0} and the full name of another
      *                    backup {@code foo} is {@code 0_foo}.
      */
-    public void restore(@Nullable String[] backupNames) throws BackupException {
+    public void restore(@Nullable String[] backupNames, @Nullable ProgressHandler progressHandler)
+            throws BackupException {
         if (requestedFlags.isEmpty()) {
             throw new BackupException("Restore is requested without any flags.");
         }
@@ -171,10 +179,15 @@ public class BackupManager {
             if (backupFileList.length > 1) {
                 Log.w(RestoreOp.TAG, "More than one backups found! Restoring only the first backup.");
             }
+            if (progressHandler != null) {
+                int max = calculateMaxProgress(1);
+                progressHandler.setProgressTextInterface(ProgressHandler.PROGRESS_PERCENT);
+                progressHandler.postUpdate(max, 0f);
+            }
             try (RestoreOp restoreOp = new RestoreOp(targetPackage.getPackageName(),
                     metadataManager, requestedFlags, backupFileList[0],
                     targetPackage.getUserHandle())) {
-                restoreOp.runRestore();
+                restoreOp.runRestore(progressHandler);
                 requiresRestart |= restoreOp.requiresRestart();
                 BackupUtils.putBackupToDbAndBroadcast(ContextUtils.getContext(), restoreOp.getMetadata());
             }
@@ -258,5 +271,14 @@ public class BackupManager {
         } else {
             throw new BackupException("No backups found.");
         }
+    }
+
+    private int calculateMaxProgress(int multiplier) {
+        int tasks = 1;
+        if (requestedFlags.backupApkFiles()) ++tasks;
+        if (requestedFlags.backupData()) ++tasks;
+        if (requestedFlags.backupExtras()) ++tasks;
+        if (requestedFlags.backupRules()) ++tasks;
+        return tasks * multiplier;
     }
 }

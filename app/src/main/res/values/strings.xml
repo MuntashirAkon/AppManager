@@ -1391,5 +1391,7 @@
     <string name="copy_this_path">Copy path</string>
     <string name="title_audio_player">Audio Player</string>
     <string name="filter_force_stopped_apps">Stopped apps</string>
-    <string name="installing_package">Installing %1$s...</string>
+    <string name="installing_package">Installing %1$s…</string>
+    <string name="backing_up_app">Backing up %1$s…</string>
+    <string name="restoring_app">Restoring %1$s…</string>
 </resources>

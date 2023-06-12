@@ -112,8 +112,8 @@ public class BackupRestoreDialogFragment extends CapsuleBottomSheetDialogFragmen
         @Override
         public void onReceive(Context context, Intent intent) {
             if (mActionCompleteInterface != null) {
-                BatchOpsManager.Result result = BatchOpsManager.getLastResult();
-                mActionCompleteInterface.onActionComplete(mMode, result != null ? result.getFailedPackages().toArray(new String[0]) : new String[0]);
+                ArrayList<String> failedPackages = intent.getStringArrayListExtra(BatchOpsService.EXTRA_FAILED_PKG);
+                mActionCompleteInterface.onActionComplete(mMode, failedPackages != null ? failedPackages.toArray(new String[0]) : new String[0]);
             }
             mActivity.unregisterReceiver(mBatchOpsBroadCastReceiver);
         }

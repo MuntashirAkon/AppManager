@@ -2,8 +2,6 @@
 
 package io.github.muntashirakon.AppManager.progress;
 
-import android.os.Bundle;
-
 import androidx.annotation.MainThread;
 import androidx.annotation.Nullable;
 
