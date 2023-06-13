@@ -22,17 +22,20 @@ import java.util.Map;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 
 final class LocalFileOverlay {
-    private static final String[] ROOT_FILES = new String[]{"apex", "bin", "config", "d", "data", "data_mirror", "debug_ramdisk",
-            "dev", "dsp", "etc", "linkerconfig", "metadata", "mnt", "odm", "odm_dklm", "oem", "oneplus", "op1",
-            "postinstall", "proc", "product", "sdcard", "second_state_resources", "storage", "sys", "system",
-            "system_ext", "vendor", "vendor_dlkm"};
-    // There might be more, but these are what I've got for now
+    private static final String[] ROOT_FILES = new String[]{"acct", "apex", "audit_filter_table", "bin", "bugreports",
+            "cache", "carrier", "config", "d", "data", "data_mirror", "debug_ramdisk", "default.prop", "dev", "dpolicy",
+            "dsp", "efs", "etc", "init", "init.container.rc", "init.environ.rc", "lib", "linkerconfig", "lost+found",
+            "metadata", "mnt", "odm", "odm_dklm", "oem", "omr", "oneplus", "op1", "postinstall", "proc", "product",
+            "sdcard", "second_state_resources", "sepolicy_version", "spu", "storage", "sys", "system", "system_ext",
+            "vendor", "vendor_dlkm"};
+    // There might be more, but these are what I've got for now (also, /system/apex)
     private static final String[] APEX_PKGS = new String[]{
             "com.android.adbd",
             "com.android.adservices",
             "com.android.appsearch",
             "com.android.art",
             "com.android.art.debug",
+            "com.android.art.release",
             "com.android.bluetooth",
             "com.android.bootanimation",
             "com.android.btservices",
@@ -41,6 +44,7 @@ final class LocalFileOverlay {
             "com.android.conscrypt",
             "com.android.devicelock",
             "com.android.extservices",
+            "com.android.extservices.gms",
             "com.android.federatedcompute",
             "com.android.geotz",
             "com.android.gki",
@@ -54,6 +58,7 @@ final class LocalFileOverlay {
             "com.android.ondevicepersonalization",
             "com.android.os.statsd",
             "com.android.permission",
+            "com.android.permission.gms",
             "com.android.resolv",
             "com.android.rkpd",
             "com.android.runtime",
@@ -62,13 +67,19 @@ final class LocalFileOverlay {
             "com.android.sepolicy",
             "com.android.telephony",
             "com.android.tethering",
+            "com.android.tethering.inprocess",
             "com.android.tzdata",
             "com.android.uwb",
             "com.android.virt",
             "com.android.vndk",
+            "com.android.vndk.current",
             "com.android.vndk.v" + Build.VERSION.SDK_INT,
             "com.android.wifi",
     };
+    private static final String[] DATA_FILES = new String[]{"app", "app-ephemeral", "app-lib", "cache", "dalvik-cache",
+            "data", "local", "media", "misc", "misc_ce", "misc_de", "per_boot", "resource-cache", "rollback",
+            "rollback-observer", "ss", "system", "system_ce", "system_de", "user", "user_ce", "user_de", "vendor",
+            "vendor_ce", "vendor_de"};
     // Read-only here means whether this should be accessed by ReadOnlyDirectory, it has nothing to do with the actual mode of the file.
     private static final HashMap<String, String[]> pathReadOnlyMap = new HashMap<String, String[]>() {{
         int userId = UserHandleHidden.myUserId();
@@ -80,9 +91,16 @@ final class LocalFileOverlay {
         }
         put("/", ROOT_FILES); // Permission denied
         put("/apex", APEX_PKGS); // Permission denied
-        put("/data", new String[]{"app", "data", "user", "user_ce", "user_de"}); // Permission denied
+        put("/data", DATA_FILES); // Permission denied
         put("/data/app", null); // Permission denied
         put("/data/data", new String[]{appId}); // Permission denied
+        put("/data/local", new String[]{"tmp"}); // Permission denied
+        put("/data/misc", new String[]{"ethernet", "gcov", "keychain", "profiles", "textclassifier", "user", "zoneinfo"});
+        put("/data/misc/user", new String[]{appId});
+        put("/data/misc/profiles", new String[]{"cur"});
+        put("/data/misc/profiles/cur", new String[]{appId});
+        put("/data/misc_ce", new String[]{String.valueOf(userId)}); // Permission denied
+        put("/data/misc_de", new String[]{String.valueOf(userId)}); // Permission denied
         put("/data/user", new String[]{String.valueOf(userId)}); // Permission denied
         put("/data/user/" + userId, new String[]{appId}); // Permission denied
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
