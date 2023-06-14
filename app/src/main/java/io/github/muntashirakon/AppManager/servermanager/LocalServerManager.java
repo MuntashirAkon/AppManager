@@ -31,6 +31,7 @@ import io.github.muntashirakon.AppManager.server.common.CallerResult;
 import io.github.muntashirakon.AppManager.server.common.DataTransmission;
 import io.github.muntashirakon.AppManager.server.common.ParcelableUtil;
 import io.github.muntashirakon.AppManager.settings.Ops;
+import io.github.muntashirakon.AppManager.smt.SmtUtils;
 import io.github.muntashirakon.adb.AdbStream;
 import io.github.muntashirakon.io.IoUtils;
 
@@ -243,6 +244,23 @@ class LocalServerManager {
         Log.e(TAG, "useRootStartServer: Server has started.");
     }
 
+    @WorkerThread
+    private void useSmtStartServer() throws Exception {
+        if (!SmtUtils.canAccessSmtShell(mContext)) {
+            throw new Exception("SMTShell access denied");
+        }
+        String command = getExecCommand();
+        Log.d(TAG, "useSmtStartServer: " + command);
+        Runner.Result result = SmtUtils.runCommand(mContext, command);
+
+        Log.d(TAG, "useSmtStartServer: " + result.getOutput());
+        if (!result.isSuccessful()) {
+            throw new Exception("Could not start server.");
+        }
+        SystemClock.sleep(3000);
+        Log.e(TAG, "useSmtStartServer: Server has started.");
+    }
+
     /**
      * Start root or ADB server based on config
      */
@@ -253,6 +271,8 @@ class LocalServerManager {
             useAdbStartServer();
         } else if (Ops.isRoot()) {
             useRootStartServer();
+        } else if (Ops.isSystem()) {
+            useSmtStartServer();
         } else throw new Exception("Neither root nor ADB mode is enabled.");
     }
 

@@ -49,6 +49,7 @@ public class MainPreferences extends PreferenceFragment {
             Ops.MODE_ROOT,
             Ops.MODE_ADB_OVER_TCP,
             Ops.MODE_ADB_WIFI,
+            Ops.MODE_SMT,
             Ops.MODE_NO_ROOT);
 
     private FragmentActivity mActivity;

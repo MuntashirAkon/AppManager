@@ -29,6 +29,7 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.settings.Ops;
+import io.github.muntashirakon.AppManager.smt.SmtUtils;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 
 /**
@@ -209,6 +210,11 @@ public abstract class RootService extends ContextWrapper {
                 } else if (Ops.isRoot()) {
                     if (!Runner.runCommand(cmd).isSuccessful()) {
                         Log.e(TAG, "Couldn't start service using root.");
+                    }
+                } else if (Ops.isSystem()) {
+                    Context context = ContextUtils.getContext();
+                    if (!SmtUtils.canAccessSmtShell(context) || !SmtUtils.runCommand(context, cmd).isSuccessful()) {
+                        Log.e(TAG, "Couldn't start service using SMT.");
                     }
                 }
             } catch (IOException | RemoteException e) {

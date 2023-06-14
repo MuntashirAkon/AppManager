@@ -25,7 +25,7 @@ public abstract class Runner {
         private final List<String> mStderr;
         private final int mExitCode;
 
-        Result(@NonNull List<String> stdout, @NonNull List<String> stderr, int exitCode) {
+        public Result(@NonNull List<String> stdout, @NonNull List<String> stderr, int exitCode) {
             mStdout = stdout;
             mStderr = stderr;
             mExitCode = exitCode;

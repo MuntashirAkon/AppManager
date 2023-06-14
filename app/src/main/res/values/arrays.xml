@@ -34,6 +34,7 @@
         <item>@string/root</item>
         <item>@string/adb_over_tcp</item>
         <item>@string/wireless_debugging</item>
+        <item>SMTShell</item>
         <item>@string/no_root</item>
     </array>
     <string-array name="shared_pref_types">

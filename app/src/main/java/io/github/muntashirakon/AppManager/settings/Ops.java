@@ -49,6 +49,7 @@ import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.session.SessionMonitoringService;
+import io.github.muntashirakon.AppManager.smt.SmtUtils;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
@@ -61,7 +62,7 @@ import io.github.muntashirakon.dialog.TextInputDialogBuilder;
  * Controls mode of operation and other related functions
  */
 public class Ops {
-    @StringDef({MODE_AUTO, MODE_ROOT, MODE_ADB_OVER_TCP, MODE_ADB_WIFI, MODE_NO_ROOT})
+    @StringDef({MODE_AUTO, MODE_ROOT, MODE_ADB_OVER_TCP, MODE_ADB_WIFI, MODE_SMT, MODE_NO_ROOT})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Mode {
     }
@@ -70,6 +71,7 @@ public class Ops {
     public static final String MODE_ROOT = "root";
     public static final String MODE_ADB_OVER_TCP = "adb_tcp";
     public static final String MODE_ADB_WIFI = "adb_wifi";
+    public static final String MODE_SMT = "smt";
     public static final String MODE_NO_ROOT = "no-root";
 
     @IntDef({
@@ -240,6 +242,14 @@ public class Ops {
                     sIsRoot = true;
                     LocalServices.bindServicesIfNotAlready();
                     return initPermissionsWithSuccess();
+                case MODE_SMT:
+                    sIsRoot = sIsAdb = false;
+                    sIsSystem = true;
+                    if (SmtUtils.canAccessSmtShell(context)) {
+                        LocalServices.bindServicesIfNotAlready();
+                        return initPermissionsWithSuccess();
+                    }
+                    throw new Exception("SMTShell cannot be accessed.");
                 case MODE_ADB_WIFI:
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                         return STATUS_AUTO_CONNECT_WIRELESS_DEBUGGING;
@@ -335,6 +345,17 @@ public class Ops {
             setMode(MODE_NO_ROOT);
             // Skip checking for ADB
             sIsAdb = false;
+            return;
+        }
+        // Check SMT
+        if (SmtUtils.canAccessSmtShell(context)) {
+            sIsSystem = true;
+            try {
+                LocalServices.bindServices();
+            } catch (RemoteException e) {
+                Log.e("System", e);
+            }
+            sIsSystem = LocalServer.alive(context);
             return;
         }
         // Check for ADB
