@@ -102,7 +102,7 @@ public class MainPreferences extends PreferenceFragment {
         modes = getResources().getStringArray(R.array.modes);
         currentMode = Ops.getMode();
         modePref.setSummary(getString(R.string.mode_of_op_with_inferred_mode_of_op, modes[MODE_NAMES.indexOf(currentMode)],
-                getInferredMode()));
+                Ops.getInferredMode(activity)));
         modePref.setOnPreferenceClickListener(preference -> {
             new SearchableSingleChoiceDialogBuilder<>(activity, MODE_NAMES, modes)
                     .setTitle(R.string.pref_mode_of_operations)
@@ -206,7 +206,7 @@ public class MainPreferences extends PreferenceFragment {
                 case Ops.STATUS_FAILURE:
                     modeOfOpsAlertDialog.dismiss();
                     modePref.setSummary(getString(R.string.mode_of_op_with_inferred_mode_of_op,
-                            modes[MODE_NAMES.indexOf(currentMode)], getInferredMode()));
+                            modes[MODE_NAMES.indexOf(currentMode)], Ops.getInferredMode(activity)));
             }
         });
         // Device info
@@ -234,16 +234,5 @@ public class MainPreferences extends PreferenceFragment {
             } else localesL[i] = locale.getDisplayName(locale);
         }
         return localesL;
-    }
-
-    @NonNull
-    private CharSequence getInferredMode() {
-        if (Ops.isRoot()) {
-            return getString(R.string.root);
-        }
-        if (Ops.isAdb()) {
-            return "ADB";
-        }
-        return getString(R.string.no_root);
     }
 }

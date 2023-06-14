@@ -110,7 +110,7 @@ public abstract class RootService extends ContextWrapper {
         Shell.Task task = bindOrTask(intent, executor, conn);
         if (task != null) {
             Shell.EXECUTOR.execute(asRunnable(task));
-        }
+        } else conn.onServiceDisconnected(intent.getComponent());
     }
 
     /**
@@ -204,11 +204,11 @@ public abstract class RootService extends ContextWrapper {
                 if (Ops.isAdb()) {
                     // ADB must be checked at first
                     if (LocalServer.getInstance().runCommand(cmd).getStatusCode() != 0) {
-                        Log.e(TAG, "Couldn't start service.");
+                        Log.e(TAG, "Couldn't start service using ADB.");
                     }
                 } else if (Ops.isRoot()) {
                     if (!Runner.runCommand(cmd).isSuccessful()) {
-                        Log.e(TAG, "Couldn't start service.");
+                        Log.e(TAG, "Couldn't start service using root.");
                     }
                 }
             } catch (IOException | RemoteException e) {

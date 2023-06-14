@@ -34,6 +34,7 @@ public class DeviceInfo {
     private final int sdkVersion = Build.VERSION.SDK_INT;
     private final long versionCode;
     private final String versionName;
+    private final CharSequence inferredMode;
 
     public DeviceInfo(@NonNull Context context) {
         PackageInfo packageInfo;
@@ -49,6 +50,7 @@ public class DeviceInfo {
             versionCode = -1;
             versionName = null;
         }
+        inferredMode = Ops.getInferredMode(context);
     }
 
     @NonNull
@@ -72,16 +74,6 @@ public class DeviceInfo {
                 + "System language: " + Locale.getDefault().toLanguageTag() + "\n"
                 + "In-App Language: " + Prefs.Appearance.getLanguage() + "\n"
                 + "Mode: " + Ops.getMode() + "\n"
-                + "Inferred Mode: " + getInferredMode();
-    }
-
-    public String getInferredMode() {
-        if (Ops.isRoot()) {
-            return "root";
-        }
-        if (Ops.isAdb()) {
-            return "ADB";
-        }
-        return "no_root";
+                + "Inferred Mode: " + inferredMode;
     }
 }

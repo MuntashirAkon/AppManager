@@ -102,9 +102,6 @@ dependencies {
     implementation project(path: ':libserver')
     implementation project(path: ':docs')
 
-    // ADB
-    implementation "com.github.MuntashirAkon:libadb-android:${libadb_version}"
-
     // API
     implementation "com.github.MuntashirAkon:unapkm-android:${unapkm_version}"
     implementation project(path: ':libopenpgp')
@@ -140,6 +137,7 @@ dependencies {
     implementation "com.j256.simplemagic:simplemagic:${simplemagic_version}"
 
     // Privileged
+    implementation "com.github.MuntashirAkon:libadb-android:${libadb_version}"
     implementation "com.github.topjohnwu.libsu:core:${libsu_version}"
     implementation "org.lsposed.hiddenapibypass:hiddenapibypass:${hiddenapibypass_version}"
     implementation "dev.rikka.tools.refine:runtime:${refine_version}"

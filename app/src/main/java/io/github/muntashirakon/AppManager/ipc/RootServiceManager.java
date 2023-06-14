@@ -189,7 +189,7 @@ public class RootServiceManager implements Handler.Callback {
         }
 
         // Classpath
-        env.append(CLASSPATH_ENV + "=").append(stagingMainJar).append(" ");
+        env.append(CLASSPATH_ENV + "=").append(Ops.isSystem() ? mainJar : stagingMainJar).append(" ");
 
         String cmd = getRunnerScript(env.toString(), mainJar, stagingMainJar, name, action, params);
 
@@ -220,10 +220,20 @@ public class RootServiceManager implements Handler.Callback {
                                    @NonNull String action,
                                    @NonNull String debugParams) {
         // ADB cannot access `exe` of another process
-        String execFile = Ops.isAdb() ? "/system/bin/app_process" : ("/proc/" + Process.myPid() + "/exe");
-        return (PackageUtils.ensurePackageStagingDirectoryCommand() +
-                String.format(Locale.ROOT, " && cp %s %s && ", mainJar, PACKAGE_STAGING_DIRECTORY) +
-                String.format(Locale.ROOT, "chmod 755 %s && chown shell:shell %s && ", stagingMainJar, stagingMainJar) +
+        String execFile = Ops.isRoot() ? ("/proc/" + Process.myPid() + "/exe") : "/system/bin/app_process";
+        String packageStagingCommand;
+        if (!Ops.isSystem()) {
+            // Use package staging directory
+            packageStagingCommand = PackageUtils.ensurePackageStagingDirectoryCommand() +
+                    // Copy to main.jar to package staging directory
+                    String.format(Locale.ROOT, " && cp %s %s && ", mainJar, PACKAGE_STAGING_DIRECTORY) +
+                    // Change permission of the main.jar
+                    String.format(Locale.ROOT, "chmod 755 %s && chown shell:shell %s && ", stagingMainJar, stagingMainJar);
+        } else {
+            // System can't use package staging directory
+            packageStagingCommand = "";
+        }
+        return (packageStagingCommand +
                 String.format(Locale.ROOT, "(%s %s %s /system/bin --nice-name=%s:root %s %s %d %s %s)&",
                         env,                                        // Environments
                         execFile,                                   // Executable
