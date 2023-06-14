@@ -194,7 +194,7 @@ public final class Prefs {
         @ComponentRule.ComponentStatus
         public static String getDefaultBlockingMethod() {
             String selectedStatus = AppPref.getString(AppPref.PrefKey.PREF_DEFAULT_BLOCKING_METHOD_STR);
-            if (Ops.isAdb()) {
+            if (!PermissionUtils.canBlockByIFW()) {
                 if (selectedStatus.equals(ComponentRule.COMPONENT_TO_BE_BLOCKED_IFW_DISABLE)
                         || selectedStatus.equals(ComponentRule.COMPONENT_TO_BE_BLOCKED_IFW)) {
                     // Lower the status

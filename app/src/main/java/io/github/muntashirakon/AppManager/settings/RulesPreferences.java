@@ -20,6 +20,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
+import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
 import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
@@ -103,6 +104,8 @@ public class RulesPreferences extends PreferenceFragment {
         });
         // Default component blocking method
         Preference defaultBlockingMethod = Objects.requireNonNull(findPreference("default_blocking_method"));
+        // Disable this option if IFW folder can't be accessed
+        defaultBlockingMethod.setEnabled(PermissionUtils.canBlockByIFW());
         int csIdx = ArrayUtils.indexOf(blockingMethods, Prefs.Blocking.getDefaultBlockingMethod());
         if (csIdx != -1) {
             defaultBlockingMethod.setSummary(blockingMethodTitles[csIdx]);

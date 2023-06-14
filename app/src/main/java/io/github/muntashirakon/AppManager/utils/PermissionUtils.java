@@ -20,7 +20,9 @@ import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 import io.github.muntashirakon.AppManager.ipc.LocalServices;
+import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.settings.Ops;
+import io.github.muntashirakon.io.Paths;
 
 @SuppressWarnings("BooleanMethodIsAlwaysInverted")
 public final class PermissionUtils {
@@ -124,5 +126,9 @@ public final class PermissionUtils {
 
     public static int getSelfOrRemoteUid() {
         return ExUtils.requireNonNullElse(() -> LocalServices.getAmService().getUid(), Process.myUid());
+    }
+
+    public static boolean canBlockByIFW() {
+        return Paths.get(ComponentsBlocker.SYSTEM_RULES_PATH).canWrite();
     }
 }

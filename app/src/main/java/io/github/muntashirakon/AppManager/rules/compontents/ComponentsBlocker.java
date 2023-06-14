@@ -64,7 +64,7 @@ import io.github.muntashirakon.io.Paths;
 public final class ComponentsBlocker extends RulesStorageManager {
     public static final String TAG = "ComponentBlocker";
 
-    static final String SYSTEM_RULES_PATH;
+    public static final String SYSTEM_RULES_PATH;
 
     static {
         SYSTEM_RULES_PATH = Build.VERSION.SDK_INT <= Build.VERSION_CODES.M ? "/data/secure/system/ifw"
