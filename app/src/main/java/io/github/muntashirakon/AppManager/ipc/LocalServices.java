@@ -18,13 +18,22 @@ public class LocalServices {
     private static final ServiceConnectionWrapper sFileSystemServiceConnectionWrapper
             = new ServiceConnectionWrapper(BuildConfig.APPLICATION_ID, FileSystemService.class.getName());
 
+    public static void bindServices() throws RemoteException {
+        bindAmService();
+        bindFileSystemManager();
+        // Verify binding
+        if (!getAmService().asBinder().pingBinder()) {
+            throw new RemoteException("IAmService not running.");
+        }
+        getFileSystemManager();
+    }
+
     @WorkerThread
-    @NonNull
     @NoOps(used = true)
-    public static FileSystemManager bindFileSystemManager() throws RemoteException {
+    public static void bindFileSystemManager() throws RemoteException {
         synchronized (sFileSystemServiceConnectionWrapper) {
             try {
-                return FileSystemManager.getRemote(sFileSystemServiceConnectionWrapper.bindService());
+                sFileSystemServiceConnectionWrapper.bindService();
             } finally {
                 sFileSystemServiceConnectionWrapper.notifyAll();
             }
@@ -45,15 +54,15 @@ public class LocalServices {
     }
 
     @NonNull
-    private static final ServiceConnectionWrapper sAMServiceConnectionWrapper = new ServiceConnectionWrapper(BuildConfig.APPLICATION_ID, AMService.class.getName());
+    private static final ServiceConnectionWrapper sAMServiceConnectionWrapper
+            = new ServiceConnectionWrapper(BuildConfig.APPLICATION_ID, AMService.class.getName());
 
     @WorkerThread
-    @NonNull
     @NoOps(used = true)
-    public static IAMService bindAmService() throws RemoteException {
+    private static void bindAmService() throws RemoteException {
         synchronized (sAMServiceConnectionWrapper) {
             try {
-                return IAMService.Stub.asInterface(sAMServiceConnectionWrapper.bindService());
+                sAMServiceConnectionWrapper.bindService();
             } finally {
                 sAMServiceConnectionWrapper.notifyAll();
             }

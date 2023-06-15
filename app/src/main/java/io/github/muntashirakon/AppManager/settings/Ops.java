@@ -232,6 +232,8 @@ public class Ops {
         }
         if (MODE_NO_ROOT.equals(mode)) {
             sIsAdb = sIsSystem = sIsRoot = false;
+            // Also, stop existing services if any
+            LocalServices.stopServices();
             return STATUS_SUCCESS;
         }
         if (!force && isAMServiceUpAndRunning(context, mode)) {

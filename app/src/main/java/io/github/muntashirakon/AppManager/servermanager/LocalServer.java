@@ -63,8 +63,8 @@ public class LocalServer {
     @NoOps(used = true)
     public static void launchAmService() throws RemoteException {
         if (amService == null || !amService.asBinder().pingBinder()) {
-            amService = LocalServices.bindAmService();
-            LocalServices.bindFileSystemManager();
+            LocalServices.bindServices();
+            amService = LocalServices.getAmService();
         }
     }
 

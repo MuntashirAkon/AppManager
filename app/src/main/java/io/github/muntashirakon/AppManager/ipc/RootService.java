@@ -110,7 +110,7 @@ public abstract class RootService extends ContextWrapper {
         Shell.Task task = bindOrTask(intent, executor, conn);
         if (task != null) {
             Shell.EXECUTOR.execute(asRunnable(task));
-        } else conn.onServiceDisconnected(intent.getComponent());
+        }
     }
 
     /**
