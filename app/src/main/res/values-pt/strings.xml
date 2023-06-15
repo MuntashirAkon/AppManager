@@ -369,7 +369,7 @@
     <string name="trackers">Rastreadores</string>
     <string name="installed_version">Versão instalada</string>
     <string name="select_all">Selecionar todos</string>
-    <string name="filter_apps_with_rules">Apps com regras</string>
+    <string name="filter_apps_with_rules">Com regras</string>
     <string name="filter_system_apps">Apps do sistema</string>
     <string name="filter_user_apps">Apps do utilizador</string>
     <string name="filter">Filtro</string>
