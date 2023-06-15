@@ -19,10 +19,8 @@ import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PermissionCompat;
-import io.github.muntashirakon.AppManager.ipc.LocalServices;
-import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.settings.Ops;
-import io.github.muntashirakon.io.Paths;
+import io.github.muntashirakon.AppManager.users.Users;
 
 @SuppressWarnings("BooleanMethodIsAlwaysInverted")
 public final class PermissionUtils {
@@ -109,26 +107,18 @@ public final class PermissionUtils {
     }
 
     public static boolean hasSelfOrRemotePermission(@NonNull String permissionName) {
-        int uid = getSelfOrRemoteUid();
+        int uid = Users.getSelfOrRemoteUid();
         if (uid == 0) {
             // Root UID has all the permissions granted
             return true;
         }
         if (uid != Process.myUid()) {
             try {
-                return PackageManagerCompat.getPackageManager().checkUidPermission(permissionName, getSelfOrRemoteUid())
+                return PackageManagerCompat.getPackageManager().checkUidPermission(permissionName, uid)
                         == PackageManager.PERMISSION_GRANTED;
             } catch (RemoteException ignore) {
             }
         }
         return hasSelfPermission(permissionName);
-    }
-
-    public static int getSelfOrRemoteUid() {
-        return ExUtils.requireNonNullElse(() -> LocalServices.getAmService().getUid(), Process.myUid());
-    }
-
-    public static boolean canBlockByIFW() {
-        return Paths.get(ComponentsBlocker.SYSTEM_RULES_PATH).canWrite();
     }
 }

@@ -60,6 +60,7 @@ import java.security.interfaces.RSAPublicKey;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -88,6 +89,7 @@ import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
+import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.Users;
@@ -107,7 +109,7 @@ public final class PackageUtils {
         ArrayList<UserPackagePair> userPackagePairList = new ArrayList<>();
         int currentUser = UserHandleHidden.myUserId();
         for (ApplicationItem item : applicationItems) {
-            if (item.userHandles != null) {
+            if (item.userHandles.length > 0) {
                 for (int userHandle : item.userHandles)
                     userPackagePairList.add(new UserPackagePair(item.packageName, userHandle));
             } else {
@@ -244,21 +246,40 @@ public final class PackageUtils {
 
     @NonNull
     public static List<PackageInfo> getAllPackages(int flags) {
-        List<PackageInfo> applicationInfoList = new ArrayList<>();
+        return getAllPackages(flags, false);
+    }
+
+    @NonNull
+    public static List<PackageInfo> getAllPackages(int flags, boolean currentUserOnly) {
+        if (currentUserOnly) {
+            return ExUtils.requireNonNullElse(() -> PackageManagerCompat.getInstalledPackages(flags,
+                    UserHandleHidden.myUserId()), Collections.emptyList());
+        }
+        List<PackageInfo> packageInfoList = new ArrayList<>();
         for (int userId : Users.getUsersIds()) {
             try {
-                applicationInfoList.addAll(PackageManagerCompat.getInstalledPackages(flags, userId));
+                packageInfoList.addAll(PackageManagerCompat.getInstalledPackages(flags, userId));
                 if (ThreadUtils.isInterrupted()) {
                     break;
                 }
             } catch (RemoteException ignore) {
             }
         }
-        return applicationInfoList;
+        return packageInfoList;
     }
+
 
     @NonNull
     public static List<ApplicationInfo> getAllApplications(int flags) {
+        return getAllApplications(flags, false);
+    }
+
+    @NonNull
+    public static List<ApplicationInfo> getAllApplications(int flags, boolean currentUserOnly) {
+        if (currentUserOnly) {
+            return ExUtils.requireNonNullElse(() -> PackageManagerCompat.getInstalledApplications(flags,
+                    UserHandleHidden.myUserId()), Collections.emptyList());
+        }
         List<ApplicationInfo> applicationInfoList = new ArrayList<>();
         for (int userId : Users.getUsersIds()) {
             try {
@@ -304,7 +325,7 @@ public final class PackageUtils {
             } catch (RemoteException | InterruptedException | SecurityException e) {
                 Log.e(TAG, e);
             }
-        } else if (PermissionUtils.hasUsageStatsPermission(context)) {
+        } else if (FeatureController.isUsageAccessEnabled()) {
             try {
                 IStorageStatsManager storageStatsManager = IStorageStatsManager.Stub.asInterface(ProxyBinder
                         .getService(Context.STORAGE_STATS_SERVICE));

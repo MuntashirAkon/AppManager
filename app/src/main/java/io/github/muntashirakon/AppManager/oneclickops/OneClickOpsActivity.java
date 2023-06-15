@@ -96,49 +96,32 @@ public class OneClickOpsActivity extends BaseActivity {
     private void setItems() {
         mItemCreator.addItemWithTitleSubtitle(getString(R.string.block_unblock_trackers),
                         getString(R.string.block_unblock_trackers_description))
-                .setOnClickListener(v -> {
-                    if (!Ops.isPrivileged()) {
-                        UIUtils.displayShortToast(R.string.only_works_in_root_or_adb_mode);
-                        return;
-                    }
-                    if (Ops.isAdb() && !Ops.isRoot()) {
-                        mProgressIndicator.show();
-                        mViewModel.blockTrackers(true);
-                        return;
-                    }
-                    new MaterialAlertDialogBuilder(this)
-                            .setTitle(R.string.block_unblock_trackers)
-                            .setMessage(R.string.apply_to_system_apps_question)
-                            .setPositiveButton(R.string.no, (dialog, which) -> {
-                                mProgressIndicator.show();
-                                mViewModel.blockTrackers(false);
-                            })
-                            .setNegativeButton(R.string.yes, (dialog, which) -> {
-                                mProgressIndicator.show();
-                                mViewModel.blockTrackers(true);
-                            })
-                            .show();
-                });
+                .setOnClickListener(v -> new MaterialAlertDialogBuilder(this)
+                        .setTitle(R.string.block_unblock_trackers)
+                        .setMessage(R.string.apply_to_system_apps_question)
+                        .setPositiveButton(R.string.no, (dialog, which) -> {
+                            mProgressIndicator.show();
+                            mViewModel.blockTrackers(false);
+                        })
+                        .setNegativeButton(R.string.yes, (dialog, which) -> {
+                            mProgressIndicator.show();
+                            mViewModel.blockTrackers(true);
+                        })
+                        .show());
         mItemCreator.addItemWithTitleSubtitle(getString(R.string.block_unblock_components_dots),
                         getString(R.string.block_unblock_components_description))
-                .setOnClickListener(v -> {
-                    if (!Ops.isPrivileged()) {
-                        UIUtils.displayShortToast(R.string.only_works_in_root_or_adb_mode);
-                        return;
-                    }
-                    new TextInputDialogBuilder(this, R.string.input_signatures)
-                            .setHelperText(R.string.input_signatures_description)
-                            .setCheckboxLabel(R.string.apply_to_system_apps)
-                            .setTitle(R.string.block_unblock_components_dots)
-                            .setPositiveButton(R.string.search, (dialog, which, signatureNames, systemApps) -> {
-                                if (signatureNames == null) return;
-                                mProgressIndicator.show();
-                                String[] signatures = signatureNames.toString().split("\\s+");
-                                mViewModel.blockComponents(systemApps, signatures);
-                            })
-                            .setNegativeButton(R.string.cancel, null)
-                            .show();
-                });
+                .setOnClickListener(v -> new TextInputDialogBuilder(this, R.string.input_signatures)
+                        .setHelperText(R.string.input_signatures_description)
+                        .setCheckboxLabel(R.string.apply_to_system_apps)
+                        .setTitle(R.string.block_unblock_components_dots)
+                        .setPositiveButton(R.string.search, (dialog, which, signatureNames, systemApps) -> {
+                            if (signatureNames == null) return;
+                            mProgressIndicator.show();
+                            String[] signatures = signatureNames.toString().split("\\s+");
+                            mViewModel.blockComponents(systemApps, signatures);
+                        })
+                        .setNegativeButton(R.string.cancel, null)
+                        .show());
         mItemCreator.addItemWithTitleSubtitle(getString(R.string.set_mode_for_app_ops_dots),
                         getString(R.string.deny_app_ops_description))
                 .setOnClickListener(v -> showAppOpsSelectionDialog());

@@ -27,6 +27,7 @@ import io.github.muntashirakon.AppManager.logcat.helper.LogcatHelper;
 import io.github.muntashirakon.AppManager.main.MainListOptions;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.runningapps.RunningAppsActivity;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
@@ -171,7 +172,7 @@ public final class Prefs {
             AppPref.set(AppPref.PrefKey.PREF_BACKUP_FLAGS_INT, flags);
         }
 
-        public static boolean backupDirectoryExists(Context context) {
+        public static boolean backupDirectoryExists() {
             Uri uri = Storage.getVolumePath();
             Path path;
             if (uri.getScheme().equals(ContentResolver.SCHEME_FILE)) {
@@ -194,7 +195,7 @@ public final class Prefs {
         @ComponentRule.ComponentStatus
         public static String getDefaultBlockingMethod() {
             String selectedStatus = AppPref.getString(AppPref.PrefKey.PREF_DEFAULT_BLOCKING_METHOD_STR);
-            if (!PermissionUtils.canBlockByIFW()) {
+            if (!SelfPermissions.canBlockByIFW()) {
                 if (selectedStatus.equals(ComponentRule.COMPONENT_TO_BE_BLOCKED_IFW_DISABLE)
                         || selectedStatus.equals(ComponentRule.COMPONENT_TO_BE_BLOCKED_IFW)) {
                     // Lower the status

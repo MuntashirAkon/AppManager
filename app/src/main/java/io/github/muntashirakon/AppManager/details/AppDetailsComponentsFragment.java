@@ -44,7 +44,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
@@ -55,6 +54,7 @@ import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Ops;
@@ -129,7 +129,8 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        if (viewModel != null && !viewModel.isExternalApk() && Ops.isRoot()) {
+        if (viewModel != null && !viewModel.isExternalApk() && SelfPermissions.canModifyAppComponentStates(
+                viewModel.getUserHandle(), viewModel.getPackageName(), viewModel.isTestOnlyApp())) {
             inflater.inflate(R.menu.fragment_app_details_components_actions, menu);
             mBlockingToggler = menu.findItem(R.id.action_toggle_blocking);
             viewModel.getRuleApplicationStatus().observe(activity, status -> {
@@ -154,8 +155,9 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
         if (viewModel == null || viewModel.isExternalApk()) {
             return;
         }
-        if (Ops.isRoot()) {
-            menu.findItem(AppDetailsFragment.sSortMenuItemIdsMap[viewModel.getSortOrder(mNeededProperty)]).setChecked(true);
+        MenuItem sortItem = menu.findItem(AppDetailsFragment.sSortMenuItemIdsMap[viewModel.getSortOrder(mNeededProperty)]);
+        if (sortItem != null) {
+            sortItem.setChecked(true);
         }
     }
 
@@ -275,7 +277,8 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
         private int mRequestedProperty;
         @Nullable
         private String mConstraint;
-        private boolean mTestOnlyApp;
+        private int mUserId;
+        private boolean mCanModifyComponentStates;
         private final int mCardColor1;
         private final int mDefaultIndicatorColor;
 
@@ -288,8 +291,15 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
         @UiThread
         void setDefaultList(@NonNull List<AppDetailsItem<?>> list) {
             mRequestedProperty = mNeededProperty;
-            mConstraint = viewModel == null ? null : viewModel.getSearchQuery();
-            mTestOnlyApp = viewModel != null && viewModel.isTestOnlyApp();
+            if (viewModel != null) {
+                mCanModifyComponentStates = !mIsExternalApk && SelfPermissions.canModifyAppComponentStates(mUserId, viewModel.getPackageName(), viewModel.isTestOnlyApp());
+                mConstraint = viewModel.getSearchQuery();
+                mUserId = viewModel.getUserHandle();
+            } else {
+                mCanModifyComponentStates = false;
+                mConstraint = null;
+                mUserId = UserHandleHidden.myUserId();
+            }
             ProgressIndicatorCompat.setVisibility(progressIndicator, false);
             synchronized (mAdapterList) {
                 mAdapterList.clear();
@@ -406,7 +416,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             holder.toggleSwitch.setOnLongClickListener(v -> {
                 PopupMenu popupMenu = new PopupMenu(activity, holder.toggleSwitch);
                 popupMenu.inflate(R.menu.fragment_app_details_components_selection_actions);
-                if (!PermissionUtils.canBlockByIFW()) {
+                if (!SelfPermissions.canBlockByIFW()) {
                     Menu menu = popupMenu.getMenu();
                     menu.findItem(R.id.action_ifw_and_disable).setEnabled(false);
                     menu.findItem(R.id.action_ifw).setEnabled(false);
@@ -508,8 +518,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                     intent.setClassName(mPackageName, activityName);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     try {
-                        ActivityManagerCompat.startActivity(activity, intent,
-                                Objects.requireNonNull(viewModel).getUserHandle());
+                        ActivityManagerCompat.startActivity(activity, intent, mUserId);
                     } catch (Throwable e) {
                         UIUtils.displayLongToast(e.getLocalizedMessage());
                     }
@@ -521,8 +530,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                         Intent intent = new Intent(activity, ActivityInterceptor.class);
                         intent.putExtra(ActivityInterceptor.EXTRA_PACKAGE_NAME, mPackageName);
                         intent.putExtra(ActivityInterceptor.EXTRA_CLASS_NAME, activityName);
-                        intent.putExtra(ActivityInterceptor.EXTRA_USER_HANDLE,
-                                Objects.requireNonNull(viewModel).getUserHandle());
+                        intent.putExtra(ActivityInterceptor.EXTRA_USER_HANDLE, mUserId);
                         intent.putExtra(ActivityInterceptor.EXTRA_ROOT, needRoot);
                         startActivity(intent);
                         return true;
@@ -543,7 +551,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                 holder.launchBtn.setVisibility(View.GONE);
             }
             // Blocking
-            if (!mIsExternalApk && (Ops.isRoot() || (Ops.isPrivileged() && mTestOnlyApp))) {
+            if (mCanModifyComponentStates) {
                 handleBlock(holder, componentItem, RuleType.ACTIVITY);
             } else holder.toggleSwitch.setVisibility(View.GONE);
             ((MaterialCardView) holder.itemView).setCardBackgroundColor(mCardColor1);
@@ -611,8 +619,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                     Intent intent = new Intent();
                     intent.setClassName(mPackageName, serviceInfo.name);
                     try {
-                        ActivityManagerCompat.startService(activity, intent,
-                                Objects.requireNonNull(viewModel).getUserHandle(), true);
+                        ActivityManagerCompat.startService(activity, intent, mUserId, true);
                     } catch (Throwable th) {
                         th.printStackTrace();
                         Toast.makeText(context, th.toString(), Toast.LENGTH_LONG).show();
@@ -623,7 +630,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                 holder.launchBtn.setVisibility(View.GONE);
             }
             // Blocking
-            if (!mIsExternalApk && (Ops.isRoot() || (Ops.isPrivileged() && mTestOnlyApp))) {
+            if (mCanModifyComponentStates) {
                 handleBlock(holder, serviceItem, RuleType.SERVICE);
             } else holder.toggleSwitch.setVisibility(View.GONE);
             ((MaterialCardView) holder.itemView).setCardBackgroundColor(mCardColor1);
@@ -682,7 +689,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                         getString(R.string.process_name), processName));
             } else holder.processNameView.setVisibility(View.GONE);
             // Blocking
-            if (!mIsExternalApk && (Ops.isRoot() || (Ops.isPrivileged() && mTestOnlyApp))) {
+            if (mCanModifyComponentStates) {
                 handleBlock(holder, componentItem, RuleType.RECEIVER);
             } else holder.toggleSwitch.setVisibility(View.GONE);
             ((MaterialCardView) holder.itemView).setCardBackgroundColor(mCardColor1);
@@ -764,7 +771,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                         getString(R.string.process_name), processName));
             } else holder.processNameView.setVisibility(View.GONE);
             // Blocking
-            if (!mIsExternalApk && (Ops.isRoot() || (Ops.isPrivileged() && mTestOnlyApp))) {
+            if (mCanModifyComponentStates) {
                 handleBlock(holder, componentItem, RuleType.PROVIDER);
             } else holder.toggleSwitch.setVisibility(View.GONE);
             ((MaterialCardView) holder.itemView).setCardBackgroundColor(mCardColor1);

@@ -16,7 +16,6 @@ import android.widget.EditText;
 import androidx.annotation.AnyThread;
 import androidx.annotation.GuardedBy;
 import androidx.annotation.IntDef;
-import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -45,8 +44,8 @@ import io.github.muntashirakon.AppManager.misc.NoOps;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
+import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
@@ -133,7 +132,7 @@ public class Ops {
 
     @AnyThread
     public static boolean isReallyRoot() {
-        return isRoot() && getUid() == ROOT_UID;
+        return isRoot() && Users.getSelfOrRemoteUid() == ROOT_UID;
     }
 
     /**
@@ -149,7 +148,7 @@ public class Ops {
      */
     @AnyThread
     public static boolean isReallySystem() {
-        return isSystem() && getUid() == SYSTEM_UID;
+        return isSystem() && Users.getSelfOrRemoteUid() == SYSTEM_UID;
     }
 
     /**
@@ -162,7 +161,7 @@ public class Ops {
 
     @AnyThread
     public static boolean isReallyAdb() {
-        return isAdb() && getUid() == SHELL_UID;
+        return isAdb() && Users.getSelfOrRemoteUid() == SHELL_UID;
     }
 
     /**
@@ -289,7 +288,7 @@ public class Ops {
             // Root permission was granted, disable ADB and force root
             sIsSystem = sIsAdb = false;
             if (LocalServer.isAMServiceAlive()) {
-                if (getUid() == ROOT_UID) {
+                if (Users.getSelfOrRemoteUid() == ROOT_UID) {
                     // Service is already running in root mode
                     return;
                 }
@@ -299,7 +298,7 @@ public class Ops {
             try {
                 // AM service is confirmed dead
                 LocalServer.launchAmService();
-                if (LocalServer.isAMServiceAlive() && getUid() == ROOT_UID) {
+                if (LocalServer.isAMServiceAlive() && Users.getSelfOrRemoteUid() == ROOT_UID) {
                     // Service is running in root
                     return;
                 }
@@ -318,7 +317,7 @@ public class Ops {
         }
         // Root was not working/granted, but check for AM service just in case
         if (LocalServer.isAMServiceAlive()) {
-            int uid = getUid();
+            int uid = Users.getSelfOrRemoteUid();
             if (uid == ROOT_UID) {
                 sIsSystem = sIsAdb = false;
                 sIsRoot = true;
@@ -561,7 +560,7 @@ public class Ops {
         }
         if (LocalServer.isAMServiceAlive()) {
             // AM service is running
-            int uid = getUid();
+            int uid = Users.getSelfOrRemoteUid();
             if (sIsRoot && uid == ROOT_UID) {
                 // AM service is running as root
                 return true;
@@ -589,7 +588,7 @@ public class Ops {
     @NoOps // Although we've used Ops checks, its overall usage does not affect anything
     private static int checkRootOrIncompleteUsbDebuggingInAdb() {
         // ADB already granted and AM service is running
-        int uid = getUid();
+        int uid = Users.getSelfOrRemoteUid();
         if (uid == ROOT_UID) {
             // AM service is being run as root
             sIsRoot = true;
@@ -609,12 +608,6 @@ public class Ops {
         }
         ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(R.string.working_on_adb_mode));
         return STATUS_SUCCESS;
-    }
-
-    @NoOps
-    @IntRange(from = -1)
-    private static int getUid() {
-        return ExUtils.requireNonNullElse(() -> LocalServices.getAmService().getUid(), Process.myUid());
     }
 
     @WorkerThread

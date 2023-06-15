@@ -27,10 +27,7 @@ import java.util.Collections;
 import java.util.List;
 
 import dev.rikka.tools.refine.Refine;
-import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
-import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.settings.Ops;
 
 public final class PermissionCompat {
     public static final int FLAG_PERMISSION_NONE = 0;
@@ -268,7 +265,7 @@ public final class PermissionCompat {
     }
 
     @SuppressWarnings("deprecation")
-    @RequiresPermission(allOf = {
+    @RequiresPermission(anyOf = {
             ManifestCompat.permission.GET_RUNTIME_PERMISSIONS,
             ManifestCompat.permission.GRANT_RUNTIME_PERMISSIONS,
             ManifestCompat.permission.REVOKE_RUNTIME_PERMISSIONS,

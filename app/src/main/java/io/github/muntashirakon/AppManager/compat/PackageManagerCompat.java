@@ -40,6 +40,7 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.OptIn;
+import androidx.annotation.RequiresPermission;
 import androidx.annotation.WorkerThread;
 import androidx.core.os.BuildCompat;
 
@@ -239,6 +240,7 @@ public final class PackageManagerCompat {
         return applicationInfo;
     }
 
+    @Nullable
     public static String getInstallerPackageName(@NonNull String packageName, @UserIdInt int userId)
             throws RemoteException {
         return getInstallSourceInfo(packageName, userId).getInstallingPackageName();
@@ -299,6 +301,7 @@ public final class PackageManagerCompat {
         return getPackageManager().getComponentEnabledSetting(componentName, userId);
     }
 
+    @RequiresPermission(value = Manifest.permission.CHANGE_COMPONENT_ENABLED_STATE)
     public static void setComponentEnabledSetting(ComponentName componentName,
                                                   @EnabledState int newState,
                                                   @EnabledFlags int flags,
@@ -310,6 +313,7 @@ public final class PackageManagerCompat {
         }
     }
 
+    @RequiresPermission(value = Manifest.permission.CHANGE_COMPONENT_ENABLED_STATE)
     public static void setApplicationEnabledSetting(String packageName, @EnabledState int newState,
                                                     @EnabledFlags int flags, @UserIdInt int userId)
             throws RemoteException {

@@ -332,6 +332,10 @@ public final class ApplicationInfoCompat {
                 && Paths.exists(info.publicSourceDir);
     }
 
+    public static boolean isTestOnly(@NonNull ApplicationInfo info) {
+        return (info.flags & ApplicationInfo.FLAG_TEST_ONLY) != 0;
+    }
+
     public static boolean isStaticSharedLibrary(@NonNull ApplicationInfo info) {
         // Android 8+
         return (getPrivateFlags(info) & PRIVATE_FLAG_STATIC_SHARED_LIBRARY) != 0;

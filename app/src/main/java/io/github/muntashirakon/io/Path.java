@@ -69,7 +69,7 @@ public class Path implements Comparable<Path> {
     }
 
     private static void setAccessPaths() {
-        if (Process.myUid() == 0 || Process.myUid() == 2000) {
+        if (Process.myUid() == Process.ROOT_UID || Process.myUid() == Process.SYSTEM_UID || Process.myUid() == Process.SHELL_UID) {
             // Root/ADB
             return;
         }
@@ -124,7 +124,7 @@ public class Path implements Comparable<Path> {
     }
 
     private static boolean needPrivilegedAccess(@NonNull String path) {
-        if (Process.myUid() == 0 || Process.myUid() == 2000) {
+        if (Process.myUid() == Process.ROOT_UID || Process.myUid() == Process.SYSTEM_UID || Process.myUid() == Process.SHELL_UID) {
             // Root/shell
             return false;
         }

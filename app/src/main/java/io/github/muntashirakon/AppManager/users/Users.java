@@ -6,10 +6,12 @@ import android.annotation.UserIdInt;
 import android.content.Context;
 import android.os.Build;
 import android.os.IUserManager;
+import android.os.Process;
 import android.os.RemoteException;
 import android.os.UserHandle;
 import android.os.UserManager;
 
+import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -17,10 +19,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.ipc.LocalServices;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
 
 public final class Users {
     public static final String TAG = "Users";
@@ -95,5 +99,10 @@ public final class Users {
             }
         }
         return null;
+    }
+
+    @IntRange(from = 0)
+    public static int getSelfOrRemoteUid() {
+        return ExUtils.requireNonNullElse(() -> LocalServices.getAmService().getUid(), Process.myUid());
     }
 }

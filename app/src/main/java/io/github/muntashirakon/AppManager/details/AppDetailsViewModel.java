@@ -98,7 +98,6 @@ import io.github.muntashirakon.AppManager.users.UserInfo;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
-import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.io.IoUtils;
 
@@ -271,7 +270,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     }
 
     public boolean isTestOnlyApp() {
-        return mPackageInfo != null && PackageUtils.isTestOnlyApp(mPackageInfo.applicationInfo);
+        return mPackageInfo != null && ApplicationInfoCompat.isTestOnly(mPackageInfo.applicationInfo);
     }
 
     @AnyThread

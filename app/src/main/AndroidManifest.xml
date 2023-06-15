@@ -18,6 +18,9 @@
         android:name="android.permission.BACKUP"
         tools:ignore="ProtectedPermissions" />
     <uses-permission
+        android:name="android.permission.CHANGE_COMPONENT_ENABLED_STATE"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission
         android:name="android.permission.CLEAR_APP_CACHE"
         tools:ignore="ProtectedPermissions" />
     <uses-permission

@@ -5,10 +5,12 @@ package io.github.muntashirakon.AppManager.oneclickops;
 import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_DISABLED_COMPONENTS;
 import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_UNINSTALLED_PACKAGES;
 
+import android.Manifest;
 import android.app.Application;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.RemoteException;
 import android.os.UserHandleHidden;
 
@@ -21,14 +23,19 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.Future;
 
+import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.compat.StorageManagerCompat;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.settings.Ops;
+import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.io.Paths;
@@ -85,25 +92,48 @@ public class OneClickOpsViewModel extends AndroidViewModel {
             futureResult.cancel(true);
         }
         futureResult = ThreadUtils.postOnBackgroundThread(() -> {
+            int flags = PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
+                    | PackageManager.GET_SERVICES | MATCH_DISABLED_COMPONENTS | MATCH_UNINSTALLED_PACKAGES
+                    | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES;
+            boolean canChangeComponentState = SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.CHANGE_COMPONENT_ENABLED_STATE);
+            if (!canChangeComponentState) {
+                // Since there's no permission, it can only change its own component states
+                try {
+                    PackageInfo packageInfo = getApplication().getPackageManager().getPackageInfo(BuildConfig.APPLICATION_ID, flags);
+                    if (systemApps || !ApplicationInfoCompat.isSystemApp(packageInfo.applicationInfo)) {
+                        ItemCount trackerCount = getTrackerCountForApp(packageInfo);
+                        if (trackerCount.count > 0) {
+                            this.trackerCount.postValue(Collections.singletonList(trackerCount));
+                            return;
+                        }
+                    }
+                } catch (PackageManager.NameNotFoundException e) {
+                    e.printStackTrace();
+                }
+                this.trackerCount.postValue(Collections.emptyList());
+                return;
+            }
+            boolean crossUserPermission = SelfPermissions.checkCrossUserPermission(1001, false);
+            boolean isShell = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && Users.getSelfOrRemoteUid() == Ops.SHELL_UID;
             List<ItemCount> trackerCounts = new ArrayList<>();
             HashSet<String> packageNames = new HashSet<>();
-            ItemCount trackerCount;
-            for (PackageInfo packageInfo : PackageUtils.getAllPackages(PackageManager.GET_ACTIVITIES
-                    | PackageManager.GET_RECEIVERS | MATCH_DISABLED_COMPONENTS | MATCH_UNINSTALLED_PACKAGES
-                    | PackageManager.GET_PROVIDERS | PackageManager.GET_SERVICES
-                    | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES)) {
+            for (PackageInfo packageInfo : PackageUtils.getAllPackages(flags, !crossUserPermission)) {
                 if (packageNames.contains(packageInfo.packageName)) {
                     continue;
                 }
                 packageNames.add(packageInfo.packageName);
                 if (ThreadUtils.isInterrupted()) return;
                 ApplicationInfo applicationInfo = packageInfo.applicationInfo;
-                if (!Ops.isRoot() && !PackageUtils.isTestOnlyApp(applicationInfo))
+                if (isShell && !ApplicationInfoCompat.isTestOnly(applicationInfo)) {
                     continue;
-                if (!systemApps && (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0)
+                }
+                if (!systemApps && ApplicationInfoCompat.isSystemApp(applicationInfo)) {
                     continue;
-                trackerCount = getTrackerCountForApp(packageInfo);
-                if (trackerCount.count > 0) trackerCounts.add(trackerCount);
+                }
+                ItemCount trackerCount = getTrackerCountForApp(packageInfo);
+                if (trackerCount.count > 0) {
+                    trackerCounts.add(trackerCount);
+                }
             }
             this.trackerCount.postValue(trackerCounts);
         });
@@ -116,16 +146,36 @@ public class OneClickOpsViewModel extends AndroidViewModel {
             futureResult.cancel(true);
         }
         futureResult = ThreadUtils.postOnBackgroundThread(() -> {
+            boolean canChangeComponentState = SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.CHANGE_COMPONENT_ENABLED_STATE);
+            if (!canChangeComponentState) {
+                // Since there's no permission, it can only change its own component states
+                ApplicationInfo applicationInfo = getApplication().getApplicationInfo();
+                if (systemApps || !ApplicationInfoCompat.isSystemApp(applicationInfo)) {
+                    ItemCount componentCount = new ItemCount();
+                    componentCount.packageName = applicationInfo.packageName;
+                    componentCount.packageLabel = applicationInfo.loadLabel(pm).toString();
+                    componentCount.count = PackageUtils.getFilteredComponents(applicationInfo.packageName,
+                            UserHandleHidden.myUserId(), signatures).size();
+                    if (componentCount.count > 0) {
+                        this.componentCount.postValue(new Pair<>(Collections.singletonList(componentCount), signatures));
+                        return;
+                    }
+                }
+                this.componentCount.postValue(new Pair<>(Collections.emptyList(), signatures));
+                return;
+            }
+            boolean crossUserPermission = SelfPermissions.checkCrossUserPermission(1001, false);
+            boolean isShell = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && Users.getSelfOrRemoteUid() == Ops.SHELL_UID;
             List<ItemCount> componentCounts = new ArrayList<>();
             HashSet<String> packageNames = new HashSet<>();
             for (ApplicationInfo applicationInfo : PackageUtils.getAllApplications(MATCH_UNINSTALLED_PACKAGES
-                    | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES)) {
+                    | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, !crossUserPermission)) {
                 if (packageNames.contains(applicationInfo.packageName)) {
                     continue;
                 }
                 packageNames.add(applicationInfo.packageName);
                 if (ThreadUtils.isInterrupted()) return;
-                if (!Ops.isRoot() && !PackageUtils.isTestOnlyApp(applicationInfo))
+                if (isShell && !ApplicationInfoCompat.isTestOnly(applicationInfo))
                     continue;
                 if (!systemApps && (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0)
                     continue;
