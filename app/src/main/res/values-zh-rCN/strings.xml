@@ -29,7 +29,7 @@
     <string name="declared_permission">自定义权限</string>
     <string name="shared_libs">共享库</string>
     <string name="group">群组</string>
-    <string name="uses_feature">属性</string>
+    <string name="uses_feature">功能声明</string>
     <string name="no_feature">无</string>
     <string name="sort_by_shared_user_id">共享的用户ID</string>
     <string name="shared_user_id">共享的用户ID</string>
@@ -706,7 +706,7 @@
     <string name="backup_external_data_description">备份外部数据文件夹。</string>
     <string name="backup_internal_data_description">备份数据文件夹。如果选中，将默认备份内部数据文件夹。</string>
     <string name="backup_apk_files_description">仅备份来自源目录的 APK 文件，包括 splits。</string>
-    <string name="selinux">SELinux 上下文</string>
+    <string name="selinux">SELinux</string>
     <string name="window_size">窗口尺寸</string>
     <string name="refresh_rate">刷新率</string>
     <string name="scaling_factor">缩放系数</string>
