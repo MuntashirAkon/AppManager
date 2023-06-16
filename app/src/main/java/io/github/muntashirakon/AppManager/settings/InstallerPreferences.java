@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.settings;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -89,6 +90,7 @@ public class InstallerPreferences extends PreferenceFragment {
         });
         // Set installer app
         installerAppPref = Objects.requireNonNull(findPreference("installer_installer_app"));
+        installerAppPref.setEnabled(SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.INSTALL_PACKAGES));
         installerApp = Prefs.Installer.getInstallerPackageName();
         installerAppPref.setSummary(PackageUtils.getPackageLabel(pm, installerApp));
         installerAppPref.setOnPreferenceClickListener(preference -> {
