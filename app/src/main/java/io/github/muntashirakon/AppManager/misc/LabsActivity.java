@@ -26,7 +26,6 @@ import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
 import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
 import io.github.muntashirakon.AppManager.runner.TermActivity;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
-import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.sysconfig.SysConfigActivity;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.widget.FlowLayout;
@@ -45,13 +44,11 @@ public class LabsActivity extends BaseActivity {
                         startActivity(intent);
                     });
         }
-        if (Ops.isRoot()) {
-            addAction(this, flowLayout, R.string.sys_config, R.drawable.ic_hammer_wrench)
-                    .setOnClickListener(v -> {
-                        Intent intent = new Intent(this, SysConfigActivity.class);
-                        startActivity(intent);
-                    });
-        }
+        addAction(this, flowLayout, R.string.sys_config, R.drawable.ic_hammer_wrench)
+                .setOnClickListener(v -> {
+                    Intent intent = new Intent(this, SysConfigActivity.class);
+                    startActivity(intent);
+                });
         addAction(this, flowLayout, R.string.title_terminal_emulator, R.drawable.ic_frost_termux)
                 .setOnClickListener(v -> {
                     Intent intent = new Intent(this, TermActivity.class);
