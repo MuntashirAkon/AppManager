@@ -73,6 +73,18 @@ public class SelfPermissions {
         return false;
     }
 
+    public static boolean canFreezeUnfreezePackages() {
+        // 1. Suspend (7+): MANAGE_USERS (<= 9), SUSPEND_APPS (>= 9)
+        // 2. Disable: CHANGE_COMPONENT_ENABLED_STATE
+        // 2. HIDE: MANAGE_USERS
+        boolean canFreezeUnfreeze = checkSelfOrRemotePermission(Manifest.permission.CHANGE_COMPONENT_ENABLED_STATE)
+                || checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_USERS);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            canFreezeUnfreeze |= checkSelfOrRemotePermission(ManifestCompat.permission.SUSPEND_APPS);
+        }
+        return canFreezeUnfreeze;
+    }
+
     public static boolean checkCrossUserPermission(@UserIdInt int userId, boolean requireFullPermission) {
         if (userId < 0) {
             throw new IllegalArgumentException("Invalid userId " + userId);

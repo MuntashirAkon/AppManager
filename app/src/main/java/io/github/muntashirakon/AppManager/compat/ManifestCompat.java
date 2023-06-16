@@ -30,6 +30,8 @@ public final class ManifestCompat {
         public static final String MANAGE_APPOPS = "android.permission.MANAGE_APPOPS";
         public static final String MANAGE_USERS = "android.permission.MANAGE_USERS";
         public static final String REVOKE_RUNTIME_PERMISSIONS = "android.permission.REVOKE_RUNTIME_PERMISSIONS";
+        @RequiresApi(Build.VERSION_CODES.P)
+        public static final String SUSPEND_APPS = "android.permission.SUSPEND_APPS";
         public static final String UPDATE_APP_OPS_STATS = "android.permission.UPDATE_APP_OPS_STATS";
         public static final String UPDATE_DOMAIN_VERIFICATION_USER_SELECTION = "android.permission.UPDATE_DOMAIN_VERIFICATION_USER_SELECTION";
         @RequiresApi(Build.VERSION_CODES.P)

@@ -94,6 +94,9 @@
     <uses-permission
         android:name="android.permission.REVOKE_RUNTIME_PERMISSIONS"
         tools:ignore="ProtectedPermissions" />
+    <uses-permission
+        android:name="android.permission.SUSPEND_APPS"
+        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission
         android:name="android.permission.UPDATE_APP_OPS_STATS"

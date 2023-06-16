@@ -1001,6 +1001,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         mHorizontalLayout.removeAllViews();
         if (mainModel != null && !mainModel.isExternalApk()) {
             boolean isFrozen = FreezeUtils.isFrozen(mApplicationInfo);
+            boolean canFreeze = SelfPermissions.canFreezeUnfreezePackages();
             // Set open
             Intent launchIntent = PackageUtils.getLaunchIntentForPackage(requireContext(), mPackageName,
                     mainModel.getUserHandle());
@@ -1016,7 +1017,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         });
             }
             // Set freeze/unfreeze
-            if (Ops.isPrivileged() && !isFrozen) {
+            if (canFreeze && !isFrozen) {
                 MaterialButton freezeButton = addToHorizontalLayout(R.string.freeze, R.drawable.ic_snowflake);
                 freezeButton.setOnClickListener(v -> {
                     if (BuildConfig.APPLICATION_ID.equals(mPackageName)) {
@@ -1084,7 +1085,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 builder.show();
             });
             // Enable/disable app (root/ADB only)
-            if (Ops.isPrivileged() && isFrozen) {
+            if (canFreeze && isFrozen) {
                 // Enable app
                 MaterialButton unfreezeButton = addToHorizontalLayout(R.string.unfreeze, R.drawable.ic_snowflake_off);
                 unfreezeButton.setOnClickListener(v -> freeze(false));

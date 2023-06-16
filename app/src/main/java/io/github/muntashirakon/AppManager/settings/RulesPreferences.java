@@ -77,6 +77,7 @@ public class RulesPreferences extends PreferenceFragment {
         if (freezeTypeIdx.get() != -1) {
             defaultFreezingMethod.setSummary(freezingMethodTitles[freezeTypeIdx.get()]);
         }
+        defaultFreezingMethod.setEnabled(SelfPermissions.canFreezeUnfreezePackages());
         defaultFreezingMethod.setOnPreferenceClickListener(preference -> {
             CharSequence[] itemDescription = new CharSequence[freezingMethods.length];
             for (int i = 0; i < freezingMethods.length; ++i) {

@@ -4,10 +4,12 @@ package io.github.muntashirakon.AppManager.settings;
 
 import static io.github.muntashirakon.AppManager.backup.MetadataManager.TAR_TYPES;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
+import android.os.UserHandleHidden;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -212,11 +214,19 @@ public final class Prefs {
         @FreezeUtils.FreezeType
         public static int getDefaultFreezingMethod() {
             int freezeType = AppPref.getInt(AppPref.PrefKey.PREF_FREEZE_TYPE_INT);
-            if (freezeType == FreezeUtils.FREEZE_HIDE && !PermissionUtils.hasSelfOrRemotePermission(ManifestCompat.permission.MANAGE_USERS)) {
-                return FreezeUtils.FREEZE_DISABLE;
+            if (freezeType == FreezeUtils.FREEZE_HIDE) {
+                // Requires MANAGE_USERS permission
+                if (!SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_USERS)) {
+                    return FreezeUtils.FREEZE_DISABLE;
+                }
             }
-            if (freezeType == FreezeUtils.FREEZE_SUSPEND && Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-                return FreezeUtils.FREEZE_DISABLE;
+            if (freezeType == FreezeUtils.FREEZE_SUSPEND) {
+                // 7+ only. Requires MANAGE_USERS permission until P. Requires SUSPEND_APPS permission after that.
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N
+                        || Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && !SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.SUSPEND_APPS)
+                        || !SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_USERS)) {
+                    return FreezeUtils.FREEZE_DISABLE;
+                }
             }
             return freezeType;
         }

@@ -40,6 +40,7 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.OptIn;
+import androidx.annotation.RequiresApi;
 import androidx.annotation.RequiresPermission;
 import androidx.annotation.WorkerThread;
 import androidx.core.os.BuildCompat;
@@ -52,6 +53,7 @@ import java.util.Objects;
 
 import dev.rikka.tools.refine.Refine;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.Users;
@@ -328,6 +330,8 @@ public final class PackageManagerCompat {
     }
 
     @SuppressWarnings("deprecation")
+    @RequiresApi(Build.VERSION_CODES.N)
+    @RequiresPermission(allOf = {"android.permission.SUSPEND_APPS", ManifestCompat.permission.MANAGE_USERS})
     public static void suspendPackages(String[] packageNames, @UserIdInt int userId, boolean suspend) throws RemoteException {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             getPackageManager().setPackagesSuspendedAsUser(packageNames, suspend, null, null, (SuspendDialogInfo) null, ActivityManagerCompat.SHELL_PACKAGE_NAME, userId);
@@ -348,8 +352,9 @@ public final class PackageManagerCompat {
         return false;
     }
 
-    public static boolean hidePackage(String packageName, @UserIdInt int userId, boolean hide) throws RemoteException {
-        if (Ops.isRoot() || (Ops.isAdb() && Build.VERSION.SDK_INT < Build.VERSION_CODES.N)) {
+    @RequiresPermission(ManifestCompat.permission.MANAGE_USERS)
+    public static void hidePackage(String packageName, @UserIdInt int userId, boolean hide) throws RemoteException {
+        if (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_USERS)) {
             boolean hidden = getPackageManager().setApplicationHiddenSettingAsUser(packageName, hide, userId);
             if (userId != UserHandleHidden.myUserId()) {
                 if (hidden) {
@@ -358,15 +363,10 @@ public final class PackageManagerCompat {
                     } else BroadcastUtils.sendPackageAdded(ContextUtils.getContext(), new String[]{packageName});
                 }
             }
-            return hidden;
-        }
-        return false;
+        } else throw new RemoteException("Missing required permission: android.permission.MANAGE_USERS.");
     }
 
     public static boolean isPackageHidden(String packageName, @UserIdInt int userId) throws RemoteException {
-        if (Ops.isRoot() || (Ops.isAdb() && Build.VERSION.SDK_INT < Build.VERSION_CODES.N)) {
-            return getPackageManager().getApplicationHiddenSettingAsUser(packageName, userId);
-        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             try {
                 // Find using private flags
@@ -375,6 +375,9 @@ public final class PackageManagerCompat {
                 return (ApplicationInfoCompat.getPrivateFlags(info) & ApplicationInfoCompat.PRIVATE_FLAG_HIDDEN) != 0;
             } catch (PackageManager.NameNotFoundException ignore) {
             }
+        }
+        if (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_USERS)) {
+            return getPackageManager().getApplicationHiddenSettingAsUser(packageName, userId);
         }
         // Otherwise, there is no way to detect if the package is hidden
         return false;

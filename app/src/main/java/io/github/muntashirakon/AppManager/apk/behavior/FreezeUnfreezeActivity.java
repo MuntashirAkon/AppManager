@@ -4,8 +4,8 @@ package io.github.muntashirakon.AppManager.apk.behavior;
 
 import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_DISABLED_COMPONENTS;
 import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_UNINSTALLED_PACKAGES;
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getDimmedBitmap;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getBitmapFromDrawable;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getDimmedBitmap;
 
 import android.app.Application;
 import android.content.Intent;
@@ -34,7 +34,7 @@ import java.util.Queue;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
-import io.github.muntashirakon.AppManager.settings.Ops;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
@@ -46,7 +46,7 @@ public class FreezeUnfreezeActivity extends BaseActivity {
     @Override
     protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
         viewModel = new ViewModelProvider(this).get(FreezeUnfreezeViewModel.class);
-        if (!Ops.isPrivileged()) {
+        if (!SelfPermissions.canFreezeUnfreezePackages()) {
             UIUtils.displayShortToast(R.string.only_works_in_root_or_adb_mode);
             finishAndRemoveTask();
             return;
@@ -100,7 +100,7 @@ public class FreezeUnfreezeActivity extends BaseActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        if (!Ops.isPrivileged()) {
+        if (!SelfPermissions.canFreezeUnfreezePackages()) {
             UIUtils.displayShortToast(R.string.only_works_in_root_or_adb_mode);
             finishAndRemoveTask();
             return;
