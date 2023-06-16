@@ -63,6 +63,16 @@ public class SelfPermissions {
                 || checkSelfOrRemotePermission(ManifestCompat.permission.REVOKE_RUNTIME_PERMISSIONS);
     }
 
+    public static boolean canInstallExistingPackages() {
+        if (checkSelfOrRemotePermission(Manifest.permission.INSTALL_PACKAGES)) {
+            return true;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            return checkSelfOrRemotePermission(ManifestCompat.permission.INSTALL_EXISTING_PACKAGES);
+        }
+        return false;
+    }
+
     public static boolean checkCrossUserPermission(@UserIdInt int userId, boolean requireFullPermission) {
         if (userId < 0) {
             throw new IllegalArgumentException("Invalid userId " + userId);

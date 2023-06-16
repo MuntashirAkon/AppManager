@@ -50,9 +50,9 @@ import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
-import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.users.UserInfo;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
@@ -463,7 +463,7 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
             }
             // 2. If the app can be installed, offer it to install again.
             if (FeatureController.isInstallerEnabled()) {
-                if (ApplicationInfoCompat.isSystemApp(info) && Ops.isPrivileged()) {
+                if (ApplicationInfoCompat.isSystemApp(info) && SelfPermissions.canInstallExistingPackages()) {
                     // Install existing app instead of installing as an update
                     mActivity.startActivity(PackageInstallerActivity.getLaunchableInstance(mActivity, item.packageName));
                     return;

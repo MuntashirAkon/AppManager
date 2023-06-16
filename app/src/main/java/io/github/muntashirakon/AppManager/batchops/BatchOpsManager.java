@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.batchops;
 
+import android.Manifest;
 import android.annotation.UserIdInt;
 import android.app.AppOpsManager;
 import android.content.Context;
@@ -60,7 +61,7 @@ import io.github.muntashirakon.AppManager.progress.ProgressHandler;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.rules.compontents.ExternalComponentsImporter;
-import io.github.muntashirakon.AppManager.settings.Ops;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
@@ -766,7 +767,8 @@ public class BatchOpsManager {
         List<UserPackagePair> failedPackages = new ArrayList<>();
         float lastProgress = progressHandler != null ? progressHandler.getLastProgress() : 0;
         AccessibilityMultiplexer accessibility = AccessibilityMultiplexer.getInstance();
-        if (!Ops.isPrivileged()) {
+        if (!SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.DELETE_PACKAGES)) {
+            // Try to use accessibility in unprivileged mode
             accessibility.enableUninstall(true);
         }
         int i = 0;

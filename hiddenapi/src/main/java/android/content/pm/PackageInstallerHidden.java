@@ -51,5 +51,6 @@ public class PackageInstallerHidden {
 
     public static class SessionParams {
         public int installFlags;
+        public String installerPackageName;
     }
 }

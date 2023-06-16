@@ -27,6 +27,9 @@
         android:name="android.permission.DELETE_CACHE_FILES"
         tools:ignore="ProtectedPermissions" />
     <uses-permission
+        android:name="android.permission.DELETE_PACKAGES"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission
         android:name="android.permission.DUMP"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
@@ -41,6 +44,15 @@
         tools:ignore="ProtectedPermissions" />
     <uses-permission
         android:name="android.permission.GRANT_RUNTIME_PERMISSIONS"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission
+        android:name="com.android.permission.INSTALL_EXISTING_PACKAGES"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission
+        android:name="android.permission.INSTALL_TEST_ONLY_PACKAGE"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission
+        android:name="android.permission.INSTALL_PACKAGES"
         tools:ignore="ProtectedPermissions" />
     <uses-permission
         android:name="android.permission.INTERACT_ACROSS_USERS"

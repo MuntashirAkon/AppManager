@@ -101,6 +101,7 @@ import io.github.muntashirakon.AppManager.backup.dialog.BackupRestoreDialogFragm
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
+import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.compat.DomainVerificationManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
@@ -324,7 +325,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             menu.findItem(R.id.action_open_in_termux).setVisible(Ops.isRoot());
             menu.findItem(R.id.action_battery_opt).setVisible(Ops.isPrivileged());
             menu.findItem(R.id.action_net_policy).setVisible(Ops.isPrivileged());
-            menu.findItem(R.id.action_install).setVisible(Ops.isPrivileged() && Users.getUsersIds().length > 1);
+            menu.findItem(R.id.action_install).setVisible(Users.getUsersIds().length > 1 && SelfPermissions.canInstallExistingPackages());
             menu.findItem(R.id.action_optimize).setVisible(Ops.isPrivileged() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N);
         }
     }
@@ -871,51 +872,48 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                     .show());
         }
         if (tagCloud.staticSharedLibraryNames != null) {
-            addChip(R.string.static_shared_library).setOnClickListener(v -> {
-                new SearchableMultiChoiceDialogBuilder<>(mActivity, tagCloud.staticSharedLibraryNames, tagCloud.staticSharedLibraryNames)
-                        .setTitle(R.string.shared_libs)
-                        .setPositiveButton(R.string.close, null)
-                        .setNeutralButton(R.string.uninstall, (dialog, which, selectedItems) -> {
-                            int userId = mainModel.getUserHandle();
-                            final boolean isSystemApp = (mApplicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
-                            new ScrollableDialogBuilder(mActivity,
-                                    isSystemApp ? R.string.uninstall_system_app_message : R.string.uninstall_app_message)
-                                    .setTitle(mPackageLabel)
-                                    .setPositiveButton(R.string.uninstall, (dialog1, which1, keepData) -> {
-                                        if (selectedItems.size() == 1) {
-                                            ThreadUtils.postOnBackgroundThread(() -> {
-                                                PackageInstallerCompat installer = PackageInstallerCompat
-                                                        .getNewInstance();
-                                                installer.setAppLabel(mPackageLabel);
-                                                boolean uninstalled = installer.uninstall(selectedItems.get(0), userId, keepData);
-                                                ThreadUtils.postOnMainThread(() -> {
-                                                    if (uninstalled) {
-                                                        displayLongToast(R.string.uninstalled_successfully, mPackageLabel);
-                                                        mActivity.finish();
-                                                    } else {
-                                                        displayLongToast(R.string.failed_to_uninstall, mPackageLabel);
-                                                    }
-                                                });
+            addChip(R.string.static_shared_library).setOnClickListener(v -> new SearchableMultiChoiceDialogBuilder<>(mActivity, tagCloud.staticSharedLibraryNames, tagCloud.staticSharedLibraryNames)
+                    .setTitle(R.string.shared_libs)
+                    .setPositiveButton(R.string.close, null)
+                    .setNeutralButton(R.string.uninstall, (dialog, which, selectedItems) -> {
+                        int userId = mainModel.getUserHandle();
+                        final boolean isSystemApp = ApplicationInfoCompat.isSystemApp(mApplicationInfo);
+                        new ScrollableDialogBuilder(mActivity,
+                                isSystemApp ? R.string.uninstall_system_app_message : R.string.uninstall_app_message)
+                                .setTitle(mPackageLabel)
+                                .setPositiveButton(R.string.uninstall, (dialog1, which1, keepData) -> {
+                                    if (selectedItems.size() == 1) {
+                                        ThreadUtils.postOnBackgroundThread(() -> {
+                                            PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance();
+                                            installer.setAppLabel(mPackageLabel);
+                                            boolean uninstalled = installer.uninstall(selectedItems.get(0), userId, false);
+                                            ThreadUtils.postOnMainThread(() -> {
+                                                if (uninstalled) {
+                                                    displayLongToast(R.string.uninstalled_successfully, mPackageLabel);
+                                                    mActivity.finish();
+                                                } else {
+                                                    displayLongToast(R.string.failed_to_uninstall, mPackageLabel);
+                                                }
                                             });
-                                        } else {
-                                            Intent intent = new Intent(mActivity, BatchOpsService.class);
-                                            ArrayList<Integer> userIds = new ArrayList<>(selectedItems.size());
-                                            for (int i = 0; i < selectedItems.size(); ++i) {
-                                                userIds.add(userId);
-                                            }
-                                            intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, selectedItems);
-                                            intent.putIntegerArrayListExtra(BatchOpsService.EXTRA_OP_USERS, userIds);
-                                            intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_UNINSTALL);
-                                            ContextCompat.startForegroundService(mActivity, intent);
+                                        });
+                                    } else {
+                                        Intent intent = new Intent(mActivity, BatchOpsService.class);
+                                        ArrayList<Integer> userIds = new ArrayList<>(selectedItems.size());
+                                        for (int i = 0; i < selectedItems.size(); ++i) {
+                                            userIds.add(userId);
                                         }
-                                    })
-                                    .setNegativeButton(R.string.cancel, (dialog1, which1, keepData) -> {
-                                        if (dialog != null) dialog.cancel();
-                                    })
-                                    .show();
-                        })
-                        .show();
-            });
+                                        intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, selectedItems);
+                                        intent.putIntegerArrayListExtra(BatchOpsService.EXTRA_OP_USERS, userIds);
+                                        intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_UNINSTALL);
+                                        ContextCompat.startForegroundService(mActivity, intent);
+                                    }
+                                })
+                                .setNegativeButton(R.string.cancel, (dialog1, which1, keepData) -> {
+                                    if (dialog != null) dialog.cancel();
+                                })
+                                .show();
+                    })
+                    .show());
         }
     }
 
@@ -1032,9 +1030,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             // Set uninstall
             addToHorizontalLayout(R.string.uninstall, R.drawable.ic_trash_can).setOnClickListener(v -> {
                 int userId = mainModel.getUserHandle();
-                if (!Ops.isPrivileged() && userId != UserHandleHidden.myUserId()) {
-                    // Could be work profile
-                    // FIXME: 22/1/23 Find a way to communicate the result to App Manager
+                if (userId != UserHandleHidden.myUserId() && !SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.DELETE_PACKAGES)) {
+                    // Could be for work profile
                     try {
                         Intent uninstallIntent = new Intent(Intent.ACTION_DELETE);
                         uninstallIntent.setData(Uri.parse("package:" + mPackageName));
@@ -1048,9 +1045,10 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 ScrollableDialogBuilder builder = new ScrollableDialogBuilder(mActivity,
                         isSystemApp ? R.string.uninstall_system_app_message : R.string.uninstall_app_message)
                         .setTitle(mPackageLabel)
+                        // FIXME: 16/6/23 Does it even work without INSTALL_PACKAGES?
+                        .setCheckboxLabel(R.string.keep_data_and_app_signing_signatures)
                         .setPositiveButton(R.string.uninstall, (dialog, which, keepData) -> ThreadUtils.postOnBackgroundThread(() -> {
-                            PackageInstallerCompat installer = PackageInstallerCompat
-                                    .getNewInstance();
+                            PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance();
                             installer.setAppLabel(mPackageLabel);
                             boolean uninstalled = installer.uninstall(mPackageName, userId, keepData);
                             ThreadUtils.postOnMainThread(() -> {
@@ -1065,9 +1063,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         .setNegativeButton(R.string.cancel, (dialog, which, keepData) -> {
                             if (dialog != null) dialog.cancel();
                         });
-                if (Ops.isPrivileged()) {
-                    builder.setCheckboxLabel(R.string.keep_data_and_app_signing_signatures);
-                }
                 if ((mApplicationInfo.flags & ApplicationInfo.FLAG_UPDATED_SYSTEM_APP) != 0) {
                     builder.setNeutralButton(R.string.uninstall_updates, (dialog, which, keepData) ->
                             ThreadUtils.postOnBackgroundThread(() -> {

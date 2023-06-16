@@ -4,6 +4,7 @@ package io.github.muntashirakon.AppManager.apk.installer;
 
 import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_UNINSTALLED_PACKAGES;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.annotation.UserIdInt;
 import android.app.PendingIntent;
@@ -25,6 +26,7 @@ import android.content.pm.VersionedPackage;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Process;
 import android.os.RemoteException;
 import android.os.UserHandleHidden;
 
@@ -59,7 +61,7 @@ import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.progress.ProgressHandler;
-import io.github.muntashirakon.AppManager.settings.Ops;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.BroadcastUtils;
@@ -521,14 +523,14 @@ public final class PackageInstallerCompat {
     // MIUI-added: Multiple attempts may be required
     int attempts = 1;
     private final String installerPackageName;
-    private final boolean isPrivileged;
+    private final boolean hasInstallPackagePermission;
 
     private PackageInstallerCompat() {
-        this(Ops.isReallyPrivileged() ? Prefs.Installer.getInstallerPackageName() : context.getPackageName());
+        this(Prefs.Installer.getInstallerPackageName());
     }
 
     private PackageInstallerCompat(@NonNull String installerPackageName) {
-        this.isPrivileged = Ops.isReallyPrivileged();
+        hasInstallPackagePermission = SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.INSTALL_PACKAGES);
         this.installerPackageName = installerPackageName;
         Log.d(TAG, "Installer app: " + installerPackageName);
     }
@@ -545,7 +547,7 @@ public final class PackageInstallerCompat {
     private static int[] getAllRequestedUsers(int userId) {
         switch (userId) {
             case UserHandleHidden.USER_ALL:
-                return Users.getUsersIds();
+                return Users.getAllUserIds();
             case UserHandleHidden.USER_NULL:
                 return EmptyArray.INT;
             default:
@@ -570,8 +572,16 @@ public final class PackageInstallerCompat {
                 callFinish(STATUS_FAILURE_INVALID);
                 return false;
             }
+            for (int u : allRequestedUsers) {
+                if (!SelfPermissions.checkCrossUserPermission(u, true)) {
+                    installCompleted(sessionId, STATUS_FAILURE_BLOCKED, "android", "STATUS_FAILURE_BLOCKED: Insufficient permission.");
+                    Log.d(TAG, "InstallExisting: Requires INTERACT_ACROSS_USERS and INTERACT_ACROSS_USERS_FULL permissions.");
+                    return false;
+                }
+            }
             ThreadUtils.postOnBackgroundThread(() -> {
                 // TODO: 6/6/23 Wait for this task to finish before returning
+                // FIXME: 16/6/23 Needed only for one user?
                 for (int u : allRequestedUsers) {
                     copyObb(apkFile, u);
                 }
@@ -634,6 +644,13 @@ public final class PackageInstallerCompat {
                 callFinish(STATUS_FAILURE_INVALID);
                 return false;
             }
+            for (int u : allRequestedUsers) {
+                if (!SelfPermissions.checkCrossUserPermission(u, true)) {
+                    installCompleted(sessionId, STATUS_FAILURE_BLOCKED, "android", "STATUS_FAILURE_BLOCKED: Insufficient permission.");
+                    Log.d(TAG, "InstallExisting: Requires INTERACT_ACROSS_USERS and INTERACT_ACROSS_USERS_FULL permissions.");
+                    return false;
+                }
+            }
             userId = allRequestedUsers[0];
             if (!openSession(userId, installFlags)) return false;
             long totalSize = 0;
@@ -666,7 +683,7 @@ public final class PackageInstallerCompat {
     private boolean commit(int userId) {
         IntentSender sender;
         LocalIntentReceiver intentReceiver;
-        if (isPrivileged) {
+        if (hasInstallPackagePermission) {
             Log.d(TAG, "Commit: Commit via LocalIntentReceiver...");
             try {
                 intentReceiver = new LocalIntentReceiver();
@@ -693,7 +710,7 @@ public final class PackageInstallerCompat {
             Log.e(TAG, "Commit: Could not commit session.", e);
             return false;
         }
-        if (!isPrivileged) {
+        if (intentReceiver == null) {
             Log.d(TAG, "Commit: Waiting for user interaction...");
             // Wait for user interaction (if needed)
             try {
@@ -735,21 +752,23 @@ public final class PackageInstallerCompat {
         // Create install session
         PackageInstaller.SessionParams sessionParams = new PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL);
         Refine.<PackageInstallerHidden.SessionParams>unsafeCast(sessionParams).installFlags |= installFlags;
+        Refine.<PackageInstallerHidden.SessionParams>unsafeCast(sessionParams).installerPackageName
+                = hasInstallPackagePermission ? installerPackageName : null;
         // Set installation location
         sessionParams.setInstallLocation(Prefs.Installer.getInstallLocation());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             sessionParams.setInstallReason(PackageManager.INSTALL_REASON_USER);
         }
-        if (!isPrivileged && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             sessionParams.setRequireUserAction(PackageInstaller.SessionParams.USER_ACTION_NOT_REQUIRED);
         }
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                sessionId = packageInstaller.createSession(sessionParams, installerPackageName,
+                sessionId = packageInstaller.createSession(sessionParams, BuildConfig.APPLICATION_ID,
                         context.getAttributionTag(), userId);
             } else {
                 //noinspection deprecation
-                sessionId = packageInstaller.createSession(sessionParams, installerPackageName, userId);
+                sessionId = packageInstaller.createSession(sessionParams, BuildConfig.APPLICATION_ID, userId);
             }
             Log.d(TAG, "OpenSession: session id " + sessionId);
         } catch (RemoteException e) {
@@ -776,7 +795,7 @@ public final class PackageInstallerCompat {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             flags |= INSTALL_ALLOW_DOWNGRADE_API29;
         }
-        if (Ops.isReallyPrivileged() && userId == UserHandleHidden.USER_ALL) {
+        if (userId == UserHandleHidden.USER_ALL) {
             flags |= INSTALL_ALL_USERS;
         }
         return flags;
@@ -789,9 +808,9 @@ public final class PackageInstallerCompat {
         }
         installWatcher = new CountDownLatch(0);
         interactionWatcher = new CountDownLatch(0);
-        if (!Ops.isReallyPrivileged()) {
+        if (!SelfPermissions.canInstallExistingPackages()) {
             installCompleted(sessionId, STATUS_FAILURE_BLOCKED, "android", "STATUS_FAILURE_BLOCKED: Insufficient permission.");
-            Log.d(TAG, "InstallExisting: Only works in privileged mode.");
+            Log.d(TAG, "InstallExisting: Requires INSTALL_PACKAGES permission.");
             return false;
         }
         // User ID must be a real user
@@ -838,6 +857,11 @@ public final class PackageInstallerCompat {
             installReason = PackageManager.INSTALL_REASON_USER;
         } else installReason = 0;
         for (int u : userIdWithoutInstalledPkg) {
+            if (!SelfPermissions.checkCrossUserPermission(u, true)) {
+                installCompleted(sessionId, STATUS_FAILURE_BLOCKED, "android", "STATUS_FAILURE_BLOCKED: Insufficient permission.");
+                Log.d(TAG, "InstallExisting: Requires INTERACT_ACROSS_USERS and INTERACT_ACROSS_USERS_FULL permissions.");
+                return false;
+            }
             try {
                 int res = PackageManagerCompat.installExistingPackageAsUser(packageName, u, installFlags, installReason, null);
                 if (res != 1 /* INSTALL_SUCCEEDED */) {
@@ -888,7 +912,10 @@ public final class PackageInstallerCompat {
     }
 
     private void cleanOldSessions() {
-        if (isPrivileged) return;
+        if (Users.getSelfOrRemoteUid() != Process.myUid()) {
+            // Only clean sessions for this UID
+            return;
+        }
         List<PackageInstaller.SessionInfo> sessionInfoList;
         try {
             sessionInfoList = packageInstaller.getMySessions(context.getPackageName(), UserHandleHidden.myUserId()).getList();
@@ -929,7 +956,7 @@ public final class PackageInstallerCompat {
         if (finalStatus == STATUS_FAILURE_ABORTED
                 && this.sessionId == sessionId
                 && onInstallListener != null
-                && !Ops.isPrivileged()
+                && !SelfPermissions.checkSelfPermission(Manifest.permission.INSTALL_PACKAGES)
                 && MiuiUtils.isActualMiuiVersionAtLeast("12.5", "20.2.0")
                 && Objects.equals(statusMessage, "INSTALL_FAILED_ABORTED: Permission denied")
                 && attempts <= 3) {
@@ -961,10 +988,17 @@ public final class PackageInstallerCompat {
     @SuppressWarnings("deprecation")
     public boolean uninstall(String packageName, @UserIdInt int userId, boolean keepData) {
         ThreadUtils.ensureWorkerThread();
+        boolean hasDeletePackagesPermission = SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.DELETE_PACKAGES);
         this.packageName = packageName;
-        String callerPackageName = isPrivileged ? ActivityManagerCompat.SHELL_PACKAGE_NAME : context.getPackageName();
+        String callerPackageName = hasDeletePackagesPermission ? ActivityManagerCompat.SHELL_PACKAGE_NAME : BuildConfig.APPLICATION_ID;
         initBroadcastReceiver();
         try {
+            if (userId == UserHandleHidden.USER_ALL && Users.getAllUserIds().length > 1
+                    && !SelfPermissions.checkCrossUserPermission(UserHandleHidden.myUserId() + 1, true)) {
+                installCompleted(sessionId, STATUS_FAILURE_BLOCKED, "android", "STATUS_FAILURE_BLOCKED: Insufficient permission.");
+                Log.d(TAG, "InstallExisting: Requires INTERACT_ACROSS_USERS and INTERACT_ACROSS_USERS_FULL permissions.");
+                return false;
+            }
             int flags;
             try {
                 flags = getDeleteFlags(packageName, userId, keepData);
@@ -985,7 +1019,7 @@ public final class PackageInstallerCompat {
             // Perform uninstallation
             IntentSender sender;
             LocalIntentReceiver intentReceiver;
-            if (isPrivileged) {
+            if (hasDeletePackagesPermission) {
                 Log.d(TAG, "Uninstall: Uninstall via LocalIntentReceiver...");
                 try {
                     intentReceiver = new LocalIntentReceiver();
@@ -1017,7 +1051,7 @@ public final class PackageInstallerCompat {
                 Log.e(TAG, "Uninstall: Could not uninstall " + packageName, th);
                 return false;
             }
-            if (!isPrivileged) {
+            if (intentReceiver == null) {
                 Log.d(TAG, "Uninstall: Waiting for user interaction...");
                 // Wait for user interaction (if needed)
                 try {
@@ -1049,13 +1083,8 @@ public final class PackageInstallerCompat {
     @DeleteFlags
     private static int getDeleteFlags(@NonNull String packageName, @UserIdInt int userId, boolean keepData)
             throws PackageManager.NameNotFoundException, RemoteException {
-        boolean isPrivileged = Ops.isReallyPrivileged();
         int flags = 0;
-        if (!isPrivileged || userId != UserHandleHidden.USER_ALL) {
-            if (!isPrivileged && userId == UserHandleHidden.USER_ALL) {
-                // PackageInfo expects a valid user ID
-                userId = UserHandleHidden.myUserId();
-            }
+        if (userId != UserHandleHidden.USER_ALL) {
             PackageInfo info = PackageManagerCompat.getPackageInfo(packageName, MATCH_UNINSTALLED_PACKAGES
                     | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId);
             final boolean isSystem = (info.applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
@@ -1068,7 +1097,7 @@ public final class PackageInstallerCompat {
         } else {
             flags |= DELETE_ALL_USERS;
         }
-        if (isPrivileged && keepData) {
+        if (keepData) {
             flags |= DELETE_KEEP_DATA;
         }
         return flags;
@@ -1076,7 +1105,7 @@ public final class PackageInstallerCompat {
 
     private static int getCorrectUserIdForUninstallation(@NonNull String packageName, @UserIdInt int userId) {
         if (userId == UserHandleHidden.USER_ALL) {
-            int[] users = Users.getUsersIds();
+            int[] users = Users.getAllUserIds();
             for (int user : users) {
                 try {
                     PackageManagerCompat.getPackageInfo(packageName, MATCH_UNINSTALLED_PACKAGES

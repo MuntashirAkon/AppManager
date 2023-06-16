@@ -64,6 +64,17 @@ public final class Users {
     }
 
     @NonNull
+    @UserIdInt
+    public static int[] getAllUserIds() {
+        getAllUsers();
+        List<Integer> users = new ArrayList<>();
+        for (UserInfo userInfo : sUserInfoList) {
+            users.add(userInfo.id);
+        }
+        return ArrayUtils.convertToIntArray(users);
+    }
+
+    @NonNull
     public static List<UserInfo> getUsers() {
         getAllUsers();
         int[] selectedUserIds = Prefs.Misc.getSelectedUsers();
