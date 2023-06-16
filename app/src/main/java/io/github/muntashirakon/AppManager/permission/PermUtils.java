@@ -2,6 +2,14 @@
 
 package io.github.muntashirakon.AppManager.permission;
 
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+import static io.github.muntashirakon.AppManager.compat.PermissionCompat.FLAG_PERMISSION_AUTO_REVOKED;
+import static io.github.muntashirakon.AppManager.compat.PermissionCompat.FLAG_PERMISSION_ONE_TIME;
+import static io.github.muntashirakon.AppManager.compat.PermissionCompat.FLAG_PERMISSION_REVIEW_REQUIRED;
+import static io.github.muntashirakon.AppManager.compat.PermissionCompat.FLAG_PERMISSION_REVOKED_COMPAT;
+import static io.github.muntashirakon.AppManager.compat.PermissionCompat.FLAG_PERMISSION_USER_FIXED;
+import static io.github.muntashirakon.AppManager.compat.PermissionCompat.FLAG_PERMISSION_USER_SET;
+
 import android.annotation.UserIdInt;
 import android.app.AppOpsManager;
 import android.content.pm.ApplicationInfo;
@@ -18,17 +26,9 @@ import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.settings.Ops;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.utils.BroadcastUtils;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
-
-import static android.content.pm.PackageManager.PERMISSION_GRANTED;
-import static io.github.muntashirakon.AppManager.compat.PermissionCompat.FLAG_PERMISSION_AUTO_REVOKED;
-import static io.github.muntashirakon.AppManager.compat.PermissionCompat.FLAG_PERMISSION_ONE_TIME;
-import static io.github.muntashirakon.AppManager.compat.PermissionCompat.FLAG_PERMISSION_REVIEW_REQUIRED;
-import static io.github.muntashirakon.AppManager.compat.PermissionCompat.FLAG_PERMISSION_REVOKED_COMPAT;
-import static io.github.muntashirakon.AppManager.compat.PermissionCompat.FLAG_PERMISSION_USER_FIXED;
-import static io.github.muntashirakon.AppManager.compat.PermissionCompat.FLAG_PERMISSION_USER_SET;
 
 public class PermUtils {
     private static final String KILL_REASON_APP_OP_CHANGE = "Permission related app op changed";
@@ -328,6 +328,6 @@ public class PermUtils {
 
     public static boolean isModifiable(@NonNull Permission permission) {
         // Non-readonly permissions or permissions with app ops are modifiable
-        return Ops.isPrivileged() && (!permission.isReadOnly() || permission.affectsAppOp());
+        return SelfPermissions.canModifyPermissions() && (!permission.isReadOnly() || permission.affectsAppOp());
     }
 }

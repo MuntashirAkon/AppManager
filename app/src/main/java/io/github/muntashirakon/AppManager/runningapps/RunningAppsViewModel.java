@@ -246,7 +246,7 @@ public class RunningAppsViewModel extends AndroidViewModel {
             return true;
         }
         try {
-            AppOpsManagerCompat appOpsManager = new AppOpsManagerCompat(getApplication());
+            AppOpsManagerCompat appOpsManager = new AppOpsManagerCompat();
             boolean canRun;
             {
                 int mode = appOpsManager.checkOperation(AppOpsManagerCompat.OP_RUN_IN_BACKGROUND, info.uid, info.packageName);
@@ -265,7 +265,7 @@ public class RunningAppsViewModel extends AndroidViewModel {
     public void preventBackgroundRun(@NonNull ApplicationInfo info) {
         mExecutor.submit(() -> {
             try {
-                AppOpsManagerCompat appOpsService = new AppOpsManagerCompat(getApplication());
+                AppOpsManagerCompat appOpsService = new AppOpsManagerCompat();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     appOpsService.setMode(AppOpsManagerCompat.OP_RUN_IN_BACKGROUND, info.uid, info.packageName,
                             AppOpsManager.MODE_IGNORED);

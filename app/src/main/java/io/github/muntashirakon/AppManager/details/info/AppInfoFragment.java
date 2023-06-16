@@ -126,6 +126,7 @@ import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.scanner.ScannerActivity;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Ops;
@@ -610,7 +611,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     tagCloud.trackerComponents.size()), tagCloud.areAllTrackersBlocked
                     ? ColorCodes.getComponentTrackerBlockedIndicatorColor(mActivity)
                     : ColorCodes.getComponentTrackerIndicatorColor(mActivity)).setOnClickListener(v -> {
-                if (!isExternalApk && isRootEnabled) {
+                if (!isExternalApk && SelfPermissions.canModifyAppComponentStates(mainModel.getUserHandle(), mPackageName, mainModel.isTestOnlyApp())) {
                     new SearchableMultiChoiceDialogBuilder<>(mActivity, tagCloud.trackerComponents, trackerComponentNames)
                             .setTitle(R.string.trackers)
                             .addSelections(tagCloud.trackerComponents)

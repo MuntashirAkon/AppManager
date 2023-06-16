@@ -61,7 +61,6 @@ import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.ssaid.SsaidSettings;
 import io.github.muntashirakon.AppManager.uri.UriManager;
-import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -76,8 +75,6 @@ class RestoreOp implements Closeable {
     static final String TAG = RestoreOp.class.getSimpleName();
     private static final Object sLock = new Object();
 
-    @NonNull
-    private final Context context = ContextUtils.getContext();
     @NonNull
     private final String packageName;
     @NonNull
@@ -557,7 +554,7 @@ class RestoreOp implements Closeable {
         loadMiscRules(rules);
         // Apply rules
         List<RuleEntry> entries = rules.getAll();
-        AppOpsManagerCompat appOpsManager = new AppOpsManagerCompat(context);
+        AppOpsManagerCompat appOpsManager = new AppOpsManagerCompat();
         INotificationManager notificationManager = INotificationManager.Stub.asInterface(ProxyBinder.getService(Context.NOTIFICATION_SERVICE));
         boolean magiskHideAvailable = MagiskHide.available();
         for (RuleEntry entry : entries) {

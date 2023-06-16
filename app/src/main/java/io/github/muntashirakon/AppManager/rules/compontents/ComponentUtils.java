@@ -35,7 +35,6 @@ import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.rules.struct.PermissionRule;
 import io.github.muntashirakon.AppManager.rules.struct.RuleEntry;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
-import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
@@ -181,7 +180,7 @@ public final class ComponentUtils {
             }
             cb.applyRules(true);
             // Reset configured app ops
-            AppOpsManagerCompat appOpsManager = new AppOpsManagerCompat(ContextUtils.getContext());
+            AppOpsManagerCompat appOpsManager = new AppOpsManagerCompat();
             try {
                 appOpsManager.resetAllModes(userHandle, packageName);
                 for (AppOpRule entry : cb.getAll(AppOpRule.class)) {

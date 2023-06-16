@@ -402,7 +402,7 @@ public final class PackageUtils {
     @NonNull
     public static Collection<Integer> getFilteredAppOps(String packageName, @UserIdInt int userHandle, @NonNull int[] appOps, int mode) {
         List<Integer> filteredAppOps = new ArrayList<>();
-        AppOpsManagerCompat appOpsManager = new AppOpsManagerCompat(ContextUtils.getContext());
+        AppOpsManagerCompat appOpsManager = new AppOpsManagerCompat();
         int uid = PackageUtils.getAppUid(new UserPackagePair(packageName, userHandle));
         for (int appOp : appOps) {
             try {

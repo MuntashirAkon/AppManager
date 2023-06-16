@@ -65,7 +65,6 @@ import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.ssaid.SsaidSettings;
 import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
-import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
@@ -81,8 +80,6 @@ import io.github.muntashirakon.io.Paths;
 class BackupOp implements Closeable {
     static final String TAG = BackupOp.class.getSimpleName();
 
-    @NonNull
-    private final Context context = ContextUtils.getContext();
     @NonNull
     private final String mPackageName;
     @NonNull
@@ -382,7 +379,7 @@ class BackupOp implements Closeable {
         int[] permissionFlags = mPackageInfo.requestedPermissionsFlags;
         List<AppOpsManagerCompat.OpEntry> opEntries = new ArrayList<>();
         try {
-            List<AppOpsManagerCompat.PackageOps> packageOpsList = new AppOpsManagerCompat(context)
+            List<AppOpsManagerCompat.PackageOps> packageOpsList = new AppOpsManagerCompat()
                     .getOpsForPackage(mPackageInfo.applicationInfo.uid, mPackageName, null);
             if (packageOpsList.size() == 1) opEntries.addAll(packageOpsList.get(0).getOps());
         } catch (Exception ignore) {

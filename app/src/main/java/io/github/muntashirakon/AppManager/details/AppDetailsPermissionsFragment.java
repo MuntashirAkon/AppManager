@@ -40,19 +40,19 @@ import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
+import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsAppOpItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsDefinedPermissionItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsPermissionItem;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.self.pref.TipsPrefs;
-import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
-import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -304,7 +304,7 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
             case APP_OPS:
                 if (mIsExternalApk) {
                     return R.string.external_apk_no_app_op;
-                } else if (Ops.isPrivileged() || PermissionUtils.hasAppOpsPermission()) {
+                } else if (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.GET_APP_OPS_STATS)) {
                     return R.string.no_app_ops;
                 } else return R.string.no_app_ops_permission;
             case USES_PERMISSIONS:
@@ -322,14 +322,14 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
                 if (!TipsPrefs.getInstance().displayInAppOpsTab()) {
                     return 0;
                 }
-                if (Ops.isPrivileged() || PermissionUtils.hasAppOpsPermission()) {
+                if (SelfPermissions.canModifyAppOpMode()) {
                     return R.string.help_app_ops_tab;
                 } else return 0;
             case USES_PERMISSIONS:
                 if (!TipsPrefs.getInstance().displayInUsesPermissionsTab()) {
                     return 0;
                 }
-                if (Ops.isPrivileged() || PermissionUtils.hasAppOpsPermission()) {
+                if (SelfPermissions.canModifyPermissions()) {
                     return R.string.help_uses_permissions_tab;
                 } else return 0;
             case PERMISSIONS:
@@ -363,6 +363,7 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
         private final int mCardColor0;
         private final int mCardColor1;
         private final int mDefaultIndicatorColor;
+        private boolean mCanModifyAppOpMode;
 
         AppDetailsRecyclerAdapter() {
             mAdapterList = new ArrayList<>();
@@ -375,6 +376,7 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
         void setDefaultList(@NonNull List<AppDetailsItem<?>> list) {
             mRequestedProperty = mNeededProperty;
             mConstraint = viewModel == null ? null : viewModel.getSearchQuery();
+            mCanModifyAppOpMode = SelfPermissions.canModifyAppOpMode();
             ProgressIndicatorCompat.setVisibility(progressIndicator, false);
             synchronized (mAdapterList) {
                 mAdapterList.clear();
@@ -593,13 +595,8 @@ public class AppDetailsPermissionsFragment extends AppDetailsFragment {
             } else {
                 holder.divider.setDividerColor(mDefaultIndicatorColor);
             }
-            if (!Ops.isPrivileged()) {
-                // No root or ADB, hide toggle buttons
-                holder.toggleSwitch.setVisibility(View.GONE);
-                return;
-            }
             // Op Switch
-            holder.toggleSwitch.setVisibility(View.VISIBLE);
+            holder.toggleSwitch.setVisibility(mCanModifyAppOpMode ? View.VISIBLE : View.GONE);
             // op granted
             holder.toggleSwitch.setChecked(item.isAllowed());
             holder.itemView.setOnClickListener(v -> {

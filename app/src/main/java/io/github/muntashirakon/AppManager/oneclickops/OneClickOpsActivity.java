@@ -38,6 +38,7 @@ import io.github.muntashirakon.AppManager.apk.behavior.DexOptimizationDialog;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.ListItemCreator;
@@ -283,7 +284,7 @@ public class OneClickOpsActivity extends BaseActivity {
     }
 
     private void showAppOpsSelectionDialog() {
-        if (!Ops.isPrivileged()) {
+        if (!SelfPermissions.canModifyAppOpMode()) {
             UIUtils.displayShortToast(R.string.only_works_in_root_or_adb_mode);
             return;
         }

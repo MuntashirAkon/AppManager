@@ -28,8 +28,6 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.ServiceCompat;
 
-import java.util.Collections;
-
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
@@ -41,7 +39,6 @@ import io.github.muntashirakon.AppManager.progress.NotificationProgressHandler.N
 import io.github.muntashirakon.AppManager.progress.ProgressHandler;
 import io.github.muntashirakon.AppManager.progress.QueuedProgressHandler;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
-import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.types.ForegroundService;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
@@ -124,9 +121,8 @@ public class PackageInstallerService extends ForegroundService {
             public void onFinishedInstall(int sessionId, String packageName, int result,
                                           @Nullable String blockingPackage, @Nullable String statusMessage) {
                 // Block trackers if requested
-                if (result == STATUS_SUCCESS && Ops.isRoot() && Prefs.Installer.blockTrackers()) {
-                    ComponentUtils.blockTrackingComponents(Collections.singletonList(
-                            new UserPackagePair(packageName, apkQueueItem.getUserId())));
+                if (result == STATUS_SUCCESS && Prefs.Installer.blockTrackers()) {
+                    ComponentUtils.blockTrackingComponents(new UserPackagePair(packageName, apkQueueItem.getUserId()));
                 }
                 if (onInstallFinished != null) {
                     ThreadUtils.postOnMainThread(() -> {

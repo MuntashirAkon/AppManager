@@ -573,7 +573,7 @@ public class BatchOpsManager {
     private Result opDisableBackground() {
         List<UserPackagePair> failedPackages = new ArrayList<>();
         float lastProgress = progressHandler != null ? progressHandler.getLastProgress() : 0;
-        AppOpsManagerCompat appOpsManager = new AppOpsManagerCompat(ContextUtils.getContext());
+        AppOpsManagerCompat appOpsManager = new AppOpsManagerCompat();
         int i = 0;
         for (UserPackagePair pair : userPackagePairs) {
             updateProgress(lastProgress, ++i);
@@ -692,7 +692,7 @@ public class BatchOpsManager {
         int mode = args.getInt(ARG_APP_OP_MODE, AppOpsManager.MODE_IGNORED);
         List<UserPackagePair> failedPkgList = new ArrayList<>();
         float lastProgress = progressHandler != null ? progressHandler.getLastProgress() : 0;
-        AppOpsManagerCompat appOpsManager = new AppOpsManagerCompat(ContextUtils.getContext());
+        AppOpsManagerCompat appOpsManager = new AppOpsManagerCompat();
         if (appOps.length == 1 && appOps[0] == AppOpsManagerCompat.OP_NONE) {
             // Wildcard detected
             int i = 0;

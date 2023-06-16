@@ -75,10 +75,6 @@ public final class PermissionUtils {
         return hasSelfPermission(ManifestCompat.permission.TERMUX_RUN_COMMAND);
     }
 
-    public static boolean hasAppOpsPermission() {
-        return hasSelfPermission(ManifestCompat.permission.GET_APP_OPS_STATS);
-    }
-
     public static boolean hasInternet() {
         return PermissionUtils.hasSelfPermission(Manifest.permission.INTERNET);
     }

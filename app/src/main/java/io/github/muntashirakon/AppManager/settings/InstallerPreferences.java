@@ -10,6 +10,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.UserHandleHidden;
 import android.text.SpannableStringBuilder;
 import android.view.View;
 
@@ -30,6 +31,7 @@ import java.util.Objects;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.signing.Signer;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
@@ -141,7 +143,7 @@ public class InstallerPreferences extends PreferenceFragment {
                 .setChecked(Prefs.Installer.displayChanges());
         // Block trackers
         SwitchPreferenceCompat blockTrackersPref = Objects.requireNonNull(findPreference("installer_block_trackers"));
-        blockTrackersPref.setVisible(Ops.isRoot());
+        blockTrackersPref.setVisible(SelfPermissions.canModifyAppComponentStates(UserHandleHidden.myUserId(), null, true));
         blockTrackersPref.setChecked(Prefs.Installer.blockTrackers());
         // Running installer in the background
         SwitchPreferenceCompat backgroundPref = Objects.requireNonNull(findPreference("installer_always_on_background"));

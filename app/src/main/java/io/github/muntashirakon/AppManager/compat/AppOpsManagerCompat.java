@@ -11,7 +11,6 @@ import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.RemoteException;
-import android.os.UserHandleHidden;
 
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
@@ -35,9 +34,7 @@ import aosp.libcore.util.EmptyArray;
 import dev.rikka.tools.refine.Refine;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.MiuiUtils;
-import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 
 @SuppressLint("SoonBlockedPrivateApi")
 public class AppOpsManagerCompat {
@@ -623,19 +620,8 @@ public class AppOpsManagerCompat {
 
     private final IAppOpsService appOpsService;
 
-    public AppOpsManagerCompat(Context context) {
-        if (!PermissionUtils.hasAppOpsPermission() && Ops.isReallyPrivileged()) {
-            try {
-                PermissionCompat.grantPermission(
-                        context.getPackageName(),
-                        ManifestCompat.permission.GET_APP_OPS_STATS,
-                        UserHandleHidden.myUserId());
-            } catch (RemoteException e) {
-                throw new RuntimeException("Couldn't grant " + ManifestCompat.permission.GET_APP_OPS_STATS, e);
-            }
-        }
-        // Local/remote services are handled automatically
-        this.appOpsService = IAppOpsService.Stub.asInterface(ProxyBinder.getService(Context.APP_OPS_SERVICE));
+    public AppOpsManagerCompat() {
+        appOpsService = IAppOpsService.Stub.asInterface(ProxyBinder.getService(Context.APP_OPS_SERVICE));
     }
 
     /**

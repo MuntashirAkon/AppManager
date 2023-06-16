@@ -43,7 +43,6 @@ import io.github.muntashirakon.AppManager.rules.struct.PermissionRule;
 import io.github.muntashirakon.AppManager.rules.struct.RuleEntry;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.settings.Prefs;
-import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.io.AtomicExtendedFile;
 import io.github.muntashirakon.io.Paths;
@@ -492,7 +491,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
         }
         boolean isSuccessful = true;
         int uid = mPackageInfo.applicationInfo.uid;
-        AppOpsManagerCompat appOpsManager = new AppOpsManagerCompat(ContextUtils.getContext());
+        AppOpsManagerCompat appOpsManager = new AppOpsManagerCompat();
         // Apply all app ops
         for (AppOpRule appOp : getAll(AppOpRule.class)) {
             try {

@@ -2,9 +2,9 @@
 
 package io.github.muntashirakon.AppManager.details;
 
+import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.GET_SIGNING_CERTIFICATES;
 import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_DISABLED_COMPONENTS;
 import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_UNINSTALLED_PACKAGES;
-import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.GET_SIGNING_CERTIFICATES;
 
 import android.annotation.SuppressLint;
 import android.annotation.UserIdInt;
@@ -67,6 +67,7 @@ import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
+import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsAppOpItem;
@@ -91,6 +92,7 @@ import io.github.muntashirakon.AppManager.rules.struct.AppOpRule;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.rules.struct.RuleEntry;
 import io.github.muntashirakon.AppManager.scanner.NativeLibraries;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
@@ -98,7 +100,6 @@ import io.github.muntashirakon.AppManager.users.UserInfo;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
-import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.io.IoUtils;
 
 public class AppDetailsViewModel extends AndroidViewModel {
@@ -664,7 +665,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     }
 
     @NonNull
-    private final AppOpsManagerCompat mAppOpsManager = new AppOpsManagerCompat(getApplication());
+    private final AppOpsManagerCompat mAppOpsManager = new AppOpsManagerCompat();
 
     @WorkerThread
     @GuardedBy("blockerLocker")
@@ -1335,7 +1336,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
     private void loadAppOps() {
         boolean privileged = Ops.isPrivileged();
         PackageInfo packageInfo = getPackageInfoInternal();
-        if (packageInfo == null || mExternalApk || !(privileged || PermissionUtils.hasAppOpsPermission())) {
+        if (packageInfo == null || mExternalApk || !SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.GET_APP_OPS_STATS)) {
             mAppOps.postValue(Collections.emptyList());
             return;
         }

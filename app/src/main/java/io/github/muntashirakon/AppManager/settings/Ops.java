@@ -599,14 +599,17 @@ public class Ops {
             sIsSystem = true;
             sIsRoot = sIsAdb = false;
             ThreadUtils.postOnMainThread(() -> UIUtils.displayLongToast(R.string.warning_working_on_system_mode));
-        } else { // ADB mode
+        } else if (uid == SHELL_UID) { // ADB mode
             if (!PermissionUtils.hasSelfOrRemotePermission(ManifestCompat.permission.GRANT_RUNTIME_PERMISSIONS)) {
                 // USB debugging is incomplete, revert back to no-root
                 sIsAdb = sIsSystem = sIsRoot = false;
                 return STATUS_FAILURE_ADB_NEED_MORE_PERMS;
             }
+            ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(R.string.working_on_adb_mode));
+        } else {
+            // No-root mode
+            return STATUS_FAILURE;
         }
-        ThreadUtils.postOnMainThread(() -> UIUtils.displayShortToast(R.string.working_on_adb_mode));
         return STATUS_SUCCESS;
     }
 

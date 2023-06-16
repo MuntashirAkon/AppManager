@@ -542,14 +542,6 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
         if (appUsageMenu != null) {
             appUsageMenu.setVisible(FeatureController.isUsageAccessEnabled());
         }
-        // Set sort by
-        if (mModel != null) {
-            if (!Ops.isPrivileged()) {
-                if (mModel.getSortBy() == MainListOptions.SORT_BY_BLOCKED_COMPONENTS) {
-                    mModel.setSortBy(MainListOptions.SORT_BY_APP_LABEL);
-                }
-            }
-        }
         // Check for backup volume
         if (!Prefs.BackupRestore.backupDirectoryExists()) {
             new MaterialAlertDialogBuilder(this)

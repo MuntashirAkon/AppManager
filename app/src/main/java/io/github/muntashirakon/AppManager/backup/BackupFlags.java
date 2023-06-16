@@ -93,7 +93,7 @@ public final class BackupFlags {
         backupFlags.add(BACKUP_EXT_DATA);
         backupFlags.add(BACKUP_EXT_OBB_MEDIA);
         backupFlags.add(BACKUP_CACHE);
-        if (Ops.isRoot()) {
+        if (Ops.isPrivileged()) {
             // Display extra backups only in root mode
             backupFlags.add(BACKUP_EXTRAS);
             backupFlags.add(BACKUP_RULES);
@@ -288,6 +288,8 @@ public final class BackupFlags {
     private static int getSanitizedFlags(int flags) {
         if (!Ops.isRoot()) {
             flags &= ~BACKUP_INT_DATA;
+        }
+        if (!Ops.isPrivileged()) {
             flags &= ~BACKUP_EXTRAS;
             flags &= ~BACKUP_RULES;
         }

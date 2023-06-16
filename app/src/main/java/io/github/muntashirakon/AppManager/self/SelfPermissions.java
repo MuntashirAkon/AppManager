@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.settings.Ops;
@@ -46,6 +47,22 @@ public class SelfPermissions {
         return checkSelfOrRemotePermission(Manifest.permission.CHANGE_COMPONENT_ENABLED_STATE);
     }
 
+    public static boolean canModifyAppOpMode() {
+        boolean canModify = checkSelfOrRemotePermission(ManifestCompat.permission.UPDATE_APP_OPS_STATS);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            canModify &= checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_APP_OPS_MODES);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                canModify &= checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_APPOPS);
+            }
+        }
+        return canModify;
+    }
+
+    public static boolean canModifyPermissions() {
+        return checkSelfOrRemotePermission(ManifestCompat.permission.GRANT_RUNTIME_PERMISSIONS)
+                || checkSelfOrRemotePermission(ManifestCompat.permission.REVOKE_RUNTIME_PERMISSIONS);
+    }
+
     public static boolean checkCrossUserPermission(@UserIdInt int userId, boolean requireFullPermission) {
         if (userId < 0) {
             throw new IllegalArgumentException("Invalid userId " + userId);
@@ -58,10 +75,10 @@ public class SelfPermissions {
             return true;
         }
         if (requireFullPermission) {
-            return checkSelfOrRemotePermission("android.permission.INTERACT_ACROSS_USERS_FULL");
+            return checkSelfOrRemotePermission(ManifestCompat.permission.INTERACT_ACROSS_USERS_FULL);
         }
-        return checkSelfOrRemotePermission("android.permission.INTERACT_ACROSS_USERS_FULL")
-                || checkSelfOrRemotePermission("android.permission.INTERACT_ACROSS_USERS");
+        return checkSelfOrRemotePermission(ManifestCompat.permission.INTERACT_ACROSS_USERS_FULL)
+                || checkSelfOrRemotePermission(ManifestCompat.permission.INTERACT_ACROSS_USERS);
     }
 
     public static boolean checkSelfOrRemotePermission(@NonNull String permissionName) {
@@ -77,6 +94,10 @@ public class SelfPermissions {
             } catch (RemoteException ignore) {
             }
         }
+        return checkSelfPermission(permissionName);
+    }
+
+    public static boolean checkSelfPermission(@NonNull String permissionName) {
         return ContextCompat.checkSelfPermission(ContextUtils.getContext(), permissionName)
                 == PackageManager.PERMISSION_GRANTED;
     }
