@@ -15,7 +15,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
+import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 
 public final class FreezeUtils {
@@ -46,12 +48,27 @@ public final class FreezeUtils {
     private static void freeze(@NonNull String packageName, @UserIdInt int userId, @FreezeType int freezeType)
             throws RemoteException {
         if (freezeType == FREEZE_HIDE) {
-            PackageManagerCompat.hidePackage(packageName, userId, true);
+            if (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_USERS)) {
+                PackageManagerCompat.hidePackage(packageName, userId, true);
+                return;
+            }
+            // No permission, fall-through
         } else if (freezeType == FREEZE_SUSPEND && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            PackageManagerCompat.suspendPackages(new String[]{packageName}, userId, true);
-        } else {
-            PackageManagerCompat.setApplicationEnabledSetting(packageName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER, 0, userId);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                if (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.SUSPEND_APPS)) {
+                    PackageManagerCompat.suspendPackages(new String[]{packageName}, userId, true);
+                    return;
+                }
+                // No permission, fall-through
+            } else {
+                if (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_USERS)) {
+                    PackageManagerCompat.suspendPackages(new String[]{packageName}, userId, true);
+                    return;
+                }
+                // No permission, fall-through
+            }
         }
+        PackageManagerCompat.setApplicationEnabledSetting(packageName, PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER, 0, userId);
     }
 
     public static void unfreeze(@NonNull String packageName, @UserIdInt int userId) throws RemoteException {

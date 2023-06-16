@@ -224,7 +224,7 @@ public final class Prefs {
                 // 7+ only. Requires MANAGE_USERS permission until P. Requires SUSPEND_APPS permission after that.
                 if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N
                         || Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && !SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.SUSPEND_APPS)
-                        || !SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_USERS)) {
+                        || (Build.VERSION.SDK_INT < Build.VERSION_CODES.P && !SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_USERS))) {
                     return FreezeUtils.FREEZE_DISABLE;
                 }
             }
