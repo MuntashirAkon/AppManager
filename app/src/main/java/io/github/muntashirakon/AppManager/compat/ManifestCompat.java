@@ -12,6 +12,7 @@ public final class ManifestCompat {
 
         @RequiresApi(Build.VERSION_CODES.Q)
         public static final String ADJUST_RUNTIME_PERMISSIONS_POLICY = "android.permission.ADJUST_RUNTIME_PERMISSIONS_POLICY";
+        public static final String FORCE_STOP_PACKAGES = "android.permission.FORCE_STOP_PACKAGES";
         public static final String GET_APP_OPS_STATS = "android.permission.GET_APP_OPS_STATS";
         @RequiresApi(Build.VERSION_CODES.TIRAMISU)
         public static final String GET_HISTORICAL_APP_OPS_STATS = "android.permission.GET_HISTORICAL_APP_OPS_STATS";

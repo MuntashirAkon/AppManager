@@ -326,6 +326,10 @@ public final class ApplicationInfoCompat {
         return (info.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
     }
 
+    public static boolean isStopped(@NonNull ApplicationInfo info) {
+        return (info.flags & ApplicationInfo.FLAG_STOPPED) != 0;
+    }
+
     public static boolean isInstalled(@NonNull ApplicationInfo info) {
         return (info.flags & ApplicationInfo.FLAG_INSTALLED) != 0
                 && info.processName != null

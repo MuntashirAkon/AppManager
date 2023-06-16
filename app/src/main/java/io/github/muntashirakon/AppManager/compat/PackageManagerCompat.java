@@ -457,6 +457,7 @@ public final class PackageManagerCompat {
         }
     }
 
+    @RequiresPermission(ManifestCompat.permission.FORCE_STOP_PACKAGES)
     public static void forceStopPackage(String packageName, int userId) throws RemoteException {
         ActivityManagerCompat.getActivityManager().forceStopPackage(packageName, userId);
         if (userId != UserHandleHidden.myUserId()) {

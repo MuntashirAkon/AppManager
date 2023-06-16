@@ -55,6 +55,7 @@ import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.changelog.Changelog;
 import io.github.muntashirakon.AppManager.changelog.ChangelogParser;
 import io.github.muntashirakon.AppManager.changelog.ChangelogRecyclerAdapter;
+import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.debloat.DebloaterActivity;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
@@ -66,6 +67,7 @@ import io.github.muntashirakon.AppManager.profiles.ProfileMetaManager;
 import io.github.muntashirakon.AppManager.profiles.ProfilesActivity;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.runningapps.RunningAppsActivity;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.self.filecache.InternalCacheCleanerService;
 import io.github.muntashirakon.AppManager.self.life.FundingCampaignChecker;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
@@ -497,25 +499,23 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
         /* === Enable/Disable === */
         // Enable “Uninstall” action iff all selections are installed
         uninstallMenu.setEnabled(nonZeroSelection && areAllInstalled);
-        // Enable the following actions iff root/ADB enabled and all selections are installed
         enableDisableMenu.setEnabled(nonZeroSelection && areAllInstalled);
         forceStopMenu.setEnabled(nonZeroSelection && areAllInstalled);
         clearDataCacheMenu.setEnabled(nonZeroSelection && areAllInstalled);
         preventBackgroundMenu.setEnabled(nonZeroSelection && areAllInstalled);
         netPolicyMenu.setEnabled(nonZeroSelection && areAllInstalled);
+        blockUnblockTrackersMenu.setEnabled(nonZeroSelection && areAllInstalled);
         // Enable “Save APK” action iff all selections are installed or the uninstalled apps are all system apps
         saveApkMenu.setEnabled(nonZeroSelection && (areAllInstalled || areAllUninstalledSystem));
         // Enable “Backup/restore” action iff all selections are installed or all the uninstalled apps have backups
         backupRestoreMenu.setEnabled(nonZeroSelection && (areAllInstalled || areAllUninstalledHasBackup));
-        // Enable “Block/unblock trackers” action iff root is enabled and all selections are installed
-        blockUnblockTrackersMenu.setEnabled(nonZeroSelection && areAllInstalled);
         // Rests are enabled by default
         exportRulesMenu.setEnabled(nonZeroSelection);
         addToProfileMenu.setEnabled(nonZeroSelection);
         /* === Visible/Invisible === */
         boolean privileged = Ops.isPrivileged();
         enableDisableMenu.setVisible(privileged);
-        forceStopMenu.setVisible(privileged);
+        forceStopMenu.setVisible(SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.FORCE_STOP_PACKAGES));
         clearDataCacheMenu.setVisible(privileged);
         preventBackgroundMenu.setVisible(privileged);
         netPolicyMenu.setVisible(privileged);

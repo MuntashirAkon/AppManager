@@ -33,8 +33,10 @@ import java.util.Collections;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
 import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Ops;
@@ -243,14 +245,22 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
                     return true;
                 });
             } else scanVtIem.setVisible(false);
-            // Set others
+            // Set force-stop
             MenuItem forceStopItem = menu.findItem(R.id.action_force_stop);
+            if (applicationInfo != null) {
+                forceStopItem.setOnMenuItemClickListener(item -> {
+                            mModel.forceStop(applicationInfo);
+                            return true;
+                        })
+                        .setEnabled(SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.FORCE_STOP_PACKAGES));
+            } else forceStopItem.setEnabled(false);
             MenuItem bgItem = menu.findItem(R.id.action_disable_background);
             if (applicationInfo != null) {
-                forceStopItem.setVisible(true).setOnMenuItemClickListener(item -> {
-                    mModel.forceStop(applicationInfo);
-                    return true;
-                });
+                forceStopItem.setOnMenuItemClickListener(item -> {
+                            mModel.forceStop(applicationInfo);
+                            return true;
+                        })
+                        .setVisible(SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.FORCE_STOP_PACKAGES));
                 if (mModel.canRunInBackground(applicationInfo)) {
                     bgItem.setVisible(true).setOnMenuItemClickListener(item -> {
                         mModel.preventBackgroundRun(applicationInfo);

@@ -737,33 +737,38 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                         .append(getStyledKeyValue(mActivity, R.string.pid,
                                                 String.valueOf(tagCloud.runningServices.get(i).pid)))));
                     }
+                    boolean logViewerAvailable = FeatureController.isLogViewerEnabled()
+                            && SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.DUMP);
                     DialogTitleBuilder titleBuilder = new DialogTitleBuilder(mActivity)
                             .setTitle(R.string.running_services);
-                    if (hasDumpPermission() && FeatureController.isLogViewerEnabled()) {
+                    if (logViewerAvailable) {
                         titleBuilder.setSubtitle(R.string.running_services_logcat_hint);
                     }
                     ThreadUtils.postOnMainThread(() -> {
                         mProgressIndicator.hide();
-                        new SearchableItemsDialogBuilder<>(mActivity, runningServices)
-                                .setTitle(titleBuilder.build())
-                                .setOnItemClickListener((dialog, which, item) -> {
-                                    if (!FeatureController.isLogViewerEnabled()) return;
-                                    Intent logViewerIntent = new Intent(mActivity.getApplicationContext(), LogViewerActivity.class)
-                                            .putExtra(LogViewerActivity.EXTRA_FILTER, SearchCriteria.PID_KEYWORD + tagCloud.runningServices.get(which).pid)
-                                            .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                    mActivity.startActivity(logViewerIntent);
-                                })
-                                .setNeutralButton(R.string.force_stop, (dialog, which) -> ThreadUtils.postOnBackgroundThread(() -> {
-                                    try {
-                                        PackageManagerCompat.forceStopPackage(mPackageName, mainModel.getUserHandle());
-                                        ThreadUtils.postOnMainThread(this::refreshDetails);
-                                    } catch (RemoteException | SecurityException e) {
-                                        Log.e(TAG, e);
-                                        displayLongToast(R.string.failed_to_stop, mPackageLabel);
-                                    }
-                                }))
-                                .setNegativeButton(R.string.close, null)
-                                .show();
+                        SearchableItemsDialogBuilder<CharSequence> builder = new SearchableItemsDialogBuilder<>(mActivity, runningServices)
+                                .setTitle(titleBuilder.build());
+                        if (logViewerAvailable) {
+                            builder.setOnItemClickListener((dialog, which, item) -> {
+                                Intent logViewerIntent = new Intent(mActivity.getApplicationContext(), LogViewerActivity.class)
+                                        .putExtra(LogViewerActivity.EXTRA_FILTER, SearchCriteria.PID_KEYWORD + tagCloud.runningServices.get(which).pid)
+                                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                mActivity.startActivity(logViewerIntent);
+                            });
+                        }
+                        if (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.FORCE_STOP_PACKAGES)) {
+                            builder.setNeutralButton(R.string.force_stop, (dialog, which) -> ThreadUtils.postOnBackgroundThread(() -> {
+                                try {
+                                    PackageManagerCompat.forceStopPackage(mPackageName, mainModel.getUserHandle());
+                                    ThreadUtils.postOnMainThread(this::refreshDetails);
+                                } catch (RemoteException | SecurityException e) {
+                                    Log.e(TAG, e);
+                                    ThreadUtils.postOnMainThread(() -> displayLongToast(R.string.failed_to_stop, mPackageLabel));
+                                }
+                            }));
+                        }
+                        builder.setNegativeButton(R.string.close, null);
+                        builder.show();
                     });
                 });
             });
@@ -1088,33 +1093,37 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     return true;
                 });
             }
-            if (Ops.isPrivileged() || ServiceHelper.checkIfServiceIsRunning(mActivity,
-                    NoRootAccessibilityService.class)) {
+            boolean accessibilityServiceRunning = ServiceHelper.checkIfServiceIsRunning(mActivity, NoRootAccessibilityService.class);
+            if (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.FORCE_STOP_PACKAGES)
+                    || accessibilityServiceRunning) {
                 // Force stop
-                if ((mApplicationInfo.flags & ApplicationInfo.FLAG_STOPPED) == 0) {
-                    addToHorizontalLayout(R.string.force_stop, R.drawable.ic_power_settings)
-                            .setOnClickListener(v -> {
-                                if (isAdbEnabled || isRootEnabled) {
-                                    ThreadUtils.postOnBackgroundThread(() -> {
-                                        try {
-                                            PackageManagerCompat.forceStopPackage(mPackageName, mainModel.getUserHandle());
-                                            ThreadUtils.postOnMainThread(this::refreshDetails);
-                                        } catch (RemoteException | SecurityException e) {
-                                            Log.e(TAG, e);
-                                            displayLongToast(R.string.failed_to_stop, mPackageLabel);
-                                        }
-                                    });
-                                } else {
-                                    // Use accessibility
-                                    AccessibilityMultiplexer.getInstance().enableForceStop(true);
-                                    activityLauncher.launch(IntentUtils.getAppDetailsSettings(mPackageName),
-                                            result -> {
-                                                AccessibilityMultiplexer.getInstance().enableForceStop(false);
-                                                refreshDetails();
-                                            });
+                if (!ApplicationInfoCompat.isStopped(mApplicationInfo) &&
+                        (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.FORCE_STOP_PACKAGES)
+                                || accessibilityServiceRunning)) {
+                    addToHorizontalLayout(R.string.force_stop, R.drawable.ic_power_settings).setOnClickListener(v -> {
+                        if (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.FORCE_STOP_PACKAGES)) {
+                            ThreadUtils.postOnBackgroundThread(() -> {
+                                try {
+                                    PackageManagerCompat.forceStopPackage(mPackageName, mainModel.getUserHandle());
+                                    ThreadUtils.postOnMainThread(this::refreshDetails);
+                                } catch (RemoteException | SecurityException e) {
+                                    Log.e(TAG, e);
+                                    displayLongToast(R.string.failed_to_stop, mPackageLabel);
                                 }
                             });
+                        } else {
+                            // Use accessibility
+                            AccessibilityMultiplexer.getInstance().enableForceStop(true);
+                            activityLauncher.launch(IntentUtils.getAppDetailsSettings(mPackageName),
+                                    result -> {
+                                        AccessibilityMultiplexer.getInstance().enableForceStop(false);
+                                        refreshDetails();
+                                    });
+                        }
+                    });
                 }
+            }
+            if (Ops.isPrivileged() || accessibilityServiceRunning) {
                 // Clear data
                 addToHorizontalLayout(R.string.clear_data, R.drawable.ic_clear_data)
                         .setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
