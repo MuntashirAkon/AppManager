@@ -149,7 +149,7 @@
     <string name="no_receivers">لا يوجد مستقبلات</string>
     <string name="receivers">المستقبلات</string>
     <string name="no_activities">لا توجد أنشطة</string>
-    <string name="refresh">تحديث</string>
+    <string name="refresh">حدِّث</string>
     <string name="no_app_ops">لا توجد عمليات تطبيق</string>
     <string name="app_size">التطبيق</string>
     <string name="storage_and_cache">التخزين وذاكرة التخزين المؤقت</string>
