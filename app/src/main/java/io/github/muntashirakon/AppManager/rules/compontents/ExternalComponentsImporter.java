@@ -30,7 +30,6 @@ import java.util.List;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.rules.RuleType;
-import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.io.Path;
@@ -60,6 +59,7 @@ public class ExternalComponentsImporter {
     public static List<String> applyFromExistingBlockList(@NonNull List<String> packageNames, int userHandle) {
         List<String> failedPkgList = new ArrayList<>();
         HashMap<String, RuleType> components;
+        Path rulesPath = Paths.get(ComponentsBlocker.SYSTEM_RULES_PATH);
         for (String packageName : packageNames) {
             components = PackageUtils.getUserDisabledComponentsForPackage(packageName, userHandle);
             try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(packageName, userHandle)) {
@@ -67,8 +67,10 @@ public class ExternalComponentsImporter {
                     cb.addComponent(componentName, components.get(componentName));
                 }
                 // Remove IFW blocking rules if exists
-                String ifwRuleFile = String.format("%s/%s*.xml", ComponentsBlocker.SYSTEM_RULES_PATH, packageName);
-                Runner.runCommand(new String[]{"rm", ifwRuleFile});
+                Path[] rulesFiles = rulesPath.listFiles((dir, name) -> name.startsWith(packageName) && name.endsWith("xml"));
+                for (Path rulesFile : rulesFiles) {
+                    rulesFile.delete();
+                }
                 cb.applyRules(true);
             } catch (Exception e) {
                 e.printStackTrace();

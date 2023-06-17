@@ -42,6 +42,8 @@ import java.util.regex.Pattern;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
+import io.github.muntashirakon.AppManager.compat.DeviceIdleManagerCompat;
+import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PermissionCompat;
@@ -59,13 +61,14 @@ import io.github.muntashirakon.AppManager.progress.ProgressHandler;
 import io.github.muntashirakon.AppManager.rules.PseudoRules;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
-import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.ssaid.SsaidSettings;
 import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -443,16 +446,17 @@ class BackupOp implements Closeable {
             }
         }
         // Backup battery optimization
-        String targetString = "user," + mPackageName + "," + mApplicationInfo.uid;
-        Runner.Result result = Runner.runCommand(new String[]{"dumpsys", "deviceidle", "whitelist"});
-        if (result.isSuccessful() && result.getOutput().contains(targetString)) {
+        boolean batteryOptimized = ExUtils.requireNonNullElse(() -> DeviceIdleManagerCompat.isBatteryOptimizedApp(mPackageName), true);
+        if (!batteryOptimized) {
             rules.setBatteryOptimization(false);
         }
         // Backup net policy
-        int policies = NetworkPolicyManagerCompat.getUidPolicy(mApplicationInfo.uid);
-        if (policies > 0) {
-            // Store only if there is a policy
-            rules.setNetPolicy(policies);
+        if (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_NETWORK_POLICY)) {
+            int policies = ExUtils.requireNonNullElse(() -> NetworkPolicyManagerCompat.getUidPolicy(mApplicationInfo.uid), 0);
+            if (policies > 0) {
+                // Store only if there is a policy
+                rules.setNetPolicy(policies);
+            }
         }
         // Backup URI grants
         List<UriManager.UriGrant> uriGrants = new UriManager().getGrantedUris(mPackageName);

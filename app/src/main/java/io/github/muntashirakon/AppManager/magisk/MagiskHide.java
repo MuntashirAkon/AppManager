@@ -67,7 +67,7 @@ public class MagiskHide {
 
     @NonNull
     public static Collection<String> getProcesses(@NonNull String packageName) {
-        Runner.Result result = Runner.runCommand("magiskhide ls");
+        Runner.Result result = Runner.runCommand(new String[]{"magiskhide", "ls"});
         return MagiskUtils.parseProcesses(packageName, result);
     }
 }

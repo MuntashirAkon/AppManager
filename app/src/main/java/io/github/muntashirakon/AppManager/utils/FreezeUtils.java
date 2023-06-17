@@ -35,7 +35,7 @@ public final class FreezeUtils {
         if (!applicationInfo.enabled) {
             return true;
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && (applicationInfo.flags & ApplicationInfo.FLAG_SUSPENDED) != 0) {
+        if (ApplicationInfoCompat.isSuspended(applicationInfo)) {
             return true;
         }
         return (ApplicationInfoCompat.getPrivateFlags(applicationInfo) & ApplicationInfoCompat.PRIVATE_FLAG_HIDDEN) != 0;

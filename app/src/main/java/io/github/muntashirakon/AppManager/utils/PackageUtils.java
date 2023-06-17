@@ -47,6 +47,8 @@ import androidx.core.content.pm.PackageInfoCompat;
 import com.android.apksig.ApkVerifier;
 import com.android.apksig.apk.ApkFormatException;
 
+import org.jetbrains.annotations.Contract;
+
 import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
@@ -542,7 +544,9 @@ public final class PackageUtils {
         return sourceDir;
     }
 
-    public static String getHiddenCodePathOrDefault(String packageName, String defaultPath) {
+    @Nullable
+    @Contract("_,!null -> !null")
+    public static String getHiddenCodePathOrDefault(@NonNull String packageName, @Nullable String defaultPath) {
         Runner.Result result = Runner.runCommand(RunnerUtils.CMD_PM + " dump " + packageName + " | grep codePath");
         if (result.isSuccessful()) {
             List<String> paths = result.getOutputAsList();
@@ -553,7 +557,7 @@ public final class PackageUtils {
                 if (start != -1) return codePath.substring(start + 1);
             }
         }
-        return new File(defaultPath).getParent();
+        return defaultPath != null ? new File(defaultPath).getParent() : null;
     }
 
     @NonNull

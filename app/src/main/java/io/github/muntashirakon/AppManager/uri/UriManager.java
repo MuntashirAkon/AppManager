@@ -8,6 +8,7 @@ import static org.xmlpull.v1.XmlPullParser.START_TAG;
 import android.net.Uri;
 import android.os.RemoteException;
 import android.os.UserHandleHidden;
+import android.system.ErrnoException;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,11 +28,11 @@ import java.util.StringTokenizer;
 
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
-import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.compat.xml.TypedXmlPullParser;
 import io.github.muntashirakon.compat.xml.TypedXmlSerializer;
 import io.github.muntashirakon.compat.xml.Xml;
 import io.github.muntashirakon.io.AtomicExtendedFile;
+import io.github.muntashirakon.io.ExtendedFile;
 import io.github.muntashirakon.io.Paths;
 
 public class UriManager {
@@ -80,6 +81,7 @@ public class UriManager {
         }
     }
 
+    @SuppressWarnings("OctalInteger")
     public void writeGrantedUriPermissions() {
         // Snapshot permissions so we can persist without lock
         List<UriGrant> persist = new ArrayList<>();
@@ -110,9 +112,12 @@ public class UriManager {
             out.endTag(null, TAG_URI_GRANTS);
             out.endDocument();
             mGrantFile.finishWrite(fos);
-            Runner.runCommand(new String[]{"chmod", "600", mGrantFile.getBaseFile().getAbsolutePath()});
-            Runner.runCommand(new String[]{"chown", "1000:1000", mGrantFile.getBaseFile().getAbsolutePath()});
-            Runner.runCommand(new String[]{"restorecon", mGrantFile.getBaseFile().getAbsolutePath()});
+            ExtendedFile file = mGrantFile.getBaseFile();
+            file.setMode(0600);
+            file.setUidGid(1000, 1000);
+            file.restoreSelinuxContext();
+        } catch (ErrnoException e) {
+            Log.e(TAG, "Failed to change file permissions.", e);
         } catch (IOException e) {
             Log.e(TAG, "Failed writing Uri grants", e);
             mGrantFile.failWrite(fos);

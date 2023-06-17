@@ -15,6 +15,7 @@ public final class ManifestCompat {
         public static final String CLEAR_APP_USER_DATA = "android.permission.CLEAR_APP_USER_DATA";
         @RequiresApi(Build.VERSION_CODES.N)
         public static final String CREATE_USERS = "android.permission.CREATE_USERS";
+        public static final String DEVICE_POWER = "android.permission.DEVICE_POWER";
         public static final String FORCE_STOP_PACKAGES = "android.permission.FORCE_STOP_PACKAGES";
         public static final String GET_APP_OPS_STATS = "android.permission.GET_APP_OPS_STATS";
         @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -33,11 +34,13 @@ public final class ManifestCompat {
         public static final String MANAGE_APP_OPS_MODES = "android.permission.MANAGE_APP_OPS_MODES";
         @RequiresApi(Build.VERSION_CODES.Q)
         public static final String MANAGE_APPOPS = "android.permission.MANAGE_APPOPS";
+        public static final String MANAGE_NETWORK_POLICY = "android.permission.MANAGE_NETWORK_POLICY";
         public static final String MANAGE_USERS = "android.permission.MANAGE_USERS";
         public static final String REVOKE_RUNTIME_PERMISSIONS = "android.permission.REVOKE_RUNTIME_PERMISSIONS";
         @RequiresApi(Build.VERSION_CODES.P)
         public static final String SUSPEND_APPS = "android.permission.SUSPEND_APPS";
         public static final String UPDATE_APP_OPS_STATS = "android.permission.UPDATE_APP_OPS_STATS";
+        @RequiresApi(Build.VERSION_CODES.S)
         public static final String UPDATE_DOMAIN_VERIFICATION_USER_SELECTION = "android.permission.UPDATE_DOMAIN_VERIFICATION_USER_SELECTION";
         @RequiresApi(Build.VERSION_CODES.P)
         public static final String WATCH_APPOPS = "android.permission.WATCH_APPOPS";

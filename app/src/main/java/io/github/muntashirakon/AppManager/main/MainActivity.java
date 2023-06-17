@@ -72,7 +72,6 @@ import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.self.filecache.InternalCacheCleanerService;
 import io.github.muntashirakon.AppManager.self.life.FundingCampaignChecker;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
-import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.settings.SettingsActivity;
 import io.github.muntashirakon.AppManager.usage.AppUsageActivity;
@@ -514,13 +513,12 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
         exportRulesMenu.setEnabled(nonZeroSelection);
         addToProfileMenu.setEnabled(nonZeroSelection);
         /* === Visible/Invisible === */
-        boolean privileged = Ops.isPrivileged();
         enableDisableMenu.setVisible(SelfPermissions.canFreezeUnfreezePackages());
         forceStopMenu.setVisible(SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.FORCE_STOP_PACKAGES));
         clearDataCacheMenu.setVisible(SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.CLEAR_APP_USER_DATA)
                 || SelfPermissions.canClearAppCache());
         preventBackgroundMenu.setVisible(SelfPermissions.canModifyAppOpMode());
-        netPolicyMenu.setVisible(privileged);
+        netPolicyMenu.setVisible(SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_NETWORK_POLICY));
         blockUnblockTrackersMenu.setVisible(SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.CHANGE_COMPONENT_ENABLED_STATE));
     }
 

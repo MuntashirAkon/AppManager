@@ -20,7 +20,6 @@ import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.viewer.ExplorerActivity;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.details.manifest.ManifestViewerActivity;
@@ -28,8 +27,9 @@ import io.github.muntashirakon.AppManager.editor.CodeEditorActivity;
 import io.github.muntashirakon.AppManager.intercept.ActivityInterceptor;
 import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
 import io.github.muntashirakon.AppManager.scanner.ScannerActivity;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.PermissionUtils;
+import io.github.muntashirakon.AppManager.viewer.ExplorerActivity;
 
 public class FeatureController {
     @IntDef(flag = true, value = {
@@ -162,7 +162,7 @@ public class FeatureController {
                 // Only depends on flag
                 return (flags & key) != 0;
             case FEAT_INTERNET:
-                return (flags & key) != 0 && PermissionUtils.hasSelfPermission(Manifest.permission.INTERNET);
+                return (flags & key) != 0 && SelfPermissions.checkSelfPermission(Manifest.permission.INTERNET);
             case FEAT_LOG_VIEWER:
                 cn = getComponentName(key, LogViewerActivity.class);
                 break;

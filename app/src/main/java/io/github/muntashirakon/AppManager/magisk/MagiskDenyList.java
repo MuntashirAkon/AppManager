@@ -67,7 +67,7 @@ public class MagiskDenyList {
 
     @NonNull
     public static Collection<String> getProcesses(@NonNull String packageName) {
-        Runner.Result result = Runner.runCommand("magisk --denylist ls");
+        Runner.Result result = Runner.runCommand(new String[]{"magisk", "--denylist", "ls"});
         return MagiskUtils.parseProcesses(packageName, result);
     }
 

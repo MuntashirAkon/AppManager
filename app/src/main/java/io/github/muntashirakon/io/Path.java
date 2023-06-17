@@ -49,6 +49,7 @@ import java.util.Objects;
 import aosp.libcore.util.EmptyArray;
 import io.github.muntashirakon.AppManager.compat.StorageManagerCompat;
 import io.github.muntashirakon.AppManager.ipc.LocalServices;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.PermissionUtils;
@@ -101,7 +102,8 @@ public class Path implements Comparable<Path> {
             } else cards = new String[]{"/storage/emulated/" + userId};
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                 // Add Android/data and Android/obb to the exemption list
-                boolean canInstallApps = PermissionUtils.hasSelfPermission(Manifest.permission.REQUEST_INSTALL_PACKAGES);
+                boolean canInstallApps = SelfPermissions.checkSelfPermission(Manifest.permission.REQUEST_INSTALL_PACKAGES)
+                        || SelfPermissions.checkSelfPermission(Manifest.permission.INSTALL_PACKAGES);
                 for (String card : cards) {
                     EXCLUSIVE_ACCESS_PATHS.add(card + "/Android/data");
                     EXCLUSIVE_ACCESS_GRANTED.add(false);

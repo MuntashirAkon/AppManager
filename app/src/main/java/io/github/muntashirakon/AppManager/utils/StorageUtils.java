@@ -42,7 +42,6 @@ public class StorageUtils {
     @NonNull
     public static ArrayMap<String, Uri> getAllStorageLocations(@NonNull Context context) {
         ArrayMap<String, Uri> storageLocations = new ArrayMap<>(10);
-        @SuppressWarnings("deprecation")
         Path sdCard = Paths.get(Environment.getExternalStorageDirectory());
         addStorage(context.getString(R.string.external_storage), sdCard, storageLocations);
         getStorageEnv(context, storageLocations);
@@ -117,14 +116,13 @@ public class StorageUtils {
     }
 
     /**
-     * Get storages via StorageManager & reflection hacks, probably never works
+     * Get storages via StorageManager
      */
     private static void retrieveStorageManager(Context context, Map<String, Uri> storageLocations) {
         Set<StorageVolume> storageVolumes = new HashSet<>();
         int[] users = Users.getUsersIds();
         for (int user : users) {
             try {
-                // TODO: Fetch volume info using "mount" service
                 storageVolumes.addAll(Arrays.asList(StorageManagerCompat.getVolumeList(context, user, 0)));
             } catch (SecurityException ignore) {
             }

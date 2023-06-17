@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.compat;
 
+import static io.github.muntashirakon.io.IoUtils.DEFAULT_BUFFER_SIZE;
+
 import android.content.Context;
 import android.os.Build;
 import android.os.Handler;
@@ -24,9 +26,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.Locale;
 
 import dev.rikka.tools.refine.Refine;
-import io.github.muntashirakon.AppManager.utils.PermissionUtils;
-
-import static io.github.muntashirakon.io.IoUtils.DEFAULT_BUFFER_SIZE;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 
 // Copyright 2018 Fung Gwo <fythonx@gmail.com>
 // Copyright 2021 Muntashir Al-Islam
@@ -65,7 +65,8 @@ public final class StorageManagerCompat {
     @NonNull
     public static StorageVolume[] getVolumeList(@NonNull Context context, int userId, int flags)
             throws SecurityException {
-        if (userId != UserHandleHidden.myUserId() && !PermissionUtils.hasAccessToUsers()) {
+        if (userId != UserHandleHidden.myUserId()
+                && SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.INTERACT_ACROSS_USERS)) {
             return new StorageVolume[0];
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

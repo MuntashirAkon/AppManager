@@ -10,6 +10,7 @@ import android.os.UserHandleHidden;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresPermission;
 import androidx.collection.ArrayMap;
 
 import java.lang.annotation.Retention;
@@ -80,15 +81,12 @@ public final class NetworkPolicyManagerCompat {
     };
 
     @NetPolicy
-    public static int getUidPolicy(int uid) {
-        try {
-            return getNetPolicyManager().getUidPolicy(uid);
-        } catch (Throwable e) {
-            e.printStackTrace();
-            return 0;
-        }
+    @RequiresPermission(ManifestCompat.permission.MANAGE_NETWORK_POLICY)
+    public static int getUidPolicy(int uid) throws RemoteException {
+        return getNetPolicyManager().getUidPolicy(uid);
     }
 
+    @RequiresPermission(ManifestCompat.permission.MANAGE_NETWORK_POLICY)
     public static void setUidPolicy(int uid, int policies) throws RemoteException {
         if (UserHandleHidden.isApp(uid)) {
             getNetPolicyManager().setUidPolicy(uid, policies);
@@ -180,7 +178,7 @@ public final class NetworkPolicyManagerCompat {
         return readablePolicies;
     }
 
-    public static INetworkPolicyManager getNetPolicyManager() {
+    private static INetworkPolicyManager getNetPolicyManager() {
         return INetworkPolicyManager.Stub.asInterface(ProxyBinder.getService("netpolicy"));
     }
 }

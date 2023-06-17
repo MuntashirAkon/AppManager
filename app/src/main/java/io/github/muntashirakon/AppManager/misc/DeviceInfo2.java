@@ -12,6 +12,7 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.FeatureInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.SELinux;
 import android.os.UserHandleHidden;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -42,7 +43,6 @@ import java.util.Locale;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
-import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.users.UserInfo;
 import io.github.muntashirakon.AppManager.users.Users;
@@ -65,7 +65,7 @@ public class DeviceInfo2 implements LocalizedString {
     public final int minSdk = SystemProperties.getInt("ro.build.version.min_supported_target_sdk", 0);
     // Security
     public boolean hasRoot;
-    public int SELinux;
+    public int selinux;
     public String encryptionStatus;
     public final String patchLevel;
     public final Provider[] securityProviders = Security.getProviders();
@@ -117,7 +117,7 @@ public class DeviceInfo2 implements LocalizedString {
     @WorkerThread
     public void loadInfo() {
         hasRoot = RunnerUtils.isRootAvailable();
-        SELinux = getSelinuxStatus();
+        selinux = getSelinuxStatus();
         encryptionStatus = getEncryptionStatus();
         cpuHardware = getCpuHardware();
         availableProcessors = Runtime.getRuntime().availableProcessors();
@@ -167,8 +167,8 @@ public class DeviceInfo2 implements LocalizedString {
         // Security
         builder.append("\n").append(getTitleText(ctx, R.string.security)).append("\n");
         builder.append(getStyledKeyValue(ctx, R.string.root, String.valueOf(hasRoot))).append("\n");
-        if (SELinux != 2) {
-            builder.append(getStyledKeyValue(ctx, R.string.selinux, getString(SELinux == 1 ?
+        if (selinux != 2) {
+            builder.append(getStyledKeyValue(ctx, R.string.selinux, getString(selinux == 1 ?
                     R.string.enforcing : R.string.permissive))).append("\n");
         }
         builder.append(getStyledKeyValue(ctx, R.string.encryption, encryptionStatus)).append("\n");
@@ -187,7 +187,7 @@ public class DeviceInfo2 implements LocalizedString {
             builder.append(getStyledKeyValue(ctx, R.string.hardware, cpuHardware)).append("\n");
         }
         builder.append(getStyledKeyValue(ctx, R.string.support_architectures,
-                TextUtils.join(", ", supportedAbis))).append("\n")
+                        TextUtils.join(", ", supportedAbis))).append("\n")
                 .append(getStyledKeyValue(ctx, R.string.no_of_cores, String.format(Locale.getDefault(), "%d",
                         availableProcessors))).append("\n");
         // GPU info
@@ -337,9 +337,10 @@ public class DeviceInfo2 implements LocalizedString {
 
     @WorkerThread
     private int getSelinuxStatus() {
-        Runner.Result result = Runner.runCommand("getenforce");
-        if (result.isSuccessful()) {
-            if (result.getOutput().trim().equals("Enforcing")) return 1;
+        if (SELinux.isSELinuxEnabled()) {
+            if (SELinux.isSELinuxEnforced()) {
+                return 1;
+            }
             return 0;
         }
         return 2;

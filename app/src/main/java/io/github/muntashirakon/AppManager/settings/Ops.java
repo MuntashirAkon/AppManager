@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.settings;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -42,11 +43,11 @@ import io.github.muntashirakon.AppManager.ipc.LocalServices;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.NoOps;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -208,7 +209,8 @@ public class Ops {
         if (mode.equals("adb")) {
             mode = Ops.MODE_ADB_OVER_TCP;
         }
-        if ((MODE_ADB_OVER_TCP.equals(mode) || MODE_ADB_WIFI.equals(mode)) && !PermissionUtils.hasInternet()) {
+        if ((MODE_ADB_OVER_TCP.equals(mode) || MODE_ADB_WIFI.equals(mode))
+                && !SelfPermissions.checkSelfPermission(Manifest.permission.INTERNET)) {
             // ADB enabled but the INTERNET permission is not granted, replace current with auto.
             return MODE_AUTO;
         }
@@ -336,7 +338,7 @@ public class Ops {
             }
         }
         // Root not granted
-        if (!PermissionUtils.hasInternet()) {
+        if (!SelfPermissions.checkSelfPermission(Manifest.permission.INTERNET)) {
             // INTERNET permission is not granted, skip checking for ADB
             sIsAdb = false;
             return;
@@ -600,7 +602,7 @@ public class Ops {
             sIsRoot = sIsAdb = false;
             ThreadUtils.postOnMainThread(() -> UIUtils.displayLongToast(R.string.warning_working_on_system_mode));
         } else if (uid == SHELL_UID) { // ADB mode
-            if (!PermissionUtils.hasSelfOrRemotePermission(ManifestCompat.permission.GRANT_RUNTIME_PERMISSIONS)) {
+            if (!SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.GRANT_RUNTIME_PERMISSIONS)) {
                 // USB debugging is incomplete, revert back to no-root
                 sIsAdb = sIsSystem = sIsRoot = false;
                 return STATUS_FAILURE_ADB_NEED_MORE_PERMS;

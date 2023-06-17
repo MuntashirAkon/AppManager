@@ -340,6 +340,18 @@ public final class ApplicationInfoCompat {
         return (info.flags & ApplicationInfo.FLAG_TEST_ONLY) != 0;
     }
 
+    public static boolean isSuspended(@NonNull ApplicationInfo info) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return (info.flags & ApplicationInfo.FLAG_SUSPENDED) != 0;
+        }
+        // Not supported
+        return false;
+    }
+
+    public static boolean isHidden(@NonNull ApplicationInfo info) {
+        return (getPrivateFlags(info) & PRIVATE_FLAG_HIDDEN) != 0;
+    }
+
     public static boolean isStaticSharedLibrary(@NonNull ApplicationInfo info) {
         // Android 8+
         return (getPrivateFlags(info) & PRIVATE_FLAG_STATIC_SHARED_LIBRARY) != 0;

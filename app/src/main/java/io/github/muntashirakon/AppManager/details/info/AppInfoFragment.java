@@ -8,7 +8,6 @@ import static io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat.HI
 import static io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat.HIDDEN_API_ENFORCEMENT_ENABLED;
 import static io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat.HIDDEN_API_ENFORCEMENT_JUST_WARN;
 import static io.github.muntashirakon.AppManager.compat.ManifestCompat.permission.TERMUX_RUN_COMMAND;
-import static io.github.muntashirakon.AppManager.utils.PermissionUtils.hasDumpPermission;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.displayLongToast;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.displayShortToast;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getBitmapFromDrawable;
@@ -102,6 +101,7 @@ import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
+import io.github.muntashirakon.AppManager.compat.DeviceIdleManagerCompat;
 import io.github.muntashirakon.AppManager.compat.DomainVerificationManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
@@ -144,6 +144,7 @@ import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 import io.github.muntashirakon.AppManager.utils.IntentUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
@@ -319,8 +320,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             menu.findItem(R.id.action_magisk_hide).setVisible(MagiskHide.available());
             menu.findItem(R.id.action_magisk_denylist).setVisible(MagiskDenyList.available());
             menu.findItem(R.id.action_open_in_termux).setVisible(Ops.isRoot());
-            menu.findItem(R.id.action_battery_opt).setVisible(Ops.isPrivileged());
-            menu.findItem(R.id.action_net_policy).setVisible(Ops.isPrivileged());
+            menu.findItem(R.id.action_battery_opt).setVisible(SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.DEVICE_POWER));
+            menu.findItem(R.id.action_net_policy).setVisible(SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_NETWORK_POLICY));
             menu.findItem(R.id.action_install).setVisible(Users.getUsersIds().length > 1 && SelfPermissions.canInstallExistingPackages());
             menu.findItem(R.id.action_optimize).setVisible(Ops.isPrivileged() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N);
         }
@@ -392,13 +393,13 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 dialogFragment.show(mActivity.getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
             });
         } else if (itemId == R.id.action_open_in_termux) {
-            if (PermissionUtils.hasTermuxPermission()) {
+            if (SelfPermissions.checkSelfPermission(TERMUX_RUN_COMMAND)) {
                 openInTermux();
             } else requestPerm.launch(TERMUX_RUN_COMMAND, granted -> {
                 if (granted) openInTermux();
             });
         } else if (itemId == R.id.action_run_in_termux) {
-            if (PermissionUtils.hasTermuxPermission()) {
+            if (SelfPermissions.checkSelfPermission(TERMUX_RUN_COMMAND)) {
                 runInTermux();
             } else requestPerm.launch(TERMUX_RUN_COMMAND, granted -> {
                 if (granted) runInTermux();
@@ -410,17 +411,27 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             if (mainModel == null) return true;
             displayMagiskDenyListDialog();
         } else if (itemId == R.id.action_battery_opt) {
-            if (hasDumpPermission()) {
+            if (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.DEVICE_POWER)) {
                 new MaterialAlertDialogBuilder(mActivity)
                         .setTitle(R.string.battery_optimization)
                         .setMessage(R.string.choose_what_to_do)
                         .setPositiveButton(R.string.enable, (dialog, which) -> {
-                            Runner.runCommand(new String[]{"dumpsys", "deviceidle", "whitelist", "-" + mPackageName});
-                            refreshDetails();
+                            try {
+                                DeviceIdleManagerCompat.enableBatteryOptimization(mPackageName);
+                                UIUtils.displayShortToast(R.string.done);
+                                refreshDetails();
+                            } catch (RemoteException e) {
+                                UIUtils.displayShortToast(R.string.failed);
+                            }
                         })
                         .setNegativeButton(R.string.disable, (dialog, which) -> {
-                            Runner.runCommand(new String[]{"dumpsys", "deviceidle", "whitelist", "+" + mPackageName});
-                            refreshDetails();
+                            try {
+                                DeviceIdleManagerCompat.disableBatteryOptimization(mPackageName);
+                                UIUtils.displayShortToast(R.string.done);
+                                refreshDetails();
+                            } catch (RemoteException e) {
+                                UIUtils.displayShortToast(R.string.failed);
+                            }
                         })
                         .show();
             } else {
@@ -434,7 +445,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             ArrayMap<Integer, String> netPolicyMap = NetworkPolicyManagerCompat.getAllReadablePolicies(mActivity);
             Integer[] polices = new Integer[netPolicyMap.size()];
             CharSequence[] policyStrings = new String[netPolicyMap.size()];
-            Integer selectedPolicies = NetworkPolicyManagerCompat.getUidPolicy(mApplicationInfo.uid);
+            int selectedPolicies = ExUtils.requireNonNullElse(() -> NetworkPolicyManagerCompat.getUidPolicy(mApplicationInfo.uid), 0);
             for (int i = 0; i < netPolicyMap.size(); ++i) {
                 polices[i] = netPolicyMap.keyAt(i);
                 policyStrings[i] = netPolicyMap.valueAt(i);
@@ -689,14 +700,14 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 SearchableItemsDialogBuilder<String> builder = new SearchableItemsDialogBuilder<>(mActivity, new ArrayList<>(tagCloud.hostsToOpen.keySet()))
                         .setTitle(R.string.title_domains_supported_by_the_app)
                         .setNegativeButton(R.string.close, null);
-                if (PermissionUtils.hasSelfOrRemotePermission(ManifestCompat.permission.UPDATE_DOMAIN_VERIFICATION_USER_SELECTION)) {
+                if (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.UPDATE_DOMAIN_VERIFICATION_USER_SELECTION)) {
                     // Enable/disable directly from the app
                     builder.setPositiveButton(tagCloud.canOpenLinks ? R.string.disable : R.string.enable,
                             (dialog, which) -> ThreadUtils.postOnBackgroundThread(() -> {
                                 try {
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                                        DomainVerificationManagerCompat
-                                                .setDomainVerificationLinkHandlingAllowed(mPackageName, !tagCloud.canOpenLinks, mainModel.getUserHandle());
+                                        DomainVerificationManagerCompat.setDomainVerificationLinkHandlingAllowed(
+                                                mPackageName, !tagCloud.canOpenLinks, mainModel.getUserHandle());
                                     }
                                     ThreadUtils.postOnMainThread(() -> {
                                         UIUtils.displayShortToast(R.string.done);
@@ -821,16 +832,23 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             });
         }
         if (!tagCloud.isBatteryOptimized) {
-            addChip(R.string.no_battery_optimization, ColorCodes.getAppNoBatteryOptimizationIndicatorColor(mActivity))
-                    .setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
-                            .setTitle(R.string.battery_optimization)
-                            .setMessage(R.string.enable_battery_optimization)
-                            .setNegativeButton(R.string.no, null)
-                            .setPositiveButton(R.string.yes, (dialog, which) -> {
-                                Runner.runCommand(new String[]{"dumpsys", "deviceidle", "whitelist", "-" + mPackageName});
+            Chip chip = addChip(R.string.no_battery_optimization, ColorCodes.getAppNoBatteryOptimizationIndicatorColor(mActivity));
+            if (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.DEVICE_POWER)) {
+                chip.setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
+                        .setTitle(R.string.battery_optimization)
+                        .setMessage(R.string.enable_battery_optimization)
+                        .setNegativeButton(R.string.no, null)
+                        .setPositiveButton(R.string.yes, (dialog, which) -> {
+                            try {
+                                DeviceIdleManagerCompat.enableBatteryOptimization(mPackageName);
+                                UIUtils.displayShortToast(R.string.done);
                                 refreshDetails();
-                            })
-                            .show());
+                            } catch (RemoteException e) {
+                                UIUtils.displayShortToast(R.string.failed);
+                            }
+                        })
+                        .show());
+            }
         }
         if (tagCloud.netPolicies > 0) {
             String[] readablePolicies = NetworkPolicyManagerCompat.getReadablePolicies(mActivity, tagCloud.netPolicies)

@@ -356,7 +356,7 @@ public class LogViewerViewModel extends AndroidViewModel {
             }
             String dmesg = null;
             if (includeDmesg) {
-                Runner.Result result = Runner.runCommand("dmesg");
+                Runner.Result result = Runner.runCommand(new String[]{"dmesg"});
                 if (result.isSuccessful()) {
                     dmesg = result.getOutput();
                     if (dmesg.length() == 0) {

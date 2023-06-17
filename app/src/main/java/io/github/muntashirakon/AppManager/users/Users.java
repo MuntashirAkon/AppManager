@@ -116,6 +116,10 @@ public final class Users {
 
     @IntRange(from = 0)
     public static int getSelfOrRemoteUid() {
-        return ExUtils.requireNonNullElse(() -> LocalServices.getAmService().getUid(), Process.myUid());
+        try {
+            return LocalServices.getAmService().getUid();
+        } catch (RemoteException e) {
+            return Process.myUid();
+        }
     }
 }

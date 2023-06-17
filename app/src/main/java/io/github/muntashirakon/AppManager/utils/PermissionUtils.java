@@ -9,56 +9,14 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Process;
-import android.os.RemoteException;
-import android.os.UserHandleHidden;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
-import io.github.muntashirakon.AppManager.AppManager;
-import io.github.muntashirakon.AppManager.compat.ManifestCompat;
-import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
-import io.github.muntashirakon.AppManager.compat.PermissionCompat;
-import io.github.muntashirakon.AppManager.settings.Ops;
-import io.github.muntashirakon.AppManager.users.Users;
-
 @SuppressWarnings("BooleanMethodIsAlwaysInverted")
 public final class PermissionUtils {
     public static boolean hasDumpPermission() {
-        Context context = AppManager.getContext();
-        if (hasSelfPermission(Manifest.permission.DUMP)) {
-            return true;
-        }
-        if (Ops.isPrivileged()) {
-            try {
-                PermissionCompat.grantPermission(context.getPackageName(), Manifest.permission.DUMP,
-                        UserHandleHidden.myUserId());
-                return true;
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        }
-        return false;
-    }
-
-    public static boolean hasAccessToUsers() {
-        Context context = AppManager.getContext();
-        if (hasSelfPermission(ManifestCompat.permission.INTERACT_ACROSS_USERS)
-                || hasSelfPermission(ManifestCompat.permission.MANAGE_USERS)) {
-            return true;
-        }
-        if (Ops.isPrivileged()) {
-            try {
-                PermissionCompat.grantPermission(
-                        context.getPackageName(),
-                        ManifestCompat.permission.INTERACT_ACROSS_USERS,
-                        UserHandleHidden.myUserId());
-                return true;
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        }
-        return false;
+        return hasSelfPermission(Manifest.permission.DUMP);
     }
 
     public static boolean hasStoragePermission() {
@@ -69,14 +27,6 @@ public final class PermissionUtils {
             return Environment.isExternalStorageManager();
         }
         return hasSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-    }
-
-    public static boolean hasTermuxPermission() {
-        return hasSelfPermission(ManifestCompat.permission.TERMUX_RUN_COMMAND);
-    }
-
-    public static boolean hasInternet() {
-        return PermissionUtils.hasSelfPermission(Manifest.permission.INTERNET);
     }
 
     public static boolean hasSelfPermission(String permissionName) {
@@ -100,21 +50,5 @@ public final class PermissionUtils {
                     == PackageManager.PERMISSION_GRANTED;
         }
         return mode == AppOpsManager.MODE_ALLOWED;
-    }
-
-    public static boolean hasSelfOrRemotePermission(@NonNull String permissionName) {
-        int uid = Users.getSelfOrRemoteUid();
-        if (uid == 0) {
-            // Root UID has all the permissions granted
-            return true;
-        }
-        if (uid != Process.myUid()) {
-            try {
-                return PackageManagerCompat.getPackageManager().checkUidPermission(permissionName, uid)
-                        == PackageManager.PERMISSION_GRANTED;
-            } catch (RemoteException ignore) {
-            }
-        }
-        return hasSelfPermission(permissionName);
     }
 }

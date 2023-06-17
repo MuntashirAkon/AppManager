@@ -35,6 +35,8 @@ import java.util.Objects;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
+import io.github.muntashirakon.AppManager.compat.DeviceIdleManagerCompat;
+import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.crypto.Crypto;
@@ -58,6 +60,7 @@ import io.github.muntashirakon.AppManager.rules.struct.RuleEntry;
 import io.github.muntashirakon.AppManager.rules.struct.SsaidRule;
 import io.github.muntashirakon.AppManager.rules.struct.UriGrantRule;
 import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.ssaid.SsaidSettings;
 import io.github.muntashirakon.AppManager.uri.UriManager;
@@ -557,16 +560,22 @@ class RestoreOp implements Closeable {
         AppOpsManagerCompat appOpsManager = new AppOpsManagerCompat();
         INotificationManager notificationManager = INotificationManager.Stub.asInterface(ProxyBinder.getService(Context.NOTIFICATION_SERVICE));
         boolean magiskHideAvailable = MagiskHide.available();
+        boolean canModifyAppOpMode = SelfPermissions.canModifyAppOpMode();
+        boolean canChangeNetPolicy = SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_NETWORK_POLICY);
         for (RuleEntry entry : entries) {
             try {
                 switch (entry.type) {
                     case APP_OP:
-                        appOpsManager.setMode(Integer.parseInt(entry.name), packageInfo.applicationInfo.uid,
-                                packageName, ((AppOpRule) entry).getMode());
+                        if (canModifyAppOpMode) {
+                            appOpsManager.setMode(Integer.parseInt(entry.name), packageInfo.applicationInfo.uid,
+                                    packageName, ((AppOpRule) entry).getMode());
+                        }
                         break;
                     case NET_POLICY:
-                        NetworkPolicyManagerCompat.setUidPolicy(packageInfo.applicationInfo.uid,
-                                ((NetPolicyRule) entry).getPolicies());
+                        if (canChangeNetPolicy) {
+                            NetworkPolicyManagerCompat.setUidPolicy(packageInfo.applicationInfo.uid,
+                                    ((NetPolicyRule) entry).getPolicies());
+                        }
                         break;
                     case PERMISSION: {
                         PermissionRule permissionRule = (PermissionRule) entry;
@@ -582,7 +591,9 @@ class RestoreOp implements Closeable {
                         break;
                     }
                     case BATTERY_OPT:
-                        Runner.runCommand(new String[]{"dumpsys", "deviceidle", "whitelist", "+" + packageName});
+                        if (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.DEVICE_POWER)) {
+                            DeviceIdleManagerCompat.disableBatteryOptimization(packageName);
+                        }
                         break;
                     case MAGISK_HIDE: {
                         MagiskHideRule magiskHideRule = (MagiskHideRule) entry;

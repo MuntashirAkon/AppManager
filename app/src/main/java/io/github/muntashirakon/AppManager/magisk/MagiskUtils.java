@@ -55,11 +55,16 @@ public class MagiskUtils {
     private static List<String> systemlessPaths;
 
     @NonNull
-    public static List<String> getSystemlessPaths() {
+    private static List<String> getSystemlessPaths() {
         if (systemlessPaths == null) {
             systemlessPaths = new ArrayList<>();
+            Path modDir = getModDir();
+            if (!modDir.canRead()) {
+                // No permission or no-magisk
+                return Collections.emptyList();
+            }
             // Get module paths
-            Path[] modulePaths = getModDir().listFiles(Path::isDirectory);
+            Path[] modulePaths = modDir.listFiles(Path::isDirectory);
             // Scan module paths
             for (Path file : modulePaths) {
                 // Get system apk files
@@ -77,7 +82,7 @@ public class MagiskUtils {
         return systemlessPaths;
     }
 
-    public static boolean isSystemlessPath(String path) {
+    public static boolean isSystemlessPath(@NonNull String path) {
         return getSystemlessPaths().contains(path);
     }
 

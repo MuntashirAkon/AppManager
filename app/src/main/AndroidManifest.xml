@@ -33,6 +33,9 @@
         android:name="android.permission.DELETE_PACKAGES"
         tools:ignore="ProtectedPermissions" />
     <uses-permission
+        android:name="android.permission.DEVICE_POWER"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission
         android:name="android.permission.DUMP"
         tools:ignore="ProtectedPermissions" />
     <uses-permission
@@ -79,6 +82,9 @@
     <uses-permission
         android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
+    <uses-permission
+        android:name="android.permission.MANAGE_NETWORK_POLICY"
+        tools:ignore="ProtectedPermissions" />
     <uses-permission
         android:name="android.permission.MANAGE_USERS"
         tools:ignore="ProtectedPermissions" />

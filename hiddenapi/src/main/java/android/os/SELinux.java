@@ -8,6 +8,20 @@ import misc.utils.HiddenUtil;
 
 public class SELinux {
     /**
+     * Determine whether SELinux is disabled or enabled.
+     *
+     * @return a boolean indicating whether SELinux is enabled.
+     */
+    public static final native boolean isSELinuxEnabled();
+
+    /**
+     * Determine whether SELinux is permissive or enforcing.
+     *
+     * @return a boolean indicating whether SELinux is enforcing.
+     */
+    public static final native boolean isSELinuxEnforced();
+
+    /**
      * Change the security context of an existing file object.
      *
      * @param path    representing the path of file object to relabel.
