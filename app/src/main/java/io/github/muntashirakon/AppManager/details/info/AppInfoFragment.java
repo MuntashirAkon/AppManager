@@ -194,8 +194,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private final ExecutorService executor = Executors.newFixedThreadPool(3);
 
     private boolean isExternalApk;
-    private boolean isRootEnabled;
-    private boolean isAdbEnabled;
 
     @GuardedBy("mListItems")
     private final List<ListItem> mListItems = new ArrayList<>();
@@ -226,8 +224,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         mainModel = mActivity.model;
         if (mainModel == null) return;
         model.setMainModel(mainModel);
-        isRootEnabled = Ops.isRoot();
-        isAdbEnabled = Ops.isAdb();
         mPackageManager = mActivity.getPackageManager();
         // Swipe refresh
         mSwipeRefresh = view.findViewById(R.id.swipe_refresh);
@@ -1124,14 +1120,15 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     });
                 }
             }
-            if (Ops.isPrivileged() || accessibilityServiceRunning) {
+            if (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.CLEAR_APP_USER_DATA)
+                    || accessibilityServiceRunning) {
                 // Clear data
                 addToHorizontalLayout(R.string.clear_data, R.drawable.ic_clear_data)
                         .setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
                                 .setTitle(mPackageLabel)
                                 .setMessage(R.string.clear_data_message)
                                 .setPositiveButton(R.string.clear, (dialog, which) -> {
-                                    if (isAdbEnabled || isRootEnabled) {
+                                    if (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.CLEAR_APP_USER_DATA)) {
                                         ThreadUtils.postOnBackgroundThread(() -> {
                                             if (PackageManagerCompat.clearApplicationUserData(mPackageName, mainModel.getUserHandle())) {
                                                 ThreadUtils.postOnMainThread(this::refreshDetails);
@@ -1151,10 +1148,12 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                 })
                                 .setNegativeButton(R.string.cancel, null)
                                 .show());
+            }
+            if (SelfPermissions.canClearAppCache() || accessibilityServiceRunning) {
                 // Clear cache
                 addToHorizontalLayout(R.string.clear_cache, R.drawable.ic_clear_cache)
                         .setOnClickListener(v -> {
-                            if (isAdbEnabled || isRootEnabled) {
+                            if (SelfPermissions.canClearAppCache()) {
                                 ThreadUtils.postOnBackgroundThread(() -> {
                                     if (PackageManagerCompat.deleteApplicationCacheFilesAsUser(mPackageName, mainModel.getUserHandle())) {
                                         ThreadUtils.postOnMainThread(this::refreshDetails);

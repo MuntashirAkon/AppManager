@@ -85,6 +85,13 @@ public class SelfPermissions {
         return canFreezeUnfreeze;
     }
 
+    public static boolean canClearAppCache() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            return checkSelfOrRemotePermission(ManifestCompat.permission.INTERNAL_DELETE_CACHE_FILES);
+        }
+        return checkSelfOrRemotePermission(Manifest.permission.DELETE_CACHE_FILES);
+    }
+
     public static boolean checkCrossUserPermission(@UserIdInt int userId, boolean requireFullPermission) {
         if (userId < 0) {
             throw new IllegalArgumentException("Invalid userId " + userId);

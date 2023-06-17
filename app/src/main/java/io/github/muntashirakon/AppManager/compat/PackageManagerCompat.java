@@ -54,12 +54,10 @@ import java.util.Objects;
 import dev.rikka.tools.refine.Refine;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
-import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.BroadcastUtils;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
-import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
 public final class PackageManagerCompat {
@@ -384,6 +382,10 @@ public final class PackageManagerCompat {
     }
 
     @SuppressWarnings("deprecation")
+    @RequiresPermission(anyOf = {
+            Manifest.permission.INSTALL_PACKAGES,
+            "com.android.permission.INSTALL_EXISTING_PACKAGES"
+    })
     public static int installExistingPackageAsUser(@NonNull String packageName, @UserIdInt int userId, int installFlags,
                                                    int installReason, @Nullable List<String> whiteListedPermissions)
             throws RemoteException {
@@ -396,6 +398,7 @@ public final class PackageManagerCompat {
         return getPackageManager().installExistingPackageAsUser(packageName, userId);
     }
 
+    @RequiresPermission(ManifestCompat.permission.CLEAR_APP_USER_DATA)
     public static void clearApplicationUserData(@NonNull UserPackagePair pair) throws AndroidException {
         IPackageManager pm = getPackageManager();
         ClearDataObserver obs = new ClearDataObserver();
@@ -404,7 +407,7 @@ public final class PackageManagerCompat {
         synchronized (obs) {
             while (!obs.isCompleted()) {
                 try {
-                    obs.wait(60_000);
+                    obs.wait(500);
                 } catch (InterruptedException ignore) {
                 }
             }
@@ -417,6 +420,7 @@ public final class PackageManagerCompat {
         }
     }
 
+    @RequiresPermission(ManifestCompat.permission.CLEAR_APP_USER_DATA)
     public static boolean clearApplicationUserData(@NonNull String packageName, @UserIdInt int userId) {
         try {
             clearApplicationUserData(new UserPackagePair(packageName, userId));
@@ -427,6 +431,10 @@ public final class PackageManagerCompat {
         }
     }
 
+    @RequiresPermission(allOf = {
+            Manifest.permission.DELETE_CACHE_FILES,
+            "android.permission.INTERNAL_DELETE_CACHE_FILES"
+    })
     public static void deleteApplicationCacheFilesAsUser(UserPackagePair pair) throws AndroidException {
         IPackageManager pm = getPackageManager();
         ClearDataObserver obs = new ClearDataObserver();
@@ -437,7 +445,7 @@ public final class PackageManagerCompat {
         synchronized (obs) {
             while (!obs.isCompleted()) {
                 try {
-                    obs.wait(60_000);
+                    obs.wait(500);
                 } catch (InterruptedException ignore) {
                 }
             }
@@ -450,6 +458,10 @@ public final class PackageManagerCompat {
         }
     }
 
+    @RequiresPermission(allOf = {
+            Manifest.permission.DELETE_CACHE_FILES,
+            "android.permission.INTERNAL_DELETE_CACHE_FILES"
+    })
     public static boolean deleteApplicationCacheFilesAsUser(String packageName, int userId) {
         try {
             deleteApplicationCacheFilesAsUser(new UserPackagePair(packageName, userId));
@@ -474,27 +486,42 @@ public final class PackageManagerCompat {
     }
 
     @SuppressWarnings("deprecation")
+    @RequiresPermission(Manifest.permission.CLEAR_APP_CACHE)
     public static void freeStorageAndNotify(@Nullable String volumeUuid,
                                             long freeStorageSize,
                                             @StorageManagerCompat.AllocateFlags int storageFlags)
             throws RemoteException {
         IPackageManager pm;
         ClearDataObserver obs = new ClearDataObserver();
-        if (PermissionUtils.hasSelfPermission(Manifest.permission.CLEAR_APP_CACHE)) {
-            // Clear cache using unprivileged method: Mostly applicable for Android Lollipop
+        if (SelfPermissions.checkSelfPermission(Manifest.permission.CLEAR_APP_CACHE)) {
+            // Clear cache using unprivileged method: Special case for Android Lollipop
             pm = getUnprivilegedPackageManager();
-        } else { // Use privileged mode
-            if (Ops.isAdb() && Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
-                // IPackageManager#freeStorageAndNotify cannot be used before Android Oreo because Shell does not have
-                // the permission android.permission.CLEAR_APP_CACHE
-                for (int userId : Users.getUsersIds()) {
-                    for (ApplicationInfo info : getInstalledApplications(MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId)) {
-                        deleteApplicationCacheFilesAsUser(info.packageName, userId);
-                    }
+        } else if (SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.CLEAR_APP_CACHE)) { // Use privileged mode
+            pm = getPackageManager();
+        } else { // Clear one by one
+            // Special case: IPackageManager#freeStorageAndNotify cannot be used before Android Oreo because Shell does
+            // not have the permission android.permission.CLEAR_APP_CACHE
+            boolean hasPermission;
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.P) {
+                hasPermission = SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.INTERNAL_DELETE_CACHE_FILES);
+            } else hasPermission = SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.DELETE_CACHE_FILES);
+            if (!hasPermission) {
+                // Does not have enough permission
+                return;
+            }
+            if (!SelfPermissions.checkCrossUserPermission(UserHandleHidden.myUserId() + 1, true)) {
+                int userId = UserHandleHidden.myUserId();
+                for (ApplicationInfo info : getInstalledApplications(MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId)) {
+                    deleteApplicationCacheFilesAsUser(info.packageName, userId);
                 }
                 return;
             }
-            pm = getPackageManager();
+            for (int userId : Users.getUsersIds()) {
+                for (ApplicationInfo info : getInstalledApplications(MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId)) {
+                    deleteApplicationCacheFilesAsUser(info.packageName, userId);
+                }
+            }
+            return;
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             pm.freeStorageAndNotify(volumeUuid, freeStorageSize, storageFlags, obs);
@@ -507,7 +534,7 @@ public final class PackageManagerCompat {
         synchronized (obs) {
             while (!obs.isCompleted()) {
                 try {
-                    obs.wait(60_000);
+                    obs.wait(1_000);
                 } catch (InterruptedException ignore) {
                 }
             }

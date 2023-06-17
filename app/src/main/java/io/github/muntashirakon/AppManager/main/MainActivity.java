@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.main;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -516,10 +517,11 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
         boolean privileged = Ops.isPrivileged();
         enableDisableMenu.setVisible(SelfPermissions.canFreezeUnfreezePackages());
         forceStopMenu.setVisible(SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.FORCE_STOP_PACKAGES));
-        clearDataCacheMenu.setVisible(privileged);
-        preventBackgroundMenu.setVisible(privileged);
+        clearDataCacheMenu.setVisible(SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.CLEAR_APP_USER_DATA)
+                || SelfPermissions.canClearAppCache());
+        preventBackgroundMenu.setVisible(SelfPermissions.canModifyAppOpMode());
         netPolicyMenu.setVisible(privileged);
-        blockUnblockTrackersMenu.setVisible(privileged);
+        blockUnblockTrackersMenu.setVisible(SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.CHANGE_COMPONENT_ENABLED_STATE));
     }
 
     @Override

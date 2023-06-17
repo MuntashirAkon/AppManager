@@ -24,6 +24,9 @@
         android:name="android.permission.CLEAR_APP_CACHE"
         tools:ignore="ProtectedPermissions" />
     <uses-permission
+        android:name="android.permission.CLEAR_APP_USER_DATA"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission
         android:name="android.permission.DELETE_CACHE_FILES"
         tools:ignore="ProtectedPermissions" />
     <uses-permission
@@ -62,6 +65,9 @@
         tools:ignore="ProtectedPermissions" />
     <uses-permission
         android:name="android.permission.INTERACT_ACROSS_USERS_FULL"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission
+        android:name="android.permission.INTERNAL_DELETE_CACHE_FILES"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission

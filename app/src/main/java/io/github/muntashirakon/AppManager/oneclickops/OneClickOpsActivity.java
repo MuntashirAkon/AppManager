@@ -6,6 +6,7 @@ import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpMode
 import static io.github.muntashirakon.AppManager.utils.PackageUtils.getAppOpNames;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -38,6 +39,7 @@ import io.github.muntashirakon.AppManager.apk.behavior.DexOptimizationDialog;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
+import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
@@ -137,7 +139,7 @@ public class OneClickOpsActivity extends BaseActivity {
         mItemCreator.addItemWithTitleSubtitle(getString(R.string.clear_data_from_uninstalled_apps),
                         getString(R.string.clear_data_from_uninstalled_apps_description))
                 .setOnClickListener(v -> {
-                    if (!Ops.isPrivileged()) {
+                    if (!SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.CLEAR_APP_USER_DATA)) {
                         UIUtils.displayShortToast(R.string.only_works_in_root_or_adb_mode);
                         return;
                     }
@@ -149,7 +151,8 @@ public class OneClickOpsActivity extends BaseActivity {
         mItemCreator.addItemWithTitleSubtitle(getString(R.string.trim_caches_in_all_apps),
                         getString(R.string.trim_caches_in_all_apps_description))
                 .setOnClickListener(v -> {
-                    if (!Ops.isPrivileged()) {
+                    if (!SelfPermissions.checkSelfPermission(Manifest.permission.CLEAR_APP_CACHE)
+                            && !SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.CLEAR_APP_CACHE)) {
                         UIUtils.displayShortToast(R.string.only_works_in_root_or_adb_mode);
                         return;
                     }
