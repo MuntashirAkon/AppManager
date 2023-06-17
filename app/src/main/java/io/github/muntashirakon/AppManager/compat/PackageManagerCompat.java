@@ -509,7 +509,7 @@ public final class PackageManagerCompat {
                 // Does not have enough permission
                 return;
             }
-            if (!SelfPermissions.checkCrossUserPermission(UserHandleHidden.myUserId() + 1, true)) {
+            if (!SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.INTERACT_ACROSS_USERS_FULL)) {
                 int userId = UserHandleHidden.myUserId();
                 for (ApplicationInfo info : getInstalledApplications(MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId)) {
                     deleteApplicationCacheFilesAsUser(info.packageName, userId);

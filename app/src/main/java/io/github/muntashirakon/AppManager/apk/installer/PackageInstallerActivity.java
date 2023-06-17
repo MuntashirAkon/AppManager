@@ -64,6 +64,7 @@ import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkChooser;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
+import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -343,7 +344,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
     private void launchInstallService() {
         // Select user
         if (Prefs.Installer.displayUsers() && Users.getAllUserIds().length > 1
-                && SelfPermissions.checkCrossUserPermission(UserHandleHidden.myUserId() + 1, true)) {
+                && SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.INTERACT_ACROSS_USERS_FULL)) {
             List<UserInfo> users = model.getUsers();
             if (users != null && users.size() > 1) {
                 String[] userNames = new String[users.size() + 1];

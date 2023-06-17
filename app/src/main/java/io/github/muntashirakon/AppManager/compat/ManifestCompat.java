@@ -13,6 +13,8 @@ public final class ManifestCompat {
         @RequiresApi(Build.VERSION_CODES.Q)
         public static final String ADJUST_RUNTIME_PERMISSIONS_POLICY = "android.permission.ADJUST_RUNTIME_PERMISSIONS_POLICY";
         public static final String CLEAR_APP_USER_DATA = "android.permission.CLEAR_APP_USER_DATA";
+        @RequiresApi(Build.VERSION_CODES.N)
+        public static final String CREATE_USERS = "android.permission.CREATE_USERS";
         public static final String FORCE_STOP_PACKAGES = "android.permission.FORCE_STOP_PACKAGES";
         public static final String GET_APP_OPS_STATS = "android.permission.GET_APP_OPS_STATS";
         @RequiresApi(Build.VERSION_CODES.TIRAMISU)

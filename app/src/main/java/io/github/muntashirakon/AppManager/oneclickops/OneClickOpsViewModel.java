@@ -30,6 +30,7 @@ import java.util.concurrent.Future;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
+import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.compat.StorageManagerCompat;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
@@ -113,7 +114,7 @@ public class OneClickOpsViewModel extends AndroidViewModel {
                 this.trackerCount.postValue(Collections.emptyList());
                 return;
             }
-            boolean crossUserPermission = SelfPermissions.checkCrossUserPermission(1001, false);
+            boolean crossUserPermission = SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.INTERACT_ACROSS_USERS);
             boolean isShell = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && Users.getSelfOrRemoteUid() == Ops.SHELL_UID;
             List<ItemCount> trackerCounts = new ArrayList<>();
             HashSet<String> packageNames = new HashSet<>();
@@ -164,7 +165,7 @@ public class OneClickOpsViewModel extends AndroidViewModel {
                 this.componentCount.postValue(new Pair<>(Collections.emptyList(), signatures));
                 return;
             }
-            boolean crossUserPermission = SelfPermissions.checkCrossUserPermission(1001, false);
+            boolean crossUserPermission = SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.INTERACT_ACROSS_USERS);
             boolean isShell = Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && Users.getSelfOrRemoteUid() == Ops.SHELL_UID;
             List<ItemCount> componentCounts = new ArrayList<>();
             HashSet<String> packageNames = new HashSet<>();

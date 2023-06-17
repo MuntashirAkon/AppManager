@@ -9,7 +9,6 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Build;
-import android.os.UserHandleHidden;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
@@ -18,6 +17,7 @@ import androidx.annotation.StyleRes;
 
 import java.io.File;
 
+import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.apk.signing.SigSchemes;
 import io.github.muntashirakon.AppManager.apk.signing.Signer;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
@@ -329,6 +329,9 @@ public final class Prefs {
 
         @NonNull
         public static String getInstallerPackageName() {
+            if (!SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.INSTALL_PACKAGES)) {
+                return BuildConfig.APPLICATION_ID;
+            }
             return AppPref.getString(AppPref.PrefKey.PREF_INSTALLER_INSTALLER_APP_STR);
         }
 
@@ -437,7 +440,6 @@ public final class Prefs {
     public static final class Misc {
         @Nullable
         public static int[] getSelectedUsers() {
-            if (!Ops.isPrivileged()) return null;
             String usersStr = AppPref.getString(AppPref.PrefKey.PREF_SELECTED_USERS_STR);
             if ("".equals(usersStr)) return null;
             String[] usersSplitStr = usersStr.split(",");
@@ -449,7 +451,7 @@ public final class Prefs {
         }
 
         public static void setSelectedUsers(@Nullable int[] users) {
-            if (users == null || !Ops.isPrivileged()) {
+            if (users == null) {
                 AppPref.set(AppPref.PrefKey.PREF_SELECTED_USERS_STR, "");
                 return;
             }
