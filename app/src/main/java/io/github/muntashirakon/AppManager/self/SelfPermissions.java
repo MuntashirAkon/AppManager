@@ -97,7 +97,7 @@ public class SelfPermissions {
             throw new IllegalArgumentException("Invalid userId " + userId);
         }
         int callingUid = Users.getSelfOrRemoteUid();
-        if (callingUid == Ops.ROOT_UID || callingUid == Ops.SYSTEM_UID || callingUid == Ops.SHELL_UID) {
+        if (isSystemOrRootOrShell(callingUid)) {
             return true;
         }
         if (userId == UserHandleHidden.getUserId(callingUid)) {
@@ -108,6 +108,14 @@ public class SelfPermissions {
         }
         return checkSelfOrRemotePermission(ManifestCompat.permission.INTERACT_ACROSS_USERS_FULL)
                 || checkSelfOrRemotePermission(ManifestCompat.permission.INTERACT_ACROSS_USERS);
+    }
+
+    public static boolean isSystemOrRootOrShell() {
+        return isSystemOrRootOrShell(Users.getSelfOrRemoteUid());
+    }
+
+    private static boolean isSystemOrRootOrShell(int callingUid) {
+        return callingUid == Ops.ROOT_UID || callingUid == Ops.SYSTEM_UID || callingUid == Ops.SHELL_UID;
     }
 
     public static boolean checkSelfOrRemotePermission(@NonNull String permissionName) {

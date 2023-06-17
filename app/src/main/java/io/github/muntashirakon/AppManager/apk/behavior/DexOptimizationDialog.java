@@ -26,6 +26,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.settings.Ops;
+import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.widget.AnyFilterArrayAdapter;
 
@@ -35,7 +36,7 @@ public class DexOptimizationDialog extends DialogFragment {
     private static final String ARG_PACKAGES = "pkg";
 
     @NonNull
-    public static DexOptimizationDialog getInstance(String[] packages) {
+    public static DexOptimizationDialog getInstance(@Nullable String[] packages) {
         DexOptimizationDialog dialog = new DexOptimizationDialog();
         Bundle args = new Bundle();
         args.putStringArray(ARG_PACKAGES, packages);
@@ -72,6 +73,8 @@ public class DexOptimizationDialog extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         options.packages = requireArguments().getStringArray(ARG_PACKAGES);
         options.checkProfiles = SystemProperties.getBoolean("dalvik.vm.usejitprofiles", false);
+        int uid = Users.getSelfOrRemoteUid();
+        boolean isRootOrSystem = uid == Ops.SYSTEM_UID || uid == Ops.ROOT_UID;
         // Inflate view
         View view = View.inflate(requireContext(), R.layout.dialog_dexopt, null);
         AutoCompleteTextView autoCompleteTextView = view.findViewById(R.id.compiler_filter);
@@ -84,7 +87,9 @@ public class DexOptimizationDialog extends DialogFragment {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             compileLayoutsCheck.setVisibility(View.GONE);
         }
-        if (!Ops.isRoot()) {
+        if (!isRootOrSystem) {
+            // clearProfileData and forceDexOpt can only be run as root/system
+            clearProfileDataCheck.setVisibility(View.GONE);
             forceDexOptCheck.setVisibility(View.GONE);
         }
 
@@ -96,7 +101,7 @@ public class DexOptimizationDialog extends DialogFragment {
         checkProfilesCheck.setOnCheckedChangeListener((buttonView, isChecked) -> options.checkProfiles = isChecked);
         forceCompilationCheck.setOnCheckedChangeListener((buttonView, isChecked) -> options.forceCompilation = isChecked);
         forceDexOptCheck.setOnCheckedChangeListener((buttonView, isChecked) -> options.forceDexOpt = isChecked);
-        if (Ops.isRoot()) {
+        if (isRootOrSystem) {
             forceDexOptCheck.setChecked(true);
         }
 

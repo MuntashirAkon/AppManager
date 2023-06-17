@@ -40,6 +40,7 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.accessibility.AccessibilityMultiplexer;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
 import io.github.muntashirakon.AppManager.apk.behavior.DexOptimizationOptions;
+import io.github.muntashirakon.AppManager.apk.behavior.DexOptimizer;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
 import io.github.muntashirakon.AppManager.backup.BackupException;
 import io.github.muntashirakon.AppManager.backup.BackupManager;
@@ -803,41 +804,37 @@ public class BatchOpsManager {
         int i = 0;
         for (String packageName : options.packages) {
             updateProgress(lastProgress, ++i);
-            try {
-                if (options.compilerFiler != null) {
-                    if (options.clearProfileData) {
-                        pm.clearApplicationProfileData(packageName);
-                    }
-                    boolean result;
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
-                        result = pm.performDexOptMode(packageName, options.checkProfiles, options.compilerFiler,
-                                options.forceCompilation, true, null);
-                    } else {
-                        result = pm.performDexOptMode(packageName, options.checkProfiles, options.compilerFiler,
-                                options.forceCompilation);
-                    }
-                    if (!result) {
-                        log("====> op=DEXOPT, pkg=" + packageName + ", failed=dexopt-mode");
-                        failedPackages.add(new UserPackagePair(packageName, 0));
-                        continue;
-                    }
+            DexOptimizer dexOptimizer = new DexOptimizer(pm, packageName);
+            if (options.compilerFiler != null) {
+                boolean result = true;
+                if (options.clearProfileData) {
+                    result &= dexOptimizer.clearApplicationProfileData();
                 }
-                if (options.compileLayouts && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                    if (options.clearProfileData) {
-                        pm.clearApplicationProfileData(packageName);
-                    }
-                    if (!pm.compileLayouts(packageName)) {
-                        log("====> op=DEXOPT, pkg=" + packageName + ", failed=compile-layouts");
-                        failedPackages.add(new UserPackagePair(packageName, 0));
-                        continue;
-                    }
+                result &= dexOptimizer.performDexOptMode(options.checkProfiles, options.compilerFiler,
+                        options.forceCompilation, true, null);
+                if (!result) {
+                    log("====> op=DEXOPT, pkg=" + packageName + ", failed=dexopt-mode", dexOptimizer.getLastError());
+                    failedPackages.add(new UserPackagePair(packageName, 0));
+                    continue;
                 }
-                if (options.forceDexOpt) {
-                    pm.forceDexOpt(packageName);
+            }
+            if (options.compileLayouts && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                boolean result = true;
+                if (options.clearProfileData) {
+                    result &= dexOptimizer.clearApplicationProfileData();
                 }
-            } catch (Throwable e) {
-                log("====> op=DEXOPT, pkg=" + packageName, e);
-                failedPackages.add(new UserPackagePair(packageName, 0));
+                result &= dexOptimizer.compileLayouts();
+                if (!result) {
+                    log("====> op=DEXOPT, pkg=" + packageName + ", failed=compile-layouts", dexOptimizer.getLastError());
+                    failedPackages.add(new UserPackagePair(packageName, 0));
+                    continue;
+                }
+            }
+            if (options.forceDexOpt) {
+                if (!dexOptimizer.forceDexOpt()) {
+                    log("====> op=DEXOPT, pkg=" + packageName + ", failed=force-dexopt", dexOptimizer.getLastError());
+                    failedPackages.add(new UserPackagePair(packageName, 0));
+                }
             }
         }
         return new Result(failedPackages);

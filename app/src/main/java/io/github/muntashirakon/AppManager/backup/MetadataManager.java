@@ -46,6 +46,7 @@ import io.github.muntashirakon.AppManager.utils.JSONUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
+import io.github.muntashirakon.compat.ObjectsCompat;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.util.LocalizedString;
@@ -179,7 +180,7 @@ public final class MetadataManager {
             }
             subtitleText.append(", ")
                     .append(context.getString(R.string.size)).append(LangUtils.getSeparatorString()).append(Formatter
-                    .formatFileSize(context, getBackupSize()));
+                            .formatFileSize(context, getBackupSize()));
 
             if (isFrozen()) {
                 subtitleText.append(", ").append(context.getText(R.string.frozen));
@@ -366,14 +367,8 @@ public final class MetadataManager {
             }
         }
         mMetadata.backupTime = 0;
-        try {
-            mMetadata.installer = PackageManagerCompat.getInstallerPackageName(packageInfo.packageName, userHandle);
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-        if (mMetadata.installer == null) {
-            mMetadata.installer = BuildConfig.APPLICATION_ID;
-        }
+        mMetadata.installer = ObjectsCompat.requireNonNullElse(PackageManagerCompat.getInstallerPackageName(
+                packageInfo.packageName, userHandle), BuildConfig.APPLICATION_ID);
         return mMetadata;
     }
 

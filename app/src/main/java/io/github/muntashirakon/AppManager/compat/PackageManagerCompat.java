@@ -241,9 +241,12 @@ public final class PackageManagerCompat {
     }
 
     @Nullable
-    public static String getInstallerPackageName(@NonNull String packageName, @UserIdInt int userId)
-            throws RemoteException {
-        return getInstallSourceInfo(packageName, userId).getInstallingPackageName();
+    public static String getInstallerPackageName(@NonNull String packageName, @UserIdInt int userId) {
+        try {
+            return getInstallSourceInfo(packageName, userId).getInstallingPackageName();
+        } catch (RemoteException | SecurityException e) {
+            return null;
+        }
     }
 
     @OptIn(markerClass = BuildCompat.PrereleaseSdkCheck.class)

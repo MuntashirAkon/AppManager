@@ -171,6 +171,9 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private PackageManager mPackageManager;
     private String mPackageName;
+    private int mUserId;
+    @Nullable
+    private String mInstallerPackageName;
     private PackageInfo mPackageInfo;
     private PackageInfo mInstalledPackageInfo;
     private AppDetailsActivity mActivity;
@@ -252,8 +255,12 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 AppDetailsItem<?> appDetailsItem = appDetailsItems.get(0);
                 mPackageInfo = (PackageInfo) appDetailsItem.vanillaItem;
                 mPackageName = appDetailsItem.name;
+                mUserId = mainModel.getUserHandle();
                 mInstalledPackageInfo = mainModel.getInstalledPackageInfo();
                 isExternalApk = mainModel.isExternalApk();
+                if (!isExternalApk) {
+                    mInstallerPackageName = PackageManagerCompat.getInstallerPackageName(mPackageName, mUserId);
+                }
                 mApplicationInfo = mPackageInfo.applicationInfo;
                 // Set package name
                 packageNameView.setText(mPackageName);
@@ -320,10 +327,6 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             menu.findItem(R.id.action_magisk_hide).setVisible(MagiskHide.available());
             menu.findItem(R.id.action_magisk_denylist).setVisible(MagiskDenyList.available());
             menu.findItem(R.id.action_open_in_termux).setVisible(Ops.isRoot());
-            menu.findItem(R.id.action_battery_opt).setVisible(SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.DEVICE_POWER));
-            menu.findItem(R.id.action_net_policy).setVisible(SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_NETWORK_POLICY));
-            menu.findItem(R.id.action_install).setVisible(Users.getUsersIds().length > 1 && SelfPermissions.canInstallExistingPackages());
-            menu.findItem(R.id.action_optimize).setVisible(Ops.isPrivileged() && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N);
         }
     }
 
@@ -337,6 +340,23 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         MenuItem runInTermuxMenu = menu.findItem(R.id.action_run_in_termux);
         if (runInTermuxMenu != null) {
             runInTermuxMenu.setVisible(isDebuggable);
+        }
+        MenuItem batteryOptMenu = menu.findItem(R.id.action_battery_opt);
+        if (batteryOptMenu != null) {
+            batteryOptMenu.setVisible(SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.DEVICE_POWER));
+        }
+        MenuItem netPolicyMenu = menu.findItem(R.id.action_net_policy);
+        if (netPolicyMenu != null) {
+            netPolicyMenu.setVisible(SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_NETWORK_POLICY));
+        }
+        MenuItem installMenu = menu.findItem(R.id.action_install);
+        if (installMenu != null) {
+            installMenu.setVisible(Users.getUsersIds().length > 1 && SelfPermissions.canInstallExistingPackages());
+        }
+        MenuItem optimizeMenu = menu.findItem(R.id.action_optimize);
+        if (optimizeMenu != null) {
+            optimizeMenu.setVisible(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                    && (SelfPermissions.isSystemOrRootOrShell() || BuildConfig.APPLICATION_ID.equals(mInstallerPackageName)));
         }
     }
 
@@ -526,12 +546,11 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     })
                     .show();
         } else if (itemId == R.id.action_optimize) {
-            if (!Ops.isPrivileged()) {
-                UIUtils.displayShortToast(R.string.only_works_in_root_or_adb_mode);
-                return false;
-            }
-            DexOptimizationDialog dialog = DexOptimizationDialog.getInstance(new String[]{mPackageName});
-            dialog.show(getChildFragmentManager(), DexOptimizationDialog.TAG);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                    && (SelfPermissions.isSystemOrRootOrShell() || BuildConfig.APPLICATION_ID.equals(mInstallerPackageName))) {
+                DexOptimizationDialog dialog = DexOptimizationDialog.getInstance(new String[]{mPackageName});
+                dialog.show(getChildFragmentManager(), DexOptimizationDialog.TAG);
+            } else UIUtils.displayShortToast(R.string.only_works_in_root_or_adb_mode);
         } else return super.onOptionsItemSelected(item);
         return true;
     }

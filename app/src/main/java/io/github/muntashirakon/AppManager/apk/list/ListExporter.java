@@ -7,7 +7,6 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.RemoteException;
 import android.os.UserHandleHidden;
 import android.text.TextUtils;
 import android.util.Xml;
@@ -59,9 +58,9 @@ public final class ListExporter {
             item.setSignatureSha256(TextUtils.join(",", signatureSha256));
             item.setFirstInstallTime(packageInfo.firstInstallTime);
             item.setLastUpdateTime(packageInfo.lastUpdateTime);
-            try {
-                String installerPackageName = PackageManagerCompat.getInstallerPackageName(
-                        packageInfo.packageName, UserHandleHidden.getUserId(applicationInfo.uid));
+            String installerPackageName = PackageManagerCompat.getInstallerPackageName(packageInfo.packageName,
+                    UserHandleHidden.getUserId(applicationInfo.uid));
+            if (installerPackageName != null) {
                 item.setInstallerPackageName(installerPackageName);
                 String installerPackageLabel;
                 try {
@@ -72,8 +71,6 @@ public final class ListExporter {
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
                 }
-            } catch (RemoteException e) {
-                e.printStackTrace();
             }
             appListItems.add(item);
         }

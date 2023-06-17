@@ -11,7 +11,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.verify.domain.DomainVerificationUserState;
 import android.os.Build;
-import android.os.RemoteException;
 import android.os.UserHandleHidden;
 
 import androidx.annotation.NonNull;
@@ -309,19 +308,16 @@ public class AppInfoViewModel extends AndroidViewModel {
                 appInfo.sizeInfo = PackageUtils.getPackageSizeInfo(getApplication(), packageName, userId,
                         Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? applicationInfo.storageUuid : null);
                 // Set installer app
-                try {
-                    String installerPackageName = PackageManagerCompat.getInstallerPackageName(packageName, userId);
-                    if (installerPackageName != null) {
-                        String applicationLabel;
-                        try {
-                            applicationLabel = pm.getApplicationInfo(installerPackageName, 0).loadLabel(pm).toString();
-                        } catch (PackageManager.NameNotFoundException e) {
-                            e.printStackTrace();
-                            applicationLabel = installerPackageName;
-                        }
-                        appInfo.installerApp = applicationLabel;
+                String installerPackageName = PackageManagerCompat.getInstallerPackageName(packageName, userId);
+                if (installerPackageName != null) {
+                    String applicationLabel;
+                    try {
+                        applicationLabel = pm.getApplicationInfo(installerPackageName, 0).loadLabel(pm).toString();
+                    } catch (PackageManager.NameNotFoundException e) {
+                        e.printStackTrace();
+                        applicationLabel = installerPackageName;
                     }
-                } catch (RemoteException ignore) {
+                    appInfo.installerApp = applicationLabel;
                 }
                 // Set main activity
                 appInfo.mainActivity = pm.getLaunchIntentForPackage(packageName);

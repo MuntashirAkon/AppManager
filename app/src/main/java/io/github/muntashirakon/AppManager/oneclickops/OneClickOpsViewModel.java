@@ -50,6 +50,7 @@ public class OneClickOpsViewModel extends AndroidViewModel {
     private final MutableLiveData<Pair<List<AppOpCount>, Pair<int[], Integer>>> appOpsCount = new MutableLiveData<>();
     private final MutableLiveData<List<String>> clearDataCandidates = new MutableLiveData<>();
     private final MutableLiveData<Boolean> trimCachesResult = new MutableLiveData<>();
+    private final MutableLiveData<String[]> appsInstalledByAmForDexOpt = new MutableLiveData<>();
 
     @Nullable
     private Future<?> futureResult;
@@ -85,6 +86,10 @@ public class OneClickOpsViewModel extends AndroidViewModel {
 
     public LiveData<Boolean> watchTrimCachesResult() {
         return trimCachesResult;
+    }
+
+    public MutableLiveData<String[]> getAppsInstalledByAmForDexOpt() {
+        return appsInstalledByAmForDexOpt;
     }
 
     @AnyThread
@@ -253,6 +258,22 @@ public class OneClickOpsViewModel extends AndroidViewModel {
             } catch (RemoteException e) {
                 this.trimCachesResult.postValue(false);
             }
+        });
+    }
+
+    public void listAppsInstalledByAmForDexOpt() {
+        ThreadUtils.postOnBackgroundThread(() -> {
+            HashSet<String> packageNames = new HashSet<>();
+            for (ApplicationInfo applicationInfo : PackageUtils.getAllApplications(0)) {
+                if (packageNames.contains(applicationInfo.packageName)) {
+                    continue;
+                }
+                packageNames.add(applicationInfo.packageName);
+                if (ThreadUtils.isInterrupted()) {
+                    return;
+                }
+            }
+            appsInstalledByAmForDexOpt.postValue(packageNames.toArray(new String[0]));
         });
     }
 

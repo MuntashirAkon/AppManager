@@ -41,7 +41,6 @@ import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
-import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.ListItemCreator;
 import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
@@ -93,6 +92,11 @@ public class OneClickOpsActivity extends BaseActivity {
         mViewModel.watchTrimCachesResult().observe(this, isSuccessful -> {
             mProgressIndicator.hide();
             UIUtils.displayShortToast(isSuccessful ? R.string.done : R.string.failed);
+        });
+        mViewModel.getAppsInstalledByAmForDexOpt().observe(this, packages -> {
+            mProgressIndicator.hide();
+            DexOptimizationDialog dialog = DexOptimizationDialog.getInstance(packages);
+            dialog.show(getSupportFragmentManager(), DexOptimizationDialog.TAG);
         });
     }
 
@@ -170,12 +174,13 @@ public class OneClickOpsActivity extends BaseActivity {
             mItemCreator.addItemWithTitleSubtitle(getString(R.string.title_perform_runtime_optimization_to_apps),
                             getString(R.string.summary_perform_runtime_optimization_to_apps))
                     .setOnClickListener(v -> {
-                        if (!Ops.isPrivileged()) {
-                            UIUtils.displayShortToast(R.string.only_works_in_root_or_adb_mode);
+                        if (SelfPermissions.isSystemOrRootOrShell()) {
+                            DexOptimizationDialog dialog = DexOptimizationDialog.getInstance(null);
+                            dialog.show(getSupportFragmentManager(), DexOptimizationDialog.TAG);
                             return;
                         }
-                        DexOptimizationDialog dialog = DexOptimizationDialog.getInstance(null);
-                        dialog.show(getSupportFragmentManager(), DexOptimizationDialog.TAG);
+                        mProgressIndicator.show();
+                        mViewModel.listAppsInstalledByAmForDexOpt();
                     });
         }
         mProgressIndicator.hide();
