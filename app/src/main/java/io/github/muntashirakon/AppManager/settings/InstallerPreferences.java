@@ -32,6 +32,7 @@ import java.util.Objects;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.signing.Signer;
+import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -65,8 +66,10 @@ public class InstallerPreferences extends PreferenceFragment {
         activity = (SettingsActivity) requireActivity();
         pm = activity.getPackageManager();
         // Display users in installer
-        ((SwitchPreferenceCompat) Objects.requireNonNull(findPreference("installer_display_users")))
-                .setChecked(Prefs.Installer.displayUsers());
+        boolean canInstallForOtherUsers = SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.INTERACT_ACROSS_USERS_FULL);
+        SwitchPreferenceCompat usersInInstallerPref = Objects.requireNonNull(findPreference("installer_display_users"));
+        usersInInstallerPref.setEnabled(canInstallForOtherUsers);
+        usersInInstallerPref.setChecked(canInstallForOtherUsers && Prefs.Installer.displayUsers());
         // Set installation locations
         Preference installLocationPref = Objects.requireNonNull(findPreference("installer_install_location"));
         installLocationPref.setSummary(installLocationNames[Prefs.Installer.getInstallLocation()]);
