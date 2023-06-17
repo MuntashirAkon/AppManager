@@ -84,7 +84,7 @@ public class DexOptimizationDialog extends DialogFragment {
         MaterialCheckBox forceCompilationCheck = view.findViewById(R.id.force_compilation);
         MaterialCheckBox forceDexOptCheck = view.findViewById(R.id.force_dexopt);
         checkProfilesCheck.setChecked(options.checkProfiles);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q || Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             compileLayoutsCheck.setVisibility(View.GONE);
         }
         if (!isRootOrSystem) {

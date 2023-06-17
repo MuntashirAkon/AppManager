@@ -959,8 +959,10 @@ public interface IPackageManager extends IInterface {
 
     /**
      * Ask the package manager to compile layouts in the given package.
+     * @deprecated Removed in API 31 (Android 12)
      */
     @RequiresApi(Build.VERSION_CODES.Q)
+    @Deprecated
     boolean compileLayouts(String packageName) throws RemoteException;
 
     /**

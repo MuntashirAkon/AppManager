@@ -60,8 +60,13 @@ public class DexOptimizer {
         return false;
     }
 
+    @SuppressWarnings("deprecation")
     @RequiresApi(Build.VERSION_CODES.Q)
     public boolean compileLayouts() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            // Removed again
+            return false;
+        }
         try {
             return mPm.compileLayouts(mPackageName);
         } catch (RemoteException | SecurityException e) {
