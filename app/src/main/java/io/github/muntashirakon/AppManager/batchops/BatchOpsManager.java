@@ -30,8 +30,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -790,7 +792,14 @@ public class BatchOpsManager {
         List<UserPackagePair> failedPackages = new ArrayList<>();
         DexOptimizationOptions options = BundleCompat.getParcelable(args, ARG_OPTIONS, DexOptimizationOptions.class);
         IPackageManager pm = PackageManagerCompat.getPackageManager();
-        if (options.packages == null) {
+        if (userPackagePairs.length > 0) {
+            // Override options.packages with this list
+            Set<String> packages = new HashSet<>(userPackagePairs.length);
+            for (UserPackagePair pair : userPackagePairs) {
+                packages.add(pair.getPackageName());
+            }
+            options.packages = packages.toArray(new String[0]);
+        } else if (options.packages == null) {
             // Include all packages
             try {
                 options.packages = pm.getAllPackages().toArray(new String[0]);

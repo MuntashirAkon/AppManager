@@ -82,6 +82,15 @@ public class DexOptimizer {
             return true;
         } catch (RemoteException | SecurityException e) {
             lastError = e;
+        } catch (IllegalStateException e) {
+            String message = e.getMessage();
+            if (message != null && message.startsWith("Failed to dexopt: 0")) {
+                // Skipped. This could be due to many reasons:
+                // 1. Package is android and does not need optimization
+                // 2. Package does not have code
+                return true;
+            }
+            lastError = e;
         }
         return false;
     }
