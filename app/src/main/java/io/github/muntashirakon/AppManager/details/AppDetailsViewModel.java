@@ -93,7 +93,6 @@ import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.rules.struct.RuleEntry;
 import io.github.muntashirakon.AppManager.scanner.NativeLibraries;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
-import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
 import io.github.muntashirakon.AppManager.users.UserInfo;
@@ -1334,12 +1333,12 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     @WorkerThread
     private void loadAppOps() {
-        boolean privileged = Ops.isPrivileged();
         PackageInfo packageInfo = getPackageInfoInternal();
         if (packageInfo == null || mExternalApk || !SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.GET_APP_OPS_STATS)) {
             mAppOps.postValue(Collections.emptyList());
             return;
         }
+        boolean canGetGrantRevokeRuntimePermissions = SelfPermissions.checkGetGrantRevokeRuntimePermissions();
         synchronized (mAppOpItems) {
             mAppOpItems.clear();
             try {
@@ -1379,10 +1378,11 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     AppDetailsAppOpItem appDetailsItem;
                     String permissionName = AppOpsManagerCompat.opToPermission(entry.getOp());
                     if (permissionName != null) {
-                        boolean isGranted = privileged && PermissionCompat.checkPermission(permissionName,
-                                packageName, mUserHandle) == PackageManager.PERMISSION_GRANTED;
-                        int permissionFlags = privileged ? PermissionCompat.getPermissionFlags(permissionName,
-                                packageName, mUserHandle) : 0;
+                        boolean isGranted = PermissionCompat.checkPermission(permissionName, packageName, mUserHandle)
+                                == PackageManager.PERMISSION_GRANTED;
+                        int permissionFlags = canGetGrantRevokeRuntimePermissions
+                                ? PermissionCompat.getPermissionFlags(permissionName, packageName, mUserHandle)
+                                : PermissionCompat.FLAG_PERMISSION_NONE;
                         PermissionInfo permissionInfo = PermissionCompat.getPermissionInfo(permissionName, packageName, 0);
                         if (permissionInfo == null) {
                             permissionInfo = new PermissionInfo();
@@ -1401,10 +1401,11 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     AppDetailsAppOpItem appDetailsItem;
                     String permissionName = AppOpsManagerCompat.opToPermission(op);
                     if (permissionName != null) {
-                        boolean isGranted = privileged && PermissionCompat.checkPermission(permissionName,
-                                packageName, mUserHandle) == PackageManager.PERMISSION_GRANTED;
-                        int permissionFlags = privileged ? PermissionCompat.getPermissionFlags(permissionName,
-                                packageName, mUserHandle) : 0;
+                        boolean isGranted = PermissionCompat.checkPermission(permissionName, packageName, mUserHandle)
+                                == PackageManager.PERMISSION_GRANTED;
+                        int permissionFlags = canGetGrantRevokeRuntimePermissions
+                                ? PermissionCompat.getPermissionFlags(permissionName, packageName, mUserHandle)
+                                : PermissionCompat.FLAG_PERMISSION_NONE;
                         PermissionInfo permissionInfo = PermissionCompat.getPermissionInfo(permissionName, packageName, 0);
                         if (permissionInfo == null) {
                             permissionInfo = new PermissionInfo();
@@ -1496,10 +1497,10 @@ public class AppDetailsViewModel extends AndroidViewModel {
             int appOp = AppOpsManagerCompat.permissionToOpCode(permissionName);
             int permissionFlags;
             boolean appOpAllowed = false;
-            if (!mExternalApk) {
-                permissionFlags = ExUtils.requireNonNullElse(() -> PermissionCompat.getPermissionFlags(
-                        permissionName, packageInfo.packageName, mUserHandle), 0);
-            } else permissionFlags = 0;
+            if (!mExternalApk && SelfPermissions.checkGetGrantRevokeRuntimePermissions()) {
+                permissionFlags = PermissionCompat.getPermissionFlags(
+                        permissionName, packageInfo.packageName, mUserHandle);
+            } else permissionFlags = PermissionCompat.FLAG_PERMISSION_NONE;
             if (!mExternalApk && appOp != AppOpsManagerCompat.OP_NONE) {
                 int mode = AppOpsManagerCompat.getModeFromOpEntriesOrDefault(appOp, opEntries);
                 appOpAllowed = mode == AppOpsManager.MODE_ALLOWED;

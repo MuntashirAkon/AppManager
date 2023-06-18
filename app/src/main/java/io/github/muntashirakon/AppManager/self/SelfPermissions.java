@@ -63,6 +63,12 @@ public class SelfPermissions {
                 || checkSelfOrRemotePermission(ManifestCompat.permission.REVOKE_RUNTIME_PERMISSIONS);
     }
 
+    public static boolean checkGetGrantRevokeRuntimePermissions() {
+        return checkSelfOrRemotePermission(ManifestCompat.permission.GET_RUNTIME_PERMISSIONS)
+                || checkSelfOrRemotePermission(ManifestCompat.permission.GRANT_RUNTIME_PERMISSIONS)
+                || checkSelfOrRemotePermission(ManifestCompat.permission.REVOKE_RUNTIME_PERMISSIONS);
+    }
+
     public static boolean canInstallExistingPackages() {
         if (checkSelfOrRemotePermission(Manifest.permission.INSTALL_PACKAGES)) {
             return true;

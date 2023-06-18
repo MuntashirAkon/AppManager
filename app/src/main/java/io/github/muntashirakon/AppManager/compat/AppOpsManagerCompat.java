@@ -16,6 +16,7 @@ import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.annotation.RequiresPermission;
 import androidx.collection.SparseArrayCompat;
 
 import com.android.internal.app.IAppOpsService;
@@ -638,6 +639,7 @@ public class AppOpsManagerCompat {
         return appOpsService.checkOperation(op, uid, packageName);
     }
 
+    @RequiresPermission(ManifestCompat.permission.GET_APP_OPS_STATS)
     public List<AppOpsManagerCompat.PackageOps> getOpsForPackage(int uid, String packageName, @Nullable int[] ops)
             throws RemoteException {
         // Check using uid mode and package mode, override ops in package mode from uid mode
@@ -653,6 +655,7 @@ public class AppOpsManagerCompat {
         return Collections.singletonList(new AppOpsManagerCompat.PackageOps(packageName, uid, opEntries));
     }
 
+    @RequiresPermission(ManifestCompat.permission.GET_APP_OPS_STATS)
     @NonNull
     public List<AppOpsManagerCompat.PackageOps> getPackagesForOps(int[] ops) throws RemoteException {
         List<Parcelable> opsForPackage = appOpsService.getPackagesForOps(ops);
@@ -666,6 +669,7 @@ public class AppOpsManagerCompat {
         return packageOpsList;
     }
 
+    @RequiresPermission("android.permission.MANAGE_APP_OPS_MODES")
     public void setMode(int op, int uid, String packageName, @AppOpsManagerCompat.Mode int mode)
             throws RemoteException {
         if (AppOpsManagerCompat.isMiuiOp(op) || Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
@@ -677,6 +681,7 @@ public class AppOpsManagerCompat {
         }
     }
 
+    @RequiresPermission("android.permission.MANAGE_APP_OPS_MODES")
     public void resetAllModes(@UserIdInt int reqUserId, @NonNull String reqPackageName) throws RemoteException {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP_MR1) {
             appOpsService.resetAllModes(reqUserId, reqPackageName);

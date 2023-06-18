@@ -10,12 +10,14 @@ import android.os.RemoteException;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresPermission;
 import androidx.annotation.WorkerThread;
 import androidx.core.content.pm.PermissionInfoCompat;
 
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
+import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.permission.DevelopmentPermission;
 import io.github.muntashirakon.AppManager.permission.PermUtils;
 import io.github.muntashirakon.AppManager.permission.Permission;
@@ -146,6 +148,10 @@ public class AppDetailsAppOpItem extends AppDetailsItem<Integer> {
      *
      * @return {@code true} iff the app op could be allowed.
      */
+    @RequiresPermission(allOf = {
+            "android.permission.MANAGE_APP_OPS_MODES",
+            ManifestCompat.permission.GRANT_RUNTIME_PERMISSIONS,
+    })
     @WorkerThread
     public boolean allowAppOp(@NonNull PackageInfo packageInfo, @NonNull AppOpsManagerCompat appOpsManager)
             throws RemoteException, PermissionException {
@@ -168,6 +174,10 @@ public class AppDetailsAppOpItem extends AppDetailsItem<Integer> {
      *
      * @return {@code true} iff the app op could be disallowed.
      */
+    @RequiresPermission(allOf = {
+            "android.permission.MANAGE_APP_OPS_MODES",
+            ManifestCompat.permission.REVOKE_RUNTIME_PERMISSIONS,
+    })
     @WorkerThread
     public boolean disallowAppOp(@NonNull PackageInfo packageInfo, @NonNull AppOpsManagerCompat appOpsManager)
             throws RemoteException, PermissionException {
@@ -190,6 +200,11 @@ public class AppDetailsAppOpItem extends AppDetailsItem<Integer> {
      *
      * @return {@code true} iff the app op could be set.
      */
+    @RequiresPermission(allOf = {
+            "android.permission.MANAGE_APP_OPS_MODES",
+            ManifestCompat.permission.GRANT_RUNTIME_PERMISSIONS,
+            ManifestCompat.permission.REVOKE_RUNTIME_PERMISSIONS,
+    })
     @WorkerThread
     public boolean setAppOp(@NonNull PackageInfo packageInfo, @NonNull AppOpsManagerCompat appOpsManager,
                             @AppOpsManagerCompat.Mode int mode)
@@ -212,6 +227,7 @@ public class AppDetailsAppOpItem extends AppDetailsItem<Integer> {
         return isSuccessful;
     }
 
+    @RequiresPermission("android.permission.MANAGE_APP_OPS_MODES")
     public void invalidate(@NonNull AppOpsManagerCompat appOpsManager, @NonNull PackageInfo packageInfo)
             throws RemoteException {
         List<AppOpsManagerCompat.OpEntry> opEntryList = appOpsManager.getOpsForPackage(packageInfo.applicationInfo.uid,
