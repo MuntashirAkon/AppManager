@@ -28,11 +28,11 @@ import java.util.Objects;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreActivity;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.self.life.BuildExpiryChecker;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.settings.SecurityAndOpsViewModel;
-import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public abstract class BaseActivity extends AppCompatActivity {
@@ -240,7 +240,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     private void initPermissionChecks() {
         for (String permission : REQUIRED_PERMISSIONS) {
-            if (!PermissionUtils.hasSelfPermission(permission)) {
+            if (!SelfPermissions.checkSelfPermission(permission)) {
                 mPermissionCheckActivity.launch(REQUIRED_PERMISSIONS);
                 return;
             }

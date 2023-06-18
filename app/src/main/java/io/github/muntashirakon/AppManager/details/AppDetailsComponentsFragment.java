@@ -47,6 +47,7 @@ import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
+import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsComponentItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsItem;
 import io.github.muntashirakon.AppManager.details.struct.AppDetailsServiceItem;
@@ -57,10 +58,8 @@ import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
-import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
-import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -279,6 +278,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
         private String mConstraint;
         private int mUserId;
         private boolean mCanModifyComponentStates;
+        private boolean mCanStartAnyActivity;
         private final int mCardColor1;
         private final int mDefaultIndicatorColor;
 
@@ -291,6 +291,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
         @UiThread
         void setDefaultList(@NonNull List<AppDetailsItem<?>> list) {
             mRequestedProperty = mNeededProperty;
+            mCanStartAnyActivity = SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.START_ANY_ACTIVITY);
             if (viewModel != null) {
                 mCanModifyComponentStates = !mIsExternalApk && SelfPermissions.canModifyAppComponentStates(mUserId, viewModel.getPackageName(), viewModel.isTestOnlyApp());
                 mConstraint = viewModel.getSearchQuery();
@@ -509,7 +510,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             // 1) Not from an external APK
             // 2) Root enabled or the activity is exportable
             // 3) App or the activity is not disabled and/or blocked
-            boolean canLaunch = !mIsExternalApk && (Ops.isRoot() || isExported)
+            boolean canLaunch = !mIsExternalApk && (mCanStartAnyActivity || isExported)
                     && !isDisabled
                     && !componentItem.isBlocked();
             if (canLaunch) {
@@ -524,9 +525,8 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                     }
                 });
                 if (FeatureController.isInterceptorEnabled()) {
-                    boolean needRoot = Ops.isRoot() && (!isExported || (activityInfo.permission != null
-                            && !PermissionUtils.hasSelfPermission(activityInfo.permission)));
                     holder.launchBtn.setOnLongClickListener(v -> {
+                        boolean needRoot = mCanStartAnyActivity && (!isExported || !SelfPermissions.checkSelfOrRemotePermission(activityInfo.permission));
                         Intent intent = new Intent(activity, ActivityInterceptor.class);
                         intent.putExtra(ActivityInterceptor.EXTRA_PACKAGE_NAME, mPackageName);
                         intent.putExtra(ActivityInterceptor.EXTRA_CLASS_NAME, activityName);
@@ -611,7 +611,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             // 2) Root enabled or the service is exportable without any permission
             // 3) App or the service is not disabled and/or blocked
             boolean canLaunch = !mIsExternalApk
-                    && (Ops.isRoot() || (serviceInfo.exported && serviceInfo.permission == null))
+                    && canLaunchService(serviceInfo)
                     && !isDisabled
                     && !serviceItem.isBlocked();
             if (canLaunch) {
@@ -776,5 +776,12 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             } else holder.toggleSwitch.setVisibility(View.GONE);
             ((MaterialCardView) holder.itemView).setCardBackgroundColor(mCardColor1);
         }
+    }
+
+    public static boolean canLaunchService(@NonNull ServiceInfo info) {
+        if (info.exported && info.permission == null) {
+            return true;
+        }
+        return SelfPermissions.checkSelfOrRemotePermission(info.permission);
     }
 }

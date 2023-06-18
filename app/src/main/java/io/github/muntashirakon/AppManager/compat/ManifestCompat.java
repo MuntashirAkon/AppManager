@@ -37,6 +37,7 @@ public final class ManifestCompat {
         public static final String MANAGE_NETWORK_POLICY = "android.permission.MANAGE_NETWORK_POLICY";
         public static final String MANAGE_USERS = "android.permission.MANAGE_USERS";
         public static final String REVOKE_RUNTIME_PERMISSIONS = "android.permission.REVOKE_RUNTIME_PERMISSIONS";
+        public static final String START_ANY_ACTIVITY = "android.permission.START_ANY_ACTIVITY";
         @RequiresApi(Build.VERSION_CODES.P)
         public static final String SUSPEND_APPS = "android.permission.SUSPEND_APPS";
         public static final String UPDATE_APP_OPS_STATS = "android.permission.UPDATE_APP_OPS_STATS";

@@ -13,7 +13,6 @@ import android.os.Process;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
-@SuppressWarnings("BooleanMethodIsAlwaysInverted")
 public final class PermissionUtils {
     public static boolean hasDumpPermission() {
         return hasSelfPermission(Manifest.permission.DUMP);

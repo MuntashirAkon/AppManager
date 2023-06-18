@@ -107,6 +107,9 @@
         android:name="android.permission.REVOKE_RUNTIME_PERMISSIONS"
         tools:ignore="ProtectedPermissions" />
     <uses-permission
+        android:name="android.permission.START_ANY_ACTIVITY"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission
         android:name="android.permission.SUSPEND_APPS"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
