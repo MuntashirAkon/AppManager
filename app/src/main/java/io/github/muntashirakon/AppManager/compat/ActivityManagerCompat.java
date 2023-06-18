@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.compat;
 
+import android.Manifest;
 import android.annotation.UserIdInt;
 import android.app.ActivityManager;
 import android.app.ActivityManagerNative;
@@ -20,6 +21,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.annotation.VisibleForTesting;
 
 import java.util.ArrayList;
@@ -32,8 +34,8 @@ import java.util.regex.Pattern;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.runner.Runner;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.settings.Ops;
-import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 
 public final class ActivityManagerCompat {
     public static final String SHELL_PACKAGE_NAME = "com.android.shell";
@@ -108,14 +110,13 @@ public final class ActivityManagerCompat {
     @NonNull
     public static List<ActivityManager.RunningServiceInfo> getRunningServices(String packageName, @UserIdInt int userId) {
         List<ActivityManager.RunningServiceInfo> runningServices;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && !Ops.isPrivileged()
-                && PermissionUtils.hasDumpPermission()) {
-            // Fetch running services by parsing dumpsys output if root/ADB is disabled
-            // and android.permission.DUMP is granted
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1
+                && !SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.REAL_GET_TASKS)
+                && canDumpRunningServices()) {
+            // Fetch running services by parsing dumpsys output
             runningServices = getRunningServicesUsingDumpSys(packageName);
         } else {
-            // For no-root, this returns services running in the current UID since Android M
+            // For no-root, this returns services running in the current UID since Android Oreo
             try {
                 runningServices = getActivityManager().getServices(100, 0);
             } catch (RemoteException e) {
@@ -133,8 +134,8 @@ public final class ActivityManagerCompat {
 
     public static List<ActivityManager.RunningAppProcessInfo> getRunningAppProcesses() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
-                && !Ops.isPrivileged()
-                && PermissionUtils.hasDumpPermission()) {
+                && !SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.REAL_GET_TASKS)
+                && canDumpRunningServices()) {
             // Fetch running app processes by parsing dumpsys output if root/ADB is disabled
             // and android.permission.DUMP is granted
             return getRunningAppProcessesUsingDumpSys();
@@ -321,6 +322,12 @@ public final class ActivityManagerCompat {
             }
         }
         return runningServices;
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    private static boolean canDumpRunningServices() {
+        return SelfPermissions.checkSelfPermission(Manifest.permission.DUMP)
+                && SelfPermissions.checkSelfPermission(Manifest.permission.PACKAGE_USAGE_STATS);
     }
 
     final static class IntentReceiver extends IIntentReceiver.Stub {

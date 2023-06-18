@@ -14,10 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 
 public final class PermissionUtils {
-    public static boolean hasDumpPermission() {
-        return hasSelfPermission(Manifest.permission.DUMP);
-    }
-
     public static boolean hasStoragePermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             if (Utils.isRoboUnitTest()) {

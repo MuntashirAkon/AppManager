@@ -51,6 +51,8 @@
     <uses-permission
         android:name="android.permission.GET_RUNTIME_PERMISSIONS"
         tools:ignore="ProtectedPermissions" />
+    <!--suppress DeprecatedClassUsageInspection -->
+    <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission
         android:name="android.permission.GRANT_RUNTIME_PERMISSIONS"
         tools:ignore="ProtectedPermissions" />
@@ -103,6 +105,9 @@
         android:name="android.permission.READ_LOGS"
         tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission
+        android:name="android.permission.REAL_GET_TASKS"
+        tools:ignore="ProtectedPermissions" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />

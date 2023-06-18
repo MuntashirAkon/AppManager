@@ -133,7 +133,7 @@ public class Ops {
     }
 
     @AnyThread
-    public static boolean isReallyRoot() {
+    private static boolean isReallyRoot() {
         return isRoot() && Users.getSelfOrRemoteUid() == ROOT_UID;
     }
 
@@ -149,7 +149,7 @@ public class Ops {
      * Whether App Manager is running in system mode
      */
     @AnyThread
-    public static boolean isReallySystem() {
+    private static boolean isReallySystem() {
         return isSystem() && Users.getSelfOrRemoteUid() == SYSTEM_UID;
     }
 
@@ -162,7 +162,7 @@ public class Ops {
     }
 
     @AnyThread
-    public static boolean isReallyAdb() {
+    private static boolean isReallyAdb() {
         return isAdb() && Users.getSelfOrRemoteUid() == SHELL_UID;
     }
 
