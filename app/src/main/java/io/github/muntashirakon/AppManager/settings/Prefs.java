@@ -311,6 +311,11 @@ public final class Prefs {
             return AppPref.getBoolean(AppPref.PrefKey.PREF_INSTALLER_BLOCK_TRACKERS_BOOL);
         }
 
+        public static boolean forceDexOpt() {
+            return Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
+                    && AppPref.getBoolean(AppPref.PrefKey.PREF_INSTALLER_FORCE_DEX_OPT_BOOL);
+        }
+
         public static boolean canSignApk() {
             if (!AppPref.getBoolean(AppPref.PrefKey.PREF_INSTALLER_SIGN_APK_BOOL)) {
                 // Signing not enabled

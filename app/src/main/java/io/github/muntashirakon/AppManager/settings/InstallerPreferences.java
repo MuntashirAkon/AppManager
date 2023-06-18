@@ -143,6 +143,10 @@ public class InstallerPreferences extends PreferenceFragment {
             }
             return true;
         });
+        boolean isSystemOrRoot = SelfPermissions.isSystemOrRoot();
+        SwitchPreferenceCompat forceDexOpt = Objects.requireNonNull(findPreference("installer_force_dex_opt"));
+        forceDexOpt.setEnabled(isSystemOrRoot);
+        forceDexOpt.setChecked(isSystemOrRoot && Prefs.Installer.forceDexOpt());
         // Display changes
         ((SwitchPreferenceCompat) Objects.requireNonNull(findPreference("installer_display_changes")))
                 .setChecked(Prefs.Installer.displayChanges());

@@ -20,6 +20,7 @@ import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,6 +32,8 @@ import androidx.core.app.ServiceCompat;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
+import io.github.muntashirakon.AppManager.apk.behavior.DexOptimizer;
+import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.main.MainActivity;
@@ -120,9 +123,16 @@ public class PackageInstallerService extends ForegroundService {
             @Override
             public void onFinishedInstall(int sessionId, String packageName, int result,
                                           @Nullable String blockingPackage, @Nullable String statusMessage) {
-                // Block trackers if requested
-                if (result == STATUS_SUCCESS && Prefs.Installer.blockTrackers()) {
-                    ComponentUtils.blockTrackingComponents(new UserPackagePair(packageName, apkQueueItem.getUserId()));
+                if (result == STATUS_SUCCESS) {
+                    // Block trackers if requested
+                    if (Prefs.Installer.blockTrackers()) {
+                        ComponentUtils.blockTrackingComponents(new UserPackagePair(packageName, apkQueueItem.getUserId()));
+                    }
+                    // Perform force dex optimization if requested
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && Prefs.Installer.forceDexOpt()) {
+                        // Ignore the result because it's irrelevant
+                        new DexOptimizer(PackageManagerCompat.getPackageManager(), packageName).forceDexOpt();
+                    }
                 }
                 if (onInstallFinished != null) {
                     ThreadUtils.postOnMainThread(() -> {

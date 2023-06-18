@@ -127,6 +127,11 @@ public class SelfPermissions {
                 || checkSelfOrRemotePermission(ManifestCompat.permission.INTERACT_ACROSS_USERS);
     }
 
+    public static boolean isSystemOrRoot() {
+        int callingUid = Users.getSelfOrRemoteUid();
+        return callingUid == Ops.ROOT_UID || callingUid == Ops.SYSTEM_UID;
+    }
+
     public static boolean isSystemOrRootOrShell() {
         return isSystemOrRootOrShell(Users.getSelfOrRemoteUid());
     }
