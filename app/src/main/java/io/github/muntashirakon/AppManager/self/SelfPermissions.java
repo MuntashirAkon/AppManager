@@ -27,6 +27,9 @@ public class SelfPermissions {
     public static boolean canBlockByIFW() {
         return Paths.get(ComponentsBlocker.SYSTEM_RULES_PATH).canWrite();
     }
+    public static boolean canWriteToDataData() {
+        return Paths.get("/data/data").canWrite();
+    }
 
     public static boolean canModifyAppComponentStates(@UserIdInt int userId, @Nullable String packageName,
                                                       boolean testOnlyApp) {

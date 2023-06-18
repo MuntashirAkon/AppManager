@@ -2,6 +2,8 @@
 
 package io.github.muntashirakon.AppManager.backup;
 
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
+
 import android.content.Context;
 import android.text.SpannableStringBuilder;
 
@@ -17,12 +19,10 @@ import java.util.List;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.settings.Ops;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
-
-import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
 public final class BackupFlags {
     @IntDef(flag = true, value = {
@@ -87,17 +87,14 @@ public final class BackupFlags {
     public static List<Integer> getSupportedBackupFlagsAsArray() {
         List<Integer> backupFlags = new ArrayList<>();
         backupFlags.add(BACKUP_APK_FILES);
-        if (Ops.isRoot()) {
+        if (SelfPermissions.canWriteToDataData()) {
             backupFlags.add(BACKUP_INT_DATA);
         }
         backupFlags.add(BACKUP_EXT_DATA);
         backupFlags.add(BACKUP_EXT_OBB_MEDIA);
         backupFlags.add(BACKUP_CACHE);
-        if (Ops.isPrivileged()) {
-            // Display extra backups only in root mode
-            backupFlags.add(BACKUP_EXTRAS);
-            backupFlags.add(BACKUP_RULES);
-        }
+        backupFlags.add(BACKUP_EXTRAS);
+        backupFlags.add(BACKUP_RULES);
         backupFlags.add(BACKUP_MULTIPLE);
         if (Users.getUsersIds().length > 1) {
             // Display custom users only if multiple users present
@@ -286,12 +283,8 @@ public final class BackupFlags {
      * Remove unsupported flags from the given list of flags
      */
     private static int getSanitizedFlags(int flags) {
-        if (!Ops.isRoot()) {
+        if (!SelfPermissions.canWriteToDataData()) {
             flags &= ~BACKUP_INT_DATA;
-        }
-        if (!Ops.isPrivileged()) {
-            flags &= ~BACKUP_EXTRAS;
-            flags &= ~BACKUP_RULES;
         }
         if (Users.getUsersIds().length == 1) {
             flags &= ~BACKUP_CUSTOM_USERS;
