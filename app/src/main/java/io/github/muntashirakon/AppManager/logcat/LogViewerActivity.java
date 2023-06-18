@@ -174,8 +174,6 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
         // Set collapsed mode
         mViewModel.setCollapsedMode(!Prefs.LogViewer.expandByDefault());
 
-        // Grant read logs permission if not already
-        mViewModel.grantReadLogsPermission();
         // It doesn't matter whether the permission has been granted or not, we can start logging
         mViewModel.observeLoggingFinished().observe(this, finished -> {
             if (finished) {

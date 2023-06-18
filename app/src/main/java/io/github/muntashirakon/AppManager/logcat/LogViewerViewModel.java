@@ -2,11 +2,8 @@
 
 package io.github.muntashirakon.AppManager.logcat;
 
-import android.Manifest;
 import android.app.Application;
 import android.net.Uri;
-import android.os.RemoteException;
-import android.os.UserHandleHidden;
 
 import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
@@ -33,7 +30,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 import io.github.muntashirakon.AppManager.db.AppsDb;
 import io.github.muntashirakon.AppManager.db.entity.LogFilter;
 import io.github.muntashirakon.AppManager.logcat.helper.BuildHelper;
@@ -46,10 +42,8 @@ import io.github.muntashirakon.AppManager.logcat.struct.SendLogDetails;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
-import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
-import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
@@ -93,20 +87,6 @@ public class LogViewerViewModel extends AndroidViewModel {
         killLogcatReaderInternal();
         mExecutor.shutdown();
         super.onCleared();
-    }
-
-    @AnyThread
-    public void grantReadLogsPermission() {
-        if (!PermissionUtils.hasSelfPermission(Manifest.permission.READ_LOGS) && Ops.isPrivileged()) {
-            mExecutor.submit(() -> {
-                try {
-                    PermissionCompat.grantPermission(getApplication().getPackageName(), Manifest.permission.READ_LOGS,
-                            UserHandleHidden.myUserId());
-                } catch (RemoteException e) {
-                    Log.d(TAG, e.toString());
-                }
-            });
-        }
     }
 
     public LiveData<Boolean> observeLoggingFinished() {
