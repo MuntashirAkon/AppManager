@@ -98,6 +98,17 @@ public class SelfPermissions {
         return checkSelfOrRemotePermission(Manifest.permission.DELETE_CACHE_FILES);
     }
 
+    public static boolean checkNotificationListenerAccess() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1) {
+            return false;
+        }
+        int callingUid = Users.getSelfOrRemoteUid();
+        if (checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_NOTIFICATION_LISTENERS)) {
+            return true;
+        }
+        return callingUid == Ops.ROOT_UID || callingUid == Ops.SYSTEM_UID || callingUid == Ops.PHONE_UID;
+    }
+
     public static boolean checkCrossUserPermission(@UserIdInt int userId, boolean requireFullPermission) {
         if (userId < 0) {
             throw new IllegalArgumentException("Invalid userId " + userId);

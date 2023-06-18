@@ -93,6 +93,7 @@ public class Ops {
 
     public static int ROOT_UID = 0;
     public static int SHELL_UID = 2000;
+    public static int PHONE_UID = Process.PHONE_UID;
     public static int SYSTEM_UID = Process.SYSTEM_UID;
 
     private static boolean sIsAdb = false; // UID = 2000

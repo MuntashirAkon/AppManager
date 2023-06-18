@@ -86,6 +86,9 @@
         android:name="android.permission.MANAGE_NETWORK_POLICY"
         tools:ignore="ProtectedPermissions" />
     <uses-permission
+        android:name="android.permission.MANAGE_NOTIFICATION_LISTENERS"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission
         android:name="android.permission.MANAGE_USERS"
         tools:ignore="ProtectedPermissions" />
     <uses-permission

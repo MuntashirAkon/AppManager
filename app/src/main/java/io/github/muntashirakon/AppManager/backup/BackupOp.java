@@ -36,7 +36,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -62,7 +61,6 @@ import io.github.muntashirakon.AppManager.rules.PseudoRules;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
-import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.ssaid.SsaidSettings;
 import io.github.muntashirakon.AppManager.uri.UriManager;
@@ -428,13 +426,10 @@ class BackupOp implements Closeable {
             }
         }
         // Backup allowed notification listeners aka BIND_NOTIFICATION_LISTENER_SERVICE
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1 && SelfPermissions.checkNotificationListenerAccess()) {
             try {
                 INotificationManager notificationManager = INotificationManager.Stub.asInterface(ProxyBinder.getService(Context.NOTIFICATION_SERVICE));
-                List<ComponentName> notificationComponents;
-                if (Ops.isPrivileged()) {
-                    notificationComponents = notificationManager.getEnabledNotificationListeners(mUserId);
-                } else notificationComponents = Collections.emptyList();
+                List<ComponentName> notificationComponents = notificationManager.getEnabledNotificationListeners(mUserId);
                 List<String> componentsForThisPkg = new ArrayList<>();
                 for (ComponentName componentName : notificationComponents) {
                     if (mPackageName.equals(componentName.getPackageName())) {

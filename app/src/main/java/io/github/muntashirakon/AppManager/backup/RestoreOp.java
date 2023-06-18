@@ -610,7 +610,8 @@ class RestoreOp implements Closeable {
                         break;
                     }
                     case NOTIFICATION:
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1
+                                && SelfPermissions.checkNotificationListenerAccess()) {
                             notificationManager.setNotificationListenerAccessGrantedForUser(
                                     new ComponentName(packageName, entry.name), userHandle, true);
                         }
