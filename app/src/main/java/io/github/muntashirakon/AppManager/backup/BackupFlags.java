@@ -47,11 +47,11 @@ public final class BackupFlags {
     public static final int BACKUP_NOTHING = 0;
     @SuppressWarnings("PointlessBitwiseExpression")
     @Deprecated
-    public static final int BACKUP_SOURCE = 1 << 0;
+    private static final int BACKUP_SOURCE = 1 << 0;
     public static final int BACKUP_INT_DATA = 1 << 1;
     public static final int BACKUP_EXT_DATA = 1 << 2;
     @Deprecated
-    public static final int BACKUP_EXCLUDE_CACHE = 1 << 3;
+    private static final int BACKUP_EXCLUDE_CACHE = 1 << 3;
     public static final int BACKUP_RULES = 1 << 4;
     public static final int BACKUP_NO_SIGNATURE_CHECK = 1 << 5;
     public static final int BACKUP_APK_FILES = 1 << 6;
@@ -309,7 +309,7 @@ public final class BackupFlags {
             // BACKUP_EXCLUDE_CACHE is inversely replaced with BACKUP_CACHE
             flags &= ~BACKUP_EXCLUDE_CACHE;
             flags &= ~BACKUP_CACHE;
-        } else flags |= BACKUP_CACHE;
+        }
         return flags;
     }
 }
