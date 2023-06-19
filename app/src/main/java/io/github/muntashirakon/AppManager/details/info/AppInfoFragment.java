@@ -1239,18 +1239,13 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                 dialogFragment.setArguments(args);
                                 dialogFragment.show(mActivity.getSupportFragmentManager(), WhatsNewDialogFragment.TAG);
                             });
-                    addToHorizontalLayout(R.string.update, R.drawable.ic_get_app)
-                            .setOnClickListener(v -> install());
+                    addToHorizontalLayout(R.string.update, R.drawable.ic_get_app).setOnClickListener(v -> install());
                 } else if (installedVersionCode == thisVersionCode) {
                     // Needs reinstall
-                    addToHorizontalLayout(R.string.reinstall, R.drawable.ic_get_app)
-                            .setOnClickListener(v -> install());
-                } else {
+                    addToHorizontalLayout(R.string.reinstall, R.drawable.ic_get_app).setOnClickListener(v -> install());
+                } else if (SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.INSTALL_PACKAGES)) {
                     // Needs downgrade
-                    if (Ops.isPrivileged()) {
-                        addToHorizontalLayout(R.string.downgrade, R.drawable.ic_get_app)
-                                .setOnClickListener(v -> install());
-                    }
+                    addToHorizontalLayout(R.string.downgrade, R.drawable.ic_get_app).setOnClickListener(v -> install());
                 }
             }
         }

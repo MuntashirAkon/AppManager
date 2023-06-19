@@ -27,6 +27,7 @@ import io.github.muntashirakon.AppManager.db.utils.AppDb;
 import io.github.muntashirakon.AppManager.oneclickops.ItemCount;
 import io.github.muntashirakon.AppManager.rules.RulesTypeSelectionDialogFragment;
 import io.github.muntashirakon.AppManager.rules.compontents.ExternalComponentsImporter;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -152,7 +153,7 @@ public class ImportExportRulesPreferences extends PreferenceFragment {
     }
 
     private void importExistingRules(final boolean systemApps) {
-        if (!Ops.isPrivileged()) {
+        if (!SelfPermissions.canModifyAppComponentStates(UserHandleHidden.myUserId(), null, true)) {
             Toast.makeText(requireContext(), R.string.only_works_in_root_or_adb_mode, Toast.LENGTH_SHORT).show();
             return;
         }
