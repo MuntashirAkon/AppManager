@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Process;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -89,7 +90,7 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
 
     @Nullable
     RunningAppsViewModel mModel;
-    boolean enableKillForSystem = false;
+    private boolean enableKillForSystem = false;
 
     @Nullable
     private RunningAppsAdapter mAdapter;
@@ -101,7 +102,6 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
     private MultiSelectionView mMultiSelectionView;
     @Nullable
     private Menu mSelectionMenu;
-    private boolean mIsAdbMode;
 
     private final BroadcastReceiver mBatchOpsBroadCastReceiver = new BroadcastReceiver() {
         @Override
@@ -292,12 +292,6 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        mIsAdbMode = Ops.isAdb();
-    }
-
-    @Override
     protected void onResume() {
         super.onResume();
         refresh();
@@ -374,10 +368,10 @@ public class RunningAppsActivity extends BaseActivity implements MultiSelectionV
         forceStop.setEnabled(appsCount != 0 && appsCount == selectedItems.size());
         forceStop.setVisible(SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.FORCE_STOP_PACKAGES));
         preventBackground.setEnabled(appsCount != 0 && appsCount == selectedItems.size());
-        boolean killEnabled = !mIsAdbMode;
+        boolean killEnabled = Ops.isRoot();
         if (killEnabled && !enableKillForSystem) {
             for (ProcessItem item : selectedItems) {
-                if (item.uid < 10_000) {
+                if (item.uid < Process.FIRST_APPLICATION_UID) {
                     killEnabled = false;
                     break;
                 }
