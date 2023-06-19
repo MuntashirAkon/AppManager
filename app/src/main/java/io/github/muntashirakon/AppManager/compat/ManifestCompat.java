@@ -28,6 +28,8 @@ public final class ManifestCompat {
         public static final String INTERACT_ACROSS_USERS_FULL = "android.permission.INTERACT_ACROSS_USERS_FULL";
         @RequiresApi(Build.VERSION_CODES.P)
         public static final String INTERNAL_DELETE_CACHE_FILES = "android.permission.INTERNAL_DELETE_CACHE_FILES";
+        @RequiresApi(Build.VERSION_CODES.M)
+        public static final String KILL_UID = "android.permission.KILL_UID";
         @RequiresApi(Build.VERSION_CODES.N)
         public static final String MANAGE_APP_OPS_RESTRICTIONS = "android.permission.MANAGE_APP_OPS_RESTRICTIONS";
         @RequiresApi(Build.VERSION_CODES.P)

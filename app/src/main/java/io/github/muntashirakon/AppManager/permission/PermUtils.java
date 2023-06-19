@@ -130,7 +130,7 @@ public class PermUtils {
 
         persistChanges(packageInfo.applicationInfo, permission, appOpsManager, false, null);
 
-        if (killApp) {
+        if (killApp && SelfPermissions.canKillUid()) {
             ActivityManagerCompat.killUid(packageInfo.applicationInfo.uid, KILL_REASON_APP_OP_CHANGE);
         }
     }
@@ -212,7 +212,7 @@ public class PermUtils {
 
         persistChanges(packageInfo.applicationInfo, permission, appOpsManager, false, null);
 
-        if (killApp) {
+        if (killApp && SelfPermissions.canKillUid()) {
             ActivityManagerCompat.killUid(packageInfo.applicationInfo.uid, KILL_REASON_APP_OP_CHANGE);
         }
     }
@@ -273,7 +273,7 @@ public class PermUtils {
             }
         }
 
-        if (mayKillBecauseOfAppOpsChange && shouldKillApp) {
+        if (mayKillBecauseOfAppOpsChange && shouldKillApp && SelfPermissions.canKillUid()) {
             ActivityManagerCompat.killUid(uid, KILL_REASON_APP_OP_CHANGE);
         }
         if (userId != UserHandleHidden.myUserId()) {

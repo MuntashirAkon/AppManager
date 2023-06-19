@@ -101,6 +101,13 @@ public class SelfPermissions {
         return checkSelfOrRemotePermission(Manifest.permission.DELETE_CACHE_FILES);
     }
 
+    public static boolean canKillUid() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return checkSelfOrRemotePermission(ManifestCompat.permission.KILL_UID);
+        }
+        return Users.getSelfOrRemoteUid() == Ops.SYSTEM_UID;
+    }
+
     public static boolean checkNotificationListenerAccess() {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1) {
             return false;
