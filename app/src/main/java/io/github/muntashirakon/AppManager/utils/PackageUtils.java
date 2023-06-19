@@ -874,6 +874,9 @@ public final class PackageUtils {
     }
 
     public static void ensurePackageStagingDirectoryPrivileged() throws ErrnoException {
+        if (!Paths.get("/data/local").canWrite()) {
+            return;
+        }
         Path psd = Paths.get(PACKAGE_STAGING_DIRECTORY);
         if (!psd.isDirectory()) {
             // Recreate directory
