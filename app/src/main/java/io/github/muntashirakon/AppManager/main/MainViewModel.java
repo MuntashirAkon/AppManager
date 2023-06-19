@@ -52,7 +52,6 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.misc.ListOptions;
 import io.github.muntashirakon.AppManager.profiles.ProfileMetaManager;
-import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
@@ -509,7 +508,6 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
     @GuardedBy("applicationItems")
     private void sortApplicationList(@MainListOptions.SortOrder int sortBy, boolean reverse) {
         synchronized (applicationItems) {
-            final boolean isRootEnabled = Ops.isRoot();
             if (sortBy != MainListOptions.SORT_BY_APP_LABEL) {
                 sortApplicationList(MainListOptions.SORT_BY_APP_LABEL, false);
             }
@@ -565,10 +563,7 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                             } else return mode * i;
                         }
                     case MainListOptions.SORT_BY_BLOCKED_COMPONENTS:
-                        if (isRootEnabled) {
-                            return -mode * o1.blockedCount.compareTo(o2.blockedCount);
-                        }
-                        break;
+                        return -mode * o1.blockedCount.compareTo(o2.blockedCount);
                     case MainListOptions.SORT_BY_FROZEN_APP:
                         return -mode * Boolean.compare(o1.isDisabled, o2.isDisabled);
                     case MainListOptions.SORT_BY_BACKUP:
