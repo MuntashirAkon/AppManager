@@ -119,22 +119,12 @@ public class Ops {
         return sIsRoot || sIsAdb || sIsSystem;
     }
 
-    @AnyThread
-    public static boolean isReallyPrivileged() {
-        return isPrivileged() && LocalServer.isAMServiceAlive();
-    }
-
     /**
      * Whether App Manager is running in root mode
      */
     @AnyThread
     public static boolean isRoot() {
         return sIsRoot;
-    }
-
-    @AnyThread
-    private static boolean isReallyRoot() {
-        return isRoot() && Users.getSelfOrRemoteUid() == ROOT_UID;
     }
 
     /**
@@ -146,24 +136,11 @@ public class Ops {
     }
 
     /**
-     * Whether App Manager is running in system mode
-     */
-    @AnyThread
-    private static boolean isReallySystem() {
-        return isSystem() && Users.getSelfOrRemoteUid() == SYSTEM_UID;
-    }
-
-    /**
      * Whether App Manager is running in ADB mode
      */
     @AnyThread
     public static boolean isAdb() {
         return sIsAdb;
-    }
-
-    @AnyThread
-    private static boolean isReallyAdb() {
-        return isAdb() && Users.getSelfOrRemoteUid() == SHELL_UID;
     }
 
     /**
@@ -191,13 +168,14 @@ public class Ops {
 
     @NonNull
     public static CharSequence getInferredMode(@NonNull Context context) {
-        if (isReallyRoot()) {
+        int uid = Users.getSelfOrRemoteUid();
+        if (uid == ROOT_UID) {
             return context.getString(R.string.root);
         }
-        if (isReallySystem()) {
+        if (uid == SYSTEM_UID) {
             return context.getString(R.string.system);
         }
-        if (isReallyAdb()) {
+        if (uid == SHELL_UID) {
             return "ADB";
         }
         return context.getString(R.string.no_root);
