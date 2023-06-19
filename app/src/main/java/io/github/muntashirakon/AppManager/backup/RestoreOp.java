@@ -61,7 +61,6 @@ import io.github.muntashirakon.AppManager.rules.struct.SsaidRule;
 import io.github.muntashirakon.AppManager.rules.struct.UriGrantRule;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
-import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.ssaid.SsaidSettings;
 import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
@@ -302,17 +301,14 @@ class RestoreOp implements Closeable {
             }
         }
         // Setup package staging directory
-        Path packageStagingDirectory;
-        if (Ops.isPrivileged()) {
-            try {
-                synchronized (sLock) {
-                    PackageUtils.ensurePackageStagingDirectoryPrivileged();
-                }
-                packageStagingDirectory = Paths.get(PackageUtils.PACKAGE_STAGING_DIRECTORY);
-            } catch (Exception e) {
-                throw new BackupException("Could not ensure the existence of /data/local/tmp", e);
+        Path packageStagingDirectory = Paths.get(PackageUtils.PACKAGE_STAGING_DIRECTORY);
+        try {
+            synchronized (sLock) {
+                PackageUtils.ensurePackageStagingDirectoryPrivileged();
             }
-        } else {
+        } catch (Exception ignore) {
+        }
+        if (!packageStagingDirectory.canWrite()) {
             packageStagingDirectory = backupPath;
         }
         synchronized (sLock) {
