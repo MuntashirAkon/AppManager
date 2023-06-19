@@ -59,8 +59,10 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.IntegerCompat;
+import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.crypto.auth.AuthManager;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.shortcut.LauncherIconCreator;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
@@ -319,7 +321,7 @@ public class ActivityInterceptor extends BaseActivity {
         findViewById(R.id.progress_linear).setVisibility(View.GONE);
         // Get Intent
         Intent intent = new Intent(getIntent());
-        mUseRoot = intent.getBooleanExtra(EXTRA_ROOT, false);
+        mUseRoot = Ops.isRoot() && intent.getBooleanExtra(EXTRA_ROOT, false);
         mUserHandle = intent.getIntExtra(EXTRA_USER_HANDLE, UserHandleHidden.myUserId());
         intent.removeExtra(EXTRA_ROOT);
         intent.removeExtra(EXTRA_USER_HANDLE);
@@ -537,7 +539,7 @@ public class ActivityInterceptor extends BaseActivity {
         if (mMutableIntent == null) {
             return Collections.emptyList();
         }
-        if (mUseRoot || (mUserHandle != UserHandleHidden.myUserId() && Ops.isPrivileged())) {
+        if (mUseRoot || SelfPermissions.checkCrossUserPermission(mUserHandle, false)) {
             try {
                 return PackageManagerCompat.queryIntentActivities(this, mMutableIntent, 0, mUserHandle);
             } catch (RemoteException e) {
@@ -561,7 +563,8 @@ public class ActivityInterceptor extends BaseActivity {
         // Setup user ID edit
         mUserIdEdit = findViewById(R.id.user_id_edit);
         mUserIdEdit.setText(String.valueOf(mUserHandle));
-        mUserIdEdit.setEnabled(Ops.isPrivileged());
+        mUserIdEdit.setEnabled(SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.INTERACT_ACROSS_USERS)
+                || SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.INTERACT_ACROSS_USERS_FULL));
         // Setup root
         MaterialCheckBox useRootCheckBox = findViewById(R.id.use_root);
         useRootCheckBox.setChecked(mUseRoot);
@@ -816,8 +819,9 @@ public class ActivityInterceptor extends BaseActivity {
                         ++parseCount;
                         break;
                     case "USER":
-                        if (Ops.isPrivileged()) {
-                            mUserHandle = Integer.decode(tokenizer.nextToken());
+                        int userId = Integer.decode(tokenizer.nextToken());
+                        if (SelfPermissions.checkCrossUserPermission(userId, false)) {
+                            mUserHandle = userId;
                         }
                         ++parseCount;
                         break;
@@ -911,19 +915,19 @@ public class ActivityInterceptor extends BaseActivity {
     }
 
     public void launchIntent(@NonNull Intent intent, boolean createChooser) {
-        boolean isPrivileged = mUseRoot || (mUserHandle != UserHandleHidden.myUserId() && Ops.isPrivileged());
+        boolean needPrivilege = mUseRoot || mUserHandle != UserHandleHidden.myUserId();
         try {
             if (createChooser) {
                 Intent chooserIntent = Intent.createChooser(intent, mResendIntentButton != null ?
                         mResendIntentButton.getText() : getString(R.string.open));
-                if (isPrivileged) {
+                if (needPrivilege) {
                     // TODO: 4/2/22 Support sending activity result back to the original app
                     ActivityManagerCompat.startActivity(this, chooserIntent, mUserHandle);
                 } else {
                     mIntentLauncher.launch(chooserIntent);
                 }
             } else { // Launch a fixed component
-                if (isPrivileged) {
+                if (needPrivilege) {
                     // TODO: 4/2/22 Support sending activity result back to the original app
                     ActivityManagerCompat.startActivity(this, intent, mUserHandle);
                 } else {
