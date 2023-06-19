@@ -519,7 +519,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                     intent.setClassName(mPackageName, activityName);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     try {
-                        ActivityManagerCompat.startActivity(activity, intent, mUserId);
+                        ActivityManagerCompat.startActivity(intent, mUserId);
                     } catch (Throwable e) {
                         UIUtils.displayLongToast(e.getLocalizedMessage());
                     }
@@ -619,7 +619,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                     Intent intent = new Intent();
                     intent.setClassName(mPackageName, serviceInfo.name);
                     try {
-                        ActivityManagerCompat.startService(activity, intent, mUserId, true);
+                        ActivityManagerCompat.startService(intent, mUserId, true);
                     } catch (Throwable th) {
                         th.printStackTrace();
                         Toast.makeText(context, th.toString(), Toast.LENGTH_LONG).show();

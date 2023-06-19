@@ -9,7 +9,6 @@ import android.os.UserHandleHidden;
 
 import androidx.annotation.Nullable;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
@@ -34,7 +33,7 @@ public class ActivityLauncherShortcutActivity extends BaseActivity {
         intent.removeExtra(EXTRA_PKG);
         intent.removeExtra(EXTRA_CLS);
         try {
-            ActivityManagerCompat.startActivity(AppManager.getContext(), intent, userId);
+            ActivityManagerCompat.startActivity(intent, userId);
         } catch (RemoteException e) {
             e.printStackTrace();
             UIUtils.displayLongToast("Error: " + e.getMessage());

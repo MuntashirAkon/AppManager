@@ -1042,8 +1042,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 addToHorizontalLayout(R.string.launch_app, R.drawable.ic_open_in_new)
                         .setOnClickListener(v -> {
                             try {
-                                ActivityManagerCompat.startActivity(requireContext(), launchIntent,
-                                        mainModel.getUserHandle());
+                                ActivityManagerCompat.startActivity(launchIntent, mainModel.getUserHandle());
                             } catch (Throwable th) {
                                 UIUtils.displayLongToast(th.getLocalizedMessage());
                             }
@@ -1074,7 +1073,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     try {
                         Intent uninstallIntent = new Intent(Intent.ACTION_DELETE);
                         uninstallIntent.setData(Uri.parse("package:" + mPackageName));
-                        ActivityManagerCompat.startActivity(requireContext(), uninstallIntent, userId);
+                        ActivityManagerCompat.startActivity(uninstallIntent, userId);
                     } catch (Throwable th) {
                         UIUtils.displayLongToast(th.getLocalizedMessage());
                     }
@@ -1213,8 +1212,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 addToHorizontalLayout(R.string.view_in_settings, R.drawable.ic_settings)
                         .setOnClickListener(v -> {
                             try {
-                                ActivityManagerCompat.startActivity(requireContext(),
-                                        IntentUtils.getAppDetailsSettings(mPackageName),
+                                ActivityManagerCompat.startActivity(IntentUtils.getAppDetailsSettings(mPackageName),
                                         mainModel.getUserHandle());
                             } catch (Throwable th) {
                                 UIUtils.displayLongToast(th.getLocalizedMessage());

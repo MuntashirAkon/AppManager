@@ -922,14 +922,14 @@ public class ActivityInterceptor extends BaseActivity {
                         mResendIntentButton.getText() : getString(R.string.open));
                 if (needPrivilege) {
                     // TODO: 4/2/22 Support sending activity result back to the original app
-                    ActivityManagerCompat.startActivity(this, chooserIntent, mUserHandle);
+                    ActivityManagerCompat.startActivity(chooserIntent, mUserHandle);
                 } else {
                     mIntentLauncher.launch(chooserIntent);
                 }
             } else { // Launch a fixed component
                 if (needPrivilege) {
                     // TODO: 4/2/22 Support sending activity result back to the original app
-                    ActivityManagerCompat.startActivity(this, intent, mUserHandle);
+                    ActivityManagerCompat.startActivity(intent, mUserHandle);
                 } else {
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     mIntentLauncher.launch(intent);
