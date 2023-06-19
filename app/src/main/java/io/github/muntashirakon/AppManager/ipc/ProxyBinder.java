@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.server.common.IRootServiceManager;
-import io.github.muntashirakon.AppManager.settings.Ops;
+import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 
 // Copyright 2020 Rikka
 public class ProxyBinder implements IBinder {
@@ -53,10 +53,7 @@ public class ProxyBinder implements IBinder {
 
     @Override
     public boolean transact(int code, @NonNull Parcel data, @Nullable Parcel reply, int flags) throws RemoteException {
-        if (Ops.isPrivileged()) {
-            if (!Ops.isReallyPrivileged()) {
-                throw new RemoteException("Root/ADB enabled but privileged service isn't alive.");
-            }
+        if (LocalServer.isAMServiceAlive()) {
             Parcel newData = Parcel.obtain();
             try {
                 newData.writeInterfaceToken(IRootServiceManager.class.getName());
