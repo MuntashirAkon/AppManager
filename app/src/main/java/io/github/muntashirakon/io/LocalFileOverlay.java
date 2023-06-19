@@ -107,7 +107,7 @@ final class LocalFileOverlay {
             put("/data/user_de", new String[]{String.valueOf(userId)}); // Permission denied
             put("/data/user_de/" + userId, new String[]{appId}); // Permission denied
         }
-        put("/mnt/sdcard", new String[]{"/storage/emulated/" + userId}); // Permission denied, but redirects to /storage/emulated/<user_id>
+        put("/mnt/sdcard", new String[]{"/storage/self/primary"}); // Permission denied, but redirects to /storage/self/primary
         put("/storage", new String[]{"emulated", "self"}); // Permission denied
         put("/storage/emulated", new String[]{String.valueOf(userId)}); // Permission denied
     }};
