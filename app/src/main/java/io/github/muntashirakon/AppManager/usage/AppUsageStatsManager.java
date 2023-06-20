@@ -18,10 +18,8 @@ import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.os.RemoteException;
+import android.os.UserHandleHidden;
 import android.telephony.SubscriptionInfo;
-import android.telephony.SubscriptionManager;
-import android.telephony.TelephonyManager;
-import android.telephony.TelephonyManagerHidden;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -37,11 +35,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
-import dev.rikka.tools.refine.Refine;
-import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.compat.SubscriptionManagerCompat;
 import io.github.muntashirakon.AppManager.compat.UsageStatsManagerCompat;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
@@ -172,8 +169,8 @@ public class AppUsageStatsManager {
     }
 
     public PackageUsageInfo getUsageStatsForPackage(@NonNull String packageName,
-                                                     @UsageUtils.IntervalType int usageInterval,
-                                                     @UserIdInt int userId)
+                                                    @UsageUtils.IntervalType int usageInterval,
+                                                    @UserIdInt int userId)
             throws RemoteException, PackageManager.NameNotFoundException {
         UsageUtils.TimeInterval range = UsageUtils.getTimeInterval(usageInterval);
         PackageUsageInfo packageUsageInfo = new PackageUsageInfo(context, packageName, userId,
@@ -302,8 +299,8 @@ public class AppUsageStatsManager {
 
     public static long getLastActivityTime(String packageName, @NonNull UsageUtils.TimeInterval interval) {
         try {
-            UsageEvents events = UsageStatsManagerCompat.getUsageStatsManager().queryEvents(interval.getStartTime(),
-                    interval.getEndTime(), AppManager.getContext().getPackageName());
+            UsageEvents events = UsageStatsManagerCompat.queryEvents(interval.getStartTime(), interval.getEndTime(),
+                    UserHandleHidden.myUserId());
             if (events == null) return 0L;
             UsageEvents.Event event = new UsageEvents.Event();
             while (events.hasNextEvent()) {
@@ -396,48 +393,33 @@ public class AppUsageStatsManager {
     /**
      * @return A list of subscriber IDs if networkType is {@link android.net.NetworkCapabilities#TRANSPORT_CELLULAR}, or
      * a singleton array with {@code null} being the only element.
-     * @deprecated Requires {@code android.Manifest.permission.READ_PRIVILEGED_PHONE_STATE} from Android 10 (API 29)
      */
     @SuppressLint({"HardwareIds", "MissingPermission"})
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP_MR1)
-    @Deprecated
+    @RequiresApi(Build.VERSION_CODES.M) // LOLLIPOP_MR1, but we don't need it for API < 23
     @NonNull
     private static List<String> getSubscriberIds(@NonNull Context context, @Transport int networkType) {
         if (networkType != TRANSPORT_CELLULAR
-                || !SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.READ_PHONE_STATE)) {
+                || !context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEPHONY_SUBSCRIPTION)
+                || (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q && !SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.READ_PHONE_STATE))
+                || (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q && !SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.READ_PRIVILEGED_PHONE_STATE))
+        ) {
+            // Unsupported API
             return Collections.singletonList(null);
         }
-        // FIXME: 24/4/21 Consider using Binder to fetch subscriber info
-        try {
-            SubscriptionManager sm = (SubscriptionManager) context.getSystemService(Context
-                    .TELEPHONY_SUBSCRIPTION_SERVICE);
-            TelephonyManager tm = (TelephonyManager) Objects.requireNonNull(context.getSystemService(Context
-                    .TELEPHONY_SERVICE));
-
-            List<SubscriptionInfo> subscriptionInfoList = sm.getActiveSubscriptionInfoList();
-            if (subscriptionInfoList == null) {
-                // No telephony services
-                return Collections.singletonList(null);
-            }
-            List<String> subscriberIds = new ArrayList<>();
-            for (SubscriptionInfo info : subscriptionInfoList) {
-                int subscriptionId = info.getSubscriptionId();
-                try {
-                    String subscriberId = Refine.<TelephonyManagerHidden>unsafeCast(tm).getSubscriberId(subscriptionId);
-                    subscriberIds.add(subscriberId);
-                } catch (Exception e) {
-                    try {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                            subscriberIds.add(tm.createForSubscriptionId(subscriptionId).getSubscriberId());
-                        }
-                    } catch (Exception e2) {
-                        subscriberIds.add(tm.getSubscriberId());
-                    }
-                }
-            }
-            return subscriberIds.size() == 0 ? Collections.singletonList(null) : subscriberIds;
-        } catch (SecurityException e) {
+        List<SubscriptionInfo> subscriptionInfoList = SubscriptionManagerCompat.getActiveSubscriptionInfoList();
+        if (subscriptionInfoList == null) {
+            // No telephony services
             return Collections.singletonList(null);
         }
+        List<String> subscriberIds = new ArrayList<>();
+        for (SubscriptionInfo info : subscriptionInfoList) {
+            int subscriptionId = info.getSubscriptionId();
+            try {
+                String subscriberId = SubscriptionManagerCompat.getSubscriberIdForSubscriber(subscriptionId);
+                subscriberIds.add(subscriberId);
+            } catch (SecurityException ignore) {
+            }
+        }
+        return subscriberIds.size() == 0 ? Collections.singletonList(null) : subscriberIds;
     }
 }

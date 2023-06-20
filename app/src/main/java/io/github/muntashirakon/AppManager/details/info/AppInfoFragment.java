@@ -1637,14 +1637,14 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 }));
             }
         }
-        if (!SelfPermissions.hasUsageStatsPermission()) {
+        if (!SelfPermissions.checkUsageStatsPermission()) {
             ThreadUtils.postOnMainThread(() -> new MaterialAlertDialogBuilder(mActivity)
                     .setTitle(R.string.grant_usage_access)
                     .setMessage(R.string.grant_usage_acess_message)
                     .setPositiveButton(R.string.go, (dialog, which) -> {
                         try {
                             activityLauncher.launch(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS), result -> {
-                                if (SelfPermissions.hasUsageStatsPermission()) {
+                                if (SelfPermissions.checkUsageStatsPermission()) {
                                     FeatureController.getInstance().modifyState(FeatureController
                                             .FEAT_USAGE_ACCESS, true);
                                     // Reload app info

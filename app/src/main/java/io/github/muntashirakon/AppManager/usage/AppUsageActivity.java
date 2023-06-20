@@ -167,7 +167,7 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
 
     private void checkPermissions() {
         // Check permission
-        if (!SelfPermissions.hasUsageStatsPermission()) {
+        if (!SelfPermissions.checkUsageStatsPermission()) {
             promptForUsageStatsPermission();
         } else getAppUsage();
         if (AppUsageStatsManager.requireReadPhoneStatePermission()) {

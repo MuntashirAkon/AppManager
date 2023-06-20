@@ -134,10 +134,10 @@ public class SelfPermissions {
         return callingUid == Ops.ROOT_UID || callingUid == Ops.SYSTEM_UID || callingUid == Ops.PHONE_UID;
     }
 
-    public static boolean hasUsageStatsPermission() {
+    public static boolean checkUsageStatsPermission() {
         AppOpsManagerCompat appOps = new AppOpsManagerCompat();
         int callingUid = Users.getSelfOrRemoteUid();
-        if (callingUid == Ops.ROOT_UID) {
+        if (callingUid == Ops.ROOT_UID || callingUid == Ops.SYSTEM_UID) {
             return true;
         }
         int mode = appOps.checkOpNoThrow(AppOpsManagerHidden.OP_GET_USAGE_STATS, callingUid, getCallingPackage(callingUid));

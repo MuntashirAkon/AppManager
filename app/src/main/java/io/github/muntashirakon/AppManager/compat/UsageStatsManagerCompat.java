@@ -12,6 +12,8 @@ import android.os.UserHandleHidden;
 
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
+import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.BroadcastUtils;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 
@@ -30,7 +32,7 @@ public final class UsageStatsManagerCompat {
 
     public static UsageEvents queryEvents(long beginTime, long endTime, int userId) throws RemoteException {
         IUsageStatsManager usm = getUsageStatsManager();
-        String callingPackage = AppManager.getContext().getPackageName();
+        String callingPackage = SelfPermissions.getCallingPackage(Users.getSelfOrRemoteUid());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             return usm.queryEventsForUser(beginTime, endTime, userId, callingPackage);
         }
