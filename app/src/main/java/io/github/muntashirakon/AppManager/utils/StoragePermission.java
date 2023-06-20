@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.utils;
 import android.Manifest;
 import android.content.Intent;
 import android.os.Build;
+import android.os.Environment;
 import android.provider.Settings;
 
 import androidx.activity.result.ActivityResult;
@@ -13,6 +14,8 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 
 public class StoragePermission {
     @NonNull
@@ -38,20 +41,20 @@ public class StoragePermission {
 
     @SuppressWarnings("InlinedApi")
     public void request(@Nullable StoragePermissionCallback callback) {
-        if (PermissionUtils.hasStoragePermission()) {
+        if (SelfPermissions.checkSelfStoragePermission()) {
             if (callback != null) callback.onResult(true);
             return;
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             storagePermApi30.launch(new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION), result -> {
                 if (callback != null) {
-                    callback.onResult(PermissionUtils.hasStoragePermission());
+                    callback.onResult(Environment.isExternalStorageManager());
                 }
             });
         } else {
             storagePerm.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE, result -> {
                 if (callback != null) {
-                    callback.onResult(PermissionUtils.hasStoragePermission());
+                    callback.onResult(SelfPermissions.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE));
                 }
             });
         }

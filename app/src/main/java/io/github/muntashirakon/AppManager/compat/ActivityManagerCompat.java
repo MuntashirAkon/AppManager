@@ -32,21 +32,17 @@ import java.util.ListIterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
-import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.users.Users;
 
 public final class ActivityManagerCompat {
-    public static final String SHELL_PACKAGE_NAME = "com.android.shell";
-
     @SuppressWarnings("deprecation")
     public static int startActivity(Intent intent, @UserIdInt int userHandle) throws RemoteException {
         IActivityManager am = getActivityManager();
-        String callingPackage = getCallingPackage();
+        String callingPackage = SelfPermissions.getCallingPackage(Users.getSelfOrRemoteUid());
         int result;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             result = am.startActivityAsUserWithFeature(null, callingPackage,
@@ -64,7 +60,7 @@ public final class ActivityManagerCompat {
     public static ComponentName startService(Intent intent, @UserIdInt int userHandle, boolean asForeground)
             throws RemoteException {
         IActivityManager am = getActivityManager();
-        String callingPackage = getCallingPackage();
+        String callingPackage = SelfPermissions.getCallingPackage(Users.getSelfOrRemoteUid());
         ComponentName cn;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             cn = am.startService(null, intent, intent.getType(), asForeground, callingPackage, null, userHandle);
@@ -330,18 +326,6 @@ public final class ActivityManagerCompat {
     private static boolean canDumpRunningServices() {
         return SelfPermissions.checkSelfPermission(Manifest.permission.DUMP)
                 && SelfPermissions.checkSelfPermission(Manifest.permission.PACKAGE_USAGE_STATS);
-    }
-
-    @NonNull
-    private static String getCallingPackage() {
-        int callingUid = Users.getSelfOrRemoteUid();
-        if (callingUid == Ops.ROOT_UID || callingUid == Ops.SHELL_UID) {
-            return SHELL_PACKAGE_NAME;
-        }
-        if (callingUid == Ops.SYSTEM_UID) {
-            return "android";
-        }
-        return BuildConfig.APPLICATION_ID;
     }
 
     final static class IntentReceiver extends IIntentReceiver.Stub {

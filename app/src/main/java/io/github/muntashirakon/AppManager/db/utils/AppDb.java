@@ -360,7 +360,7 @@ public class AppDb {
             // Interrupt thread on request
             if (ThreadUtils.isInterrupted()) return;
             try {
-                packageUsageInfoList.addAll(AppUsageStatsManager.getInstance(context)
+                packageUsageInfoList.addAll(AppUsageStatsManager.getInstance()
                         .getUsageStats(UsageUtils.USAGE_WEEKLY, userId));
             } catch (Exception e) {
                 e.printStackTrace();

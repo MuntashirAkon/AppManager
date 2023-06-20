@@ -33,7 +33,6 @@ import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
-import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
 import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.io.Path;
@@ -180,7 +179,7 @@ public final class Prefs {
             if (uri.getScheme().equals(ContentResolver.SCHEME_FILE)) {
                 // Append AppManager only if storage permissions are granted
                 String newPath = uri.getPath();
-                if (PermissionUtils.hasStoragePermission() || Ops.isPrivileged()) {
+                if (SelfPermissions.checkStoragePermission()) {
                     newPath += File.separator + "AppManager";
                 }
                 path = Paths.get(newPath);

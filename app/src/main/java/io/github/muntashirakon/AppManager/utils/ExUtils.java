@@ -2,6 +2,11 @@
 
 package io.github.muntashirakon.AppManager.utils;
 
+import android.os.Build;
+import android.os.DeadObjectException;
+import android.os.DeadSystemException;
+import android.os.RemoteException;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -36,6 +41,34 @@ public class ExUtils {
         //noinspection UnnecessaryInitCause
         backupException.initCause(e);
         throw backupException;
+    }
+
+    @Contract("_ -> fail")
+    public static  <T> T rethrowAsRuntimeException(@NonNull Throwable th) {
+        throw new RuntimeException(th);
+    }
+
+    /**
+     * Rethrow this exception when we know it came from the system server. This
+     * gives us an opportunity to throw a nice clean
+     * {@link DeadSystemException} signal to avoid spamming logs with
+     * misleading stack traces.
+     * <p>
+     * Apps making calls into the system server may end up persisting internal
+     * state or making security decisions based on the perceived success or
+     * failure of a call, or any default values returned. For this reason, we
+     * want to strongly throw when there was trouble with the transaction.
+     */
+    @Contract("_ -> fail")
+    public static  <T> T rethrowFromSystemServer(@NonNull RemoteException e) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            throw e.rethrowFromSystemServer();
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && e instanceof DeadObjectException) {
+                throw new RuntimeException(new DeadSystemException());
+        } else {
+            throw new RuntimeException(e);
+        }
     }
 
     @Nullable

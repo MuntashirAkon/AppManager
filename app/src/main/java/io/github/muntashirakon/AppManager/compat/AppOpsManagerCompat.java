@@ -35,6 +35,7 @@ import aosp.libcore.util.EmptyArray;
 import dev.rikka.tools.refine.Refine;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.MiuiUtils;
 
 @SuppressLint("SoonBlockedPrivateApi")
@@ -637,6 +638,19 @@ public class AppOpsManagerCompat {
     @AppOpsManagerCompat.Mode
     public int checkOperation(int op, int uid, String packageName) throws RemoteException {
         return appOpsService.checkOperation(op, uid, packageName);
+    }
+
+    /**
+     * Same as {@link AppOpsManager#checkOpNoThrow(String, int, String)}. To be used with App Manager itself.
+     */
+    @AppOpsManagerCompat.Mode
+    public int checkOpNoThrow(int op, int uid, String packageName) {
+        try {
+            int mode = appOpsService.checkOperation(op, uid, packageName);
+            return mode == AppOpsManager.MODE_FOREGROUND ? AppOpsManager.MODE_ALLOWED : mode;
+        } catch (RemoteException e) {
+            return ExUtils.rethrowFromSystemServer(e);
+        }
     }
 
     @RequiresPermission(ManifestCompat.permission.GET_APP_OPS_STATS)

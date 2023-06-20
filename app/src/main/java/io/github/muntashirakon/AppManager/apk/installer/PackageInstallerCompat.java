@@ -55,7 +55,6 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
-import io.github.muntashirakon.AppManager.compat.ActivityManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
@@ -991,7 +990,7 @@ public final class PackageInstallerCompat {
         ThreadUtils.ensureWorkerThread();
         boolean hasDeletePackagesPermission = SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.DELETE_PACKAGES);
         this.packageName = packageName;
-        String callerPackageName = hasDeletePackagesPermission ? ActivityManagerCompat.SHELL_PACKAGE_NAME : BuildConfig.APPLICATION_ID;
+        String callerPackageName = SelfPermissions.getCallingPackage(Users.getSelfOrRemoteUid());
         initBroadcastReceiver();
         try {
             if (userId == UserHandleHidden.USER_ALL && Users.getAllUserIds().length > 1

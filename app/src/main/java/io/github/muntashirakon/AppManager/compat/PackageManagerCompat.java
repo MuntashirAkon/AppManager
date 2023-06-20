@@ -334,10 +334,11 @@ public final class PackageManagerCompat {
     @RequiresApi(Build.VERSION_CODES.N)
     @RequiresPermission(allOf = {"android.permission.SUSPEND_APPS", ManifestCompat.permission.MANAGE_USERS})
     public static void suspendPackages(String[] packageNames, @UserIdInt int userId, boolean suspend) throws RemoteException {
+        String callingPackage = SelfPermissions.getCallingPackage(Users.getSelfOrRemoteUid());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            getPackageManager().setPackagesSuspendedAsUser(packageNames, suspend, null, null, (SuspendDialogInfo) null, ActivityManagerCompat.SHELL_PACKAGE_NAME, userId);
+            getPackageManager().setPackagesSuspendedAsUser(packageNames, suspend, null, null, (SuspendDialogInfo) null, callingPackage, userId);
         } else if (Build.VERSION.SDK_INT == Build.VERSION_CODES.P) {
-            getPackageManager().setPackagesSuspendedAsUser(packageNames, suspend, null, null, (String) null, ActivityManagerCompat.SHELL_PACKAGE_NAME, userId);
+            getPackageManager().setPackagesSuspendedAsUser(packageNames, suspend, null, null, (String) null, callingPackage, userId);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             getPackageManager().setPackagesSuspendedAsUser(packageNames, suspend, userId);
         }

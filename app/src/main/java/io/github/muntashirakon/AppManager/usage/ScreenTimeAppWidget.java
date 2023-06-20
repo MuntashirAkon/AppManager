@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.usage;
 
+import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -16,9 +17,7 @@ import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
@@ -27,28 +26,26 @@ import io.github.muntashirakon.AppManager.utils.DateUtils;
 
 public class ScreenTimeAppWidget extends AppWidgetProvider {
 
-    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
-                                int appWidgetId) {
+    static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
         // Fetch screens time
         int[] userIds = Users.getUsersIds();
         List<PackageUsageInfo> packageUsageInfoList = new ArrayList<>();
         for (int userId : userIds) {
-                try {
-                    packageUsageInfoList.addAll(AppUsageStatsManager.getInstance(context)
-                            .getUsageStats(UsageUtils.USAGE_TODAY, userId));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            try {
+                packageUsageInfoList.addAll(AppUsageStatsManager.getInstance()
+                        .getUsageStats(UsageUtils.USAGE_TODAY, userId));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         Collections.sort(packageUsageInfoList, (o1, o2) -> -Long.compare(o1.screenTime, o2.screenTime));
         long totalScreenTime = 0;
-        Set<Integer> users = new HashSet<>(3);
         for (PackageUsageInfo appItem : packageUsageInfoList) {
             totalScreenTime += appItem.screenTime;
-            users.add(appItem.userId);
         }
         // Get pending intent
         Intent intent = new Intent(context, AppUsageActivity.class);
+        @SuppressLint("WrongConstant")
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0 /* no requestCode */, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntentCompat.FLAG_IMMUTABLE);
         // Construct the RemoteViews object

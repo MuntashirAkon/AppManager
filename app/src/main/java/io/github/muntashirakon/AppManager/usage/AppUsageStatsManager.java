@@ -43,9 +43,10 @@ import dev.rikka.tools.refine.Refine;
 import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.compat.UsageStatsManagerCompat;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.NonNullUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
-import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 
 public class AppUsageStatsManager {
     @Retention(RetentionPolicy.SOURCE)
@@ -115,12 +116,19 @@ public class AppUsageStatsManager {
         }
     }
 
+    public static boolean requireReadPhoneStatePermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+            return !SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.READ_PHONE_STATE);
+        }
+        return false;
+    }
+
     @SuppressLint("StaticFieldLeak")
     private static AppUsageStatsManager appUsageStatsManager;
 
-    public static AppUsageStatsManager getInstance(@NonNull Context context) {
+    public static AppUsageStatsManager getInstance() {
         if (appUsageStatsManager == null)
-            appUsageStatsManager = new AppUsageStatsManager(context.getApplicationContext());
+            appUsageStatsManager = new AppUsageStatsManager();
         return appUsageStatsManager;
     }
 
@@ -128,8 +136,8 @@ public class AppUsageStatsManager {
     private final Context context;
 
     @SuppressLint("WrongConstant")
-    private AppUsageStatsManager(@NonNull Context context) {
-        this.context = context;
+    private AppUsageStatsManager() {
+        this.context = ContextUtils.getContext();
     }
 
     /**
@@ -395,8 +403,8 @@ public class AppUsageStatsManager {
     @Deprecated
     @NonNull
     private static List<String> getSubscriberIds(@NonNull Context context, @Transport int networkType) {
-        if (networkType != TRANSPORT_CELLULAR || !PermissionUtils.hasSelfPermission(
-                Manifest.permission.READ_PHONE_STATE)) {
+        if (networkType != TRANSPORT_CELLULAR
+                || !SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.READ_PHONE_STATE)) {
             return Collections.singletonList(null);
         }
         // FIXME: 24/4/21 Consider using Binder to fetch subscriber info

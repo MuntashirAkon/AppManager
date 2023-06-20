@@ -150,7 +150,6 @@ import io.github.muntashirakon.AppManager.utils.IntentUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
-import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -1632,21 +1631,20 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private void setStorageAndCache(AppInfoViewModel.AppInfo appInfo) {
         if (FeatureController.isUsageAccessEnabled()) {
             // Grant optional READ_PHONE_STATE permission
-            if (!PermissionUtils.hasSelfPermission(Manifest.permission.READ_PHONE_STATE) &&
-                    Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && Build.VERSION.SDK_INT < Build.VERSION_CODES.P) {
+            if (AppUsageStatsManager.requireReadPhoneStatePermission()) {
                 ThreadUtils.postOnMainThread(() -> requestPerm.launch(Manifest.permission.READ_PHONE_STATE, granted -> {
                     if (granted) model.loadAppInfo();
                 }));
             }
         }
-        if (!PermissionUtils.hasUsageStatsPermission(mActivity)) {
+        if (!SelfPermissions.hasUsageStatsPermission()) {
             ThreadUtils.postOnMainThread(() -> new MaterialAlertDialogBuilder(mActivity)
                     .setTitle(R.string.grant_usage_access)
                     .setMessage(R.string.grant_usage_acess_message)
                     .setPositiveButton(R.string.go, (dialog, which) -> {
                         try {
                             activityLauncher.launch(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS), result -> {
-                                if (PermissionUtils.hasUsageStatsPermission(mActivity)) {
+                                if (SelfPermissions.hasUsageStatsPermission()) {
                                     FeatureController.getInstance().modifyState(FeatureController
                                             .FEAT_USAGE_ACCESS, true);
                                     // Reload app info

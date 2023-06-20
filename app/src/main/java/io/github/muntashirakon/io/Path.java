@@ -52,7 +52,6 @@ import io.github.muntashirakon.AppManager.ipc.LocalServices;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
-import io.github.muntashirakon.AppManager.utils.PermissionUtils;
 import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.io.fs.VirtualFileSystem;
 
@@ -91,13 +90,14 @@ public class Path implements Comparable<Path> {
                 EXCLUSIVE_ACCESS_GRANTED.add(true);
             }
         }
-        if (PermissionUtils.hasStoragePermission()) {
+        if (SelfPermissions.checkSelfStoragePermission()) {
             int userId = UserHandleHidden.myUserId();
             String[] cards;
             if (userId == 0) {
                 cards = new String[]{
                         "/sdcard",
-                        "/storage/emulated/" + userId
+                        "/storage/emulated/" + userId,
+                        "/storage/self/primary"
                 };
             } else cards = new String[]{"/storage/emulated/" + userId};
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
