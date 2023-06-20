@@ -149,6 +149,9 @@ public class SelfPermissions {
 
     public static boolean checkSelfStoragePermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (Utils.isRoboUnitTest()) {
+                return false;
+            }
             return Environment.isExternalStorageManager();
         }
         return checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
@@ -160,9 +163,6 @@ public class SelfPermissions {
             return true;
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            if (Utils.isRoboUnitTest()) {
-                return false;
-            }
             String packageName = getCallingPackage(callingUid);
             AppOpsManagerCompat appOps = new AppOpsManagerCompat();
             int opMode = appOps.checkOpNoThrow(AppOpsManagerHidden.OP_MANAGE_EXTERNAL_STORAGE, callingUid, packageName);
