@@ -58,8 +58,10 @@ import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
+import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -782,6 +784,13 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
         if (info.exported && info.permission == null) {
             return true;
         }
-        return SelfPermissions.checkSelfOrRemotePermission(info.permission);
+        int uid = Users.getSelfOrRemoteUid();
+        if (uid == Ops.ROOT_UID || (uid == Ops.SYSTEM_UID && info.permission == null)) {
+            return true;
+        }
+        if (info.permission == null) {
+            return false;
+        }
+        return SelfPermissions.checkSelfOrRemotePermission(info.permission, uid);
     }
 }
