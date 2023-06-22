@@ -12,7 +12,7 @@ import misc.utils.HiddenUtil;
 
 @RefineAs(PackageInstaller.class)
 public class PackageInstallerHidden {
-    @RequiresApi(31)
+    @RequiresApi(Build.VERSION_CODES.S)
     public PackageInstallerHidden(IPackageInstaller installer,
                                   String installerPackageName,
                                   String installerAttributionTag,
@@ -51,6 +51,7 @@ public class PackageInstallerHidden {
 
     public static class SessionParams {
         public int installFlags;
+        @RequiresApi(Build.VERSION_CODES.P)
         public String installerPackageName;
     }
 }

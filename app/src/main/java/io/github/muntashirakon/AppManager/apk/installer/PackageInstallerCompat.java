@@ -29,6 +29,7 @@ import android.os.IBinder;
 import android.os.Process;
 import android.os.RemoteException;
 import android.os.UserHandleHidden;
+import android.text.TextUtils;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -519,6 +520,7 @@ public final class PackageInstallerCompat {
     // MIUI-added: Multiple attempts may be required
     int mAttempts = 1;
     private final Context mContext = ContextUtils.getContext();
+    @NonNull
     private final String mInstallerPackageName;
     private final boolean mHasInstallPackagePermission;
 
@@ -528,7 +530,7 @@ public final class PackageInstallerCompat {
 
     private PackageInstallerCompat(@NonNull String installerPackageName) {
         mHasInstallPackagePermission = SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.INSTALL_PACKAGES);
-        mInstallerPackageName = installerPackageName;
+        mInstallerPackageName = !TextUtils.isEmpty(installerPackageName) ? installerPackageName : BuildConfig.APPLICATION_ID;
         Log.d(TAG, "Installer app: " + installerPackageName);
     }
 
@@ -737,6 +739,9 @@ public final class PackageInstallerCompat {
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private boolean openSession(@UserIdInt int userId, @InstallFlags int installFlags) {
+        String requestedInstallerPackageName = mHasInstallPackagePermission ? mInstallerPackageName : null;
+        String installerPackageName = Build.VERSION.SDK_INT < Build.VERSION_CODES.P && mHasInstallPackagePermission
+                ? mInstallerPackageName : BuildConfig.APPLICATION_ID;
         try {
             mPackageInstaller = PackageManagerCompat.getPackageInstaller();
         } catch (RemoteException e) {
@@ -749,8 +754,9 @@ public final class PackageInstallerCompat {
         // Create install session
         PackageInstaller.SessionParams sessionParams = new PackageInstaller.SessionParams(PackageInstaller.SessionParams.MODE_FULL_INSTALL);
         Refine.<PackageInstallerHidden.SessionParams>unsafeCast(sessionParams).installFlags |= installFlags;
-        Refine.<PackageInstallerHidden.SessionParams>unsafeCast(sessionParams).installerPackageName
-                = mHasInstallPackagePermission ? mInstallerPackageName : null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            Refine.<PackageInstallerHidden.SessionParams>unsafeCast(sessionParams).installerPackageName = requestedInstallerPackageName;
+        }
         // Set installation location
         sessionParams.setInstallLocation(Prefs.Installer.getInstallLocation());
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -761,11 +767,10 @@ public final class PackageInstallerCompat {
         }
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                mSessionId = mPackageInstaller.createSession(sessionParams, BuildConfig.APPLICATION_ID,
-                        mContext.getAttributionTag(), userId);
+                mSessionId = mPackageInstaller.createSession(sessionParams, installerPackageName, null, userId);
             } else {
                 //noinspection deprecation
-                mSessionId = mPackageInstaller.createSession(sessionParams, BuildConfig.APPLICATION_ID, userId);
+                mSessionId = mPackageInstaller.createSession(sessionParams, installerPackageName, userId);
             }
             Log.d(TAG, "OpenSession: session id " + mSessionId);
         } catch (RemoteException e) {
