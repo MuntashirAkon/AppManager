@@ -17,7 +17,7 @@ import io.github.muntashirakon.AppManager.ipc.LocalServices;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.ParcelFileDescriptorUtil;
 
-class AdbShell extends Runner {
+class PrivilegedShell extends Runner {
     @Override
     public boolean isRoot() {
         // ADB shell in App Manager always runs in no-root
@@ -37,7 +37,7 @@ class AdbShell extends Runner {
             IShellResult result = shell.exec();
             return new Result(result.getStdout().getList(), result.getStderr().getList(), result.getExitCode());
         } catch (RemoteException | IOException e) {
-            Log.e(AdbShell.class.getSimpleName(), e);
+            Log.e(PrivilegedShell.class.getSimpleName(), e);
             return new Result();
         }
     }

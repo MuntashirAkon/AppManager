@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.settings.Ops;
 
 public abstract class Runner {
@@ -73,16 +74,16 @@ public abstract class Runner {
         }
     }
 
-    private static NormalShell rootShell;
-    private static AdbShell adbShell;
-    private static NormalShell noRootShell;
+    private static NormalShell sRootShell;
+    private static PrivilegedShell sPrivilegedShell;
+    private static NormalShell sNoRootShell;
 
     @NonNull
-    public static Runner getInstance() {
+    private static Runner getInstance() {
         if (Ops.isRoot()) {
             return getRootInstance();
-        } else if (Ops.isAdb()) {
-            return getAdbInstance();
+        } else if (LocalServer.isAMServiceAlive()) {
+            return getPrivilegedInstance();
         } else {
             return getNoRootInstance();
         }
@@ -90,28 +91,28 @@ public abstract class Runner {
 
     @NonNull
     static Runner getRootInstance() {
-        if (rootShell == null) {
-            rootShell = new NormalShell(true);
+        if (sRootShell == null) {
+            sRootShell = new NormalShell(true);
             Log.d(TAG, "RootShell");
         }
-        return rootShell;
+        return sRootShell;
     }
 
     @NonNull
-    static Runner getAdbInstance() {
-        if (adbShell == null) {
-            adbShell = new AdbShell();
-            Log.d(TAG, "AdbShell");
+    private static Runner getPrivilegedInstance() {
+        if (sPrivilegedShell == null) {
+            sPrivilegedShell = new PrivilegedShell();
+            Log.d(TAG, "PrivilegedShell");
         }
-        return adbShell;
+        return sPrivilegedShell;
     }
 
-    static Runner getNoRootInstance() {
-        if (noRootShell == null) {
-            noRootShell = new NormalShell(false);
+    private static Runner getNoRootInstance() {
+        if (sNoRootShell == null) {
+            sNoRootShell = new NormalShell(false);
             Log.d(TAG, "NoRootShell");
         }
-        return noRootShell;
+        return sNoRootShell;
     }
 
     @NonNull
