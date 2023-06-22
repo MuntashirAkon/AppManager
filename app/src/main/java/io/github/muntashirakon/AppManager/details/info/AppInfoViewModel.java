@@ -22,7 +22,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -292,17 +291,9 @@ public class AppInfoViewModel extends AndroidViewModel {
                     appInfo.jniDir = applicationInfo.nativeLibraryDir;
                 }
                 // Net statistics
-                try {
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        if (FeatureController.isUsageAccessEnabled()) {
-                            appInfo.dataUsage = AppUsageStatsManager.getDataUsageForPackage(getApplication(),
-                                    applicationInfo.uid, UsageUtils.USAGE_LAST_BOOT);
-                        }
-                    } else {
-                        appInfo.dataUsage = getNetStats(applicationInfo.uid);
-                    }
-                } catch (Throwable e) {
-                    e.printStackTrace();
+                if (FeatureController.isUsageAccessEnabled()) {
+                    appInfo.dataUsage = AppUsageStatsManager.getDataUsageForPackage(getApplication(),
+                            applicationInfo.uid, UsageUtils.USAGE_LAST_BOOT);
                 }
                 // Set sizes
                 appInfo.sizeInfo = PackageUtils.getPackageSizeInfo(getApplication(), packageName, userId,
@@ -363,33 +354,6 @@ public class AppInfoViewModel extends AndroidViewModel {
             });
             installer.installExisting(Objects.requireNonNull(mainModel.getPackageName()), userId);
         });
-    }
-
-    private static final String UID_STATS_PATH = "/proc/uid_stat/";
-    private static final String UID_STATS_TX = "tcp_snd";
-    private static final String UID_STATS_RX = "tcp_rcv";
-
-    /**
-     * Get network stats.
-     *
-     * @param uid Application UID
-     * @return A tuple consisting of transmitted and received data
-     */
-    @NonNull
-    private AppUsageStatsManager.DataUsage getNetStats(int uid) {
-        long tx = 0L;
-        long rx = 0L;
-        Path uidStatsDir = Paths.get(UID_STATS_PATH + uid);
-        if (uidStatsDir.isDirectory()) {
-            try {
-                Path txFile = uidStatsDir.findFile(UID_STATS_TX);
-                Path rxFile = uidStatsDir.findFile(UID_STATS_RX);
-                tx = Long.parseLong(txFile.getContentAsString("0").trim());
-                rx = Long.parseLong(rxFile.getContentAsString("0").trim());
-            } catch (FileNotFoundException ignore) {
-            }
-        }
-        return new AppUsageStatsManager.DataUsage(tx, rx);
     }
 
     public static class TagCloud {

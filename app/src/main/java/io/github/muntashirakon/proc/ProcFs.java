@@ -10,7 +10,10 @@ import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.PathReader;
@@ -20,6 +23,7 @@ public class ProcFs {
     // Files in /proc/ directory
     private static final String CPU_INFO = "cpuinfo";
     private static final String MEM_INFO = "meminfo";
+    private static final String UID_STAT = "uid_stat";
     private static final String UPTIME = "uptime";
 
     // Files in /proc/$PID/ and /proc/$PID/task/$TID/ directory
@@ -72,6 +76,10 @@ public class ProcFs {
 
     // TODO: Files in /proc/$PID/net
 
+    // Files in /proc/uid_stat/$UID
+    private static final String TCP_SND = "tcp_snd";
+    private static final String TCP_RCV = "tcp_rcv";
+
     private static ProcFs instance;
 
     @NonNull
@@ -84,8 +92,8 @@ public class ProcFs {
 
     private final Path procRoot;
 
-    public ProcFs() {
-        procRoot = Paths.get("/proc");
+    private ProcFs() {
+        this(Paths.get("/proc"));
     }
 
     @VisibleForTesting
@@ -117,6 +125,7 @@ public class ProcFs {
         return null;
     }
 
+    @Nullable
     public ProcMemoryInfo getMemoryInfo() {
         String statFileContents = getStringOrNull(Paths.build(procRoot, MEM_INFO));
         if (statFileContents == null) {
@@ -164,6 +173,7 @@ public class ProcFs {
         return null;
     }
 
+    @Nullable
     public String[] getEnvVars(int pid) {
         String data = getStringOrNull(Paths.build(procRoot, String.valueOf(pid), ENVIRON));
         return data != null ? data.split("\0") : null;
@@ -182,6 +192,7 @@ public class ProcFs {
         return null;
     }
 
+    @Nullable
     public ProcFdInfoList getFdInfo(int pid) {
         Path fdDir = Paths.build(procRoot, String.valueOf(pid), FD);
         Path fdInfoDir = Paths.build(procRoot, String.valueOf(pid), FD_INFO);
@@ -233,6 +244,7 @@ public class ProcFs {
         }
         return null;
     }
+
     @Nullable
     public ProcStatus getStatus(int pid) {
         String statFileContents = getStringOrNull(Paths.build(procRoot, String.valueOf(pid), STATUS));
@@ -263,6 +275,49 @@ public class ProcFs {
             return null;
         }
         return context.trim();
+    }
+
+    /**
+     * @deprecated Removed in API 23 (Android M). Use usage stats API instead
+     */
+    @Deprecated
+    @Nullable
+    public ProcUidNetStat getUidNetStat(int uid) {
+        Path uidPath = Paths.build(procRoot, UID_STAT, String.valueOf(uid));
+        if (uidPath == null) {
+            return null;
+        }
+        return getUidNetStatInternal(uid, uidPath);
+    }
+
+    /**
+     * @deprecated Removed in API 23 (Android M). Use usage stats API instead
+     */
+    @Deprecated
+    public List<ProcUidNetStat> getAllUidNetStat() {
+        Path[] uidPaths = procRoot.listFiles((dir, name) -> TextUtils.isDigitsOnly(name));
+        List<ProcUidNetStat> netStats = new ArrayList<>(uidPaths.length);
+        for (Path uidPath : uidPaths) {
+            int uid = Integer.parseInt(uidPath.getName());
+            ProcUidNetStat netStat = getUidNetStatInternal(uid, uidPath);
+            if (netStat != null) {
+                netStats.add(netStat);
+            }
+        }
+        return netStats;
+    }
+
+    @Nullable
+    private ProcUidNetStat getUidNetStatInternal(int uid, @NonNull Path uidPath) {
+        try {
+            Path txFile = uidPath.findFile(TCP_SND);
+            Path rxFile = uidPath.findFile(TCP_RCV);
+            long tx = Long.parseLong(txFile.getContentAsString("0").trim());
+            long rx = Long.parseLong(rxFile.getContentAsString("0").trim());
+            return new ProcUidNetStat(uid, tx, rx);
+        } catch (FileNotFoundException ignore) {
+        }
+        return null;
     }
 
     private String getStringOrNull(@Nullable Path file) {
