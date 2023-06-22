@@ -41,6 +41,7 @@ import android.util.Pair;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresPermission;
 import androidx.annotation.WorkerThread;
 import androidx.core.content.pm.PackageInfoCompat;
 
@@ -91,7 +92,6 @@ import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
-import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.Users;
@@ -296,6 +296,7 @@ public final class PackageUtils {
     }
 
     @WorkerThread
+    @RequiresPermission("android.permission.PACKAGE_USAGE_STATS")
     @Nullable
     public static PackageSizeInfo getPackageSizeInfo(@NonNull Context context, @NonNull String packageName,
                                                      @UserIdInt int userHandle, @Nullable UUID storageUuid) {
@@ -327,7 +328,7 @@ public final class PackageUtils {
             } catch (RemoteException | InterruptedException | SecurityException e) {
                 Log.e(TAG, e);
             }
-        } else if (FeatureController.isUsageAccessEnabled()) {
+        } else {
             try {
                 IStorageStatsManager storageStatsManager = IStorageStatsManager.Stub.asInterface(ProxyBinder
                         .getService(Context.STORAGE_STATS_SERVICE));

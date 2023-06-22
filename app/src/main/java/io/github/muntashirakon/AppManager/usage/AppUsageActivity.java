@@ -107,6 +107,10 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
     @SuppressLint("WrongConstant")
     @Override
     protected void onAuthenticated(Bundle savedInstanceState) {
+        if (FeatureController.isUsageAccessEnabled()) {
+            finish();
+            return;
+        }
         setContentView(R.layout.activity_app_usage);
         setSupportActionBar(findViewById(R.id.toolbar));
         mViewModel = new ViewModelProvider(this).get(AppUsageViewModel.class);
@@ -332,8 +336,8 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
         public void loadPackageUsageInfo(PackageUsageInfo usageInfo) {
             mExecutor.submit(() -> {
                 try {
-                    PackageUsageInfo packageUsageInfo = AppUsageStatsManager.getInstance()
-                            .getUsageStatsForPackage(usageInfo.packageName, mCurrentInterval, usageInfo.userId);
+                    PackageUsageInfo packageUsageInfo = AppUsageStatsManager.getInstance().getUsageStatsForPackage(
+                            usageInfo.packageName, mCurrentInterval, usageInfo.userId);
                     packageUsageInfo.copyOthers(usageInfo);
                     mPackageUsageInfoLiveData.postValue(packageUsageInfo);
                 } catch (Exception e) {

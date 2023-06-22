@@ -21,12 +21,16 @@ import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
+import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 
 public class ScreenTimeAppWidget extends AppWidgetProvider {
-
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
+        if (!FeatureController.isUsageAccessEnabled() || !SelfPermissions.checkUsageStatsPermission()) {
+            return;
+        }
         // Fetch screens time
         int[] userIds = Users.getUsersIds();
         List<PackageUsageInfo> packageUsageInfoList = new ArrayList<>();

@@ -25,6 +25,7 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.annotation.RequiresPermission;
 import androidx.collection.SparseArrayCompat;
 import androidx.core.util.Pair;
 
@@ -152,6 +153,7 @@ public class AppUsageStatsManager {
      * @throws SecurityException If usage stats permission is not available for the user
      * @throws RemoteException   If usage stats cannot be retrieved due to transaction error
      */
+    @RequiresPermission("android.permission.PACKAGE_USAGE_STATS")
     @NonNull
     public List<PackageUsageInfo> getUsageStats(@UsageUtils.IntervalType int usageInterval, @UserIdInt int userId)
             throws RemoteException, SecurityException, PackageManager.NameNotFoundException {
@@ -172,6 +174,7 @@ public class AppUsageStatsManager {
         return packageUsageInfoList;
     }
 
+    @RequiresPermission("android.permission.PACKAGE_USAGE_STATS")
     @NonNull
     public PackageUsageInfo getUsageStatsForPackage(@NonNull String packageName,
                                                     @UsageUtils.IntervalType int usageInterval,
@@ -291,6 +294,7 @@ public class AppUsageStatsManager {
         return screenTimeList;
     }
 
+    @RequiresPermission("android.permission.PACKAGE_USAGE_STATS")
     public static long getLastActivityTime(String packageName, @NonNull UsageUtils.TimeInterval interval) {
         try {
             UsageEvents events = UsageStatsManagerCompat.queryEvents(interval.getStartTime(), interval.getEndTime(),
@@ -356,6 +360,7 @@ public class AppUsageStatsManager {
         return dataUsageSparseArray;
     }
 
+    @RequiresPermission("android.permission.PACKAGE_USAGE_STATS")
     @NonNull
     public static DataUsage getDataUsageForPackage(@NonNull Context context, int uid,
                                                    @UsageUtils.IntervalType int intervalType) {

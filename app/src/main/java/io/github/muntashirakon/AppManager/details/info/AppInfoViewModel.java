@@ -290,14 +290,15 @@ public class AppInfoViewModel extends AndroidViewModel {
                 if (Paths.exists(applicationInfo.nativeLibraryDir)) {
                     appInfo.jniDir = applicationInfo.nativeLibraryDir;
                 }
+                boolean hasUsageAccess = FeatureController.isUsageAccessEnabled() && SelfPermissions.checkUsageStatsPermission();
+                if (hasUsageAccess) {
                 // Net statistics
-                if (FeatureController.isUsageAccessEnabled()) {
                     appInfo.dataUsage = AppUsageStatsManager.getDataUsageForPackage(getApplication(),
                             applicationInfo.uid, UsageUtils.USAGE_LAST_BOOT);
+                    // Set sizes
+                    appInfo.sizeInfo = PackageUtils.getPackageSizeInfo(getApplication(), packageName, userId,
+                            Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? applicationInfo.storageUuid : null);
                 }
-                // Set sizes
-                appInfo.sizeInfo = PackageUtils.getPackageSizeInfo(getApplication(), packageName, userId,
-                        Build.VERSION.SDK_INT >= Build.VERSION_CODES.O ? applicationInfo.storageUuid : null);
                 // Set installer app
                 String installerPackageName = PackageManagerCompat.getInstallerPackageName(packageName, userId);
                 if (installerPackageName != null) {

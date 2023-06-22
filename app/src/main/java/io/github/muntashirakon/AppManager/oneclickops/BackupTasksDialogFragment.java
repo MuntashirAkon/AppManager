@@ -29,6 +29,8 @@ import io.github.muntashirakon.AppManager.backup.dialog.BackupRestoreDialogFragm
 import io.github.muntashirakon.AppManager.db.AppsDb;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.main.ApplicationItem;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
+import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.UsageUtils;
@@ -144,6 +146,7 @@ public class BackupTasksDialogFragment extends DialogFragment {
                 if (isDetached() || ThreadUtils.isInterrupted()) return;
                 List<ApplicationItem> applicationItems = new ArrayList<>();
                 List<CharSequence> applicationLabels = new ArrayList<>();
+                boolean hasUsageAccess = FeatureController.isUsageAccessEnabled() && SelfPermissions.checkUsageStatsPermission();
                 Backup backup;
                 for (ApplicationItem item : PackageUtils.getInstalledOrBackedUpApplicationsFromDb(requireContext(), false, true)) {
                     if (isDetached() || ThreadUtils.isInterrupted()) return;
@@ -152,13 +155,13 @@ public class BackupTasksDialogFragment extends DialogFragment {
                     // Checks
                     // 0. App is installed (Skip backup)
                     if (!item.isInstalled) continue;
-                    // 1. App version code and 2. last update date (Whether to backup source)
+                    // 1. App version code and 2. last update date (Whether to back up source)
                     boolean needSourceUpdate = item.versionCode > backup.versionCode
                             || item.lastUpdateTime > backup.backupTime;
                     if (needSourceUpdate
                             // 3. Last activity date
-                            || AppUsageStatsManager.getLastActivityTime(item.packageName, new UsageUtils.TimeInterval(
-                            backup.backupTime, System.currentTimeMillis())) > backup.backupTime
+                            || (hasUsageAccess && AppUsageStatsManager.getLastActivityTime(item.packageName,
+                            new UsageUtils.TimeInterval(backup.backupTime, System.currentTimeMillis())) > backup.backupTime)
                             // 4. Check integrity
                             || !isVerified(item, backup)) {
                         // 5. Check hash

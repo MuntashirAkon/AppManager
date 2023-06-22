@@ -38,6 +38,8 @@ import io.github.muntashirakon.AppManager.db.entity.App;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
+import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.ssaid.SsaidSettings;
 import io.github.muntashirakon.AppManager.types.PackageChangeReceiver;
 import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
@@ -46,6 +48,7 @@ import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.usage.PackageUsageInfo;
 import io.github.muntashirakon.AppManager.usage.UsageUtils;
 import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
@@ -356,14 +359,16 @@ public class AppDb {
         UriManager uriManager = new UriManager();
         ArrayMap<Integer, SsaidSettings> userIdSsaidSettingsMap = new ArrayMap<>();
         List<PackageUsageInfo> packageUsageInfoList = new ArrayList<>();
+        boolean hasUsageAccess = FeatureController.isUsageAccessEnabled() && SelfPermissions.checkUsageStatsPermission();
         for (int userId : Users.getUsersIds()) {
             // Interrupt thread on request
             if (ThreadUtils.isInterrupted()) return;
-            try {
-                packageUsageInfoList.addAll(AppUsageStatsManager.getInstance()
+            if (hasUsageAccess) {
+                List<PackageUsageInfo> usageInfoList = ExUtils.exceptionAsNull(() -> AppUsageStatsManager.getInstance()
                         .getUsageStats(UsageUtils.USAGE_WEEKLY, userId));
-            } catch (Exception e) {
-                e.printStackTrace();
+                if (usageInfoList != null) {
+                    packageUsageInfoList.addAll(usageInfoList);
+                }
             }
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 try {
@@ -382,12 +387,13 @@ public class AppDb {
             try (ComponentsBlocker cb = ComponentsBlocker.getInstance(app.packageName, userId, false)) {
                 app.rulesCount = cb.entryCount();
             }
-            PackageSizeInfo sizeInfo = PackageUtils.getPackageSizeInfo(context, app.packageName, userId, null);
-            if (sizeInfo != null) {
-                app.codeSize = sizeInfo.codeSize + sizeInfo.obbSize;
-                app.dataSize = sizeInfo.dataSize + sizeInfo.mediaSize + sizeInfo.cacheSize;
-            } else {
-                app.codeSize = app.dataSize = 0;
+            app.codeSize = app.dataSize = 0;
+            if (hasUsageAccess) {
+                PackageSizeInfo sizeInfo = PackageUtils.getPackageSizeInfo(context, app.packageName, userId, null);
+                if (sizeInfo != null) {
+                    app.codeSize = sizeInfo.codeSize + sizeInfo.obbSize;
+                    app.dataSize = sizeInfo.dataSize + sizeInfo.mediaSize + sizeInfo.cacheSize;
+                }
             }
             // Interrupt thread on request
             if (ThreadUtils.isInterrupted()) return;
