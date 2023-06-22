@@ -20,14 +20,14 @@ import java.util.concurrent.TimeoutException;
 import io.github.muntashirakon.AppManager.logs.Log;
 
 public class MultithreadedExecutor implements ExecutorService {
-    private static final List<MultithreadedExecutor> executorCache = new ArrayList<>();
+    private static final List<MultithreadedExecutor> sExecutorCache = new ArrayList<>();
 
     @AnyThread
     @NonNull
     public static MultithreadedExecutor getNewInstance() {
-        if (executorCache.size() > 0) {
+        if (sExecutorCache.size() > 0) {
             // Check if any executor has been shutdown
-            for (MultithreadedExecutor executor : executorCache) {
+            for (MultithreadedExecutor executor : sExecutorCache) {
                 if (executor.isTerminated()) {
                     executor.renew();
                     return executor;
@@ -35,61 +35,61 @@ public class MultithreadedExecutor implements ExecutorService {
             }
         }
         MultithreadedExecutor executor = new MultithreadedExecutor();
-        executorCache.add(executor);
+        sExecutorCache.add(executor);
         return executor;
     }
 
     @NonNull
-    private ExecutorService executor;
+    private ExecutorService mExecutor;
 
     private MultithreadedExecutor() {
-        executor = Executors.newFixedThreadPool(getThreadCount());
+        mExecutor = Executors.newFixedThreadPool(getThreadCount());
     }
 
     private void renew() {
-        if (executor.isTerminated()) {
+        if (mExecutor.isTerminated()) {
             // TODO: 26/5/21 Find a better way to recreate an executor
-            executor = Executors.newFixedThreadPool(getThreadCount());
+            mExecutor = Executors.newFixedThreadPool(getThreadCount());
         }
     }
 
     @Override
     public Future<?> submit(Runnable task) {
-        if (executor.isShutdown()) throw new UnsupportedOperationException("The executor was terminated");
-        return executor.submit(task);
+        if (mExecutor.isShutdown()) throw new UnsupportedOperationException("The executor was terminated");
+        return mExecutor.submit(task);
     }
 
     @Override
     public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks) throws InterruptedException {
-        return executor.invokeAll(tasks);
+        return mExecutor.invokeAll(tasks);
     }
 
     @Override
     public <T> List<Future<T>> invokeAll(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit)
             throws InterruptedException {
-        return executor.invokeAll(tasks, timeout, unit);
+        return mExecutor.invokeAll(tasks, timeout, unit);
     }
 
     @Override
     public <T> T invokeAny(Collection<? extends Callable<T>> tasks) throws ExecutionException, InterruptedException {
-        return executor.invokeAny(tasks);
+        return mExecutor.invokeAny(tasks);
     }
 
     @Override
     public <T> T invokeAny(Collection<? extends Callable<T>> tasks, long timeout, TimeUnit unit) throws ExecutionException, InterruptedException, TimeoutException {
-        return executor.invokeAny(tasks, timeout, unit);
+        return mExecutor.invokeAny(tasks, timeout, unit);
     }
 
     @Override
     public <T> Future<T> submit(Callable<T> task) {
-        if (executor.isShutdown()) throw new UnsupportedOperationException("The executor was terminated");
-        return executor.submit(task);
+        if (mExecutor.isShutdown()) throw new UnsupportedOperationException("The executor was terminated");
+        return mExecutor.submit(task);
     }
 
     @Override
     public <T> Future<T> submit(Runnable task, T result) {
-        if (executor.isShutdown()) throw new UnsupportedOperationException("The executor was terminated");
-        return executor.submit(task, result);
+        if (mExecutor.isShutdown()) throw new UnsupportedOperationException("The executor was terminated");
+        return mExecutor.submit(task, result);
     }
 
     @WorkerThread
@@ -106,32 +106,32 @@ public class MultithreadedExecutor implements ExecutorService {
 
     @Override
     public void shutdown() {
-        executor.shutdown();
+        mExecutor.shutdown();
     }
 
     @Override
     public List<Runnable> shutdownNow() {
-        return executor.shutdownNow();
+        return mExecutor.shutdownNow();
     }
 
     @Override
     public boolean isShutdown() {
-        return executor.isShutdown();
+        return mExecutor.isShutdown();
     }
 
     @Override
     public boolean isTerminated() {
-        return executor.isTerminated();
+        return mExecutor.isTerminated();
     }
 
     @Override
     public boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
-        return executor.awaitTermination(timeout, unit);
+        return mExecutor.awaitTermination(timeout, unit);
     }
 
     @Override
     public void execute(Runnable command) {
-        executor.execute(command);
+        mExecutor.execute(command);
     }
 
     public static int getThreadCount() {

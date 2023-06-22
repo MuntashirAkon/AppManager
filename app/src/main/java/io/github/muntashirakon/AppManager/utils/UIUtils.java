@@ -53,7 +53,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.Locale;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
@@ -302,34 +301,34 @@ public class UIUtils {
 
     @UiThread
     public static void displayShortToast(@StringRes int res) {
-        Toast.makeText(AppManager.getContext(), res, Toast.LENGTH_SHORT).show();
+        Toast.makeText(ContextUtils.getContext(), res, Toast.LENGTH_SHORT).show();
     }
 
     @UiThread
     public static void displayShortToast(@StringRes int res, Object... args) {
-        Context appContext = AppManager.getContext();
+        Context appContext = ContextUtils.getContext();
         Toast.makeText(appContext, appContext.getString(res, args), Toast.LENGTH_SHORT).show();
     }
 
     @UiThread
     public static void displayLongToast(CharSequence message) {
-        Toast.makeText(AppManager.getContext(), message, Toast.LENGTH_LONG).show();
+        Toast.makeText(ContextUtils.getContext(), message, Toast.LENGTH_LONG).show();
     }
 
     @UiThread
     public static void displayLongToast(@StringRes int res) {
-        Toast.makeText(AppManager.getContext(), res, Toast.LENGTH_LONG).show();
+        Toast.makeText(ContextUtils.getContext(), res, Toast.LENGTH_LONG).show();
     }
 
     @UiThread
     public static void displayLongToast(@StringRes int res, Object... args) {
-        Context appContext = AppManager.getContext();
+        Context appContext = ContextUtils.getContext();
         Toast.makeText(appContext, appContext.getString(res, args), Toast.LENGTH_LONG).show();
     }
 
     @UiThread
     public static void displayLongToastPl(@PluralsRes int res, int count, Object... args) {
-        Context appContext = AppManager.getContext();
+        Context appContext = ContextUtils.getContext();
         Toast.makeText(appContext, appContext.getResources().getQuantityString(res, count, args), Toast.LENGTH_LONG).show();
     }
 

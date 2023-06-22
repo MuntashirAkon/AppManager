@@ -28,19 +28,19 @@ import io.github.muntashirakon.util.UiUtils;
 
 public class FmIconFetcher implements ImageLoader.ImageFetcherInterface {
     @NonNull
-    private final FmItem fmItem;
+    private final FmItem mFmItem;
 
     public FmIconFetcher(@NonNull FmItem fmItem) {
-        this.fmItem = fmItem;
+        mFmItem = fmItem;
     }
 
     @NonNull
     @Override
     public ImageLoader.ImageFetcherResult fetchImage(@NonNull String tag) {
-        PathContentInfo contentInfo = fmItem.getContentInfo();
+        PathContentInfo contentInfo = mFmItem.getContentInfo();
         if (contentInfo == null) {
-            contentInfo = fmItem.path.getPathContentInfo();
-            fmItem.setContentInfo(contentInfo);
+            contentInfo = mFmItem.path.getPathContentInfo();
+            mFmItem.setContentInfo(contentInfo);
         }
         String mimeType = contentInfo.getMimeType();
         int drawableRes = FmIcons.getDrawableFromType(mimeType);
@@ -50,14 +50,14 @@ public class FmIconFetcher implements ImageLoader.ImageFetcherInterface {
         Size size = new Size(length, length);
         if (FmIcons.isAudio(drawableRes)) {
             try {
-                Bitmap bitmap = ThumbnailUtilsCompat.createAudioThumbnail(ContextUtils.getContext(), FmProvider.getContentUri(fmItem.path), size, null);
+                Bitmap bitmap = ThumbnailUtilsCompat.createAudioThumbnail(ContextUtils.getContext(), FmProvider.getContentUri(mFmItem.path), size, null);
                 return new ImageLoader.ImageFetcherResult(tag, bitmap, false, true, defaultImage);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else if (FmIcons.isVideo(drawableRes)) {
             try {
-                Bitmap bitmap = ThumbnailUtilsCompat.createVideoThumbnail(ContextUtils.getContext(), FmProvider.getContentUri(fmItem.path), size, null);
+                Bitmap bitmap = ThumbnailUtilsCompat.createVideoThumbnail(ContextUtils.getContext(), FmProvider.getContentUri(mFmItem.path), size, null);
                 return new ImageLoader.ImageFetcherResult(tag, getThumbnail(bitmap, size, true), false, true, defaultImage);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -65,7 +65,7 @@ public class FmIconFetcher implements ImageLoader.ImageFetcherInterface {
         } else if (FmIcons.isImage(drawableRes)) {
             if (ContentType.SVG.getMimeType().equals(mimeType)) {
                 // Load SVG image
-                try (InputStream is = fmItem.path.openInputStream()) {
+                try (InputStream is = mFmItem.path.openInputStream()) {
                     SVG svg = SVGParser.getSVGFromInputStream(is);
                     Bitmap bitmap = svg.getBitmap();
                     return new ImageLoader.ImageFetcherResult(tag, getThumbnail(bitmap, size, true), false, true, defaultImage);
@@ -74,7 +74,7 @@ public class FmIconFetcher implements ImageLoader.ImageFetcherInterface {
                     th.printStackTrace();
                 }
             } else {
-                byte[] bytes = fmItem.path.getContentAsBinary();
+                byte[] bytes = mFmItem.path.getContentAsBinary();
                 if (bytes.length > 0) {
                     Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                     if (bitmap != null) {
@@ -85,26 +85,26 @@ public class FmIconFetcher implements ImageLoader.ImageFetcherInterface {
             }
         } else if (FmIcons.isEbook(drawableRes)) {
             if (ContentType.EPUB.getMimeType().equals(mimeType)) {
-                Bitmap bitmap = FmIcons.generateEpubCover(fmItem.path);
+                Bitmap bitmap = FmIcons.generateEpubCover(mFmItem.path);
                 if (bitmap != null) {
                     return new ImageLoader.ImageFetcherResult(tag, getThumbnail(bitmap, size, true),
                             false, true, defaultImage);
                 }
             }
         } else if (FmIcons.isFont(drawableRes)) {
-            Bitmap bitmap = FmIcons.generateFontBitmap(fmItem.path);
+            Bitmap bitmap = FmIcons.generateFontBitmap(mFmItem.path);
             if (bitmap != null) {
                 return new ImageLoader.ImageFetcherResult(tag, bitmap,
                         false, true, defaultImage);
             }
         } else if (FmIcons.isPdf(drawableRes)) {
-            Bitmap bitmap = FmIcons.generatePdfBitmap(ContextUtils.getContext(), FmProvider.getContentUri(fmItem.path));
+            Bitmap bitmap = FmIcons.generatePdfBitmap(ContextUtils.getContext(), FmProvider.getContentUri(mFmItem.path));
             if (bitmap != null) {
                 return new ImageLoader.ImageFetcherResult(tag, getThumbnail(bitmap, size, true),
                         false, true, defaultImage);
             }
         } else if (FmIcons.isGeneric(drawableRes)) {
-            String extension = fmItem.path.getExtension();
+            String extension = mFmItem.path.getExtension();
             if (extension != null) {
                 // Generate icon from extension (at most 4 characters)
                 int len = Math.min(extension.length(), 4);
@@ -113,7 +113,7 @@ public class FmIconFetcher implements ImageLoader.ImageFetcherInterface {
                 return new ImageLoader.ImageFetcherResult(tag, null,
                         new ImageLoader.DefaultImageString(extTag, shortExt));
             }
-            if (fmItem.path.canExecute()) {
+            if (mFmItem.path.canExecute()) {
                 // Generate executable string
                 drawableRes = R.drawable.ic_frost_termux;
                 return new ImageLoader.ImageFetcherResult(tag, null,

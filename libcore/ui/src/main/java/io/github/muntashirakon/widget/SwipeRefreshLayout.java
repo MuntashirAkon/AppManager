@@ -28,7 +28,6 @@ public class SwipeRefreshLayout extends androidx.swiperefreshlayout.widget.Swipe
 
     public SwipeRefreshLayout(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
-
     }
 
     public SwipeRefreshLayout(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes final int defStyleAttr) {

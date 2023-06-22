@@ -54,23 +54,23 @@ import io.github.muntashirakon.widget.RecyclerView;
 public class ProfilesActivity extends BaseActivity {
     private static final String TAG = "ProfilesActivity";
 
-    private ProfilesAdapter adapter;
-    private ProfilesViewModel model;
-    private LinearProgressIndicator progressIndicator;
+    private ProfilesAdapter mAdapter;
+    private ProfilesViewModel mModel;
+    private LinearProgressIndicator mProgressIndicator;
     @Nullable
-    private String profileName;
+    private String mProfileName;
 
-    private final ActivityResultLauncher<String> exportProfile = registerForActivityResult(
+    private final ActivityResultLauncher<String> mExportProfile = registerForActivityResult(
             new ActivityResultContracts.CreateDocument("application/json"),
             uri -> {
                 if (uri == null) {
                     // Back button pressed.
                     return;
                 }
-                if (profileName != null) {
+                if (mProfileName != null) {
                     // Export profile
                     try (OutputStream os = getContentResolver().openOutputStream(uri)) {
-                        ProfileMetaManager manager = new ProfileMetaManager(profileName);
+                        ProfileMetaManager manager = new ProfileMetaManager(mProfileName);
                         manager.writeProfile(os);
                         Toast.makeText(this, R.string.the_export_was_successful, Toast.LENGTH_SHORT).show();
                     } catch (IOException | JSONException e) {
@@ -79,7 +79,7 @@ public class ProfilesActivity extends BaseActivity {
                     }
                 }
             });
-    private final ActivityResultLauncher<String> importProfile = registerForActivityResult(
+    private final ActivityResultLauncher<String> mImportProfile = registerForActivityResult(
             new ActivityResultContracts.GetContent(),
             uri -> {
                 if (uri == null) {
@@ -97,7 +97,7 @@ public class ProfilesActivity extends BaseActivity {
                     manager.writeProfile();
                     Toast.makeText(this, R.string.the_import_was_successful, Toast.LENGTH_SHORT).show();
                     // Reload page
-                    new Thread(() -> model.loadProfiles()).start();
+                    new Thread(() -> mModel.loadProfiles()).start();
                     // Load imported profile
                     startActivity(AppsProfileActivity.getProfileIntent(this, manager.getProfileName()));
                 } catch (IOException | JSONException | RemoteException e) {
@@ -110,15 +110,15 @@ public class ProfilesActivity extends BaseActivity {
     protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
         setContentView(R.layout.activity_profiles);
         setSupportActionBar(findViewById(R.id.toolbar));
-        model = new ViewModelProvider(this).get(ProfilesViewModel.class);
-        progressIndicator = findViewById(R.id.progress_linear);
-        progressIndicator.setVisibilityAfterHide(View.GONE);
+        mModel = new ViewModelProvider(this).get(ProfilesViewModel.class);
+        mProgressIndicator = findViewById(R.id.progress_linear);
+        mProgressIndicator.setVisibilityAfterHide(View.GONE);
         RecyclerView listView = findViewById(android.R.id.list);
         listView.setLayoutManager(new LinearLayoutManager(this));
         listView.setEmptyView(findViewById(android.R.id.empty));
         UiUtils.applyWindowInsetsAsPaddingNoTop(listView);
-        adapter = new ProfilesAdapter(this);
-        listView.setAdapter(adapter);
+        mAdapter = new ProfilesAdapter(this);
+        listView.setAdapter(mAdapter);
         FloatingActionButton fab = findViewById(R.id.floatingActionButton);
         UiUtils.applyWindowInsetsAsMargin(fab);
         fab.setOnClickListener(v -> new TextInputDialogBuilder(this, R.string.input_profile_name)
@@ -132,21 +132,21 @@ public class ProfilesActivity extends BaseActivity {
                     }
                 })
                 .show());
-        model.getProfiles().observe(this, profiles -> {
-            progressIndicator.hide();
-            adapter.setDefaultList(profiles);
+        mModel.getProfiles().observe(this, profiles -> {
+            mProgressIndicator.hide();
+            mAdapter.setDefaultList(profiles);
         });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (progressIndicator != null) {
-            progressIndicator.show();
+        if (mProgressIndicator != null) {
+            mProgressIndicator.show();
         }
         new Thread(() -> {
-            if (model != null) {
-                model.loadProfiles();
+            if (mModel != null) {
+                mModel.loadProfiles();
             }
         }).start();
     }
@@ -163,10 +163,10 @@ public class ProfilesActivity extends BaseActivity {
         if (id == android.R.id.home) {
             finish();
         } else if (id == R.id.action_import) {
-            importProfile.launch("application/json");
+            mImportProfile.launch("application/json");
         } else if (id == R.id.action_refresh) {
-            progressIndicator.show();
-            new Thread(() -> model.loadProfiles()).start();
+            mProgressIndicator.show();
+            new Thread(() -> mModel.loadProfiles()).start();
         } else return super.onOptionsItemSelected(item);
         return true;
     }
@@ -177,7 +177,7 @@ public class ProfilesActivity extends BaseActivity {
         private String[] mDefaultList;
         private String[] mAdapterList;
         private HashMap<String, CharSequence> mAdapterMap;
-        private final ProfilesActivity activity;
+        private final ProfilesActivity mActivity;
         private final int mQueryStringHighlightColor;
 
         static class ViewHolder extends RecyclerView.ViewHolder {
@@ -193,7 +193,7 @@ public class ProfilesActivity extends BaseActivity {
         }
 
         ProfilesAdapter(@NonNull ProfilesActivity activity) {
-            this.activity = activity;
+            mActivity = activity;
             mQueryStringHighlightColor = ColorCodes.getQueryStringHighlightColor(activity);
         }
 
@@ -233,71 +233,71 @@ public class ProfilesActivity extends BaseActivity {
             CharSequence value = mAdapterMap.get(profName);
             holder.summary.setText(value != null ? value : "");
             holder.itemView.setOnClickListener(v ->
-                    activity.startActivity(AppsProfileActivity.getProfileIntent(activity, profName)));
+                    mActivity.startActivity(AppsProfileActivity.getProfileIntent(mActivity, profName)));
             holder.itemView.setOnLongClickListener(v -> {
-                PopupMenu popupMenu = new PopupMenu(activity, v);
+                PopupMenu popupMenu = new PopupMenu(mActivity, v);
                 popupMenu.inflate(R.menu.activity_profiles_popup_actions);
                 popupMenu.setOnMenuItemClickListener(item -> {
                     int id = item.getItemId();
                     if (id == R.id.action_apply) {
                         final String[] statesL = new String[]{
-                                activity.getString(R.string.on),
-                                activity.getString(R.string.off)
+                                mActivity.getString(R.string.on),
+                                mActivity.getString(R.string.off)
                         };
                         @ProfileMetaManager.ProfileState final List<String> states = Arrays.asList(ProfileMetaManager.STATE_ON, ProfileMetaManager.STATE_OFF);
-                        new SearchableSingleChoiceDialogBuilder<>(activity, states, statesL)
+                        new SearchableSingleChoiceDialogBuilder<>(mActivity, states, statesL)
                                 .setTitle(R.string.profile_state)
                                 .setOnSingleChoiceClickListener((dialog, which, selectedState, isChecked) -> {
                                     if (!isChecked) {
                                         return;
                                     }
-                                    Intent aIntent = new Intent(activity, ProfileApplierService.class);
+                                    Intent aIntent = new Intent(mActivity, ProfileApplierService.class);
                                     aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_NAME, profName);
                                     aIntent.putExtra(ProfileApplierService.EXTRA_PROFILE_STATE, selectedState);
-                                    ContextCompat.startForegroundService(activity, aIntent);
+                                    ContextCompat.startForegroundService(mActivity, aIntent);
                                     dialog.dismiss();
                                 })
                                 .show();
                     } else if (id == R.id.action_delete) {
                         ProfileMetaManager manager = new ProfileMetaManager(profName);
                         if (manager.deleteProfile()) {
-                            Toast.makeText(activity, R.string.deleted_successfully, Toast.LENGTH_SHORT).show();
-                            new Thread(() -> activity.model.loadProfiles()).start();
+                            Toast.makeText(mActivity, R.string.deleted_successfully, Toast.LENGTH_SHORT).show();
+                            new Thread(() -> mActivity.mModel.loadProfiles()).start();
                         } else {
-                            Toast.makeText(activity, R.string.deletion_failed, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mActivity, R.string.deletion_failed, Toast.LENGTH_SHORT).show();
                         }
                     } else if (id == R.id.action_routine_ops) {
                         // TODO(7/11/20): Setup routine operations for this profile
-                        Toast.makeText(activity, "Not yet implemented", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity, "Not yet implemented", Toast.LENGTH_SHORT).show();
                     } else if (id == R.id.action_duplicate) {
-                        new TextInputDialogBuilder(activity, R.string.input_profile_name)
+                        new TextInputDialogBuilder(mActivity, R.string.input_profile_name)
                                 .setTitle(R.string.new_profile)
                                 .setHelperText(R.string.input_profile_name_description)
                                 .setNegativeButton(R.string.cancel, null)
                                 .setPositiveButton(R.string.go, (dialog, which, newProfName, isChecked) -> {
                                     if (!TextUtils.isEmpty(newProfName)) {
                                         //noinspection ConstantConditions
-                                        activity.startActivity(AppsProfileActivity.getCloneProfileIntent(activity,
+                                        mActivity.startActivity(AppsProfileActivity.getCloneProfileIntent(mActivity,
                                                 profName, newProfName.toString()));
                                     }
                                 })
                                 .show();
                     } else if (id == R.id.action_export) {
-                        activity.profileName = profName;
-                        activity.exportProfile.launch(profName + ".am.json");
+                        mActivity.mProfileName = profName;
+                        mActivity.mExportProfile.launch(profName + ".am.json");
                     } else if (id == R.id.action_shortcut) {
                         final String[] shortcutTypesL = new String[]{
-                                activity.getString(R.string.simple),
-                                activity.getString(R.string.advanced)
+                                mActivity.getString(R.string.simple),
+                                mActivity.getString(R.string.advanced)
                         };
                         final String[] shortcutTypes = new String[]{AppsProfileActivity.ST_SIMPLE, AppsProfileActivity.ST_ADVANCED};
-                        new SearchableSingleChoiceDialogBuilder<>(activity, shortcutTypes, shortcutTypesL)
+                        new SearchableSingleChoiceDialogBuilder<>(mActivity, shortcutTypes, shortcutTypesL)
                                 .setTitle(R.string.create_shortcut)
                                 .setOnSingleChoiceClickListener((dialog, which, item1, isChecked) -> {
                                     if (!isChecked) {
                                         return;
                                     }
-                                    LauncherShortcuts.createForProfile(activity, profName, shortcutTypes[which],
+                                    LauncherShortcuts.createForProfile(mActivity, profName, shortcutTypes[which],
                                             shortcutTypesL[which]);
                                     dialog.dismiss();
                                 })

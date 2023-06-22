@@ -24,30 +24,30 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.ProcessCompat;
 
 public class TermActivity extends BaseActivity {
-    private final Object lock = new Object();
-    private AppCompatEditText commandInput;
-    private AppCompatTextView commandOutput;
-    private Process proc;
-    private OutputStream processOutputStream;
-    private final ExecutorService executor = Executors.newFixedThreadPool(3);
+    private final Object mLock = new Object();
+    private AppCompatEditText mCommandInput;
+    private AppCompatTextView mCommandOutput;
+    private Process mProc;
+    private OutputStream mProcessOutputStream;
+    private final ExecutorService mExecutor = Executors.newFixedThreadPool(3);
 
     @Override
     protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
         setContentView(R.layout.activity_term);
         setSupportActionBar(findViewById(R.id.toolbar));
-        commandInput = findViewById(R.id.command_input);
-        commandOutput = findViewById(R.id.command_output);
-        commandInput.setOnEditorActionListener((v, actionId, event) -> {
+        mCommandInput = findViewById(R.id.command_input);
+        mCommandOutput = findViewById(R.id.command_output);
+        mCommandInput.setOnEditorActionListener((v, actionId, event) -> {
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                String command = Objects.requireNonNull(commandInput.getText()) + "\n";
-                if (processOutputStream != null) {
-                    if (!ProcessCompat.isAlive(proc)) {
+                String command = Objects.requireNonNull(mCommandInput.getText()) + "\n";
+                if (mProcessOutputStream != null) {
+                    if (!ProcessCompat.isAlive(mProc)) {
                         // Process is dead
                         return false;
                     }
                     try {
-                        processOutputStream.write(command.getBytes(StandardCharsets.UTF_8));
-                        processOutputStream.flush();
+                        mProcessOutputStream.write(command.getBytes(StandardCharsets.UTF_8));
+                        mProcessOutputStream.flush();
                     } catch (Throwable e) {
                         e.printStackTrace();
                     }
@@ -61,42 +61,42 @@ public class TermActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        executor.shutdownNow();
+        mExecutor.shutdownNow();
         super.onDestroy();
     }
 
     private void initShell() {
-        executor.submit(() -> {
+        mExecutor.submit(() -> {
             try {
-                proc = ProcessCompat.exec(new String[]{"sh"}/*, new String[]{"TERM=xterm-256color"}*/);
-                processOutputStream = new BufferedOutputStream(proc.getOutputStream());
-                executor.submit(() -> {
-                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(proc.getInputStream()))) {
+                mProc = ProcessCompat.exec(new String[]{"sh"}/*, new String[]{"TERM=xterm-256color"}*/);
+                mProcessOutputStream = new BufferedOutputStream(mProc.getOutputStream());
+                mExecutor.submit(() -> {
+                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(mProc.getInputStream()))) {
                         String line;
                         while ((line = reader.readLine()) != null) {
-                            synchronized (lock) {
+                            synchronized (mLock) {
                                 String finalLine = line;
-                                runOnUiThread(() -> commandOutput.append(finalLine + "\n"));
+                                runOnUiThread(() -> mCommandOutput.append(finalLine + "\n"));
                             }
                         }
                     } catch (Throwable e) {
                         e.printStackTrace();
                     }
                 });
-                executor.submit(() -> {
-                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(proc.getErrorStream()))) {
+                mExecutor.submit(() -> {
+                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(mProc.getErrorStream()))) {
                         String line;
                         while ((line = reader.readLine()) != null) {
-                            synchronized (lock) {
+                            synchronized (mLock) {
                                 String finalLine = line;
-                                runOnUiThread(() -> commandOutput.append(finalLine + "\n"));
+                                runOnUiThread(() -> mCommandOutput.append(finalLine + "\n"));
                             }
                         }
                     } catch (Throwable e) {
                         e.printStackTrace();
                     }
                 });
-                proc.waitFor();
+                mProc.waitFor();
                 runOnUiThread(this::finishAndRemoveTask);
             } catch (Throwable e) {
                 e.printStackTrace();
@@ -107,6 +107,6 @@ public class TermActivity extends BaseActivity {
 
     @AnyThread
     private void appendOutput(String line) {
-        commandOutput.append(line + "\n");
+        mCommandOutput.append(line + "\n");
     }
 }

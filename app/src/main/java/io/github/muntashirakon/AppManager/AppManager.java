@@ -8,7 +8,6 @@ import android.os.Build;
 import android.sun.security.provider.JavaKeyStoreProvider;
 
 import androidx.annotation.Keep;
-import androidx.annotation.NonNull;
 
 import com.topjohnwu.superuser.Shell;
 
@@ -21,8 +20,6 @@ import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.AppManager.utils.appearance.AppearanceUtils;
 
 public class AppManager extends Application {
-    private static AppManager instance;
-
     static {
         Shell.enableVerboseLogging = BuildConfig.DEBUG;
         Shell.setDefaultBuilder(Shell.Builder.create()
@@ -30,20 +27,9 @@ public class AppManager extends Application {
                 .setTimeout(10));
     }
 
-    @NonNull
-    public static AppManager getInstance() {
-        return instance;
-    }
-
-    @NonNull
-    public static Context getContext() {
-        return instance.getBaseContext();
-    }
-
     @Keep
     @Override
     public void onCreate() {
-        instance = this;
         super.onCreate();
         Thread.setDefaultUncaughtExceptionHandler(new AMExceptionHandler(this));
         AppearanceUtils.init(this);

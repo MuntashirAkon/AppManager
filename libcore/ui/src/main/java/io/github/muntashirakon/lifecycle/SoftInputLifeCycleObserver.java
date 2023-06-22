@@ -14,19 +14,19 @@ import java.lang.ref.WeakReference;
 
 public class SoftInputLifeCycleObserver implements DefaultLifecycleObserver {
     @NonNull
-    private final WeakReference<View> view;
+    private final WeakReference<View> mViewRef;
 
-    public SoftInputLifeCycleObserver(@NonNull WeakReference<View> view) {
-        this.view = view;
+    public SoftInputLifeCycleObserver(@NonNull WeakReference<View> viewRef) {
+        mViewRef = viewRef;
     }
 
     @Override
     public void onResume(@NonNull LifecycleOwner owner) {
-        if (view.get() == null) {
+        if (mViewRef.get() == null) {
             return;
         }
-        view.get().postDelayed(() -> {
-            View v = view.get();
+        mViewRef.get().postDelayed(() -> {
+            View v = mViewRef.get();
             if (v == null) return;
             v.requestFocus();
             InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -36,11 +36,11 @@ public class SoftInputLifeCycleObserver implements DefaultLifecycleObserver {
 
     @Override
     public void onPause(@NonNull LifecycleOwner owner) {
-        if (view.get() == null) {
+        if (mViewRef.get() == null) {
             return;
         }
-        view.get().postDelayed(() -> {
-            View v = view.get();
+        mViewRef.get().postDelayed(() -> {
+            View v = mViewRef.get();
             if (v == null) return;
             InputMethodManager imm = (InputMethodManager) v.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(v.getWindowToken(), 0);

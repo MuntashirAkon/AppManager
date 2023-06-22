@@ -21,22 +21,22 @@ import io.github.muntashirakon.io.IoUtils;
 // Copyright 2020 Rikka
 // Copyright 2023 Muntashir Al-Islam
 public class RemoteProcessImpl extends IRemoteProcess.Stub {
-    private final Process process;
-    private ParcelFileDescriptor in;
-    private OutputTransferThread outputTransferThread;
+    private final Process mProcess;
+    private ParcelFileDescriptor mIn;
+    private OutputTransferThread mOutputTransferThread;
 
     public RemoteProcessImpl(Process process) {
-        this.process = process;
+        mProcess = process;
     }
 
     @Override
     public ParcelFileDescriptor getOutputStream() {
-        if (outputTransferThread == null) {
-            outputTransferThread = new OutputTransferThread(process);
-            outputTransferThread.start();
+        if (mOutputTransferThread == null) {
+            mOutputTransferThread = new OutputTransferThread(mProcess);
+            mOutputTransferThread.start();
         }
         try {
-            return outputTransferThread.getWriteSide();
+            return mOutputTransferThread.getWriteSide();
         } catch (IOException | InterruptedException e) {
             throw new IllegalStateException(e);
         }
@@ -44,29 +44,29 @@ public class RemoteProcessImpl extends IRemoteProcess.Stub {
 
     @Override
     public void closeOutputStream() {
-        if (outputTransferThread != null) {
-            outputTransferThread.interrupt();
+        if (mOutputTransferThread != null) {
+            mOutputTransferThread.interrupt();
         }
     }
 
     @Override
     public ParcelFileDescriptor getInputStream() {
-        if (in == null) {
+        if (mIn == null) {
             try {
-                InputTransferThread thread = new InputTransferThread(process, false);
+                InputTransferThread thread = new InputTransferThread(mProcess, false);
                 thread.start();
-                in = thread.getReadSide();
+                mIn = thread.getReadSide();
             } catch (IOException | InterruptedException e) {
                 throw new IllegalStateException(e);
             }
         }
-        return in;
+        return mIn;
     }
 
     @Override
     public ParcelFileDescriptor getErrorStream() {
         try {
-            InputTransferThread thread = new InputTransferThread(process, true);
+            InputTransferThread thread = new InputTransferThread(mProcess, true);
             thread.start();
             return thread.getReadSide();
         } catch (IOException | InterruptedException e) {
@@ -77,7 +77,7 @@ public class RemoteProcessImpl extends IRemoteProcess.Stub {
     @Override
     public int waitFor() {
         try {
-            return process.waitFor();
+            return mProcess.waitFor();
         } catch (InterruptedException e) {
             throw new IllegalStateException(e);
         }
@@ -85,18 +85,18 @@ public class RemoteProcessImpl extends IRemoteProcess.Stub {
 
     @Override
     public int exitValue() {
-        return process.exitValue();
+        return mProcess.exitValue();
     }
 
     @Override
     public void destroy() {
-        process.destroy();
+        mProcess.destroy();
     }
 
     @Override
     public boolean alive() {
         try {
-            this.exitValue();
+            exitValue();
             return false;
         } catch (IllegalThreadStateException e) {
             return true;
@@ -125,7 +125,7 @@ public class RemoteProcessImpl extends IRemoteProcess.Stub {
 
     private static class OutputTransferThread extends Thread {
         private final Process mProcess;
-        private OutputStream processOutputStream;
+        private OutputStream mProcessOutputStream;
         @Nullable
         private volatile ParcelFileDescriptor mWriteSide;
         @NonNull
@@ -150,8 +150,8 @@ public class RemoteProcessImpl extends IRemoteProcess.Stub {
 
         @Override
         public void run() {
-            if (processOutputStream == null) {
-                processOutputStream = mProcess.getOutputStream();
+            if (mProcessOutputStream == null) {
+                mProcessOutputStream = mProcess.getOutputStream();
             }
             try {
                 do {
@@ -166,12 +166,12 @@ public class RemoteProcessImpl extends IRemoteProcess.Stub {
                         byte[] buf = new byte[IoUtils.DEFAULT_BUFFER_SIZE];
                         int len;
                         while ((len = in.read(buf)) > 0) {
-                            processOutputStream.write(buf, 0, len);
+                            mProcessOutputStream.write(buf, 0, len);
                         }
                     }
-                    processOutputStream.flush();
+                    mProcessOutputStream.flush();
                 } while (!isInterrupted());
-                processOutputStream.close();
+                mProcessOutputStream.close();
             } catch (IOException e) {
                 Log.e("FD", "IOException when writing to out", e);
                 mWaitForWriteSide.countDown();

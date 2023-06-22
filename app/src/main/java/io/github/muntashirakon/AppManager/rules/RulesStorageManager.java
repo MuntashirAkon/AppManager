@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.rules;
 
+import android.annotation.UserIdInt;
 import android.content.Context;
 import android.os.RemoteException;
 
@@ -18,7 +19,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PermissionCompat;
@@ -36,6 +36,7 @@ import io.github.muntashirakon.AppManager.rules.struct.RuleEntry;
 import io.github.muntashirakon.AppManager.rules.struct.SsaidRule;
 import io.github.muntashirakon.AppManager.rules.struct.UriGrantRule;
 import io.github.muntashirakon.AppManager.uri.UriManager;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.PathReader;
 import io.github.muntashirakon.io.Paths;
@@ -49,12 +50,13 @@ public class RulesStorageManager implements Closeable {
     protected String packageName;
     @GuardedBy("entries")
     protected boolean readOnly = true;
-    protected int userHandle;
+    @UserIdInt
+    protected int userId;
 
-    protected RulesStorageManager(@NonNull String packageName, int userHandle) {
+    protected RulesStorageManager(@NonNull String packageName, @UserIdInt int userId) {
         this.packageName = packageName;
-        this.userHandle = userHandle;
-        this.mEntries = new ArrayList<>();
+        this.userId = userId;
+        mEntries = new ArrayList<>();
         try {
             loadEntries(getDesiredFile(false), false);
         } catch (Throwable ignored) {
@@ -256,14 +258,13 @@ public class RulesStorageManager implements Closeable {
     }
 
     @NonNull
-    public static Path getConfDir() {
-        Context ctx = AppManager.getContext();
-        return Objects.requireNonNull(Paths.build(ctx.getFilesDir(), "conf"));
+    public static Path getConfDir(@NonNull Context context) {
+        return Objects.requireNonNull(Paths.build(context.getFilesDir(), "conf"));
     }
 
     @NonNull
     protected Path getDesiredFile(boolean create) throws IOException {
-        Path confDir = getConfDir();
+        Path confDir = getConfDir(ContextUtils.getContext());
         if (!confDir.exists()) {
             confDir.mkdirs();
         }

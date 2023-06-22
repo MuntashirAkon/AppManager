@@ -63,6 +63,7 @@ import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.ssaid.SsaidSettings;
 import io.github.muntashirakon.AppManager.uri.UriManager;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
@@ -78,56 +79,59 @@ class RestoreOp implements Closeable {
     private static final Object sLock = new Object();
 
     @NonNull
-    private final String packageName;
+    private final Context mContext;
     @NonNull
-    private final BackupFlags backupFlags;
+    private final String mPackageName;
     @NonNull
-    private final BackupFlags requestedFlags;
+    private final BackupFlags mBackupFlags;
     @NonNull
-    private final MetadataManager.Metadata metadata;
+    private final BackupFlags mRequestedFlags;
     @NonNull
-    private final Path backupPath;
+    private final MetadataManager.Metadata mMetadata;
     @NonNull
-    private final BackupFiles.BackupFile backupFile;
+    private final Path mBackupPath;
+    @NonNull
+    private final BackupFiles.BackupFile mBackupFile;
     @Nullable
-    private PackageInfo packageInfo;
+    private PackageInfo mPackageInfo;
     @NonNull
-    private final Crypto crypto;
+    private final Crypto mCrypto;
     @NonNull
-    private final BackupFiles.Checksum checksum;
-    private final int userHandle;
-    private boolean isInstalled;
-    private final List<Path> decryptedFiles = new ArrayList<>();
+    private final BackupFiles.Checksum mChecksum;
+    private final int mUserId;
+    private boolean mIsInstalled;
+    private final List<Path> mDecryptedFiles = new ArrayList<>();
 
-    private boolean requiresRestart;
+    private boolean mRequiresRestart;
 
     RestoreOp(@NonNull String packageName, @NonNull MetadataManager metadataManager,
               @NonNull BackupFlags requestedFlags, @NonNull BackupFiles.BackupFile backupFile,
-              int userHandle) throws BackupException {
-        this.packageName = packageName;
-        this.requestedFlags = requestedFlags;
-        this.backupFile = backupFile;
-        this.backupPath = this.backupFile.getBackupPath();
-        this.userHandle = userHandle;
+              int userId) throws BackupException {
+        mContext = ContextUtils.getContext();
+        mPackageName = packageName;
+        mRequestedFlags = requestedFlags;
+        mBackupFile = backupFile;
+        mBackupPath = mBackupFile.getBackupPath();
+        mUserId = userId;
         try {
-            metadataManager.readMetadata(this.backupFile);
-            metadata = metadataManager.getMetadata();
-            backupFlags = metadata.flags;
+            metadataManager.readMetadata(mBackupFile);
+            mMetadata = metadataManager.getMetadata();
+            mBackupFlags = mMetadata.flags;
         } catch (IOException e) {
             throw new BackupException("Failed to read metadata. Possibly due to malformed json file.", e);
         }
         // Setup crypto
-        if (!CryptoUtils.isAvailable(metadata.crypto)) {
-            throw new BackupException("Mode " + metadata.crypto + " is currently unavailable.");
+        if (!CryptoUtils.isAvailable(mMetadata.crypto)) {
+            throw new BackupException("Mode " + mMetadata.crypto + " is currently unavailable.");
         }
         try {
-            crypto = CryptoUtils.getCrypto(metadata);
+            mCrypto = CryptoUtils.getCrypto(mMetadata);
         } catch (CryptoException e) {
-            throw new BackupException("Failed to get crypto " + metadata.crypto, e);
+            throw new BackupException("Failed to get crypto " + mMetadata.crypto, e);
         }
         Path checksumFile;
         try {
-            checksumFile = this.backupFile.getChecksumFile(metadata.crypto);
+            checksumFile = mBackupFile.getChecksumFile(mMetadata.crypto);
         } catch (IOException e) {
             throw new BackupException("Could not get encrypted checksum.txt file.", e);
         }
@@ -139,46 +143,46 @@ class RestoreOp implements Closeable {
         }
         // Get checksums
         try {
-            this.checksum = this.backupFile.getChecksum(CryptoUtils.MODE_NO_ENCRYPTION);
+            mChecksum = mBackupFile.getChecksum(CryptoUtils.MODE_NO_ENCRYPTION);
         } catch (Throwable e) {
-            this.backupFile.cleanup();
+            mBackupFile.cleanup();
             throw new BackupException("Failed to get checksums.", e);
         }
         // Verify metadata
         if (!requestedFlags.skipSignatureCheck()) {
             Path metadataFile;
             try {
-                metadataFile = this.backupFile.getMetadataFile();
+                metadataFile = mBackupFile.getMetadataFile();
             } catch (IOException e) {
                 throw new BackupException("Could not get metadata file.", e);
             }
-            String checksum = DigestUtils.getHexDigest(metadata.checksumAlgo, metadataFile);
-            if (!checksum.equals(this.checksum.get(metadataFile.getName()))) {
+            String checksum = DigestUtils.getHexDigest(mMetadata.checksumAlgo, metadataFile);
+            if (!checksum.equals(mChecksum.get(metadataFile.getName()))) {
                 throw new BackupException("Couldn't verify metadata file." +
                         "\nFile: " + metadataFile +
                         "\nFound: " + checksum +
-                        "\nRequired: " + this.checksum.get(metadataFile.getName()));
+                        "\nRequired: " + mChecksum.get(metadataFile.getName()));
             }
         }
         // Check user handle
-        if (metadata.userHandle != userHandle) {
+        if (mMetadata.userHandle != userId) {
             Log.w(TAG, "Using different user handle.");
         }
         // Get package info
-        packageInfo = null;
+        mPackageInfo = null;
         try {
-            packageInfo = PackageManagerCompat.getPackageInfo(packageName, GET_SIGNING_CERTIFICATES
-                    | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userHandle);
+            mPackageInfo = PackageManagerCompat.getPackageInfo(packageName, GET_SIGNING_CERTIFICATES
+                    | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId);
         } catch (Exception ignore) {
         }
-        isInstalled = packageInfo != null;
+        mIsInstalled = mPackageInfo != null;
     }
 
     @Override
     public void close() {
         Log.d(TAG, "Close called");
-        crypto.close();
-        for (Path file : decryptedFiles) {
+        mCrypto.close();
+        for (Path file : mDecryptedFiles) {
             Log.d(TAG, "Deleting " + file);
             file.delete();
         }
@@ -186,30 +190,30 @@ class RestoreOp implements Closeable {
 
     @NonNull
     public MetadataManager.Metadata getMetadata() {
-        return metadata;
+        return mMetadata;
     }
 
     void runRestore(@Nullable ProgressHandler progressHandler) throws BackupException {
         try {
-            if (requestedFlags.backupData() && metadata.keyStore && !requestedFlags.skipSignatureCheck()) {
+            if (mRequestedFlags.backupData() && mMetadata.keyStore && !mRequestedFlags.skipSignatureCheck()) {
                 // Check checksum of master key first
                 checkMasterKey();
             }
             incrementProgress(progressHandler);
-            if (requestedFlags.backupApkFiles()) {
+            if (mRequestedFlags.backupApkFiles()) {
                 restoreApkFiles();
                 incrementProgress(progressHandler);
             }
-            if (requestedFlags.backupData()) {
+            if (mRequestedFlags.backupData()) {
                 restoreData();
-                if (metadata.keyStore) restoreKeyStore();
+                if (mMetadata.keyStore) restoreKeyStore();
                 incrementProgress(progressHandler);
             }
-            if (requestedFlags.backupExtras()) {
+            if (mRequestedFlags.backupExtras()) {
                 restoreExtras();
                 incrementProgress(progressHandler);
             }
-            if (requestedFlags.backupRules()) {
+            if (mRequestedFlags.backupRules()) {
                 restoreRules();
                 incrementProgress(progressHandler);
             }
@@ -229,7 +233,7 @@ class RestoreOp implements Closeable {
     }
 
     public boolean requiresRestart() {
-        return requiresRestart;
+        return mRequiresRestart;
     }
 
     private void checkMasterKey() throws BackupException {
@@ -237,10 +241,10 @@ class RestoreOp implements Closeable {
             // TODO: 6/2/22 MasterKey may not actually be necessary.
             return;
         }
-        String oldChecksum = checksum.get(MASTER_KEY);
+        String oldChecksum = mChecksum.get(MASTER_KEY);
         Path masterKey;
         try {
-            masterKey = KeyStoreUtils.getMasterKey(userHandle);
+            masterKey = KeyStoreUtils.getMasterKey(mUserId);
         } catch (FileNotFoundException e) {
             if (oldChecksum == null) return;
             else throw new BackupException("Master key existed when the checksum was made but now it doesn't.");
@@ -248,45 +252,45 @@ class RestoreOp implements Closeable {
         if (oldChecksum == null) {
             throw new BackupException("Master key exists but it didn't exist when the backup was made.");
         }
-        String newChecksum = DigestUtils.getHexDigest(metadata.checksumAlgo, masterKey.getContentAsString().getBytes());
+        String newChecksum = DigestUtils.getHexDigest(mMetadata.checksumAlgo, masterKey.getContentAsString().getBytes());
         if (!newChecksum.equals(oldChecksum)) {
             throw new BackupException("Checksums for master key did not match.");
         }
     }
 
     private void restoreApkFiles() throws BackupException {
-        if (!backupFlags.backupApkFiles()) {
+        if (!mBackupFlags.backupApkFiles()) {
             throw new BackupException("APK restore is requested but backup doesn't contain any source files.");
         }
-        Path[] backupSourceFiles = getSourceFiles(backupPath);
+        Path[] backupSourceFiles = getSourceFiles(mBackupPath);
         if (backupSourceFiles.length == 0) {
             // No source backup found
             throw new BackupException("Source restore is requested but there are no source files.");
         }
         boolean isVerified = true;
-        if (packageInfo != null) {
+        if (mPackageInfo != null) {
             // Check signature of the installed app
-            List<String> certChecksumList = Arrays.asList(PackageUtils.getSigningCertChecksums(metadata.checksumAlgo, packageInfo, false));
-            String[] certChecksums = BackupFiles.Checksum.getCertChecksums(checksum);
+            List<String> certChecksumList = Arrays.asList(PackageUtils.getSigningCertChecksums(mMetadata.checksumAlgo, mPackageInfo, false));
+            String[] certChecksums = BackupFiles.Checksum.getCertChecksums(mChecksum);
             for (String checksum : certChecksums) {
                 if (certChecksumList.contains(checksum)) continue;
                 isVerified = false;
-                if (!requestedFlags.skipSignatureCheck()) {
+                if (!mRequestedFlags.skipSignatureCheck()) {
                     throw new BackupException("Signing info verification failed." +
                             "\nInstalled: " + certChecksumList +
                             "\nBackup: " + Arrays.toString(certChecksums));
                 }
             }
         }
-        if (!requestedFlags.skipSignatureCheck()) {
+        if (!mRequestedFlags.skipSignatureCheck()) {
             String checksum;
             for (Path file : backupSourceFiles) {
-                checksum = DigestUtils.getHexDigest(metadata.checksumAlgo, file);
-                if (!checksum.equals(this.checksum.get(file.getName()))) {
+                checksum = DigestUtils.getHexDigest(mMetadata.checksumAlgo, file);
+                if (!checksum.equals(mChecksum.get(file.getName()))) {
                     throw new BackupException("Source file verification failed." +
                             "\nFile: " + file +
                             "\nFound: " + checksum +
-                            "\nRequired: " + this.checksum.get(file.getName()));
+                            "\nRequired: " + mChecksum.get(file.getName()));
                 }
             }
         }
@@ -295,7 +299,7 @@ class RestoreOp implements Closeable {
             // The only way to restore is to reinstall the app
             synchronized (sLock) {
                 PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance();
-                if (installer.uninstall(packageName, userHandle, false)) {
+                if (installer.uninstall(mPackageName, mUserId, false)) {
                     throw new BackupException("An uninstallation was necessary but couldn't perform it.");
                 }
             }
@@ -309,19 +313,19 @@ class RestoreOp implements Closeable {
         } catch (Exception ignore) {
         }
         if (!packageStagingDirectory.canWrite()) {
-            packageStagingDirectory = backupPath;
+            packageStagingDirectory = mBackupPath;
         }
         synchronized (sLock) {
             // Setup apk files, including split apk
-            final int splitCount = metadata.splitConfigs.length;
+            final int splitCount = mMetadata.splitConfigs.length;
             String[] allApkNames = new String[splitCount + 1];
             Path[] allApks = new Path[splitCount + 1];
             try {
-                Path baseApk = packageStagingDirectory.createNewFile(metadata.apkName, null);
+                Path baseApk = packageStagingDirectory.createNewFile(mMetadata.apkName, null);
                 allApks[0] = baseApk;
-                allApkNames[0] = metadata.apkName;
+                allApkNames[0] = mMetadata.apkName;
                 for (int i = 1; i < allApkNames.length; ++i) {
-                    allApkNames[i] = metadata.splitConfigs[i - 1];
+                    allApkNames[i] = mMetadata.splitConfigs[i - 1];
                     allApks[i] = packageStagingDirectory.createNewFile(allApkNames[i], null);
                 }
             } catch (IOException e) {
@@ -335,12 +339,12 @@ class RestoreOp implements Closeable {
             }
             // Extract apk files to the package staging directory
             try {
-                TarUtils.extract(metadata.tarType, backupSourceFiles, packageStagingDirectory, allApkNames, null, null);
+                TarUtils.extract(mMetadata.tarType, backupSourceFiles, packageStagingDirectory, allApkNames, null, null);
             } catch (Throwable th) {
                 throw new BackupException("Failed to extract the apk file(s).", th);
             }
             // A normal update will do it now
-            PackageInstallerCompat packageInstaller = PackageInstallerCompat.getNewInstance(metadata.installer);
+            PackageInstallerCompat packageInstaller = PackageInstallerCompat.getNewInstance(mMetadata.installer);
             packageInstaller.setOnInstallListener(new PackageInstallerCompat.OnInstallListener() {
                 @Override
                 public void onStartInstall(int sessionId, String packageName) {
@@ -350,7 +354,7 @@ class RestoreOp implements Closeable {
                 public void onAnotherAttemptInMiui(@Nullable ApkFile apkFile) {
                     // This works because the parent install method still remains active until a final status is
                     // received after all the attempts are finished, which is, then, returned to the parent.
-                    packageInstaller.install(allApks, packageName, userHandle);
+                    packageInstaller.install(allApks, mPackageName, mUserId);
                 }
 
                 @Override
@@ -358,7 +362,7 @@ class RestoreOp implements Closeable {
                 }
             });
             try {
-                if (!packageInstaller.install(allApks, packageName, userHandle)) {
+                if (!packageInstaller.install(allApks, mPackageName, mUserId)) {
                     throw new BackupException("A (re)install was necessary but couldn't perform it.");
                 }
             } finally {
@@ -366,9 +370,9 @@ class RestoreOp implements Closeable {
             }
             // Get package info, again
             try {
-                packageInfo = PackageManagerCompat.getPackageInfo(packageName, GET_SIGNING_CERTIFICATES
-                        | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userHandle);
-                isInstalled = true;
+                mPackageInfo = PackageManagerCompat.getPackageInfo(mPackageName, GET_SIGNING_CERTIFICATES
+                        | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, mUserId);
+                mIsInstalled = true;
             } catch (Exception e) {
                 throw new BackupException("Apparently the install wasn't complete in the previous section.", e);
             }
@@ -376,22 +380,22 @@ class RestoreOp implements Closeable {
     }
 
     private void restoreKeyStore() throws BackupException {
-        if (packageInfo == null) {
+        if (mPackageInfo == null) {
             throw new BackupException("KeyStore restore is requested but the app isn't installed.");
         }
-        Path[] keyStoreFiles = getKeyStoreFiles(backupPath);
+        Path[] keyStoreFiles = getKeyStoreFiles(mBackupPath);
         if (keyStoreFiles.length == 0) {
             throw new BackupException("KeyStore files should've existed but they didn't");
         }
-        if (!requestedFlags.skipSignatureCheck()) {
+        if (!mRequestedFlags.skipSignatureCheck()) {
             String checksum;
             for (Path file : keyStoreFiles) {
-                checksum = DigestUtils.getHexDigest(metadata.checksumAlgo, file);
-                if (!checksum.equals(this.checksum.get(file.getName()))) {
+                checksum = DigestUtils.getHexDigest(mMetadata.checksumAlgo, file);
+                if (!checksum.equals(mChecksum.get(file.getName()))) {
                     throw new BackupException("KeyStore file verification failed." +
                             "\nFile: " + file +
                             "\nFound: " + checksum +
-                            "\nRequired: " + this.checksum.get(file.getName()));
+                            "\nRequired: " + mChecksum.get(file.getName()));
                 }
             }
         }
@@ -402,7 +406,7 @@ class RestoreOp implements Closeable {
             throw new BackupException("Failed to decrypt " + Arrays.toString(keyStoreFiles), e);
         }
         // Restore KeyStore files to the /data/misc/keystore folder
-        Path keyStorePath = KeyStoreUtils.getKeyStorePath(userHandle);
+        Path keyStorePath = KeyStoreUtils.getKeyStorePath(mUserId);
         // Note down UID/GID
         UidGidPair uidGidPair;
         int mode;
@@ -413,7 +417,7 @@ class RestoreOp implements Closeable {
             throw new BackupException("Failed to access properties of the KeyStore folder.", e);
         }
         try {
-            TarUtils.extract(metadata.tarType, keyStoreFiles, keyStorePath, null, null, null);
+            TarUtils.extract(mMetadata.tarType, keyStoreFiles, keyStorePath, null, null, null);
             // Restore folder permission
             Paths.chown(keyStorePath, uidGidPair.uid, uidGidPair.gid);
             //noinspection OctalInteger
@@ -422,8 +426,8 @@ class RestoreOp implements Closeable {
             throw new BackupException("Failed to restore the KeyStore files.", th);
         }
         // Rename files
-        int uid = packageInfo.applicationInfo.uid;
-        List<String> keyStoreFileNames = KeyStoreUtils.getKeyStoreFiles(KEYSTORE_PLACEHOLDER, userHandle);
+        int uid = mPackageInfo.applicationInfo.uid;
+        List<String> keyStoreFileNames = KeyStoreUtils.getKeyStoreFiles(KEYSTORE_PLACEHOLDER, mUserId);
         for (String keyStoreFileName : keyStoreFileNames) {
             try {
                 String newFilename = Utils.replaceOnce(keyStoreFileName, String.valueOf(KEYSTORE_PLACEHOLDER), String.valueOf(uid));
@@ -443,58 +447,58 @@ class RestoreOp implements Closeable {
     private void restoreData() throws BackupException {
         // Data restore is requested: Data restore is only possible if the app is actually
         // installed. So, check if it's installed first.
-        if (packageInfo == null) {
+        if (mPackageInfo == null) {
             throw new BackupException("Data restore is requested but the app isn't installed.");
         }
-        if (!requestedFlags.skipSignatureCheck()) {
+        if (!mRequestedFlags.skipSignatureCheck()) {
             // Verify integrity of the data backups
             String checksum;
-            for (int i = 0; i < metadata.dataDirs.length; ++i) {
-                Path[] dataFiles = getDataFiles(backupPath, i);
+            for (int i = 0; i < mMetadata.dataDirs.length; ++i) {
+                Path[] dataFiles = getDataFiles(mBackupPath, i);
                 if (dataFiles.length == 0) {
                     throw new BackupException("Data restore is requested but there are no data files for index " + i + ".");
                 }
                 for (Path file : dataFiles) {
-                    checksum = DigestUtils.getHexDigest(metadata.checksumAlgo, file);
-                    if (!checksum.equals(this.checksum.get(file.getName()))) {
+                    checksum = DigestUtils.getHexDigest(mMetadata.checksumAlgo, file);
+                    if (!checksum.equals(mChecksum.get(file.getName()))) {
                         throw new BackupException("Data file verification failed for index " + i + "." +
                                 "\nFile: " + file +
                                 "\nFound: " + checksum +
-                                "\nRequired: " + this.checksum.get(file.getName()));
+                                "\nRequired: " + mChecksum.get(file.getName()));
                     }
                 }
             }
         }
         // Force-stop and clear app data
-        PackageManagerCompat.clearApplicationUserData(packageName, userHandle);
+        PackageManagerCompat.clearApplicationUserData(mPackageName, mUserId);
         // Restore backups
-        for (int i = 0; i < metadata.dataDirs.length; ++i) {
-            String dataSource = BackupUtils.getWritableDataDirectory(metadata.dataDirs[i], metadata.userHandle, userHandle);
-            BackupDataDirectoryInfo dataDirectoryInfo = BackupDataDirectoryInfo.getInfo(dataSource, userHandle);
+        for (int i = 0; i < mMetadata.dataDirs.length; ++i) {
+            String dataSource = BackupUtils.getWritableDataDirectory(mMetadata.dataDirs[i], mMetadata.userHandle, mUserId);
+            BackupDataDirectoryInfo dataDirectoryInfo = BackupDataDirectoryInfo.getInfo(dataSource, mUserId);
             Path dataSourceFile = Paths.get(dataSource);
 
-            Path[] dataFiles = getDataFiles(backupPath, i);
+            Path[] dataFiles = getDataFiles(mBackupPath, i);
             if (dataFiles.length == 0) {
                 throw new BackupException("Data restore is requested but there are no data files for index " + i + ".");
             }
             UidGidPair uidGidPair = dataSourceFile.getUidGid();
             if (uidGidPair == null) {
                 // Fallback to app UID
-                uidGidPair = new UidGidPair(packageInfo.applicationInfo.uid, packageInfo.applicationInfo.uid);
+                uidGidPair = new UidGidPair(mPackageInfo.applicationInfo.uid, mPackageInfo.applicationInfo.uid);
             }
             if (dataDirectoryInfo.isExternal()) {
                 // Skip if external data restore is not requested
                 switch (dataDirectoryInfo.subtype) {
                     case BackupDataDirectoryInfo.TYPE_ANDROID_DATA:
                         // Skip restoring Android/data directory if not requested
-                        if (!requestedFlags.backupExternalData()) {
+                        if (!mRequestedFlags.backupExternalData()) {
                             continue;
                         }
                         break;
                     case BackupDataDirectoryInfo.TYPE_ANDROID_OBB:
                     case BackupDataDirectoryInfo.TYPE_ANDROID_MEDIA:
                         // Skip restoring Android/data or Android/media if media/obb restore not requested
-                        if (!requestedFlags.backupMediaObb()) {
+                        if (!mRequestedFlags.backupMediaObb()) {
                             continue;
                         }
                         break;
@@ -506,7 +510,7 @@ class RestoreOp implements Closeable {
                 }
             } else {
                 // Skip if internal data restore is not requested.
-                if (!requestedFlags.backupInternalData()) continue;
+                if (!mRequestedFlags.backupInternalData()) continue;
             }
             // Create data folder if not exists
             if (!dataSourceFile.exists()) {
@@ -527,9 +531,9 @@ class RestoreOp implements Closeable {
             }
             // Extract data to the data directory
             try {
-                String publicSourceDir = new File(packageInfo.applicationInfo.publicSourceDir).getParent();
-                TarUtils.extract(metadata.tarType, dataFiles, dataSourceFile, null, BackupUtils
-                        .getExcludeDirs(!requestedFlags.backupCache(), null), publicSourceDir);
+                String publicSourceDir = new File(mPackageInfo.applicationInfo.publicSourceDir).getParent();
+                TarUtils.extract(mMetadata.tarType, dataFiles, dataSourceFile, null, BackupUtils
+                        .getExcludeDirs(!mRequestedFlags.backupCache(), null), publicSourceDir);
             } catch (Throwable th) {
                 throw new BackupException("Failed to restore data files for index " + i + ".", th);
             }
@@ -545,10 +549,10 @@ class RestoreOp implements Closeable {
     }
 
     private synchronized void restoreExtras() throws BackupException {
-        if (!isInstalled) {
+        if (!mIsInstalled) {
             throw new BackupException("Misc restore is requested but the app isn't installed.");
         }
-        PseudoRules rules = new PseudoRules(packageName, userHandle);
+        PseudoRules rules = new PseudoRules(mPackageName, mUserId);
         // Backward compatibility for restoring permissions
         loadMiscRules(rules);
         // Apply rules
@@ -563,13 +567,13 @@ class RestoreOp implements Closeable {
                 switch (entry.type) {
                     case APP_OP:
                         if (canModifyAppOpMode) {
-                            appOpsManager.setMode(Integer.parseInt(entry.name), packageInfo.applicationInfo.uid,
-                                    packageName, ((AppOpRule) entry).getMode());
+                            appOpsManager.setMode(Integer.parseInt(entry.name), mPackageInfo.applicationInfo.uid,
+                                    mPackageName, ((AppOpRule) entry).getMode());
                         }
                         break;
                     case NET_POLICY:
                         if (canChangeNetPolicy) {
-                            NetworkPolicyManagerCompat.setUidPolicy(packageInfo.applicationInfo.uid,
+                            NetworkPolicyManagerCompat.setUidPolicy(mPackageInfo.applicationInfo.uid,
                                     ((NetPolicyRule) entry).getPolicies());
                         }
                         break;
@@ -577,18 +581,18 @@ class RestoreOp implements Closeable {
                         PermissionRule permissionRule = (PermissionRule) entry;
                         Permission permission = permissionRule.getPermission(true);
                         permission.setAppOpAllowed(permission.getAppOp() != AppOpsManagerCompat.OP_NONE && appOpsManager
-                                .checkOperation(permission.getAppOp(), packageInfo.applicationInfo.uid,
-                                        packageName) == AppOpsManager.MODE_ALLOWED);
+                                .checkOperation(permission.getAppOp(), mPackageInfo.applicationInfo.uid,
+                                        mPackageName) == AppOpsManager.MODE_ALLOWED);
                         if (permissionRule.isGranted()) {
-                            PermUtils.grantPermission(packageInfo, permission, appOpsManager, true, true);
+                            PermUtils.grantPermission(mPackageInfo, permission, appOpsManager, true, true);
                         } else {
-                            PermUtils.revokePermission(packageInfo, permission, appOpsManager, true);
+                            PermUtils.revokePermission(mPackageInfo, permission, appOpsManager, true);
                         }
                         break;
                     }
                     case BATTERY_OPT:
                         if (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.DEVICE_POWER)) {
-                            DeviceIdleManagerCompat.disableBatteryOptimization(packageName);
+                            DeviceIdleManagerCompat.disableBatteryOptimization(mPackageName);
                         }
                         break;
                     case MAGISK_HIDE: {
@@ -609,25 +613,25 @@ class RestoreOp implements Closeable {
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1
                                 && SelfPermissions.checkNotificationListenerAccess()) {
                             notificationManager.setNotificationListenerAccessGrantedForUser(
-                                    new ComponentName(packageName, entry.name), userHandle, true);
+                                    new ComponentName(mPackageName, entry.name), mUserId, true);
                         }
                         break;
                     case URI_GRANT:
                         UriManager.UriGrant uriGrant = ((UriGrantRule) entry).getUriGrant();
                         UriManager.UriGrant newUriGrant = new UriManager.UriGrant(
-                                uriGrant.sourceUserId, userHandle, uriGrant.userHandle,
+                                uriGrant.sourceUserId, mUserId, uriGrant.userHandle,
                                 uriGrant.sourcePkg, uriGrant.targetPkg, uriGrant.uri,
                                 uriGrant.prefix, uriGrant.modeFlags, uriGrant.createdTime);
                         UriManager uriManager = new UriManager();
                         uriManager.grantUri(newUriGrant);
                         uriManager.writeGrantedUriPermissions();
-                        requiresRestart = true;
+                        mRequiresRestart = true;
                         break;
                     case SSAID:
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                            new SsaidSettings(userHandle).setSsaid(packageName, packageInfo.applicationInfo.uid,
+                            new SsaidSettings(mUserId).setSsaid(mPackageName, mPackageInfo.applicationInfo.uid,
                                     ((SsaidRule) entry).getSsaid());
-                            requiresRestart = true;
+                            mRequiresRestart = true;
                         }
                         break;
                 }
@@ -643,18 +647,18 @@ class RestoreOp implements Closeable {
     private void loadMiscRules(final PseudoRules rules) throws BackupException {
         Path miscFile;
         try {
-            miscFile = backupFile.getMiscFile(metadata.crypto);
+            miscFile = mBackupFile.getMiscFile(mMetadata.crypto);
         } catch (IOException e) {
             // There are no permissions, just skip
             return;
         }
-        if (!requestedFlags.skipSignatureCheck()) {
-            String checksum = DigestUtils.getHexDigest(metadata.checksumAlgo, miscFile);
-            if (!checksum.equals(this.checksum.get(miscFile.getName()))) {
+        if (!mRequestedFlags.skipSignatureCheck()) {
+            String checksum = DigestUtils.getHexDigest(mMetadata.checksumAlgo, miscFile);
+            if (!checksum.equals(mChecksum.get(miscFile.getName()))) {
                 throw new BackupException("Couldn't verify misc file." +
                         "\nFile: " + miscFile +
                         "\nFound: " + checksum +
-                        "\nRequired: " + this.checksum.get(miscFile.getName()));
+                        "\nRequired: " + mChecksum.get(miscFile.getName()));
             }
         }
         // Decrypt permission file
@@ -665,7 +669,7 @@ class RestoreOp implements Closeable {
         }
         // Get decrypted file
         try {
-            miscFile = backupFile.getMiscFile(CryptoUtils.MODE_NO_ENCRYPTION);
+            miscFile = mBackupFile.getMiscFile(CryptoUtils.MODE_NO_ENCRYPTION);
         } catch (IOException e) {
             throw new BackupException("Could not get decrypted misc file", e);
         }
@@ -678,27 +682,27 @@ class RestoreOp implements Closeable {
 
     private void restoreRules() throws BackupException {
         // Apply rules
-        if (!isInstalled) {
+        if (!mIsInstalled) {
             throw new BackupException("Rules restore is requested but the app isn't installed.");
         }
         Path rulesFile;
         try {
-            rulesFile = backupFile.getRulesFile(metadata.crypto);
+            rulesFile = mBackupFile.getRulesFile(mMetadata.crypto);
         } catch (IOException e) {
-            if (metadata.hasRules) {
+            if (mMetadata.hasRules) {
                 throw new BackupException("Rules file is missing.", e);
             } else {
                 // There are no rules, just skip
                 return;
             }
         }
-        if (!requestedFlags.skipSignatureCheck()) {
-            String checksum = DigestUtils.getHexDigest(metadata.checksumAlgo, rulesFile);
-            if (!checksum.equals(this.checksum.get(rulesFile.getName()))) {
+        if (!mRequestedFlags.skipSignatureCheck()) {
+            String checksum = DigestUtils.getHexDigest(mMetadata.checksumAlgo, rulesFile);
+            if (!checksum.equals(mChecksum.get(rulesFile.getName()))) {
                 throw new BackupException("Couldn't verify permission file." +
                         "\nFile: " + rulesFile +
                         "\nFound: " + checksum +
-                        "\nRequired: " + this.checksum.get(rulesFile.getName()));
+                        "\nRequired: " + mChecksum.get(rulesFile.getName()));
             }
         }
         // Decrypt rules file
@@ -709,13 +713,13 @@ class RestoreOp implements Closeable {
         }
         // Get decrypted file
         try {
-            rulesFile = backupFile.getRulesFile(CryptoUtils.MODE_NO_ENCRYPTION);
+            rulesFile = mBackupFile.getRulesFile(CryptoUtils.MODE_NO_ENCRYPTION);
         } catch (IOException e) {
             throw new BackupException("Could not get decrypted rules file", e);
         }
-        try (RulesImporter importer = new RulesImporter(Arrays.asList(RuleType.values()), new int[]{userHandle})) {
+        try (RulesImporter importer = new RulesImporter(mContext, Arrays.asList(RuleType.values()), new int[]{mUserId})) {
             importer.addRulesFromPath(rulesFile);
-            importer.setPackagesToImport(Collections.singletonList(packageName));
+            importer.setPackagesToImport(Collections.singletonList(mPackageName));
             importer.applyRules(true);
         } catch (IOException e) {
             throw new BackupException("Failed to restore rules file.", e);
@@ -724,7 +728,7 @@ class RestoreOp implements Closeable {
 
     @NonNull
     private Path[] getSourceFiles(@NonNull Path backupPath) {
-        String mode = CryptoUtils.getExtension(metadata.crypto);
+        String mode = CryptoUtils.getExtension(mMetadata.crypto);
         return backupPath.listFiles((dir, name) -> name.startsWith(SOURCE_PREFIX) && name.endsWith(mode));
     }
 
@@ -736,13 +740,13 @@ class RestoreOp implements Closeable {
 
     @NonNull
     private Path[] getKeyStoreFiles(@NonNull Path backupPath) {
-        String mode = CryptoUtils.getExtension(metadata.crypto);
+        String mode = CryptoUtils.getExtension(mMetadata.crypto);
         return backupPath.listFiles((dir, name) -> name.startsWith(KEYSTORE_PREFIX) && name.endsWith(mode));
     }
 
     @NonNull
     private Path[] getDataFiles(@NonNull Path backupPath, int index) {
-        String mode = CryptoUtils.getExtension(metadata.crypto);
+        String mode = CryptoUtils.getExtension(mMetadata.crypto);
         final String dataPrefix = DATA_PREFIX + index;
         return backupPath.listFiles((dir, name) -> name.startsWith(dataPrefix) && name.endsWith(mode));
     }
@@ -751,10 +755,10 @@ class RestoreOp implements Closeable {
     private Path[] decrypt(@NonNull Path[] files) throws IOException {
         Path[] newFiles;
         synchronized (Crypto.class) {
-            crypto.decrypt(files);
-            newFiles = crypto.getNewFiles();
+            mCrypto.decrypt(files);
+            newFiles = mCrypto.getNewFiles();
         }
-        decryptedFiles.addAll(Arrays.asList(newFiles));
+        mDecryptedFiles.addAll(Arrays.asList(newFiles));
         return newFiles.length > 0 ? newFiles : files;
     }
 }

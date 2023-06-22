@@ -12,25 +12,25 @@ import java.util.Arrays;
 import java.util.List;
 
 public class SplitInputStream extends InputStream {
-    private final List<InputStream> inputStreams;
-    private int currentIndex = -1;
-    private final List<Path> files;
+    private final List<InputStream> mInputStreams;
+    private int mCurrentIndex = -1;
+    private final List<Path> mFiles;
 
-    private final byte[] buf;
+    private final byte[] mBuf;
 
     // Number of valid bytes in buf
-    private int count = 0;
+    private int mCount = 0;
     // Current read pos, > 0 in buf, < 0 in markBuf (interpret in bitwise negate)
-    private int pos = 0;
+    private int mPos = 0;
 
     // -1 when no active mark, 0 when markBuf is active, pos when mark is called
-    private int markPos = -1;
+    private int mMarkPos = -1;
     // Number of valid bytes in markBuf
-    private int markBufCount = 0;
+    private int mMarkBufCount = 0;
 
     // markBuf.length == markBufSize
-    private int markBufSize;
-    private byte[] markBuf;
+    private int mMarkBufSize;
+    private byte[] mMarkBuf;
 
     // Some value ranges:
     // 0 <= count <= buf.length
@@ -40,9 +40,9 @@ public class SplitInputStream extends InputStream {
     // 0 <= markBufCount <= markLimit
 
     public SplitInputStream(@NonNull List<Path> files) {
-        this.files = files;
-        this.inputStreams = new ArrayList<>(files.size());
-        buf = new byte[1024 * 4];
+        mFiles = files;
+        mInputStreams = new ArrayList<>(files.size());
+        mBuf = new byte[1024 * 4];
     }
 
     public SplitInputStream(@NonNull Path[] files) {
@@ -77,7 +77,7 @@ public class SplitInputStream extends InputStream {
 
     @Override
     public void close() throws IOException {
-        for (InputStream stream : inputStreams) {
+        for (InputStream stream : mInputStreams) {
             stream.close();
         }
     }
@@ -85,44 +85,44 @@ public class SplitInputStream extends InputStream {
     @Override
     public synchronized void mark(int readlimit) {
         // Reset mark
-        markPos = pos;
-        markBufCount = 0;
-        markBuf = null;
+        mMarkPos = mPos;
+        mMarkBufCount = 0;
+        mMarkBuf = null;
 
-        int remain = count - pos;
+        int remain = mCount - mPos;
         if (readlimit <= remain) {
             // Don't need a separate buffer
-            markBufSize = 0;
+            mMarkBufSize = 0;
         } else {
             // Extra buffer required is remain + n * buf.length
-            markBufSize = remain + ((readlimit - remain) / buf.length) * buf.length;
+            mMarkBufSize = remain + ((readlimit - remain) / mBuf.length) * mBuf.length;
         }
     }
 
     @Override
     public synchronized void reset() throws IOException {
-        if (markPos < 0)
+        if (mMarkPos < 0)
             throw new IOException("Resetting to invalid mark");
         // Switch to markPos or use markBuf
-        pos = markBuf == null ? markPos : ~0;
+        mPos = mMarkBuf == null ? mMarkPos : ~0;
     }
 
     @WorkerThread
     @Override
     public synchronized int available() throws IOException {
-        if (count < 0) return 0;
-        if (pos >= count) {
+        if (mCount < 0) return 0;
+        if (mPos >= mCount) {
             // Try to read the next chunk into memory
             read0(null, 0, 1);
-            if (count < 0) return 0;
+            if (mCount < 0) return 0;
             // Revert the 1 byte read
-            --pos;
+            --mPos;
         }
         // Return the size available in memory
-        if (pos < 0) {
-            return (markBufCount - ~pos) + count;
+        if (mPos < 0) {
+            return (mMarkBufCount - ~mPos) + mCount;
         } else {
-            return count - pos;
+            return mCount - mPos;
         }
     }
 
@@ -135,60 +135,60 @@ public class SplitInputStream extends InputStream {
     private synchronized int read0(byte[] b, int off, int len) throws IOException {
         int n = 0;
         while (n < len) {
-            if (pos < 0) {
+            if (mPos < 0) {
                 // Read from markBuf
-                int pos = ~this.pos;
-                int size = Math.min(markBufCount - pos, len - n);
+                int pos = ~mPos;
+                int size = Math.min(mMarkBufCount - pos, len - n);
                 if (b != null) {
-                    System.arraycopy(markBuf, pos, b, off + n, size);
+                    System.arraycopy(mMarkBuf, pos, b, off + n, size);
                 }
                 n += size;
                 pos += size;
-                if (pos == markBufCount) {
+                if (pos == mMarkBufCount) {
                     // markBuf done, switch to buf
-                    this.pos = 0;
+                    mPos = 0;
                 } else {
                     // continue reading markBuf
-                    this.pos = ~pos;
+                    mPos = ~pos;
                 }
                 continue;
             }
             // Read from buf
-            if (pos >= count) {
+            if (mPos >= mCount) {
                 // We ran out of buffer, need to either refill or abort
-                if (markPos >= 0) {
+                if (mMarkPos >= 0) {
                     // We need to preserve some buffer for mark
-                    long size = count - markPos;
-                    if ((markBufSize - markBufCount) < size) {
+                    long size = mCount - mMarkPos;
+                    if ((mMarkBufSize - mMarkBufCount) < size) {
                         // Out of mark limit, discard markBuf
-                        markBuf = null;
-                        markBufCount = 0;
-                        markPos = -1;
-                    } else if (markBuf == null) {
-                        markBuf = new byte[(int) markBufSize];
-                        markBufCount = 0;
+                        mMarkBuf = null;
+                        mMarkBufCount = 0;
+                        mMarkPos = -1;
+                    } else if (mMarkBuf == null) {
+                        mMarkBuf = new byte[(int) mMarkBufSize];
+                        mMarkBufCount = 0;
                     }
-                    if (markBuf != null) {
+                    if (mMarkBuf != null) {
                         // Accumulate data in markBuf
-                        System.arraycopy(buf, markPos, markBuf, markBufCount, (int) size);
-                        markBufCount += size;
+                        System.arraycopy(mBuf, mMarkPos, mMarkBuf, mMarkBufCount, (int) size);
+                        mMarkBufCount += size;
                         // Set markPos to 0 as buffer will refill
-                        markPos = 0;
+                        mMarkPos = 0;
                     }
                 }
                 // refill buffer
-                pos = 0;
-                count = readStream(buf);
-                if (count < 0) {
+                mPos = 0;
+                mCount = readStream(mBuf);
+                if (mCount < 0) {
                     return n == 0 ? -1 : n;
                 }
             }
-            int size = Math.min(count - pos, len - n);
+            int size = Math.min(mCount - mPos, len - n);
             if (b != null) {
-                System.arraycopy(buf, pos, b, off + n, size);
+                System.arraycopy(mBuf, mPos, b, off + n, size);
             }
             n += size;
-            pos += size;
+            mPos += size;
         }
         return n;
     }
@@ -199,21 +199,21 @@ public class SplitInputStream extends InputStream {
         int len = b.length;
         if (len <= 0) return len;
         try {
-            if (files.size() == 0) {
+            if (mFiles.size() == 0) {
                 // No files supplied, nothing to read
                 return -1;
-            } else if (currentIndex == -1) {
+            } else if (mCurrentIndex == -1) {
                 // Initialize a new stream
-                inputStreams.add(files.get(0).openInputStream());
-                ++currentIndex;
+                mInputStreams.add(mFiles.get(0).openInputStream());
+                ++mCurrentIndex;
             }
             do {
-                int readCount = inputStreams.get(currentIndex).read(b, off, len);
+                int readCount = mInputStreams.get(mCurrentIndex).read(b, off, len);
                 if (readCount <= 0) {
                     // This stream has been read completely, initialize new stream if available
-                    if (currentIndex + 1 != files.size()) {
-                        inputStreams.add(files.get(currentIndex + 1).openInputStream());
-                        ++currentIndex;
+                    if (mCurrentIndex + 1 != mFiles.size()) {
+                        mInputStreams.add(mFiles.get(mCurrentIndex + 1).openInputStream());
+                        ++mCurrentIndex;
                     } else {
                         // Last stream reached
                         if (len == b.length) {

@@ -12,23 +12,23 @@ import io.github.muntashirakon.AppManager.uri.UriManager;
 
 public class UriGrantRule extends RuleEntry {
     @NonNull
-    private final UriManager.UriGrant uriGrant;
+    private final UriManager.UriGrant mUriGrant;
 
     public UriGrantRule(@NonNull String packageName, @NonNull UriManager.UriGrant uriGrant) {
         super(packageName, STUB, RuleType.URI_GRANT);
-        this.uriGrant = uriGrant;
+        mUriGrant = uriGrant;
     }
 
     public UriGrantRule(@NonNull String packageName, @NonNull StringTokenizer tokenizer) {
         super(packageName, STUB, RuleType.URI_GRANT);
         if (tokenizer.hasMoreElements()) {
-            uriGrant = UriManager.UriGrant.unflattenFromString(tokenizer.nextElement().toString());
+            mUriGrant = UriManager.UriGrant.unflattenFromString(tokenizer.nextElement().toString());
         } else throw new IllegalArgumentException("Invalid format: uriGrant not found");
     }
 
     @NonNull
     public UriManager.UriGrant getUriGrant() {
-        return uriGrant;
+        return mUriGrant;
     }
 
     @NonNull
@@ -36,14 +36,14 @@ public class UriGrantRule extends RuleEntry {
     public String toString() {
         return "UriGrantRule{" +
                 "packageName='" + packageName + '\'' +
-                ", uriGrant=" + uriGrant +
+                ", uriGrant=" + mUriGrant +
                 '}';
     }
 
     @NonNull
     @Override
     public String flattenToString(boolean isExternal) {
-        return addPackageWithTab(isExternal) + name + "\t" + type.name() + "\t" + uriGrant.flattenToString();
+        return addPackageWithTab(isExternal) + name + "\t" + type.name() + "\t" + mUriGrant.flattenToString();
     }
 
     @Override

@@ -21,62 +21,62 @@ import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 
 public class SignerInfo {
     @Nullable
-    private final Signature[] currentSignatures;
+    private final Signature[] mCurrentSignatures;
     @Nullable
-    private final Signature[] allSignatures;
+    private final Signature[] mAllSignatures;
 
     public SignerInfo(@NonNull ApkVerifier.Result apkVerifierResult) throws CertificateEncodingException {
         List<X509Certificate> certificates = apkVerifierResult.getSignerCertificates();
         if (certificates == null) {
-            currentSignatures = null;
+            mCurrentSignatures = null;
         } else {
-            currentSignatures = new Signature[certificates.size()];
+            mCurrentSignatures = new Signature[certificates.size()];
             int i = 0;
             for (X509Certificate certificate : certificates) {
-                currentSignatures[i++] = new Signature(certificate.getEncoded());
+                mCurrentSignatures[i++] = new Signature(certificate.getEncoded());
             }
         }
-        if (currentSignatures == null || currentSignatures.length > 1) {
+        if (mCurrentSignatures == null || mCurrentSignatures.length > 1) {
             // Skip checking rotation because the app has multiple signers or no signer at all
-            allSignatures = currentSignatures;
+            mAllSignatures = mCurrentSignatures;
             return;
         }
         SigningCertificateLineage lineage = apkVerifierResult.getSigningCertificateLineage();
         if (lineage == null) {
             // There is no SigningCertificateLineage block
-            allSignatures = currentSignatures;
+            mAllSignatures = mCurrentSignatures;
             return;
         }
         List<X509Certificate> certificatesInLineage = lineage.getCertificatesInLineage();
         if (certificatesInLineage == null) {
             // There is no certificate in the SigningCertificateLineage block
-            allSignatures = currentSignatures;
+            mAllSignatures = mCurrentSignatures;
             return;
         }
         // At this point, currentSignatures is a singleton array
-        allSignatures = new Signature[currentSignatures.length + certificatesInLineage.size()];
+        mAllSignatures = new Signature[mCurrentSignatures.length + certificatesInLineage.size()];
         int i = 0;
         // Add the current signature on top
-        for (Signature signature : currentSignatures) {
-            allSignatures[i++] = signature;
+        for (Signature signature : mCurrentSignatures) {
+            mAllSignatures[i++] = signature;
         }
         for (X509Certificate certificate : certificatesInLineage) {
-            allSignatures[i++] = new Signature(certificate.getEncoded());
+            mAllSignatures[i++] = new Signature(certificate.getEncoded());
         }
     }
 
     @RequiresApi(Build.VERSION_CODES.P)
     public SignerInfo(@Nullable SigningInfo signingInfo) {
         if (signingInfo == null) {
-            currentSignatures = null;
-            allSignatures = null;
+            mCurrentSignatures = null;
+            mAllSignatures = null;
             return;
         }
-        currentSignatures = signingInfo.getApkContentsSigners();
+        mCurrentSignatures = signingInfo.getApkContentsSigners();
         if (signingInfo.hasMultipleSigners() || !signingInfo.hasPastSigningCertificates()) {
-            allSignatures = signingInfo.getApkContentsSigners();
+            mAllSignatures = signingInfo.getApkContentsSigners();
         } else {
-            allSignatures = ArrayUtils.concatElements(
+            mAllSignatures = ArrayUtils.concatElements(
                     Signature.class,
                     signingInfo.getApkContentsSigners(),
                     signingInfo.getSigningCertificateHistory());
@@ -84,21 +84,21 @@ public class SignerInfo {
     }
 
     public SignerInfo(@Nullable Signature[] signatures) {
-        currentSignatures = signatures;
-        allSignatures = signatures;
+        mCurrentSignatures = signatures;
+        mAllSignatures = signatures;
     }
 
     public boolean hasMultipleSigners() {
-        return currentSignatures != null && currentSignatures.length > 1;
+        return mCurrentSignatures != null && mCurrentSignatures.length > 1;
     }
 
     public boolean hasProofOfRotation() {
-        return !hasMultipleSigners() && allSignatures != null && allSignatures.length > 1;
+        return !hasMultipleSigners() && mAllSignatures != null && mAllSignatures.length > 1;
     }
 
     @Nullable
     public Signature[] getCurrentSignatures() {
-        return currentSignatures;
+        return mCurrentSignatures;
     }
 
     /**
@@ -109,6 +109,6 @@ public class SignerInfo {
      */
     @Nullable
     public Signature[] getAllSignatures() {
-        return allSignatures;
+        return mAllSignatures;
     }
 }

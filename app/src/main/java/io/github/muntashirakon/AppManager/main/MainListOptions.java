@@ -115,8 +115,8 @@ public class MainListOptions extends ListOptions {
     public static final int FILTER_APPS_WITH_SSAID = 1 << 13;
     public static final int FILTER_STOPPED_APPS = 1 << 14;
 
-    private final List<String> profileNames = new ArrayList<>();
-    private final TextWatcher profileInputWatcher = new TextWatcher() {
+    private final List<String> mProfileNames = new ArrayList<>();
+    private final TextWatcher mProfileInputWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
         }
@@ -133,7 +133,7 @@ public class MainListOptions extends ListOptions {
             }
             if (s != null) {
                 String profileName = s.toString().trim();
-                if (profileNames.contains(profileName)) {
+                if (mProfileNames.contains(profileName)) {
                     activity.mModel.setFilterProfileName(profileName);
                     return;
                 }
@@ -141,20 +141,20 @@ public class MainListOptions extends ListOptions {
             activity.mModel.setFilterProfileName(null);
         }
     };
-    private Future<?> profileSuggestionsResult;
+    private Future<?> mProfileSuggestionsResult;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         MainActivity activity = (MainActivity) requireActivity();
-        profileNameInput.addTextChangedListener(profileInputWatcher);
-        profileSuggestionsResult = ThreadUtils.postOnBackgroundThread(() -> {
-            profileNames.clear();
-            profileNames.addAll(ProfileManager.getProfileNames());
+        profileNameInput.addTextChangedListener(mProfileInputWatcher);
+        mProfileSuggestionsResult = ThreadUtils.postOnBackgroundThread(() -> {
+            mProfileNames.clear();
+            mProfileNames.addAll(ProfileManager.getProfileNames());
             if (isDetached() || ThreadUtils.isInterrupted()) return;
             activity.runOnUiThread(() -> {
                 profileNameInput.setAdapter(new AnyFilterArrayAdapter<>(activity,
-                        io.github.muntashirakon.ui.R.layout.item_checked_text_view, profileNames));
+                        io.github.muntashirakon.ui.R.layout.item_checked_text_view, mProfileNames));
                 if (activity.mModel != null) {
                     profileNameInput.setText(activity.mModel.getFilterProfileName());
                 }
@@ -203,8 +203,8 @@ public class MainListOptions extends ListOptions {
 
     @Override
     public void onDestroy() {
-        if (profileSuggestionsResult != null) {
-            profileSuggestionsResult.cancel(true);
+        if (mProfileSuggestionsResult != null) {
+            mProfileSuggestionsResult.cancel(true);
         }
         super.onDestroy();
     }

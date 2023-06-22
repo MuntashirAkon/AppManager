@@ -17,9 +17,9 @@ import static com.topjohnwu.superuser.Shell.EXECUTOR;
 
 // Copyright 2020 John "topjohnwu" Wu
 public class SerialExecutorService extends AbstractExecutorService implements Callable<Void> {
-    private boolean isShutdown = false;
+    private boolean mIsShutdown = false;
     private final ArrayDeque<Runnable> mTasks = new ArrayDeque<>();
-    private FutureTask<Void> scheduleTask = null;
+    private FutureTask<Void> mScheduleTask = null;
 
     @Override
     public Void call() {
@@ -27,7 +27,7 @@ public class SerialExecutorService extends AbstractExecutorService implements Ca
             Runnable task;
             synchronized (this) {
                 if ((task = mTasks.poll()) == null) {
-                    scheduleTask = null;
+                    mScheduleTask = null;
                     return null;
                 }
             }
@@ -37,28 +37,28 @@ public class SerialExecutorService extends AbstractExecutorService implements Ca
 
     @Override
     public synchronized void execute(Runnable r) {
-        if (isShutdown) {
+        if (mIsShutdown) {
             throw new RejectedExecutionException(
                     "Task " + r.toString() + " rejected from " + this);
         }
         mTasks.offer(r);
-        if (scheduleTask == null) {
-            scheduleTask = new FutureTask<>(this);
-            EXECUTOR.execute(scheduleTask);
+        if (mScheduleTask == null) {
+            mScheduleTask = new FutureTask<>(this);
+            EXECUTOR.execute(mScheduleTask);
         }
     }
 
     @Override
     public synchronized void shutdown() {
-        isShutdown = true;
+        mIsShutdown = true;
         mTasks.clear();
     }
 
     @Override
     public synchronized List<Runnable> shutdownNow() {
-        isShutdown = true;
-        if (scheduleTask != null)
-            scheduleTask.cancel(true);
+        mIsShutdown = true;
+        if (mScheduleTask != null)
+            mScheduleTask.cancel(true);
         try {
             return new ArrayList<>(mTasks);
         } finally {
@@ -68,20 +68,20 @@ public class SerialExecutorService extends AbstractExecutorService implements Ca
 
     @Override
     public synchronized boolean isShutdown() {
-        return isShutdown;
+        return mIsShutdown;
     }
 
     @Override
     public synchronized boolean isTerminated() {
-        return isShutdown && scheduleTask == null;
+        return mIsShutdown && mScheduleTask == null;
     }
 
     @Override
     public synchronized boolean awaitTermination(long timeout, TimeUnit unit) throws InterruptedException {
-        if (scheduleTask == null)
+        if (mScheduleTask == null)
             return true;
         try {
-            scheduleTask.get(timeout, unit);
+            mScheduleTask.get(timeout, unit);
         } catch (TimeoutException e) {
             return false;
         } catch (ExecutionException ignored) {

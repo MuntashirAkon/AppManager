@@ -162,7 +162,7 @@ public final class ProcessParser {
         for (int uid : duplicateUids) mInstalledUidList.remove(uid);
         List<ActivityManager.RunningAppProcessInfo> runningAppProcesses = ActivityManagerCompat.getRunningAppProcesses();
         for (ActivityManager.RunningAppProcessInfo info : runningAppProcesses) {
-            this.mRunningAppProcesses.put(info.pid, info);
+            mRunningAppProcesses.put(info.pid, info);
         }
     }
 

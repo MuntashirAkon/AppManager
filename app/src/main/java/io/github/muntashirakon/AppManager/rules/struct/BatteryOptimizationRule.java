@@ -10,26 +10,26 @@ import java.util.StringTokenizer;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 
 public class BatteryOptimizationRule extends RuleEntry {
-    private boolean enabled;
+    private boolean mEnabled;
 
     public BatteryOptimizationRule(@NonNull String packageName, boolean enabled) {
         super(packageName, STUB, RuleType.BATTERY_OPT);
-        this.enabled = enabled;
+        mEnabled = enabled;
     }
 
     public BatteryOptimizationRule(@NonNull String packageName, @NonNull StringTokenizer tokenizer) {
         super(packageName, STUB, RuleType.BATTERY_OPT);
         if (tokenizer.hasMoreElements()) {
-            enabled = Boolean.parseBoolean(tokenizer.nextElement().toString());
+            mEnabled = Boolean.parseBoolean(tokenizer.nextElement().toString());
         } else throw new IllegalArgumentException("Invalid format: enabled not found");
     }
 
     public boolean isEnabled() {
-        return enabled;
+        return mEnabled;
     }
 
     public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+        mEnabled = enabled;
     }
 
     @NonNull
@@ -37,14 +37,14 @@ public class BatteryOptimizationRule extends RuleEntry {
     public String toString() {
         return "BatteryOptimizationRule{" +
                 "packageName='" + packageName + '\'' +
-                ", enabled=" + enabled +
+                ", enabled=" + mEnabled +
                 '}';
     }
 
     @NonNull
     @Override
     public String flattenToString(boolean isExternal) {
-        return addPackageWithTab(isExternal) + name + "\t" + type.name() + "\t" + enabled;
+        return addPackageWithTab(isExternal) + name + "\t" + type.name() + "\t" + mEnabled;
     }
 
     @Override

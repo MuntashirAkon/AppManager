@@ -62,7 +62,7 @@ public class LogcatRecordingService extends ForegroundService {
     private LogcatReader mReader;
     private boolean mKilled;
     private Handler mHandler;
-    private QueuedProgressHandler progressHandler;
+    private QueuedProgressHandler mProgressHandler;
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -115,7 +115,7 @@ public class LogcatRecordingService extends ForegroundService {
     public int onStartCommand(Intent intent, int flags, int startId) {
         // Update widget
         WidgetHelper.updateWidgets(getApplicationContext());
-        progressHandler = new NotificationProgressHandler(this,
+        mProgressHandler = new NotificationProgressHandler(this,
                 new NotificationProgressHandler.NotificationManagerInfo(CHANNEL_ID, "Logcat Recorder", NotificationManagerCompat.IMPORTANCE_DEFAULT),
                 NotificationUtils.HIGH_PRIORITY_NOTIFICATION_INFO,
                 null);
@@ -133,7 +133,7 @@ public class LogcatRecordingService extends ForegroundService {
                 .setBody(getString(R.string.notification_subtext))
                 .setStatusBarText(getText(R.string.notification_ticker))
                 .setDefaultAction(pendingIntent);
-        progressHandler.onAttach(this, notificationInfo);
+        mProgressHandler.onAttach(this, notificationInfo);
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -195,7 +195,7 @@ public class LogcatRecordingService extends ForegroundService {
             } else {
                 notificationInfo.setTitle(getString(R.string.unable_to_save_log));
             }
-            ThreadUtils.postOnMainThread(() -> progressHandler.onResult(notificationInfo));
+            ThreadUtils.postOnMainThread(() -> mProgressHandler.onResult(notificationInfo));
         }
     }
 

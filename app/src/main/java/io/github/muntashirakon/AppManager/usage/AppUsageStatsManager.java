@@ -135,11 +135,11 @@ public class AppUsageStatsManager {
     }
 
     @NonNull
-    private final Context context;
+    private final Context mContext;
 
     @SuppressLint("WrongConstant")
     private AppUsageStatsManager() {
-        this.context = ContextUtils.getContext();
+        mContext = ContextUtils.getContext();
     }
 
     /**
@@ -183,7 +183,7 @@ public class AppUsageStatsManager {
         UsageUtils.TimeInterval range = UsageUtils.getTimeInterval(usageInterval);
         ApplicationInfo applicationInfo = PackageManagerCompat.getApplicationInfo(packageName, MATCH_UNINSTALLED_PACKAGES
                 | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId);
-        PackageUsageInfo packageUsageInfo = new PackageUsageInfo(context, packageName, userId, applicationInfo);
+        PackageUsageInfo packageUsageInfo = new PackageUsageInfo(mContext, packageName, userId, applicationInfo);
         UsageEvents events = UsageStatsManagerCompat.queryEvents(range.getStartTime(), range.getEndTime(), userId);
         if (events == null) return packageUsageInfo;
         UsageEvents.Event event = new UsageEvents.Event();
@@ -278,7 +278,7 @@ public class AppUsageStatsManager {
             // Skip uninstalled packages?
             ApplicationInfo applicationInfo = PackageManagerCompat.getApplicationInfo(packageName, MATCH_UNINSTALLED_PACKAGES
                     | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId);
-            PackageUsageInfo packageUsageInfo = new PackageUsageInfo(context, packageName, userId, applicationInfo);
+            PackageUsageInfo packageUsageInfo = new PackageUsageInfo(mContext, packageName, userId, applicationInfo);
             packageUsageInfo.timesOpened = NonNullUtils.defeatNullable(accessCount.get(packageName));
             packageUsageInfo.lastUsageTime = NonNullUtils.defeatNullable(lastUse.get(packageName));
             packageUsageInfo.screenTime = NonNullUtils.defeatNullable(screenTimes.get(packageName));
@@ -335,7 +335,7 @@ public class AppUsageStatsManager {
             }
             return dataUsageSparseArray;
         }
-        List<String> subscriberIds = getSubscriberIds(context, networkType);
+        List<String> subscriberIds = getSubscriberIds(mContext, networkType);
         for (String subscriberId : subscriberIds) {
             try (NetworkStatsCompat networkStats = NetworkStatsManagerCompat.querySummary(networkType, subscriberId,
                     interval.getStartTime(), interval.getEndTime())) {

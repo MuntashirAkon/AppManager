@@ -115,7 +115,7 @@ public class HistoryEditText {
      * define history function for these editors
      */
     public HistoryEditText(@NonNull Activity context, @NonNull MaterialAutoCompleteTextView... editors) {
-        this.mContext = context;
+        mContext = context;
         mEditorHandlers = new EditorHandler[editors.length];
 
         for (int i = 0; i < editors.length; i++) {

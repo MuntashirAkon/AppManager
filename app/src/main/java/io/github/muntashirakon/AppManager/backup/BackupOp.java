@@ -39,7 +39,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.DeviceIdleManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
@@ -65,6 +64,7 @@ import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.ssaid.SsaidSettings;
 import io.github.muntashirakon.AppManager.uri.UriManager;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
@@ -105,43 +105,44 @@ class BackupOp implements Closeable {
     private final BackupFiles.Checksum mChecksum;
     // We don't need privileged package manager here
     @NonNull
-    private final PackageManager mPm = AppManager.getContext().getPackageManager();
+    private final PackageManager mPm;
 
     BackupOp(@NonNull String packageName, @NonNull MetadataManager metadataManager, @NonNull BackupFlags backupFlags,
              @NonNull BackupFiles.BackupFile backupFile, @UserIdInt int userId) throws BackupException {
-        this.mPackageName = packageName;
-        this.mBackupFile = backupFile;
-        this.mUserId = userId;
-        this.mMetadataManager = metadataManager;
-        this.mBackupFlags = backupFlags;
-        this.mTempBackupPath = this.mBackupFile.getBackupPath();
+        mPackageName = packageName;
+        mBackupFile = backupFile;
+        mUserId = userId;
+        mMetadataManager = metadataManager;
+        mBackupFlags = backupFlags;
+        mTempBackupPath = mBackupFile.getBackupPath();
+        mPm = ContextUtils.getContext().getPackageManager();
         try {
-            mPackageInfo = PackageManagerCompat.getPackageInfo(this.mPackageName,
+            mPackageInfo = PackageManagerCompat.getPackageInfo(mPackageName,
                     PackageManager.GET_META_DATA | GET_SIGNING_CERTIFICATES | PackageManager.GET_PERMISSIONS
                             | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId);
-            this.mApplicationInfo = mPackageInfo.applicationInfo;
+            mApplicationInfo = mPackageInfo.applicationInfo;
             // Override existing metadata
-            this.mMetadata = this.mMetadataManager.setupMetadata(mPackageInfo, userId, backupFlags);
+            mMetadata = mMetadataManager.setupMetadata(mPackageInfo, userId, backupFlags);
         } catch (Exception e) {
-            this.mBackupFile.cleanup();
+            mBackupFile.cleanup();
             throw new BackupException("Failed to setup metadata.", e);
         }
         try {
             // Setup crypto
-            CryptoUtils.setupCrypto(this.mMetadata);
-            this.mCrypto = CryptoUtils.getCrypto(mMetadata);
+            CryptoUtils.setupCrypto(mMetadata);
+            mCrypto = CryptoUtils.getCrypto(mMetadata);
         } catch (CryptoException e) {
-            this.mBackupFile.cleanup();
+            mBackupFile.cleanup();
             throw new BackupException("Failed to get crypto " + mMetadata.crypto, e);
         }
         try {
-            this.mChecksum = this.mBackupFile.getChecksum(CryptoUtils.MODE_NO_ENCRYPTION);
+            mChecksum = mBackupFile.getChecksum(CryptoUtils.MODE_NO_ENCRYPTION);
             String[] certChecksums = PackageUtils.getSigningCertChecksums(mMetadata.checksumAlgo, mPackageInfo, false);
             for (int i = 0; i < certChecksums.length; ++i) {
                 mChecksum.add(CERT_PREFIX + i, certChecksums[i]);
             }
         } catch (Throwable e) {
-            this.mBackupFile.cleanup();
+            mBackupFile.cleanup();
             throw new BackupException("Failed to create checksum file.", e);
         }
     }

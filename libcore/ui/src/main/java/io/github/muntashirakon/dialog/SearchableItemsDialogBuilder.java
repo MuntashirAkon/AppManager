@@ -34,15 +34,15 @@ import io.github.muntashirakon.widget.SearchView;
 
 public class SearchableItemsDialogBuilder<T extends CharSequence> {
     @NonNull
-    private final MaterialAlertDialogBuilder builder;
-    private final SearchView searchView;
+    private final MaterialAlertDialogBuilder mBuilder;
+    private final SearchView mSearchView;
     @NonNull
-    private final SearchableRecyclerViewAdapter adapter;
+    private final SearchableRecyclerViewAdapter mAdapter;
     @Nullable
-    private AlertDialog dialog;
+    private AlertDialog mDialog;
     @Nullable
-    private OnItemClickListener<T> onItemClickListener;
-    private boolean isTextSelectable;
+    private OnItemClickListener<T> mOnItemClickListener;
+    private boolean mIsTextSelectable;
 
     public interface OnItemClickListener<T> {
         void onClick(DialogInterface dialog, int which, T item);
@@ -62,8 +62,8 @@ public class SearchableItemsDialogBuilder<T extends CharSequence> {
         RecyclerView recyclerView = view.findViewById(android.R.id.list);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-        searchView = view.findViewById(R.id.action_search);
-        searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
+        mSearchView = view.findViewById(R.id.action_search);
+        mSearchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
@@ -71,135 +71,134 @@ public class SearchableItemsDialogBuilder<T extends CharSequence> {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                adapter.setFilteredItems(newText);
+                mAdapter.setFilteredItems(newText);
                 return true;
             }
         });
         // Don't display search bar if items are less than 6
         if (itemNames.size() < 6) {
-            searchView.setVisibility(View.GONE);
+            mSearchView.setVisibility(View.GONE);
         }
-        builder = new MaterialAlertDialogBuilder(context).setView(view);
+        mBuilder = new MaterialAlertDialogBuilder(context).setView(view);
         @SuppressLint({"RestrictedApi", "PrivateResource"})
         int layoutId = MaterialAttributes.resolveInteger(context, androidx.appcompat.R.attr.listItemLayout,
                 R.layout.m3_alert_select_dialog_item);
-        adapter = new SearchableRecyclerViewAdapter(itemNames, layoutId);
-        recyclerView.setAdapter(adapter);
+        mAdapter = new SearchableRecyclerViewAdapter(itemNames, layoutId);
+        recyclerView.setAdapter(mAdapter);
     }
 
     public SearchableItemsDialogBuilder<T> setOnItemClickListener(@Nullable OnItemClickListener<T>
                                                                           onItemClickListener) {
-        this.onItemClickListener = onItemClickListener;
+        mOnItemClickListener = onItemClickListener;
         return this;
     }
 
     public SearchableItemsDialogBuilder<T> addDisabledItems(@Nullable List<T> disabledItems) {
-        adapter.addDisabledItems(disabledItems);
+        mAdapter.addDisabledItems(disabledItems);
         return this;
     }
 
     public SearchableItemsDialogBuilder<T> reloadListUi() {
-        adapter.notifyDataSetChanged();
+        mAdapter.notifyDataSetChanged();
         return this;
     }
 
     public SearchableItemsDialogBuilder<T> setTextSelectable(boolean textSelectable) {
-        this.isTextSelectable = textSelectable;
+        mIsTextSelectable = textSelectable;
         return this;
     }
 
     public SearchableItemsDialogBuilder<T> setCancelable(boolean cancelable) {
-        builder.setCancelable(cancelable);
+        mBuilder.setCancelable(cancelable);
         return this;
     }
 
     public SearchableItemsDialogBuilder<T> hideSearchBar(boolean hide) {
-        this.searchView.setVisibility(hide ? View.GONE : View.VISIBLE);
+        mSearchView.setVisibility(hide ? View.GONE : View.VISIBLE);
         return this;
     }
 
     public SearchableItemsDialogBuilder<T> setTitle(@Nullable CharSequence title) {
-        builder.setTitle(title);
+        mBuilder.setTitle(title);
         return this;
     }
 
     public SearchableItemsDialogBuilder<T> setTitle(@StringRes int title) {
-        builder.setTitle(title);
+        mBuilder.setTitle(title);
         return this;
     }
 
     public SearchableItemsDialogBuilder<T> setTitle(View title) {
-        builder.setCustomTitle(title);
+        mBuilder.setCustomTitle(title);
         return this;
     }
 
     public SearchableItemsDialogBuilder<T> setPositiveButton(@StringRes int textId,
                                                              @Nullable DialogInterface.OnClickListener listener) {
-        builder.setPositiveButton(textId, listener);
+        mBuilder.setPositiveButton(textId, listener);
         return this;
     }
 
     public SearchableItemsDialogBuilder<T> setPositiveButton(@NonNull CharSequence text,
                                                              @Nullable DialogInterface.OnClickListener listener) {
-        builder.setPositiveButton(text, listener);
+        mBuilder.setPositiveButton(text, listener);
         return this;
     }
 
     public SearchableItemsDialogBuilder<T> setNegativeButton(@StringRes int textId,
                                                              @Nullable DialogInterface.OnClickListener listener) {
-        builder.setNegativeButton(textId, listener);
+        mBuilder.setNegativeButton(textId, listener);
         return this;
     }
 
     public SearchableItemsDialogBuilder<T> setNegativeButton(@NonNull CharSequence text,
                                                              @Nullable DialogInterface.OnClickListener listener) {
-        builder.setNegativeButton(text, listener);
+        mBuilder.setNegativeButton(text, listener);
         return this;
     }
 
     public SearchableItemsDialogBuilder<T> setNeutralButton(@StringRes int textId,
                                                             @Nullable DialogInterface.OnClickListener listener) {
-        builder.setNeutralButton(textId, listener);
+        mBuilder.setNeutralButton(textId, listener);
         return this;
     }
 
     public SearchableItemsDialogBuilder<T> setNeutralButton(@NonNull CharSequence text,
                                                             @Nullable DialogInterface.OnClickListener listener) {
-        builder.setNeutralButton(text, listener);
+        mBuilder.setNeutralButton(text, listener);
         return this;
     }
 
     public AlertDialog create() {
-        return dialog = builder.create();
+        return mDialog = mBuilder.create();
     }
 
     public AlertDialog show() {
-        return dialog = builder.show();
+        return mDialog = mBuilder.show();
     }
 
     private void triggerItemClickListener(int index) {
-        if (dialog != null && onItemClickListener != null) {
-            onItemClickListener.onClick(dialog, index, adapter.items.get(index));
+        if (mDialog != null && mOnItemClickListener != null) {
+            mOnItemClickListener.onClick(mDialog, index, mAdapter.mItems.get(index));
         }
     }
 
     class SearchableRecyclerViewAdapter extends RecyclerView.Adapter<SearchableRecyclerViewAdapter.ViewHolder> {
         @NonNull
-        private final List<T> items;
+        private final List<T> mItems;
         @NonNull
-        private final ArrayList<Integer> filteredItems = new ArrayList<>();
-        private final Set<Integer> disabledItems = new ArraySet<>();
+        private final ArrayList<Integer> mFilteredItems = new ArrayList<>();
+        private final Set<Integer> mDisabledItems = new ArraySet<>();
         @LayoutRes
-        private final int layoutId;
-
+        private final int mLayoutId;
 
         SearchableRecyclerViewAdapter(@NonNull List<T> items, int layoutId) {
-            this.items = items;
-            this.layoutId = layoutId;
+            mItems = items;
+            mLayoutId = layoutId;
             new Thread(() -> {
-                synchronized (filteredItems) {
-                    for (int i = 0; i < this.items.size(); ++i) {
-                        filteredItems.add(i);
+                synchronized (mFilteredItems) {
+                    for (int i = 0; i < mItems.size(); ++i) {
+                        mFilteredItems.add(i);
                     }
                 }
             }, "searchable_items_dialog").start();
@@ -207,11 +206,11 @@ public class SearchableItemsDialogBuilder<T extends CharSequence> {
 
         void setFilteredItems(CharSequence constraint) {
             Locale locale = Locale.getDefault();
-            synchronized (filteredItems) {
-                filteredItems.clear();
-                for (int i = 0; i < items.size(); ++i) {
-                    if (items.get(i).toString().toLowerCase(locale).contains(constraint)) {
-                        filteredItems.add(i);
+            synchronized (mFilteredItems) {
+                mFilteredItems.clear();
+                for (int i = 0; i < mItems.size(); ++i) {
+                    if (mItems.get(i).toString().toLowerCase(locale).contains(constraint)) {
+                        mFilteredItems.add(i);
                     }
                 }
                 notifyDataSetChanged();
@@ -221,10 +220,10 @@ public class SearchableItemsDialogBuilder<T extends CharSequence> {
         void addDisabledItems(@Nullable List<T> disabledItems) {
             if (disabledItems != null) {
                 for (T item : disabledItems) {
-                    int index = items.indexOf(item);
+                    int index = mItems.indexOf(item);
                     if (index != -1) {
-                        synchronized (this.disabledItems) {
-                            this.disabledItems.add(index);
+                        synchronized (mDisabledItems) {
+                            mDisabledItems.add(index);
                         }
                     }
                 }
@@ -234,28 +233,28 @@ public class SearchableItemsDialogBuilder<T extends CharSequence> {
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(mLayoutId, parent, false);
             return new ViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             Integer index;
-            synchronized (filteredItems) {
-                index = filteredItems.get(position);
+            synchronized (mFilteredItems) {
+                index = mFilteredItems.get(position);
             }
-            holder.item.setText(items.get(index));
-            holder.item.setTextIsSelectable(isTextSelectable);
-            synchronized (disabledItems) {
-                holder.item.setEnabled(!disabledItems.contains(index));
+            holder.item.setText(mItems.get(index));
+            holder.item.setTextIsSelectable(mIsTextSelectable);
+            synchronized (mDisabledItems) {
+                holder.item.setEnabled(!mDisabledItems.contains(index));
             }
             holder.itemView.setOnClickListener(v -> triggerItemClickListener(index));
         }
 
         @Override
         public int getItemCount() {
-            synchronized (filteredItems) {
-                return filteredItems.size();
+            synchronized (mFilteredItems) {
+                return mFilteredItems.size();
             }
         }
 

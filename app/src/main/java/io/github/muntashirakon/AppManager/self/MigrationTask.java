@@ -2,13 +2,17 @@
 
 package io.github.muntashirakon.AppManager.self;
 
+import android.content.Context;
+
 import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 
 abstract class MigrationTask implements Runnable {
     public final long fromVersionAtLeast;
     public final long fromVersionAtMost;
     public final long toVersion;
     public final boolean mainThread;
+    public final Context context;
 
     public MigrationTask(long fromVersion) {
         this(fromVersion, false);
@@ -31,6 +35,7 @@ abstract class MigrationTask implements Runnable {
         this.fromVersionAtMost = fromVersionAtMost;
         this.toVersion = toVersion;
         this.mainThread = mainThread;
+        this.context = ContextUtils.getContext();
     }
 
     boolean shouldRunMigration(long fromVersion) {

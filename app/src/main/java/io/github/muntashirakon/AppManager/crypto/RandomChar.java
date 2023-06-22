@@ -15,8 +15,8 @@ public class RandomChar {
     public static final String DIGITS = "0123456789";
     public static final String ALPHA_NUMERIC = UPPERCASE + LOWERCASE + DIGITS;
 
-    private final Random random;
-    private final char[] symbols;
+    private final Random mRandom;
+    private final char[] mSymbols;
 
     public RandomChar() {
         this(new SecureRandom());
@@ -28,17 +28,17 @@ public class RandomChar {
 
     public RandomChar(@NonNull Random random, @NonNull String symbols) {
         if (symbols.length() < 2) throw new IllegalArgumentException();
-        this.random = Objects.requireNonNull(random);
-        this.symbols = symbols.toCharArray();
+        mRandom = Objects.requireNonNull(random);
+        mSymbols = symbols.toCharArray();
     }
 
     public void nextChars(@NonNull char[] chars) {
         for (int idx = 0; idx < chars.length; ++idx) {
-            chars[idx] = symbols[random.nextInt(symbols.length)];
+            chars[idx] = mSymbols[mRandom.nextInt(mSymbols.length)];
         }
     }
 
     public char nextChar() {
-        return symbols[random.nextInt(symbols.length)];
+        return mSymbols[mRandom.nextInt(mSymbols.length)];
     }
 }

@@ -113,7 +113,7 @@ public class EditPrefItemFragment extends DialogFragment {
     private final ViewGroup[] mLayoutTypes = new ViewGroup[6];
     private final TextView[] mValues = new TextView[6];
     @Type
-    private int currentType;
+    private int mCurrentType;
 
     @NonNull
     @Override
@@ -136,7 +136,7 @@ public class EditPrefItemFragment extends DialogFragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 for (ViewGroup layout : mLayoutTypes) layout.setVisibility(View.GONE);
                 mLayoutTypes[position].setVisibility(View.VISIBLE);
-                currentType = position;
+                mCurrentType = position;
             }
 
             @Override
@@ -168,32 +168,32 @@ public class EditPrefItemFragment extends DialogFragment {
             }
             // Key value
             if (keyValue instanceof Boolean) {
-                currentType = TYPE_BOOLEAN;
+                mCurrentType = TYPE_BOOLEAN;
                 mLayoutTypes[TYPE_BOOLEAN].setVisibility(View.VISIBLE);
                 ((MaterialSwitch) mValues[TYPE_BOOLEAN]).setChecked((Boolean) keyValue);
                 spinner.setSelection(TYPE_BOOLEAN);
             } else if (keyValue instanceof Float) {
-                currentType = TYPE_FLOAT;
+                mCurrentType = TYPE_FLOAT;
                 mLayoutTypes[TYPE_FLOAT].setVisibility(View.VISIBLE);
                 mValues[TYPE_FLOAT].setText(keyValue.toString());
                 spinner.setSelection(TYPE_FLOAT);
             } else if (keyValue instanceof Integer) {
-                currentType = TYPE_INTEGER;
+                mCurrentType = TYPE_INTEGER;
                 mLayoutTypes[TYPE_INTEGER].setVisibility(View.VISIBLE);
                 mValues[TYPE_INTEGER].setText(keyValue.toString());
                 spinner.setSelection(TYPE_INTEGER);
             } else if (keyValue instanceof Long) {
-                currentType = TYPE_LONG;
+                mCurrentType = TYPE_LONG;
                 mLayoutTypes[TYPE_LONG].setVisibility(View.VISIBLE);
                 mValues[TYPE_LONG].setText(keyValue.toString());
                 spinner.setSelection(TYPE_LONG);
             } else if (keyValue instanceof String) {
-                currentType = TYPE_STRING;
+                mCurrentType = TYPE_STRING;
                 mLayoutTypes[TYPE_STRING].setVisibility(View.VISIBLE);
                 mValues[TYPE_STRING].setText((String) keyValue);
                 spinner.setSelection(TYPE_STRING);
             } else if (keyValue instanceof Set) {
-                currentType = TYPE_SET;
+                mCurrentType = TYPE_SET;
                 mLayoutTypes[TYPE_SET].setVisibility(View.VISIBLE);
                 //noinspection unchecked
                 mValues[TYPE_SET].setText(SharedPrefsUtil.flattenToString((Set<String>) keyValue));
@@ -216,24 +216,24 @@ public class EditPrefItemFragment extends DialogFragment {
                     }
 
                     try {
-                        switch (currentType) {
+                        switch (mCurrentType) {
                             case TYPE_BOOLEAN:
-                                newPrefItem.keyValue = ((MaterialSwitch) mValues[currentType]).isChecked();
+                                newPrefItem.keyValue = ((MaterialSwitch) mValues[mCurrentType]).isChecked();
                                 break;
                             case TYPE_FLOAT:
-                                newPrefItem.keyValue = Float.valueOf(mValues[currentType].getText().toString());
+                                newPrefItem.keyValue = Float.valueOf(mValues[mCurrentType].getText().toString());
                                 break;
                             case TYPE_INTEGER:
-                                newPrefItem.keyValue = Integer.valueOf(mValues[currentType].getText().toString());
+                                newPrefItem.keyValue = Integer.valueOf(mValues[mCurrentType].getText().toString());
                                 break;
                             case TYPE_LONG:
-                                newPrefItem.keyValue = Long.valueOf(mValues[currentType].getText().toString());
+                                newPrefItem.keyValue = Long.valueOf(mValues[mCurrentType].getText().toString());
                                 break;
                             case TYPE_STRING:
-                                newPrefItem.keyValue = mValues[currentType].getText().toString();
+                                newPrefItem.keyValue = mValues[mCurrentType].getText().toString();
                                 break;
                             case TYPE_SET:
-                                newPrefItem.keyValue = SharedPrefsUtil.unflattenToSet(mValues[currentType].getText().toString());
+                                newPrefItem.keyValue = SharedPrefsUtil.unflattenToSet(mValues[mCurrentType].getText().toString());
                                 break;
                         }
                     } catch (Exception e) {

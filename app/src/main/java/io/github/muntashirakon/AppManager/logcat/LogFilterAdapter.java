@@ -21,7 +21,7 @@ import io.github.muntashirakon.AppManager.db.entity.LogFilter;
 
 // Copyright 2012 Nolan Lawson
 public class LogFilterAdapter extends ArrayAdapter<LogFilter> {
-    LayoutInflater layoutInflater;
+    private final LayoutInflater mLayoutInflater;
 
     public interface OnClickListener {
         void onClick(ViewGroup parent, View view, int position, LogFilter logFilter);
@@ -35,7 +35,7 @@ public class LogFilterAdapter extends ArrayAdapter<LogFilter> {
 
     public LogFilterAdapter(FragmentActivity activity, List<LogFilter> items) {
         super(activity, R.layout.item_title_action, items);
-        layoutInflater = activity.getLayoutInflater();
+        mLayoutInflater = activity.getLayoutInflater();
     }
 
     @NonNull
@@ -43,7 +43,7 @@ public class LogFilterAdapter extends ArrayAdapter<LogFilter> {
     public View getView(int position, View convertView, @NonNull ViewGroup parent) {
         ViewHolder holder;
         if (convertView == null) {
-            convertView = layoutInflater.inflate(R.layout.item_title_action, parent, false);
+            convertView = mLayoutInflater.inflate(R.layout.item_title_action, parent, false);
             holder = new ViewHolder();
             holder.textView = convertView.findViewById(R.id.item_title);
             holder.actionButton = convertView.findViewById(R.id.item_action);

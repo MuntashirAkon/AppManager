@@ -54,8 +54,8 @@ public class SettingsActivity extends BaseActivity implements PreferenceFragment
 
     public LinearProgressIndicator progressIndicator;
     @NonNull
-    private List<String> keys = Collections.emptyList();
-    private int level = 0;
+    private List<String> mKeys = Collections.emptyList();
+    private int mLevel = 0;
 
     @Override
     protected void onAuthenticated(Bundle savedInstanceState) {
@@ -72,19 +72,19 @@ public class SettingsActivity extends BaseActivity implements PreferenceFragment
 
         Uri uri = getIntent().getData();
         if (uri != null && SCHEME.equals(uri.getScheme()) && HOST.equals(uri.getHost()) && uri.getPath() != null) {
-            keys = Objects.requireNonNull(uri.getPathSegments());
+            mKeys = Objects.requireNonNull(uri.getPathSegments());
         }
 
         getSupportFragmentManager().addFragmentOnAttachListener((fragmentManager, fragment) -> {
             if (!(fragment instanceof MainPreferences)) {
-                ++level;
+                ++mLevel;
             }
         });
-        getSupportFragmentManager().addOnBackStackChangedListener(() -> level = getSupportFragmentManager().getBackStackEntryCount());
+        getSupportFragmentManager().addOnBackStackChangedListener(() -> mLevel = getSupportFragmentManager().getBackStackEntryCount());
 
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.main_layout, MainPreferences.getInstance(getKey(level)))
+                .replace(R.id.main_layout, MainPreferences.getInstance(getKey(mLevel)))
                 .commit();
     }
 
@@ -93,11 +93,11 @@ public class SettingsActivity extends BaseActivity implements PreferenceFragment
         super.onNewIntent(intent);
         Uri uri = intent.getData();
         if (uri != null && SCHEME.equals(uri.getScheme()) && HOST.equals(uri.getHost()) && uri.getPath() != null) {
-            keys = Objects.requireNonNull(uri.getPathSegments());
+            mKeys = Objects.requireNonNull(uri.getPathSegments());
             clearBackStack();
             Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_layout);
             if (fragment instanceof MainPreferences) {
-                ((MainPreferences) fragment).setPrefKey(getKey(level = 0));
+                ((MainPreferences) fragment).setPrefKey(getKey(mLevel = 0));
             }
             Log.e(TAG, "Pref selected: " + fragment.getClass().getName());
         }
@@ -117,10 +117,9 @@ public class SettingsActivity extends BaseActivity implements PreferenceFragment
         if (pref.getFragment() != null) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             Bundle args = pref.getExtras();
-            Fragment fragment = fragmentManager.getFragmentFactory()
-                    .instantiate(this.getClassLoader(), pref.getFragment());
-            String subKey = getKey(level + 1);
-            if (subKey != null && fragment instanceof PreferenceFragment && Objects.equals(pref.getKey(), getKey(level))) {
+            Fragment fragment = fragmentManager.getFragmentFactory().instantiate(getClassLoader(), pref.getFragment());
+            String subKey = getKey(mLevel + 1);
+            if (subKey != null && fragment instanceof PreferenceFragment && Objects.equals(pref.getKey(), getKey(mLevel))) {
                 args.putString(PreferenceFragment.PREF_KEY, subKey);
             }
             fragment.setArguments(args);
@@ -137,8 +136,8 @@ public class SettingsActivity extends BaseActivity implements PreferenceFragment
 
     @Nullable
     private String getKey(int level) {
-        if (keys.size() > level) {
-            return keys.get(level);
+        if (mKeys.size() > level) {
+            return mKeys.get(level);
         }
         return null;
     }

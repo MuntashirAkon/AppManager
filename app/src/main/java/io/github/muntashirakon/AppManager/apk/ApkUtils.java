@@ -36,7 +36,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.apk.parser.AndroidBinXmlDecoder;
 import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkExporter;
@@ -61,10 +60,9 @@ public final class ApkUtils {
 
     @WorkerThread
     @NonNull
-    public static Path getSharableApkFile(@NonNull PackageInfo packageInfo) throws Exception {
+    public static Path getSharableApkFile(@NonNull Context ctx, @NonNull PackageInfo packageInfo) throws IOException {
         synchronized (sLock) {
             ApplicationInfo info = packageInfo.applicationInfo;
-            Context ctx = AppManager.getContext();
             PackageManager pm = ctx.getPackageManager();
             String outputName = FileUtils.getSanitizedFileName(info.loadLabel(pm).toString() + "_" +
                     packageInfo.versionName, false);
@@ -83,21 +81,20 @@ public final class ApkUtils {
     }
 
     /**
-     * Backup the given apk (both root and non root). This is similar to apk sharing feature except
+     * Backup the given apk (both root and no-root). This is similar to apk sharing feature except
      * that these are saved at /sdcard/AppManager/apks
      */
     @WorkerThread
-    public static void backupApk(@NonNull String packageName, @UserIdInt int userHandle)
+    public static void backupApk(@NonNull Context ctx, @NonNull String packageName, @UserIdInt int userHandle)
             throws IOException, PackageManager.NameNotFoundException, RemoteException {
         Path backupPath = BackupFiles.getApkBackupDirectory();
         // Fetch package info
-        Context ctx = AppManager.getContext();
         PackageManager pm = ctx.getPackageManager();
         PackageInfo packageInfo = PackageManagerCompat.getPackageInfo(packageName,
                 MATCH_UNINSTALLED_PACKAGES | PackageManager.GET_SHARED_LIBRARY_FILES
                         | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userHandle);
         ApplicationInfo info = packageInfo.applicationInfo;
-        String outputName = FileUtils.getSanitizedFileName(getFormattedApkFilename(packageInfo, pm), false);
+        String outputName = FileUtils.getSanitizedFileName(getFormattedApkFilename(ctx, packageInfo, pm), false);
         if (outputName == null) outputName = packageName;
         Path apkFile;
         if (isSplitApk(info) || hasObbFiles(packageName, userHandle)) {
@@ -112,7 +109,8 @@ public final class ApkUtils {
     }
 
     @NonNull
-    private static String getFormattedApkFilename(@NonNull PackageInfo packageInfo, @NonNull PackageManager pm) {
+    private static String getFormattedApkFilename(@NonNull Context context, @NonNull PackageInfo packageInfo,
+                                                  @NonNull PackageManager pm) {
         // TODO: 15/3/22 Optimize this
         String apkName = AppPref.getString(AppPref.PrefKey.PREF_SAVED_APK_FORMAT_STR)
                 .replaceAll("%label%", packageInfo.applicationInfo.loadLabel(pm).toString())
@@ -120,7 +118,7 @@ public final class ApkUtils {
                 .replaceAll("%version%", packageInfo.versionName)
                 .replaceAll("%version_code%", String.valueOf(PackageInfoCompat.getLongVersionCode(packageInfo)))
                 .replaceAll("%target_sdk%", String.valueOf(packageInfo.applicationInfo.targetSdkVersion))
-                .replaceAll("%datetime%", DateUtils.formatDateTime(System.currentTimeMillis()));
+                .replaceAll("%datetime%", DateUtils.formatDateTime(context, System.currentTimeMillis()));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             return apkName.replaceAll("%min_sdk%", String.valueOf(packageInfo.applicationInfo.minSdkVersion));
         }

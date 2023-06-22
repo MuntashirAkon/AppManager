@@ -29,12 +29,12 @@ import io.github.muntashirakon.io.IoUtils;
 public class ManifestViewerViewModel extends AndroidViewModel {
     public static final String TAG = ManifestViewerViewModel.class.getSimpleName();
 
-    private ApkFile apkFile;
+    private ApkFile mApkFile;
     @Nullable
-    private Future<?> manifestLoaderResult;
+    private Future<?> mManifestLoaderResult;
 
-    private final FileCache fileCache = new FileCache();
-    private final MutableLiveData<Uri> manifestLiveData = new MutableLiveData<>();
+    private final FileCache mFileCache = new FileCache();
+    private final MutableLiveData<Uri> mManifestLiveData = new MutableLiveData<>();
 
     public ManifestViewerViewModel(@NonNull Application application) {
         super(application);
@@ -42,25 +42,25 @@ public class ManifestViewerViewModel extends AndroidViewModel {
 
     @Override
     protected void onCleared() {
-        if (manifestLoaderResult != null) {
-            manifestLoaderResult.cancel(true);
+        if (mManifestLoaderResult != null) {
+            mManifestLoaderResult.cancel(true);
         }
-        IoUtils.closeQuietly(apkFile);
-        IoUtils.closeQuietly(fileCache);
+        IoUtils.closeQuietly(mApkFile);
+        IoUtils.closeQuietly(mFileCache);
         super.onCleared();
     }
 
     public LiveData<Uri> getManifestLiveData() {
-        return manifestLiveData;
+        return mManifestLiveData;
     }
 
     public void loadApkFile(@Nullable Uri packageUri, @Nullable String type, @Nullable String packageName) {
-        manifestLoaderResult = ThreadUtils.postOnBackgroundThread(() -> {
+        mManifestLoaderResult = ThreadUtils.postOnBackgroundThread(() -> {
             final PackageManager pm = getApplication().getPackageManager();
             if (packageUri != null) {
                 try {
                     int key = ApkFile.createInstance(packageUri, type);
-                    apkFile = ApkFile.getInstance(key);
+                    mApkFile = ApkFile.getInstance(key);
                     if (ThreadUtils.isInterrupted()) {
                         return;
                     }
@@ -72,7 +72,7 @@ public class ManifestViewerViewModel extends AndroidViewModel {
                 try {
                     ApplicationInfo applicationInfo = pm.getApplicationInfo(packageName, 0);
                     int key = ApkFile.createInstance(applicationInfo);
-                    apkFile = ApkFile.getInstance(key);
+                    mApkFile = ApkFile.getInstance(key);
                     if (ThreadUtils.isInterrupted()) {
                         return;
                     }
@@ -80,17 +80,17 @@ public class ManifestViewerViewModel extends AndroidViewModel {
                     Log.e(TAG, "Error: ", e);
                 }
             }
-            if (apkFile != null) {
-                ByteBuffer byteBuffer = apkFile.getBaseEntry().manifest;
+            if (mApkFile != null) {
+                ByteBuffer byteBuffer = mApkFile.getBaseEntry().manifest;
                 // Reset properties
                 byteBuffer.position(0);
                 byteBuffer.order(ByteOrder.LITTLE_ENDIAN);
                 try {
-                    File cachedFile = fileCache.createCachedFile("xml");
+                    File cachedFile = mFileCache.createCachedFile("xml");
                     try (PrintStream ps = new PrintStream(cachedFile)) {
                         AndroidBinXmlDecoder.decode(byteBuffer, ps);
                     }
-                    manifestLiveData.postValue(Uri.fromFile(cachedFile));
+                    mManifestLiveData.postValue(Uri.fromFile(cachedFile));
                 } catch (Throwable e) {
                     Log.e(TAG, "Could not parse APK", e);
                 }

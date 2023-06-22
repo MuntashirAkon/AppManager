@@ -32,7 +32,7 @@ public class SharedPrefsViewModel extends AndroidViewModel {
     // TODO: 8/2/22 Use AtomicExtendedFile to better handle errors
     private Path mSharedPrefsFile;
     private Map<String, Object> mSharedPrefsMap;
-    private boolean modified;
+    private boolean mModified;
 
     public SharedPrefsViewModel(@NonNull Application application) {
         super(application);
@@ -49,7 +49,7 @@ public class SharedPrefsViewModel extends AndroidViewModel {
     }
 
     public boolean isModified() {
-        return modified;
+        return mModified;
     }
 
     @Nullable
@@ -66,13 +66,13 @@ public class SharedPrefsViewModel extends AndroidViewModel {
     }
 
     public void remove(@NonNull String key) {
-        mSharedPrefsModifiedLiveData.postValue(modified = true);
+        mSharedPrefsModifiedLiveData.postValue(mModified = true);
         mSharedPrefsMap.remove(key);
         mSharedPrefsMapLiveData.postValue(mSharedPrefsMap);
     }
 
     public void add(@NonNull String key, @NonNull Object value) {
-        mSharedPrefsModifiedLiveData.postValue(modified = true);
+        mSharedPrefsModifiedLiveData.postValue(mModified = true);
         mSharedPrefsMap.put(key, value);
         mSharedPrefsMapLiveData.postValue(mSharedPrefsMap);
     }
@@ -105,7 +105,7 @@ public class SharedPrefsViewModel extends AndroidViewModel {
                 SharedPrefsUtil.writeSharedPref(xmlFile, mSharedPrefsMap);
                 // TODO: 9/7/21 Investigate the state of permission (should be unchanged)
                 mSharedPrefsSavedLiveData.postValue(true);
-                mSharedPrefsModifiedLiveData.postValue(modified = false);
+                mSharedPrefsModifiedLiveData.postValue(mModified = false);
             } catch (IOException e) {
                 e.printStackTrace();
                 mSharedPrefsSavedLiveData.postValue(false);
@@ -117,7 +117,7 @@ public class SharedPrefsViewModel extends AndroidViewModel {
     public void loadSharedPrefs() {
         mExecutor.submit(() -> {
             try (InputStream rulesStream = mSharedPrefsFile.openInputStream()) {
-                mSharedPrefsModifiedLiveData.postValue(modified = false);
+                mSharedPrefsModifiedLiveData.postValue(mModified = false);
                 mSharedPrefsMap = SharedPrefsUtil.readSharedPref(rulesStream);
                 mSharedPrefsMapLiveData.postValue(mSharedPrefsMap);
             } catch (IOException | XmlPullParserException e) {

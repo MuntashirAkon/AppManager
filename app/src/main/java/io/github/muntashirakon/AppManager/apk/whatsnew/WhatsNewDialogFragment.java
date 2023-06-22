@@ -49,7 +49,7 @@ public class WhatsNewDialogFragment extends DialogFragment {
     }
 
     public void setOnTriggerInstall(InstallInterface installInterface) {
-        this.mInstallInterface = installInterface;
+        mInstallInterface = installInterface;
     }
 
     private InstallInterface mInstallInterface;
@@ -101,18 +101,18 @@ public class WhatsNewDialogFragment extends DialogFragment {
 
     class WhatsNewRecyclerAdapter extends RecyclerView.Adapter<WhatsNewRecyclerAdapter.ViewHolder> {
         private final List<ApkWhatsNewFinder.Change> mAdapterList = new ArrayList<>();
-        private final int colorAdd;
-        private final int colorRemove;
-        private final int colorNeutral;
-        private final Typeface typefaceNormal;
-        private final Typeface typefaceMedium;
+        private final int mColorAdd;
+        private final int mColorRemove;
+        private final int mColorNeutral;
+        private final Typeface mTypefaceNormal;
+        private final Typeface mTypefaceMedium;
 
         WhatsNewRecyclerAdapter() {
-            colorAdd = ColorCodes.getWhatsNewPlusIndicatorColor(mActivity);
-            colorRemove = ColorCodes.getWhatsNewMinusIndicatorColor(mActivity);
-            colorNeutral = UIUtils.getTextColorPrimary(mActivity);
-            typefaceNormal = Typeface.create("sans-serif", Typeface.NORMAL);
-            typefaceMedium = Typeface.create("sans-serif-medium", Typeface.NORMAL);
+            mColorAdd = ColorCodes.getWhatsNewPlusIndicatorColor(mActivity);
+            mColorRemove = ColorCodes.getWhatsNewMinusIndicatorColor(mActivity);
+            mColorNeutral = UIUtils.getTextColorPrimary(mActivity);
+            mTypefaceNormal = Typeface.create("sans-serif", Typeface.NORMAL);
+            mTypefaceMedium = Typeface.create("sans-serif-medium", Typeface.NORMAL);
         }
 
         void setAdapterList(List<ApkWhatsNewFinder.Change> list) {
@@ -138,20 +138,20 @@ public class WhatsNewDialogFragment extends DialogFragment {
             switch (change.changeType) {
                 case ApkWhatsNewFinder.CHANGE_ADD:
                     holder.textView.setText("+ " + change.value);
-                    holder.textView.setTextColor(colorAdd);
-                    holder.textView.setTypeface(typefaceNormal);
+                    holder.textView.setTextColor(mColorAdd);
+                    holder.textView.setTypeface(mTypefaceNormal);
                     holder.textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                     break;
                 case ApkWhatsNewFinder.CHANGE_INFO:
                     holder.textView.setText(change.value);
-                    holder.textView.setTextColor(colorNeutral);
-                    holder.textView.setTypeface(typefaceMedium);
+                    holder.textView.setTextColor(mColorNeutral);
+                    holder.textView.setTypeface(mTypefaceMedium);
                     holder.textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
                     break;
                 case ApkWhatsNewFinder.CHANGE_REMOVED:
                     holder.textView.setText("- " + change.value);
-                    holder.textView.setTextColor(colorRemove);
-                    holder.textView.setTypeface(typefaceNormal);
+                    holder.textView.setTextColor(mColorRemove);
+                    holder.textView.setTypeface(mTypefaceNormal);
                     holder.textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
                     break;
             }

@@ -18,23 +18,23 @@ import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 
 public class DeviceInfo {
-    private final String[] abis = Build.SUPPORTED_ABIS;
-    private final String[] abis32Bits = Build.SUPPORTED_32_BIT_ABIS;
-    private final String[] abis64Bits = Build.SUPPORTED_64_BIT_ABIS;
-    private final String brand = Build.BRAND;
-    private final String buildID = Build.DISPLAY;
-    private final String buildVersion = Build.VERSION.INCREMENTAL;
-    private final String device = Build.DEVICE;
-    private final String hardware = Build.HARDWARE;
-    private final String manufacturer = Build.MANUFACTURER;
-    private final String model = Build.MODEL;
-    private final String product = Build.PRODUCT;
-    private final String releaseVersion = Build.VERSION.RELEASE;
+    public final String[] abis = Build.SUPPORTED_ABIS;
+    public final String[] abis32Bits = Build.SUPPORTED_32_BIT_ABIS;
+    public final String[] abis64Bits = Build.SUPPORTED_64_BIT_ABIS;
+    public final String brand = Build.BRAND;
+    public final String buildID = Build.DISPLAY;
+    public final String buildVersion = Build.VERSION.INCREMENTAL;
+    public final String device = Build.DEVICE;
+    public final String hardware = Build.HARDWARE;
+    public final String manufacturer = Build.MANUFACTURER;
+    public final String model = Build.MODEL;
+    public final String product = Build.PRODUCT;
+    public final String releaseVersion = Build.VERSION.RELEASE;
     @IntRange(from = 0)
-    private final int sdkVersion = Build.VERSION.SDK_INT;
-    private final long versionCode;
-    private final String versionName;
-    private final CharSequence inferredMode;
+    public final int sdkVersion = Build.VERSION.SDK_INT;
+    public final long versionCode;
+    public final String versionName;
+    public final CharSequence inferredMode;
 
     public DeviceInfo(@NonNull Context context) {
         PackageInfo packageInfo;

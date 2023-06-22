@@ -20,7 +20,7 @@ import io.github.muntashirakon.AppManager.accessibility.AccessibilityMultiplexer
 import io.github.muntashirakon.AppManager.accessibility.NoRootAccessibilityService;
 
 public class LeadingActivityTrackerActivity extends BaseActivity {
-    private final ActivityResultLauncher<Intent> settingsLauncher = registerForActivityResult(
+    private final ActivityResultLauncher<Intent> mSettingsLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(), result -> {
                 // Init again
                 init();
@@ -45,7 +45,7 @@ public class LeadingActivityTrackerActivity extends BaseActivity {
                     .setPositiveButton(R.string.ok, (dialog, which) -> {
                         Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION);
                         intent.setData(Uri.parse("package:" + getPackageName()));
-                        settingsLauncher.launch(intent);
+                        mSettingsLauncher.launch(intent);
                     })
                     .setNegativeButton(R.string.go_back, (dialog, which) -> finish())
                     .show();
@@ -57,7 +57,7 @@ public class LeadingActivityTrackerActivity extends BaseActivity {
                     .setMessage(R.string.grant_accessibility_permission_for_tracking_window_contents)
                     .setCancelable(false)
                     .setPositiveButton(R.string.ok, (dialog, which) ->
-                            settingsLauncher.launch(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)))
+                            mSettingsLauncher.launch(new Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)))
                     .setNegativeButton(R.string.go_back, (dialog, which) -> finish())
                     .show();
             return;

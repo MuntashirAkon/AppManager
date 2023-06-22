@@ -54,11 +54,11 @@ public class ImageLoader implements Closeable {
         ImageFetcherResult fetchImage(@NonNull String tag);
     }
 
-    private static final ImageLoader instance = new ImageLoader();
+    private static final ImageLoader sInstance = new ImageLoader();
 
     @NonNull
     public static ImageLoader getInstance() {
-        return instance;
+        return sInstance;
     }
 
     private final LruCache<String, Bitmap> mMemoryCache = new LruCache<>(300);
@@ -127,19 +127,19 @@ public class ImageLoader implements Closeable {
 
     private static class PackageInfoImageFetcher implements ImageFetcherInterface {
         @Nullable
-        private final PackageItemInfo info;
+        private final PackageItemInfo mInfo;
 
         public PackageInfoImageFetcher(@Nullable PackageItemInfo info) {
-            this.info = info;
+            mInfo = info;
         }
 
         @Override
         @NonNull
         public ImageFetcherResult fetchImage(@NonNull String tag) {
             PackageManager pm = ContextUtils.getContext().getPackageManager();
-            Drawable drawable = info != null ? info.loadIcon(pm) : null;
+            Drawable drawable = mInfo != null ? mInfo.loadIcon(pm) : null;
             return new ImageFetcherResult(tag, drawable != null ? UIUtils.getBitmapFromDrawable(drawable) : null,
-                    info != null && tag.equals(info.packageName), true,
+                    mInfo != null && tag.equals(mInfo.packageName), true,
                     new DefaultImageDrawable("android_default_icon", pm.getDefaultActivityIcon()));
         }
     }
@@ -156,81 +156,81 @@ public class ImageLoader implements Closeable {
 
     public static class DefaultImageDrawableRes implements DefaultImage {
         @Nullable
-        private final String tag;
+        private final String mTag;
         @DrawableRes
-        private final int drawableRes;
+        private final int mDrawableRes;
         @Px
-        private final int padding;
+        private final int mPadding;
 
         public DefaultImageDrawableRes(@Nullable String tag, int drawableRes) {
             this(tag, drawableRes, 0);
         }
 
         public DefaultImageDrawableRes(@Nullable String tag, int drawableRes, @Px int padding) {
-            this.tag = tag;
-            this.drawableRes = drawableRes;
-            this.padding = padding;
+            mTag = tag;
+            mDrawableRes = drawableRes;
+            mPadding = padding;
         }
 
         @Override
         @Nullable
         public String getTag() {
-            return tag;
+            return mTag;
         }
 
         @NonNull
         @Override
         public Bitmap getImage() {
             return UIUtils.getBitmapFromDrawable(Objects.requireNonNull(ContextCompat
-                    .getDrawable(ContextUtils.getContext(), drawableRes)), padding);
+                    .getDrawable(ContextUtils.getContext(), mDrawableRes)), mPadding);
         }
     }
 
     public static class DefaultImageDrawable implements DefaultImage {
         @Nullable
-        private final String tag;
+        private final String mTag;
         @NonNull
-        private final Drawable drawable;
+        private final Drawable mDrawable;
 
         public DefaultImageDrawable(@Nullable String tag, @NonNull Drawable drawable) {
-            this.tag = tag;
-            this.drawable = drawable;
+            mTag = tag;
+            mDrawable = drawable;
         }
 
         @Override
         @Nullable
         public String getTag() {
-            return tag;
+            return mTag;
         }
 
         @NonNull
         @Override
         public Bitmap getImage() {
-            return UIUtils.getBitmapFromDrawable(drawable);
+            return UIUtils.getBitmapFromDrawable(mDrawable);
         }
     }
 
     public static class DefaultImageString implements DefaultImage {
         @Nullable
-        private final String tag;
+        private final String mTag;
         @NonNull
-        private final String text;
+        private final String mText;
 
         public DefaultImageString(@Nullable String tag, @NonNull String text) {
-            this.tag = tag;
-            this.text = text;
+            mTag = tag;
+            mText = text;
         }
 
         @Override
         @Nullable
         public String getTag() {
-            return tag;
+            return mTag;
         }
 
         @NonNull
         @Override
         public Bitmap getImage() {
-            return UIUtils.generateBitmapFromText(text, null);
+            return UIUtils.generateBitmapFromText(mText, null);
         }
     }
 
@@ -262,13 +262,14 @@ public class ImageLoader implements Closeable {
     public static class ImageLoaderQueueItem {
         public final String tag;
         public final WeakReference<ImageView> imageView;
-        private final ImageFetcherInterface imageFetcherInterface;
+
+        private final ImageFetcherInterface mImageFetcherInterface;
 
         public ImageLoaderQueueItem(@NonNull String tag, @NonNull ImageFetcherInterface imageFetcherInterface,
                                     @NonNull ImageView imageView) {
             this.tag = tag;
-            this.imageFetcherInterface = imageFetcherInterface;
             this.imageView = new WeakReference<>(imageView);
+            mImageFetcherInterface = imageFetcherInterface;
         }
     }
 
@@ -276,7 +277,7 @@ public class ImageLoader implements Closeable {
         private final ImageLoaderQueueItem mQueueItem;
 
         LoadQueueItem(ImageLoaderQueueItem queueItem) {
-            this.mQueueItem = queueItem;
+            mQueueItem = queueItem;
         }
 
         @WorkerThread
@@ -289,7 +290,7 @@ public class ImageLoader implements Closeable {
                 mMemoryCache.put(mQueueItem.tag, image);
             } else {
                 // Cache miss
-                ImageFetcherResult result = mQueueItem.imageFetcherInterface.fetchImage(mQueueItem.tag);
+                ImageFetcherResult result = mQueueItem.mImageFetcherInterface.fetchImage(mQueueItem.tag);
                 if (result.bitmap == null) {
                     // No image produced, try default
                     DefaultImage defaultImage = result.defaultImage;
@@ -337,8 +338,8 @@ public class ImageLoader implements Closeable {
         private final ImageLoaderQueueItem mQueueItem;
 
         public LoadImageInImageView(@NonNull Bitmap image, ImageLoaderQueueItem queueItem) {
-            this.mImage = image;
-            this.mQueueItem = queueItem;
+            mImage = image;
+            mQueueItem = queueItem;
         }
 
         @UiThread

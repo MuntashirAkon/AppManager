@@ -9,17 +9,16 @@ import com.topjohnwu.superuser.internal.UiThreadHandler;
 
 // Copyright 2022 John "topjohnwu" Wu
 abstract class BinderHolder implements IBinder.DeathRecipient {
-
-    private final IBinder binder;
+    private final IBinder mBinder;
 
     BinderHolder(IBinder b) throws RemoteException {
-        binder = b;
-        binder.linkToDeath(this, 0);
+        mBinder = b;
+        mBinder.linkToDeath(this, 0);
     }
 
     @Override
     public final void binderDied() {
-        binder.unlinkToDeath(this, 0);
+        mBinder.unlinkToDeath(this, 0);
         UiThreadHandler.run(this::onBinderDied);
     }
 

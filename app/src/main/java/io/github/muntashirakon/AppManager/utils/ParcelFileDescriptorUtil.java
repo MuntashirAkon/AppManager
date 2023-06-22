@@ -53,8 +53,8 @@ public class ParcelFileDescriptorUtil {
 
 
     static class TransferThread extends Thread {
-        final InputStream mIn;
-        final OutputStream mOut;
+        private final InputStream mIn;
+        private final OutputStream mOut;
 
         TransferThread(InputStream in, OutputStream out) {
             super("IPC Transfer Thread");

@@ -43,17 +43,17 @@ import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 public class ProfileViewModel extends AndroidViewModel {
-    private final Object profileLock = new Object();
-    private final MutableLiveData<Pair<Integer, Boolean>> toast = new MutableLiveData<>();
-    private final MutableLiveData<ArrayList<Pair<CharSequence, ApplicationInfo>>> installedApps = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> profileLoaded = new MutableLiveData<>();
-    private final MutableLiveData<String> logs = new MutableLiveData<>();
+    private final Object mProfileLock = new Object();
+    private final MutableLiveData<Pair<Integer, Boolean>> mToast = new MutableLiveData<>();
+    private final MutableLiveData<ArrayList<Pair<CharSequence, ApplicationInfo>>> mInstalledApps = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> mProfileLoaded = new MutableLiveData<>();
+    private final MutableLiveData<String> mLogs = new MutableLiveData<>();
     @GuardedBy("profileLock")
-    private String profileName;
-    private boolean isNew;
+    private String mProfileName;
+    private boolean mIsNew;
     @Nullable
-    private Future<?> loadProfileResult;
-    private Future<?> loadAppsResult;
+    private Future<?> mLoadProfileResult;
+    private Future<?> mLoadAppsResult;
 
     public ProfileViewModel(@NonNull Application application) {
         super(application);
@@ -61,37 +61,37 @@ public class ProfileViewModel extends AndroidViewModel {
 
     @Override
     protected void onCleared() {
-        if (loadProfileResult != null) {
-            loadProfileResult.cancel(true);
+        if (mLoadProfileResult != null) {
+            mLoadProfileResult.cancel(true);
         }
-        if (loadAppsResult != null) {
-            loadAppsResult.cancel(true);
+        if (mLoadAppsResult != null) {
+            mLoadAppsResult.cancel(true);
         }
         super.onCleared();
     }
 
     public LiveData<Pair<Integer, Boolean>> observeToast() {
-        return toast;
+        return mToast;
     }
 
     public LiveData<ArrayList<Pair<CharSequence, ApplicationInfo>>> observeInstalledApps() {
-        return installedApps;
+        return mInstalledApps;
     }
 
     public LiveData<Boolean> observeProfileLoaded() {
-        return profileLoaded;
+        return mProfileLoaded;
     }
 
     public LiveData<String> getLogs() {
-        return logs;
+        return mLogs;
     }
 
     @AnyThread
     public void loadInstalledApps() {
-        if (loadAppsResult != null) {
-            loadAppsResult.cancel(true);
+        if (mLoadAppsResult != null) {
+            mLoadAppsResult.cancel(true);
         }
-        loadAppsResult = ThreadUtils.postOnBackgroundThread(() -> {
+        mLoadAppsResult = ThreadUtils.postOnBackgroundThread(() -> {
             PackageManager pm = getApplication().getPackageManager();
             try {
                 ArrayList<Pair<CharSequence, ApplicationInfo>> itemPairs;
@@ -111,7 +111,7 @@ public class ProfileViewModel extends AndroidViewModel {
                     }
                 }
                 Collections.sort(itemPairs, (o1, o2) -> o1.first.toString().compareToIgnoreCase(o2.first.toString()));
-                installedApps.postValue(itemPairs);
+                mInstalledApps.postValue(itemPairs);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -120,14 +120,14 @@ public class ProfileViewModel extends AndroidViewModel {
 
     @GuardedBy("profileLock")
     public void setProfileName(String profileName, boolean isNew) {
-        synchronized (profileLock) {
-            this.profileName = profileName;
-            this.isNew = isNew;
+        synchronized (mProfileLock) {
+            mProfileName = profileName;
+            mIsNew = isNew;
         }
     }
 
     public String getProfileName() {
-        return profileName;
+        return mProfileName;
     }
 
     @GuardedBy("profileLock")
@@ -137,25 +137,25 @@ public class ProfileViewModel extends AndroidViewModel {
 
     @AnyThread
     public void loadProfile() {
-        if (loadProfileResult != null) {
-            loadProfileResult.cancel(true);
+        if (mLoadProfileResult != null) {
+            mLoadProfileResult.cancel(true);
         }
-        loadProfileResult = ThreadUtils.postOnBackgroundThread(() -> {
+        mLoadProfileResult = ThreadUtils.postOnBackgroundThread(() -> {
             loadProfileInternal();
-            profileLoaded.postValue(profileMetaManager == null);
+            mProfileLoaded.postValue(profileMetaManager == null);
         });
     }
 
     @AnyThread
     public void loadLogs() {
-        ThreadUtils.postOnBackgroundThread(() -> logs.postValue(ProfileLogger.getAllLogs(profileName)));
+        ThreadUtils.postOnBackgroundThread(() -> mLogs.postValue(ProfileLogger.getAllLogs(mProfileName)));
     }
 
     @WorkerThread
     @GuardedBy("profileLock")
     private void loadProfileInternal() {
-        synchronized (profileLock) {
-            profileMetaManager = new ProfileMetaManager(profileName);
+        synchronized (mProfileLock) {
+            profileMetaManager = new ProfileMetaManager(mProfileName);
             profile = profileMetaManager.getProfile();
         }
     }
@@ -164,7 +164,7 @@ public class ProfileViewModel extends AndroidViewModel {
     @GuardedBy("profileLock")
     public void cloneProfileInternal(String profileName) {
         setProfileName(profileName, true);
-        synchronized (profileLock) {
+        synchronized (mProfileLock) {
             profileMetaManager = new ProfileMetaManager(profileName, profile);
             profile = profileMetaManager.getProfile();
         }
@@ -172,10 +172,10 @@ public class ProfileViewModel extends AndroidViewModel {
 
     @AnyThread
     public void cloneProfile(String profileName) {
-        if (loadProfileResult != null) {
-            loadProfileResult.cancel(true);
+        if (mLoadProfileResult != null) {
+            mLoadProfileResult.cancel(true);
         }
-        loadProfileResult = ThreadUtils.postOnBackgroundThread(() -> {
+        mLoadProfileResult = ThreadUtils.postOnBackgroundThread(() -> {
             if (profileMetaManager == null) {
                 loadProfileInternal();
                 if (ThreadUtils.isInterrupted()) {
@@ -183,31 +183,31 @@ public class ProfileViewModel extends AndroidViewModel {
                 }
             }
             cloneProfileInternal(profileName);
-            toast.postValue(new Pair<>(R.string.done, false));
-            profileLoaded.postValue(profileMetaManager == null);
+            mToast.postValue(new Pair<>(R.string.done, false));
+            mProfileLoaded.postValue(profileMetaManager == null);
         });
     }
 
     @AnyThread
     public void loadNewProfile(@Nullable String[] initialPackages) {
-        if (loadProfileResult != null) {
-            loadProfileResult.cancel(true);
+        if (mLoadProfileResult != null) {
+            mLoadProfileResult.cancel(true);
         }
-        loadProfileResult = ThreadUtils.postOnBackgroundThread(() -> {
+        mLoadProfileResult = ThreadUtils.postOnBackgroundThread(() -> {
             loadProfileInternal();
             if (initialPackages != null) {
                 profile.packages = initialPackages;
             }
-            profileLoaded.postValue(profileMetaManager == null);
+            mProfileLoaded.postValue(profileMetaManager == null);
         });
     }
 
     @AnyThread
     public void loadAndCloneProfile(@NonNull String profileName) {
-        if (loadProfileResult != null) {
-            loadProfileResult.cancel(true);
+        if (mLoadProfileResult != null) {
+            mLoadProfileResult.cancel(true);
         }
-        loadProfileResult = ThreadUtils.postOnBackgroundThread(() -> {
+        mLoadProfileResult = ThreadUtils.postOnBackgroundThread(() -> {
             if (profileMetaManager == null) {
                 loadProfileInternal();
                 if (ThreadUtils.isInterrupted()) {
@@ -215,7 +215,7 @@ public class ProfileViewModel extends AndroidViewModel {
                 }
             }
             cloneProfileInternal(profileName);
-            profileLoaded.postValue(profileMetaManager == null);
+            mProfileLoaded.postValue(profileMetaManager == null);
         });
     }
 
@@ -224,7 +224,7 @@ public class ProfileViewModel extends AndroidViewModel {
     @AnyThread
     @GuardedBy("profileLock")
     public void setPackages(@NonNull List<String> packages) {
-        synchronized (profileLock) {
+        synchronized (mProfileLock) {
             profile.packages = packages.toArray(new String[0]);
             Log.e("Packages", packages.toString());
             loadPackages();
@@ -233,7 +233,7 @@ public class ProfileViewModel extends AndroidViewModel {
 
     @GuardedBy("profileLock")
     public void deletePackage(@NonNull String packageName) {
-        synchronized (profileLock) {
+        synchronized (mProfileLock) {
             profile.packages = Objects.requireNonNull(ArrayUtils.removeString(profile.packages, packageName));
             loadPackages();
         }
@@ -243,13 +243,13 @@ public class ProfileViewModel extends AndroidViewModel {
     @GuardedBy("profileLock")
     public void save() {
         ThreadUtils.postOnBackgroundThread(() -> {
-            synchronized (profileLock) {
+            synchronized (mProfileLock) {
                 try {
                     profileMetaManager.writeProfile();
-                    toast.postValue(new Pair<>(R.string.saved_successfully, false));
+                    mToast.postValue(new Pair<>(R.string.saved_successfully, false));
                 } catch (IOException | JSONException | RemoteException e) {
                     e.printStackTrace();
-                    toast.postValue(new Pair<>(R.string.saving_failed, false));
+                    mToast.postValue(new Pair<>(R.string.saving_failed, false));
                 }
             }
         });
@@ -257,11 +257,11 @@ public class ProfileViewModel extends AndroidViewModel {
 
     @AnyThread
     public void discard() {
-        if (loadProfileResult != null) {
-            loadProfileResult.cancel(true);
+        if (mLoadProfileResult != null) {
+            mLoadProfileResult.cancel(true);
         }
-        loadProfileResult = ThreadUtils.postOnBackgroundThread(() -> {
-            synchronized (profileLock) {
+        mLoadProfileResult = ThreadUtils.postOnBackgroundThread(() -> {
+            synchronized (mProfileLock) {
                 loadProfileInternal();
                 if (ThreadUtils.isInterrupted()) {
                     return;
@@ -274,10 +274,10 @@ public class ProfileViewModel extends AndroidViewModel {
     @AnyThread
     public void delete() {
         ThreadUtils.postOnBackgroundThread(() -> {
-            synchronized (profileLock) {
+            synchronized (mProfileLock) {
                 if (profileMetaManager.deleteProfile()) {
-                    toast.postValue(new Pair<>(R.string.deleted_successfully, true));
-                } else toast.postValue(new Pair<>(R.string.deletion_failed, false));
+                    mToast.postValue(new Pair<>(R.string.deleted_successfully, true));
+                } else mToast.postValue(new Pair<>(R.string.deletion_failed, false));
             }
         });
     }
@@ -297,11 +297,11 @@ public class ProfileViewModel extends AndroidViewModel {
 
     @AnyThread
     public void loadPackages() {
-        if (loadProfileResult != null) {
-            loadProfileResult.cancel(true);
+        if (mLoadProfileResult != null) {
+            mLoadProfileResult.cancel(true);
         }
-        loadProfileResult = ThreadUtils.postOnBackgroundThread(() -> {
-            synchronized (profileLock) {
+        mLoadProfileResult = ThreadUtils.postOnBackgroundThread(() -> {
+            synchronized (mProfileLock) {
                 if (profileMetaManager == null) loadProfileInternal();
                 packagesLiveData.postValue(new ArrayList<>(Arrays.asList(profile.packages)));
             }

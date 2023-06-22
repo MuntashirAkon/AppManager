@@ -18,7 +18,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 
-import io.github.muntashirakon.AppManager.AppManager;
+import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
@@ -29,6 +29,7 @@ import io.github.muntashirakon.AppManager.logcat.LogViewerActivity;
 import io.github.muntashirakon.AppManager.scanner.ScannerActivity;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.utils.AppPref;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.viewer.ExplorerActivity;
 
 public class FeatureController {
@@ -66,7 +67,7 @@ public class FeatureController {
     @FeatureFlags
     public static final List<Integer> featureFlags = new ArrayList<>();
 
-    private static final LinkedHashMap<Integer, Integer> featureFlagsMap = new LinkedHashMap<Integer, Integer>() {
+    private static final LinkedHashMap<Integer, Integer> sFeatureFlagsMap = new LinkedHashMap<Integer, Integer>() {
         {
             featureFlags.add(FEAT_INTERCEPTOR);
             put(FEAT_INTERCEPTOR, R.string.interceptor);
@@ -95,24 +96,24 @@ public class FeatureController {
     public static CharSequence[] getFormattedFlagNames(@NonNull Context context) {
         CharSequence[] flagNames = new CharSequence[featureFlags.size()];
         for (int i = 0; i < flagNames.length; ++i) {
-            flagNames[i] = context.getText(Objects.requireNonNull(featureFlagsMap.get(featureFlags.get(i))));
+            flagNames[i] = context.getText(Objects.requireNonNull(sFeatureFlagsMap.get(featureFlags.get(i))));
         }
         return flagNames;
     }
 
-    private static final String packageName = AppManager.getContext().getPackageName();
-    private static final SparseArrayCompat<ComponentName> componentCache = new SparseArrayCompat<>(4);
+    private static final SparseArrayCompat<ComponentName> sComponentCache = new SparseArrayCompat<>(4);
 
-    private final PackageManager pm;
-    private int flags;
+    private final String mPackageName = BuildConfig.APPLICATION_ID;
+    private final PackageManager mPm;
+    private int mFlags;
 
     private FeatureController() {
-        pm = AppManager.getContext().getPackageManager();
-        flags = AppPref.getInt(AppPref.PrefKey.PREF_ENABLED_FEATURES_INT);
+        mPm = ContextUtils.getContext().getPackageManager();
+        mFlags = AppPref.getInt(AppPref.PrefKey.PREF_ENABLED_FEATURES_INT);
     }
 
     public int getFlags() {
-        return flags;
+        return mFlags;
     }
 
     public static boolean isInterceptorEnabled() {
@@ -160,9 +161,9 @@ public class FeatureController {
                 break;
             case FEAT_USAGE_ACCESS:
                 // Only depends on flag
-                return (flags & key) != 0;
+                return (mFlags & key) != 0;
             case FEAT_INTERNET:
-                return (flags & key) != 0 && SelfPermissions.checkSelfPermission(Manifest.permission.INTERNET);
+                return (mFlags & key) != 0 && SelfPermissions.checkSelfPermission(Manifest.permission.INTERNET);
             case FEAT_LOG_VIEWER:
                 cn = getComponentName(key, LogViewerActivity.class);
                 break;
@@ -178,7 +179,7 @@ public class FeatureController {
             default:
                 throw new IllegalArgumentException();
         }
-        return isComponentEnabled(cn) && (flags & key) != 0;
+        return isComponentEnabled(cn) && (mFlags & key) != 0;
     }
 
     public void modifyState(@FeatureFlags int key, boolean enabled) {
@@ -213,32 +214,32 @@ public class FeatureController {
                 break;
         }
         // Modify flags
-        flags = enabled ? (flags | key) : (flags & ~key);
+        mFlags = enabled ? (mFlags | key) : (mFlags & ~key);
         // Save to pref
-        AppPref.set(AppPref.PrefKey.PREF_ENABLED_FEATURES_INT, flags);
+        AppPref.set(AppPref.PrefKey.PREF_ENABLED_FEATURES_INT, mFlags);
     }
 
     private void modifyState(@FeatureFlags int key, @Nullable Class<? extends AppCompatActivity> clazz, boolean enabled) {
         ComponentName cn = getComponentName(key, clazz);
         if (cn == null) return;
         int state = enabled ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED : PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
-        pm.setComponentEnabledSetting(cn, state, PackageManager.DONT_KILL_APP);
+        mPm.setComponentEnabledSetting(cn, state, PackageManager.DONT_KILL_APP);
     }
 
     private void modifyState(@FeatureFlags int key, @Nullable String name, boolean enabled) {
         ComponentName cn = getComponentName(key, name);
         if (cn == null) return;
         int state = enabled ? PackageManager.COMPONENT_ENABLED_STATE_ENABLED : PackageManager.COMPONENT_ENABLED_STATE_DISABLED;
-        pm.setComponentEnabledSetting(cn, state, PackageManager.DONT_KILL_APP);
+        mPm.setComponentEnabledSetting(cn, state, PackageManager.DONT_KILL_APP);
     }
 
     @Nullable
     private ComponentName getComponentName(@FeatureFlags int key, @Nullable Class<? extends AppCompatActivity> clazz) {
         if (clazz == null) return null;
-        ComponentName cn = componentCache.get(key);
+        ComponentName cn = sComponentCache.get(key);
         if (cn == null) {
-            cn = new ComponentName(packageName, clazz.getName());
-            componentCache.put(key, cn);
+            cn = new ComponentName(mPackageName, clazz.getName());
+            sComponentCache.put(key, cn);
         }
         return cn;
     }
@@ -246,17 +247,17 @@ public class FeatureController {
     @Nullable
     private ComponentName getComponentName(@FeatureFlags int key, @Nullable String name) {
         if (name == null) return null;
-        ComponentName cn = componentCache.get(key);
+        ComponentName cn = sComponentCache.get(key);
         if (cn == null) {
-            cn = new ComponentName(packageName, name);
-            componentCache.put(key, cn);
+            cn = new ComponentName(mPackageName, name);
+            sComponentCache.put(key, cn);
         }
         return cn;
     }
 
     private boolean isComponentEnabled(@Nullable ComponentName componentName) {
         if (componentName == null) return true;
-        int status = pm.getComponentEnabledSetting(componentName);
+        int status = mPm.getComponentEnabledSetting(componentName);
         return status == PackageManager.COMPONENT_ENABLED_STATE_DEFAULT || status == PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
     }
 }

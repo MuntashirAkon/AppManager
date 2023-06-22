@@ -77,13 +77,13 @@ public final class ListExporter {
         if (exportType == EXPORT_TYPE_XML) {
             return exportXml(appListItems);
         } else if (exportType == EXPORT_TYPE_MARKDOWN) {
-            return exportMarkdown(appListItems);
+            return exportMarkdown(context, appListItems);
         }
         throw new IllegalArgumentException("Invalid export type: " + exportType);
     }
 
     @NonNull
-    public static String exportXml(@NonNull List<AppListItem> appListItems) throws IOException {
+    private static String exportXml(@NonNull List<AppListItem> appListItems) throws IOException {
         XmlSerializer xmlSerializer = Xml.newSerializer();
         StringWriter stringWriter = new StringWriter();
         xmlSerializer.setOutput(stringWriter);
@@ -119,7 +119,7 @@ public final class ListExporter {
     }
 
     @NonNull
-    public static String exportMarkdown(@NonNull List<AppListItem> appListItems) {
+    private static String exportMarkdown(@NonNull Context context, @NonNull List<AppListItem> appListItems) {
         StringBuilder sb = new StringBuilder("# Package Info\n\n");
         for (AppListItem appListItem : appListItems) {
             sb.append("## ").append(appListItem.getPackageLabel()).append("\n\n")
@@ -130,8 +130,8 @@ public final class ListExporter {
                 sb.append("**Min SDK:** ").append(appListItem.getMinSdk()).append(", ");
             }
             sb.append("**Target SDK:** ").append(appListItem.getTargetSdk()).append("\n")
-                    .append("**Date installed:** ").append(DateUtils.formatDateTime(appListItem.getFirstInstallTime()))
-                    .append(", **Date updated:** ").append(DateUtils.formatDateTime(appListItem.getLastUpdateTime()))
+                    .append("**Date installed:** ").append(DateUtils.formatDateTime(context, appListItem.getFirstInstallTime()))
+                    .append(", **Date updated:** ").append(DateUtils.formatDateTime(context, appListItem.getLastUpdateTime()))
                     .append("\n");
             if (appListItem.getInstallerPackageName() != null) {
                 sb.append("**Installer:** ");

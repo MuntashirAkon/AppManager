@@ -77,10 +77,10 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
     private String mFilterProfileName;
     @Nullable
     private int[] mSelectedUsers;
-    private String searchQuery;
+    private String mSearchQuery;
     @AdvancedSearchView.SearchType
-    private int searchType;
-    private final Map<String, ApplicationItem> selectedPackageApplicationItemMap = Collections.synchronizedMap(new LinkedHashMap<>());
+    private int mSearchType;
+    private final Map<String, ApplicationItem> mSelectedPackageApplicationItemMap = Collections.synchronizedMap(new LinkedHashMap<>());
     final MultithreadedExecutor executor = MultithreadedExecutor.getNewInstance();
 
     public MainViewModel(@NonNull Application application) {
@@ -97,71 +97,71 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
         if ("".equals(mFilterProfileName)) mFilterProfileName = null;
     }
 
-    private final MutableLiveData<Boolean> operationStatus = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> mOperationStatus = new MutableLiveData<>();
     @NonNull
-    private final MutableLiveData<List<ApplicationItem>> applicationItemsLiveData = new MutableLiveData<>();
-    private final List<ApplicationItem> applicationItems = new ArrayList<>();
+    private final MutableLiveData<List<ApplicationItem>> mApplicationItemsLiveData = new MutableLiveData<>();
+    private final List<ApplicationItem> mApplicationItems = new ArrayList<>();
 
     public int getApplicationItemCount() {
-        return applicationItems.size();
+        return mApplicationItems.size();
     }
 
     @NonNull
     public LiveData<List<ApplicationItem>> getApplicationItems() {
-        if (applicationItemsLiveData.getValue() == null) {
+        if (mApplicationItemsLiveData.getValue() == null) {
             loadApplicationItems();
         }
-        return applicationItemsLiveData;
+        return mApplicationItemsLiveData;
     }
 
     public LiveData<Boolean> getOperationStatus() {
-        return operationStatus;
+        return mOperationStatus;
     }
 
     @GuardedBy("applicationItems")
     public ApplicationItem deselect(@NonNull ApplicationItem item) {
-        synchronized (applicationItems) {
-            int i = applicationItems.indexOf(item);
+        synchronized (mApplicationItems) {
+            int i = mApplicationItems.indexOf(item);
             if (i == -1) return item;
-            item = applicationItems.get(i);
-            selectedPackageApplicationItemMap.remove(item.packageName);
+            item = mApplicationItems.get(i);
+            mSelectedPackageApplicationItemMap.remove(item.packageName);
             item.isSelected = false;
-            applicationItems.set(i, item);
+            mApplicationItems.set(i, item);
             return item;
         }
     }
 
     @GuardedBy("applicationItems")
     public ApplicationItem select(@NonNull ApplicationItem item) {
-        synchronized (applicationItems) {
-            int i = applicationItems.indexOf(item);
+        synchronized (mApplicationItems) {
+            int i = mApplicationItems.indexOf(item);
             if (i == -1) return item;
-            item = applicationItems.get(i);
+            item = mApplicationItems.get(i);
             // Removal is needed because LinkedHashMap insertion-oriented
-            selectedPackageApplicationItemMap.remove(item.packageName);
-            selectedPackageApplicationItemMap.put(item.packageName, item);
+            mSelectedPackageApplicationItemMap.remove(item.packageName);
+            mSelectedPackageApplicationItemMap.put(item.packageName, item);
             item.isSelected = true;
-            applicationItems.set(i, item);
+            mApplicationItems.set(i, item);
             return item;
         }
     }
 
     public void cancelSelection() {
-        synchronized (applicationItems) {
+        synchronized (mApplicationItems) {
             for (ApplicationItem item : getSelectedApplicationItems()) {
-                int i = applicationItems.indexOf(item);
+                int i = mApplicationItems.indexOf(item);
                 if (i != -1) {
-                    applicationItems.get(i).isSelected = false;
+                    mApplicationItems.get(i).isSelected = false;
                 }
             }
-            selectedPackageApplicationItemMap.clear();
+            mSelectedPackageApplicationItemMap.clear();
         }
     }
 
     @Nullable
     public ApplicationItem getLastSelectedPackage() {
         // Last selected package is the same as the last added package.
-        Iterator<ApplicationItem> it = selectedPackageApplicationItemMap.values().iterator();
+        Iterator<ApplicationItem> it = mSelectedPackageApplicationItemMap.values().iterator();
         ApplicationItem lastItem = null;
         while (it.hasNext()) {
             lastItem = it.next();
@@ -170,7 +170,7 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
     }
 
     public Map<String, ApplicationItem> getSelectedPackages() {
-        return selectedPackageApplicationItemMap;
+        return mSelectedPackageApplicationItemMap;
     }
 
     @NonNull
@@ -178,8 +178,8 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
         ArrayList<UserPackagePair> userPackagePairs = new ArrayList<>();
         int myUserId = UserHandleHidden.myUserId();
         int[] userIds = Users.getUsersIds();
-        for (String packageName : selectedPackageApplicationItemMap.keySet()) {
-            int[] userHandles = Objects.requireNonNull(selectedPackageApplicationItemMap.get(packageName)).userHandles;
+        for (String packageName : mSelectedPackageApplicationItemMap.keySet()) {
+            int[] userHandles = Objects.requireNonNull(mSelectedPackageApplicationItemMap.get(packageName)).userHandles;
             if (userHandles.length == 0) {
                 // Could be a backup only item
                 // Assign current user in it
@@ -195,16 +195,16 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
     }
 
     public Collection<ApplicationItem> getSelectedApplicationItems() {
-        return selectedPackageApplicationItemMap.values();
+        return mSelectedPackageApplicationItemMap.values();
     }
 
     public String getSearchQuery() {
-        return searchQuery;
+        return mSearchQuery;
     }
 
     public void setSearchQuery(String searchQuery, @AdvancedSearchView.SearchType int searchType) {
-        this.searchQuery = searchType != AdvancedSearchView.SEARCH_TYPE_REGEX ? searchQuery.toLowerCase(Locale.ROOT) : searchQuery;
-        this.searchType = searchType;
+        this.mSearchQuery = searchType != AdvancedSearchView.SEARCH_TYPE_REGEX ? searchQuery.toLowerCase(Locale.ROOT) : searchQuery;
+        this.mSearchType = searchType;
         executor.submit(this::filterItemsByFlags);
     }
 
@@ -325,10 +325,10 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                     }
                 }
                 os.write(ListExporter.export(getApplication(), exportType, packageInfoList).getBytes(StandardCharsets.UTF_8));
-                operationStatus.postValue(true);
+                mOperationStatus.postValue(true);
             } catch (IOException | RemoteException | PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
-                operationStatus.postValue(false);
+                mOperationStatus.postValue(false);
             }
         });
     }
@@ -338,9 +338,9 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
         executor.submit(() -> {
             List<ApplicationItem> updatedApplicationItems = PackageUtils
                     .getInstalledOrBackedUpApplicationsFromDb(getApplication(), true, true);
-            synchronized (applicationItems) {
-                applicationItems.clear();
-                applicationItems.addAll(updatedApplicationItems);
+            synchronized (mApplicationItems) {
+                mApplicationItems.clear();
+                mApplicationItems.addAll(updatedApplicationItems);
                 // select apps again
                 for (ApplicationItem item : getSelectedApplicationItems()) {
                     select(item);
@@ -353,35 +353,35 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
 
     private void filterItemsByQuery(@NonNull List<ApplicationItem> applicationItems) {
         List<ApplicationItem> filteredApplicationItems;
-        if (searchType == AdvancedSearchView.SEARCH_TYPE_REGEX) {
-            filteredApplicationItems = AdvancedSearchView.matches(searchQuery, applicationItems,
+        if (mSearchType == AdvancedSearchView.SEARCH_TYPE_REGEX) {
+            filteredApplicationItems = AdvancedSearchView.matches(mSearchQuery, applicationItems,
                     (AdvancedSearchView.ChoicesGenerator<ApplicationItem>) item -> new ArrayList<String>() {{
                         add(item.packageName);
                         add(item.label);
                     }}, AdvancedSearchView.SEARCH_TYPE_REGEX);
-            mHandler.post(() -> applicationItemsLiveData.postValue(filteredApplicationItems));
+            mHandler.post(() -> mApplicationItemsLiveData.postValue(filteredApplicationItems));
             return;
         }
         // Others
         filteredApplicationItems = new ArrayList<>();
         for (ApplicationItem item : applicationItems) {
-            if (AdvancedSearchView.matches(searchQuery, item.packageName.toLowerCase(Locale.ROOT), searchType)) {
+            if (AdvancedSearchView.matches(mSearchQuery, item.packageName.toLowerCase(Locale.ROOT), mSearchType)) {
                 filteredApplicationItems.add(item);
-            } else if (searchType == AdvancedSearchView.SEARCH_TYPE_CONTAINS) {
-                if (Utils.containsOrHasInitials(searchQuery, item.label)) {
+            } else if (mSearchType == AdvancedSearchView.SEARCH_TYPE_CONTAINS) {
+                if (Utils.containsOrHasInitials(mSearchQuery, item.label)) {
                     filteredApplicationItems.add(item);
                 }
-            } else if (AdvancedSearchView.matches(searchQuery, item.label.toLowerCase(Locale.ROOT), searchType)) {
+            } else if (AdvancedSearchView.matches(mSearchQuery, item.label.toLowerCase(Locale.ROOT), mSearchType)) {
                 filteredApplicationItems.add(item);
             }
         }
-        mHandler.post(() -> applicationItemsLiveData.postValue(filteredApplicationItems));
+        mHandler.post(() -> mApplicationItemsLiveData.postValue(filteredApplicationItems));
     }
 
     @WorkerThread
     @GuardedBy("applicationItems")
     private void filterItemsByFlags() {
-        synchronized (applicationItems) {
+        synchronized (mApplicationItems) {
             List<ApplicationItem> candidateApplicationItems = new ArrayList<>();
             if (mFilterProfileName != null) {
                 ProfileMetaManager profileMetaManager = new ProfileMetaManager(mFilterProfileName);
@@ -389,20 +389,20 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                 for (String packageName : profileMetaManager.getProfile().packages) {
                     ApplicationItem item = new ApplicationItem();
                     item.packageName = packageName;
-                    int index = applicationItems.indexOf(item);
+                    int index = mApplicationItems.indexOf(item);
                     if (index != -1) {
                         indexes.add(index);
                     }
                 }
                 Collections.sort(indexes);
                 for (int index : indexes) {
-                    ApplicationItem item = applicationItems.get(index);
+                    ApplicationItem item = mApplicationItems.get(index);
                     if (isAmongSelectedUsers(item)) {
                         candidateApplicationItems.add(item);
                     }
                 }
             } else {
-                for (ApplicationItem item : applicationItems) {
+                for (ApplicationItem item : mApplicationItems) {
                     if (isAmongSelectedUsers(item)) {
                         candidateApplicationItems.add(item);
                     }
@@ -410,10 +410,10 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
             }
             // Other filters
             if (mFilterFlags == MainListOptions.FILTER_NO_FILTER) {
-                if (!TextUtils.isEmpty(searchQuery)) {
+                if (!TextUtils.isEmpty(mSearchQuery)) {
                     filterItemsByQuery(candidateApplicationItems);
                 } else {
-                    mHandler.post(() -> applicationItemsLiveData.postValue(candidateApplicationItems));
+                    mHandler.post(() -> mApplicationItemsLiveData.postValue(candidateApplicationItems));
                 }
             } else {
                 List<ApplicationItem> filteredApplicationItems = new ArrayList<>();
@@ -461,10 +461,10 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                     }
                     filteredApplicationItems.add(item);
                 }
-                if (!TextUtils.isEmpty(searchQuery)) {
+                if (!TextUtils.isEmpty(mSearchQuery)) {
                     filterItemsByQuery(filteredApplicationItems);
                 } else {
-                    mHandler.post(() -> applicationItemsLiveData.postValue(filteredApplicationItems));
+                    mHandler.post(() -> mApplicationItemsLiveData.postValue(filteredApplicationItems));
                 }
             }
         }
@@ -485,7 +485,7 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
 
     @GuardedBy("applicationItems")
     private void loadRunningApps() {
-        synchronized (applicationItems) {
+        synchronized (mApplicationItems) {
             try {
                 List<ActivityManager.RunningAppProcessInfo> runningAppProcessInfoList;
                 runningAppProcessInfoList = ActivityManagerCompat.getRunningAppProcesses();
@@ -493,11 +493,11 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
                 for (ActivityManager.RunningAppProcessInfo runningAppProcessInfo : runningAppProcessInfoList) {
                     Collections.addAll(runningPackages, runningAppProcessInfo.pkgList);
                 }
-                for (int i = 0; i < applicationItems.size(); ++i) {
-                    ApplicationItem applicationItem = applicationItems.get(i);
+                for (int i = 0; i < mApplicationItems.size(); ++i) {
+                    ApplicationItem applicationItem = mApplicationItems.get(i);
                     applicationItem.isRunning = applicationItem.isInstalled
                             && runningPackages.contains(applicationItem.packageName);
-                    applicationItems.set(i, applicationItem);
+                    mApplicationItems.set(i, applicationItem);
                 }
             } catch (Throwable th) {
                 Log.e("MVM", th);
@@ -507,12 +507,12 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
 
     @GuardedBy("applicationItems")
     private void sortApplicationList(@MainListOptions.SortOrder int sortBy, boolean reverse) {
-        synchronized (applicationItems) {
+        synchronized (mApplicationItems) {
             if (sortBy != MainListOptions.SORT_BY_APP_LABEL) {
                 sortApplicationList(MainListOptions.SORT_BY_APP_LABEL, false);
             }
             int mode = reverse ? -1 : 1;
-            Collections.sort(applicationItems, (o1, o2) -> {
+            Collections.sort(mApplicationItems, (o1, o2) -> {
                 switch (sortBy) {
                     case MainListOptions.SORT_BY_APP_LABEL:
                         return mode * sCollator.compare(o1.label, o2.label);
@@ -631,12 +631,12 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
     @GuardedBy("applicationItems")
     private boolean insertOrAddApplicationItem(@Nullable ApplicationItem item) {
         if (item == null) return false;
-        synchronized (applicationItems) {
+        synchronized (mApplicationItems) {
             if (insertApplicationItem(item)) {
                 return true;
             }
-            boolean inserted = applicationItems.add(item);
-            if (selectedPackageApplicationItemMap.containsKey(item.packageName)) {
+            boolean inserted = mApplicationItems.add(item);
+            if (mSelectedPackageApplicationItemMap.containsKey(item.packageName)) {
                 select(item);
             }
             return inserted;
@@ -645,13 +645,13 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
 
     @GuardedBy("applicationItems")
     private boolean insertApplicationItem(@NonNull ApplicationItem item) {
-        synchronized (applicationItems) {
+        synchronized (mApplicationItems) {
             boolean isInserted = false;
-            for (int i = 0; i < applicationItems.size(); ++i) {
-                if (item.equals(applicationItems.get(i))) {
-                    applicationItems.set(i, item);
+            for (int i = 0; i < mApplicationItems.size(); ++i) {
+                if (item.equals(mApplicationItems.get(i))) {
+                    mApplicationItems.set(i, item);
                     isInserted = true;
-                    if (selectedPackageApplicationItemMap.containsKey(item.packageName)) {
+                    if (mSelectedPackageApplicationItemMap.containsKey(item.packageName)) {
                         select(item);
                     }
                 }
@@ -661,12 +661,12 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
     }
 
     private boolean deleteApplicationItem(@NonNull String packageName) {
-        synchronized (applicationItems) {
-            ListIterator<ApplicationItem> it = applicationItems.listIterator();
+        synchronized (mApplicationItems) {
+            ListIterator<ApplicationItem> it = mApplicationItems.listIterator();
             while (it.hasNext()) {
                 ApplicationItem item = it.next();
                 if (item.packageName.equals(packageName)) {
-                    selectedPackageApplicationItemMap.remove(packageName);
+                    mSelectedPackageApplicationItemMap.remove(packageName);
                     it.remove();
                     return true;
                 }
@@ -753,9 +753,9 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
     @GuardedBy("applicationItems")
     @NonNull
     private String[] getPackagesForUid(int uid) {
-        synchronized (applicationItems) {
+        synchronized (mApplicationItems) {
             List<String> packages = new LinkedList<>();
-            for (ApplicationItem item : applicationItems) {
+            for (ApplicationItem item : mApplicationItems) {
                 if (item.uid == uid) packages.add(item.packageName);
             }
             return packages.toArray(new String[0]);
@@ -770,7 +770,7 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
     }
 
     public static class PackageIntentReceiver extends PackageChangeReceiver {
-        final MainViewModel mModel;
+        private final MainViewModel mModel;
 
         public PackageIntentReceiver(@NonNull MainViewModel model) {
             super(model.getApplication());

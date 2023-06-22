@@ -11,12 +11,14 @@ import androidx.core.os.LocaleListCompat;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.misc.VMRuntime;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 
 public class StaticDataset {
-    private static String[] trackerCodeSignatures;
-    private static String[] trackerNames;
+    private static String[] sTrackerCodeSignatures;
+    private static String[] sTrackerNames;
 
     public static final String ARMEABI_V7A = "armeabi_v7a";
     public static final String ARM64_V8A = "arm64_v8a";
@@ -40,8 +42,7 @@ public class StaticDataset {
     public static final String XXHDPI = "xxhdpi";
     public static final String XXXHDPI = "xxxhdpi";
 
-    public static final ArrayMap<String, Integer> DENSITY_NAME_TO_DENSITY
-            = new ArrayMap<String, Integer>(8) {
+    public static final ArrayMap<String, Integer> DENSITY_NAME_TO_DENSITY = new ArrayMap<String, Integer>(8) {
         {
             put(LDPI, DisplayMetrics.DENSITY_LOW);
             put(MDPI, DisplayMetrics.DENSITY_MEDIUM);
@@ -63,21 +64,21 @@ public class StaticDataset {
     static {
         LocaleListCompat localeList = ConfigurationCompat.getLocales(Resources.getSystem().getConfiguration());
         for (int i = 0; i < localeList.size(); i++) {
-            LOCALE_RANKING.put(localeList.get(i).getLanguage(), i);
+            LOCALE_RANKING.put(Objects.requireNonNull(localeList.get(i)).getLanguage(), i);
         }
     }
 
     public static String[] getTrackerCodeSignatures() {
-        if (trackerCodeSignatures == null) {
-            trackerCodeSignatures = AppManager.getContext().getResources().getStringArray(R.array.tracker_signatures);
+        if (sTrackerCodeSignatures == null) {
+            sTrackerCodeSignatures = ContextUtils.getContext().getResources().getStringArray(R.array.tracker_signatures);
         }
-        return trackerCodeSignatures;
+        return sTrackerCodeSignatures;
     }
 
     public static String[] getTrackerNames() {
-        if (trackerNames == null) {
-            trackerNames = AppManager.getContext().getResources().getStringArray(R.array.tracker_names);
+        if (sTrackerNames == null) {
+            sTrackerNames = ContextUtils.getContext().getResources().getStringArray(R.array.tracker_names);
         }
-        return trackerNames;
+        return sTrackerNames;
     }
 }

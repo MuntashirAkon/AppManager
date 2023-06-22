@@ -34,71 +34,72 @@ public class ChangelogItem {
     public static final int TEXT_MEDIUM = 1;
     public static final int TEXT_LARGE = 2;
 
-    @NonNull
-    private final CharSequence changeText;
     @ChangelogType
     public final int type;
 
-    private boolean bulletedList;
-    private boolean subtext;
+    @NonNull
+    private final CharSequence mChangeText;
+
+    private boolean mBulletedList;
+    private boolean mSubtext;
     @Nullable
-    private String changeTitle;
+    private String mChangeTitle;
     @ChangeTextType
-    private int changeTextType;
+    private int mChangeTextType;
 
     public ChangelogItem(@ChangelogType int type) {
-        changeText = "";
+        mChangeText = "";
         this.type = type;
     }
 
     public ChangelogItem(@NonNull CharSequence changeText, @ChangelogType int type) {
-        this.changeText = changeText;
+        mChangeText = changeText;
         this.type = type;
     }
 
     public ChangelogItem(@NonNull String changeText, @ChangelogType int type) {
-        this.changeText = parseChangeText(changeText);
+        mChangeText = parseChangeText(changeText);
         this.type = type;
     }
 
     public boolean isBulletedList() {
-        return bulletedList;
+        return mBulletedList;
     }
 
     public void setBulletedList(boolean bulletedList) {
-        this.bulletedList = bulletedList;
+        mBulletedList = bulletedList;
     }
 
     public boolean isSubtext() {
-        return subtext;
+        return mSubtext;
     }
 
     public void setSubtext(boolean subtext) {
-        this.subtext = subtext;
-        changeTextType = subtext ? TEXT_SMALL : TEXT_MEDIUM;
+        mSubtext = subtext;
+        mChangeTextType = subtext ? TEXT_SMALL : TEXT_MEDIUM;
     }
 
     @NonNull
     public CharSequence getChangeText() {
-        return changeText;
+        return mChangeText;
     }
 
     @Nullable
     public String getChangeTitle() {
-        return changeTitle;
+        return mChangeTitle;
     }
 
     void setChangeTitle(@Nullable String changeTitle) {
-        this.changeTitle = changeTitle;
+        mChangeTitle = changeTitle;
     }
 
     @ChangeTextType
     public int getChangeTextType() {
-        return changeTextType;
+        return mChangeTextType;
     }
 
     public void setChangeTextType(@ChangeTextType int changeTextType) {
-        this.changeTextType = changeTextType;
+        mChangeTextType = changeTextType;
     }
 
     @NonNull

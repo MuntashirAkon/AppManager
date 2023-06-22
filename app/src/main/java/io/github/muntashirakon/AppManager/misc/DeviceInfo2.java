@@ -99,16 +99,16 @@ public class DeviceInfo2 implements LocalizedString {
     // Features
     public FeatureInfo[] features;
 
-    private final FragmentActivity activity;
-    private final ActivityManager activityManager;
-    private final PackageManager pm;
-    private final Display display;
+    private final FragmentActivity mActivity;
+    private final ActivityManager mActivityManager;
+    private final PackageManager mPm;
+    private final Display mDisplay;
 
     public DeviceInfo2(@NonNull FragmentActivity activity) {
-        this.activity = activity;
-        activityManager = (ActivityManager) activity.getSystemService(Context.ACTIVITY_SERVICE);
-        pm = activity.getPackageManager();
-        display = getDisplay();
+        this.mActivity = activity;
+        mActivityManager = (ActivityManager) activity.getSystemService(Context.ACTIVITY_SERVICE);
+        mPm = activity.getPackageManager();
+        mDisplay = getDisplay();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             patchLevel = getSecurityPatch();
         } else patchLevel = null;
@@ -121,27 +121,27 @@ public class DeviceInfo2 implements LocalizedString {
         encryptionStatus = getEncryptionStatus();
         cpuHardware = getCpuHardware();
         availableProcessors = Runtime.getRuntime().availableProcessors();
-        glEsVersion = Utils.getGlEsVersion(activityManager.getDeviceConfigurationInfo().reqGlEsVersion);
+        glEsVersion = Utils.getGlEsVersion(mActivityManager.getDeviceConfigurationInfo().reqGlEsVersion);
         // TODO(19/12/20): Get vendor name
-        activityManager.getMemoryInfo(memoryInfo);
+        mActivityManager.getMemoryInfo(memoryInfo);
         batteryCapacityMAh = getBatteryCapacity();
         // TODO(19/12/20): Get more battery info
         DisplayMetrics displayMetrics = new DisplayMetrics();
         // Actual size
-        display.getRealMetrics(displayMetrics);
+        mDisplay.getRealMetrics(displayMetrics);
         scalingFactor = displayMetrics.density;
         actualWidthPx = displayMetrics.widthPixels;
         actualHeightPx = displayMetrics.heightPixels;
         // Window size
-        display.getMetrics(displayMetrics);
+        mDisplay.getMetrics(displayMetrics);
         windowWidthPx = displayMetrics.widthPixels;
         windowHeightPx = displayMetrics.heightPixels;
-        refreshRate = display.getRefreshRate();
+        refreshRate = mDisplay.getRefreshRate();
         users = Users.getAllUsers();
         for (UserInfo info : users) {
             userPackages.put(info.id, getPackageStats(info.id));
         }
-        features = pm.getSystemAvailableFeatures();
+        features = mPm.getSystemAvailableFeatures();
     }
 
     @Override
@@ -277,10 +277,10 @@ public class DeviceInfo2 implements LocalizedString {
 
     private Display getDisplay() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            return activity.getDisplay();
+            return mActivity.getDisplay();
         } else {
             //noinspection deprecation
-            return activity.getWindowManager().getDefaultDisplay();
+            return mActivity.getWindowManager().getDefaultDisplay();
         }
     }
 
@@ -370,7 +370,7 @@ public class DeviceInfo2 implements LocalizedString {
         double capacity = -1.0;
         try {
             Object powerProfile = Class.forName("com.android.internal.os.PowerProfile")
-                    .getConstructor(Context.class).newInstance(activity.getApplication());
+                    .getConstructor(Context.class).newInstance(mActivity.getApplication());
             //noinspection ConstantConditions
             capacity = (double) Class.forName("com.android.internal.os.PowerProfile")
                     .getMethod("getAveragePower", String.class)
@@ -400,6 +400,6 @@ public class DeviceInfo2 implements LocalizedString {
     }
 
     private String getString(@StringRes int strRes) {
-        return activity.getString(strRes);
+        return mActivity.getString(strRes);
     }
 }

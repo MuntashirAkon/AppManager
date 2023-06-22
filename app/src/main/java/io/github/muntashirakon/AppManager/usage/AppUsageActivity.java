@@ -101,13 +101,13 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
     private LinearProgressIndicator mProgressIndicator;
     private SwipeRefreshLayout mSwipeRefresh;
     private AppUsageAdapter mAppUsageAdapter;
-    private final BetterActivityResult<String, Boolean> requestPerm = BetterActivityResult
+    private final BetterActivityResult<String, Boolean> mRequestPerm = BetterActivityResult
             .registerForActivityResult(this, new ActivityResultContracts.RequestPermission());
 
     @SuppressLint("WrongConstant")
     @Override
     protected void onAuthenticated(Bundle savedInstanceState) {
-        if (FeatureController.isUsageAccessEnabled()) {
+        if (!FeatureController.isUsageAccessEnabled()) {
             finish();
             return;
         }
@@ -176,7 +176,7 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
         } else getAppUsage();
         if (AppUsageStatsManager.requireReadPhoneStatePermission()) {
             // Grant READ_PHONE_STATE permission
-            requestPerm.launch(Manifest.permission.READ_PHONE_STATE, granted -> {
+            mRequestPerm.launch(Manifest.permission.READ_PHONE_STATE, granted -> {
                 if (granted) recreate();
             });
         }
@@ -317,7 +317,7 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
         }
 
         public void setCurrentInterval(@IntervalType int currentInterval) {
-            this.mCurrentInterval = currentInterval;
+            mCurrentInterval = currentInterval;
         }
 
         @IntervalType
@@ -423,7 +423,7 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
         }
 
         public void setSortBy(int sortBy) {
-            this.mSortBy = sortBy;
+            mSortBy = sortBy;
         }
 
         private void sortPackageUsageInfoList() {

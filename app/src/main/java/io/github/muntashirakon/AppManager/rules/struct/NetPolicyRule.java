@@ -12,27 +12,27 @@ import io.github.muntashirakon.AppManager.rules.RuleType;
 
 public class NetPolicyRule extends RuleEntry {
     @NetworkPolicyManagerCompat.NetPolicy
-    private int netPolicies;
+    private int mNetPolicies;
 
     public NetPolicyRule(@NonNull String packageName, @NetworkPolicyManagerCompat.NetPolicy int netPolicies) {
         super(packageName, STUB, RuleType.NET_POLICY);
-        this.netPolicies = netPolicies;
+        mNetPolicies = netPolicies;
     }
 
     public NetPolicyRule(@NonNull String packageName, @NonNull StringTokenizer tokenizer) {
         super(packageName, STUB, RuleType.NET_POLICY);
         if (tokenizer.hasMoreElements()) {
-            netPolicies = Integer.parseInt(tokenizer.nextElement().toString());
+            mNetPolicies = Integer.parseInt(tokenizer.nextElement().toString());
         } else throw new IllegalArgumentException("Invalid format: netPolicies not found");
     }
 
     @NetworkPolicyManagerCompat.NetPolicy
     public int getPolicies() {
-        return netPolicies;
+        return mNetPolicies;
     }
 
     public void setPolicies(@NetworkPolicyManagerCompat.NetPolicy int netPolicies) {
-        this.netPolicies = netPolicies;
+        mNetPolicies = netPolicies;
     }
 
     @NonNull
@@ -40,14 +40,14 @@ public class NetPolicyRule extends RuleEntry {
     public String toString() {
         return "NetPolicyRule{" +
                 "packageName='" + packageName + '\'' +
-                ", netPolicies=" + netPolicies +
+                ", netPolicies=" + mNetPolicies +
                 '}';
     }
 
     @NonNull
     @Override
     public String flattenToString(boolean isExternal) {
-        return addPackageWithTab(isExternal) + name + "\t" + type.name() + "\t" + netPolicies;
+        return addPackageWithTab(isExternal) + name + "\t" + type.name() + "\t" + mNetPolicies;
     }
 
     @Override
@@ -56,11 +56,11 @@ public class NetPolicyRule extends RuleEntry {
         if (!(o instanceof NetPolicyRule)) return false;
         if (!super.equals(o)) return false;
         NetPolicyRule that = (NetPolicyRule) o;
-        return netPolicies == that.netPolicies;
+        return mNetPolicies == that.mNetPolicies;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), netPolicies);
+        return Objects.hash(super.hashCode(), mNetPolicies);
     }
 }

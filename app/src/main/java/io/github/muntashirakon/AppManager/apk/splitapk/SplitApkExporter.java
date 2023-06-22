@@ -21,8 +21,8 @@ import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.io.IoUtils;
@@ -60,7 +60,7 @@ public final class SplitApkExporter {
         apksMetadata.writeMetadata(zipOutputStream);
         
         // Add icon
-        Bitmap bitmap = UIUtils.getBitmapFromDrawable(applicationInfo.loadIcon(AppManager.getContext().getPackageManager()));
+        Bitmap bitmap = UIUtils.getBitmapFromDrawable(applicationInfo.loadIcon(ContextUtils.getContext().getPackageManager()));
         ByteArrayOutputStream pngOutputStream = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, pngOutputStream);
         addBytes(zipOutputStream, pngOutputStream.toByteArray(), ApksMetadata.ICON_FILE, apksMetadata.exportTimestamp);

@@ -44,25 +44,25 @@ public class KeyPairImporterDialogFragment extends DialogFragment {
     }
 
     @Nullable
-    private OnKeySelectedListener listener;
-    private FragmentActivity activity;
+    private OnKeySelectedListener mListener;
+    private FragmentActivity mActivity;
     @KeyStoreUtils.KeyType
-    private int keyType;
+    private int mKeyType;
     @Nullable
-    private Uri ksOrPemFile;
+    private Uri mKsOrPemFile;
     @Nullable
-    private Uri pk8File;
-    private final BetterActivityResult<String, Uri> importFile = BetterActivityResult
+    private Uri mPk8File;
+    private final BetterActivityResult<String, Uri> mImportFile = BetterActivityResult
             .registerForActivityResult(this, new ActivityResultContracts.GetContent());
 
     public void setOnKeySelectedListener(OnKeySelectedListener listener) {
-        this.listener = listener;
+        mListener = listener;
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        activity = requireActivity();
+        mActivity = requireActivity();
         String targetAlias = requireArguments().getString(EXTRA_ALIAS);
         if (targetAlias == null) {
             return super.onCreateDialog(savedInstanceState);
@@ -80,13 +80,13 @@ public class KeyPairImporterDialogFragment extends DialogFragment {
                 v.performClick();
             }
         });
-        ksLocationOrPem.setOnClickListener(v -> importFile.launch("application/*", result -> {
-            ksOrPemFile = result;
+        ksLocationOrPem.setOnClickListener(v -> mImportFile.launch("application/*", result -> {
+            mKsOrPemFile = result;
             if (result != null) {
                 ksLocationOrPem.setText(result.toString());
             }
         }));
-        keyTypeSpinner.setAdapter(ArrayAdapter.createFromResource(activity, R.array.crypto_import_types,
+        keyTypeSpinner.setAdapter(ArrayAdapter.createFromResource(mActivity, R.array.crypto_import_types,
                 androidx.appcompat.R.layout.support_simple_spinner_dropdown_item));
         keyTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -103,8 +103,8 @@ public class KeyPairImporterDialogFragment extends DialogFragment {
                             v.performClick();
                         }
                     });
-                    ksPassOrPk8.setOnClickListener(v -> importFile.launch("application/*", result -> {
-                        pk8File = result;
+                    ksPassOrPk8.setOnClickListener(v -> mImportFile.launch("application/*", result -> {
+                        mPk8File = result;
                         if (result != null) {
                             ksPassOrPk8.setText(result.toString());
                         }
@@ -114,12 +114,12 @@ public class KeyPairImporterDialogFragment extends DialogFragment {
                     // KeyStore
                     onNothingSelected(parent);
                 }
-                keyType = position;
+                mKeyType = position;
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                keyType = KeyStoreUtils.KeyType.JKS;
+                mKeyType = KeyStoreUtils.KeyType.JKS;
                 // KeyStore
                 ksPassOrPk8Layout.setHint(R.string.keystore_pass);
                 ksPassOrPk8.setKeyListener(keyListener);
@@ -128,7 +128,7 @@ public class KeyPairImporterDialogFragment extends DialogFragment {
                 ksLocationOrPemLayout.setHint(R.string.keystore_file);
             }
         });
-        AlertDialog alertDialog = new MaterialAlertDialogBuilder(activity)
+        AlertDialog alertDialog = new MaterialAlertDialogBuilder(mActivity)
                 .setTitle(R.string.import_key)
                 .setView(view)
                 .setPositiveButton(R.string.ok, null)
@@ -138,18 +138,18 @@ public class KeyPairImporterDialogFragment extends DialogFragment {
             AlertDialog dialog1 = (AlertDialog) dialog;
             Button okButton = dialog1.getButton(AlertDialog.BUTTON_POSITIVE);
             okButton.setOnClickListener(v -> {
-                if (listener == null) return;
-                if (keyType == KeyStoreUtils.KeyType.PK8) {
+                if (mListener == null) return;
+                if (mKeyType == KeyStoreUtils.KeyType.PK8) {
                     // PKCS #8 and PEM
                     try {
-                        if (pk8File == null || ksOrPemFile == null) {
+                        if (mPk8File == null || mKsOrPemFile == null) {
                             throw new Exception("PK8 or PEM can't be null.");
                         }
-                        KeyPair keyPair = KeyStoreUtils.getKeyPair(activity, pk8File, ksOrPemFile);
-                        listener.onKeySelected(keyPair);
+                        KeyPair keyPair = KeyStoreUtils.getKeyPair(mActivity, mPk8File, mKsOrPemFile);
+                        mListener.onKeySelected(keyPair);
                     } catch (Exception e) {
                         Log.e(TAG, e);
-                        listener.onKeySelected(null);
+                        mListener.onKeySelected(null);
                     }
                     dialog.dismiss();
                 } else {
@@ -157,20 +157,20 @@ public class KeyPairImporterDialogFragment extends DialogFragment {
                     char[] ksPassword = Utils.getChars(ksPassOrPk8.getText());
                     new Thread(() -> {
                         try {
-                            if (ksOrPemFile == null) {
+                            if (mKsOrPemFile == null) {
                                 throw new Exception("KeyStore file can't be null.");
                             }
-                            ArrayList<String> aliases = KeyStoreUtils.listAliases(activity, ksOrPemFile, keyType,
+                            ArrayList<String> aliases = KeyStoreUtils.listAliases(mActivity, mKsOrPemFile, mKeyType,
                                     ksPassword);
                             if (isDetached()) return;
-                            activity.runOnUiThread(() -> {
+                            mActivity.runOnUiThread(() -> {
                                 if (aliases.size() == 0) {
                                     UIUtils.displayLongToast(R.string.found_no_alias_in_keystore);
                                     dialog.dismiss();
                                     return;
                                 }
                                 TextInputDropdownDialogBuilder builder;
-                                builder = new TextInputDropdownDialogBuilder(activity, R.string.choose_an_alias)
+                                builder = new TextInputDropdownDialogBuilder(mActivity, R.string.choose_an_alias)
                                         .setDropdownItems(aliases, -1, true)
                                         .setAuxiliaryInputLabel(R.string.alias_pass)
                                         .setTitle(R.string.choose_an_alias)
@@ -181,21 +181,21 @@ public class KeyPairImporterDialogFragment extends DialogFragment {
                                     char[] aliasPassword = Utils.getChars(builder.getAuxiliaryInput());
                                     new Thread(() -> {
                                         try {
-                                            KeyPair keyPair = KeyStoreUtils.getKeyPair(activity, ksOrPemFile, keyType,
+                                            KeyPair keyPair = KeyStoreUtils.getKeyPair(mActivity, mKsOrPemFile, mKeyType,
                                                     aliasName, ksPassword, aliasPassword);
-                                            listener.onKeySelected(keyPair);
+                                            mListener.onKeySelected(keyPair);
                                         } catch (Exception e) {
                                             Log.e(TAG, e);
-                                            listener.onKeySelected(null);
+                                            mListener.onKeySelected(null);
                                         }
-                                        activity.runOnUiThread(dialog::dismiss);
+                                        mActivity.runOnUiThread(dialog::dismiss);
                                     }).start();
                                 }).show();
                             });
                         } catch (Exception e) {
                             Log.e(TAG, e);
                             if (isDetached()) return;
-                            activity.runOnUiThread(() -> UIUtils.displayLongToast(R.string.failed_to_read_keystore));
+                            mActivity.runOnUiThread(() -> UIUtils.displayLongToast(R.string.failed_to_read_keystore));
                         }
                     }).start();
                 }

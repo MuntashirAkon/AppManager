@@ -41,30 +41,30 @@ import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 
 public class InstallerPreferences extends PreferenceFragment {
-    private static final Integer[] installLocations = new Integer[] {
+    private static final Integer[] INSTALL_LOCATIONS = new Integer[] {
             PackageInfo.INSTALL_LOCATION_AUTO,
             PackageInfo.INSTALL_LOCATION_INTERNAL_ONLY,
             PackageInfo.INSTALL_LOCATION_PREFER_EXTERNAL
     };
-    private static final int[] installLocationNames = new int[]{
+    private static final int[] INSTALL_LOCATION_NAMES = new int[]{
             R.string.auto,  // PackageInfo.INSTALL_LOCATION_AUTO
             R.string.install_location_internal_only,  // PackageInfo.INSTALL_LOCATION_INTERNAL_ONLY
             R.string.install_location_prefer_external,  // PackageInfo.INSTALL_LOCATION_PREFER_EXTERNAL
     };
 
-    private SettingsActivity activity;
-    private PackageManager pm;
-    private String installerApp;
-    private Preference installerAppPref;
-    private MainPreferencesViewModel model;
+    private SettingsActivity mActivity;
+    private PackageManager mPm;
+    private String mInstallerApp;
+    private Preference mInstallerAppPref;
+    private MainPreferencesViewModel mModel;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences_installer, rootKey);
         getPreferenceManager().setPreferenceDataStore(new SettingsDataStore());
-        model = new ViewModelProvider(requireActivity()).get(MainPreferencesViewModel.class);
-        activity = (SettingsActivity) requireActivity();
-        pm = activity.getPackageManager();
+        mModel = new ViewModelProvider(requireActivity()).get(MainPreferencesViewModel.class);
+        mActivity = (SettingsActivity) requireActivity();
+        mPm = mActivity.getPackageManager();
         // Display users in installer
         boolean canInstallForOtherUsers = SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.INTERACT_ACROSS_USERS_FULL);
         SwitchPreferenceCompat usersInInstallerPref = Objects.requireNonNull(findPreference("installer_display_users"));
@@ -72,53 +72,53 @@ public class InstallerPreferences extends PreferenceFragment {
         usersInInstallerPref.setChecked(canInstallForOtherUsers && Prefs.Installer.displayUsers());
         // Set installation locations
         Preference installLocationPref = Objects.requireNonNull(findPreference("installer_install_location"));
-        installLocationPref.setSummary(installLocationNames[Prefs.Installer.getInstallLocation()]);
+        installLocationPref.setSummary(INSTALL_LOCATION_NAMES[Prefs.Installer.getInstallLocation()]);
         installLocationPref.setOnPreferenceClickListener(preference -> {
-            CharSequence[] installLocationTexts = new CharSequence[installLocationNames.length];
-            for (int i = 0; i < installLocationNames.length; ++i) {
-                installLocationTexts[i] = getString(installLocationNames[i]);
+            CharSequence[] installLocationTexts = new CharSequence[INSTALL_LOCATION_NAMES.length];
+            for (int i = 0; i < INSTALL_LOCATION_NAMES.length; ++i) {
+                installLocationTexts[i] = getString(INSTALL_LOCATION_NAMES[i]);
             }
             int defaultChoice = Prefs.Installer.getInstallLocation();
-            new SearchableSingleChoiceDialogBuilder<>(requireActivity(), installLocations, installLocationTexts)
+            new SearchableSingleChoiceDialogBuilder<>(requireActivity(), INSTALL_LOCATIONS, installLocationTexts)
                     .setTitle(R.string.install_location)
                     .setSelection(defaultChoice)
                     .setPositiveButton(R.string.save, (dialog, which, newInstallLocation) -> {
                         Objects.requireNonNull(newInstallLocation);
                         Prefs.Installer.setInstallLocation(newInstallLocation);
-                        installLocationPref.setSummary(installLocationNames[newInstallLocation]);
+                        installLocationPref.setSummary(INSTALL_LOCATION_NAMES[newInstallLocation]);
                     })
                     .setNegativeButton(R.string.cancel, null)
                     .show();
             return true;
         });
         // Set installer app
-        installerAppPref = Objects.requireNonNull(findPreference("installer_installer_app"));
-        installerAppPref.setEnabled(SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.INSTALL_PACKAGES));
-        installerApp = Prefs.Installer.getInstallerPackageName();
-        installerAppPref.setSummary(PackageUtils.getPackageLabel(pm, installerApp));
-        installerAppPref.setOnPreferenceClickListener(preference -> {
+        mInstallerAppPref = Objects.requireNonNull(findPreference("installer_installer_app"));
+        mInstallerAppPref.setEnabled(SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.INSTALL_PACKAGES));
+        mInstallerApp = Prefs.Installer.getInstallerPackageName();
+        mInstallerAppPref.setSummary(PackageUtils.getPackageLabel(mPm, mInstallerApp));
+        mInstallerAppPref.setOnPreferenceClickListener(preference -> {
             new MaterialAlertDialogBuilder(requireActivity())
                     .setTitle(R.string.installer_app)
                     .setMessage(R.string.installer_app_message)
                     .setPositiveButton(R.string.choose, (dialog1, which1) -> {
-                        activity.progressIndicator.show();
-                        model.loadPackageNameLabelPair();
+                        mActivity.progressIndicator.show();
+                        mModel.loadPackageNameLabelPair();
                     })
                     .setNegativeButton(R.string.specify_custom_name, (dialog, which) ->
                             new TextInputDialogBuilder(requireActivity(), R.string.installer_app)
                                     .setTitle(R.string.installer_app)
-                                    .setInputText(installerApp)
+                                    .setInputText(mInstallerApp)
                                     .setPositiveButton(R.string.ok, (dialog1, which1, inputText, isChecked) -> {
                                         if (inputText == null) return;
-                                        installerApp = inputText.toString().trim();
-                                        Prefs.Installer.setInstallerPackageName(installerApp);
-                                        installerAppPref.setSummary(PackageUtils.getPackageLabel(pm, installerApp));
+                                        mInstallerApp = inputText.toString().trim();
+                                        Prefs.Installer.setInstallerPackageName(mInstallerApp);
+                                        mInstallerAppPref.setSummary(PackageUtils.getPackageLabel(mPm, mInstallerApp));
                                     })
                                     .setNegativeButton(R.string.cancel, null)
                                     .show())
                     .setNeutralButton(R.string.reset_to_default, (dialog, which) -> {
-                        Prefs.Installer.setInstallerPackageName(installerApp = BuildConfig.APPLICATION_ID);
-                        installerAppPref.setSummary(PackageUtils.getPackageLabel(pm, installerApp));
+                        Prefs.Installer.setInstallerPackageName(mInstallerApp = BuildConfig.APPLICATION_ID);
+                        mInstallerAppPref.setSummary(PackageUtils.getPackageLabel(mPm, mInstallerApp));
                     })
                     .show();
             return true;
@@ -164,7 +164,7 @@ public class InstallerPreferences extends PreferenceFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // Observe installer app selection
-        model.getPackageNameLabelPairLiveData().observe(getViewLifecycleOwner(), this::displayInstallerAppSelectionDialog);
+        mModel.getPackageNameLabelPairLiveData().observe(getViewLifecycleOwner(), this::displayInstallerAppSelectionDialog);
     }
 
     @Override
@@ -188,15 +188,15 @@ public class InstallerPreferences extends PreferenceFragment {
                     .append("\n")
                     .append(getSecondaryText(requireContext(), getSmallerText(pair.first))));
         }
-        activity.progressIndicator.hide();
+        mActivity.progressIndicator.hide();
         new SearchableSingleChoiceDialogBuilder<>(requireActivity(), items, itemNames)
                 .setTitle(R.string.installer_app)
-                .setSelection(installerApp)
+                .setSelection(mInstallerApp)
                 .setPositiveButton(R.string.save, (dialog, which, selectedInstallerApp) -> {
                     if (selectedInstallerApp != null) {
-                        installerApp = selectedInstallerApp;
-                        Prefs.Installer.setInstallerPackageName(installerApp);
-                        installerAppPref.setSummary(PackageUtils.getPackageLabel(pm, installerApp));
+                        mInstallerApp = selectedInstallerApp;
+                        Prefs.Installer.setInstallerPackageName(mInstallerApp);
+                        mInstallerAppPref.setSummary(PackageUtils.getPackageLabel(mPm, mInstallerApp));
                     }
                 })
                 .setNegativeButton(R.string.cancel, null)

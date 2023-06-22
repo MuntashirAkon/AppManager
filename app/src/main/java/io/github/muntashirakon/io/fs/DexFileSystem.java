@@ -53,11 +53,11 @@ public class DexFileSystem extends VirtualFileSystem {
         }
     }
 
-    private final LruCache<String, Node<ClassDef>> cache = new LruCache<>(100);
+    private final LruCache<String, Node<ClassDef>> mCache = new LruCache<>(100);
     @Nullable
-    private DexClasses dexClasses;
+    private DexClasses mDexClasses;
     @Nullable
-    private Node<ClassDef> rootNode;
+    private Node<ClassDef> mRootNode;
 
     protected DexFileSystem(@NonNull Path dexPath) {
         super(dexPath);
@@ -76,36 +76,36 @@ public class DexFileSystem extends VirtualFileSystem {
     @NonNull
     public final DexClasses getDexClasses() {
         checkMounted();
-        return Objects.requireNonNull(dexClasses);
+        return Objects.requireNonNull(mDexClasses);
     }
 
     @Override
     protected Path onMount() throws IOException {
         if (".dex".equals(getFile().getExtension())) {
             try (InputStream is = getFile().openInputStream()) {
-                dexClasses = new DexClasses(is, getApiLevel());
+                mDexClasses = new DexClasses(is, getApiLevel());
             }
         } else { // APK/Zip file, may need caching
             ExtendedFile file = getFile().getFile();
             if (file != null) {
-                dexClasses = new DexClasses(file, getApiLevel());
+                mDexClasses = new DexClasses(file, getApiLevel());
             } else {
                 File cachedFile = FileCache.getGlobalFileCache().getCachedFile(getFile());
-                dexClasses = new DexClasses(cachedFile, getApiLevel());
+                mDexClasses = new DexClasses(cachedFile, getApiLevel());
             }
         }
-        rootNode = buildTree(Objects.requireNonNull(dexClasses));
+        mRootNode = buildTree(Objects.requireNonNull(mDexClasses));
         return Paths.get(this);
     }
 
     @Override
     protected File onUnmount(@NonNull Map<String, List<Action>> actions) throws IOException {
         File cachedFile = getUpdatedDexFile(actions);
-        if (dexClasses != null) {
-            dexClasses.close();
+        if (mDexClasses != null) {
+            mDexClasses.close();
         }
-        rootNode = null;
-        cache.evictAll();
+        mRootNode = null;
+        mCache.evictAll();
         return cachedFile;
     }
 
@@ -117,7 +117,7 @@ public class DexFileSystem extends VirtualFileSystem {
         String extension = getFile().getExtension();
         File file = FileCache.getGlobalFileCache().createCachedFile(extension);
         Map<String, ClassInfo> classInfoMap = new HashMap<>();
-        for (String className : Objects.requireNonNull(dexClasses).getClassNames()) {
+        for (String className : Objects.requireNonNull(mDexClasses).getClassNames()) {
             classInfoMap.put(File.separator + className, new ClassInfo(null, true));
         }
         for (String path : actionList.keySet()) {
@@ -180,7 +180,7 @@ public class DexFileSystem extends VirtualFileSystem {
             }
             if (classInfo.physical) {
                 try {
-                    classDefList.add(dexClasses.getClassDef(className));
+                    classDefList.add(mDexClasses.getClassDef(className));
                 } catch (ClassNotFoundException e) {
                     throw new IOException(e);
                 }
@@ -195,15 +195,15 @@ public class DexFileSystem extends VirtualFileSystem {
     @Override
     protected Node<?> getNode(String path) {
         checkMounted();
-        Node<ClassDef> targetNode = cache.get(path);
+        Node<ClassDef> targetNode = mCache.get(path);
         if (targetNode == null) {
             if (path.equals(File.separator)) {
-                targetNode = rootNode;
+                targetNode = mRootNode;
             } else {
-                targetNode = Objects.requireNonNull(rootNode).getLastChild(Paths.getSanitizedPath(path, true));
+                targetNode = Objects.requireNonNull(mRootNode).getLastChild(Paths.getSanitizedPath(path, true));
             }
             if (targetNode != null) {
-                cache.put(path, targetNode);
+                mCache.put(path, targetNode);
             }
         }
         return targetNode;
@@ -211,7 +211,7 @@ public class DexFileSystem extends VirtualFileSystem {
 
     @Override
     protected void invalidate(String path) {
-        cache.remove(path);
+        mCache.remove(path);
     }
 
     @Override
@@ -232,7 +232,7 @@ public class DexFileSystem extends VirtualFileSystem {
             return -1;
         }
         try {
-            return Objects.requireNonNull(dexClasses)
+            return Objects.requireNonNull(mDexClasses)
                     .getClassContents((ClassDef) targetNode.getObject())
                     .getBytes(StandardCharsets.UTF_8)
                     .length;

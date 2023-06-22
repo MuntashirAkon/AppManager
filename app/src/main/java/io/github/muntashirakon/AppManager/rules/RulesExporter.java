@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 
@@ -29,21 +28,22 @@ public class RulesExporter {
     @NonNull
     private final List<RuleType> mTypesToExport;
     @NonNull
-    private final int[] userHandles;
+    private final int[] mUserIds;
 
-    public RulesExporter(@NonNull List<RuleType> typesToExport, @Nullable List<String> packagesToExport, @NonNull int[] userHandles) {
-        mContext = AppManager.getContext();
+    public RulesExporter(@NonNull Context context, @NonNull List<RuleType> typesToExport,
+                         @Nullable List<String> packagesToExport, @NonNull int[] userIds) {
+        mContext = context;
         mPackagesToExport = packagesToExport;
         mTypesToExport = typesToExport;
-        this.userHandles = userHandles;
+        mUserIds = userIds;
     }
 
     public void saveRules(Uri uri) throws IOException {
-        if (mPackagesToExport == null) mPackagesToExport = ComponentUtils.getAllPackagesWithRules();
+        if (mPackagesToExport == null) mPackagesToExport = ComponentUtils.getAllPackagesWithRules(mContext);
         try (OutputStream outputStream = mContext.getContentResolver().openOutputStream(uri)) {
             if (outputStream == null) throw new IOException("Content provider has crashed.");
             for (String packageName: mPackagesToExport) {
-                for (int userHandle : userHandles) {
+                for (int userHandle : mUserIds) {
                     // Get a read-only instance
                     try (ComponentsBlocker cb = ComponentsBlocker.getInstance(packageName, userHandle)) {
                         ComponentUtils.storeRules(outputStream, cb.getAll(mTypesToExport), true);

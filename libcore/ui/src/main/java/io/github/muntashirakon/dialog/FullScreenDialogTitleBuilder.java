@@ -20,132 +20,132 @@ import io.github.muntashirakon.ui.R;
 @SuppressWarnings("UnusedReturnValue")
 public class FullScreenDialogTitleBuilder {
     @NonNull
-    private final Context context;
+    private final Context mContext;
     @StringRes
-    private int titleRes;
+    private int mTitleRes;
     @Nullable
-    private CharSequence title;
+    private CharSequence mTitle;
     @Nullable
-    private DialogInterface.OnClickListener onCloseButtonClickListener;
-    private int closeIconDescriptionRes = android.R.string.cancel;
+    private DialogInterface.OnClickListener mOnCloseButtonClickListener;
+    private int mCloseIconDescriptionRes = android.R.string.cancel;
     @Nullable
-    private CharSequence closeIconDescription;
+    private CharSequence mCloseIconDescription;
     @Nullable
-    private Drawable closeButtonIcon;
+    private Drawable mCloseButtonIcon;
     @Nullable
-    private Drawable positiveButtonIcon;
+    private Drawable mPositiveButtonIcon;
     @StringRes
-    private int positiveButtonTextRes;
+    private int mPositiveButtonTextRes;
     @Nullable
-    private CharSequence positiveButtonText;
-    private DialogInterface.OnClickListener onPositiveButtonClickListener;
-    private boolean exitOnButtonPress = true;
+    private CharSequence mPositiveButtonText;
+    private DialogInterface.OnClickListener mOnPositiveButtonClickListener;
+    private boolean mExitOnButtonPress = true;
 
     public FullScreenDialogTitleBuilder(@NonNull Context context) {
-        this.context = context;
+        mContext = context;
     }
 
     public FullScreenDialogTitleBuilder setTitle(@Nullable CharSequence title) {
-        this.title = title;
+        mTitle = title;
         return this;
     }
 
     public FullScreenDialogTitleBuilder setTitle(@StringRes int titleId) {
-        this.titleRes = titleId;
+        mTitleRes = titleId;
         return this;
     }
 
     public FullScreenDialogTitleBuilder setExitOnButtonPress(boolean exitOnButtonPress) {
-        this.exitOnButtonPress = exitOnButtonPress;
+        mExitOnButtonPress = exitOnButtonPress;
         return this;
     }
 
     public FullScreenDialogTitleBuilder setCloseButtonIcon(@Nullable Drawable closeButtonIcon) {
-        this.closeButtonIcon = closeButtonIcon;
+        mCloseButtonIcon = closeButtonIcon;
         return this;
     }
 
     public FullScreenDialogTitleBuilder setOnCloseButtonClickListener(@Nullable DialogInterface.OnClickListener listener) {
-        this.onCloseButtonClickListener = listener;
+        mOnCloseButtonClickListener = listener;
         return this;
     }
 
     public FullScreenDialogTitleBuilder setCloseIconContentDescription(@Nullable CharSequence closeIconDescription) {
-        this.closeIconDescription = closeIconDescription;
+        mCloseIconDescription = closeIconDescription;
         return this;
     }
 
     public FullScreenDialogTitleBuilder setCloseIconContentDescription(@StringRes int strRes) {
-        this.closeIconDescriptionRes = strRes;
+        mCloseIconDescriptionRes = strRes;
         return this;
     }
 
     public FullScreenDialogTitleBuilder setPositiveButtonIcon(Drawable positiveButtonIcon) {
-        this.positiveButtonIcon = positiveButtonIcon;
+        mPositiveButtonIcon = positiveButtonIcon;
         return this;
     }
 
     public FullScreenDialogTitleBuilder setPositiveButtonText(@Nullable CharSequence text) {
-        this.positiveButtonText = text;
+        mPositiveButtonText = text;
         return this;
     }
 
     public FullScreenDialogTitleBuilder setPositiveButtonText(@StringRes int textId) {
-        this.positiveButtonTextRes = textId;
+        mPositiveButtonTextRes = textId;
         return this;
     }
 
     public FullScreenDialogTitleBuilder setOnPositiveButtonClickListener(DialogInterface.OnClickListener listener) {
-        this.onPositiveButtonClickListener = listener;
+        mOnPositiveButtonClickListener = listener;
         return this;
     }
 
     public View build(DialogInterface dialog) {
-        View v = View.inflate(context, R.layout.dialog_title_toolbar, null);
+        View v = View.inflate(mContext, R.layout.dialog_title_toolbar, null);
         MaterialToolbar toolbar = v.findViewById(R.id.toolbar);
-        if (title != null) toolbar.setTitle(title);
-        else if (titleRes != 0) toolbar.setTitle(titleRes);
-        if (closeButtonIcon != null) {
-            toolbar.setNavigationIcon(closeButtonIcon);
+        if (mTitle != null) toolbar.setTitle(mTitle);
+        else if (mTitleRes != 0) toolbar.setTitle(mTitleRes);
+        if (mCloseButtonIcon != null) {
+            toolbar.setNavigationIcon(mCloseButtonIcon);
         }
         // TODO: 28/1/22 Use Handler instead of lamda functions
-        if (onCloseButtonClickListener != null) {
+        if (mOnCloseButtonClickListener != null) {
             toolbar.setNavigationOnClickListener(v1 -> {
-                onCloseButtonClickListener.onClick(dialog, AlertDialog.BUTTON_NEGATIVE);
-                if (exitOnButtonPress) dialog.dismiss();
+                mOnCloseButtonClickListener.onClick(dialog, AlertDialog.BUTTON_NEGATIVE);
+                if (mExitOnButtonPress) dialog.dismiss();
             });
         } else {
             toolbar.setNavigationOnClickListener(v1 -> dialog.dismiss());
         }
-        if (closeIconDescription != null) {
-            toolbar.setNavigationContentDescription(closeIconDescription);
+        if (mCloseIconDescription != null) {
+            toolbar.setNavigationContentDescription(mCloseIconDescription);
         } else {
-            toolbar.setNavigationContentDescription(closeIconDescriptionRes);
+            toolbar.setNavigationContentDescription(mCloseIconDescriptionRes);
         }
         MaterialButton positiveButton = v.findViewById(android.R.id.button1);
-        if (onPositiveButtonClickListener != null) {
+        if (mOnPositiveButtonClickListener != null) {
             positiveButton.setOnClickListener(v1 -> {
-                onPositiveButtonClickListener.onClick(dialog, AlertDialog.BUTTON_POSITIVE);
-                if (exitOnButtonPress) dialog.dismiss();
+                mOnPositiveButtonClickListener.onClick(dialog, AlertDialog.BUTTON_POSITIVE);
+                if (mExitOnButtonPress) dialog.dismiss();
             });
         } else {
             positiveButton.setOnClickListener(v1 -> dialog.dismiss());
         }
-        if (positiveButtonIcon != null) {
+        if (mPositiveButtonIcon != null) {
             // Set icon only, remove text
-            positiveButton.setIcon(positiveButtonIcon);
+            positiveButton.setIcon(mPositiveButtonIcon);
             positiveButton.setIconPadding(0);
             positiveButton.setIconGravity(MaterialButton.ICON_GRAVITY_TEXT_TOP);
             positiveButton.setText(null);
-            if (positiveButtonText != null) {
-                positiveButton.setContentDescription(positiveButtonText);
-            } else if (positiveButtonTextRes != 0) {
-                positiveButton.setContentDescription(context.getString(positiveButtonTextRes));
+            if (mPositiveButtonText != null) {
+                positiveButton.setContentDescription(mPositiveButtonText);
+            } else if (mPositiveButtonTextRes != 0) {
+                positiveButton.setContentDescription(mContext.getString(mPositiveButtonTextRes));
             }
-        } else if (positiveButtonText != null) {
-            positiveButton.setText(positiveButtonText);
-        } else if (positiveButtonTextRes != 0) {
-            positiveButton.setText(positiveButtonTextRes);
+        } else if (mPositiveButtonText != null) {
+            positiveButton.setText(mPositiveButtonText);
+        } else if (mPositiveButtonTextRes != 0) {
+            positiveButton.setText(mPositiveButtonTextRes);
         } else positiveButton.setVisibility(View.GONE);
         return v;
     }

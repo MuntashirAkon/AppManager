@@ -45,18 +45,18 @@ public class AdvancedPreferences extends PreferenceFragment {
             "%datetime%"
     };
 
-    private int threadCount;
-    private MainPreferencesViewModel model;
+    private int mThreadCount;
+    private MainPreferencesViewModel mModel;
 
     @Override
     public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
         setPreferencesFromResource(R.xml.preferences_advanced, rootKey);
         getPreferenceManager().setPreferenceDataStore(new SettingsDataStore());
-        model = new ViewModelProvider(requireActivity()).get(MainPreferencesViewModel.class);
+        mModel = new ViewModelProvider(requireActivity()).get(MainPreferencesViewModel.class);
         // Selected users
         Preference usersPref = Objects.requireNonNull(findPreference("selected_users"));
         usersPref.setOnPreferenceClickListener(preference -> {
-            model.loadAllUsers();
+            mModel.loadAllUsers();
             return true;
         });
         // Saved apk name format
@@ -93,20 +93,20 @@ public class AdvancedPreferences extends PreferenceFragment {
         });
         // Thread count
         Preference threadCountPref = Objects.requireNonNull(findPreference("thread_count"));
-        threadCount = MultithreadedExecutor.getThreadCount();
-        threadCountPref.setSummary(getResources().getQuantityString(R.plurals.pref_thread_count_msg, threadCount, threadCount));
+        mThreadCount = MultithreadedExecutor.getThreadCount();
+        threadCountPref.setSummary(getResources().getQuantityString(R.plurals.pref_thread_count_msg, mThreadCount, mThreadCount));
         threadCountPref.setOnPreferenceClickListener(preference -> {
             new TextInputDialogBuilder(requireActivity(), null)
                     .setTitle(R.string.pref_thread_count)
                     .setHelperText(getString(R.string.pref_thread_count_hint, Utils.getTotalCores()))
-                    .setInputText(String.valueOf(threadCount))
+                    .setInputText(String.valueOf(mThreadCount))
                     .setNegativeButton(R.string.cancel, null)
                     .setPositiveButton(R.string.save, (dialog, which, inputText, isChecked) -> {
                         if (inputText != null && TextUtils.isDigitsOnly(inputText)) {
                             int c = Integer.decode(inputText.toString());
                             MultithreadedExecutor.setThreadCount(c);
-                            threadCount = MultithreadedExecutor.getThreadCount();
-                            threadCountPref.setSummary(getResources().getQuantityString(R.plurals.pref_thread_count_msg, threadCount, threadCount));
+                            mThreadCount = MultithreadedExecutor.getThreadCount();
+                            threadCountPref.setSummary(getResources().getQuantityString(R.plurals.pref_thread_count_msg, mThreadCount, mThreadCount));
                         }
                     })
                     .show();
@@ -131,7 +131,7 @@ public class AdvancedPreferences extends PreferenceFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        model.selectUsers().observe(getViewLifecycleOwner(), users -> {
+        mModel.selectUsers().observe(getViewLifecycleOwner(), users -> {
             if (users == null) return;
             int[] selectedUsers = Prefs.Misc.getSelectedUsers();
             Integer[] userIds = new Integer[users.size()];

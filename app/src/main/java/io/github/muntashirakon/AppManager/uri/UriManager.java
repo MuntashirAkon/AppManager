@@ -40,7 +40,7 @@ public class UriManager {
 
     private final AtomicExtendedFile mGrantFile;
 
-    private final HashMap<String, ArrayList<UriGrant>> uriGrantsHashMap = new HashMap<>();
+    private final HashMap<String, ArrayList<UriGrant>> mUriGrantsHashMap = new HashMap<>();
 
     /**
      * XML constants used in {@link #mGrantFile}
@@ -66,16 +66,16 @@ public class UriManager {
     @Nullable
     public ArrayList<UriGrant> getGrantedUris(String packageName) {
         synchronized (this) {
-            return uriGrantsHashMap.get(packageName);
+            return mUriGrantsHashMap.get(packageName);
         }
     }
 
     public void grantUri(@NonNull UriGrant uriGrant) {
         synchronized (this) {
-            ArrayList<UriGrant> uriGrants = uriGrantsHashMap.get(uriGrant.targetPkg);
+            ArrayList<UriGrant> uriGrants = mUriGrantsHashMap.get(uriGrant.targetPkg);
             if (uriGrants == null) {
                 uriGrants = new ArrayList<>();
-                uriGrantsHashMap.put(uriGrant.targetPkg, uriGrants);
+                mUriGrantsHashMap.put(uriGrant.targetPkg, uriGrants);
             }
             uriGrants.add(uriGrant);
         }
@@ -86,7 +86,7 @@ public class UriManager {
         // Snapshot permissions so we can persist without lock
         List<UriGrant> persist = new ArrayList<>();
         synchronized (this) {
-            for (List<UriGrant> uriGrants : uriGrantsHashMap.values()) {
+            for (List<UriGrant> uriGrants : mUriGrantsHashMap.values()) {
                 persist.addAll(uriGrants);
             }
         }
@@ -155,10 +155,10 @@ public class UriManager {
                         UriGrant uriGrant = new UriGrant(sourceUserId, targetUserId, userHandle,
                                 sourcePkg, targetPkg, uri, prefix, modeFlags, createdTime);
                         synchronized (this) {
-                            ArrayList<UriGrant> uriGrants = uriGrantsHashMap.get(targetPkg);
+                            ArrayList<UriGrant> uriGrants = mUriGrantsHashMap.get(targetPkg);
                             if (uriGrants == null) {
                                 uriGrants = new ArrayList<>();
-                                uriGrantsHashMap.put(targetPkg, uriGrants);
+                                mUriGrantsHashMap.put(targetPkg, uriGrants);
                             }
                             uriGrants.add(uriGrant);
                         }

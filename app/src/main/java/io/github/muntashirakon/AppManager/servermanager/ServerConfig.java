@@ -15,12 +15,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.Inet4Address;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.misc.NoOps;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 
 // Copyright 2016 Zheng Li
@@ -33,9 +32,9 @@ public final class ServerConfig {
     static final String JAR_NAME = "am.jar";
     static final String EXECUTABLE_FILE_NAME = "run_server.sh";
 
-    private static File destJarFile;
-    private static File destExecFile;
-    private static final SharedPreferences sPreferences = AppManager.getContext()
+    private static File sDestJarFile;
+    private static File sDestExecFile;
+    private static final SharedPreferences sPreferences = ContextUtils.getContext()
             .getSharedPreferences("server_config", Context.MODE_PRIVATE);
     private static volatile boolean sInitialised = false;
 
@@ -47,8 +46,8 @@ public final class ServerConfig {
         }
 
         File externalStorage = FileUtils.getExternalCachePath(context);
-        destJarFile = new File(externalStorage, JAR_NAME);
-        destExecFile = new File(externalStorage, EXECUTABLE_FILE_NAME);
+        sDestJarFile = new File(externalStorage, JAR_NAME);
+        sDestExecFile = new File(externalStorage, EXECUTABLE_FILE_NAME);
 
         if (userHandle != 0) {
             SOCKET_PATH += userHandle;
@@ -61,19 +60,19 @@ public final class ServerConfig {
     @AnyThread
     @NonNull
     public static File getDestJarFile() {
-        return destJarFile;
+        return sDestJarFile;
     }
 
     @AnyThread
     @NonNull
     static String getClassPath() {
-        return destJarFile.getAbsolutePath();
+        return sDestJarFile.getAbsolutePath();
     }
 
     @AnyThread
     @NonNull
     public static File getExecPath() {
-        return destExecFile;
+        return sDestExecFile;
     }
 
     /**

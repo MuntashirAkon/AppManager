@@ -11,24 +11,24 @@ public class TipsPrefs {
     private static final int TIPS_TAB_USES_PERMISSIONS = 1 << 1;
     private static final int TIPS_TAB_PERMISSIONS = 1 << 2;
 
-    private static TipsPrefs instance;
+    private static TipsPrefs sInstance;
 
     @NonNull
     public static TipsPrefs getInstance() {
-        if (instance != null) {
-            return instance;
+        if (sInstance != null) {
+            return sInstance;
         }
-        return instance = new TipsPrefs();
+        return sInstance = new TipsPrefs();
     }
 
-    private int flags;
+    private int mFlags;
 
     private TipsPrefs() {
-        this.flags = AppPref.getInt(AppPref.PrefKey.PREF_TIPS_PREFS_INT);
+        mFlags = AppPref.getInt(AppPref.PrefKey.PREF_TIPS_PREFS_INT);
     }
 
     public boolean displayInAppOpsTab() {
-        return (flags & TIPS_TAB_APP_OPS) != 0;
+        return (mFlags & TIPS_TAB_APP_OPS) != 0;
     }
 
     public void setDisplayInAppOpsTab(boolean display) {
@@ -36,7 +36,7 @@ public class TipsPrefs {
     }
 
     public boolean displayInUsesPermissionsTab() {
-        return (flags & TIPS_TAB_USES_PERMISSIONS) != 0;
+        return (mFlags & TIPS_TAB_USES_PERMISSIONS) != 0;
     }
 
     public void setDisplayInUsesPermissionsTab(boolean display) {
@@ -44,7 +44,7 @@ public class TipsPrefs {
     }
 
     public boolean displayInPermissionsTab() {
-        return (flags & TIPS_TAB_PERMISSIONS) != 0;
+        return (mFlags & TIPS_TAB_PERMISSIONS) != 0;
     }
 
     public void setDisplayInPermissionsTab(boolean display) {
@@ -52,8 +52,8 @@ public class TipsPrefs {
     }
 
     private void save(int flag, boolean display) {
-        if (display) flags |= flag;
-        else flags &= ~flag;
-        AppPref.set(AppPref.PrefKey.PREF_TIPS_PREFS_INT, flags);
+        if (display) mFlags |= flag;
+        else mFlags &= ~flag;
+        AppPref.set(AppPref.PrefKey.PREF_TIPS_PREFS_INT, mFlags);
     }
 }

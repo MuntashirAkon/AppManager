@@ -27,7 +27,7 @@ import io.github.muntashirakon.io.Paths;
 public class MagiskUtils {
     // FIXME(20/9/20): This isn't always true, see check_data in util_functions.sh
     public static final String NVBASE = "/data/adb";
-    private static boolean bootMode = false;
+    private static boolean sBootMode = false;
 
     public static final String ISOLATED_MAGIC = "isolated";
 
@@ -45,19 +45,19 @@ public class MagiskUtils {
 
     @NonNull
     public static Path getModDir() {
-        return Paths.get(NVBASE + "/modules" + (bootMode ? "_update" : ""));
+        return Paths.get(NVBASE + "/modules" + (sBootMode ? "_update" : ""));
     }
 
     public static void setBootMode(boolean bootMode) {
-        MagiskUtils.bootMode = bootMode;
+        MagiskUtils.sBootMode = bootMode;
     }
 
-    private static List<String> systemlessPaths;
+    private static List<String> sSystemlessPaths;
 
     @NonNull
     private static List<String> getSystemlessPaths() {
-        if (systemlessPaths == null) {
-            systemlessPaths = new ArrayList<>();
+        if (sSystemlessPaths == null) {
+            sSystemlessPaths = new ArrayList<>();
             Path modDir = getModDir();
             if (!modDir.canRead()) {
                 // No permission or no-magisk
@@ -73,13 +73,13 @@ public class MagiskUtils {
                     Path[] paths = Objects.requireNonNull(Paths.build(file, sysPath)).listFiles(Path::isDirectory);
                     for (Path path : paths) {
                         if (hasApkFile(path)) {
-                            systemlessPaths.add(sysPath + "/" + path.getName());
+                            sSystemlessPaths.add(sysPath + "/" + path.getName());
                         }
                     }
                 }
             }
         }
-        return systemlessPaths;
+        return sSystemlessPaths;
     }
 
     public static boolean isSystemlessPath(@NonNull String path) {

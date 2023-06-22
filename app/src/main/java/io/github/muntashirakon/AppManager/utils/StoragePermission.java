@@ -27,15 +27,15 @@ public class StoragePermission {
         void onResult(boolean granted);
     }
 
-    private BetterActivityResult<String, Boolean> storagePerm;
+    private BetterActivityResult<String, Boolean> mStoragePerm;
     @RequiresApi(api = Build.VERSION_CODES.R)
-    private BetterActivityResult<Intent, ActivityResult> storagePermApi30;
+    private BetterActivityResult<Intent, ActivityResult> mStoragePermApi30;
 
     private StoragePermission(@NonNull ActivityResultCaller caller) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            storagePermApi30 = BetterActivityResult.registerForActivityResult(caller, new ActivityResultContracts.StartActivityForResult());
+            mStoragePermApi30 = BetterActivityResult.registerForActivityResult(caller, new ActivityResultContracts.StartActivityForResult());
         } else {
-            storagePerm = BetterActivityResult.registerForActivityResult(caller, new ActivityResultContracts.RequestPermission());
+            mStoragePerm = BetterActivityResult.registerForActivityResult(caller, new ActivityResultContracts.RequestPermission());
         }
     }
 
@@ -46,13 +46,13 @@ public class StoragePermission {
             return;
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            storagePermApi30.launch(new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION), result -> {
+            mStoragePermApi30.launch(new Intent(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION), result -> {
                 if (callback != null) {
                     callback.onResult(Environment.isExternalStorageManager());
                 }
             });
         } else {
-            storagePerm.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE, result -> {
+            mStoragePerm.launch(Manifest.permission.WRITE_EXTERNAL_STORAGE, result -> {
                 if (callback != null) {
                     callback.onResult(SelfPermissions.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE));
                 }

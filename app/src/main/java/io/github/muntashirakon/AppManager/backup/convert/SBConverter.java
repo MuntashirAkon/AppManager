@@ -47,7 +47,6 @@ import java.util.Objects;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.backup.BackupException;
 import io.github.muntashirakon.AppManager.backup.BackupFiles;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
@@ -93,7 +92,7 @@ public class SBConverter extends Converter {
         mPackageName = Paths.trimPathExtension(xmlFile.getName());
         mBackupTime = xmlFile.lastModified();
         mUserId = UserHandleHidden.myUserId();
-        mPm = AppManager.getContext().getPackageManager();
+        mPm = ContextUtils.getContext().getPackageManager();
         mFilesToBeDeleted.add(xmlFile);
     }
 

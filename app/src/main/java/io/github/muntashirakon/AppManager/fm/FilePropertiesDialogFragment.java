@@ -91,7 +91,7 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
         iconView.setImageResource(path.isDirectory() ? R.drawable.ic_folder : R.drawable.ic_file_document);
         symbolicLinkiconView.setVisibility(path.isSymbolicLink() ? View.VISIBLE : View.GONE);
         nameView.setText(path.getName());
-        String modificationDate = DateUtils.formatDateTime(path.lastModified());
+        String modificationDate = DateUtils.formatDateTime(requireContext(), path.lastModified());
         pathView.setText(FmUtils.getDisplayablePath(path));
         String realFile = null;
         if (path.isSymbolicLink()) {
@@ -112,8 +112,8 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
         dateAccessedView.setText("--");
         long creationTime = path.creationTime();
         long lastAccessTime = path.lastAccess();
-        dateCreatedView.setText(creationTime > 0 ? DateUtils.formatDateTime(creationTime) : "--");
-        dateAccessedView.setText(lastAccessTime > 0 ? DateUtils.formatDateTime(lastAccessTime) : "--");
+        dateCreatedView.setText(creationTime > 0 ? DateUtils.formatDateTime(requireContext(), creationTime) : "--");
+        dateAccessedView.setText(lastAccessTime > 0 ? DateUtils.formatDateTime(requireContext(), lastAccessTime) : "--");
         int mode = path.getMode();
         modeView.setText(mode != 0 ? getFormattedMode(mode) : "--");
         UidGidPair uidGidPair = path.getUidGid();

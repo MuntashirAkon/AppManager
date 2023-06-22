@@ -19,7 +19,7 @@ import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 
 public class OpenPGPCryptoActivity extends BaseActivity {
-    private final ActivityResultLauncher<IntentSenderRequest> confirmationLauncher = registerForActivityResult(
+    private final ActivityResultLauncher<IntentSenderRequest> mConfirmationLauncher = registerForActivityResult(
             new ActivityResultContracts.StartIntentSenderForResult(), result -> {
                 Intent broadcastIntent = new Intent(OpenPGPCrypto.ACTION_OPEN_PGP_INTERACTION_END);
                 sendBroadcast(broadcastIntent);
@@ -41,6 +41,6 @@ public class OpenPGPCryptoActivity extends BaseActivity {
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         PendingIntent pi = Objects.requireNonNull(IntentCompat.getParcelableExtra(intent, OpenPgpApi.RESULT_INTENT, PendingIntent.class));
-        confirmationLauncher.launch(new IntentSenderRequest.Builder(pi).build());
+        mConfirmationLauncher.launch(new IntentSenderRequest.Builder(pi).build());
     }
 }

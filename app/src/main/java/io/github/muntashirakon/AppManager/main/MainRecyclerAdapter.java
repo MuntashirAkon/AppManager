@@ -66,7 +66,7 @@ import io.github.muntashirakon.widget.MultiSelectionView;
 
 public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecyclerAdapter.ViewHolder>
         implements SectionIndexer {
-    static final String sections = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final String sSections = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
     private final MainActivity mActivity;
     private final PackageManager mPackageManager;
@@ -238,7 +238,7 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
         // Set version name
         holder.version.setText(item.versionName);
         // Set date and (if available,) days between first install and last update
-        String lastUpdateDate = DateUtils.formatDate(item.lastUpdateTime);
+        String lastUpdateDate = DateUtils.formatDate(mActivity, item.lastUpdateTime);
         if (item.firstInstallTime == item.lastUpdateTime) {
             holder.date.setText(lastUpdateDate);
         } else {
@@ -417,7 +417,7 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
             for (int i = 0; i < getItemCount(); i++) {
                 String item = mAdapterList.get(i).label;
                 if (item.length() > 0) {
-                    if (item.charAt(0) == sections.charAt(section))
+                    if (item.charAt(0) == sSections.charAt(section))
                         return i;
                 }
             }
@@ -432,9 +432,9 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
 
     @Override
     public Object[] getSections() {
-        String[] sectionsArr = new String[sections.length()];
-        for (int i = 0; i < sections.length(); i++)
-            sectionsArr[i] = String.valueOf(sections.charAt(i));
+        String[] sectionsArr = new String[sSections.length()];
+        for (int i = 0; i < sSections.length(); i++)
+            sectionsArr[i] = String.valueOf(sSections.charAt(i));
 
         return sectionsArr;
     }

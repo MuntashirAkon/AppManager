@@ -80,14 +80,14 @@ public class ProcFs {
     private static final String TCP_SND = "tcp_snd";
     private static final String TCP_RCV = "tcp_rcv";
 
-    private static ProcFs instance;
+    private static ProcFs sInstance;
 
     @NonNull
     public static ProcFs getInstance() {
-        if (instance == null) {
-            instance = new ProcFs();
+        if (sInstance == null) {
+            sInstance = new ProcFs();
         }
-        return instance;
+        return sInstance;
     }
 
     private final Path procRoot;

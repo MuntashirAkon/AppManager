@@ -72,19 +72,19 @@ public class ComponentRule extends RuleEntry {
 
     @NonNull
     @ComponentStatus
-    private String componentStatus;
+    private String mComponentStatus;
 
     public ComponentRule(@NonNull String packageName, @NonNull String name, RuleType componentType,
                          @NonNull @ComponentStatus String componentStatus) {
         super(packageName, name, componentType);
-        this.componentStatus = componentStatus;
+        mComponentStatus = componentStatus;
     }
 
     public ComponentRule(@NonNull String packageName, @NonNull String name, RuleType componentType,
                          @NonNull StringTokenizer tokenizer) throws IllegalArgumentException {
         super(packageName, name, componentType);
         if (tokenizer.hasMoreElements()) {
-            componentStatus = tokenizer.nextElement().toString();
+            mComponentStatus = tokenizer.nextElement().toString();
         } else throw new IllegalArgumentException("Invalid format: componentStatus not found");
     }
 
@@ -95,37 +95,37 @@ public class ComponentRule extends RuleEntry {
     @NonNull
     @ComponentStatus
     public String getComponentStatus() {
-        return componentStatus;
+        return mComponentStatus;
     }
 
     public boolean toBeRemoved() {
-        return componentStatus.equals(COMPONENT_TO_BE_DEFAULTED);
+        return mComponentStatus.equals(COMPONENT_TO_BE_DEFAULTED);
     }
 
     public boolean isBlocked() {
-        return componentStatus.equals(COMPONENT_BLOCKED_IFW_DISABLE)
-                || componentStatus.equals(COMPONENT_BLOCKED_IFW)
-                || componentStatus.equals(COMPONENT_DISABLED);
+        return mComponentStatus.equals(COMPONENT_BLOCKED_IFW_DISABLE)
+                || mComponentStatus.equals(COMPONENT_BLOCKED_IFW)
+                || mComponentStatus.equals(COMPONENT_DISABLED);
     }
 
     public boolean isIfw() {
-        return componentStatus.equals(COMPONENT_TO_BE_BLOCKED_IFW)
-                || componentStatus.equals(COMPONENT_TO_BE_BLOCKED_IFW_DISABLE)
-                || componentStatus.equals(COMPONENT_BLOCKED_IFW)
-                || componentStatus.equals(COMPONENT_BLOCKED_IFW_DISABLE);
+        return mComponentStatus.equals(COMPONENT_TO_BE_BLOCKED_IFW)
+                || mComponentStatus.equals(COMPONENT_TO_BE_BLOCKED_IFW_DISABLE)
+                || mComponentStatus.equals(COMPONENT_BLOCKED_IFW)
+                || mComponentStatus.equals(COMPONENT_BLOCKED_IFW_DISABLE);
     }
 
     public boolean isApplied() {
-        return !(componentStatus.equals(COMPONENT_TO_BE_BLOCKED_IFW_DISABLE)
-                || componentStatus.equals(COMPONENT_TO_BE_BLOCKED_IFW)
-                || componentStatus.equals(COMPONENT_TO_BE_DISABLED)
-                || componentStatus.equals(COMPONENT_TO_BE_ENABLED)
-                || componentStatus.equals(COMPONENT_TO_BE_DEFAULTED));
+        return !(mComponentStatus.equals(COMPONENT_TO_BE_BLOCKED_IFW_DISABLE)
+                || mComponentStatus.equals(COMPONENT_TO_BE_BLOCKED_IFW)
+                || mComponentStatus.equals(COMPONENT_TO_BE_DISABLED)
+                || mComponentStatus.equals(COMPONENT_TO_BE_ENABLED)
+                || mComponentStatus.equals(COMPONENT_TO_BE_DEFAULTED));
     }
 
     @ComponentStatus
     public String getCounterpartOfToBe() {
-        switch (componentStatus) {
+        switch (mComponentStatus) {
             case COMPONENT_TO_BE_BLOCKED_IFW_DISABLE:
                 return COMPONENT_BLOCKED_IFW_DISABLE;
             case COMPONENT_TO_BE_BLOCKED_IFW:
@@ -135,13 +135,13 @@ public class ComponentRule extends RuleEntry {
             case COMPONENT_TO_BE_ENABLED:
                 return COMPONENT_ENABLED;
             default:
-                return componentStatus;
+                return mComponentStatus;
         }
     }
 
     @ComponentStatus
     public String getToBe() {
-        switch (componentStatus) {
+        switch (mComponentStatus) {
             case COMPONENT_BLOCKED_IFW_DISABLE:
                 return COMPONENT_TO_BE_BLOCKED_IFW_DISABLE;
             case COMPONENT_BLOCKED_IFW:
@@ -151,12 +151,12 @@ public class ComponentRule extends RuleEntry {
             case COMPONENT_ENABLED:
                 return COMPONENT_TO_BE_ENABLED;
             default:
-                return componentStatus;
+                return mComponentStatus;
         }
     }
 
     public void setComponentStatus(@NonNull @ComponentStatus String componentStatus) {
-        this.componentStatus = componentStatus;
+        mComponentStatus = componentStatus;
     }
 
     @NonNull
@@ -166,14 +166,14 @@ public class ComponentRule extends RuleEntry {
                 "packageName='" + packageName + '\'' +
                 ", name='" + name + '\'' +
                 ", type=" + type.name() +
-                ", componentStatus='" + componentStatus + '\'' +
+                ", componentStatus='" + mComponentStatus + '\'' +
                 '}';
     }
 
     @NonNull
     @Override
     public String flattenToString(boolean isExternal) {
-        return addPackageWithTab(isExternal) + name + "\t" + type.name() + "\t" + componentStatus;
+        return addPackageWithTab(isExternal) + name + "\t" + type.name() + "\t" + mComponentStatus;
     }
 
     @Override

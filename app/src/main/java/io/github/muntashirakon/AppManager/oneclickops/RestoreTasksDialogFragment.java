@@ -30,21 +30,21 @@ import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 public class RestoreTasksDialogFragment extends DialogFragment {
     public static final String TAG = "RestoreTasksDialogFragment";
 
-    private OneClickOpsActivity activity;
-    private final ExecutorService executor = Executors.newFixedThreadPool(2);
+    private OneClickOpsActivity mActivity;
+    private final ExecutorService mExecutor = Executors.newFixedThreadPool(2);
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        activity = (OneClickOpsActivity) requireActivity();
-        LayoutInflater inflater = LayoutInflater.from(activity);
+        mActivity = (OneClickOpsActivity) requireActivity();
+        LayoutInflater inflater = LayoutInflater.from(mActivity);
         if (inflater == null) return super.onCreateDialog(savedInstanceState);
         @SuppressLint("InflateParams")
         View view = inflater.inflate(R.layout.dialog_restore_tasks, null);
         // Restore all apps
         view.findViewById(R.id.restore_all).setOnClickListener(v -> {
-            activity.mProgressIndicator.show();
-            executor.submit(() -> {
+            mActivity.progressIndicator.show();
+            mExecutor.submit(() -> {
                 if (isDetached() || ThreadUtils.isInterrupted()) return;
                 List<ApplicationItem> applicationItems = new ArrayList<>();
                 List<CharSequence> applicationLabels = new ArrayList<>();
@@ -61,8 +61,8 @@ public class RestoreTasksDialogFragment extends DialogFragment {
         });
         // Restore not installed
         view.findViewById(R.id.restore_not_installed).setOnClickListener(v -> {
-            activity.mProgressIndicator.show();
-            executor.submit(() -> {
+            mActivity.progressIndicator.show();
+            mExecutor.submit(() -> {
                 if (isDetached() || ThreadUtils.isInterrupted()) return;
                 List<ApplicationItem> applicationItems = new ArrayList<>();
                 List<CharSequence> applicationLabels = new ArrayList<>();
@@ -79,8 +79,8 @@ public class RestoreTasksDialogFragment extends DialogFragment {
         });
         // Restore latest versions only
         view.findViewById(R.id.restore_latest).setOnClickListener(v -> {
-            activity.mProgressIndicator.show();
-            executor.submit(() -> {
+            mActivity.progressIndicator.show();
+            mExecutor.submit(() -> {
                 if (isDetached() || ThreadUtils.isInterrupted()) return;
                 List<ApplicationItem> applicationItems = new ArrayList<>();
                 List<CharSequence> applicationLabels = new ArrayList<>();
@@ -105,23 +105,23 @@ public class RestoreTasksDialogFragment extends DialogFragment {
 
     @Override
     public void onDestroy() {
-        executor.shutdownNow();
+        mExecutor.shutdownNow();
         super.onDestroy();
     }
 
     @UiThread
     private void runMultiChoiceDialog(List<ApplicationItem> applicationItems, List<CharSequence> applicationLabels) {
         if (isDetached()) return;
-        activity.mProgressIndicator.hide();
-        new SearchableMultiChoiceDialogBuilder<>(activity, applicationItems, applicationLabels)
+        mActivity.progressIndicator.hide();
+        new SearchableMultiChoiceDialogBuilder<>(mActivity, applicationItems, applicationLabels)
                 .addSelections(applicationItems)
                 .setTitle(R.string.filtered_packages)
                 .setPositiveButton(R.string.restore, (dialog, which, selectedItems) -> {
                     if (isDetached()) return;
                     BackupRestoreDialogFragment fragment = BackupRestoreDialogFragment.getInstance(
                             PackageUtils.getUserPackagePairs(selectedItems), BackupRestoreDialogFragment.MODE_RESTORE);
-                    fragment.setOnActionBeginListener(mode -> activity.mProgressIndicator.show());
-                    fragment.setOnActionCompleteListener((mode, failedPackages) -> activity.mProgressIndicator.hide());
+                    fragment.setOnActionBeginListener(mode -> mActivity.progressIndicator.show());
+                    fragment.setOnActionCompleteListener((mode, failedPackages) -> mActivity.progressIndicator.hide());
                     if (isDetached()) return;
                     fragment.show(getParentFragmentManager(), BackupRestoreDialogFragment.TAG);
                 })

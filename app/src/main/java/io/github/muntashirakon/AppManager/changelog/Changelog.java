@@ -10,34 +10,34 @@ import java.util.LinkedList;
 // Copyright 2022 Muntashir Al-Islam
 public class Changelog {
     @NonNull
-    private final LinkedList<ChangelogItem> changelogItems;
+    private final LinkedList<ChangelogItem> mChangelogItems;
 
-    private boolean bulletedList;
+    private boolean mBulletedList;
 
     public Changelog() {
-        changelogItems = new LinkedList<>();
+        mChangelogItems = new LinkedList<>();
     }
 
     public void addItem(@NonNull ChangelogItem row) {
-        changelogItems.add(row);
+        mChangelogItems.add(row);
     }
 
     /**
      * Clear all rows
      */
     public void clearAllRows() {
-        changelogItems.clear();
+        mChangelogItems.clear();
     }
 
     public boolean isBulletedList() {
-        return bulletedList;
+        return mBulletedList;
     }
 
     public void setBulletedList(boolean bulletedList) {
-        this.bulletedList = bulletedList;
+        mBulletedList = bulletedList;
     }
 
     public LinkedList<ChangelogItem> getChangelogItems() {
-        return changelogItems;
+        return mChangelogItems;
     }
 }

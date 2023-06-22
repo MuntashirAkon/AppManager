@@ -22,28 +22,28 @@ public class NoRootAccessibilityService extends BaseAccessibilityService {
     private static final CharSequence SETTING_PACKAGE = "com.android.settings";
     private static final CharSequence INSTALLER_PACKAGE = "com.android.packageinstaller";
 
-    private final AccessibilityMultiplexer multiplexer = AccessibilityMultiplexer.getInstance();
-    private PackageManager pm;
-    private int tries = 1;
+    private final AccessibilityMultiplexer mMultiplexer = AccessibilityMultiplexer.getInstance();
+    private PackageManager mPm;
+    private int mTries = 1;
     @Nullable
-    private TrackerWindow trackerWindow;
+    private TrackerWindow mTrackerWindow;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        pm = AppearanceUtils.getSystemContext(this).getPackageManager();
+        mPm = AppearanceUtils.getSystemContext(this).getPackageManager();
     }
 
     @Override
     public void onAccessibilityEvent(AccessibilityEvent event) {
-        if (multiplexer.isLeadingActivityTracker()) {
-            if (trackerWindow == null) {
-                trackerWindow = new TrackerWindow(this);
+        if (mMultiplexer.isLeadingActivityTracker()) {
+            if (mTrackerWindow == null) {
+                mTrackerWindow = new TrackerWindow(this);
             }
-            trackerWindow.showOrUpdate(event);
-        } else if (trackerWindow != null) {
-            trackerWindow.dismiss();
-            trackerWindow = null;
+            mTrackerWindow.showOrUpdate(event);
+        } else if (mTrackerWindow != null) {
+            mTrackerWindow.dismiss();
+            mTrackerWindow = null;
         }
         if (event.getEventType() != AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
             return;
@@ -57,29 +57,29 @@ public class NoRootAccessibilityService extends BaseAccessibilityService {
             // Clear data/cache, force-stop
             if (event.getClassName().equals("com.android.settings.applications.InstalledAppDetailsTop")) {
                 AccessibilityNodeInfo node = findViewByText(getString(event, "force_stop"), true);
-                if (multiplexer.isForceStopEnabled()) {
+                if (mMultiplexer.isForceStopEnabled()) {
                     if (node != null) {
                         if (node.isEnabled()) {
-                            tries = 0;
+                            mTries = 0;
                             performViewClick(node);
-                        } else if (tries > 0 && navigateToStorageAndCache(event)) {
+                        } else if (mTries > 0 && navigateToStorageAndCache(event)) {
                             // Hack to enable force-stop when it is disabled due to Android bug
                             performBackClick();
-                            --tries;
+                            --mTries;
                         } else performBackClick();
                         node.recycle();
                     } else performBackClick();
-                } else if (multiplexer.isNavigateToStorageAndCache()) {
+                } else if (mMultiplexer.isNavigateToStorageAndCache()) {
                     SystemClock.sleep(1000);
                     navigateToStorageAndCache(event);
                 }
             } else if (event.getClassName().equals("com.android.settings.SubSettings")
                     || getString(event, "storage_settings").equals(event.getText().toString())) {
-                if (multiplexer.isClearDataEnabled()) {
+                if (mMultiplexer.isClearDataEnabled()) {
                     performViewClick(findViewByText(getString(event, "clear_user_data_text"), true));
                 }
-                if (multiplexer.isClearCacheEnabled()) {
-                    multiplexer.enableClearCache(false);
+                if (mMultiplexer.isClearCacheEnabled()) {
+                    mMultiplexer.enableClearCache(false);
                     AccessibilityNodeInfo node = findViewByText(getString(event, "clear_cache_btn_text"), true);
                     if (node != null) {
                         if (node.isEnabled()) {
@@ -91,14 +91,14 @@ public class NoRootAccessibilityService extends BaseAccessibilityService {
                     }
                 }
             } else if (event.getClassName().equals("androidx.appcompat.app.AlertDialog")) {
-                if (multiplexer.isForceStopEnabled() && findViewByText(getString(event, "force_stop_dlg_title")) != null) {
-                    multiplexer.enableForceStop(false);
-                    tries = 1; // Restore tries
+                if (mMultiplexer.isForceStopEnabled() && findViewByText(getString(event, "force_stop_dlg_title")) != null) {
+                    mMultiplexer.enableForceStop(false);
+                    mTries = 1; // Restore tries
                     performViewClick(findViewByText(getString(event, "dlg_ok"), true));
                     performBackClick();
                 }
-                if (multiplexer.isClearDataEnabled() && findViewByText(getString(event, "clear_data_dlg_title")) != null) {
-                    multiplexer.enableClearData(false);
+                if (mMultiplexer.isClearDataEnabled() && findViewByText(getString(event, "clear_data_dlg_title")) != null) {
+                    mMultiplexer.enableClearData(false);
                     performViewClick(findViewByText(getString(event, "dlg_ok"), true));
                     performBackClick();
                     performBackClick();
@@ -113,21 +113,21 @@ public class NoRootAccessibilityService extends BaseAccessibilityService {
 
     @Override
     public boolean onUnbind(Intent intent) {
-        if (trackerWindow != null) {
-            trackerWindow.dismiss();
-            trackerWindow = null;
+        if (mTrackerWindow != null) {
+            mTrackerWindow.dismiss();
+            mTrackerWindow = null;
         }
         return super.onUnbind(intent);
     }
 
     private void automateInstallationUninstallation(@NonNull AccessibilityEvent event) {
         if (event.getClassName().equals("android.app.Dialog")) {
-            if (multiplexer.isInstallEnabled()) {
+            if (mMultiplexer.isInstallEnabled()) {
                 // Install
                 performViewClick(findViewByText(getString(event, "install"), true)); // install_text
             }
         } else if (event.getClassName().equals("com.android.packageinstaller.UninstallerActivity")) {
-            if (multiplexer.isUninstallEnabled()) {
+            if (mMultiplexer.isUninstallEnabled()) {
                 // uninstall
                 performViewClick(findViewByText(getString(event, "ok"), true)); // dlg_ok
             }
@@ -142,7 +142,7 @@ public class NoRootAccessibilityService extends BaseAccessibilityService {
         SystemClock.sleep(500); // It may take a few moments to initialise the Recycler/List views
         AccessibilityNodeInfo storageNode = findViewByTextRecursive(getRootInActiveWindow(), storageSettings);
         if (storageNode != null) {
-            multiplexer.enableNavigateToStorageAndCache(false);  // prevent infinite loop
+            mMultiplexer.enableNavigateToStorageAndCache(false);  // prevent infinite loop
             performViewClick(storageNode);
             storageNode.recycle();
             return true;
@@ -168,13 +168,13 @@ public class NoRootAccessibilityService extends BaseAccessibilityService {
         }
         ResourceUtil resUtil = new ResourceUtil();
         if (!TextUtils.isEmpty(className)) {
-            if (!resUtil.loadResources(pm, packageName.toString(), className.toString())
-                    && !resUtil.loadResources(pm, packageName.toString())
+            if (!resUtil.loadResources(mPm, packageName.toString(), className.toString())
+                    && !resUtil.loadResources(mPm, packageName.toString())
                     && !resUtil.loadAndroidResources()) {
                 throw new Resources.NotFoundException("Couldn't load resources for package: " + packageName
                         + ", class: " + className);
             }
-        } else if (!resUtil.loadResources(pm, packageName.toString()) && !resUtil.loadAndroidResources()) {
+        } else if (!resUtil.loadResources(mPm, packageName.toString()) && !resUtil.loadAndroidResources()) {
             throw new Resources.NotFoundException("Couldn't load resources for package: " + packageName);
         }
         return resUtil.getString(stringRes);

@@ -132,19 +132,19 @@ public final class RunnerUtils {
         /**
          * The mapping to be used in translation.
          */
-        private final Map<String, String> lookupMap;
+        private final Map<String, String> mLookupMap;
         /**
          * The first character of each key in the lookupMap.
          */
-        private final BitSet prefixSet;
+        private final BitSet mPrefixSet;
         /**
          * The length of the shortest key in the lookupMap.
          */
-        private final int shortest;
+        private final int mShortest;
         /**
          * The length of the longest key in the lookupMap.
          */
-        private final int longest;
+        private final int mLongest;
 
         /**
          * Define the lookup table to be used in translation
@@ -161,14 +161,14 @@ public final class RunnerUtils {
             if (lookupMap == null) {
                 throw new InvalidParameterException("lookupMap cannot be null");
             }
-            this.lookupMap = new HashMap<>();
-            this.prefixSet = new BitSet();
+            mLookupMap = new HashMap<>();
+            mPrefixSet = new BitSet();
             int currentShortest = Integer.MAX_VALUE;
             int currentLongest = 0;
 
             for (final Map.Entry<CharSequence, CharSequence> pair : lookupMap.entrySet()) {
-                this.lookupMap.put(pair.getKey().toString(), pair.getValue().toString());
-                this.prefixSet.set(pair.getKey().charAt(0));
+                mLookupMap.put(pair.getKey().toString(), pair.getValue().toString());
+                mPrefixSet.set(pair.getKey().charAt(0));
                 final int sz = pair.getKey().length();
                 if (sz < currentShortest) {
                     currentShortest = sz;
@@ -177,8 +177,8 @@ public final class RunnerUtils {
                     currentLongest = sz;
                 }
             }
-            this.shortest = currentShortest;
-            this.longest = currentLongest;
+            mShortest = currentShortest;
+            mLongest = currentLongest;
         }
 
         /**
@@ -195,15 +195,15 @@ public final class RunnerUtils {
          */
         public int translate(@NonNull final CharSequence input, final int index, final Writer out) throws IOException {
             // check if translation exists for the input at position index
-            if (prefixSet.get(input.charAt(index))) {
-                int max = longest;
-                if (index + longest > input.length()) {
+            if (mPrefixSet.get(input.charAt(index))) {
+                int max = mLongest;
+                if (index + mLongest > input.length()) {
                     max = input.length() - index;
                 }
                 // implement greedy algorithm by trying maximum match first
-                for (int i = max; i >= shortest; i--) {
+                for (int i = max; i >= mShortest; i--) {
                     final CharSequence subSeq = input.subSequence(index, index + i);
-                    final String result = lookupMap.get(subSeq.toString());
+                    final String result = mLookupMap.get(subSeq.toString());
 
                     if (result != null) {
                         out.write(result);

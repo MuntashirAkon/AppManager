@@ -112,9 +112,9 @@ class LocalServerManager {
      * Stop ADB and then close client session
      */
     void stop() {
-        IoUtils.closeQuietly(adbStream);
+        IoUtils.closeQuietly(mAdbStream);
         IoUtils.closeQuietly(mSession);
-        adbStream = null;
+        mAdbStream = null;
         mSession = null;
     }
 
@@ -170,21 +170,21 @@ class LocalServerManager {
     }
 
     @Nullable
-    private volatile AdbStream adbStream;
-    private volatile CountDownLatch adbConnectionWatcher = new CountDownLatch(1);
-    private volatile boolean adbServerStarted;
-    private final Runnable adbOutputThread = () -> {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(adbStream).openInputStream()))) {
+    private volatile AdbStream mAdbStream;
+    private volatile CountDownLatch mAdbConnectionWatcher = new CountDownLatch(1);
+    private volatile boolean mAdbServerStarted;
+    private final Runnable mAdbOutputThread = () -> {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(Objects.requireNonNull(mAdbStream).openInputStream()))) {
             String s;
             while ((s = reader.readLine()) != null) {
                 Log.d(TAG, "RESPONSE: " + s);
                 if (s.startsWith("Success!")) {
-                    adbServerStarted = true;
-                    adbConnectionWatcher.countDown();
+                    mAdbServerStarted = true;
+                    mAdbConnectionWatcher.countDown();
                     break;
                 } else if (s.startsWith("Error!")) {
-                    adbServerStarted = false;
-                    adbConnectionWatcher.countDown();
+                    mAdbServerStarted = false;
+                    mAdbConnectionWatcher.countDown();
                     break;
                 }
             }
@@ -195,7 +195,7 @@ class LocalServerManager {
 
     @WorkerThread
     private void useAdbStartServer() throws Exception {
-        if (adbStream == null || Objects.requireNonNull(adbStream).isClosed()) {
+        if (mAdbStream == null || Objects.requireNonNull(mAdbStream).isClosed()) {
             // ADB shell not running
             String adbHost = ServerConfig.getAdbHost(mContext);
             int adbPort = ServerConfig.getAdbPort();
@@ -206,21 +206,21 @@ class LocalServerManager {
             }
 
             Log.d(TAG, "useAdbStartServer: Opening shell...");
-            adbStream = manager.openStream("shell:");
-            adbConnectionWatcher = new CountDownLatch(1);
-            adbServerStarted = false;
-            new Thread(adbOutputThread).start();
+            mAdbStream = manager.openStream("shell:");
+            mAdbConnectionWatcher = new CountDownLatch(1);
+            mAdbServerStarted = false;
+            new Thread(mAdbOutputThread).start();
         }
         Log.d(TAG, "useAdbStartServer: Shell opened.");
 
-        try (OutputStream os = Objects.requireNonNull(adbStream).openOutputStream()) {
+        try (OutputStream os = Objects.requireNonNull(mAdbStream).openOutputStream()) {
             os.write("id\n".getBytes());
             String command = getExecCommand();
             Log.d(TAG, "useAdbStartServer: " + command);
             os.write((command + "\n").getBytes());
         }
 
-        if (!adbConnectionWatcher.await(1, TimeUnit.MINUTES) || !adbServerStarted) {
+        if (!mAdbConnectionWatcher.await(1, TimeUnit.MINUTES) || !mAdbServerStarted) {
             throw new Exception("Server wasn't started.");
         }
         Log.d(TAG, "useAdbStartServer: Server has started.");

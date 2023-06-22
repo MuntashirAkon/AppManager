@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.rules;
 
+import android.annotation.UserIdInt;
 import android.app.Dialog;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.compat.BundleCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.settings.SettingsActivity;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
@@ -50,29 +52,31 @@ public class RulesTypeSelectionDialogFragment extends DialogFragment {
             RuleType.PERMISSION,
     };
 
-    private FragmentActivity activity;
+    private FragmentActivity mActivity;
+    @Nullable
     private Uri mUri;
     private List<String> mPackages = null;
     private HashSet<RuleType> mSelectedTypes;
-    private int[] userHandles;
+    @UserIdInt
+    private int[] mUserIds;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        activity = requireActivity();
+        mActivity = requireActivity();
         Bundle args = requireArguments();
         @Mode int mode = args.getInt(ARG_MODE, MODE_EXPORT);
         mPackages = args.getStringArrayList(ARG_PKG);
-        mUri = (Uri) args.get(ARG_URI);
-        userHandles = args.getIntArray(ARG_USERS);
-        if (userHandles == null) userHandles = new int[]{UserHandleHidden.myUserId()};
+        mUri = BundleCompat.getParcelable(args, ARG_URI, Uri.class);
+        mUserIds = args.getIntArray(ARG_USERS);
+        if (mUserIds == null) mUserIds = new int[]{UserHandleHidden.myUserId()};
         if (mUri == null) return super.onCreateDialog(savedInstanceState);
         List<Integer> ruleIndexes = new ArrayList<>();
         for (int i = 0; i < RULE_TYPES.length; ++i) {
             ruleIndexes.add(i);
         }
         mSelectedTypes = new HashSet<>(RULE_TYPES.length);
-        return new SearchableMultiChoiceDialogBuilder<>(activity, ruleIndexes, R.array.rule_types)
+        return new SearchableMultiChoiceDialogBuilder<>(mActivity, ruleIndexes, R.array.rule_types)
                 .setTitle(mode == MODE_IMPORT ? R.string.import_options : R.string.export_options)
                 .addSelections(ruleIndexes)
                 .setPositiveButton(mode == MODE_IMPORT ? R.string.pref_import : R.string.pref_export,
@@ -81,8 +85,8 @@ public class RulesTypeSelectionDialogFragment extends DialogFragment {
                                 mSelectedTypes.add(RULE_TYPES[i]);
                             }
                             Log.d("TestImportExport", "Types: " + mSelectedTypes.toString() + "\nURI: " + mUri.toString());
-                            if (activity instanceof SettingsActivity) {
-                                ((SettingsActivity) activity).progressIndicator.show();
+                            if (mActivity instanceof SettingsActivity) {
+                                ((SettingsActivity) mActivity).progressIndicator.show();
                             }
                             if (mode == MODE_IMPORT) {
                                 handleImport();
@@ -93,32 +97,38 @@ public class RulesTypeSelectionDialogFragment extends DialogFragment {
     }
 
     private void handleExport() {
+        if (mUri == null) {
+            return;
+        }
         new Thread(() -> {
             try {
-                RulesExporter exporter = new RulesExporter(new ArrayList<>(mSelectedTypes), mPackages, userHandles);
+                RulesExporter exporter = new RulesExporter(mActivity, new ArrayList<>(mSelectedTypes), mPackages, mUserIds);
                 exporter.saveRules(mUri);
-                activity.runOnUiThread(() -> Toast.makeText(activity, R.string.the_export_was_successful, Toast.LENGTH_LONG).show());
+                mActivity.runOnUiThread(() -> Toast.makeText(mActivity, R.string.the_export_was_successful, Toast.LENGTH_LONG).show());
             } catch (IOException e) {
-                activity.runOnUiThread(() -> Toast.makeText(activity, R.string.export_failed, Toast.LENGTH_LONG).show());
+                mActivity.runOnUiThread(() -> Toast.makeText(mActivity, R.string.export_failed, Toast.LENGTH_LONG).show());
             }
-            if (activity instanceof SettingsActivity) {
-                activity.runOnUiThread(() -> ((SettingsActivity) activity).progressIndicator.hide());
+            if (mActivity instanceof SettingsActivity) {
+                mActivity.runOnUiThread(() -> ((SettingsActivity) mActivity).progressIndicator.hide());
             }
         }).start();
     }
 
     private void handleImport() {
+        if (mUri == null) {
+            return;
+        }
         new Thread(() -> {
-            try (RulesImporter importer = new RulesImporter(new ArrayList<>(mSelectedTypes), userHandles)) {
+            try (RulesImporter importer = new RulesImporter(mActivity, new ArrayList<>(mSelectedTypes), mUserIds)) {
                 importer.addRulesFromUri(mUri);
                 if (mPackages != null) importer.setPackagesToImport(mPackages);
                 importer.applyRules(true);
-                activity.runOnUiThread(() -> Toast.makeText(activity, R.string.the_import_was_successful, Toast.LENGTH_LONG).show());
+                mActivity.runOnUiThread(() -> Toast.makeText(mActivity, R.string.the_import_was_successful, Toast.LENGTH_LONG).show());
             } catch (IOException e) {
-                activity.runOnUiThread(() -> Toast.makeText(activity, R.string.import_failed, Toast.LENGTH_LONG).show());
+                mActivity.runOnUiThread(() -> Toast.makeText(mActivity, R.string.import_failed, Toast.LENGTH_LONG).show());
             }
-            if (activity instanceof SettingsActivity) {
-                activity.runOnUiThread(() -> ((SettingsActivity) activity).progressIndicator.hide());
+            if (mActivity instanceof SettingsActivity) {
+                mActivity.runOnUiThread(() -> ((SettingsActivity) mActivity).progressIndicator.hide());
             }
         }).start();
     }

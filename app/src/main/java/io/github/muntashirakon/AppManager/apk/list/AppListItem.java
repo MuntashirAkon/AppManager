@@ -6,107 +6,107 @@ import android.graphics.Bitmap;
 
 public class AppListItem {
     public final String packageName;
-    private Bitmap icon;
-    private String packageLabel;
-    private long versionCode;
-    private String versionName;
-    private int minSdk;
-    private int targetSdk;
-    private String signatureSha256;
-    private long firstInstallTime;
-    private long lastUpdateTime;
-    private String installerPackageName;
-    private String installerPackageLabel;
+    private Bitmap mIcon;
+    private String mPackageLabel;
+    private long mVersionCode;
+    private String mVersionName;
+    private int mMinSdk;
+    private int mTargetSdk;
+    private String mSignatureSha256;
+    private long mFirstInstallTime;
+    private long mLastUpdateTime;
+    private String mInstallerPackageName;
+    private String mInstallerPackageLabel;
 
     public AppListItem(String packageName) {
         this.packageName = packageName;
     }
 
     public Bitmap getIcon() {
-        return icon;
+        return mIcon;
     }
 
     public void setIcon(Bitmap icon) {
-        this.icon = icon;
+        mIcon = icon;
     }
 
     public String getPackageLabel() {
-        return packageLabel;
+        return mPackageLabel;
     }
 
     public void setPackageLabel(String packageLabel) {
-        this.packageLabel = packageLabel;
+        mPackageLabel = packageLabel;
     }
 
     public long getVersionCode() {
-        return versionCode;
+        return mVersionCode;
     }
 
     public void setVersionCode(long versionCode) {
-        this.versionCode = versionCode;
+        mVersionCode = versionCode;
     }
 
     public String getVersionName() {
-        return versionName;
+        return mVersionName;
     }
 
     public void setVersionName(String versionName) {
-        this.versionName = versionName;
+        mVersionName = versionName;
     }
 
     public int getMinSdk() {
-        return minSdk;
+        return mMinSdk;
     }
 
     public void setMinSdk(int minSdk) {
-        this.minSdk = minSdk;
+        mMinSdk = minSdk;
     }
 
     public int getTargetSdk() {
-        return targetSdk;
+        return mTargetSdk;
     }
 
     public void setTargetSdk(int targetSdk) {
-        this.targetSdk = targetSdk;
+        mTargetSdk = targetSdk;
     }
 
     public String getSignatureSha256() {
-        return signatureSha256;
+        return mSignatureSha256;
     }
 
     public void setSignatureSha256(String signatureSha256) {
-        this.signatureSha256 = signatureSha256;
+        mSignatureSha256 = signatureSha256;
     }
 
     public long getFirstInstallTime() {
-        return firstInstallTime;
+        return mFirstInstallTime;
     }
 
     public void setFirstInstallTime(long firstInstallTime) {
-        this.firstInstallTime = firstInstallTime;
+        mFirstInstallTime = firstInstallTime;
     }
 
     public long getLastUpdateTime() {
-        return lastUpdateTime;
+        return mLastUpdateTime;
     }
 
     public void setLastUpdateTime(long lastUpdateTime) {
-        this.lastUpdateTime = lastUpdateTime;
+        mLastUpdateTime = lastUpdateTime;
     }
 
     public String getInstallerPackageName() {
-        return installerPackageName;
+        return mInstallerPackageName;
     }
 
     public void setInstallerPackageName(String installerPackageName) {
-        this.installerPackageName = installerPackageName;
+        mInstallerPackageName = installerPackageName;
     }
 
     public String getInstallerPackageLabel() {
-        return installerPackageLabel;
+        return mInstallerPackageLabel;
     }
 
     public void setInstallerPackageLabel(String installerPackageLabel) {
-        this.installerPackageLabel = installerPackageLabel;
+        mInstallerPackageLabel = installerPackageLabel;
     }
 }

@@ -19,7 +19,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.UUID;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.details.ActivityLauncherShortcutActivity;
@@ -36,7 +35,10 @@ public class LauncherIconCreator {
      */
     public static void createLauncherIcon(@NonNull Context context, @NonNull ActivityInfo activityInfo,
                                           @NonNull CharSequence name, @NonNull Drawable icon) {
-        createLauncherIcon(context, name, icon, requireProxy(activityInfo) ? getProxyIntent(activityInfo) : getIntent(activityInfo));
+        context = context.getApplicationContext();
+        createLauncherIcon(context, name, icon, requireProxy(activityInfo)
+                ? getProxyIntent(context, activityInfo)
+                : getIntent(activityInfo));
     }
 
     /**
@@ -114,9 +116,9 @@ public class LauncherIconCreator {
     }
 
     @NonNull
-    private static Intent getProxyIntent(@NonNull ActivityInfo itemInfo) {
+    private static Intent getProxyIntent(@NonNull Context context, @NonNull ActivityInfo itemInfo) {
         Intent intent = new Intent();
-        intent.setClass(AppManager.getContext(), ActivityLauncherShortcutActivity.class);
+        intent.setClass(context, ActivityLauncherShortcutActivity.class);
         intent.putExtra(ActivityLauncherShortcutActivity.EXTRA_PKG, itemInfo.packageName);
         intent.putExtra(ActivityLauncherShortcutActivity.EXTRA_CLS, itemInfo.name);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

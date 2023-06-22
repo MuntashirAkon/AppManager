@@ -269,8 +269,8 @@ public class NativeLibraries {
         }
     }
 
-    private final List<NativeLib> libs = new ArrayList<>();
-    private final Set<String> uniqueLibs = new HashSet<>();
+    private final List<NativeLib> mLibs = new ArrayList<>();
+    private final Set<String> mUniqueLibs = new HashSet<>();
 
     @WorkerThread
     public NativeLibraries(@NonNull File apkFile) throws IOException {
@@ -281,8 +281,8 @@ public class NativeLibraries {
                 if (zipEntry.getName().endsWith(".so")) {
                     try (InputStream is = zipFile.getInputStream(zipEntry)) {
                         NativeLib nativeLib = NativeLib.parse(zipEntry.getName(), zipEntry.getSize(), is);
-                        libs.add(nativeLib);
-                        uniqueLibs.add(nativeLib.getName());
+                        mLibs.add(nativeLib);
+                        mUniqueLibs.add(nativeLib.getName());
                     } catch (IOException e) {
                         Log.w(TAG, "Could not load native library " + zipEntry.getName(), e);
                     }
@@ -299,8 +299,8 @@ public class NativeLibraries {
                 if (zipEntry.getName().endsWith(".so")) {
                     try {
                         NativeLib nativeLib = NativeLib.parse(zipEntry.getName(), zipEntry.getSize(), zipInputStream);
-                        libs.add(nativeLib);
-                        uniqueLibs.add(nativeLib.getName());
+                        mLibs.add(nativeLib);
+                        mUniqueLibs.add(nativeLib.getName());
                     } catch (IOException e) {
                         Log.w(TAG, "Could not load native library " + zipEntry.getName(), e);
                     }
@@ -317,8 +317,8 @@ public class NativeLibraries {
             if (!zipEntry.isDirectory() && zipEntry.getName().endsWith(".so")) {
                 try (InputStream is = zipFile.getInputStream(zipEntry)) {
                     NativeLib nativeLib = NativeLib.parse(zipEntry.getName(), zipEntry.getSize(), is);
-                    libs.add(nativeLib);
-                    uniqueLibs.add(nativeLib.getName());
+                    mLibs.add(nativeLib);
+                    mUniqueLibs.add(nativeLib.getName());
                 } catch (IOException e) {
                     Log.w(TAG, "Could not load native library " + zipEntry.getName(), e);
                 }
@@ -328,11 +328,11 @@ public class NativeLibraries {
 
     @NonNull
     public List<NativeLib> getLibs() {
-        return libs;
+        return mLibs;
     }
 
     @NonNull
     public Collection<String> getUniqueLibs() {
-        return uniqueLibs;
+        return mUniqueLibs;
     }
 }

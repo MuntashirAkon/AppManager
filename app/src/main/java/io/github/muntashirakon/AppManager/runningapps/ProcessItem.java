@@ -26,10 +26,10 @@ public class ProcessItem implements Parcelable {
     public String name;
 
     @NonNull
-    private final ProcessEntry processEntry;
+    private final ProcessEntry mProcessEntry;
 
     public ProcessItem(@NonNull ProcessEntry processEntry) {
-        this.processEntry = processEntry;
+        mProcessEntry = processEntry;
         pid = processEntry.pid;
         ppid = processEntry.ppid;
         rss = processEntry.residentSetSize;
@@ -42,48 +42,48 @@ public class ProcessItem implements Parcelable {
      * @see <a href="https://stackoverflow.com/a/16736599">How do I get the total CPU usage of an application from /proc/pid/stat?</a>
      */
     public double getCpuTimeInPercent() {
-        return processEntry.cpuTimeConsumed * 100. / processEntry.elapsedTime;
+        return mProcessEntry.cpuTimeConsumed * 100. / mProcessEntry.elapsedTime;
     }
 
     public long getCpuTimeInMillis() {
-        return processEntry.cpuTimeConsumed * 1000;
+        return mProcessEntry.cpuTimeConsumed * 1000;
     }
 
     public String getCommandlineArgsAsString() {
-        return processEntry.name.replace('\u0000', ' ');
+        return mProcessEntry.name.replace('\u0000', ' ');
     }
 
     public String[] getCommandlineArgs() {
-        return processEntry.name.split("\u0000");
+        return mProcessEntry.name.split("\u0000");
     }
 
     public long getMemory() {
-        return processEntry.residentSetSize << 12;
+        return mProcessEntry.residentSetSize << 12;
     }
 
     public long getVirtualMemory() {
-        return processEntry.virtualMemorySize;
+        return mProcessEntry.virtualMemorySize;
     }
 
     public long getSharedMemory() {
-        return processEntry.sharedMemory << 12;
+        return mProcessEntry.sharedMemory << 12;
     }
 
     public int getPriority() {
-        return processEntry.priority;
+        return mProcessEntry.priority;
     }
 
     public int getThreadCount() {
-        return processEntry.threadCount;
+        return mProcessEntry.threadCount;
     }
 
     protected ProcessItem(@NonNull Parcel in) {
-        processEntry = Objects.requireNonNull(ParcelCompat.readParcelable(in, ProcessEntry.class.getClassLoader(), ProcessEntry.class));
-        pid = processEntry.pid;
-        ppid = processEntry.ppid;
-        rss = processEntry.residentSetSize;
-        uid = processEntry.users.fsUid;
-        context = processEntry.seLinuxPolicy;
+        mProcessEntry = Objects.requireNonNull(ParcelCompat.readParcelable(in, ProcessEntry.class.getClassLoader(), ProcessEntry.class));
+        pid = mProcessEntry.pid;
+        ppid = mProcessEntry.ppid;
+        rss = mProcessEntry.residentSetSize;
+        uid = mProcessEntry.users.fsUid;
+        context = mProcessEntry.seLinuxPolicy;
 
         user = in.readString();
         state = in.readString();
@@ -141,7 +141,7 @@ public class ProcessItem implements Parcelable {
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeParcelable(processEntry, flags);
+        dest.writeParcelable(mProcessEntry, flags);
         dest.writeString(user);
         dest.writeString(state);
         dest.writeString(state_extra);

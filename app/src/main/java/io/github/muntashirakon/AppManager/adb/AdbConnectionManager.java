@@ -19,13 +19,13 @@ public class AdbConnectionManager extends AbsAdbConnectionManager {
 
     public static final String ADB_KEY_ALIAS = "adb_rsa";
 
-    private static AdbConnectionManager INSTANCE;
+    private static AdbConnectionManager sInstance;
 
     public static AdbConnectionManager getInstance() throws Exception {
-        if (INSTANCE == null) {
-            INSTANCE = new AdbConnectionManager();
+        if (sInstance == null) {
+            sInstance = new AdbConnectionManager();
         }
-        return INSTANCE;
+        return sInstance;
     }
 
     @NonNull

@@ -81,20 +81,20 @@ public class FmProvider extends ContentProvider {
             OpenableColumns.DISPLAY_NAME
     };
 
-    HandlerThread callbackThread;
-    Handler callbackHandler;
+    private HandlerThread mCallbackThread;
+    private Handler mCallbackHandler;
 
     @Override
     public boolean onCreate() {
-        callbackThread = new HandlerThread("FmProvider.HandlerThread");
-        callbackThread.start();
-        callbackHandler = new Handler(callbackThread.getLooper());
+        mCallbackThread = new HandlerThread("FmProvider.HandlerThread");
+        mCallbackThread.start();
+        mCallbackHandler = new Handler(mCallbackThread.getLooper());
         return true;
     }
 
     @Override
     public void shutdown() {
-        callbackThread.quitSafely();
+        mCallbackThread.quitSafely();
     }
 
     @Override
@@ -184,7 +184,7 @@ public class FmProvider extends ContentProvider {
     @Override
     public ParcelFileDescriptor openFile(@NonNull Uri uri, @NonNull String mode) throws FileNotFoundException {
         // ContentProvider has already checked granted permissions
-        return getFileProviderPath(uri).openFileDescriptor(checkMode(mode), callbackThread);
+        return getFileProviderPath(uri).openFileDescriptor(checkMode(mode), mCallbackThread);
     }
 
     private static String[] getDefaultProjection() {

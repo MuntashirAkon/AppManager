@@ -12,39 +12,35 @@ import android.content.pm.PackageInstaller;
 
 import androidx.annotation.NonNull;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
 class PackageInstallerBroadcastReceiver extends BroadcastReceiver {
-    public static final String TAG = "PIReceiver";
+    public static final String TAG = PackageInstallerBroadcastReceiver.class.getSimpleName();
     public static final String ACTION_PI_RECEIVER = BuildConfig.APPLICATION_ID + ".action.PI_RECEIVER";
 
-    private String packageName;
-    private CharSequence appLabel;
-    private int confirmNotificationId = 0;
-    private final Context mContext;
-
-    public PackageInstallerBroadcastReceiver() {
-        mContext = AppManager.getContext();
-    }
+    private String mPackageName;
+    private CharSequence mAppLabel;
+    private int mConfirmNotificationId = 0;
 
     public void setPackageName(String packageName) {
-        this.packageName = packageName;
+        mPackageName = packageName;
     }
 
     public void setAppLabel(CharSequence appLabel) {
-        this.appLabel = appLabel;
+        mAppLabel = appLabel;
     }
 
     @SuppressLint("WrongConstant")
     @Override
-    public void onReceive(Context context, @NonNull Intent intent) {
+    public void onReceive(Context nullableContext, @NonNull Intent intent) {
+        Context context = nullableContext != null ? nullableContext : ContextUtils.getContext();
         int status = intent.getIntExtra(PackageInstaller.EXTRA_STATUS, -1);
         int sessionId = intent.getIntExtra(PackageInstaller.EXTRA_SESSION_ID, -1);
         Log.d(TAG, "Session ID: " + sessionId);
@@ -53,16 +49,16 @@ class PackageInstallerBroadcastReceiver extends BroadcastReceiver {
                 Log.d(TAG, "Requesting user confirmation...");
                 // Send broadcast first
                 Intent broadcastIntent2 = new Intent(PackageInstallerCompat.ACTION_INSTALL_INTERACTION_BEGIN);
-                broadcastIntent2.putExtra(PackageInstaller.EXTRA_PACKAGE_NAME, packageName);
+                broadcastIntent2.putExtra(PackageInstaller.EXTRA_PACKAGE_NAME, mPackageName);
                 broadcastIntent2.putExtra(PackageInstaller.EXTRA_SESSION_ID, sessionId);
-                mContext.sendBroadcast(broadcastIntent2);
+                context.sendBroadcast(broadcastIntent2);
                 // Open confirmIntent using the PackageInstallerActivity.
                 // If the confirmIntent isn't open via an activity, it will fail for large apk files
                 Intent confirmIntent = IntentCompat.getParcelableExtra(intent, Intent.EXTRA_INTENT, Intent.class);
-                Intent intent2 = new Intent(mContext, PackageInstallerActivity.class);
+                Intent intent2 = new Intent(context, PackageInstallerActivity.class);
                 intent2.setAction(PackageInstallerActivity.ACTION_PACKAGE_INSTALLED);
                 intent2.putExtra(Intent.EXTRA_INTENT, confirmIntent);
-                intent2.putExtra(PackageInstaller.EXTRA_PACKAGE_NAME, packageName);
+                intent2.putExtra(PackageInstaller.EXTRA_PACKAGE_NAME, mPackageName);
                 intent2.putExtra(PackageInstaller.EXTRA_SESSION_ID, sessionId);
                 intent2.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 boolean appInForeground = Utils.isAppInForeground();
@@ -72,18 +68,18 @@ class PackageInstallerBroadcastReceiver extends BroadcastReceiver {
                 }
                 // Delete intent: aborts the operation
                 Intent broadcastCancel = new Intent(PackageInstallerCompat.ACTION_INSTALL_COMPLETED);
-                broadcastCancel.putExtra(PackageInstaller.EXTRA_PACKAGE_NAME, packageName);
+                broadcastCancel.putExtra(PackageInstaller.EXTRA_PACKAGE_NAME, mPackageName);
                 broadcastCancel.putExtra(PackageInstaller.EXTRA_STATUS, PackageInstallerCompat.STATUS_FAILURE_ABORTED);
                 broadcastCancel.putExtra(PackageInstaller.EXTRA_SESSION_ID, sessionId);
                 // Ask user for permission
-                confirmNotificationId = NotificationUtils.displayInstallConfirmNotification(context, builder -> builder
+                mConfirmNotificationId = NotificationUtils.displayInstallConfirmNotification(context, builder -> builder
                         .setAutoCancel(false)
                         .setSilent(appInForeground)
                         .setDefaults(Notification.DEFAULT_ALL)
                         .setWhen(System.currentTimeMillis())
                         .setSmallIcon(R.drawable.ic_default_notification)
-                        .setTicker(appLabel)
-                        .setContentTitle(appLabel)
+                        .setTicker(mAppLabel)
+                        .setContentTitle(mAppLabel)
                         .setSubText(context.getString(R.string.package_installer))
                         // A neat way to find the title is to check for sessionId
                         .setContentText(context.getString(sessionId == -1 ? R.string.confirm_uninstallation : R.string.confirm_installation))
@@ -95,18 +91,18 @@ class PackageInstallerBroadcastReceiver extends BroadcastReceiver {
                 break;
             case PackageInstaller.STATUS_SUCCESS:
                 Log.d(TAG, "Install success!");
-                NotificationUtils.cancelInstallConfirmNotification(context, confirmNotificationId);
-                PackageInstallerCompat.sendCompletedBroadcast(packageName, PackageInstallerCompat.STATUS_SUCCESS, sessionId);
+                NotificationUtils.cancelInstallConfirmNotification(context, mConfirmNotificationId);
+                PackageInstallerCompat.sendCompletedBroadcast(context, mPackageName, PackageInstallerCompat.STATUS_SUCCESS, sessionId);
                 break;
             default:
-                NotificationUtils.cancelInstallConfirmNotification(context, confirmNotificationId);
+                NotificationUtils.cancelInstallConfirmNotification(context, mConfirmNotificationId);
                 Intent broadcastError = new Intent(PackageInstallerCompat.ACTION_INSTALL_COMPLETED);
                 broadcastError.putExtra(PackageInstaller.EXTRA_STATUS_MESSAGE, intent.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE));
-                broadcastError.putExtra(PackageInstaller.EXTRA_PACKAGE_NAME, packageName);
+                broadcastError.putExtra(PackageInstaller.EXTRA_PACKAGE_NAME, mPackageName);
                 broadcastError.putExtra(PackageInstaller.EXTRA_OTHER_PACKAGE_NAME, intent.getStringExtra(PackageInstaller.EXTRA_OTHER_PACKAGE_NAME));
                 broadcastError.putExtra(PackageInstaller.EXTRA_STATUS, status);
                 broadcastError.putExtra(PackageInstaller.EXTRA_SESSION_ID, sessionId);
-                mContext.sendBroadcast(broadcastError);
+                context.sendBroadcast(broadcastError);
                 Log.d(TAG, "Install failed! " + intent.getStringExtra(PackageInstaller.EXTRA_STATUS_MESSAGE));
                 break;
         }

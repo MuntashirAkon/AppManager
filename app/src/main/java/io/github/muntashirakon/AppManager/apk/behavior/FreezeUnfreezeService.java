@@ -57,27 +57,27 @@ public class FreezeUnfreezeService extends Service {
 
     private static final String STOP_ACTION = BuildConfig.APPLICATION_ID + ".action.STOP_FREEZE_UNFREEZE_MONITOR";
 
-    private final Map<String, FreezeUnfreeze.ShortcutInfo> packagesToShortcut = new HashMap<>();
-    private final Map<String, Integer> packagesToNotificationId = new HashMap<>();
-    private static final Timer timer = new Timer();
-    private final BroadcastReceiver screenLockedReceiver = new BroadcastReceiver() {
+    private final Map<String, FreezeUnfreeze.ShortcutInfo> mPackagesToShortcut = new HashMap<>();
+    private final Map<String, Integer> mPackagesToNotificationId = new HashMap<>();
+    private static final Timer sTimer = new Timer();
+    private final BroadcastReceiver mScreenLockedReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             try {
-                if (checkLockResult != null) {
-                    checkLockResult.cancel(true);
+                if (mCheckLockResult != null) {
+                    mCheckLockResult.cancel(true);
                 }
-                checkLockResult = ThreadUtils.postOnBackgroundThread(() -> checkLock(-1));
+                mCheckLockResult = ThreadUtils.postOnBackgroundThread(() -> checkLock(-1));
             } catch (Throwable th) {
                 th.printStackTrace();
             }
         }
     };
 
-    private CheckLockTask checkLockTask;
-    private boolean isWorking;
+    private CheckLockTask mCheckLockTask;
+    private boolean mIsWorking;
     @Nullable
-    private Future<?> checkLockResult;
+    private Future<?> mCheckLockResult;
 
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
@@ -86,10 +86,10 @@ public class FreezeUnfreezeService extends Service {
             return START_NOT_STICKY;
         }
         onHandleIntent(intent);
-        if (isWorking) {
+        if (mIsWorking) {
             return START_NOT_STICKY;
         }
-        isWorking = true;
+        mIsWorking = true;
         NotificationManagerCompat notificationManager = NotificationUtils.getNewNotificationManager(this, CHANNEL_ID,
                 "Freeze/unfreeze Monitor", NotificationManagerCompat.IMPORTANCE_LOW);
         Intent stopIntent = new Intent(this, FreezeUnfreezeService.class).setAction(STOP_ACTION);
@@ -112,16 +112,16 @@ public class FreezeUnfreezeService extends Service {
         filter.addAction(Intent.ACTION_SCREEN_ON);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         filter.addAction(Intent.ACTION_USER_PRESENT);
-        registerReceiver(screenLockedReceiver, filter);
+        registerReceiver(mScreenLockedReceiver, filter);
         return START_NOT_STICKY;
     }
 
     @Override
     public void onDestroy() {
-        unregisterReceiver(screenLockedReceiver);
+        unregisterReceiver(mScreenLockedReceiver);
         ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_REMOVE);
-        if (checkLockResult != null) {
-            checkLockResult.cancel(true);
+        if (mCheckLockResult != null) {
+            mCheckLockResult.cancel(true);
         }
         super.onDestroy();
     }
@@ -136,9 +136,9 @@ public class FreezeUnfreezeService extends Service {
         if (intent == null) return;
         FreezeUnfreeze.ShortcutInfo shortcutInfo = FreezeUnfreeze.getShortcutInfo(intent);
         if (shortcutInfo == null) return;
-        packagesToShortcut.put(shortcutInfo.packageName, shortcutInfo);
+        mPackagesToShortcut.put(shortcutInfo.packageName, shortcutInfo);
         int notificationId = shortcutInfo.hashCode();
-        packagesToNotificationId.put(shortcutInfo.packageName, notificationId);
+        mPackagesToNotificationId.put(shortcutInfo.packageName, notificationId);
     }
 
     @WorkerThread
@@ -153,15 +153,15 @@ public class FreezeUnfreezeService extends Service {
         Log.i(TAG, String.format(Locale.ROOT, "checkLock: isProtected=%b, isLocked=%b, isInteractive=%b, delay=%d",
                 isProtected, isLocked, isInteractive, checkLockDelays[delayIndex]));
 
-        if (checkLockTask != null) {
-            Log.i(TAG, String.format(Locale.ROOT, "checkLock: cancelling CheckLockTask[%x]", System.identityHashCode(checkLockTask)));
-            checkLockTask.cancel();
+        if (mCheckLockTask != null) {
+            Log.i(TAG, String.format(Locale.ROOT, "checkLock: cancelling CheckLockTask[%x]", System.identityHashCode(mCheckLockTask)));
+            mCheckLockTask.cancel();
         }
 
         if (isProtected && !isLocked && !isInteractive) {
-            checkLockTask = new CheckLockTask(delayIndex);
-            Log.i(TAG, String.format(Locale.ROOT, "checkLock: scheduling CheckLockTask[%x] for %d ms", System.identityHashCode(checkLockTask), checkLockDelays[delayIndex]));
-            timer.schedule(checkLockTask, checkLockDelays[delayIndex]);
+            mCheckLockTask = new CheckLockTask(delayIndex);
+            Log.i(TAG, String.format(Locale.ROOT, "checkLock: scheduling CheckLockTask[%x] for %d ms", System.identityHashCode(mCheckLockTask), checkLockDelays[delayIndex]));
+            sTimer.schedule(mCheckLockTask, checkLockDelays[delayIndex]);
         } else {
             Log.d(TAG, "checkLock: no need to schedule CheckLockTask");
             if (isProtected && isLocked) {
@@ -172,9 +172,9 @@ public class FreezeUnfreezeService extends Service {
 
     @WorkerThread
     private void freezeAllPackages() {
-        for (String packageName : packagesToShortcut.keySet()) {
-            FreezeUnfreeze.ShortcutInfo shortcutInfo = packagesToShortcut.get(packageName);
-            Integer notificationId = packagesToNotificationId.get(packageName);
+        for (String packageName : mPackagesToShortcut.keySet()) {
+            FreezeUnfreeze.ShortcutInfo shortcutInfo = mPackagesToShortcut.get(packageName);
+            Integer notificationId = mPackagesToNotificationId.get(packageName);
             if (shortcutInfo != null) {
                 try {
                     ApplicationInfo applicationInfo = PackageManagerCompat.getApplicationInfo(shortcutInfo.packageName,

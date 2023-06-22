@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.utils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import org.jetbrains.annotations.Contract;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public final class JSONUtils {
+    @Contract("null -> null")
     @Nullable
     public static <T> JSONArray getJSONArray(@Nullable final T[] typicalArray) {
         if (typicalArray == null) return null;
@@ -22,6 +24,7 @@ public final class JSONUtils {
         return jsonArray;
     }
 
+    @Contract("null -> null")
     @Nullable
     public static JSONArray getJSONArray(@Nullable final int[] typicalArray) {
         if (typicalArray == null) return null;
@@ -30,6 +33,7 @@ public final class JSONUtils {
         return jsonArray;
     }
 
+    @Contract("null -> null")
     @Nullable
     public static <T> JSONArray getJSONArray(@Nullable final Collection<T> collection) {
         if (collection == null || collection.size() == 0) return null;
@@ -84,7 +88,10 @@ public final class JSONUtils {
         }
     }
 
-    public static String getString(@NonNull final JSONObject jsonObject, @NonNull String key, String defaultValue) {
+    @Contract("_,_,!null -> !null")
+    @Nullable
+    public static String getString(@NonNull final JSONObject jsonObject, @NonNull String key,
+                                   @Nullable String defaultValue) {
         try {
             return jsonObject.getString(key);
         } catch (JSONException e) {

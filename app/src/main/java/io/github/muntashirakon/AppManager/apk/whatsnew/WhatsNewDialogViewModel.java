@@ -20,9 +20,9 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
 public class WhatsNewDialogViewModel extends AndroidViewModel {
-    private final MutableLiveData<List<ApkWhatsNewFinder.Change>> changesLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<ApkWhatsNewFinder.Change>> mChangesLiveData = new MutableLiveData<>();
     @Nullable
-    private Future<?> whatsNewResult;
+    private Future<?> mWhatsNewResult;
 
     public WhatsNewDialogViewModel(@NonNull Application application) {
         super(application);
@@ -30,19 +30,20 @@ public class WhatsNewDialogViewModel extends AndroidViewModel {
 
     @Override
     protected void onCleared() {
-        if (whatsNewResult != null) {
-            whatsNewResult.cancel(true);
+        if (mWhatsNewResult != null) {
+            mWhatsNewResult.cancel(true);
         }
         super.onCleared();
     }
 
     public LiveData<List<ApkWhatsNewFinder.Change>> getChangesLiveData() {
-        return changesLiveData;
+        return mChangesLiveData;
     }
 
     public void loadChanges(PackageInfo newPkgInfo, PackageInfo oldPkgInfo) {
-        whatsNewResult = ThreadUtils.postOnBackgroundThread(() -> {
-            ApkWhatsNewFinder.Change[][] changes = ApkWhatsNewFinder.getInstance().getWhatsNew(newPkgInfo, oldPkgInfo);
+        mWhatsNewResult = ThreadUtils.postOnBackgroundThread(() -> {
+            ApkWhatsNewFinder.Change[][] changes = ApkWhatsNewFinder.getInstance().getWhatsNew(getApplication(),
+                    newPkgInfo, oldPkgInfo);
             List<ApkWhatsNewFinder.Change> changeList = new ArrayList<>();
             for (ApkWhatsNewFinder.Change[] changes1 : changes) {
                 if (changes1.length > 0) {
@@ -53,7 +54,7 @@ public class WhatsNewDialogViewModel extends AndroidViewModel {
                 changeList.add(new ApkWhatsNewFinder.Change(ApkWhatsNewFinder.CHANGE_INFO,
                         getApplication().getString(R.string.no_changes)));
             }
-            changesLiveData.postValue(changeList);
+            mChangesLiveData.postValue(changeList);
         });
     }
 }

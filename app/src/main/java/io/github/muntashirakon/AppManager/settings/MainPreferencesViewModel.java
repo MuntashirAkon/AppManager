@@ -136,7 +136,7 @@ public class MainPreferencesViewModel extends AndroidViewModel implements Ops.Ad
     public void removeAllRules() {
         ThreadUtils.postOnBackgroundThread(() -> {
             int[] userHandles = Users.getUsersIds();
-            List<String> packages = ComponentUtils.getAllPackagesWithRules();
+            List<String> packages = ComponentUtils.getAllPackagesWithRules(getApplication());
             for (int userHandle : userHandles) {
                 for (String packageName : packages) {
                     ComponentUtils.removeAllRules(packageName, userHandle);

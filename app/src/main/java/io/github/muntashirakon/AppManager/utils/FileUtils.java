@@ -33,7 +33,6 @@ import java.nio.channels.FileChannel;
 import java.util.Objects;
 import java.util.zip.ZipEntry;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.io.FileSystemManager;
@@ -176,7 +175,7 @@ public final class FileUtils {
     @AnyThread
     @NonNull
     public static File getCachePath() {
-        Context context = AppManager.getContext();
+        Context context = ContextUtils.getContext();
         try {
             return getExternalCachePath(context);
         } catch (IOException e) {
@@ -232,7 +231,7 @@ public final class FileUtils {
     }
 
     public static String translateModePosixToString(int mode) {
-        String res = "";
+        String res;
         if ((mode & O_ACCMODE) == O_RDWR) {
             res = "rw";
         } else if ((mode & O_ACCMODE) == O_WRONLY) {

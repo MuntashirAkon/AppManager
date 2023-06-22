@@ -27,7 +27,7 @@ public class PathContentInfo {
         put("application/zip", true);
     }};
 
-    private static ContentInfoUtil contentInfoUtil;
+    private static ContentInfoUtil sContentInfoUtil;
 
     @NonNull
     public static PathContentInfo fromExtension(@NonNull Path path) {
@@ -51,14 +51,14 @@ public class PathContentInfo {
         if (path.isDirectory()) {
             return DIRECTORY;
         }
-        if (contentInfoUtil == null) {
-            contentInfoUtil = new ContentInfoUtil();
+        if (sContentInfoUtil == null) {
+            sContentInfoUtil = new ContentInfoUtil();
         }
         String ext = path.getExtension();
         ContentInfo extInfo = ext != null ? ContentInfoUtil.findExtensionMatch(ext) : null;
         ContentType2 extType2 = ext != null ? ContentType2.fromFileExtension(ext) : null;
         try (InputStream is = path.openInputStream()) {
-            ContentInfo contentInfo = contentInfoUtil.findMatch(is);
+            ContentInfo contentInfo = sContentInfoUtil.findMatch(is);
             if (contentInfo != null) {
                 // FIXME: 20/11/22 This will not work for invalid extensions. A better option is to use magic-mime-db
                 //  instead which is currently a WIP.

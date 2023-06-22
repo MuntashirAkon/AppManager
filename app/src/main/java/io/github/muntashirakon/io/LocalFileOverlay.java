@@ -81,7 +81,7 @@ final class LocalFileOverlay {
             "rollback-observer", "ss", "system", "system_ce", "system_de", "user", "user_ce", "user_de", "vendor",
             "vendor_ce", "vendor_de"};
     // Read-only here means whether this should be accessed by ReadOnlyDirectory, it has nothing to do with the actual mode of the file.
-    private static final HashMap<String, String[]> pathReadOnlyMap = new HashMap<String, String[]>() {{
+    private static final HashMap<String, String[]> sPathReadOnlyMap = new HashMap<String, String[]>() {{
         int userId = UserHandleHidden.myUserId();
         String appId;
         try {
@@ -152,12 +152,12 @@ final class LocalFileOverlay {
         if (path.equals("/data/app")) {
             fetchDataAppPaths();
         }
-        return pathReadOnlyMap.get(path);
+        return sPathReadOnlyMap.get(path);
     }
 
     @SuppressWarnings("SuspiciousRegexArgument") // Not on windows
     public static void fetchDataAppPaths() {
-        if (pathReadOnlyMap.get("/data/app") != null) {
+        if (sPathReadOnlyMap.get("/data/app") != null) {
             return;
         }
         List<ApplicationInfo> applicationInfoList = null;
@@ -197,13 +197,13 @@ final class LocalFileOverlay {
             }
         }
         // Update pathReadOnlyMap
-        pathReadOnlyMap.put("/data/app", paths.keySet().toArray(new String[0]));
+        sPathReadOnlyMap.put("/data/app", paths.keySet().toArray(new String[0]));
         for (String part1 : paths.keySet()) {
             List<String> part2 = paths.get(part1);
             if (part2 == null) {
                 continue;
             }
-            pathReadOnlyMap.put("/data/app/" + part1, part2.toArray(new String[0]));
+            sPathReadOnlyMap.put("/data/app/" + part1, part2.toArray(new String[0]));
         }
     }
 }

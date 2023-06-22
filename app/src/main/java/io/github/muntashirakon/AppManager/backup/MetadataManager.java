@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Locale;
 
 import aosp.libcore.util.HexEncoding;
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
@@ -40,6 +39,7 @@ import io.github.muntashirakon.AppManager.misc.VMRuntime;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
@@ -161,7 +161,7 @@ public final class MetadataManager {
             CharSequence titleText = shortName == null ? context.getText(R.string.base_backup) : shortName;
 
             StringBuilder subtitleText = new StringBuilder()
-                    .append(DateUtils.formatDateTime(backupTime))
+                    .append(DateUtils.formatDateTime(context, backupTime))
                     .append(", ")
                     .append(flags.toLocalisedString(context))
                     .append(", ")
@@ -216,7 +216,7 @@ public final class MetadataManager {
     private final Context mContext;
 
     private MetadataManager() {
-        mContext = AppManager.getContext();
+        mContext = ContextUtils.getContext();
     }
 
     public Metadata getMetadata() {

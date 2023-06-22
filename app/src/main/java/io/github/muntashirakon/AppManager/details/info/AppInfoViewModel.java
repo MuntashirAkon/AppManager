@@ -70,13 +70,13 @@ import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 
 public class AppInfoViewModel extends AndroidViewModel {
-    private final MutableLiveData<CharSequence> packageLabel = new MutableLiveData<>();
-    private final MutableLiveData<TagCloud> tagCloud = new MutableLiveData<>();
-    private final MutableLiveData<AppInfo> appInfo = new MutableLiveData<>();
-    private final MutableLiveData<Pair<Integer, CharSequence>> installExistingResult = new MutableLiveData<>();
-    private final ExecutorService executor = Executors.newFixedThreadPool(4);
+    private final MutableLiveData<CharSequence> mPackageLabel = new MutableLiveData<>();
+    private final MutableLiveData<TagCloud> mTagCloud = new MutableLiveData<>();
+    private final MutableLiveData<AppInfo> mAppInfo = new MutableLiveData<>();
+    private final MutableLiveData<Pair<Integer, CharSequence>> mInstallExistingResult = new MutableLiveData<>();
+    private final ExecutorService mExecutor = Executors.newFixedThreadPool(4);
     @Nullable
-    private AppDetailsViewModel mainModel;
+    private AppDetailsViewModel mMainModel;
 
     public AppInfoViewModel(@NonNull Application application) {
         super(application);
@@ -84,56 +84,56 @@ public class AppInfoViewModel extends AndroidViewModel {
 
     @Override
     protected void onCleared() {
-        executor.shutdownNow();
+        mExecutor.shutdownNow();
         super.onCleared();
     }
 
     public void setMainModel(@NonNull AppDetailsViewModel mainModel) {
-        this.mainModel = mainModel;
+        mMainModel = mainModel;
     }
 
     public LiveData<CharSequence> getPackageLabel() {
-        return packageLabel;
+        return mPackageLabel;
     }
 
     public LiveData<TagCloud> getTagCloud() {
-        return tagCloud;
+        return mTagCloud;
     }
 
     public LiveData<AppInfo> getAppInfo() {
-        return appInfo;
+        return mAppInfo;
     }
 
     public LiveData<Pair<Integer, CharSequence>> getInstallExistingResult() {
-        return installExistingResult;
+        return mInstallExistingResult;
     }
 
     @WorkerThread
     public void loadPackageLabel() {
-        if (mainModel != null) {
-            PackageInfo pi = mainModel.getPackageInfo();
+        if (mMainModel != null) {
+            PackageInfo pi = mMainModel.getPackageInfo();
             if (pi != null) {
-                packageLabel.postValue(pi.applicationInfo.loadLabel(getApplication().getPackageManager()));
+                mPackageLabel.postValue(pi.applicationInfo.loadLabel(getApplication().getPackageManager()));
             }
         }
     }
 
     @WorkerThread
     public void loadTagCloud() {
-        if (mainModel == null) return;
-        PackageInfo packageInfo = mainModel.getPackageInfo();
+        if (mMainModel == null) return;
+        PackageInfo packageInfo = mMainModel.getPackageInfo();
         if (packageInfo == null) return;
-        boolean isExternalApk = mainModel.isExternalApk();
+        boolean isExternalApk = mMainModel.isExternalApk();
         String packageName = packageInfo.packageName;
-        int userId = mainModel.getUserHandle();
+        int userId = mMainModel.getUserId();
         ApplicationInfo applicationInfo = packageInfo.applicationInfo;
         TagCloud tagCloud = new TagCloud();
         try {
             HashMap<String, RuleType> trackerComponents = ComponentUtils
-                    .getTrackerComponentsForPackageInfo(packageInfo);
+                    .getTrackerComponentsForPackage(packageInfo);
             tagCloud.trackerComponents = new ArrayList<>(trackerComponents.size());
             for (String component : trackerComponents.keySet()) {
-                ComponentRule componentRule = mainModel.getComponentRule(component);
+                ComponentRule componentRule = mMainModel.getComponentRule(component);
                 if (componentRule == null) {
                     componentRule = new ComponentRule(packageName, component, trackerComponents.get(component),
                             Prefs.Blocking.getDefaultBlockingMethod());
@@ -155,7 +155,7 @@ public class AppInfoViewModel extends AndroidViewModel {
                     }
                 }
             }
-            tagCloud.splitCount = mainModel.getSplitCount();
+            tagCloud.splitCount = mMainModel.getSplitCount();
             tagCloud.isDebuggable = (applicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
             tagCloud.isTestOnly = ApplicationInfoCompat.isTestOnly(applicationInfo);
             tagCloud.hasCode = (applicationInfo.flags & ApplicationInfo.FLAG_HAS_CODE) != 0;
@@ -241,7 +241,7 @@ public class AppInfoViewModel extends AndroidViewModel {
                 }
                 tagCloud.staticSharedLibraryNames = staticSharedLibraryNames.toArray(new String[0]);
             }
-            this.tagCloud.postValue(tagCloud);
+            mTagCloud.postValue(tagCloud);
         } catch (Throwable th) {
             // Unknown behaviour
             ThreadUtils.postOnMainThread(() -> {
@@ -253,14 +253,14 @@ public class AppInfoViewModel extends AndroidViewModel {
 
     @WorkerThread
     public void loadAppInfo() {
-        if (mainModel == null) return;
-        PackageInfo packageInfo = mainModel.getPackageInfo();
+        if (mMainModel == null) return;
+        PackageInfo packageInfo = mMainModel.getPackageInfo();
         if (packageInfo == null) return;
         String packageName = packageInfo.packageName;
         ApplicationInfo applicationInfo = packageInfo.applicationInfo;
         int userId = UserHandleHidden.getUserId(applicationInfo.uid);
         PackageManager pm = getApplication().getPackageManager();
-        boolean isExternalApk = mainModel.isExternalApk();
+        boolean isExternalApk = mMainModel.isExternalApk();
         AppInfo appInfo = new AppInfo();
         try {
             // Set source dir
@@ -268,7 +268,7 @@ public class AppInfoViewModel extends AndroidViewModel {
                 appInfo.sourceDir = new File(applicationInfo.publicSourceDir).getParent();
             }
             // Set split entries
-            ApkFile apkFile = ApkFile.getInstance(mainModel.getApkFileKey());
+            ApkFile apkFile = ApkFile.getInstance(mMainModel.getApkFileKey());
             int countSplits = apkFile.getEntries().size() - 1;
             if (!isExternalApk) {
                 // Set data dirs
@@ -322,7 +322,7 @@ public class AppInfoViewModel extends AndroidViewModel {
                 // hiddenApiEnforcementPolicy
                 appInfo.hiddenApiEnforcementPolicy = ApplicationInfoCompat.getHiddenApiEnforcementPolicy(applicationInfo);
             }
-            this.appInfo.postValue(appInfo);
+            mAppInfo.postValue(appInfo);
         } catch (Throwable th) {
             // Unknown behaviour
             ThreadUtils.postOnMainThread(() -> {
@@ -333,8 +333,8 @@ public class AppInfoViewModel extends AndroidViewModel {
     }
 
     public void installExisting(@UserIdInt int userId) {
-        if (mainModel == null) return;
-        executor.submit(() -> {
+        if (mMainModel == null) return;
+        mExecutor.submit(() -> {
             PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance();
             installer.setOnInstallListener(new PackageInstallerCompat.OnInstallListener() {
                 @Override
@@ -350,10 +350,10 @@ public class AppInfoViewModel extends AndroidViewModel {
                     if (statusMessage != null) {
                         sb.append("\n\n").append(statusMessage);
                     }
-                    installExistingResult.postValue(new Pair<>(result, sb));
+                    mInstallExistingResult.postValue(new Pair<>(result, sb));
                 }
             });
-            installer.installExisting(Objects.requireNonNull(mainModel.getPackageName()), userId);
+            installer.installExisting(Objects.requireNonNull(mMainModel.getPackageName()), userId);
         });
     }
 

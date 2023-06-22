@@ -3,6 +3,7 @@
 package io.github.muntashirakon.AppManager.crypto;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -10,12 +11,13 @@ import java.io.OutputStream;
 import io.github.muntashirakon.io.Path;
 
 public class DummyCrypto implements Crypto {
-    Path[] newFiles;
+    @Nullable
+    private Path[] mNewFiles;
 
     @Override
     public void encrypt(@NonNull Path[] files) {
         // Have to return new files to be processed further
-        newFiles = files;
+        mNewFiles = files;
     }
 
     @Override
@@ -26,7 +28,7 @@ public class DummyCrypto implements Crypto {
     @Override
     public void decrypt(@NonNull Path[] files) {
         // The new files will be deleted, so don't send
-        newFiles = null;
+        mNewFiles = null;
     }
 
     @Override
@@ -37,8 +39,8 @@ public class DummyCrypto implements Crypto {
     @NonNull
     @Override
     public Path[] getNewFiles() {
-        if (newFiles == null) return new Path[0];
-        return newFiles;
+        if (mNewFiles == null) return new Path[0];
+        return mNewFiles;
     }
 
     @Override

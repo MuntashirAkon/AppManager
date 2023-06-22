@@ -26,66 +26,66 @@ import io.github.muntashirakon.dialog.DialogTitleBuilder;
 import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 
 public class RulesPreferences extends PreferenceFragment {
-    private final String[] blockingMethods = new String[]{
+    private static final String[] BLOCKING_METHODS = new String[]{
             ComponentRule.COMPONENT_TO_BE_BLOCKED_IFW_DISABLE,
             ComponentRule.COMPONENT_TO_BE_BLOCKED_IFW,
             ComponentRule.COMPONENT_TO_BE_DISABLED
     };
 
-    private final Integer[] blockingMethodTitles = new Integer[]{
+    private static final Integer[] BLOCKING_METHOD_TITLES = new Integer[]{
             R.string.intent_firewall_and_disable,
             R.string.intent_firewall,
             R.string.disable
     };
 
-    private final Integer[] blockingMethodDescriptions = new Integer[]{
+    private static final Integer[] BLOCKING_METHOD_DESCRIPTIONS = new Integer[]{
             R.string.pref_intent_firewall_and_disable_description,
             R.string.pref_intent_firewall_description,
             R.string.pref_disable_description
     };
 
-    private final Integer[] freezingMethods = new Integer[]{
+    private static final Integer[] FREEZING_METHODS = new Integer[]{
             FreezeUtils.FREEZE_SUSPEND,
             FreezeUtils.FREEZE_DISABLE,
             FreezeUtils.FREEZE_HIDE
     };
 
-    private final Integer[] freezingMethodTitles = new Integer[]{
+    private static final Integer[] FREEZING_METHOD_TITLES = new Integer[]{
             R.string.suspend_app,
             R.string.disable,
             R.string.hide_app
     };
 
-    private final Integer[] freezingMethodDescriptions = new Integer[]{
+    private static final Integer[] FREEZING_METHOD_DESCRIPTIONS = new Integer[]{
             R.string.suspend_app_description,
             R.string.disable_app_description,
             R.string.hide_app_description
     };
 
-    private SettingsActivity activity;
+    private SettingsActivity mActivity;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.preferences_rules);
         getPreferenceManager().setPreferenceDataStore(new SettingsDataStore());
         MainPreferencesViewModel model = new ViewModelProvider(requireActivity()).get(MainPreferencesViewModel.class);
-        activity = (SettingsActivity) requireActivity();
+        mActivity = (SettingsActivity) requireActivity();
         // Default freezing method
         Preference defaultFreezingMethod = Objects.requireNonNull(findPreference("freeze_type"));
-        AtomicInteger freezeTypeIdx = new AtomicInteger(ArrayUtils.indexOf(freezingMethods,
+        AtomicInteger freezeTypeIdx = new AtomicInteger(ArrayUtils.indexOf(FREEZING_METHODS,
                 Prefs.Blocking.getDefaultFreezingMethod()));
         if (freezeTypeIdx.get() != -1) {
-            defaultFreezingMethod.setSummary(freezingMethodTitles[freezeTypeIdx.get()]);
+            defaultFreezingMethod.setSummary(FREEZING_METHOD_TITLES[freezeTypeIdx.get()]);
         }
         defaultFreezingMethod.setEnabled(SelfPermissions.canFreezeUnfreezePackages());
         defaultFreezingMethod.setOnPreferenceClickListener(preference -> {
-            CharSequence[] itemDescription = new CharSequence[freezingMethods.length];
-            for (int i = 0; i < freezingMethods.length; ++i) {
-                itemDescription[i] = new SpannableStringBuilder(getString(freezingMethodTitles[i])).append("\n")
-                        .append(UIUtils.getSmallerText(getString(freezingMethodDescriptions[i])));
+            CharSequence[] itemDescription = new CharSequence[FREEZING_METHODS.length];
+            for (int i = 0; i < FREEZING_METHODS.length; ++i) {
+                itemDescription[i] = new SpannableStringBuilder(getString(FREEZING_METHOD_TITLES[i])).append("\n")
+                        .append(UIUtils.getSmallerText(getString(FREEZING_METHOD_DESCRIPTIONS[i])));
             }
-            new SearchableSingleChoiceDialogBuilder<>(activity, freezingMethods, itemDescription)
-                    .setTitle(new DialogTitleBuilder(activity)
+            new SearchableSingleChoiceDialogBuilder<>(mActivity, FREEZING_METHODS, itemDescription)
+                    .setTitle(new DialogTitleBuilder(mActivity)
                             .setTitle(R.string.pref_default_freezing_method)
                             .setSubtitle(R.string.pref_default_freezing_method_description)
                             .build())
@@ -95,7 +95,7 @@ public class RulesPreferences extends PreferenceFragment {
                             return;
                         }
                         Prefs.Blocking.setDefaultFreezingMethod(selectedFreezingMethod);
-                        defaultFreezingMethod.setSummary(freezingMethodTitles[which]);
+                        defaultFreezingMethod.setSummary(FREEZING_METHOD_TITLES[which]);
                         freezeTypeIdx.set(which);
                         dialog.dismiss();
                     })
@@ -107,18 +107,18 @@ public class RulesPreferences extends PreferenceFragment {
         Preference defaultBlockingMethod = Objects.requireNonNull(findPreference("default_blocking_method"));
         // Disable this option if IFW folder can't be accessed
         defaultBlockingMethod.setEnabled(SelfPermissions.canBlockByIFW());
-        int csIdx = ArrayUtils.indexOf(blockingMethods, Prefs.Blocking.getDefaultBlockingMethod());
+        int csIdx = ArrayUtils.indexOf(BLOCKING_METHODS, Prefs.Blocking.getDefaultBlockingMethod());
         if (csIdx != -1) {
-            defaultBlockingMethod.setSummary(blockingMethodTitles[csIdx]);
+            defaultBlockingMethod.setSummary(BLOCKING_METHOD_TITLES[csIdx]);
         }
         defaultBlockingMethod.setOnPreferenceClickListener(preference -> {
-            CharSequence[] itemDescription = new CharSequence[blockingMethods.length];
-            for (int i = 0; i < blockingMethods.length; ++i) {
-                itemDescription[i] = new SpannableStringBuilder(getString(blockingMethodTitles[i])).append("\n")
-                        .append(UIUtils.getSmallerText(getString(blockingMethodDescriptions[i])));
+            CharSequence[] itemDescription = new CharSequence[BLOCKING_METHODS.length];
+            for (int i = 0; i < BLOCKING_METHODS.length; ++i) {
+                itemDescription[i] = new SpannableStringBuilder(getString(BLOCKING_METHOD_TITLES[i])).append("\n")
+                        .append(UIUtils.getSmallerText(getString(BLOCKING_METHOD_DESCRIPTIONS[i])));
             }
-            new SearchableSingleChoiceDialogBuilder<>(activity, blockingMethods, itemDescription)
-                    .setTitle(new DialogTitleBuilder(activity)
+            new SearchableSingleChoiceDialogBuilder<>(mActivity, BLOCKING_METHODS, itemDescription)
+                    .setTitle(new DialogTitleBuilder(mActivity)
                             .setTitle(R.string.pref_default_blocking_method)
                             .setSubtitle(R.string.pref_default_blocking_method_description)
                             .build())
@@ -128,7 +128,7 @@ public class RulesPreferences extends PreferenceFragment {
                             return;
                         }
                         Prefs.Blocking.setDefaultBlockingMethod(selectedBlockingMethod);
-                        defaultBlockingMethod.setSummary(blockingMethodTitles[which]);
+                        defaultBlockingMethod.setSummary(BLOCKING_METHOD_TITLES[which]);
                         dialog.dismiss();
                     })
                     .setNegativeButton(R.string.close, null)
@@ -146,11 +146,11 @@ public class RulesPreferences extends PreferenceFragment {
         });
         // Remove all rules
         ((Preference) Objects.requireNonNull(findPreference("remove_all_rules"))).setOnPreferenceClickListener(preference -> {
-            new MaterialAlertDialogBuilder(activity)
+            new MaterialAlertDialogBuilder(mActivity)
                     .setTitle(R.string.pref_remove_all_rules)
                     .setMessage(R.string.are_you_sure)
                     .setPositiveButton(R.string.yes, (dialog, which) -> {
-                        activity.progressIndicator.show();
+                        mActivity.progressIndicator.show();
                         model.removeAllRules();
                     })
                     .setNegativeButton(R.string.no, null)

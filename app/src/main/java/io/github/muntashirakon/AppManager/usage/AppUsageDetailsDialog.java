@@ -149,21 +149,23 @@ public class AppUsageDetailsDialog extends CapsuleBottomSheetDialogFragment {
             }
         }
 
+        @Nullable
         private List<PackageUsageInfo.Entry> mDefaultList;
+        @Nullable
         private List<PackageUsageInfo.Entry> mAdapterList;
-        private final Context context;
+        private final Context mContext;
 
         private final int mColorTransparent;
         private final int mColorSemiTransparent;
 
         AppUsageDetailsAdapter(@NonNull Activity activity) {
-            context = activity;
+            mContext = activity;
             mColorTransparent = Color.TRANSPARENT;
             mColorSemiTransparent = ContextCompat.getColor(activity, io.github.muntashirakon.ui.R.color.semi_transparent);
             setHasStableIds(true);
         }
 
-        void setDefaultList(List<PackageUsageInfo.Entry> list) {
+        void setDefaultList(@Nullable List<PackageUsageInfo.Entry> list) {
             mDefaultList = list;
             mAdapterList = list;
             notifyDataSetChanged();
@@ -189,8 +191,9 @@ public class AppUsageDetailsDialog extends CapsuleBottomSheetDialogFragment {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             PackageUsageInfo.Entry entry = mAdapterList.get(position);
-            holder.title.setText(String.format(Locale.getDefault(), "%s", DateUtils.formatDateTime(entry.startTime)));
-            holder.subtitle.setText(DateUtils.getFormattedDuration(context, entry.getDuration()));
+            String dateTime = String.format(Locale.getDefault(), "%s", DateUtils.formatDateTime(mContext, entry.startTime));
+            holder.title.setText(dateTime);
+            holder.subtitle.setText(DateUtils.getFormattedDuration(mContext, entry.getDuration()));
             holder.itemView.setBackgroundColor(position % 2 == 0 ? mColorSemiTransparent : mColorTransparent);
         }
     }

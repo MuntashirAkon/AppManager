@@ -70,23 +70,23 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         return fragment;
     }
 
-    private FmViewModel model;
+    private FmViewModel mModel;
     @Nullable
-    private RecyclerView recyclerView;
+    private RecyclerView mRecyclerView;
     @Nullable
-    private FmAdapter adapter;
+    private FmAdapter mAdapter;
     @Nullable
-    private SwipeRefreshLayout swipeRefresh;
+    private SwipeRefreshLayout mSwipeRefresh;
     @Nullable
-    private MultiSelectionView multiSelectionView;
-    private FmPathListAdapter pathListAdapter;
-    private FmActivity activity;
+    private MultiSelectionView mMultiSelectionView;
+    private FmPathListAdapter mPathListAdapter;
+    private FmActivity mActivity;
 
     private final OnBackPressedCallback mBackPressedCallback = new OnBackPressedCallback(true) {
         @Override
         public void handleOnBackPressed() {
-            if (pathListAdapter != null && pathListAdapter.getCurrentPosition() > 0) {
-                model.loadFiles(pathListAdapter.calculateUri(pathListAdapter.getCurrentPosition() - 1));
+            if (mPathListAdapter != null && mPathListAdapter.getCurrentPosition() > 0) {
+                mModel.loadFiles(mPathListAdapter.calculateUri(mPathListAdapter.getCurrentPosition() - 1));
                 return;
             }
             setEnabled(false);
@@ -98,7 +98,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        model = new ViewModelProvider(this).get(FmViewModel.class);
+        mModel = new ViewModelProvider(this).get(FmViewModel.class);
     }
 
     @Nullable
@@ -124,22 +124,22 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         if (options == null) {
             options = Objects.requireNonNull(BundleCompat.getParcelable(requireArguments(), ARG_OPTIONS, FmActivity.Options.class));
         }
-        activity = (FmActivity) requireActivity();
+        mActivity = (FmActivity) requireActivity();
         // Set title and subtitle
-        ActionBar actionBar = activity.getSupportActionBar();
-        swipeRefresh = view.findViewById(R.id.swipe_refresh);
-        swipeRefresh.setOnRefreshListener(this);
+        ActionBar actionBar = mActivity.getSupportActionBar();
+        mSwipeRefresh = view.findViewById(R.id.swipe_refresh);
+        mSwipeRefresh.setOnRefreshListener(this);
         RecyclerView pathListView = view.findViewById(R.id.path_list);
-        pathListView.setLayoutManager(new LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false));
-        pathListAdapter = new FmPathListAdapter(model);
-        pathListAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+        pathListView.setLayoutManager(new LinearLayoutManager(mActivity, RecyclerView.HORIZONTAL, false));
+        mPathListAdapter = new FmPathListAdapter(mModel);
+        mPathListAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
                 LinearLayoutManager layoutManager = (LinearLayoutManager) pathListView.getLayoutManager();
                 if (layoutManager == null) {
                     return;
                 }
-                layoutManager.scrollToPositionWithOffset(pathListAdapter.getCurrentPosition(), 0);
+                layoutManager.scrollToPositionWithOffset(mPathListAdapter.getCurrentPosition(), 0);
             }
 
             @Override
@@ -147,29 +147,29 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
                 onChanged();
             }
         });
-        pathListView.setAdapter(pathListAdapter);
+        pathListView.setAdapter(mPathListAdapter);
         MaterialButton pathEditButton = view.findViewById(R.id.uri_edit);
         pathEditButton.setOnClickListener(v -> {
-            String path = FmUtils.getDisplayablePath(model.getCurrentUri());
-            new TextInputDialogBuilder(activity, null)
+            String path = FmUtils.getDisplayablePath(mModel.getCurrentUri());
+            new TextInputDialogBuilder(mActivity, null)
                     .setTitle(R.string.go_to_path)
                     .setInputText(path)
                     .setPositiveButton(R.string.go, (dialog, which, inputText, isChecked) -> {
                         if (!TextUtils.isEmpty(inputText)) {
                             String p = inputText.toString();
-                            model.loadFiles(p.startsWith(File.separator) ? Uri.fromFile(new File(p)) : Uri.parse(p));
+                            mModel.loadFiles(p.startsWith(File.separator) ? Uri.fromFile(new File(p)) : Uri.parse(p));
                         }
                     })
                     .setNegativeButton(R.string.close, null)
                     .show();
         });
-        recyclerView = view.findViewById(R.id.list_item);
-        recyclerView.setLayoutManager(new LinearLayoutManager(activity));
-        adapter = new FmAdapter(model, activity);
-        adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+        mRecyclerView = view.findViewById(R.id.list_item);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
+        mAdapter = new FmAdapter(mModel, mActivity);
+        mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
-                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                LinearLayoutManager layoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
                 if (layoutManager == null) {
                     return;
                 }
@@ -178,31 +178,31 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
                     layoutManager.scrollToPositionWithOffset(scrollPosition.get(), 0);
                     scrollPosition.set(RecyclerView.NO_POSITION);
                 } else {
-                    layoutManager.scrollToPositionWithOffset(model.getCurrentScrollPosition(), 0);
+                    layoutManager.scrollToPositionWithOffset(mModel.getCurrentScrollPosition(), 0);
                 }
             }
         });
-        recyclerView.setAdapter(adapter);
-        multiSelectionView = view.findViewById(R.id.selection_view);
-        multiSelectionView.hide();
+        mRecyclerView.setAdapter(mAdapter);
+        mMultiSelectionView = view.findViewById(R.id.selection_view);
+        mMultiSelectionView.hide();
         // Set observer
-        model.getLastUriLiveData().observe(getViewLifecycleOwner(), uri1 -> {
+        mModel.getLastUriLiveData().observe(getViewLifecycleOwner(), uri1 -> {
             if (uri1 == null) {
                 return;
             }
-            if (recyclerView != null) {
-                View v = recyclerView.getChildAt(0);
+            if (mRecyclerView != null) {
+                View v = mRecyclerView.getChildAt(0);
                 if (v != null) {
-                    model.setScrollPosition(uri1, recyclerView.getChildAdapterPosition(v));
+                    mModel.setScrollPosition(uri1, mRecyclerView.getChildAdapterPosition(v));
                 }
-                adapter.setFmList(Collections.emptyList());
+                mAdapter.setFmList(Collections.emptyList());
             }
         });
-        model.getFmItemsLiveData().observe(getViewLifecycleOwner(), fmItems -> {
-            if (swipeRefresh != null) swipeRefresh.setRefreshing(false);
-            adapter.setFmList(fmItems);
+        mModel.getFmItemsLiveData().observe(getViewLifecycleOwner(), fmItems -> {
+            if (mSwipeRefresh != null) mSwipeRefresh.setRefreshing(false);
+            mAdapter.setFmList(fmItems);
         });
-        model.getUriLiveData().observe(getViewLifecycleOwner(), uri1 -> {
+        mModel.getUriLiveData().observe(getViewLifecycleOwner(), uri1 -> {
             if (actionBar != null) {
                 String title = uri1.getLastPathSegment();
                 if (TextUtils.isEmpty(title)) {
@@ -210,12 +210,12 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
                 }
                 actionBar.setTitle(title);
             }
-            if (swipeRefresh != null) {
-                swipeRefresh.setRefreshing(true);
+            if (mSwipeRefresh != null) {
+                mSwipeRefresh.setRefreshing(true);
             }
-            pathListAdapter.setCurrentUri(uri1);
+            mPathListAdapter.setCurrentUri(uri1);
         });
-        model.getFolderShortInfoLiveData().observe(getViewLifecycleOwner(), folderShortInfo -> {
+        mModel.getFolderShortInfoLiveData().observe(getViewLifecycleOwner(), folderShortInfo -> {
             if (actionBar == null) {
                 return;
             }
@@ -252,32 +252,32 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
             }
             actionBar.setSubtitle(subtitle);
         });
-        model.getDisplayPropertiesLiveData().observe(getViewLifecycleOwner(), uri1 -> {
+        mModel.getDisplayPropertiesLiveData().observe(getViewLifecycleOwner(), uri1 -> {
             FilePropertiesDialogFragment dialogFragment = FilePropertiesDialogFragment.getInstance(uri1);
-            dialogFragment.show(activity.getSupportFragmentManager(), FilePropertiesDialogFragment.TAG);
+            dialogFragment.show(mActivity.getSupportFragmentManager(), FilePropertiesDialogFragment.TAG);
         });
-        model.getShortcutCreatorLiveData().observe(getViewLifecycleOwner(), pathBitmapPair -> {
+        mModel.getShortcutCreatorLiveData().observe(getViewLifecycleOwner(), pathBitmapPair -> {
             Path path = pathBitmapPair.first;
             Bitmap icon = pathBitmapPair.second;
             if (path.isDirectory()) {
-                LauncherShortcuts.fm_createForFolder(activity, path.getName(), path.getUri());
+                LauncherShortcuts.fm_createForFolder(mActivity, path.getName(), path.getUri());
             } else {
-                LauncherShortcuts.fm_createForFile(activity, path.getName(), icon, path.getUri(), null);
+                LauncherShortcuts.fm_createForFile(mActivity, path.getName(), icon, path.getUri(), null);
             }
         });
-        model.setOptions(options, uri);
+        mModel.setOptions(options, uri);
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        if (model != null) {
-            outState.putParcelable(ARG_URI, model.getCurrentUri());
-            outState.putParcelable(ARG_OPTIONS, model.getOptions());
+        if (mModel != null) {
+            outState.putParcelable(ARG_URI, mModel.getCurrentUri());
+            outState.putParcelable(ARG_OPTIONS, mModel.getOptions());
         }
-        if (recyclerView != null) {
-            View v = recyclerView.getChildAt(0);
+        if (mRecyclerView != null) {
+            View v = mRecyclerView.getChildAt(0);
             if (v != null) {
-                outState.putInt(ARG_POSITION, recyclerView.getChildAdapterPosition(v));
+                outState.putInt(ARG_POSITION, mRecyclerView.getChildAdapterPosition(v));
             }
         }
     }
@@ -299,21 +299,21 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_refresh) {
-            model.reload();
+            mModel.reload();
             return true;
         } else if (id == R.id.action_shortcut) {
-            Uri uri = pathListAdapter.getCurrentUri();
+            Uri uri = mPathListAdapter.getCurrentUri();
             if (uri != null) {
-                model.createShortcut(uri);
+                mModel.createShortcut(uri);
             }
             return true;
         } else if (id == R.id.action_storage) {
             ThreadUtils.postOnBackgroundThread(() -> {
-                ArrayMap<String, Uri> storageLocations = StorageUtils.getAllStorageLocations(activity);
+                ArrayMap<String, Uri> storageLocations = StorageUtils.getAllStorageLocations(mActivity);
                 if (storageLocations.size() == 0) {
-                    activity.runOnUiThread(() -> {
+                    mActivity.runOnUiThread(() -> {
                         if (isDetached()) return;
-                        new MaterialAlertDialogBuilder(activity)
+                        new MaterialAlertDialogBuilder(mActivity)
                                 .setTitle(R.string.storage)
                                 .setMessage(R.string.no_volumes_found)
                                 .setNegativeButton(R.string.ok, null)
@@ -326,14 +326,14 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
                 for (int i = 0; i < storageLocations.size(); ++i) {
                     backupVolumes[i] = storageLocations.valueAt(i);
                     backupVolumesStr[i] = new SpannableStringBuilder(storageLocations.keyAt(i)).append("\n")
-                            .append(getSecondaryText(activity, getSmallerText(backupVolumes[i].getPath())));
+                            .append(getSecondaryText(mActivity, getSmallerText(backupVolumes[i].getPath())));
                 }
-                activity.runOnUiThread(() -> {
+                mActivity.runOnUiThread(() -> {
                     if (isDetached()) return;
-                    new SearchableItemsDialogBuilder<>(activity, backupVolumesStr)
+                    new SearchableItemsDialogBuilder<>(mActivity, backupVolumesStr)
                             .setTitle(R.string.storage)
                             .setOnItemClickListener((dialog, which, item1) -> {
-                                model.loadFiles(backupVolumes[which]);
+                                mModel.loadFiles(backupVolumes[which]);
                                 dialog.dismiss();
                             })
                             .setNegativeButton(R.string.cancel, null)
@@ -343,11 +343,11 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
             return true;
         } else if (id == R.id.action_list_options) {
             FmListOptions listOptions = new FmListOptions();
-            listOptions.setListOptionActions(model);
+            listOptions.setListOptionActions(mModel);
             listOptions.show(getChildFragmentManager(), FmListOptions.TAG);
             return true;
         } else if (id == R.id.action_new_window) {
-            Intent intent = new Intent(activity, FmActivity.class);
+            Intent intent = new Intent(mActivity, FmActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
             startActivity(intent);
             return true;
@@ -368,6 +368,6 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
 
     @Override
     public void onRefresh() {
-        if (model != null) model.reload();
+        if (mModel != null) mModel.reload();
     }
 }

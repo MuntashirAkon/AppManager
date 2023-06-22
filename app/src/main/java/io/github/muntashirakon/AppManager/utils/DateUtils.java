@@ -10,42 +10,42 @@ import androidx.annotation.NonNull;
 import java.text.DateFormat;
 import java.util.Date;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 
 public final class DateUtils {
     @NonNull
-    public static String formatDate(long millis) {
+    public static String formatDate(@NonNull Context context, long millis) {
         Date dateTime = new Date(millis);
-        return getDateFormat().format(dateTime);
+        return getDateFormat(context).format(dateTime);
     }
 
     @NonNull
-    public static String formatDateTime(long millis) {
+    public static String formatDateTime(@NonNull Context context, long millis) {
         Date dateTime = new Date(millis);
-        String date = getDateFormat().format(dateTime);
-        String time = getTimeFormat().format(dateTime);
+        String date = getDateFormat(context).format(dateTime);
+        String time = getTimeFormat(context).format(dateTime);
         return date + " " + time;
     }
 
     @NonNull
-    public static String formatWeekMediumDateTime(long millis) {
+    public static String formatWeekMediumDateTime(@NonNull Context context, long millis) {
         Date dateTime = new Date(millis);
         CharSequence week = android.text.format.DateFormat.format("EE", dateTime);
-        String date = getMediumDateFormat().format(dateTime);
-        String time = getTimeFormat().format(dateTime);
+        String date = getMediumDateFormat(context).format(dateTime);
+        String time = getTimeFormat(context).format(dateTime);
         return week + ", " + date + " " + time;
     }
 
-    public static String getFormattedDuration(Context context, long millis) {
+    public static String getFormattedDuration(@NonNull Context context, long millis) {
         return getFormattedDuration(context, millis, false);
     }
 
-    public static String getFormattedDuration(Context context, long millis, boolean addSign) {
+    public static String getFormattedDuration(@NonNull Context context, long millis, boolean addSign) {
         return getFormattedDuration(context, millis, addSign, false);
     }
 
-    public static String getFormattedDuration(Context context, long millis, boolean addSign, boolean includeSeconds) {
+    public static String getFormattedDuration(@NonNull Context context, long millis, boolean addSign,
+                                              boolean includeSeconds) {
         String fTime = "";
         if (millis < 0) {
             millis = -millis;
@@ -177,15 +177,15 @@ public final class DateUtils {
         return (addSign && isNegative ? "-" : "") + fTime;
     }
 
-    private static DateFormat getDateFormat() {
-        return android.text.format.DateFormat.getDateFormat(AppManager.getContext());
+    private static DateFormat getDateFormat(@NonNull Context context) {
+        return android.text.format.DateFormat.getDateFormat(context);
     }
 
-    public static DateFormat getMediumDateFormat() {
-        return android.text.format.DateFormat.getMediumDateFormat(AppManager.getContext());
+    public static DateFormat getMediumDateFormat(@NonNull Context context) {
+        return android.text.format.DateFormat.getMediumDateFormat(context);
     }
 
-    private static DateFormat getTimeFormat() {
-        return android.text.format.DateFormat.getTimeFormat(AppManager.getContext());
+    private static DateFormat getTimeFormat(@NonNull Context context) {
+        return android.text.format.DateFormat.getTimeFormat(context);
     }
 }

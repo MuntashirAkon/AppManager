@@ -27,17 +27,17 @@ import io.github.muntashirakon.dialog.AlertDialogBuilder;
 import io.github.muntashirakon.dialog.ScrollableDialogBuilder;
 
 public class AboutPreferences extends PreferenceFragment {
-    private MainPreferencesViewModel model;
+    private MainPreferencesViewModel mModel;
 
     @Override
     public void onCreatePreferences(@Nullable Bundle savedInstanceState, @Nullable String rootKey) {
         setPreferencesFromResource(R.xml.preferences_about, rootKey);
         getPreferenceManager().setPreferenceDataStore(new SettingsDataStore());
-        model = new ViewModelProvider(requireActivity()).get(MainPreferencesViewModel.class);
+        mModel = new ViewModelProvider(requireActivity()).get(MainPreferencesViewModel.class);
         Preference versionPref = Objects.requireNonNull(findPreference("version"));
         versionPref.setSummary(String.format(Locale.getDefault(), "%s (%d)", BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
         versionPref.setOnPreferenceClickListener(preference -> {
-            model.loadChangeLog();
+            mModel.loadChangeLog();
             return true;
         });
         // User manual
@@ -96,7 +96,7 @@ public class AboutPreferences extends PreferenceFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // Observe Changelog
-        model.getChangeLog().observe(getViewLifecycleOwner(), changelog -> {
+        mModel.getChangeLog().observe(getViewLifecycleOwner(), changelog -> {
             RecyclerView recyclerView = (RecyclerView) View.inflate(requireContext(), R.layout.dialog_whats_new, null);
             recyclerView.setHasFixedSize(true);
             recyclerView.setLayoutManager(new LinearLayoutManager(recyclerView.getContext()));

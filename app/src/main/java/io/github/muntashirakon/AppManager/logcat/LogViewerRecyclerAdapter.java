@@ -69,7 +69,7 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
         }
     };
 
-    private static int[] tagColors;
+    private static int[] sTagColors;
 
     @ColorInt
     private static int getBackgroundColorForLogLevel(Context context, int logLevel) {
@@ -86,13 +86,13 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
     }
 
     private static synchronized int getOrCreateTagColor(Context context, String tag) {
-        if (tagColors == null) {
-            tagColors = context.getResources().getIntArray(R.array.random_colors);
+        if (sTagColors == null) {
+            sTagColors = context.getResources().getIntArray(R.array.random_colors);
         }
         // Ensure consistency
         int hashCode = (tag == null) ? 0 : tag.hashCode();
-        int smear = Math.abs(hashCode) % tagColors.length;
-        return tagColors[smear];
+        int smear = Math.abs(hashCode) % sTagColors.length;
+        return sTagColors[smear];
     }
 
     /**
@@ -114,10 +114,10 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
     private ArrayList<LogLine> mOriginalValues;
     private ArrayFilter mFilter;
 
-    private int logLevelLimit = Prefs.LogViewer.getLogLevel();
+    private int mLogLevelLimit = Prefs.LogViewer.getLogLevel();
     private final Set<LogLine> mSelectedLogLines = new LinkedHashSet<>();
     @ColorInt
-    private int highlightColor;
+    private int mHighlightColor;
 
     public LogViewerRecyclerAdapter() {
         mObjects = new ArrayList<>();
@@ -278,7 +278,7 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
 
     @Override
     public int getHighlightColor() {
-        return highlightColor;
+        return mHighlightColor;
     }
 
     @Override
@@ -325,7 +325,7 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        highlightColor = ColorCodes.getListItemSelectionColor(parent.getContext());
+        mHighlightColor = ColorCodes.getListItemSelectionColor(parent.getContext());
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_logcat, parent, false);
         return new ViewHolder(v);
     }
@@ -420,11 +420,11 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
     }
 
     public int getLogLevelLimit() {
-        return logLevelLimit;
+        return mLogLevelLimit;
     }
 
     public void setLogLevelLimit(int logLevelLimit) {
-        this.logLevelLimit = logLevelLimit;
+        mLogLevelLimit = logLevelLimit;
     }
 
     /**
@@ -479,7 +479,7 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
             }
 
             for (LogLine logLine : logLines) {
-                if (logLine != null && logLine.getLogLevel() >= logLevelLimit) {
+                if (logLine != null && logLine.getLogLevel() >= mLogLevelLimit) {
                     allValues.add(logLine);
                 }
             }
@@ -511,18 +511,18 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
     }
 
     private static class StopWatch {
-        private long startTime;
-        private String name;
+        private long mStartTime;
+        private String mName;
 
         public StopWatch(String name) {
             if (BuildConfig.DEBUG) {
-                this.name = name;
-                this.startTime = System.currentTimeMillis();
+                mName = name;
+                mStartTime = System.currentTimeMillis();
             }
         }
 
         public void log() {
-            Log.d(TAG, name + " took " + (System.currentTimeMillis() - startTime) + " ms");
+            Log.d(TAG, mName + " took " + (System.currentTimeMillis() - mStartTime) + " ms");
         }
     }
 

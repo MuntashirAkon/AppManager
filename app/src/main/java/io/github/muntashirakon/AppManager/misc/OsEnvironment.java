@@ -19,9 +19,9 @@ import java.util.List;
 import java.util.Objects;
 
 import dev.rikka.tools.refine.Refine;
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.compat.StorageManagerCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 
@@ -94,7 +94,7 @@ public final class OsEnvironment {
         @NonNull
         public Path[] getExternalDirs() {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                final StorageVolume[] volumes = StorageManagerCompat.getVolumeList(AppManager.getContext(),
+                final StorageVolume[] volumes = StorageManagerCompat.getVolumeList(ContextUtils.getContext(),
                         mUserHandle, StorageManagerHidden.FLAG_FOR_WRITE);
                 Log.d(TAG, Arrays.toString(volumes));
                 final List<Path> files = new ArrayList<>();

@@ -61,52 +61,52 @@ public class Signer {
     }
 
     @NonNull
-    private final PrivateKey privateKey;
+    private final PrivateKey mPrivateKey;
     @NonNull
-    private final X509Certificate certificate;
+    private final X509Certificate mCertificate;
     @NonNull
-    private final SigSchemes sigSchemes;
+    private final SigSchemes mSigSchemes;
     @Nullable
-    private File idsigFile;
+    private File mIdsigFile;
 
     private Signer(@NonNull SigSchemes sigSchemes, @NonNull PrivateKey privateKey, @NonNull X509Certificate certificate) {
-        this.sigSchemes = sigSchemes;
-        this.privateKey = privateKey;
-        this.certificate = certificate;
+        mSigSchemes = sigSchemes;
+        mPrivateKey = privateKey;
+        mCertificate = certificate;
     }
 
     public boolean isV4SchemeEnabled() {
-        return sigSchemes.v4SchemeEnabled();
+        return mSigSchemes.v4SchemeEnabled();
     }
 
     public void setIdsigFile(@Nullable File idsigFile) {
-        this.idsigFile = idsigFile;
+        mIdsigFile = idsigFile;
     }
 
     public boolean sign(File in, File out, int minSdk, boolean alignFileSize) {
         ApkSigner.SignerConfig signerConfig = new ApkSigner.SignerConfig.Builder("CERT",
-                privateKey, Collections.singletonList(certificate)).build();
+                mPrivateKey, Collections.singletonList(mCertificate)).build();
         ApkSigner.Builder builder = new ApkSigner.Builder(Collections.singletonList(signerConfig));
         builder.setInputApk(in);
         builder.setOutputApk(out);
         builder.setCreatedBy("AppManager");
         builder.setAlignFileSize(alignFileSize);
         if (minSdk != -1) builder.setMinSdkVersion(minSdk);
-        if (sigSchemes.v1SchemeEnabled()) {
+        if (mSigSchemes.v1SchemeEnabled()) {
             builder.setV1SigningEnabled(true);
         }
-        if (sigSchemes.v2SchemeEnabled()) {
+        if (mSigSchemes.v2SchemeEnabled()) {
             builder.setV2SigningEnabled(true);
         }
-        if (sigSchemes.v3SchemeEnabled()) {
+        if (mSigSchemes.v3SchemeEnabled()) {
             builder.setV3SigningEnabled(true);
         }
-        if (sigSchemes.v4SchemeEnabled()) {
-            if (idsigFile == null) {
+        if (mSigSchemes.v4SchemeEnabled()) {
+            if (mIdsigFile == null) {
                 throw new RuntimeException("idsig file is mandatory for v4 signature scheme.");
             }
             builder.setV4SigningEnabled(true);
-            builder.setV4SignatureOutputFile(idsigFile);
+            builder.setV4SignatureOutputFile(mIdsigFile);
         }
         ApkSigner signer = builder.build();
         Log.i(TAG, String.format("SignApk: %s", in));

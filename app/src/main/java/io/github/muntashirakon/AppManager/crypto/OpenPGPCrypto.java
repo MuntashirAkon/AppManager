@@ -32,7 +32,6 @@ import java.util.List;
 
 import javax.crypto.Cipher;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
@@ -51,22 +50,23 @@ public class OpenPGPCrypto implements Crypto {
 
     public static final String GPG_EXT = ".gpg";
 
-    private OpenPgpServiceConnection service;
-    private boolean successFlag, errorFlag;
-    private Path[] files;
+    private OpenPgpServiceConnection mService;
+    private boolean mSuccessFlag;
+    private boolean mErrorFlag;
+    private Path[] mFiles;
     @NonNull
-    private final List<Path> newFiles = new ArrayList<>();
-    private InputStream is;
-    private OutputStream os;
+    private final List<Path> mNewFiles = new ArrayList<>();
+    private InputStream mIs;
+    private OutputStream mOs;
     @NonNull
-    private final long[] keyIds;
-    private final String provider;
-    private Intent lastIntent;
-    private int lastMode;
-    private final Context context = AppManager.getContext();
-    private final Handler handler;
-    private boolean isFileMode;  // Whether to en/decrypt a file than an stream
-    private final BroadcastReceiver receiver = new BroadcastReceiver() {
+    private final long[] mKeyIds;
+    private final String mProvider;
+    private Intent mLastIntent;
+    private int mLastMode;
+    private final Context mContext;
+    private final Handler mHandler;
+    private boolean mIsFileMode;  // Whether to en/decrypt a file than an stream
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, @NonNull Intent intent) {
             if (intent.getAction() == null) return;
@@ -77,7 +77,7 @@ public class OpenPGPCrypto implements Crypto {
                     // TODO: 17/12/21 Handle this better by using CountdownLatch
                     new Thread(() -> {
                         try {
-                            doAction(lastIntent, lastMode, false);
+                            doAction(mLastIntent, mLastMode, false);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
@@ -88,25 +88,26 @@ public class OpenPGPCrypto implements Crypto {
     };
 
     @AnyThread
-    public OpenPGPCrypto(@NonNull String keyIdsStr) throws CryptoException {
+    public OpenPGPCrypto(@NonNull Context context, @NonNull String keyIdsStr) throws CryptoException {
+        mContext = context;
         try {
             String[] keyIds = keyIdsStr.split(",");
-            this.keyIds = new long[keyIds.length];
-            for (int i = 0; i < keyIds.length; ++i) this.keyIds[i] = Long.parseLong(keyIds[i]);
+            mKeyIds = new long[keyIds.length];
+            for (int i = 0; i < keyIds.length; ++i) mKeyIds[i] = Long.parseLong(keyIds[i]);
         } catch (NumberFormatException e) {
             throw new CryptoException(e);
         }
-        this.provider = Prefs.Encryption.getOpenPgpProvider();
-        this.handler = new Handler(Looper.getMainLooper());
+        mProvider = Prefs.Encryption.getOpenPgpProvider();
+        mHandler = new Handler(Looper.getMainLooper());
         bind();
     }
 
     @Override
     public void close() {
         // Unbind service
-        if (service != null) service.unbindFromService();
+        if (mService != null) mService.unbindFromService();
         // Unregister receiver
-        context.unregisterReceiver(receiver);
+        mContext.unregisterReceiver(mReceiver);
     }
 
     @WorkerThread
@@ -127,7 +128,7 @@ public class OpenPGPCrypto implements Crypto {
     @Override
     public void encrypt(@NonNull Path[] filesList) throws IOException {
         Intent intent = new Intent(OpenPgpApi.ACTION_ENCRYPT);
-        intent.putExtra(OpenPgpApi.EXTRA_KEY_IDS, keyIds);
+        intent.putExtra(OpenPgpApi.EXTRA_KEY_IDS, mKeyIds);
         handleFiles(intent, Cipher.ENCRYPT_MODE, filesList);
     }
 
@@ -135,39 +136,39 @@ public class OpenPGPCrypto implements Crypto {
     public void encrypt(@NonNull InputStream unencryptedStream, @NonNull OutputStream encryptedStream)
             throws IOException {
         Intent intent = new Intent(OpenPgpApi.ACTION_ENCRYPT);
-        intent.putExtra(OpenPgpApi.EXTRA_KEY_IDS, keyIds);
+        intent.putExtra(OpenPgpApi.EXTRA_KEY_IDS, mKeyIds);
         handleStreams(intent, Cipher.ENCRYPT_MODE, unencryptedStream, encryptedStream);
     }
 
     @WorkerThread
     private void handleFiles(Intent intent, int mode, @NonNull Path[] filesList) throws IOException {
-        isFileMode = true;
+        mIsFileMode = true;
         waitForServiceBound();
-        is = null;
-        os = null;
-        files = filesList;
-        newFiles.clear();
-        lastIntent = intent;
-        lastMode = mode;
+        mIs = null;
+        mOs = null;
+        mFiles = filesList;
+        mNewFiles.clear();
+        mLastIntent = intent;
+        mLastMode = mode;
         doAction(intent, mode, true);
     }
 
     @WorkerThread
     private void handleStreams(Intent intent, int mode, @NonNull InputStream is, @NonNull OutputStream os)
             throws IOException {
-        isFileMode = false;
+        mIsFileMode = false;
         waitForServiceBound();
-        this.is = is;
-        this.os = os;
-        files = new Path[0];
-        lastIntent = intent;
-        lastMode = mode;
+        mIs = is;
+        mOs = os;
+        mFiles = new Path[0];
+        mLastIntent = intent;
+        mLastMode = mode;
         doAction(intent, mode, true);
     }
 
     @WorkerThread
     private void doAction(Intent intent, int mode, boolean waitForResult) throws IOException {
-        if (isFileMode) {
+        if (mIsFileMode) {
             doActionForFiles(intent, mode, waitForResult);
         } else {
             doActionForStream(intent, waitForResult);
@@ -176,13 +177,13 @@ public class OpenPGPCrypto implements Crypto {
 
     @WorkerThread
     private void doActionForFiles(Intent intent, int mode, boolean waitForResult) throws IOException {
-        errorFlag = false;
+        mErrorFlag = false;
         // `files` is never null here
-        if (files.length == 0) {
+        if (mFiles.length == 0) {
             Log.d(TAG, "No files to de/encrypt");
             return;
         }
-        for (Path inputPath : files) {
+        for (Path inputPath : mFiles) {
             Path parent = inputPath.getParentFile();
             if (parent == null) {
                 throw new IOException("Parent of " + inputPath + " cannot be null.");
@@ -192,15 +193,15 @@ public class OpenPGPCrypto implements Crypto {
                 outputFilename = inputPath.getName().substring(0, inputPath.getName().lastIndexOf(GPG_EXT));
             } else outputFilename = inputPath.getName() + GPG_EXT;
             Path outputPath = parent.createNewFile(outputFilename, null);
-            newFiles.add(outputPath);
+            mNewFiles.add(outputPath);
             Log.i(TAG, "Input: " + inputPath + "\nOutput: " + outputPath);
             InputStream is = inputPath.openInputStream();
             OutputStream os = outputPath.openOutputStream();
-            OpenPgpApi api = new OpenPgpApi(context, service.getService());
+            OpenPgpApi api = new OpenPgpApi(mContext, mService.getService());
             Intent result = api.executeApi(intent, is, os);
-            handler.post(() -> handleResult(result));
+            mHandler.post(() -> handleResult(result));
             if (waitForResult) waitForResult();
-            if (errorFlag) {
+            if (mErrorFlag) {
                 outputPath.delete();
                 throw new IOException("Error occurred during en/decryption process");
             }
@@ -216,12 +217,12 @@ public class OpenPGPCrypto implements Crypto {
 
     @WorkerThread
     private void doActionForStream(Intent intent, boolean waitForResult) throws IOException {
-        errorFlag = false;
-        OpenPgpApi api = new OpenPgpApi(context, service.getService());
-        Intent result = api.executeApi(intent, is, os);
-        handler.post(() -> handleResult(result));
+        mErrorFlag = false;
+        OpenPgpApi api = new OpenPgpApi(mContext, mService.getService());
+        Intent result = api.executeApi(intent, mIs, mOs);
+        mHandler.post(() -> handleResult(result));
         if (waitForResult) waitForResult();
-        if (errorFlag) {
+        if (mErrorFlag) {
             throw new IOException("Error occurred during en/decryption process");
         }
     }
@@ -229,11 +230,11 @@ public class OpenPGPCrypto implements Crypto {
     @NonNull
     @Override
     public Path[] getNewFiles() {
-        return newFiles.toArray(new Path[0]);
+        return mNewFiles.toArray(new Path[0]);
     }
 
     private void bind() {
-        service = new OpenPgpServiceConnection(context, provider,
+        mService = new OpenPgpServiceConnection(mContext, mProvider,
                 new OpenPgpServiceConnection.OnBound() {
                     @Override
                     public void onBound(IOpenPgpService2 service) {
@@ -246,17 +247,17 @@ public class OpenPGPCrypto implements Crypto {
                     }
                 }
         );
-        service.bindToService();
+        mService.bindToService();
         // Start broadcast receiver
         IntentFilter filter = new IntentFilter(ACTION_OPEN_PGP_INTERACTION_BEGIN);
         filter.addAction(ACTION_OPEN_PGP_INTERACTION_END);
-        context.registerReceiver(receiver, filter);
+        mContext.registerReceiver(mReceiver, filter);
     }
 
     @WorkerThread
     private void waitForServiceBound() throws IOException {
         int i = 0;
-        while (service.getService() == null) {
+        while (mService.getService() == null) {
             if (i % 20 == 0) {
                 Log.i(TAG, "Waiting for openpgp-api service to be bound");
             }
@@ -265,7 +266,7 @@ public class OpenPGPCrypto implements Crypto {
                 break;
             i++;
         }
-        if (service.getService() == null) {
+        if (mService.getService() == null) {
             throw new IOException("OpenPGPService could not be bound.");
         }
     }
@@ -273,7 +274,7 @@ public class OpenPGPCrypto implements Crypto {
     @WorkerThread
     private void waitForResult() {
         int i = 0;
-        while (!successFlag && !errorFlag) {
+        while (!mSuccessFlag && !mErrorFlag) {
             if (i % 200 == 0) Log.i(TAG, "Waiting for user interaction");
             SystemClock.sleep(100);
             if (i > 1000)
@@ -285,23 +286,23 @@ public class OpenPGPCrypto implements Crypto {
     @SuppressLint("WrongConstant")
     @UiThread
     private void handleResult(@NonNull Intent result) {
-        successFlag = false;
+        mSuccessFlag = false;
         switch (result.getIntExtra(OpenPgpApi.RESULT_CODE, OpenPgpApi.RESULT_CODE_ERROR)) {
             case OpenPgpApi.RESULT_CODE_SUCCESS:
                 Log.i(TAG, "en/decryption successful.");
-                successFlag = true;
+                mSuccessFlag = true;
                 break;
             case OpenPgpApi.RESULT_CODE_USER_INTERACTION_REQUIRED: {
                 Log.i(TAG, "User interaction required. Sending intent...");
                 Intent broadcastIntent = new Intent(OpenPGPCrypto.ACTION_OPEN_PGP_INTERACTION_BEGIN);
-                context.sendBroadcast(broadcastIntent);
+                mContext.sendBroadcast(broadcastIntent);
                 // Intent wrapper
-                Intent intent = new Intent(context, OpenPGPCryptoActivity.class);
+                Intent intent = new Intent(mContext, OpenPGPCryptoActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra(OpenPgpApi.RESULT_INTENT, IntentCompat.getParcelableExtra(result, OpenPgpApi.RESULT_INTENT, PendingIntent.class));
                 String openPGP = "Open PGP";
                 // We don't need a DELETE intent since the time will be expired anyway
-                NotificationCompat.Builder builder = NotificationUtils.getHighPriorityNotificationBuilder(context)
+                NotificationCompat.Builder builder = NotificationUtils.getHighPriorityNotificationBuilder(mContext)
                         .setAutoCancel(true)
                         .setDefaults(Notification.DEFAULT_ALL)
                         .setWhen(System.currentTimeMillis())
@@ -309,15 +310,15 @@ public class OpenPGPCrypto implements Crypto {
                         .setTicker(openPGP)
                         .setContentTitle(openPGP)
                         .setSubText(openPGP)
-                        .setContentText(context.getString(R.string.allow_open_pgp_operation));
-                builder.setContentIntent(PendingIntent.getActivity(context, 0, intent,
+                        .setContentText(mContext.getString(R.string.allow_open_pgp_operation));
+                builder.setContentIntent(PendingIntent.getActivity(mContext, 0, intent,
                         PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_UPDATE_CURRENT
                                 | PendingIntentCompat.FLAG_IMMUTABLE));
-                NotificationUtils.displayHighPriorityNotification(context, builder.build());
+                NotificationUtils.displayHighPriorityNotification(mContext, builder.build());
                 break;
             }
             case OpenPgpApi.RESULT_CODE_ERROR:
-                errorFlag = true;
+                mErrorFlag = true;
                 OpenPgpError error = IntentCompat.getParcelableExtra(result, OpenPgpApi.RESULT_ERROR, OpenPgpError.class);
                 if (error != null) {
                     Log.e(TAG, "handleResult: (" + error.getErrorId() + ") " + error.getMessage());

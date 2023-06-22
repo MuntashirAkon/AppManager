@@ -45,21 +45,21 @@ import io.github.muntashirakon.io.Paths;
 public class BackupTasksDialogFragment extends DialogFragment {
     public static final String TAG = "BackupTasksDialogFragment";
 
-    private OneClickOpsActivity activity;
-    private final ExecutorService executor = Executors.newFixedThreadPool(2);
+    private OneClickOpsActivity mActivity;
+    private final ExecutorService mExecutor = Executors.newFixedThreadPool(2);
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        activity = (OneClickOpsActivity) requireActivity();
-        LayoutInflater inflater = LayoutInflater.from(activity);
+        mActivity = (OneClickOpsActivity) requireActivity();
+        LayoutInflater inflater = LayoutInflater.from(mActivity);
         if (inflater == null) return super.onCreateDialog(savedInstanceState);
         @SuppressLint("InflateParams")
         View view = inflater.inflate(R.layout.dialog_backup_tasks, null);
         // Backup all installed apps
         view.findViewById(R.id.backup_all).setOnClickListener(v -> {
-            activity.mProgressIndicator.show();
-            executor.submit(() -> {
+            mActivity.progressIndicator.show();
+            mExecutor.submit(() -> {
                 if (isDetached() || ThreadUtils.isInterrupted()) return;
                 List<ApplicationItem> applicationItems = new ArrayList<>();
                 List<CharSequence> applicationLabels = new ArrayList<>();
@@ -76,8 +76,8 @@ public class BackupTasksDialogFragment extends DialogFragment {
         });
         // Redo existing backups for the installed apps
         view.findViewById(R.id.redo_existing_backups).setOnClickListener(v -> {
-            activity.mProgressIndicator.show();
-            executor.submit(() -> {
+            mActivity.progressIndicator.show();
+            mExecutor.submit(() -> {
                 if (isDetached() || ThreadUtils.isInterrupted()) return;
                 List<ApplicationItem> applicationItems = new ArrayList<>();
                 List<CharSequence> applicationLabels = new ArrayList<>();
@@ -94,8 +94,8 @@ public class BackupTasksDialogFragment extends DialogFragment {
         });
         // Backup apps without any previous backups
         view.findViewById(R.id.backup_apps_without_backup).setOnClickListener(v -> {
-            activity.mProgressIndicator.show();
-            executor.submit(() -> {
+            mActivity.progressIndicator.show();
+            mExecutor.submit(() -> {
                 if (isDetached() || ThreadUtils.isInterrupted()) return;
                 List<ApplicationItem> applicationItems = new ArrayList<>();
                 List<CharSequence> applicationLabels = new ArrayList<>();
@@ -111,8 +111,8 @@ public class BackupTasksDialogFragment extends DialogFragment {
             });
         });
         view.findViewById(R.id.verify_and_redo_backups).setOnClickListener(v -> {
-            activity.mProgressIndicator.show();
-            executor.submit(() -> {
+            mActivity.progressIndicator.show();
+            mExecutor.submit(() -> {
                 if (isDetached() || ThreadUtils.isInterrupted()) return;
                 List<ApplicationItem> applicationItems = new ArrayList<>();
                 List<CharSequence> applicationLabels = new ArrayList<>();
@@ -130,7 +130,7 @@ public class BackupTasksDialogFragment extends DialogFragment {
                                 .append(LangUtils.getSeparatorString())
                                 .append(backup.backupName)
                                 .append('\n')
-                                .append(UIUtils.getSmallerText(UIUtils.getSecondaryText(activity,
+                                .append(UIUtils.getSmallerText(UIUtils.getSecondaryText(mActivity,
                                         new SpannableStringBuilder(backup.packageName)
                                                 .append('\n')
                                                 .append(e.getMessage())))));
@@ -141,8 +141,8 @@ public class BackupTasksDialogFragment extends DialogFragment {
             });
         });
         view.findViewById(R.id.backup_apps_with_changes).setOnClickListener(v -> {
-            activity.mProgressIndicator.show();
-            executor.submit(() -> {
+            mActivity.progressIndicator.show();
+            mExecutor.submit(() -> {
                 if (isDetached() || ThreadUtils.isInterrupted()) return;
                 List<ApplicationItem> applicationItems = new ArrayList<>();
                 List<CharSequence> applicationLabels = new ArrayList<>();
@@ -184,14 +184,14 @@ public class BackupTasksDialogFragment extends DialogFragment {
                                 .append(LangUtils.getSeparatorString())
                                 .append(backup.backupName)
                                 .append('\n')
-                                .append(UIUtils.getSmallerText(UIUtils.getSecondaryText(activity, backup.packageName))));
+                                .append(UIUtils.getSmallerText(UIUtils.getSecondaryText(mActivity, backup.packageName))));
                     }
                 }
                 if (isDetached() || ThreadUtils.isInterrupted()) return;
                 requireActivity().runOnUiThread(() -> runMultiChoiceDialog(applicationItems, applicationLabels));
             });
         });
-        return new MaterialAlertDialogBuilder(activity)
+        return new MaterialAlertDialogBuilder(mActivity)
                 .setView(view)
                 .setTitle(R.string.back_up)
                 .setNegativeButton(R.string.cancel, null)
@@ -201,16 +201,16 @@ public class BackupTasksDialogFragment extends DialogFragment {
     @UiThread
     private void runMultiChoiceDialog(List<ApplicationItem> applicationItems, List<CharSequence> applicationLabels) {
         if (isDetached()) return;
-        activity.mProgressIndicator.hide();
-        new SearchableMultiChoiceDialogBuilder<>(activity, applicationItems, applicationLabels)
+        mActivity.progressIndicator.hide();
+        new SearchableMultiChoiceDialogBuilder<>(mActivity, applicationItems, applicationLabels)
                 .addSelections(applicationItems)
                 .setTitle(R.string.filtered_packages)
                 .setPositiveButton(R.string.back_up, (dialog, which, selectedItems) -> {
                     if (isDetached()) return;
                     BackupRestoreDialogFragment fragment = BackupRestoreDialogFragment.getInstance(
                             PackageUtils.getUserPackagePairs(selectedItems), BackupRestoreDialogFragment.MODE_BACKUP);
-                    fragment.setOnActionBeginListener(mode -> activity.mProgressIndicator.show());
-                    fragment.setOnActionCompleteListener((mode, failedPackages) -> activity.mProgressIndicator.hide());
+                    fragment.setOnActionBeginListener(mode -> mActivity.progressIndicator.show());
+                    fragment.setOnActionCompleteListener((mode, failedPackages) -> mActivity.progressIndicator.hide());
                     if (isDetached()) return;
                     fragment.show(getParentFragmentManager(), BackupRestoreDialogFragment.TAG);
                 })
@@ -220,7 +220,7 @@ public class BackupTasksDialogFragment extends DialogFragment {
 
     @Override
     public void onDestroy() {
-        executor.shutdownNow();
+        mExecutor.shutdownNow();
         super.onDestroy();
     }
 

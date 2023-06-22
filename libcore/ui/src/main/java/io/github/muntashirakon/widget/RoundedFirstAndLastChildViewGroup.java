@@ -19,7 +19,7 @@ public class RoundedFirstAndLastChildViewGroup extends FlowLayout {
         this(context, null);
     }
 
-    public RoundedFirstAndLastChildViewGroup(Context context, AttributeSet attrs) {
+    public RoundedFirstAndLastChildViewGroup(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 

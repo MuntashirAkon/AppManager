@@ -50,7 +50,7 @@ public class SharedPrefsActivity extends BaseActivity implements
     private SharedPrefsListingAdapter mAdapter;
     private LinearProgressIndicator mProgressIndicator;
     private SharedPrefsViewModel mViewModel;
-    private boolean writeAndExit = false;
+    private boolean mWriteAndExit = false;
 
     @Override
     protected void onAuthenticated(Bundle savedInstanceState) {
@@ -95,9 +95,9 @@ public class SharedPrefsActivity extends BaseActivity implements
         mViewModel.getSharedPrefsSavedLiveData().observe(this, saved -> {
             if (saved) {
                 UIUtils.displayShortToast(R.string.saved_successfully);
-                if (writeAndExit) {
+                if (mWriteAndExit) {
                     finish();
-                    writeAndExit = false;
+                    mWriteAndExit = false;
                 }
             } else {
                 UIUtils.displayShortToast(R.string.saving_failed);
@@ -217,7 +217,7 @@ public class SharedPrefsActivity extends BaseActivity implements
                 .setNegativeButton(R.string.no, null)
                 .setPositiveButton(R.string.yes, (dialog, which) -> finish())
                 .setNeutralButton(R.string.save_and_exit, (dialog, which) -> {
-                    writeAndExit = true;
+                    mWriteAndExit = true;
                     mViewModel.writeSharedPrefs();
                 })
                 .show();

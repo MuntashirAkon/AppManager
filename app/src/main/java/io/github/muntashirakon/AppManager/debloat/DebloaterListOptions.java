@@ -98,7 +98,7 @@ public class DebloaterListOptions extends CapsuleBottomSheetDialogFragment {
                | FILTER_INSTALLED_APPS | FILTER_SYSTEM_APPS;
     }
 
-    private DebloaterViewModel model;
+    private DebloaterViewModel mModel;
 
     @NonNull
     @Override
@@ -110,7 +110,7 @@ public class DebloaterListOptions extends CapsuleBottomSheetDialogFragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         DebloaterActivity activity = (DebloaterActivity) requireActivity();
-        model = activity.viewModel;
+        mModel = activity.viewModel;
         ViewGroup listTypes = view.findViewById(R.id.list_types);
         for (int i = 0; i < LIST_FILTER_MAP.size(); ++i) {
             listTypes.addView(getFilterChip(listTypes.getContext(), LIST_FILTER_MAP.keyAt(i), LIST_FILTER_MAP.valueAt(i)));
@@ -130,10 +130,10 @@ public class DebloaterListOptions extends CapsuleBottomSheetDialogFragment {
         chip.setFocusable(true);
         chip.setCloseIconVisible(false);
         chip.setText(strRes);
-        chip.setChecked(model.hasFilterFlag(flag));
+        chip.setChecked(mModel.hasFilterFlag(flag));
         chip.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (isChecked) model.addFilterFlag(flag);
-            else model.removeFilterFlag(flag);
+            if (isChecked) mModel.addFilterFlag(flag);
+            else mModel.removeFilterFlag(flag);
         });
         return chip;
     }

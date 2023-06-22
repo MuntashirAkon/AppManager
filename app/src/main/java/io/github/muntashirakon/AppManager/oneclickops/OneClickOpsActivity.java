@@ -53,14 +53,14 @@ import io.github.muntashirakon.dialog.TextInputDropdownDialogBuilder;
 public class OneClickOpsActivity extends BaseActivity {
     public static final String EXTRA_OP = "op";
 
-    LinearProgressIndicator mProgressIndicator;
+    LinearProgressIndicator progressIndicator;
 
     private OneClickOpsViewModel mViewModel;
     private ListItemCreator mItemCreator;
     private final BroadcastReceiver mBatchOpsBroadCastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            mProgressIndicator.hide();
+            progressIndicator.hide();
         }
     };
 
@@ -79,8 +79,8 @@ public class OneClickOpsActivity extends BaseActivity {
         setSupportActionBar(findViewById(R.id.toolbar));
         mViewModel = new ViewModelProvider(this).get(OneClickOpsViewModel.class);
         mItemCreator = new ListItemCreator(this, R.id.container);
-        mProgressIndicator = findViewById(R.id.progress_linear);
-        mProgressIndicator.setVisibilityAfterHide(View.GONE);
+        progressIndicator = findViewById(R.id.progress_linear);
+        progressIndicator.setVisibilityAfterHide(View.GONE);
         setItems();
         // Watch LiveData
         mViewModel.watchTrackerCount().observe(this, this::blockTrackers);
@@ -90,11 +90,11 @@ public class OneClickOpsActivity extends BaseActivity {
                 setAppOps(listPairPair.first, listPairPair.second.first, listPairPair.second.second));
         mViewModel.getClearDataCandidates().observe(this, this::clearData);
         mViewModel.watchTrimCachesResult().observe(this, isSuccessful -> {
-            mProgressIndicator.hide();
+            progressIndicator.hide();
             UIUtils.displayShortToast(isSuccessful ? R.string.done : R.string.failed);
         });
         mViewModel.getAppsInstalledByAmForDexOpt().observe(this, packages -> {
-            mProgressIndicator.hide();
+            progressIndicator.hide();
             DexOptimizationDialog dialog = DexOptimizationDialog.getInstance(packages);
             dialog.show(getSupportFragmentManager(), DexOptimizationDialog.TAG);
         });
@@ -107,11 +107,11 @@ public class OneClickOpsActivity extends BaseActivity {
                         .setTitle(R.string.block_unblock_trackers)
                         .setMessage(R.string.apply_to_system_apps_question)
                         .setPositiveButton(R.string.no, (dialog, which) -> {
-                            mProgressIndicator.show();
+                            progressIndicator.show();
                             mViewModel.blockTrackers(false);
                         })
                         .setNegativeButton(R.string.yes, (dialog, which) -> {
-                            mProgressIndicator.show();
+                            progressIndicator.show();
                             mViewModel.blockTrackers(true);
                         })
                         .show());
@@ -123,7 +123,7 @@ public class OneClickOpsActivity extends BaseActivity {
                         .setTitle(R.string.block_unblock_components_dots)
                         .setPositiveButton(R.string.search, (dialog, which, signatureNames, systemApps) -> {
                             if (signatureNames == null) return;
-                            mProgressIndicator.show();
+                            progressIndicator.show();
                             String[] signatures = signatureNames.toString().split("\\s+");
                             mViewModel.blockComponents(systemApps, signatures);
                         })
@@ -165,7 +165,7 @@ public class OneClickOpsActivity extends BaseActivity {
                             .setMessage(R.string.are_you_sure)
                             .setNegativeButton(R.string.no, null)
                             .setPositiveButton(R.string.yes, (dialog, which) -> {
-                                mProgressIndicator.show();
+                                progressIndicator.show();
                                 mViewModel.trimCaches();
                             })
                             .show();
@@ -179,11 +179,11 @@ public class OneClickOpsActivity extends BaseActivity {
                             dialog.show(getSupportFragmentManager(), DexOptimizationDialog.TAG);
                             return;
                         }
-                        mProgressIndicator.show();
+                        progressIndicator.show();
                         mViewModel.listAppsInstalledByAmForDexOpt();
                     });
         }
-        mProgressIndicator.hide();
+        progressIndicator.hide();
     }
 
     @Override
@@ -196,13 +196,13 @@ public class OneClickOpsActivity extends BaseActivity {
     protected void onPause() {
         super.onPause();
         unregisterReceiver(mBatchOpsBroadCastReceiver);
-        if (mProgressIndicator != null) {
-            mProgressIndicator.hide();
+        if (progressIndicator != null) {
+            progressIndicator.hide();
         }
     }
 
     private void blockTrackers(@Nullable List<ItemCount> trackerCounts) {
-        mProgressIndicator.hide();
+        progressIndicator.hide();
         if (trackerCounts == null) {
             UIUtils.displayShortToast(R.string.failed_to_fetch_package_info);
             return;
@@ -223,7 +223,7 @@ public class OneClickOpsActivity extends BaseActivity {
                 .addSelections(trackerPackages)
                 .setTitle(R.string.filtered_packages)
                 .setPositiveButton(R.string.block, (dialog, which, selectedPackages) -> {
-                    mProgressIndicator.show();
+                    progressIndicator.show();
                     Intent intent = new Intent(this, BatchOpsService.class);
                     intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, selectedPackages);
                     intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_BLOCK_TRACKERS);
@@ -231,7 +231,7 @@ public class OneClickOpsActivity extends BaseActivity {
                     ContextCompat.startForegroundService(this, intent);
                 })
                 .setNeutralButton(R.string.unblock, (dialog, which, selectedPackages) -> {
-                    mProgressIndicator.show();
+                    progressIndicator.show();
                     Intent intent = new Intent(this, BatchOpsService.class);
                     intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, selectedPackages);
                     intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_UNBLOCK_TRACKERS);
@@ -243,7 +243,7 @@ public class OneClickOpsActivity extends BaseActivity {
     }
 
     private void blockComponents(@Nullable List<ItemCount> componentCounts, @NonNull String[] signatures) {
-        mProgressIndicator.hide();
+        progressIndicator.hide();
         if (componentCounts == null) {
             UIUtils.displayShortToast(R.string.failed_to_fetch_package_info);
             return;
@@ -266,7 +266,7 @@ public class OneClickOpsActivity extends BaseActivity {
                 .addSelections(selectedPackages)
                 .setTitle(R.string.filtered_packages)
                 .setPositiveButton(R.string.block, (dialog1, which1, selectedItems) -> {
-                    mProgressIndicator.show();
+                    progressIndicator.show();
                     Intent intent = new Intent(this, BatchOpsService.class);
                     intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, selectedItems);
                     intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_BLOCK_COMPONENTS);
@@ -277,7 +277,7 @@ public class OneClickOpsActivity extends BaseActivity {
                     ContextCompat.startForegroundService(this, intent);
                 })
                 .setNeutralButton(R.string.unblock, (dialog1, which1, selectedItems) -> {
-                    mProgressIndicator.show();
+                    progressIndicator.show();
                     Intent intent = new Intent(this, BatchOpsService.class);
                     intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, selectedItems);
                     intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_UNBLOCK_COMPONENTS);
@@ -324,7 +324,7 @@ public class OneClickOpsActivity extends BaseActivity {
                         UIUtils.displayShortToast(R.string.failed_to_parse_some_numbers);
                         return;
                     }
-                    mProgressIndicator.show();
+                    progressIndicator.show();
                     mViewModel.setAppOps(appOpList, mode, systemApps);
                 })
                 .setNegativeButton(R.string.cancel, null)
@@ -332,7 +332,7 @@ public class OneClickOpsActivity extends BaseActivity {
     }
 
     private void setAppOps(@Nullable List<AppOpCount> appOpCounts, @NonNull int[] appOpList, int mode) {
-        mProgressIndicator.hide();
+        progressIndicator.hide();
         if (appOpCounts == null) {
             UIUtils.displayShortToast(R.string.failed_to_fetch_package_info);
             return;
@@ -355,7 +355,7 @@ public class OneClickOpsActivity extends BaseActivity {
                 .addSelections(selectedPackages)
                 .setTitle(R.string.filtered_packages)
                 .setPositiveButton(R.string.apply, (dialog1, which1, selectedItems) -> {
-                    mProgressIndicator.show();
+                    progressIndicator.show();
                     Intent intent = new Intent(this, BatchOpsService.class);
                     intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, selectedItems);
                     intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_SET_APP_OPS);
@@ -366,7 +366,7 @@ public class OneClickOpsActivity extends BaseActivity {
                     intent.putExtra(BatchOpsService.EXTRA_OP_EXTRA_ARGS, args);
                     ContextCompat.startForegroundService(this, intent);
                 })
-                .setNegativeButton(R.string.cancel, (dialog1, which1, selectedItems) -> mProgressIndicator.hide())
+                .setNegativeButton(R.string.cancel, (dialog1, which1, selectedItems) -> progressIndicator.hide())
                 .show();
     }
 
@@ -375,14 +375,14 @@ public class OneClickOpsActivity extends BaseActivity {
         new SearchableMultiChoiceDialogBuilder<>(this, packages, packages)
                 .setTitle(R.string.filtered_packages)
                 .setPositiveButton(R.string.apply, (dialog1, which1, selectedItems) -> {
-                    mProgressIndicator.show();
+                    progressIndicator.show();
                     Intent intent = new Intent(this, BatchOpsService.class);
                     intent.putStringArrayListExtra(BatchOpsService.EXTRA_OP_PKG, selectedItems);
                     intent.putExtra(BatchOpsService.EXTRA_OP, BatchOpsManager.OP_UNINSTALL);
                     intent.putExtra(BatchOpsService.EXTRA_HEADER, getString(R.string.one_click_ops));
                     ContextCompat.startForegroundService(this, intent);
                 })
-                .setNegativeButton(R.string.cancel, (dialog1, which1, selectedItems) -> mProgressIndicator.hide())
+                .setNegativeButton(R.string.cancel, (dialog1, which1, selectedItems) -> progressIndicator.hide())
                 .show();
     }
 

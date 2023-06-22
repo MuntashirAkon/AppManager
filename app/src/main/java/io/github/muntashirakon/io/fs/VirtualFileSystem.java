@@ -48,41 +48,41 @@ public abstract class VirtualFileSystem {
 
     public static class MountOptions {
         public static class Builder {
-            private boolean remount = false;
-            private boolean readWrite = false;
-            private int mode = 0;
+            private boolean mRemount = false;
+            private boolean mReadWrite = false;
+            private int mMode = 0;
             @Nullable
-            private UidGidPair uidGidPair = null;
+            private UidGidPair mUidGidPair = null;
             @Nullable
-            private OnFileSystemUnmounted onFileSystemUnmounted = null;
+            private OnFileSystemUnmounted mOnFileSystemUnmounted = null;
 
             public Builder setRemount(boolean remount) {
-                this.remount = remount;
+                mRemount = remount;
                 return this;
             }
 
             public Builder setReadWrite(boolean readWrite) {
-                this.readWrite = readWrite;
+                mReadWrite = readWrite;
                 return this;
             }
 
             public Builder setMode(int mode) {
-                this.mode = mode;
+                mMode = mode;
                 return this;
             }
 
             public Builder setUidGidPair(@Nullable UidGidPair uidGidPair) {
-                this.uidGidPair = uidGidPair;
+                mUidGidPair = uidGidPair;
                 return this;
             }
 
             public Builder setOnFileSystemUnmounted(@Nullable OnFileSystemUnmounted fileSystemUnmounted) {
-                this.onFileSystemUnmounted = fileSystemUnmounted;
+                mOnFileSystemUnmounted = fileSystemUnmounted;
                 return this;
             }
 
             public MountOptions build() {
-                return new MountOptions(remount, readWrite, mode, uidGidPair, onFileSystemUnmounted);
+                return new MountOptions(mRemount, mReadWrite, mMode, mUidGidPair, mOnFileSystemUnmounted);
             }
         }
 
@@ -125,9 +125,9 @@ public abstract class VirtualFileSystem {
         throw new IllegalArgumentException("Invalid type " + type);
     }
 
-    private static final SparseArrayCompat<VirtualFileSystem> fileSystems = new SparseArrayCompat<>(3);
-    private static final HashMap<Uri, Integer> uriVfsIdsMap = new HashMap<>(3);
-    private static final HashMap<Uri, List<Integer>> parentUriVfsIdsMap = new HashMap<>(3);
+    private static final SparseArrayCompat<VirtualFileSystem> sFileSystems = new SparseArrayCompat<>(3);
+    private static final HashMap<Uri, Integer> sUriVfsIdsMap = new HashMap<>(3);
+    private static final HashMap<Uri, List<Integer>> sParentUriVfsIdsMap = new HashMap<>(3);
 
     @WorkerThread
     public static int mount(@NonNull Uri mountPoint, @NonNull Path file, @NonNull String type) throws IOException {
@@ -147,27 +147,27 @@ public abstract class VirtualFileSystem {
     private static int mount(@NonNull Uri mountPoint, @NonNull VirtualFileSystem fs, @NonNull MountOptions options)
             throws IOException {
         int vfsId;
-        synchronized (fileSystems) {
-            synchronized (uriVfsIdsMap) {
-                if (!options.remount && uriVfsIdsMap.get(mountPoint) != null) {
+        synchronized (sFileSystems) {
+            synchronized (sUriVfsIdsMap) {
+                if (!options.remount && sUriVfsIdsMap.get(mountPoint) != null) {
                     throw new IOException(String.format("Mount point (%s) is already in use.", mountPoint));
                 }
             }
             do {
                 vfsId = ThreadLocalRandom.current().nextInt(1, Integer.MAX_VALUE);
-            } while (vfsId == 0 || fileSystems.get(vfsId) != null);
+            } while (vfsId == 0 || sFileSystems.get(vfsId) != null);
             fs.mount(mountPoint, vfsId, options);
-            fileSystems.put(vfsId, fs);
+            sFileSystems.put(vfsId, fs);
         }
-        synchronized (uriVfsIdsMap) {
-            uriVfsIdsMap.put(mountPoint, vfsId);
+        synchronized (sUriVfsIdsMap) {
+            sUriVfsIdsMap.put(mountPoint, vfsId);
         }
-        synchronized (parentUriVfsIdsMap) {
+        synchronized (sParentUriVfsIdsMap) {
             Uri uri = Paths.removeLastPathSegment(mountPoint);
-            List<Integer> vfsIds = parentUriVfsIdsMap.get(uri);
+            List<Integer> vfsIds = sParentUriVfsIdsMap.get(uri);
             if (vfsIds == null) {
                 vfsIds = new ArrayList<>(1);
-                parentUriVfsIdsMap.put(uri, vfsIds);
+                sParentUriVfsIdsMap.put(uri, vfsIds);
             }
             vfsIds.add(vfsId);
         }
@@ -180,18 +180,18 @@ public abstract class VirtualFileSystem {
         VirtualFileSystem fs = getFileSystem(vfsId);
         if (fs == null) return;
         Uri mountPoint = fs.getMountPoint();
-        synchronized (fileSystems) {
-            fileSystems.remove(vfsId);
+        synchronized (sFileSystems) {
+            sFileSystems.remove(vfsId);
         }
-        synchronized (uriVfsIdsMap) {
-            uriVfsIdsMap.remove(mountPoint);
+        synchronized (sUriVfsIdsMap) {
+            sUriVfsIdsMap.remove(mountPoint);
         }
-        synchronized (parentUriVfsIdsMap) {
+        synchronized (sParentUriVfsIdsMap) {
             if (mountPoint != null) {
                 Uri uri = Paths.removeLastPathSegment(mountPoint);
-                List<Integer> vfsIds = parentUriVfsIdsMap.get(uri);
+                List<Integer> vfsIds = sParentUriVfsIdsMap.get(uri);
                 if (vfsIds != null && vfsIds.contains(vfsId)) {
-                    if (vfsIds.size() == 1) parentUriVfsIdsMap.remove(uri);
+                    if (vfsIds.size() == 1) sParentUriVfsIdsMap.remove(uri);
                     else vfsIds.remove((Integer) vfsId);
                 }
             }
@@ -203,27 +203,27 @@ public abstract class VirtualFileSystem {
     public static void alterMountPoint(Uri oldMountPoint, Uri newMountPoint) {
         VirtualFileSystem fs = getFileSystem(oldMountPoint);
         if (fs == null) return;
-        synchronized (uriVfsIdsMap) {
-            uriVfsIdsMap.remove(oldMountPoint);
-            uriVfsIdsMap.put(newMountPoint, fs.getFsId());
+        synchronized (sUriVfsIdsMap) {
+            sUriVfsIdsMap.remove(oldMountPoint);
+            sUriVfsIdsMap.put(newMountPoint, fs.getFsId());
         }
-        synchronized (parentUriVfsIdsMap) {
+        synchronized (sParentUriVfsIdsMap) {
             // Remove old mount point
             Uri oldParent = Paths.removeLastPathSegment(oldMountPoint);
-            List<Integer> oldFsIds = parentUriVfsIdsMap.get(oldParent);
+            List<Integer> oldFsIds = sParentUriVfsIdsMap.get(oldParent);
             if (oldFsIds != null) {
                 oldFsIds.remove((Integer) fs.getFsId());
             }
             // Add new mount point
             Uri newParent = Paths.removeLastPathSegment(newMountPoint);
-            List<Integer> newFsIds = parentUriVfsIdsMap.get(newParent);
+            List<Integer> newFsIds = sParentUriVfsIdsMap.get(newParent);
             if (newFsIds == null) {
                 newFsIds = new ArrayList<>(1);
-                parentUriVfsIdsMap.put(newParent, newFsIds);
+                sParentUriVfsIdsMap.put(newParent, newFsIds);
             }
             newFsIds.add(fs.getFsId());
         }
-        fs.mountPoint = newMountPoint;
+        fs.mMountPoint = newMountPoint;
         Log.d(TAG, String.format(Locale.ROOT, "Mount point of %d altered from %s to %s", fs.getFsId(),
                 oldMountPoint, newMountPoint));
     }
@@ -247,8 +247,8 @@ public abstract class VirtualFileSystem {
     @Nullable
     public static Path getFsRoot(Uri mountPoint) {
         Integer vfsId;
-        synchronized (uriVfsIdsMap) {
-            vfsId = uriVfsIdsMap.get(mountPoint);
+        synchronized (sUriVfsIdsMap) {
+            vfsId = sUriVfsIdsMap.get(mountPoint);
         }
         if (vfsId == null) return null;
         return getFsRoot(vfsId);
@@ -257,8 +257,8 @@ public abstract class VirtualFileSystem {
     @Nullable
     public static VirtualFileSystem getFileSystem(Uri mountPoint) {
         Integer vfsId;
-        synchronized (uriVfsIdsMap) {
-            vfsId = uriVfsIdsMap.get(mountPoint);
+        synchronized (sUriVfsIdsMap) {
+            vfsId = sUriVfsIdsMap.get(mountPoint);
         }
         if (vfsId == null) return null;
         return getFileSystem(vfsId);
@@ -266,22 +266,22 @@ public abstract class VirtualFileSystem {
 
     @Nullable
     public static VirtualFileSystem getFileSystem(int vfsId) {
-        synchronized (fileSystems) {
-            return fileSystems.get(vfsId);
+        synchronized (sFileSystems) {
+            return sFileSystems.get(vfsId);
         }
     }
 
     @NonNull
     public static VirtualFileSystem[] getFileSystemsAtUri(Uri parentUri) {
         List<Integer> vfsIds;
-        synchronized (parentUriVfsIdsMap) {
-            vfsIds = parentUriVfsIdsMap.get(parentUri);
+        synchronized (sParentUriVfsIdsMap) {
+            vfsIds = sParentUriVfsIdsMap.get(parentUri);
         }
         if (vfsIds == null) return ArrayUtils.emptyArray(VirtualFileSystem.class);
         VirtualFileSystem[] fs = new VirtualFileSystem[vfsIds.size()];
-        synchronized (fileSystems) {
+        synchronized (sFileSystems) {
             for (int i = 0; i < fs.length; ++i) {
-                fs[i] = fileSystems.get(vfsIds.get(i));
+                fs[i] = sFileSystems.get(vfsIds.get(i));
             }
         }
         return fs;
@@ -328,9 +328,9 @@ public abstract class VirtualFileSystem {
          * to modify the virtual file system.
          */
         @Nullable
-        private File cachedPath;
+        private File mCachedPath;
         // Only applicable for ACTION_MOVE
-        private String sourcePath;
+        private String mSourcePath;
 
         public Action(@CrudAction int action, @NonNull Node<?> targetNode) {
             this.action = action;
@@ -338,20 +338,20 @@ public abstract class VirtualFileSystem {
         }
 
         private void setCachedPath(@Nullable File cachedPath) {
-            this.cachedPath = cachedPath;
+            mCachedPath = cachedPath;
         }
 
         @Nullable
         public File getCachedPath() {
-            return cachedPath;
+            return mCachedPath;
         }
 
         private void setSourcePath(String sourcePath) {
-            this.sourcePath = sourcePath;
+            mSourcePath = sourcePath;
         }
 
         public String getSourcePath() {
-            return sourcePath;
+            return mSourcePath;
         }
 
         @Override
@@ -372,18 +372,18 @@ public abstract class VirtualFileSystem {
         @NonNull
         public final File cachedFile;
 
-        private boolean modified;
+        private boolean mModified;
 
         private FileCacheItem(@NonNull File cachedFile) {
             this.cachedFile = cachedFile;
         }
 
         public void setModified(boolean modified) {
-            this.modified = modified;
+            mModified = modified;
         }
 
         public boolean isModified() {
-            return modified;
+            return mModified;
         }
 
         @Override
@@ -400,34 +400,34 @@ public abstract class VirtualFileSystem {
         }
     }
 
-    private final Object lock = new Object();
+    private final Object sLock = new Object();
     @NonNull
-    private final Map<String, List<Action>> actions = new HashMap<>();
-    private final Map<String, FileCacheItem> fileCacheMap = new HashMap<>();
-    private final FileCache fileCache = new FileCache();
+    private final Map<String, List<Action>> mActions = new HashMap<>();
+    private final Map<String, FileCacheItem> mFileCacheMap = new HashMap<>();
+    private final FileCache mFileCache = new FileCache();
     @NonNull
-    private final Path file;
+    private final Path mFile;
 
     @Nullable
-    private Uri mountPoint;
+    private Uri mMountPoint;
     @Nullable
-    private MountOptions options;
-    private int fsId = 0;
-    private Path rootPath;
+    private MountOptions mOptions;
+    private int mFsId = 0;
+    private Path mRootPath;
 
     protected VirtualFileSystem(@NonNull Path file) {
-        this.file = file;
+        mFile = file;
     }
 
     @NonNull
     public Path getFile() {
-        return file;
+        return mFile;
     }
 
     public abstract String getType();
 
     public int getFsId() {
-        return fsId;
+        return mFsId;
     }
 
     /**
@@ -436,12 +436,12 @@ public abstract class VirtualFileSystem {
      */
     @Nullable
     public final Uri getMountPoint() {
-        return mountPoint;
+        return mMountPoint;
     }
 
     @Nullable
     public MountOptions getOptions() {
-        return options;
+        return mOptions;
     }
 
     /**
@@ -451,7 +451,7 @@ public abstract class VirtualFileSystem {
      */
     @NonNull
     public Path getRootPath() {
-        return Objects.requireNonNull(rootPath);
+        return Objects.requireNonNull(mRootPath);
     }
 
     /**
@@ -461,12 +461,12 @@ public abstract class VirtualFileSystem {
      * @throws IOException If the file system cannot be mounted.
      */
     private void mount(@NonNull Uri mountPoint, int fsId, MountOptions options) throws IOException {
-        synchronized (lock) {
-            this.mountPoint = mountPoint;
-            this.fsId = fsId;
-            this.options = options;
+        synchronized (sLock) {
+            mMountPoint = mountPoint;
+            mFsId = fsId;
+            mOptions = options;
             onPreMount();
-            this.rootPath = onMount();
+            mRootPath = onMount();
             onMounted();
         }
     }
@@ -498,11 +498,11 @@ public abstract class VirtualFileSystem {
 
     private void unmount() throws IOException {
         checkMounted();
-        Objects.requireNonNull(options);
-        synchronized (lock) {
+        Objects.requireNonNull(mOptions);
+        synchronized (sLock) {
             // Update actions
-            for (String path : fileCacheMap.keySet()) {
-                FileCacheItem fileCacheItem = Objects.requireNonNull(fileCacheMap.get(path));
+            for (String path : mFileCacheMap.keySet()) {
+                FileCacheItem fileCacheItem = Objects.requireNonNull(mFileCacheMap.get(path));
                 if (fileCacheItem.isModified()) {
                     Node<?> node = getNode(path);
                     if (node != null) {
@@ -512,18 +512,18 @@ public abstract class VirtualFileSystem {
                     }
                 }
             }
-            File cachedFile = onUnmount(actions);
-            this.fsId = 0;
-            this.mountPoint = null;
+            File cachedFile = onUnmount(mActions);
+            mFsId = 0;
+            mMountPoint = null;
             // Cleanup
-            fileCacheMap.clear();
-            fileCache.deleteAll();
-            actions.clear();
+            mFileCacheMap.clear();
+            mFileCache.deleteAll();
+            mActions.clear();
             // Handle cached file
             if (cachedFile != null) {
                 // Run interface if available
-                boolean handled = options.onFileSystemUnmounted != null
-                        && options.onFileSystemUnmounted.onUnmounted(this, cachedFile);
+                boolean handled = mOptions.onFileSystemUnmounted != null
+                        && mOptions.onFileSystemUnmounted.onUnmounted(this, cachedFile);
                 if (!handled) {
                     // Cached file isn't handled above, try the default ignoring all issues
                     Path dest = getFile();
@@ -532,14 +532,14 @@ public abstract class VirtualFileSystem {
                     source.moveTo(dest);
                 }
             }
-            this.options = null;
+            mOptions = null;
             onUnmounted();
         }
     }
 
     @Override
     protected void finalize() {
-        fileCache.close();
+        mFileCache.close();
     }
 
     /**
@@ -558,8 +558,8 @@ public abstract class VirtualFileSystem {
     }
 
     protected void checkMounted() {
-        synchronized (lock) {
-            if (fsId == 0) {
+        synchronized (sLock) {
+            if (mFsId == 0) {
                 throw new NotMountedException("Not mounted");
             }
         }
@@ -567,11 +567,11 @@ public abstract class VirtualFileSystem {
 
     /* File APIs */
     private void addAction(@NonNull String path, @NonNull Action action) {
-        synchronized (actions) {
-            List<Action> actionSet = actions.get(path);
+        synchronized (mActions) {
+            List<Action> actionSet = mActions.get(path);
             if (actionSet == null) {
                 actionSet = new ArrayList<>();
-                actions.put(path, actionSet);
+                mActions.put(path, actionSet);
             }
             actionSet.add(action);
         }
@@ -848,10 +848,10 @@ public abstract class VirtualFileSystem {
             }
             addAction(dest, action);
             // Check if it's cached
-            FileCacheItem cache = fileCacheMap.remove(source);
+            FileCacheItem cache = mFileCacheMap.remove(source);
             if (cache != null) {
                 // Cache exists, alter it
-                fileCacheMap.put(dest, cache);
+                mFileCacheMap.put(dest, cache);
             }
             targetNode.addChild(renamedNode);
             invalidate(source);
@@ -873,10 +873,10 @@ public abstract class VirtualFileSystem {
             action.setSourcePath(source);
             addAction(dest, action);
             // Check if it's cached
-            FileCacheItem cache = fileCacheMap.remove(source);
+            FileCacheItem cache = mFileCacheMap.remove(source);
             if (cache != null) {
                 // Cache exists, alter it
-                fileCacheMap.put(dest, cache);
+                mFileCacheMap.put(dest, cache);
             }
             invalidate(source);
             invalidate(dest);
@@ -1060,12 +1060,12 @@ public abstract class VirtualFileSystem {
 
     @Nullable
     protected File findCachedFile(@NonNull Node<?> node) {
-        FileCacheItem fileCacheItem = fileCacheMap.get(node.getFullPath());
+        FileCacheItem fileCacheItem = mFileCacheMap.get(node.getFullPath());
         return fileCacheItem != null ? fileCacheItem.cachedFile : null;
     }
 
     private File getCachedFile(@NonNull Node<?> node, boolean write) throws IOException {
-        FileCacheItem fileCacheItem = fileCacheMap.get(node.getFullPath());
+        FileCacheItem fileCacheItem = mFileCacheMap.get(node.getFullPath());
         if (fileCacheItem != null) {
             if (write) {
                 fileCacheItem.setModified(true);
@@ -1073,7 +1073,7 @@ public abstract class VirtualFileSystem {
             return fileCacheItem.cachedFile;
         }
         // File hasn't been cached.
-        File cachedFile = fileCache.createCachedFile(Paths.getPathExtension(node.getName()));
+        File cachedFile = mFileCache.createCachedFile(Paths.getPathExtension(node.getName()));
         if (node.isPhysical()) {
             // The file exists physically. It has to be cached first.
             try (InputStream is = getInputStream(node);
@@ -1085,7 +1085,7 @@ public abstract class VirtualFileSystem {
         if (write) {
             fileCacheItem.setModified(true);
         }
-        fileCacheMap.put(node.getFullPath(), fileCacheItem);
+        mFileCacheMap.put(node.getFullPath(), fileCacheItem);
         return fileCacheItem.cachedFile;
     }
 
@@ -1093,18 +1093,18 @@ public abstract class VirtualFileSystem {
     protected static class Node<T> {
         // TODO: 23/11/22 Should include modification, creation, access times
         @NonNull
-        private final String name;
+        private final String mName;
         @Nullable
-        private final T object;
-        private final boolean physical;
+        private final T mObject;
+        private final boolean mPhysical;
         @Nullable
-        private final String physicalFullPath;
+        private final String mPhysicalFullPath;
 
         @Nullable
-        private Node<T> parent;
+        private Node<T> mParent;
         @Nullable
-        private HashMap<String, Node<T>> children = null;
-        private boolean directory;
+        private HashMap<String, Node<T>> mChildren = null;
+        private boolean mDirectory;
 
         protected Node(@Nullable Node<T> parent, @NonNull String name) {
             this(parent, name, null);
@@ -1119,108 +1119,108 @@ public abstract class VirtualFileSystem {
         }
 
         protected Node(@Nullable Node<T> parent, @NonNull Node<T> node, @NonNull String newName) {
-            this(parent, newName, node.object, node.physical);
-            children = node.children;
-            directory = node.directory;
-            if (children != null) {
-                for (Node<T> child : children.values()) {
-                    child.parent = this;
+            this(parent, newName, node.mObject, node.mPhysical);
+            mChildren = node.mChildren;
+            mDirectory = node.mDirectory;
+            if (mChildren != null) {
+                for (Node<T> child : mChildren.values()) {
+                    child.mParent = this;
                 }
             }
         }
 
         protected Node(@Nullable Node<T> parent, @NonNull String name, @Nullable T object, boolean physical) {
-            this.parent = parent;
-            this.name = name;
-            this.object = object;
-            this.physical = physical;
-            this.directory = object == null;
-            this.physicalFullPath = physical ? calculateFullPath(parent, this) : null;
+            mParent = parent;
+            mName = name;
+            mObject = object;
+            mPhysical = physical;
+            mDirectory = object == null;
+            mPhysicalFullPath = physical ? calculateFullPath(parent, this) : null;
         }
 
         @NonNull
         public String getName() {
-            return name;
+            return mName;
         }
 
         @Nullable
         public Node<T> getParent() {
-            return parent;
+            return mParent;
         }
 
         @NonNull
         public String getFullPath() {
-            return calculateFullPath(parent, this);
+            return calculateFullPath(mParent, this);
         }
 
         @Nullable
         public String getPhysicalFullPath() {
-            return physicalFullPath;
+            return mPhysicalFullPath;
         }
 
         @Nullable
         public T getObject() {
-            return object;
+            return mObject;
         }
 
         public boolean isPhysical() {
-            return physical;
+            return mPhysical;
         }
 
         public void setDirectory(boolean directory) {
-            this.directory = directory;
+            mDirectory = directory;
         }
 
         public void setFile(boolean file) {
-            this.directory = !file;
+            mDirectory = !file;
         }
 
         public boolean isDirectory() {
-            return directory;
+            return mDirectory;
         }
 
         public boolean isFile() {
-            return !directory;
+            return !mDirectory;
         }
 
         @Nullable
         public Node<T> getChild(String name) {
-            if (children == null) return null;
-            return children.get(name);
+            if (mChildren == null) return null;
+            return mChildren.get(name);
         }
 
         @Nullable
         public Node<T> getLastChild(@Nullable String name) {
-            if (children == null) return null;
+            if (mChildren == null) return null;
             return getLastNode(this, name);
         }
 
         @SuppressWarnings("unchecked")
         @Nullable
         public Node<T>[] listChildren() {
-            if (children == null || children.size() == 0) return null;
-            return children.values().toArray(new Node[0]);
+            if (mChildren == null || mChildren.size() == 0) return null;
+            return mChildren.values().toArray(new Node[0]);
         }
 
         @SuppressWarnings("unchecked")
         public void addChild(@Nullable Node<?> child) {
             if (child == null) return;
-            if (children == null) children = new HashMap<>();
+            if (mChildren == null) mChildren = new HashMap<>();
             Node<T> node = (Node<T>) child;
-            node.parent = this;
-            children.put(node.name, node);
+            node.mParent = this;
+            mChildren.put(node.mName, node);
         }
 
         public void removeChild(@Nullable Node<?> child) {
-            if (child == null || children == null) return;
-            children.remove(child.name);
-            child.parent = null;
+            if (child == null || mChildren == null) return;
+            mChildren.remove(child.mName);
+            child.mParent = null;
         }
 
         private static String calculateFullPath(@Nullable Node<?> parent, @NonNull Node<?> child) {
             String basePath = parent == null ? File.separator : parent.getFullPath();
-            return (basePath.equals(File.separator) ? (child.name.equals(File.separator) ? "" : File.separator)
-                    : basePath + File.separatorChar) + child.name;
+            return (basePath.equals(File.separator) ? (child.mName.equals(File.separator) ? "" : File.separator)
+                    : basePath + File.separatorChar) + child.mName;
         }
 
         @SuppressWarnings("SuspiciousRegexArgument") // Not on Windows

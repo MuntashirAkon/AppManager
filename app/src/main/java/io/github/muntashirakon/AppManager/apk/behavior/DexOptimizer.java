@@ -17,7 +17,7 @@ public class DexOptimizer {
     private final String mPackageName;
 
     @Nullable
-    private Exception lastError;
+    private Exception mLastError;
 
     public DexOptimizer(@NonNull IPackageManager pm, @NonNull String packageName) {
         mPm = pm;
@@ -27,9 +27,9 @@ public class DexOptimizer {
     @Nullable
     public Exception getLastError() {
         try {
-            return lastError;
+            return mLastError;
         } finally {
-            lastError = null;
+            mLastError = null;
         }
     }
 
@@ -44,7 +44,7 @@ public class DexOptimizer {
                 return mPm.performDexOptMode(mPackageName, checkProfiles, targetCompilerFilter, force);
             }
         } catch (RemoteException | SecurityException e) {
-            lastError = e;
+            mLastError = e;
         }
         return false;
     }
@@ -55,7 +55,7 @@ public class DexOptimizer {
             mPm.clearApplicationProfileData(mPackageName);
             return true;
         } catch (RemoteException | SecurityException e) {
-            lastError = e;
+            mLastError = e;
         }
         return false;
     }
@@ -70,7 +70,7 @@ public class DexOptimizer {
         try {
             return mPm.compileLayouts(mPackageName);
         } catch (RemoteException | SecurityException e) {
-            lastError = e;
+            mLastError = e;
         }
         return false;
     }
@@ -81,7 +81,7 @@ public class DexOptimizer {
             mPm.forceDexOpt(mPackageName);
             return true;
         } catch (RemoteException | SecurityException e) {
-            lastError = e;
+            mLastError = e;
         } catch (IllegalStateException e) {
             String message = e.getMessage();
             if (message != null && message.startsWith("Failed to dexopt: 0")) {
@@ -90,7 +90,7 @@ public class DexOptimizer {
                 // 2. Package does not have code
                 return true;
             }
-            lastError = e;
+            mLastError = e;
         }
         return false;
     }

@@ -6,19 +6,19 @@ import java.util.List;
 
 // Copyright 2012 Nolan Lawson
 public class SavedLog {
-    private final List<String> logLines;
-    private final boolean truncated;
+    private final List<String> mLogLines;
+    private final boolean mTruncated;
 
     public SavedLog(List<String> logLines, boolean truncated) {
-        this.logLines = logLines;
-        this.truncated = truncated;
+        mLogLines = logLines;
+        mTruncated = truncated;
     }
 
     public List<String> getLogLines() {
-        return logLines;
+        return mLogLines;
     }
 
     public boolean isTruncated() {
-        return truncated;
+        return mTruncated;
     }
 }

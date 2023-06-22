@@ -94,7 +94,7 @@ public class AddIntentExtraFragment extends DialogFragment {
     private static final int TYPE_COUNT = 18;
 
     @Nullable
-    private OnSaveListener onSaveListener;
+    private OnSaveListener mOnSaveListener;
 
     public interface OnSaveListener {
         void onSave(@Mode int mode, ExtraItem extraItem);
@@ -126,10 +126,10 @@ public class AddIntentExtraFragment extends DialogFragment {
     private final ViewGroup[] mLayoutTypes = new ViewGroup[TYPE_COUNT];
     private final TextView[] mValues = new TextView[TYPE_COUNT];
     @Type
-    private int currentType;
+    private int mCurrentType;
 
     public void setOnSaveListener(@Nullable OnSaveListener onSaveListener) {
-        this.onSaveListener = onSaveListener;
+        mOnSaveListener = onSaveListener;
     }
 
     @NonNull
@@ -160,7 +160,7 @@ public class AddIntentExtraFragment extends DialogFragment {
                         ((TextInputLayout) viewGroup).setHint(spinnerAdapter.getItem(position));
                     }
                 }
-                currentType = position;
+                mCurrentType = position;
             }
 
             @Override
@@ -209,18 +209,18 @@ public class AddIntentExtraFragment extends DialogFragment {
         TextInputEditText editKeyName = view.findViewById(R.id.key_name);
         if (extraItem != null) {
             // Extra is already set
-            currentType = extraItem.type;
+            mCurrentType = extraItem.type;
             String keyName = extraItem.keyName;
             Object keyValue = extraItem.keyValue;
             editKeyName.setText(keyName);
             if (mode == MODE_EDIT) editKeyName.setEnabled(false);
             for (ViewGroup layout : mLayoutTypes) layout.setVisibility(View.GONE);
-            if (currentType != TYPE_NULL) {
+            if (mCurrentType != TYPE_NULL) {
                 // We don't need a value for null
-                ViewGroup viewGroup = mLayoutTypes[currentType];
+                ViewGroup viewGroup = mLayoutTypes[mCurrentType];
                 viewGroup.setVisibility(View.VISIBLE);
                 if (viewGroup instanceof TextInputLayout) {
-                    ((TextInputLayout) viewGroup).setHint(spinnerAdapter.getItem(currentType));
+                    ((TextInputLayout) viewGroup).setHint(spinnerAdapter.getItem(mCurrentType));
                 }
                 if (keyValue != null) {
                     // FIXME: 25/1/21 Reformat the string to support parsing
@@ -234,7 +234,7 @@ public class AddIntentExtraFragment extends DialogFragment {
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity);
         builder.setView(view)
                 .setPositiveButton(mode == MODE_CREATE ? R.string.add_item : R.string.done, (dialog, which) -> {
-                    if (onSaveListener == null) return;
+                    if (mOnSaveListener == null) return;
                     if (editKeyName.getText() == null) {
                         Toast.makeText(getActivity(), R.string.key_name_cannot_be_null, Toast.LENGTH_LONG).show();
                         return;
@@ -246,30 +246,30 @@ public class AddIntentExtraFragment extends DialogFragment {
                         newExtraItem = new ExtraItem();
                         newExtraItem.keyName = keyName;
                     }
-                    newExtraItem.type = currentType;
+                    newExtraItem.type = mCurrentType;
                     if (TextUtils.isEmpty(newExtraItem.keyName)) {
                         Toast.makeText(getActivity(), R.string.key_name_cannot_be_null, Toast.LENGTH_LONG).show();
                         return;
                     }
                     try {
-                        if (currentType == TYPE_BOOLEAN) {
-                            newExtraItem.keyValue = ((MaterialSwitch) mValues[currentType]).isChecked();
+                        if (mCurrentType == TYPE_BOOLEAN) {
+                            newExtraItem.keyValue = ((MaterialSwitch) mValues[mCurrentType]).isChecked();
                         } else {
-                            newExtraItem.keyValue = parseExtraValue(currentType, mValues[currentType].getText().toString().trim());
+                            newExtraItem.keyValue = parseExtraValue(mCurrentType, mValues[mCurrentType].getText().toString().trim());
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                         Toast.makeText(getActivity(), R.string.error_evaluating_input, Toast.LENGTH_LONG).show();
                         return;
                     }
-                    onSaveListener.onSave(mode, newExtraItem);
+                    mOnSaveListener.onSave(mode, newExtraItem);
                 })
                 .setNegativeButton(R.string.cancel, (dialog, which) -> {
                     if (getDialog() != null) getDialog().cancel();
                 });
         if (mode == MODE_EDIT) {
             builder.setNeutralButton(R.string.delete, (dialog, which) -> {
-                if (onSaveListener != null) onSaveListener.onSave(MODE_DELETE, extraItem);
+                if (mOnSaveListener != null) mOnSaveListener.onSave(MODE_DELETE, extraItem);
             });
         }
         return builder.create();

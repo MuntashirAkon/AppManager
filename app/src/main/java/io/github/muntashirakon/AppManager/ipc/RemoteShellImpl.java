@@ -19,25 +19,25 @@ class RemoteShellImpl extends IRemoteShell.Stub {
                 .setTimeout(10));
     }
 
-    private final Shell.Job job;
+    private final Shell.Job mJob;
 
     public RemoteShellImpl(String[] cmd) {
-        job = Shell.cmd(cmd);
+        mJob = Shell.cmd(cmd);
     }
 
     @Override
     public void addCommand(String[] commands) {
-        job.add(commands);
+        mJob.add(commands);
     }
 
     @Override
     public void addInputStream(ParcelFileDescriptor inputStream) {
-        job.add(new ParcelFileDescriptor.AutoCloseInputStream(inputStream));
+        mJob.add(new ParcelFileDescriptor.AutoCloseInputStream(inputStream));
     }
 
     @Override
     public IShellResult exec() {
-        Shell.Result result = job.exec();
+        Shell.Result result = mJob.exec();
         return new IShellResult.Stub() {
             @Override
             public StringParceledListSlice getStdout() {

@@ -27,16 +27,16 @@ public class Groups {
     private static final int AID_SHARED_GID_END = 59999;
     private static final int AID_ISOLATED_START = 99000;
 
-    private static final Map<Integer, String> gidGroupMap = new HashMap<>();
+    private static final Map<Integer, String> sGidGroupMap = new HashMap<>();
 
     public static Map<Integer, String> getUidGroupMap(boolean reload) {
-        synchronized (gidGroupMap) {
-            if (gidGroupMap.isEmpty() || reload) {
+        synchronized (sGidGroupMap) {
+            if (sGidGroupMap.isEmpty() || reload) {
                 try {
                     OsCompat.setgrent();
                     StructGroup passwd;
                     while ((passwd = OsCompat.getgrent()) != null) {
-                        gidGroupMap.put(passwd.gr_id, passwd.gr_name);
+                        sGidGroupMap.put(passwd.gr_id, passwd.gr_name);
                     }
                 } catch (ErrnoException e) {
                     e.printStackTrace();
@@ -44,7 +44,7 @@ public class Groups {
                     ExUtils.exceptionAsIgnored(OsCompat::endgrent);
                 }
             }
-            return gidGroupMap;
+            return sGidGroupMap;
         }
     }
 

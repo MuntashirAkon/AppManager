@@ -12,23 +12,23 @@ import io.github.muntashirakon.AppManager.rules.RuleType;
 
 public class MagiskDenyListRule extends RuleEntry {
     @NonNull
-    private final MagiskProcess magiskProcess;
+    private final MagiskProcess mMagiskProcess;
 
     public MagiskDenyListRule(@NonNull MagiskProcess magiskProcess) {
         super(magiskProcess.packageName, magiskProcess.name, RuleType.MAGISK_DENY_LIST);
-        this.magiskProcess = magiskProcess;
+        mMagiskProcess = magiskProcess;
     }
 
     public MagiskDenyListRule(@NonNull String packageName, @NonNull String processName, @NonNull StringTokenizer tokenizer)
             throws IllegalArgumentException {
         super(packageName, processName, RuleType.MAGISK_DENY_LIST);
-        magiskProcess = new MagiskProcess(packageName, name);
-        magiskProcess.setAppZygote(name.endsWith("_zygote"));
+        mMagiskProcess = new MagiskProcess(packageName, name);
+        mMagiskProcess.setAppZygote(name.endsWith("_zygote"));
         if (tokenizer.hasMoreElements()) {
-            magiskProcess.setEnabled(Boolean.parseBoolean(tokenizer.nextElement().toString()));
+            mMagiskProcess.setEnabled(Boolean.parseBoolean(tokenizer.nextElement().toString()));
         } else throw new IllegalArgumentException("Invalid format: isHidden not found");
         if (tokenizer.hasMoreElements()) {
-            magiskProcess.setIsolatedProcess(Boolean.parseBoolean(tokenizer.nextElement().toString()));
+            mMagiskProcess.setIsolatedProcess(Boolean.parseBoolean(tokenizer.nextElement().toString()));
         }
     }
 
@@ -38,7 +38,7 @@ public class MagiskDenyListRule extends RuleEntry {
 
     @NonNull
     public MagiskProcess getMagiskProcess() {
-        return magiskProcess;
+        return mMagiskProcess;
     }
 
     @NonNull
@@ -47,17 +47,17 @@ public class MagiskDenyListRule extends RuleEntry {
         return "MagiskDenyListRule{" +
                 "packageName='" + packageName + '\'' +
                 "processName='" + name + '\'' +
-                ", isDenied=" + magiskProcess.isEnabled() +
-                ", isIsolated=" + magiskProcess.isIsolatedProcess() +
-                ", isAppZygote=" + magiskProcess.isAppZygote() +
+                ", isDenied=" + mMagiskProcess.isEnabled() +
+                ", isIsolated=" + mMagiskProcess.isIsolatedProcess() +
+                ", isAppZygote=" + mMagiskProcess.isAppZygote() +
                 '}';
     }
 
     @NonNull
     @Override
     public String flattenToString(boolean isExternal) {
-        return addPackageWithTab(isExternal) + name + "\t" + type.name() + "\t" + magiskProcess.isEnabled() + "\t"
-                + magiskProcess.isIsolatedProcess();
+        return addPackageWithTab(isExternal) + name + "\t" + type.name() + "\t" + mMagiskProcess.isEnabled() + "\t"
+                + mMagiskProcess.isIsolatedProcess();
     }
 
     @Override
@@ -66,12 +66,12 @@ public class MagiskDenyListRule extends RuleEntry {
         if (!(o instanceof MagiskDenyListRule)) return false;
         if (!super.equals(o)) return false;
         MagiskDenyListRule that = (MagiskDenyListRule) o;
-        return magiskProcess.isEnabled() == that.magiskProcess.isEnabled()
-                && magiskProcess.isIsolatedProcess() == that.magiskProcess.isIsolatedProcess();
+        return mMagiskProcess.isEnabled() == that.mMagiskProcess.isEnabled()
+                && mMagiskProcess.isIsolatedProcess() == that.mMagiskProcess.isIsolatedProcess();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), magiskProcess.isEnabled(), magiskProcess.isIsolatedProcess());
+        return Objects.hash(super.hashCode(), mMagiskProcess.isEnabled(), mMagiskProcess.isIsolatedProcess());
     }
 }

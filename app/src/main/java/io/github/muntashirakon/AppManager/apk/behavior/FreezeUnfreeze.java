@@ -52,9 +52,9 @@ public final class FreezeUnfreeze {
         @FreezeFlags
         public final int flags;
 
-        private Bitmap icon;
-        private String label;
-        private int privateFlags;
+        private Bitmap mIcon;
+        private String mLabel;
+        private int mPrivateFlags;
 
         public ShortcutInfo(@NonNull String packageName, int userId, int flags) {
             this.shortcutId = "freeze:u=" + userId + ",p=" + packageName;
@@ -64,35 +64,35 @@ public final class FreezeUnfreeze {
         }
 
         public Bitmap getIcon() {
-            return icon;
+            return mIcon;
         }
 
         public void setIcon(Bitmap icon) {
-            this.icon = icon;
+            mIcon = icon;
         }
 
         public String getLabel() {
-            return label;
+            return mLabel;
         }
 
         public void setLabel(String label) {
-            this.label = label;
+            mLabel = label;
         }
 
         public int getPrivateFlags() {
-            return privateFlags;
+            return mPrivateFlags;
         }
 
         public void setPrivateFlags(int privateFlags) {
-            this.privateFlags = privateFlags;
+            mPrivateFlags = privateFlags;
         }
 
         public void addPrivateFlags(int privateFlags) {
-            this.privateFlags |= privateFlags;
+            mPrivateFlags |= privateFlags;
         }
 
         public void removePrivateFlags(int privateFlags) {
-            this.privateFlags &= ~privateFlags;
+            mPrivateFlags &= ~privateFlags;
         }
 
         @Override

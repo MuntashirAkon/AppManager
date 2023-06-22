@@ -27,24 +27,24 @@ import static io.github.muntashirakon.AppManager.details.info.ListItem.LIST_ITEM
 import static io.github.muntashirakon.AppManager.details.info.ListItem.LIST_ITEM_REGULAR_ACTION;
 
 class AppInfoRecyclerAdapter extends RecyclerView.Adapter<AppInfoRecyclerAdapter.ViewHolder> {
-    private final Context context;
-    private final List<ListItem> adapterList;
+    private final Context mContext;
+    private final List<ListItem> mAdapterList;
 
     AppInfoRecyclerAdapter(Context context) {
-        this.context = context;
-        adapterList = new ArrayList<>();
+        mContext = context;
+        mAdapterList = new ArrayList<>();
     }
 
     void setAdapterList(@NonNull List<ListItem> list) {
-        adapterList.clear();
-        adapterList.addAll(list);
+        mAdapterList.clear();
+        mAdapterList.addAll(list);
         notifyDataSetChanged();
     }
 
     @Override
     @ListItem.ListItemType
     public int getItemViewType(int position) {
-        return adapterList.get(position).type;
+        return mAdapterList.get(position).type;
     }
 
     @NonNull
@@ -79,7 +79,7 @@ class AppInfoRecyclerAdapter extends RecyclerView.Adapter<AppInfoRecyclerAdapter
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        ListItem listItem = adapterList.get(position);
+        ListItem listItem = mAdapterList.get(position);
         // Set title
         holder.title.setText(listItem.getTitle());
         if (listItem.type == LIST_ITEM_GROUP_BEGIN) {
@@ -100,7 +100,7 @@ class AppInfoRecyclerAdapter extends RecyclerView.Adapter<AppInfoRecyclerAdapter
             if (listItem.getActionContentDescription() != null) {
                 holder.actionIcon.setContentDescription(listItem.getActionContentDescription());
             } else if (listItem.getActionContentDescriptionRes() != 0) {
-                holder.actionIcon.setContentDescription(context.getString(listItem.getActionContentDescriptionRes()));
+                holder.actionIcon.setContentDescription(mContext.getString(listItem.getActionContentDescriptionRes()));
             }
             if (listItem.getOnActionClickListener() != null) {
                 holder.actionIcon.setVisibility(View.VISIBLE);
@@ -111,7 +111,7 @@ class AppInfoRecyclerAdapter extends RecyclerView.Adapter<AppInfoRecyclerAdapter
 
     @Override
     public int getItemCount() {
-        return adapterList.size();
+        return mAdapterList.size();
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder {

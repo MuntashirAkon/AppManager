@@ -28,41 +28,41 @@ public class DebloaterRecyclerViewAdapter extends MultiSelectionView.Adapter<Deb
     private List<DebloatObject> mAdapterList = Collections.emptyList();
 
     @ColorInt
-    private final int highlightColor;
+    private final int mHighlightColor;
     @ColorInt
-    private final int removalSafeColor;
+    private final int mRemovalSafeColor;
     @ColorInt
-    private final int removalReplaceColor;
+    private final int mRemovalReplaceColor;
     @ColorInt
-    private final int removalCautionColor;
+    private final int mRemovalCautionColor;
     @ColorInt
-    private final int removalUnsafeColor;
+    private final int mRemovalUnsafeColor;
     @ColorInt
-    private final int colorSurface;
+    private final int mColorSurface;
     private final Object mLock = new Object();
     private final DebloaterViewModel mViewModel;
 
     public DebloaterRecyclerViewAdapter(DebloaterActivity activity) {
-        highlightColor = ColorCodes.getListItemSelectionColor(activity);
-        removalSafeColor = ColorCodes.getRemovalSafeIndicatorColor(activity);
-        removalReplaceColor = ColorCodes.getRemovalReplaceIndicatorColor(activity);
-        removalCautionColor = ColorCodes.getRemovalCautionIndicatorColor(activity);
-        removalUnsafeColor = ColorCodes.getRemovalUnsafeIndicatorColor(activity);
-        colorSurface = MaterialColors.getColor(activity, com.google.android.material.R.attr.colorSurface,
+        mHighlightColor = ColorCodes.getListItemSelectionColor(activity);
+        mRemovalSafeColor = ColorCodes.getRemovalSafeIndicatorColor(activity);
+        mRemovalReplaceColor = ColorCodes.getRemovalReplaceIndicatorColor(activity);
+        mRemovalCautionColor = ColorCodes.getRemovalCautionIndicatorColor(activity);
+        mRemovalUnsafeColor = ColorCodes.getRemovalUnsafeIndicatorColor(activity);
+        mColorSurface = MaterialColors.getColor(activity, com.google.android.material.R.attr.colorSurface,
                 DebloaterRecyclerViewAdapter.class.getCanonicalName());
         mViewModel = activity.viewModel;
     }
 
     public void setAdapterList(List<DebloatObject> adapterList) {
         synchronized (mLock) {
-            this.mAdapterList = adapterList;
+            mAdapterList = adapterList;
             notifyDataSetChanged();
         }
     }
 
     @Override
     public int getHighlightColor() {
-        return highlightColor;
+        return mHighlightColor;
     }
 
     @NonNull
@@ -93,18 +93,18 @@ public class DebloaterRecyclerViewAdapter extends MultiSelectionView.Adapter<Deb
         } else {
             holder.labelView.setVisibility(View.GONE);
         }
-        switch (debloatObject.getRemoval()) {
+        switch (debloatObject.getmRemoval()) {
             case DebloatObject.REMOVAL_SAFE:
-                holder.removalIndicator.setDividerColor(removalSafeColor);
+                holder.removalIndicator.setDividerColor(mRemovalSafeColor);
                 break;
             case DebloatObject.REMOVAL_CAUTION:
-                holder.removalIndicator.setDividerColor(removalCautionColor);
+                holder.removalIndicator.setDividerColor(mRemovalCautionColor);
                 break;
             case DebloatObject.REMOVAL_REPLACE:
-                holder.removalIndicator.setDividerColor(removalReplaceColor);
+                holder.removalIndicator.setDividerColor(mRemovalReplaceColor);
                 break;
             case DebloatObject.REMOVAL_UNSAFE:
-                holder.removalIndicator.setDividerColor(removalUnsafeColor);
+                holder.removalIndicator.setDividerColor(mRemovalUnsafeColor);
                 break;
         }
         holder.itemView.setOnLongClickListener(v -> {
@@ -117,7 +117,7 @@ public class DebloaterRecyclerViewAdapter extends MultiSelectionView.Adapter<Deb
                 toggleSelection(position);
             }
         });
-        holder.itemView.setCardBackgroundColor(colorSurface);
+        holder.itemView.setCardBackgroundColor(mColorSurface);
         super.onBindViewHolder(holder, position);
     }
 

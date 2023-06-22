@@ -54,14 +54,14 @@ public class EditShortcutDialogFragment extends DialogFragment {
     @Nullable
     private ComponentName mComponentName;
     private PackageManager mPackageManager;
-    private EditText textName;
-    private EditText textIcon;
-    private ImageView imageIcon;
+    private EditText mTextName;
+    private EditText mTextIcon;
+    private ImageView mImageIcon;
     @Nullable
-    private CreateShortcutInterface createShortcutInterface;
+    private CreateShortcutInterface mCreateShortcutInterface;
 
     public void setOnCreateShortcut(@Nullable CreateShortcutInterface createShortcutInterface) {
-        this.createShortcutInterface = createShortcutInterface;
+        mCreateShortcutInterface = createShortcutInterface;
     }
 
     @NonNull
@@ -75,10 +75,10 @@ public class EditShortcutDialogFragment extends DialogFragment {
         if (inflater == null) return super.onCreateDialog(savedInstanceState);
         @SuppressLint("InflateParams")
         View view = inflater.inflate(R.layout.dialog_shortcut, null);
-        textName = view.findViewById(R.id.shortcut_name);
-        textName.setText(shortcutName);
-        textIcon = view.findViewById(R.id.insert_icon);
-        textIcon.addTextChangedListener(new TextWatcher() {
+        mTextName = view.findViewById(R.id.shortcut_name);
+        mTextName.setText(shortcutName);
+        mTextIcon = view.findViewById(R.id.insert_icon);
+        mTextIcon.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
@@ -87,16 +87,16 @@ public class EditShortcutDialogFragment extends DialogFragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                imageIcon.setImageDrawable(getDrawable(s.toString()));
+                mImageIcon.setImageDrawable(getDrawable(s.toString()));
             }
         });
 
-        imageIcon = view.findViewById(R.id.insert_icon_btn);
-        imageIcon.setOnClickListener(v -> {
+        mImageIcon = view.findViewById(R.id.insert_icon_btn);
+        mImageIcon.setOnClickListener(v -> {
             IconPickerDialogFragment dialog = new IconPickerDialogFragment();
             dialog.attachIconPickerListener(icon -> {
-                textIcon.setText(icon.name);
-                imageIcon.setImageDrawable(icon.loadIcon(mPackageManager));
+                mTextIcon.setText(icon.name);
+                mImageIcon.setImageDrawable(icon.loadIcon(mPackageManager));
             });
             dialog.show(getParentFragmentManager(), IconPickerDialogFragment.TAG);
         });
@@ -105,12 +105,12 @@ public class EditShortcutDialogFragment extends DialogFragment {
                 .setTitle(shortcutName)
                 .setView(view)
                 .setPositiveButton(R.string.create_shortcut, (dialog, which) -> {
-                    String newShortcutName = textName.getText().toString();
+                    String newShortcutName = mTextName.getText().toString();
                     if (newShortcutName.length() == 0) newShortcutName = shortcutName;
 
                     Drawable icon = null;
                     try {
-                        String iconResourceString = textIcon.getText().toString();
+                        String iconResourceString = mTextIcon.getText().toString();
                         icon = ResourceUtil.getResourceFromName(mPackageManager, iconResourceString).getDrawable(activity.getTheme());
                     } catch (PackageManager.NameNotFoundException | Resources.NotFoundException e) {
                         Toast.makeText(activity, R.string.error_invalid_icon_resource, Toast.LENGTH_LONG).show();
@@ -120,8 +120,8 @@ public class EditShortcutDialogFragment extends DialogFragment {
                     if (icon == null) {
                         icon = mPackageManager.getDefaultActivityIcon();
                     }
-                    if (createShortcutInterface != null) {
-                        createShortcutInterface.onCreateShortcut(newShortcutName, icon);
+                    if (mCreateShortcutInterface != null) {
+                        mCreateShortcutInterface.onCreateShortcut(newShortcutName, icon);
                     }
                 })
                 .setNegativeButton(R.string.cancel, null).create();

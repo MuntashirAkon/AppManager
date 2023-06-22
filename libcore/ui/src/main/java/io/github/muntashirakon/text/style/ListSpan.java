@@ -23,9 +23,9 @@ public class ListSpan implements LeadingMarginSpan {
      * @param index       Index number for a numeric list.
      */
     public ListSpan(int leadingGap, int trailingGap, int index, Locale locale) {
-        this.mLeadingGapWidth = leadingGap;
-        this.mTrailingGapWidth = trailingGap;
-        this.mText = String.format(locale, "%d.", index);
+        mLeadingGapWidth = leadingGap;
+        mTrailingGapWidth = trailingGap;
+        mText = String.format(locale, "%d.", index);
     }
 
     /**
@@ -34,9 +34,9 @@ public class ListSpan implements LeadingMarginSpan {
      * @param index       Index number for a numeric list.
      */
     public ListSpan(int leadingGap, int trailingGap, int index) {
-        this.mLeadingGapWidth = leadingGap;
-        this.mTrailingGapWidth = trailingGap;
-        this.mText = String.format(Locale.getDefault(), "%d.", index);
+        mLeadingGapWidth = leadingGap;
+        mTrailingGapWidth = trailingGap;
+        mText = String.format(Locale.getDefault(), "%d.", index);
     }
 
     /**
@@ -45,9 +45,9 @@ public class ListSpan implements LeadingMarginSpan {
      * @param ch          Character for a bulleted list (preferably a bullet).
      */
     public ListSpan(int leadingGap, int trailingGap, char ch) {
-        this.mLeadingGapWidth = leadingGap;
-        this.mTrailingGapWidth = trailingGap;
-        this.mText = String.valueOf(ch);
+        mLeadingGapWidth = leadingGap;
+        mTrailingGapWidth = trailingGap;
+        mText = String.valueOf(ch);
     }
 
     @Override
@@ -60,8 +60,8 @@ public class ListSpan implements LeadingMarginSpan {
         if (first) {
             Paint.Style lastStyle = p.getStyle();
             p.setStyle(Paint.Style.FILL);
-            float width = p.measureText(this.mText);
-            c.drawText(this.mText, x * dir, bottom - p.descent(), p);
+            float width = p.measureText(mText);
+            c.drawText(mText, x * dir, bottom - p.descent(), p);
             c.drawText("", (mLeadingGapWidth + x - width / 2) * dir, bottom - p.descent(), p);
             p.setStyle(lastStyle);
         }

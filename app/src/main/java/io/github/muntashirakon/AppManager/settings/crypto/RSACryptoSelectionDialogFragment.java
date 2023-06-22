@@ -54,48 +54,48 @@ public class RSACryptoSelectionDialogFragment extends DialogFragment {
     }
 
     @Nullable
-    ScrollableDialogBuilder builder;
+    ScrollableDialogBuilder mBuilder;
     @Nullable
-    private OnKeyPairUpdatedListener listener;
-    private String targetAlias;
+    private OnKeyPairUpdatedListener mListener;
+    private String mTargetAlias;
     @Nullable
-    private RSACryptoSelectionViewModel model;
+    private RSACryptoSelectionViewModel mModel;
 
     public void setOnKeyPairUpdatedListener(OnKeyPairUpdatedListener listener) {
-        this.listener = listener;
+        mListener = listener;
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        model = new ViewModelProvider(this).get(RSACryptoSelectionViewModel.class);
-        model.observeStatus().observe(this, status -> {
+        mModel = new ViewModelProvider(this).get(RSACryptoSelectionViewModel.class);
+        mModel.observeStatus().observe(this, status -> {
             if (status.second /* long toast */) {
                 UIUtils.displayLongToast(status.first);
             } else {
                 UIUtils.displayShortToast(status.first);
             }
         });
-        model.observeKeyUpdated().observe(this, updatedKeyPair -> {
-            if (listener == null) return;
-            listener.keyPairUpdated(updatedKeyPair.first, updatedKeyPair.second);
+        mModel.observeKeyUpdated().observe(this, updatedKeyPair -> {
+            if (mListener == null) return;
+            mListener.keyPairUpdated(updatedKeyPair.first, updatedKeyPair.second);
         });
-        model.observeSigningInfo().observe(this, keyPair -> {
-            if (builder != null) builder.setMessage(getSigningInfo(keyPair));
+        mModel.observeSigningInfo().observe(this, keyPair -> {
+            if (mBuilder != null) mBuilder.setMessage(getSigningInfo(keyPair));
         });
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        targetAlias = requireArguments().getString(EXTRA_ALIAS);
-        builder = new ScrollableDialogBuilder(requireActivity())
+        mTargetAlias = requireArguments().getString(EXTRA_ALIAS);
+        mBuilder = new ScrollableDialogBuilder(requireActivity())
                 .setTitle(R.string.rsa)
                 .setNegativeButton(R.string.pref_import, null)
                 .setNeutralButton(R.string.generate_key, null)
                 .setPositiveButton(R.string.ok, null);
-        Objects.requireNonNull(model).loadSigningInfo(targetAlias);
-        AlertDialog dialog = Objects.requireNonNull(builder).create();
+        Objects.requireNonNull(mModel).loadSigningInfo(mTargetAlias);
+        AlertDialog dialog = Objects.requireNonNull(mBuilder).create();
         dialog.setOnShowListener(dialog3 -> {
             AlertDialog dialog1 = (AlertDialog) dialog3;
             Button importButton = dialog1.getButton(AlertDialog.BUTTON_NEGATIVE);
@@ -103,9 +103,9 @@ public class RSACryptoSelectionDialogFragment extends DialogFragment {
             importButton.setOnClickListener(v -> {
                 KeyPairImporterDialogFragment fragment = new KeyPairImporterDialogFragment();
                 Bundle args = new Bundle();
-                args.putString(KeyPairImporterDialogFragment.EXTRA_ALIAS, targetAlias);
+                args.putString(KeyPairImporterDialogFragment.EXTRA_ALIAS, mTargetAlias);
                 fragment.setArguments(args);
-                fragment.setOnKeySelectedListener(keyPair -> model.addKeyPair(targetAlias, keyPair));
+                fragment.setOnKeySelectedListener(keyPair -> mModel.addKeyPair(mTargetAlias, keyPair));
                 fragment.show(getParentFragmentManager(), KeyPairImporterDialogFragment.TAG);
             });
             generateButton.setOnClickListener(v -> {
@@ -113,7 +113,7 @@ public class RSACryptoSelectionDialogFragment extends DialogFragment {
                 Bundle args = new Bundle();
                 args.putString(KeyPairGeneratorDialogFragment.EXTRA_KEY_TYPE, CryptoUtils.MODE_RSA);
                 fragment.setArguments(args);
-                fragment.setOnGenerateListener(keyPair -> model.addKeyPair(targetAlias, keyPair));
+                fragment.setOnGenerateListener(keyPair -> mModel.addKeyPair(mTargetAlias, keyPair));
                 fragment.show(getParentFragmentManager(), KeyPairGeneratorDialogFragment.TAG);
             });
         });

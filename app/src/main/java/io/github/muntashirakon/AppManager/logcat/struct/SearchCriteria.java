@@ -19,10 +19,10 @@ public class SearchCriteria {
     private static final Pattern PID_PATTERN = Pattern.compile("pid:(\\d+)", Pattern.CASE_INSENSITIVE);
     private static final Pattern TAG_PATTERN = Pattern.compile("tag:(\"[^\"]+\"|\\S+)", Pattern.CASE_INSENSITIVE);
 
-    private int pid = -1;
-    private String tag;
-    private final String searchText;
-    private int searchTextAsInt = -1;
+    private int mPid = -1;
+    private String mTag;
+    private final String mSearchText;
+    private int mSearchTextAsInt = -1;
 
     public SearchCriteria(@Nullable CharSequence inputQuery) {
         // Check for the "pid" keyword
@@ -30,7 +30,7 @@ public class SearchCriteria {
         Matcher pidMatcher = PID_PATTERN.matcher(query);
         if (pidMatcher.find()) {
             try {
-                pid = Integer.parseInt(Objects.requireNonNull(pidMatcher.group(1)));
+                mPid = Integer.parseInt(Objects.requireNonNull(pidMatcher.group(1)));
                 query.replace(pidMatcher.start(), pidMatcher.end(), ""); // remove
                 // from
                 // search
@@ -41,9 +41,9 @@ public class SearchCriteria {
         // Check for the "tag" keyword
         Matcher tagMatcher = TAG_PATTERN.matcher(query);
         if (tagMatcher.find()) {
-            tag = Objects.requireNonNull(tagMatcher.group(1));
-            if (tag.startsWith("\"") && tag.endsWith("\"")) {
-                tag = tag.substring(1, tag.length() - 1); // remove quotes
+            mTag = Objects.requireNonNull(tagMatcher.group(1));
+            if (mTag.startsWith("\"") && mTag.endsWith("\"")) {
+                mTag = mTag.substring(1, mTag.length() - 1); // remove quotes
             }
             query.replace(tagMatcher.start(), tagMatcher.end(), ""); // remove
             // from
@@ -51,15 +51,15 @@ public class SearchCriteria {
             // string
         }
         // Everything else becomes a search term
-        searchText = query.toString().trim();
+        mSearchText = query.toString().trim();
         try {
-            searchTextAsInt = Integer.parseInt(searchText);
+            mSearchTextAsInt = Integer.parseInt(mSearchText);
         } catch (NumberFormatException ignore) {
         }
     }
 
     public boolean isEmpty() {
-        return pid == -1 && TextUtils.isEmpty(tag) && TextUtils.isEmpty(searchText);
+        return mPid == -1 && TextUtils.isEmpty(mTag) && TextUtils.isEmpty(mSearchText);
     }
 
     public boolean matches(LogLine logLine) {
@@ -74,19 +74,19 @@ public class SearchCriteria {
     }
 
     private boolean checkFoundText(LogLine logLine) {
-        return TextUtils.isEmpty(searchText)
-                || (searchTextAsInt != -1 && searchTextAsInt == logLine.getProcessId())
-                || (logLine.getTagName() != null && logLine.getTagName().toLowerCase(Locale.ROOT).contains(searchText.toLowerCase(Locale.ROOT)))
-                || (logLine.getLogOutput() != null && logLine.getLogOutput().toLowerCase(Locale.ROOT).contains(searchText.toLowerCase(Locale.ROOT)));
+        return TextUtils.isEmpty(mSearchText)
+                || (mSearchTextAsInt != -1 && mSearchTextAsInt == logLine.getProcessId())
+                || (logLine.getTagName() != null && logLine.getTagName().toLowerCase(Locale.ROOT).contains(mSearchText.toLowerCase(Locale.ROOT)))
+                || (logLine.getLogOutput() != null && logLine.getLogOutput().toLowerCase(Locale.ROOT).contains(mSearchText.toLowerCase(Locale.ROOT)));
     }
 
     private boolean checkFoundTag(LogLine logLine) {
-        return TextUtils.isEmpty(tag)
-                || (logLine.getTagName() != null && logLine.getTagName().toLowerCase(Locale.ROOT).contains(tag.toLowerCase(Locale.ROOT)));
+        return TextUtils.isEmpty(mTag)
+                || (logLine.getTagName() != null && logLine.getTagName().toLowerCase(Locale.ROOT).contains(mTag.toLowerCase(Locale.ROOT)));
     }
 
     private boolean checkFoundPid(LogLine logLine) {
-        return pid == -1 || logLine.getProcessId() == pid;
+        return mPid == -1 || logLine.getProcessId() == mPid;
     }
 
 }

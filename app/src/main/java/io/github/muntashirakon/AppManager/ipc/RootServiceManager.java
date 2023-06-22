@@ -135,12 +135,12 @@ public class RootServiceManager implements Handler.Callback {
     private RemoteProcess mRemote;
     private RemoteProcess mDaemon;
 
-    private String filterAction;
-    private int flags = 0;
+    private String mFilterAction;
+    private int mFlags = 0;
 
-    private final List<BindTask> pendingTasks = new ArrayList<>();
-    private final Map<Pair<ComponentName, Boolean>, RemoteService> services = new ArrayMap<>();
-    private final Map<ServiceConnection, Pair<RemoteService, Executor>> connections = new ArrayMap<>();
+    private final List<BindTask> mPendingTasks = new ArrayList<>();
+    private final Map<Pair<ComponentName, Boolean>, RemoteService> mServices = new ArrayMap<>();
+    private final Map<ServiceConnection, Pair<RemoteService, Executor>> mConnections = new ArrayMap<>();
 
     private RootServiceManager() {
     }
@@ -162,10 +162,10 @@ public class RootServiceManager implements Handler.Callback {
         }
         File stagingMainJar = new File(PACKAGE_STAGING_DIRECTORY, "main.jar");
 
-        if (filterAction == null) {
-            filterAction = UUID.randomUUID().toString();
+        if (mFilterAction == null) {
+            mFilterAction = UUID.randomUUID().toString();
             // Register receiver to receive binder from root process
-            IntentFilter filter = new IntentFilter(filterAction);
+            IntentFilter filter = new IntentFilter(mFilterAction);
             context.registerReceiver(new ServiceReceiver(), filter);
         }
 
@@ -242,7 +242,7 @@ public class RootServiceManager implements Handler.Callback {
                         IPCMAIN_CLASSNAME,                          // Java command
                         serviceName.flattenToString().replace("$", "\\$"), // args[0]
                         Process.myUid(),                            // args[1]
-                        filterAction,                               // args[2]
+                        mFilterAction,                               // args[2]
                         action));                                   // args[3]
     }
 
@@ -253,9 +253,9 @@ public class RootServiceManager implements Handler.Callback {
 
         // Local cache
         Pair<ComponentName, Boolean> key = enforceIntent(intent);
-        RemoteService s = services.get(key);
+        RemoteService s = mServices.get(key);
         if (s != null) {
-            connections.put(conn, new Pair<>(s, executor));
+            mConnections.put(conn, new Pair<>(s, executor));
             s.refCount++;
             executor.execute(() -> conn.onServiceConnected(key.first, s.binder));
             return null;
@@ -269,8 +269,8 @@ public class RootServiceManager implements Handler.Callback {
             IBinder binder = p.sm.bind(intent);
             if (binder != null) {
                 RemoteService r = new RemoteService(key, binder, p);
-                connections.put(conn, new Pair<>(r, executor));
-                services.put(key, r);
+                mConnections.put(conn, new Pair<>(r, executor));
+                mServices.put(key, r);
                 executor.execute(() -> conn.onServiceConnected(key.first, binder));
             } else if (Build.VERSION.SDK_INT >= 28) {
                 executor.execute(() -> conn.onNullBinding(key.first));
@@ -287,11 +287,11 @@ public class RootServiceManager implements Handler.Callback {
     public Shell.Task createBindTask(Intent intent, Executor executor, ServiceConnection conn) {
         Pair<ComponentName, Boolean> key = bindInternal(intent, executor, conn);
         if (key != null) {
-            pendingTasks.add(() -> bindInternal(intent, executor, conn) == null);
+            mPendingTasks.add(() -> bindInternal(intent, executor, conn) == null);
             int mask = key.second ? DAEMON_EN_ROUTE : REMOTE_EN_ROUTE;
             String action = key.second ? CMDLINE_START_DAEMON : CMDLINE_START_SERVICE;
-            if ((flags & mask) == 0) {
-                flags |= mask;
+            if ((mFlags & mask) == 0) {
+                mFlags |= mask;
                 return startRootProcess(key.first, action);
             }
         }
@@ -301,13 +301,13 @@ public class RootServiceManager implements Handler.Callback {
     public void unbind(@NonNull ServiceConnection conn) {
         enforceMainThread();
 
-        Pair<RemoteService, Executor> p = connections.remove(conn);
+        Pair<RemoteService, Executor> p = mConnections.remove(conn);
         if (p != null) {
             p.first.refCount--;
             p.second.execute(() -> conn.onServiceDisconnected(p.first.key.first));
             if (p.first.refCount == 0) {
                 // Actually close the service
-                services.remove(p.first.key);
+                mServices.remove(p.first.key);
                 try {
                     p.first.host.sm.unbind(p.first.key.first);
                 } catch (RemoteException e) {
@@ -318,13 +318,13 @@ public class RootServiceManager implements Handler.Callback {
     }
 
     private void stopInternal(Pair<ComponentName, Boolean> key) {
-        RemoteService s = services.remove(key);
+        RemoteService s = mServices.remove(key);
         if (s == null)
             return;
 
         // Notify all connections
         Iterator<Map.Entry<ServiceConnection, Pair<RemoteService, Executor>>> it =
-                connections.entrySet().iterator();
+                mConnections.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry<ServiceConnection, Pair<RemoteService, Executor>> e = it.next();
             if (e.getValue().first.equals(s)) {
@@ -380,7 +380,7 @@ public class RootServiceManager implements Handler.Callback {
             if (mDaemon == this)
                 mDaemon = null;
 
-            Iterator<RemoteService> sit = services.values().iterator();
+            Iterator<RemoteService> sit = mServices.values().iterator();
             while (sit.hasNext()) {
                 if (sit.next().host == this) {
                     sit.remove();
@@ -388,7 +388,7 @@ public class RootServiceManager implements Handler.Callback {
             }
 
             Iterator<Map.Entry<ServiceConnection, Pair<RemoteService, Executor>>> it =
-                    connections.entrySet().iterator();
+                    mConnections.entrySet().iterator();
             while (it.hasNext()) {
                 Map.Entry<ServiceConnection, Pair<RemoteService, Executor>> e = it.next();
                 if (e.getValue().first.host == this) {
@@ -424,14 +424,14 @@ public class RootServiceManager implements Handler.Callback {
                 RemoteProcess p = new RemoteProcess(sm);
                 if (intent.getBooleanExtra(INTENT_DAEMON_KEY, false)) {
                     mDaemon = p;
-                    flags &= ~DAEMON_EN_ROUTE;
+                    mFlags &= ~DAEMON_EN_ROUTE;
                 } else {
                     mRemote = p;
-                    flags &= ~REMOTE_EN_ROUTE;
+                    mFlags &= ~REMOTE_EN_ROUTE;
                 }
-                for (int i = pendingTasks.size() - 1; i >= 0; --i) {
-                    if (pendingTasks.get(i).run()) {
-                        pendingTasks.remove(i);
+                for (int i = mPendingTasks.size() - 1; i >= 0; --i) {
+                    if (mPendingTasks.get(i).run()) {
+                        mPendingTasks.remove(i);
                     }
                 }
             } catch (RemoteException e) {

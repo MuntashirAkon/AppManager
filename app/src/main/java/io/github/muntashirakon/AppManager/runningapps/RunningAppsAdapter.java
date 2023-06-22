@@ -68,7 +68,7 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
     RunningAppsAdapter(@NonNull RunningAppsActivity activity) {
         super();
         mActivity = activity;
-        mModel = activity.mModel;
+        mModel = activity.model;
         mCardColor = ColorCodes.getListItemColor1(activity);
         mQueryStringHighlightColor = ColorCodes.getQueryStringHighlightColor(activity);
         mHighlightColor = ColorCodes.getListItemSelectionColor(activity);

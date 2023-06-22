@@ -10,36 +10,36 @@ import io.github.muntashirakon.io.Path;
 // Copyright 2021 Muntashir Al-Islam
 public class SendLogDetails {
     @Nullable
-    private String subject;
+    private String mSubject;
     @Nullable
-    private Path attachment;
+    private Path mAttachment;
     @Nullable
-    private String attachmentType;
+    private String mAttachmentType;
 
     @Nullable
     public String getSubject() {
-        return subject;
+        return mSubject;
     }
 
     public void setSubject(@Nullable String subject) {
-        this.subject = subject;
+        mSubject = subject;
     }
 
     @Nullable
     public Path getAttachment() {
-        return attachment;
+        return mAttachment;
     }
 
     public void setAttachment(@Nullable Path attachment) {
-        this.attachment = attachment;
+        mAttachment = attachment;
     }
 
     @Nullable
     public String getAttachmentType() {
-        return attachmentType;
+        return mAttachmentType;
     }
 
     public void setAttachmentType(@Nullable String attachmentType) {
-        this.attachmentType = attachmentType;
+        mAttachmentType = attachmentType;
     }
 }

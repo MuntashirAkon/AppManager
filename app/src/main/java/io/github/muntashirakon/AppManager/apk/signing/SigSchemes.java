@@ -28,22 +28,22 @@ public class SigSchemes {
     public static final int DEFAULT_SCHEMES = SIG_SCHEME_V1 | SIG_SCHEME_V2;
 
     @SignatureScheme
-    private int flags;
+    private int mFlags;
 
     public SigSchemes(@SignatureScheme int flags) {
-        this.flags = flags;
+        this.mFlags = flags;
     }
 
     public boolean isEmpty() {
-        return flags == 0;
+        return mFlags == 0;
     }
 
     public int getFlags() {
-        return flags;
+        return mFlags;
     }
 
     public void setFlags(int flags) {
-        this.flags = flags;
+        this.mFlags = flags;
     }
 
     @NonNull
@@ -56,15 +56,15 @@ public class SigSchemes {
     }
 
     public boolean v1SchemeEnabled() {
-        return (flags & SIG_SCHEME_V1) != 0;
+        return (mFlags & SIG_SCHEME_V1) != 0;
     }
     public boolean v2SchemeEnabled() {
-        return (flags & SIG_SCHEME_V2) != 0;
+        return (mFlags & SIG_SCHEME_V2) != 0;
     }
     public boolean v3SchemeEnabled() {
-        return (flags & SIG_SCHEME_V3) != 0;
+        return (mFlags & SIG_SCHEME_V3) != 0;
     }
     public boolean v4SchemeEnabled() {
-        return (flags & SIG_SCHEME_V4) != 0;
+        return (mFlags & SIG_SCHEME_V4) != 0;
     }
 }

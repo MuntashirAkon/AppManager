@@ -43,28 +43,28 @@ import io.github.muntashirakon.widget.MultiSelectionView;
 class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
     private static final List<String> DEX_EXTENSIONS = Arrays.asList("dex", "jar");
 
-    private final List<FmItem> adapterList = Collections.synchronizedList(new ArrayList<>());
-    private final FmViewModel viewModel;
-    private final FmActivity fmActivity;
+    private final List<FmItem> mAdapterList = Collections.synchronizedList(new ArrayList<>());
+    private final FmViewModel mViewModel;
+    private final FmActivity mFmActivity;
     @ColorInt
-    private final int highlightColor;
+    private final int mHighlightColor;
 
     public FmAdapter(FmViewModel viewModel, FmActivity activity) {
-        this.viewModel = viewModel;
-        this.fmActivity = activity;
-        highlightColor = ColorCodes.getListItemSelectionColor(activity);
+        mViewModel = viewModel;
+        mFmActivity = activity;
+        mHighlightColor = ColorCodes.getListItemSelectionColor(activity);
     }
 
     public void setFmList(List<FmItem> list) {
-        adapterList.clear();
-        adapterList.addAll(list);
+        mAdapterList.clear();
+        mAdapterList.addAll(list);
         notifySelectionChange();
         notifyDataSetChanged();
     }
 
     @Override
     public int getHighlightColor() {
-        return highlightColor;
+        return mHighlightColor;
     }
 
     @NonNull
@@ -79,9 +79,9 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        FmItem item = adapterList.get(position);
+        FmItem item = mAdapterList.get(position);
         holder.title.setText(item.path.getName());
-        String modificationDate = DateUtils.formatDateTime(item.path.lastModified());
+        String modificationDate = DateUtils.formatDateTime(mFmActivity, item.path.lastModified());
         // Set icon
         ImageLoader.getInstance().displayImage(item.tag, holder.icon, new FmIconFetcher(item));
         // Set sub-icon
@@ -89,14 +89,14 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
         if (item.type == FileType.DIRECTORY) {
             holder.subtitle.setText(String.format(Locale.getDefault(), "%d • %s", item.path.listFiles().length,
                     modificationDate));
-            holder.itemView.setOnClickListener(v -> viewModel.loadFiles(item.path.getUri()));
+            holder.itemView.setOnClickListener(v -> mViewModel.loadFiles(item.path.getUri()));
         } else {
             holder.subtitle.setText(String.format(Locale.getDefault(), "%s • %s",
-                    Formatter.formatShortFileSize(fmActivity, item.path.length()), modificationDate));
+                    Formatter.formatShortFileSize(mFmActivity, item.path.length()), modificationDate));
             holder.itemView.setOnClickListener(v -> {
                 // TODO: 16/11/22 Retrieve default open with from DB and open the file with it
                 OpenWithDialogFragment fragment = OpenWithDialogFragment.getInstance(item.path);
-                fragment.show(fmActivity.getSupportFragmentManager(), OpenWithDialogFragment.TAG);
+                fragment.show(mFmActivity.getSupportFragmentManager(), OpenWithDialogFragment.TAG);
             });
         }
         // Symbolic link
@@ -112,12 +112,12 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
 
     @Override
     public long getItemId(int position) {
-        return adapterList.get(position).hashCode();
+        return mAdapterList.get(position).hashCode();
     }
 
     @Override
     public int getItemCount() {
-        return adapterList.size();
+        return mAdapterList.size();
     }
 
     @Override
@@ -150,7 +150,7 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
 
     @Override
     protected int getTotalItemCount() {
-        return adapterList.size();
+        return mAdapterList.size();
     }
 
     private void displayActions(View anchor, FmItem item) {
@@ -175,7 +175,7 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
         // Set actions
         openWithAction.setOnMenuItemClickListener(menuItem -> {
             OpenWithDialogFragment fragment = OpenWithDialogFragment.getInstance(item.path);
-            fragment.show(fmActivity.getSupportFragmentManager(), OpenWithDialogFragment.TAG);
+            fragment.show(mFmActivity.getSupportFragmentManager(), OpenWithDialogFragment.TAG);
             return true;
         });
         menu.findItem(R.id.action_cut).setOnMenuItemClickListener(menuItem -> {
@@ -198,23 +198,23 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
                 }
                 if (item.path.renameTo(displayName)) {
                     UIUtils.displayShortToast(R.string.renamed_successfully);
-                    viewModel.reload();
+                    mViewModel.reload();
                 } else {
                     UIUtils.displayShortToast(R.string.failed);
                 }
             });
-            dialog.show(fmActivity.getSupportFragmentManager(), RenameDialogFragment.TAG);
+            dialog.show(mFmActivity.getSupportFragmentManager(), RenameDialogFragment.TAG);
             return false;
         });
         menu.findItem(R.id.action_delete).setOnMenuItemClickListener(menuItem -> {
-            new MaterialAlertDialogBuilder(fmActivity)
-                    .setTitle(fmActivity.getString(R.string.delete_filename, item.path.getName()))
+            new MaterialAlertDialogBuilder(mFmActivity)
+                    .setTitle(mFmActivity.getString(R.string.delete_filename, item.path.getName()))
                     .setMessage(R.string.are_you_sure)
                     .setNegativeButton(R.string.cancel, null)
                     .setPositiveButton(R.string.confirm_file_deletion, (dialog, which) -> {
                         if (item.path.delete()) {
                             UIUtils.displayShortToast(R.string.deleted_successfully);
-                            viewModel.reload();
+                            mViewModel.reload();
                         } else {
                             UIUtils.displayShortToast(R.string.failed);
                         }
@@ -227,28 +227,28 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
                     .setType(item.path.getType())
                     .putExtra(Intent.EXTRA_STREAM, FmProvider.getContentUri(item.path))
                     .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            fmActivity.startActivity(Intent.createChooser(intent, item.path.getName())
+            mFmActivity.startActivity(Intent.createChooser(intent, item.path.getName())
                     .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             return true;
         });
-        boolean isVfs = viewModel.getOptions().isVfs;
+        boolean isVfs = mViewModel.getOptions().isVfs;
         menu.findItem(R.id.action_shortcut)
                 // TODO: 31/5/23 Enable creating shortcuts for VFS
                 .setEnabled(!isVfs)
                 .setVisible(!isVfs)
                 .setOnMenuItemClickListener(menuItem -> {
-                    viewModel.createShortcut(item);
+                    mViewModel.createShortcut(item);
                     return true;
                 });
         menu.findItem(R.id.action_copy_path).setOnMenuItemClickListener(menuItem -> {
             String path = FmUtils.getDisplayablePath(item.path);
-            ClipboardManager clipboard = (ClipboardManager) fmActivity.getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipboardManager clipboard = (ClipboardManager) mFmActivity.getSystemService(Context.CLIPBOARD_SERVICE);
             clipboard.setPrimaryClip(ClipData.newPlainText("File path", path));
             UIUtils.displayShortToast(R.string.copied_to_clipboard);
             return true;
         });
         menu.findItem(R.id.action_properties).setOnMenuItemClickListener(menuItem -> {
-            viewModel.getDisplayPropertiesLiveData().setValue(item.path.getUri());
+            mViewModel.getDisplayPropertiesLiveData().setValue(item.path.getUri());
             return true;
         });
         popupMenu.show();

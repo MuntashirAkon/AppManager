@@ -57,10 +57,10 @@ public class SplitApkChooser extends DialogFragment {
     }
 
     @Nullable
-    private OnTriggerInstallInterface installInterface;
-    private ApkFile apkFile;
-    private PackageManager pm;
-    private final HashMap<String /* feature */, HashSet<Integer> /* seen types */> seenSplits = new HashMap<>();
+    private OnTriggerInstallInterface mInstallInterface;
+    private ApkFile mApkFile;
+    private PackageManager mPm;
+    private final HashMap<String /* feature */, HashSet<Integer> /* seen types */> mSeenSplits = new HashMap<>();
 
     @NonNull
     @Override
@@ -69,31 +69,31 @@ public class SplitApkChooser extends DialogFragment {
         String actionName = requireArguments().getString(EXTRA_ACTION_NAME);
         ApplicationInfo appInfo = BundleCompat.getParcelable(requireArguments(), EXTRA_APP_INFO, ApplicationInfo.class);
         String versionInfo = requireArguments().getString(EXTRA_VERSION_INFO);
-        pm = requireActivity().getPackageManager();
+        mPm = requireActivity().getPackageManager();
         if (apkFileKey == -1 || appInfo == null) {
             throw new IllegalArgumentException("ApkFile cannot be empty.");
         }
-        apkFile = ApkFile.getInstance(apkFileKey);
-        if (!apkFile.isSplit()) {
+        mApkFile = ApkFile.getInstance(apkFileKey);
+        if (!mApkFile.isSplit()) {
             throw new RuntimeException("Apk file does not contain any split.");
         }
-        List<ApkFile.Entry> apkEntries = apkFile.getEntries();
+        List<ApkFile.Entry> apkEntries = mApkFile.getEntries();
         CharSequence[] entryNames = new CharSequence[apkEntries.size()];
         for (int i = 0; i < apkEntries.size(); ++i) {
             entryNames[i] = apkEntries.get(i).toLocalizedString(requireActivity());
         }
-        if (installInterface == null) {
+        if (mInstallInterface == null) {
             throw new RuntimeException("No install action has been set.");
         }
         SearchableMultiChoiceDialogBuilder<ApkFile.Entry> builder = new SearchableMultiChoiceDialogBuilder<>(
                 requireActivity(), apkEntries, entryNames)
-                .setTitle(UIUtils.getDialogTitle(requireActivity(), pm.getApplicationLabel(appInfo),
-                        pm.getApplicationIcon(appInfo), versionInfo))
+                .setTitle(UIUtils.getDialogTitle(requireActivity(), mPm.getApplicationLabel(appInfo),
+                        mPm.getApplicationIcon(appInfo), versionInfo))
                 .showSelectAll(false)
                 .addSelections(getInitialSelections(apkEntries))
                 .addDisabledItems(getUnsupportedOrRequiredSplits())
                 .setPositiveButton(actionName == null ? getString(R.string.install) : actionName, (dialog, which, selectedItems) ->
-                        installInterface.triggerInstall())
+                        mInstallInterface.triggerInstall())
                 .setNegativeButton(R.string.cancel, (dialog, which, selectedItems) -> onCancel(dialog))
                 .setCancelable(false);
         return builder.setOnMultiChoiceClickListener((dialog, which, item, isChecked) -> {
@@ -114,17 +114,17 @@ public class SplitApkChooser extends DialogFragment {
 
     @Override
     public void onDestroy() {
-        apkFile.close();
+        mApkFile.close();
         super.onDestroy();
     }
 
     @Override
     public void onCancel(@NonNull DialogInterface dialog) {
-        Objects.requireNonNull(installInterface).triggerCancel();
+        Objects.requireNonNull(mInstallInterface).triggerCancel();
     }
 
     public void setOnTriggerInstall(@Nullable OnTriggerInstallInterface installInterface) {
-        this.installInterface = installInterface;
+        mInstallInterface = installInterface;
     }
 
     @NonNull
@@ -132,7 +132,7 @@ public class SplitApkChooser extends DialogFragment {
         List<Integer> selections = new ArrayList<>();
         try {
             // See if the app has been installed
-            ApplicationInfo info = pm.getApplicationInfo(apkFile.getPackageName(), 0);
+            ApplicationInfo info = mPm.getApplicationInfo(mApkFile.getPackageName(), 0);
             HashSet<String> splitNames = new HashSet<>();
             try (ApkFile installedApkFile = ApkFile.getInstance(ApkFile.createInstance(info))) {
                 for (ApkFile.Entry apkEntry : installedApkFile.getEntries()) {
@@ -143,13 +143,13 @@ public class SplitApkChooser extends DialogFragment {
                 for (int i = 0; i < apkEntries.size(); ++i) {
                     ApkFile.Entry apkEntry = apkEntries.get(i);
                     if (splitNames.contains(apkEntry.name) || apkEntry.type == ApkFile.APK_BASE) {
-                        HashSet<Integer> types = seenSplits.get(apkEntry.getFeature());
+                        HashSet<Integer> types = mSeenSplits.get(apkEntry.getFeature());
                         if (types == null) {
                             types = new HashSet<>();
-                            seenSplits.put(apkEntry.getFeature(), types);
+                            mSeenSplits.put(apkEntry.getFeature(), types);
                         }
                         types.add(apkEntry.type);
-                        apkFile.select(i);
+                        mApkFile.select(i);
                     }
                 }
                 // Fall-through deliberately to see if there are any new requirements
@@ -163,8 +163,8 @@ public class SplitApkChooser extends DialogFragment {
                 selections.add(i);
                 if (apkEntry.type == ApkFile.APK_BASE || apkEntry.type == ApkFile.APK_SPLIT_FEATURE) {
                     // Set feature
-                    if (seenSplits.get(apkEntry.getFeature()) == null) {
-                        seenSplits.put(apkEntry.getFeature(), new HashSet<>());
+                    if (mSeenSplits.get(apkEntry.getFeature()) == null) {
+                        mSeenSplits.put(apkEntry.getFeature(), new HashSet<>());
                     }
                 }
             }
@@ -176,7 +176,7 @@ public class SplitApkChooser extends DialogFragment {
                 // Already selected
                 continue;
             }
-            HashSet<Integer> types = seenSplits.get(apkEntry.getFeature());
+            HashSet<Integer> types = mSeenSplits.get(apkEntry.getFeature());
             if (types == null) {
                 // This feature was not selected earlier
                 continue;
@@ -191,21 +191,21 @@ public class SplitApkChooser extends DialogFragment {
                     if (!types.contains(ApkFile.APK_SPLIT_DENSITY)) {
                         types.add(ApkFile.APK_SPLIT_DENSITY);
                         selections.add(i);
-                        apkFile.select(i);
+                        mApkFile.select(i);
                     }
                     break;
                 case ApkFile.APK_SPLIT_ABI:
                     if (!types.contains(ApkFile.APK_SPLIT_ABI)) {
                         types.add(ApkFile.APK_SPLIT_ABI);
                         selections.add(i);
-                        apkFile.select(i);
+                        mApkFile.select(i);
                     }
                     break;
                 case ApkFile.APK_SPLIT_LOCALE:
                     if (!types.contains(ApkFile.APK_SPLIT_LOCALE)) {
                         types.add(ApkFile.APK_SPLIT_LOCALE);
                         selections.add(i);
-                        apkFile.select(i);
+                        mApkFile.select(i);
                     }
                     break;
                 default:
@@ -217,7 +217,7 @@ public class SplitApkChooser extends DialogFragment {
 
     @NonNull
     private List<ApkFile.Entry> getUnsupportedOrRequiredSplits() {
-        List<ApkFile.Entry> apkEntries = apkFile.getEntries();
+        List<ApkFile.Entry> apkEntries = mApkFile.getEntries();
         List<ApkFile.Entry> unsupportedOrRequiredSplits = new ArrayList<>();
         for (ApkFile.Entry apkEntry : apkEntries) {
             if (!apkEntry.supported() || apkEntry.isRequired()) {
@@ -230,27 +230,27 @@ public class SplitApkChooser extends DialogFragment {
     @NonNull
     private int[] select(int index) {
         List<Integer> selections = new ArrayList<>();
-        apkFile.select(index);
-        List<ApkFile.Entry> apkEntries = apkFile.getEntries();
+        mApkFile.select(index);
+        List<ApkFile.Entry> apkEntries = mApkFile.getEntries();
         ApkFile.Entry entry = apkEntries.get(index);
         String feature = entry.getFeature();
-        HashSet<Integer> types = seenSplits.get(feature);
+        HashSet<Integer> types = mSeenSplits.get(feature);
         if (types == null) {
             types = new HashSet<>();
-            seenSplits.put(feature, types);
+            mSeenSplits.put(feature, types);
         }
         for (int i = 0; i < apkEntries.size(); ++i) {
             ApkFile.Entry apkEntry = apkEntries.get(i);
             if (Objects.equals(apkEntry.getFeature(), feature) && apkEntry.type != entry.type) {
                 if (apkEntry.isSelected()) {
                     // Deselect unwanted items
-                    apkFile.deselect(i);
+                    mApkFile.deselect(i);
                 }
                 // Select wanted items only
                 switch (apkEntry.type) {
                     case ApkFile.APK_BASE:
                     case ApkFile.APK_SPLIT_FEATURE:
-                        apkFile.select(i);
+                        mApkFile.select(i);
                         break;
                     case ApkFile.APK_SPLIT_UNKNOWN:
                     case ApkFile.APK_SPLIT:
@@ -259,21 +259,21 @@ public class SplitApkChooser extends DialogFragment {
                         if (!types.contains(ApkFile.APK_SPLIT_DENSITY)) {
                             types.add(ApkFile.APK_SPLIT_DENSITY);
                             selections.add(i);
-                            apkFile.select(i);
+                            mApkFile.select(i);
                         }
                         break;
                     case ApkFile.APK_SPLIT_ABI:
                         if (!types.contains(ApkFile.APK_SPLIT_ABI)) {
                             types.add(ApkFile.APK_SPLIT_ABI);
                             selections.add(i);
-                            apkFile.select(i);
+                            mApkFile.select(i);
                         }
                         break;
                     case ApkFile.APK_SPLIT_LOCALE:
                         if (!types.contains(ApkFile.APK_SPLIT_LOCALE)) {
                             types.add(ApkFile.APK_SPLIT_LOCALE);
                             selections.add(i);
-                            apkFile.select(i);
+                            mApkFile.select(i);
                         }
                         break;
                     default:
@@ -286,7 +286,7 @@ public class SplitApkChooser extends DialogFragment {
 
     @Nullable
     private int[] deselect(int index) {
-        List<ApkFile.Entry> apkEntries = apkFile.getEntries();
+        List<ApkFile.Entry> apkEntries = mApkFile.getEntries();
         ApkFile.Entry entry = apkEntries.get(index);
         if (entry.isRequired()) {
             // 1. This is a required split, can't be unselected
@@ -297,14 +297,14 @@ public class SplitApkChooser extends DialogFragment {
         if (featureSplit) {
             // 2. If this is a feature split (base.apk is always a required split), unselect all the associated splits
             List<Integer> deselectedSplits = new ArrayList<>();
-            seenSplits.remove(feature);
+            mSeenSplits.remove(feature);
             for (int i = 0; i < apkEntries.size(); ++i) {
                 ApkFile.Entry apkEntry = apkEntries.get(i);
                 if (Objects.equals(apkEntry.getFeature(), feature)) {
                     // Split has the same feature
                     if (apkEntry.isSelected()) {
                         deselectedSplits.add(i);
-                        apkFile.deselect(i);
+                        mApkFile.deselect(i);
                     }
                 }
             }
@@ -326,7 +326,7 @@ public class SplitApkChooser extends DialogFragment {
             }
             if (selectedAnySplits) {
                 // At least one item is selected, deselect the current one
-                apkFile.deselect(index);
+                mApkFile.deselect(index);
                 return EmptyArray.INT;
             }
             return null;

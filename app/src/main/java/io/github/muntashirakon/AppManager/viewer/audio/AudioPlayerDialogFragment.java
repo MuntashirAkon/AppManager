@@ -43,29 +43,29 @@ public class AudioPlayerDialogFragment extends CapsuleBottomSheetDialogFragment 
         return dialog;
     }
 
-    private ImageView iconView;
-    private TextView playlistSizeView;
-    private TextView titleView;
-    private TextView infoView;
-    private Slider slider;
-    private TextView progressView;
-    private TextView durationView;
-    private TextView playbackSpeedView;
-    private ImageView rewindButton;
-    private ImageView forwardButton;
-    private ImageView playPauseButton;
-    private ImageView repeatButton;
+    private ImageView mIconView;
+    private TextView mPlaylistSizeView;
+    private TextView mTitleView;
+    private TextView mInfoView;
+    private Slider mSlider;
+    private TextView mProgressView;
+    private TextView mDurationView;
+    private TextView mPlaybackSpeedView;
+    private ImageView mRewindButton;
+    private ImageView mForwardButton;
+    private ImageView mPlayPauseButton;
+    private ImageView mRepeatButton;
 
-    private Handler updateHandler;
-    private Runnable updateRunnable;
+    private Handler mUpdateHandler;
+    private Runnable mUpdateRunnable;
 
-    private boolean isTimeReversed = false;
-    private boolean shouldCheckRepeat = true;
+    private boolean mIsTimeReversed = false;
+    private boolean mShouldCheckRepeat = true;
 
-    private MediaPlayer mediaPlayer;
-    private AudioPlayerViewModel viewModel;
+    private MediaPlayer mMediaPlayer;
+    private AudioPlayerViewModel mViewModel;
 
-    private boolean closeActivity;
+    private boolean mCloseActivity;
 
     @NonNull
     @Override
@@ -75,44 +75,44 @@ public class AudioPlayerDialogFragment extends CapsuleBottomSheetDialogFragment 
 
     @Override
     public void onBodyInitialized(@NonNull View bodyView, @Nullable Bundle savedInstanceState) {
-        viewModel = new ViewModelProvider(this).get(AudioPlayerViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(AudioPlayerViewModel.class);
         Uri[] uriList = (Uri[]) requireArguments().getParcelableArray(ARG_URI_LIST);
-        closeActivity = requireArguments().getBoolean(ARG_CLOSE_ACTIVITY);
-        iconView = bodyView.findViewById(android.R.id.icon);
-        playlistSizeView = bodyView.findViewById(R.id.size);
-        titleView = bodyView.findViewById(android.R.id.title);
-        infoView = bodyView.findViewById(R.id.info);
-        slider = bodyView.findViewById(R.id.slider);
-        progressView = bodyView.findViewById(R.id.progress);
-        durationView = bodyView.findViewById(R.id.duration);
-        playbackSpeedView = bodyView.findViewById(R.id.playback_speed);
-        rewindButton = bodyView.findViewById(R.id.action_rewind);
-        forwardButton = bodyView.findViewById(R.id.action_forward);
-        playPauseButton = bodyView.findViewById(R.id.action_play_pause);
-        repeatButton = bodyView.findViewById(R.id.action_repeat);
+        mCloseActivity = requireArguments().getBoolean(ARG_CLOSE_ACTIVITY);
+        mIconView = bodyView.findViewById(android.R.id.icon);
+        mPlaylistSizeView = bodyView.findViewById(R.id.size);
+        mTitleView = bodyView.findViewById(android.R.id.title);
+        mInfoView = bodyView.findViewById(R.id.info);
+        mSlider = bodyView.findViewById(R.id.slider);
+        mProgressView = bodyView.findViewById(R.id.progress);
+        mDurationView = bodyView.findViewById(R.id.duration);
+        mPlaybackSpeedView = bodyView.findViewById(R.id.playback_speed);
+        mRewindButton = bodyView.findViewById(R.id.action_rewind);
+        mForwardButton = bodyView.findViewById(R.id.action_forward);
+        mPlayPauseButton = bodyView.findViewById(R.id.action_play_pause);
+        mRepeatButton = bodyView.findViewById(R.id.action_repeat);
         // Set tags
-        playbackSpeedView.setTag(1.0f);
-        repeatButton.setTag(RepeatMode.NO_REPEAT);
+        mPlaybackSpeedView.setTag(1.0f);
+        mRepeatButton.setTag(RepeatMode.NO_REPEAT);
         // Listeners
-        mediaPlayer = new MediaPlayer();
+        mMediaPlayer = new MediaPlayer();
         setListeners();
-        viewModel.getAudioMetadataLiveData().observe(getViewLifecycleOwner(), this::setupMetadata);
-        viewModel.getMediaPlayerPreparedLiveData().observe(getViewLifecycleOwner(), prepared -> {
+        mViewModel.getAudioMetadataLiveData().observe(getViewLifecycleOwner(), this::setupMetadata);
+        mViewModel.getMediaPlayerPreparedLiveData().observe(getViewLifecycleOwner(), prepared -> {
             if (!prepared) {
                 return;
             }
             startPlayingMedia();
-            shouldCheckRepeat = true;
+            mShouldCheckRepeat = true;
         });
-        viewModel.getPlaylistLoadedLiveData().observe(getViewLifecycleOwner(), loaded -> updatePlaylistSize());
-        viewModel.addToPlaylist(uriList);
+        mViewModel.getPlaylistLoadedLiveData().observe(getViewLifecycleOwner(), loaded -> updatePlaylistSize());
+        mViewModel.addToPlaylist(uriList);
     }
 
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
         if (mediaPlayerInitialized()) {
-            mediaPlayer.stop();
-            mediaPlayer.release();
+            mMediaPlayer.stop();
+            mMediaPlayer.release();
         }
         super.onDismiss(dialog);
     }
@@ -120,136 +120,136 @@ public class AudioPlayerDialogFragment extends CapsuleBottomSheetDialogFragment 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (closeActivity) {
+        if (mCloseActivity) {
             requireActivity().finish();
         }
     }
 
     private void setListeners() {
-        slider.addOnChangeListener((slider, value, fromUser) -> {
+        mSlider.addOnChangeListener((slider, value, fromUser) -> {
             if (!fromUser) {
                 return;
             }
             if (mediaPlayerInitialized()) {
-                mediaPlayer.seekTo((int) value);
+                mMediaPlayer.seekTo((int) value);
 
-                if (!mediaPlayer.isPlaying()) {
-                    if (value != mediaPlayer.getDuration()) {
-                        playPauseButton.setImageResource(R.drawable.ic_play_arrow);
+                if (!mMediaPlayer.isPlaying()) {
+                    if (value != mMediaPlayer.getDuration()) {
+                        mPlayPauseButton.setImageResource(R.drawable.ic_play_arrow);
                     } else resetMediaPlayer();
                 }
             }
         });
-        slider.setLabelFormatter(value -> getFormattedTime((long) value, isTimeReversed));
+        mSlider.setLabelFormatter(value -> getFormattedTime((long) value, mIsTimeReversed));
 
-        updateHandler = new Handler(Looper.myLooper());
-        updateRunnable = new Runnable() {
+        mUpdateHandler = new Handler(Looper.myLooper());
+        mUpdateRunnable = new Runnable() {
             @Override
             public void run() {
                 if (mediaPlayerInitialized()) {
-                    final int currentPosition = mediaPlayer.getCurrentPosition();
-                    if (currentPosition <= slider.getValueTo()) {
-                        slider.setValue(currentPosition);
+                    final int currentPosition = mMediaPlayer.getCurrentPosition();
+                    if (currentPosition <= mSlider.getValueTo()) {
+                        mSlider.setValue(currentPosition);
                     }
 
-                    progressView.setText(getFormattedTime(currentPosition, isTimeReversed));
-                    updateHandler.postDelayed(this, 10);
+                    mProgressView.setText(getFormattedTime(currentPosition, mIsTimeReversed));
+                    mUpdateHandler.postDelayed(this, 10);
                 }
             }
         };
 
 
         // Play/Pause: Click -> Play/pause, Long click -> Set duration to zero
-        playPauseButton.setOnClickListener(v -> {
+        mPlayPauseButton.setOnClickListener(v -> {
             if (mediaPlayerInitialized())
-                if (!mediaPlayer.isPlaying()) {
-                    if (mediaPlayer.getCurrentPosition() == mediaPlayer.getDuration()) {
-                        mediaPlayer.seekTo(0);
+                if (!mMediaPlayer.isPlaying()) {
+                    if (mMediaPlayer.getCurrentPosition() == mMediaPlayer.getDuration()) {
+                        mMediaPlayer.seekTo(0);
                     }
                     resumeMediaPlayer();
                 } else {
                     pauseMediaPlayer();
                 }
         });
-        playPauseButton.setOnLongClickListener(v -> {
-            mediaPlayer.seekTo(0);
+        mPlayPauseButton.setOnLongClickListener(v -> {
+            mMediaPlayer.seekTo(0);
             return true;
         });
 
-        progressView.setOnClickListener(v -> isTimeReversed = !isTimeReversed);
+        mProgressView.setOnClickListener(v -> mIsTimeReversed = !mIsTimeReversed);
 
-        playbackSpeedView.setOnClickListener(v -> {
-            float speed = (float) playbackSpeedView.getTag();
+        mPlaybackSpeedView.setOnClickListener(v -> {
+            float speed = (float) mPlaybackSpeedView.getTag();
             if (speed == 0.5F) {
-                playbackSpeedView.setText("0.75x");
-                playbackSpeedView.setTag(0.75F);
+                mPlaybackSpeedView.setText("0.75x");
+                mPlaybackSpeedView.setTag(0.75F);
             } else if (speed == 0.75F) {
-                playbackSpeedView.setText("1x");
-                playbackSpeedView.setTag(1F);
+                mPlaybackSpeedView.setText("1x");
+                mPlaybackSpeedView.setTag(1F);
             } else if (speed == 1.0F) {
-                playbackSpeedView.setText("1.25x");
-                playbackSpeedView.setTag(1.25F);
+                mPlaybackSpeedView.setText("1.25x");
+                mPlaybackSpeedView.setTag(1.25F);
             } else if (speed == 1.25F) {
-                playbackSpeedView.setText("1.5x");
-                playbackSpeedView.setTag(1.5F);
+                mPlaybackSpeedView.setText("1.5x");
+                mPlaybackSpeedView.setTag(1.5F);
             } else if (speed == 1.5F) {
-                playbackSpeedView.setText("2.0x");
-                playbackSpeedView.setTag(2.0F);
+                mPlaybackSpeedView.setText("2.0x");
+                mPlaybackSpeedView.setTag(2.0F);
             } else if (speed == 2.0F) {
-                playbackSpeedView.setText("0.5x");
-                playbackSpeedView.setTag(0.5F);
+                mPlaybackSpeedView.setText("0.5x");
+                mPlaybackSpeedView.setTag(0.5F);
             }
             updatePlaybackSpeed();
         });
 
-        repeatButton.setOnClickListener(v -> {
+        mRepeatButton.setOnClickListener(v -> {
             @RepeatMode
-            int state = (int) repeatButton.getTag();
+            int state = (int) mRepeatButton.getTag();
             switch (state) {
                 case RepeatMode.NO_REPEAT:
-                    repeatButton.setImageResource(R.drawable.ic_repeat);
-                    repeatButton.setTag(RepeatMode.REPEAT_INDEFINITELY);
+                    mRepeatButton.setImageResource(R.drawable.ic_repeat);
+                    mRepeatButton.setTag(RepeatMode.REPEAT_INDEFINITELY);
                     break;
                 case RepeatMode.REPEAT_INDEFINITELY:
-                    repeatButton.setImageResource(R.drawable.ic_repeat_one);
-                    repeatButton.setTag(RepeatMode.REPEAT_SINGLE_INDEFINITELY);
+                    mRepeatButton.setImageResource(R.drawable.ic_repeat_one);
+                    mRepeatButton.setTag(RepeatMode.REPEAT_SINGLE_INDEFINITELY);
                     break;
                 case RepeatMode.REPEAT_SINGLE_INDEFINITELY:
-                    repeatButton.setImageResource(R.drawable.ic_repeat_off);
-                    repeatButton.setTag(RepeatMode.NO_REPEAT);
+                    mRepeatButton.setImageResource(R.drawable.ic_repeat_off);
+                    mRepeatButton.setTag(RepeatMode.NO_REPEAT);
                     break;
             }
         });
 
         // Rewind: Click -> -10 sec, Long click -> Play previous item
-        rewindButton.setOnClickListener(v -> {
+        mRewindButton.setOnClickListener(v -> {
             if (mediaPlayerInitialized()) {
-                mediaPlayer.seekTo(mediaPlayer.getCurrentPosition() - 10 * 1000);
+                mMediaPlayer.seekTo(mMediaPlayer.getCurrentPosition() - 10 * 1000);
             }
         });
-        rewindButton.setOnLongClickListener(v -> {
-            viewModel.playPrevious();
+        mRewindButton.setOnLongClickListener(v -> {
+            mViewModel.playPrevious();
             return true;
         });
 
         // Forward: Click -> +10 sec, Long click -> Play next item
-        forwardButton.setOnClickListener(v -> {
+        mForwardButton.setOnClickListener(v -> {
             if (mediaPlayerInitialized()) {
-                mediaPlayer.seekTo(mediaPlayer.getCurrentPosition() + 10 * 1000);
+                mMediaPlayer.seekTo(mMediaPlayer.getCurrentPosition() + 10 * 1000);
             }
         });
-        forwardButton.setOnLongClickListener(v -> {
-            viewModel.playNext(false);
+        mForwardButton.setOnLongClickListener(v -> {
+            mViewModel.playNext(false);
             return true;
         });
 
-        mediaPlayer.setOnCompletionListener(mediaPlayer -> {
-            if (!shouldCheckRepeat) {
-                shouldCheckRepeat = true;
+        mMediaPlayer.setOnCompletionListener(mediaPlayer -> {
+            if (!mShouldCheckRepeat) {
+                mShouldCheckRepeat = true;
                 return;
             }
             @RepeatMode
-            int state = (int) repeatButton.getTag();
+            int state = (int) mRepeatButton.getTag();
             resetMediaPlayer();
             if (state == RepeatMode.REPEAT_SINGLE_INDEFINITELY) {
                 if (mediaPlayer.getCurrentPosition() == mediaPlayer.getDuration()) {
@@ -257,37 +257,37 @@ public class AudioPlayerDialogFragment extends CapsuleBottomSheetDialogFragment 
                 }
                 resumeMediaPlayer();
             } else {
-                viewModel.playNext(state);
+                mViewModel.playNext(state);
             }
         });
     }
 
     private void updatePlaybackSpeed() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && mediaPlayerInitialized()) {
-            boolean isPlaying = mediaPlayer.isPlaying();
-            mediaPlayer.setPlaybackParams(mediaPlayer.getPlaybackParams().setSpeed((float) playbackSpeedView.getTag()));
+            boolean isPlaying = mMediaPlayer.isPlaying();
+            mMediaPlayer.setPlaybackParams(mMediaPlayer.getPlaybackParams().setSpeed((float) mPlaybackSpeedView.getTag()));
             if (!isPlaying) {
-                mediaPlayer.pause();
+                mMediaPlayer.pause();
             }
         }
     }
 
     private void pauseMediaPlayer() {
         if (mediaPlayerInitialized()) {
-            mediaPlayer.pause();
-            playPauseButton.setImageResource(R.drawable.ic_play_arrow);
+            mMediaPlayer.pause();
+            mPlayPauseButton.setImageResource(R.drawable.ic_play_arrow);
         }
     }
 
     private void resumeMediaPlayer() {
         if (mediaPlayerInitialized()) {
-            mediaPlayer.start();
-            playPauseButton.setImageResource(R.drawable.ic_pause);
+            mMediaPlayer.start();
+            mPlayPauseButton.setImageResource(R.drawable.ic_pause);
         }
     }
 
     private void resetMediaPlayer() {
-        playPauseButton.setImageResource(R.drawable.ic_replay);
+        mPlayPauseButton.setImageResource(R.drawable.ic_replay);
     }
 
     private String getFormattedTime(long millis, boolean isTimeReversed) {
@@ -299,15 +299,15 @@ public class AudioPlayerDialogFragment extends CapsuleBottomSheetDialogFragment 
         String secondsStr = Long.toString(seconds);
         String secs = (secondsStr.length() >= 2) ? secondsStr.substring(0, 2) : "0" + secondsStr;
         if (!isTimeReversed) return minutes + ":" + secs;
-        return "-" + getFormattedTime(mediaPlayer.getDuration() - millis, false);
+        return "-" + getFormattedTime(mMediaPlayer.getDuration() - millis, false);
     }
 
     private boolean mediaPlayerInitialized() {
-        if (mediaPlayer == null) {
+        if (mMediaPlayer == null) {
             return false;
         }
         try {
-            mediaPlayer.isPlaying();
+            mMediaPlayer.isPlaying();
             return true;
         } catch (IllegalStateException e) {
             return false;
@@ -315,39 +315,39 @@ public class AudioPlayerDialogFragment extends CapsuleBottomSheetDialogFragment 
     }
 
     private void updatePlaylistSize() {
-        int currentAudio = viewModel.getCurrentPlaylistIndex() + 1;
-        int playlistSize = viewModel.playlistSize();
-        playlistSizeView.setVisibility(playlistSize > 1 ? View.VISIBLE : View.GONE);
-        playlistSizeView.setText(String.format(Locale.ROOT, "%d/%d", currentAudio, playlistSize));
+        int currentAudio = mViewModel.getCurrentPlaylistIndex() + 1;
+        int playlistSize = mViewModel.playlistSize();
+        mPlaylistSizeView.setVisibility(playlistSize > 1 ? View.VISIBLE : View.GONE);
+        mPlaylistSizeView.setText(String.format(Locale.ROOT, "%d/%d", currentAudio, playlistSize));
     }
 
     private void setupMetadata(@NonNull AudioMetadata meta) {
         if (meta.cover != null) {
-            iconView.setImageBitmap(meta.cover);
+            mIconView.setImageBitmap(meta.cover);
         } else {
-            iconView.setImageResource(R.drawable.ic_audio_file);
+            mIconView.setImageResource(R.drawable.ic_audio_file);
         }
         updatePlaylistSize();
-        titleView.setText(String.format(Locale.ROOT, "%s - %s", meta.artist, meta.title));
-        titleView.setSelected(true);
-        infoView.setText(String.format(Locale.ROOT, "%s - %s", meta.albumArtist, meta.album));
-        infoView.setSelected(true);
+        mTitleView.setText(String.format(Locale.ROOT, "%s - %s", meta.artist, meta.title));
+        mTitleView.setSelected(true);
+        mInfoView.setText(String.format(Locale.ROOT, "%s - %s", meta.albumArtist, meta.album));
+        mInfoView.setSelected(true);
 
-        shouldCheckRepeat = false;
-        viewModel.prepareMediaPlayer(mediaPlayer, meta.uri);
+        mShouldCheckRepeat = false;
+        mViewModel.prepareMediaPlayer(mMediaPlayer, meta.uri);
     }
 
     private void startPlayingMedia() {
-        int duration = mediaPlayer.getDuration();
-        slider.setValueFrom(0);
-        slider.setValueTo(duration);
+        int duration = mMediaPlayer.getDuration();
+        mSlider.setValueFrom(0);
+        mSlider.setValueTo(duration);
 
-        durationView.setText(getFormattedTime(duration, isTimeReversed));
+        mDurationView.setText(getFormattedTime(duration, mIsTimeReversed));
 
-        mediaPlayer.seekTo(0);
+        mMediaPlayer.seekTo(0);
         resumeMediaPlayer();
-        updateHandler.postDelayed(updateRunnable, 0);
+        mUpdateHandler.postDelayed(mUpdateRunnable, 0);
 
-        playPauseButton.setImageResource(R.drawable.ic_pause);
+        mPlayPauseButton.setImageResource(R.drawable.ic_pause);
     }
 }

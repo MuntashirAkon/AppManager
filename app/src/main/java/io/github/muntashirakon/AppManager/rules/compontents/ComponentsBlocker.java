@@ -398,11 +398,11 @@ public final class ComponentsBlocker extends RulesStorageManager {
     @WorkerThread
     public boolean applyRules(boolean apply) {
         // Check root. If no root is present, check if the app is test-only.
-        if (!SelfPermissions.canModifyAppComponentStates(userHandle, packageName, mPackageInfo != null
+        if (!SelfPermissions.canModifyAppComponentStates(userId, packageName, mPackageInfo != null
                 && ApplicationInfoCompat.isTestOnly(mPackageInfo.applicationInfo))) {
             return false;
         }
-       // Validate components
+        // Validate components
         validateComponents();
         // Save blocked IFW components or remove them based on the value of apply
         if (SelfPermissions.canBlockByIFW() && !saveDisabledComponents(apply)) {
@@ -420,7 +420,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
                         try {
                             PackageManagerCompat.setComponentEnabledSetting(entry.getComponentName(),
                                     PackageManager.COMPONENT_ENABLED_STATE_DEFAULT, PackageManager.DONT_KILL_APP,
-                                    userHandle);
+                                    userId);
                             removeEntry(entry);
                         } catch (Throwable e) {
                             isSuccessful = false;
@@ -432,7 +432,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
                         try {
                             PackageManagerCompat.setComponentEnabledSetting(entry.getComponentName(),
                                     PackageManager.COMPONENT_ENABLED_STATE_ENABLED, PackageManager.DONT_KILL_APP,
-                                    userHandle);
+                                    userId);
                             setComponent(entry.name, entry.type, ComponentRule.COMPONENT_ENABLED);
                         } catch (Throwable e) {
                             isSuccessful = false;
@@ -448,7 +448,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
                         try {
                             PackageManagerCompat.setComponentEnabledSetting(entry.getComponentName(),
                                     PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP,
-                                    userHandle);
+                                    userId);
                             setComponent(entry.name, entry.type, entry.getCounterpartOfToBe());
                         } catch (Throwable e) {
                             isSuccessful = false;
@@ -467,7 +467,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
                 try {
                     PackageManagerCompat.setComponentEnabledSetting(entry.getComponentName(),
                             PackageManager.COMPONENT_ENABLED_STATE_DEFAULT, PackageManager.DONT_KILL_APP,
-                            userHandle);
+                            userId);
                     if (entry.toBeRemoved()) {
                         removeEntry(entry);
                     } else setComponent(entry.name, entry.type, entry.getToBe());
@@ -549,7 +549,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
                 continue;
             }
             try {
-                int s = PackageManagerCompat.getComponentEnabledSetting(new ComponentName(entry.packageName, entry.name), userHandle);
+                int s = PackageManagerCompat.getComponentEnabledSetting(new ComponentName(entry.packageName, entry.name), userId);
                 switch (entry.getComponentStatus()) {
                     case ComponentRule.COMPONENT_BLOCKED_IFW_DISABLE:
                     case ComponentRule.COMPONENT_DISABLED:
@@ -568,7 +568,7 @@ public final class ComponentsBlocker extends RulesStorageManager {
                         }
                         break;
                 }
-            } catch (RemoteException ignore) {
+            } catch (Throwable ignore) {
             }
         }
         return invalidated;

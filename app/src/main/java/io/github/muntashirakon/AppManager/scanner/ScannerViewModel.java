@@ -29,10 +29,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
@@ -70,7 +68,7 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
     private Collection<String> mNativeLibraries;
 
     private CountDownLatch mWaitForFile;
-    private final FileCache fileCache = new FileCache();
+    private final FileCache mFileCache = new FileCache();
     private final MultithreadedExecutor mExecutor = MultithreadedExecutor.getNewInstance();
     private final MutableLiveData<Pair<String, String>[]> mApkChecksumsLiveData = new MutableLiveData<>();
     private final MutableLiveData<ApkVerifier.Result> mApkVerifierResultLiveData = new MutableLiveData<>();
@@ -93,7 +91,7 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
     protected void onCleared() {
         super.onCleared();
         mExecutor.shutdownNow();
-        IoUtils.closeQuietly(fileCache);
+        IoUtils.closeQuietly(mFileCache);
         try {
             VirtualFileSystem.unmount(mDexVfsId);
         } catch (Throwable e) {
@@ -220,7 +218,7 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
         if (this.mApkFile == null || !mApkFile.canRead()) {
             // Not readable, cache the file
             try {
-                mApkFile = fileCache.getCachedFile(Paths.get(mApkUri));
+                mApkFile = mFileCache.getCachedFile(Paths.get(mApkUri));
             } catch (IOException e) {
                 e.printStackTrace();
             }

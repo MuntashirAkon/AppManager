@@ -24,7 +24,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
@@ -58,14 +57,14 @@ public class ApkWhatsNewFinder {
 
     private static final int INFO_COUNT = 7;
 
-    private final Set<String> tmpInfo = new HashSet<>();
-
-    private static ApkWhatsNewFinder instance;
+    private static ApkWhatsNewFinder sInstance;
 
     public static ApkWhatsNewFinder getInstance() {
-        if (instance == null) instance = new ApkWhatsNewFinder();
-        return instance;
+        if (sInstance == null) sInstance = new ApkWhatsNewFinder();
+        return sInstance;
     }
+
+    private final Set<String> mTmpInfo = new HashSet<>();
 
     /**
      * Get changes between two packages: one is the apk file and other is the installed app
@@ -82,8 +81,8 @@ public class ApkWhatsNewFinder {
      */
     @WorkerThread
     @NonNull
-    public Change[][] getWhatsNew(@NonNull PackageInfo newPkgInfo, @NonNull PackageInfo oldPkgInfo) {
-        Context context = AppManager.getContext();
+    public Change[][] getWhatsNew(@NonNull Context context, @NonNull PackageInfo newPkgInfo,
+                                  @NonNull PackageInfo oldPkgInfo) {
         ApplicationInfo newAppInfo = newPkgInfo.applicationInfo;
         ApplicationInfo oldAppInfo = oldPkgInfo.applicationInfo;
         Change[][] changes = new Change[INFO_COUNT][];
@@ -203,11 +202,11 @@ public class ApkWhatsNewFinder {
     @NonNull
     private List<Change> findChanges(Set<String> newInfo, Set<String> oldInfo) {
         List<Change> changeList = new ArrayList<>();
-        tmpInfo.clear();
-        tmpInfo.addAll(newInfo);
+        mTmpInfo.clear();
+        mTmpInfo.addAll(newInfo);
         newInfo.removeAll(oldInfo);
         for (String info : newInfo) changeList.add(new Change(CHANGE_ADD, info));
-        oldInfo.removeAll(tmpInfo);
+        oldInfo.removeAll(mTmpInfo);
         for (String info : oldInfo) changeList.add(new Change(CHANGE_REMOVED, info));
         return changeList;
     }

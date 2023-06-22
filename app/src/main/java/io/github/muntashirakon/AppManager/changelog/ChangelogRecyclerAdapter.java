@@ -30,15 +30,15 @@ import io.github.muntashirakon.util.UiUtils;
 
 
 public class ChangelogRecyclerAdapter extends RecyclerView.Adapter<ChangelogRecyclerAdapter.ViewHolder> {
-    private final List<ChangelogItem> adapterList = new ArrayList<>();
+    private final List<ChangelogItem> mAdapterList = new ArrayList<>();
 
     public ChangelogRecyclerAdapter() {
     }
 
     public void setAdapterList(@NonNull List<ChangelogItem> list) {
-        synchronized (adapterList) {
-            adapterList.clear();
-            adapterList.addAll(list);
+        synchronized (mAdapterList) {
+            mAdapterList.clear();
+            mAdapterList.addAll(list);
             notifyDataSetChanged();
         }
     }
@@ -46,8 +46,8 @@ public class ChangelogRecyclerAdapter extends RecyclerView.Adapter<ChangelogRecy
     @ChangelogItem.ChangelogType
     @Override
     public int getItemViewType(int position) {
-        synchronized (adapterList) {
-            return adapterList.get(position).type;
+        synchronized (mAdapterList) {
+            return mAdapterList.get(position).type;
         }
     }
 
@@ -66,8 +66,8 @@ public class ChangelogRecyclerAdapter extends RecyclerView.Adapter<ChangelogRecy
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ChangelogItem changelogItem;
-        synchronized (adapterList) {
-            changelogItem = adapterList.get(position);
+        synchronized (mAdapterList) {
+            changelogItem = mAdapterList.get(position);
         }
         Context context = holder.itemView.getContext();
         switch (changelogItem.type) {
@@ -93,8 +93,8 @@ public class ChangelogRecyclerAdapter extends RecyclerView.Adapter<ChangelogRecy
 
     @Override
     public int getItemCount() {
-        synchronized (adapterList) {
-            return adapterList.size();
+        synchronized (mAdapterList) {
+            return mAdapterList.size();
         }
     }
 

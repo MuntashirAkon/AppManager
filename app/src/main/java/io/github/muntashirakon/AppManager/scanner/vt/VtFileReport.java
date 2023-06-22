@@ -12,104 +12,104 @@ import static java.util.Collections.unmodifiableMap;
 
 public class VtFileReport {
     @SerializedName("scans")
-    private Map<String, VtFileReportScanItem> scans;
+    private Map<String, VtFileReportScanItem> mScans;
     @SerializedName("scan_id")
-    private String scanId;
+    private String mScanId;
     @SerializedName("sha1")
-    private String sha1;
+    private String mSha1;
     @SerializedName("resource")
-    private String resource;
+    private String mResource;
     @SerializedName("response_code")
-    private Integer responseCode;
+    private Integer mResponseCode;
     @SerializedName("scan_date")
-    private String scanDate;
+    private String mScanDate;
     @SerializedName("permalink")
-    private String permalink;
+    private String mPermalink;
     @SerializedName("verbose_msg")
-    private String verboseMessage;
+    private String mVerboseMessage;
     @SerializedName("total")
-    private Integer total;
+    private Integer mTotal;
     @SerializedName("positives")
-    private Integer positives;
+    private Integer mPositives;
     @SerializedName("sha256")
-    private String sha256;
+    private String mSha256;
     @SerializedName("md5")
-    private String md5;
+    private String mMd5;
 
     @Nullable
     public Map<String, VtFileReportScanItem> getScans() {
-        if (scans == null) return null;
-        return unmodifiableMap(scans);
+        if (mScans == null) return null;
+        return unmodifiableMap(mScans);
     }
 
     @Nullable
     public String getScanId() {
-        return scanId;
+        return mScanId;
     }
 
     @Nullable
     public String getSha1() {
-        return sha1;
+        return mSha1;
     }
 
     public String getResource() {
-        return resource;
+        return mResource;
     }
 
     public Integer getResponseCode() {
-        return responseCode;
+        return mResponseCode;
     }
 
     @Nullable
     public String getScanDate() {
-        return scanDate;
+        return mScanDate;
     }
 
     @Nullable
     public String getPermalink() {
-        return permalink;
+        return mPermalink;
     }
 
     public String getVerboseMessage() {
-        return verboseMessage;
+        return mVerboseMessage;
     }
 
     @Nullable
     public Integer getTotal() {
-        return total;
+        return mTotal;
     }
 
     @Nullable
     public Integer getPositives() {
-        return positives;
+        return mPositives;
     }
 
     @Nullable
     public String getSha256() {
-        return sha256;
+        return mSha256;
     }
 
     @Nullable
     public String getMd5() {
-        return md5;
+        return mMd5;
     }
 
     @NonNull
     @Override
     public String toString() {
         return "VtFileReport{" +
-                "scans=" + scans +
-                ", scanId='" + scanId + '\'' +
-                ", sha1='" + sha1 + '\'' +
-                ", resource='" + resource + '\'' +
-                ", responseCode=" + responseCode +
-                ", scanDate='" + scanDate + '\'' +
-                ", permalink='" + permalink + '\'' +
-                ", verboseMessage='" + verboseMessage + '\'' +
-                ", total=" + total +
-                ", positives=" + positives +
-                ", sha256='" + sha256 + '\'' +
-                ", md5='" + md5 + '\'' +
+                "scans=" + mScans +
+                ", scanId='" + mScanId + '\'' +
+                ", sha1='" + mSha1 + '\'' +
+                ", resource='" + mResource + '\'' +
+                ", responseCode=" + mResponseCode +
+                ", scanDate='" + mScanDate + '\'' +
+                ", permalink='" + mPermalink + '\'' +
+                ", verboseMessage='" + mVerboseMessage + '\'' +
+                ", total=" + mTotal +
+                ", positives=" + mPositives +
+                ", sha256='" + mSha256 + '\'' +
+                ", md5='" + mMd5 + '\'' +
                 '}';
     }
 }

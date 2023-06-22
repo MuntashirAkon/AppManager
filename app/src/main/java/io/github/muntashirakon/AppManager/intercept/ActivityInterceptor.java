@@ -219,19 +219,19 @@ public class ActivityInterceptor extends BaseActivity {
     };
 
     private abstract class IntentUpdateTextWatcher implements TextWatcher {
-        private final TextView textView;
+        private final TextView mTextView;
 
         IntentUpdateTextWatcher(TextView textView) {
-            this.textView = textView;
+            mTextView = textView;
         }
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             if (mAreTextWatchersActive) {
                 try {
-                    String modifiedContent = textView.getText().toString();
+                    String modifiedContent = mTextView.getText().toString();
                     onUpdateIntent(modifiedContent);
-                    showTextViewIntentData(textView);
+                    showTextViewIntentData(mTextView);
                     showResetIntentButton(true);
                     refreshUI();
                 } catch (Exception e) {
@@ -902,13 +902,13 @@ public class ActivityInterceptor extends BaseActivity {
             result.append(spaces).append("\tPACKAGE\t").append(activityinfo.packageName).append("\n");
         }
         // Add activity results
-        if (this.mLastResultCode != null) {
+        if (mLastResultCode != null) {
             result.append("\n");
             // ACTIVITY RESULT <result-code>
-            result.append("ACTIVITY RESULT\t").append(this.mLastResultCode).append("\n");
-            if (this.mLastResultIntent != null) {
+            result.append("ACTIVITY RESULT\t").append(mLastResultCode).append("\n");
+            if (mLastResultIntent != null) {
                 // Print the last result intent with RESULT prefix so that it will not be parsed by the parser
-                result.append(IntentCompat.describeIntent(this.mLastResultIntent, "RESULT"));
+                result.append(IntentCompat.describeIntent(mLastResultIntent, "RESULT"));
             }
         }
         return result.toString();
@@ -1079,16 +1079,16 @@ public class ActivityInterceptor extends BaseActivity {
     }
 
     private static class CategoriesRecyclerViewAdapter extends RecyclerView.Adapter<CategoriesRecyclerViewAdapter.ViewHolder> {
-        private final List<String> categories = new ArrayList<>();
-        private final ActivityInterceptor activity;
+        private final List<String> mCategories = new ArrayList<>();
+        private final ActivityInterceptor mActivity;
 
         public CategoriesRecyclerViewAdapter(ActivityInterceptor activity) {
-            this.activity = activity;
+            mActivity = activity;
         }
 
         public void setDefaultList(@Nullable Collection<String> categories) {
-            this.categories.clear();
-            if (categories != null) this.categories.addAll(categories);
+            mCategories.clear();
+            if (categories != null) mCategories.addAll(categories);
             notifyDataSetChanged();
         }
 
@@ -1101,21 +1101,21 @@ public class ActivityInterceptor extends BaseActivity {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            String category = categories.get(position);
+            String category = mCategories.get(position);
             holder.title.setText(category);
             holder.title.setTextIsSelectable(true);
             holder.actionIcon.setOnClickListener(v -> {
-                if (activity.mMutableIntent != null) {
-                    activity.mMutableIntent.removeCategory(category);
-                    setDefaultList(activity.mMutableIntent.getCategories());
-                    activity.showTextViewIntentData(null);
+                if (mActivity.mMutableIntent != null) {
+                    mActivity.mMutableIntent.removeCategory(category);
+                    setDefaultList(mActivity.mMutableIntent.getCategories());
+                    mActivity.showTextViewIntentData(null);
                 }
             });
         }
 
         @Override
         public int getItemCount() {
-            return categories.size();
+            return mCategories.size();
         }
 
         static class ViewHolder extends RecyclerView.ViewHolder {
@@ -1131,16 +1131,16 @@ public class ActivityInterceptor extends BaseActivity {
     }
 
     private static class FlagsRecyclerViewAdapter extends RecyclerView.Adapter<FlagsRecyclerViewAdapter.ViewHolder> {
-        private final List<String> flags = new ArrayList<>();
-        private final ActivityInterceptor activity;
+        private final List<String> mFlags = new ArrayList<>();
+        private final ActivityInterceptor mActivity;
 
         public FlagsRecyclerViewAdapter(ActivityInterceptor activity) {
-            this.activity = activity;
+            mActivity = activity;
         }
 
         public void setDefaultList(@Nullable Collection<String> flags) {
-            this.flags.clear();
-            if (flags != null) this.flags.addAll(flags);
+            mFlags.clear();
+            if (flags != null) mFlags.addAll(flags);
             notifyDataSetChanged();
         }
 
@@ -1153,22 +1153,22 @@ public class ActivityInterceptor extends BaseActivity {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            String flagName = flags.get(position);
+            String flagName = mFlags.get(position);
             holder.title.setText(flagName);
             holder.title.setTextIsSelectable(true);
             holder.actionIcon.setOnClickListener(v -> {
                 int i = INTENT_FLAG_TO_STRING.indexOfValue(flagName);
-                if (i >= 0 && activity.mMutableIntent != null) {
-                    IntentCompat.removeFlags(activity.mMutableIntent, INTENT_FLAG_TO_STRING.keyAt(i));
-                    setDefaultList(activity.getFlags());
-                    activity.showTextViewIntentData(null);
+                if (i >= 0 && mActivity.mMutableIntent != null) {
+                    IntentCompat.removeFlags(mActivity.mMutableIntent, INTENT_FLAG_TO_STRING.keyAt(i));
+                    setDefaultList(mActivity.getFlags());
+                    mActivity.showTextViewIntentData(null);
                 }
             });
         }
 
         @Override
         public int getItemCount() {
-            return flags.size();
+            return mFlags.size();
         }
 
         static class ViewHolder extends RecyclerView.ViewHolder {
@@ -1184,16 +1184,16 @@ public class ActivityInterceptor extends BaseActivity {
     }
 
     private static class ExtrasRecyclerViewAdapter extends RecyclerView.Adapter<ExtrasRecyclerViewAdapter.ViewHolder> {
-        private final List<Pair<String, Object>> extras = new ArrayList<>();
-        private final ActivityInterceptor activity;
+        private final List<Pair<String, Object>> mExtras = new ArrayList<>();
+        private final ActivityInterceptor mActivity;
 
         public ExtrasRecyclerViewAdapter(ActivityInterceptor activity) {
-            this.activity = activity;
+            mActivity = activity;
         }
 
         public void setDefaultList(@Nullable List<Pair<String, Object>> extras) {
-            this.extras.clear();
-            if (extras != null) this.extras.addAll(extras);
+            mExtras.clear();
+            if (extras != null) mExtras.addAll(extras);
             notifyDataSetChanged();
         }
 
@@ -1206,16 +1206,16 @@ public class ActivityInterceptor extends BaseActivity {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            Pair<String, Object> extraItem = extras.get(position);
+            Pair<String, Object> extraItem = mExtras.get(position);
             holder.title.setText(extraItem.first);
             holder.title.setTextIsSelectable(true);
             holder.subtitle.setText(extraItem.second.toString());
             holder.subtitle.setTextIsSelectable(true);
             holder.actionIcon.setOnClickListener(v -> {
-                if (activity.mMutableIntent != null) {
-                    activity.mMutableIntent.removeExtra(extraItem.first);
-                    activity.showTextViewIntentData(null);
-                    extras.remove(position);
+                if (mActivity.mMutableIntent != null) {
+                    mActivity.mMutableIntent.removeExtra(extraItem.first);
+                    mActivity.showTextViewIntentData(null);
+                    mExtras.remove(position);
                     notifyDataSetChanged();
                 }
             });
@@ -1223,7 +1223,7 @@ public class ActivityInterceptor extends BaseActivity {
 
         @Override
         public int getItemCount() {
-            return extras.size();
+            return mExtras.size();
         }
 
         static class ViewHolder extends RecyclerView.ViewHolder {
@@ -1245,18 +1245,18 @@ public class ActivityInterceptor extends BaseActivity {
     }
 
     private static class MatchingActivitiesRecyclerViewAdapter extends RecyclerView.Adapter<MatchingActivitiesRecyclerViewAdapter.ViewHolder> {
-        private final List<ResolveInfo> matchingActivities = new ArrayList<>();
-        private final PackageManager pm;
-        private final ActivityInterceptor activity;
+        private final List<ResolveInfo> mMatchingActivities = new ArrayList<>();
+        private final PackageManager mPm;
+        private final ActivityInterceptor mActivity;
 
         public MatchingActivitiesRecyclerViewAdapter(ActivityInterceptor activity) {
-            this.activity = activity;
-            pm = activity.getPackageManager();
+            mActivity = activity;
+            mPm = activity.getPackageManager();
         }
 
         public void setDefaultList(@Nullable List<ResolveInfo> matchingActivities) {
-            this.matchingActivities.clear();
-            if (matchingActivities != null) this.matchingActivities.addAll(matchingActivities);
+            mMatchingActivities.clear();
+            if (matchingActivities != null) mMatchingActivities.addAll(matchingActivities);
             notifyDataSetChanged();
         }
 
@@ -1269,25 +1269,25 @@ public class ActivityInterceptor extends BaseActivity {
 
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            ResolveInfo resolveInfo = matchingActivities.get(position);
+            ResolveInfo resolveInfo = mMatchingActivities.get(position);
             ActivityInfo info = resolveInfo.activityInfo;
-            holder.title.setText(info.loadLabel(pm));
+            holder.title.setText(info.loadLabel(mPm));
             String activityName = info.name;
             String name = info.packageName + "\n" + activityName;
             holder.subtitle.setText(name);
             holder.subtitle.setTextIsSelectable(true);
             ImageLoader.getInstance().displayImage(info.packageName + "_" + activityName, info, holder.icon);
             holder.actionIcon.setOnClickListener(v -> {
-                Intent intent = new Intent(activity.mMutableIntent);
+                Intent intent = new Intent(mActivity.mMutableIntent);
                 intent.setClassName(info.packageName, activityName);
                 IntentCompat.removeFlags(intent, Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-                activity.launchIntent(intent, false);
+                mActivity.launchIntent(intent, false);
             });
         }
 
         @Override
         public int getItemCount() {
-            return matchingActivities.size();
+            return mMatchingActivities.size();
         }
 
         static class ViewHolder extends RecyclerView.ViewHolder {

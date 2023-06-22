@@ -55,7 +55,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.apk.signing.SigSchemes;
@@ -92,25 +91,25 @@ public final class ApkFile implements AutoCloseable {
     private static final String UN_APKM_PKG = "io.github.muntashirakon.unapkm";
 
     // There's hardly any chance of using multiple instances of ApkFile but still kept for convenience
-    private static final SparseArray<ApkFile> apkFiles = new SparseArray<>(3);
-    private static final SparseIntArray instanceCount = new SparseIntArray(3);
-    private static final SparseIntArray advancedInstanceCount = new SparseIntArray(3);
+    private static final SparseArray<ApkFile> sApkFiles = new SparseArray<>(3);
+    private static final SparseIntArray sInstanceCount = new SparseIntArray(3);
+    private static final SparseIntArray sAdvancedInstanceCount = new SparseIntArray(3);
 
     @AnyThread
     @NonNull
     public static ApkFile getInstance(int sparseArrayKey) {
-        ApkFile apkFile = apkFiles.get(sparseArrayKey);
+        ApkFile apkFile = sApkFiles.get(sparseArrayKey);
         if (apkFile == null) {
             throw new IllegalArgumentException("ApkFile not found for key " + sparseArrayKey);
         }
-        synchronized (instanceCount) {
-            int advancedCount = advancedInstanceCount.get(sparseArrayKey);
+        synchronized (sInstanceCount) {
+            int advancedCount = sAdvancedInstanceCount.get(sparseArrayKey);
             if (advancedCount > 0) {
                 // One or more instances are requested in advance, decrement the advanced instance counter
-                advancedInstanceCount.put(sparseArrayKey, advancedCount - 1);
+                sAdvancedInstanceCount.put(sparseArrayKey, advancedCount - 1);
             } else {
                 // No advanced instance, increment the number of active instances
-                instanceCount.put(sparseArrayKey, instanceCount.get(sparseArrayKey) + 1);
+                sInstanceCount.put(sparseArrayKey, sInstanceCount.get(sparseArrayKey) + 1);
             }
         }
         return apkFile;
@@ -121,11 +120,11 @@ public final class ApkFile implements AutoCloseable {
      */
     @AnyThread
     public static void getInAdvance(int sparseArrayKey) {
-        synchronized (instanceCount) {
+        synchronized (sInstanceCount) {
             // Add this to the instance count to avoid closing when close() is called
-            instanceCount.put(sparseArrayKey, instanceCount.get(sparseArrayKey) + 1);
+            sInstanceCount.put(sparseArrayKey, sInstanceCount.get(sparseArrayKey) + 1);
             // Add this to the advance instance counter
-            advancedInstanceCount.put(sparseArrayKey, advancedInstanceCount.get(sparseArrayKey) + 1);
+            sAdvancedInstanceCount.put(sparseArrayKey, sAdvancedInstanceCount.get(sparseArrayKey) + 1);
         }
     }
 
@@ -133,7 +132,7 @@ public final class ApkFile implements AutoCloseable {
     public static int createInstance(Uri apkUri, @Nullable String mimeType) throws ApkFileException {
         int key = ThreadLocalRandom.current().nextInt();
         ApkFile apkFile = new ApkFile(apkUri, mimeType, key);
-        apkFiles.put(key, apkFile);
+        sApkFiles.put(key, apkFile);
         return key;
     }
 
@@ -141,7 +140,7 @@ public final class ApkFile implements AutoCloseable {
     public static int createInstance(ApplicationInfo info) throws ApkFileException {
         int key = ThreadLocalRandom.current().nextInt();
         ApkFile apkFile = new ApkFile(info, key);
-        apkFiles.put(key, apkFile);
+        sApkFiles.put(key, apkFile);
         return key;
     }
 
@@ -182,30 +181,30 @@ public final class ApkFile implements AutoCloseable {
         SUPPORTED_MIMES.add("application/xapk-package-archive");
     }
 
-    private final int sparseArrayKey;
+    private final int mSparseArrayKey;
     @NonNull
-    private final List<Entry> entries = new ArrayList<>();
-    private Entry baseEntry;
+    private final List<Entry> mEntries = new ArrayList<>();
+    private Entry mBaseEntry;
     @Nullable
-    private Path idsigFile;
+    private Path mIdsigFile;
     @Nullable
-    private ApksMetadata apksMetadata;
+    private ApksMetadata mApksMetadata;
     @NonNull
-    private final String packageName;
+    private final String mPackageName;
     @NonNull
-    private final List<ZipEntry> obbFiles = new ArrayList<>();
-    private final FileCache fileCache = new FileCache();
+    private final List<ZipEntry> mObbFiles = new ArrayList<>();
+    private final FileCache mFileCache = new FileCache();
     @NonNull
-    private final File cacheFilePath;
+    private final File mCacheFilePath;
     @Nullable
-    private ParcelFileDescriptor fd;
+    private ParcelFileDescriptor mFd;
     @Nullable
-    private ZipFile zipFile;
-    private boolean closed;
+    private ZipFile mZipFile;
+    private boolean mClosed;
 
     private ApkFile(@NonNull Uri apkUri, @Nullable String mimeType, int sparseArrayKey) throws ApkFileException {
-        this.sparseArrayKey = sparseArrayKey;
-        Context context = AppManager.getContext();
+        mSparseArrayKey = sparseArrayKey;
+        Context context = ContextUtils.getContext();
         ContentResolver cr = context.getContentResolver();
         Path apkSource = Paths.get(apkUri);
         @NonNull String extension;
@@ -240,9 +239,9 @@ public final class ApkFile implements AutoCloseable {
         if (extension.equals("apkm")) {
             // Convert to APKS
             try {
-                this.cacheFilePath = fileCache.createCachedFile("apks");
+                mCacheFilePath = mFileCache.createCachedFile("apks");
                 try (ParcelFileDescriptor inputFD = cr.openFileDescriptor(apkUri, "r");
-                     OutputStream outputStream = new FileOutputStream(this.cacheFilePath)) {
+                     OutputStream outputStream = new FileOutputStream(mCacheFilePath)) {
                     if (inputFD == null) {
                         throw new IOException("Apk URI inaccessible or empty.");
                     }
@@ -260,22 +259,22 @@ public final class ApkFile implements AutoCloseable {
                     if (fd == null) {
                         throw new FileNotFoundException("Could not get file descriptor from the Uri");
                     }
-                    this.fd = fd;
+                    mFd = fd;
                 } catch (FileNotFoundException e) {
                     throw new ApkFileException(e);
                 } catch (SecurityException e) {
                     Log.e(TAG, e);
                 }
             }
-            File cacheFilePath = this.fd != null ? FileUtils.getFileFromFd(fd) : null;
+            File cacheFilePath = mFd != null ? FileUtils.getFileFromFd(mFd) : null;
             if (cacheFilePath == null || !FileUtils.canRead(cacheFilePath)) {
                 // Cache manually
                 try {
-                    this.cacheFilePath = fileCache.getCachedFile(apkSource);
+                    mCacheFilePath = mFileCache.getCachedFile(apkSource);
                 } catch (IOException e) {
                     throw new ApkFileException("Could not cache the input file.", e);
                 }
-            } else this.cacheFilePath = cacheFilePath;
+            } else mCacheFilePath = cacheFilePath;
         }
         String packageName = null;
         // Check for splits
@@ -284,7 +283,7 @@ public final class ApkFile implements AutoCloseable {
             ByteBuffer manifest;
             HashMap<String, String> manifestAttrs;
             try {
-                manifest = getManifestFromApk(cacheFilePath);
+                manifest = getManifestFromApk(mCacheFilePath);
                 manifestAttrs = getManifestAttributes(manifest);
             } catch (IOException e) {
                 throw new ApkFileException("Manifest not found for base APK.", e);
@@ -293,22 +292,22 @@ public final class ApkFile implements AutoCloseable {
                 throw new IllegalArgumentException("Manifest doesn't contain any package name.");
             }
             packageName = manifestAttrs.get(ATTR_PACKAGE);
-            baseEntry = new Entry(cacheFilePath, manifest);
-            entries.add(baseEntry);
+            mBaseEntry = new Entry(mCacheFilePath, manifest);
+            mEntries.add(mBaseEntry);
         } else {
             try {
                 getCachePath();
-                zipFile = new ZipFile(cacheFilePath);
+                mZipFile = new ZipFile(mCacheFilePath);
             } catch (IOException e) {
                 throw new ApkFileException(e);
             }
-            Enumeration<? extends ZipEntry> zipEntries = zipFile.entries();
+            Enumeration<? extends ZipEntry> zipEntries = mZipFile.entries();
             while (zipEntries.hasMoreElements()) {
                 ZipEntry zipEntry = zipEntries.nextElement();
                 if (zipEntry.isDirectory()) continue;
                 String fileName = FileUtils.getFileNameFromZipEntry(zipEntry);
                 if (fileName.endsWith(".apk")) { // APK is more likely to match
-                    try (InputStream zipInputStream = zipFile.getInputStream(zipEntry)) {
+                    try (InputStream zipInputStream = mZipFile.getInputStream(zipEntry)) {
                         // Get manifest attributes
                         ByteBuffer manifest;
                         HashMap<String, String> manifestAttrs;
@@ -321,13 +320,13 @@ public final class ApkFile implements AutoCloseable {
                         if (manifestAttrs.containsKey("split")) {
                             // TODO: check for duplicates
                             Entry entry = new Entry(fileName, zipEntry, APK_SPLIT, manifest, manifestAttrs);
-                            entries.add(entry);
+                            mEntries.add(entry);
                         } else {
-                            if (baseEntry != null) {
+                            if (mBaseEntry != null) {
                                 throw new RuntimeException("Duplicate base apk found.");
                             }
-                            baseEntry = new Entry(fileName, zipEntry, APK_BASE, manifest, manifestAttrs);
-                            entries.add(baseEntry);
+                            mBaseEntry = new Entry(fileName, zipEntry, APK_BASE, manifest, manifestAttrs);
+                            mEntries.add(mBaseEntry);
                             if (manifestAttrs.containsKey(ATTR_PACKAGE)) {
                                 packageName = manifestAttrs.get(ATTR_PACKAGE);
                             } else throw new RuntimeException("Package name not found.");
@@ -337,26 +336,26 @@ public final class ApkFile implements AutoCloseable {
                     }
                 } else if (fileName.equals(ApksMetadata.META_FILE)) {
                     try {
-                        String jsonString = IoUtils.getInputStreamContent(zipFile.getInputStream(zipEntry));
-                        apksMetadata = new ApksMetadata();
-                        apksMetadata.readMetadata(jsonString);
+                        String jsonString = IoUtils.getInputStreamContent(mZipFile.getInputStream(zipEntry));
+                        mApksMetadata = new ApksMetadata();
+                        mApksMetadata.readMetadata(jsonString);
                     } catch (IOException | JSONException e) {
-                        apksMetadata = null;
+                        mApksMetadata = null;
                         Log.w(TAG, "The contents of info.json in the bundle is invalid", e);
                     }
                 } else if (fileName.endsWith(".obb")) {
-                    obbFiles.add(zipEntry);
+                    mObbFiles.add(zipEntry);
                 } else if (fileName.endsWith(".idsig")) {
                     try {
-                        idsigFile = FileUtils.saveZipFile(zipFile.getInputStream(zipEntry), getCachePath(), IDSIG_FILE);
+                        mIdsigFile = FileUtils.saveZipFile(mZipFile.getInputStream(zipEntry), getCachePath(), IDSIG_FILE);
                     } catch (IOException e) {
                         throw new ApkFileException(e);
                     }
                 }
             }
-            if (baseEntry == null) throw new ApkFileException("No base apk found.");
+            if (mBaseEntry == null) throw new ApkFileException("No base apk found.");
             // Sort the entries based on type and rank
-            Collections.sort(entries, (o1, o2) -> {
+            Collections.sort(mEntries, (o1, o2) -> {
                 Integer int1 = o1.type;
                 int int2 = o2.type;
                 int typeCmp;
@@ -367,18 +366,18 @@ public final class ApkFile implements AutoCloseable {
             });
         }
         if (packageName == null) throw new ApkFileException("Package name not found.");
-        this.packageName = packageName;
+        mPackageName = packageName;
     }
 
     public ApkFile(@NonNull ApplicationInfo info, int sparseArrayKey) throws ApkFileException {
-        this.sparseArrayKey = sparseArrayKey;
-        this.packageName = info.packageName;
-        this.cacheFilePath = new File(info.publicSourceDir);
-        File sourceDir = cacheFilePath.getParentFile();
+        mSparseArrayKey = sparseArrayKey;
+        mPackageName = info.packageName;
+        mCacheFilePath = new File(info.publicSourceDir);
+        File sourceDir = mCacheFilePath.getParentFile();
         if (sourceDir == null || "/data/app".equals(sourceDir.getAbsolutePath())) {
             // Old file structure (storing APK files at /data/app)
             try {
-                entries.add(baseEntry = new Entry(cacheFilePath, getManifestFromApk(cacheFilePath)));
+                mEntries.add(mBaseEntry = new Entry(mCacheFilePath, getManifestFromApk(mCacheFilePath)));
             } catch (IOException e) {
                 throw new ApkFileException("Manifest not found.", e);
             }
@@ -388,7 +387,7 @@ public final class ApkFile implements AutoCloseable {
                 // Directory might be inaccessible
                 Log.w(TAG, "No apk files found in " + sourceDir.getAbsolutePath() + ". Using default.");
                 List<File> allApks = new ArrayList<>();
-                allApks.add(cacheFilePath);
+                allApks.add(mCacheFilePath);
                 String[] splits = info.splitPublicSourceDirs;
                 if (splits != null) {
                     for (String split : splits) {
@@ -413,25 +412,25 @@ public final class ApkFile implements AutoCloseable {
                 }
                 if (manifestAttrs.containsKey("split")) {
                     Entry entry = new Entry(fileName, apk, APK_SPLIT, manifest, manifestAttrs);
-                    entries.add(entry);
+                    mEntries.add(entry);
                 } else {
                     // Could be a base entry, check package name
                     if (!manifestAttrs.containsKey(ATTR_PACKAGE)) {
                         throw new IllegalArgumentException("Manifest doesn't contain any package name.");
                     }
                     String newPackageName = manifestAttrs.get(ATTR_PACKAGE);
-                    if (packageName.equals(newPackageName)) {
-                        if (baseEntry != null) {
+                    if (mPackageName.equals(newPackageName)) {
+                        if (mBaseEntry != null) {
                             throw new RuntimeException("Duplicate base apk found.");
                         }
-                        baseEntry = new Entry(fileName, apk, APK_BASE, manifest, manifestAttrs);
-                        entries.add(baseEntry);
+                        mBaseEntry = new Entry(fileName, apk, APK_BASE, manifest, manifestAttrs);
+                        mEntries.add(mBaseEntry);
                     } // else continue;
                 }
             }
-            if (baseEntry == null) throw new ApkFileException("No base apk found.");
+            if (mBaseEntry == null) throw new ApkFileException("No base apk found.");
             // Sort the entries based on type
-            Collections.sort(entries, (o1, o2) -> {
+            Collections.sort(mEntries, (o1, o2) -> {
                 Integer int1 = o1.type;
                 int int2 = o2.type;
                 int typeCmp;
@@ -444,18 +443,18 @@ public final class ApkFile implements AutoCloseable {
     }
 
     public Entry getBaseEntry() {
-        return baseEntry;
+        return mBaseEntry;
     }
 
     @NonNull
     public List<Entry> getEntries() {
-        return entries;
+        return mEntries;
     }
 
     @Nullable
     public File getIdsigFile() {
-        if (idsigFile != null) {
-            return idsigFile.getFile();
+        if (mIdsigFile != null) {
+            return mIdsigFile.getFile();
         }
         return null;
     }
@@ -463,7 +462,7 @@ public final class ApkFile implements AutoCloseable {
     @NonNull
     public List<Entry> getSelectedEntries() {
         List<Entry> selectedEntries = new ArrayList<>();
-        ListIterator<Entry> it = entries.listIterator();
+        ListIterator<Entry> it = mEntries.listIterator();
         Entry tmpEntry;
         while (it.hasNext()) {
             tmpEntry = it.next();
@@ -474,40 +473,40 @@ public final class ApkFile implements AutoCloseable {
 
     @Nullable
     public ApksMetadata getApksMetadata() {
-        return apksMetadata;
+        return mApksMetadata;
     }
 
     @NonNull
     public String getPackageName() {
-        return packageName;
+        return mPackageName;
     }
 
     public boolean isSplit() {
-        return entries.size() > 1;
+        return mEntries.size() > 1;
     }
 
     public boolean hasObb() {
-        return obbFiles.size() > 0;
+        return mObbFiles.size() > 0;
     }
 
     @WorkerThread
     public void extractObb(Path writableObbDir) throws IOException {
-        if (!hasObb() || zipFile == null) return;
-        for (ZipEntry obbEntry : obbFiles) {
+        if (!hasObb() || mZipFile == null) return;
+        for (ZipEntry obbEntry : mObbFiles) {
             String fileName = FileUtils.getFileNameFromZipEntry(obbEntry);
             // Extract obb file to the destination directory
-            try (InputStream zipInputStream = zipFile.getInputStream(obbEntry)) {
+            try (InputStream zipInputStream = mZipFile.getInputStream(obbEntry)) {
                 FileUtils.saveZipFile(zipInputStream, writableObbDir, fileName);
             }
         }
     }
 
     public void select(int entry) {
-        entries.get(entry).selected = true;
+        mEntries.get(entry).mSelected = true;
     }
 
     public void deselect(int entry) {
-        entries.get(entry).selected = false;
+        mEntries.get(entry).mSelected = false;
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
@@ -517,33 +516,33 @@ public final class ApkFile implements AutoCloseable {
 
     @Override
     public void close() {
-        closed = true;
-        synchronized (instanceCount) {
-            if (instanceCount.get(sparseArrayKey) > 1) {
+        mClosed = true;
+        synchronized (sInstanceCount) {
+            if (sInstanceCount.get(mSparseArrayKey) > 1) {
                 // This isn't the only instance, do not close yet
-                instanceCount.put(sparseArrayKey, instanceCount.get(sparseArrayKey) - 1);
+                sInstanceCount.put(mSparseArrayKey, sInstanceCount.get(mSparseArrayKey) - 1);
                 return;
             }
             // Only this instance remained
-            instanceCount.delete(sparseArrayKey);
+            sInstanceCount.delete(mSparseArrayKey);
         }
-        apkFiles.delete(sparseArrayKey);
-        for (Entry entry : entries) {
+        sApkFiles.delete(mSparseArrayKey);
+        for (Entry entry : mEntries) {
             entry.close();
         }
-        IoUtils.closeQuietly(zipFile);
-        IoUtils.closeQuietly(fd);
-        IoUtils.closeQuietly(fileCache);
-        FileUtils.deleteSilently(idsigFile);
+        IoUtils.closeQuietly(mZipFile);
+        IoUtils.closeQuietly(mFd);
+        IoUtils.closeQuietly(mFileCache);
+        FileUtils.deleteSilently(mIdsigFile);
         // Ensure that entries are not accessible if accidentally accessed
-        entries.clear();
-        baseEntry = null;
-        obbFiles.clear();
+        mEntries.clear();
+        mBaseEntry = null;
+        mObbFiles.clear();
     }
 
     @Override
     protected void finalize() {
-        if (!closed) {
+        if (!mClosed) {
             close();
         }
     }
@@ -572,22 +571,22 @@ public final class ApkFile implements AutoCloseable {
         public final ByteBuffer manifest;
 
         @Nullable
-        private String splitSuffix;
+        private String mSplitSuffix;
         @Nullable
-        private String forFeature = null;
+        private String mForFeature = null;
         @Nullable
-        private File cachedFile;
+        private File mCachedFile;
         @Nullable
-        private ZipEntry zipEntry;
+        private ZipEntry mZipEntry;
         @Nullable
-        private File source;
+        private File mSource;
         @Nullable
-        private File signedFile;
+        private File mSignedFile;
         @Nullable
-        private File idsigFile;
-        private boolean selected = false;
-        private final boolean required;
-        private final boolean isolated;
+        private File mIdsigFile;
+        private boolean mSelected = false;
+        private final boolean mRequired;
+        private final boolean mIsolated;
 
         /**
          * Rank for a certain {@link #type} to create a priority list. This is applicable for
@@ -598,10 +597,10 @@ public final class ApkFile implements AutoCloseable {
 
         Entry(@NonNull File source, @NonNull ByteBuffer manifest) {
             this.name = "Base.apk";
-            this.source = Objects.requireNonNull(source);
+            mSource = Objects.requireNonNull(source);
             this.type = APK_BASE;
-            this.selected = this.required = true;
-            this.isolated = false;
+            mSelected = mRequired = true;
+            mIsolated = false;
             this.manifest = Objects.requireNonNull(manifest);
         }
 
@@ -611,7 +610,7 @@ public final class ApkFile implements AutoCloseable {
               @NonNull ByteBuffer manifest,
               @NonNull HashMap<String, String> manifestAttrs) {
             this(name, type, manifest, manifestAttrs);
-            this.zipEntry = Objects.requireNonNull(zipEntry);
+            mZipEntry = Objects.requireNonNull(zipEntry);
         }
 
         Entry(@NonNull String name,
@@ -620,7 +619,7 @@ public final class ApkFile implements AutoCloseable {
               @NonNull ByteBuffer manifest,
               @NonNull HashMap<String, String> manifestAttrs) {
             this(name, type, manifest, manifestAttrs);
-            this.source = Objects.requireNonNull(source);
+            mSource = Objects.requireNonNull(source);
         }
 
         private Entry(@NonNull String name,
@@ -633,8 +632,8 @@ public final class ApkFile implements AutoCloseable {
             this.manifest = manifest;
             if (type == APK_BASE) {
                 this.name = name;
-                this.selected = this.required = true;
-                this.isolated = false;
+                mSelected = mRequired = true;
+                mIsolated = false;
                 this.type = APK_BASE;
             } else if (type == APK_SPLIT) {
                 String splitName = manifestAttrs.get(ATTR_SPLIT);
@@ -643,53 +642,54 @@ public final class ApkFile implements AutoCloseable {
                 // Check if required
                 if (manifestAttrs.containsKey(ATTR_IS_SPLIT_REQUIRED)) {
                     String value = manifestAttrs.get(ATTR_IS_SPLIT_REQUIRED);
-                    this.selected = this.required = value != null && Boolean.parseBoolean(value);
-                } else this.required = false;
+                    mSelected = mRequired = value != null && Boolean.parseBoolean(value);
+                } else mRequired = false;
                 // Check if isolated
                 if (manifestAttrs.containsKey(ATTR_ISOLATED_SPLIT)) {
                     String value = manifestAttrs.get(ATTR_ISOLATED_SPLIT);
-                    this.isolated = value != null && Boolean.parseBoolean(value);
-                } else this.isolated = false;
+                    mIsolated = value != null && Boolean.parseBoolean(value);
+                } else mIsolated = false;
                 // Infer types
                 if (manifestAttrs.containsKey(ATTR_IS_FEATURE_SPLIT)) {
                     this.type = APK_SPLIT_FEATURE;
                 } else {
                     if (manifestAttrs.containsKey(ATTR_CONFIG_FOR_SPLIT)) {
-                        this.forFeature = manifestAttrs.get(ATTR_CONFIG_FOR_SPLIT);
-                        if (TextUtils.isEmpty(this.forFeature)) this.forFeature = null;
+                        mForFeature = manifestAttrs.get(ATTR_CONFIG_FOR_SPLIT);
+                        if (TextUtils.isEmpty(mForFeature)) mForFeature = null;
                     }
                     int configPartIndex = this.name.lastIndexOf(CONFIG_PREFIX);
                     if (configPartIndex == -1 || (configPartIndex != 0 && this.name.charAt(configPartIndex - 1) != '.')) {
                         this.type = APK_SPLIT_UNKNOWN;
                         return;
                     }
-                    splitSuffix = this.name.substring(configPartIndex + (CONFIG_PREFIX.length()));
-                    if (StaticDataset.ALL_ABIS.containsKey(splitSuffix)) {
+                    mSplitSuffix = this.name.substring(configPartIndex + (CONFIG_PREFIX.length()));
+                    if (StaticDataset.ALL_ABIS.containsKey(mSplitSuffix)) {
                         // This split is an ABI
                         this.type = APK_SPLIT_ABI;
-                        int index = ArrayUtils.indexOf(Build.SUPPORTED_ABIS, StaticDataset.ALL_ABIS.get(splitSuffix));
+                        String abi = StaticDataset.ALL_ABIS.get(mSplitSuffix);
+                        int index = ArrayUtils.indexOf(Build.SUPPORTED_ABIS, Objects.requireNonNull(abi));
                         if (index != -1) {
                             this.rank = index;
-                            if (this.forFeature == null) {
+                            if (mForFeature == null) {
                                 // Increment rank for base APK
                                 this.rank -= 1000;
                             }
                         }
-                    } else if (StaticDataset.DENSITY_NAME_TO_DENSITY.containsKey(splitSuffix)) {
+                    } else if (StaticDataset.DENSITY_NAME_TO_DENSITY.containsKey(mSplitSuffix)) {
                         // This split is for Screen Density
                         this.type = APK_SPLIT_DENSITY;
-                        this.rank = Math.abs(StaticDataset.DEVICE_DENSITY - getDensityFromName(splitSuffix));
-                        if (this.forFeature == null) {
+                        this.rank = Math.abs(StaticDataset.DEVICE_DENSITY - getDensityFromName(mSplitSuffix));
+                        if (mForFeature == null) {
                             // Increment rank for base APK
                             this.rank -= 1000;
                         }
-                    } else if (LangUtils.isValidLocale(splitSuffix)) {
+                    } else if (LangUtils.isValidLocale(mSplitSuffix)) {
                         // This split is for Locale
                         this.type = APK_SPLIT_LOCALE;
-                        Integer rank = StaticDataset.LOCALE_RANKING.get(splitSuffix);
+                        Integer rank = StaticDataset.LOCALE_RANKING.get(mSplitSuffix);
                         if (rank != null) {
                             this.rank = rank;
-                            if (this.forFeature == null) {
+                            if (mForFeature == null) {
                                 // Increment rank for base APK
                                 this.rank -= 1000;
                             }
@@ -699,7 +699,7 @@ public final class ApkFile implements AutoCloseable {
             } else {
                 this.name = name;
                 this.type = APK_SPLIT_UNKNOWN;
-                this.required = this.isolated = false;
+                mRequired = mIsolated = false;
             }
         }
 
@@ -708,9 +708,9 @@ public final class ApkFile implements AutoCloseable {
          */
         @NonNull
         public String getFileName() {
-            if (Paths.exists(cachedFile)) return cachedFile.getName();
-            if (zipEntry != null) return FileUtils.getFileNameFromZipEntry(zipEntry);
-            if (Paths.exists(source)) return source.getName();
+            if (Paths.exists(mCachedFile)) return mCachedFile.getName();
+            if (mZipEntry != null) return FileUtils.getFileNameFromZipEntry(mZipEntry);
+            if (Paths.exists(mSource)) return mSource.getName();
             else throw new RuntimeException("Neither zipEntry nor source is defined.");
         }
 
@@ -718,9 +718,9 @@ public final class ApkFile implements AutoCloseable {
          * Get size of the entry.
          */
         public long getFileSize() {
-            if (Paths.exists(cachedFile)) return cachedFile.length();
-            if (zipEntry != null) return zipEntry.getSize();
-            if (Paths.exists(source)) return source.length();
+            if (Paths.exists(mCachedFile)) return mCachedFile.length();
+            if (mZipEntry != null) return mZipEntry.getSize();
+            if (Paths.exists(mSource)) return mSource.length();
             else throw new RuntimeException("Neither zipEntry nor source is defined.");
         }
 
@@ -735,19 +735,19 @@ public final class ApkFile implements AutoCloseable {
                 // Return original/real file if signing is not requested
                 return realFile;
             }
-            if (Paths.exists(signedFile)) return signedFile;
-            signedFile = fileCache.createCachedFile("apk");
+            if (Paths.exists(mSignedFile)) return mSignedFile;
+            mSignedFile = mFileCache.createCachedFile("apk");
             SigSchemes sigSchemes = Prefs.Signing.getSigSchemes();
             boolean zipAlign = Prefs.Signing.zipAlign();
             try {
                 Signer signer = Signer.getInstance(sigSchemes);
                 if (signer.isV4SchemeEnabled()) {
-                    idsigFile = fileCache.createCachedFile("idsig");
-                    signer.setIdsigFile(idsigFile);
+                    mIdsigFile = mFileCache.createCachedFile("idsig");
+                    signer.setIdsigFile(mIdsigFile);
                 }
-                if (signer.sign(realFile, signedFile, -1, zipAlign)) {
-                    if (Signer.verify(sigSchemes, signedFile, idsigFile)) {
-                        return signedFile;
+                if (signer.sign(realFile, mSignedFile, -1, zipAlign)) {
+                    if (Signer.verify(sigSchemes, mSignedFile, mIdsigFile)) {
+                        return mSignedFile;
                     }
                 }
                 throw new IOException("Failed to sign " + realFile);
@@ -776,7 +776,7 @@ public final class ApkFile implements AutoCloseable {
          */
         @Nullable
         public String getApkSource() {
-            return source == null ? null : source.getAbsolutePath();
+            return mSource == null ? null : mSource.getAbsolutePath();
         }
 
         /**
@@ -784,12 +784,12 @@ public final class ApkFile implements AutoCloseable {
          */
         @Override
         public void close() {
-            FileUtils.deleteSilently(cachedFile);
-            FileUtils.deleteSilently(idsigFile);
-            FileUtils.deleteSilently(signedFile);
-            if (source != null && !source.getAbsolutePath().startsWith("/proc/self")
-                    && !source.getAbsolutePath().startsWith("/data/app")) {
-                FileUtils.deleteSilently(source);
+            FileUtils.deleteSilently(mCachedFile);
+            FileUtils.deleteSilently(mIdsigFile);
+            FileUtils.deleteSilently(mSignedFile);
+            if (mSource != null && !mSource.getAbsolutePath().startsWith("/proc/self")
+                    && !mSource.getAbsolutePath().startsWith("/data/app")) {
+                FileUtils.deleteSilently(mSource);
             }
         }
 
@@ -801,9 +801,9 @@ public final class ApkFile implements AutoCloseable {
          */
         @NonNull
         public InputStream getRealInputStream() throws IOException {
-            if (Paths.exists(cachedFile)) return new FileInputStream(cachedFile);
-            if (zipEntry != null) return Objects.requireNonNull(zipFile).getInputStream(zipEntry);
-            if (Paths.exists(source)) return new FileInputStream(source);
+            if (Paths.exists(mCachedFile)) return new FileInputStream(mCachedFile);
+            if (mZipEntry != null) return Objects.requireNonNull(mZipFile).getInputStream(mZipEntry);
+            if (Paths.exists(mSource)) return new FileInputStream(mSource);
             else throw new IOException("Neither zipEntry nor source is defined.");
         }
 
@@ -814,17 +814,17 @@ public final class ApkFile implements AutoCloseable {
          */
         @WorkerThread
         public File getRealCachedFile() throws IOException {
-            if (source != null && source.canRead() && !source.getAbsolutePath().startsWith("/proc/self")) {
-                return source;
+            if (mSource != null && mSource.canRead() && !mSource.getAbsolutePath().startsWith("/proc/self")) {
+                return mSource;
             }
-            if (cachedFile != null) {
-                if (cachedFile.canRead()) {
-                    return cachedFile;
-                } else FileUtils.deleteSilently(cachedFile);
+            if (mCachedFile != null) {
+                if (mCachedFile.canRead()) {
+                    return mCachedFile;
+                } else FileUtils.deleteSilently(mCachedFile);
             }
             try (InputStream is = getRealInputStream()) {
-                cachedFile = FileUtils.saveZipFile(is, getCachePath(), name).getFile();
-                return Objects.requireNonNull(cachedFile);
+                mCachedFile = FileUtils.saveZipFile(is, getCachePath(), name).getFile();
+                return Objects.requireNonNull(mCachedFile);
             }
         }
 
@@ -832,21 +832,21 @@ public final class ApkFile implements AutoCloseable {
          * Whether the entry has been selected. Selected entries can be retrieved using {@link #getSelectedEntries()}.
          */
         public boolean isSelected() {
-            return selected;
+            return mSelected;
         }
 
         /**
          * Whether the entry is a required entry i.e. it must be installed along with the base APK.
          */
         public boolean isRequired() {
-            return required;
+            return mRequired;
         }
 
         /**
          * Whether the entry is an isolated entry.
          */
         public boolean isIsolated() {
-            return isolated;
+            return mIsolated;
         }
 
         /**
@@ -860,7 +860,7 @@ public final class ApkFile implements AutoCloseable {
         @NonNull
         public String getAbi() {
             if (type == APK_SPLIT_ABI) {
-                return Objects.requireNonNull(StaticDataset.ALL_ABIS.get(splitSuffix));
+                return Objects.requireNonNull(StaticDataset.ALL_ABIS.get(mSplitSuffix));
             }
             throw new RuntimeException("Attempt to fetch ABI for invalid apk");
         }
@@ -875,7 +875,7 @@ public final class ApkFile implements AutoCloseable {
          */
         public int getDensity() {
             if (type == APK_SPLIT_DENSITY) {
-                return getDensityFromName(splitSuffix);
+                return getDensityFromName(mSplitSuffix);
             }
             throw new RuntimeException("Attempt to fetch Density for invalid apk");
         }
@@ -889,7 +889,7 @@ public final class ApkFile implements AutoCloseable {
         @NonNull
         public Locale getLocale() {
             if (type == APK_SPLIT_LOCALE) {
-                return new Locale.Builder().setLanguageTag(Objects.requireNonNull(splitSuffix)).build();
+                return new Locale.Builder().setLanguageTag(Objects.requireNonNull(mSplitSuffix)).build();
             }
             throw new RuntimeException("Attempt to fetch Locale for invalid apk");
         }
@@ -899,11 +899,11 @@ public final class ApkFile implements AutoCloseable {
             if (type == APK_SPLIT_FEATURE) {
                 return name;
             }
-            return forFeature;
+            return mForFeature;
         }
 
         public boolean isForFeature() {
-            return forFeature != null;
+            return mForFeature != null;
         }
 
         /**
@@ -946,20 +946,20 @@ public final class ApkFile implements AutoCloseable {
                 case ApkFile.APK_BASE:
                     return context.getString(R.string.base_apk);
                 case ApkFile.APK_SPLIT_DENSITY:
-                    if (forFeature != null) {
-                        return context.getString(R.string.density_split_for_feature, splitSuffix, getDensity(), forFeature);
+                    if (mForFeature != null) {
+                        return context.getString(R.string.density_split_for_feature, mSplitSuffix, getDensity(), mForFeature);
                     } else {
-                        return context.getString(R.string.density_split_for_base_apk, splitSuffix, getDensity());
+                        return context.getString(R.string.density_split_for_base_apk, mSplitSuffix, getDensity());
                     }
                 case ApkFile.APK_SPLIT_ABI:
-                    if (forFeature != null) {
-                        return context.getString(R.string.abi_split_for_feature, getAbi(), forFeature);
+                    if (mForFeature != null) {
+                        return context.getString(R.string.abi_split_for_feature, getAbi(), mForFeature);
                     } else {
                         return context.getString(R.string.abi_split_for_base_apk, getAbi());
                     }
                 case ApkFile.APK_SPLIT_LOCALE:
-                    if (forFeature != null) {
-                        return context.getString(R.string.locale_split_for_feature, getLocale().getDisplayLanguage(), forFeature);
+                    if (mForFeature != null) {
+                        return context.getString(R.string.locale_split_for_feature, getLocale().getDisplayLanguage(), mForFeature);
                     } else {
                         return context.getString(R.string.locale_split_for_base_apk, getLocale().getDisplayLanguage());
                     }
@@ -967,8 +967,8 @@ public final class ApkFile implements AutoCloseable {
                     return context.getString(R.string.split_feature_name, name);
                 case ApkFile.APK_SPLIT_UNKNOWN:
                 case ApkFile.APK_SPLIT:
-                    if (forFeature != null) {
-                        return context.getString(R.string.unknown_split_for_feature, name, forFeature);
+                    if (mForFeature != null) {
+                        return context.getString(R.string.unknown_split_for_feature, name, mForFeature);
                     } else {
                         return context.getString(R.string.unknown_split_for_base_apk, name);
                     }

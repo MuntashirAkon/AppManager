@@ -55,7 +55,8 @@ public class StorageUtils {
             long time = grantedUrisAndDate.valueAt(i);
             if (Paths.get(uri).isDirectory()) {
                 // Only directories are locations
-                storageLocations.put(Paths.getLastPathSegment(uri.getPath()) + " " + DateUtils.formatDate(time), getFixedTreeUri(uri));
+                String readableName = Paths.getLastPathSegment(uri.getPath()) + " " + DateUtils.formatDate(context, time);
+                storageLocations.put(readableName, getFixedTreeUri(uri));
             }
         }
         return storageLocations;

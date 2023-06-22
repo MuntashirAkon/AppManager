@@ -54,7 +54,7 @@ public class AnyFilterArrayAdapter<T> extends ArrayAdapter<T> {
 
     public AnyFilterArrayAdapter(@NonNull Context context, @LayoutRes int resource, @NonNull List<T> objects) {
         super(context, resource, new ArrayList<>(objects));
-        this.mObjects = objects;
+        mObjects = objects;
     }
 
     @NonNull

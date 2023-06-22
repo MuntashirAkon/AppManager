@@ -31,20 +31,20 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 class FmPathListAdapter extends RecyclerView.Adapter<FmPathListAdapter.PathHolder> {
-    private final FmViewModel viewModel;
-    private final List<String> pathParts = Collections.synchronizedList(new ArrayList<>());
-    private int currentPosition = -1;
+    private final FmViewModel mViewModel;
+    private final List<String> mPathParts = Collections.synchronizedList(new ArrayList<>());
+    private int mCurrentPosition = -1;
     @Nullable
-    private Uri currentUri;
+    private Uri mCurrentUri;
 
     FmPathListAdapter(FmViewModel viewModel) {
-        this.viewModel = viewModel;
+        mViewModel = viewModel;
     }
 
     public void setCurrentUri(@NonNull Uri currentUri) {
-        Uri lastPath = this.currentUri;
+        Uri lastPath = mCurrentUri;
         String lastPathStr = lastPath != null ? lastPath.toString() : null;
-        this.currentUri = currentUri;
+        mCurrentUri = currentUri;
         List<String> paths = FmUtils.uriToPathParts(currentUri);
         String currentPathStr = currentUri.toString();
         if (!currentPathStr.endsWith(File.separator)) {
@@ -58,29 +58,29 @@ class FmPathListAdapter extends RecyclerView.Adapter<FmPathListAdapter.PathHolde
             setCurrentPosition(paths.size() - 1);
         } else {
             // Case 2
-            pathParts.clear();
-            pathParts.addAll(paths);
-            currentPosition = pathParts.size() - 1;
+            mPathParts.clear();
+            mPathParts.addAll(paths);
+            mCurrentPosition = mPathParts.size() - 1;
             notifyDataSetChanged();
         }
     }
 
     @Nullable
     public Uri getCurrentUri() {
-        return currentUri;
+        return mCurrentUri;
     }
 
     public int getCurrentPosition() {
-        return currentPosition;
+        return mCurrentPosition;
     }
 
     public Uri calculateUri(int position) {
-        return FmUtils.uriFromPathParts(Objects.requireNonNull(currentUri), pathParts, position);
+        return FmUtils.uriFromPathParts(Objects.requireNonNull(mCurrentUri), mPathParts, position);
     }
 
     private void setCurrentPosition(int currentPosition) {
-        int lastPosition = this.currentPosition;
-        this.currentPosition = currentPosition;
+        int lastPosition = mCurrentPosition;
+        mCurrentPosition = currentPosition;
         if (lastPosition >= 0) {
             notifyItemChanged(lastPosition);
         }
@@ -96,11 +96,11 @@ class FmPathListAdapter extends RecyclerView.Adapter<FmPathListAdapter.PathHolde
 
     @Override
     public void onBindViewHolder(@NonNull PathHolder holder, int position) {
-        String pathPart = (position == 0 ? "" : "» ") + pathParts.get(position);
+        String pathPart = (position == 0 ? "" : "» ") + mPathParts.get(position);
         holder.textView.setText(pathPart);
         holder.itemView.setOnClickListener(v -> {
-            if (currentPosition != position) {
-                viewModel.loadFiles(calculateUri(position));
+            if (mCurrentPosition != position) {
+                mViewModel.loadFiles(calculateUri(position));
             }
         });
         holder.itemView.setOnLongClickListener(v -> {
@@ -128,20 +128,20 @@ class FmPathListAdapter extends RecyclerView.Adapter<FmPathListAdapter.PathHolde
             // Properties
             menu.add(R.string.file_properties)
                     .setOnMenuItemClickListener(menuItem -> {
-                        viewModel.getDisplayPropertiesLiveData().setValue(calculateUri(position));
+                        mViewModel.getDisplayPropertiesLiveData().setValue(calculateUri(position));
                         return true;
                     });
             popupMenu.show();
             return true;
         });
-        holder.textView.setTextColor(currentPosition == position
+        holder.textView.setTextColor(mCurrentPosition == position
                 ? MaterialColors.getColor(holder.textView, com.google.android.material.R.attr.colorPrimary)
                 : MaterialColors.getColor(holder.textView, android.R.attr.textColorSecondary));
     }
 
     @Override
     public int getItemCount() {
-        return pathParts.size();
+        return mPathParts.size();
     }
 
     public static class PathHolder extends RecyclerView.ViewHolder {

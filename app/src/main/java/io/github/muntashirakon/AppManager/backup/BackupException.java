@@ -6,21 +6,21 @@ import androidx.annotation.NonNull;
 
 public class BackupException extends Throwable {
     @NonNull
-    private final String detailMessage;
+    private final String mDetailMessage;
 
     public BackupException(@NonNull String message) {
         super(message);
-        this.detailMessage = message;
+        mDetailMessage = message;
     }
 
     public BackupException(@NonNull String message, @NonNull Throwable cause) {
         super(message, cause);
-        detailMessage = message;
+        mDetailMessage = message;
     }
 
     @NonNull
     @Override
     public String getMessage() {
-        return detailMessage;
+        return mDetailMessage;
     }
 }

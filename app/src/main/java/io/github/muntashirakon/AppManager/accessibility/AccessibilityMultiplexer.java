@@ -32,45 +32,45 @@ public class AccessibilityMultiplexer {
     private @interface Flags {
     }
 
-    private static final AccessibilityMultiplexer instance = new AccessibilityMultiplexer();
+    private static final AccessibilityMultiplexer sInstance = new AccessibilityMultiplexer();
 
     public static AccessibilityMultiplexer getInstance() {
-        return instance;
+        return sInstance;
     }
 
     @Flags
-    private int flags = 0;
-    private final Bundle args = new Bundle();
+    private int mFlags = 0;
+    private final Bundle mArgs = new Bundle();
 
     public boolean isInstallEnabled() {
-        return (flags & M_INSTALL) != 0;
+        return (mFlags & M_INSTALL) != 0;
     }
 
     public boolean isUninstallEnabled() {
-        return (flags & M_UNINSTALL) != 0;
+        return (mFlags & M_UNINSTALL) != 0;
     }
 
     public boolean isClearCacheEnabled() {
-        return (flags & M_CLEAR_CACHE) != 0;
+        return (mFlags & M_CLEAR_CACHE) != 0;
     }
 
     public boolean isClearDataEnabled() {
-        return (flags & M_CLEAR_DATA) != 0;
+        return (mFlags & M_CLEAR_DATA) != 0;
     }
 
     public boolean isForceStopEnabled() {
-        return (flags & M_FORCE_STOP) != 0;
+        return (mFlags & M_FORCE_STOP) != 0;
     }
 
     public boolean isNavigateToStorageAndCache() {
-        return (flags & M_NAVIGATE_TO_STORAGE_AND_CACHE) != 0;
+        return (mFlags & M_NAVIGATE_TO_STORAGE_AND_CACHE) != 0;
     }
     public boolean isLeadingActivityTracker() {
-        return (flags & M_LEADING_ACTIVITY_TRACKER) != 0;
+        return (mFlags & M_LEADING_ACTIVITY_TRACKER) != 0;
     }
 
     public void clearFlags() {
-        flags = 0;
+        mFlags = 0;
     }
 
     public void enableInstall(boolean enable) {
@@ -103,11 +103,11 @@ public class AccessibilityMultiplexer {
 
     @Nullable
     public String getTitleText() {
-        return args.getString("title");
+        return mArgs.getString("title");
     }
 
     public void setTitleText(String title) {
-        args.putString("title", title);
+        mArgs.putString("title", title);
     }
 
     private void addOrRemoveFlag(@Flags int flag, boolean add) {
@@ -116,10 +116,10 @@ public class AccessibilityMultiplexer {
     }
 
     private void addFlag(@Flags int flag) {
-        flags |= flag;
+        mFlags |= flag;
     }
 
     private void removeFlag(@Flags int flag) {
-        flags &= ~flag;
+        mFlags &= ~flag;
     }
 }

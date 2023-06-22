@@ -11,27 +11,27 @@ import io.github.muntashirakon.AppManager.rules.RuleType;
 
 public class SsaidRule extends RuleEntry {
     @NonNull
-    private String ssaid;
+    private String mSsaid;
 
     public SsaidRule(@NonNull String packageName, @NonNull String ssaid) {
         super(packageName, STUB, RuleType.SSAID);
-        this.ssaid = ssaid;
+        mSsaid = ssaid;
     }
 
     public SsaidRule(@NonNull String packageName, @NonNull StringTokenizer tokenizer) {
         super(packageName, STUB, RuleType.SSAID);
         if (tokenizer.hasMoreElements()) {
-            ssaid = tokenizer.nextElement().toString();
+            mSsaid = tokenizer.nextElement().toString();
         } else throw new IllegalArgumentException("Invalid format: ssaid not found");
     }
 
     @NonNull
     public String getSsaid() {
-        return ssaid;
+        return mSsaid;
     }
 
     public void setSsaid(@NonNull String ssaid) {
-        this.ssaid = ssaid;
+        mSsaid = ssaid;
     }
 
     @NonNull
@@ -39,14 +39,14 @@ public class SsaidRule extends RuleEntry {
     public String toString() {
         return "SsaidRule{" +
                 "packageName='" + packageName + '\'' +
-                ", ssaid='" + ssaid + '\'' +
+                ", ssaid='" + mSsaid + '\'' +
                 '}';
     }
 
     @NonNull
     @Override
     public String flattenToString(boolean isExternal) {
-        return addPackageWithTab(isExternal) + name + "\t" + type.name() + "\t" + ssaid;
+        return addPackageWithTab(isExternal) + name + "\t" + type.name() + "\t" + mSsaid;
     }
 
     @Override

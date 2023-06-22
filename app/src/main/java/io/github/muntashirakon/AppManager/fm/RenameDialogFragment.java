@@ -45,28 +45,28 @@ public class RenameDialogFragment extends DialogFragment {
     @Nullable
     private OnRenameFilesInterface mOnRenameFilesInterface;
     private View mDialogView;
-    private TextInputEditText editText;
+    private TextInputEditText mEditText;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         String name = getArguments() != null ? requireArguments().getString(ARG_NAME) : null;
         mDialogView = View.inflate(requireActivity(), R.layout.dialog_rename, null);
-        editText = mDialogView.findViewById(R.id.rename);
-        editText.setText(name);
+        mEditText = mDialogView.findViewById(R.id.rename);
+        mEditText.setText(name);
         if (name != null) {
             int lastIndex = name.lastIndexOf('.');
             if (lastIndex != -1 || lastIndex == name.length() - 1) {
-                editText.setSelection(0, lastIndex);
+                mEditText.setSelection(0, lastIndex);
             } else {
-                editText.selectAll();
+                mEditText.selectAll();
             }
         }
         return new MaterialAlertDialogBuilder(requireActivity())
                 .setTitle(R.string.rename)
                 .setView(mDialogView)
                 .setPositiveButton(R.string.save, (dialog, which) -> {
-                    Editable editable = editText.getText();
+                    Editable editable = mEditText.getText();
                     if (editable != null && mOnRenameFilesInterface != null) {
                         String newName = editable.toString();
                         String prefix = Paths.trimPathExtension(newName);
@@ -86,7 +86,7 @@ public class RenameDialogFragment extends DialogFragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        getLifecycle().addObserver(new SoftInputLifeCycleObserver(new WeakReference<>(editText)));
+        getLifecycle().addObserver(new SoftInputLifeCycleObserver(new WeakReference<>(mEditText)));
     }
 
     public void setOnRenameFilesInterface(@Nullable OnRenameFilesInterface renameFilesInterface) {

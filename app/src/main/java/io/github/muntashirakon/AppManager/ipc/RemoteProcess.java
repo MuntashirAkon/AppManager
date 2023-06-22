@@ -21,8 +21,8 @@ import io.github.muntashirakon.AppManager.IRemoteProcess;
 // Copyright 2023 Muntashir Al-Islam
 public class RemoteProcess extends Process implements Parcelable {
     private final IRemoteProcess mRemote;
-    private OutputStream os;
-    private InputStream is;
+    private OutputStream mOs;
+    private InputStream mIs;
 
     public RemoteProcess(IRemoteProcess remote) {
         mRemote = remote;
@@ -30,22 +30,22 @@ public class RemoteProcess extends Process implements Parcelable {
 
     @Override
     public OutputStream getOutputStream() {
-        if (os == null) {
-            os = new RemoteOutputStream(mRemote);
+        if (mOs == null) {
+            mOs = new RemoteOutputStream(mRemote);
         }
-        return os;
+        return mOs;
     }
 
     @Override
     public InputStream getInputStream() {
-        if (is == null) {
+        if (mIs == null) {
             try {
-                is = new ParcelFileDescriptor.AutoCloseInputStream(mRemote.getInputStream());
+                mIs = new ParcelFileDescriptor.AutoCloseInputStream(mRemote.getInputStream());
             } catch (RemoteException e) {
                 throw new RuntimeException(e);
             }
         }
-        return is;
+        return mIs;
     }
 
     @Override

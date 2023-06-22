@@ -10,26 +10,26 @@ import java.util.StringTokenizer;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 
 public class NotificationListenerRule extends RuleEntry {
-    private boolean isGranted;
+    private boolean mIsGranted;
 
     public NotificationListenerRule(@NonNull String packageName, String name, boolean isGranted) {
         super(packageName, name, RuleType.NOTIFICATION);
-        this.isGranted = isGranted;
+        this.mIsGranted = isGranted;
     }
 
     public NotificationListenerRule(@NonNull String packageName, String name, @NonNull StringTokenizer tokenizer) {
         super(packageName, name, RuleType.NOTIFICATION);
         if (tokenizer.hasMoreElements()) {
-            isGranted = Boolean.parseBoolean(tokenizer.nextElement().toString());
+            mIsGranted = Boolean.parseBoolean(tokenizer.nextElement().toString());
         } else throw new IllegalArgumentException("Invalid format: isGranted not found");
     }
 
     public boolean isGranted() {
-        return isGranted;
+        return mIsGranted;
     }
 
     public void setGranted(boolean granted) {
-        isGranted = granted;
+        mIsGranted = granted;
     }
 
     @NonNull
@@ -38,14 +38,14 @@ public class NotificationListenerRule extends RuleEntry {
         return "NotificationListenerRule{" +
                 "packageName='" + packageName + '\'' +
                 ", name='" + name + '\'' +
-                ", isGranted=" + isGranted +
+                ", isGranted=" + mIsGranted +
                 '}';
     }
 
     @NonNull
     @Override
     public String flattenToString(boolean isExternal) {
-        return addPackageWithTab(isExternal) + name + "\t" + type.name() + "\t" + isGranted;
+        return addPackageWithTab(isExternal) + name + "\t" + type.name() + "\t" + mIsGranted;
     }
 
     @Override

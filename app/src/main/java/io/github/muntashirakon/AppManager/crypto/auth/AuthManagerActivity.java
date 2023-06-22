@@ -17,25 +17,25 @@ import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 
 public class AuthManagerActivity extends BaseActivity {
-    private TextInputLayout authKeyLayout;
-    private TextInputEditText authKeyField;
+    private TextInputLayout mAuthKeyLayout;
+    private TextInputEditText mAuthKeyField;
 
     @Override
     protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
         setContentView(R.layout.activity_auth_management);
         setSupportActionBar(findViewById(R.id.toolbar));
         findViewById(R.id.progress_linear).setVisibility(View.GONE);
-        authKeyLayout = findViewById(R.id.auth_field);
-        authKeyField = findViewById(android.R.id.text1);
-        authKeyField.setText(AuthManager.getKey());
-        authKeyLayout.setEndIconOnClickListener(v -> new MaterialAlertDialogBuilder(this)
+        mAuthKeyLayout = findViewById(R.id.auth_field);
+        mAuthKeyField = findViewById(android.R.id.text1);
+        mAuthKeyField.setText(AuthManager.getKey());
+        mAuthKeyLayout.setEndIconOnClickListener(v -> new MaterialAlertDialogBuilder(this)
                 .setTitle(R.string.regenerate_auth_key)
                 .setMessage(R.string.regenerate_auth_key_warning)
                 .setNegativeButton(R.string.no, null)
                 .setPositiveButton(R.string.yes, (dialog, which) -> {
                     String authKey = AuthManager.generateKey();
                     AuthManager.setKey(authKey);
-                    authKeyField.setText(authKey);
+                    mAuthKeyField.setText(authKey);
                 })
                 .show());
     }

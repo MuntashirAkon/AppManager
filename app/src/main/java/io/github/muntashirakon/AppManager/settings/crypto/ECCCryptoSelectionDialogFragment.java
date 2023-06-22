@@ -35,23 +35,23 @@ public class ECCCryptoSelectionDialogFragment extends DialogFragment {
         void keyPairUpdated(@Nullable KeyPair keyPair, @Nullable byte[] certificateBytes);
     }
 
-    private FragmentActivity activity;
-    private ScrollableDialogBuilder builder;
+    private FragmentActivity mActivity;
+    private ScrollableDialogBuilder mBuilder;
     @Nullable
-    private OnKeyPairUpdatedListener listener;
+    private OnKeyPairUpdatedListener mListener;
     @Nullable
-    private KeyStoreManager keyStoreManager;
-    private final String targetAlias = ECCCrypto.ECC_KEY_ALIAS;
+    private KeyStoreManager mKeyStoreManager;
+    private final String mTargetAlias = ECCCrypto.ECC_KEY_ALIAS;
 
     public void setOnKeyPairUpdatedListener(OnKeyPairUpdatedListener listener) {
-        this.listener = listener;
+        mListener = listener;
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        activity = requireActivity();
-        builder = new ScrollableDialogBuilder(activity)
+        mActivity = requireActivity();
+        mBuilder = new ScrollableDialogBuilder(mActivity)
                 .setTitle(R.string.ecc)
                 .setPositiveButton(R.string.ok, null)
                 .setNegativeButton(R.string.pref_import, null)
@@ -59,9 +59,9 @@ public class ECCCryptoSelectionDialogFragment extends DialogFragment {
         new Thread(() -> {
             if (isDetached()) return;
             CharSequence info = getSigningInfo();
-            activity.runOnUiThread(() -> builder.setMessage(info));
+            mActivity.runOnUiThread(() -> mBuilder.setMessage(info));
         }).start();
-        AlertDialog alertDialog = builder.create();
+        AlertDialog alertDialog = mBuilder.create();
         alertDialog.setOnShowListener(dialog -> {
             AlertDialog dialog1 = (AlertDialog) dialog;
             Button defaultOrOkButton = dialog1.getButton(AlertDialog.BUTTON_POSITIVE);
@@ -70,7 +70,7 @@ public class ECCCryptoSelectionDialogFragment extends DialogFragment {
             importButton.setOnClickListener(v -> {
                 KeyPairImporterDialogFragment fragment = new KeyPairImporterDialogFragment();
                 Bundle args = new Bundle();
-                args.putString(KeyPairImporterDialogFragment.EXTRA_ALIAS, targetAlias);
+                args.putString(KeyPairImporterDialogFragment.EXTRA_ALIAS, mTargetAlias);
                 fragment.setArguments(args);
                 fragment.setOnKeySelectedListener((keyPair) -> new Thread(() ->
                         new Thread(() -> addKeyPair(keyPair)).start()).start());
@@ -88,11 +88,11 @@ public class ECCCryptoSelectionDialogFragment extends DialogFragment {
             defaultOrOkButton.setOnClickListener(v -> new Thread(() -> {
                 try {
                     if (isDetached()) return;
-                    activity.runOnUiThread(() -> UIUtils.displayShortToast(R.string.done));
+                    mActivity.runOnUiThread(() -> UIUtils.displayShortToast(R.string.done));
                     keyPairUpdated();
                 } catch (Exception e) {
                     Log.e(TAG, e);
-                    activity.runOnUiThread(() -> UIUtils.displayLongToast(R.string.failed_to_save_key));
+                    mActivity.runOnUiThread(() -> UIUtils.displayLongToast(R.string.failed_to_save_key));
                 } finally {
                     alertDialog.dismiss();
                 }
@@ -106,7 +106,7 @@ public class ECCCryptoSelectionDialogFragment extends DialogFragment {
         KeyPair keyPair = getKeyPair();
         if (keyPair != null) {
             try {
-                return PackageUtils.getSigningCertificateInfo(activity, (X509Certificate) keyPair.getCertificate());
+                return PackageUtils.getSigningCertificateInfo(mActivity, (X509Certificate) keyPair.getCertificate());
             } catch (CertificateEncodingException e) {
                 return getString(R.string.failed_to_load_key);
             }
@@ -120,17 +120,17 @@ public class ECCCryptoSelectionDialogFragment extends DialogFragment {
             if (keyPair == null) {
                 throw new Exception("Keypair can't be null.");
             }
-            keyStoreManager = KeyStoreManager.getInstance();
-            keyStoreManager.addKeyPair(targetAlias, keyPair, true);
+            mKeyStoreManager = KeyStoreManager.getInstance();
+            mKeyStoreManager.addKeyPair(mTargetAlias, keyPair, true);
             if (isDetached()) return;
-            activity.runOnUiThread(() -> UIUtils.displayShortToast(R.string.done));
+            mActivity.runOnUiThread(() -> UIUtils.displayShortToast(R.string.done));
             keyPairUpdated();
             if (isDetached()) return;
             CharSequence info = getSigningInfo();
-            activity.runOnUiThread(() -> builder.setMessage(info));
+            mActivity.runOnUiThread(() -> mBuilder.setMessage(info));
         } catch (Exception e) {
             Log.e(TAG, e);
-            activity.runOnUiThread(() -> UIUtils.displayLongToast(R.string.failed_to_save_key));
+            mActivity.runOnUiThread(() -> UIUtils.displayLongToast(R.string.failed_to_save_key));
         }
     }
 
@@ -139,17 +139,17 @@ public class ECCCryptoSelectionDialogFragment extends DialogFragment {
         try {
             KeyPair keyPair = getKeyPair();
             if (keyPair != null) {
-                if (listener != null) {
+                if (mListener != null) {
                     byte[] bytes = keyPair.getCertificate().getEncoded();
-                    activity.runOnUiThread(() -> listener.keyPairUpdated(keyPair, bytes));
+                    mActivity.runOnUiThread(() -> mListener.keyPairUpdated(keyPair, bytes));
                 }
                 return;
             }
         } catch (Exception e) {
             Log.e(TAG, e);
         }
-        if (listener != null) {
-            activity.runOnUiThread(() -> listener.keyPairUpdated(null, null));
+        if (mListener != null) {
+            mActivity.runOnUiThread(() -> mListener.keyPairUpdated(null, null));
         }
     }
 
@@ -157,9 +157,9 @@ public class ECCCryptoSelectionDialogFragment extends DialogFragment {
     @Nullable
     private KeyPair getKeyPair() {
         try {
-            keyStoreManager = KeyStoreManager.getInstance();
-            if (keyStoreManager.containsKey(targetAlias)) {
-                return keyStoreManager.getKeyPair(targetAlias);
+            mKeyStoreManager = KeyStoreManager.getInstance();
+            if (mKeyStoreManager.containsKey(mTargetAlias)) {
+                return mKeyStoreManager.getKeyPair(mTargetAlias);
             }
         } catch (Exception e) {
             Log.e(TAG, e);

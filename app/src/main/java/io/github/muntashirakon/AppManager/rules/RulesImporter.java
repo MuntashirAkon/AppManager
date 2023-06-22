@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.rules.struct.RuleEntry;
 import io.github.muntashirakon.io.IoUtils;
@@ -43,21 +42,21 @@ public class RulesImporter implements Closeable {
     @Nullable
     private List<String> mPackagesToImport;
     @NonNull
-    private final int[] userHandles;
+    private final int[] mUserIds;
 
-    public RulesImporter(@NonNull List<RuleType> typesToImport, @NonNull int[] userHandles) {
-        mContext = AppManager.getContext();
-        if (userHandles.length <= 0) {
+    public RulesImporter(@NonNull Context context, @NonNull List<RuleType> typesToImport, @NonNull int[] userIds) {
+        mContext = context;
+        if (userIds.length == 0) {
             throw new IllegalArgumentException("Input must contain one or more user handles");
         }
         // Init CBs
         //noinspection unchecked
-        mComponentsBlockers = new HashMap[userHandles.length];
-        for (int i = 0; i < userHandles.length; ++i) {
+        mComponentsBlockers = new HashMap[userIds.length];
+        for (int i = 0; i < userIds.length; ++i) {
             mComponentsBlockers[i] = new HashMap<>();
         }
         mTypesToImport = typesToImport;
-        this.userHandles = userHandles;
+        mUserIds = userIds;
     }
 
     public void addRulesFromUri(Uri uri) throws IOException {
@@ -68,10 +67,10 @@ public class RulesImporter implements Closeable {
                 while ((dataRow = TSVFile.readLine()) != null) {
                     RuleEntry entry = RuleEntry.unflattenFromString(null, dataRow, true);
                     // Parse complete, now add the row to CB
-                    for (int i = 0; i < userHandles.length; ++i) {
+                    for (int i = 0; i < mUserIds.length; ++i) {
                         if (mComponentsBlockers[i].get(entry.packageName) == null) {
                             // Get a read-only instance, commit will be called manually
-                            mComponentsBlockers[i].put(entry.packageName, ComponentsBlocker.getInstance(entry.packageName, userHandles[i]));
+                            mComponentsBlockers[i].put(entry.packageName, ComponentsBlocker.getInstance(entry.packageName, mUserIds[i]));
                         }
                         if (mTypesToImport.contains(entry.type)) {
                             //noinspection ConstantConditions Returned ComponentsBlocker will never be null here
@@ -90,10 +89,10 @@ public class RulesImporter implements Closeable {
                 while ((dataRow = TSVFile.readLine()) != null) {
                     RuleEntry entry = RuleEntry.unflattenFromString(null, dataRow, true);
                     // Parse complete, now add the row to CB
-                    for (int i = 0; i < userHandles.length; ++i) {
+                    for (int i = 0; i < mUserIds.length; ++i) {
                         if (mComponentsBlockers[i].get(entry.packageName) == null) {
                             // Get a read-only instance, commit will be called manually
-                            mComponentsBlockers[i].put(entry.packageName, ComponentsBlocker.getInstance(entry.packageName, userHandles[i]));
+                            mComponentsBlockers[i].put(entry.packageName, ComponentsBlocker.getInstance(entry.packageName, mUserIds[i]));
                         }
                         if (mTypesToImport.contains(entry.type)) {
                             //noinspection ConstantConditions Returned ComponentsBlocker will never be null here
@@ -118,7 +117,7 @@ public class RulesImporter implements Closeable {
         if (mPackagesToImport == null) mPackagesToImport = getPackages();
         // When #setPackagesToImport(List<String>) is used, ComponentBlocker can be null
         @Nullable ComponentsBlocker cb;
-        for (int i = 0; i < userHandles.length; ++i) {
+        for (int i = 0; i < mUserIds.length; ++i) {
             for (String packageName : mPackagesToImport) {
                 cb = mComponentsBlockers[i].get(packageName);
                 if (cb == null) continue;
@@ -143,7 +142,7 @@ public class RulesImporter implements Closeable {
     @Override
     public void close() {
         // When #setPackagesToImport(List<String>) is used, ComponentBlocker can be null
-        for (int i = 0; i < userHandles.length; ++i) {
+        for (int i = 0; i < mUserIds.length; ++i) {
             for (ComponentsBlocker cb : mComponentsBlockers[i].values()) {
                 IoUtils.closeQuietly(cb);
             }

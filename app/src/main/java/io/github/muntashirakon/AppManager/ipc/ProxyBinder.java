@@ -45,10 +45,10 @@ public class ProxyBinder implements IBinder {
         return binder;
     }
 
-    private final IBinder original;
+    private final IBinder mOriginal;
 
     public ProxyBinder(@NonNull IBinder original) {
-        this.original = Objects.requireNonNull(original);
+        mOriginal = Objects.requireNonNull(original);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class ProxyBinder implements IBinder {
             Parcel newData = Parcel.obtain();
             try {
                 newData.writeInterfaceToken(IRootServiceManager.class.getName());
-                newData.writeStrongBinder(original);
+                newData.writeStrongBinder(mOriginal);
                 newData.writeInt(code);
                 newData.appendFrom(data, 0, data.dataSize());
                 // Transact via AMService
@@ -68,14 +68,14 @@ public class ProxyBinder implements IBinder {
             return true;
         }
         // Run unprivileged code as a fallback method
-        return original.transact(code, data, reply, flags);
+        return mOriginal.transact(code, data, reply, flags);
     }
 
     @Nullable
     @Override
     public String getInterfaceDescriptor() {
         try {
-            return original.getInterfaceDescriptor();
+            return mOriginal.getInterfaceDescriptor();
         } catch (RemoteException e) {
             throw new IllegalStateException(e.getClass().getSimpleName(), e);
         }
@@ -83,12 +83,12 @@ public class ProxyBinder implements IBinder {
 
     @Override
     public boolean pingBinder() {
-        return original.pingBinder();
+        return mOriginal.pingBinder();
     }
 
     @Override
     public boolean isBinderAlive() {
-        return original.isBinderAlive();
+        return mOriginal.isBinderAlive();
     }
 
     @Nullable
@@ -100,7 +100,7 @@ public class ProxyBinder implements IBinder {
     @Override
     public void dump(@NonNull FileDescriptor fd, @Nullable String[] args) {
         try {
-            original.dump(fd, args);
+            mOriginal.dump(fd, args);
         } catch (RemoteException e) {
             throw new IllegalStateException(e.getClass().getSimpleName(), e);
         }
@@ -109,7 +109,7 @@ public class ProxyBinder implements IBinder {
     @Override
     public void dumpAsync(@NonNull FileDescriptor fd, @Nullable String[] args) {
         try {
-            original.dumpAsync(fd, args);
+            mOriginal.dumpAsync(fd, args);
         } catch (RemoteException e) {
             throw new IllegalStateException(e.getClass().getSimpleName(), e);
         }
@@ -118,7 +118,7 @@ public class ProxyBinder implements IBinder {
     @Override
     public void linkToDeath(@NonNull DeathRecipient recipient, int flags) {
         try {
-            original.linkToDeath(recipient, flags);
+            mOriginal.linkToDeath(recipient, flags);
         } catch (RemoteException e) {
             throw new IllegalStateException(e.getClass().getSimpleName(), e);
         }
@@ -126,6 +126,6 @@ public class ProxyBinder implements IBinder {
 
     @Override
     public boolean unlinkToDeath(@NonNull DeathRecipient recipient, int flags) {
-        return original.unlinkToDeath(recipient, flags);
+        return mOriginal.unlinkToDeath(recipient, flags);
     }
 }

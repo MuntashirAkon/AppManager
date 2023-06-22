@@ -16,49 +16,49 @@ class BackupInfo {
     @NonNull
     public final ArraySet<Integer> userIds = new ArraySet<>();
 
-    private CharSequence appLabel;
+    private CharSequence mAppLabel;
     @NonNull
-    private List<MetadataManager.Metadata> backups = Collections.emptyList();
-    private boolean installed;
-    private boolean hasBaseBackup;
+    private List<MetadataManager.Metadata> mBackups = Collections.emptyList();
+    private boolean mInstalled;
+    private boolean mHasBaseBackup;
 
     BackupInfo(@NonNull String packageName, int userId) {
         this.packageName = packageName;
         this.userIds.add(userId);
-        appLabel = packageName;
+        mAppLabel = packageName;
     }
 
     @NonNull
     public CharSequence getAppLabel() {
-        return appLabel;
+        return mAppLabel;
     }
 
     public void setAppLabel(@NonNull CharSequence appLabel) {
-        this.appLabel = appLabel;
+        mAppLabel = appLabel;
     }
 
     @NonNull
     public List<MetadataManager.Metadata> getBackups() {
-        return backups;
+        return mBackups;
     }
 
     public void setBackups(@NonNull List<MetadataManager.Metadata> backups) {
-        this.backups = backups;
+        mBackups = backups;
     }
 
     public boolean hasBaseBackup() {
-        return hasBaseBackup;
+        return mHasBaseBackup;
     }
 
     public void setHasBaseBackup(boolean hasBaseBackup) {
-        this.hasBaseBackup = hasBaseBackup;
+        mHasBaseBackup = hasBaseBackup;
     }
 
     public boolean isInstalled() {
-        return installed;
+        return mInstalled;
     }
 
     public void setInstalled(boolean installed) {
-        this.installed = installed;
+        mInstalled = installed;
     }
 }

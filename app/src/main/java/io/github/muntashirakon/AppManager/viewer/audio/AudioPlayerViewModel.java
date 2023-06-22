@@ -21,38 +21,38 @@ import java.util.List;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
 public class AudioPlayerViewModel extends AndroidViewModel {
-    private final MutableLiveData<AudioMetadata> audioMetadataLiveData = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> mediaPlayerPreparedLiveData = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> playlistLoadedLiveData = new MutableLiveData<>();
-    private final List<AudioMetadata> playlist = Collections.synchronizedList(new ArrayList<>());
+    private final MutableLiveData<AudioMetadata> mAudioMetadataLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> mMediaPlayerPreparedLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> mPlaylistLoadedLiveData = new MutableLiveData<>();
+    private final List<AudioMetadata> mPlaylist = Collections.synchronizedList(new ArrayList<>());
 
-    private int currentPlaylistIndex = -1;
+    private int mCurrentPlaylistIndex = -1;
 
     public AudioPlayerViewModel(@NonNull Application application) {
         super(application);
     }
 
     public int getCurrentPlaylistIndex() {
-        return currentPlaylistIndex;
+        return mCurrentPlaylistIndex;
     }
 
     public int playlistSize() {
-        return playlist.size();
+        return mPlaylist.size();
     }
 
     public void addToPlaylist(@NonNull Uri[] uriList) {
         ThreadUtils.postOnBackgroundThread(() -> {
             for (Uri uri : uriList) {
                 AudioMetadata audioMetadata = fetchAudioMetadata(uri);
-                playlist.add(audioMetadata);
-                int index = currentPlaylistIndex;
+                mPlaylist.add(audioMetadata);
+                int index = mCurrentPlaylistIndex;
                 if (index == -1) {
                     // Start playing immediately if nothing is playing
-                    currentPlaylistIndex = 0;
-                    audioMetadataLiveData.postValue(audioMetadata);
+                    mCurrentPlaylistIndex = 0;
+                    mAudioMetadataLiveData.postValue(audioMetadata);
                 }
             }
-            playlistLoadedLiveData.postValue(true);
+            mPlaylistLoadedLiveData.postValue(true);
         });
     }
 
@@ -66,43 +66,43 @@ public class AudioPlayerViewModel extends AndroidViewModel {
                 playNext(true);
                 break;
             case RepeatMode.REPEAT_SINGLE_INDEFINITELY:
-                audioMetadataLiveData.postValue(playlist.get(currentPlaylistIndex));
+                mAudioMetadataLiveData.postValue(mPlaylist.get(mCurrentPlaylistIndex));
         }
     }
 
     public void playNext(boolean repeat) {
-        int index = currentPlaylistIndex;
-        if (index < (playlist.size() - 1)) {
+        int index = mCurrentPlaylistIndex;
+        if (index < (mPlaylist.size() - 1)) {
             ++index;
-            currentPlaylistIndex = index;
-            audioMetadataLiveData.postValue(playlist.get(index));
+            mCurrentPlaylistIndex = index;
+            mAudioMetadataLiveData.postValue(mPlaylist.get(index));
         } else if (repeat) {
             // Reset index
             index = 0;
-            currentPlaylistIndex = index;
-            audioMetadataLiveData.postValue(playlist.get(index));
+            mCurrentPlaylistIndex = index;
+            mAudioMetadataLiveData.postValue(mPlaylist.get(index));
         }
     }
 
     public void playPrevious() {
-        int index = currentPlaylistIndex;
+        int index = mCurrentPlaylistIndex;
         if (index > 0) {
             --index;
-            currentPlaylistIndex = index;
-            audioMetadataLiveData.postValue(playlist.get(index));
+            mCurrentPlaylistIndex = index;
+            mAudioMetadataLiveData.postValue(mPlaylist.get(index));
         }
     }
 
     public LiveData<AudioMetadata> getAudioMetadataLiveData() {
-        return audioMetadataLiveData;
+        return mAudioMetadataLiveData;
     }
 
     public LiveData<Boolean> getMediaPlayerPreparedLiveData() {
-        return mediaPlayerPreparedLiveData;
+        return mMediaPlayerPreparedLiveData;
     }
 
     public LiveData<Boolean> getPlaylistLoadedLiveData() {
-        return playlistLoadedLiveData;
+        return mPlaylistLoadedLiveData;
     }
 
     public void prepareMediaPlayer(@NonNull MediaPlayer mediaPlayer, @NonNull Uri uri) {
@@ -111,10 +111,10 @@ public class AudioPlayerViewModel extends AndroidViewModel {
                 mediaPlayer.reset();
                 mediaPlayer.setDataSource(getApplication(), uri);
                 mediaPlayer.prepare();
-                mediaPlayerPreparedLiveData.postValue(true);
+                mMediaPlayerPreparedLiveData.postValue(true);
             } catch (IOException e) {
                 e.printStackTrace();
-                mediaPlayerPreparedLiveData.postValue(false);
+                mMediaPlayerPreparedLiveData.postValue(false);
             }
         });
     }

@@ -61,7 +61,7 @@ public final class BackupFlags {
     public static final int BACKUP_EXTRAS = 1 << 10;
     public static final int BACKUP_CACHE = 1 << 11;
 
-    private static final LinkedHashMap<Integer, Pair<Integer, Integer>> backupFlagsMap = new LinkedHashMap<Integer, Pair<Integer, Integer>>() {{
+    private static final LinkedHashMap<Integer, Pair<Integer, Integer>> sBackupFlagsMap = new LinkedHashMap<Integer, Pair<Integer, Integer>>() {{
         put(BACKUP_APK_FILES, new Pair<>(R.string.backup_apk_files, R.string.backup_apk_files_description));
         put(BACKUP_INT_DATA, new Pair<>(R.string.internal_data, R.string.backup_internal_data_description));
         put(BACKUP_EXT_DATA, new Pair<>(R.string.external_data, R.string.backup_external_data_description));
@@ -146,7 +146,7 @@ public final class BackupFlags {
         // Reset backup flags
         CharSequence[] flagNames = new CharSequence[backupFlags.size()];
         for (int i = 0; i < flagNames.length; ++i) {
-            Pair<Integer, Integer> flagNamePair = Objects.requireNonNull(backupFlagsMap.get(backupFlags.get(i)));
+            Pair<Integer, Integer> flagNamePair = Objects.requireNonNull(sBackupFlagsMap.get(backupFlags.get(i)));
             flagNames[i] = new SpannableStringBuilder()
                     .append(context.getText(flagNamePair.first))
                     .append("\n")
@@ -156,7 +156,7 @@ public final class BackupFlags {
     }
 
     @BackupFlag
-    private int flags;
+    private int mFlags;
 
     @NonNull
     public static BackupFlags fromPref() {
@@ -164,24 +164,24 @@ public final class BackupFlags {
     }
 
     public BackupFlags(@BackupFlag int flags) {
-        this.flags = flags;
+        mFlags = flags;
     }
 
     @BackupFlag
     public int getFlags() {
-        return flags;
+        return mFlags;
     }
 
     public void addFlag(@BackupFlag int flag) {
-        this.flags |= flag;
+        mFlags |= flag;
     }
 
     public void removeFlag(@BackupFlag int flag) {
-        this.flags &= ~flag;
+        mFlags &= ~flag;
     }
 
     public void setFlags(int flags) {
-        this.flags = flags;
+        mFlags = flags;
     }
 
     @NonNull
@@ -189,7 +189,7 @@ public final class BackupFlags {
         List<Integer> indexes = new ArrayList<>();
         for (int i = 0; i < enabledFlags.size(); ++i) {
             int flag = enabledFlags.get(i);
-            if ((flags & flag) != 0) {
+            if ((mFlags & flag) != 0) {
                 indexes.add(i);
             }
         }
@@ -197,23 +197,23 @@ public final class BackupFlags {
     }
 
     public boolean isEmpty() {
-        return flags == 0;
+        return mFlags == 0;
     }
 
     public boolean backupApkFiles() {
-        return (flags & BACKUP_APK_FILES) != 0;
+        return (mFlags & BACKUP_APK_FILES) != 0;
     }
 
     public boolean backupInternalData() {
-        return (flags & BACKUP_INT_DATA) != 0;
+        return (mFlags & BACKUP_INT_DATA) != 0;
     }
 
     public boolean backupExternalData() {
-        return (flags & BACKUP_EXT_DATA) != 0;
+        return (mFlags & BACKUP_EXT_DATA) != 0;
     }
 
     public boolean backupMediaObb() {
-        return (flags & BACKUP_EXT_OBB_MEDIA) != 0;
+        return (mFlags & BACKUP_EXT_OBB_MEDIA) != 0;
     }
 
     public boolean backupData() {
@@ -221,28 +221,28 @@ public final class BackupFlags {
     }
 
     public boolean backupRules() {
-        return (flags & BACKUP_RULES) != 0;
+        return (mFlags & BACKUP_RULES) != 0;
     }
 
     public boolean backupExtras() {
-        return (flags & BACKUP_EXTRAS) != 0;
+        return (mFlags & BACKUP_EXTRAS) != 0;
     }
 
     public boolean backupCache() {
-        return (flags & BACKUP_CACHE) != 0;
+        return (mFlags & BACKUP_CACHE) != 0;
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean skipSignatureCheck() {
-        return (flags & BACKUP_NO_SIGNATURE_CHECK) != 0;
+        return (mFlags & BACKUP_NO_SIGNATURE_CHECK) != 0;
     }
 
     public boolean backupMultiple() {
-        return (flags & BACKUP_MULTIPLE) != 0;
+        return (mFlags & BACKUP_MULTIPLE) != 0;
     }
 
     public boolean backupCustomUsers() {
-        return (flags & BACKUP_CUSTOM_USERS) != 0;
+        return (mFlags & BACKUP_CUSTOM_USERS) != 0;
     }
 
     @NonNull

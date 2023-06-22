@@ -59,15 +59,15 @@ public final class NotificationUtils {
         Notification build(NotificationCompat.Builder builder);
     }
 
-    private static final Map<String, Integer> notificationIds = Collections.synchronizedMap(new HashMap<>());
+    private static final Map<String, Integer> sNotificationIds = Collections.synchronizedMap(new HashMap<>());
 
     public static int getNotificationId(String channelId) {
-        Integer id = notificationIds.get(channelId);
+        Integer id = sNotificationIds.get(channelId);
         if (id == null) {
-            notificationIds.put(channelId, 1);
+            sNotificationIds.put(channelId, 1);
             return 1;
         }
-        notificationIds.put(channelId, id + 1);
+        sNotificationIds.put(channelId, id + 1);
         return id;
     }
 

@@ -40,101 +40,101 @@ public class ApkQueueItem implements Parcelable {
     }
 
     @Nullable
-    private Uri uri;
+    private Uri mUri;
     @Nullable
-    private String packageName;
+    private String mPackageName;
     @Nullable
-    private String appLabel;
+    private String mAppLabel;
     @Nullable
-    private String mimeType;
-    private boolean installExisting;
-    private int apkFileKey = -1;
-    private int userId;
+    private String mMimeType;
+    private boolean mInstallExisting;
+    private int mApkFileKey = -1;
+    private int mUserId;
 
     ApkQueueItem(@NonNull Uri uri, @Nullable String mimeType) {
-        this.uri = uri;
-        this.mimeType = mimeType;
+        mUri = uri;
+        mMimeType = mimeType;
     }
 
     ApkQueueItem(@NonNull String packageName, boolean installExisting) {
-        this.packageName = packageName;
-        this.installExisting = installExisting;
+        mPackageName = packageName;
+        mInstallExisting = installExisting;
         assert installExisting;
     }
 
     ApkQueueItem(int apkFileKey) {
-        this.apkFileKey = apkFileKey;
+        mApkFileKey = apkFileKey;
         assert apkFileKey != -1;
     }
 
     protected ApkQueueItem(@NonNull Parcel in) {
-        uri = ParcelCompat.readParcelable(in, Uri.class.getClassLoader(), Uri.class);
-        packageName = in.readString();
-        appLabel = in.readString();
-        mimeType = in.readString();
-        installExisting = in.readByte() != 0;
-        apkFileKey = in.readInt();
-        userId = in.readInt();
+        mUri = ParcelCompat.readParcelable(in, Uri.class.getClassLoader(), Uri.class);
+        mPackageName = in.readString();
+        mAppLabel = in.readString();
+        mMimeType = in.readString();
+        mInstallExisting = in.readByte() != 0;
+        mApkFileKey = in.readInt();
+        mUserId = in.readInt();
     }
 
     @Nullable
     public Uri getUri() {
-        return uri;
+        return mUri;
     }
 
     public void setUri(@Nullable Uri uri) {
-        this.uri = uri;
+        mUri = uri;
     }
 
     @Nullable
     public String getMimeType() {
-        return mimeType;
+        return mMimeType;
     }
 
     public void setMimeType(@Nullable String mimeType) {
-        this.mimeType = mimeType;
+        mMimeType = mimeType;
     }
 
     @Nullable
     public String getPackageName() {
-        return packageName;
+        return mPackageName;
     }
 
     public void setPackageName(@Nullable String packageName) {
-        this.packageName = packageName;
+        mPackageName = packageName;
     }
 
     public void setInstallExisting(boolean installExisting) {
-        this.installExisting = installExisting;
+        mInstallExisting = installExisting;
     }
 
     public boolean isInstallExisting() {
-        return installExisting;
+        return mInstallExisting;
     }
 
     public int getApkFileKey() {
-        return apkFileKey;
+        return mApkFileKey;
     }
 
     public void setApkFileKey(int apkFileKey) {
-        this.apkFileKey = apkFileKey;
+        mApkFileKey = apkFileKey;
     }
 
     public int getUserId() {
-        return userId;
+        return mUserId;
     }
 
     public void setUserId(int userId) {
-        this.userId = userId;
+        mUserId = userId;
     }
 
     @Nullable
     public String getAppLabel() {
-        return appLabel;
+        return mAppLabel;
     }
 
     public void setAppLabel(@Nullable String appLabel) {
-        this.appLabel = appLabel;
+        mAppLabel = appLabel;
     }
 
     @Override
@@ -144,13 +144,13 @@ public class ApkQueueItem implements Parcelable {
 
     @Override
     public void writeToParcel(@NonNull Parcel dest, int flags) {
-        dest.writeParcelable(uri, flags);
-        dest.writeString(packageName);
-        dest.writeString(appLabel);
-        dest.writeString(mimeType);
-        dest.writeByte((byte) (installExisting ? 1 : 0));
-        dest.writeInt(apkFileKey);
-        dest.writeInt(userId);
+        dest.writeParcelable(mUri, flags);
+        dest.writeString(mPackageName);
+        dest.writeString(mAppLabel);
+        dest.writeString(mMimeType);
+        dest.writeByte((byte) (mInstallExisting ? 1 : 0));
+        dest.writeInt(mApkFileKey);
+        dest.writeInt(mUserId);
     }
 
     public static final Creator<ApkQueueItem> CREATOR = new Creator<ApkQueueItem>() {

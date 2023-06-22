@@ -58,6 +58,7 @@ import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.BroadcastUtils;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
 public final class PackageManagerCompat {
@@ -300,8 +301,12 @@ public final class PackageManagerCompat {
     @EnabledState
     public static int getComponentEnabledSetting(ComponentName componentName,
                                                  @UserIdInt int userId)
-            throws RemoteException {
-        return getPackageManager().getComponentEnabledSetting(componentName, userId);
+            throws SecurityException, IllegalArgumentException {
+        try {
+            return getPackageManager().getComponentEnabledSetting(componentName, userId);
+        } catch (RemoteException e) {
+            return ExUtils.rethrowFromSystemServer(e);
+        }
     }
 
     @RequiresPermission(value = Manifest.permission.CHANGE_COMPONENT_ENABLED_STATE)

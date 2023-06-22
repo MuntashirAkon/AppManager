@@ -4,15 +4,12 @@ package io.github.muntashirakon.AppManager.usage;
 
 import android.os.SystemClock;
 
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
 import androidx.core.util.Pair;
 
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
-
-import androidx.annotation.IntDef;
-import androidx.annotation.NonNull;
-
-import io.github.muntashirakon.AppManager.utils.DateUtils;
 
 public final class UsageUtils {
     public static final int ONE_DAY = 86400000;
@@ -52,8 +49,8 @@ public final class UsageUtils {
         @Override
         public String toString() {
             return "TimeInterval{" +
-                    "startTime=" + DateUtils.formatDateTime(first) +
-                    ", endTime=" + DateUtils.formatDateTime(second) +
+                    "startTime=" + first +
+                    ", endTime=" + second +
                     '}';
         }
     }

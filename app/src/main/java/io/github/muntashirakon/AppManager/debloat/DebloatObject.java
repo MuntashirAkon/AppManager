@@ -33,41 +33,42 @@ public class DebloatObject {
     public String type;
     @SerializedName("description")
     public String description;
+
     @SerializedName("dependencies")
-    private String[] dependencies;
+    private String[] mDependencies;
     @SerializedName("neededBy")
-    private String[] neededBy;
+    private String[] mNeededBy;
     @SerializedName("labels")
-    private String[] labels;
+    private String[] mLabels;
     @SerializedName("removal")
-    private String removal;
+    private String mRemoval;
 
     @Nullable
-    private CharSequence label;
+    private CharSequence mLabel;
     @Nullable
-    private App app;
+    private App mApp;
     @Nullable
-    private PackageInfo packageInfo;
-    private int[] users;
-    private boolean installed;
+    private PackageInfo mPackageInfo;
+    private int[] mUsers;
+    private boolean mInstalled;
     @Nullable
-    private Boolean systemApp = null;
+    private Boolean mSystemApp = null;
 
     public String[] getDependencies() {
-        return dependencies;
+        return mDependencies;
     }
 
     public String[] getNeededBy() {
-        return neededBy;
+        return mNeededBy;
     }
 
     public String[] getLabels() {
-        return labels;
+        return mLabels;
     }
 
     @Removal
-    public int getRemoval() {
-        switch (removal) {
+    public int getmRemoval() {
+        switch (mRemoval) {
             default:
             case "Recommended":
                 return REMOVAL_SAFE;
@@ -82,60 +83,60 @@ public class DebloatObject {
 
     @Nullable
     public CharSequence getLabel() {
-        return label;
+        return mLabel;
     }
 
     public void setLabel(@Nullable CharSequence label) {
-        this.label = label;
+        mLabel = label;
     }
 
     @Nullable
     public App getApp() {
-        return app;
+        return mApp;
     }
 
     public void setApp(@Nullable App app) {
-        this.app = app;
+        mApp = app;
     }
 
     @Nullable
     public PackageInfo getPackageInfo() {
-        return packageInfo;
+        return mPackageInfo;
     }
 
     public void setPackageInfo(@Nullable PackageInfo packageInfo) {
-        this.packageInfo = packageInfo;
+        mPackageInfo = packageInfo;
     }
 
     public int[] getUsers() {
-        return users;
+        return mUsers;
     }
 
     public void addUser(int userId) {
-        if (users == null) {
-            users = new int[]{userId};
+        if (mUsers == null) {
+            mUsers = new int[]{userId};
         } else {
-            users = ArrayUtils.appendInt(users, userId);
+            mUsers = ArrayUtils.appendInt(mUsers, userId);
         }
     }
 
     public boolean isInstalled() {
-        return installed;
+        return mInstalled;
     }
 
     public void setInstalled(boolean installed) {
-        this.installed = installed;
+        mInstalled = installed;
     }
 
     public boolean isSystemApp() {
-        return Boolean.TRUE.equals(systemApp);
+        return Boolean.TRUE.equals(mSystemApp);
     }
 
     public boolean isUserApp() {
-        return Boolean.FALSE.equals(systemApp);
+        return Boolean.FALSE.equals(mSystemApp);
     }
 
     public void setSystemApp(@Nullable Boolean systemApp) {
-        this.systemApp = systemApp;
+        mSystemApp = systemApp;
     }
 }

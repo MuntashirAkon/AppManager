@@ -44,10 +44,10 @@ public final class AppearanceUtils {
     private static final ArrayMap<Integer, WeakReference<Activity>> sActivityReferences = new ArrayMap<>();
 
     private static class AppearanceOptions {
-        private Locale locale;
-        private Integer layoutDirection;
-        private Integer theme;
-        private Integer nightMode;
+        public Locale locale;
+        public Integer layoutDirection;
+        public Integer theme;
+        public Integer nightMode;
     }
 
     public static void applyOnlyLocale(@NonNull Context context) {
@@ -177,7 +177,7 @@ public final class AppearanceUtils {
     }
 
     private static class ComponentAppearanceCallback implements ComponentCallbacks2 {
-        public final Application mApplication;
+        private final Application mApplication;
 
         public ComponentAppearanceCallback(@NonNull Application application) {
             mApplication = application;

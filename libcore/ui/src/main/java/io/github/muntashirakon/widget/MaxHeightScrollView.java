@@ -12,7 +12,7 @@ import io.github.muntashirakon.util.UiUtils;
 
 // Copyright 2016 Bumsoo Kim
 public class MaxHeightScrollView extends ScrollView {
-    private int maxHeight;
+    private int mMaxHeight;
 
     public MaxHeightScrollView(Context context) {
         super(context);
@@ -49,23 +49,23 @@ public class MaxHeightScrollView extends ScrollView {
 
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        heightMeasureSpec = MeasureSpec.makeMeasureSpec(maxHeight, MeasureSpec.AT_MOST);
+        heightMeasureSpec = MeasureSpec.makeMeasureSpec(mMaxHeight, MeasureSpec.AT_MOST);
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 
     public void setMaxHeight(int maxHeight) {
-        this.maxHeight = maxHeight;
+        mMaxHeight = maxHeight;
     }
 
     public void setMaxHeightDp(int maxHeightDp) {
-        this.maxHeight = UiUtils.dpToPx(getContext(), maxHeightDp);
+        mMaxHeight = UiUtils.dpToPx(getContext(), maxHeightDp);
     }
 
     public int getMaxHeight() {
-        return maxHeight;
+        return mMaxHeight;
     }
 
     public int getMaxHeightDp() {
-        return UiUtils.pxToDp(getContext(), maxHeight);
+        return UiUtils.pxToDp(getContext(), mMaxHeight);
     }
 }

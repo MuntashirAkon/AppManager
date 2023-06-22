@@ -13,12 +13,12 @@ import androidx.fragment.app.Fragment;
 import io.github.muntashirakon.AppManager.R;
 
 public class ConfFragment extends Fragment {
-    AppsProfileActivity activity;
+    private AppsProfileActivity mActivity;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activity = (AppsProfileActivity) requireActivity();
+        mActivity = (AppsProfileActivity) requireActivity();
     }
 
     @Nullable
@@ -36,9 +36,9 @@ public class ConfFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        if (activity.getSupportActionBar() != null) {
-            activity.getSupportActionBar().setSubtitle(R.string.configurations);
+        if (mActivity.getSupportActionBar() != null) {
+            mActivity.getSupportActionBar().setSubtitle(R.string.configurations);
         }
-        activity.fab.hide();
+        mActivity.fab.hide();
     }
 }

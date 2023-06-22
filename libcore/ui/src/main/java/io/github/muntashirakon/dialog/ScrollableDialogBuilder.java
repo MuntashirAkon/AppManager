@@ -22,11 +22,11 @@ import io.github.muntashirakon.ui.R;
 @SuppressWarnings("unused")
 public class ScrollableDialogBuilder {
     @NonNull
-    private final MaterialTextView message;
+    private final MaterialTextView mMessage;
     @NonNull
-    private final MaterialCheckBox checkBox;
+    private final MaterialCheckBox mCheckBox;
     @NonNull
-    private final AlertDialogBuilder builder;
+    private final AlertDialogBuilder mBuilder;
 
     public interface OnClickListener {
         void onClick(DialogInterface dialog, int which, boolean isChecked);
@@ -34,11 +34,11 @@ public class ScrollableDialogBuilder {
 
     public ScrollableDialogBuilder(@NonNull FragmentActivity activity, @Nullable CharSequence message, boolean fullScreen) {
         View view = View.inflate(activity, R.layout.dialog_scrollable_text_view, null);
-        this.message = view.findViewById(android.R.id.content);
-        this.message.setText(message);
-        this.checkBox = view.findViewById(android.R.id.checkbox);
-        this.checkBox.setVisibility(View.GONE);
-        this.builder = new AlertDialogBuilder(activity, fullScreen).setView(view);
+        mMessage = view.findViewById(android.R.id.content);
+        mMessage.setText(message);
+        mCheckBox = view.findViewById(android.R.id.checkbox);
+        mCheckBox.setVisibility(View.GONE);
+        mBuilder = new AlertDialogBuilder(activity, fullScreen).setView(view);
     }
 
     public ScrollableDialogBuilder(@NonNull FragmentActivity activity, @Nullable CharSequence message) {
@@ -58,42 +58,42 @@ public class ScrollableDialogBuilder {
     }
 
     public ScrollableDialogBuilder setTitle(@Nullable View title) {
-        builder.setCustomTitle(title);
+        mBuilder.setCustomTitle(title);
         return this;
     }
 
     public ScrollableDialogBuilder setTitle(@Nullable CharSequence title) {
-        builder.setTitle(title);
+        mBuilder.setTitle(title);
         return this;
     }
 
     public ScrollableDialogBuilder setTitle(@StringRes int title) {
-        builder.setTitle(title);
+        mBuilder.setTitle(title);
         return this;
     }
 
     public ScrollableDialogBuilder setMessage(@StringRes int message) {
-        this.message.setText(message);
+        mMessage.setText(message);
         return this;
     }
 
     public ScrollableDialogBuilder setMessage(@Nullable CharSequence message) {
-        this.message.setText(message);
+        mMessage.setText(message);
         return this;
     }
 
     public ScrollableDialogBuilder setSelectable(boolean selectable) {
-        this.message.setTextIsSelectable(selectable);
+        mMessage.setTextIsSelectable(selectable);
         return this;
     }
 
     public ScrollableDialogBuilder enableAnchors() {
-        this.message.setMovementMethod(LinkMovementMethod.getInstance());
+        mMessage.setMovementMethod(LinkMovementMethod.getInstance());
         return this;
     }
 
     public ScrollableDialogBuilder linkify(@LinkifyCompat.LinkifyMask int mask) {
-        LinkifyCompat.addLinks(message, mask);
+        LinkifyCompat.addLinks(mMessage, mask);
         return this;
     }
 
@@ -103,64 +103,65 @@ public class ScrollableDialogBuilder {
 
     public ScrollableDialogBuilder setCheckboxLabel(@Nullable CharSequence checkboxLabel) {
         if (checkboxLabel != null) {
-            checkBox.setVisibility(View.VISIBLE);
-            checkBox.setText(checkboxLabel);
-        } else checkBox.setVisibility(View.GONE);
+            mCheckBox.setVisibility(View.VISIBLE);
+            mCheckBox.setText(checkboxLabel);
+        } else mCheckBox.setVisibility(View.GONE);
         return this;
     }
 
     public ScrollableDialogBuilder setCheckboxLabel(@StringRes int checkboxLabel) {
         if (checkboxLabel != 0) {
-            checkBox.setVisibility(View.VISIBLE);
-            checkBox.setText(checkboxLabel);
-        } else checkBox.setVisibility(View.GONE);
+            mCheckBox.setVisibility(View.VISIBLE);
+            mCheckBox.setText(checkboxLabel);
+        } else mCheckBox.setVisibility(View.GONE);
         return this;
     }
 
-    public ScrollableDialogBuilder setPositiveButton(@StringRes int textId, OnClickListener listener) {
-        builder.setPositiveButton(textId, (dialog, which) -> {
-            if (listener != null) listener.onClick(dialog, which, checkBox.isChecked());
+    public ScrollableDialogBuilder setPositiveButton(@StringRes int textId, @Nullable OnClickListener listener) {
+        mBuilder.setPositiveButton(textId, (dialog, which) -> {
+            if (listener != null) listener.onClick(dialog, which, mCheckBox.isChecked());
         });
         return this;
     }
 
-    public ScrollableDialogBuilder setPositiveButton(@NonNull CharSequence text, OnClickListener listener) {
-        builder.setPositiveButton(text, (dialog, which) -> {
-            if (listener != null) listener.onClick(dialog, which, checkBox.isChecked());
+    public ScrollableDialogBuilder setPositiveButton(@NonNull CharSequence text, @Nullable OnClickListener listener) {
+        mBuilder.setPositiveButton(text, (dialog, which) -> {
+            if (listener != null) listener.onClick(dialog, which, mCheckBox.isChecked());
         });
         return this;
     }
 
-    public ScrollableDialogBuilder setNegativeButton(@StringRes int textId, OnClickListener listener) {
-        builder.setNegativeButton(textId, (dialog, which) -> {
-            if (listener != null) listener.onClick(dialog, which, checkBox.isChecked());
+    public ScrollableDialogBuilder setNegativeButton(@StringRes int textId, @Nullable OnClickListener listener) {
+        mBuilder.setNegativeButton(textId, (dialog, which) -> {
+            if (listener != null) listener.onClick(dialog, which, mCheckBox.isChecked());
         });
         return this;
     }
 
-    public ScrollableDialogBuilder setNegativeButton(@NonNull CharSequence text, OnClickListener listener) {
-        builder.setNegativeButton(text, (dialog, which) -> {
-            if (listener != null) listener.onClick(dialog, which, checkBox.isChecked());
+    public ScrollableDialogBuilder setNegativeButton(@NonNull CharSequence text, @Nullable OnClickListener listener) {
+        mBuilder.setNegativeButton(text, (dialog, which) -> {
+            if (listener != null) listener.onClick(dialog, which, mCheckBox.isChecked());
         });
         return this;
     }
 
-    public ScrollableDialogBuilder setNeutralButton(@StringRes int textId, OnClickListener listener) {
-        builder.setNeutralButton(textId, (dialog, which) -> {
-            if (listener != null) listener.onClick(dialog, which, checkBox.isChecked());
+    public ScrollableDialogBuilder setNeutralButton(@StringRes int textId, @Nullable OnClickListener listener) {
+        mBuilder.setNeutralButton(textId, (dialog, which) -> {
+            if (listener != null) listener.onClick(dialog, which, mCheckBox.isChecked());
         });
         return this;
     }
 
-    public ScrollableDialogBuilder setNeutralButton(@NonNull CharSequence text, OnClickListener listener) {
-        builder.setNeutralButton(text, (dialog, which) -> {
-            if (listener != null) listener.onClick(dialog, which, checkBox.isChecked());
+    public ScrollableDialogBuilder setNeutralButton(@NonNull CharSequence text, @Nullable OnClickListener listener) {
+        mBuilder.setNeutralButton(text, (dialog, which) -> {
+            if (listener != null) listener.onClick(dialog, which, mCheckBox.isChecked());
         });
         return this;
     }
 
+    @NonNull
     public AlertDialog create() {
-        return builder.create();
+        return mBuilder.create();
     }
 
     public void show() {

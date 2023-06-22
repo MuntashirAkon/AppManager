@@ -81,19 +81,19 @@ public class CodeEditorViewModel extends AndroidViewModel {
     public static final int XML_TYPE_ABX = 2;
 
     @Nullable
-    private String language;
-    private boolean canGenerateJava;
+    private String mLanguage;
+    private boolean mCanGenerateJava;
     @XmlType
-    private int xmlType = XML_TYPE_NONE;
+    private int mXmlType = XML_TYPE_NONE;
     @Nullable
-    private Path sourceFile;
-    private CodeEditorFragment.Options options;
+    private Path mSourceFile;
+    private CodeEditorFragment.Options mOptions;
     @Nullable
-    private Future<?> contentLoaderResult;
+    private Future<?> mContentLoaderResult;
     @Nullable
-    private Future<?> javaConverterResult;
+    private Future<?> mJavaConverterResult;
 
-    private final FileCache fileCache = new FileCache();
+    private final FileCache mFileCache = new FileCache();
     private final MutableLiveData<String> mContentLiveData = new MutableLiveData<>();
     // Only for smali
     private final SingleLiveEvent<Uri> mJavaFileLiveData = new SingleLiveEvent<>();
@@ -105,13 +105,13 @@ public class CodeEditorViewModel extends AndroidViewModel {
 
     @Override
     protected void onCleared() {
-        if (contentLoaderResult != null) {
-            contentLoaderResult.cancel(true);
+        if (mContentLoaderResult != null) {
+            mContentLoaderResult.cancel(true);
         }
-        if (javaConverterResult != null) {
-            javaConverterResult.cancel(true);
+        if (mJavaConverterResult != null) {
+            mJavaConverterResult.cancel(true);
         }
-        IoUtils.closeQuietly(fileCache);
+        IoUtils.closeQuietly(mFileCache);
         super.onCleared();
     }
 
@@ -128,32 +128,32 @@ public class CodeEditorViewModel extends AndroidViewModel {
     }
 
     public void setOptions(@NonNull CodeEditorFragment.Options options) {
-        this.options = options;
-        sourceFile = options.uri != null ? Paths.get(options.uri) : null;
-        String extension = sourceFile != null ? sourceFile.getExtension() : null;
-        language = getLanguageFromExt(extension);
-        canGenerateJava = options.javaSmaliToggle || "smali".equals(language);
+        mOptions = options;
+        mSourceFile = options.uri != null ? Paths.get(options.uri) : null;
+        String extension = mSourceFile != null ? mSourceFile.getExtension() : null;
+        mLanguage = getLanguageFromExt(extension);
+        mCanGenerateJava = options.javaSmaliToggle || "smali".equals(mLanguage);
     }
 
     @Nullable
     public Path getSourceFile() {
-        return sourceFile;
+        return mSourceFile;
     }
 
     public void loadFileContentIfAvailable() {
-        if (sourceFile == null) return;
-        if (contentLoaderResult != null) {
-            contentLoaderResult.cancel(true);
+        if (mSourceFile == null) return;
+        if (mContentLoaderResult != null) {
+            mContentLoaderResult.cancel(true);
         }
-        contentLoaderResult = ThreadUtils.postOnBackgroundThread(() -> {
+        mContentLoaderResult = ThreadUtils.postOnBackgroundThread(() -> {
             String content = null;
-            if ("xml".equals(language)) {
-                byte[] bytes = sourceFile.getContentAsBinary();
+            if ("xml".equals(mLanguage)) {
+                byte[] bytes = mSourceFile.getContentAsBinary();
                 ByteBuffer buffer = ByteBuffer.wrap(bytes);
                 try {
                     if (AndroidBinXmlDecoder.isBinaryXml(buffer)) {
                         content = AndroidBinXmlDecoder.decode(bytes);
-                        xmlType = XML_TYPE_AXML;
+                        mXmlType = XML_TYPE_AXML;
                     } else if (Xml.isBinaryXml(buffer)) {
                         // FIXME: 19/5/23 Unfortunately, converting ABX to XML is lossy. Find a way to fix this.
                         //  Until then, the feature is disabled.
@@ -165,8 +165,8 @@ public class CodeEditorViewModel extends AndroidViewModel {
                 }
             }
             if (content == null) {
-                content = sourceFile.getContentAsString();
-                xmlType = XML_TYPE_NONE;
+                content = mSourceFile.getContentAsString();
+                mXmlType = XML_TYPE_NONE;
             }
             mContentLiveData.postValue(content);
         });
@@ -174,15 +174,15 @@ public class CodeEditorViewModel extends AndroidViewModel {
 
     public void saveFile(@NonNull String content, @Nullable Path alternativeFile) {
         ThreadUtils.postOnBackgroundThread(() -> {
-            if (sourceFile == null && alternativeFile == null) {
+            if (mSourceFile == null && alternativeFile == null) {
                 mSaveFileLiveData.postValue(false);
                 return;
             }
             // Important: Alternative file gets the top priority
-            Path savingPath = alternativeFile != null ? alternativeFile : sourceFile;
+            Path savingPath = alternativeFile != null ? alternativeFile : mSourceFile;
             try (OutputStream os = savingPath.openOutputStream()) {
                 byte[] realContent;
-                switch (xmlType) {
+                switch (mXmlType) {
                     case XML_TYPE_AXML:
                         realContent = AndroidBinXmlEncoder.encodeString(content);
                         break;
@@ -203,46 +203,46 @@ public class CodeEditorViewModel extends AndroidViewModel {
     }
 
     public boolean isReadOnly() {
-        return options == null || options.readOnly;
+        return mOptions == null || mOptions.readOnly;
     }
 
     public boolean canWrite() {
-        return !isReadOnly() && sourceFile != null && sourceFile.canWrite();
+        return !isReadOnly() && mSourceFile != null && mSourceFile.canWrite();
     }
 
     public boolean isBackedByAFile() {
-        return sourceFile != null;
+        return mSourceFile != null;
     }
 
     @NonNull
     public String getFilename() {
-        if (sourceFile == null) {
+        if (mSourceFile == null) {
             return "untitled.txt";
         }
-        return sourceFile.getName();
+        return mSourceFile.getName();
     }
 
     public boolean canGenerateJava() {
-        return canGenerateJava;
+        return mCanGenerateJava;
     }
 
     @Nullable
     public String getLanguage() {
-        return language;
+        return mLanguage;
     }
 
     public void generateJava(String smaliContent) {
-        if (!canGenerateJava) {
+        if (!mCanGenerateJava) {
             return;
         }
-        if (javaConverterResult != null) {
-            javaConverterResult.cancel(true);
+        if (mJavaConverterResult != null) {
+            mJavaConverterResult.cancel(true);
         }
-        javaConverterResult = ThreadUtils.postOnBackgroundThread(() -> {
+        mJavaConverterResult = ThreadUtils.postOnBackgroundThread(() -> {
             List<String> smaliContents;
-            if (sourceFile != null) {
-                Path parent = sourceFile.getParentFile();
-                String baseName = DexUtils.getClassNameWithoutInnerClasses(Paths.trimPathExtension(sourceFile.getName()));
+            if (mSourceFile != null) {
+                Path parent = mSourceFile.getParentFile();
+                String baseName = DexUtils.getClassNameWithoutInnerClasses(Paths.trimPathExtension(mSourceFile.getName()));
                 String baseSmali = baseName + ".smali";
                 String baseStartWith = baseName + "$";
                 Path[] paths = parent != null ? parent.listFiles((dir, name) -> name.equals(baseSmali) || name.startsWith(baseStartWith))
@@ -250,7 +250,7 @@ public class CodeEditorViewModel extends AndroidViewModel {
                 smaliContents = new ArrayList<>(paths.length + 1);
                 smaliContents.add(smaliContent);
                 for (Path path : paths) {
-                    if (path.equals(sourceFile)) {
+                    if (path.equals(mSourceFile)) {
                         // We already have this file
                         continue;
                     }
@@ -269,7 +269,7 @@ public class CodeEditorViewModel extends AndroidViewModel {
                 return;
             }
             try {
-                File cachedFile = fileCache.createCachedFile("java");
+                File cachedFile = mFileCache.createCachedFile("java");
                 try (PrintStream ps = new PrintStream(cachedFile)) {
                     ps.print(DexUtils.toJavaCode(smaliContents, -1));
                 }

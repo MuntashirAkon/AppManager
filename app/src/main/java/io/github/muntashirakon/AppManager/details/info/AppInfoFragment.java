@@ -183,35 +183,36 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private CharSequence mPackageLabel;
     private LinearProgressIndicator mProgressIndicator;
     @Nullable
-    private AppDetailsViewModel mainModel;
-    private AppInfoViewModel model;
-    private AppInfoRecyclerAdapter adapter;
+    private AppDetailsViewModel mMainModel;
+    private AppInfoViewModel mAppInfoModel;
+    private AppInfoRecyclerAdapter mAdapter;
     // Headers
-    private TextView labelView;
-    private TextView packageNameView;
-    private TextView versionView;
-    private ImageView iconView;
-    private List<MagiskProcess> magiskHiddenProcesses;
-    private List<MagiskProcess> magiskDeniedProcesses;
+    private TextView mLabelView;
+    private TextView mPackageNameView;
+    private TextView mVersionView;
+    private ImageView mIconView;
+    private List<MagiskProcess> mMagiskHiddenProcesses;
+    private List<MagiskProcess> mMagiskDeniedProcesses;
 
-    private final ExecutorService executor = Executors.newFixedThreadPool(3);
+    @Deprecated
+    private final ExecutorService mExecutor = Executors.newFixedThreadPool(3);
 
-    private boolean isExternalApk;
+    private boolean mIsExternalApk;
 
     @GuardedBy("mListItems")
     private final List<ListItem> mListItems = new ArrayList<>();
-    private final BetterActivityResult<String, Uri> export = BetterActivityResult
+    private final BetterActivityResult<String, Uri> mExport = BetterActivityResult
             .registerForActivityResult(this, new ActivityResultContracts.CreateDocument("*/*"));
-    private final BetterActivityResult<String, Boolean> requestPerm = BetterActivityResult
+    private final BetterActivityResult<String, Boolean> mRequestPerm = BetterActivityResult
             .registerForActivityResult(this, new ActivityResultContracts.RequestPermission());
-    private final BetterActivityResult<Intent, ActivityResult> activityLauncher = BetterActivityResult
+    private final BetterActivityResult<Intent, ActivityResult> mActivityLauncher = BetterActivityResult
             .registerActivityForResult(this);
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        model = new ViewModelProvider(this).get(AppInfoViewModel.class);
+        mAppInfoModel = new ViewModelProvider(this).get(AppInfoViewModel.class);
     }
 
     @Nullable
@@ -224,9 +225,9 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mActivity = (AppDetailsActivity) requireActivity();
-        mainModel = mActivity.model;
-        if (mainModel == null) return;
-        model.setMainModel(mainModel);
+        mMainModel = mActivity.model;
+        if (mMainModel == null) return;
+        mAppInfoModel.setMainModel(mMainModel);
         mPackageManager = mActivity.getPackageManager();
         // Swipe refresh
         mSwipeRefresh = view.findViewById(R.id.swipe_refresh);
@@ -242,28 +243,28 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         showProgressIndicator(true);
         // Header
         mTagCloud = view.findViewById(R.id.tag_cloud);
-        labelView = view.findViewById(R.id.label);
-        packageNameView = view.findViewById(R.id.packageName);
-        iconView = view.findViewById(R.id.icon);
-        versionView = view.findViewById(R.id.version);
-        adapter = new AppInfoRecyclerAdapter(mActivity);
-        recyclerView.setAdapter(adapter);
+        mLabelView = view.findViewById(R.id.label);
+        mPackageNameView = view.findViewById(R.id.packageName);
+        mIconView = view.findViewById(R.id.icon);
+        mVersionView = view.findViewById(R.id.version);
+        mAdapter = new AppInfoRecyclerAdapter(mActivity);
+        recyclerView.setAdapter(mAdapter);
         // Set observer
-        mainModel.get(AppDetailsFragment.APP_INFO).observe(getViewLifecycleOwner(), appDetailsItems -> {
-            if (appDetailsItems != null && !appDetailsItems.isEmpty() && mainModel.isPackageExist()) {
+        mMainModel.get(AppDetailsFragment.APP_INFO).observe(getViewLifecycleOwner(), appDetailsItems -> {
+            if (appDetailsItems != null && !appDetailsItems.isEmpty() && mMainModel.isPackageExist()) {
                 AppDetailsItem<?> appDetailsItem = appDetailsItems.get(0);
                 mPackageInfo = (PackageInfo) appDetailsItem.vanillaItem;
                 mPackageName = appDetailsItem.name;
-                mUserId = mainModel.getUserHandle();
-                mInstalledPackageInfo = mainModel.getInstalledPackageInfo();
-                isExternalApk = mainModel.isExternalApk();
-                if (!isExternalApk) {
+                mUserId = mMainModel.getUserId();
+                mInstalledPackageInfo = mMainModel.getInstalledPackageInfo();
+                mIsExternalApk = mMainModel.isExternalApk();
+                if (!mIsExternalApk) {
                     mInstallerPackageName = PackageManagerCompat.getInstallerPackageName(mPackageName, mUserId);
                 }
                 mApplicationInfo = mPackageInfo.applicationInfo;
                 // Set package name
-                packageNameView.setText(mPackageName);
-                packageNameView.setOnClickListener(v -> {
+                mPackageNameView.setText(mPackageName);
+                mPackageNameView.setOnClickListener(v -> {
                     ClipboardManager clipboard = (ClipboardManager) mActivity.getSystemService(Context.CLIPBOARD_SERVICE);
                     ClipData clip = ClipData.newPlainText("Package Name", mPackageName);
                     clipboard.setPrimaryClip(clip);
@@ -271,17 +272,17 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 });
                 // Set App Version
                 CharSequence version = getString(R.string.version_name_with_code, mPackageInfo.versionName, PackageInfoCompat.getLongVersionCode(mPackageInfo));
-                versionView.setText(version);
+                mVersionView.setText(version);
                 // Set others
-                executor.submit(this::loadPackageInfo);
+                mExecutor.submit(this::loadPackageInfo);
             } else showProgressIndicator(false);
         });
-        model.getPackageLabel().observe(getViewLifecycleOwner(), packageLabel -> {
+        mAppInfoModel.getPackageLabel().observe(getViewLifecycleOwner(), packageLabel -> {
             mPackageLabel = packageLabel;
             // Set Application Name, aka Label
-            labelView.setText(mPackageLabel);
+            mLabelView.setText(mPackageLabel);
         });
-        iconView.setOnClickListener(v -> {
+        mIconView.setOnClickListener(v -> {
             ClipboardManager clipboard = (ClipboardManager) mActivity.getSystemService(Context.CLIPBOARD_SERVICE);
             ThreadUtils.postOnBackgroundThread(() -> {
                 ClipData clipData = clipboard.getPrimaryClip();
@@ -290,7 +291,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             .toLowerCase(Locale.ROOT);
                     if (data.matches("[0-9a-f: \n]+")) {
                         data = data.replaceAll("[: \n]+", "");
-                        Signature[] signatures = PackageUtils.getSigningInfo(mPackageInfo, isExternalApk);
+                        Signature[] signatures = PackageUtils.getSigningInfo(mPackageInfo, mIsExternalApk);
                         if (signatures != null && signatures.length == 1) {
                             byte[] certBytes = signatures[0].toByteArray();
                             Pair<String, String>[] digests = DigestUtils.getDigests(certBytes);
@@ -308,9 +309,9 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 }
             });
         });
-        model.getTagCloud().observe(getViewLifecycleOwner(), this::setupTagCloud);
-        model.getAppInfo().observe(getViewLifecycleOwner(), this::setupVerticalView);
-        model.getInstallExistingResult().observe(getViewLifecycleOwner(), statusMessagePair ->
+        mAppInfoModel.getTagCloud().observe(getViewLifecycleOwner(), this::setupTagCloud);
+        mAppInfoModel.getAppInfo().observe(getViewLifecycleOwner(), this::setupVerticalView);
+        mAppInfoModel.getInstallExistingResult().observe(getViewLifecycleOwner(), statusMessagePair ->
                 new MaterialAlertDialogBuilder(requireActivity())
                         .setTitle(mPackageLabel)
                         .setIcon(mApplicationInfo.loadIcon(mPackageManager))
@@ -321,7 +322,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        if (mainModel != null && !mainModel.isExternalApk()) {
+        if (mMainModel != null && !mMainModel.isExternalApk()) {
             inflater.inflate(R.menu.fragment_app_info_actions, menu);
             menu.findItem(R.id.action_magisk_hide).setVisible(MagiskHide.available());
             menu.findItem(R.id.action_magisk_denylist).setVisible(MagiskDenyList.available());
@@ -331,7 +332,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @Override
     public void onPrepareOptionsMenu(@NonNull Menu menu) {
-        if (isExternalApk) return;
+        if (mIsExternalApk) return;
         boolean isDebuggable;
         if (mApplicationInfo != null) {
             isDebuggable = (mApplicationInfo.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
@@ -368,7 +369,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             showProgressIndicator(true);
             ThreadUtils.postOnBackgroundThread(() -> {
                 try {
-                    Path tmpApkSource = ApkUtils.getSharableApkFile(mPackageInfo);
+                    Path tmpApkSource = ApkUtils.getSharableApkFile(requireContext(), mPackageInfo);
                     ThreadUtils.postOnMainThread(() -> {
                         showProgressIndicator(false);
                         Context ctx = ContextUtils.getContext();
@@ -385,18 +386,18 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 }
             });
         } else if (itemId == R.id.action_backup) {
-            if (mainModel == null) return true;
+            if (mMainModel == null) return true;
             BackupRestoreDialogFragment fragment = BackupRestoreDialogFragment.getInstance(
-                    Collections.singletonList(new UserPackagePair(mPackageName, mainModel.getUserHandle())));
+                    Collections.singletonList(new UserPackagePair(mPackageName, mUserId)));
             fragment.setOnActionBeginListener(mode -> showProgressIndicator(true));
             fragment.setOnActionCompleteListener((mode, failedPackages) -> showProgressIndicator(false));
             fragment.show(getParentFragmentManager(), BackupRestoreDialogFragment.TAG);
         } else if (itemId == R.id.action_view_settings) {
             startActivity(IntentUtils.getAppDetailsSettings(mPackageName));
         } else if (itemId == R.id.action_export_blocking_rules) {
-            final String fileName = "app_manager_rules_export-" + DateUtils.formatDateTime(System.currentTimeMillis()) + ".am.tsv";
-            export.launch(fileName, uri -> {
-                if (uri == null || mainModel == null) {
+            final String fileName = "app_manager_rules_export-" + DateUtils.formatDateTime(mActivity, System.currentTimeMillis()) + ".am.tsv";
+            mExport.launch(fileName, uri -> {
+                if (uri == null || mMainModel == null) {
                     // Back button pressed.
                     return;
                 }
@@ -407,27 +408,27 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 exportArgs.putInt(RulesTypeSelectionDialogFragment.ARG_MODE, RulesTypeSelectionDialogFragment.MODE_EXPORT);
                 exportArgs.putParcelable(RulesTypeSelectionDialogFragment.ARG_URI, uri);
                 exportArgs.putStringArrayList(RulesTypeSelectionDialogFragment.ARG_PKG, packages);
-                exportArgs.putIntArray(RulesTypeSelectionDialogFragment.ARG_USERS, new int[]{mainModel.getUserHandle()});
+                exportArgs.putIntArray(RulesTypeSelectionDialogFragment.ARG_USERS, new int[]{mUserId});
                 dialogFragment.setArguments(exportArgs);
                 dialogFragment.show(mActivity.getSupportFragmentManager(), RulesTypeSelectionDialogFragment.TAG);
             });
         } else if (itemId == R.id.action_open_in_termux) {
             if (SelfPermissions.checkSelfPermission(TERMUX_RUN_COMMAND)) {
                 openInTermux();
-            } else requestPerm.launch(TERMUX_RUN_COMMAND, granted -> {
+            } else mRequestPerm.launch(TERMUX_RUN_COMMAND, granted -> {
                 if (granted) openInTermux();
             });
         } else if (itemId == R.id.action_run_in_termux) {
             if (SelfPermissions.checkSelfPermission(TERMUX_RUN_COMMAND)) {
                 runInTermux();
-            } else requestPerm.launch(TERMUX_RUN_COMMAND, granted -> {
+            } else mRequestPerm.launch(TERMUX_RUN_COMMAND, granted -> {
                 if (granted) runInTermux();
             });
         } else if (itemId == R.id.action_magisk_hide) {
-            if (mainModel == null) return true;
+            if (mMainModel == null) return true;
             displayMagiskHideDialog();
         } else if (itemId == R.id.action_magisk_denylist) {
-            if (mainModel == null) return true;
+            if (mMainModel == null) return true;
             displayMagiskDenyListDialog();
         } else if (itemId == R.id.action_battery_opt) {
             if (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.DEVICE_POWER)) {
@@ -488,7 +489,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     .show();
         } else if (itemId == R.id.action_extract_icon) {
             String iconName = mPackageLabel + "_icon.png";
-            export.launch(iconName, uri -> {
+            mExport.launch(iconName, uri -> {
                 if (uri == null) {
                     // Back button pressed.
                     return;
@@ -518,7 +519,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             new SearchableItemsDialogBuilder<>(mActivity, userNames)
                     .setTitle(R.string.select_user)
                     .setOnItemClickListener((dialog, which, item1) -> {
-                        model.installExisting(users.get(which).id);
+                        mAppInfoModel.installExisting(users.get(which).id);
                         dialog.dismiss();
                     })
                     .setNegativeButton(R.string.cancel, null)
@@ -574,7 +575,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @Override
     public void onDetach() {
-        executor.shutdownNow();
+        mExecutor.shutdownNow();
         super.onDetach();
     }
 
@@ -601,8 +602,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     private void install() {
-        if (mainModel == null) return;
-        int apkFileKey = mainModel.getApkFileKey();
+        if (mMainModel == null) return;
+        int apkFileKey = mMainModel.getApkFileKey();
         try {
             // Reserve ApkFile in case the activity is destroyed
             ApkFile.getInAdvance(apkFileKey);
@@ -616,15 +617,15 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @UiThread
     private void refreshDetails() {
-        if (mainModel == null || isDetached()) return;
+        if (mMainModel == null || isDetached()) return;
         showProgressIndicator(true);
-        mainModel.triggerPackageChange();
+        mMainModel.triggerPackageChange();
     }
 
     @UiThread
     private void setupTagCloud(AppInfoViewModel.TagCloud tagCloud) {
         mTagCloud.removeAllViews();
-        if (mainModel == null) return;
+        if (mMainModel == null) return;
         // Add tracker chip
         if (!tagCloud.trackerComponents.isEmpty()) {
             CharSequence[] trackerComponentNames = new CharSequence[tagCloud.trackerComponents.size()];
@@ -637,7 +638,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     tagCloud.trackerComponents.size()), tagCloud.areAllTrackersBlocked
                     ? ColorCodes.getComponentTrackerBlockedIndicatorColor(mActivity)
                     : ColorCodes.getComponentTrackerIndicatorColor(mActivity)).setOnClickListener(v -> {
-                if (!isExternalApk && SelfPermissions.canModifyAppComponentStates(mainModel.getUserHandle(), mPackageName, mainModel.isTestOnlyApp())) {
+                if (!mIsExternalApk && SelfPermissions.canModifyAppComponentStates(mUserId, mPackageName, mMainModel.isTestOnlyApp())) {
                     new SearchableMultiChoiceDialogBuilder<>(mActivity, tagCloud.trackerComponents, trackerComponentNames)
                             .setTitle(R.string.trackers)
                             .addSelections(tagCloud.trackerComponents)
@@ -645,7 +646,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             .setPositiveButton(R.string.block, (dialog, which, selectedItems) -> {
                                 showProgressIndicator(true);
                                 ThreadUtils.postOnBackgroundThread(() -> {
-                                    mainModel.addRules(selectedItems, true);
+                                    mMainModel.addRules(selectedItems, true);
                                     ThreadUtils.postOnMainThread(() -> {
                                         if (!isDetached()) {
                                             showProgressIndicator(false);
@@ -657,7 +658,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                             .setNeutralButton(R.string.unblock, (dialog, which, selectedItems) -> {
                                 showProgressIndicator(true);
                                 ThreadUtils.postOnBackgroundThread(() -> {
-                                    mainModel.removeRules(selectedItems, true);
+                                    mMainModel.removeRules(selectedItems, true);
                                     ThreadUtils.postOnMainThread(() -> {
                                         if (!isDetached()) {
                                             showProgressIndicator(false);
@@ -682,11 +683,11 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             if (tagCloud.isUpdatedSystemApp) {
                 addChip(R.string.updated_app);
             }
-        } else if (!mainModel.isExternalApk()) addChip(R.string.user_app);
+        } else if (!mMainModel.isExternalApk()) addChip(R.string.user_app);
         if (tagCloud.splitCount > 0) {
             addChip(getResources().getQuantityString(R.plurals.no_of_splits, tagCloud.splitCount,
                     tagCloud.splitCount)).setOnClickListener(v -> {
-                try (ApkFile apkFile = ApkFile.getInstance(mainModel.getApkFileKey())) {
+                try (ApkFile apkFile = ApkFile.getInstance(mMainModel.getApkFileKey())) {
                     // Display a list of apks
                     List<ApkFile.Entry> apkEntries = apkFile.getEntries();
                     CharSequence[] entryNames = new CharSequence[tagCloud.splitCount];
@@ -725,7 +726,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                 try {
                                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                                         DomainVerificationManagerCompat.setDomainVerificationLinkHandlingAllowed(
-                                                mPackageName, !tagCloud.canOpenLinks, mainModel.getUserHandle());
+                                                mPackageName, !tagCloud.canOpenLinks, mUserId);
                                     }
                                     ThreadUtils.postOnMainThread(() -> {
                                         UIUtils.displayShortToast(R.string.done);
@@ -750,7 +751,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         if (tagCloud.runningServices.size() > 0) {
             addChip(R.string.running, ColorCodes.getComponentRunningIndicatorColor(mActivity)).setOnClickListener(v -> {
                 mProgressIndicator.show();
-                executor.submit(() -> {
+                mExecutor.submit(() -> {
                     CharSequence[] runningServices = new CharSequence[tagCloud.runningServices.size()];
                     for (int i = 0; i < runningServices.length; ++i) {
                         runningServices[i] = new SpannableStringBuilder()
@@ -784,7 +785,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         if (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.FORCE_STOP_PACKAGES)) {
                             builder.setNeutralButton(R.string.force_stop, (dialog, which) -> ThreadUtils.postOnBackgroundThread(() -> {
                                 try {
-                                    PackageManagerCompat.forceStopPackage(mPackageName, mainModel.getUserHandle());
+                                    PackageManagerCompat.forceStopPackage(mPackageName, mUserId);
                                     ThreadUtils.postOnMainThread(this::refreshDetails);
                                 } catch (RemoteException | SecurityException e) {
                                     Log.e(TAG, e);
@@ -810,11 +811,11 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         if (tagCloud.isAppHidden) {
             addChip(R.string.hidden, ColorCodes.getAppHiddenIndicatorColor(mActivity));
         }
-        magiskHiddenProcesses = tagCloud.magiskHiddenProcesses;
+        mMagiskHiddenProcesses = tagCloud.magiskHiddenProcesses;
         if (tagCloud.isMagiskHideEnabled) {
             addChip(R.string.magisk_hide_enabled).setOnClickListener(v -> displayMagiskHideDialog());
         }
-        magiskDeniedProcesses = tagCloud.magiskDeniedProcesses;
+        mMagiskDeniedProcesses = tagCloud.magiskDeniedProcesses;
         if (tagCloud.isMagiskDenyListEnabled) {
             addChip(R.string.magisk_denylist).setOnClickListener(v -> displayMagiskDenyListDialog());
         }
@@ -834,7 +835,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 chip = addChip(R.string.keystore, ColorCodes.getAppKeystoreIndicatorColor(mActivity));
             } else chip = addChip(R.string.keystore);
             chip.setOnClickListener(view -> new SearchableItemsDialogBuilder<>(mActivity, KeyStoreUtils
-                    .getKeyStoreFiles(mApplicationInfo.uid, mainModel.getUserHandle()))
+                    .getKeyStoreFiles(mApplicationInfo.uid, mUserId))
                     .setTitle(R.string.keystore)
                     .setNegativeButton(R.string.close, null)
                     .show());
@@ -842,7 +843,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         if (!tagCloud.backups.isEmpty()) {
             addChip(R.string.backup).setOnClickListener(v -> {
                 BackupRestoreDialogFragment fragment = BackupRestoreDialogFragment.getInstance(
-                        Collections.singletonList(new UserPackagePair(mPackageName, mainModel.getUserHandle())),
+                        Collections.singletonList(new UserPackagePair(mPackageName, mUserId)),
                         BackupRestoreDialogFragment.MODE_RESTORE | BackupRestoreDialogFragment.MODE_DELETE);
                 fragment.setOnActionBeginListener(mode -> showProgressIndicator(true));
                 fragment.setOnActionCompleteListener((mode, failedPackages) -> showProgressIndicator(false));
@@ -913,7 +914,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     .setTitle(R.string.shared_libs)
                     .setPositiveButton(R.string.close, null)
                     .setNeutralButton(R.string.uninstall, (dialog, which, selectedItems) -> {
-                        int userId = mainModel.getUserHandle();
+                        int userId = mUserId;
                         final boolean isSystemApp = ApplicationInfoCompat.isSystemApp(mApplicationInfo);
                         new ScrollableDialogBuilder(mActivity,
                                 isSystemApp ? R.string.uninstall_system_app_message : R.string.uninstall_app_message)
@@ -957,10 +958,10 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @UiThread
     private void displayMagiskHideDialog() {
         SearchableMultiChoiceDialogBuilder<MagiskProcess> builder;
-        builder = getMagiskProcessDialog(magiskHiddenProcesses, (dialog, which, mp, isChecked) -> executor.submit(() -> {
+        builder = getMagiskProcessDialog(mMagiskHiddenProcesses, (dialog, which, mp, isChecked) -> mExecutor.submit(() -> {
             mp.setEnabled(isChecked);
             if (MagiskHide.apply(mp)) {
-                try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mPackageName, mainModel.getUserHandle())) {
+                try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mPackageName, mUserId)) {
                     cb.setMagiskHide(mp);
                     ThreadUtils.postOnMainThread(this::refreshDetails);
                 }
@@ -978,10 +979,10 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @UiThread
     private void displayMagiskDenyListDialog() {
         SearchableMultiChoiceDialogBuilder<MagiskProcess> builder;
-        builder = getMagiskProcessDialog(magiskDeniedProcesses, (dialog, which, mp, isChecked) -> executor.submit(() -> {
+        builder = getMagiskProcessDialog(mMagiskDeniedProcesses, (dialog, which, mp, isChecked) -> mExecutor.submit(() -> {
             mp.setEnabled(isChecked);
             if (MagiskDenyList.apply(mp)) {
-                try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mPackageName, mainModel.getUserHandle())) {
+                try (ComponentsBlocker cb = ComponentsBlocker.getMutableInstance(mPackageName, mUserId)) {
                     cb.setMagiskDenyList(mp);
                     ThreadUtils.postOnMainThread(this::refreshDetails);
                 }
@@ -1031,17 +1032,16 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     private void setHorizontalActions() {
         mHorizontalLayout.removeAllViews();
-        if (mainModel != null && !mainModel.isExternalApk()) {
+        if (mMainModel != null && !mMainModel.isExternalApk()) {
             boolean isFrozen = FreezeUtils.isFrozen(mApplicationInfo);
             boolean canFreeze = SelfPermissions.canFreezeUnfreezePackages();
             // Set open
-            Intent launchIntent = PackageUtils.getLaunchIntentForPackage(requireContext(), mPackageName,
-                    mainModel.getUserHandle());
+            Intent launchIntent = PackageUtils.getLaunchIntentForPackage(requireContext(), mPackageName, mUserId);
             if (launchIntent != null && !isFrozen) {
                 addToHorizontalLayout(R.string.launch_app, R.drawable.ic_open_in_new)
                         .setOnClickListener(v -> {
                             try {
-                                ActivityManagerCompat.startActivity(launchIntent, mainModel.getUserHandle());
+                                ActivityManagerCompat.startActivity(launchIntent, mUserId);
                             } catch (Throwable th) {
                                 UIUtils.displayLongToast(th.getLocalizedMessage());
                             }
@@ -1066,13 +1066,12 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             }
             // Set uninstall
             addToHorizontalLayout(R.string.uninstall, R.drawable.ic_trash_can).setOnClickListener(v -> {
-                int userId = mainModel.getUserHandle();
-                if (userId != UserHandleHidden.myUserId() && !SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.DELETE_PACKAGES)) {
+                if (mUserId != UserHandleHidden.myUserId() && !SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.DELETE_PACKAGES)) {
                     // Could be for work profile
                     try {
                         Intent uninstallIntent = new Intent(Intent.ACTION_DELETE);
                         uninstallIntent.setData(Uri.parse("package:" + mPackageName));
-                        ActivityManagerCompat.startActivity(uninstallIntent, userId);
+                        ActivityManagerCompat.startActivity(uninstallIntent, mUserId);
                     } catch (Throwable th) {
                         UIUtils.displayLongToast(th.getLocalizedMessage());
                     }
@@ -1087,7 +1086,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         .setPositiveButton(R.string.uninstall, (dialog, which, keepData) -> ThreadUtils.postOnBackgroundThread(() -> {
                             PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance();
                             installer.setAppLabel(mPackageLabel);
-                            boolean uninstalled = installer.uninstall(mPackageName, userId, keepData);
+                            boolean uninstalled = installer.uninstall(mPackageName, mUserId, keepData);
                             ThreadUtils.postOnMainThread(() -> {
                                 if (uninstalled) {
                                     displayLongToast(R.string.uninstalled_successfully, mPackageLabel);
@@ -1136,7 +1135,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         if (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.FORCE_STOP_PACKAGES)) {
                             ThreadUtils.postOnBackgroundThread(() -> {
                                 try {
-                                    PackageManagerCompat.forceStopPackage(mPackageName, mainModel.getUserHandle());
+                                    PackageManagerCompat.forceStopPackage(mPackageName, mUserId);
                                     ThreadUtils.postOnMainThread(this::refreshDetails);
                                 } catch (RemoteException | SecurityException e) {
                                     Log.e(TAG, e);
@@ -1146,7 +1145,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         } else {
                             // Use accessibility
                             AccessibilityMultiplexer.getInstance().enableForceStop(true);
-                            activityLauncher.launch(IntentUtils.getAppDetailsSettings(mPackageName),
+                            mActivityLauncher.launch(IntentUtils.getAppDetailsSettings(mPackageName),
                                     result -> {
                                         AccessibilityMultiplexer.getInstance().enableForceStop(false);
                                         refreshDetails();
@@ -1165,7 +1164,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                 .setPositiveButton(R.string.clear, (dialog, which) -> {
                                     if (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.CLEAR_APP_USER_DATA)) {
                                         ThreadUtils.postOnBackgroundThread(() -> {
-                                            if (PackageManagerCompat.clearApplicationUserData(mPackageName, mainModel.getUserHandle())) {
+                                            if (PackageManagerCompat.clearApplicationUserData(mPackageName, mUserId)) {
                                                 ThreadUtils.postOnMainThread(this::refreshDetails);
                                             }
                                         });
@@ -1173,7 +1172,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                         // Use accessibility
                                         AccessibilityMultiplexer.getInstance().enableNavigateToStorageAndCache(true);
                                         AccessibilityMultiplexer.getInstance().enableClearData(true);
-                                        activityLauncher.launch(IntentUtils.getAppDetailsSettings(mPackageName),
+                                        mActivityLauncher.launch(IntentUtils.getAppDetailsSettings(mPackageName),
                                                 result -> {
                                                     AccessibilityMultiplexer.getInstance().enableNavigateToStorageAndCache(true);
                                                     AccessibilityMultiplexer.getInstance().enableClearData(false);
@@ -1190,7 +1189,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         .setOnClickListener(v -> {
                             if (SelfPermissions.canClearAppCache()) {
                                 ThreadUtils.postOnBackgroundThread(() -> {
-                                    if (PackageManagerCompat.deleteApplicationCacheFilesAsUser(mPackageName, mainModel.getUserHandle())) {
+                                    if (PackageManagerCompat.deleteApplicationCacheFilesAsUser(mPackageName, mUserId)) {
                                         ThreadUtils.postOnMainThread(this::refreshDetails);
                                     }
                                 });
@@ -1198,7 +1197,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                 // Use accessibility
                                 AccessibilityMultiplexer.getInstance().enableNavigateToStorageAndCache(true);
                                 AccessibilityMultiplexer.getInstance().enableClearCache(true);
-                                activityLauncher.launch(IntentUtils.getAppDetailsSettings(mPackageName),
+                                mActivityLauncher.launch(IntentUtils.getAppDetailsSettings(mPackageName),
                                         result -> {
                                             AccessibilityMultiplexer.getInstance().enableNavigateToStorageAndCache(false);
                                             AccessibilityMultiplexer.getInstance().enableClearCache(false);
@@ -1212,7 +1211,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         .setOnClickListener(v -> {
                             try {
                                 ActivityManagerCompat.startActivity(IntentUtils.getAppDetailsSettings(mPackageName),
-                                        mainModel.getUserHandle());
+                                        mUserId);
                             } catch (Throwable th) {
                                 UIUtils.displayLongToast(th.getLocalizedMessage());
                             }
@@ -1259,12 +1258,12 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         if (FeatureController.isScannerEnabled()) {
             addToHorizontalLayout(R.string.scanner, R.drawable.ic_security).setOnClickListener(v -> {
                 Intent intent = new Intent(mActivity, ScannerActivity.class);
-                intent.putExtra(ScannerActivity.EXTRA_IS_EXTERNAL, isExternalApk);
+                intent.putExtra(ScannerActivity.EXTRA_IS_EXTERNAL, mIsExternalApk);
                 startActivityForSplit(intent);
             });
         }
         // Root only features
-        if (!mainModel.isExternalApk()) {
+        if (!mMainModel.isExternalApk()) {
             // Shared prefs (root only)
             final List<Path> sharedPrefs = new ArrayList<>();
             Path[] tmpPaths = getSharedPrefs(mApplicationInfo.dataDir);
@@ -1306,7 +1305,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 addToHorizontalLayout(R.string.databases, R.drawable.ic_database)
                         .setOnClickListener(v -> new SearchableItemsDialogBuilder<>(mActivity, databases2)
                                 .setTitle(R.string.databases)
-                                .setOnItemClickListener((dialog, which, item) -> executor.submit(() -> {
+                                .setOnItemClickListener((dialog, which, item) -> mExecutor.submit(() -> {
                                     // Vacuum database
                                     Runner.runCommand(new String[]{"sqlite3", databases.get(which).getFilePath(), "vacuum"});
                                     ThreadUtils.postOnMainThread(() -> {
@@ -1357,8 +1356,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
     @UiThread
     private void startActivityForSplit(Intent intent) {
-        if (mainModel == null) return;
-        try (ApkFile apkFile = ApkFile.getInstance(mainModel.getApkFileKey())) {
+        if (mMainModel == null) return;
+        try (ApkFile apkFile = ApkFile.getInstance(mMainModel.getApkFileKey())) {
             if (apkFile.isSplit()) {
                 // Display a list of apks
                 List<ApkFile.Entry> apkEntries = apkFile.getEntries();
@@ -1368,7 +1367,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 }
                 new SearchableItemsDialogBuilder<>(mActivity, entryNames)
                         .setTitle(R.string.select_apk)
-                        .setOnItemClickListener((dialog, which, item) -> executor.submit(() -> {
+                        .setOnItemClickListener((dialog, which, item) -> mExecutor.submit(() -> {
                             try {
                                 File file = apkEntries.get(which).getRealCachedFile();
                                 intent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton()
@@ -1434,7 +1433,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             mListItems.add(ListItem.newGroupStart(getString(R.string.more_info)));
 
             // Set installer version info
-            if (isExternalApk && mInstalledPackageInfo != null) {
+            if (mIsExternalApk && mInstalledPackageInfo != null) {
                 ListItem listItem = ListItem.newSelectableRegularItem(getString(R.string.installed_version),
                         getString(R.string.version_name_with_code, mInstalledPackageInfo.versionName,
                                 PackageInfoCompat.getLongVersionCode(mInstalledPackageInfo)), v -> {
@@ -1472,7 +1471,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 flagsItem.setMonospace(true);
                 mListItems.add(flagsItem);
             }
-            if (isExternalApk) return;
+            if (mIsExternalApk) return;
 
             mListItems.add(ListItem.newRegularItem(getString(R.string.date_installed), getTime(mPackageInfo.firstInstallTime)));
             mListItems.add(ListItem.newRegularItem(getString(R.string.date_updated), getTime(mPackageInfo.lastUpdateTime)));
@@ -1494,7 +1493,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 mListItems.add(ListItem.newSelectableRegularItem(getString(R.string.zygote_preload_name),
                         appInfo.zygotePreloadName));
             }
-            if (!isExternalApk) {
+            if (!mIsExternalApk) {
                 mListItems.add(ListItem.newRegularItem(getString(R.string.hidden_api_enforcement_policy),
                         getHiddenApiEnforcementPolicy(appInfo.hiddenApiEnforcementPolicy)));
             }
@@ -1546,7 +1545,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private void setupVerticalView(AppInfoViewModel.AppInfo appInfo) {
         synchronized (mListItems) {
             mListItems.clear();
-            if (!isExternalApk) {
+            if (!mIsExternalApk) {
                 setPathsAndDirectories(appInfo);
                 setDataUsage(appInfo);
                 // Storage and Cache
@@ -1555,7 +1554,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 }
             }
             setMoreInfo(appInfo);
-            adapter.setAdapterList(mListItems);
+            mAdapter.setAdapterList(mListItems);
         }
     }
 
@@ -1632,8 +1631,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         if (FeatureController.isUsageAccessEnabled()) {
             // Grant optional READ_PHONE_STATE permission
             if (AppUsageStatsManager.requireReadPhoneStatePermission()) {
-                ThreadUtils.postOnMainThread(() -> requestPerm.launch(Manifest.permission.READ_PHONE_STATE, granted -> {
-                    if (granted) model.loadAppInfo();
+                ThreadUtils.postOnMainThread(() -> mRequestPerm.launch(Manifest.permission.READ_PHONE_STATE, granted -> {
+                    if (granted) mAppInfoModel.loadAppInfo();
                 }));
             }
         }
@@ -1643,12 +1642,12 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     .setMessage(R.string.grant_usage_acess_message)
                     .setPositiveButton(R.string.go, (dialog, which) -> {
                         try {
-                            activityLauncher.launch(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS), result -> {
+                            mActivityLauncher.launch(new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS), result -> {
                                 if (SelfPermissions.checkUsageStatsPermission()) {
                                     FeatureController.getInstance().modifyState(FeatureController
                                             .FEAT_USAGE_ACCESS, true);
                                     // Reload app info
-                                    model.loadAppInfo();
+                                    mAppInfoModel.loadAppInfo();
                                 }
                             });
                         } catch (SecurityException ignore) {
@@ -1681,27 +1680,27 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @WorkerThread
     private void loadPackageInfo() {
         // Set App Icon
-        ImageLoader.displayImage(mApplicationInfo, iconView);
+        ImageLoader.displayImage(mApplicationInfo, mIconView);
         // (Re)load views
-        model.loadPackageLabel();
-        model.loadTagCloud();
+        mAppInfoModel.loadPackageLabel();
+        mAppInfoModel.loadTagCloud();
         ThreadUtils.postOnMainThread(() -> {
             if (isAdded() && !isDetached()) {
                 setHorizontalActions();
             }
         });
-        model.loadAppInfo();
+        mAppInfoModel.loadAppInfo();
         ThreadUtils.postOnMainThread(() -> showProgressIndicator(false));
     }
 
     @MainThread
     private void freeze(boolean freeze) {
-        if (mainModel == null) return;
+        if (mMainModel == null) return;
         try {
             if (freeze) {
-                FreezeUtils.freeze(mPackageName, mainModel.getUserHandle());
+                FreezeUtils.freeze(mPackageName, mUserId);
             } else {
-                FreezeUtils.unfreeze(mPackageName, mainModel.getUserHandle());
+                FreezeUtils.unfreeze(mPackageName, mUserId);
             }
         } catch (RemoteException | SecurityException e) {
             Log.e(TAG, e);
@@ -1710,7 +1709,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     private void createFreezeShortcut(boolean isFrozen) {
-        if (mainModel == null) return;
+        if (mMainModel == null) return;
         List<Integer> allFlags = new ArrayList<>(3);
         for (int i = 0; i < 3; ++i) {
             allFlags.add(1 << i);
@@ -1723,8 +1722,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         flags |= flag;
                     }
                     LauncherShortcuts.createFreezeUnfreezeShortcut(requireContext(), mPackageLabel,
-                            getBitmapFromDrawable(iconView.getDrawable()), mPackageName, mainModel.getUserHandle(),
-                            flags, isFrozen);
+                            getBitmapFromDrawable(mIconView.getDrawable()), mPackageName, mUserId, flags, isFrozen);
                 })
                 .show();
     }
@@ -1737,7 +1735,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
      */
     @NonNull
     private String getTime(long time) {
-        return DateUtils.formatWeekMediumDateTime(time);
+        return DateUtils.formatWeekMediumDateTime(requireContext(), time);
     }
 
     /**

@@ -22,6 +22,7 @@ import io.github.muntashirakon.AppManager.crypto.OpenPGPCrypto;
 import io.github.muntashirakon.AppManager.crypto.RSACrypto;
 import io.github.muntashirakon.AppManager.crypto.ks.KeyStoreManager;
 import io.github.muntashirakon.AppManager.settings.Prefs;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 
 public class CryptoUtils {
     @StringDef(value = {
@@ -78,7 +79,7 @@ public class CryptoUtils {
     public static Crypto getCrypto(@NonNull MetadataManager.Metadata metadata) throws CryptoException {
         switch (metadata.crypto) {
             case MODE_OPEN_PGP:
-                return new OpenPGPCrypto(metadata.keyIds);
+                return new OpenPGPCrypto(ContextUtils.getContext(), metadata.keyIds);
             case MODE_AES: {
                 AESCrypto aesCrypto = new AESCrypto(metadata.iv);
                 if (metadata.version < 4) {

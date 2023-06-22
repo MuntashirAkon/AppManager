@@ -11,36 +11,36 @@ import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 
 public class AppOpRule extends RuleEntry {
-    private final int op;
+    private final int mOp;
     @AppOpsManagerCompat.Mode
-    private int mode;
+    private int mMode;
 
     public AppOpRule(@NonNull String packageName, int op, @AppOpsManagerCompat.Mode int mode) {
         super(packageName, String.valueOf(op), RuleType.APP_OP);
-        this.op = op;
-        this.mode = mode;
+        mOp = op;
+        mMode = mode;
     }
 
     public AppOpRule(@NonNull String packageName, String opInt, @NonNull StringTokenizer tokenizer)
             throws RuntimeException {
         super(packageName, opInt, RuleType.APP_OP);
-        this.op = Integer.parseInt(opInt);
+        mOp = Integer.parseInt(opInt);
         if (tokenizer.hasMoreElements()) {
-            mode = Integer.parseInt(tokenizer.nextElement().toString());
+            mMode = Integer.parseInt(tokenizer.nextElement().toString());
         } else throw new IllegalArgumentException("Invalid format: mode not found");
     }
 
     public int getOp() {
-        return op;
+        return mOp;
     }
 
     @AppOpsManagerCompat.Mode
     public int getMode() {
-        return mode;
+        return mMode;
     }
 
     public void setMode(@AppOpsManagerCompat.Mode int mode) {
-        this.mode = mode;
+        mMode = mode;
     }
 
     @NonNull
@@ -48,15 +48,15 @@ public class AppOpRule extends RuleEntry {
     public String toString() {
         return "AppOpRule{" +
                 "packageName='" + packageName + '\'' +
-                ", op=" + op +
-                ", mode=" + mode +
+                ", op=" + mOp +
+                ", mode=" + mMode +
                 '}';
     }
 
     @NonNull
     @Override
     public String flattenToString(boolean isExternal) {
-        return addPackageWithTab(isExternal) + op + "\t" + type.name() + "\t" + mode;
+        return addPackageWithTab(isExternal) + mOp + "\t" + type.name() + "\t" + mMode;
     }
 
     @Override

@@ -18,19 +18,19 @@ public class ProfilesViewModel extends AndroidViewModel {
         super(application);
     }
 
-    private MutableLiveData<HashMap<String, CharSequence>> profileLiveData;
+    private MutableLiveData<HashMap<String, CharSequence>> mProfileLiveData;
 
     public LiveData<HashMap<String, CharSequence>> getProfiles() {
-        if (profileLiveData == null) {
-            profileLiveData = new MutableLiveData<>();
+        if (mProfileLiveData == null) {
+            mProfileLiveData = new MutableLiveData<>();
             new Thread(this::loadProfiles).start();
         }
-        return profileLiveData;
+        return mProfileLiveData;
     }
 
     @WorkerThread
     public void loadProfiles() {
-        HashMap<String, CharSequence> profiles = ProfileManager.getProfileSummaries();
-        profileLiveData.postValue(profiles);
+        HashMap<String, CharSequence> profiles = ProfileManager.getProfileSummaries(getApplication());
+        mProfileLiveData.postValue(profiles);
     }
 }

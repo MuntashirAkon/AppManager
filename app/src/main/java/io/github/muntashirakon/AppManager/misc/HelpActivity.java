@@ -32,10 +32,10 @@ import io.github.muntashirakon.AppManager.utils.appearance.AppearanceUtils;
 import io.github.muntashirakon.util.UiUtils;
 
 public class HelpActivity extends BaseActivity implements SearchView.OnQueryTextListener {
-    private LinearLayoutCompat container;
-    private WebView webView;
-    private LinearLayoutCompat searchContainer;
-    private SearchView searchView;
+    private LinearLayoutCompat mContainer;
+    private WebView mWebView;
+    private LinearLayoutCompat mSearchContainer;
+    private SearchView mSearchView;
 
     @Override
     protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
@@ -56,31 +56,31 @@ public class HelpActivity extends BaseActivity implements SearchView.OnQueryText
             openDocsSite();
             return;
         }
-        container = findViewById(R.id.container);
-        webView = findViewById(R.id.webview);
-        UiUtils.applyWindowInsetsAsPaddingNoTop(container);
+        mContainer = findViewById(R.id.container);
+        mWebView = findViewById(R.id.webview);
+        UiUtils.applyWindowInsetsAsPaddingNoTop(mContainer);
 
         // Fix locale issue due to WebView (https://issuetracker.google.com/issues/37113860)
         AppearanceUtils.applyOnlyLocale(this);
 
-        webView.setWebViewClient(new WebViewClientImpl());
-        webView.setNetworkAvailable(false);
-        webView.loadUrl("file:///android_res/raw/index.html");
+        mWebView.setWebViewClient(new WebViewClientImpl());
+        mWebView.setNetworkAvailable(false);
+        mWebView.loadUrl("file:///android_res/raw/index.html");
 
-        searchContainer = findViewById(R.id.search_container);
+        mSearchContainer = findViewById(R.id.search_container);
         Button nextButton = findViewById(R.id.next_button);
         Button previousButton = findViewById(R.id.previous_button);
-        searchView = findViewById(R.id.search_bar);
-        searchView.findViewById(com.google.android.material.R.id.search_close_btn).setOnClickListener(v -> {
-            webView.clearMatches();
-            searchView.setQuery(null, false);
+        mSearchView = findViewById(R.id.search_bar);
+        mSearchView.findViewById(com.google.android.material.R.id.search_close_btn).setOnClickListener(v -> {
+            mWebView.clearMatches();
+            mSearchView.setQuery(null, false);
             Transition sharedAxis = new MaterialSharedAxis(MaterialSharedAxis.Y, true);
-            TransitionManager.beginDelayedTransition(container, sharedAxis);
-            searchContainer.setVisibility(View.GONE);
+            TransitionManager.beginDelayedTransition(mContainer, sharedAxis);
+            mSearchContainer.setVisibility(View.GONE);
         });
-        searchView.setOnQueryTextListener(this);
-        nextButton.setOnClickListener(v -> webView.findNext(true));
-        previousButton.setOnClickListener(v -> webView.findNext(false));
+        mSearchView.setOnQueryTextListener(this);
+        nextButton.setOnClickListener(v -> mWebView.findNext(true));
+        previousButton.setOnClickListener(v -> mWebView.findNext(false));
     }
 
     @Override
@@ -99,8 +99,8 @@ public class HelpActivity extends BaseActivity implements SearchView.OnQueryText
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         // Check if the key event was the Back button and if there's history
-        if ((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack()) {
-            webView.goBack();
+        if ((keyCode == KeyEvent.KEYCODE_BACK) && mWebView.canGoBack()) {
+            mWebView.goBack();
             return true;
         }
         // If it wasn't the Back key or there's no web page history, bubble up to the default
@@ -114,15 +114,15 @@ public class HelpActivity extends BaseActivity implements SearchView.OnQueryText
         if (id == android.R.id.home) {
             finish();
         } else if (id == R.id.action_search) {
-            if (searchContainer.getVisibility() == View.VISIBLE) {
-                searchView.setQuery(null, false);
+            if (mSearchContainer.getVisibility() == View.VISIBLE) {
+                mSearchView.setQuery(null, false);
                 Transition sharedAxis = new MaterialSharedAxis(MaterialSharedAxis.Y, true);
-                TransitionManager.beginDelayedTransition(container, sharedAxis);
-                searchContainer.setVisibility(View.GONE);
+                TransitionManager.beginDelayedTransition(mContainer, sharedAxis);
+                mSearchContainer.setVisibility(View.GONE);
             } else {
                 Transition sharedAxis = new MaterialSharedAxis(MaterialSharedAxis.Y, false);
-                TransitionManager.beginDelayedTransition(container, sharedAxis);
-                searchContainer.setVisibility(View.VISIBLE);
+                TransitionManager.beginDelayedTransition(mContainer, sharedAxis);
+                mSearchContainer.setVisibility(View.VISIBLE);
             }
             return true;
         }
@@ -136,7 +136,7 @@ public class HelpActivity extends BaseActivity implements SearchView.OnQueryText
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        webView.findAllAsync(newText);
+        mWebView.findAllAsync(newText);
         return true;
     }
 

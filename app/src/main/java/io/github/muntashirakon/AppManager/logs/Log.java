@@ -31,7 +31,7 @@ public class Log extends Logger {
     }
 
     @Nullable
-    private static Log INSTANCE;
+    private static Log sInstance;
     private static final File LOG_FILE;
     private static final DateFormat DATE_FORMAT;
 
@@ -39,7 +39,7 @@ public class Log extends Logger {
         DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS", Locale.ROOT);
         LOG_FILE = new File(getLoggingDirectory(), "am.log");
         try {
-            INSTANCE = new Log();
+            sInstance = new Log();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -122,7 +122,7 @@ public class Log extends Logger {
     }
 
     private static void println(@Level int level, @Nullable String tag, @Nullable String msg, @Nullable Throwable tr) {
-        if (INSTANCE == null) return;
+        if (sInstance == null) return;
         StringBuilder sb = new StringBuilder();
         sb.append(DATE_FORMAT.format(new Date(System.currentTimeMillis()))).append(" ");
         switch (level) {
@@ -147,6 +147,6 @@ public class Log extends Logger {
         }
         sb.append(tag == null ? "App Manager" : tag);
         if (msg != null) sb.append(": ").append(msg);
-        INSTANCE.println(sb, tr);
+        sInstance.println(sb, tr);
     }
 }

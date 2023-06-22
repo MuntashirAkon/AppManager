@@ -24,21 +24,22 @@ import io.github.muntashirakon.dialog.SearchableFlagsDialogBuilder;
 
 public class ApkSigningPreferences extends PreferenceFragment {
     public static final String TAG = "ApkSigningPreferences";
-    private SettingsActivity activity;
-    private Preference customSigPref;
-    private MainPreferencesViewModel model;
+
+    private SettingsActivity mActivity;
+    private Preference mCustomSigPref;
+    private MainPreferencesViewModel mModel;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences_signature, rootKey);
         getPreferenceManager().setPreferenceDataStore(new SettingsDataStore());
-        model = new ViewModelProvider(requireActivity()).get(MainPreferencesViewModel.class);
-        activity = (SettingsActivity) requireActivity();
+        mModel = new ViewModelProvider(requireActivity()).get(MainPreferencesViewModel.class);
+        mActivity = (SettingsActivity) requireActivity();
         // Set signature schemes
         Preference sigSchemes = Objects.requireNonNull(findPreference("signature_schemes"));
         final SigSchemes sigSchemeFlags = Prefs.Signing.getSigSchemes();
         sigSchemes.setOnPreferenceClickListener(preference -> {
-            new SearchableFlagsDialogBuilder<>(activity, sigSchemeFlags.getAllItems(), R.array.sig_schemes, sigSchemeFlags.getFlags())
+            new SearchableFlagsDialogBuilder<>(mActivity, sigSchemeFlags.getAllItems(), R.array.sig_schemes, sigSchemeFlags.getFlags())
                     .setTitle(R.string.app_signing_signature_schemes)
                     .setPositiveButton(R.string.save, (dialog, which, selections) -> {
                         int flags = 0;
@@ -56,8 +57,8 @@ public class ApkSigningPreferences extends PreferenceFragment {
                     .show();
             return true;
         });
-        customSigPref = Objects.requireNonNull(findPreference("signing_keys"));
-        customSigPref.setOnPreferenceClickListener(preference -> {
+        mCustomSigPref = Objects.requireNonNull(findPreference("signing_keys"));
+        mCustomSigPref.setOnPreferenceClickListener(preference -> {
             RSACryptoSelectionDialogFragment fragment = RSACryptoSelectionDialogFragment.getInstance(Signer.SIGNING_KEY_ALIAS);
             fragment.setOnKeyPairUpdatedListener((keyPair, certificateBytes) -> {
                 if (keyPair != null && certificateBytes != null) {
@@ -66,9 +67,9 @@ public class ApkSigningPreferences extends PreferenceFragment {
                         keyPair.destroy();
                     } catch (Exception ignore) {
                     }
-                    customSigPref.setSummary(hash);
+                    mCustomSigPref.setSummary(hash);
                 } else {
-                    customSigPref.setSummary(R.string.key_not_set);
+                    mCustomSigPref.setSummary(R.string.key_not_set);
                 }
             });
             fragment.show(getParentFragmentManager(), RSACryptoSelectionDialogFragment.TAG);
@@ -88,14 +89,14 @@ public class ApkSigningPreferences extends PreferenceFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        model.getSigningKeySha256HashLiveData().observe(getViewLifecycleOwner(), hash -> {
+        mModel.getSigningKeySha256HashLiveData().observe(getViewLifecycleOwner(), hash -> {
             if (hash != null) {
-                customSigPref.setSummary(hash);
+                mCustomSigPref.setSummary(hash);
             } else {
-                customSigPref.setSummary(R.string.key_not_set);
+                mCustomSigPref.setSummary(R.string.key_not_set);
             }
         });
-        model.loadSigningKeySha256Hash();
+        mModel.loadSigningKeySha256Hash();
     }
 
     @Override

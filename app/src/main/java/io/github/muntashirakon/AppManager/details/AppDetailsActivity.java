@@ -88,7 +88,8 @@ public class AppDetailsActivity extends BaseActivity {
     private Uri mApkUri;
     @Nullable
     private String mApkType;
-    private int mUserHandle;
+    @UserIdInt
+    private int mUserId;
 
     @Override
     protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
@@ -99,20 +100,20 @@ public class AppDetailsActivity extends BaseActivity {
         // Restore instance state
         SavedState ss = savedInstanceState != null ? BundleCompat.getParcelable(savedInstanceState, "ss", SavedState.class) : null;
         if (ss != null) {
-            mBackToMainPage = ss.backToMainPage;
-            mPackageName = ss.packageName;
-            mApkUri = ss.apkUri;
-            mApkType = ss.apkType;
-            mUserHandle = ss.userHandle;
+            mBackToMainPage = ss.mBackToMainPage;
+            mPackageName = ss.mPackageName;
+            mApkUri = ss.mApkUri;
+            mApkType = ss.mApkType;
+            mUserId = ss.mUserId;
         } else {
             Intent intent = getIntent();
             mBackToMainPage = intent.getBooleanExtra(EXTRA_BACK_TO_MAIN, mBackToMainPage);
             mPackageName = intent.getStringExtra(EXTRA_PACKAGE_NAME);
             mApkUri = IntentCompat.getDataUri(intent);
             mApkType = intent.getType();
-            mUserHandle = intent.getIntExtra(EXTRA_USER_HANDLE, UserHandleHidden.myUserId());
+            mUserId = intent.getIntExtra(EXTRA_USER_HANDLE, UserHandleHidden.myUserId());
         }
-        model.setUserHandle(mUserHandle);
+        model.setUserId(mUserId);
         // Initialize tabs
         mTabTitleIds = getResources().obtainTypedArray(R.array.TAB_TITLES);
         mTabFragments = new Fragment[mTabTitleIds.length()];
@@ -178,24 +179,24 @@ public class AppDetailsActivity extends BaseActivity {
     }
 
     static class SavedState implements Parcelable {
-        private boolean backToMainPage;
+        private boolean mBackToMainPage;
         @Nullable
-        private String packageName;
+        private String mPackageName;
         @Nullable
-        private Uri apkUri;
+        private Uri mApkUri;
         @Nullable
-        private String apkType;
-        private int userHandle;
+        private String mApkType;
+        private int mUserId;
 
         protected SavedState() {
         }
 
         public SavedState(Parcel source, ClassLoader loader) {
-            backToMainPage = ParcelUtils.readBoolean(source);
-            packageName = source.readString();
-            apkUri = ParcelCompat.readParcelable(source, loader, Uri.class);
-            apkType = source.readString();
-            userHandle = source.readInt();
+            mBackToMainPage = ParcelUtils.readBoolean(source);
+            mPackageName = source.readString();
+            mApkUri = ParcelCompat.readParcelable(source, loader, Uri.class);
+            mApkType = source.readString();
+            mUserId = source.readInt();
         }
 
         @Override
@@ -205,11 +206,11 @@ public class AppDetailsActivity extends BaseActivity {
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
-            ParcelUtils.writeBoolean(backToMainPage, dest);
-            dest.writeString(packageName);
-            dest.writeParcelable(apkUri, flags);
-            dest.writeString(apkType);
-            dest.writeInt(userHandle);
+            ParcelUtils.writeBoolean(mBackToMainPage, dest);
+            dest.writeString(mPackageName);
+            dest.writeParcelable(mApkUri, flags);
+            dest.writeString(mApkType);
+            dest.writeInt(mUserId);
         }
 
         public static final Creator<SavedState> CREATOR = new ClassLoaderCreator<SavedState>() {
@@ -234,11 +235,11 @@ public class AppDetailsActivity extends BaseActivity {
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         if (mApkUri != null || mPackageName != null) {
             SavedState ss = new SavedState();
-            ss.backToMainPage = mBackToMainPage;
-            ss.packageName = mPackageName;
-            ss.apkUri = mApkUri;
-            ss.apkType = mApkType;
-            ss.userHandle = mUserHandle;
+            ss.mBackToMainPage = mBackToMainPage;
+            ss.mPackageName = mPackageName;
+            ss.mApkUri = mApkUri;
+            ss.mApkType = mApkType;
+            ss.mUserId = mUserId;
             outState.putParcelable("ss", ss);
         }
         super.onSaveInstanceState(outState);

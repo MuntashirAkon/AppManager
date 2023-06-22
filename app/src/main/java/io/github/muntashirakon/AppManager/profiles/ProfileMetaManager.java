@@ -27,11 +27,11 @@ import java.util.List;
 import java.util.Objects;
 
 import aosp.libcore.util.EmptyArray;
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
 import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.io.Path;
@@ -131,7 +131,7 @@ public class ProfileMetaManager implements LocalizedString {
 
     @NonNull
     public static Path getProfilesDir() {
-        Context context = AppManager.getContext();
+        Context context = ContextUtils.getContext();
         return Objects.requireNonNull(Paths.build(context.getFilesDir(), "profiles"));
     }
 

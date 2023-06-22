@@ -50,7 +50,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.crypto.SecretKey;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.adb.AdbConnectionManager;
@@ -60,6 +59,7 @@ import io.github.muntashirakon.AppManager.crypto.AESCrypto;
 import io.github.muntashirakon.AppManager.crypto.RSACrypto;
 import io.github.muntashirakon.AppManager.crypto.RandomChar;
 import io.github.muntashirakon.AppManager.logs.Log;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 
@@ -72,29 +72,29 @@ public class KeyStoreManager {
     private static final String AM_KEYSTORE = "BKS";  // KeyStore.getDefaultType() == JKS
     private static final String PREF_AM_KEYSTORE_PREFIX = "ks_";
     private static final String PREF_AM_KEYSTORE_PASS = "kspass";
-    private static final SharedPreferences sharedPreferences;
+    private static final SharedPreferences sSharedPreferences;
 
     public static final String ACTION_KS_INTERACTION_BEGIN = BuildConfig.APPLICATION_ID + ".action.KS_INTERACTION_BEGIN";
     public static final String ACTION_KS_INTERACTION_END = BuildConfig.APPLICATION_ID + ".action.KS_INTERACTION_END";
 
     static {
-        Context ctx = AppManager.getContext();
+        Context ctx = ContextUtils.getContext();
         AM_KEYSTORE_FILE = new File(ctx.getFilesDir(), AM_KEYSTORE_FILE_NAME);
-        sharedPreferences = ctx.getSharedPreferences("keystore", Context.MODE_PRIVATE);
+        sSharedPreferences = ctx.getSharedPreferences("keystore", Context.MODE_PRIVATE);
     }
 
     @SuppressLint("StaticFieldLeak")
-    private static KeyStoreManager INSTANCE;
+    private static KeyStoreManager sInstance;
 
     public static KeyStoreManager getInstance() throws Exception {
-        if (INSTANCE == null) {
-            INSTANCE = new KeyStoreManager(AppManager.getContext());
+        if (sInstance == null) {
+            sInstance = new KeyStoreManager();
         }
-        return INSTANCE;
+        return sInstance;
     }
 
     public static void reloadKeyStore() throws Exception {
-        INSTANCE = new KeyStoreManager(AppManager.getContext());
+        sInstance = new KeyStoreManager();
     }
 
     @NonNull
@@ -103,7 +103,7 @@ public class KeyStoreManager {
         char[] password = new char[30];
         RandomChar randomChar = new RandomChar();
         randomChar.nextChars(password);
-        savePass(PREF_AM_KEYSTORE_PASS, password);
+        savePass(activity, PREF_AM_KEYSTORE_PASS, password);
         return displayKeyStorePassword(activity, password, dismissListener);
     }
 
@@ -163,7 +163,7 @@ public class KeyStoreManager {
                 //noinspection ConstantConditions
                 char[] password = new char[editable.length()];
                 editable.getChars(0, editable.length(), password, 0);
-                savePass(PREF_AM_KEYSTORE_PASS, password);
+                savePass(activity, PREF_AM_KEYSTORE_PASS, password);
                 Utils.clearChars(password);
                 try {
                     getInstance();
@@ -176,8 +176,8 @@ public class KeyStoreManager {
             });
             deleteButton.setOnClickListener(v -> {
                 AM_KEYSTORE_FILE.delete();
-                if (sharedPreferences.contains(PREF_AM_KEYSTORE_PASS)) {
-                    sharedPreferences.edit().remove(PREF_AM_KEYSTORE_PASS).apply();
+                if (sSharedPreferences.contains(PREF_AM_KEYSTORE_PASS)) {
+                    sSharedPreferences.edit().remove(PREF_AM_KEYSTORE_PASS).apply();
                 }
                 dismiss.set(false);
                 generateAndDisplayKeyStorePassword(activity, dismissListener).show();
@@ -230,9 +230,9 @@ public class KeyStoreManager {
         }
     }
 
-    private final Context context;
-    private final KeyStore amKeyStore;
-    private final BroadcastReceiver receiver = new BroadcastReceiver() {
+    private final Context mContext;
+    private final KeyStore mAmKeyStore;
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, @NonNull Intent intent) {
             if (intent.getAction() == null) return;
@@ -246,17 +246,17 @@ public class KeyStoreManager {
         }
     };
 
-    private KeyStoreManager(@NonNull Context context)
+    private KeyStoreManager()
             throws CertificateException, NoSuchAlgorithmException, KeyStoreException, IOException {
-        this.context = context;
-        amKeyStore = getAmKeyStore();
+        mContext = ContextUtils.getContext();
+        mAmKeyStore = getAmKeyStore();
     }
 
     public void addKeyPair(String alias, @NonNull KeyPair keyPair, boolean isOverride)
             throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException {
         // Check existence of this alias in system preferences, this should be unique
         String prefAlias = getPrefAlias(alias);
-        if (sharedPreferences.contains(prefAlias) && amKeyStore.containsAlias(alias)) {
+        if (sSharedPreferences.contains(prefAlias) && mAmKeyStore.containsAlias(alias)) {
             Log.w(TAG, "Alias " + alias + " exists.");
             if (isOverride) removeItemInternal(alias);
             else return;
@@ -264,15 +264,15 @@ public class KeyStoreManager {
         char[] password = getAmKeyStorePassword();
         PrivateKey privateKey = keyPair.getPrivateKey();
         Certificate certificate = keyPair.getCertificate();
-        amKeyStore.setKeyEntry(alias, privateKey, password, new Certificate[]{certificate});
-        String encryptedPass = getEncryptedPassword(password);
+        mAmKeyStore.setKeyEntry(alias, privateKey, password, new Certificate[]{certificate});
+        String encryptedPass = getEncryptedPassword(mContext, password);
         if (encryptedPass == null) {
-            amKeyStore.deleteEntry(alias);
+            mAmKeyStore.deleteEntry(alias);
             throw new KeyStoreException("Password for " + alias + " could not be saved.");
         }
-        sharedPreferences.edit().putString(prefAlias, encryptedPass).apply();
+        sSharedPreferences.edit().putString(prefAlias, encryptedPass).apply();
         try (OutputStream is = new FileOutputStream(AM_KEYSTORE_FILE)) {
-            amKeyStore.store(is, password);
+            mAmKeyStore.store(is, password);
             Utils.clearChars(password);
             Utils.clearChars(password);
         }
@@ -282,20 +282,20 @@ public class KeyStoreManager {
             throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException {
         // Check existence of this alias in system preferences, this should be unique
         String prefAlias = getPrefAlias(alias);
-        if (sharedPreferences.contains(prefAlias) && amKeyStore.containsAlias(alias)) {
+        if (sSharedPreferences.contains(prefAlias) && mAmKeyStore.containsAlias(alias)) {
             if (!isOverride) throw new KeyStoreException("Alias " + alias + " exists.");
             else Log.w(TAG, "Alias " + alias + " exists.");
         }
         char[] password = getAmKeyStorePassword();
-        amKeyStore.setEntry(alias, new KeyStore.SecretKeyEntry(secretKey), new KeyStore.PasswordProtection(password));
-        String encryptedPass = getEncryptedPassword(password);
+        mAmKeyStore.setEntry(alias, new KeyStore.SecretKeyEntry(secretKey), new KeyStore.PasswordProtection(password));
+        String encryptedPass = getEncryptedPassword(mContext, password);
         if (encryptedPass == null) {
-            amKeyStore.deleteEntry(alias);
+            mAmKeyStore.deleteEntry(alias);
             throw new KeyStoreException("Password for " + alias + " could not be saved.");
         }
-        sharedPreferences.edit().putString(prefAlias, encryptedPass).apply();
+        sSharedPreferences.edit().putString(prefAlias, encryptedPass).apply();
         try (OutputStream is = new FileOutputStream(AM_KEYSTORE_FILE)) {
-            amKeyStore.store(is, password);
+            mAmKeyStore.store(is, password);
         } finally {
             Utils.clearChars(password);
             Utils.clearChars(password);
@@ -307,17 +307,17 @@ public class KeyStoreManager {
         removeItemInternal(alias);
         char[] realPassword = getAmKeyStorePassword();
         try (OutputStream is = new FileOutputStream(AM_KEYSTORE_FILE)) {
-            amKeyStore.store(is, realPassword);
+            mAmKeyStore.store(is, realPassword);
         } finally {
             Utils.clearChars(realPassword);
         }
     }
 
     private void removeItemInternal(String alias) throws KeyStoreException {
-        amKeyStore.deleteEntry(alias);
+        mAmKeyStore.deleteEntry(alias);
         String prefAlias = getPrefAlias(alias);
-        if (sharedPreferences.contains(prefAlias)) {
-            sharedPreferences.edit().remove(prefAlias).apply();
+        if (sSharedPreferences.contains(prefAlias)) {
+            sSharedPreferences.edit().remove(prefAlias).apply();
         }
     }
 
@@ -325,7 +325,7 @@ public class KeyStoreManager {
     private Key getKey(String alias)
             throws UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException {
         char[] password = getAmKeyStorePassword();
-        Key key = amKeyStore.getKey(alias, password);
+        Key key = mAmKeyStore.getKey(alias, password);
         Utils.clearChars(password);
         return key;
     }
@@ -340,7 +340,7 @@ public class KeyStoreManager {
         if (password == null) {
             password = getAliasPassword(alias);
         }
-        Key key = amKeyStore.getKey(alias, password);
+        Key key = mAmKeyStore.getKey(alias, password);
         Utils.clearChars(password);
         return key;
     }
@@ -375,7 +375,7 @@ public class KeyStoreManager {
     }
 
     public boolean containsKey(String alias) throws KeyStoreException {
-        return amKeyStore.containsAlias(alias);
+        return mAmKeyStore.containsAlias(alias);
     }
 
     /**
@@ -385,7 +385,7 @@ public class KeyStoreManager {
      * @return Certificate associated with the alias, usually {@link X509Certificate}
      */
     private Certificate getCertificate(String alias) throws KeyStoreException {
-        return amKeyStore.getCertificate(alias);
+        return mAmKeyStore.getCertificate(alias);
     }
 
     /**
@@ -394,8 +394,8 @@ public class KeyStoreManager {
      * @param prefAlias The alias after running {@link #getPrefAlias(String)}
      * @param password  The password for the alias. {@link Utils#clearChars(char[])} must be called when done.
      */
-    static void savePass(String prefAlias, char[] password) {
-        sharedPreferences.edit().putString(prefAlias, getEncryptedPassword(password)).apply();
+    static void savePass(@NonNull Context context, String prefAlias, char[] password) {
+        sSharedPreferences.edit().putString(prefAlias, getEncryptedPassword(context, password)).apply();
     }
 
     /**
@@ -406,10 +406,10 @@ public class KeyStoreManager {
      */
     @CheckResult
     @Nullable
-    private static char[] getDecryptedPassword(@NonNull String encryptedPass) {
+    private static char[] getDecryptedPassword(@NonNull Context context, @NonNull String encryptedPass) {
         try {
             byte[] encryptedBytes = Base64.decode(encryptedPass, Base64.NO_WRAP);
-            return Utils.bytesToChars(CompatUtil.decryptData(AppManager.getContext(), encryptedBytes));
+            return Utils.bytesToChars(CompatUtil.decryptData(context, encryptedBytes));
         } catch (Exception e) {
             Log.e("KS", "Could not get decrypted password for " + encryptedPass, e);
         }
@@ -423,9 +423,9 @@ public class KeyStoreManager {
      * @return Encrypted password (IV length + IV + password) in base 64 format
      */
     @Nullable
-    private static String getEncryptedPassword(@NonNull char[] realPass) {
+    private static String getEncryptedPassword(@NonNull Context context, @NonNull char[] realPass) {
         try (ByteArrayOutputStream bos = new ByteArrayOutputStream()) {
-            AesEncryptedData encryptedData = CompatUtil.getEncryptedData(Utils.charsToBytes(realPass), AppManager.getContext());
+            AesEncryptedData encryptedData = CompatUtil.getEncryptedData(Utils.charsToBytes(realPass), context);
             bos.write((byte) encryptedData.getIv().length);
             bos.write(encryptedData.getIv());
             bos.write(encryptedData.getEncryptedData());
@@ -471,11 +471,11 @@ public class KeyStoreManager {
     @CheckResult
     @NonNull
     public char[] getAmKeyStorePassword() throws KeyStoreException {
-        String encryptedPass = sharedPreferences.getString(PREF_AM_KEYSTORE_PASS, null);
+        String encryptedPass = sSharedPreferences.getString(PREF_AM_KEYSTORE_PASS, null);
         if (encryptedPass == null) {
             throw new KeyStoreException("No saved password for KeyStore.");
         }
-        char[] realPassword = getDecryptedPassword(encryptedPass);
+        char[] realPassword = getDecryptedPassword(mContext, encryptedPass);
         if (realPassword == null) {
             throw new KeyStoreException("Could not decrypt encrypted password.");
         }
@@ -493,12 +493,12 @@ public class KeyStoreManager {
     private char[] getAliasPassword(@NonNull String alias) throws KeyStoreException {
         char[] password;
         String prefAlias = getPrefAlias(alias);
-        if (sharedPreferences.contains(prefAlias)) {
-            String encryptedPass = sharedPreferences.getString(prefAlias, null);
+        if (sSharedPreferences.contains(prefAlias)) {
+            String encryptedPass = sSharedPreferences.getString(prefAlias, null);
             if (encryptedPass == null) {
                 throw new KeyStoreException("Stored pass is empty for alias " + alias);
             }
-            password = getDecryptedPassword(encryptedPass);
+            password = getDecryptedPassword(mContext, encryptedPass);
             if (password == null) {
                 throw new KeyStoreException("Decrypted pass is empty for alias " + alias);
             }
@@ -506,16 +506,16 @@ public class KeyStoreManager {
         } else {
             IntentFilter filter = new IntentFilter(ACTION_KS_INTERACTION_BEGIN);
             filter.addAction(ACTION_KS_INTERACTION_END);
-            context.registerReceiver(receiver, filter);
+            mContext.registerReceiver(mReceiver, filter);
             Intent broadcastIntent = new Intent(ACTION_KS_INTERACTION_BEGIN);
-            context.sendBroadcast(broadcastIntent);
+            mContext.sendBroadcast(broadcastIntent);
             // Intent wrapper
-            Intent intent = new Intent(context, KeyStoreActivity.class);
+            Intent intent = new Intent(mContext, KeyStoreActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra(KeyStoreActivity.EXTRA_ALIAS, alias);
             String ks = "AM KeyStore";
             // We don't need a delete intent since the time will be expired anyway
-            NotificationCompat.Builder builder = NotificationUtils.getHighPriorityNotificationBuilder(context)
+            NotificationCompat.Builder builder = NotificationUtils.getHighPriorityNotificationBuilder(mContext)
                     .setAutoCancel(true)
                     .setDefaults(Notification.DEFAULT_ALL)
                     .setWhen(System.currentTimeMillis())
@@ -523,13 +523,13 @@ public class KeyStoreManager {
                     .setTicker(ks)
                     .setContentTitle(ks)
                     .setSubText(ks)
-                    .setContentText(context.getString(R.string.input_keystore_alias_pass_msg, alias));
-            builder.setContentIntent(PendingIntent.getActivity(context, 0, intent,
+                    .setContentText(mContext.getString(R.string.input_keystore_alias_pass_msg, alias));
+            builder.setContentIntent(PendingIntent.getActivity(mContext, 0, intent,
                     PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_UPDATE_CURRENT
                             | PendingIntentCompat.FLAG_IMMUTABLE));
-            NotificationUtils.displayHighPriorityNotification(context, builder.build());
+            NotificationUtils.displayHighPriorityNotification(mContext, builder.build());
             acquireLock();
-            context.unregisterReceiver(receiver);
+            mContext.unregisterReceiver(mReceiver);
             return getAliasPassword(alias);
         }
     }
@@ -546,16 +546,16 @@ public class KeyStoreManager {
         return PREF_AM_KEYSTORE_PREFIX + alias;
     }
 
-    private CountDownLatch interactionWatcher;
+    private CountDownLatch mInteractionWatcher;
 
     private void releaseLock() {
-        if (interactionWatcher != null) interactionWatcher.countDown();
+        if (mInteractionWatcher != null) mInteractionWatcher.countDown();
     }
 
     private void acquireLock() {
-        interactionWatcher = new CountDownLatch(1);
+        mInteractionWatcher = new CountDownLatch(1);
         try {
-            interactionWatcher.await(100, TimeUnit.SECONDS);
+            mInteractionWatcher.await(100, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             Log.e(TAG, "waitForResult: interrupted", e);
             Thread.currentThread().interrupt();

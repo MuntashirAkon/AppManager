@@ -36,51 +36,51 @@ import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.io.IoUtils;
 
 public class PackageInstallerViewModel extends AndroidViewModel {
-    private final PackageManager packageManager;
-    private PackageInfo newPackageInfo;
-    private PackageInfo installedPackageInfo;
-    private int apkFileKey;
-    private ApkFile apkFile;
-    private String packageName;
-    private String appLabel;
-    private Drawable appIcon;
-    private boolean isSignatureDifferent = false;
+    private final PackageManager mPm;
+    private PackageInfo mNewPackageInfo;
+    private PackageInfo mInstalledPackageInfo;
+    private int mApkFileKey;
+    private ApkFile mApkFile;
+    private String mPackageName;
+    private String mAppLabel;
+    private Drawable mAppIcon;
+    private boolean mIsSignatureDifferent = false;
     @Nullable
-    private List<UserInfo> users;
-    private int trackerCount;
+    private List<UserInfo> mUsers;
+    private int mTrackerCount;
     @Nullable
-    private Future<?> packageInfoResult;
-    private final MutableLiveData<PackageInfo> packageInfoLiveData = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> packageUninstalledLiveData = new MutableLiveData<>();
+    private Future<?> mPackageInfoResult;
+    private final MutableLiveData<PackageInfo> mPackageInfoLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> mPackageUninstalledLiveData = new MutableLiveData<>();
 
     public PackageInstallerViewModel(@NonNull Application application) {
         super(application);
-        packageManager = application.getPackageManager();
+        mPm = application.getPackageManager();
     }
 
     @Override
     protected void onCleared() {
-        IoUtils.closeQuietly(apkFile);
-        if (packageInfoResult != null) {
-            packageInfoResult.cancel(true);
+        IoUtils.closeQuietly(mApkFile);
+        if (mPackageInfoResult != null) {
+            mPackageInfoResult.cancel(true);
         }
         super.onCleared();
     }
 
     public LiveData<PackageInfo> packageInfoLiveData() {
-        return packageInfoLiveData;
+        return mPackageInfoLiveData;
     }
 
     public LiveData<Boolean> packageUninstalledLiveData() {
-        return packageUninstalledLiveData;
+        return mPackageUninstalledLiveData;
     }
 
     @AnyThread
     public void getPackageInfo(ApkQueueItem apkQueueItem) {
-        if (packageInfoResult != null) {
-            packageInfoResult.cancel(true);
+        if (mPackageInfoResult != null) {
+            mPackageInfoResult.cancel(true);
         }
-        packageInfoResult = ThreadUtils.postOnBackgroundThread(() -> {
+        mPackageInfoResult = ThreadUtils.postOnBackgroundThread(() -> {
             try {
                 // Three possibilities: 1. Install-existing, 2. ApkFile, 3. Uri
                 if (apkQueueItem.isInstallExisting()) {
@@ -89,20 +89,20 @@ public class PackageInstallerViewModel extends AndroidViewModel {
                     }
                     getExistingPackageInfoInternal(apkQueueItem.getPackageName());
                 } else if (apkQueueItem.getApkFileKey() != -1) {
-                    apkFileKey = apkQueueItem.getApkFileKey();
+                    mApkFileKey = apkQueueItem.getApkFileKey();
                     getPackageInfoInternal();
                 } else if (apkQueueItem.getUri() != null) {
-                    apkFileKey = ApkFile.createInstance(apkQueueItem.getUri(), apkQueueItem.getMimeType());
+                    mApkFileKey = ApkFile.createInstance(apkQueueItem.getUri(), apkQueueItem.getMimeType());
                     getPackageInfoInternal();
                 } else {
                     throw new IllegalArgumentException("Invalid queue item.");
                 }
-                apkQueueItem.setApkFileKey(apkFileKey);
-                apkQueueItem.setPackageName(packageName);
-                apkQueueItem.setAppLabel(appLabel);
+                apkQueueItem.setApkFileKey(mApkFileKey);
+                apkQueueItem.setPackageName(mPackageName);
+                apkQueueItem.setAppLabel(mAppLabel);
             } catch (Throwable th) {
                 Log.e("PIVM", "Couldn't fetch package info", th);
-                packageInfoLiveData.postValue(null);
+                mPackageInfoLiveData.postValue(null);
             }
         });
     }
@@ -110,102 +110,102 @@ public class PackageInstallerViewModel extends AndroidViewModel {
     public void uninstallPackage() {
         ThreadUtils.postOnBackgroundThread(() -> {
             PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance();
-            installer.setAppLabel(appLabel);
-            packageUninstalledLiveData.postValue(installer.uninstall(packageName, UserHandleHidden.USER_ALL, false));
+            installer.setAppLabel(mAppLabel);
+            mPackageUninstalledLiveData.postValue(installer.uninstall(mPackageName, UserHandleHidden.USER_ALL, false));
         });
     }
 
     public PackageInfo getNewPackageInfo() {
-        return newPackageInfo;
+        return mNewPackageInfo;
     }
 
     @Nullable
     public PackageInfo getInstalledPackageInfo() {
-        return installedPackageInfo;
+        return mInstalledPackageInfo;
     }
 
     public String getAppLabel() {
-        return appLabel;
+        return mAppLabel;
     }
 
     public Drawable getAppIcon() {
-        return appIcon;
+        return mAppIcon;
     }
 
     public String getPackageName() {
-        return packageName;
+        return mPackageName;
     }
 
     public ApkFile getApkFile() {
-        return apkFile;
+        return mApkFile;
     }
 
     public int getTrackerCount() {
-        return trackerCount;
+        return mTrackerCount;
     }
 
     public int getApkFileKey() {
-        return apkFileKey;
+        return mApkFileKey;
     }
 
     public boolean isSignatureDifferent() {
-        return isSignatureDifferent;
+        return mIsSignatureDifferent;
     }
 
     @Nullable
     public List<UserInfo> getUsers() {
-        return users;
+        return mUsers;
     }
 
     private void getPackageInfoInternal() throws PackageManager.NameNotFoundException, IOException {
-        apkFile = ApkFile.getInstance(this.apkFileKey);
-        newPackageInfo = loadNewPackageInfo();
-        packageName = newPackageInfo.packageName;
+        mApkFile = ApkFile.getInstance(mApkFileKey);
+        mNewPackageInfo = loadNewPackageInfo();
+        mPackageName = mNewPackageInfo.packageName;
         if (ThreadUtils.isInterrupted()) {
             return;
         }
         try {
-            installedPackageInfo = loadInstalledPackageInfo(packageName);
+            mInstalledPackageInfo = loadInstalledPackageInfo(mPackageName);
             if (ThreadUtils.isInterrupted()) {
                 return;
             }
         } catch (PackageManager.NameNotFoundException ignore) {
         }
-        appLabel = packageManager.getApplicationLabel(newPackageInfo.applicationInfo).toString();
-        appIcon = packageManager.getApplicationIcon(newPackageInfo.applicationInfo);
-        trackerCount = ComponentUtils.getTrackerComponentsForPackageInfo(newPackageInfo).size();
+        mAppLabel = mPm.getApplicationLabel(mNewPackageInfo.applicationInfo).toString();
+        mAppIcon = mPm.getApplicationIcon(mNewPackageInfo.applicationInfo);
+        mTrackerCount = ComponentUtils.getTrackerComponentsForPackage(mNewPackageInfo).size();
         if (ThreadUtils.isInterrupted()) {
             return;
         }
-        if (newPackageInfo != null && installedPackageInfo != null) {
-            isSignatureDifferent = PackageUtils.isSignatureDifferent(newPackageInfo, installedPackageInfo);
+        if (mNewPackageInfo != null && mInstalledPackageInfo != null) {
+            mIsSignatureDifferent = PackageUtils.isSignatureDifferent(mNewPackageInfo, mInstalledPackageInfo);
         }
-        users = Users.getUsers();
-        packageInfoLiveData.postValue(newPackageInfo);
+        mUsers = Users.getUsers();
+        mPackageInfoLiveData.postValue(mNewPackageInfo);
     }
 
     private void getExistingPackageInfoInternal(@NonNull String packageName) throws PackageManager.NameNotFoundException, IOException, ApkFile.ApkFileException {
-        this.packageName = packageName;
-        installedPackageInfo = loadInstalledPackageInfo(packageName);
-        apkFileKey = ApkFile.createInstance(installedPackageInfo.applicationInfo);
-        apkFile = ApkFile.getInstance(this.apkFileKey);
-        newPackageInfo = loadNewPackageInfo();
-        appLabel = packageManager.getApplicationLabel(newPackageInfo.applicationInfo).toString();
-        appIcon = packageManager.getApplicationIcon(newPackageInfo.applicationInfo);
-        trackerCount = ComponentUtils.getTrackerComponentsForPackageInfo(newPackageInfo).size();
-        if (newPackageInfo != null && installedPackageInfo != null) {
-            isSignatureDifferent = PackageUtils.isSignatureDifferent(newPackageInfo, installedPackageInfo);
+        mPackageName = packageName;
+        mInstalledPackageInfo = loadInstalledPackageInfo(packageName);
+        mApkFileKey = ApkFile.createInstance(mInstalledPackageInfo.applicationInfo);
+        mApkFile = ApkFile.getInstance(mApkFileKey);
+        mNewPackageInfo = loadNewPackageInfo();
+        mAppLabel = mPm.getApplicationLabel(mNewPackageInfo.applicationInfo).toString();
+        mAppIcon = mPm.getApplicationIcon(mNewPackageInfo.applicationInfo);
+        mTrackerCount = ComponentUtils.getTrackerComponentsForPackage(mNewPackageInfo).size();
+        if (mNewPackageInfo != null && mInstalledPackageInfo != null) {
+            mIsSignatureDifferent = PackageUtils.isSignatureDifferent(mNewPackageInfo, mInstalledPackageInfo);
         }
-        users = Users.getUsers();
-        packageInfoLiveData.postValue(newPackageInfo);
+        mUsers = Users.getUsers();
+        mPackageInfoLiveData.postValue(mNewPackageInfo);
     }
 
     @WorkerThread
     @NonNull
     private PackageInfo loadNewPackageInfo() throws PackageManager.NameNotFoundException, IOException {
-        String apkPath = apkFile.getBaseEntry().getSignedFile().getAbsolutePath();
+        String apkPath = mApkFile.getBaseEntry().getSignedFile().getAbsolutePath();
         @SuppressLint("WrongConstant")
-        PackageInfo packageInfo = packageManager.getPackageArchiveInfo(apkPath, PackageManager.GET_PERMISSIONS
+        PackageInfo packageInfo = mPm.getPackageArchiveInfo(apkPath, PackageManager.GET_PERMISSIONS
                 | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
                 | PackageManager.GET_SERVICES | MATCH_DISABLED_COMPONENTS | GET_SIGNING_CERTIFICATES_APK
                 | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_SHARED_LIBRARY_FILES);
@@ -221,7 +221,7 @@ public class PackageInstallerViewModel extends AndroidViewModel {
     @NonNull
     private PackageInfo loadInstalledPackageInfo(String packageName) throws PackageManager.NameNotFoundException {
         @SuppressLint("WrongConstant")
-        PackageInfo packageInfo = packageManager.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS
+        PackageInfo packageInfo = mPm.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS
                 | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
                 | PackageManager.GET_SERVICES | MATCH_DISABLED_COMPONENTS | GET_SIGNING_CERTIFICATES | MATCH_UNINSTALLED_PACKAGES
                 | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_SHARED_LIBRARY_FILES);

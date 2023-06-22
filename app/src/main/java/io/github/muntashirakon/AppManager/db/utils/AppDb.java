@@ -59,41 +59,41 @@ public class AppDb {
 
     private static final Object sLock = new Object();
 
-    private final AppDao appDao;
-    private final BackupDao backupDao;
+    private final AppDao mAppDao;
+    private final BackupDao mBackupDao;
 
     public AppDb() {
-        appDao = AppsDb.getInstance().appDao();
-        backupDao = AppsDb.getInstance().backupDao();
+        mAppDao = AppsDb.getInstance().appDao();
+        mBackupDao = AppsDb.getInstance().backupDao();
     }
 
     public List<App> getAllApplications() {
         synchronized (sLock) {
-            return appDao.getAll();
+            return mAppDao.getAll();
         }
     }
 
     public List<App> getAllInstalledApplications() {
         synchronized (sLock) {
-            return appDao.getAllInstalled();
+            return mAppDao.getAllInstalled();
         }
     }
 
     public List<App> getAllApplications(String packageName) {
         synchronized (sLock) {
-            return appDao.getAll(packageName);
+            return mAppDao.getAll(packageName);
         }
     }
 
     public List<Backup> getAllBackups() {
         synchronized (sLock) {
-            return backupDao.getAll();
+            return mBackupDao.getAll();
         }
     }
 
     public List<Backup> getAllBackups(String packageName) {
         synchronized (sLock) {
-            return backupDao.get(packageName);
+            return mBackupDao.get(packageName);
         }
     }
 
@@ -101,48 +101,48 @@ public class AppDb {
      * Fetch backups without a lock file. Necessary checks must be done to ensure that the backups actually exist.
      */
     public List<Backup> getAllBackupsNoLock(String packageName) {
-        return backupDao.get(packageName);
+        return mBackupDao.get(packageName);
     }
 
     public void insert(App app) {
         synchronized (sLock) {
-            appDao.insert(app);
+            mAppDao.insert(app);
         }
     }
 
     public void insert(Backup backup) {
         synchronized (sLock) {
-            backupDao.insert(backup);
+            mBackupDao.insert(backup);
         }
     }
 
     public void insertBackups(List<Backup> backups) {
         synchronized (sLock) {
-            backupDao.insert(backups);
+            mBackupDao.insert(backups);
         }
     }
 
     public void deleteApplication(String packageName, int userId) {
         synchronized (sLock) {
-            appDao.delete(packageName, userId);
+            mAppDao.delete(packageName, userId);
         }
     }
 
     public void deleteAllApplications() {
         synchronized (sLock) {
-            appDao.deleteAll();
+            mAppDao.deleteAll();
         }
     }
 
     public void deleteAllBackups() {
         synchronized (sLock) {
-            backupDao.deleteAll();
+            mBackupDao.deleteAll();
         }
     }
 
     public void deleteBackup(Backup backup) {
         synchronized (sLock) {
-            backupDao.delete(backup);
+            mBackupDao.delete(backup);
         }
     }
 
@@ -161,7 +161,7 @@ public class AppDb {
             }
             // Update usage and others
             updateVariableData(context, appList);
-            appDao.insert(appList);
+            mAppDao.insert(appList);
             return appList;
         }
     }
@@ -172,7 +172,7 @@ public class AppDb {
             List<App> appList = updateApplicationInternal(context, packageName);
             // Update usage and others
             updateVariableData(context, appList);
-            appDao.insert(appList);
+            mAppDao.insert(appList);
             return appList;
         }
     }
@@ -181,9 +181,9 @@ public class AppDb {
     @NonNull
     private List<App> updateApplicationInternal(@NonNull Context context, @NonNull String packageName) {
         int[] userIds = Users.getUsersIds();
-        List<App> oldApps = new ArrayList<>(appDao.getAll(packageName));
+        List<App> oldApps = new ArrayList<>(mAppDao.getAll(packageName));
         List<App> appList = new ArrayList<>(userIds.length);
-        List<Backup> backups = new ArrayList<>(backupDao.get(packageName));
+        List<Backup> backups = new ArrayList<>(mBackupDao.get(packageName));
         for (int userId : userIds) {
             int oldAppIndex = findIndexOfApp(oldApps, packageName, userId);
             PackageInfo packageInfo = null;
@@ -210,14 +210,14 @@ public class AppDb {
                 // Neither backup nor package exist
                 if (oldAppIndex >= 0) {
                     // Delete existing backup
-                    appDao.delete(oldApps.get(oldAppIndex));
+                    mAppDao.delete(oldApps.get(oldAppIndex));
                 }
                 continue;
             }
             if (oldAppIndex >= 0) {
                 // There's already existing app
                 App oldApp = oldApps.get(oldAppIndex);
-                appDao.delete(oldApp);
+                mAppDao.delete(oldApp);
                 if ((packageInfo != null && isUpToDate(oldApp, packageInfo))
                         || (backup != null && isUpToDate(oldApp, backup))) {
                     // Up-to-date app
@@ -244,7 +244,7 @@ public class AppDb {
     public void updateApplications(@NonNull Context context) {
         synchronized (sLock) {
             Map<String, Backup> backups = getBackups(false);
-            List<App> oldApps = new ArrayList<>(appDao.getAll());
+            List<App> oldApps = new ArrayList<>(mAppDao.getAll());
             List<App> modifiedApps = new ArrayList<>();
             Set<String> newApps = new HashSet<>();
             Set<String> updatedApps = new HashSet<>();
@@ -318,8 +318,8 @@ public class AppDb {
                 modifiedApps.add(app);
             }
             // Add new data
-            appDao.delete(oldApps);
-            appDao.insert(modifiedApps);
+            mAppDao.delete(oldApps);
+            mAppDao.insert(modifiedApps);
             if (oldApps.size() > 0) {
                 // Delete broadcast
                 Intent intent = new Intent(PackageChangeReceiver.ACTION_DB_PACKAGE_REMOVED);

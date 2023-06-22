@@ -224,7 +224,7 @@ public class OpenWithDialogFragment extends DialogFragment {
         private final List<ResolvedActivityInfo> mMatchingActivities = new ArrayList<>();
         private final Activity mActivity;
         private final OpenWithViewModel mViewModel;
-        private final ImageLoader imageLoader = ImageLoader.getInstance();
+        private final ImageLoader mImageLoader = ImageLoader.getInstance();
 
         private Intent mIntent;
 
@@ -264,7 +264,7 @@ public class OpenWithDialogFragment extends DialogFragment {
             String activityName = info.name;
             String summary = resolvedActivityInfo.appLabel + "\n" + getShortActivityName(activityName);
             holder.summary.setText(summary);
-            imageLoader.displayImage(info.packageName + "_" + resolvedActivityInfo.label, holder.icon,
+            mImageLoader.displayImage(info.packageName + "_" + resolvedActivityInfo.label, holder.icon,
                     new ResolveInfoImageFetcher(resolvedActivityInfo.resolveInfo));
             holder.itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(mIntent);
@@ -364,17 +364,17 @@ public class OpenWithDialogFragment extends DialogFragment {
 
     private static class ResolveInfoImageFetcher implements ImageLoader.ImageFetcherInterface {
         @Nullable
-        private final ResolveInfo info;
+        private final ResolveInfo mInfo;
 
         public ResolveInfoImageFetcher(@Nullable ResolveInfo info) {
-            this.info = info;
+            mInfo = info;
         }
 
         @Override
         @NonNull
         public ImageLoader.ImageFetcherResult fetchImage(@NonNull String tag) {
             PackageManager pm = ContextUtils.getContext().getPackageManager();
-            Drawable drawable = info != null ? info.loadIcon(pm) : null;
+            Drawable drawable = mInfo != null ? mInfo.loadIcon(pm) : null;
             return new ImageLoader.ImageFetcherResult(tag, drawable != null ? UIUtils.getBitmapFromDrawable(drawable) : null,
                     false, true,
                     new ImageLoader.DefaultImageDrawable("android_default_icon", pm.getDefaultActivityIcon()));

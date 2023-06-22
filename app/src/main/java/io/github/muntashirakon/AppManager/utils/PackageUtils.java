@@ -420,12 +420,11 @@ public final class PackageUtils {
     }
 
     @NonNull
-    public static HashMap<String, RuleType> getUserDisabledComponentsForPackage(String packageName, @UserIdInt int userHandle) {
-        HashMap<String, RuleType> componentClasses = collectComponentClassNames(packageName, userHandle);
+    public static HashMap<String, RuleType> getUserDisabledComponentsForPackage(String packageName, @UserIdInt int userId) {
+        HashMap<String, RuleType> componentClasses = collectComponentClassNames(packageName, userId);
         HashMap<String, RuleType> disabledComponents = new HashMap<>();
-        PackageManager pm = AppManager.getContext().getPackageManager();
         for (String componentName : componentClasses.keySet()) {
-            if (isComponentDisabledByUser(pm, packageName, componentName))
+            if (isComponentDisabledByUser(packageName, componentName, userId))
                 disabledComponents.put(componentName, componentClasses.get(componentName));
         }
         disabledComponents.putAll(ComponentUtils.getIFWRulesForPackage(packageName));
@@ -433,9 +432,11 @@ public final class PackageUtils {
     }
 
     @SuppressLint("SwitchIntDef")
-    public static boolean isComponentDisabledByUser(@NonNull PackageManager pm, @NonNull String packageName, @NonNull String componentClassName) {
+    public static boolean isComponentDisabledByUser(@NonNull String packageName, @NonNull String componentClassName,
+                                                    @UserIdInt int userId)
+            throws SecurityException, IllegalArgumentException {
         ComponentName componentName = new ComponentName(packageName, componentClassName);
-        switch (pm.getComponentEnabledSetting(componentName)) {
+        switch (PackageManagerCompat.getComponentEnabledSetting(componentName, userId)) {
             case PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER:
                 return true;
             case PackageManager.COMPONENT_ENABLED_STATE_DISABLED:

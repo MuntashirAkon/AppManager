@@ -21,14 +21,14 @@ public abstract class PreferenceFragment extends PreferenceFragmentCompat {
     public static final String PREF_KEY = "key";
 
     @Nullable
-    private String prefKey;
+    private String mPrefKey;
 
     @CallSuper
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (getArguments() != null) {
-            prefKey = requireArguments().getString(PREF_KEY);
+            mPrefKey = requireArguments().getString(PREF_KEY);
             requireArguments().remove(PREF_KEY);
         }
         // https://github.com/androidx/androidx/blob/androidx-main/preference/preference/res/layout/preference_recyclerview.xml
@@ -50,14 +50,14 @@ public abstract class PreferenceFragment extends PreferenceFragmentCompat {
     public abstract int getTitle();
 
     public void setPrefKey(@Nullable String prefKey) {
-        this.prefKey = prefKey;
+        mPrefKey = prefKey;
         updateUi();
     }
 
     @SuppressLint("RestrictedApi")
     private void updateUi() {
-        if (prefKey != null) {
-            Preference prefToNavigate = findPreference(prefKey);
+        if (mPrefKey != null) {
+            Preference prefToNavigate = findPreference(mPrefKey);
             if (prefToNavigate != null) {
                 prefToNavigate.performClick();
             }

@@ -44,35 +44,35 @@ public class KeyPairGeneratorDialogFragment extends DialogFragment {
         void onGenerate(@Nullable KeyPair keyPair);
     }
 
-    private OnGenerateListener listener;
-    private int keySize;
-    private long expiryDate;
+    private OnGenerateListener mListener;
+    private int mKeySize;
+    private long mExpiryDate;
     @CryptoUtils.Mode
-    private String keyType;
+    private String mKeyType;
 
     public void setOnGenerateListener(OnGenerateListener listener) {
-        this.listener = listener;
+        mListener = listener;
     }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         FragmentActivity activity = requireActivity();
-        keyType = requireArguments().getString(EXTRA_KEY_TYPE, CryptoUtils.MODE_RSA);
+        mKeyType = requireArguments().getString(EXTRA_KEY_TYPE, CryptoUtils.MODE_RSA);
         View view = View.inflate(activity, R.layout.dialog_certificate_generator, null);
         Spinner keySizeSpinner = view.findViewById(R.id.key_size_selector_spinner);
-        if (keyType.equals(CryptoUtils.MODE_RSA)) {
+        if (mKeyType.equals(CryptoUtils.MODE_RSA)) {
             keySizeSpinner.setAdapter(new ArrayAdapter<>(activity, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
                     SUPPORTED_RSA_KEY_SIZES));
             keySizeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    keySize = SUPPORTED_RSA_KEY_SIZES.get(position);
+                    mKeySize = SUPPORTED_RSA_KEY_SIZES.get(position);
                 }
 
                 @Override
                 public void onNothingSelected(AdapterView<?> parent) {
-                    keySize = 2048;
+                    mKeySize = 2048;
                 }
             });
         } else {
@@ -103,7 +103,7 @@ public class KeyPairGeneratorDialogFragment extends DialogFragment {
                             orgUnit.getText().toString(), orgName.getText().toString(),
                             locality.getText().toString(), state.getText().toString(),
                             country.getText().toString());
-                    if (this.expiryDate == 0) {
+                    if (mExpiryDate == 0) {
                         if (isDetached()) return;
                         activity.runOnUiThread(() -> UIUtils.displayShortToast(R.string.expiry_date_cannot_be_empty));
                         return;
@@ -112,17 +112,17 @@ public class KeyPairGeneratorDialogFragment extends DialogFragment {
                         formattedSubject = "CN=App Manager";
                     }
                     try {
-                        if (keyType.equals(CryptoUtils.MODE_RSA)) {
-                            keyPair.set(KeyStoreUtils.generateRSAKeyPair(formattedSubject, keySize, this.expiryDate));
-                        } else if (keyType.equals(CryptoUtils.MODE_ECC)) {
-                            keyPair.set(KeyStoreUtils.generateECCKeyPair(formattedSubject, this.expiryDate));
+                        if (mKeyType.equals(CryptoUtils.MODE_RSA)) {
+                            keyPair.set(KeyStoreUtils.generateRSAKeyPair(formattedSubject, mKeySize, mExpiryDate));
+                        } else if (mKeyType.equals(CryptoUtils.MODE_ECC)) {
+                            keyPair.set(KeyStoreUtils.generateECCKeyPair(formattedSubject, mExpiryDate));
                         }
                     } catch (Exception e) {
                         Log.e(TAG, e);
                     } finally {
                         if (!isDetached()) {
                             activity.runOnUiThread(() -> {
-                                if (listener != null) listener.onGenerate(keyPair.get());
+                                if (mListener != null) mListener.onGenerate(keyPair.get());
                                 dialog.dismiss();
                             });
                         }
@@ -156,8 +156,8 @@ public class KeyPairGeneratorDialogFragment extends DialogFragment {
                 .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
                 .build();
         datePicker.addOnPositiveButtonClickListener(selection -> {
-            this.expiryDate = selection;
-            expiryDate.setText(DateUtils.formatDate(selection));
+            mExpiryDate = selection;
+            expiryDate.setText(DateUtils.formatDate(requireContext(), selection));
         });
         datePicker.show(getChildFragmentManager(), "DatePicker");
     }

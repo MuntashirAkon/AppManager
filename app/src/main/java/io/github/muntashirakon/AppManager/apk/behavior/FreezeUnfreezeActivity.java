@@ -41,11 +41,11 @@ import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 
 public class FreezeUnfreezeActivity extends BaseActivity {
-    private FreezeUnfreezeViewModel viewModel;
+    private FreezeUnfreezeViewModel mViewModel;
 
     @Override
     protected void onAuthenticated(@Nullable Bundle savedInstanceState) {
-        viewModel = new ViewModelProvider(this).get(FreezeUnfreezeViewModel.class);
+        mViewModel = new ViewModelProvider(this).get(FreezeUnfreezeViewModel.class);
         if (!SelfPermissions.canFreezeUnfreezePackages()) {
             UIUtils.displayShortToast(R.string.only_works_in_root_or_adb_mode);
             finishAndRemoveTask();
@@ -54,13 +54,13 @@ public class FreezeUnfreezeActivity extends BaseActivity {
         FreezeUnfreeze.ShortcutInfo i = FreezeUnfreeze.getShortcutInfo(getIntent());
         if (i != null) {
             hideNotification(i);
-            viewModel.addToPendingShortcuts(i);
-            viewModel.checkNextFrozen();
+            mViewModel.addToPendingShortcuts(i);
+            mViewModel.checkNextFrozen();
         } else {
             finishAndRemoveTask();
             return;
         }
-        viewModel.isFrozenLiveData.observe(this, shortcutInfoBooleanPair -> {
+        mViewModel.mIsFrozenLiveData.observe(this, shortcutInfoBooleanPair -> {
             if (shortcutInfoBooleanPair == null) {
                 // End of queue reached
                 finishAndRemoveTask();
@@ -81,14 +81,14 @@ public class FreezeUnfreezeActivity extends BaseActivity {
             if (!shortcutInfoBooleanPair.second && (shortcutInfo.flags & FreezeUnfreeze.FLAG_ON_UNFREEZE_OPEN_APP) != 0) {
                 FreezeUnfreeze.launchApp(this, shortcutInfo);
             }
-            viewModel.checkNextFrozen();
+            mViewModel.checkNextFrozen();
         });
-        viewModel.openAppOrFreeze.observe(this, shortcutInfo -> new MaterialAlertDialogBuilder(this)
+        mViewModel.mOpenAppOrFreeze.observe(this, shortcutInfo -> new MaterialAlertDialogBuilder(this)
                 .setTitle(R.string.freeze_unfreeze)
                 .setMessage(R.string.choose_what_to_do)
                 .setPositiveButton(R.string.open, (dialog, which) -> FreezeUnfreeze.launchApp(this, shortcutInfo))
-                .setNegativeButton(R.string.freeze, (dialog, which) -> viewModel.freezeFinal(shortcutInfo))
-                .setOnDismissListener(v -> viewModel.checkNextFrozen())
+                .setNegativeButton(R.string.freeze, (dialog, which) -> mViewModel.freezeFinal(shortcutInfo))
+                .setOnDismissListener(v -> mViewModel.checkNextFrozen())
                 .show());
     }
 
@@ -106,9 +106,9 @@ public class FreezeUnfreezeActivity extends BaseActivity {
             return;
         }
         FreezeUnfreeze.ShortcutInfo shortcutInfo = FreezeUnfreeze.getShortcutInfo(getIntent());
-        if (viewModel != null && shortcutInfo != null) {
+        if (mViewModel != null && shortcutInfo != null) {
             hideNotification(shortcutInfo);
-            viewModel.addToPendingShortcuts(shortcutInfo);
+            mViewModel.addToPendingShortcuts(shortcutInfo);
         }
     }
 
@@ -119,28 +119,28 @@ public class FreezeUnfreezeActivity extends BaseActivity {
     }
 
     public static class FreezeUnfreezeViewModel extends AndroidViewModel {
-        private final MutableLiveData<Pair<FreezeUnfreeze.ShortcutInfo, Boolean>> isFrozenLiveData = new MutableLiveData<>();
-        private final MutableLiveData<FreezeUnfreeze.ShortcutInfo> openAppOrFreeze = new MutableLiveData<>();
-        private final Queue<FreezeUnfreeze.ShortcutInfo> pendingShortcuts = new LinkedList<>();
+        private final MutableLiveData<Pair<FreezeUnfreeze.ShortcutInfo, Boolean>> mIsFrozenLiveData = new MutableLiveData<>();
+        private final MutableLiveData<FreezeUnfreeze.ShortcutInfo> mOpenAppOrFreeze = new MutableLiveData<>();
+        private final Queue<FreezeUnfreeze.ShortcutInfo> mPendingShortcuts = new LinkedList<>();
 
         public FreezeUnfreezeViewModel(@NonNull Application application) {
             super(application);
         }
 
         public void addToPendingShortcuts(@NonNull FreezeUnfreeze.ShortcutInfo shortcutInfo) {
-            synchronized (pendingShortcuts) {
-                pendingShortcuts.add(shortcutInfo);
+            synchronized (mPendingShortcuts) {
+                mPendingShortcuts.add(shortcutInfo);
             }
         }
 
         public void checkNextFrozen() {
             ThreadUtils.postOnBackgroundThread(() -> {
                 FreezeUnfreeze.ShortcutInfo shortcutInfo;
-                synchronized (pendingShortcuts) {
-                    shortcutInfo = pendingShortcuts.poll();
+                synchronized (mPendingShortcuts) {
+                    shortcutInfo = mPendingShortcuts.poll();
                 }
                 if (shortcutInfo == null) {
-                    isFrozenLiveData.postValue(null);
+                    mIsFrozenLiveData.postValue(null);
                     return;
                 }
                 boolean forceFreeze = (shortcutInfo.getPrivateFlags() & FreezeUnfreeze.PRIVATE_FLAG_FREEZE_FORCE) != 0;
@@ -158,12 +158,12 @@ public class FreezeUnfreezeActivity extends BaseActivity {
                         shortcutInfo.setIcon(getDimmedBitmap(icon));
                         if (!forceFreeze && (shortcutInfo.flags & FreezeUnfreeze.FLAG_ON_UNFREEZE_OPEN_APP) != 0) {
                             // Ask whether to open or freeze the app
-                            openAppOrFreeze.postValue(shortcutInfo);
+                            mOpenAppOrFreeze.postValue(shortcutInfo);
                             return;
                         }
                         FreezeUtils.freeze(shortcutInfo.packageName, shortcutInfo.userId);
                     }
-                    isFrozenLiveData.postValue(new Pair<>(shortcutInfo, !isFrozen));
+                    mIsFrozenLiveData.postValue(new Pair<>(shortcutInfo, !isFrozen));
                 } catch (RemoteException | PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -174,7 +174,7 @@ public class FreezeUnfreezeActivity extends BaseActivity {
             ThreadUtils.postOnBackgroundThread(() -> {
                 try {
                     FreezeUtils.freeze(shortcutInfo.packageName, shortcutInfo.userId);
-                    isFrozenLiveData.postValue(new Pair<>(shortcutInfo, true));
+                    mIsFrozenLiveData.postValue(new Pair<>(shortcutInfo, true));
                 } catch (RemoteException e) {
                     e.printStackTrace();
                 }

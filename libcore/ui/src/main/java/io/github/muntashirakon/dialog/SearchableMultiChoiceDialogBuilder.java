@@ -39,16 +39,16 @@ import io.github.muntashirakon.widget.SearchView;
 
 public class SearchableMultiChoiceDialogBuilder<T> {
     @NonNull
-    private final MaterialAlertDialogBuilder builder;
-    private final SearchView searchView;
-    private final CheckBox selectAll;
+    private final MaterialAlertDialogBuilder mBuilder;
+    private final SearchView mSearchView;
+    private final CheckBox mSelectAll;
     @NonNull
-    private final SearchableRecyclerViewAdapter adapter;
+    private final SearchableRecyclerViewAdapter mAdapter;
     @Nullable
-    private AlertDialog dialog;
+    private AlertDialog mDialog;
     @Nullable
-    private OnMultiChoiceClickListener<T> onMultiChoiceClickListener;
-    private boolean isTextSelectable;
+    private OnMultiChoiceClickListener<T> mOnMultiChoiceClickListener;
+    private boolean mIsTextSelectable;
 
     public interface OnClickListener<T> {
         void onClick(DialogInterface dialog, int which, @NonNull ArrayList<T> selectedItems);
@@ -75,9 +75,9 @@ public class SearchableMultiChoiceDialogBuilder<T> {
         RecyclerView recyclerView = view.findViewById(android.R.id.list);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
-        searchView = view.findViewById(R.id.action_search);
-        selectAll = view.findViewById(android.R.id.checkbox);
-        searchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
+        mSearchView = view.findViewById(R.id.action_search);
+        mSelectAll = view.findViewById(android.R.id.checkbox);
+        mSearchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;
@@ -85,148 +85,148 @@ public class SearchableMultiChoiceDialogBuilder<T> {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                adapter.setFilteredItems(newText);
+                mAdapter.setFilteredItems(newText);
                 return true;
             }
         });
         // Don't display search bar if items are less than 6
         if (items.size() < 6) {
-            searchView.setVisibility(View.GONE);
+            mSearchView.setVisibility(View.GONE);
         }
-        builder = new MaterialAlertDialogBuilder(context).setView(view);
+        mBuilder = new MaterialAlertDialogBuilder(context).setView(view);
         @SuppressLint({"RestrictedApi", "PrivateResource"})
         int layoutId = MaterialAttributes.resolveInteger(context, androidx.appcompat.R.attr.multiChoiceItemLayout,
                 com.google.android.material.R.layout.mtrl_alert_select_dialog_multichoice);
-        adapter = new SearchableRecyclerViewAdapter(itemNames, items, layoutId);
-        recyclerView.setAdapter(adapter);
-        selectAll.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        mAdapter = new SearchableRecyclerViewAdapter(itemNames, items, layoutId);
+        recyclerView.setAdapter(mAdapter);
+        mSelectAll.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
-                adapter.selectAll();
+                mAdapter.selectAll();
             } else {
-                adapter.deselectAll();
+                mAdapter.deselectAll();
             }
         });
         if (items.size() < 2) {
             // No need to display select all if only one item is present
-            selectAll.setVisibility(View.GONE);
+            mSelectAll.setVisibility(View.GONE);
         }
         checkSelections();
     }
 
     public SearchableMultiChoiceDialogBuilder<T> setOnMultiChoiceClickListener(@Nullable OnMultiChoiceClickListener<T>
                                                                                        onMultiChoiceClickListener) {
-        this.onMultiChoiceClickListener = onMultiChoiceClickListener;
+        mOnMultiChoiceClickListener = onMultiChoiceClickListener;
         return this;
     }
 
     public SearchableMultiChoiceDialogBuilder<T> addDisabledItems(@Nullable List<T> disabledItems) {
-        adapter.addDisabledItems(disabledItems);
+        mAdapter.addDisabledItems(disabledItems);
         checkSelections();
         return this;
     }
 
     public SearchableMultiChoiceDialogBuilder<T> addSelections(@Nullable List<T> selectedItems) {
-        adapter.addSelectedItems(selectedItems);
+        mAdapter.addSelectedItems(selectedItems);
         checkSelections();
         return this;
     }
 
     public SearchableMultiChoiceDialogBuilder<T> addSelections(@Nullable int[] selectedIndexes) {
-        adapter.addSelectedIndexes(selectedIndexes);
+        mAdapter.addSelectedIndexes(selectedIndexes);
         checkSelections();
         return this;
     }
 
     public SearchableMultiChoiceDialogBuilder<T> removeSelections(@Nullable int[] selectedIndexes) {
-        adapter.removeSelectedIndexes(selectedIndexes);
+        mAdapter.removeSelectedIndexes(selectedIndexes);
         checkSelections();
         return this;
     }
 
     public SearchableMultiChoiceDialogBuilder<T> reloadListUi() {
-        adapter.notifyDataSetChanged();
+        mAdapter.notifyDataSetChanged();
         return this;
     }
 
     public SearchableMultiChoiceDialogBuilder<T> setTextSelectable(boolean textSelectable) {
-        this.isTextSelectable = textSelectable;
+        mIsTextSelectable = textSelectable;
         return this;
     }
 
     public SearchableMultiChoiceDialogBuilder<T> setCancelable(boolean cancelable) {
-        builder.setCancelable(cancelable);
+        mBuilder.setCancelable(cancelable);
         return this;
     }
 
     public SearchableMultiChoiceDialogBuilder<T> hideSearchBar(boolean hide) {
-        this.searchView.setVisibility(hide ? View.GONE : View.VISIBLE);
+        mSearchView.setVisibility(hide ? View.GONE : View.VISIBLE);
         return this;
     }
 
     public SearchableMultiChoiceDialogBuilder<T> showSelectAll(boolean show) {
-        this.selectAll.setVisibility(show ? View.VISIBLE : View.GONE);
+        mSelectAll.setVisibility(show ? View.VISIBLE : View.GONE);
         return this;
     }
 
     public SearchableMultiChoiceDialogBuilder<T> setTitle(@Nullable CharSequence title) {
-        builder.setTitle(title);
+        mBuilder.setTitle(title);
         return this;
     }
 
     public SearchableMultiChoiceDialogBuilder<T> setTitle(@StringRes int title) {
-        builder.setTitle(title);
+        mBuilder.setTitle(title);
         return this;
     }
 
     public SearchableMultiChoiceDialogBuilder<T> setTitle(@Nullable View title) {
-        builder.setCustomTitle(title);
+        mBuilder.setCustomTitle(title);
         return this;
     }
 
     public SearchableMultiChoiceDialogBuilder<T> setPositiveButton(@StringRes int textId, @Nullable OnClickListener<T> listener) {
-        builder.setPositiveButton(textId, (dialog, which) -> {
-            if (listener != null) listener.onClick(dialog, which, adapter.getSelectedItems());
+        mBuilder.setPositiveButton(textId, (dialog, which) -> {
+            if (listener != null) listener.onClick(dialog, which, mAdapter.getSelectedItems());
         });
         return this;
     }
 
     public SearchableMultiChoiceDialogBuilder<T> setPositiveButton(@NonNull CharSequence text, @Nullable OnClickListener<T> listener) {
-        builder.setPositiveButton(text, (dialog, which) -> {
-            if (listener != null) listener.onClick(dialog, which, adapter.getSelectedItems());
+        mBuilder.setPositiveButton(text, (dialog, which) -> {
+            if (listener != null) listener.onClick(dialog, which, mAdapter.getSelectedItems());
         });
         return this;
     }
 
     public SearchableMultiChoiceDialogBuilder<T> setNegativeButton(@StringRes int textId, @Nullable OnClickListener<T> listener) {
-        builder.setNegativeButton(textId, (dialog, which) -> {
-            if (listener != null) listener.onClick(dialog, which, adapter.getSelectedItems());
+        mBuilder.setNegativeButton(textId, (dialog, which) -> {
+            if (listener != null) listener.onClick(dialog, which, mAdapter.getSelectedItems());
         });
         return this;
     }
 
     public SearchableMultiChoiceDialogBuilder<T> setNegativeButton(@NonNull CharSequence text, @Nullable OnClickListener<T> listener) {
-        builder.setNegativeButton(text, (dialog, which) -> {
-            if (listener != null) listener.onClick(dialog, which, adapter.getSelectedItems());
+        mBuilder.setNegativeButton(text, (dialog, which) -> {
+            if (listener != null) listener.onClick(dialog, which, mAdapter.getSelectedItems());
         });
         return this;
     }
 
     public SearchableMultiChoiceDialogBuilder<T> setNeutralButton(@StringRes int textId, @Nullable OnClickListener<T> listener) {
-        builder.setNeutralButton(textId, (dialog, which) -> {
-            if (listener != null) listener.onClick(dialog, which, adapter.getSelectedItems());
+        mBuilder.setNeutralButton(textId, (dialog, which) -> {
+            if (listener != null) listener.onClick(dialog, which, mAdapter.getSelectedItems());
         });
         return this;
     }
 
     public SearchableMultiChoiceDialogBuilder<T> setNeutralButton(@NonNull CharSequence text, @Nullable OnClickListener<T> listener) {
-        builder.setNeutralButton(text, (dialog, which) -> {
-            if (listener != null) listener.onClick(dialog, which, adapter.getSelectedItems());
+        mBuilder.setNeutralButton(text, (dialog, which) -> {
+            if (listener != null) listener.onClick(dialog, which, mAdapter.getSelectedItems());
         });
         return this;
     }
 
     public AlertDialog create() {
-        return dialog = builder.create();
+        return mDialog = mBuilder.create();
     }
 
     public void show() {
@@ -234,38 +234,38 @@ public class SearchableMultiChoiceDialogBuilder<T> {
     }
 
     private void checkSelections() {
-        selectAll.setChecked(adapter.areAllSelected(), false);
+        mSelectAll.setChecked(mAdapter.areAllSelected(), false);
     }
 
     private void triggerMultiChoiceClickListener(int index, boolean isChecked) {
-        if (dialog != null && onMultiChoiceClickListener != null) {
-            onMultiChoiceClickListener.onClick(dialog, index, adapter.items.get(index), isChecked);
+        if (mDialog != null && mOnMultiChoiceClickListener != null) {
+            mOnMultiChoiceClickListener.onClick(mDialog, index, mAdapter.mItems.get(index), isChecked);
         }
     }
 
     class SearchableRecyclerViewAdapter extends RecyclerView.Adapter<SearchableRecyclerViewAdapter.ViewHolder> {
         @NonNull
-        private final List<CharSequence> itemNames;
+        private final List<CharSequence> mItemNames;
         @NonNull
-        private final List<T> items;
+        private final List<T> mItems;
         @NonNull
-        private final List<T> notFoundItems = new ArrayList<>();
+        private final List<T> mNotFoundItems = new ArrayList<>();
         @NonNull
-        private final ArrayList<Integer> filteredItems = new ArrayList<>();
+        private final ArrayList<Integer> mFilteredItems = new ArrayList<>();
         @NonNull
-        private final Set<Integer> selectedItems = new ArraySet<>();
-        private final Set<Integer> disabledItems = new ArraySet<>();
+        private final Set<Integer> mSelectedItems = new ArraySet<>();
+        private final Set<Integer> mDisabledItems = new ArraySet<>();
         @LayoutRes
-        private final int layoutId;
+        private final int mLayoutId;
 
         SearchableRecyclerViewAdapter(@NonNull List<CharSequence> itemNames, @NonNull List<T> items, int layoutId) {
-            this.itemNames = itemNames;
-            this.items = items;
-            this.layoutId = layoutId;
+            mItemNames = itemNames;
+            mItems = items;
+            mLayoutId = layoutId;
             new Thread(() -> {
-                synchronized (filteredItems) {
+                synchronized (mFilteredItems) {
                     for (int i = 0; i < items.size(); ++i) {
-                        filteredItems.add(i);
+                        mFilteredItems.add(i);
                     }
                 }
             }, "searchable_multi_choice_dialog").start();
@@ -273,12 +273,12 @@ public class SearchableMultiChoiceDialogBuilder<T> {
 
         void setFilteredItems(CharSequence constraint) {
             Locale locale = Locale.getDefault();
-            synchronized (filteredItems) {
-                filteredItems.clear();
-                for (int i = 0; i < items.size(); ++i) {
-                    if (itemNames.get(i).toString().toLowerCase(locale).contains(constraint)
-                            || items.get(i).toString().toLowerCase(Locale.ROOT).contains(constraint)) {
-                        filteredItems.add(i);
+            synchronized (mFilteredItems) {
+                mFilteredItems.clear();
+                for (int i = 0; i < mItems.size(); ++i) {
+                    if (mItemNames.get(i).toString().toLowerCase(locale).contains(constraint)
+                            || mItems.get(i).toString().toLowerCase(Locale.ROOT).contains(constraint)) {
+                        mFilteredItems.add(i);
                     }
                 }
                 checkSelections();
@@ -287,10 +287,10 @@ public class SearchableMultiChoiceDialogBuilder<T> {
         }
 
         ArrayList<T> getSelectedItems() {
-            ArrayList<T> selections = new ArrayList<>(notFoundItems);
-            synchronized (selectedItems) {
-                for (int item : selectedItems) {
-                    selections.add(items.get(item));
+            ArrayList<T> selections = new ArrayList<>(mNotFoundItems);
+            synchronized (mSelectedItems) {
+                for (int item : mSelectedItems) {
+                    selections.add(mItems.get(item));
                 }
             }
             return selections;
@@ -299,12 +299,12 @@ public class SearchableMultiChoiceDialogBuilder<T> {
         void addSelectedItems(@Nullable List<T> selectedItems) {
             if (selectedItems != null) {
                 for (T item : selectedItems) {
-                    int index = items.indexOf(item);
+                    int index = mItems.indexOf(item);
                     if (index != -1) {
-                        synchronized (this.selectedItems) {
-                            this.selectedItems.add(index);
+                        synchronized (mSelectedItems) {
+                            mSelectedItems.add(index);
                         }
-                    } else notFoundItems.add(item);
+                    } else mNotFoundItems.add(item);
                 }
             }
         }
@@ -312,8 +312,8 @@ public class SearchableMultiChoiceDialogBuilder<T> {
         void addSelectedIndexes(@Nullable int[] selectedIndexes) {
             if (selectedIndexes != null) {
                 for (int index : selectedIndexes) {
-                    synchronized (this.selectedItems) {
-                        this.selectedItems.add(index);
+                    synchronized (mSelectedItems) {
+                        mSelectedItems.add(index);
                     }
                 }
             }
@@ -322,8 +322,8 @@ public class SearchableMultiChoiceDialogBuilder<T> {
         void removeSelectedIndexes(@Nullable int[] selectedIndexes) {
             if (selectedIndexes != null) {
                 for (int index : selectedIndexes) {
-                    synchronized (this.selectedItems) {
-                        this.selectedItems.remove(index);
+                    synchronized (mSelectedItems) {
+                        mSelectedItems.remove(index);
                     }
                 }
             }
@@ -332,10 +332,10 @@ public class SearchableMultiChoiceDialogBuilder<T> {
         void addDisabledItems(@Nullable List<T> disabledItems) {
             if (disabledItems != null) {
                 for (T item : disabledItems) {
-                    int index = items.indexOf(item);
+                    int index = mItems.indexOf(item);
                     if (index != -1) {
-                        synchronized (this.disabledItems) {
-                            this.disabledItems.add(index);
+                        synchronized (mDisabledItems) {
+                            mDisabledItems.add(index);
                         }
                     }
                 }
@@ -343,15 +343,15 @@ public class SearchableMultiChoiceDialogBuilder<T> {
         }
 
         void selectAll() {
-            synchronized (selectedItems) {
-                synchronized (filteredItems) {
+            synchronized (mSelectedItems) {
+                synchronized (mFilteredItems) {
                     List<Integer> newSelections = new ArrayList<>();
-                    for (int index : filteredItems) {
-                        if (!selectedItems.contains(index)) {
+                    for (int index : mFilteredItems) {
+                        if (!mSelectedItems.contains(index)) {
                             newSelections.add(index);
                         }
                     }
-                    selectedItems.addAll(newSelections);
+                    mSelectedItems.addAll(newSelections);
                     checkSelections();
                     for (int index : newSelections) {
                         triggerMultiChoiceClickListener(index, true);
@@ -362,16 +362,16 @@ public class SearchableMultiChoiceDialogBuilder<T> {
         }
 
         void deselectAll() {
-            synchronized (selectedItems) {
-                synchronized (filteredItems) {
+            synchronized (mSelectedItems) {
+                synchronized (mFilteredItems) {
                     List<Integer> oldSelections = new ArrayList<>();
-                    for (int index : filteredItems) {
-                        if (selectedItems.contains(index)) {
+                    for (int index : mFilteredItems) {
+                        if (mSelectedItems.contains(index)) {
                             oldSelections.add(index);
                         }
                     }
                     //noinspection SlowAbstractSetRemoveAll
-                    selectedItems.removeAll(oldSelections);
+                    mSelectedItems.removeAll(oldSelections);
                     checkSelections();
                     for (int index : oldSelections) {
                         triggerMultiChoiceClickListener(index, false);
@@ -382,9 +382,9 @@ public class SearchableMultiChoiceDialogBuilder<T> {
         }
 
         boolean areAllSelected() {
-            synchronized (selectedItems) {
-                synchronized (filteredItems) {
-                    return selectedItems.containsAll(filteredItems);
+            synchronized (mSelectedItems) {
+                synchronized (mFilteredItems) {
+                    return mSelectedItems.containsAll(mFilteredItems);
                 }
             }
         }
@@ -392,31 +392,31 @@ public class SearchableMultiChoiceDialogBuilder<T> {
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(mLayoutId, parent, false);
             return new ViewHolder(view);
         }
 
         @Override
         public void onBindViewHolder(@NonNull SearchableRecyclerViewAdapter.ViewHolder holder, int position) {
             Integer index;
-            synchronized (filteredItems) {
-                index = filteredItems.get(position);
+            synchronized (mFilteredItems) {
+                index = mFilteredItems.get(position);
             }
             final AtomicBoolean selected;
-            synchronized (selectedItems) {
-                selected = new AtomicBoolean(selectedItems.contains(index));
+            synchronized (mSelectedItems) {
+                selected = new AtomicBoolean(mSelectedItems.contains(index));
             }
-            holder.item.setText(itemNames.get(index));
-            holder.item.setTextIsSelectable(isTextSelectable);
-            synchronized (disabledItems) {
-                holder.item.setEnabled(!disabledItems.contains(index));
+            holder.item.setText(mItemNames.get(index));
+            holder.item.setTextIsSelectable(mIsTextSelectable);
+            synchronized (mDisabledItems) {
+                holder.item.setEnabled(!mDisabledItems.contains(index));
             }
             holder.item.setChecked(selected.get());
             holder.item.setOnClickListener(v -> {
-                synchronized (selectedItems) {
+                synchronized (mSelectedItems) {
                     if (selected.get()) {
-                        selectedItems.remove(index);
-                    } else selectedItems.add(index);
+                        mSelectedItems.remove(index);
+                    } else mSelectedItems.add(index);
                 }
                 selected.set(!selected.get());
                 holder.item.setChecked(selected.get());
@@ -427,8 +427,8 @@ public class SearchableMultiChoiceDialogBuilder<T> {
 
         @Override
         public int getItemCount() {
-            synchronized (filteredItems) {
-                return filteredItems.size();
+            synchronized (mFilteredItems) {
+                return mFilteredItems.size();
             }
         }
 

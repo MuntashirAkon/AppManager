@@ -16,7 +16,7 @@ import io.github.muntashirakon.AppManager.miui.MiuiVersionInfo;
 // Copyright 2020 Aefyr
 public class MiuiUtils {
     @Nullable
-    private static MiuiVersionInfo miuiVersionInfo;
+    private static MiuiVersionInfo sMiuiVersionInfo;
 
     public static boolean isMiui() {
         return !TextUtils.isEmpty(SystemProperties.get("ro.miui.ui.version.name", ""));
@@ -24,15 +24,15 @@ public class MiuiUtils {
 
     @Nullable
     public static MiuiVersionInfo getMiuiVersionInfo() {
-        if (miuiVersionInfo != null) {
-            return miuiVersionInfo;
+        if (sMiuiVersionInfo != null) {
+            return sMiuiVersionInfo;
         }
         if (!isMiui()) {
             return null;
         }
         String versionString = Build.VERSION.INCREMENTAL;
         if (TextUtils.isDigitsOnly(versionString)) {
-            return miuiVersionInfo = new MiuiVersionInfo(versionString, null, true);
+            return sMiuiVersionInfo = new MiuiVersionInfo(versionString, null, true);
         }
         if (!versionString.startsWith("V")) {
             throw new IllegalStateException("Stable version must begin with `V`");
@@ -49,7 +49,7 @@ public class MiuiUtils {
             firstNoDigitIndex = i;
             break;
         }
-        return miuiVersionInfo = new MiuiVersionInfo(versionString.substring(0, firstNoDigitIndex), versionString.substring(firstNoDigitIndex), false);
+        return sMiuiVersionInfo = new MiuiVersionInfo(versionString.substring(0, firstNoDigitIndex), versionString.substring(firstNoDigitIndex), false);
     }
 
     @NonNull

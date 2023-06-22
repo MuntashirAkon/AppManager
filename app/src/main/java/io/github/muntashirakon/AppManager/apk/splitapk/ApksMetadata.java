@@ -26,11 +26,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.ZipOutputStream;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
@@ -72,7 +72,7 @@ public class ApksMetadata {
         public BuildInfo() {
             timestamp = System.currentTimeMillis();
             builderId = BuildConfig.APPLICATION_ID;
-            builderLabel = AppManager.getContext().getString(R.string.app_name);
+            builderLabel = ContextUtils.getContext().getString(R.string.app_name);
             builderVersion = BuildConfig.VERSION_NAME;
             platform = "android";
         }
@@ -149,9 +149,10 @@ public class ApksMetadata {
 
     public void writeMetadata(@NonNull ZipOutputStream zipOutputStream) throws IOException {
         // Fetch meta
+        PackageManager pm = ContextUtils.getContext().getPackageManager();
         ApplicationInfo applicationInfo = mPackageInfo.applicationInfo;
         packageName = mPackageInfo.packageName;
-        displayName = applicationInfo.loadLabel(AppManager.getContext().getPackageManager()).toString();
+        displayName = applicationInfo.loadLabel(pm).toString();
         versionName = mPackageInfo.versionName;
         versionCode = PackageInfoCompat.getLongVersionCode(mPackageInfo);
         exportTimestamp = 946684800000L;  // Fake time
@@ -165,7 +166,6 @@ public class ApksMetadata {
                 if (!file.endsWith(".apk")) {
                     continue;
                 }
-                PackageManager pm = AppManager.getContext().getPackageManager();
                 PackageInfo packageInfo = pm.getPackageArchiveInfo(file, PackageManager.GET_SHARED_LIBRARY_FILES);
                 if (packageInfo == null) {
                     continue;

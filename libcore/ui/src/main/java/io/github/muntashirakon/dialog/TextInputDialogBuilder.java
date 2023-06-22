@@ -39,14 +39,14 @@ public class TextInputDialogBuilder {
 
     @SuppressLint("InflateParams")
     public TextInputDialogBuilder(@NonNull Context context, @Nullable CharSequence inputTextLabel) {
-        this.mContext = context;
+        mContext = context;
         View view = View.inflate(context, R.layout.dialog_text_input, null);
-        this.mTextInputLayout = view.findViewById(android.R.id.text1);
-        this.mTextInputLayout.setHint(inputTextLabel);
-        this.mEditText = view.findViewById(android.R.id.input);
-        this.mCheckBox = view.findViewById(android.R.id.checkbox);
-        this.mCheckBox.setVisibility(View.GONE);
-        this.mBuilder = new MaterialAlertDialogBuilder(context).setView(view);
+        mTextInputLayout = view.findViewById(android.R.id.text1);
+        mTextInputLayout.setHint(inputTextLabel);
+        mEditText = view.findViewById(android.R.id.input);
+        mCheckBox = view.findViewById(android.R.id.checkbox);
+        mCheckBox.setVisibility(View.GONE);
+        mBuilder = new MaterialAlertDialogBuilder(context).setView(view);
     }
 
     @SuppressLint("InflateParams")

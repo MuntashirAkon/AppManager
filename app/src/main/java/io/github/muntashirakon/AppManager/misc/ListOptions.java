@@ -67,25 +67,26 @@ public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
         }
     }
 
-    private TextView sortText;
-    private ChipGroup sortGroup;
-    private MaterialCheckBox reverseSort;
-    private TextView filterText;
-    private ChipGroup filterOptions;
-    private TextView optionsText;
-    private LinearLayoutCompat optionsView;
+    private TextView mSortText;
+    private ChipGroup mSortGroup;
+    private MaterialCheckBox mReverseSort;
+    private TextView mFilterText;
+    private ChipGroup mFilterOptions;
+    private TextView mOptionsText;
+    private LinearLayoutCompat mOptionsView;
+    @Nullable
+    private ListOptionActions mListOptionActions;
+    @Nullable
+    private ListOptionsViewModel mListOptionsViewModel;
+
     protected TextInputLayout profileNameText;
     protected MaterialAutoCompleteTextView profileNameInput;
     protected MaterialButton selectUserView;
-    @Nullable
-    private ListOptionActions listOptionActions;
-    @Nullable
-    private ListOptionsViewModel listOptionsViewModel;
 
     public void setListOptionActions(@Nullable ListOptionActions listOptionActions) {
-        if (listOptionsViewModel != null) {
-            listOptionsViewModel.setListOptionActions(listOptionActions);
-        } else this.listOptionActions = listOptionActions;
+        if (mListOptionsViewModel != null) {
+            mListOptionsViewModel.setListOptionActions(listOptionActions);
+        } else mListOptionActions = listOptionActions;
     }
 
     @CallSuper
@@ -99,14 +100,14 @@ public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        listOptionsViewModel = new ViewModelProvider(this).get(ListOptionsViewModel.class);
-        sortText = view.findViewById(R.id.sort_text);
-        sortGroup = view.findViewById(R.id.sort_options);
-        reverseSort = view.findViewById(R.id.reverse_sort);
-        filterText = view.findViewById(R.id.filter_text);
-        filterOptions = view.findViewById(R.id.filter_options);
-        optionsText = view.findViewById(R.id.options_text);
-        optionsView = view.findViewById(R.id.options);
+        mListOptionsViewModel = new ViewModelProvider(this).get(ListOptionsViewModel.class);
+        mSortText = view.findViewById(R.id.sort_text);
+        mSortGroup = view.findViewById(R.id.sort_options);
+        mReverseSort = view.findViewById(R.id.reverse_sort);
+        mFilterText = view.findViewById(R.id.filter_text);
+        mFilterOptions = view.findViewById(R.id.filter_options);
+        mOptionsText = view.findViewById(R.id.options_text);
+        mOptionsView = view.findViewById(R.id.options);
         profileNameText = view.findViewById(android.R.id.text1);
         profileNameInput = view.findViewById(android.R.id.input);
         selectUserView = view.findViewById(R.id.user);
@@ -137,14 +138,14 @@ public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
 
     @NonNull
     private ListOptionActions requireListOptionActions() {
-        if (listOptionsViewModel == null) {
+        if (mListOptionsViewModel == null) {
             throw new NullPointerException("ViewModel is not initialized.");
         }
-        if (listOptionActions != null) {
-            listOptionsViewModel.setListOptionActions(listOptionActions);
-            listOptionActions = null;
+        if (mListOptionActions != null) {
+            mListOptionsViewModel.setListOptionActions(mListOptionActions);
+            mListOptionActions = null;
         }
-        ListOptionActions actions = listOptionsViewModel.getListOptionActions();
+        ListOptionActions actions = mListOptionsViewModel.getListOptionActions();
         if (actions == null) {
             throw new NullPointerException("ListOptionsActions must be set before calling init.");
         }
@@ -155,34 +156,34 @@ public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
         // Enable sorting
         LinkedHashMap<Integer, Integer> sortIdLocaleMap = getSortIdLocaleMap();
         boolean sortingEnabled = sortIdLocaleMap != null;
-        sortText.setVisibility(sortingEnabled ? View.VISIBLE : View.GONE);
-        sortGroup.setVisibility(sortingEnabled ? View.VISIBLE : View.GONE);
-        reverseSort.setVisibility(sortingEnabled ? View.VISIBLE : View.GONE);
+        mSortText.setVisibility(sortingEnabled ? View.VISIBLE : View.GONE);
+        mSortGroup.setVisibility(sortingEnabled ? View.VISIBLE : View.GONE);
+        mReverseSort.setVisibility(sortingEnabled ? View.VISIBLE : View.GONE);
         if (sortingEnabled) {
             int i = 0;
             for (int sortId : sortIdLocaleMap.keySet()) {
                 int sortStringRes = Objects.requireNonNull(sortIdLocaleMap.get(sortId));
-                sortGroup.addView(getRadioChip(sortId, sortStringRes), i);
+                mSortGroup.addView(getRadioChip(sortId, sortStringRes), i);
                 ++i;
             }
-            sortGroup.check(requireListOptionActions().getSortBy());
-            sortGroup.setOnCheckedStateChangeListener((group, checkedIds) ->
-                    requireListOptionActions().setSortBy(sortGroup.getCheckedChipId()));
-            reverseSort.setChecked(requireListOptionActions().isReverseSort());
-            reverseSort.setOnCheckedChangeListener((buttonView, isChecked) ->
+            mSortGroup.check(requireListOptionActions().getSortBy());
+            mSortGroup.setOnCheckedStateChangeListener((group, checkedIds) ->
+                    requireListOptionActions().setSortBy(mSortGroup.getCheckedChipId()));
+            mReverseSort.setChecked(requireListOptionActions().isReverseSort());
+            mReverseSort.setOnCheckedChangeListener((buttonView, isChecked) ->
                     requireListOptionActions().setReverseSort(isChecked));
         }
 
         // Enable filtering
         LinkedHashMap<Integer, Integer> filterFlagLocaleMap = getFilterFlagLocaleMap();
         boolean filteringEnabled = filterFlagLocaleMap != null;
-        filterText.setVisibility(filteringEnabled ? View.VISIBLE : View.GONE);
-        filterOptions.setVisibility(filteringEnabled ? View.VISIBLE : View.GONE);
+        mFilterText.setVisibility(filteringEnabled ? View.VISIBLE : View.GONE);
+        mFilterOptions.setVisibility(filteringEnabled ? View.VISIBLE : View.GONE);
         if (filteringEnabled) {
             int i = 0;
             for (int flag : filterFlagLocaleMap.keySet()) {
                 int flagStringRes = Objects.requireNonNull(filterFlagLocaleMap.get(flag));
-                filterOptions.addView(getFilterChip(flag, flagStringRes), i);
+                mFilterOptions.addView(getFilterChip(flag, flagStringRes), i);
                 ++i;
             }
         }
@@ -190,13 +191,13 @@ public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
         // Enable options
         LinkedHashMap<Integer, Integer> optionIdLocaleMap = getOptionIdLocaleMap();
         boolean optionsEnabled = optionIdLocaleMap != null;
-        optionsText.setVisibility(optionsEnabled ? View.VISIBLE : View.GONE);
-        optionsView.setVisibility(optionsEnabled ? View.VISIBLE : View.GONE);
+        mOptionsText.setVisibility(optionsEnabled ? View.VISIBLE : View.GONE);
+        mOptionsView.setVisibility(optionsEnabled ? View.VISIBLE : View.GONE);
         if (optionsEnabled) {
             int i = 0;
             for (int option : optionIdLocaleMap.keySet()) {
                 int optionStringRes = Objects.requireNonNull(optionIdLocaleMap.get(option));
-                optionsView.addView(getOption(option, optionStringRes), i);
+                mOptionsView.addView(getOption(option, optionStringRes), i);
                 ++i;
             }
         }
@@ -214,18 +215,18 @@ public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
             return;
         }
 
-        if (sortingEnabled && sortGroup.getChildCount() > 0) {
-            sortGroup.getChildAt(0).requestFocus();
-        } else if (filteringEnabled && filterOptions.getChildCount() > 0) {
-            filterOptions.getChildAt(0).requestFocus();
-        } else if (optionsEnabled && optionsView.getChildCount() > 0) {
-            optionsView.getChildAt(0).requestFocus();
+        if (sortingEnabled && mSortGroup.getChildCount() > 0) {
+            mSortGroup.getChildAt(0).requestFocus();
+        } else if (filteringEnabled && mFilterOptions.getChildCount() > 0) {
+            mFilterOptions.getChildAt(0).requestFocus();
+        } else if (optionsEnabled && mOptionsView.getChildCount() > 0) {
+            mOptionsView.getChildAt(0).requestFocus();
         }
     }
 
     @NonNull
     private MaterialSwitch getOption(int option, @StringRes int strRes) {
-        MaterialSwitch materialSwitch = new MaterialSwitch(optionsView.getContext());
+        MaterialSwitch materialSwitch = new MaterialSwitch(mOptionsView.getContext());
         materialSwitch.setFocusable(true);
         materialSwitch.setId(option);
         materialSwitch.setText(strRes);
@@ -237,7 +238,7 @@ public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
 
     @NonNull
     private Chip getFilterChip(int flag, @StringRes int strRes) {
-        Chip chip = new Chip(filterOptions.getContext());
+        Chip chip = new Chip(mFilterOptions.getContext());
         chip.setFocusable(true);
         chip.setCloseIconVisible(false);
         chip.setId(flag);
@@ -255,7 +256,7 @@ public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
 
     @NonNull
     private Chip getRadioChip(int sortOrder, @StringRes int strRes) {
-        Chip chip = new Chip(sortGroup.getContext());
+        Chip chip = new Chip(mSortGroup.getContext());
         chip.setFocusable(true);
         chip.setCloseIconVisible(false);
         chip.setId(sortOrder);
@@ -265,19 +266,19 @@ public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
 
     public static class ListOptionsViewModel extends AndroidViewModel {
         @Nullable
-        private ListOptionActions listOptionActions;
+        private ListOptionActions mListOptionActions;
 
         public ListOptionsViewModel(@NonNull Application application) {
             super(application);
         }
 
         public void setListOptionActions(@Nullable ListOptionActions listOptionActions) {
-            this.listOptionActions = listOptionActions;
+            mListOptionActions = listOptionActions;
         }
 
         @Nullable
         public ListOptionActions getListOptionActions() {
-            return listOptionActions;
+            return mListOptionActions;
         }
     }
 }

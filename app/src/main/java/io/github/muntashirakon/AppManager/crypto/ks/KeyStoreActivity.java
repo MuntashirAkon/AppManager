@@ -90,7 +90,7 @@ public class KeyStoreActivity extends AppCompatActivity {
             password = new char[rawPassword.length()];
             rawPassword.getChars(0, rawPassword.length(), password, 0);
         }
-        KeyStoreManager.savePass(prefKey, password);
+        KeyStoreManager.savePass(this, prefKey, password);
         Utils.clearChars(password);
         sendBroadcast(new Intent(KeyStoreManager.ACTION_KS_INTERACTION_END));
     }

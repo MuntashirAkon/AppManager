@@ -85,7 +85,7 @@ public final class StorageManagerCompat {
         ParcelFileDescriptor[] pipe = ParcelFileDescriptor.createReliablePipe();
         if ((mode & ParcelFileDescriptor.MODE_READ_ONLY) != 0) {
             // Reading requested i.e. we have to read from our side and write it to the target
-            callback.handler.post(() -> {
+            callback.mHandler.post(() -> {
                 try (ParcelFileDescriptor.AutoCloseOutputStream os = new ParcelFileDescriptor.AutoCloseOutputStream(pipe[1])) {
                     long totalSize = callback.onGetSize();
                     long currOffset = 0;
@@ -112,7 +112,7 @@ public final class StorageManagerCompat {
             return pipe[0];
         } else if ((mode & ParcelFileDescriptor.MODE_WRITE_ONLY) != 0) {
             // Writing requested i.e. we have to read from the target and write it to our side
-            callback.handler.post(() -> {
+            callback.mHandler.post(() -> {
                 try (ParcelFileDescriptor.AutoCloseInputStream is = new ParcelFileDescriptor.AutoCloseInputStream(pipe[0])) {
                     long currOffset = 0;
                     byte[] buf = new byte[DEFAULT_BUFFER_SIZE];
@@ -147,12 +147,12 @@ public final class StorageManagerCompat {
     }
 
     public static abstract class ProxyFileDescriptorCallbackCompat {
-        private final HandlerThread callbackThread;
-        private final Handler handler;
+        private final HandlerThread mCallbackThread;
+        private final Handler mHandler;
 
         public ProxyFileDescriptorCallbackCompat(HandlerThread callbackThread) {
-            this.callbackThread = callbackThread;
-            this.handler = new Handler(this.callbackThread.getLooper());
+            mCallbackThread = callbackThread;
+            mHandler = new Handler(mCallbackThread.getLooper());
         }
 
         /**
@@ -211,7 +211,7 @@ public final class StorageManagerCompat {
          * Invoked after the file is closed.
          */
         protected void onRelease() {
-            callbackThread.quitSafely();
+            mCallbackThread.quitSafely();
         }
     }
 }

@@ -160,7 +160,7 @@ public class DebloaterViewModel extends AndroidViewModel {
                         continue;
                     }
                     // Removal
-                    int removalType = debloatObject.getRemoval();
+                    int removalType = debloatObject.getmRemoval();
                     if ((mFilterFlags & DebloaterListOptions.FILTER_REMOVAL_SAFE) == 0 && removalType == DebloatObject.REMOVAL_SAFE) {
                         continue;
                     }

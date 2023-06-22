@@ -25,11 +25,11 @@ import io.github.muntashirakon.proc.ProcStatus;
  */
 public class Ps {
     @NonNull
-    private final ProcFs procFs;
+    private final ProcFs mProcFs;
     @GuardedBy("processEntries")
-    private final ArrayList<ProcessEntry> processEntries = new ArrayList<>(256);
-    private long uptime;
-    private long clockTicks;
+    private final ArrayList<ProcessEntry> mProcessEntries = new ArrayList<>(256);
+    private long mUptime;
+    private long mClockTicks;
 
     public Ps() {
         this(Paths.get("/proc"));
@@ -37,37 +37,37 @@ public class Ps {
 
     @VisibleForTesting
     public Ps(@NonNull Path procPath) {
-        this.procFs = new ProcFs(procPath);
+        mProcFs = new ProcFs(procPath);
     }
 
     @AnyThread
     @GuardedBy("processEntries")
     @NonNull
     public ArrayList<ProcessEntry> getProcesses() {
-        synchronized (processEntries) {
-            return processEntries;
+        synchronized (mProcessEntries) {
+            return mProcessEntries;
         }
     }
 
     @WorkerThread
     @GuardedBy("processEntries")
     public void loadProcesses() {
-        synchronized (processEntries) {
-            processEntries.clear();
-            uptime = procFs.getUptime() / 1000;
+        synchronized (mProcessEntries) {
+            mProcessEntries.clear();
+            mUptime = mProcFs.getUptime() / 1000;
             if (!Utils.isRoboUnitTest()) {
-                clockTicks = CpuUtils.getClockTicksPerSecond();
-            } else clockTicks = 100; // To prevent error due to native library
+                mClockTicks = CpuUtils.getClockTicksPerSecond();
+            } else mClockTicks = 100; // To prevent error due to native library
             // Get process info for each PID
-            for (int pid : procFs.getPids()) {
+            for (int pid : mProcFs.getPids()) {
                 ProcItem procItem = new ProcItem();
-                procItem.stat = procFs.getStat(pid);
-                procItem.memStat = procFs.getMemStat(pid);
-                procItem.status = procFs.getStatus(pid);
-                procItem.name = procFs.getCmdline(pid);
-                procItem.sepol = procFs.getCurrentContext(pid);
-                procItem.wchan = procFs.getWchan(pid);
-                processEntries.add(newProcess(procItem));
+                procItem.stat = mProcFs.getStat(pid);
+                procItem.memStat = mProcFs.getMemStat(pid);
+                procItem.status = mProcFs.getStatus(pid);
+                procItem.name = mProcFs.getCmdline(pid);
+                procItem.sepol = mProcFs.getCurrentContext(pid);
+                procItem.wchan = mProcFs.getWchan(pid);
+                mProcessEntries.add(newProcess(procItem));
             }
         }
     }
@@ -95,10 +95,10 @@ public class Ps {
         processEntry.name = procItem.name.equals("") ? procItem.status.getString(ProcStatus.STATUS_NAME) : procItem.name;
         processEntry.users = new ProcessUsers(procItem.status.getString(ProcStatus.STATUS_UID), procItem.status.getString(ProcStatus.STATUS_GID));
         processEntry.cpuTimeConsumed = (procItem.stat.getInteger(ProcStat.STAT_UTIME)
-                + procItem.stat.getInteger(ProcStat.STAT_STIME)) / clockTicks;
+                + procItem.stat.getInteger(ProcStat.STAT_STIME)) / mClockTicks;
         processEntry.cCpuTimeConsumed = (procItem.stat.getInteger(ProcStat.STAT_CUTIME)
-                + procItem.stat.getInteger(ProcStat.STAT_CSTIME)) / clockTicks;
-        processEntry.elapsedTime = uptime - (procItem.stat.getInteger(ProcStat.STAT_START_TIME) / clockTicks);
+                + procItem.stat.getInteger(ProcStat.STAT_CSTIME)) / mClockTicks;
+        processEntry.elapsedTime = mUptime - (procItem.stat.getInteger(ProcStat.STAT_START_TIME) / mClockTicks);
         String state = procItem.status.getString(ProcStatus.STATUS_STATE);
         if (state == null) {
             throw new RuntimeException("Process state cannot be empty!");
@@ -125,11 +125,11 @@ public class Ps {
     }
 
     private static class ProcItem {
-        private ProcStat stat;
-        private ProcMemStat memStat;
-        private ProcStatus status;
-        private String name;
-        private String sepol;
-        private String wchan;
+        public ProcStat stat;
+        public ProcMemStat memStat;
+        public ProcStatus status;
+        public String name;
+        public String sepol;
+        public String wchan;
     }
 }

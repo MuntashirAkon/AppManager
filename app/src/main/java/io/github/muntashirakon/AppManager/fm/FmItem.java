@@ -20,7 +20,7 @@ public class FmItem implements Comparable<FmItem> {
     final String tag;
 
     @Nullable
-    private PathContentInfo contentInfo;
+    private PathContentInfo mContentInfo;
 
     FmItem(@NonNull Path path) {
         this.path = path;
@@ -32,11 +32,11 @@ public class FmItem implements Comparable<FmItem> {
 
     @Nullable
     public PathContentInfo getContentInfo() {
-        return contentInfo;
+        return mContentInfo;
     }
 
     public void setContentInfo(@Nullable PathContentInfo contentInfo) {
-        this.contentInfo = contentInfo;
+        this.mContentInfo = contentInfo;
     }
 
     @Override

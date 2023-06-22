@@ -15,12 +15,12 @@ class ReadOnlyLocalFile extends LocalFile {
     @NonNull
     public static ReadOnlyLocalFile getAliasInstance(@NonNull String pathname, @NonNull String alias) {
         ReadOnlyLocalFile file = new ReadOnlyLocalFile(alias);
-        file.actualPath = pathname;
+        file.mActualPath = pathname;
         return file;
     }
 
     @Nullable
-    private String actualPath;
+    private String mActualPath;
 
     public ReadOnlyLocalFile(@NonNull String pathname) {
         super(pathname);
@@ -33,15 +33,15 @@ class ReadOnlyLocalFile extends LocalFile {
     @NonNull
     @Override
     public String getName() {
-        if (actualPath != null) {
-            return new File(actualPath).getName();
+        if (mActualPath != null) {
+            return new File(mActualPath).getName();
         }
         return super.getName();
     }
 
     @Override
     public boolean isSymlink() {
-        if (actualPath != null) {
+        if (mActualPath != null) {
             return true;
         }
         return super.isSymlink();

@@ -54,19 +54,19 @@ public class BetterActivityResult<Input, Result> {
         void onActivityResult(O result);
     }
 
-    private final ActivityResultLauncher<Input> launcher;
+    private final ActivityResultLauncher<Input> mLauncher;
     @Nullable
-    private OnActivityResult<Result> onActivityResult;
+    private OnActivityResult<Result> mOnActivityResult;
 
     private BetterActivityResult(@NonNull ActivityResultCaller caller,
                                  @NonNull ActivityResultContract<Input, Result> contract,
                                  @Nullable OnActivityResult<Result> onActivityResult) {
-        this.onActivityResult = onActivityResult;
-        this.launcher = caller.registerForActivityResult(contract, this::callOnActivityResult);
+        mOnActivityResult = onActivityResult;
+        mLauncher = caller.registerForActivityResult(contract, this::callOnActivityResult);
     }
 
     public void setOnActivityResult(@Nullable OnActivityResult<Result> onActivityResult) {
-        this.onActivityResult = onActivityResult;
+        mOnActivityResult = onActivityResult;
     }
 
     /**
@@ -75,19 +75,19 @@ public class BetterActivityResult<Input, Result> {
      */
     public void launch(Input input, @Nullable OnActivityResult<Result> onActivityResult) {
         if (onActivityResult != null) {
-            this.onActivityResult = onActivityResult;
+            mOnActivityResult = onActivityResult;
         }
-        launcher.launch(input);
+        mLauncher.launch(input);
     }
 
     /**
      * Same as {@link #launch(Object, OnActivityResult)} with last parameter set to {@code null}.
      */
     public void launch(Input input) {
-        launch(input, this.onActivityResult);
+        launch(input, mOnActivityResult);
     }
 
     private void callOnActivityResult(Result result) {
-        if (onActivityResult != null) onActivityResult.onActivityResult(result);
+        if (mOnActivityResult != null) mOnActivityResult.onActivityResult(result);
     }
 }

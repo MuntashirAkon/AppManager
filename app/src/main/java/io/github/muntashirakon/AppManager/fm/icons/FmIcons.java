@@ -53,7 +53,7 @@ final class FmIcons {
     private static final int DRAWABLE_EXCEL = DRAWABLE_SPREADSHEET;
     private static final int DRAWABLE_POWERPOINT = DRAWABLE_PRESENTATION;
 
-    private static final Map<String, Integer> mimeTypeToIconMap = new HashMap<String, Integer>() {
+    private static final Map<String, Integer> sMimeTypeToIconMap = new HashMap<String, Integer>() {
         {
             put("application/vnd.android.package-archive", DRAWABLE_APK);
             put("application/vnd.apkm", DRAWABLE_APK);
@@ -237,7 +237,7 @@ final class FmIcons {
         }
     };
 
-    private static final Map<String, Integer> typeToIconMap = new HashMap<String, Integer>() {
+    private static final Map<String, Integer> sTypeToIconMap = new HashMap<String, Integer>() {
         {
             put("audio", DRAWABLE_AUDIO);
             put("font", DRAWABLE_FONT);
@@ -252,12 +252,12 @@ final class FmIcons {
         if (mimeType == null) {
             return DRAWABLE_GENERIC;
         }
-        Integer drawable = mimeTypeToIconMap.get(mimeType);
+        Integer drawable = sMimeTypeToIconMap.get(mimeType);
         if (drawable != null) {
             return drawable;
         }
         String firstPart = mimeType.split("/")[0];
-        drawable = typeToIconMap.get(firstPart);
+        drawable = sTypeToIconMap.get(firstPart);
         return drawable != null ? drawable : DRAWABLE_GENERIC;
     }
 

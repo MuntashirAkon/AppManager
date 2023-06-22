@@ -34,14 +34,14 @@ public class VirtualDocumentFile extends DocumentFile {
     }
 
     @NonNull
-    private final VirtualFileSystem fs;
+    private final VirtualFileSystem mFs;
     @NonNull
-    private String fullPath;
+    private String mFullPath;
 
     public VirtualDocumentFile(@Nullable DocumentFile parent, @NonNull VirtualFileSystem fs) {
         super(parent);
-        this.fs = fs;
-        this.fullPath = File.separator;
+        mFs = fs;
+        mFullPath = File.separator;
     }
 
     protected VirtualDocumentFile(@NonNull VirtualDocumentFile parent, @NonNull String displayName) {
@@ -49,8 +49,8 @@ public class VirtualDocumentFile extends DocumentFile {
         if (displayName.contains(File.separator)) {
             throw new IllegalArgumentException("displayName cannot contain a separator");
         }
-        this.fs = parent.fs;
-        this.fullPath = Paths.appendPathSegment(parent.fullPath, displayName);
+        mFs = parent.mFs;
+        mFullPath = Paths.appendPathSegment(parent.mFullPath, displayName);
     }
 
     @Nullable
@@ -65,8 +65,8 @@ public class VirtualDocumentFile extends DocumentFile {
         if (extension != null) {
             displayName += "." + extension;
         }
-        String newFilePath = Paths.appendPathSegment(fullPath, displayName);
-        return fs.createNewFile(newFilePath) ? new VirtualDocumentFile(this, displayName) : null;
+        String newFilePath = Paths.appendPathSegment(mFullPath, displayName);
+        return mFs.createNewFile(newFilePath) ? new VirtualDocumentFile(this, displayName) : null;
     }
 
     @Nullable
@@ -76,39 +76,39 @@ public class VirtualDocumentFile extends DocumentFile {
             // displayName cannot contain a separator
             return null;
         }
-        String newFilePath = Paths.appendPathSegment(fullPath, displayName);
-        return fs.mkdir(newFilePath) ? new VirtualDocumentFile(this, displayName) : null;
+        String newFilePath = Paths.appendPathSegment(mFullPath, displayName);
+        return mFs.mkdir(newFilePath) ? new VirtualDocumentFile(this, displayName) : null;
     }
 
     @NonNull
     public String getFullPath() {
-        return fullPath;
+        return mFullPath;
     }
 
     @NonNull
     public VirtualFileSystem getFileSystem() {
-        return fs;
+        return mFs;
     }
 
     @NonNull
     @Override
     public String getName() {
-        if (fullPath.equals(File.separator)) {
+        if (mFullPath.equals(File.separator)) {
             return File.separator;
         }
-        return Paths.getLastPathSegment(fullPath);
+        return Paths.getLastPathSegment(mFullPath);
     }
 
     @Nullable
     @Override
     public String getType() {
-        if (fs.isFile(fullPath)) {
+        if (mFs.isFile(mFullPath)) {
             String extension = Paths.getPathExtension(getName());
             if (extension == null) {
                 return null;
             }
             return MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
-        } else if (fs.isDirectory(fullPath)) {
+        } else if (mFs.isDirectory(mFullPath)) {
             return "resource/folder";
         }
         return null;
@@ -121,97 +121,97 @@ public class VirtualDocumentFile extends DocumentFile {
 
     @Override
     public boolean isFile() {
-        return fs.isFile(fullPath);
+        return mFs.isFile(mFullPath);
     }
 
     @Override
     public boolean isDirectory() {
-        return fs.isDirectory(fullPath);
+        return mFs.isDirectory(mFullPath);
     }
 
     @Override
     public boolean exists() {
-        return fs.checkAccess(fullPath, OsConstants.F_OK);
+        return mFs.checkAccess(mFullPath, OsConstants.F_OK);
     }
 
     @Override
     public boolean canRead() {
-        return fs.checkAccess(fullPath, OsConstants.R_OK);
+        return mFs.checkAccess(mFullPath, OsConstants.R_OK);
     }
 
     @Override
     public boolean canWrite() {
-        return fs.checkAccess(fullPath, OsConstants.W_OK);
+        return mFs.checkAccess(mFullPath, OsConstants.W_OK);
     }
 
     public int getMode() {
-        return fs.getMode(fullPath);
+        return mFs.getMode(mFullPath);
     }
 
     public boolean setMode(int mode) {
-        fs.setMode(fullPath, mode);
+        mFs.setMode(mFullPath, mode);
         return true;
     }
 
     @Nullable
     public UidGidPair getUidGid() {
-        return fs.getUidGid(fullPath);
+        return mFs.getUidGid(mFullPath);
     }
 
     public boolean setUidGid(@NonNull UidGidPair uidGidPair) {
-        fs.setUidGid(fullPath, uidGidPair.uid, uidGidPair.gid);
+        mFs.setUidGid(mFullPath, uidGidPair.uid, uidGidPair.gid);
         return true;
     }
 
     @Override
     public boolean delete() {
-        return fs.delete(fullPath);
+        return mFs.delete(mFullPath);
     }
 
     @NonNull
     @Override
     public Uri getUri() {
-        return VirtualFileSystem.getUri(fs.getFsId(), fullPath);
+        return VirtualFileSystem.getUri(mFs.getFsId(), mFullPath);
     }
 
     @NonNull
     public FileInputStream openInputStream() throws IOException {
-        return fs.newInputStream(fullPath);
+        return mFs.newInputStream(mFullPath);
     }
 
     @NonNull
     public FileOutputStream openOutputStream(boolean append) throws IOException {
-        return fs.newOutputStream(fullPath, append);
+        return mFs.newOutputStream(mFullPath, append);
     }
 
     public FileChannel openChannel(int mode) throws IOException {
-        return fs.openChannel(fullPath, mode);
+        return mFs.openChannel(mFullPath, mode);
     }
 
     public ParcelFileDescriptor openFileDescriptor(int mode) throws IOException {
-        return fs.openFileDescriptor(fullPath, mode);
+        return mFs.openFileDescriptor(mFullPath, mode);
     }
 
     @Override
     public long lastModified() {
-        return fs.lastModified(fullPath);
+        return mFs.lastModified(mFullPath);
     }
 
     public boolean setLastModified(long millis) {
-        return fs.setLastModified(fullPath, millis);
+        return mFs.setLastModified(mFullPath, millis);
     }
 
     public long lastAccess() {
-        return fs.lastAccess(fullPath);
+        return mFs.lastAccess(mFullPath);
     }
 
     public long creationTime() {
-        return fs.creationTime(fullPath);
+        return mFs.creationTime(mFullPath);
     }
 
     @Override
     public long length() {
-        return fs.length(fullPath);
+        return mFs.length(mFullPath);
     }
 
     @Nullable
@@ -231,7 +231,7 @@ public class VirtualDocumentFile extends DocumentFile {
     @NonNull
     @Override
     public VirtualDocumentFile[] listFiles() {
-        String[] children = fs.list(fullPath);
+        String[] children = mFs.list(mFullPath);
         if (children == null) return new VirtualDocumentFile[0];
         VirtualDocumentFile[] documentFiles = new VirtualDocumentFile[children.length];
         for (int i = 0; i < children.length; ++i) {
@@ -246,10 +246,10 @@ public class VirtualDocumentFile extends DocumentFile {
             // displayName cannot contain a separator
             return false;
         }
-        String parent = Paths.removeLastPathSegment(fullPath);
+        String parent = Paths.removeLastPathSegment(mFullPath);
         String newFile = Paths.appendPathSegment(parent, displayName);
-        if(fs.renameTo(fullPath, newFile)) {
-            fullPath = newFile;
+        if(mFs.renameTo(mFullPath, newFile)) {
+            mFullPath = newFile;
             return true;
         }
         return false;

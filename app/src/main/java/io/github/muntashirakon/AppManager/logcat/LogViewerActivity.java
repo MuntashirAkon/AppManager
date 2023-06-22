@@ -108,11 +108,11 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
     private SearchingInterface mSearchingInterface;
     private LogViewerViewModel mViewModel;
 
-    private final MultithreadedExecutor executor = MultithreadedExecutor.getNewInstance();
-    private final BetterActivityResult<Intent, ActivityResult> activityLauncher =
+    private final MultithreadedExecutor mExecutor = MultithreadedExecutor.getNewInstance();
+    private final BetterActivityResult<Intent, ActivityResult> mActivityLauncher =
             BetterActivityResult.registerActivityForResult(this);
-    private final StoragePermission storagePermission = StoragePermission.init(this);
-    private final BetterActivityResult<String, Uri> saveLauncher = BetterActivityResult
+    private final StoragePermission mStoragePermission = StoragePermission.init(this);
+    private final BetterActivityResult<String, Uri> mSaveLauncher = BetterActivityResult
             .registerForActivityResult(this, new ActivityResultContracts.CreateDocument("*/*"));
 
     public static void startChooser(@NonNull Context context, @Nullable String subject,
@@ -158,7 +158,7 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
 
         if ("record".equals(getIntent().getStringExtra("shortcut_action"))) {
             // Handle shortcut
-            storagePermission.request(granted -> {
+            mStoragePermission.request(granted -> {
                 if (granted) {
                     startLogRecorder();
                 }
@@ -214,7 +214,7 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
                         sendLogDetails.getAttachment());
             } else {
                 // Open SAF activity
-                saveLauncher.launch(sendLogDetails.getAttachment().getName(), uri -> {
+                mSaveLauncher.launch(sendLogDetails.getAttachment().getName(), uri -> {
                     if (uri == null) return;
                     mViewModel.saveLogs(Paths.get(uri), sendLogDetails);
                 });
@@ -242,7 +242,7 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
 
     private void startLogRecorder() {
         String logFilename = SaveLogHelper.createLogFilename();
-        executor.submit(() -> {
+        mExecutor.submit(() -> {
             // Start recording logs
             Intent intent = ServiceHelper.getLogcatRecorderServiceIfNotAlreadyRunning(this, logFilename,
                     "", Prefs.LogViewer.getLogLevel());
@@ -319,7 +319,7 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
     @Override
     public void onDestroy() {
         super.onDestroy();
-        executor.shutdownNow();
+        mExecutor.shutdownNow();
     }
 
     private void startLiveLogViewer(boolean force) {
@@ -452,7 +452,7 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
 
     void displayLogViewerSettings() {
         Intent intent = SettingsActivity.getIntent(this, "log_viewer_prefs");
-        activityLauncher.launch(intent, result -> {
+        mActivityLauncher.launch(intent, result -> {
             // Preferences may have changed
             mViewModel.setCollapsedMode(!Prefs.LogViewer.expandByDefault());
             if (result.getResultCode() == Activity.RESULT_FIRST_USER) {
@@ -537,7 +537,7 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
     protected void handleNewFilterText(String text, final LogFilterAdapter logFilterAdapter) {
         final String trimmed = text.trim();
         if (!TextUtils.isEmpty(trimmed)) {
-            executor.submit(() -> {
+            mExecutor.submit(() -> {
                 LogFilterDao dao = AppsDb.getInstance().logFilterDao();
                 long id = dao.insert(trimmed);
                 LogFilter logFilter = dao.get(id);
@@ -590,7 +590,7 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
     private void resetDisplay() {
         mViewModel.setCollapsedMode(!Prefs.LogViewer.expandByDefault());
         // Populate suggestions with existing filters (if any)
-        executor.submit(this::addFiltersToSuggestions);
+        mExecutor.submit(this::addFiltersToSuggestions);
         resetFilter();
     }
 

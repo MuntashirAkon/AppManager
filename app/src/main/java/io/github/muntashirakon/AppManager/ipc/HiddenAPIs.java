@@ -22,9 +22,9 @@ import java.lang.reflect.Method;
 class HiddenAPIs {
     public static final String TAG = HiddenAPIs.class.getSimpleName();
 
-    private static Method addService;
-    private static Method attachBaseContext;
-    private static Method setAppName;
+    private static Method sAddService;
+    private static Method sAttachBaseContext;
+    private static Method sSetAppName;
 
     // Set this flag to silence AMS's complaints. Only exist on Android 8.0+
     public static final int FLAG_RECEIVER_FROM_SHELL = Build.VERSION.SDK_INT >= 26 ? 0x00400000 : 0;
@@ -34,21 +34,21 @@ class HiddenAPIs {
             Class<?> sm = Class.forName("android.os.ServiceManager");
             if (Build.VERSION.SDK_INT >= 28) {
                 try {
-                    addService = sm.getDeclaredMethod("addService",
+                    sAddService = sm.getDeclaredMethod("addService",
                             String.class, IBinder.class, boolean.class, int.class);
                 } catch (NoSuchMethodException ignored) {
                     // Fallback to the 2 argument version
                 }
             }
-            if (addService == null) {
-                addService = sm.getDeclaredMethod("addService", String.class, IBinder.class);
+            if (sAddService == null) {
+                sAddService = sm.getDeclaredMethod("addService", String.class, IBinder.class);
             }
 
-            attachBaseContext = ContextWrapper.class.getDeclaredMethod("attachBaseContext", Context.class);
-            attachBaseContext.setAccessible(true);
+            sAttachBaseContext = ContextWrapper.class.getDeclaredMethod("attachBaseContext", Context.class);
+            sAttachBaseContext.setAccessible(true);
 
             Class<?> ddm = Class.forName("android.ddm.DdmHandleAppName");
-            setAppName = ddm.getDeclaredMethod("setAppName", String.class, int.class);
+            sSetAppName = ddm.getDeclaredMethod("setAppName", String.class, int.class);
         } catch (ReflectiveOperationException e) {
             Log.e(TAG, e.getMessage(), e);
         }
@@ -56,7 +56,7 @@ class HiddenAPIs {
 
     static void setAppName(String name) {
         try {
-            setAppName.invoke(null, name, 0);
+            sSetAppName.invoke(null, name, 0);
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e);
         }
@@ -64,11 +64,11 @@ class HiddenAPIs {
 
     static void addService(String name, IBinder service) {
         try {
-            if (addService.getParameterTypes().length == 4) {
+            if (sAddService.getParameterTypes().length == 4) {
                 // Set dumpPriority to 0 so the service cannot be listed
-                addService.invoke(null, name, service, false, 0);
+                sAddService.invoke(null, name, service, false, 0);
             } else {
-                addService.invoke(null, name, service);
+                sAddService.invoke(null, name, service);
             }
         } catch (ReflectiveOperationException e) {
             Log.e(TAG, e.getMessage(), e);
@@ -78,7 +78,7 @@ class HiddenAPIs {
     static void attachBaseContext(Object wrapper, Context context) {
         if (wrapper instanceof ContextWrapper) {
             try {
-                attachBaseContext.invoke(wrapper, context);
+                sAttachBaseContext.invoke(wrapper, context);
             } catch (ReflectiveOperationException ignored) { /* Impossible */ }
         }
     }

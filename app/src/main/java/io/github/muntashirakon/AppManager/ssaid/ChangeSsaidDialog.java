@@ -61,7 +61,7 @@ public class ChangeSsaidDialog extends DialogFragment {
     @Nullable
     private SsaidChangedInterface mSsaidChangedInterface;
     @Nullable
-    private Future<?> ssaidChangedResult;
+    private Future<?> mSsaidChangedResult;
 
     @NonNull
     @Override
@@ -90,7 +90,7 @@ public class ChangeSsaidDialog extends DialogFragment {
             resetButton.set(alertDialog.getButton(AlertDialog.BUTTON_NEUTRAL));
             applyButton.get().setVisibility(View.GONE);
             applyButton.get().setOnClickListener(v -> {
-                ssaidChangedResult = ThreadUtils.postOnBackgroundThread(() -> {
+                mSsaidChangedResult = ThreadUtils.postOnBackgroundThread(() -> {
                     try {
                         Editable editable = ssaidEditText.getText();
                         if (editable == null) {
@@ -168,8 +168,8 @@ public class ChangeSsaidDialog extends DialogFragment {
 
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
-        if (ssaidChangedResult != null) {
-            ssaidChangedResult.cancel(true);
+        if (mSsaidChangedResult != null) {
+            mSsaidChangedResult.cancel(true);
         }
         super.onDismiss(dialog);
     }

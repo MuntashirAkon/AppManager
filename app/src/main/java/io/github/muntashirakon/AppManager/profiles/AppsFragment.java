@@ -28,15 +28,15 @@ import io.github.muntashirakon.widget.RecyclerView;
 import io.github.muntashirakon.widget.SwipeRefreshLayout;
 
 public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
-    private AppsProfileActivity activity;
-    private SwipeRefreshLayout swipeRefresh;
-    private LinearProgressIndicator progressIndicator;
-    private ProfileViewModel model;
+    private AppsProfileActivity mActivity;
+    private SwipeRefreshLayout mSwipeRefresh;
+    private LinearProgressIndicator mProgressIndicator;
+    private ProfileViewModel mModel;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        activity = (AppsProfileActivity) requireActivity();
+        mActivity = (AppsProfileActivity) requireActivity();
     }
 
     @Nullable
@@ -49,25 +49,25 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // Swipe refresh
-        swipeRefresh = view.findViewById(R.id.swipe_refresh);
-        swipeRefresh.setOnRefreshListener(this);
+        mSwipeRefresh = view.findViewById(R.id.swipe_refresh);
+        mSwipeRefresh.setOnRefreshListener(this);
         RecyclerView recyclerView = view.findViewById(R.id.scrollView);
         recyclerView.setFitsSystemWindows(false);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false));
+        recyclerView.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         final TextView emptyView = view.findViewById(android.R.id.empty);
         emptyView.setText(R.string.no_apps);
         recyclerView.setEmptyView(emptyView);
-        progressIndicator = view.findViewById(R.id.progress_linear);
-        progressIndicator.setVisibilityAfterHide(View.GONE);
-        progressIndicator.show();
+        mProgressIndicator = view.findViewById(R.id.progress_linear);
+        mProgressIndicator.setVisibilityAfterHide(View.GONE);
+        mProgressIndicator.show();
         view.findViewById(R.id.alert_text).setVisibility(View.GONE);
-        swipeRefresh.setOnChildScrollUpCallback((parent, child) -> recyclerView.canScrollVertically(-1));
-        model = activity.model;
+        mSwipeRefresh.setOnChildScrollUpCallback((parent, child) -> recyclerView.canScrollVertically(-1));
+        mModel = mActivity.model;
         AppsRecyclerAdapter adapter = new AppsRecyclerAdapter();
         recyclerView.setAdapter(adapter);
-        model.getPackages().observe(getViewLifecycleOwner(), packages -> {
-            progressIndicator.hide();
+        mModel.getPackages().observe(getViewLifecycleOwner(), packages -> {
+            mProgressIndicator.hide();
             adapter.setList(packages);
         });
     }
@@ -75,16 +75,16 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void onResume() {
         super.onResume();
-        if (activity.getSupportActionBar() != null) {
-            activity.getSupportActionBar().setSubtitle(R.string.apps);
+        if (mActivity.getSupportActionBar() != null) {
+            mActivity.getSupportActionBar().setSubtitle(R.string.apps);
         }
-        activity.fab.show();
+        mActivity.fab.show();
     }
 
     @Override
     public void onRefresh() {
-        swipeRefresh.setRefreshing(false);
-        model.loadPackages();
+        mSwipeRefresh.setRefreshing(false);
+        mModel.loadPackages();
     }
 
     public class AppsRecyclerAdapter extends RecyclerView.Adapter<AppsRecyclerAdapter.ViewHolder> {
@@ -92,7 +92,7 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         final ArrayList<String> packages = new ArrayList<>();
 
         private AppsRecyclerAdapter() {
-            pm = activity.getPackageManager();
+            pm = mActivity.getPackageManager();
         }
 
         void setList(List<String> list) {
@@ -130,9 +130,9 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             }
             holder.itemView.setOnClickListener(v -> {});
             holder.itemView.setOnLongClickListener(v -> {
-                PopupMenu popupMenu = new PopupMenu(activity, holder.itemView);
+                PopupMenu popupMenu = new PopupMenu(mActivity, holder.itemView);
                 popupMenu.getMenu().add(R.string.delete).setOnMenuItemClickListener(item -> {
-                    model.deletePackage(packageName);
+                    mModel.deletePackage(packageName);
                     return true;
                 });
                 popupMenu.show();

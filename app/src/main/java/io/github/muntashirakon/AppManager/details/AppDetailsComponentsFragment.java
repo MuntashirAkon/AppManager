@@ -131,7 +131,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         if (viewModel != null && !viewModel.isExternalApk() && SelfPermissions.canModifyAppComponentStates(
-                viewModel.getUserHandle(), viewModel.getPackageName(), viewModel.isTestOnlyApp())) {
+                viewModel.getUserId(), viewModel.getPackageName(), viewModel.isTestOnlyApp())) {
             inflater.inflate(R.menu.fragment_app_details_components_actions, menu);
             mBlockingToggler = menu.findItem(R.id.action_toggle_blocking);
             viewModel.getRuleApplicationStatus().observe(activity, status -> {
@@ -297,7 +297,7 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
             if (viewModel != null) {
                 mCanModifyComponentStates = !mIsExternalApk && SelfPermissions.canModifyAppComponentStates(mUserId, viewModel.getPackageName(), viewModel.isTestOnlyApp());
                 mConstraint = viewModel.getSearchQuery();
-                mUserId = viewModel.getUserHandle();
+                mUserId = viewModel.getUserId();
             } else {
                 mCanModifyComponentStates = false;
                 mConstraint = null;

@@ -63,9 +63,9 @@ public class ScannerFragment extends Fragment {
     private ScannerViewModel mViewModel;
     private ScannerActivity mActivity;
 
-    private MaterialCardView vtContainerView;
-    private TextView vtTitleView;
-    private TextView vtDescriptionView;
+    private MaterialCardView mVtContainerView;
+    private TextView mVtTitleView;
+    private TextView mVtDescriptionView;
 
     @Nullable
     @Override
@@ -82,8 +82,8 @@ public class ScannerFragment extends Fragment {
         classesView.setCardBackgroundColor(cardColor);
         MaterialCardView trackersView = view.findViewById(R.id.tracker);
         trackersView.setCardBackgroundColor(cardColor);
-        vtContainerView = view.findViewById(R.id.vt);
-        vtContainerView.setCardBackgroundColor(cardColor);
+        mVtContainerView = view.findViewById(R.id.vt);
+        mVtContainerView.setCardBackgroundColor(cardColor);
         MaterialCardView libsView = view.findViewById(R.id.libs);
         libsView.setCardBackgroundColor(cardColor);
         MaterialCardView apkInfoView = view.findViewById(R.id.apk);
@@ -167,15 +167,15 @@ public class ScannerFragment extends Fragment {
         });
         // VirusTotal
         if (!FeatureController.isInternetEnabled() || Prefs.VirusTotal.getApiKey() == null) {
-            vtContainerView.setVisibility(View.GONE);
+            mVtContainerView.setVisibility(View.GONE);
             view.findViewById(R.id.vt_disclaimer).setVisibility(View.GONE);
         }
-        vtTitleView = view.findViewById(R.id.vt_title);
-        vtDescriptionView = view.findViewById(R.id.vt_description);
+        mVtTitleView = view.findViewById(R.id.vt_title);
+        mVtDescriptionView = view.findViewById(R.id.vt_description);
         mViewModel.vtFileScanMetaLiveData().observe(getViewLifecycleOwner(), vtFileScanMeta -> {
             if (vtFileScanMeta == null) {
                 // Uploading
-                vtTitleView.setText(R.string.vt_uploading);
+                mVtTitleView.setText(R.string.vt_uploading);
                 if (Prefs.VirusTotal.promptBeforeUpload()) {
                     new MaterialAlertDialogBuilder(mActivity)
                             .setTitle(R.string.scan_in_vt)
@@ -187,20 +187,20 @@ public class ScannerFragment extends Fragment {
                 } else mViewModel.enableUploading();
             } else {
                 // Upload completed and queued
-                vtTitleView.setText(R.string.vt_queued);
-                vtDescriptionView.setText(vtFileScanMeta.getPermalink());
+                mVtTitleView.setText(R.string.vt_queued);
+                mVtDescriptionView.setText(vtFileScanMeta.getPermalink());
             }
         });
         mViewModel.vtFileReportLiveData().observe(getViewLifecycleOwner(), vtFileReport -> {
             if (vtFileReport == null) {
                 // Failed
-                vtTitleView.setText(R.string.vt_failed);
-                vtDescriptionView.setText(null);
-                vtContainerView.setOnClickListener(null);
+                mVtTitleView.setText(R.string.vt_failed);
+                mVtDescriptionView.setText(null);
+                mVtContainerView.setOnClickListener(null);
             } else if (vtFileReport.getPositives() == null) {
                 // Still queued
-                vtTitleView.setText(R.string.vt_queued);
-                vtDescriptionView.setText(vtFileReport.getPermalink());
+                mVtTitleView.setText(R.string.vt_queued);
+                mVtDescriptionView.setText(vtFileReport.getPermalink());
             } else {
                 // Successful
                 publishVirusTotalReport(vtFileReport);
@@ -243,10 +243,10 @@ public class ScannerFragment extends Fragment {
             detectedList.addAll(undetectedList);
             result = UiUtils.getOrderedList(detectedList);
         } else result = null;
-        vtTitleView.setText(getColoredText(resultSummary, color));
+        mVtTitleView.setText(getColoredText(resultSummary, color));
         if (result != null) {
-            vtDescriptionView.setText(R.string.tap_to_see_details);
-            vtContainerView.setOnClickListener(v -> {
+            mVtDescriptionView.setText(R.string.tap_to_see_details);
+            mVtContainerView.setOnClickListener(v -> {
                 VirusTotalDialog fragment = VirusTotalDialog.getInstance(resultSummary, scanDate, result, permalink);
                 fragment.show(getParentFragmentManager(), VirusTotalDialog.TAG);
             });

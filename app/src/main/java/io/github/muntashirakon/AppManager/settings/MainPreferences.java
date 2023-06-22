@@ -51,30 +51,30 @@ public class MainPreferences extends PreferenceFragment {
             Ops.MODE_ADB_WIFI,
             Ops.MODE_NO_ROOT);
 
-    private FragmentActivity activity;
-    private String currentLang;
+    private FragmentActivity mActivity;
+    private String mCurrentLang;
     @Ops.Mode
-    private String currentMode;
-    private MainPreferencesViewModel model;
-    private AlertDialog modeOfOpsAlertDialog;
-    private Preference modePref;
-    private String[] modes;
+    private String mCurrentMode;
+    private MainPreferencesViewModel mModel;
+    private AlertDialog mModeOfOpsAlertDialog;
+    private Preference mModePref;
+    private String[] mModes;
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.preferences_main, rootKey);
         getPreferenceManager().setPreferenceDataStore(new SettingsDataStore());
-        model = new ViewModelProvider(requireActivity()).get(MainPreferencesViewModel.class);
-        activity = requireActivity();
+        mModel = new ViewModelProvider(requireActivity()).get(MainPreferencesViewModel.class);
+        mActivity = requireActivity();
         // Custom locale
-        currentLang = Prefs.Appearance.getLanguage();
-        ArrayMap<String, Locale> locales = LangUtils.getAppLanguages(activity);
+        mCurrentLang = Prefs.Appearance.getLanguage();
+        ArrayMap<String, Locale> locales = LangUtils.getAppLanguages(mActivity);
         final CharSequence[] languageNames = getLanguagesL(locales);
         final String[] languages = new String[languageNames.length];
         for (int i = 0; i < locales.size(); ++i) {
             languages[i] = locales.keyAt(i);
         }
-        int localeIndex = locales.indexOfKey(currentLang);
+        int localeIndex = locales.indexOfKey(mCurrentLang);
         if (localeIndex < 0) {
             localeIndex = locales.indexOfKey(LangUtils.LANG_AUTO);
         }
@@ -82,13 +82,13 @@ public class MainPreferences extends PreferenceFragment {
         locale.setSummary(languageNames[localeIndex]);
         int finalLocaleIndex = localeIndex;
         locale.setOnPreferenceClickListener(preference -> {
-            new SearchableSingleChoiceDialogBuilder<>(activity, languages, languageNames)
+            new SearchableSingleChoiceDialogBuilder<>(mActivity, languages, languageNames)
                     .setTitle(R.string.choose_language)
                     .setSelectionIndex(finalLocaleIndex)
                     .setPositiveButton(R.string.apply, (dialog, which, selectedItem) -> {
                         if (selectedItem != null) {
-                            currentLang = selectedItem;
-                            Prefs.Appearance.setLanguage(currentLang);
+                            mCurrentLang = selectedItem;
+                            Prefs.Appearance.setLanguage(mCurrentLang);
                             AppearanceUtils.applyConfigurationChangesToActivities();
                         }
                     })
@@ -97,28 +97,28 @@ public class MainPreferences extends PreferenceFragment {
             return true;
         });
         // Mode of operation
-        modePref = Objects.requireNonNull(findPreference("mode_of_operations"));
-        modeOfOpsAlertDialog = UIUtils.getProgressDialog(activity, getString(R.string.loading));
-        modes = getResources().getStringArray(R.array.modes);
-        currentMode = Ops.getMode();
-        modePref.setSummary(getString(R.string.mode_of_op_with_inferred_mode_of_op, modes[MODE_NAMES.indexOf(currentMode)],
-                Ops.getInferredMode(activity)));
-        modePref.setOnPreferenceClickListener(preference -> {
-            new SearchableSingleChoiceDialogBuilder<>(activity, MODE_NAMES, modes)
+        mModePref = Objects.requireNonNull(findPreference("mode_of_operations"));
+        mModeOfOpsAlertDialog = UIUtils.getProgressDialog(mActivity, getString(R.string.loading));
+        mModes = getResources().getStringArray(R.array.modes);
+        mCurrentMode = Ops.getMode();
+        mModePref.setSummary(getString(R.string.mode_of_op_with_inferred_mode_of_op, mModes[MODE_NAMES.indexOf(mCurrentMode)],
+                Ops.getInferredMode(mActivity)));
+        mModePref.setOnPreferenceClickListener(preference -> {
+            new SearchableSingleChoiceDialogBuilder<>(mActivity, MODE_NAMES, mModes)
                     .setTitle(R.string.pref_mode_of_operations)
-                    .setSelection(currentMode)
+                    .setSelection(mCurrentMode)
                     .addDisabledItems(Build.VERSION.SDK_INT < Build.VERSION_CODES.R ?
                             Collections.singletonList(Ops.MODE_ADB_WIFI) : Collections.emptyList())
                     .setPositiveButton(R.string.apply, (dialog, which, selectedItem) -> {
                         if (selectedItem != null) {
-                            currentMode = selectedItem;
-                            if (Ops.MODE_ADB_OVER_TCP.equals(currentMode)) {
+                            mCurrentMode = selectedItem;
+                            if (Ops.MODE_ADB_OVER_TCP.equals(mCurrentMode)) {
                                 ServerConfig.setAdbPort(ServerConfig.DEFAULT_ADB_PORT);
                             }
-                            Ops.setMode(currentMode);
-                            modePref.setSummary(modes[MODE_NAMES.indexOf(currentMode)]);
-                            modeOfOpsAlertDialog.show();
-                            model.setModeOfOps();
+                            Ops.setMode(mCurrentMode);
+                            mModePref.setSummary(mModes[MODE_NAMES.indexOf(mCurrentMode)]);
+                            mModeOfOpsAlertDialog.show();
+                            mModel.setModeOfOps();
                         }
                     })
                     .setNegativeButton(R.string.cancel, null)
@@ -127,7 +127,7 @@ public class MainPreferences extends PreferenceFragment {
         });
         // VT API key
         ((Preference) Objects.requireNonNull(findPreference("vt_apikey"))).setOnPreferenceClickListener(preference -> {
-            new TextInputDialogBuilder(activity, null)
+            new TextInputDialogBuilder(mActivity, null)
                     .setTitle(R.string.pref_vt_apikey)
                     .setHelperText(getString(R.string.pref_vt_apikey_description) + "\n\n" + getString(R.string.vt_disclaimer))
                     .setInputText(Prefs.VirusTotal.getApiKey())
@@ -146,7 +146,7 @@ public class MainPreferences extends PreferenceFragment {
         // About device
         ((Preference) Objects.requireNonNull(findPreference("about_device")))
                 .setOnPreferenceClickListener(preference -> {
-                    model.loadDeviceInfo(new DeviceInfo2(activity));
+                    mModel.loadDeviceInfo(new DeviceInfo2(mActivity));
                     return true;
                 });
 
@@ -157,11 +157,11 @@ public class MainPreferences extends PreferenceFragment {
         if (!FeatureController.isLogViewerEnabled()) {
             ((Preference) Objects.requireNonNull(findPreference("log_viewer_prefs"))).setVisible(false);
         }
-        model.getOperationCompletedLiveData().observe(requireActivity(), completed -> {
+        mModel.getOperationCompletedLiveData().observe(requireActivity(), completed -> {
             if (requireActivity() instanceof SettingsActivity) {
                 ((SettingsActivity) requireActivity()).progressIndicator.hide();
             }
-            Toast.makeText(activity, R.string.the_operation_was_successful, Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, R.string.the_operation_was_successful, Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -177,44 +177,44 @@ public class MainPreferences extends PreferenceFragment {
         super.onViewCreated(view, savedInstanceState);
         // Preference loaders
         // Mode of ops
-        model.getModeOfOpsStatus().observe(getViewLifecycleOwner(), status -> {
+        mModel.getModeOfOpsStatus().observe(getViewLifecycleOwner(), status -> {
             switch (status) {
                 case Ops.STATUS_AUTO_CONNECT_WIRELESS_DEBUGGING:
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                        model.autoConnectAdb(Ops.STATUS_WIRELESS_DEBUGGING_CHOOSER_REQUIRED);
+                        mModel.autoConnectAdb(Ops.STATUS_WIRELESS_DEBUGGING_CHOOSER_REQUIRED);
                         return;
                     } // fall-through
                 case Ops.STATUS_WIRELESS_DEBUGGING_CHOOSER_REQUIRED:
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                        modeOfOpsAlertDialog.dismiss();
-                        Ops.connectWirelessDebugging(activity, model);
+                        mModeOfOpsAlertDialog.dismiss();
+                        Ops.connectWirelessDebugging(mActivity, mModel);
                         return;
                     } // fall-through
                 case Ops.STATUS_ADB_CONNECT_REQUIRED:
-                    modeOfOpsAlertDialog.dismiss();
-                    Ops.connectAdbInput(activity, model);
+                    mModeOfOpsAlertDialog.dismiss();
+                    Ops.connectAdbInput(mActivity, mModel);
                     return;
                 case Ops.STATUS_ADB_PAIRING_REQUIRED:
-                    modeOfOpsAlertDialog.dismiss();
+                    mModeOfOpsAlertDialog.dismiss();
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                        Ops.pairAdbInput(activity, model);
+                        Ops.pairAdbInput(mActivity, mModel);
                         return;
                     } // fall-through
                 case Ops.STATUS_FAILURE_ADB_NEED_MORE_PERMS:
                     Ops.displayIncompleteUsbDebuggingMessage(requireActivity());
                 case Ops.STATUS_SUCCESS:
                 case Ops.STATUS_FAILURE:
-                    modeOfOpsAlertDialog.dismiss();
-                    modePref.setSummary(getString(R.string.mode_of_op_with_inferred_mode_of_op,
-                            modes[MODE_NAMES.indexOf(currentMode)], Ops.getInferredMode(activity)));
+                    mModeOfOpsAlertDialog.dismiss();
+                    mModePref.setSummary(getString(R.string.mode_of_op_with_inferred_mode_of_op,
+                            mModes[MODE_NAMES.indexOf(mCurrentMode)], Ops.getInferredMode(mActivity)));
             }
         });
         // Device info
-        model.getDeviceInfo().observe(getViewLifecycleOwner(), deviceInfo -> {
-            View v = View.inflate(activity, io.github.muntashirakon.ui.R.layout.dialog_scrollable_text_view, null);
-            ((TextView) v.findViewById(android.R.id.content)).setText(deviceInfo.toLocalizedString(activity));
+        mModel.getDeviceInfo().observe(getViewLifecycleOwner(), deviceInfo -> {
+            View v = View.inflate(mActivity, io.github.muntashirakon.ui.R.layout.dialog_scrollable_text_view, null);
+            ((TextView) v.findViewById(android.R.id.content)).setText(deviceInfo.toLocalizedString(mActivity));
             v.findViewById(android.R.id.checkbox).setVisibility(View.GONE);
-            new AlertDialogBuilder(activity, true).setTitle(R.string.about_device).setView(v).show();
+            new AlertDialogBuilder(mActivity, true).setTitle(R.string.about_device).setView(v).show();
         });
     }
 
@@ -230,7 +230,7 @@ public class MainPreferences extends PreferenceFragment {
         for (int i = 0; i < locales.size(); ++i) {
             locale = locales.valueAt(i);
             if (LangUtils.LANG_AUTO.equals(locales.keyAt(i))) {
-                localesL[i] = activity.getString(R.string.auto);
+                localesL[i] = mActivity.getString(R.string.auto);
             } else localesL[i] = locale.getDisplayName(locale);
         }
         return localesL;

@@ -40,26 +40,26 @@ class ZipFileSystem extends VirtualFileSystem {
     public static final String TYPE = ContentType.ZIP.getMimeType();
 
     private static class VirtualZipEntry extends ZipEntry {
-        private File cachedFile;
+        private File mCachedFile;
 
         public VirtualZipEntry(String name) {
             super(name);
         }
 
         public File getCachedFile() {
-            return cachedFile;
+            return mCachedFile;
         }
 
         public void setCachedFile(File cachedFile) {
-            this.cachedFile = cachedFile;
+            mCachedFile = cachedFile;
         }
     }
 
-    private final LruCache<String, Node<ZipEntry>> cache = new LruCache<>(100);
+    private final LruCache<String, Node<ZipEntry>> mCache = new LruCache<>(100);
     @Nullable
-    private ZipFile zipFile;
+    private ZipFile mZipFile;
     @Nullable
-    private Node<ZipEntry> rootNode;
+    private Node<ZipEntry> mRootNode;
 
     protected ZipFileSystem(@NonNull Path zipFile) {
         super(zipFile);
@@ -72,12 +72,12 @@ class ZipFileSystem extends VirtualFileSystem {
 
     @Override
     protected Path onMount() throws IOException {
-        if (Objects.requireNonNull(getOptions()).remount && zipFile != null && rootNode != null) {
+        if (Objects.requireNonNull(getOptions()).remount && mZipFile != null && mRootNode != null) {
             // Remount requested, no need to generate anything if they're already generated.
             return Paths.get(this);
         }
-        zipFile = new ZipFile(Objects.requireNonNull(getFile().getFile()));
-        rootNode = buildTree(Objects.requireNonNull(zipFile));
+        mZipFile = new ZipFile(Objects.requireNonNull(getFile().getFile()));
+        mRootNode = buildTree(Objects.requireNonNull(mZipFile));
         return Paths.get(this);
     }
 
@@ -85,11 +85,11 @@ class ZipFileSystem extends VirtualFileSystem {
     @Override
     protected File onUnmount(@NonNull Map<String, List<Action>> actionList) throws IOException {
         File cachedFile = getUpdatedZipFile(actionList);
-        rootNode = null;
-        cache.evictAll();
-        if (zipFile != null) {
-            zipFile.close();
-            zipFile = null;
+        mRootNode = null;
+        mCache.evictAll();
+        if (mZipFile != null) {
+            mZipFile.close();
+            mZipFile = null;
         }
         return cachedFile;
     }
@@ -102,7 +102,7 @@ class ZipFileSystem extends VirtualFileSystem {
         String extension = getFile().getExtension();
         File file = FileCache.getGlobalFileCache().createCachedFile(extension);
         Map<String, ZipEntry> zipEntries = new HashMap<>();
-        for (ZipEntry zipEntry : Collections.list(Objects.requireNonNull(zipFile).entries())) {
+        for (ZipEntry zipEntry : Collections.list(Objects.requireNonNull(mZipFile).entries())) {
             zipEntries.put(Paths.getSanitizedPath(File.separator + zipEntry.getName(), false), zipEntry);
         }
         for (String path : actionList.keySet()) {
@@ -173,7 +173,7 @@ class ZipFileSystem extends VirtualFileSystem {
                         continue;
                     }
                     // Entry is a file
-                    try (InputStream is = zipFile.getInputStream(zipEntry)) {
+                    try (InputStream is = mZipFile.getInputStream(zipEntry)) {
                         IoUtils.copy(is, zos, -1, null);
                     }
                     zos.closeEntry();
@@ -233,15 +233,15 @@ class ZipFileSystem extends VirtualFileSystem {
     @Override
     protected Node<?> getNode(String path) {
         checkMounted();
-        Node<ZipEntry> targetNode = cache.get(path);
+        Node<ZipEntry> targetNode = mCache.get(path);
         if (targetNode == null) {
             if (path.equals(File.separator)) {
-                targetNode = rootNode;
+                targetNode = mRootNode;
             } else {
-                targetNode = Objects.requireNonNull(rootNode).getLastChild(Paths.getSanitizedPath(path, true));
+                targetNode = Objects.requireNonNull(mRootNode).getLastChild(Paths.getSanitizedPath(path, true));
             }
             if (targetNode != null) {
-                cache.put(path, targetNode);
+                mCache.put(path, targetNode);
             }
         }
         return targetNode;
@@ -249,7 +249,7 @@ class ZipFileSystem extends VirtualFileSystem {
 
     @Override
     protected void invalidate(String path) {
-        cache.remove(path);
+        mCache.remove(path);
     }
 
     @Override
@@ -341,7 +341,7 @@ class ZipFileSystem extends VirtualFileSystem {
         if (zipEntry == null) {
             throw new FileNotFoundException("Class definition for " + node.getFullPath() + " is not found.");
         }
-        return Objects.requireNonNull(zipFile).getInputStream(zipEntry);
+        return Objects.requireNonNull(mZipFile).getInputStream(zipEntry);
     }
 
     @NonNull

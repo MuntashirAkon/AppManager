@@ -15,16 +15,16 @@ import io.github.muntashirakon.AppManager.compat.OsCompat;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
 
 public class Owners {
-    private static final Map<Integer, String> uidOwnerMap = new HashMap<>();
+    private static final Map<Integer, String> sUidOwnerMap = new HashMap<>();
 
     public static Map<Integer, String> getUidOwnerMap(boolean reload) {
-        synchronized (uidOwnerMap) {
-            if (uidOwnerMap.isEmpty() || reload) {
+        synchronized (sUidOwnerMap) {
+            if (sUidOwnerMap.isEmpty() || reload) {
                 try {
                     OsCompat.setpwent();
                     StructPasswd passwd;
                     while ((passwd = OsCompat.getpwent()) != null) {
-                        uidOwnerMap.put(passwd.pw_uid, passwd.pw_name);
+                        sUidOwnerMap.put(passwd.pw_uid, passwd.pw_name);
                     }
                 } catch (ErrnoException e) {
                     e.printStackTrace();
@@ -32,7 +32,7 @@ public class Owners {
                     ExUtils.exceptionAsIgnored(OsCompat::endpwent);
                 }
             }
-            return uidOwnerMap;
+            return sUidOwnerMap;
         }
     }
 

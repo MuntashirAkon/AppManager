@@ -36,37 +36,37 @@ public enum ContentType2 {
     OTHER("application/octet-stream", "other"),
     ;
 
-    private final static Map<String, ContentType2> mimeTypeMap = new HashMap<>();
-    private final static Map<String, ContentType2> fileExtensionMap = new HashMap<>();
-    private static IanaEntries ianaEntries;
+    private final static Map<String, ContentType2> sMimeTypeMap = new HashMap<>();
+    private final static Map<String, ContentType2> sFileExtensionMap = new HashMap<>();
+    private static IanaEntries sIanaEntries;
 
     static {
         for (ContentType2 type : values()) {
             // NOTE: this may overwrite this mapping
-            mimeTypeMap.put(type.mimeType.toLowerCase(Locale.ROOT), type);
-            if (type.fileExtensions != null) {
-                for (String fileExtension : type.fileExtensions) {
+            sMimeTypeMap.put(type.mMimeType.toLowerCase(Locale.ROOT), type);
+            if (type.mFileExtensions != null) {
+                for (String fileExtension : type.mFileExtensions) {
                     // NOTE: this may overwrite this mapping
-                    fileExtensionMap.put(fileExtension, type);
+                    sFileExtensionMap.put(fileExtension, type);
                 }
             }
         }
     }
 
     @NonNull
-    private final String mimeType;
+    private final String mMimeType;
     @NonNull
-    private final String simpleName;
+    private final String mSimpleName;
     @Nullable
-    private final String[] fileExtensions;
+    private final String[] mFileExtensions;
     @Nullable
-    private final IanaEntry ianaEntry;
+    private final IanaEntry mIanaEntry;
 
     ContentType2(@NonNull String mimeType, @NonNull String simpleName, @Nullable String... fileExtensions) {
-        this.mimeType = mimeType;
-        this.simpleName = simpleName;
-        this.fileExtensions = fileExtensions;
-        this.ianaEntry = findIanaEntryByMimeType(mimeType);
+        mMimeType = mimeType;
+        mSimpleName = simpleName;
+        mFileExtensions = fileExtensions;
+        mIanaEntry = findIanaEntryByMimeType(mimeType);
     }
 
     /**
@@ -74,17 +74,17 @@ public enum ContentType2 {
      */
     @NonNull
     public String getSimpleName() {
-        return simpleName;
+        return mSimpleName;
     }
 
     @NonNull
     public String getMimeType() {
-        return mimeType;
+        return mMimeType;
     }
 
     @Nullable
     public String[] getFileExtensions() {
-        return fileExtensions;
+        return mFileExtensions;
     }
 
     /**
@@ -96,7 +96,7 @@ public enum ContentType2 {
         if (mimeType != null) {
             mimeType = mimeType.toLowerCase(Locale.ROOT);
         }
-        ContentType2 type = mimeTypeMap.get(mimeType);
+        ContentType2 type = sMimeTypeMap.get(mimeType);
         if (type == null) {
             return OTHER;
         } else {
@@ -110,7 +110,7 @@ public enum ContentType2 {
      */
     @Nullable
     public static ContentType2 fromFileExtension(@NonNull String fileExtension) {
-        return fileExtensionMap.get(fileExtension.toLowerCase(Locale.ROOT));
+        return sFileExtensionMap.get(fileExtension.toLowerCase(Locale.ROOT));
     }
 
     /**
@@ -118,10 +118,10 @@ public enum ContentType2 {
      */
     @Nullable
     public List<String> getReferences() {
-        if (ianaEntry == null) {
+        if (mIanaEntry == null) {
             return null;
         } else {
-            return ianaEntry.getReferences();
+            return mIanaEntry.getReferences();
         }
     }
 
@@ -130,18 +130,18 @@ public enum ContentType2 {
      */
     @Nullable
     public List<String> getReferenceUrls() {
-        if (ianaEntry == null) {
+        if (mIanaEntry == null) {
             return null;
         } else {
-            return ianaEntry.getReferenceUrls();
+            return mIanaEntry.getReferenceUrls();
         }
     }
 
     @Nullable
     private static IanaEntry findIanaEntryByMimeType(String mimeType) {
-        if (ianaEntries == null) {
-            ianaEntries = new IanaEntries();
+        if (sIanaEntries == null) {
+            sIanaEntries = new IanaEntries();
         }
-        return ianaEntries.lookupByMimeType(mimeType);
+        return sIanaEntries.lookupByMimeType(mimeType);
     }
 }

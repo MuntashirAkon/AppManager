@@ -20,14 +20,14 @@ public abstract class Runner {
     public static final String TAG = Runner.class.getSimpleName();
 
     public static class Result {
-        private final List<String> stdout;
-        private final List<String> stderr;
-        private final int exitCode;
+        private final List<String> mStdout;
+        private final List<String> mStderr;
+        private final int mExitCode;
 
         Result(@NonNull List<String> stdout, @NonNull List<String> stderr, int exitCode) {
-            this.stdout = stdout;
-            this.stderr = stderr;
-            this.exitCode = exitCode;
+            mStdout = stdout;
+            mStderr = stderr;
+            mExitCode = exitCode;
             // Print stderr
             if (stderr.size() > 0) {
                 Log.e(TAG, TextUtils.join("\n", stderr));
@@ -43,33 +43,33 @@ public abstract class Runner {
         }
 
         public boolean isSuccessful() {
-            return exitCode == 0;
+            return mExitCode == 0;
         }
 
         public int getExitCode() {
-            return exitCode;
+            return mExitCode;
         }
 
         @NonNull
         public List<String> getOutputAsList() {
-            return stdout;
+            return mStdout;
         }
 
         @NonNull
         public List<String> getOutputAsList(int firstIndex) {
-            if (firstIndex >= stdout.size()) {
+            if (firstIndex >= mStdout.size()) {
                 return Collections.emptyList();
             }
-            return stdout.subList(firstIndex, stdout.size());
+            return mStdout.subList(firstIndex, mStdout.size());
         }
 
         @NonNull
         public String getOutput() {
-            return TextUtils.join("\n", stdout);
+            return TextUtils.join("\n", mStdout);
         }
 
         public List<String> getStderr() {
-            return stderr;
+            return mStderr;
         }
     }
 

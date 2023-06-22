@@ -10,39 +10,39 @@ import java.util.Locale;
 // Copyright 2022 Muntashir Al-Islam
 public class ChangelogHeader extends ChangelogItem {
     @NonNull
-    private final String versionName;
-    private final long versionCode;
+    private final String mVersionName;
+    private final long mVersionCode;
     @NonNull
-    private final String releaseType;
+    private final String mReleaseType;
     @NonNull
-    private final String releaseDate;
+    private final String mReleaseDate;
 
     public ChangelogHeader(@NonNull String versionName, long versionCode, @NonNull String releaseType, @NonNull String releaseDate) {
         super(parseHeaderText(versionName, versionCode), HEADER);
-        this.versionName = versionName;
-        this.versionCode = versionCode;
-        this.releaseType = releaseType;
-        this.releaseDate = releaseDate;
+        mVersionName = versionName;
+        mVersionCode = versionCode;
+        mReleaseType = releaseType;
+        mReleaseDate = releaseDate;
         setBulletedList(false);
     }
 
     @NonNull
     public String getVersionName() {
-        return versionName;
+        return mVersionName;
     }
 
     public long getVersionCode() {
-        return versionCode;
+        return mVersionCode;
     }
 
     @NonNull
     public String getReleaseType() {
-        return releaseType;
+        return mReleaseType;
     }
 
     @NonNull
     public String getReleaseDate() {
-        return releaseDate;
+        return mReleaseDate;
     }
 
     @NonNull

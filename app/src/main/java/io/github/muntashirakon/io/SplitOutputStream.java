@@ -13,57 +13,57 @@ import java.util.List;
 public class SplitOutputStream extends OutputStream {
     private static final long MAX_BYTES_WRITTEN = 1024 * 1024 * 1024;  // 1GB
 
-    private final List<OutputStream> outputStreams = new ArrayList<>(1);
-    private final List<Path> files = new ArrayList<>(1);
-    private int currentIndex = -1;
-    private long bytesWritten;
-    private final long maxBytesPerFile;
-    private final String baseName;
-    private final Path basePath;
+    private final List<OutputStream> mOutputStreams = new ArrayList<>(1);
+    private final List<Path> mFiles = new ArrayList<>(1);
+    private int mCurrentIndex = -1;
+    private long mBytesWritten;
+    private final long mMaxBytesPerFile;
+    private final String mBaseName;
+    private final Path mBasePath;
 
     public SplitOutputStream(@NonNull Path basePath, @NonNull String baseName) {
         this(basePath, baseName, MAX_BYTES_WRITTEN);
     }
 
     public SplitOutputStream(@NonNull Path basePath, @NonNull String baseName, long maxBytesPerFile) {
-        this.basePath = basePath;
-        this.baseName = baseName;
-        this.maxBytesPerFile = maxBytesPerFile;
-        this.bytesWritten = maxBytesPerFile;
+        mBasePath = basePath;
+        mBaseName = baseName;
+        mMaxBytesPerFile = maxBytesPerFile;
+        mBytesWritten = maxBytesPerFile;
     }
 
     public List<Path> getFiles() {
-        return files;
+        return mFiles;
     }
 
     @WorkerThread
     @Override
     public void write(int b) throws IOException {
         checkCurrentStream(1);
-        outputStreams.get(currentIndex).write(b);
-        ++bytesWritten;
+        mOutputStreams.get(mCurrentIndex).write(b);
+        ++mBytesWritten;
     }
 
     @WorkerThread
     @Override
     public void write(@NonNull byte[] b) throws IOException {
         checkCurrentStream(b.length);
-        outputStreams.get(currentIndex).write(b);
-        bytesWritten += b.length;
+        mOutputStreams.get(mCurrentIndex).write(b);
+        mBytesWritten += b.length;
     }
 
     @WorkerThread
     @Override
     public void write(byte[] b, int off, int len) throws IOException {
         checkCurrentStream(len);
-        outputStreams.get(currentIndex).write(b, off, len);
-        bytesWritten += len;
+        mOutputStreams.get(mCurrentIndex).write(b, off, len);
+        mBytesWritten += len;
     }
 
     @WorkerThread
     @Override
     public void flush() throws IOException {
-        for (OutputStream stream : outputStreams) {
+        for (OutputStream stream : mOutputStreams) {
             stream.flush();
         }
     }
@@ -71,25 +71,25 @@ public class SplitOutputStream extends OutputStream {
     @WorkerThread
     @Override
     public void close() throws IOException {
-        for (OutputStream stream : outputStreams) {
+        for (OutputStream stream : mOutputStreams) {
             stream.close();
         }
     }
 
     @WorkerThread
     private void checkCurrentStream(int nextBytesSize) throws IOException {
-        if (bytesWritten + nextBytesSize > maxBytesPerFile) {
+        if (mBytesWritten + nextBytesSize > mMaxBytesPerFile) {
             // Need to create a new stream
             Path newFile = getNextFile();
-            files.add(newFile);
-            outputStreams.add(newFile.openOutputStream());
-            ++currentIndex;
-            bytesWritten = 0;
+            mFiles.add(newFile);
+            mOutputStreams.add(newFile.openOutputStream());
+            ++mCurrentIndex;
+            mBytesWritten = 0;
         }
     }
 
     @NonNull
     private Path getNextFile() throws IOException {
-        return basePath.createNewFile(baseName + "." + (currentIndex + 1), null);
+        return mBasePath.createNewFile(mBaseName + "." + (mCurrentIndex + 1), null);
     }
 }

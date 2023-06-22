@@ -16,8 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import io.github.muntashirakon.AppManager.utils.DateUtils;
-
 public class PackageUsageInfo implements Parcelable {
     @NonNull
     public final String packageName;
@@ -160,8 +158,8 @@ public class PackageUsageInfo implements Parcelable {
         @Override
         public String toString() {
             return "USEntry{" +
-                    "startTime=" + DateUtils.formatDateTime(startTime) +
-                    ", endTime=" + DateUtils.formatDateTime(endTime) +
+                    "startTime=" + startTime +
+                    ", endTime=" + endTime +
                     '}';
         }
 

@@ -64,33 +64,33 @@ public class PackageInstallerService extends ForegroundService {
     }
 
     @Nullable
-    private OnInstallFinished onInstallFinished;
-    private int sessionId;
-    private String packageName;
-    private QueuedProgressHandler progressHandler;
-    private NotificationInfo notificationInfo;
+    private OnInstallFinished mOnInstallFinished;
+    private int mSessionId;
+    private String mPackageName;
+    private QueuedProgressHandler mProgressHandler;
+    private NotificationInfo mNotificationInfo;
 
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
         if (isWorking()) {
             return super.onStartCommand(intent, flags, startId);
         }
-        progressHandler = new NotificationProgressHandler(
+        mProgressHandler = new NotificationProgressHandler(
                 this,
                 new NotificationProgressHandler.NotificationManagerInfo(CHANNEL_ID, "Install Progress", NotificationManagerCompat.IMPORTANCE_LOW),
                 NotificationUtils.HIGH_PRIORITY_NOTIFICATION_INFO,
                 NotificationUtils.HIGH_PRIORITY_NOTIFICATION_INFO
         );
-        progressHandler.setProgressTextInterface(ProgressHandler.PROGRESS_PERCENT);
+        mProgressHandler.setProgressTextInterface(ProgressHandler.PROGRESS_PERCENT);
         Intent notificationIntent = new Intent(this, MainActivity.class);
         @SuppressLint("WrongConstant")
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent,
                 PendingIntentCompat.FLAG_IMMUTABLE);
-        notificationInfo = new NotificationInfo()
+        mNotificationInfo = new NotificationInfo()
                 .setBody(getString(R.string.install_in_progress))
                 .setOperationName(getText(R.string.package_installer))
                 .setDefaultAction(pendingIntent);
-        progressHandler.onAttach(this, notificationInfo);
+        mProgressHandler.onAttach(this, mNotificationInfo);
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -107,15 +107,15 @@ public class PackageInstallerService extends ForegroundService {
         installer.setOnInstallListener(new PackageInstallerCompat.OnInstallListener() {
             @Override
             public void onStartInstall(int sessionId, String packageName) {
-                PackageInstallerService.this.sessionId = sessionId;
-                PackageInstallerService.this.packageName = packageName;
+                PackageInstallerService.this.mSessionId = sessionId;
+                PackageInstallerService.this.mPackageName = packageName;
             }
 
             // MIUI-begin: MIUI 12.5+ workaround
             @Override
             public void onAnotherAttemptInMiui(@Nullable ApkFile apkFile) {
                 if (apkFile != null) {
-                    installer.install(apkFile, apkQueueItem.getUserId(), progressHandler);
+                    installer.install(apkFile, apkQueueItem.getUserId(), mProgressHandler);
                 }
             }
             // MIUI-end
@@ -134,10 +134,10 @@ public class PackageInstallerService extends ForegroundService {
                         new DexOptimizer(PackageManagerCompat.getPackageManager(), packageName).forceDexOpt();
                     }
                 }
-                if (onInstallFinished != null) {
+                if (mOnInstallFinished != null) {
                     ThreadUtils.postOnMainThread(() -> {
-                        if (onInstallFinished != null) {
-                            onInstallFinished.onFinished(packageName, result, blockingPackage, statusMessage);
+                        if (mOnInstallFinished != null) {
+                            mOnInstallFinished.onFinished(packageName, result, blockingPackage, statusMessage);
                         }
                     });
                 } else sendNotification(result, apkQueueItem.getAppLabel(), blockingPackage, statusMessage);
@@ -178,7 +178,7 @@ public class PackageInstallerService extends ForegroundService {
                 // No apk file, abort
                 return;
             }
-            installer.install(apkFile, apkQueueItem.getUserId(), progressHandler);
+            installer.install(apkFile, apkQueueItem.getUserId(), mProgressHandler);
         }
     }
 
@@ -193,7 +193,7 @@ public class PackageInstallerService extends ForegroundService {
                 .setTitle(appLabel)
                 .setBody(getString(R.string.added_to_queue))
                 .setTime(System.currentTimeMillis());
-        progressHandler.onQueue(notificationInfo);
+        mProgressHandler.onQueue(notificationInfo);
     }
 
     @Override
@@ -212,14 +212,14 @@ public class PackageInstallerService extends ForegroundService {
         } else {
             title = getString(R.string.install_in_progress);
         }
-        notificationInfo.setTitle(title);
-        progressHandler.onProgressStart(-1, 0, notificationInfo);
+        mNotificationInfo.setTitle(title);
+        mProgressHandler.onProgressStart(-1, 0, mNotificationInfo);
     }
 
     @Override
     public void onTaskRemoved(Intent rootIntent) {
-        if (progressHandler != null) {
-            progressHandler.onDetach(this);
+        if (mProgressHandler != null) {
+            mProgressHandler.onDetach(this);
         }
     }
 
@@ -230,15 +230,15 @@ public class PackageInstallerService extends ForegroundService {
     }
 
     public void setOnInstallFinished(@Nullable OnInstallFinished onInstallFinished) {
-        this.onInstallFinished = onInstallFinished;
+        this.mOnInstallFinished = onInstallFinished;
     }
 
     public int getCurrentSessionId() {
-        return sessionId;
+        return mSessionId;
     }
 
     public String getCurrentPackageName() {
-        return packageName;
+        return mPackageName;
     }
 
     @SuppressLint("WrongConstant")
@@ -246,7 +246,7 @@ public class PackageInstallerService extends ForegroundService {
                                   @Nullable String appLabel,
                                   @Nullable String blockingPackage,
                                   @Nullable String statusMessage) {
-        Intent intent = getPackageManager().getLaunchIntentForPackage(packageName);
+        Intent intent = getPackageManager().getLaunchIntentForPackage(mPackageName);
         PendingIntent defaultAction = intent != null ? PendingIntent.getActivity(this, 0, intent,
                 PendingIntent.FLAG_ONE_SHOT | PendingIntentCompat.FLAG_IMMUTABLE) : null;
         String subject = getStringFromStatus(this, status, appLabel, blockingPackage);
@@ -260,12 +260,12 @@ public class PackageInstallerService extends ForegroundService {
                 .setBody(subject)
                 .setStyle(content)
                 .setDefaultAction(defaultAction);
-        NotificationInfo progressNotificationInfo = (NotificationInfo) progressHandler.getLastMessage();
+        NotificationInfo progressNotificationInfo = (NotificationInfo) mProgressHandler.getLastMessage();
         if (progressNotificationInfo != null) {
             progressNotificationInfo.setBody(getString(R.string.done));
         }
-        progressHandler.setProgressTextInterface(null);
-        ThreadUtils.postOnMainThread(() -> progressHandler.onResult(notificationInfo));
+        mProgressHandler.setProgressTextInterface(null);
+        ThreadUtils.postOnMainThread(() -> mProgressHandler.onResult(notificationInfo));
     }
 
     @NonNull

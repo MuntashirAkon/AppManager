@@ -35,8 +35,8 @@ import io.github.muntashirakon.io.IoUtils;
 public class ImportExportKeyStoreDialogFragment extends DialogFragment {
     public static final String TAG = "IEKeyStoreDialogFragment";
 
-    private FragmentActivity activity;
-    private final ActivityResultLauncher<String> exportKeyStore = registerForActivityResult(
+    private FragmentActivity mActivity;
+    private final ActivityResultLauncher<String> mExportKeyStore = registerForActivityResult(
             new ActivityResultContracts.CreateDocument("application/octet-stream"), uri -> {
                 if (uri == null) {
                     dismiss();
@@ -44,28 +44,28 @@ public class ImportExportKeyStoreDialogFragment extends DialogFragment {
                 }
                 new Thread(() -> {
                     try (InputStream is = new FileInputStream(AM_KEYSTORE_FILE);
-                         OutputStream os = activity.getContentResolver().openOutputStream(uri)) {
+                         OutputStream os = mActivity.getContentResolver().openOutputStream(uri)) {
                         if (os == null) throw new IOException("Unable to open URI");
                         IoUtils.copy(is, os, -1, null);
-                        activity.runOnUiThread(() -> {
+                        mActivity.runOnUiThread(() -> {
                             UIUtils.displayShortToast(R.string.done);
                             dismiss();
                         });
                     } catch (IOException e) {
-                        activity.runOnUiThread(() -> {
+                        mActivity.runOnUiThread(() -> {
                             UIUtils.displayShortToast(R.string.failed);
                             dismiss();
                         });
                     }
                 }).start();
             });
-    private final ActivityResultLauncher<String> importKeyStore = registerForActivityResult(
+    private final ActivityResultLauncher<String> mImportKeyStore = registerForActivityResult(
             new ActivityResultContracts.GetContent(), uri -> {
                 if (uri == null) {
                     dismiss();
                     return;
                 }
-                new MaterialAlertDialogBuilder(activity)
+                new MaterialAlertDialogBuilder(mActivity)
                         .setTitle(R.string.import_keystore)
                         .setMessage(R.string.confirm_import_keystore)
                         .setPositiveButton(R.string.yes, (dialog, which) -> new Thread(() -> {
@@ -74,13 +74,13 @@ public class ImportExportKeyStoreDialogFragment extends DialogFragment {
                             if (AM_KEYSTORE_FILE.exists()) {
                                 AM_KEYSTORE_FILE.renameTo(tmpFile);
                             }
-                            try (InputStream is = activity.getContentResolver().openInputStream(uri);
+                            try (InputStream is = mActivity.getContentResolver().openInputStream(uri);
                                  OutputStream os = new FileOutputStream(AM_KEYSTORE_FILE)) {
                                 if (is == null) throw new IOException("Unable to open URI");
                                 IoUtils.copy(is, os, -1, null);
                                 if (KeyStoreManager.hasKeyStorePassword()) {
                                     CountDownLatch waitForKs = new CountDownLatch(1);
-                                    KeyStoreManager.inputKeyStorePassword(activity, waitForKs::countDown);
+                                    KeyStoreManager.inputKeyStorePassword(mActivity, waitForKs::countDown);
                                     waitForKs.await(2, TimeUnit.MINUTES);
                                     if (waitForKs.getCount() == 1) {
                                         throw new Exception();
@@ -88,7 +88,7 @@ public class ImportExportKeyStoreDialogFragment extends DialogFragment {
                                 }
                                 KeyStoreManager.reloadKeyStore();
                                 // TODO: 21/4/21 Only import the keys that we use instead of replacing the entire keystore
-                                activity.runOnUiThread(() -> {
+                                mActivity.runOnUiThread(() -> {
                                     UIUtils.displayShortToast(R.string.done);
                                     dismiss();
                                 });
@@ -101,7 +101,7 @@ public class ImportExportKeyStoreDialogFragment extends DialogFragment {
                                     } catch (Exception ignore) {
                                     }
                                 }
-                                activity.runOnUiThread(() -> {
+                                mActivity.runOnUiThread(() -> {
                                     UIUtils.displayShortToast(R.string.failed);
                                     dismiss();
                                 });
@@ -115,8 +115,8 @@ public class ImportExportKeyStoreDialogFragment extends DialogFragment {
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        activity = requireActivity();
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity)
+        mActivity = requireActivity();
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(mActivity)
                 .setTitle(R.string.pref_import_export_keystore)
                 .setMessage(R.string.choose_what_to_do)
                 .setPositiveButton(R.string.pref_export, null)
@@ -128,9 +128,9 @@ public class ImportExportKeyStoreDialogFragment extends DialogFragment {
             Button exportButton = dialog1.getButton(AlertDialog.BUTTON_POSITIVE);
             Button importButton = dialog1.getButton(AlertDialog.BUTTON_NEUTRAL);
             if (AM_KEYSTORE_FILE.exists()) {
-                exportButton.setOnClickListener(v -> exportKeyStore.launch(KeyStoreManager.AM_KEYSTORE_FILE_NAME));
+                exportButton.setOnClickListener(v -> mExportKeyStore.launch(KeyStoreManager.AM_KEYSTORE_FILE_NAME));
             }
-            importButton.setOnClickListener(v -> importKeyStore.launch("application/*"));
+            importButton.setOnClickListener(v -> mImportKeyStore.launch("application/*"));
         });
         return alertDialog;
     }

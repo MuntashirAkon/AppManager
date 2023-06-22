@@ -7,36 +7,36 @@ import com.google.gson.annotations.SerializedName;
 
 public class VtFileReportScanItem {
     @SerializedName("detected")
-    private boolean detected;
+    private boolean mDetected;
     @SerializedName("version")
-    private String version;
+    private String mVersion;
     @SerializedName("result")
-    private String malware;
+    private String mMalware;
     @SerializedName("update")
-    private String update;
+    private String mUpdate;
 
     public boolean isDetected() {
-        return detected;
+        return mDetected;
     }
 
     public String getVersion() {
-        return version;
+        return mVersion;
     }
 
     public String getMalware() {
-        return malware;
+        return mMalware;
     }
 
     public String getUpdate() {
-        return update;
+        return mUpdate;
     }
 
     @NonNull
     @Override
     public String toString() {
-        return "(detected=" + detected +
-                ", version=" + version +
-                ", malware=" + malware +
-                ", update=" + update + ')';
+        return "(detected=" + mDetected +
+                ", version=" + mVersion +
+                ", malware=" + mMalware +
+                ", update=" + mUpdate + ')';
     }
 }

@@ -42,15 +42,15 @@ public class ScannerActivity extends BaseActivity {
     @Nullable
     private LinearProgressIndicator mProgressIndicator;
     @Nullable
-    private ParcelFileDescriptor fd;
+    private ParcelFileDescriptor mFd;
     @Nullable
-    private Uri apkUri;
-    private boolean isExternalApk;
+    private Uri mApkUri;
+    private boolean mIsExternalApk;
 
     @Override
     protected void onDestroy() {
         Paths.get(getCodeCacheDir()).delete();
-        IoUtils.closeQuietly(fd);
+        IoUtils.closeQuietly(mFd);
         super.onDestroy();
     }
 
@@ -61,14 +61,14 @@ public class ScannerActivity extends BaseActivity {
         ScannerViewModel model = new ViewModelProvider(this).get(ScannerViewModel.class);
         mActionBar = getSupportActionBar();
         Intent intent = getIntent();
-        isExternalApk = intent.getBooleanExtra(EXTRA_IS_EXTERNAL, true);
+        mIsExternalApk = intent.getBooleanExtra(EXTRA_IS_EXTERNAL, true);
 
         mProgressIndicator = findViewById(R.id.progress_linear);
         mProgressIndicator.setVisibilityAfterHide(View.GONE);
         showProgress(true);
 
-        apkUri = IntentCompat.getDataUri(intent);
-        if (apkUri == null) {
+        mApkUri = IntentCompat.getDataUri(intent);
+        if (mApkUri == null) {
             Toast.makeText(this, getString(R.string.error), Toast.LENGTH_LONG).show();
             finish();
             return;
@@ -76,24 +76,24 @@ public class ScannerActivity extends BaseActivity {
 
         File apkFile = null;
         if (Intent.ACTION_VIEW.equals(intent.getAction())) {
-            if (!FmProvider.AUTHORITY.equals(apkUri.getAuthority())) {
+            if (!FmProvider.AUTHORITY.equals(mApkUri.getAuthority())) {
                 try {
-                    fd = getContentResolver().openFileDescriptor(apkUri, "r");
-                    if (fd == null) {
+                    mFd = getContentResolver().openFileDescriptor(mApkUri, "r");
+                    if (mFd == null) {
                         throw new FileNotFoundException("FileDescription cannot be null");
                     }
-                    apkFile = FileUtils.getFileFromFd(fd);
+                    apkFile = FileUtils.getFileFromFd(mFd);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
             }
         } else {
-            String path = apkUri.getPath();
+            String path = mApkUri.getPath();
             if (path != null) apkFile = new File(path);
         }
 
         model.setApkFile(apkFile);
-        model.setApkUri(apkUri);
+        model.setApkUri(mApkUri);
 
         loadNewFragment(new ScannerFragment());
     }
@@ -102,7 +102,7 @@ public class ScannerActivity extends BaseActivity {
     public void onBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
             super.onBackPressed();
-        } else this.finish();
+        } else finish();
     }
 
     @Override
@@ -113,7 +113,7 @@ public class ScannerActivity extends BaseActivity {
 
     @Override
     public boolean onPrepareOptionsMenu(@NonNull Menu menu) {
-        menu.findItem(R.id.action_install).setVisible(isExternalApk && FeatureController.isInstallerEnabled());
+        menu.findItem(R.id.action_install).setVisible(mIsExternalApk && FeatureController.isInstallerEnabled());
         return super.onPrepareOptionsMenu(menu);
     }
 
@@ -124,8 +124,8 @@ public class ScannerActivity extends BaseActivity {
             onBackPressed();
             return true;
         } else if (id == R.id.action_install) {
-            if (apkUri != null) {
-                startActivity(PackageInstallerActivity.getLaunchableInstance(getApplicationContext(), apkUri));
+            if (mApkUri != null) {
+                startActivity(PackageInstallerActivity.getLaunchableInstance(getApplicationContext(), mApkUri));
                 return true;
             }
         }

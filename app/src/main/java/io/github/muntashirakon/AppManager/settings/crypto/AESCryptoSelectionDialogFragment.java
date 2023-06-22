@@ -40,40 +40,40 @@ import io.github.muntashirakon.dialog.TextInputDropdownDialogBuilder;
 public class AESCryptoSelectionDialogFragment extends DialogFragment {
     public static final String TAG = "AESCryptoSelectionDialogFragment";
 
-    private FragmentActivity activity;
-    private TextInputDialogBuilder builder;
+    private FragmentActivity mActivity;
+    private TextInputDialogBuilder mBuilder;
     @Nullable
-    private KeyStoreManager keyStoreManager;
+    private KeyStoreManager mKeyStoreManager;
     @Nullable
-    private char[] keyChars;
+    private char[] mKeyChars;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        activity = requireActivity();
-        builder = new TextInputDialogBuilder(activity, R.string.input_key)
+        mActivity = requireActivity();
+        mBuilder = new TextInputDialogBuilder(mActivity, R.string.input_key)
                 .setTitle(R.string.aes)
                 .setNeutralButton(R.string.generate_key, null)
                 .setNegativeButton(R.string.cancel, null)
                 .setPositiveButton(R.string.save, null);
-        AlertDialog alertDialog = builder.create();
+        AlertDialog alertDialog = mBuilder.create();
         alertDialog.setOnShowListener(dialog -> {
             AlertDialog dialog1 = (AlertDialog) dialog;
             Button positiveButton = dialog1.getButton(AlertDialog.BUTTON_POSITIVE);
             Button neutralButton = dialog1.getButton(AlertDialog.BUTTON_NEUTRAL);
             // Save
             positiveButton.setOnClickListener(v -> {
-                Editable inputText = builder.getInputText();
+                Editable inputText = mBuilder.getInputText();
                 if (TextUtils.isEmpty(inputText)) return;
-                if (keyStoreManager == null) {
+                if (mKeyStoreManager == null) {
                     UIUtils.displayLongToast(R.string.failed_to_initialize_key_store);
                     return;
                 }
-                keyChars = new char[inputText.length()];
-                inputText.getChars(0, inputText.length(), keyChars, 0);
+                mKeyChars = new char[inputText.length()];
+                inputText.getChars(0, inputText.length(), mKeyChars, 0);
                 byte[] keyBytes;
                 try {
-                    keyBytes = HexEncoding.decode(keyChars);
+                    keyBytes = HexEncoding.decode(mKeyChars);
                 } catch (IllegalArgumentException e) {
                     UIUtils.displayLongToast(R.string.invalid_aes_key_size);
                     return;
@@ -84,7 +84,7 @@ public class AESCryptoSelectionDialogFragment extends DialogFragment {
                 }
                 SecretKey secretKey = new SecretKeySpec(keyBytes, "AES");
                 try {
-                    keyStoreManager.addSecretKey(AES_KEY_ALIAS, secretKey, true);
+                    mKeyStoreManager.addSecretKey(AES_KEY_ALIAS, secretKey, true);
                     Prefs.Encryption.setEncryptionMode(CryptoUtils.MODE_AES);
                 } catch (Exception e) {
                     Log.e(TAG, e);
@@ -99,7 +99,7 @@ public class AESCryptoSelectionDialogFragment extends DialogFragment {
                 dialog.dismiss();
             });
             // Key generator
-            neutralButton.setOnClickListener(v -> new TextInputDropdownDialogBuilder(activity, R.string.crypto_key_size)
+            neutralButton.setOnClickListener(v -> new TextInputDropdownDialogBuilder(mActivity, R.string.crypto_key_size)
                     .setDropdownItems(Arrays.asList(128, 256), 0, false)
                     .setTitle(R.string.generate_key)
                     .setNegativeButton(R.string.cancel, null)
@@ -114,23 +114,23 @@ public class AESCryptoSelectionDialogFragment extends DialogFragment {
                         SecureRandom random = new SecureRandom();
                         byte[] key = new byte[keySize];
                         random.nextBytes(key);
-                        keyChars = HexEncoding.encode(key);
-                        builder.setInputText(CharBuffer.wrap(keyChars));
+                        mKeyChars = HexEncoding.encode(key);
+                        mBuilder.setInputText(CharBuffer.wrap(mKeyChars));
                     })
                     .show());
         });
         new Thread(() -> {
             try {
-                keyStoreManager = KeyStoreManager.getInstance();
-                SecretKey secretKey = keyStoreManager.getSecretKey(AES_KEY_ALIAS);
+                mKeyStoreManager = KeyStoreManager.getInstance();
+                SecretKey secretKey = mKeyStoreManager.getSecretKey(AES_KEY_ALIAS);
                 if (secretKey != null) {
-                    keyChars = HexEncoding.encode(secretKey.getEncoded());
+                    mKeyChars = HexEncoding.encode(secretKey.getEncoded());
                     try {
                         SecretKeyCompat.destroy(secretKey);
                     } catch (Exception ex) {
                         Log.e(TAG, ex);
                     }
-                    activity.runOnUiThread(() -> builder.setInputText(CharBuffer.wrap(keyChars)));
+                    mActivity.runOnUiThread(() -> mBuilder.setInputText(CharBuffer.wrap(mKeyChars)));
                 }
             } catch (Exception e) {
                 Log.e(TAG, e);
@@ -141,12 +141,12 @@ public class AESCryptoSelectionDialogFragment extends DialogFragment {
 
     @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
-        if (keyChars != null) Utils.clearChars(keyChars);
+        if (mKeyChars != null) Utils.clearChars(mKeyChars);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (keyChars != null) Utils.clearChars(keyChars);
+        if (mKeyChars != null) Utils.clearChars(mKeyChars);
     }
 }

@@ -44,60 +44,60 @@ import io.github.muntashirakon.io.Paths;
 public class OneClickOpsViewModel extends AndroidViewModel {
     public static final String TAG = OneClickOpsViewModel.class.getSimpleName();
 
-    private final PackageManager pm;
-    private final MutableLiveData<List<ItemCount>> trackerCount = new MutableLiveData<>();
-    private final MutableLiveData<Pair<List<ItemCount>, String[]>> componentCount = new MutableLiveData<>();
-    private final MutableLiveData<Pair<List<AppOpCount>, Pair<int[], Integer>>> appOpsCount = new MutableLiveData<>();
-    private final MutableLiveData<List<String>> clearDataCandidates = new MutableLiveData<>();
-    private final MutableLiveData<Boolean> trimCachesResult = new MutableLiveData<>();
-    private final MutableLiveData<String[]> appsInstalledByAmForDexOpt = new MutableLiveData<>();
+    private final PackageManager mPm;
+    private final MutableLiveData<List<ItemCount>> mTrackerCount = new MutableLiveData<>();
+    private final MutableLiveData<Pair<List<ItemCount>, String[]>> mComponentCount = new MutableLiveData<>();
+    private final MutableLiveData<Pair<List<AppOpCount>, Pair<int[], Integer>>> mAppOpsCount = new MutableLiveData<>();
+    private final MutableLiveData<List<String>> mClearDataCandidates = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> mTrimCachesResult = new MutableLiveData<>();
+    private final MutableLiveData<String[]> mAppsInstalledByAmForDexOpt = new MutableLiveData<>();
 
     @Nullable
-    private Future<?> futureResult;
+    private Future<?> mFutureResult;
 
     public OneClickOpsViewModel(@NonNull Application application) {
         super(application);
-        pm = application.getPackageManager();
+        mPm = application.getPackageManager();
     }
 
     @Override
     protected void onCleared() {
-        if (futureResult != null) {
-            futureResult.cancel(true);
+        if (mFutureResult != null) {
+            mFutureResult.cancel(true);
         }
         super.onCleared();
     }
 
     public LiveData<List<ItemCount>> watchTrackerCount() {
-        return trackerCount;
+        return mTrackerCount;
     }
 
     public LiveData<Pair<List<ItemCount>, String[]>> watchComponentCount() {
-        return componentCount;
+        return mComponentCount;
     }
 
     public LiveData<Pair<List<AppOpCount>, Pair<int[], Integer>>> watchAppOpsCount() {
-        return appOpsCount;
+        return mAppOpsCount;
     }
 
     public LiveData<List<String>> getClearDataCandidates() {
-        return clearDataCandidates;
+        return mClearDataCandidates;
     }
 
     public LiveData<Boolean> watchTrimCachesResult() {
-        return trimCachesResult;
+        return mTrimCachesResult;
     }
 
     public MutableLiveData<String[]> getAppsInstalledByAmForDexOpt() {
-        return appsInstalledByAmForDexOpt;
+        return mAppsInstalledByAmForDexOpt;
     }
 
     @AnyThread
     public void blockTrackers(boolean systemApps) {
-        if (futureResult != null) {
-            futureResult.cancel(true);
+        if (mFutureResult != null) {
+            mFutureResult.cancel(true);
         }
-        futureResult = ThreadUtils.postOnBackgroundThread(() -> {
+        mFutureResult = ThreadUtils.postOnBackgroundThread(() -> {
             int flags = PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
                     | PackageManager.GET_SERVICES | MATCH_DISABLED_COMPONENTS | MATCH_UNINSTALLED_PACKAGES
                     | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES;
@@ -109,14 +109,14 @@ public class OneClickOpsViewModel extends AndroidViewModel {
                     if (systemApps || !ApplicationInfoCompat.isSystemApp(packageInfo.applicationInfo)) {
                         ItemCount trackerCount = getTrackerCountForApp(packageInfo);
                         if (trackerCount.count > 0) {
-                            this.trackerCount.postValue(Collections.singletonList(trackerCount));
+                            mTrackerCount.postValue(Collections.singletonList(trackerCount));
                             return;
                         }
                     }
                 } catch (PackageManager.NameNotFoundException e) {
                     e.printStackTrace();
                 }
-                this.trackerCount.postValue(Collections.emptyList());
+                mTrackerCount.postValue(Collections.emptyList());
                 return;
             }
             boolean crossUserPermission = SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.INTERACT_ACROSS_USERS)
@@ -142,17 +142,17 @@ public class OneClickOpsViewModel extends AndroidViewModel {
                     trackerCounts.add(trackerCount);
                 }
             }
-            this.trackerCount.postValue(trackerCounts);
+            mTrackerCount.postValue(trackerCounts);
         });
     }
 
     @AnyThread
     public void blockComponents(boolean systemApps, @NonNull String[] signatures) {
         if (signatures.length == 0) return;
-        if (futureResult != null) {
-            futureResult.cancel(true);
+        if (mFutureResult != null) {
+            mFutureResult.cancel(true);
         }
-        futureResult = ThreadUtils.postOnBackgroundThread(() -> {
+        mFutureResult = ThreadUtils.postOnBackgroundThread(() -> {
             boolean canChangeComponentState = SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.CHANGE_COMPONENT_ENABLED_STATE);
             if (!canChangeComponentState) {
                 // Since there's no permission, it can only change its own component states
@@ -160,15 +160,15 @@ public class OneClickOpsViewModel extends AndroidViewModel {
                 if (systemApps || !ApplicationInfoCompat.isSystemApp(applicationInfo)) {
                     ItemCount componentCount = new ItemCount();
                     componentCount.packageName = applicationInfo.packageName;
-                    componentCount.packageLabel = applicationInfo.loadLabel(pm).toString();
+                    componentCount.packageLabel = applicationInfo.loadLabel(mPm).toString();
                     componentCount.count = PackageUtils.getFilteredComponents(applicationInfo.packageName,
                             UserHandleHidden.myUserId(), signatures).size();
                     if (componentCount.count > 0) {
-                        this.componentCount.postValue(new Pair<>(Collections.singletonList(componentCount), signatures));
+                        mComponentCount.postValue(new Pair<>(Collections.singletonList(componentCount), signatures));
                         return;
                     }
                 }
-                this.componentCount.postValue(new Pair<>(Collections.emptyList(), signatures));
+                mComponentCount.postValue(new Pair<>(Collections.emptyList(), signatures));
                 return;
             }
             boolean crossUserPermission = SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.INTERACT_ACROSS_USERS)
@@ -189,21 +189,21 @@ public class OneClickOpsViewModel extends AndroidViewModel {
                     continue;
                 ItemCount componentCount = new ItemCount();
                 componentCount.packageName = applicationInfo.packageName;
-                componentCount.packageLabel = applicationInfo.loadLabel(pm).toString();
+                componentCount.packageLabel = applicationInfo.loadLabel(mPm).toString();
                 componentCount.count = PackageUtils.getFilteredComponents(applicationInfo.packageName,
                         UserHandleHidden.myUserId(), signatures).size();
                 if (componentCount.count > 0) componentCounts.add(componentCount);
             }
-            this.componentCount.postValue(new Pair<>(componentCounts, signatures));
+            mComponentCount.postValue(new Pair<>(componentCounts, signatures));
         });
     }
 
     @AnyThread
     public void setAppOps(int[] appOpList, int mode, boolean systemApps) {
-        if (futureResult != null) {
-            futureResult.cancel(true);
+        if (mFutureResult != null) {
+            mFutureResult.cancel(true);
         }
-        futureResult = ThreadUtils.postOnBackgroundThread(() -> {
+        mFutureResult = ThreadUtils.postOnBackgroundThread(() -> {
             Pair<int[], Integer> appOpsModePair = new Pair<>(appOpList, mode);
             List<AppOpCount> appOpCounts = new ArrayList<>();
             HashSet<String> packageNames = new HashSet<>();
@@ -218,21 +218,21 @@ public class OneClickOpsViewModel extends AndroidViewModel {
                     continue;
                 AppOpCount appOpCount = new AppOpCount();
                 appOpCount.packageName = applicationInfo.packageName;
-                appOpCount.packageLabel = applicationInfo.loadLabel(pm).toString();
+                appOpCount.packageLabel = applicationInfo.loadLabel(mPm).toString();
                 appOpCount.appOps = PackageUtils.getFilteredAppOps(applicationInfo.packageName,
                         UserHandleHidden.myUserId(), appOpList, mode);
                 appOpCount.count = appOpCount.appOps.size();
                 if (appOpCount.count > 0) appOpCounts.add(appOpCount);
             }
-            this.appOpsCount.postValue(new Pair<>(appOpCounts, appOpsModePair));
+            mAppOpsCount.postValue(new Pair<>(appOpCounts, appOpsModePair));
         });
     }
 
     public void clearData() {
-        if (futureResult != null) {
-            futureResult.cancel(true);
+        if (mFutureResult != null) {
+            mFutureResult.cancel(true);
         }
-        futureResult = ThreadUtils.postOnBackgroundThread(() -> {
+        mFutureResult = ThreadUtils.postOnBackgroundThread(() -> {
             HashSet<String> packageNames = new HashSet<>();
             for (ApplicationInfo applicationInfo : PackageUtils.getAllApplications(MATCH_UNINSTALLED_PACKAGES
                     | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES)) {
@@ -244,7 +244,7 @@ public class OneClickOpsViewModel extends AndroidViewModel {
                     return;
                 }
             }
-            this.clearDataCandidates.postValue(new ArrayList<>(packageNames));
+            mClearDataCandidates.postValue(new ArrayList<>(packageNames));
         });
     }
 
@@ -256,9 +256,9 @@ public class OneClickOpsViewModel extends AndroidViewModel {
                 // TODO: 30/8/21 Iterate all volumes?
                 PackageManagerCompat.freeStorageAndNotify(null /* internal */, size,
                         StorageManagerCompat.FLAG_ALLOCATE_DEFY_ALL_RESERVED);
-                this.trimCachesResult.postValue(true);
+                mTrimCachesResult.postValue(true);
             } catch (RemoteException e) {
-                this.trimCachesResult.postValue(false);
+                mTrimCachesResult.postValue(false);
             }
         });
     }
@@ -275,7 +275,7 @@ public class OneClickOpsViewModel extends AndroidViewModel {
                     return;
                 }
             }
-            appsInstalledByAmForDexOpt.postValue(packageNames.toArray(new String[0]));
+            mAppsInstalledByAmForDexOpt.postValue(packageNames.toArray(new String[0]));
         });
     }
 
@@ -283,7 +283,7 @@ public class OneClickOpsViewModel extends AndroidViewModel {
     private ItemCount getTrackerCountForApp(@NonNull PackageInfo packageInfo) {
         ItemCount trackerCount = new ItemCount();
         trackerCount.packageName = packageInfo.packageName;
-        trackerCount.packageLabel = packageInfo.applicationInfo.loadLabel(pm).toString();
+        trackerCount.packageLabel = packageInfo.applicationInfo.loadLabel(mPm).toString();
         trackerCount.count = ComponentUtils.getTrackerComponentsForPackage(packageInfo).size();
         return trackerCount;
     }

@@ -24,14 +24,14 @@ public class CrazyLoggerService extends ForegroundService {
     };
 
     private static final long INTERVAL = 300;
-    private boolean kill = false;
+    private boolean mKill = false;
 
     public CrazyLoggerService() {
         super(TAG);
     }
 
     protected void onHandleIntent(Intent intent) {
-        while (!kill) {
+        while (!mKill) {
             SystemClock.sleep(INTERVAL);
             if (new Random().nextInt(100) % 5 == 0) {
                 Log.println(LOG_LEVELS[new Random().nextInt(6)], TAG, LOG_MESSAGES[new Random().nextInt(5)]);
@@ -42,6 +42,6 @@ public class CrazyLoggerService extends ForegroundService {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        kill = true;
+        mKill = true;
     }
 }

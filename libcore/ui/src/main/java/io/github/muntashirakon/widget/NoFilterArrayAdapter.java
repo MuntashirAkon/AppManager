@@ -16,7 +16,7 @@ import java.util.List;
  * An {@link ArrayAdapter} incapable of filtering i.e. returns everything regardless of the filtered text.
  */
 public class NoFilterArrayAdapter<T> extends ArrayAdapter<T> {
-    private final Filter dummyFilter = new Filter() {
+    private final Filter mDummyFilter = new Filter() {
         @Override
         @Nullable
         protected FilterResults performFiltering(CharSequence constraint) {
@@ -36,6 +36,6 @@ public class NoFilterArrayAdapter<T> extends ArrayAdapter<T> {
     @NonNull
     @Override
     public Filter getFilter() {
-        return dummyFilter;
+        return mDummyFilter;
     }
 }

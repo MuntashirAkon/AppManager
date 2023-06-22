@@ -38,16 +38,16 @@ public class AppDetailsAppOpItem extends AppDetailsItem<Integer> {
     public final boolean appContainsPermission;
 
     @Nullable
-    private AppOpsManagerCompat.OpEntry opEntry;
+    private AppOpsManagerCompat.OpEntry mOpEntry;
 
     public AppDetailsAppOpItem(@NonNull AppOpsManagerCompat.OpEntry opEntry) {
         this(opEntry.getOp());
-        this.opEntry = opEntry;
+        mOpEntry = opEntry;
     }
 
     public AppDetailsAppOpItem(int op) {
         super(op);
-        opEntry = null;
+        mOpEntry = null;
         permissionInfo = null;
         permission = null;
         isDangerous = false;
@@ -58,7 +58,7 @@ public class AppDetailsAppOpItem extends AppDetailsItem<Integer> {
     public AppDetailsAppOpItem(@NonNull AppOpsManagerCompat.OpEntry opEntry, @NonNull PermissionInfo permissionInfo,
                                boolean isGranted, int permissionFlags, boolean appContainsPermission) {
         super(opEntry.getOp());
-        this.opEntry = opEntry;
+        mOpEntry = opEntry;
         this.permissionInfo = permissionInfo;
         this.appContainsPermission = appContainsPermission;
         isDangerous = PermissionInfoCompat.getProtection(permissionInfo) == PermissionInfo.PROTECTION_DANGEROUS;
@@ -76,7 +76,7 @@ public class AppDetailsAppOpItem extends AppDetailsItem<Integer> {
     public AppDetailsAppOpItem(int op, @NonNull PermissionInfo permissionInfo,
                                boolean isGranted, int permissionFlags, boolean appContainsPermission) {
         super(op);
-        this.opEntry = null;
+        mOpEntry = null;
         this.permissionInfo = permissionInfo;
         this.appContainsPermission = appContainsPermission;
         isDangerous = PermissionInfoCompat.getProtection(permissionInfo) == PermissionInfo.PROTECTION_DANGEROUS;
@@ -97,35 +97,35 @@ public class AppDetailsAppOpItem extends AppDetailsItem<Integer> {
 
     @AppOpsManagerCompat.Mode
     public int getMode() {
-        if (opEntry != null) {
-            return opEntry.getMode();
+        if (mOpEntry != null) {
+            return mOpEntry.getMode();
         }
         return AppOpsManagerCompat.opToDefaultMode(getOp());
     }
 
     public long getDuration() {
-        if (opEntry != null) {
-            return opEntry.getDuration();
+        if (mOpEntry != null) {
+            return mOpEntry.getDuration();
         }
         return 0L;
     }
 
     public long getTime() {
-        if (opEntry != null) {
-            return opEntry.getTime();
+        if (mOpEntry != null) {
+            return mOpEntry.getTime();
         }
         return 0L;
     }
 
     public long getRejectTime() {
-        if (opEntry != null) {
-            return opEntry.getRejectTime();
+        if (mOpEntry != null) {
+            return mOpEntry.getRejectTime();
         }
         return 0L;
     }
 
     public boolean isRunning() {
-        return opEntry != null && opEntry.isRunning();
+        return mOpEntry != null && mOpEntry.isRunning();
     }
 
     public boolean isAllowed() {
@@ -232,6 +232,6 @@ public class AppDetailsAppOpItem extends AppDetailsItem<Integer> {
             throws RemoteException {
         List<AppOpsManagerCompat.OpEntry> opEntryList = appOpsManager.getOpsForPackage(packageInfo.applicationInfo.uid,
                 packageInfo.packageName, new int[]{getOp()}).get(0).getOps();
-        opEntry = opEntryList.size() > 0 ? opEntryList.get(0) : null;
+        mOpEntry = opEntryList.size() > 0 ? opEntryList.get(0) : null;
     }
 }

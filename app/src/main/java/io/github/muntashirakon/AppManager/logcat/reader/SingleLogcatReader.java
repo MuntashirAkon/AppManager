@@ -4,6 +4,8 @@ package io.github.muntashirakon.AppManager.logcat.reader;
 
 import android.text.TextUtils;
 
+import androidx.annotation.Nullable;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -15,44 +17,48 @@ import io.github.muntashirakon.AppManager.logs.Log;
 
 // Copyright 2012 Nolan Lawson
 public class SingleLogcatReader extends AbsLogcatReader {
-    private final Process logcatProcess;
-    private final BufferedReader bufferedReader;
-    private String lastLine;
+    private final Process mLogcatProcess;
+    private final BufferedReader mBufferedReader;
+    @Nullable
+    private String mLastLine;
 
-    public SingleLogcatReader(boolean recordingMode, @LogcatHelper.LogBufferId int buffers, String lastLine)
+    public SingleLogcatReader(boolean recordingMode, @LogcatHelper.LogBufferId int buffers, @Nullable String lastLine)
             throws IOException {
         super(recordingMode);
-        this.lastLine = lastLine;
+        mLastLine = lastLine;
 
         // Use the "time" log so we can see what time the logs were logged at
-        logcatProcess = LogcatHelper.getLogcatProcess(buffers);
-        bufferedReader = new BufferedReader(new InputStreamReader(logcatProcess.getInputStream()), 8192);
+        mLogcatProcess = LogcatHelper.getLogcatProcess(buffers);
+        mBufferedReader = new BufferedReader(new InputStreamReader(mLogcatProcess.getInputStream()), 8192);
     }
 
     @Override
     public void killQuietly() {
-        if (logcatProcess != null) {
-            logcatProcess.destroy();
+        if (mLogcatProcess != null) {
+            mLogcatProcess.destroy();
             Log.d("SLR", "killed 1 logcat process");
         }
     }
 
     @Override
     public String readLine() throws IOException {
-        String line = bufferedReader.readLine();
-        if (recordingMode && lastLine != null) { // Still skipping past the 'last line'
-            if (lastLine.equals(line) /*|| isAfterLastTime(line)*/) {
-                lastLine = null; // Indicates we've passed the last line
+        String line = mBufferedReader.readLine();
+        if (recordingMode && mLastLine != null) { // Still skipping past the 'last line'
+            if (mLastLine.equals(line) /*|| isAfterLastTime(line)*/) {
+                mLastLine = null; // Indicates we've passed the last line
             }
         }
         return line;
     }
 
     private boolean isAfterLastTime(String line) {
+        if (mLastLine == null) {
+            return false;
+        }
         // Doing a string comparison is sufficient to determine whether this line is chronologically
         // after the last line, because the format they use is exactly the same and
         // lists larger time period before smaller ones
-        return isDatedLogLine(lastLine) && isDatedLogLine(line) && line.compareTo(lastLine) > 0;
+        return isDatedLogLine(mLastLine) && isDatedLogLine(line) && line.compareTo(mLastLine) > 0;
     }
 
     private boolean isDatedLogLine(String line) {
@@ -62,11 +68,11 @@ public class SingleLogcatReader extends AbsLogcatReader {
 
     @Override
     public boolean readyToRecord() {
-        return recordingMode && lastLine == null;
+        return recordingMode && mLastLine == null;
     }
 
     @Override
     public List<Process> getProcesses() {
-        return Collections.singletonList(logcatProcess);
+        return Collections.singletonList(mLogcatProcess);
     }
 }
