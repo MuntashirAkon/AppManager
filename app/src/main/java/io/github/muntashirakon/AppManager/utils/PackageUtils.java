@@ -27,6 +27,7 @@ import android.content.pm.LauncherActivityInfo;
 import android.content.pm.LauncherApps;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.pm.Signature;
 import android.content.pm.SigningInfo;
 import android.os.Build;
@@ -75,7 +76,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-import io.github.muntashirakon.AppManager.AppManager;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.signing.Signer;
 import io.github.muntashirakon.AppManager.apk.signing.SignerInfo;
@@ -365,10 +365,6 @@ public final class PackageUtils {
         // Add activities
         if (packageInfo.activities != null) {
             for (ActivityInfo activityInfo : packageInfo.activities) {
-                if (activityInfo.targetActivity != null) {
-                    // We need real class name exclusively
-                    componentClasses.put(activityInfo.targetActivity, RuleType.ACTIVITY);
-                }
                 componentClasses.put(activityInfo.name, RuleType.ACTIVITY);
             }
         }
@@ -424,8 +420,13 @@ public final class PackageUtils {
         HashMap<String, RuleType> componentClasses = collectComponentClassNames(packageName, userId);
         HashMap<String, RuleType> disabledComponents = new HashMap<>();
         for (String componentName : componentClasses.keySet()) {
-            if (isComponentDisabledByUser(packageName, componentName, userId))
-                disabledComponents.put(componentName, componentClasses.get(componentName));
+            try {
+                if (isComponentDisabledByUser(packageName, componentName, userId)) {
+                    disabledComponents.put(componentName, componentClasses.get(componentName));
+                }
+            } catch (NameNotFoundException ignore) {
+                // Component unavailable
+            }
         }
         disabledComponents.putAll(ComponentUtils.getIFWRulesForPackage(packageName));
         return disabledComponents;
@@ -434,23 +435,27 @@ public final class PackageUtils {
     @SuppressLint("SwitchIntDef")
     public static boolean isComponentDisabledByUser(@NonNull String packageName, @NonNull String componentClassName,
                                                     @UserIdInt int userId)
-            throws SecurityException, IllegalArgumentException {
-        ComponentName componentName = new ComponentName(packageName, componentClassName);
-        switch (PackageManagerCompat.getComponentEnabledSetting(componentName, userId)) {
-            case PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER:
-                return true;
-            case PackageManager.COMPONENT_ENABLED_STATE_DISABLED:
-            case PackageManager.COMPONENT_ENABLED_STATE_DISABLED_UNTIL_USED:
-            case PackageManager.COMPONENT_ENABLED_STATE_ENABLED:
-            case PackageManager.COMPONENT_ENABLED_STATE_DEFAULT:
-            default:
-                return false;
+            throws SecurityException, NameNotFoundException {
+        try {
+            ComponentName componentName = new ComponentName(packageName, componentClassName);
+            switch (PackageManagerCompat.getComponentEnabledSetting(componentName, userId)) {
+                case PackageManager.COMPONENT_ENABLED_STATE_DISABLED_USER:
+                    return true;
+                case PackageManager.COMPONENT_ENABLED_STATE_DISABLED:
+                case PackageManager.COMPONENT_ENABLED_STATE_DISABLED_UNTIL_USED:
+                case PackageManager.COMPONENT_ENABLED_STATE_ENABLED:
+                case PackageManager.COMPONENT_ENABLED_STATE_DEFAULT:
+                default:
+                    return false;
+            }
+        } catch (IllegalArgumentException e) {
+            throw (NameNotFoundException) new NameNotFoundException(e.getMessage()).initCause(e);
         }
     }
 
     @Nullable
     public static String[] getPermissionsForPackage(String packageName, @UserIdInt int userId)
-            throws PackageManager.NameNotFoundException, RemoteException {
+            throws NameNotFoundException, RemoteException {
         PackageInfo info = PackageManagerCompat.getPackageInfo(packageName, PackageManager.GET_PERMISSIONS
                 | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId);
         return info.requestedPermissions;
@@ -492,7 +497,7 @@ public final class PackageUtils {
             @SuppressLint("WrongConstant")
             ApplicationInfo applicationInfo = pm.getApplicationInfo(packageName, MATCH_UNINSTALLED_PACKAGES);
             return pm.getApplicationLabel(applicationInfo).toString();
-        } catch (PackageManager.NameNotFoundException ignore) {
+        } catch (NameNotFoundException ignore) {
         }
         return packageName;
     }
