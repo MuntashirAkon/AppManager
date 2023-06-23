@@ -21,6 +21,7 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.compat.PermissionCompat;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentsBlocker;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.users.Users;
@@ -30,6 +31,27 @@ import io.github.muntashirakon.io.Paths;
 
 public class SelfPermissions {
     public static final String SHELL_PACKAGE_NAME = "com.android.shell";
+
+    public static void init() {
+        if (!canModifyPermissions()) {
+            return;
+        }
+        String[] permissions = new String[]{
+                Manifest.permission.DUMP,
+                ManifestCompat.permission.GET_APP_OPS_STATS,
+                ManifestCompat.permission.INTERACT_ACROSS_USERS,
+                Manifest.permission.READ_LOGS
+        };
+        int userId = UserHandleHidden.myUserId();
+        for (String permission : permissions) {
+            if (!checkSelfPermission(permission)) {
+                try {
+                    PermissionCompat.grantPermission(BuildConfig.APPLICATION_ID, permission, userId);
+                } catch (Exception ignore) {
+                }
+            }
+        }
+    }
 
     public static boolean canBlockByIFW() {
         return Paths.get(ComponentsBlocker.SYSTEM_RULES_PATH).canWrite();
@@ -182,14 +204,15 @@ public class SelfPermissions {
     }
 
     public static boolean checkCrossUserPermission(@UserIdInt int userId, boolean requireFullPermission) {
+        int callingUid = Users.getSelfOrRemoteUid();
+        return checkCrossUserPermission(userId, requireFullPermission, callingUid);
+    }
+
+    public static boolean checkCrossUserPermission(@UserIdInt int userId, boolean requireFullPermission, int callingUid) {
         if (userId < 0) {
             throw new IllegalArgumentException("Invalid userId " + userId);
         }
-        int callingUid = Users.getSelfOrRemoteUid();
-        if (isSystemOrRootOrShell(callingUid)) {
-            return true;
-        }
-        if (userId == UserHandleHidden.getUserId(callingUid)) {
+        if (isSystemOrRootOrShell(callingUid) || userId == UserHandleHidden.getUserId(callingUid)) {
             return true;
         }
         if (requireFullPermission) {

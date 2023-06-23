@@ -208,7 +208,7 @@ public class Ops {
         String mode = getMode();
         if (MODE_AUTO.equals(mode)) {
             autoDetectRootSystemOrAdb(context);
-            return STATUS_SUCCESS;
+            return sIsAdb ? STATUS_SUCCESS : initPermissionsWithSuccess();
         }
         if (MODE_NO_ROOT.equals(mode)) {
             sIsAdb = sIsSystem = sIsRoot = false;
@@ -218,7 +218,7 @@ public class Ops {
         }
         if (!force && isAMServiceUpAndRunning(context, mode)) {
             // An instance of AMService is already running
-            return STATUS_SUCCESS;
+            return sIsAdb ? STATUS_SUCCESS : initPermissionsWithSuccess();
         }
         try {
             switch (mode) {
@@ -229,7 +229,7 @@ public class Ops {
                     sIsSystem = sIsAdb = false;
                     sIsRoot = true;
                     LocalServer.launchAmService();
-                    return STATUS_SUCCESS;
+                    return initPermissionsWithSuccess();
                 case MODE_ADB_WIFI:
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                         return STATUS_AUTO_CONNECT_WIRELESS_DEBUGGING;
@@ -517,6 +517,11 @@ public class Ops {
                 .show();
     }
 
+    private static int initPermissionsWithSuccess() {
+        SelfPermissions.init();
+        return STATUS_SUCCESS;
+    }
+
     /**
      * @return {@code true} iff AMService is up and running
      */
@@ -591,7 +596,7 @@ public class Ops {
             // No-root mode
             return STATUS_FAILURE;
         }
-        return STATUS_SUCCESS;
+        return initPermissionsWithSuccess();
     }
 
     @WorkerThread
