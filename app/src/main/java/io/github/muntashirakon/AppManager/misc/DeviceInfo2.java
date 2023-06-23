@@ -36,6 +36,7 @@ import java.security.Security;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -271,6 +272,7 @@ public class DeviceInfo2 implements LocalizedString {
                 } else featureStrings.add(info.name);
             }
         }
+        Collections.sort(featureStrings, (o1, o2) -> String.CASE_INSENSITIVE_ORDER.compare(o1.toString(), o2.toString()));
         builder.append(TextUtilsCompat.joinSpannable("\n", featureStrings)).append("\n");
         return builder;
     }
