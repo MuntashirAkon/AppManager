@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.ParcelFileDescriptor;
+import android.os.Process;
 import android.os.storage.StorageManager;
 import android.os.storage.StorageManagerHidden;
 import android.os.storage.StorageVolume;
@@ -64,7 +65,7 @@ public final class StorageManagerCompat {
     @NonNull
     public static StorageVolume[] getVolumeList(@NonNull Context context, int userId, int flags)
             throws SecurityException {
-        if (!SelfPermissions.checkCrossUserPermission(userId, false)) {
+        if (!SelfPermissions.checkCrossUserPermission(userId, false, Process.myUid())) {
             return new StorageVolume[0];
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

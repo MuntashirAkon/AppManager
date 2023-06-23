@@ -16,7 +16,7 @@ import misc.utils.HiddenUtil;
 @RefineAs(StorageManager.class)
 public class StorageManagerHidden {
     @RequiresApi(Build.VERSION_CODES.M)
-    public static final int FLAG_FOR_WRITE = 1;  // 1 << 8 in later versions
+    public static /*final*/ int FLAG_FOR_WRITE = 1;  // 1 << 8 in later versions
 
     /**
      * Returns list of all mountable volumes.
