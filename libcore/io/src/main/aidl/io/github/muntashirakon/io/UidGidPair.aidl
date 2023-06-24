@@ -2,4 +2,4 @@
 
 package io.github.muntashirakon.io;
 
-parcelable ParcelValues;
+parcelable UidGidPair;

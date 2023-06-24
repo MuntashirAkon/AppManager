@@ -6,11 +6,13 @@ import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Process;
 import android.os.RemoteException;
+import android.os.UserHandle;
 import android.util.Log;
 
 import java.io.IOException;
@@ -63,7 +65,7 @@ public class RootServiceMain extends ContextWrapper implements Callable<Object[]
     }
 
     @SuppressLint("PrivateApi")
-    static Context getSystemContext() {
+    private static Context getSystemContext() {
         try {
             Class<?> atClazz = Class.forName("android.app.ActivityThread");
             Method systemMain = atClazz.getMethod("systemMain");
@@ -72,6 +74,23 @@ public class RootServiceMain extends ContextWrapper implements Callable<Object[]
             return (Context) getSystemContext.invoke(activityThread);
         } catch (Exception e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @SuppressWarnings({"DataFlowIssue", "JavaReflectionMemberAccess"})
+    private static Context createPackageContextAsUser(String packageName, int userId, int flags)
+            throws PackageManager.NameNotFoundException {
+        Context systemContext = getSystemContext();
+        try {
+            UserHandle userHandle = (UserHandle) UserHandle.class
+                    .getDeclaredMethod("of", int.class).invoke(null, userId);
+            return (Context) systemContext.getClass()
+                    .getDeclaredMethod("createPackageContextAsUser",
+                            String.class, int.class, UserHandle.class)
+                    .invoke(systemContext, packageName, flags, userHandle);
+        } catch (Throwable e) {
+            Log.w("IPC", "Failed to create package context as user: " + userId, e);
+            return systemContext.createPackageContext(packageName, flags);
         }
     }
 
@@ -168,8 +187,6 @@ public class RootServiceMain extends ContextWrapper implements Callable<Object[]
                 System.exit(0);
         }
 
-        Context systemContext = getSystemContext();
-
         // Calling createPackageContext crashes on LG ROM
         // Override the system resources object to prevent crashing
         Resources systemRes = Resources.getSystem();
@@ -183,21 +200,21 @@ public class RootServiceMain extends ContextWrapper implements Callable<Object[]
             systemResField.setAccessible(true);
             systemResField.set(null, wrapper);
         } catch (ReflectiveOperationException ignored) {}
+        int userId = uid / 100_000;
+        int flags = Context.CONTEXT_INCLUDE_CODE | Context.CONTEXT_IGNORE_SECURITY;
+        Context context = createPackageContextAsUser(name.getPackageName(), userId, flags);
+        attachBaseContext(context);
 
-        Context context = systemContext.createPackageContext(name.getPackageName(),
-                Context.CONTEXT_INCLUDE_CODE | Context.CONTEXT_IGNORE_SECURITY);
+        // Use classloader from the package context to run everything
+        ClassLoader cl = context.getClassLoader();
 
-        // Restore the system resources object after context creation
+        // Restore the system resources object after classloader is available
         if (systemResField != null) {
             try {
                 systemResField.set(null, systemRes);
             } catch (ReflectiveOperationException ignored) {}
         }
 
-        attachBaseContext(context);
-
-        // Use classloader from the package context to run everything
-        ClassLoader cl = context.getClassLoader();
         Class<?> clz = cl.loadClass(name.getClassName());
         Constructor<?> ctor = clz.getDeclaredConstructor();
         ctor.setAccessible(true);
@@ -205,8 +222,7 @@ public class RootServiceMain extends ContextWrapper implements Callable<Object[]
     }
 
     private static class ResourcesWrapper extends Resources {
-
-        @SuppressWarnings("JavaReflectionMemberAccess")
+        @SuppressWarnings({"JavaReflectionMemberAccess", "deprecation"})
         @SuppressLint("DiscouragedPrivateApi")
         public ResourcesWrapper(Resources res) throws ReflectiveOperationException {
             super(res.getAssets(), res.getDisplayMetrics(), res.getConfiguration());
