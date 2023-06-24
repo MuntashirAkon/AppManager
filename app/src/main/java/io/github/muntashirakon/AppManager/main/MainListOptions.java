@@ -128,17 +128,17 @@ public class MainListOptions extends ListOptions {
         @Override
         public void afterTextChanged(Editable s) {
             MainActivity activity = (MainActivity) requireActivity();
-            if (activity.mModel == null) {
+            if (activity.viewModel == null) {
                 return;
             }
             if (s != null) {
                 String profileName = s.toString().trim();
                 if (mProfileNames.contains(profileName)) {
-                    activity.mModel.setFilterProfileName(profileName);
+                    activity.viewModel.setFilterProfileName(profileName);
                     return;
                 }
             }
-            activity.mModel.setFilterProfileName(null);
+            activity.viewModel.setFilterProfileName(null);
         }
     };
     private Future<?> mProfileSuggestionsResult;
@@ -155,8 +155,8 @@ public class MainListOptions extends ListOptions {
             activity.runOnUiThread(() -> {
                 profileNameInput.setAdapter(new AnyFilterArrayAdapter<>(activity,
                         io.github.muntashirakon.ui.R.layout.item_checked_text_view, mProfileNames));
-                if (activity.mModel != null) {
-                    profileNameInput.setText(activity.mModel.getFilterProfileName());
+                if (activity.viewModel != null) {
+                    profileNameInput.setText(activity.viewModel.getFilterProfileName());
                 }
             });
         });
@@ -172,8 +172,8 @@ public class MainListOptions extends ListOptions {
                 ++i;
             }
             List<Integer> selections;
-            if (activity.mModel != null) {
-                int[] selectedUsers = activity.mModel.getSelectedUsers();
+            if (activity.viewModel != null) {
+                int[] selectedUsers = activity.viewModel.getSelectedUsers();
                 if (selectedUsers != null) {
                     selections = new ArrayList<>();
                     for (int userId : selectedUsers) {
@@ -188,12 +188,12 @@ public class MainListOptions extends ListOptions {
                     .showSelectAll(true)
                     .hideSearchBar(true)
                     .setPositiveButton(R.string.filter, (dialog, which, selectedItems) -> {
-                        if (activity.mModel != null) {
+                        if (activity.viewModel != null) {
                             if (selectedItems.size() == userInfoList.size()) {
                                 // All users
-                                activity.mModel.setSelectedUsers(null);
+                                activity.viewModel.setSelectedUsers(null);
                             } else {
-                                activity.mModel.setSelectedUsers(ArrayUtils.convertToIntArray(selectedItems));
+                                activity.viewModel.setSelectedUsers(ArrayUtils.convertToIntArray(selectedItems));
                             }
                         }
                     })

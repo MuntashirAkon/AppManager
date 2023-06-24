@@ -102,11 +102,11 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
     @GuardedBy("mAdapterList")
     @UiThread
     void setDefaultList(List<ApplicationItem> list) {
-        if (mActivity.mModel == null) return;
+        if (mActivity.viewModel == null) return;
         synchronized (mAdapterList) {
             mAdapterList.clear();
             mAdapterList.addAll(list);
-            mSearchQuery = mActivity.mModel.getSearchQuery();
+            mSearchQuery = mActivity.viewModel.getSearchQuery();
             notifyDataSetChanged();
             notifySelectionChange();
         }
@@ -121,19 +121,19 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
     @Override
     public void cancelSelection() {
         super.cancelSelection();
-        mActivity.mModel.cancelSelection();
+        mActivity.viewModel.cancelSelection();
     }
 
     @Override
     public int getSelectedItemCount() {
-        if (mActivity.mModel == null) return 0;
-        return mActivity.mModel.getSelectedPackages().size();
+        if (mActivity.viewModel == null) return 0;
+        return mActivity.viewModel.getSelectedPackages().size();
     }
 
     @Override
     protected int getTotalItemCount() {
-        if (mActivity.mModel == null) return 0;
-        return mActivity.mModel.getApplicationItemCount();
+        if (mActivity.viewModel == null) return 0;
+        return mActivity.viewModel.getApplicationItemCount();
     }
 
     @GuardedBy("mAdapterList")
@@ -148,7 +148,7 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
     @Override
     protected void select(int position) {
         synchronized (mAdapterList) {
-            mAdapterList.set(position, mActivity.mModel.select(mAdapterList.get(position)));
+            mAdapterList.set(position, mActivity.viewModel.select(mAdapterList.get(position)));
         }
     }
 
@@ -156,7 +156,7 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
     @Override
     protected void deselect(int position) {
         synchronized (mAdapterList) {
-            mAdapterList.set(position, mActivity.mModel.deselect(mAdapterList.get(position)));
+            mAdapterList.set(position, mActivity.viewModel.deselect(mAdapterList.get(position)));
         }
     }
 
@@ -212,7 +212,7 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
             // 1) Turn selection mode on if this is the first item in the selection list
             // 2) Select between last selection position and this position (inclusive) if selection mode is on
             synchronized (mAdapterList) {
-                ApplicationItem lastSelectedItem = mActivity.mModel.getLastSelectedPackage();
+                ApplicationItem lastSelectedItem = mActivity.viewModel.getLastSelectedPackage();
                 int lastSelectedItemPosition = lastSelectedItem == null ? -1 : mAdapterList.indexOf(lastSelectedItem);
                 if (lastSelectedItemPosition >= 0) {
                     // Select from last selection to this selection

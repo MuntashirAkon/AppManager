@@ -47,6 +47,7 @@ import io.github.muntashirakon.util.UiUtils;
 @SuppressLint("RestrictedApi")
 public class MultiSelectionView extends MaterialCardView implements OnApplyWindowInsetsListener {
     public interface OnSelectionChangeListener {
+        @UiThread
         void onSelectionChange(int selectionCount);
     }
 
