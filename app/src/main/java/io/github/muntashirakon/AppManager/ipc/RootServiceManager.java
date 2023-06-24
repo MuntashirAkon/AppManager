@@ -2,6 +2,12 @@
 
 package io.github.muntashirakon.AppManager.ipc;
 
+import static io.github.muntashirakon.AppManager.ipc.RootService.CATEGORY_DAEMON_MODE;
+import static io.github.muntashirakon.AppManager.server.common.ServerUtils.CMDLINE_START_DAEMON;
+import static io.github.muntashirakon.AppManager.server.common.ServerUtils.CMDLINE_START_SERVICE;
+import static io.github.muntashirakon.AppManager.server.common.ServerUtils.CMDLINE_STOP_SERVICE;
+import static io.github.muntashirakon.AppManager.utils.PackageUtils.PACKAGE_STAGING_DIRECTORY;
+
 import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -41,21 +47,21 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.Executor;
 
+import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.server.common.IRootServiceManager;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 
-import static io.github.muntashirakon.AppManager.ipc.RootService.CATEGORY_DAEMON_MODE;
-import static io.github.muntashirakon.AppManager.server.common.ServerUtils.CMDLINE_START_DAEMON;
-import static io.github.muntashirakon.AppManager.server.common.ServerUtils.CMDLINE_START_SERVICE;
-import static io.github.muntashirakon.AppManager.server.common.ServerUtils.CMDLINE_STOP_SERVICE;
-import static io.github.muntashirakon.AppManager.utils.PackageUtils.PACKAGE_STAGING_DIRECTORY;
-
+/**
+ * Runs in the non-root (client) process.
+ * <p>
+ * Starts the root process and manages connections with the remote process.
+ */
 // Copyright 2021 John "topjohnwu" Wu
 @RestrictTo(RestrictTo.Scope.LIBRARY)
 public class RootServiceManager implements Handler.Callback {
@@ -69,6 +75,7 @@ public class RootServiceManager implements Handler.Callback {
     private static final String BUNDLE_BINDER_KEY = "binder";
     private static final String INTENT_BUNDLE_KEY = "extra.bundle";
     private static final String INTENT_DAEMON_KEY = "extra.daemon";
+    private static final String RECEIVER_BROADCAST = BuildConfig.APPLICATION_ID + ".RECEIVER_BROADCAST";
     private static final String API_27_DEBUG =
             "-Xrunjdwp:transport=dt_android_adb,suspend=n,server=y " +
                     "-Xcompiler-option --debuggable";
@@ -85,6 +92,7 @@ public class RootServiceManager implements Handler.Callback {
 
     private static final int REMOTE_EN_ROUTE = 1 << 0;
     private static final int DAEMON_EN_ROUTE = 1 << 1;
+    private static final int RECEIVER_REGISTERED = 1 << 2;
 
     private static final String IPCMAIN_CLASSNAME = "io.github.muntashirakon.AppManager.server.RootServiceMain";
 
@@ -101,7 +109,7 @@ public class RootServiceManager implements Handler.Callback {
     static Intent getBroadcastIntent(IBinder binder, boolean isDaemon) {
         Bundle bundle = new Bundle();
         bundle.putBinder(BUNDLE_BINDER_KEY, binder);
-        return new Intent()
+        return new Intent(RECEIVER_BROADCAST)
                 .setPackage(ContextUtils.context.getPackageName())
                 .addFlags(HiddenAPIs.FLAG_RECEIVER_FROM_SHELL)
                 .putExtra(INTENT_DAEMON_KEY, isDaemon)
@@ -115,7 +123,7 @@ public class RootServiceManager implements Handler.Callback {
     }
 
     @NonNull
-    private static Pair<ComponentName, Boolean> enforceIntent(Intent intent) {
+    private static ServiceKey parseIntent(Intent intent) {
         ComponentName name = intent.getComponent();
         if (name == null) {
             throw new IllegalArgumentException("The intent does not have a component set");
@@ -123,24 +131,17 @@ public class RootServiceManager implements Handler.Callback {
         if (!name.getPackageName().equals(ContextUtils.getContext().getPackageName())) {
             throw new IllegalArgumentException("RootServices outside of the app are not supported");
         }
-        return new Pair<>(name, intent.hasCategory(CATEGORY_DAEMON_MODE));
-    }
-
-    private static void notifyDisconnection(Map.Entry<ServiceConnection, Pair<RemoteService, Executor>> e) {
-        ServiceConnection c = e.getKey();
-        ComponentName name = e.getValue().first.key.first;
-        e.getValue().second.execute(() -> c.onServiceDisconnected(name));
+        return new ServiceKey(name, intent.hasCategory(CATEGORY_DAEMON_MODE));
     }
 
     private RemoteProcess mRemote;
     private RemoteProcess mDaemon;
 
-    private String mFilterAction;
     private int mFlags = 0;
 
     private final List<BindTask> mPendingTasks = new ArrayList<>();
-    private final Map<Pair<ComponentName, Boolean>, RemoteService> mServices = new ArrayMap<>();
-    private final Map<ServiceConnection, Pair<RemoteService, Executor>> mConnections = new ArrayMap<>();
+    private final Map<ServiceKey, RemoteServiceRecord> mServices = new ArrayMap<>();
+    private final Map<ServiceConnection, ConnectionRecord> mConnections = new ArrayMap<>();
 
     private RootServiceManager() {
     }
@@ -153,53 +154,65 @@ public class RootServiceManager implements Handler.Callback {
             Log.e(TAG, JVMTI_ERROR);
         }
 
-        Context de = ContextUtils.getDeContext(context);
-        File mainJar;
-        try {
-            mainJar = new File(FileUtils.getExternalCachePath(de), "main.jar");
-        } catch (IOException e) {
-            throw new IllegalStateException("External directory unavailable.", e);
-        }
-        File stagingMainJar = new File(PACKAGE_STAGING_DIRECTORY, "main.jar");
-
-        if (mFilterAction == null) {
-            mFilterAction = UUID.randomUUID().toString();
+        if ((mFlags & RECEIVER_REGISTERED) == 0) {
             // Register receiver to receive binder from root process
-            IntentFilter filter = new IntentFilter(mFilterAction);
-            context.registerReceiver(new ServiceReceiver(), filter);
-        }
-
-        StringBuilder env = new StringBuilder();
-        String params = "";
-
-        if (Utils.vLog()) {
-            env.append(LOGGING_ENV + "=1 ");
-        }
-
-        // Only support debugging on SDK >= 27
-        if (Build.VERSION.SDK_INT >= 27 && Debug.isDebuggerConnected()) {
-            env.append(DEBUG_ENV + "=1 ");
-            // Reference of the params to start jdwp:
-            // https://developer.android.com/ndk/guides/wrap-script#debugging_when_using_wrapsh
-            if (Build.VERSION.SDK_INT == 27) {
-                params = API_27_DEBUG;
+            IntentFilter filter = new IntentFilter(RECEIVER_BROADCAST);
+            // Guard the receiver behind permission UPDATE_APP_OPS_STATS. This permission
+            // is not obtainable by normal apps, making the receiver effectively non-exported,
+            // but will allow any root/ADB/system process to send broadcast message.
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                context.registerReceiver(new ServiceReceiver(), filter, ManifestCompat.permission.UPDATE_APP_OPS_STATS,
+                        null, Context.RECEIVER_EXPORTED);
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.registerReceiver(new ServiceReceiver(), filter, ManifestCompat.permission.UPDATE_APP_OPS_STATS,
+                        null, 0);
             } else {
-                params = API_28_DEBUG;
+                context.registerReceiver(new ServiceReceiver(), filter, ManifestCompat.permission.UPDATE_APP_OPS_STATS,
+                        null);
             }
+            mFlags |= RECEIVER_REGISTERED;
         }
-
-        // Classpath
-        env.append(CLASSPATH_ENV + "=").append(Ops.isSystem() ? mainJar : stagingMainJar).append(" ");
-
-        String cmd = getRunnerScript(env.toString(), mainJar, stagingMainJar, name, action, params);
 
         return (stdin, stdout, stderr) -> {
+            Context ctx = ContextUtils.getContext();
+            Context de = ContextUtils.getDeContext(ctx);
+            File mainJar;
+            try {
+                mainJar = new File(FileUtils.getExternalCachePath(de), "main.jar");
+            } catch (IOException e) {
+                throw new IllegalStateException("External directory unavailable.", e);
+            }
+            File stagingMainJar = new File(PACKAGE_STAGING_DIRECTORY, "main.jar");
             // Dump main.jar as trampoline
             try (InputStream in = context.getResources().getAssets().open("main.jar");
                  OutputStream out = new FileOutputStream(mainJar)) {
                 Utils.pump(in, out);
             }
             FileUtils.chmod644(mainJar);
+
+            StringBuilder env = new StringBuilder();
+            String params = "";
+
+            if (Utils.vLog()) {
+                env.append(LOGGING_ENV + "=1 ");
+            }
+
+            // Only support debugging on SDK >= 27
+            if (Build.VERSION.SDK_INT >= 27 && Debug.isDebuggerConnected()) {
+                env.append(DEBUG_ENV + "=1 ");
+                // Reference of the params to start jdwp:
+                // https://developer.android.com/ndk/guides/wrap-script#debugging_when_using_wrapsh
+                if (Build.VERSION.SDK_INT == 27) {
+                    params = API_27_DEBUG;
+                } else {
+                    params = API_28_DEBUG;
+                }
+            }
+
+            // Classpath
+            env.append(CLASSPATH_ENV + "=").append(Ops.isSystem() ? mainJar : stagingMainJar).append(" ");
+
+            String cmd = getRunnerScript(env.toString(), mainJar, stagingMainJar, name, action, params);
             Log.d(TAG, cmd);
             // Write command to stdin
             byte[] bytes = cmd.getBytes(StandardCharsets.UTF_8);
@@ -219,8 +232,9 @@ public class RootServiceManager implements Handler.Callback {
                                    @NonNull ComponentName serviceName,
                                    @NonNull String action,
                                    @NonNull String debugParams) {
-        // ADB cannot access `exe` of another process
-        String execFile = Ops.isRoot() ? ("/proc/" + Process.myPid() + "/exe") : "/system/bin/app_process";
+        // We cannot readlink /proc/self/exe on old kernels
+        @SuppressLint("RestrictedApi")
+        String execFile = "/system/bin/app_process" + (Utils.isProcess64Bit() ? "64" : "32");
         String packageStagingCommand;
         if (!Ops.isSystem()) {
             // Use package staging directory
@@ -234,46 +248,58 @@ public class RootServiceManager implements Handler.Callback {
             packageStagingCommand = "";
         }
         return (packageStagingCommand +
-                String.format(Locale.ROOT, "(%s %s %s /system/bin --nice-name=%s:root %s %s %d %s %s)&",
-                        env,                                        // Environments
-                        execFile,                                   // Executable
-                        debugParams,                                // Debug parameters
-                        ContextUtils.getContext().getPackageName(), // Process name
-                        IPCMAIN_CLASSNAME,                          // Java command
-                        serviceName.flattenToString().replace("$", "\\$"), // args[0]
-                        Process.myUid(),                            // args[1]
-                        mFilterAction,                               // args[2]
-                        action));                                   // args[3]
+                String.format(Locale.ROOT, "(%s %s %s /system/bin %s %s '%s' %d %s 2>&1)&",
+                        env,                            // Environments
+                        execFile,                       // Executable
+                        debugParams,                    // Debug parameters
+                        getNiceNameArg(action),         // Process name
+                        IPCMAIN_CLASSNAME,              // Java command
+                        serviceName.flattenToString(),  // args[0]
+                        Process.myUid(),                // args[1]
+                        action));                       // args[2]
+    }
+
+    @NonNull
+    private String getNiceNameArg(@NonNull String action) {
+        switch (action) {
+            case CMDLINE_START_SERVICE:
+                return String.format(Locale.ROOT, "--nice-name=%s:priv:%d",
+                        BuildConfig.APPLICATION_ID, Process.myUid() / 100000);
+            case CMDLINE_START_DAEMON:
+                return "--nice-name=" + BuildConfig.APPLICATION_ID + ":priv:daemon";
+            default:
+                return "";
+        }
     }
 
     // Returns null if binding is done synchronously, or else return key
-    private Pair<ComponentName, Boolean> bindInternal(
-            Intent intent, Executor executor, ServiceConnection conn) {
+    private ServiceKey bindInternal(Intent intent, Executor executor, ServiceConnection conn) {
         enforceMainThread();
 
         // Local cache
-        Pair<ComponentName, Boolean> key = enforceIntent(intent);
-        RemoteService s = mServices.get(key);
+        ServiceKey key = parseIntent(intent);
+        RemoteServiceRecord s = mServices.get(key);
         if (s != null) {
-            mConnections.put(conn, new Pair<>(s, executor));
+            mConnections.put(conn, new ConnectionRecord(s, executor));
             s.refCount++;
-            executor.execute(() -> conn.onServiceConnected(key.first, s.binder));
+            IBinder binder = s.binder;
+            executor.execute(() -> conn.onServiceConnected(key.getName(), binder));
             return null;
         }
 
-        RemoteProcess p = key.second ? mDaemon : mRemote;
+        RemoteProcess p = key.isDaemon() ? mDaemon : mRemote;
         if (p == null)
             return key;
 
         try {
-            IBinder binder = p.sm.bind(intent);
+            IBinder binder = p.mgr.bind(intent);
             if (binder != null) {
-                RemoteService r = new RemoteService(key, binder, p);
-                mConnections.put(conn, new Pair<>(r, executor));
-                mServices.put(key, r);
-                executor.execute(() -> conn.onServiceConnected(key.first, binder));
+                s = new RemoteServiceRecord(key, binder, p);
+                mConnections.put(conn, new ConnectionRecord(s, executor));
+                mServices.put(key, s);
+                executor.execute(() -> conn.onServiceConnected(key.getName(), binder));
             } else if (Build.VERSION.SDK_INT >= 28) {
-                executor.execute(() -> conn.onNullBinding(key.first));
+                executor.execute(() -> conn.onNullBinding(key.getName()));
             }
         } catch (RemoteException e) {
             Log.e(TAG, e.getMessage(), e);
@@ -285,14 +311,14 @@ public class RootServiceManager implements Handler.Callback {
     }
 
     public Shell.Task createBindTask(Intent intent, Executor executor, ServiceConnection conn) {
-        Pair<ComponentName, Boolean> key = bindInternal(intent, executor, conn);
+        ServiceKey key = bindInternal(intent, executor, conn);
         if (key != null) {
             mPendingTasks.add(() -> bindInternal(intent, executor, conn) == null);
-            int mask = key.second ? DAEMON_EN_ROUTE : REMOTE_EN_ROUTE;
-            String action = key.second ? CMDLINE_START_DAEMON : CMDLINE_START_SERVICE;
+            int mask = key.isDaemon() ? DAEMON_EN_ROUTE : REMOTE_EN_ROUTE;
             if ((mFlags & mask) == 0) {
                 mFlags |= mask;
-                return startRootProcess(key.first, action);
+                String action = key.isDaemon() ? CMDLINE_START_DAEMON : CMDLINE_START_SERVICE;
+                return startRootProcess(key.getName(), action);
             }
         }
         return null;
@@ -301,15 +327,15 @@ public class RootServiceManager implements Handler.Callback {
     public void unbind(@NonNull ServiceConnection conn) {
         enforceMainThread();
 
-        Pair<RemoteService, Executor> p = mConnections.remove(conn);
-        if (p != null) {
-            p.first.refCount--;
-            p.second.execute(() -> conn.onServiceDisconnected(p.first.key.first));
-            if (p.first.refCount == 0) {
+        ConnectionRecord r = mConnections.remove(conn);
+        if (r != null) {
+            RemoteServiceRecord s = r.getService();
+            s.refCount--;
+            if (s.refCount == 0) {
                 // Actually close the service
-                mServices.remove(p.first.key);
+                mServices.remove(s.key);
                 try {
-                    p.first.host.sm.unbind(p.first.key.first);
+                    s.host.mgr.unbind(s.key.getName());
                 } catch (RemoteException e) {
                     Log.e(TAG, e.getMessage(), e);
                 }
@@ -317,60 +343,90 @@ public class RootServiceManager implements Handler.Callback {
         }
     }
 
-    private void stopInternal(Pair<ComponentName, Boolean> key) {
-        RemoteService s = mServices.remove(key);
-        if (s == null)
-            return;
-
-        // Notify all connections
-        Iterator<Map.Entry<ServiceConnection, Pair<RemoteService, Executor>>> it =
-                mConnections.entrySet().iterator();
+    private void dropConnections(Predicate predicate) {
+        Iterator<Map.Entry<ServiceConnection, ConnectionRecord>> it = mConnections.entrySet().iterator();
         while (it.hasNext()) {
-            Map.Entry<ServiceConnection, Pair<RemoteService, Executor>> e = it.next();
-            if (e.getValue().first.equals(s)) {
-                notifyDisconnection(e);
+            Map.Entry<ServiceConnection, ConnectionRecord> e = it.next();
+            ConnectionRecord r = e.getValue();
+            if (predicate.eval(r.getService())) {
+                r.disconnect(e.getKey());
                 it.remove();
             }
         }
     }
 
+    private void onServiceStopped(ServiceKey key) {
+        RemoteServiceRecord s = mServices.remove(key);
+        if (s != null)
+            dropConnections(s::equals);
+    }
+
     public Shell.Task createStopTask(Intent intent) {
         enforceMainThread();
 
-        Pair<ComponentName, Boolean> key = enforceIntent(intent);
-        RemoteProcess p = key.second ? mDaemon : mRemote;
+        ServiceKey key = parseIntent(intent);
+        RemoteProcess p = key.isDaemon() ? mDaemon : mRemote;
         if (p == null) {
-            if (key.second) {
+            if (key.isDaemon()) {
                 // Start a new root process to stop daemon
-                return startRootProcess(key.first, CMDLINE_STOP_SERVICE);
+                return startRootProcess(key.getName(), CMDLINE_STOP_SERVICE);
             }
             return null;
         }
 
-        stopInternal(key);
         try {
-            p.sm.stop(key.first, -1, null);
+            p.mgr.stop(key.getName(), -1);
         } catch (RemoteException e) {
             Log.e(TAG, e.getMessage(), e);
         }
+
+        onServiceStopped(key);
         return null;
     }
 
     @Override
     public boolean handleMessage(@NonNull Message msg) {
         if (msg.what == MSG_STOP) {
-            stopInternal(new Pair<>((ComponentName) msg.obj, msg.arg1 != 0));
+            onServiceStopped(new ServiceKey((ComponentName) msg.obj, msg.arg1 != 0));
         }
         return false;
     }
 
-    class RemoteProcess extends BinderHolder {
+    private static class ServiceKey extends Pair<ComponentName, Boolean> {
+        ServiceKey(ComponentName name, boolean isDaemon) {
+            super(name, isDaemon);
+        }
 
-        final IRootServiceManager sm;
+        ComponentName getName() {
+            return first;
+        }
+
+        boolean isDaemon() {
+            return second;
+        }
+    }
+
+    private static class ConnectionRecord extends Pair<RemoteServiceRecord, Executor> {
+        ConnectionRecord(RemoteServiceRecord s, Executor e) {
+            super(s, e);
+        }
+
+        RemoteServiceRecord getService() {
+            return first;
+        }
+
+        void disconnect(ServiceConnection conn) {
+            second.execute(() -> conn.onServiceDisconnected(first.key.getName()));
+        }
+    }
+
+    private class RemoteProcess extends BinderHolder {
+
+        final IRootServiceManager mgr;
 
         RemoteProcess(IRootServiceManager s) throws RemoteException {
             super(s.asBinder());
-            sm = s;
+            mgr = s;
         }
 
         @Override
@@ -380,26 +436,30 @@ public class RootServiceManager implements Handler.Callback {
             if (mDaemon == this)
                 mDaemon = null;
 
-            Iterator<RemoteService> sit = mServices.values().iterator();
+            Iterator<RemoteServiceRecord> sit = mServices.values().iterator();
             while (sit.hasNext()) {
                 if (sit.next().host == this) {
                     sit.remove();
                 }
             }
-
-            Iterator<Map.Entry<ServiceConnection, Pair<RemoteService, Executor>>> it =
-                    mConnections.entrySet().iterator();
-            while (it.hasNext()) {
-                Map.Entry<ServiceConnection, Pair<RemoteService, Executor>> e = it.next();
-                if (e.getValue().first.host == this) {
-                    notifyDisconnection(e);
-                    it.remove();
-                }
-            }
+            dropConnections(s -> s.host == this);
         }
     }
 
-    class ServiceReceiver extends BroadcastReceiver {
+    private static class RemoteServiceRecord {
+        final ServiceKey key;
+        final IBinder binder;
+        final RemoteProcess host;
+        int refCount = 1;
+
+        RemoteServiceRecord(ServiceKey key, IBinder binder, RemoteProcess host) {
+            this.key = key;
+            this.binder = binder;
+            this.host = host;
+        }
+    }
+
+    private class ServiceReceiver extends BroadcastReceiver {
 
         private final Messenger m;
 
@@ -418,10 +478,10 @@ public class RootServiceManager implements Handler.Callback {
             if (binder == null)
                 return;
 
-            IRootServiceManager sm = IRootServiceManager.Stub.asInterface(binder);
+            IRootServiceManager mgr = IRootServiceManager.Stub.asInterface(binder);
             try {
-                sm.connect(m.getBinder());
-                RemoteProcess p = new RemoteProcess(sm);
+                mgr.connect(m.getBinder());
+                RemoteProcess p = new RemoteProcess(mgr);
                 if (intent.getBooleanExtra(INTENT_DAEMON_KEY, false)) {
                     mDaemon = p;
                     mFlags &= ~DAEMON_EN_ROUTE;
@@ -440,20 +500,11 @@ public class RootServiceManager implements Handler.Callback {
         }
     }
 
-    static class RemoteService {
-        final Pair<ComponentName, Boolean> key;
-        final IBinder binder;
-        final RemoteProcess host;
-        int refCount = 1;
-
-        RemoteService(Pair<ComponentName, Boolean> key, IBinder binder, RemoteProcess host) {
-            this.key = key;
-            this.binder = binder;
-            this.host = host;
-        }
+    private interface BindTask {
+        boolean run();
     }
 
-    interface BindTask {
-        boolean run();
+    private interface Predicate {
+        boolean eval(RemoteServiceRecord s);
     }
 }

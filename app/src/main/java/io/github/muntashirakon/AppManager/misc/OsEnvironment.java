@@ -14,7 +14,6 @@ import androidx.annotation.NonNull;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -96,7 +95,6 @@ public final class OsEnvironment {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                 final StorageVolume[] volumes = StorageManagerCompat.getVolumeList(ContextUtils.getContext(),
                         mUserHandle, StorageManagerHidden.FLAG_FOR_WRITE);
-                Log.d(TAG, Arrays.toString(volumes));
                 final List<Path> files = new ArrayList<>();
                 File tmpFile;
                 for (@NonNull StorageVolume volume : volumes) {

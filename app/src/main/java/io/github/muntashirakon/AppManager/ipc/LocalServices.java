@@ -5,12 +5,17 @@ package io.github.muntashirakon.AppManager.ipc;
 import android.os.RemoteException;
 
 import androidx.annotation.AnyThread;
+import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.WorkerThread;
+
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.IAMService;
 import io.github.muntashirakon.AppManager.misc.NoOps;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.io.FileSystemManager;
 
 public class LocalServices {
@@ -18,7 +23,9 @@ public class LocalServices {
     private static final ServiceConnectionWrapper sFileSystemServiceConnectionWrapper
             = new ServiceConnectionWrapper(BuildConfig.APPLICATION_ID, FileSystemService.class.getName());
 
+    @WorkerThread
     public static void bindServices() throws RemoteException {
+        unbindServicesIfRunning();
         bindAmService();
         bindFileSystemManager();
         // Verify binding
@@ -90,6 +97,33 @@ public class LocalServices {
         }
         synchronized (sFileSystemServiceConnectionWrapper) {
             sFileSystemServiceConnectionWrapper.stopDaemon();
+        }
+    }
+
+    @MainThread
+    public static void unbindServices() {
+        synchronized (sAMServiceConnectionWrapper) {
+            sAMServiceConnectionWrapper.unbindService();
+        }
+        synchronized (sFileSystemServiceConnectionWrapper) {
+            sFileSystemServiceConnectionWrapper.unbindService();
+        }
+    }
+
+    @WorkerThread
+    private static void unbindServicesIfRunning() {
+        // Basically unregister the services so that we can open another connection
+        CountDownLatch unbindWatcher = new CountDownLatch(1);
+        ThreadUtils.postOnMainThread(() -> {
+            try {
+                unbindServices();
+            } finally {
+                unbindWatcher.countDown();
+            }
+        });
+        try {
+            unbindWatcher.await(30, TimeUnit.SECONDS);
+        } catch (InterruptedException ignore) {
         }
     }
 }

@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.ContextWrapper;
+import android.content.res.Resources;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.Process;
@@ -14,12 +15,14 @@ import android.util.Log;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.concurrent.Callable;
 
 import io.github.muntashirakon.AppManager.server.common.IRootServiceManager;
 
 import static io.github.muntashirakon.AppManager.server.common.ServerUtils.CMDLINE_START_DAEMON;
+import static io.github.muntashirakon.AppManager.server.common.ServerUtils.CMDLINE_START_SERVICE;
 import static io.github.muntashirakon.AppManager.server.common.ServerUtils.CMDLINE_STOP_SERVICE;
 import static io.github.muntashirakon.AppManager.server.common.ServerUtils.getServiceName;
 
@@ -36,8 +39,7 @@ import static io.github.muntashirakon.AppManager.server.common.ServerUtils.getSe
  * Expected command-line args:
  * args[0]: client service component name
  * args[1]: client UID
- * args[2]: client broadcast receiver intent filter
- * args[3]: CMDLINE_START_SERVICE, CMDLINE_START_DAEMON, or CMDLINE_STOP_SERVICE
+ * args[2]: CMDLINE_START_SERVICE, CMDLINE_START_DAEMON, or CMDLINE_STOP_SERVICE
  * <p>
  * <b>Note:</b> This class is hardcoded in {@code IPCClient#IPCMAIN_CLASSNAME}. Don't change the class name or package
  * path without changing them there.
@@ -90,8 +92,9 @@ public class RootServiceMain extends ContextWrapper implements Callable<Object[]
         // Close STDOUT/STDERR since it belongs to the parent shell
         System.out.close();
         System.err.close();
-        if (args.length < 4)
-            System.exit(0);
+        if (args.length < 3) {
+            System.exit(1);
+        }
 
         Looper.prepareMainLooper();
 
@@ -104,22 +107,21 @@ public class RootServiceMain extends ContextWrapper implements Callable<Object[]
 
         // Main thread event loop
         Looper.loop();
-        System.exit(0);
+        System.exit(1);
     }
 
     private final int uid;
-    private final String filter;
     private final boolean isDaemon;
 
     @Override
     public Object[] call() {
-        Object[] objs = new Object[3];
+        Object[] objs = new Object[2];
         objs[0] = uid;
-        objs[1] = filter;
-        objs[2] = isDaemon;
+        objs[1] = isDaemon;
         return objs;
     }
 
+    @SuppressLint("DiscouragedPrivateApi")
     public RootServiceMain(String[] args) throws Exception {
         super(null);
 
@@ -129,8 +131,7 @@ public class RootServiceMain extends ContextWrapper implements Callable<Object[]
 
         ComponentName name = ComponentName.unflattenFromString(args[0]);
         uid = Integer.parseInt(args[1]);
-        filter = args[2];
-        String action = args[3];
+        String action = args[2];
         boolean stop = false;
 
         switch (action) {
@@ -140,9 +141,11 @@ public class RootServiceMain extends ContextWrapper implements Callable<Object[]
             case CMDLINE_START_DAEMON:
                 isDaemon = true;
                 break;
-            default:
+            case CMDLINE_START_SERVICE:
                 isDaemon = false;
                 break;
+            default:
+                throw new IllegalArgumentException("Unknown action: " + action);
         }
 
         if (isDaemon) daemon: try {
@@ -153,9 +156,9 @@ public class RootServiceMain extends ContextWrapper implements Callable<Object[]
                 break daemon;
 
             if (stop) {
-                m.stop(name, uid, filter);
+                m.stop(name, uid);
             } else {
-                m.broadcast(uid, filter);
+                m.broadcast(uid);
                 // Terminate process if broadcast went through without exception
                 System.exit(0);
             }
@@ -166,8 +169,31 @@ public class RootServiceMain extends ContextWrapper implements Callable<Object[]
         }
 
         Context systemContext = getSystemContext();
+
+        // Calling createPackageContext crashes on LG ROM
+        // Override the system resources object to prevent crashing
+        Resources systemRes = Resources.getSystem();
+        Field systemResField = null;
+        try {
+            // This class only exists on LG ROMs with broken implementations
+            Class.forName("com.lge.systemservice.core.integrity.IntegrityManager");
+            // If control flow goes here, we need the resource hack
+            Resources wrapper = new ResourcesWrapper(systemRes);
+            systemResField = Resources.class.getDeclaredField("mSystem");
+            systemResField.setAccessible(true);
+            systemResField.set(null, wrapper);
+        } catch (ReflectiveOperationException ignored) {}
+
         Context context = systemContext.createPackageContext(name.getPackageName(),
                 Context.CONTEXT_INCLUDE_CODE | Context.CONTEXT_IGNORE_SECURITY);
+
+        // Restore the system resources object after context creation
+        if (systemResField != null) {
+            try {
+                systemResField.set(null, systemRes);
+            } catch (ReflectiveOperationException ignored) {}
+        }
+
         attachBaseContext(context);
 
         // Use classloader from the package context to run everything
@@ -176,5 +202,29 @@ public class RootServiceMain extends ContextWrapper implements Callable<Object[]
         Constructor<?> ctor = clz.getDeclaredConstructor();
         ctor.setAccessible(true);
         attachBaseContext.invoke(ctor.newInstance(), this);
+    }
+
+    private static class ResourcesWrapper extends Resources {
+
+        @SuppressWarnings("JavaReflectionMemberAccess")
+        @SuppressLint("DiscouragedPrivateApi")
+        public ResourcesWrapper(Resources res) throws ReflectiveOperationException {
+            super(res.getAssets(), res.getDisplayMetrics(), res.getConfiguration());
+            Method getImpl = Resources.class.getDeclaredMethod("getImpl");
+            getImpl.setAccessible(true);
+            Method setImpl = Resources.class.getDeclaredMethod("setImpl", getImpl.getReturnType());
+            setImpl.setAccessible(true);
+            Object impl = getImpl.invoke(res);
+            setImpl.invoke(this, impl);
+        }
+
+        @Override
+        public boolean getBoolean(int id) {
+            try {
+                return super.getBoolean(id);
+            } catch (NotFoundException e) {
+                return false;
+            }
+        }
     }
 }
