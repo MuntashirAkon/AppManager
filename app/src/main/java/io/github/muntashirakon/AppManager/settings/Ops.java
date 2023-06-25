@@ -505,6 +505,7 @@ public class Ops {
         new ScrollableDialogBuilder(activity)
                 .setTitle(R.string.adb_incomplete_usb_debugging_title)
                 .setMessage(R.string.adb_incomplete_usb_debugging_message)
+                .enableAnchors()
                 .setNegativeButton(R.string.close, null)
                 .setPositiveButton(R.string.open, (dialog, which, isChecked) -> {
                     Intent intent = new Intent(Settings.ACTION_APPLICATION_DEVELOPMENT_SETTINGS)
