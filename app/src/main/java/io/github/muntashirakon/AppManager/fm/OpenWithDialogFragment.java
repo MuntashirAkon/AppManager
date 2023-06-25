@@ -98,7 +98,7 @@ public class OpenWithDialogFragment extends DialogFragment {
 
         private ResolvedActivityInfo(@NonNull ResolveInfo resolveInfo, @NonNull CharSequence label, @NonNull CharSequence appLabel) {
             this.resolveInfo = resolveInfo;
-            this.packageName = resolveInfo.resolvePackageName;
+            this.packageName = resolveInfo.activityInfo.packageName;
             this.name = resolveInfo.activityInfo.name;
             this.shortName = getShortActivityName(this.name);
             this.label = label;
