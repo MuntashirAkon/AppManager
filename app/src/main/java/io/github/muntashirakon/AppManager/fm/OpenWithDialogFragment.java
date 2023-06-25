@@ -6,12 +6,12 @@ import android.app.Activity;
 import android.app.Application;
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +35,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
@@ -51,6 +52,7 @@ import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.PathContentInfo;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.lifecycle.SingleLiveEvent;
+import io.github.muntashirakon.widget.SearchView;
 
 public class OpenWithDialogFragment extends DialogFragment {
     public static final String TAG = OpenWithDialogFragment.class.getSimpleName();
@@ -84,14 +86,45 @@ public class OpenWithDialogFragment extends DialogFragment {
         @NonNull
         public final ResolveInfo resolveInfo;
         @NonNull
+        public final String packageName;
+        @NonNull
+        public final String name;
+        @NonNull
+        public final String shortName;
+        @NonNull
         public final CharSequence label;
         @NonNull
         public final CharSequence appLabel;
 
         private ResolvedActivityInfo(@NonNull ResolveInfo resolveInfo, @NonNull CharSequence label, @NonNull CharSequence appLabel) {
             this.resolveInfo = resolveInfo;
+            this.packageName = resolveInfo.resolvePackageName;
+            this.name = resolveInfo.activityInfo.name;
+            this.shortName = getShortActivityName(this.name);
             this.label = label;
             this.appLabel = appLabel;
+        }
+
+        public boolean matches(@Nullable String constraint) {
+            if (constraint == null) {
+                return true;
+            }
+            // Match the following:
+            // 1. Label
+            // 2. Short name
+            // 3. App label
+            return label.toString().toLowerCase(Locale.getDefault()).contains(constraint)
+                    || shortName.contains(constraint)
+                    || appLabel.toString().toLowerCase(Locale.getDefault()).contains(constraint);
+        }
+
+        @NonNull
+        private String getShortActivityName(@NonNull String longName) {
+            int idxOfDot = longName.lastIndexOf('.');
+            if (idxOfDot == -1) {
+                return longName;
+            }
+            return longName.substring(idxOfDot + 1);
         }
     }
 
@@ -99,6 +132,7 @@ public class OpenWithDialogFragment extends DialogFragment {
     private String mCustomType;
     private boolean mCloseActivity;
     private View mDialogView;
+    private SearchView mSearchView;
     private OpenWithViewModel mViewModel;
     private MatchingActivitiesRecyclerViewAdapter mAdapter;
 
@@ -112,6 +146,19 @@ public class OpenWithDialogFragment extends DialogFragment {
         mAdapter = new MatchingActivitiesRecyclerViewAdapter(mViewModel, requireActivity());
         mAdapter.setIntent(getIntent(mPath, mCustomType));
         mDialogView = View.inflate(requireActivity(), R.layout.dialog_open_with, null);
+        mSearchView = mDialogView.findViewById(io.github.muntashirakon.ui.R.id.action_search);
+        mSearchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                mAdapter.setFilteredItems(newText);
+                return true;
+            }
+        });
         RecyclerView matchingActivitiesView = mDialogView.findViewById(R.id.intent_matching_activities);
         matchingActivitiesView.setLayoutManager(new LinearLayoutManager(requireContext()));
         matchingActivitiesView.setAdapter(mAdapter);
@@ -174,7 +221,13 @@ public class OpenWithDialogFragment extends DialogFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         if (mViewModel != null) {
-            mViewModel.getMatchingActivitiesLiveData().observe(getViewLifecycleOwner(), mAdapter::setDefaultList);
+            mViewModel.getMatchingActivitiesLiveData().observe(getViewLifecycleOwner(), matchingActivities -> {
+                mAdapter.setDefaultList(matchingActivities);
+                // Don't display search bar if items are less than 6
+                if (matchingActivities.size() < 6) {
+                    mSearchView.setVisibility(View.GONE);
+                }
+            });
             mViewModel.getPathContentInfoLiveData().observe(getViewLifecycleOwner(), pathContentInfo -> {
                 if (mAdapter != null) {
                     mAdapter.setIntent(getIntent(mPath, pathContentInfo.getMimeType()));
@@ -221,12 +274,17 @@ public class OpenWithDialogFragment extends DialogFragment {
     }
 
     private static class MatchingActivitiesRecyclerViewAdapter extends RecyclerView.Adapter<MatchingActivitiesRecyclerViewAdapter.ViewHolder> {
+        @NonNull
         private final List<ResolvedActivityInfo> mMatchingActivities = new ArrayList<>();
+        @NonNull
+        private final ArrayList<Integer> mFilteredItems = new ArrayList<>();
         private final Activity mActivity;
         private final OpenWithViewModel mViewModel;
         private final ImageLoader mImageLoader = ImageLoader.getInstance();
 
         private Intent mIntent;
+        @Nullable
+        private String mConstraint;
 
         public MatchingActivitiesRecyclerViewAdapter(OpenWithViewModel viewModel, Activity activity) {
             mViewModel = viewModel;
@@ -246,7 +304,24 @@ public class OpenWithDialogFragment extends DialogFragment {
             if (matchingActivities != null) {
                 mMatchingActivities.addAll(matchingActivities);
             }
-            notifyDataSetChanged();
+            filterItems();
+        }
+
+        void setFilteredItems(@Nullable String constraint) {
+            mConstraint = TextUtils.isEmpty(constraint) ? null : constraint.toLowerCase(Locale.getDefault());
+            filterItems();
+        }
+
+        private void filterItems() {
+            synchronized (mFilteredItems) {
+                mFilteredItems.clear();
+                for (int i = 0; i < mMatchingActivities.size(); ++i) {
+                    if (mConstraint == null || mMatchingActivities.get(i).matches(mConstraint)) {
+                        mFilteredItems.add(i);
+                    }
+                }
+                notifyDataSetChanged();
+            }
         }
 
         @NonNull
@@ -258,17 +333,20 @@ public class OpenWithDialogFragment extends DialogFragment {
 
         @Override
         public void onBindViewHolder(@NonNull MatchingActivitiesRecyclerViewAdapter.ViewHolder holder, int position) {
-            ResolvedActivityInfo resolvedActivityInfo = mMatchingActivities.get(position);
-            ActivityInfo info = resolvedActivityInfo.resolveInfo.activityInfo;
-            holder.title.setText(resolvedActivityInfo.label);
-            String activityName = info.name;
-            String summary = resolvedActivityInfo.appLabel + "\n" + getShortActivityName(activityName);
+            int index;
+            synchronized (mFilteredItems) {
+                index = mFilteredItems.get(position);
+            }
+            ResolvedActivityInfo resolvedInfo = mMatchingActivities.get(index);
+            holder.title.setText(resolvedInfo.label);
+            String activityName = resolvedInfo.name;
+            String summary = resolvedInfo.appLabel + "\n" + resolvedInfo.shortName;
             holder.summary.setText(summary);
-            mImageLoader.displayImage(info.packageName + "_" + resolvedActivityInfo.label, holder.icon,
-                    new ResolveInfoImageFetcher(resolvedActivityInfo.resolveInfo));
+            mImageLoader.displayImage(resolvedInfo.packageName + "_" + resolvedInfo.label, holder.icon,
+                    new ResolveInfoImageFetcher(resolvedInfo.resolveInfo));
             holder.itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(mIntent);
-                intent.setClassName(info.packageName, activityName);
+                intent.setClassName(resolvedInfo.packageName, activityName);
                 mViewModel.openIntent(intent);
             });
             holder.itemView.setOnLongClickListener(v -> {
@@ -276,7 +354,7 @@ public class OpenWithDialogFragment extends DialogFragment {
                     return false;
                 }
                 Intent intent = new Intent(mIntent);
-                intent.putExtra(ActivityInterceptor.EXTRA_PACKAGE_NAME, info.packageName);
+                intent.putExtra(ActivityInterceptor.EXTRA_PACKAGE_NAME, resolvedInfo.packageName);
                 intent.putExtra(ActivityInterceptor.EXTRA_CLASS_NAME, activityName);
                 intent.setClassName(mActivity, ActivityInterceptor.class.getName());
                 mViewModel.openIntent(intent);
@@ -286,16 +364,9 @@ public class OpenWithDialogFragment extends DialogFragment {
 
         @Override
         public int getItemCount() {
-            return mMatchingActivities.size();
-        }
-
-        @NonNull
-        private String getShortActivityName(@NonNull String longName) {
-            int idxOfDot = longName.lastIndexOf('.');
-            if (idxOfDot == -1) {
-                return longName;
+            synchronized (mFilteredItems) {
+                return mFilteredItems.size();
             }
-            return longName.substring(idxOfDot + 1);
         }
 
         static class ViewHolder extends RecyclerView.ViewHolder {
