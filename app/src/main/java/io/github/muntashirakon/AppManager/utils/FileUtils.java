@@ -24,7 +24,6 @@ import androidx.annotation.WorkerThread;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -152,16 +151,11 @@ public final class FileUtils {
     }
 
     @WorkerThread
-    public static void copyFromAsset(@NonNull Context context, String fileName, File destFile) {
-        try (AssetFileDescriptor openFd = context.getAssets().openFd(fileName)) {
-            try (InputStream open = openFd.createInputStream();
-                 FileOutputStream fos = new FileOutputStream(destFile)) {
-                IoUtils.copy(open, fos, -1, null);
-                fos.flush();
-                fos.getFD().sync();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+    public static void copyFromAsset(@NonNull Context context, @NonNull String fileName, @NonNull Path dest)
+            throws IOException {
+        try (InputStream is = context.getAssets().open(fileName);
+             OutputStream os = dest.openOutputStream()) {
+            IoUtils.copy(is, os, -1, null);
         }
     }
 
@@ -190,7 +184,7 @@ public final class FileUtils {
         if (extDirs == null) {
             throw new FileNotFoundException("Shared storage unavailable.");
         }
-        for (File extDir: extDirs) {
+        for (File extDir : extDirs) {
             // The priority is from top to bottom of the list as per Context#getExternalDir()
             if (extDir == null) {
                 // Other external directory might exist

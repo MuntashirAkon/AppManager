@@ -45,6 +45,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.BundleCompat;
 import io.github.muntashirakon.AppManager.shortcut.LauncherShortcuts;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.StorageUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
@@ -452,7 +453,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         }
     }
 
-    private void createNewFile(String prefix, @Nullable String extension) {
+    private void createNewFile(String prefix, @Nullable String extension, String template) {
         Uri uri = mPathListAdapter.getCurrentUri();
         if (uri == null) {
             return;
@@ -460,8 +461,8 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         Path path = Paths.get(uri);
         String displayName = findNextBestDisplayName(path, prefix, extension);
         try {
-            // TODO: 26/6/23 The best way to do that is to copy a file from the asset
             Path newFile = path.createNewFile(displayName, null);
+            FileUtils.copyFromAsset(requireContext(), "blanks/" + template, newFile);
             UIUtils.displayShortToast(R.string.done);
             // FIXME: 26/6/23 Locate the file after reload
             mModel.reload();
