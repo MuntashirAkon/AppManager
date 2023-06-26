@@ -1,69 +1,103 @@
 <!-- SPDX-License-Identifier: GPL-3.0-or-later -->
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".fm.FmActivity">
 
-    <io.github.muntashirakon.widget.SwipeRefreshLayout
-        android:id="@+id/swipe_refresh"
+    <com.leinardi.android.speeddial.SpeedDialOverlayLayout
+        android:id="@+id/overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:focusable="false">
+        android:layout_gravity="fill"
+        android:fitsSystemWindows="true" />
 
-        <androidx.appcompat.widget.LinearLayoutCompat
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <io.github.muntashirakon.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:focusable="false">
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <io.github.muntashirakon.widget.RecyclerView
+                        android:id="@+id/path_list"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingHorizontal="@dimen/padding_medium"
+                        android:scrollbars="horizontal"
+                        android:focusable="false"
+                        android:clipToPadding="false"
+                        android:fitsSystemWindows="false"
+                        tools:listitem="@layout/m3_preference" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/uri_edit"
+                        style="@style/Widget.AppTheme.Button.IconButton"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_weight="0"
+                        app:icon="@drawable/ic_edit" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <io.github.muntashirakon.widget.RecyclerView
-                    android:id="@+id/path_list"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:paddingHorizontal="@dimen/padding_medium"
-                    android:scrollbars="horizontal"
+                    android:id="@+id/list_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scrollbars="none"
                     android:focusable="false"
                     android:clipToPadding="false"
-                    android:fitsSystemWindows="false"
+                    android:fitsSystemWindows="true"
+                    app:fastScrollerEnabled="true"
                     tools:listitem="@layout/m3_preference" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/uri_edit"
-                    style="@style/Widget.AppTheme.Button.IconButton"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:layout_weight="0"
-                    app:icon="@drawable/ic_edit"/>
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <io.github.muntashirakon.widget.RecyclerView
-                android:id="@+id/list_item"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbars="none"
-                android:focusable="false"
-                android:clipToPadding="false"
-                android:fitsSystemWindows="true"
-                app:fastScrollerEnabled="true"
-                tools:listitem="@layout/m3_preference" />
+        </io.github.muntashirakon.widget.SwipeRefreshLayout>
 
-        </androidx.appcompat.widget.LinearLayoutCompat>
+        <io.github.muntashirakon.widget.MultiSelectionView
+            android:id="@+id/selection_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
+            android:focusable="false"
+            app:menu="@menu/activity_running_apps_popup_actions" />
 
-    </io.github.muntashirakon.widget.SwipeRefreshLayout>
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
-    <io.github.muntashirakon.widget.MultiSelectionView
-        android:id="@+id/selection_view"
+    <FrameLayout
+        android:id="@+id/fab_holder"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fitsSystemWindows="true"
-        android:focusable="false"
-        app:menu="@menu/activity_running_apps_popup_actions" />
+        android:layout_height="match_parent"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:elevation="@dimen/sd_open_elevation"
+        android:fitsSystemWindows="true">
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+        <io.github.muntashirakon.widget.FloatingActionButtonGroup
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            app:sdMainFabClosedSrc="@drawable/ic_add"
+            app:sdOverlayLayout="@id/overlay"
+            android:layout_margin="@dimen/padding_medium"
+            android:contentDescription="@string/add" />
+    </FrameLayout>
+
+</FrameLayout>

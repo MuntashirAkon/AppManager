@@ -32,9 +32,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.leinardi.android.speeddial.SpeedDialActionItem;
+import com.leinardi.android.speeddial.SpeedDialView;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collections;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -43,14 +47,19 @@ import io.github.muntashirakon.AppManager.compat.BundleCompat;
 import io.github.muntashirakon.AppManager.shortcut.LauncherShortcuts;
 import io.github.muntashirakon.AppManager.utils.StorageUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.SearchableItemsDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 import io.github.muntashirakon.io.Path;
+import io.github.muntashirakon.io.Paths;
+import io.github.muntashirakon.util.UiUtils;
+import io.github.muntashirakon.widget.FloatingActionButtonGroup;
 import io.github.muntashirakon.widget.MultiSelectionView;
 import io.github.muntashirakon.widget.RecyclerView;
 import io.github.muntashirakon.widget.SwipeRefreshLayout;
 
-public class FmFragment extends Fragment implements SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener {
+public class FmFragment extends Fragment implements SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener,
+        SpeedDialView.OnActionSelectedListener {
     public static final String TAG = FmFragment.class.getSimpleName();
 
     public static final String ARG_URI = "uri";
@@ -81,6 +90,8 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
     private MultiSelectionView mMultiSelectionView;
     private FmPathListAdapter mPathListAdapter;
     private FmActivity mActivity;
+
+    private FolderShortInfo mFolderShortInfo;
 
     private final OnBackPressedCallback mBackPressedCallback = new OnBackPressedCallback(true) {
         @Override
@@ -163,6 +174,10 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
                     .setNegativeButton(R.string.close, null)
                     .show();
         });
+        FloatingActionButtonGroup fabGroup = view.findViewById(R.id.fab);
+        fabGroup.inflate(R.menu.fragment_fm_speed_dial);
+        fabGroup.setOnActionSelectedListener(this);
+        UiUtils.applyWindowInsetsAsMargin(view.findViewById(R.id.fab_holder));
         mRecyclerView = view.findViewById(R.id.list_item);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
         mAdapter = new FmAdapter(mModel, mActivity);
@@ -183,6 +198,19 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
             }
         });
         mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.addOnScrollListener(new androidx.recyclerview.widget.RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull androidx.recyclerview.widget.RecyclerView recyclerView, int dx, int dy) {
+                if (mFolderShortInfo == null) {
+                    return;
+                }
+                if (dy < 0 && mFolderShortInfo.canWrite && !fabGroup.isShown()) {
+                    fabGroup.show();
+                } else if (dy > 0 && fabGroup.isShown()) {
+                    fabGroup.hide();
+                }
+            }
+        });
         mMultiSelectionView = view.findViewById(R.id.selection_view);
         mMultiSelectionView.hide();
         // Set observer
@@ -216,6 +244,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
             mPathListAdapter.setCurrentUri(uri1);
         });
         mModel.getFolderShortInfoLiveData().observe(getViewLifecycleOwner(), folderShortInfo -> {
+            mFolderShortInfo = folderShortInfo;
             if (actionBar == null) {
                 return;
             }
@@ -227,7 +256,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
             // 2. Folders and files
             if (folderShortInfo.folderCount > 0 && folderShortInfo.fileCount > 0) {
                 subtitle.append(getResources().getQuantityString(R.plurals.folder_count, folderShortInfo.folderCount,
-                        folderShortInfo.folderCount))
+                                folderShortInfo.folderCount))
                         .append(", ")
                         .append(getResources().getQuantityString(R.plurals.file_count, folderShortInfo.fileCount,
                                 folderShortInfo.fileCount));
@@ -248,6 +277,15 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
                 }
                 if (folderShortInfo.canWrite) {
                     subtitle.append("W");
+                }
+            }
+            if (!folderShortInfo.canWrite) {
+                if (fabGroup.isShown()) {
+                    fabGroup.hide();
+                }
+            } else {
+                if (!fabGroup.isShown()) {
+                    fabGroup.show();
                 }
             }
             actionBar.setSubtitle(subtitle);
@@ -356,6 +394,31 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
     }
 
     @Override
+    public boolean onActionSelected(@NonNull SpeedDialActionItem actionItem) {
+        int id = actionItem.getId();
+        if (id == R.id.action_file) {
+            NewFileDialogFragment dialog = NewFileDialogFragment.getInstance(this::createNewFile);
+            dialog.show(getChildFragmentManager(), NewFileDialogFragment.TAG);
+        } else if (id == R.id.action_folder) {
+            NewFolderDialogFragment dialog = NewFolderDialogFragment.getInstance(this::createNewFolder);
+            dialog.show(getChildFragmentManager(), NewFolderDialogFragment.TAG);
+        } else if (id == R.id.action_symbolic_link) {
+            Uri uri = mPathListAdapter.getCurrentUri();
+            if (uri == null) {
+                return false;
+            }
+            Path path = Paths.get(uri);
+            if (path.getFile() == null) {
+                UIUtils.displayLongToast(R.string.symbolic_link_not_supported);
+                return false;
+            }
+            NewSymbolicLinkDialogFragment dialog = NewSymbolicLinkDialogFragment.getInstance(this::createNewSymbolicLink);
+            dialog.show(getChildFragmentManager(), NewSymbolicLinkDialogFragment.TAG);
+        }
+        return false;
+    }
+
+    @Override
     public boolean onQueryTextSubmit(String query) {
         return false;
     }
@@ -369,5 +432,72 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
     @Override
     public void onRefresh() {
         if (mModel != null) mModel.reload();
+    }
+
+    private void createNewFolder(String name) {
+        Uri uri = mPathListAdapter.getCurrentUri();
+        if (uri == null) {
+            return;
+        }
+        Path path = Paths.get(uri);
+        String displayName = findNextBestDisplayName(path, name, null);
+        try {
+            Path newDir = path.createNewDirectory(displayName);
+            UIUtils.displayShortToast(R.string.done);
+            // FIXME: 26/6/23 Locate the folder after reload
+            mModel.reload();
+        } catch (IOException e) {
+            e.printStackTrace();
+            UIUtils.displayShortToast(R.string.failed);
+        }
+    }
+
+    private void createNewFile(String prefix, @Nullable String extension) {
+        Uri uri = mPathListAdapter.getCurrentUri();
+        if (uri == null) {
+            return;
+        }
+        Path path = Paths.get(uri);
+        String displayName = findNextBestDisplayName(path, prefix, extension);
+        try {
+            // TODO: 26/6/23 The best way to do that is to copy a file from the asset
+            Path newFile = path.createNewFile(displayName, null);
+            UIUtils.displayShortToast(R.string.done);
+            // FIXME: 26/6/23 Locate the file after reload
+            mModel.reload();
+        } catch (IOException e) {
+            e.printStackTrace();
+            UIUtils.displayShortToast(R.string.failed);
+        }
+    }
+
+    private void createNewSymbolicLink(String prefix, @Nullable String extension, String targetPath) {
+        Uri uri = mPathListAdapter.getCurrentUri();
+        if (uri == null) {
+            return;
+        }
+        Path basePath = Paths.get(uri);
+        String displayName = findNextBestDisplayName(basePath, prefix, extension);
+        Path sourcePath = Paths.build(basePath, displayName);
+        if (sourcePath != null && sourcePath.createNewSymbolicLink(targetPath)) {
+            UIUtils.displayShortToast(R.string.done);
+            // FIXME: 26/6/23 Locate the link after reload
+            mModel.reload();
+        } else {
+            UIUtils.displayShortToast(R.string.failed);
+        }
+    }
+
+    private String findNextBestDisplayName(@NonNull Path basePath, @NonNull String prefix, @Nullable String extension) {
+        if (TextUtils.isEmpty(extension)) {
+            extension = "";
+        } else extension = "." + extension;
+        String displayName = prefix + extension;
+        int i = 0;
+        // We need to find the next best file name if current exists
+        while (basePath.hasFile(displayName)) {
+            displayName = String.format(Locale.ROOT, "%s (%d)%s", prefix, ++i, extension);
+        }
+        return displayName;
     }
 }

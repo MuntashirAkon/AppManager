@@ -23,56 +23,44 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.lifecycle.SoftInputLifeCycleObserver;
 
-public class RenameDialogFragment extends DialogFragment {
-    public static final String TAG = RenameDialogFragment.class.getSimpleName();
+public class NewFileDialogFragment extends DialogFragment {
+    public static final String TAG = NewFileDialogFragment.class.getSimpleName();
 
-    public interface OnRenameFilesInterface {
-        void onRename(@NonNull String prefix, @Nullable String extension);
+    public interface OnCreateNewFileInterface {
+        void onCreate(@NonNull String prefix, @Nullable String extension);
     }
 
-    private static final String ARG_NAME = "name";
-
     @NonNull
-    public static RenameDialogFragment getInstance(@Nullable String name,
-                                                   @Nullable OnRenameFilesInterface renameFilesInterface) {
-        RenameDialogFragment fragment = new RenameDialogFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_NAME, name);
-        fragment.setArguments(args);
-        fragment.setOnRenameFilesInterface(renameFilesInterface);
+    public static NewFileDialogFragment getInstance(@Nullable OnCreateNewFileInterface createNewFileInterface) {
+        NewFileDialogFragment fragment = new NewFileDialogFragment();
+        fragment.setOnCreateNewFileInterface(createNewFileInterface);
         return fragment;
     }
 
     @Nullable
-    private OnRenameFilesInterface mOnRenameFilesInterface;
+    private OnCreateNewFileInterface mOnCreateNewFileInterface;
     private View mDialogView;
     private TextInputEditText mEditText;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        String name = getArguments() != null ? requireArguments().getString(ARG_NAME) : null;
         mDialogView = View.inflate(requireActivity(), R.layout.dialog_rename, null);
         mEditText = mDialogView.findViewById(R.id.rename);
+        String name = "New file.txt";
         mEditText.setText(name);
-        if (name != null) {
-            int lastIndex = name.lastIndexOf('.');
-            if (lastIndex != -1 || lastIndex == name.length() - 1) {
-                mEditText.setSelection(0, lastIndex);
-            } else {
-                mEditText.selectAll();
-            }
-        }
+        handleFilename(name);
+        // TODO: 26/6/23 Add options to set other kind of files
         return new MaterialAlertDialogBuilder(requireActivity())
-                .setTitle(R.string.rename)
+                .setTitle(R.string.create_new_file)
                 .setView(mDialogView)
-                .setPositiveButton(R.string.save, (dialog, which) -> {
+                .setPositiveButton(R.string.ok, (dialog, which) -> {
                     Editable editable = mEditText.getText();
-                    if (!TextUtils.isEmpty(editable) && mOnRenameFilesInterface != null) {
+                    if (!TextUtils.isEmpty(editable) && mOnCreateNewFileInterface != null) {
                         String newName = editable.toString();
                         String prefix = Paths.trimPathExtension(newName);
                         String extension = Paths.getPathExtension(newName, false);
-                        mOnRenameFilesInterface.onRename(prefix, extension);
+                        mOnCreateNewFileInterface.onCreate(prefix, extension);
                     }
                 })
                 .setNegativeButton(R.string.cancel, null)
@@ -90,7 +78,19 @@ public class RenameDialogFragment extends DialogFragment {
         getLifecycle().addObserver(new SoftInputLifeCycleObserver(new WeakReference<>(mEditText)));
     }
 
-    public void setOnRenameFilesInterface(@Nullable OnRenameFilesInterface renameFilesInterface) {
-        mOnRenameFilesInterface = renameFilesInterface;
+    public void setOnCreateNewFileInterface(@Nullable OnCreateNewFileInterface createNewFileInterface) {
+        mOnCreateNewFileInterface = createNewFileInterface;
+    }
+
+    private void handleFilename(@Nullable String name) {
+        if (name == null) {
+            return;
+        }
+        int lastIndex = name.lastIndexOf('.');
+        if (lastIndex != -1 || lastIndex == name.length() - 1) {
+            mEditText.setSelection(0, lastIndex);
+        } else {
+            mEditText.selectAll();
+        }
     }
 }

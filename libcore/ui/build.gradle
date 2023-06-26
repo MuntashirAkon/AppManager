@@ -29,4 +29,5 @@ dependencies {
     api "androidx.swiperefreshlayout:swiperefreshlayout:${swipe_refresh_version}"
     api "androidx.preference:preference:${preferences_version}"
     api "me.zhanghai.android.fastscroll:library:${fastscroll_version}"
+    api "com.leinardi.android:speed-dial:${speed_dial_version}"
 }

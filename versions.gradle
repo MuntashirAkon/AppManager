@@ -31,6 +31,7 @@ ext {
     room_version = "2.5.1"
     simplemagic_version = "1.17"
     sora_editor_version = "0.21.1"
+    speed_dial_version = "3.3.0"
     splashscreen_version = "1.0.1"
     sun_security_version = "1.1"
     swipe_refresh_version = "1.2.0-alpha01"

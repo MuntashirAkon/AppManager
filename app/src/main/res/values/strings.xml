@@ -1399,4 +1399,13 @@
     <string name="backing_up_app">Backing up %1$s…</string>
     <string name="restoring_app">Restoring %1$s…</string>
     <string name="pref_installer_force_dexopt_description">Perform DEX optimization immediately after installing the app without waiting for the system to do it when the system is idle.</string>
+    <string name="folder">Folder</string>
+    <string name="symbolic_link">Symbolic link</string>
+    <string name="create_new_symbolic_link">New symbolic link</string>
+    <string name="symbolic_link_not_supported">This folder does not support creating a symbolic link.</string>
+    <string name="create_new_folder">New folder</string>
+    <string name="create_new_file">New file</string>
+    <string name="enter_symbolic_link_name">Link name</string>
+    <string name="enter_target_path">Target path</string>
+    <string name="invalid_target_path">Invalid path</string>
 </resources>
