@@ -63,6 +63,8 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
     @Nullable
     private String mQueryString;
     @Nullable
+    private String mScrollToFilename;
+    @Nullable
     private Future<?> mFmFileLoaderResult;
     private Future<?> mFmFileSystemLoaderResult;
     // These are for VFS
@@ -188,17 +190,28 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
 
     @MainThread
     public void reload() {
+        reload(null);
+    }
+
+    @MainThread
+    public void reload(@Nullable String scrollToFilename) {
         if (mOptions != null && mCurrentUri != null) {
-            loadFiles(mCurrentUri);
+            loadFiles(mCurrentUri, scrollToFilename);
         }
+    }
+
+    @MainThread
+    public void loadFiles(@NonNull Uri uri) {
+        loadFiles(uri, null);
     }
 
     @SuppressLint("WrongThread")
     @MainThread
-    public void loadFiles(@NonNull Uri uri) {
+    public void loadFiles(@NonNull Uri uri, @Nullable String scrollToFilename) {
         if (mFmFileLoaderResult != null) {
             mFmFileLoaderResult.cancel(true);
         }
+        mScrollToFilename = scrollToFilename;
         Uri lastUri = mCurrentUri;
         // Send last URI
         mLastUriLiveData.setValue(lastUri);
@@ -367,6 +380,15 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
         }
         if (ThreadUtils.isInterrupted()) {
             return;
+        }
+        if (mScrollToFilename != null) {
+            for (int i = 0; i < filteredList.size(); ++i) {
+                if (mScrollToFilename.equals(filteredList.get(i).path.getName())) {
+                    setScrollPosition(mCurrentUri, i);
+                    break;
+                }
+            }
+            mScrollToFilename = null;
         }
         mFmItemsLiveData.postValue(filteredList);
     }

@@ -228,7 +228,9 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
             }
         });
         mModel.getFmItemsLiveData().observe(getViewLifecycleOwner(), fmItems -> {
-            if (mSwipeRefresh != null) mSwipeRefresh.setRefreshing(false);
+            if (mSwipeRefresh != null) {
+                mSwipeRefresh.setRefreshing(false);
+            }
             mAdapter.setFmList(fmItems);
         });
         mModel.getUriLiveData().observe(getViewLifecycleOwner(), uri1 -> {
@@ -445,8 +447,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         try {
             Path newDir = path.createNewDirectory(displayName);
             UIUtils.displayShortToast(R.string.done);
-            // FIXME: 26/6/23 Locate the folder after reload
-            mModel.reload();
+            mModel.reload(newDir.getName());
         } catch (IOException e) {
             e.printStackTrace();
             UIUtils.displayShortToast(R.string.failed);
@@ -464,8 +465,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
             Path newFile = path.createNewFile(displayName, null);
             FileUtils.copyFromAsset(requireContext(), "blanks/" + template, newFile);
             UIUtils.displayShortToast(R.string.done);
-            // FIXME: 26/6/23 Locate the file after reload
-            mModel.reload();
+            mModel.reload(newFile.getName());
         } catch (IOException e) {
             e.printStackTrace();
             UIUtils.displayShortToast(R.string.failed);
@@ -482,8 +482,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         Path sourcePath = Paths.build(basePath, displayName);
         if (sourcePath != null && sourcePath.createNewSymbolicLink(targetPath)) {
             UIUtils.displayShortToast(R.string.done);
-            // FIXME: 26/6/23 Locate the link after reload
-            mModel.reload();
+            mModel.reload(sourcePath.getName());
         } else {
             UIUtils.displayShortToast(R.string.failed);
         }
