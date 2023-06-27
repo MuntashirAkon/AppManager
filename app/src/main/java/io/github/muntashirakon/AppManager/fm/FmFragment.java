@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.format.Formatter;
@@ -19,11 +20,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.collection.ArrayMap;
 import androidx.fragment.app.Fragment;
@@ -37,12 +40,15 @@ import com.leinardi.android.speeddial.SpeedDialView;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicReference;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.BundleCompat;
@@ -440,15 +446,23 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         List<Path> selectedFiles = mModel.getSelectedItems();
+        if (selectedFiles.size() == 0) {
+            // Do nothing on empty list
+            return false;
+        }
         if (id == R.id.action_share) {
             mModel.shareFiles(selectedFiles);
         } else if (id == R.id.action_rename) {
-            // TODO: 27/6/23 Support for batch renaming. Shouldn't be that hard. Just rename one by one.
-            UIUtils.displayLongToast("Not implemented.");
+            RenameDialogFragment dialog = RenameDialogFragment.getInstance(null, (prefix, extension) ->
+                    startBatchRenaming(selectedFiles, prefix, extension));
+            dialog.show(getChildFragmentManager(), RenameDialogFragment.TAG);
         } else if (id == R.id.action_delete) {
-            // TODO: 27/6/23 Support for batch deletion. Shouldn't be that hard. Just delete one by one.
-            //  However, in the future, this might be done with a visual UI so that the user can revert the process
-            UIUtils.displayLongToast("Not implemented.");
+            new MaterialAlertDialogBuilder(mActivity)
+                    .setTitle(R.string.title_confirm_deletion)
+                    .setMessage(R.string.are_you_sure)
+                    .setPositiveButton(R.string.cancel, null)
+                    .setNegativeButton(R.string.confirm_file_deletion, (dialog, which) -> startBatchDeletion(selectedFiles))
+                    .show();
         } else if (id == R.id.action_cut) {
             // TODO: 27/6/23 Support for batch cut-pasting. Refer hand notes for details.
             UIUtils.displayLongToast("Not implemented.");
@@ -532,15 +546,147 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         }
     }
 
+    private void startBatchDeletion(@NonNull List<Path> paths) {
+        // TODO: 27/6/23 Ideally, these should be done in a bound service
+        AtomicReference<Future<?>> deletionThread = new AtomicReference<>();
+        View view = View.inflate(requireContext(), R.layout.dialog_progress, null);
+        TextView label = view.findViewById(android.R.id.text1);
+        TextView counter = view.findViewById(android.R.id.text2);
+        counter.setText(String.format(Locale.getDefault(), "%d/%d", 0, paths.size()));
+        AlertDialog dialog = new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.delete)
+                .setView(view)
+                .setPositiveButton(R.string.action_stop_service, (dialog1, which) -> {
+                    if (deletionThread.get() != null) {
+                        deletionThread.get().cancel(true);
+                    }
+                })
+                .setCancelable(false)
+                .show();
+        deletionThread.set(ThreadUtils.postOnBackgroundThread(() -> {
+            WeakReference<TextView> labelRef = new WeakReference<>(label);
+            WeakReference<TextView> counterRef = new WeakReference<>(counter);
+            WeakReference<AlertDialog> dialogRef = new WeakReference<>(dialog);
+            try {
+                int i = 1;
+                for (Path path : paths) {
+                    // Update label
+                    TextView l = labelRef.get();
+                    if (l != null) {
+                        ThreadUtils.postOnMainThread(() -> l.setText(path.getName()));
+                    }
+                    if (ThreadUtils.isInterrupted()) {
+                        break;
+                    }
+                    // Sleep, delete, progress
+                    SystemClock.sleep(2_000);
+                    if (ThreadUtils.isInterrupted()) {
+                        break;
+                    }
+                    path.delete();
+                    TextView c = counterRef.get();
+                    if (c != null) {
+                        int finalI = i;
+                        ThreadUtils.postOnMainThread(() ->
+                                c.setText(String.format(Locale.getDefault(), "%d/%d", finalI, paths.size())));
+                    }
+                    ++i;
+                    if (ThreadUtils.isInterrupted()) {
+                        break;
+                    }
+                }
+            } finally {
+                AlertDialog d = dialogRef.get();
+                if (d != null) {
+                    ThreadUtils.postOnMainThread(() -> {
+                        d.dismiss();
+                        UIUtils.displayShortToast(R.string.deleted_successfully);
+                        mModel.reload();
+                    });
+                }
+            }
+        }));
+    }
+
+    private void startBatchRenaming(List<Path> paths, String prefix, @Nullable String extension) {
+        AtomicReference<Future<?>> renameThread = new AtomicReference<>();
+        View view = View.inflate(requireContext(), R.layout.dialog_progress, null);
+        TextView label = view.findViewById(android.R.id.text1);
+        TextView counter = view.findViewById(android.R.id.text2);
+        counter.setText(String.format(Locale.getDefault(), "%d/%d", 0, paths.size()));
+        AlertDialog dialog = new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.rename)
+                .setView(view)
+                .setPositiveButton(R.string.action_stop_service, (dialog1, which) -> {
+                    if (renameThread.get() != null) {
+                        renameThread.get().cancel(true);
+                    }
+                })
+                .setCancelable(false)
+                .show();
+        renameThread.set(ThreadUtils.postOnBackgroundThread(() -> {
+            WeakReference<TextView> labelRef = new WeakReference<>(label);
+            WeakReference<TextView> counterRef = new WeakReference<>(counter);
+            WeakReference<AlertDialog> dialogRef = new WeakReference<>(dialog);
+            try {
+                int i = 1;
+                for (Path path : paths) {
+                    // Update label
+                    TextView l = labelRef.get();
+                    if (l != null) {
+                        ThreadUtils.postOnMainThread(() -> l.setText(path.getName()));
+                    }
+                    if (ThreadUtils.isInterrupted()) {
+                        break;
+                    }
+                    // Sleep, delete, progress
+                    SystemClock.sleep(2_000);
+                    if (ThreadUtils.isInterrupted()) {
+                        break;
+                    }
+                    Path basePath = path.getParentFile();
+                    if (basePath != null) {
+                        String displayName = findNextBestDisplayName(basePath, prefix, extension, i);
+                        path.renameTo(displayName);
+                    }
+                    TextView c = counterRef.get();
+                    if (c != null) {
+                        int finalI = i;
+                        ThreadUtils.postOnMainThread(() ->
+                                c.setText(String.format(Locale.getDefault(), "%d/%d", finalI, paths.size())));
+                    }
+                    ++i;
+                    if (ThreadUtils.isInterrupted()) {
+                        break;
+                    }
+                }
+            } finally {
+                AlertDialog d = dialogRef.get();
+                if (d != null) {
+                    ThreadUtils.postOnMainThread(() -> {
+                        d.dismiss();
+                        UIUtils.displayShortToast(R.string.renamed_successfully);
+                        mModel.reload();
+                    });
+                }
+            }
+        }));
+    }
+
     private String findNextBestDisplayName(@NonNull Path basePath, @NonNull String prefix, @Nullable String extension) {
+        return findNextBestDisplayName(basePath, prefix, extension, 1);
+    }
+
+    private String findNextBestDisplayName(@NonNull Path basePath, @NonNull String prefix, @Nullable String extension, int startIndex) {
         if (TextUtils.isEmpty(extension)) {
             extension = "";
         } else extension = "." + extension;
         String displayName = prefix + extension;
-        int i = 0;
+        int i = startIndex;
         // We need to find the next best file name if current exists
         while (basePath.hasFile(displayName)) {
-            displayName = String.format(Locale.ROOT, "%s (%d)%s", prefix, ++i, extension);
+            displayName = String.format(Locale.ROOT, "%s (%d)%s", prefix, i, extension);
+            ++i;
         }
         return displayName;
     }

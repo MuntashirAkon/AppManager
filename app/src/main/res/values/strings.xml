@@ -1409,4 +1409,5 @@
     <string name="enter_target_path">Target path</string>
     <string name="invalid_target_path">Invalid path</string>
     <string name="copy_these_paths">Copy paths</string>
+    <string name="title_confirm_deletion">Confirm deletion</string>
 </resources>
