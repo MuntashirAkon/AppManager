@@ -2,8 +2,6 @@
 
 package io.github.muntashirakon.AppManager.fm;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -28,11 +26,13 @@ import java.util.List;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
 
 class FmPathListAdapter extends RecyclerView.Adapter<FmPathListAdapter.PathHolder> {
     private final FmViewModel mViewModel;
     private final List<String> mPathParts = Collections.synchronizedList(new ArrayList<>());
+    @Nullable
+    private String mAlternativeRootName = null;
     private int mCurrentPosition = -1;
     @Nullable
     private Uri mCurrentUri;
@@ -63,6 +63,10 @@ class FmPathListAdapter extends RecyclerView.Adapter<FmPathListAdapter.PathHolde
             mCurrentPosition = mPathParts.size() - 1;
             notifyDataSetChanged();
         }
+    }
+
+    public void setAlternativeRootName(@Nullable String alternativeRootName) {
+        mAlternativeRootName = alternativeRootName;
     }
 
     @Nullable
@@ -96,7 +100,10 @@ class FmPathListAdapter extends RecyclerView.Adapter<FmPathListAdapter.PathHolde
 
     @Override
     public void onBindViewHolder(@NonNull PathHolder holder, int position) {
-        String pathPart = (position == 0 ? "" : "» ") + mPathParts.get(position);
+        String pathPart;
+        if (position == 0) {
+            pathPart = mAlternativeRootName != null ? mAlternativeRootName : mPathParts.get(position);
+        } else pathPart = "» " + mPathParts.get(position);
         holder.textView.setText(pathPart);
         holder.itemView.setOnClickListener(v -> {
             if (mCurrentPosition != position) {
@@ -111,9 +118,7 @@ class FmPathListAdapter extends RecyclerView.Adapter<FmPathListAdapter.PathHolde
             menu.add(R.string.copy_this_path)
                     .setOnMenuItemClickListener(menuItem -> {
                         String path = FmUtils.getDisplayablePath(calculateUri(position));
-                        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
-                        clipboard.setPrimaryClip(ClipData.newPlainText("File path", path));
-                        UIUtils.displayShortToast(R.string.copied_to_clipboard);
+                        Utils.copyToClipboard(context, "Path", path);
                         return true;
                     });
             // Open in new window

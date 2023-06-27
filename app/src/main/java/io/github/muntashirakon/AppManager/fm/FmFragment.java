@@ -258,10 +258,12 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
             mAdapter.setFmList(fmItems);
         });
         mModel.getUriLiveData().observe(getViewLifecycleOwner(), uri1 -> {
+            FmActivity.Options options1 = mModel.getOptions();
+            String alternativeRootName = options1.isVfs ? options1.uri.getLastPathSegment() : null;
             if (actionBar != null) {
                 String title = uri1.getLastPathSegment();
                 if (TextUtils.isEmpty(title)) {
-                    title = "Root";
+                    title = alternativeRootName != null ? alternativeRootName : "Root";
                 }
                 actionBar.setTitle(title);
             }
@@ -269,6 +271,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
                 mSwipeRefresh.setRefreshing(true);
             }
             mPathListAdapter.setCurrentUri(uri1);
+            mPathListAdapter.setAlternativeRootName(alternativeRootName);
         });
         mModel.getFolderShortInfoLiveData().observe(getViewLifecycleOwner(), folderShortInfo -> {
             mFolderShortInfo = folderShortInfo;
