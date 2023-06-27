@@ -261,7 +261,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
             if (actionBar != null) {
                 String title = uri1.getLastPathSegment();
                 if (TextUtils.isEmpty(title)) {
-                    title = "Root"; // FIXME: 21/5/23 Use localisation?
+                    title = "Root";
                 }
                 actionBar.setTitle(title);
             }
@@ -366,7 +366,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         MenuItem pasteMenu = menu.findItem(R.id.action_paste);
         if (pasteMenu != null) {
             FmTasks.FmTask fmTask = FmTasks.getInstance().peek();
-            pasteMenu.setEnabled(fmTask != null && fmTask.canPaste());
+            pasteMenu.setEnabled(mFolderShortInfo != null && fmTask != null && mFolderShortInfo.canWrite && fmTask.canPaste());
         }
     }
 
