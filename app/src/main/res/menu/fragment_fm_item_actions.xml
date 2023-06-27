@@ -8,12 +8,12 @@
 
     <item
         android:id="@+id/action_cut"
-        android:icon="@drawable/ic_content_copy"
+        android:icon="@drawable/ic_content_cut"
         android:title="@string/file_cut" />
 
     <item
         android:id="@+id/action_copy"
-        android:icon="@drawable/ic_content_copy"
+        android:icon="@drawable/ic_file_copy"
         android:title="@string/copy" />
 
     <item

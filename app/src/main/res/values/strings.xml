@@ -1408,4 +1408,5 @@
     <string name="enter_symbolic_link_name">Link name</string>
     <string name="enter_target_path">Target path</string>
     <string name="invalid_target_path">Invalid path</string>
+    <string name="copy_these_paths">Copy paths</string>
 </resources>

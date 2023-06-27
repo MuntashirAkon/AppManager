@@ -3,6 +3,8 @@
 package io.github.muntashirakon.AppManager.utils;
 
 import android.app.ActivityManager;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -641,6 +643,12 @@ public class Utils {
 
     public static int getTotalCores() {
         return Runtime.getRuntime().availableProcessors();
+    }
+
+    public static void copyToClipboard(@NonNull Context context, @Nullable CharSequence label, @NonNull CharSequence text) {
+        ClipboardManager clipboard = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+        clipboard.setPrimaryClip(ClipData.newPlainText(label, text));
+        UIUtils.displayShortToast(R.string.copied_to_clipboard);
     }
 
     @Nullable

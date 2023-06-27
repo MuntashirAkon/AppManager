@@ -2,9 +2,6 @@
 
 package io.github.muntashirakon.AppManager.fm;
 
-import android.content.ClipData;
-import android.content.ClipboardManager;
-import android.content.Context;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -36,7 +33,9 @@ import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
+import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
 class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
@@ -88,11 +87,21 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
         if (item.type == FileType.DIRECTORY) {
             holder.subtitle.setText(String.format(Locale.getDefault(), "%d • %s", item.path.listFiles().length,
                     modificationDate));
-            holder.itemView.setOnClickListener(v -> mViewModel.loadFiles(item.path.getUri()));
+            holder.itemView.setOnClickListener(v -> {
+                if (isInSelectionMode()) {
+                    toggleSelection(position);
+                    return;
+                }
+                mViewModel.loadFiles(item.path.getUri());
+            });
         } else {
             holder.subtitle.setText(String.format(Locale.getDefault(), "%s • %s",
                     Formatter.formatShortFileSize(mFmActivity, item.path.length()), modificationDate));
             holder.itemView.setOnClickListener(v -> {
+                if (isInSelectionMode()) {
+                    toggleSelection(position);
+                    return;
+                }
                 // TODO: 16/11/22 Retrieve default open with from DB and open the file with it
                 OpenWithDialogFragment fragment = OpenWithDialogFragment.getInstance(item.path);
                 fragment.show(mFmActivity.getSupportFragmentManager(), OpenWithDialogFragment.TAG);
@@ -106,6 +115,28 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
         holder.icon.setOnClickListener(v -> toggleSelection(position));
         // Set actions
         holder.action.setOnClickListener(v -> displayActions(holder.action, item));
+        holder.itemView.setOnLongClickListener(v -> {
+            // Long click listener: Select/deselect an app.
+            // 1) Turn selection mode on if this is the first item in the selection list
+            // 2) Select between last selection position and this position (inclusive) if selection mode is on
+            Path lastSelectedItem = mViewModel.getLastSelectedItem();
+            int lastSelectedItemPosition = -1;
+            if (lastSelectedItem != null) {
+                int i = 0;
+                for (FmItem fmItem : mAdapterList) {
+                    if (fmItem.path.equals(lastSelectedItem)) {
+                        lastSelectedItemPosition = i;
+                        break;
+                    }
+                    ++i;
+                }
+            }
+            if (lastSelectedItemPosition >= 0) {
+                // Select from last selection to this selection
+                selectRange(lastSelectedItemPosition, position);
+            } else toggleSelection(position);
+            return true;
+        });
         super.onBindViewHolder(holder, position);
     }
 
@@ -121,30 +152,28 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
 
     @Override
     protected void select(int position) {
-        // TODO: 4/7/21
+        mViewModel.setSelectedItem(mAdapterList.get(position).path, true);
     }
 
     @Override
     protected void deselect(int position) {
-        // TODO: 4/7/21
+        mViewModel.setSelectedItem(mAdapterList.get(position).path, false);
     }
 
     @Override
     protected boolean isSelected(int position) {
-        // TODO: 4/7/21
-        return false;
+        return mViewModel.isSelected(mAdapterList.get(position).path);
     }
 
     @Override
     protected void cancelSelection() {
         super.cancelSelection();
-        // TODO: 4/7/21
+        mViewModel.clearSelections();
     }
 
     @Override
     protected int getSelectedItemCount() {
-        // TODO: 4/7/21
-        return 0;
+        return mViewModel.getSelectedItemCount();
     }
 
     @Override
@@ -236,9 +265,7 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
                 });
         menu.findItem(R.id.action_copy_path).setOnMenuItemClickListener(menuItem -> {
             String path = FmUtils.getDisplayablePath(item.path);
-            ClipboardManager clipboard = (ClipboardManager) mFmActivity.getSystemService(Context.CLIPBOARD_SERVICE);
-            clipboard.setPrimaryClip(ClipData.newPlainText("File path", path));
-            UIUtils.displayShortToast(R.string.copied_to_clipboard);
+            Utils.copyToClipboard(mFmActivity, "Path", path);
             return true;
         });
         menu.findItem(R.id.action_properties).setOnMenuItemClickListener(menuItem -> {

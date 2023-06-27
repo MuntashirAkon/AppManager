@@ -13,8 +13,7 @@
         android:layout_gravity="fill"
         android:fitsSystemWindows="true" />
 
-    <androidx.appcompat.widget.LinearLayoutCompat
-        android:orientation="vertical"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -76,9 +75,9 @@
             android:layout_height="wrap_content"
             android:fitsSystemWindows="true"
             android:focusable="false"
-            app:menu="@menu/activity_running_apps_popup_actions" />
+            app:menu="@menu/fragment_fm_selection_actions" />
 
-    </androidx.appcompat.widget.LinearLayoutCompat>
+    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/fab_holder"

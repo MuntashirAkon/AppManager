@@ -37,7 +37,9 @@ import com.leinardi.android.speeddial.SpeedDialView;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -49,10 +51,12 @@ import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.StorageUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.dialog.SearchableItemsDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
+import io.github.muntashirakon.reflow.ReflowMenuViewWrapper;
 import io.github.muntashirakon.util.UiUtils;
 import io.github.muntashirakon.widget.FloatingActionButtonGroup;
 import io.github.muntashirakon.widget.MultiSelectionView;
@@ -60,7 +64,7 @@ import io.github.muntashirakon.widget.RecyclerView;
 import io.github.muntashirakon.widget.SwipeRefreshLayout;
 
 public class FmFragment extends Fragment implements SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener,
-        SpeedDialView.OnActionSelectedListener {
+        SpeedDialView.OnActionSelectedListener, ReflowMenuViewWrapper.OnItemSelectedListener {
     public static final String TAG = FmFragment.class.getSimpleName();
 
     public static final String ARG_URI = "uri";
@@ -97,6 +101,10 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
     private final OnBackPressedCallback mBackPressedCallback = new OnBackPressedCallback(true) {
         @Override
         public void handleOnBackPressed() {
+            if (mAdapter != null && mMultiSelectionView != null && mAdapter.isInSelectionMode()) {
+                mMultiSelectionView.cancel();
+                return;
+            }
             if (mPathListAdapter != null && mPathListAdapter.getCurrentPosition() > 0) {
                 mModel.loadFiles(mPathListAdapter.calculateUri(mPathListAdapter.getCurrentPosition() - 1));
                 return;
@@ -213,7 +221,9 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
             }
         });
         mMultiSelectionView = view.findViewById(R.id.selection_view);
-        mMultiSelectionView.hide();
+        mMultiSelectionView.setOnItemSelectedListener(this);
+        mMultiSelectionView.setAdapter(mAdapter);
+        mMultiSelectionView.updateCounter(true);
         // Set observer
         mModel.getLastUriLiveData().observe(getViewLifecycleOwner(), uri1 -> {
             if (uri1 == null) {
@@ -225,6 +235,9 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
                     mModel.setScrollPosition(uri1, mRecyclerView.getChildAdapterPosition(v));
                 }
                 mAdapter.setFmList(Collections.emptyList());
+            }
+            if (mMultiSelectionView.isShown()) {
+                mMultiSelectionView.cancel();
             }
         });
         mModel.getFmItemsLiveData().observe(getViewLifecycleOwner(), fmItems -> {
@@ -419,6 +432,35 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
             }
             NewSymbolicLinkDialogFragment dialog = NewSymbolicLinkDialogFragment.getInstance(this::createNewSymbolicLink);
             dialog.show(getChildFragmentManager(), NewSymbolicLinkDialogFragment.TAG);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        int id = item.getItemId();
+        List<Path> selectedFiles = mModel.getSelectedItems();
+        if (id == R.id.action_share) {
+            mModel.shareFiles(selectedFiles);
+        } else if (id == R.id.action_rename) {
+            // TODO: 27/6/23 Support for batch renaming. Shouldn't be that hard. Just rename one by one.
+            UIUtils.displayLongToast("Not implemented.");
+        } else if (id == R.id.action_delete) {
+            // TODO: 27/6/23 Support for batch deletion. Shouldn't be that hard. Just delete one by one.
+            //  However, in the future, this might be done with a visual UI so that the user can revert the process
+            UIUtils.displayLongToast("Not implemented.");
+        } else if (id == R.id.action_cut) {
+            // TODO: 27/6/23 Support for batch cut-pasting. Refer hand notes for details.
+            UIUtils.displayLongToast("Not implemented.");
+        } else if (id == R.id.action_copy) {
+            // TODO: 27/6/23 Support for batch copy-pasting. Refer hand notes for details.
+            UIUtils.displayLongToast("Not implemented.");
+        } else if (id == R.id.action_copy_path) {
+            List<String> paths = new ArrayList<>(selectedFiles.size());
+            for (Path path : selectedFiles) {
+                paths.add(FmUtils.getDisplayablePath(path));
+            }
+            Utils.copyToClipboard(mActivity, "Paths", TextUtils.join("\n", paths));
         }
         return false;
     }

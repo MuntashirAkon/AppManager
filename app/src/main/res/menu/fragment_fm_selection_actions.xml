@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_share"
+        android:icon="@drawable/ic_share"
+        android:title="@string/share" />
+
+    <item
+        android:id="@+id/action_rename"
+        android:icon="@drawable/ic_form_textbox"
+        android:title="@string/rename" />
+
+    <item
+        android:id="@+id/action_delete"
+        android:icon="@drawable/ic_trash_can"
+        android:title="@string/delete" />
+
+    <item
+        android:id="@+id/action_cut"
+        android:icon="@drawable/ic_content_cut"
+        android:title="@string/file_cut" />
+
+    <item
+        android:id="@+id/action_copy"
+        android:icon="@drawable/ic_file_copy"
+        android:title="@string/copy" />
+
+    <item
+        android:id="@+id/action_copy_path"
+        android:icon="@drawable/ic_content_copy"
+        android:title="@string/copy_these_paths" />
+
+</menu>

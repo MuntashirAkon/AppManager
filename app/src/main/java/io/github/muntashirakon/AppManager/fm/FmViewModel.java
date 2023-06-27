@@ -24,7 +24,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.Future;
 
 import io.github.muntashirakon.AppManager.dex.DexUtils;
@@ -53,6 +55,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
     private final SingleLiveEvent<Pair<Path, Bitmap>> mShortcutCreatorLiveData = new SingleLiveEvent<>();
     private final SingleLiveEvent<SharableItems> mSharableItemsLiveData = new SingleLiveEvent<>();
     private final List<FmItem> mFmItems = new ArrayList<>();
+    private final Set<Path> mSelectedItems = Collections.synchronizedSet(new LinkedHashSet<>());
     private final HashMap<Uri, Integer> mPathScrollPositionMap = new HashMap<>();
     private FmActivity.Options mOptions;
     private Uri mCurrentUri;
@@ -187,6 +190,41 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
     public int getCurrentScrollPosition() {
         Integer scrollPosition = mPathScrollPositionMap.get(mCurrentUri);
         return scrollPosition != null ? scrollPosition : 0;
+    }
+
+    public List<Path> getSelectedItems() {
+        return new ArrayList<>(mSelectedItems);
+    }
+
+    @Nullable
+    public Path getLastSelectedItem() {
+        // Last selected item is the same as the last added item.
+        Iterator<Path> it = mSelectedItems.iterator();
+        Path lastItem = null;
+        while (it.hasNext()) {
+            lastItem = it.next();
+        }
+        return lastItem;
+    }
+
+    public int getSelectedItemCount() {
+        return mSelectedItems.size();
+    }
+
+    public void setSelectedItem(@NonNull Path path, boolean select) {
+        if (select) {
+            mSelectedItems.add(path);
+        } else {
+            mSelectedItems.remove(path);
+        }
+    }
+
+    public boolean isSelected(@NonNull Path path) {
+        return mSelectedItems.contains(path);
+    }
+
+    public void clearSelections() {
+        mSelectedItems.clear();
     }
 
     @MainThread
