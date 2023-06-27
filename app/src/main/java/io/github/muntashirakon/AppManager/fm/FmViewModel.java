@@ -51,6 +51,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
     private final MutableLiveData<Uri> mLastUriLiveData = new MutableLiveData<>();
     private final MutableLiveData<Uri> mDisplayPropertiesLiveData = new MutableLiveData<>();
     private final SingleLiveEvent<Pair<Path, Bitmap>> mShortcutCreatorLiveData = new SingleLiveEvent<>();
+    private final SingleLiveEvent<SharableItems> mSharableItemsLiveData = new SingleLiveEvent<>();
     private final List<FmItem> mFmItems = new ArrayList<>();
     private final HashMap<Uri, Integer> mPathScrollPositionMap = new HashMap<>();
     private FmActivity.Options mOptions;
@@ -284,6 +285,13 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
         });
     }
 
+    public void shareFiles(@NonNull List<Path> pathList) {
+        ThreadUtils.postOnBackgroundThread(() -> {
+            SharableItems sharableItems = new SharableItems(pathList);
+            mSharableItemsLiveData.postValue(sharableItems);
+        });
+    }
+
     public void createShortcut(@NonNull Uri uri) {
         createShortcut(new FmItem(Paths.get(uri)));
     }
@@ -308,8 +316,12 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
         return mDisplayPropertiesLiveData;
     }
 
-    public SingleLiveEvent<Pair<Path, Bitmap>> getShortcutCreatorLiveData() {
+    public LiveData<Pair<Path, Bitmap>> getShortcutCreatorLiveData() {
         return mShortcutCreatorLiveData;
+    }
+
+    public LiveData<SharableItems> getSharableItemsLiveData() {
+        return mSharableItemsLiveData;
     }
 
     private void filterAndSort() {

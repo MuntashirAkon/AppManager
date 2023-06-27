@@ -5,7 +5,6 @@ package io.github.muntashirakon.AppManager.fm;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.Intent;
 import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -223,12 +222,7 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
             return true;
         });
         menu.findItem(R.id.action_share).setOnMenuItemClickListener(menuItem -> {
-            Intent intent = new Intent(Intent.ACTION_SEND)
-                    .setType(item.path.getType())
-                    .putExtra(Intent.EXTRA_STREAM, FmProvider.getContentUri(item.path))
-                    .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            mFmActivity.startActivity(Intent.createChooser(intent, item.path.getName())
-                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
+            mViewModel.shareFiles(Collections.singletonList(item.path));
             return true;
         });
         boolean isVfs = mViewModel.getOptions().isVfs;

@@ -306,6 +306,8 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
                 LauncherShortcuts.fm_createForFile(mActivity, path.getName(), icon, path.getUri(), null);
             }
         });
+        mModel.getSharableItemsLiveData().observe(getViewLifecycleOwner(), sharableItems ->
+                mActivity.startActivity(sharableItems.toSharableIntent()));
         mModel.setOptions(options, uri);
     }
 
