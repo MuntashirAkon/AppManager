@@ -317,7 +317,7 @@
     <string name="changelog">سجل التغييرات</string>
     <string name="one_click_ops">عمليات بضغطة واحدة</string>
     <string name="never_ask">لا تسأل أبدا</string>
-    <string name="launch_app">تشغيل</string>
+    <string name="launch_app">تشغيل التطبيق</string>
     <string name="failed_to_deny_dangerous_app_ops">لا يمكن إلغاء جميع عمليات التطبيق الخطرة</string>
     <string name="failed_to_deny_dangerous_perms">تعذر إبطال كافة الأذونات الخطيرة</string>
     <string name="failed_to_reset_app_ops">تعذر إعادة تعيين عمليات التطبيق</string>
@@ -328,7 +328,7 @@
     <string name="deny_dangerous_permissions">رفض الأذونات الخطيرة</string>
     <string name="sort_by_denied_permissions">المرفوضة أولا</string>
     <string name="sort_by_dangerous_permissions">الخطيرة أولا</string>
-    <string name="sort_by_permission_names">اسم الصلاحية</string>
+    <string name="sort_by_permission_names">اسم الإذن</string>
     <string name="sort_by_app_ops_values">قيمة عمليات التطبيق</string>
     <string name="sort_by_denied_app_ops">المرفوضة أولا</string>
     <string name="sort_by_app_ops_names">اسم عمليات التطبيق</string>
@@ -432,7 +432,7 @@
     <string name="install_location_internal_only">الداخلية فقط</string>
     <string name="install_location">موقع التثبيت</string>
     <string name="installer">المثبت</string>
-    <string name="comment">تعليق</string>
+    <string name="comment">ملاحظة</string>
     <string name="close">إغلاق</string>
     <string name="no_root">لا يوجد جذر</string>
     <string name="root">الجذر</string>
@@ -445,7 +445,7 @@
     <string name="input_permissions">أذونات الإدخال</string>
     <string name="options">الخيارات</string>
     <string name="off">غير مفعّل</string>
-    <string name="on">تشغيل</string>
+    <string name="on">يعمل</string>
     <string name="profile_state_msg">حالة تشغيل/إيقاف مخصصة لملف التعريف هذا</string>
     <string name="profile_block_trackers_msg">حظر برمجيات التتبع في التطبيقات</string>
     <string name="profile_clear_data_msg">مسح بيانات التطبيقات</string>
@@ -1190,7 +1190,7 @@
     <string name="explore">استكشف</string>
     <string name="system_partition">جذر أندرويد</string>
     <string name="exit_confirmation">تأكيد الخروج</string>
-    <string name="replace">استبدال</string>
+    <string name="replace">تبديل</string>
     <string name="rename">إعادة تسمية</string>
     <string name="java">جافا</string>
     <string name="smali">سمالي</string>
@@ -1321,7 +1321,7 @@
     <string name="pref_reload_apps_msg">أعد تحميل قائمة التطبيقات المخزنة في قاعدة بيانات مدير التطبيقات في حالة حدوث سلوك غير متوقع.</string>
     <string name="changelog_type_new">جديد</string>
     <string name="changelog_type_fix">اصلاح</string>
-    <string name="changelog_type_improve">تحسين</string>
+    <string name="changelog_type_improve">حسن</string>
     <string name="unsupported_split_apk">غير مدعوم</string>
     <string name="view_changelog">اكتشف الجديد في هذا الإصدار</string>
     <string name="sort_by_total_size">الحجم الإجمالي</string>
@@ -1332,7 +1332,7 @@
     <string name="freeze_unfreeze">تجميد/فك التجميد</string>
     <string name="profile_freeze_msg">التجميد أو فك التجميد علي حسب حالة التطبيق</string>
     <string name="pref_default_freezing_method">طريقة التجميد الافتراضية</string>
-    <string name="suspend_app">تعليق</string>
+    <string name="suspend_app">سكون</string>
     <string name="hide_app">اخفاء</string>
     <plurals name="alert_failed_to_freeze">
         <item quantity="zero">تعذر تجميد تطبيق %1$d</item>
@@ -1436,7 +1436,7 @@
     <string name="optimize_option_force_compilation">فرض التجميع حتى عندما لا يكون مطلوبا</string>
     <string name="optimize_option_force_dexopt">إجراء تحسين ديكس على الفور</string>
     <string name="title_perform_runtime_optimization_to_apps">إجراء تحسين وقت التشغيل</string>
-    <string name="action_run">تشغيل</string>
+    <string name="action_run">شغِّل</string>
     <string name="summary_perform_runtime_optimization_to_apps">قم بتحسين تخطيطات ديكس و (في اندرويد 10 والإصدارات الأحدث) لتحسين أداء التطبيقات.</string>
     <string name="action_optimize_app">تحسين</string>
     <string name="batch_ops_runtime_optimization">تحسين وقت التشغيل</string>
@@ -1471,7 +1471,7 @@
     </plurals>
     <string name="debloat_list_type">القائمة</string>
     <string name="debloat_removal_type">النوع</string>
-    <string name="system_app_put_back">إعادة</string>
+    <string name="system_app_put_back">ارجاع</string>
     <string name="debloater_title">المنظف</string>
     <string name="debloat_list_aosp">تطبيقات اندرويد مفتوحة المصدر</string>
     <string name="debloat_list_oem">برمجيات المصنع</string>
@@ -1480,7 +1480,7 @@
     <string name="debloat_list_misc">المنوعات</string>
     <string name="debloat_list_pending">معلَّقة</string>
     <string name="debloat_removal_safe">آمن</string>
-    <string name="debloat_removal_replace">استبدال</string>
+    <string name="debloat_removal_replace">تبديل</string>
     <string name="debloat_removal_caution">الحذر</string>
     <string name="debloat_removal_unsafe">غير آمن</string>
     <string name="static_shared_library">المكتبة المشتركة الثابتة</string>
