@@ -1410,4 +1410,11 @@
     <string name="invalid_target_path">Invalid path</string>
     <string name="copy_these_paths">Copy paths</string>
     <string name="title_confirm_deletion">Confirm deletion</string>
+    <string name="conflict_detected_while_copying">Conflict detected</string>
+    <string name="conflict_detected_while_copying_message">An item named “%1$s” already exists in this location. Do you want to replace it?</string>
+    <string name="copy_keep_both_file">Keep both</string>
+    <string name="copied_successfully">Copied.</string>
+    <string name="moved_successfully">Moved</string>
+    <string name="failed_to_copy_specified_file">Could not copy “%1$s”.</string>
+    <string name="failed_to_delete_specified_file_after_copying">Could not delete “%1$s” after copying it, possibly due to not enough permission.</string>
 </resources>

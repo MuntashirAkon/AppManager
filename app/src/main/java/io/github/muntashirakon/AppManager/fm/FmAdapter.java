@@ -207,13 +207,15 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
             return true;
         });
         menu.findItem(R.id.action_cut).setOnMenuItemClickListener(menuItem -> {
-            // TODO: 21/11/22
-            UIUtils.displayLongToast("Not implemented.");
+            FmTasks.FmTask fmTask = new FmTasks.FmTask(FmTasks.FmTask.TYPE_CUT, Collections.singletonList(item.path));
+            FmTasks.getInstance().enqueue(fmTask);
+            UIUtils.displayShortToast(R.string.copied_to_clipboard);
             return false;
         });
         menu.findItem(R.id.action_copy).setOnMenuItemClickListener(menuItem -> {
-            // TODO: 21/11/22
-            UIUtils.displayLongToast("Not implemented.");
+            FmTasks.FmTask fmTask = new FmTasks.FmTask(FmTasks.FmTask.TYPE_COPY, Collections.singletonList(item.path));
+            FmTasks.getInstance().enqueue(fmTask);
+            UIUtils.displayShortToast(R.string.copied_to_clipboard);
             return false;
         });
         menu.findItem(R.id.action_rename).setOnMenuItemClickListener(menuItem -> {

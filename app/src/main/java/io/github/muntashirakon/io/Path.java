@@ -1160,23 +1160,44 @@ public class Path implements Comparable<Path> {
         DocumentFile dest = getRealDocumentFile(path.mDocumentFile);
         if (!source.exists()) {
             // Source itself does not exist.
+            Log.d(TAG, "Source does not exist.");
             return null;
         }
         if (dest.exists() && !dest.canWrite()) {
             // There's no point is attempting to copy if the destination is read-only.
+            Log.d(TAG, "Read-only destination.");
             return null;
         }
-        if (dest.getUri().toString().startsWith(source.getUri().toString())) {
+        // Add separator to avoid matching wrong files
+        String destStr = dest.getUri() + File.separator;
+        String srcStr = source.getUri() + File.separator;
+        if (destStr.startsWith(srcStr)) {
             // Destination cannot be the same or a subdirectory of source
+            Log.d(TAG, "Destination is a subdirectory of source.");
             return null;
         }
         DocumentFile destParent = dest.getParentFile();
         if (source.isDirectory()) { // Source is a directory
             if (dest.isDirectory()) {
                 // Destination is a directory: Apply copy source inside the dest
-                DocumentFile newPath = dest.createDirectory(Objects.requireNonNull(source.getName()));
+                String name = Objects.requireNonNull(source.getName());
+                DocumentFile newPath = dest.findFile(name);
+                if (newPath != null) {
+                    // Desired directory exists
+                    if (!override) {
+                        Log.d(TAG, "Overwriting isn't enabled.");
+                        return null;
+                    }
+                    // Check if this is the source
+                    if (source.getUri().equals(newPath.getUri())) {
+                        Log.d(TAG, "Source and destination are the same.");
+                        return null;
+                    }
+                }
+                newPath = dest.createDirectory(name);
                 if (newPath == null) {
                     // Couldn't create directory
+                    Log.d(TAG, "Could not create directory in the destination.");
                     return null;
                 }
                 try {
@@ -1184,6 +1205,7 @@ public class Path implements Comparable<Path> {
                     copyDirectory(mContext, source, newPath, override);
                     return new Path(mContext, newPath);
                 } catch (IOException e) {
+                    Log.d(TAG, "Could not copy files.", e);
                     return null;
                 }
             }
@@ -1191,11 +1213,13 @@ public class Path implements Comparable<Path> {
                 // Destination does not exist, simply create and copy
                 // Make sure that parent exists, and it is a directory
                 if (destParent == null || !destParent.isDirectory()) {
+                    Log.d(TAG, "Parent of destination must exist.");
                     return null;
                 }
                 DocumentFile newPath = destParent.createDirectory(Objects.requireNonNull(dest.getName()));
                 if (newPath == null) {
                     // Couldn't create directory or the directory is not empty
+                    Log.d(TAG, "Could not create directory or non-empty directory.");
                     return null;
                 }
                 try {
@@ -1203,21 +1227,37 @@ public class Path implements Comparable<Path> {
                     copyDirectory(mContext, source, newPath, override);
                     return new Path(mContext, newPath);
                 } catch (IOException e) {
+                    Log.d(TAG, "Could not copy files.", e);
                     return null;
                 }
             }
             // Current path is a directory but target is not a directory
+            Log.d(TAG, "Source is a directory while destination is not.");
             return null;
         }
         if (source.isFile()) { // Source is a file
             DocumentFile newPath;
             if (dest.isDirectory()) {
                 // Move the file inside the directory
+                newPath = dest.findFile(getName());
+                if (newPath != null) {
+                    // File exists
+                    if (!override) {
+                        Log.d(TAG, "Overwriting isn't enabled.");
+                        return null;
+                    }
+                    // Check if this is the source
+                    if (source.getUri().equals(newPath.getUri())) {
+                        Log.d(TAG, "Source and destination are the same.");
+                        return null;
+                    }
+                }
                 newPath = dest.createFile(DEFAULT_MIME, getName());
             } else if (dest.isFile()) {
                 // Override the existing dest
                 if (!override) {
                     // overriding is disabled
+                    Log.d(TAG, "Overwriting isn't enabled.");
                     return null;
                 }
                 newPath = dest;
@@ -1226,10 +1266,12 @@ public class Path implements Comparable<Path> {
                 newPath = destParent.createFile(DEFAULT_MIME, Objects.requireNonNull(dest.getName()));
             } else {
                 // File does not exist, but nothing could be done about it
+                Log.d(TAG, "Could not copy file.");
                 return null;
             }
             if (newPath == null) {
                 // For some reason, newPath could not be created
+                Log.d(TAG, "Could not create file in the destination.");
                 return null;
             }
             try {
@@ -1237,9 +1279,11 @@ public class Path implements Comparable<Path> {
                 copyFile(mContext, source, newPath);
                 return new Path(mContext, newPath);
             } catch (IOException e) {
+                Log.d(TAG, "Could not copy files.", e);
                 return null;
             }
         }
+        Log.d(TAG, "Unknown error during copying.");
         return null;
     }
 

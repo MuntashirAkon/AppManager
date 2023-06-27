@@ -21,10 +21,16 @@
         app:showAsAction="ifRoom" />
 
     <item
+        android:id="@+id/action_paste"
+        android:icon="@drawable/ic_content_paste"
+        android:title="@string/paste"
+        app:showAsAction="never" />
+
+    <item
         android:id="@+id/action_shortcut"
         android:icon="@drawable/ic_link"
         android:title="@string/create_shortcut"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_storage"

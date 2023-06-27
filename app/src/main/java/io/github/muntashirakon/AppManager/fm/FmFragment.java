@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.fm;
 
+import static io.github.muntashirakon.AppManager.fm.FmTasks.FmTask.TYPE_CUT;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
@@ -25,6 +26,7 @@ import android.widget.TextView;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
@@ -46,6 +48,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -356,7 +359,15 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.activity_fm_actions, menu);
-        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        MenuItem pasteMenu = menu.findItem(R.id.action_paste);
+        if (pasteMenu != null) {
+            FmTasks.FmTask fmTask = FmTasks.getInstance().peek();
+            pasteMenu.setEnabled(fmTask != null && fmTask.canPaste());
+        }
     }
 
     @Override
@@ -409,6 +420,12 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
             FmListOptions listOptions = new FmListOptions();
             listOptions.setListOptionActions(mModel);
             listOptions.show(getChildFragmentManager(), FmListOptions.TAG);
+            return true;
+        } else if (id == R.id.action_paste) {
+            FmTasks.FmTask task = FmTasks.getInstance().dequeue();
+            if (task != null) {
+                startBatchPaste(task);
+            }
             return true;
         } else if (id == R.id.action_new_window) {
             Intent intent = new Intent(mActivity, FmActivity.class);
@@ -466,11 +483,13 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
                     .setNegativeButton(R.string.confirm_file_deletion, (dialog, which) -> startBatchDeletion(selectedFiles))
                     .show();
         } else if (id == R.id.action_cut) {
-            // TODO: 27/6/23 Support for batch cut-pasting. Refer hand notes for details.
-            UIUtils.displayLongToast("Not implemented.");
+            FmTasks.FmTask fmTask = new FmTasks.FmTask(TYPE_CUT, selectedFiles);
+            FmTasks.getInstance().enqueue(fmTask);
+            UIUtils.displayShortToast(R.string.copied_to_clipboard);
         } else if (id == R.id.action_copy) {
-            // TODO: 27/6/23 Support for batch copy-pasting. Refer hand notes for details.
-            UIUtils.displayLongToast("Not implemented.");
+            FmTasks.FmTask fmTask = new FmTasks.FmTask(FmTasks.FmTask.TYPE_COPY, selectedFiles);
+            FmTasks.getInstance().enqueue(fmTask);
+            UIUtils.displayShortToast(R.string.copied_to_clipboard);
         } else if (id == R.id.action_copy_path) {
             List<String> paths = new ArrayList<>(selectedFiles.size());
             for (Path path : selectedFiles) {
@@ -641,7 +660,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
                     if (ThreadUtils.isInterrupted()) {
                         break;
                     }
-                    // Sleep, delete, progress
+                    // Sleep, rename, progress
                     SystemClock.sleep(2_000);
                     if (ThreadUtils.isInterrupted()) {
                         break;
@@ -673,6 +692,145 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
                 }
             }
         }));
+    }
+
+    private void startBatchPaste(@NonNull FmTasks.FmTask task) {
+        Uri uri = mPathListAdapter.getCurrentUri();
+        if (uri == null) {
+            return;
+        }
+        AtomicReference<Future<?>> pasteThread = new AtomicReference<>();
+        View view = View.inflate(requireContext(), R.layout.dialog_progress, null);
+        TextView label = view.findViewById(android.R.id.text1);
+        TextView counter = view.findViewById(android.R.id.text2);
+        counter.setText(String.format(Locale.getDefault(), "%d/%d", 0, task.files.size()));
+        AlertDialog dialog = new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.paste)
+                .setView(view)
+                .setPositiveButton(R.string.action_stop_service, (dialog1, which) -> {
+                    if (pasteThread.get() != null) {
+                        pasteThread.get().cancel(true);
+                    }
+                })
+                .setCancelable(false)
+                .show();
+        pasteThread.set(ThreadUtils.postOnBackgroundThread(() -> {
+            WeakReference<TextView> labelRef = new WeakReference<>(label);
+            WeakReference<TextView> counterRef = new WeakReference<>(counter);
+            WeakReference<AlertDialog> dialogRef = new WeakReference<>(dialog);
+            Path targetPath = Paths.get(uri);
+            try {
+                int i = 1;
+                for (Path sourcePath : task.files) {
+                    // Update label
+                    TextView l = labelRef.get();
+                    if (l != null) {
+                        ThreadUtils.postOnMainThread(() -> l.setText(sourcePath.getName()));
+                    }
+                    if (ThreadUtils.isInterrupted()) {
+                        break;
+                    }
+                    // Sleep, copy, progress
+                    SystemClock.sleep(2_000);
+                    if (ThreadUtils.isInterrupted()) {
+                        break;
+                    }
+                    if (!copy(sourcePath, targetPath)) {
+                        // Failed to copy, abort
+                        ThreadUtils.postOnMainThread(() -> new MaterialAlertDialogBuilder(requireContext())
+                                .setTitle(R.string.error)
+                                .setMessage(getString(R.string.failed_to_copy_specified_file, sourcePath.getName()))
+                                .setPositiveButton(R.string.close, null)
+                                .show());
+                        return;
+                    }
+                    if (task.type == TYPE_CUT) {
+                        if (!sourcePath.delete()) {
+                            // Failed to move, abort
+                            ThreadUtils.postOnMainThread(() -> new MaterialAlertDialogBuilder(requireContext())
+                                    .setTitle(R.string.error)
+                                    .setMessage(getString(R.string.failed_to_delete_specified_file_after_copying, sourcePath.getName()))
+                                    .setPositiveButton(R.string.close, null)
+                                    .show());
+                            return;
+                        }
+                    }
+                    TextView c = counterRef.get();
+                    if (c != null) {
+                        int finalI = i;
+                        ThreadUtils.postOnMainThread(() ->
+                                c.setText(String.format(Locale.getDefault(), "%d/%d", finalI, task.files.size())));
+                    }
+                    ++i;
+                    if (ThreadUtils.isInterrupted()) {
+                        break;
+                    }
+                }
+                UIUtils.displayShortToast(task.type == TYPE_CUT ? R.string.moved_successfully : R.string.copied_successfully);
+            } finally {
+                AlertDialog d = dialogRef.get();
+                if (d != null) {
+                    ThreadUtils.postOnMainThread(() -> {
+                        d.dismiss();
+                        mModel.reload();
+                    });
+                }
+            }
+        }));
+    }
+
+    @WorkerThread
+    private boolean copy(Path source, Path dest) {
+        String name = source.getName();
+        if (dest.hasFile(name)) {
+            // Duplicate found. Ask user for what to do.
+            CountDownLatch waitForUser = new CountDownLatch(1);
+            AtomicReference<Boolean> keepBoth = new AtomicReference<>(null);
+            ThreadUtils.postOnMainThread(() -> new MaterialAlertDialogBuilder(requireContext())
+                    .setTitle(R.string.conflict_detected_while_copying)
+                    .setMessage(getString(R.string.conflict_detected_while_copying_message, name))
+                    .setCancelable(false)
+                    .setOnDismissListener(dialog -> waitForUser.countDown())
+                    .setPositiveButton(R.string.replace, (dialog, which) -> keepBoth.set(false))
+                    .setNegativeButton(R.string.action_stop_service, (dialog, which) -> keepBoth.set(null))
+                    .setNeutralButton(R.string.copy_keep_both_file, (dialog, which) -> keepBoth.set(true))
+                    .show());
+            try {
+                waitForUser.await();
+            } catch (InterruptedException ignore) {
+            }
+            if (keepBoth.get() == null) {
+                // Abort copying
+                return false;
+            }
+            if (keepBoth.get()) {
+                // Keep both
+                String prefix;
+                String extension;
+                if (!source.isDirectory()) {
+                    prefix = Paths.trimPathExtension(name);
+                    extension = Paths.getPathExtension(name);
+                } else {
+                    prefix = name;
+                    extension = null;
+                }
+                String newName = findNextBestDisplayName(dest, prefix, extension);
+                try {
+                    Path newPath = source.isDirectory() ? dest.createNewDirectory(newName) : dest.createNewFile(newName, null);
+                    // Need to create that path again
+                    newPath.delete();
+                    return source.copyTo(newPath) != null;
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    return false;
+                }
+            } else {
+                // Overwrite
+                return source.copyTo(dest, true) != null;
+            }
+        }
+        // Simply copy
+        return source.copyTo(dest, false) != null;
     }
 
     private String findNextBestDisplayName(@NonNull Path basePath, @NonNull String prefix, @Nullable String extension) {
