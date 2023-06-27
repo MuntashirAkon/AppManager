@@ -230,6 +230,8 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         mMultiSelectionView.setOnItemSelectedListener(this);
         mMultiSelectionView.setAdapter(mAdapter);
         mMultiSelectionView.updateCounter(true);
+        BatchOpsHandler batchOpsHandler = new BatchOpsHandler(mMultiSelectionView);
+        mMultiSelectionView.setOnSelectionChangeListener(batchOpsHandler);
         // Set observer
         mModel.getLastUriLiveData().observe(getViewLifecycleOwner(), uri1 -> {
             if (uri1 == null) {
@@ -689,5 +691,37 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
             ++i;
         }
         return displayName;
+    }
+
+    private class BatchOpsHandler implements MultiSelectionView.OnSelectionChangeListener {
+        private final MenuItem mShareMenu;
+        private final MenuItem mRenameMenu;
+        private final MenuItem mDeleteMenu;
+        private final MenuItem mCutMenu;
+        private final MenuItem mCopyMenu;
+        private final MenuItem mCopyPathsMenu;
+
+        public BatchOpsHandler(@NonNull MultiSelectionView multiSelectionView) {
+            Menu menu = multiSelectionView.getMenu();
+            mShareMenu = menu.findItem(R.id.action_share);
+            mRenameMenu = menu.findItem(R.id.action_rename);
+            mDeleteMenu = menu.findItem(R.id.action_delete);
+            mCutMenu = menu.findItem(R.id.action_cut);
+            mCopyMenu = menu.findItem(R.id.action_copy);
+            mCopyPathsMenu = menu.findItem(R.id.action_copy_path);
+        }
+
+        @Override
+        public void onSelectionChange(int selectionCount) {
+            boolean nonZeroSelection = selectionCount > 0;
+            boolean canRead = mFolderShortInfo.canRead;
+            boolean canWrite = mFolderShortInfo.canWrite;
+            mShareMenu.setEnabled(nonZeroSelection && canRead);
+            mRenameMenu.setEnabled(nonZeroSelection && canWrite);
+            mDeleteMenu.setEnabled(nonZeroSelection && canWrite);
+            mCutMenu.setEnabled(nonZeroSelection && canWrite);
+            mCopyMenu.setEnabled(nonZeroSelection && canRead);
+            mCopyPathsMenu.setEnabled(nonZeroSelection);
+        }
     }
 }
