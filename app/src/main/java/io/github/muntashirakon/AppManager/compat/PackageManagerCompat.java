@@ -324,15 +324,24 @@ public final class PackageManagerCompat {
     @RequiresPermission(value = Manifest.permission.CHANGE_COMPONENT_ENABLED_STATE)
     public static void setApplicationEnabledSetting(String packageName, @EnabledState int newState,
                                                     @EnabledFlags int flags, @UserIdInt int userId)
-            throws RemoteException {
-        getPackageManager().setApplicationEnabledSetting(packageName, newState, flags, userId, null);
-        if (userId != UserHandleHidden.myUserId()) {
-            BroadcastUtils.sendPackageAltered(ContextUtils.getContext(), new String[]{packageName});
+            throws SecurityException, IllegalArgumentException {
+        try {
+            getPackageManager().setApplicationEnabledSetting(packageName, newState, flags, userId, null);
+            if (userId != UserHandleHidden.myUserId()) {
+                BroadcastUtils.sendPackageAltered(ContextUtils.getContext(), new String[]{packageName});
+            }
+        } catch (RemoteException e) {
+            ExUtils.rethrowFromSystemServer(e);
         }
     }
 
-    public static int getApplicationEnabledSetting(String packageName, @UserIdInt int userId) throws RemoteException {
-        return getPackageManager().getApplicationEnabledSetting(packageName, userId);
+    public static int getApplicationEnabledSetting(String packageName, @UserIdInt int userId)
+            throws SecurityException, IllegalArgumentException {
+        try {
+            return getPackageManager().getApplicationEnabledSetting(packageName, userId);
+        } catch (RemoteException e) {
+            return ExUtils.rethrowFromSystemServer(e);
+        }
     }
 
     @SuppressWarnings("deprecation")

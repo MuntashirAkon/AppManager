@@ -1033,8 +1033,9 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private void setHorizontalActions() {
         mHorizontalLayout.removeAllViews();
         if (mMainModel != null && !mMainModel.isExternalApk()) {
+            boolean isStaticSharedLib = ApplicationInfoCompat.isStaticSharedLibrary(mApplicationInfo);
             boolean isFrozen = FreezeUtils.isFrozen(mApplicationInfo);
-            boolean canFreeze = SelfPermissions.canFreezeUnfreezePackages();
+            boolean canFreeze = !isStaticSharedLib && SelfPermissions.canFreezeUnfreezePackages();
             // Set open
             Intent launchIntent = PackageUtils.getLaunchIntentForPackage(requireContext(), mPackageName, mUserId);
             if (launchIntent != null && !isFrozen) {
@@ -1125,8 +1126,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 });
             }
             boolean accessibilityServiceRunning = ServiceHelper.checkIfServiceIsRunning(mActivity, NoRootAccessibilityService.class);
-            if (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.FORCE_STOP_PACKAGES)
-                    || accessibilityServiceRunning) {
+            if (!isStaticSharedLib && (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.FORCE_STOP_PACKAGES)
+                    || accessibilityServiceRunning)) {
                 // Force stop
                 if (!ApplicationInfoCompat.isStopped(mApplicationInfo) &&
                         (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.FORCE_STOP_PACKAGES)
@@ -1154,8 +1155,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     });
                 }
             }
-            if (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.CLEAR_APP_USER_DATA)
-                    || accessibilityServiceRunning) {
+            if (!isStaticSharedLib && (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.CLEAR_APP_USER_DATA)
+                    || accessibilityServiceRunning)) {
                 // Clear data
                 addToHorizontalLayout(R.string.clear_data, R.drawable.ic_clear_data)
                         .setOnClickListener(v -> new MaterialAlertDialogBuilder(mActivity)
@@ -1183,7 +1184,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                 .setNegativeButton(R.string.cancel, null)
                                 .show());
             }
-            if (SelfPermissions.canClearAppCache() || accessibilityServiceRunning) {
+            if (!isStaticSharedLib && (SelfPermissions.canClearAppCache() || accessibilityServiceRunning)) {
                 // Clear cache
                 addToHorizontalLayout(R.string.clear_cache, R.drawable.ic_clear_cache)
                         .setOnClickListener(v -> {
