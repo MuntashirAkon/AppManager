@@ -176,16 +176,26 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
     @SuppressWarnings("OctalInteger")
     @NonNull
     private String getFormattedMode(int mode) {
-        String s = ((mode & 0400) != 0 ? "r" : "-") +
-                ((mode & 0200) != 0 ? "w" : "-") +
-                ((mode & 0100) != 0 ? "x" : "-") +
-                ((mode & 040) != 0 ? "r" : "-") +
-                ((mode & 020) != 0 ? "w" : "-") +
-                ((mode & 010) != 0 ? "x" : "-") +
-                ((mode & 04) != 0 ? "r" : "-") +
+        // Ref: https://man7.org/linux/man-pages/man7/inode.7.html
+        String s = getSingleMode(mode >> 6, (mode & 04000) != 0, "s") +
+                getSingleMode(mode >> 3, (mode & 02000) != 0, "s") +
+                getSingleMode(mode, (mode & 01000) != 0, "t");
+        return String.format(Locale.ROOT, "%s (%o)", s, mode & 07777);
+    }
+
+    @SuppressWarnings("OctalInteger")
+    @NonNull
+    private String getSingleMode(int mode, boolean special, String specialChar) {
+        boolean canExecute = (mode & 01) != 0;
+        String execMode;
+        if (canExecute) {
+            execMode = special ? specialChar.toLowerCase(Locale.ROOT) : "x";
+        } else if (special) {
+            execMode = specialChar.toUpperCase(Locale.ROOT);
+        } else execMode = "-";
+        return  ((mode & 04) != 0 ? "r" : "-") +
                 ((mode & 02) != 0 ? "w" : "-") +
-                ((mode & 01) != 0 ? "x" : "-");
-        return String.format(Locale.ROOT, "%s (%o)", s, mode & 0777);
+                execMode;
     }
 
     public static class FilePropertiesViewModel extends AndroidViewModel {
