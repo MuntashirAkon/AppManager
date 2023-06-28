@@ -7,6 +7,8 @@ import android.os.Parcelable;
 
 import androidx.annotation.NonNull;
 
+import java.util.Objects;
+
 public class UidGidPair implements Parcelable {
     public final int uid;
     public final int gid;
@@ -42,5 +44,18 @@ public class UidGidPair implements Parcelable {
     public void writeToParcel(@NonNull Parcel dest, int flags) {
         dest.writeInt(uid);
         dest.writeInt(gid);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof UidGidPair)) return false;
+        UidGidPair that = (UidGidPair) o;
+        return uid == that.uid && gid == that.gid;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(uid, gid);
     }
 }

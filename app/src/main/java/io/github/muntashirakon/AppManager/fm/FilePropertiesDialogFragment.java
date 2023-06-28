@@ -42,6 +42,7 @@ import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.io.UidGidPair;
 import io.github.muntashirakon.util.UiUtils;
 import io.github.muntashirakon.view.TextInputLayoutCompat;
+import io.github.muntashirakon.widget.TextInputTextView;
 
 public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragment {
     public static final String TAG = FilePropertiesDialogFragment.class.getSimpleName();
@@ -56,6 +57,9 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
         fragment.setArguments(args);
         return fragment;
     }
+
+    @Nullable
+    private FileProperties mFileProperties;
 
     @NonNull
     @Override
@@ -74,68 +78,116 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
         TextView summaryView = bodyView.findViewById(R.id.summary);
         MaterialButton moreButton = bodyView.findViewById(R.id.more);
         moreButton.setVisibility(View.GONE);
-        TextView pathView = bodyView.findViewById(R.id.path);
-        TextView typeView = bodyView.findViewById(R.id.type);
-        TextView targetPathView = bodyView.findViewById(R.id.target_file);
-        TextInputLayout targetPathLayout = (TextInputLayout) targetPathView.getParent().getParent();
+        TextInputTextView pathView = bodyView.findViewById(R.id.path);
+        TextInputTextView typeView = bodyView.findViewById(R.id.type);
+        TextInputTextView targetPathView = bodyView.findViewById(R.id.target_file);
+        TextInputLayout targetPathLayout = TextInputLayoutCompat.fromTextInputEditText(targetPathView);
         TextInputLayoutCompat.setEndIconSize(targetPathLayout, endIconSizeSmall);
-        TextInputLayout openWithLayoutView = bodyView.findViewById(R.id.open_with_layout);
-        TextView openWithView = bodyView.findViewById(R.id.open_with);
-        TextView sizeView = bodyView.findViewById(R.id.size);
-        TextView dateCreatedView = bodyView.findViewById(R.id.date_created);
-        TextView dateModifiedView = bodyView.findViewById(R.id.date_modified);
-        TextView dateAccessedView = bodyView.findViewById(R.id.date_accessed);
-        TextView moreInfoView = bodyView.findViewById(R.id.more_info);
-        ((View) moreInfoView.getParent()).setVisibility(View.GONE);
-        TextView modeView = bodyView.findViewById(R.id.file_mode);
-        TextView ownerView = bodyView.findViewById(R.id.owner_id);
-        TextView groupView = bodyView.findViewById(R.id.group_id);
-        TextView selinuxContextView = bodyView.findViewById(R.id.selinux_context);
-
-        // Set values
-        iconView.setImageResource(path.isDirectory() ? R.drawable.ic_folder : R.drawable.ic_file_document);
-        symbolicLinkIconView.setVisibility(path.isSymbolicLink() ? View.VISIBLE : View.GONE);
-        nameView.setText(path.getName());
-        String modificationDate = DateUtils.formatDateTime(requireContext(), path.lastModified());
-        pathView.setText(FmUtils.getDisplayablePath(path));
-        String realFile = null;
-        if (path.isSymbolicLink()) {
-            try {
-                realFile = path.getRealFilePath();
-            } catch (IOException ignore) {
+        TextInputTextView openWithView = bodyView.findViewById(R.id.open_with);
+        TextInputLayout openWithLayout = TextInputLayoutCompat.fromTextInputEditText(openWithView);
+        TextInputLayoutCompat.setEndIconSize(openWithLayout, endIconSizeSmall);
+        TextInputTextView sizeView = bodyView.findViewById(R.id.size);
+        TextInputTextView dateCreatedView = bodyView.findViewById(R.id.date_created);
+        TextInputTextView dateModifiedView = bodyView.findViewById(R.id.date_modified);
+        TextInputLayout dateModifiedLayout = TextInputLayoutCompat.fromTextInputEditText(dateModifiedView);
+        TextInputLayoutCompat.setEndIconSize(dateModifiedLayout, endIconSizeSmall);
+        dateModifiedLayout.setEndIconOnClickListener(v -> {
+            if (mFileProperties != null) {
+                viewModel.setModificationTime(mFileProperties, System.currentTimeMillis());
             }
-        }
-        if (realFile != null) {
-            targetPathView.setText(realFile);
-        } else {
-            ((View) targetPathView.getParent()).setVisibility(View.GONE);
-        }
+        });
+        TextInputTextView dateAccessedView = bodyView.findViewById(R.id.date_accessed);
+        TextInputLayout dateAccessedLayout = TextInputLayoutCompat.fromTextInputEditText(dateAccessedView);
+        dateAccessedLayout.setEndIconOnClickListener(v -> {
+            if (mFileProperties != null) {
+                // TODO: 28/6/23 Set last access
+                // viewModel.setLastAccessTime(mFileProperties);
+            }
+        });
+        TextInputLayoutCompat.setEndIconSize(dateAccessedLayout, endIconSizeSmall);
+        TextInputTextView moreInfoView = bodyView.findViewById(R.id.more_info);
+        TextInputLayoutCompat.fromTextInputEditText(moreInfoView).setVisibility(View.GONE);
+        TextInputTextView modeView = bodyView.findViewById(R.id.file_mode);
+        TextInputTextView ownerView = bodyView.findViewById(R.id.owner_id);
+        TextInputTextView groupView = bodyView.findViewById(R.id.group_id);
+        TextInputTextView selinuxContextView = bodyView.findViewById(R.id.selinux_context);
+
         // TODO: 16/11/22 Handle open with
-        openWithLayoutView.setVisibility(View.GONE);
-        dateModifiedView.setText(modificationDate);
-        dateCreatedView.setText("--");
-        dateAccessedView.setText("--");
-        long creationTime = path.creationTime();
-        long lastAccessTime = path.lastAccess();
-        dateCreatedView.setText(creationTime > 0 ? DateUtils.formatDateTime(requireContext(), creationTime) : "--");
-        dateAccessedView.setText(lastAccessTime > 0 ? DateUtils.formatDateTime(requireContext(), lastAccessTime) : "--");
-        int mode = path.getMode();
-        modeView.setText(mode != 0 ? getFormattedMode(mode) : "--");
-        UidGidPair uidGidPair = path.getUidGid();
-        // TODO: 7/12/22 Display owner and group name using syscall (setpwent, getpwent, endpwent)
-        if (uidGidPair == null) {
-            ownerView.setText("--");
-            groupView.setText("--");
-        }
-        String context = path.getSelinuxContext();
-        selinuxContextView.setText(context != null ? context : "--");
+        openWithLayout.setVisibility(View.GONE);
 
         // Live data
-        viewModel.getFileSizeLiveData().observe(getViewLifecycleOwner(), size -> {
-            summaryView.setText(String.format(Locale.getDefault(), "%s • %s", modificationDate,
-                    Formatter.formatShortFileSize(requireContext(), size)));
-            sizeView.setText(String.format(Locale.getDefault(), "%s (%s bytes)",
-                    Formatter.formatShortFileSize(requireContext(), size), size));
+        viewModel.getFilePropertiesLiveData().observe(getViewLifecycleOwner(), fileProperties -> {
+            boolean noInit = mFileProperties == null;
+            if (noInit || mFileProperties.isDirectory != fileProperties.isDirectory) {
+                if (fileProperties.isDirectory) {
+                    iconView.setImageResource(R.drawable.ic_folder);
+                }
+            }
+            if (noInit || mFileProperties.isSymlink != fileProperties.isSymlink) {
+                symbolicLinkIconView.setVisibility(fileProperties.isSymlink ? View.VISIBLE : View.GONE);
+            }
+            if (noInit || !Objects.equals(mFileProperties.name, fileProperties.name)) {
+                nameView.setText(fileProperties.name);
+            }
+            if (noInit || !Objects.equals(mFileProperties.readablePath, fileProperties.readablePath)) {
+                pathView.setText(fileProperties.readablePath);
+            }
+            if (noInit || !Objects.equals(mFileProperties.targetPath, fileProperties.targetPath)) {
+                if (fileProperties.targetPath != null) {
+                    targetPathView.setText(fileProperties.targetPath);
+                } else {
+                    TextInputLayoutCompat.fromTextInputEditText(targetPathView).setVisibility(View.GONE);
+                }
+            }
+            if (noInit || mFileProperties.size != fileProperties.size
+                    || mFileProperties.lastModified != fileProperties.lastModified) {
+                if (fileProperties.size != -1) {
+                    summaryView.setText(String.format(Locale.getDefault(), "%s • %s",
+                            DateUtils.formatDateTime(requireContext(), fileProperties.lastModified),
+                            Formatter.formatShortFileSize(requireContext(), fileProperties.size)));
+                    sizeView.setText(String.format(Locale.getDefault(), "%s (%s bytes)",
+                            Formatter.formatShortFileSize(requireContext(), fileProperties.size), fileProperties.size));
+                }
+            }
+            if (noInit || mFileProperties.lastModified != fileProperties.lastModified) {
+                dateModifiedView.setText(DateUtils.formatDateTime(requireContext(), fileProperties.lastModified));
+            }
+            if (noInit || mFileProperties.creationTime != fileProperties.creationTime) {
+                dateCreatedView.setText(fileProperties.creationTime > 0 ? DateUtils.formatDateTime(requireContext(),
+                        fileProperties.creationTime) : "--");
+            }
+            if (noInit || mFileProperties.lastAccess != fileProperties.lastAccess) {
+                dateAccessedView.setText(fileProperties.lastAccess > 0 ? DateUtils.formatDateTime(requireContext(),
+                        fileProperties.lastAccess) : "--");
+            }
+            if (noInit || mFileProperties.canRead != fileProperties.canRead) {
+                // TODO: 28/6/23 Set last access
+                dateAccessedLayout.setEndIconVisible(false);
+            }
+            if (noInit || mFileProperties.canWrite != fileProperties.canWrite) {
+                dateModifiedLayout.setEndIconVisible(fileProperties.canWrite);
+            }
+            if (noInit || mFileProperties.mode != fileProperties.mode) {
+                modeView.setText(fileProperties.mode != 0 ? getFormattedMode(fileProperties.mode) : "--");
+            }
+            if (noInit || mFileProperties.uidGidPair != fileProperties.uidGidPair) {
+                if (fileProperties.uidGidPair == null) {
+                    ownerView.setText("--");
+                    groupView.setText("--");
+                }
+            }
+            if (noInit || !Objects.equals(mFileProperties.context, fileProperties.context)) {
+                selinuxContextView.setText(fileProperties.context != null ? fileProperties.context : "--");
+            }
+            mFileProperties = new FileProperties(fileProperties);
+            // Load others
+            if (fileProperties.size == -1) {
+                viewModel.loadFileSize(fileProperties);
+            }
+            if (fileProperties.uidGidPair != null) {
+                viewModel.loadOwnerInfo(fileProperties.uidGidPair.uid);
+                viewModel.loadGroupInfo(fileProperties.uidGidPair.gid);
+            }
         });
         viewModel.getFmItemLiveData().observe(getViewLifecycleOwner(), fmItem -> {
             ImageLoader.getInstance().displayImage(fmItem.tag, iconView, new FmIconFetcher(fmItem));
@@ -150,27 +202,25 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
                     typeView.setText(name);
                 }
                 if (message != null) {
-                    ((View) moreInfoView.getParent()).setVisibility(View.VISIBLE);
+                    TextInputLayoutCompat.fromTextInputEditText(moreInfoView).setVisibility(View.VISIBLE);
                     moreInfoView.setText(message);
                 }
             }
         });
         viewModel.getOwnerLiveData().observe(getViewLifecycleOwner(), ownerName -> {
-            assert uidGidPair != null;
-            ownerView.setText(String.format(Locale.ROOT, "%s (%d)", ownerName, uidGidPair.uid));
+            assert mFileProperties != null;
+            assert mFileProperties.uidGidPair != null;
+            ownerView.setText(String.format(Locale.ROOT, "%s (%d)", ownerName, mFileProperties.uidGidPair.uid));
         });
         viewModel.getGroupLiveData().observe(getViewLifecycleOwner(), groupName -> {
-            assert uidGidPair != null;
-            groupView.setText(String.format(Locale.ROOT, "%s (%d)", groupName, uidGidPair.gid));
+            assert mFileProperties != null;
+            assert mFileProperties.uidGidPair != null;
+            groupView.setText(String.format(Locale.ROOT, "%s (%d)", groupName, mFileProperties.uidGidPair.gid));
         });
 
         // Load live data
-        viewModel.loadFileSize(path);
+        viewModel.loadFileProperties(path);
         viewModel.loadFmItem(path);
-        if (uidGidPair != null) {
-            viewModel.loadOwnerInfo(uidGidPair.uid);
-            viewModel.loadGroupInfo(uidGidPair.gid);
-        }
     }
 
     @SuppressWarnings("OctalInteger")
@@ -193,13 +243,13 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
         } else if (special) {
             execMode = specialChar.toUpperCase(Locale.ROOT);
         } else execMode = "-";
-        return  ((mode & 04) != 0 ? "r" : "-") +
+        return ((mode & 04) != 0 ? "r" : "-") +
                 ((mode & 02) != 0 ? "w" : "-") +
                 execMode;
     }
 
     public static class FilePropertiesViewModel extends AndroidViewModel {
-        private final MutableLiveData<Long> mFileSizeLiveData = new MutableLiveData<>();
+        private final MutableLiveData<FileProperties> mFilePropertiesLiveData = new MutableLiveData<>();
         private final MutableLiveData<FmItem> mFmItemLiveData = new MutableLiveData<>();
         private final MutableLiveData<String> mOwnerLiveData = new MutableLiveData<>();
         private final MutableLiveData<String> mGroupLiveData = new MutableLiveData<>();
@@ -220,10 +270,57 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
             super.onCleared();
         }
 
-        public void loadFileSize(@NonNull Path path) {
+        public void setModificationTime(@NonNull FileProperties properties, long time) {
+            ThreadUtils.postOnBackgroundThread(() -> {
+                if (properties.path.setLastModified(time)) {
+                    FileProperties newProperties = new FileProperties(properties);
+                    newProperties.lastModified = newProperties.path.lastModified();
+                    mFilePropertiesLiveData.postValue(newProperties);
+                }
+            });
+        }
+
+        public void loadFileProperties(@NonNull Path path) {
+            ThreadUtils.postOnBackgroundThread(() -> {
+                FileProperties properties = new FileProperties();
+                Path[] children = path.listFiles();
+                int count = children.length;
+                int folderCount = 0;
+                for (Path child : children) {
+                    if (child.isDirectory()) {
+                        ++folderCount;
+                    }
+                }
+                properties.path = path;
+                properties.name = path.getName();
+                properties.readablePath = FmUtils.getDisplayablePath(path);
+                properties.folderCount = folderCount;
+                properties.fileCount = count - folderCount;
+                properties.isDirectory = path.isDirectory();
+                properties.isSymlink = path.isSymbolicLink();
+                properties.canRead = path.canRead();
+                properties.canWrite = path.canWrite();
+                properties.lastAccess = path.lastAccess();
+                properties.lastModified = path.lastModified();
+                properties.creationTime = path.creationTime();
+                properties.mode = path.getMode();
+                properties.uidGidPair = path.getUidGid();
+                properties.context = path.getSelinuxContext();
+                if (properties.isSymlink) {
+                    try {
+                        properties.targetPath = path.getRealFilePath();
+                    } catch (IOException ignore) {
+                    }
+                }
+                mFilePropertiesLiveData.postValue(properties);
+            });
+        }
+
+        public void loadFileSize(@NonNull FileProperties properties) {
             sizeResult = ThreadUtils.postOnBackgroundThread(() -> {
-                long size = Paths.size(path);
-                mFileSizeLiveData.postValue(size);
+                FileProperties newProperties = new FileProperties(properties);
+                newProperties.size = Paths.size(newProperties.path);
+                mFilePropertiesLiveData.postValue(newProperties);
             });
         }
 
@@ -249,8 +346,8 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
             });
         }
 
-        public LiveData<Long> getFileSizeLiveData() {
-            return mFileSizeLiveData;
+        public LiveData<FileProperties> getFilePropertiesLiveData() {
+            return mFilePropertiesLiveData;
         }
 
         public LiveData<FmItem> getFmItemLiveData() {
@@ -263,6 +360,52 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
 
         public LiveData<String> getGroupLiveData() {
             return mGroupLiveData;
+        }
+    }
+
+    private static class FileProperties {
+        public Path path;
+        public String name;
+        public String readablePath;
+        public int folderCount;
+        public int fileCount;
+        public boolean isDirectory;
+        public boolean isSymlink;
+        public boolean canRead;
+        public boolean canWrite;
+        public long size = -1;
+        public long lastAccess;
+        public long lastModified;
+        public long creationTime;
+        public int mode;
+        @Nullable
+        public UidGidPair uidGidPair;
+        @Nullable
+        public String context;
+        @Nullable
+        public String targetPath;
+
+        public FileProperties() {
+        }
+
+        public FileProperties(@NonNull FileProperties fileProperties) {
+            path = fileProperties.path;
+            name = fileProperties.name;
+            readablePath = fileProperties.readablePath;
+            folderCount = fileProperties.folderCount;
+            fileCount = fileProperties.fileCount;
+            isDirectory = fileProperties.isDirectory;
+            isSymlink = fileProperties.isSymlink;
+            canRead = fileProperties.canRead;
+            canWrite = fileProperties.canWrite;
+            size = fileProperties.size;
+            lastAccess = fileProperties.lastAccess;
+            lastModified = fileProperties.lastModified;
+            creationTime = fileProperties.creationTime;
+            mode = fileProperties.mode;
+            uidGidPair = fileProperties.uidGidPair;
+            context = fileProperties.context;
+            targetPath = fileProperties.targetPath;
         }
     }
 }
