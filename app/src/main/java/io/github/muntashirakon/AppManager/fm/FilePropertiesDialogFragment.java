@@ -40,6 +40,8 @@ import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.PathContentInfo;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.io.UidGidPair;
+import io.github.muntashirakon.util.UiUtils;
+import io.github.muntashirakon.view.TextInputLayoutCompat;
 
 public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragment {
     public static final String TAG = FilePropertiesDialogFragment.class.getSimpleName();
@@ -65,8 +67,9 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
     public void onBodyInitialized(@NonNull View bodyView, @Nullable Bundle savedInstanceState) {
         FilePropertiesViewModel viewModel = new ViewModelProvider(this).get(FilePropertiesViewModel.class);
         Path path = Paths.get(Objects.requireNonNull(BundleCompat.getParcelable(requireArguments(), ARG_PATH, Uri.class)));
+        int endIconSizeSmall = UiUtils.dpToPx(requireContext(), 34 - 16);
         ImageView iconView = bodyView.findViewById(android.R.id.icon);
-        ImageView symbolicLinkiconView = bodyView.findViewById(R.id.symolic_link_icon);
+        ImageView symbolicLinkIconView = bodyView.findViewById(R.id.symolic_link_icon);
         TextView nameView = bodyView.findViewById(R.id.name);
         TextView summaryView = bodyView.findViewById(R.id.summary);
         MaterialButton moreButton = bodyView.findViewById(R.id.more);
@@ -74,6 +77,8 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
         TextView pathView = bodyView.findViewById(R.id.path);
         TextView typeView = bodyView.findViewById(R.id.type);
         TextView targetPathView = bodyView.findViewById(R.id.target_file);
+        TextInputLayout targetPathLayout = (TextInputLayout) targetPathView.getParent().getParent();
+        TextInputLayoutCompat.setEndIconSize(targetPathLayout, endIconSizeSmall);
         TextInputLayout openWithLayoutView = bodyView.findViewById(R.id.open_with_layout);
         TextView openWithView = bodyView.findViewById(R.id.open_with);
         TextView sizeView = bodyView.findViewById(R.id.size);
@@ -89,7 +94,7 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
 
         // Set values
         iconView.setImageResource(path.isDirectory() ? R.drawable.ic_folder : R.drawable.ic_file_document);
-        symbolicLinkiconView.setVisibility(path.isSymbolicLink() ? View.VISIBLE : View.GONE);
+        symbolicLinkIconView.setVisibility(path.isSymbolicLink() ? View.VISIBLE : View.GONE);
         nameView.setText(path.getName());
         String modificationDate = DateUtils.formatDateTime(requireContext(), path.lastModified());
         pathView.setText(FmUtils.getDisplayablePath(path));

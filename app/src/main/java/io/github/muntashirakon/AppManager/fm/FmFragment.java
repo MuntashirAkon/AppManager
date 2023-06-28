@@ -105,6 +105,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
     private FmPathListAdapter mPathListAdapter;
     private FmActivity mActivity;
 
+    @Nullable
     private FolderShortInfo mFolderShortInfo;
 
     private final OnBackPressedCallback mBackPressedCallback = new OnBackPressedCallback(true) {
@@ -875,8 +876,8 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         @Override
         public void onSelectionChange(int selectionCount) {
             boolean nonZeroSelection = selectionCount > 0;
-            boolean canRead = mFolderShortInfo.canRead;
-            boolean canWrite = mFolderShortInfo.canWrite;
+            boolean canRead = mFolderShortInfo != null && mFolderShortInfo.canRead;
+            boolean canWrite = mFolderShortInfo != null && mFolderShortInfo.canWrite;
             mShareMenu.setEnabled(nonZeroSelection && canRead);
             mRenameMenu.setEnabled(nonZeroSelection && canWrite);
             mDeleteMenu.setEnabled(nonZeroSelection && canWrite);
