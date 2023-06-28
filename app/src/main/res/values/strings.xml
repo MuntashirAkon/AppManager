@@ -1417,4 +1417,6 @@
     <string name="moved_successfully">Moved</string>
     <string name="failed_to_copy_specified_file">Could not copy “%1$s”.</string>
     <string name="failed_to_delete_specified_file_after_copying">Could not delete “%1$s” after copying it, possibly due to not enough permission.</string>
+    <string name="title_change_selinux_context">Change SELinux context</string>
+    <string name="apply_recursively">Apply to enclosed files</string>
 </resources>

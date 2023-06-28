@@ -5,7 +5,9 @@ package io.github.muntashirakon.AppManager.fm;
 import android.app.Application;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.text.format.Formatter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,11 +33,14 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.BundleCompat;
 import io.github.muntashirakon.AppManager.fm.icons.FmIconFetcher;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
+import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.users.Groups;
 import io.github.muntashirakon.AppManager.users.Owners;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.dialog.CapsuleBottomSheetDialogFragment;
+import io.github.muntashirakon.dialog.TextInputDialogBuilder;
+import io.github.muntashirakon.io.ExtendedFile;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.PathContentInfo;
 import io.github.muntashirakon.io.Paths;
@@ -77,9 +82,13 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
     private TextInputLayout mDateAccessedLayout;
     private TextInputTextView mMoreInfoView;
     private TextInputTextView mModeView;
+    private TextInputLayout mModeLayout;
     private TextInputTextView mOwnerView;
+    private TextInputLayout mOwnerLayout;
     private TextInputTextView mGroupView;
+    private TextInputLayout mGroupLayout;
     private TextInputTextView mSelinuxContextView;
+    private TextInputLayout mSelinuxContextLayout;
 
     private FilePropertiesViewModel mViewModel;
     @Nullable
@@ -133,9 +142,25 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
         mMoreInfoView = bodyView.findViewById(R.id.more_info);
         TextInputLayoutCompat.fromTextInputEditText(mMoreInfoView).setVisibility(View.GONE);
         mModeView = bodyView.findViewById(R.id.file_mode);
+        mModeLayout = TextInputLayoutCompat.fromTextInputEditText(mModeView);
+        TextInputLayoutCompat.setEndIconSize(mModeLayout, endIconSizeSmall);
+        // TODO: 28/6/23 Add option to edit mode
+        mModeLayout.setEndIconVisible(false);
         mOwnerView = bodyView.findViewById(R.id.owner_id);
+        mOwnerLayout = TextInputLayoutCompat.fromTextInputEditText(mOwnerView);
+        TextInputLayoutCompat.setEndIconSize(mOwnerLayout, endIconSizeSmall);
+        // TODO: 28/6/23 Add option to edit UID
+        mOwnerLayout.setEndIconVisible(false);
         mGroupView = bodyView.findViewById(R.id.group_id);
+        mGroupLayout = TextInputLayoutCompat.fromTextInputEditText(mGroupView);
+        TextInputLayoutCompat.setEndIconSize(mGroupLayout, endIconSizeSmall);
+        // TODO: 28/6/23 Add option to edit GID
+        mGroupLayout.setEndIconVisible(false);
         mSelinuxContextView = bodyView.findViewById(R.id.selinux_context);
+        mSelinuxContextLayout = TextInputLayoutCompat.fromTextInputEditText(mSelinuxContextView);
+        TextInputLayoutCompat.setEndIconSize(mSelinuxContextLayout, endIconSizeSmall);
+        mSelinuxContextLayout.setEndIconVisible(Ops.isRoot());
+        mSelinuxContextLayout.setEndIconOnClickListener(v -> displaySeContextUpdater());
 
         // Live data
         mViewModel.getFilePropertiesLiveData().observe(getViewLifecycleOwner(), this::updateProperties);
@@ -247,6 +272,23 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
         }
     }
 
+    private void displaySeContextUpdater() {
+        assert mFileProperties != null;
+        new TextInputDialogBuilder(requireContext(), null)
+                .setTitle(R.string.title_change_selinux_context)
+                .setInputText(mFileProperties.context)
+                .setCheckboxLabel(R.string.apply_recursively)
+                .setPositiveButton(R.string.ok, (dialog, which, context, recursive) -> {
+                    if (!TextUtils.isEmpty(context)) {
+                        mViewModel.setSeContext(mFileProperties, context.toString().trim(), recursive);
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .setNeutralButton(R.string.restore, (dialog, which, context, recursive) ->
+                        mViewModel.restorecon(mFileProperties, recursive))
+                .show();
+    }
+
     @SuppressWarnings("OctalInteger")
     @NonNull
     private String getFormattedMode(int mode) {
@@ -292,6 +334,40 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
                 sizeResult.cancel(true);
             }
             super.onCleared();
+        }
+
+        public void restorecon(@NonNull FileProperties properties, boolean recursive) {
+            ThreadUtils.postOnBackgroundThread(() -> {
+                ExtendedFile file = properties.path.getFile();
+                if (file == null) {
+                    return;
+                }
+                if (recursive) {
+                    restoreconRecursive(file);
+                }
+                if (file.restoreSelinuxContext()) {
+                    FileProperties newProperties = new FileProperties(properties);
+                    newProperties.context = newProperties.path.getSelinuxContext();
+                    mFilePropertiesLiveData.postValue(newProperties);
+                }
+            });
+        }
+
+        public void setSeContext(@NonNull FileProperties properties, @NonNull String newContext, boolean recursive) {
+            ThreadUtils.postOnBackgroundThread(() -> {
+                ExtendedFile file = properties.path.getFile();
+                if (file == null) {
+                    return;
+                }
+                if (recursive) {
+                    setSeContextRecursive(file, newContext);
+                }
+                if (file.setSelinuxContext(newContext)) {
+                    FileProperties newProperties = new FileProperties(properties);
+                    newProperties.context = newProperties.path.getSelinuxContext();
+                    mFilePropertiesLiveData.postValue(newProperties);
+                }
+            });
         }
 
         public void setModificationTime(@NonNull FileProperties properties, long time) {
@@ -394,6 +470,48 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
 
         public LiveData<String> getGroupLiveData() {
             return mGroupLiveData;
+        }
+
+        private boolean restoreconRecursive(@NonNull ExtendedFile dir) {
+            if (dir.isSymlink()) {
+                // Avoid following symbolic links
+                return true;
+            }
+            ExtendedFile[] files = dir.listFiles();
+            boolean success = true;
+            if (files != null) {
+                for (ExtendedFile file : files) {
+                    if (file.isDirectory()) {
+                        success &= restoreconRecursive(file);
+                    }
+                    if (!file.restoreSelinuxContext()) {
+                        Log.w(TAG, "Failed to restorecon on " + file);
+                        success = false;
+                    }
+                }
+            }
+            return success;
+        }
+
+        private boolean setSeContextRecursive(@NonNull ExtendedFile dir, @NonNull String newContext) {
+            if (dir.isSymlink()) {
+                // Avoid following symbolic links
+                return true;
+            }
+            ExtendedFile[] files = dir.listFiles();
+            boolean success = true;
+            if (files != null) {
+                for (ExtendedFile file : files) {
+                    if (file.isDirectory()) {
+                        success &= setSeContextRecursive(file, newContext);
+                    }
+                    if (!file.setSelinuxContext(newContext)) {
+                        Log.w(TAG, "Failed to set SELinux context on " + file);
+                        success = false;
+                    }
+                }
+            }
+            return success;
         }
     }
 
