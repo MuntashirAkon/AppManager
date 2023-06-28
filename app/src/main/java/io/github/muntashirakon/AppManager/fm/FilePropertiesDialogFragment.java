@@ -58,6 +58,30 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
         return fragment;
     }
 
+    private ImageView mIconView;
+    private ImageView mSymlinkIconView;
+    private TextView mNameView;
+    private TextView mSummaryView;
+    private MaterialButton mMoreButton;
+    private TextInputTextView mPathView;
+    private TextInputTextView mTypeView;
+    private TextInputTextView mTargetPathView;
+    private TextInputLayout mTargetPathLayout;
+    private TextInputTextView mOpenWithView;
+    private TextInputLayout mOpenWithLayout;
+    private TextInputTextView mSizeView;
+    private TextInputTextView mDateCreatedView;
+    private TextInputTextView mDateModifiedView;
+    private TextInputLayout mDateModifiedLayout;
+    private TextInputTextView mDateAccessedView;
+    private TextInputLayout mDateAccessedLayout;
+    private TextInputTextView mMoreInfoView;
+    private TextInputTextView mModeView;
+    private TextInputTextView mOwnerView;
+    private TextInputTextView mGroupView;
+    private TextInputTextView mSelinuxContextView;
+
+    private FilePropertiesViewModel mViewModel;
     @Nullable
     private FileProperties mFileProperties;
 
@@ -69,156 +93,158 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
 
     @Override
     public void onBodyInitialized(@NonNull View bodyView, @Nullable Bundle savedInstanceState) {
-        FilePropertiesViewModel viewModel = new ViewModelProvider(this).get(FilePropertiesViewModel.class);
         Path path = Paths.get(Objects.requireNonNull(BundleCompat.getParcelable(requireArguments(), ARG_PATH, Uri.class)));
+        mViewModel = new ViewModelProvider(this).get(FilePropertiesViewModel.class);
         int endIconSizeSmall = UiUtils.dpToPx(requireContext(), 34 - 16);
-        ImageView iconView = bodyView.findViewById(android.R.id.icon);
-        ImageView symbolicLinkIconView = bodyView.findViewById(R.id.symolic_link_icon);
-        TextView nameView = bodyView.findViewById(R.id.name);
-        TextView summaryView = bodyView.findViewById(R.id.summary);
-        MaterialButton moreButton = bodyView.findViewById(R.id.more);
-        moreButton.setVisibility(View.GONE);
-        TextInputTextView pathView = bodyView.findViewById(R.id.path);
-        TextInputTextView typeView = bodyView.findViewById(R.id.type);
-        TextInputTextView targetPathView = bodyView.findViewById(R.id.target_file);
-        TextInputLayout targetPathLayout = TextInputLayoutCompat.fromTextInputEditText(targetPathView);
-        TextInputLayoutCompat.setEndIconSize(targetPathLayout, endIconSizeSmall);
-        TextInputTextView openWithView = bodyView.findViewById(R.id.open_with);
-        TextInputLayout openWithLayout = TextInputLayoutCompat.fromTextInputEditText(openWithView);
-        TextInputLayoutCompat.setEndIconSize(openWithLayout, endIconSizeSmall);
-        TextInputTextView sizeView = bodyView.findViewById(R.id.size);
-        TextInputTextView dateCreatedView = bodyView.findViewById(R.id.date_created);
-        TextInputTextView dateModifiedView = bodyView.findViewById(R.id.date_modified);
-        TextInputLayout dateModifiedLayout = TextInputLayoutCompat.fromTextInputEditText(dateModifiedView);
-        TextInputLayoutCompat.setEndIconSize(dateModifiedLayout, endIconSizeSmall);
-        dateModifiedLayout.setEndIconOnClickListener(v -> {
-            if (mFileProperties != null) {
-                viewModel.setModificationTime(mFileProperties, System.currentTimeMillis());
-            }
-        });
-        TextInputTextView dateAccessedView = bodyView.findViewById(R.id.date_accessed);
-        TextInputLayout dateAccessedLayout = TextInputLayoutCompat.fromTextInputEditText(dateAccessedView);
-        dateAccessedLayout.setEndIconOnClickListener(v -> {
-            if (mFileProperties != null) {
-                viewModel.setLastAccessTime(mFileProperties, System.currentTimeMillis());
-            }
-        });
-        TextInputLayoutCompat.setEndIconSize(dateAccessedLayout, endIconSizeSmall);
-        TextInputTextView moreInfoView = bodyView.findViewById(R.id.more_info);
-        TextInputLayoutCompat.fromTextInputEditText(moreInfoView).setVisibility(View.GONE);
-        TextInputTextView modeView = bodyView.findViewById(R.id.file_mode);
-        TextInputTextView ownerView = bodyView.findViewById(R.id.owner_id);
-        TextInputTextView groupView = bodyView.findViewById(R.id.group_id);
-        TextInputTextView selinuxContextView = bodyView.findViewById(R.id.selinux_context);
-
+        mIconView = bodyView.findViewById(android.R.id.icon);
+        mSymlinkIconView = bodyView.findViewById(R.id.symolic_link_icon);
+        mNameView = bodyView.findViewById(R.id.name);
+        mSummaryView = bodyView.findViewById(R.id.summary);
+        mMoreButton = bodyView.findViewById(R.id.more);
+        mMoreButton.setVisibility(View.GONE);
+        mPathView = bodyView.findViewById(R.id.path);
+        mTypeView = bodyView.findViewById(R.id.type);
+        mTargetPathView = bodyView.findViewById(R.id.target_file);
+        mTargetPathLayout = TextInputLayoutCompat.fromTextInputEditText(mTargetPathView);
+        TextInputLayoutCompat.setEndIconSize(mTargetPathLayout, endIconSizeSmall);
+        mOpenWithView = bodyView.findViewById(R.id.open_with);
+        mOpenWithLayout = TextInputLayoutCompat.fromTextInputEditText(mOpenWithView);
+        TextInputLayoutCompat.setEndIconSize(mOpenWithLayout, endIconSizeSmall);
         // TODO: 16/11/22 Handle open with
-        openWithLayout.setVisibility(View.GONE);
+        mOpenWithLayout.setVisibility(View.GONE);
+        mSizeView = bodyView.findViewById(R.id.size);
+        mDateCreatedView = bodyView.findViewById(R.id.date_created);
+        mDateModifiedView = bodyView.findViewById(R.id.date_modified);
+        mDateModifiedLayout = TextInputLayoutCompat.fromTextInputEditText(mDateModifiedView);
+        TextInputLayoutCompat.setEndIconSize(mDateModifiedLayout, endIconSizeSmall);
+        mDateModifiedLayout.setEndIconOnClickListener(v -> {
+            if (mFileProperties != null) {
+                mViewModel.setModificationTime(mFileProperties, System.currentTimeMillis());
+            }
+        });
+        mDateAccessedView = bodyView.findViewById(R.id.date_accessed);
+        mDateAccessedLayout = TextInputLayoutCompat.fromTextInputEditText(mDateAccessedView);
+        mDateAccessedLayout.setEndIconOnClickListener(v -> {
+            if (mFileProperties != null) {
+                mViewModel.setLastAccessTime(mFileProperties, System.currentTimeMillis());
+            }
+        });
+        TextInputLayoutCompat.setEndIconSize(mDateAccessedLayout, endIconSizeSmall);
+        mMoreInfoView = bodyView.findViewById(R.id.more_info);
+        TextInputLayoutCompat.fromTextInputEditText(mMoreInfoView).setVisibility(View.GONE);
+        mModeView = bodyView.findViewById(R.id.file_mode);
+        mOwnerView = bodyView.findViewById(R.id.owner_id);
+        mGroupView = bodyView.findViewById(R.id.group_id);
+        mSelinuxContextView = bodyView.findViewById(R.id.selinux_context);
 
         // Live data
-        viewModel.getFilePropertiesLiveData().observe(getViewLifecycleOwner(), fileProperties -> {
-            boolean noInit = mFileProperties == null;
-            if (noInit || mFileProperties.isDirectory != fileProperties.isDirectory) {
-                if (fileProperties.isDirectory) {
-                    iconView.setImageResource(R.drawable.ic_folder);
-                }
-            }
-            if (noInit || mFileProperties.isSymlink != fileProperties.isSymlink) {
-                symbolicLinkIconView.setVisibility(fileProperties.isSymlink ? View.VISIBLE : View.GONE);
-            }
-            if (noInit || !Objects.equals(mFileProperties.name, fileProperties.name)) {
-                nameView.setText(fileProperties.name);
-            }
-            if (noInit || !Objects.equals(mFileProperties.readablePath, fileProperties.readablePath)) {
-                pathView.setText(fileProperties.readablePath);
-            }
-            if (noInit || !Objects.equals(mFileProperties.targetPath, fileProperties.targetPath)) {
-                if (fileProperties.targetPath != null) {
-                    targetPathView.setText(fileProperties.targetPath);
-                } else {
-                    TextInputLayoutCompat.fromTextInputEditText(targetPathView).setVisibility(View.GONE);
-                }
-            }
-            if (noInit || mFileProperties.size != fileProperties.size
-                    || mFileProperties.lastModified != fileProperties.lastModified) {
-                if (fileProperties.size != -1) {
-                    summaryView.setText(String.format(Locale.getDefault(), "%s • %s",
-                            DateUtils.formatDateTime(requireContext(), fileProperties.lastModified),
-                            Formatter.formatShortFileSize(requireContext(), fileProperties.size)));
-                    sizeView.setText(String.format(Locale.getDefault(), "%s (%s bytes)",
-                            Formatter.formatShortFileSize(requireContext(), fileProperties.size), fileProperties.size));
-                }
-            }
-            if (noInit || mFileProperties.lastModified != fileProperties.lastModified) {
-                dateModifiedView.setText(DateUtils.formatDateTime(requireContext(), fileProperties.lastModified));
-            }
-            if (noInit || mFileProperties.creationTime != fileProperties.creationTime) {
-                dateCreatedView.setText(fileProperties.creationTime > 0 ? DateUtils.formatDateTime(requireContext(),
-                        fileProperties.creationTime) : "--");
-            }
-            if (noInit || mFileProperties.lastAccess != fileProperties.lastAccess) {
-                dateAccessedView.setText(fileProperties.lastAccess > 0 ? DateUtils.formatDateTime(requireContext(),
-                        fileProperties.lastAccess) : "--");
-            }
-            if (noInit || mFileProperties.canRead != fileProperties.canRead) {
-                dateAccessedLayout.setEndIconVisible(fileProperties.canRead);
-            }
-            if (noInit || mFileProperties.canWrite != fileProperties.canWrite) {
-                dateModifiedLayout.setEndIconVisible(fileProperties.canWrite);
-            }
-            if (noInit || mFileProperties.mode != fileProperties.mode) {
-                modeView.setText(fileProperties.mode != 0 ? getFormattedMode(fileProperties.mode) : "--");
-            }
-            if (noInit || mFileProperties.uidGidPair != fileProperties.uidGidPair) {
-                if (fileProperties.uidGidPair == null) {
-                    ownerView.setText("--");
-                    groupView.setText("--");
-                }
-            }
-            if (noInit || !Objects.equals(mFileProperties.context, fileProperties.context)) {
-                selinuxContextView.setText(fileProperties.context != null ? fileProperties.context : "--");
-            }
-            mFileProperties = new FileProperties(fileProperties);
-            // Load others
-            if (fileProperties.size == -1) {
-                viewModel.loadFileSize(fileProperties);
-            }
-            if (fileProperties.uidGidPair != null) {
-                viewModel.loadOwnerInfo(fileProperties.uidGidPair.uid);
-                viewModel.loadGroupInfo(fileProperties.uidGidPair.gid);
-            }
-        });
-        viewModel.getFmItemLiveData().observe(getViewLifecycleOwner(), fmItem -> {
-            ImageLoader.getInstance().displayImage(fmItem.tag, iconView, new FmIconFetcher(fmItem));
+        mViewModel.getFilePropertiesLiveData().observe(getViewLifecycleOwner(), this::updateProperties);
+        mViewModel.getFmItemLiveData().observe(getViewLifecycleOwner(), fmItem -> {
+            ImageLoader.getInstance().displayImage(fmItem.tag, mIconView, new FmIconFetcher(fmItem));
             PathContentInfo contentInfo = fmItem.getContentInfo();
             if (contentInfo != null) {
                 String name = contentInfo.getName();
                 String mime = contentInfo.getMimeType();
                 String message = contentInfo.getMessage();
                 if (mime != null) {
-                    typeView.setText(String.format(Locale.ROOT, "%s (%s)", name, mime));
+                    mTypeView.setText(String.format(Locale.ROOT, "%s (%s)", name, mime));
                 } else {
-                    typeView.setText(name);
+                    mTypeView.setText(name);
                 }
                 if (message != null) {
-                    TextInputLayoutCompat.fromTextInputEditText(moreInfoView).setVisibility(View.VISIBLE);
-                    moreInfoView.setText(message);
+                    TextInputLayoutCompat.fromTextInputEditText(mMoreInfoView).setVisibility(View.VISIBLE);
+                    mMoreInfoView.setText(message);
                 }
             }
         });
-        viewModel.getOwnerLiveData().observe(getViewLifecycleOwner(), ownerName -> {
+        mViewModel.getOwnerLiveData().observe(getViewLifecycleOwner(), ownerName -> {
             assert mFileProperties != null;
             assert mFileProperties.uidGidPair != null;
-            ownerView.setText(String.format(Locale.ROOT, "%s (%d)", ownerName, mFileProperties.uidGidPair.uid));
+            mOwnerView.setText(String.format(Locale.ROOT, "%s (%d)", ownerName, mFileProperties.uidGidPair.uid));
         });
-        viewModel.getGroupLiveData().observe(getViewLifecycleOwner(), groupName -> {
+        mViewModel.getGroupLiveData().observe(getViewLifecycleOwner(), groupName -> {
             assert mFileProperties != null;
             assert mFileProperties.uidGidPair != null;
-            groupView.setText(String.format(Locale.ROOT, "%s (%d)", groupName, mFileProperties.uidGidPair.gid));
+            mGroupView.setText(String.format(Locale.ROOT, "%s (%d)", groupName, mFileProperties.uidGidPair.gid));
         });
 
         // Load live data
-        viewModel.loadFileProperties(path);
-        viewModel.loadFmItem(path);
+        mViewModel.loadFileProperties(path);
+        mViewModel.loadFmItem(path);
+    }
+
+    private void updateProperties(@NonNull FileProperties fileProperties) {
+        boolean noInit = mFileProperties == null;
+        boolean uidGidChanged = noInit || mFileProperties.uidGidPair != fileProperties.uidGidPair;
+        if (noInit || mFileProperties.isDirectory != fileProperties.isDirectory) {
+            if (fileProperties.isDirectory) {
+                mIconView.setImageResource(R.drawable.ic_folder);
+            }
+        }
+        if (noInit || mFileProperties.isSymlink != fileProperties.isSymlink) {
+            mSymlinkIconView.setVisibility(fileProperties.isSymlink ? View.VISIBLE : View.GONE);
+        }
+        if (noInit || !Objects.equals(mFileProperties.name, fileProperties.name)) {
+            mNameView.setText(fileProperties.name);
+        }
+        if (noInit || !Objects.equals(mFileProperties.readablePath, fileProperties.readablePath)) {
+            mPathView.setText(fileProperties.readablePath);
+        }
+        if (noInit || !Objects.equals(mFileProperties.targetPath, fileProperties.targetPath)) {
+            if (fileProperties.targetPath != null) {
+                mTargetPathView.setText(fileProperties.targetPath);
+            } else {
+                TextInputLayoutCompat.fromTextInputEditText(mTargetPathView).setVisibility(View.GONE);
+            }
+        }
+        if (noInit || mFileProperties.size != fileProperties.size
+                || mFileProperties.lastModified != fileProperties.lastModified) {
+            if (fileProperties.size != -1) {
+                mSummaryView.setText(String.format(Locale.getDefault(), "%s • %s",
+                        DateUtils.formatDateTime(requireContext(), fileProperties.lastModified),
+                        Formatter.formatShortFileSize(requireContext(), fileProperties.size)));
+                mSizeView.setText(String.format(Locale.getDefault(), "%s (%s bytes)",
+                        Formatter.formatShortFileSize(requireContext(), fileProperties.size), fileProperties.size));
+            }
+        }
+        if (noInit || mFileProperties.lastModified != fileProperties.lastModified) {
+            mDateModifiedView.setText(DateUtils.formatDateTime(requireContext(), fileProperties.lastModified));
+        }
+        if (noInit || mFileProperties.creationTime != fileProperties.creationTime) {
+            mDateCreatedView.setText(fileProperties.creationTime > 0 ? DateUtils.formatDateTime(requireContext(),
+                    fileProperties.creationTime) : "--");
+        }
+        if (noInit || mFileProperties.lastAccess != fileProperties.lastAccess) {
+            mDateAccessedView.setText(fileProperties.lastAccess > 0 ? DateUtils.formatDateTime(requireContext(),
+                    fileProperties.lastAccess) : "--");
+        }
+        if (noInit || mFileProperties.canRead != fileProperties.canRead) {
+            mDateAccessedLayout.setEndIconVisible(fileProperties.canRead);
+        }
+        if (noInit || mFileProperties.canWrite != fileProperties.canWrite) {
+            mDateModifiedLayout.setEndIconVisible(fileProperties.canWrite);
+        }
+        if (noInit || mFileProperties.mode != fileProperties.mode) {
+            mModeView.setText(fileProperties.mode != 0 ? getFormattedMode(fileProperties.mode) : "--");
+        }
+        if (uidGidChanged) {
+            if (fileProperties.uidGidPair == null) {
+                mOwnerView.setText("--");
+                mGroupView.setText("--");
+            }
+        }
+        if (noInit || !Objects.equals(mFileProperties.context, fileProperties.context)) {
+            mSelinuxContextView.setText(fileProperties.context != null ? fileProperties.context : "--");
+        }
+        mFileProperties = fileProperties;
+        // Load others
+        if (fileProperties.size == -1) {
+            mViewModel.loadFileSize(fileProperties);
+        }
+        if (fileProperties.uidGidPair != null && uidGidChanged) {
+            mViewModel.loadOwnerInfo(fileProperties.uidGidPair.uid);
+            mViewModel.loadGroupInfo(fileProperties.uidGidPair.gid);
+        }
     }
 
     @SuppressWarnings("OctalInteger")
