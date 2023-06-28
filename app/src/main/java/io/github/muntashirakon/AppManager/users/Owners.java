@@ -11,8 +11,8 @@ import androidx.annotation.NonNull;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.github.muntashirakon.AppManager.compat.OsCompat;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
+import io.github.muntashirakon.compat.system.OsCompat;
 
 public class Owners {
     private static final Map<Integer, String> sUidOwnerMap = new HashMap<>();

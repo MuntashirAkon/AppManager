@@ -15,6 +15,9 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+import io.github.muntashirakon.compat.system.OsCompat;
+import io.github.muntashirakon.compat.system.StructTimespec;
+
 // Copyright 2022 John "topjohnwu" Wu
 // Copyright 2022 Muntashir Al-Islam
 class LocalFile extends FileImpl<LocalFile> {
@@ -134,6 +137,20 @@ class LocalFile extends FileImpl<LocalFile> {
     @Override
     public long lastAccess() throws ErrnoException {
         return Os.lstat(getPath()).st_atime * 1000;
+    }
+
+    @Override
+    public boolean setLastAccess(long millis) {
+        long seconds_part = millis / 1_000;
+        long nanoseconds_part = (millis % 1_000) * 1_000_000;
+        StructTimespec atime = new StructTimespec(seconds_part, nanoseconds_part);
+        StructTimespec mtime = new StructTimespec(0, OsCompat.UTIME_OMIT);
+        try {
+            OsCompat.utimensat(OsCompat.AT_FDCWD, getPath(), atime, mtime, OsCompat.AT_SYMLINK_NOFOLLOW);
+            return true;
+        } catch (ErrnoException e) {
+            return false;
+        }
     }
 
     @NonNull

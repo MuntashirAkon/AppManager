@@ -251,6 +251,16 @@ class RemoteFile extends FileImpl<RemoteFile> {
     }
 
     @Override
+    public boolean setLastAccess(long millis) {
+        try {
+            fs.setLastAccess(getPath(), millis).checkErrnoException();
+            return true;
+        } catch (RemoteException | ErrnoException e) {
+            return false;
+        }
+    }
+
+    @Override
     public long length() {
         try {
             return fs.length(getPath());

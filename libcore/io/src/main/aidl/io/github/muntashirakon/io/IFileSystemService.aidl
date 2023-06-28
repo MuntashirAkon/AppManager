@@ -23,6 +23,7 @@ interface IFileSystemService {
     boolean mkdirs(String path);
     boolean renameTo(String path, String dest);
     boolean setLastModified(String path, long time);
+    /* (err) */ IOResult setLastAccess(String path, long time);
     boolean setReadOnly(String path);
     boolean setWritable(String path, boolean writable, boolean ownerOnly);
     boolean setReadable(String path, boolean readable, boolean ownerOnly);

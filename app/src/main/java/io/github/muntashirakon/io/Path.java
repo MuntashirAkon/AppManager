@@ -1359,6 +1359,17 @@ public class Path implements Comparable<Path> {
         return 0;
     }
 
+    public boolean setLastAccess(long millis) {
+        if (mDocumentFile instanceof ExtendedRawDocumentFile) {
+            return Objects.requireNonNull(getFile()).setLastAccess(millis);
+        }
+//        // TODO: 28/6/23
+//        if (mDocumentFile instanceof VirtualDocumentFile) {
+//            return ((VirtualDocumentFile) mDocumentFile).setLastAccess();
+//        }
+        return false;
+    }
+
     public long creationTime() {
         if (mDocumentFile instanceof ExtendedRawDocumentFile) {
             try {

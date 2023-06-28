@@ -27,6 +27,8 @@ android {
 }
 
 dependencies {
+    compileOnly project(path: ':hiddenapi')
+
     api "androidx.annotation:annotation:${annotation_version}"
 
     // Unit Testing

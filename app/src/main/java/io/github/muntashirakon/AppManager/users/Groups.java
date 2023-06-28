@@ -10,9 +10,9 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-import io.github.muntashirakon.AppManager.compat.OsCompat;
-import io.github.muntashirakon.AppManager.compat.StructGroup;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
+import io.github.muntashirakon.compat.system.OsCompat;
+import io.github.muntashirakon.compat.system.StructGroup;
 
 public class Groups {
     private static final int AID_USER_OFFSET = 100000;

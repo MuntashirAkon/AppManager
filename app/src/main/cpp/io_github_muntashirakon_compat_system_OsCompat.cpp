@@ -6,8 +6,10 @@
 #include <grp.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <fcntl.h>
+#include <sys/stat.h>
 
-#include "io_github_muntashirakon_AppManager_compat_OsCompat.h"
+#include "io_github_muntashirakon_compat_system_OsCompat.h"
 
 // Converted from https://github.com/zhanghai/MaterialFiles/blob/faf6c1fe526e0bae3048070a8d1b742ff62c8e6f/app/src/main/jni/syscalls.c
 // Copyright (c) 2018 Hai Zhang <dreaming.in.code.zh@gmail.com>
@@ -152,7 +154,7 @@ static jclass getStringClass(JNIEnv *env) {
 static jclass getStructGroupClass(JNIEnv *env) {
     static jclass structGroupClass = NULL;
     if (!structGroupClass) {
-        structGroupClass = findClass(env, "io/github/muntashirakon/AppManager/compat/StructGroup");
+        structGroupClass = findClass(env, "io/github/muntashirakon/compat/system/StructGroup");
     }
     return structGroupClass;
 }
@@ -164,6 +166,23 @@ static jclass getStructPasswdClass(JNIEnv *env) {
     }
     return structPasswdClass;
 }
+
+static jclass getStructTimespecClass(JNIEnv *env) {
+    static jclass structTimespecClass = NULL;
+    if (!structTimespecClass) {
+        structTimespecClass = findClass(env, "io/github/muntashirakon/compat/system/StructTimespec");
+    }
+    return structTimespecClass;
+}
+
+static jclass getOsCompatClass(JNIEnv *env) {
+    static jclass osCompatClass = NULL;
+    if (!osCompatClass) {
+        osCompatClass = findClass(env, "io/github/muntashirakon/compat/system/OsCompat");
+    }
+    return osCompatClass;
+}
+
 
 static jobject newStructGroup(JNIEnv *env, const struct group *group) {
     static jmethodID constructor = NULL;
@@ -230,9 +249,24 @@ static jobject newStructPasswd(JNIEnv *env, const struct passwd *passwd) {
     return struct_passwd;
 }
 
+static struct timespec javaStructTimespecToTimespec(JNIEnv *env, jobject obj) {
+    static jfieldID tv_sec = NULL;
+    static jfieldID tv_nsec = NULL;
+    if (!tv_sec) {
+        tv_sec = env->GetFieldID(getStructTimespecClass(env), "tv_sec", "J");
+    }
+    if (!tv_nsec) {
+        tv_nsec = env->GetFieldID(getStructTimespecClass(env), "tv_nsec", "J");
+    }
+    struct timespec time;
+    time.tv_sec = (time_t) env->GetLongField(obj, tv_sec);
+    time.tv_nsec = env->GetLongField(obj, tv_nsec);
+    return time;
+}
+
 /** OsCompat **/
 
-JNIEXPORT void JNICALL Java_io_github_muntashirakon_AppManager_compat_OsCompat_setgrent
+JNIEXPORT void JNICALL Java_io_github_muntashirakon_compat_system_OsCompat_setgrent
   (JNIEnv *env, jclass clazz) {
     TEMP_FAILURE_RETRY_V(setgrent());
     if (errno) {
@@ -240,7 +274,7 @@ JNIEXPORT void JNICALL Java_io_github_muntashirakon_AppManager_compat_OsCompat_s
     }
 }
 
-JNIEXPORT void JNICALL Java_io_github_muntashirakon_AppManager_compat_OsCompat_setpwent
+JNIEXPORT void JNICALL Java_io_github_muntashirakon_compat_system_OsCompat_setpwent
   (JNIEnv *env, jclass clazz) {
     TEMP_FAILURE_RETRY_V(setpwent());
     if (errno) {
@@ -248,7 +282,7 @@ JNIEXPORT void JNICALL Java_io_github_muntashirakon_AppManager_compat_OsCompat_s
     }
 }
 
-JNIEXPORT jobject JNICALL Java_io_github_muntashirakon_AppManager_compat_OsCompat_getgrent
+JNIEXPORT jobject JNICALL Java_io_github_muntashirakon_compat_system_OsCompat_getgrent
   (JNIEnv *env, jclass clazz) {
     while (true) {
         struct group *group = TEMP_FAILURE_RETRY_N(getgrent());
@@ -275,7 +309,7 @@ JNIEXPORT jobject JNICALL Java_io_github_muntashirakon_AppManager_compat_OsCompa
     }
 }
 
-JNIEXPORT jobject JNICALL Java_io_github_muntashirakon_AppManager_compat_OsCompat_getpwent
+JNIEXPORT jobject JNICALL Java_io_github_muntashirakon_compat_system_OsCompat_getpwent
   (JNIEnv *env, jclass clazz) {
     while (true) {
         struct passwd *passwd = TEMP_FAILURE_RETRY_N(getpwent());
@@ -297,7 +331,7 @@ JNIEXPORT jobject JNICALL Java_io_github_muntashirakon_AppManager_compat_OsCompa
     }
 }
 
-JNIEXPORT void JNICALL Java_io_github_muntashirakon_AppManager_compat_OsCompat_endgrent
+JNIEXPORT void JNICALL Java_io_github_muntashirakon_compat_system_OsCompat_endgrent
   (JNIEnv *env, jclass clazz) {
     TEMP_FAILURE_RETRY_V(endgrent());
     if (errno) {
@@ -305,10 +339,36 @@ JNIEXPORT void JNICALL Java_io_github_muntashirakon_AppManager_compat_OsCompat_e
     }
 }
 
-JNIEXPORT void JNICALL Java_io_github_muntashirakon_AppManager_compat_OsCompat_endpwent
+JNIEXPORT void JNICALL Java_io_github_muntashirakon_compat_system_OsCompat_endpwent
   (JNIEnv *env, jclass clazz) {
     TEMP_FAILURE_RETRY_V(endpwent());
     if (errno) {
         throwErrnoException(env, "endpwent");
     }
+}
+
+JNIEXPORT void JNICALL Java_io_github_muntashirakon_compat_system_OsCompat_utimensat
+  (JNIEnv *env, jclass clazz, jint dirfd, jstring pathname, jobject atime, jobject mtime, jint flags) {
+    const char *path = env->GetStringUTFChars(pathname, 0);
+    struct timespec times[2];
+    times[0] = javaStructTimespecToTimespec(env, atime);
+    times[1] = javaStructTimespecToTimespec(env, mtime);
+    TEMP_FAILURE_RETRY_V(utimensat(dirfd, path, times, flags));
+    env->ReleaseStringUTFChars(pathname, path);
+    if (errno) {
+        throwErrnoException(env, "utimensat");
+    }
+}
+
+JNIEXPORT void JNICALL Java_io_github_muntashirakon_compat_system_OsCompat_setNativeConstants
+  (JNIEnv *env, jclass clazz) {
+    jclass osCompatClass = getOsCompatClass(env);
+    jfieldID utime_now = env->GetStaticFieldID(osCompatClass, "UTIME_NOW", "J");
+    jfieldID utime_omit = env->GetStaticFieldID(osCompatClass, "UTIME_OMIT", "J");
+    jfieldID at_fdcwd = env->GetStaticFieldID(osCompatClass, "AT_FDCWD", "I");
+    jfieldID at_symlink_nofollow = env->GetStaticFieldID(osCompatClass, "AT_SYMLINK_NOFOLLOW", "I");
+    env->SetStaticLongField(osCompatClass, utime_now, UTIME_NOW);
+    env->SetStaticLongField(osCompatClass, utime_omit, UTIME_OMIT);
+    env->SetStaticIntField(osCompatClass, at_fdcwd, AT_FDCWD);
+    env->SetStaticIntField(osCompatClass, at_symlink_nofollow, AT_SYMLINK_NOFOLLOW);
 }

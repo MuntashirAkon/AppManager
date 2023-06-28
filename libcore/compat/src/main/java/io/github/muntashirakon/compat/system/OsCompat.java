@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-package io.github.muntashirakon.AppManager.compat;
+package io.github.muntashirakon.compat.system;
 
 import android.system.ErrnoException;
 import android.system.StructPasswd;
@@ -15,6 +15,17 @@ public class OsCompat {
         System.loadLibrary("am");
     }
 
+    public static long UTIME_NOW;
+    public static long UTIME_OMIT;
+    public static int AT_FDCWD;
+    public static int AT_SYMLINK_NOFOLLOW;
+
+    static {
+        setNativeConstants();
+    }
+
+    private static native void setNativeConstants();
+
     public static native void setgrent() throws ErrnoException;
 
     public static native void setpwent() throws ErrnoException;
@@ -26,4 +37,7 @@ public class OsCompat {
     public static native void endgrent() throws ErrnoException;
 
     public static native void endpwent() throws ErrnoException;
+
+    public static native void utimensat(int dirfd, String pathname, StructTimespec atime, StructTimespec mtime,
+                                        int flags) throws ErrnoException;
 }

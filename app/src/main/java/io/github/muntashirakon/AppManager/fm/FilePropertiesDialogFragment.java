@@ -100,8 +100,7 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
         TextInputLayout dateAccessedLayout = TextInputLayoutCompat.fromTextInputEditText(dateAccessedView);
         dateAccessedLayout.setEndIconOnClickListener(v -> {
             if (mFileProperties != null) {
-                // TODO: 28/6/23 Set last access
-                // viewModel.setLastAccessTime(mFileProperties);
+                viewModel.setLastAccessTime(mFileProperties, System.currentTimeMillis());
             }
         });
         TextInputLayoutCompat.setEndIconSize(dateAccessedLayout, endIconSizeSmall);
@@ -161,8 +160,7 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
                         fileProperties.lastAccess) : "--");
             }
             if (noInit || mFileProperties.canRead != fileProperties.canRead) {
-                // TODO: 28/6/23 Set last access
-                dateAccessedLayout.setEndIconVisible(false);
+                dateAccessedLayout.setEndIconVisible(fileProperties.canRead);
             }
             if (noInit || mFileProperties.canWrite != fileProperties.canWrite) {
                 dateModifiedLayout.setEndIconVisible(fileProperties.canWrite);
@@ -275,6 +273,16 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
                 if (properties.path.setLastModified(time)) {
                     FileProperties newProperties = new FileProperties(properties);
                     newProperties.lastModified = newProperties.path.lastModified();
+                    mFilePropertiesLiveData.postValue(newProperties);
+                }
+            });
+        }
+
+        public void setLastAccessTime(@NonNull FileProperties properties, long time) {
+            ThreadUtils.postOnBackgroundThread(() -> {
+                if (properties.path.setLastAccess(time)) {
+                    FileProperties newProperties = new FileProperties(properties);
+                    newProperties.lastAccess = newProperties.path.lastAccess();
                     mFilePropertiesLiveData.postValue(newProperties);
                 }
             });

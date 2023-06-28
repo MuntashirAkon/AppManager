@@ -95,7 +95,9 @@ public abstract class ExtendedFile extends File {
 
     @Nullable
     public abstract String getSelinuxContext();
+
     public abstract boolean restoreSelinuxContext();
+
     public abstract boolean setSelinuxContext(@NonNull String context);
 
     /**
@@ -142,6 +144,16 @@ public abstract class ExtendedFile extends File {
      * file does not exist or if an I/O error occurs
      */
     public abstract long lastAccess() throws ErrnoException;
+
+    /**
+     * Set the time that the file denoted by this abstract pathname was last accessed.
+     *
+     * @param millis A <code>long</code> value representing the time the file was
+     *               last accessed, measured in milliseconds since the epoch
+     *               (00:00:00 GMT, January 1, 1970)
+     * @return {@code true} if and only if the operation succeeded; {@code false} otherwise.
+     */
+    public abstract boolean setLastAccess(long millis);
 
     /**
      * Creates a new hard link named by this abstract pathname of an existing file

@@ -1,7 +1,10 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-package io.github.muntashirakon.AppManager.compat;
+package io.github.muntashirakon.compat.system;
 
+import androidx.annotation.Keep;
+
+@Keep
 public class StructGroup {
     public final String gr_name;
     public final String gr_passwd;

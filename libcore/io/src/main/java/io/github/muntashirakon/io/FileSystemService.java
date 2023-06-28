@@ -26,6 +26,9 @@ import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import io.github.muntashirakon.compat.system.OsCompat;
+import io.github.muntashirakon.compat.system.StructTimespec;
+
 // Copyright 2022 John "topjohnwu" Wu
 // Copyright 2022 Muntashir Al-Islam
 class FileSystemService extends IFileSystemService.Stub {
@@ -128,6 +131,20 @@ class FileSystemService extends IFileSystemService.Stub {
     @Override
     public boolean setLastModified(String path, long time) {
         return mCache.get(path).setLastModified(time);
+    }
+
+    @Override
+    public IOResult setLastAccess(String path, long time) {
+        long seconds_part = time / 1_000;
+        long nanoseconds_part = (time % 1_000) * 1_000_000;
+        StructTimespec atime = new StructTimespec(seconds_part, nanoseconds_part);
+        StructTimespec mtime = new StructTimespec(0, OsCompat.UTIME_OMIT);
+        try {
+            OsCompat.utimensat(OsCompat.AT_FDCWD, path, atime, mtime, OsCompat.AT_SYMLINK_NOFOLLOW);
+            return new IOResult(true);
+        } catch (ErrnoException e) {
+            return new IOResult(e);
+        }
     }
 
     @Override

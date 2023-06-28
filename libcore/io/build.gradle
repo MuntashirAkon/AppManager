@@ -23,6 +23,8 @@ android {
 dependencies {
     compileOnly project(path: ':hiddenapi')
 
+    implementation project(path: ':libcore:compat')
+
     api "androidx.documentfile:documentfile:${documentfile_version}"
 
     implementation "androidx.annotation:annotation:${annotation_version}"
