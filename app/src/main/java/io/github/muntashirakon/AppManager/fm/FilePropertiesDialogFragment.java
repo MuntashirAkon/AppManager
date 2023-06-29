@@ -159,7 +159,6 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
         mSelinuxContextView = bodyView.findViewById(R.id.selinux_context);
         mSelinuxContextLayout = TextInputLayoutCompat.fromTextInputEditText(mSelinuxContextView);
         TextInputLayoutCompat.setEndIconSize(mSelinuxContextLayout, endIconSizeSmall);
-        mSelinuxContextLayout.setEndIconVisible(Ops.isRoot());
         mSelinuxContextLayout.setEndIconOnClickListener(v -> displaySeContextUpdater());
 
         // Live data
@@ -244,10 +243,10 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
                     fileProperties.lastAccess) : "--");
         }
         if (noInit || mFileProperties.canRead != fileProperties.canRead) {
-            mDateAccessedLayout.setEndIconVisible(fileProperties.canRead);
+            mDateAccessedLayout.setEndIconVisible(fileProperties.canRead && fileProperties.isPhysicalFs);
         }
         if (noInit || mFileProperties.canWrite != fileProperties.canWrite) {
-            mDateModifiedLayout.setEndIconVisible(fileProperties.canWrite);
+            mDateModifiedLayout.setEndIconVisible(fileProperties.canWrite && fileProperties.isPhysicalFs);
         }
         if (noInit || mFileProperties.mode != fileProperties.mode) {
             mModeView.setText(fileProperties.mode != 0 ? getFormattedMode(fileProperties.mode) : "--");
@@ -261,6 +260,7 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
         if (noInit || !Objects.equals(mFileProperties.context, fileProperties.context)) {
             mSelinuxContextView.setText(fileProperties.context != null ? fileProperties.context : "--");
         }
+        mSelinuxContextLayout.setEndIconVisible(Ops.isRoot() && fileProperties.isPhysicalFs);
         mFileProperties = fileProperties;
         // Load others
         if (fileProperties.size == -1) {
@@ -402,6 +402,7 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
                     }
                 }
                 properties.path = path;
+                properties.isPhysicalFs = path.getFile() != null;
                 properties.name = path.getName();
                 properties.readablePath = FmUtils.getDisplayablePath(path);
                 properties.folderCount = folderCount;
@@ -517,6 +518,7 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
 
     private static class FileProperties {
         public Path path;
+        public boolean isPhysicalFs;
         public String name;
         public String readablePath;
         public int folderCount;
@@ -542,6 +544,7 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
 
         public FileProperties(@NonNull FileProperties fileProperties) {
             path = fileProperties.path;
+            isPhysicalFs = fileProperties.isPhysicalFs;
             name = fileProperties.name;
             readablePath = fileProperties.readablePath;
             folderCount = fileProperties.folderCount;
