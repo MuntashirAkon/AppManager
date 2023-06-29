@@ -78,10 +78,7 @@ public class ScannerActivity extends BaseActivity {
         if (Intent.ACTION_VIEW.equals(intent.getAction())) {
             if (!FmProvider.AUTHORITY.equals(mApkUri.getAuthority())) {
                 try {
-                    mFd = getContentResolver().openFileDescriptor(mApkUri, "r");
-                    if (mFd == null) {
-                        throw new FileNotFoundException("FileDescription cannot be null");
-                    }
+                    mFd = FileUtils.getFdFromUri(this, mApkUri, "r");
                     apkFile = FileUtils.getFileFromFd(mFd);
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();

@@ -52,6 +52,7 @@ import io.github.muntashirakon.AppManager.ipc.LocalServices;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.io.fs.VirtualFileSystem;
 
@@ -1473,7 +1474,7 @@ public class Path implements Comparable<Path> {
         return files.toArray(new String[0]);
     }
 
-    @Nullable
+    @NonNull
     public ParcelFileDescriptor openFileDescriptor(@NonNull String mode, @NonNull HandlerThread callbackThread)
             throws FileNotFoundException {
         DocumentFile documentFile = getRealDocumentFile(mDocumentFile);
@@ -1496,7 +1497,7 @@ public class Path implements Comparable<Path> {
                 throw (FileNotFoundException) new FileNotFoundException(e.getMessage()).initCause(e);
             }
         }
-        return mContext.getContentResolver().openFileDescriptor(documentFile.getUri(), mode);
+        return FileUtils.getFdFromUri(mContext, documentFile.getUri(), mode);
     }
 
     public OutputStream openOutputStream() throws IOException {

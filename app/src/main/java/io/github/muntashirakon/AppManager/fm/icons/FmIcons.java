@@ -23,6 +23,7 @@ import java.util.Map;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.io.Path;
 
@@ -316,7 +317,7 @@ final class FmIcons {
     public static Bitmap generatePdfBitmap(@NonNull Context context, @NonNull Uri uri) {
         PdfRenderer renderer;
         try {
-            renderer = new PdfRenderer(context.getContentResolver().openFileDescriptor(uri, "r"));
+            renderer = new PdfRenderer(FileUtils.getFdFromUri(context, uri, "r"));
         } catch (IOException e) {
             e.printStackTrace();
             return null;

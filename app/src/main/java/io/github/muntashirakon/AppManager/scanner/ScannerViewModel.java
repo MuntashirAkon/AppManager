@@ -43,6 +43,7 @@ import io.github.muntashirakon.AppManager.scanner.vt.VtFileReport;
 import io.github.muntashirakon.AppManager.scanner.vt.VtFileScanMeta;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.AppManager.utils.DigestUtils;
+import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
@@ -171,7 +172,7 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
     }
 
     public void setTrackerClasses(List<String> trackerClasses) {
-        this.mTrackerClasses = trackerClasses;
+        mTrackerClasses = trackerClasses;
     }
 
     @Nullable
@@ -185,7 +186,7 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
     }
 
     public void setApkFile(@Nullable File apkFile) {
-        this.mApkFile = apkFile;
+        mApkFile = apkFile;
     }
 
     public Uri getApkUri() {
@@ -215,7 +216,7 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
     @WorkerThread
     private void cacheFileIfRequired() {
         // Test if this path is readable
-        if (this.mApkFile == null || !mApkFile.canRead()) {
+        if (mApkFile == null || !FileUtils.canReadUnprivileged(mApkFile)) {
             // Not readable, cache the file
             try {
                 mApkFile = mFileCache.getCachedFile(Paths.get(mApkUri));
@@ -228,7 +229,7 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
     @WorkerThread
     private void generateApkChecksumsAndScanInVirusTotal() {
         waitForFile();
-        Pair<String, String>[] digests = DigestUtils.getDigests(Paths.get(mApkFile));
+        Pair<String, String>[] digests = DigestUtils.getDigests(Paths.getUnprivileged(mApkFile));
         mApkChecksumsLiveData.postValue(digests);
         if (mVt == null) return;
         String md5 = digests[0].second;
@@ -243,12 +244,11 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
     private void loadApkVerifierResult() {
         waitForFile();
         try {
-            // TODO: 26/5/21 Add v4 verification
             ApkVerifier.Builder builder = new ApkVerifier.Builder(mApkFile)
                     .setMaxCheckedPlatformVersion(Build.VERSION.SDK_INT);
             ApkVerifier apkVerifier = builder.build();
             ApkVerifier.Result apkVerifierResult = apkVerifier.verify();
-            this.mApkVerifierResultLiveData.postValue(apkVerifierResult);
+            mApkVerifierResultLiveData.postValue(apkVerifierResult);
         } catch (IOException | ApkFormatException | NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
@@ -270,12 +270,12 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
         waitForFile();
         try {
             NativeLibraries nativeLibraries = new NativeLibraries(mApkFile);
-            this.mNativeLibraries = nativeLibraries.getUniqueLibs();
+            mNativeLibraries = nativeLibraries.getUniqueLibs();
         } catch (Throwable e) {
             mNativeLibraries = Collections.emptyList();
         }
         try {
-            mDexVfsId = VirtualFileSystem.mount(Uri.fromFile(mApkFile), Paths.get(mApkFile), ContentType2.DEX.getMimeType());
+            mDexVfsId = VirtualFileSystem.mount(Uri.fromFile(mApkFile), Paths.getUnprivileged(mApkFile), ContentType2.DEX.getMimeType());
             DexFileSystem dfs = (DexFileSystem) Objects.requireNonNull(VirtualFileSystem.getFileSystem(mDexVfsId));
             mAllClasses = dfs.getDexClasses().getBaseClassNames();
             Collections.sort(mAllClasses);

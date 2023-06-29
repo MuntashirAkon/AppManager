@@ -7,7 +7,6 @@ import static io.github.muntashirakon.AppManager.apk.ApkUtils.getManifestAttribu
 import static io.github.muntashirakon.AppManager.apk.ApkUtils.getManifestFromApk;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.net.Uri;
@@ -205,7 +204,6 @@ public final class ApkFile implements AutoCloseable {
     private ApkFile(@NonNull Uri apkUri, @Nullable String mimeType, int sparseArrayKey) throws ApkFileException {
         mSparseArrayKey = sparseArrayKey;
         Context context = ContextUtils.getContext();
-        ContentResolver cr = context.getContentResolver();
         Path apkSource = Paths.get(apkUri);
         @NonNull String extension;
         // Check type
@@ -240,11 +238,8 @@ public final class ApkFile implements AutoCloseable {
             // Convert to APKS
             try {
                 mCacheFilePath = mFileCache.createCachedFile("apks");
-                try (ParcelFileDescriptor inputFD = cr.openFileDescriptor(apkUri, "r");
+                try (ParcelFileDescriptor inputFD = FileUtils.getFdFromUri(context, apkUri, "r");
                      OutputStream outputStream = new FileOutputStream(mCacheFilePath)) {
-                    if (inputFD == null) {
-                        throw new IOException("Apk URI inaccessible or empty.");
-                    }
                     UnApkm unApkm = new UnApkm(context, UN_APKM_PKG);
                     unApkm.decryptFile(inputFD, outputStream);
                 }
@@ -255,11 +250,7 @@ public final class ApkFile implements AutoCloseable {
             // Open file descriptor
             if (!FmProvider.AUTHORITY.equals(apkUri.getAuthority())) {
                 try {
-                    ParcelFileDescriptor fd = cr.openFileDescriptor(apkUri, "r");
-                    if (fd == null) {
-                        throw new FileNotFoundException("Could not get file descriptor from the Uri");
-                    }
-                    mFd = fd;
+                    mFd = FileUtils.getFdFromUri(context, apkUri, "r");
                 } catch (FileNotFoundException e) {
                     throw new ApkFileException(e);
                 } catch (SecurityException e) {
@@ -267,7 +258,7 @@ public final class ApkFile implements AutoCloseable {
                 }
             }
             File cacheFilePath = mFd != null ? FileUtils.getFileFromFd(mFd) : null;
-            if (cacheFilePath == null || !FileUtils.canRead(cacheFilePath)) {
+            if (cacheFilePath == null || !FileUtils.canReadUnprivileged(cacheFilePath)) {
                 // Cache manually
                 try {
                     mCacheFilePath = mFileCache.getCachedFile(apkSource);

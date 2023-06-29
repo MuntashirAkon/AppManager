@@ -188,6 +188,7 @@ public class VirtualDocumentFile extends DocumentFile {
         return mFs.openChannel(mFullPath, mode);
     }
 
+    @NonNull
     public ParcelFileDescriptor openFileDescriptor(int mode) throws IOException {
         return mFs.openFileDescriptor(mFullPath, mode);
     }

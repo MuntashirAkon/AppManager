@@ -10,7 +10,7 @@ import static android.system.OsConstants.O_TRUNC;
 import static android.system.OsConstants.O_WRONLY;
 
 import android.content.Context;
-import android.content.res.AssetFileDescriptor;
+import android.net.Uri;
 import android.os.Environment;
 import android.os.ParcelFileDescriptor;
 import android.system.ErrnoException;
@@ -103,6 +103,16 @@ public final class FileUtils {
             return null;
         }
         return fileName;
+    }
+
+    @NonNull
+    public static ParcelFileDescriptor getFdFromUri(@NonNull Context context, @NonNull Uri uri, String mode)
+            throws FileNotFoundException {
+        ParcelFileDescriptor fd = context.getContentResolver().openFileDescriptor(uri, mode);
+        if (fd == null) {
+            throw new FileNotFoundException("Uri inaccessible or empty.");
+        }
+        return fd;
     }
 
     @AnyThread
@@ -213,7 +223,7 @@ public final class FileUtils {
         }
     }
 
-    public static boolean canRead(@NonNull File file) {
+    public static boolean canReadUnprivileged(@NonNull File file) {
         if (file.canRead()) {
             try (FileChannel ignored = FileSystemManager.getLocal().openChannel(file, FileSystemManager.MODE_READ_ONLY)) {
                 return true;
