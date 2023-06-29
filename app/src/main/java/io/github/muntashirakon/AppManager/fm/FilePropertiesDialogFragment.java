@@ -221,15 +221,17 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
                 TextInputLayoutCompat.fromTextInputEditText(mTargetPathView).setVisibility(View.GONE);
             }
         }
-        if (noInit || mFileProperties.size != fileProperties.size
-                || mFileProperties.lastModified != fileProperties.lastModified) {
+        if (noInit || mFileProperties.size != fileProperties.size) {
             if (fileProperties.size != -1) {
-                mSummaryView.setText(String.format(Locale.getDefault(), "%s • %s",
-                        DateUtils.formatDateTime(requireContext(), fileProperties.lastModified),
-                        Formatter.formatShortFileSize(requireContext(), fileProperties.size)));
-                mSizeView.setText(String.format(Locale.getDefault(), "%s (%s bytes)",
+                mSizeView.setText(String.format(Locale.getDefault(), "%s (%,d bytes)",
                         Formatter.formatShortFileSize(requireContext(), fileProperties.size), fileProperties.size));
             }
+        }
+        if (noInit || mFileProperties.size != fileProperties.size
+                || mFileProperties.lastModified != fileProperties.lastModified
+                || mFileProperties.fileCount != fileProperties.fileCount
+                || mFileProperties.folderCount != fileProperties.folderCount) {
+            updateSummary(fileProperties);
         }
         if (noInit || mFileProperties.lastModified != fileProperties.lastModified) {
             mDateModifiedView.setText(DateUtils.formatDateTime(requireContext(), fileProperties.lastModified));
@@ -270,6 +272,34 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
             mViewModel.loadOwnerInfo(fileProperties.uidGidPair.uid);
             mViewModel.loadGroupInfo(fileProperties.uidGidPair.gid);
         }
+    }
+
+    private void updateSummary(@NonNull FileProperties fileProperties) {
+        StringBuilder summary = new StringBuilder();
+        // 1. Date modified
+        summary.append(DateUtils.formatDateTime(requireContext(), fileProperties.lastModified));
+        // 2. Size
+        if (fileProperties.size > 0) {
+            summary.append(" • ").append(Formatter.formatShortFileSize(requireContext(), fileProperties.size));
+        }
+        // 3. Folders and files
+        if (fileProperties.folderCount > 0 && fileProperties.fileCount > 0) {
+            summary.append(" • ")
+                    .append(getResources().getQuantityString(R.plurals.folder_count, fileProperties.folderCount,
+                            fileProperties.folderCount))
+                    .append(", ")
+                    .append(getResources().getQuantityString(R.plurals.file_count, fileProperties.fileCount,
+                            fileProperties.fileCount));
+        } else if (fileProperties.folderCount > 0) {
+            summary.append(" • ")
+                    .append(getResources().getQuantityString(R.plurals.folder_count, fileProperties.folderCount,
+                            fileProperties.folderCount));
+        } else if (fileProperties.fileCount > 0) {
+            summary.append(" • ")
+                    .append(getResources().getQuantityString(R.plurals.file_count, fileProperties.fileCount,
+                            fileProperties.fileCount));
+        }
+        mSummaryView.setText(summary);
     }
 
     private void displaySeContextUpdater() {
