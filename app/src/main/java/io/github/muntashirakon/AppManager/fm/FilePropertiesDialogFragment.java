@@ -338,16 +338,23 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
             selectedUid = new AndroidId();
             selectedUid.id = mFileProperties.uidGidPair.uid;
         } else selectedUid = null;
-        View view = View.inflate(requireContext(), R.layout.item_checkbox, null);
-        MaterialCheckBox checkBox = view.findViewById(R.id.checkbox);
-        checkBox.setText(R.string.apply_recursively);
+        View view;
+        MaterialCheckBox checkBox;
+        if (mFileProperties.isDirectory) {
+            view = View.inflate(requireContext(), R.layout.item_checkbox, null);
+            checkBox = view.findViewById(R.id.checkbox);
+            checkBox.setText(R.string.apply_recursively);
+        } else {
+            view = null;
+            checkBox = null;
+        }
         new SearchableSingleChoiceDialogBuilder<>(requireContext(), owners, uidNames)
                 .setSelection(selectedUid)
                 .setTitle(R.string.change_owner_uid)
                 .setView(view)
                 .setPositiveButton(R.string.ok, (dialog, which, uid) -> {
                     if (uid != null) {
-                        mViewModel.setUid(mFileProperties, uid.id, checkBox.isChecked());
+                        mViewModel.setUid(mFileProperties, uid.id, checkBox != null && checkBox.isChecked());
                     }
                 })
                 .setNegativeButton(R.string.cancel, null)
@@ -365,16 +372,23 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
             selectedGid = new AndroidId();
             selectedGid.id = mFileProperties.uidGidPair.gid;
         } else selectedGid = null;
-        View view = View.inflate(requireContext(), R.layout.item_checkbox, null);
-        MaterialCheckBox checkBox = view.findViewById(R.id.checkbox);
-        checkBox.setText(R.string.apply_recursively);
+        View view;
+        MaterialCheckBox checkBox;
+        if (mFileProperties.isDirectory) {
+            view = View.inflate(requireContext(), R.layout.item_checkbox, null);
+            checkBox = view.findViewById(R.id.checkbox);
+            checkBox.setText(R.string.apply_recursively);
+        } else {
+            view = null;
+            checkBox = null;
+        }
         new SearchableSingleChoiceDialogBuilder<>(requireContext(), groups, gidNames)
                 .setSelection(selectedGid)
                 .setTitle(R.string.change_group_gid)
                 .setView(view)
                 .setPositiveButton(R.string.ok, (dialog, which, gid) -> {
                     if (gid != null) {
-                        mViewModel.setGid(mFileProperties, gid.id, checkBox.isChecked());
+                        mViewModel.setGid(mFileProperties, gid.id, checkBox != null && checkBox.isChecked());
                     }
                 })
                 .setNegativeButton(R.string.cancel, null)
@@ -386,7 +400,7 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
         new TextInputDialogBuilder(requireContext(), null)
                 .setTitle(R.string.title_change_selinux_context)
                 .setInputText(mFileProperties.context)
-                .setCheckboxLabel(R.string.apply_recursively)
+                .setCheckboxLabel(mFileProperties.isDirectory ? R.string.apply_recursively : 0)
                 .setPositiveButton(R.string.ok, (dialog, which, context, recursive) -> {
                     if (!TextUtils.isEmpty(context)) {
                         mViewModel.setSeContext(mFileProperties, context.toString().trim(), recursive);
