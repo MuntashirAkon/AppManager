@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckedTextView;
+import android.widget.FrameLayout;
 
 import androidx.annotation.ArrayRes;
 import androidx.annotation.LayoutRes;
@@ -42,6 +43,7 @@ public class SearchableSingleChoiceDialogBuilder<T> {
     private final MaterialAlertDialogBuilder mBuilder;
     private final SearchView mSearchView;
     private final RecyclerView mRecyclerView;
+    private final FrameLayout mViewContainer;
     @NonNull
     private final SearchableRecyclerViewAdapter mAdapter;
     @Nullable
@@ -75,6 +77,7 @@ public class SearchableSingleChoiceDialogBuilder<T> {
         mRecyclerView = view.findViewById(android.R.id.list);
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+        mViewContainer = view.findViewById(R.id.container);
         mSearchView = view.findViewById(R.id.action_search);
         mSearchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
             @Override
@@ -124,6 +127,14 @@ public class SearchableSingleChoiceDialogBuilder<T> {
 
     public SearchableSingleChoiceDialogBuilder<T> removeSelection() {
         mAdapter.setSelectedIndex(-1);
+        return this;
+    }
+
+    public SearchableSingleChoiceDialogBuilder<T> setView(@Nullable View view) {
+        mViewContainer.removeAllViews();
+        if (view != null) {
+            mViewContainer.addView(view);
+        }
         return this;
     }
 

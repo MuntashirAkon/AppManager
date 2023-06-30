@@ -11,6 +11,7 @@
         android:id="@+id/action_search"
         android:layout_width="match_parent"
         android:layout_height="40dp"
+        android:layout_weight="0"
         android:layout_marginHorizontal="@dimen/padding_medium"
         app:iconifiedByDefault="false" />
 
@@ -18,9 +19,17 @@
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:scrollIndicators="top|bottom"
         app:fastScrollerEnabled="true"
         tools:ignore="UnusedAttribute"
-        tools:listitem="@layout/mtrl_alert_select_dialog_singlechoice" />
+        tools:listitem="@layout/mtrl_alert_select_dialog_singlechoice"
+        tools:itemCount="50"/>
+
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

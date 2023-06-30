@@ -29,6 +29,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.IOException;
@@ -337,12 +338,16 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
             selectedUid = new AndroidId();
             selectedUid.id = mFileProperties.uidGidPair.uid;
         } else selectedUid = null;
+        View view = View.inflate(requireContext(), R.layout.item_checkbox, null);
+        MaterialCheckBox checkBox = view.findViewById(R.id.checkbox);
+        checkBox.setText(R.string.apply_recursively);
         new SearchableSingleChoiceDialogBuilder<>(requireContext(), owners, uidNames)
                 .setSelection(selectedUid)
                 .setTitle(R.string.change_owner_uid)
+                .setView(view)
                 .setPositiveButton(R.string.ok, (dialog, which, uid) -> {
                     if (uid != null) {
-                        mViewModel.setUid(mFileProperties, uid.id, false);
+                        mViewModel.setUid(mFileProperties, uid.id, checkBox.isChecked());
                     }
                 })
                 .setNegativeButton(R.string.cancel, null)
@@ -360,12 +365,16 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
             selectedGid = new AndroidId();
             selectedGid.id = mFileProperties.uidGidPair.gid;
         } else selectedGid = null;
+        View view = View.inflate(requireContext(), R.layout.item_checkbox, null);
+        MaterialCheckBox checkBox = view.findViewById(R.id.checkbox);
+        checkBox.setText(R.string.apply_recursively);
         new SearchableSingleChoiceDialogBuilder<>(requireContext(), groups, gidNames)
                 .setSelection(selectedGid)
                 .setTitle(R.string.change_group_gid)
+                .setView(view)
                 .setPositiveButton(R.string.ok, (dialog, which, gid) -> {
                     if (gid != null) {
-                        mViewModel.setGid(mFileProperties, gid.id, false);
+                        mViewModel.setGid(mFileProperties, gid.id, checkBox.isChecked());
                     }
                 })
                 .setNegativeButton(R.string.cancel, null)
