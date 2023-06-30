@@ -1419,4 +1419,6 @@
     <string name="failed_to_delete_specified_file_after_copying">Could not delete “%1$s” after copying it, possibly due to not enough permission.</string>
     <string name="title_change_selinux_context">Change SELinux context</string>
     <string name="apply_recursively">Apply to enclosed files</string>
+    <string name="change_owner_uid">Change owner (UID)</string>
+    <string name="change_group_gid">Change group (GID)</string>
 </resources>

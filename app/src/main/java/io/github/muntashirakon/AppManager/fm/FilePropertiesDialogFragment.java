@@ -3,8 +3,14 @@
 package io.github.muntashirakon.AppManager.fm;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.system.ErrnoException;
+import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.format.Formatter;
 import android.util.Log;
@@ -16,6 +22,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -25,7 +32,12 @@ import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.Future;
 
@@ -37,14 +49,18 @@ import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.users.Groups;
 import io.github.muntashirakon.AppManager.users.Owners;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
+import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
+import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.CapsuleBottomSheetDialogFragment;
+import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 import io.github.muntashirakon.io.ExtendedFile;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.PathContentInfo;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.io.UidGidPair;
+import io.github.muntashirakon.util.LocalizedString;
 import io.github.muntashirakon.util.UiUtils;
 import io.github.muntashirakon.view.TextInputLayoutCompat;
 import io.github.muntashirakon.widget.TextInputTextView;
@@ -115,7 +131,6 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
         mTypeView = bodyView.findViewById(R.id.type);
         mTargetPathView = bodyView.findViewById(R.id.target_file);
         mTargetPathLayout = TextInputLayoutCompat.fromTextInputEditText(mTargetPathView);
-        TextInputLayoutCompat.setEndIconSize(mTargetPathLayout, endIconSizeSmall);
         mOpenWithView = bodyView.findViewById(R.id.open_with);
         mOpenWithLayout = TextInputLayoutCompat.fromTextInputEditText(mOpenWithView);
         TextInputLayoutCompat.setEndIconSize(mOpenWithLayout, endIconSizeSmall);
@@ -149,13 +164,19 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
         mOwnerView = bodyView.findViewById(R.id.owner_id);
         mOwnerLayout = TextInputLayoutCompat.fromTextInputEditText(mOwnerView);
         TextInputLayoutCompat.setEndIconSize(mOwnerLayout, endIconSizeSmall);
-        // TODO: 28/6/23 Add option to edit UID
-        mOwnerLayout.setEndIconVisible(false);
+        mOwnerLayout.setEndIconOnClickListener(v -> {
+            if (mFileProperties != null) {
+                mViewModel.fetchOwnerList();
+            }
+        });
         mGroupView = bodyView.findViewById(R.id.group_id);
         mGroupLayout = TextInputLayoutCompat.fromTextInputEditText(mGroupView);
         TextInputLayoutCompat.setEndIconSize(mGroupLayout, endIconSizeSmall);
-        // TODO: 28/6/23 Add option to edit GID
-        mGroupLayout.setEndIconVisible(false);
+        mGroupLayout.setEndIconOnClickListener(v -> {
+            if (mFileProperties != null) {
+                mViewModel.fetchGroupList();
+            }
+        });
         mSelinuxContextView = bodyView.findViewById(R.id.selinux_context);
         mSelinuxContextLayout = TextInputLayoutCompat.fromTextInputEditText(mSelinuxContextView);
         TextInputLayoutCompat.setEndIconSize(mSelinuxContextLayout, endIconSizeSmall);
@@ -181,6 +202,8 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
                 }
             }
         });
+        mViewModel.getOwnerListLiveData().observe(getViewLifecycleOwner(), this::displayUidUpdater);
+        mViewModel.getGroupListLiveData().observe(getViewLifecycleOwner(), this::displayGidUpdater);
         mViewModel.getOwnerLiveData().observe(getViewLifecycleOwner(), ownerName -> {
             assert mFileProperties != null;
             assert mFileProperties.uidGidPair != null;
@@ -218,7 +241,7 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
             if (fileProperties.targetPath != null) {
                 mTargetPathView.setText(fileProperties.targetPath);
             } else {
-                TextInputLayoutCompat.fromTextInputEditText(mTargetPathView).setVisibility(View.GONE);
+                mTargetPathLayout.setVisibility(View.GONE);
             }
         }
         if (noInit || mFileProperties.size != fileProperties.size) {
@@ -244,11 +267,12 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
             mDateAccessedView.setText(fileProperties.lastAccess > 0 ? DateUtils.formatDateTime(requireContext(),
                     fileProperties.lastAccess) : "--");
         }
-        if (noInit || mFileProperties.canRead != fileProperties.canRead) {
-            mDateAccessedLayout.setEndIconVisible(fileProperties.canRead && fileProperties.isPhysicalFs);
-        }
         if (noInit || mFileProperties.canWrite != fileProperties.canWrite) {
-            mDateModifiedLayout.setEndIconVisible(fileProperties.canWrite && fileProperties.isPhysicalFs);
+            boolean isPhysicalWritable = fileProperties.canWrite && fileProperties.isPhysicalFs;
+            mDateModifiedLayout.setEndIconVisible(isPhysicalWritable);
+            mDateAccessedLayout.setEndIconVisible(isPhysicalWritable);
+            mOwnerLayout.setEndIconVisible(isPhysicalWritable);
+            mGroupLayout.setEndIconVisible(isPhysicalWritable);
         }
         if (noInit || mFileProperties.mode != fileProperties.mode) {
             mModeView.setText(fileProperties.mode != 0 ? getFormattedMode(fileProperties.mode) : "--");
@@ -302,6 +326,52 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
         mSummaryView.setText(summary);
     }
 
+    private void displayUidUpdater(@NonNull List<AndroidId> owners) {
+        assert mFileProperties != null;
+        List<CharSequence> uidNames = new ArrayList<>(owners.size());
+        for (AndroidId androidId : owners) {
+            uidNames.add(androidId.toLocalizedString(requireContext()));
+        }
+        AndroidId selectedUid;
+        if (mFileProperties.uidGidPair != null) {
+            selectedUid = new AndroidId();
+            selectedUid.id = mFileProperties.uidGidPair.uid;
+        } else selectedUid = null;
+        new SearchableSingleChoiceDialogBuilder<>(requireContext(), owners, uidNames)
+                .setSelection(selectedUid)
+                .setTitle(R.string.change_owner_uid)
+                .setPositiveButton(R.string.ok, (dialog, which, uid) -> {
+                    if (uid != null) {
+                        mViewModel.setUid(mFileProperties, uid.id, false);
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+    }
+
+    private void displayGidUpdater(@NonNull List<AndroidId> groups) {
+        assert mFileProperties != null;
+        List<CharSequence> gidNames = new ArrayList<>(groups.size());
+        for (AndroidId androidId : groups) {
+            gidNames.add(androidId.toLocalizedString(requireContext()));
+        }
+        AndroidId selectedGid;
+        if (mFileProperties.uidGidPair != null) {
+            selectedGid = new AndroidId();
+            selectedGid.id = mFileProperties.uidGidPair.gid;
+        } else selectedGid = null;
+        new SearchableSingleChoiceDialogBuilder<>(requireContext(), groups, gidNames)
+                .setSelection(selectedGid)
+                .setTitle(R.string.change_group_gid)
+                .setPositiveButton(R.string.ok, (dialog, which, gid) -> {
+                    if (gid != null) {
+                        mViewModel.setGid(mFileProperties, gid.id, false);
+                    }
+                })
+                .setNegativeButton(R.string.cancel, null)
+                .show();
+    }
+
     private void displaySeContextUpdater() {
         assert mFileProperties != null;
         new TextInputDialogBuilder(requireContext(), null)
@@ -347,8 +417,13 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
     public static class FilePropertiesViewModel extends AndroidViewModel {
         private final MutableLiveData<FileProperties> mFilePropertiesLiveData = new MutableLiveData<>();
         private final MutableLiveData<FmItem> mFmItemLiveData = new MutableLiveData<>();
+        private final MutableLiveData<List<AndroidId>> mOwnerListLiveData = new MutableLiveData<>();
+        private final MutableLiveData<List<AndroidId>> mGroupListLiveData = new MutableLiveData<>();
         private final MutableLiveData<String> mOwnerLiveData = new MutableLiveData<>();
         private final MutableLiveData<String> mGroupLiveData = new MutableLiveData<>();
+
+        private final List<AndroidId> mOwnerList = new ArrayList<>();
+        private final List<AndroidId> mGroupList = new ArrayList<>();
 
         @Nullable
         private Future<?> sizeResult;
@@ -364,6 +439,127 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
                 sizeResult.cancel(true);
             }
             super.onCleared();
+        }
+
+        public void fetchOwnerList() {
+            ThreadUtils.postOnBackgroundThread(() -> {
+                if (mOwnerList.isEmpty()) {
+                    getOwnersAndGroupsInternal();
+                }
+                mOwnerListLiveData.postValue(mOwnerList);
+            });
+        }
+
+        public void fetchGroupList() {
+            ThreadUtils.postOnBackgroundThread(() -> {
+                if (mGroupList.isEmpty()) {
+                    getOwnersAndGroupsInternal();
+                }
+                mGroupListLiveData.postValue(mGroupList);
+            });
+        }
+
+        @WorkerThread
+        private void getOwnersAndGroupsInternal() {
+            mOwnerList.clear();
+            mGroupList.clear();
+            // Add owners
+            Map<Integer, String> uidOwnerMap = Owners.getUidOwnerMap(false);
+            for (int uid : uidOwnerMap.keySet()) {
+                AndroidId id = new AndroidId();
+                id.id = uid;
+                id.name = Objects.requireNonNull(uidOwnerMap.get(uid));
+                // TODO: 30/6/23 Add a more readable description from android_filesystem_config.h
+                id.description = "System";
+                mOwnerList.add(id);
+            }
+            // Add groups
+            Map<Integer, String> gidGroupMap = Groups.getGidGroupMap(false);
+            for (int gid : gidGroupMap.keySet()) {
+                AndroidId id = new AndroidId();
+                id.id = gid;
+                id.name = Objects.requireNonNull(gidGroupMap.get(gid));
+                id.description = "System";
+                mGroupList.add(id);
+            }
+            List<ApplicationInfo> applicationInfoList = PackageUtils.getAllApplications(0);
+            Map<Integer, CharSequence> uidList = new HashMap<>(applicationInfoList.size());
+            PackageManager pm = getApplication().getPackageManager();
+            for (ApplicationInfo info : applicationInfoList) {
+                if (uidOwnerMap.containsKey(info.uid)) {
+                    // Omit system UID/GIDs
+                    continue;
+                }
+                if (!uidList.containsKey(info.uid)) {
+                    // Include only the first app label
+                    // TODO: 30/6/23 Include all app names?
+                    uidList.put(info.uid, info.loadLabel(pm));
+                }
+            }
+            for (int uid : uidList.keySet()) {
+                AndroidId id = new AndroidId();
+                id.id = uid;
+                id.name = Owners.formatUid(uid);
+                id.description = Objects.requireNonNull(uidList.get(uid));
+                mOwnerList.add(id);
+                mGroupList.add(id);
+                // Add cached uid
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    int gid = Groups.getCacheAppGid(uid);
+                    if (gid == -1 || gid == uid) {
+                        continue;
+                    }
+                    AndroidId cachedGid = new AndroidId();
+                    cachedGid.id = gid;
+                    cachedGid.name = Groups.formatGid(gid);
+                    cachedGid.description = id.description;
+                    mGroupList.add(cachedGid);
+                }
+            }
+            Collections.sort(mOwnerList, (o1, o2) -> Integer.compare(o1.id, o2.id));
+            Collections.sort(mGroupList, (o1, o2) -> Integer.compare(o1.id, o2.id));
+        }
+
+        public void setUid(@NonNull FileProperties properties, int uid, boolean recursive) {
+            ThreadUtils.postOnBackgroundThread(() -> {
+                ExtendedFile file = properties.path.getFile();
+                if (file == null) {
+                    return;
+                }
+                if (recursive) {
+                    setUidRecursive(file, uid);
+                }
+                try {
+                    UidGidPair pair = file.getUidGid();
+                    file.setUidGid(uid, pair.gid);
+                    FileProperties newProperties = new FileProperties(properties);
+                    newProperties.uidGidPair = newProperties.path.getUidGid();
+                    mFilePropertiesLiveData.postValue(newProperties);
+                } catch (ErrnoException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+
+        public void setGid(@NonNull FileProperties properties, int gid, boolean recursive) {
+            ThreadUtils.postOnBackgroundThread(() -> {
+                ExtendedFile file = properties.path.getFile();
+                if (file == null) {
+                    return;
+                }
+                if (recursive) {
+                    setGidRecursive(file, gid);
+                }
+                try {
+                    UidGidPair pair = file.getUidGid();
+                    file.setUidGid(pair.uid, gid);
+                    FileProperties newProperties = new FileProperties(properties);
+                    newProperties.uidGidPair = newProperties.path.getUidGid();
+                    mFilePropertiesLiveData.postValue(newProperties);
+                } catch (ErrnoException e) {
+                    e.printStackTrace();
+                }
+            });
         }
 
         public void restorecon(@NonNull FileProperties properties, boolean recursive) {
@@ -495,12 +691,69 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
             return mFmItemLiveData;
         }
 
+        public LiveData<List<AndroidId>> getOwnerListLiveData() {
+            return mOwnerListLiveData;
+        }
+
+        public LiveData<List<AndroidId>> getGroupListLiveData() {
+            return mGroupListLiveData;
+        }
+
         public LiveData<String> getOwnerLiveData() {
             return mOwnerLiveData;
         }
 
         public LiveData<String> getGroupLiveData() {
             return mGroupLiveData;
+        }
+
+        private boolean setUidRecursive(@NonNull ExtendedFile dir, int uid) {
+            if (dir.isSymlink()) {
+                // Avoid following symbolic links
+                return true;
+            }
+            ExtendedFile[] files = dir.listFiles();
+            boolean success = true;
+            if (files != null) {
+                for (ExtendedFile file : files) {
+                    if (file.isDirectory()) {
+                        success &= setUidRecursive(file, uid);
+                    }
+                    try {
+                        UidGidPair pair = file.getUidGid();
+                        file.setUidGid(uid, pair.gid);
+                    } catch (ErrnoException e) {
+                        Log.w(TAG, "Failed to set UID " + uid + " on " + file);
+                        success = false;
+                    }
+                }
+            }
+            return success;
+        }
+
+
+        private boolean setGidRecursive(@NonNull ExtendedFile dir, int gid) {
+            if (dir.isSymlink()) {
+                // Avoid following symbolic links
+                return true;
+            }
+            ExtendedFile[] files = dir.listFiles();
+            boolean success = true;
+            if (files != null) {
+                for (ExtendedFile file : files) {
+                    if (file.isDirectory()) {
+                        success &= setGidRecursive(file, gid);
+                    }
+                    try {
+                        UidGidPair pair = file.getUidGid();
+                        file.setUidGid(pair.uid, gid);
+                    } catch (ErrnoException e) {
+                        Log.w(TAG, "Failed to set GID " + gid + " on " + file);
+                        success = false;
+                    }
+                }
+            }
+            return success;
         }
 
         private boolean restoreconRecursive(@NonNull ExtendedFile dir) {
@@ -543,6 +796,32 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
                 }
             }
             return success;
+        }
+    }
+
+    private static class AndroidId implements LocalizedString {
+        public int id;
+        public String name;
+        public CharSequence description;
+
+        @NonNull
+        @Override
+        public CharSequence toLocalizedString(@NonNull Context context) {
+            return new SpannableStringBuilder(name).append(" (").append(String.valueOf(id)).append(")\n")
+                    .append(UIUtils.getSmallerText(UIUtils.getSecondaryText(context, description)));
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof AndroidId)) return false;
+            AndroidId androidId = (AndroidId) o;
+            return id == androidId.id;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(id);
         }
     }
 

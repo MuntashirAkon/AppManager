@@ -5,6 +5,7 @@ package io.github.muntashirakon.dialog;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -243,12 +244,14 @@ public class SearchableSingleChoiceDialogBuilder<T> {
             }, "searchable_single_choice_dialog").start();
         }
 
-        void setFilteredItems(CharSequence constraint) {
+        void setFilteredItems(String constraint) {
+            constraint = TextUtils.isEmpty(constraint) ? null : constraint.toLowerCase(Locale.ROOT);
             Locale locale = Locale.getDefault();
             synchronized (mFilteredItems) {
                 mFilteredItems.clear();
                 for (int i = 0; i < mItems.size(); ++i) {
-                    if (mItemNames.get(i).toString().toLowerCase(locale).contains(constraint)
+                    if (constraint == null
+                            || mItemNames.get(i).toString().toLowerCase(locale).contains(constraint)
                             || mItems.get(i).toString().toLowerCase(Locale.ROOT).contains(constraint)) {
                         mFilteredItems.add(i);
                     }

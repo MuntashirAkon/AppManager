@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.users;
 import android.os.UserHandleHidden;
 import android.system.ErrnoException;
 import android.system.StructPasswd;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 
@@ -49,6 +50,14 @@ public class Owners {
     public static String formatUid(int uid) {
         StringBuilder sb = new StringBuilder();
         UserHandleHidden.formatUid(sb, uid);
+        if (sb.indexOf("u") == 0) {
+            // u-prefixed name, index 1 is a mandatory integer, but not so sure about others
+            int i = 2;
+            while (TextUtils.isDigitsOnly(String.valueOf(sb.charAt(i)))) {
+                ++i;
+            }
+            sb.insert(i, '_');
+        }
         return sb.toString();
     }
 }

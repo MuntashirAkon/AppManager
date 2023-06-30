@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.users;
 
+import android.os.UserHandleHidden;
 import android.system.ErrnoException;
 
 import androidx.annotation.NonNull;
@@ -17,6 +18,7 @@ import io.github.muntashirakon.compat.system.StructGroup;
 public class Groups {
     private static final int AID_USER_OFFSET = 100000;
     private static final int AID_APP_START = 10000;
+    private static final int AID_APP_END = 19999;
     private static final int AID_CACHE_GID_START = 20000;
     private static final int AID_CACHE_GID_END = 29999;
     private static final int AID_EXT_GID_START = 30000;
@@ -29,7 +31,7 @@ public class Groups {
 
     private static final Map<Integer, String> sGidGroupMap = new HashMap<>();
 
-    public static Map<Integer, String> getUidGroupMap(boolean reload) {
+    public static Map<Integer, String> getGidGroupMap(boolean reload) {
         synchronized (sGidGroupMap) {
             if (sGidGroupMap.isEmpty() || reload) {
                 try {
@@ -50,7 +52,7 @@ public class Groups {
 
     @NonNull
     public static String getGroupName(int uid) {
-        String name = getUidGroupMap(false).get(uid);
+        String name = getGidGroupMap(false).get(uid);
         if (name != null) {
             return name;
         }
@@ -75,6 +77,16 @@ public class Groups {
             return String.valueOf(gid); // As per UserHandle
         } else {
             return String.format(Locale.ROOT, "u%d_a%d", userid, appid - AID_APP_START);
+        }
+    }
+
+    public static int getCacheAppGid(int uid) {
+        int appId = uid % AID_USER_OFFSET;
+        int userId = uid / AID_USER_OFFSET;
+        if (appId >= AID_APP_START && appId <= AID_APP_END) {
+            return UserHandleHidden.getUid(userId, (appId - AID_APP_START) + AID_CACHE_GID_START);
+        } else {
+            return -1;
         }
     }
 }

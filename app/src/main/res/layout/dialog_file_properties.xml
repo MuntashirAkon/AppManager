@@ -135,9 +135,6 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/padding_small"
             android:hint="@string/file_shortcut_target_file"
-            app:endIconMode="custom"
-            app:endIconDrawable="@drawable/ic_open_in_new"
-            app:endIconContentDescription="@string/open_in_new_window"
             app:hintEnabled="true">
 
             <io.github.muntashirakon.widget.TextInputTextView
