@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.io.Path;
@@ -32,6 +33,31 @@ final class FmUtils {
             return uri.getPath();
         }
         return uri.toString();
+    }
+
+    @SuppressWarnings("OctalInteger")
+    @NonNull
+    public static String getFormattedMode(int mode) {
+        // Ref: https://man7.org/linux/man-pages/man7/inode.7.html
+        String s = getSingleMode(mode >> 6, (mode & 04000) != 0, "s") +
+                getSingleMode(mode >> 3, (mode & 02000) != 0, "s") +
+                getSingleMode(mode, (mode & 01000) != 0, "t");
+        return String.format(Locale.ROOT, "%s (0%o)", s, mode & 07777);
+    }
+
+    @SuppressWarnings("OctalInteger")
+    @NonNull
+    private static String getSingleMode(int mode, boolean special, String specialChar) {
+        boolean canExecute = (mode & 01) != 0;
+        String execMode;
+        if (canExecute) {
+            execMode = special ? specialChar.toLowerCase(Locale.ROOT) : "x";
+        } else if (special) {
+            execMode = specialChar.toUpperCase(Locale.ROOT);
+        } else execMode = "-";
+        return ((mode & 04) != 0 ? "r" : "-") +
+                ((mode & 02) != 0 ? "w" : "-") +
+                execMode;
     }
 
     @SuppressWarnings("SuspiciousRegexArgument") // We're not on Windows

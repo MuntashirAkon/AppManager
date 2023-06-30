@@ -1421,4 +1421,5 @@
     <string name="apply_recursively">Apply to enclosed files</string>
     <string name="change_owner_uid">Change owner (UID)</string>
     <string name="change_group_gid">Change group (GID)</string>
+    <string name="change_mode">Change mode</string>
 </resources>

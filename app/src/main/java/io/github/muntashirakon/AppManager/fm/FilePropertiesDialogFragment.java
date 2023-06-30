@@ -160,8 +160,14 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
         mModeView = bodyView.findViewById(R.id.file_mode);
         mModeLayout = TextInputLayoutCompat.fromTextInputEditText(mModeView);
         TextInputLayoutCompat.setEndIconSize(mModeLayout, endIconSizeSmall);
-        // TODO: 28/6/23 Add option to edit mode
-        mModeLayout.setEndIconVisible(false);
+        mModeLayout.setEndIconOnClickListener(v -> {
+            if (mFileProperties != null) {
+                ChangeFileModeDialogFragment dialog = ChangeFileModeDialogFragment.getInstance(mFileProperties.mode,
+                        mFileProperties.isDirectory, (mode, recursive) ->
+                                mViewModel.setMode(mFileProperties, mode, recursive));
+                dialog.show(getChildFragmentManager(), ChangeFileModeDialogFragment.TAG);
+            }
+        });
         mOwnerView = bodyView.findViewById(R.id.owner_id);
         mOwnerLayout = TextInputLayoutCompat.fromTextInputEditText(mOwnerView);
         TextInputLayoutCompat.setEndIconSize(mOwnerLayout, endIconSizeSmall);
@@ -274,9 +280,11 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
             mDateAccessedLayout.setEndIconVisible(isPhysicalWritable);
             mOwnerLayout.setEndIconVisible(isPhysicalWritable);
             mGroupLayout.setEndIconVisible(isPhysicalWritable);
+            mModeLayout.setEndIconVisible(isPhysicalWritable);
+            mSelinuxContextLayout.setEndIconVisible(Ops.isRoot() && isPhysicalWritable);
         }
         if (noInit || mFileProperties.mode != fileProperties.mode) {
-            mModeView.setText(fileProperties.mode != 0 ? getFormattedMode(fileProperties.mode) : "--");
+            mModeView.setText(fileProperties.mode != 0 ? FmUtils.getFormattedMode(fileProperties.mode) : "--");
         }
         if (uidGidChanged) {
             if (fileProperties.uidGidPair == null) {
@@ -287,7 +295,6 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
         if (noInit || !Objects.equals(mFileProperties.context, fileProperties.context)) {
             mSelinuxContextView.setText(fileProperties.context != null ? fileProperties.context : "--");
         }
-        mSelinuxContextLayout.setEndIconVisible(Ops.isRoot() && fileProperties.isPhysicalFs);
         mFileProperties = fileProperties;
         // Load others
         if (fileProperties.size == -1) {
@@ -412,31 +419,6 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
                 .show();
     }
 
-    @SuppressWarnings("OctalInteger")
-    @NonNull
-    private String getFormattedMode(int mode) {
-        // Ref: https://man7.org/linux/man-pages/man7/inode.7.html
-        String s = getSingleMode(mode >> 6, (mode & 04000) != 0, "s") +
-                getSingleMode(mode >> 3, (mode & 02000) != 0, "s") +
-                getSingleMode(mode, (mode & 01000) != 0, "t");
-        return String.format(Locale.ROOT, "%s (%o)", s, mode & 07777);
-    }
-
-    @SuppressWarnings("OctalInteger")
-    @NonNull
-    private String getSingleMode(int mode, boolean special, String specialChar) {
-        boolean canExecute = (mode & 01) != 0;
-        String execMode;
-        if (canExecute) {
-            execMode = special ? specialChar.toLowerCase(Locale.ROOT) : "x";
-        } else if (special) {
-            execMode = specialChar.toUpperCase(Locale.ROOT);
-        } else execMode = "-";
-        return ((mode & 04) != 0 ? "r" : "-") +
-                ((mode & 02) != 0 ? "w" : "-") +
-                execMode;
-    }
-
     public static class FilePropertiesViewModel extends AndroidViewModel {
         private final MutableLiveData<FileProperties> mFilePropertiesLiveData = new MutableLiveData<>();
         private final MutableLiveData<FmItem> mFmItemLiveData = new MutableLiveData<>();
@@ -462,6 +444,26 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
                 sizeResult.cancel(true);
             }
             super.onCleared();
+        }
+
+        public void setMode(@NonNull FileProperties properties, int mode, boolean recursive) {
+            ThreadUtils.postOnBackgroundThread(() -> {
+                ExtendedFile file = properties.path.getFile();
+                if (file == null) {
+                    return;
+                }
+                if (recursive) {
+                    setModeRecursive(file, mode);
+                }
+                try {
+                    file.setMode(mode);
+                    FileProperties newProperties = new FileProperties(properties);
+                    newProperties.mode = newProperties.path.getMode();
+                    mFilePropertiesLiveData.postValue(newProperties);
+                } catch (ErrnoException e) {
+                    e.printStackTrace();
+                }
+            });
         }
 
         public void fetchOwnerList() {
@@ -728,6 +730,29 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
 
         public LiveData<String> getGroupLiveData() {
             return mGroupLiveData;
+        }
+
+        private boolean setModeRecursive(@NonNull ExtendedFile dir, int mode) {
+            if (dir.isSymlink()) {
+                // Avoid following symbolic links
+                return true;
+            }
+            ExtendedFile[] files = dir.listFiles();
+            boolean success = true;
+            if (files != null) {
+                for (ExtendedFile file : files) {
+                    if (file.isDirectory()) {
+                        success &= setModeRecursive(file, mode);
+                    }
+                    try {
+                        file.setMode(mode);
+                    } catch (ErrnoException e) {
+                        Log.w(TAG, "Failed to set mode " + mode + " on " + file);
+                        success = false;
+                    }
+                }
+            }
+            return success;
         }
 
         private boolean setUidRecursive(@NonNull ExtendedFile dir, int uid) {
