@@ -301,7 +301,7 @@
     <string name="update">Cập nhật</string>
     <string name="clear_app_cache">Xoá bộ nhớ đệm của ứng dụng</string>
     <string name="failed_to_parse_some_numbers">Không thể xử lý một số chữ số</string>
-    <string name="filter_apps_with_rules">Ứng dụng có quy tắc</string>
+    <string name="filter_apps_with_rules">Với các quy tắc</string>
     <string name="filter_system_apps">Ứng dụng hệ thống</string>
     <string name="filter_user_apps">Ứng dụng người dùng</string>
     <string name="filter">Lọc</string>
@@ -375,8 +375,8 @@
     <string name="failed_packages">Gói thất bại</string>
     <string name="no_tracker_found">Không tìm thấy trình theo dõi nào</string>
     <string name="clear_app_cache_description">Xoá bộ nhớ đệm của tất cả ứng dụng</string>
-    <string name="credits_message">Đến các tác giả của:
-\n- The Android Open Source Project
+    <string name="credits_message">Gửi các tác giả của
+\n- Dự án mã nguồn mở Android
 \n- <a href="https://github.com/zhaobozhen/libraries">Absinthe\'s libraries</a>
 \n- <a href="https://github.com/butzist/ActivityLauncher">Activity Launcher</a>
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-applications-info">Apps_packages Info</a>
@@ -385,6 +385,7 @@
 \n- <a href="https://github.com/gabrielemariotti/changeloglib">ChangeLog Library</a>
 \n- <a href="https://bitbucket.org/oF2pks/fdroid-classyshark3xodus">ClassySharkAndroid</a>
 \n- <a href="https://github.com/billthefarmer/editor">Editor</a>
+\n- <a href="https://github.com/Raival-e/File-Explorer">File Explorer</a>
 \n- <a href="https://github.com/nex3z/FlowLayout">FlowLayout</a>
 \n- <a href="https://github.com/k3b/intent-intercept">Intent Intercept</a>
 \n- <a href="https://github.com/YarikSOffice/lingver">Lingver</a>
@@ -396,8 +397,8 @@
 \n- <a href="https://github.com/open-keychain/open-keychain">Open Keychain</a>
 \n- <a href="https://github.com/Aefyr/SAI">SAI</a>
 \n- <a href="https://github.com/RikkaApps/Shizuku">Shizuku</a>
-\n- <a href="https://github.com/tuyafeng/Watt">Watt</a>
-\nGhi nhận logo ban đầu: <a href="https://github.com/Atrate">Atrate</a>. </string>
+\n- <a href="https://github.com/eclipse/tm4e">tm4e</a>
+\n- <a href="https://github.com/tuyafeng/Watt">Watt</a> </string>
     <string name="starting_activity">Hoạt động bắt đầu: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="clear_data_message">Bạn có chắc muốn xoá dữ liệu của ứng dụng này không\?</string>
     <string name="clear_data_from_uninstalled_apps_description">Xoá dữ liệu của các ứng dụng đã gỡ cài đặt với cờ <tt>DONT_DELETE_DATA</tt></string>
@@ -1252,4 +1253,51 @@
     <string name="export_option_markdown">Markdown</string>
     <string name="adb_incomplete_usb_debugging_title">Gỡ lỗi USB chưa hoàn thành</string>
     <string name="funding_campaign_text">Chúng tôi đang chạy <b>chiến dịch tài trợ</b> cho App Manager trong một khoảng thời gian giới hạn. <a href="https://opencollective.com/app-manager#category-ABOUT">tìm hiểu thêm…</a></string>
+    <string name="source_stamp_verified_and_identified_to_be_from_source">SourceStamp đã được xác minh và xác định là từ <xliff:g id="source" example="Google Play">%1$s</xliff:g>.</string>
+    <string name="title_domains_supported_by_the_app">Miền được hỗ trợ</string>
+    <string name="block_unblock_components_dots">Chặn/bỏ chặn các thành phần…</string>
+    <string name="unblock_components_dots">Bỏ chặn các thành phần…</string>
+    <string name="block_unblock_components_description">Chặn hoặc bỏ chặn tất cả các thành phần được xác định bởi các chữ ký đã cho</string>
+    <string name="pref_layout_direction">Hướng bố trí</string>
+    <string name="app_info_tag_open_links">Mở liên kết</string>
+    <string name="pref_zip_align">Căn chỉnh tệp APK</string>
+    <string name="pref_zip_align_msg">Việc căn chỉnh tệp APK giúp giảm mức sử dụng bộ nhớ vì có thể truy cập trực tiếp các tệp trong APK mà không cần sao chép dữ liệu vào RAM. Bước này là bắt buộc nếu &lt;tt&gt;extractNativeLibs&lt;/tt&gt; được đặt thành &lt;tt&gt;true&lt;/</string>
+    <string name="title_code_editor">Trình chỉnh sửa mã</string>
+    <string name="redo">Làm lại</string>
+    <string name="read_only_file">Tập tin chỉ đọc</string>
+    <string name="read_only_file_warning">Không thể ghi các thay đổi vào tệp, có thể do tệp nằm trong ổ đĩa mà Trình quản lý ứng dụng không có quyền ghi vào. Bạn có muốn lưu nó ở một nơi khác không\?</string>
+    <string name="line_separator">Dấu tách dòng</string>
+    <string name="action_replace_all">Thay thế tất cả</string>
+    <string name="search_option_whole_word">Cả từ</string>
+    <string name="uninstall_app_again_message">Ứng dụng đã được gỡ cài đặt mà không xóa dữ liệu và chữ ký. Bạn có muốn gỡ cài đặt hoàn toàn không\?</string>
+    <plurals name="search_results">
+        <item quantity="other">%d kết quả</item>
+    </plurals>
+    <string name="replacement_text">Thay thế</string>
+    <string name="uninstall_app">Gỡ cài đặt %1$s</string>
+    <string name="debloat_list_type">Danh sách</string>
+    <string name="system_app_put_back">Để lại chỗ cũ</string>
+    <string name="debloat_list_carrier">Nhà cung cấp dịch vụ/ISP</string>
+    <string name="debloat_list_misc">Linh tinh</string>
+    <string name="debloat_list_pending">Đang chờ</string>
+    <string name="debloat_removal_safe">An toàn</string>
+    <string name="debloat_removal_replace">Thay thế</string>
+    <string name="debloat_removal_caution">Cẩn trọng</string>
+    <string name="filter_force_stopped_apps">Ứng dụng đã dừng</string>
+    <string name="debloat_removal_type">Kiểu</string>
+    <string name="empty_folder">Trống</string>
+    <plurals name="folder_count">
+        <item quantity="other">%d thư mục</item>
+    </plurals>
+    <plurals name="file_count">
+        <item quantity="other">%d tệp</item>
+    </plurals>
+    <string name="go_to_path">Đi đến…</string>
+    <string name="copy_this_path">Sao chép đường dẫn</string>
+    <string name="title_audio_player">Máy nghe nhạc</string>
+    <plurals name="alert_failed_to_unblock_components">
+        <item quantity="other">Không thể bỏ chặn các thành phần cho ứng dụng %1$d</item>
+    </plurals>
+    <string name="debloat_removal_unsafe">Không an toàn</string>
+    <string name="static_shared_library">Thư viện chia sẻ tĩnh</string>
 </resources>
