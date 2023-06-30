@@ -21,7 +21,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.collection.ArraySet;
 import androidx.core.widget.TextViewCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.color.MaterialColors;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -35,12 +34,14 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.github.muntashirakon.ui.R;
+import io.github.muntashirakon.widget.RecyclerView;
 import io.github.muntashirakon.widget.SearchView;
 
 public class SearchableSingleChoiceDialogBuilder<T> {
     @NonNull
     private final MaterialAlertDialogBuilder mBuilder;
     private final SearchView mSearchView;
+    private final RecyclerView mRecyclerView;
     @NonNull
     private final SearchableRecyclerViewAdapter mAdapter;
     @Nullable
@@ -71,9 +72,9 @@ public class SearchableSingleChoiceDialogBuilder<T> {
 
     public SearchableSingleChoiceDialogBuilder(@NonNull Context context, @NonNull List<T> items, @NonNull List<CharSequence> itemNames) {
         View view = View.inflate(context, R.layout.dialog_searchable_single_choice, null);
-        RecyclerView recyclerView = view.findViewById(android.R.id.list);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
+        mRecyclerView = view.findViewById(android.R.id.list);
+        mRecyclerView.setHasFixedSize(true);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
         mSearchView = view.findViewById(R.id.action_search);
         mSearchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
             @Override
@@ -97,7 +98,7 @@ public class SearchableSingleChoiceDialogBuilder<T> {
         int layoutId = MaterialAttributes.resolveInteger(context, androidx.appcompat.R.attr.singleChoiceItemLayout,
                 com.google.android.material.R.layout.mtrl_alert_select_dialog_singlechoice);
         mAdapter = new SearchableRecyclerViewAdapter(itemNames, items, layoutId);
-        recyclerView.setAdapter(mAdapter);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     public SearchableSingleChoiceDialogBuilder<T> setOnSingleChoiceClickListener(@Nullable OnSingleChoiceClickListener<T>
@@ -235,13 +236,11 @@ public class SearchableSingleChoiceDialogBuilder<T> {
             mItemNames = itemNames;
             mItems = items;
             mLayoutId = layoutId;
-            new Thread(() -> {
-                synchronized (mFilteredItems) {
-                    for (int i = 0; i < items.size(); ++i) {
-                        mFilteredItems.add(i);
-                    }
+            synchronized (mFilteredItems) {
+                for (int i = 0; i < items.size(); ++i) {
+                    mFilteredItems.add(i);
                 }
-            }, "searchable_single_choice_dialog").start();
+            }
         }
 
         void setFilteredItems(String constraint) {
@@ -285,6 +284,7 @@ public class SearchableSingleChoiceDialogBuilder<T> {
             updateSelection(false);
             mSelectedItem = selectedIndex;
             updateSelection(true);
+            mRecyclerView.setSelection(selectedIndex);
         }
 
         void addDisabledItems(@Nullable List<T> disabledItems) {

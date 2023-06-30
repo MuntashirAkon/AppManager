@@ -165,11 +165,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         mPathListAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
-                LinearLayoutManager layoutManager = (LinearLayoutManager) pathListView.getLayoutManager();
-                if (layoutManager == null) {
-                    return;
-                }
-                layoutManager.scrollToPositionWithOffset(mPathListAdapter.getCurrentPosition(), 0);
+                pathListView.setSelection(mPathListAdapter.getCurrentPosition());
             }
 
             @Override
@@ -203,16 +199,12 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         mAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
-                LinearLayoutManager layoutManager = (LinearLayoutManager) mRecyclerView.getLayoutManager();
-                if (layoutManager == null) {
-                    return;
-                }
                 if (scrollPosition.get() != RecyclerView.NO_POSITION) {
                     // Update scroll position
-                    layoutManager.scrollToPositionWithOffset(scrollPosition.get(), 0);
+                    mRecyclerView.setSelection(scrollPosition.get());
                     scrollPosition.set(RecyclerView.NO_POSITION);
                 } else {
-                    layoutManager.scrollToPositionWithOffset(mModel.getCurrentScrollPosition(), 0);
+                    mRecyclerView.setSelection(mModel.getCurrentScrollPosition());
                 }
             }
         });
