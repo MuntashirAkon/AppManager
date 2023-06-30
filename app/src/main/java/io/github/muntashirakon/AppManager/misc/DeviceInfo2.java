@@ -44,6 +44,7 @@ import java.util.Locale;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.runner.Runner;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.users.UserInfo;
 import io.github.muntashirakon.AppManager.users.Users;
@@ -340,7 +341,11 @@ public class DeviceInfo2 implements LocalizedString {
     @WorkerThread
     private int getSelinuxStatus() {
         if (SELinux.isSELinuxEnabled()) {
-            if (SELinux.isSELinuxEnforced()) {
+            // if (SELinux.isSELinuxEnforced()) {
+            //    return 1;
+            // }
+            Runner.Result result = Runner.runCommand("getenforce");
+            if (result.isSuccessful() && result.getOutput().trim().equals("Enforcing")) {
                 return 1;
             }
             return 0;
