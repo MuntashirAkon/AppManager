@@ -31,4 +31,29 @@
     <string name="intro$main$$contributing-title">Đóng góp</string>
     <string name="intro$main$$buiding-title">Hướng dẫn xây dựng</string>
     <string name="intro$main$terminologies">Hieucandy</string>
+    <string name="intro$main$source-code-links">Tất cả trừ GitHub là các liên kết nhân bản. Các thẻ phải luôn được cập nhật, nhưng nhánh chính không được đảm bảo là
+\ncập nhật. Nếu mục tiêu là sao chép nhánh chính, hãy sử dụng liên kết GitHub thay vì các liên kết khác.</string>
+    <string name="intro$main$buiding">Hướng dẫn xây dựng có sẵn trong tệp BUILDING nằm ở thư mục gốc của mã nguồn.</string>
+    <string name="pages$main$$pages-chapter-title">Trang</string>
+    <string name="pages$main-page$$section-title">Trang chính</string>
+    <string name="pages$main-page$$how-app-ops-work-title">Một mục danh sách ứng dụng trong trang chính</string>
+    <string name="pages$main-page$$settings-title">Cài đặt</string>
+    <string name="pages$main-page$$profiles-title">Hồ sơ</string>
+    <string name="pages$main-page$$apk-updater-title">Trình cập nhật APK</string>
+    <string name="pages$main-page$$batch-operations-title">Hoạt động hàng loạt</string>
+    <string name="pages$main-page$$1-click-ops-title">1-Nhấp vào Hoạt động</string>
+    <string name="pages$main-page$$system-config-title">Cấu hình hệ thống</string>
+    <string name="pages$main-page$$running-apps-title">Đang chạy các ứng dụng</string>
+    <string name="pages$main-page$$log-viewer-title">Trình xem nhật ký</string>
+    <string name="pages$main-page$options-menu">Menu tùy chọn cung cấp một số tùy chọn có thể được sử dụng để sắp xếp và lọc các ứng dụng được liệt kê cũng như để điều hướng
+\nđến các trang khác nhau trong hoặc ngoài Trình quản lý ứng dụng.</string>
+    <string name="pages$main-page$list-options">\\textbf{Liệt kê các tùy chọn} chứa các tùy chọn để sắp xếp và lọc danh sách trong trang chính.</string>
+    <string name="intro$main$supported-versions">Hiện tại, các phiên bản được hỗ trợ là v3.0.4 và v3.1.0 (ổn định), v3.2.0 (bản phát hành alpha và gỡ lỗi).
+\nCác phiên bản trước của Trình quản lý ứng dụng có thể chứa các lỗ hổng bảo mật và không nên được sử dụng.</string>
+    <string name="intro$main$translations">Trình quản lý ứng dụng không chấp nhận bản dịch trực tiếp thông qua yêu cầu kéo/hợp nhất. Các bản dịch được quản lý thông qua Hosted Weblate.
+\nĐể dịch Trình quản lý ứng dụng, hãy truy cập \\url{https://hosted.weblate.org/engage/app-manager/}.</string>
+    <string name="intro$main$contributing">Có nhiều cách người dùng có thể đóng góp, chẳng hạn như tạo các vấn đề hữu ích, tham dự các cuộc thảo luận, cải thiện
+\ntài liệu và bản dịch, thêm các thư viện hoặc trình theo dõi không được công nhận, xem lại mã nguồn cũng như
+\nbáo cáo lỗ hổng bảo mật.</string>
+    <string name="pages$main-page$$app-usage-title">Sử dụng ứng dụng</string>
 </resources>
