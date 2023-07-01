@@ -14,15 +14,12 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -33,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
@@ -40,6 +38,7 @@ import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
+import io.github.muntashirakon.widget.MaterialSpinner;
 import io.github.muntashirakon.widget.RecyclerView;
 
 public class SysConfigActivity extends BaseActivity {
@@ -55,7 +54,7 @@ public class SysConfigActivity extends BaseActivity {
         setContentView(R.layout.activity_sys_config);
         setSupportActionBar(findViewById(R.id.toolbar));
         mViewModel = new ViewModelProvider(this).get(SysConfigViewModel.class);
-        AppCompatSpinner spinner = findViewById(R.id.spinner);
+        MaterialSpinner spinner = findViewById(R.id.spinner);
         // Make spinner the first item to focus on
         spinner.requestFocus();
         RecyclerView recyclerView = findViewById(R.id.recycler_view);
@@ -64,20 +63,13 @@ public class SysConfigActivity extends BaseActivity {
         mProgressIndicator.setVisibilityAfterHide(View.GONE);
 
         String[] sysConfigTypes = getResources().getStringArray(R.array.sys_config_names);
-        SpinnerAdapter intervalSpinnerAdapter = new ArrayAdapter<>(this,
+        ArrayAdapter<String> intervalSpinnerAdapter = new ArrayAdapter<>(this,
                 io.github.muntashirakon.ui.R.layout.item_checked_text_view, android.R.id.text1, sysConfigTypes);
         spinner.setAdapter(intervalSpinnerAdapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mProgressIndicator.show();
-                mType = sysConfigTypes[position];
-                mViewModel.loadSysConfigInfo(mType);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
+        spinner.setOnItemClickListener((parent, view, position, id) -> {
+            mProgressIndicator.show();
+            mType = sysConfigTypes[position];
+            mViewModel.loadSysConfigInfo(mType);
         });
 
         mAdapter = new SysConfigRecyclerAdapter(this);
@@ -86,6 +78,8 @@ public class SysConfigActivity extends BaseActivity {
         recyclerView.setAdapter(mAdapter);
         // Observe data
         mViewModel.getSysConfigInfoListLiveData().observe(this, sysConfigInfoList -> {
+            Optional.ofNullable(getSupportActionBar())
+                    .ifPresent(actionBar -> actionBar.setSubtitle(mType));
             mAdapter.setList(sysConfigInfoList);
             mProgressIndicator.hide();
         });
@@ -151,7 +145,7 @@ public class SysConfigActivity extends BaseActivity {
                     ImageLoader.getInstance().displayImage(info.name, null, holder.icon);
                 }
                 holder.icon.setOnClickListener(v -> {
-                    Intent appDetailsIntent = AppDetailsActivity.getIntent(mActivity, info.name,0);
+                    Intent appDetailsIntent = AppDetailsActivity.getIntent(mActivity, info.name, 0);
                     mActivity.startActivity(appDetailsIntent);
                 });
             } else {

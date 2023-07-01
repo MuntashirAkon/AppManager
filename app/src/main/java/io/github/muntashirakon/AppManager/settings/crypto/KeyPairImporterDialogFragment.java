@@ -7,11 +7,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.method.KeyListener;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
 
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
@@ -33,6 +31,7 @@ import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.dialog.TextInputDropdownDialogBuilder;
+import io.github.muntashirakon.widget.MaterialSpinner;
 
 public class KeyPairImporterDialogFragment extends DialogFragment {
     public static final String TAG = "KeyPairImporterDialogFragment";
@@ -46,6 +45,11 @@ public class KeyPairImporterDialogFragment extends DialogFragment {
     @Nullable
     private OnKeySelectedListener mListener;
     private FragmentActivity mActivity;
+    private TextInputLayout mKsPassOrPk8Layout;
+    private EditText mKsPassOrPk8;
+    private KeyListener mKeyListener;
+    private TextInputLayout mKsLocationOrPemLayout;
+    private EditText mKsLocationOrPem;
     @KeyStoreUtils.KeyType
     private int mKeyType;
     @Nullable
@@ -68,66 +72,53 @@ public class KeyPairImporterDialogFragment extends DialogFragment {
             return super.onCreateDialog(savedInstanceState);
         }
         View view = getLayoutInflater().inflate(R.layout.dialog_key_pair_importer, null);
-        Spinner keyTypeSpinner = view.findViewById(R.id.key_type_selector_spinner);
-        TextInputLayout ksPassOrPk8Layout = view.findViewById(R.id.hint);
-        EditText ksPassOrPk8 = view.findViewById(R.id.text);
-        KeyListener keyListener = ksPassOrPk8.getKeyListener();
-        TextInputLayout ksLocationOrPemLayout = view.findViewById(R.id.hint2);
-        EditText ksLocationOrPem = view.findViewById(R.id.text2);
-        ksLocationOrPem.setKeyListener(null);
-        ksLocationOrPem.setOnFocusChangeListener((v, hasFocus) -> {
+        MaterialSpinner keyTypeSpinner = view.findViewById(R.id.key_type_selector_spinner);
+        mKsPassOrPk8Layout = view.findViewById(R.id.hint);
+        mKsPassOrPk8 = view.findViewById(R.id.text);
+        mKeyListener = mKsPassOrPk8.getKeyListener();
+        mKsLocationOrPemLayout = view.findViewById(R.id.hint2);
+        mKsLocationOrPem = view.findViewById(R.id.text2);
+        mKsLocationOrPem.setKeyListener(null);
+        mKsLocationOrPem.setOnFocusChangeListener((v, hasFocus) -> {
             if (v.isInTouchMode() && hasFocus) {
                 v.performClick();
             }
         });
-        ksLocationOrPem.setOnClickListener(v -> mImportFile.launch("application/*", result -> {
+        mKsLocationOrPem.setOnClickListener(v -> mImportFile.launch("application/*", result -> {
             mKsOrPemFile = result;
             if (result != null) {
-                ksLocationOrPem.setText(result.toString());
+                mKsLocationOrPem.setText(result.toString());
             }
         }));
         keyTypeSpinner.setAdapter(ArrayAdapter.createFromResource(mActivity, R.array.crypto_import_types,
                 androidx.appcompat.R.layout.support_simple_spinner_dropdown_item));
-        keyTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, @KeyStoreUtils.KeyType int position, long id) {
-                ksPassOrPk8.setText(null);
-                ksLocationOrPem.setText(null);
+        keyTypeSpinner.setOnItemClickListener((parent, view1, position, id) -> {
+                mKsPassOrPk8.setText(null);
+                mKsLocationOrPem.setText(null);
 
                 if (position == KeyStoreUtils.KeyType.PK8) {
                     // PKCS #8 and PEM
-                    ksPassOrPk8Layout.setHint(R.string.pk8_file);
-                    ksPassOrPk8.setKeyListener(null);
-                    ksPassOrPk8.setOnFocusChangeListener((v, hasFocus) -> {
+                    mKsPassOrPk8Layout.setHint(R.string.pk8_file);
+                    mKsPassOrPk8.setKeyListener(null);
+                    mKsPassOrPk8.setOnFocusChangeListener((v, hasFocus) -> {
                         if (v.isInTouchMode() && hasFocus) {
                             v.performClick();
                         }
                     });
-                    ksPassOrPk8.setOnClickListener(v -> mImportFile.launch("application/*", result -> {
+                    mKsPassOrPk8.setOnClickListener(v -> mImportFile.launch("application/*", result -> {
                         mPk8File = result;
                         if (result != null) {
-                            ksPassOrPk8.setText(result.toString());
+                            mKsPassOrPk8.setText(result.toString());
                         }
                     }));
-                    ksLocationOrPemLayout.setHint(R.string.pem_file);
+                    mKsLocationOrPemLayout.setHint(R.string.pem_file);
                 } else {
                     // KeyStore
-                    onNothingSelected(parent);
+                    setDefault();
                 }
                 mKeyType = position;
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                mKeyType = KeyStoreUtils.KeyType.JKS;
-                // KeyStore
-                ksPassOrPk8Layout.setHint(R.string.keystore_pass);
-                ksPassOrPk8.setKeyListener(keyListener);
-                ksPassOrPk8.setOnFocusChangeListener(null);
-                ksPassOrPk8.setOnClickListener(null);
-                ksLocationOrPemLayout.setHint(R.string.keystore_file);
-            }
         });
+        setDefault();
         AlertDialog alertDialog = new MaterialAlertDialogBuilder(mActivity)
                 .setTitle(R.string.import_key)
                 .setView(view)
@@ -154,7 +145,7 @@ public class KeyPairImporterDialogFragment extends DialogFragment {
                     dialog.dismiss();
                 } else {
                     // KeyStore
-                    char[] ksPassword = Utils.getChars(ksPassOrPk8.getText());
+                    char[] ksPassword = Utils.getChars(mKsPassOrPk8.getText());
                     new Thread(() -> {
                         try {
                             if (mKsOrPemFile == null) {
@@ -202,5 +193,15 @@ public class KeyPairImporterDialogFragment extends DialogFragment {
             });
         });
         return alertDialog;
+    }
+
+    private void setDefault() {
+        mKeyType = KeyStoreUtils.KeyType.JKS;
+        // KeyStore
+        mKsPassOrPk8Layout.setHint(R.string.keystore_pass);
+        mKsPassOrPk8.setKeyListener(mKeyListener);
+        mKsPassOrPk8.setOnFocusChangeListener(null);
+        mKsPassOrPk8.setOnClickListener(null);
+        mKsLocationOrPemLayout.setHint(R.string.keystore_file);
     }
 }

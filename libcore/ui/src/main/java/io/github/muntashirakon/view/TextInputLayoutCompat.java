@@ -3,6 +3,7 @@
 package io.github.muntashirakon.view;
 
 import android.view.Gravity;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -29,5 +30,25 @@ public final class TextInputLayoutCompat {
         layoutParams.gravity = Gravity.CENTER_VERTICAL | Gravity.END;
         endIconView.setLayoutParams(layoutParams);
         endIconView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+    }
+
+    public static void fixEndIcon(@NonNull TextInputLayout layout) {
+        EditText editText = layout.getEditText();
+        if (editText == null) {
+            // Invalid
+            return;
+        }
+        layout.post(() -> {
+            AppCompatImageButton endIconView = layout.findViewById(R.id.text_input_end_icon);
+            int endIconSize = layout.getEndIconMinSize();
+            int width = editText.getMinimumHeight(); // For consistency
+            int newHeight = endIconSize > 0 ? endIconSize : width;
+            int newWidth = Math.max(width, newHeight);
+            // AppCompatImageButton errorIconView = layout.findViewById(R.id.text_input_error_icon);
+            FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(newWidth, newHeight);
+            layoutParams.gravity = Gravity.CENTER_VERTICAL | Gravity.END;
+            endIconView.setLayoutParams(layoutParams);
+            endIconView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        });
     }
 }

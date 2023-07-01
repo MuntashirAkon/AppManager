@@ -10,9 +10,7 @@ import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +30,7 @@ import java.util.Set;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.BundleCompat;
+import io.github.muntashirakon.widget.MaterialSpinner;
 
 public class EditPrefItemFragment extends DialogFragment {
     public static final String TAG = EditPrefItemFragment.class.getSimpleName();
@@ -127,21 +126,14 @@ public class EditPrefItemFragment extends DialogFragment {
         if (inflater == null) return super.onCreateDialog(savedInstanceState);
         @SuppressLint("InflateParams")
         View view = inflater.inflate(R.layout.dialog_edit_pref_item, null);
-        Spinner spinner = view.findViewById(R.id.type_selector_spinner);
+        MaterialSpinner spinner = view.findViewById(R.id.type_selector_spinner);
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(activity, R.array.shared_pref_types,
                 io.github.muntashirakon.ui.R.layout.item_checked_text_view);
         spinner.setAdapter(spinnerAdapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                for (ViewGroup layout : mLayoutTypes) layout.setVisibility(View.GONE);
-                mLayoutTypes[position].setVisibility(View.VISIBLE);
-                mCurrentType = position;
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
+        spinner.setOnItemClickListener((parent, view1, position, id) -> {
+            for (ViewGroup layout : mLayoutTypes) layout.setVisibility(View.GONE);
+            mLayoutTypes[position].setVisibility(View.VISIBLE);
+            mCurrentType = position;
         });
         // Set layouts
         mLayoutTypes[TYPE_BOOLEAN] = view.findViewById(R.id.layout_bool);
@@ -203,7 +195,7 @@ public class EditPrefItemFragment extends DialogFragment {
         mInterfaceCommunicator = (InterfaceCommunicator) activity;
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(activity);
         builder.setView(view)
-                .setPositiveButton(mode == MODE_CREATE ? R.string.add_item : R.string.done, (dialog, which) -> {
+                .setPositiveButton(mode == MODE_CREATE ? R.string.add : R.string.done, (dialog, which) -> {
                     PrefItem newPrefItem;
                     if (prefItem != null) newPrefItem = prefItem;
                     else {

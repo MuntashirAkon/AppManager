@@ -28,15 +28,14 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <androidx.appcompat.widget.AppCompatSpinner
+                <io.github.muntashirakon.widget.MaterialSpinner
+                    style="@style/Widget.AppTheme.MaterialSpinner.Outlined.Small"
                     android:id="@+id/spinner_interval"
                     android:layout_width="130dp"
-                    android:layout_height="35sp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_margin="@dimen/padding_large"
-                    android:focusable="true"
-                    android:nextFocusDown="@id/recycler_view"
-                    style="@style/AppTheme.Spinner" />
+                    android:nextFocusDown="@id/recycler_view" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/time_used"

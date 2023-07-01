@@ -28,6 +28,7 @@
         <item name="materialSwitchStyle">@style/Widget.AppTheme.MaterialSwitch.Large</item>
         <item name="searchViewStyle">@style/Widget.AppTheme.SearchView</item>
         <item name="textInputStyle">@style/Widget.AppTheme.TextInputLayout</item>
+        <item name="materialSpinnerStyle">@style/Widget.AppTheme.MaterialSpinner</item>
         <item name="toolbarStyle">@style/Widget.AppTheme.MaterialToolbar</item>
 
         <!-- Preferences -->
@@ -109,13 +110,18 @@
         <item name="android:windowExitAnimation">@anim/fullscreen_dialog_exit</item>
     </style>
 
-    <!-- Spinner TODO: Replace with TextInputLayout-MaterialAutoCompleteTextView combo -->
-    <style name="AppTheme.Spinner">
-        <item name="android:gravity">center</item>
-        <item name="android:background">@drawable/spinner_rounded_border</item>
-        <item name="android:paddingStart">@dimen/padding_small</item>
-        <item name="android:paddingEnd">@dimen/padding_large</item>
+    <!-- MaterialSpinner -->
+    <style name="Widget.AppTheme.MaterialSpinner" parent="Widget.AppTheme.TextInputLayout.ExposedDropdownMenu">
+        <item name="boxStrokeWidth">0dp</item>
     </style>
+
+    <style name="Widget.AppTheme.MaterialSpinner.Small" parent="Widget.AppTheme.TextInputLayout.ExposedDropdownMenu.Small">
+        <item name="boxStrokeWidth">0dp</item>
+    </style>
+
+    <style name="Widget.AppTheme.MaterialSpinner.Outlined" parent="Widget.AppTheme.TextInputLayout.ExposedDropdownMenu" />
+
+    <style name="Widget.AppTheme.MaterialSpinner.Outlined.Small" parent="Widget.AppTheme.TextInputLayout.ExposedDropdownMenu.Small" />
 
     <!-- MaterialAlertDialog -->
     <style name="MaterialAlertDialog.Material3.Body.Text.Large" parent="MaterialAlertDialog.Material3.Body.Text">
@@ -388,12 +394,22 @@
     </style>
 
     <style name="ThemeOverlay.AppTheme.TextInputLayout.Small" parent="">
-        <item name="autoCompleteTextViewStyle">@style/Widget.AppTheme.TextInputEditText.Small</item>
+        <item name="autoCompleteTextViewStyle">@style/Widget.AppTheme.AutoCompleteTextView.Small</item>
         <item name="editTextStyle">@style/Widget.AppTheme.TextInputEditText.Small</item>
+        <item name="endIconMinSize">18dp</item> <!-- 34 - 8*2 -->
     </style>
 
     <!-- TextInputEditText -->
     <style name="Widget.AppTheme.TextInputEditText.Small" parent="Widget.Material3.TextInputEditText.OutlinedBox.Dense">
+        <item name="android:textAppearance">?attr/textAppearanceBodySmall</item>
+        <item name="android:paddingStart">12dp</item>
+        <item name="android:paddingEnd">12dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:minHeight">34dp</item>
+    </style>
+
+    <style name="Widget.AppTheme.AutoCompleteTextView.Small" parent="Widget.Material3.AutoCompleteTextView.OutlinedBox.Dense">
         <item name="android:textAppearance">?attr/textAppearanceBodySmall</item>
         <item name="android:paddingStart">12dp</item>
         <item name="android:paddingEnd">12dp</item>

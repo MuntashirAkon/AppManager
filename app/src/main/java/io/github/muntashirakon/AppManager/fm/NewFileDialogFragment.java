@@ -9,9 +9,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,6 +23,7 @@ import java.lang.ref.WeakReference;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.lifecycle.SoftInputLifeCycleObserver;
+import io.github.muntashirakon.widget.MaterialSpinner;
 
 public class NewFileDialogFragment extends DialogFragment {
     public static final String TAG = NewFileDialogFragment.class.getSimpleName();
@@ -79,26 +78,15 @@ public class NewFileDialogFragment extends DialogFragment {
         String name = "New file.txt";
         mEditText.setText(name);
         handleFilename(name, null);
-        Spinner spinner = mDialogView.findViewById(R.id.type_selector_spinner);
+        MaterialSpinner spinner = mDialogView.findViewById(R.id.type_selector_spinner);
         ArrayAdapter<CharSequence> spinnerAdapter = new ArrayAdapter<>(requireContext(),
                 io.github.muntashirakon.ui.R.layout.item_checked_text_view, TYPE_LABELS);
         spinner.setAdapter(spinnerAdapter);
         spinner.setSelection(TYPE_TEXT);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (mType != position) {
-                    mType = position;
-                    handleFilename(mEditText.getText(), TYPE_DEFAULT_EXTENSIONS[mType]);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                if (mType != TYPE_TEXT) {
-                    mType = TYPE_TEXT;
-                    handleFilename(mEditText.getText(), TYPE_DEFAULT_EXTENSIONS[mType]);
-                }
+        spinner.setOnItemClickListener((parent, view, position, id) -> {
+            if (mType != position) {
+                mType = position;
+                handleFilename(mEditText.getText(), TYPE_DEFAULT_EXTENSIONS[mType]);
             }
         });
         return new MaterialAlertDialogBuilder(requireActivity())

@@ -6,10 +6,8 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.Spinner;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,6 +30,7 @@ import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.AlertDialogBuilder;
+import io.github.muntashirakon.widget.MaterialSpinner;
 
 public class KeyPairGeneratorDialogFragment extends DialogFragment {
     public static final String TAG = "KeyPairGeneratorDialogFragment";
@@ -60,24 +59,16 @@ public class KeyPairGeneratorDialogFragment extends DialogFragment {
         FragmentActivity activity = requireActivity();
         mKeyType = requireArguments().getString(EXTRA_KEY_TYPE, CryptoUtils.MODE_RSA);
         View view = View.inflate(activity, R.layout.dialog_certificate_generator, null);
-        Spinner keySizeSpinner = view.findViewById(R.id.key_size_selector_spinner);
+        MaterialSpinner keySizeSpinner = view.findViewById(R.id.key_size_selector_spinner);
         if (mKeyType.equals(CryptoUtils.MODE_RSA)) {
+            mKeySize = 2048;
             keySizeSpinner.setAdapter(new ArrayAdapter<>(activity, androidx.appcompat.R.layout.support_simple_spinner_dropdown_item,
                     SUPPORTED_RSA_KEY_SIZES));
-            keySizeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    mKeySize = SUPPORTED_RSA_KEY_SIZES.get(position);
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-                    mKeySize = 2048;
-                }
-            });
+            keySizeSpinner.setOnItemClickListener((parent, view1, position, id) ->
+                    mKeySize = SUPPORTED_RSA_KEY_SIZES.get(position));
         } else {
             // There's no keysize for ECC
-            ((View) keySizeSpinner.getParent()).setVisibility(View.GONE);
+            keySizeSpinner.setVisibility(View.GONE);
         }
         EditText expiryDate = view.findViewById(R.id.expiry_date);
         expiryDate.setKeyListener(null);

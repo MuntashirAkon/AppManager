@@ -21,11 +21,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -67,6 +64,7 @@ import io.github.muntashirakon.AppManager.utils.BetterActivityResult;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.widget.MaterialSpinner;
 import io.github.muntashirakon.widget.RecyclerView;
 import io.github.muntashirakon.widget.SwipeRefreshLayout;
 
@@ -134,22 +132,15 @@ public class AppUsageActivity extends BaseActivity implements SwipeRefreshLayout
         mSwipeRefresh.setOnRefreshListener(this);
         mSwipeRefresh.setOnChildScrollUpCallback((parent, child) -> recyclerView.canScrollVertically(-1));
 
-        Spinner intervalSpinner = findViewById(R.id.spinner_interval);
+        MaterialSpinner intervalSpinner = findViewById(R.id.spinner_interval);
         // Make spinner the first item to focus on
         intervalSpinner.requestFocus();
-        SpinnerAdapter intervalSpinnerAdapter = ArrayAdapter.createFromResource(this,
+        ArrayAdapter<CharSequence> intervalSpinnerAdapter = ArrayAdapter.createFromResource(this,
                 R.array.usage_interval_dropdown_list, io.github.muntashirakon.ui.R.layout.item_checked_text_view);
         intervalSpinner.setAdapter(intervalSpinnerAdapter);
-        intervalSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mViewModel.setCurrentInterval(position);
-                getAppUsage();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
+        intervalSpinner.setOnItemClickListener((parent, view, position, id) -> {
+            mViewModel.setCurrentInterval(position);
+            getAppUsage();
         });
         mViewModel.getPackageUsageInfoList().observe(this, packageUsageInfoList -> {
             mAppUsageAdapter.setDefaultList(packageUsageInfoList);
