@@ -183,6 +183,7 @@ class FmAdapter extends MultiSelectionView.Adapter<FmAdapter.ViewHolder> {
 
     private void displayActions(View anchor, FmItem item) {
         PopupMenu popupMenu = new PopupMenu(anchor.getContext(), anchor);
+        popupMenu.setForceShowIcon(true);
         popupMenu.inflate(R.menu.fragment_fm_item_actions);
         Menu menu = popupMenu.getMenu();
         MenuItem openWithAction = menu.findItem(R.id.action_open_with);

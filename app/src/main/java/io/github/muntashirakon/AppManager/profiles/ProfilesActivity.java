@@ -236,6 +236,7 @@ public class ProfilesActivity extends BaseActivity {
                     mActivity.startActivity(AppsProfileActivity.getProfileIntent(mActivity, profName)));
             holder.itemView.setOnLongClickListener(v -> {
                 PopupMenu popupMenu = new PopupMenu(mActivity, v);
+                popupMenu.setForceShowIcon(true);
                 popupMenu.inflate(R.menu.activity_profiles_popup_actions);
                 popupMenu.setOnMenuItemClickListener(item -> {
                     int id = item.getItemId();

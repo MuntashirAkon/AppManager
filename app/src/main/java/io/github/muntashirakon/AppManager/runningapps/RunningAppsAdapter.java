@@ -216,6 +216,7 @@ public class RunningAppsAdapter extends MultiSelectionView.Adapter<MultiSelectio
         // Set more
         holder.more.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(mActivity, holder.more);
+            popupMenu.setForceShowIcon(true);
             popupMenu.inflate(R.menu.activity_running_apps_popup_actions);
             Menu menu = popupMenu.getMenu();
             // Set kill

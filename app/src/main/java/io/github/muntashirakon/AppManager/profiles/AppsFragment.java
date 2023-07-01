@@ -128,13 +128,16 @@ public class AppsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 holder.subtitle.setVisibility(View.VISIBLE);
                 holder.subtitle.setText(packageName);
             }
-            holder.itemView.setOnClickListener(v -> {});
+            holder.itemView.setOnClickListener(v -> {
+            });
             holder.itemView.setOnLongClickListener(v -> {
                 PopupMenu popupMenu = new PopupMenu(mActivity, holder.itemView);
-                popupMenu.getMenu().add(R.string.delete).setOnMenuItemClickListener(item -> {
-                    mModel.deletePackage(packageName);
-                    return true;
-                });
+                popupMenu.setForceShowIcon(true);
+                popupMenu.getMenu().add(R.string.delete).setIcon(R.drawable.ic_trash_can)
+                        .setOnMenuItemClickListener(item -> {
+                            mModel.deletePackage(packageName);
+                            return true;
+                        });
                 popupMenu.show();
                 return true;
             });

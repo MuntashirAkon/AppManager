@@ -4,12 +4,12 @@
 
     <item
         android:id="@+id/action_apply"
-        android:icon="@drawable/ic_clear"
+        android:icon="@drawable/ic_sync"
         android:title="@string/apply_now" />
 
     <item
         android:id="@+id/action_delete"
-        android:icon="@drawable/ic_power_settings"
+        android:icon="@drawable/ic_trash_can"
         android:title="@string/delete" />
 
     <item

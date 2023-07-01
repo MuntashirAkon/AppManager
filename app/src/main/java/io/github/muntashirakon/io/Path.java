@@ -1511,7 +1511,7 @@ public class Path implements Comparable<Path> {
             try {
                 return Objects.requireNonNull(getFile()).newOutputStream(append);
             } catch (IOException e) {
-                throw new IOException("Could not open file for writing: " + documentFile.getUri());
+                throw new IOException("Could not open file for writing: " + documentFile.getUri(), e);
             }
         } else if (documentFile instanceof VirtualDocumentFile) {
             return ((VirtualDocumentFile) documentFile).openOutputStream(append);
