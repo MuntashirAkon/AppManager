@@ -62,7 +62,6 @@ import io.github.muntashirakon.io.PathContentInfo;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.io.UidGidPair;
 import io.github.muntashirakon.util.LocalizedString;
-import io.github.muntashirakon.util.UiUtils;
 import io.github.muntashirakon.view.TextInputLayoutCompat;
 import io.github.muntashirakon.widget.TextInputTextView;
 
@@ -121,7 +120,6 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
     public void onBodyInitialized(@NonNull View bodyView, @Nullable Bundle savedInstanceState) {
         Path path = Paths.get(Objects.requireNonNull(BundleCompat.getParcelable(requireArguments(), ARG_PATH, Uri.class)));
         mViewModel = new ViewModelProvider(this).get(FilePropertiesViewModel.class);
-        int endIconSizeSmall = UiUtils.dpToPx(requireContext(), 34 - 16);
         mIconView = bodyView.findViewById(android.R.id.icon);
         mSymlinkIconView = bodyView.findViewById(R.id.symolic_link_icon);
         mNameView = bodyView.findViewById(R.id.name);
@@ -134,14 +132,14 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
         mTargetPathLayout = TextInputLayoutCompat.fromTextInputEditText(mTargetPathView);
         mOpenWithView = bodyView.findViewById(R.id.open_with);
         mOpenWithLayout = TextInputLayoutCompat.fromTextInputEditText(mOpenWithView);
-        TextInputLayoutCompat.setEndIconSize(mOpenWithLayout, endIconSizeSmall);
+        TextInputLayoutCompat.fixEndIcon(mOpenWithLayout);
         // TODO: 16/11/22 Handle open with
         mOpenWithLayout.setVisibility(View.GONE);
         mSizeView = bodyView.findViewById(R.id.size);
         mDateCreatedView = bodyView.findViewById(R.id.date_created);
         mDateModifiedView = bodyView.findViewById(R.id.date_modified);
         mDateModifiedLayout = TextInputLayoutCompat.fromTextInputEditText(mDateModifiedView);
-        TextInputLayoutCompat.setEndIconSize(mDateModifiedLayout, endIconSizeSmall);
+        TextInputLayoutCompat.fixEndIcon(mDateModifiedLayout);
         mDateModifiedLayout.setEndIconOnClickListener(v -> {
             if (mFileProperties != null) {
                 mViewModel.setModificationTime(mFileProperties, System.currentTimeMillis());
@@ -154,12 +152,12 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
                 mViewModel.setLastAccessTime(mFileProperties, System.currentTimeMillis());
             }
         });
-        TextInputLayoutCompat.setEndIconSize(mDateAccessedLayout, endIconSizeSmall);
+        TextInputLayoutCompat.fixEndIcon(mDateAccessedLayout);
         mMoreInfoView = bodyView.findViewById(R.id.more_info);
         TextInputLayoutCompat.fromTextInputEditText(mMoreInfoView).setVisibility(View.GONE);
         mModeView = bodyView.findViewById(R.id.file_mode);
         mModeLayout = TextInputLayoutCompat.fromTextInputEditText(mModeView);
-        TextInputLayoutCompat.setEndIconSize(mModeLayout, endIconSizeSmall);
+        TextInputLayoutCompat.fixEndIcon(mModeLayout);
         mModeLayout.setEndIconOnClickListener(v -> {
             if (mFileProperties != null) {
                 ChangeFileModeDialogFragment dialog = ChangeFileModeDialogFragment.getInstance(mFileProperties.mode,
@@ -170,7 +168,7 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
         });
         mOwnerView = bodyView.findViewById(R.id.owner_id);
         mOwnerLayout = TextInputLayoutCompat.fromTextInputEditText(mOwnerView);
-        TextInputLayoutCompat.setEndIconSize(mOwnerLayout, endIconSizeSmall);
+        TextInputLayoutCompat.fixEndIcon(mOwnerLayout);
         mOwnerLayout.setEndIconOnClickListener(v -> {
             if (mFileProperties != null) {
                 mViewModel.fetchOwnerList();
@@ -178,7 +176,7 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
         });
         mGroupView = bodyView.findViewById(R.id.group_id);
         mGroupLayout = TextInputLayoutCompat.fromTextInputEditText(mGroupView);
-        TextInputLayoutCompat.setEndIconSize(mGroupLayout, endIconSizeSmall);
+        TextInputLayoutCompat.fixEndIcon(mGroupLayout);
         mGroupLayout.setEndIconOnClickListener(v -> {
             if (mFileProperties != null) {
                 mViewModel.fetchGroupList();
@@ -186,7 +184,7 @@ public class FilePropertiesDialogFragment extends CapsuleBottomSheetDialogFragme
         });
         mSelinuxContextView = bodyView.findViewById(R.id.selinux_context);
         mSelinuxContextLayout = TextInputLayoutCompat.fromTextInputEditText(mSelinuxContextView);
-        TextInputLayoutCompat.setEndIconSize(mSelinuxContextLayout, endIconSizeSmall);
+        TextInputLayoutCompat.fixEndIcon(mSelinuxContextLayout);
         mSelinuxContextLayout.setEndIconOnClickListener(v -> displaySeContextUpdater());
 
         // Live data
