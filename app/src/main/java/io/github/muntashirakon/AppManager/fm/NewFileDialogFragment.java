@@ -80,7 +80,7 @@ public class NewFileDialogFragment extends DialogFragment {
         handleFilename(name, null);
         MaterialSpinner spinner = mDialogView.findViewById(R.id.type_selector_spinner);
         ArrayAdapter<CharSequence> spinnerAdapter = new ArrayAdapter<>(requireContext(),
-                io.github.muntashirakon.ui.R.layout.item_checked_text_view, TYPE_LABELS);
+                io.github.muntashirakon.ui.R.layout.auto_complete_dropdown_item, TYPE_LABELS);
         spinner.setAdapter(spinnerAdapter);
         spinner.setSelection(TYPE_TEXT);
         spinner.setOnItemClickListener((parent, view, position, id) -> {

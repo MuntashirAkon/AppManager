@@ -76,6 +76,7 @@
         <item name="actionOverflowButtonStyle">@style/Widget.AppTheme.PopupMenu.OverflowButton</item>
         <item name="actionOverflowMenuStyle">@style/Widget.AppTheme.PopupMenu.Overflow</item>
         <item name="popupMenuBackground">@drawable/popup_menu_background</item>
+        <item name="listChoiceBackgroundIndicator">@drawable/popup_menu_item_background</item>
         <item name="android:dropDownListViewStyle">@style/Widget.AppTheme.PopupMenu.DropDown</item>
 
         <!-- Misc -->
@@ -409,7 +410,12 @@
         <item name="android:minHeight">34dp</item>
     </style>
 
-    <style name="Widget.AppTheme.AutoCompleteTextView.Small" parent="Widget.Material3.AutoCompleteTextView.OutlinedBox.Dense">
+    <!-- AutoCompleteTextView -->
+    <style name="Widget.AppTheme.AutoCompleteTextView" parent="Widget.Material3.AutoCompleteTextView.OutlinedBox.Dense">
+        <item name="simpleItemLayout">@layout/auto_complete_dropdown_item</item>
+    </style>
+
+    <style name="Widget.AppTheme.AutoCompleteTextView.Small" parent="Widget.AppTheme.AutoCompleteTextView">
         <item name="android:textAppearance">?attr/textAppearanceBodySmall</item>
         <item name="android:paddingStart">12dp</item>
         <item name="android:paddingEnd">12dp</item>

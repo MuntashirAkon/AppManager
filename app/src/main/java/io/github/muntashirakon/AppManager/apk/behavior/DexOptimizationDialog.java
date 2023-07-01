@@ -94,7 +94,7 @@ public class DexOptimizationDialog extends DialogFragment {
         }
 
         // Set listeners
-        autoCompleteTextView.setAdapter(new AnyFilterArrayAdapter<>(requireContext(), io.github.muntashirakon.ui.R.layout.item_checked_text_view,
+        autoCompleteTextView.setAdapter(new AnyFilterArrayAdapter<>(requireContext(), io.github.muntashirakon.ui.R.layout.auto_complete_dropdown_item,
                 COMPILER_FILTERS));
         compileLayoutsCheck.setOnCheckedChangeListener((buttonView, isChecked) -> mOptions.compileLayouts = isChecked);
         clearProfileDataCheck.setOnCheckedChangeListener((buttonView, isChecked) -> mOptions.clearProfileData = isChecked);

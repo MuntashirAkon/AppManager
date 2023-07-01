@@ -154,7 +154,7 @@ public class MainListOptions extends ListOptions {
             if (isDetached() || ThreadUtils.isInterrupted()) return;
             activity.runOnUiThread(() -> {
                 profileNameInput.setAdapter(new AnyFilterArrayAdapter<>(activity,
-                        io.github.muntashirakon.ui.R.layout.item_checked_text_view, mProfileNames));
+                        io.github.muntashirakon.ui.R.layout.auto_complete_dropdown_item_small, mProfileNames));
                 if (activity.viewModel != null) {
                     profileNameInput.setText(activity.viewModel.getFilterProfileName());
                 }

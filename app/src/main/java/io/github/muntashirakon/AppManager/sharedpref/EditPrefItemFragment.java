@@ -128,7 +128,7 @@ public class EditPrefItemFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.dialog_edit_pref_item, null);
         MaterialSpinner spinner = view.findViewById(R.id.type_selector_spinner);
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(activity, R.array.shared_pref_types,
-                io.github.muntashirakon.ui.R.layout.item_checked_text_view);
+                io.github.muntashirakon.ui.R.layout.auto_complete_dropdown_item);
         spinner.setAdapter(spinnerAdapter);
         spinner.setOnItemClickListener((parent, view1, position, id) -> {
             for (ViewGroup layout : mLayoutTypes) layout.setVisibility(View.GONE);

@@ -89,9 +89,9 @@ public class TextInputDropdownDialogBuilder {
     public <T> TextInputDropdownDialogBuilder setDropdownItems(List<T> items, int choice, boolean filterable) {
         ArrayAdapter<T> adapter;
         if (filterable) {
-            adapter = new AnyFilterArrayAdapter<>(mActivity, R.layout.item_checked_text_view, items);
+            adapter = new AnyFilterArrayAdapter<>(mActivity, R.layout.auto_complete_dropdown_item, items);
         } else {
-            adapter = new NoFilterArrayAdapter<>(mActivity, R.layout.item_checked_text_view, items);
+            adapter = new NoFilterArrayAdapter<>(mActivity, R.layout.auto_complete_dropdown_item, items);
         }
         mMainInput.setAdapter(adapter);
         if (choice >= 0) {
@@ -112,7 +112,7 @@ public class TextInputDropdownDialogBuilder {
         mAuxiliaryInputLayout.setHelperText(helperText);
         mAuxiliaryInput.setText(inputText);
         if (dropdownItems != null) {
-            ArrayAdapter<T> adapter = new NoFilterArrayAdapter<>(mActivity, R.layout.item_checked_text_view, dropdownItems);
+            ArrayAdapter<T> adapter = new NoFilterArrayAdapter<>(mActivity, R.layout.auto_complete_dropdown_item, dropdownItems);
             mAuxiliaryInput.setAdapter(adapter);
             mAuxiliaryInputLayout.setEndIconMode(TextInputLayout.END_ICON_DROPDOWN_MENU);
         } else {

@@ -1,0 +1,12 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<androidx.appcompat.widget.AppCompatCheckedTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@android:id/text1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingVertical="8dp"
+    android:paddingHorizontal="16dp"
+    android:ellipsize="end"
+    android:maxLines="1"
+    android:textAppearance="?attr/textAppearanceBodyMedium"
+    tools:text="@tools:sample/lorem/random" />

@@ -148,7 +148,7 @@ public class LogViewerActivity extends BaseActivity implements SearchView.OnQuer
             mSearchView.setOnSuggestionListener(this);
         }
 
-        mSearchSuggestionsAdapter = new SimpleCursorAdapter(this, io.github.muntashirakon.ui.R.layout.item_checked_text_view, null,
+        mSearchSuggestionsAdapter = new SimpleCursorAdapter(this, io.github.muntashirakon.ui.R.layout.auto_complete_dropdown_item, null,
                 new String[]{"suggestion"}, new int[]{android.R.id.text1},
                 CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER);
         mSearchView.setSuggestionsAdapter(mSearchSuggestionsAdapter);

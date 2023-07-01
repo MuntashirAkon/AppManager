@@ -64,7 +64,7 @@ public class SysConfigActivity extends BaseActivity {
 
         String[] sysConfigTypes = getResources().getStringArray(R.array.sys_config_names);
         ArrayAdapter<String> intervalSpinnerAdapter = new ArrayAdapter<>(this,
-                io.github.muntashirakon.ui.R.layout.item_checked_text_view, android.R.id.text1, sysConfigTypes);
+                io.github.muntashirakon.ui.R.layout.auto_complete_dropdown_item_small, android.R.id.text1, sysConfigTypes);
         spinner.setAdapter(intervalSpinnerAdapter);
         spinner.setOnItemClickListener((parent, view, position, id) -> {
             mProgressIndicator.show();

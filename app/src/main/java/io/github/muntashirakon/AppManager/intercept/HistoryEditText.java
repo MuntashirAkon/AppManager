@@ -45,7 +45,7 @@ public class HistoryEditText {
         protected void showHistory() {
             List<String> items = getHistoryItems();
             ArrayAdapter<String> adapter = new NoFilterArrayAdapter<>(mContext,
-                    io.github.muntashirakon.ui.R.layout.item_checked_text_view, items);
+                    io.github.muntashirakon.ui.R.layout.auto_complete_dropdown_item, items);
             mEditor.setAdapter(adapter);
         }
 
