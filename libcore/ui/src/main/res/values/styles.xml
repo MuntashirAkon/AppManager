@@ -25,7 +25,7 @@
         <item name="materialCalendarTheme">@style/Widget.AppTheme.MaterialCalendar</item>
         <item name="materialCardViewStyle">@style/Widget.AppTheme.CardView.Elevated</item>
         <item name="materialDividerStyle">@style/Widget.AppTheme.Divider</item>
-        <item name="materialSwitchStyle">@style/Widget.AppTheme.MaterialSwitch</item>
+        <item name="materialSwitchStyle">@style/Widget.AppTheme.MaterialSwitch.Large</item>
         <item name="searchViewStyle">@style/Widget.AppTheme.SearchView</item>
         <item name="textInputStyle">@style/Widget.AppTheme.TextInputLayout</item>
         <item name="toolbarStyle">@style/Widget.AppTheme.MaterialToolbar</item>

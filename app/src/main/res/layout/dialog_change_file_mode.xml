@@ -141,18 +141,21 @@
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <com.google.android.material.materialswitch.MaterialSwitch
+        style="@style/Widget.AppTheme.MaterialSwitch"
         android:id="@+id/uid_bit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="set-user-ID bit" />
 
     <com.google.android.material.materialswitch.MaterialSwitch
+        style="@style/Widget.AppTheme.MaterialSwitch"
         android:id="@+id/gid_bit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="set-group-ID bit" />
 
     <com.google.android.material.materialswitch.MaterialSwitch
+        style="@style/Widget.AppTheme.MaterialSwitch"
         android:id="@+id/sticky_bit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

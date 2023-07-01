@@ -226,7 +226,7 @@ public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
 
     @NonNull
     private MaterialSwitch getOption(int option, @StringRes int strRes) {
-        MaterialSwitch materialSwitch = new MaterialSwitch(mOptionsView.getContext());
+        MaterialSwitch materialSwitch = (MaterialSwitch) View.inflate(mOptionsView.getContext(), R.layout.item_switch, null);
         materialSwitch.setFocusable(true);
         materialSwitch.setId(option);
         materialSwitch.setText(strRes);

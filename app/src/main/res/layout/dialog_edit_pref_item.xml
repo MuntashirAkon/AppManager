@@ -62,19 +62,12 @@
             android:layout_marginBottom="@dimen/padding_small"
             android:orientation="horizontal">
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:labelFor="@id/input_bool"
-                android:text="@string/boolean_value"
-                android:textAllCaps="true" />
-
             <com.google.android.material.materialswitch.MaterialSwitch
+                style="@style/Widget.AppTheme.MaterialSwitch"
                 android:id="@+id/input_bool"
-                android:layout_width="56dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0" />
+                android:text="@string/boolean_value" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 
