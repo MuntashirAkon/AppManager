@@ -1,0 +1,11 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<!-- See: @drawable/m3_popupmenu_background_overlay -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <solid android:color="@macro/m3_comp_menu_container_color"/>
+
+    <corners
+        android:bottomLeftRadius="16dp"
+        android:bottomRightRadius="16dp"
+        android:topLeftRadius="16dp"
+        android:topRightRadius="16dp"/>
+</shape>

@@ -1,0 +1,6 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true" android:drawable="@drawable/popup_menu_item_background_ripple" />
+    <item android:state_focused="true" android:drawable="@drawable/popup_menu_item_background_ripple" />
+    <item android:drawable="@android:color/transparent" />
+</selector>

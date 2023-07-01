@@ -26,13 +26,6 @@
         <item name="materialCardViewStyle">@style/Widget.AppTheme.CardView.Elevated</item>
         <item name="materialDividerStyle">@style/Widget.AppTheme.Divider</item>
         <item name="materialSwitchStyle">@style/Widget.AppTheme.MaterialSwitch</item>
-        <item name="popupMenuStyle">@style/Widget.AppTheme.PopupMenu</item>
-        <item name="listPopupWindowStyle">@style/Widget.AppTheme.PopupMenu.ListPopupWindow</item>
-        <item name="android:contextPopupMenuStyle" tools:targetApi="N">
-            @style/Widget.AppTheme.PopupMenu.ContextMenu
-        </item>
-        <item name="actionOverflowButtonStyle">@style/Widget.AppTheme.PopupMenu.OverflowButton</item>
-        <item name="actionOverflowMenuStyle">@style/Widget.AppTheme.PopupMenu.Overflow</item>
         <item name="searchViewStyle">@style/Widget.AppTheme.SearchView</item>
         <item name="textInputStyle">@style/Widget.AppTheme.TextInputLayout</item>
         <item name="toolbarStyle">@style/Widget.AppTheme.MaterialToolbar</item>
@@ -72,6 +65,17 @@
 
         <!-- Dialog -->
         <item name="materialAlertDialogListItemTextStyle">@style/MaterialAlertDialog.Material3.Body.Text.Large</item>
+
+        <!-- Popup Menu -->
+        <item name="popupMenuStyle">@style/Widget.AppTheme.PopupMenu</item>
+        <item name="listPopupWindowStyle">@style/Widget.AppTheme.PopupMenu.ListPopupWindow</item>
+        <item name="android:contextPopupMenuStyle" tools:targetApi="N">
+            @style/Widget.AppTheme.PopupMenu.ContextMenu
+        </item>
+        <item name="actionOverflowButtonStyle">@style/Widget.AppTheme.PopupMenu.OverflowButton</item>
+        <item name="actionOverflowMenuStyle">@style/Widget.AppTheme.PopupMenu.Overflow</item>
+        <item name="popupMenuBackground">@drawable/popup_menu_background</item>
+        <item name="android:dropDownListViewStyle">@style/Widget.AppTheme.PopupMenu.DropDown</item>
 
         <!-- Misc -->
         <item name="android:windowActivityTransitions">true</item>
@@ -275,8 +279,12 @@
 
     <style name="Widget.AppTheme.PopupMenu.Overflow" parent="Widget.Material3.PopupMenu.Overflow" />
     <!-- Overflow menu button -->
-    <style name="Widget.AppTheme.PopupMenu.OverflowButton" parent="@style/Widget.AppCompat.ActionButton.Overflow">
+    <style name="Widget.AppTheme.PopupMenu.OverflowButton" parent="Widget.AppCompat.ActionButton.Overflow">
         <item name="android:src">@drawable/ic_more_vert</item>
+    </style>
+
+    <style name="Widget.AppTheme.PopupMenu.DropDown" parent="Widget.AppCompat.ListView.DropDown">
+        <item name="android:listSelector">@drawable/popup_menu_item_background</item>
     </style>
 
     <!-- ProgressIndicator -->
@@ -414,6 +422,7 @@
     </style>
 
     <style name="Widget.AppTheme.Button.TextButton" parent="Widget.Material3.Button.TextButton" />
+
     <style name="Widget.AppTheme.Button.TextIconButton" parent="Widget.AppTheme.Button.TextButton">
         <item name="android:minWidth">120dp</item>
         <item name="android:gravity">center</item>
