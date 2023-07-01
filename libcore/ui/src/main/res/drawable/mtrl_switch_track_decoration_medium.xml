@@ -1,0 +1,14 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="@dimen/mtrl_switch_track_width_medium"
+    android:height="@dimen/mtrl_switch_track_height_medium"
+    android:viewportWidth="@integer/mtrl_switch_track_viewport_width"
+    android:viewportHeight="@integer/mtrl_switch_track_viewport_height">
+
+    <path
+        android:name="outline"
+        android:strokeColor="?attr/colorOutline"
+        android:strokeWidth="2"
+        android:pathData="@string/mtrl_switch_track_decoration_path" />
+
+</vector>

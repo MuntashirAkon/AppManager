@@ -11,4 +11,8 @@
     <dimen name="font_size_medium">12sp</dimen>
     <dimen name="font_size_small">10sp</dimen>
     <dimen name="font_size_smaller">9sp</dimen>
+    
+    <dimen name="mtrl_switch_thumb_size_medium">24dp</dimen>
+    <dimen name="mtrl_switch_track_height_medium">24dp</dimen>
+    <dimen name="mtrl_switch_track_width_medium">39dp</dimen> <!-- 52*24/32 -->
 </resources>

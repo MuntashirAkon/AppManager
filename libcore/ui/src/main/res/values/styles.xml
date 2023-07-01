@@ -25,6 +25,7 @@
         <item name="materialCalendarTheme">@style/Widget.AppTheme.MaterialCalendar</item>
         <item name="materialCardViewStyle">@style/Widget.AppTheme.CardView.Elevated</item>
         <item name="materialDividerStyle">@style/Widget.AppTheme.Divider</item>
+        <item name="materialSwitchStyle">@style/Widget.AppTheme.MaterialSwitch</item>
         <item name="popupMenuStyle">@style/Widget.AppTheme.PopupMenu</item>
         <item name="listPopupWindowStyle">@style/Widget.AppTheme.PopupMenu.ListPopupWindow</item>
         <item name="android:contextPopupMenuStyle" tools:targetApi="N">
@@ -247,6 +248,18 @@
         <!-- MaterialCalendar doesn't follow the M3-styled dialog -->
         <item name="shapeAppearanceMediumComponent">@style/ShapeAppearance.AppTheme.LargeComponent</item>
     </style>
+
+    <!-- MaterialSwitch -->
+    <style name="Widget.AppTheme.MaterialSwitch" parent="Widget.Material3.CompoundButton.MaterialSwitch">
+        <!-- Matches CheckBox -->
+        <item name="minHeight">32dp</item>
+        <item name="switchPadding">8dp</item>
+        <item name="android:thumb">@drawable/mtrl_switch_thumb_medium</item>
+        <item name="track">@drawable/mtrl_switch_track_medium</item>
+        <item name="trackDecoration">@drawable/mtrl_switch_track_decoration_medium</item>
+    </style>
+
+    <style name="Widget.AppTheme.MaterialSwitch.Large" parent="Widget.Material3.CompoundButton.MaterialSwitch" />
 
     <!-- MaterialToolbar -->
     <style name="Widget.AppTheme.MaterialToolbar" parent="Widget.Material3.Toolbar">
