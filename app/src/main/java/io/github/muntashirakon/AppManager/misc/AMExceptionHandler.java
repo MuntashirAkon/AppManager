@@ -2,7 +2,6 @@
 
 package io.github.muntashirakon.AppManager.misc;
 
-import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -11,9 +10,9 @@ import android.os.Build;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.PendingIntentCompat;
 
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 
 public class AMExceptionHandler implements Thread.UncaughtExceptionHandler {
@@ -54,10 +53,9 @@ public class AMExceptionHandler implements Thread.UncaughtExceptionHandler {
         i.putExtra(Intent.EXTRA_SUBJECT, "App Manager: Crash report");
         String body = report.toString();
         i.putExtra(Intent.EXTRA_TEXT, body);
-        @SuppressLint("WrongConstant")
-        PendingIntent pendingIntent = PendingIntent.getActivity(mContext, 0,
+        PendingIntent pendingIntent = PendingIntentCompat.getActivity(mContext, 0,
                 Intent.createChooser(i, mContext.getText(R.string.send_crash_report)),
-                PendingIntent.FLAG_ONE_SHOT | PendingIntentCompat.FLAG_MUTABLE);
+                PendingIntent.FLAG_ONE_SHOT, true);
         NotificationCompat.Builder builder = NotificationUtils.getHighPriorityNotificationBuilder(mContext)
                 .setAutoCancel(true)
                 .setDefaults(Notification.DEFAULT_ALL)

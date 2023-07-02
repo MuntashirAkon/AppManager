@@ -2,7 +2,6 @@
 
 package io.github.muntashirakon.AppManager.usage;
 
-import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -14,13 +13,13 @@ import android.util.Size;
 import android.widget.RemoteViews;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.PendingIntentCompat;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.users.Users;
@@ -49,9 +48,8 @@ public class ScreenTimeAppWidget extends AppWidgetProvider {
         }
         // Get pending intent
         Intent intent = new Intent(context, AppUsageActivity.class);
-        @SuppressLint("WrongConstant")
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0 /* no requestCode */, intent,
-                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntentCompat.FLAG_IMMUTABLE);
+        PendingIntent pendingIntent = PendingIntentCompat.getActivity(context, 0 /* no requestCode */, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT, false);
         // Construct the RemoteViews object
         Size appWidgetSize = getAppWidgetSize(context, appWidgetManager, appWidgetId);
         RemoteViews views;

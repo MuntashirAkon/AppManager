@@ -2,7 +2,6 @@
 
 package io.github.muntashirakon.AppManager.apk.behavior;
 
-import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -12,6 +11,7 @@ import android.os.UserHandleHidden;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.PendingIntentCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
@@ -19,7 +19,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -87,9 +86,8 @@ public final class FreezeUnfreeze {
             activity.startActivity(launchIntent);
             Intent intent = getShortcutIntent(activity, shortcutInfo);
             intent.putExtra(EXTRA_FORCE_FREEZE, true);
-            @SuppressLint("WrongConstant")
-            PendingIntent pendingIntent = PendingIntent.getActivity(activity, 0, intent,
-                    PendingIntentCompat.FLAG_IMMUTABLE | PendingIntent.FLAG_ONE_SHOT);
+            PendingIntent pendingIntent = PendingIntentCompat.getActivity(activity, 0, intent,
+                    PendingIntent.FLAG_ONE_SHOT, false);
             int notificationId = shortcutInfo.hashCode();
             NotificationUtils.displayFreezeUnfreezeNotification(activity, notificationId, builder -> builder
                     .setDefaults(Notification.DEFAULT_ALL)

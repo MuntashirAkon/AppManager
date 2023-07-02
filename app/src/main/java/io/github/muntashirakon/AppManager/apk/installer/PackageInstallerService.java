@@ -16,7 +16,6 @@ import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerC
 import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_FAILURE_STORAGE;
 import static io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat.STATUS_SUCCESS;
 
-import android.annotation.SuppressLint;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -27,6 +26,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.app.PendingIntentCompat;
 import androidx.core.app.ServiceCompat;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
@@ -34,7 +34,6 @@ import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.behavior.DexOptimizer;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
-import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.main.MainActivity;
 import io.github.muntashirakon.AppManager.progress.NotificationProgressHandler;
@@ -83,9 +82,7 @@ public class PackageInstallerService extends ForegroundService {
         );
         mProgressHandler.setProgressTextInterface(ProgressHandler.PROGRESS_PERCENT);
         Intent notificationIntent = new Intent(this, MainActivity.class);
-        @SuppressLint("WrongConstant")
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent,
-                PendingIntentCompat.FLAG_IMMUTABLE);
+        PendingIntent pendingIntent = PendingIntentCompat.getActivity(this, 0, notificationIntent, 0, false);
         mNotificationInfo = new NotificationInfo()
                 .setBody(getString(R.string.install_in_progress))
                 .setOperationName(getText(R.string.package_installer))
@@ -241,14 +238,13 @@ public class PackageInstallerService extends ForegroundService {
         return mPackageName;
     }
 
-    @SuppressLint("WrongConstant")
     private void sendNotification(@PackageInstallerCompat.Status int status,
                                   @Nullable String appLabel,
                                   @Nullable String blockingPackage,
                                   @Nullable String statusMessage) {
         Intent intent = getPackageManager().getLaunchIntentForPackage(mPackageName);
-        PendingIntent defaultAction = intent != null ? PendingIntent.getActivity(this, 0, intent,
-                PendingIntent.FLAG_ONE_SHOT | PendingIntentCompat.FLAG_IMMUTABLE) : null;
+        PendingIntent defaultAction = intent != null ? PendingIntentCompat.getActivity(this, 0, intent,
+                PendingIntent.FLAG_ONE_SHOT, false) : null;
         String subject = getStringFromStatus(this, status, appLabel, blockingPackage);
         NotificationCompat.Style content = statusMessage != null ? new NotificationCompat.BigTextStyle()
                 .bigText(subject + "\n\n" + statusMessage) : null;

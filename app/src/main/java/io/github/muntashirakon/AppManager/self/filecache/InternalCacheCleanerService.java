@@ -2,7 +2,6 @@
 
 package io.github.muntashirakon.AppManager.self.filecache;
 
-import android.annotation.SuppressLint;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -11,10 +10,10 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.PendingIntentCompat;
 
 import java.util.Calendar;
 
-import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.types.ForegroundService;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.FileSystemManager;
@@ -25,15 +24,14 @@ import io.github.muntashirakon.io.Paths;
 public class InternalCacheCleanerService extends ForegroundService {
     public static final String TAG = InternalCacheCleanerService.class.getSimpleName();
 
-    @SuppressLint("WrongConstant")
     public static void scheduleAlarm(@NonNull Context context) {
         Intent intent = new Intent(context, InternalCacheCleanerService.class);
-        int flags = PendingIntentCompat.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT;
-        if (PendingIntent.getService(context, 0, intent, flags | PendingIntent.FLAG_NO_CREATE) != null) {
+        int flags = PendingIntent.FLAG_UPDATE_CURRENT;
+        if (PendingIntentCompat.getService(context, 0, intent, flags | PendingIntent.FLAG_NO_CREATE, false) != null) {
             // Already exists
             return;
         }
-        PendingIntent alarmIntent = PendingIntent.getService(context, 0, intent, flags);
+        PendingIntent alarmIntent = PendingIntentCompat.getService(context, 0, intent, flags, false);
 
         // Set the alarm to start at 5:00 AM
         Calendar calendar = Calendar.getInstance();

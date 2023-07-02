@@ -2,7 +2,6 @@
 
 package io.github.muntashirakon.AppManager.apk.installer;
 
-import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -11,10 +10,10 @@ import android.content.Intent;
 import android.content.pm.PackageInstaller;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.PendingIntentCompat;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
@@ -37,7 +36,6 @@ class PackageInstallerBroadcastReceiver extends BroadcastReceiver {
         mAppLabel = appLabel;
     }
 
-    @SuppressLint("WrongConstant")
     @Override
     public void onReceive(Context nullableContext, @NonNull Intent intent) {
         Context context = nullableContext != null ? nullableContext : ContextUtils.getContext();
@@ -83,10 +81,10 @@ class PackageInstallerBroadcastReceiver extends BroadcastReceiver {
                         .setSubText(context.getString(R.string.package_installer))
                         // A neat way to find the title is to check for sessionId
                         .setContentText(context.getString(sessionId == -1 ? R.string.confirm_uninstallation : R.string.confirm_installation))
-                        .setContentIntent(PendingIntent.getActivity(context, 0, intent2,
-                                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntentCompat.FLAG_IMMUTABLE))
-                        .setDeleteIntent(PendingIntent.getBroadcast(context, 0, broadcastCancel,
-                                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntentCompat.FLAG_IMMUTABLE))
+                        .setContentIntent(PendingIntentCompat.getActivity(context, 0, intent2,
+                                PendingIntent.FLAG_UPDATE_CURRENT, false))
+                        .setDeleteIntent(PendingIntentCompat.getBroadcast(context, 0, broadcastCancel,
+                                PendingIntent.FLAG_UPDATE_CURRENT, false))
                         .build());
                 break;
             case PackageInstaller.STATUS_SUCCESS:

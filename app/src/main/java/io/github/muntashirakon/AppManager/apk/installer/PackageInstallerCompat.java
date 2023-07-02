@@ -36,6 +36,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.WorkerThread;
+import androidx.core.app.PendingIntentCompat;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -57,7 +58,6 @@ import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
-import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.progress.ProgressHandler;
@@ -696,9 +696,7 @@ public final class PackageInstallerCompat {
             Log.d(TAG, "Commit: Calling activity to request permission...");
             intentReceiver = null;
             Intent callbackIntent = new Intent(PackageInstallerBroadcastReceiver.ACTION_PI_RECEIVER);
-            @SuppressLint("WrongConstant")
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, callbackIntent,
-                    PendingIntentCompat.FLAG_MUTABLE);
+            PendingIntent pendingIntent = PendingIntentCompat.getBroadcast(mContext, 0, callbackIntent, 0, true);
             sender = pendingIntent.getIntentSender();
         }
         Log.d(TAG, "Commit: Committing...");
@@ -1035,9 +1033,7 @@ public final class PackageInstallerCompat {
                 Log.d(TAG, "Uninstall: Calling activity to request permission...");
                 intentReceiver = null;
                 Intent callbackIntent = new Intent(PackageInstallerBroadcastReceiver.ACTION_PI_RECEIVER);
-                @SuppressLint("WrongConstant")
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0, callbackIntent,
-                        PendingIntentCompat.FLAG_MUTABLE);
+                PendingIntent pendingIntent = PendingIntentCompat.getBroadcast(mContext, 0, callbackIntent, 0, true);
                 sender = pendingIntent.getIntentSender();
             }
             Log.d(TAG, "Uninstall: Uninstalling...");

@@ -7,7 +7,6 @@ import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MAT
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getBitmapFromDrawable;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getDimmedBitmap;
 
-import android.annotation.SuppressLint;
 import android.app.KeyguardManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -27,6 +26,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.app.PendingIntentCompat;
 import androidx.core.app.ServiceCompat;
 import androidx.core.content.pm.ShortcutInfoCompat;
 import androidx.core.content.pm.ShortcutManagerCompat;
@@ -43,7 +43,6 @@ import java.util.concurrent.Future;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
-import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
@@ -93,8 +92,7 @@ public class FreezeUnfreezeService extends Service {
         NotificationManagerCompat notificationManager = NotificationUtils.getNewNotificationManager(this, CHANNEL_ID,
                 "Freeze/unfreeze Monitor", NotificationManagerCompat.IMPORTANCE_LOW);
         Intent stopIntent = new Intent(this, FreezeUnfreezeService.class).setAction(STOP_ACTION);
-        @SuppressLint("WrongConstant")
-        PendingIntent pendingIntent = PendingIntent.getService(this, 0, stopIntent, PendingIntentCompat.FLAG_IMMUTABLE | PendingIntent.FLAG_ONE_SHOT);
+        PendingIntent pendingIntent = PendingIntentCompat.getService(this, 0, stopIntent, PendingIntent.FLAG_ONE_SHOT, false);
         NotificationCompat.Action stopServiceAction = new NotificationCompat.Action.Builder(null,
                 getString(R.string.action_stop_service), pendingIntent)
                 .setAuthenticationRequired(true)

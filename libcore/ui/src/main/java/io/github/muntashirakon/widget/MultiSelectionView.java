@@ -23,6 +23,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.Px;
 import androidx.annotation.UiThread;
 import androidx.appcompat.widget.TintTypedArray;
+import androidx.core.os.ParcelCompat;
 import androidx.core.util.ObjectsCompat;
 import androidx.core.view.OnApplyWindowInsetsListener;
 import androidx.core.view.ViewCompat;
@@ -41,7 +42,6 @@ import java.util.Locale;
 
 import io.github.muntashirakon.reflow.ReflowMenuViewWrapper;
 import io.github.muntashirakon.ui.R;
-import io.github.muntashirakon.util.ParcelUtils;
 import io.github.muntashirakon.util.UiUtils;
 
 @SuppressLint("RestrictedApi")
@@ -161,7 +161,7 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
             currentHeight = source.readInt();
             selectionBottomPadding = source.readInt();
             selectionBottomPaddingMinimum = source.readInt();
-            inSelectionMode = ParcelUtils.readBoolean(source);
+            inSelectionMode = ParcelCompat.readBoolean(source);
         }
 
         @Override
@@ -170,7 +170,7 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
             dest.writeInt(currentHeight);
             dest.writeInt(selectionBottomPadding);
             dest.writeInt(selectionBottomPaddingMinimum);
-            ParcelUtils.writeBoolean(inSelectionMode, dest);
+            ParcelCompat.writeBoolean(dest, inSelectionMode);
         }
 
         @NonNull

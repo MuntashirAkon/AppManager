@@ -2,7 +2,6 @@
 
 package io.github.muntashirakon.AppManager.sharedpref;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.os.Parcel;
@@ -17,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.os.BundleCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
@@ -29,7 +29,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.util.Set;
 
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.compat.BundleCompat;
 import io.github.muntashirakon.widget.MaterialSpinner;
 
 public class EditPrefItemFragment extends DialogFragment {
@@ -124,7 +123,6 @@ public class EditPrefItemFragment extends DialogFragment {
 
         LayoutInflater inflater = LayoutInflater.from(activity);
         if (inflater == null) return super.onCreateDialog(savedInstanceState);
-        @SuppressLint("InflateParams")
         View view = inflater.inflate(R.layout.dialog_edit_pref_item, null);
         MaterialSpinner spinner = view.findViewById(R.id.type_selector_spinner);
         ArrayAdapter<CharSequence> spinnerAdapter = ArrayAdapter.createFromResource(activity, R.array.shared_pref_types,

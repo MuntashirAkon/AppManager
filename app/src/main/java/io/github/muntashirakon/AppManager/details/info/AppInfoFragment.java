@@ -266,12 +266,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 mApplicationInfo = mPackageInfo.applicationInfo;
                 // Set package name
                 mPackageNameView.setText(mPackageName);
-                mPackageNameView.setOnClickListener(v -> {
-                    ClipboardManager clipboard = (ClipboardManager) mActivity.getSystemService(Context.CLIPBOARD_SERVICE);
-                    ClipData clip = ClipData.newPlainText("Package Name", mPackageName);
-                    clipboard.setPrimaryClip(clip);
-                    displayShortToast(R.string.copied_to_clipboard);
-                });
+                mPackageNameView.setOnClickListener(v ->
+                        Utils.copyToClipboard(mActivity, "Package name", mPackageName));
                 // Set App Version
                 CharSequence version = getString(R.string.version_name_with_code, mPackageInfo.versionName, PackageInfoCompat.getLongVersionCode(mPackageInfo));
                 mVersionView.setText(version);

@@ -10,9 +10,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.RemoteViews;
 
+import androidx.core.app.PendingIntentCompat;
+
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
-import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 
 public class ClearCacheAppWidget extends AppWidgetProvider {
 
@@ -21,8 +22,8 @@ public class ClearCacheAppWidget extends AppWidgetProvider {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.app_widget_clear_cache);
         Intent intent = new Intent(context, OneClickOpsActivity.class);
         intent.putExtra(OneClickOpsActivity.EXTRA_OP, BatchOpsManager.OP_CLEAR_CACHE);
-        views.setOnClickPendingIntent(android.R.id.background, PendingIntent.getActivity(context, 0, intent,
-                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntentCompat.FLAG_IMMUTABLE));
+        views.setOnClickPendingIntent(android.R.id.background, PendingIntentCompat.getActivity(context, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT, false));
         // Instruct the widget manager to update the widget
         appWidgetManager.updateAppWidget(appWidgetId, views);
     }

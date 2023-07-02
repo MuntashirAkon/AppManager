@@ -72,6 +72,7 @@ import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.shortcut.CreateShortcutDialogFragment;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
+import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.dialog.TextInputDropdownDialogBuilder;
 
 // Copyright 2020 Muntashir Al-Islam
@@ -782,9 +783,7 @@ public class ActivityInterceptor extends BaseActivity {
     }
 
     private void copyIntentDetails() {
-        ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-        clipboard.setPrimaryClip(ClipData.newPlainText("Intent Details", getIntentDetailsString()));
-        UIUtils.displayShortToast(R.string.copied_to_clipboard);
+        Utils.copyToClipboard(this, "Intent Details", getIntentDetailsString());
     }
 
     private void copyIntentAsCommand() {
@@ -794,9 +793,7 @@ public class ActivityInterceptor extends BaseActivity {
         List<String> args = IntentCompat.flattenToCommand(mMutableIntent);
         String command = String.format(Locale.ROOT, "%s start --user %d %s", RunnerUtils.CMD_AM, mUserHandle,
                 TextUtils.join(" ", args));
-        ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-        clipboard.setPrimaryClip(ClipData.newPlainText("am command", command));
-        UIUtils.displayShortToast(R.string.copied_to_clipboard);
+        Utils.copyToClipboard(this, "am command", command);
     }
 
     private void pasteIntentDetails() {

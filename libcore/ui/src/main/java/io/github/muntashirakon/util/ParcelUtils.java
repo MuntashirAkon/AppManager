@@ -20,14 +20,6 @@ import java.util.Map;
 public class ParcelUtils {
     private static final String TAG = ParcelUtils.class.getSimpleName();
 
-    public static void writeBoolean(boolean b, @NonNull Parcel dest) {
-        dest.writeInt(b ? 1 : 0);
-    }
-
-    public static boolean readBoolean(@NonNull Parcel in) {
-        return in.readInt() != 0;
-    }
-
     /**
      * Write an array set to the parcel.
      *

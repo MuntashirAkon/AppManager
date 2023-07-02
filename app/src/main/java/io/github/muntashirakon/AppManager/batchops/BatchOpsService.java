@@ -2,7 +2,6 @@
 
 package io.github.muntashirakon.AppManager.batchops;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
@@ -13,6 +12,7 @@ import android.os.UserHandleHidden;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.app.PendingIntentCompat;
 import androidx.core.app.ServiceCompat;
 
 import java.util.ArrayList;
@@ -20,7 +20,6 @@ import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.main.MainActivity;
 import io.github.muntashirakon.AppManager.progress.NotificationProgressHandler;
 import io.github.muntashirakon.AppManager.progress.NotificationProgressHandler.NotificationManagerInfo;
@@ -116,9 +115,7 @@ public class BatchOpsService extends ForegroundService {
                 NotificationUtils.HIGH_PRIORITY_NOTIFICATION_INFO);
         mProgressHandler.setProgressTextInterface(ProgressHandler.PROGRESS_REGULAR);
         Intent notificationIntent = new Intent(this, MainActivity.class);
-        @SuppressLint("WrongConstant")
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent,
-                PendingIntentCompat.FLAG_IMMUTABLE);
+        PendingIntent pendingIntent = PendingIntentCompat.getActivity(this, 0, notificationIntent, 0, false);
         mNotificationInfo = new NotificationProgressHandler.NotificationInfo()
                 .setOperationName(mHeader)
                 .setBody(getString(R.string.operation_running))
@@ -244,18 +241,16 @@ public class BatchOpsService extends ForegroundService {
                 intent.putExtra(EXTRA_FAILURE_MESSAGE, message);
                 intent.putStringArrayListExtra(EXTRA_FAILED_PKG, opResult.getFailedPackages());
                 intent.putIntegerArrayListExtra(EXTRA_OP_USERS, opResult.getAssociatedUserHandles());
-                @SuppressLint("WrongConstant")
-                PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
-                        PendingIntent.FLAG_ONE_SHOT | PendingIntentCompat.FLAG_IMMUTABLE);
+                PendingIntent pendingIntent = PendingIntentCompat.getActivity(this, 0, intent,
+                        PendingIntent.FLAG_ONE_SHOT, false);
                 notificationInfo.setDefaultAction(pendingIntent);
                 notificationInfo.setBody(message + detailsMessage);
         }
         if (opResult != null && opResult.requiresRestart()) {
             Intent intent = new Intent(this, BatchOpsResultsActivity.class);
             intent.putExtra(EXTRA_REQUIRES_RESTART, true);
-            @SuppressLint("WrongConstant")
-            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
-                    PendingIntent.FLAG_ONE_SHOT | PendingIntentCompat.FLAG_IMMUTABLE);
+            PendingIntent pendingIntent = PendingIntentCompat.getActivity(this, 0, intent,
+                    PendingIntent.FLAG_ONE_SHOT, false);
             notificationInfo.addAction(0, getString(R.string.restart_device), pendingIntent);
         }
         mProgressHandler.onResult(notificationInfo);

@@ -2,7 +2,6 @@
 
 package io.github.muntashirakon.AppManager.crypto;
 
-import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -18,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
 import androidx.core.app.NotificationCompat;
+import androidx.core.app.PendingIntentCompat;
 
 import org.openintents.openpgp.IOpenPgpService2;
 import org.openintents.openpgp.OpenPgpError;
@@ -34,7 +34,6 @@ import javax.crypto.Cipher;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.settings.Prefs;
@@ -283,7 +282,6 @@ public class OpenPGPCrypto implements Crypto {
         }
     }
 
-    @SuppressLint("WrongConstant")
     @UiThread
     private void handleResult(@NonNull Intent result) {
         mSuccessFlag = false;
@@ -311,9 +309,8 @@ public class OpenPGPCrypto implements Crypto {
                         .setContentTitle(openPGP)
                         .setSubText(openPGP)
                         .setContentText(mContext.getString(R.string.allow_open_pgp_operation));
-                builder.setContentIntent(PendingIntent.getActivity(mContext, 0, intent,
-                        PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_UPDATE_CURRENT
-                                | PendingIntentCompat.FLAG_IMMUTABLE));
+                builder.setContentIntent(PendingIntentCompat.getActivity(mContext, 0, intent,
+                        PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_UPDATE_CURRENT, false));
                 NotificationUtils.displayHighPriorityNotification(mContext, builder.build());
                 break;
             }

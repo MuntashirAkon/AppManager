@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.os.BundleCompat;
 import androidx.core.os.ParcelCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -31,7 +32,6 @@ import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.compat.BundleCompat;
 import io.github.muntashirakon.AppManager.details.info.AppInfoFragment;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -39,7 +39,6 @@ import io.github.muntashirakon.AppManager.main.MainActivity;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.io.Path;
-import io.github.muntashirakon.util.ParcelUtils;
 
 public class AppDetailsActivity extends BaseActivity {
     public static final String ALIAS_APP_INFO = "io.github.muntashirakon.AppManager.details.AppInfoActivity";
@@ -192,7 +191,7 @@ public class AppDetailsActivity extends BaseActivity {
         }
 
         public SavedState(Parcel source, ClassLoader loader) {
-            mBackToMainPage = ParcelUtils.readBoolean(source);
+            mBackToMainPage = ParcelCompat.readBoolean(source);
             mPackageName = source.readString();
             mApkUri = ParcelCompat.readParcelable(source, loader, Uri.class);
             mApkType = source.readString();
@@ -206,7 +205,7 @@ public class AppDetailsActivity extends BaseActivity {
 
         @Override
         public void writeToParcel(Parcel dest, int flags) {
-            ParcelUtils.writeBoolean(mBackToMainPage, dest);
+            ParcelCompat.writeBoolean(dest, mBackToMainPage);
             dest.writeString(mPackageName);
             dest.writeParcelable(mApkUri, flags);
             dest.writeString(mApkType);

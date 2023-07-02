@@ -2,20 +2,19 @@
 
 package io.github.muntashirakon.AppManager.profiles;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.PendingIntent;
 import android.content.Intent;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.app.PendingIntentCompat;
 import androidx.core.app.ServiceCompat;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsResultsActivity;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
-import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
 import io.github.muntashirakon.AppManager.progress.NotificationProgressHandler;
 import io.github.muntashirakon.AppManager.progress.NotificationProgressHandler.NotificationManagerInfo;
 import io.github.muntashirakon.AppManager.progress.ProgressHandler;
@@ -91,9 +90,8 @@ public class ProfileApplierService extends ForegroundService {
         mProfileName = intent.getStringExtra(EXTRA_PROFILE_NAME);
         Intent notificationIntent = new Intent(this, AppsProfileActivity.class);
         notificationIntent.putExtra(AppsProfileActivity.EXTRA_PROFILE_NAME, mProfileName);
-        @SuppressLint("WrongConstant")
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent,
-                PendingIntentCompat.FLAG_IMMUTABLE);
+        PendingIntent pendingIntent = PendingIntentCompat.getActivity(this, 0, notificationIntent,
+                0, false);
         // Set app name in the ongoing notification
         mNotificationInfo.setTitle(mProfileName).setDefaultAction(pendingIntent);
         mProgressHandler.onProgressStart(-1, 0, mNotificationInfo);
@@ -129,9 +127,8 @@ public class ProfileApplierService extends ForegroundService {
         if (requiresRestart) {
             Intent intent = new Intent(this, BatchOpsResultsActivity.class);
             intent.putExtra(BatchOpsService.EXTRA_REQUIRES_RESTART, true);
-            @SuppressLint("WrongConstant")
-            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent,
-                    PendingIntent.FLAG_ONE_SHOT | PendingIntentCompat.FLAG_IMMUTABLE);
+            PendingIntent pendingIntent = PendingIntentCompat.getActivity(this, 0, intent,
+                    PendingIntent.FLAG_ONE_SHOT, false);
             notificationInfo.addAction(0, getString(R.string.restart_device), pendingIntent);
         }
         mProgressHandler.onResult(notificationInfo);

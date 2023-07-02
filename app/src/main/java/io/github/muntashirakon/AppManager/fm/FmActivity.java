@@ -14,6 +14,7 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.os.BundleCompat;
 import androidx.core.os.ParcelCompat;
 import androidx.fragment.app.Fragment;
 
@@ -21,7 +22,6 @@ import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.compat.BundleCompat;
 
 public class FmActivity extends BaseActivity {
     public static class Options implements Parcelable {

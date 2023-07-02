@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
+import androidx.core.os.BundleCompat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,7 +28,6 @@ import java.util.Objects;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
-import io.github.muntashirakon.AppManager.compat.BundleCompat;
 
 import static io.github.muntashirakon.AppManager.batchops.BatchOpsService.ACTION_BATCH_OPS_COMPLETED;
 
@@ -117,7 +117,7 @@ public abstract class PackageChangeReceiver extends BroadcastReceiver {
 
         @Override
         public void handleMessage(@NonNull Message msg) {
-            Intent intent = BundleCompat.getParcelable(msg.getData(), "intent", Intent.class);
+            Intent intent = Objects.requireNonNull(BundleCompat.getParcelable(msg.getData(), "intent", Intent.class));
             switch (Objects.requireNonNull(intent.getAction())) {
                 case Intent.ACTION_PACKAGE_REMOVED:
                     if (intent.getBooleanExtra(Intent.EXTRA_REPLACING, false)) return;
