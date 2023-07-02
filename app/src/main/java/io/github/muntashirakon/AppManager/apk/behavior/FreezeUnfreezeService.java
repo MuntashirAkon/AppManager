@@ -57,7 +57,7 @@ public class FreezeUnfreezeService extends Service {
 
     private static final String STOP_ACTION = BuildConfig.APPLICATION_ID + ".action.STOP_FREEZE_UNFREEZE_MONITOR";
 
-    private final Map<String, FreezeUnfreeze.ShortcutInfo> mPackagesToShortcut = new HashMap<>();
+    private final Map<String, FreezeUnfreezeShortcutInfo> mPackagesToShortcut = new HashMap<>();
     private final Map<String, Integer> mPackagesToNotificationId = new HashMap<>();
     private static final Timer sTimer = new Timer();
     private final BroadcastReceiver mScreenLockedReceiver = new BroadcastReceiver() {
@@ -134,7 +134,7 @@ public class FreezeUnfreezeService extends Service {
 
     private void onHandleIntent(@Nullable Intent intent) {
         if (intent == null) return;
-        FreezeUnfreeze.ShortcutInfo shortcutInfo = FreezeUnfreeze.getShortcutInfo(intent);
+        FreezeUnfreezeShortcutInfo shortcutInfo = FreezeUnfreeze.getShortcutInfo(intent);
         if (shortcutInfo == null) return;
         mPackagesToShortcut.put(shortcutInfo.packageName, shortcutInfo);
         int notificationId = shortcutInfo.hashCode();
@@ -173,7 +173,7 @@ public class FreezeUnfreezeService extends Service {
     @WorkerThread
     private void freezeAllPackages() {
         for (String packageName : mPackagesToShortcut.keySet()) {
-            FreezeUnfreeze.ShortcutInfo shortcutInfo = mPackagesToShortcut.get(packageName);
+            FreezeUnfreezeShortcutInfo shortcutInfo = mPackagesToShortcut.get(packageName);
             Integer notificationId = mPackagesToNotificationId.get(packageName);
             if (shortcutInfo != null) {
                 try {
@@ -181,7 +181,7 @@ public class FreezeUnfreezeService extends Service {
                             MATCH_UNINSTALLED_PACKAGES | MATCH_DISABLED_COMPONENTS
                                     | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, shortcutInfo.userId);
                     Bitmap icon = getBitmapFromDrawable(applicationInfo.loadIcon(getApplication().getPackageManager()));
-                    shortcutInfo.setLabel(applicationInfo.loadLabel(getApplication().getPackageManager()).toString());
+                    shortcutInfo.setName(applicationInfo.loadLabel(getApplication().getPackageManager()));
                     FreezeUtils.freeze(shortcutInfo.packageName, shortcutInfo.userId);
                     shortcutInfo.setIcon(getDimmedBitmap(icon));
                     updateShortcuts(shortcutInfo);
@@ -196,13 +196,13 @@ public class FreezeUnfreezeService extends Service {
         stopSelf();
     }
 
-    private void updateShortcuts(@NonNull FreezeUnfreeze.ShortcutInfo shortcutInfo) {
+    private void updateShortcuts(@NonNull FreezeUnfreezeShortcutInfo shortcutInfo) {
         Intent intent = FreezeUnfreeze.getShortcutIntent(this, shortcutInfo);
         // Set action for shortcut
         intent.setAction(Intent.ACTION_CREATE_SHORTCUT);
-        ShortcutInfoCompat shortcutInfoCompat = new ShortcutInfoCompat.Builder(this, shortcutInfo.shortcutId)
-                .setShortLabel(shortcutInfo.getLabel())
-                .setLongLabel(shortcutInfo.getLabel())
+        ShortcutInfoCompat shortcutInfoCompat = new ShortcutInfoCompat.Builder(this, shortcutInfo.getId())
+                .setShortLabel(shortcutInfo.getName())
+                .setLongLabel(shortcutInfo.getName())
                 .setIcon(IconCompat.createWithBitmap(shortcutInfo.getIcon()))
                 .setIntent(intent)
                 .build();

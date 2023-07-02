@@ -7,6 +7,7 @@ import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
@@ -37,7 +38,7 @@ import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.shortcut.LauncherShortcuts;
+import io.github.muntashirakon.AppManager.shortcut.CreateShortcutDialogFragment;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
@@ -278,7 +279,11 @@ public class AppsProfileActivity extends BaseActivity implements NavigationBarVi
                         if (!isChecked) {
                             return;
                         }
-                        LauncherShortcuts.createForProfile(this, model.getProfileName(), shortcutTypes[which], shortcutTypesL[which]);
+                        Drawable icon = Objects.requireNonNull(ContextCompat.getDrawable(this, R.drawable.ic_launcher_foreground));
+                        ProfileShortcutInfo shortcutInfo = new ProfileShortcutInfo(model.getProfileName(), shortcutTypes[which], shortcutTypesL[which]);
+                        shortcutInfo.setIcon(UIUtils.getBitmapFromDrawable(icon));
+                        CreateShortcutDialogFragment dialog1 = CreateShortcutDialogFragment.getInstance(shortcutInfo);
+                        dialog1.show(getSupportFragmentManager(), CreateShortcutDialogFragment.TAG);
                         dialog.dismiss();
                     })
                     .show();

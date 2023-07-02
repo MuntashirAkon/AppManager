@@ -3,12 +3,10 @@
 package io.github.muntashirakon.AppManager.apk.behavior;
 
 import android.annotation.SuppressLint;
-import android.annotation.UserIdInt;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.UserHandleHidden;
 
 import androidx.annotation.IntDef;
@@ -19,7 +17,6 @@ import androidx.fragment.app.FragmentActivity;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.PendingIntentCompat;
@@ -43,71 +40,13 @@ public final class FreezeUnfreeze {
 
     public static final int PRIVATE_FLAG_FREEZE_FORCE = 1 << 0;
 
-    public static class ShortcutInfo {
-        public final String shortcutId;
-        @NonNull
-        public final String packageName;
-        @UserIdInt
-        public final int userId;
-        @FreezeFlags
-        public final int flags;
-
-        private Bitmap mIcon;
-        private String mLabel;
-        private int mPrivateFlags;
-
-        public ShortcutInfo(@NonNull String packageName, int userId, int flags) {
-            this.shortcutId = "freeze:u=" + userId + ",p=" + packageName;
-            this.packageName = packageName;
-            this.userId = userId;
-            this.flags = flags;
-        }
-
-        public Bitmap getIcon() {
-            return mIcon;
-        }
-
-        public void setIcon(Bitmap icon) {
-            mIcon = icon;
-        }
-
-        public String getLabel() {
-            return mLabel;
-        }
-
-        public void setLabel(String label) {
-            mLabel = label;
-        }
-
-        public int getPrivateFlags() {
-            return mPrivateFlags;
-        }
-
-        public void setPrivateFlags(int privateFlags) {
-            mPrivateFlags = privateFlags;
-        }
-
-        public void addPrivateFlags(int privateFlags) {
-            mPrivateFlags |= privateFlags;
-        }
-
-        public void removePrivateFlags(int privateFlags) {
-            mPrivateFlags &= ~privateFlags;
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(packageName, userId);
-        }
-    }
-
     private static final String EXTRA_PACKAGE_NAME = "pkg";
     private static final String EXTRA_USER_ID = "user";
     private static final String EXTRA_FLAGS = "flags";
     private static final String EXTRA_FORCE_FREEZE = "force";
 
     @NonNull
-    public static Intent getShortcutIntent(@NonNull Context context, @NonNull ShortcutInfo shortcutInfo) {
+    public static Intent getShortcutIntent(@NonNull Context context, @NonNull FreezeUnfreezeShortcutInfo shortcutInfo) {
         Intent intent = new Intent(context, FreezeUnfreezeActivity.class);
         intent.putExtra(EXTRA_PACKAGE_NAME, shortcutInfo.packageName);
         intent.putExtra(EXTRA_USER_ID, shortcutInfo.userId);
@@ -117,7 +56,7 @@ public final class FreezeUnfreeze {
     }
 
     @Nullable
-    public static ShortcutInfo getShortcutInfo(@NonNull Intent intent) {
+    public static FreezeUnfreezeShortcutInfo getShortcutInfo(@NonNull Intent intent) {
         String packageName = intent.getStringExtra(EXTRA_PACKAGE_NAME);
         if (packageName == null) {
             return null;
@@ -125,14 +64,14 @@ public final class FreezeUnfreeze {
         int userId = intent.getIntExtra(EXTRA_USER_ID, UserHandleHidden.myUserId());
         int flags = intent.getIntExtra(EXTRA_FLAGS, 0);
         boolean force = intent.getBooleanExtra(EXTRA_FORCE_FREEZE, false);
-        ShortcutInfo shortcutInfo = new ShortcutInfo(packageName, userId, flags);
+        FreezeUnfreezeShortcutInfo shortcutInfo = new FreezeUnfreezeShortcutInfo(packageName, userId, flags);
         if (force) {
             shortcutInfo.addPrivateFlags(PRIVATE_FLAG_FREEZE_FORCE);
         }
         return shortcutInfo;
     }
 
-    static void launchApp(@NonNull FragmentActivity activity, @NonNull ShortcutInfo shortcutInfo) {
+    static void launchApp(@NonNull FragmentActivity activity, @NonNull FreezeUnfreezeShortcutInfo shortcutInfo) {
         if (shortcutInfo.userId != UserHandleHidden.myUserId()) {
             return;
         }
@@ -157,7 +96,7 @@ public final class FreezeUnfreeze {
                     .setWhen(System.currentTimeMillis())
                     .setSmallIcon(R.drawable.ic_default_notification)
                     .setTicker(activity.getText(R.string.freeze))
-                    .setContentTitle(shortcutInfo.getLabel())
+                    .setContentTitle(shortcutInfo.getName())
                     .setContentText(activity.getString(R.string.tap_to_freeze_app))
                     .setContentIntent(pendingIntent)
                     .build());

@@ -51,7 +51,7 @@ public class FreezeUnfreezeActivity extends BaseActivity {
             finishAndRemoveTask();
             return;
         }
-        FreezeUnfreeze.ShortcutInfo i = FreezeUnfreeze.getShortcutInfo(getIntent());
+        FreezeUnfreezeShortcutInfo i = FreezeUnfreeze.getShortcutInfo(getIntent());
         if (i != null) {
             hideNotification(i);
             mViewModel.addToPendingShortcuts(i);
@@ -66,13 +66,13 @@ public class FreezeUnfreezeActivity extends BaseActivity {
                 finishAndRemoveTask();
                 return;
             }
-            FreezeUnfreeze.ShortcutInfo shortcutInfo = shortcutInfoBooleanPair.first;
+            FreezeUnfreezeShortcutInfo shortcutInfo = shortcutInfoBooleanPair.first;
             Intent intent = FreezeUnfreeze.getShortcutIntent(this, shortcutInfo);
             // Set action for shortcut
             intent.setAction(Intent.ACTION_CREATE_SHORTCUT);
-            ShortcutInfoCompat shortcutInfoCompat = new ShortcutInfoCompat.Builder(this, shortcutInfo.shortcutId)
-                    .setShortLabel(shortcutInfo.getLabel())
-                    .setLongLabel(shortcutInfo.getLabel())
+            ShortcutInfoCompat shortcutInfoCompat = new ShortcutInfoCompat.Builder(this, shortcutInfo.getId())
+                    .setShortLabel(shortcutInfo.getName())
+                    .setLongLabel(shortcutInfo.getName())
                     .setIcon(IconCompat.createWithBitmap(shortcutInfo.getIcon()))
                     .setIntent(intent)
                     .build();
@@ -105,29 +105,29 @@ public class FreezeUnfreezeActivity extends BaseActivity {
             finishAndRemoveTask();
             return;
         }
-        FreezeUnfreeze.ShortcutInfo shortcutInfo = FreezeUnfreeze.getShortcutInfo(getIntent());
+        FreezeUnfreezeShortcutInfo shortcutInfo = FreezeUnfreeze.getShortcutInfo(getIntent());
         if (mViewModel != null && shortcutInfo != null) {
             hideNotification(shortcutInfo);
             mViewModel.addToPendingShortcuts(shortcutInfo);
         }
     }
 
-    private void hideNotification(@Nullable FreezeUnfreeze.ShortcutInfo shortcutInfo) {
+    private void hideNotification(@Nullable FreezeUnfreezeShortcutInfo shortcutInfo) {
         if (shortcutInfo == null) return;
         int notificationId = shortcutInfo.hashCode();
         NotificationUtils.getFreezeUnfreezeNotificationManager(this).cancel(notificationId);
     }
 
     public static class FreezeUnfreezeViewModel extends AndroidViewModel {
-        private final MutableLiveData<Pair<FreezeUnfreeze.ShortcutInfo, Boolean>> mIsFrozenLiveData = new MutableLiveData<>();
-        private final MutableLiveData<FreezeUnfreeze.ShortcutInfo> mOpenAppOrFreeze = new MutableLiveData<>();
-        private final Queue<FreezeUnfreeze.ShortcutInfo> mPendingShortcuts = new LinkedList<>();
+        private final MutableLiveData<Pair<FreezeUnfreezeShortcutInfo, Boolean>> mIsFrozenLiveData = new MutableLiveData<>();
+        private final MutableLiveData<FreezeUnfreezeShortcutInfo> mOpenAppOrFreeze = new MutableLiveData<>();
+        private final Queue<FreezeUnfreezeShortcutInfo> mPendingShortcuts = new LinkedList<>();
 
         public FreezeUnfreezeViewModel(@NonNull Application application) {
             super(application);
         }
 
-        public void addToPendingShortcuts(@NonNull FreezeUnfreeze.ShortcutInfo shortcutInfo) {
+        public void addToPendingShortcuts(@NonNull FreezeUnfreezeShortcutInfo shortcutInfo) {
             synchronized (mPendingShortcuts) {
                 mPendingShortcuts.add(shortcutInfo);
             }
@@ -135,7 +135,7 @@ public class FreezeUnfreezeActivity extends BaseActivity {
 
         public void checkNextFrozen() {
             ThreadUtils.postOnBackgroundThread(() -> {
-                FreezeUnfreeze.ShortcutInfo shortcutInfo;
+                FreezeUnfreezeShortcutInfo shortcutInfo;
                 synchronized (mPendingShortcuts) {
                     shortcutInfo = mPendingShortcuts.poll();
                 }
@@ -149,7 +149,7 @@ public class FreezeUnfreezeActivity extends BaseActivity {
                             MATCH_UNINSTALLED_PACKAGES | MATCH_DISABLED_COMPONENTS
                                     | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, shortcutInfo.userId);
                     Bitmap icon = getBitmapFromDrawable(applicationInfo.loadIcon(getApplication().getPackageManager()));
-                    shortcutInfo.setLabel(applicationInfo.loadLabel(getApplication().getPackageManager()).toString());
+                    shortcutInfo.setName(applicationInfo.loadLabel(getApplication().getPackageManager()));
                     boolean isFrozen = !forceFreeze && FreezeUtils.isFrozen(applicationInfo);
                     if (isFrozen) {
                         FreezeUtils.unfreeze(shortcutInfo.packageName, shortcutInfo.userId);
@@ -170,7 +170,7 @@ public class FreezeUnfreezeActivity extends BaseActivity {
             });
         }
 
-        public void freezeFinal(FreezeUnfreeze.ShortcutInfo shortcutInfo) {
+        public void freezeFinal(FreezeUnfreezeShortcutInfo shortcutInfo) {
             ThreadUtils.postOnBackgroundThread(() -> {
                 try {
                     FreezeUtils.freeze(shortcutInfo.packageName, shortcutInfo.userId);

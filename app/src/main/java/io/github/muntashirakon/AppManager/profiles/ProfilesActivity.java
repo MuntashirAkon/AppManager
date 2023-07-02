@@ -3,6 +3,7 @@
 package io.github.muntashirakon.AppManager.profiles;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.text.TextUtils;
@@ -37,11 +38,12 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.shortcut.LauncherShortcuts;
+import io.github.muntashirakon.AppManager.shortcut.CreateShortcutDialogFragment;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
@@ -298,8 +300,11 @@ public class ProfilesActivity extends BaseActivity {
                                     if (!isChecked) {
                                         return;
                                     }
-                                    LauncherShortcuts.createForProfile(mActivity, profName, shortcutTypes[which],
-                                            shortcutTypesL[which]);
+                                    Drawable icon = Objects.requireNonNull(ContextCompat.getDrawable(mActivity, R.drawable.ic_launcher_foreground));
+                                    ProfileShortcutInfo shortcutInfo = new ProfileShortcutInfo(profName, shortcutTypes[which], shortcutTypesL[which]);
+                                    shortcutInfo.setIcon(UIUtils.getBitmapFromDrawable(icon));
+                                    CreateShortcutDialogFragment dialog1 = CreateShortcutDialogFragment.getInstance(shortcutInfo);
+                                    dialog1.show(mActivity.getSupportFragmentManager(), CreateShortcutDialogFragment.TAG);
                                     dialog.dismiss();
                                 })
                                 .show();

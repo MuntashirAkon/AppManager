@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.BadParcelableException;
 import android.os.Build;
@@ -34,6 +35,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.collection.SparseArrayCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -62,12 +64,12 @@ import io.github.muntashirakon.AppManager.compat.IntegerCompat;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.crypto.auth.AuthManager;
-import io.github.muntashirakon.AppManager.self.SelfPermissions;
-import io.github.muntashirakon.AppManager.shortcut.LauncherIconCreator;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.runner.RunnerUtils;
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.Ops;
+import io.github.muntashirakon.AppManager.shortcut.CreateShortcutDialogFragment;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.TextInputDropdownDialogBuilder;
@@ -963,40 +965,41 @@ public class ActivityInterceptor extends BaseActivity {
             pasteIntentDetails();
             return true;
         } else if (id == R.id.action_shortcut) {
-            ActionBar actionBar = getSupportActionBar();
-            CharSequence shortcutName = null;
-            if (actionBar != null) {
-                shortcutName = actionBar.getSubtitle();
-            }
-            if (shortcutName == null) {
-                shortcutName = Objects.requireNonNull(getTitle());
-            }
-            EditShortcutDialogFragment fragment = EditShortcutDialogFragment.getInstance(shortcutName.toString(), mRequestedComponent);
-            fragment.setOnCreateShortcut((newShortcutName, drawable) -> {
-                try {
-                    Intent intent = new Intent(mMutableIntent);
-                    // Add necessary extras
-                    intent.putExtra(EXTRA_AUTH, AuthManager.getKey());
-                    intent.putExtra(EXTRA_TRIGGER_ON_START, true);
-                    intent.putExtra(EXTRA_ACTION, intent.getAction());
-                    if (mUseRoot) {
-                        intent.putExtra(EXTRA_ROOT, true);
-                    }
-                    if (mUserHandle != UserHandleHidden.myUserId()) {
-                        intent.putExtra(EXTRA_USER_HANDLE, mUserHandle);
-                    }
-                    if (mRequestedComponent != null) {
-                        intent.putExtra(EXTRA_PACKAGE_NAME, mRequestedComponent.getPackageName());
-                        intent.putExtra(EXTRA_CLASS_NAME, mRequestedComponent.getClassName());
-                    }
-                    intent.setClass(getApplicationContext(), ActivityInterceptor.class);
-                    LauncherIconCreator.createLauncherIcon(this, newShortcutName, drawable, intent);
-                } catch (Throwable th) {
-                    Log.e(TAG, th);
-                    UIUtils.displayLongToast(R.string.error_with_details, th.getClass().getName() + ": " + th.getMessage());
+            try {
+                ActionBar actionBar = getSupportActionBar();
+                CharSequence shortcutName = null;
+                if (actionBar != null) {
+                    shortcutName = actionBar.getSubtitle();
                 }
-            });
-            fragment.show(getSupportFragmentManager(), EditShortcutDialogFragment.TAG);
+                if (shortcutName == null) {
+                    shortcutName = Objects.requireNonNull(getTitle());
+                }
+                Drawable icon = Objects.requireNonNull(ContextCompat.getDrawable(this, R.drawable.ic_launcher_foreground));
+                Intent intent = new Intent(mMutableIntent);
+                // Add necessary extras
+                intent.putExtra(EXTRA_AUTH, AuthManager.getKey());
+                intent.putExtra(EXTRA_TRIGGER_ON_START, true);
+                intent.putExtra(EXTRA_ACTION, intent.getAction());
+                if (mUseRoot) {
+                    intent.putExtra(EXTRA_ROOT, true);
+                }
+                if (mUserHandle != UserHandleHidden.myUserId()) {
+                    intent.putExtra(EXTRA_USER_HANDLE, mUserHandle);
+                }
+                if (mRequestedComponent != null) {
+                    intent.putExtra(EXTRA_PACKAGE_NAME, mRequestedComponent.getPackageName());
+                    intent.putExtra(EXTRA_CLASS_NAME, mRequestedComponent.getClassName());
+                }
+                intent.setClass(getApplicationContext(), ActivityInterceptor.class);
+                InterceptorShortcutInfo shortcutInfo = new InterceptorShortcutInfo(intent);
+                shortcutInfo.setName(shortcutName);
+                shortcutInfo.setIcon(UIUtils.getBitmapFromDrawable(icon));
+                CreateShortcutDialogFragment dialog = CreateShortcutDialogFragment.getInstance(shortcutInfo);
+                dialog.show(getSupportFragmentManager(), CreateShortcutDialogFragment.TAG);
+            } catch (Throwable th) {
+                Log.e(TAG, th);
+                UIUtils.displayLongToast(R.string.error_with_details, th.getClass().getName() + ": " + th.getMessage());
+            }
             return true;
         }
         return super.onOptionsItemSelected(item);

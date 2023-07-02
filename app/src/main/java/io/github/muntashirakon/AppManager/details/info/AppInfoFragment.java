@@ -12,6 +12,7 @@ import static io.github.muntashirakon.AppManager.utils.UIUtils.displayLongToast;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.displayShortToast;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getBitmapFromDrawable;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getColoredText;
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getDimmedBitmap;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getStyledKeyValue;
@@ -93,6 +94,7 @@ import io.github.muntashirakon.AppManager.accessibility.NoRootAccessibilityServi
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
 import io.github.muntashirakon.AppManager.apk.behavior.DexOptimizationDialog;
+import io.github.muntashirakon.AppManager.apk.behavior.FreezeUnfreezeShortcutInfo;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
@@ -132,7 +134,7 @@ import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.sharedpref.SharedPrefsActivity;
-import io.github.muntashirakon.AppManager.shortcut.LauncherShortcuts;
+import io.github.muntashirakon.AppManager.shortcut.CreateShortcutDialogFragment;
 import io.github.muntashirakon.AppManager.ssaid.ChangeSsaidDialog;
 import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
@@ -1722,8 +1724,12 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     for (int flag : selections) {
                         flags |= flag;
                     }
-                    LauncherShortcuts.createFreezeUnfreezeShortcut(requireContext(), mPackageLabel,
-                            getBitmapFromDrawable(mIconView.getDrawable()), mPackageName, mUserId, flags, isFrozen);
+                    Bitmap icon = getBitmapFromDrawable(mIconView.getDrawable());
+                    FreezeUnfreezeShortcutInfo shortcutInfo = new FreezeUnfreezeShortcutInfo(mPackageName, mUserId, flags);
+                    shortcutInfo.setName(mPackageLabel);
+                    shortcutInfo.setIcon(isFrozen ? getDimmedBitmap(icon) : icon);
+                    CreateShortcutDialogFragment dialog1 = CreateShortcutDialogFragment.getInstance(shortcutInfo);
+                    dialog1.show(getChildFragmentManager(), CreateShortcutDialogFragment.TAG);
                 })
                 .show();
     }

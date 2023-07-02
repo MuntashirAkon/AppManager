@@ -9,6 +9,7 @@ import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -31,6 +32,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.SearchView;
 import androidx.collection.ArrayMap;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -55,7 +57,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.BundleCompat;
-import io.github.muntashirakon.AppManager.shortcut.LauncherShortcuts;
+import io.github.muntashirakon.AppManager.shortcut.CreateShortcutDialogFragment;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.StorageUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
@@ -320,11 +322,16 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         mModel.getShortcutCreatorLiveData().observe(getViewLifecycleOwner(), pathBitmapPair -> {
             Path path = pathBitmapPair.first;
             Bitmap icon = pathBitmapPair.second;
-            if (path.isDirectory()) {
-                LauncherShortcuts.fm_createForFolder(mActivity, path.getName(), path.getUri());
+            FmShortcutInfo shortcutInfo = new FmShortcutInfo(path, null);
+            if (icon != null) {
+                shortcutInfo.setIcon(icon);
             } else {
-                LauncherShortcuts.fm_createForFile(mActivity, path.getName(), icon, path.getUri(), null);
+                Drawable drawable = Objects.requireNonNull(ContextCompat.getDrawable(requireContext(),
+                        path.isDirectory() ? R.drawable.ic_folder : R.drawable.ic_file));
+                shortcutInfo.setIcon(UIUtils.getBitmapFromDrawable(drawable));
             }
+            CreateShortcutDialogFragment dialog = CreateShortcutDialogFragment.getInstance(shortcutInfo);
+            dialog.show(getChildFragmentManager(), CreateShortcutDialogFragment.TAG);
         });
         mModel.getSharableItemsLiveData().observe(getViewLifecycleOwner(), sharableItems ->
                 mActivity.startActivity(sharableItems.toSharableIntent()));

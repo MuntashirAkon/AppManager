@@ -82,12 +82,9 @@
     <string name="error_verbose_pin_shortcut">Current launcher does not support PinShortcut. Unable to create shortcut.</string>
     <string name="starting_activity">Starting activity: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="create_shortcut">Create Shortcut</string>
-    <string name="edit_shortcut">Edit Shortcut</string>
     <string name="shortcut_name">Shortcut Name</string>
     <string name="package_name">Package Name</string>
     <string name="class_name">Class Name</string>
-    <string name="error_invalid_icon_resource">Invalid icon resource</string>
-    <string name="error_invalid_icon_format">Invalid icon format</string>
     <string name="icon_picker">Icon Picker</string>
     <string name="license">License</string>
     <string name="license_message" translatable="false"><a href="https://www.gnu.org/licenses/gpl-3.0.html">GNU General

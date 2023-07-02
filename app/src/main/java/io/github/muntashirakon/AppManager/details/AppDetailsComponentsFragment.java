@@ -29,7 +29,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.UiThread;
 import androidx.appcompat.widget.PopupMenu;
-import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
@@ -60,6 +59,7 @@ import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.Prefs;
+import io.github.muntashirakon.AppManager.shortcut.CreateShortcutDialogFragment;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
@@ -539,12 +539,11 @@ public class AppDetailsComponentsFragment extends AppDetailsFragment {
                     });
                 }
                 holder.shortcutBtn.setOnClickListener(v -> {
-                    DialogFragment dialog = new EditShortcutDialogFragment();
-                    Bundle args = new Bundle();
-                    args.putParcelable(EditShortcutDialogFragment.ARG_ACTIVITY_INFO, activityInfo);
-                    args.putCharSequence(EditShortcutDialogFragment.ARG_SHORTCUT_NAME, label);
-                    dialog.setArguments(args);
-                    dialog.show(getParentFragmentManager(), EditShortcutDialogFragment.TAG);
+                    PackageItemShortcutInfo<ActivityInfo> shortcutInfo = new PackageItemShortcutInfo<>(activityInfo, ActivityInfo.class);
+                    shortcutInfo.setName(label);
+                    shortcutInfo.setIcon(UIUtils.getBitmapFromDrawable(activityInfo.loadIcon(packageManager)));
+                    CreateShortcutDialogFragment dialog = CreateShortcutDialogFragment.getInstance(shortcutInfo);
+                    dialog.show(getParentFragmentManager(), CreateShortcutDialogFragment.TAG);
                 });
                 holder.shortcutBtn.setVisibility(View.VISIBLE);
                 holder.launchBtn.setVisibility(View.VISIBLE);
