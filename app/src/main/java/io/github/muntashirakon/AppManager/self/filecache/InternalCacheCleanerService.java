@@ -27,7 +27,8 @@ public class InternalCacheCleanerService extends ForegroundService {
     public static void scheduleAlarm(@NonNull Context context) {
         Intent intent = new Intent(context, InternalCacheCleanerService.class);
         int flags = PendingIntent.FLAG_UPDATE_CURRENT;
-        if (PendingIntentCompat.getService(context, 0, intent, flags | PendingIntent.FLAG_NO_CREATE, false) != null) {
+        PendingIntent pastAlarmIntent = PendingIntentCompat.getService(context, 0, intent, flags | PendingIntent.FLAG_NO_CREATE, false);
+        if (pastAlarmIntent != null) {
             // Already exists
             return;
         }
