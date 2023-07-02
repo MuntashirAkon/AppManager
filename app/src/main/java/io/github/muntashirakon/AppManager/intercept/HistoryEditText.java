@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import io.github.muntashirakon.widget.NoFilterArrayAdapter;
+import io.github.muntashirakon.adapters.NoFilterArrayAdapter;
 
 public class HistoryEditText {
     private static final String DELIMITER = "';'";

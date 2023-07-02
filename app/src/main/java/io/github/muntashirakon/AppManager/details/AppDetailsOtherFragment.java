@@ -57,7 +57,7 @@ import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.util.LocalizedString;
-import io.github.muntashirakon.util.ProgressIndicatorCompat;
+import io.github.muntashirakon.view.ProgressIndicatorCompat;
 import io.github.muntashirakon.widget.RecyclerView;
 
 public class AppDetailsOtherFragment extends AppDetailsFragment {

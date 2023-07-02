@@ -76,6 +76,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
+import aosp.libcore.util.HexEncoding;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.signing.Signer;
 import io.github.muntashirakon.AppManager.apk.signing.SignerInfo;
@@ -763,7 +764,7 @@ public final class PackageUtils {
         builder.append(getStyledKeyValue(ctx, R.string.validity, ctx.getText(validity), separator))
                 .append("\n")
                 .append(getPrimaryText(ctx, ctx.getString(R.string.serial_no) + separator))
-                .append(getMonospacedText(Utils.bytesToHex(certificate.getSerialNumber().toByteArray())))
+                .append(getMonospacedText(HexEncoding.encodeToString(certificate.getSerialNumber().toByteArray(), false)))
                 .append("\n");
         // Checksums
         builder.append(getTitleText(ctx, ctx.getString(R.string.checksums))).append("\n");
@@ -781,7 +782,7 @@ public final class PackageUtils {
                 .append(getStyledKeyValue(ctx, "OID", certificate.getSigAlgOID(), separator))
                 .append("\n")
                 .append(getPrimaryText(ctx, ctx.getString(R.string.app_signing_signature) + separator))
-                .append(getMonospacedText(Utils.bytesToHex(certificate.getSignature()))).append("\n");
+                .append(getMonospacedText(HexEncoding.encodeToString(certificate.getSignature(), false))).append("\n");
         // Public key used by Google: https://github.com/google/conscrypt
         // 1. X509PublicKey (PublicKey)
         // 2. OpenSSLRSAPublicKey (RSAPublicKey)
@@ -798,7 +799,7 @@ public final class PackageUtils {
                     .append(getStyledKeyValue(ctx, R.string.rsa_exponent, rsaPublicKey.getPublicExponent().toString(), separator))
                     .append("\n")
                     .append(getPrimaryText(ctx, ctx.getString(R.string.rsa_modulus) + separator))
-                    .append(getMonospacedText(Utils.bytesToHex(rsaPublicKey.getModulus().toByteArray())));
+                    .append(getMonospacedText(HexEncoding.encodeToString(rsaPublicKey.getModulus().toByteArray(), false)));
         } else if (publicKey instanceof ECPublicKey) {
             ECPublicKey ecPublicKey = (ECPublicKey) publicKey;
             builder.append("\n")
@@ -814,7 +815,7 @@ public final class PackageUtils {
                 String oidName = OidMap.getName(oid);
                 builder.append("\n- ")
                         .append(getPrimaryText(ctx, (oidName != null ? oidName : oid) + separator))
-                        .append(getMonospacedText(Utils.bytesToHex(certificate.getExtensionValue(oid))));
+                        .append(getMonospacedText(HexEncoding.encodeToString(certificate.getExtensionValue(oid), false)));
             }
         }
         Set<String> nonCritSet = certificate.getNonCriticalExtensionOIDs();
@@ -824,7 +825,7 @@ public final class PackageUtils {
                 String oidName = OidMap.getName(oid);
                 builder.append("\n- ")
                         .append(getPrimaryText(ctx, (oidName != null ? oidName : oid) + separator))
-                        .append(getMonospacedText(Utils.bytesToHex(certificate.getExtensionValue(oid))));
+                        .append(getMonospacedText(HexEncoding.encodeToString(certificate.getExtensionValue(oid), false)));
             }
         }
         return builder;

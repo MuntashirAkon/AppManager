@@ -2,10 +2,13 @@
 
 package io.github.muntashirakon.AppManager.scanner;
 
+import static io.github.muntashirakon.AppManager.misc.AdvancedSearchView.SEARCH_TYPE_REGEX;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -33,13 +36,10 @@ import java.util.Locale;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.editor.CodeEditorActivity;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
-import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.util.UiUtils;
 import io.github.muntashirakon.widget.RecyclerView;
-
-import static io.github.muntashirakon.AppManager.misc.AdvancedSearchView.SEARCH_TYPE_REGEX;
 
 public class ClassListingFragment extends Fragment implements AdvancedSearchView.OnQueryTextListener {
     private TextView mEmptyView;
@@ -91,7 +91,7 @@ public class ClassListingFragment extends Fragment implements AdvancedSearchView
     @Override
     public void onResume() {
         super.onResume();
-        if (mClassListingAdapter != null && !TextUtilsCompat.isEmpty(mClassListingAdapter.mConstraint)) {
+        if (mClassListingAdapter != null && !TextUtils.isEmpty(mClassListingAdapter.mConstraint)) {
             mClassListingAdapter.filter();
         }
     }
@@ -178,7 +178,7 @@ public class ClassListingFragment extends Fragment implements AdvancedSearchView
         }
 
         void filter() {
-            if (!TextUtilsCompat.isEmpty(mConstraint)) {
+            if (!TextUtils.isEmpty(mConstraint)) {
                 filter(mConstraint, mFilterType);
             }
         }

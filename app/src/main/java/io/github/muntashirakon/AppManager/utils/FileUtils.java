@@ -53,18 +53,6 @@ public final class FileUtils {
         return header == 0x504B0304 || header == 0x504B0506 || header == 0x504B0708;
     }
 
-    @AnyThread
-    public static boolean isZip(@NonNull InputStream is) throws IOException {
-        if (!is.markSupported()) throw new IOException("InputStream must support mark.");
-        int header;
-        byte[] headerBytes = new byte[4];
-        is.mark(4);
-        is.read(headerBytes);
-        is.reset();
-        header = new BigInteger(headerBytes).intValue();
-        return header == 0x504B0304 || header == 0x504B0506 || header == 0x504B0708;
-    }
-
     @WorkerThread
     @NonNull
     public static Path saveZipFile(@NonNull InputStream zipInputStream,

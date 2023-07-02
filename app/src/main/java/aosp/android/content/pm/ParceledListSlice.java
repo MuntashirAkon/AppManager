@@ -5,10 +5,12 @@ package aosp.android.content.pm;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import androidx.annotation.Nullable;
+
 import java.util.Collections;
 import java.util.List;
 
-import io.github.muntashirakon.AppManager.utils.ParcelUtils;
+import io.github.muntashirakon.util.ParcelUtils;
 
 /**
  * Transfer a large list of Parcelable objects across an IPC.  Splits into
@@ -52,7 +54,7 @@ public class ParceledListSlice<T extends Parcelable> extends BaseParceledListSli
     }
 
     @Override
-    protected Parcelable.Creator<?> readParcelableCreator(Parcel from, ClassLoader loader) {
+    protected Parcelable.Creator<?> readParcelableCreator(Parcel from, @Nullable ClassLoader loader) {
         return ParcelUtils.readParcelableCreator(from, loader);
     }
 

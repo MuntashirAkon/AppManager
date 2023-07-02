@@ -33,7 +33,6 @@ import java.util.List;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.accessibility.AccessibilityMultiplexer;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
-import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.AppearanceUtils;
 import io.github.muntashirakon.widget.TextInputTextView;
@@ -77,7 +76,7 @@ public class TrackerWindow {
         mPlayPauseButton = mView.findViewById(R.id.action_play_pause);
         mPackageNameView.setOnLongClickListener(v -> {
             Editable packageName = mPackageNameView.getText();
-            if (TextUtilsCompat.isEmpty(packageName)) {
+            if (TextUtils.isEmpty(packageName)) {
                 return false;
             }
             copyText("Package name", packageName);
@@ -85,7 +84,7 @@ public class TrackerWindow {
         });
         mClassNameView.setOnLongClickListener(v -> {
             Editable className = mClassNameView.getText();
-            if (TextUtilsCompat.isEmpty(className)) {
+            if (TextUtils.isEmpty(className)) {
                 return false;
             }
             copyText("Class name", className);
@@ -93,7 +92,7 @@ public class TrackerWindow {
         });
         mClassHierarchyView.setOnLongClickListener(v -> {
             Editable hierarchy = mClassHierarchyView.getText();
-            if (TextUtilsCompat.isEmpty(hierarchy)) {
+            if (TextUtils.isEmpty(hierarchy)) {
                 return false;
             }
             copyText("Class hierarchy", hierarchy);
@@ -101,7 +100,7 @@ public class TrackerWindow {
         });
         mView.findViewById(R.id.info).setOnClickListener(v -> {
             Editable packageName = mPackageNameView.getText();
-            if (TextUtilsCompat.isEmpty(packageName)) {
+            if (TextUtils.isEmpty(packageName)) {
                 return;
             }
             Intent appInfoIntent = AppDetailsActivity.getIntent(context, packageName.toString(), UserHandleHidden.myUserId(), true);

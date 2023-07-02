@@ -2,9 +2,9 @@
 
 package io.github.muntashirakon.AppManager.db.utils;
 
+import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.GET_SIGNING_CERTIFICATES;
 import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_DISABLED_COMPONENTS;
 import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_UNINSTALLED_PACKAGES;
-import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.GET_SIGNING_CERTIFICATES;
 
 import android.annotation.UserIdInt;
 import android.content.Context;
@@ -15,6 +15,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.RemoteException;
 import android.os.UserHandleHidden;
+import android.text.TextUtils;
 import android.util.ArrayMap;
 
 import androidx.annotation.NonNull;
@@ -51,7 +52,6 @@ import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
-import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
 public class AppDb {
@@ -406,7 +406,7 @@ public class AppDb {
                 SsaidSettings ssaidSettings = userIdSsaidSettingsMap.get(userId);
                 if (ssaidSettings != null) {
                     String ssaid = ssaidSettings.getSsaid(app.packageName, app.uid);
-                    app.ssaid = TextUtilsCompat.isEmpty(ssaid) ? null : ssaid;
+                    app.ssaid = TextUtils.isEmpty(ssaid) ? null : ssaid;
                 } else {
                     app.ssaid = null;
                 }

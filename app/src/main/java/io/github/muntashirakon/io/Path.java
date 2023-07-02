@@ -17,6 +17,7 @@ import android.os.UserHandleHidden;
 import android.provider.DocumentsContract;
 import android.system.ErrnoException;
 import android.system.OsConstants;
+import android.text.TextUtils;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
 
@@ -53,7 +54,6 @@ import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
-import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.io.fs.VirtualFileSystem;
 
 /**
@@ -212,7 +212,7 @@ public class Path implements Comparable<Path> {
                     Path rootPath = VirtualFileSystem.getFsRoot(parsedUri.first);
                     if (rootPath != null) {
                         String path = Paths.getSanitizedPath(parsedUri.second, true);
-                        if (TextUtilsCompat.isEmpty(path) || path.equals(File.separator)) {
+                        if (TextUtils.isEmpty(path) || path.equals(File.separator)) {
                             // Root requested
                             documentFile = rootPath.mDocumentFile;
                         } else {

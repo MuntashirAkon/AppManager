@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-package io.github.muntashirakon.widget;
+package io.github.muntashirakon.adapters;
 
 import android.content.Context;
 import android.widget.ArrayAdapter;

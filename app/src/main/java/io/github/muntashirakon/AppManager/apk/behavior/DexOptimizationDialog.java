@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemProperties;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 
@@ -27,8 +28,7 @@ import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.users.Users;
-import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
-import io.github.muntashirakon.widget.AnyFilterArrayAdapter;
+import io.github.muntashirakon.adapters.AnyFilterArrayAdapter;
 
 public class DexOptimizationDialog extends DialogFragment {
     public static final String TAG = DexOptimizationDialog.class.getSimpleName();
@@ -110,7 +110,7 @@ public class DexOptimizationDialog extends DialogFragment {
                 .setView(view)
                 .setPositiveButton(R.string.action_run, (dialog, which) -> {
                     Editable compilerFilterRaw = autoCompleteTextView.getText();
-                    if (TextUtilsCompat.isEmpty(compilerFilterRaw)) {
+                    if (TextUtils.isEmpty(compilerFilterRaw)) {
                         return;
                     }
                     String compilerFiler = compilerFilterRaw.toString().trim();

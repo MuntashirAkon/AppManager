@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.verify.domain.DomainVerificationUserState;
 import android.os.Build;
 import android.os.UserHandleHidden;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -64,7 +65,6 @@ import io.github.muntashirakon.AppManager.usage.UsageUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.KeyStoreUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
-import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
@@ -207,7 +207,7 @@ public class AppInfoViewModel extends AndroidViewModel {
                 try {
                     tagCloud.ssaid = new SsaidSettings(userId)
                             .getSsaid(packageName, applicationInfo.uid);
-                    if (TextUtilsCompat.isEmpty(tagCloud.ssaid)) tagCloud.ssaid = null;
+                    if (TextUtils.isEmpty(tagCloud.ssaid)) tagCloud.ssaid = null;
                 } catch (IOException ignore) {
                 }
             }

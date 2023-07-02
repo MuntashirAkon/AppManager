@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.app.Application;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.text.TextUtils;
 
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
@@ -37,7 +38,6 @@ import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
-import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
@@ -368,7 +368,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
 
         List<FmItem> filteredList;
         synchronized (mFmItems) {
-            if (!TextUtilsCompat.isEmpty(mQueryString)) {
+            if (!TextUtils.isEmpty(mQueryString)) {
                 filteredList = AdvancedSearchView.matches(mQueryString, mFmItems,
                         (AdvancedSearchView.ChoiceGenerator<FmItem>) object -> object.path.getName(),
                         AdvancedSearchView.SEARCH_TYPE_CONTAINS);

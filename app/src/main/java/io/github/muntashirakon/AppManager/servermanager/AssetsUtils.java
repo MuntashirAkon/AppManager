@@ -19,11 +19,11 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.SecureRandom;
 
+import aosp.libcore.util.HexEncoding;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.server.common.ConfigParams;
 import io.github.muntashirakon.AppManager.server.common.Constants;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
-import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.io.IoUtils;
 
 // Copyright 2016 Zheng Li
@@ -111,6 +111,6 @@ class AssetsUtils {
         SecureRandom secureRandom = new SecureRandom();
         byte[] bytes = new byte[16];
         secureRandom.nextBytes(bytes);
-        return Utils.bytesToHex(bytes);
+        return HexEncoding.encodeToString(bytes, false /* lowercase */);
     }
 }

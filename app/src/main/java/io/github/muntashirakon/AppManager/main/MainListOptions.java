@@ -28,7 +28,7 @@ import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
-import io.github.muntashirakon.widget.AnyFilterArrayAdapter;
+import io.github.muntashirakon.adapters.AnyFilterArrayAdapter;
 
 public class MainListOptions extends ListOptions {
     public static final String TAG = MainListOptions.class.getSimpleName();

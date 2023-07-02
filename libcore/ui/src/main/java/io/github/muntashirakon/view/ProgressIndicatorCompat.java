@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 
-package io.github.muntashirakon.util;
+package io.github.muntashirakon.view;
 
 import android.view.View;
 

@@ -19,6 +19,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.BackgroundColorSpan;
 import android.text.style.ForegroundColorSpan;
@@ -65,7 +66,7 @@ public class UIUtils {
     public static Spannable getHighlightedText(@NonNull String text, @Nullable String constraint,
                                                @ColorInt int color) {
         Spannable spannable = sSpannableFactory.newSpannable(text);
-        if (TextUtilsCompat.isEmpty(constraint)) {
+        if (TextUtils.isEmpty(constraint)) {
             return spannable;
         }
         int start = text.toLowerCase(Locale.ROOT).indexOf(constraint);
@@ -211,14 +212,6 @@ public class UIUtils {
         return typedValue.data;
     }
 
-    public static int getAccentColor(@NonNull Context context) {
-        return MaterialColors.getColor(context, androidx.appcompat.R.attr.colorAccent, -1);
-    }
-
-    public static int getPrimaryColor(@NonNull Context context) {
-        return MaterialColors.getColor(context, androidx.appcompat.R.attr.colorPrimary, -1);
-    }
-
     public static int getTextColorPrimary(@NonNull Context context) {
         return MaterialColors.getColor(context, com.google.android.material.R.attr.colorOnSurface, -1);
     }
@@ -240,11 +233,6 @@ public class UIUtils {
     public static View getDialogTitle(@NonNull FragmentActivity activity, @NonNull CharSequence title,
                                       @Nullable Drawable drawable, @Nullable CharSequence subtitle) {
         return new DialogTitleBuilder(activity).setTitle(title).setSubtitle(subtitle).setStartIcon(drawable).build();
-    }
-
-    @NonNull
-    public static AlertDialog getProgressDialog(@NonNull FragmentActivity activity) {
-        return getProgressDialog(activity, null);
     }
 
     @NonNull

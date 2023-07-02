@@ -62,7 +62,7 @@ public class ConfPreferences extends PreferenceFragmentCompat {
                     .setTitle(R.string.comment)
                     .setInputText(mModel.getComment())
                     .setPositiveButton(R.string.ok, (dialog, which, inputText, isChecked) -> {
-                        mModel.setComment(TextUtilsCompat.isEmpty(inputText) ? null : inputText.toString());
+                        mModel.setComment(TextUtils.isEmpty(inputText) ? null : inputText.toString());
                         commentPref.setSummary(mModel.getComment());
                     })
                     .setNegativeButton(R.string.cancel, null)
@@ -103,7 +103,7 @@ public class ConfPreferences extends PreferenceFragmentCompat {
                     .setInputText(mComponents == null ? "" : TextUtils.join(" ", mComponents))
                     .setHelperText(R.string.input_signatures_description)
                     .setPositiveButton(R.string.ok, (dialog, which, inputText, isChecked) -> {
-                        if (!TextUtilsCompat.isEmpty(inputText)) {
+                        if (!TextUtils.isEmpty(inputText)) {
                             String[] newComponents = inputText.toString().split("\\s+");
                             mModel.setComponents(newComponents);
                         } else mModel.setComponents(null);
@@ -125,7 +125,7 @@ public class ConfPreferences extends PreferenceFragmentCompat {
                     .setInputText(mAppOps == null ? "" : TextUtils.join(" ", mAppOps))
                     .setHelperText(R.string.input_app_ops_description_profile)
                     .setPositiveButton(R.string.ok, (dialog, which, inputText, isChecked) -> {
-                        if (!TextUtilsCompat.isEmpty(inputText)) {
+                        if (!TextUtils.isEmpty(inputText)) {
                             String[] newAppOps = inputText.toString().split("\\s+");
                             mModel.setAppOps(newAppOps);
                         } else mModel.setAppOps(null);
@@ -147,7 +147,7 @@ public class ConfPreferences extends PreferenceFragmentCompat {
                     .setInputText(mPermissions == null ? "" : TextUtils.join(" ", mPermissions))
                     .setHelperText(R.string.input_permissions_description)
                     .setPositiveButton(R.string.ok, (dialog, which, inputText, isChecked) -> {
-                        if (!TextUtilsCompat.isEmpty(inputText)) {
+                        if (!TextUtils.isEmpty(inputText)) {
                             String[] newPermissions = inputText.toString().split("\\s+");
                             mModel.setPermissions(newPermissions);
                         } else mModel.setPermissions(null);
@@ -198,7 +198,7 @@ public class ConfPreferences extends PreferenceFragmentCompat {
                         }
                         CharSequence backupName = editText.getText();
                         BackupFlags backupFlags1 = new BackupFlags(backupFlags.get());
-                        if (!TextUtilsCompat.isEmpty(backupName)) {
+                        if (!TextUtils.isEmpty(backupName)) {
                             backupFlags1.addFlag(BackupFlags.BACKUP_MULTIPLE);
                             mBackupInfo.name = backupName.toString();
                         } else {

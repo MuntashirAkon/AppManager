@@ -48,7 +48,6 @@ import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
-import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
@@ -418,7 +417,7 @@ public class Ops {
                 .setInputText(String.valueOf(ServerConfig.getAdbPort()))
                 .setHelperText(R.string.adb_connect_port_number_description)
                 .setPositiveButton(R.string.ok, (dialog2, which2, inputText, isChecked) -> {
-                    if (TextUtilsCompat.isEmpty(inputText)) {
+                    if (TextUtils.isEmpty(inputText)) {
                         UIUtils.displayShortToast(R.string.port_number_empty);
                         callback.connectAdb(-1);
                         return;

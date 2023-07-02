@@ -7,6 +7,8 @@ import static org.xmlpull.v1.XmlPullParser.END_TAG;
 import static org.xmlpull.v1.XmlPullParser.START_DOCUMENT;
 import static org.xmlpull.v1.XmlPullParser.START_TAG;
 
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 
 import com.reandroid.apk.AndroidFrameworks;
@@ -30,7 +32,6 @@ import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
 
 import io.github.muntashirakon.AppManager.utils.IntegerUtils;
-import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.io.IoUtils;
 
 public class AndroidBinXmlDecoder {
@@ -136,7 +137,7 @@ public class AndroidBinXmlDecoder {
 
     @NonNull
     private static String getNamespacePrefix(String prefix) {
-        if (TextUtilsCompat.isEmpty(prefix)) {
+        if (TextUtils.isEmpty(prefix)) {
             return "";
         }
         return prefix + ":";

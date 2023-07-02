@@ -2,6 +2,9 @@
 
 package io.github.muntashirakon.AppManager.utils;
 
+import static android.app.ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND;
+import static android.app.ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIBLE;
+
 import android.app.ActivityManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
@@ -30,15 +33,9 @@ import androidx.annotation.StringRes;
 import androidx.core.content.pm.PermissionInfoCompat;
 import androidx.fragment.app.FragmentActivity;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringWriter;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
@@ -50,24 +47,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathFactory;
-
 import aosp.libcore.util.EmptyArray;
-import aosp.libcore.util.HexEncoding;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
-
-import static android.app.ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND;
-import static android.app.ActivityManager.RunningAppProcessInfo.IMPORTANCE_VISIBLE;
 
 public class Utils {
     public static final String TERMUX_LOGIN_PATH = OsEnvironment.getDataDirectoryRaw() + "/data/com.termux/files/usr/bin/login";
@@ -473,21 +455,6 @@ public class Utils {
         return major + "." + minor;
     }
 
-    @NonNull
-    public static String bytesToHex(@NonNull byte[] bytes) {
-        return HexEncoding.encodeToString(bytes, false /* lowercase */);
-    }
-
-    @NonNull
-    public static byte[] longToBytes(long l) {
-        byte[] result = new byte[8];
-        for (int i = 7; i >= 0; i--) {
-            result[i] = (byte) (l & 0xFF);
-            l >>= 8;
-        }
-        return result;
-    }
-
     @CheckResult
     @NonNull
     public static byte[] charsToBytes(@NonNull char[] chars) {
@@ -540,44 +507,6 @@ public class Utils {
             }
         }
         return new Pair<>(name, algoName);
-    }
-
-    /**
-     * Format xml file to correct indentation ...
-     */
-    @NonNull
-    public static String getProperXml(@NonNull String dirtyXml) {
-        try {
-            Document document = DocumentBuilderFactory.newInstance()
-                    .newDocumentBuilder()
-                    .parse(new InputSource(new ByteArrayInputStream(dirtyXml.getBytes(StandardCharsets.UTF_8))));
-
-            XPath xPath = XPathFactory.newInstance().newXPath();
-            NodeList nodeList = (NodeList) xPath.evaluate("//text()[normalize-space()='']",
-                    document,
-                    XPathConstants.NODESET);
-
-            for (int i = 0; i < nodeList.getLength(); ++i) {
-                Node node = nodeList.item(i);
-                node.getParentNode().removeChild(node);
-            }
-
-            Transformer transformer = TransformerFactory.newInstance().newTransformer();
-            transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-            transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
-            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
-
-            StringWriter stringWriter = new StringWriter();
-            StreamResult streamResult = new StreamResult(stringWriter);
-
-            transformer.transform(new DOMSource(document), streamResult);
-
-            return stringWriter.toString();
-        } catch (Exception e) {
-            Log.e("Utils", "Could not get proper XML.", e);
-            return dirtyXml;
-        }
     }
 
     /**

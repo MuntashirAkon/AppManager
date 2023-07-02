@@ -73,7 +73,7 @@
     <declare-styleable name="MultiSelectionView">
         <!-- The menu resource to inflate and populate items from. Attribute type definition is in
              navigation package. -->
-        <attr name="menu" />
+        <attr name="menu" format="reference" />
     </declare-styleable>
     <declare-styleable name="NestedScrollView">
         <!-- Whether fast scroller is enabled. Default is false. -->

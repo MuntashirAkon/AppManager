@@ -3,6 +3,7 @@
 package io.github.muntashirakon.AppManager.db.entity;
 
 import android.os.UserHandleHidden;
+import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
@@ -16,7 +17,6 @@ import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.backup.MetadataManager;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
-import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.io.Path;
 
 @SuppressWarnings("NotNullFieldNotInitialized")
@@ -87,7 +87,7 @@ public class Backup {
 
     @NonNull
     public Path getBackupPath() throws IOException {
-        String backupUuid = TextUtilsCompat.isEmpty(uuid) ? null : uuid;
+        String backupUuid = TextUtils.isEmpty(uuid) ? null : uuid;
         return BackupFiles.findBackupDirectory(backupName, packageName, backupUuid);
     }
 

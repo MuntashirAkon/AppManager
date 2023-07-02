@@ -10,6 +10,8 @@ import android.os.Build;
 
 import androidx.annotation.NonNull;
 
+import java.util.Objects;
+
 // Copyright 2020 John "topjohnwu" Wu
 public final class ContextUtils {
     public static final String TAG = ContextUtils.class.getSimpleName();
@@ -25,7 +27,7 @@ public final class ContextUtils {
                 Context c = (Context) Class.forName("android.app.ActivityThread")
                         .getMethod("currentApplication")
                         .invoke(null);
-                context = getContextImpl(c);
+                context = getContextImpl(Objects.requireNonNull(c));
             } catch (Exception e) {
                 // Shall never happen
                 throw new RuntimeException(e);

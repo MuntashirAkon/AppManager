@@ -23,8 +23,8 @@ import com.google.android.material.textfield.TextInputLayout;
 import java.util.List;
 
 import io.github.muntashirakon.ui.R;
-import io.github.muntashirakon.widget.AnyFilterArrayAdapter;
-import io.github.muntashirakon.widget.NoFilterArrayAdapter;
+import io.github.muntashirakon.adapters.AnyFilterArrayAdapter;
+import io.github.muntashirakon.adapters.NoFilterArrayAdapter;
 
 @SuppressWarnings("unused")
 public class TextInputDropdownDialogBuilder {

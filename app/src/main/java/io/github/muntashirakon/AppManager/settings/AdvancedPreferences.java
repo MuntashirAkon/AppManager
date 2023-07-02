@@ -29,7 +29,6 @@ import io.github.muntashirakon.AppManager.settings.crypto.ImportExportKeyStoreDi
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
-import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
@@ -83,7 +82,7 @@ public class AdvancedPreferences extends PreferenceFragment {
                     .setView(view)
                     .setPositiveButton(R.string.save, (dialog, which) -> {
                         Editable apkFormat = inputApkNameFormat.getText();
-                        if (!TextUtilsCompat.isEmpty(apkFormat)) {
+                        if (!TextUtils.isEmpty(apkFormat)) {
                             AppPref.set(AppPref.PrefKey.PREF_SAVED_APK_FORMAT_STR, apkFormat.toString().trim());
                         }
                     })

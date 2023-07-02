@@ -16,6 +16,7 @@ import androidx.appcompat.widget.LinearLayoutCompat;
 
 import io.github.muntashirakon.AppManager.R;
 
+// TODO: 2/7/23 Replace this with preferences
 public class ListItemCreator {
     private static final int EMPTY = -1;
 

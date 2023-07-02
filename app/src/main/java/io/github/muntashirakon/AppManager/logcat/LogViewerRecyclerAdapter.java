@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
@@ -31,7 +32,6 @@ import io.github.muntashirakon.AppManager.logcat.struct.LogLine;
 import io.github.muntashirakon.AppManager.logcat.struct.SearchCriteria;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.settings.Prefs;
-import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
@@ -73,15 +73,13 @@ public class LogViewerRecyclerAdapter extends MultiSelectionView.Adapter<LogView
 
     @ColorInt
     private static int getBackgroundColorForLogLevel(Context context, int logLevel) {
-        Integer result = BACKGROUND_COLORS.get(logLevel);
-        if (result == null) return UIUtils.getPrimaryColor(context);
+        int result = Objects.requireNonNull(BACKGROUND_COLORS.get(logLevel));
         return ContextCompat.getColor(context, result);
     }
 
     @ColorInt
     private static int getForegroundColorForLogLevel(Context context, int logLevel) {
-        Integer result = FOREGROUND_COLORS.get(logLevel);
-        if (result == null) return UIUtils.getAccentColor(context);
+        int result = Objects.requireNonNull(FOREGROUND_COLORS.get(logLevel));
         return ContextCompat.getColor(context, result);
     }
 

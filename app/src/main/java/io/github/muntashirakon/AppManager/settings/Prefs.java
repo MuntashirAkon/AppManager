@@ -34,7 +34,6 @@ import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
-import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 
@@ -430,7 +429,7 @@ public final class Prefs {
         @Nullable
         public static String getFilteredProfileName() {
             String profileName = AppPref.getString(AppPref.PrefKey.PREF_MAIN_WINDOW_FILTER_PROFILE_STR);
-            if (TextUtilsCompat.isEmpty(profileName)) {
+            if (TextUtils.isEmpty(profileName)) {
                 return null;
             }
             return profileName;
@@ -556,7 +555,7 @@ public final class Prefs {
         @Nullable
         public static String getApiKey() {
             String apiKey = AppPref.getString(AppPref.PrefKey.PREF_VIRUS_TOTAL_API_KEY_STR);
-            if (TextUtilsCompat.isEmpty(apiKey)) {
+            if (TextUtils.isEmpty(apiKey)) {
                 return null;
             }
             return apiKey;

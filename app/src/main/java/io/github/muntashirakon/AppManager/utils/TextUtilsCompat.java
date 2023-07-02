@@ -5,22 +5,13 @@ package io.github.muntashirakon.AppManager.utils;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
-import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import org.jetbrains.annotations.Contract;
-
 import java.util.Iterator;
 
 public class TextUtilsCompat {
-    @Contract("null -> true")
-    public static boolean isEmpty(@Nullable CharSequence text) {
-        return TextUtils.isEmpty(text);
-    }
-
-
     /**
      * Returns a string containing the tokens joined by delimiters.
      *
@@ -53,9 +44,10 @@ public class TextUtilsCompat {
     }
 
     /**
-     * @return interned string if it's null.
+     * @return interned string if it's not null.
      */
-    public static String safeIntern(String s) {
+    @Nullable
+    public static String safeIntern(@Nullable String s) {
         return (s != null) ? s.intern() : null;
     }
 }

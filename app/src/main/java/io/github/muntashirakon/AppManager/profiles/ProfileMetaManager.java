@@ -33,7 +33,6 @@ import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.JSONUtils;
-import io.github.muntashirakon.AppManager.utils.TextUtilsCompat;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.util.LocalizedString;
@@ -203,7 +202,7 @@ public class ProfileMetaManager implements LocalizedString {
     @Contract("null -> null")
     @Nullable
     public static Profile readProfile(@Nullable String profileStr) throws JSONException {
-        if (TextUtilsCompat.isEmpty(profileStr)) {
+        if (TextUtils.isEmpty(profileStr)) {
             return null;
         }
         JSONObject profileObj = new JSONObject(profileStr);
