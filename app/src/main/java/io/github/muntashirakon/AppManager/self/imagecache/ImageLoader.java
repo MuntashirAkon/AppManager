@@ -5,14 +5,11 @@ package io.github.muntashirakon.AppManager.self.imagecache;
 import android.content.pm.PackageItemInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
-import android.view.View;
 import android.widget.ImageView;
 
 import androidx.annotation.AnyThread;
 import androidx.annotation.DrawableRes;
-import androidx.annotation.FloatRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.Px;
@@ -284,7 +281,6 @@ public class ImageLoader implements Closeable {
         public void run() {
             if (imageViewReusedOrClosed(mQueueItem)) return;
             Bitmap image = mImageFileCache.getImage(mQueueItem.tag);
-            ImageView iv = mQueueItem.imageView.get();
             if (image != null) {
                 // Cache hit
                 mMemoryCache.put(mQueueItem.tag, image);
@@ -297,7 +293,7 @@ public class ImageLoader implements Closeable {
                     String tag = defaultImage.getTag();
                     if (tag == null) {
                         // No tag listed, use the image directly
-                        image = getScaledBitmap(iv, defaultImage.getImage(), 1.0f);
+                        image = defaultImage.getImage();
                     } else {
                         // Listed a tag, try cache first
                         image = mMemoryCache.get(tag);
@@ -306,7 +302,7 @@ public class ImageLoader implements Closeable {
                         }
                         if (image == null) {
                             // Cache miss
-                            image = getScaledBitmap(iv, defaultImage.getImage(), 1.0f);
+                            image = defaultImage.getImage();
                             mMemoryCache.put(tag, image);
                             try {
                                 mImageFileCache.putImage(tag, image);
@@ -315,7 +311,7 @@ public class ImageLoader implements Closeable {
                         }
                     }
                 } else {
-                    image = getScaledBitmap(iv, result.bitmap, 1.0f);
+                    image = result.bitmap;
                     if (result.cacheInMemory) {
                         mMemoryCache.put(mQueueItem.tag, image);
                     }
@@ -356,36 +352,5 @@ public class ImageLoader implements Closeable {
     private boolean imageViewReusedOrClosed(@NonNull ImageLoaderQueueItem imageLoaderQueueItem) {
         ImageView iv = imageLoaderQueueItem.imageView.get();
         return mIsClosed || iv == null;
-    }
-
-    /**
-     * Get a scaled {@link Bitmap} from the given {@link Drawable} that fits the frame.
-     *
-     * @param frame         The frame to scale. The frame must be initialised beforehand.
-     * @param bitmap        The bitmap to resize
-     * @param scalingFactor A number between 0 and 1. E.g. 1.0 fits the frame and 0.1 only fits 10% of the frame.
-     */
-    @WorkerThread
-    public static Bitmap getScaledBitmap(@Nullable View frame, @NonNull Bitmap bitmap,
-                                         @FloatRange(from = 0.0, to = 1.0) float scalingFactor) {
-        if (frame == null) {
-            return bitmap;
-        }
-        int imgWidth = bitmap.getWidth();
-        int imgHeight = bitmap.getHeight();
-        int frameHeight = frame.getHeight();
-        int frameWidth = frame.getWidth();
-        float scale;
-        if (imgHeight <= 0 || imgWidth <= 0) {
-            return bitmap;
-        } else if (frameHeight == 0 && frameWidth == 0) {
-            // The view isn't initialised
-            return bitmap;
-        } else {
-            scale = Math.min(Math.min(frameHeight, frameWidth) * scalingFactor / (float) Math.max(imgHeight, imgWidth), 1);
-        }
-        Matrix matrix = new Matrix();
-        matrix.postScale(scale, scale);
-        return Bitmap.createBitmap(bitmap, 0, 0, imgWidth, imgHeight, matrix, false);
     }
 }
