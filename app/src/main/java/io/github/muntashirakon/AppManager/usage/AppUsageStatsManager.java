@@ -45,8 +45,8 @@ import io.github.muntashirakon.AppManager.compat.SubscriptionManagerCompat;
 import io.github.muntashirakon.AppManager.compat.UsageStatsManagerCompat;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.NonNullUtils;
-import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.proc.ProcFs;
 import io.github.muntashirakon.proc.ProcUidNetStat;
 
@@ -156,7 +156,7 @@ public class AppUsageStatsManager {
     @RequiresPermission("android.permission.PACKAGE_USAGE_STATS")
     @NonNull
     public List<PackageUsageInfo> getUsageStats(@UsageUtils.IntervalType int usageInterval, @UserIdInt int userId)
-            throws RemoteException, SecurityException, PackageManager.NameNotFoundException {
+            throws RemoteException, SecurityException {
         List<PackageUsageInfo> packageUsageInfoList = new ArrayList<>();
         int _try = 5; // try to get usage stats at most 5 times
         RemoteException re;
@@ -223,7 +223,7 @@ public class AppUsageStatsManager {
     @NonNull
     private List<PackageUsageInfo> getUsageStatsInternal(@UsageUtils.IntervalType int usageInterval,
                                                          @UserIdInt int userId)
-            throws RemoteException, PackageManager.NameNotFoundException {
+            throws RemoteException {
         List<PackageUsageInfo> screenTimeList = new ArrayList<>();
         Map<String, Long> screenTimes = new HashMap<>();
         Map<String, Long> lastUse = new HashMap<>();
@@ -276,13 +276,14 @@ public class AppUsageStatsManager {
         wifiData.putAll(getWifiData(interval));
         for (String packageName : screenTimes.keySet()) {
             // Skip uninstalled packages?
-            ApplicationInfo applicationInfo = PackageManagerCompat.getApplicationInfo(packageName, MATCH_UNINSTALLED_PACKAGES
-                    | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId);
+            ApplicationInfo applicationInfo = ExUtils.exceptionAsNull(() -> PackageManagerCompat
+                    .getApplicationInfo(packageName, MATCH_UNINSTALLED_PACKAGES
+                            | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, userId));
             PackageUsageInfo packageUsageInfo = new PackageUsageInfo(mContext, packageName, userId, applicationInfo);
             packageUsageInfo.timesOpened = NonNullUtils.defeatNullable(accessCount.get(packageName));
             packageUsageInfo.lastUsageTime = NonNullUtils.defeatNullable(lastUse.get(packageName));
             packageUsageInfo.screenTime = NonNullUtils.defeatNullable(screenTimes.get(packageName));
-            int uid = PackageUtils.getAppUid(packageUsageInfo.applicationInfo);
+            int uid = applicationInfo != null ? applicationInfo.uid : 0;
             if (mobileData.containsKey(uid)) {
                 packageUsageInfo.mobileData = mobileData.get(uid);
             } else packageUsageInfo.mobileData = DataUsage.EMPTY;

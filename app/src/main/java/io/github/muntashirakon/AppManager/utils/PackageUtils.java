@@ -526,17 +526,9 @@ public final class PackageUtils {
         return appLabels;
     }
 
-    public static int getAppUid(@Nullable ApplicationInfo applicationInfo) {
-        return applicationInfo != null ? applicationInfo.uid : 0;
-    }
-
     public static int getAppUid(@NonNull UserPackagePair pair) {
-        try {
-            return PackageManagerCompat.getApplicationInfo(pair.getPackageName(),
-                    PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, pair.getUserHandle()).uid;
-        } catch (Exception ignore) {
-        }
-        return -1;
+        return ExUtils.requireNonNullElse(() -> PackageManagerCompat.getApplicationInfo(pair.getPackageName(),
+                PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, pair.getUserHandle()).uid, -1);
     }
 
     public static boolean isTestOnlyApp(@NonNull ApplicationInfo applicationInfo) {

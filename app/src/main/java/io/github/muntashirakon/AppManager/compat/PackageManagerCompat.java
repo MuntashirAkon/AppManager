@@ -225,7 +225,6 @@ public final class PackageManagerCompat {
         return Objects.requireNonNull(info);
     }
 
-    @SuppressLint("NewApi")
     @SuppressWarnings("deprecation")
     @NonNull
     public static ApplicationInfo getApplicationInfo(String packageName, int flags, @UserIdInt int userHandle)
