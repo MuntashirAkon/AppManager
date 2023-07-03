@@ -53,24 +53,6 @@ public final class FileUtils {
         return header == 0x504B0304 || header == 0x504B0506 || header == 0x504B0708;
     }
 
-    @WorkerThread
-    @NonNull
-    public static Path saveZipFile(@NonNull InputStream zipInputStream,
-                                   @NonNull Path destinationDirectory,
-                                   @NonNull String fileName)
-            throws IOException {
-        return saveZipFile(zipInputStream, destinationDirectory.findOrCreateFile(fileName, null));
-    }
-
-    @WorkerThread
-    @NonNull
-    public static Path saveZipFile(@NonNull InputStream zipInputStream, @NonNull Path filePath) throws IOException {
-        try (OutputStream outputStream = filePath.openOutputStream()) {
-            IoUtils.copy(zipInputStream, outputStream, -1, null);
-        }
-        return filePath;
-    }
-
     @AnyThread
     @NonNull
     public static String getFileNameFromZipEntry(@NonNull ZipEntry zipEntry) {

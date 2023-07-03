@@ -185,7 +185,7 @@ public final class ApkFile implements AutoCloseable {
     private final List<Entry> mEntries = new ArrayList<>();
     private Entry mBaseEntry;
     @Nullable
-    private Path mIdsigFile;
+    private File mIdsigFile;
     @Nullable
     private ApksMetadata mApksMetadata;
     @NonNull
@@ -287,7 +287,6 @@ public final class ApkFile implements AutoCloseable {
             mEntries.add(mBaseEntry);
         } else {
             try {
-                getCachePath();
                 mZipFile = new ZipFile(mCacheFilePath);
             } catch (IOException e) {
                 throw new ApkFileException(e);
@@ -338,7 +337,7 @@ public final class ApkFile implements AutoCloseable {
                     mObbFiles.add(zipEntry);
                 } else if (fileName.endsWith(".idsig")) {
                     try {
-                        mIdsigFile = FileUtils.saveZipFile(mZipFile.getInputStream(zipEntry), getCachePath(), IDSIG_FILE);
+                        mIdsigFile = mFileCache.getCachedFile(mZipFile.getInputStream(zipEntry), ".idsig");
                     } catch (IOException e) {
                         throw new ApkFileException(e);
                     }
@@ -360,7 +359,7 @@ public final class ApkFile implements AutoCloseable {
         mPackageName = packageName;
     }
 
-    public ApkFile(@NonNull ApplicationInfo info, int sparseArrayKey) throws ApkFileException {
+    private ApkFile(@NonNull ApplicationInfo info, int sparseArrayKey) throws ApkFileException {
         mSparseArrayKey = sparseArrayKey;
         mPackageName = info.packageName;
         mCacheFilePath = new File(info.publicSourceDir);
@@ -445,7 +444,7 @@ public final class ApkFile implements AutoCloseable {
     @Nullable
     public File getIdsigFile() {
         if (mIdsigFile != null) {
-            return mIdsigFile.getFile();
+            return mIdsigFile;
         }
         return null;
     }
@@ -485,9 +484,11 @@ public final class ApkFile implements AutoCloseable {
         if (!hasObb() || mZipFile == null) return;
         for (ZipEntry obbEntry : mObbFiles) {
             String fileName = FileUtils.getFileNameFromZipEntry(obbEntry);
+            Path obbDir = writableObbDir.findOrCreateFile(fileName, null);
             // Extract obb file to the destination directory
-            try (InputStream zipInputStream = mZipFile.getInputStream(obbEntry)) {
-                FileUtils.saveZipFile(zipInputStream, writableObbDir, fileName);
+            try (InputStream zipInputStream = mZipFile.getInputStream(obbEntry);
+                 OutputStream outputStream = obbDir.openOutputStream()) {
+                IoUtils.copy(zipInputStream, outputStream, -1, null);
             }
         }
     }
@@ -536,11 +537,6 @@ public final class ApkFile implements AutoCloseable {
         if (!mClosed) {
             close();
         }
-    }
-
-    @NonNull
-    private Path getCachePath() throws IOException {
-        return Paths.get(FileUtils.getExternalCachePath(ContextUtils.getContext()));
     }
 
     public class Entry implements AutoCloseable, LocalizedString {
@@ -814,7 +810,7 @@ public final class ApkFile implements AutoCloseable {
                 } else FileUtils.deleteSilently(mCachedFile);
             }
             try (InputStream is = getRealInputStream()) {
-                mCachedFile = FileUtils.saveZipFile(is, getCachePath(), name).getFile();
+                mCachedFile = mFileCache.getCachedFile(is, "apk");
                 return Objects.requireNonNull(mCachedFile);
             }
         }
