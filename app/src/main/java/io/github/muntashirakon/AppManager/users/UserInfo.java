@@ -9,7 +9,6 @@ import android.os.UserHandleHidden;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import dev.rikka.tools.refine.Refine;
 import io.github.muntashirakon.util.LocalizedString;
 
 public class UserInfo implements LocalizedString {
@@ -24,7 +23,7 @@ public class UserInfo implements LocalizedString {
         id = userInfo.id;
         String username = userInfo.name;
         if (username == null) {
-            this.name = id == UserHandleHidden.myUserId() ? "Main" : "Work";
+            this.name = id == UserHandleHidden.myUserId() ? "This" : "Other";
         } else this.name = username;
     }
 
