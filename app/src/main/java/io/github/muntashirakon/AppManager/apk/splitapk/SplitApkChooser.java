@@ -7,11 +7,14 @@ import android.content.DialogInterface;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.os.BundleCompat;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,6 +25,7 @@ import java.util.Objects;
 import aosp.libcore.util.EmptyArray;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
+import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerViewModel;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
@@ -29,21 +33,16 @@ import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 public class SplitApkChooser extends DialogFragment {
     public static final String TAG = SplitApkChooser.class.getSimpleName();
 
-    private static final String EXTRA_APK_FILE_KEY = "EXTRA_APK_FILE_KEY";
-    private static final String EXTRA_ACTION_NAME = "EXTRA_ACTION_NAME";
-    private static final String EXTRA_APP_INFO = "EXTRA_APP_INFO";
-    private static final String EXTRA_VERSION_INFO = "EXTRA_VERSION_INFO";
+    private static final String EXTRA_ACTION_NAME = "name";
+    private static final String EXTRA_VERSION_INFO = "version";
 
     @NonNull
-    public static SplitApkChooser getNewInstance(int apkFileKey, @NonNull ApplicationInfo info,
-                                                 @NonNull String versionInfo, @Nullable String actionName,
+    public static SplitApkChooser getNewInstance(@NonNull String versionInfo, @Nullable String actionName,
                                                  @NonNull OnTriggerInstallInterface installInterface) {
         SplitApkChooser splitApkChooser = new SplitApkChooser();
         Bundle args = new Bundle();
-        args.putInt(SplitApkChooser.EXTRA_APK_FILE_KEY, apkFileKey);
-        args.putString(SplitApkChooser.EXTRA_ACTION_NAME, actionName);
-        args.putParcelable(SplitApkChooser.EXTRA_APP_INFO, info);
-        args.putString(SplitApkChooser.EXTRA_VERSION_INFO, versionInfo);
+        args.putString(EXTRA_ACTION_NAME, actionName);
+        args.putString(EXTRA_VERSION_INFO, versionInfo);
         splitApkChooser.setArguments(args);
         splitApkChooser.setCancelable(false);
         splitApkChooser.setOnTriggerInstall(installInterface);
@@ -58,22 +57,28 @@ public class SplitApkChooser extends DialogFragment {
 
     @Nullable
     private OnTriggerInstallInterface mInstallInterface;
+    private PackageInstallerViewModel mViewModel;
+    private View mDialogView;
     private ApkFile mApkFile;
-    private PackageManager mPm;
     private final HashMap<String /* feature */, HashSet<Integer> /* seen types */> mSeenSplits = new HashMap<>();
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mViewModel = new ViewModelProvider(requireActivity()).get(PackageInstallerViewModel.class);
+    }
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        int apkFileKey = requireArguments().getInt(EXTRA_APK_FILE_KEY, -1);
         String actionName = requireArguments().getString(EXTRA_ACTION_NAME);
-        ApplicationInfo appInfo = BundleCompat.getParcelable(requireArguments(), EXTRA_APP_INFO, ApplicationInfo.class);
         String versionInfo = requireArguments().getString(EXTRA_VERSION_INFO);
-        mPm = requireActivity().getPackageManager();
-        if (apkFileKey == -1 || appInfo == null) {
+        ApplicationInfo appInfo = mViewModel.getNewPackageInfo().applicationInfo;
+        PackageManager pm = requireActivity().getPackageManager();
+        mApkFile = mViewModel.getApkFile();
+        if (mApkFile == null) {
             throw new IllegalArgumentException("ApkFile cannot be empty.");
         }
-        mApkFile = ApkFile.getInstance(apkFileKey);
         if (!mApkFile.isSplit()) {
             throw new RuntimeException("Apk file does not contain any split.");
         }
@@ -87,8 +92,8 @@ public class SplitApkChooser extends DialogFragment {
         }
         SearchableMultiChoiceDialogBuilder<ApkFile.Entry> builder = new SearchableMultiChoiceDialogBuilder<>(
                 requireActivity(), apkEntries, entryNames)
-                .setTitle(UIUtils.getDialogTitle(requireActivity(), mPm.getApplicationLabel(appInfo),
-                        mPm.getApplicationIcon(appInfo), versionInfo))
+                .setTitle(UIUtils.getDialogTitle(requireActivity(), pm.getApplicationLabel(appInfo),
+                        pm.getApplicationIcon(appInfo), versionInfo))
                 .showSelectAll(false)
                 .addSelections(getInitialSelections(apkEntries))
                 .addDisabledItems(getUnsupportedOrRequiredSplits())
@@ -96,7 +101,7 @@ public class SplitApkChooser extends DialogFragment {
                         mInstallInterface.triggerInstall())
                 .setNegativeButton(R.string.cancel, (dialog, which, selectedItems) -> onCancel(dialog))
                 .setCancelable(false);
-        return builder.setOnMultiChoiceClickListener((dialog, which, item, isChecked) -> {
+        builder.setOnMultiChoiceClickListener((dialog, which, item, isChecked) -> {
             if (isChecked) {
                 builder.addSelections(select(which));
             } else {
@@ -109,7 +114,15 @@ public class SplitApkChooser extends DialogFragment {
                 }
             }
             builder.reloadListUi();
-        }).create();
+        });
+        mDialogView = builder.getView();
+        return builder.create();
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return mDialogView;
     }
 
     @Override
@@ -131,12 +144,14 @@ public class SplitApkChooser extends DialogFragment {
     public int[] getInitialSelections(@NonNull final List<ApkFile.Entry> apkEntries) {
         List<Integer> selections = new ArrayList<>();
         try {
-            // See if the app has been installed
-            ApplicationInfo info = mPm.getApplicationInfo(mApkFile.getPackageName(), 0);
             HashSet<String> splitNames = new HashSet<>();
-            try (ApkFile installedApkFile = ApkFile.getInstance(ApkFile.createInstance(info))) {
-                for (ApkFile.Entry apkEntry : installedApkFile.getEntries()) {
-                    splitNames.add(apkEntry.name);
+            // See if the app has been installed
+            if (mViewModel.getInstalledPackageInfo() != null) {
+                ApplicationInfo info = mViewModel.getInstalledPackageInfo().applicationInfo;
+                try (ApkFile installedApkFile = new ApkFile.ApkSource(info).resolve()) {
+                    for (ApkFile.Entry apkEntry : installedApkFile.getEntries()) {
+                        splitNames.add(apkEntry.name);
+                    }
                 }
             }
             if (splitNames.size() > 0) {
@@ -154,7 +169,7 @@ public class SplitApkChooser extends DialogFragment {
                 }
                 // Fall-through deliberately to see if there are any new requirements
             }
-        } catch (PackageManager.NameNotFoundException | ApkFile.ApkFileException ignored) {
+        } catch (ApkFile.ApkFileException ignored) {
         }
         // Set up features
         for (int i = 0; i < apkEntries.size(); ++i) {

@@ -123,7 +123,7 @@ public abstract class CapsuleBottomSheetDialogFragment extends BottomSheetDialog
         }
         mIsLoadingFinished = true;
         mBodyContainer.setVisibility(View.VISIBLE);
-        if (mBodyContainer.getChildCount() != 1) {
+        if (mBodyContainer.getChildCount() != 1 && getBody() != null) {
             mBodyContainer.addView(getBody(), new ViewGroup.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         } // else Body has already been set, no need to set it again

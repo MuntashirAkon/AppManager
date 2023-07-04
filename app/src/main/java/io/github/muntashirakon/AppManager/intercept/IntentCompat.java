@@ -54,14 +54,10 @@ public final class IntentCompat {
      * or null if no Parcelable value was found.
      * @see Intent#putExtra(String, Parcelable)
      */
-    @SuppressWarnings("deprecation")
     @Nullable
     public static <T extends Parcelable> T getParcelableExtra(@NonNull Intent intent, @Nullable String name,
                                                               @NonNull Class<T> clazz) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            return intent.getParcelableExtra(name, clazz);
-        }
-        return intent.getParcelableExtra(name);
+        return androidx.core.content.IntentCompat.getParcelableExtra(intent, name, clazz);
     }
 
     /**
@@ -75,15 +71,11 @@ public final class IntentCompat {
      * ArrayList<Parcelable> value was found.
      * @see Intent#putParcelableArrayListExtra(String, ArrayList)
      */
-    @SuppressWarnings("deprecation")
     @Nullable
     public static <T extends Parcelable> ArrayList<T> getParcelableArrayListExtra(@NonNull Intent intent,
                                                                                   @Nullable String name,
                                                                                   @NonNull Class<? extends T> clazz) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            return intent.getParcelableArrayListExtra(name, clazz);
-        }
-        return intent.getParcelableArrayListExtra(name);
+        return androidx.core.content.IntentCompat.getParcelableArrayListExtra(intent, name, clazz);
     }
 
     @Nullable

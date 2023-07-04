@@ -57,28 +57,26 @@ public class ManifestViewerViewModel extends AndroidViewModel {
     public void loadApkFile(@Nullable Uri packageUri, @Nullable String type, @Nullable String packageName) {
         mManifestLoaderResult = ThreadUtils.postOnBackgroundThread(() -> {
             final PackageManager pm = getApplication().getPackageManager();
+            ApkFile.ApkSource apkSource;
             if (packageUri != null) {
-                try {
-                    int key = ApkFile.createInstance(packageUri, type);
-                    mApkFile = ApkFile.getInstance(key);
-                    if (ThreadUtils.isInterrupted()) {
-                        return;
-                    }
-                } catch (ApkFile.ApkFileException e) {
-                    Log.e(TAG, "Error: ", e);
-                    return;
-                }
+                apkSource = new ApkFile.ApkSource(packageUri, type);
             } else {
                 try {
                     ApplicationInfo applicationInfo = pm.getApplicationInfo(packageName, 0);
-                    int key = ApkFile.createInstance(applicationInfo);
-                    mApkFile = ApkFile.getInstance(key);
-                    if (ThreadUtils.isInterrupted()) {
-                        return;
-                    }
-                } catch (PackageManager.NameNotFoundException | ApkFile.ApkFileException e) {
+                    apkSource = new ApkFile.ApkSource(applicationInfo);
+                } catch (PackageManager.NameNotFoundException e) {
                     Log.e(TAG, "Error: ", e);
+                    return;
                 }
+            }
+            try {
+                mApkFile = apkSource.resolve();
+            } catch (ApkFile.ApkFileException e) {
+                Log.e(TAG, "Error: ", e);
+                return;
+            }
+            if (ThreadUtils.isInterrupted()) {
+                return;
             }
             if (mApkFile != null) {
                 ByteBuffer byteBuffer = mApkFile.getBaseEntry().manifest;

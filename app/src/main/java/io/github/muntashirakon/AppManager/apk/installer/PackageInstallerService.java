@@ -151,27 +151,18 @@ public class PackageInstallerService extends ForegroundService {
             installer.installExisting(packageName, apkQueueItem.getUserId());
         } else {
             // ApkFile/Uri
-            ApkFile apkFile = null;
-            int apkFileKey = apkQueueItem.getApkFileKey();
-            if (apkFileKey != -1) {
+            ApkFile apkFile;
+            ApkFile.ApkSource apkSource = apkQueueItem.getApkFileLink();
+            if (apkSource != null) {
                 // ApkFile set
                 try {
-                    apkFile = ApkFile.getInstance(apkFileKey);
+                    apkFile = apkSource.resolve();
                 } catch (Throwable th) {
-                    // Could not get ApkFile for some reason, fallback to use Uri
+                    // Could not get ApkFile for some reason, abort
                     th.printStackTrace();
-                    apkFileKey = -1;
+                    return;
                 }
-            }
-            if (apkFileKey == -1) {
-                try {
-                    apkFileKey = ApkFile.createInstance(apkQueueItem.getUri(), apkQueueItem.getMimeType());
-                    apkFile = ApkFile.getInstance(apkFileKey);
-                } catch (ApkFile.ApkFileException e) {
-                    e.printStackTrace();
-                }
-            }
-            if (apkFile == null) {
+            } else {
                 // No apk file, abort
                 return;
             }

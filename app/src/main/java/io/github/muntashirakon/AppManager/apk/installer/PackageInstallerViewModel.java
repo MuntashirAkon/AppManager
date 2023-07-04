@@ -39,7 +39,7 @@ public class PackageInstallerViewModel extends AndroidViewModel {
     private final PackageManager mPm;
     private PackageInfo mNewPackageInfo;
     private PackageInfo mInstalledPackageInfo;
-    private int mApkFileKey;
+    private ApkFile.ApkSource mApkSource;
     private ApkFile mApkFile;
     private String mPackageName;
     private String mAppLabel;
@@ -88,16 +88,13 @@ public class PackageInstallerViewModel extends AndroidViewModel {
                         throw new IllegalArgumentException("Package name not set for install-existing.");
                     }
                     getExistingPackageInfoInternal(apkQueueItem.getPackageName());
-                } else if (apkQueueItem.getApkFileKey() != -1) {
-                    mApkFileKey = apkQueueItem.getApkFileKey();
-                    getPackageInfoInternal();
-                } else if (apkQueueItem.getUri() != null) {
-                    mApkFileKey = ApkFile.createInstance(apkQueueItem.getUri(), apkQueueItem.getMimeType());
+                } else if (apkQueueItem.getApkFileLink() != null) {
+                    mApkSource = apkQueueItem.getApkFileLink();
                     getPackageInfoInternal();
                 } else {
                     throw new IllegalArgumentException("Invalid queue item.");
                 }
-                apkQueueItem.setApkFileKey(mApkFileKey);
+                apkQueueItem.setApkFileLink(mApkSource);
                 apkQueueItem.setPackageName(mPackageName);
                 apkQueueItem.setAppLabel(mAppLabel);
             } catch (Throwable th) {
@@ -144,10 +141,6 @@ public class PackageInstallerViewModel extends AndroidViewModel {
         return mTrackerCount;
     }
 
-    public int getApkFileKey() {
-        return mApkFileKey;
-    }
-
     public boolean isSignatureDifferent() {
         return mIsSignatureDifferent;
     }
@@ -157,8 +150,8 @@ public class PackageInstallerViewModel extends AndroidViewModel {
         return mUsers;
     }
 
-    private void getPackageInfoInternal() throws PackageManager.NameNotFoundException, IOException {
-        mApkFile = ApkFile.getInstance(mApkFileKey);
+    private void getPackageInfoInternal() throws PackageManager.NameNotFoundException, IOException, ApkFile.ApkFileException {
+        mApkFile = mApkSource.resolve();
         mNewPackageInfo = loadNewPackageInfo();
         mPackageName = mNewPackageInfo.packageName;
         if (ThreadUtils.isInterrupted()) {
@@ -187,8 +180,8 @@ public class PackageInstallerViewModel extends AndroidViewModel {
     private void getExistingPackageInfoInternal(@NonNull String packageName) throws PackageManager.NameNotFoundException, IOException, ApkFile.ApkFileException {
         mPackageName = packageName;
         mInstalledPackageInfo = loadInstalledPackageInfo(packageName);
-        mApkFileKey = ApkFile.createInstance(mInstalledPackageInfo.applicationInfo);
-        mApkFile = ApkFile.getInstance(mApkFileKey);
+        mApkSource = new ApkFile.ApkSource(mInstalledPackageInfo.applicationInfo);
+        mApkFile = mApkSource.resolve();
         mNewPackageInfo = loadNewPackageInfo();
         mAppLabel = mPm.getApplicationLabel(mNewPackageInfo.applicationInfo).toString();
         mAppIcon = mPm.getApplicationIcon(mNewPackageInfo.applicationInfo);

@@ -11,7 +11,9 @@ import android.content.Context;
 import android.content.pm.ApplicationInfo;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Parcel;
 import android.os.ParcelFileDescriptor;
+import android.os.Parcelable;
 import android.os.RemoteException;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
@@ -27,6 +29,7 @@ import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
+import androidx.core.os.ParcelCompat;
 
 import com.google.android.material.color.MaterialColors;
 
@@ -68,6 +71,7 @@ import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
@@ -77,7 +81,77 @@ import io.github.muntashirakon.util.LocalizedString;
 public final class ApkFile implements AutoCloseable {
     public static final String TAG = "ApkFile";
 
-    private static final String IDSIG_FILE = "Signature.idsig";
+    public static class ApkSource implements Parcelable {
+        public final Uri uri;
+        @Nullable
+        public final String mimeType;
+        public final ApplicationInfo applicationInfo;
+
+        private int mApkFileKey;
+
+        public ApkSource(@NonNull Uri uri, @Nullable String mimeType) {
+            this.uri = Objects.requireNonNull(uri);
+            this.mimeType = mimeType;
+            this.applicationInfo = null;
+        }
+
+        public ApkSource(@NonNull ApplicationInfo applicationInfo) {
+            this.uri = null;
+            this.mimeType = null;
+            this.applicationInfo = Objects.requireNonNull(applicationInfo);
+        }
+
+        @NonNull
+        public ApkFile resolve() throws ApkFileException {
+            ApkFile apkFile = getInstance(mApkFileKey);
+            if (apkFile != null && !apkFile.mClosed) {
+                // Usable past instance
+                return apkFile;
+            }
+            if (uri != null) {
+                mApkFileKey = createInstance(uri, mimeType);
+                return Objects.requireNonNull(getInstance(mApkFileKey));
+            }
+            if (applicationInfo != null) {
+                mApkFileKey = createInstance(applicationInfo);
+                return Objects.requireNonNull(getInstance(mApkFileKey));
+            }
+            throw new IllegalStateException("Both Uri and ApplicationInfo cannot be null or not null.");
+        }
+
+        protected ApkSource(Parcel in) {
+            uri = ParcelCompat.readParcelable(in, Uri.class.getClassLoader(), Uri.class);
+            mimeType = in.readString();
+            applicationInfo = ParcelCompat.readParcelable(in, ApplicationInfo.class.getClassLoader(), ApplicationInfo.class);
+            mApkFileKey = in.readInt();
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeParcelable(uri, flags);
+            dest.writeString(mimeType);
+            dest.writeParcelable(applicationInfo, flags);
+            dest.writeInt(mApkFileKey);
+        }
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        public static final Creator<ApkSource> CREATOR = new Creator<ApkSource>() {
+            @Override
+            public ApkSource createFromParcel(Parcel in) {
+                return new ApkSource(in);
+            }
+
+            @Override
+            public ApkSource[] newArray(int size) {
+                return new ApkSource[size];
+            }
+        };
+    }
+
     private static final String ANDROID_XML_NAMESPACE = "http" + "://schemas.android.com/apk/res/android";
     private static final String ATTR_IS_FEATURE_SPLIT = ANDROID_XML_NAMESPACE + ":isFeatureSplit";
     private static final String ATTR_IS_SPLIT_REQUIRED = ANDROID_XML_NAMESPACE + ":isSplitRequired";
@@ -92,43 +166,24 @@ public final class ApkFile implements AutoCloseable {
     // There's hardly any chance of using multiple instances of ApkFile but still kept for convenience
     private static final SparseArray<ApkFile> sApkFiles = new SparseArray<>(3);
     private static final SparseIntArray sInstanceCount = new SparseIntArray(3);
-    private static final SparseIntArray sAdvancedInstanceCount = new SparseIntArray(3);
 
     @AnyThread
-    @NonNull
-    public static ApkFile getInstance(int sparseArrayKey) {
+    @Nullable
+    private static ApkFile getInstance(int sparseArrayKey) {
         ApkFile apkFile = sApkFiles.get(sparseArrayKey);
         if (apkFile == null) {
-            throw new IllegalArgumentException("ApkFile not found for key " + sparseArrayKey);
+            return null;
         }
         synchronized (sInstanceCount) {
-            int advancedCount = sAdvancedInstanceCount.get(sparseArrayKey);
-            if (advancedCount > 0) {
-                // One or more instances are requested in advance, decrement the advanced instance counter
-                sAdvancedInstanceCount.put(sparseArrayKey, advancedCount - 1);
-            } else {
-                // No advanced instance, increment the number of active instances
-                sInstanceCount.put(sparseArrayKey, sInstanceCount.get(sparseArrayKey) + 1);
-            }
+            // Increment the number of active instances
+            sInstanceCount.put(sparseArrayKey, sInstanceCount.get(sparseArrayKey) + 1);
         }
         return apkFile;
     }
 
-    /**
-     * Request a new instance in advance, thereby, preventing any attempt at closing the APK file via {@link #close()}.
-     */
-    @AnyThread
-    public static void getInAdvance(int sparseArrayKey) {
-        synchronized (sInstanceCount) {
-            // Add this to the instance count to avoid closing when close() is called
-            sInstanceCount.put(sparseArrayKey, sInstanceCount.get(sparseArrayKey) + 1);
-            // Add this to the advance instance counter
-            sAdvancedInstanceCount.put(sparseArrayKey, sAdvancedInstanceCount.get(sparseArrayKey) + 1);
-        }
-    }
-
     @WorkerThread
-    public static int createInstance(Uri apkUri, @Nullable String mimeType) throws ApkFileException {
+    private static int createInstance(Uri apkUri, @Nullable String mimeType) throws ApkFileException {
+        ThreadUtils.ensureWorkerThread();
         int key = ThreadLocalRandom.current().nextInt();
         ApkFile apkFile = new ApkFile(apkUri, mimeType, key);
         sApkFiles.put(key, apkFile);
@@ -136,7 +191,8 @@ public final class ApkFile implements AutoCloseable {
     }
 
     @WorkerThread
-    public static int createInstance(ApplicationInfo info) throws ApkFileException {
+    private static int createInstance(ApplicationInfo info) throws ApkFileException {
+        ThreadUtils.ensureWorkerThread();
         int key = ThreadLocalRandom.current().nextInt();
         ApkFile apkFile = new ApkFile(info, key);
         sApkFiles.put(key, apkFile);
@@ -508,7 +564,6 @@ public final class ApkFile implements AutoCloseable {
 
     @Override
     public void close() {
-        mClosed = true;
         synchronized (sInstanceCount) {
             if (sInstanceCount.get(mSparseArrayKey) > 1) {
                 // This isn't the only instance, do not close yet
@@ -518,6 +573,7 @@ public final class ApkFile implements AutoCloseable {
             // Only this instance remained
             sInstanceCount.delete(mSparseArrayKey);
         }
+        mClosed = true;
         sApkFiles.delete(mSparseArrayKey);
         for (Entry entry : mEntries) {
             entry.close();

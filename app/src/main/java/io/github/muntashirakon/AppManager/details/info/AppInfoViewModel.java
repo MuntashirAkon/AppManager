@@ -33,7 +33,6 @@ import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerService;
 import io.github.muntashirakon.AppManager.backup.BackupUtils;
@@ -267,9 +266,6 @@ public class AppInfoViewModel extends AndroidViewModel {
             if (!isExternalApk) {
                 appInfo.sourceDir = new File(applicationInfo.publicSourceDir).getParent();
             }
-            // Set split entries
-            ApkFile apkFile = ApkFile.getInstance(mMainModel.getApkFileKey());
-            int countSplits = apkFile.getEntries().size() - 1;
             if (!isExternalApk) {
                 // Set data dirs
                 appInfo.dataDir = applicationInfo.dataDir;

@@ -345,8 +345,7 @@ public final class MetadataManager {
                 requestedFlags.backupExternalData(), requestedFlags.backupMediaObb());
         mMetadata.isSystem = (applicationInfo.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
         mMetadata.isSplitApk = false;
-        try {
-            ApkFile apkFile = ApkFile.getInstance(ApkFile.createInstance(applicationInfo));
+        try (ApkFile apkFile = new ApkFile.ApkSource(applicationInfo).resolve()) {
             if (apkFile.isSplit()) {
                 List<ApkFile.Entry> apkEntries = apkFile.getEntries();
                 int splitCount = apkEntries.size() - 1;

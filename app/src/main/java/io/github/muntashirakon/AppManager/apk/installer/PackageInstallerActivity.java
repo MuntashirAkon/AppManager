@@ -91,9 +91,9 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
     }
 
     @NonNull
-    public static Intent getLaunchableInstance(@NonNull Context context, int apkFileKey) {
+    public static Intent getLaunchableInstance(@NonNull Context context, ApkFile.ApkSource apkSource) {
         Intent intent = new Intent(context, PackageInstallerActivity.class);
-        intent.putExtra(EXTRA_APK_FILE_KEY, apkFileKey);
+        intent.putExtra(EXTRA_APK_FILE_LINK, apkSource);
         return intent;
     }
 
@@ -105,7 +105,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
         return intent;
     }
 
-    public static final String EXTRA_APK_FILE_KEY = "key";
+    private static final String EXTRA_APK_FILE_LINK = "link";
     public static final String EXTRA_INSTALL_EXISTING = "install_existing";
     public static final String EXTRA_PACKAGE_NAME = "pkg";
     public static final String ACTION_PACKAGE_INSTALLED = BuildConfig.APPLICATION_ID + ".action.PACKAGE_INSTALLED";
@@ -184,10 +184,10 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
         synchronized (mApkQueue) {
             mApkQueue.addAll(ApkQueueItem.fromIntent(intent));
         }
-        int apkFileKey = intent.getIntExtra(EXTRA_APK_FILE_KEY, -1);
-        if (apkFileKey != -1) {
+        ApkFile.ApkSource apkSource = IntentCompat.getParcelableExtra(intent, EXTRA_APK_FILE_LINK, ApkFile.ApkSource.class);
+        if (apkSource != null) {
             synchronized (mApkQueue) {
-                mApkQueue.add(new ApkQueueItem(apkFileKey));
+                mApkQueue.add(new ApkQueueItem(apkSource));
             }
         }
         goToNext();
@@ -317,8 +317,6 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
     private void launchInstaller() {
         if (mModel.getApkFile().isSplit()) {
             SplitApkChooser.getNewInstance(
-                    mModel.getApkFileKey(),
-                    mModel.getNewPackageInfo().applicationInfo,
                     getVersionInfoWithTrackers(mModel.getNewPackageInfo()),
                     getString(mActionName),
                     new SplitApkChooser.OnTriggerInstallInterface() {
@@ -375,10 +373,6 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
         boolean alwaysOnBackground = canDisplayNotification && Prefs.Installer.installInBackground();
         Intent intent = new Intent(this, PackageInstallerService.class);
         intent.putExtra(PackageInstallerService.EXTRA_QUEUE_ITEM, mCurrentItem);
-        // We have to get an ApkFile instance in advance because of the queue management i.e. if this activity is closed
-        // before the ApkFile in the queue is accessed, it will throw an IllegalArgumentException as the ApkFile under
-        // the key is unavailable by the time it calls it.
-        ApkFile.getInAdvance(mModel.getApkFileKey());
         if (!SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.INSTALL_PACKAGES)) {
             // For unprivileged mode, use accessibility service if enabled
             mMultiplexer.enableInstall(true);

@@ -600,16 +600,13 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     private void install() {
-        if (mMainModel == null) return;
-        int apkFileKey = mMainModel.getApkFileKey();
+        ApkFile.ApkSource apkSource = mMainModel != null ? mMainModel.getApkFileLink() : null;
+        if (apkSource == null) return;
         try {
-            // Reserve ApkFile in case the activity is destroyed
-            ApkFile.getInAdvance(apkFileKey);
-            startActivity(PackageInstallerActivity.getLaunchableInstance(requireContext(), apkFileKey));
+            startActivity(PackageInstallerActivity.getLaunchableInstance(requireContext(), apkSource));
         } catch (Exception e) {
-            // Error occurred, so the APK file wasn't used by the installer.
-            // Close the APK file to remove one instance.
-            ApkFile.getInstance(apkFileKey).close();
+            e.printStackTrace();
+            UIUtils.displayLongToast("Error: " + e.getMessage());
         }
     }
 
@@ -685,18 +682,20 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         if (tagCloud.splitCount > 0) {
             addChip(getResources().getQuantityString(R.plurals.no_of_splits, tagCloud.splitCount,
                     tagCloud.splitCount)).setOnClickListener(v -> {
-                try (ApkFile apkFile = ApkFile.getInstance(mMainModel.getApkFileKey())) {
-                    // Display a list of apks
-                    List<ApkFile.Entry> apkEntries = apkFile.getEntries();
-                    CharSequence[] entryNames = new CharSequence[tagCloud.splitCount];
-                    for (int i = 0; i < tagCloud.splitCount; ++i) {
-                        entryNames[i] = apkEntries.get(i + 1).toLocalizedString(mActivity);
-                    }
-                    new SearchableItemsDialogBuilder<>(mActivity, entryNames)
-                            .setTitle(R.string.splits)
-                            .setNegativeButton(R.string.close, null)
-                            .show();
+                ApkFile apkFile = mMainModel.getApkFile();
+                if (apkFile == null) {
+                    return;
                 }
+                // Display a list of apks
+                List<ApkFile.Entry> apkEntries = apkFile.getEntries();
+                CharSequence[] entryNames = new CharSequence[tagCloud.splitCount];
+                for (int i = 0; i < tagCloud.splitCount; ++i) {
+                    entryNames[i] = apkEntries.get(i + 1).toLocalizedString(mActivity);
+                }
+                new SearchableItemsDialogBuilder<>(mActivity, entryNames)
+                        .setTitle(R.string.splits)
+                        .setNegativeButton(R.string.close, null)
+                        .show();
             });
         }
         if (tagCloud.isDebuggable) {
@@ -1356,34 +1355,33 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @UiThread
     private void startActivityForSplit(Intent intent) {
         if (mMainModel == null) return;
-        try (ApkFile apkFile = ApkFile.getInstance(mMainModel.getApkFileKey())) {
-            if (apkFile.isSplit()) {
-                // Display a list of apks
-                List<ApkFile.Entry> apkEntries = apkFile.getEntries();
-                CharSequence[] entryNames = new CharSequence[apkEntries.size()];
-                for (int i = 0; i < apkEntries.size(); ++i) {
-                    entryNames[i] = apkEntries.get(i).toShortLocalizedString(requireActivity());
-                }
-                new SearchableItemsDialogBuilder<>(mActivity, entryNames)
-                        .setTitle(R.string.select_apk)
-                        .setOnItemClickListener((dialog, which, item) -> mExecutor.submit(() -> {
-                            try {
-                                File file = apkEntries.get(which).getRealCachedFile();
-                                intent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton()
-                                        .getMimeTypeFromExtension("apk"));
-                                ThreadUtils.postOnMainThread(() -> startActivity(intent));
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }))
-                        .setNegativeButton(R.string.cancel, null)
-                        .show();
-            } else {
-                // Open directly
-                File file = new File(mApplicationInfo.publicSourceDir);
-                intent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
-                startActivity(intent);
+        ApkFile apkFile = mMainModel.getApkFile();
+        if (apkFile != null && apkFile.isSplit()) {
+            // Display a list of apks
+            List<ApkFile.Entry> apkEntries = apkFile.getEntries();
+            CharSequence[] entryNames = new CharSequence[apkEntries.size()];
+            for (int i = 0; i < apkEntries.size(); ++i) {
+                entryNames[i] = apkEntries.get(i).toShortLocalizedString(requireActivity());
             }
+            new SearchableItemsDialogBuilder<>(mActivity, entryNames)
+                    .setTitle(R.string.select_apk)
+                    .setOnItemClickListener((dialog, which, item) -> mExecutor.submit(() -> {
+                        try {
+                            File file = apkEntries.get(which).getRealCachedFile();
+                            intent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton()
+                                    .getMimeTypeFromExtension("apk"));
+                            ThreadUtils.postOnMainThread(() -> startActivity(intent));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }))
+                    .setNegativeButton(R.string.cancel, null)
+                    .show();
+        } else {
+            // Open directly
+            File file = new File(mApplicationInfo.publicSourceDir);
+            intent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton().getMimeTypeFromExtension("apk"));
+            startActivity(intent);
         }
     }
 

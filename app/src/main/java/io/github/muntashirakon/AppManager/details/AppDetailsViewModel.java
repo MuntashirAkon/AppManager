@@ -122,8 +122,9 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @Nullable
     private String mApkPath;
     @Nullable
+    private ApkFile.ApkSource mApkSource;
+    @Nullable
     private ApkFile mApkFile;
-    private int mApkFileKey;
     private int mUserId;
     @AppDetailsFragment.SortOrder
     private int mSortOrderComponents = Prefs.AppDetailsPage.getComponentsSortOrder();
@@ -176,12 +177,12 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @NonNull
     public LiveData<PackageInfo> setPackage(@NonNull Uri packageUri, @Nullable String type) {
         MutableLiveData<PackageInfo> packageInfoLiveData = new MutableLiveData<>();
+        mApkSource = new ApkFile.ApkSource(packageUri, type);
         mExecutor.submit(() -> {
             try {
                 Log.d(TAG, "Package Uri is being set");
                 mExternalApk = true;
-                mApkFileKey = ApkFile.createInstance(packageUri, type);
-                mApkFile = ApkFile.getInstance(mApkFileKey);
+                mApkFile = mApkSource.resolve();
                 setPackageName(mApkFile.getPackageName());
                 File cachedApkFile = mApkFile.getBaseEntry().getRealCachedFile();
                 if (!cachedApkFile.canRead()) throw new Exception("Cannot read " + cachedApkFile);
@@ -211,8 +212,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 setPackageInfo(false);
                 PackageInfo pi = getPackageInfo();
                 if (pi == null) throw new ApkFile.ApkFileException("Package not installed.");
-                mApkFileKey = ApkFile.createInstance(pi.applicationInfo);
-                mApkFile = ApkFile.getInstance(mApkFileKey);
+                mApkSource = new ApkFile.ApkSource(pi.applicationInfo);
+                mApkFile = mApkSource.resolve();
                 packageInfoLiveData.postValue(pi);
             } catch (Throwable th) {
                 Log.e(TAG, "Could not fetch package info.", th);
@@ -265,9 +266,14 @@ public class AppDetailsViewModel extends AndroidViewModel {
         return mPackageName;
     }
 
+    @Nullable
+    public ApkFile getApkFile() {
+        return mApkFile;
+    }
+
     @AnyThread
-    public int getApkFileKey() {
-        return mApkFileKey;
+    public ApkFile.ApkSource getApkFileLink() {
+        return mApkSource;
     }
 
     public boolean isTestOnlyApp() {
