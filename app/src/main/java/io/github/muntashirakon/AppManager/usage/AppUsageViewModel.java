@@ -19,8 +19,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.users.Users;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 
 public class AppUsageViewModel extends AndroidViewModel {
@@ -74,30 +74,23 @@ public class AppUsageViewModel extends AndroidViewModel {
     }
 
     public void loadPackageUsageInfo(PackageUsageInfo usageInfo) {
-        ThreadUtils.postOnBackgroundThread(() -> {
-            try {
-                PackageUsageInfo packageUsageInfo = AppUsageStatsManager.getInstance().getUsageStatsForPackage(
-                        usageInfo.packageName, mCurrentInterval, usageInfo.userId);
-                packageUsageInfo.copyOthers(usageInfo);
-                mPackageUsageInfoLiveData.postValue(packageUsageInfo);
-            } catch (Exception e) {
-                Log.e("AppUsage", e);
-            }
-        });
+        ThreadUtils.postOnBackgroundThread(() -> ExUtils.exceptionAsIgnored(() -> {
+            PackageUsageInfo packageUsageInfo = AppUsageStatsManager.getInstance().getUsageStatsForPackage(
+                    usageInfo.packageName, mCurrentInterval, usageInfo.userId);
+            packageUsageInfo.copyOthers(usageInfo);
+            mPackageUsageInfoLiveData.postValue(packageUsageInfo);
+        }));
     }
 
     @AnyThread
     public void loadPackageUsageInfoList() {
         ThreadUtils.postOnBackgroundThread(() -> {
             int[] userIds = Users.getUsersIds();
+            AppUsageStatsManager usageStatsManager = AppUsageStatsManager.getInstance();
             mPackageUsageInfoList.clear();
             for (int userId : userIds) {
-                try {
-                    mPackageUsageInfoList.addAll(AppUsageStatsManager.getInstance()
-                            .getUsageStats(mCurrentInterval, userId));
-                } catch (Exception e) {
-                    Log.e("AppUsage", e);
-                }
+                ExUtils.exceptionAsIgnored(() -> mPackageUsageInfoList.addAll(usageStatsManager
+                        .getUsageStats(mCurrentInterval, userId)));
             }
             mTotalScreenTime = 0;
             Set<Integer> users = new HashSet<>(3);

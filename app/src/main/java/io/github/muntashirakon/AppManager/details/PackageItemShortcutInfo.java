@@ -11,8 +11,6 @@ import android.os.Parcelable;
 import androidx.annotation.NonNull;
 import androidx.core.os.ParcelCompat;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
@@ -36,14 +34,14 @@ public class PackageItemShortcutInfo<T extends PackageItemInfo & Parcelable> ext
     }
 
     @Override
-    public void writeToParcel(@NonNull @NotNull Parcel dest, int flags) {
+    public void writeToParcel(@NonNull Parcel dest, int flags) {
         super.writeToParcel(dest, flags);
         dest.writeSerializable(mClazz);
         dest.writeParcelable(mPackageItemInfo, flags);
     }
 
     @Override
-    public Intent toShortcutIntent(@NonNull @NotNull Context context) {
+    public Intent toShortcutIntent(@NonNull Context context) {
         return requireProxy(mPackageItemInfo) ? getProxyIntent(context, mPackageItemInfo) : getIntent(mPackageItemInfo);
     }
 

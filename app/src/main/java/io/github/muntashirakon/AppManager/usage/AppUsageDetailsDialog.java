@@ -17,11 +17,15 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.os.BundleCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.material.textfield.TextInputLayout;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -31,7 +35,9 @@ import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
 import io.github.muntashirakon.dialog.CapsuleBottomSheetDialogFragment;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
+import io.github.muntashirakon.view.TextInputLayoutCompat;
 import io.github.muntashirakon.widget.RecyclerView;
+import io.github.muntashirakon.widget.TextInputTextView;
 
 public class AppUsageDetailsDialog extends CapsuleBottomSheetDialogFragment {
     public static final String TAG = AppUsageDetailsDialog.class.getSimpleName();
@@ -85,74 +91,58 @@ public class AppUsageDetailsDialog extends CapsuleBottomSheetDialogFragment {
         }
         setHeader(titleBuilder.build());
 
-        // Set body
-        AppUsageStatsManager.DataUsage mobileData = usageInfo.mobileData;
-        AppUsageStatsManager.DataUsage wifiData = usageInfo.wifiData;
-
-        TextView screenTime = view.findViewById(R.id.screen_time);
-        TextView timesOpened = view.findViewById(R.id.times_opened);
-        TextView lastUsed = view.findViewById(R.id.last_used);
-        TextView userId = view.findViewById(R.id.user_id);
-        TextView mobileDataUsage = view.findViewById(R.id.data_usage);
-        TextView wifiDataUsage = view.findViewById(R.id.wifi_usage);
         RecyclerView recyclerView = view.findViewById(android.R.id.list);
-        AppUsageDetailsAdapter adapter = new AppUsageDetailsAdapter(activity);
-
-        screenTime.setText(DateUtils.getFormattedDuration(requireContext(), usageInfo.screenTime));
-        timesOpened.setText(getResources().getQuantityString(R.plurals.no_of_times_opened, usageInfo.timesOpened,
-                usageInfo.timesOpened));
-        long lastRun = usageInfo.lastUsageTime > 1 ? (System.currentTimeMillis() - usageInfo.lastUsageTime) : 0;
-        if (usageInfo.packageName.equals(BuildConfig.APPLICATION_ID)) {
-            // Special case for App Manager since the user is using the app right now
-            lastUsed.setText(R.string.running);
-        } else if (lastRun > 1) {
-            lastUsed.setText(String.format(Locale.getDefault(), "%s %s", DateUtils.getFormattedDuration(
-                            requireContext(), lastRun), getString(R.string.ago)));
-        } else {
-            lastUsed.setText(R.string._undefined);
-        }
-        userId.setText(String.format(Locale.getDefault(), "%d", usageInfo.userId));
-        if ((mobileData == null && wifiData == null) || (mobileData != null && wifiData != null
-                && (mobileData.getTotal() + wifiData.getTotal() == 0))) {
-            view.findViewById(R.id.data_usage_layout).setVisibility(View.GONE);
-        } else {
-            if (mobileData != null && mobileData.getTotal() != 0) {
-                String dataUsage = String.format("  ↑ %1$s ↓ %2$s",
-                        Formatter.formatFileSize(requireContext(), mobileData.first),
-                        Formatter.formatFileSize(requireContext(), mobileData.second));
-                mobileDataUsage.setText(dataUsage);
-            } else mobileDataUsage.setVisibility(View.GONE);
-            if (wifiData != null && wifiData.getTotal() != 0) {
-                String dataUsage = String.format("  ↑ %1$s ↓ %2$s",
-                        Formatter.formatFileSize(requireContext(), wifiData.first),
-                        Formatter.formatFileSize(requireContext(), wifiData.second));
-                wifiDataUsage.setText(dataUsage);
-            } else wifiDataUsage.setVisibility(View.GONE);
-        }
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));
+        AppUsageDetailsAdapter adapter = new AppUsageDetailsAdapter(activity);
         recyclerView.setAdapter(adapter);
-        adapter.setDefaultList(usageInfo.entries);
+        adapter.setDefaultList(usageInfo);
 
         // Load the body
-        getView().postDelayed(this::finishLoading, 300);
+        requireView().postDelayed(this::finishLoading, 300);
     }
 
-    static class AppUsageDetailsAdapter extends RecyclerView.Adapter<AppUsageDetailsAdapter.ViewHolder> {
-        static class ViewHolder extends RecyclerView.ViewHolder {
+    static class AppUsageDetailsAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+        private static final int VIEW_TYPE_HEADER = 1;
+        private static final int VIEW_TYPE_LIST_ITEM = 2;
+
+        static class ListHeaderViewHolder extends RecyclerView.ViewHolder {
+            final TextInputTextView screenTime;
+            final TextInputTextView timesOpened;
+            final TextInputTextView lastUsed;
+            final TextInputTextView userId;
+            final TextInputTextView mobileDataUsage;
+            final TextInputTextView wifiDataUsage;
+            final LinearLayoutCompat dataUsageLayout;
+            final TextInputLayout mobileDataUsageLayout;
+            final TextInputLayout wifiDataUsageLayout;
+
+            public ListHeaderViewHolder(@NonNull View itemView) {
+                super(itemView);
+                screenTime = itemView.findViewById(R.id.screen_time);
+                timesOpened = itemView.findViewById(R.id.times_opened);
+                lastUsed = itemView.findViewById(R.id.last_used);
+                userId = itemView.findViewById(R.id.user_id);
+                mobileDataUsage = itemView.findViewById(R.id.data_usage);
+                mobileDataUsageLayout = TextInputLayoutCompat.fromTextInputEditText(mobileDataUsage);
+                wifiDataUsage = itemView.findViewById(R.id.wifi_usage);
+                wifiDataUsageLayout = TextInputLayoutCompat.fromTextInputEditText(wifiDataUsage);
+                dataUsageLayout = itemView.findViewById(R.id.data_usage_layout);
+            }
+        }
+
+        static class ListItemViewHolder extends RecyclerView.ViewHolder {
             TextView title;
             TextView subtitle;
 
-            public ViewHolder(@NonNull View itemView) {
+            public ListItemViewHolder(@NonNull View itemView) {
                 super(itemView);
                 title = itemView.findViewById(R.id.item_title);
                 subtitle = itemView.findViewById(R.id.item_subtitle);
             }
         }
 
-        @Nullable
-        private List<PackageUsageInfo.Entry> mDefaultList;
-        @Nullable
-        private List<PackageUsageInfo.Entry> mAdapterList;
+        private final List<PackageUsageInfo.Entry> mAdapterList = new ArrayList<>();
+        private PackageUsageInfo mUsageInfo;
         private final Context mContext;
 
         private final int mColorTransparent;
@@ -165,33 +155,111 @@ public class AppUsageDetailsDialog extends CapsuleBottomSheetDialogFragment {
             setHasStableIds(true);
         }
 
-        void setDefaultList(@Nullable List<PackageUsageInfo.Entry> list) {
-            mDefaultList = list;
-            mAdapterList = list;
+        void setDefaultList(@NonNull PackageUsageInfo usageInfo) {
+            mUsageInfo = usageInfo;
+            synchronized (mAdapterList) {
+                mAdapterList.clear();
+                if (usageInfo.entries != null) {
+                    mAdapterList.addAll(usageInfo.entries);
+                }
+            }
             notifyDataSetChanged();
         }
 
         @Override
+        public int getItemViewType(int position) {
+            if (position == 0) {
+                return VIEW_TYPE_HEADER;
+            }
+            return VIEW_TYPE_LIST_ITEM;
+        }
+
+        @Override
         public int getItemCount() {
-            return mAdapterList == null ? 0 : mAdapterList.size();
+            synchronized (mAdapterList) {
+                return mAdapterList.size() + 1;
+            }
         }
 
         @NonNull
         @Override
-        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_app_usage_details, parent, false);
-            return new ViewHolder(view);
+        public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            View view;
+            switch (viewType) {
+                case VIEW_TYPE_HEADER:
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_app_usage_details_header, parent, false);
+                    return new ListHeaderViewHolder(view);
+                default:
+                case VIEW_TYPE_LIST_ITEM:
+                    view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_app_usage_details, parent, false);
+                    return new ListItemViewHolder(view);
+            }
         }
 
         @Override
         public long getItemId(int position) {
-            return mDefaultList.indexOf(mAdapterList.get(position));
+            if (position == 0) {
+                return 0;
+            }
+            synchronized (mAdapterList) {
+                return mAdapterList.get(position - 1).hashCode();
+            }
         }
 
         @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            PackageUsageInfo.Entry entry = mAdapterList.get(position);
-            String dateTime = String.format(Locale.getDefault(), "%s", DateUtils.formatDateTime(mContext, entry.startTime));
+        public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+            if (position == 0) {
+                onBindViewHolder((ListHeaderViewHolder) holder);
+            } else onBindViewHolder((ListItemViewHolder) holder, position - 1);
+        }
+
+        public void onBindViewHolder(@NonNull ListHeaderViewHolder holder) {
+            AppUsageStatsManager.DataUsage mobileData = mUsageInfo.mobileData;
+            AppUsageStatsManager.DataUsage wifiData = mUsageInfo.wifiData;
+
+            holder.screenTime.setText(DateUtils.getFormattedDuration(mContext, mUsageInfo.screenTime));
+            holder.timesOpened.setText(mContext.getResources().getQuantityString(R.plurals.no_of_times_opened,
+                    mUsageInfo.timesOpened, mUsageInfo.timesOpened));
+            long lastRun = mUsageInfo.lastUsageTime > 1 ? (System.currentTimeMillis() - mUsageInfo.lastUsageTime) : 0;
+            if (mUsageInfo.packageName.equals(BuildConfig.APPLICATION_ID)) {
+                // Special case for App Manager since the user is using the app right now
+                holder.lastUsed.setText(R.string.running);
+            } else if (lastRun > 1) {
+                holder.lastUsed.setText(String.format(Locale.getDefault(), "%s %s", DateUtils.getFormattedDuration(
+                        mContext, lastRun), mContext.getString(R.string.ago)));
+            } else {
+                holder.lastUsed.setText(R.string._undefined);
+            }
+            holder.userId.setText(String.format(Locale.getDefault(), "%d", mUsageInfo.userId));
+            if ((mobileData == null && wifiData == null) || (mobileData != null && wifiData != null
+                    && (mobileData.getTotal() + wifiData.getTotal() == 0))) {
+                holder.dataUsageLayout.setVisibility(View.GONE);
+            } else {
+                holder.dataUsageLayout.setVisibility(View.VISIBLE);
+                if (mobileData != null && mobileData.getTotal() != 0) {
+                    String dataUsage = String.format("  ↑ %1$s ↓ %2$s",
+                            Formatter.formatFileSize(mContext, mobileData.first),
+                            Formatter.formatFileSize(mContext, mobileData.second));
+                    holder.mobileDataUsageLayout.setVisibility(View.VISIBLE);
+                    holder.mobileDataUsage.setText(dataUsage);
+                } else holder.mobileDataUsageLayout.setVisibility(View.GONE);
+                if (wifiData != null && wifiData.getTotal() != 0) {
+                    String dataUsage = String.format("  ↑ %1$s ↓ %2$s",
+                            Formatter.formatFileSize(mContext, wifiData.first),
+                            Formatter.formatFileSize(mContext, wifiData.second));
+                    holder.wifiDataUsageLayout.setVisibility(View.VISIBLE);
+                    holder.wifiDataUsage.setText(dataUsage);
+                } else holder.wifiDataUsageLayout.setVisibility(View.GONE);
+            }
+        }
+
+        public void onBindViewHolder(@NonNull ListItemViewHolder holder, int position) {
+            PackageUsageInfo.Entry entry;
+            synchronized (mAdapterList) {
+                entry = mAdapterList.get(position);
+            }
+            String dateTime = String.format(Locale.getDefault(), "%s",
+                    DateUtils.formatDateTime(mContext, entry.startTime));
             holder.title.setText(dateTime);
             holder.subtitle.setText(DateUtils.getFormattedDuration(mContext, entry.getDuration()));
             holder.itemView.setBackgroundColor(position % 2 == 0 ? mColorSemiTransparent : mColorTransparent);

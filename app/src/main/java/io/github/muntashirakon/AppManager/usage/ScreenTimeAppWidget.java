@@ -24,6 +24,7 @@ import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.DateUtils;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
 
 public class ScreenTimeAppWidget extends AppWidgetProvider {
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager, int appWidgetId) {
@@ -33,13 +34,10 @@ public class ScreenTimeAppWidget extends AppWidgetProvider {
         // Fetch screens time
         int[] userIds = Users.getUsersIds();
         List<PackageUsageInfo> packageUsageInfoList = new ArrayList<>();
+        AppUsageStatsManager usageStatsManager = AppUsageStatsManager.getInstance();
         for (int userId : userIds) {
-            try {
-                packageUsageInfoList.addAll(AppUsageStatsManager.getInstance()
-                        .getUsageStats(UsageUtils.USAGE_TODAY, userId));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            ExUtils.exceptionAsIgnored(() -> packageUsageInfoList.addAll(usageStatsManager
+                    .getUsageStats(UsageUtils.USAGE_TODAY, userId)));
         }
         Collections.sort(packageUsageInfoList, (o1, o2) -> -Long.compare(o1.screenTime, o2.screenTime));
         long totalScreenTime = 0;
