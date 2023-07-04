@@ -44,6 +44,7 @@ import java.io.OutputStream;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
@@ -554,10 +555,6 @@ public final class PackageInstallerCompat {
         }
     }
 
-    public boolean install(@NonNull ApkFile apkFile, @UserIdInt int userId) {
-        return install(apkFile, userId, null);
-    }
-
     public boolean install(@NonNull ApkFile apkFile, @UserIdInt int userId, @Nullable ProgressHandler progressHandler) {
         ThreadUtils.ensureWorkerThread();
         try {
@@ -571,10 +568,11 @@ public final class PackageInstallerCompat {
                 callFinish(STATUS_FAILURE_INVALID);
                 return false;
             }
+            Log.d(TAG, "Installing for users: " + Arrays.toString(allRequestedUsers));
             for (int u : allRequestedUsers) {
                 if (!SelfPermissions.checkCrossUserPermission(u, true)) {
                     installCompleted(mSessionId, STATUS_FAILURE_BLOCKED, "android", "STATUS_FAILURE_BLOCKED: Insufficient permission.");
-                    Log.d(TAG, "InstallExisting: Requires INTERACT_ACROSS_USERS and INTERACT_ACROSS_USERS_FULL permissions.");
+                    Log.d(TAG, "Install: Requires INTERACT_ACROSS_USERS and INTERACT_ACROSS_USERS_FULL permissions.");
                     return false;
                 }
             }
@@ -643,10 +641,11 @@ public final class PackageInstallerCompat {
                 callFinish(STATUS_FAILURE_INVALID);
                 return false;
             }
+            Log.d(TAG, "Installing for users: " + Arrays.toString(allRequestedUsers));
             for (int u : allRequestedUsers) {
                 if (!SelfPermissions.checkCrossUserPermission(u, true)) {
                     installCompleted(mSessionId, STATUS_FAILURE_BLOCKED, "android", "STATUS_FAILURE_BLOCKED: Insufficient permission.");
-                    Log.d(TAG, "InstallExisting: Requires INTERACT_ACROSS_USERS and INTERACT_ACROSS_USERS_FULL permissions.");
+                    Log.d(TAG, "Install: Requires INTERACT_ACROSS_USERS and INTERACT_ACROSS_USERS_FULL permissions.");
                     return false;
                 }
             }
@@ -996,7 +995,7 @@ public final class PackageInstallerCompat {
             if (userId == UserHandleHidden.USER_ALL && Users.getAllUserIds().length > 1
                     && !SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.INTERACT_ACROSS_USERS_FULL)) {
                 installCompleted(mSessionId, STATUS_FAILURE_BLOCKED, "android", "STATUS_FAILURE_BLOCKED: Insufficient permission.");
-                Log.d(TAG, "InstallExisting: Requires INTERACT_ACROSS_USERS and INTERACT_ACROSS_USERS_FULL permissions.");
+                Log.d(TAG, "Uninstall: Requires INTERACT_ACROSS_USERS and INTERACT_ACROSS_USERS_FULL permissions.");
                 return false;
             }
             int flags;

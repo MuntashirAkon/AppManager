@@ -104,8 +104,8 @@ public class PackageInstallerService extends ForegroundService {
         installer.setOnInstallListener(new PackageInstallerCompat.OnInstallListener() {
             @Override
             public void onStartInstall(int sessionId, String packageName) {
-                PackageInstallerService.this.mSessionId = sessionId;
-                PackageInstallerService.this.mPackageName = packageName;
+                mSessionId = sessionId;
+                mPackageName = packageName;
             }
 
             // MIUI-begin: MIUI 12.5+ workaround
