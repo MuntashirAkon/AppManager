@@ -355,7 +355,6 @@
     <string name="sort_by_sha">স্বাক্ষর</string>
     <string name="shared_user_id">শেয়ার্ড ব্যবহারকারীর আইডি</string>
     <string name="sort_by_shared_user_id">শেয়ার্ড ব্যবহারকারীর আইডি</string>
-    <string name="error_invalid_icon_resource">অকার্যকর আইকন রিসোর্স</string>
     <string name="error_creating_shortcut">শর্টকাট তৈরি করতে ব্যর্থ</string>
     <string name="app_signing_no_signatures">কোন স্বাক্ষর নেই</string>
     <string name="signatures">স্বাক্ষর</string>

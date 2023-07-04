@@ -82,7 +82,6 @@
     <string name="shortcut_name">ショートカート名</string>
     <string name="package_name">パッケージ名</string>
     <string name="class_name">クラス名</string>
-    <string name="error_invalid_icon_format">アイコンのフォーマットが無効です</string>
     <string name="icon_picker">アイコンを選択</string>
     <string name="license">ライセンス</string>
     <string name="third_party">サードパーティのライブラリとアイコン</string>

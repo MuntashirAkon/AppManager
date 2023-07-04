@@ -45,7 +45,6 @@
     <string name="credits">Köszönet</string>
     <string name="license">Licenc</string>
     <string name="icon_picker">Ikon választó</string>
-    <string name="error_invalid_icon_resource">Érvénytelen ikon forrás</string>
     <string name="class_name">Osztály név</string>
     <string name="package_name">Csomagnév</string>
     <string name="shortcut_name">Parancsikon neve</string>

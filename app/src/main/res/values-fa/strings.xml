@@ -138,7 +138,6 @@
     <string name="third_party">کتابخانه‌ها و آیکون های شخص سوم</string>
     <string name="license">لایسنس</string>
     <string name="icon_picker">انتخاب‌گر آیکون</string>
-    <string name="error_invalid_icon_resource">منبع آیکون نامعتبر</string>
     <string name="class_name">نام کلاس</string>
     <string name="package_name">نام بسته</string>
     <string name="shortcut_name">نام میانبر</string>

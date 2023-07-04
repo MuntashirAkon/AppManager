@@ -215,7 +215,6 @@
     <string name="third_party">Pustakaan dan Ikon Pihak-Ketiga</string>
     <string name="license">Lisensi</string>
     <string name="icon_picker">Pengambil Ikon</string>
-    <string name="error_invalid_icon_resource">Sumber ikon tidak valid</string>
     <string name="class_name">Nama Class</string>
     <string name="package_name">Nama Package</string>
     <string name="shortcut_name">Nama Pintasan</string>

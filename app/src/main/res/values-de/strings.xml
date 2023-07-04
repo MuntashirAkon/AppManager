@@ -83,7 +83,6 @@
     <string name="shortcut_name">Name der Verknüpfung</string>
     <string name="package_name">Paketname</string>
     <string name="class_name">Klassenname</string>
-    <string name="error_invalid_icon_format">Ungültiges Icon-Format</string>
     <string name="icon_picker">Icon-Auswahl</string>
     <string name="license">Lizenz</string>
     <string name="third_party">Drittanbieter-Lizenzen und -Icons</string>

@@ -46,7 +46,6 @@
     <string name="third_party">Tredjepartsbibliotek og ikoner</string>
     <string name="license">Lisens</string>
     <string name="icon_picker">Ikonvelger</string>
-    <string name="error_invalid_icon_resource">Ugyldig ikonressurs</string>
     <string name="class_name">Klassenavn</string>
     <string name="package_name">Pakkenavn</string>
     <string name="shortcut_name">Snarveisnavn</string>

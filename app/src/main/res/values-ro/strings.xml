@@ -81,7 +81,6 @@
     <string name="create_shortcut">Crează Scurtătură</string>
     <string name="shortcut_name">Nume Scurtătură</string>
     <string name="package_name">Nume Pachet</string>
-    <string name="error_invalid_icon_format">Format iconiță invalid</string>
     <string name="icon_picker">Selectare Iconiță</string>
     <string name="license">Licență</string>
     <string name="third_party">Librării și Iconițe Terțe</string>

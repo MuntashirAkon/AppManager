@@ -83,7 +83,6 @@
     <string name="shortcut_name">Название ярлыка</string>
     <string name="package_name">Имя пакета</string>
     <string name="class_name">Название класса</string>
-    <string name="error_invalid_icon_format">Неверный формат значка</string>
     <string name="icon_picker">Выбор иконок</string>
     <string name="license">Лицензия</string>
     <string name="third_party">Сторонние библиотеки и значки</string>

@@ -64,7 +64,6 @@
     <string name="starting_activity">Εκκίνηση δραστηριότητας: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="shortcut_name">Όνομα Συντόμευσης</string>
     <string name="package_name">Όνομα Πακέτου</string>
-    <string name="error_invalid_icon_format">Άκυρο φορμάτ εικονιδίου</string>
     <string name="icon_picker">Επιλογέας Εικονίδιου</string>
     <plurals name="tracker_and_classes">
         <item quantity="one">1 ανιχνευτής με <xliff:g id="class_no" example="50">%1$d</xliff:g> κλάση</item>

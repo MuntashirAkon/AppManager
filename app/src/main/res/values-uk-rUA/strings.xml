@@ -458,7 +458,6 @@
     <string name="pref_import_export_blocking_rules_msg">Імпорт/Експорт правил, імпорт зовнішніх правил з Watt або Blocker.</string>
     <string name="failed_to_disable_op">Сталася помилка під час спроби заборонити дозвіл</string>
     <string name="debuggable">Налагоджується</string>
-    <string name="error_invalid_icon_resource">Пошкоджений ресурс іконки</string>
     <string name="installer_app">Встановник додатків</string>
     <string name="sort_by_package_name">Ім’я пакету</string>
     <string name="require_no_permission">Не вимагає дозволів</string>

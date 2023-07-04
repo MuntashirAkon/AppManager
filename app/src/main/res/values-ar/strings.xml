@@ -72,7 +72,6 @@
     <string name="third_party">مكتبات وأيقونات الطرف الثالث</string>
     <string name="license">الرخصة</string>
     <string name="icon_picker">منتقي الأيقونات</string>
-    <string name="error_invalid_icon_format">تنسيق الايقونه غير صالح</string>
     <string name="class_name">اسم الفصل</string>
     <string name="package_name">اسم الحزمة</string>
     <string name="shortcut_name">اسم الاختصار</string>

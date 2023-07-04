@@ -71,7 +71,6 @@
     <string name="error_verbose_pin_shortcut">Současný spouštěč nepodporuje funkci PinShortcut. Nelze vytvořit zástupce.</string>
     <string name="package_name">Název Balíčku</string>
     <string name="shortcut_name">Nazev Zástupce</string>
-    <string name="error_invalid_icon_format">Neplatný formát ikony</string>
     <string name="third_party">Ikony a Knihovny třetích stran</string>
     <string name="soft_input">Režim softwarového vstupu</string>
     <string name="no_receivers">Žádné přijímače</string>
