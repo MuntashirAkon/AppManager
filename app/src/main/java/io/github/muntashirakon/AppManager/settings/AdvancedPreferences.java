@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.Preference;
+import androidx.preference.SwitchPreferenceCompat;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -118,6 +119,9 @@ public class AdvancedPreferences extends PreferenceFragment {
                     fragment.show(getParentFragmentManager(), ImportExportKeyStoreDialogFragment.TAG);
                     return true;
                 });
+        // Send notifications to the connected device
+        ((SwitchPreferenceCompat) Objects.requireNonNull(findPreference("send_notifications_to_connected_devices")))
+                .setChecked(Prefs.Misc.sendNotificationsToConnectedDevices());
     }
 
     @Override

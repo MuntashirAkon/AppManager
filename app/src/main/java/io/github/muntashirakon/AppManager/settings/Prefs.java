@@ -464,6 +464,10 @@ public final class Prefs {
             }
             AppPref.set(AppPref.PrefKey.PREF_SELECTED_USERS_STR, TextUtils.join(",", userString));
         }
+
+        public static boolean sendNotificationsToConnectedDevices() {
+            return AppPref.getBoolean(AppPref.PrefKey.PREF_SEND_NOTIFICATIONS_TO_CONNECTED_DEVICES_BOOL);
+        }
     }
 
     public static final class RunningApps {

@@ -21,6 +21,7 @@ import java.util.Map;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.progress.NotificationProgressHandler;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 
 public final class NotificationUtils {
     private static final String HIGH_PRIORITY_CHANNEL_ID = BuildConfig.APPLICATION_ID + ".channel.HIGH_PRIORITY";
@@ -74,13 +75,8 @@ public final class NotificationUtils {
     @NonNull
     public static NotificationCompat.Builder getHighPriorityNotificationBuilder(@NonNull Context context) {
         return new NotificationCompat.Builder(context, NotificationUtils.HIGH_PRIORITY_CHANNEL_ID)
+                .setLocalOnly(!Prefs.Misc.sendNotificationsToConnectedDevices())
                 .setPriority(NotificationCompat.PRIORITY_HIGH);
-    }
-
-    @NonNull
-    public static NotificationCompat.Builder getFreezeUnfreezeNotificationBuilder(@NonNull Context context) {
-        return new NotificationCompat.Builder(context, NotificationUtils.FREEZE_UNFREEZE_CHANNEL_ID)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
     }
 
     public static void displayHighPriorityNotification(@NonNull Context context, Notification notification) {
@@ -119,7 +115,7 @@ public final class NotificationUtils {
         manager.cancel(notificationId);
     }
 
-    public static void displayNotification(@NonNull Context context,
+    private static void displayNotification(@NonNull Context context,
                                            @NonNull String channelId,
                                            @NonNull CharSequence channelName,
                                            @NotificationImportance int importance,
@@ -127,6 +123,7 @@ public final class NotificationUtils {
                                            @NonNull NotificationBuilder notification) {
         NotificationManagerCompat manager = getNewNotificationManager(context, channelId, channelName, importance);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
+                .setLocalOnly(!Prefs.Misc.sendNotificationsToConnectedDevices())
                 .setPriority(importanceToPriority(importance));
         if (SelfPermissions.checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS)) {
             manager.notify(notificationId, notification.build(builder));

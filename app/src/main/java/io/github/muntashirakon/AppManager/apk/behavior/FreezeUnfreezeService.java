@@ -98,6 +98,7 @@ public class FreezeUnfreezeService extends Service {
                 .setAuthenticationRequired(true)
                 .build();
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setLocalOnly(true)
                 .setOngoing(true)
                 .setContentTitle(null)
                 .setContentText(getString(R.string.waiting_for_the_phone_to_be_locked))

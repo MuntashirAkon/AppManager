@@ -1419,4 +1419,6 @@
     <string name="change_owner_uid">Change owner (UID)</string>
     <string name="change_group_gid">Change group (GID)</string>
     <string name="change_mode">Change mode</string>
+    <string name="pref_send_notifications_to_connected_devices">Send notifications to the connected devices</string>
+    <string name="pref_send_notification_to_connected_devices_msg">Set whether to send notifications to connected devices such as wearables.</string>
 </resources>

@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
 
 public class NotificationProgressHandler extends QueuedProgressHandler {
@@ -72,6 +73,7 @@ public class NotificationProgressHandler extends QueuedProgressHandler {
         NotificationInfo info = (NotificationInfo) message;
         Notification notification = info
                 .getBuilder(mContext, mQueueNotificationManagerInfo)
+                .setLocalOnly(true)
                 .build();
         notify(mContext, mQueueNotificationManager, mQueueNotificationId, notification);
     }
@@ -83,6 +85,7 @@ public class NotificationProgressHandler extends QueuedProgressHandler {
             mAttachedToService = true;
             Notification notification = mLastProgressNotification
                     .getBuilder(mContext, mProgressNotificationManagerInfo)
+                    .setLocalOnly(true)
                     .setOngoing(true)
                     .setOnlyAlertOnce(true)
                     .setProgress(0, 0, false)
@@ -111,6 +114,7 @@ public class NotificationProgressHandler extends QueuedProgressHandler {
         int newCurrent = max < 0 ? 0 : (int) current;
         NotificationCompat.Builder builder = mLastProgressNotification
                 .getBuilder(mContext, mProgressNotificationManagerInfo)
+                .setLocalOnly(true)
                 .setOngoing(true)
                 .setOnlyAlertOnce(true)
                 .setProgress(newMax, newCurrent, indeterminate);
@@ -321,6 +325,7 @@ public class NotificationProgressHandler extends QueuedProgressHandler {
         @NonNull
         NotificationCompat.Builder getBuilder(@NonNull Context context, @NonNull NotificationManagerInfo info) {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context, info.channelId)
+                    .setLocalOnly(!Prefs.Misc.sendNotificationsToConnectedDevices())
                     .setPriority(NotificationUtils.importanceToPriority(info.importance))
                     .setDefaults(Notification.DEFAULT_ALL)
                     .setSmallIcon(icon, level)

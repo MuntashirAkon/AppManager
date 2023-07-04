@@ -25,4 +25,10 @@
         app:summary="@string/pref_import_export_keystore_msg"
         app:iconSpaceReserved="false" />
 
+    <SwitchPreferenceCompat
+        app:key="send_notifications_to_connected_devices"
+        app:title="@string/pref_send_notifications_to_connected_devices"
+        app:summary="@string/pref_send_notification_to_connected_devices_msg"
+        app:iconSpaceReserved="false" />
+
 </PreferenceScreen>
