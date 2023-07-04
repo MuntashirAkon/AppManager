@@ -907,8 +907,8 @@
     <string name="backup_obb_media_description">النسخ الاحتياطي لمجلدات OBB والوسائط.</string>
     <string name="backup_cache_description">نسخ <b> ذاكرة التخزين المؤقت</b>، <b>no_cache</b> و <b>no_backup</b> المجلدات.</string>
     <string name="backup_extras">إضافية</string>
-    <string name="backup_extras_description">نسخ أذونات التطبيق احتياطيًا ، وخيارات توفير البطارية واستخدام البيانات ، وحالة MagiskHide ، و SSAID ، وما إلى ذلك.</string>
-    <string name="backup_rules_description">قواعد النسخ الاحتياطي التي تم تكوينها داخل مدير التطبيقات.</string>
+    <string name="backup_extras_description">قم بعمل نسخة احتياطية من أذونات التطبيق ، وتوفير البطارية وخيارات استخدام البيانات ، وحالة MagiskHide ، و SSAID ، وما إلى ذلك. <font fgcolor="#ff0000"> اعتمادا على الأذونات ، لا يمكن استعادة جميع الإضافات. </font> </string>
+    <string name="backup_rules_description">قواعد النسخ الاحتياطي التي تم تكوينها داخل مدير التطبيقات. <font fgcolor="#ff0000"> اعتمادًا على الأذونات ، لا يمكن إعادة تطبيق جميع القواعد أثناء الاستعادة. </font> </string>
     <string name="backup_multiple_description">قم بإنشاء نسخة احتياطية منفصلة <i> باسم </i> بدلاً من النسخة الاحتياطية الأساسية.</string>
     <string name="patch_level">مستوى التصحيح</string>
     <string name="selinux">امان لينكس المحسن</string>
@@ -1518,4 +1518,34 @@
         <item quantity="other">مجلدات %d</item>
     </plurals>
     <string name="filter_force_stopped_apps">التطبيقات المتوقفة</string>
+    <string name="warning_working_on_system_mode">تحذير: العمل على النظام بدلا من وضع ADB.</string>
+    <string name="installing_package">جاري تثبيت %1$s…</string>
+    <string name="backing_up_app">النسخ الاحتياطي %1$s …</string>
+    <string name="restoring_app">استعادة %1$s …</string>
+    <string name="folder">المجلد</string>
+    <string name="symbolic_link">رابط رمزي</string>
+    <string name="create_new_symbolic_link">رابط رمزي جديد</string>
+    <string name="symbolic_link_not_supported">لا يدعم هذا المجلد إنشاء ارتباط رمزي.</string>
+    <string name="create_new_folder">مجلد جديد</string>
+    <string name="create_new_file">ملف جديد</string>
+    <string name="enter_symbolic_link_name">اسم الرابط</string>
+    <string name="enter_target_path">المسار الهدف</string>
+    <string name="invalid_target_path">مسار غير صالح</string>
+    <string name="copy_these_paths">نسخ المسار</string>
+    <string name="conflict_detected_while_copying">تم اكتشاف تعارض</string>
+    <string name="copy_keep_both_file">احتفظ بكليهما</string>
+    <string name="copied_successfully">نسخ.</string>
+    <string name="moved_successfully">تم النقل</string>
+    <string name="failed_to_delete_specified_file_after_copying">تعذر حذف \"%1$s\" بعد نسخه ، ربما بسبب عدم وجود صلاحيات كافية.</string>
+    <string name="change_group_gid">تغيير المجموعة (GID)</string>
+    <string name="change_mode">بدّل النمط</string>
+    <string name="pref_send_notifications_to_connected_devices">إرسال إشعارات إلى الأجهزة المتصلة</string>
+    <string name="pref_send_notification_to_connected_devices_msg">قم بتعيين ما إذا كنت تريد إرسال إشعارات إلى الأجهزة المتصلة مثل الأجهزة القابلة للارتداء.</string>
+    <string name="pref_installer_force_dexopt_description">قم بإجراء تحسين DEX بعد تثبيت التطبيق دون انتظار قيام النظام بذلك عندما يكون النظام في وضع الخمول.</string>
+    <string name="conflict_detected_while_copying_message">يوجد عنصر باسم \"%1$s\" بالفعل في هذا الموقع. هل تريد استبداله؟</string>
+    <string name="title_confirm_deletion">تأكيد الحذف</string>
+    <string name="failed_to_copy_specified_file">تعذر نسخ \"%1$s\".</string>
+    <string name="title_change_selinux_context">تغيير سياق SELinux</string>
+    <string name="apply_recursively">تطبيق على الملفات المرفقة</string>
+    <string name="change_owner_uid">تغيير المالك (UID)</string>
 </resources>
