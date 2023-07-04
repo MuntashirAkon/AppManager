@@ -21,14 +21,15 @@ import android.text.TextUtils;
 import android.text.format.Formatter;
 import android.text.style.ForegroundColorSpan;
 import android.util.DisplayMetrics;
-import android.util.SparseArray;
 import android.util.SparseIntArray;
 
 import androidx.annotation.AnyThread;
+import androidx.annotation.GuardedBy;
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
+import androidx.collection.SparseArrayCompat;
 import androidx.core.os.ParcelCompat;
 
 import com.google.android.material.color.MaterialColors;
@@ -71,7 +72,6 @@ import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.LangUtils;
-import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
@@ -101,6 +101,7 @@ public final class ApkFile implements AutoCloseable {
             this.applicationInfo = Objects.requireNonNull(applicationInfo);
         }
 
+        @AnyThread
         @NonNull
         public ApkFile resolve() throws ApkFileException {
             ApkFile apkFile = getInstance(mApkFileKey);
@@ -164,38 +165,51 @@ public final class ApkFile implements AutoCloseable {
     private static final String UN_APKM_PKG = "io.github.muntashirakon.unapkm";
 
     // There's hardly any chance of using multiple instances of ApkFile but still kept for convenience
-    private static final SparseArray<ApkFile> sApkFiles = new SparseArray<>(3);
+    private static final SparseArrayCompat<ApkFile> sApkFiles = new SparseArrayCompat<>(3);
     private static final SparseIntArray sInstanceCount = new SparseIntArray(3);
 
     @AnyThread
     @Nullable
     private static ApkFile getInstance(int sparseArrayKey) {
-        ApkFile apkFile = sApkFiles.get(sparseArrayKey);
-        if (apkFile == null) {
-            return null;
+        synchronized (sApkFiles) {
+            ApkFile apkFile = sApkFiles.get(sparseArrayKey);
+            if (apkFile == null) {
+                return null;
+            }
+            synchronized (sInstanceCount) {
+                // Increment the number of active instances
+                sInstanceCount.put(sparseArrayKey, sInstanceCount.get(sparseArrayKey) + 1);
+            }
+            return apkFile;
         }
-        synchronized (sInstanceCount) {
-            // Increment the number of active instances
-            sInstanceCount.put(sparseArrayKey, sInstanceCount.get(sparseArrayKey) + 1);
-        }
-        return apkFile;
     }
 
-    @WorkerThread
+    @AnyThread
     private static int createInstance(Uri apkUri, @Nullable String mimeType) throws ApkFileException {
-        ThreadUtils.ensureWorkerThread();
-        int key = ThreadLocalRandom.current().nextInt();
-        ApkFile apkFile = new ApkFile(apkUri, mimeType, key);
-        sApkFiles.put(key, apkFile);
-        return key;
+        synchronized (sApkFiles) {
+            int key = getUniqueKey();
+            ApkFile apkFile = new ApkFile(apkUri, mimeType, key);
+            sApkFiles.put(key, apkFile);
+            return key;
+        }
     }
 
-    @WorkerThread
+    @AnyThread
     private static int createInstance(ApplicationInfo info) throws ApkFileException {
-        ThreadUtils.ensureWorkerThread();
-        int key = ThreadLocalRandom.current().nextInt();
-        ApkFile apkFile = new ApkFile(info, key);
-        sApkFiles.put(key, apkFile);
+        synchronized (sApkFiles) {
+            int key = getUniqueKey();
+            ApkFile apkFile = new ApkFile(info, key);
+            sApkFiles.put(key, apkFile);
+            return key;
+        }
+    }
+
+    @GuardedBy("sApkFiles")
+    private static int getUniqueKey() {
+        int key;
+        do {
+            key = ThreadLocalRandom.current().nextInt();
+        } while (sApkFiles.containsKey(key));
         return key;
     }
 
@@ -574,7 +588,7 @@ public final class ApkFile implements AutoCloseable {
             sInstanceCount.delete(mSparseArrayKey);
         }
         mClosed = true;
-        sApkFiles.delete(mSparseArrayKey);
+        sApkFiles.remove(mSparseArrayKey);
         for (Entry entry : mEntries) {
             entry.close();
         }
