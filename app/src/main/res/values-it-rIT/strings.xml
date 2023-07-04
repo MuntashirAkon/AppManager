@@ -134,7 +134,6 @@
     <string name="found_trackers">Trova tracker:</string>
     <string name="no_shared_libs">Nessuna libreria condivisa</string>
     <string name="third_party">Librerie e icone di terze parti</string>
-    <string name="error_invalid_icon_format">Formato icona non valido</string>
     <string name="error_invalid_icon_resource">Risorsa icona non valida</string>
     <string name="class_name">Nome classe</string>
     <string name="package_name">Nome pacchetto</string>
@@ -334,7 +333,6 @@
     <string name="sort_by_target_sdk">SDK di destinazione</string>
     <string name="icon_picker">Selettore icone</string>
     <string name="shortcut_name">Nome scorciatoia</string>
-    <string name="edit_shortcut">Modifica scorciatoia</string>
     <string name="create_shortcut">Crea scorciatoia</string>
     <string name="starting_activity">Attività iniziale: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="empty_package_name">Nome pacchetto vuoto</string>

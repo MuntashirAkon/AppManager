@@ -47,7 +47,6 @@
     <string name="user_app">Uživatelská aplikace</string>
     <string name="sdk_max">Cíl</string>
     <string name="starting_activity">Spouštění aktivity: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
-    <string name="error_invalid_icon_resource">Neplatný zdroj ikony</string>
     <string name="data_usage_msg">Využití dat</string>
     <string name="app_not_installed">Aplikace není nainstalována</string>
     <string name="word_wrap">Přepnout obtékání slov</string>
@@ -72,7 +71,6 @@
     <string name="error_verbose_pin_shortcut">Současný spouštěč nepodporuje funkci PinShortcut. Nelze vytvořit zástupce.</string>
     <string name="package_name">Název Balíčku</string>
     <string name="shortcut_name">Nazev Zástupce</string>
-    <string name="edit_shortcut">Upravit Zástupce</string>
     <string name="error_invalid_icon_format">Neplatný formát ikony</string>
     <string name="third_party">Ikony a Knihovny třetích stran</string>
     <string name="soft_input">Režim softwarového vstupu</string>

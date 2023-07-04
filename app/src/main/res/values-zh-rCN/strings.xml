@@ -80,11 +80,9 @@
     <string name="error_verbose_pin_shortcut">当前启动器尚不支持 “PinShortcut”。无法创建快捷方式。</string>
     <string name="starting_activity">启动活动: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="create_shortcut">创建快捷方式</string>
-    <string name="edit_shortcut">编辑快捷方式</string>
     <string name="shortcut_name">快捷方式名称</string>
     <string name="package_name">应用包名</string>
     <string name="class_name">类名</string>
-    <string name="error_invalid_icon_resource">无效的图标</string>
     <string name="error_invalid_icon_format">无效图标格式</string>
     <string name="icon_picker">选择图标</string>
     <string name="license">许可协议</string>

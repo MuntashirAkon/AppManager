@@ -8,7 +8,6 @@
     <string name="uninstall">Fshi</string>
     <string name="class_name">Emri i klasës</string>
     <string name="uses_feature">Përdorimi veçorive</string>
-    <string name="edit_shortcut">Modifiko Shkurtoren</string>
     <string name="system">Sistemi</string>
     <string name="data_received">Të dhënat e marra</string>
     <string name="app_info">Info app</string>
@@ -39,11 +38,9 @@
     <string name="orientation">Orientimi</string>
     <string name="sort_by_package_name">Emri i paketës</string>
     <string name="sort_by_domain">App të user-it së pari</string>
-    <string name="error_invalid_icon_resource">Burim i pavlefshëm i ikonës</string>
     <string name="user">Përdoruesi</string>
     <string name="user_app">App te përdoruesit</string>
     <string name="app_not_installed">Aplikacioni nuk është i instaluar</string>
-    <string name="error_invalid_icon_format">Format i pavlefshëm i ikonës</string>
     <string name="about">Rreth</string>
     <string name="paths_and_directories">Rrugët &amp; Direktoritë</string>
     <string name="data_size">Të dhënat</string>

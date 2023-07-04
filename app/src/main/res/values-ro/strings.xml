@@ -21,7 +21,6 @@
     <string name="user">Utilizator</string>
     <string name="sdk_max">Țintă</string>
     <string name="class_name">Nume Clasă</string>
-    <string name="edit_shortcut">Editează Scurtătură</string>
     <string name="toggle_class_listing">Activează Listare Clase</string>
     <string name="uninstall">Dezinstalare</string>
     <string name="require_no_permission">Nu necesită permisiuni</string>
@@ -82,7 +81,6 @@
     <string name="create_shortcut">Crează Scurtătură</string>
     <string name="shortcut_name">Nume Scurtătură</string>
     <string name="package_name">Nume Pachet</string>
-    <string name="error_invalid_icon_resource">Resursă iconiță invalidă</string>
     <string name="error_invalid_icon_format">Format iconiță invalid</string>
     <string name="icon_picker">Selectare Iconiță</string>
     <string name="license">Licență</string>

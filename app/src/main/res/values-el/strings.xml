@@ -61,11 +61,9 @@
     <string name="empty_package_name">Κενό όνομα πακέτου</string>
     <string name="error_creating_shortcut">Σφάλμα δημιουργίας συντόμευσης</string>
     <string name="error_verbose_pin_shortcut">Ο τρέχων εκκινητής δεν υποστηρίζει PinShortcut. Αδυναμία δημιουργίας συντόμευσης.</string>
-    <string name="edit_shortcut">Επεξεργασία Συντόμευσης</string>
     <string name="starting_activity">Εκκίνηση δραστηριότητας: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="shortcut_name">Όνομα Συντόμευσης</string>
     <string name="package_name">Όνομα Πακέτου</string>
-    <string name="error_invalid_icon_resource">Άκυρη πηγή εικονιδίου</string>
     <string name="error_invalid_icon_format">Άκυρο φορμάτ εικονιδίου</string>
     <string name="icon_picker">Επιλογέας Εικονίδιου</string>
     <plurals name="tracker_and_classes">

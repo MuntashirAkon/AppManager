@@ -46,12 +46,10 @@
     <string name="third_party">Tredjepartsbibliotek og ikoner</string>
     <string name="license">Lisens</string>
     <string name="icon_picker">Ikonvelger</string>
-    <string name="error_invalid_icon_format">Ugyldig ikonformat</string>
     <string name="error_invalid_icon_resource">Ugyldig ikonressurs</string>
     <string name="class_name">Klassenavn</string>
     <string name="package_name">Pakkenavn</string>
     <string name="shortcut_name">Snarveisnavn</string>
-    <string name="edit_shortcut">Rediger snarvei</string>
     <string name="create_shortcut">Opprett snarvei</string>
     <string name="error_verbose_pin_shortcut">Nåværende oppstarter støtter ikke PinShortcut. Klarte ikke å opprette snarvei.</string>
     <string name="error_creating_shortcut">Klarte ikke å opprette snarvei</string>

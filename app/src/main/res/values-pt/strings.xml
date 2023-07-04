@@ -309,12 +309,10 @@
     <string name="third_party">Bibliotecas e ícones de terceiros</string>
     <string name="license">Licença</string>
     <string name="icon_picker">Selecionar ícone</string>
-    <string name="error_invalid_icon_format">Ícone com formato inválido</string>
     <string name="error_invalid_icon_resource">Recurso de ícone inválido</string>
     <string name="class_name">Nome da classe</string>
     <string name="package_name">Nome do pacote</string>
     <string name="shortcut_name">Nome do atalho</string>
-    <string name="edit_shortcut">Editar atalho</string>
     <string name="create_shortcut">Criar atalho</string>
     <string name="starting_activity">A iniciar atividade: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="error_verbose_pin_shortcut">O iniciador atual não suporta PinShortcut. Não foi possível criar o atalho.</string>

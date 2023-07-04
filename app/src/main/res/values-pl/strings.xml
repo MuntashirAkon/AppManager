@@ -104,10 +104,8 @@
     <string name="installer_error_security">Nie uzyskano dostępu do plików APK</string>
     <string name="install_in_progress">Instalowanie…</string>
     <string name="license">Licencja</string>
-    <string name="error_invalid_icon_format">Nieprawidłowy format ikony</string>
     <string name="class_name">Nazwa klasy</string>
     <string name="shortcut_name">Nazwa skrótu</string>
-    <string name="edit_shortcut">Edytuj skrót</string>
     <string name="orientation">Orientacja</string>
     <string name="no_service">Brak usług</string>
     <string name="service">Usługi</string>
@@ -479,7 +477,6 @@
     <string name="tracker_classes">Klasy elementów śledzących</string>
     <string name="tracker_details">Szczegóły elementu śledzącego</string>
     <string name="found_trackers">Znaleziono elementów śledzących:</string>
-    <string name="error_invalid_icon_resource">Nieprawidłowy zasób ikon</string>
     <string name="package_name">Nazwa Pakietu</string>
     <string name="error_verbose_pin_shortcut">Obecny launcher nie wspiera PinShortcut. Brak możliwości utworzenia skrótu.</string>
     <string name="empty_package_name">Pusta nazwa pakietu</string>

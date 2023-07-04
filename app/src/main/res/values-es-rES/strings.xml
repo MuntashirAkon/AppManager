@@ -204,12 +204,10 @@
     <string name="third_party">Bibliotecas e iconos de terceros</string>
     <string name="license">Licencia</string>
     <string name="icon_picker">Selector de iconos</string>
-    <string name="error_invalid_icon_format">Formato de icono no válido</string>
     <string name="error_invalid_icon_resource">Recurso de icono no válido</string>
     <string name="class_name">Nombre de la Clase</string>
     <string name="package_name">Nombre del paquete</string>
     <string name="shortcut_name">Nombre del atajo (shortcut)</string>
-    <string name="edit_shortcut">Editar atajo (shortcut)</string>
     <string name="create_shortcut">Crear un atajo (shortcut)</string>
     <string name="starting_activity">Inicio de la actividad: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="error_verbose_pin_shortcut">El iniciador actual no admite PinShortcut. No se puede crear el atajo.</string>
@@ -1333,4 +1331,12 @@
     </plurals>
     <string name="app_info_tag_open_links">Open links</string>
     <string name="title_domains_supported_by_the_app">Dominios soportados</string>
+    <string name="block_unblock_components_dots">Bloquear/desbloquear componentes…</string>
+    <string name="unblock_components_dots">Desbloquear componentes…</string>
+    <string name="block_unblock_components_description">Bloquear o desbloquear todos los componentes identificados por las firmas dadas</string>
+    <plurals name="alert_failed_to_unblock_components">
+        <item quantity="one">"No se pudo desbloquear  los componentes para %1$d app"</item>
+        <item quantity="many">No se pudieron desbloquear los componentes para %1$d app</item>
+        <item quantity="other"/>
+    </plurals>
 </resources>

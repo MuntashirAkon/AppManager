@@ -28,7 +28,6 @@
     <string name="obb_size">Obb</string>
     <string name="error_creating_shortcut">Помилка створення ярлика</string>
     <string name="create_shortcut">Створити ярлик</string>
-    <string name="edit_shortcut">Редагувати ярлик</string>
     <string name="class_name">Назва класу</string>
     <string name="license">Ліцензія</string>
     <string name="third_party">Сторонні бібліотеки та іконки</string>
@@ -459,7 +458,6 @@
     <string name="pref_import_export_blocking_rules_msg">Імпорт/Експорт правил, імпорт зовнішніх правил з Watt або Blocker.</string>
     <string name="failed_to_disable_op">Сталася помилка під час спроби заборонити дозвіл</string>
     <string name="debuggable">Налагоджується</string>
-    <string name="error_invalid_icon_format">Пошкоджений формат іконки</string>
     <string name="error_invalid_icon_resource">Пошкоджений ресурс іконки</string>
     <string name="installer_app">Встановник додатків</string>
     <string name="sort_by_package_name">Ім’я пакету</string>

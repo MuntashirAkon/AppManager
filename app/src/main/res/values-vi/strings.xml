@@ -52,11 +52,9 @@
     <string name="failed_to_change_ssaid">Không thể thay đổi SSAID</string>
     <string name="copied_to_clipboard">Đã sao chép vào bộ nhớ.</string>
     <string name="icon_picker">Trình chọn biểu tượng</string>
-    <string name="error_invalid_icon_format">Định dạng biểu tượng không hợp lệ</string>
     <string name="error_invalid_icon_resource">Tài nguyên biểu tượng không hợp lệ</string>
     <string name="package_name">Tên gói</string>
     <string name="shortcut_name">Tên lối tắt</string>
-    <string name="edit_shortcut">Chỉnh sửa lối tắt</string>
     <string name="create_shortcut">Tạo lối tắt</string>
     <string name="license">Giấy phép</string>
     <string name="date_updated">Ngày cập nhật</string>

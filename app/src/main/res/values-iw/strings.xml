@@ -66,7 +66,6 @@
     <string name="installer_app">התקן אפליקציה</string>
     <string name="shortcut_name">שם קיצור דרך</string>
     <string name="class_name">שם הכיתה</string>
-    <string name="error_invalid_icon_format">פורמט סמל לא חוקי</string>
     <string name="icon_picker">בוחר אייקונים</string>
     <string name="go_back">חזור אחורה</string>
     <string name="license">רשיון</string>
@@ -89,7 +88,6 @@
     <string name="boolean_value">ערך בוליאני</string>
     <string name="string_value">ערך מחרוזת</string>
     <string name="done">סיים</string>
-    <string name="error_invalid_icon_resource">משאב סמל לא חוקי</string>
     <string name="select_type">בחר סוג</string>
     <string name="more_info">עוד מידע</string>
     <string name="user">משתמש</string>
@@ -150,7 +148,6 @@
     <string name="obb_size">Obb</string>
     <string name="main_activity">פעילות עיקרית</string>
     <string name="add_item">הוסף פריט</string>
-    <string name="edit_shortcut">ערוך קיצור דרך</string>
     <string name="type_int">מספר שלם</string>
     <string name="delete">מחק</string>
     <string name="deleted_successfully">נמחק</string>

@@ -72,12 +72,10 @@
     <string name="third_party">مكتبات وأيقونات الطرف الثالث</string>
     <string name="license">الرخصة</string>
     <string name="icon_picker">منتقي الأيقونات</string>
-    <string name="error_invalid_icon_resource">مصدر الايقونه غير صالح</string>
     <string name="error_invalid_icon_format">تنسيق الايقونه غير صالح</string>
     <string name="class_name">اسم الفصل</string>
     <string name="package_name">اسم الحزمة</string>
     <string name="shortcut_name">اسم الاختصار</string>
-    <string name="edit_shortcut">تحرير الاختصار</string>
     <string name="create_shortcut">إنشاء اختصار</string>
     <string name="starting_activity">بدء النشاط: <xliff:g id="activity_name" example=".main.MainActivity"> %1$s </xliff:g></string>
     <string name="error_verbose_pin_shortcut">المشغل الحالي لا يدعم تدبيس الإختصار. تعذر إنشاء الاختصار.</string>

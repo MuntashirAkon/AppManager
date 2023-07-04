@@ -80,11 +80,9 @@
     <string name="error_verbose_pin_shortcut">Текущий лончер не поддерживает закрепление ярлыков. Невозможно создать ярлык.</string>
     <string name="starting_activity">Стартовое активити: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="create_shortcut">Создать ярлык</string>
-    <string name="edit_shortcut">Изменить ярлык</string>
     <string name="shortcut_name">Название ярлыка</string>
     <string name="package_name">Имя пакета</string>
     <string name="class_name">Название класса</string>
-    <string name="error_invalid_icon_resource">Недействительный ресурс значка</string>
     <string name="error_invalid_icon_format">Неверный формат значка</string>
     <string name="icon_picker">Выбор иконок</string>
     <string name="license">Лицензия</string>

@@ -45,12 +45,10 @@
     <string name="credits">Köszönet</string>
     <string name="license">Licenc</string>
     <string name="icon_picker">Ikon választó</string>
-    <string name="error_invalid_icon_format">Érvénytelen ikon formátum</string>
     <string name="error_invalid_icon_resource">Érvénytelen ikon forrás</string>
     <string name="class_name">Osztály név</string>
     <string name="package_name">Csomagnév</string>
     <string name="shortcut_name">Parancsikon neve</string>
-    <string name="edit_shortcut">Parancsikon szerkesztés</string>
     <string name="create_shortcut">Parancsikon létrehozás</string>
     <string name="starting_activity">Kezdő tevékenység: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="error_verbose_pin_shortcut">A jelenlegi indító nem támogatja a PinShortcut-ot. Nem lehet létrehozni a linket.</string>

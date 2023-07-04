@@ -562,12 +562,10 @@
     <string name="third_party">Bibliothèques tierces et icônes</string>
     <string name="license">Licence</string>
     <string name="icon_picker">Sélecteur d\'icône</string>
-    <string name="error_invalid_icon_format">Format d\'icône invalide</string>
     <string name="error_invalid_icon_resource">Ressource d\'icône invalide</string>
     <string name="class_name">Nom de classe</string>
     <string name="package_name">Nom du paquet</string>
     <string name="shortcut_name">Nom du raccourci</string>
-    <string name="edit_shortcut">Modifier le raccourci</string>
     <string name="create_shortcut">Créer un raccourci</string>
     <string name="starting_activity">Démarrage de l\'activité : <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="error_creating_shortcut">Erreur lors de la création du raccourci</string>

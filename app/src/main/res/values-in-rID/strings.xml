@@ -215,12 +215,10 @@
     <string name="third_party">Pustakaan dan Ikon Pihak-Ketiga</string>
     <string name="license">Lisensi</string>
     <string name="icon_picker">Pengambil Ikon</string>
-    <string name="error_invalid_icon_format">Format ikon tidak valid</string>
     <string name="error_invalid_icon_resource">Sumber ikon tidak valid</string>
     <string name="class_name">Nama Class</string>
     <string name="package_name">Nama Package</string>
     <string name="shortcut_name">Nama Pintasan</string>
-    <string name="edit_shortcut">Sunting Pintasan</string>
     <string name="create_shortcut">Buat Pintasan</string>
     <string name="empty_package_name">Nama package kosong</string>
     <string name="sdk_flags">Bendera</string>

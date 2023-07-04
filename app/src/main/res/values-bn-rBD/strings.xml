@@ -355,7 +355,6 @@
     <string name="sort_by_sha">স্বাক্ষর</string>
     <string name="shared_user_id">শেয়ার্ড ব্যবহারকারীর আইডি</string>
     <string name="sort_by_shared_user_id">শেয়ার্ড ব্যবহারকারীর আইডি</string>
-    <string name="error_invalid_icon_format">অকার্যকর আইকন ফরমেট</string>
     <string name="error_invalid_icon_resource">অকার্যকর আইকন রিসোর্স</string>
     <string name="error_creating_shortcut">শর্টকাট তৈরি করতে ব্যর্থ</string>
     <string name="app_signing_no_signatures">কোন স্বাক্ষর নেই</string>
@@ -377,7 +376,6 @@
     <string name="pref_global_blocking_enabled">গ্লোবাল উপাদান ব্লকিং</string>
     <string name="type_boolean">সত্য/মিথ্যা</string>
     <string name="native_library_dir">Native JNI Library ডিরেক্টরি</string>
-    <string name="edit_shortcut">শর্টকাট সম্পাদনা করুন</string>
     <string name="create_shortcut">শর্টকাট তৈরি করুন</string>
     <string name="manifest">ম্যানিফেস্ট</string>
     <string name="soft_input">সফট ইনপুট মোড</string>

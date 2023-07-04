@@ -80,11 +80,9 @@
     <string name="error_verbose_pin_shortcut">Der aktuelle Launcher unterstützt PinShortcut nicht. Konnte Verknüpfung nicht erstellen.</string>
     <string name="starting_activity">Starte Aktivität: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="create_shortcut">Verknüpfung erstellen</string>
-    <string name="edit_shortcut">Verknüpfung bearbeiten</string>
     <string name="shortcut_name">Name der Verknüpfung</string>
     <string name="package_name">Paketname</string>
     <string name="class_name">Klassenname</string>
-    <string name="error_invalid_icon_resource">Ungültige Icon-Ressource</string>
     <string name="error_invalid_icon_format">Ungültiges Icon-Format</string>
     <string name="icon_picker">Icon-Auswahl</string>
     <string name="license">Lizenz</string>

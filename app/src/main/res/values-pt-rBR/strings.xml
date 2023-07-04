@@ -67,11 +67,9 @@
     <string name="error_verbose_pin_shortcut">O launcher atual não aceita PinShortcut. Não foi possível criar o atalho.</string>
     <string name="starting_activity">Iniciando atividade: <xliff:g id="activity_name" example=".main.MainActivity">%1$s</xliff:g></string>
     <string name="create_shortcut">Criar Atalho</string>
-    <string name="edit_shortcut">Editar Atalho</string>
     <string name="shortcut_name">Nome do Atalho</string>
     <string name="package_name">Nome do Pacote</string>
     <string name="class_name">Nome da Classe</string>
-    <string name="error_invalid_icon_resource">Recurso de ícone inválido</string>
     <string name="error_invalid_icon_format">Formato de ícone inválido</string>
     <string name="icon_picker">Seletor de Ícone</string>
     <string name="license">Licença</string>

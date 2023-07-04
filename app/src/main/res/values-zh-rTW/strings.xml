@@ -730,12 +730,10 @@
     <string name="third_party">第三方資源庫和圖示</string>
     <string name="license">授權條款</string>
     <string name="icon_picker">圖示選擇器</string>
-    <string name="error_invalid_icon_format">無效的圖示格式</string>
     <string name="error_invalid_icon_resource">無效的圖示資源</string>
     <string name="class_name">類別名稱</string>
     <string name="package_name">套件名稱</string>
     <string name="shortcut_name">捷徑名稱</string>
-    <string name="edit_shortcut">編輯捷徑</string>
     <string name="create_shortcut">建立捷徑</string>
     <string name="error_verbose_pin_shortcut">目前啟動器不支援PinShortcut。無法建立捷徑。</string>
     <string name="error_creating_shortcut">建立捷徑時發生錯誤</string>
