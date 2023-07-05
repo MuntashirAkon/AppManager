@@ -31,13 +31,19 @@ public final class Users {
     public static final String TAG = "Users";
 
     private static final List<UserInfo> sUserInfoList = new ArrayList<>();
+    private static boolean sUnprivilegedMode = false;
 
     @NonNull
     public static List<UserInfo> getAllUsers() {
-        if (sUserInfoList.isEmpty()) {
+        if (sUserInfoList.isEmpty() || sUnprivilegedMode) {
             IUserManager userManager = IUserManager.Stub.asInterface(ProxyBinder.getService(Context.USER_SERVICE));
             if (SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.MANAGE_USERS)
                     || SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.CREATE_USERS)) {
+                if (sUnprivilegedMode) {
+                    // User info were previously fetched in unprivileged mode. We need to fetch them again.
+                    sUnprivilegedMode = false;
+                    sUserInfoList.clear();
+                }
                 List<android.content.pm.UserInfo> userInfoList = null;
                 try {
                     userInfoList = userManager.getUsers(true);
@@ -53,6 +59,7 @@ public final class Users {
                 }
             }
             if (sUserInfoList.isEmpty()) {
+                sUnprivilegedMode = true;
                 // The above didn't succeed, try no-root mode
                 Log.d(TAG, "Missing required permission: MANAGE_USERS or CREATE_USERS (7+). Falling back to unprivileged mode.");
                 List<android.content.pm.UserInfo> userInfoList = userManager.getProfiles(
