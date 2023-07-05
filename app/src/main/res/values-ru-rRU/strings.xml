@@ -776,8 +776,8 @@
     <string name="security">Безопасность</string>
     <string name="patch_level">Обновление системы безопасности Андроид</string>
     <string name="backup_skip_signature_checks_description">Восстановление резервных копий, которые либо не прошли проверку контрольных сумм, либо имеют подписи, отличные от предыдущих резервных копий APK.</string>
-    <string name="backup_multiple_description">Создание отдельной резервной копии, с <i>именем</i> , которое отличается от базового наименования бекапа.</string>
-    <string name="backup_rules_description">Резервное копирование правил, настроенных в App Manager.</string>
+    <string name="backup_multiple_description">Создание отдельной резервной копии, с <i>именем</i> , которое отличается от основного наименования бекапа.</string>
+    <string name="backup_rules_description">Резервное копирование правил, настроенных в App Manager.<font fgcolor="#ff0000">В зависимости от разрешений не все правила можно повторно применить во время восстановления.</font> </string>
     <string name="backup_extras_description">Резервное копирование разрешений приложения, экономия батареи, параметры использования данных, статус MagiskHide, SSAID и т.д.</string>
     <string name="backup_extras">Дополнительно</string>
     <string name="backup_cache_description">Резервное копирование папок <b>cache</b>, <b>no_cache</b> и <b>no_backup</b>.</string>
@@ -1434,4 +1434,34 @@
     <string name="go_to_path">Перейти к…</string>
     <string name="copy_this_path">Копировать путь</string>
     <string name="title_audio_player">Аудиоплеер</string>
+    <string name="backing_up_app">Резервное копирование %1$s…</string>
+    <string name="restoring_app">Восстановление %1$s…</string>
+    <string name="folder">Папка</string>
+    <string name="create_new_symbolic_link">Новая символическая ссылка</string>
+    <string name="symbolic_link_not_supported">Эта папка не поддерживает создание символической ссылки.</string>
+    <string name="create_new_folder">Новая папка</string>
+    <string name="create_new_file">Новый файл</string>
+    <string name="title_confirm_deletion">Подтвердить удаление</string>
+    <string name="copy_keep_both_file">Сохранить оба</string>
+    <string name="copied_successfully">Скопировано</string>
+    <string name="moved_successfully">Перемещено</string>
+    <string name="failed_to_copy_specified_file">Не удалось скопировать “%1$s”.</string>
+    <string name="apply_recursively">Применить к вложенным файлам</string>
+    <string name="change_owner_uid">Изменить владельца (UID)</string>
+    <string name="change_group_gid">Изменить группу (GID)</string>
+    <string name="warning_working_on_system_mode">Предупреждение: работа в системе, а не в режиме ADB.</string>
+    <string name="pref_installer_force_dexopt_description">Выполнить оптимизацию DEX сразу после установки приложения, не дожидаясь, пока система сделает это во время простоя.</string>
+    <string name="symbolic_link">Символическая ссылка</string>
+    <string name="enter_symbolic_link_name">Название ссылки</string>
+    <string name="installing_package">Установка %1$s…</string>
+    <string name="enter_target_path">Целевой путь</string>
+    <string name="invalid_target_path">Неверный путь</string>
+    <string name="copy_these_paths">Копировать пути</string>
+    <string name="conflict_detected_while_copying">Обнаружен конфликт</string>
+    <string name="conflict_detected_while_copying_message">В этом расположении уже существует элемент с именем «%1$s». Вы хотите заменить его\?</string>
+    <string name="title_change_selinux_context">Изменение контекста SELinux</string>
+    <string name="change_mode">Изменить режим</string>
+    <string name="failed_to_delete_specified_file_after_copying">Не удалось удалить «%1$s» после его копирования, возможно, из-за отсутствия прав.</string>
+    <string name="pref_send_notifications_to_connected_devices">Отправка уведомлений на подключенные устройства</string>
+    <string name="pref_send_notification_to_connected_devices_msg">Укажите, следует ли отправлять уведомления на подключенные устройства, такие как носимые устройства.</string>
 </resources>
