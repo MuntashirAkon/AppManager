@@ -178,10 +178,10 @@ public class AppDetailsViewModel extends AndroidViewModel {
     public LiveData<PackageInfo> setPackage(@NonNull Uri packageUri, @Nullable String type) {
         MutableLiveData<PackageInfo> packageInfoLiveData = new MutableLiveData<>();
         mApkSource = new ApkFile.ApkSource(packageUri, type);
+        mExternalApk = true;
         mExecutor.submit(() -> {
             try {
                 Log.d(TAG, "Package Uri is being set");
-                mExternalApk = true;
                 mApkFile = mApkSource.resolve();
                 setPackageName(mApkFile.getPackageName());
                 File cachedApkFile = mApkFile.getBaseEntry().getRealCachedFile();
@@ -203,10 +203,10 @@ public class AppDetailsViewModel extends AndroidViewModel {
     @NonNull
     public LiveData<PackageInfo> setPackage(@NonNull String packageName) {
         MutableLiveData<PackageInfo> packageInfoLiveData = new MutableLiveData<>();
+        mExternalApk = false;
         mExecutor.submit(() -> {
             try {
                 Log.d(TAG, "Package name is being set");
-                mExternalApk = false;
                 setPackageName(packageName);
                 // TODO: 23/5/21 The app could be “data only”
                 setPackageInfo(false);
@@ -1111,11 +1111,11 @@ public class AppDetailsViewModel extends AndroidViewModel {
     public LiveData<UserInfo> getUserInfo() {
         MutableLiveData<UserInfo> userInfoMutableLiveData = new MutableLiveData<>();
         mExecutor.submit(() -> {
-            final List<UserInfo> userInfoList;
-            if (!mExternalApk) {
-                userInfoList = Users.getUsers();
-            } else userInfoList = null;
-            if (userInfoList != null && userInfoList.size() > 1) {
+            if (mExternalApk) {
+                return;
+            }
+            final List<UserInfo> userInfoList = Users.getUsers();
+            if (userInfoList.size() > 1) {
                 for (UserInfo userInfo : userInfoList) {
                     if (userInfo.id == mUserId) {
                         userInfoMutableLiveData.postValue(userInfo);
