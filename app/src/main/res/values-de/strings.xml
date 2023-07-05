@@ -353,7 +353,7 @@
     <string name="filter">Filter</string>
     <string name="filter_user_apps">Benutzer-Anwendungen</string>
     <string name="filter_system_apps">System-Anwendungen</string>
-    <string name="filter_apps_with_rules">Anwendungen mit Regeln</string>
+    <string name="filter_apps_with_rules">Mit Regeln</string>
     <string name="select_all">Alle auswählen</string>
     <string name="installed_version">Installierte Version</string>
     <string name="trackers">Verfolger</string>
