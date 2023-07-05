@@ -18,6 +18,8 @@
         <attr name="queryHint" />
         <attr name="searchHintIcon" />
         <attr name="android:textAppearance" />
+        <attr name="android:popupBackground" />
+        <attr name="android:dropDownSelector" />
         <!-- Horizontal margin of the edit frame -->
         <attr name="frameMarginHorizontal" format="dimension" />
     </declare-styleable>

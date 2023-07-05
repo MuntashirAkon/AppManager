@@ -79,7 +79,7 @@ public class SearchableSingleChoiceDialogBuilder<T> {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false));
         mViewContainer = view.findViewById(R.id.container);
         mSearchView = view.findViewById(R.id.action_search);
-        mSearchView.setOnQueryTextListener(new androidx.appcompat.widget.SearchView.OnQueryTextListener() {
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 return false;

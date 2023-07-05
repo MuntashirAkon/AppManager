@@ -314,6 +314,8 @@
         <item name="android:backgroundTint">?attr/colorSurfaceVariant</item>
         <item name="android:textAppearance">?attr/textAppearanceBodyLarge</item>
         <item name="shapeAppearanceOverlay">@style/ShapeAppearance.AppTheme.LargeComponent</item>
+        <item name="android:popupBackground">?attr/popupMenuBackground</item>
+        <item name="android:dropDownSelector">?attr/listChoiceBackgroundIndicator</item>
     </style>
 
     <style name="Widget.AppTheme.SearchView.Small" parent="Widget.AppTheme.SearchView">
