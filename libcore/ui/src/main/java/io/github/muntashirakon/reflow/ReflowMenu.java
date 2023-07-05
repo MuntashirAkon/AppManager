@@ -21,44 +21,22 @@ import androidx.appcompat.view.menu.MenuItemImpl;
 public final class ReflowMenu extends MenuBuilder {
     @NonNull
     private final Class<?> viewClass;
-    private final int maxItemCount;
 
-    public ReflowMenu(
-            @NonNull Context context, @NonNull Class<?> viewClass, int maxItemCount) {
+    public ReflowMenu(@NonNull Context context, @NonNull Class<?> viewClass) {
         super(context);
         this.viewClass = viewClass;
-        this.maxItemCount = maxItemCount;
-    }
-
-    /**
-     * Returns the maximum number of items that can be shown in ReflowMenu.
-     */
-    public int getMaxItemCount() {
-        return maxItemCount;
     }
 
     @NonNull
     @Override
     public SubMenu addSubMenu(int group, int id, int categoryOrder, @NonNull CharSequence title) {
-        throw new UnsupportedOperationException(
-                viewClass.getSimpleName() + " does not support submenus");
+        throw new UnsupportedOperationException(viewClass.getSimpleName() + " does not support submenus");
     }
 
     @Override
     @NonNull
     protected MenuItem addInternal(
             int group, int id, int categoryOrder, @NonNull CharSequence title) {
-        if (size() + 1 > maxItemCount) {
-            String viewClassName = viewClass.getSimpleName();
-            throw new IllegalArgumentException(
-                    "Maximum number of items supported by "
-                            + viewClassName
-                            + " is "
-                            + maxItemCount
-                            + ". Limit can be checked with "
-                            + viewClassName
-                            + "#getMaxItemCount()");
-        }
         stopDispatchingItemsChanged();
         final MenuItem item = super.addInternal(group, id, categoryOrder, title);
         if (item instanceof MenuItemImpl) {

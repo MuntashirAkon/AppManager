@@ -40,7 +40,7 @@ import com.google.android.material.transition.MaterialSharedAxis;
 import java.lang.reflect.Field;
 import java.util.Locale;
 
-import io.github.muntashirakon.reflow.ReflowMenuViewWrapper;
+import io.github.muntashirakon.reflow.SelectionActionsView;
 import io.github.muntashirakon.ui.R;
 import io.github.muntashirakon.util.UiUtils;
 
@@ -138,8 +138,6 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
         if (attributes.hasValue(R.styleable.MultiSelectionView_menu)) {
             mSelectionActionsView.inflateMenu(attributes.getResourceId(R.styleable.MultiSelectionView_menu, 0));
         }
-
-        mSelectionActionsView.setItemActiveIndicatorEnabled(false);
 
         attributes.recycle();
 
@@ -340,7 +338,7 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
         }
     }
 
-    public void setOnItemSelectedListener(ReflowMenuViewWrapper.OnItemSelectedListener listener) {
+    public void setOnItemSelectedListener(io.github.muntashirakon.reflow.SelectionActionsView.OnItemSelectedListener listener) {
         mSelectionActionsView.setOnItemSelectedListener(listener);
     }
 

@@ -19,11 +19,11 @@ import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.logcat.struct.LogLine;
-import io.github.muntashirakon.reflow.ReflowMenuViewWrapper;
+import io.github.muntashirakon.reflow.SelectionActionsView;
 
 // Copyright 2022 Muntashir Al-Islam
 public class SavedLogViewerFragment extends AbsLogViewerFragment implements LogViewerViewModel.LogLinesAvailableInterface,
-        ReflowMenuViewWrapper.OnItemSelectedListener, LogViewerActivity.SearchingInterface, Filter.FilterListener {
+        SelectionActionsView.OnItemSelectedListener, LogViewerActivity.SearchingInterface, Filter.FilterListener {
     public static final String TAG = SavedLogViewerFragment.class.getSimpleName();
     public static final String ARG_FILE_URI = "file_uri";
 

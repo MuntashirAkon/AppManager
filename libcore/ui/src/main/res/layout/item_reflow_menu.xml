@@ -1,64 +1,34 @@
 <!-- SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later -->
-<merge xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_horizontal"
+    android:minWidth="80dp"
+    android:paddingTop="12dp"
+    android:paddingBottom="12dp"
+    android:paddingStart="6dp"
+    android:paddingEnd="6dp"
+    android:gravity="center_horizontal">
 
-    <FrameLayout
-        android:id="@+id/item_icon_container"
-        android:layout_width="@dimen/design_bottom_navigation_item_max_width"
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/icon"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginVertical="@dimen/design_bottom_navigation_margin"
-        android:duplicateParentState="true"
-        tools:theme="@style/AppTheme">
+        android:layout_marginBottom="4dp"
+        tools:src="@drawable/ic_information" />
 
-        <View
-            android:id="@+id/item_active_indicator_view"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_gravity="center" />
-
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/item_icon"
-            android:layout_width="24dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:contentDescription="@null"
-            android:duplicateParentState="true"
-            tools:src="@drawable/ic_clear" />
-    </FrameLayout>
-
-    <com.google.android.material.internal.BaselineLayout
-        android:id="@+id/item_labels_group"
-        android:layout_width="@dimen/design_bottom_navigation_item_max_width"
+    <TextView
+        android:id="@+id/label"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center_horizontal"
-        android:paddingBottom="@dimen/design_bottom_navigation_label_padding"
-        android:clipChildren="false"
-        android:clipToPadding="false"
-        android:duplicateParentState="true"
-        tools:theme="@style/AppTheme">
+        android:textAppearance="?attr/textAppearanceTitleMedium"
+        android:gravity="center_horizontal"
+        android:maxLines="2"
+        android:ellipsize="end"
+        android:hyphenationFrequency="normal"
+        tools:text="Info"
+        tools:ignore="UnusedAttribute" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/item_small_label_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:duplicateParentState="true"
-            android:paddingHorizontal="@dimen/padding_very_small"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textSize="@dimen/design_bottom_navigation_text_size"
-            tools:text="@android:string/cancel" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/item_large_label_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:duplicateParentState="true"
-            android:paddingHorizontal="@dimen/padding_very_small"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:textSize="@dimen/design_bottom_navigation_active_text_size"
-            android:visibility="invisible"
-            tools:text="@android:string/cancel" />
-    </com.google.android.material.internal.BaselineLayout>
-</merge>
+</androidx.appcompat.widget.LinearLayoutCompat>

@@ -40,11 +40,11 @@ import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 import io.github.muntashirakon.io.Path;
-import io.github.muntashirakon.reflow.ReflowMenuViewWrapper;
+import io.github.muntashirakon.reflow.SelectionActionsView;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
 public abstract class AbsLogViewerFragment extends Fragment implements LogViewerViewModel.LogLinesAvailableInterface,
-        ReflowMenuViewWrapper.OnItemSelectedListener, LogViewerActivity.SearchingInterface, Filter.FilterListener {
+        SelectionActionsView.OnItemSelectedListener, LogViewerActivity.SearchingInterface, Filter.FilterListener {
     public static final String TAG = AbsLogViewerFragment.class.getSimpleName();
 
     protected RecyclerView mRecyclerView;

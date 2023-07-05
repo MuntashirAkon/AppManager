@@ -6,7 +6,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.util.SparseArray;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -16,20 +15,15 @@ import androidx.appcompat.view.menu.MenuItemImpl;
 import androidx.appcompat.view.menu.MenuPresenter;
 import androidx.appcompat.view.menu.MenuView;
 import androidx.appcompat.view.menu.SubMenuBuilder;
-import androidx.core.os.ParcelCompat;
-
-import com.google.android.material.badge.BadgeDrawable;
-import com.google.android.material.badge.BadgeUtils;
-import com.google.android.material.internal.ParcelableSparseArray;
 
 // Copyright 2020 The Android Open Source Project
 @SuppressLint("RestrictedApi")
 public class ReflowMenuPresenter implements MenuPresenter {
-    private ReflowMenuView menuView;
+    private SelectionMenuAdapter menuView;
     private boolean updateSuspended = false;
     private int id;
 
-    public void setMenuView(@NonNull ReflowMenuView menuView) {
+    public void setMenuView(@NonNull SelectionMenuAdapter menuView) {
         this.menuView = menuView;
     }
 
@@ -99,8 +93,6 @@ public class ReflowMenuPresenter implements MenuPresenter {
     public Parcelable onSaveInstanceState() {
         SavedState savedState = new SavedState();
         savedState.selectedItemId = menuView.getSelectedItemId();
-        savedState.badgeSavedStates =
-                BadgeUtils.createParcelableBadgeStates(menuView.getBadgeDrawables());
         return savedState;
     }
 
@@ -109,9 +101,6 @@ public class ReflowMenuPresenter implements MenuPresenter {
     public void onRestoreInstanceState(@NonNull Parcelable state) {
         if (state instanceof SavedState) {
             menuView.tryRestoreSelectedItemId(((SavedState) state).selectedItemId);
-            SparseArray<BadgeDrawable> badgeDrawables = BadgeUtils.createBadgeDrawablesFromSavedStates(
-                    menuView.getContext(), ((SavedState) state).badgeSavedStates);
-            menuView.setBadgeDrawables(badgeDrawables);
         }
     }
 
@@ -121,15 +110,12 @@ public class ReflowMenuPresenter implements MenuPresenter {
 
     static class SavedState implements Parcelable {
         int selectedItemId;
-        @Nullable
-        ParcelableSparseArray badgeSavedStates;
 
         SavedState() {
         }
 
         SavedState(@NonNull Parcel in) {
             selectedItemId = in.readInt();
-            badgeSavedStates = ParcelCompat.readParcelable(in, getClass().getClassLoader(), ParcelableSparseArray.class);
         }
 
         @Override
@@ -140,7 +126,6 @@ public class ReflowMenuPresenter implements MenuPresenter {
         @Override
         public void writeToParcel(@NonNull Parcel out, int flags) {
             out.writeInt(selectedItemId);
-            out.writeParcelable(badgeSavedStates, /* parcelableFlags= */ 0);
         }
 
         public static final Creator<SavedState> CREATOR =

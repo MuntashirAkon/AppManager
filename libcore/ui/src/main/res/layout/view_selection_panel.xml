@@ -26,7 +26,7 @@
             android:clickable="true"
             android:nextFocusRight="@id/action_cancel"
             android:nextFocusDown="@id/selection_actions"
-            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
             android:text="@android:string/selectAll" />
 
         <com.google.android.material.textview.MaterialTextView
@@ -38,7 +38,7 @@
             android:paddingHorizontal="@dimen/padding_small"
             android:focusable="false"
             android:gravity="center"
-            android:textAppearance="?attr/textAppearanceBodySmall"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
             tools:text="10/11" />
 
         <com.google.android.material.button.MaterialButton
@@ -72,7 +72,7 @@
         android:paddingBottom="@dimen/padding_very_small"
         app:maxHeight="116dp">
 
-        <io.github.muntashirakon.widget.SelectionActionsView
+        <io.github.muntashirakon.reflow.SelectionActionsView
             android:id="@+id/selection_actions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -83,8 +83,8 @@
             app:elevation="0dp"
             app:itemIconTint="@color/m3_textfield_indicator_text_color"
             app:itemTextColor="@color/m3_textfield_input_text_color"
-            app:itemTextAppearanceActive="?attr/textAppearanceBodySmall"
-            app:itemTextAppearanceInactive="?attr/textAppearanceBodySmall" />
+            app:itemTextAppearanceActive="?attr/textAppearanceBodyMedium"
+            app:itemTextAppearanceInactive="?attr/textAppearanceBodyMedium" />
 
     </io.github.muntashirakon.widget.MaxHeightScrollView>
 

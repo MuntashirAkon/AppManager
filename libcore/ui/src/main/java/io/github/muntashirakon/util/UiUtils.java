@@ -45,22 +45,22 @@ public final class UiUtils {
     }
 
     @Px
-    public static int dpToPx(@NonNull Context context, @Dimension int dp) {
+    public static int dpToPx(@NonNull Context context, @Dimension(unit = Dimension.DP) int dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
                 context.getResources().getDisplayMetrics());
     }
 
     @Px
-    public static int dpToPx(@NonNull Context context, @Dimension float dp) {
+    public static int dpToPx(@NonNull Context context, @Dimension(unit = Dimension.DP) float dp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, context.getResources().getDisplayMetrics());
     }
 
     @Px
-    public static int spToPx(@NonNull Context context, @Dimension float sp) {
+    public static int spToPx(@NonNull Context context, @Dimension(unit = Dimension.SP) float sp) {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, sp, context.getResources().getDisplayMetrics());
     }
 
-    @Dimension
+    @Dimension(unit = Dimension.DP)
     public static int pxToDp(@NonNull Context context, @Px int pixel) {
         return (int) ((float) pixel / context.getResources().getDisplayMetrics().density);
     }
@@ -77,6 +77,15 @@ public final class UiUtils {
         TypedValue typedValue = new TypedValue();
         context.getTheme().resolveAttribute(resId, typedValue, true);
         return ContextCompat.getDrawable(context, typedValue.resourceId);
+    }
+
+    public static int getColumnCount(@NonNull View v, @Dimension(unit = Dimension.DP) int columnWidth, int defaultCount) {
+        int width = v.getWidth();
+        if (width == 0) {
+            return defaultCount;
+        }
+        int widthDp = pxToDp(v.getContext(), width);
+        return (int) (widthDp / columnWidth + 0.5);
     }
 
     public static void hideKeyboard(@NonNull View v) {
