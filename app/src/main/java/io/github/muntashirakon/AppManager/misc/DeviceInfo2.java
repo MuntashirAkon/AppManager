@@ -345,11 +345,13 @@ public class DeviceInfo2 implements LocalizedString {
             //    return 1;
             // }
             Runner.Result result = Runner.runCommand("getenforce");
-            if (result.isSuccessful() && result.getOutput().trim().equals("Enforcing")) {
-                return 1;
+            if (result.isSuccessful() && result.getOutput().trim().equals("Permissive")) {
+                return 0;
             }
-            return 0;
+            // SELinux enabled, but cannot access result means it is "Enforcing"
+            return 1;
         }
+        // Disabled
         return 2;
     }
 
