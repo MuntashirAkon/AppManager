@@ -695,8 +695,8 @@
     <string name="patch_level">安全补丁级别</string>
     <string name="backup_skip_signature_checks_description">还原校验和验证失败或具有与先前备份不同的 APK 签名的备份。</string>
     <string name="backup_multiple_description">使用一个单独<i>命名的</i>备份，而不是基本备份。</string>
-    <string name="backup_rules_description">备份 App Manager 内配置的规则。</string>
-    <string name="backup_extras_description">备份应用权限、节电和数据使用选项、MagiskHide 状态、SSAID 等。</string>
+    <string name="backup_rules_description">备份 App Manager 内配置的规则。<font fgcolor="#ff0000">取决于权限，并非所有规则都可以在还原期间被重新应用。</font> </string>
+    <string name="backup_extras_description">备份应用权限、节电和数据使用选项、MagiskHide 状态、SSAID 等。<font fgcolor="#ff0000">取决于权限，并非所有提取的应用都可以被还原。</font>。 </string>
     <string name="backup_extras">附加</string>
     <string name="backup_cache_description">备份<b>缓存</b>、<b>no_cache</b> 和 <b>no_backup</b> 文件夹。</string>
     <string name="backup_obb_media_description">备份 OBB 和媒体文件夹。</string>
