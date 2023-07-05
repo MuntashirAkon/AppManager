@@ -561,7 +561,7 @@
     <string name="enable_battery_optimization">Włączyć optymalizację baterii\?</string>
     <string name="type_uri">URI</string>
     <string name="receivers">Odbiorniki</string>
-    <string name="backup_extras_description">Utwórz kopię zapasową uprawnień aplikacji, oszczędzania baterii, opcji wykorzystania danych, statusu MagiskHide, SSAID itp.</string>
+    <string name="backup_extras_description">Utwórz kopię zapasową uprawnień aplikacji, oszczędzania baterii, opcji wykorzystania danych, statusu MagiskHide, SSAID itp. <font fgcolor="#ff0000">W zależności od uprawnień, nie wszystkie dodatki mogą zostać przywrócone.</font> </string>
     <string name="backup_internal_data_description">Utwórz kopię zapasową folderów danych. Jeśli ta opcja jest wybrana, kopie zapasowe wewnętrznych folderów danych zostaną utworzone.</string>
     <string name="window_size">Rozmiar okna</string>
     <string name="refresh_rate">Częstotliwość odświeżania</string>
@@ -619,7 +619,7 @@
     <string name="pref_backup_android_keystore_msg">Nie wszystkie aplikacje będą działać po przywróceniu. Przywracanie KeyStore nie działa na większości urządzeń.</string>
     <string name="pref_backup_android_keystore">Twórz kopie zapasowe aplikacji używających Android KeyStore</string>
     <string name="backup_multiple_description">Utwórz oddzielną kopię zapasową <i> o nazwie</i> zamiast podstawowej kopii zapasowej.</string>
-    <string name="backup_rules_description">Utwórz kopię zapasową reguł skonfigurowanych w App Manager.</string>
+    <string name="backup_rules_description">Utwórz kopię zapasową reguł skonfigurowanych w App Manager. <font fgcolor="#ff0000">W zależności od uprawnień, nie wszystkie reguły można ponownie zastosować podczas przywracania.</font> </string>
     <string name="backup_external_data_description">Utwórz kopię zapasową zewnętrznych folderów danych.</string>
     <string name="backup_apk_files_description">Utwórz kopię zapasową tylko plików APK z katalogu źródłowego. <b>Źródło</b> musi być wybrane, aby to zadziałało.</string>
     <string name="vendor">Producent</string>
@@ -1431,4 +1431,34 @@
         <item quantity="other">%d plików</item>
     </plurals>
     <string name="filter_force_stopped_apps">Zatrzymane aplikacje</string>
+    <string name="restoring_app">Przywracanie %1$s…</string>
+    <string name="folder">Folder</string>
+    <string name="symbolic_link">Dowiązanie symboliczne</string>
+    <string name="create_new_symbolic_link">Nowe dowiązanie symboliczne</string>
+    <string name="create_new_folder">Nowy folder</string>
+    <string name="create_new_file">Nowy plik</string>
+    <string name="enter_symbolic_link_name">Nazwa łącza</string>
+    <string name="enter_target_path">Ścieżka docelowa</string>
+    <string name="copy_these_paths">Skopiuj ścieżki</string>
+    <string name="title_confirm_deletion">Potwierdź usunięcie</string>
+    <string name="copy_keep_both_file">Zachowaj oba</string>
+    <string name="copied_successfully">Skopiowano.</string>
+    <string name="moved_successfully">Przeniesiono</string>
+    <string name="failed_to_delete_specified_file_after_copying">Nie można usunąć „%1$s” po skopiowaniu, prawdopodobnie z powodu braku wystarczających uprawnień.</string>
+    <string name="title_change_selinux_context">Zmiana kontekstu SELinuksa</string>
+    <string name="change_group_gid">Zmień grupę (GID)</string>
+    <string name="change_mode">Zmień tryb</string>
+    <string name="pref_send_notifications_to_connected_devices">Wysyłaj powiadomienia do podłączonych urządzeń</string>
+    <string name="pref_send_notification_to_connected_devices_msg">Ustaw, czy chcesz wysyłać powiadomienia do podłączonych urządzeń, takich jak urządzenia do noszenia.</string>
+    <string name="pref_installer_force_dexopt_description">Przeprowadź optymalizację DEX natychmiast po zainstalowaniu aplikacji, nie czekając, aż system to zrobi, gdy jest bezczynny.</string>
+    <string name="warning_working_on_system_mode">Ostrzeżenie: Praca w systemie zamiast w trybie ADB.</string>
+    <string name="backing_up_app">Tworzenie kopii zapasowej %1$s…</string>
+    <string name="installing_package">Instalowanie %1$s…</string>
+    <string name="symbolic_link_not_supported">Ten folder nie obsługuje tworzenia dowiązania symbolicznego.</string>
+    <string name="failed_to_copy_specified_file">Nie można skopiować \"%1$s\".</string>
+    <string name="invalid_target_path">Nieprawidłowa ścieżka</string>
+    <string name="conflict_detected_while_copying_message">Element o nazwie „%1$s” już istnieje w tej lokalizacji. Czy chcesz go nadpisać\?</string>
+    <string name="conflict_detected_while_copying">Wykryto konflikt</string>
+    <string name="apply_recursively">Zastosuj do załączonych plików</string>
+    <string name="change_owner_uid">Zmień właściciela (UID)</string>
 </resources>
