@@ -423,8 +423,8 @@
     <string name="expiry_date_cannot_be_empty">Ngày hết hạn không thể trống.</string>
     <string name="signing_key">Mã ký</string>
     <string name="app_signing_signatures">Chữ ký</string>
-    <string name="backup_rules_description">Sao lưu các quy tắc đã thiết lập từ trong App Manager.</string>
-    <string name="backup_extras_description">Sao lưu các quyền của ứng dụng, các tuỳ chọn tiết kiệm pin và sử dụng dữ liệu, trạng thái MagiskHide, SSAID, v.v.</string>
+    <string name="backup_rules_description">Sao lưu các quy tắc được định cấu hình trong Trình quản lý ứng dụng. <font fgcolor="#ff0000">Tùy thuộc vào quyền, không phải tất cả các quy tắc đều có thể được áp dụng lại trong quá trình khôi phục.</font> . </string>
+    <string name="backup_extras_description">Sao lưu các quyền của ứng dụng, tùy chọn tiết kiệm pin và sử dụng dữ liệu, trạng thái MagiskHide, SSAID, v.v. <font fgcolor="#ff0000">Tùy thuộc vào quyền, không phải tất cả các tính năng bổ sung đều có thể được khôi phục.</font>. </string>
     <string name="backup_extras">Bổ sung</string>
     <string name="backup_cache_description">Sao lưu các thư mục <b>cache</b>, <b>no_cache</b> và <b>no_backup</b>.</string>
     <string name="backup_obb_media_description">Sao lưu OBB và các thư mục phương tiện.</string>
@@ -1297,4 +1297,5 @@
     </plurals>
     <string name="debloat_removal_unsafe">Không an toàn</string>
     <string name="static_shared_library">Thư viện chia sẻ tĩnh</string>
+    <string name="warning_working_on_system_mode">Cảnh báo: Làm việc trên hệ thống thay vì chế độ ADB.</string>
 </resources>
