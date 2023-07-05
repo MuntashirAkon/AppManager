@@ -22,7 +22,6 @@ import com.google.android.material.checkbox.MaterialCheckBox;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.materialswitch.MaterialSwitch;
-import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.LinkedHashMap;
@@ -30,6 +29,7 @@ import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.dialog.CapsuleBottomSheetDialogFragment;
+import io.github.muntashirakon.widget.MaterialAutoCompleteTextView;
 
 public abstract class ListOptions extends CapsuleBottomSheetDialogFragment {
     public static final String TAG = ListOptions.class.getSimpleName();

@@ -119,7 +119,7 @@
             app:hintAnimationEnabled="true"
             app:hintEnabled="true">
 
-            <com.google.android.material.textfield.MaterialAutoCompleteTextView
+            <io.github.muntashirakon.widget.MaterialAutoCompleteTextView
                 android:id="@android:id/input"
                 android:layout_width="match_parent"
                 android:layout_height="34dp"

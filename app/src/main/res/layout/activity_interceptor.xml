@@ -56,7 +56,7 @@
                 app:hintAnimationEnabled="true"
                 app:hintEnabled="true">
 
-                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                <io.github.muntashirakon.widget.MaterialAutoCompleteTextView
                     android:id="@+id/action_edit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -76,7 +76,7 @@
                 app:hintAnimationEnabled="true"
                 app:hintEnabled="true">
 
-                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                <io.github.muntashirakon.widget.MaterialAutoCompleteTextView
                     android:id="@+id/data_edit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -96,7 +96,7 @@
                 app:hintAnimationEnabled="true"
                 app:hintEnabled="true">
 
-                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                <io.github.muntashirakon.widget.MaterialAutoCompleteTextView
                     android:id="@+id/type_edit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -116,7 +116,7 @@
                 app:hintAnimationEnabled="true"
                 app:hintEnabled="true">
 
-                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                <io.github.muntashirakon.widget.MaterialAutoCompleteTextView
                     android:id="@+id/package_edit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -136,7 +136,7 @@
                 app:hintAnimationEnabled="true"
                 app:hintEnabled="true">
 
-                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                <io.github.muntashirakon.widget.MaterialAutoCompleteTextView
                     android:id="@+id/class_edit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -211,7 +211,7 @@
                 app:hintAnimationEnabled="true"
                 app:hintEnabled="true">
 
-                <com.google.android.material.textfield.MaterialAutoCompleteTextView
+                <io.github.muntashirakon.widget.MaterialAutoCompleteTextView
                     android:id="@+id/uri_edit"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

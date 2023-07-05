@@ -10,6 +10,8 @@ import android.widget.ListPopupWindow;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.material.textfield.MaterialAutoCompleteTextView;
+
 import java.lang.reflect.Field;
 
 public final class AutoCompleteTextViewCompat {
@@ -21,6 +23,21 @@ public final class AutoCompleteTextViewCompat {
             Field mPopup = AutoCompleteTextView.class.getDeclaredField("mPopup");
             mPopup.setAccessible(true);
             popupWindow = (ListPopupWindow) mPopup.get(view);
+            if (popupWindow != null) {
+                popupWindow.setListSelector(listSelector);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setListSelectorMaterial(@NonNull MaterialAutoCompleteTextView view, @Nullable Drawable listSelector) {
+        setListSelector(view, listSelector);
+        try {
+            androidx.appcompat.widget.ListPopupWindow popupWindow;
+            Field mPopup = MaterialAutoCompleteTextView.class.getDeclaredField("modalListPopup");
+            mPopup.setAccessible(true);
+            popupWindow = (androidx.appcompat.widget.ListPopupWindow) mPopup.get(view);
             if (popupWindow != null) {
                 popupWindow.setListSelector(listSelector);
             }

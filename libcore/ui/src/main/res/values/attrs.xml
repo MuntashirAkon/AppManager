@@ -69,6 +69,9 @@
         <attr name="android:textAppearance" />
         <attr name="android:textColor" />
     </declare-styleable>
+    <declare-styleable name="MaterialAutoCompleteTextView">
+        <attr name="android:dropDownSelector" />
+    </declare-styleable>
     <declare-styleable name="MaxHeightScrollView">
         <attr name="maxHeight" format="dimension" />
     </declare-styleable>

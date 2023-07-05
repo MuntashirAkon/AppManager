@@ -9,13 +9,12 @@ import android.widget.ArrayAdapter;
 import androidx.annotation.NonNull;
 import androidx.preference.PreferenceManager;
 
-import com.google.android.material.textfield.MaterialAutoCompleteTextView;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import io.github.muntashirakon.adapters.NoFilterArrayAdapter;
+import io.github.muntashirakon.widget.MaterialAutoCompleteTextView;
 
 public class HistoryEditText {
     private static final String DELIMITER = "';'";
