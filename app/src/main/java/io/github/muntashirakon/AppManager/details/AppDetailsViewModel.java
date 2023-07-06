@@ -184,7 +184,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
                 Log.d(TAG, "Package Uri is being set");
                 mApkFile = mApkSource.resolve();
                 setPackageName(mApkFile.getPackageName());
-                File cachedApkFile = mApkFile.getBaseEntry().getRealCachedFile();
+                File cachedApkFile = mApkFile.getBaseEntry().getFile(false);
                 if (!cachedApkFile.canRead()) throw new Exception("Cannot read " + cachedApkFile);
                 mApkPath = cachedApkFile.getAbsolutePath();
                 setPackageInfo(false);
@@ -1724,7 +1724,7 @@ public class AppDetailsViewModel extends AndroidViewModel {
         }
         try {
             File idsigFile = mApkFile.getIdsigFile();
-            ApkVerifier.Builder builder = new ApkVerifier.Builder(mApkFile.getBaseEntry().getRealCachedFile())
+            ApkVerifier.Builder builder = new ApkVerifier.Builder(mApkFile.getBaseEntry().getFile(false))
                     .setMaxCheckedPlatformVersion(Build.VERSION.SDK_INT);
             if (idsigFile != null) {
                 builder.setV4SignatureFile(idsigFile);
@@ -1819,12 +1819,12 @@ public class AppDetailsViewModel extends AndroidViewModel {
                     || entry.type == ApkFile.APK_SPLIT_UNKNOWN) {
                 // Scan for .so files
                 NativeLibraries nativeLibraries;
-                try (InputStream is = entry.getRealInputStream()) {
+                try (InputStream is = entry.getInputStream(false)) {
                     try {
                         nativeLibraries = new NativeLibraries(is);
                     } catch (IOException e) {
                         // Maybe zip error, Try without InputStream
-                        nativeLibraries = new NativeLibraries(entry.getRealCachedFile());
+                        nativeLibraries = new NativeLibraries(entry.getFile(false));
                     }
                     for (NativeLibraries.NativeLib nativeLib : nativeLibraries.getLibs()) {
                         AppDetailsItem<?> appDetailsItem = new AppDetailsItem<>(nativeLib);

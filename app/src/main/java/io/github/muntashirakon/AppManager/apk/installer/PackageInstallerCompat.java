@@ -29,7 +29,6 @@ import android.os.IBinder;
 import android.os.Process;
 import android.os.RemoteException;
 import android.os.UserHandleHidden;
-import android.text.TextUtils;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -63,7 +62,6 @@ import io.github.muntashirakon.AppManager.ipc.ProxyBinder;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.progress.ProgressHandler;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
-import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.BroadcastUtils;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
@@ -452,11 +450,6 @@ public final class PackageInstallerCompat {
         return new PackageInstallerCompat();
     }
 
-    @NonNull
-    public static PackageInstallerCompat getNewInstance(@NonNull String installerPackageName) {
-        return new PackageInstallerCompat(installerPackageName);
-    }
-
     private CountDownLatch mInstallWatcher;
     private CountDownLatch mInteractionWatcher;
 
@@ -521,18 +514,10 @@ public final class PackageInstallerCompat {
     // MIUI-added: Multiple attempts may be required
     int mAttempts = 1;
     private final Context mContext = ContextUtils.getContext();
-    @NonNull
-    private final String mInstallerPackageName;
     private final boolean mHasInstallPackagePermission;
 
     private PackageInstallerCompat() {
-        this(Prefs.Installer.getInstallerPackageName());
-    }
-
-    private PackageInstallerCompat(@NonNull String installerPackageName) {
         mHasInstallPackagePermission = SelfPermissions.checkSelfOrRemotePermission(Manifest.permission.INSTALL_PACKAGES);
-        mInstallerPackageName = !TextUtils.isEmpty(installerPackageName) ? installerPackageName : BuildConfig.APPLICATION_ID;
-        Log.d(TAG, "Installer app: " + installerPackageName);
     }
 
     public void setOnInstallListener(@Nullable OnInstallListener onInstallListener) {
@@ -555,12 +540,13 @@ public final class PackageInstallerCompat {
         }
     }
 
-    public boolean install(@NonNull ApkFile apkFile, @UserIdInt int userId, @Nullable ProgressHandler progressHandler) {
+    public boolean install(@NonNull ApkFile apkFile, @NonNull InstallerOptions options, @Nullable ProgressHandler progressHandler) {
         ThreadUtils.ensureWorkerThread();
         try {
             mApkFile = apkFile;
             mPackageName = apkFile.getPackageName();
             initBroadcastReceiver();
+            int userId = options.getUserId();
             int installFlags = getInstallFlags(userId);
             int[] allRequestedUsers = getAllRequestedUsers(userId);
             if (allRequestedUsers.length == 0) {
@@ -585,14 +571,16 @@ public final class PackageInstallerCompat {
             });
             userId = allRequestedUsers[0];
             Log.d(TAG, "Install: opening session...");
-            if (!openSession(userId, installFlags)) return false;
+            if (!openSession(userId, installFlags, options.getInstallerName(), options.getInstallLocation())) {
+                return false;
+            }
             List<ApkFile.Entry> selectedEntries = apkFile.getSelectedEntries();
             Log.d(TAG, "Install: selected entries: " + selectedEntries.size());
             // Write apk files
             long totalSize = 0;
             for (ApkFile.Entry entry : selectedEntries) {
                 try {
-                    totalSize += entry.getSignedFile().length();
+                    totalSize += entry.getFile(options.isSignApkFiles()).length();
                 } catch (IOException e) {
                     callFinish(STATUS_FAILURE_INVALID);
                     Log.e(TAG, "Install: Cannot retrieve the selected APK files.", e);
@@ -600,7 +588,7 @@ public final class PackageInstallerCompat {
                 }
             }
             for (ApkFile.Entry entry : selectedEntries) {
-                try (InputStream apkInputStream = entry.getSignedInputStream();
+                try (InputStream apkInputStream = entry.getInputStream(options.isSignApkFiles());
                      OutputStream apkOutputStream = mSession.openWrite(entry.getFileName(), 0, entry.getFileSize())) {
                     IoUtils.copy(apkInputStream, apkOutputStream, totalSize, progressHandler);
                     mSession.fsync(apkOutputStream);
@@ -623,17 +611,18 @@ public final class PackageInstallerCompat {
         }
     }
 
-    public boolean install(@NonNull Path[] apkFiles, @NonNull String packageName, @UserIdInt int userId) {
-        return install(apkFiles, packageName, userId, null);
+    public boolean install(@NonNull Path[] apkFiles, @NonNull String packageName, @NonNull InstallerOptions options) {
+        return install(apkFiles, packageName, options, null);
     }
 
-    public boolean install(@NonNull Path[] apkFiles, @NonNull String packageName, @UserIdInt int userId,
+    public boolean install(@NonNull Path[] apkFiles, @NonNull String packageName, @NonNull InstallerOptions options,
                            @Nullable ProgressHandler progressHandler) {
         ThreadUtils.ensureWorkerThread();
         try {
             mApkFile = null;
             mPackageName = packageName;
             initBroadcastReceiver();
+            int userId = options.getUserId();
             int installFlags = getInstallFlags(userId);
             int[] allRequestedUsers = getAllRequestedUsers(userId);
             if (allRequestedUsers.length == 0) {
@@ -650,7 +639,9 @@ public final class PackageInstallerCompat {
                 }
             }
             userId = allRequestedUsers[0];
-            if (!openSession(userId, installFlags)) return false;
+            if (!openSession(userId, installFlags, options.getInstallerName(), options.getInstallLocation())) {
+                return false;
+            }
             long totalSize = 0;
             for (Path apkFile : apkFiles) {
                 totalSize += apkFile.length();
@@ -735,10 +726,10 @@ public final class PackageInstallerCompat {
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    private boolean openSession(@UserIdInt int userId, @InstallFlags int installFlags) {
-        String requestedInstallerPackageName = mHasInstallPackagePermission ? mInstallerPackageName : null;
+    private boolean openSession(@UserIdInt int userId, @InstallFlags int installFlags, String installerName, int installLocation) {
+        String requestedInstallerPackageName = mHasInstallPackagePermission ? installerName : null;
         String installerPackageName = Build.VERSION.SDK_INT < Build.VERSION_CODES.P && mHasInstallPackagePermission
-                ? mInstallerPackageName : BuildConfig.APPLICATION_ID;
+                ? installerName : BuildConfig.APPLICATION_ID;
         try {
             mPackageInstaller = PackageManagerCompat.getPackageInstaller();
         } catch (RemoteException e) {
@@ -755,7 +746,7 @@ public final class PackageInstallerCompat {
             Refine.<PackageInstallerHidden.SessionParams>unsafeCast(sessionParams).installerPackageName = requestedInstallerPackageName;
         }
         // Set installation location
-        sessionParams.setInstallLocation(Prefs.Installer.getInstallLocation());
+        sessionParams.setInstallLocation(installLocation);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             sessionParams.setInstallReason(PackageManager.INSTALL_REASON_USER);
         }

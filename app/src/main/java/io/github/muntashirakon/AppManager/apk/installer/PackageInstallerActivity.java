@@ -45,13 +45,11 @@ import androidx.annotation.UiThread;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.pm.PackageInfoCompat;
-import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Objects;
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicReference;
@@ -64,22 +62,37 @@ import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkChooser;
 import io.github.muntashirakon.AppManager.apk.whatsnew.WhatsNewDialogFragment;
 import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
-import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.types.ForegroundService;
-import io.github.muntashirakon.AppManager.users.UserInfo;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.StoragePermission;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
 import io.github.muntashirakon.dialog.DialogTitleBuilder;
-import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 
+/**
+ * Activity that manages installing and confirming package installation. Actual installation is done by
+ * {@link PackageInstallerService}.
+ * <p>
+ * How the installer works:
+ * <ol>
+ * <li>When the installation of a package is requested, it is either stored in queue or loaded directly if the queue is
+ * empty.
+ * <li>Then, it is checked whether there's an already installed package by the same name. If there exists any, the user
+ * is offered to reinstall, upgrade or downgrade the package depending on the features supported by the present mode of
+ * operation. Otherwise, the user is asked to confirm installation. Before doing so, however, a changelog may be
+ * listed if it is enabled in settings.
+ * <li>Next, if it is a split app, the user is asked to choose the splits to be installed. Otherwise, the installer
+ * proceeds to the next phase directly.
+ * <li>If display options is enabled, the options are displayed so that the user can tweak the present installer.
+ * Otherwise, the installed proceeds to the next phase.
+ * <li>Installer takes necessary steps to launch a installer service to initiate the installation.
+ * </ol>
+ */
 public class PackageInstallerActivity extends BaseActivity implements WhatsNewDialogFragment.InstallInterface {
     public static final String TAG = PackageInstallerActivity.class.getSimpleName();
 
@@ -121,7 +134,6 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
     private int mActionName;
     @UserIdInt
     private int mLastUserId;
-    private FragmentManager mFragmentManager;
     private AlertDialog mProgressDialog;
     @Nullable
     private AlertDialog mInstallProgressDialog;
@@ -147,7 +159,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
     private final ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            PackageInstallerActivity.this.mService = ((ForegroundService.Binder) service).getService();
+            mService = ((ForegroundService.Binder) service).getService();
         }
 
         @Override
@@ -179,7 +191,6 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
             throw new RuntimeException("Unable to bind PackageInstallerService");
         }
         mProgressDialog = getParsingProgressDialog();
-        mFragmentManager = getSupportFragmentManager();
         mProgressDialog.show();
         synchronized (mApkQueue) {
             mApkQueue.addAll(ApkQueueItem.fromIntent(intent));
@@ -330,7 +341,7 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
                             PackageInstallerActivity.this.triggerCancel();
                         }
                     }
-            ).show(mFragmentManager, SplitApkChooser.TAG);
+            ).show(getSupportFragmentManager(), SplitApkChooser.TAG);
         } else {
             launchInstallService();
         }
@@ -339,38 +350,25 @@ public class PackageInstallerActivity extends BaseActivity implements WhatsNewDi
     @UiThread
     private void launchInstallService() {
         // Select user
-        if (Prefs.Installer.displayUsers() && Users.getAllUserIds().length > 1
-                && SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.INTERACT_ACROSS_USERS_FULL)) {
-            List<UserInfo> users = mModel.getUsers();
-            if (users != null && users.size() > 1) {
-                String[] userNames = new String[users.size() + 1];
-                Integer[] userHandles = new Integer[users.size() + 1];
-                userNames[0] = getString(R.string.backup_all_users);
-                userHandles[0] = UserHandleHidden.USER_ALL;
-                int i = 1;
-                for (UserInfo info : users) {
-                    userNames[i] = info.name == null ? String.valueOf(info.id) : info.name;
-                    userHandles[i] = info.id;
-                    ++i;
-                }
-                new SearchableSingleChoiceDialogBuilder<>(this, userHandles, userNames)
-                        .setCancelable(false)
-                        .setTitle(R.string.select_user)
-                        .setSelectionIndex(0)
-                        .setPositiveButton(R.string.ok, (dialog, which, selectedUserId) ->
-                                doLaunchInstallerService(Objects.requireNonNull(selectedUserId)))
-                        .setNegativeButton(R.string.cancel, (dialog, which, selectedUserId) -> triggerCancel())
-                        .show();
-                return;
-            }
+        if (Prefs.Installer.displayOptions()) {
+            PackageInfo packageInfo = mModel.getNewPackageInfo();
+            InstallerOptionsFragment dialog = InstallerOptionsFragment.getInstance(packageInfo.packageName,
+                    ApplicationInfoCompat.isTestOnly(packageInfo.applicationInfo), (dialog1, which, options) -> {
+                        if (options != null) {
+                            doLaunchInstallerService(options);
+                        } else triggerCancel();
+                    });
+            dialog.show(getSupportFragmentManager(), InstallerOptionsFragment.TAG);
+            return;
         }
-        doLaunchInstallerService(UserHandleHidden.myUserId());
+        doLaunchInstallerService(new InstallerOptions());
     }
 
-    private void doLaunchInstallerService(@UserIdInt int userId) {
+    private void doLaunchInstallerService(@NonNull InstallerOptions options) {
         assert mCurrentItem != null;
+        int userId = options.getUserId();
+        mCurrentItem.setInstallerOptions(options);
         mLastUserId = userId == UserHandleHidden.USER_ALL ? UserHandleHidden.myUserId() : userId;
-        mCurrentItem.setUserId(userId);
         boolean canDisplayNotification = Utils.canDisplayNotification(this);
         boolean alwaysOnBackground = canDisplayNotification && Prefs.Installer.installInBackground();
         Intent intent = new Intent(this, PackageInstallerService.class);

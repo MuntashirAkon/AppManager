@@ -1367,7 +1367,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     .setTitle(R.string.select_apk)
                     .setOnItemClickListener((dialog, which, item) -> mExecutor.submit(() -> {
                         try {
-                            File file = apkEntries.get(which).getRealCachedFile();
+                            File file = apkEntries.get(which).getFile(false);
                             intent.setDataAndType(Uri.fromFile(file), MimeTypeMap.getSingleton()
                                     .getMimeTypeFromExtension("apk"));
                             ThreadUtils.postOnMainThread(() -> startActivity(intent));

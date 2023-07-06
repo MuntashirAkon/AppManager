@@ -41,7 +41,6 @@ import io.github.muntashirakon.AppManager.progress.NotificationProgressHandler.N
 import io.github.muntashirakon.AppManager.progress.ProgressHandler;
 import io.github.muntashirakon.AppManager.progress.QueuedProgressHandler;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
-import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.types.ForegroundService;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.utils.NotificationUtils;
@@ -98,6 +97,9 @@ public class PackageInstallerService extends ForegroundService {
         if (apkQueueItem == null) {
             return;
         }
+        InstallerOptions options = apkQueueItem.getInstallerOptions() != null
+                ? apkQueueItem.getInstallerOptions()
+                : new InstallerOptions();
         // Install package
         PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance();
         installer.setAppLabel(apkQueueItem.getAppLabel());
@@ -112,7 +114,7 @@ public class PackageInstallerService extends ForegroundService {
             @Override
             public void onAnotherAttemptInMiui(@Nullable ApkFile apkFile) {
                 if (apkFile != null) {
-                    installer.install(apkFile, apkQueueItem.getUserId(), mProgressHandler);
+                    installer.install(apkFile, options, mProgressHandler);
                 }
             }
             // MIUI-end
@@ -122,11 +124,11 @@ public class PackageInstallerService extends ForegroundService {
                                           @Nullable String blockingPackage, @Nullable String statusMessage) {
                 if (result == STATUS_SUCCESS) {
                     // Block trackers if requested
-                    if (Prefs.Installer.blockTrackers()) {
-                        ComponentUtils.blockTrackingComponents(new UserPackagePair(packageName, apkQueueItem.getUserId()));
+                    if (options.isBlockTrackers()) {
+                        ComponentUtils.blockTrackingComponents(new UserPackagePair(packageName, options.getUserId()));
                     }
                     // Perform force dex optimization if requested
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && Prefs.Installer.forceDexOpt()) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N && options.isForceDexOpt()) {
                         // Ignore the result because it's irrelevant
                         new DexOptimizer(PackageManagerCompat.getPackageManager(), packageName).forceDexOpt();
                     }
@@ -148,7 +150,7 @@ public class PackageInstallerService extends ForegroundService {
                 // No package name supplied, abort
                 return;
             }
-            installer.installExisting(packageName, apkQueueItem.getUserId());
+            installer.installExisting(packageName, options.getUserId());
         } else {
             // ApkFile/Uri
             ApkFile apkFile;
@@ -166,7 +168,7 @@ public class PackageInstallerService extends ForegroundService {
                 // No apk file, abort
                 return;
             }
-            installer.install(apkFile, apkQueueItem.getUserId(), mProgressHandler);
+            installer.install(apkFile, options, mProgressHandler);
         }
     }
 

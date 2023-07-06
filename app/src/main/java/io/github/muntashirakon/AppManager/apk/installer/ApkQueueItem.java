@@ -48,7 +48,8 @@ public class ApkQueueItem implements Parcelable {
     private boolean mInstallExisting;
     @Nullable
     private ApkFile.ApkSource mApkSource;
-    private int mUserId;
+    @Nullable
+    private InstallerOptions mInstallerOptions;
 
     ApkQueueItem(@NonNull String packageName, boolean installExisting) {
         mPackageName = Objects.requireNonNull(packageName);
@@ -65,7 +66,7 @@ public class ApkQueueItem implements Parcelable {
         mAppLabel = in.readString();
         mInstallExisting = in.readByte() != 0;
         mApkSource = ParcelCompat.readParcelable(in, ApkFile.ApkSource.class.getClassLoader(), ApkFile.ApkSource.class);
-        mUserId = in.readInt();
+        mInstallerOptions = ParcelCompat.readParcelable(in, InstallerOptions.class.getClassLoader(), InstallerOptions.class);
     }
 
     @Nullable
@@ -94,12 +95,13 @@ public class ApkQueueItem implements Parcelable {
         mApkSource = apkSource;
     }
 
-    public int getUserId() {
-        return mUserId;
+    @Nullable
+    public InstallerOptions getInstallerOptions() {
+        return mInstallerOptions;
     }
 
-    public void setUserId(int userId) {
-        mUserId = userId;
+    public void setInstallerOptions(InstallerOptions installerOptions) {
+        mInstallerOptions = installerOptions;
     }
 
     @Nullable
@@ -122,7 +124,7 @@ public class ApkQueueItem implements Parcelable {
         dest.writeString(mAppLabel);
         dest.writeByte((byte) (mInstallExisting ? 1 : 0));
         dest.writeParcelable(mApkSource, flags);
-        dest.writeInt(mUserId);
+        dest.writeParcelable(mInstallerOptions, flags);
     }
 
     public static final Creator<ApkQueueItem> CREATOR = new Creator<ApkQueueItem>() {

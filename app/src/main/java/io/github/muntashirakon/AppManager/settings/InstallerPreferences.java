@@ -32,7 +32,6 @@ import java.util.Objects;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.signing.Signer;
-import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -41,12 +40,12 @@ import io.github.muntashirakon.dialog.SearchableSingleChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 
 public class InstallerPreferences extends PreferenceFragment {
-    private static final Integer[] INSTALL_LOCATIONS = new Integer[] {
+    public static final Integer[] INSTALL_LOCATIONS = new Integer[] {
             PackageInfo.INSTALL_LOCATION_AUTO,
             PackageInfo.INSTALL_LOCATION_INTERNAL_ONLY,
             PackageInfo.INSTALL_LOCATION_PREFER_EXTERNAL
     };
-    private static final int[] INSTALL_LOCATION_NAMES = new int[]{
+    public static final int[] INSTALL_LOCATION_NAMES = new int[]{
             R.string.auto,  // PackageInfo.INSTALL_LOCATION_AUTO
             R.string.install_location_internal_only,  // PackageInfo.INSTALL_LOCATION_INTERNAL_ONLY
             R.string.install_location_prefer_external,  // PackageInfo.INSTALL_LOCATION_PREFER_EXTERNAL
@@ -65,11 +64,9 @@ public class InstallerPreferences extends PreferenceFragment {
         mModel = new ViewModelProvider(requireActivity()).get(MainPreferencesViewModel.class);
         mActivity = (SettingsActivity) requireActivity();
         mPm = mActivity.getPackageManager();
-        // Display users in installer
-        boolean canInstallForOtherUsers = SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.INTERACT_ACROSS_USERS_FULL);
+        // Display options in installer
         SwitchPreferenceCompat usersInInstallerPref = Objects.requireNonNull(findPreference("installer_display_users"));
-        usersInInstallerPref.setEnabled(canInstallForOtherUsers);
-        usersInInstallerPref.setChecked(canInstallForOtherUsers && Prefs.Installer.displayUsers());
+        usersInInstallerPref.setChecked(Prefs.Installer.displayOptions());
         // Set installation locations
         Preference installLocationPref = Objects.requireNonNull(findPreference("installer_install_location"));
         installLocationPref.setSummary(INSTALL_LOCATION_NAMES[Prefs.Installer.getInstallLocation()]);

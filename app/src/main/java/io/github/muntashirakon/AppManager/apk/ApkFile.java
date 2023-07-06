@@ -571,11 +571,6 @@ public final class ApkFile implements AutoCloseable {
         mEntries.get(entry).mSelected = false;
     }
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public boolean needSigning() {
-        return Prefs.Installer.canSignApk();
-    }
-
     @Override
     public void close() {
         synchronized (sInstanceCount) {
@@ -781,17 +776,23 @@ public final class ApkFile implements AutoCloseable {
             else throw new RuntimeException("Neither zipEntry nor source is defined.");
         }
 
+        @WorkerThread
+        public File getFile(boolean signed) throws IOException {
+            return signed ? getSignedFile() : getRealCachedFile();
+        }
+
+        @WorkerThread
+        public InputStream getInputStream(boolean signed) throws IOException {
+            return signed ? getSignedInputStream() : getRealInputStream();
+        }
+
         /**
-         * Get signed APK file if required based on user preferences.
+         * Get signed APK file.
          *
          * @throws IOException If the APK cannot be signed or cached.
          */
-        public File getSignedFile() throws IOException {
+        private File getSignedFile() throws IOException {
             File realFile = getRealCachedFile();
-            if (!needSigning()) {
-                // Return original/real file if signing is not requested
-                return realFile;
-            }
             if (Paths.exists(mSignedFile)) return mSignedFile;
             mSignedFile = mFileCache.createCachedFile("apk");
             SigSchemes sigSchemes = Prefs.Signing.getSigSchemes();
@@ -818,11 +819,7 @@ public final class ApkFile implements AutoCloseable {
          *
          * @throws IOException If the APK cannot be signed or cached.
          */
-        public InputStream getSignedInputStream() throws IOException {
-            if (!needSigning()) {
-                // Return original/real input stream if signing is not requested
-                return getRealInputStream();
-            }
+        private InputStream getSignedInputStream() throws IOException {
             return new FileInputStream(getSignedFile());
         }
 
@@ -857,7 +854,7 @@ public final class ApkFile implements AutoCloseable {
          * @throws IOException If I/O error occurs.
          */
         @NonNull
-        public InputStream getRealInputStream() throws IOException {
+        private InputStream getRealInputStream() throws IOException {
             if (Paths.exists(mCachedFile)) return new FileInputStream(mCachedFile);
             if (mZipEntry != null) return Objects.requireNonNull(mZipFile).getInputStream(mZipEntry);
             if (Paths.exists(mSource)) return new FileInputStream(mSource);
@@ -870,7 +867,7 @@ public final class ApkFile implements AutoCloseable {
          * @throws IOException If an I/O error occurs while caching the APK.
          */
         @WorkerThread
-        public File getRealCachedFile() throws IOException {
+        private File getRealCachedFile() throws IOException {
             if (mSource != null && mSource.canRead() && !mSource.getAbsolutePath().startsWith("/proc/self")) {
                 return mSource;
             }

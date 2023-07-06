@@ -4,8 +4,8 @@
 
     <SwitchPreferenceCompat
         app:key="installer_display_users"
-        app:title="@string/pref_show_users_in_installer"
-        app:summary="@string/pref_show_users_in_installer_msg"
+        app:title="@string/pref_options_in_installer"
+        app:summary="@string/pref_options_in_installer_msg"
         app:iconSpaceReserved="false" />
 
     <SwitchPreferenceCompat

@@ -1,0 +1,71 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingVertical="8dp"
+        android:paddingHorizontal="16dp"
+        android:orientation="vertical">
+
+        <io.github.muntashirakon.widget.MaterialSpinner
+            android:id="@+id/user"
+            style="@style/Widget.AppTheme.MaterialSpinner.Outlined.Small"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/select_user" />
+
+        <io.github.muntashirakon.widget.MaterialSpinner
+            android:id="@+id/install_location"
+            style="@style/Widget.AppTheme.MaterialSpinner.Outlined.Small"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/install_location" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.AppTheme.TextInputLayout.Small"
+            android:id="@+id/installer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/installer_app"
+            app:endIconMode="custom"
+            app:endIconDrawable="@drawable/ic_refresh"
+            app:hintAnimationEnabled="true"
+            app:hintEnabled="true">
+
+            <io.github.muntashirakon.widget.TextInputTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:textIsSelectable="true"
+                tools:text="@tools:sample/lorem[4]" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/action_sign_apk"
+            style="@style/Widget.AppTheme.MaterialSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/pref_sign_apk" />
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/action_optimize"
+            style="@style/Widget.AppTheme.MaterialSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/optimize_option_force_dexopt" />
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/action_block_trackers"
+            style="@style/Widget.AppTheme.MaterialSwitch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/block_trackers" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</ScrollView>

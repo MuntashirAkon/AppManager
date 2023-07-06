@@ -33,6 +33,7 @@ import java.util.Locale;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.apk.ApkFile;
+import io.github.muntashirakon.AppManager.apk.installer.InstallerOptions;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
 import io.github.muntashirakon.AppManager.compat.DeviceIdleManagerCompat;
@@ -344,7 +345,10 @@ class RestoreOp implements Closeable {
                 throw new BackupException("Failed to extract the apk file(s).", th);
             }
             // A normal update will do it now
-            PackageInstallerCompat packageInstaller = PackageInstallerCompat.getNewInstance(mMetadata.installer);
+            InstallerOptions options = new InstallerOptions();
+            options.setInstallerName(mMetadata.installer);
+            options.setUserId(mUserId);
+            PackageInstallerCompat packageInstaller = PackageInstallerCompat.getNewInstance();
             packageInstaller.setOnInstallListener(new PackageInstallerCompat.OnInstallListener() {
                 @Override
                 public void onStartInstall(int sessionId, String packageName) {
@@ -354,7 +358,7 @@ class RestoreOp implements Closeable {
                 public void onAnotherAttemptInMiui(@Nullable ApkFile apkFile) {
                     // This works because the parent install method still remains active until a final status is
                     // received after all the attempts are finished, which is, then, returned to the parent.
-                    packageInstaller.install(allApks, mPackageName, mUserId);
+                    packageInstaller.install(allApks, mPackageName, options);
                 }
 
                 @Override
@@ -362,7 +366,7 @@ class RestoreOp implements Closeable {
                 }
             });
             try {
-                if (!packageInstaller.install(allApks, mPackageName, mUserId)) {
+                if (!packageInstaller.install(allApks, mPackageName, options)) {
                     throw new BackupException("A (re)install was necessary but couldn't perform it.");
                 }
             } finally {

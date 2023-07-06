@@ -301,7 +301,7 @@ public final class Prefs {
             return AppPref.getBoolean(AppPref.PrefKey.PREF_INSTALLER_DISPLAY_CHANGES_BOOL);
         }
 
-        public static boolean displayUsers() {
+        public static boolean displayOptions() {
             return AppPref.getBoolean(AppPref.PrefKey.PREF_INSTALLER_DISPLAY_USERS_BOOL);
         }
 
