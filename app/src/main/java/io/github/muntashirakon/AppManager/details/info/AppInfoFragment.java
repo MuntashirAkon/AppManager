@@ -600,7 +600,7 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }
 
     private void install() {
-        ApkFile.ApkSource apkSource = mMainModel != null ? mMainModel.getApkFileLink() : null;
+        ApkFile.ApkSource apkSource = mMainModel != null ? mMainModel.getApkSource() : null;
         if (apkSource == null) return;
         try {
             startActivity(PackageInstallerActivity.getLaunchableInstance(requireContext(), apkSource));

@@ -87,11 +87,11 @@ public class ApkQueueItem implements Parcelable {
     }
 
     @Nullable
-    public ApkFile.ApkSource getApkFileLink() {
+    public ApkFile.ApkSource getApkSource() {
         return mApkSource;
     }
 
-    public void setApkFileLink(@Nullable ApkFile.ApkSource apkSource) {
+    public void setApkSource(@Nullable ApkFile.ApkSource apkSource) {
         mApkSource = apkSource;
     }
 

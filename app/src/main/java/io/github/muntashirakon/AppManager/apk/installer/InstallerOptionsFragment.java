@@ -24,6 +24,7 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.os.BundleCompat;
 import androidx.core.util.Pair;
 import androidx.fragment.app.DialogFragment;
 import androidx.lifecycle.AndroidViewModel;
@@ -64,13 +65,16 @@ public class InstallerOptionsFragment extends DialogFragment {
 
     private static final String ARG_PACKAGE_NAME = "pkg";
     private static final String ARG_TEST_ONLY_APP = "test_only";
+    private static final String ARG_REF_INSTALLER_OPTIONS = "ref_opt";
 
     public interface OnClickListener {
         void onClick(DialogInterface dialog, int which, @Nullable InstallerOptions options);
     }
 
     @NonNull
-    public static InstallerOptionsFragment getInstance(@Nullable String packageName, @Nullable Boolean isTestOnly,
+    public static InstallerOptionsFragment getInstance(@Nullable String packageName,
+                                                       @Nullable Boolean isTestOnly,
+                                                       @NonNull InstallerOptions options,
                                                        @Nullable OnClickListener clickListener) {
         InstallerOptionsFragment dialog = new InstallerOptionsFragment();
         Bundle args = new Bundle();
@@ -78,6 +82,7 @@ public class InstallerOptionsFragment extends DialogFragment {
         if (isTestOnly != null) {
             args.putBoolean(ARG_TEST_ONLY_APP, isTestOnly);
         }
+        args.putParcelable(ARG_REF_INSTALLER_OPTIONS, options);
         dialog.setArguments(args);
         dialog.setOnClickListener(clickListener);
         return dialog;
@@ -112,6 +117,7 @@ public class InstallerOptionsFragment extends DialogFragment {
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         mPackageName = requireArguments().getString(ARG_PACKAGE_NAME);
         mIsTestOnly = requireArguments().getBoolean(ARG_TEST_ONLY_APP, true);
+        mOptions = Objects.requireNonNull(BundleCompat.getParcelable(requireArguments(), ARG_REF_INSTALLER_OPTIONS, InstallerOptions.class));
         mDialogView = View.inflate(requireActivity(), R.layout.dialog_installer_options, null);
         mUserSelectionSpinner = mDialogView.findViewById(R.id.user);
         mInstallLocationSpinner = mDialogView.findViewById(R.id.install_location);
@@ -121,7 +127,6 @@ public class InstallerOptionsFragment extends DialogFragment {
         MaterialSwitch forceDexOptSwitch = mDialogView.findViewById(R.id.action_optimize);
         mBlockTrackersSwitch = mDialogView.findViewById(R.id.action_block_trackers);
         // Set values and defaults
-        mOptions = new InstallerOptions();
         mPm = requireContext().getPackageManager();
         boolean canInstallForOtherUsers = SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.INTERACT_ACROSS_USERS_FULL);
         boolean isSystemOrRoot = SelfPermissions.isSystemOrRoot();

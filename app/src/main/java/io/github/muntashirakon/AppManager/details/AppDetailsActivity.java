@@ -32,6 +32,7 @@ import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.details.info.AppInfoFragment;
 import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -44,6 +45,7 @@ public class AppDetailsActivity extends BaseActivity {
     public static final String ALIAS_APP_INFO = "io.github.muntashirakon.AppManager.details.AppInfoActivity";
 
     private static final String EXTRA_PACKAGE_NAME = "pkg";
+    private static final String EXTRA_APK_SOURCE = "src";
     private static final String EXTRA_USER_HANDLE = "user";
     private static final String EXTRA_BACK_TO_MAIN = "main";
 
@@ -66,9 +68,26 @@ public class AppDetailsActivity extends BaseActivity {
     }
 
     @NonNull
-    public static Intent getIntent(@NonNull Context context, @NonNull Path apkPath, boolean backToMainPage) {
+    public static Intent getIntent(@NonNull Context context, @NonNull ApkFile.ApkSource apkSource, boolean backToMainPage) {
         Intent intent = new Intent(context, AppDetailsActivity.class);
-        intent.setDataAndType(apkPath.getUri(), "application/vnd.android.package-archive");
+        intent.putExtra(AppDetailsActivity.EXTRA_APK_SOURCE, apkSource);
+        intent.putExtra(AppDetailsActivity.EXTRA_BACK_TO_MAIN, backToMainPage);
+        return intent;
+    }
+
+    @NonNull
+    public static Intent getIntent(@NonNull Context context, @NonNull Path apkPath, boolean backToMainPage) {
+        return getIntent(context, apkPath.getUri(), apkPath.getType(), backToMainPage);
+    }
+
+    @NonNull
+    public static Intent getIntent(@NonNull Context context, @NonNull Uri apkPath, @Nullable String mimeType, boolean backToMainPage) {
+        Intent intent = new Intent(context, AppDetailsActivity.class);
+        if (mimeType != null) {
+            intent.setDataAndType(apkPath, mimeType);
+        } else {
+            intent.setData(apkPath);
+        }
         intent.putExtra(AppDetailsActivity.EXTRA_BACK_TO_MAIN, backToMainPage);
         return intent;
     }
@@ -84,7 +103,7 @@ public class AppDetailsActivity extends BaseActivity {
     @Nullable
     private String mPackageName;
     @Nullable
-    private Uri mApkUri;
+    private ApkFile.ApkSource mApkSource;
     @Nullable
     private String mApkType;
     @UserIdInt
@@ -101,14 +120,17 @@ public class AppDetailsActivity extends BaseActivity {
         if (ss != null) {
             mBackToMainPage = ss.mBackToMainPage;
             mPackageName = ss.mPackageName;
-            mApkUri = ss.mApkUri;
+            mApkSource = ss.mApkSource;
             mApkType = ss.mApkType;
             mUserId = ss.mUserId;
         } else {
             Intent intent = getIntent();
+            Uri uri = IntentCompat.getDataUri(intent);
             mBackToMainPage = intent.getBooleanExtra(EXTRA_BACK_TO_MAIN, mBackToMainPage);
             mPackageName = intent.getStringExtra(EXTRA_PACKAGE_NAME);
-            mApkUri = IntentCompat.getDataUri(intent);
+            mApkSource = uri != null
+                    ? new ApkFile.ApkSource(uri, intent.getType())
+                    : IntentCompat.getParcelableExtra(intent, EXTRA_APK_SOURCE, ApkFile.ApkSource.class);
             mApkType = intent.getType();
             mUserId = intent.getIntExtra(EXTRA_USER_HANDLE, UserHandleHidden.myUserId());
         }
@@ -116,7 +138,7 @@ public class AppDetailsActivity extends BaseActivity {
         // Initialize tabs
         mTabTitleIds = getResources().obtainTypedArray(R.array.TAB_TITLES);
         mTabFragments = new Fragment[mTabTitleIds.length()];
-        if (mPackageName == null && mApkUri == null) {
+        if (mPackageName == null && mApkSource == null) {
             UIUtils.displayLongToast(R.string.empty_package_name);
             finish();
             return;
@@ -142,7 +164,7 @@ public class AppDetailsActivity extends BaseActivity {
         // Load package info
         (mPackageName != null
                 ? model.setPackage(mPackageName)
-                : model.setPackage(Objects.requireNonNull(mApkUri), mApkType)
+                : model.setPackage(Objects.requireNonNull(mApkSource))
         ).observe(this, packageInfo -> {
             progressDialog.dismiss();
             if (packageInfo == null) {
@@ -182,7 +204,7 @@ public class AppDetailsActivity extends BaseActivity {
         @Nullable
         private String mPackageName;
         @Nullable
-        private Uri mApkUri;
+        private ApkFile.ApkSource mApkSource;
         @Nullable
         private String mApkType;
         private int mUserId;
@@ -190,10 +212,10 @@ public class AppDetailsActivity extends BaseActivity {
         protected SavedState() {
         }
 
-        public SavedState(Parcel source, ClassLoader loader) {
+        public SavedState(Parcel source) {
             mBackToMainPage = ParcelCompat.readBoolean(source);
             mPackageName = source.readString();
-            mApkUri = ParcelCompat.readParcelable(source, loader, Uri.class);
+            mApkSource = ParcelCompat.readParcelable(source, ApkFile.ApkSource.class.getClassLoader(), ApkFile.ApkSource.class);
             mApkType = source.readString();
             mUserId = source.readInt();
         }
@@ -207,7 +229,7 @@ public class AppDetailsActivity extends BaseActivity {
         public void writeToParcel(Parcel dest, int flags) {
             ParcelCompat.writeBoolean(dest, mBackToMainPage);
             dest.writeString(mPackageName);
-            dest.writeParcelable(mApkUri, flags);
+            dest.writeParcelable(mApkSource, flags);
             dest.writeString(mApkType);
             dest.writeInt(mUserId);
         }
@@ -215,12 +237,12 @@ public class AppDetailsActivity extends BaseActivity {
         public static final Creator<SavedState> CREATOR = new ClassLoaderCreator<SavedState>() {
             @Override
             public SavedState createFromParcel(Parcel in, ClassLoader loader) {
-                return new SavedState(in, loader);
+                return new SavedState(in);
             }
 
             @Override
             public SavedState createFromParcel(Parcel in) {
-                return new SavedState(in, null);
+                return new SavedState(in);
             }
 
             @Override
@@ -232,11 +254,11 @@ public class AppDetailsActivity extends BaseActivity {
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
-        if (mApkUri != null || mPackageName != null) {
+        if (mApkSource != null || mPackageName != null) {
             SavedState ss = new SavedState();
             ss.mBackToMainPage = mBackToMainPage;
             ss.mPackageName = mPackageName;
-            ss.mApkUri = mApkUri;
+            ss.mApkSource = mApkSource;
             ss.mApkType = mApkType;
             ss.mUserId = mUserId;
             outState.putParcelable("ss", ss);

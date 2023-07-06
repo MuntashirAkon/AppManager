@@ -17,6 +17,7 @@
             style="@style/Widget.AppTheme.MaterialSpinner.Outlined.Small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:hint="@string/select_user" />
 
         <io.github.muntashirakon.widget.MaterialSpinner
@@ -24,6 +25,7 @@
             style="@style/Widget.AppTheme.MaterialSpinner.Outlined.Small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:hint="@string/install_location" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -31,6 +33,7 @@
             android:id="@+id/installer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
             android:hint="@string/installer_app"
             app:endIconMode="custom"
             app:endIconDrawable="@drawable/ic_refresh"

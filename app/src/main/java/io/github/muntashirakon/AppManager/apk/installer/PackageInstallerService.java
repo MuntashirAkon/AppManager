@@ -154,7 +154,7 @@ public class PackageInstallerService extends ForegroundService {
         } else {
             // ApkFile/Uri
             ApkFile apkFile;
-            ApkFile.ApkSource apkSource = apkQueueItem.getApkFileLink();
+            ApkFile.ApkSource apkSource = apkQueueItem.getApkSource();
             if (apkSource != null) {
                 // ApkFile set
                 try {

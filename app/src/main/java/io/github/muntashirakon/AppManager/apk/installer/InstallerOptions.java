@@ -42,6 +42,15 @@ public class InstallerOptions implements Parcelable {
         mBlockTrackers = in.readByte() != 0;
     }
 
+    public void copy(@NonNull InstallerOptions options) {
+        mUserId = options.mUserId;
+        mInstallLocation = options.mInstallLocation;
+        mInstallerName = options.mInstallerName;
+        mSignApkFiles = options.mSignApkFiles;
+        mForceDexOpt = options.mForceDexOpt;
+        mBlockTrackers = options.mBlockTrackers;
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(mUserId);

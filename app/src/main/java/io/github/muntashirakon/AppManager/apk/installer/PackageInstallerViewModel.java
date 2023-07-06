@@ -88,13 +88,13 @@ public class PackageInstallerViewModel extends AndroidViewModel {
                         throw new IllegalArgumentException("Package name not set for install-existing.");
                     }
                     getExistingPackageInfoInternal(apkQueueItem.getPackageName());
-                } else if (apkQueueItem.getApkFileLink() != null) {
-                    mApkSource = apkQueueItem.getApkFileLink();
+                } else if (apkQueueItem.getApkSource() != null) {
+                    mApkSource = apkQueueItem.getApkSource();
                     getPackageInfoInternal();
                 } else {
                     throw new IllegalArgumentException("Invalid queue item.");
                 }
-                apkQueueItem.setApkFileLink(mApkSource);
+                apkQueueItem.setApkSource(mApkSource);
                 apkQueueItem.setPackageName(mPackageName);
                 apkQueueItem.setAppLabel(mAppLabel);
             } catch (Throwable th) {
@@ -135,6 +135,10 @@ public class PackageInstallerViewModel extends AndroidViewModel {
 
     public ApkFile getApkFile() {
         return mApkFile;
+    }
+
+    public ApkFile.ApkSource getApkSource() {
+        return mApkSource;
     }
 
     public int getTrackerCount() {

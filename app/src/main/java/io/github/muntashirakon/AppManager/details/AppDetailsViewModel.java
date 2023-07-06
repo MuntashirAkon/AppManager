@@ -24,7 +24,6 @@ import android.content.pm.PermissionInfo;
 import android.content.pm.ProviderInfo;
 import android.content.pm.ServiceInfo;
 import android.content.pm.Signature;
-import android.net.Uri;
 import android.os.Build;
 import android.os.RemoteException;
 import android.text.TextUtils;
@@ -175,9 +174,9 @@ public class AppDetailsViewModel extends AndroidViewModel {
 
     @UiThread
     @NonNull
-    public LiveData<PackageInfo> setPackage(@NonNull Uri packageUri, @Nullable String type) {
+    public LiveData<PackageInfo> setPackage(@NonNull ApkFile.ApkSource apkSource) {
         MutableLiveData<PackageInfo> packageInfoLiveData = new MutableLiveData<>();
-        mApkSource = new ApkFile.ApkSource(packageUri, type);
+        mApkSource = apkSource;
         mExternalApk = true;
         mExecutor.submit(() -> {
             try {
@@ -272,7 +271,8 @@ public class AppDetailsViewModel extends AndroidViewModel {
     }
 
     @AnyThread
-    public ApkFile.ApkSource getApkFileLink() {
+    @Nullable
+    public ApkFile.ApkSource getApkSource() {
         return mApkSource;
     }
 
