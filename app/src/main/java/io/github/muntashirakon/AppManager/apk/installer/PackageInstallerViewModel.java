@@ -197,11 +197,15 @@ public class PackageInstallerViewModel extends AndroidViewModel {
     @NonNull
     private PackageInfo loadNewPackageInfo() throws PackageManager.NameNotFoundException, IOException {
         String apkPath = mApkFile.getBaseEntry().getFile(false).getAbsolutePath();
-        @SuppressLint("WrongConstant")
-        PackageInfo packageInfo = mPm.getPackageArchiveInfo(apkPath, PackageManager.GET_PERMISSIONS
+        int flags = PackageManager.GET_PERMISSIONS
                 | PackageManager.GET_ACTIVITIES | PackageManager.GET_RECEIVERS | PackageManager.GET_PROVIDERS
                 | PackageManager.GET_SERVICES | MATCH_DISABLED_COMPONENTS | GET_SIGNING_CERTIFICATES_APK
-                | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_SHARED_LIBRARY_FILES);
+                | PackageManager.GET_CONFIGURATIONS | PackageManager.GET_SHARED_LIBRARY_FILES;
+        PackageInfo packageInfo = mPm.getPackageArchiveInfo(apkPath, flags);
+        if (packageInfo == null) {
+            // Previous method could return null if the APK isn't signed. So, try without it.
+            packageInfo = mPm.getPackageArchiveInfo(apkPath, flags & ~GET_SIGNING_CERTIFICATES_APK);
+        }
         if (packageInfo == null) {
             throw new PackageManager.NameNotFoundException("Package cannot be parsed.");
         }
