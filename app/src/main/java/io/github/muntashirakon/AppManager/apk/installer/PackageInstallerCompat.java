@@ -540,7 +540,8 @@ public final class PackageInstallerCompat {
         }
     }
 
-    public boolean install(@NonNull ApkFile apkFile, @NonNull InstallerOptions options, @Nullable ProgressHandler progressHandler) {
+    public boolean install(@NonNull ApkFile apkFile, @NonNull List<String> selectedSplitIds,
+                           @NonNull InstallerOptions options, @Nullable ProgressHandler progressHandler) {
         ThreadUtils.ensureWorkerThread();
         try {
             mApkFile = apkFile;
@@ -574,19 +575,22 @@ public final class PackageInstallerCompat {
             if (!openSession(userId, installFlags, options.getInstallerName(), options.getInstallLocation())) {
                 return false;
             }
-            List<ApkFile.Entry> selectedEntries = apkFile.getSelectedEntries();
-            Log.d(TAG, "Install: selected entries: " + selectedEntries.size());
-            // Write apk files
+            List<ApkFile.Entry> selectedEntries = new ArrayList<>();
             long totalSize = 0;
-            for (ApkFile.Entry entry : selectedEntries) {
-                try {
-                    totalSize += entry.getFile(options.isSignApkFiles()).length();
-                } catch (IOException e) {
-                    callFinish(STATUS_FAILURE_INVALID);
-                    Log.e(TAG, "Install: Cannot retrieve the selected APK files.", e);
-                    return abandon();
+            for (ApkFile.Entry entry : apkFile.getEntries()) {
+                if (selectedSplitIds.contains(entry.id)) {
+                    selectedEntries.add(entry);
+                    try {
+                        totalSize += entry.getFile(options.isSignApkFiles()).length();
+                    } catch (IOException e) {
+                        callFinish(STATUS_FAILURE_INVALID);
+                        Log.e(TAG, "Install: Cannot retrieve the selected APK files.", e);
+                        return abandon();
+                    }
                 }
             }
+            Log.d(TAG, "Install: selected entries: " + selectedSplitIds);
+            // Write apk files
             for (ApkFile.Entry entry : selectedEntries) {
                 try (InputStream apkInputStream = entry.getInputStream(options.isSignApkFiles());
                      OutputStream apkOutputStream = mSession.openWrite(entry.getFileName(), 0, entry.getFileSize())) {

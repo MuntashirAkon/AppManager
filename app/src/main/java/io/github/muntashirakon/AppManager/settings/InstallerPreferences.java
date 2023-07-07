@@ -64,9 +64,6 @@ public class InstallerPreferences extends PreferenceFragment {
         mModel = new ViewModelProvider(requireActivity()).get(MainPreferencesViewModel.class);
         mActivity = (SettingsActivity) requireActivity();
         mPm = mActivity.getPackageManager();
-        // Display options in installer
-        SwitchPreferenceCompat usersInInstallerPref = Objects.requireNonNull(findPreference("installer_display_users"));
-        usersInInstallerPref.setChecked(Prefs.Installer.displayOptions());
         // Set installation locations
         Preference installLocationPref = Objects.requireNonNull(findPreference("installer_install_location"));
         installLocationPref.setSummary(INSTALL_LOCATION_NAMES[Prefs.Installer.getInstallLocation()]);

@@ -2,13 +2,9 @@
 
 package io.github.muntashirakon.AppManager.apk.whatsnew;
 
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.os.BundleCompat;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
@@ -25,71 +20,60 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
-import com.google.android.material.textview.MaterialTextView;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.utils.UIUtils;
-import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 
 public class WhatsNewDialogFragment extends DialogFragment {
     public static final String TAG = WhatsNewDialogFragment.class.getSimpleName();
-    public static final String ARG_NEW_PKG_INFO = "ARG_NEW_PKG_INFO";
-    public static final String ARG_OLD_PKG_INFO = "ARG_OLD_PKG_INFO";
-    public static final String ARG_INSTALL_NAME = "ARG_INSTALL_NAME";
-    public static final String ARG_VERSION_INFO = "ARG_VERSION_INFO";
+    private static final String ARG_NEW_PKG_INFO = "new_pkg";
+    private static final String ARG_OLD_PKG_INFO = "old_pkg";
 
-    public interface InstallInterface {
-        void triggerInstall();
-
-        void triggerCancel();
+    @NonNull
+    public static WhatsNewDialogFragment getInstance(@NonNull PackageInfo newPkgInfo, @NonNull PackageInfo oldPkgInfo) {
+        WhatsNewDialogFragment dialog = new WhatsNewDialogFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(ARG_NEW_PKG_INFO, newPkgInfo);
+        args.putParcelable(ARG_OLD_PKG_INFO, oldPkgInfo);
+        dialog.setArguments(args);
+        return dialog;
     }
 
-    public void setOnTriggerInstall(InstallInterface installInterface) {
-        mInstallInterface = installInterface;
-    }
-
-    private InstallInterface mInstallInterface;
-    private FragmentActivity mActivity;
     private WhatsNewRecyclerAdapter mAdapter;
     private PackageInfo mNewPkgInfo;
     private PackageInfo mOldPkgInfo;
+    private View mDialogView;
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+        mDialogView = View.inflate(requireContext(), R.layout.dialog_whats_new, null);
+        return new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.whats_new)
+                .setView(mDialogView)
+                .setNegativeButton(R.string.ok, null)
+                .create();
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return mDialogView;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         WhatsNewDialogViewModel viewModel = new ViewModelProvider(this).get(WhatsNewDialogViewModel.class);
-        mActivity = requireActivity();
         mNewPkgInfo = Objects.requireNonNull(BundleCompat.getParcelable(requireArguments(), ARG_NEW_PKG_INFO, PackageInfo.class));
         mOldPkgInfo = Objects.requireNonNull(BundleCompat.getParcelable(requireArguments(), ARG_OLD_PKG_INFO, PackageInfo.class));
-        final String installName = requireArguments().getString(ARG_INSTALL_NAME);
-        String versionInfo = requireArguments().getString(ARG_VERSION_INFO);
-        View view = View.inflate(mActivity, R.layout.dialog_whats_new, null);
-        RecyclerView recyclerView = (RecyclerView) view;
+        RecyclerView recyclerView = (RecyclerView) mDialogView;
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
-        mAdapter = new WhatsNewRecyclerAdapter();
+        recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+        mAdapter = new WhatsNewRecyclerAdapter(requireContext(), mNewPkgInfo.packageName);
         recyclerView.setAdapter(mAdapter);
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(mActivity)
-                .setTitle(R.string.whats_new)
-                .setView(view);
-        if (mInstallInterface != null) {
-            PackageManager pm = mActivity.getPackageManager();
-            builder.setCustomTitle(UIUtils.getDialogTitle(requireActivity(),
-                            pm.getApplicationLabel(mNewPkgInfo.applicationInfo),
-                            pm.getApplicationIcon(mNewPkgInfo.applicationInfo),
-                            versionInfo))
-                    .setNegativeButton(R.string.cancel, (dialog, which) -> mInstallInterface.triggerCancel())
-                    .setPositiveButton(installName, (dialog, which) -> mInstallInterface.triggerInstall());
-        } else {
-            builder.setNegativeButton(R.string.ok, null);
-        }
-        viewModel.getChangesLiveData().observe(this, changes -> mAdapter.setAdapterList(changes));
+        viewModel.getChangesLiveData().observe(this, mAdapter::setAdapterList);
         viewModel.loadChanges(mNewPkgInfo, mOldPkgInfo);
-        return builder.create();
     }
 
     @Override
@@ -97,78 +81,5 @@ public class WhatsNewDialogFragment extends DialogFragment {
         FragmentTransaction ft = manager.beginTransaction();
         ft.add(this, tag);
         ft.commitAllowingStateLoss();
-    }
-
-    class WhatsNewRecyclerAdapter extends RecyclerView.Adapter<WhatsNewRecyclerAdapter.ViewHolder> {
-        private final List<ApkWhatsNewFinder.Change> mAdapterList = new ArrayList<>();
-        private final int mColorAdd;
-        private final int mColorRemove;
-        private final int mColorNeutral;
-        private final Typeface mTypefaceNormal;
-        private final Typeface mTypefaceMedium;
-
-        WhatsNewRecyclerAdapter() {
-            mColorAdd = ColorCodes.getWhatsNewPlusIndicatorColor(mActivity);
-            mColorRemove = ColorCodes.getWhatsNewMinusIndicatorColor(mActivity);
-            mColorNeutral = UIUtils.getTextColorPrimary(mActivity);
-            mTypefaceNormal = Typeface.create("sans-serif", Typeface.NORMAL);
-            mTypefaceMedium = Typeface.create("sans-serif-medium", Typeface.NORMAL);
-        }
-
-        void setAdapterList(List<ApkWhatsNewFinder.Change> list) {
-            mAdapterList.clear();
-            mAdapterList.addAll(list);
-            notifyDataSetChanged();
-        }
-
-        @NonNull
-        @Override
-        public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            final View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_text_view, parent, false);
-            return new ViewHolder(view);
-        }
-
-        @SuppressLint("SetTextI18n")
-        @Override
-        public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            ApkWhatsNewFinder.Change change = mAdapterList.get(position);
-            if (change.value.startsWith(mNewPkgInfo.packageName)) {
-                change.value = change.value.replaceFirst(mNewPkgInfo.packageName, "");
-            }
-            switch (change.changeType) {
-                case ApkWhatsNewFinder.CHANGE_ADD:
-                    holder.textView.setText("+ " + change.value);
-                    holder.textView.setTextColor(mColorAdd);
-                    holder.textView.setTypeface(mTypefaceNormal);
-                    holder.textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-                    break;
-                case ApkWhatsNewFinder.CHANGE_INFO:
-                    holder.textView.setText(change.value);
-                    holder.textView.setTextColor(mColorNeutral);
-                    holder.textView.setTypeface(mTypefaceMedium);
-                    holder.textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16);
-                    break;
-                case ApkWhatsNewFinder.CHANGE_REMOVED:
-                    holder.textView.setText("- " + change.value);
-                    holder.textView.setTextColor(mColorRemove);
-                    holder.textView.setTypeface(mTypefaceNormal);
-                    holder.textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14);
-                    break;
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            return mAdapterList.size();
-        }
-
-        class ViewHolder extends RecyclerView.ViewHolder {
-            MaterialTextView textView;
-
-            public ViewHolder(@NonNull View itemView) {
-                super(itemView);
-                textView = (MaterialTextView) itemView;
-            }
-        }
     }
 }

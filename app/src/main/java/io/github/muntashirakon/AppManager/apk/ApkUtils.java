@@ -41,6 +41,7 @@ import io.github.muntashirakon.AppManager.apk.parser.AndroidBinXmlDecoder;
 import io.github.muntashirakon.AppManager.apk.splitapk.SplitApkExporter;
 import io.github.muntashirakon.AppManager.backup.BackupFiles;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.AppManager.utils.AppPref;
@@ -186,11 +187,28 @@ public final class ApkUtils {
             throws ApkFile.ApkFileException, IOException {
         HashMap<String, String> manifestAttrs = new HashMap<>();
         XMLDocument xmlDocument = AndroidBinXmlDecoder.decodeToXml(manifestBytes);
-        XMLElement xmlElement = xmlDocument.getDocumentElement();
-        if (!"manifest".equals(xmlElement.getTagName())) {
+        XMLElement manifestElement = xmlDocument.getDocumentElement();
+        if (!"manifest".equals(manifestElement.getTagName())) {
             throw new ApkFile.ApkFileException("No manifest found.");
         }
-        for (XMLAttribute attribute : xmlElement.listAttributes()) {
+        for (XMLAttribute attribute : manifestElement.listAttributes()) {
+            if (attribute.getName().isEmpty()) {
+                continue;
+            }
+            manifestAttrs.put(attribute.getName(), attribute.getValue());
+        }
+        XMLElement androidElement = null;
+        for (XMLElement elem : manifestElement.listChildElements()) {
+            if ("application".equals(elem.getTagName())) {
+                androidElement = elem;
+                break;
+            }
+        }
+        if (androidElement == null) {
+            Log.w("ApkUtils", "No application element found while parsing APK.");
+            return manifestAttrs;
+        }
+        for (XMLAttribute attribute : androidElement.listAttributes()) {
             if (attribute.getName().isEmpty()) {
                 continue;
             }

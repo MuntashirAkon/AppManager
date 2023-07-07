@@ -3,12 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <SwitchPreferenceCompat
-        app:key="installer_display_users"
-        app:title="@string/pref_options_in_installer"
-        app:summary="@string/pref_options_in_installer_msg"
-        app:iconSpaceReserved="false" />
-
-    <SwitchPreferenceCompat
         app:key="installer_sign_apk"
         app:title="@string/pref_sign_apk"
         app:summary="@string/pref_sign_apk_msg"

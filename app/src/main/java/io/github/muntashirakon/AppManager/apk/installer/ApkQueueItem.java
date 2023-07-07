@@ -50,6 +50,8 @@ public class ApkQueueItem implements Parcelable {
     private ApkFile.ApkSource mApkSource;
     @Nullable
     private InstallerOptions mInstallerOptions;
+    @Nullable
+    private ArrayList<String> mSelectedSplits;
 
     ApkQueueItem(@NonNull String packageName, boolean installExisting) {
         mPackageName = Objects.requireNonNull(packageName);
@@ -67,6 +69,8 @@ public class ApkQueueItem implements Parcelable {
         mInstallExisting = in.readByte() != 0;
         mApkSource = ParcelCompat.readParcelable(in, ApkFile.ApkSource.class.getClassLoader(), ApkFile.ApkSource.class);
         mInstallerOptions = ParcelCompat.readParcelable(in, InstallerOptions.class.getClassLoader(), InstallerOptions.class);
+        mSelectedSplits = new ArrayList<>();
+        in.readStringList(mSelectedSplits);
     }
 
     @Nullable
@@ -104,6 +108,15 @@ public class ApkQueueItem implements Parcelable {
         mInstallerOptions = installerOptions;
     }
 
+    public void setSelectedSplits(@NonNull ArrayList<String> selectedSplits) {
+        mSelectedSplits = selectedSplits;
+    }
+
+    @Nullable
+    public ArrayList<String> getSelectedSplits() {
+        return mSelectedSplits;
+    }
+
     @Nullable
     public String getAppLabel() {
         return mAppLabel;
@@ -125,6 +138,7 @@ public class ApkQueueItem implements Parcelable {
         dest.writeByte((byte) (mInstallExisting ? 1 : 0));
         dest.writeParcelable(mApkSource, flags);
         dest.writeParcelable(mInstallerOptions, flags);
+        dest.writeStringList(mSelectedSplits);
     }
 
     public static final Creator<ApkQueueItem> CREATOR = new Creator<ApkQueueItem>() {

@@ -1,0 +1,26 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!-- The sequence must be maintained. -->
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_container_view_tag"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="@dimen/padding_medium"
+        android:paddingVertical="@dimen/padding_large"
+        tools:text="@tools:sample/lorem" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" />
+</FrameLayout>

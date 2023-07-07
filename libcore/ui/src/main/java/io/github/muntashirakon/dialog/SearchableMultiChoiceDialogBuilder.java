@@ -419,14 +419,15 @@ public class SearchableMultiChoiceDialogBuilder<T> {
             holder.item.setChecked(selected.get());
             holder.item.setOnClickListener(v -> {
                 synchronized (mSelectedItems) {
-                    if (selected.get()) {
+                    boolean isSelected = selected.get();
+                    if (isSelected) {
                         mSelectedItems.remove(index);
                     } else mSelectedItems.add(index);
+                    selected.set(!isSelected);
+                    holder.item.setChecked(!isSelected);
+                    checkSelections();
+                    triggerMultiChoiceClickListener(index, selected.get());
                 }
-                selected.set(!selected.get());
-                holder.item.setChecked(selected.get());
-                checkSelections();
-                triggerMultiChoiceClickListener(index, selected.get());
             });
         }
 

@@ -23,14 +23,15 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.concurrent.Future;
 
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
-import io.github.muntashirakon.AppManager.users.UserInfo;
-import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.io.IoUtils;
@@ -45,13 +46,12 @@ public class PackageInstallerViewModel extends AndroidViewModel {
     private String mAppLabel;
     private Drawable mAppIcon;
     private boolean mIsSignatureDifferent = false;
-    @Nullable
-    private List<UserInfo> mUsers;
     private int mTrackerCount;
     @Nullable
     private Future<?> mPackageInfoResult;
     private final MutableLiveData<PackageInfo> mPackageInfoLiveData = new MutableLiveData<>();
     private final MutableLiveData<Boolean> mPackageUninstalledLiveData = new MutableLiveData<>();
+    private final Set<String> mSelectedSplits = new HashSet<>();
 
     public PackageInstallerViewModel(@NonNull Application application) {
         super(application);
@@ -80,6 +80,7 @@ public class PackageInstallerViewModel extends AndroidViewModel {
         if (mPackageInfoResult != null) {
             mPackageInfoResult.cancel(true);
         }
+        mSelectedSplits.clear();
         mPackageInfoResult = ThreadUtils.postOnBackgroundThread(() -> {
             try {
                 // Three possibilities: 1. Install-existing, 2. ApkFile, 3. Uri
@@ -149,9 +150,19 @@ public class PackageInstallerViewModel extends AndroidViewModel {
         return mIsSignatureDifferent;
     }
 
-    @Nullable
-    public List<UserInfo> getUsers() {
-        return mUsers;
+    public Set<String> getSelectedSplits() {
+        return mSelectedSplits;
+    }
+
+    @NonNull
+    public ArrayList<String> getSelectedSplitsForInstallation() {
+        if (mApkFile.isSplit()) {
+            if (mSelectedSplits.isEmpty()) {
+                throw new IllegalArgumentException("No splits selected.");
+            }
+            return new ArrayList<>(mSelectedSplits);
+        }
+        return new ArrayList<>(Collections.singletonList(mApkFile.getBaseEntry().id));
     }
 
     private void getPackageInfoInternal() throws PackageManager.NameNotFoundException, IOException, ApkFile.ApkFileException {
@@ -177,7 +188,6 @@ public class PackageInstallerViewModel extends AndroidViewModel {
         if (mNewPackageInfo != null && mInstalledPackageInfo != null) {
             mIsSignatureDifferent = PackageUtils.isSignatureDifferent(mNewPackageInfo, mInstalledPackageInfo);
         }
-        mUsers = Users.getUsers();
         mPackageInfoLiveData.postValue(mNewPackageInfo);
     }
 
@@ -193,7 +203,6 @@ public class PackageInstallerViewModel extends AndroidViewModel {
         if (mNewPackageInfo != null && mInstalledPackageInfo != null) {
             mIsSignatureDifferent = PackageUtils.isSignatureDifferent(mNewPackageInfo, mInstalledPackageInfo);
         }
-        mUsers = Users.getUsers();
         mPackageInfoLiveData.postValue(mNewPackageInfo);
     }
 

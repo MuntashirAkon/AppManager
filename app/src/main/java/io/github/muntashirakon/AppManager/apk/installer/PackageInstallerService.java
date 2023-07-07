@@ -29,6 +29,9 @@ import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.PendingIntentCompat;
 import androidx.core.app.ServiceCompat;
 
+import java.util.List;
+import java.util.Objects;
+
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
@@ -100,6 +103,7 @@ public class PackageInstallerService extends ForegroundService {
         InstallerOptions options = apkQueueItem.getInstallerOptions() != null
                 ? apkQueueItem.getInstallerOptions()
                 : new InstallerOptions();
+        List<String> selectedSplitIds = Objects.requireNonNull(apkQueueItem.getSelectedSplits());
         // Install package
         PackageInstallerCompat installer = PackageInstallerCompat.getNewInstance();
         installer.setAppLabel(apkQueueItem.getAppLabel());
@@ -114,7 +118,7 @@ public class PackageInstallerService extends ForegroundService {
             @Override
             public void onAnotherAttemptInMiui(@Nullable ApkFile apkFile) {
                 if (apkFile != null) {
-                    installer.install(apkFile, options, mProgressHandler);
+                    installer.install(apkFile, selectedSplitIds, options, mProgressHandler);
                 }
             }
             // MIUI-end
@@ -168,7 +172,7 @@ public class PackageInstallerService extends ForegroundService {
                 // No apk file, abort
                 return;
             }
-            installer.install(apkFile, options, mProgressHandler);
+            installer.install(apkFile, selectedSplitIds, options, mProgressHandler);
         }
     }
 

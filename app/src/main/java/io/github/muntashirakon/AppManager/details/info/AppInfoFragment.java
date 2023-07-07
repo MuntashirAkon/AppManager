@@ -1228,12 +1228,9 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                     // Needs update
                     addToHorizontalLayout(R.string.whats_new, io.github.muntashirakon.ui.R.drawable.ic_information)
                             .setOnClickListener(v -> {
-                                Bundle args = new Bundle();
-                                args.putParcelable(WhatsNewDialogFragment.ARG_NEW_PKG_INFO, mPackageInfo);
-                                args.putParcelable(WhatsNewDialogFragment.ARG_OLD_PKG_INFO, mInstalledPackageInfo);
-                                WhatsNewDialogFragment dialogFragment = new WhatsNewDialogFragment();
-                                dialogFragment.setArguments(args);
-                                dialogFragment.show(mActivity.getSupportFragmentManager(), WhatsNewDialogFragment.TAG);
+                                WhatsNewDialogFragment dialogFragment = WhatsNewDialogFragment
+                                        .getInstance(mPackageInfo, mInstalledPackageInfo);
+                                dialogFragment.show(getChildFragmentManager(), WhatsNewDialogFragment.TAG);
                             });
                     addToHorizontalLayout(R.string.update, R.drawable.ic_get_app).setOnClickListener(v -> install());
                 } else if (installedVersionCode == thisVersionCode) {

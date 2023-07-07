@@ -533,7 +533,7 @@
             android:excludeFromRecents="true"
             android:exported="true"
             android:label="@string/install"
-            android:launchMode="singleTop"
+            android:launchMode="singleInstance"
             android:taskAffinity=""
             android:theme="@style/AppTheme.TransparentBackground">
             <intent-filter>

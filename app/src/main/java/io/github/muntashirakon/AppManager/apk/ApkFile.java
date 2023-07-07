@@ -51,7 +51,6 @@ import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
@@ -153,10 +152,9 @@ public final class ApkFile implements AutoCloseable {
         };
     }
 
-    private static final String ANDROID_XML_NAMESPACE = "http" + "://schemas.android.com/apk/res/android";
-    private static final String ATTR_IS_FEATURE_SPLIT = ANDROID_XML_NAMESPACE + ":isFeatureSplit";
-    private static final String ATTR_IS_SPLIT_REQUIRED = ANDROID_XML_NAMESPACE + ":isSplitRequired";
-    private static final String ATTR_ISOLATED_SPLIT = ANDROID_XML_NAMESPACE + ":isolatedSplits";
+    private static final String ATTR_IS_FEATURE_SPLIT = "android:isFeatureSplit";
+    private static final String ATTR_IS_SPLIT_REQUIRED = "android:isSplitRequired";
+    private static final String ATTR_ISOLATED_SPLIT = "android:isolatedSplits";
     private static final String ATTR_CONFIG_FOR_SPLIT = "configForSplit";
     private static final String ATTR_SPLIT = "split";
     private static final String ATTR_PACKAGE = "package";
@@ -519,18 +517,6 @@ public final class ApkFile implements AutoCloseable {
         return null;
     }
 
-    @NonNull
-    public List<Entry> getSelectedEntries() {
-        List<Entry> selectedEntries = new ArrayList<>();
-        ListIterator<Entry> it = mEntries.listIterator();
-        Entry tmpEntry;
-        while (it.hasNext()) {
-            tmpEntry = it.next();
-            if (tmpEntry.isSelected() || tmpEntry.isRequired()) selectedEntries.add(tmpEntry);
-        }
-        return selectedEntries;
-    }
-
     @Nullable
     public ApksMetadata getApksMetadata() {
         return mApksMetadata;
@@ -561,14 +547,6 @@ public final class ApkFile implements AutoCloseable {
                 IoUtils.copy(zipInputStream, outputStream, -1, null);
             }
         }
-    }
-
-    public void select(int entry) {
-        mEntries.get(entry).mSelected = true;
-    }
-
-    public void deselect(int entry) {
-        mEntries.get(entry).mSelected = false;
     }
 
     @Override
@@ -606,6 +584,11 @@ public final class ApkFile implements AutoCloseable {
 
     public class Entry implements AutoCloseable, LocalizedString {
         /**
+         * Unique identifier capable of persisting across new instances. This is usually the file path (relative or
+         * absolute).
+         */
+        public final String id;
+        /**
          * Name of the file, for split apk, name of the split instead
          */
         @NonNull
@@ -636,7 +619,6 @@ public final class ApkFile implements AutoCloseable {
         private File mSignedFile;
         @Nullable
         private File mIdsigFile;
-        private boolean mSelected = false;
         private final boolean mRequired;
         private final boolean mIsolated;
 
@@ -648,10 +630,11 @@ public final class ApkFile implements AutoCloseable {
         public int rank = Integer.MAX_VALUE;
 
         Entry(@NonNull File source, @NonNull ByteBuffer manifest) {
-            this.name = "Base.apk";
             mSource = Objects.requireNonNull(source);
-            this.type = APK_BASE;
-            mSelected = mRequired = true;
+            id = source.getAbsolutePath();
+            name = "Base.apk";
+            type = APK_BASE;
+            mRequired = true;
             mIsolated = false;
             this.manifest = Objects.requireNonNull(manifest);
         }
@@ -661,7 +644,7 @@ public final class ApkFile implements AutoCloseable {
               @ApkType int type,
               @NonNull ByteBuffer manifest,
               @NonNull HashMap<String, String> manifestAttrs) {
-            this(name, type, manifest, manifestAttrs);
+            this(Objects.requireNonNull(zipEntry).getName(), name, type, manifest, manifestAttrs);
             mZipEntry = Objects.requireNonNull(zipEntry);
         }
 
@@ -670,21 +653,23 @@ public final class ApkFile implements AutoCloseable {
               @ApkType int type,
               @NonNull ByteBuffer manifest,
               @NonNull HashMap<String, String> manifestAttrs) {
-            this(name, type, manifest, manifestAttrs);
-            mSource = Objects.requireNonNull(source);
+            this(Objects.requireNonNull(source).getAbsolutePath(), name, type, manifest, manifestAttrs);
+            mSource = source;
         }
 
-        private Entry(@NonNull String name,
+        private Entry(@NonNull String id,
+                      @NonNull String name,
                       @ApkType int type,
                       @NonNull ByteBuffer manifest,
                       @NonNull HashMap<String, String> manifestAttrs) {
             Objects.requireNonNull(name);
             Objects.requireNonNull(manifest);
             Objects.requireNonNull(manifestAttrs);
+            this.id = id;
             this.manifest = manifest;
             if (type == APK_BASE) {
                 this.name = name;
-                mSelected = mRequired = true;
+                mRequired = true;
                 mIsolated = false;
                 this.type = APK_BASE;
             } else if (type == APK_SPLIT) {
@@ -694,7 +679,7 @@ public final class ApkFile implements AutoCloseable {
                 // Check if required
                 if (manifestAttrs.containsKey(ATTR_IS_SPLIT_REQUIRED)) {
                     String value = manifestAttrs.get(ATTR_IS_SPLIT_REQUIRED);
-                    mSelected = mRequired = value != null && Boolean.parseBoolean(value);
+                    mRequired = value != null && Boolean.parseBoolean(value);
                 } else mRequired = false;
                 // Check if isolated
                 if (manifestAttrs.containsKey(ATTR_ISOLATED_SPLIT)) {
@@ -880,13 +865,6 @@ public final class ApkFile implements AutoCloseable {
                 mCachedFile = mFileCache.getCachedFile(is, "apk");
                 return Objects.requireNonNull(mCachedFile);
             }
-        }
-
-        /**
-         * Whether the entry has been selected. Selected entries can be retrieved using {@link #getSelectedEntries()}.
-         */
-        public boolean isSelected() {
-            return mSelected;
         }
 
         /**
