@@ -3,6 +3,7 @@
 package io.github.muntashirakon.AppManager.main;
 
 import android.Manifest;
+import android.os.Build;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -104,7 +105,7 @@ public class MainBatchOpsHandler implements MultiSelectionView.OnSelectionChange
         mFreezeUnfreezeMenu.setVisible(mCanFreezeUnfreezePackages);
         mForceStopMenu.setVisible(mCanForceStopPackages);
         mClearDataCacheMenu.setVisible(mCanClearData || mCanClearCache);
-        mPreventBackgroundMenu.setVisible(mCanModifyAppOpMode);
+        mPreventBackgroundMenu.setVisible(mCanModifyAppOpMode && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N);
         mNetPolicyMenu.setVisible(mCanModifyNetPolicy);
         mBlockUnblockTrackersMenu.setVisible(mCanModifyComponentState);
     }
