@@ -499,7 +499,7 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
         if (viewModel != null) viewModel.onResume();
         if (mAdapter != null && mBatchOpsHandler != null && mAdapter.isInSelectionMode()) {
             mBatchOpsHandler.updateConstraints();
-            mBatchOpsHandler.onSelectionChange(0); // count is irrelevant
+            mMultiSelectionView.updateCounter(false);
         }
         registerReceiver(mBatchOpsBroadCastReceiver, new IntentFilter(BatchOpsService.ACTION_BATCH_OPS_COMPLETED));
     }

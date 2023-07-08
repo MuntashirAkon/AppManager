@@ -873,7 +873,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         }
 
         @Override
-        public void onSelectionChange(int selectionCount) {
+        public boolean onSelectionChange(int selectionCount) {
             boolean nonZeroSelection = selectionCount > 0;
             boolean canRead = mFolderShortInfo != null && mFolderShortInfo.canRead;
             boolean canWrite = mFolderShortInfo != null && mFolderShortInfo.canWrite;
@@ -883,6 +883,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
             mCutMenu.setEnabled(nonZeroSelection && canWrite);
             mCopyMenu.setEnabled(nonZeroSelection && canRead);
             mCopyPathsMenu.setEnabled(nonZeroSelection);
+            return false;
         }
     }
 }

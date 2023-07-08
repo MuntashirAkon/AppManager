@@ -126,8 +126,9 @@ public class DebloaterActivity extends BaseActivity implements MultiSelectionVie
     }
 
     @Override
-    public void onSelectionChange(int selectionCount) {
+    public boolean onSelectionChange(int selectionCount) {
         // TODO: 7/8/22
+        return false;
     }
 
     @Override

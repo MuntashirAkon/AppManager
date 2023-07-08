@@ -41,6 +41,7 @@ public class LiveLogViewerFragment extends AbsLogViewerFragment implements LogVi
             } else if (selectionCount == 0) {
                 mViewModel.resumeLogcat();
             }
+            return false;
         });
         mViewModel.startLogcat(new WeakReference<>(this));
     }

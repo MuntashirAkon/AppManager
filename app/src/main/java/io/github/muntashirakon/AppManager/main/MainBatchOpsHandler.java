@@ -66,7 +66,7 @@ public class MainBatchOpsHandler implements MultiSelectionView.OnSelectionChange
     }
 
     @Override
-    public void onSelectionChange(int selectionCount) {
+    public boolean onSelectionChange(int selectionCount) {
         Collection<ApplicationItem> selectedItems = mViewModel.getSelectedApplicationItems();
         boolean nonZeroSelection = selectedItems.size() > 0;
         // It was ensured that the algorithm is greedy
@@ -108,5 +108,6 @@ public class MainBatchOpsHandler implements MultiSelectionView.OnSelectionChange
         mPreventBackgroundMenu.setVisible(mCanModifyAppOpMode && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N);
         mNetPolicyMenu.setVisible(mCanModifyNetPolicy);
         mBlockUnblockTrackersMenu.setVisible(mCanModifyComponentState);
+        return true;
     }
 }

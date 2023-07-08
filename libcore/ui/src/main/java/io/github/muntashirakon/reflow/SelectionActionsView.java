@@ -242,6 +242,10 @@ public class SelectionActionsView extends LinearLayoutCompat {
         return mMenuAdapter;
     }
 
+    public void updateMenuView() {
+        mMenuAdapter.updateMenuView();
+    }
+
     /**
      * Inflate a menu resource into this navigation view.
      *

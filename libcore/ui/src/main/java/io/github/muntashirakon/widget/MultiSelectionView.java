@@ -47,8 +47,15 @@ import io.github.muntashirakon.util.UiUtils;
 @SuppressLint("RestrictedApi")
 public class MultiSelectionView extends MaterialCardView implements OnApplyWindowInsetsListener {
     public interface OnSelectionChangeListener {
+        /**
+         * Called when the number of selections has changed or an update is required internally or via
+         * {@link #updateCounter(boolean)}.
+         *
+         * @param selectionCount Present selection count
+         * @return {@code true} if it's necessary to update the visibility of menu items, or {@code false} otherwise.
+         */
         @UiThread
-        void onSelectionChange(int selectionCount);
+        boolean onSelectionChange(int selectionCount);
     }
 
     private final SelectionActionsView mSelectionActionsView;
@@ -356,8 +363,8 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
         int selectionCount = mAdapter.getSelectedItemCount();
         if (selectionCount <= 0 && hideOnEmpty) {
             if (getVisibility() != GONE) hide();
-            if (mSelectionChangeListener != null) {
-                mSelectionChangeListener.onSelectionChange(0);
+            if (mSelectionChangeListener != null && mSelectionChangeListener.onSelectionChange(0)) {
+                mSelectionActionsView.updateMenuView();
             }
             return;
         }
@@ -366,8 +373,8 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
         }
         mSelectionCounter.setText(String.format(Locale.getDefault(), "%d/%d", selectionCount, mAdapter.getTotalItemCount()));
         mSelectAllView.setChecked(mAdapter.areAllSelected(), false);
-        if (mSelectionChangeListener != null) {
-            mSelectionChangeListener.onSelectionChange(selectionCount);
+        if (mSelectionChangeListener != null && mSelectionChangeListener.onSelectionChange(selectionCount)) {
+            mSelectionActionsView.updateMenuView();
         }
         if (!mAdapter.isInSelectionMode()) {
             // Special check to avoid displaying the selection panel on resizing the view
