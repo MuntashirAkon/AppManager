@@ -18,25 +18,24 @@ import androidx.appcompat.view.menu.MenuItemImpl;
  */
 // Copyright 2020 The Android Open Source Project
 @SuppressLint("RestrictedApi")
-public final class ReflowMenu extends MenuBuilder {
+final class ReflowMenu extends MenuBuilder {
     @NonNull
-    private final Class<?> viewClass;
+    private final Class<?> mViewClass;
 
     public ReflowMenu(@NonNull Context context, @NonNull Class<?> viewClass) {
         super(context);
-        this.viewClass = viewClass;
+        mViewClass = viewClass;
     }
 
     @NonNull
     @Override
     public SubMenu addSubMenu(int group, int id, int categoryOrder, @NonNull CharSequence title) {
-        throw new UnsupportedOperationException(viewClass.getSimpleName() + " does not support submenus");
+        throw new UnsupportedOperationException(mViewClass.getSimpleName() + " does not support submenus");
     }
 
     @Override
     @NonNull
-    protected MenuItem addInternal(
-            int group, int id, int categoryOrder, @NonNull CharSequence title) {
+    protected MenuItem addInternal(int group, int id, int categoryOrder, @NonNull CharSequence title) {
         stopDispatchingItemsChanged();
         final MenuItem item = super.addInternal(group, id, categoryOrder, title);
         if (item instanceof MenuItemImpl) {

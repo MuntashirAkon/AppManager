@@ -18,35 +18,35 @@ import androidx.appcompat.view.menu.SubMenuBuilder;
 
 // Copyright 2020 The Android Open Source Project
 @SuppressLint("RestrictedApi")
-public class ReflowMenuPresenter implements MenuPresenter {
-    private SelectionMenuAdapter menuView;
-    private boolean updateSuspended = false;
-    private int id;
+class ReflowMenuPresenter implements MenuPresenter {
+    private SelectionMenuAdapter mMenuView;
+    private boolean mUpdateSuspended = false;
+    private int mId;
 
     public void setMenuView(@NonNull SelectionMenuAdapter menuView) {
-        this.menuView = menuView;
+        mMenuView = menuView;
     }
 
     @Override
     public void initForMenu(@NonNull Context context, @NonNull MenuBuilder menu) {
-        menuView.initialize(menu);
+        mMenuView.initialize(menu);
     }
 
     @Override
     @Nullable
     public MenuView getMenuView(@Nullable ViewGroup root) {
-        return menuView;
+        return mMenuView;
     }
 
     @Override
     public void updateMenuView(boolean cleared) {
-        if (updateSuspended) {
+        if (mUpdateSuspended) {
             return;
         }
         if (cleared) {
-            menuView.buildMenuView();
+            mMenuView.buildMenuView();
         } else {
-            menuView.updateMenuView();
+            mMenuView.updateMenuView();
         }
     }
 
@@ -79,43 +79,34 @@ public class ReflowMenuPresenter implements MenuPresenter {
     }
 
     public void setId(int id) {
-        this.id = id;
+        mId = id;
     }
 
     @Override
     public int getId() {
-        return id;
+        return mId;
     }
 
-    @SuppressLint("UnsafeOptInUsageError")
+
     @NonNull
     @Override
     public Parcelable onSaveInstanceState() {
-        SavedState savedState = new SavedState();
-        savedState.selectedItemId = menuView.getSelectedItemId();
-        return savedState;
+        return new SavedState();
     }
 
-    @SuppressLint("UnsafeOptInUsageError")
     @Override
     public void onRestoreInstanceState(@NonNull Parcelable state) {
-        if (state instanceof SavedState) {
-            menuView.tryRestoreSelectedItemId(((SavedState) state).selectedItemId);
-        }
     }
 
     public void setUpdateSuspended(boolean updateSuspended) {
-        this.updateSuspended = updateSuspended;
+        mUpdateSuspended = updateSuspended;
     }
 
     static class SavedState implements Parcelable {
-        int selectedItemId;
-
         SavedState() {
         }
 
         SavedState(@NonNull Parcel in) {
-            selectedItemId = in.readInt();
         }
 
         @Override
@@ -125,22 +116,20 @@ public class ReflowMenuPresenter implements MenuPresenter {
 
         @Override
         public void writeToParcel(@NonNull Parcel out, int flags) {
-            out.writeInt(selectedItemId);
         }
 
-        public static final Creator<SavedState> CREATOR =
-                new Creator<SavedState>() {
-                    @NonNull
-                    @Override
-                    public SavedState createFromParcel(@NonNull Parcel in) {
-                        return new SavedState(in);
-                    }
+        public static final Creator<SavedState> CREATOR = new Creator<SavedState>() {
+            @NonNull
+            @Override
+            public SavedState createFromParcel(@NonNull Parcel in) {
+                return new SavedState(in);
+            }
 
-                    @NonNull
-                    @Override
-                    public SavedState[] newArray(int size) {
-                        return new SavedState[size];
-                    }
-                };
+            @NonNull
+            @Override
+            public SavedState[] newArray(int size) {
+                return new SavedState[size];
+            }
+        };
     }
 }

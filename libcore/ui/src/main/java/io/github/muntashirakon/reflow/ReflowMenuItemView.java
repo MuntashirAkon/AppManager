@@ -42,24 +42,22 @@ import io.github.muntashirakon.ui.R;
 // Copyright 2020 The Android Open Source Project
 @SuppressLint("RestrictedApi")
 public final class ReflowMenuItemView extends MaterialCardView implements MenuView.ItemView {
-    private static final int INVALID_ITEM_POSITION = -1;
     private static final int[] CHECKED_STATE_SET = {android.R.attr.state_checked};
 
-    private final ImageView icon;
-    private final TextView label;
-    private int itemPosition = INVALID_ITEM_POSITION;
+    private final ImageView mIcon;
+    private final TextView mLabel;
 
     @Nullable
-    private MenuItemImpl itemData;
+    private MenuItemImpl mItemData;
 
     @Nullable
-    private ColorStateList iconTint;
+    private ColorStateList mIconTint;
     @Nullable
-    private Drawable originalIconDrawable;
+    private Drawable mOriginalIconDrawable;
     @Nullable
-    private Drawable wrappedIconDrawable;
+    private Drawable mWrappedIconDrawable;
 
-    private boolean activeBackgroundEnabled = false;
+    private boolean mActiveBackgroundEnabled = false;
 
     public ReflowMenuItemView(Context context) {
         this(context, null);
@@ -74,33 +72,33 @@ public final class ReflowMenuItemView extends MaterialCardView implements MenuVi
 
         // Inflate layout
         LayoutInflater.from(context).inflate(R.layout.item_reflow_menu, this, true);
-        icon = findViewById(R.id.icon);
-        label = findViewById(R.id.label);
+        mIcon = findViewById(R.id.icon);
+        mLabel = findViewById(R.id.label);
 
-        ViewCompat.setImportantForAccessibility(label, ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_YES);
+        ViewCompat.setImportantForAccessibility(mLabel, ViewCompat.IMPORTANT_FOR_ACCESSIBILITY_YES);
         setFocusable(true);
     }
 
     @Override
     protected int getSuggestedMinimumWidth() {
-        LinearLayoutCompat.LayoutParams labelGroupParams = (LinearLayoutCompat.LayoutParams) label.getLayoutParams();
-        int labelWidth = labelGroupParams.leftMargin + label.getMeasuredWidth() + labelGroupParams.rightMargin;
+        LinearLayoutCompat.LayoutParams labelGroupParams = (LinearLayoutCompat.LayoutParams) mLabel.getLayoutParams();
+        int labelWidth = labelGroupParams.leftMargin + mLabel.getMeasuredWidth() + labelGroupParams.rightMargin;
 
         return max(getSuggestedIconWidth(), labelWidth);
     }
 
     @Override
     protected int getSuggestedMinimumHeight() {
-        LinearLayoutCompat.LayoutParams labelGroupParams = (LinearLayoutCompat.LayoutParams) label.getLayoutParams();
+        LinearLayoutCompat.LayoutParams labelGroupParams = (LinearLayoutCompat.LayoutParams) mLabel.getLayoutParams();
         return getSuggestedIconHeight()
                 + labelGroupParams.topMargin
-                + label.getMeasuredHeight()
+                + mLabel.getMeasuredHeight()
                 + labelGroupParams.bottomMargin;
     }
 
     @Override
     public void initialize(@NonNull MenuItemImpl itemData, int menuType) {
-        this.itemData = itemData;
+        mItemData = itemData;
         setCheckable(itemData.isCheckable());
         setChecked(itemData.isChecked());
         setEnabled(itemData.isEnabled());
@@ -130,33 +128,25 @@ public final class ReflowMenuItemView extends MaterialCardView implements MenuVi
      * might not container an icon container or active indicator view.
      */
     private View getIconOrContainer() {
-        return icon;
-    }
-
-    public void setItemPosition(int position) {
-        itemPosition = position;
-    }
-
-    public int getItemPosition() {
-        return itemPosition;
+        return mIcon;
     }
 
     @Override
     @Nullable
     public MenuItemImpl getItemData() {
-        return itemData;
+        return mItemData;
     }
 
     @Override
     public void setTitle(@Nullable CharSequence title) {
-        label.setText(title);
-        if (itemData == null || TextUtils.isEmpty(itemData.getContentDescription())) {
+        mLabel.setText(title);
+        if (mItemData == null || TextUtils.isEmpty(mItemData.getContentDescription())) {
             setContentDescription(title);
         }
 
-        CharSequence tooltipText = itemData == null || TextUtils.isEmpty(itemData.getTooltipText())
+        CharSequence tooltipText = mItemData == null || TextUtils.isEmpty(mItemData.getTooltipText())
                 ? title
-                : itemData.getTooltipText();
+                : mItemData.getTooltipText();
         // Avoid calling tooltip for L and M devices because long pressing twice may freeze devices.
         if (VERSION.SDK_INT > VERSION_CODES.M) {
             TooltipCompat.setTooltipText(this, tooltipText);
@@ -170,8 +160,8 @@ public final class ReflowMenuItemView extends MaterialCardView implements MenuVi
 
     @Override
     public void setChecked(boolean checked) {
-        label.setPivotX(label.getWidth() / 2F);
-        label.setPivotY(label.getBaseline());
+        mLabel.setPivotX(mLabel.getWidth() / 2F);
+        mLabel.setPivotY(mLabel.getBaseline());
 
         refreshDrawableState();
 
@@ -221,8 +211,8 @@ public final class ReflowMenuItemView extends MaterialCardView implements MenuVi
     @Override
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
-        label.setEnabled(enabled);
-        icon.setEnabled(enabled);
+        mLabel.setEnabled(enabled);
+        mIcon.setEnabled(enabled);
 
         if (enabled) {
             ViewCompat.setPointerIcon(this, PointerIconCompat.getSystemIcon(getContext(), PointerIconCompat.TYPE_HAND));
@@ -235,7 +225,7 @@ public final class ReflowMenuItemView extends MaterialCardView implements MenuVi
     @NonNull
     public int[] onCreateDrawableState(final int extraSpace) {
         final int[] drawableState = super.onCreateDrawableState(extraSpace + 1);
-        if (activeBackgroundEnabled && itemData != null && itemData.isCheckable() && itemData.isChecked()) {
+        if (mActiveBackgroundEnabled && mItemData != null && mItemData.isCheckable() && mItemData.isChecked()) {
             mergeDrawableStates(drawableState, CHECKED_STATE_SET);
         }
         return drawableState;
@@ -247,21 +237,21 @@ public final class ReflowMenuItemView extends MaterialCardView implements MenuVi
 
     @Override
     public void setIcon(@Nullable Drawable iconDrawable) {
-        if (iconDrawable == originalIconDrawable) {
+        if (iconDrawable == mOriginalIconDrawable) {
             return;
         }
 
         // Save the original icon to check if it has changed in future calls of this method.
-        originalIconDrawable = iconDrawable;
+        mOriginalIconDrawable = iconDrawable;
         if (iconDrawable != null) {
             Drawable.ConstantState state = iconDrawable.getConstantState();
             iconDrawable = DrawableCompat.wrap(state == null ? iconDrawable : state.newDrawable()).mutate();
-            wrappedIconDrawable = iconDrawable;
-            if (iconTint != null) {
-                DrawableCompat.setTintList(wrappedIconDrawable, iconTint);
+            mWrappedIconDrawable = iconDrawable;
+            if (mIconTint != null) {
+                DrawableCompat.setTintList(mWrappedIconDrawable, mIconTint);
             }
         }
-        this.icon.setImageDrawable(iconDrawable);
+        mIcon.setImageDrawable(iconDrawable);
     }
 
     @Override
@@ -275,31 +265,31 @@ public final class ReflowMenuItemView extends MaterialCardView implements MenuVi
     }
 
     public void setIconTintList(@Nullable ColorStateList tint) {
-        iconTint = tint;
-        if (itemData != null && wrappedIconDrawable != null) {
-            DrawableCompat.setTintList(wrappedIconDrawable, iconTint);
-            wrappedIconDrawable.invalidateSelf();
+        mIconTint = tint;
+        if (mItemData != null && mWrappedIconDrawable != null) {
+            DrawableCompat.setTintList(mWrappedIconDrawable, mIconTint);
+            mWrappedIconDrawable.invalidateSelf();
         }
     }
 
     public void setIconSize(int iconSize) {
-        LinearLayoutCompat.LayoutParams iconParams = (LinearLayoutCompat.LayoutParams) icon.getLayoutParams();
+        LinearLayoutCompat.LayoutParams iconParams = (LinearLayoutCompat.LayoutParams) mIcon.getLayoutParams();
         iconParams.width = iconSize;
         iconParams.height = iconSize;
-        icon.setLayoutParams(iconParams);
+        mIcon.setLayoutParams(iconParams);
     }
 
     public void setTextAppearanceInactive(@StyleRes int inactiveTextAppearance) {
-        TextViewCompat.setTextAppearance(label, inactiveTextAppearance);
+        TextViewCompat.setTextAppearance(mLabel, inactiveTextAppearance);
     }
 
     public void setTextAppearanceActive(@StyleRes int activeTextAppearance) {
-        TextViewCompat.setTextAppearance(label, activeTextAppearance);
+        TextViewCompat.setTextAppearance(mLabel, activeTextAppearance);
     }
 
     public void setTextColor(@Nullable ColorStateList color) {
         if (color != null) {
-            label.setTextColor(color);
+            mLabel.setTextColor(color);
         }
     }
 
@@ -319,19 +309,19 @@ public final class ReflowMenuItemView extends MaterialCardView implements MenuVi
      * Set whether or not this item should show an active indicator when checked.
      */
     public void setActiveBackgroundEnabled(boolean enabled) {
-        this.activeBackgroundEnabled = enabled;
+        mActiveBackgroundEnabled = enabled;
         requestLayout();
     }
 
     private int getSuggestedIconWidth() {
         LinearLayoutCompat.LayoutParams iconContainerParams = (LinearLayoutCompat.LayoutParams) getIconOrContainer().getLayoutParams();
         return iconContainerParams.leftMargin
-                + icon.getMeasuredWidth()
+                + mIcon.getMeasuredWidth()
                 + iconContainerParams.rightMargin;
     }
 
     private int getSuggestedIconHeight() {
         LinearLayoutCompat.LayoutParams iconContainerParams = (LinearLayoutCompat.LayoutParams) getIconOrContainer().getLayoutParams();
-        return iconContainerParams.topMargin + icon.getMeasuredWidth();
+        return iconContainerParams.topMargin + mIcon.getMeasuredWidth();
     }
 }

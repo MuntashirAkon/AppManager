@@ -60,26 +60,25 @@ public class SelectionActionsView extends LinearLayoutCompat {
     private static final int DEFAULT_COLUMN_SIZE = 5;
 
     @NonNull
-    private final ReflowMenu menu;
+    private final ReflowMenu mMenu;
     @NonNull
-    private final RecyclerView menuView;
-    private final SelectionMenuAdapter menuAdapter;
+    private final RecyclerView mMenuView;
+    private final SelectionMenuAdapter mMenuAdapter;
     @NonNull
-    private final ReflowMenuPresenter presenter = new ReflowMenuPresenter();
-    private MenuInflater menuInflater;
+    private final ReflowMenuPresenter mPresenter = new ReflowMenuPresenter();
+    private MenuInflater mMenuInflater;
 
-    private OnItemSelectedListener selectedListener;
-    private OnItemReselectedListener reselectedListener;
+    private OnItemSelectedListener mSelectedListener;
 
     public SelectionActionsView(Context context) {
         this(context, null);
     }
 
-    public SelectionActionsView(Context context, AttributeSet attrs) {
+    public SelectionActionsView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, com.google.android.material.R.attr.bottomNavigationStyle);
     }
 
-    public SelectionActionsView(Context context, AttributeSet attrs, @AttrRes int defStyleAttr) {
+    public SelectionActionsView(Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         this(context, attrs, defStyleAttr, com.google.android.material.R.style.Widget_Design_BottomNavigationView);
     }
 
@@ -105,24 +104,24 @@ public class SelectionActionsView extends LinearLayoutCompat {
                         R.styleable.ReflowMenuViewWrapper_itemTextAppearanceActive);
 
         // Create the menu.
-        this.menu = new ReflowMenu(context, this.getClass());
+        mMenu = new ReflowMenu(context, this.getClass());
 
         // Create the menu view.
-        menuView = createNavigationBarMenuView(context);
-        menuView.setLayoutManager(new GridLayoutManager(context, UiUtils.getColumnCount(this, MIN_COLUMN_WIDTH_DP, DEFAULT_COLUMN_SIZE)));
-        menuAdapter = new SelectionMenuAdapter(context, View.EMPTY_STATE_SET);
-        menuView.setAdapter(menuAdapter);
+        mMenuView = createNavigationBarMenuView(context);
+        mMenuView.setLayoutManager(new GridLayoutManager(context, UiUtils.getColumnCount(this, MIN_COLUMN_WIDTH_DP, DEFAULT_COLUMN_SIZE)));
+        mMenuAdapter = new SelectionMenuAdapter(context, View.EMPTY_STATE_SET);
+        mMenuView.setAdapter(mMenuAdapter);
 
-        presenter.setMenuView(menuAdapter);
-        presenter.setId(MENU_PRESENTER_ID);
-        menuAdapter.setPresenter(presenter);
-        this.menu.addMenuPresenter(presenter);
-        presenter.initForMenu(getContext(), this.menu);
+        mPresenter.setMenuView(mMenuAdapter);
+        mPresenter.setId(MENU_PRESENTER_ID);
+        mMenuAdapter.setPresenter(mPresenter);
+        mMenu.addMenuPresenter(mPresenter);
+        mPresenter.initForMenu(getContext(), mMenu);
 
         if (attributes.hasValue(R.styleable.ReflowMenuViewWrapper_itemIconTint)) {
-            menuAdapter.setIconTintList(attributes.getColorStateList(R.styleable.ReflowMenuViewWrapper_itemIconTint));
+            mMenuAdapter.setIconTintList(attributes.getColorStateList(R.styleable.ReflowMenuViewWrapper_itemIconTint));
         } else {
-            menuAdapter.setIconTintList(menuAdapter.createDefaultColorStateList(android.R.attr.textColorSecondary));
+            mMenuAdapter.setIconTintList(mMenuAdapter.createDefaultColorStateList(android.R.attr.textColorSecondary));
         }
 
         setItemIconSize(attributes.getDimensionPixelSize(
@@ -158,7 +157,7 @@ public class SelectionActionsView extends LinearLayoutCompat {
 
         int itemBackground = attributes.getResourceId(R.styleable.ReflowMenuViewWrapper_itemBackground, 0);
         if (itemBackground != 0) {
-            menuAdapter.setItemBackgroundRes(itemBackground);
+            mMenuAdapter.setItemBackgroundRes(itemBackground);
         }
 
         if (attributes.hasValue(R.styleable.ReflowMenuViewWrapper_menu)) {
@@ -167,17 +166,13 @@ public class SelectionActionsView extends LinearLayoutCompat {
 
         attributes.recycle();
 
-        addView(menuView);
+        addView(mMenuView);
 
-        this.menu.setCallback(
+        mMenu.setCallback(
                 new MenuBuilder.Callback() {
                     @Override
                     public boolean onMenuItemSelected(@NonNull MenuBuilder menu, @NonNull MenuItem item) {
-                        if (reselectedListener != null && item.getItemId() == getSelectedItemId()) {
-                            reselectedListener.onNavigationItemReselected(item);
-                            return true; // item is already selected
-                        }
-                        return selectedListener != null && !selectedListener.onNavigationItemSelected(item);
+                        return mSelectedListener != null && !mSelectedListener.onNavigationItemSelected(item);
                     }
 
                     @Override
@@ -201,14 +196,13 @@ public class SelectionActionsView extends LinearLayoutCompat {
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
         if (w != oldw) {
-            menuView.setLayoutManager(new GridLayoutManager(getContext(), UiUtils.getColumnCount(this, MIN_COLUMN_WIDTH_DP, DEFAULT_COLUMN_SIZE)));
+            mMenuView.setLayoutManager(new GridLayoutManager(getContext(), UiUtils.getColumnCount(this, MIN_COLUMN_WIDTH_DP, DEFAULT_COLUMN_SIZE)));
         }
     }
 
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-
         MaterialShapeUtils.setParentAbsoluteElevation(this);
     }
 
@@ -224,26 +218,12 @@ public class SelectionActionsView extends LinearLayoutCompat {
     }
 
     /**
-     * Set a listener that will be notified when a navigation item is selected. This listener will
-     * also be notified when the currently selected item is reselected, unless an {@link
-     * OnItemReselectedListener} has also been set.
+     * Set a listener that will be notified when a navigation item is selected.
      *
      * @param listener The listener to notify
-     * @see #setOnItemReselectedListener(OnItemReselectedListener)
      */
     public void setOnItemSelectedListener(@Nullable OnItemSelectedListener listener) {
-        selectedListener = listener;
-    }
-
-    /**
-     * Set a listener that will be notified when the currently selected navigation item is reselected.
-     * This does not require an {@link OnItemSelectedListener} to be set.
-     *
-     * @param listener The listener to notify
-     * @see #setOnItemSelectedListener(OnItemSelectedListener)
-     */
-    public void setOnItemReselectedListener(@Nullable OnItemReselectedListener listener) {
-        reselectedListener = listener;
+        mSelectedListener = listener;
     }
 
     /**
@@ -251,7 +231,7 @@ public class SelectionActionsView extends LinearLayoutCompat {
      */
     @NonNull
     public Menu getMenu() {
-        return menu;
+        return mMenu;
     }
 
     /**
@@ -259,7 +239,7 @@ public class SelectionActionsView extends LinearLayoutCompat {
      */
     @NonNull
     public MenuView getMenuView() {
-        return menuAdapter;
+        return mMenuAdapter;
     }
 
     /**
@@ -270,10 +250,10 @@ public class SelectionActionsView extends LinearLayoutCompat {
      * @param resId ID of a menu resource to inflate
      */
     public void inflateMenu(int resId) {
-        presenter.setUpdateSuspended(true);
-        getMenuInflater().inflate(resId, menu);
-        presenter.setUpdateSuspended(false);
-        presenter.updateMenuView(true);
+        mPresenter.setUpdateSuspended(true);
+        getMenuInflater().inflate(resId, mMenu);
+        mPresenter.setUpdateSuspended(false);
+        mPresenter.updateMenuView(true);
     }
 
     /**
@@ -284,7 +264,7 @@ public class SelectionActionsView extends LinearLayoutCompat {
      */
     @Nullable
     public ColorStateList getItemIconTintList() {
-        return menuAdapter.getIconTintList();
+        return mMenuAdapter.getIconTintList();
     }
 
     /**
@@ -294,7 +274,7 @@ public class SelectionActionsView extends LinearLayoutCompat {
      * @see R.styleable#ReflowMenuViewWrapper_itemIconTint
      */
     public void setItemIconTintList(@Nullable ColorStateList tint) {
-        menuAdapter.setIconTintList(tint);
+        mMenuAdapter.setIconTintList(tint);
     }
 
     /**
@@ -306,7 +286,7 @@ public class SelectionActionsView extends LinearLayoutCompat {
      * @see R.styleable#ReflowMenuViewWrapper_itemIconSize
      */
     public void setItemIconSize(@Dimension int iconSize) {
-        menuAdapter.setItemIconSize(iconSize);
+        mMenuAdapter.setItemIconSize(iconSize);
     }
 
     /**
@@ -329,7 +309,7 @@ public class SelectionActionsView extends LinearLayoutCompat {
      */
     @Dimension
     public int getItemIconSize() {
-        return menuAdapter.getItemIconSize();
+        return mMenuAdapter.getItemIconSize();
     }
 
     /**
@@ -342,7 +322,7 @@ public class SelectionActionsView extends LinearLayoutCompat {
      */
     @Nullable
     public ColorStateList getItemTextColor() {
-        return menuAdapter.getItemTextColor();
+        return mMenuAdapter.getItemTextColor();
     }
 
     /**
@@ -353,7 +333,7 @@ public class SelectionActionsView extends LinearLayoutCompat {
      * @see #getItemTextColor()
      */
     public void setItemTextColor(@Nullable ColorStateList textColor) {
-        menuAdapter.setItemTextColor(textColor);
+        mMenuAdapter.setItemTextColor(textColor);
     }
 
     /**
@@ -366,7 +346,7 @@ public class SelectionActionsView extends LinearLayoutCompat {
     @Deprecated
     @DrawableRes
     public int getItemBackgroundResource() {
-        return menuAdapter.getItemBackgroundRes();
+        return mMenuAdapter.getItemBackgroundRes();
     }
 
     /**
@@ -376,7 +356,7 @@ public class SelectionActionsView extends LinearLayoutCompat {
      * @see R.styleable#ReflowMenuViewWrapper_itemBackground
      */
     public void setItemBackgroundResource(@DrawableRes int resId) {
-        menuAdapter.setItemBackgroundRes(resId);
+        mMenuAdapter.setItemBackgroundRes(resId);
     }
 
     /**
@@ -387,7 +367,7 @@ public class SelectionActionsView extends LinearLayoutCompat {
      */
     @Nullable
     public Drawable getItemBackground() {
-        return menuAdapter.getItemBackground();
+        return mMenuAdapter.getItemBackground();
     }
 
     /**
@@ -397,7 +377,7 @@ public class SelectionActionsView extends LinearLayoutCompat {
      * @see R.styleable#ReflowMenuViewWrapper_itemBackground
      */
     public void setItemBackground(@Nullable Drawable background) {
-        menuAdapter.setItemBackground(background);
+        mMenuAdapter.setItemBackground(background);
     }
 
     /**
@@ -406,7 +386,7 @@ public class SelectionActionsView extends LinearLayoutCompat {
      * @return true if an active background will be shown when an item is selected.
      */
     public boolean isItemActiveBackgroundEnabled() {
-        return menuAdapter.getItemActiveBackgroundEnabled();
+        return mMenuAdapter.getItemActiveBackgroundEnabled();
     }
 
     /**
@@ -415,29 +395,18 @@ public class SelectionActionsView extends LinearLayoutCompat {
      * @param enabled true if a selected item should show an active background.
      */
     public void setItemActiveBackgroundEnabled(boolean enabled) {
-        menuAdapter.setItemActiveBackgroundEnabled(enabled);
-    }
-
-    /**
-     * Returns the currently selected menu item ID, or zero if there is no menu.
-     *
-     * @see #setSelectedItemId(int)
-     */
-    @IdRes
-    public int getSelectedItemId() {
-        return menuAdapter.getSelectedItemId();
+        mMenuAdapter.setItemActiveBackgroundEnabled(enabled);
     }
 
     /**
      * Set the selected menu item ID. This behaves the same as tapping on an item.
      *
      * @param itemId The menu item ID. If no item has this ID, the current selection is unchanged.
-     * @see #getSelectedItemId()
      */
-    public void setSelectedItemId(@IdRes int itemId) {
-        MenuItem item = menu.findItem(itemId);
+    public void performItemAction(@IdRes int itemId) {
+        MenuItem item = mMenu.findItem(itemId);
         if (item != null) {
-            if (!menu.performItemAction(item, presenter, 0)) {
+            if (!mMenu.performItemAction(item, mPresenter, 0)) {
                 item.setChecked(true);
             }
         }
@@ -449,7 +418,7 @@ public class SelectionActionsView extends LinearLayoutCompat {
      * @param textAppearanceRes the text appearance ID used for inactive menu item labels
      */
     public void setItemTextAppearanceInactive(@StyleRes int textAppearanceRes) {
-        menuAdapter.setItemTextAppearanceInactive(textAppearanceRes);
+        mMenuAdapter.setItemTextAppearanceInactive(textAppearanceRes);
     }
 
     /**
@@ -459,7 +428,7 @@ public class SelectionActionsView extends LinearLayoutCompat {
      */
     @StyleRes
     public int getItemTextAppearanceInactive() {
-        return menuAdapter.getItemTextAppearanceInactive();
+        return mMenuAdapter.getItemTextAppearanceInactive();
     }
 
     /**
@@ -468,7 +437,7 @@ public class SelectionActionsView extends LinearLayoutCompat {
      * @param textAppearanceRes the text appearance ID used for menu item labels
      */
     public void setItemTextAppearanceActive(@StyleRes int textAppearanceRes) {
-        menuAdapter.setItemTextAppearanceActive(textAppearanceRes);
+        mMenuAdapter.setItemTextAppearanceActive(textAppearanceRes);
     }
 
     /**
@@ -478,7 +447,7 @@ public class SelectionActionsView extends LinearLayoutCompat {
      */
     @StyleRes
     public int getItemTextAppearanceActive() {
-        return menuAdapter.getItemTextAppearanceActive();
+        return mMenuAdapter.getItemTextAppearanceActive();
     }
 
     /**
@@ -486,7 +455,7 @@ public class SelectionActionsView extends LinearLayoutCompat {
      * provided {@code menuItemId}.
      */
     public void setItemOnTouchListener(int menuItemId, @Nullable OnTouchListener onTouchListener) {
-        menuAdapter.setItemOnTouchListener(menuItemId, onTouchListener);
+        mMenuAdapter.setItemOnTouchListener(menuItemId, onTouchListener);
     }
 
     /**
@@ -505,19 +474,6 @@ public class SelectionActionsView extends LinearLayoutCompat {
         boolean onNavigationItemSelected(@NonNull MenuItem item);
     }
 
-    /**
-     * Listener for handling reselection events on navigation items.
-     */
-    public interface OnItemReselectedListener {
-
-        /**
-         * Called when the currently selected item in the navigation menu is selected again.
-         *
-         * @param item The selected item
-         */
-        void onNavigationItemReselected(@NonNull MenuItem item);
-    }
-
     @NonNull
     protected RecyclerView createNavigationBarMenuView(@NonNull Context context) {
         RecyclerView view = new RecyclerView(context);
@@ -529,15 +485,10 @@ public class SelectionActionsView extends LinearLayoutCompat {
     }
 
     private MenuInflater getMenuInflater() {
-        if (menuInflater == null) {
-            menuInflater = new SupportMenuInflater(getContext());
+        if (mMenuInflater == null) {
+            mMenuInflater = new SupportMenuInflater(getContext());
         }
-        return menuInflater;
-    }
-
-    @NonNull
-    protected ReflowMenuPresenter getPresenter() {
-        return presenter;
+        return mMenuInflater;
     }
 
     @Override
@@ -546,7 +497,7 @@ public class SelectionActionsView extends LinearLayoutCompat {
         Parcelable superState = super.onSaveInstanceState();
         SavedState savedState = new SavedState(superState);
         savedState.menuPresenterState = new Bundle();
-        menu.savePresenterStates(savedState.menuPresenterState);
+        mMenu.savePresenterStates(savedState.menuPresenterState);
         return savedState;
     }
 
@@ -558,7 +509,7 @@ public class SelectionActionsView extends LinearLayoutCompat {
         }
         SavedState savedState = (SavedState) state;
         super.onRestoreInstanceState(savedState.getSuperState());
-        menu.restorePresenterStates(savedState.menuPresenterState);
+        mMenu.restorePresenterStates(savedState.menuPresenterState);
     }
 
     static class SavedState extends AbsSavedState {
@@ -587,25 +538,24 @@ public class SelectionActionsView extends LinearLayoutCompat {
             menuPresenterState = in.readBundle(loader);
         }
 
-        public static final Creator<SavedState> CREATOR =
-                new ClassLoaderCreator<SavedState>() {
-                    @NonNull
-                    @Override
-                    public SavedState createFromParcel(@NonNull Parcel in, ClassLoader loader) {
-                        return new SavedState(in, loader);
-                    }
+        public static final Creator<SavedState> CREATOR = new ClassLoaderCreator<SavedState>() {
+            @NonNull
+            @Override
+            public SavedState createFromParcel(@NonNull Parcel in, ClassLoader loader) {
+                return new SavedState(in, loader);
+            }
 
-                    @NonNull
-                    @Override
-                    public SavedState createFromParcel(@NonNull Parcel in) {
-                        return new SavedState(in, null);
-                    }
+            @NonNull
+            @Override
+            public SavedState createFromParcel(@NonNull Parcel in) {
+                return new SavedState(in, null);
+            }
 
-                    @NonNull
-                    @Override
-                    public SavedState[] newArray(int size) {
-                        return new SavedState[size];
-                    }
-                };
+            @NonNull
+            @Override
+            public SavedState[] newArray(int size) {
+                return new SavedState[size];
+            }
+        };
     }
 }

@@ -8,8 +8,6 @@ import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.util.SparseArray;
 import android.util.TypedValue;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -22,10 +20,13 @@ import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.view.menu.MenuItemImpl;
 import androidx.appcompat.view.menu.MenuView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.github.muntashirakon.widget.RecyclerView;
 
-@SuppressLint("RestrictedApi")
-public class SelectionMenuAdapter extends RecyclerView.Adapter<SelectionMenuAdapter.MenuItemHolder> implements MenuView {
+@SuppressLint({"RestrictedApi", "NotifyDataSetChanged"})
+class SelectionMenuAdapter extends RecyclerView.Adapter<SelectionMenuAdapter.MenuItemHolder> implements MenuView {
     private static final int[] CHECKED_STATE_SET = {android.R.attr.state_checked};
     private static final int[] DISABLED_STATE_SET = {-android.R.attr.state_enabled};
     private static int[] EMPTY_STATE_SET;
@@ -33,41 +34,40 @@ public class SelectionMenuAdapter extends RecyclerView.Adapter<SelectionMenuAdap
 
     private final Context mContext;
     @NonNull
-    private final SparseArray<View.OnTouchListener> onTouchListeners = new SparseArray<>(ITEM_POOL_SIZE);
+    private final SparseArray<View.OnTouchListener> mOnTouchListeners = new SparseArray<>(ITEM_POOL_SIZE);
 
     @Nullable
-    private ColorStateList itemIconTint;
+    private ColorStateList mItemIconTint;
     @Dimension
-    private int itemIconSize;
-    private ColorStateList itemTextColorFromUser;
+    private int mItemIconSize;
+    private ColorStateList mItemTextColorFromUser;
     @Nullable
-    private final ColorStateList itemTextColorDefault;
+    private final ColorStateList mItemTextColorDefault;
     @StyleRes
-    private int itemTextAppearanceInactive;
+    private int mItemTextAppearanceInactive;
     @StyleRes
-    private int itemTextAppearanceActive;
-    private Drawable itemBackground;
-    private int itemBackgroundRes;
-    private boolean itemActiveBackgroundEnabled;
+    private int mItemTextAppearanceActive;
+    private Drawable mItemBackground;
+    private int mItemBackgroundRes;
+    private boolean mItemActiveBackgroundEnabled;
 
-    private ReflowMenuPresenter presenter;
-    private MenuBuilder menu;
-    private int selectedItemId = 0;
-    private int selectedItemPosition = 0;
+    private ReflowMenuPresenter mPresenter;
+    private MenuBuilder mMenu;
+    private final List<MenuItemImpl> mVisibleMenuItems = new ArrayList<>();
 
     public SelectionMenuAdapter(Context context, int[] EMPTY_STATE_SET) {
         SelectionMenuAdapter.EMPTY_STATE_SET = EMPTY_STATE_SET;
         mContext = context;
-        itemTextColorDefault = createDefaultColorStateList(android.R.attr.textColorSecondary);
+        mItemTextColorDefault = createDefaultColorStateList(android.R.attr.textColorSecondary);
     }
 
     public void setPresenter(ReflowMenuPresenter presenter) {
-        this.presenter = presenter;
+        mPresenter = presenter;
     }
 
     @Override
     public void initialize(@NonNull MenuBuilder menu) {
-        this.menu = menu;
+        mMenu = menu;
     }
 
     @Override
@@ -81,7 +81,7 @@ public class SelectionMenuAdapter extends RecyclerView.Adapter<SelectionMenuAdap
      * @param tint the tint to apply
      */
     public void setIconTintList(@Nullable ColorStateList tint) {
-        itemIconTint = tint;
+        mItemIconTint = tint;
         notifyDataSetChanged();
     }
 
@@ -92,7 +92,7 @@ public class SelectionMenuAdapter extends RecyclerView.Adapter<SelectionMenuAdap
      */
     @Nullable
     public ColorStateList getIconTintList() {
-        return itemIconTint;
+        return mItemIconTint;
     }
 
     /**
@@ -103,7 +103,7 @@ public class SelectionMenuAdapter extends RecyclerView.Adapter<SelectionMenuAdap
      * @param iconSize the size to provide for the menu item icons in pixels
      */
     public void setItemIconSize(@Dimension int iconSize) {
-        this.itemIconSize = iconSize;
+        mItemIconSize = iconSize;
         notifyDataSetChanged();
     }
 
@@ -112,7 +112,7 @@ public class SelectionMenuAdapter extends RecyclerView.Adapter<SelectionMenuAdap
      */
     @Dimension
     public int getItemIconSize() {
-        return itemIconSize;
+        return mItemIconSize;
     }
 
     /**
@@ -121,7 +121,7 @@ public class SelectionMenuAdapter extends RecyclerView.Adapter<SelectionMenuAdap
      * @param color the ColorStateList used for menu item labels
      */
     public void setItemTextColor(@Nullable ColorStateList color) {
-        itemTextColorFromUser = color;
+        mItemTextColorFromUser = color;
         notifyDataSetChanged();
     }
 
@@ -132,7 +132,7 @@ public class SelectionMenuAdapter extends RecyclerView.Adapter<SelectionMenuAdap
      */
     @Nullable
     public ColorStateList getItemTextColor() {
-        return itemTextColorFromUser;
+        return mItemTextColorFromUser;
     }
 
     /**
@@ -141,7 +141,7 @@ public class SelectionMenuAdapter extends RecyclerView.Adapter<SelectionMenuAdap
      * @param textAppearanceRes the text appearance ID used for inactive menu item labels
      */
     public void setItemTextAppearanceInactive(@StyleRes int textAppearanceRes) {
-        this.itemTextAppearanceInactive = textAppearanceRes;
+        mItemTextAppearanceInactive = textAppearanceRes;
         notifyDataSetChanged();
     }
 
@@ -152,7 +152,7 @@ public class SelectionMenuAdapter extends RecyclerView.Adapter<SelectionMenuAdap
      */
     @StyleRes
     public int getItemTextAppearanceInactive() {
-        return itemTextAppearanceInactive;
+        return mItemTextAppearanceInactive;
     }
 
     /**
@@ -161,7 +161,7 @@ public class SelectionMenuAdapter extends RecyclerView.Adapter<SelectionMenuAdap
      * @param textAppearanceRes the text appearance ID used for the active menu item label
      */
     public void setItemTextAppearanceActive(@StyleRes int textAppearanceRes) {
-        this.itemTextAppearanceActive = textAppearanceRes;
+        mItemTextAppearanceActive = textAppearanceRes;
         notifyDataSetChanged();
     }
 
@@ -172,7 +172,7 @@ public class SelectionMenuAdapter extends RecyclerView.Adapter<SelectionMenuAdap
      */
     @StyleRes
     public int getItemTextAppearanceActive() {
-        return itemTextAppearanceActive;
+        return mItemTextAppearanceActive;
     }
 
     /**
@@ -181,7 +181,7 @@ public class SelectionMenuAdapter extends RecyclerView.Adapter<SelectionMenuAdap
      * @param background the resource ID of the background
      */
     public void setItemBackgroundRes(int background) {
-        itemBackgroundRes = background;
+        mItemBackgroundRes = background;
         notifyDataSetChanged();
     }
 
@@ -193,7 +193,7 @@ public class SelectionMenuAdapter extends RecyclerView.Adapter<SelectionMenuAdap
      */
     @Deprecated
     public int getItemBackgroundRes() {
-        return itemBackgroundRes;
+        return mItemBackgroundRes;
     }
 
 
@@ -203,7 +203,7 @@ public class SelectionMenuAdapter extends RecyclerView.Adapter<SelectionMenuAdap
      * @param background the drawable of the background
      */
     public void setItemBackground(@Nullable Drawable background) {
-        itemBackground = background;
+        mItemBackground = background;
         notifyDataSetChanged();
     }
 
@@ -214,7 +214,7 @@ public class SelectionMenuAdapter extends RecyclerView.Adapter<SelectionMenuAdap
      */
     @Nullable
     public Drawable getItemBackground() {
-        return itemBackground;
+        return mItemBackground;
     }
 
     /**
@@ -223,7 +223,7 @@ public class SelectionMenuAdapter extends RecyclerView.Adapter<SelectionMenuAdap
      * @return true if the active background is enabled.
      */
     public boolean getItemActiveBackgroundEnabled() {
-        return itemActiveBackgroundEnabled;
+        return mItemActiveBackgroundEnabled;
     }
 
     /**
@@ -232,7 +232,7 @@ public class SelectionMenuAdapter extends RecyclerView.Adapter<SelectionMenuAdap
      * @param enabled true if an active background should be shown.
      */
     public void setItemActiveBackgroundEnabled(boolean enabled) {
-        this.itemActiveBackgroundEnabled = enabled;
+        mItemActiveBackgroundEnabled = enabled;
         notifyDataSetChanged();
     }
 
@@ -243,56 +243,27 @@ public class SelectionMenuAdapter extends RecyclerView.Adapter<SelectionMenuAdap
     @SuppressLint("ClickableViewAccessibility")
     public void setItemOnTouchListener(int menuItemId, @Nullable View.OnTouchListener onTouchListener) {
         if (onTouchListener == null) {
-            onTouchListeners.remove(menuItemId);
+            mOnTouchListeners.remove(menuItemId);
         } else {
-            onTouchListeners.put(menuItemId, onTouchListener);
+            mOnTouchListeners.put(menuItemId, onTouchListener);
         }
-        if (menu != null) {
-            for (int i = 0; i < menu.size(); ++i) {
-                MenuItemImpl menuItem = (MenuItemImpl) menu.getItem(i);
-                if (menuItem.getItemId() == menuItemId) {
-                    notifyItemChanged(i);
-                }
-            }
-        }
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    public void buildMenuView() {
-        if (menu.size() == 0) {
-            selectedItemId = 0;
-            selectedItemPosition = 0;
-            return;
-        }
-
-        for (int i = 0; i < menu.size(); i++) {
-            presenter.setUpdateSuspended(true);
-            MenuItemImpl menuItem = (MenuItemImpl) menu.getItem(i);
-            menuItem.setCheckable(true);
-            presenter.setUpdateSuspended(false);
-            if (selectedItemId != Menu.NONE && menuItem.getItemId() == selectedItemId) {
-                selectedItemPosition = i;
-            }
-        }
-        selectedItemPosition = Math.min(menu.size() - 1, selectedItemPosition);
-        menu.getItem(selectedItemPosition).setChecked(true);
-
         notifyDataSetChanged();
     }
 
-    public void updateMenuView() {
-        if (menu == null) {
-            return;
-        }
+    public void buildMenuView() {
+        updateMenuView();
+    }
 
-        for (int i = 0; i < menu.size(); i++) {
-            MenuItem item = menu.getItem(i);
-            if (item.isChecked()) {
-                selectedItemId = item.getItemId();
-                selectedItemPosition = i;
+    public void updateMenuView() {
+        mVisibleMenuItems.clear();
+        if (mMenu != null) {
+            for (int i = 0; i < mMenu.size(); ++i) {
+                MenuItemImpl menuItem = (MenuItemImpl) mMenu.getItem(i);
+                if (menuItem.isVisible()) {
+                    mVisibleMenuItems.add(menuItem);
+                }
             }
         }
-
         notifyDataSetChanged();
     }
 
@@ -300,37 +271,20 @@ public class SelectionMenuAdapter extends RecyclerView.Adapter<SelectionMenuAdap
     @SuppressLint("ClickableViewAccessibility")
     private ReflowMenuItemView getNewItem() {
         ReflowMenuItemView item = new ReflowMenuItemView(mContext);
-        item.setIconTintList(itemIconTint);
-        item.setIconSize(itemIconSize);
+        item.setIconTintList(mItemIconTint);
+        item.setIconSize(mItemIconSize);
         // Set the text color the default, then look for another text color in order of precedence.
-        item.setTextColor(itemTextColorDefault);
-        item.setTextAppearanceInactive(itemTextAppearanceInactive);
-        item.setTextAppearanceActive(itemTextAppearanceActive);
-        item.setTextColor(itemTextColorFromUser);
-        item.setActiveBackgroundEnabled(itemActiveBackgroundEnabled);
-        if (itemBackground != null) {
-            item.setItemBackground(itemBackground);
+        item.setTextColor(mItemTextColorDefault);
+        item.setTextAppearanceInactive(mItemTextAppearanceInactive);
+        item.setTextAppearanceActive(mItemTextAppearanceActive);
+        item.setTextColor(mItemTextColorFromUser);
+        item.setActiveBackgroundEnabled(mItemActiveBackgroundEnabled);
+        if (mItemBackground != null) {
+            item.setItemBackground(mItemBackground);
         } else {
-            item.setItemBackground(itemBackgroundRes);
+            item.setItemBackground(mItemBackgroundRes);
         }
         return item;
-    }
-
-    public int getSelectedItemId() {
-        return selectedItemId;
-    }
-
-    void tryRestoreSelectedItemId(int itemId) {
-        final int size = menu.size();
-        for (int i = 0; i < size; i++) {
-            MenuItem item = menu.getItem(i);
-            if (itemId == item.getItemId()) {
-                selectedItemId = itemId;
-                selectedItemPosition = i;
-                item.setChecked(true);
-                break;
-            }
-        }
     }
 
     @NonNull
@@ -342,25 +296,17 @@ public class SelectionMenuAdapter extends RecyclerView.Adapter<SelectionMenuAdap
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onBindViewHolder(@NonNull MenuItemHolder holder, int position) {
-        MenuItemImpl menuItem = (MenuItemImpl) menu.getItem(position);
+        MenuItemImpl menuItem = mVisibleMenuItems.get(position);
         ReflowMenuItemView menuItemView = holder.itemView;
-        presenter.setUpdateSuspended(true);
         menuItemView.initialize(menuItem, 0);
-        presenter.setUpdateSuspended(false);
-        menuItemView.setItemPosition(position);
         int itemId = menuItem.getItemId();
-        menuItemView.setOnTouchListener(onTouchListeners.get(itemId));
-        menuItemView.setOnClickListener(v -> {
-            if (!menu.performItemAction(menuItem, presenter, 0)) {
-                menuItem.setChecked(true);
-                notifyItemChanged(position);
-            }
-        });
+        menuItemView.setOnTouchListener(mOnTouchListeners.get(itemId));
+        menuItemView.setOnClickListener(v -> mMenu.performItemAction(menuItem, mPresenter, 0));
     }
 
     @Override
     public int getItemCount() {
-        return menu != null ? menu.size() : 0;
+        return mVisibleMenuItems.size();
     }
 
     @Nullable
