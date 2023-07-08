@@ -12,28 +12,24 @@ import android.os.RemoteException;
 
 import androidx.annotation.RequiresApi;
 
+import misc.utils.HiddenUtil;
+
 /**
  * Interface for managing an app's permission to access a particular URI.
  */
 @RequiresApi(Build.VERSION_CODES.Q)
 public interface IUriGrantsManager extends android.os.IInterface {
-    abstract class Stub extends Binder implements IUriGrantsManager {
-        public static IUriGrantsManager asInterface(IBinder obj) {
-            throw new UnsupportedOperationException();
-        }
+    void takePersistableUriPermission(Uri uri, int modeFlags, String toPackage, int userId) throws RemoteException;
 
-        @Override
-        public IBinder asBinder() {
-            return this;
-        }
-    }
+    void releasePersistableUriPermission(Uri uri, int modeFlags, String toPackage, int userId) throws RemoteException;
 
     void grantUriPermissionFromOwner(IBinder owner, int fromUid, String targetPkg, Uri uri, int mode, int sourceUserId, int targetUserId) throws RemoteException;
 
     /**
      * Gets the URI permissions granted to an arbitrary package (or all packages if null)
-     * NOTE: this is different from getUriPermissions(), which returns the URIs the package
-     * granted to another packages (instead of those granted to it).
+     * <p>
+     * NOTE: this is different from {@link #getUriPermissions(String, boolean, boolean)}, which returns the URIs the
+     * package granted to another packages (instead of those granted to it).
      */
     ParceledListSlice<GrantedUriPermission> getGrantedUriPermissions(String packageName, int userId) throws RemoteException;
 
@@ -43,4 +39,15 @@ public interface IUriGrantsManager extends android.os.IInterface {
     void clearGrantedUriPermissions(String packageName, int userId) throws RemoteException;
 
     ParceledListSlice<UriPermission> getUriPermissions(String packageName, boolean incoming, boolean persistedOnly) throws RemoteException;
+
+    abstract class Stub extends Binder implements IUriGrantsManager {
+        public static IUriGrantsManager asInterface(IBinder obj) {
+            return HiddenUtil.throwUOE(obj);
+        }
+
+        @Override
+        public IBinder asBinder() {
+            return this;
+        }
+    }
 }

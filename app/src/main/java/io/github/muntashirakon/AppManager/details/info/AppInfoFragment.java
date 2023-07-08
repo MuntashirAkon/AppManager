@@ -138,6 +138,7 @@ import io.github.muntashirakon.AppManager.shortcut.CreateShortcutDialogFragment;
 import io.github.muntashirakon.AppManager.ssaid.ChangeSsaidDialog;
 import io.github.muntashirakon.AppManager.types.PackageSizeInfo;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
+import io.github.muntashirakon.AppManager.uri.GrantUriUtils;
 import io.github.muntashirakon.AppManager.usage.AppUsageStatsManager;
 import io.github.muntashirakon.AppManager.users.UserInfo;
 import io.github.muntashirakon.AppManager.users.Users;
@@ -889,10 +890,13 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             addChip(R.string.saf).setOnClickListener(v -> {
                 CharSequence[] uriGrants = new CharSequence[tagCloud.uriGrants.size()];
                 for (int i = 0; i < tagCloud.uriGrants.size(); ++i) {
-                    uriGrants[i] = tagCloud.uriGrants.get(i).uri.toString();
+                    uriGrants[i] = GrantUriUtils.toLocalisedString(mActivity, tagCloud.uriGrants.get(i).uri);
                 }
                 new SearchableItemsDialogBuilder<>(mActivity, uriGrants)
                         .setTitle(R.string.saf)
+                        .setTextSelectable(true)
+                        .setListBackgroundColorOdd(ColorCodes.getListItemColor0(mActivity))
+                        .setListBackgroundColorEven(ColorCodes.getListItemColor1(mActivity))
                         .setNegativeButton(R.string.close, null)
                         .show();
             });

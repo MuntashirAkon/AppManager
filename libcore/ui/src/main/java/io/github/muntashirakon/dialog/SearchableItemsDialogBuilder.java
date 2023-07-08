@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.ArrayRes;
+import androidx.annotation.ColorInt;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -20,6 +21,7 @@ import androidx.collection.ArraySet;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.resources.MaterialAttributes;
 
@@ -43,6 +45,10 @@ public class SearchableItemsDialogBuilder<T extends CharSequence> {
     @Nullable
     private OnItemClickListener<T> mOnItemClickListener;
     private boolean mIsTextSelectable;
+    @ColorInt
+    private Integer mListBackgroundColorEven;
+    @ColorInt
+    private Integer mListBackgroundColorOdd;
 
     public interface OnItemClickListener<T> {
         void onClick(DialogInterface dialog, int which, T item);
@@ -95,6 +101,16 @@ public class SearchableItemsDialogBuilder<T extends CharSequence> {
 
     public SearchableItemsDialogBuilder<T> addDisabledItems(@Nullable List<T> disabledItems) {
         mAdapter.addDisabledItems(disabledItems);
+        return this;
+    }
+
+    public SearchableItemsDialogBuilder<T> setListBackgroundColorEven(@ColorInt Integer color) {
+        mListBackgroundColorEven = color;
+        return this;
+    }
+
+    public SearchableItemsDialogBuilder<T> setListBackgroundColorOdd(@ColorInt Integer color) {
+        mListBackgroundColorOdd = color;
         return this;
     }
 
@@ -195,13 +211,11 @@ public class SearchableItemsDialogBuilder<T extends CharSequence> {
         SearchableRecyclerViewAdapter(@NonNull List<T> items, int layoutId) {
             mItems = items;
             mLayoutId = layoutId;
-            new Thread(() -> {
-                synchronized (mFilteredItems) {
-                    for (int i = 0; i < mItems.size(); ++i) {
-                        mFilteredItems.add(i);
-                    }
+            synchronized (mFilteredItems) {
+                for (int i = 0; i < mItems.size(); ++i) {
+                    mFilteredItems.add(i);
                 }
-            }, "searchable_items_dialog").start();
+            }
         }
 
         void setFilteredItems(CharSequence constraint) {
@@ -249,6 +263,27 @@ public class SearchableItemsDialogBuilder<T extends CharSequence> {
                 holder.item.setEnabled(!mDisabledItems.contains(index));
             }
             holder.itemView.setOnClickListener(v -> triggerItemClickListener(index));
+            // Set background colors if set (position starts at 1, so the situation is reversed)
+            setBackgroundColor(holder.itemView, position % 2 == 0 ? mListBackgroundColorOdd : mListBackgroundColorEven);
+        }
+
+        private void setBackgroundColor(View view, @Nullable Integer color) {
+            if (view instanceof MaterialCardView) {
+                MaterialCardView card = (MaterialCardView) view;
+                if (color != null) {
+                    card.setCardBackgroundColor(color);
+                } else {
+                    // Reset background
+                    card.setCardBackgroundColor(null);
+                }
+            } else {
+                if (color != null) {
+                    view.setBackgroundColor(color);
+                } else {
+                    // Reset background
+                    view.setBackground(null);
+                }
+            }
         }
 
         @Override

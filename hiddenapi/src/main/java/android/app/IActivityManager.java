@@ -12,6 +12,7 @@ import android.content.UriPermission;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.IPackageDataObserver;
 import android.content.pm.ParceledListSlice;
+import android.content.pm.UserInfo;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Build;
@@ -205,11 +206,11 @@ public interface IActivityManager extends IInterface {
     @RequiresApi(Build.VERSION_CODES.O)
     void revokeUriPermission(IApplicationThread caller, String targetPkg, Uri uri, int mode, int userId) throws RemoteException;
 
-    // Gets the URI permissions granted to an arbitrary package.
-    // NOTE: this is different from getPersistedUriPermissions(), which returns the URIs the package
-    // granted to another packages (instead of those granted to it).
-
     /**
+     * Gets the URI permissions granted to an arbitrary package (or all packages if null)
+     * <p>
+     * NOTE: this is different from getPersistedUriPermissions(), which returns the URIs the package granted to another
+     * packages (instead of those granted to it).
      * @return {@link UriPermission} before Android P and {@link GrantedUriPermission} from Android P
      */
     @RequiresApi(Build.VERSION_CODES.N)
@@ -280,10 +281,10 @@ public interface IActivityManager extends IInterface {
 
     boolean killPids(int[] pids, String reason, boolean secure) throws RemoteException;
 
-    java.util.List<ActivityManager.RunningServiceInfo> getServices(int maxNum, int flags) throws RemoteException;
+    List<ActivityManager.RunningServiceInfo> getServices(int maxNum, int flags) throws RemoteException;
     // Retrieve running application processes in the system
 
-    java.util.List<ActivityManager.RunningAppProcessInfo> getRunningAppProcesses() throws RemoteException;
+    List<ActivityManager.RunningAppProcessInfo> getRunningAppProcesses() throws RemoteException;
 
     IBinder peekService(Intent service, String resolvedType, String callingPackage) throws RemoteException;
     // Turn on/off profiling in a particular process.
@@ -348,7 +349,7 @@ public interface IActivityManager extends IInterface {
 
     boolean killProcessesBelowForeground(String reason) throws RemoteException;
 
-    android.content.pm.UserInfo getCurrentUser() throws RemoteException;
+    UserInfo getCurrentUser() throws RemoteException;
     // This is not because you need to be very careful in how you
     // manage your activity to make sure it is always the uid you expect.
 
