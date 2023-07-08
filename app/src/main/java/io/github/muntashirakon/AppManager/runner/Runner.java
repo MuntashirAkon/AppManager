@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import io.github.muntashirakon.AppManager.ipc.LocalServices;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.settings.Ops;
 
 public abstract class Runner {
@@ -82,7 +82,7 @@ public abstract class Runner {
     private static Runner getInstance() {
         if (Ops.isRoot()) {
             return getRootInstance();
-        } else if (LocalServer.isAMServiceAlive()) {
+        } else if (LocalServices.alive()) {
             return getPrivilegedInstance();
         } else {
             return getNoRootInstance();

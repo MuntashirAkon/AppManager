@@ -22,7 +22,6 @@ import io.github.muntashirakon.AppManager.ipc.LocalServices;
 import io.github.muntashirakon.AppManager.ipc.ps.ProcessEntry;
 import io.github.muntashirakon.AppManager.ipc.ps.Ps;
 import io.github.muntashirakon.AppManager.logs.Log;
-import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.PackageUtils;
 import io.github.muntashirakon.AppManager.utils.Utils;
@@ -56,7 +55,7 @@ public final class ProcessParser {
         List<ProcessItem> processItems = new ArrayList<>();
         try {
             List<ProcessEntry> processEntries;
-            if (Paths.get("/proc/1").canRead() && LocalServer.isAMServiceAlive()) {
+            if (Paths.get("/proc/1").canRead() && LocalServices.alive()) {
                 processEntries = (List<ProcessEntry>) LocalServices.getAmService().getRunningProcesses().getList();
             } else {
                 Ps ps = new Ps();

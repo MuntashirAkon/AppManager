@@ -227,7 +227,7 @@ public class Ops {
                     }
                     sIsSystem = sIsAdb = false;
                     sIsRoot = true;
-                    LocalServer.launchAmService();
+                    LocalServices.bindServicesIfNotAlready();
                     return initPermissionsWithSuccess();
                 case MODE_ADB_WIFI:
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -267,7 +267,7 @@ public class Ops {
         if (sIsRoot) {
             // Root permission was granted, disable ADB and force root
             sIsSystem = sIsAdb = false;
-            if (LocalServer.isAMServiceAlive()) {
+            if (LocalServices.alive()) {
                 if (Users.getSelfOrRemoteUid() == ROOT_UID) {
                     // Service is already running in root mode
                     return;
@@ -276,9 +276,9 @@ public class Ops {
                 LocalServices.stopServices();
             }
             try {
-                // AM service is confirmed dead
-                LocalServer.launchAmService();
-                if (LocalServer.isAMServiceAlive() && Users.getSelfOrRemoteUid() == ROOT_UID) {
+                // Service is confirmed dead
+                LocalServices.bindServices();
+                if (LocalServices.alive() && Users.getSelfOrRemoteUid() == ROOT_UID) {
                     // Service is running in root
                     return;
                 }
@@ -296,7 +296,7 @@ public class Ops {
             // Fall-through, in case we can use other options
         }
         // Root was not working/granted, but check for AM service just in case
-        if (LocalServer.isAMServiceAlive()) {
+        if (LocalServices.alive()) {
             int uid = Users.getSelfOrRemoteUid();
             if (uid == ROOT_UID) {
                 sIsSystem = sIsAdb = false;
@@ -329,7 +329,7 @@ public class Ops {
         } catch (Throwable e) {
             Log.e("ADB", e);
         }
-        sIsAdb = LocalServer.isAMServiceAlive();
+        sIsAdb = LocalServices.alive();
         if (sIsAdb) {
             // No need to return anything here because we're in auto-mode.
             // Any message produced by the method below is just a helpful message.
@@ -535,7 +535,7 @@ public class Ops {
         sIsRoot = MODE_ROOT.equals(mode);
         sIsAdb = !sIsRoot; // Because the rests are ADB
         sIsSystem = false;
-        if (LocalServer.isLocalServerAlive(context)) {
+        if (LocalServer.alive(context)) {
             // Remote server is running, but local server may not be running
             try {
                 LocalServer.getInstance();
@@ -544,7 +544,7 @@ public class Ops {
                 // fall-through, because the remote service may still be alive
             }
         }
-        if (LocalServer.isAMServiceAlive()) {
+        if (LocalServices.alive()) {
             // AM service is running
             int uid = Users.getSelfOrRemoteUid();
             if (sIsRoot && uid == ROOT_UID) {

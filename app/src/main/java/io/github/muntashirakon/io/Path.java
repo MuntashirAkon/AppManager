@@ -51,7 +51,6 @@ import aosp.libcore.util.EmptyArray;
 import io.github.muntashirakon.AppManager.compat.StorageManagerCompat;
 import io.github.muntashirakon.AppManager.ipc.LocalServices;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
-import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
@@ -143,7 +142,7 @@ public class Path implements Comparable<Path> {
 
     @NonNull
     private static DocumentFile getRequiredRawDocument(@NonNull String path) {
-        if (needPrivilegedAccess(path) && LocalServer.isAMServiceAlive()) {
+        if (needPrivilegedAccess(path) && LocalServices.alive()) {
             try {
                 FileSystemManager fs = LocalServices.getFileSystemManager();
                 return new ExtendedRawDocumentFile(fs.getFile(path));

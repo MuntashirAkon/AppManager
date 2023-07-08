@@ -17,7 +17,6 @@ import java.util.Map;
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.server.common.IRootServiceManager;
-import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 
 // Copyright 2020 Rikka
 public class ProxyBinder implements IBinder {
@@ -53,7 +52,7 @@ public class ProxyBinder implements IBinder {
 
     @Override
     public boolean transact(int code, @NonNull Parcel data, @Nullable Parcel reply, int flags) throws RemoteException {
-        if (LocalServer.isAMServiceAlive()) {
+        if (LocalServices.alive()) {
             Parcel newData = Parcel.obtain();
             try {
                 newData.writeInterfaceToken(IRootServiceManager.class.getName());

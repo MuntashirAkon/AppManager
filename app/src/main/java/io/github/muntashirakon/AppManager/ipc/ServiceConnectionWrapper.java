@@ -140,7 +140,7 @@ class ServiceConnectionWrapper {
         mIBinder = null;
     }
 
-    private boolean isBinderActive() {
+    boolean isBinderActive() {
         return mIBinder != null && mIBinder.pingBinder();
     }
 }

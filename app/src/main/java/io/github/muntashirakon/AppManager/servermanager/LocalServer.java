@@ -18,7 +18,6 @@ import java.net.ServerSocket;
 import java.net.SocketTimeoutException;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
-import io.github.muntashirakon.AppManager.IAMService;
 import io.github.muntashirakon.AppManager.ipc.LocalServices;
 import io.github.muntashirakon.AppManager.logs.Log;
 import io.github.muntashirakon.AppManager.misc.NoOps;
@@ -36,7 +35,6 @@ public class LocalServer {
 
     @SuppressLint("StaticFieldLeak")
     private static LocalServer sLocalServer;
-    private static IAMService sAmService;
 
     @GuardedBy("lockObject")
     @WorkerThread
@@ -50,7 +48,7 @@ public class LocalServer {
                 sLocalServer = new LocalServer();
                 // This calls the AdbShell class which has dependencies on LocalServer which might cause deadlock
                 // if not careful (see comment above on non-null check)
-                launchAmService();
+                LocalServices.bindServicesIfNotAlready();
             } finally {
                 sLock.notifyAll();
             }
@@ -59,17 +57,8 @@ public class LocalServer {
     }
 
     @WorkerThread
-    @NoOps(used = true)
-    public static void launchAmService() throws RemoteException {
-        if (sAmService == null || !sAmService.asBinder().pingBinder()) {
-            LocalServices.bindServices();
-            sAmService = LocalServices.getAmService();
-        }
-    }
-
-    @WorkerThread
     @NoOps
-    public static boolean isLocalServerAlive(Context context) {
+    public static boolean alive(Context context) {
         if (sLocalServer != null) {
             return true;
         } else {
@@ -81,13 +70,6 @@ public class LocalServer {
                 return true;
             }
         }
-    }
-
-    @AnyThread
-    @NoOps
-    public static boolean isAMServiceAlive() {
-        if (sAmService != null) return sAmService.asBinder().pingBinder();
-        else return false;
     }
 
     @NonNull
@@ -192,7 +174,7 @@ public class LocalServer {
             manager.closeBgServer();
             manager.stop();
             manager.start();
-            launchAmService();
+            LocalServices.bindServicesIfNotAlready();
         } else {
             getInstance();
         }

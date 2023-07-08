@@ -24,6 +24,13 @@ public class LocalServices {
             = new ServiceConnectionWrapper(BuildConfig.APPLICATION_ID, FileSystemService.class.getName());
 
     @WorkerThread
+    public static void bindServicesIfNotAlready() throws RemoteException {
+        if (!alive()) {
+            bindServices();
+        }
+    }
+
+    @WorkerThread
     public static void bindServices() throws RemoteException {
         unbindServicesIfRunning();
         bindAmService();
@@ -33,6 +40,12 @@ public class LocalServices {
             throw new RemoteException("IAmService not running.");
         }
         getFileSystemManager();
+    }
+
+    public static boolean alive() {
+        synchronized (sAMServiceConnectionWrapper) {
+            return sAMServiceConnectionWrapper.isBinderActive();
+        }
     }
 
     @WorkerThread
