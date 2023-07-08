@@ -39,6 +39,10 @@
         android:title="@string/net_policy"
         android:icon="@drawable/ic_security_network" />
     <item
+        android:id="@+id/action_optimize"
+        android:title="@string/action_optimize_app"
+        android:icon="@drawable/ic_run_fast" />
+    <item
         android:id="@+id/action_export_blocking_rules"
         android:title="@string/export_blocking_rules"
         android:icon="@drawable/ic_file_export" />

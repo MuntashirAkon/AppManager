@@ -47,6 +47,7 @@ import java.util.List;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.apk.behavior.DexOptimizationDialog;
 import io.github.muntashirakon.AppManager.apk.list.ListExporter;
 import io.github.muntashirakon.AppManager.backup.dialog.BackupRestoreDialogFragment;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
@@ -397,6 +398,9 @@ public class MainActivity extends BaseActivity implements AdvancedSearchView.OnQ
                         handleBatchOp(BatchOpsManager.OP_NET_POLICY, args);
                     })
                     .show();
+        } else if (id == R.id.action_optimize) {
+            DexOptimizationDialog dialog = DexOptimizationDialog.getInstance(viewModel.getSelectedPackages().keySet().toArray(new String[0]));
+            dialog.show(getSupportFragmentManager(), DexOptimizationDialog.TAG);
         } else if (id == R.id.action_export_blocking_rules) {
             final String fileName = "app_manager_rules_export-" + DateUtils.formatDateTime(this, System.currentTimeMillis()) + ".am.tsv";
             mBatchExportRules.launch(fileName);
