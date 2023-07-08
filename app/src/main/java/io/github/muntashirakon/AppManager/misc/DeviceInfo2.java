@@ -229,7 +229,7 @@ public class DeviceInfo2 implements LocalizedString {
                     .append("\n");
             List<String> userNames = new ArrayList<>();
             for (UserInfo user : users) {
-                userNames.add(user.name);
+                userNames.add(user.name != null ? user.name : String.valueOf(user.id));
             }
             builder.append(String.format(Locale.getDefault(), "%d", users.size())).append(" (")
                     .append(TextUtilsCompat.joinSpannable(", ", userNames))
@@ -240,7 +240,7 @@ public class DeviceInfo2 implements LocalizedString {
                 Pair<Integer, Integer> packageSizes = userPackages.get(user.id);
                 if (packageSizes == null) continue;
                 if (packageSizes.first + packageSizes.second == 0) continue;
-                builder.append(getStyledKeyValue(ctx, R.string.user, user.name + " (" + user.id + ")")).append("\n   ")
+                builder.append(getStyledKeyValue(ctx, R.string.user, user.toLocalizedString(ctx))).append("\n   ")
                         .append(getStyledKeyValue(ctx, R.string.total_size, String.format(Locale.getDefault(), "%d",
                                 packageSizes.first + packageSizes.second))).append(", ")
                         .append(getStyledKeyValue(ctx, R.string.user, String.format(Locale.getDefault(), "%d",

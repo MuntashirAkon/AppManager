@@ -509,10 +509,10 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
             });
         } else if (itemId == R.id.action_install) {
             List<UserInfo> users = Users.getUsers();
-            String[] userNames = new String[users.size()];
+            CharSequence[] userNames = new String[users.size()];
             int i = 0;
             for (UserInfo info : users) {
-                userNames[i++] = info.name == null ? String.valueOf(info.id) : info.name;
+                userNames[i++] = info.toLocalizedString(requireContext());
             }
             new SearchableItemsDialogBuilder<>(mActivity, userNames)
                     .setTitle(R.string.select_user)

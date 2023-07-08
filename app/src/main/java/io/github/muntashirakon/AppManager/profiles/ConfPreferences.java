@@ -316,7 +316,7 @@ public class ConfPreferences extends PreferenceFragmentCompat {
             List<Integer> userHandles = new ArrayList<>(users.size());
             int i = 0;
             for (UserInfo info : users) {
-                userNames[i] = info.name == null ? String.valueOf(info.id) : info.name;
+                userNames[i] = info.toLocalizedString(requireContext());
                 userHandles.add(info.id);
                 ++i;
             }
@@ -353,7 +353,7 @@ public class ConfPreferences extends PreferenceFragmentCompat {
         List<CharSequence> userInfoOut = new ArrayList<>();
         for (UserInfo info : userInfoList) {
             if (userHandles.contains(info.id)) {
-                userInfoOut.add(info.name);
+                userInfoOut.add(info.toLocalizedString(requireContext()));
             }
         }
         return userInfoOut;

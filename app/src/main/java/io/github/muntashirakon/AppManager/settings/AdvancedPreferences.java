@@ -142,7 +142,7 @@ public class AdvancedPreferences extends PreferenceFragment {
             List<Integer> preselectedUserIds = new ArrayList<>();
             for (int i = 0; i < users.size(); ++i) {
                 userIds[i] = users.get(i).id;
-                userInfo[i] = userIds[i] + " (" + users.get(i).name + ")";
+                userInfo[i] = users.get(i).toLocalizedString(requireContext());
                 if (selectedUsers == null || ArrayUtils.contains(selectedUsers, userIds[i])) {
                     preselectedUserIds.add(userIds[i]);
                 }

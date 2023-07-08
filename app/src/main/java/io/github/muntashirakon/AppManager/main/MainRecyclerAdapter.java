@@ -514,12 +514,12 @@ public class MainRecyclerAdapter extends MultiSelectionView.Adapter<MainRecycler
             return;
         }
         // More than a user, ask the user to select one
-        String[] userNames = new String[item.userHandles.length];
+        CharSequence[] userNames = new String[item.userHandles.length];
         List<UserInfo> users = Users.getUsers();
         for (UserInfo info : users) {
             for (int i = 0; i < item.userHandles.length; ++i) {
                 if (info.id == item.userHandles[i]) {
-                    userNames[i] = info.name == null ? String.valueOf(info.id) : info.name;
+                    userNames[i] = info.toLocalizedString(mActivity);
                 }
             }
         }

@@ -328,7 +328,7 @@ public class BackupRestoreDialogFragment extends CapsuleBottomSheetDialogFragmen
         List<Integer> userHandles = new ArrayList<>(users.size());
         int i = 0;
         for (UserInfo info : users) {
-            userNames[i] = info.name == null ? String.valueOf(info.id) : (info.name + " (" + info.id + ")");
+            userNames[i] = info.toLocalizedString(requireContext());
             userHandles.add(info.id);
             ++i;
         }
