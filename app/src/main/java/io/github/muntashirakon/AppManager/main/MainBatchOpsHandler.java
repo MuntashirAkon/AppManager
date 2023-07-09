@@ -15,7 +15,6 @@ import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
 public class MainBatchOpsHandler implements MultiSelectionView.OnSelectionChangeListener {
-    private final MultiSelectionView mMultiSelectionView;
     private final MainViewModel mViewModel;
     private final MenuItem mUninstallMenu;
     private final MenuItem mFreezeUnfreezeMenu;
@@ -27,6 +26,8 @@ public class MainBatchOpsHandler implements MultiSelectionView.OnSelectionChange
     private final MenuItem mBlockUnblockTrackersMenu;
     private final MenuItem mNetPolicyMenu;
     private final MenuItem mExportRulesMenu;
+    private final MenuItem mExportAppListMenu;
+    private final MenuItem mOptimizeMenu;
     private final MenuItem mAddToProfileMenu;
 
     private boolean mCanFreezeUnfreezePackages;
@@ -38,9 +39,8 @@ public class MainBatchOpsHandler implements MultiSelectionView.OnSelectionChange
     private boolean mCanModifyComponentState;
 
     public MainBatchOpsHandler(MultiSelectionView multiSelectionView, MainViewModel viewModel) {
-        mMultiSelectionView = multiSelectionView;
+        Menu selectionMenu = multiSelectionView.getMenu();
         mViewModel = viewModel;
-        Menu selectionMenu = mMultiSelectionView.getMenu();
         mUninstallMenu = selectionMenu.findItem(R.id.action_uninstall);
         mFreezeUnfreezeMenu = selectionMenu.findItem(R.id.action_freeze_unfreeze);
         mForceStopMenu = selectionMenu.findItem(R.id.action_force_stop);
@@ -51,6 +51,8 @@ public class MainBatchOpsHandler implements MultiSelectionView.OnSelectionChange
         mBlockUnblockTrackersMenu = selectionMenu.findItem(R.id.action_block_unblock_trackers);
         mNetPolicyMenu = selectionMenu.findItem(R.id.action_net_policy);
         mExportRulesMenu = selectionMenu.findItem(R.id.action_export_blocking_rules);
+        mExportAppListMenu = selectionMenu.findItem(R.id.action_export_app_list);
+        mOptimizeMenu = selectionMenu.findItem(R.id.action_optimize);
         mAddToProfileMenu = selectionMenu.findItem(R.id.action_add_to_profile);
         updateConstraints();
     }
@@ -100,6 +102,8 @@ public class MainBatchOpsHandler implements MultiSelectionView.OnSelectionChange
         mBackupRestoreMenu.setEnabled(nonZeroSelection && (areAllInstalled || doAllUninstalledhaveBackup));
         // Rests are enabled by default
         mExportRulesMenu.setEnabled(nonZeroSelection);
+        mExportAppListMenu.setEnabled(nonZeroSelection);
+        mOptimizeMenu.setEnabled(nonZeroSelection);
         mAddToProfileMenu.setEnabled(nonZeroSelection);
         /* === Visible/Invisible === */
         mFreezeUnfreezeMenu.setVisible(mCanFreezeUnfreezePackages);
@@ -108,6 +112,7 @@ public class MainBatchOpsHandler implements MultiSelectionView.OnSelectionChange
         mPreventBackgroundMenu.setVisible(mCanModifyAppOpMode && Build.VERSION.SDK_INT >= Build.VERSION_CODES.N);
         mNetPolicyMenu.setVisible(mCanModifyNetPolicy);
         mBlockUnblockTrackersMenu.setVisible(mCanModifyComponentState);
+        mOptimizeMenu.setVisible(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N);
         return true;
     }
 }
