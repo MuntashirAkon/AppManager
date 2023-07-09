@@ -11,7 +11,7 @@
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="36dp"
         android:orientation="horizontal"
         android:focusable="false">
 
@@ -20,13 +20,13 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="0"
-            android:layout_gravity="start|center_vertical"
+            android:layout_gravity="center_vertical"
             android:layout_marginHorizontal="@dimen/padding_small"
             android:focusable="true"
             android:clickable="true"
             android:nextFocusRight="@id/action_cancel"
             android:nextFocusDown="@id/selection_actions"
-            android:textAppearance="?attr/textAppearanceBodyMedium"
+            android:textAppearance="?attr/textAppearanceBodySmall"
             android:text="@android:string/selectAll" />
 
         <com.google.android.material.textview.MaterialTextView
@@ -36,18 +36,19 @@
             android:layout_weight="1"
             android:layout_gravity="center"
             android:paddingHorizontal="@dimen/padding_small"
-            android:focusable="false"
+            android:focusable="true"
+            android:focusableInTouchMode="false"
             android:gravity="center"
-            android:textAppearance="?attr/textAppearanceBodyMedium"
+            android:textAppearance="?attr/textAppearanceBodySmall"
             tools:text="10/11" />
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/action_cancel"
             style="@style/Widget.AppTheme.Button.IconButton"
-            android:layout_width="34dp"
-            android:layout_height="34dp"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
             android:layout_weight="0"
-            android:layout_gravity="end|center_vertical"
+            android:layout_gravity="center_vertical"
             android:layout_marginHorizontal="@dimen/padding_small"
             android:focusable="true"
             android:clickable="true"
@@ -64,28 +65,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <io.github.muntashirakon.widget.MaxHeightScrollView
-        android:id="@+id/selection_actions_container"
+    <io.github.muntashirakon.multiselection.MultiSelectionActionsView
+        android:id="@+id/selection_actions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:focusable="false"
-        android:paddingBottom="@dimen/padding_very_small"
-        app:maxHeight="116dp">
-
-        <io.github.muntashirakon.reflow.SelectionActionsView
-            android:id="@+id/selection_actions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:focusable="false"
-            android:nextFocusUp="@id/action_select_all"
-            android:padding="@dimen/padding_very_small"
-            app:elevation="0dp"
-            app:itemIconTint="@color/m3_textfield_indicator_text_color"
-            app:itemTextColor="@color/m3_textfield_input_text_color"
-            app:itemTextAppearanceActive="?attr/textAppearanceBodyMedium"
-            app:itemTextAppearanceInactive="?attr/textAppearanceBodyMedium" />
-
-    </io.github.muntashirakon.widget.MaxHeightScrollView>
+        android:nextFocusUp="@id/action_select_all" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

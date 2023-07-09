@@ -37,7 +37,7 @@ import io.github.muntashirakon.AppManager.utils.StoragePermission;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.dialog.SearchableMultiChoiceDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
-import io.github.muntashirakon.reflow.SelectionActionsView;
+import io.github.muntashirakon.multiselection.MultiSelectionActionsView;
 import io.github.muntashirakon.widget.MultiSelectionView;
 import io.github.muntashirakon.widget.RecyclerView;
 
@@ -45,7 +45,7 @@ import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
 public class DebloaterActivity extends BaseActivity implements MultiSelectionView.OnSelectionChangeListener,
-        SelectionActionsView.OnItemSelectedListener, AdvancedSearchView.OnQueryTextListener {
+        MultiSelectionActionsView.OnItemSelectedListener, AdvancedSearchView.OnQueryTextListener {
     DebloaterViewModel viewModel;
 
     private LinearProgressIndicator mProgressIndicator;

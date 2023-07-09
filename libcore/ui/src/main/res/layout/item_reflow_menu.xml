@@ -3,13 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="wrap_content"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
     android:minWidth="80dp"
     android:paddingTop="12dp"
     android:paddingBottom="12dp"
     android:paddingStart="6dp"
     android:paddingEnd="6dp"
+    android:background="?attr/selectableItemBackgroundBorderless"
     android:gravity="center_horizontal">
 
     <androidx.appcompat.widget.AppCompatImageView
@@ -23,12 +24,10 @@
         android:id="@+id/label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?attr/textAppearanceTitleMedium"
+        android:textAppearance="?attr/textAppearanceBodyMedium"
         android:gravity="center_horizontal"
-        android:maxLines="2"
+        android:maxLines="1"
         android:ellipsize="end"
-        android:hyphenationFrequency="normal"
-        tools:text="Info"
-        tools:ignore="UnusedAttribute" />
+        tools:text="Info" />
 
 </androidx.appcompat.widget.LinearLayoutCompat>

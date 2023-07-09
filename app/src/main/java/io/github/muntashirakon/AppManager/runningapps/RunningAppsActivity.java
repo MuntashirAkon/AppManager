@@ -45,12 +45,12 @@ import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
-import io.github.muntashirakon.reflow.SelectionActionsView;
+import io.github.muntashirakon.multiselection.MultiSelectionActionsView;
 import io.github.muntashirakon.widget.MultiSelectionView;
 import io.github.muntashirakon.widget.SwipeRefreshLayout;
 
 public class RunningAppsActivity extends BaseActivity implements MultiSelectionView.OnSelectionChangeListener,
-        SelectionActionsView.OnItemSelectedListener, AdvancedSearchView.OnQueryTextListener,
+        MultiSelectionActionsView.OnItemSelectedListener, AdvancedSearchView.OnQueryTextListener,
         SwipeRefreshLayout.OnRefreshListener {
 
     @IntDef(value = {

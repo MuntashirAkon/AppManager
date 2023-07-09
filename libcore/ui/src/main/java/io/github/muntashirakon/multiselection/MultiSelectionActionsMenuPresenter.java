@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later
 
-package io.github.muntashirakon.reflow;
+package io.github.muntashirakon.multiselection;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -18,12 +18,12 @@ import androidx.appcompat.view.menu.SubMenuBuilder;
 
 // Copyright 2020 The Android Open Source Project
 @SuppressLint("RestrictedApi")
-class ReflowMenuPresenter implements MenuPresenter {
-    private SelectionMenuAdapter mMenuView;
+class MultiSelectionActionsMenuPresenter implements MenuPresenter {
+    private MultiSelectionActionsView mMenuView;
     private boolean mUpdateSuspended = false;
     private int mId;
 
-    public void setMenuView(@NonNull SelectionMenuAdapter menuView) {
+    public void setMenuView(@NonNull MultiSelectionActionsView menuView) {
         mMenuView = menuView;
     }
 

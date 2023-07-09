@@ -30,6 +30,7 @@
         <item name="textInputStyle">@style/Widget.AppTheme.TextInputLayout</item>
         <item name="materialSpinnerStyle">@style/Widget.AppTheme.MaterialSpinner</item>
         <item name="toolbarStyle">@style/Widget.AppTheme.MaterialToolbar</item>
+        <item name="multiSelectionActionsView">@style/Widget.AppTheme.MultiSelectionActionsView</item>
 
         <!-- Preferences -->
         <item name="preferenceStyle">@style/Preference.M3</item>
@@ -292,6 +293,22 @@
 
     <style name="Widget.AppTheme.PopupMenu.DropDown" parent="Widget.AppCompat.ListView.DropDown">
         <item name="android:listSelector">@drawable/popup_menu_item_background</item>
+    </style>
+
+    <!-- MultiSelectionActionsView -->
+    <style name="Widget.AppTheme.MultiSelectionActionsView" parent="android:Widget">
+        <item name="android:background">@macro/m3_comp_navigation_bar_container_color</item>
+        <item name="backgroundTint">@null</item>
+        <item name="elevation">0dp</item>
+        <item name="itemTextAppearanceInactive">?attr/textAppearanceBodyMedium</item>
+        <item name="itemTextAppearanceActive">?attr/textAppearanceBodyMedium</item>
+        <item name="itemIconSize">@dimen/m3_comp_navigation_bar_icon_size</item>
+        <item name="itemIconTint">@color/m3_textfield_indicator_text_color</item>
+        <item name="itemTextColor">@color/m3_textfield_indicator_text_color</item>
+        <item name="enforceTextAppearance">true</item>
+        <item name="enforceMaterialTheme">true</item>
+        <item name="itemBackground">@null</item>
+        <item name="itemHorizontalTranslationEnabled">false</item>
     </style>
 
     <!-- ProgressIndicator -->

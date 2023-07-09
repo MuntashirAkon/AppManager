@@ -11,6 +11,7 @@
     <attr name="materialAlertDialogListItemTextStyle" format="reference" />
     <attr name="materialFullScreenAlertDialogTheme" format="reference" />
     <attr name="materialSpinnerStyle" format="reference" />
+    <attr name="multiSelectionActionsView" format="reference" />
 
     <declare-styleable name="SearchView">
         <!-- Tint to apply to the SearchView's close icon. -->
@@ -88,7 +89,7 @@
         <!-- Whether fast scroller is enabled. Default is false. -->
         <attr name="fastScrollerEnabled" format="boolean" />
     </declare-styleable>
-    <declare-styleable name="ReflowMenuViewWrapper">
+    <declare-styleable name="MultiSelectionActionsView">
         <!-- Background tint for the navigation bar. -->
         <attr name="backgroundTint" />
         <!-- The menu resource to inflate and populate items from. Attribute type definition is in

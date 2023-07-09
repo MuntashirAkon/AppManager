@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later
 
-package io.github.muntashirakon.reflow;
+package io.github.muntashirakon.multiselection;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -18,19 +18,16 @@ import androidx.appcompat.view.menu.MenuItemImpl;
  */
 // Copyright 2020 The Android Open Source Project
 @SuppressLint("RestrictedApi")
-final class ReflowMenu extends MenuBuilder {
-    @NonNull
-    private final Class<?> mViewClass;
+final class MultiSelectionActionsMenu extends MenuBuilder {
 
-    public ReflowMenu(@NonNull Context context, @NonNull Class<?> viewClass) {
+    public MultiSelectionActionsMenu(@NonNull Context context) {
         super(context);
-        mViewClass = viewClass;
     }
 
     @NonNull
     @Override
     public SubMenu addSubMenu(int group, int id, int categoryOrder, @NonNull CharSequence title) {
-        throw new UnsupportedOperationException(mViewClass.getSimpleName() + " does not support submenus");
+        throw new UnsupportedOperationException("MultiSelectionActionsView does not support submenus");
     }
 
     @Override

@@ -67,7 +67,7 @@ import io.github.muntashirakon.dialog.SearchableItemsDialogBuilder;
 import io.github.muntashirakon.dialog.TextInputDialogBuilder;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
-import io.github.muntashirakon.reflow.SelectionActionsView;
+import io.github.muntashirakon.multiselection.MultiSelectionActionsView;
 import io.github.muntashirakon.util.UiUtils;
 import io.github.muntashirakon.widget.FloatingActionButtonGroup;
 import io.github.muntashirakon.widget.MultiSelectionView;
@@ -75,7 +75,7 @@ import io.github.muntashirakon.widget.RecyclerView;
 import io.github.muntashirakon.widget.SwipeRefreshLayout;
 
 public class FmFragment extends Fragment implements SearchView.OnQueryTextListener, SwipeRefreshLayout.OnRefreshListener,
-        SpeedDialView.OnActionSelectedListener, SelectionActionsView.OnItemSelectedListener {
+        SpeedDialView.OnActionSelectedListener, MultiSelectionActionsView.OnItemSelectedListener {
     public static final String TAG = FmFragment.class.getSimpleName();
 
     public static final String ARG_URI = "uri";

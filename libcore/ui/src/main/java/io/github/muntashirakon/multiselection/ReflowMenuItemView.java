@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: Apache-2.0 AND GPL-3.0-or-later
 
-package io.github.muntashirakon.reflow;
-
-import static java.lang.Math.max;
+package io.github.muntashirakon.multiselection;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -16,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityNodeInfo;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -23,7 +22,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StyleRes;
 import androidx.appcompat.view.menu.MenuItemImpl;
-import androidx.appcompat.view.menu.MenuView;
 import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.TooltipCompat;
 import androidx.core.content.ContextCompat;
@@ -35,13 +33,11 @@ import androidx.core.view.accessibility.AccessibilityNodeInfoCompat.Accessibilit
 import androidx.core.view.accessibility.AccessibilityNodeInfoCompat.CollectionItemInfoCompat;
 import androidx.core.widget.TextViewCompat;
 
-import com.google.android.material.card.MaterialCardView;
-
 import io.github.muntashirakon.ui.R;
 
 // Copyright 2020 The Android Open Source Project
 @SuppressLint("RestrictedApi")
-public final class ReflowMenuItemView extends MaterialCardView implements MenuView.ItemView {
+public final class ReflowMenuItemView extends FrameLayout {
     private static final int[] CHECKED_STATE_SET = {android.R.attr.state_checked};
 
     private final ImageView mIcon;
@@ -64,11 +60,7 @@ public final class ReflowMenuItemView extends MaterialCardView implements MenuVi
     }
 
     public ReflowMenuItemView(Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs, com.google.android.material.R.attr.materialCardViewStyle);
-    }
-
-    public ReflowMenuItemView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
+        super(context, attrs);
 
         // Inflate layout
         LayoutInflater.from(context).inflate(R.layout.item_reflow_menu, this, true);
@@ -79,25 +71,7 @@ public final class ReflowMenuItemView extends MaterialCardView implements MenuVi
         setFocusable(true);
     }
 
-    @Override
-    protected int getSuggestedMinimumWidth() {
-        LinearLayoutCompat.LayoutParams labelGroupParams = (LinearLayoutCompat.LayoutParams) mLabel.getLayoutParams();
-        int labelWidth = labelGroupParams.leftMargin + mLabel.getMeasuredWidth() + labelGroupParams.rightMargin;
-
-        return max(getSuggestedIconWidth(), labelWidth);
-    }
-
-    @Override
-    protected int getSuggestedMinimumHeight() {
-        LinearLayoutCompat.LayoutParams labelGroupParams = (LinearLayoutCompat.LayoutParams) mLabel.getLayoutParams();
-        return getSuggestedIconHeight()
-                + labelGroupParams.topMargin
-                + mLabel.getMeasuredHeight()
-                + labelGroupParams.bottomMargin;
-    }
-
-    @Override
-    public void initialize(@NonNull MenuItemImpl itemData, int menuType) {
+    public void initialize(@NonNull MenuItemImpl itemData) {
         mItemData = itemData;
         setCheckable(itemData.isCheckable());
         setChecked(itemData.isChecked());
@@ -120,24 +94,6 @@ public final class ReflowMenuItemView extends MaterialCardView implements MenuVi
         setVisibility(itemData.isVisible() ? View.VISIBLE : View.GONE);
     }
 
-    /**
-     * If this item's layout contains a container which holds the icon and active indicator, return
-     * the container. Otherwise, return the icon image view.
-     * <p>
-     * This is needed for clients who subclass this view and set their own item layout resource which
-     * might not container an icon container or active indicator view.
-     */
-    private View getIconOrContainer() {
-        return mIcon;
-    }
-
-    @Override
-    @Nullable
-    public MenuItemImpl getItemData() {
-        return mItemData;
-    }
-
-    @Override
     public void setTitle(@Nullable CharSequence title) {
         mLabel.setText(title);
         if (mItemData == null || TextUtils.isEmpty(mItemData.getContentDescription())) {
@@ -153,12 +109,10 @@ public final class ReflowMenuItemView extends MaterialCardView implements MenuVi
         }
     }
 
-    @Override
     public void setCheckable(boolean checkable) {
         refreshDrawableState();
     }
 
-    @Override
     public void setChecked(boolean checked) {
         mLabel.setPivotX(mLabel.getWidth() / 2F);
         mLabel.setPivotY(mLabel.getBaseline());
@@ -231,11 +185,6 @@ public final class ReflowMenuItemView extends MaterialCardView implements MenuVi
         return drawableState;
     }
 
-    @Override
-    public void setShortcut(boolean showShortcut, char shortcutKey) {
-    }
-
-    @Override
     public void setIcon(@Nullable Drawable iconDrawable) {
         if (iconDrawable == mOriginalIconDrawable) {
             return;
@@ -252,16 +201,6 @@ public final class ReflowMenuItemView extends MaterialCardView implements MenuVi
             }
         }
         mIcon.setImageDrawable(iconDrawable);
-    }
-
-    @Override
-    public boolean prefersCondensedTitle() {
-        return false;
-    }
-
-    @Override
-    public boolean showsIcon() {
-        return true;
     }
 
     public void setIconTintList(@Nullable ColorStateList tint) {
@@ -311,17 +250,5 @@ public final class ReflowMenuItemView extends MaterialCardView implements MenuVi
     public void setActiveBackgroundEnabled(boolean enabled) {
         mActiveBackgroundEnabled = enabled;
         requestLayout();
-    }
-
-    private int getSuggestedIconWidth() {
-        LinearLayoutCompat.LayoutParams iconContainerParams = (LinearLayoutCompat.LayoutParams) getIconOrContainer().getLayoutParams();
-        return iconContainerParams.leftMargin
-                + mIcon.getMeasuredWidth()
-                + iconContainerParams.rightMargin;
-    }
-
-    private int getSuggestedIconHeight() {
-        LinearLayoutCompat.LayoutParams iconContainerParams = (LinearLayoutCompat.LayoutParams) getIconOrContainer().getLayoutParams();
-        return iconContainerParams.topMargin + mIcon.getMeasuredWidth();
     }
 }

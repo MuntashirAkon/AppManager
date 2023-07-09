@@ -40,7 +40,7 @@ import com.google.android.material.transition.MaterialSharedAxis;
 import java.lang.reflect.Field;
 import java.util.Locale;
 
-import io.github.muntashirakon.reflow.SelectionActionsView;
+import io.github.muntashirakon.multiselection.MultiSelectionActionsView;
 import io.github.muntashirakon.ui.R;
 import io.github.muntashirakon.util.UiUtils;
 
@@ -58,9 +58,8 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
         boolean onSelectionChange(int selectionCount);
     }
 
-    private final SelectionActionsView mSelectionActionsView;
+    private final MultiSelectionActionsView mSelectionActionsView;
     private final View mDivider;
-    private final MaxHeightScrollView mSelectionActionsContainer;
     private final View mCancelSelectionView;
     private final CheckBox mSelectAllView;
     private final TextView mSelectionCounter;
@@ -102,14 +101,13 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
         // Inflate layout
         LayoutInflater.from(context).inflate(R.layout.view_selection_panel, this, true);
         mSelectionActionsView = findViewById(R.id.selection_actions);
-        mSelectionActionsContainer = findViewById(R.id.selection_actions_container);
         mCancelSelectionView = findViewById(R.id.action_cancel);
         mSelectAllView = findViewById(R.id.action_select_all);
         mSelectionCounter = findViewById(R.id.selection_counter);
         mDivider = findViewById(R.id.divider);
 
         // Set heights
-        mMaxHeight = UiUtils.dpToPx(context, 48 + 1 + 116);
+        mMaxHeight = UiUtils.dpToPx(context, 36 + 1 + 75); // This is a pessimistic approximation, not a real height
         mTitleHeight = UiUtils.dpToPx(context, 48);
         mCurrentHeight = mMaxHeight;
 
@@ -137,7 +135,7 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
         @Px
         int smallSize = getResources().getDimensionPixelSize(R.dimen.padding_small);
         setPreventCornerOverlap(false);
-        setCardElevation(UiUtils.dpToPx(context, 4));
+        setCardElevation(UiUtils.dpToPx(context, 8));
 
         mHorizontalMargin = smallSize;
         mBottomMargin = getResources().getDimensionPixelSize(R.dimen.padding_very_small);
@@ -345,7 +343,7 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
         }
     }
 
-    public void setOnItemSelectedListener(io.github.muntashirakon.reflow.SelectionActionsView.OnItemSelectedListener listener) {
+    public void setOnItemSelectedListener(MultiSelectionActionsView.OnItemSelectedListener listener) {
         mSelectionActionsView.setOnItemSelectedListener(listener);
     }
 
@@ -392,14 +390,14 @@ public class MultiSelectionView extends MaterialCardView implements OnApplyWindo
 
     private void minimize() {
         mCurrentHeight = mTitleHeight;
-        mSelectionActionsContainer.setVisibility(GONE);
+        mSelectionActionsView.setVisibility(GONE);
         mDivider.setVisibility(GONE);
         requestLayout();
     }
 
     private void maximize() {
         mCurrentHeight = mMaxHeight;
-        mSelectionActionsContainer.setVisibility(VISIBLE);
+        mSelectionActionsView.setVisibility(VISIBLE);
         mDivider.setVisibility(VISIBLE);
         requestLayout();
     }
