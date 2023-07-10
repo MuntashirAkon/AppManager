@@ -9,7 +9,6 @@ import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MAT
 import android.annotation.UserIdInt;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -379,8 +378,7 @@ public class AppDb {
             }
         }
         for (App app : modifiedApps) {
-            boolean isSystemApp = (app.flags & ApplicationInfo.FLAG_SYSTEM) != 0;
-            if (!app.isInstalled && !isSystemApp) {
+            if (!app.isInstalled && !app.isSystemApp()) {
                 continue;
             }
             int userId = app.userId;

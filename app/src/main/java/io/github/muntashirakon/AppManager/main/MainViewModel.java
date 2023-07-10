@@ -721,8 +721,8 @@ public class MainViewModel extends AndroidViewModel implements ListOptions.ListO
             }
             item.flags = app.flags;
             item.uid = app.uid;
-            item.debuggable = (app.flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
-            item.isUser = (app.flags & ApplicationInfo.FLAG_SYSTEM) == 0;
+            item.debuggable = app.isDebuggable();
+            item.isUser = !app.isSystemApp();
             item.isDisabled = !app.isEnabled;
             item.label = app.packageLabel;
             item.sdk = app.sdk;

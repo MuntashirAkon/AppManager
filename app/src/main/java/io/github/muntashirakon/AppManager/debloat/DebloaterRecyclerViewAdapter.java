@@ -2,7 +2,7 @@
 
 package io.github.muntashirakon.AppManager.debloat;
 
-import android.content.pm.ApplicationInfo;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.widget.MultiSelectionView;
 
@@ -36,21 +35,22 @@ public class DebloaterRecyclerViewAdapter extends MultiSelectionView.Adapter<Deb
     @ColorInt
     private final int mRemovalCautionColor;
     @ColorInt
-    private final int mRemovalUnsafeColor;
-    @ColorInt
     private final int mColorSurface;
     private final Object mLock = new Object();
+    @NonNull
     private final DebloaterViewModel mViewModel;
+    @NonNull
+    private final Drawable mDefaultIcon;
 
     public DebloaterRecyclerViewAdapter(DebloaterActivity activity) {
         mHighlightColor = ColorCodes.getListItemSelectionColor(activity);
         mRemovalSafeColor = ColorCodes.getRemovalSafeIndicatorColor(activity);
         mRemovalReplaceColor = ColorCodes.getRemovalReplaceIndicatorColor(activity);
         mRemovalCautionColor = ColorCodes.getRemovalCautionIndicatorColor(activity);
-        mRemovalUnsafeColor = ColorCodes.getRemovalUnsafeIndicatorColor(activity);
         mColorSurface = MaterialColors.getColor(activity, com.google.android.material.R.attr.colorSurface,
                 DebloaterRecyclerViewAdapter.class.getCanonicalName());
         mViewModel = activity.viewModel;
+        mDefaultIcon = activity.getPackageManager().getDefaultActivityIcon();
     }
 
     public void setAdapterList(List<DebloatObject> adapterList) {
@@ -78,11 +78,8 @@ public class DebloaterRecyclerViewAdapter extends MultiSelectionView.Adapter<Deb
         synchronized (mLock) {
             debloatObject = mAdapterList.get(position);
         }
-        ApplicationInfo applicationInfo;
-        if (debloatObject.getPackageInfo() != null) {
-            applicationInfo = debloatObject.getPackageInfo().applicationInfo;
-        } else applicationInfo = null;
-        ImageLoader.getInstance().displayImage(debloatObject.packageName, applicationInfo, holder.imageView);
+        Drawable icon = debloatObject.getIcon() != null ? debloatObject.getIcon() : mDefaultIcon;
+        holder.imageView.setImageDrawable(icon);
         holder.listTypeView.setText(debloatObject.type);
         holder.packageNameView.setText(debloatObject.packageName);
         holder.descriptionView.setText(debloatObject.description.trim());
@@ -93,7 +90,7 @@ public class DebloaterRecyclerViewAdapter extends MultiSelectionView.Adapter<Deb
         } else {
             holder.labelView.setVisibility(View.GONE);
         }
-        switch (debloatObject.getmRemoval()) {
+        switch (debloatObject.getRemoval()) {
             case DebloatObject.REMOVAL_SAFE:
                 holder.removalIndicator.setDividerColor(mRemovalSafeColor);
                 break;
@@ -104,7 +101,7 @@ public class DebloaterRecyclerViewAdapter extends MultiSelectionView.Adapter<Deb
                 holder.removalIndicator.setDividerColor(mRemovalReplaceColor);
                 break;
             case DebloatObject.REMOVAL_UNSAFE:
-                holder.removalIndicator.setDividerColor(mRemovalUnsafeColor);
+                // N/A
                 break;
         }
         holder.itemView.setOnLongClickListener(v -> {

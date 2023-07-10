@@ -139,10 +139,6 @@ public final class ColorCodes {
         return ContextCompat.getColor(context, R.color.tracker);
     }
 
-    public static int getRemovalUnsafeIndicatorColor(@NonNull Context context) {
-        return ContextCompat.getColor(context, R.color.electric_red);
-    }
-
     public static int getScannerNoTrackerIndicatorColor(@NonNull Context context) {
         return ContextCompat.getColor(context, R.color.stopped);
     }

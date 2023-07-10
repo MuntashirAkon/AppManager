@@ -2,7 +2,7 @@
 
 package io.github.muntashirakon.AppManager.debloat;
 
-import android.content.pm.PackageInfo;
+import android.graphics.drawable.Drawable;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.Nullable;
@@ -46,9 +46,9 @@ public class DebloatObject {
     @Nullable
     private CharSequence mLabel;
     @Nullable
-    private App mApp;
+    private Drawable mIcon;
     @Nullable
-    private PackageInfo mPackageInfo;
+    private App mApp;
     private int[] mUsers;
     private boolean mInstalled;
     @Nullable
@@ -67,7 +67,7 @@ public class DebloatObject {
     }
 
     @Removal
-    public int getmRemoval() {
+    public int getRemoval() {
         switch (mRemoval) {
             default:
             case "Recommended":
@@ -91,21 +91,21 @@ public class DebloatObject {
     }
 
     @Nullable
+    public Drawable getIcon() {
+        return mIcon;
+    }
+
+    public void setIcon(@Nullable Drawable icon) {
+        mIcon = icon;
+    }
+
+    @Nullable
     public App getApp() {
         return mApp;
     }
 
     public void setApp(@Nullable App app) {
         mApp = app;
-    }
-
-    @Nullable
-    public PackageInfo getPackageInfo() {
-        return mPackageInfo;
-    }
-
-    public void setPackageInfo(@Nullable PackageInfo packageInfo) {
-        mPackageInfo = packageInfo;
     }
 
     public int[] getUsers() {

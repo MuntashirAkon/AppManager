@@ -2,7 +2,6 @@
 
 package io.github.muntashirakon.AppManager.settings;
 
-import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
 import android.os.UserHandleHidden;
 import android.text.SpannableStringBuilder;
@@ -163,7 +162,7 @@ public class ImportExportRulesPreferences extends PreferenceFragment {
             ItemCount itemCount;
             for (App app : new AppDb().getAllInstalledApplications()) {
                 if (isDetached()) return;
-                if (!systemApps && (app.flags & ApplicationInfo.FLAG_SYSTEM) != 0)
+                if (!systemApps && app.isSystemApp())
                     continue;
                 itemCount = new ItemCount();
                 itemCount.packageName = app.packageName;

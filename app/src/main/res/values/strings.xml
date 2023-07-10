@@ -1375,7 +1375,6 @@
     <string name="debloat_removal_safe">Safe</string>
     <string name="debloat_removal_replace">Replace</string>
     <string name="debloat_removal_caution">Caution</string>
-    <string name="debloat_removal_unsafe">Unsafe</string>
     <string name="static_shared_library">Static shared library</string>
     <string name="empty_folder">Empty</string>
     <plurals name="folder_count">

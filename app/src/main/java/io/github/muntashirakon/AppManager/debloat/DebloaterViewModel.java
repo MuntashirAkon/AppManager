@@ -2,11 +2,11 @@
 
 package io.github.muntashirakon.AppManager.debloat;
 
+import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES;
 import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_UNINSTALLED_PACKAGES;
 
 import android.app.Application;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.RemoteException;
 import android.os.UserHandleHidden;
@@ -30,6 +30,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
+import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.db.entity.App;
 import io.github.muntashirakon.AppManager.db.utils.AppDb;
@@ -160,7 +161,7 @@ public class DebloaterViewModel extends AndroidViewModel {
                         continue;
                     }
                     // Removal
-                    int removalType = debloatObject.getmRemoval();
+                    int removalType = debloatObject.getRemoval();
                     if ((mFilterFlags & DebloaterListOptions.FILTER_REMOVAL_SAFE) == 0 && removalType == DebloatObject.REMOVAL_SAFE) {
                         continue;
                     }
@@ -170,7 +171,8 @@ public class DebloaterViewModel extends AndroidViewModel {
                     if ((mFilterFlags & DebloaterListOptions.FILTER_REMOVAL_CAUTION) == 0 && removalType == DebloatObject.REMOVAL_CAUTION) {
                         continue;
                     }
-                    if ((mFilterFlags & DebloaterListOptions.FILTER_REMOVAL_UNSAFE) == 0 && removalType == DebloatObject.REMOVAL_UNSAFE) {
+                    if (removalType == DebloatObject.REMOVAL_UNSAFE) {
+                        // Do not list unsafe apps
                         continue;
                     }
                     // Filter others
@@ -226,21 +228,20 @@ public class DebloaterViewModel extends AndroidViewModel {
                 }
                 debloatObject.setInstalled(true);
                 debloatObject.addUser(app.userId);
-                debloatObject.setSystemApp((app.flags & ApplicationInfo.FLAG_SYSTEM) != 0);
-                if (debloatObject.getPackageInfo() == null) {
+                debloatObject.setSystemApp(app.isSystemApp());
+                debloatObject.setLabel(app.packageLabel);
+                if (debloatObject.getIcon() == null) {
                     try {
-                        PackageInfo pi = PackageManagerCompat.getPackageInfo(debloatObject.packageName,
-                                MATCH_UNINSTALLED_PACKAGES
-                                        | PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, app.userId);
-                        ApplicationInfo ai = pi.applicationInfo;
+                        ApplicationInfo ai = PackageManagerCompat.getApplicationInfo(debloatObject.packageName,
+                                MATCH_UNINSTALLED_PACKAGES | MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, app.userId);
                         if ((ai.flags & ApplicationInfo.FLAG_INSTALLED) != 0) {
                             // Reset installed
                             debloatObject.setInstalled(true);
                         }
                         // Reset system app
-                        debloatObject.setSystemApp((ai.flags & ApplicationInfo.FLAG_SYSTEM) != 0);
-                        debloatObject.setPackageInfo(pi);
+                        debloatObject.setSystemApp(ApplicationInfoCompat.isSystemApp(ai));
                         debloatObject.setLabel(ai.loadLabel(pm));
+                        debloatObject.setIcon(ai.loadIcon(pm));
                     } catch (RemoteException | PackageManager.NameNotFoundException ignore) {
                     }
                 }

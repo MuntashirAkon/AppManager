@@ -117,6 +117,13 @@ public class App implements Serializable {
     @ColumnInfo(name = "last_action_time", defaultValue = "0")
     public long lastActionTime;
 
+    public boolean isSystemApp() {
+        return (flags & ApplicationInfo.FLAG_SYSTEM) != 0;
+    }
+
+    public boolean isDebuggable() {
+        return (flags & ApplicationInfo.FLAG_DEBUGGABLE) != 0;
+    }
 
     @NonNull
     public static App fromPackageInfo(@NonNull Context context, @NonNull PackageInfo packageInfo) {
