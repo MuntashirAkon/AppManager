@@ -501,7 +501,8 @@ public class MultiSelectionActionsView extends LinearLayoutCompat implements Men
                 PopupMenu overflowMenu = new PopupMenu(getContext(), overflowView);
                 overflowMenu.setForceShowIcon(true);
                 Menu menu = overflowMenu.getMenu();
-                for (MenuItemImpl menuItem : overflowItems) {
+                for (int i = overflowItems.size() - 1; i >= 0; --i) {
+                    MenuItemImpl menuItem = overflowItems.get(i);
                     addMenuFromMenuItem(menu, menuItem);
                 }
                 overflowMenu.show();
