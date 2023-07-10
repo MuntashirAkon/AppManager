@@ -1,3 +1,6 @@
 [submodule "scripts/android-libraries"]
 	path = scripts/android-libraries
 	url = https://github.com/MuntashirAkon/android-libraries.git
+[submodule "scripts/android-debloat-list"]
+	path = scripts/android-debloat-list
+	url = https://github.com/MuntashirAkon/android-debloat-list.git
