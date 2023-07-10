@@ -16,6 +16,7 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.color.MaterialColors;
@@ -32,6 +33,7 @@ import io.github.muntashirakon.widget.MultiSelectionView;
 public class DebloaterRecyclerViewAdapter extends MultiSelectionView.Adapter<DebloaterRecyclerViewAdapter.ViewHolder> {
     private List<DebloatObject> mAdapterList = Collections.emptyList();
 
+    private final FragmentActivity mActivity;
     @ColorInt
     private final int mHighlightColor;
     @ColorInt
@@ -49,6 +51,7 @@ public class DebloaterRecyclerViewAdapter extends MultiSelectionView.Adapter<Deb
     private final Drawable mDefaultIcon;
 
     public DebloaterRecyclerViewAdapter(DebloaterActivity activity) {
+        mActivity = activity;
         mHighlightColor = ColorCodes.getListItemSelectionColor(activity);
         mRemovalSafeColor = ColorCodes.getRemovalSafeIndicatorColor(activity);
         mRemovalReplaceColor = ColorCodes.getRemovalReplaceIndicatorColor(activity);
@@ -125,6 +128,9 @@ public class DebloaterRecyclerViewAdapter extends MultiSelectionView.Adapter<Deb
         holder.itemView.setOnClickListener(v -> {
             if (isInSelectionMode()) {
                 toggleSelection(position);
+            } else {
+                DebloatItemDetailsDialog dialog = DebloatItemDetailsDialog.getInstance(debloatObject.packageName);
+                dialog.show(mActivity.getSupportFragmentManager(), DebloatItemDetailsDialog.TAG);
             }
         });
         holder.itemView.setCardBackgroundColor(mColorSurface);

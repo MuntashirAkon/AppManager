@@ -14,6 +14,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -48,7 +49,8 @@ public class DebloaterViewModel extends AndroidViewModel {
     private String mQueryString = null;
     @AdvancedSearchView.SearchType
     private int mQueryType;
-    private DebloatObject[] mDebloatObjects;
+    @Nullable
+    private List<DebloatObject> mDebloatObjects;
 
     private final Map<String, int[]> mSelectedPackages = new HashMap<>();
     private final MutableLiveData<List<DebloatObject>> mDebloatObjectLiveData = new MutableLiveData<>();
@@ -87,7 +89,7 @@ public class DebloaterViewModel extends AndroidViewModel {
     }
 
     public int getTotalItemCount() {
-        return mDebloatObjects != null ? mDebloatObjects.length : 0;
+        return mDebloatObjects != null ? mDebloatObjects.size() : 0;
     }
 
     public int getSelectedItemCount() {
@@ -134,10 +136,25 @@ public class DebloaterViewModel extends AndroidViewModel {
         return userPackagePairs;
     }
 
+    @Nullable
+    public DebloatObject findDebloatObject(@NonNull String packageName) {
+        if (mDebloatObjects != null) {
+            for (DebloatObject object : mDebloatObjects) {
+                if (packageName.equals(object.packageName)) {
+                    return object;
+                }
+            }
+        }
+        return null;
+    }
+
     @AnyThread
     public void loadPackages() {
         mExecutor.submit(() -> {
             loadDebloatObjects();
+            if (mDebloatObjects == null) {
+                return;
+            }
             List<DebloatObject> debloatObjects = new ArrayList<>();
             if (mFilterFlags != DebloaterListOptions.FILTER_NO_FILTER) {
                 for (DebloatObject debloatObject : mDebloatObjects) {
@@ -213,9 +230,12 @@ public class DebloaterViewModel extends AndroidViewModel {
         }
         String jsonContent = FileUtils.getContentFromAssets(getApplication(), "debloat.json");
         try {
-            mDebloatObjects = mGson.fromJson(jsonContent, DebloatObject[].class);
+            mDebloatObjects = Arrays.asList(mGson.fromJson(jsonContent, DebloatObject[].class));
         } catch (Throwable e) {
             e.printStackTrace();
+        }
+        if (mDebloatObjects == null) {
+            return;
         }
         PackageManager pm = getApplication().getPackageManager();
         // Fetch package info for all users
