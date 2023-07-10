@@ -1419,4 +1419,7 @@
     <string name="pref_send_notifications_to_connected_devices">Send notifications to the connected devices</string>
     <string name="pref_send_notification_to_connected_devices_msg">Set whether to send notifications to connected devices such as wearables.</string>
     <string name="installer_options">Installer options</string>
+    <string name="debloat_removal_safe_short_description">Safe to remove</string>
+    <string name="debloat_removal_caution_short_description">Exercise caution</string>
+    <string name="debloat_removal_replace_short_description">Replace with alternative</string>
 </resources>

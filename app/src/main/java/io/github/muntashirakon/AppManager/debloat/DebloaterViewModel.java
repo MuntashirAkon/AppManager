@@ -142,22 +142,22 @@ public class DebloaterViewModel extends AndroidViewModel {
             if (mFilterFlags != DebloaterListOptions.FILTER_NO_FILTER) {
                 for (DebloatObject debloatObject : mDebloatObjects) {
                     // List
-                    if ((mFilterFlags & DebloaterListOptions.FILTER_LIST_AOSP) == 0 && debloatObject.type.equals("Aosp")) {
+                    if ((mFilterFlags & DebloaterListOptions.FILTER_LIST_AOSP) == 0 && debloatObject.type.equals("aosp")) {
                         continue;
                     }
-                    if ((mFilterFlags & DebloaterListOptions.FILTER_LIST_OEM) == 0 && debloatObject.type.equals("Oem")) {
+                    if ((mFilterFlags & DebloaterListOptions.FILTER_LIST_CARRIER) == 0 && debloatObject.type.equals("carrier")) {
                         continue;
                     }
-                    if ((mFilterFlags & DebloaterListOptions.FILTER_LIST_CARRIER) == 0 && debloatObject.type.equals("Carrier")) {
+                    if ((mFilterFlags & DebloaterListOptions.FILTER_LIST_GOOGLE) == 0 && debloatObject.type.equals("google")) {
                         continue;
                     }
-                    if ((mFilterFlags & DebloaterListOptions.FILTER_LIST_GOOGLE) == 0 && debloatObject.type.equals("Google")) {
+                    if ((mFilterFlags & DebloaterListOptions.FILTER_LIST_MISC) == 0 && debloatObject.type.equals("misc")) {
                         continue;
                     }
-                    if ((mFilterFlags & DebloaterListOptions.FILTER_LIST_MISC) == 0 && debloatObject.type.equals("Misc")) {
+                    if ((mFilterFlags & DebloaterListOptions.FILTER_LIST_OEM) == 0 && debloatObject.type.equals("oem")) {
                         continue;
                     }
-                    if ((mFilterFlags & DebloaterListOptions.FILTER_LIST_PENDING) == 0 && debloatObject.type.equals("Pending")) {
+                    if ((mFilterFlags & DebloaterListOptions.FILTER_LIST_PENDING) == 0 && debloatObject.type.equals("pending")) {
                         continue;
                     }
                     // Removal
@@ -169,10 +169,6 @@ public class DebloaterViewModel extends AndroidViewModel {
                         continue;
                     }
                     if ((mFilterFlags & DebloaterListOptions.FILTER_REMOVAL_CAUTION) == 0 && removalType == DebloatObject.REMOVAL_CAUTION) {
-                        continue;
-                    }
-                    if (removalType == DebloatObject.REMOVAL_UNSAFE) {
-                        // Do not list unsafe apps
                         continue;
                     }
                     // Filter others
@@ -216,7 +212,11 @@ public class DebloaterViewModel extends AndroidViewModel {
             return;
         }
         String jsonContent = FileUtils.getContentFromAssets(getApplication(), "debloat.json");
-        mDebloatObjects = mGson.fromJson(jsonContent, DebloatObject[].class);
+        try {
+            mDebloatObjects = mGson.fromJson(jsonContent, DebloatObject[].class);
+        } catch (Throwable e) {
+            e.printStackTrace();
+        }
         PackageManager pm = getApplication().getPackageManager();
         // Fetch package info for all users
         AppDb appDb = new AppDb();

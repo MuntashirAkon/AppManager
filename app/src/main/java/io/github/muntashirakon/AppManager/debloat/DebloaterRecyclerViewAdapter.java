@@ -2,13 +2,19 @@
 
 package io.github.muntashirakon.AppManager.debloat;
 
+import static io.github.muntashirakon.AppManager.utils.UIUtils.getColoredText;
+
+import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import androidx.appcompat.widget.AppCompatImageView;
 
 import com.google.android.material.card.MaterialCardView;
@@ -78,37 +84,44 @@ public class DebloaterRecyclerViewAdapter extends MultiSelectionView.Adapter<Deb
         synchronized (mLock) {
             debloatObject = mAdapterList.get(position);
         }
+        Context context = holder.itemView.getContext();
         Drawable icon = debloatObject.getIcon() != null ? debloatObject.getIcon() : mDefaultIcon;
-        holder.imageView.setImageDrawable(icon);
-        holder.listTypeView.setText(debloatObject.type);
-        holder.packageNameView.setText(debloatObject.packageName);
-        holder.descriptionView.setText(debloatObject.description.trim());
-        CharSequence label = debloatObject.getLabel();
-        if (label != null) {
-            holder.labelView.setVisibility(View.VISIBLE);
-            holder.labelView.setText(label);
-        } else {
-            holder.labelView.setVisibility(View.GONE);
-        }
+        String warning = debloatObject.getWarning();
+        SpannableStringBuilder sb = new SpannableStringBuilder();
+        int removalColor;
+        @StringRes
+        int removalRes;
         switch (debloatObject.getRemoval()) {
             case DebloatObject.REMOVAL_SAFE:
-                holder.removalIndicator.setDividerColor(mRemovalSafeColor);
+                removalColor = mRemovalSafeColor;
+                removalRes = R.string.debloat_removal_safe_short_description;
                 break;
+            default:
             case DebloatObject.REMOVAL_CAUTION:
-                holder.removalIndicator.setDividerColor(mRemovalCautionColor);
+                removalColor = mRemovalCautionColor;
+                removalRes = R.string.debloat_removal_caution_short_description;
                 break;
             case DebloatObject.REMOVAL_REPLACE:
-                holder.removalIndicator.setDividerColor(mRemovalReplaceColor);
-                break;
-            case DebloatObject.REMOVAL_UNSAFE:
-                // N/A
+                removalColor = mRemovalReplaceColor;
+                removalRes = R.string.debloat_removal_replace_short_description;
                 break;
         }
+        sb.append(getColoredText(context.getString(removalRes), removalColor));
+        if (!TextUtils.isEmpty(warning)) {
+            sb.append(" — ").append(warning);
+        }
+        CharSequence label = debloatObject.getLabel() != null ? debloatObject.getLabel() : debloatObject.packageName;
+        holder.iconView.setImageDrawable(icon);
+        holder.listTypeView.setText(debloatObject.type);
+        holder.packageNameView.setText(debloatObject.packageName);
+        holder.descriptionView.setText(sb);
+        holder.removalIndicator.setDividerColor(removalColor);
+        holder.labelView.setText(label);
         holder.itemView.setOnLongClickListener(v -> {
             toggleSelection(position);
             return true;
         });
-        holder.imageView.setOnClickListener(v -> toggleSelection(position));
+        holder.iconView.setOnClickListener(v -> toggleSelection(position));
         holder.itemView.setOnClickListener(v -> {
             if (isInSelectionMode()) {
                 toggleSelection(position);
@@ -172,7 +185,7 @@ public class DebloaterRecyclerViewAdapter extends MultiSelectionView.Adapter<Deb
     public static class ViewHolder extends MultiSelectionView.ViewHolder {
         public final MaterialCardView itemView;
         public final MaterialDivider removalIndicator;
-        public final AppCompatImageView imageView;
+        public final AppCompatImageView iconView;
         public final MaterialTextView listTypeView;
         public final MaterialTextView labelView;
         public final MaterialTextView packageNameView;
@@ -182,7 +195,7 @@ public class DebloaterRecyclerViewAdapter extends MultiSelectionView.Adapter<Deb
             super(itemView);
             this.itemView = (MaterialCardView) itemView;
             removalIndicator = itemView.findViewById(R.id.divider);
-            imageView = itemView.findViewById(R.id.icon);
+            iconView = itemView.findViewById(R.id.icon);
             listTypeView = itemView.findViewById(R.id.list_type);
             labelView = itemView.findViewById(R.id.label);
             packageNameView = itemView.findViewById(R.id.package_name);

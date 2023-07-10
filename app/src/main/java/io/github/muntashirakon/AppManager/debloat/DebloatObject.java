@@ -5,6 +5,7 @@ package io.github.muntashirakon.AppManager.debloat;
 import android.graphics.drawable.Drawable;
 
 import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
@@ -12,11 +13,10 @@ import com.google.gson.annotations.SerializedName;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-import io.github.muntashirakon.AppManager.db.entity.App;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 
 public class DebloatObject {
-    @IntDef({REMOVAL_SAFE, REMOVAL_REPLACE, REMOVAL_CAUTION, REMOVAL_UNSAFE})
+    @IntDef({REMOVAL_SAFE, REMOVAL_REPLACE, REMOVAL_CAUTION})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Removal {
     }
@@ -24,66 +24,87 @@ public class DebloatObject {
     public static final int REMOVAL_SAFE = 0;
     public static final int REMOVAL_REPLACE = 1;
     public static final int REMOVAL_CAUTION = 2;
-    public static final int REMOVAL_UNSAFE = 3;
 
     @SerializedName("id")
     public String packageName;
-    // Possible values: Google, Misc, Oem, Aosp, Pending, Carrier
-    @SerializedName("list")
+    @SerializedName("label")
+    @Nullable
+    private String mInternalLabel;
+    @SerializedName("tags")
+    @Nullable
+    private String[] mTags;
+    @SerializedName("dependencies")
+    @Nullable
+    private String[] mDependencies;
+    @SerializedName("required_by")
+    @Nullable
+    private String[] mRequiredBy;
+    // Possible values: aosp, carrier, google, misc, oem, pending
+    @SerializedName("type")
     public String type;
     @SerializedName("description")
-    public String description;
-
-    @SerializedName("dependencies")
-    private String[] mDependencies;
-    @SerializedName("neededBy")
-    private String[] mNeededBy;
-    @SerializedName("labels")
-    private String[] mLabels;
+    private String mDescription;
+    @SerializedName("web")
+    @Nullable
+    private String[] mWebRefs;
     @SerializedName("removal")
     private String mRemoval;
-
+    @SerializedName("warning")
     @Nullable
-    private CharSequence mLabel;
+    private String mWarning;
+    @SerializedName("suggestions")
+    @Nullable
+    private String mSuggestionId;
+
     @Nullable
     private Drawable mIcon;
     @Nullable
-    private App mApp;
+    private CharSequence mLabel;
     private int[] mUsers;
     private boolean mInstalled;
     @Nullable
     private Boolean mSystemApp = null;
 
+    @Nullable
     public String[] getDependencies() {
         return mDependencies;
     }
 
-    public String[] getNeededBy() {
-        return mNeededBy;
-    }
-
-    public String[] getLabels() {
-        return mLabels;
+    @Nullable
+    public String[] getRequiredBy() {
+        return mRequiredBy;
     }
 
     @Removal
     public int getRemoval() {
         switch (mRemoval) {
             default:
-            case "Recommended":
+            case "safe":
                 return REMOVAL_SAFE;
-            case "Advanced":
+            case "replace":
                 return REMOVAL_REPLACE;
-            case "Expert":
+            case "caution":
                 return REMOVAL_CAUTION;
-            case "Unsafe":
-                return REMOVAL_UNSAFE;
         }
     }
 
     @Nullable
+    public String getWarning() {
+        return mWarning;
+    }
+
+    public String getDescription() {
+        return mDescription;
+    }
+
+    @NonNull
+    public String[] getWebRefs() {
+        return ArrayUtils.defeatNullable(mWebRefs);
+    }
+
+    @Nullable
     public CharSequence getLabel() {
-        return mLabel;
+        return mLabel != null ? mLabel : mInternalLabel;
     }
 
     public void setLabel(@Nullable CharSequence label) {
@@ -97,15 +118,6 @@ public class DebloatObject {
 
     public void setIcon(@Nullable Drawable icon) {
         mIcon = icon;
-    }
-
-    @Nullable
-    public App getApp() {
-        return mApp;
-    }
-
-    public void setApp(@Nullable App app) {
-        mApp = app;
     }
 
     public int[] getUsers() {

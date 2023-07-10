@@ -53,7 +53,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
-                android:textIsSelectable="true"
                 android:ellipsize="end"
                 android:textAppearance="?attr/textAppearanceListItem"
                 tools:text="@string/app_name" />
@@ -63,7 +62,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
-                android:textIsSelectable="true"
                 android:ellipsize="end"
                 android:textAppearance="?attr/textAppearanceListItemSecondary"
                 android:textStyle="italic"
@@ -75,7 +73,6 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="?attr/textAppearanceListItemSecondary"
                 android:autoLink="web"
-                android:textIsSelectable="true"
                 tools:text="@tools:sample/lorem/random"
                 tools:ignore="SmallSp" />
 
