@@ -27,9 +27,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.io.StringReader;
+import java.io.Reader;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.nio.ByteBuffer;
@@ -51,10 +52,13 @@ import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.compat.xml.TypedXmlPullParser;
 import io.github.muntashirakon.compat.xml.TypedXmlSerializer;
 import io.github.muntashirakon.compat.xml.Xml;
+import io.github.muntashirakon.io.CharSequenceInputStream;
 import io.github.muntashirakon.io.IoUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.lifecycle.SingleLiveEvent;
+import io.github.rosemoe.sora.text.Content;
+import io.github.rosemoe.sora.text.ContentIO;
 
 public class CodeEditorViewModel extends AndroidViewModel {
     public static final String TAG = CodeEditorViewModel.class.getSimpleName();
@@ -94,7 +98,7 @@ public class CodeEditorViewModel extends AndroidViewModel {
     private Future<?> mJavaConverterResult;
 
     private final FileCache mFileCache = new FileCache();
-    private final MutableLiveData<String> mContentLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Content> mContentLiveData = new MutableLiveData<>();
     // Only for smali
     private final SingleLiveEvent<Uri> mJavaFileLiveData = new SingleLiveEvent<>();
     private final MutableLiveData<Boolean> mSaveFileLiveData = new MutableLiveData<>();
@@ -115,7 +119,7 @@ public class CodeEditorViewModel extends AndroidViewModel {
         super.onCleared();
     }
 
-    public LiveData<String> getContentLiveData() {
+    public LiveData<Content> getContentLiveData() {
         return mContentLiveData;
     }
 
@@ -146,13 +150,13 @@ public class CodeEditorViewModel extends AndroidViewModel {
             mContentLoaderResult.cancel(true);
         }
         mContentLoaderResult = ThreadUtils.postOnBackgroundThread(() -> {
-            String content = null;
+            Content content = null;
             if ("xml".equals(mLanguage)) {
                 byte[] bytes = mSourceFile.getContentAsBinary();
                 ByteBuffer buffer = ByteBuffer.wrap(bytes);
                 try {
                     if (AndroidBinXmlDecoder.isBinaryXml(buffer)) {
-                        content = AndroidBinXmlDecoder.decode(bytes);
+                        content = new Content(AndroidBinXmlDecoder.decode(bytes));
                         mXmlType = XML_TYPE_AXML;
                     } else if (Xml.isBinaryXml(buffer)) {
                         // FIXME: 19/5/23 Unfortunately, converting ABX to XML is lossy. Find a way to fix this.
@@ -165,14 +169,18 @@ public class CodeEditorViewModel extends AndroidViewModel {
                 }
             }
             if (content == null) {
-                content = mSourceFile.getContentAsString();
-                mXmlType = XML_TYPE_NONE;
+                try (InputStream is = mSourceFile.openInputStream()) {
+                    content = ContentIO.createFrom(is);
+                    mXmlType = XML_TYPE_NONE;
+                }catch (IOException e) {
+                    Log.e(TAG, "Could not read file " + mSourceFile, e);
+                }
             }
             mContentLiveData.postValue(content);
         });
     }
 
-    public void saveFile(@NonNull String content, @Nullable Path alternativeFile) {
+    public void saveFile(@NonNull Content content, @Nullable Path alternativeFile) {
         ThreadUtils.postOnBackgroundThread(() -> {
             if (mSourceFile == null && alternativeFile == null) {
                 mSaveFileLiveData.postValue(false);
@@ -181,19 +189,23 @@ public class CodeEditorViewModel extends AndroidViewModel {
             // Important: Alternative file gets the top priority
             Path savingPath = alternativeFile != null ? alternativeFile : mSourceFile;
             try (OutputStream os = savingPath.openOutputStream()) {
-                byte[] realContent;
                 switch (mXmlType) {
-                    case XML_TYPE_AXML:
-                        realContent = AndroidBinXmlEncoder.encodeString(content);
+                    case XML_TYPE_AXML: {
+                        // TODO: Use serializer from the latest update
+                        byte[] realContent = AndroidBinXmlEncoder.encodeString(content.toString());
+                        os.write(realContent);
                         break;
-                    case XML_TYPE_ABX:
-                        realContent = getAbxFromXml(content);
+                    }
+                    case XML_TYPE_ABX: {
+                        try (InputStream is = new CharSequenceInputStream(content, StandardCharsets.UTF_8)) {
+                            copyAbxFromXml(is, os);
+                        }
                         break;
+                    }
                     default:
                     case XML_TYPE_NONE:
-                        realContent = content.getBytes(StandardCharsets.UTF_8);
+                        ContentIO.writeTo(content, os, false);
                 }
-                os.write(realContent);
                 mSaveFileLiveData.postValue(true);
             } catch (IOException e) {
                 Log.e(TAG, "Could not write to file " + savingPath, e);
@@ -231,7 +243,7 @@ public class CodeEditorViewModel extends AndroidViewModel {
         return mLanguage;
     }
 
-    public void generateJava(String smaliContent) {
+    public void generateJava(Content smaliContent) {
         if (!mCanGenerateJava) {
             return;
         }
@@ -248,7 +260,7 @@ public class CodeEditorViewModel extends AndroidViewModel {
                 Path[] paths = parent != null ? parent.listFiles((dir, name) -> name.equals(baseSmali) || name.startsWith(baseStartWith))
                         : new Path[0];
                 smaliContents = new ArrayList<>(paths.length + 1);
-                smaliContents.add(smaliContent);
+                smaliContents.add(smaliContent.toString());
                 for (Path path : paths) {
                     if (path.equals(mSourceFile)) {
                         // We already have this file
@@ -256,14 +268,14 @@ public class CodeEditorViewModel extends AndroidViewModel {
                     }
                     String content = path.getContentAsString(null);
                     if (content != null) {
-                        smaliContents.add(path.getContentAsString());
+                        smaliContents.add(content);
                     } else {
                         mJavaFileLiveData.postValue(null);
                         return;
                     }
                 }
             } else {
-                smaliContents = Collections.singletonList(smaliContent);
+                smaliContents = Collections.singletonList(smaliContent.toString());
             }
             if (ThreadUtils.isInterrupted()) {
                 return;
@@ -303,17 +315,15 @@ public class CodeEditorViewModel extends AndroidViewModel {
         }
     }
 
-    private static byte[] getAbxFromXml(@NonNull String data) throws IOException {
-        try (StringReader is = new StringReader(data);
-             ByteArrayOutputStream os = new ByteArrayOutputStream()) {
+    private static void copyAbxFromXml(@NonNull InputStream in, @NonNull OutputStream out) throws IOException {
+        try (Reader is = new InputStreamReader(in)) {
             TypedXmlPullParser parser = Xml.newFastPullParser();
             parser.setInput(is);
             TypedXmlSerializer serializer = Xml.newBinarySerializer();
-            serializer.setOutput(os, StandardCharsets.UTF_8.name());
+            serializer.setOutput(out, StandardCharsets.UTF_8.name());
             copyXml(parser, serializer);
-            return os.toByteArray();
         } catch (XmlPullParserException e) {
-            return ExUtils.rethrowAsIOException(e);
+            ExUtils.rethrowAsIOException(e);
         }
     }
 
