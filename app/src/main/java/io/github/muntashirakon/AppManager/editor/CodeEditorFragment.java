@@ -19,6 +19,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.HorizontalScrollView;
 import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
@@ -313,7 +314,8 @@ public class CodeEditorFragment extends Fragment {
                 new String[]{"⇥", "{", "}", "(", ")", ",", ".", ";", "\"", "?", "+", "-", "*", "/"},
                 new String[]{"\t", "{", "}", "(", ")", ",", ".", ";", "\"", "?", "+", "-", "*", "/"});
         mSymbolInputView.setTextColor(MaterialColors.getColor(mSymbolInputView, com.google.android.material.R.attr.colorOnSurface));
-        mSymbolInputView.setBackgroundColor(SurfaceColors.SURFACE_2.getColor(requireContext()));
+        mSymbolInputView.setBackground(null);
+        ((HorizontalScrollView) mSymbolInputView.getParent()).setBackgroundColor(SurfaceColors.SURFACE_2.getColor(requireContext()));
         mSymbolInputView.bindEditor(mEditor);
         if (mOptions.readOnly) {
             mSymbolInputView.setVisibility(View.GONE);
