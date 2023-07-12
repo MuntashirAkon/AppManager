@@ -337,7 +337,7 @@
     <string name="empty_package_name">Nome pacchetto vuoto</string>
     <string name="main_activity">Attività principale</string>
     <string name="installer_app">App di installazione</string>
-    <string name="about">Informazioni</string>
+    <string name="about">Informazioni su</string>
     <string name="input_features">Input funzionalità</string>
     <string name="no_feature">Nessuna funzionalità</string>
     <string name="uses_feature">Utilizza funzionalità</string>
@@ -956,8 +956,8 @@
     <string name="enabled">Abilitato</string>
     <string name="install_location_prefer_external">Preferisci esterni</string>
     <string name="backup_multiple_description">Crea un backup separato denominato <i>named</i> invece del backup di base.</string>
-    <string name="backup_extras_description">Esegui il backup delle autorizzazioni delle app, del risparmio della batteria e delle opzioni di utilizzo dei dati, lo stato di MagiskHide, SSAID, ecc.</string>
-    <string name="backup_rules_description">Esegui il backup delle regole configurate in App Manager.</string>
+    <string name="backup_extras_description">Esegui il backup delle autorizzazioni delle app, del risparmio della batteria e delle opzioni di utilizzo dei dati, lo stato di MagiskHide, SSAID, etc. <font fgcolor="#ff0000">A seconda delle autorizzazioni, non tutti gli extra possono essere ripristinati.</font> </string>
+    <string name="backup_rules_description">Esegui il backup delle regole configurate in App Manager. <font fgcolor="#ff0000">A seconda delle autorizzazioni, non tutte le regole possono essere riapplicate durante il ripristino.</font> </string>
     <string name="unlock_app_manager">Sblocca App Manager</string>
     <string name="screen_lock_msg">Blocca App Manager utilizzando il blocco schermo Android</string>
     <string name="type_component_name">Nome componente</string>
@@ -1390,4 +1390,34 @@
     <string name="go_to_path">Vai a…</string>
     <string name="copy_this_path">Copia percorso</string>
     <string name="title_audio_player">Lettore audio</string>
+    <string name="installing_package">Installazione di %1$s…</string>
+    <string name="backing_up_app">Backup di %1$s…</string>
+    <string name="restoring_app">Ripristino di %1$s…</string>
+    <string name="pref_installer_force_dexopt_description">Esegui l\'ottimizzazione DEX subito dopo aver installato l\'app senza attendere che il sistema lo esegua quando il sistema è inattivo.</string>
+    <string name="folder">Cartella</string>
+    <string name="symbolic_link">Collegamento simbolico</string>
+    <string name="create_new_symbolic_link">Nuovo collegamento simbolico</string>
+    <string name="create_new_folder">Nuova cartella</string>
+    <string name="create_new_file">Nuovo file</string>
+    <string name="enter_symbolic_link_name">Nome collegamento</string>
+    <string name="enter_target_path">Percorso di destinazione</string>
+    <string name="invalid_target_path">Percorso non valido</string>
+    <string name="copy_these_paths">Copia percorsi</string>
+    <string name="title_confirm_deletion">Conferma eliminazione</string>
+    <string name="conflict_detected_while_copying">Rilevato conflitto</string>
+    <string name="conflict_detected_while_copying_message">Un elemento chiamato \"%1$s\" esiste già in questa posizione. Vuoi sostituirlo\?</string>
+    <string name="copy_keep_both_file">Mantieni entrambi</string>
+    <string name="copied_successfully">Copiato.</string>
+    <string name="moved_successfully">Spostato</string>
+    <string name="failed_to_delete_specified_file_after_copying">Impossibile eliminare \"%1$s\" dopo averlo copiato, probabilmente a causa di un\'autorizzazione insufficiente.</string>
+    <string name="title_change_selinux_context">Cambia il contesto di SELinux</string>
+    <string name="apply_recursively">Applica ai file inclusi</string>
+    <string name="change_owner_uid">Cambia proprietario (UID)</string>
+    <string name="change_group_gid">Cambia gruppo (GID)</string>
+    <string name="change_mode">Cambia modalità</string>
+    <string name="pref_send_notification_to_connected_devices_msg">Imposta se inviare notifiche ai dispositivi connessi come i dispositivi indossabili.</string>
+    <string name="warning_working_on_system_mode">Avviso: sto operando in modalità sistema invece che in modalità ADB.</string>
+    <string name="symbolic_link_not_supported">Questa cartella non supporta la creazione di un collegamento simbolico.</string>
+    <string name="failed_to_copy_specified_file">Impossibile copiare \"%1$s\".</string>
+    <string name="pref_send_notifications_to_connected_devices">Invia notifiche ai dispositivi connessi</string>
 </resources>
