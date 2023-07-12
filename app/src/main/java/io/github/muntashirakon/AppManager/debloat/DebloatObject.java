@@ -2,7 +2,14 @@
 
 package io.github.muntashirakon.AppManager.debloat;
 
+import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES;
+import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_UNINSTALLED_PACKAGES;
+
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.os.RemoteException;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
@@ -14,6 +21,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.List;
 
+import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
+import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.db.entity.App;
+import io.github.muntashirakon.AppManager.db.utils.AppDb;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 
 public class DebloatObject {
@@ -61,6 +72,7 @@ public class DebloatObject {
     private Drawable mIcon;
     @Nullable
     private CharSequence mLabel;
+    @Nullable
     private int[] mUsers;
     private boolean mInstalled;
     @Nullable
@@ -124,24 +136,17 @@ public class DebloatObject {
         return mLabel != null ? mLabel : mInternalLabel;
     }
 
-    public void setLabel(@Nullable CharSequence label) {
-        mLabel = label;
-    }
-
     @Nullable
     public Drawable getIcon() {
         return mIcon;
     }
 
-    public void setIcon(@Nullable Drawable icon) {
-        mIcon = icon;
-    }
-
+    @Nullable
     public int[] getUsers() {
         return mUsers;
     }
 
-    public void addUser(int userId) {
+    private void addUser(int userId) {
         if (mUsers == null) {
             mUsers = new int[]{userId};
         } else {
@@ -153,10 +158,6 @@ public class DebloatObject {
         return mInstalled;
     }
 
-    public void setInstalled(boolean installed) {
-        mInstalled = installed;
-    }
-
     public boolean isSystemApp() {
         return Boolean.TRUE.equals(mSystemApp);
     }
@@ -165,7 +166,42 @@ public class DebloatObject {
         return Boolean.FALSE.equals(mSystemApp);
     }
 
-    public void setSystemApp(@Nullable Boolean systemApp) {
-        mSystemApp = systemApp;
+    public void fillInstallInfo(@NonNull Context context, @NonNull AppDb appDb) {
+        PackageManager pm = context.getPackageManager();
+        List<SuggestionObject> suggestionObjects = getSuggestions();
+        if (suggestionObjects != null) {
+            for (SuggestionObject suggestionObject : suggestionObjects) {
+                List<App> apps = appDb.getAllApplications(suggestionObject.packageName);
+                for (App app : apps) {
+                    if (app.isInstalled) {
+                        suggestionObject.addUser(app.userId);
+                    }
+                }
+            }
+        }
+        // Update application data
+        mInstalled = false;
+        mUsers = null;
+        List<App> apps = appDb.getAllApplications(packageName);
+        for (App app : apps) {
+            if (!app.isInstalled) {
+                continue;
+            }
+            mInstalled = true;
+            addUser(app.userId);
+            mSystemApp = app.isSystemApp();
+            mLabel = app.packageLabel;
+            if (getIcon() == null) {
+                try {
+                    ApplicationInfo ai = PackageManagerCompat.getApplicationInfo(packageName,
+                            MATCH_UNINSTALLED_PACKAGES | MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, app.userId);
+                    mInstalled = (ai.flags & ApplicationInfo.FLAG_INSTALLED) != 0;
+                    mSystemApp = ApplicationInfoCompat.isSystemApp(ai);
+                    mLabel = ai.loadLabel(pm);
+                    mIcon = ai.loadIcon(pm);
+                } catch (RemoteException | PackageManager.NameNotFoundException ignore) {
+                }
+            }
+        }
     }
 }

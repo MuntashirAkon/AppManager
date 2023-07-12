@@ -2,13 +2,7 @@
 
 package io.github.muntashirakon.AppManager.debloat;
 
-import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_STATIC_SHARED_AND_SDK_LIBRARIES;
-import static io.github.muntashirakon.AppManager.compat.PackageManagerCompat.MATCH_UNINSTALLED_PACKAGES;
-
 import android.app.Application;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
-import android.os.RemoteException;
 import android.os.UserHandleHidden;
 import android.text.TextUtils;
 
@@ -19,8 +13,6 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.google.gson.Gson;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -30,16 +22,12 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
-import io.github.muntashirakon.AppManager.compat.ApplicationInfoCompat;
-import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
-import io.github.muntashirakon.AppManager.db.entity.App;
-import io.github.muntashirakon.AppManager.db.utils.AppDb;
+import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
 import io.github.muntashirakon.AppManager.types.UserPackagePair;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
-import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.MultithreadedExecutor;
 
 public class DebloaterViewModel extends AndroidViewModel {
@@ -50,14 +38,10 @@ public class DebloaterViewModel extends AndroidViewModel {
     private int mQueryType;
     @NonNull
     private final List<DebloatObject> mDebloatObjects = new ArrayList<>();
-    @NonNull
-    private final HashMap<String, List<SuggestionObject>> mIdSuggestionObjectsMap = new HashMap<>();
 
     private final Map<String, int[]> mSelectedPackages = new HashMap<>();
     private final MutableLiveData<List<DebloatObject>> mDebloatObjectListLiveData = new MutableLiveData<>();
-    private final MutableLiveData<DebloatObject> mDebloatObjectLiveData = new MutableLiveData<>();
     private final ExecutorService mExecutor = MultithreadedExecutor.getNewInstance();
-    private final Gson mGson = new Gson();
 
     public DebloaterViewModel(@NonNull Application application) {
         super(application);
@@ -88,10 +72,6 @@ public class DebloaterViewModel extends AndroidViewModel {
 
     public LiveData<List<DebloatObject>> getDebloatObjectListLiveData() {
         return mDebloatObjectListLiveData;
-    }
-
-    public LiveData<DebloatObject> getDebloatObjectLiveData() {
-        return mDebloatObjectLiveData;
     }
 
     public int getTotalItemCount() {
@@ -140,19 +120,6 @@ public class DebloaterViewModel extends AndroidViewModel {
             }
         }
         return userPackagePairs;
-    }
-
-    public void findDebloatObject(@NonNull String packageName) {
-        mExecutor.submit(() -> {
-            for (DebloatObject object : mDebloatObjects) {
-                if (packageName.equals(object.packageName)) {
-                    mDebloatObjectLiveData.postValue(object);
-                    return;
-                }
-            }
-            mDebloatObjectLiveData.postValue(null);
-
-        });
     }
 
     @AnyThread
@@ -232,75 +199,6 @@ public class DebloaterViewModel extends AndroidViewModel {
         if (!mDebloatObjects.isEmpty()) {
             return;
         }
-        loadSuggestions();
-        String jsonContent = FileUtils.getContentFromAssets(getApplication(), "debloat.json");
-        try {
-            mDebloatObjects.addAll(Arrays.asList(mGson.fromJson(jsonContent, DebloatObject[].class)));
-        } catch (Throwable e) {
-            e.printStackTrace();
-        }
-        if (mDebloatObjects.isEmpty()) {
-            return;
-        }
-        PackageManager pm = getApplication().getPackageManager();
-        // Fetch package info for all users
-        AppDb appDb = new AppDb();
-        for (DebloatObject debloatObject : mDebloatObjects) {
-            // Update suggestion data
-            List<SuggestionObject> suggestionObjects = mIdSuggestionObjectsMap.get(debloatObject.getSuggestionId());
-            debloatObject.setSuggestions(suggestionObjects);
-            // Update application data
-            List<App> apps = appDb.getAllApplications(debloatObject.packageName);
-            for (App app : apps) {
-                if (!app.isInstalled) {
-                    continue;
-                }
-                debloatObject.setInstalled(true);
-                debloatObject.addUser(app.userId);
-                debloatObject.setSystemApp(app.isSystemApp());
-                debloatObject.setLabel(app.packageLabel);
-                if (debloatObject.getIcon() == null) {
-                    try {
-                        ApplicationInfo ai = PackageManagerCompat.getApplicationInfo(debloatObject.packageName,
-                                MATCH_UNINSTALLED_PACKAGES | MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, app.userId);
-                        debloatObject.setInstalled((ai.flags & ApplicationInfo.FLAG_INSTALLED) != 0);
-                        debloatObject.setSystemApp(ApplicationInfoCompat.isSystemApp(ai));
-                        debloatObject.setLabel(ai.loadLabel(pm));
-                        debloatObject.setIcon(ai.loadIcon(pm));
-                    } catch (RemoteException | PackageManager.NameNotFoundException ignore) {
-                    }
-                }
-            }
-        }
-    }
-
-    @WorkerThread
-    private void loadSuggestions() {
-        if (!mIdSuggestionObjectsMap.isEmpty()) {
-            return;
-        }
-        String jsonContent = FileUtils.getContentFromAssets(getApplication(), "suggestions.json");
-        try {
-            SuggestionObject[] suggestionObjects = mGson.fromJson(jsonContent, SuggestionObject[].class);
-            if (suggestionObjects != null) {
-                AppDb appDb = new AppDb();
-                for (SuggestionObject suggestionObject : suggestionObjects) {
-                    List<SuggestionObject> objects = mIdSuggestionObjectsMap.get(suggestionObject.suggestionId);
-                    if (objects == null) {
-                        objects = new ArrayList<>();
-                        mIdSuggestionObjectsMap.put(suggestionObject.suggestionId, objects);
-                    }
-                    objects.add(suggestionObject);
-                    List<App> apps = appDb.getAllApplications(suggestionObject.packageName);
-                    for (App app : apps) {
-                        if (app.isInstalled) {
-                            suggestionObject.addUser(app.userId);
-                        }
-                    }
-                }
-            }
-        } catch (Throwable th) {
-            th.printStackTrace();
-        }
+        mDebloatObjects.addAll(StaticDataset.getDebloatObjectsWithInstalledInfo(getApplication()));
     }
 }

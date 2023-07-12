@@ -108,6 +108,7 @@ import io.github.muntashirakon.AppManager.compat.DomainVerificationManagerCompat
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
+import io.github.muntashirakon.AppManager.debloat.BloatwareDetailsDialog;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
 import io.github.muntashirakon.AppManager.details.AppDetailsFragment;
 import io.github.muntashirakon.AppManager.details.AppDetailsViewModel;
@@ -826,6 +827,13 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                     .enableAnchors()
                                     .setNegativeButton(R.string.close, null)
                                     .show());
+        }
+        if (tagCloud.isBloatware) {
+            addChip("Bloatware", ColorCodes.getBloatwareIndicatorColor(mActivity))
+                    .setOnClickListener(v -> {
+                        BloatwareDetailsDialog dialog = BloatwareDetailsDialog.getInstance(mPackageName);
+                        dialog.show(getChildFragmentManager(), BloatwareDetailsDialog.TAG);
+                    });
         }
         if (tagCloud.hasKeyStoreItems) {
             Chip chip;

@@ -63,7 +63,7 @@ public class SuggestionObject {
     public void addUser(int userId) {
         if (mUsers == null) {
             mUsers = new int[]{userId};
-        } else {
+        } else if (!ArrayUtils.contains(mUsers, userId)) {
             mUsers = ArrayUtils.appendInt(mUsers, userId);
         }
     }

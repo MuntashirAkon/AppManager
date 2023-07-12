@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.debloat;
 
+import android.app.Application;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -17,6 +18,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.widget.LinearLayoutCompat;
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -30,7 +33,10 @@ import java.util.Collections;
 import java.util.List;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.StaticDataset;
+import io.github.muntashirakon.AppManager.db.utils.AppDb;
 import io.github.muntashirakon.AppManager.details.AppDetailsActivity;
+import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.AppManager.utils.UIUtils;
 import io.github.muntashirakon.AppManager.utils.appearance.ColorCodes;
 import io.github.muntashirakon.dialog.CapsuleBottomSheetDialogFragment;
@@ -80,7 +86,7 @@ public class BloatwareDetailsDialog extends CapsuleBottomSheetDialogFragment {
             dismiss();
             return;
         }
-        DebloaterViewModel viewModel = new ViewModelProvider(requireActivity()).get(DebloaterViewModel.class);
+        BloatwareDetailsViewModel viewModel = new ViewModelProvider(requireActivity()).get(BloatwareDetailsViewModel.class);
         mAppIconView = view.findViewById(R.id.icon);
         mOpenAppInfoButton = view.findViewById(R.id.info);
         mAppLabelView = view.findViewById(R.id.name);
@@ -94,7 +100,7 @@ public class BloatwareDetailsDialog extends CapsuleBottomSheetDialogFragment {
         mAdapter = new SuggestionsAdapter();
         mSuggestionView.setAdapter(mAdapter);
 
-        viewModel.getDebloatObjectLiveData().observe(getViewLifecycleOwner(), debloatObject -> {
+        viewModel.debloatObjectLiveData.observe(getViewLifecycleOwner(), debloatObject -> {
             if (debloatObject == null) {
                 dismiss();
                 return;
@@ -110,6 +116,7 @@ public class BloatwareDetailsDialog extends CapsuleBottomSheetDialogFragment {
         mAppIconView.setImageDrawable(icon != null ? icon : requireActivity().getPackageManager().getDefaultActivityIcon());
         int[] users = debloatObject.getUsers();
         if (users != null && users.length > 0) {
+            mOpenAppInfoButton.setVisibility(View.VISIBLE);
             mOpenAppInfoButton.setOnClickListener(v -> {
                 Intent appDetailsIntent = AppDetailsActivity.getIntent(requireContext(), debloatObject.packageName,
                         users[0]);
@@ -124,10 +131,11 @@ public class BloatwareDetailsDialog extends CapsuleBottomSheetDialogFragment {
         mPackageNameView.setText(debloatObject.packageName);
         String warning = debloatObject.getWarning();
         if (warning != null) {
+            mWarningView.setVisibility(View.VISIBLE);
             mWarningView.setText(warning);
             if (debloatObject.getRemoval() != DebloatObject.REMOVAL_CAUTION) {
                 mWarningView.setAlertType(MaterialAlertView.ALERT_TYPE_INFO);
-            }
+            } else mWarningView.setAlertType(MaterialAlertView.ALERT_TYPE_WARN);
         } else mWarningView.setVisibility(View.GONE);
         mDescriptionView.setText(getDescription(debloatObject));
         // Add tags
@@ -210,6 +218,28 @@ public class BloatwareDetailsDialog extends CapsuleBottomSheetDialogFragment {
         Chip chip = (Chip) LayoutInflater.from(requireContext()).inflate(R.layout.item_chip, parent, false);
         chip.setText(title);
         parent.addView(chip);
+    }
+
+    public static class BloatwareDetailsViewModel extends AndroidViewModel {
+        public final MutableLiveData<DebloatObject> debloatObjectLiveData = new MutableLiveData<>();
+
+        public BloatwareDetailsViewModel(@NonNull Application application) {
+            super(application);
+        }
+
+        public void findDebloatObject(@NonNull String packageName) {
+            ThreadUtils.postOnBackgroundThread(() -> {
+                List<DebloatObject> debloatObjects = StaticDataset.getDebloatObjects();
+                for (DebloatObject debloatObject : debloatObjects) {
+                    if (packageName.equals(debloatObject.packageName)) {
+                        debloatObject.fillInstallInfo(getApplication(), new AppDb());
+                        debloatObjectLiveData.postValue(debloatObject);
+                        return;
+                    }
+                }
+                debloatObjectLiveData.postValue(null);
+            });
+        }
     }
 
     private class SuggestionsAdapter extends RecyclerView.Adapter<SuggestionsAdapter.SuggestionViewHolder> {

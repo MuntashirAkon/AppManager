@@ -33,6 +33,7 @@ import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerService;
 import io.github.muntashirakon.AppManager.backup.BackupUtils;
@@ -44,6 +45,7 @@ import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.compat.NetworkPolicyManagerCompat;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.db.entity.Backup;
+import io.github.muntashirakon.AppManager.debloat.DebloatObject;
 import io.github.muntashirakon.AppManager.details.AppDetailsViewModel;
 import io.github.muntashirakon.AppManager.magisk.MagiskDenyList;
 import io.github.muntashirakon.AppManager.magisk.MagiskHide;
@@ -186,6 +188,13 @@ public class AppInfoViewModel extends AndroidViewModel {
                 }
             }
             tagCloud.isMagiskDenyListEnabled = !isExternalApk && magiskDenyListEnabled;
+            List<DebloatObject> debloatObjects = StaticDataset.getDebloatObjects();
+            for (DebloatObject debloatObject : debloatObjects) {
+                if (packageName.equals(debloatObject.packageName)) {
+                    tagCloud.isBloatware = true;
+                    break;
+                }
+            }
             tagCloud.canWriteAndExecute = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
                     && applicationInfo.targetSdkVersion < Build.VERSION_CODES.Q;
             tagCloud.hasKeyStoreItems = KeyStoreUtils.hasKeyStore(applicationInfo.uid);
@@ -379,6 +388,7 @@ public class AppInfoViewModel extends AndroidViewModel {
         public boolean isAppSuspended;
         public boolean isMagiskHideEnabled;
         public boolean isMagiskDenyListEnabled;
+        public boolean isBloatware;
         public boolean canWriteAndExecute;
         public boolean hasKeyStoreItems;
         public boolean hasMasterKeyInKeyStore;
