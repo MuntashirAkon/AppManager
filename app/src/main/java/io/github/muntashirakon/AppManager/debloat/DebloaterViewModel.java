@@ -14,7 +14,6 @@ import android.text.TextUtils;
 
 import androidx.annotation.AnyThread;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
@@ -49,11 +48,14 @@ public class DebloaterViewModel extends AndroidViewModel {
     private String mQueryString = null;
     @AdvancedSearchView.SearchType
     private int mQueryType;
-    @Nullable
-    private List<DebloatObject> mDebloatObjects;
+    @NonNull
+    private final List<DebloatObject> mDebloatObjects = new ArrayList<>();
+    @NonNull
+    private final HashMap<String, List<SuggestionObject>> mIdSuggestionObjectsMap = new HashMap<>();
 
     private final Map<String, int[]> mSelectedPackages = new HashMap<>();
-    private final MutableLiveData<List<DebloatObject>> mDebloatObjectLiveData = new MutableLiveData<>();
+    private final MutableLiveData<List<DebloatObject>> mDebloatObjectListLiveData = new MutableLiveData<>();
+    private final MutableLiveData<DebloatObject> mDebloatObjectLiveData = new MutableLiveData<>();
     private final ExecutorService mExecutor = MultithreadedExecutor.getNewInstance();
     private final Gson mGson = new Gson();
 
@@ -84,12 +86,16 @@ public class DebloaterViewModel extends AndroidViewModel {
         loadPackages();
     }
 
-    public LiveData<List<DebloatObject>> getDebloatObjectLiveData() {
+    public LiveData<List<DebloatObject>> getDebloatObjectListLiveData() {
+        return mDebloatObjectListLiveData;
+    }
+
+    public LiveData<DebloatObject> getDebloatObjectLiveData() {
         return mDebloatObjectLiveData;
     }
 
     public int getTotalItemCount() {
-        return mDebloatObjects != null ? mDebloatObjects.size() : 0;
+        return mDebloatObjects.size();
     }
 
     public int getSelectedItemCount() {
@@ -136,25 +142,23 @@ public class DebloaterViewModel extends AndroidViewModel {
         return userPackagePairs;
     }
 
-    @Nullable
-    public DebloatObject findDebloatObject(@NonNull String packageName) {
-        if (mDebloatObjects != null) {
+    public void findDebloatObject(@NonNull String packageName) {
+        mExecutor.submit(() -> {
             for (DebloatObject object : mDebloatObjects) {
                 if (packageName.equals(object.packageName)) {
-                    return object;
+                    mDebloatObjectLiveData.postValue(object);
+                    return;
                 }
             }
-        }
-        return null;
+            mDebloatObjectLiveData.postValue(null);
+
+        });
     }
 
     @AnyThread
     public void loadPackages() {
         mExecutor.submit(() -> {
             loadDebloatObjects();
-            if (mDebloatObjects == null) {
-                return;
-            }
             List<DebloatObject> debloatObjects = new ArrayList<>();
             if (mFilterFlags != DebloaterListOptions.FILTER_NO_FILTER) {
                 for (DebloatObject debloatObject : mDebloatObjects) {
@@ -205,7 +209,7 @@ public class DebloaterViewModel extends AndroidViewModel {
                 }
             }
             if (TextUtils.isEmpty(mQueryString)) {
-                mDebloatObjectLiveData.postValue(debloatObjects);
+                mDebloatObjectListLiveData.postValue(debloatObjects);
                 return;
             }
             // Apply searching
@@ -219,28 +223,33 @@ public class DebloaterViewModel extends AndroidViewModel {
                         }
                     },
                     mQueryType);
-            mDebloatObjectLiveData.postValue(newList);
+            mDebloatObjectListLiveData.postValue(newList);
         });
     }
 
     @WorkerThread
     private void loadDebloatObjects() {
-        if (mDebloatObjects != null) {
+        if (!mDebloatObjects.isEmpty()) {
             return;
         }
+        loadSuggestions();
         String jsonContent = FileUtils.getContentFromAssets(getApplication(), "debloat.json");
         try {
-            mDebloatObjects = Arrays.asList(mGson.fromJson(jsonContent, DebloatObject[].class));
+            mDebloatObjects.addAll(Arrays.asList(mGson.fromJson(jsonContent, DebloatObject[].class)));
         } catch (Throwable e) {
             e.printStackTrace();
         }
-        if (mDebloatObjects == null) {
+        if (mDebloatObjects.isEmpty()) {
             return;
         }
         PackageManager pm = getApplication().getPackageManager();
         // Fetch package info for all users
         AppDb appDb = new AppDb();
         for (DebloatObject debloatObject : mDebloatObjects) {
+            // Update suggestion data
+            List<SuggestionObject> suggestionObjects = mIdSuggestionObjectsMap.get(debloatObject.getSuggestionId());
+            debloatObject.setSuggestions(suggestionObjects);
+            // Update application data
             List<App> apps = appDb.getAllApplications(debloatObject.packageName);
             for (App app : apps) {
                 if (!app.isInstalled) {
@@ -254,11 +263,7 @@ public class DebloaterViewModel extends AndroidViewModel {
                     try {
                         ApplicationInfo ai = PackageManagerCompat.getApplicationInfo(debloatObject.packageName,
                                 MATCH_UNINSTALLED_PACKAGES | MATCH_STATIC_SHARED_AND_SDK_LIBRARIES, app.userId);
-                        if ((ai.flags & ApplicationInfo.FLAG_INSTALLED) != 0) {
-                            // Reset installed
-                            debloatObject.setInstalled(true);
-                        }
-                        // Reset system app
+                        debloatObject.setInstalled((ai.flags & ApplicationInfo.FLAG_INSTALLED) != 0);
                         debloatObject.setSystemApp(ApplicationInfoCompat.isSystemApp(ai));
                         debloatObject.setLabel(ai.loadLabel(pm));
                         debloatObject.setIcon(ai.loadIcon(pm));
@@ -266,6 +271,36 @@ public class DebloaterViewModel extends AndroidViewModel {
                     }
                 }
             }
+        }
+    }
+
+    @WorkerThread
+    private void loadSuggestions() {
+        if (!mIdSuggestionObjectsMap.isEmpty()) {
+            return;
+        }
+        String jsonContent = FileUtils.getContentFromAssets(getApplication(), "suggestions.json");
+        try {
+            SuggestionObject[] suggestionObjects = mGson.fromJson(jsonContent, SuggestionObject[].class);
+            if (suggestionObjects != null) {
+                AppDb appDb = new AppDb();
+                for (SuggestionObject suggestionObject : suggestionObjects) {
+                    List<SuggestionObject> objects = mIdSuggestionObjectsMap.get(suggestionObject.suggestionId);
+                    if (objects == null) {
+                        objects = new ArrayList<>();
+                        mIdSuggestionObjectsMap.put(suggestionObject.suggestionId, objects);
+                    }
+                    objects.add(suggestionObject);
+                    List<App> apps = appDb.getAllApplications(suggestionObject.packageName);
+                    for (App app : apps) {
+                        if (app.isInstalled) {
+                            suggestionObject.addUser(app.userId);
+                        }
+                    }
+                }
+            }
+        } catch (Throwable th) {
+            th.printStackTrace();
         }
     }
 }

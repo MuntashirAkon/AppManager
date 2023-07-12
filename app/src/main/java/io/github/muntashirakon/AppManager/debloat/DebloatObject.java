@@ -12,6 +12,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.util.List;
 
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
 
@@ -64,6 +65,8 @@ public class DebloatObject {
     private boolean mInstalled;
     @Nullable
     private Boolean mSystemApp = null;
+    @Nullable
+    private List<SuggestionObject> mSuggestions;
 
     @Nullable
     public String[] getDependencies() {
@@ -100,6 +103,20 @@ public class DebloatObject {
     @NonNull
     public String[] getWebRefs() {
         return ArrayUtils.defeatNullable(mWebRefs);
+    }
+
+    @Nullable
+    public String getSuggestionId() {
+        return mSuggestionId;
+    }
+
+    @Nullable
+    public List<SuggestionObject> getSuggestions() {
+        return mSuggestions;
+    }
+
+    public void setSuggestions(@Nullable List<SuggestionObject> suggestions) {
+        mSuggestions = suggestions;
     }
 
     @Nullable

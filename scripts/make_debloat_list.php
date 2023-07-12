@@ -5,29 +5,22 @@ require_once __DIR__ . '/utils.php';
 
 const SUPPORTED_REMOVAL_TYPES = ['delete', 'replace', 'caution', 'unsafe'];
 const SUPPORTED_TAGS = [];
+const REPO_DIR = __DIR__ . '/android-debloat-list';
 
-$repo_dir = __DIR__ . '/android-debloat-list';
 $target_file = __DIR__ . '/../app/src/main/assets/debloat.json';
 
-$debloat_file_list = array();
-$debloat_file_type = array();
-foreach (list_files($repo_dir) as $filename) {
-    if (str_ends_with($filename, ".json")) {
-        $debloat_file_list[] = $repo_dir . '/' . $filename;
-        $debloat_file_type[] = substr($filename, 0, -5);
-    }
-}
-
 $debloat_list = array();
-$file_count = count($debloat_file_list);
-for ($i = 0; $i < $file_count; ++$i) {
-    $file = $debloat_file_list[$i];
-    $type = $debloat_file_type[$i];
+foreach (list_files(REPO_DIR) as $filename) {
+    if (!str_ends_with($filename, ".json")) {
+        continue;
+    }
+    $file = REPO_DIR . '/' . $filename;
+    $type = substr($filename, 0, -5);
     $list = json_decode(file_get_contents($file), true);
     if ($list === null) {
         fprintf(STDERR, "Malformed file: $file\n");
         continue;
-    } else fprintf(STDERR, "Adding $file\n");
+    } else fprintf(STDERR, "Adding $filename\n");
     foreach ($list as $item) {
         verify_item($item);
         if ($item['removal'] == 'unsafe') {
@@ -115,7 +108,14 @@ function verify_item(array $item): void {
         fprintf(STDERR, "{$item['id']}: Expected `warning` field to be a string, found: " . gettype($item['warning']) . "\n");
     }
     // `warning` is an optional string
-    if (isset($item['suggestions']) && gettype($item['suggestions']) != 'string') {
-        fprintf(STDERR, "{$item['id']}: Expected `suggestions` field to be a string, found: " . gettype($item['suggestions']) . "\n");
+    if (isset($item['suggestions'])) {
+        if (gettype($item['suggestions']) != 'string') {
+            fprintf(STDERR, "{$item['id']}: Expected `suggestions` field to be a string, found: " . gettype($item['suggestions']) . "\n");
+        } else {
+            $suggestion_file = REPO_DIR . '/suggestions/' . $item['suggestions'] . '.json';
+            if (!file_exists($suggestion_file)) {
+                fprintf(STDERR, "{$item['id']}: Suggestion ID ({$item['suggestions']}) does not exist.\n");
+            }
+        }
     }
 }

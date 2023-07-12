@@ -71,7 +71,6 @@
             android:id="@+id/tag_cloud"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingHorizontal="@dimen/padding_medium"
             android:gravity="start"
             tools:listItem="@layout/item_chip" />
 
@@ -89,8 +88,31 @@
             android:layout_marginTop="8dp"
             android:textAppearance="?attr/textAppearanceListItemSecondary"
             android:autoLink="web"
-            tools:text="@tools:sample/lorem/random"
-            tools:ignore="SmallSp" />
+            android:textIsSelectable="true"
+            tools:text="@tools:sample/lorem/random" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textAppearance="?attr/textAppearanceListItemSecondary"
+                android:textStyle="bold"
+                android:text="@string/title_alternatives_to_bloatware" />
+
+            <io.github.muntashirakon.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:overScrollMode="never" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
 
     </androidx.appcompat.widget.LinearLayoutCompat>
 </ScrollView>

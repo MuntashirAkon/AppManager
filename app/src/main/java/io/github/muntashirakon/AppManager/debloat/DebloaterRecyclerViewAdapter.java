@@ -129,8 +129,8 @@ public class DebloaterRecyclerViewAdapter extends MultiSelectionView.Adapter<Deb
             if (isInSelectionMode()) {
                 toggleSelection(position);
             } else {
-                DebloatItemDetailsDialog dialog = DebloatItemDetailsDialog.getInstance(debloatObject.packageName);
-                dialog.show(mActivity.getSupportFragmentManager(), DebloatItemDetailsDialog.TAG);
+                BloatwareDetailsDialog dialog = BloatwareDetailsDialog.getInstance(debloatObject.packageName);
+                dialog.show(mActivity.getSupportFragmentManager(), BloatwareDetailsDialog.TAG);
             }
         });
         holder.itemView.setCardBackgroundColor(mColorSurface);

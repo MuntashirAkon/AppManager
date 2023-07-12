@@ -1422,4 +1422,5 @@
     <string name="debloat_removal_safe_short_description">Safe to remove</string>
     <string name="debloat_removal_caution_short_description">Exercise caution</string>
     <string name="debloat_removal_replace_short_description">Replace with alternative</string>
+    <string name="title_alternatives_to_bloatware">Alternatives</string>
 </resources>
