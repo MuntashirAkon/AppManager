@@ -68,14 +68,14 @@ public class DebloatObject {
     @Nullable
     private List<SuggestionObject> mSuggestions;
 
-    @Nullable
+    @NonNull
     public String[] getDependencies() {
-        return mDependencies;
+        return ArrayUtils.defeatNullable(mDependencies);
     }
 
-    @Nullable
+    @NonNull
     public String[] getRequiredBy() {
-        return mRequiredBy;
+        return ArrayUtils.defeatNullable(mRequiredBy);
     }
 
     @Removal

@@ -129,7 +129,7 @@ public class BloatwareDetailsDialog extends CapsuleBottomSheetDialogFragment {
                 mWarningView.setAlertType(MaterialAlertView.ALERT_TYPE_INFO);
             }
         } else mWarningView.setVisibility(View.GONE);
-        mDescriptionView.setText(getDescription(debloatObject.getDescription(), debloatObject.getWebRefs()));
+        mDescriptionView.setText(getDescription(debloatObject));
         // Add tags
         int removalColor;
         @StringRes
@@ -164,15 +164,37 @@ public class BloatwareDetailsDialog extends CapsuleBottomSheetDialogFragment {
     }
 
     @NonNull
-    private CharSequence getDescription(@NonNull String description, @Nullable String[] refSites) {
+    private CharSequence getDescription(@NonNull DebloatObject debloatObject) {
+        String description = debloatObject.getDescription();
+        String[] refSites = debloatObject.getWebRefs();
+        String[] dependencies = debloatObject.getDependencies();
+        String[] requiredBy = debloatObject.getRequiredBy();
         SpannableStringBuilder sb = new SpannableStringBuilder();
         sb.append(description.trim());
-        if (refSites == null || refSites.length == 0) {
-            return sb;
+        if (dependencies.length > 0) {
+            // Add dependencies
+            if (dependencies.length == 1) {
+                sb.append(UIUtils.getBoldString("\n\nDependency: ")).append(dependencies[0]);
+            } else {
+                sb.append(UIUtils.getBoldString("\n\nDependencies\n"))
+                        .append(UiUtils.getOrderedList(Arrays.asList(dependencies)));
+            }
         }
-        // Add references
-        return sb.append(UIUtils.getBoldString("\n\nReferences\n"))
-                .append(UiUtils.getOrderedList(Arrays.asList(refSites)));
+        if (requiredBy.length > 0) {
+            // Add dependencies
+            if (requiredBy.length == 1) {
+                sb.append(UIUtils.getBoldString("\n\nRequired by: ")).append(requiredBy[0]);
+            } else {
+                sb.append(UIUtils.getBoldString("\n\nRequired by\n"))
+                        .append(UiUtils.getOrderedList(Arrays.asList(requiredBy)));
+            }
+        }
+        if (refSites.length > 0) {
+            // Add references
+            sb.append(UIUtils.getBoldString("\n\nReferences\n"))
+                    .append(UiUtils.getOrderedList(Arrays.asList(refSites)));
+        }
+        return sb;
     }
 
     private void addTag(@NonNull ViewGroup parent, @StringRes int titleRes, @ColorInt int textColor) {
