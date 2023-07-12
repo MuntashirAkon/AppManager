@@ -950,7 +950,29 @@
             android:name=".fm.FmActivity"
             android:exported="true"
             android:label="@string/files"
-            android:taskAffinity=".fm.FmActivity" />
+            android:taskAffinity=".fm.FmActivity">
+            <intent-filter android:label="@string/browse_files">
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="org.openintents.action.VIEW_DIRECTORY" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:mimeType="inode/directory" />
+                <data android:mimeType="resource/folder" />
+                <data android:mimeType="vnd.android.document/directory" />
+                <data android:mimeType="vnd.android.cursor.dir/*" />
+                <data android:mimeType="x-directory/normal" />
+                <data
+                    android:scheme=""
+                    tools:ignore="AppLinkUrlError" />
+                <data android:scheme="file" />
+                <data android:scheme="folder" />
+                <data android:scheme="directory" />
+                <data android:scheme="content" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".fm.OpenWithActivity"
             android:label="@string/file_open_with"

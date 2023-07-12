@@ -2,6 +2,7 @@
 
 package io.github.muntashirakon.AppManager.fm;
 
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -79,6 +80,15 @@ public class FmActivity extends BaseActivity {
         setSupportActionBar(findViewById(R.id.toolbar));
         findViewById(R.id.progress_linear).setVisibility(View.GONE);
         Uri uri = getIntent().getData();
+        if (uri.getScheme() == null) {
+            // file:// URI can have no schema. So, fix it by adding file://
+            if (uri.getPath() != null && uri.getAuthority() == null) {
+                uri = uri.buildUpon().scheme(ContentResolver.SCHEME_FILE).build();
+            } else {
+                // Avoid loading invalid paths
+                uri = null;
+            }
+        }
         if (savedInstanceState == null) {
             Options options = getIntent().getExtras() != null ? BundleCompat.getParcelable(getIntent().getExtras(), EXTRA_OPTIONS, Options.class) : null;
             if (options == null) {
