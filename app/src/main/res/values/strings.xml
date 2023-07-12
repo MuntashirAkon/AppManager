@@ -386,7 +386,8 @@
         <a href="https://0xacab.org/muntashir/AppManager">Riseup</a> •
         <a href="https://codeberg.org/muntashir/AppManager">Codeberg</a></string>
     <string name="community">Community</string>
-    <string name="community_links"><a href="https://t.me/AppManagerChannel">Telegram channel</a> •
+    <string name="community_links"><a href="https://matrix.to/#/#appmanager:matrix.org">Matrix</a> •
+        <a href="https://t.me/AppManagerChannel">Telegram</a> •
         <a href="https://twitter.com/AppManagerNews">Twitter</a></string>
     <string name="pref_import_existing">Import existing rules</string>
     <string name="pref_import_existing_msg">Add components disabled by others apps to App Manager.
