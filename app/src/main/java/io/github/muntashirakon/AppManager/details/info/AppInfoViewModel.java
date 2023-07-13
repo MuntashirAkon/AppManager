@@ -32,6 +32,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.zip.ZipFile;
 
 import io.github.muntashirakon.AppManager.StaticDataset;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
@@ -52,6 +53,7 @@ import io.github.muntashirakon.AppManager.magisk.MagiskHide;
 import io.github.muntashirakon.AppManager.magisk.MagiskProcess;
 import io.github.muntashirakon.AppManager.magisk.MagiskUtils;
 import io.github.muntashirakon.AppManager.misc.OsEnvironment;
+import io.github.muntashirakon.AppManager.misc.XposedModuleInfo;
 import io.github.muntashirakon.AppManager.rules.RuleType;
 import io.github.muntashirakon.AppManager.rules.compontents.ComponentUtils;
 import io.github.muntashirakon.AppManager.rules.struct.ComponentRule;
@@ -194,6 +196,14 @@ public class AppInfoViewModel extends AndroidViewModel {
                     tagCloud.isBloatware = true;
                     break;
                 }
+            }
+            try (ZipFile zipFile = new ZipFile(applicationInfo.publicSourceDir)) {
+                Boolean isXposedModule = XposedModuleInfo.isXposedModule(applicationInfo, zipFile);
+                if (!Boolean.FALSE.equals(isXposedModule)) {
+                    tagCloud.xposedModuleInfo = new XposedModuleInfo(applicationInfo, isXposedModule == null ? null : zipFile);
+                }
+            } catch (Throwable th) {
+                th.printStackTrace();
             }
             tagCloud.canWriteAndExecute = Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
                     && applicationInfo.targetSdkVersion < Build.VERSION_CODES.Q;
@@ -389,6 +399,8 @@ public class AppInfoViewModel extends AndroidViewModel {
         public boolean isMagiskHideEnabled;
         public boolean isMagiskDenyListEnabled;
         public boolean isBloatware;
+        @Nullable
+        public XposedModuleInfo xposedModuleInfo;
         public boolean canWriteAndExecute;
         public boolean hasKeyStoreItems;
         public boolean hasMasterKeyInKeyStore;

@@ -918,6 +918,13 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
                                     .setNegativeButton(R.string.close, null)
                                     .show());
         }
+        if (tagCloud.xposedModuleInfo != null) {
+            addChip("Xposed").setOnClickListener(v -> new ScrollableDialogBuilder(mActivity)
+                    .setTitle(R.string.xposed_module_info)
+                    .setMessage(tagCloud.xposedModuleInfo.toLocalizedString(mActivity))
+                    .setNegativeButton(R.string.close, null)
+                    .show());
+        }
         if (tagCloud.staticSharedLibraryNames != null) {
             addChip(R.string.static_shared_library).setOnClickListener(v -> new SearchableMultiChoiceDialogBuilder<>(mActivity, tagCloud.staticSharedLibraryNames, tagCloud.staticSharedLibraryNames)
                     .setTitle(R.string.shared_libs)
