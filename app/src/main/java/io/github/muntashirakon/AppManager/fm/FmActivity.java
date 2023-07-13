@@ -6,7 +6,6 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.DocumentsContract;
@@ -17,12 +16,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.os.BundleCompat;
 import androidx.core.os.ParcelCompat;
+import androidx.core.util.Pair;
 import androidx.fragment.app.Fragment;
 
 import java.util.Objects;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.settings.Prefs;
 
 public class FmActivity extends BaseActivity {
     public static class Options implements Parcelable {
@@ -72,6 +73,8 @@ public class FmActivity extends BaseActivity {
         }
     }
 
+    public static final String LAUNCHER_ALIAS = "io.github.muntashirakon.AppManager.fm.FilesActivity";
+
     public static final String EXTRA_OPTIONS = "opt";
 
     @Override
@@ -80,7 +83,7 @@ public class FmActivity extends BaseActivity {
         setSupportActionBar(findViewById(R.id.toolbar));
         findViewById(R.id.progress_linear).setVisibility(View.GONE);
         Uri uri = getIntent().getData();
-        if (uri.getScheme() == null) {
+        if (uri != null && uri.getScheme() == null) {
             // file:// URI can have no schema. So, fix it by adding file://
             if (uri.getPath() != null && uri.getAuthority() == null) {
                 uri = uri.buildUpon().scheme(ContentResolver.SCHEME_FILE).build();
@@ -91,11 +94,26 @@ public class FmActivity extends BaseActivity {
         }
         if (savedInstanceState == null) {
             Options options = getIntent().getExtras() != null ? BundleCompat.getParcelable(getIntent().getExtras(), EXTRA_OPTIONS, Options.class) : null;
+            Integer position = null;
             if (options == null) {
-                options = new Options(uri != null ? uri : Uri.fromFile(Environment.getExternalStorageDirectory()),
-                        false, false, false);
+                if (uri != null) {
+                    options = new Options(uri, false, false, false);
+                } else if (Prefs.FileManager.isRememberLastOpenedPath()) {
+                    Pair<FmActivity.Options, Pair<Uri, Integer>> optionsUriPostionPair = Prefs.FileManager.getLastOpenedPath();
+                    if (optionsUriPostionPair != null) {
+                        options = optionsUriPostionPair.first;
+                        if (options.isVfs) {
+                            uri = optionsUriPostionPair.second.first;
+                        }
+                        position = optionsUriPostionPair.second.second;
+                    }
+                }
+                if (options == null) {
+                    // Use home
+                    options = new Options(Prefs.FileManager.getHome(), false, false, false);
+                }
             }
-            Fragment fragment = FmFragment.getNewInstance(options, options.isVfs ? uri : null);
+            Fragment fragment = FmFragment.getNewInstance(options, options.isVfs ? uri : null, position);
             getSupportFragmentManager()
                     .beginTransaction()
                     .replace(R.id.main_layout, fragment, FmFragment.TAG)

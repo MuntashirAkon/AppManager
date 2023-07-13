@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.provider.DocumentsContract;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
 import android.text.format.Formatter;
@@ -57,6 +58,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import io.github.muntashirakon.AppManager.R;
+import io.github.muntashirakon.AppManager.settings.Prefs;
+import io.github.muntashirakon.AppManager.settings.SettingsActivity;
 import io.github.muntashirakon.AppManager.shortcut.CreateShortcutDialogFragment;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.StorageUtils;
@@ -83,7 +86,8 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
     public static final String ARG_POSITION = "pos";
 
     @NonNull
-    public static FmFragment getNewInstance(@NonNull FmActivity.Options options, @Nullable Uri initUri) {
+    public static FmFragment getNewInstance(@NonNull FmActivity.Options options, @Nullable Uri initUri,
+                                            @Nullable Integer position) {
         if (!options.isVfs && initUri != null) {
             throw new IllegalArgumentException("initUri can only be set when the file system is virtual.");
         }
@@ -91,6 +95,9 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         Bundle args = new Bundle();
         args.putParcelable(ARG_OPTIONS, options);
         args.putParcelable(ARG_URI, initUri);
+        if (position != null) {
+            args.putInt(ARG_POSITION, position);
+        }
         fragment.setArguments(args);
         return fragment;
     }
@@ -155,6 +162,9 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         }
         if (options == null) {
             options = Objects.requireNonNull(BundleCompat.getParcelable(requireArguments(), ARG_OPTIONS, FmActivity.Options.class));
+            if (requireArguments().containsKey(ARG_POSITION)) {
+                scrollPosition.set(requireArguments().getInt(ARG_POSITION, RecyclerView.NO_POSITION));
+            }
         }
         mActivity = (FmActivity) requireActivity();
         // Set title and subtitle
@@ -339,6 +349,17 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        if (mModel != null && mRecyclerView != null) {
+            View v = mRecyclerView.getChildAt(0);
+            if (v != null) {
+                Prefs.FileManager.setLastOpenedPath(mModel.getOptions(), mModel.getCurrentUri(), mRecyclerView.getChildAdapterPosition(v));
+            }
+        }
+    }
+
+    @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         if (mModel != null) {
             outState.putParcelable(ARG_URI, mModel.getCurrentUri());
@@ -432,7 +453,14 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
             return true;
         } else if (id == R.id.action_new_window) {
             Intent intent = new Intent(mActivity, FmActivity.class);
+            if (!mModel.getOptions().isVfs) {
+                intent.setDataAndType(mModel.getCurrentUri(), DocumentsContract.Document.MIME_TYPE_DIR);
+            }
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+            startActivity(intent);
+            return true;
+        } else if (id == R.id.action_settings) {
+            Intent intent = SettingsActivity.getIntent(requireContext(), "files_prefs");
             startActivity(intent);
             return true;
         }

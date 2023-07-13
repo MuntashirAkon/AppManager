@@ -1,0 +1,20 @@
+<!-- SPDX-License-Identifier: GPL-3.0-or-later -->
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <SwitchPreferenceCompat
+        app:key="fm_display_in_launcher"
+        app:title="@string/pref_files_display_in_launcher"
+        app:iconSpaceReserved="false" />
+
+    <SwitchPreferenceCompat
+        app:key="fm_remember_last_path"
+        app:title="@string/pref_files_remember_last_path"
+        app:summary="@string/pref_files_remember_last_path_msg"
+        app:iconSpaceReserved="false" />
+
+    <Preference
+        app:key="fm_home"
+        app:title="@string/pref_set_home"
+        app:iconSpaceReserved="false" />
+
+</PreferenceScreen>

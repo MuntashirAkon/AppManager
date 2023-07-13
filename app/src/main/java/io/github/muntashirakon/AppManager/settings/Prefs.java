@@ -5,8 +5,10 @@ package io.github.muntashirakon.AppManager.settings;
 import static io.github.muntashirakon.AppManager.backup.MetadataManager.TAR_TYPES;
 
 import android.Manifest;
+import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.text.TextUtils;
@@ -14,6 +16,10 @@ import android.text.TextUtils;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StyleRes;
+import androidx.core.util.Pair;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 
@@ -24,6 +30,7 @@ import io.github.muntashirakon.AppManager.backup.BackupFlags;
 import io.github.muntashirakon.AppManager.backup.CryptoUtils;
 import io.github.muntashirakon.AppManager.compat.ManifestCompat;
 import io.github.muntashirakon.AppManager.details.AppDetailsFragment;
+import io.github.muntashirakon.AppManager.fm.FmActivity;
 import io.github.muntashirakon.AppManager.fm.FmListOptions;
 import io.github.muntashirakon.AppManager.logcat.helper.LogcatHelper;
 import io.github.muntashirakon.AppManager.main.MainListOptions;
@@ -32,6 +39,7 @@ import io.github.muntashirakon.AppManager.runningapps.RunningAppsActivity;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.AppManager.utils.FreezeUtils;
 import io.github.muntashirakon.AppManager.utils.TarUtils;
 import io.github.muntashirakon.io.Path;
@@ -265,6 +273,63 @@ public final class Prefs {
     }
 
     public static final class FileManager {
+        public static boolean displayInLauncher() {
+            ComponentName componentName = new ComponentName(BuildConfig.APPLICATION_ID, FmActivity.LAUNCHER_ALIAS);
+            int state = ContextUtils.getContext().getPackageManager().getComponentEnabledSetting(componentName);
+            return state == PackageManager.COMPONENT_ENABLED_STATE_ENABLED;
+        }
+
+        public static Uri getHome() {
+            return Uri.parse(AppPref.getString(AppPref.PrefKey.PREF_FM_HOME_STR));
+        }
+
+        public static void setHome(@NonNull Uri uri) {
+            AppPref.set(AppPref.PrefKey.PREF_FM_HOME_STR, uri.toString());
+        }
+
+        public static boolean isRememberLastOpenedPath() {
+            return AppPref.getBoolean(AppPref.PrefKey.PREF_FM_REMEMBER_LAST_PATH_BOOL);
+        }
+
+        @Nullable
+        public static Pair<FmActivity.Options, Pair<Uri, Integer>> getLastOpenedPath() {
+            String jsonString = AppPref.getString(AppPref.PrefKey.PREF_FM_LAST_PATH_STR);
+            try {
+                JSONObject object = new JSONObject(jsonString);
+                if (object.has("path") && object.has("pos")) {
+                    boolean vfs = object.has("vfs") && object.getBoolean("vfs");
+                    FmActivity.Options options = new FmActivity.Options(Uri.parse(object.getString("path")),
+                            vfs, false, false);
+                    Uri initUri;
+                    if (vfs && object.has("init")) {
+                        initUri = Uri.parse(object.getString("init"));
+                    } else initUri = null;
+                    Pair<Uri, Integer> uriPositionPair = new Pair<>(initUri, object.getInt("pos"));
+                    return new Pair<>(options, uriPositionPair);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        public static void setLastOpenedPath(@NonNull FmActivity.Options options, @NonNull Uri initUri, int position) {
+            try {
+                JSONObject object = new JSONObject();
+                object.put("pos", position);
+                if (options.isVfs) {
+                    object.put("vfs", true);
+                    object.put("path", options.uri.toString());
+                    object.put("init", initUri.toString());
+                } else {
+                    object.put("path", initUri.toString());
+                }
+                AppPref.set(AppPref.PrefKey.PREF_FM_LAST_PATH_STR, object.toString());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
         @FmListOptions.Options
         public static int getOptions() {
             return AppPref.getInt(AppPref.PrefKey.PREF_FM_OPTIONS_INT);

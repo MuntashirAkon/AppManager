@@ -21,7 +21,7 @@ import io.github.muntashirakon.AppManager.utils.ContextUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.fs.VirtualFileSystem;
 
-final class FmUtils {
+public final class FmUtils {
     @NonNull
     public static String getDisplayablePath(@NonNull Path path) {
         return getDisplayablePath(path.getUri());

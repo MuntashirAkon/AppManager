@@ -1425,4 +1425,9 @@
     <string name="debloat_removal_replace_short_description">Replace with alternative</string>
     <string name="title_alternatives_to_bloatware">Alternatives</string>
     <string name="browse_files">Browse</string>
+    <string name="pref_files_msg">Configure file manager.</string>
+    <string name="pref_files_display_in_launcher">Display “Files” in app drawer</string>
+    <string name="pref_files_remember_last_path">Remember last opened path and its position</string>
+    <string name="pref_files_remember_last_path_msg">When this option is enabled, opening a new window opens the last opened folder instead of the home folder.</string>
+    <string name="pref_set_home">Set home</string>
 </resources>

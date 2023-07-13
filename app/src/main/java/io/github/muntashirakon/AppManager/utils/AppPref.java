@@ -81,7 +81,11 @@ public class AppPref {
         PREF_ENCRYPTION_STR,
 
         PREF_FREEZE_TYPE_INT,
+        PREF_FM_DISPLAY_IN_LAUNCHER_BOOL,
+        PREF_FM_HOME_STR,
+        PREF_FM_LAST_PATH_STR,
         PREF_FM_OPTIONS_INT,
+        PREF_FM_REMEMBER_LAST_PATH_BOOL,
         PREF_FM_SORT_ORDER_INT,
         PREF_FM_SORT_REVERSE_BOOL,
 
@@ -377,6 +381,8 @@ public class AppPref {
             case PREF_LOG_VIEWER_OMIT_SENSITIVE_INFO_BOOL:
             case PREF_APP_THEME_PURE_BLACK_BOOL:
             case PREF_DISPLAY_CHANGELOG_BOOL:
+            case PREF_FM_DISPLAY_IN_LAUNCHER_BOOL:
+            case PREF_FM_REMEMBER_LAST_PATH_BOOL:
             case PREF_FM_SORT_REVERSE_BOOL:
                 return false;
             case PREF_APP_OP_SHOW_DEFAULT_BOOL:
@@ -429,6 +435,7 @@ public class AppPref {
             case PREF_SIGNATURE_SCHEMES_INT:
                 return SigSchemes.DEFAULT_SCHEMES;
             case PREF_BACKUP_VOLUME_STR:
+            case PREF_FM_HOME_STR:
                 return Uri.fromFile(Environment.getExternalStorageDirectory()).toString();
             case PREF_LOG_VIEWER_FILTER_PATTERN_STR:
                 return mContext.getString(R.string.pref_filter_pattern_default);
@@ -457,6 +464,8 @@ public class AppPref {
                 return FmListOptions.SORT_BY_NAME;
             case PREF_DEBLOATER_FILTER_FLAGS_INT:
                 return DebloaterListOptions.getDefaultFilterFlags();
+            case PREF_FM_LAST_PATH_STR:
+                return "{}";
         }
         throw new IllegalArgumentException("Pref key not found.");
     }

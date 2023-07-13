@@ -950,6 +950,8 @@
             android:name=".fm.FmActivity"
             android:exported="true"
             android:label="@string/files"
+            android:icon="@mipmap/ic_launcher_fm"
+            android:roundIcon="@mipmap/ic_launcher_fm_round"
             android:taskAffinity=".fm.FmActivity">
             <intent-filter android:label="@string/browse_files">
                 <action android:name="android.intent.action.VIEW" />
@@ -972,6 +974,22 @@
                 <data android:scheme="content" />
             </intent-filter>
         </activity>
+
+        <activity-alias
+            android:name=".fm.FilesActivity"
+            android:targetActivity=".fm.FmActivity"
+            android:label="@string/files"
+            android:icon="@mipmap/ic_launcher_fm"
+            android:roundIcon="@mipmap/ic_launcher_fm_round"
+            android:enabled="false"
+            android:taskAffinity=".fm.FmActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
 
         <activity
             android:name=".fm.OpenWithActivity"

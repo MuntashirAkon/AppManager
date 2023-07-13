@@ -58,6 +58,13 @@
         android:fragment="io.github.muntashirakon.AppManager.settings.LogViewerPreferences" />
 
     <Preference
+        app:key="files_prefs"
+        app:icon="@drawable/ic_file_document_multiple"
+        app:title="@string/files"
+        app:summary="@string/pref_files_msg"
+        android:fragment="io.github.muntashirakon.AppManager.settings.FileManagerPreferences" />
+
+    <Preference
         app:key="rules_prefs"
         app:icon="@drawable/ic_list_status"
         app:title="@string/rules"
