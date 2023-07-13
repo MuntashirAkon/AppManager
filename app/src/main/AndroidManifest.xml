@@ -982,6 +982,7 @@
             android:icon="@mipmap/ic_launcher_fm"
             android:roundIcon="@mipmap/ic_launcher_fm_round"
             android:enabled="false"
+            android:exported="true"
             android:taskAffinity=".fm.FmActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
