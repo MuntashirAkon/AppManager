@@ -41,6 +41,7 @@ import java.util.TimerTask;
 import java.util.concurrent.Future;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
+import io.github.muntashirakon.AppManager.DummyActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.compat.PackageManagerCompat;
 import io.github.muntashirakon.AppManager.logs.Log;
@@ -89,8 +90,8 @@ public class FreezeUnfreezeService extends Service {
             return START_NOT_STICKY;
         }
         mIsWorking = true;
-        NotificationManagerCompat notificationManager = NotificationUtils.getNewNotificationManager(this, CHANNEL_ID,
-                "Freeze/unfreeze Monitor", NotificationManagerCompat.IMPORTANCE_LOW);
+        NotificationUtils.getNewNotificationManager(this, CHANNEL_ID, "Freeze/unfreeze Monitor",
+                NotificationManagerCompat.IMPORTANCE_LOW);
         Intent stopIntent = new Intent(this, FreezeUnfreezeService.class).setAction(STOP_ACTION);
         PendingIntent pendingIntent = PendingIntentCompat.getService(this, 0, stopIntent, PendingIntent.FLAG_ONE_SHOT, false);
         NotificationCompat.Action stopServiceAction = new NotificationCompat.Action.Builder(null,
@@ -108,11 +109,18 @@ public class FreezeUnfreezeService extends Service {
                 .addAction(stopServiceAction);
         startForeground(NOTIFICATION_ID, builder.build());
         IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
-        filter.addAction(Intent.ACTION_SCREEN_ON);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         filter.addAction(Intent.ACTION_USER_PRESENT);
         registerReceiver(mScreenLockedReceiver, filter);
         return START_NOT_STICKY;
+    }
+
+    @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        // https://issuetracker.google.com/issues/36967794
+        Intent intent = new Intent(this, DummyActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 
     @Override

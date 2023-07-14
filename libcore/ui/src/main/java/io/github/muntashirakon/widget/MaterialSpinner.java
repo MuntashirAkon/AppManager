@@ -27,11 +27,11 @@ public class MaterialSpinner extends TextInputLayout {
         this(context, null);
     }
 
-    public MaterialSpinner(@NonNull Context context, @Nullable @org.jetbrains.annotations.Nullable AttributeSet attrs) {
+    public MaterialSpinner(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, R.attr.materialSpinnerStyle);
     }
 
-    public MaterialSpinner(@NonNull Context context, @Nullable @org.jetbrains.annotations.Nullable AttributeSet attrs, int defStyleAttr) {
+    public MaterialSpinner(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         context = getContext();
         mAutoCompleteTextView = new MaterialAutoCompleteTextView(context);
