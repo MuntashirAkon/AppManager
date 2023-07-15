@@ -39,7 +39,7 @@ public class XposedModuleInfo implements LocalizedString {
 
     @Nullable
     public static Boolean isXposedModule(@NonNull ApplicationInfo app, @NonNull ZipFile zipFile) {
-        if (app.metaData.containsKey("xposedminversion")) {
+        if (app.metaData != null && app.metaData.containsKey("xposedminversion")) {
             return null;
         }
         return zipFile.getEntry("META-INF/xposed/module.prop") != null;
