@@ -66,7 +66,7 @@ public class DigestUtils {
         List<String> hashes = new ArrayList<>(allFiles.size());
         for (Path file : allFiles) {
             try (InputStream fileInputStream = file.openInputStream()) {
-                hashes.add(DigestUtils.getHexDigest(algo, fileInputStream));
+                hashes.add(getHexDigest(algo, fileInputStream));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -152,13 +152,32 @@ public class DigestUtils {
 
     @WorkerThread
     @NonNull
-    public static Pair<String, String>[] getDigests(Path path) {
-        @Algorithm String[] algorithms = new String[]{DigestUtils.MD5, DigestUtils.SHA_1, DigestUtils.SHA_256,
-                DigestUtils.SHA_384, DigestUtils.SHA_512};
+    public static Pair<String, String>[] getDigests(Path file) throws IOException {
+        if (!file.isFile()) {
+            throw new IOException(file + " is not a file.");
+        }
+        @Algorithm String[] algorithms = new String[]{MD5, SHA_1, SHA_256, SHA_384, SHA_512};
+        MessageDigest[] messageDigests = new MessageDigest[algorithms.length];
         @SuppressWarnings("unchecked")
         Pair<String, String>[] digests = new Pair[algorithms.length];
         for (int i = 0; i < algorithms.length; ++i) {
-            digests[i] = new Pair<>(algorithms[i], getHexDigest(algorithms[i], path));
+            try {
+                messageDigests[i] = MessageDigest.getInstance(algorithms[i]);
+            } catch (NoSuchAlgorithmException e) {
+                return ExUtils.rethrowAsIOException(e);
+            }
+        }
+        try (InputStream is = file.openInputStream()) {
+            byte[] buffer = new byte[IoUtils.DEFAULT_BUFFER_SIZE];
+            int length;
+            while ((length = is.read(buffer)) != -1) {
+                for (int i = 0; i < algorithms.length; ++i) {
+                    messageDigests[i].update(buffer, 0, length);
+                }
+            }
+        }
+        for (int i = 0; i < algorithms.length; ++i) {
+            digests[i] = new Pair<>(algorithms[i], HexEncoding.encodeToString(messageDigests[i].digest(), false));
         }
         return digests;
     }
@@ -166,8 +185,7 @@ public class DigestUtils {
     @AnyThread
     @NonNull
     public static Pair<String, String>[] getDigests(byte[] bytes) {
-        @Algorithm String[] algorithms = new String[]{DigestUtils.MD5, DigestUtils.SHA_1, DigestUtils.SHA_256,
-                DigestUtils.SHA_384, DigestUtils.SHA_512};
+        @Algorithm String[] algorithms = new String[]{MD5, SHA_1, SHA_256, SHA_384, SHA_512};
         @SuppressWarnings("unchecked")
         Pair<String, String>[] digests = new Pair[algorithms.length];
         for (int i = 0; i < algorithms.length; ++i) {

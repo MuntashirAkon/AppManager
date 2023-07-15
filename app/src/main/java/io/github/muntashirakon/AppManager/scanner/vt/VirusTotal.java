@@ -29,6 +29,7 @@ import java.util.Objects;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.settings.Prefs;
 import io.github.muntashirakon.io.IoUtils;
+import io.github.muntashirakon.io.Path;
 
 public class VirusTotal {
     public interface FullScanResponseInterface {
@@ -68,8 +69,7 @@ public class VirusTotal {
         mGson = new Gson();
     }
 
-    public void fetchReportsOrScan(@NonNull String filename, long fileSize,
-                                   @NonNull InputStream is,
+    public void fetchReportsOrScan(@NonNull Path file,
                                    @NonNull String checksum,
                                    @NonNull FullScanResponseInterface response)
             throws IOException {
@@ -90,11 +90,16 @@ public class VirusTotal {
                 // Scanning disabled
                 throw new FileNotFoundException("File not found in VirusTotal.");
             }
+            long fileSize = file.length();
             if (fileSize > 32 * 1024 * 1024) {
                 throw new IOException("APK is larger than 32 MB.");
             }
             response.onScanningInitiated();
-            VtFileScanMeta scanMeta = scan(filename, is);
+            String filename = file.getName();
+            VtFileScanMeta scanMeta;
+            try (InputStream is = file.openInputStream()) {
+                scanMeta = scan(filename, is);
+            }
             response.onScanCompleted(scanMeta);
             responseCode = VirusTotal.RESPONSE_QUEUED;
         } else {

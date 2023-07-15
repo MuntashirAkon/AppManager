@@ -21,10 +21,8 @@ import com.android.apksig.ApkVerifier;
 import com.android.apksig.apk.ApkFormatException;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -229,14 +227,16 @@ public class ScannerViewModel extends AndroidViewModel implements VirusTotal.Ful
     @WorkerThread
     private void generateApkChecksumsAndScanInVirusTotal() {
         waitForFile();
-        Pair<String, String>[] digests = DigestUtils.getDigests(Paths.getUnprivileged(mApkFile));
-        mApkChecksumsLiveData.postValue(digests);
-        if (mVt == null) return;
-        String md5 = digests[0].second;
-        try (InputStream is = new FileInputStream(mApkFile)) {
-            mVt.fetchReportsOrScan(mApkFile.getName(), mApkFile.length(), is, md5, this);
+        try {
+            Path file = Paths.getUnprivileged(mApkFile);
+            Pair<String, String>[] digests = DigestUtils.getDigests(file);
+            mApkChecksumsLiveData.postValue(digests);
+            if (mVt == null) return;
+            String md5 = digests[0].second;
+            mVt.fetchReportsOrScan(file, md5, this);
         } catch (IOException e) {
             e.printStackTrace();
+            mApkChecksumsLiveData.postValue(null);
             mVtFileReportLiveData.postValue(null);
         }
     }

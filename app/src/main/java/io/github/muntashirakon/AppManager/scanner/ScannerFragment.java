@@ -94,6 +94,9 @@ public class ScannerFragment extends Fragment {
         missingLibsView.setCardBackgroundColor(cardColor);
         // Checksum
         mViewModel.apkChecksumsLiveData().observe(getViewLifecycleOwner(), checksums -> {
+            if (checksums == null) {
+                return;
+            }
             List<CharSequence> lines = new ArrayList<>();
             for (Pair<String, String> digest : checksums) {
                 lines.add(new SpannableStringBuilder()

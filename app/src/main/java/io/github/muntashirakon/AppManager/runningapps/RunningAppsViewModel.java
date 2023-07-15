@@ -20,7 +20,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -105,35 +104,34 @@ public class RunningAppsViewModel extends AndroidViewModel {
                 return;
             }
             String sha256 = DigestUtils.getHexDigest(DigestUtils.SHA_256, proxyFile);
-            try (InputStream is = proxyFile.openInputStream()) {
-                mVt.fetchReportsOrScan(proxyFile.getName(), proxyFile.length(), is, sha256,
-                        new VirusTotal.FullScanResponseInterface() {
-                            @Override
-                            public boolean scanFile() {
-                                mUploadingEnabled = false;
-                                mUploadingEnabledWatcher = new CountDownLatch(1);
-                                mVtFileScanMeta.postValue(new Pair<>(processItem, null));
-                                try {
-                                    mUploadingEnabledWatcher.await(2, TimeUnit.MINUTES);
-                                } catch (InterruptedException ignore) {
-                                }
-                                return mUploadingEnabled;
-                            }
+            try {
+                mVt.fetchReportsOrScan(proxyFile, sha256, new VirusTotal.FullScanResponseInterface() {
+                    @Override
+                    public boolean scanFile() {
+                        mUploadingEnabled = false;
+                        mUploadingEnabledWatcher = new CountDownLatch(1);
+                        mVtFileScanMeta.postValue(new Pair<>(processItem, null));
+                        try {
+                            mUploadingEnabledWatcher.await(2, TimeUnit.MINUTES);
+                        } catch (InterruptedException ignore) {
+                        }
+                        return mUploadingEnabled;
+                    }
 
-                            @Override
-                            public void onScanningInitiated() {
-                            }
+                    @Override
+                    public void onScanningInitiated() {
+                    }
 
-                            @Override
-                            public void onScanCompleted(@NonNull VtFileScanMeta meta) {
-                                mVtFileScanMeta.postValue(new Pair<>(processItem, meta));
-                            }
+                    @Override
+                    public void onScanCompleted(@NonNull VtFileScanMeta meta) {
+                        mVtFileScanMeta.postValue(new Pair<>(processItem, meta));
+                    }
 
-                            @Override
-                            public void onReportReceived(@NonNull VtFileReport report) {
-                                mVtFileReport.postValue(new Pair<>(processItem, report));
-                            }
-                        });
+                    @Override
+                    public void onReportReceived(@NonNull VtFileReport report) {
+                        mVtFileReport.postValue(new Pair<>(processItem, report));
+                    }
+                });
             } catch (IOException e) {
                 e.printStackTrace();
                 mVtFileReport.postValue(new Pair<>(processItem, null));
