@@ -153,7 +153,10 @@ public final class Paths {
     }
 
     @Nullable
-    public static String getSanitizedPath(@NonNull String name, boolean omitRoot) {
+    public static String getSanitizedPath(@Nullable String name, boolean omitRoot) {
+        if (name == null) {
+            return null;
+        }
         // Replace multiple separators with a single separator
         //noinspection RegExpRedundantEscape,RegExpSimplifiable
         name = name.replaceAll("[\\/\\\\]+", File.separator);

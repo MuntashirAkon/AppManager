@@ -300,7 +300,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
                 if (path.exists()) {
                     e = new FileNotFoundException(getApplication().getString(R.string.path_not_a_folder, path.getName()));
                 } else {
-                    e = new FileNotFoundException(getApplication().getString(R.string.path_does_not_exist, path.getName()));
+                    e = new IOException(getApplication().getString(R.string.path_does_not_exist, path.getName()));
                 }
                 handleError(e, mCurrentUri);
                 return;

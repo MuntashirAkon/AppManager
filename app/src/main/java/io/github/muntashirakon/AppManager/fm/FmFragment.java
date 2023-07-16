@@ -6,6 +6,7 @@ import static io.github.muntashirakon.AppManager.fm.FmTasks.FmTask.TYPE_CUT;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSecondaryText;
 import static io.github.muntashirakon.AppManager.utils.UIUtils.getSmallerText;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -38,6 +39,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.collection.ArrayMap;
 import androidx.core.content.ContextCompat;
 import androidx.core.os.BundleCompat;
+import androidx.core.provider.DocumentsContractCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -200,10 +202,10 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
                     .setTitle(R.string.go_to_path)
                     .setInputText(path)
                     .setPositiveButton(R.string.go, (dialog, which, inputText, isChecked) -> {
-                        if (!TextUtils.isEmpty(inputText)) {
-                            String p = inputText.toString();
-                            mModel.loadFiles(p.startsWith(File.separator) ? Uri.fromFile(new File(p)) : Uri.parse(p));
+                        if (TextUtils.isEmpty(inputText)) {
+                            return;
                         }
+                        goToRawPath(inputText.toString());
                     })
                     .setNegativeButton(R.string.close, null)
                     .show();
@@ -569,6 +571,53 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
     @Override
     public void onRefresh() {
         if (mModel != null) mModel.reload();
+    }
+
+    private void goToRawPath(@NonNull String p) {
+        Uri uncheckedUri = Uri.parse(p);
+        if (uncheckedUri.getScheme() != null) {
+            // Valid path
+            mModel.loadFiles(uncheckedUri);
+            return;
+        }
+        // Bad Uri, consider it to be a file://
+        if (p.startsWith(File.separator)) {
+            // absolute file
+            mModel.loadFiles(uncheckedUri.buildUpon().scheme(ContentResolver.SCHEME_FILE).build());
+            return;
+        }
+        // relative path
+        String goodPath = Paths.getSanitizedPath(p, false);
+        if (goodPath == null) {
+            // No relative path means current path which is already loaded
+            return;
+        }
+        Uri currentUri = mModel.getCurrentUri();
+        if (DocumentsContractCompat.isDocumentUri(requireContext(), currentUri)) {
+            List<String> pathSegments = currentUri.getPathSegments();
+            if (pathSegments.size() == 4) {
+                // For a tree URI, the 3rd index is the path
+                String lastPathSegment = pathSegments.get(3) + File.separator + p;
+                Uri.Builder b = new Uri.Builder()
+                        .scheme(currentUri.getScheme())
+                        .authority(currentUri.getAuthority())
+                        .appendPath(pathSegments.get(0))
+                        .appendPath(pathSegments.get(1))
+                        .appendPath(pathSegments.get(2))
+                        .appendPath(lastPathSegment);
+                mModel.loadFiles(b.build());
+            }
+            // Other document Uris don't support navigation nor do they support folders/trees
+            return;
+        }
+        // For others, simply append path segments at the end
+        @SuppressWarnings("SuspiciousRegexArgument") // We aren't on Windows
+        String[] segments = p.split(File.separator);
+        Uri.Builder b = currentUri.buildUpon();
+        for (String segment : segments) {
+            b.appendPath(segment);
+        }
+        mModel.loadFiles(b.build());
     }
 
     private void handleEmptyView(@DrawableRes int icon, @Nullable CharSequence title, @Nullable Throwable th) {
