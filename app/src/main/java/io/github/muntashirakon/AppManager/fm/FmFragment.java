@@ -205,7 +205,7 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
                         if (TextUtils.isEmpty(inputText)) {
                             return;
                         }
-                        goToRawPath(inputText.toString());
+                        goToRawPath(inputText.toString().trim());
                     })
                     .setNegativeButton(R.string.close, null)
                     .show();
