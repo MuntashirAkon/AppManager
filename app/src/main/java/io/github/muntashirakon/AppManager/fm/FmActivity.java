@@ -6,6 +6,7 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.DocumentsContract;
@@ -24,6 +25,8 @@ import java.util.Objects;
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.settings.Prefs;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
+import io.github.muntashirakon.io.Paths;
 
 public class FmActivity extends BaseActivity {
     public static class Options implements Parcelable {
@@ -112,6 +115,12 @@ public class FmActivity extends BaseActivity {
                     // Use home
                     options = new Options(Prefs.FileManager.getHome(), false, false, false);
                 }
+            }
+            Uri uncheckedUri = options.uri;
+            Uri checkedUri = ExUtils.exceptionAsNull(() -> Paths.getStrict(uncheckedUri).exists() ? uncheckedUri : null);
+            if (checkedUri == null) {
+                // Use default directory
+                options = new Options(Uri.fromFile(Environment.getExternalStorageDirectory()), false, false, false);
             }
             Fragment fragment = FmFragment.getNewInstance(options, options.isVfs ? uri : null, position);
             getSupportFragmentManager()

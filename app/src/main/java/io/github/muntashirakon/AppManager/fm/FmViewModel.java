@@ -19,14 +19,15 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.j256.simplemagic.ContentType;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.Future;
 
@@ -37,6 +38,7 @@ import io.github.muntashirakon.AppManager.misc.ListOptions;
 import io.github.muntashirakon.AppManager.self.filecache.FileCache;
 import io.github.muntashirakon.AppManager.self.imagecache.ImageLoader;
 import io.github.muntashirakon.AppManager.settings.Prefs;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
 import io.github.muntashirakon.io.IoUtils;
@@ -71,10 +73,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
     @Nullable
     private Future<?> mFmFileLoaderResult;
     private Future<?> mFmFileSystemLoaderResult;
-    // These are for VFS
-    private Integer mVfsId;
-    private File mCachedFile;
-    private Path mBaseFsRoot;
+    private final Set<Integer> mVfsIdSet = new HashSet<>();
     private final FileCache mFileCache = new FileCache();
 
     public FmViewModel(@NonNull Application application) {
@@ -94,12 +93,8 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
             mFmFileSystemLoaderResult.cancel(true);
         }
         // Clear VFS related data
-        if (mVfsId != null) {
-            try {
-                VirtualFileSystem.unmount(mVfsId);
-            } catch (Throwable e) {
-                e.printStackTrace();
-            }
+        for (int vfsId : mVfsIdSet) {
+            ExUtils.exceptionAsIgnored(() -> VirtualFileSystem.unmount(vfsId));
         }
         IoUtils.closeQuietly(mFileCache);
         super.onCleared();
@@ -159,20 +154,22 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
         mOptions = options;
         if (!options.isVfs) {
             // No need to mount anything. Options#uri is the base URI
-            loadFiles(defaultUri != null ? defaultUri : options.uri);
+            loadFiles(defaultUri != null ? defaultUri : options.uri, null);
             return;
         }
         // Need to mount the file system
         mFmFileSystemLoaderResult = ThreadUtils.postOnBackgroundThread(() -> {
             try {
-                handleOptions();
+                VirtualFileSystem fs = mountVfs();
+                int vfsId = fs.getFsId();
+                mVfsIdSet.add(vfsId);
                 // vfs ID/authority has altered
                 Uri newUri;
                 if (defaultUri != null) {
-                    newUri = defaultUri.buildUpon().authority(String.valueOf(mVfsId)).build();
-                } else newUri = mBaseFsRoot.getUri();
+                    newUri = defaultUri.buildUpon().authority(String.valueOf(vfsId)).build();
+                } else newUri = fs.getRootPath().getUri();
                 // Now load files
-                ThreadUtils.postOnMainThread(() -> loadFiles(newUri));
+                ThreadUtils.postOnMainThread(() -> loadFiles(newUri, null));
             } catch (IOException e) {
                 e.printStackTrace();
                 mFmItemsLiveData.postValue(Collections.emptyList());
@@ -246,12 +243,26 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
 
     @MainThread
     public void loadFiles(@NonNull Uri uri) {
+        if (mCurrentUri != null) {
+            // May need to reload options
+            if (!Objects.equals(mCurrentUri.getScheme(), uri.getScheme())
+                    || !Objects.equals(mCurrentUri.getAuthority(), uri.getAuthority())) {
+                updateOptions(uri);
+                return;
+            }
+        }
         loadFiles(uri, null);
+    }
+
+    @MainThread
+    private void updateOptions(@NonNull Uri refUri) {
+        FmActivity.Options options = new FmActivity.Options(refUri, false, false, false);
+        setOptions(options, null);
     }
 
     @SuppressLint("WrongThread")
     @MainThread
-    public void loadFiles(@NonNull Uri uri, @Nullable String scrollToFilename) {
+    private void loadFiles(@NonNull Uri uri, @Nullable String scrollToFilename) {
         if (mFmFileLoaderResult != null) {
             mFmFileLoaderResult.cancel(true);
         }
@@ -449,27 +460,29 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
     }
 
     @WorkerThread
-    private void handleOptions() throws IOException {
+    @NonNull
+    private VirtualFileSystem mountVfs() throws IOException {
         if (!mOptions.isVfs) {
-            return;
+            throw new IOException("A VFS was expected");
         }
-        if (mCachedFile == null) {
+        VirtualFileSystem fs = VirtualFileSystem.getFileSystem(mOptions.uri);
+        if (fs == null) {
             // TODO: 31/5/23 Handle read-only
             Path filePath = Paths.get(mOptions.uri);
-            mCachedFile = mFileCache.getCachedFile(filePath);
-            Path cachedPath = Paths.get(mCachedFile);
+            Path cachedPath = Paths.get(mFileCache.getCachedFile(filePath));
+            int vfsId;
             if (FileUtils.isZip(cachedPath)) {
-                mVfsId = VirtualFileSystem.mount(filePath.getUri(), cachedPath, ContentType.ZIP.getMimeType());
+                vfsId = VirtualFileSystem.mount(filePath.getUri(), cachedPath, ContentType.ZIP.getMimeType());
             } else if (DexUtils.isDex(cachedPath)) {
-                mVfsId = VirtualFileSystem.mount(filePath.getUri(), cachedPath, ContentType2.DEX.getMimeType());
+                vfsId = VirtualFileSystem.mount(filePath.getUri(), cachedPath, ContentType2.DEX.getMimeType());
             } else {
-                mVfsId = VirtualFileSystem.mount(filePath.getUri(), cachedPath, cachedPath.getType());
+                vfsId = VirtualFileSystem.mount(filePath.getUri(), cachedPath, cachedPath.getType());
             }
-            VirtualFileSystem fs = VirtualFileSystem.getFileSystem(mVfsId);
+            fs = VirtualFileSystem.getFileSystem(vfsId);
             if (fs == null) {
                 throw new IOException("Could not mount " + mOptions.uri);
             }
-            mBaseFsRoot = fs.getRootPath();
         }
+        return fs;
     }
 }
