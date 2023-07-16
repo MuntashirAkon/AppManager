@@ -192,6 +192,9 @@ public class Path implements Comparable<Path> {
             mDocumentFile = fsRoot.mDocumentFile;
             return;
         }
+        if (uri.getScheme() == null) {
+            throw new IllegalArgumentException("Uri has no scheme: " + uri);
+        }
         DocumentFile documentFile;
         switch (uri.getScheme()) {
             case ContentResolver.SCHEME_CONTENT:

@@ -1441,4 +1441,6 @@
     <string name="pref_enable_persistent_session_msg">Running App Manager in the background reduces initialisation delay. Useful if you use App Manager frequently.</string>
     <string name="pref_enable_auto_lock">Automatic lockdown</string>
     <string name="pref_enable_auto_lock_msg">Lock App Manager when the device is locked.</string>
+    <string name="path_does_not_exist">“%1$s” does not exist</string>
+    <string name="path_not_a_folder">“%1$s” is not a folder</string>
 </resources>

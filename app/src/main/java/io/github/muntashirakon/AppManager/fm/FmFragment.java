@@ -23,14 +23,17 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.appcompat.widget.SearchView;
 import androidx.collection.ArrayMap;
 import androidx.core.content.ContextCompat;
@@ -105,6 +108,10 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
     private FmViewModel mModel;
     @Nullable
     private RecyclerView mRecyclerView;
+    private LinearLayoutCompat mEmptyView;
+    private ImageView mEmptyViewIcon;
+    private TextView mEmptyViewTitle;
+    private TextView mEmptyViewDetails;
     @Nullable
     private FmAdapter mAdapter;
     @Nullable
@@ -205,6 +212,10 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         fabGroup.inflate(R.menu.fragment_fm_speed_dial);
         fabGroup.setOnActionSelectedListener(this);
         UiUtils.applyWindowInsetsAsMargin(view.findViewById(R.id.fab_holder));
+        mEmptyView = view.findViewById(android.R.id.empty);
+        mEmptyViewIcon = view.findViewById(R.id.icon);
+        mEmptyViewTitle = view.findViewById(R.id.title);
+        mEmptyViewDetails = view.findViewById(R.id.message);
         mRecyclerView = view.findViewById(R.id.list_item);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mActivity));
         mAdapter = new FmAdapter(mModel, mActivity);
@@ -242,6 +253,10 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
         mMultiSelectionView.setOnSelectionChangeListener(batchOpsHandler);
         // Set observer
         mModel.getLastUriLiveData().observe(getViewLifecycleOwner(), uri1 -> {
+            // force disable empty view
+            if (mEmptyView.isShown()) {
+                mEmptyView.setVisibility(View.GONE);
+            }
             if (uri1 == null) {
                 return;
             }
@@ -261,6 +276,15 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
                 mSwipeRefresh.setRefreshing(false);
             }
             mAdapter.setFmList(fmItems);
+            if (fmItems.isEmpty()) {
+                handleEmptyView(R.drawable.ic_file, getString(R.string.empty_folder), null);
+            }
+        });
+        mModel.getFmErrorLiveData().observe(getViewLifecycleOwner(), throwable -> {
+            if (mSwipeRefresh != null) {
+                mSwipeRefresh.setRefreshing(false);
+            }
+            handleEmptyView(io.github.muntashirakon.ui.R.drawable.ic_caution, throwable.getMessage(), throwable);
         });
         mModel.getUriLiveData().observe(getViewLifecycleOwner(), uri1 -> {
             FmActivity.Options options1 = mModel.getOptions();
@@ -545,6 +569,40 @@ public class FmFragment extends Fragment implements SearchView.OnQueryTextListen
     @Override
     public void onRefresh() {
         if (mModel != null) mModel.reload();
+    }
+
+    private void handleEmptyView(@DrawableRes int icon, @Nullable CharSequence title, @Nullable Throwable th) {
+        if (!mEmptyView.isShown()) {
+            mEmptyView.setVisibility(View.VISIBLE);
+        }
+        mEmptyViewIcon.setImageResource(icon);
+        mEmptyViewTitle.setText(title);
+        if (th == null) {
+            mEmptyViewDetails.setVisibility(View.GONE);
+            return;
+        }
+        // Only log the first three lines
+        StackTraceElement[] arr = th.getStackTrace();
+        StringBuilder report = new StringBuilder(th + "\n");
+        int i = 0;
+        for (StackTraceElement traceElement : arr) {
+            if (i == 3) break;
+            report.append("    at ").append(traceElement.toString()).append("\n");
+            ++i;
+        }
+        Throwable cause = th;
+        while ((cause = cause.getCause()) != null) {
+            report.append(" Caused by: ").append(cause).append("\n");
+            arr = cause.getStackTrace();
+            i = 0;
+            for (StackTraceElement stackTraceElement : arr) {
+                if (i == 3) break;
+                report.append("   at ").append(stackTraceElement.toString()).append("\n");
+                ++i;
+            }
+        }
+        mEmptyViewDetails.setVisibility(View.VISIBLE);
+        mEmptyViewDetails.setText(report);
     }
 
     private void createNewFolder(String name) {

@@ -54,16 +54,67 @@
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
-                <io.github.muntashirakon.widget.RecyclerView
-                    android:id="@+id/list_item"
+                <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scrollbars="none"
-                    android:focusable="false"
-                    android:clipToPadding="false"
-                    android:fitsSystemWindows="true"
-                    app:fastScrollerEnabled="true"
-                    tools:listitem="@layout/m3_preference" />
+                    android:layout_height="match_parent">
+
+                    <io.github.muntashirakon.widget.RecyclerView
+                        android:id="@+id/list_item"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scrollbars="none"
+                        android:focusable="false"
+                        android:clipToPadding="false"
+                        android:fitsSystemWindows="true"
+                        app:fastScrollerEnabled="true"
+                        tools:listitem="@layout/m3_preference" />
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:id="@android:id/empty"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:paddingHorizontal="16dp"
+                        android:paddingVertical="8dp"
+                        android:visibility="gone"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical"
+                        tools:visibility="visible">
+
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:id="@+id/icon"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:minHeight="48dp"
+                            android:maxHeight="72dp"
+                            android:adjustViewBounds="true"
+                            android:layout_gravity="center_horizontal"
+                            app:srcCompat="@drawable/ic_caution" />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/title"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:textAppearance="?attr/textAppearanceBodyLarge"
+                            tools:text="Folder does not exist." />
+
+                        <com.google.android.material.textview.MaterialTextView
+                            android:id="@+id/message"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            android:textAppearance="?attr/textAppearanceBodySmall"
+                            android:textIsSelectable="true"
+                            android:fontFamily="monospace"
+                            android:maxLines="10"
+                            android:scrollbars="vertical"
+                            android:overScrollMode="ifContentScrolls"
+                            tools:visibility="visible"
+                            tools:text="Folder does not exist." />
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                </FrameLayout>
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 

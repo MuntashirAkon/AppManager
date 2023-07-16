@@ -19,6 +19,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.j256.simplemagic.ContentType;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,6 +32,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.Future;
 
+import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.dex.DexUtils;
 import io.github.muntashirakon.AppManager.fm.icons.FmIconFetcher;
 import io.github.muntashirakon.AppManager.misc.AdvancedSearchView;
@@ -50,6 +52,7 @@ import io.github.muntashirakon.lifecycle.SingleLiveEvent;
 public class FmViewModel extends AndroidViewModel implements ListOptions.ListOptionActions {
     private final Object mSizeLock = new Object();
     private final MutableLiveData<List<FmItem>> mFmItemsLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Throwable> mFmErrorLiveData = new MutableLiveData<>();
     private final MutableLiveData<FolderShortInfo> mFolderShortInfoLiveData = new MutableLiveData<>();
     private final MutableLiveData<Uri> mUriLiveData = new MutableLiveData<>();
     private final MutableLiveData<Uri> mLastUriLiveData = new MutableLiveData<>();
@@ -171,8 +174,7 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
                 // Now load files
                 ThreadUtils.postOnMainThread(() -> loadFiles(newUri, null));
             } catch (IOException e) {
-                e.printStackTrace();
-                mFmItemsLiveData.postValue(Collections.emptyList());
+                handleError(e, mOptions.uri);
             }
         });
     }
@@ -271,7 +273,13 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
         // Send last URI
         mLastUriLiveData.setValue(lastUri);
         mCurrentUri = uri;
-        Path currentPath = Paths.get(uri);
+        Path currentPath;
+        try {
+            currentPath = Paths.getStrict(uri);
+        } catch (IOException e) {
+            handleError(e, uri);
+            return;
+        }
         while (currentPath.isSymbolicLink()) {
             try {
                 Path realPath = currentPath.getRealPath();
@@ -287,9 +295,18 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
         }
         Path path = currentPath;
         mFmFileLoaderResult = ThreadUtils.postOnBackgroundThread(() -> {
+            if (!path.isDirectory()) {
+                IOException e;
+                if (path.exists()) {
+                    e = new FileNotFoundException(getApplication().getString(R.string.path_not_a_folder, path.getName()));
+                } else {
+                    e = new FileNotFoundException(getApplication().getString(R.string.path_does_not_exist, path.getName()));
+                }
+                handleError(e, mCurrentUri);
+                return;
+            }
             // Send current URI
             mUriLiveData.postValue(mCurrentUri);
-            if (!path.isDirectory()) return;
             Path[] children = path.listFiles();
             FolderShortInfo folderShortInfo = new FolderShortInfo();
             int count = children.length;
@@ -354,6 +371,10 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
         return mFmItemsLiveData;
     }
 
+    public LiveData<Throwable> getFmErrorLiveData() {
+        return mFmErrorLiveData;
+    }
+
     public LiveData<Uri> getUriLiveData() {
         return mUriLiveData;
     }
@@ -376,6 +397,19 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
 
     public LiveData<SharableItems> getSharableItemsLiveData() {
         return mSharableItemsLiveData;
+    }
+
+    private void handleError(@NonNull Throwable th, @NonNull Uri currentUri) {
+        FolderShortInfo folderShortInfo = new FolderShortInfo();
+        if (ThreadUtils.isMainThread()) {
+            mUriLiveData.setValue(currentUri);
+            mFolderShortInfoLiveData.setValue(folderShortInfo);
+            mFmErrorLiveData.setValue(th);
+        } else {
+            mUriLiveData.postValue(currentUri);
+            mFolderShortInfoLiveData.postValue(folderShortInfo);
+            mFmErrorLiveData.postValue(th);
+        }
     }
 
     private void filterAndSort() {
@@ -463,12 +497,12 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
     @NonNull
     private VirtualFileSystem mountVfs() throws IOException {
         if (!mOptions.isVfs) {
-            throw new IOException("A VFS was expected");
+            throw new IOException("VFS expected, found regular FS.");
         }
         VirtualFileSystem fs = VirtualFileSystem.getFileSystem(mOptions.uri);
         if (fs == null) {
             // TODO: 31/5/23 Handle read-only
-            Path filePath = Paths.get(mOptions.uri);
+            Path filePath = Paths.getStrict(mOptions.uri);
             Path cachedPath = Paths.get(mFileCache.getCachedFile(filePath));
             int vfsId;
             if (FileUtils.isZip(cachedPath)) {
