@@ -77,6 +77,15 @@ public final class Paths {
     }
 
     @NonNull
+    public static Path getStrict(@NonNull Uri pathUri) throws FileNotFoundException {
+        try {
+            return new Path(ContextUtils.getContext(), pathUri);
+        } catch (IllegalArgumentException e) {
+            throw (FileNotFoundException) (new FileNotFoundException(e.getMessage())).initCause(e);
+        }
+    }
+
+    @NonNull
     public static Path get(@NonNull VirtualFileSystem fs) {
         return new Path(ContextUtils.getContext(), fs);
     }

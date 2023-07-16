@@ -22,6 +22,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.apk.signing.SigSchemes;
@@ -300,6 +301,10 @@ public final class Prefs {
                     boolean vfs = object.has("vfs") && object.getBoolean("vfs");
                     FmActivity.Options options = new FmActivity.Options(Uri.parse(object.getString("path")),
                             vfs, false, false);
+                    if (!Paths.getStrict(options.uri).exists()) {
+                        // Do not bother if path does not exist
+                        return null;
+                    }
                     Uri initUri;
                     if (vfs && object.has("init")) {
                         initUri = Uri.parse(object.getString("init"));
@@ -307,7 +312,7 @@ public final class Prefs {
                     Pair<Uri, Integer> uriPositionPair = new Pair<>(initUri, object.getInt("pos"));
                     return new Pair<>(options, uriPositionPair);
                 }
-            } catch (JSONException e) {
+            } catch (JSONException | FileNotFoundException e) {
                 e.printStackTrace();
             }
             return null;

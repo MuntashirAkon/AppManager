@@ -32,6 +32,7 @@ import java.util.List;
 
 import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.utils.ArrayUtils;
+import io.github.muntashirakon.AppManager.utils.ExUtils;
 import io.github.muntashirakon.io.Path;
 import io.github.muntashirakon.io.Paths;
 import io.github.muntashirakon.io.fs.VirtualFileSystem;
@@ -123,7 +124,10 @@ public class FmProvider extends ContentProvider {
                 }
             }
         } else columns = Arrays.asList(defaultProjection);
-        Path path = getFileProviderPath(uri);
+        Path path = ExUtils.exceptionAsNull(() -> getFileProviderPath(uri));
+        if (path == null) {
+            return new MatrixCursor(columns.toArray(new String[0]), 0);
+        }
         List<Object> row = new ArrayList<>();
         for (String column : columns) {
             switch (column) {
@@ -161,7 +165,7 @@ public class FmProvider extends ContentProvider {
     @Nullable
     @Override
     public String getType(@NonNull Uri uri) {
-        return getFileProviderPath(uri).getType();
+        return ExUtils.exceptionAsNull(() -> getFileProviderPath(uri).getType());
     }
 
     @Nullable
@@ -202,8 +206,8 @@ public class FmProvider extends ContentProvider {
     }
 
     @NonNull
-    private static Path getFileProviderPath(@NonNull Uri uri) {
-        return Paths.get(getFileProviderPathInternal(uri));
+    private static Path getFileProviderPath(@NonNull Uri uri) throws FileNotFoundException {
+        return Paths.getStrict(getFileProviderPathInternal(uri));
     }
 
     /**

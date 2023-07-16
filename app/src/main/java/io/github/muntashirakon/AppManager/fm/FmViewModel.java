@@ -166,8 +166,13 @@ public class FmViewModel extends AndroidViewModel implements ListOptions.ListOpt
         mFmFileSystemLoaderResult = ThreadUtils.postOnBackgroundThread(() -> {
             try {
                 handleOptions();
+                // vfs ID/authority has altered
+                Uri newUri;
+                if (defaultUri != null) {
+                    newUri = defaultUri.buildUpon().authority(String.valueOf(mVfsId)).build();
+                } else newUri = mBaseFsRoot.getUri();
                 // Now load files
-                ThreadUtils.postOnMainThread(() -> loadFiles(defaultUri != null ? defaultUri : mBaseFsRoot.getUri()));
+                ThreadUtils.postOnMainThread(() -> loadFiles(newUri));
             } catch (IOException e) {
                 e.printStackTrace();
                 mFmItemsLiveData.postValue(Collections.emptyList());
