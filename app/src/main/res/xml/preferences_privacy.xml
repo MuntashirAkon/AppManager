@@ -6,6 +6,18 @@
         app:summary="@string/screen_lock_msg"
         app:iconSpaceReserved="false" />
 
+    <SwitchPreferenceCompat
+        app:key="enable_persistent_session"
+        app:title="@string/pref_enable_persistent_session"
+        app:summary="@string/pref_enable_persistent_session_msg"
+        app:iconSpaceReserved="false" />
+
+    <SwitchPreferenceCompat
+        app:key="enable_auto_lock"
+        app:title="@string/pref_enable_auto_lock"
+        app:summary="@string/pref_enable_auto_lock_msg"
+        app:iconSpaceReserved="false" />
+
     <Preference
         app:key="auth_manager"
         app:title="@string/auth_manager_title"

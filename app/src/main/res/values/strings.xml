@@ -1433,4 +1433,12 @@
     <string name="xposed_module_info">Xposed Module Info</string>
     <string name="title_description">Description</string>
     <string name="module_name">Module name</string>
+    <string name="app_manager_is_running">App Manager is running</string>
+    <string name="tap_to_open_notification_settings">Tap to hide</string>
+    <string name="app_manager_is_unlocked">App Manager is unlocked</string>
+    <string name="action_lock_app">Lock</string>
+    <string name="pref_enable_persistent_session">Run App Manager in the background</string>
+    <string name="pref_enable_persistent_session_msg">Running App Manager in the background reduces initialisation delay. Useful if you use App Manager frequently.</string>
+    <string name="pref_enable_auto_lock">Automatic lockdown</string>
+    <string name="pref_enable_auto_lock_msg">Lock App Manager when the device is locked.</string>
 </resources>

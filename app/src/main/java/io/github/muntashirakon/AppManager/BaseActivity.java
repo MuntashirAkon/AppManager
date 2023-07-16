@@ -133,7 +133,7 @@ public abstract class BaseActivity extends AppCompatActivity {
                     Log.d(TAG, "Authentication completed.");
                     mViewModel.setAuthenticating(false);
                     if (mAlertDialog != null) mAlertDialog.dismiss();
-                    Ops.setAuthenticated(true);
+                    Ops.setAuthenticated(this, true);
                     onAuthenticated(savedInstanceState);
                     initPermissionChecks();
                     InternalCacheCleanerService.scheduleAlarm(getApplicationContext());
@@ -215,7 +215,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     private void ensureSecurityAndModeOfOp() {
-        if (!Prefs.Security.isScreenLockEnabled()) {
+        if (!Prefs.Privacy.isScreenLockEnabled()) {
             // No security enabled
             handleMigrationAndModeOfOp();
             return;

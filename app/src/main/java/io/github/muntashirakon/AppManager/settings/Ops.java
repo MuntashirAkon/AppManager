@@ -17,6 +17,7 @@ import android.widget.EditText;
 import androidx.annotation.AnyThread;
 import androidx.annotation.GuardedBy;
 import androidx.annotation.IntDef;
+import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -24,6 +25,7 @@ import androidx.annotation.StringDef;
 import androidx.annotation.UiThread;
 import androidx.annotation.WorkerThread;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 import androidx.lifecycle.LiveData;
 
@@ -46,6 +48,7 @@ import io.github.muntashirakon.AppManager.runner.RunnerUtils;
 import io.github.muntashirakon.AppManager.self.SelfPermissions;
 import io.github.muntashirakon.AppManager.servermanager.LocalServer;
 import io.github.muntashirakon.AppManager.servermanager.ServerConfig;
+import io.github.muntashirakon.AppManager.session.SessionMonitoringService;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.AppManager.utils.AppPref;
 import io.github.muntashirakon.AppManager.utils.ThreadUtils;
@@ -158,10 +161,18 @@ public class Ops {
     }
 
     @GuardedBy("sSecurityLock")
-    @AnyThread
-    public static void setAuthenticated(boolean authenticated) {
+    @MainThread
+    public static void setAuthenticated(@NonNull Context context, boolean authenticated) {
         synchronized (sSecurityLock) {
             sIsAuthenticated = authenticated;
+            if (Prefs.Privacy.isPersistentSessionAllowed()) {
+                Intent service = new Intent(context, SessionMonitoringService.class);
+                if (authenticated) {
+                    ContextCompat.startForegroundService(context, service);
+                } else {
+                    context.stopService(service);
+                }
+            }
         }
     }
 

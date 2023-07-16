@@ -152,7 +152,7 @@ public class DigestUtils {
 
     @WorkerThread
     @NonNull
-    public static Pair<String, String>[] getDigests(Path file) throws IOException {
+    public static Pair<String, String>[] getDigests(@NonNull Path file) throws IOException {
         if (!file.isFile()) {
             throw new IOException(file + " is not a file.");
         }

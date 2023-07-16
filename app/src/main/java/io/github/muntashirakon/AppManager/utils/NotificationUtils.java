@@ -5,9 +5,14 @@ package io.github.muntashirakon.AppManager.utils;
 import android.Manifest;
 import android.app.Notification;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
+import android.os.Process;
+import android.provider.Settings;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.app.NotificationChannelCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
@@ -116,11 +121,11 @@ public final class NotificationUtils {
     }
 
     private static void displayNotification(@NonNull Context context,
-                                           @NonNull String channelId,
-                                           @NonNull CharSequence channelName,
-                                           @NotificationImportance int importance,
-                                           int notificationId,
-                                           @NonNull NotificationBuilder notification) {
+                                            @NonNull String channelId,
+                                            @NonNull CharSequence channelName,
+                                            @NotificationImportance int importance,
+                                            int notificationId,
+                                            @NonNull NotificationBuilder notification) {
         NotificationManagerCompat manager = getNewNotificationManager(context, channelId, channelName, importance);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
                 .setLocalOnly(!Prefs.Misc.sendNotificationsToConnectedDevices())
@@ -166,5 +171,26 @@ public final class NotificationUtils {
             case NotificationManagerCompat.IMPORTANCE_MIN:
                 return NotificationCompat.PRIORITY_MIN;
         }
+    }
+
+    public static Intent getNotificationSettingIntent(@Nullable String channelId) {
+        Intent intent = new Intent();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (channelId != null) {
+                intent.setAction(Settings.ACTION_CHANNEL_NOTIFICATION_SETTINGS);
+                intent.putExtra(Settings.EXTRA_CHANNEL_ID, channelId);
+            } else {
+                intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+            }
+            intent.putExtra(Settings.EXTRA_APP_PACKAGE, BuildConfig.APPLICATION_ID);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            }
+        } else {
+            intent.setAction("android.settings.APP_NOTIFICATION_SETTINGS");
+            intent.putExtra("app_package", BuildConfig.APPLICATION_ID);
+            intent.putExtra("app_uid", Process.myUid());
+        }
+        return intent;
     }
 }

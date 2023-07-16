@@ -559,9 +559,17 @@ public final class Prefs {
         }
     }
 
-    public static final class Security {
+    public static final class Privacy {
         public static boolean isScreenLockEnabled() {
             return AppPref.getBoolean(AppPref.PrefKey.PREF_ENABLE_SCREEN_LOCK_BOOL);
+        }
+
+        public static boolean isAutoLockEnabled() {
+            return AppPref.getBoolean(AppPref.PrefKey.PREF_ENABLE_AUTO_LOCK_BOOL);
+        }
+
+        public static boolean isPersistentSessionAllowed() {
+            return AppPref.getBoolean(AppPref.PrefKey.PREF_ENABLE_PERSISTENT_SESSION_BOOL);
         }
     }
 

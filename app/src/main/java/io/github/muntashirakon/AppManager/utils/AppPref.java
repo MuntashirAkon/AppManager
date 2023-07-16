@@ -76,6 +76,8 @@ public class AppPref {
         PREF_DEBLOATER_FILTER_FLAGS_INT,
 
         PREF_ENABLE_KILL_FOR_SYSTEM_BOOL,
+        PREF_ENABLE_AUTO_LOCK_BOOL,
+        PREF_ENABLE_PERSISTENT_SESSION_BOOL,
         PREF_ENABLE_SCREEN_LOCK_BOOL,
         PREF_ENABLED_FEATURES_INT,
         PREF_ENCRYPTION_STR,
@@ -384,6 +386,7 @@ public class AppPref {
             case PREF_FM_DISPLAY_IN_LAUNCHER_BOOL:
             case PREF_FM_REMEMBER_LAST_PATH_BOOL:
             case PREF_FM_SORT_REVERSE_BOOL:
+            case PREF_ENABLE_PERSISTENT_SESSION_BOOL:
                 return false;
             case PREF_APP_OP_SHOW_DEFAULT_BOOL:
             case PREF_SHOW_DISCLAIMER_BOOL:
@@ -392,6 +395,7 @@ public class AppPref {
             case PREF_VIRUS_TOTAL_PROMPT_BEFORE_UPLOADING_BOOL:
             case PREF_ZIP_ALIGN_BOOL:
             case PREF_SEND_NOTIFICATIONS_TO_CONNECTED_DEVICES_BOOL:
+            case PREF_ENABLE_AUTO_LOCK_BOOL:
                 return true;
             case PREF_CONCURRENCY_THREAD_COUNT_INT:
             case PREF_APP_THEME_CUSTOM_INT:

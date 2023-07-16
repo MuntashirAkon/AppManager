@@ -113,7 +113,7 @@ public class SplashActivity extends AppCompatActivity {
                 case Ops.STATUS_FAILURE:
                     Log.d(TAG, "Authentication completed.");
                     mViewModel.setAuthenticating(false);
-                    Ops.setAuthenticated(true);
+                    Ops.setAuthenticated(this, true);
                     startActivity(new Intent(this, MainActivity.class));
                     finish();
             }
@@ -148,7 +148,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void ensureSecurityAndModeOfOp() {
-        if (!Prefs.Security.isScreenLockEnabled()) {
+        if (!Prefs.Privacy.isScreenLockEnabled()) {
             // No security enabled
             handleMigrationAndModeOfOp();
             return;

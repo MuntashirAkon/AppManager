@@ -1076,6 +1076,9 @@
         <service
             android:name=".self.filecache.InternalCacheCleanerService"
             android:exported="false" />
+        <service
+            android:name=".session.SessionMonitoringService"
+            android:exported="false" />
 
         <receiver
             android:name=".servermanager.ServerStatusChangeReceiver"
