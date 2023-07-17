@@ -999,7 +999,7 @@
             android:theme="@style/AppTheme.TransparentBackground" />
         <activity
             android:name=".viewer.audio.AudioPlayerActivity"
-            android:exported="true"
+            android:exported="false"
             android:label="@string/title_audio_player"
             android:excludeFromRecents="true"
             android:theme="@style/AppTheme.TransparentBackground"
