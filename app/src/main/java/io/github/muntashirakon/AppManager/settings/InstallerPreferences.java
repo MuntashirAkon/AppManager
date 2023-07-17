@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.UserHandleHidden;
 import android.text.SpannableStringBuilder;
@@ -138,6 +139,7 @@ public class InstallerPreferences extends PreferenceFragment {
             return true;
         });
         SwitchPreferenceCompat forceDexOpt = Objects.requireNonNull(findPreference("installer_force_dex_opt"));
+        forceDexOpt.setVisible(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N);
         forceDexOpt.setChecked(Prefs.Installer.forceDexOpt());
         // Display changes
         ((SwitchPreferenceCompat) Objects.requireNonNull(findPreference("installer_display_changes")))

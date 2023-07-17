@@ -12,6 +12,7 @@ import android.app.Application;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.UserHandleHidden;
 import android.text.SpannableStringBuilder;
@@ -136,6 +137,7 @@ public class InstallerOptionsFragment extends DialogFragment {
         initInstallerAppSpinner();
         signApkSwitch.setChecked(mOptions.isSignApkFiles());
         signApkSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> mOptions.setSignApkFiles(isChecked));
+        forceDexOptSwitch.setVisibility(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N ? View.VISIBLE : View.GONE);
         forceDexOptSwitch.setChecked(mOptions.isForceDexOpt());
         forceDexOptSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> mOptions.setForceDexOpt(isChecked));
         mBlockTrackersSwitch.setChecked(canBlockTrackers && mOptions.isBlockTrackers());
