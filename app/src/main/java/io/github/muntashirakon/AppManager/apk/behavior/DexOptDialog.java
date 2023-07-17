@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.SystemProperties;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.View;
@@ -30,14 +29,14 @@ import io.github.muntashirakon.AppManager.settings.Ops;
 import io.github.muntashirakon.AppManager.users.Users;
 import io.github.muntashirakon.adapters.AnyFilterArrayAdapter;
 
-public class DexOptimizationDialog extends DialogFragment {
-    public static final String TAG = DexOptimizationDialog.class.getSimpleName();
+public class DexOptDialog extends DialogFragment {
+    public static final String TAG = DexOptDialog.class.getSimpleName();
 
     private static final String ARG_PACKAGES = "pkg";
 
     @NonNull
-    public static DexOptimizationDialog getInstance(@Nullable String[] packages) {
-        DexOptimizationDialog dialog = new DexOptimizationDialog();
+    public static DexOptDialog getInstance(@Nullable String[] packages) {
+        DexOptDialog dialog = new DexOptDialog();
         Bundle args = new Bundle();
         args.putStringArray(ARG_PACKAGES, packages);
         dialog.setArguments(args);
@@ -66,13 +65,12 @@ public class DexOptimizationDialog extends DialogFragment {
         add("everything-profile");
     }};
 
-    private final DexOptimizationOptions mOptions = new DexOptimizationOptions();
+    private final DexOptOptions mOptions = DexOptOptions.getDefault();
 
     @NonNull
     @Override
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         mOptions.packages = requireArguments().getStringArray(ARG_PACKAGES);
-        mOptions.checkProfiles = SystemProperties.getBoolean("dalvik.vm.usejitprofiles", false);
         int uid = Users.getSelfOrRemoteUid();
         boolean isRootOrSystem = uid == Ops.SYSTEM_UID || uid == Ops.ROOT_UID;
         // Inflate view
@@ -123,7 +121,7 @@ public class DexOptimizationDialog extends DialogFragment {
                 })
                 .setNegativeButton(R.string.cancel, null)
                 .setNeutralButton(R.string.reset_to_default, (dialog, which) -> {
-                    mOptions.compilerFiler = SystemProperties.get("pm.dexopt.install", "speed-profile");
+                    mOptions.compilerFiler = DexOptOptions.getDefaultCompilerFilterForInstallation();
                     mOptions.forceCompilation = true;
                     mOptions.clearProfileData = true;
                     launchOp();

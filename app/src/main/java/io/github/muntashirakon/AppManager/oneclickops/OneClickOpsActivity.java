@@ -35,7 +35,7 @@ import java.util.Set;
 
 import io.github.muntashirakon.AppManager.BaseActivity;
 import io.github.muntashirakon.AppManager.R;
-import io.github.muntashirakon.AppManager.apk.behavior.DexOptimizationDialog;
+import io.github.muntashirakon.AppManager.apk.behavior.DexOptDialog;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsManager;
 import io.github.muntashirakon.AppManager.batchops.BatchOpsService;
 import io.github.muntashirakon.AppManager.compat.AppOpsManagerCompat;
@@ -95,8 +95,8 @@ public class OneClickOpsActivity extends BaseActivity {
         });
         mViewModel.getAppsInstalledByAmForDexOpt().observe(this, packages -> {
             progressIndicator.hide();
-            DexOptimizationDialog dialog = DexOptimizationDialog.getInstance(packages);
-            dialog.show(getSupportFragmentManager(), DexOptimizationDialog.TAG);
+            DexOptDialog dialog = DexOptDialog.getInstance(packages);
+            dialog.show(getSupportFragmentManager(), DexOptDialog.TAG);
         });
     }
 
@@ -175,8 +175,8 @@ public class OneClickOpsActivity extends BaseActivity {
                             getString(R.string.summary_perform_runtime_optimization_to_apps))
                     .setOnClickListener(v -> {
                         if (SelfPermissions.isSystemOrRootOrShell()) {
-                            DexOptimizationDialog dialog = DexOptimizationDialog.getInstance(null);
-                            dialog.show(getSupportFragmentManager(), DexOptimizationDialog.TAG);
+                            DexOptDialog dialog = DexOptDialog.getInstance(null);
+                            dialog.show(getSupportFragmentManager(), DexOptDialog.TAG);
                             return;
                         }
                         progressIndicator.show();

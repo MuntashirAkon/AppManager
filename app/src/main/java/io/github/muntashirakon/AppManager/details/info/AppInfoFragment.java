@@ -93,7 +93,7 @@ import io.github.muntashirakon.AppManager.accessibility.AccessibilityMultiplexer
 import io.github.muntashirakon.AppManager.accessibility.NoRootAccessibilityService;
 import io.github.muntashirakon.AppManager.apk.ApkFile;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
-import io.github.muntashirakon.AppManager.apk.behavior.DexOptimizationDialog;
+import io.github.muntashirakon.AppManager.apk.behavior.DexOptDialog;
 import io.github.muntashirakon.AppManager.apk.behavior.FreezeUnfreezeShortcutInfo;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerActivity;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
@@ -548,8 +548,8 @@ public class AppInfoFragment extends Fragment implements SwipeRefreshLayout.OnRe
         } else if (itemId == R.id.action_optimize) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N
                     && (SelfPermissions.isSystemOrRootOrShell() || BuildConfig.APPLICATION_ID.equals(mInstallerPackageName))) {
-                DexOptimizationDialog dialog = DexOptimizationDialog.getInstance(new String[]{mPackageName});
-                dialog.show(getChildFragmentManager(), DexOptimizationDialog.TAG);
+                DexOptDialog dialog = DexOptDialog.getInstance(new String[]{mPackageName});
+                dialog.show(getChildFragmentManager(), DexOptDialog.TAG);
             } else UIUtils.displayShortToast(R.string.only_works_in_root_or_adb_mode);
         } else return super.onOptionsItemSelected(item);
         return true;

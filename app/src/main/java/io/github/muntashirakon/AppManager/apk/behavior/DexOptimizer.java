@@ -10,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 
+import io.github.muntashirakon.AppManager.self.SelfPermissions;
+
 @RequiresApi(Build.VERSION_CODES.N)
 public class DexOptimizer {
     @NonNull
@@ -77,8 +79,15 @@ public class DexOptimizer {
 
     public boolean forceDexOpt() {
         try {
-            // Allowed for only root/system
-            mPm.forceDexOpt(mPackageName);
+            if (SelfPermissions.isSystemOrRoot()) {
+                // Allowed for only root/system
+                mPm.forceDexOpt(mPackageName);
+            } else {
+                // forceDexOpt only applies certain set of configurations with performDexOptMode. So, it's possible to
+                // do the same using performDexOptMode in unprivileged mode
+                // https://android.googlesource.com/platform/frameworks/base/+/eb4af72f526c8351ad22322a635507a54c9ad1b8/services/core/java/com/android/server/pm/DexOptHelper.java#495
+                return performDexOptMode(false, DexOptOptions.getDefaultCompilerFilter(), true, true, null);
+            }
             return true;
         } catch (RemoteException | SecurityException e) {
             mLastError = e;

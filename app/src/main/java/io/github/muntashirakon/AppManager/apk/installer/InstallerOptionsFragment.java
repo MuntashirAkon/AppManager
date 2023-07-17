@@ -129,7 +129,6 @@ public class InstallerOptionsFragment extends DialogFragment {
         // Set values and defaults
         mPm = requireContext().getPackageManager();
         boolean canInstallForOtherUsers = SelfPermissions.checkSelfOrRemotePermission(ManifestCompat.permission.INTERACT_ACROSS_USERS_FULL);
-        boolean isSystemOrRoot = SelfPermissions.isSystemOrRoot();
         int selectedUser = getSelectedUserId(canInstallForOtherUsers);
         boolean canBlockTrackers = SelfPermissions.canModifyAppComponentStates(selectedUser, mPackageName, mIsTestOnly);
         initUserSpinner(canInstallForOtherUsers);
@@ -137,8 +136,7 @@ public class InstallerOptionsFragment extends DialogFragment {
         initInstallerAppSpinner();
         signApkSwitch.setChecked(mOptions.isSignApkFiles());
         signApkSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> mOptions.setSignApkFiles(isChecked));
-        forceDexOptSwitch.setChecked(isSystemOrRoot && mOptions.isForceDexOpt());
-        forceDexOptSwitch.setEnabled(isSystemOrRoot);
+        forceDexOptSwitch.setChecked(mOptions.isForceDexOpt());
         forceDexOptSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> mOptions.setForceDexOpt(isChecked));
         mBlockTrackersSwitch.setChecked(canBlockTrackers && mOptions.isBlockTrackers());
         mBlockTrackersSwitch.setEnabled(canBlockTrackers);

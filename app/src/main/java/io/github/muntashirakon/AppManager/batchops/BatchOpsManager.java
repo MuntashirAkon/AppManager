@@ -42,7 +42,7 @@ import io.github.muntashirakon.AppManager.BuildConfig;
 import io.github.muntashirakon.AppManager.R;
 import io.github.muntashirakon.AppManager.accessibility.AccessibilityMultiplexer;
 import io.github.muntashirakon.AppManager.apk.ApkUtils;
-import io.github.muntashirakon.AppManager.apk.behavior.DexOptimizationOptions;
+import io.github.muntashirakon.AppManager.apk.behavior.DexOptOptions;
 import io.github.muntashirakon.AppManager.apk.behavior.DexOptimizer;
 import io.github.muntashirakon.AppManager.apk.installer.PackageInstallerCompat;
 import io.github.muntashirakon.AppManager.backup.BackupException;
@@ -125,7 +125,7 @@ public class BatchOpsManager {
      */
     public static final String ARG_NET_POLICIES = "net_policies";
     /**
-     * {@link DexOptimizationOptions}, to be used with {@link #OP_DEXOPT}.
+     * {@link DexOptOptions}, to be used with {@link #OP_DEXOPT}.
      */
     public static final String ARG_OPTIONS = "options";
 
@@ -791,7 +791,7 @@ public class BatchOpsManager {
     @RequiresApi(Build.VERSION_CODES.N)
     private Result opPerformDexOpt() {
         List<UserPackagePair> failedPackages = new ArrayList<>();
-        DexOptimizationOptions options = BundleCompat.getParcelable(mArgs, ARG_OPTIONS, DexOptimizationOptions.class);
+        DexOptOptions options = BundleCompat.getParcelable(mArgs, ARG_OPTIONS, DexOptOptions.class);
         IPackageManager pm = PackageManagerCompat.getPackageManager();
         if (mUserPackagePairs.length > 0) {
             // Override options.packages with this list
@@ -821,7 +821,7 @@ public class BatchOpsManager {
                     result &= dexOptimizer.clearApplicationProfileData();
                 }
                 result &= dexOptimizer.performDexOptMode(options.checkProfiles, options.compilerFiler,
-                        options.forceCompilation, true, null);
+                        options.forceCompilation, options.bootComplete, null);
                 if (!result) {
                     log("====> op=DEXOPT, pkg=" + packageName + ", failed=dexopt-mode", dexOptimizer.getLastError());
                     failedPackages.add(new UserPackagePair(packageName, 0));
