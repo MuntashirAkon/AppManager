@@ -31,7 +31,6 @@ import io.github.muntashirakon.AppManager.intercept.IntentCompat;
 import io.github.muntashirakon.AppManager.settings.FeatureController;
 import io.github.muntashirakon.AppManager.utils.FileUtils;
 import io.github.muntashirakon.io.IoUtils;
-import io.github.muntashirakon.io.Paths;
 
 // Copyright 2015 Google, Inc.
 public class ScannerActivity extends BaseActivity {
@@ -49,7 +48,7 @@ public class ScannerActivity extends BaseActivity {
 
     @Override
     protected void onDestroy() {
-        Paths.get(getCodeCacheDir()).delete();
+        FileUtils.deleteSilently(getCodeCacheDir());
         IoUtils.closeQuietly(mFd);
         super.onDestroy();
     }

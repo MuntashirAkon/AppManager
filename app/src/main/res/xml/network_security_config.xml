@@ -11,6 +11,25 @@
             <pin digest="SHA-256">RQeZkB42znUfsDIIFWIRiYEcKl7nHwNFwWCrnMMJbVc=</pin>
         </pin-set>
     </domain-config>
+    <domain-config>
+        <domain includeSubdomains="true">beta.pithus.org</domain>
+        <pin-set expiration="2024-10-01">
+            <!--
+            Resources:
+            https://letsencrypt.org/certificates/
+            https://community.letsencrypt.org/t/hpkp-best-practices-if-you-choose-to-implement/4625
+            -->
+
+            <!-- DST Root CA X3 -->
+            <pin digest="SHA-256">Vjs8r4z+80wjNcr1YKepWQboSIRi63WsWXhIMN+eWys=</pin>
+
+            <!-- ISRG Root X1 -->
+            <pin digest="SHA-256">C5+lpZ7tcVwmwQIMcRtPbsQtWLABXhQzejna0wHFr8M=</pin>
+
+            <!-- ISRG Root X2 -->
+            <pin digest="SHA-256">diGVwiVYbubAI3RW4hB9xU8e/CH2GnkuvVFZE8zmgzI=</pin>
+        </pin-set>
+    </domain-config>
     <domain-config cleartextTrafficPermitted="true">
         <domain includeSubdomains="false">127.0.0.1</domain>
         <domain includeSubdomains="false">localhost</domain>

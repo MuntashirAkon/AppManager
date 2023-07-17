@@ -1443,4 +1443,7 @@
     <string name="pref_enable_auto_lock_msg">Lock App Manager when the device is locked.</string>
     <string name="path_does_not_exist">“%1$s” does not exist</string>
     <string name="path_not_a_folder">“%1$s” is not a folder</string>
+    <string name="scan_report_from_pithus">Pithus report</string>
+    <string name="action_checking">Checking…</string>
+    <string name="report_not_available">Not available</string>
 </resources>

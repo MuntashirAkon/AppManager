@@ -117,6 +117,39 @@
 
             <com.google.android.material.card.MaterialCardView
                 style="@style/Widget.AppTheme.CardView.ListItem.Padded"
+                android:id="@+id/pithus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardElevation="0dp"
+                android:focusable="true">
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/padding_medium"
+                    android:orientation="vertical">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/scan_report_from_pithus"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        tools:text="VirusTotal: 4/57" />
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/pithus_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:autoLink="web"
+                        android:textColor="?android:attr/textColorSecondary"
+                        android:text="@string/action_checking" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.AppTheme.CardView.ListItem.Padded"
                 android:id="@+id/libs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
