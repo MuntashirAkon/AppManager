@@ -874,7 +874,7 @@ public class BatchOpsManager {
         if (mProgressHandler == null) {
             return;
         }
-        int max = mProgressHandler.getLastMax() + appendMax;
+        int max = Math.max(mProgressHandler.getLastMax(), 0) + appendMax;
         float current = mProgressHandler.getLastProgress();
         mProgressHandler.postUpdate(max, current);
     }

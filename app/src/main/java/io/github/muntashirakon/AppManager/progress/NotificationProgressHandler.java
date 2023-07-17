@@ -47,8 +47,8 @@ public class NotificationProgressHandler extends QueuedProgressHandler {
 
     @Nullable
     private NotificationInfo mLastProgressNotification = null;
-    private int mLastMax = MAX_INDETERMINATE;
-    private float mLastProgress = 0;
+    private volatile int mLastMax = MAX_INDETERMINATE;
+    private volatile float mLastProgress = 0;
     private boolean mAttachedToService;
 
     public NotificationProgressHandler(@NonNull Context context,
@@ -177,6 +177,14 @@ public class NotificationProgressHandler extends QueuedProgressHandler {
     @Override
     public Object getLastMessage() {
         return mLastProgressNotification;
+    }
+
+    @Override
+    public void postUpdate(int max, float current, @Nullable Object message) {
+        // Update values immediately to avoid issues
+        mLastMax = max;
+        mLastProgress = current;
+        super.postUpdate(max, current, message);
     }
 
     private static void notify(@NonNull Context context,

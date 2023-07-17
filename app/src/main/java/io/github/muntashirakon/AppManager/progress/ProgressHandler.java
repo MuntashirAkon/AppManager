@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.app.Service;
 
 import androidx.annotation.AnyThread;
+import androidx.annotation.CallSuper;
 import androidx.annotation.MainThread;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -102,7 +103,7 @@ public abstract class ProgressHandler {
      * @param current Current progress value. Irrelevant in non-determinate mode.
      */
     @AnyThread
-    public void postUpdate(float current) {
+    public final void postUpdate(float current) {
         postUpdate(getLastMax(), current, getLastMessage());
     }
 
@@ -113,7 +114,7 @@ public abstract class ProgressHandler {
      * @param current Current progress value. Irrelevant in non-determinate mode.
      */
     @AnyThread
-    public void postUpdate(int max, float current) {
+    public final void postUpdate(int max, float current) {
         postUpdate(max, current, getLastMessage());
     }
 
@@ -126,6 +127,7 @@ public abstract class ProgressHandler {
      */
     @SuppressLint("WrongThread")
     @AnyThread
+    @CallSuper
     public void postUpdate(int max, float current, @Nullable Object message) {
         if (ThreadUtils.isMainThread()) {
             onProgressUpdate(max, current, message);
